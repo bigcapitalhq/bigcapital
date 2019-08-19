@@ -1,0 +1,22 @@
+{
+  "name": "moosher-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bookshelf": "^0.15.1",
+    "bookshelf-json-columns": "^2.1.1",
+    "bookshelf-modelbase": "^2.10.4",
+    "dotenv": "^8.1.0",
+    "errorhandler": "^1.5.1",
+    "express": "^4.17.1",
+    "express-oauth-server": "^2.0.0",
+    "knex": "^0.19.2",
+    "mysql2": "^1.6.5"
+  }
+}
