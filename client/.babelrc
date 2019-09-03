@@ -8,7 +8,18 @@
     }],
     "stage-2"
   ],
-  "plugins": ["transform-vue-jsx", "transform-runtime"],
+  "plugins": [
+    "transform-vue-jsx",
+    "transform-runtime",
+    [
+      "component",
+      {
+        "libraryName": "element-ui",
+        "styleLibraryName": "~node_modules/element-theme-chalk/src",
+        "ext": ".scss"
+      }
+    ]
+  ],
   "env": {
     "test": {
       "presets": ["env", "stage-2"],

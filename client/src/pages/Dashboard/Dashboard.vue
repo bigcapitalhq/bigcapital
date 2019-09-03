@@ -26,8 +26,12 @@ export default {
 </script>
 
 <style lang="scss">
-#dashboard{
+.dashboard{
   display: flex;
   flex-direction: row;
+
+  &__content{
+    width: 100%;
+  }
 }
 </style>

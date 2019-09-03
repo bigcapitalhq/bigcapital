@@ -1,0 +1,14 @@
+# environment variables
+# WEB_REVERSE_PROXY_PORT ${WEB_REVERSE_PROXY_PORT}
+
+Listen 80
+
+<VirtualHost *:80>
+
+	ProxyPass / http://node:${WEB_REVERSE_PROXY_PORT}
+	# ProxyPassReverse / http://node:${WEB_REVERSE_PROXY_PORT}
+
+	ErrorLog logs/http-error.log
+	CustomLog logs/http-access.log common
+
+</VirtualHost>

@@ -38,6 +38,7 @@ module.exports = {
       props: true,
       ignorePropertyModificationsFor: [
         'state', // for vuex state
+        's',
         'acc', // for reduce accumulators
         'e' // for e.returnvalue
       ]

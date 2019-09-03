@@ -1,0 +1,6 @@
+
+{
+    "presets": ["@babel/preset-env"],
+    "retainLines": true,
+    "plugins": ["@babel/plugin-transform-runtime"]
+}

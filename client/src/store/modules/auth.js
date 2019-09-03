@@ -1,9 +1,9 @@
-import ApiService from '~/plugins/api-service';
+import ApiService from '@/plugins/api-service';
 
-let state = {
+const state = {
   token: localStorage.getItem('token') || '',
   errors: {},
-  role: {}
+  role: {},
 };
 
 const getters = {
@@ -14,9 +14,9 @@ const getters = {
 
 const actions = {
   /**
-   * User login authentication request.
+   * User login login authentication request.
    */
-  async authRequest({ commit }, { form }) {
+  async login({ commit }, { form }) {
     const response = await ApiService.post('auth/login', form);
     const { data } = response;
 
@@ -27,32 +27,29 @@ const actions = {
   },
 
   /**
-   * Send reset password email or SMS.
+   * Send reset password via email or SMS.
    */
   sendResetPassword({}, { email }) {
     return ApiService.post('auth/send_reset_password', { email });
   },
 
-  /**
-   * Verify reset password verification code.
-   */
-  verifyResetPasswordToken({ commit, dispatch }, { token }) {
-    return ApiService.post(`reset/${token}`);
-  }
+  newPassword(, { form }) {
+    return ApiService.post('auth/new_password', form);
+  },
 };
-
 
 const mutations = {
-  
-  setToken(state, token) {
+
+  setToken(s, token) {
     localStorage.setItem('token', token);
-    state.token = token;
+    s.token = token;
   },
 
-  removeToken(state) {
+  removeToken(s) {
     localStorage.removeItem('token');
-    state.token = '';
+    s.token = '';
   },
 };
 
-export default {state, actions, mutations, getters};
+export default { state, actions, mutations, getters };
+

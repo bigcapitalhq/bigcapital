@@ -1,0 +1,190 @@
+html, body {
+    color: #666666;
+    font-family: 'Roboto', sans-serif;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-size: 15px;
+}
+
+code, pre {
+    text-align: left;
+}
+
+h3 {
+    font-size: 20px;
+    color: #4A4A4A;
+    position: relative;
+}
+
+.uppercase {
+    text-transform: uppercase;
+}
+
+h3 img {
+    position: absolute;
+    display: none;
+}
+
+.lightning-icon {
+    left: -34px;
+}
+
+.box-icon {
+    left: -43px;
+}
+
+h5 {
+    font-size: 14px;
+    color: #9B9B9B;
+    margin: 10px 0 18px 0;
+}
+
+.gist {
+    font-size: 13px;
+    line-height: 18px;
+    margin-bottom: 30px;
+    width: 100%;
+}
+
+.gist pre {
+    font-family: Menlo, Monaco, 'Bitstream Vera Sans Mono', 'Courier New', monospace !important;
+}
+
+.gist .gist-file {
+    border-bottom: none !important;
+    background-color: #FBFBFB !important;
+}
+
+.gist-meta {
+    display: none;
+}
+
+.top-section {
+    background-color: #FBFBFB;
+    border-bottom: 1px solid #E0E0E0;
+}
+
+.middle-section {
+    padding: 60px 0 0 0;
+}
+
+.middle-section .container {
+    margin-bottom: 60px;
+}
+
+.logo {
+    margin: 80px auto;
+    display: block;
+}
+
+.intro {
+    font-weight: 300;
+    margin: 120px auto 60px auto;
+    font-size: 21px;
+    text-align: center;
+}
+
+.intro span {
+    font-size: 16px;
+}
+
+.tech-logos {
+    margin: 30px auto 0 auto;
+    width: 100%;
+}
+
+footer {
+    height: 120px;
+    background-color: #000;
+    padding: 30px 0;
+}
+
+.osedea-logo {
+    margin: 0 auto;
+    display: block;
+}
+
+.cta {
+    height: 40px;
+    border: 1px solid #EE4028;
+    border-radius: 8px;
+    color: #EE4028;
+    font-size: 15px;
+    width: 300px;
+    margin: 90px auto;
+    display: block;
+    line-height: 40px;
+    text-align: center;
+    background-color: #FFF;
+    transition: background-color 0.3s ease;
+    transition: color 0.3s ease;
+}
+
+.cta:hover {
+    background-color: #EE4028;
+    color: #FFF;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    transition: color 0.3s ease;
+}
+
+.middle-container:last-child {
+    margin-bottom: 0;
+}
+
+copyright {
+    color: #FFF;
+    font-size: 12px;
+    position: initial;
+    text-align: center;
+    display: block;
+    padding-top: 15px;
+}
+
+copyright a {
+    color: #FFF;
+    text-decoration: underline;
+}
+
+copyright a:hover {
+    color: #FFF;
+}
+
+@media (min-width: 768px) {
+    .intro {
+        font-size: 30px;
+        margin: 140px auto 0 auto;
+    }
+    
+    .intro span {
+        font-size: 22px;
+    }
+    
+    footer {
+        height: 80px;
+    }
+    
+    .osedea-logo {
+        margin: 0;
+        display: inline;
+    }
+    
+    copyright {
+        position: relative;
+        top: 3px;
+        text-align: right;
+    }
+}
+
+@media (min-width: 860px) {
+    h3 img {
+        display: block;
+    }
+}
+
+@media (min-width: 820px) {
+    .container{
+        max-width: 820px !important;
+    }
+}

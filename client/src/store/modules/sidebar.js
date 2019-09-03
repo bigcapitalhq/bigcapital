@@ -37,12 +37,15 @@ const actions = {
    * Set count to the given sidebar item.
    */
   setSidebarItemCount(s, { name, count }) {
-    s.items.forEach((item) => {
+    s.items = s.items.map((item) => {
+      const mapped = { ...item };
+
       if (item.name === name) {
-        item.count = count;
+        mapped.count = count;
       }
-    })
-  }
-}
+      return mapped;
+    });
+  },
+};
 
 export default { state, getters, actions };

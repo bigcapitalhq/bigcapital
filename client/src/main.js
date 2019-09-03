@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import ElementUI from 'element-ui';
+import {Form, FormItem, Input} from 'element-ui';
 import App from '@/App';
 import router from '@/router';
 import store from '@/store';
@@ -9,7 +9,9 @@ import '@/plugins/i18n';
 
 Vue.config.productionTip = false;
 
-Vue.use(ElementUI);
+Vue.use(Form);
+Vue.use(FormItem);
+Vue.use(Input);
 
 const app = new Vue({
   el: '#app',

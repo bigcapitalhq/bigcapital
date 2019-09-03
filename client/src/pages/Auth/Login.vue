@@ -10,12 +10,23 @@
       </el-form-item>
 
       <el-button type="primary">{{ $t('login') }}</el-button>
-      <el-link>{{ $t('forget_your_password') }}</el-link>
     </el-form>
+
+    <div class="form-note">
+      <div class="forget-password">
+        <router-link :to="{name: 'forgetPassword'}">{{ $t('forget_password') }}</router-link>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
+const STATE = {
+  USER_NOT_ACTIVE: 1,
+};
+
 export default {
   name: 'login',
   data() {
@@ -27,6 +38,25 @@ export default {
     };
   },
   methods: {
+    ...mapActions(['login']),
+
+    /**
+     * Handle the submitting the login form.
+     */
+    onSubmit() {
+      const form = {};
+
+      this.login({ form }).then(() => {
+
+      }).catch((error) => {
+        const { response } = error;
+        const { data } = response;
+
+        if (data.error.type === 'USER_NOT_ACTIVE') {
+          this.current_state = STATE.USER_NOT_ACTIVE;
+        }
+      });
+    },
   },
 };
 </script>

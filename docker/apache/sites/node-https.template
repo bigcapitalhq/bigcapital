@@ -1,0 +1,17 @@
+# environment variables
+# WEB_REVERSE_PROXY_PORT ${WEB_REVERSE_PROXY_PORT}
+
+Listen 443
+
+<VirtualHost *:443>
+
+	SSLEngine on
+	SSLCertificateFile /etc/ssl/cert1.pem
+	SSLCertificateKeyFile /etc/ssl/privkey1.pem
+
+	ProxyPass / http://node:${WEB_REVERSE_PROXY_PORT}
+
+	ErrorLog logs/https-error.log
+	CustomLog logs/https-access.log common
+
+</VirtualHost>

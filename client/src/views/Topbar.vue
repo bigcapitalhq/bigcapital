@@ -1,5 +1,9 @@
 <template>
   <div class="topbar">
+    <div class="topbar__sidebar-toggle">
+
+    </div>
+
     <div class="topbar__title">
       <h3>{{ pageTitle }}</h3>
     </div>
@@ -26,10 +30,12 @@ export default {
 <style lang="scss">
 .topbar{
   padding-bottom: 12px;
+  width: 100%;
 
   &__title{
 
     h3{
+      margin: 0;
       font-size: 30px;
     }
   }

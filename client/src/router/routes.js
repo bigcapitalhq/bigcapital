@@ -7,10 +7,16 @@ const routes = [
       '@/pages/Auth/Auth.vue'),
     children: [
       {
-        name: 'authLogin',
+        name: 'login',
         path: '/login',
         component: () => import(/* webpackChunkName: "login" */
           '@/pages/Auth/Login.vue'),
+      },
+      {
+        name: 'forgetPassword',
+        path: '/forget_password',
+        component: () => import(/* webpackChunkName: "forget_password" */
+          '@/pages/Auth/ForgetPassword.vue'),
       },
     ],
   },

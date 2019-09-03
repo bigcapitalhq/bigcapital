@@ -1,11 +1,11 @@
 <template>
-  <div class="sidebar__item" :class="computedClasses">
-    <router-link :to="to">
+  <div class="sidebar__menu-item" :class="computedClasses">
+    <router-link class="sidebar__menu-item-anchor" :to="to">
       <span class="title">{{ name }}</span>
       <span v-if="count" class="count">{{ count }}</span>
     </router-link>
 
-    <div v-if="hasChildren" class="sidebar__item-children">
+    <div v-if="hasChildren" class="sidebar__menu-item-children">
     </div>
   </div>
 </template>

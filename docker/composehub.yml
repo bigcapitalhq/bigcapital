@@ -1,0 +1,10 @@
+---
+name: NoDock
+blurb: NoDock is the Docker solution for Node. Open-source full-stack environment for your Node projects
+description: |
+  Framework Agnostic: MEAN, Meteor, Sails, etc. Run the stack you choose, the way you want. Totally unopinionated, fully customizable. Better, Faster & Stronger: Docker + Docker Compose ensures your environment is fast and stable for development, testing and production. Focus on Code: Plug-and-play configurations allow you to get started in minutes. Reduce the learning curve for new developers.
+email: philippe.trepanier@osedea.com
+repo_url: https://github.com/Osedea/nodock
+tags: node,docker,nginx,apache,mysql,certbot,yarn,mongodb,memcached,rabbitmq
+private: false
+cmd: 
