@@ -1,7 +1,6 @@
 import bookshelf from './bookshelf';
 
 const Account = bookshelf.Model.extend({
-
   /**
    * Table name
    */
@@ -11,6 +10,17 @@ const Account = bookshelf.Model.extend({
    * Timestamp columns.
    */
   hasTimestamps: ['created_at', 'updated_at'],
+
+  /**
+   * Account model may belongs to account type.
+   */
+  type() {
+    return this.belongsTo('AccountType', 'account_type_id');
+  },
+
+  balances() {
+    return this.hasMany('AccountBalance', 'accounnt_id');
+  }
 });
 
 export default bookshelf.model('Account', Account);

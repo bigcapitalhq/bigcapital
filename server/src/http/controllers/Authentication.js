@@ -37,16 +37,15 @@ export default {
    */
   login: {
     validation: [
-      check('crediential').isEmail(),
-      check('password').isLength({ min: 5 }),
+      check('crediential').exists().isEmail(),
+      check('password').exists().isLength({ min: 5 }),
     ],
     async handler(req, res) {
       const validationErrors = validationResult(req);
 
       if (!validationErrors.isEmpty()) {
         return res.boom.badData(null, {
-          code: 'validation_error',
-          ...validationErrors,
+          code: 'validation_error', ...validationErrors,
         });
       }
       const { crediential, password } = req.body;
@@ -81,17 +80,19 @@ export default {
    */
   sendResetPassword: {
     validation: [
-      check('email').isEmail(),
+      check('email').exists().isEmail(),
     ],
     // eslint-disable-next-line consistent-return
     async handler(req, res) {
-      const errors = validationResult(req);
+      const validationErrors = validationResult(req);
 
-      if (!errors.isEmpty()) {
-        return res.status(422).json({ errors: errors.array() });
+      if (!validationErrors.isEmpty()) {
+        return res.boom.badData(null, {
+          code: 'validation_error', ...validationErrors,
+        });
       }
       const { email } = req.body;
-      const user = User.where('email').fetch();
+      const user = User.where('email', email).fetch();
 
       if (!user) {
         return res.status(422).send();
@@ -137,14 +138,21 @@ export default {
    */
   resetPassword: {
     validation: [
-      check('password').isLength({ min: 5 }),
-      check('reset_password'),
+      check('password').exists().isLength({ min: 5 }).custom((value, { req }) => {
+        if (value !== req.body.confirm_password) {
+          throw new Error("Passwords don't match");
+        } else {
+          return value;
+        }
+      }),
     ],
     async handler(req, res) {
-      const errors = validationResult(req);
+      const validationErrors = validationResult(req);
 
-      if (!errors.isEmpty()) {
-        return res.status(422).json({ errors: errors.array() });
+      if (!validationErrors.isEmpty()) {
+        return res.boom.badData(null, {
+          code: 'VALIDATION_ERROR', ...validationErrors,
+        });
       }
       const { token } = req.params;
       const { password } = req.body;
@@ -155,11 +163,8 @@ export default {
       }).fetch();
 
       if (!tokenModel) {
-        return res.status(400).send({
-          error: {
-            type: 'token.invalid',
-            message: 'Password reset token is invalid or has expired',
-          },
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'TOKEN_INVALID', code: 100 }],
         });
       }
 
@@ -167,8 +172,8 @@ export default {
         email: tokenModel.attributes.email,
       });
       if (!user) {
-        return res.status(400).send({
-          error: { message: 'An unexpected error occurred.' },
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'USER_NOT_FOUND', code: 120 }],
         });
       }
       const hashedPassword = await hashPassword(password);

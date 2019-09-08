@@ -184,7 +184,10 @@ export default {
         page: filter.page,
       });
 
-      return res.status(200).send({ ...items.toJSON() });
+      return res.status(200).send({
+        items: items.toJSON(),
+        pagination: items.pagination,
+      });
     },
   },
 };

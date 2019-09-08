@@ -1,13 +1,18 @@
+/* eslint-disable consistent-return */
 import jwt from 'jsonwebtoken';
 import User from '@/models/User';
+import Auth from '@/models/Auth';
 
 const authMiddleware = (req, res, next) => {
   const token = req.headers['x-access-token'] || req.query.token;
 
-  const onError = () => res.status(401).send({
-    success: false,
-    message: 'unauthorized',
-  });
+  const onError = () => {
+    Auth.loggedOut();
+    res.status(401).send({
+      success: false,
+      message: 'unauthorized',
+    });
+  }
 
   if (!token) {
     return onError();
@@ -19,7 +24,9 @@ const authMiddleware = (req, res, next) => {
       if (error) {
         reject(error);
       } else {
+        // eslint-disable-next-line no-underscore-dangle
         req.user = await User.where('id', decoded._id).fetch();
+        Auth.setAuthenticatedUser(req.user);
 
         if (!req.user) {
           return onError();

@@ -6,9 +6,7 @@ const hashPassword = (password) => new Promise((resolve) => {
   });
 });
 
-const origin = (request) => {
-  return `${request.protocol}://${request.hostname}`;
-};
+const origin = (request) => `${request.protocol}://${request.hostname}`;
 
 export {
   hashPassword,

@@ -1,5 +1,6 @@
 import { request, expect, create } from '~/testInit';
 import { hashPassword } from '@/utils';
+import knex from '@/database/knex';
 
 describe('routes: /auth/', () => {
   describe('POST `/api/auth/login`', () => {
@@ -110,61 +111,136 @@ describe('routes: /auth/', () => {
     });
   });
 
-  // describe('POST: `auth/send_reset_password`', () => {
+  describe('POST: `/auth/send_reset_password`', () => {
+    it('Should `email` be required.', async () => {
+      const res = await request().post('/api/auth/send_reset_password').send();
 
-  //   it('Should `email` be required.', () => {
+      expect(res.status).equals(422);
+      expect(res.body.code).equals('validation_error');
+    });
 
-  //   });
+    it('Should response unproccessable if the email address was invalid.', async () => {
+      const res = await request().post('/api/auth/send_reset_password').send({
+        email: 'invalid_email',
+      });
 
-  //   it('Should response unproccessable if the email address was invalid.', () => {
+      expect(res.status).equals(422);
+      expect(res.body.code).equals('validation_error');
+    });
 
-  //   });
+    it('Should response unproccessable if the email address was not exist.', async () => {
+      const res = await request().post('/api/auth/send_reset_password').send({
+        email: 'admin@admin.com',
+      });
 
-  //   it('Should response unproccessable if the email address was not exist.', () => {
+      expect(res.status).equals(422);
+      expect(res.body.errors).include.something.that.deep.equals({
+        type: 'EMAIL_NOT_FOUND', code: 100,
+      });
+    });
 
-  //   });
+    it('Should delete all already tokens that associate to the given email.', async () => {
+      const user = await create('user');
+      const token = '123123';
 
-  //   it('Should delete all already tokens that associate to the given email.', () => {
+      await knex('password_resets').insert({ email: user.email, token });
+      await request().post('/api/auth/send_reset_password').send({
+        email: user.email,
+      });
 
-  //   });
+      const oldPasswordToken = await knex('password_resets').where('token', token);
 
-  //   it('Should store new token associate with the given email.', () => {
+      expect(oldPasswordToken).to.have.lengthOf(0);
+    });
 
-  //   });
+    it('Should store new token associate with the given email.', async () => {
+      const user = await create('user');
+      await request().post('/api/auth/send_reset_password').send({
+        email: user.email,
+      });
 
-  //   it('Should response success if the email was exist.', () => {
+      const token = await knex('password_resets').where('email', user.email);
 
-  //   });
+      expect(token).to.have.lengthOf(1);
+    });
 
-  //   it('Should token be stored to the table after success request.', () => {
+    it('Should response success if the email was exist.', async () => {
+      const user = await create('user');
+      const res = await request().post('/api/auth/send_reset_password').send({
+        email: user.email,
+      });
 
-  //   });
-  // });
+      expect(res.status).equals(200);
+    });
+  });
 
-  // describe('POST: `/auth/reset/:token`', () => {
+  describe('POST: `/auth/reset/:token`', () => {
+    // it('Should response forbidden if the token was invalid.', () => {
 
-  //   it('Should response forbidden if the token was invalid.', () => {
+    // });
 
-  //   });
+    it('Should response forbidden if the token was expired.', () => {
 
-  //   it('Should response forbidden if the token was expired.', () => {
+    });
 
-  //   });
+    it('Should `password` be required.', async () => {
+      const passwordReset = await create('password_reset');
+      const res = await request().post(`/api/reset/${passwordReset.token}`).send();
 
-  //   it('Should password be required.', () => {
+      expect(res.status).equals(422);
+      expect(res.body.code).equals('VALIDATION_ERROR');
 
-  //   });
+      const paramsErrors = res.body.errors.map((error) => error.param);
+      expect(paramsErrors).to.include('password');
+    });
 
-  //   it('Should password and confirm_password be equal.', () => {
+    it('Should password and confirm_password be equal.', async () => {
+      const passwordReset = await create('password_reset');
+      const res = await request().post(`/api/reset/${passwordReset.token}`).send({
+        password: '123123',
+      });
 
-  //   });
+      expect(res.status).equals(422);
+      expect(res.body.code).equals('VALIDATION_ERROR');
 
-  //   it('Should token be deleted after success response.', () => {
+      const paramsErrors = res.body.errors.map((error) => error.param);
+      expect(paramsErrors).to.include('password');
+    });
 
-  //   });
+    it('Should response success with correct data form.', async () => {
+      const passwordReset = await create('password_reset');
+      const res = await request().post(`/api/reset/${passwordReset.token}`).send({
+        password: '123123',
+        confirm_password: '123123',
+      });
 
-  //   it('Should password be updated after success response.', () => {
+      expect(res.status).equals(200);
+    });
 
-  //   })
-  // });
+    it('Should token be deleted after success response.', async () => {
+      const passwordReset = await create('password_reset');
+      await request().post(`/api/reset/${passwordReset.token}`).send({
+        password: '123123',
+        confirm_password: '123123',
+      });
+
+      const foundTokens = await knex('password_resets').where('email', passwordReset.email);
+      expect(foundTokens).to.have.lengthOf(0);
+    });
+
+    it('Should password be updated after success response.', async () => {
+      const user = await create('user');
+      const passwordReset = await create('password_reset', { user_id: user.id });
+
+      await request().post(`/api/reset/${passwordReset.token}`).send({
+        password: '123123',
+        confirm_password: '123123',
+      });
+
+      const foundUser = await knex('users').where('id', user.id);
+
+      expect(foundUser.id).equals(user.id);
+      expect(foundUser.password).not.equals(user.password);
+    });
+  });
 });

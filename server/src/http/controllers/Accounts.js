@@ -4,7 +4,7 @@ import asyncMiddleware from '../middleware/asyncMiddleware';
 import Account from '@/models/Account';
 import AccountBalance from '@/models/AccountBalance';
 import AccountType from '@/models/AccountType';
-import JWTAuth from '@/http/middleware/jwtAuth';
+// import JWTAuth from '@/http/middleware/jwtAuth';
 
 export default {
   /**
@@ -13,18 +13,22 @@ export default {
   router() {
     const router = express.Router();
 
-    router.use(JWTAuth);
+    // router.use(JWTAuth);
     router.post('/',
       this.newAccount.validation,
       asyncMiddleware(this.newAccount.handler));
 
-    router.get('/:id',
-      this.getAccount.validation,
-      asyncMiddleware(this.getAccount.handler));
+    router.post('/:id',
+      this.editAccount.validation,
+      asyncMiddleware(this.editAccount.handler));
 
-    router.delete('/:id',
-      this.deleteAccount.validation,
-      asyncMiddleware(this.deleteAccount.handler));
+    // router.get('/:id',
+    //   this.getAccount.validation,
+    //   asyncMiddleware(this.getAccount.handler));
+
+    // router.delete('/:id',
+    //   this.deleteAccount.validation,
+    //   asyncMiddleware(this.deleteAccount.handler));
 
     return router;
   },
@@ -36,20 +40,22 @@ export default {
     validation: [
       check('name').isLength({ min: 3 }).trim().escape(),
       check('code').isLength({ max: 10 }).trim().escape(),
-      check('type_id').isNumeric().toInt(),
+      check('account_type_id').isNumeric().toInt(),
       check('description').trim().escape(),
     ],
     async handler(req, res) {
-      const errors = validationResult(req);
+      const validationErrors = validationResult(req);
 
-      if (!errors.isEmpty()) {
-        return res.status(422).json({ errors: errors.array() });
+      if (!validationErrors.isEmpty()) {
+        return res.boom.badData(null, {
+          code: 'validation_error', ...validationErrors,
+        });
       }
 
       const { name, code, description } = req.body;
-      const { type_id: typeId } = req.body;
+      const { account_type_id: typeId } = req.body;
 
-      const foundAccountCodePromise = Account.where('code', code).fetch();
+      const foundAccountCodePromise = code ? Account.where('code', code).fetch() : null;
       const foundAccountTypePromise = AccountType.where('id', typeId).fetch();
 
       const [foundAccountCode, foundAccountType] = await Promise.all([
@@ -57,7 +63,7 @@ export default {
         foundAccountTypePromise,
       ]);
 
-      if (!foundAccountCode) {
+      if (!foundAccountCode && foundAccountCodePromise) {
         return res.boom.badRequest(null, {
           errors: [{ type: 'NOT_UNIQUE_CODE', code: 100 }],
         });
@@ -68,11 +74,67 @@ export default {
         });
       }
       const account = Account.forge({
-        name, code, type_id: typeId, description,
+        name, code, account_type_id: typeId, description,
       });
 
       await account.save();
-      return res.boom.success({ item: { ...account.attributes } });
+      return res.status(200).send({ item: { ...account.attributes } });
+    },
+  },
+
+  /**
+   * Edit the given account details.
+   */
+  editAccount: {
+    validation: [
+      check('name').isLength({ min: 3 }).trim().escape(),
+      check('code').isLength({ max: 10 }).trim().escape(),
+      check('account_type_id').isNumeric().toInt(),
+      check('description').trim().escape(),
+    ],
+    async handler(req, res) {
+      const { id } = req.params;
+      const validationErrors = validationResult(req);
+
+      if (!validationErrors.isEmpty()) {
+        return res.boom.badData(null, {
+          code: 'validation_error', ...validationErrors,
+        });
+      }
+
+      const account = await Account.where('id', id).fetch();
+
+      if (!account) {
+        return res.boom.notFound();
+      }
+      const { name, code, description } = req.body;
+      const { account_type_id: typeId } = req.body;
+
+      const foundAccountCodePromise = (code && code !== account.attributes.code)
+        ? Account.query({ where: { code }, whereNot: { id } }).fetch() : null;
+
+      const foundAccountTypePromise = (typeId !== account.attributes.account_type_id)
+        ? AccountType.where('id', typeId).fetch() : null;
+
+      const [foundAccountCode, foundAccountType] = await Promise.all([
+        foundAccountCodePromise, foundAccountTypePromise,
+      ]);
+
+      if (!foundAccountCode && foundAccountCodePromise) {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'NOT_UNIQUE_CODE', code: 100 }],
+        });
+      }
+      if (!foundAccountType && foundAccountTypePromise) {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'NOT_EXIST_ACCOUNT_TYPE', code: 110 }],
+        });
+      }
+
+      await account.save({
+        name, code, account_type_id: typeId, description,
+      });
+      return res.status(200).send();
     },
   },
 
@@ -105,7 +167,6 @@ export default {
       if (!account) {
         return res.boom.notFound();
       }
-
       await account.destroy();
       await AccountBalance.where('account_id', id).destroy({ require: false });
 
