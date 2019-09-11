@@ -2,7 +2,7 @@ import { create, expect } from '~/testInit';
 import '@/models/Account';
 import AccountType from '@/models/AccountType';
 
-describe.only('Model: AccountType', () => {
+describe('Model: AccountType', () => {
   it('Shoud account type model has many associated accounts.', async () => {
     const accountType = await create('account_type');
     await create('account', { account_type_id: accountType.id });

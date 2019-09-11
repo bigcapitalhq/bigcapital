@@ -7,7 +7,6 @@ const factory = knexFactory(knex);
 
 factory.define('user', 'users', async () => {
   const hashedPassword = await hashPassword('admin');
-
   return {
     first_name: faker.name.firstName(),
     last_name: faker.name.lastName(),
@@ -32,7 +31,6 @@ factory.define('account_type', 'account_types', async () => ({
 
 factory.define('account', 'accounts', async () => {
   const accountType = await factory.create('account_type');
-
   return {
     name: faker.lorem.word(),
     account_type_id: accountType.id,
@@ -59,7 +57,6 @@ factory.define('item_metadata', 'items_metadata', async () => {
 factory.define('item', 'items', async () => {
   const category = await factory.create('item_category');
   const account = await factory.create('account');
-
   return {
     name: faker.lorem.word(),
     note: faker.lorem.paragraph(),
@@ -73,7 +70,6 @@ factory.define('item', 'items', async () => {
 
 factory.define('setting', 'settings', async () => {
   const user = await factory.create('user');
-
   return {
     key: faker.lorem.slug(),
     user_id: user.id,
@@ -82,5 +78,46 @@ factory.define('setting', 'settings', async () => {
     group: 'default',
   };
 });
+
+factory.define('role', 'roles', async () => ({
+  name: faker.lorem.word(),
+  description: faker.lorem.words(),
+  predefined: false,
+}));
+
+factory.define('user_has_role', 'user_has_roles', async () => {
+  const user = await factory.create('user');
+  const role = await factory.create('role');
+
+  return {
+    user_id: user.id,
+    role_id: role.id,
+  };
+});
+
+factory.define('permission', 'permissions', async () => {
+  const permissions = ['create', 'edit', 'delete', 'view', 'owner'];
+  const randomPermission = permissions[Math.floor(Math.random() * permissions.length)];
+
+  return {
+    name: randomPermission,
+  };
+});
+
+factory.define('role_has_permission', 'role_has_permissions', async () => {
+  const permission = await factory.create('permission');
+  const role = await factory.create('role');
+  const resource = await factory.create('resource');
+
+  return {
+    role_id: role.id,
+    permission_id: permission.id,
+    resource_id: resource.id,
+  };
+});
+
+factory.define('resource', 'resources', () => ({
+  name: faker.lorem.word(),
+}));
 
 export default factory;

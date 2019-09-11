@@ -1,6 +1,6 @@
 import { request, expect } from '~/testInit';
 
-describe.only('routes: `/accountOpeningBalance`', () => {
+describe('routes: `/accountOpeningBalance`', () => {
   describe('POST `/accountOpeningBalance`', () => {
     it('Should `accounts` be array type.', async () => {
       const res = await request().post('/api/accountOpeningBalance').send({
@@ -28,7 +28,7 @@ describe.only('routes: `/accountOpeningBalance`', () => {
       expect(res.status).equals(422);
     });
 
-    it.only('Should `accounts.*.id` be exist in the storage.', async () => {
+    it('Should `accounts.*.id` be exist in the storage.', async () => {
       const res = await request().post('/api/accountOpeningBalance').send({
         accounts: [
           { id: 100, credit: 100, debit: 100 },

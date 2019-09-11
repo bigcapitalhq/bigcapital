@@ -21,6 +21,13 @@ const User = bookshelf.Model.extend({
   verifyPassword(password) {
     return bcrypt.compareSync(password, this.get('password'));
   },
+
+  /**
+   * User model may has many associated roles.
+   */
+  roles() {
+    return this.belongsToMany('Role', 'user_has_roles', 'user_id', 'role_id');
+  },
 });
 
 export default bookshelf.model('User', User);

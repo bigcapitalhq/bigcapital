@@ -20,7 +20,7 @@ const Account = bookshelf.Model.extend({
 
   balances() {
     return this.hasMany('AccountBalance', 'accounnt_id');
-  }
+  },
 });
 
 export default bookshelf.model('Account', Account);

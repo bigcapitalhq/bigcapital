@@ -21,10 +21,17 @@ const Role = bookshelf.Model.extend({
   },
 
   /**
+   * Role may has many resources.
+   */
+  resources() {
+    return this.belongsToMany('Resource', 'role_has_permissions', 'role_id', 'resource_id');
+  },
+
+  /**
    * Role model may has many users.
    */
   users() {
-    return this.belongsTo('User');
+    return this.belongsToMany('User', 'user_has_roles');
   },
 });
 

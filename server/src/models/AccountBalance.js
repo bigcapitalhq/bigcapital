@@ -12,9 +12,7 @@ const AccountBalance = bookshelf.Model.extend({
    */
   hasTimestamps: false,
 
-  /**
-   * 
-   */
+
   account() {
     return this.belongsTo('Account', 'account_id');
   },
