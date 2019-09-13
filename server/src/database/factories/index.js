@@ -120,4 +120,51 @@ factory.define('resource', 'resources', () => ({
   name: faker.lorem.word(),
 }));
 
+factory.define('view', 'views', async () => {
+  const resource = await factory.create('resource');
+  return {
+    name: faker.lorem.word(),
+    resource_id: resource.id,
+    predefined: false,
+  };
+});
+
+factory.define('resource_field', 'resource_fields', async () => {
+  const resource = await factory.create('resource');
+  const dataTypes = ['select', 'date', 'text'];
+
+  return {
+    label_name: faker.lorem.words(),
+    data_type: dataTypes[Math.floor(Math.random() * dataTypes.length)],
+    help_text: faker.lorem.words(),
+    default: faker.lorem.word(),
+    resource_id: resource.id,
+    active: true,
+    predefined: false,
+  };
+});
+
+factory.define('view_role', 'view_roles', async () => {
+  const view = await factory.create('view');
+  const field = await factory.create('resource_field');
+
+  return {
+    view_id: view.id,
+    index: faker.random.number(),
+    field_id: field.id,
+    value: '',
+    comparator: '',
+  };
+});
+
+factory.define('view_has_columns', 'view_has_columns', async () => {
+  const view = await factory.create('view');
+  const field = await factory.create('resource_field');
+
+  return {
+    field_id: field.id,
+    view_id: view.id,
+  };
+});
+
 export default factory;

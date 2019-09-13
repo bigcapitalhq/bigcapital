@@ -33,7 +33,7 @@ const actions = {
     return ApiService.post('auth/send_reset_password', { email });
   },
 
-  newPassword(, { form }) {
+  newPassword(null, { form }) {
     return ApiService.post('auth/new_password', form);
   },
 };

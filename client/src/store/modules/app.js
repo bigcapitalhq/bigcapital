@@ -7,6 +7,9 @@ const state = {
 
   pageTitle: 'Welcome',
   actions: [],
+
+  contentState: 0,
+  sidebarOpened: true,
 };
 
 const getters = {
@@ -23,4 +26,16 @@ const actions = {
   },
 };
 
-export default { state, actions, getters };
+const mutations = {
+  toggleSidebar() {
+    state.sidebarOpened = !state.sidebarOpened;
+
+    if (state.sidebarOpened) {
+      localStorage.set('sidebarStatus', 1)
+    } else {
+      localStorage.set('sidebarStatus', 0)
+    }
+  },
+}
+
+export default { state, actions, mutations, getters };

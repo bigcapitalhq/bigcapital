@@ -9,7 +9,7 @@ const state = {
     },
     {
       name: 'Products',
-      to: 'dashboard.home',
+      to: 'dashboard.items.list',
     },
     {
       name: 'Customers',
@@ -23,12 +23,54 @@ const state = {
       name: 'Reports',
       to: 'dashboard.home',
     },
+    {
+      name: 'Users',
+      to: 'dashboard.users.list',
+      children: {
+        name: 'New User',
+        to: 'dashboard.user.new',
+      },
+    },
+    {
+      name: 'Accounting',
+      to: 'dashboard.accounts.list',
+    },
+  ],
+
+  quickActions: [
+    {
+      route: 'dashboard.items.list',
+      actions: [
+        {
+          dialog: 'global-search',
+          label: 'Search',
+          icon: 'search',
+        },
+      ],
+    },
+    {
+      route: 'dashboard.items.list',
+      actions: [
+        {
+          dialog: 'test',
+        },
+      ],
+    },
   ],
 };
 
 const getters = {
   getSidebarItems: s => s.items,
   getSidebarItem: s => name => s.items.find(item => item.name === name),
+
+  getAllQuickActions: s => s.quickActions,
+  getQuickActions: s => (route) => {
+    const foundDefault = s.quickActions.find(q => q.default === true);
+    const found = s.quickActions.find(q => q.route === route);
+    const defaultActions = foundDefault ? foundDefault.actions : [];
+
+    return found ? [...defaultActions, found.actions] : defaultActions;
+  },
 };
 
 const actions = {

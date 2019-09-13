@@ -3,9 +3,7 @@ import Vue from 'vue';
 export default {
 
   get(resource, params) {
-    return Vue.axios.get(`api/${resource}`, params).catch((error) => {
-      throw new Error(`[Moosher] ApiService ${error}`);
-    });
+    return Vue.axios.get(`api/${resource}`, params);
   },
 
   post(resource, params) {
@@ -21,8 +19,6 @@ export default {
   },
 
   delete(resource) {
-    return Vue.axios.delete(`api/${resource}`).catch((error) => {
-      throw new Error(`[Moosher] ApiService ${error}`);
-    });
+    return Vue.axios.delete(`api/${resource}`);
   }
 };

@@ -6,6 +6,8 @@ import Items from '@/http/controllers/Items';
 import ItemCategories from '@/http/controllers/ItemCategories';
 import Accounts from '@/http/controllers/Accounts';
 import AccountOpeningBalance from '@/http/controllers/AccountOpeningBalance';
+import Views from '@/http/controllers/Views';
+import CustomFields from '@/http/controllers/Fields';
 
 export default (app) => {
   // app.use('/api/oauth2', OAuth2.router());
@@ -14,6 +16,8 @@ export default (app) => {
   app.use('/api/roles', Roles.router());
   app.use('/api/accounts', Accounts.router());
   app.use('/api/accountOpeningBalance', AccountOpeningBalance.router());
+  app.use('/api/views', Views.router());
+  app.use('/api/fields', CustomFields.router());
   app.use('/api/items', Items.router());
   app.use('/api/item_categories', ItemCategories.router());
 };

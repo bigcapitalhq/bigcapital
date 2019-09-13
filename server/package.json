@@ -17,6 +17,7 @@
     "@hapi/boom": "^7.4.3",
     "bcryptjs": "^2.4.3",
     "bookshelf": "^0.15.1",
+    "bookshelf-cascade-delete": "^2.0.1",
     "bookshelf-json-columns": "^2.1.1",
     "bookshelf-modelbase": "^2.10.4",
     "bookshelf-paranoia": "^0.13.1",

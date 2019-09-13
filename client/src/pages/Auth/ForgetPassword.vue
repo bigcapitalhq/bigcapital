@@ -1,5 +1,10 @@
 <template>
   <div id="reset-password">
+    <h2 class="page-auth__content-title">
+      {{ $t('reset_your_password') }}
+      <small>{{ $t('if_you_forget_your_password') }}</small>
+    </h2>
+
     <el-form ref="form" class="form-container">
       <el-form-item :label="$t('username_password')" prop="title">
         <el-input v-model="form.crediential" :maxlength="100" name="name"  required />

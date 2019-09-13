@@ -1,8 +1,8 @@
 import express from 'express';
-import { check, validationResult } from 'express-validator';
+import { check, validationResult, param } from 'express-validator';
 import asyncMiddleware from '../middleware/asyncMiddleware';
 import Account from '@/models/Account';
-import AccountBalance from '@/models/AccountBalance';
+// import AccountBalance from '@/models/AccountBalance';
 import AccountType from '@/models/AccountType';
 // import JWTAuth from '@/http/middleware/jwtAuth';
 
@@ -22,13 +22,12 @@ export default {
       this.editAccount.validation,
       asyncMiddleware(this.editAccount.handler));
 
-    // router.get('/:id',
-    //   this.getAccount.validation,
-    //   asyncMiddleware(this.getAccount.handler));
+    router.get('/:id',
+      asyncMiddleware(this.getAccount.handler));
 
-    // router.delete('/:id',
-    //   this.deleteAccount.validation,
-    //   asyncMiddleware(this.deleteAccount.handler));
+    router.delete('/:id',
+      this.deleteAccount.validation,
+      asyncMiddleware(this.deleteAccount.handler));
 
     return router;
   },
@@ -87,6 +86,7 @@ export default {
    */
   editAccount: {
     validation: [
+      param('id').toInt(),
       check('name').isLength({ min: 3 }).trim().escape(),
       check('code').isLength({ max: 10 }).trim().escape(),
       check('account_type_id').isNumeric().toInt(),
@@ -142,7 +142,9 @@ export default {
    * Get details of the given account.
    */
   getAccount: {
-    valiation: [],
+    valiation: [
+      param('id').toInt(),
+    ],
     async handler(req, res) {
       const { id } = req.params;
       const account = await Account.where('id', id).fetch();
@@ -159,7 +161,9 @@ export default {
    * Delete the given account.
    */
   deleteAccount: {
-    validation: [],
+    validation: [
+      param('id').toInt(),
+    ],
     async handler(req, res) {
       const { id } = req.params;
       const account = await Account.where('id', id).fetch();
@@ -168,7 +172,6 @@ export default {
         return res.boom.notFound();
       }
       await account.destroy();
-      await AccountBalance.where('account_id', id).destroy({ require: false });
 
       return res.status(200).send({ id: account.previous('id') });
     },

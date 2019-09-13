@@ -1,7 +1,7 @@
 import { request, expect, create } from '~/testInit';
 import knex from '@/database/knex';
 
-describe.only('routes: `/roles/`', () => {
+describe('routes: `/roles/`', () => {
   describe('POST: `/roles/`', () => {
     it('Should `name` be required.', async () => {
       const res = await request().post('/api/roles').send();
@@ -237,7 +237,7 @@ describe.only('routes: `/roles/`', () => {
       expect(storedResources).to.have.lengthOf(1);
     });
 
-    it.only('Should save the submit permissions in the storage in case was not exist.', async () => {
+    it('Should save the submit permissions in the storage in case was not exist.', async () => {
       const role = await create('role');
       await request().post(`/api/roles/${role.id}`).send({
         name: 'Role Name',

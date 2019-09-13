@@ -21,6 +21,11 @@ const Account = bookshelf.Model.extend({
   balances() {
     return this.hasMany('AccountBalance', 'accounnt_id');
   },
+}, {
+  /**
+   * Cascade delete dependents.
+   */
+  dependents: ['balances'],
 });
 
 export default bookshelf.model('Account', Account);

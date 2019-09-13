@@ -6,7 +6,9 @@ import Account from '@/models/Account';
 // import AccountBalance from '@/models/AccountBalance';
 
 export default {
-
+  /**
+   * Router constructor.
+   */
   router() {
     const router = express.Router();
 
@@ -17,6 +19,11 @@ export default {
     return router;
   },
 
+  /**
+   * Opening balance to the given account.
+   * @param {Request} req -
+   * @param {Response} res -
+   */
   openingBalnace: {
     validation: [
       check('accounts').isArray({ min: 1 }),

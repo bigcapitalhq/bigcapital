@@ -92,7 +92,7 @@ export default {
         });
       }
       const { email } = req.body;
-      const user = User.where('email', email).fetch();
+      const user = await User.where('email', email).fetch();
 
       if (!user) {
         return res.status(422).send();

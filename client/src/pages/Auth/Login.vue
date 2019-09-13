@@ -1,5 +1,22 @@
 <template>
   <div class="login">
+    <h2 class="page-auth__content-title">
+      {{ $t('sign_in') }}
+      <small>{{ $t('with_your_account') }}</small>
+    </h2>
+
+    <el-alert :active="isCredentialError" :type="'error'">
+      {{ $t('email_password_do_not_match') }}
+    </el-alert>
+
+    <el-alert :isActive="isInactiveError" :type="'error'">
+      {{ $t('the_account_suspended_please_contact') }}
+    </el-alert>
+
+    <el-alert :isActive="isResetPasswordSuccess" type="success">
+      {{ $t('your_password_has_been_changed') }}
+    </el-alert>
+
     <el-form ref="form" class="form-container">
       <el-form-item :label="$t('username_password')" prop="title">
         <el-input v-model="form.crediential" :maxlength="100" name="name"  required />
@@ -37,6 +54,17 @@ export default {
       },
     };
   },
+  computed: {
+    isCredentialError() {
+      return false;
+    },
+    isInactiveError() {
+      return false;
+    },
+    isResetPasswordSuccess() {
+      return false;
+    },
+  },
   methods: {
     ...mapActions(['login']),
 
@@ -47,7 +75,7 @@ export default {
       const form = {};
 
       this.login({ form }).then(() => {
-
+        this.$route.push({ name: 'dashboard.home' });
       }).catch((error) => {
         const { response } = error;
         const { data } = response;

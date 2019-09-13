@@ -9,7 +9,11 @@
     </div>
 
     <div class="topbar__actions">
-
+      <div class="topbar__actions-list">
+        <div v-for="(action, index) in actions" :key="index">
+          <button @click.prevent="onClickItem(action)">{{ action.label }}</button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -22,8 +26,18 @@ export default {
   computed: {
     ...mapGetters({
       pageTitle: 'getPageTitle',
+      quickActions: 'getQuickActions',
     }),
+    actions() {
+      return this.quickActions(this.$route.name) || [];
+    },
   },
+  methods: {
+
+    onClickItem(action) {
+      return action;
+    },
+  }
 };
 </script>
 

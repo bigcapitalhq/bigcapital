@@ -1,9 +1,11 @@
 <template>
+  <div>
 
+  </div>
 </template>
 
 <script>
 export default {
-  name: 'products-list',
-}
+  name: 'accounts-list',
+};
 </script>

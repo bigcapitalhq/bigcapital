@@ -1,5 +1,5 @@
 import express from 'express';
-import { check, validationResult } from 'express-validator';
+import { check, param, validationResult } from 'express-validator';
 import asyncMiddleware from '../middleware/asyncMiddleware';
 import ItemCategory from '@/models/ItemCategory';
 // import JWTAuth from '@/http/middleware/jwtAuth';
@@ -79,6 +79,7 @@ export default {
    */
   editCategory: {
     validation: [
+      param('id').toInt(),
       check('name').exists({ checkFalsy: true }).trim().escape(),
       check('parent_category_id').optional().isNumeric().toInt(),
       check('description').optional().trim().escape(),
@@ -93,13 +94,11 @@ export default {
         });
       }
       const { name, parent_category_id: parentCategoryId, description } = req.body;
-
       const itemCategory = await ItemCategory.where('id', id).fetch();
 
       if (!itemCategory) {
         return res.boom.notFound();
       }
-
       if (parentCategoryId && parentCategoryId !== itemCategory.attributes.parent_category_id) {
         const foundParentCategory = await ItemCategory.where('id', parentCategoryId).fetch();
 
@@ -109,7 +108,6 @@ export default {
           });
         }
       }
-
       await itemCategory.save({
         label: name,
         description,
@@ -124,7 +122,9 @@ export default {
    * Delete the give item category.
    */
   deleteItem: {
-    validation: [],
+    validation: [
+      param('id').toInt(),
+    ],
     async handler(req, res) {
       const { id } = req.params;
       const itemCategory = await ItemCategory.where('id', id).fetch();
@@ -149,6 +149,24 @@ export default {
         return res.boom.notFound();
       }
       return res.status(200).send({ items: items.toJSON() });
+    },
+  },
+
+  getCategory: {
+    validation: [
+      param('category_id').toInt(),
+    ],
+    async handler(req, res) {
+      const { category_id: categoryId } = req.params;
+      const item = await ItemCategory.where('id', categoryId).fetch();
+
+      if (!item) {
+        return res.boom.notFound(null, {
+          errors: [{ type: 'CATEGORY_NOT_FOUND', code: 100 }],
+        });
+      }
+
+      return res.status(200).send({ category: item.toJSON() });
     },
   },
 };

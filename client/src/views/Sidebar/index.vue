@@ -19,7 +19,7 @@
         v-for="(item, index) in sidebarItems" :key="index"
         :to="item.to"
         :name="item.name"
-        :count="item.count"
+        :count="item.count || false"
         :children="item.children"
       />
     </div>

@@ -1,6 +1,6 @@
 <template>
   <div class="sidebar__menu-item" :class="computedClasses">
-    <router-link class="sidebar__menu-item-anchor" :to="to">
+    <router-link class="sidebar__menu-item-anchor" :to="{name: to}">
       <span class="title">{{ name }}</span>
       <span v-if="count" class="count">{{ count }}</span>
     </router-link>
@@ -18,6 +18,7 @@ export default {
     to: String,
     icon: String,
     children: Array,
+    count: [Number, Boolean],
   },
   computed: {
     computedClasses() {

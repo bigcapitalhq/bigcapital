@@ -11,10 +11,18 @@ const Resource = bookshelf.Model.extend({
    */
   hasTimestamps: false,
 
-  permissions() {
+  /**
+   * Resource model may has many views.
+   */
+  views() {
+    return this.hasMany('View', 'resource_id');
   },
 
-  roles() {
+  /**
+   * Resource model may has many fields.
+   */
+  fields() {
+    return this.hasMany('ResourceField', 'resource_id');
   },
 });
 

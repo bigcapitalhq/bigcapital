@@ -22,9 +22,7 @@ const actions = {
     commit('setItems', data);
 
     if (count) {
-      commit('setSidebarItemCount', {
-        name: 'customers', count,
-      });
+      commit('setSidebarItemCount', { name: 'customers', count });
     }
     return data;
   },
