@@ -2,7 +2,8 @@ import express from 'express';
 import { check, param, validationResult } from 'express-validator';
 import asyncMiddleware from '../middleware/asyncMiddleware';
 import ItemCategory from '@/models/ItemCategory';
-// import JWTAuth from '@/http/middleware/jwtAuth';
+import Authorization from '@/http/middleware/authorization';
+import JWTAuth from '@/http/middleware/jwtAuth';
 
 export default {
   /**
@@ -10,24 +11,32 @@ export default {
    */
   router() {
     const router = express.Router();
+    const permit = Authorization('items_categories');
+
+    router.use(JWTAuth);
 
     router.post('/:id',
+      permit('create', 'edit'),
       this.editCategory.validation,
       asyncMiddleware(this.editCategory.handler));
 
     router.post('/',
+      permit('create'),
       this.newCategory.validation,
       asyncMiddleware(this.newCategory.handler));
 
     router.delete('/:id',
+      permit('create', 'edit', 'delete'),
       this.deleteItem.validation,
       asyncMiddleware(this.deleteItem.handler));
 
-    // router.get('/:id',
-    //   this.getCategory.validation,
-    //   asyncMiddleware(this.getCategory.handler));
+    router.get('/:id',
+      permit('view'),
+      this.getCategory.validation,
+      asyncMiddleware(this.getCategory.handler));
 
     router.get('/',
+      permit('view'),
       this.getList.validation,
       asyncMiddleware(this.getList.validation));
 
@@ -152,6 +161,9 @@ export default {
     },
   },
 
+  /**
+   * Retrieve details of the given category.
+   */
   getCategory: {
     validation: [
       param('category_id').toInt(),

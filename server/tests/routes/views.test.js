@@ -154,7 +154,7 @@ describe('routes: `/views`', () => {
     });
   });
 
-  describe.only('POST: `/views/:view_id`', () => {
+  describe('POST: `/views/:view_id`', () => {
     it('Should `label` be required.', async () => {
       const view = await create('view');
       const res = await request().post(`/api/views/${view.id}`);
@@ -251,7 +251,7 @@ describe('routes: `/views`', () => {
       expect(res.status).equals(404);
     });
 
-    it.only('Should response the roles fields not exist in case role field was not exist.', async () => {
+    it('Should response the roles fields not exist in case role field was not exist.', async () => {
       const view = await create('view');
       await create('resource_field', {
         resource_id: view.resource_id,

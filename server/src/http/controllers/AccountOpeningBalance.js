@@ -1,9 +1,10 @@
 import express from 'express';
 import { check, validationResult, oneOf } from 'express-validator';
 import { difference } from 'lodash';
+import knex from 'knex';
 import asyncMiddleware from '../middleware/asyncMiddleware';
 import Account from '@/models/Account';
-// import AccountBalance from '@/models/AccountBalance';
+import '@/models/AccountBalance';
 
 export default {
   /**
@@ -35,6 +36,7 @@ export default {
     ],
     async handler(req, res) {
       const validationErrors = validationResult(req);
+      // const defaultCurrency = 'USD';
 
       if (!validationErrors.isEmpty()) {
         return res.boom.badData(null, {
@@ -48,11 +50,12 @@ export default {
       const accountsCollection = await Account.query((query) => {
         query.select(['id']);
         query.whereIn('id', accountsIds);
-      }).fetchAll();
+      }).fetchAll({
+        withRelated: ['balances'],
+      });
 
       const accountsStoredIds = accountsCollection.map((account) => account.attributes.id);
       const notFoundAccountsIds = difference(accountsIds, accountsStoredIds);
-
       const errorReasons = [];
 
       if (notFoundAccountsIds.length > 0) {
@@ -63,6 +66,29 @@ export default {
       if (errorReasons.length > 0) {
         return res.boom.badData(null, { errors: errorReasons });
       }
+
+      const storedAccountsBalances = accountsCollection.related('balances');
+
+      const submitBalancesMap = new Map(accounts.map((account) => [account, account.id]));
+      const storedBalancesMap = new Map(storedAccountsBalances.map((balance) => [
+        balance.attributes, balance.attributes.id,
+      ]));
+
+      // const updatedStoredBalanced = [];
+      const notStoredBalances = [];
+
+      accountsIds.forEach((id) => {
+        if (!storedBalancesMap.get(id)) {
+          notStoredBalances.push(id);
+        }
+      });
+
+      await knex('accounts_balances').insert([
+        ...notStoredBalances.map((id) => {
+          const account = submitBalancesMap.get(id);
+          return { ...account };
+        }),
+      ]);
 
       return res.status(200).send();
     },

@@ -1,21 +1,30 @@
 import express from 'express';
 import { check, validationResult } from 'express-validator';
 import moment from 'moment';
-import asyncMiddleware from '../middleware/asyncMiddleware';
+import { difference } from 'lodash';
+import asyncMiddleware from '@/http/middleware/asyncMiddleware';
+import jwtAuth from '@/http/middleware/jwtAuth';
 import Item from '@/models/Item';
 import Account from '@/models/Account';
 import ItemCategory from '@/models/ItemCategory';
+import Resource from '@/models/Resource';
+import ResourceField from '@/models/ResourceField';
+import Authorization from '@/http/middleware/authorization';
 
 export default {
 
   router() {
     const router = express.Router();
+    const permit = Authorization('items');
+
+    router.use(jwtAuth);
 
     // router.post('/:id',
     //   this.editItem.validation,
     //   asyncMiddleware(this.editCategory.handler));
 
     router.post('/',
+      permit('create'),
       this.newItem.validation,
       asyncMiddleware(this.newItem.handler));
 
@@ -46,6 +55,11 @@ export default {
       check('cost_account_id').exists().isInt(),
       check('sell_account_id').exists().isInt(),
       check('category_id').optional().isInt(),
+
+      check('custom_fields').isArray({ min: 1 }),
+      check('custom_fields.*.key').exists().isNumeric().toInt(),
+      check('custom_fields.*.value').exists(),
+
       check('note').optional(),
     ],
     async handler(req, res) {
@@ -58,19 +72,38 @@ export default {
       }
 
       const { sell_account_id: sellAccountId, cost_account_id: costAccountId } = req.body;
-      const { category_id: categoryId } = req.body;
+      const { category_id: categoryId, custom_fields: customFields } = req.body;
+      const errorReasons = [];
 
       const costAccountPromise = Account.where('id', costAccountId).fetch();
       const sellAccountPromise = Account.where('id', sellAccountId).fetch();
       const itemCategoryPromise = (categoryId)
         ? ItemCategory.where('id', categoryId).fetch() : null;
 
+      // Validate the custom fields key and value type.
+      if (customFields.length > 0) {
+        const customFieldsKeys = customFields.map((field) => field.key);
+
+        // Get resource id than get all resource fields.
+        const resource = await Resource.where('name', 'items').fetch();
+        const fields = await ResourceField.query((query) => {
+          query.where('resource_id', resource.id);
+          query.whereIn('key', customFieldsKeys);
+        }).fetchAll();
+
+        const storedFieldsKey = fields.map((f) => f.attributes.key);
+
+        // Get all not defined resource fields.
+        const notFoundFields = difference(customFieldsKeys, storedFieldsKey);
+
+        if (notFoundFields.length > 0) {
+          errorReasons.push({ type: 'FIELD_KEY_NOT_FOUND', code: 150, fields: notFoundFields });
+        }
+      }
+
       const [costAccount, sellAccount, itemCategory] = await Promise.all([
         costAccountPromise, sellAccountPromise, itemCategoryPromise,
       ]);
-
-      const errorReasons = [];
-
       if (!costAccount) {
         errorReasons.push({ type: 'COST_ACCOUNT_NOT_FOUND', code: 100 });
       }
@@ -92,7 +125,6 @@ export default {
         currency_code: req.body.currency_code,
         note: req.body.note,
       });
-
       await item.save();
 
       return res.status(200).send();

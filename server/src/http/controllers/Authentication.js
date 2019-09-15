@@ -4,6 +4,7 @@ import { check, validationResult } from 'express-validator';
 import path from 'path';
 import fs from 'fs';
 import Mustache from 'mustache';
+import jwt from 'jsonwebtoken';
 import User from '@/models/User';
 import asyncMiddleware from '../middleware/asyncMiddleware';
 import PasswordReset from '@/models/PasswordReset';
@@ -49,6 +50,7 @@ export default {
         });
       }
       const { crediential, password } = req.body;
+      const { JWT_SECRET_KEY } = process.env;
 
       const user = await User.query({
         where: { email: crediential },
@@ -70,8 +72,15 @@ export default {
           errors: [{ type: 'USER_INACTIVE', code: 120 }],
         });
       }
-      user.save({ alst_login_at: new Date() });
-      return res.status(200).send({});
+      user.save({ last_login_at: new Date() });
+
+      const token = jwt.sign({
+        email: user.attributes.email,
+        _id: user.id,
+      }, JWT_SECRET_KEY, {
+        expiresIn: '1d',
+      });
+      return res.status(200).send({ token });
     },
   },
 

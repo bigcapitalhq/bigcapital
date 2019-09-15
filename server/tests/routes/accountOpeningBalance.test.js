@@ -1,4 +1,4 @@
-import { request, expect } from '~/testInit';
+import { request, expect, create } from '~/testInit';
 
 describe('routes: `/accountOpeningBalance`', () => {
   describe('POST `/accountOpeningBalance`', () => {
@@ -39,6 +39,17 @@ describe('routes: `/accountOpeningBalance`', () => {
       expect(res.body.errors).include.something.that.deep.equals({
         type: 'NOT_FOUND_ACCOUNT', code: 100, ids: [100],
       });
+    });
+
+    it('Should store the given credit and debit to the account balance in the storage.', async () => {
+      const account = await create('account');
+      const res = await request().post('/api/accountOpeningBalance').send({
+        accounts: [
+          { id: account.id, credit: 100, debit: 2 },
+        ],
+      });
+
+      console.log(res.status);
     });
   });
 });

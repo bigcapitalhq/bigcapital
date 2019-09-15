@@ -2,6 +2,8 @@ import express from 'express';
 import { check, validationResult } from 'express-validator';
 import User from '@/models/User';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
+import jwtAuth from '@/http/middleware/jwtAuth';
+import Authorization from '@/http/middleware/authorization';
 
 export default {
 
@@ -10,24 +12,32 @@ export default {
    */
   router() {
     const router = express.Router();
+    const permit = Authorization('users');
+
+    router.use(jwtAuth);
 
     router.post('/',
+      permit('create'),
       this.newUser.validation,
       asyncMiddleware(this.newUser.handler));
 
     router.post('/:id',
+      permit('create', 'edit'),
       this.editUser.validation,
       asyncMiddleware(this.editUser.handler));
 
-    // router.get('/',
-    //   this.listUsers.validation,
-    //   asyncMiddleware(this.listUsers.handler));
+    router.get('/',
+      permit('view'),
+      this.listUsers.validation,
+      asyncMiddleware(this.listUsers.handler));
 
-    // router.get('/:id',
-    //   this.getUser.validation,
-    //   asyncMiddleware(this.getUser.handler));
+    router.get('/:id',
+      permit('view'),
+      this.getUser.validation,
+      asyncMiddleware(this.getUser.handler));
 
     router.delete('/:id',
+      permit('create', 'edit', 'delete'),
       this.deleteUser.validation,
       asyncMiddleware(this.deleteUser.handler));
 

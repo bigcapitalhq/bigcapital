@@ -18,8 +18,11 @@ const Account = bookshelf.Model.extend({
     return this.belongsTo('AccountType', 'account_type_id');
   },
 
+  /**
+   * Account model may has many balances accounts.
+   */
   balances() {
-    return this.hasMany('AccountBalance', 'accounnt_id');
+    return this.hasMany('AccountBalance', 'account_id');
   },
 }, {
   /**

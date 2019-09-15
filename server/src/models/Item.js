@@ -1,7 +1,6 @@
 import bookshelf from './bookshelf';
 
 const Item = bookshelf.Model.extend({
-
   /**
    * Table name
    */
@@ -25,6 +24,11 @@ const Item = bookshelf.Model.extend({
   category() {
     return this.belongsTo('ItemCategory', 'category_id');
   },
+}, {
+  /**
+   * Cascade delete dependents.
+   */
+  dependents: ['ItemMetadata'],
 });
 
 export default bookshelf.model('Item', Item);

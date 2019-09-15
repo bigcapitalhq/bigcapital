@@ -85,14 +85,14 @@ describe('routes: /auth/', () => {
     });
 
     it('Should autheticate success with correct phone number and password.', async () => {
-      const password = hashPassword('admin');
+      const password = await hashPassword('admin');
       const user = await create('user', {
         phone_number: '0920000000',
         password,
       });
       const res = await request().post('/api/auth/login').send({
-        crediential: user.phone_number,
-        password,
+        crediential: user.email,
+        password: 'admin',
       });
 
       expect(res.status).equals(200);

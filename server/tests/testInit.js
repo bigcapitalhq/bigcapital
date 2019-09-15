@@ -4,7 +4,7 @@ import chaiThings from 'chai-things';
 import app from '@/app';
 import knex from '@/database/knex';
 import factory from '@/database/factories';
-import { hashPassword } from '@/utils';
+// import { hashPassword } from '@/utils';
 
 const request = () => chai.request(app);
 const { expect } = chai;
@@ -22,13 +22,13 @@ chai.use(chaiHttp);
 chai.use(chaiThings);
 
 const login = async (givenUser) => {
-  const user = givenUser === null ? await factory.create('user') : givenUser;
+  const user = !givenUser ? await factory.create('user') : givenUser;
 
   const response = await request()
     .post('/api/auth/login')
     .send({
       crediential: user.email,
-      password: hashPassword('secret'),
+      password: 'admin',
     });
 
   return response;

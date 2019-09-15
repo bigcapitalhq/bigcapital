@@ -1,7 +1,9 @@
 import bcrypt from 'bcryptjs';
 import bookshelf from './bookshelf';
+import PermissionsService from '@/services/PermissionsService';
 
 const User = bookshelf.Model.extend({
+  ...PermissionsService,
 
   /**
    * Table name
@@ -12,6 +14,10 @@ const User = bookshelf.Model.extend({
    * Timestamp columns.
    */
   hasTimestamps: ['created_at', 'updated_at'],
+
+  initialize() {
+    this.initializeCache();
+  },
 
   /**
    * Verify the password of the user.

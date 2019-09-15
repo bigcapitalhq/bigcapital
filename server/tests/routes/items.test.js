@@ -1,10 +1,26 @@
-import { request, expect, create } from '~/testInit';
+import {
+  request,
+  expect,
+  create,
+  login,
+} from '~/testInit';
 import knex from '@/database/knex';
 
-describe('routes: `/items`', () => {
-  describe('POST: `/items`', () => {
+describe.only('routes: `/items`', () => {
+  describe.only('POST: `/items`', () => {
     it('Should not create a new item if the user was not authorized.', async () => {
+      const res = await request().post('/api/items').send();
 
+      expect(res.status).equals(401);
+      expect(res.body.message).equals('unauthorized');
+    });
+
+    it('Should user have create permission to create a new item.', async () => {
+      const loginRes = await login();
+      const res = await request().post('/api/items')
+        .set('x-access-token', loginRes.body.token).send();
+
+      expect(res.status).equals(401);
     });
 
     it('Should `name` be required.', async () => {

@@ -152,7 +152,6 @@ export default {
       if (!account) {
         return res.boom.notFound();
       }
-
       return res.status(200).send({ item: { ...account.attributes } });
     },
   },

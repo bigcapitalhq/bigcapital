@@ -24,6 +24,10 @@ const Resource = bookshelf.Model.extend({
   fields() {
     return this.hasMany('ResourceField', 'resource_id');
   },
+
+  permissions() {
+    return this.belongsToMany('Permission', 'role_has_permissions', 'resource_id', 'permission_id');
+  },
 });
 
 export default bookshelf.model('Resource', Resource);
