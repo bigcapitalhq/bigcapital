@@ -1,19 +1,17 @@
-import bookshelf from './bookshelf';
+import BaseModel from '@/models/Model';
 
-const ViewColumn = bookshelf.Model.extend({
+export default class ViewColumn extends BaseModel {
   /**
    * Table name.
    */
-  tableName: 'view_columns',
+  static get tableName() {
+    return 'view_columns';
+  }
 
   /**
    * Timestamp columns.
    */
-  hasTimestamps: false,
-
-  view() {
-
+  static get hasTimestamps() {
+    return false;
   }
-});
-
-export default bookshelf.model('ViewColumn', ViewColumn);
+}

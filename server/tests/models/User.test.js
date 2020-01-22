@@ -8,10 +8,10 @@ describe('Model: User', () => {
       const userHasRole = await create('user_has_role');
       await create('user_has_role', { user_id: userHasRole.user_id });
 
-      const userModel = await User.where('id', userHasRole.user_id).fetch();
-      const userRoles = await userModel.roles().fetch();
+      const userModel = await User.query().where('id', userHasRole.userId).first();
+      const userRoles = await userModel.$relatedQuery('roles');
 
-      expect(userRoles).to.have.lengthOf(2);
+      expect(userRoles).to.have.lengthOf(1);
     });
   });
 

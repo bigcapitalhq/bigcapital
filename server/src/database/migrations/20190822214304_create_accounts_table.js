@@ -7,6 +7,8 @@ exports.up = function (knex) {
     table.integer('parent_account_id');
     table.string('code', 10);
     table.text('description');
+    table.boolean('active').defaultTo(true);
+    table.integer('index').unsigned();
     table.timestamps();
   });
 };

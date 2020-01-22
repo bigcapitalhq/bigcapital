@@ -1,6 +1,5 @@
 import { create, expect } from '~/testInit';
 import Account from '@/models/Account';
-// eslint-disable-next-line no-unused-vars
 import AccountType from '@/models/AccountType';
 
 describe('Model: Account', () => {
@@ -8,9 +7,32 @@ describe('Model: Account', () => {
     const accountType = await create('account_type');
     const account = await create('account', { account_type_id: accountType.id });
 
-    const accountModel = await Account.where('id', account.id).fetch();
-    const accountTypeModel = await accountModel.type().fetch();
+    const accountModel = await Account.query()
+      .where('id', account.id)
+      .withGraphFetched('type')
+      .first();
 
-    expect(accountTypeModel.attributes.id).equals(account.id);
+    expect(accountModel.type.id).equals(accountType.id);
+  });
+
+  it('Should account model has one balance model that associated to the account model.', async () => {
+    const accountBalance = await create('account_balance');
+
+    const accountModel = await Account.query()
+      .where('id', accountBalance.accountId)
+      .withGraphFetched('balance')
+      .first();
+
+    expect(accountModel.balance.amount).equals(accountBalance.amount);
+  });
+
+  it('Should account model has many transactions models that associated to the account model.', async () => {
+    const account = await create('account');
+    const accountTransaction = await create('account_transaction', { account_id: account.id });
+
+    const accountModel = await Account.query().where('id', account.id).first();
+    const transactionsModels = await accountModel.$relatedQuery('transactions');
+
+    expect(transactionsModels.length).equals(1);
   });
 });

@@ -187,7 +187,6 @@ describe('route: `/fields`', () => {
     });
   });
 
-
   describe('DELETE: `/fields/:field_id`', () => {
     it('Should response not found in case field id was not exist.', async () => {
       const res = await request().delete('/api/fields/100').send();

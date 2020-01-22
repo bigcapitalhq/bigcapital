@@ -9,8 +9,8 @@ describe('Model: Item', () => {
     const category = await create('item_category');
     const item = await create('item', { category_id: category.id });
 
-    const itemModel = await Item.where('id', item.id).fetch();
-    const itemCategoryModel = await itemModel.category().fetch();
+    const itemModel = await Item.query().where('id', item.id);
+    const itemCategoryModel = await itemModel.$relatedQuery('category');
 
     expect(itemCategoryModel.attributes.id).equals(category.id);
   });
@@ -20,8 +20,8 @@ describe('Model: Item', () => {
     await create('item_metadata', { item_id: item.id });
     await create('item_metadata', { item_id: item.id });
 
-    const itemModel = await Item.where('id', item.id).fetch();
-    const itemMetadataCollection = await itemModel.metadata().fetch();
+    const itemModel = await Item.query().where('id', item.id);
+    const itemMetadataCollection = await itemModel.$relatedQuery('metadata');
 
     expect(itemMetadataCollection.length).equals(2);
   });

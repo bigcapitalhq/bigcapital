@@ -1,23 +1,39 @@
 import bcrypt from 'bcryptjs';
-import bookshelf from './bookshelf';
-import PermissionsService from '@/services/PermissionsService';
+import { Model } from 'objection';
+import BaseModel from '@/models/Model';
+// import PermissionsService from '@/services/PermissionsService';
 
-const User = bookshelf.Model.extend({
-  ...PermissionsService,
+export default class User extends BaseModel {
+  // ...PermissionsService
 
   /**
    * Table name
    */
-  tableName: 'users',
+  static get tableName() {
+    return 'users';
+  }
 
   /**
-   * Timestamp columns.
+   * Relationship mapping.
    */
-  hasTimestamps: ['created_at', 'updated_at'],
+  static get relationMappings() {
+    const Role = require('@/models/Role');
 
-  initialize() {
-    this.initializeCache();
-  },
+    return {
+      roles: {
+        relation: Model.ManyToManyRelation,
+        modelClass: Role.default,
+        join: {
+          from: 'users.id',
+          through: {
+            from: 'user_has_roles.userId',
+            to: 'user_has_roles.roleId',
+          },
+          to: 'roles.id',
+        },
+      },
+    };
+  }
 
   /**
    * Verify the password of the user.
@@ -25,15 +41,6 @@ const User = bookshelf.Model.extend({
    * @return {Boolean}
    */
   verifyPassword(password) {
-    return bcrypt.compareSync(password, this.get('password'));
-  },
-
-  /**
-   * User model may has many associated roles.
-   */
-  roles() {
-    return this.belongsToMany('Role', 'user_has_roles', 'user_id', 'role_id');
-  },
-});
-
-export default bookshelf.model('User', User);
+    return bcrypt.compareSync(password, this.password);
+  }
+}

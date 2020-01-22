@@ -4,7 +4,6 @@ describe('routes: /oauth2/', () => {
   describe('POST `/api/oauth/token`', () => {
     it('Should `crediential` be required.', async () => {
       const res = await request().post('/api/oauth2/token').send({});
-      console.log(res.body);
       expect(res.status).equals(200);
     });
   });

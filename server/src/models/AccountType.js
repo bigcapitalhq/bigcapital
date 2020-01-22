@@ -1,23 +1,33 @@
-import bookshelf from './bookshelf';
+// import path from 'path';
+import { Model } from 'objection';
+import BaseModel from '@/models/Model';
 
-const AccountType = bookshelf.Model.extend({
-
+export default class AccountType extends BaseModel {
   /**
    * Table name
    */
-  tableName: 'accounts',
+  static get tableName() {
+    return 'account_types';
+  }
 
   /**
-   * Timestamp columns.
+   * Relationship mapping.
    */
-  hasTimestamps: false,
+  static get relationMappings() {
+    const Account = require('@/models/Account');
 
-  /**
-   * Account type may has many associated accounts.
-   */
-  accounts() {
-    return this.hasMany('Account', 'account_type_id');
-  },
-});
-
-export default bookshelf.model('AccountType', AccountType);
+    return {
+      /**
+       * Account type may has many associated accounts.
+       */
+      accounts: {
+        relation: Model.HasManyRelation,
+        modelClass: Account.default,
+        join: {
+          from: 'account_types.id',
+          to: 'accounts.accountTypeId',
+        },
+      },
+    };
+  }
+}

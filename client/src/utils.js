@@ -36,3 +36,5 @@ export const handleClipboard = (text, event) => {
   // })
   // clipboard.onClick(event)
 }
+
+

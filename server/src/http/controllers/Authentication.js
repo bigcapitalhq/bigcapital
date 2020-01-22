@@ -5,8 +5,8 @@ import path from 'path';
 import fs from 'fs';
 import Mustache from 'mustache';
 import jwt from 'jsonwebtoken';
-import User from '@/models/User';
 import asyncMiddleware from '../middleware/asyncMiddleware';
+import User from '@/models/User';
 import PasswordReset from '@/models/PasswordReset';
 import mail from '@/services/mail';
 import { hashPassword } from '@/utils';
@@ -52,10 +52,10 @@ export default {
       const { crediential, password } = req.body;
       const { JWT_SECRET_KEY } = process.env;
 
-      const user = await User.query({
-        where: { email: crediential },
-        orWhere: { phone_number: crediential },
-      }).fetch();
+      const user = await User.query()
+        .where('email', crediential)
+        .orWhere('phone_number', crediential)
+        .first();
 
       if (!user) {
         return res.boom.badRequest(null, {
@@ -67,15 +67,15 @@ export default {
           errors: [{ type: 'INCORRECT_PASSWORD', code: 110 }],
         });
       }
-      if (!user.attributes.active) {
+      if (!user.active) {
         return res.boom.badRequest(null, {
           errors: [{ type: 'USER_INACTIVE', code: 120 }],
         });
       }
-      user.save({ last_login_at: new Date() });
+      // user.update({ last_login_at: new Date() });
 
       const token = jwt.sign({
-        email: user.attributes.email,
+        email: user.email,
         _id: user.id,
       }, JWT_SECRET_KEY, {
         expiresIn: '1d',
@@ -113,7 +113,6 @@ export default {
         email,
         token: '123123',
       });
-
       await passwordReset.save();
 
       const filePath = path.join(__dirname, '../../views/mail/ResetPassword.html');
@@ -166,19 +165,18 @@ export default {
       const { token } = req.params;
       const { password } = req.body;
 
-      const tokenModel = await PasswordReset.query((query) => {
-        query.where({ token });
-        query.where('created_at', '>=', Date.now() - 3600000);
-      }).fetch();
+      const tokenModel = await PasswordReset.query()
+        .where('token', token)
+        .where('created_at', '>=', Date.now() - 3600000)
+        .first();
 
       if (!tokenModel) {
         return res.boom.badRequest(null, {
           errors: [{ type: 'TOKEN_INVALID', code: 100 }],
         });
       }
-
       const user = await User.where({
-        email: tokenModel.attributes.email,
+        email: tokenModel.email,
       });
       if (!user) {
         return res.boom.badRequest(null, {
@@ -187,7 +185,7 @@ export default {
       }
       const hashedPassword = await hashPassword(password);
 
-      user.set('password', hashedPassword);
+      user.password = hashedPassword;
       await user.save();
 
       await PasswordReset.where('email', user.get('email')).destroy({ require: false });

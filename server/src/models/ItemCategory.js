@@ -1,23 +1,31 @@
-import bookshelf from './bookshelf';
+import path from 'path';
+import { Model } from 'objection';
+import BaseModel from '@/models/Model';
 
-const ItemCategory = bookshelf.Model.extend({
+export default class ItemCategory extends BaseModel {
+  /**
+   * Table name.
+   */
+  static get tableName() {
+    return 'items_categories';
+  }
 
   /**
-   * Table name
+   * Relationship mapping.
    */
-  tableName: 'items_categories',
-
-  /**
-   * Timestamp columns.
-   */
-  hasTimestamps: ['created_at', 'updated_at'],
-
-  /**
-   * Item category may has many items.
-   */
-  items() {
-    return this.hasMany('Item', 'category_id');
-  },
-});
-
-export default bookshelf.model('ItemCategory', ItemCategory);
+  static get relationMappings() {
+    return {
+      /**
+       * Item category may has many items.
+       */
+      items: {
+        relation: Model.HasManyRelation,
+        modelBase: path.join(__dirname, 'Item'),
+        join: {
+          from: 'items_categories.item_id',
+          to: 'items.id',
+        },
+      },
+    };
+  }
+}

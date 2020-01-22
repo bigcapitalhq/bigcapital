@@ -1,22 +1,38 @@
-import bookshelf from './bookshelf';
+import { Model } from 'objection';
+import path from 'path';
+import BaseModel from '@/models/Model';
 
-const ViewRole = bookshelf.Model.extend({
+export default class ViewRole extends BaseModel {
   /**
    * Table name.
    */
-  tableName: 'view_roles',
+  static get tableName() {
+    return 'view_roles';
+  }
 
   /**
    * Timestamp columns.
    */
-  hasTimestamps: false,
+  static get hasTimestamps() {
+    return false;
+  }
 
   /**
-   * View role model may belongs to view model.
+   * Relationship mapping.
    */
-  view() {
-    return this.belongsTo('View', 'view_id');
-  },
-});
-
-export default bookshelf.model('ViewRole', ViewRole);
+  static get relationMappings() {
+    return {
+      /**
+       * View role model may belongs to view model.
+       */
+      view: {
+        relation: Model.BelongsToOneRelation,
+        modelBase: path.join(__dirname, 'View'),
+        join: {
+          from: 'view_roles.view_id',
+          to: 'views.id',
+        },
+      },
+    };
+  }
+}

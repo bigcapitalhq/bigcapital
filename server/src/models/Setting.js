@@ -1,34 +1,28 @@
-import bookshelf from './bookshelf';
-import Metable from './Metable';
+import BaseModel from '@/models/Model';
 import Auth from './Auth';
 
-const Setting = bookshelf.Model.extend({
+export default class Setting extends BaseModel {
   /**
    * Table name
    */
-  tableName: 'settings',
+  static get tableName() {
+    return 'settings';
+  }
 
   /**
    * Timestamp columns.
    */
-  hasTimestamps: false,
+  static get hasTimestamps() {
+    return false;
+  }
 
   /**
    * Extra metadata query to query with the current authenticate user.
    * @param {Object} query
    */
-  extraMetadataQuery(query) {
+  static extraMetadataQuery(query) {
     if (Auth.isLogged()) {
       query.where('user_id', Auth.userId());
     }
-  },
-}, {
-  /**
-   * Table name
-   */
-  tableName: 'settings',
-
-  ...Metable,
-});
-
-export default bookshelf.model('Setting', Setting);
+  }
+}

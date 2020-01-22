@@ -1,33 +1,70 @@
-import bookshelf from './bookshelf';
+import path from 'path';
+import { Model } from 'objection';
+import BaseModel from '@/models/Model';
 
-const Resource = bookshelf.Model.extend({
+export default class Resource extends BaseModel {
   /**
    * Table name.
    */
-  tableName: 'resources',
+  static get tableName() {
+    return 'resources';
+  }
 
   /**
    * Timestamp columns.
    */
-  hasTimestamps: false,
+  static get hasTimestamps() {
+    return false;
+  }
 
   /**
-   * Resource model may has many views.
+   * Relationship mapping.
    */
-  views() {
-    return this.hasMany('View', 'resource_id');
-  },
+  static get relationMappings() {
+    const View = require('@/models/View');
+    const ResourceField = require('@/models/ResourceField');
+    const Permission = require('@/models/Permission');
 
-  /**
-   * Resource model may has many fields.
-   */
-  fields() {
-    return this.hasMany('ResourceField', 'resource_id');
-  },
+    return {
+      /**
+       * Resource model may has many views.
+       */
+      views: {
+        relation: Model.HasManyRelation,
+        modelClass: View.default,
+        join: {
+          from: 'resources.id',
+          to: 'views.resourceId',
+        },
+      },
 
-  permissions() {
-    return this.belongsToMany('Permission', 'role_has_permissions', 'resource_id', 'permission_id');
-  },
-});
+      /**
+       * Resource model may has many fields.
+       */
+      fields: {
+        relation: Model.HasManyRelation,
+        modelClass: ResourceField.default,
+        join: {
+          from: 'resources.id',
+          to: 'resource_fields.resourceId',
+        },
+      },
 
-export default bookshelf.model('Resource', Resource);
+      /**
+       * Resource model may has many associated permissions.
+       */
+      permissions: {
+        relation: Model.ManyToManyRelation,
+        modelClass: Permission.default,
+        join: {
+          from: 'resources.id',
+          through: {
+            from: 'role_has_permissions.resourceId',
+            to: 'role_has_permissions.permissionId',
+          },
+          to: 'permissions.id',
+        },
+      },
+    };
+  }
+}

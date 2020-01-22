@@ -1,34 +1,81 @@
-import bookshelf from './bookshelf';
+/* eslint-disable global-require */
+import { Model } from 'objection';
+import { flatten } from 'lodash';
+import BaseModel from '@/models/Model';
 
-const Account = bookshelf.Model.extend({
+export default class Account extends BaseModel {
   /**
    * Table name
    */
-  tableName: 'accounts',
+  static get tableName() {
+    return 'accounts';
+  }
 
   /**
-   * Timestamp columns.
+   * Model modifiers.
    */
-  hasTimestamps: ['created_at', 'updated_at'],
+  static get modifiers() {
+    return {
+      filterAccountTypes(query, typesIds) {
+        if (typesIds.length > 0) {
+          query.whereIn('accoun_type_id', typesIds);
+        }
+      },
+    };
+  }
 
   /**
-   * Account model may belongs to account type.
+   * Relationship mapping.
    */
-  type() {
-    return this.belongsTo('AccountType', 'account_type_id');
-  },
+  static get relationMappings() {
+    const AccountType = require('@/models/AccountType');
+    const AccountBalance = require('@/models/AccountBalance');
+    const AccountTransaction = require('@/models/AccountTransaction');
 
-  /**
-   * Account model may has many balances accounts.
-   */
-  balances() {
-    return this.hasMany('AccountBalance', 'account_id');
-  },
-}, {
-  /**
-   * Cascade delete dependents.
-   */
-  dependents: ['balances'],
-});
+    return {
+      /**
+       * Account model may belongs to account type.
+       */
+      type: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: AccountType.default,
+        join: {
+          from: 'accounts.accountTypeId',
+          to: 'account_types.id',
+        },
+      },
 
-export default bookshelf.model('Account', Account);
+      /**
+       * Account model may has many balances accounts.
+       */
+      balance: {
+        relation: Model.HasOneRelation,
+        modelClass: AccountBalance.default,
+        join: {
+          from: 'accounts.id',
+          to: 'account_balances.accountId',
+        },
+      },
+
+      /**
+       * Account model may has many transactions.
+       */
+      transactions: {
+        relation: Model.HasManyRelation,
+        modelClass: AccountTransaction.default,
+        join: {
+          from: 'accounts.id',
+          to: 'accounts_transactions.accountId',
+        },
+      },
+    };
+  }
+
+  static collectJournalEntries(accounts) {
+    return flatten(accounts.map((account) => account.transactions.map((transaction) => ({
+      accountId: account.id,
+      ...transaction,
+      accountNormal: account.type.normal,
+    }))));
+  }
+}

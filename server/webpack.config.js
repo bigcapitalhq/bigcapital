@@ -31,17 +31,17 @@ module.exports = {
   },
   module: {
     rules: [
-      {
-        test: /\.(js)$/,
-        loader: 'eslint-loader',
-        enforce: 'pre',
-        include: [resolve('src'), resolve('test')],
-        options: {
-          // eslint-disable-next-line global-require
-          formatter: require('eslint-friendly-formatter'),
-          // emitWarning: !config.dev.showEslintErrorsInOverlay
-        },
-      },
+      // {
+      //   test: /\.(js)$/,
+      //   loader: 'eslint-loader',
+      //   enforce: 'pre',
+      //   include: [resolve('src'), resolve('test')],
+      //   options: {
+      //     // eslint-disable-next-line global-require
+      //     formatter: require('eslint-friendly-formatter'),
+      //     // emitWarning: !config.dev.showEslintErrorsInOverlay
+      //   },
+      // },
       {
         use: 'babel-loader',
         exclude: /(node_modules)/,

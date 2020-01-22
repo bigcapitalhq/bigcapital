@@ -1,37 +1,53 @@
 import { snakeCase } from 'lodash';
-import bookshelf from './bookshelf';
+import { Model } from 'objection';
+import path from 'path';
+import BaseModel from '@/models/Model';
 
-const ResourceField = bookshelf.Model.extend({
+export default class ResourceField extends BaseModel {
   /**
    * Table name.
    */
-  tableName: 'resource_fields',
+  static get tableName() {
+    return 'resource_fields';
+  }
 
   /**
    * Timestamp columns.
    */
-  hasTimestamps: false,
-
-  virtuals: {
-    /**
-     * Resource field key.
-     */
-    key() {
-      return snakeCase(this.attributes.label_name);
-    },
-  },
+  static get hasTimestamps() {
+    return false;
+  }
 
   /**
-   * Resource field may belongs to resource model.
+   * Virtual attributes.
    */
-  resource() {
-    return this.belongsTo('Resource', 'resource_id');
-  },
-}, {
-  /**
-   * JSON Columns.
-   */
-  jsonColumns: ['options'],
-});
+  static get virtualAttributes() {
+    return ['key'];
+  }
 
-export default bookshelf.model('ResourceField', ResourceField);
+  /**
+   * Resource field key.
+   */
+  key() {
+    return snakeCase(this.labelName);
+  }
+
+  /**
+   * Relationship mapping.
+   */
+  static get relationMappings() {
+    return {
+      /**
+       * Resource field may belongs to resource model.
+       */
+      resource: {
+        relation: Model.BelongsToOneRelation,
+        modelBase: path.join(__dirname, 'Resource'),
+        join: {
+          from: 'resource_fields.resource_id',
+          to: 'resources.id',
+        },
+      },
+    };
+  }
+}

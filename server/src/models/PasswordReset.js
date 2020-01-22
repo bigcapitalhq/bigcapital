@@ -1,16 +1,10 @@
-import bookshelf from './bookshelf';
+import Model from '@/models/Model';
 
-const PasswordResets = bookshelf.Model.extend({
-
+export default class PasswordResets extends Model {
   /**
    * Table name
    */
-  tableName: 'password_resets',
-
-  /**
-   * Timestamp columns.
-   */
-  hasTimestamps: false,
-});
-
-export default bookshelf.model('PasswordResets', PasswordResets);
+  static get tableName() {
+    return 'password_resets';
+  }
+}

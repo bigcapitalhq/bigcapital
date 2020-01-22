@@ -18,41 +18,38 @@ const AccessControllSchema = [
   },
 ];
 
-// eslint-disable-next-line arrow-body-style
-const getResourceSchema = (resource) => AccessControllSchema.find((schema) => {
-  return schema.resource === resource;
-});
+const getResourceSchema = (resource) => AccessControllSchema
+  .find((schema) => schema.resource === resource);
 
 const getResourcePermissions = (resource) => {
   const foundResource = getResourceSchema(resource);
   return foundResource ? foundResource.permissions : [];
 };
 
+const findNotFoundResources = (resourcesSlugs) => {
+  const schemaResourcesSlugs = AccessControllSchema.map((s) => s.resource);
+  return difference(resourcesSlugs, schemaResourcesSlugs);
+};
+
+const findNotFoundPermissions = (permissions, resourceSlug) => {
+  const schemaPermissions = getResourcePermissions(resourceSlug);
+  return difference(permissions, schemaPermissions);
+};
+
 export default {
-
-  findNotFoundResources(resourcesSlugs) {
-    const schemaResourcesSlugs = AccessControllSchema.map((s) => s.resource);
-    return difference(resourcesSlugs, schemaResourcesSlugs);
-  },
-
-  findNotFoundPermissions(permissions, resourceSlug) {
-    const schemaPermissions = getResourcePermissions(resourceSlug);
-    return difference(permissions, schemaPermissions);
-  },
-
   /**
    * Router constructor method.
    */
   router() {
     const router = express.Router();
 
+    router.post('/',
+      this.newRole.validation,
+      asyncMiddleware(this.newRole.handler));
+
     router.post('/:id',
       this.editRole.validation,
       asyncMiddleware(this.editRole.handler.bind(this)));
-
-    // router.post('/',
-    //   this.newRole.validation,
-    //   asyncMiddleware(this.newRole.handler));
 
     router.delete('/:id',
       this.deleteRole.validation,
@@ -80,32 +77,30 @@ export default {
           code: 'validation_error', ...validationErrors,
         });
       }
-
       const { name, description, permissions } = req.body;
 
       const resourcesSlugs = permissions.map((perm) => perm.resource_slug);
       const permissionsSlugs = [];
+      const resourcesNotFound = findNotFoundResources(resourcesSlugs);
 
-      const resourcesNotFound = this.findNotFoundResources(resourcesSlugs);
       const errorReasons = [];
       const notFoundPermissions = [];
 
       if (resourcesNotFound.length > 0) {
         errorReasons.push({
-          type: 'RESOURCE_SLUG_NOT_FOUND',
-          code: 100,
-          resources: resourcesNotFound,
+          type: 'RESOURCE_SLUG_NOT_FOUND', code: 100, resources: resourcesNotFound,
         });
       }
       permissions.forEach((perm) => {
         const abilities = perm.permissions.map((ability) => ability);
 
         // Gets the not found permissions in the schema.
-        const notFoundAbilities = this.findNotFoundPermissions(abilities, perm.resource_slug);
-
+        const notFoundAbilities = findNotFoundPermissions(abilities, perm.resource_slug);
+        
         if (notFoundAbilities.length > 0) {
           notFoundPermissions.push({
-            resource_slug: perm.resource_slug, permissions: notFoundAbilities,
+            resource_slug: perm.resource_slug,
+            permissions: notFoundAbilities,
           });
         } else {
           const perms = perm.permissions || [];
@@ -217,7 +212,7 @@ export default {
       const notFoundPermissions = [];
 
       const resourcesSlugs = permissions.map((perm) => perm.resource_slug);
-      const resourcesNotFound = this.findNotFoundResources(resourcesSlugs);
+      const resourcesNotFound = findNotFoundResources(resourcesSlugs);
 
       if (resourcesNotFound.length > 0) {
         errorReasons.push({
@@ -230,7 +225,7 @@ export default {
       permissions.forEach((perm) => {
         const abilities = perm.permissions.map((ability) => ability);
         // Gets the not found permissions in the schema.
-        const notFoundAbilities = this.findNotFoundPermissions(abilities, perm.resource_slug);
+        const notFoundAbilities = findNotFoundPermissions(abilities, perm.resource_slug);
 
         if (notFoundAbilities.length > 0) {
           notFoundPermissions.push({

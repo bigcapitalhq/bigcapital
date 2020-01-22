@@ -3,12 +3,14 @@ import { difference } from 'lodash';
 import Role from '@/models/Role';
 
 export default {
-
   cacheKey: 'ratteb.cache,',
   cacheExpirationTime: null,
   permissions: [],
   cache: null,
 
+  /**
+   * Initialize the cache.
+   */
   initializeCache() {
     if (!this.cache) {
       this.cache = new cache.Cache();

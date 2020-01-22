@@ -70,19 +70,17 @@ export default {
           code: 'validation_error', ...validationErrors,
         });
       }
-
-      const { sell_account_id: sellAccountId, cost_account_id: costAccountId } = req.body;
-      const { category_id: categoryId, custom_fields: customFields } = req.body;
+      const form = { ...req.body };
       const errorReasons = [];
 
-      const costAccountPromise = Account.where('id', costAccountId).fetch();
-      const sellAccountPromise = Account.where('id', sellAccountId).fetch();
-      const itemCategoryPromise = (categoryId)
-        ? ItemCategory.where('id', categoryId).fetch() : null;
+      const costAccountPromise = Account.where('id', form.cost_account_id).fetch();
+      const sellAccountPromise = Account.where('id', form.sell_account_id).fetch();
+      const itemCategoryPromise = (form.category_id)
+        ? ItemCategory.where('id', form.category_id).fetch() : null;
 
       // Validate the custom fields key and value type.
-      if (customFields.length > 0) {
-        const customFieldsKeys = customFields.map((field) => field.key);
+      if (form.custom_fields.length > 0) {
+        const customFieldsKeys = form.custom_fields.map((field) => field.key);
 
         // Get resource id than get all resource fields.
         const resource = await Resource.where('name', 'items').fetch();
@@ -110,13 +108,12 @@ export default {
       if (!sellAccount) {
         errorReasons.push({ type: 'SELL_ACCOUNT_NOT_FOUND', code: 120 });
       }
-      if (!itemCategory && categoryId) {
+      if (!itemCategory && form.category_id) {
         errorReasons.push({ type: 'ITEM_CATEGORY_NOT_FOUND', code: 140 });
       }
       if (errorReasons.length > 0) {
         return res.boom.badRequest(null, { errors: errorReasons });
       }
-
       const item = Item.forge({
         name: req.body.name,
         type_id: 1,

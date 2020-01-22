@@ -1,38 +1,67 @@
-import bookshelf from './bookshelf';
+import path from 'path';
+import { Model } from 'objection';
+import BaseModel from '@/models/Model';
 
-const View = bookshelf.Model.extend({
+export default class View extends BaseModel {
   /**
    * Table name.
    */
-  tableName: 'views',
+  static get tableName() {
+    return 'views';
+  }
 
   /**
-   * Timestamp columns.
+   * Relationship mapping.
    */
-  hasTimestamps: false,
+  static get relationMappings() {
+    return {
+      /**
+       * View model belongs to resource model.
+       */
+      resource: {
+        relation: Model.BelongsToOneRelation,
+        modelBase: path.join(__dirname, 'Resource'),
+        join: {
+          from: 'views.resource_id',
+          to: 'resources.id',
+        },
+      },
 
-  /**
-   * View model belongs to resource model.
-   */
-  resource() {
-    return this.belongsTo('Resource', 'resource_id');
-  },
+      /**
+       * View model may has many columns.
+       */
+      // columns: {
+      //   relation: Model.ManyToManyRelation,
+      //   modelBase: path.join(__dirname, 'ResourceField'),
+      //   join: {
+      //     from: 'id',
+      //     through: {
+      //       from: 'view_has_columns.view_id',
+      //       to: 'view_has_columns.field_id',
+      //     },
+      //     to: 'resource_fields.view_id',
+      //   }
+      // }
 
-  /**
-   * View model may has many columns.
-   */
-  columns() {
-    return this.belongsToMany('ResourceField', 'view_has_columns', 'view_id', 'field_id');
-  },
+      /**
+       * View model may has many view roles.
+       */
+      viewRoles: {
+        relation: Model.HasManyRelation,
+        modelBase: path.join(__dirname, 'ViewRole'),
+        join: {
+          from: 'views.id',
+          to: 'view_id',
+        },
+      },
+    };
+  }
 
-  /**
-   * View model may has many view roles.
-   */
-  viewRoles() {
-    return this.hasMany('ViewRole', 'view_id');
-  },
-}, {
-  dependents: ['columns', 'viewRoles'],
-});
+  // columns() {
+  //   return this.belongsToMany('ResourceField', 'view_has_columns', 'view_id', 'field_id');
+  // },
 
-export default bookshelf.model('View', View);
+  // viewRoles() {
+  //   return this.hasMany('ViewRole', 'view_id');
+  // },
+}

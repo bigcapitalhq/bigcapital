@@ -36,16 +36,7 @@ export default {
   setExtraColumns(columns) {
     this.extraColumns = columns;
   },
-
-  /**
-   * Retrieve the cache namespace.
-   */
-  getCacheNamespace() {
-    const { metadataCacheNamespace: cacheName } = this;
-    return typeof cacheName === 'function'
-      ? cacheName() : cacheName;
-  },
-
+ 
   /**
    * Metadata database query.
    * @param {Object} query -
@@ -126,7 +117,7 @@ export default {
       metadata.markAsDeleted = true;
     }
     this.shouldReload = true;
-  },
+  
 
   /**
    * Remove all meta data of the given group.

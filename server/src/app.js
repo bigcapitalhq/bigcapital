@@ -3,6 +3,7 @@ import helmet from 'helmet';
 import boom from 'express-boom';
 import '../config';
 import routes from '@/http';
+import '@/models';
 
 const app = express();
 

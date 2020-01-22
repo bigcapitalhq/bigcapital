@@ -1,6 +1,6 @@
-MYSQL_USER="moosher"
-MYSQL_DATABASE="moosher"
-MYSQL_CONTAINER_NAME="moosher_test"
+MYSQL_USER="ratteb"
+MYSQL_DATABASE="ratteb"
+MYSQL_CONTAINER_NAME="ratteb_test"
 
 MYSQL_ROOT_PASSWORD="root"
 MYSQL_PASSWORD="root"

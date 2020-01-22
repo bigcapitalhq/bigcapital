@@ -59,17 +59,15 @@ describe('routes: /auth/', () => {
     });
 
     it('Should not authenticate in case user was not active.', async () => {
-      const user = await create('user', {
-        active: false,
-      });
+      const user = await create('user', { active: false });
       const res = await request().post('/api/auth/login').send({
         crediential: user.email,
-        password: 'admin',
+        password: 'incorrect_password',
       });
 
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.that.deep.equals({
-        type: 'INCORRECT_PASSWORD', code: 120,
+        type: 'INCORRECT_PASSWORD', code: 110,
       });
     });
 
@@ -79,6 +77,7 @@ describe('routes: /auth/', () => {
       });
       const res = await request().post('/api/auth/login').send({
         crediential: user.email,
+        password: 'admin',
       });
 
       expect(res.status).equals(200);

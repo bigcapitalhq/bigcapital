@@ -1,21 +1,29 @@
-import bookshelf from './bookshelf';
+import { Model } from 'objection';
+import BaseModel from '@/models/Model';
 
-const AccountBalance = bookshelf.Model.extend({
-
+export default class AccountBalance extends BaseModel {
   /**
    * Table name
    */
-  tableName: 'account_balance',
+  static get tableName() {
+    return 'account_balances';
+  }
 
   /**
-   * Timestamp columns.
+   * Relationship mapping.
    */
-  hasTimestamps: false,
+  static get relationMappings() {
+    const Account = require('@/models/Account');
 
-
-  account() {
-    return this.belongsTo('Account', 'account_id');
-  },
-});
-
-export default bookshelf.model('AccountBalance', AccountBalance);
+    return {
+      account: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Account.default,
+        join: {
+          from: 'account_balance.account_id',
+          to: 'accounts.id',
+        },
+      },
+    };
+  }
+}

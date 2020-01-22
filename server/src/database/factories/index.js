@@ -27,14 +27,49 @@ factory.define('password_reset', 'password_resets', async () => {
 
 factory.define('account_type', 'account_types', async () => ({
   name: faker.lorem.words(2),
+  normal: 'debit',
 }));
+
+factory.define('account_balance', 'account_balances', async () => {
+  const account = await factory.create('account');
+
+  return {
+    account_id: account.id,
+    amount: faker.random.number(),
+    currency_code: 'USD',
+  };
+});
 
 factory.define('account', 'accounts', async () => {
   const accountType = await factory.create('account_type');
   return {
     name: faker.lorem.word(),
+    code: faker.random.number(),
     account_type_id: accountType.id,
     description: faker.lorem.paragraph(),
+  };
+});
+
+factory.define('account_transaction', 'accounts_transactions', async () => {
+  const account = await factory.create('account');
+  const user = await factory.create('user');
+
+  return {
+    account_id: account.id,
+    credit: faker.random.number(),
+    debit: 0,
+    user_id: user.id,
+  };
+});
+
+factory.define('manual_journal', 'manual_journals', async () => {
+  const user = await factory.create('user');
+
+  return {
+    reference: faker.random.number(),
+    amount: faker.random.number(),
+    // date: faker.random,
+    user_id: user.id,
   };
 });
 
@@ -135,11 +170,13 @@ factory.define('resource_field', 'resource_fields', async () => {
 
   return {
     label_name: faker.lorem.words(),
+    slug: faker.lorem.slug(),
     data_type: dataTypes[Math.floor(Math.random() * dataTypes.length)],
     help_text: faker.lorem.words(),
     default: faker.lorem.word(),
     resource_id: resource.id,
     active: true,
+    columnable: true,
     predefined: false,
   };
 });
@@ -164,6 +201,49 @@ factory.define('view_has_columns', 'view_has_columns', async () => {
   return {
     field_id: field.id,
     view_id: view.id,
+  };
+});
+
+factory.define('expense', 'expenses', async () => {
+  const paymentAccount = await factory.create('account');
+  const expenseAccount = await factory.create('account');
+  const user = await factory.create('user');
+
+  return {
+    payment_account_id: paymentAccount.id,
+    expense_account_id: expenseAccount.id,
+    user_id: user.id,
+    amount: faker.random.number(),
+    currency_code: 'USD',
+  };
+});
+
+factory.define('option', 'options', async () => {
+  return {
+    key: faker.lorem.slug(),
+    value: faker.lorem.slug(),
+    group: faker.lorem.slug(),
+  };
+});
+
+factory.define('budget', 'budgets', async () => {
+  return {
+    name: faker.lorem.slug(),
+    fiscal_year: '2020',
+    period: 'month',
+    account_types: 'profit_loss',
+  };
+});
+
+factory.define('budget_entry', 'budget_entries', async () => {
+  const budget = await factory.create('budget');
+  const account = await factory.create('account');
+
+  return {
+    account_id: account.id,
+    budget_id: budget.id,
+    amount: 1000,
+    order: 1,
   };
 });
 

@@ -1,8 +1,9 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import chaiThings from 'chai-things';
-import app from '@/app';
 import knex from '@/database/knex';
+import '@/models';
+import app from '@/app';
 import factory from '@/database/factories';
 // import { hashPassword } from '@/utils';
 

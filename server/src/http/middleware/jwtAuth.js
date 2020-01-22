@@ -25,7 +25,7 @@ const authMiddleware = (req, res, next) => {
         reject(error);
       } else {
         // eslint-disable-next-line no-underscore-dangle
-        req.user = await User.where('id', decoded._id).fetch();
+        req.user = await User.query().findById(decoded._id);
         // Auth.setAuthenticatedUser(req.user);
 
         if (!req.user) {

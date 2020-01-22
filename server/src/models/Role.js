@@ -1,38 +1,78 @@
-import bookshelf from './bookshelf';
+import { Model } from 'objection';
+import BaseModel from '@/models/Model';
 
-const Role = bookshelf.Model.extend({
-
+export default class Role extends BaseModel {
   /**
    * Table name of Role model.
    * @type {String}
    */
-  tableName: 'roles',
+  static get tableName() {
+    return 'roles';
+  }
 
   /**
    * Timestamp columns.
    */
-  hasTimestamps: false,
+  static get hasTimestamps() {
+    return false;
+  }
 
   /**
-   * Role may has many permissions.
+   * Relationship mapping.
    */
-  permissions() {
-    return this.belongsToMany('Permission', 'role_has_permissions', 'role_id', 'permission_id');
-  },
+  static get relationMappings() {
+    const Permission = require('@/models/Permission');
+    const Resource = require('@/models/Resource');
+    const User = require('@/models/User');
 
-  /**
-   * Role may has many resources.
-   */
-  resources() {
-    return this.belongsToMany('Resource', 'role_has_permissions', 'role_id', 'resource_id');
-  },
+    return {
+      /**
+       * Role may has many permissions.
+       */
+      permissions: {
+        relation: Model.ManyToManyRelation,
+        modelClass: Permission.default,
+        join: {
+          from: 'roles.id',
+          through: {
+            from: 'role_has_permissions.roleId',
+            to: 'role_has_permissions.permissionId',
+          },
+          to: 'permissions.id',
+        },
+      },
 
-  /**
-   * Role model may has many users.
-   */
-  users() {
-    return this.belongsToMany('User', 'user_has_roles');
-  },
-});
+      /**
+       * Role may has many resources.
+       */
+      resources: {
+        relation: Model.ManyToManyRelation,
+        modelClass: Resource.default,
+        join: {
+          from: 'roles.id',
+          through: {
+            from: 'role_has_permissions.roleId',
+            to: 'role_has_permissions.resourceId',
+          },
+          to: 'resources.id',
+        },
+      },
 
-export default bookshelf.model('Role', Role);
+      /**
+       * Role may has many associated users.
+       */
+      users: {
+        relation: Model.ManyToManyRelation,
+        modelClass: User.default,
+        join: {
+          from: 'roles.id',
+          through: {
+            from: 'user_has_roles.roleId',
+            to: 'user_has_roles.userId',
+          },
+          to: 'users.id',
+        },
+      },
+    };
+  }
+}

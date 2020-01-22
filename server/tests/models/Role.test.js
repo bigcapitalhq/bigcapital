@@ -6,10 +6,10 @@ import '@/models/Resource';
 describe('Model: Role', () => {
   it('Role model may has many associated users', async () => {
     const userHasRole = await create('user_has_role');
-    await create('user_has_role', { role_id: userHasRole.role_id });
+    await create('user_has_role', { role_id: userHasRole.roleId });
 
-    const roleModel = await Role.where('id', userHasRole.role_id).fetch();
-    const roleUsers = await roleModel.users().fetch();
+    const roleModel = await Role.query().findById(userHasRole.roleId);
+    const roleUsers = await roleModel.$relatedQuery('users');
 
     expect(roleUsers).to.have.lengthOf(2);
   });
@@ -17,8 +17,8 @@ describe('Model: Role', () => {
   it('Role model may has many associated permissions.', async () => {
     const roleHasPermissions = await create('role_has_permission');
 
-    const roleModel = await Role.where('id', roleHasPermissions.role_id).fetch();
-    const rolePermissions = await roleModel.permissions().fetch();
+    const roleModel = await Role.query().findById(roleHasPermissions.roleId);
+    const rolePermissions = await roleModel.$relatedQuery('permissions');
 
     expect(rolePermissions).to.have.lengthOf(1);
   });
@@ -26,8 +26,8 @@ describe('Model: Role', () => {
   it('Role model may has many associated resources that has some or all permissions.', async () => {
     const roleHasPermissions = await create('role_has_permission');
 
-    const roleModel = await Role.where('id', roleHasPermissions.role_id).fetch();
-    const roleResources = await roleModel.resources().fetch();
+    const roleModel = await Role.query().findById(roleHasPermissions.roleId);
+    const roleResources = await roleModel.$relatedQuery('resources');
 
     expect(roleResources).to.have.lengthOf(1);
   });

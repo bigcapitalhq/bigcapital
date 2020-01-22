@@ -8,8 +8,8 @@ describe('Model: AccountType', () => {
     await create('account', { account_type_id: accountType.id });
     await create('account', { account_type_id: accountType.id });
 
-    const accountTypeModel = await AccountType.where('id', accountType.id).fetch();
-    const typeAccounts = await accountTypeModel.accounts().fetch();
+    const accountTypeModel = await AccountType.query().where('id', accountType.id).first();
+    const typeAccounts = await accountTypeModel.$relatedQuery('accounts');
 
     expect(typeAccounts.length).equals(2);
   });

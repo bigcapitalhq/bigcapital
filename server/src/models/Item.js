@@ -1,34 +1,43 @@
-import bookshelf from './bookshelf';
+import { Model } from 'objection';
+import path from 'path';
+import BaseModel from '@/models/Model';
 
-const Item = bookshelf.Model.extend({
+export default class Item extends BaseModel {
   /**
    * Table name
    */
-  tableName: 'items',
+  static get tableName() {
+    return 'items';
+  }
 
   /**
-   * Timestamp columns.
+   * Relationship mapping.
    */
-  hasTimestamps: false,
+  static get relationMappings() {
+    return {
+      /**
+       * Item may has many meta data.
+       */
+      metadata: {
+        relation: Model.HasManyRelation,
+        modelBase: path.join(__dirname, 'ItemMetadata'),
+        join: {
+          from: 'items.id',
+          to: 'items_metadata.item_id',
+        },
+      },
 
-  /**
-   * Item may has many meta data.
-   */
-  metadata() {
-    return this.hasMany('ItemMetadata', 'item_id');
-  },
-
-  /**
-   * Item may belongs to the item category.
-   */
-  category() {
-    return this.belongsTo('ItemCategory', 'category_id');
-  },
-}, {
-  /**
-   * Cascade delete dependents.
-   */
-  dependents: ['ItemMetadata'],
-});
-
-export default bookshelf.model('Item', Item);
+      /**
+       * Item may belongs to cateogory model.
+       */
+      category: {
+        relation: Model.BelongsToOneRelation,
+        modelBase: path.join(__dirname, 'ItemCategory'),
+        join: {
+          from: 'items.categoryId',
+          to: 'items_categories.id',
+        },
+      },
+    };
+  }
+}
