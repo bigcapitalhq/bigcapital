@@ -11,6 +11,21 @@ export default class ResourceField extends BaseModel {
     return 'resource_fields';
   }
 
+  static get jsonAttributes() {
+    return ['options'];
+  }
+
+  /**
+   * Model modifiers.
+   */
+  static get modifiers() {
+    return {
+      whereNotPredefined(query) {
+        query.whereNot('predefined', true);
+      },
+    };
+  }
+
   /**
    * Timestamp columns.
    */

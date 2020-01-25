@@ -50,13 +50,9 @@ export default {
       this.profitLossSheet.validation,
       asyncMiddleware(this.profitLossSheet.handler));
 
-    // router.get('/cash_flow_statement',
-    //   this.cashFlowStatement.validation,
-    //   asyncMiddleware(this.cashFlowStatement.handler));
-
-    // router.get('/badget_verses_actual',
-    //   this.badgetVersesActuals.validation,
-    //   asyncMiddleware(this.badgetVersesActuals.handler));
+    router.get('/cash_flow_statement',
+      this.cashFlowStatement.validation,
+      asyncMiddleware(this.cashFlowStatement.handler));
 
     return router;
   },
@@ -510,17 +506,12 @@ export default {
     ],
     async handler(req, res) {
       
-      return res.status(200).send();
-    },
-  },
-
-
-  badgetVersesActuals: {
-    validation: [
-
-    ],
-    async handler(req, res) {
-
+      return res.status(200).send({
+        meta: {},
+        operating: [],
+        financing: [],
+        investing: [],
+      });
     },
   },
 }

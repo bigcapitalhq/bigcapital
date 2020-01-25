@@ -16,6 +16,7 @@ import JWTAuth from '@/http/middleware/jwtAuth';
 import AccountTransaction from '@/models/AccountTransaction';
 import View from '@/models/View';
 import Resource from '../../models/Resource';
+import ResourceCustomFieldRepository from '@/services/CustomFields/ResourceCustomFieldRepository';
 
 export default {
   /**
@@ -28,6 +29,10 @@ export default {
     router.post('/',
       this.newExpense.validation,
       asyncMiddleware(this.newExpense.handler));
+
+    router.post('/:id/publish',
+      this.publishExpense.validation,
+      asyncMiddleware(this.publishExpense.handler));
 
     router.delete('/:id',
       this.deleteExpense.validation,
@@ -60,6 +65,10 @@ export default {
       check('amount').exists().isNumeric().toFloat(),
       check('currency_code').optional(),
       check('exchange_rate').optional().isNumeric().toFloat(),
+      check('publish').optional().isBoolean().toBoolean(),
+      check('custom_fields').optional().isArray({ min: 1 }),
+      check('custom_fields.*.key').exists().trim().escape(),
+      check('custom_fields.*.value').exists(),
     ],
     async handler(req, res) {
       const validationErrors = validationResult(req);
@@ -71,6 +80,7 @@ export default {
       }
       const form = {
         date: new Date(),
+        published: false,
         ...req.body,
       };
       // Convert the date to the general format.
@@ -83,16 +93,23 @@ export default {
       if (!paymentAccount) {
         errorReasons.push({ type: 'PAYMENT.ACCOUNT.NOT.FOUND', code: 100 });
       }
-      const expenseAccount = await Account.query()
-        .findById(form.expense_account_id).first();
+      const expenseAccount = await Account.query().findById(form.expense_account_id).first();
 
       if (!expenseAccount) {
         errorReasons.push({ type: 'EXPENSE.ACCOUNT.NOT.FOUND', code: 200 });
       }
+      const customFields = new ResourceCustomFieldRepository('Expense');
+      await customFields.load();
+
+      customFields.fillCustomFields(form.custom_fields);
+
+      if (customFields.validateExistCustomFields()) {
+        errorReasons.push({ type: 'CUSTOM.FIELDS.SLUGS.NOT.EXISTS', code: 400 });
+      }
       if (errorReasons.length > 0) {
         return res.status(400).send({ errors: errorReasons });
       }
-      const expenseTransaction = await Expense.query().insert({ ...form });
+      const expenseTransaction = await Expense.query().insertAndFetch({ ...form });
 
       const journalEntries = new JournalPoster();
       const creditEntry = new JournalEntry({
@@ -102,6 +119,7 @@ export default {
         date: form.date,
         account: expenseAccount.id,
         accountNormal: 'debit',
+        draft: !form.published,
       });
       const debitEntry = new JournalEntry({
         debit: form.amount,
@@ -110,11 +128,13 @@ export default {
         date: form.date,
         account: paymentAccount.id,
         accountNormal: 'debit',
+        draft: !form.published,
       });
       journalEntries.credit(creditEntry);
       journalEntries.debit(debitEntry);
 
       await Promise.all([
+        customFields.saveCustomFields(expenseTransaction.id),
         journalEntries.saveEntries(),
         journalEntries.saveBalance(),
       ]);
@@ -222,6 +242,55 @@ export default {
   },
 
   /**
+   * Publish the given expense id.
+   */
+  publishExpense: {
+    validation: [
+      param('id').exists().isNumeric().toInt(),
+    ],
+    async handler(req, res) {
+      const validationErrors = validationResult(req);
+
+      if (!validationErrors.isEmpty()) {
+        return res.boom.badData(null, {
+          code: 'validation_error', ...validationErrors,
+        });
+      }
+
+      const { id } = req.params;
+      const errorReasons = [];
+      const expense = await Expense.query().findById(id);
+
+      if (!expense) {
+        errorReasons.push({ type: 'EXPENSE.NOT.FOUND', code: 100 });
+      }
+      if (errorReasons.length > 0) {
+        return res.status(400).send({ errors: errorReasons });
+      }
+
+      if (expense.published) {
+        errorReasons.push({ type: 'EXPENSE.ALREADY.PUBLISHED', code: 200 });
+      }
+      if (errorReasons.length > 0) {
+        return res.status(400).send({ errors: errorReasons });
+      }
+
+      await AccountTransaction.query()
+        .where('reference_id', expense.id)
+        .where('reference_type', 'Expense')
+        .patch({
+          draft: false,
+        });
+
+      await Expense.query()
+        .where('id', expense.id)
+        .update({ published: true });
+
+      return res.status(200).send();
+    },
+  },
+
+  /**
    * Retrieve paginated expenses list.
    */
   listExpenses: {
@@ -324,7 +393,7 @@ export default {
       expenseEntriesCollect.reverseEntries();
 
       await Promise.all([
-        expenseTransaction.delete(),
+        Expense.query().findById(expenseTransaction.id).delete(),
         expenseEntriesCollect.deleteEntries(),
         expenseEntriesCollect.saveBalance(),
       ]);

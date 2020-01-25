@@ -9,6 +9,7 @@ exports.up = function(knex) {
     table.integer('expense_account_id').unsigned().references('id').inTable('accounts');
     table.integer('payment_account_id').unsigned().references('id').inTable('accounts');
     table.string('reference');
+    table.boolean('published').defaultTo(false);
     table.integer('user_id').unsigned().references('id').inTable('users');
     table.date('date');
     // table.timestamps();

@@ -10,6 +10,7 @@ exports.up = function (knex) {
     table.boolean('active');
     table.boolean('predefined');
     table.boolean('columnable');
+    table.integer('index');
     table.json('options');
     table.integer('resource_id').unsigned().references('id').inTable('resources');
   });

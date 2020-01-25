@@ -28,7 +28,7 @@ export default (app) => {
   app.use('/api/roles', Roles.router());
   app.use('/api/accounts', Accounts.router());
   app.use('/api/accounting', Accounting.router());
-  app.use('/api/accounts_opeing_balance', AccountOpeningBalance.router());
+  app.use('/api/accounts_opening_balances', AccountOpeningBalance.router());
   app.use('/api/views', Views.router());
   app.use('/api/fields', CustomFields.router());
   app.use('/api/items', Items.router());

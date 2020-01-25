@@ -247,7 +247,7 @@ describe('routes: `/budget`', () => {
     });
   });
 
-  describe.only('GET: `/budget`', () => {
+  describe('GET: `/budget`', () => {
     it('Should retrieve all budgets with pagination metadata.', async () => {
       const res = await request()
         .get('/api/budget')

@@ -69,7 +69,6 @@ export default {
           errors: [{ type: 'budget.not.found', code: 100 }],
         });
       }
-
       const accountTypes = await AccountType.query().where('balance_sheet', true);
 
       const [budgetEntries, accounts] = await Promise.all([
@@ -211,6 +210,7 @@ export default {
       query('profit_loss').optional().isBoolean().toBoolean(),
       query('page').optional().isNumeric().toInt(),
       query('page_size').isNumeric().toInt(),
+      query('custom_view_id').optional().isNumeric().toInt(),
     ],
     async handler(req, res) {
       const validationErrors = validationResult(req);
@@ -241,7 +241,7 @@ export default {
       });
       return res.status(200).send({
         items: budgets.items,
-      })
+      });
     },
   },
 };

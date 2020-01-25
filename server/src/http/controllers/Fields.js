@@ -16,7 +16,7 @@ export default {
   router() {
     const router = express.Router();
 
-    router.post('/resource/:resource_id',
+    router.post('/resource/:resource_name',
       this.addNewField.validation,
       asyncMiddleware(this.addNewField.handler));
 
@@ -28,11 +28,11 @@ export default {
       this.changeStatus.validation,
       asyncMiddleware(this.changeStatus.handler));
 
-    router.get('/:field_id',
-      asyncMiddleware(this.getField.handler));
+    // router.get('/:field_id',
+    //   asyncMiddleware(this.getField.handler));
 
-    router.delete('/:field_id',
-      asyncMiddleware(this.deleteField.handler));
+    // router.delete('/:field_id',
+    //   asyncMiddleware(this.deleteField.handler));
 
     return router;
   },
@@ -44,47 +44,44 @@ export default {
    */
   addNewField: {
     validation: [
-      param('resource_id').toInt(),
+      param('resource_name').exists().trim().escape(),
       check('label').exists().escape().trim(),
       check('data_type').exists().isIn(TYPES),
       check('help_text').optional(),
       check('default').optional(),
       check('options').optional().isArray(),
+      check('options.*.key').exists().isNumeric().toInt(),
+      check('options.*.value').exists(),
     ],
     async handler(req, res) {
-      const { resource_id: resourceId } = req.params;
+      const { resource_name: resourceName } = req.params;
       const validationErrors = validationResult(req);
 
       if (!validationErrors.isEmpty()) {
         return res.boom.badData(null, {
-          code: 'VALIDATION_ERROR', ...validationErrors,
+          code: 'validation_error', ...validationErrors,
         });
       }
-      const resource = await Resource.where('id', resourceId).fetch();
+      const resource = await Resource.query().where('name', resourceName).first();
 
       if (!resource) {
         return res.boom.notFound(null, {
           errors: [{ type: 'RESOURCE_NOT_FOUND', code: 100 }],
         });
       }
+      const form = { options: [], ...req.body };
+      const choices = form.options.map((option) => ({ key: option.key, value: option.value }));
 
-      const { label, data_type: dataType, help_text: helpText } = req.body;
-      const { default: defaultValue, options } = req.body;
-
-      const choices = options.map((option, index) => ({ key: index + 1, value: option }));
-
-      const field = ResourceField.forge({
-        data_type: dataType,
-        label_name: label,
-        help_text: helpText,
-        default: defaultValue,
+      const storedResource = await ResourceField.query().insertAndFetch({
+        data_type: form.data_type,
+        label_name: form.label,
+        help_text: form.help_text,
+        default: form.default,
         resource_id: resource.id,
         options: choices,
+        index: -1,
       });
-
-      await field.save();
-
-      return res.status(200).send();
+      return res.status(200).send({ id: storedResource.id });
     },
   },
 
@@ -93,12 +90,14 @@ export default {
    */
   editField: {
     validation: [
-      param('field_id').toInt(),
+      param('field_id').exists().isNumeric().toInt(),
       check('label').exists().escape().trim(),
-      check('data_type').exists(),
+      check('data_type').exists().isIn(TYPES),
       check('help_text').optional(),
       check('default').optional(),
       check('options').optional().isArray(),
+      check('options.*.key').exists().isNumeric().toInt(),
+      check('options.*.value').exists(),
     ],
     async handler(req, res) {
       const { field_id: fieldId } = req.params;
@@ -106,52 +105,28 @@ export default {
 
       if (!validationErrors.isEmpty()) {
         return res.boom.badData(null, {
-          code: 'VALIDATION_ERROR', ...validationErrors,
+          code: 'validation_error', ...validationErrors,
         });
       }
-
-      const field = await ResourceField.where('id', fieldId).fetch();
+      const field = await ResourceField.query().findById(fieldId);
 
       if (!field) {
         return res.boom.notFound(null, {
           errors: [{ type: 'FIELD_NOT_FOUND', code: 100 }],
         });
       }
-
       // Sets the default value of optional fields.
       const form = { options: [], ...req.body };
+      const choices = form.options.map((option) => ({ key: option.key, value: option.value }));
 
-      const { label, data_type: dataType, help_text: helpText } = form;
-      const { default: defaultValue, options } = form;
-
-      const storedFieldOptions = field.attributes.options || [];
-      let lastChoiceIndex = 0;
-      storedFieldOptions.forEach((option) => {
-        const key = parseInt(option.key, 10);
-        if (key > lastChoiceIndex) {
-          lastChoiceIndex = key;
-        }
-      });
-      const savedOptionKeys = options.filter((op) => typeof op === 'object');
-      const notSavedOptionsKeys = options.filter((op) => typeof op !== 'object');
-
-      const choices = [
-        ...savedOptionKeys,
-        ...notSavedOptionsKeys.map((option) => {
-          lastChoiceIndex += 1;
-          return { key: lastChoiceIndex, value: option };
-        }),
-      ];
-
-      await field.save({
-        data_type: dataType,
-        label_name: label,
-        help_text: helpText,
-        default: defaultValue,
+      await ResourceField.query().findById(field.id).update({
+        data_type: form.data_type,
+        label_name: form.label,
+        help_text: form.help_text,
+        default: form.default,
         options: choices,
       });
-
-      return res.status(200).send({ id: field.get('id') });
+      return res.status(200).send({ id: field.id });
     },
   },
 
@@ -162,11 +137,25 @@ export default {
    */
   fieldsList: {
     validation: [
-      param('resource_id').toInt(),
+      param('resource_name').toInt(),
     ],
     async handler(req, res) {
-      const { resource_id: resourceId } = req.params;
-      const fields = await ResourceField.where('resource_id', resourceId).fetchAll();
+      const validationErrors = validationResult(req);
+
+      if (!validationErrors.isEmpty()) {
+        return res.boom.badData(null, {
+          code: 'validation_error', ...validationErrors,
+        });
+      }
+      const { resource_name: resourceName } = req.params;
+      const resource = await Resource.query().where('name', resourceName).first();
+
+      if (!resource) {
+        return res.boom.notFound(null, {
+          errors: [{ type: 'RESOURCE_NOT_FOUND', code: 100 }],
+        });
+      }
+      const fields = await ResourceField.where('resource_id', resource.id).fetchAll();
 
       return res.status(200).send({ fields: fields.toJSON() });
     },
@@ -182,7 +171,7 @@ export default {
     ],
     async handler(req, res) {
       const { field_id: fieldId } = req.params;
-      const field = await ResourceField.where('id', fieldId).fetch();
+      const field = await ResourceField.query().findById(fieldId);
 
       if (!field) {
         return res.boom.notFound(null, {
@@ -191,9 +180,9 @@ export default {
       }
 
       const { active } = req.body;
-      await field.save({ active });
+      await ResourceField.query().findById(field.id).patch({ active });
 
-      return res.status(200).send({ id: field.get('id') });
+      return res.status(200).send({ id: field.id });
     },
   },
 

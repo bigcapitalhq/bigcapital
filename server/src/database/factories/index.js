@@ -181,6 +181,17 @@ factory.define('resource_field', 'resource_fields', async () => {
   };
 });
 
+factory.define('resource_custom_field_metadata', 'resource_custom_fields_metadata', async () => {
+  const resource = await factory.create('resource');
+
+  return {
+    resource_id: resource.id,
+    resource_item_id: 1,
+    key: faker.lorem.words(),
+    value: faker.lorem.words(),
+  };
+});
+
 factory.define('view_role', 'view_roles', async () => {
   const view = await factory.create('view');
   const field = await factory.create('resource_field');

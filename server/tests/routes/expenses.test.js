@@ -1,4 +1,9 @@
-import { request, expect, create, login } from '~/testInit';
+import {
+  request,
+  expect,
+  create,
+  login,
+} from '~/testInit';
 import AccountTransaction from '@/models/AccountTransaction';
 import Expense from '@/models/Expense';
 
@@ -78,7 +83,7 @@ describe('routes: /expenses/', () => {
           payment_account_id: 100,
           amount: 100,
         });
-      
+
       expect(res.body.errors).include.something.that.deep.equals({
         type: 'EXPENSE.ACCOUNT.NOT.FOUND', code: 200,
       });
@@ -92,14 +97,14 @@ describe('routes: /expenses/', () => {
           payment_account_id: 100,
           amount: 100,
         });
-  
+
       expect(res.body.errors).include.something.that.deep.equals({
         type: 'PAYMENT.ACCOUNT.NOT.FOUND', code: 100,
       });
     });
 
     it('Should response success with valid required data.', async () => {
-      const res = await request().post('/api/expenses') 
+      const res = await request().post('/api/expenses')
         .set('x-access-token', loginRes.body.token)
         .send({
           expense_account_id: expenseAccount.id,
@@ -111,7 +116,8 @@ describe('routes: /expenses/', () => {
     });
 
     it('Should record journal entries of expense transaction.', async () => {
-      const res = await request().post('/api/expenses') 
+      const res = await request()
+        .post('/api/expenses')
         .set('x-access-token', loginRes.body.token)
         .send({
           expense_account_id: expenseAccount.id,
@@ -122,12 +128,31 @@ describe('routes: /expenses/', () => {
       const expensesEntries = await AccountTransaction.query()
         .where('reference_type', 'Expense')
         .where('reference_id', res.body.id);
-      
+
       expect(expensesEntries.length).equals(2);
     });
 
-    it('Should save expense transaction to the storage.', () => {
-      
+    it('Should save expense transaction to the storage.', async () => {
+      const res = await request()
+        .post('/api/expenses')
+        .set('x-access-token', loginRes.body.token)
+        .send({
+          expense_account_id: expenseAccount.id,
+          payment_account_id: cashAccount.id,
+          amount: 100,
+        });
+
+      const expenseTransaction = await Expense.query().where('id', res.body.id);
+
+      expect(expenseTransaction.amount).equals(100);
+    });
+
+    it('Should response bad request in case custom field slug was not exists in the storage.', () => {
+
+    });
+
+    it('Should save expense custom fields to the storage.', () => {
+
     });
   });
 
@@ -135,24 +160,31 @@ describe('routes: /expenses/', () => {
     it('Should response unauthorized in case user was not authorized.', () => {
 
     });
+    it('Should response not found in case expense was not exist.', () => {
+
+    });
+
+    it('Should update the expense transaction.', () => {
+
+    });
   });
 
   describe('DELETE: `/expenses/:id`', () => {
     it('Should response not found in case expense not found.', async () => {
       const res = await request()
-        .delete('/api/expense/1000')
+        .delete('/api/expenses/1000')
         .set('x-access-token', loginRes.body.token)
         .send();
 
-      expect(res.body.reasons).include.something.that.deep.equals({
-        type: 'EXPENSE.NOT.FOUND', code: 100,
+      expect(res.body.errors).include.something.that.deep.equals({
+        type: 'EXPENSE.TRANSACTION.NOT.FOUND', code: 100,
       });
     });
 
     it('Should response success in case expense transaction was exist.', async () => {
       const expense = await create('expense');
       const res = await request()
-        .delete(`/api/expense/${expense.id}`)
+        .delete(`/api/expenses/${expense.id}`)
         .set('x-access-token', loginRes.body.token)
         .send();
 
@@ -162,7 +194,7 @@ describe('routes: /expenses/', () => {
     it('Should delete the expense transaction from the storage.', async () => {
       const expense = await create('expense');
       await request()
-        .delete(`/api/expense/${expense.id}`)
+        .delete(`/api/expenses/${expense.id}`)
         .set('x-access-token', loginRes.body.token)
         .send();
 
@@ -185,6 +217,10 @@ describe('routes: /expenses/', () => {
     });
 
     it('Should reverse accounts balance that associated to expense transaction.', () => { 
+
+    });
+
+    it('Should delete the custom fields that associated to resource and resource item.', () => {
 
     });
   });
@@ -296,6 +332,75 @@ describe('routes: /expenses/', () => {
     });
   });
 
+  describe('POST: `/expenses/:id/publish`', () => {
+    it('Should response not found in case the expense id was not exist.', async () => {
+      const expense = await create('expense', { published: false });
+      const res = await request()
+        .post('/api/expenses/100/publish')
+        .set('x-access-token', loginRes.body.token)
+        .send();
+
+      expect(res.status).equals(400);
+      expect(res.body.errors).include.something.that.deep.equals({
+        type: 'EXPENSE.NOT.FOUND', code: 100,
+      });
+    });
+
+    it('Should response bad request in case expense is already published.', async () => {
+      const expense = await create('expense', { published: true });
+      const res = await request()
+        .post(`/api/expenses/${expense.id}/publish`)
+        .set('x-access-token', loginRes.body.token)
+        .send();
+
+      expect(res.status).equals(400);
+      expect(res.body.errors).include.something.that.deep.equals({
+        type: 'EXPENSE.ALREADY.PUBLISHED', code: 200,
+      });
+    });
+
+    it('Should publish the expense transaction.', async () => {
+      const expense = await create('expense', { published: false });
+      const res = await request()
+        .post(`/api/expenses/${expense.id}/publish`)
+        .set('x-access-token', loginRes.body.token)
+        .send();
+
+      const storedExpense = await Expense.query().findById(expense.id);
+      expect(storedExpense.published).equals(1);
+    });
+
+    it('Should publish the journal entries that associated to the given expense transaction.', async () => {
+      const expense = await create('expense', { published: false });
+      const transaction = await create('account_transaction', {
+        reference_id: expense.id,
+        reference_type: 'Expense',
+      });
+      const res = await request()
+        .post(`/api/expenses/${expense.id}/publish`)
+        .set('x-access-token', loginRes.body.token)
+        .send();
+
+      const entries = await AccountTransaction.query()
+        .where('reference_id', expense.id)
+        .where('reference_type', 'Expense');
+
+      entries.forEach((entry) => {
+        expect(entry.draft).equals(0);
+      });
+    });
+
+    it('Should response success in case expense was exist and not published.', async () => {
+      const expense = await create('expense', { published: false });
+      const res = await request()
+        .post(`/api/expenses/${expense.id}/publish`)
+        .set('x-access-token', loginRes.body.token)
+        .send();
+
+      expect(res.status).equals(200);
+    });
+  });
+
   describe('GET: `/expenses/:id`', () => {
     it('Should response view not found in case the custom view id was not exist.', async () => {
       const res = await request()
@@ -304,6 +409,10 @@ describe('routes: /expenses/', () => {
         .send();
 
       console.log(res.status);
+    });
+
+    it('Should retrieve custom fields metadata.', () => {
+      
     });
   });
 });

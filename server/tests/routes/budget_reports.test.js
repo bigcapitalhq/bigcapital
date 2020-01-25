@@ -14,7 +14,7 @@ describe('routes: `/budget_reports`', () => {
     loginRes = null;
   });
 
-  describe.only('GET: `/budget_verses_actual/:reportId`', () => {
+  describe('GET: `/budget_verses_actual/:reportId`', () => {
     it('Should retrieve columns of budget year range with quarter period.', async () => {
       const budget = await create('budget', { period: 'quarter' });
       const budgetEntry = await create('budget_entry', { budget_id: budget.id });

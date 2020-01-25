@@ -3,7 +3,7 @@ exports.up = function (knex) {
   return knex.schema.createTable('items', (table) => {
     table.increments();
     table.string('name');
-    table.integer('type_id').unsigned();
+    table.string('type');
     table.decimal('cost_price').unsigned();
     table.decimal('sell_price').unsigned();
     table.string('currency_code', 3);
