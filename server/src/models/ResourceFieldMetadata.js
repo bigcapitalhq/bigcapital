@@ -1,7 +1,7 @@
 import { Model } from 'objection';
 import path from 'path';
 import BaseModel from '@/models/Model';
-import MetableCollection from '@/lib/Metable/MetableCollection';
+import ResourceFieldMetadataCollection from '@/collection/ResourceFieldMetadataCollection';
 
 export default class ResourceFieldMetadata extends BaseModel {
   /**
@@ -15,7 +15,7 @@ export default class ResourceFieldMetadata extends BaseModel {
    * Override the resource field metadata collection.
    */
   static get collection() {
-    return MetableCollection;
+    return ResourceFieldMetadataCollection;
   }
 
   /**

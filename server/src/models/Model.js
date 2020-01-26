@@ -1,7 +1,6 @@
 import { Model } from 'objection';
 
 export default class ModelBase extends Model {
-
   static get collection() {
     return Array;
   }

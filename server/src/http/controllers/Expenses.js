@@ -6,7 +6,7 @@ import {
   validationResult,
 } from 'express-validator';
 import moment from 'moment';
-import { difference, chain } from 'lodash';
+import { difference, chain, omit } from 'lodash';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
 import Expense from '@/models/Expense';
 import Account from '@/models/Account';
@@ -50,6 +50,10 @@ export default {
       this.listExpenses.validation,
       asyncMiddleware(this.listExpenses.handler));
 
+    router.get('/:id',
+      this.getExpense.validation,
+      asyncMiddleware(this.getExpense.handler));
+
     return router;
   },
 
@@ -81,11 +85,12 @@ export default {
       const form = {
         date: new Date(),
         published: false,
+        custom_fields: [],
         ...req.body,
       };
       // Convert the date to the general format.
       form.date = moment(form.date).format('YYYY-MM-DD');
-
+s
       const errorReasons = [];
       const paymentAccount = await Account.query()
         .findById(form.payment_account_id).first();
@@ -98,10 +103,8 @@ export default {
       if (!expenseAccount) {
         errorReasons.push({ type: 'EXPENSE.ACCOUNT.NOT.FOUND', code: 200 });
       }
-      const customFields = new ResourceCustomFieldRepository('Expense');
+      const customFields = new ResourceCustomFieldRepository(Expense);
       await customFields.load();
-
-      customFields.fillCustomFields(form.custom_fields);
 
       if (customFields.validateExistCustomFields()) {
         errorReasons.push({ type: 'CUSTOM.FIELDS.SLUGS.NOT.EXISTS', code: 400 });
@@ -109,7 +112,10 @@ export default {
       if (errorReasons.length > 0) {
         return res.status(400).send({ errors: errorReasons });
       }
-      const expenseTransaction = await Expense.query().insertAndFetch({ ...form });
+      const expenseTransaction = await Expense.query().insertAndFetch({
+        ...omit(form, ['custom_fields']),
+      });
+      customFields.fillCustomFields(expenseTransaction.id, form.custom_fields);
 
       const journalEntries = new JournalPoster();
       const creditEntry = new JournalEntry({
@@ -431,6 +437,45 @@ export default {
           errors: [{ type: 'EXPENSE.TRANSACTION.NOT.FOUND', code: 100 }],
         });
       }
+    },
+  },
+
+  /**
+   * Retrieve details of the given expense id.
+   */
+  getExpense: {
+    validation: [
+      param('id').exists().isNumeric().toInt(),
+    ],
+    async handler(req, res) {
+      const validationErrors = validationResult(req);
+
+      if (!validationErrors.isEmpty()) {
+        return res.boom.badData(null, {
+          code: 'validation_error', ...validationErrors,
+        });
+      }
+      const { id } = req.params;
+      const expenseTransaction = await Expense.query().findById(id);
+
+      if (!expenseTransaction) {
+        return res.status(404).send({
+          errors: [{ type: 'EXPENSE.TRANSACTION.NOT.FOUND', code: 100 }],
+        });
+      }
+
+      const expenseCFMetadataRepo = new ResourceCustomFieldRepository(Expense);
+      await expenseCFMetadataRepo.load();
+      await expenseCFMetadataRepo.fetchCustomFieldsMetadata(expenseTransaction.id);
+
+      const expenseCusFieldsMetadata = expenseCFMetadataRepo.getMetadata(expenseTransaction.id);
+
+      return res.status(200).send({
+        ...expenseTransaction,
+        custom_fields: [
+          ...expenseCusFieldsMetadata.toArray(),
+        ],
+      });
     },
   },
 };

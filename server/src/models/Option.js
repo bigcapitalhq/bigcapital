@@ -10,6 +10,19 @@ export default class Option extends mixin(BaseModel, [mixin]) {
     return 'options';
   }
 
+  /**
+   * Override the model query.
+   * @param  {...any} args -
+   */
+  static query(...args) {
+    return super.query(...args).runAfter((result) => {
+      if (result instanceof MetableCollection) {
+        result.setModel(Option);
+      }
+      return result;
+    });
+  }
+
   static get collection() {
     return MetableCollection;
   }

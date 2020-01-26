@@ -6,6 +6,7 @@ import {
 } from '~/testInit';
 import AccountTransaction from '@/models/AccountTransaction';
 import Expense from '@/models/Expense';
+import ResourceFieldMetadata from '@/models/ResourceFieldMetadata';
 
 let loginRes;
 let expenseType;
@@ -143,16 +144,60 @@ describe('routes: /expenses/', () => {
         });
 
       const expenseTransaction = await Expense.query().where('id', res.body.id);
-
       expect(expenseTransaction.amount).equals(100);
     });
 
-    it('Should response bad request in case custom field slug was not exists in the storage.', () => {
+    it('Should response bad request in case custom field slug was not exists in the storage.', async () => {
+      const res = await request()
+        .post('/api/expenses')
+        .set('x-access-token', loginRes.body.token)
+        .send({
+          expense_account_id: expenseAccount.id,
+          payment_account_id: cashAccount.id,
+          amount: 100,
+          custom_options: [
+            {
+              key: 'random_key',
+              value: 'Value here',
+            },
+          ],
+        });
 
+      expect(res.status).equals(400);
     });
 
-    it('Should save expense custom fields to the storage.', () => {
+    it('Should save expense custom fields to the storage.', async () => {
+      const resource = await create('resource', { name: 'Expense' });
+      const resourceField = await create('resource_field', {
+        resource_id: resource.id,
+        slug: 'custom_field_1',
+      });
 
+      const res = await request()
+        .post('/api/expenses')
+        .set('x-access-token', loginRes.body.token)
+        .send({
+          expense_account_id: expenseAccount.id,
+          payment_account_id: cashAccount.id,
+          amount: 100,
+          custom_fields: [
+            {
+              key: 'custom_field_1',
+              value: 'Value here',
+            },
+          ],
+        });
+       
+      const storedResourceItemMetadata = await ResourceFieldMetadata.query()
+        .where('resource_id', resource.id)
+        .where('resource_item_id', res.body.id);
+
+      expect(storedResourceItemMetadata.metadata.length).equals(1);
+      expect(storedResourceItemMetadata.metadata[0].resourceId).equals(resource.id);
+      expect(storedResourceItemMetadata.metadata[0].resourceItemId).equals(res.body.id);
+
+      expect(storedResourceItemMetadata.metadata[0].key).equals('custom_field_1');
+      expect(storedResourceItemMetadata.metadata[0].value).equals('Value here');
     });
   });
 
@@ -403,16 +448,43 @@ describe('routes: /expenses/', () => {
 
   describe('GET: `/expenses/:id`', () => {
     it('Should response view not found in case the custom view id was not exist.', async () => {
+      const expense = await create('expense');
+
       const res = await request()
-        .get('/api/expenses')
+        .get(`/api/expenses/${expense.id}123`)
         .set('x-access-token', loginRes.body.token)
         .send();
 
-      console.log(res.status);
+      expect(res.status).equals(404);
+      expect(res.body.errors).include.something.deep.equals({
+        type: 'EXPENSE.TRANSACTION.NOT.FOUND', code: 100,
+      });
     });
 
-    it('Should retrieve custom fields metadata.', () => {
-      
+    it('Should retrieve custom fields metadata.', async () => {
+      const expense = await create('expense');
+      const resource = await create('resource', { name: 'Expense' });
+      const resourceField = await create('resource_field', {
+        resource_id: resource.id,
+        slug: 'custom_field_1',
+      });
+
+      const resourceFieldMetadata = await create('resource_custom_field_metadata', {
+        resource_id: resource.id,
+        resource_item_id: expense.id,
+        key: 'custom_field_1',
+      });
+
+      const res = await request()
+        .get(`/api/expenses/${expense.id}`)
+        .set('x-access-token', loginRes.body.token)
+        .send();
+
+      expect(res.status).equals(200);
+
+      expect(res.body.custom_fields.length).equals(1);
+      expect(res.body.custom_fields[0].key).equals('custom_field_1');
+      expect(res.body.custom_fields[0].value).equals(resourceFieldMetadata.value);
     });
   });
 });

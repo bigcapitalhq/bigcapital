@@ -1,5 +1,4 @@
 import {
-  request,
   expect,
   create,
   login,
@@ -26,20 +25,31 @@ describe('ResourceCustomFieldRepository', () => {
     });
   });
 
-  describe('fetchCustomFields', () => {
+  describe('loadResource()', () => {
+    it('Should fetches the resource name.', async () => {
+      const resource = await create('resource', { name: 'Expense' });
+      const customFieldsRepo = new ResourceCustomFieldRepository(Expense);
+      await customFieldsRepo.loadResource();
+
+      expect(customFieldsRepo.resource.name).equals('Expense');
+    });
+  });
+
+  describe('loadResourceCustomFields()', () => {
     it('Should fetches all custom fields that associated with the resource.', async () => {
       const resource = await create('resource', { name: 'Expense' });
       const resourceField = await create('resource_field', { resource_id: resource.id });
       const resourceField2 = await create('resource_field', { resource_id: resource.id });
 
       const customFieldsRepo = new ResourceCustomFieldRepository(Expense);
-      await customFieldsRepo.fetchCustomFields();
+      await customFieldsRepo.loadResource();
+      await customFieldsRepo.loadResourceCustomFields();
 
       expect(customFieldsRepo.customFields.length).equals(2);
     });
   });
 
-  describe.only('fetchCustomFieldsMetadata', () => {
+  describe('fetchCustomFieldsMetadata', () => {
     it('Should fetches all custom fields metadata that associated to the resource and resource item.', async () => {
       const resource = await create('resource', { name: 'Expense' });
       const resourceField = await create('resource_field', { resource_id: resource.id });
@@ -52,46 +62,64 @@ describe('ResourceCustomFieldRepository', () => {
       });
       const customFieldsRepo = new ResourceCustomFieldRepository(Expense);
 
-      await customFieldsRepo.fetchCustomFields();
+      await customFieldsRepo.load();
       await customFieldsRepo.fetchCustomFieldsMetadata(expense.id);
 
       expect(customFieldsRepo.metadata[expense.id].metadata.length).equals(1);
+      expect(customFieldsRepo.metadata[expense.id].metadata[0].key).equals(fieldMetadata.key);
+      expect(customFieldsRepo.metadata[expense.id].metadata[0].value).equals(fieldMetadata.value);
     });
   });
 
   describe('fillCustomFields', () => {
-
-  });
-
-  describe('saveCustomFields', () => {
-    it('Should save the given custom fields metadata to the resource item.', () => {
-      const resource = await create('resource');
-      const resourceField = await create('resource_field', { resource_field: resource.id });
+    it('Should fill custom fields metadata attributes to metadata object.', async () => {
+      const resource = await create('resource', { name: 'Expense' });
+      const resourceField = await create('resource_field', { resource_id: resource.id });
 
       const expense = await create('expense');
-      const fieldMetadata = await create('resource_custom_field_metadata', {
-        resource_id: resource.id, resource_item_id: expense.id,
-      });
 
       const customFieldsRepo = new ResourceCustomFieldRepository(Expense);
       await customFieldsRepo.load();
+      await customFieldsRepo.fetchCustomFieldsMetadata(expense.id);
+
+      customFieldsRepo.fillCustomFields(expense.id, [
+        {
+          key: resourceField.key,
+          value: 'Hello World',
+        },
+      ]);
+      expect(customFieldsRepo.fieldsMetadata[expense.id].metadata.length).equals(1);
+      expect(customFieldsRepo.filledCustomFields[expense.id].length).equals(1);
+    });
+  });
+
+  describe('saveCustomFields', () => {
+    it('Should save the given custom fields metadata to the resource item.', async () => {
+      const resource = await create('resource', { name: 'Expense' });
+      const resourceField = await create('resource_field', { resource_id: resource.id });
+
+      const expense = await create('expense');
+      const fieldMetadata = await create('resource_custom_field_metadata', {
+        key: resourceField.slug,
+        resource_id: resource.id,
+        resource_item_id: expense.id,
+      });
+      const customFieldsRepo = new ResourceCustomFieldRepository(Expense);
+      await customFieldsRepo.load();
+      await customFieldsRepo.fetchCustomFieldsMetadata(expense.id);
 
       customFieldsRepo.fillCustomFields(expense.id, [
         { key: resourceField.slug, value: 'Hello World' },
       ]);
 
-      await customFieldsRepo.saveCustomFields();
+      await customFieldsRepo.saveCustomFields(expense.id);
 
-      const updateResourceFieldData = await ResourceFieldMetadata.query()
-        .where('resource_id', resource.id)
-        .where('resource_item_id', expense.id)
-        .first();
-
-      expect(updateResourceFieldData.value).equals('Hello World');
+      const updateResourceFieldData = await ResourceFieldMetadata.query();
+      expect(updateResourceFieldData.metadata[0].value).equals('Hello World');
     });
   });
 
-  // describe('validateExistCustomFields', () => {
+  describe('validateExistCustomFields', () => {
 
-  // });
+  });
 });

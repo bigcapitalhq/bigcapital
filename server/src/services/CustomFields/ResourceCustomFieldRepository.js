@@ -1,23 +1,24 @@
 import Resource from '@/models/Resource';
 import ResourceField from '@/models/ResourceField';
 import ResourceFieldMetadata from '@/models/ResourceFieldMetadata';
-import ModelBase from '@/models/Model';
+import ResourceFieldMetadataCollection from '@/collection/ResourceFieldMetadataCollection';
 
 export default class ResourceCustomFieldRepository {
-
+  /**
+   * Class constructor.
+   */
   constructor(model) {
     if (typeof model === 'function') {
       this.resourceName = model.name;
     } else if (typeof model === 'string') {
       this.resourceName = model;
     }
-
     // Custom fields of the given resource.
     this.customFields = [];
-    this.filledCustomFields = [];
+    this.filledCustomFields = {};
 
     // metadata of custom fields of the given resource.
-    this.metadata = {};
+    this.fieldsMetadata = {};
     this.resource = {};
   }
 
@@ -36,7 +37,7 @@ export default class ResourceCustomFieldRepository {
       .where('resource_id', this.resource.id)
       .where('resource_item_id', id);
 
-    this.metadata[id] = metadata;
+    this.fieldsMetadata[id] = metadata;
   }
 
   /**
@@ -86,21 +87,49 @@ export default class ResourceCustomFieldRepository {
    * @param {Integer} itemId -
    */
   getMetadata(itemId) {
-    return this.metadata[itemId] || this.metadata;
+    return this.fieldsMetadata[itemId] || this.fieldsMetadata;
   }
 
+  /**
+   * Fill metadata of the custom fields that associated to the resource.
+   * @param {Inter} id - Resource item id.
+   * @param {Array} attributes -
+   */
   fillCustomFields(id, attributes) {
     if (typeof this.filledCustomFields[id] === 'undefined') {
       this.filledCustomFields[id] = [];
     }
     attributes.forEach((attr) => {
       this.filledCustomFields[id].push(attr);
-      this.fieldsMetadata[id].setMeta(attr.key, attr.value);
+
+      if (!this.fieldsMetadata[id]) {
+        this.fieldsMetadata[id] = new ResourceFieldMetadataCollection();
+      }
+      this.fieldsMetadata[id].setMeta(attr.key, attr.value, {
+        resource_id: this.resource.id,
+        resource_item_id: id,
+      });
     });
   }
 
-  saveCustomFields(id) {
-    this.fieldsMetadata.saveMeta();
+  /**
+   * Saves the instered, updated and deleted  custom fields metadata.
+   * @param {Integer} id - Optional resource item id.
+   */
+  async saveCustomFields(id) {
+    if (id) {
+      if (typeof this.fieldsMetadata[id] === 'undefined') {
+        throw new Error('There is no resource item with the given id.');
+      }
+      await this.fieldsMetadata[id].saveMeta();
+    } else {
+      const opers = [];
+      this.fieldsMetadata.forEach((metadata) => {
+        const oper = metadata.saveMeta();
+        opers.push(oper);
+      });
+      await Promise.all(opers);
+    }
   }
 
   /**
@@ -115,9 +144,11 @@ export default class ResourceCustomFieldRepository {
   }
 
   async load() {
-    await Promise.all([
-      this.loadResource(),
-      this.loadResourceCustomFields(),
-    ]);
+    await this.loadResource();
+    await this.loadResourceCustomFields();
+  }
+
+  static forgeMetadataCollection() {
+
   }
 }

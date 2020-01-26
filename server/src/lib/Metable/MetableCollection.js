@@ -6,6 +6,11 @@ export default class MetableCollection {
     this.VALUE_COLUMN = 'value';
     this.TYPE_COLUMN = 'type';
     this.model = null;
+    this.extraColumns = [];
+
+    this.extraQuery = (query, meta) => {
+      query.where('key', meta[this.KEY_COLUMN]);
+    };
   }
 
   /**
@@ -59,9 +64,14 @@ export default class MetableCollection {
    * @param {*} group
    */
   removeAllMeta(group = 'default') {
-    this.metadata.forEach(meta => {
-      meta.markAsDeleted = true;
-    });
+    this.metadata = this.metadata.map((meta) => ({
+      ...meta,
+      markAsDeleted: true,
+    }));
+  }
+
+  setExtraQuery(callback) {
+    this.extraQuery = callback;
   }
 
   /**
@@ -100,17 +110,34 @@ export default class MetableCollection {
     const opers = [];
 
     if (deleted.length > 0) {
-      const deleteOper = this.model.query()
-        .whereIn('key', deleted.map((meta) => meta.key)).delete();
-
-      opers.push(deleteOper);
+      deleted.forEach((meta) => {
+        const deleteOper = this.model.query().beforeRun((query, result) => {
+          this.extraQuery(query, meta);
+          return result;
+        }).delete();
+        opers.push(deleteOper);
+      });
     }
     inserted.forEach((meta) => {
       const insertOper = this.model.query().insert({
         [this.KEY_COLUMN]: meta.key,
         [this.VALUE_COLUMN]: meta.value,
+        ...this.extraColumns.reduce((obj, column) => {
+          if (typeof meta[column] !== 'undefined') {
+            obj[column] = meta[column];
+          }
+          return obj;
+        }, {}),
       });
       opers.push(insertOper);
+    });
+    updated.forEach((meta) => {
+      const updateOper = this.model.query().onBuild((query) => {
+        this.extraQuery(query, meta);
+      }).patch({
+        [this.VALUE_COLUMN]: meta.value,
+      });
+      opers.push(updateOper);
     });
     await Promise.all(opers);
   }
@@ -196,6 +223,11 @@ export default class MetableCollection {
       return;
     }
     this.metadata.push(meta);
+  }
+
+
+  toArray() {
+    return this.metadata;
   }
 
   /**
