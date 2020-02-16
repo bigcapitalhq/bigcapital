@@ -1,25 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { createStore, applyMiddleware, compose } from 'redux';
 import { Provider } from 'react-redux';
-import rootReducer from './reducers';
-import thunkMiddleware from 'redux-thunk';
-import monitorReducerEnhancer from './enhancers/monitorReducer';
-// import axios from 'axios';
-import App from './pages/App';
-import * as serviceWorker from './serviceWorker';
-import loggerMiddleware from './middleware/logger'
-
-const middlewareEnhancer = applyMiddleware(loggerMiddleware, thunkMiddleware)
-const composedEnhancers = compose(
-  middlewareEnhancer,
-  monitorReducerEnhancer,
-)
-const store = createStore(rootReducer, undefined, composedEnhancers);
+import { BrowserRouter } from 'react-router-dom';
+import App from 'components/App';
+import * as serviceWorker from 'serviceWorker';
+import createStore from 'store/createStore';
 
 ReactDOM.render(
-  <Provider store={store}>
-    <App />
+  <Provider store={createStore}>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
   </Provider>,
   document.getElementById('root')
 );

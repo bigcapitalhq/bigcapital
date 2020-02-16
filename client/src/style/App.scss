@@ -1,0 +1,16 @@
+
+@import "./normalize.scss";
+
+// Blueprint framework.
+@import "@blueprintjs/core/src/blueprint.scss";
+
+@import "pages/authentication.scss";
+
+.dashboard{
+  display: flex;
+  height: 100vh;
+
+  &-content{
+
+  }
+}

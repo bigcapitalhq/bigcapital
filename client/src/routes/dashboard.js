@@ -1,11 +1,18 @@
-import AccountsChart from '../pages/Dashboard/AccountsChart';
+import Homepage from "containers/Dashboard/Homepage";
+
+// import AccountsChart from 'pages/Dashboard/AccountsChart';
 
 export default [
   {
-    path: '/accounts/list',
-    component: AccountsChart,
-    icon: 'cut',
-    text: 'Chart of Accounts',
-    label: 'Chart of Accounts'
+    path: '/homepage',
+    component: Homepage,
+    exact: true,
   },
+  // {
+  //   path: '/accounts/list',
+  //   component: AccountsChart,
+  //   icon: 'cut',
+  //   text: 'Chart of Accounts',
+  //   label: 'Chart of Accounts'
+  // },
 ];

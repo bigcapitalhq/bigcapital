@@ -1,0 +1,26 @@
+
+
+.authentication-page{
+  &__form-wrapper{
+    width: 100%;
+    max-width: 350px;
+    padding: 15px;
+    margin: 0 auto;
+  }
+
+  .login-page{
+
+    .input-group{
+      &--email-phone-number{
+        margin-bottom: 1rem;
+      }
+      &--password{
+        margin-bottom: 1rem;
+      }
+    }
+  }
+  &__footer{
+    margin-top: 1rem;
+    text-align: center;
+  }
+}
