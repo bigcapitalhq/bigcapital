@@ -1,9 +1,11 @@
-import { difference } from 'lodash';
+import { difference, pick } from 'lodash';
 import express from 'express';
 import { check, query, validationResult } from 'express-validator';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
+import jwtAuth from '@/http/middleware/jwtAuth';
 import Resource from '@/models/Resource';
-import View from '../../models/View';
+import View from '@/models/View';
+import ViewRole from '@/models/ViewRole';
 
 export default {
   resource: 'items',
@@ -13,6 +15,8 @@ export default {
    */
   router() {
     const router = express.Router();
+
+    router.use(jwtAuth);
 
     router.post('/',
       this.createView.validation,
@@ -28,6 +32,10 @@ export default {
 
     router.get('/:view_id',
       asyncMiddleware(this.getView.handler));
+
+    router.get('/resource/:resource_name',
+      this.getResourceViews.validation,
+      asyncMiddleware(this.getResourceViews.handler));
 
     return router;
   },
@@ -105,7 +113,9 @@ export default {
       check('roles.*.comparator').exists(),
       check('roles.*.value').exists(),
       check('roles.*.index').exists().isNumeric().toInt(),
-      check('columns.*').exists().escape().trim(),
+      check('columns').exists().isArray(),
+      check('columns.*.field').exists().escape().trim(),
+      check('columns.*.index').exists().isNumeric().toInt(),
     ],
     async handler(req, res) {
       const validationErrors = validationResult(req);
@@ -115,7 +125,6 @@ export default {
           code: 'validation_error', ...validationErrors,
         });
       }
-
       const form = { ...req.body };
       const resource = await Resource.query().where('name', form.resource_name).first();
 
@@ -152,11 +161,23 @@ export default {
         predefined: false,
         resource_id: resource.id,
       });
-      
-      // Save view roles.
 
+      // Save view roles async operations.
+      const saveViewRolesOpers = [];
 
-      return res.status(200).send();
+      form.roles.forEach((role) => {
+        const fieldModel = resourceFields.find((f) => f.slug === role.field);
+
+        const oper = ViewRole.query().insert({
+          ...pick(role, ['comparator', 'value', 'index']),
+          field_id: fieldModel.id,
+          view_id: view.id,
+        });
+        saveViewRolesOpers.push(oper);
+      });
+      await Promise.all(saveViewRolesOpers);
+
+      return res.status(200).send({ id: view.id });
     },
   },
 
@@ -188,6 +209,15 @@ export default {
       }
 
       return res.status(200).send();
+    },
+  },
+
+  getResourceViews: {
+    validation: [
+
+    ],
+    async handler(req, res) {
+
     },
   },
 };

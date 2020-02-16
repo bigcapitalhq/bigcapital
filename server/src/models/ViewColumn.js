@@ -5,7 +5,7 @@ export default class ViewColumn extends BaseModel {
    * Table name.
    */
   static get tableName() {
-    return 'view_columns';
+    return 'view_has_columns';
   }
 
   /**

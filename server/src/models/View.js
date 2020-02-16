@@ -14,15 +14,19 @@ export default class View extends BaseModel {
    * Relationship mapping.
    */
   static get relationMappings() {
+    const Resource = require('@/models/Resource');
+    const ViewColumn = require('@/models/ViewColumn');
+    const ViewRole = require('@/models/ViewRole');
+
     return {
       /**
        * View model belongs to resource model.
        */
       resource: {
         relation: Model.BelongsToOneRelation,
-        modelBase: path.join(__dirname, 'Resource'),
+        modelClass: Resource.default,
         join: {
-          from: 'views.resource_id',
+          from: 'views.resourceId',
           to: 'resources.id',
         },
       },
@@ -30,38 +34,26 @@ export default class View extends BaseModel {
       /**
        * View model may has many columns.
        */
-      // columns: {
-      //   relation: Model.ManyToManyRelation,
-      //   modelBase: path.join(__dirname, 'ResourceField'),
-      //   join: {
-      //     from: 'id',
-      //     through: {
-      //       from: 'view_has_columns.view_id',
-      //       to: 'view_has_columns.field_id',
-      //     },
-      //     to: 'resource_fields.view_id',
-      //   }
-      // }
+      columns: {
+        relation: Model.HasManyRelation,
+        modelClass: ViewColumn.default,
+        join: {
+          from: 'views.id',
+          to: 'view_has_columns.view_id',
+        },
+      },
 
       /**
        * View model may has many view roles.
        */
       viewRoles: {
         relation: Model.HasManyRelation,
-        modelBase: path.join(__dirname, 'ViewRole'),
+        modelClass: ViewRole.default,
         join: {
           from: 'views.id',
-          to: 'view_id',
+          to: 'view_roles.view_id',
         },
       },
     };
   }
-
-  // columns() {
-  //   return this.belongsToMany('ResourceField', 'view_has_columns', 'view_id', 'field_id');
-  // },
-
-  // viewRoles() {
-  //   return this.hasMany('ViewRole', 'view_id');
-  // },
 }

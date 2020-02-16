@@ -205,13 +205,14 @@ factory.define('view_role', 'view_roles', async () => {
   };
 });
 
-factory.define('view_has_columns', 'view_has_columns', async () => {
+factory.define('view_column', 'view_has_columns', async () => {
   const view = await factory.create('view');
   const field = await factory.create('resource_field');
 
   return {
     field_id: field.id,
     view_id: view.id,
+    // index: 1,
   };
 });
 

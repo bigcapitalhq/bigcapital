@@ -52,9 +52,9 @@ export default {
       check('type').exists().trim().escape().isIn(['service', 'product']),
       check('cost_price').exists().isNumeric(),
       check('sell_price').exists().isNumeric(),
-      check('cost_account_id').exists().isInt(),
-      check('sell_account_id').exists().isInt(),
-      check('category_id').optional().isInt(),
+      check('cost_account_id').exists().isInt().toInt(),
+      check('sell_account_id').exists().isInt().toInt(),
+      check('category_id').optional().isInt().toInt(),
 
       check('custom_fields').optional().isArray({ min: 1 }),
       check('custom_fields.*.key').exists().isNumeric().toInt(),

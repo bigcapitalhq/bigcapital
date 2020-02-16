@@ -4,6 +4,7 @@ exports.up = function (knex) {
     table.increments();
     table.integer('view_id').unsigned();
     table.integer('field_id').unsigned();
+    table.integer('index').unsigned();
   });
 };
 
