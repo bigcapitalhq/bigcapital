@@ -1,37 +1,26 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
-import {
-  Cell,
-  Column,
-  ColumnHeaderCell,
-  CopyCellsMenuItem,
-  IMenuContext,
-  SelectionModes,
-  Table,
-  Utils,
-} from "@blueprintjs/table";
+import { connect } from 'react-redux';
+import t from 'store/types';
 
-function RecordSortableColumn() {
+function AccountsChart({ changePageTitle }) {  
+  useEffect(() => {
+    changePageTitle('Chart of Accounts');
+  });
   return (
-    <Menu>
-      <MenuItem
-        icon="sort-asc"
-        text="Sort Wins Asc"
-      />
-      <MenuItem
-        icon="sort-desc"
-        text="Sort Wins Desc"
-      />
-    </Menu>
-  );
-};
-
-export default function AccountsChart() {
-  return (
-    <DashboardActionsBar />
-    <DashboardPageContent>
-    
-    </DashboardPageContent>
+    <React.Fragment>
+      <DashboardActionsBar />
+      <DashboardPageContent>
+      
+      </DashboardPageContent>
+    </React.Fragment>
   );
 }
+
+const mapActionsToProps = (dispatch) => ({
+  changePageTitle: pageTitle => dispatch({
+    type: t.CHANGE_DASHBOARD_PAGE_TITLE, pageTitle
+  }),
+});
+export default connect(null, mapActionsToProps)(AccountsChart);
