@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {IntlProvider} from 'react-intl';
-// import {Switch} from 'react-router-dom';
+import {connect} from 'react-redux';
 import PrivateRoute from 'components/PrivateRoute';
 import Authentication from 'components/Authentication';
 import Dashboard from 'components/Dashboard/Dashboard';
+// import {isAuthenticated} from 'reducers/authentication'
 import messages from 'lang/en';
 import 'style/App.scss';
 
@@ -12,8 +13,8 @@ function App(props) {
   return (
     <IntlProvider locale={props.locale} messages={messages}>
       <div className="App">
-        <Authentication isAuthenticated={true} />
-        <PrivateRoute isAuthenticated={true} component={Dashboard} />
+        <Authentication isAuthenticated={props.isAuthorized} />
+        <PrivateRoute isAuthenticated={props.isAuthorized} component={Dashboard} />
       </div>
     </IntlProvider>
   );
@@ -23,6 +24,10 @@ App.defaultProps = {
 };
 App.propTypes = {
   locale: PropTypes.string,
+  isAuthorized: PropTypes.bool,
 };
 
-export default App;
+const mapStateToProps = (state) => ({
+  isAuthorized: true,
+});
+export default connect(mapStateToProps)(App);

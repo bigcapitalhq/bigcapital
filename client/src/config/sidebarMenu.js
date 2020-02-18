@@ -6,9 +6,17 @@ export default [
   },
   {
     icon: 'cut',
-    text: 'cut',
-    label: '⌘C',
+    text: 'Homepage',
     disabled: false,
+    href: '/dashboard/homepage',
+  },
+  {
+    divider: true,
+  },
+  {
+    icon: 'cut',
+    text: 'Chart of Accounts',
+    href: '/dashboard/accounts',
     children: [
       {
         icon: 'cut',

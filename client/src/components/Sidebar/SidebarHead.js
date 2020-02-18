@@ -1,4 +1,5 @@
 import React from 'react';
+import appMeta from 'config/app';
 
 export default function() {
   return (
@@ -8,11 +9,15 @@ export default function() {
       </div>
 
       <div className="sidebar__head-company-meta">
-        <span className="comapny-name">
+        <div className="comapny-name">
+          { appMeta.app_name } 
+        </div>
 
-        </span>
-
-        <span className="company-meta"></span>
+        <div className="company-meta">
+          <span class="version">
+          { appMeta.app_version }
+          </span>
+        </div>
       </div>
     </div>
   );

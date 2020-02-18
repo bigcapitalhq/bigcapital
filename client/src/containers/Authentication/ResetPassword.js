@@ -22,7 +22,7 @@ export default function Login() {
       </form>
 
       <div class="authentication-page__footer">
-        <Link to="/login"><FormattedMessage id="login" /></Link>
+        <Link to="/auth/login"><FormattedMessage id="login" /></Link>
       </div>
     </div>
   )

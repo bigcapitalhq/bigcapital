@@ -9,8 +9,65 @@
 .dashboard{
   display: flex;
   height: 100vh;
+  
+
+
+  &__topbar{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #F2EFEF;
+
+    &-actions{
+      
+    }
+  }
+
+  &__title{
+    font-size: 26px;
+    font-weight: 200;
+  }
 
   &-content{
+    width: calc(100% - 220px);
+  }
+}
 
+$sidebar-background: #05276E;
+$sidebar-text-color: #fff;
+$sidebar-width: 220px;
+$sidebar-menu-item-color: #fff;
+
+.sidebar{
+  background: $sidebar-background;
+  color: $sidebar-text-color;
+  width: $sidebar-width;
+
+  &__head{
+
+    &-company-meta{
+
+      
+    }
+  }
+
+  &-menu{
+    background: transparent;
+    padding: 0;
+    min-width: $sidebar-width;
+    border-radius: 0;
+
+    .#{$ns}-menu-item{
+      color: $sidebar-menu-item-color;
+      border-radius: 0;
+
+      > .#{$ns}-icon{
+        color: #8186A4;
+      }
+    }
+
+    .#{$ns}-menu-divider{
+      border-top-color: #183C86;
+    }
   }
 }

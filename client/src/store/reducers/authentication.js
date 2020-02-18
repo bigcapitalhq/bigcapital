@@ -12,7 +12,9 @@ export default function authentication(state = {}, action) {
         ...state,
         token: '',
       };
-    default: 
+    default:
       return state;
   }
 }
+
+export const isAuthenticated = (state) => !!state.token;
