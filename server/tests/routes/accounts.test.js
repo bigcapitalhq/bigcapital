@@ -1,5 +1,4 @@
 import { request, expect, create, login } from '~/testInit';
-import knex from '@/database/knex';
 import Account from '@/models/Account';
 
 let loginRes;
@@ -194,16 +193,112 @@ describe('routes: /accounts/', () => {
   });
 
   describe('GET: `/accounts`', () => {
+    it('Should retrieve accounts resource not found.', async () => {
+      const res = await request()
+        .get('/api/accounts')
+        .set('x-access-token', loginRes.body.token)
+        .send();
+
+      expect(res.status).equals(400);
+      expect(res.body.errors).include.something.that.deep.equals({
+        type: 'ACCOUNTS_RESOURCE_NOT_FOUND', code: 200,
+      });
+    });
+
     it('Should retrieve chart of accounts', async () => {
+      await create('resource', { name: 'accounts' });
       const account = await create('account');
       const account2 = await create('account', { parent_account_id: account.id });
 
       const res = await request()
         .get('/api/accounts')
         .set('x-access-token', loginRes.body.token)
-        .send()
+        .send();
 
-      console.log(res.body);
+      expect(res.status).equals(200);
+      expect(res.body.accounts.length).equals(1);
+    });
+
+    it('Should retrieve accounts based on view roles conditionals of the custom view.', async () => {
+      const resource = await create('resource', { name: 'accounts' });
+      
+      const accountTypeField = await create('resource_field', {
+        label_name: 'Account type',
+        column_key: 'account_type',
+        resource_id: resource.id,
+        active: true,
+        predefined: true,
+      });
+      const accountsView = await create('view', {
+        name: 'Accounts View',
+        resource_id: resource.id,
+        roles_logic_expression: '1',
+      });
+      const accountsViewRole = await create('view_role', {
+        view_id: accountsView.id,
+        index: 1,
+        field_id: accountTypeField.id,
+        value: '2',
+        comparator: 'equals',
+      });
+
+      await create('account');
+      await create('account');
+      await create('account');
+
+      const res = await request()
+        .get('/api/accounts')
+        .set('x-access-token', loginRes.body.token)
+        .query({ custom_view_id: accountsView.id })
+        .send();
+
+      expect(res.status).equals(200);
+      res.body.accounts.forEach((account) => {
+        expect(account).to.deep.include({ accountTypeId: 2 });
+      });
+    });
+
+    it('Should retrieve accounts and child accounts in nested set graph.', async () => {
+      const resource = await create('resource', { name: 'accounts' });
+
+      const account1 = await create('account');
+      const account2 = await create('account', { parent_account_id: account1.id });
+      const account3 = await create('account', { parent_account_id: account2.id });
+
+      const res = await request()
+        .get('/api/accounts')
+        .set('x-access-token', loginRes.body.token)
+        .query({ display_type: 'tree' })
+        .send();
+
+      expect(res.status).equals(200);
+
+      expect(res.body.accounts[0].id).equals(account1.id);
+      expect(res.body.accounts[0].children[0].id).equals(account2.id);
+      expect(res.body.accounts[0].children[0].children[0].id).equals(account3.id);
+    });
+
+    it('Should retrieve accounts and child accounts in flat display with dashed accounts name.', async () => {
+      const resource = await create('resource', { name: 'accounts' });
+
+      const account1 = await create('account');
+      const account2 = await create('account', { parent_account_id: account1.id });
+      const account3 = await create('account', { parent_account_id: account2.id });
+
+      const res = await request()
+        .get('/api/accounts')
+        .set('x-access-token', loginRes.body.token)
+        .query({ display_type: 'flat' })
+        .send();
+
+      expect(res.body.accounts[0].id).equals(account1.id);
+      expect(res.body.accounts[0].name).equals(account1.name);
+
+      expect(res.body.accounts[1].id).equals(account2.id);
+      expect(res.body.accounts[1].name).equals(`${account1.name} ― ${account2.name}`);
+
+      expect(res.body.accounts[2].id).equals(account3.id);
+      expect(res.body.accounts[2].name).equals(`${account1.name} ― ${account2.name} ― ${account3.name}`);
     });
   });
 

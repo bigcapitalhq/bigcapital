@@ -1,0 +1,5 @@
+
+
+export default {
+  MAKE_JOURNAL_ENTRIES: 'MAKE_JOURNAL_ENTRIES',
+}

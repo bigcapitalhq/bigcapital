@@ -226,7 +226,6 @@ export default {
           errors: [{ type: 'PREDEFINED_FIELD', code: 100 }],
         });
       }
-
       await field.destroy();
 
       return res.status(200).send({ id: field.get('id') });

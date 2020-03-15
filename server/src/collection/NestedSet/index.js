@@ -12,9 +12,6 @@ export default class NestedSet {
     };
     this.items = items;
     this.collection = {};
-    this.toTree();
-
-    return this.collection;
   }
 
   /**
@@ -49,25 +46,32 @@ export default class NestedSet {
       }
     });
     this.collection = Object.values(tree);
+    return this.collection;
   }
 
-  walk() {
-
+  getTree() {
+    return this.collection;
   }
 
-  getParents() {
+  flattenTree(nodeMapper) {
+    const flattenTree = [];
 
-  }
+    const traversal = (nodes, parentNode) => {
+      nodes.forEach((node) => {
+        let nodeMapped = node;
 
-  getChildren() {
-    
-  }
+        if (typeof nodeMapper === 'function') {
+          nodeMapped = nodeMapper(nodeMapped, parentNode);
+        }
+        flattenTree.push(nodeMapped);
 
-  toFlattenArray() {
+        if (node.children && node.children.length > 0) {
+          traversal(node.children, node);
+        }
+      });
+    };
+    traversal(this.collection);
 
-  }
-
-  toArray() {
-
+    return flattenTree;
   }
 }

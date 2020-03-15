@@ -170,7 +170,7 @@ factory.define('resource_field', 'resource_fields', async () => {
 
   return {
     label_name: faker.lorem.words(),
-    slug: faker.lorem.slug(),
+    key: faker.lorem.slug(),
     data_type: dataTypes[Math.floor(Math.random() * dataTypes.length)],
     help_text: faker.lorem.words(),
     default: faker.lorem.word(),

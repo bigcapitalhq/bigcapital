@@ -1,5 +1,10 @@
 import express from 'express';
-import { check, validationResult } from 'express-validator';
+import {
+  check,
+  query,
+  param,
+  validationResult,
+} from 'express-validator';
 import User from '@/models/User';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
 import jwtAuth from '@/http/middleware/jwtAuth';
@@ -12,32 +17,32 @@ export default {
    */
   router() {
     const router = express.Router();
-    const permit = Authorization('users');
+    // const permit = Authorization('users');
 
     router.use(jwtAuth);
 
     router.post('/',
-      permit('create'),
+      // permit('create'),
       this.newUser.validation,
       asyncMiddleware(this.newUser.handler));
 
     router.post('/:id',
-      permit('create', 'edit'),
+      // permit('create', 'edit'),
       this.editUser.validation,
       asyncMiddleware(this.editUser.handler));
 
     router.get('/',
-      permit('view'),
+      // permit('view'),
       this.listUsers.validation,
       asyncMiddleware(this.listUsers.handler));
 
     router.get('/:id',
-      permit('view'),
+      // permit('view'),
       this.getUser.validation,
       asyncMiddleware(this.getUser.handler));
 
     router.delete('/:id',
-      permit('create', 'edit', 'delete'),
+      // permit('create', 'edit', 'delete'),
       this.deleteUser.validation,
       asyncMiddleware(this.deleteUser.handler));
 
@@ -49,8 +54,8 @@ export default {
    */
   newUser: {
     validation: [
-      check('first_name').exists(),
-      check('last_name').exists(),
+      check('first_name').trim().escape().exists(),
+      check('last_name').trim().escape().exists(),
       check('email').exists().isEmail(),
       check('phone_number').optional().isMobilePhone(),
       check('password').isLength({ min: 4 }).exists().custom((value, { req }) => {
@@ -72,13 +77,12 @@ export default {
       }
       const { email, phone_number: phoneNumber } = req.body;
 
-      const foundUsers = await User.query((query) => {
-        query.where('email', email);
-        query.orWhere('phone_number', phoneNumber);
-      }).fetchAll();
+      const foundUsers = await User.query()
+        .where('email', email)
+        .orWhere('phone_number', phoneNumber);
 
-      const foundUserEmail = foundUsers.find((u) => u.attributes.email === email);
-      const foundUserPhone = foundUsers.find((u) => u.attributes.phone_number === phoneNumber);
+      const foundUserEmail = foundUsers.find((u) => u.email === email);
+      const foundUserPhone = foundUsers.find((u) => u.phoneNumber === phoneNumber);
 
       const errorReasons = [];
 
@@ -92,7 +96,7 @@ export default {
         return res.boom.badRequest(null, { errors: errorReasons });
       }
 
-      const user = User.forge({
+      const user = await User.query().insert({
         first_name: req.body.first_name,
         last_name: req.body.last_name,
         email: req.body.email,
@@ -100,9 +104,7 @@ export default {
         active: req.body.status,
       });
 
-      await user.save();
-
-      return res.status(200).send({ id: user.get('id') });
+      return res.status(200).send({ user });
     },
   },
 
@@ -111,6 +113,7 @@ export default {
    */
   editUser: {
     validation: [
+      param('id').exists().isNumeric().toInt(),
       check('first_name').exists(),
       check('last_name').exists(),
       check('email').exists().isEmail(),
@@ -133,21 +136,22 @@ export default {
           code: 'validation_error', ...validationErrors,
         });
       }
-      const user = await User.where('id', id).fetch();
+      const user = await User.query().where('id', id).first();
 
       if (!user) {
         return res.boom.notFound();
       }
       const { email, phone_number: phoneNumber } = req.body;
 
-      const foundUsers = await User.query((query) => {
-        query.whereNot('id', id);
-        query.where('email', email);
-        query.orWhere('phone_number', phoneNumber);
-      }).fetchAll();
+      const foundUsers = await User.query()
+        .whereNot('id', id)
+        .andWhere((q) => {
+          q.where('email', email);
+          q.orWhere('phone_number', phoneNumber);
+        });
 
-      const foundUserEmail = foundUsers.find((u) => u.attribues.email === email);
-      const foundUserPhone = foundUsers.find((u) => u.attribues.phone_number === phoneNumber);
+      const foundUserEmail = foundUsers.find((u) => u.email === email);
+      const foundUserPhone = foundUsers.find((u) => u.phoneNumber === phoneNumber);
 
       const errorReasons = [];
 
@@ -158,17 +162,16 @@ export default {
         errorReasons.push({ type: 'PHONE_NUMBER_ALREADY_EXIST', code: 120 });
       }
       if (errorReasons.length > 0) {
-        return res.badRequest(null, { errors: errorReasons });
+        return res.boom.badRequest(null, { errors: errorReasons });
       }
 
-      await user.save({
+      await User.query().where('id', id).update({
         first_name: req.body.first_name,
         last_name: req.body.last_name,
         email: req.body.email,
         phone_number: req.body.phone_number,
-        status: req.body.status,
+        active: req.body.status,
       });
-
       return res.status(200).send();
     },
   },
@@ -180,30 +183,34 @@ export default {
     validation: [],
     async handler(req, res) {
       const { id } = req.params;
-      const user = await User.where('id', id).fetch();
+      const user = await User.query().where('id', id).first();
 
       if (!user) {
         return res.boom.notFound(null, {
           errors: [{ type: 'USER_NOT_FOUND', code: 100 }],
         });
       }
+      await User.query().where('id', id).delete();
 
-      await user.destroy();
       return res.status(200).send();
     },
   },
 
+  /**
+   * Retrieve user details of the given user id.
+   */
   getUser: {
-    validation: [],
+    validation: [
+      param('id').exists().isNumeric().toInt(),
+    ],
     async handler(req, res) {
       const { id } = req.params;
-      const user = await User.where('id', id).fetch();
+      const user = await User.query().where('id', id).first();
 
       if (!user) {
         return res.boom.notFound();
       }
-
-      return res.status(200).send({ item: user.toJSON() });
+      return res.status(200).send({ user });
     },
   },
 
@@ -211,8 +218,11 @@ export default {
    * Retrieve the list of users.
    */
   listUsers: {
-    validation: [],
-    handler(req, res) {
+    validation: [
+      query('page_size').optional().isNumeric().toInt(),
+      query('page').optional().isNumeric().toInt(),
+    ],
+    async handler(req, res) {
       const filter = {
         first_name: '',
         last_name: '',
@@ -224,28 +234,10 @@ export default {
         ...req.query,
       };
 
-      const users = User.query((query) => {
-        if (filter.first_name) {
-          query.where('first_name', filter.first_name);
-        }
-        if (filter.last_name) {
-          query.where('last_name', filter.last_name);
-        }
-        if (filter.email) {
-          query.where('email', filter.email);
-        }
-        if (filter.phone_number) {
-          query.where('phone_number', filter.phone_number);
-        }
-      }).fetchPage({
-        page_size: filter.page_size,
-        page: filter.page,
-      });
+      const users = await User.query()
+        .page(filter.page - 1, filter.page_size);
 
-      return res.status(200).send({
-        items: users.toJSON(),
-        pagination: users.pagination,
-      });
+      return res.status(200).send({ users });
     },
   },
 };

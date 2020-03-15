@@ -6,8 +6,14 @@ import AccountType from '@/models/AccountType';
 import AccountTransaction from '@/models/AccountTransaction';
 import JournalPoster from '@/services/Accounting/JournalPoster';
 import AccountBalance from '@/models/AccountBalance';
+import Resource from '@/models/Resource';
+import View from '@/models/View';
 import JWTAuth from '@/http/middleware/jwtAuth';
 import NestedSet from '../../collection/NestedSet';
+import {
+  mapViewRolesToConditionals,
+  validateViewRoles,
+} from '@/lib/ViewRolesBuilder';
 
 export default {
   /**
@@ -162,12 +168,12 @@ export default {
     ],
     async handler(req, res) {
       const { id } = req.params;
-      const account = await Account.where('id', id).fetch();
+      const account = await Account.query().where('id', id).first();
 
       if (!account) {
         return res.boom.notFound();
       }
-      return res.status(200).send({ item: { ...account.attributes } });
+      return res.status(200).send({ account: { ...account } });
     },
   },
 
@@ -204,8 +210,10 @@ export default {
    */
   getAccountsList: {
     validation: [
+      query('display_type').optional().isIn(['tree', 'flat']),
       query('account_types').optional().isArray(),
       query('account_types.*').optional().isNumeric().toInt(),
+      query('custom_view_id').optional().isNumeric().toInt(),
     ],
     async handler(req, res) {
       const validationErrors = validationResult(req);
@@ -216,19 +224,72 @@ export default {
         });
       }
 
-      const form = {
+      const filter = {
         account_types: [],
-        ...req.body,
+        display_type: 'tree',
+        ...req.query,
       };
-      const accounts = await Account.query()
-        .modify('filterAccountTypes', form.account_types);
+      const errorReasons = [];
+      const viewConditionals = [];
+      const accountsResource = await Resource.query().where('name', 'accounts').first();
 
-      const accountsNestedSet = new NestedSet(accounts, {
-        parentId: 'parentAccountId',
+      if (!accountsResource) {
+        return res.status(400).send({
+          errors: [{ type: 'ACCOUNTS_RESOURCE_NOT_FOUND', code: 200 }],
+        });
+      }
+      const view = await View.query().onBuild((builder) => {
+        if (filter.custom_view_id) {
+          builder.where('id', filter.custom_view_id);
+        } else {
+          builder.where('favourite', true);
+        }
+        builder.where('resource_id', accountsResource.id);
+        builder.withGraphFetched('roles.field');
+        builder.withGraphFetched('columns');
+        builder.first();
       });
 
+      if (view && view.roles.length > 0) {
+        viewConditionals.push(
+          ...mapViewRolesToConditionals(view.roles),
+        );
+        if (!validateViewRoles(viewConditionals, view.rolesLogicExpression)) {
+          errorReasons.push({ type: 'VIEW.LOGIC.EXPRESSION.INVALID', code: 400 });
+        }
+      }
+      if (errorReasons.length > 0) {
+        return res.status(400).send({ errors: errorReasons });
+      }
+      const accounts = await Account.query().onBuild((builder) => {
+        builder.modify('filterAccountTypes', filter.account_types);
+        builder.withGraphFetched('type');
+
+        if (viewConditionals.length) {
+          builder.modify('viewRolesBuilder', viewConditionals, view.rolesLogicExpression);
+        }
+      });
+
+      const nestedAccounts = new NestedSet(accounts, { parentId: 'parentAccountId' });
+      const groupsAccounts = nestedAccounts.toTree();
+      const accountsList = [];
+
+      if (filter.display_type === 'tree') {
+        accountsList.push(...groupsAccounts);
+      } else if (filter.display_type === 'flat') {
+        const flattenAccounts = nestedAccounts.flattenTree((account, parentAccount) => {
+          if (parentAccount) {
+            account.name = `${parentAccount.name} ― ${account.name}`;
+          }
+          return account;
+        });
+        accountsList.push(...flattenAccounts);
+      }
       return res.status(200).send({
-        // ...accountsNestedSet.toArray(),
+        accounts: accountsList,
+        ...(view) ? {
+          customViewId: view.id,
+        } : {},
       });
     },
   },

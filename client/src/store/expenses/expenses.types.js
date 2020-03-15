@@ -1,0 +1,5 @@
+
+export default {
+  EXPENSES_LIST_SET: 'EXPENSES_LIST_SET',
+  EXPENSE_SET: 'EXPENSE_SET',
+};

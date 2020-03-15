@@ -1,5 +1,8 @@
 import bcrypt from 'bcryptjs';
 import moment from 'moment';
+import _ from 'lodash';
+const { map, isArray, isPlainObject, mapKeys, mapValues } = require('lodash')
+
 
 const hashPassword = (password) => new Promise((resolve) => {
   bcrypt.genSalt(10, (error, salt) => {
@@ -43,9 +46,31 @@ const dateRangeFormat = (rangeType) => {
   }
 };
 
+
+const mapKeysDeep = (obj, cb) => {
+  if (_.isArray(obj)) {
+      return obj.map(innerObj => mapKeysDeep(innerObj, cb));
+  }
+  else if (_.isObject(obj)) {
+      return _.mapValues(
+          _.mapKeys(obj, cb),
+          val => mapKeysDeep(val, cb),
+      )
+  } else {
+      return obj;
+  }
+}
+
+const mapValuesDeep = (v, callback) => (
+  _.isObject(v)
+    ? _.mapValues(v, v => mapValuesDeep(v, callback))
+    : callback(v));
+
 export {
   hashPassword,
   origin,
   dateRangeCollection,
   dateRangeFormat,
+  mapValuesDeep,
+  mapKeysDeep,
 };

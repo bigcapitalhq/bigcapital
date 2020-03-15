@@ -68,9 +68,7 @@ export default {
       }
       const options = await Option.query();
 
-      return res.status(200).sends({
-        options: options.toArray(),
-      });
+      return res.status(200).sends({ options });
     },
   },
 };

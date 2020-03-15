@@ -24,6 +24,7 @@ export default class Role extends BaseModel {
     const Permission = require('@/models/Permission');
     const Resource = require('@/models/Resource');
     const User = require('@/models/User');
+    const ResourceField = require('@/models/ResourceField');
 
     return {
       /**
@@ -56,6 +57,18 @@ export default class Role extends BaseModel {
           },
           to: 'resources.id',
         },
+      },
+
+      /**
+       * Role may has resource field.
+       */
+      field: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: ResourceField.default,
+        join: {
+          from: 'roles.fieldId',
+          to: 'resource_fields.id',
+        }
       },
 
       /**

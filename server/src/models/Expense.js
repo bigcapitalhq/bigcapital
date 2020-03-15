@@ -1,6 +1,6 @@
 import { Model } from 'objection';
 import BaseModel from '@/models/Model';
-
+import {viewRolesBuilder} from '@/lib/ViewRolesBuilder';
 export default class Expense extends BaseModel {
   /**
    * Table name
@@ -44,6 +44,14 @@ export default class Expense extends BaseModel {
           query.where('payment_account_id', accountId);
         }
       },
+
+      viewRolesBuilder(query, conditionals, expression) {
+        viewRolesBuilder(conditionals, expression)(query);
+      },
+
+      orderBy(query) {
+        
+      }
     };
   }
 

@@ -7,7 +7,7 @@
     "build": "webpack",
     "start": "npm-run-all --parallel watch:server watch:build",
     "watch:build": "webpack --watch",
-    "watch:server": "nodemon --inspect=\"9229\" \"./dist/bundle.js\" --watch \"./dist\" ",
+    "watch:server": "nodemon  \"./dist/bundle.js\" --watch \"./dist\" ",
     "test": "cross-env NODE_ENV=test mocha-webpack --webpack-config webpack.config.js \"tests/**/*.test.js\"",
     "test:watch": "cross-env NODE_ENV=test mocha-webpack --watch --webpack-config webpack.config.js --timeout=30000 tests/**/*.test.js"
   },

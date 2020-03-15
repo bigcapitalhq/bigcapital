@@ -39,19 +39,19 @@ export default class View extends BaseModel {
         modelClass: ViewColumn.default,
         join: {
           from: 'views.id',
-          to: 'view_has_columns.view_id',
+          to: 'view_has_columns.viewId',
         },
       },
 
       /**
        * View model may has many view roles.
        */
-      viewRoles: {
+      roles: {
         relation: Model.HasManyRelation,
         modelClass: ViewRole.default,
         join: {
           from: 'views.id',
-          to: 'view_roles.view_id',
+          to: 'view_roles.viewId',
         },
       },
     };

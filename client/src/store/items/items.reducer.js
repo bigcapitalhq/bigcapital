@@ -1,0 +1,6 @@
+
+const initialState = {
+  list: [],
+  itemById: {},
+};
+

@@ -3,8 +3,11 @@ import thunkMiddleware from 'redux-thunk';
 import monitorReducerEnhancer from 'store/enhancers/monitorReducer';
 import loggerMiddleware from 'middleware/logger'
 import rootReducer from 'store/reducers';
+import { loadState, saveState } from 'store/localStorage';
 
-const createStore = (initialState = {}) => {
+const createStore = (initialState = {
+  ...loadState(),
+}) => {
   /**
   |--------------------------------------------------
   | Middleware Configuration
@@ -43,6 +46,13 @@ const createStore = (initialState = {}) => {
   );
   store.asyncReducers = {};
 
+  store.subscribe(() => {
+    saveState({
+      authentication: {
+        token: store.getState().authentication.token,
+      },
+    });
+  });
   return store;
 };
 export default createStore();

@@ -1,5 +1,5 @@
 
-exports.up = function (knex) {
+exports.up = (knex) => {
   return knex.schema.createTable('account_types', (table) => {
     table.increments();
     table.string('name');

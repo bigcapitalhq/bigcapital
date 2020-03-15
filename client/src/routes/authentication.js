@@ -1,20 +1,20 @@
-import Login from 'containers/Authentication/Login';
-import ResetPassword from 'containers/Authentication/ResetPassword';
+import LazyLoader from 'components/LazyLoader';
+
+const BASE_URL = '/auth';
 
 export default [
-  // {
-  //   path: '/',
-  //   exact: true,
-  //   component: Login,
-  // },
   {
-    path: '/auth/login',
-    exact: true,
-    component: Login,
+    path: `${BASE_URL}/login`,
+    name: 'auth.login',
+    component: LazyLoader({
+      loader: () => import('containers/Authentication/Login')
+    }),
   },
   {
-    path: '/auth/reset_password',
-    exact: true,
-    component: ResetPassword,
+    path: `${BASE_URL}/reset_password`,
+    name: 'auth.reset_password',
+    component: LazyLoader({
+      loader: () => import('containers/Authentication/ResetPassword')
+    }),
   }
 ];

@@ -1,5 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import {useHistory} from 'react-router';
 import {
   Navbar,
   NavbarGroup,
@@ -10,44 +11,64 @@ import {
   Menu,
   Popover,
 } from '@blueprintjs/core';
+import DashboardBreadcrumbs from 'components/Dashboard/DashboardBreadcrumbs';
+import DashboardTopbarUser from 'components/Dashboard/TopbarUser';
+import Icon from 'components/Icon';
 
-function DashboardTopbar({ pageTitle }) {
-  const userAvatarDropMenu = (
-    <Menu>
-      <MenuItem icon="graph" text="Graph" />
-      <MenuItem icon="map" text="Map" />
-      <MenuItem icon="th" text="Table" shouldDismissPopover={false} />
-      <MenuItem icon="zoom-to-fit" text="Nucleus" disabled={true} />
-      <MenuDivider />
-      <MenuItem icon="cog" text="Logout" />
-    </Menu>
-  );
+function DashboardTopbar({
+  pageTitle,
+  pageSubtitle,
+  editViewId,
+}) {
+  const history = useHistory();
+
+  const handlerClickEditView = () => {
+    history.push(`/dashboard/custom_views/${editViewId}/edit`)
+  }
   return (
     <div class="dashboard__topbar">
-      <div>
-        <Button>
-          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" role="img" focusable="false">
-            <title>Menu</title>
-            <path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path>
-          </svg>
-        </Button>
-        <h1 class="dashboard__title">{ pageTitle }</h1>
+      <div class="dashboard__topbar-left">
+        <div class="dashboard__topbar-sidebar-toggle">
+          <Button>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" role="img" focusable="false">
+              <title>Menu</title>
+              <path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="5" stroke-width="2" d="M4 7h15M4 12h15M4 17h15"></path>
+            </svg>
+          </Button>
+        </div>
+
+        <div class="dashboard__title">
+          <h1>{ pageTitle }</h1>
+
+          { pageSubtitle && (
+            <>
+              <span class="sep"></span>
+              <h3>{ pageSubtitle }</h3>  
+              <Button
+                className="button--view-edit"
+                icon={<Icon icon="pen" />}
+                onClick={handlerClickEditView} />
+            </>
+          )}
+        </div>
+
+        <div class="dashboard__breadcrumbs">
+          <DashboardBreadcrumbs />
+        </div>
       </div>
 
-      <div class="dashboard__topbar-actions">
+      <div class="dashboard__topbar-right">
         <Navbar class="dashboard__topbar-navbar">
           <NavbarGroup>
-            <Button className={Classes.MINIMAL} icon="home" text="Home" />
-            <Button className={Classes.MINIMAL} icon="document" text="Files" />
+            <Button className={Classes.MINIMAL} icon="home" text="Search" />
+            <Button className={Classes.MINIMAL} icon="document" text="Filters" />
+            <Button className={Classes.MINIMAL} icon="document" text="Add order" />
+            <Button className={Classes.MINIMAL} icon="document" text="More" />
           </NavbarGroup>
         </Navbar>
 
-        <div class="dashboard__user">
-          <Popover content={userAvatarDropMenu}>
-            <Button>
-              <div className="user-avatar"></div>
-            </Button>
-          </Popover>
+        <div class="dashboard__topbar-user">
+          <DashboardTopbarUser />
         </div>
       </div>
     </div>
@@ -56,5 +77,8 @@ function DashboardTopbar({ pageTitle }) {
 
 const mapStateToProps = (state) => ({
   pageTitle: state.dashboard.pageTitle,
+  pageSubtitle: state.dashboard.pageSubtitle,
+  editViewId: state.dashboard.topbarEditViewId, 
 });
+
 export default connect(mapStateToProps)(DashboardTopbar);

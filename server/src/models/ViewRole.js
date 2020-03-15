@@ -1,8 +1,21 @@
 import { Model } from 'objection';
-import path from 'path';
 import BaseModel from '@/models/Model';
 
 export default class ViewRole extends BaseModel {
+
+  /**
+   * Virtual attributes.
+   */
+  static get virtualAttributes() {
+    return ['comparators'];
+  }
+
+  static get comparators() {
+    return [
+      'equals', 'not_equal', 'contains', 'not_contain',
+    ];
+  }
+
   /**
    * Table name.
    */
@@ -21,16 +34,31 @@ export default class ViewRole extends BaseModel {
    * Relationship mapping.
    */
   static get relationMappings() {
+    const ResourceField = require('@/models/ResourceField');
+    const View = require('@/models/View');
+
     return {
       /**
        * View role model may belongs to view model.
        */
       view: {
         relation: Model.BelongsToOneRelation,
-        modelBase: path.join(__dirname, 'View'),
+        modelClass: View.default,
         join: {
-          from: 'view_roles.view_id',
+          from: 'view_roles.viewId',
           to: 'views.id',
+        },
+      },
+
+      /**
+       * View role model may belongs to resource field model.
+       */
+      field: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: ResourceField.default,
+        join: {
+          from: 'view_roles.fieldId',
+          to: 'resource_fields.id',
         },
       },
     };

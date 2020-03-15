@@ -5,6 +5,7 @@ exports.up = function (knex) {
     table.string('name');
     table.boolean('predefined');
     table.integer('resource_id').unsigned().references('id').inTable('resources');
+    table.boolean('favourite');
     table.string('roles_logic_expression');
   });
 };

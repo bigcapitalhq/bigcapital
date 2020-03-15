@@ -2,6 +2,7 @@
 import { Model } from 'objection';
 import { flatten } from 'lodash';
 import BaseModel from '@/models/Model';
+import {viewRolesBuilder} from '@/lib/ViewRolesBuilder';
 
 export default class Account extends BaseModel {
   /**
@@ -20,6 +21,9 @@ export default class Account extends BaseModel {
         if (typesIds.length > 0) {
           query.whereIn('accoun_type_id', typesIds);
         }
+      },
+      viewRolesBuilder(query, conditionals, expression) {
+        viewRolesBuilder(conditionals, expression)(query);
       },
     };
   }

@@ -1,0 +1,13 @@
+
+exports.seed = (knex) => {
+  // Deletes ALL existing entries
+  return knex('resources').del()
+    .then(() => {
+      // Inserts seed entries
+      return knex('resources').insert([
+        { id: 1, name: 'accounts' },
+        { id: 2, name: 'items' },
+        { id: 3, name: 'expenses' },
+      ]);
+    });
+};

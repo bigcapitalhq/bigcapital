@@ -17,6 +17,10 @@ import AccountTransaction from '@/models/AccountTransaction';
 import View from '@/models/View';
 import Resource from '../../models/Resource';
 import ResourceCustomFieldRepository from '@/services/CustomFields/ResourceCustomFieldRepository';
+import {
+  validateViewRoles,
+  mapViewRolesToConditionals,
+} from '@/lib/ViewRolesBuilder';
 
 export default {
   /**
@@ -50,9 +54,9 @@ export default {
       this.listExpenses.validation,
       asyncMiddleware(this.listExpenses.handler));
 
-    router.get('/:id',
-      this.getExpense.validation,
-      asyncMiddleware(this.getExpense.handler));
+    // router.get('/:id',
+    //   this.getExpense.validation,
+    //   asyncMiddleware(this.getExpense.handler));
 
     return router;
   },
@@ -62,7 +66,7 @@ export default {
    */
   newExpense: {
     validation: [
-      check('date').optional().isISO8601(),
+      check('date').optional(),
       check('payment_account_id').exists().isNumeric().toInt(),
       check('expense_account_id').exists().isNumeric().toInt(),
       check('description').optional(),
@@ -90,7 +94,7 @@ export default {
       };
       // Convert the date to the general format.
       form.date = moment(form.date).format('YYYY-MM-DD');
-s
+
       const errorReasons = [];
       const paymentAccount = await Account.query()
         .findById(form.payment_account_id).first();
@@ -103,19 +107,19 @@ s
       if (!expenseAccount) {
         errorReasons.push({ type: 'EXPENSE.ACCOUNT.NOT.FOUND', code: 200 });
       }
-      const customFields = new ResourceCustomFieldRepository(Expense);
-      await customFields.load();
+      // const customFields = new ResourceCustomFieldRepository(Expense);
+      // await customFields.load();
 
-      if (customFields.validateExistCustomFields()) {
-        errorReasons.push({ type: 'CUSTOM.FIELDS.SLUGS.NOT.EXISTS', code: 400 });
-      }
+      // if (customFields.validateExistCustomFields()) {
+      //   errorReasons.push({ type: 'CUSTOM.FIELDS.SLUGS.NOT.EXISTS', code: 400 });
+      // }
       if (errorReasons.length > 0) {
         return res.status(400).send({ errors: errorReasons });
       }
       const expenseTransaction = await Expense.query().insertAndFetch({
         ...omit(form, ['custom_fields']),
       });
-      customFields.fillCustomFields(expenseTransaction.id, form.custom_fields);
+      // customFields.fillCustomFields(expenseTransaction.id, form.custom_fields);
 
       const journalEntries = new JournalPoster();
       const creditEntry = new JournalEntry({
@@ -140,7 +144,7 @@ s
       journalEntries.debit(debitEntry);
 
       await Promise.all([
-        customFields.saveCustomFields(expenseTransaction.id),
+        // customFields.saveCustomFields(expenseTransaction.id),
         journalEntries.saveEntries(),
         journalEntries.saveBalance(),
       ]);
@@ -331,38 +335,61 @@ s
       const expenseResource = await Resource.query().where('name', 'expenses').first();
 
       if (!expenseResource) {
-        errorReasons.push({ type: 'EXPENSE_NOT_FOUND', code: 300 });
+        errorReasons.push({ type: 'EXPENSE_RESOURCE_NOT_FOUND', code: 300 });
       }
-      const view = await View.query().runBefore((result, q) => {
-        if (filter.customer_view_id) {
-          q.where('id', filter.customer_view_id);
+      if (errorReasons.length > 0) {
+        return res.status(400).send({ errors: errorReasons });
+      }
+      const view = await View.query().onBuild((builder) => {
+        if (filter.custom_view_id) {
+          builder.where('id', filter.custom_view_id);
         } else {
-          q.where('favorite', true);
+          builder.where('favourite', true);
         }
-        q.where('resource_id', expenseResource.id);
-        q.withGraphFetched('viewRoles');
-        q.withGraphFetched('columns');
-        q.first();
-        return result;
-      });
+        builder.where('resource_id', expenseResource.id);
+        builder.withGraphFetched('viewRoles.field');
+        builder.withGraphFetched('columns');
 
-      if (!view) {
+        builder.first();
+      });
+      let viewConditionals = [];
+
+      if (view && view.viewRoles.length > 0) {
+        viewConditionals = mapViewRolesToConditionals(view.viewRoles);
+
+        if (!validateViewRoles(viewConditionals, view.rolesLogicExpression)) {
+          errorReasons.push({ type: 'VIEW.LOGIC.EXPRESSION.INVALID', code: 400 })
+        }
+      }
+      if (!view && filter.custom_view_id) {
         errorReasons.push({ type: 'VIEW_NOT_FOUND', code: 100 });
       }
       if (errorReasons.length > 0) {
         return res.boom.badRequest(null, { errors: errorReasons });
       }
-      const expenses = await Expense.query()
-        .modify('filterByAmountRange', filter.range_from, filter.to_range)
-        .modify('filterByDateRange', filter.date_from, filter.date_to)
-        .modify('filterByExpenseAccount', filter.expense_account_id)
-        .modify('filterByPaymentAccount', filter.payment_account_id)
-        .modify('orderBy', filter.column_sort_order, filter.sort_order)
-        .page(filter.page, filter.page_size);
-      
+
+      const expenses = await Expense.query().onBuild((builder) => {
+        builder.withGraphFetched('paymentAccount');
+        builder.withGraphFetched('expenseAccount');
+        builder.withGraphFetched('user');
+
+        if (viewConditionals.length) {
+          builder.modify('viewRolesBuilder', viewConditionals, view.rolesLogicExpression);
+        }
+        builder.modify('filterByAmountRange', filter.range_from, filter.to_range);
+        builder.modify('filterByDateRange', filter.date_from, filter.date_to);
+        builder.modify('filterByExpenseAccount', filter.expense_account_id);
+        builder.modify('filterByPaymentAccount', filter.payment_account_id);
+        builder.modify('orderBy', filter.column_sort_order, filter.sort_order);
+      }).page(filter.page - 1, filter.page_size);
+
       return res.status(200).send({
-        columns: view.columns,
-        viewRoles: view.viewRoles,
+        ...(view) ? {
+          customViewId: view.id, 
+          viewColumns: view.columns,
+          viewConditionals,
+        } : {},
+        expenses,
       });
     },
   },

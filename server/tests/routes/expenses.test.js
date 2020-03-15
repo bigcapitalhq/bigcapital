@@ -205,6 +205,7 @@ describe('routes: /expenses/', () => {
     it('Should response unauthorized in case user was not authorized.', () => {
 
     });
+
     it('Should response not found in case expense was not exist.', () => {
 
     });

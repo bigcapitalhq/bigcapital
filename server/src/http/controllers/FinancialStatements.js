@@ -289,6 +289,7 @@ export default {
           })),
       ];
       return res.status(200).send({
+        query: { ...filter },
         columns: { ...dateRangeSet },
         balance_sheet: {
           assets,

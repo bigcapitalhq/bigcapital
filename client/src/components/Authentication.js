@@ -7,7 +7,7 @@ export default function({ isAuthenticated =false, ...rest }) {
 
   return (
     <Route path="/auth">
-      { isAuthenticated ?
+      { (isAuthenticated) ?
         (<Redirect to={to} />) : (
         <Switch>
           <div class="authentication-page">

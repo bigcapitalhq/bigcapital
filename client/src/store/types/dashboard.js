@@ -1,6 +1,0 @@
-
-const ACTION = {
-  CHANGE_DASHBOARD_PAGE_TITLE: 'CHANGE_DASHBOARD_PAGE_TITLE',
-};
-
-export default ACTION;

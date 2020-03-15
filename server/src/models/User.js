@@ -6,6 +6,10 @@ import BaseModel from '@/models/Model';
 export default class User extends BaseModel {
   // ...PermissionsService
 
+  static get virtualAttributes() {
+    return ['fullName'];
+  }
+
   /**
    * Table name
    */
@@ -42,5 +46,9 @@ export default class User extends BaseModel {
    */
   verifyPassword(password) {
     return bcrypt.compareSync(password, this.password);
+  }
+
+  fullName() {
+    return `${this.firstName} ${this.lastName}`;
   }
 }

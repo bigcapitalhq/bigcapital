@@ -11,18 +11,124 @@ import ViewColumn from '../../src/models/ViewColumn';
 
 let loginRes;
 
-describe('routes: `/views`', () => {
+describe.only('routes: `/views`', () => {
   beforeEach(async () => {
     loginRes = await login();
   });
   afterEach(() => {
     loginRes = null;
   });
+
+  describe('GET: `/views`', () => {
+    it('Should response unauthorized in case the user was not authorized.', async () => {
+      const res = await request().get('/api/views');
+
+      expect(res.status).equals(401);
+      expect(res.body.message).equals('unauthorized');
+    });
+
+    it('Should retrieve all views of the given resource name.', async () => {
+      const resource = await create('resource', { name: 'resource_name' });
+      const resourceFields = await create('view', {
+        name: 'Resource View',
+        resource_id: resource.id,
+        roles_logic_expression: '',
+      });
+
+      const res = await request()
+        .get('/api/views')
+        .set('x-access-token', loginRes.body.token)
+        .query({ resource_name: 'resource_name' })
+        .send();
+
+      // console.log(res.body);
+
+      expect(res.status).equals(200);
+      expect(res.body.views.length).equals(1);
+    });
+  });
+
+  describe('GET `/views/:id`', () => {
+    it('Should response unauthorized in case the user was not authorized.', async () => {
+      const resource = await create('resource', { name: 'resource_name' });
+      const resourceView = await create('view', {
+        name: 'Resource View',
+        resource_id: resource.id,
+        roles_logic_expression: '',
+      });
+
+      const res = await request()
+        .get(`/api/views/${resourceView.id}`)
+        .query({ resource_name: 'resource_name' })
+        .send();
+
+      expect(res.status).equals(401);
+      expect(res.body.message).equals('unauthorized');
+    });
+
+    it('Should response not found in case the given view was not found.', async () => {
+      const resource = await create('resource', { name: 'resource_name' });
+      const resourceView = await create('view', {
+        name: 'Resource View',
+        resource_id: resource.id,
+        roles_logic_expression: '',
+      });
+
+      const res = await request()
+        .get('/api/views/123')
+        .set('x-access-token', loginRes.body.token)
+        .send();
+
+      expect(res.status).equals(404);
+      expect(res.body.errors[0]).deep.equals({
+        type: 'VIEW_NOT_FOUND', code: 100,
+      });
+    });
+
+    it('Should retrieve details of the given view with associated graphs.', async () => {
+      const resource = await create('resource', { name: 'resource_name' });
+      const resourceView = await create('view', {
+        name: 'Resource View',
+        resource_id: resource.id,
+        roles_logic_expression: '1 AND 2',
+      });
+      const resourceField = await create('resource_field', {
+        label_name: 'Expense Account',
+        key: 'expense_account',
+        data_type: 'integer',
+        resource_id: resource.id,
+        active: true,
+        predefined: true,
+        builtin: true,
+      });
+      const viewRole = await create('view_role', {
+        view_id: resourceView.id,
+        index: 1,
+        field_id: resourceField.id,
+        value: '12',
+        comparator: 'equals',
+      });
+
+      const res = await request()
+        .get(`/api/views/${resourceView.id}`)
+        .set('x-access-token', loginRes.body.token)
+        .send();
+
+      expect(res.status).equals(200);
+      expect(res.body.view.name).equals(resourceView.name);
+      expect(res.body.view.resourceId).equals(resourceView.resourceId);
+      expect(res.body.view.rolesLogicExpression).equals(resourceView.rolesLogicExpression);
+
+      expect(res.body.view.viewRoles.length).equals(1);
+      expect(res.body.view.viewRoles[0].viewId).equals(viewRole.viewId);
+    });
+  });
+
   describe('POST: `/views`', () => {
     it('Should response unauthorzied in case the user was not authorized.', async () => {
       const res = await request().post('/api/views');
 
-      expect(res.status).equals(422);
+      expect(res.status).equals(401);
       expect(res.body.message).equals('unauthorized');
     });
 
@@ -84,31 +190,34 @@ describe('routes: `/views`', () => {
       });
     });
 
-    it('Should `roles.*.field` be required.', async () => {
+    it('Should `roles.*.field_key` be required.', async () => {
       const resource = await create('resource');
       const res = await request()
         .post('/api/views')
+        .set('x-access-token', loginRes.body.token)
         .send({
           resource_name: resource.name,
           label: 'View Label',
           roles: [{}],
-        })
-        .set('x-access-token', loginRes.body.token);
+        });
 
       expect(res.status).equals(422);
       expect(res.body.code).equals('validation_error');
       expect(res.body.errors).include.something.deep.equals({
-        msg: 'Invalid value', param: 'roles[0].field', location: 'body',
+        msg: 'Invalid value', param: 'roles[0].field_key', location: 'body',
       });
     });
 
     it('Should `roles.*.comparator` be valid.', async () => {
       const resource = await create('resource');
-      const res = await request().post('/api/views').send({
-        resource_name: resource.name,
-        label: 'View Label',
-        roles: [{}],
-      });
+      const res = await request()
+        .post('/api/views')
+        .set('x-access-token', loginRes.body.token)
+        .send({
+          resource_name: resource.name,
+          label: 'View Label',
+          roles: [{}],
+        });
 
       expect(res.status).equals(422);
       expect(res.body.code).equals('validation_error');
@@ -143,18 +252,22 @@ describe('routes: `/views`', () => {
     it('Should response not found in case resource was not exist.', async () => {
       const res = await request()
         .post('/api/views')
+        .set('x-access-token', loginRes.body.token)
         .send({
           resource_name: 'not_found',
           label: 'View Label',
-          columns: ['amount', 'thumbnail', 'status'],
+          columns: [
+            { key: 'amount', index: 1 },
+            { key: 'thumbnail', index: 1 },
+            { key: 'status', index: 1 },
+          ],
           roles: [{
             index: 1,
-            field: 'amount',
+            field_key: 'amount',
             comparator: 'equals',
             value: '100',
           }],
-        })
-        .set('x-access-token', loginRes.body.token);
+        });
 
       expect(res.status).equals(404);
       expect(res.body.errors).include.something.that.deep.equals({
@@ -162,76 +275,118 @@ describe('routes: `/views`', () => {
       });
     });
 
+    it('Should response invalid logic expression.', async () =>{
+      const resource = await create('resource');
+      await create('resource_field', {
+        resource_id: resource.id,
+        label_name: 'Amount',
+        key: 'amount',
+      });
+      const res = await request()
+        .post('/api/views')
+        .set('x-access-token', loginRes.body.token)
+        .send({
+          resource_name: resource.name,
+          logic_expression: '100 && 100',
+          label: 'View Label',
+          columns: [
+            { key: 'amount', index: 1 },
+          ],
+          roles: [{
+            index: 1,
+            field_key: 'amount',
+            comparator: 'equals',
+            value: '100',
+          }],
+        });
+
+      expect(res.body.errors).include.something.that.deep.equals({
+        type: 'VIEW.ROLES.LOGIC.EXPRESSION.INVALID', code: 400,
+      });
+    })
+
     it('Should response the roles fields not exist in case role field was not exist.', async () => {
       const resource = await create('resource');
       await create('resource_field', { resource_id: resource.id, label_name: 'Amount' });
 
       const res = await request()
         .post('/api/views')
+        .set('x-access-token', loginRes.body.token)
         .send({
           resource_name: resource.name,
           label: 'View Label',
-          columns: ['amount', 'thumbnail', 'status'],
+          columns: [
+            { key: 'amount', index: 1 },
+            { key: 'thumbnail', index: 1 },
+            { key: 'status', index: 1 },
+          ],
           roles: [{
             index: 1,
-            field: 'price',
+            field_key: 'price',
             comparator: 'equals',
             value: '100',
           }],
-        })
-        .set('x-access-token', loginRes.body.token);
+        });
 
       expect(res.body.errors).include.something.that.deep.equals({
         type: 'RESOURCE_FIELDS_NOT_EXIST', code: 100, fields: ['price'],
       });
     });
 
-    it('Should response the columns not exists in case column was not exist.', async () => {
+    it('Should response the columns that not exists in case column was not exist.', async () => {
       const resource = await create('resource');
       const resourceField = await create('resource_field', {
-        resource_id: resource.id, label_name: 'Amount', slug: 'amount',
+        resource_id: resource.id,
+        label_name: 'Amount',
+        key: 'amount',
       });
       const res = await request()
         .post('/api/views')
+        .set('x-access-token', loginRes.body.token)
         .send({
           resource_name: resource.name,
           label: 'View Label',
-          columns: ['amount', 'thumbnail', 'status'],
+          columns: [
+            { key: 'amount', index: 1 },
+            { key: 'thumbnail', index: 2 },
+            { key: 'status', index: 3 },
+          ],
           roles: [{
             index: 1,
-            field: 'price',
+            field_key: 'price',
             comparator: 'equals',
             value: '100',
           }],
-        })
-        .set('x-access-token', loginRes.body.token);
+        });
 
       expect(res.body.errors).include.something.that.deep.equals({
-        type: 'COLUMNS_NOT_EXIST',
-        code: 200,
-        columns: ['thumbnail', 'status'],
+        type: 'COLUMNS_NOT_EXIST', code: 200, columns: ['thumbnail', 'status'],
       });
     });
 
     it('Should save the given details of the view.', async () => {
       const resource = await create('resource');
       await create('resource_field', {
-        resource_id: resource.id, label_name: 'Amount', slug: 'amount',
+        resource_id: resource.id,
+        label_name: 'Amount',
+        key: 'amount',
       });
       const res = await request()
         .post('/api/views')
+        .set('x-access-token', loginRes.body.token)
         .send({
           resource_name: resource.name,
           label: 'View Label',
-          columns: ['amount'],
+          columns: [
+            { key: 'amount', index: 1 },
+          ],
           roles: [{
             index: 1,
-            field: 'amount',
+            field_key: 'amount',
             comparator: 'equals',
             value: '100',
           }],
-        })
-        .set('x-access-token', loginRes.body.token);
+        });
 
       const storedView = await View.query().where('name', 'View Label').first();
 
@@ -243,7 +398,9 @@ describe('routes: `/views`', () => {
     it('Should save the given details of view fields that associated to the given view id.', async () => {
       const resource = await create('resource');
       const resourceField = await create('resource_field', {
-        resource_id: resource.id, label_name: 'Amount', slug: 'amount',
+        resource_id: resource.id,
+        label_name: 'Amount',
+        key: 'amount',
       });
 
       const res = await request()
@@ -251,10 +408,10 @@ describe('routes: `/views`', () => {
         .send({
           resource_name: resource.name,
           label: 'View Label',
-          columns: ['amount'],
+          columns: [{ key: 'amount', index: 1 }],
           roles: [{
             index: 1,
-            field: 'amount',
+            field_key: 'amount',
             comparator: 'equals',
             value: '100',
           }],
@@ -270,26 +427,30 @@ describe('routes: `/views`', () => {
       expect(viewRoles[0].comparator).equals('equals');
     });
 
-    it.only('Should save columns that associated to the given view.', async () => {
+    it('Should save columns that associated to the given view.', async () => {
       const resource = await create('resource');
       const resourceField = await create('resource_field', {
-        resource_id: resource.id, label_name: 'Amount', slug: 'amount',
+        resource_id: resource.id,
+        label_name: 'Amount',
+        key: 'amount',
       });
 
       const res = await request()
         .post('/api/views')
+        .set('x-access-token', loginRes.body.token)
         .send({
           resource_name: resource.name,
           label: 'View Label',
-          columns: ['amount'],
+          columns: [
+            { key: 'amount', index: 1 },
+          ],
           roles: [{
             index: 1,
-            field: 'amount',
+            field_key: 'amount',
             comparator: 'equals',
             value: '100',
           }],
-        })
-        .set('x-access-token', loginRes.body.token);
+        });
 
       const viewColumns = await ViewColumn.query().where('view_id', res.body.id);
       expect(viewColumns.length).equals(1);
@@ -419,7 +580,10 @@ describe('routes: `/views`', () => {
   describe('DELETE: `/views/:resource_id`', () => {
     it('Should not delete predefined view.', async () => {
       const view = await create('view', { predefined: true });
-      const res = await request().delete(`/api/views/${view.id}`).send();
+      const res = await request()
+        .delete(`/api/views/${view.id}`)
+        .set('x-access-token', loginRes.body.token)
+        .send();
 
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.that.deep.equals({
@@ -428,7 +592,10 @@ describe('routes: `/views`', () => {
     });
 
     it('Should response not found in case view was not exist.', async () => {
-      const res = await request().delete('/api/views/100').send();
+      const res = await request()
+        .delete('/api/views/100')
+        .set('x-access-token', loginRes.body.token)
+        .send();
 
       expect(res.status).equals(404);
       expect(res.body.errors).include.something.that.deep.equals({
@@ -439,12 +606,17 @@ describe('routes: `/views`', () => {
     it('Should delete the given view and associated view columns and roles.', async () => {
       const view = await create('view', { predefined: false });
       await create('view_role', { view_id: view.id });
-      await create('view_has_columns', { view_id: view.id });
+      await create('view_column', { view_id: view.id });
 
-      await request().delete(`/api/views/${view.id}`).send();
+      const res = await request()
+        .delete(`/api/views/${view.id}`)
+        .set('x-access-token', loginRes.body.token)
+        .send();
 
-      const foundViews = await View.query().where('id', view.id).first();
-      const foundViewRoles = await ViewRole.query().where('view_id', view.id).first();
+      expect(res.body.id).equals(view.id);
+
+      const foundViews = await View.query().where('id', view.id);
+      const foundViewRoles = await ViewRole.query().where('view_id', view.id);
 
       expect(foundViews).to.have.lengthOf(0);
       expect(foundViewRoles).to.have.lengthOf(0);

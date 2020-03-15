@@ -39,7 +39,7 @@ export default {
   login: {
     validation: [
       check('crediential').exists().isEmail(),
-      check('password').exists().isLength({ min: 5 }),
+      check('password').exists().isLength({ min: 4 }),
     ],
     async handler(req, res) {
       const validationErrors = validationResult(req);
@@ -64,12 +64,12 @@ export default {
       }
       if (!user.verifyPassword(password)) {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'INCORRECT_PASSWORD', code: 110 }],
+          errors: [{ type: 'INVALID_DETAILS', code: 100 }],
         });
       }
       if (!user.active) {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'USER_INACTIVE', code: 120 }],
+          errors: [{ type: 'USER_INACTIVE', code: 110 }],
         });
       }
       // user.update({ last_login_at: new Date() });
@@ -80,7 +80,7 @@ export default {
       }, JWT_SECRET_KEY, {
         expiresIn: '1d',
       });
-      return res.status(200).send({ token });
+      return res.status(200).send({ token, user });
     },
   },
 

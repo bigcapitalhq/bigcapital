@@ -1,4 +1,6 @@
 import { Model } from 'objection';
+import {transform, snakeCase} from 'lodash';
+import {mapKeysDeep} from '@/utils';
 
 export default class ModelBase extends Model {
   static get collection() {
@@ -12,5 +14,14 @@ export default class ModelBase extends Model {
       }
       return result;
     });
+  }
+
+  $formatJson(json, opt) {
+    const transformed = mapKeysDeep(json, (value, key) => {
+      return snakeCase(key);
+    });
+    const parsedJson = super.$formatJson(transformed, opt);
+
+    return parsedJson;
   }
 }

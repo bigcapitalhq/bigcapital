@@ -4,7 +4,7 @@ import t from 'store/types';
 
 const DashboardHomepage = ({ changePageTitle }) => {
   useEffect(() => {
-    changePageTitle('Homepage')
+    changePageTitle('Craig’s Design and Landscaping Services')
   });
   return (
     <div>asdasd</div>

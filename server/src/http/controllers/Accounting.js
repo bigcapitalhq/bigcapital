@@ -52,7 +52,10 @@ export default {
           code: 'validation_error', ...validationErrors,
         });
       }
-      const form = { ...req.body };
+      const form = {
+        date: new Date(),
+        ...req.body,
+      };
       const errorReasons = [];
       let totalCredit = 0;
       let totalDebit = 0;
@@ -98,6 +101,7 @@ export default {
         const account = accounts.find((a) => a.id === entry.account_id);
 
         const jouranlEntry = new JournalEntry({
+          date: entry.date,
           debit: entry.debit,
           credit: entry.credit,
           account: account.id,

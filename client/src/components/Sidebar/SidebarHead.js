@@ -9,7 +9,7 @@ export default function() {
       </div>
 
       <div className="sidebar__head-company-meta">
-        <div className="comapny-name">
+        <div className="company-name">
           { appMeta.app_name } 
         </div>
 
