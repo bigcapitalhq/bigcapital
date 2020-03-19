@@ -13,7 +13,7 @@ exports.up = function (knex) {
     table.boolean('columnable');
     table.integer('index');
     table.json('options');
-    table.integer('resource_id').unsigned().references('id').inTable('resources');
+    table.integer('resource_id').unsigned();
   });
 };
 

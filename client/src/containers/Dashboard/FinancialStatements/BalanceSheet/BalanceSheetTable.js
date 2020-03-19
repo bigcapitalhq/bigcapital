@@ -1,31 +1,114 @@
-import React, {useMemo, useState} from 'react';
+import React, {useMemo, useState, useEffect} from 'react';
 import FinancialSheet from 'components/FinancialSheet';
 import DataTable from 'components/DataTable';
+import FinancialStatementConnect from 'connectors/FinancialStatements.connector';
+import {compose} from 'utils';
+import moment from 'moment';
 
-export default function BalanceSheetTable({
+function BalanceSheetTable({
+  balanceSheet,
+  balanceSheetIndex,
+  getBalanceSheetColumns,
 
+  getBalanceSheetAssetsAccounts,
+  getBalanceSheetLiabilitiesAccounts,
+
+  getBalanceSheetQuery,
 }) {
+  const balanceSheetColumns = useMemo(() => {
+    return getBalanceSheetColumns(balanceSheetIndex);
+  }, [getBalanceSheetColumns]);
+
+  const balanceSheetQuery = useMemo(() => {
+    return getBalanceSheetQuery(balanceSheetIndex);
+  }, [getBalanceSheetQuery])
 
   const columns = useMemo(() => [
     {
+      // Build our expander column
+      id: 'expander', // Make sure it has an ID
+      Header: ({
+        getToggleAllRowsExpandedProps,
+        isAllRowsExpanded
+      }) => (
+        <span {...getToggleAllRowsExpandedProps()}>
+          {isAllRowsExpanded ? '👇' : '👉'}
+        </span>
+      ),
+      Cell: ({ row }) =>
+        // Use the row.canExpand and row.getToggleRowExpandedProps prop getter
+        // to build the toggle for expanding a row
+        row.canExpand ? (
+          <span
+            {...row.getToggleRowExpandedProps({
+              style: {
+                // We can even use the row.depth property
+                // and paddingLeft to indicate the depth
+                // of the row
+                paddingLeft: `${row.depth * 2}rem`,
+              },
+            })}
+          >
+            {row.isExpanded ? '👇' : '👉'}
+          </span>
+        ) : null,
+    },
+    {
       Header: 'Account Name',
-      accessor: 'index',
+      accessor: 'name',
       className: "actions",
     },
     {
       Header: 'Code', 
-      accessor: 'note',
+      accessor: 'code',
       className: "note",
     },
-    {
-      Header: 'Total',
-      accessor: 'total',
-      className: "credit",
-    },
-  ]);
-
+    ...(balanceSheetQuery &&
+        balanceSheetQuery.display_columns_by === 'total') ? [
+      {
+        Header: 'Total',
+        accessor: 'balance.formatted_amount',
+        className: "credit",
+      }
+    ]: (balanceSheetColumns.map((column, index) => ({
+      Header: column,
+      accessor: (row) => {
+        if (row.periods_balance && row.periods_balance[index]) {
+          return row.periods_balance[index].formatted_amount;
+        }
+      },
+    }))),
+  
+  
+    
+  ], [balanceSheetColumns]);
+ 
   const [data, setData] = useState([]);
 
+  useEffect(() => {
+    if (!balanceSheet) { return; }
+
+    setData([
+      {
+        name: 'Assets',
+        code: '',
+        children: [
+          ...getBalanceSheetAssetsAccounts(balanceSheetIndex),
+        ],
+      },
+      {
+        name: 'Liabilies & Equity',
+        code: '',
+        children: [
+          ...getBalanceSheetLiabilitiesAccounts(balanceSheetIndex),
+        ]
+      }
+    ])
+  }, [])
+
+  // if (balanceSheets.length > 0) {
+  //   setData(balanceSheets[0].balance_sheet);
+  // }
   return (
     <FinancialSheet
       companyTitle={'Facebook, Incopration'}
@@ -38,4 +121,8 @@ export default function BalanceSheetTable({
 
     </FinancialSheet>
   )
-} 
+}
+
+export default compose(
+  FinancialStatementConnect,
+)(BalanceSheetTable);

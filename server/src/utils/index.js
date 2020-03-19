@@ -66,6 +66,12 @@ const mapValuesDeep = (v, callback) => (
     ? _.mapValues(v, v => mapValuesDeep(v, callback))
     : callback(v));
 
+
+const promiseSerial = (funcs) => {
+  return funcs.reduce((promise, func) => promise.then((result) => func().then(Array.prototype.concat.bind(result))),
+    Promise.resolve([]));
+}
+
 export {
   hashPassword,
   origin,
@@ -73,4 +79,5 @@ export {
   dateRangeFormat,
   mapValuesDeep,
   mapKeysDeep,
+  promiseSerial,
 };

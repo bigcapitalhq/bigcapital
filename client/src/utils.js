@@ -1,4 +1,5 @@
 import moment from 'moment';
+import _ from 'lodash';
 
 export function removeEmptyFromObject(obj) {
   obj = Object.assign({}, obj);
@@ -77,3 +78,37 @@ export const objectKeysTransform = (obj, transform) => {
 
 export const compose = (...funcs) =>
   funcs.reduce((a, b) => (...args) => a(b(...args)), arg => arg);
+
+export const getObjectDiff = (a, b) => {
+  return _.reduce(a, (result, value, key) => {
+      return _.isEqual(value, b[key]) ?
+          result : result.concat(key);
+  }, []);
+}
+
+export const parseDateRangeQuery = (keyword) => {
+  const queries = {
+    'today': {
+      range: 'day',
+    },
+    'this_year': {
+      range: 'year',
+    },
+    'this_month': {
+      range: 'month'
+    },
+    'this_week': {
+      range: 'week'
+    }
+  };
+
+  if (typeof queries[keyword] === 'undefined') {
+    throw new Error(`The date range query ${keyword} is not defined.`);
+  }
+  const query = queries[keyword];
+
+  return {
+    from_date: moment().startOf(query.range).toDate(),
+    to_date: moment().endOf(query.range).toDate(),
+  };
+};

@@ -2,7 +2,7 @@
 exports.up = function (knex) {
   return knex.schema.createTable('settings', (table) => {
     table.increments();
-    table.integer('user_id').unsigned().references('id').inTable('users');
+    table.integer('user_id').unsigned();
     table.string('group');
     table.string('type');
     table.string('key');

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTable, usePagination } from 'react-table'
+import { useTable, useExpanded, usePagination } from 'react-table'
 
 export default function DataTable({
   columns,
@@ -32,8 +32,10 @@ export default function DataTable({
       // This means we'll also have to provide our own
       // pageCount.
       // pageCount: controlledPageCount,
+      getSubRows: row => row.children,
     },
-    usePagination
+    useExpanded,
+    usePagination,
   );
 
   return (

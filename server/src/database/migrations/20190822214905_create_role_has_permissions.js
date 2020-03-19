@@ -2,9 +2,9 @@
 exports.up = function (knex) {
   return knex.schema.createTable('role_has_permissions', (table) => {
     table.increments();
-    table.integer('role_id').unsigned().references('id').inTable('roles');
-    table.integer('permission_id').unsigned().references('id').inTable('permissions');
-    table.integer('resource_id').unsigned().references('id').inTable('resources');
+    table.integer('role_id').unsigned();
+    table.integer('permission_id').unsigned();
+    table.integer('resource_id').unsigned();
   });
 };
 

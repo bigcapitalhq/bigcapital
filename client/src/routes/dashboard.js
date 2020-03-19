@@ -76,17 +76,24 @@ export default [
     }),
   },
   {
-    path: `${BASE_URL}/accounting/trial-balance`,
-    name: 'dashboard.accounting.trial.balance',
-    component: LazyLoader({
-      loader: () => import('containers/Dashboard/FinancialStatements/TrialBalanceSheet')
-    }),
-  },
-  {
     path: `${BASE_URL}/accounting/balance-sheet`,
     name: 'dashboard.accounting.balance.sheet',
     component: LazyLoader({
-      loader: () => import('containers/Dashboard/FinancialStatements/BalanceSheet')
+      loader: () => import('containers/Dashboard/FinancialStatements/BalanceSheet/BalanceSheet')
+    }),
+  },
+  {
+    path: `${BASE_URL}/accounting/trial-balance-sheet`,
+    name: 'dashboard.accounting.trial.balance',
+    component: LazyLoader({
+      loader: () => import('containers/Dashboard/FinancialStatements/TrialBalanceSheet/TrialBalanceSheet')
+    }),
+  },
+  {
+    path: `${BASE_URL}/accounting/profit-loss-sheet`,
+    name: 'dashboard.accounting.profit.loss.sheet',
+    component: LazyLoader({
+      loader: () => import('containers/Dashboard/FinancialStatements/ProfitLossSheet/ProfitLossSheet')
     }),
   }
 ];

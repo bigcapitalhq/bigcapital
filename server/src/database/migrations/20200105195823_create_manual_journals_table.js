@@ -7,7 +7,7 @@ exports.up = function(knex) {
     table.decimal('amount');
     table.date('date');
     table.string('note');
-    table.integer('user_id').unsigned().references('id').inTable('users');
+    table.integer('user_id').unsigned();
     table.timestamps();
   });
 };

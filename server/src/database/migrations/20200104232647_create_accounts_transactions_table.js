@@ -7,10 +7,10 @@ exports.up = function(knex) {
     table.string('transaction_type');
     table.string('reference_type');
     table.integer('reference_id');
-    table.integer('account_id').unsigned().references('id').inTable('accounts');
+    table.integer('account_id').unsigned();
     table.string('note');
     table.boolean('draft').defaultTo(false);
-    table.integer('user_id').unsigned().references('id').inTable('users');
+    table.integer('user_id').unsigned();
     table.date('date');
     table.timestamps();
   });

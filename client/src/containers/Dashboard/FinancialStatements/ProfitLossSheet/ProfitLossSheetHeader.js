@@ -22,7 +22,7 @@ import {
 } from 'utils';
 import moment from 'moment';
 
-export default function BalanceSheetHeader({
+export default function ProfitLossSheetHeader({
   onSubmitFilter,
   pageFilter,
 }) {

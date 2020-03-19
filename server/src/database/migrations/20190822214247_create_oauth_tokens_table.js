@@ -7,7 +7,7 @@ exports.up = function(knex) {
     table.integer('client_id').unsigned();
     table.string('refresh_token');
     table.date('refresh_token_expires_on');
-    table.integer('user_id').unsigned().references('id').inTable('users');
+    table.integer('user_id').unsigned();
   });
 };
 

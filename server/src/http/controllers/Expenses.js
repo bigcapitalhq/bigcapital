@@ -317,6 +317,12 @@ export default {
       query('page').optional().isNumeric().toInt(),
       query('page_size').optional().isNumeric().toInt(),
       query('custom_view_id').optional().isNumeric().toInt(),
+
+      query('filter_roles').optional().isArray(),
+      query('filter_roles.*.field_key').exists().escape().trim(),
+      query('filter_roles.*.value').exists().escape().trim(),
+      query('filter_roles.*.comparator').exists().escape().trim(),
+      query('filter_roles.*.index').exists().isNumeric().toInt(),
     ],
     async handler(req, res) {
       const validationErrors = validationResult(req);

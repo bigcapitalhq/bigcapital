@@ -4,6 +4,7 @@ import {
   login,
   create,
 } from '~/testInit';
+import moment from 'moment';
 
 let loginRes;
 let creditAccount;
@@ -145,56 +146,95 @@ describe('routes: `/financial_statements`', () => {
     });
   });
 
-  describe('routes: `/financial_statements/general_ledger`', () => {
+  describe.only('routes: `/financial_statements/general_ledger`', () => {
     it('Should response unauthorized in case the user was not authorized.', async () => {
       const res = await request()
         .get('/api/financial_statements/general_ledger')
         .send();
 
-      expect(res.status).equals(400);
+      expect(res.status).equals(401);
     });
 
-    it('Should retrieve the genereal ledger transactions.', async () => {
+    it('Should retrieve request query meta on response schema.', async () => {
       const res = await request()
         .get('/api/financial_statements/general_ledger')
         .set('x-access-token', loginRes.body.token)
         .send();
 
-      expect(res.body.items).to.be.a('array');
-      expect(res.body.items.length).equals(4);
+      expect(res.body.query.from_date).equals(moment().startOf('year').format('YYYY-MM-DD'));
+      expect(res.body.query.to_date).equals(moment().endOf('year').format('YYYY-MM-DD'));
+      expect(res.body.query.basis).equals('cash');
+      expect(res.body.query.number_format.no_cents).equals(false);
+      expect(res.body.query.number_format.divide_1000).equals(false);
+      expect(res.body.query.none_zero).equals(false);
+      expect(res.body.query.accounts_ids).to.be.an('array');
     });
 
-    it('Should retrieve opeing and closing balance in each account.', async () => {
+    it('Should retrieve the general ledger accounts with associated transactions and opening/closing balance.', async () => {
       const res = await request()
         .get('/api/financial_statements/general_ledger')
         .set('x-access-token', loginRes.body.token)
         .send();
 
-      const foundCreditAccount = res.body.items.find((a) => a.id === creditAccount.id);
-
-      expect(foundCreditAccount.closing.balance).equals(2000);
-      expect(foundCreditAccount.opening.balance).equals(0);
+      expect(res.body.accounts).is.an('array');
+      expect(res.body.accounts[0].id).to.be.an('number');
+      expect(res.body.accounts[0].name).to.be.a('string');
+      expect(res.body.accounts[0].code).to.be.a('string');
+      expect(res.body.accounts[0].transactions).to.be.a('array');
+      expect(res.body.accounts[0].opening).to.be.a('object');
+      expect(res.body.accounts[0].opening.balance).to.be.a('number');
+      expect(res.body.accounts[0].opening.date).to.be.a('string');
+      expect(res.body.accounts[0].closing).to.be.a('object');
+      expect(res.body.accounts[0].closing.balance).to.be.a('number');
+      expect(res.body.accounts[0].closing.date).to.be.a('string');
     });
 
-    it('Should retrieve the general ledger transactions between date range.', async () => {
+    it('Should retrieve opening and closing balance.', async () => {
       const res = await request()
         .get('/api/financial_statements/general_ledger')
         .set('x-access-token', loginRes.body.token)
-        .query({
-          from_date: '2020-04-04',
-          to_date: '2020-05-05',
-        })
         .send();
-      
-      const foundCreditAccount = res.body.items.find((a) => a.id === creditAccount.id);
-      expect(foundCreditAccount.transactions.length).equals(0);
+
+      const targetAccount = res.body.accounts.find((a) => a.id === creditAccount.id);
+
+      expect(targetAccount).to.be.an('object');
+      expect(targetAccount.opening).to.deep.equal({
+        balance: 0, date: '2020-01-01',
+      });
+      expect(targetAccount.closing).to.deep.equal({
+        balance: 2000, date: '2020-12-31',
+      });
     });
 
-    it('Should retrieve the general ledger transactions with no cents numbers.', () => {
+    it('Should retrieve opening and closing balance between the given date range.', () => {
 
     });
 
-    it('Should retrieve the transacvtions divided on 1000.', () => {
+    it('Should retrieve transactions of accounts that has transactions between date range.', () => {
+
+    });
+
+    it('Should retrieve accounts transactions only that between date range.', () => {
+
+    });
+
+    it('Should not retrieve all accounts that have no transactions in the given date range when `none_zero` is `false`.', () => {
+
+    });
+
+    it('Should retrieve all accounts even it have no transactions in the given date range when `none_zero` is `true`', () => {
+
+    });
+
+    it('Should amount transactions divided on 1000 when `number_format.none_zero` is `true`.', () => {
+
+    });
+
+    it('Should amount transactions rounded with no decimals when `number_format.no_cents` is `true`.', () => {
+
+    });
+
+    it('Should retrieve only accounts that given in the query.', () => {
 
     });
   });
@@ -208,6 +248,27 @@ describe('routes: `/financial_statements`', () => {
       expect(res.status).equals(401);
     });
 
+    it('Should retrieve query of the balance sheet with default values.', async () => {
+      const res = await request()
+        .get('/api/financial_statements/balance_sheet')
+        .set('x-access-token', loginRes.body.token)
+        .query({
+          display_columns_by: 'year',
+          from_date: '2020-01-01',
+          to_date: '2020-02-01',
+        })
+        .send();
+
+      expect(res.body.query.display_columns_by).equals('year');
+      expect(res.body.query.from_date).equals('2020-01-01');
+      expect(res.body.query.to_date).equals('2020-02-01');
+
+      expect(res.body.query.number_format.no_cents).equals(false);
+      expect(res.body.query.number_format.divide_1000).equals(false);
+
+      expect(res.body.query.none_zero).equals(false);
+    });
+
     it('Should retrieve the asset accounts balance.', async () => {
       const res = await request()
         .get('/api/financial_statements/balance_sheet')
@@ -217,11 +278,30 @@ describe('routes: `/financial_statements`', () => {
         })
         .send();
 
-      expect(res.body.balance_sheet.assets).to.be.a('array');
-      expect(res.body.balance_sheet.liabilities_equity).to.be.a('array');
+      expect(res.body.balance_sheet.assets.accounts).to.be.a('array');
+      expect(res.body.balance_sheet.liabilities_equity.accounts).to.be.a('array');
     });
 
-    it('Should retrieve asset/liabilities balance sheet between the given date range.', async () => {
+    it('Should retrieve assets/liabilities total balance between the given date range.', async () => {
+      const res = await request()
+        .get('/api/financial_statements/balance_sheet')
+        .set('x-access-token', loginRes.body.token)
+        .query({
+          display_columns_by: 'total',
+          from_date: '2012-01-01',
+          to_date: '2032-02-02',
+        })
+        .send();
+
+      expect(res.body.balance_sheet.assets.accounts[0].balance).deep.equals({
+        amount: 4000, formattedAmount: 4000, date: '2032-02-02',
+      });
+      expect(res.body.balance_sheet.liabilities_equity.accounts[0].balance).deep.equals({
+        amount: 2000, formattedAmount: 2000, date: '2032-02-02',
+      });
+    });
+
+    it('Should retrieve asset/liabilities balance sheet with display columns by `year`.', async () => {
       const res = await request()
         .get('/api/financial_statements/balance_sheet')
         .set('x-access-token', loginRes.body.token)
@@ -232,121 +312,142 @@ describe('routes: `/financial_statements`', () => {
         })
         .send();
 
-      const { balance_sheet: balanceSheet } = res.body;
-      const foundCreditAccount = balanceSheet.assets.find((account) => {
-        return account.id === debitAccount.id;
-      });
+      expect(res.body.balance_sheet.assets.accounts[0].periods_balance.length).equals(7);
+      expect(res.body.balance_sheet.liabilities_equity.accounts[0].periods_balance.length).equals(7);
 
-      expect(foundCreditAccount.transactions.length).equals(6);
-      foundCreditAccount.transactions.forEach((transaction) => {
-        expect(transaction.balance).equals(0);
-      });
-
-      const foundDebitAccount = balanceSheet.liabilities_equity.find((account) => {
-        return account.id === creditAccount.id;
-      });
-
-      expect(foundDebitAccount.transactions.length).equals(6);
-      foundDebitAccount.transactions.forEach((transaction) => {
-        expect(transaction.balance).equals(0);
-      });
+      expect(res.body.balance_sheet.assets.accounts[0].periods_balance).deep.equals([
+        {
+          amount: 0,
+          formatted_amount: 0,
+          date: '2012',
+        },
+        {
+          amount: 0,
+          formatted_amount: 0,
+          date: '2013',
+        },
+        {
+          amount: 0,
+          formatted_amount: 0,
+          date: '2014',
+        },
+        {
+          amount: 0,
+          formatted_amount: 0,
+          date: '2015',
+        },
+        {
+          amount: 0,
+          formatted_amount: 0,
+          date: '2016',
+        },
+        {
+          amount: 0,
+          formatted_amount: 0,
+          date: '2017',
+        },
+        {
+          amount: 0,
+          formatted_amount: 0,
+          date: '2018',
+        },
+      ]);
     });
 
-    it('Should retrieve balance sheet with display columns day.', async () => {
+    it('Should retrieve balance sheet with display columns by `day`.', async () => {
       const res = await request()
         .get('/api/financial_statements/balance_sheet')
         .set('x-access-token', loginRes.body.token)
         .query({
           display_columns_by: 'day',
-          from_date: '2020-03-01',
-          to_date: '2020-04-01',
+          from_date: '2020-01-08',
+          to_date: '2020-01-12',
         })
         .send();
 
-      const { balance_sheet: balanceSheet } = res.body;
-
-      const foundDebitAccount = balanceSheet.assets.find((account) => {
-        return account.id === debitAccount.id;
-      });
-      const foundCreditAccount = balanceSheet.liabilities_equity.find((account) => {
-        return account.id === creditAccount.id;
-      });
-
-      expect(foundDebitAccount.transactions.length).equals(31);
-      expect(foundCreditAccount.transactions.length).equals(31);
-
-      foundDebitAccount.transactions.forEach((transaction) => {
-        expect(transaction.balance).equals(4000);
-      });
-      foundCreditAccount.transactions.forEach((transaction) => {
-        expect(transaction.balance).equals(2000);
-      });
+      expect(res.body.balance_sheet.assets.accounts[0].periods_balance).deep.equals([
+        { date: '2020-01-08', formatted_amount: 0, amount: 0 },
+        { date: '2020-01-09', formatted_amount: 0, amount: 0 },
+        { date: '2020-01-10', formatted_amount: 4000, amount: 4000 },
+        { date: '2020-01-11', formatted_amount: 4000, amount: 4000 },
+        { date: '2020-01-12', formatted_amount: 4000, amount: 4000 },
+      ]);
     });
 
-    it('Should retrieve the balance sheet with display columns month.', async () => {
+    it('Should retrieve the balance sheet with display columns by `month`.', async () => {
       const res = await request()
         .get('/api/financial_statements/balance_sheet')
         .set('x-access-token', loginRes.body.token)
         .query({
           display_columns_by: 'month',
-          from_date: '2020',
-          to_date: '2021',
+          from_date: '2019-07-01',
+          to_date: '2020-06-30',
         })
         .send();
 
-      const { balance_sheet: balanceSheet } = res.body;
+      expect(res.body.balance_sheet.assets.accounts[0].periods_balance.length).equals(12);
+      expect(res.body.balance_sheet.liabilities_equity.accounts[0].periods_balance.length).equals(12);
 
-      const foundDebitAccount = balanceSheet.assets.find((account) => {
-        return account.id === debitAccount.id;
-      });
-      const foundCreditAccount = balanceSheet.liabilities_equity.find((account) => {
-        return account.id === creditAccount.id;
-      });
-
-      expect(foundDebitAccount.transactions.length).equals(12);
-      expect(foundCreditAccount.transactions.length).equals(12);
-
-      foundDebitAccount.transactions.forEach((transaction) => {
-        expect(transaction.balance).equals(4000);
-      });
-      foundCreditAccount.transactions.forEach((transaction) => {
-        expect(transaction.balance).equals(2000);
-      });
+      expect(res.body.balance_sheet.assets.accounts[0].periods_balance).deep.equals([
+        { date: '2019-07', formatted_amount: 0, amount: 0 },
+        { date: '2019-08', formatted_amount: 0, amount: 0 },
+        { date: '2019-09', formatted_amount: 0, amount: 0 },
+        { date: '2019-10', formatted_amount: 0, amount: 0 },
+        { date: '2019-11', formatted_amount: 0, amount: 0 },
+        { date: '2019-12', formatted_amount: 0, amount: 0 },
+        { date: '2020-01', formatted_amount: 4000, amount: 4000 },
+        { date: '2020-02', formatted_amount: 4000, amount: 4000 },
+        { date: '2020-03', formatted_amount: 4000, amount: 4000 },
+        { date: '2020-04', formatted_amount: 4000, amount: 4000 },
+        { date: '2020-05', formatted_amount: 4000, amount: 4000 },
+        { date: '2020-06', formatted_amount: 4000, amount: 4000 },
+      ]);
     });
 
-    it('Should retrieve the balance sheet with display columns quarter.', async () => {
+    it('Should retrieve the balance sheet with display columns `quarter`.', async () => {
       const res = await request()
         .get('/api/financial_statements/balance_sheet')
         .set('x-access-token', loginRes.body.token)
         .query({
           display_columns_by: 'quarter',
-          from_date: '2020',
-          to_date: '2021',
+          from_date: '2020-01-01',
+          to_date: '2020-12-31',
         })
         .send();
 
-      const { balance_sheet: balanceSheet } = res.body;
-
-      const foundDebitAccount = balanceSheet.assets.find((account) => {
-        return account.id === debitAccount.id;
-      });
-      const foundCreditAccount = balanceSheet.liabilities_equity.find((account) => {
-        return account.id === creditAccount.id;
-      });
-
-      expect(foundDebitAccount.transactions.length).equals(4);
-      expect(foundCreditAccount.transactions.length).equals(4);
-
-      foundDebitAccount.transactions.forEach((transaction) => {
-        expect(transaction.balance).equals(4000);
-      });
-      foundCreditAccount.transactions.forEach((transaction) => {
-        expect(transaction.balance).equals(2000);
-      });
+      expect(res.body.balance_sheet.assets.accounts[0].periods_balance.length).equals(4);
+      expect(res.body.balance_sheet.assets.accounts[0].periods_balance).deep.equals([
+        { date: '2020-03', formatted_amount: 4000, amount: 4000 },
+        { date: '2020-06', formatted_amount: 4000, amount: 4000 },
+        { date: '2020-09', formatted_amount: 4000, amount: 4000 },
+        { date: '2020-12', formatted_amount: 4000, amount: 4000 },
+      ]);
     });
 
-    it('Should retrieve the balance sheet amounts without cents.', () => {
-      
+    it('Should retrieve the balance sheet amounts without cents.', async () => {
+      await create('account_transaction', {
+        debit: 0.25, credit: 0, account_id: debitAccount.id, date: '2020-1-10',
+      });
+      const res = await request()
+        .get('/api/financial_statements/balance_sheet')
+        .set('x-access-token', loginRes.body.token)
+        .query({
+          display_columns_by: 'quarter',
+          from_date: '2020-01-01',
+          to_date: '2020-12-31',
+          number_format: {
+            no_cents: true,
+          },
+        })
+        .send();
+
+      expect(res.body.balance_sheet.assets.accounts[0].periods_balance.length).equals(4);
+      expect(res.body.balance_sheet.assets.accounts[0].periods_balance).deep.equals([
+        { date: '2020-03', formatted_amount: 4000, amount: 4000.25 },
+        { date: '2020-06', formatted_amount: 4000, amount: 4000.25 },
+        { date: '2020-09', formatted_amount: 4000, amount: 4000.25 },
+        { date: '2020-12', formatted_amount: 4000, amount: 4000.25 },
+      ]);
     });
 
     it('Should retrieve the balance sheet amounts divided on 1000.', async () => {
@@ -363,23 +464,13 @@ describe('routes: `/financial_statements`', () => {
         })
         .send();
 
-      const { balance_sheet: balanceSheet } = res.body;
-      const foundDebitAccount = balanceSheet.assets.find((account) => {
-        return account.id === debitAccount.id;
-      });
-      const foundCreditAccount = balanceSheet.liabilities_equity.find((account) => {
-        return account.id === creditAccount.id;
-      });
-
-      expect(foundDebitAccount.transactions.length).equals(4);
-      expect(foundCreditAccount.transactions.length).equals(4);
-
-      foundDebitAccount.transactions.forEach((transaction) => {
-        expect(transaction.balance).equals(4);
-      });
-      foundCreditAccount.transactions.forEach((transaction) => {
-        expect(transaction.balance).equals(2);
-      });
+      expect(res.body.balance_sheet.assets.accounts[0].periods_balance).deep.equals([
+        { date: '2020-03', formatted_amount: 4, amount: 4000 },
+        { date: '2020-06', formatted_amount: 4, amount: 4000 },
+        { date: '2020-09', formatted_amount: 4, amount: 4000 },
+        { date: '2020-12', formatted_amount: 4, amount: 4000 },
+        { date: '2021-03', formatted_amount: 4, amount: 4000 },
+      ]);
     });
 
     it('Should not retrieve accounts has no transactions between the given date range in case query none_zero is true.', async () => {
@@ -397,16 +488,8 @@ describe('routes: `/financial_statements`', () => {
         })
         .send();
 
-      const { balance_sheet: balanceSheet } = res.body;
-      const foundDebitAccount = balanceSheet.assets.find((account) => {
-        return account.id === debitAccount.id;
-      });
-
-      const foundCreditAccount = balanceSheet.liabilities_equity.find((account) => {
-        return account.id === creditAccount.id;
-      });
-      expect(foundDebitAccount).equals(undefined);
-      expect(foundCreditAccount).equals(undefined);
+      expect(res.body.balance_sheet.assets.accounts.length).equals(0);
+      expect(res.body.balance_sheet.liabilities_equity.accounts.length).equals(0);
     });
   });
 
@@ -441,14 +524,11 @@ describe('routes: `/financial_statements`', () => {
           // There is no transactions between these dates.
           from_date: '2002-01-01',
           to_date: '2003-01-01',
+          none_zero: true,
         })
         .send();
 
-      res.body.items.forEach((item) => {
-        expect(item.credit).equals(0);
-        expect(item.debit).equals(0);
-        expect(item.balance).equals(0);
-      });
+      expect(res.body.items.length).equals(0);
     });
 
     it('Should retrieve trial balance of accounts between the given date range.', async () => {
@@ -506,6 +586,10 @@ describe('routes: `/financial_statements`', () => {
         })
         .send();
     });
+
+    it('Should retrieve associated account details in accounts list.', async () => {
+
+    });
   });
 
   describe('routes: `/api/financial_statements/profit_loss_sheet`', () => {
@@ -515,7 +599,111 @@ describe('routes: `/financial_statements`', () => {
         .send();
 
       expect(res.status).equals(401);
-      expect(res.body.message).equals('unauthorzied');
+      expect(res.body.message).equals('unauthorized');
+    });
+
+    it('Should retrieve columns when display type `date_periods` and columns by `month` between date range.', async () => {
+      const res = await request()
+        .get('/api/financial_statements/profit_loss_sheet')
+        .set('x-access-token', loginRes.body.token)
+        .query({
+          from_date: '2020-01-01',
+          to_date: '2020-12-12',
+          display_columns_type: 'date_periods',
+          display_columns_by: 'month',
+        })
+        .send();
+
+      expect(res.body.columns.length).equals(12);
+      expect(res.body.columns).deep.equals([
+        '2020-01', '2020-02',
+        '2020-03', '2020-04',
+        '2020-05', '2020-06',
+        '2020-07', '2020-08',
+        '2020-09', '2020-10',
+        '2020-11', '2020-12',
+      ]);
+    });
+
+    it('Should retrieve columns when display type `date_periods` and columns by `quarter`.', async () => {
+      const res = await request()
+        .get('/api/financial_statements/profit_loss_sheet')
+        .set('x-access-token', loginRes.body.token)
+        .query({
+          from_date: moment().startOf('year').format('YYYY-MM-DD'),
+          to_date: moment().endOf('year').format('YYYY-MM-DD'),
+          display_columns_type: 'date_periods',
+          display_columns_by: 'month',
+        })
+        .send();
+
+      expect(res.body.columns.length).equals(12);
+      expect(res.body.columns).deep.equals([
+        '2020-03', '2020-06', '2020-09', '2020-12',
+      ]);
+    });
+
+    it('Should retrieve columns when display type `date_periods` and columns by `day` between date range.', async () => {
+      const res = await request()
+        .get('/api/financial_statements/profit_loss_sheet')
+        .set('x-access-token', loginRes.body.token)
+        .query({
+          from_date: moment('2020-01-01').startOf('month').format('YYYY-MM-DD'),
+          to_date: moment('2020-01-01').endOf('month').format('YYYY-MM-DD'),
+          display_columns_type: 'date_periods',
+          display_columns_by: 'day',
+        })
+        .send();
+
+      expect(res.body.columns.length).equals(31);
+      expect(res.body.columns).deep.equals([
+        '2020-01-01', '2020-01-02', '2020-01-03',
+        '2020-01-04', '2020-01-05', '2020-01-06',
+        '2020-01-07', '2020-01-08', '2020-01-09',
+        '2020-01-10', '2020-01-11', '2020-01-12',
+        '2020-01-13', '2020-01-14', '2020-01-15',
+        '2020-01-16', '2020-01-17', '2020-01-18',
+        '2020-01-19', '2020-01-20', '2020-01-21',
+        '2020-01-22', '2020-01-23', '2020-01-24',
+        '2020-01-25', '2020-01-26', '2020-01-27',
+        '2020-01-28', '2020-01-29', '2020-01-30',
+        '2020-01-31',
+      ]);
+    });
+
+    it('Should retrieve all income accounts even it has no transactions.', async () => {
+      const res = await request()
+        .get('/api/financial_statements/profit_loss_sheet')
+        .set('x-access-token', loginRes.body.token)
+        .query({
+          from_date: moment('2020-01-01').startOf('month').format('YYYY-MM-DD'),
+          to_date: moment('2020-01-01').endOf('month').format('YYYY-MM-DD'),
+          display_columns_type: 'total',
+          display_columns_by: 'day',
+        })
+        .send();
+
+      console.log(res.body);
+
+      // expect(res.body.income.accounts.length).equals(2);
+      // expect(res.body.income.accounts[0].name).to.be.an('string');
+      // expect(res.body.income.accounts[0].code).to.be.an('string');
+      // expect(res.body.income.accounts[0].periods).to.be.an('array');
+      // expect(res.body.income.accounts[0].periods.length).equals(31);
+    });
+
+    it('Should retrieve total of each income account when display columns by `total`.',  async () => {
+      const res = await request()
+        .get('/api/financial_statements/profit_loss_sheet')
+        .set('x-access-token', loginRes.body.token)
+        .query({
+          from_date: moment('2020-01-01').startOf('month').format('YYYY-MM-DD'),
+          to_date: moment('2020-01-01').endOf('month').format('YYYY-MM-DD'),
+          display_columns_by: 'day',
+        })
+        .send();
+
+      expect(res.body.income).deep.equals();
     });
 
     it('Should retrieve credit sumation of income accounts.', async () => {
@@ -530,6 +718,8 @@ describe('routes: `/financial_statements`', () => {
           },
         })
         .send();
+
+      console.log(res.body);
 
       res.body.income.accounts[0].dates.forEach((item) => {
         expect(item.rawAmount).equals(2000);

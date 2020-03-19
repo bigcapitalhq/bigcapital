@@ -1,6 +1,7 @@
-import { check, query, validationResult } from 'express-validator';
+import { check, query, oneOf, validationResult } from 'express-validator';
 import express from 'express';
 import { difference } from 'lodash';
+import moment from 'moment';
 import Account from '@/models/Account';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
 import JWTAuth from '@/http/middleware/jwtAuth';
@@ -38,9 +39,10 @@ export default {
     validation: [
       check('date').isISO8601(),
       check('reference').exists(),
+      check('memo').optional().trim().escape(),
       check('entries').isArray({ min: 1 }),
-      check('entries.*.credit').isNumeric().toInt(),
-      check('entries.*.debit').isNumeric().toInt(),
+      check('entries.*.credit').optional({ nullable: true }).isNumeric().toInt(),
+      check('entries.*.debit').optional({ nullable: true }).isNumeric().toInt(),
       check('entries.*.account_id').isNumeric().toInt(),
       check('entries.*.note').optional(),
     ],
@@ -56,11 +58,16 @@ export default {
         date: new Date(),
         ...req.body,
       };
-      const errorReasons = [];
+
       let totalCredit = 0;
       let totalDebit = 0;
 
-      form.entries.forEach((entry) => {
+      const { user } = req;
+      const errorReasons = [];
+      const entries = form.entries.filter((entry) => (entry.credit || entry.debit));
+      const formattedDate = moment(form.date).format('YYYY-MM-DD');
+
+      entries.forEach((entry) => {
         if (entry.credit > 0) {
           totalCredit += entry.credit;
         }
@@ -68,6 +75,7 @@ export default {
           totalDebit += entry.debit;
         }
       });
+
       if (totalCredit <= 0 || totalDebit <= 0) {
         errorReasons.push({
           type: 'CREDIT.DEBIT.SUMATION.SHOULD.NOT.EQUAL.ZERO',
@@ -77,7 +85,7 @@ export default {
       if (totalCredit !== totalDebit) {
         errorReasons.push({ type: 'CREDIT.DEBIT.NOT.EQUALS', code: 100 });
       }
-      const accountsIds = form.entries.map((entry) => entry.account_id);
+      const accountsIds = entries.map((entry) => entry.account_id);
       const accounts = await Account.query().whereIn('id', accountsIds)
         .withGraphFetched('type');
 
@@ -95,18 +103,30 @@ export default {
       if (errorReasons.length > 0) {
         return res.status(400).send({ errors: errorReasons });
       }
+
+      // Save manual journal transaction.
+      const manualJournal = await ManualJournal.query().insert({
+        reference: form.reference,
+        transaction_type: 'Journal',
+        amount: totalCredit,
+        date: formattedDate,
+        note: form.memo,
+        user_id: user.id,
+      });
       const journalPoster = new JournalPoster();
 
-      form.entries.forEach((entry) => {
+      entries.forEach((entry) => {
         const account = accounts.find((a) => a.id === entry.account_id);
 
         const jouranlEntry = new JournalEntry({
-          date: entry.date,
           debit: entry.debit,
           credit: entry.credit,
           account: account.id,
+          transactionType: 'Journal',
           accountNormal: account.type.normal,
           note: entry.note,
+          date: formattedDate,
+          userId: user.id,
         });
         if (entry.debit) {
           journalPoster.debit(jouranlEntry);
@@ -120,7 +140,7 @@ export default {
         journalPoster.saveEntries(),
         journalPoster.saveBalance(),
       ]);
-      return res.status(200).send();
+      return res.status(200).send({ id: manualJournal.id });
     },
   },
 

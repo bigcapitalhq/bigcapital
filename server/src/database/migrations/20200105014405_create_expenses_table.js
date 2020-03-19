@@ -6,11 +6,11 @@ exports.up = function(knex) {
     table.string('currency_code');
     table.decimal('exchange_rate');
     table.text('description');
-    table.integer('expense_account_id').unsigned().references('id').inTable('accounts');
-    table.integer('payment_account_id').unsigned().references('id').inTable('accounts');
+    table.integer('expense_account_id').unsigned();
+    table.integer('payment_account_id').unsigned();
     table.string('reference');
     table.boolean('published').defaultTo(false);
-    table.integer('user_id').unsigned().references('id').inTable('users');
+    table.integer('user_id').unsigned();
     table.date('date');
     // table.timestamps();
   })  

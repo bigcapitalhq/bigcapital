@@ -2,8 +2,8 @@
 exports.up = function(knex) {
   return knex.schema.createTable('budget_entries', (table) => {
     table.increments();
-    table.integer('budget_id').unsigned().references('id').inTable('budgets');
-    table.integer('account_id').unsigned().references('id').inTable('accounts');
+    table.integer('budget_id').unsigned();
+    table.integer('account_id').unsigned();
     table.decimal('amount', 15, 5);
     table.integer('order');
   })  

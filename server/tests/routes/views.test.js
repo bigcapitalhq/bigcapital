@@ -11,7 +11,7 @@ import ViewColumn from '../../src/models/ViewColumn';
 
 let loginRes;
 
-describe.only('routes: `/views`', () => {
+describe('routes: `/views`', () => {
   beforeEach(async () => {
     loginRes = await login();
   });

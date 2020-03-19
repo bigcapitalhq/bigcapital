@@ -17,6 +17,11 @@ export default class Account extends BaseModel {
    */
   static get modifiers() {
     return {
+      filterAccounts(query, accountIds) {
+        if (accountIds.length > 0) {
+          query.whereIn('id', accountIds);
+        }
+      },
       filterAccountTypes(query, typesIds) {
         if (typesIds.length > 0) {
           query.whereIn('accoun_type_id', typesIds);

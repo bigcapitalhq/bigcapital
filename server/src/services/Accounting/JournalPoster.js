@@ -3,6 +3,7 @@ import moment from 'moment';
 import JournalEntry from '@/services/Accounting/JournalEntry';
 import AccountTransaction from '@/models/AccountTransaction';
 import AccountBalance from '@/models/AccountBalance';
+import {promiseSerial} from '@/utils';
 
 export default class JournalPoster {
   /**
@@ -125,12 +126,12 @@ export default class JournalPoster {
     this.entries.forEach((entry) => {
       const oper = AccountTransaction.query().insert({
         accountId: entry.account,
-        ...pick(entry, ['credit', 'debit', 'transactionType',
+        ...pick(entry, ['credit', 'debit', 'transactionType', 'date', 'userId',
           'referenceType', 'referenceId', 'note']),
       });
-      saveOperations.push(oper);
+      saveOperations.push(() => oper);
     });
-    await Promise.all(saveOperations);
+    await promiseSerial(saveOperations);
   }
 
   /**

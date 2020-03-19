@@ -117,6 +117,10 @@ export default [
     href: '/dashboard/accounting/balance-sheet',
   },
   {
+    text: 'Trial Balance Sheet',
+    href: '/dashboard/accounting/trial-balance-sheet',
+  },
+  {
     divider: true,
   },
   {
