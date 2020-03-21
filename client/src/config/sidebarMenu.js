@@ -121,6 +121,10 @@ export default [
     href: '/dashboard/accounting/trial-balance-sheet',
   },
   {
+    text: 'Journal',
+    href: '/dashboard/accounting/journal-sheet',
+  },
+  {
     divider: true,
   },
   {

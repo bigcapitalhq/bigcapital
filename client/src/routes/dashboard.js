@@ -95,5 +95,12 @@ export default [
     component: LazyLoader({
       loader: () => import('containers/Dashboard/FinancialStatements/ProfitLossSheet/ProfitLossSheet')
     }),
-  }
+  },
+  {
+    path: `${BASE_URL}/accounting/journal-sheet`,
+    name: 'dashboard.accounting.journal.sheet',
+    component: LazyLoader({
+      loader: () => import('containers/Dashboard/FinancialStatements/Journal/Journal')
+    }),
+  },
 ];

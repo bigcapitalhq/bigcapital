@@ -1,12 +1,16 @@
 import { createReducer } from '@reduxjs/toolkit';
 import t from 'store/types';
-import {getBalanceSheetIndexByQuery, getTrialBalanceSheetIndex} from './financialStatements.selectors';
-import { actionComplete } from '@syncfusion/ej2-react-grids';
+import {
+  getBalanceSheetIndexByQuery,
+  getTrialBalanceSheetIndex,
+  getFinancialSheetIndexByQuery,
+} from './financialStatements.selectors';
 
 const initialState = {
   balanceSheets: [],
   trialBalanceSheets: [],
   generalLedger: [],
+  journalSheets: [],
 };
 
 export default createReducer(initialState, {
@@ -36,6 +40,21 @@ export default createReducer(initialState, {
       state.trialBalanceSheets[index] = trailBalanceSheet;
     } else {
       state.trailBalanceSheet.push(trailBalanceSheet);
+    }
+  },
+
+  [t.JOURNAL_SHEET_SET]: (state, action) => {
+    const index = getFinancialSheetIndexByQuery(state.journalSheets, action.query);
+    console.log(index, 'INDEX');
+    
+    const journal = {
+      query: action.data.query,
+      journal: action.data.journal,
+    };
+    if (index !== -1) {
+      state.journalSheets[index] = journal;
+    } else {
+      state.journalSheets.push(journal);
     }
   }
 });

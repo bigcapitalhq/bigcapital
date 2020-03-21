@@ -78,16 +78,12 @@ function BalanceSheetTable({
         }
       },
     }))),
-  
-  
-    
-  ], [balanceSheetColumns]);
+  ], [balanceSheetColumns, balanceSheetQuery]);
  
   const [data, setData] = useState([]);
 
   useEffect(() => {
     if (!balanceSheet) { return; }
-
     setData([
       {
         name: 'Assets',
@@ -106,9 +102,6 @@ function BalanceSheetTable({
     ])
   }, [])
 
-  // if (balanceSheets.length > 0) {
-  //   setData(balanceSheets[0].balance_sheet);
-  // }
   return (
     <FinancialSheet
       companyTitle={'Facebook, Incopration'}

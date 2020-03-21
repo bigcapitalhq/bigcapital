@@ -214,6 +214,12 @@ export default {
       query('account_types').optional().isArray(),
       query('account_types.*').optional().isNumeric().toInt(),
       query('custom_view_id').optional().isNumeric().toInt(),
+
+      query('roles').optional().isArray({ min: 1 }),
+      query('roles.*.field_key').exists().escape().trim(),
+      query('roles.*.comparator').exists(),
+      query('roles.*.value').exists(),
+      query('roles.*.index').exists().isNumeric().toInt(),
     ],
     async handler(req, res) {
       const validationErrors = validationResult(req);

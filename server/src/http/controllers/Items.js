@@ -49,11 +49,14 @@ export default {
   newItem: {
     validation: [
       check('name').exists(),
-      check('type').exists().trim().escape().isIn(['service', 'product']),
+      check('type').exists().trim().escape()
+        .isIn(['service', 'non-inventory', 'inventory']),
+      check('sku').optional().trim().escape(),
       check('cost_price').exists().isNumeric(),
       check('sell_price').exists().isNumeric(),
       check('cost_account_id').exists().isInt().toInt(),
       check('sell_account_id').exists().isInt().toInt(),
+      check('inventory_account_id').exists().isInt().toInt(),
       check('category_id').optional().isInt().toInt(),
 
       check('custom_fields').optional().isArray({ min: 1 }),
@@ -78,6 +81,9 @@ export default {
 
       const costAccountPromise = Account.query().findById(form.cost_account_id);
       const sellAccountPromise = Account.query().findById(form.sell_account_id);
+      const inventoryAccountPromise = (form.type === 'inventory') ? 
+        Account.query().findByid(form.inventory_account_id) : null;
+
       const itemCategoryPromise = (form.category_id)
         ? ItemCategory.query().findById(form.category_id) : null;
 
@@ -101,8 +107,14 @@ export default {
           errorReasons.push({ type: 'FIELD_KEY_NOT_FOUND', code: 150, fields: notFoundFields });
         }
       }
-      const [costAccount, sellAccount, itemCategory] = await Promise.all([
-        costAccountPromise, sellAccountPromise, itemCategoryPromise,
+      const [
+        costAccount,
+        sellAccount,
+        itemCategory,
+        inventoryAccount,
+      ] = await Promise.all([
+        costAccountPromise, sellAccountPromise,
+        itemCategoryPromise, inventoryAccountPromise,
       ]);
       if (!costAccount) {
         errorReasons.push({ type: 'COST_ACCOUNT_NOT_FOUND', code: 100 });
@@ -112,6 +124,9 @@ export default {
       }
       if (!itemCategory && form.category_id) {
         errorReasons.push({ type: 'ITEM_CATEGORY_NOT_FOUND', code: 140 });
+      }
+      if (!inventoryAccount && form.type === 'inventory') {
+        errorReasons.push({ type: 'INVENTORY_ACCOUNT_NOT_FOUND', code: 150 });
       }
       if (errorReasons.length > 0) {
         return res.boom.badRequest(null, { errors: errorReasons });

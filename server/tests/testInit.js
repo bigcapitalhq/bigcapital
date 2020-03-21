@@ -6,16 +6,29 @@ import knex from '@/database/knex';
 import '@/models';
 import app from '@/app';
 import factory from '@/database/factories';
-import knexConfig from '@/../knexfile';
 import dbManager from '@/database/manager';
 // import { hashPassword } from '@/utils';
 
 const request = () => chai.request(app);
 const { expect } = chai;
 
+const login = async (givenUser) => {
+  const user = !givenUser ? await factory.create('user') : givenUser;
+
+  const response = request()
+    .post('/api/auth/login')
+    .send({
+      crediential: user.email,
+      password: 'admin',
+    });
+  return response;
+};
+
 before(async () => {
-  await dbManager.dropDb();
-  await dbManager.createDb('ratteb');
+  await dbManager.closeKnex();
+  await dbManager.close();
+  // await dbManager.dropDb();
+  // await dbManager.createDb();
 });
 
 beforeEach(async () => {
@@ -23,24 +36,11 @@ beforeEach(async () => {
   await knex.migrate.latest();
 });
 
-afterEach(async () => {
+after(async () => {
 });
 
 chai.use(chaiHttp);
 chai.use(chaiThings);
-
-const login = async (givenUser) => {
-  const user = !givenUser ? await factory.create('user') : givenUser;
-
-  const response = await request()
-    .post('/api/auth/login')
-    .send({
-      crediential: user.email,
-      password: 'admin',
-    });
-
-  return response;
-};
 
 const create = async (name, data) => factory.create(name, data);
 const make = async (name, data) => factory.build(name, data);

@@ -300,6 +300,25 @@ describe('routes: /accounts/', () => {
       expect(res.body.accounts[2].id).equals(account3.id);
       expect(res.body.accounts[2].name).equals(`${account1.name} ― ${account2.name} ― ${account3.name}`);
     });
+
+    it('Should retrieve filtered accounts according to the given filter roles.', async () => {
+      const account1 = await create('account', { name: 'ahmed' });
+      const account2 = await create('account');
+      const account3 = await create('account');
+
+      const res = await request()
+        .get('/api/accounts')
+        .set('x-access-token', loginRes.body.token)
+        .query({
+          filter_roles: [{
+            field_key: 'name',
+            comparator: 'equals',
+            value: 'ahmed',
+          }],
+        });
+
+      expect(res.body.accounts.length).equals(1);
+    });
   });
 
   describe('DELETE: `/accounts`', () => {
