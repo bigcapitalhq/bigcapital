@@ -1,5 +1,5 @@
 import express from 'express';
-import { check, validationResult } from 'express-validator';
+import { check, oneOf, validationResult } from 'express-validator';
 import moment from 'moment';
 import { difference } from 'lodash';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
@@ -10,6 +10,8 @@ import ItemCategory from '@/models/ItemCategory';
 import Resource from '@/models/Resource';
 import ResourceField from '@/models/ResourceField';
 import Authorization from '@/http/middleware/authorization';
+
+
 
 export default {
 
@@ -52,11 +54,13 @@ export default {
       check('type').exists().trim().escape()
         .isIn(['service', 'non-inventory', 'inventory']),
       check('sku').optional().trim().escape(),
-      check('cost_price').exists().isNumeric(),
-      check('sell_price').exists().isNumeric(),
+      check('cost_price').exists().isNumeric().toFloat(),
+      check('sell_price').exists().isNumeric().toFloat(),
       check('cost_account_id').exists().isInt().toInt(),
       check('sell_account_id').exists().isInt().toInt(),
-      check('inventory_account_id').exists().isInt().toInt(),
+      check('inventory_account_id')
+        .if(check('type').equals('inventory'))
+        .exists().isInt().toInt(),
       check('category_id').optional().isInt().toInt(),
 
       check('custom_fields').optional().isArray({ min: 1 }),

@@ -1,7 +1,7 @@
 import {
   request,
-  expect,
   create,
+  expect,
   login,
 } from '~/testInit';
 import knex from '@/database/knex';
@@ -20,7 +20,6 @@ describe('routes: `/items`', () => {
     it('Should not create a new item if the user was not authorized.', async () => {
       const res = await request()
         .post('/api/items')
-        .set('x-access-token', loginRes.body.token)
         .send();
 
       expect(res.status).equals(401);
@@ -48,7 +47,7 @@ describe('routes: `/items`', () => {
       });
     });
 
-    it('Should `type_id` be required.', async () => {
+    it('Should `type` be required.', async () => {
       const res = await request()
         .post('/api/items')
         .set('x-access-token', loginRes.body.token)
@@ -57,29 +56,27 @@ describe('routes: `/items`', () => {
       expect(res.status).equals(422);
       expect(res.body.code).equals('validation_error');
       expect(res.body.errors).include.something.deep.equals({
-        msg: 'Invalid value', param: 'type_id', location: 'body',
+        msg: 'Invalid value', param: 'type', location: 'body',
       });
     });
 
-    it('Should `buy_price` be numeric.', async () => {
+    it('Should `type` be one of defined words.', async () => {
       const res = await request()
         .post('/api/items')
         .set('x-access-token', loginRes.body.token)
         .send({
-          buy_price: 'not_numeric',
+          type: 'not-defined',
         });
 
-      expect(res.status).equals(422);
-      expect(res.body.code).equals('validation_error');
-      expect(res.body.errors).include.something.deep.equals({ 
-        value: 'not_numeric',
+      expect(res.body.errors).include.something.deep.equals({
+        value: 'not-defined',
         msg: 'Invalid value',
-        param: 'buy_price',
+        param: 'type',
         location: 'body',
       });
     });
 
-    it('Should `cost_price` be numeric.', async () => {
+    it('Should `buy_price` be numeric.', async () => {
       const res = await request()
         .post('/api/items')
         .set('x-access-token', loginRes.body.token)
@@ -89,7 +86,7 @@ describe('routes: `/items`', () => {
 
       expect(res.status).equals(422);
       expect(res.body.code).equals('validation_error');
-      expect(res.body.errors).include.something.deep.equals({ 
+        expect(res.body.errors).include.something.deep.equals({ 
         value: 'not_numeric',
         msg: 'Invalid value',
         param: 'cost_price',
@@ -97,25 +94,25 @@ describe('routes: `/items`', () => {
       });
     });
 
-    it('Should `sell_account_id` be integer.', async () => {
+    it('Should `sell_price` be numeric.', async () => {
       const res = await request()
         .post('/api/items')
         .set('x-access-token', loginRes.body.token)
         .send({
-          sell_account_id: 'not_numeric',
+          sell_price: 'not_numeric',
         });
 
       expect(res.status).equals(422);
       expect(res.body.code).equals('validation_error');
-      expect(res.body.errors).include.something.deep.equals({
+      expect(res.body.errors).include.something.deep.equals({ 
         value: 'not_numeric',
         msg: 'Invalid value',
-        param: 'sell_account_id',
+        param: 'sell_price',
         location: 'body',
       });
     });
 
-    it('Should `cost_account_id` be integer.', async () => {
+    it('Should `sell_account_id` be integer.', async () => {
       const res = await request()
         .post('/api/items')
         .set('x-access-token', loginRes.body.token)
@@ -133,6 +130,24 @@ describe('routes: `/items`', () => {
       });
     });
 
+    it('Should `cost_account_id` be integer.', async () => {
+      const res = await request()
+        .post('/api/items')
+        .set('x-access-token', loginRes.body.token)
+        .send({
+          sell_account_id: 'not_numeric',
+        });
+
+      expect(res.status).equals(422);
+      expect(res.body.code).equals('validation_error');
+      expect(res.body.errors).include.something.deep.equals({
+        value: 'not_numeric',
+        msg: 'Invalid value',
+        param: 'sell_account_id',
+        location: 'body',
+      });
+    });
+
     it('Should `cost_account_id` be required if `cost_price` was presented.', async () => {
 
     });
@@ -141,14 +156,54 @@ describe('routes: `/items`', () => {
 
     });
 
-    it('Should response bad request in case cost account was not exist.', async () => {
+    it('Should `inventory_account_id` be required if type was `inventory` item.', async () => {
       const res = await request()
         .post('/api/items')
         .set('x-access-token', loginRes.body.token)
         .send({
           name: 'Item Name',
-          type_id: 1,
-          buy_price: 10.2,
+          type: 'inventory',
+          sell_price: 10.2,
+          cost_price: 20.2,
+          sell_account_id: 10,
+          cost_account_id: 20,
+        });
+
+      expect(res.body.errors).include.something.deep.equals({
+        msg: 'Invalid value',
+        param: 'inventory_account_id',
+        location: 'body',
+      });
+    });
+
+    it('Should `inventory_account_id` be not required if type was not `inventory`.', async () => {
+      const res = await request()
+        .post('/api/items')
+        .set('x-access-token', loginRes.body.token)
+        .send({
+          name: 'Item Name',
+          type: 'service',
+          sell_price: 10.2,
+          cost_price: 20.2,
+          sell_account_id: 10,
+          cost_account_id: 20,
+        });
+
+      expect(res.body.errors).include.something.deep.not.equals({
+        msg: 'Invalid value',
+        param: 'inventory_account_id',
+        location: 'body',
+      });
+    });
+
+    it('Should response bad request in case `cost account` was not exist.', async () => {
+      const res = await request()
+        .post('/api/items')
+        .set('x-access-token', loginRes.body.token)
+        .send({
+          name: 'Item Name',
+          type: 'service',
+          sell_price: 10.2,
           cost_price: 20.2,
           sell_account_id: 10,
           cost_account_id: 20,
@@ -166,7 +221,7 @@ describe('routes: `/items`', () => {
         .set('x-access-token', loginRes.body.token)
         .send({
           name: 'Item Name',
-          type_id: 1,
+          type: 'service',
           sell_price: 10.2,
           cost_price: 20.2,
           sell_account_id: 10,
@@ -185,7 +240,7 @@ describe('routes: `/items`', () => {
         .set('x-access-token', loginRes.body.token)
         .send({
           name: 'Item Name',
-          type_id: 1,
+          type: 'service',
           sell_price: 10.2,
           cost_price: 20.2,
           sell_account_id: 10,
@@ -209,7 +264,7 @@ describe('routes: `/items`', () => {
         .set('x-access-token', loginRes.body.token)
         .send({
           name: 'Item Name',
-          type_id: 1,
+          type: 'service',
           sell_price: 10.2,
           cost_price: 20.2,
           sell_account_id: account.id,
