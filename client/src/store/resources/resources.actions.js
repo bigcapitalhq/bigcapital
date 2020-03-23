@@ -4,7 +4,6 @@ import t from 'store/types';
 export const fetchResourceColumns = ({ resourceSlug }) => {
   return (dispatch) => new Promise((resolve, reject) => {
     ApiService.get(`resources/${resourceSlug}/columns`).then((response) => {
-      console.log(t.RESOURCE_COLUMNS_SET);
       dispatch({
         type: t.RESOURCE_COLUMNS_SET,
         columns: response.data.resource_columns,

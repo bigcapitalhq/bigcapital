@@ -16,6 +16,7 @@ import DashboardActionsBar from 'components/Accounts/AccountsActionsBar';
 import AccountsConnect from 'connectors/Accounts.connector';
 import DashboardConnect from 'connectors/Dashboard.connector';
 import CustomViewConnect from 'connectors/CustomView.connector';
+import ResourceConnect from 'connectors/Resource.connector';
 import { compose } from 'utils';
 
 function AccountsChart({
@@ -23,7 +24,9 @@ function AccountsChart({
   fetchAccounts,
   deleteAccount,
   inactiveAccount,
-  fetchResourceViews
+  fetchResourceViews,
+  fetchResourceFields,
+  getResourceFields,
 }) {
   const [state, setState] = useState({
     deleteAlertActive: false,
@@ -32,9 +35,12 @@ function AccountsChart({
     targetAccount: {},
   });
 
+  const [filterConditions, setFilterConditions] = useState([]);
+ 
   const fetchHook = useAsync(async () => {
     await Promise.all([
       fetchResourceViews('accounts'),
+      fetchResourceFields('accounts'),
     ]);
   });
 
@@ -106,9 +112,11 @@ function AccountsChart({
   const handleDeleteBulkAccounts = (accounts) => {
 
   };
+  const handleFilterChange = (conditions) => { setFilterConditions(conditions); };
+
   return (
     <DashboardInsider loading={fetchHook.pending} name={'accounts-chart'}>
-      <DashboardActionsBar />
+      <DashboardActionsBar onFilterChange={handleFilterChange} />
       <DashboardPageContent>
         <Switch>
           <Route
@@ -118,8 +126,9 @@ function AccountsChart({
               '/dashboard/accounts'
             ]}>
             <AccountsViewsTabs onDeleteBulkAccounts={handleDeleteBulkAccounts} />
-
+ 
             <AccountsDataTable
+              filterConditions={filterConditions}
               onDeleteAccount={handleDeleteAccount}
               onInactiveAccount={handleInactiveAccount}
               onRestoreAccount={handleRestoreAccount}
@@ -176,5 +185,6 @@ function AccountsChart({
 export default compose(
   AccountsConnect,
   CustomViewConnect,
+  ResourceConnect,
   DashboardConnect,
 )(AccountsChart);

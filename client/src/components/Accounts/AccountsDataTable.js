@@ -26,6 +26,7 @@ import ViewConnect from 'connectors/View.connector';
 import LoadingIndicator from 'components/LoadingIndicator';
 
 function AccountsDataTable({
+  filterConditions,
   accounts,
   onDeleteAccount,
   onInactiveAccount,
@@ -43,9 +44,17 @@ function AccountsDataTable({
   // Fetch accounts list according to the given custom view id.
   const fetchHook = useAsync(async () => {
     await Promise.all([
-      fetchAccounts({ custom_view_id: customViewId }),
+      fetchAccounts({
+        custom_view_id: customViewId,
+        stringified_filter_roles: JSON.stringify(filterConditions) || '',
+      }),
     ]);
   });
+
+  useEffect(() => {
+    fetchHook.execute();
+  }, [filterConditions]);
+
   // Refetch accounts list after custom view id change.
   useEffect(() => {
     const viewMeta = getViewItem(customViewId);

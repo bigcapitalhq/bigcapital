@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import Icon from 'components/Icon';
 import {
   Button,
@@ -19,23 +19,32 @@ import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import DialogConnect from 'connectors/Dialog.connector';
 import AccountsConnect from 'connectors/Accounts.connector';
 import {compose} from 'utils';
+import FilterDropdown from 'components/FilterDropdown';
+import ResourceConnect from 'connectors/Resource.connector';
 
 function AccountsActionsBar({
   openDialog,
   views,
   bulkActions,
+  getResourceFields,
+  onFilterChange,
 }) {
   const {path} = useRouteMatch();
   const onClickNewAccount = () => { openDialog('account-form', {}); };
 
+  const accountsFields = getResourceFields('accounts');
+
   const viewsMenuItems = views.map((view) => {
     return (<MenuItem href={`${path}/${view.id}/custom_view`} text={view.name} />);
   });
-
   const hasBulkActionsSelected = useMemo(() => {
     return Object.keys(bulkActions).length > 0;
   }, [bulkActions]);
 
+  const filterDropdown = FilterDropdown({
+    fields: accountsFields,
+    onFilterChange,
+  });
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -59,6 +68,18 @@ function AccountsActionsBar({
           icon={ <Icon icon="plus" /> }
           text="New Account"
           onClick={onClickNewAccount} />
+
+        <Popover
+          content={filterDropdown}
+          interactionKind={PopoverInteractionKind.CLICK}
+          position={Position.BOTTOM_LEFT}>
+
+          <Button
+            className={classNames(Classes.MINIMAL, 'button--filter')}
+            text="Filter"
+            icon={ <Icon icon="filter" /> } />
+
+        </Popover>
 
         {hasBulkActionsSelected && (
           <Button
@@ -95,5 +116,6 @@ const mapStateToProps = (state) => {
 export default compose(
   DialogConnect,
   AccountsConnect,
+  ResourceConnect,
   connect(mapStateToProps),
 )(AccountsActionsBar);
