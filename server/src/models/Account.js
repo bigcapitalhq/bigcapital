@@ -2,8 +2,9 @@
 import { Model } from 'objection';
 import { flatten } from 'lodash';
 import BaseModel from '@/models/Model';
-import {viewRolesBuilder} from '@/lib/ViewRolesBuilder';
-
+import {
+  buildFilterQuery,
+} from '@/lib/ViewRolesBuilder';
 export default class Account extends BaseModel {
   /**
    * Table name
@@ -16,19 +17,21 @@ export default class Account extends BaseModel {
    * Model modifiers.
    */
   static get modifiers() {
+    const TABLE_NAME = Account.tableName;
+
     return {
       filterAccounts(query, accountIds) {
         if (accountIds.length > 0) {
-          query.whereIn('id', accountIds);
+          query.whereIn(`${TABLE_NAME}.id`, accountIds);
         }
       },
       filterAccountTypes(query, typesIds) {
         if (typesIds.length > 0) {
-          query.whereIn('accoun_type_id', typesIds);
+          query.whereIn('account_types.accoun_type_id', typesIds);
         }
       },
       viewRolesBuilder(query, conditionals, expression) {
-        viewRolesBuilder(conditionals, expression)(query);
+        buildFilterQuery(Account.tableName, conditionals, expression)(query);
       },
     };
   }

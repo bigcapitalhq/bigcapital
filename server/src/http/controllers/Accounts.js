@@ -14,6 +14,7 @@ import {
   mapViewRolesToConditionals,
   validateViewRoles,
 } from '@/lib/ViewRolesBuilder';
+import FilterRoles from '@/lib/FilterRoles';
 
 export default {
   /**
@@ -215,11 +216,7 @@ export default {
       query('account_types.*').optional().isNumeric().toInt(),
       query('custom_view_id').optional().isNumeric().toInt(),
 
-      query('roles').optional().isArray({ min: 1 }),
-      query('roles.*.field_key').exists().escape().trim(),
-      query('roles.*.comparator').exists(),
-      query('roles.*.value').exists(),
-      query('roles.*.index').exists().isNumeric().toInt(),
+      query('stringified_filter_roles').optional().isJSON(),
     ],
     async handler(req, res) {
       const validationErrors = validationResult(req);
@@ -233,11 +230,17 @@ export default {
       const filter = {
         account_types: [],
         display_type: 'tree',
+        filter_roles: [],
         ...req.query,
       };
+      if (filter.stringified_filter_roles) {
+        filter.filter_roles = JSON.parse(filter.stringified_filter_roles);
+      }
       const errorReasons = [];
       const viewConditionals = [];
-      const accountsResource = await Resource.query().where('name', 'accounts').first();
+
+      const accountsResource = await Resource.query()
+        .where('name', 'accounts').withGraphFetched('fields').first();
 
       if (!accountsResource) {
         return res.status(400).send({
@@ -264,6 +267,15 @@ export default {
           errorReasons.push({ type: 'VIEW.LOGIC.EXPRESSION.INVALID', code: 400 });
         }
       }
+
+      // Validate the accounts resource fields.
+      const filterRoles = new FilterRoles(Account.tableName,
+        filter.filter_roles.map((role) => ({ ...role, columnKey: role.fieldKey })),
+        accountsResource.fields);
+
+      if (filterRoles.validateFilterRoles().length > 0) {
+        errorReasons.push({ type: 'ACCOUNTS.RESOURCE.HAS.NO.GIVEN.FIELDS', code: 500 });
+      }
       if (errorReasons.length > 0) {
         return res.status(400).send({ errors: errorReasons });
       }
@@ -271,8 +283,14 @@ export default {
         builder.modify('filterAccountTypes', filter.account_types);
         builder.withGraphFetched('type');
 
-        if (viewConditionals.length) {
+        // Build custom view conditions query.
+        if (viewConditionals.length > 0) {
           builder.modify('viewRolesBuilder', viewConditionals, view.rolesLogicExpression);
+        }
+
+        // Build filter query.
+        if (filter.filter_roles.length > 0) {
+          filterRoles.buildQuery()(builder);
         }
       });
 
