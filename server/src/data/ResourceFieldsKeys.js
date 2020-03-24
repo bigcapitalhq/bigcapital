@@ -33,4 +33,13 @@ export default {
       column: 'code',
     },
   },
+
+  'items': {
+    'type': {
+      column: 'type',
+    },
+    'name': {
+      column: 'name',
+    },
+  }
 };

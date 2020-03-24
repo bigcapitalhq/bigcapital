@@ -91,14 +91,17 @@ factory.define('item_metadata', 'items_metadata', async () => {
 
 factory.define('item', 'items', async () => {
   const category = await factory.create('item_category');
-  const account = await factory.create('account');
+  const costAccount = await factory.create('account');
+  const sellAccount = await factory.create('account');
+  const inventoryAccount = await factory.create('account');
   return {
     name: faker.lorem.word(),
     note: faker.lorem.paragraph(),
     cost_price: faker.random.number(),
     sell_price: faker.random.number(),
-    cost_account_id: account.id,
-    sell_account_id: account.id,
+    cost_account_id: costAccount.id,
+    sell_account_id: sellAccount.id,
+    inventory_account_id: inventoryAccount.id,
     category_id: category.id,
   };
 });

@@ -10,6 +10,7 @@ exports.up = function (knex) {
     table.string('picture_uri');
     table.integer('cost_account_id').unsigned();
     table.integer('sell_account_id').unsigned();
+    table.integer('inventory_account_id').unsigned();
     table.text('note').nullable();
     table.integer('category_id').unsigned();
     table.integer('user_id').unsigned();

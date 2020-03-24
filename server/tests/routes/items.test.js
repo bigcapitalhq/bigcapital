@@ -503,4 +503,171 @@ describe('routes: `/items`', () => {
       expect(storedItems).to.have.lengthOf(0);
     });
   });
+
+  describe('GET: `items`', () => {
+    it('Should response unauthorized access in case the user not authenticated.', async () => {
+      const res = await request()
+        .get('/api/items')
+        .send();
+
+      expect(res.status).equals(401);
+      expect(res.body.message).equals('unauthorized');
+    });
+
+    it('Should response items resource not found.', async () => {
+      await create('item');
+
+      const res = await request()
+        .get('/api/items')
+        .set('x-access-token', loginRes.body.token)
+        .send();
+
+      expect(res.status).equals(400);
+      expect(res.body.errors).include.something.that.deep.equal({
+        type: 'ITEMS_RESOURCE_NOT_FOUND',
+        code: 200,
+      });
+    });
+
+    it('Should retrieve items list with associated accounts.', async () => {
+      await create('resource', { name: 'items' });
+      await create('item');
+
+      const res = await request()
+        .get('/api/items')
+        .set('x-access-token', loginRes.body.token)
+        .send();
+
+      expect(res.status).equals(200);
+
+      expect(res.body.items).to.be.a('object');
+      expect(res.body.items.results).to.be.a('array');
+      expect(res.body.items.results.length).equals(1);
+
+      expect(res.body.items.results[0].cost_account).to.be.an('object');
+      expect(res.body.items.results[0].sell_account).to.be.an('object');
+      expect(res.body.items.results[0].inventory_account).to.be.an('object');
+      expect(res.body.items.results[0].category).to.be.an('object');
+    });
+
+    it('Should retrieve ordered items based on the given `column_sort_order` and `sort_order` query.', async () => {
+      await create('resource', { name: 'items' });
+      await create('item', { name: 'ahmed' });
+      await create('item', { name: 'mohamed' });
+
+      const res = await request()
+        .get('/api/items')
+        .set('x-access-token', loginRes.body.token)
+        .query({
+          column_sort_order: 'name',
+          sort_order: 'desc',
+        })
+        .send();
+
+      expect(res.body.items.results.length).equals(2);
+      expect(res.body.items.results[0].name).equals('mohamed');
+      expect(res.body.items.results[1].name).equals('ahmed');
+    });
+
+    it('Should retrieve pagination meta of items list.', async () => {
+      await create('resource', { name: 'items' });
+
+      const res = await request()
+        .get('/api/items')
+        .set('x-access-token', loginRes.body.token)
+        .query({
+          page: 2,
+        })
+        .send();
+
+      expect(res.body.items.results).to.be.a('array');
+      expect(res.body.items.results.length).equals(0);
+      expect(res.body.items.total).to.be.a('number');
+      expect(res.body.items.total).equals(0)
+    });
+
+    it('Should retrieve filtered items based on custom view conditions.', async () => {
+      const resource = await create('resource', { name: 'items' });
+      const resourceField = await create('resource_field', {
+        label_name: 'Type',
+        key: 'type',
+        resource_id: resource.id,
+      });
+      const item1 = await create('item', { type: 'service' });
+      const item2 = await create('item', { type: 'service' });
+      const item3 = await create('item', { type: 'inventory' });
+      const item4 = await create('item', { type: 'inventory' });
+
+      const view = await create('view', {
+        name: 'Items Inventory',
+        resource_id: resource.id,
+        roles_logic_expression: '1',
+      });
+      const viewCondition = await create('view_role', {
+        view_id: view.id,
+        index: 1,
+        field_id: resourceField,
+        value: 'inventory',
+        comparator: 'equals',
+      });
+      const res = await request()
+        .get('/api/items')
+        .set('x-access-token', loginRes.body.token)
+        .query({
+          custom_view_id: view.id,
+        })
+        .send();
+
+      expect(res.body.customViewId).equals(view.id);
+      expect(res.body.viewColumns).to.be.a('array');
+      expect(res.body.viewConditions).to.be.a('array');
+      expect(res.body.items.results.length).equals(2);
+      expect(res.body.items.results[0].type).equals('inventory');
+      expect(res.body.items.results[1].type).equals('inventory');
+    });
+
+    it('Should retrieve filtered items based on filtering conditions.', async () => {
+      const resource = await create('resource', { name: 'items' });
+      const resourceField = await create('resource_field', {
+        label_name: 'Type',
+        key: 'type',
+        resource_id: resource.id,
+      });
+      const resourceNameField = await create('resource_field', {
+        label_name: 'item name',
+        key: 'name',
+        resource_id: resource.id,
+      });
+      const item1 = await create('item', { type: 'service' });
+      const item2 = await create('item', { type: 'service', name: 'target' });
+      const item3 = await create('item', { type: 'inventory' });
+      const item4 = await create('item', { type: 'inventory' });
+
+      const res = await request()
+        .get('/api/items')
+        .set('x-access-token', loginRes.body.token)
+        .query({
+          stringified_filter_roles: JSON.stringify([
+            {
+              condition: '&&',
+              field_key: 'type',
+              comparator: 'equals',
+              value: 'inventory',
+            },
+            {
+              condition: '||',
+              field_key: 'name',
+              comparator: 'equals',
+              value: 'target',
+            },
+          ]),
+        })
+        .send();
+
+      expect(res.body.items.results.length).equals(3);
+      expect(res.body.items.results[0].name).equals('target');
+      expect(res.body.items.results[1].type).equals('inventory');
+      expect(res.body.items.results[2].type).equals('inventory');
+    });
+  });
 });

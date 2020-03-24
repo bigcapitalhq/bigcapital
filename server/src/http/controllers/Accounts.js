@@ -287,7 +287,6 @@ export default {
         if (viewConditionals.length > 0) {
           builder.modify('viewRolesBuilder', viewConditionals, view.rolesLogicExpression);
         }
-
         // Build filter query.
         if (filter.filter_roles.length > 0) {
           filterRoles.buildQuery()(builder);

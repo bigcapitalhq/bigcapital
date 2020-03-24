@@ -3,7 +3,7 @@ import Account from '@/models/Account';
 
 let loginRes;
 
-describe.only('routes: /accounts/', () => {
+describe('routes: /accounts/', () => {
   beforeEach(async () => {
     loginRes = await login();
   });

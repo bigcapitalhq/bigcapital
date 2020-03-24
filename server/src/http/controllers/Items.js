@@ -1,5 +1,5 @@
 import express from 'express';
-import { check, oneOf, validationResult } from 'express-validator';
+import { check, query, oneOf, validationResult } from 'express-validator';
 import moment from 'moment';
 import { difference } from 'lodash';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
@@ -10,8 +10,12 @@ import ItemCategory from '@/models/ItemCategory';
 import Resource from '@/models/Resource';
 import ResourceField from '@/models/ResourceField';
 import Authorization from '@/http/middleware/authorization';
-
-
+import View from '@/models/View';
+import {
+  mapViewRolesToConditionals,
+  validateViewRoles,
+} from '@/lib/ViewRolesBuilder';
+import FilterRoles from '@/lib/FilterRoles';
 
 export default {
 
@@ -38,9 +42,9 @@ export default {
     //   this.getCategory.validation,
     //   asyncMiddleware(this.getCategory.handler));
 
-    // router.get('/',
-    //   this.categoriesList.validation,
-    //   asyncMiddleware(this.categoriesList.validation));
+    router.get('/',
+      this.listItems.validation,
+      asyncMiddleware(this.listItems.handler));
 
     return router;
   },
@@ -248,46 +252,99 @@ export default {
    * Retrive the list items with pagination meta.
    */
   listItems: {
-    validation: [],
+    validation: [
+      query('column_sort_order').optional().isIn(['created_at', 'name', 'amount', 'sku']),
+      query('sort_order').optional().isIn(['desc', 'asc']),
+      query('page').optional().isNumeric().toInt(),
+      query('page_size').optional().isNumeric().toInt(),
+      query('custom_view_id').optional().isNumeric().toInt(),
+      query('stringified_filter_roles').optional().isJSON(),
+    ],
     async handler(req, res) {
+      const validationErrors = validationResult(req);
+
+      if (!validationErrors.isEmpty()) {
+        return res.boom.badData(null, {
+          code: 'validation_error', ...validationErrors,
+        });
+      }
+      const errorReasons = [];
+      const viewConditions = [];
+      const itemsResource = await Resource.query()
+        .where('name', 'items')
+        .withGraphFetched('fields')
+        .first();
+
+      if (!itemsResource) {
+        return res.status(400).send({ errors: [
+          {type: 'ITEMS_RESOURCE_NOT_FOUND', code: 200},
+        ]});
+      }
       const filter = {
-        name: '',
-        description: '',
-        SKU: '',
-        account_id: null,
-        page_size: 10,
+        column_sort_order: 'created_at',
+        sort_order: '',
         page: 1,
-        start_date: null,
-        end_date: null,
+        page_size: 10,
+        custom_view_id: null,
+        filter_roles: [],
         ...req.query,
       };
+      if (filter.stringified_filter_roles) {
+        filter.filter_roles = JSON.parse(filter.stringified_filter_roles);
+      }
 
-      const items = await Item.query((query) => {
-        if (filter.description) {
-          query.where('description', 'like', `%${filter.description}%`);
+      const view = await View.query().onBuild((builder) => {
+        if (filter.custom_view_id) {
+          builder.where('id', filter.custom_view_id);
+        } else {
+          builder.where('favourite', true);
         }
-        if (filter.description) {
-          query.where('SKU', filter.SKY);
-        }
-        if (filter.name) {
-          query.where('name', filter.name);
-        }
-        if (filter.start_date) {
-          const startDateFormatted = moment(filter.start_date).format('YYYY-MM-DD HH:mm:SS');
-          query.where('created_at', '>=', startDateFormatted);
-        }
-        if (filter.end_date) {
-          const endDateFormatted = moment(filter.end_date).format('YYYY-MM-DD HH:mm:SS');
-          query.where('created_at', '<=', endDateFormatted);
-        }
-      }).fetchPage({
-        page_size: filter.page_size,
-        page: filter.page,
+        builder.where('resource_id', itemsResource.id);
+        builder.withGraphFetched('roles.field');
+        builder.withGraphFetched('columns');
+        builder.first();
       });
+      if (view && view.roles.length > 0) {
+        viewConditions.push(
+          ...mapViewRolesToConditionals(view.roles),
+        );
+        if (!validateViewRoles(viewConditions, view.rolesLogicExpression)) {
+          errorReasons.push({ type: 'VIEW.LOGIC.EXPRESSION.INVALID', code: 400 });
+        }
+      }
+      const filterConditions = new FilterRoles(Item.tableName,
+        filter.filter_roles.map((role) => ({ ...role, columnKey: role.fieldKey })),
+        itemsResource.fields,
+      );
+      if (filterConditions.validateFilterRoles().length > 0) {
+        errorReasons.push({ type: 'ITEMS.RESOURCE.HAS.NO.FIELDS', code: 500 });
+      }
+      if (errorReasons.length > 0) {
+        return res.status(400).send({ errors: errorReasons });
+      }
+      const items = await Item.query().onBuild((builder) => {
+        builder.withGraphFetched('costAccount');
+        builder.withGraphFetched('sellAccount');
+        builder.withGraphFetched('inventoryAccount');
+        builder.withGraphFetched('category');
+
+        builder.modify('sortBy', filter.column_sort_order, filter.sort_order);
+
+        if (viewConditions.length > 0) {
+          builder.modify('viewRolesBuilder', viewConditions, view.rolesLogicExpression);
+        }
+        if (filter.filter_roles.length > 0) {
+          filterConditions.buildQuery()(builder);
+        }
+      }).page(filter.page - 1, filter.page_size);
 
       return res.status(200).send({
-        items: items.toJSON(),
-        pagination: items.pagination,
+        items,
+        ...(view) && {
+          customViewId: view.id,
+          viewColumns: view.columns,
+          viewConditions,
+        },
       });
     },
   },
