@@ -1,0 +1,39 @@
+
+.make-journal-entries{
+
+  &__header{
+    padding: 25px 40px;
+    background: #fbfbfb;
+  }
+
+  &__table{
+    .bp3-form-group{
+      margin-bottom: 0;
+    }
+    table{
+      border: 1px solid transparent;
+
+      thead{
+        th.index{ width: 3%; }
+        th.account{ width: 22%; }
+        th.note{ width: 40%; }
+        th.credit{ width: 17.5%; }
+        th.debit{ width: 17.5%; }
+      }
+
+      th,
+      td{
+        border-right: 1px dotted #999;
+      }
+      th{
+        color: #444;
+        font-weight: 600;
+        border-bottom: 1px dotted #666;
+      }
+
+      td{
+        border-bottom: 1px dotted #999;
+      }
+    }
+  }
+}

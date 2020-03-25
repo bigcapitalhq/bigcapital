@@ -1,0 +1,17 @@
+
+
+.dashboard__insider--expense-form{
+  padding: 40px 20px;
+
+  .#{$ns}-form-group{
+    margin-bottom: 22px;
+
+    .#{$ns}-label{
+      min-width: 130px;
+    }
+
+    .#{$ns}-form-content{
+      width: 300px;
+    }
+  }
+}

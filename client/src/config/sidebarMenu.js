@@ -7,16 +7,27 @@ export default [
   {
     icon: 'homepage',
     iconSize: 20,
-    text: 'Items List',
+    text: 'Homepage',
     disabled: false,
-    href: '/dashboard/items/list',
+    href: '/dashboard/homepage',
+  },
+  {
+    divider: true,
   },
   {
     icon: 'homepage',
     iconSize: 20,
-    text: 'Homepage',
-    disabled: false,
-    href: '/dashboard/homepage',
+    text: 'Items',
+    children: [
+      {
+        text: 'Items List',
+        href: '/dashboard/accounts',
+      },
+      {
+        text: 'New Item',
+        href: '/dashboard/accounts',
+      },
+    ]
   },
   {
     divider: true,
@@ -28,26 +39,12 @@ export default [
     href: '/dashboard/accounts',
     children: [
       {
-        text: 'cut',
-        label: '⌘C',
-        disabled: false,
-      },
-
-      {
-        text: 'cut',
-        label: '⌘C',
-        disabled: false,
+        text: 'Accounts Chart',
+        href: '/dashboard/accounts',
       },
       {
-        text: 'cut',
-        label: '⌘C',
-        disabled: false,
-      },
-
-      {
-        text: 'cut',
-        label: '⌘C',
-        disabled: false,
+        text: 'Make Journal',
+        href: '/dashboard/accounting/make-journal-entry'
       },
     ]
   },
@@ -57,12 +54,7 @@ export default [
     text: 'Banking',
     href: '/dashboard/accounts',
     children: [
-      {
-        icon: 'cut',
-        text: 'cut',
-        label: '⌘C',
-        disabled: false,
-      }
+      
     ]
   },
   {
@@ -71,12 +63,7 @@ export default [
     text: 'Sales',
     href: '/dashboard/accounts',
     children: [
-      {
-        icon: 'cut',
-        text: 'cut',
-        label: '⌘C',
-        disabled: false,
-      }
+     
     ]
   },
   {
@@ -100,36 +87,41 @@ export default [
     href: '/dashboard/accounts',
     children: [
       {
-        icon: 'cut',
-        text: 'cut',
-        label: '⌘C',
-        disabled: false,
-      }
+        text: 'Balance Sheet',
+        href: '/dashboard/accounting/balance-sheet',
+      },
+      {
+        text: 'Trial Balance Sheet',
+        href: '/dashboard/accounting/trial-balance-sheet',
+      },
+      {
+        text: 'Journal',
+        href: '/dashboard/accounting/journal-sheet',
+      },
+      {
+        text: 'General Ledger',
+        href: '/dashboard/accounting/general-ledger',
+      },
+      {
+        text: 'Profit Loss Sheet',
+        href: '/dashboard/accounting/profit-loss-sheet',
+      },
     ]
   },
   {
     text: 'Expenses',
-    href: '/dashboard/expenses',
-  },
-  {
-    text: 'New Expenses',
-    href: '/dashboard/expenses/new',
-  },
-  {
-    text: 'Make Journal',
-    href: '/dashboard/accounting/make-journal-entry'
-  },
-  {
-    text: 'Balance Sheet',
-    href: '/dashboard/accounting/balance-sheet',
-  },
-  {
-    text: 'Trial Balance Sheet',
-    href: '/dashboard/accounting/trial-balance-sheet',
-  },
-  {
-    text: 'Journal',
-    href: '/dashboard/accounting/journal-sheet',
+    icon: 'receipt',
+    iconSize: 18,
+    children: [
+      {
+        text: 'Expenses List',
+        href: '/dashboard/expenses',
+      },
+      {
+        text: 'New Expenses',
+        href: '/dashboard/expenses/new',
+      },
+    ]
   },
   {
     divider: true,

@@ -1,0 +1,8 @@
+// Tabs component.
+.#{$ns}-tab-indicator-wrapper .#{$ns}-tab-indicator{
+  height: 2px;
+}
+.#{$ns}-large > .#{$ns}-tab{
+  line-height: 50px;
+  font-size: 15px;
+}

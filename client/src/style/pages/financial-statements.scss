@@ -1,0 +1,48 @@
+
+
+
+.financial-statement{
+
+  &__header{
+    padding: 30px;
+    background: #FDFDFD;
+  }
+
+  &__body{
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+.financial-sheet{
+  border: 1px solid #E2E2E2;
+  min-width: 640px;
+  width: 0;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 20px;
+  margin-top: 40px;
+
+  &__title{
+    font-weight: 200;
+    font-size: 22px;
+    color: #222;
+    text-align: center;
+  }
+
+  &__sheet-type{
+    text-align: center;
+  }
+
+  &__date{
+    text-align: center;
+  }
+
+  &__table{
+
+  }
+
+  &__accounting-basis{
+
+  }
+}

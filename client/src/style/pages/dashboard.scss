@@ -1,0 +1,246 @@
+
+
+.dashboard{
+  display: flex;
+  height: 100vh;
+ 
+  &__topbar{
+    width: 100%;
+    height: 80px;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #F2EFEF;
+
+    &-right,
+    &-left{
+      display: flex;
+    }
+    &-actions{
+      
+    }
+    &-sidebar-toggle{
+      display: flex;
+      align-items: center;
+      margin-left: 4px;
+
+      .#{$ns}-button{
+        color: #8E8E8E;
+
+        &,
+        &:hover,
+        &:focus{
+          border-radius: 0;
+          box-shadow: none;
+          background-color: transparent;
+          border: 0;
+        }
+      }
+    }
+
+    &-navbar{
+      display: flex;
+      align-items: center;
+      margin-right: 18px;
+
+      .#{$ns}-button{
+        color: #1552C8;
+        font-weight: 5000;
+        font-size: 14px;
+
+        &:hover,
+        &:focus{
+          background-color: rgba(178, 220, 253, 0.15);
+        }
+        .#{$ns}-icon{
+          color: #1552C8;
+        }
+      }
+    }
+
+    &-user{
+      display: flex;
+      align-items: center;
+      margin-right: 28px;
+
+      .#{$ns}-button{
+        background-size: contain;
+        border-radius: 50%;
+        height: 40px;
+        width: 40px;
+        
+        &,
+        &:hover,
+        &:focus{
+          background-color: transparent;
+          border: 0;
+          box-shadow: none;
+          background-image: url(http://1.gravatar.com/avatar/767fc9c115a1b989744c755db47feb60?size=400);
+        }
+      }
+    }
+  }
+
+  &__breadcrumbs{
+    display: flex;
+    margin-left: 16px;
+    align-items: center;
+
+    // Breadcrumbs component.
+    .#{$ns}-breadcrumbs-collapsed{
+      background: $light-gray3;
+
+      &:hover{
+        background: $light-gray2;
+      }
+    }
+  }
+
+  &__actions-bar{
+    border-bottom: 2px solid #EAEAEA;
+
+    .#{$ns}-navbar{
+      box-shadow: none;
+
+      &,
+      &-group{
+        height: 44px;
+      }
+
+      .#{$ns}-navbar-divider{
+        margin-left: 0;
+        margin-right: 0;
+      }
+      .#{$ns}-button{
+        color: #5C5C5C;
+        padding: 8px 12px;
+
+        &:hover{
+          background: rgba(167, 182, 194, 0.12);
+          color: #5C5C5C;
+        }
+        .#{$ns}-icon{
+          color: #666;
+          margin-right: 7px;
+        }
+      }
+
+      .button--table-views{
+        .#{$ns}-icon{
+          color: #1183DA;
+        }
+      }
+    }
+  }
+
+  &__breadcrumbs{
+    display: flex;
+    align-items: center;
+    margin-left: 1rem;
+  }
+  &__title{
+    align-items: center;;
+    display: flex;
+    margin-left: 6px;
+
+    h1{
+      font-size: 26px;
+      font-weight: 100;
+      margin: 0;
+    }
+
+    .sep{
+      margin-left: 12px;
+      margin-right: 12px;
+      color: #999;
+      border-left: 1px solid #d9d9d9;
+      width: 1px;
+      height: 25px;
+    }
+
+    h3{
+      font-size: 16px;
+      font-weight: 300;
+      color: #777;
+      margin: 0;
+    }
+  }
+
+  &-content{
+    width: calc(100% - 220px);
+    display: flex;
+    flex-direction: column;
+
+    
+  }
+
+  &__insider{
+    height: 100%;
+    
+    &--loading{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  &__page-content{
+    // padding: 22px;
+  }
+
+  &__preferences-topbar{
+    border-bottom: 1px solid #E5E5E5;
+    height: 70px;
+    padding: 0 22px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    h2{
+      font-size: 22px;
+      font-weight: 200;
+      margin: 0;
+    }
+  }
+}
+
+.tabs--dashboard-views{
+
+  .#{$ns}-tab{
+    color: #5C5C5C;
+    font-size: 14px;
+    line-height: 50px;
+    font-weight: 400;
+    padding: 0 14px;
+    margin-right: 0;
+  }
+
+  .#{$ns}-tab-indicator-wrapper{
+    .#{$ns}-tab-indicator{
+      height: 2px;
+    }
+  }
+
+  .button--new-view{
+    margin: 0;
+    height: 50px;
+
+    &,
+    &:hover,
+    &:active,
+    &:focus{
+      background: transparent;
+      border: 0;
+      box-shadow: 0 0 0;
+    }
+
+    .#{$ns}-icon{
+      color: #A7A7A7;
+    }
+  }
+}
+
+.navbar--dashboard-views{
+  box-shadow: 0 0 0;
+  border-bottom: 1px solid #EAEAEA;
+}

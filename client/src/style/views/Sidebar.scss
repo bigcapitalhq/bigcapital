@@ -1,0 +1,107 @@
+
+$sidebar-background: #01194E;
+$sidebar-text-color: #fff;
+$sidebar-width: 220px;
+$sidebar-menu-item-color: #E9EBF7;
+
+$sidebar-popover-submenu-bg: rgb(1, 20, 62);
+
+.sidebar{
+  background: $sidebar-background;
+  color: $sidebar-text-color;
+  width: $sidebar-width;
+
+  &__head{
+    padding: 16px 10px;
+   
+    &-company-meta{
+
+      .company-name{
+        font-size: 16px;
+        font-weight: 200;
+        margin-bottom: 5px;
+      }
+      .company-meta{
+        color: #A7AFC2;
+        font-size: 12px;
+      }
+    }
+  }
+
+  &-menu{
+    background: transparent;
+    padding: 0;
+    min-width: $sidebar-width;
+    border-radius: 0;
+
+    .#{$ns}-menu-item{
+      color: $sidebar-menu-item-color;
+      border-radius: 0;
+      padding: 10px 16px;
+      font-size: 15px;
+      font-weight: 200;
+
+      &:hover{
+        background: #012470;
+      }
+      &:focus,
+      &:active{
+       background: #01143e;
+      }
+
+      > .#{$ns}-icon{
+        color: #767B9B;
+        margin-right: 12px;
+        margin-top: 0;
+      }
+
+      > .#{$ns}-icon-caret-right{
+        margin-right: -2px;
+        margin-top: 2px;
+        color: #767B9B;
+      }
+    }
+
+    .#{$ns}-submenu{
+
+      .#{$ns}-menu{
+        padding: 10px 0;
+        margin: 0;
+        background: $sidebar-popover-submenu-bg;
+        border-radius: 0;
+
+        &-item{
+          padding-top: 7px;
+          padding-bottom: 7px;
+          padding-left: 16px;
+          padding-right: 16px;
+          font-size: 14px;
+
+          &,
+          &:hover,
+          &:active,
+          &:focus{
+            color: #fff;
+            background: transparent;
+          }
+        }
+      }
+
+      .#{$ns}-popover{
+        padding: 0;
+
+        &-content{
+          box-shadow: 0 0 0;
+        }
+      }
+    }
+    .#{$ns}-popover-target.#{$ns}-popover-open .#{$ns}-menu-item{
+      color: $sidebar-menu-item-color;
+    }
+    .#{$ns}-menu-divider{
+      border-top-color: #183C86;
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }
+}

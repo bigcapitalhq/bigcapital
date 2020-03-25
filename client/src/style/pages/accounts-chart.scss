@@ -1,0 +1,25 @@
+
+.dashboard__insider--accounts-chart{
+
+  .e-grid{
+    .e-gridheader{
+      border-top: 0;
+    }
+
+    .account-normal{
+
+      .#{$ns}-icon{
+        color: #666;
+        padding-left: 15px;
+      }
+    }
+
+    .checkbox-row{
+      width: 0;
+       
+      .#{$ns}-control{
+        margin: 0;
+      }
+    }
+  }
+}

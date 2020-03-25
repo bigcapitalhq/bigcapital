@@ -1,0 +1,51 @@
+
+.bigcapital-datatable{
+
+  table {
+    text-align: left;
+    border-spacing: 0;
+    width: 100%;
+
+    thead{
+      th{
+        height: 48px;
+        padding: 0.5rem 1.5rem;
+        background: #F8FAFA;
+        font-size: 14px;
+        color: #666;
+        font-weight: 500;
+
+        border-bottom: 1px solid rgb(224, 224, 224);
+      }
+    }
+
+    tr {
+      :last-child {
+        td {
+          border-bottom: 0;
+        }
+      }
+    }
+
+    th,
+    td {
+      margin: 0;
+      padding: 0.5rem;
+
+      :last-child {
+        border-right: 0;
+      }
+    }
+
+    tbody{
+      
+      .#{$ns}-button--action{
+        background: #E6EFFB;
+        border: 0;
+        box-shadow: 0 0 0;
+        padding: 5px 15px;
+      }
+    }
+  }
+}
+

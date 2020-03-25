@@ -1,0 +1,38 @@
+
+.filter-dropdown{
+  width: 500px;
+
+  &__body{
+    padding: 12px;
+  }
+
+  &__condition{
+    display: flex;
+
+    &:not(:first-of-type) {
+      padding-top: 8px;
+      border-top: 1px solid #e6e6e6;
+      margin-top: 8px;
+    }
+  }
+
+  .bp3-form-group{
+    padding-right: 16px;
+    margin-bottom: 0;
+
+    &:not(:last-of-type) {
+      padding-right: 15px;
+    }
+  }
+
+  &__footer{
+    border-top: 1px solid #e8e8e8;
+    padding: 5px 10px;
+  }
+  .form-group{
+    &--condition{ width: 25%; }
+    &--field{ width: 45%; }
+    &--compatator{ width: 30%; }
+    &--value{ width: 25%; }
+  }
+}
