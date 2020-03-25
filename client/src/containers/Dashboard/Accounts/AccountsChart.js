@@ -116,7 +116,8 @@ function AccountsChart({
 
   return (
     <DashboardInsider loading={fetchHook.pending} name={'accounts-chart'}>
-      <DashboardActionsBar onFilterChange={handleFilterChange} />
+      <DashboardActionsBar
+        onFilterChange={handleFilterChange} />
       <DashboardPageContent>
         <Switch>
           <Route

@@ -4,9 +4,10 @@ export const pickItemsFromIds = (items, ids) => {
   return Object.values(pick(items, ids));
 }
 
-export const getCurrentPageResults = (items, page, name) => {
-  const currentPage = page.pages[page.currentPages[name]]
-  return typeof currentPage == 'undefined' ? [] : Object.values(pick(items || [], currentPage.ids))
+export const getCurrentPageResults = (items, pages, pageNumber) => {
+  const currentPage = pages[pageNumber]
+  return typeof currentPage == 'undefined' ?
+    [] : Object.values(pick(items || [], currentPage.ids));
 }
 
 export const getCurrentTotalResultsCount = (pagination, name) => {

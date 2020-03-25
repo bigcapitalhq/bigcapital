@@ -7,6 +7,13 @@ export default [
   {
     icon: 'homepage',
     iconSize: 20,
+    text: 'Items List',
+    disabled: false,
+    href: '/dashboard/items/list',
+  },
+  {
+    icon: 'homepage',
+    iconSize: 20,
     text: 'Homepage',
     disabled: false,
     href: '/dashboard/homepage',

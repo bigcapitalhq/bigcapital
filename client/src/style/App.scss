@@ -693,13 +693,24 @@ label{
 
 
 .bigcapital-datatable{
-  padding: 1rem;
 
   table {
     text-align: left;
     border-spacing: 0;
-    border: 1px solid black;
     width: 100%;
+
+    thead{
+      th{
+        height: 48px;
+        padding: 0.5rem 1.5rem;
+        background: #F8FAFA;
+        font-size: 14px;
+        color: #666;
+        font-weight: 500;
+
+        border-bottom: 1px solid rgb(224, 224, 224);
+      }
+    }
 
     tr {
       :last-child {
@@ -713,8 +724,6 @@ label{
     td {
       margin: 0;
       padding: 0.5rem;
-      border-bottom: 1px solid black;
-      border-right: 1px solid black;
 
       :last-child {
         border-right: 0;

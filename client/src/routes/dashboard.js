@@ -66,6 +66,13 @@ export default [
     text: 'Make Journal Entry',
   },
 
+  // Items
+  {
+    path: `${BASE_URL}/items/list`,
+    component: LazyLoader({
+      loader: () => import('containers/Dashboard/Items/ItemsList')
+    }),
+  },
 
   // Financial Reports.
   {

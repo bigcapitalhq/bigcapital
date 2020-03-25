@@ -575,15 +575,13 @@ describe('routes: `/items`', () => {
       const res = await request()
         .get('/api/items')
         .set('x-access-token', loginRes.body.token)
-        .query({
-          page: 2,
-        })
         .send();
 
       expect(res.body.items.results).to.be.a('array');
       expect(res.body.items.results.length).equals(0);
-      expect(res.body.items.total).to.be.a('number');
-      expect(res.body.items.total).equals(0)
+      expect(res.body.items.pagination).to.be.a('object');
+      expect(res.body.items.pagination.total).to.be.a('number');
+      expect(res.body.items.pagination.total).equals(0)
     });
 
     it('Should retrieve filtered items based on custom view conditions.', async () => {

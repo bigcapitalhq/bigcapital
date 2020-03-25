@@ -11,10 +11,16 @@ export const editItem = ({ id, form }) => {
 
 export const fetchItems = ({ query }) => {
   return (dispatch) => new Promise((resolve, reject) => {
-    ApiService.get(`items`, query).then(response => {
+    ApiService.get(`items`).then(response => {    
       dispatch({
-        type: t.ITEMS_LIST_SET,
-        items: response.data.items,
+        type: t.ITEMS_SET,
+        items: response.data.items.results,
+      });
+      dispatch({
+        type: t.ITEMS_PAGE_SET,
+        items: response.data.items.results,
+        customViewId: response.data.customViewId,
+        paginationMeta: response.data.items.pagination,
       });
       resolve(response);
     }).catch(error => { reject(error); });

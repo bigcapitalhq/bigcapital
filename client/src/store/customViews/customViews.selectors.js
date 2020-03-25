@@ -13,3 +13,8 @@ export const getViewMeta = (state, viewId) => {
 export const getViewItem = (state, viewId) => {
   return state.views.views[viewId] || {};
 };
+
+export const getViewPages = (resourceViews, viewId) => {
+  return (typeof resourceViews[viewId] === 'undefined') ? 
+    {} : resourceViews[viewId].pages;
+};

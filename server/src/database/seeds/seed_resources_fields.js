@@ -74,6 +74,24 @@ exports.seed = (knex) => {
           predefined: 1,
           columnable: true,
         },
+
+        // Items
+        {
+          id: 10,
+          resource_id: 2,
+          label_name: 'Name',
+          data_type: 'textbox',
+          predefined: 1,
+          columnable: true,
+        },
+        {
+          id: 11,
+          resource_id: 2,
+          label_name: 'Type',
+          data_type: 'textbox',
+          predefined: 1,
+          columnable: true,
+        },
       ]);
     });
 };

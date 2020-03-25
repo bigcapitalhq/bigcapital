@@ -273,7 +273,7 @@ describe('routes: /accounts/', () => {
       expect(res.body.accounts[1].account_type_id).equals(2); 
     });
 
-    it.only('Should retrieve accounts based on view roles conditionals with relation join column.', async () => {
+    it('Should retrieve accounts based on view roles conditionals with relation join column.', async () => {
       const resource = await create('resource', { name: 'accounts' });
       
       const accountTypeField = await create('resource_field', {

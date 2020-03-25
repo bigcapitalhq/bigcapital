@@ -336,7 +336,7 @@ export default {
         if (filter.filter_roles.length > 0) {
           filterConditions.buildQuery()(builder);
         }
-      }).page(filter.page - 1, filter.page_size);
+      }).pagination(filter.page - 1, filter.page_size);
 
       return res.status(200).send({
         items,
