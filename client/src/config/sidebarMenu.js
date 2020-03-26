@@ -19,11 +19,11 @@ export default [
     children: [
       {
         text: 'Items List',
-        href: '/dashboard/accounts',
+        href: '/dashboard/items/list',
       },
       {
         text: 'New Item',
-        href: '/dashboard/accounts',
+        href: '/dashboard/items/new',
       },
     ]
   },

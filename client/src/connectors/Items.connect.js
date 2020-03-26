@@ -3,7 +3,6 @@
 import {connect} from 'react-redux';
 import {
   fetchItems,
-  fetchItem,
   deleteItem,
   submitItem,
 } from 'store/items/items.actions';
@@ -29,7 +28,7 @@ export const mapStateToProps = (state, props) => {
 };
 
 export const mapDispatchToProps = (dispatch) => ({
-  fetchItems: (query) => dispatch(fetchItems({ query })),
+  requestFetchItems: (query) => dispatch(fetchItems({ query })),
   requestDeleteItem: (id) => dispatch(deleteItem({ id })),
   requestSubmitItem: (form) => dispatch(submitItem({ form })),
   addBulkActionItem: (id) => dispatch({

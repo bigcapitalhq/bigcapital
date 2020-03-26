@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-
 import {
   FormGroup,
   MenuItem,
@@ -13,19 +12,21 @@ import {
 import { Row, Col } from 'react-grid-system';
 import { Select } from '@blueprintjs/select';
 import AppToaster from 'components/AppToaster';
+import AccountsConnect from 'connectors/Accounts.connector';
+import ItemsConnect from 'connectors/Items.connect';
+import {compose} from 'utils';
 
-export default function ItemForm({
-  submitItem,
+const ItemForm = ({
+  requestSubmitItem,
   accounts,
-  category,
-}) {
+}) => {
   const [selectedAccounts, setSelectedAccounts] = useState({});
 
   const ItemTypeDisplay = [
-    { label: 'Select Item Type' },
-    { value: 'service', label: 'service' },
-    { value: 'inventory', label: 'inventory' },
-    { value: 'non-inventory', label: 'non-inventory' }
+    { value: null, label: 'Select Item Type' },
+    { value: 'service', label: 'Service' },
+    { value: 'inventory', label: 'Inventory' },
+    { value: 'non-inventory', label: 'Non-Inventory' }
   ];
   const validationSchema = Yup.object().shape({
     name: Yup.string().required(),
@@ -46,7 +47,7 @@ export default function ItemForm({
     validationSchema: validationSchema,
     initialValues: {},
     onSubmit: values => {
-      submitItem(values)
+      requestSubmitItem(values)
         .then(response => {
           AppToaster.show({
             message: 'The_Items_has_been_Submit'
@@ -295,4 +296,9 @@ export default function ItemForm({
       </form>
     </div>
   );
-}
+};
+
+export default compose(
+  AccountsConnect,
+  ItemsConnect,
+)(ItemForm);

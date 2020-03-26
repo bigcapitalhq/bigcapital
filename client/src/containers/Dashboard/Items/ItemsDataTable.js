@@ -19,7 +19,7 @@ import Icon from 'components/Icon';
 import {handleBooleanChange} from 'utils';
 
 const ItemsDataTable = ({
-  fetchItems,
+  requestFetchItems,
   filterConditions,
   currentPageItems,
   onEditItem,
@@ -31,7 +31,7 @@ const ItemsDataTable = ({
 
   const fetchHook = useAsync(async () => {
     await Promise.all([
-      fetchItems({
+      requestFetchItems({
         custom_view_id: customViewId,
         stringified_filter_roles: JSON.stringify(filterConditions),
       }),

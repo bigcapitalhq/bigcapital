@@ -5,43 +5,34 @@ import DashboardConnect from 'connectors/Dashboard.connector';
 import ItemForm from 'components/Items/ItemForm';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import ItemsConnect from 'connectors/Items.connect';
+import AccountsConnect from 'connectors/Accounts.connector';
 import { compose } from 'utils';
+
 const ItemFormContainer = ({
   changePageTitle,
-  fetchAccount,
-  submitItem,
-  editItem,
-  fetchItems,
-  fetchItem,
-  deleteItem,
-  accounts
+  fetchAccounts,
 }) => {
   const { id } = useParams();
   useEffect(() => {
-    id ? changePageTitle('Edit Item Details') : changePageTitle('New Item');
+    id ?
+      changePageTitle('Edit Item Details') :
+      changePageTitle('New Item');
   }, []);
 
   const fetchHook = useAsync(async () => {
-    await Promise.all([fetchAccount()]);
+    await Promise.all([
+      fetchAccounts(),
+    ]);
   });
   return (
-    <DashboardInsider isLoading={fetchHook.loading} name={'expense-form'}>
-      <ItemForm
-        {...{
-          submitItem,
-          editItem,
-          fetchItem,
-          fetchItems,
-          deleteItem,
-          accounts
-        }}
-      />
+    <DashboardInsider isLoading={fetchHook.loading} name={'item-form'}>
+      <ItemForm />
     </DashboardInsider>
   );
 };
 
 export default compose(
   DashboardConnect,
-  ItemsConnect
-  // AccountsConnect
+  ItemsConnect,
+  AccountsConnect,
 )(ItemFormContainer);
