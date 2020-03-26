@@ -3,7 +3,9 @@ import React from 'react';
 export default function SidebarContainer(props) {
   return (
     <div className="sidebar" id="sidebar">
-      {props.children}
+      <div class="sidebar__inner">
+        {props.children}
+      </div>
     </div>
   )
 }

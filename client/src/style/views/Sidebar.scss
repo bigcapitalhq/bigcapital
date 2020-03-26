@@ -11,6 +11,13 @@ $sidebar-popover-submenu-bg: rgb(1, 20, 62);
   color: $sidebar-text-color;
   width: $sidebar-width;
 
+  &__inner{
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 100%;
+  }
+
+
   &__head{
     padding: 16px 10px;
    
@@ -33,6 +40,7 @@ $sidebar-popover-submenu-bg: rgb(1, 20, 62);
     padding: 0;
     min-width: $sidebar-width;
     border-radius: 0;
+    padding-bottom: 2rem;
 
     .#{$ns}-menu-item{
       color: $sidebar-menu-item-color;
@@ -56,37 +64,33 @@ $sidebar-popover-submenu-bg: rgb(1, 20, 62);
       }
 
       > .#{$ns}-icon-caret-right{
-        margin-right: -2px;
-        margin-top: 2px;
-        color: #767B9B;
+        margin-right: -4px;
+        margin-top: 3px;
+        color: #5B5F7B;
       }
     }
 
     .#{$ns}-submenu{
 
-      .#{$ns}-menu{
-        padding: 10px 0;
-        margin: 0;
-        background: $sidebar-popover-submenu-bg;
-        border-radius: 0;
+      .#{$ns}-collapse{
 
-        &-item{
-          padding-top: 7px;
-          padding-bottom: 7px;
-          padding-left: 16px;
-          padding-right: 16px;
-          font-size: 14px;
+        &-body{
+          background-color: rgb(11, 34, 85);
+          padding-bottom: 6px;
+          padding-top: 6px;
+        }
 
-          &,
-          &:hover,
-          &:active,
-          &:focus{
-            color: #fff;
+        .#{$ns}-menu-item{
+          padding: 7px 16px 7px 18px;
+          font-size: 15px;
+          color: #C5CBE3;
+
+          &:hover{
             background: transparent;
+            color: #fff;
           }
         }
       }
-
       .#{$ns}-popover{
         padding: 0;
 
@@ -100,8 +104,8 @@ $sidebar-popover-submenu-bg: rgb(1, 20, 62);
     }
     .#{$ns}-menu-divider{
       border-top-color: #183C86;
-      margin-left: 0;
-      margin-right: 0;
+      color: #6B708C;
+      margin: 4px 0;
     }
   }
 }

@@ -143,6 +143,7 @@ export default class MenuItem extends AbstractPureComponent2 {
             textClassName,
             tagName = "a",
             dropdownType,
+            caretIconSize = 16,
             ...htmlProps
         } = this.props;
         const hasSubmenu = children != null;
@@ -181,7 +182,7 @@ export default class MenuItem extends AbstractPureComponent2 {
                 {text}
             </Text>,
             this.maybeRenderLabel(labelElement),
-            hasSubmenu ? <Icon icon="caret-right" /> : undefined,
+            hasSubmenu ? <Icon icon="caret-right" iconSize={caretIconSize} /> : undefined,
         );
 
         const liClasses = classNames({ [Classes.MENU_SUBMENU]: hasSubmenu });

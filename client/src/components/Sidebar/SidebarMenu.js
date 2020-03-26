@@ -23,6 +23,7 @@ export default function SidebarMenu() {
             disabled={item.disabled}
             children={children}
             dropdownType={item.dropdownType || 'collapse'}
+            caretIconSize={15}
             onClick={() => {
               if (item.href) {
                 history.push(item.href);
