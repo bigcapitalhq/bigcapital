@@ -122,11 +122,26 @@
           color: #666;
           margin-right: 7px;
         }
+
+        &.#{$ns}-minimal.#{$ns}-intent-danger{
+          color: #c23030;
+
+          &:hover,
+          &:focus{
+            background: rgba(219, 55, 55, 0.1);
+          }
+        }
       }
 
       .button--table-views{
         .#{$ns}-icon{
           color: #1183DA;
+        }
+        .#{$ns}-button-text{
+          margin-right: 3px;
+        }
+        .#{$ns}-icon-caret-down{
+          margin-right: 0;
         }
       }
     }

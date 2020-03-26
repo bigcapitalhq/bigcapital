@@ -3,14 +3,14 @@ import Icon from 'components/Icon';
 import {
   Button,
   NavbarGroup,
-  Navbar,
   Classes,
   NavbarDivider,
   MenuItem,
   Menu,
   Popover,
   PopoverInteractionKind,
-  Position
+  Position,
+  Intent,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { connect } from 'react-redux';
@@ -40,7 +40,7 @@ function AccountsActionsBar({
   const hasBulkActionsSelected = useMemo(() => {
     return Object.keys(bulkActions).length > 0;
   }, [bulkActions]);
-
+ 
   const filterDropdown = FilterDropdown({
     fields: accountsFields,
     onFilterChange,
@@ -70,7 +70,6 @@ function AccountsActionsBar({
           text='New Account'
           onClick={onClickNewAccount}
         />
-
         <Popover
           content={filterDropdown}
           interactionKind={PopoverInteractionKind.CLICK}
@@ -86,7 +85,7 @@ function AccountsActionsBar({
         {hasBulkActionsSelected && (
           <Button
             className={Classes.MINIMAL}
-            icon={<Icon icon='trash' />}
+            icon={<Icon icon='archive' iconSize={15} />}
             text='Archive'
           />
         )}
@@ -94,17 +93,16 @@ function AccountsActionsBar({
         {hasBulkActionsSelected && (
           <Button
             className={Classes.MINIMAL}
-            icon={<Icon icon='trash' />}
+            icon={<Icon icon='trash' iconSize={15} />}
             text='Delete'
+            intent={Intent.DANGER}
           />
         )}
-
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon='file-import' />}
           text='Import'
         />
-
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon='file-export' />}
