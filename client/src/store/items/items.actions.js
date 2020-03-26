@@ -1,12 +1,12 @@
-import ApiService from "services/ApiService"
+import ApiService from 'services/ApiService';
 import t from 'store/types';
 
 export const submitItem = ({ form }) => {
-  return (dispatch) => ApiService.post(`items`, form);
+  return dispatch => ApiService.post(`items`, form);
 };
 
 export const editItem = ({ id, form }) => {
-  return (dispatch) => ApiService.post(`items/${id}`, form);
+  return dispatch => ApiService.post(`items/${id}`, form);
 };
 
 export const fetchItems = ({ query }) => {
@@ -28,16 +28,21 @@ export const fetchItems = ({ query }) => {
 };
 
 export const fetchItem = ({ id }) => {
-  return (dispatch) => new Promise((resolve, reject) => {
-    ApiService.get(`items/${id}`).then((response) => {
-      dispatch({
-        type: t.ITEM_SET,
-        item: response.data.item,
-      });
-    }).catch(error => { reject(error); });
-  });
+  return dispatch =>
+    new Promise((resolve, reject) => {
+      ApiService.get(`items/${id}`)
+        .then(response => {
+          dispatch({
+            type: t.ITEM_SET,
+            item: response.data.item
+          });
+        })
+        .catch(error => {
+          reject(error);
+        });
+    });
 };
 
 export const deleteItem = ({ id }) => {
-  return (dispatch) => ApiService.delete(`items/${id}`);
+  return dispatch => ApiService.delete(`items/${id}`);
 };

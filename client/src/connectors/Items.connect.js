@@ -5,6 +5,7 @@ import {
   fetchItems,
   fetchItem,
   deleteItem,
+  submitItem,
 } from 'store/items/items.actions';
 import {
   getResourceViews,
@@ -30,6 +31,7 @@ export const mapStateToProps = (state, props) => {
 export const mapDispatchToProps = (dispatch) => ({
   fetchItems: (query) => dispatch(fetchItems({ query })),
   requestDeleteItem: (id) => dispatch(deleteItem({ id })),
+  requestSubmitItem: (form) => dispatch(submitItem({ form })),
   addBulkActionItem: (id) => dispatch({
     type: t.ITEM_BULK_ACTION_ADD, itemId: id
   }),

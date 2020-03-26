@@ -33,6 +33,7 @@ function ExpenseFormContainer({
   return (
     <DashboardInsider isLoading={fetchHook.loading} name={'expense-form'}>
       <ExpenseForm {...{submitExpense, editExpense, accounts, currencies} } />
+    
     </DashboardInsider>
   );
 }

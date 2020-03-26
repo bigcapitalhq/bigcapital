@@ -1,5 +1,5 @@
 import React from 'react';
-import {Spinner} from '@blueprintjs/core';
+import { Spinner } from '@blueprintjs/core';
 
 export default function LoadingIndicator({
   loading,
@@ -8,10 +8,13 @@ export default function LoadingIndicator({
 }) {
   return (
     <>
-      { (loading) ? (
-        <div class="dashboard__loading-indicator">
+      {loading ? (
+        <div class='dashboard__loading-indicator'>
           <Spinner size={spinnerSize} value={null} />
-        </div>) : children }
+        </div>
+      ) : (
+        children
+      )}
     </>
   );
 }

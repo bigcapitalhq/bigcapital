@@ -24,17 +24,14 @@ export default function SidebarMenu() {
             children={children}
             dropdownType={item.dropdownType || 'collapse'}
             onClick={() => {
-              history.push(item.href);
+              if (item.href) {
+                history.push(item.href);
+              }              
             }} />
       );
     });
   };
-
   const items = menuItemsMapper(sidebarMenuList);
   
-  return (
-    <Menu className="sidebar-menu">
-      {items}
-    </Menu>
-  )
+  return (<Menu className="sidebar-menu">{items}</Menu>);
 };

@@ -10,11 +10,11 @@ import {
   Menu,
   Popover,
   PopoverInteractionKind,
-  Position,
-} from "@blueprintjs/core";
+  Position
+} from '@blueprintjs/core';
 import classNames from 'classnames';
-import {connect} from 'react-redux';
-import {useRouteMatch} from 'react-router-dom';
+import { connect } from 'react-redux';
+import { useRouteMatch } from 'react-router-dom';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import DialogConnect from 'connectors/Dialog.connector';
 import AccountsConnect from 'connectors/Accounts.connector';
@@ -52,22 +52,24 @@ function AccountsActionsBar({
           content={<Menu>{viewsMenuItems}</Menu>}
           minimal={true}
           interactionKind={PopoverInteractionKind.HOVER}
-          position={Position.BOTTOM_LEFT}>
-          
+          position={Position.BOTTOM_LEFT}
+        >
           <Button
             className={classNames(Classes.MINIMAL, 'button--table-views')}
-            icon={ <Icon icon="table" /> }
-            text="Table Views"
-            rightIcon={'caret-down'} />
+            icon={<Icon icon='table' />}
+            text='Table Views'
+            rightIcon={'caret-down'}
+          />
         </Popover>
 
         <NavbarDivider />
 
         <Button
           className={Classes.MINIMAL}
-          icon={ <Icon icon="plus" /> }
-          text="New Account"
-          onClick={onClickNewAccount} />
+          icon={<Icon icon='plus' />}
+          text='New Account'
+          onClick={onClickNewAccount}
+        />
 
         <Popover
           content={filterDropdown}
@@ -84,32 +86,38 @@ function AccountsActionsBar({
         {hasBulkActionsSelected && (
           <Button
             className={Classes.MINIMAL}
-            icon={ <Icon icon="trash" />} 
-            text="Archive" />)}
+            icon={<Icon icon='trash' />}
+            text='Archive'
+          />
+        )}
 
         {hasBulkActionsSelected && (
           <Button
             className={Classes.MINIMAL}
-            icon={ <Icon icon="trash" />} 
-            text="Delete" />)}
+            icon={<Icon icon='trash' />}
+            text='Delete'
+          />
+        )}
 
         <Button
           className={Classes.MINIMAL}
-          icon={ <Icon icon="file-import" /> }
-          text="Import" />
+          icon={<Icon icon='file-import' />}
+          text='Import'
+        />
 
         <Button
           className={Classes.MINIMAL}
-          icon={ <Icon icon="file-export" /> }
-          text="Export" />
+          icon={<Icon icon='file-export' />}
+          text='Export'
+        />
       </NavbarGroup>
     </DashboardActionsBar>
-  )
+  );
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
-    bulkActions: state.accounts.bulkActions,
+    bulkActions: state.accounts.bulkActions
   };
 };
 

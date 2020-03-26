@@ -1,6 +1,4 @@
 
-
-
 import { connect } from 'react-redux';
 import t from 'store/types';
 

@@ -161,7 +161,9 @@ export default class MenuItem extends AbstractPureComponent2 {
             className,
         );
  
-        const handleAnchorClick = () => {
+        const handleAnchorClick = (event) => {
+          htmlProps.onClick && htmlProps.onClick(event);
+
           if (dropdownType === 'collapse') {
             this.setState({ isCollapseActive: !this.state.isCollapseActive });
           }          
@@ -210,7 +212,9 @@ export default class MenuItem extends AbstractPureComponent2 {
       return (
         <>
           {target}
-          <Collapse isOpen={this.state.isCollapseActive}>{ children }</Collapse>
+          <Collapse isOpen={this.state.isCollapseActive} keepChildrenMounted={true}>
+            { children }
+          </Collapse>
         </>
        );
     }
