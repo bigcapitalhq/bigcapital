@@ -12,6 +12,10 @@ exports.up = function (knex) {
     table.string('language');
     table.date('last_login_at');
     table.timestamps();
+  }).then(() => {
+    knex.seed.run({
+      specific: 'seed_users.js',
+    })
   });
 };
 

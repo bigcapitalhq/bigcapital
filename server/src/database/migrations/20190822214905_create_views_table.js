@@ -7,6 +7,10 @@ exports.up = function (knex) {
     table.integer('resource_id').unsigned().references('id').inTable('resources');
     table.boolean('favourite');
     table.string('roles_logic_expression');
+  }).then(() => {
+    return knex.seed.run({
+      specific: 'seed_views.js',
+    });
   });
 };
 

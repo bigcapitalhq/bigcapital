@@ -7,6 +7,10 @@ exports.up = function (knex) {
     table.string('comparator');
     table.string('value');
     table.integer('view_id').unsigned();
+  }).then(() => {
+    return knex.seed.run({
+      specific: 'seed_views_role.js',
+    });
   });
 };
 

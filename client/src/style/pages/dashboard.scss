@@ -162,22 +162,34 @@
       font-weight: 100;
       margin: 0;
     }
-
-    .sep{
-      margin-left: 12px;
-      margin-right: 12px;
-      color: #999;
-      border-left: 1px solid #d9d9d9;
-      width: 1px;
-      height: 25px;
-    }
-
     h3{
+      border-left: 1px solid #d9d9d9;
+      padding-left: 10px;
       font-size: 16px;
       font-weight: 300;
       color: #777;
-      margin: 0;
+      margin: 0 0 0 12px;
+      padding-top: 4px;
+      padding-bottom: 4px;
     }
+
+    .button--view-edit{
+
+      svg{
+        color: #929699;
+      }
+
+      &:hover,
+      &:focus{
+        svg{
+          color: #5c7080;
+        }
+      }
+    }
+  }
+
+  &__subtitle{
+    
   }
 
   &-content{

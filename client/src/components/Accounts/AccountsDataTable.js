@@ -51,9 +51,7 @@ function AccountsDataTable({
     ]);
   });
 
-  useEffect(() => {
-    fetchHook.execute();
-  }, [filterConditions]);
+  useEffect(() => { fetchHook.execute(); }, [filterConditions]);
 
   // Refetch accounts list after custom view id change.
   useEffect(() => {
@@ -64,20 +62,13 @@ function AccountsDataTable({
       changeCurrentView(customViewId);
       setTopbarEditView(customViewId);
     }
-    if (customViewId && viewMeta) {
-      changePageSubtitle(viewMeta.name);
-    } else {
-      changePageSubtitle('');
-    }
+    changePageSubtitle((customViewId && viewMeta) ? viewMeta.name : '');
   }, [customViewId]);
 
-  useEffect(
-    () => () => {
-      // Clear page subtitle when unmount the page.
-      changePageSubtitle('');
-    },
-    []
-  );
+  useEffect(() => () => {
+    // Clear page subtitle when unmount the page.
+    changePageSubtitle('');
+  }, []);
 
   const handleEditAccount = account => () => {
     openDialog('account-form', { action: 'edit', id: account.id });
@@ -91,12 +82,10 @@ function AccountsDataTable({
       <MenuDivider />
       <MenuItem
         text='Inactivate Account'
-        onClick={() => onInactiveAccount(account)}
-      />
+        onClick={() => onInactiveAccount(account)} />
       <MenuItem
         text='Delete Account'
-        onClick={() => onDeleteAccount(account)}
-      />
+        onClick={() => onDeleteAccount(account)} />
     </Menu>
   );
 

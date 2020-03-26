@@ -14,6 +14,10 @@ exports.up = function (knex) {
     table.integer('index');
     table.json('options');
     table.integer('resource_id').unsigned();
+  }).then(() => {
+    return knex.seed.run({
+      specific: 'seed_resources_fields.js',
+    });
   });
 };
 

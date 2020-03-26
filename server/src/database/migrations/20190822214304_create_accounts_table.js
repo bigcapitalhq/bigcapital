@@ -10,6 +10,10 @@ exports.up = function (knex) {
     table.boolean('active').defaultTo(true);
     table.integer('index').unsigned();
     table.timestamps();
+  }).then(() => {
+    return knex.seed.run({
+      specific: 'seed_accounts.js',
+    });
   });
 };
 

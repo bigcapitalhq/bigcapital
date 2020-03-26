@@ -25,6 +25,14 @@ function DashboardTopbar({
   const handlerClickEditView = () => {
     history.push(`/dashboard/custom_views/${editViewId}/edit`)
   }
+
+  const maybleRenderPageSubtitle = pageSubtitle && (<h3>{ pageSubtitle }</h3>);
+  const maybeRenderEditViewBtn = (pageSubtitle && editViewId) && (
+    <Button
+      className={Classes.MINIMAL + ' button--view-edit'}
+      icon={<Icon icon="pen" iconSize={13} />}
+      onClick={handlerClickEditView} />
+  );
   return (
     <div class="dashboard__topbar">
       <div class="dashboard__topbar-left">
@@ -39,17 +47,8 @@ function DashboardTopbar({
 
         <div class="dashboard__title">
           <h1>{ pageTitle }</h1>
-
-          { pageSubtitle && (
-            <>
-              <span class="sep"></span>
-              <h3>{ pageSubtitle }</h3>  
-              <Button
-                className="button--view-edit"
-                icon={<Icon icon="pen" />}
-                onClick={handlerClickEditView} />
-            </>
-          )}
+          {maybleRenderPageSubtitle}
+          {maybeRenderEditViewBtn}
         </div>
 
         <div class="dashboard__breadcrumbs">

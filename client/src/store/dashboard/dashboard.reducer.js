@@ -41,7 +41,7 @@ export default createReducer(initialState, {
   },
 
   [t.SET_TOPBAR_EDIT_VIEW]: (state, action) => {
-  state.topbarEditViewId = action.id;
+    state.topbarEditViewId = action.id;
   }
 });
 

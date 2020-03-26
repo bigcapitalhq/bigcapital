@@ -6,6 +6,10 @@ exports.up = (knex) => {
     table.string('normal');
     table.boolean('balance_sheet');
     table.boolean('income_sheet');
+  }).then(() => {
+    return knex.seed.run({
+      specific: 'seed_account_types.js',
+    });
   });
 };
 

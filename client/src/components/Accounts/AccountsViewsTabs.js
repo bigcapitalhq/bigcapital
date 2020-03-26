@@ -14,18 +14,29 @@ import Icon from 'components/Icon';
 import { Link } from 'react-router-dom';
 import { compose } from 'utils';
 import AccountsConnect from 'connectors/Accounts.connector';
+import DashboardConnect from 'connectors/Dashboard.connector';
 
-function AccountsViewsTabs({ views }) {
+function AccountsViewsTabs({
+  views,
+  setTopbarEditView,  
+}) {
   const history = useHistory();
   const { custom_view_id: customViewId } = useParams();
 
   const handleClickNewView = () => {
+    setTopbarEditView(null);
     history.push('/dashboard/custom_views/accounts/new');
   };
+  const handleViewLinkClick = () => {
+    setTopbarEditView(customViewId);
+  }
   const tabs = views.map(view => {
     const baseUrl = '/dashboard/accounts';
     const link = (
-      <Link to={`${baseUrl}/${view.id}/custom_view`}>{view.name}</Link>
+      <Link
+        to={`${baseUrl}/${view.id}/custom_view`}
+        onClick={handleViewLinkClick}
+      >{view.name}</Link>
     );
     return <Tab id={`custom_view_${view.id}`} title={link} />;
   });
@@ -52,4 +63,7 @@ function AccountsViewsTabs({ views }) {
   );
 }
 
-export default compose(AccountsConnect)(AccountsViewsTabs);
+export default compose(
+  AccountsConnect,
+  DashboardConnect,
+)(AccountsViewsTabs);
