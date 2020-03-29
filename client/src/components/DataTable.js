@@ -1,10 +1,41 @@
-import React from 'react';
-import { useTable, useExpanded, usePagination } from 'react-table'
+import React, {useEffect} from 'react';
+import {
+  useTable,
+  useExpanded,
+  useRowSelect,
+  usePagination,
+  useResizeColumns,
+  useAsyncDebounce,
+  useSortBy,
+  useFlexLayout
+} from 'react-table'
+import {Checkbox} from '@blueprintjs/core';
+import classnames from 'classnames';
+import Icon from 'components/Icon';
+// import { FixedSizeList } from 'react-window'
+
+const IndeterminateCheckbox = React.forwardRef(
+  ({ indeterminate, ...rest }, ref) => {
+    const defaultRef = React.useRef()
+    const resolvedRef = ref || defaultRef
+
+    useEffect(() => {
+      resolvedRef.current.indeterminate = indeterminate
+    }, [resolvedRef, indeterminate])
+
+    return (
+      <Checkbox ref={resolvedRef} {...rest} />
+    );
+  }
+);
 
 export default function DataTable({
   columns,
   data,
   loading,
+  onFetchData,
+  onSelectedRowsChange,
+  manualSortBy = 'false'
 }) {
   const {
     getTableProps,
@@ -20,8 +51,10 @@ export default function DataTable({
     nextPage,
     previousPage,
     setPageSize,
+
+    selectedFlatRows,
     // Get the state from the instance
-    state: { pageIndex, pageSize },
+    state: { pageIndex, pageSize, sortBy, selectedRowIds },
   } = useTable(
     {
       columns,
@@ -33,59 +66,102 @@ export default function DataTable({
       // pageCount.
       // pageCount: controlledPageCount,
       getSubRows: row => row.children,
+      manualSortBy
     },
+    useSortBy,
     useExpanded,
+    useRowSelect,
     usePagination,
+    useResizeColumns,
+    useFlexLayout,
+    hooks => {
+      hooks.visibleColumns.push(columns => [
+        // Let's make a column for selection
+        {
+          id: 'selection',
+          disableResizing: true,
+          minWidth: 35,
+          width: 35,
+          maxWidth: 35,
+          // The header can use the table's getToggleAllRowsSelectedProps method
+          // to render a checkbox
+          Header: ({ getToggleAllRowsSelectedProps }) => (
+            <div>
+              <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
+            </div>
+          ),
+          // The cell can use the individual row's getToggleRowSelectedProps method
+          // to the render a checkbox
+          Cell: ({ row }) => (
+            <div>
+              <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+            </div>
+          ),
+        },
+        ...columns,
+      ])
+    }
   );
+
+  // Debounce our onFetchData call for 100ms
+  const onFetchDataDebounced = useAsyncDebounce(onFetchData, 100);
+  const onSelectRowsDebounced = useAsyncDebounce(onSelectedRowsChange, 250);
+
+  // When these table states change, fetch new data!
+  useEffect(() => {
+    onFetchDataDebounced({ pageIndex, pageSize, sortBy })
+  }, []);
 
   return (
     <div className={'bigcapital-datatable'}>
-      <table {...getTableProps()}>
-        <thead>
+      <div {...getTableProps()} className="table"> 
+        <div className="thead">
           {headerGroups.map(headerGroup => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
+            <div {...headerGroup.getHeaderGroupProps()} className="tr">
               {headerGroup.headers.map(column => (
-                <th {...column.getHeaderProps({
-                  className: column.className || '',
+                <div {...column.getHeaderProps({
+                  className: classnames(column.className || '', 'th'),
                 })}>
-                  {column.render('Header')}
-                  <span>
-                    {column.isSorted
-                      ? column.isSortedDesc
-                        ? ' 🔽'
-                        : ' 🔼'
-                      : ''}
-                  </span>
-                </th>
+                  <div {...column.getSortByToggleProps()}>
+                    {column.render('Header')}
+                    <span>
+                      {column.isSorted
+                        ? column.isSortedDesc
+                          ? (<Icon icon="sort-down" />)
+                          : (<Icon icon="sort-up" />)
+                        : ''}
+                    </span>
+                  </div>
+
+                  {column.canResize && (
+                    <div
+                      {...column.getResizerProps()}
+                      className={`resizer ${
+                        column.isResizing ? 'isResizing' : ''
+                      }`}>
+                      <div class="inner-resizer" />
+                    </div>
+                  )}
+                </div>
               ))}
-            </tr>
+            </div>
           ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
+        </div>
+        <div {...getTableBodyProps()} className="tbody">
           {page.map((row, i) => {
             prepareRow(row)
             return (
-              <tr {...row.getRowProps()}>
+              <div {...row.getRowProps()} className="tr">
                 {row.cells.map((cell) => {
-                  return <td {...cell.getCellProps({
-                    className: cell.column.className || '',
-                  })}>{ cell.render('Cell') }</td>
+                  return <div {...cell.getCellProps({
+                    className: classnames(cell.column.className || '', 'td'),
+                  })}>{ cell.render('Cell') }</div>
                 })}
-              </tr>
+              </div>
             )
           })}
-          <tr>
-            {loading ? (
-              // Use our custom loading state to show a loading indicator
-              <td colSpan="10000">Loading...</td>
-            ) : (
-              <td colSpan="10000">
-                {/* Showing {page.length} of ~{controlledPageCount * pageSize}{' '} results */}
-              </td>
-            )}
-          </tr>
-        </tbody>
-      </table>
+        </div>
+      </div>
     </div>
   )
 }

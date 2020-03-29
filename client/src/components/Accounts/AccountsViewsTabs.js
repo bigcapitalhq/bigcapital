@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { useHistory } from 'react-router';
 import { connect } from 'react-redux';
 import {
@@ -15,10 +15,14 @@ import { Link } from 'react-router-dom';
 import { compose } from 'utils';
 import AccountsConnect from 'connectors/Accounts.connector';
 import DashboardConnect from 'connectors/Dashboard.connector';
+import {useUpdateEffect} from 'hooks';
 
 function AccountsViewsTabs({
   views,
-  setTopbarEditView,  
+  setTopbarEditView,
+  customViewChanged,
+  addAccountsTableQueries,
+  onViewChanged,
 }) {
   const history = useHistory();
   const { custom_view_id: customViewId } = useParams();
@@ -30,6 +34,22 @@ function AccountsViewsTabs({
   const handleViewLinkClick = () => {
     setTopbarEditView(customViewId);
   }
+
+  useUpdateEffect(() => {
+    customViewChanged && customViewChanged(customViewId);
+
+    addAccountsTableQueries({
+      custom_view_id: customViewId || null,
+    });
+    onViewChanged && onViewChanged(customViewId);
+  }, [customViewId]);
+
+  useEffect(() => {
+    addAccountsTableQueries({
+      custom_view_id: customViewId,
+    })   
+  }, [customViewId]);
+
   const tabs = views.map(view => {
     const baseUrl = '/dashboard/accounts';
     const link = (
@@ -38,7 +58,9 @@ function AccountsViewsTabs({
         onClick={handleViewLinkClick}
       >{view.name}</Link>
     );
-    return <Tab id={`custom_view_${view.id}`} title={link} />;
+    return <Tab
+      id={`custom_view_${view.id}`}
+      title={link} />;
   });
   return (
     <Navbar className='navbar--dashboard-views'>
@@ -49,7 +71,9 @@ function AccountsViewsTabs({
           selectedTabId={`custom_view_${customViewId}`}
           className='tabs--dashboard-views'
         >
-          <Tab id='all' title={<Link to={`/dashboard/accounts`}>All</Link>} />
+          <Tab
+            id='all'
+            title={<Link to={`/dashboard/accounts`}>All</Link>} />
 
           {tabs}
           <Button

@@ -1,5 +1,6 @@
 import t from 'store/types';
-import { createReducer } from '@reduxjs/toolkit';
+import { createReducer, combineReducers } from '@reduxjs/toolkit';
+import { createTableQueryReducers } from 'store/queryReducers';
 
 const initialState = {
   items: {},
@@ -9,10 +10,11 @@ const initialState = {
   accountFormErrors: [],
   datatableQuery: {},
   currentViewId: -1,
-  bulkActions: {},
+  selectedRows: [],
+  loading: false,
 };
 
-export default createReducer(initialState, {
+const accountsReducer = createReducer(initialState, {
   [t.ACCOUNTS_ITEMS_SET]: (state, action) => {
     const _items = {};
 
@@ -44,19 +46,32 @@ export default createReducer(initialState, {
     state.accountsById[action.account.id] = action.account;
   },
 
-  [t.ACCOUNT_BULK_ACTION_ADD]: (state, action) => {
-    state.bulkActions[action.account_id] = true;
+  [t.ACCOUNT_DELETE]: (state, action) => {
+    if (typeof state.items[action.id] !== 'undefined'){
+      delete state.items[action.id];
+    }
   },
 
-  [t.ACCOUNT_BULK_ACTION_REMOVE]: (state, action) => {
-    delete state.bulkActions[action.account_id];
+  [t.ACCOUNTS_SELECTED_ROWS_SET]: (state, action) => {
+    state.selectedRows.push(...action.ids);
   },
 
   [t.ACCOUNTS_SET_CURRENT_VIEW]: (state, action) => {  
     state.currentViewId = action.currentViewId;
-  }
+  },
+
+  [t.ACCOUNTS_TABLE_LOADING]: (state, action) => {
+    state.loading = action.loading;
+  },
 });
+
+export default createTableQueryReducers('accounts', accountsReducer);
 
 export const getAccountById = (state, id) => {
   return state.accounts.accountsById[id];
 };
+ 
+// export default {
+//   // ...accountsReducer,
+//   // testReducer,
+// }

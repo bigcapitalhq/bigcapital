@@ -10,6 +10,8 @@ $sidebar-popover-submenu-bg: rgb(1, 20, 62);
   background: $sidebar-background;
   color: $sidebar-text-color;
   width: $sidebar-width;
+  position: fixed;
+  height: 100%;
 
   &__inner{
     overflow-y: scroll;

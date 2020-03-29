@@ -1,11 +1,11 @@
 import { connect } from 'react-redux';
-import {useParams} from 'react-router-dom';
 import t from 'store/types';
 import {
   fetchAccountTypes,
   fetchAccountsList,
   deleteAccount,
   inactiveAccount,
+  fetchAccountsTable,
 } from 'store/accounts/accounts.actions';
 import {
   getAccountsItems,
@@ -17,22 +17,31 @@ import {
 const mapStateToProps = (state, props) => ({
   views: getResourceViews(state, 'accounts'),
   accounts: getAccountsItems(state, state.accounts.currentViewId),
+  tableQuery: state.accounts.tableQuery,
+  accountsLoading: state.accounts.loading,
 });
 
 const mapActionsToProps = (dispatch) => ({
   fetchAccounts: (query) => dispatch(fetchAccountsList({ query })),
   fetchAccountTypes: () => dispatch(fetchAccountTypes()),
-  deleteAccount: (id) => dispatch(deleteAccount({ id })),
-  inactiveAccount: (id) => dispatch(inactiveAccount({ id })),
-  addBulkActionAccount: (id) => dispatch({
-    type: t.ACCOUNT_BULK_ACTION_ADD, account_id: id
-  }),
-  removeBulkActionAccount: (id) => dispatch({
-    type: t.ACCOUNT_BULK_ACTION_REMOVE, account_id: id,
-  }),
+  requestDeleteAccount: (id) => dispatch(deleteAccount({ id })),
+  requestInactiveAccount: (id) => dispatch(inactiveAccount({ id })),
   changeCurrentView: (id) => dispatch({
     type: t.ACCOUNTS_SET_CURRENT_VIEW,
     currentViewId: parseInt(id, 10),
+  }),
+
+  setAccountsTableQuery: (key, value) => dispatch({
+    type: 'ACCOUNTS_TABLE_QUERY_SET', key, value,
+  }),
+  addAccountsTableQueries: (queries) => dispatch({
+    type: 'ACCOUNTS_TABLE_QUERIES_ADD', queries,
+  }),
+
+  fetchAccountsTable: (query = {}) => dispatch(fetchAccountsTable({ query: { ...query } })),
+
+  setSelectedRowsAccounts: (ids) => dispatch({
+    type: t.ACCOUNTS_SELECTED_ROWS_SET, ids,
   }),
 });
 

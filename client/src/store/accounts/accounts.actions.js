@@ -12,9 +12,7 @@ export const fetchAccountTypes = () => {
           });
           resolve(response);
         })
-        .catch(error => {
-          reject(error);
-        });
+        .catch(error => { reject(error); });
     });
 };
 
@@ -31,6 +29,38 @@ export const fetchAccountsList = ({ query } = {}) => {
           dispatch({
             type: t.ACCOUNTS_ITEMS_SET,
             accounts: response.data.accounts
+          });
+          resolve(response);
+        })
+        .catch(error => {
+          reject(error);
+        });
+    });
+};
+
+export const fetchAccountsTable = ({ query } = {}) => {
+  return (dispatch, getState) =>
+    new Promise((resolve, reject) => {
+      const pageQuery = getState().accounts.tableQuery;
+
+      dispatch({
+        type: t.ACCOUNTS_TABLE_LOADING,
+        loading: true,
+      });
+      ApiService.get('accounts', { params: { ...pageQuery, ...query } })
+        .then(response => {
+          dispatch({
+            type: t.ACCOUNTS_PAGE_SET,
+            accounts: response.data.accounts,
+            customViewId: response.data.customViewId
+          });
+          dispatch({
+            type: t.ACCOUNTS_ITEMS_SET,
+            accounts: response.data.accounts
+          });
+          dispatch({
+            type: t.ACCOUNTS_TABLE_LOADING,
+            loading: false,
           });
           resolve(response);
         })
@@ -109,7 +139,12 @@ export const inactiveAccount = ({ id }) => {
 };
 
 export const deleteAccount = ({ id }) => {
-  return dispatch => ApiService.delete(`accounts/${id}`);
+  return dispatch => new Promise((resolve, reject) => {
+    ApiService.delete(`accounts/${id}`).then((response) => {
+      dispatch({ type: t.ACCOUNT_DELETE, id });
+      resolve(response);
+    }).catch(error => { reject(error); });
+  });
 };
 
 export const deleteBulkAccounts = ({ ids }) => {};

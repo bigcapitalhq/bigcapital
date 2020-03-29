@@ -6,7 +6,7 @@ export default function DialogsContainer() {
   return (
     <React.Fragment>
       <AccountFormDialog />
-      <UserFormDialog />
+      {/* <UserFormDialog /> */}
     </React.Fragment>
   );
 }

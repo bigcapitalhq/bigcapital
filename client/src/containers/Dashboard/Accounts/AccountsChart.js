@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   Route,
   Switch,
@@ -22,11 +22,12 @@ import { compose } from 'utils';
 function AccountsChart({
   changePageTitle,
   fetchAccounts,
-  deleteAccount,
-  inactiveAccount,
+  requestDeleteAccount,
+  requestInactiveAccount,
   fetchResourceViews,
   fetchResourceFields,
   getResourceFields,
+  fetchAccountsTable,
 }) {
   const [state, setState] = useState({
     deleteAlertActive: false,
@@ -34,8 +35,8 @@ function AccountsChart({
     inactiveAlertActive: false,
     targetAccount: {},
   });
-
-  const [filterConditions, setFilterConditions] = useState([]);
+  const [deleteAccount, setDeleteAccount] = useState(false);
+  const [inactiveAccount, setInactiveAccount] = useState(false);
  
   const fetchHook = useAsync(async () => {
     await Promise.all([
@@ -44,57 +45,56 @@ function AccountsChart({
     ]);
   });
 
+  // Fetch accounts list according to the given custom view id.
+  const fetchAccountsHook = useAsync(async () => {
+    await Promise.all([
+      fetchAccountsTable(),
+    ]);
+  }, false);
+
   useEffect(() => {
     changePageTitle('Chart of Accounts');
   }, []);
 
-  /**
-   * Handle click and cancel/confirm account delete
-   */
-  const handleDeleteAccount = (account) => {
-    setState({
-      deleteAlertActive: true,
-      deleteAccount: account,
-    });
-  };
- 
-  const handleCancelAccountDelete = () => {
-    setState({ deleteAlertActive: false });
-  };
-  const handleConfirmAccountDelete = () => {
-    const { targetAccount: account } = state;
-    deleteAccount(account.id).then(() => {
-      setState({ deleteAlertActive: false });
-      fetchAccounts();
+  // Handle click and cancel/confirm account delete
+  const handleDeleteAccount = (account) => { setDeleteAccount(account); };
+  
+  // handle cancel delete account alert.
+  const handleCancelAccountDelete = () => { setDeleteAccount(false); };
+  
+  // Handle confirm account delete
+  const handleConfirmAccountDelete = useCallback(() => {
+    requestDeleteAccount(deleteAccount.id).then(() => {
+      setDeleteAccount(false);
+      fetchAccountsHook.execute();
       AppToaster.show({ message: 'the_account_has_been_deleted' });
     });
-  };
+  }, [deleteAccount]);
 
-  /**
-   * Handle cancel/confirm account inactive.
-   */
-  const handleInactiveAccount = (account) => {
-    setState({ inactiveAlertActive: true, targetAccount: account });
-  };
+  // Handle cancel/confirm account inactive.
+  const handleInactiveAccount = useCallback((account) => {
+    setInactiveAccount(account);
+  }, []);
 
-  const handleCancelInactiveAccount = () => {
-    setState({ inactiveAlertActive: false });
-  };
+  // Handle cancel inactive account alert.
+  const handleCancelInactiveAccount = useCallback(() => {
+    setInactiveAccount(false);
+  }, []);
 
-  const handleConfirmAccountActive = () => {
-    const { targetAccount: account } = state;
-    inactiveAccount(account.id).then(() => {
-      setState({ inactiveAlertActive: true });
-      fetchAccounts();
+  // Handle confirm account activation.
+  const handleConfirmAccountActive = useCallback(() => {
+    requestInactiveAccount(inactiveAccount.id).then(() => {
+      setInactiveAccount(false);
+      fetchAccountsTable();
       AppToaster.show({ message: 'the_account_has_been_inactivated' });
     });
-  };
+  }, [inactiveAccount]);
 
   /**
    * Handle cancel/confirm account restore.
    */
   const handleCancelAccountRestore = () => {
-    setState({ restoreAlertActive: false });
+    
   };
 
   const handleEditAccount = (account) => {
@@ -108,16 +108,22 @@ function AccountsChart({
   const handleConfirmAccountRestore = (account) => {
 
   };
-
   const handleDeleteBulkAccounts = (accounts) => {
 
   };
-  const handleFilterChange = (conditions) => { setFilterConditions(conditions); };
+
+  const handleSelectedRowsChange = (accounts) => {
+    console.log(accounts);
+  };
+
+  const handleFilterChanged = useCallback(() => { fetchAccountsHook.execute(); }, []);
+  const handleViewChanged = useCallback(() => { fetchAccountsHook.execute(); }, []);
+  const handleFetchData = useCallback(() => { fetchAccountsHook.execute(); }, []);
 
   return (
     <DashboardInsider loading={fetchHook.pending} name={'accounts-chart'}>
       <DashboardActionsBar
-        onFilterChange={handleFilterChange} />
+        onFilterChanged={handleFilterChanged} />
       <DashboardPageContent>
         <Switch>
           <Route
@@ -126,14 +132,17 @@ function AccountsChart({
               '/dashboard/accounts/:custom_view_id/custom_view',
               '/dashboard/accounts'
             ]}>
-            <AccountsViewsTabs onDeleteBulkAccounts={handleDeleteBulkAccounts} />
- 
+            <AccountsViewsTabs
+              onViewChanged={handleViewChanged}
+              onDeleteBulkAccounts={handleDeleteBulkAccounts} />
+
             <AccountsDataTable
-              filterConditions={filterConditions}
+              onSelectedRowsChange={handleSelectedRowsChange}
               onDeleteAccount={handleDeleteAccount}
               onInactiveAccount={handleInactiveAccount}
               onRestoreAccount={handleRestoreAccount}
-              onEditAccount={handleEditAccount} />
+              onEditAccount={handleEditAccount}
+              onFetchData={handleFetchData} />
           </Route>
         </Switch>
 
@@ -142,7 +151,7 @@ function AccountsChart({
           confirmButtonText="Move to Trash"
           icon="trash"
           intent={Intent.DANGER}
-          isOpen={state.deleteAlertActive}
+          isOpen={deleteAccount}
           onCancel={handleCancelAccountDelete}
           onConfirm={handleConfirmAccountDelete}>
           <p>
@@ -156,23 +165,9 @@ function AccountsChart({
           confirmButtonText="Inactivate"
           icon="trash"
           intent={Intent.WARNING}
-          isOpen={state.inactiveAlertActive}
+          isOpen={inactiveAccount}
           onCancel={handleCancelInactiveAccount}
           onConfirm={handleConfirmAccountActive}>
-          <p>
-          Are you sure you want to move <b>filename</b> to Trash? You will be able to restore it later,
-          but it will become private to you.
-          </p>
-        </Alert>
-
-        <Alert
-          cancelButtonText="Cancel"
-          confirmButtonText="Move to Trash"
-          icon="trash"
-          intent={Intent.DANGER}
-          isOpen={state.restoreAlertActive}
-          onCancel={handleCancelAccountRestore}
-          onConfirm={handleConfirmAccountRestore}>
           <p>
           Are you sure you want to move <b>filename</b> to Trash? You will be able to restore it later,
           but it will become private to you.

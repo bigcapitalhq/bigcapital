@@ -21,6 +21,7 @@ import AppToaster from 'components/AppToaster';
 import DialogConnect from 'connectors/Dialog.connector';
 import DialogReduxConnect from 'components/DialogReduxConnect';
 import AccountFormDialogConnect from 'connectors/AccountFormDialog.connector';
+import AccountsConnect from 'connectors/Accounts.connector';
 
 function AccountFormDialog({
   name,
@@ -33,7 +34,8 @@ function AccountFormDialog({
   closeDialog,
   submitAccount,
   fetchAccount,
-  editAccount
+  editAccount,
+  fetchAccountsTable,
 }) {
   const intl = useIntl();
   const accountFormValidationSchema = Yup.object().shape({
@@ -64,6 +66,7 @@ function AccountFormDialog({
           AppToaster.show({
             message: 'the_account_has_been_edited'
           });
+          refetchAccounts.execute();
         });
       } else {
         submitAccount({ form: { ...omit(values, exclude) } }).then(response => {
@@ -71,6 +74,7 @@ function AccountFormDialog({
           AppToaster.show({
             message: 'the_account_has_been_submit'
           });
+          refetchAccounts.execute();
         });
       }
     }
@@ -131,15 +135,19 @@ function AccountFormDialog({
     await Promise.all([
       fetchAccounts(),
       fetchAccountTypes(),
-
       // Fetch the target in case edit mode.
       ...(payload.action === 'edit' ? [fetchAccount(payload.id)] : [])
     ]);
-  });
+  }, false);
 
-  const onDialogOpening = async () => {
-    fetchHook.execute();
-  };
+  const refetchAccounts = useAsync(async () => {
+    await Promise.all([
+      fetchAccountsTable(),
+    ]);
+  }, false);
+
+  // Fetch requests on dialog opening.
+  const onDialogOpening = async () => { fetchHook.execute(); };
 
   const onChangeAccountType = accountType => {
     setState({ ...state, selectedAccountType: accountType.name });
@@ -294,6 +302,7 @@ function AccountFormDialog({
 
 export default compose(
   AccountFormDialogConnect,
+  AccountsConnect,
   DialogReduxConnect,
   DialogConnect
 )(AccountFormDialog);

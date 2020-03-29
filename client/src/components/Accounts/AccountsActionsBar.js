@@ -25,9 +25,10 @@ import ResourceConnect from 'connectors/Resource.connector';
 function AccountsActionsBar({
   openDialog,
   views,
-  bulkActions,
+  selectedRows = [],
   getResourceFields,
-  onFilterChange,
+  addAccountsTableQueries,
+  onFilterChanged,
 }) {
   const {path} = useRouteMatch();
   const onClickNewAccount = () => { openDialog('account-form', {}); };
@@ -37,13 +38,16 @@ function AccountsActionsBar({
   const viewsMenuItems = views.map((view) => {
     return (<MenuItem href={`${path}/${view.id}/custom_view`} text={view.name} />);
   });
-  const hasBulkActionsSelected = useMemo(() => {
-    return Object.keys(bulkActions).length > 0;
-  }, [bulkActions]);
+  const hasSelectedRows = useMemo(() => selectedRows.length > 0, [selectedRows]);
  
   const filterDropdown = FilterDropdown({
     fields: accountsFields,
-    onFilterChange,
+    onFilterChange: (filterConditions) => {
+      addAccountsTableQueries({
+        filter_roles: filterConditions || '',  
+      });
+      onFilterChanged && onFilterChanged(filterConditions);
+    },
   });
   return (
     <DashboardActionsBar>
@@ -82,7 +86,7 @@ function AccountsActionsBar({
 
         </Popover>
 
-        {hasBulkActionsSelected && (
+        {hasSelectedRows && (
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon='archive' iconSize={15} />}
@@ -90,7 +94,7 @@ function AccountsActionsBar({
           />
         )}
 
-        {hasBulkActionsSelected && (
+        {hasSelectedRows && (
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon='trash' iconSize={15} />}
@@ -115,7 +119,7 @@ function AccountsActionsBar({
 
 const mapStateToProps = state => {
   return {
-    bulkActions: state.accounts.bulkActions
+    // selectedRows: state.accounts.selectedRows
   };
 };
 
