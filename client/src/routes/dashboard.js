@@ -71,13 +71,19 @@ export default [
     path: `${BASE_URL}/items/list`,
     component: LazyLoader({
       loader: () => import('containers/Dashboard/Items/ItemsList')
-    }),
+    })
   },
   {
     path: `${BASE_URL}/items/new`,
     component: LazyLoader({
       loader: () => import('containers/Dashboard/Items/ItemForm')
-    }),
+    })
+  },
+  {
+    path: `${BASE_URL}/items/category`,
+    component: LazyLoader({
+      loader: () => import('containers/Dashboard/Items/ItemCategoryList')
+    })
   },
 
   // Financial Reports.

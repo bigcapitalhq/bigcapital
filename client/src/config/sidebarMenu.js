@@ -19,16 +19,20 @@ export default [
     children: [
       {
         text: 'Items List',
-        href: '/dashboard/items/list',
+        href: '/dashboard/items/list'
       },
       {
         text: 'New Item',
-        href: '/dashboard/items/new',
+        href: '/dashboard/items/new'
       },
+      {
+        text: 'Category List',
+        href: '/dashboard/items/category'
+      }
     ]
   },
   {
-    divider: true,
+    divider: true
   },
   {
     icon: 'balance-scale',
@@ -37,29 +41,25 @@ export default [
     children: [
       {
         text: 'Accounts Chart',
-        href: '/dashboard/accounts',
+        href: '/dashboard/accounts'
       },
       {
         text: 'Make Journal',
         href: '/dashboard/accounting/make-journal-entry'
-      },
+      }
     ]
   },
   {
     icon: 'university',
     iconSize: 20,
     text: 'Banking',
-    children: [
-      
-    ]
+    children: []
   },
   {
     icon: 'shopping-cart',
     iconSize: 20,
     text: 'Sales',
-    children: [
-     
-    ]
+    children: []
   },
   {
     icon: 'balance-scale',
@@ -81,24 +81,24 @@ export default [
     children: [
       {
         text: 'Balance Sheet',
-        href: '/dashboard/accounting/balance-sheet',
+        href: '/dashboard/accounting/balance-sheet'
       },
       {
         text: 'Trial Balance Sheet',
-        href: '/dashboard/accounting/trial-balance-sheet',
+        href: '/dashboard/accounting/trial-balance-sheet'
       },
       {
         text: 'Journal',
-        href: '/dashboard/accounting/journal-sheet',
+        href: '/dashboard/accounting/journal-sheet'
       },
       {
         text: 'General Ledger',
-        href: '/dashboard/accounting/general-ledger',
+        href: '/dashboard/accounting/general-ledger'
       },
       {
         text: 'Profit Loss Sheet',
-        href: '/dashboard/accounting/profit-loss-sheet',
-      },
+        href: '/dashboard/accounting/profit-loss-sheet'
+      }
     ]
   },
   {
@@ -108,12 +108,12 @@ export default [
     children: [
       {
         text: 'Expenses List',
-        href: '/dashboard/expenses',
+        href: '/dashboard/expenses'
       },
       {
         text: 'New Expenses',
-        href: '/dashboard/expenses/new',
-      },
+        href: '/dashboard/expenses/new'
+      }
     ]
   },
   {
