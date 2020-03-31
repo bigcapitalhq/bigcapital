@@ -17,15 +17,22 @@ label{
 }
 
 .#{$ns}-input{
-  box-shadow: 0 0 0 0 rgba(19, 124, 189, 0),
-    0 0 0 0 rgba(19, 124, 189, 0),
-    inset 0 0 0 1px rgba(16, 22, 26, 0.1),
-    inset 0 1px 1px rgba(16, 22, 26, 0.15);
+  box-shadow: 0 0 0;
+  border: 1px solid #ced4da;
+  border-radius: 0;
+  height: 32px;
+  line-height: 32px;
+  color: #333;
+
+  &:focus,
+  &.bp3-active{
+    box-shadow: 0 0 0 .2rem rgba(0,123,255,.25); 
+    border-color: #80bdff;
+  }
 }
 
-
-
 .#{$ns}-form-group{
+  margin-bottom: 20px;
 
   &.#{$ns}-intent-danger{
     select{
@@ -35,5 +42,52 @@ label{
         inset 0 0 0 1px rgba(16, 22, 26, 0.15),
         inset 0 1px 1px rgba(16, 22, 26, 0.2);
     }
+  }
+
+  .#{$ns}-label{
+    margin-bottom: 6px;
+
+    .#{$ns}-icon-info-circle{
+      margin-left: 3px;
+      position: relative;
+      top: -1px;
+      color: #A1B2C5;
+    }
+  }
+}
+
+.#{$ns}-button:not([class*=".#{$ns}-intent-"]) {
+  background-image: none;
+}
+
+.#{$ns}-html-select select,
+.#{$ns}-select select{
+  background-image: none;
+  border-radius: 0;
+  
+  &,
+  &:hover{
+    background: #fff;
+    box-shadow: 0 0 0;
+    border: 1px solid #ced4da;
+  }
+  &:focus{
+    box-shadow: 0 0 0 .2rem rgba(0,123,255,.25); 
+    border-color: #80bdff;
+  }
+}
+
+.bp3-datepicker-caption select{
+  
+  &,
+  &:hover{
+    border-color: transparent;
+  }
+}
+
+.form-group--select-list{
+
+  .#{$ns}-icon-caret-down{
+    color: #8D8D8D;
   }
 }

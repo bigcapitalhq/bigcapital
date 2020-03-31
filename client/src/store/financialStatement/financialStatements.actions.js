@@ -28,10 +28,18 @@ export const fetchBalanceSheet = ({ query }) => {
 
 export const fetchTrialBalanceSheet = ({ query }) => {
   return (dispatch) => new Promise((resolve, reject) => {
+    dispatch({
+      type: t.TRIAL_BALANCE_SHEET_LOADING,
+      loading: true,
+    });
     ApiService.get('/financial_statements/trial_balance_sheet', { params: query }).then((response) => {
       dispatch({
         type: t.TRAIL_BALANCE_STATEMENT_SET,
         data: response.data,
+      });
+      dispatch({
+        type: t.TRIAL_BALANCE_SHEET_LOADING,
+        loading: false,
       });
       resolve(response.data);
     }).catch((error) => { reject(error); })

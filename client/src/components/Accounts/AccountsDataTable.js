@@ -131,7 +131,8 @@ function AccountsDataTable({
         columns={columns}
         data={accounts}
         onFetchData={handleDatatableFetchData}
-        manualSortBy={true} />
+        manualSortBy={true}
+        selectionColumn={true} />
     </LoadingIndicator>    
   );
 }

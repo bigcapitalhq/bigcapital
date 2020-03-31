@@ -1,9 +1,10 @@
-import React, {useMemo, useState, useEffect} from 'react';
+import React, {useMemo, useState, useCallback, useEffect} from 'react';
 import FinancialSheet from 'components/FinancialSheet';
 import DataTable from 'components/DataTable';
 import FinancialStatementConnect from 'connectors/FinancialStatements.connector';
 import {compose} from 'utils';
 import moment from 'moment';
+import Money from 'components/Money';
 
 function BalanceSheetTable({
   balanceSheet,
@@ -14,25 +15,32 @@ function BalanceSheetTable({
   getBalanceSheetLiabilitiesAccounts,
 
   getBalanceSheetQuery,
-}) {
-  const balanceSheetColumns = useMemo(() => {
-    return getBalanceSheetColumns(balanceSheetIndex);
-  }, [getBalanceSheetColumns]);
 
-  const balanceSheetQuery = useMemo(() => {
-    return getBalanceSheetQuery(balanceSheetIndex);
-  }, [getBalanceSheetQuery])
+  onFetchData,
+  asDate,
+}) {
+  const balanceSheetColumns = useMemo(() => 
+    getBalanceSheetColumns(balanceSheetIndex),
+    [getBalanceSheetColumns, balanceSheetIndex]);
+
+  const balanceSheetQuery = useMemo(() => 
+    getBalanceSheetQuery(balanceSheetIndex),
+    [getBalanceSheetQuery, balanceSheetIndex])
 
   const columns = useMemo(() => [
     {
       // Build our expander column
       id: 'expander', // Make sure it has an ID
+      className: 'expander',      
       Header: ({
         getToggleAllRowsExpandedProps,
         isAllRowsExpanded
       }) => (
-        <span {...getToggleAllRowsExpandedProps()}>
-          {isAllRowsExpanded ? '👇' : '👉'}
+        <span {...getToggleAllRowsExpandedProps()} className="toggle">
+          {isAllRowsExpanded ?
+            (<span class="arrow-down" />) :
+            (<span class="arrow-right" />)
+          }
         </span>
       ),
       Cell: ({ row }) =>
@@ -47,30 +55,41 @@ function BalanceSheetTable({
                 // of the row
                 paddingLeft: `${row.depth * 2}rem`,
               },
+              className: 'toggle',
             })}
           >
-            {row.isExpanded ? '👇' : '👉'}
+            {row.isExpanded ?
+              (<span class="arrow-down" />) :
+              (<span class="arrow-right" />)
+            }
           </span>
         ) : null,
+      width: 20,
+      disableResizing: true,
     },
     {
       Header: 'Account Name',
       accessor: 'name',
-      className: "actions",
+      className: "account_name",
     },
     {
       Header: 'Code', 
       accessor: 'code',
-      className: "note",
+      className: "code",
     },
     ...(balanceSheetQuery &&
         balanceSheetQuery.display_columns_by === 'total') ? [
       {
         Header: 'Total',
         accessor: 'balance.formatted_amount',
+        Cell: ({ cell }) => {
+          const row = cell.row.original;
+          if (!row.balance) { return ''; }
+          return (<Money amount={row.balance.formatted_amount} currency={'USD'} />);
+        },
         className: "credit",
       }
-    ]: (balanceSheetColumns.map((column, index) => ({
+    ] : (balanceSheetColumns.map((column, index) => ({
       Header: column,
       accessor: (row) => {
         if (row.periods_balance && row.periods_balance[index]) {
@@ -87,33 +106,32 @@ function BalanceSheetTable({
     setData([
       {
         name: 'Assets',
-        code: '',
-        children: [
-          ...getBalanceSheetAssetsAccounts(balanceSheetIndex),
-        ],
+        children: getBalanceSheetAssetsAccounts(balanceSheetIndex),
       },
       {
         name: 'Liabilies & Equity',
-        code: '',
-        children: [
-          ...getBalanceSheetLiabilitiesAccounts(balanceSheetIndex),
-        ]
+        children: getBalanceSheetLiabilitiesAccounts(balanceSheetIndex),
       }
     ])
-  }, [])
+  }, []);
+
+  const handleFetchData = useCallback(() => {
+    onFetchData && onFetchData();
+  }, [onFetchData]);
 
   return (
     <FinancialSheet
       companyTitle={'Facebook, Incopration'}
       sheetType={'Balance Sheet'}
-      date={''}>
+      date={asDate}>
       
       <DataTable
+        className="bigcapital-datatable--financial-report"
         columns={columns}
-        data={data} />
-
+        data={data}
+        onFetchData={handleFetchData} />
     </FinancialSheet>
-  )
+  );
 }
 
 export default compose(

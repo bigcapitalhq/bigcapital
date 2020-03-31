@@ -74,7 +74,7 @@ factory.define('manual_journal', 'manual_journals', async () => {
 });
 
 factory.define('item_category', 'items_categories', () => ({
-  label: faker.name.firstName(),
+  name: faker.name.firstName(),
   description: faker.lorem.text(),
   parent_category_id: null,
 }));

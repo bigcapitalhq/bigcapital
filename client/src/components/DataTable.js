@@ -12,7 +12,6 @@ import {
 import {Checkbox} from '@blueprintjs/core';
 import classnames from 'classnames';
 import Icon from 'components/Icon';
-// import { FixedSizeList } from 'react-window'
 
 const IndeterminateCheckbox = React.forwardRef(
   ({ indeterminate, ...rest }, ref) => {
@@ -23,9 +22,7 @@ const IndeterminateCheckbox = React.forwardRef(
       resolvedRef.current.indeterminate = indeterminate
     }, [resolvedRef, indeterminate])
 
-    return (
-      <Checkbox ref={resolvedRef} {...rest} />
-    );
+    return (<Checkbox ref={resolvedRef} {...rest} />);
   }
 );
 
@@ -35,7 +32,9 @@ export default function DataTable({
   loading,
   onFetchData,
   onSelectedRowsChange,
-  manualSortBy = 'false'
+  manualSortBy = 'false',
+  selectionColumn = false,
+  className
 }) {
   const {
     getTableProps,
@@ -51,8 +50,8 @@ export default function DataTable({
     nextPage,
     previousPage,
     setPageSize,
-
     selectedFlatRows,
+
     // Get the state from the instance
     state: { pageIndex, pageSize, sortBy, selectedRowIds },
   } = useTable(
@@ -77,7 +76,7 @@ export default function DataTable({
     hooks => {
       hooks.visibleColumns.push(columns => [
         // Let's make a column for selection
-        {
+        ...(selectionColumn) ? [{
           id: 'selection',
           disableResizing: true,
           minWidth: 35,
@@ -97,23 +96,19 @@ export default function DataTable({
               <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
             </div>
           ),
-        },
+        }] : [],
         ...columns,
       ])
     }
   );
 
-  // Debounce our onFetchData call for 100ms
-  const onFetchDataDebounced = useAsyncDebounce(onFetchData, 100);
-  const onSelectRowsDebounced = useAsyncDebounce(onSelectedRowsChange, 250);
-
   // When these table states change, fetch new data!
   useEffect(() => {
-    onFetchDataDebounced({ pageIndex, pageSize, sortBy })
-  }, []);
+    onFetchData && onFetchData({ pageIndex, pageSize, sortBy })
+  }, [pageIndex, pageSize, sortBy]);
 
   return (
-    <div className={'bigcapital-datatable'}>
+    <div className={classnames('bigcapital-datatable', className)}>
       <div {...getTableProps()} className="table"> 
         <div className="thead">
           {headerGroups.map(headerGroup => (
@@ -157,8 +152,7 @@ export default function DataTable({
                     className: classnames(cell.column.className || '', 'td'),
                   })}>{ cell.render('Cell') }</div>
                 })}
-              </div>
-            )
+              </div>)
           })}
         </div>
       </div>

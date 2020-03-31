@@ -11,6 +11,7 @@ import {
   HTMLSelect,
   Intent,
   Popover,
+  Classes,
 } from "@blueprintjs/core";
 import {Select} from '@blueprintjs/select';
 import {DateInput} from '@blueprintjs/datetime';
@@ -21,6 +22,7 @@ import {
   parseDateRangeQuery,
 } from 'utils';
 import moment from 'moment';
+import Icon from 'components/Icon';
 
 export default function BalanceSheetHeader({
   onSubmitFilter,
@@ -111,12 +113,16 @@ export default function BalanceSheetHeader({
       </RadioGroup>
     </div>
   );
+
+  const infoIcon = useMemo(() => (<Icon icon="info-circle" iconSize={12} />), []);
+
   return (
     <FinancialStatementHeader>
       <Row>
         <Col sm={3}>
           <FormGroup
             label={intl.formatMessage({'id': 'report_date_range'})}
+            labelInfo={infoIcon}
             minimal={true}
             fill={true}>
 
@@ -131,6 +137,7 @@ export default function BalanceSheetHeader({
         <Col sm={3}>
           <FormGroup
             label={intl.formatMessage({'id': 'from_date'})}
+            labelInfo={infoIcon}
             minimal={true}
             fill={true}>
 
@@ -146,6 +153,7 @@ export default function BalanceSheetHeader({
         <Col sm={3}>
           <FormGroup
             label={intl.formatMessage({'id': 'to_date'})}
+            labelInfo={infoIcon}
             minimal={true}
             fill={true}>
 
@@ -163,7 +171,8 @@ export default function BalanceSheetHeader({
         <Col sm={3}>
           <FormGroup
             label={'Display report columns'}
-            className="{'form-group-display-columns-by'}"
+            labelInfo={infoIcon}
+            className="form-group-display-columns-by form-group--select-list bp3-fill"
             inline={false}>
 
             <Select
@@ -184,6 +193,7 @@ export default function BalanceSheetHeader({
         <Col sm={3}>
           <FormGroup
             label={'Show non-zero or active only'}
+            className="form-group--select-list bp3-fill"
             inline={false}>
 
             <Popover

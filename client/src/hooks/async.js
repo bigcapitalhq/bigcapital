@@ -9,12 +9,12 @@ const useAsync = (asyncFunction, immediate = true) => {
   // handles setting state for pending, value, and error.
   // useCallback ensures the below useEffect is not called
   // on every render, but only if asyncFunction changes.
-  const execute = useCallback(() => {
+  const execute = useCallback((...args) => {
     setPending(true);
     setValue(null);
     setError(null);
 
-    return asyncFunction()
+    return asyncFunction(...args)
       .then(response => setValue(response))
       .catch(error => setError(error))
       .finally(() => setPending(false));

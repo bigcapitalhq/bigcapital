@@ -4,8 +4,14 @@
 .financial-statement{
 
   &__header{
-    padding: 30px;
+    padding: 25px 26px 25px;
     background: #FDFDFD;
+
+    .bp3-form-group .bp3-label{
+      font-weight: 500;
+      font-size: 13px;
+      color: #444;
+    }
   }
 
   &__body{
@@ -21,28 +27,44 @@
   margin-left: auto;
   margin-right: auto;
   padding: 20px;
-  margin-top: 40px;
+  padding-top: 30px;
+  margin-top: 35px;
 
   &__title{
+    margin: 0;
     font-weight: 200;
     font-size: 22px;
     color: #222;
     text-align: center;
   }
-
   &__sheet-type{
     text-align: center;
+    margin: 0;
+    font-size: 15px;
+    font-weight: 400;
+    color: #666;
+    margin-top: 6px;
   }
-
   &__date{
     text-align: center;
+    color: #888;
+    margin-top: 6px;
   }
-
   &__table{
+    margin-top: 24px;
 
+    .tbody{
+      .code.td{
+        color: #777;
+      }
+    }
   }
-
   &__accounting-basis{
 
   }
+
+  &--trial-balance{
+    min-width: 720px;
+  }
+
 }

@@ -2,13 +2,16 @@ import { createReducer } from '@reduxjs/toolkit';
 import t from 'store/types';
 import {
   getBalanceSheetIndexByQuery,
-  getTrialBalanceSheetIndex,
   getFinancialSheetIndexByQuery,
+  // getFinancialSheetIndexByQuery,
 } from './financialStatements.selectors';
 
 const initialState = {
   balanceSheets: [],
-  trialBalanceSheets: [],
+  trialBalance: {
+    sheets: [],
+    loading: false,
+  },
   generalLedger: [],
   journalSheets: [],
 };
@@ -30,17 +33,20 @@ export default createReducer(initialState, {
   },
 
   [t.TRAIL_BALANCE_STATEMENT_SET]: (state, action) => {
-    const index = getTrialBalanceSheetIndex(state.trialBalanceSheets, action.query);
-
+    const index = getFinancialSheetIndexByQuery(state.trialBalance.sheets, action.query);
     const trailBalanceSheet = {
       accounts: action.data.accounts,
       query: action.data.query,
     };
     if (index !== -1) {
-      state.trialBalanceSheets[index] = trailBalanceSheet;
+      state.trialBalance.sheets[index] = trailBalanceSheet;
     } else {
-      state.trailBalanceSheet.push(trailBalanceSheet);
+      state.trialBalance.sheets.push(trailBalanceSheet);
     }
+  },
+
+  [t.TRIAL_BALANCE_SHEET_LOADING]: (state, action) => {
+    state.trialBalance.loading = !!action.loading;
   },
 
   [t.JOURNAL_SHEET_SET]: (state, action) => {

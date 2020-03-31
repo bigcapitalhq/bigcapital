@@ -414,10 +414,10 @@ export default {
       query('basis').optional(),
       query('from_date').optional().isISO8601(),
       query('to_date').optional().isISO8601(),
-      query('number_format.no_cents').optional().isBoolean(),
-      query('number_format.1000_divide').optional().isBoolean(),
+      query('number_format.no_cents').optional().isBoolean().toBoolean(),
+      query('number_format.1000_divide').optional().isBoolean().toBoolean(),
       query('basis').optional(),
-      query('none_zero').optional(),
+      query('none_zero').optional().isBoolean().toBoolean(),
     ],
     async handler(req, res) {
       const validationErrors = validationResult(req);
@@ -462,6 +462,7 @@ export default {
           const trial = journalEntries.getTrialBalance(account.id);
           return {
             account_id: account.id,
+            name: account.name,
             code: account.code,
             accountNormal: account.type.normal,
             credit: balanceFormatter(trial.credit),
@@ -471,7 +472,7 @@ export default {
         });
       return res.status(200).send({
         query: { ...filter },
-        items: [...items],
+        accounts: [...items],
       });
     },
   },

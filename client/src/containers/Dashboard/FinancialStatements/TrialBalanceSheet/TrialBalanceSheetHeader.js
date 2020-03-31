@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useCallback} from 'react';
 import FinancialStatementHeader from 'containers/Dashboard/FinancialStatements/FinancialStatementHeader';
 import {Row, Col} from 'react-grid-system';
 import { 
@@ -48,7 +48,7 @@ export default function TrialBalanceSheetHeader({
     setFilterByKey(name, date);
   };
 
-  const handleSubmitClick = () => { onSubmitFilter(filter); };
+  const handleSubmitClick = useCallback(() => { onSubmitFilter(filter); }, [filter]);
 
   return (
     <FinancialStatementHeader>

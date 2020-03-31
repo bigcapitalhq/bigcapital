@@ -4,9 +4,10 @@ import { Spinner } from '@blueprintjs/core';
 export default function LoadingIndicator({
   loading,
   spinnerSize = 40,
-  children
+  children,
+  mount = true,
 }) {
-  const [rendered, setRendered] = useState(false);
+  const [rendered, setRendered] = useState(mount);
 
   useEffect(() => {
     if (!loading) { setRendered(true); }

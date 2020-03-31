@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useCallback, useState} from 'react';
 import DashboardConnect from 'connectors/Dashboard.connector';
 import {compose} from 'utils';
 import useAsync from 'hooks/async';
@@ -30,39 +30,41 @@ function BalanceSheet({
 
   const fetchHook = useAsync(async () => { 
     await Promise.all([
-      fetchBalanceSheet(filter),
+      fetchBalanceSheet({
+        ...filter,
+        display_columns_type: 'total',
+      }),
     ]);
     setReload(false);
   });
 
-  useEffect(() => {
-    if (!reload) { return; }
-    fetchHook.execute();
-  }, [reload]);
+  // Handle fetch the data of balance sheet.
+  const handleFetchData = useCallback(() => { fetchHook.execute(); }, [fetchHook]);
 
   useEffect(() => {
     changePageTitle('Balance Sheet');
   }, []);
 
   // Retrieve balance sheet index by the given filter query.
-  const balanceSheetIndex = useMemo(() => {
-    return getBalanceSheetIndexByQuery(filter);
-  }, [filter, balanceSheets]);
+  const balanceSheetIndex = useMemo(() => 
+    getBalanceSheetIndexByQuery(filter),
+    [filter, getBalanceSheetIndexByQuery]);
 
   // Retreive balance sheet by the given sheet index.
-  const balanceSheet = useMemo(() => {  
-    return getBalanceSheetByIndex(balanceSheetIndex);
-  }, [balanceSheetIndex, balanceSheets]);
+  const balanceSheet = useMemo(() => 
+    getBalanceSheetByIndex(balanceSheetIndex),
+    [balanceSheetIndex, getBalanceSheetByIndex]);
 
   // Handle re-fetch balance sheet after filter change.
-  const handleFilterSubmit = (filter) => {
+  const handleFilterSubmit = useCallback((filter) => {
     setFilter({
       ...filter,
       from_date: moment(filter.from_date).format('YYYY-MM-DD'),
       to_date: moment(filter.to_date).format('YYYY-MM-DD'),
     });
     setReload(true);
-  };
+  }, [setFilter]);
+
   return (
     <div class="financial-statement">
       <BalanceSheetHeader
@@ -73,7 +75,9 @@ function BalanceSheet({
         <LoadingIndicator loading={fetchHook.pending}>
           <BalanceSheetTable
             balanceSheet={balanceSheet}
-            balanceSheetIndex={balanceSheetIndex} />
+            balanceSheetIndex={balanceSheetIndex}
+            onFetchData={handleFetchData}
+            asDate={new Date()} />
         </LoadingIndicator>
       </div>
     </div>

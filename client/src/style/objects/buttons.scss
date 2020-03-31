@@ -1,0 +1,58 @@
+
+
+.form-group--select-list{
+
+  .bp3-button{
+    border-radius: 0;
+    
+
+    &,
+    &:hover{
+      background: #fff;
+      box-shadow: 0 0 0;  
+      border: 1px solid #ced4da;
+    }
+  }
+}
+
+.form-group--select-list.bp3-fill{
+
+  .bp3-popover-wrapper{
+    &,
+    .bp3-popover-target{
+      width: 100%;
+    }
+  
+    .bp3-button{
+      width: 100%;
+      justify-content: space-between;
+      color: #333;
+    }
+  }
+}
+
+.form-group--select-list{
+
+  .bp3-popover-open{
+
+    .bp3-button{
+      border-color: #80bdff;
+    }
+  }
+}
+
+.bp3-button{
+  min-width: 32px;
+  min-height: 32px;
+
+  &.bp3-intent-primary,
+  &.bp3-intent-success,
+  &.bp3-intent-danger,
+  &.bp3-intent-warning{
+     
+    &,
+    &:hover{
+      box-shadow: 0 0 0;
+    }
+  }
+}

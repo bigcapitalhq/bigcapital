@@ -6,12 +6,15 @@ import {
   getTrialBalanceSheetIndex,
   getTrialBalanceAccounts,
   getTrialBalanceQuery,
+  getFinancialSheetIndexByQuery,
 } from 'store/financialStatement/financialStatements.selectors';
 
 export const mapStateToProps = (state, props) => ({
-  getTrialBalanceSheetIndex: (query) => getTrialBalanceSheetIndex(state.financialStatements.trialBalanceSheets, query),
-  getTrialBalanceAccounts: (sheetIndex) => getTrialBalanceAccounts(state.financialStatements.trialBalanceSheets, sheetIndex),
-  getTrialBalanceQuery: (sheetIndex) => getTrialBalanceQuery(state.financialStatements.trialBalanceSheets, sheetIndex),
+  getTrialBalanceSheetIndex: (query) => getFinancialSheetIndexByQuery(state.financialStatements.trialBalance.sheets, query),
+  getTrialBalanceAccounts: (sheetIndex) => getTrialBalanceAccounts(state.financialStatements.trialBalance.sheets, sheetIndex),
+  getTrialBalanceQuery: (sheetIndex) => getTrialBalanceQuery(state.financialStatements.trialBalance.sheets, sheetIndex),
+
+  trialBalanceSheetLoading: state.financialStatements.trialBalance.loading,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
