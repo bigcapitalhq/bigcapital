@@ -11,34 +11,34 @@ export default {
    */
   router() {
     const router = express.Router();
-    const permit = Authorization('items_categories');
+    // const permit = Authorization('items_categories');
 
     router.use(JWTAuth);
 
     router.post('/:id',
-      permit('create', 'edit'),
+      // permit('create', 'edit'),
       this.editCategory.validation,
       asyncMiddleware(this.editCategory.handler));
 
     router.post('/',
-      permit('create'),
+      // permit('create'),
       this.newCategory.validation,
       asyncMiddleware(this.newCategory.handler));
 
     router.delete('/:id',
-      permit('create', 'edit', 'delete'),
+      // permit('create', 'edit', 'delete'),
       this.deleteItem.validation,
       asyncMiddleware(this.deleteItem.handler));
 
     router.get('/:id',
-      permit('view'),
+      // permit('view'),
       this.getCategory.validation,
       asyncMiddleware(this.getCategory.handler));
 
     router.get('/',
-      permit('view'),
+      // permit('view'),
       this.getList.validation,
-      asyncMiddleware(this.getList.validation));
+      asyncMiddleware(this.getList.handler));
 
     return router;
   },
@@ -48,7 +48,7 @@ export default {
    */
   newCategory: {
     validation: [
-      check('name').exists({ checkFalsy: true }).trim().escape(),
+      check('name').exists().trim().escape(),
       check('parent_category_id').optional().isNumeric().toInt(),
       check('description').optional().trim().escape(),
     ],
@@ -61,10 +61,12 @@ export default {
         });
       }
 
-      const { name, parent_category_id: parentCategoryId, description } = req.body;
+      const { user } = req;
+      const form = { ...req.body };
 
-      if (parentCategoryId) {
-        const foundParentCategory = await ItemCategory.where('id', parentCategoryId).fetch();
+      if (form.parent_category_id) {
+        const foundParentCategory = await ItemCategory.query()
+          .where('id', form.parent_category_id).first();
 
         if (!foundParentCategory) {
           return res.boom.notFound('The parent category ID is not found.', {
@@ -72,14 +74,11 @@ export default {
           });
         }
       }
-      const category = await ItemCategory.forge({
-        label: name,
-        parent_category_id: parentCategoryId,
-        description,
+      const category = await ItemCategory.query().insert({
+        ...form,
+        user_id: user.id,
       });
-
-      await category.save();
-      return res.status(200).send({ id: category.get('id') });
+      return res.status(200).send({ category });
     },
   },
 
@@ -89,7 +88,7 @@ export default {
   editCategory: {
     validation: [
       param('id').toInt(),
-      check('name').exists({ checkFalsy: true }).trim().escape(),
+      check('name').exists().trim().escape(),
       check('parent_category_id').optional().isNumeric().toInt(),
       check('description').optional().trim().escape(),
     ],
@@ -102,14 +101,19 @@ export default {
           code: 'validation_error', ...validationErrors,
         });
       }
-      const { name, parent_category_id: parentCategoryId, description } = req.body;
-      const itemCategory = await ItemCategory.where('id', id).fetch();
+
+      const form = { ...req.body };
+      const itemCategory = await ItemCategory.query().where('id', id).first()
 
       if (!itemCategory) {
-        return res.boom.notFound();
+        return res.boom.notFound({
+          errors: [{ type: 'ITEM_CATEGORY.NOT.FOUND', code: 100 }],
+        });
       }
-      if (parentCategoryId && parentCategoryId !== itemCategory.attributes.parent_category_id) {
-        const foundParentCategory = await ItemCategory.where('id', parentCategoryId).fetch();
+      if (form.parent_category_id
+        && form.parent_category_id !== itemCategory.parent_category_id) {
+        const foundParentCategory = await ItemCategory.query()
+          .where('id', form.parent_category_id).first();
 
         if (!foundParentCategory) {
           return res.boom.notFound('The parent category ID is not found.', {
@@ -117,13 +121,9 @@ export default {
           });
         }
       }
-      await itemCategory.save({
-        label: name,
-        description,
-        parent_category_id: parentCategoryId,
-      });
+      const updateItemCategory = await ItemCategory.query().where('id', id).update({ ...form });
 
-      return res.status(200).send({ id: itemCategory.id });
+      return res.status(200).send({ id: updateItemCategory });
     },
   },
 
@@ -132,16 +132,18 @@ export default {
    */
   deleteItem: {
     validation: [
-      param('id').toInt(),
+      param('id').exists().toInt(),
     ],
     async handler(req, res) {
       const { id } = req.params;
-      const itemCategory = await ItemCategory.where('id', id).fetch();
+      const itemCategory = await ItemCategory.query().where('id', id).first();
 
       if (!itemCategory) {
         return res.boom.notFound();
       }
-      await itemCategory.destroy();
+
+      await ItemCategory.query().where('id', itemCategory.id).delete();
+
       return res.status(200).send();
     },
   },
@@ -152,12 +154,9 @@ export default {
   getList: {
     validation: [],
     async handler(req, res) {
-      const items = await ItemCategory.fetch();
+      const categories = await ItemCategory.query();
 
-      if (!items) {
-        return res.boom.notFound();
-      }
-      return res.status(200).send({ items: items.toJSON() });
+      return res.status(200).send({ categories });
     },
   },
 

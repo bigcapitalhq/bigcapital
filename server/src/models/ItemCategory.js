@@ -14,15 +14,17 @@ export default class ItemCategory extends BaseModel {
    * Relationship mapping.
    */
   static get relationMappings() {
+    const Item = require('@/models/Item');
+
     return {
       /**
        * Item category may has many items.
        */
       items: {
         relation: Model.HasManyRelation,
-        modelBase: path.join(__dirname, 'Item'),
+        modelClass: Item.default,
         join: {
-          from: 'items_categories.item_id',
+          from: 'items_categories.itemId',
           to: 'items.id',
         },
       },
