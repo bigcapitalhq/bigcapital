@@ -11,6 +11,7 @@ import resources from './resources/resource.types';
 import users from './users/users.types';
 import financialStatements from './financialStatement/financialStatements.types';
 import itemCategories from './itemCategories/itemsCategory.type';
+
 export default {
   ...authentication,
   ...accounts,

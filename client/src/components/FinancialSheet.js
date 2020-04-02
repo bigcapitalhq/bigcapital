@@ -20,7 +20,7 @@ export default function FinancialSheet({
       <LoadingIndicator loading={loading}>
         <h1 class="financial-sheet__title">{ companyTitle }</h1>
         <h6 class="financial-sheet__sheet-type">{ sheetType }</h6>
-        <div class="financial-sheet__date">As of { formattedDate }</div>
+        <div class="financial-sheet__date">From { formattedDate } | To { formattedDate }</div>
 
         <div class="financial-sheet__table">
           { children }

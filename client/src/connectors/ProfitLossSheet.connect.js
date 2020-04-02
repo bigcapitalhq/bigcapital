@@ -3,17 +3,13 @@ import {
   fetchProfitLossSheet,
 } from 'store/financialStatement/financialStatements.actions';
 import {
-  getProfitLossSheetIndex,
-  getProfitLossSheet,
-  getProfitLossSheetColumns,
-  getProfitLossSheetAccounts,
+  getFinancialSheetIndexByQuery,
+  getFinancialSheet,
 } from 'store/financialStatement/financialStatements.selectors';
 
 export const mapStateToProps = (state, props) => ({
-  getProfitLossSheetIndex: (query) => getProfitLossSheetIndex(state.financialStatements.profitLossSheets, query),
-  getProfitLossSheet: (index) => getProfitLossSheet(state.financialStatements.profitLossSheets, index),
-  getProfitLossSheetColumns: (index) => getProfitLossSheetColumns(state.financialStatements.profitLossSheets, index),
-  getProfitLossSheetAccounts: (index) => getProfitLossSheetAccounts(state.financialStatements.profitLossSheets, index),
+  getProfitLossSheetIndex: (query) => getFinancialSheetIndexByQuery(state.financialStatements.profitLoss.sheets, query),
+  getProfitLossSheet: (index) => getFinancialSheet(state.financialStatements.profitLoss.sheets, index),
 });
 
 export const mapDispatchToProps = (dispatch) => ({

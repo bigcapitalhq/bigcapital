@@ -8,6 +8,9 @@ import BalanceSheetHeader from './BalanceSheetHeader';
 import LoadingIndicator from 'components/LoadingIndicator';
 import BalanceSheetTable from './BalanceSheetTable';
 import moment from 'moment';
+import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
+import DashboardInsider from 'components/Dashboard/DashboardInsider';
+import BalanceSheetActionsBar from './BalanceSheetActionsBar';
 
 function BalanceSheet({
   fetchBalanceSheet,
@@ -22,20 +25,15 @@ function BalanceSheet({
     from_date: moment().startOf('year').format('YYYY-MM-DD'),
     to_date: moment().endOf('year').format('YYYY-MM-DD'),
     basis: 'cash',
-    display_columns_by: 'total',
+    display_columns_type: 'total',
+    display_columns_by: '',
     none_zero: false,
   });
  
-  const [reload, setReload] = useState(false);
-
-  const fetchHook = useAsync(async () => { 
+  const fetchHook = useAsync(async (query = filter) => { 
     await Promise.all([
-      fetchBalanceSheet({
-        ...filter,
-        display_columns_type: 'total',
-      }),
+      fetchBalanceSheet({ ...query }),
     ]);
-    setReload(false);
   });
 
   // Handle fetch the data of balance sheet.
@@ -57,30 +55,37 @@ function BalanceSheet({
 
   // Handle re-fetch balance sheet after filter change.
   const handleFilterSubmit = useCallback((filter) => {
-    setFilter({
+    const _filter = {
       ...filter,
       from_date: moment(filter.from_date).format('YYYY-MM-DD'),
       to_date: moment(filter.to_date).format('YYYY-MM-DD'),
-    });
-    setReload(true);
-  }, [setFilter]);
+    };
+    setFilter({ ..._filter });
+    fetchHook.execute(_filter);
+  }, [setFilter, fetchHook]);
 
   return (
-    <div class="financial-statement">
-      <BalanceSheetHeader
-        pageFilter={filter}
-        onSubmitFilter={handleFilterSubmit} />
+    <DashboardInsider>
+      <BalanceSheetActionsBar />
 
-      <div class="financial-statement__body">
-        <LoadingIndicator loading={fetchHook.pending}>
-          <BalanceSheetTable
-            balanceSheet={balanceSheet}
-            balanceSheetIndex={balanceSheetIndex}
-            onFetchData={handleFetchData}
-            asDate={new Date()} />
-        </LoadingIndicator>
-      </div>
-    </div>
+      <DashboardPageContent>
+        <div class="financial-statement">
+          <BalanceSheetHeader
+            pageFilter={filter}
+            onSubmitFilter={handleFilterSubmit} />
+
+          <div class="financial-statement__body">
+            <LoadingIndicator loading={fetchHook.pending}>
+              <BalanceSheetTable
+                balanceSheet={balanceSheet}
+                balanceSheetIndex={balanceSheetIndex}
+                onFetchData={handleFetchData}
+                asDate={new Date()} />
+            </LoadingIndicator>
+          </div>
+        </div>
+      </DashboardPageContent>
+    </DashboardInsider>
   );
 }
 

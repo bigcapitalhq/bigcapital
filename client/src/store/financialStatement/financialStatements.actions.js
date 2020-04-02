@@ -48,10 +48,20 @@ export const fetchTrialBalanceSheet = ({ query }) => {
 
 export const fetchProfitLossSheet = ({ query }) => {
   return (dispatch) => new Promise((resolve, reject) => {
-    ApiService.get('/financial_statements/profit_loss_sheet', { params: query }).then((response) => {
+    dispatch({
+      type: t.PROFIT_LOSS_SHEET_LOADING,
+      loading: false,
+    }); 
+    ApiService.get('/financial_statements/profit_loss_sheet').then((response) => {
       dispatch({
-        type: t.PROFIT_LOSS_STATEMENT_SET,
-        data: response.data,
+        type: t.PROFIT_LOSS_SHEET_SET,
+        profitLoss: response.data.profitLoss,
+        columns: response.data.columns,
+        query: response.data.query,
+      });
+      dispatch({
+        type: t.PROFIT_LOSS_SHEET_LOADING,
+        loading: false,
       });
       resolve(response.data);
     }).catch((error) => { reject(error); });
@@ -60,11 +70,19 @@ export const fetchProfitLossSheet = ({ query }) => {
 
 export const fetchJournalSheet = ({ query }) => {
   return (dispatch) => new Promise((resolve, reject) => {
+    dispatch({
+      type: t.JOURNAL_SHEET_LOADING,
+      loading: true,
+    });
     ApiService.get('/financial_statements/journal', { params: query }).then((response) => {
       dispatch({
         type: t.JOURNAL_SHEET_SET,
         data: response.data,
         query: response.data.query,
+      });
+      dispatch({
+        type: t.JOURNAL_SHEET_LOADING,
+        loading: false,
       });
       resolve(response.data);
     }).catch(error => { reject(error); });

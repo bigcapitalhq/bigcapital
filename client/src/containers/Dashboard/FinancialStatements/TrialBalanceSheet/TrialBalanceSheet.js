@@ -7,6 +7,10 @@ import moment from 'moment';
 import {compose} from 'utils';
 import TrialBalanceSheetConnect from 'connectors/TrialBalanceSheet.connect';
 import DashboardConnect from 'connectors/Dashboard.connector';
+import TrialBalanceActionsBar from './TrialBalanceActionsBar';
+import DashboardInsider from 'components/Dashboard/DashboardInsider';
+import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
+
 
 function TrialBalanceSheet({
   changePageTitle,
@@ -57,19 +61,25 @@ function TrialBalanceSheet({
   }, [setFilter, fetchHook]);
 
   return (
-    <div class="financial-statement">
-      <TrialBalanceSheetHeader
-        pageFilter={filter}
-        onSubmitFilter={handleFilterSubmit} />
+    <DashboardInsider>
+      <TrialBalanceActionsBar />
 
-      <div class="financial-statement__body">
-        <TrialBalanceSheetTable
-          trialBalanceSheetAccounts={trialBalanceAccounts}
-          trialBalanceSheetIndex={trialBalanceSheetIndex}
-          onFetchData={handleFetchData}
-          loading={trialBalanceSheetLoading} />
-      </div>
-    </div>
+      <DashboardPageContent>
+        <div class="financial-statement">
+          <TrialBalanceSheetHeader
+            pageFilter={filter}
+            onSubmitFilter={handleFilterSubmit} />
+
+          <div class="financial-statement__body">
+            <TrialBalanceSheetTable
+              trialBalanceSheetAccounts={trialBalanceAccounts}
+              trialBalanceSheetIndex={trialBalanceSheetIndex}
+              onFetchData={handleFetchData}
+              loading={trialBalanceSheetLoading} />
+          </div>
+        </div>
+      </DashboardPageContent>
+    </DashboardInsider>
   )
 }
 

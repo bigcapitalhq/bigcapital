@@ -1,74 +1,81 @@
-import React, {useState, useEffect, useMemo} from 'react';
+import React, {useState, useMemo, useCallback, useEffect} from 'react';
 import ProfitLossSheetHeader from './ProfitLossSheetHeader';
 import ProfitLossSheetTable from './ProfitLossSheetTable';
 import LoadingIndicator from 'components/LoadingIndicator';
-import { useAsync } from 'react-use';
-import moment from 'moment';
+import useAsync from 'hooks/async';
 import {compose} from 'utils';
 import DashboardConnect from 'connectors/Dashboard.connector';
 import ProfitLossSheetConnect from 'connectors/ProfitLossSheet.connect';
+import DashboardInsider from 'components/Dashboard/DashboardInsider'
+import DashboardPageContent from 'components/Dashboard/DashboardPageContent'
+import ProfitLossActionsBar from './ProfitLossActionsBar';
+import moment from 'moment';
 
 function ProfitLossSheet({
   changePageTitle,
-
   fetchProfitLossSheet,
 
   getProfitLossSheetIndex,
   getProfitLossSheet,
-
-  getProfitLossSheetAccounts,
-  getProfitLossSheetColumns,
 }) {
-  const [filter, setFilter] = useState({});
-  const [reload, setReload] = useState(false);
+  const [filter, setFilter] = useState({
+    from_date: moment().startOf('year').format('YYYY-MM-DD'),
+    to_date: moment().endOf('year').format('YYYY-MM-DD'),
+  });
 
   // Change page title of the dashboard.
   useEffect(() => {
-    changePageTitle('Trial Balance Sheet');
+    changePageTitle('Profit/Loss Sheet');
   }, []);
 
-  const fetchHook = useAsync(async () => {
-    await Promise.all([
-      fetchProfitLossSheet(filter),
+  // Fetches profit/loss sheet.
+  const fetchHook = useAsync((query = filter) => {
+    return Promise.all([
+      fetchProfitLossSheet(query),
     ]);
-  });
+  }, false);
 
-  const handleFilterSubmit = (filter) => {
-    setFilter({
+  const profitLossSheetIndex = useMemo(() =>
+    getProfitLossSheetIndex(filter),
+    [getProfitLossSheetIndex, filter])
+
+  const profitLossSheet = useMemo(() => 
+    getProfitLossSheet(profitLossSheetIndex),
+    [getProfitLossSheet, profitLossSheetIndex]);
+
+  const handleSubmitFilter = useCallback((filter) => {
+    const _filter = {
       ...filter,
       from_date: moment(filter.from_date).format('YYYY-MM-DD'),
       to_date: moment(filter.to_date).format('YYYY-MM-DD'),
-    });
-    setReload(true);
-  }
+    };
+    setFilter(_filter);
+    fetchHook.execute(_filter);
+  }, []);
 
-  const profitLossSheetIndex = useMemo(() => {
-    return getProfitLossSheetIndex(filter);
-  }, [filter, getProfitLossSheetIndex]);
-
-  const profitLossSheetAccounts = useMemo(() => {
-    return getProfitLossSheetAccounts(profitLossSheetIndex);
-  }, [profitLossSheetIndex, getProfitLossSheet]);
-
-  const profitLossSheetColumns = useMemo(() => {
-    return getProfitLossSheetColumns(profitLossSheetIndex);
-  }, [profitLossSheetIndex])
+  // Handle fetch data of profit/loss sheet table.
+  const handleFetchData = useCallback(() => {
+    fetchHook.execute();
+  }, [fetchHook]);
 
   return (
-    <div class="financial-statement">
-      <ProfitLossSheetHeader
-        pageFilter={filter}
-        onSubmitFilter={handleFilterSubmit} />
+    <DashboardInsider>
+      <ProfitLossActionsBar  />
 
-      <div class="financial-statement__body">
-        <LoadingIndicator loading={fetchHook.pending}>
+      <div class="financial-statement">
+        <ProfitLossSheetHeader
+          pageFilter={filter}
+          onSubmitFilter={handleSubmitFilter} />
 
-          <ProfitLossSheetTable
-            accounts={profitLossSheetAccounts}
-            columns={profitLossSheetColumns} />
-        </LoadingIndicator>
+        <div class="financial-statement__body">
+          <LoadingIndicator loading={false}>
+            <ProfitLossSheetTable
+              data={[]}
+              onFetchData={handleFetchData} />
+          </LoadingIndicator>
+        </div> 
       </div>
-    </div>
+    </DashboardInsider>
   );
 }
 

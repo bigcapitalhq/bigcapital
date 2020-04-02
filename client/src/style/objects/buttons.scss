@@ -1,20 +1,4 @@
 
-
-.form-group--select-list{
-
-  .bp3-button{
-    border-radius: 0;
-    
-
-    &,
-    &:hover{
-      background: #fff;
-      box-shadow: 0 0 0;  
-      border: 1px solid #ced4da;
-    }
-  }
-}
-
 .form-group--select-list.bp3-fill{
 
   .bp3-popover-wrapper{
@@ -41,18 +25,39 @@
   }
 }
 
-.bp3-button{
+.bp3-button:not([class*="bp3-intent-"]):not(.bp3-minimal){
   min-width: 32px;
   min-height: 32px;
+  background-color: #E6EFFB;
+  color: #555555;
+  box-shadow: 0 0 0;
+
+  .form-group--select-list &{
+    border-radius: 0;
+
+    &,
+    &:hover{
+      background: #fff;
+      box-shadow: 0 0 0;  
+      border: 1px solid #ced4da;
+    }
+  }
+}
+
+.bp3-button{
 
   &.bp3-intent-primary,
   &.bp3-intent-success,
   &.bp3-intent-danger,
   &.bp3-intent-warning{
-     
+
     &,
     &:hover{
       box-shadow: 0 0 0;
-    }
+    }    
   }
+}
+
+.button--secondary{
+  
 }

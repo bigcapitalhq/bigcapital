@@ -92,7 +92,7 @@ export default [
     name: 'dashboard.accounting.general.ledger',
     component: LazyLoader({
       loader: () =>
-        import('containers/Dashboard/FinancialStatements/LedgerSheet')
+        import('containers/Dashboard/FinancialStatements/GeneralLedger/GeneralLedger')
     })
   },
   {

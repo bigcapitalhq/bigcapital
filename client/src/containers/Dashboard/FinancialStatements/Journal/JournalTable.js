@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useMemo} from 'react';
+import React, {useState, useEffect, useCallback, useMemo} from 'react';
 import FinancialSheet from 'components/FinancialSheet';
 import DataTable from 'components/DataTable';
 import {compose} from 'utils';
@@ -8,82 +8,87 @@ import {
   getFinancialSheet,
 } from 'store/financialStatement/financialStatements.selectors';
 import {connect} from 'react-redux';
+import Money from 'components/Money';
 
 function JournalSheetTable({
-  journalIndex,
-  journalTableData,
+  onFetchData,
+  data,
+  loading,
 }) {
+  const rowTypeFilter = (rowType, value, types) => {
+    return (types.indexOf(rowType) === -1) ? '' : value;
+  };
+
+  const exceptRowTypes = (rowType, value, types) => {
+    return (types.indexOf(rowType) !== -1) ? '' : value;    
+  };
   const columns = useMemo(() => [
     {
       Header: 'Date',
-      accessor: r => moment(r.date).format('YYYY/MM/DD'),
+      accessor: r => rowTypeFilter(r.rowType, moment(r.date).format('YYYY/MM/DD'), ['first_entry']),
       className: 'date',
-    },
-    {
-      Header: 'Account Name',
-      accessor: 'account.name',
+      width: 85,
     },
     {
       Header: 'Transaction Type',
-      accessor: 'transaction_type',
+      accessor: r => rowTypeFilter(r.rowType, r.transaction_type, ['first_entry']),
       className: "transaction_type",
+      width: 145,
     },
     {
       Header: 'Num.',
-      accessor: 'reference_id',
+      accessor: r => rowTypeFilter(r.rowType, r.reference_id, ['first_entry']),
       className: 'reference_id',
+      width: 70,
     },
     {
-      Header: 'Note',
+      Header: 'Description',
       accessor: 'note',
     },
     {
+      Header: 'Acc. Code',
+      accessor: 'account.code',
+      width: 120,
+      className: 'account_code',
+    },
+    {
+      Header: 'Account',
+      accessor: 'account.name',
+    },
+    {
       Header: 'Credit',
-      accessor: 'credit',
+      accessor: r => exceptRowTypes(
+        r.rowType, (<Money amount={r.credit} currency={'USD'} />), ['space_entry']),
     },
     {
       Header: 'Debit',
-      accessor: 'debit',
+      accessor: r => exceptRowTypes(
+        r.rowType, (<Money amount={r.debit} currency={'USD'} />), ['space_entry']),
     },
   ], []);
+
+  const handleFetchData = useCallback((...args) => {
+    onFetchData && onFetchData(...args)
+  }, [onFetchData]);
 
   return (
     <FinancialSheet
       companyTitle={'Facebook, Incopration'}
-      sheetType={'Balance Sheet'}
-      date={[]}>
+      sheetType={'Journal Sheet'}
+      date={new Date()}
+      name="journal"
+      loading={loading}>
       
       <DataTable
+        className="bigcapital-datatable--financial-report"
         columns={columns}
-        data={journalTableData} />
-
+        data={data}
+        onFetchData={handleFetchData}
+        noResults={"This report does not contain any data."} />
     </FinancialSheet>
   );
 }
 
-const mapStateToProps = (state, props) => {
-  const journalTableData = [];
-  const journalSheet = getFinancialSheet(state.financialStatements.journalSheets, props.journalIndex);
-
-  if (journalSheet && journalSheet.journal) {
-    journalSheet.journal.forEach((journal) => {
-      journal.entries.forEach((entry, index) => {
-        journalTableData.push({ ...entry, index });
-      });
-      journalTableData.push({
-        credit: journal.credit,
-        debit: journal.debit,
-        total: true,
-      })
-    })
-  }
-  return {
-    journalSheet,
-    journalTableData,
-  }
-}
-
 export default compose(
-  connect(mapStateToProps),
   JournalConnect,
 )(JournalSheetTable);

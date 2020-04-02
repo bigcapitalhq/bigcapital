@@ -120,7 +120,7 @@ export default {
       const formatNumber = formatNumberClosure(filter.number_format);
 
       const journalGrouped = groupBy(accountsJournalEntries, (entry) => {
-        return `${entry.id}-${entry.referenceType}`;
+        return `${entry.referenceId}-${entry.referenceType}`;
       });
       const journal = Object.keys(journalGrouped).map((key) => {
         const transactionsGroup = journalGrouped[key];
@@ -251,11 +251,11 @@ export default {
           ],
           opening: {
             date: filter.from_date,
-            balance: opeingBalanceCollection.getClosingBalance(account.id),
+            amount: opeingBalanceCollection.getClosingBalance(account.id),
           },
           closing: {
             date: filter.to_date,
-            balance: closingBalanceCollection.getClosingBalance(account.id),
+            amount: closingBalanceCollection.getClosingBalance(account.id),
           },
         }));
 
@@ -666,9 +666,11 @@ export default {
       return res.status(200).send({
         query: { ...filter },
         columns: [...dateRangeSet],
-        income: incomeResponse,
-        expenses: expenseResponse,
-        net_income: netIncomeResponse,
+        profitLoss: {
+          income: incomeResponse,
+          expenses: expenseResponse,
+          net_income: netIncomeResponse,
+        },        
       });
     },
   },

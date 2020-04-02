@@ -37,10 +37,14 @@ label{
   &.#{$ns}-intent-danger{
     select{
       box-shadow: 0 0 0 0 rgba(219, 55, 55, 0),
-        0 0 0 0 rgba(219, 55, 55, 0),
+        0 0 0 0 rgba(2, 2, 2, 0),
         inset 0 0 0 1px #db3737,
         inset 0 0 0 1px rgba(16, 22, 26, 0.15),
         inset 0 1px 1px rgba(16, 22, 26, 0.2);
+    }
+
+    .bp3-input{
+      border-color: #db3737;
     }
   }
 

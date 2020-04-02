@@ -24,11 +24,9 @@
   border: 1px solid #E2E2E2;
   min-width: 640px;
   width: 0;
-  margin-left: auto;
-  margin-right: auto;
   padding: 20px;
   padding-top: 30px;
-  margin-top: 35px;
+  margin: 35px auto;
 
   &__title{
     margin: 0;
@@ -62,9 +60,40 @@
   &__accounting-basis{
 
   }
-
+ 
   &--trial-balance{
     min-width: 720px;
   }
 
+  &--general-ledger,
+  &--journal{
+    width: auto;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 10px;
+    border-color: #EEEDED;
+  }
+
+  &--journal{
+
+    .financial-sheet__table{
+
+      .tbody{
+        .tr .td{
+          padding: 0.4rem;
+          color: #444;
+          border-bottom-color: #F0F0F0;
+          min-height: 32px;
+          border-left: 1px solid #F0F0F0;
+
+          &:first-of-type{
+            border-left: 0;
+          }
+          &.account_code{
+            color: #666;
+          }
+        }
+      }
+    }
+  }
 }

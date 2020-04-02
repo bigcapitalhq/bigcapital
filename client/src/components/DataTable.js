@@ -34,7 +34,8 @@ export default function DataTable({
   onSelectedRowsChange,
   manualSortBy = 'false',
   selectionColumn = false,
-  className
+  className,
+  noResults = 'This report does not contain any data.'
 }) {
   const {
     getTableProps,
@@ -144,7 +145,8 @@ export default function DataTable({
         </div>
         <div {...getTableBodyProps()} className="tbody">
           {page.map((row, i) => {
-            prepareRow(row)
+            prepareRow(row);
+
             return (
               <div {...row.getRowProps()} className="tr">
                 {row.cells.map((cell) => {
@@ -154,6 +156,12 @@ export default function DataTable({
                 })}
               </div>)
           })}
+
+          { (page.length === 0) && (
+            <div className={'tr no-results'}>
+              <div class="td">{ noResults }</div>
+            </div>
+          )}
         </div>
       </div>
     </div>

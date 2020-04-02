@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useMemo} from 'react';
+import React, {useState, useCallback, useEffect, useMemo} from 'react';
 import {compose} from 'utils';
 import LoadingIndicator from 'components/LoadingIndicator';
 import JournalConnect from 'connectors/Journal.connect';
@@ -8,61 +8,91 @@ import {useIntl} from 'react-intl';
 import moment from 'moment';
 import JournalTable from './JournalTable';
 import DashboardConnect from 'connectors/Dashboard.connector';
+import JournalActionsBar from './JournalActionsBar';
+import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
+import DashboardInsider from 'components/Dashboard/DashboardInsider';
 
 function Journal({
   fetchJournalSheet,
   getJournalSheet,
   getJournalSheetIndex,
   changePageTitle,
+  journalSheetLoading,
 }) {
   const [filter, setFilter] = useState({
     from_date: moment().startOf('year').format('YYYY-MM-DD'),
     to_date: moment().endOf('year').format('YYYY-MM-DD'),
-  });
-  const [reload, setReload] = useState(false);
-
-  const fetchHook = useAsync(async () => {
-    await Promise.all([
-      fetchJournalSheet(filter),
-    ]);
-    setReload(false);
+    basis: 'accural'
   });
 
   useEffect(() => {
-    changePageTitle('Journal');
+    changePageTitle('Journal Sheet');
   }, []);
 
-  useEffect(() => {
-    if (reload) {
-      fetchHook.execute();
-    }
-  }, [reload, fetchHook]);
+  const fetchHook = useAsync((query = filter) => {
+    return Promise.all([
+      fetchJournalSheet(query),    
+    ]);
+  }, false);
 
-  const journalSheetIndex = useMemo(() => {
-    return getJournalSheetIndex(filter);
-  }, [filter, getJournalSheetIndex]);
+  // Retrieve journal sheet index by the given filter query.
+  const journalSheetIndex = useMemo(() => 
+    getJournalSheetIndex(filter),
+    [getJournalSheetIndex, filter]);
 
-  const handleFilterSubmit = (filter) => {
-    setFilter({
+  // Retrieve journal sheet by the given sheet index.
+  const journalSheet = useMemo(() => 
+    getJournalSheet(journalSheetIndex),
+    [getJournalSheet, journalSheetIndex]);
+
+  // Handle financial statement filter change.
+  const handleFilterSubmit = useCallback((filter) => {
+    const _filter = {
       ...filter,
       from_date: moment(filter.from_date).format('YYYY-MM-DD'),
       to_date: moment(filter.to_date).format('YYYY-MM-DD'),
-    });
-    setReload(true);
-  };
-  return (
-    <div class="financial-statement">
-      <JournalHeader
-        pageFilter={filter}
-        onSubmitFilter={handleFilterSubmit} />
+    };
+    setFilter(_filter);
+    fetchHook.execute(_filter);
+  }, [fetchHook]);
 
-      <div class="financial-statement__body">
-        <LoadingIndicator loading={fetchHook.pending}>
-          <JournalTable
-            journalIndex={journalSheetIndex} />
-        </LoadingIndicator>
-      </div>
-    </div>
+  const handlePrintClick = useCallback(() => {
+
+  }, []);
+
+  const handleExportClick = useCallback(() => {
+
+  }, []);
+
+  const handleFetchData = useCallback(({ sortBy, pageIndex, pageSize }) => {
+    fetchHook.execute();
+  }, [fetchHook]);
+
+  return (
+    <DashboardInsider>
+      <JournalActionsBar
+        onFilterChanged={() => {}}
+        onPrintClick={handlePrintClick}
+        onExportClick={handleExportClick} />
+
+      <DashboardPageContent>
+        <div class="financial-statement financial-statement--journal">
+          <JournalHeader 
+            pageFilter={filter}
+            onSubmitFilter={handleFilterSubmit} />
+          
+          <div class="financial-statement__table">
+            <JournalTable
+              data={[
+                ...(journalSheet && journalSheet.tableRows)
+                  ? journalSheet.tableRows : []
+              ]}
+              loading={journalSheetLoading}
+              onFetchData={handleFetchData} />              
+          </div>
+        </div>
+      </DashboardPageContent>
+    </DashboardInsider>
   )
 }
 
