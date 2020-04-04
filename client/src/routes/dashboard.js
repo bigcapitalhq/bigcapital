@@ -79,13 +79,14 @@ export default [
       loader: () => import('containers/Dashboard/Items/ItemForm')
     })
   },
+
   {
-    path: `${BASE_URL}/items/category`,
+    path: `${BASE_URL}/items/ItemCategoriesList`,
     component: LazyLoader({
-      loader: () => import('containers/Dashboard/Items/ItemCategoryList')
+      loader: () => import('containers/Dashboard/Items/ItemsCategoryList')
     })
   },
-
+  ,
   // Financial Reports.
   {
     path: `${BASE_URL}/accounting/general-ledger`,

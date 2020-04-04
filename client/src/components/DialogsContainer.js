@@ -1,14 +1,14 @@
 import React from 'react';
 import AccountFormDialog from 'containers/Dashboard/Dialogs/AccountFormDialog';
 import UserFormDialog from 'containers/Dashboard/Dialogs/UserFormDialog';
-import ItemFromDialog from 'containers/Dashboard/Dialogs/ItemFromDialog';
+import ItemFCategoryDialog from 'containers/Dashboard/Dialogs/ItemCategoryDialog';
 
 export default function DialogsContainer() {
   return (
     <React.Fragment>
+      <ItemFCategoryDialog />
       <AccountFormDialog />
       <UserFormDialog />
-      <ItemFromDialog />
     </React.Fragment>
   );
 }

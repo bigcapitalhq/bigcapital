@@ -11,7 +11,7 @@ import expenses from './expenses/expenses.reducer';
 import currencies from './currencies/currencies.reducer';
 import resources from './resources/resources.reducer';
 import financialStatements from './financialStatement/financialStatements.reducer';
-import itemCategories from './itemCategories/itemsCateory.reducer';
+import itemCategories from './itemCategories/itemsCategory.reducer';
 
 export default combineReducers({
   authentication,
