@@ -66,9 +66,11 @@ factory.define('manual_journal', 'manual_journals', async () => {
   const user = await factory.create('user');
 
   return {
-    reference: faker.random.number(),
+    journal_number: faker.random.number(),
+    transaction_type: '',
     amount: faker.random.number(),
-    // date: faker.random,
+    date: faker.date.future,
+    status: 1,
     user_id: user.id,
   };
 });

@@ -245,6 +245,36 @@ describe('routes: `/accounting`', () => {
     });
   });
 
+
+  describe.only('route: `accounting/manual-journals`', async () => {
+
+    it('Should retrieve manual journals resource not found.', async () => {
+      const res = await request()
+        .get('/api/accounting/manual-journals')
+        .set('x-access-token', loginRes.body.token)
+        .send();
+      
+      expect(res.status).equal(400);
+      expect(res.body.errors[0].type).equals('MANUAL_JOURNALS.RESOURCE.NOT.FOUND');
+      expect(res.body.errors[0].code).equals(200);
+    });
+
+    it.only('Should retrieve all manual journals with pagination meta.', async () => {
+      const resource = await create('resource', { name: 'manual_journals' });
+      const manualJournal1 = await create('manual_journal');
+      const manualJournal2 = await create('manual_journal');
+
+      const res = await request()
+        .get('/api/accounting/manual-journals')
+        .set('x-access-token', loginRes.body.token)
+        .send();
+
+      expect(res.status).equals(200);
+      expect(res.body.manualJournals).to.be.a('array');
+      expect(res.body.manualJournals.length).equals(2);      
+    });
+  });
+
   describe('route: `/accounting/quick-journal-entries`', async () => {
     it('Shoud `credit_account_id` be required', () => {
 

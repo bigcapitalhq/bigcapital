@@ -8,6 +8,13 @@ import JWTAuth from '@/http/middleware/jwtAuth';
 import JournalPoster from '@/services/Accounting/JournalPoster';
 import JournalEntry from '@/services/Accounting/JournalEntry';
 import ManualJournal from '@/models/JournalEntry';
+import Resource from '@/models/Resource';
+import View from '@/models/View';
+import {
+  mapViewRolesToConditionals,
+  validateViewRoles,
+} from '@/lib/ViewRolesBuilder';
+import FilterRoles from '@/lib/FilterRoles';
 
 export default {
   /**
@@ -16,6 +23,10 @@ export default {
   router() {
     const router = express.Router();
     router.use(JWTAuth);
+
+    router.get('/manual-journals',
+      this.manualJournals.validation,
+      asyncMiddleware(this.manualJournals.handler));
 
     router.post('/make-journal-entries',
       this.makeJournalEntries.validation,
@@ -30,6 +41,83 @@ export default {
       asyncMiddleware(this.quickJournalEntries.handler));
 
     return router;
+  },
+
+  /**
+   * Retrieve manual journals,
+   */
+  manualJournals: {
+    validation: [
+      query('custom_view_id').optional().isNumeric().toInt(),
+      query('stringified_filter_roles').optional().isJSON(),
+    ],
+    async handler(req, res) {
+      const validationErrors = validationResult(req);
+
+      if (!validationErrors.isEmpty()) {
+        return res.boom.badData(null, {
+          code: 'validation_error', ...validationErrors,
+        });
+      }
+      const filter = {
+        filter_roles: [],
+        ...req.query,
+      };
+      if (filter.stringified_filter_roles) {
+        filter.filter_roles = JSON.parse(filter.stringified_filter_roles);
+      }
+
+      const errorReasons = [];
+      const viewConditionals = [];
+      const manualJournalsResource = await Resource.query()
+        .where('name', 'manual_journals')
+        .withGraphFetched('fields')
+        .first();
+
+      if (!manualJournalsResource) {
+        return res.status(400).send({
+          errors: [{ type: 'MANUAL_JOURNALS.RESOURCE.NOT.FOUND', code: 200 }],
+        });
+      }
+
+      const view = await View.query().onBuild((builder) => {
+        if (filter.custom_view_id) {
+          builder.where('id', filter.custom_view_id);
+        } else {
+          builder.where('favourite', true);
+        }
+        builder.where('resource_id', manualJournalsResource.id);
+        builder.withGraphFetched('roles.field');
+        builder.withGraphFetched('columns');
+        builder.first();
+      });
+
+      if (view && view.roles.length > 0) {
+        viewConditionals.push(
+          ...mapViewRolesToConditionals(view.roles),
+        );
+        if (!validateViewRoles(viewConditionals, view.rolesLogicExpression)) {
+          errorReasons.push({ type: 'VIEW.LOGIC.EXPRESSION.INVALID', code: 400 });
+        }
+      }
+      // Validate the accounts resource fields.
+      const filterRoles = new FilterRoles(Resource.tableName,
+        filter.filter_roles.map((role) => ({ ...role, columnKey: role.fieldKey })),
+        manualJournalsResource.fields);
+
+      if (filterRoles.validateFilterRoles().length > 0) {
+        errorReasons.push({ type: 'ACCOUNTS.RESOURCE.HAS.NO.GIVEN.FIELDS', code: 500 });
+      }
+      if (errorReasons.length > 0) {
+        return res.status(400).send({ errors: errorReasons });
+      }
+      // Manual journals.
+      const manualJournals = await ManualJournal.query();
+
+      return res.status(200).send({
+        manualJournals,
+      });
+    },
   },
 
   /**

@@ -363,7 +363,7 @@ describe('routes: `/financial_statements`', () => {
     });
   });
 
-  describe.only('routes: `financial_statements/balance_sheet`', () => {
+  describe('routes: `financial_statements/balance_sheet`', () => {
     it('Should response unauthorzied in case the user was not authorized.', async () => {
       const res = await request()
         .get('/api/financial_statements/balance_sheet')
@@ -406,7 +406,7 @@ describe('routes: `/financial_statements`', () => {
       expect(res.body.balance_sheet.liabilities_equity.accounts).to.be.a('array');
     });
 
-    it.only('Should retrieve assets/liabilities total balance between the given date range.', async () => {
+    it('Should retrieve assets/liabilities total balance between the given date range.', async () => {
       const res = await request()
         .get('/api/financial_statements/balance_sheet')
         .set('x-access-token', loginRes.body.token)
