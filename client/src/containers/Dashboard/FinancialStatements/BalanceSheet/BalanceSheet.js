@@ -5,12 +5,12 @@ import useAsync from 'hooks/async';
 import BalanceSheetConnect from 'connectors/BalanceSheet.connect';
 import {useIntl} from 'react-intl';
 import BalanceSheetHeader from './BalanceSheetHeader';
-import LoadingIndicator from 'components/LoadingIndicator';
 import BalanceSheetTable from './BalanceSheetTable';
 import moment from 'moment';
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import BalanceSheetActionsBar from './BalanceSheetActionsBar';
+import SettingsConnect from 'connectors/Settings.connect';
 
 function BalanceSheet({
   fetchBalanceSheet,
@@ -18,6 +18,7 @@ function BalanceSheet({
   balanceSheetLoading, 
   getBalanceSheetIndex,
   getBalanceSheet,
+  organizationSettings
 }) {
   const intl = useIntl();
   const [filter, setFilter] = useState({
@@ -70,6 +71,7 @@ function BalanceSheet({
 
           <div class="financial-statement__body">
             <BalanceSheetTable
+              companyName={organizationSettings.name}
               loading={balanceSheetLoading}
               balanceSheetIndex={balanceSheetIndex}
               onFetchData={handleFetchData} />
@@ -83,4 +85,5 @@ function BalanceSheet({
 export default compose(
   DashboardConnect,
   BalanceSheetConnect,
+  SettingsConnect,
 )(BalanceSheet);

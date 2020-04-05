@@ -1,6 +1,5 @@
 import React, {useState, useCallback, useEffect, useMemo} from 'react';
 import {compose} from 'utils';
-import LoadingIndicator from 'components/LoadingIndicator';
 import JournalConnect from 'connectors/Journal.connect';
 import JournalHeader from 'containers/Dashboard/FinancialStatements/Journal/JournalHeader';
 import useAsync from 'hooks/async';
@@ -11,6 +10,7 @@ import DashboardConnect from 'connectors/Dashboard.connector';
 import JournalActionsBar from './JournalActionsBar';
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
+import SettingsConnect from 'connectors/Settings.connect';
 
 function Journal({
   fetchJournalSheet,
@@ -18,6 +18,7 @@ function Journal({
   getJournalSheetIndex,
   changePageTitle,
   journalSheetLoading,
+  organizationSettings,
 }) {
   const [filter, setFilter] = useState({
     from_date: moment().startOf('year').format('YYYY-MM-DD'),
@@ -83,6 +84,7 @@ function Journal({
           
           <div class="financial-statement__table">
             <JournalTable
+              companyName={organizationSettings.name}
               data={[
                 ...(journalSheet && journalSheet.tableRows)
                   ? journalSheet.tableRows : []
@@ -99,4 +101,5 @@ function Journal({
 export default compose(
   JournalConnect,
   DashboardConnect,
+  SettingsConnect,
 )(Journal);

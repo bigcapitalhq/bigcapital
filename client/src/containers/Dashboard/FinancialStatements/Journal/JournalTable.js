@@ -14,6 +14,7 @@ function JournalSheetTable({
   onFetchData,
   data,
   loading,
+  companyName,
 }) {
   const rowTypeFilter = (rowType, value, types) => {
     return (types.indexOf(rowType) === -1) ? '' : value;
@@ -76,7 +77,7 @@ function JournalSheetTable({
 
   return (
     <FinancialSheet
-      companyTitle={'Facebook, Incopration'}
+      companyName={companyName}
       sheetType={'Journal Sheet'}
       date={new Date()}
       name="journal"

@@ -8,6 +8,7 @@ export default function TrialBalanceSheetTable({
   trialBalanceSheetIndex,
   onFetchData,
   loading,
+  companyName,
 }) {
   const [data, setData] = useState([]);
 
@@ -88,7 +89,7 @@ export default function TrialBalanceSheetTable({
 
   return (
     <FinancialSheet
-      companyTitle={'Facebook, Incopration'}
+      companyName={companyName}
       sheetType={'Trial Balance Sheet'}
       date={new Date()}
       name="trial-balance"

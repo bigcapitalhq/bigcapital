@@ -11,6 +11,7 @@ import {
 } from 'utils';
 
 function BalanceSheetTable({
+  companyName,
   balanceSheetAccounts,
   balanceSheetColumns,
   balanceSheetQuery,
@@ -110,9 +111,11 @@ function BalanceSheetTable({
 
   return (
     <FinancialSheet
-      companyTitle={'Facebook, Incopration'}
+      companyName={companyName}
       sheetType={'Balance Sheet'}
-      date={asDate}
+      fromDate={balanceSheetQuery.from_date}
+      toDate={balanceSheetQuery.to_date}
+      basis={balanceSheetQuery.basis}
       loading={loading}>
       
       <DataTable

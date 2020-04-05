@@ -1,6 +1,5 @@
 import React, { useEffect, useCallback, useState, useMemo } from 'react';
 import TrialBalanceSheetHeader from "./TrialBalanceSheetHeader";
-import LoadingIndicator from 'components/LoadingIndicator';
 import TrialBalanceSheetTable from './TrialBalanceSheetTable';
 import useAsync from 'hooks/async';
 import moment from 'moment';
@@ -10,7 +9,7 @@ import DashboardConnect from 'connectors/Dashboard.connector';
 import TrialBalanceActionsBar from './TrialBalanceActionsBar';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
-
+import SettingsConnect from 'connectors/Settings.connect';
 
 function TrialBalanceSheet({
   changePageTitle,
@@ -18,6 +17,7 @@ function TrialBalanceSheet({
   getTrialBalanceSheetIndex,
   getTrialBalanceAccounts,
   trialBalanceSheetLoading,
+  organizationSettings,
 }) {
   const [filter, setFilter] = useState({
     from_date: moment().startOf('year').format('YYYY-MM-DD'),
@@ -72,6 +72,7 @@ function TrialBalanceSheet({
 
           <div class="financial-statement__body">
             <TrialBalanceSheetTable
+              companyName={organizationSettings.name}
               trialBalanceSheetAccounts={trialBalanceAccounts}
               trialBalanceSheetIndex={trialBalanceSheetIndex}
               onFetchData={handleFetchData}
@@ -86,4 +87,5 @@ function TrialBalanceSheet({
 export default compose(
   DashboardConnect,
   TrialBalanceSheetConnect,
+  SettingsConnect,
 )(TrialBalanceSheet);

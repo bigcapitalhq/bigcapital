@@ -121,16 +121,21 @@ export default function DataTable({
 
   // Renders table row.
   const RenderRow = useCallback(({ style = {}, row }) => {
-    prepareRow(row);
+    prepareRow(row);    
+    const rowClasses = rowClassNames && rowClassNames(row.original);
+
     return (
-      <div {...row.getRowProps({ style })} className="tr">
+      <div {...row.getRowProps({
+        className: classnames('tr', rowClasses),
+        style
+      })}>
         {row.cells.map((cell) => {
           return <div {...cell.getCellProps({
             className: classnames(cell.column.className || '', 'td'),
           })}>{ cell.render('Cell') }</div>
         })}
       </div>);
-  }, [prepareRow]);
+  }, [prepareRow, rowClassNames]);
 
   // Renders virtualize circle table rows.
   const RenderVirtualizedRows = useCallback(({ index, style }) => {

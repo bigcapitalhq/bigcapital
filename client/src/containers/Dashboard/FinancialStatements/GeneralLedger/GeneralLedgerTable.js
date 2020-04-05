@@ -16,6 +16,7 @@ const ROW_TYPE = {
 }
 
 export default function GeneralLedgerTable({
+  companyName,
   onFetchData,
   loading,
   data,
@@ -144,7 +145,7 @@ export default function GeneralLedgerTable({
 
   return (
     <FinancialSheet
-      companyTitle={'Facebook, Incopration'}
+      companyName={companyName}
       sheetType={'General Ledger Sheet'}
       date={new Date()}
       name="general-ledger"

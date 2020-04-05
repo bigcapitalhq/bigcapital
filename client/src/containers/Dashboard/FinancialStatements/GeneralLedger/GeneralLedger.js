@@ -8,9 +8,9 @@ import GeneralLedgerHeader from './GeneralLedgerHeader';
 import {compose} from 'utils';
 import DashboardInsider from 'components/Dashboard/DashboardInsider'
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
-import DashboardActionsBar from 'components/Accounts/AccountsActionsBar'
 import GeneralLedgerActionsBar from './GeneralLedgerActionsBar';
 import AccountsConnect from 'connectors/Accounts.connector';
+import SettingsConnect from 'connectors/Settings.connect';
 
 function GeneralLedger({
   changePageTitle,
@@ -19,6 +19,7 @@ function GeneralLedger({
   fetchGeneralLedger,
   generalLedgerSheetLoading,
   fetchAccounts,
+  organizationSettings,
 }) {
   const [filter, setFilter] = useState({
     from_date: moment().startOf('year').format('YYYY-MM-DD'),
@@ -80,6 +81,7 @@ function GeneralLedger({
 
           <div class="financial-statement__table">
             <GeneralLedgerTable
+              companyName={organizationSettings.name}
               loading={generalLedgerSheetLoading}
               data={[
                 ... (generalLedgerSheet) ?
@@ -97,4 +99,5 @@ export default compose(
   DashboardConnect,
   AccountsConnect,
   GeneralLedgerConnect,
+  SettingsConnect,
 )(GeneralLedger);

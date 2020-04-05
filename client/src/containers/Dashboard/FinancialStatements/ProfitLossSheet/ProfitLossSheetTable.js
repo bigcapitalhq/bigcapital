@@ -9,11 +9,11 @@ import { compose, defaultExpanderReducer } from 'utils';
 
 function ProfitLossSheetTable({
   loading,
-  data,
   onFetchData,
   profitLossTableRows,
   profitLossQuery,
-  profitLossColumns
+  profitLossColumns,
+  companyName,
 }) {
   const columns = useMemo(() => [
     {
@@ -113,11 +113,12 @@ function ProfitLossSheetTable({
 
   return (
     <FinancialSheet
-      companyTitle={'Facebook, Incopration'}
+      companyName={companyName}
       sheetType={'Profit/Loss Sheet'}
       date={new Date()}
       name="profit-loss-sheet"
-      loading={loading}>
+      loading={loading}
+      basis={profitLossQuery.basis}>
 
       <DataTable
         className="bigcapital-datatable--financial-report"

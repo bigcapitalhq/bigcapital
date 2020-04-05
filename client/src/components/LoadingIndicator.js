@@ -27,7 +27,7 @@ export default function LoadingIndicator({
     <div style={componentStyle}>{ children }</div>
   ), [children, componentStyle]);
 
-  const maybeRenderComponent = rendered && renderComponent;
+  const maybeRenderComponent = (rendered && children) && renderComponent;
   const maybeRenderLoadingSpinner = loading && loadingComponent;
 
   return (

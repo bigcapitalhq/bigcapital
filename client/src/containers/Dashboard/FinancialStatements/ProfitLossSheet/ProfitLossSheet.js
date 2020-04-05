@@ -1,21 +1,23 @@
 import React, {useState, useMemo, useCallback, useEffect} from 'react';
-import ProfitLossSheetHeader from './ProfitLossSheetHeader';
-import ProfitLossSheetTable from './ProfitLossSheetTable';
-import LoadingIndicator from 'components/LoadingIndicator';
+import moment from 'moment';
 import useAsync from 'hooks/async';
 import {compose} from 'utils';
+import ProfitLossSheetHeader from './ProfitLossSheetHeader';
+import ProfitLossSheetTable from './ProfitLossSheetTable';
 import DashboardConnect from 'connectors/Dashboard.connector';
 import ProfitLossSheetConnect from 'connectors/ProfitLossSheet.connect';
 import DashboardInsider from 'components/Dashboard/DashboardInsider'
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent'
 import ProfitLossActionsBar from './ProfitLossActionsBar';
-import moment from 'moment';
+import SettingsConnect from 'connectors/Settings.connect';
+
 
 function ProfitLossSheet({
   changePageTitle,
   fetchProfitLossSheet,
   getProfitLossSheetIndex,
   profitLossSheetLoading,
+  organizationSettings,
 }) {
   const [filter, setFilter] = useState({
     basis: 'cash',
@@ -66,6 +68,7 @@ function ProfitLossSheet({
 
           <div class="financial-statement__body">
             <ProfitLossSheetTable
+              companyName={organizationSettings.name}
               profitLossSheetIndex={profitLossSheetIndex}
               onFetchData={handleFetchData}
               loading={profitLossSheetLoading} />
@@ -78,5 +81,6 @@ function ProfitLossSheet({
 
 export default compose(
   DashboardConnect,
-  ProfitLossSheetConnect
+  ProfitLossSheetConnect,
+  SettingsConnect,
 )(ProfitLossSheet);
