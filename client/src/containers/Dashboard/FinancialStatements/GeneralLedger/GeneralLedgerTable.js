@@ -3,6 +3,10 @@ import FinancialSheet from 'components/FinancialSheet';
 import DataTable from 'components/DataTable';
 import Money from 'components/Money';
 import moment from 'moment';
+import {
+  defaultExpanderReducer,
+} from 'utils';
+
 
 const ROW_TYPE = {
   CLOSING_BALANCE: 'closing_balance',
@@ -135,6 +139,9 @@ export default function GeneralLedgerTable({
     onFetchData && onFetchData();
   }, [onFetchData]);
 
+  // Default expanded rows of general ledger table.
+  const expandedRows = useMemo(() => defaultExpanderReducer(data, 1), [data]);
+
   return (
     <FinancialSheet
       companyTitle={'Facebook, Incopration'}
@@ -147,7 +154,11 @@ export default function GeneralLedgerTable({
         className="bigcapital-datatable--financial-report"
         columns={columns}
         data={data}
-        onFetchData={handleFetchData} />
+        onFetchData={handleFetchData}
+        expanded={expandedRows}
+        virtualizedRows={true}
+        fixedItemSize={37}
+        fixedSizeHeight={1000}  />
     </FinancialSheet>
   ); 
 }

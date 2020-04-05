@@ -1,6 +1,6 @@
 
 
-import React, {useMemo, useCallback} from 'react';
+import React, { useMemo, useState, useCallback } from 'react';
 import SelectList from 'components/SelectList';
 import {
   FormGroup,
@@ -8,20 +8,30 @@ import {
 } from '@blueprintjs/core';
 
 export default function SelectsListColumnsBy(props) {
-  const { formGroupProps, selectListProps } = props;
+  const { onItemSelect, formGroupProps, selectListProps } = props;
+  const [itemSelected, setItemSelected] = useState(null);
 
   const displayColumnsByOptions = useMemo(() => [
     {key: 'total', name: 'Total', type: 'total', by: '', },
-    {key: 'year', name: 'Year', type: 'date', by: 'year'},
-    {key: 'month', name: 'Month', type: 'date', by: 'month'},
-    {key: 'week', name: 'Week', type: 'date', by: 'month'},
-    {key: 'day', name: 'Day', type: 'date', by: 'day'},
-    {key: 'quarter', name: 'Quarter', type: 'date', by: 'quarter'},
+    {key: 'year', name: 'Date/Year', type: 'date_periods', by: 'year'},
+    {key: 'month', name: 'Date/Month', type: 'date_periods', by: 'month'},
+    {key: 'week', name: 'Date/Week', type: 'date_periods', by: 'month'},
+    {key: 'day', name: 'Date/Day', type: 'date_periods', by: 'day'},
+    {key: 'quarter', name: 'Date/Quarter', type: 'date_periods', by: 'quarter'},
   ]);
 
   const itemRenderer = useCallback((item, { handleClick, modifiers, query }) => {
     return (<MenuItem text={item.name} key={item.id} onClick={handleClick} />);
   }, []);
+
+  const handleItemSelect = useCallback((item) => {
+    setItemSelected(item);
+    onItemSelect && onItemSelect(item);
+  }, [setItemSelected, onItemSelect]);
+
+  const buttonLabel = useMemo(() => 
+    itemSelected ? itemSelected.name : 'Select display columns by...',
+    [itemSelected]);
 
   return (
     <FormGroup
@@ -36,7 +46,8 @@ export default function SelectsListColumnsBy(props) {
         filterable={false}
         itemRenderer={itemRenderer}
         popoverProps={{ minimal: true }}
-        buttonLabel={'Select...'}
+        buttonLabel={buttonLabel}
+        onItemSelect={handleItemSelect}        
         {...selectListProps} />
     </FormGroup>
   );

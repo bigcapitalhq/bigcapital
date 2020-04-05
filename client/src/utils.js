@@ -112,3 +112,23 @@ export const parseDateRangeQuery = (keyword) => {
     to_date: moment().endOf(query.range).toDate(),
   };
 };
+
+
+export const defaultExpanderReducer = (tableRows, level) => {
+  let currentLevel = 1;
+  const expended = [];
+
+  const walker = (rows, parentIndex = null) => {
+    return rows.forEach((row, index) => {
+      const _index = parentIndex ? `${parentIndex}.${index}` : `${index}`;
+      expended[_index] = true;
+  
+      if (row.children && currentLevel < level) {
+        walker(row.children, _index);
+      }
+      currentLevel++;
+    }, {});
+  };
+  walker(tableRows);
+  return expended;
+}

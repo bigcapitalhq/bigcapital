@@ -30,7 +30,7 @@
   min-height: 32px;
   background-color: #E6EFFB;
   color: #555555;
-  box-shadow: 0 0 0;
+  box-shadow: 0 0 0 transparent;
 
   .form-group--select-list &{
     border-radius: 0;
@@ -38,7 +38,7 @@
     &,
     &:hover{
       background: #fff;
-      box-shadow: 0 0 0;  
+      box-shadow: 0 0 0 transparent;  
       border: 1px solid #ced4da;
     }
   }
@@ -53,7 +53,7 @@
 
     &,
     &:hover{
-      box-shadow: 0 0 0;
+      box-shadow: 0 0 0 transparent;
     }    
   }
 }

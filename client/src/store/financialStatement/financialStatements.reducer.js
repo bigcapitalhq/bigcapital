@@ -1,14 +1,17 @@
 import { createReducer } from '@reduxjs/toolkit';
 import t from 'store/types';
 import {
-  getBalanceSheetIndexByQuery,
+  // getBalanceSheetIndexByQuery,
   getFinancialSheetIndexByQuery,
   // getFinancialSheetIndexByQuery,
 } from './financialStatements.selectors';
 import {omit} from 'lodash';
 
 const initialState = {
-  balanceSheets: [],
+  balanceSheet: {
+    sheets: [],
+    loading: false,
+  },
   trialBalance: {
     sheets: [],
     loading: false,
@@ -72,20 +75,59 @@ const mapJournalTableRows = (journal) => {
   }, []);
 }
 
+
+const mapProfitLossToTableRows = (profitLoss) => {
+  return [
+    {
+      name: 'Income',
+      total: profitLoss.income.total,
+      children: [
+        ...profitLoss.income.accounts,
+        {
+          name: 'Total Income',
+          total: profitLoss.income.total,
+          rowType: 'income_total',
+        }
+      ],
+    },
+    {
+      name: 'Expenses',
+      total: profitLoss.expenses.total,
+      children: [
+        ...profitLoss.expenses.accounts,
+        {
+          name: 'Total Expenses',
+          total: profitLoss.expenses.total,
+          rowType: 'expense_total',
+        }
+      ],
+    },
+    {
+      name: 'Net Income',
+      total: profitLoss.net_income.total, 
+      rowType: 'net_income',
+    }
+  ]
+};
+
 export default createReducer(initialState, {
   [t.BALANCE_SHEET_STATEMENT_SET]: (state, action) => {
-    const index  = getBalanceSheetIndexByQuery(state.balanceSheets, action.query);
-
+    const index  = getFinancialSheetIndexByQuery(state.balanceSheet.sheets, action.query);
+  
     const balanceSheet = {
-      balances: action.data.balance_sheet,
+      accounts: action.data.accounts,
       columns: Object.values(action.data.columns),
       query: action.data.query,
     };
     if (index !== -1) {
-      state.balanceSheets[index] = balanceSheet;
+      state.balanceSheet.sheets[index] = balanceSheet;
     } else {
-      state.balanceSheets.push(balanceSheet);
+      state.balanceSheet.sheets.push(balanceSheet);
     }
+  },
+
+  [t.BALANCE_SHEET_LOADING]: (state, action) => {
+    state.balanceSheet.loading = !!action.loading;
   },
 
   [t.TRAIL_BALANCE_STATEMENT_SET]: (state, action) => {
@@ -139,13 +181,18 @@ export default createReducer(initialState, {
     }
   },
 
+  [t.GENERAL_LEDGER_SHEET_LOADING]: (state, action) => {
+    state.generalLedger.loading = !!action.loading;
+  },
+
   [t.PROFIT_LOSS_SHEET_SET]: (state, action) => {
     const index = getFinancialSheetIndexByQuery(state.profitLoss.sheets, action.query);
-    
+
     const profitLossSheet = {
       query: action.query,
       profitLoss: action.profitLoss,
       columns: action.columns,
+      tableRows: mapProfitLossToTableRows(action.profitLoss),
     };
     if (index !== -1) {
       state.profitLoss.sheets[index] = profitLossSheet;      

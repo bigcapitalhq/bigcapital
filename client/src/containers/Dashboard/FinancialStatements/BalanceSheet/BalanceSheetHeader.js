@@ -39,7 +39,7 @@ export default function BalanceSheetHeader({
       actions.setSubmitting(false);
     },
   });
-   
+
   // Handle item select of `display columns by` field.
   const onItemSelectDisplayColumns = useCallback((item) => {
     formik.setFieldValue('display_columns_type', item.type);
@@ -73,7 +73,8 @@ export default function BalanceSheetHeader({
 
       <Row>
         <Col sm={3}>
-          <SelectDisplayColumnsBy onItemSelect={onItemSelectDisplayColumns} />
+          <SelectDisplayColumnsBy
+            onItemSelect={onItemSelectDisplayColumns} />
         </Col>
 
         <Col sm={3}>
@@ -102,7 +103,7 @@ export default function BalanceSheetHeader({
             type="submit"
             onClick={handleSubmitClick}
             disabled={formik.isSubmitting}
-            className={'button--submit-filter'}>
+            className={'button--submit-filter mt2'}>
             { 'Calculate Report' }
           </Button>
         </Col>

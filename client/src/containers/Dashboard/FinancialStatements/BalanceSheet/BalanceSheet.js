@@ -2,7 +2,7 @@ import React, {useEffect, useMemo, useCallback, useState} from 'react';
 import DashboardConnect from 'connectors/Dashboard.connector';
 import {compose} from 'utils';
 import useAsync from 'hooks/async';
-import FinancialStatementConnect from 'connectors/FinancialStatements.connector';
+import BalanceSheetConnect from 'connectors/BalanceSheet.connect';
 import {useIntl} from 'react-intl';
 import BalanceSheetHeader from './BalanceSheetHeader';
 import LoadingIndicator from 'components/LoadingIndicator';
@@ -15,10 +15,9 @@ import BalanceSheetActionsBar from './BalanceSheetActionsBar';
 function BalanceSheet({
   fetchBalanceSheet,
   changePageTitle,
-  getBalanceSheetByQuery,
-  getBalanceSheetIndexByQuery,
-  getBalanceSheetByIndex,
-  balanceSheets
+  balanceSheetLoading, 
+  getBalanceSheetIndex,
+  getBalanceSheet,
 }) {
   const intl = useIntl();
   const [filter, setFilter] = useState({
@@ -45,13 +44,8 @@ function BalanceSheet({
 
   // Retrieve balance sheet index by the given filter query.
   const balanceSheetIndex = useMemo(() => 
-    getBalanceSheetIndexByQuery(filter),
-    [filter, getBalanceSheetIndexByQuery]);
-
-  // Retreive balance sheet by the given sheet index.
-  const balanceSheet = useMemo(() => 
-    getBalanceSheetByIndex(balanceSheetIndex),
-    [balanceSheetIndex, getBalanceSheetByIndex]);
+    getBalanceSheetIndex(filter),
+    [filter, getBalanceSheetIndex]);
 
   // Handle re-fetch balance sheet after filter change.
   const handleFilterSubmit = useCallback((filter) => {
@@ -75,13 +69,10 @@ function BalanceSheet({
             onSubmitFilter={handleFilterSubmit} />
 
           <div class="financial-statement__body">
-            <LoadingIndicator loading={fetchHook.pending}>
-              <BalanceSheetTable
-                balanceSheet={balanceSheet}
-                balanceSheetIndex={balanceSheetIndex}
-                onFetchData={handleFetchData}
-                asDate={new Date()} />
-            </LoadingIndicator>
+            <BalanceSheetTable
+              loading={balanceSheetLoading}
+              balanceSheetIndex={balanceSheetIndex}
+              onFetchData={handleFetchData} />
           </div>
         </div>
       </DashboardPageContent>
@@ -91,5 +82,5 @@ function BalanceSheet({
 
 export default compose(
   DashboardConnect,
-  FinancialStatementConnect,
+  BalanceSheetConnect,
 )(BalanceSheet);

@@ -83,7 +83,7 @@ function GeneralLedgerHeader({
             type="submit"
             onClick={handleSubmitClick}
             disabled={formik.isSubmitting}
-            className={'button--submit-filter'}>
+            className={'button--submit-filter mt2'}>
             { 'Calculate Report' }
           </Button>
         </Col>

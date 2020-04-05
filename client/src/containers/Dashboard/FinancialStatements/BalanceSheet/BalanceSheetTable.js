@@ -1,37 +1,28 @@
 import React, {useMemo, useState, useCallback, useEffect} from 'react';
-import FinancialSheet from 'components/FinancialSheet';
-import DataTable from 'components/DataTable';
-import FinancialStatementConnect from 'connectors/FinancialStatements.connector';
-import {compose} from 'utils';
 import moment from 'moment';
 import Money from 'components/Money';
+import FinancialSheet from 'components/FinancialSheet';
+import DataTable from 'components/DataTable';
+import BalanceSheetConnect from 'connectors/BalanceSheet.connect';
+import BalanceSheetTableConnect from 'connectors/BalanceSheetTable.connect';
+import {
+  compose,
+  defaultExpanderReducer,
+} from 'utils';
 
 function BalanceSheetTable({
-  balanceSheet,
-  balanceSheetIndex,
-  getBalanceSheetColumns,
-
-  getBalanceSheetAssetsAccounts,
-  getBalanceSheetLiabilitiesAccounts,
-
-  getBalanceSheetQuery,
-
+  balanceSheetAccounts,
+  balanceSheetColumns,
+  balanceSheetQuery,
   onFetchData,
   asDate,
+  loading,
 }) {
-  const balanceSheetColumns = useMemo(() => 
-    getBalanceSheetColumns(balanceSheetIndex),
-    [getBalanceSheetColumns, balanceSheetIndex]);
-
-  const balanceSheetQuery = useMemo(() => 
-    getBalanceSheetQuery(balanceSheetIndex),
-    [getBalanceSheetQuery, balanceSheetIndex])
-
   const columns = useMemo(() => [
     {
       // Build our expander column
       id: 'expander', // Make sure it has an ID
-      className: 'expander',      
+      className: 'expander',
       Header: ({
         getToggleAllRowsExpandedProps,
         isAllRowsExpanded
@@ -77,63 +68,65 @@ function BalanceSheetTable({
       accessor: 'code',
       className: "code",
     },
-    ...(balanceSheetQuery &&
-        balanceSheetQuery.display_columns_by === 'total') ? [
+    ...(balanceSheetQuery.display_columns_type === 'total') ? [
       {
         Header: 'Total',
         accessor: 'balance.formatted_amount',
         Cell: ({ cell }) => {
           const row = cell.row.original;
-          if (!row.balance) { return ''; }
-          return (<Money amount={row.balance.formatted_amount} currency={'USD'} />);
+          if (row.total) {
+            return (<Money amount={row.total.formatted_amount} currency={'USD'} />);
+          }
+          return '';          
         },
         className: "credit",
       }
-    ] : (balanceSheetColumns.map((column, index) => ({
-      Header: column,
-      accessor: (row) => {
-        if (row.periods_balance && row.periods_balance[index]) {
-          return row.periods_balance[index].formatted_amount;
-        }
-      },
-    }))),
-  ], [balanceSheetColumns, balanceSheetQuery]);
- 
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    if (!balanceSheet) { return; }
-    setData([
-      {
-        name: 'Assets',
-        children: getBalanceSheetAssetsAccounts(balanceSheetIndex),
-      },
-      {
-        name: 'Liabilies & Equity',
-        children: getBalanceSheetLiabilitiesAccounts(balanceSheetIndex),
-      }
-    ])
-  }, []);
-
+    ] : [],
+    ...(balanceSheetQuery.display_columns_type === 'date_periods') ? 
+      (balanceSheetColumns.map((column, index) => ({
+        id: `date_period_${index}`,
+        Header: column,
+        accessor: (row) => {
+          if (row.total_periods && row.total_periods[index]) {
+            const amount = row.total_periods[index].formatted_amount;
+            return (<Money amount={amount} currency={'USD'} />);
+          }
+          return '';
+        },
+        width: 100,
+      })))
+    : [],
+  ], [balanceSheetQuery, balanceSheetColumns]);
+  
   const handleFetchData = useCallback(() => {
     onFetchData && onFetchData();
   }, [onFetchData]);
+
+
+  // Calculates the default expanded rows of balance sheet table.
+  const expandedRows = useMemo(() => 
+    defaultExpanderReducer(balanceSheetAccounts, 1),
+    [balanceSheetAccounts]);
 
   return (
     <FinancialSheet
       companyTitle={'Facebook, Incopration'}
       sheetType={'Balance Sheet'}
-      date={asDate}>
+      date={asDate}
+      loading={loading}>
       
       <DataTable
         className="bigcapital-datatable--financial-report"
         columns={columns}
-        data={data}
-        onFetchData={handleFetchData} />
+        data={balanceSheetAccounts}
+        onFetchData={handleFetchData}
+        expandSubRows={true}
+        expanded={expandedRows} />
     </FinancialSheet>
   );
 }
 
 export default compose(
-  FinancialStatementConnect,
+  BalanceSheetConnect,
+  BalanceSheetTableConnect,
 )(BalanceSheetTable);

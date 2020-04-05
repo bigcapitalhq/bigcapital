@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useMemo, useCallback} from 'react';
 import {
   useTable,
   useExpanded,
@@ -11,6 +11,7 @@ import {
 } from 'react-table'
 import {Checkbox} from '@blueprintjs/core';
 import classnames from 'classnames';
+import { FixedSizeList } from 'react-window'
 import Icon from 'components/Icon';
 
 const IndeterminateCheckbox = React.forwardRef(
@@ -34,8 +35,15 @@ export default function DataTable({
   onSelectedRowsChange,
   manualSortBy = 'false',
   selectionColumn = false,
+  expandSubRows = true,
   className,
-  noResults = 'This report does not contain any data.'
+  noResults = 'This report does not contain any data.',
+  expanded = {},
+  rowClassNames,
+  stickyHeader = true,
+  virtualizedRows = false,
+  fixedSizeHeight = 100,
+  fixedItemSize = 30,
 }) {
   const {
     getTableProps,
@@ -43,6 +51,7 @@ export default function DataTable({
     headerGroups,
     prepareRow,
     page,
+    rows,
     canPreviousPage,
     canNextPage,
     pageOptions,
@@ -52,21 +61,23 @@ export default function DataTable({
     previousPage,
     setPageSize,
     selectedFlatRows,
+    totalColumnsWidth,
 
     // Get the state from the instance
     state: { pageIndex, pageSize, sortBy, selectedRowIds },
   } = useTable(
     {
       columns,
-      data,
-      initialState: { pageIndex: 0 }, // Pass our hoisted table state
+      data: data,
+      initialState: { pageIndex: 0, expanded }, // Pass our hoisted table state
       manualPagination: true, // Tell the usePagination
       // hook that we'll handle our own data fetching
       // This means we'll also have to provide our own
       // pageCount.
       // pageCount: controlledPageCount,
       getSubRows: row => row.children,
-      manualSortBy
+      manualSortBy,
+      expandSubRows,
     },
     useSortBy,
     useExpanded,
@@ -102,14 +113,50 @@ export default function DataTable({
       ])
     }
   );
-
+ 
   // When these table states change, fetch new data!
   useEffect(() => {
     onFetchData && onFetchData({ pageIndex, pageSize, sortBy })
   }, [pageIndex, pageSize, sortBy]);
 
+  // Renders table row.
+  const RenderRow = useCallback(({ style = {}, row }) => {
+    prepareRow(row);
+    return (
+      <div {...row.getRowProps({ style })} className="tr">
+        {row.cells.map((cell) => {
+          return <div {...cell.getCellProps({
+            className: classnames(cell.column.className || '', 'td'),
+          })}>{ cell.render('Cell') }</div>
+        })}
+      </div>);
+  }, [prepareRow]);
+
+  // Renders virtualize circle table rows.
+  const RenderVirtualizedRows = useCallback(({ index, style }) => {
+    const row = rows[index];
+    return RenderRow({ row, style });
+  }, [RenderRow, rows]);
+
+  const RenderPage = useCallback(({ style, index } = {}) => {
+    return page.map((row, index) => RenderRow({ row }));
+  }, [RenderRow, page]);
+
+  const RenderTBody = useCallback(() => {
+    return (virtualizedRows) ? (
+      <FixedSizeList
+        height={fixedSizeHeight}
+        itemCount={rows.length}
+        itemSize={fixedItemSize}
+      >
+        {RenderVirtualizedRows}
+      </FixedSizeList>
+    ) : RenderPage();
+  }, [fixedSizeHeight, rows, fixedItemSize, virtualizedRows,
+    RenderVirtualizedRows, RenderPage])
+
   return (
-    <div className={classnames('bigcapital-datatable', className)}>
+    <div className={classnames('bigcapital-datatable', className, {'has-sticky-header': stickyHeader})}>
       <div {...getTableProps()} className="table"> 
         <div className="thead">
           {headerGroups.map(headerGroup => (
@@ -144,19 +191,8 @@ export default function DataTable({
           ))}
         </div>
         <div {...getTableBodyProps()} className="tbody">
-          {page.map((row, i) => {
-            prepareRow(row);
-
-            return (
-              <div {...row.getRowProps()} className="tr">
-                {row.cells.map((cell) => {
-                  return <div {...cell.getCellProps({
-                    className: classnames(cell.column.className || '', 'td'),
-                  })}>{ cell.render('Cell') }</div>
-                })}
-              </div>)
-          })}
-
+          { RenderTBody() }
+        
           { (page.length === 0) && (
             <div className={'tr no-results'}>
               <div class="td">{ noResults }</div>

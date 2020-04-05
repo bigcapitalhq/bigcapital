@@ -47,7 +47,7 @@ export default function JournalHeader({
           <Button
             type="submit"
             onClick={handleSubmitClick}
-            class={'button--submit-filter'}>
+            className={'button--submit-filter'}>
             { 'Run Report' }
           </Button>
         </Col>

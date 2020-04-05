@@ -3,10 +3,18 @@ import t from 'store/types';
 
 export const fetchGeneralLedger = ({ query }) => {
   return (dispatch) => new Promise((resolve, reject) => {
+    dispatch({
+      type: t.GENERAL_LEDGER_SHEET_LOADING,
+      loading: true,
+    })
     ApiService.get('/financial_statements/general_ledger', { params: query }).then((response) => {
       dispatch({
         type: t.GENERAL_LEDGER_STATEMENT_SET,
         data: response.data,
+      });
+      dispatch({
+        type: t.GENERAL_LEDGER_SHEET_LOADING,
+        loading: false,
       });
       resolve(response);
     }).catch((error) => { reject(error); });
@@ -15,11 +23,19 @@ export const fetchGeneralLedger = ({ query }) => {
 
 export const fetchBalanceSheet = ({ query }) => {
   return (dispatch) => new Promise((resolve, reject) => {
+    dispatch({
+      type: t.BALANCE_SHEET_LOADING,
+      loading: true,
+    });
     ApiService.get('/financial_statements/balance_sheet', { params: query }).then((response) => {
       dispatch({
         type: t.BALANCE_SHEET_STATEMENT_SET,
         data: response.data,
         query: query,
+      });
+      dispatch({
+        type: t.BALANCE_SHEET_LOADING,
+        loading: false,
       });
       resolve(response);
     }).catch((error) => { reject(error); });
@@ -50,9 +66,9 @@ export const fetchProfitLossSheet = ({ query }) => {
   return (dispatch) => new Promise((resolve, reject) => {
     dispatch({
       type: t.PROFIT_LOSS_SHEET_LOADING,
-      loading: false,
+      loading: true,
     }); 
-    ApiService.get('/financial_statements/profit_loss_sheet').then((response) => {
+    ApiService.get('/financial_statements/profit_loss_sheet', { params: query }).then((response) => {
       dispatch({
         type: t.PROFIT_LOSS_SHEET_SET,
         profitLoss: response.data.profitLoss,

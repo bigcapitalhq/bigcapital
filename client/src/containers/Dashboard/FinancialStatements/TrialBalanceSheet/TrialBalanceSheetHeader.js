@@ -55,7 +55,8 @@ export default function TrialBalanceSheetHeader({
           <Button
             type="submit"
             onClick={handleSubmitClick}
-            disabled={formik.isSubmitting}>
+            disabled={formik.isSubmitting}
+            className={'button--submit-filter'}>
             { 'Run Report' }
           </Button>
         </Col>

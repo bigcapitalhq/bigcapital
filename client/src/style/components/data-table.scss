@@ -1,5 +1,5 @@
 
-.bigcapital-datatable{  
+.bigcapital-datatable{
   display: block;
   overflow-x: auto;
   overflow-y: hidden;
@@ -138,14 +138,22 @@
     }
   }
 
-  .no-results{
-    
+  .no-results{    
     color: #666;
 
     .td{
       padding-top: 20px;
      padding-bottom: 20px;
       width: 100%;
+    }
+  }
+
+  &.has-sticky-header{
+
+    .thead{
+      .tr .th{
+        position: sticky;
+      }
     }
   }
 

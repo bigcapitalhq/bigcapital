@@ -363,7 +363,7 @@ describe('routes: `/financial_statements`', () => {
     });
   });
 
-  describe('routes: `financial_statements/balance_sheet`', () => {
+  describe.only('routes: `financial_statements/balance_sheet`', () => {
     it('Should response unauthorzied in case the user was not authorized.', async () => {
       const res = await request()
         .get('/api/financial_statements/balance_sheet')
@@ -406,21 +406,23 @@ describe('routes: `/financial_statements`', () => {
       expect(res.body.balance_sheet.liabilities_equity.accounts).to.be.a('array');
     });
 
-    it('Should retrieve assets/liabilities total balance between the given date range.', async () => {
+    it.only('Should retrieve assets/liabilities total balance between the given date range.', async () => {
       const res = await request()
         .get('/api/financial_statements/balance_sheet')
         .set('x-access-token', loginRes.body.token)
         .query({
-          display_columns_by: 'total',
+          display_columns_type: 'total',
           from_date: '2012-01-01',
           to_date: '2032-02-02',
         })
         .send();
 
-      expect(res.body.balance_sheet.assets.accounts[0].balance).deep.equals({
+        console.log(res.body.balance_sheet.assets.accounts);
+
+      expect(res.body.balance_sheet.assets.accounts[0].total).deep.equals({
         amount: 4000, formatted_amount: 4000, date: '2032-02-02',
       });
-      expect(res.body.balance_sheet.liabilities_equity.accounts[0].balance).deep.equals({
+      expect(res.body.balance_sheet.liabilities_equity.accounts[0].total).deep.equals({
         amount: 2000, formatted_amount: 2000, date: '2032-02-02',
       });
     });

@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useCallback, useMemo} from 'react';
 import FinancialSheet from 'components/FinancialSheet';
 import DataTable from 'components/DataTable';
-import {compose} from 'utils';
+import {compose, defaultExpanderReducer} from 'utils';
 import moment from 'moment';
 import JournalConnect from 'connectors/Journal.connect';
 import {
@@ -71,6 +71,9 @@ function JournalSheetTable({
     onFetchData && onFetchData(...args)
   }, [onFetchData]);
 
+  // Default expanded rows of general journal table.
+  const expandedRows = useMemo(() => defaultExpanderReducer(data, 1), [data]);
+
   return (
     <FinancialSheet
       companyTitle={'Facebook, Incopration'}
@@ -84,7 +87,8 @@ function JournalSheetTable({
         columns={columns}
         data={data}
         onFetchData={handleFetchData}
-        noResults={"This report does not contain any data."} />
+        noResults={"This report does not contain any data."}
+        expanded={expandedRows} />
     </FinancialSheet>
   );
 }

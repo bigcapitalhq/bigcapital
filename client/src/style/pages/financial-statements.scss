@@ -7,26 +7,46 @@
     padding: 25px 26px 25px;
     background: #FDFDFD;
 
-    .bp3-form-group .bp3-label{
-      font-weight: 500;
-      font-size: 13px;
-      color: #444;
+    .bp3-form-group,
+    .radio-group---accounting-basis{
+      
+      .bp3-label{
+        font-weight: 500;
+        font-size: 13px;
+        color: #444;
+      }
+    }
+    .bp3-button.button--submit-filter{
+      min-height: 34px;
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+    .radio-group---accounting-basis{
+      .bp3-label{
+        margin-bottom: 12px;
+      }
     }
   }
 
   &__body{
     padding-left: 20px;
     padding-right: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 }
 
 .financial-sheet{
   border: 1px solid #E2E2E2;
   min-width: 640px;
-  width: 0;
-  padding: 20px;
-  padding-top: 30px;
+  width: auto;
+  padding: 30px 20px;
+  max-width: 100%;
   margin: 35px auto;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
 
   &__title{
     margin: 0;
@@ -57,14 +77,24 @@
       }
     }
   }
-  &__accounting-basis{
-
+  &__basis{
+    color: #888;
+    text-align: center;
+    margin-top: auto;
+    padding-top: 16px;
+    font-size: 12px;
   }
- 
+  .dashboard__loading-indicator{
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  &--expended{
+    width: auto;
+  }
   &--trial-balance{
     min-width: 720px;
   }
-
   &--general-ledger,
   &--journal{
     width: auto;
@@ -73,11 +103,8 @@
     margin-top: 10px;
     border-color: #EEEDED;
   }
-
   &--journal{
-
     .financial-sheet__table{
-
       .tbody{
         .tr .td{
           padding: 0.4rem;
@@ -91,6 +118,27 @@
           }
           &.account_code{
             color: #666;
+          }
+        }
+      }
+    }
+  }
+
+  &--profit-loss-sheet{
+
+    .financial-sheet__table{
+      .tbody{
+        .account_code.td{
+          color: #666;
+        }
+        
+        .row--income_total,
+        .row--expense_total,
+        .row--net_income{
+          font-weight: 600;
+
+          .total.td{
+            border-bottom-color: #555;
           }
         }
       }

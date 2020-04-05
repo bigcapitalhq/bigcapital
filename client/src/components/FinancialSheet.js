@@ -11,12 +11,13 @@ export default function FinancialSheet({
   accountingBasis,
   name,
   loading,
+  className,
 }) {
   const formattedDate = moment(date).format('DD MMMM YYYY')
   const nameModifer = name ? `financial-sheet--${name}` : '';
 
   return (
-    <div className={classnames('financial-sheet', nameModifer)}>
+    <div className={classnames('financial-sheet', nameModifer, className)}>
       <LoadingIndicator loading={loading}>
         <h1 class="financial-sheet__title">{ companyTitle }</h1>
         <h6 class="financial-sheet__sheet-type">{ sheetType }</h6>
@@ -28,6 +29,10 @@ export default function FinancialSheet({
 
         <div class="financial-sheet__accounting-basis">
           { accountingBasis }
+        </div>
+
+        <div class="financial-sheet__basis">
+          Accounting Basis: Accural
         </div>
       </LoadingIndicator>
     </div>

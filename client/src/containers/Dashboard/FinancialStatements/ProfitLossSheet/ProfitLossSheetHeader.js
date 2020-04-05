@@ -39,7 +39,7 @@ export default function JournalHeader({
   const handleItemSelectDisplayColumns = useCallback((item) => {
     formik.setFieldValue('display_columns_type', item.type);
     formik.setFieldValue('display_columns_by', item.by);
-  }, []);
+  }, [formik]);
 
   const handleSubmitClick = useCallback(() => {
     formik.submitForm();
@@ -68,7 +68,7 @@ export default function JournalHeader({
           <Button
             type="submit"
             onClick={handleSubmitClick}
-            className={'button--submit-filter'}>
+            className={'button--submit-filter mt2'}>
             { 'Run Report' }
           </Button>
         </Col>

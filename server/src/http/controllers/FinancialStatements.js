@@ -274,7 +274,9 @@ export default {
       query('accounting_method').optional().isIn(['cash', 'accural']),
       query('from_date').optional(),
       query('to_date').optional(),
-      query('display_columns_by').optional().isIn(['total', 'year', 'month', 'week', 'day', 'quarter']),
+      query('display_columns_type').optional().isIn(['date_periods', 'total']),
+      query('display_columns_by').optional({ nullable: true, checkFalsy: true })
+        .isIn(['year', 'month', 'week', 'day', 'quarter']),
       query('number_format.no_cents').optional().isBoolean().toBoolean(),
       query('number_format.divide_1000').optional().isBoolean().toBoolean(),
       query('none_zero').optional().isBoolean().toBoolean(),
@@ -288,7 +290,8 @@ export default {
         });
       }
       const filter = {
-        display_columns_by: 'total',
+        display_columns_type: 'total',
+        display_columns_by: '',
         from_date: moment().startOf('year').format('YYYY-MM-DD'),
         to_date: moment().endOf('year').format('YYYY-MM-DD'),
         number_format: {
@@ -299,7 +302,6 @@ export default {
         basis: 'cash',
         ...req.query,
       };
-
       const balanceSheetTypes = await AccountType.query().where('balance_sheet', true);
 
       // Fetch all balance sheet accounts.
@@ -317,91 +319,76 @@ export default {
 
       // Account balance formmatter based on the given query.
       const balanceFormatter = formatNumberClosure(filter.number_format);
-      const filterDateType = filter.display_columns_by === 'total'
+      const comparatorDateType = filter.display_columns_type === 'total'
         ? 'day' : filter.display_columns_by;
 
-      // Gets the date range set from start to end date.
-      const dateRangeSet = dateRangeCollection(
-        filter.from_date,
-        filter.to_date,
-        filterDateType,
-      );
-      // Retrieve the asset balance sheet.
-      const assets = accounts
-        .filter((account) => (
-          account.type.normal === 'debit'
-            && (account.transactions.length > 0 || !filter.none_zero)
-        ))
-        .map((account) => {
+      const dateRangeSet = (filter.display_columns_type === 'date_periods')
+        ? dateRangeCollection(
+          filter.from_date, filter.to_date, comparatorDateType,
+        ) : [];
+
+      const totalPeriods = (account) => {
+        // Gets the date range set from start to end date.
+        return {
+          total_periods: dateRangeSet.map((date) => {
+            const balance = journalEntries.getClosingBalance(account.id, date, comparatorDateType);
+            return {
+              date,
+              formatted_amount: balanceFormatter(balance),
+              amount: balance,
+            };
+          }),
+        };
+      };
+
+      const accountsMapper = (balanceSheetAccounts) => {
+        return balanceSheetAccounts.map((account) => {
           // Calculates the closing balance to the given date.
           const closingBalance = journalEntries.getClosingBalance(account.id, filter.to_date);
-          const type = filter.display_columns_by;
 
           return {
             ...pick(account, ['id', 'index', 'name', 'code']),
-            ...(type !== 'total') ? {
-              periods_balance: dateRangeSet.map((date) => {
-                const balance = journalEntries.getClosingBalance(account.id, date, filterDateType);
 
-                return {
-                  date,
-                  formatted_amount: balanceFormatter(balance),
-                  amount: balance,
-                };
-              }),
-            } : {},
-            balance: {
+            // Date periods when display columns.
+            ...(filter.display_columns_type === 'date_periods') && totalPeriods(account),
+
+            total: {
               formatted_amount: balanceFormatter(closingBalance),
               amount: closingBalance,
               date: filter.to_date,
             },
           };
         });
+      };
+      // Retrieve all assets accounts.
+      const assetsAccounts = accounts.filter((account) => (
+        account.type.normal === 'debit'
+          && (account.transactions.length > 0 || !filter.none_zero)));
+
+      // Retrieve all liability accounts.
+      const liabilitiesAccounts = accounts.filter((account) => (
+        account.type.normal === 'credit'
+          && (account.transactions.length > 0 || !filter.none_zero)));
+
+      // Retrieve the asset balance sheet.
+      const assets = accountsMapper(assetsAccounts);
 
       // Retrieve liabilities and equity balance sheet.
-      const liabilitiesEquity = accounts
-        .filter((account) => (
-          account.type.normal === 'credit'
-            && (account.transactions.length > 0 || !filter.none_zero)
-        ))
-        .map((account) => {
-          // Calculates the closing balance to the given date.
-          const closingBalance = journalEntries.getClosingBalance(account.id, filter.to_date);
-          const type = filter.display_columns_by;
-
-          return {
-            ...pick(account, ['id', 'index', 'name', 'code']),
-            ...(type !== 'total') ? {
-              periods_balance: dateRangeSet.map((date) => {
-                const balance = journalEntries.getClosingBalance(account.id, date, filterDateType);
-                return {
-                  date,
-                  formatted_amount: balanceFormatter(balance),
-                  amount: balance,
-                };
-              }),
-            } : {},
-            balance: {
-              formatted_amount: balanceFormatter(closingBalance),
-              amount: closingBalance,
-              date: filter.to_date,
-            },
-          };
-        });
+      const liabilitiesEquity = accountsMapper(liabilitiesAccounts);
 
       return res.status(200).send({
         query: { ...filter },
         columns: { ...dateRangeSet },
-        balance_sheet: {
-          assets: {
-            title: 'Assets',
-            accounts: [...assets],
+        accounts: [
+          {
+            name: 'Assets',
+            children: [...assets],
           },
-          liabilities_equity: {
-            title: 'Liabilities & Equity',
-            accounts: [...liabilitiesEquity],
+          {
+            name: 'Liabilities & Equity',
+            children: [...liabilitiesEquity],
           },
-        },
+        ],
       });
     },
   },
@@ -492,9 +479,8 @@ export default {
       query('display_columns_type').optional().isIn([
         'total', 'date_periods',
       ]),
-      query('display_columns_by').optional().isIn([
-        'year', 'month', 'week', 'day', 'quarter',
-      ]),
+      query('display_columns_by').optional({ nullable: true, checkFalsy: true })
+        .isIn(['year', 'month', 'week', 'day', 'quarter']),
     ],
     async handler(req, res) {
       const validationErrors = validationResult(req);

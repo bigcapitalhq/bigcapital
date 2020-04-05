@@ -14,11 +14,11 @@ import moment from 'moment';
 function ProfitLossSheet({
   changePageTitle,
   fetchProfitLossSheet,
-
   getProfitLossSheetIndex,
-  getProfitLossSheet,
+  profitLossSheetLoading,
 }) {
   const [filter, setFilter] = useState({
+    basis: 'cash',
     from_date: moment().startOf('year').format('YYYY-MM-DD'),
     to_date: moment().endOf('year').format('YYYY-MM-DD'),
   });
@@ -26,7 +26,7 @@ function ProfitLossSheet({
   // Change page title of the dashboard.
   useEffect(() => {
     changePageTitle('Profit/Loss Sheet');
-  }, []);
+  }, [changePageTitle]);
 
   // Fetches profit/loss sheet.
   const fetchHook = useAsync((query = filter) => {
@@ -35,14 +35,12 @@ function ProfitLossSheet({
     ]);
   }, false);
 
+  // Retrieve profit/loss sheet index based on the given filter query.
   const profitLossSheetIndex = useMemo(() =>
     getProfitLossSheetIndex(filter),
-    [getProfitLossSheetIndex, filter])
+    [getProfitLossSheetIndex, filter]);
 
-  const profitLossSheet = useMemo(() => 
-    getProfitLossSheet(profitLossSheetIndex),
-    [getProfitLossSheet, profitLossSheetIndex]);
-
+  // Handle submit filter.
   const handleSubmitFilter = useCallback((filter) => {
     const _filter = {
       ...filter,
@@ -51,30 +49,29 @@ function ProfitLossSheet({
     };
     setFilter(_filter);
     fetchHook.execute(_filter);
-  }, []);
+  }, [fetchHook]);
 
   // Handle fetch data of profit/loss sheet table.
-  const handleFetchData = useCallback(() => {
-    fetchHook.execute();
-  }, [fetchHook]);
+  const handleFetchData = useCallback(() => { fetchHook.execute(); }, [fetchHook]);
 
   return (
     <DashboardInsider>
       <ProfitLossActionsBar  />
+      
+      <DashboardPageContent>
+        <div class="financial-statement">
+          <ProfitLossSheetHeader
+            pageFilter={filter}
+            onSubmitFilter={handleSubmitFilter} />
 
-      <div class="financial-statement">
-        <ProfitLossSheetHeader
-          pageFilter={filter}
-          onSubmitFilter={handleSubmitFilter} />
-
-        <div class="financial-statement__body">
-          <LoadingIndicator loading={false}>
+          <div class="financial-statement__body">
             <ProfitLossSheetTable
-              data={[]}
-              onFetchData={handleFetchData} />
-          </LoadingIndicator>
-        </div> 
-      </div>
+              profitLossSheetIndex={profitLossSheetIndex}
+              onFetchData={handleFetchData}
+              loading={profitLossSheetLoading} />
+          </div> 
+        </div>
+      </DashboardPageContent>
     </DashboardInsider>
   );
 }

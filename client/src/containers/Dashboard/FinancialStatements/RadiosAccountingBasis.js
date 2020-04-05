@@ -19,6 +19,7 @@ export default function RadiosAccountingBasis(props) {
       onChange={handleStringChange((value) => {
         onChange && onChange(value);
       })}
+      className={'radio-group---accounting-basis'}
       {...rest}>
       <Radio label="Cash" value="cash" />
       <Radio label="Accural" value="accural" />

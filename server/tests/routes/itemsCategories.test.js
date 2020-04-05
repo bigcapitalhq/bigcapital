@@ -8,7 +8,7 @@ import knex from '@/database/knex';
 
 let loginRes;
 
-describe.only('routes: /item_categories/', () => {
+describe('routes: /item_categories/', () => {
   beforeEach(async () => {
     loginRes = await login();
   });
