@@ -1,4 +1,4 @@
-import { check, query, oneOf, validationResult } from 'express-validator';
+import { check, query, oneOf, validationResult, param } from 'express-validator';
 import express from 'express';
 import { difference } from 'lodash';
 import moment from 'moment';
@@ -8,6 +8,7 @@ import JWTAuth from '@/http/middleware/jwtAuth';
 import JournalPoster from '@/services/Accounting/JournalPoster';
 import JournalEntry from '@/services/Accounting/JournalEntry';
 import ManualJournal from '@/models/JournalEntry';
+import AccountTransaction from '@/models/AccountTransaction';
 import Resource from '@/models/Resource';
 import View from '@/models/View';
 import {
@@ -31,6 +32,14 @@ export default {
     router.post('/make-journal-entries',
       this.makeJournalEntries.validation,
       asyncMiddleware(this.makeJournalEntries.handler));
+
+    router.post('/manual-journal/:id',
+      this.editManualJournal.validation,
+      asyncMiddleware(this.editManualJournal.handler));
+
+    router.delete('/manual-journals/:id',
+      this.deleteManualJournal.validation,
+      asyncMiddleware(this.deleteManualJournal.handler));
 
     router.post('/recurring-journal-entries',
       this.recurringJournalEntries.validation,
@@ -125,7 +134,7 @@ export default {
    */
   makeJournalEntries: {
     validation: [
-      check('date').isISO8601(),
+      check('date').exists().isISO8601(),
       check('journal_number').exists().trim().escape(),
       check('transaction_type').optional({ nullable: true }).trim().escape(),
       check('reference').optional({ nullable: true }),
@@ -261,7 +270,189 @@ export default {
           code: 'validation_error', ...validationErrors,
         });
       }
+    },
+  },
 
+  editManualJournal: {
+    validation: [
+      param('id').exists().isNumeric().toInt(),
+      check('date').exists().isISO8601(),
+      check('journal_number').exists().trim().escape(),
+      check('transaction_type').optional({ nullable: true }).trim().escape(),
+      check('reference').optional({ nullable: true }),
+      check('description').optional().trim().escape(),
+      check('entries').isArray({ min: 2 }),
+      check('entries.*.credit').optional({ nullable: true }).isNumeric().toInt(),
+      check('entries.*.debit').optional({ nullable: true }).isNumeric().toInt(),
+      check('entries.*.account_id').isNumeric().toInt(),
+      check('entries.*.note').optional(),
+    ],
+    async handler(req, res) {
+      const validationErrors = validationResult(req);
+
+      if (!validationErrors.isEmpty()) {
+        return res.boom.badData(null, {
+          code: 'validation_error', ...validationErrors,
+        });
+      }
+      const form = {
+        date: new Date(),
+        transaction_type: 'journal',
+        reference: '',
+        ...req.body,
+      };
+      const { id } = req.params;
+      const manualJournal = await ManualJournal.query().where('id', id).first();
+
+      if (!manualJournal) {
+        return res.status(4040).send({
+          errors: [{ type: 'MANUAL.JOURNAL.NOT.FOUND', code: 100 }],
+        });
+      }
+      let totalCredit = 0;
+      let totalDebit = 0;
+
+      const { user } = req;
+      const errorReasons = [];
+      const entries = form.entries.filter((entry) => (entry.credit || entry.debit));
+      const formattedDate = moment(form.date).format('YYYY-MM-DD');
+
+      entries.forEach((entry) => {
+        if (entry.credit > 0) {
+          totalCredit += entry.credit;
+        }
+        if (entry.debit > 0) {
+          totalDebit += entry.debit;
+        }
+      });
+      if (totalCredit <= 0 || totalDebit <= 0) {
+        errorReasons.push({
+          type: 'CREDIT.DEBIT.SUMATION.SHOULD.NOT.EQUAL.ZERO',
+          code: 400,
+        });
+      }
+      if (totalCredit !== totalDebit) {
+        errorReasons.push({ type: 'CREDIT.DEBIT.NOT.EQUALS', code: 100 });
+      }
+      const journalNumber = await ManualJournal.query()
+        .where('journal_number', form.journal_number)
+        .whereNot('id', id)
+        .first();
+
+      if (journalNumber) {
+        errorReasons.push({ type: 'JOURNAL.NUMBER.ALREADY.EXISTS', code: 300 });
+      }
+      const accountsIds = entries.map((entry) => entry.account_id);
+      const accounts = await Account.query().whereIn('id', accountsIds)
+        .withGraphFetched('type');
+
+      const storedAccountsIds = accounts.map((account) => account.id);
+
+      if (difference(accountsIds, storedAccountsIds).length > 0) {
+        errorReasons.push({ type: 'ACCOUNTS.IDS.NOT.FOUND', code: 200 });
+      }
+      if (errorReasons.length > 0) {
+        return res.status(400).send({ errors: errorReasons });
+      }
+
+      await ManualJournal.query()
+        .where('id', manualJournal.id)
+        .update({
+          reference: form.reference,
+          transaction_type: 'Journal',
+          journalNumber: form.journal_number,
+          amount: totalCredit,
+          date: formattedDate,
+          description: form.description,
+        });
+
+      const transactions = await AccountTransaction.query()
+        .whereIn('reference_type', ['Journal'])
+        .where('reference_id', manualJournal.id)
+        .withGraphFetched('account.type');
+
+      const journal = new JournalPoster();
+      journal.loadEntries(transactions);
+      journal.removeEntries();
+
+      await Promise.all([
+        journal.deleteEntries(),
+        journal.saveEntries(),
+        journal.saveBalance(),
+      ]);
+
+      return res.status(200).send({});
+    },
+  },
+
+  getManualJournal: {
+    validation: [
+      param('id').exists().isNumeric().toInt(),
+    ],
+    async handler(req, res) {
+      const validationErrors = validationResult(req);
+
+      if (!validationErrors.isEmpty()) {
+        return res.boom.badData(null, {
+          code: 'validation_error', ...validationErrors,
+        });
+      }
+      const { id } = req.params;
+      const manualJournal = await ManualJournal.query()
+        .where('id', id).first();
+
+      if (!manualJournal) {
+        return res.status(404).send({
+          errors: [{ type: 'MANUAL.JOURNAL.NOT.FOUND', code: 100 }],
+        });
+      }
+      
+    },
+  },
+
+  /**
+   * Deletes manual journal transactions and associated
+   * accounts transactions.
+   */
+  deleteManualJournal: {
+    validation: [
+      param('id').exists().isNumeric().toInt(),
+    ],
+    async handler(req, res) {
+      const validationErrors = validationResult(req);
+
+      if (!validationErrors.isEmpty()) {
+        return res.boom.badData(null, {
+          code: 'validation_error', ...validationErrors,
+        });
+      }
+      const { id } = req.params;
+      const manualJournal = await ManualJournal.query()
+        .where('id', id).first();
+
+      if (!manualJournal) {
+        return res.status(404).send({
+          errors: [{ type: 'MANUAL.JOURNAL.NOT.FOUND', code: 100 }],
+        });
+      }
+      const transactions = await AccountTransaction.query()
+        .whereIn('reference_type', ['Journal', 'ManualJournal'])
+        .where('reference_id', manualJournal.id)
+        .withGraphFetched('account.type');
+
+      const journal = new JournalPoster();
+      journal.loadEntries(transactions);
+      journal.removeEntries();
+
+      await ManualJournal.query()
+        .where('id', manualJournal.id)
+        .delete();
+
+      await Promise.all([
+        journal.deleteEntries(),
+        journal.saveBalance(),
+      ]);
+      return res.status(200).send({ id });
     },
   },
 

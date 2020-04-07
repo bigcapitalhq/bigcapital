@@ -8,7 +8,6 @@ import { FormattedList } from 'react-intl';
 export default function MakeJournalEntriesFooter({
   formik,
 }) {
-
   return (
     <div>
       <div class="form__floating-footer">

@@ -12,6 +12,7 @@ export default class JournalPoster {
   constructor() {
     this.entries = [];
     this.balancesChange = {};
+    this.deletedEntriesIds = [];
   }
 
   /**
@@ -155,14 +156,32 @@ export default class JournalPoster {
   }
 
   /**
-   * Delete the given or all stacked entries.
+   * 
    * @param {Array} ids -
    */
-  async deleteEntries(ids) {
-    const entriesIds = ids || this.entries.map((e) => e.id);
+  removeEntries(ids = []) {
+    const targetIds = (ids.length <= 0) ? this.entries.map(e => e.id) : ids;
+    const removeEntries = this.entries.filter((e) => targetIds.indexOf(e.id) !== -1);
 
-    if (entriesIds.length > 0) {
-      await AccountTransaction.query().whereIn('id', entriesIds).delete();
+    this.entries = this.entries
+      .filter(e => targetIds.indexOf(e.id) === -1)
+
+    removeEntries.forEach((entry) => {
+      entry.credit = -1 * entry.credit;
+      entry.debit = -1 * entry.debit;
+
+      this.setAccountBalanceChange(entry, entry.accountNormal);
+    });
+    this.deletedEntriesIds.push(
+      ...removeEntries.map(entry => entry.id),
+    );
+  }
+
+  async deleteEntries() {
+    if (this.deletedEntriesIds.length > 0) {
+      await AccountTransaction.query()
+        .whereIn('id', this.deletedEntriesIds)
+        .delete();
     }
   }
 

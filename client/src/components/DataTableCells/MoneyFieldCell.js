@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import MoneyInputGroup from 'components/MoneyInputGroup';
 
 // Input form cell renderer.
@@ -22,6 +22,10 @@ const MoneyFieldCellRenderer = ({
     const updateValue = isNumeric(value) ? parseFloat(value) : value;
     payload.updateData(index, id, updateValue);
   };
+
+  useEffect(() => {
+    setValue(initialValue);
+  }, [initialValue])
 
   return (<MoneyInputGroup
     value={value}

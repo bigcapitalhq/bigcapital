@@ -220,8 +220,102 @@ describe('JournalPoster', () => {
 
   });
 
-  describe('deleteEntries', () => {
+  describe.only('removeEntries', () => {
+    it('Should remove all entries in the collection.', () => {
+      const journalPoster = new JournalPoster();
+      const journalEntry1 = new JournalEntry({
+        id: 1,
+        credit: 1000,
+        account: 1,
+        accountNormal: 'credit',
+      });
+      const journalEntry2 = new JournalEntry({
+        id: 2,
+        debit: 1000,
+        account: 2,
+        accountNormal: 'debit',
+      });
+      journalPoster.credit(journalEntry1);
+      journalPoster.debit(journalEntry2);
 
+      journalPoster.removeEntries();
+
+      expect(journalPoster.entries.length).equals(0);
+    });
+
+    it('Should remove the given entries ids from the collection.', () => {
+      const journalPoster = new JournalPoster();
+      const journalEntry1 = new JournalEntry({
+        id: 1,
+        credit: 1000,
+        account: 1,
+        accountNormal: 'credit',
+      });
+      const journalEntry2 = new JournalEntry({
+        id: 2,
+        debit: 1000,
+        account: 2,
+        accountNormal: 'debit',
+      });
+      journalPoster.credit(journalEntry1);
+      journalPoster.debit(journalEntry2);
+
+      journalPoster.removeEntries([1]);
+      expect(journalPoster.entries.length).equals(1);
+    });
+
+    it('Should the removed entries ids be stacked to deleted entries ids.', () => {
+      const journalPoster = new JournalPoster();
+      const journalEntry1 = new JournalEntry({
+        id: 1,
+        credit: 1000,
+        account: 1,
+        accountNormal: 'credit',
+      });
+      const journalEntry2 = new JournalEntry({
+        id: 2,
+        debit: 1000,
+        account: 2,
+        accountNormal: 'debit',
+      });
+      journalPoster.credit(journalEntry1);
+      journalPoster.debit(journalEntry2);
+
+      journalPoster.removeEntries();
+
+      expect(journalPoster.deletedEntriesIds.length).equals(2);
+      expect(journalPoster.deletedEntriesIds[0]).equals(1);
+      expect(journalPoster.deletedEntriesIds[1]).equals(2);
+    });
+
+    it.only('Should revert the account balance after remove the entries.', () => {
+      const journalPoster = new JournalPoster();
+      const journalEntry1 = new JournalEntry({
+        id: 1,
+        credit: 1000,
+        account: 1,
+        accountNormal: 'credit',
+      });
+      const journalEntry2 = new JournalEntry({
+        id: 2,
+        debit: 1000,
+        account: 2,
+        accountNormal: 'debit',
+      });
+      journalPoster.credit(journalEntry1);
+      journalPoster.debit(journalEntry2);
+
+      journalPoster.removeEntries([1]);
+
+      expect(journalPoster.balancesChange['1']).equals(0);
+      expect(journalPoster.balancesChange['2']).equals(1000);
+    })
+  });
+
+  describe('deleteEntries', () => {
+    it('Should delete all entries from the storage based on the stacked deleted entries ids.', () => {
+
+    });
   });
 
   describe('reverseEntries()', () => {
