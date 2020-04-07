@@ -4,9 +4,9 @@ import {
 } from '@blueprintjs/core';
 
 const InputEditableCell = ({
-  value: initialValue,
   row: { index },
-  column: { id },
+  column: { id,  },
+  cell: { value: initialValue },
   payload,
 }) => {
   const [value, setValue] = useState(initialValue)

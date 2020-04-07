@@ -14,8 +14,13 @@ const MoneyFieldCellRenderer = ({
     setValue(value);
   }, []);
 
+  function isNumeric(data) {
+    return !isNaN(parseFloat(data)) && isFinite(data) && data.constructor !== Array;
+  }
+
   const onBlur = () => {
-    payload.updateData(index, id, parseFloat(value));
+    const updateValue = isNumeric(value) ? parseFloat(value) : value;
+    payload.updateData(index, id, updateValue);
   };
 
   return (<MoneyInputGroup

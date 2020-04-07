@@ -49,8 +49,8 @@ function MakeJournalEntriesForm({
 
   const defaultEntry = useMemo(() => ({
     account_id: null,
-    credit: null,
-    debit: null,
+    credit: 0,
+    debit: 0,
     note: '',
   }), []);
 
@@ -71,7 +71,7 @@ function MakeJournalEntriesForm({
         defaultEntry,
       ],
     },
-    onSubmit: (values) => {
+    onSubmit: (values, actions) => {
       const form = values.entries.filter((entry) => (
         (entry.credit || entry.debit)
       ));
@@ -95,8 +95,9 @@ function MakeJournalEntriesForm({
           AppToaster.show({
             message: 'manual_journal_has_been_submit',
           }); 
+          actions.setSubmitting(false);
         }).catch((error) => {
-
+          actions.setSubmitting(false);
         });
     },
   });

@@ -13,12 +13,14 @@ export default function MakeJournalEntriesFooter({
     <div>
       <div class="form__floating-footer">
         <Button
+          disabled={formik.isSubmitting}
           intent={Intent.PRIMARY}
           type="submit">
           Save
         </Button>
 
         <Button
+          disabled={formik.isSubmitting}
           intent={Intent.PRIMARY}
           type="submit"
           className={'ml1'}>
@@ -26,6 +28,7 @@ export default function MakeJournalEntriesFooter({
         </Button>
 
         <Button
+          disabled={formik.isSubmitting}
           type="submit"
           className={'button-secondary ml1'}>
           Save as Draft

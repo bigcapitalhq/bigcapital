@@ -11,6 +11,7 @@ import {
 const AccountCellRenderer = ({
   column: { id, value },
   row: { index, original },
+  cell: { value: initialValue },
   payload: { accounts, updateData, errors },
 }) => {
   const handleAccountSelected = useCallback((account) => {
