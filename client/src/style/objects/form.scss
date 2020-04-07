@@ -17,7 +17,7 @@ label{
 }
 
 .#{$ns}-input{
-  box-shadow: 0 0 0;
+  box-shadow: 0 0 0 transparent;
   border: 1px solid #ced4da;
   border-radius: 0;
   height: 32px;
@@ -93,6 +93,10 @@ label{
 
   .#{$ns}-icon-caret-down{
     color: #8D8D8D;
+  }
+
+  &.bp3-fill{
+    width: 100%;
   }
 }
 

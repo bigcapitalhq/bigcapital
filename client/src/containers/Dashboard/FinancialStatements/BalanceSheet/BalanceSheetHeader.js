@@ -46,7 +46,7 @@ export default function BalanceSheetHeader({
     formik.setFieldValue('display_columns_by', item.by);
   }, []);
 
-  // handle submit filter submit button.
+  // Handle submit filter submit button.
   const handleSubmitClick = useCallback(() => {
     formik.submitForm();
   }, [formik]);  

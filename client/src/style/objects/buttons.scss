@@ -32,6 +32,11 @@
   color: #555555;
   box-shadow: 0 0 0 transparent;
 
+  &.bp3-small{
+    font-size: 13px;
+    min-height: 29px;
+  }
+
   .form-group--select-list &{
     border-radius: 0;
 

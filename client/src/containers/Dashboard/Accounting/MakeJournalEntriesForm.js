@@ -76,13 +76,14 @@ function MakeJournalEntriesForm({
     },
   });
 
-  console.log(formik.errors);
   return (
-    <form onSubmit={formik.handleSubmit}>
-      <MakeJournalEntriesHeader formik={formik} />
-      <MakeJournalEntriesTable formik={formik} />
-      <MakeJournalEntriesFooter formik={formik} />
-    </form>
+    <div class="make-journal-entries">
+      <form onSubmit={formik.handleSubmit}>
+        <MakeJournalEntriesHeader formik={formik} />
+        <MakeJournalEntriesTable formik={formik} defaultRow={defaultEntry} />
+        <MakeJournalEntriesFooter formik={formik} />
+      </form>
+    </div>
   );
 }
 

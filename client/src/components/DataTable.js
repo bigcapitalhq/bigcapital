@@ -44,6 +44,7 @@ export default function DataTable({
   virtualizedRows = false,
   fixedSizeHeight = 100,
   fixedItemSize = 30,
+  payload, 
 }) {
   const {
     getTableProps,
@@ -78,6 +79,7 @@ export default function DataTable({
       getSubRows: row => row.children,
       manualSortBy,
       expandSubRows,
+      payload,
     },
     useSortBy,
     useExpanded,
@@ -122,7 +124,7 @@ export default function DataTable({
   // Renders table row.
   const RenderRow = useCallback(({ style = {}, row }) => {
     prepareRow(row);    
-    const rowClasses = rowClassNames && rowClassNames(row.original);
+    const rowClasses = rowClassNames && rowClassNames(row);
 
     return (
       <div {...row.getRowProps({

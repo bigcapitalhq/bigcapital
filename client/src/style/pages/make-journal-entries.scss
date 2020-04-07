@@ -2,38 +2,147 @@
 .make-journal-entries{
 
   &__header{
-    padding: 25px 40px;
+    padding: 25px 27px 20px;
     background: #fbfbfb;
+
+    .bp3-form-group{
+
+      .bp3-label{
+        font-weight: 500;
+        font-size: 13px;
+        color: #444;
+      }
+    }
   }
 
   &__table{
+    padding: 15px;
+
     .bp3-form-group{
       margin-bottom: 0;
     }
-    table{
-      border: 1px solid transparent;
+    .table{
+      border: 1px dotted rgb(195, 195, 195);
+      border-bottom: transparent;
+      border-left: transparent;
 
-      thead{
-        th.index{ width: 3%; }
-        th.account{ width: 22%; }
-        th.note{ width: 40%; }
-        th.credit{ width: 17.5%; }
-        th.debit{ width: 17.5%; }
+      .th,
+      .td{
+        border-left: 1px dotted rgb(195, 195, 195); 
+
+        &.index{
+
+          span{
+            width: 100%;
+            font-weight: 500;
+          }            
+        }
       }
 
-      th,
-      td{
-        border-right: 1px dotted #999;
+      .thead{
+        .tr .th{
+          padding: 10px 10px;
+          background-color: #F2F5FA;
+          font-size: 14px;
+          font-weight: 500;
+          color: #333;
+        }
       }
-      th{
+
+      .tbody{
+        .tr .td{
+          padding: 7px;
+          border-bottom: 1px dotted rgb(195, 195, 195);
+          min-height: 46px;
+
+          &.index{
+            background-color: #F2F5FA;
+            text-align: center;
+
+            > span{
+              margin-top: auto;
+              margin-bottom: auto; 
+            }
+          }
+        }
+        .tr{
+          .bp3-input,
+          .form-group--select-list .bp3-button{
+            border-color: #E5E5E5;
+            border-radius: 3px;
+            padding-left: 8px;
+            padding-right: 8px;
+          }
+
+          &:last-of-type{
+
+            .td{
+              border-bottom: transparent;
+
+              .bp3-button,
+              .bp3-input-group{
+                display: none;
+              }
+            }
+          }
+
+          .td.actions{
+            .bp3-button{
+              background-color: transparent;
+              color: #E68F8E;
+
+              &:hover{
+                color: #c23030;
+              }
+            }
+          }
+
+          &.row--total{
+
+            .account.td,
+            .debit.td,
+            .credit.td{
+              > span{
+                padding-top: 6px;
+              }
+            }
+            .debit.td,
+            .credit.td{
+              > span{
+                font-weight: 600;
+                color: #444;
+              }
+            }
+          }
+        }
+      }
+      .th{
         color: #444;
         font-weight: 600;
         border-bottom: 1px dotted #666;
       }
 
-      td{
+      .td{
         border-bottom: 1px dotted #999;
       }
+
+      .actions.td{
+        .bp3-button{
+          background: transparent;
+          margin: 0;
+        }
+      }
     }
+  }
+
+  .bp3-button{
+    &.button--clear-lines{
+      background-color: #FCEFEF;
+    }
+  }
+  .button--clear-lines,
+  .button--new-line{
+    padding-left: 14px;
+    padding-right: 14px;
   }
 }

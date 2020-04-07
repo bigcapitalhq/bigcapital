@@ -8,30 +8,9 @@ import { FormattedList } from 'react-intl';
 export default function MakeJournalEntriesFooter({
   formik,
 }) {
-  const creditSum = useMemo(() => {
-    return formik.values.entries.reduce((sum, entry) => {
-      return entry.credit + sum;
-    }, 0);
-  }, [formik.values.entries]);
-
-  const debitSum = useMemo(() => {
-    return formik.values.entries.reduce((sum, entry) => {
-      return entry.debit + sum;
-    }, 0);
-  }, [formik.values.entries]);
 
   return (
     <div>
-      <table>
-        <tbody>
-          <tr>
-            <td><strong>Total</strong></td>
-            <td>{ creditSum }</td>
-            <td>{ debitSum }</td>
-          </tr>
-        </tbody>
-      </table>
-
       <div class="form__floating-footer">
         <Button
           intent={Intent.PRIMARY}
@@ -42,8 +21,20 @@ export default function MakeJournalEntriesFooter({
         <Button
           intent={Intent.PRIMARY}
           type="submit"
-          className={'ml2'}>
+          className={'ml1'}>
           Save & New
+        </Button>
+
+        <Button
+          type="submit"
+          className={'button-secondary ml1'}>
+          Save as Draft
+        </Button>
+
+        <Button
+          type="submit"
+          className={'button-secondary ml1'}>
+          Cancel
         </Button>
       </div>
     </div>
