@@ -2,7 +2,9 @@ import React, {useMemo, useCallback, useState} from 'react';
 import {omit} from 'lodash';
 import {
   MenuItem,
-  Button
+  FormGroup,
+  Button,
+  Intent,
 } from '@blueprintjs/core';
 import {Select} from '@blueprintjs/select';
 // import MultiSelect from 'components/MultiSelect';
@@ -10,6 +12,7 @@ import {Select} from '@blueprintjs/select';
 export default function AccountsMultiSelect({
   accounts,
   onAccountSelected,
+  error,
 }) {
   const [selectedAccount, setSelectedAccount] = useState(null); 
 
@@ -30,18 +33,20 @@ export default function AccountsMultiSelect({
   }, [setSelectedAccount, onAccountSelected]);
 
   return (
+ 
     <Select
       items={accounts}
       noResults={<MenuItem disabled={true} text='No results.' />}
       itemRenderer={accountItem}
       popoverProps={{ minimal: true }}
       filterable={true}
-      onItemSelect={onAccountSelect}
+      onItemSelect={onAccountSelect}        
     >
       <Button
         rightIcon='caret-down'
         text={selectedAccount ? selectedAccount.name : 'Select account'}
       />
     </Select>
+
   );
 }

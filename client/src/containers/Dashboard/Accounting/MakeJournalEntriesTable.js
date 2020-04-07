@@ -1,9 +1,9 @@
 import React, {useState, useMemo, useCallback} from 'react';
-import DataTable from 'components/DataTable';
 import {
   Button,
   Intent,
 } from '@blueprintjs/core';
+import DataTable from 'components/DataTable';
 import Icon from 'components/Icon';
 import AccountsConnect from 'connectors/Accounts.connector.js';
 import {compose, formattedAmount} from 'utils';
@@ -11,7 +11,8 @@ import {
   AccountsListFieldCell,
   MoneyFieldCell,
   InputGroupCell,
-} from 'comp}onents/DataTableCells';
+} from 'components/DataTableCells';
+import { omit } from 'lodash';
 
 // Actions cell renderer.
 const ActionsCellRenderer = ({
@@ -50,7 +51,7 @@ const TotalAccountCellRenderer = (chainedComponent) => (props) => {
 // Total credit/debit cell renderer.
 const TotalCreditDebitCellRenderer = (chainedComponent, type) => (props) => {
   if (props.data.length === (props.row.index + 2)) {
-    const total = props.data.reduce((total, entry) => {
+      const total = props.data.reduce((total, entry) => {
       const amount = parseInt(entry[type], 10);
       const computed = amount ? total + amount : total;
 
@@ -82,18 +83,20 @@ function MakeJournalEntriesTable({
 
   // Handles update datatable data.
   const handleUpdateData = useCallback((rowIndex, columnId, value) => {
-    setRow((old) =>
-      old.map((row, index) => {
-        if (index === rowIndex) {
-          return {
-            ...old[rowIndex],
-            [columnId]: value,
-          }
-        }
-        return row
-      })
-    )
-  }, []);
+    const newRows = rows.map((row, index) => {
+      if (index === rowIndex) {
+        return {
+          ...rows[rowIndex],
+          [columnId]: value,
+        };
+      }
+      return { ...row };
+    });
+    setRow(newRows);
+    formik.setFieldValue('entries', newRows.map(row => ({
+      ...omit(row, ['rowType']),
+    })));
+  }, [rows, formik]);
 
   // Handles click remove datatable row.
   const handleRemoveRow = useCallback((rowIndex) => {
@@ -119,6 +122,7 @@ function MakeJournalEntriesTable({
     },
     {
       Header: 'Account',
+      id: 'account_id',
       accessor: 'account',
       Cell: TotalAccountCellRenderer(AccountsListFieldCell),
       className: "account",
@@ -174,6 +178,7 @@ function MakeJournalEntriesTable({
   const rowClassNames = useCallback((row) => ({
     'row--total': rows.length === (row.index + 2),
   }), [rows]);
+
   return (
     <div class="make-journal-entries__table">
       <DataTable
@@ -182,6 +187,7 @@ function MakeJournalEntriesTable({
         rowClassNames={rowClassNames}
         payload={{
           accounts,
+          errors: formik.errors.entries || [],
           updateData: handleUpdateData,
           removeRow: handleRemoveRow,
         }}/>

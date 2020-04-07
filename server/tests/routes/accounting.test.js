@@ -18,7 +18,7 @@ describe('routes: `/accounting`', () => {
     loginRes = null;
   });
 
-  describe('route: `/accounting/make-journal-entries`', async () => {
+  describe.only('route: `/accounting/make-journal-entries`', async () => {
     it('Should sumation of credit or debit does not equal zero.', async () => {
       const account = await create('account');
       const res = await request()
@@ -26,6 +26,7 @@ describe('routes: `/accounting`', () => {
         .set('x-access-token', loginRes.body.token)
         .send({
           date: new Date().toISOString(),
+          journal_number: '123',
           reference: 'ASC',
           entries: [
             {
@@ -54,7 +55,7 @@ describe('routes: `/accounting`', () => {
         .set('x-access-token', loginRes.body.token)
         .send({
           date: new Date().toISOString(),
-          reference: 'ASC',
+          journal_number: '123',
           entries: [
             {
               credit: 1000,
@@ -85,7 +86,7 @@ describe('routes: `/accounting`', () => {
         .set('x-access-token', loginRes.body.token)
         .send({
           date: new Date().toISOString(),
-          reference: manualJournal.reference,
+          journal_number: manualJournal.journalNumber,
           entries: [
             {
               credit: 1000,
@@ -102,18 +103,18 @@ describe('routes: `/accounting`', () => {
 
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.that.deep.equal({
-        type: 'REFERENCE.ALREADY.EXISTS',
+        type: 'JOURNAL.NUMBER.ALREADY.EXISTS',
         code: 300,
       });
     });
 
-    it('Should response error in case account id not exists.', async () => {
+    it('Should response error in case account id not exists in one of the given entries.', async () => {
       const res = await request()
         .post('/api/accounting/make-journal-entries')
         .set('x-access-token', loginRes.body.token)
         .send({
           date: new Date().toISOString(),
-          reference: '1000',
+          journal_number: '123',
           entries: [
             {
               credit: 1000,
@@ -144,7 +145,7 @@ describe('routes: `/accounting`', () => {
         .set('x-access-token', loginRes.body.token)
         .send({
           date: new Date().toISOString(),
-          reference: '1000',
+          journal_number: '1000',
           entries: [
             {
               credit: null,
@@ -166,7 +167,7 @@ describe('routes: `/accounting`', () => {
       });
     });
 
-    it('Should store manual journal transaction to the storage.', async () => {
+    it.only('Should store manual journal transaction to the storage.', async () => {
       const account1 = await create('account');
       const account2 = await create('account');
 
@@ -175,8 +176,9 @@ describe('routes: `/accounting`', () => {
         .set('x-access-token', loginRes.body.token)
         .send({
           date: new Date('2020-2-2').toISOString(),
-          reference: '1000',
-          memo: 'Description here.',
+          journal_number: '1000',
+          reference: '2000',
+          description: 'Description here.',
           entries: [
             {
               credit: 1000,
@@ -192,12 +194,14 @@ describe('routes: `/accounting`', () => {
       const foundManualJournal = await ManualJournal.query();
 
       expect(foundManualJournal.length).equals(1);
-      expect(foundManualJournal[0].reference).equals('1000');
+      
+      expect(foundManualJournal[0].reference).equals('2000');
+      expect(foundManualJournal[0].journalNumber).equals('1000');
       expect(foundManualJournal[0].transactionType).equals('Journal');
       expect(foundManualJournal[0].amount).equals(1000);
       expect(moment(foundManualJournal[0].date).format('YYYY-MM-DD')).equals('2020-02-02');
-      expect(foundManualJournal[0].note).equals('Description here.');
-      expect(foundManualJournal[0].userId).equals(1);
+      expect(foundManualJournal[0].description).equals('Description here.');
+      expect(foundManualJournal[0].userId).to.be.a('integer');
     });
 
     it('Should store journal transactions to the storage.', async () => {
@@ -246,7 +250,7 @@ describe('routes: `/accounting`', () => {
   });
 
 
-  describe.only('route: `accounting/manual-journals`', async () => {
+  describe('route: `accounting/manual-journals`', async () => {
 
     it('Should retrieve manual journals resource not found.', async () => {
       const res = await request()

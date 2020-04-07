@@ -126,9 +126,11 @@ export default {
   makeJournalEntries: {
     validation: [
       check('date').isISO8601(),
-      check('reference').exists(),
-      check('memo').optional().trim().escape(),
-      check('entries').isArray({ min: 1 }),
+      check('journal_number').exists().trim().escape(),
+      check('transaction_type').optional({ nullable: true }).trim().escape(),
+      check('reference').optional({ nullable: true }),
+      check('description').optional().trim().escape(),
+      check('entries').isArray({ min: 2 }),
       check('entries.*.credit').optional({ nullable: true }).isNumeric().toInt(),
       check('entries.*.debit').optional({ nullable: true }).isNumeric().toInt(),
       check('entries.*.account_id').isNumeric().toInt(),
@@ -144,6 +146,8 @@ export default {
       }
       const form = {
         date: new Date(),
+        transaction_type: 'journal',
+        reference: '',
         ...req.body,
       };
 
@@ -183,10 +187,11 @@ export default {
         errorReasons.push({ type: 'ACCOUNTS.IDS.NOT.FOUND', code: 200 });
       }
 
-      const journalReference = await ManualJournal.query().where('reference', form.reference);
+      const journalNumber = await ManualJournal.query()
+        .where('journal_number', form.journal_number);
 
-      if (journalReference.length > 0) {
-        errorReasons.push({ type: 'REFERENCE.ALREADY.EXISTS', code: 300 });
+      if (journalNumber.length > 0) {
+        errorReasons.push({ type: 'JOURNAL.NUMBER.ALREADY.EXISTS', code: 300 });
       }
       if (errorReasons.length > 0) {
         return res.status(400).send({ errors: errorReasons });
@@ -196,9 +201,10 @@ export default {
       const manualJournal = await ManualJournal.query().insert({
         reference: form.reference,
         transaction_type: 'Journal',
+        journal_number: form.journal_number,
         amount: totalCredit,
         date: formattedDate,
-        note: form.memo,
+        description: form.description,
         user_id: user.id,
       });
       const journalPoster = new JournalPoster();
@@ -210,7 +216,8 @@ export default {
           debit: entry.debit,
           credit: entry.credit,
           account: account.id,
-          transactionType: 'Journal',
+          referenceType: 'Journal',
+          referenceId: manualJournal.id,
           accountNormal: account.type.normal,
           note: entry.note,
           date: formattedDate,

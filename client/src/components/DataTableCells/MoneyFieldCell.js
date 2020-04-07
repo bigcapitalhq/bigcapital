@@ -15,7 +15,7 @@ const MoneyFieldCellRenderer = ({
   }, []);
 
   const onBlur = () => {
-    payload.updateData(index, id, value)
+    payload.updateData(index, id, parseFloat(value));
   };
 
   return (<MoneyInputGroup

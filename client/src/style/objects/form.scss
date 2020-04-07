@@ -98,6 +98,12 @@ label{
   &.bp3-fill{
     width: 100%;
   }
+
+  &.bp3-intent-danger{
+    .bp3-button:not(.bp3-minimal){
+      border-color: #db3737;
+    }
+  }  
 }
 
 

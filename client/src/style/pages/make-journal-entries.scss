@@ -1,5 +1,6 @@
 
 .make-journal-entries{
+  padding-bottom: 80px;
 
   &__header{
     padding: 25px 27px 20px;
@@ -72,6 +73,14 @@
             border-radius: 3px;
             padding-left: 8px;
             padding-right: 8px;
+          }
+
+          .form-group--select-list{
+            &.bp3-intent-danger{
+              .bp3-button:not(.bp3-minimal){
+                border-color: #efa8a8;
+              }
+            }  
           }
 
           &:last-of-type{

@@ -1,5 +1,8 @@
 import moment from 'moment';
 import _ from 'lodash';
+import Currency from 'js-money/lib/currency';
+import accounting from 'accounting';
+
 
 export function removeEmptyFromObject(obj) {
   obj = Object.assign({}, obj);
@@ -131,4 +134,12 @@ export const defaultExpanderReducer = (tableRows, level) => {
   };
   walker(tableRows);
   return expended;
+}
+
+
+export function formattedAmount(cents, currency) {
+  const { symbol, decimal_digits: precision } = Currency[currency];
+  const amount = cents / Math.pow(10, precision);
+
+  return accounting.formatMoney(amount, { symbol, precision });
 }
