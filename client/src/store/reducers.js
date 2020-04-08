@@ -11,16 +11,16 @@ import expenses from './expenses/expenses.reducer';
 import currencies from './currencies/currencies.reducer';
 import resources from './resources/resources.reducer';
 import financialStatements from './financialStatement/financialStatements.reducer';
-import itemCategories from './itemCategories/itemsCateory.reducer';
+import itemCategories from './itemCategories/itemsCategory.reducer';
 import settings from './settings/settings.reducer';
-import accounting from './accounting/accounting.reducers';
+import manualJournals from './manualJournals/manualJournals.reducers';
 
 export default combineReducers({
   authentication,
   dashboard,
   users,
   accounts,
-  accounting,
+  manualJournals,
   fields,
   views,
   expenses,

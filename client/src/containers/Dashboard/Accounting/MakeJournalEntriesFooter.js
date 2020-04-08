@@ -7,6 +7,8 @@ import { FormattedList } from 'react-intl';
 
 export default function MakeJournalEntriesFooter({
   formik,
+  onSubmitClick,
+  onCancelClick,
 }) {
   return (
     <div>
@@ -14,28 +16,38 @@ export default function MakeJournalEntriesFooter({
         <Button
           disabled={formik.isSubmitting}
           intent={Intent.PRIMARY}
-          type="submit">
+          name={'save'}
+          onClick={() => {
+            onSubmitClick({ publish: true, redirect: true });
+          }}>
           Save
         </Button>
 
         <Button
           disabled={formik.isSubmitting}
           intent={Intent.PRIMARY}
-          type="submit"
-          className={'ml1'}>
+          className={'ml1'}
+          name={'save_and_new'}
+          onClick={() => {
+            onSubmitClick({ publish: true, redirect: false }); 
+          }}>
           Save & New
         </Button>
 
         <Button
           disabled={formik.isSubmitting}
-          type="submit"
-          className={'button-secondary ml1'}>
+          className={'button-secondary ml1'}
+          onClick={() => {
+            onSubmitClick({ publish: false, redirect: false }); 
+          }}>
           Save as Draft
         </Button>
 
         <Button
-          type="submit"
-          className={'button-secondary ml1'}>
+          className={'button-secondary ml1'}
+          onClick={() => {
+            onCancelClick && onCancelClick();
+          }}>
           Cancel
         </Button>
       </div>

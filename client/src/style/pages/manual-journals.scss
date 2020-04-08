@@ -1,0 +1,26 @@
+
+
+.dashboard__insider--manual-journals{
+
+  .bigcapital-datatable{
+
+    .thead{
+
+    }
+
+    .tbody{
+      .amount > span{
+        font-weight: 600;
+      }
+      .note{
+        .bp3-icon{
+          color: #666;
+        }
+      }
+      .status{
+        font-size: 13px;
+        text-transform: uppercase;
+      }
+    }
+  }
+}

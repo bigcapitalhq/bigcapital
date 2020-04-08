@@ -16,7 +16,7 @@
       overflow-x: hidden;
 
       .th{
-        padding: 1rem 1.5rem;
+        padding: 1rem 0.5rem;
         background: #F8FAFA;
         font-size: 14px;
         color: #666;
@@ -54,7 +54,6 @@
       .bp3-control{
         margin-bottom: 0;
       }
-
       .resizer {
         display: inline-block;
         background: transparent;
@@ -90,8 +89,8 @@
 
       .tr .td{
         border-bottom: 1px solid #E0E2E2;
-      }
-      
+        align-items: center;
+      }      
       .td.actions .#{$ns}-button{
         background: #E6EFFB;
         border: 0;

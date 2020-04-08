@@ -433,11 +433,15 @@ export default {
           errors: [{ type: 'MANUAL.JOURNAL.NOT.FOUND', code: 100 }],
         });
       }
-      if (!manualJournal.status) {
+      if (manualJournal.status) {
         return res.status(400).send({
           errors: [{ type: 'MANUAL.JOURNAL.PUBLISHED.ALREADY', code: 200 }],
         });
       }
+      const updateJournalTransactionOper = ManualJournal.query()
+        .where('id', manualJournal.id)
+        .update({ status: 1 });
+
       const transactions = await AccountTransaction.query()
         .whereIn('reference_type', ['Journal', 'ManualJournal'])
         .where('reference_id', manualJournal.id)
@@ -452,6 +456,7 @@ export default {
         .update({ draft: 0 });
 
       await Promise.all([
+        updateJournalTransactionOper,
         updateAccountsTransactionsOper,
         journal.saveBalance(),
       ]);

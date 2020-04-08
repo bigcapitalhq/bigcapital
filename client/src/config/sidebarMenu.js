@@ -44,9 +44,13 @@ export default [
         href: '/dashboard/accounts'
       },
       {
+        text: 'Manual Journal',
+        href: '/dashboard/accounting/manual-journals'
+      },
+      {
         text: 'Make Journal',
         href: '/dashboard/accounting/make-journal-entry'
-      }
+      },
     ]
   },
   {

@@ -1,5 +1,5 @@
-import React, {useMemo} from 'react';
-import { useParams } from 'react-router-dom';
+import React, {useMemo, useCallback} from 'react';
+import { useParams, useHistory } from 'react-router-dom';
 import { useAsync } from 'react-use';
 import MakeJournalEntriesForm from './MakeJournalEntriesForm';
 import LoadingIndicator from 'components/LoadingIndicator';
@@ -13,6 +13,7 @@ function MakeJournalEntriesPage({
   getManualJournal,
   fetchAccounts,
 }) {
+  const history = useHistory();
   const { id } = useParams();
 
   const fetchJournal = useAsync(() => {
@@ -25,9 +26,21 @@ function MakeJournalEntriesPage({
     getManualJournal(id) || null,
     [getManualJournal, id]);
 
+  const handleFormSubmit = useCallback((payload) => {
+    payload.redirect && 
+      history.push('/dashboard/accounting/manual-journals');
+  }, [history]);
+
+  const handleCancel = useCallback(() => {
+    history.push('/dashboard/accounting/manual-journals');
+  }, [history]);
+
   return (
     <LoadingIndicator loading={fetchJournal.loading} mount={false}>
-      <MakeJournalEntriesForm editJournal={editJournal} />
+      <MakeJournalEntriesForm
+        onFormSubmit={handleFormSubmit}
+        editJournal={editJournal}
+        onCancelForm={handleCancel} />
     </LoadingIndicator>
   );
 }

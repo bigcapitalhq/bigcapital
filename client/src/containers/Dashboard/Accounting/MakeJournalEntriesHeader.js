@@ -1,13 +1,11 @@
 import React, {useMemo, useCallback} from 'react';
-import * as Yup from 'yup';
 import {
   InputGroup,
   FormGroup,
   Intent,
   Position,
 } from '@blueprintjs/core';
-import {DatePicker, DateInput} from '@blueprintjs/datetime';
-import {Formik, useFormik} from "formik";
+import {DateInput} from '@blueprintjs/datetime';
 import {useIntl} from 'react-intl';
 import {Row, Col} from 'react-grid-system';
 import moment from 'moment';

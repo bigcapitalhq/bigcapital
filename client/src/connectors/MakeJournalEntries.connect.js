@@ -3,10 +3,10 @@ import {
   makeJournalEntries,
   fetchManualJournal,
   editManualJournal,
-} from 'store/accounting/accounting.actions';
+} from 'store/manualJournals/manualJournals.actions';
 import {
   getManualJournal,
-} from 'store/accounting/accounting.reducers';
+} from 'store/manualJournals/manualJournals.reducers';
 
 export const mapStateToProps = (state, props) => ({
   getManualJournal: (id) => getManualJournal(state, id),
