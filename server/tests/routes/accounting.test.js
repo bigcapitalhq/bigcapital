@@ -560,7 +560,7 @@ describe('routes: `/accounting`', () => {
     });
   });
 
-  describe.only('route: GET `accounting/manual-journals/:id`', () => {
+  describe('route: GET `accounting/manual-journals/:id`', () => {
     it('Should response not found in case manual transaction id was not exists.', async () => {
       const res = await request()
         .delete('/api/accounting/manual-journals/100')
@@ -605,6 +605,64 @@ describe('routes: `/accounting`', () => {
       expect(res.status).equals(200);
       expect(res.body.manualJournals).to.be.a('array');
       expect(res.body.manualJournals.length).equals(2);
+    });
+  });
+
+  describe.only('route: POST `accounting/manual-journals/:id/publish`', () => {
+
+    it('Should response not found in case the manual journal id was not exists.', async () => {
+      const manualJournal = await create('manual_journal');
+
+      const res = await request()
+        .post('/api/accounting/manual-journals/123/publish')
+        .set('x-access-token', loginRes.body.token)
+        .send();
+
+      expect(res.status).equals(404);
+      expect(res.body.errors).include.something.that.deep.equals({
+        type: 'MANUAL.JOURNAL.NOT.FOUND', code: 100,
+      });
+    });
+
+    it('Should response published ready.', async () => {
+      const manualJournal = await create('manual_journal', { status: 0 });
+      const res = await request()
+        .post(`/api/accounting/manual-journals/${manualJournal.id}/publish`)
+        .set('x-access-token', loginRes.body.token)
+        .send();
+
+      expect(res.status).equals(400);
+      expect(res.body.errors).include.something.that.deep.equals({
+        type: 'MANUAL.JOURNAL.PUBLISHED.ALREADY', code: 200,
+      });
+    });
+
+    it('Should update all accounts transactions to not draft.', async () => {
+      const manualJournal = await create('manual_journal');
+      const transaction = await create('account_transaction', {
+        reference_type: 'Journal',
+        reference_id: manualJournal.id,
+        draft: 1,
+      });
+      const transaction2 = await create('account_transaction', {
+        reference_type: 'Journal',
+        reference_id: manualJournal.id,
+        draft: 1,
+      });
+      const res = await request()
+        .post(`/api/accounting/manual-journals/${manualJournal.id}/publish`)
+        .set('x-access-token', loginRes.body.token)
+        .send();
+
+      const foundTransactions = await AccountTransaction.query()
+        .whereIn('id', [transaction.id, transaction2.id]);
+
+      expect(foundTransactions[0].draft).equals(0);
+      expect(foundTransactions[1].draft).equals(0);
+    });
+
+    it('Should increment/decrement accounts balance.', () => {
+
     });
   });
 

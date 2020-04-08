@@ -37,6 +37,10 @@ export default {
       this.makeJournalEntries.validation,
       asyncMiddleware(this.makeJournalEntries.handler));
 
+    router.post('/manual-journals/:id/publish',
+      this.publishManualJournal.validation,
+      asyncMiddleware(this.publishManualJournal.handler));
+
     router.post('/manual-journals/:id',
       this.editManualJournal.validation,
       asyncMiddleware(this.editManualJournal.handler));
@@ -143,6 +147,7 @@ export default {
       check('transaction_type').optional({ nullable: true }).trim().escape(),
       check('reference').optional({ nullable: true }),
       check('description').optional().trim().escape(),
+      check('status').optional().isBoolean().toBoolean(),
       check('entries').isArray({ min: 2 }),
       check('entries.*.credit').optional({ nullable: true }).isNumeric().toInt(),
       check('entries.*.debit').optional({ nullable: true }).isNumeric().toInt(),
@@ -163,7 +168,6 @@ export default {
         reference: '',
         ...req.body,
       };
-
       let totalCredit = 0;
       let totalDebit = 0;
 
@@ -180,7 +184,6 @@ export default {
           totalDebit += entry.debit;
         }
       });
-
       if (totalCredit <= 0 || totalDebit <= 0) {
         errorReasons.push({
           type: 'CREDIT.DEBIT.SUMATION.SHOULD.NOT.EQUAL.ZERO',
@@ -209,7 +212,6 @@ export default {
       if (errorReasons.length > 0) {
         return res.status(400).send({ errors: errorReasons });
       }
-
       // Save manual journal transaction.
       const manualJournal = await ManualJournal.query().insert({
         reference: form.reference,
@@ -218,13 +220,13 @@ export default {
         amount: totalCredit,
         date: formattedDate,
         description: form.description,
+        status: form.status,
         user_id: user.id,
       });
       const journalPoster = new JournalPoster();
 
       entries.forEach((entry) => {
         const account = accounts.find((a) => a.id === entry.account_id);
-
         const jouranlEntry = new JournalEntry({
           debit: entry.debit,
           credit: entry.credit,
@@ -235,6 +237,7 @@ export default {
           note: entry.note,
           date: formattedDate,
           userId: user.id,
+          draft: !form.status,
         });
         if (entry.debit) {
           journalPoster.debit(jouranlEntry);
@@ -246,7 +249,7 @@ export default {
       // Saves the journal entries and accounts balance changes.
       await Promise.all([
         journalPoster.saveEntries(),
-        journalPoster.saveBalance(),
+        (form.status) && journalPoster.saveBalance(),
       ]);
       return res.status(200).send({ id: manualJournal.id });
     },
@@ -406,6 +409,53 @@ export default {
       ]);
 
       return res.status(200).send({});
+    },
+  },
+
+  publishManualJournal: {
+    validation: [
+      param('id').exists().isNumeric().toInt(),
+    ],
+    async handler(req, res) {
+      const validationErrors = validationResult(req);
+
+      if (!validationErrors.isEmpty()) {
+        return res.boom.badData(null, {
+          code: 'validation_error', ...validationErrors,
+        });
+      }
+      const { id } = req.params;
+      const manualJournal = await ManualJournal.query()
+        .where('id', id).first();
+
+      if (!manualJournal) {
+        return res.status(404).send({
+          errors: [{ type: 'MANUAL.JOURNAL.NOT.FOUND', code: 100 }],
+        });
+      }
+      if (!manualJournal.status) {
+        return res.status(400).send({
+          errors: [{ type: 'MANUAL.JOURNAL.PUBLISHED.ALREADY', code: 200 }],
+        });
+      }
+      const transactions = await AccountTransaction.query()
+        .whereIn('reference_type', ['Journal', 'ManualJournal'])
+        .where('reference_id', manualJournal.id)
+        .withGraphFetched('account.type');
+
+      const journal = new JournalPoster();
+      journal.loadEntries(transactions);
+      journal.calculateEntriesBalanceChange();
+
+      const updateAccountsTransactionsOper = AccountTransaction.query()
+        .whereIn('id', transactions.map((t) => t.id))
+        .update({ draft: 0 });
+
+      await Promise.all([
+        updateAccountsTransactionsOper,
+        journal.saveBalance(),
+      ]);
+      return res.status(200).send({ id });
     },
   },
 

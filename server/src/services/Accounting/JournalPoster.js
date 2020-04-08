@@ -255,6 +255,17 @@ export default class JournalPoster {
     });
   }
 
+  calculateEntriesBalanceChange() {
+    this.entries.forEach((entry) => {
+      if (entry.credit) {
+        this.setAccountBalanceChange(entry, 'credit');
+      }
+      if (entry.debit) {
+        this.setAccountBalanceChange(entry, 'debit');
+      }
+    });
+  }
+
   static loadAccounts() {
 
   }
