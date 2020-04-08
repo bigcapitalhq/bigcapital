@@ -65,6 +65,14 @@ export default [
     }),
     text: 'Make Journal Entry'
   },
+  {
+    path: `${BASE_URL}/accounting/manual-journals`,
+    component: LazyLoader({
+      loader: () =>
+        import('containers/Dashboard/Accounting/ManualJournalsTable')
+    }),
+    text: 'Manual Journals'
+  },
 
   // Items
   {
@@ -86,14 +94,16 @@ export default [
       loader: () => import('containers/Dashboard/Items/ItemsCategoryList')
     })
   },
-  ,
+
   // Financial Reports.
   {
     path: `${BASE_URL}/accounting/general-ledger`,
     name: 'dashboard.accounting.general.ledger',
     component: LazyLoader({
       loader: () =>
-        import('containers/Dashboard/FinancialStatements/GeneralLedger/GeneralLedger')
+        import(
+          'containers/Dashboard/FinancialStatements/GeneralLedger/GeneralLedger'
+        )
     })
   },
   {

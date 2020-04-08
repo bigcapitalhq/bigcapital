@@ -46,6 +46,10 @@ export default [
       {
         text: 'Make Journal',
         href: '/dashboard/accounting/make-journal-entry'
+      },
+      {
+        text: 'Manual Journal',
+        href: '/dashboard/accounting/manual-journals'
       }
     ]
   },

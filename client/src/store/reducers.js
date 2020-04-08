@@ -11,9 +11,9 @@ import expenses from './expenses/expenses.reducer';
 import currencies from './currencies/currencies.reducer';
 import resources from './resources/resources.reducer';
 import financialStatements from './financialStatement/financialStatements.reducer';
-import itemCategories from './itemCategories/itemsCateory.reducer';
+import itemCategories from './itemCategories/itemsCategory.reducer';
 import settings from './settings/settings.reducer';
-
+import manual_journals from './accounting/accounting.reducers';
 export default combineReducers({
   authentication,
   dashboard,
@@ -28,4 +28,5 @@ export default combineReducers({
   items,
   itemCategories,
   settings,
+  manual_journals,
 });

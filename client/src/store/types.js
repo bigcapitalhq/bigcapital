@@ -12,7 +12,7 @@ import users from './users/users.types';
 import financialStatements from './financialStatement/financialStatements.types';
 import itemCategories from './itemCategories/itemsCategory.type';
 import settings from './settings/settings.type';
-
+import manualJournals from './accounting/accountsing.types';
 export default {
   ...authentication,
   ...accounts,
@@ -27,5 +27,6 @@ export default {
   ...users,
   ...financialStatements,
   ...itemCategories,
-  ...settings
+  ...settings,
+  ...manualJournals
 };
