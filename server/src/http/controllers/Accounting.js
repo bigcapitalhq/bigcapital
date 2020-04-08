@@ -25,6 +25,10 @@ export default {
     const router = express.Router();
     router.use(JWTAuth);
 
+    router.get('/manual-journals/:id',
+      this.getManualJournal.validation,
+      asyncMiddleware(this.getManualJournal.handler));
+
     router.get('/manual-journals',
       this.manualJournals.validation,
       asyncMiddleware(this.manualJournals.handler));
@@ -33,7 +37,7 @@ export default {
       this.makeJournalEntries.validation,
       asyncMiddleware(this.makeJournalEntries.handler));
 
-    router.post('/manual-journal/:id',
+    router.post('/manual-journals/:id',
       this.editManualJournal.validation,
       asyncMiddleware(this.editManualJournal.handler));
 
@@ -375,6 +379,26 @@ export default {
       journal.loadEntries(transactions);
       journal.removeEntries();
 
+      entries.forEach((entry) => {
+        const account = accounts.find((a) => a.id === entry.account_id);
+
+        const jouranlEntry = new JournalEntry({
+          debit: entry.debit,
+          credit: entry.credit,
+          account: account.id,
+          referenceType: 'Journal',
+          referenceId: manualJournal.id,
+          accountNormal: account.type.normal,
+          note: entry.note,
+          date: formattedDate,
+          userId: user.id,
+        });
+        if (entry.debit) {
+          journal.debit(jouranlEntry);
+        } else {
+          journal.credit(jouranlEntry);
+        }
+      });
       await Promise.all([
         journal.deleteEntries(),
         journal.saveEntries(),
@@ -405,8 +429,19 @@ export default {
         return res.status(404).send({
           errors: [{ type: 'MANUAL.JOURNAL.NOT.FOUND', code: 100 }],
         });
-      }
-      
+      }     
+      const transactions = await AccountTransaction.query()
+        .whereIn('reference_type', ['Journal', 'ManualJournal'])
+        .where('reference_id', manualJournal.id);
+
+      return res.status(200).send({
+        manual_journal: {
+          ...manualJournal.toJSON(),
+          entries: [
+            ...transactions,
+          ],
+        },
+      });
     },
   },
 

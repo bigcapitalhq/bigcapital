@@ -66,6 +66,15 @@ export default [
     text: 'Make Journal Entry'
   },
 
+  {
+    path: `${BASE_URL}/accounting/manual-journal/:id`,
+    name: 'dashboard.manual.journal.edit',
+    component: LazyLoader({
+      loader: () =>
+        import('containers/Dashboard/Accounting/MakeJournalEntriesPage')
+    }),
+  },
+
   // Items
   {
     path: `${BASE_URL}/items/list`,

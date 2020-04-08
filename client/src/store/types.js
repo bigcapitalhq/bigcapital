@@ -1,5 +1,6 @@
 import authentication from './authentication/authentication.types';
 import accounts from './accounts/accounts.types';
+import accounting from './accounting/accounting.types'
 import currencies from './currencies/currencies.types';
 import customFields from './customFields/customFields.types';
 import customViews from './customViews/customViews.types';
@@ -27,5 +28,6 @@ export default {
   ...users,
   ...financialStatements,
   ...itemCategories,
-  ...settings
+  ...settings,
+  ...accounting,
 };

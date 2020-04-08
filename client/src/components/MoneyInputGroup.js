@@ -64,7 +64,9 @@ export default function MoneyFieldGroup({
 
   const options = useMemo(() => ({
     prefix, suffix, thousands, decimal, precision,
-  }), []);
+  }), [
+    prefix, suffix, thousands, decimal, precision,
+  ]);
 
   const handleChange = useCallback((event) => {
     const formatted = formatter(event.target.value, options);
@@ -72,12 +74,12 @@ export default function MoneyFieldGroup({
 
     setState(formatted);
     onChange && onChange(event, value);
-  }, []);
+  }, [onChange, options]);
 
   useEffect(() => {
     const formatted = formatter(value, options);
     setState(formatted)
-  }, []);
+  }, [value, options, setState]);
 
   return (
    <InputGroup

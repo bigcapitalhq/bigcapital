@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useMemo} from 'react';
 import AccountsSelectList from 'components/AccountsSelectList';
 import classNames from 'classnames';
 import {
@@ -20,6 +20,10 @@ const AccountCellRenderer = ({
 
   const { account_id = false } = (errors[index] || {});
 
+  const initialAccount = useMemo(() => 
+    accounts.find(a => a.id === initialValue),
+    [accounts, initialValue]);
+
   return (
     <FormGroup
       intent={account_id ? Intent.DANGER : ''}
@@ -31,7 +35,8 @@ const AccountCellRenderer = ({
       <AccountsSelectList
         accounts={accounts}
         onAccountSelected={handleAccountSelected}
-        error={account_id} />
+        error={account_id}
+        initialAccount={initialAccount} />
     </FormGroup>
   );
 };

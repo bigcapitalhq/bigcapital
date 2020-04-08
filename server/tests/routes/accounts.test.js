@@ -16,7 +16,6 @@ describe('routes: /accounts/', () => {
         .post('/api/accounts')
         .set('x-access-token', loginRes.body.token)
         .send();
-
       expect(res.status).equals(422);
       expect(res.body.code).equals('validation_error');
     });
@@ -191,7 +190,6 @@ describe('routes: /accounts/', () => {
   });
 
   describe('GET: `/accounts`', () => {
- 
     it('Should retrieve accounts resource not found.', async () => {
       const res = await request()
         .get('/api/accounts')

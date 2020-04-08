@@ -13,21 +13,23 @@ import {compose} from 'utils';
 import useAsync from 'hooks/async';
 import moment from 'moment';
 import AppToaster from 'components/AppToaster';
+import {pick, omit} from 'lodash';
 
 function MakeJournalEntriesForm({
-  makeJournalEntries,
-  fetchAccounts,
+  requestMakeJournalEntries,
+  requestEditManualJournal,
   changePageTitle,
+  changePageSubtitle,
+  editJournal,
 }) {
   useEffect(() => {
-    changePageTitle('New Journal');  
-  }, []);
-
-  const fetchHook = useAsync(async () => {
-    await Promise.all([
-      fetchAccounts(),
-    ]);
-  });
+    if (editJournal && editJournal.id) {
+      changePageTitle('Edit Journal');
+      changePageSubtitle(`No. ${editJournal.journal_number}`);
+    } else {
+      changePageTitle('New Journal');  
+    }
+  }, [changePageTitle, changePageSubtitle, editJournal]);
 
   const validationSchema = Yup.object().shape({
     journal_number: Yup.string().required(),
@@ -54,22 +56,31 @@ function MakeJournalEntriesForm({
     note: '',
   }), []);
 
+  const initialValues = useMemo(() => ({
+    journal_number: '',
+    date: moment(new Date()).format('YYYY-MM-DD'),
+    description: '',
+    reference: '',
+    entries: [
+      defaultEntry,
+      defaultEntry,
+      defaultEntry,
+      defaultEntry,
+    ],
+  }), [defaultEntry]);
+
   const formik = useFormik({
     enableReinitialize: true,
     validationSchema,
     initialValues: {
-      journal_number: '',
-      date: moment(new Date()).format('YYYY-MM-DD'),
-      description: '',
-      reference: '',
-      entries: [
-        defaultEntry,
-        defaultEntry,
-        defaultEntry,
-        defaultEntry,
-        defaultEntry,
-        defaultEntry,
-      ],
+      ...(editJournal) ? {
+        ...pick(editJournal, Object.keys(initialValues)),
+        entries: editJournal.entries.map((entry) => ({
+          ...pick(entry, Object.keys(defaultEntry)),
+        }))
+      } : {
+        ...initialValues,
+      }
     },
     onSubmit: (values, actions) => {
       const form = values.entries.filter((entry) => (
@@ -87,18 +98,31 @@ function MakeJournalEntriesForm({
         AppToaster.show({
           message: 'credit_and_debit_not_equal',
         });
+        actions.setSubmitting(false);
         return;
       }
-
-      makeJournalEntries({ ...values, entries: form })
-        .then((response) => {
-          AppToaster.show({
-            message: 'manual_journal_has_been_submit',
-          }); 
-          actions.setSubmitting(false);
-        }).catch((error) => {
-          actions.setSubmitting(false);
-        });
+      
+      if (editJournal && editJournal.id) {
+        requestEditManualJournal(editJournal.id, { ...values, entries: form })
+          .then((response) => {
+            AppToaster.show({
+              message: 'manual_journal_has_been_edited',
+            }); 
+            actions.setSubmitting(false);
+          }).catch((error) => {
+            actions.setSubmitting(false);
+          });
+      } else {
+        requestMakeJournalEntries({ ...values, entries: form })
+          .then((response) => {
+            AppToaster.show({
+              message: 'manual_journal_has_been_submit',
+            }); 
+            actions.setSubmitting(false);
+          }).catch((error) => {
+            actions.setSubmitting(false);
+          });
+      }
     },
   });
 

@@ -13,12 +13,14 @@ import resources from './resources/resources.reducer';
 import financialStatements from './financialStatement/financialStatements.reducer';
 import itemCategories from './itemCategories/itemsCateory.reducer';
 import settings from './settings/settings.reducer';
+import accounting from './accounting/accounting.reducers';
 
 export default combineReducers({
   authentication,
   dashboard,
   users,
   accounts,
+  accounting,
   fields,
   views,
   expenses,

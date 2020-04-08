@@ -70,6 +70,9 @@ const NoteCellRenderer = (chainedComponent) => (props) => {
   return chainedComponent(props);
 };
 
+/**
+ * Make journal entries table component.
+ */
 function MakeJournalEntriesTable({
   formik,
   accounts,
@@ -79,6 +82,8 @@ function MakeJournalEntriesTable({
 }) {
   const [rows, setRow] = useState([
     ...formik.values.entries.map((e) => ({ ...e, rowType: 'editor'})),
+    defaultRow,
+    defaultRow,
   ]);
 
   // Handles update datatable data.
@@ -101,11 +106,15 @@ function MakeJournalEntriesTable({
   // Handles click remove datatable row.
   const handleRemoveRow = useCallback((rowIndex) => {
     const removeIndex = parseInt(rowIndex, 10);
-    setRow([
-      ...rows.filter((row, index) => index !== removeIndex),
-    ]);
+    const newRows = rows.filter((row, index) => index !== removeIndex);
+    
+    setRow([ ...newRows ]);
+    formik.setFieldValue('entries', newRows
+      .filter(row => row.rowType === 'editor')
+      .map(row => ({ ...omit(row, ['rowType']) })
+    ));
     onClickRemoveRow && onClickRemoveRow(removeIndex);
-  }, [rows, onClickRemoveRow]);
+  }, [rows, formik, onClickRemoveRow]);
 
   // Memorized data table columns.
   const columns = useMemo(() => [
@@ -123,7 +132,7 @@ function MakeJournalEntriesTable({
     {
       Header: 'Account',
       id: 'account_id',
-      accessor: 'account',
+      accessor: 'account_id',
       Cell: TotalAccountCellRenderer(AccountsListFieldCell),
       className: "account",
       disableSortBy: true,

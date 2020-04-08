@@ -21,12 +21,13 @@ export default function MakeJournalEntriesHeader({
 }) {
   const intl = useIntl();
  
-  const handleDateChange = (date) => {
+  const handleDateChange = useCallback((date) => {
     const formatted = moment(date).format('YYYY-MM-DD');
     formik.setFieldValue('date', formatted);
-  };
+  }, [formik]);
 
-  const infoIcon = useMemo(() => (<Icon icon="info-circle" iconSize={12} />), []);
+  const infoIcon = useMemo(() =>
+    (<Icon icon="info-circle" iconSize={12} />), []);
 
   return (
     <div class="make-journal-entries__header">

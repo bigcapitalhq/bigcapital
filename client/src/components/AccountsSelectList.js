@@ -1,29 +1,23 @@
-import React, {useMemo, useCallback, useState} from 'react';
-import {omit} from 'lodash';
+import React, {useCallback, useState} from 'react';
 import {
   MenuItem,
-  FormGroup,
   Button,
-  Intent,
 } from '@blueprintjs/core';
 import {Select} from '@blueprintjs/select';
-// import MultiSelect from 'components/MultiSelect';
 
 export default function AccountsMultiSelect({
   accounts,
   onAccountSelected,
   error,
+  initialAccount,
 }) {
-  const [selectedAccount, setSelectedAccount] = useState(null); 
-
+  const [selectedAccount, setSelectedAccount] = useState(
+    initialAccount || null
+  );
   // Account item of select accounts field.
   const accountItem = useCallback((item, { handleClick, modifiers, query }) => {
     return (
-      <MenuItem
-        text={item.name}
-        label={item.code}
-        key={item.id}
-        onClick={handleClick} />
+      <MenuItem text={item.name} label={item.code} key={item.id} onClick={handleClick} />
     );
   }, []);
 
@@ -33,20 +27,17 @@ export default function AccountsMultiSelect({
   }, [setSelectedAccount, onAccountSelected]);
 
   return (
- 
     <Select
       items={accounts}
       noResults={<MenuItem disabled={true} text='No results.' />}
       itemRenderer={accountItem}
       popoverProps={{ minimal: true }}
       filterable={true}
-      onItemSelect={onAccountSelect}        
-    >
+      onItemSelect={onAccountSelect}>
       <Button
         rightIcon='caret-down'
         text={selectedAccount ? selectedAccount.name : 'Select account'}
       />
     </Select>
-
   );
 }
