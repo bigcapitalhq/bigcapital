@@ -18,7 +18,6 @@ import { useUpdateEffect } from 'hooks';
 
 function ManualJournalsViewTabs({
   views,
-  manualJournals,
   setTopbarEditView,
   customViewChanged,
   addManualJournalsTableQueries,
@@ -51,8 +50,6 @@ function ManualJournalsViewTabs({
   }, [customViewId]);
 
   const tabs = views.map((view) => {
-    //FIXME: dashboard/accounting/make-journal-entry
-
     const baseUrl = '/dashboard/accounting/manual-journals';
     const link = (
       <Link

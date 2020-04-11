@@ -1,6 +1,6 @@
 import authentication from './authentication/authentication.types';
 import accounts from './accounts/accounts.types';
-import accounting from './manualJournals/manualJournals.types'
+import accounting from './manualJournals/manualJournals.types';
 import currencies from './currencies/currencies.types';
 import customFields from './customFields/customFields.types';
 import customViews from './customViews/customViews.types';
@@ -13,7 +13,7 @@ import users from './users/users.types';
 import financialStatements from './financialStatement/financialStatements.types';
 import itemCategories from './itemCategories/itemsCategory.type';
 import settings from './settings/settings.type';
-
+import search from './search/search.type';
 export default {
   ...authentication,
   ...accounts,
@@ -30,4 +30,5 @@ export default {
   ...itemCategories,
   ...settings,
   ...accounting,
+  ...search,
 };
