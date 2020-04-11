@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback, useMemo} from 'react';
 import {Formik, useFormik, ErrorMessage} from "formik";
 import {useIntl} from 'react-intl';
 import {
@@ -34,12 +34,13 @@ function ViewForm({
   const [draggedColumns, setDraggedColumn] = useState([]);
   const [availableColumns, setAvailableColumns] = useState(columns); 
 
-  const defaultViewRole = {
+  const defaultViewRole = useMemo(() => ({
     field_key: '',
     comparator: 'AND',
     value: '',
     index: 1,
-  };
+  }), []);
+
   const validationSchema = Yup.object().shape({
     resource_name: Yup.string().required(),
     name: Yup.string().required(),
@@ -86,7 +87,6 @@ function ViewForm({
       ],
     },
     onSubmit: (values) => {
-
       if (viewForm && viewForm.id) {
         editView(viewForm.id, values).then((response) => {
 
@@ -100,10 +100,11 @@ function ViewForm({
   });
 
   useEffect(() => {
-    formik.setFieldValue('columns', draggedColumns.map((column, index) => ({
+    formik.setFieldValue('columns',
+      draggedColumns.map((column, index) => ({
       index, key: column.key,
     })));
-  }, [draggedColumns]);
+  }, [draggedColumns, formik]);
 
   const conditionalsItems = [
     { value: 'and', label: 'AND' },
@@ -123,16 +124,16 @@ function ViewForm({
   ];
 
   // Resource fields.
-  const resourceFields = [
+  const resourceFields = useMemo(() => ([
     {value: '', label: 'Select a field'},
     ...fields.map((field) => ({ value: field.key, label: field.labelName, })),
-  ];
+  ]), []);
   // Account item of select accounts field.
   const selectItem = (item, { handleClick, modifiers, query }) => {
     return (<MenuItem text={item.label} key={item.key} onClick={handleClick} />)
   };
   // Handle click new condition button.
-  const onClickNewRole = () => {
+  const onClickNewRole = useCallback(() => {
     formik.setFieldValue('roles', [
       ...formik.values.roles,
       {
@@ -140,9 +141,10 @@ function ViewForm({
         index: formik.values.roles.length + 1,
       }
     ]);
-  };
+  }, [formik, defaultViewRole]);
+
   // Handle click remove view role button.
-  const onClickRemoveRole = (viewRole, index) => () => {
+  const onClickRemoveRole = useCallback((viewRole, index) => () => {
     const viewRoles = [...formik.values.roles];
     viewRoles.splice(index, 1);
     viewRoles.map((role, i) => {
@@ -150,9 +152,12 @@ function ViewForm({
       return role;
     });
     formik.setFieldValue('roles', viewRoles);
-  };
+  }, [formik]);
 
-  const onClickDeleteView = () => { onDelete(viewForm); };
+  const onClickDeleteView = useCallback(() => {
+    onDelete && onDelete(viewForm);
+  }, [onDelete, viewForm]);
+
   return (
     <div class="view-form">
       <form onSubmit={formik.handleSubmit}>

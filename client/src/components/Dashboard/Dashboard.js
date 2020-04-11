@@ -8,7 +8,7 @@ import PreferencesSidebar from 'components/Preferences/PreferencesSidebar';
 
 export default function() {
   return (
-    <div className="dashboard dashboard--preferences">
+    <div className="dashboard">
       <Switch>
         <Route path="/dashboard/preferences">
           <Sidebar />

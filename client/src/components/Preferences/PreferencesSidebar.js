@@ -18,13 +18,15 @@ export default function PreferencesSidebar() {
 
   return (
     <div class="preferences__sidebar">
-      <div class="preferences__sidebar-head">
-        <h2>Preferences</h2>
-      </div>
+      <div class="preferences__sidebar-wrapper">
+        <div class="preferences__sidebar-head">
+          <h2>Preferences</h2>
+        </div>
 
-      <Menu className="preferences__sidebar-menu">
-        { items }
-      </Menu>
+        <Menu className="preferences__sidebar-menu">
+          { items }
+        </Menu>
+      </div>
     </div>
   );
 }

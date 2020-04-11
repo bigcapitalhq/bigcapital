@@ -1,30 +1,22 @@
 import React from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import {connect} from 'react-redux';
 import {
   Button,
   FormGroup,
   InputGroup,
   Intent,
 } from "@blueprintjs/core";
-import { useAsync } from 'react-use';
 import {optionsMapToArray} from 'utils';
-import AppToaster from 'components/AppToaster';
-import {
-  savePreferences,
-  fetchPreferences,
-} from 'store/preferences/preferences.actions';
 
-function GeneralPreferences({ savePreferences, fetchPreferences }) {
+function GeneralPreferences({
+
+}) {
   const validationSchema = Yup.object().shape({
     organization_name: Yup.string().required(),
     organization_industry: Yup.string().required(),
   });
 
-  const asyncHook = useAsync(async () => {
-    await fetchPreferences();
-  });
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
@@ -35,13 +27,6 @@ function GeneralPreferences({ savePreferences, fetchPreferences }) {
         return {...option, group: 'general'};
       });
 
-      savePreferences(options).then((response) => {
-        AppToaster.show({
-          message: 'preferences_have_been_updated',
-        });
-      }).catch(error => {
-
-      });
     },
   });
 
@@ -80,9 +65,4 @@ function GeneralPreferences({ savePreferences, fetchPreferences }) {
   )
 }
 
-const mapDispatchToProps = (dispatch) => ({
-  savePreferences: (options) => dispatch(savePreferences({ options })),
-  fetchPreferences: (keys) => dispatch(fetchPreferences())
-});
-
-export default connect(null, mapDispatchToProps)(GeneralPreferences);
+export default GeneralPreferences;

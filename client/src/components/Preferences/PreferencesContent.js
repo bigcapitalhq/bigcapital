@@ -4,7 +4,7 @@ import PreferencesContentRoute from 'components/Preferences/PreferencesContentRo
 
 export default function() {
   return (
-    <div className="dashboard-content" id="dashboard">
+    <div className="dashboard-content dashboard-content--preferences">
       <PreferencesTopbar pageTitle={"asdad"}/>
       
       <div class="dashboard__preferences-content">

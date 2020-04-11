@@ -1,5 +1,8 @@
 
 
+.dashboard-content--preferences{
+  margin-left: 430px;
+}
 
 .preferences{
   &__inside-content--tabable{
@@ -8,7 +11,6 @@
   }
 
   &__inside-content{
-
     .#{$ns}-tab-list{
       border-bottom: 1px solid #E5E5E5;
       padding-left: 15px;
@@ -22,9 +24,16 @@
 
 .preferences__sidebar{
   background: #fdfdfd;
+  position: fixed;
+  left: 220px;
   min-width: 210px;
   max-width: 210px;
-  
+  height: 100%;
+
+  .sidebar-wrapper{
+
+  }
+
   &-head{
     display: flex;
     flex-direction: row;
