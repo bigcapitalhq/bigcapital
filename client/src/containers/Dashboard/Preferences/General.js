@@ -31,6 +31,7 @@ function GeneralPreferences({
   });
 
   return (
+    <div class="preferences__inside-content preferences__inside-content--general">
     <form onSubmit={formik.handleSubmit}>
       <FormGroup
         label={'Organization Name'}
@@ -62,6 +63,7 @@ function GeneralPreferences({
 
       <Button intent={Intent.PRIMARY} type="submit">{ 'Save' }</Button>
     </form>
+    </div>
   )
 }
 
