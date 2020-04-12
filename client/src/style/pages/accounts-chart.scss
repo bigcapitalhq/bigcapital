@@ -2,10 +2,43 @@
 .dashboard__insider--accounts-chart{
 
   .bigcapital-datatable{
+
     .normal{
       .#{$ns}-icon{
-        color: #666;
+        color: #aaa;
         padding-left: 15px;
+      }
+    }
+
+    .table{
+      .thead,
+      .tbody{
+        .th.selection,
+        .td.selection{
+          padding-left: 18px;
+        }
+      }
+
+      .tbody{
+        .tr .td{
+          padding-top: 0.4rem;
+          padding-bottom: 0.4rem;
+        }
+        .account_name{
+          font-weight: 500;
+
+          .bp3-tooltip-indicator{
+            cursor: default;
+            border-bottom-color: #c6c6c6;
+          }
+        }
+        .code{
+          color: #666;
+        }
+        .actions{
+          padding-right: 18px;
+          justify-content: right;
+        }
       }
     }
   }
@@ -48,7 +81,6 @@
     .form-group--parent-account{
       margin-bottom: 35px;
     }
-
     .form-group--account-code{
       margin-bottom: 16px;
     }

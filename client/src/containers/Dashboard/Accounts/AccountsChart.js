@@ -28,6 +28,7 @@ function AccountsChart({
   fetchResourceFields,
   getResourceFields,
   requestFetchAccountsTable,
+  addAccountsTableQueries
 }) {
   const [state, setState] = useState({
     deleteAlertActive: false,
@@ -116,9 +117,21 @@ function AccountsChart({
     console.log(accounts);
   };
 
-  const handleFilterChanged = useCallback(() => { fetchAccountsHook.execute(); }, []);
+  const handleFilterChanged = useCallback(() => {
+    
+    fetchAccountsHook.execute();
+  }, [fetchAccountsHook]);
+
   const handleViewChanged = useCallback(() => { fetchAccountsHook.execute(); }, []);
-  const handleFetchData = useCallback(() => { fetchAccountsHook.execute(); }, []);
+  const handleFetchData = useCallback(({ pageIndex, pageSize, sortBy }) => {
+    addAccountsTableQueries({
+      ...(sortBy.length > 0) ? {
+        column_sort_by: sortBy[0].id,
+        sort_by: sortBy[0].desc ? 'desc' : 'asc',
+      } : {},
+    });
+    fetchAccountsHook.execute();
+  }, [fetchAccountsHook, addAccountsTableQueries]);
 
   return (
     <DashboardInsider loading={fetchHook.pending} name={'accounts-chart'}>

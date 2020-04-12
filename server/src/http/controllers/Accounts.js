@@ -282,6 +282,7 @@ export default {
       const accounts = await Account.query().onBuild((builder) => {
         builder.modify('filterAccountTypes', filter.account_types);
         builder.withGraphFetched('type');
+        builder.withGraphFetched('balance');
 
         // Build custom view conditions query.
         if (viewConditionals.length > 0) {

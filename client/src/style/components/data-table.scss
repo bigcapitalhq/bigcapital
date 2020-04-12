@@ -4,19 +4,27 @@
   overflow-x: auto;
   overflow-y: hidden;
 
+  .dashboard__page-content &{
+
+    .table .thead{
+      .th{
+        border-bottom-color: #eaeaea;
+      }
+    }
+  }
+
   .table {
     text-align: left;
     border-spacing: 0;
     min-width: 100%;
     display: block;
-    // width: 100%;
 
     .thead{
       overflow-y: auto;
       overflow-x: hidden;
 
       .th{
-        padding: 1rem 0.5rem;
+        padding: 0.8rem 0.5rem;
         background: #F8FAFA;
         font-size: 14px;
         color: #555;
@@ -109,13 +117,17 @@
       .tr .td{
         border-bottom: 1px solid #E0E2E2;
         align-items: center;
+
+        .placeholder{
+          color: #999;
+        }
       }      
       .td.actions .#{$ns}-button{
         background: #E6EFFB;
         border: 0;
         box-shadow: none;
         padding: 5px 15px;
-        border-radius: 2px;
+        border-radius: 5px;
 
         &:hover,
         &:focus{

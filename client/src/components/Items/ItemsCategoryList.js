@@ -45,7 +45,11 @@ const ItemsCategoryList = ({
         Header: 'Description',
         accessor: 'description'
       },
-
+      {
+        id: 'count',
+        Header: 'Count',
+        // accessor: ''
+      },
       {
         id: 'actions',
         Header: '',

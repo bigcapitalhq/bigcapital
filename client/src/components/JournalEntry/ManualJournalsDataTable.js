@@ -107,6 +107,7 @@ function ManualJournalsDataTable({
       Header: 'Note',
       accessor: r => (<Icon icon={'file-alt'} iconSize={16} />),
       disableResizing: true,
+      disableSorting: true,
       width: 100,
       className: 'note',
     },

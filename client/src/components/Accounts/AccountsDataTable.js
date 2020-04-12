@@ -6,6 +6,8 @@ import {
   MenuItem,
   MenuDivider,
   Position,
+  Classes,
+  Tooltip,
 } from '@blueprintjs/core';
 import { useParams } from 'react-router-dom';
 import Icon from 'components/Icon';
@@ -16,6 +18,7 @@ import DashboardConnect from 'connectors/Dashboard.connector';
 import ViewConnect from 'connectors/View.connector';
 import LoadingIndicator from 'components/LoadingIndicator';
 import DataTable from 'components/DataTable';
+import Money from 'components/Money';
 
 function AccountsDataTable({
   accounts,
@@ -45,9 +48,10 @@ function AccountsDataTable({
   // Clear page subtitle when unmount the page.
   useEffect(() => () => { changePageSubtitle(''); }, []);
 
-  const handleEditAccount = account => () => {
+  const handleEditAccount = useCallback((account) => () => {
     openDialog('account-form', { action: 'edit', id: account.id });
-  };
+  }, [openDialog]);
+
   const actionMenuList = account => (
     <Menu>
       <MenuItem text='View Details' />
@@ -65,19 +69,70 @@ function AccountsDataTable({
   );
   const columns = useMemo(() => [
     {
+      // Build our expander column
+      id: 'expander', // Make sure it has an ID
+      className: 'expander',
+      Header: ({
+        getToggleAllRowsExpandedProps,
+        isAllRowsExpanded
+      }) => (
+        <span {...getToggleAllRowsExpandedProps()} className="toggle">
+          {isAllRowsExpanded ?
+            (<span class="arrow-down" />) :
+            (<span class="arrow-right" />)
+          }
+        </span>
+      ),
+      Cell: ({ row }) =>
+        // Use the row.canExpand and row.getToggleRowExpandedProps prop getter
+        // to build the toggle for expanding a row
+        row.canExpand ? (
+          <span
+            {...row.getToggleRowExpandedProps({
+              style: {
+                // We can even use the row.depth property
+                // and paddingLeft to indicate the depth
+                // of the row
+                paddingLeft: `${row.depth * 2}rem`,
+              },
+              className: 'toggle',
+            })}
+          >
+            {row.isExpanded ?
+              (<span class="arrow-down" />) :
+              (<span class="arrow-right" />)
+            }
+          </span>
+        ) : null,
+      width: 20,
+      disableResizing: true,
+    },
+    {
       id: 'name',
       Header: 'Account Name',
-      accessor: 'name',
+      accessor: row => {
+        return (row.description) ?
+          (<Tooltip
+            className={Classes.TOOLTIP_INDICATOR}
+            content={row.description}
+            position={Position.RIGHT_TOP}
+            hoverOpenDelay={500}>
+              { row.name }
+          </Tooltip>) : row.name;
+      },
+      className: 'account_name',
     },
     {
       id: 'code',
       Header: 'Code',
-      accessor: 'code'
+      accessor: 'code',
+      className: 'code',
     },
     {
       id: 'type',
       Header: 'Type',
-      accessor: 'type.name'
+      accessor: 'type.name',
+      className: 'type',
     },
     {
       id: 'normal',
@@ -96,14 +151,14 @@ function AccountsDataTable({
       Header: 'Balance',
       Cell: ({ cell }) => {
         const account = cell.row.original;
-        const {balance} = account;
+        const {balance = null} = account;
 
-        return ('undefined' !== typeof balance) ?
-          (<span>{ balance.amount }</span>) :
-          (<span>--</span>);
+        return (balance) ?
+          (<span>
+            <Money amount={balance.amount} currency={balance.currency_code} />
+            </span>) :
+          (<span class="placeholder">--</span>);
       },
-      
-      // canResize: false,
     },
     {
       id: 'actions',
@@ -111,18 +166,23 @@ function AccountsDataTable({
       Cell: ({ cell }) => (
         <Popover
           content={actionMenuList(cell.row.original)}
-          position={Position.RIGHT_BOTTOM}>
+          position={Position.RIGHT_TOP}>
           <Button icon={<Icon icon='ellipsis-h' />} />
         </Popover>
       ),
       className: 'actions',
       width: 50,
-      // canResize: false
     }
   ], []);
 
-  const handleDatatableFetchData = useCallback(() => {
-    onFetchData && onFetchData();
+  const selectionColumn = useMemo(() => ({
+    minWidth: 42,
+    width: 42,
+    maxWidth: 42,
+  }), [])
+
+  const handleDatatableFetchData = useCallback((...params) => {
+    onFetchData && onFetchData(...params);
   }, []);
 
   return (
@@ -132,7 +192,7 @@ function AccountsDataTable({
         data={accounts}
         onFetchData={handleDatatableFetchData}
         manualSortBy={true}
-        selectionColumn={true} />
+        selectionColumn={selectionColumn} />
     </LoadingIndicator>    
   );
 }

@@ -9,6 +9,8 @@ $pt-popover-box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.02), 0 2px 4px rgba(16, 22,
 $menu-item-color-hover: $light-gray4;
 $menu-item-color-active: $light-gray3;
 
+$breadcrumbs-collapsed-icon: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='#6B8193' enable-background='new 0 0 16 16' xml:space='preserve'><g><circle cx='2' cy='8.03' r='2'/><circle cx='14' cy='8.03' r='2'/><circle cx='8' cy='8.03' r='2'/></g></svg>");
+
 // Blueprint framework.
 @import "@blueprintjs/core/src/blueprint.scss";
 @import "@blueprintjs/datetime/src/blueprint-datetime.scss";
@@ -27,6 +29,12 @@ $pt-font-family: Noto Sans, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
 // Components
 @import "components/data-table";
 @import "components/dialog";
+  
+.bp3-breadcrumbs-collapsed::before{
+  background: escape-svg($breadcrumbs-collapsed-icon) center center;
+  width: 15px;
+  height: 15px;
+}
 
 // Pages
 @import "pages/dashboard";

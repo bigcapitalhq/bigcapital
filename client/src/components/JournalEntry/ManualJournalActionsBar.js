@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useCallback } from 'react';
 import Icon from 'components/Icon';
 import {
   Button,
@@ -37,9 +37,10 @@ function ManualJournalActionsBar({
     );
   });
 
-  const onClickNewManualJournal = () => {
+  const onClickNewManualJournal = useCallback(() => {
     history.push('/dashboard/accounting/make-journal-entry');
-  };
+  }, [history]);
+
   const filterDropdown = FilterDropdown({
     fields: manualJournalFields,
     onFilterChange: filterConditions => {
@@ -83,12 +84,15 @@ function ManualJournalActionsBar({
             icon={<Icon icon='filter' />}
           />
         </Popover>
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon='trash' iconSize={15} />}
-          text='Delete'
-          intent={Intent.DANGER}
-        />
+
+        { (false) && (
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon='trash' iconSize={15} />}
+            text='Delete'
+            intent={Intent.DANGER}
+          />
+        )}
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon='file-import' />}

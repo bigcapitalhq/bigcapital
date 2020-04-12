@@ -103,6 +103,8 @@ export default function DataTable({
               <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
             </div>
           ),
+          className: 'selection',
+          ...(typeof selectionColumn === 'object') ? selectionColumn : {},
         }] : [],
         ...columns,
       ])
