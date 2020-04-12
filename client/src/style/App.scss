@@ -30,12 +30,6 @@ $pt-font-family: Noto Sans, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
 @import "components/data-table";
 @import "components/dialog";
   
-.bp3-breadcrumbs-collapsed::before{
-  background: escape-svg($breadcrumbs-collapsed-icon) center center;
-  width: 15px;
-  height: 15px;
-}
-
 // Pages
 @import "pages/dashboard";
 @import "pages/accounts-chart";
@@ -47,9 +41,8 @@ $pt-font-family: Noto Sans, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
 @import "pages/view-form";
 @import "pages/manual-journals";
 @import "pages/item-category";
+@import "pages/items";
 
 // Views
 @import "views/filter-dropdown";
 @import "views/sidebar";
-
-

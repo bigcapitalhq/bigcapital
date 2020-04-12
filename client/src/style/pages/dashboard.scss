@@ -92,6 +92,11 @@
       &:hover{
         background: $light-gray2;
       }
+      &::before{
+        background: escape-svg($breadcrumbs-collapsed-icon) center center;
+        width: 15px;
+        height: 15px;
+      }
     }
   }
 
