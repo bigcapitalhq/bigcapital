@@ -18,17 +18,17 @@ export default [
     text: 'Items',
     children: [
       {
-        text: 'Category List',
-        href: '/dashboard/items/ItemCategoriesList'
-      },
-      {
         text: 'Items List',
         href: '/dashboard/items/list'
       },
       {
         text: 'New Item',
         href: '/dashboard/items/new'
-      }
+      },
+      {
+        text: 'Category List',
+        href: '/dashboard/items/ItemCategoriesList'
+      },
     ]
   },
   {

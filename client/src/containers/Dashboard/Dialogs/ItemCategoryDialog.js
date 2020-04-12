@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import {
   Button,
   Classes,
@@ -9,7 +9,7 @@ import {
   MenuItem
 } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
-import { omit, pick } from 'lodash';
+import { pick } from 'lodash';
 import * as Yup from 'yup';
 import { useIntl } from 'react-intl';
 import { useFormik } from 'formik';
@@ -20,6 +20,9 @@ import AppToaster from 'components/AppToaster';
 import DialogConnect from 'connectors/Dialog.connector';
 import DialogReduxConnect from 'components/DialogReduxConnect';
 import ItemsCategoryConnect from 'connectors/ItemsCategory.connect';
+import ErrorMessage from 'components/ErrorMessage';
+import classNames from 'classnames';
+import Icon from 'components/Icon';
 
 function ItemCategoryDialog({
   name,
@@ -33,9 +36,8 @@ function ItemCategoryDialog({
   requestEditItemCategory,
   editItemCategory
 }) {
-  const [state, setState] = useState({
-    selectedParentCategory: null
-  });
+  const [selectedParentCategory, setParentCategory] = useState(null);
+
   const intl = useIntl();
   const ValidationSchema = Yup.object().shape({
     name: Yup.string().required(intl.formatMessage({ id: 'required' })),
@@ -43,11 +45,12 @@ function ItemCategoryDialog({
     description: Yup.string().trim()
   });
 
-  const initialValues = {
+  const initialValues = useMemo(() => ({
     name: '',
     description: '',
     parent_category_id: null
-  };
+  }), []);
+
   //Formik
   const formik = useFormik({
     enableReinitialize: true,
@@ -56,30 +59,35 @@ function ItemCategoryDialog({
         pick(editItemCategory, Object.keys(initialValues)))
     },
     validationSchema: ValidationSchema,
-    onSubmit: values => {
+    onSubmit: (values, { setSubmitting }) => {
       if (payload.action === 'edit') {
         requestEditItemCategory(payload.id, values).then(response => {
           closeDialog(name);
           AppToaster.show({
             message: 'the_category_has_been_edited'
           });
+          setSubmitting(false);
+        }).catch((error) => {
+          setSubmitting(false);
         });
       } else {
         requestSubmitItemCategory(values)
-          .then(response => {
+          .then((response) => {
             closeDialog(name);
             AppToaster.show({
               message: 'the_category_has_been_submit'
             });
+            setSubmitting(false);
           })
-          .catch(error => {
-            alert(error.message);
+          .catch((error) => {
+            setSubmitting(false);
           });
       }
     }
   });
+  const { values, errors, touched } = useMemo(() => formik, [formik]);
 
-  const filterItemCategory = (query, category, _index, exactMatch) => {
+  const filterItemCategory = useCallback((query, category, _index, exactMatch) => {
     const normalizedTitle = category.name.toLowerCase();
     const normalizedQuery = query.toLowerCase();
 
@@ -88,73 +96,80 @@ function ItemCategoryDialog({
     } else {
       return normalizedTitle.indexOf(normalizedQuery) >= 0;
     }
-  };
+  }, []);
 
-  const parentCategoryItem = (category, { handleClick, modifiers, query }) => {
+  const parentCategoryItem = useCallback((category, { handleClick, modifiers, query }) => {
     return (
       <MenuItem text={category.name} key={category.id} onClick={handleClick} />
     );
-  };
-  const handleClose = () => {
-    closeDialog(name);
-  };
+  }, []);
+
+  const handleClose = useCallback(() => { closeDialog(name); }, [name, closeDialog]);
 
   const fetchHook = useAsync(async () => {
-    await Promise.all([requestFetchItemCategories()]);
+    await Promise.all([
+      requestFetchItemCategories(),
+    ]);
   }, false);
 
-  const onDialogOpening = () => {
-    fetchHook.execute();
-  };
+  const onDialogOpening = useCallback(() => { fetchHook.execute(); }, [fetchHook]);
 
-  const onChangeParentCategory = parentCategory => {
-    setState({ ...state, selectedParentCategory: parentCategory.name });
+  const onChangeParentCategory = useCallback((parentCategory) => {
+    setParentCategory(parentCategory);
     formik.setFieldValue('parent_category_id', parentCategory.id);
-  };
+  }, [formik]);
 
-  const onDialogClosed = () => {
+  const onDialogClosed = useCallback(() => {
     formik.resetForm();
     closeDialog(name);
-  };
+  }, [formik, closeDialog, name]);
+
+  const requiredSpan = useMemo(() => (<span class="required">*</span>), []);
+  const infoIcon = useMemo(() => (<Icon icon="info-circle" iconSize={12} />), []);
 
   return (
     <Dialog
       name={name}
       title={payload.action === 'edit' ? 'Edit Category' : ' New Category'}
-      className={{
-        'dialog--loading': state.isLoading,
-        'dialog--item-form': true
-      }}
+      className={classNames({
+        'dialog--loading': fetchHook.pending,
+      },
+        'dialog--category-form',
+      )}
       isOpen={isOpen}
       onClosed={onDialogClosed}
       onOpening={onDialogOpening}
       isLoading={fetchHook.pending}
+      onClose={handleClose}
     >
       <form onSubmit={formik.handleSubmit}>
         <div className={Classes.DIALOG_BODY}>
           <FormGroup
             label={'Category Name'}
+            labelInfo={requiredSpan}
             className={'form-group--category-name'}
-            intent={formik.errors.name && Intent.DANGER}
-            helperText={formik.errors.name && formik.errors.name}
+            intent={(errors.name && touched.name) && Intent.DANGER}
+            helperText={(<ErrorMessage name="name" {...formik} />)}
             inline={true}
           >
             <InputGroup
               medium={true}
-              intent={formik.errors.name && Intent.DANGER}
+              intent={(errors.name && touched.name) && Intent.DANGER}
               {...formik.getFieldProps('name')}
             />
           </FormGroup>
 
           <FormGroup
             label={'Parent Category'}
-            className="{'form-group--parent-category'}"
+            labelInfo={infoIcon}
+            className={classNames(
+              'form-group--select-list',
+              'form-group--parent-category',
+              Classes.FILL,
+            )}
             inline={true}
-            helperText={
-              formik.errors.parent_category_id &&
-              formik.errors.parent_category_id
-            }
-            intent={formik.errors.parent_category_id && Intent.DANGER}
+            helperText={(<ErrorMessage name="parent_category_id" {...formik} />)}
+            intent={(errors.parent_category_id && touched.parent_category_id) && Intent.DANGER}
           >
             <Select
               items={Object.values(categories)}
@@ -166,7 +181,8 @@ function ItemCategoryDialog({
             >
               <Button
                 rightIcon='caret-down'
-                text={state.selectedParentCategory || 'Select Parent Category'}
+                text={selectedParentCategory
+                  ? selectedParentCategory.name : 'Select Parent Category'}
               />
             </Select>
           </FormGroup>
@@ -174,8 +190,8 @@ function ItemCategoryDialog({
           <FormGroup
             label={'Description'}
             className={'form-group--description'}
-            intent={formik.errors.description && Intent.DANGER}
-            helperText={formik.errors.description && formik.errors.credential}
+            intent={(errors.description && touched.description) && Intent.DANGER}
+            helperText={(<ErrorMessage name="description" {...formik} />)}
             inline={true}
           >
             <TextArea

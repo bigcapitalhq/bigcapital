@@ -19,9 +19,29 @@
         padding: 1rem 0.5rem;
         background: #F8FAFA;
         font-size: 14px;
-        color: #666;
+        color: #555;
         font-weight: 500;
         border-bottom: 1px solid rgb(224, 224, 224);
+      }
+
+      .sort-icon{
+        width: 0;
+        height: 0;
+        position: relative;
+        top: -2px;
+        display: inline-block;
+        margin-left: 5px;
+
+        &--desc{
+          border-left: 4px solid transparent;
+          border-right: 4px solid transparent;
+          border-bottom: 6px solid #888;
+        }
+        &--asc{
+          border-left: 4px solid transparent;
+          border-right: 4px solid transparent;
+          border-top: 6px solid #888;
+        }
       }
     }
 
@@ -43,7 +63,6 @@
       justify-content: flex-start;
       align-items: flex-start;
       display: flex;
-      
       margin: 0;
       padding: 0.5rem;
 
@@ -94,9 +113,14 @@
       .td.actions .#{$ns}-button{
         background: #E6EFFB;
         border: 0;
-        box-shadow: 0 0 0;
+        box-shadow: none;
         padding: 5px 15px;
         border-radius: 2px;
+
+        &:hover,
+        &:focus{
+          background-color: #CFDCEE;
+        }
       }
     }
 

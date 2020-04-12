@@ -18,7 +18,7 @@ function GeneralLedger({
   getGeneralLedgerSheet,
   fetchGeneralLedger,
   generalLedgerSheetLoading,
-  fetchAccounts,
+  requestFetchAccounts,
   organizationSettings,
 }) {
   const [filter, setFilter] = useState({
@@ -35,7 +35,7 @@ function GeneralLedger({
 
   const fetchHook = useAsync(() => {
     return Promise.all([
-      fetchAccounts(),
+      requestFetchAccounts(),
     ]);
   });
 

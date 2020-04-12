@@ -10,3 +10,57 @@
     }
   }
 }
+
+// Account Form Dialog.
+// ----------------------------
+.dialog--account-form{
+
+  &:not(.dialog--loading) .bp3-dialog-body{
+    margin-bottom: 25px;
+  }
+
+  .bp3-dialog-body{
+    
+    .bp3-form-group.bp3-inline{
+
+      .bp3-label{
+        min-width: 140px;
+      }
+      .bp3-form-content{
+        width: 250px;
+      }
+
+      &.form-group--description{
+
+        .bp3-form-content{
+          width: 280px;
+
+          textarea{
+            min-width: 100%;
+            max-width: 100%;
+            width: 100%;
+            max-height: 120px;
+          }
+        }
+      }
+    }
+
+    .form-group--parent-account{
+      margin-bottom: 35px;
+    }
+
+    .form-group--account-code{
+      margin-bottom: 16px;
+    }
+    .form-group--subaccount{
+      margin-bottom: 16px;
+
+      .bp3-icon-info-circle{
+        color: #A1B2C5;
+        position: relative;
+        top: -2px;
+        margin-left: 2px;
+      }
+    }    
+  }
+}

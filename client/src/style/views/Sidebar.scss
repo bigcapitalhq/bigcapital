@@ -2,7 +2,7 @@
 $sidebar-background: #01194E;
 $sidebar-text-color: #fff;
 $sidebar-width: 220px;
-$sidebar-menu-item-color: #E9EBF7;
+$sidebar-menu-item-color: #a8b1c7;
 
 $sidebar-popover-submenu-bg: rgb(1, 20, 62);
 
@@ -29,9 +29,10 @@ $sidebar-popover-submenu-bg: rgb(1, 20, 62);
         font-size: 16px;
         font-weight: 200;
         margin-bottom: 5px;
+        color: rgba(255, 255, 255, 0.75);
       }
       .company-meta{
-        color: #A7AFC2;
+        color: rgba(255, 255, 255, 0.4);
         font-size: 12px;
       }
     }
@@ -49,10 +50,11 @@ $sidebar-popover-submenu-bg: rgb(1, 20, 62);
       border-radius: 0;
       padding: 10px 16px;
       font-size: 15px;
-      font-weight: 200;
+      font-weight: 400; 
 
       &:hover{
         background: #012470;
+        color: #b2bbd0;
       }
       &:focus,
       &:active{
@@ -60,21 +62,21 @@ $sidebar-popover-submenu-bg: rgb(1, 20, 62);
       }
 
       > .#{$ns}-icon{
-        color: #767B9B;
-        margin-right: 12px;
+        color: #767b9b;
+        margin-right: 14px;
         margin-top: 0;
       }
-
       > .#{$ns}-icon-caret-right{
         margin-right: -4px;
         margin-top: 3px;
-        color: #5B5F7B;
+        color: #42547b;
       }
     }
 
     .#{$ns}-submenu{
 
       .#{$ns}-collapse{
+        border-left: 2px solid rgba(255, 255, 255, 0.15);
 
         &-body{
           background-color: rgb(11, 34, 85);
@@ -85,11 +87,11 @@ $sidebar-popover-submenu-bg: rgb(1, 20, 62);
         .#{$ns}-menu-item{
           padding: 7px 16px 7px 18px;
           font-size: 15px;
-          color: #C5CBE3;
+          color: #8a95b6;
 
           &:hover{
             background: transparent;
-            color: #fff;
+            color: #C5CBE3;
           }
         }
       }
@@ -105,7 +107,7 @@ $sidebar-popover-submenu-bg: rgb(1, 20, 62);
       color: $sidebar-menu-item-color;
     }
     .#{$ns}-menu-divider{
-      border-top-color: #183C86;
+      border-top-color: #1D366A;
       color: #6B708C;
       margin: 4px 0;
     }

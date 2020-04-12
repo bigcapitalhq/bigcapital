@@ -37,7 +37,7 @@ function DashboardTopbar({
     <div class="dashboard__topbar">
       <div class="dashboard__topbar-left">
         <div class="dashboard__topbar-sidebar-toggle">
-          <Button>
+          <Button minimal={true}>
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" role="img" focusable="false">
               <title>Menu</title>
               <path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="5" stroke-width="2" d="M4 7h15M4 12h15M4 17h15"></path>

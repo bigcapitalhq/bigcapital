@@ -6,6 +6,8 @@ import {
   deleteAccount,
   inactiveAccount,
   fetchAccountsTable,
+  submitAccount,
+  fetchAccount,
 } from 'store/accounts/accounts.actions';
 import {
   getAccountsItems,
@@ -13,33 +15,40 @@ import {
 import {
   getResourceViews,
 } from 'store/customViews/customViews.selectors';
+import {
+  getItemById
+} from 'store/selectors';
 
 const mapStateToProps = (state, props) => ({
   views: getResourceViews(state, 'accounts'),
   accounts: getAccountsItems(state, state.accounts.currentViewId),
+  accountsTypes: state.accounts.accountsTypes,
+
   tableQuery: state.accounts.tableQuery,
   accountsLoading: state.accounts.loading,
+
+  getAccountById: (id) => getItemById(state.accounts.items, id),
 });
 
 const mapActionsToProps = (dispatch) => ({
-  fetchAccounts: (query) => dispatch(fetchAccountsList({ query })),
-  fetchAccountTypes: () => dispatch(fetchAccountTypes()),
+  requestFetchAccounts: (query) => dispatch(fetchAccountsList({ query })),
+  requestFetchAccountTypes: () => dispatch(fetchAccountTypes()),
+  requestSubmitAccount: ({ form }) => dispatch(submitAccount({ form })),
   requestDeleteAccount: (id) => dispatch(deleteAccount({ id })),
   requestInactiveAccount: (id) => dispatch(inactiveAccount({ id })),
+  requestFetchAccount: (id) => dispatch(fetchAccount({ id })),
+  requestFetchAccountsTable: (query = {}) => dispatch(fetchAccountsTable({ query: { ...query } })),
+
   changeCurrentView: (id) => dispatch({
     type: t.ACCOUNTS_SET_CURRENT_VIEW,
     currentViewId: parseInt(id, 10),
   }),
-
   setAccountsTableQuery: (key, value) => dispatch({
     type: 'ACCOUNTS_TABLE_QUERY_SET', key, value,
   }),
   addAccountsTableQueries: (queries) => dispatch({
     type: 'ACCOUNTS_TABLE_QUERIES_ADD', queries,
   }),
-
-  fetchAccountsTable: (query = {}) => dispatch(fetchAccountsTable({ query: { ...query } })),
-
   setSelectedRowsAccounts: (ids) => dispatch({
     type: t.ACCOUNTS_SELECTED_ROWS_SET, ids,
   }),

@@ -16,14 +16,7 @@ import Icon from 'components/Icon';
 
 const IndeterminateCheckbox = React.forwardRef(
   ({ indeterminate, ...rest }, ref) => {
-    const defaultRef = React.useRef()
-    const resolvedRef = ref || defaultRef
-
-    useEffect(() => {
-      resolvedRef.current.indeterminate = indeterminate
-    }, [resolvedRef, indeterminate])
-
-    return (<Checkbox ref={resolvedRef} {...rest} />);
+    return (<Checkbox indeterminate={indeterminate} {...rest} />);
   }
 );
 
@@ -174,13 +167,14 @@ export default function DataTable({
                 })}>
                   <div {...column.getSortByToggleProps()}>
                     {column.render('Header')}
-                    <span>
-                      {column.isSorted
-                        ? column.isSortedDesc
-                          ? (<Icon icon="sort-down" />)
-                          : (<Icon icon="sort-up" />)
-                        : ''}
-                    </span>
+
+                    {column.isSorted && (
+                      <span className={classnames({
+                        'sort-icon--desc': column.isSortedDesc,
+                        'sort-icon--asc': !column.isSortedDesc,
+                      }, 'sort-icon')}>
+                      </span>
+                    )}
                   </div>
 
                   {column.canResize && (

@@ -11,14 +11,14 @@ import AccountsConnect from 'connectors/Accounts.connector';
 function MakeJournalEntriesPage({
   fetchManualJournal,
   getManualJournal,
-  fetchAccounts,
+  requestFetchAccounts,
 }) {
   const history = useHistory();
   const { id } = useParams();
 
   const fetchJournal = useAsync(() => {
     return Promise.all([
-      fetchAccounts(),
+      requestFetchAccounts(),
       (id) && fetchManualJournal(id),
     ]);
   });

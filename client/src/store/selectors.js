@@ -1,5 +1,9 @@
 import {pick} from 'lodash';
 
+export const getItemById = (items, id) => {
+  return items[id] || null;
+};
+
 export const pickItemsFromIds = (items, ids) => {
   return Object.values(pick(items, ids));
 }

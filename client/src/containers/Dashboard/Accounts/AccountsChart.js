@@ -21,13 +21,13 @@ import { compose } from 'utils';
 
 function AccountsChart({
   changePageTitle,
-  fetchAccounts,
+  requestFetchAccounts,
   requestDeleteAccount,
   requestInactiveAccount,
   fetchResourceViews,
   fetchResourceFields,
   getResourceFields,
-  fetchAccountsTable,
+  requestFetchAccountsTable,
 }) {
   const [state, setState] = useState({
     deleteAlertActive: false,
@@ -48,7 +48,7 @@ function AccountsChart({
   // Fetch accounts list according to the given custom view id.
   const fetchAccountsHook = useAsync(async () => {
     await Promise.all([
-      fetchAccountsTable(),
+      requestFetchAccountsTable(),
     ]);
   }, false);
 
@@ -85,7 +85,7 @@ function AccountsChart({
   const handleConfirmAccountActive = useCallback(() => {
     requestInactiveAccount(inactiveAccount.id).then(() => {
       setInactiveAccount(false);
-      fetchAccountsTable();
+      requestFetchAccountsTable();
       AppToaster.show({ message: 'the_account_has_been_inactivated' });
     });
   }, [inactiveAccount]);

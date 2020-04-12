@@ -1,0 +1,30 @@
+
+
+.dialog--category-form{
+
+  .bp3-dialog-body{    
+    .bp3-form-group.bp3-inline{
+
+      .bp3-label{
+        min-width: 140px;
+      }
+      .bp3-form-content{
+        width: 250px;
+      }
+
+      &.form-group--description{
+
+        .bp3-form-content{
+          width: 280px;
+
+          textarea{
+            min-width: 100%;
+            max-width: 100%;
+            width: 100%;
+            max-height: 120px;
+          }
+        }
+      }
+    }
+  }
+}

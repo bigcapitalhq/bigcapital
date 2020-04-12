@@ -5,11 +5,12 @@ import {
 } from '@blueprintjs/core';
 import {Select} from '@blueprintjs/select';
 
-export default function AccountsMultiSelect({
+export default function AccountsSelectList({
   accounts,
   onAccountSelected,
   error,
   initialAccount,
+  defautlSelectText = 'Select account'
 }) {
   const [selectedAccount, setSelectedAccount] = useState(
     initialAccount || null
@@ -36,7 +37,7 @@ export default function AccountsMultiSelect({
       onItemSelect={onAccountSelect}>
       <Button
         rightIcon='caret-down'
-        text={selectedAccount ? selectedAccount.name : 'Select account'}
+        text={selectedAccount ? selectedAccount.name : defautlSelectText}
       />
     </Select>
   );

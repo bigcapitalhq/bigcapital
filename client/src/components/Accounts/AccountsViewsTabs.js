@@ -80,6 +80,7 @@ function AccountsViewsTabs({
             className='button--new-view'
             icon={<Icon icon='plus' />}
             onClick={handleClickNewView}
+            minimal={true}
           />
         </Tabs>
       </NavbarGroup>
