@@ -14,9 +14,16 @@ import {
 import DashboardBreadcrumbs from 'components/Dashboard/DashboardBreadcrumbs';
 import DashboardTopbarUser from 'components/Dashboard/TopbarUser';
 import Icon from 'components/Icon';
-import Search from 'containers/Dashboard/GeneralSearch/Search';
+import SearchConnect from 'connectors/Search.connect';
+import { compose } from 'utils';
 
-function DashboardTopbar({ pageTitle, pageSubtitle, editViewId }) {
+function DashboardTopbar({
+  pageTitle,
+  pageSubtitle,
+  editViewId,
+  globalSearchShow,
+  openGlobalSearch,
+}) {
   const history = useHistory();
 
   const handlerClickEditView = () => {
@@ -70,8 +77,13 @@ function DashboardTopbar({ pageTitle, pageSubtitle, editViewId }) {
       <div class='dashboard__topbar-right'>
         <Navbar class='dashboard__topbar-navbar'>
           <NavbarGroup>
-            {/* <Button className={Classes.MINIMAL} icon="home" text="Search" /> */}
-            <Search className />
+            <Button
+              onClick={() => openGlobalSearch(true)}
+              className={Classes.MINIMAL}
+              icon='home'
+              text='Search'
+            />
+
             <Button
               className={Classes.MINIMAL}
               icon='document'
@@ -100,4 +112,7 @@ const mapStateToProps = (state) => ({
   editViewId: state.dashboard.topbarEditViewId,
 });
 
-export default connect(mapStateToProps)(DashboardTopbar);
+export default compose(
+  SearchConnect,
+  connect(mapStateToProps)
+)(DashboardTopbar);
