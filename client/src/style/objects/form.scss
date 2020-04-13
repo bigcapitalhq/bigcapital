@@ -80,12 +80,12 @@ $form-check-input-indeterminate-bg-image: url("data:image/svg+xml,<svg xmlns='ht
 .#{$ns}-html-select select,
 .#{$ns}-select select{
   background-image: none;
-  border-radius: 0;
+  border-radius: 2px;
   
   &,
   &:hover{
     background: #fff;
-    box-shadow: 0 0 0;
+    box-shadow: none;
     border: 1px solid #ced4da;
   }
   &:focus{
@@ -149,16 +149,16 @@ $form-check-input-indeterminate-bg-image: url("data:image/svg+xml,<svg xmlns='ht
 .#{$ns}-control {
 
   input:checked ~ .#{$ns}-control-indicator {
-    box-shadow: 0 0 0 transparent;
+    box-shadow: none;
     background-color: transparent;
     background-image: none;
   }
   &:hover input:checked ~ .#{$ns}-control-indicator {
-    box-shadow: 0 0 0 transparent;
+    box-shadow: none;
     background-color: transparent;
   }
   input:not(:disabled):active:checked ~ .#{$ns}-control-indicator {
-    box-shadow: 0 0 0 transparent;
+    box-shadow: none;
     background: transparent;
   }
   input:disabled:checked ~ .#{$ns}-control-indicator {

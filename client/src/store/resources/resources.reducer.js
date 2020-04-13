@@ -1,22 +1,41 @@
 import { createReducer } from "@reduxjs/toolkit";
 import t from 'store/types';
+import { pickItemsFromIds } from 'store/selectors'
 
 const initialState = {
-  resourceFields: {
-    // resource name => { field_id }
-  },
+  fields: {},
+  columns: {},
+  resourceFields: {},
   resourceColumns: {},
 };
 
 export default createReducer(initialState, {
   [t.RESOURCE_COLUMNS_SET]: (state, action) => {
-    state.resourceColumns[action.resource_slug] = action.columns;
+    const _columns = {};
+    
+    action.columns.forEach((column) => {
+      _columns[column.id] = column;
+    });
+    state.columns = {
+      ...state.columns,
+      ..._columns,
+    };
+    state.resourceColumns[action.resource_slug] = action.columns.map(c => c.id);
   },
 
   [t.RESOURCE_FIELDS_SET]: (state, action) => {
-    state.resourceFields[action.resource_slug] = action.fields;
+    const _fields = {};
+    
+    action.fields.forEach((field) => {
+      _fields[field.id] = field;
+    });
+    state.fields = {
+      ...state.fields,
+      ..._fields,
+    };
+    state.resourceFields[action.resource_slug] = action.fields.map(f => f.id);
   },
-})
+});
 
 /**
  * Retrieve resource fields of the given resource slug.
@@ -24,9 +43,10 @@ export default createReducer(initialState, {
  * @param {String} resourceSlug 
  */
 export const getResourceFields = (state, resourceSlug) => {
-  const resourceFields = state.resources.resourceFields[resourceSlug];
-  return resourceFields ? Object.values(resourceFields) : [];
-}
+  const resourceIds = state.resources.resourceFields[resourceSlug];
+  const items = state.resources.fields;
+  return pickItemsFromIds(items, resourceIds);
+};
 
 /**
  * Retrieve resource columns of the given resource slug.
@@ -34,6 +54,25 @@ export const getResourceFields = (state, resourceSlug) => {
  * @param {String} resourceSlug -
  */
 export const getResourceColumns = (state, resourceSlug) => {
-  const resourceColumns = state.resources.resourceColumns[resourceSlug];
-  return resourceColumns ? Object.values(resourceColumns) : [];
-}
+  const resourceIds = state.resources.resourceColumns[resourceSlug];
+  const items = state.resources.columns;
+  return pickItemsFromIds(items, resourceIds);
+};
+
+/**
+ * 
+ * @param {State} state 
+ * @param {Number} fieldId 
+ */
+export const getResourceField = (state, fieldId) => {
+  return state.resources.fields[fieldId];
+};
+
+/**
+ * 
+ * @param {State} state 
+ * @param {Number} columnId 
+ */
+export const getResourceColumn = (state, columnId) => {
+  return state.resources.columns[columnId];
+};

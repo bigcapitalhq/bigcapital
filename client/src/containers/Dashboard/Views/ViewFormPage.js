@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import { useAsync } from 'react-use';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { Intent, Alert } from '@blueprintjs/core';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
@@ -23,8 +23,10 @@ function ViewFormPage({
   deleteView,
 }) {
   const { resource_slug: resourceSlug, view_id: viewId } = useParams();
+
   const columns = getResourceColumns('accounts');
   const fields = getResourceFields('accounts');
+
   const viewForm = (viewId) ? getViewMeta(viewId) : null;
 
   const [stateDeleteView, setStateDeleteView] = useState(null);
@@ -35,7 +37,7 @@ function ViewFormPage({
     } else {
       changePageTitle('New Custom View');
     }
-  }, [viewId]);
+  }, [viewId, changePageTitle]);
 
   const fetchHook = useAsync(async () => {
     await Promise.all([
@@ -47,21 +49,28 @@ function ViewFormPage({
     ]);
   }, []);
 
-  const handleDeleteView = (view) => { setStateDeleteView(view); };
-  const handleCancelDeleteView = () => { setStateDeleteView(null); };
+  const handleDeleteView = useCallback((view) => {
+    setStateDeleteView(view);
+  }, []);
 
-  const handleConfirmDeleteView = () => {
+  const handleCancelDeleteView = useCallback(() => {
+    setStateDeleteView(null);
+  }, []);
+
+  const handleConfirmDeleteView = useCallback(() => {
     deleteView(stateDeleteView.id).then((response) => {
       setStateDeleteView(null);
       AppToaster.show({
         message: 'the_custom_view_has_been_deleted',
       });
     })
-  };
+  }, [deleteView, stateDeleteView]);
+
   return (
-    <DashboardInsider name={'view-form'} loading={fetchHook.loading}>
+    <DashboardInsider name={'view-form'} loading={fetchHook.loading} mount={false}>
       <DashboardPageContent>
         <ViewForm
+          resourceName={resourceSlug}
           columns={columns}
           fields={fields}
           viewForm={viewForm}

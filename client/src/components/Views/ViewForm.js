@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useCallback, useMemo} from 'react';
-import {Formik, useFormik, ErrorMessage} from "formik";
+import { useFormik } from "formik";
 import {useIntl} from 'react-intl';
 import {
   InputGroup,
@@ -16,29 +16,47 @@ import {
 import {Row, Col} from 'react-grid-system';
 import { ReactSortable } from 'react-sortablejs';
 import * as Yup from 'yup';
-import {pick} from 'lodash';
+import {pick, get} from 'lodash';
 import Icon from 'components/Icon';
 import ViewFormConnect from 'connectors/ViewFormPage.connector';
 import {compose} from 'utils';
+import ErrorMessage from 'components/ErrorMessage';
+import DashboardConnect from 'connectors/Dashboard.connector';
+import ResourceConnect from 'connectors/Resource.connector';
+import AppToaster from 'components/AppToaster';
 
 function ViewForm({
+  resourceName,
   columns,
   fields,
   viewColumns,
   viewForm,
+  viewFormColumns,
   submitView,
   editView,
   onDelete,
+  getResourceField,
+  getResourceColumn,
 }) {
   const intl = useIntl();
-  const [draggedColumns, setDraggedColumn] = useState([]);
-  const [availableColumns, setAvailableColumns] = useState(columns); 
+
+  const [draggedColumns, setDraggedColumn] = useState([
+    ...(viewForm && viewForm.columns) ? viewForm.columns.map((column) => {
+      return getResourceColumn(column.field_id);
+    }) : []
+  ]);
+
+  const draggedColumnsIds = useMemo(() =>
+    draggedColumns.map(c => c.id), [draggedColumns]);
+  
+  const [availableColumns, setAvailableColumns] = useState([
+    ...(viewForm && viewForm.columns) ? columns.filter((column) => 
+      draggedColumnsIds.indexOf(column.id) === -1
+    ) : columns,
+  ]);
 
   const defaultViewRole = useMemo(() => ({
-    field_key: '',
-    comparator: 'AND',
-    value: '',
-    index: 1,
+    field_key: '', comparator: '', value: '', index: 1,
   }), []);
 
   const validationSchema = Yup.object().shape({
@@ -58,20 +76,37 @@ function ViewForm({
         key: Yup.string().required(),
         index: Yup.string().required(),
       }),
-    )
+    ),
   });
-  const initialEmptyForm = {
-    resource_name: '',
+  const initialEmptyForm = useMemo(() => ({
+    resource_name: resourceName || '',
     name: '',
     logic_expression: '',
     roles: [
       defaultViewRole,
     ],
     columns: [],
-  };
-  const initialForm = { ...initialEmptyForm, ...viewForm };
+  }), [defaultViewRole, resourceName]);
 
-  const formik = useFormik({
+  const initialForm = useMemo(() =>
+    ({
+      ...initialEmptyForm,
+      ...viewForm ? {
+        ...viewForm,
+        resource_name: viewForm.resource.name,
+      } : {},
+    }),
+    [initialEmptyForm, viewForm]);
+
+  const {
+    values,
+    errors,
+    touched,
+    setFieldValue,
+    getFieldProps,
+    handleSubmit,
+    isSubmitting,
+  } = useFormik({
     enableReinitialize: true,
     validationSchema: validationSchema,
     initialValues: {
@@ -86,96 +121,112 @@ function ViewForm({
         }),
       ],
     },
-    onSubmit: (values) => {
+    onSubmit: (values, { setSubmitting }) => {
       if (viewForm && viewForm.id) {
         editView(viewForm.id, values).then((response) => {
-
+          AppToaster.show({
+            message: 'the_view_has_been_edited'
+          });
+          setSubmitting(false);
         });
       } else {
         submitView(values).then((response) => {
-
+          AppToaster.show({
+            message: 'the_view_has_been_submit'
+          });
+          setSubmitting(false);
         });
       }
     },
   });
 
   useEffect(() => {
-    formik.setFieldValue('columns',
+    setFieldValue('columns',
       draggedColumns.map((column, index) => ({
       index, key: column.key,
     })));
-  }, [draggedColumns, formik]);
+  }, [setFieldValue, draggedColumns]);
 
-  const conditionalsItems = [
+  const conditionalsItems = useMemo(() => ([
     { value: 'and', label: 'AND' },
     { value: 'or', label: 'OR' },
-  ];
-  const whenConditionalsItems = [
+  ]), []);
+
+  const whenConditionalsItems = useMemo(() => ([
     { value: '', label: 'When' },
-  ];
+  ]), []);
 
   // Compatotors items.
-  const compatatorsItems = [
-    {value: '', label: 'Select a compatator'},
+  const compatatorsItems = useMemo(() => ([
+    {value: '', label: 'Compatator'},
     {value: 'equals', label: 'Equals'},
     {value: 'not_equal', label: 'Not Equal'},
     {value: 'contain', label: 'Contain'},
     {value: 'not_contain', label: 'Not Contain'},
-  ];
+  ]), []);
 
   // Resource fields.
   const resourceFields = useMemo(() => ([
     {value: '', label: 'Select a field'},
-    ...fields.map((field) => ({ value: field.key, label: field.labelName, })),
-  ]), []);
+    ...fields.map((field) => ({ value: field.key, label: field.label_name, })),
+  ]), [fields]);
+
   // Account item of select accounts field.
   const selectItem = (item, { handleClick, modifiers, query }) => {
     return (<MenuItem text={item.label} key={item.key} onClick={handleClick} />)
   };
   // Handle click new condition button.
   const onClickNewRole = useCallback(() => {
-    formik.setFieldValue('roles', [
-      ...formik.values.roles,
+    setFieldValue('roles', [
+      ...values.roles,
       {
         ...defaultViewRole,
-        index: formik.values.roles.length + 1,
+        index: values.roles.length + 1,
       }
     ]);
-  }, [formik, defaultViewRole]);
+  }, [defaultViewRole, setFieldValue, values]);
 
   // Handle click remove view role button.
   const onClickRemoveRole = useCallback((viewRole, index) => () => {
-    const viewRoles = [...formik.values.roles];
+    const viewRoles = [...values.roles];
+
+    // Can't continue if view roles equals or less than 1.
+    if (viewRoles.length <= 1) { return; }
+
     viewRoles.splice(index, 1);
     viewRoles.map((role, i) => {
       role.index = i + 1;
       return role;
     });
-    formik.setFieldValue('roles', viewRoles);
-  }, [formik]);
+    setFieldValue('roles', viewRoles);
+  }, [values, setFieldValue]);
 
   const onClickDeleteView = useCallback(() => {
     onDelete && onDelete(viewForm);
   }, [onDelete, viewForm]);
 
+  const hasError = (path) => get(errors, path) && get(touched, path); 
+  
+  console.log(errors, touched);
+
   return (
     <div class="view-form">
-      <form onSubmit={formik.handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <div class="view-form--name-section">
           <Row>
             <Col sm={8}>
               <FormGroup
                 label={intl.formatMessage({'id': 'View Name'})}
                 className={'form-group--name'}
-                intent={formik.errors.name && Intent.DANGER}
-                helperText={formik.errors.name && formik.errors.label}
+                intent={(errors.name && touched.name) && Intent.DANGER}
+                helperText={<ErrorMessage {...{errors, touched}} name={'name'} />}
                 inline={true}
                 fill={true}>
 
                 <InputGroup
-                  intent={formik.errors.name && Intent.DANGER}
+                  intent={(errors.name && touched.name) && Intent.DANGER}
                   fill={true}
-                  {...formik.getFieldProps('name')} />
+                  {...getFieldProps('name')} />
               </FormGroup>
             </Col>
           </Row>
@@ -183,7 +234,7 @@ function ViewForm({
    
         <H5 className="mb2">Define the conditionals</H5>
 
-        {formik.values.roles.map((role, index) => (
+        {values.roles.map((role, index) => (
           <Row class="view-form__role-conditional">
             <Col sm={2} class="flex">
               <div class="mr2 pt1 condition-number">{ index + 1 }</div>
@@ -196,38 +247,36 @@ function ViewForm({
 
             <Col sm={2}>
               <FormGroup
-                intent={formik.getFieldMeta(`roles[${index}].field_key`).error && Intent.DANGER}>
-
+                intent={hasError(`roles[${index}].field_key`) && Intent.DANGER}>
                 <HTMLSelect
                   options={resourceFields}
-                  value={role.field}
+                  value={role.field_key}
                   className={Classes.FILL}
-                  {...formik.getFieldProps(`roles[${index}].field_key`)} />
+                  {...getFieldProps(`roles[${index}].field_key`)} />
               </FormGroup>
             </Col>
 
             <Col sm={2}>
               <FormGroup
-                intent={formik.getFieldMeta(`roles[${index}].comparator`).error && Intent.DANGER}>
-
+                intent={hasError(`roles[${index}].comparator`) && Intent.DANGER}>
                 <HTMLSelect
                   options={compatatorsItems}
                   value={role.comparator}
                   className={Classes.FILL}
-                  {...formik.getFieldProps(`roles[${index}].comparator`)} />
+                  {...getFieldProps(`roles[${index}].comparator`)} />
               </FormGroup>
             </Col>
 
             <Col sm={5} class="flex">
-              <FormGroup>
+              <FormGroup
+                intent={hasError(`roles[${index}].value`) && Intent.DANGER}>
                 <InputGroup
                   placeholder={intl.formatMessage({'id': 'value'})}
-                  intent={formik.getFieldMeta(`roles[${index}].value`).error && Intent.DANGER}
-                  {...formik.getFieldProps(`roles[${index}].value`)} />
+                  {...getFieldProps(`roles[${index}].value`)} />
               </FormGroup>
               
               <Button 
-                icon={<Icon icon="mines" />}
+                icon={<Icon icon="times-circle" iconSize={14} />}
                 iconSize={14}
                 className="ml2"
                 minimal={true} 
@@ -237,12 +286,12 @@ function ViewForm({
           </Row>
         ))}
 
-      <div class="mt1">
+      <div className={'view-form__role-conditions-actions'}> 
         <Button
           minimal={true}
           intent={Intent.PRIMARY}
           onClick={onClickNewRole}>
-          + New Conditional
+          New Conditional
         </Button>
       </div>
 
@@ -252,22 +301,24 @@ function ViewForm({
             <FormGroup
               label={intl.formatMessage({'id': 'Logic Expression'})}
               className={'form-group--logic-expression'}
-              intent={formik.errors.logic_expression && Intent.DANGER}
-              helperText={formik.errors.logic_expression && formik.errors.logic_expression}
+              intent={(errors.logic_expression && touched.logic_expression) && Intent.DANGER}
+              helperText={<ErrorMessage {...{errors, touched}} name='logic_expression' />}
               inline={true}
               fill={true}>
 
-              <InputGroup intent={formik.errors.logic_expression && Intent.DANGER} fill={true}
-                {...formik.getFieldProps('logic_expression')} />
+              <InputGroup
+                intent={(errors.logic_expression && touched.logic_expression) && Intent.DANGER}
+                fill={true}
+                {...getFieldProps('logic_expression')} />
             </FormGroup>
           </Col>
         </Row>
-
       </div>
+
       <H5 className={'mb2'}>Columns Preferences</H5>
       
       <div class="dragable-columns">
-        <Row>
+        <Row gutterWidth={14}>
           <Col sm={4} className="dragable-columns__column">
             <H6 className="dragable-columns__title">Available Columns</H6>
 
@@ -317,11 +368,22 @@ function ViewForm({
       </div>
       
       <div class="form__floating-footer">
-        <Button intent={Intent.PRIMARY} type="submit">Submit</Button>
-        <Button intent={Intent.NONE} type="submit" className="ml2">Cancel</Button>
+        <Button
+          intent={Intent.PRIMARY}
+          type="submit"
+          disabled={isSubmitting}>
+          Submit
+        </Button>
+
+        <Button intent={Intent.NONE} type="submit" className="ml1">Cancel</Button>
 
         { (viewForm && viewForm.id) && (
-          <Button intent={Intent.DANGER} onClick={onClickDeleteView}>Delete</Button>
+          <Button
+            intent={Intent.DANGER}
+            onClick={onClickDeleteView}
+            className={"right mr2"}>
+              Delete
+          </Button>
         ) }
       </div>
     </form>
@@ -331,4 +393,6 @@ function ViewForm({
 
 export default compose(
   ViewFormConnect,
+  DashboardConnect,
+  ResourceConnect,
 )(ViewForm);

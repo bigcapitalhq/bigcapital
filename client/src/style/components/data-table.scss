@@ -134,6 +134,14 @@
           background-color: #CFDCEE;
         }
       }
+      .tr.no-results{
+        .td{
+          flex-direction: column;
+          padding: 20px;
+          color: #666;
+          align-items: center;
+        }
+      }
     }
 
     .tr .th.expander,

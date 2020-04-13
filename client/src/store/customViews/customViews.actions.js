@@ -6,7 +6,7 @@ export const submitView = ({ form }) => {
 };
 
 export const editView = ({ id, form }) => {
-  return (dispatch) => ApiService.post(`views/${id}`);
+  return (dispatch) => ApiService.post(`views/${id}`, form);
 };
 
 export const deleteView = ({ id }) => {

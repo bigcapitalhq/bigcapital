@@ -20,7 +20,7 @@
       }
 
       .tbody{
-        .tr .td{
+        .tr:not(.no-results) .td{
           padding-top: 0.4rem;
           padding-bottom: 0.4rem;
         }

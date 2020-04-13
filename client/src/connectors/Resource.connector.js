@@ -6,11 +6,16 @@ import {
 import {
   getResourceColumns,
   getResourceFields,
+  getResourceColumn,
+  getResourceField,
 } from 'store/resources/resources.reducer';
 
 export const mapStateToProps = (state, props) => ({
   getResourceColumns: (resourceSlug) => getResourceColumns(state, resourceSlug),
   getResourceFields: (resourceSlug) => getResourceFields(state, resourceSlug),
+
+  getResourceColumn: (columnId) => getResourceColumn(state, columnId),
+  getResourceField: (fieldId) => getResourceField(state, fieldId),
 });
 
 export const mapDispatchToProps = (dispatch) => ({

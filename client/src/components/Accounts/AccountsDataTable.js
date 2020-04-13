@@ -121,18 +121,21 @@ function AccountsDataTable({
           </Tooltip>) : row.name;
       },
       className: 'account_name',
+      width: 300,
     },
     {
       id: 'code',
       Header: 'Code',
       accessor: 'code',
       className: 'code',
+      width: 100,
     },
     {
       id: 'type',
       Header: 'Type',
       accessor: 'type.name',
       className: 'type',
+      width: 120,
     },
     {
       id: 'normal',
@@ -145,6 +148,7 @@ function AccountsDataTable({
         return (<Icon icon={`arrow-${arrowDirection}`} />);
       },
       className: 'normal',
+      width: 75,
     },
     {
       id: 'balance',
@@ -159,6 +163,7 @@ function AccountsDataTable({
             </span>) :
           (<span class="placeholder">--</span>);
       },
+      width: 150,
     },
     {
       id: 'actions',
