@@ -38,7 +38,7 @@ function DashboardTopbar({
     <div class='dashboard__topbar'>
       <div class='dashboard__topbar-left'>
         <div class='dashboard__topbar-sidebar-toggle'>
-          <Button>
+          <Button minimal={true}>
             <svg
               xmlns='http://www.w3.org/2000/svg'
               width='20'
