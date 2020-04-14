@@ -3,11 +3,13 @@ import t from 'store/types';
 import { generalSearch } from 'store/search/search.actions';
 
 export const mapStateToProps = (state, props) => ({
-  resultSearch: state.GeneralSearch,
+  resultSearch: state.globalSearch.searches,
+  globalSearchShow: state.globalSearch.isOpen,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
-  generalSearch: (result) => dispatch(generalSearch(result)),
+  openGlobalSearch: (result) => dispatch({ type: t.OPEN_SEARCH, }),
+  closeGlobalSearch: (result) => dispatch({ type: t.CLOSE_SEARCH }),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps);

@@ -274,3 +274,19 @@
   box-shadow: 0 0 0;
   border-bottom: 1px solid #EAEAEA;
 }
+
+.navbar-omnibar{
+  -webkit-filter: blur(0);
+  filter: blur(0);
+  opacity: 1;
+  top: 20vh;
+  left: calc(50% - 250px);
+  z-index: 21;
+  border-radius: 3px;
+  -webkit-box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.1),
+    0 4px 8px rgba(16, 22, 26, 0.2), 0 18px 46px 6px rgba(16, 22, 26, 0.2);
+  box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.1), 0 4px 8px rgba(16, 22, 26, 0.2),
+    0 18px 46px 6px rgba(16, 22, 26, 0.2);
+  background-color: #fff;
+  width: 500px;
+}

@@ -14,7 +14,7 @@ import financialStatements from './financialStatement/financialStatements.reduce
 import itemCategories from './itemCategories/itemsCategory.reducer';
 import settings from './settings/settings.reducer';
 import manualJournals from './manualJournals/manualJournals.reducers';
-import search from './search/search.reducer';
+import globalSearch from './search/search.reducer';
 
 export default combineReducers({
   authentication,
@@ -31,5 +31,5 @@ export default combineReducers({
   items,
   itemCategories,
   settings,
-  search,
+  globalSearch,
 });
