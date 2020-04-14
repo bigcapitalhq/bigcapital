@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 import {
   Route,
   Switch,
@@ -17,8 +17,9 @@ import ResourceConnect from 'connectors/Resource.connector';
 import DashboardConnect from 'connectors/Dashboard.connector';
 import ItemsConnect from 'connectors/Items.connect';
 import CustomViewsConnect from 'connectors/CustomView.connector'
-import DashboardViewsTabs from 'components/Accounts/AccountsViewsTabs';
+import ItemsViewsTabs from 'containers/Dashboard/Items/ItemsViewsTabs';
 import AppToaster from 'components/AppToaster';
+
 
 function ItemsList({
   changePageTitle,
@@ -26,13 +27,14 @@ function ItemsList({
   fetchResourceFields,
   views,
   requestDeleteItem,
+  requestFetchItems,
+  addItemsTableQueries,
 }) {
-  const [filterConditions, setFilterConditions] = useState([]);
   const [deleteItem, setDeleteItem] = useState(false);
 
   useEffect(() => {
     changePageTitle('Items List');
-  }, []);
+  }, [changePageTitle]);
 
   const fetchHook = useAsync(async () => {
     await Promise.all([
@@ -40,31 +42,68 @@ function ItemsList({
       fetchResourceFields('items'),
     ])
   });
-  const handleDeleteItem = (item) => { setDeleteItem(item); };
+
+  const fetchItems = useAsync(async () => {
+    await Promise.all([
+      requestFetchItems({  }),
+    ])
+  });
+
+  const handleDeleteItem = useCallback((item) => {
+    setDeleteItem(item);
+  }, [setDeleteItem]);
+
   const handleEditItem = () => {};
-  const handleCancelDeleteItem = () => { setDeleteItem(false) };
-  const handleConfirmDeleteItem = () => {
+
+  const handleCancelDeleteItem = useCallback(() => {
+    setDeleteItem(false);
+  }, [setDeleteItem]);
+
+  const handleConfirmDeleteItem = useCallback(() => {
     requestDeleteItem(deleteItem.id).then(() => {
       AppToaster.show({ message: 'the_item_has_been_deleted' });
       setDeleteItem(false);
     });
-  };
+  }, [requestDeleteItem, deleteItem]);
 
-  const handleFilterChange = (filter) => { setFilterConditions(filter); };
+  const handleFetchData = useCallback(({ pageIndex, pageSize, sortBy  }) => {
+    addItemsTableQueries({
+      ...(sortBy.length > 0) ? {
+        column_sort_by: sortBy[0].id,
+        sort_by: sortBy[0].desc ? 'desc' : 'asc',
+      } : {},
+    });
+    fetchItems.execute();
+  }, [fetchItems, addItemsTableQueries]);
+
+  const handleFilterChanged = useCallback(() => {
+    fetchItems.execute();
+  }, [fetchItems]);
+
+  const handleCustomViewChanged = useCallback(() => {    
+    fetchItems.execute();
+  }, [fetchItems]);
   
   return (
     <DashboardInsider isLoading={fetchHook.pending} name={'items-list'}>
-      <ItemsActionsBar views={views} onFilterChange={handleFilterChange} />
+      <ItemsActionsBar
+        onFilterChanged={handleFilterChanged}
+        views={views} />
 
       <DashboardPageContent>
         <Switch>
-          <Route>
-            <DashboardViewsTabs resourceName={'items'} />
+          <Route
+            exact={true}
+            path={[
+              '/dashboard/items/:custom_view_id/custom_view',
+              '/dashboard/items'
+            ]}>
+            <ItemsViewsTabs onViewChanged={handleCustomViewChanged} />
 
             <ItemsDataTable
-              filterConditions={filterConditions}
               onDeleteItem={handleDeleteItem}
-              onEditItem={handleEditItem} />
+              onEditItem={handleEditItem}
+              onFetchData={handleFetchData} />
 
             <Alert
               cancelButtonText="Cancel"

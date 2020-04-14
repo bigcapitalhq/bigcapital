@@ -12,6 +12,7 @@ export const mapStateToProps = (state, props) => {
   const dialogPayload = getDialogPayload(state, 'item-form');
   return {
     categories: state.itemCategories.categories,
+    categoriesList: Object.values(state.itemCategories.categories),
     name: 'item-form',
     payload: { action: 'new', id: null },
     editItemCategory:
@@ -21,6 +22,7 @@ export const mapStateToProps = (state, props) => {
     getCategoryId: id => getCategoryId(state, id)
   };
 };
+
 export const mapDispatchToProps = dispatch => ({
   requestSubmitItemCategory: form => dispatch(submitItemCategory({ form })),
   requestFetchItemCategories: () => dispatch(fetchItemCategories()),

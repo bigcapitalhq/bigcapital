@@ -117,8 +117,7 @@ function AccountsChart({
     console.log(accounts);
   };
 
-  const handleFilterChanged = useCallback(() => {
-    
+  const handleFilterChanged = useCallback(() => { 
     fetchAccountsHook.execute();
   }, [fetchAccountsHook]);
 

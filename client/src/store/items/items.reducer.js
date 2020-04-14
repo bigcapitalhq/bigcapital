@@ -3,6 +3,7 @@ import { createReducer } from '@reduxjs/toolkit';
 import {
   getItemsViewPages,
 } from 'store/items/items.selectors';
+import { createTableQueryReducers } from 'store/queryReducers';
 
 const initialState = {
   items: {},
@@ -10,10 +11,12 @@ const initialState = {
   itemsRelation: {},
   currentPage: 1,
   currentViewId: -1,
+  tableQuery: {},
   bulkActions: {},
+  loading: false,
 };
 
-export default createReducer(initialState, {
+const itemsReducer = createReducer(initialState, {
   [t.ITEMS_SET]: (state, action) => {
     const _items = {};
 
@@ -83,9 +86,15 @@ export default createReducer(initialState, {
       delete state.items[itemId];
 
     }
+  },
 
+  [t.ITEMS_TABLE_LOADING]: (state, action) => {
+    const { loading } = action.payload;
+    state.loading = !!loading;
   },
 });
+
+export default createTableQueryReducers('items', itemsReducer);
 
 export const getItemById = (state, id) => {
   return state.items.items[id];

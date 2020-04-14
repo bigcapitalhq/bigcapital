@@ -6,7 +6,7 @@
  
   &__topbar{
     width: 100%;
-    height: 80px;
+    min-height: 65px;
     display: flex;
     justify-content: space-between;
     border-bottom: 1px solid #F2EFEF;
@@ -215,6 +215,20 @@
 
   &__page-content{
     // padding: 22px;
+
+
+    .bigcapital-datatable{
+
+      .table{
+        .thead,
+        .tbody{
+          .th.selection,
+          .td.selection{
+            padding-left: 18px;
+          }
+        }
+      }
+    }
   }
 
   &__preferences-topbar{

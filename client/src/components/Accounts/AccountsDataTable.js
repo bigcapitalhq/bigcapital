@@ -52,7 +52,7 @@ function AccountsDataTable({
     openDialog('account-form', { action: 'edit', id: account.id });
   }, [openDialog]);
 
-  const actionMenuList = account => (
+  const actionMenuList = useCallback(account => (
     <Menu>
       <MenuItem text='View Details' />
       <MenuDivider />
@@ -66,7 +66,8 @@ function AccountsDataTable({
         text='Delete Account'
         onClick={() => onDeleteAccount(account)} />
     </Menu>
-  );
+  ), [handleEditAccount, onDeleteAccount, onInactiveAccount]);
+
   const columns = useMemo(() => [
     {
       id: 'name',
@@ -139,7 +140,7 @@ function AccountsDataTable({
       className: 'actions',
       width: 50,
     }
-  ], []);
+  ], [actionMenuList]);
 
   const selectionColumn = useMemo(() => ({
     minWidth: 42,

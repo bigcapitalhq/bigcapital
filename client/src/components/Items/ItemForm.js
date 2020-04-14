@@ -9,6 +9,7 @@ import {
   HTMLSelect,
   Button,
   Classes,
+  Checkbox,
 } from '@blueprintjs/core';
 import { Row, Col } from 'react-grid-system';
 import { Select } from '@blueprintjs/select';
@@ -19,11 +20,15 @@ import {compose} from 'utils';
 import ErrorMessage from 'components/ErrorMessage';
 import classNames from 'classnames';
 import Icon from 'components/Icon';
+import ItemCategoryConnect from 'connectors/ItemsCategory.connect';
+import MoneyInputGroup from 'components/MoneyInputGroup';
 
 
 const ItemForm = ({
   requestSubmitItem,
   accounts,
+  categories,
+  categoriesList,
 }) => {
   const [selectedAccounts, setSelectedAccounts] = useState({});
 
@@ -35,24 +40,30 @@ const ItemForm = ({
   ]), []);
 
   const validationSchema = Yup.object().shape({
+    active: Yup.boolean(),
     name: Yup.string().required(),
     type: Yup.string().trim().required(),
     sku: Yup.string().required(),
-    cost_price: Yup.number().required(),
-    sell_price: Yup.number().required(),
+    cost_price: Yup.number(),
+    sell_price: Yup.number(),
     cost_account_id: Yup.number().required(),
     sell_account_id: Yup.number().required(),
-    inventory_account_id: Yup.number().required(),
-    category_id: Yup.number().required(),
+    inventory_account_id: Yup.number().when('type', {
+      is: (value) => value === 'inventory',
+      then: Yup.number().required(),
+      otherwise: Yup.number().nullable(),
+    }),
+    category_id: Yup.number().nullable(),
     stock: Yup.string() || Yup.boolean()
   });
 
   const initialValues = useMemo(() => ({
+    active: true,
     name: '',
     type: '',
     sku: '',
-    cost_price: null,
-    sell_price: null,
+    cost_price: 0,
+    sell_price: 0,
     cost_account_id: null,
     sell_account_id: null,
     inventory_account_id: null,
@@ -80,9 +91,10 @@ const ItemForm = ({
   });
   const {errors, values, touched} = useMemo(() => formik, [formik]);
 
-  const accountItem = (item, { handleClick }) => (
+  const accountItem = useCallback((item, { handleClick }) => (
     <MenuItem key={item.id} text={item.name} label={item.code} onClick={handleClick} />
-  );
+  ), []);
+
   // Filter Account Items
   const filterAccounts = (query, account, _index, exactMatch) => {
     const normalizedTitle = account.name.toLowerCase();
@@ -104,6 +116,10 @@ const ItemForm = ({
     };
   }, [formik, selectedAccounts]);
 
+  const categoryItem = useCallback((item, { handleClick }) => (
+    <MenuItem text={item.name} onClick={handleClick} />
+  ), []);
+
   const getSelectedAccountLabel = useCallback((fieldName, defaultLabel) => {
     return typeof selectedAccounts[fieldName] !== 'undefined'
       ? selectedAccounts[fieldName].name : defaultLabel;
@@ -111,6 +127,10 @@ const ItemForm = ({
 
   const requiredSpan = useMemo(() => (<span class="required">*</span>), []);
   const infoIcon = useMemo(() => (<Icon icon="info-circle" iconSize={12} />), []);
+
+  const handleMoneyInputChange = (fieldKey) => (e, value) => {
+    formik.setFieldValue(fieldKey, value);
+  };
 
   return (
     <div class='item-form'>
@@ -175,8 +195,8 @@ const ItemForm = ({
             )}
           >
             <Select
-              items={accounts}
-              itemRenderer={accountItem}
+              items={categoriesList}
+              itemRenderer={categoryItem}
               itemPredicate={filterAccounts}
               popoverProps={{ minimal: true }}
               onItemSelect={onItemAccountSelect('category_id')}
@@ -184,15 +204,28 @@ const ItemForm = ({
               <Button
                 fill={true}
                 rightIcon='caret-down'
-                text={getSelectedAccountLabel('category_id', 'Select account')}
+                text={getSelectedAccountLabel('category_id', 'Select category')}
               />
             </Select>
+          </FormGroup>
+
+          <FormGroup
+            label={' '}
+            inline={true}
+            className={'form-group--active'}
+          >
+            <Checkbox
+              inline={true}
+              label={'Active'}
+              defaultChecked={values.active}
+              {...formik.getFieldProps('active')}
+            />
           </FormGroup>
         </div>
 
         <Row gutterWidth={16} className={'item-form__accounts-section'}>
           <Col width={404}>
-            <h4 >Purchase Information</h4>
+            <h4>Purchase Information</h4>
 
             <FormGroup
               label={'Selling Price'}
@@ -201,11 +234,14 @@ const ItemForm = ({
               helperText={<ErrorMessage {...formik} name="selling_price" />}
               inline={true}
             >
-              <InputGroup
-                medium={true}
-                intent={(errors.selling_price && touched.selling_price) && Intent.DANGER}
-                {...formik.getFieldProps('sell_price')}
-              />
+              <MoneyInputGroup
+                value={values.selling_price}
+                prefix={'$'}
+                onChange={handleMoneyInputChange('selling_price')}
+                inputGroupProps={{
+                  medium: true,
+                  intent: (errors.selling_price && touched.selling_price) && Intent.DANGER,
+                }} />
             </FormGroup>
 
             <FormGroup
@@ -236,7 +272,9 @@ const ItemForm = ({
           </Col>
 
           <Col width={404}>
-            <h4>Sales Information</h4>
+            <h4>
+              Sales Information
+            </h4>
 
             <FormGroup
               label={'Cost Price'}
@@ -245,11 +283,14 @@ const ItemForm = ({
               helperText={<ErrorMessage {...formik} name="cost_price" />}
               inline={true}
             >
-              <InputGroup
-                medium={true}
-                intent={(errors.cost_price && touched.cost_price) && Intent.DANGER}
-                {...formik.getFieldProps('cost_price')}
-              />
+              <MoneyInputGroup
+                value={values.cost_price}
+                prefix={'$'}
+                onChange={handleMoneyInputChange('cost_price')}
+                inputGroupProps={{
+                  medium: true,
+                  intent: (errors.cost_price && touched.cost_price) && Intent.DANGER,
+                }} />
             </FormGroup>
 
             <FormGroup
@@ -262,7 +303,7 @@ const ItemForm = ({
                 'form-group--cost-account',
                 'form-group--select-list',
                 Classes.FILL)}
-            >
+              >
               <Select
                 items={accounts}
                 itemRenderer={accountItem}
@@ -282,12 +323,14 @@ const ItemForm = ({
 
         <Row className={'item-form__accounts-section mt2'}>
           <Col width={404}>
-            <h4>Inventory Information</h4>
+            <h4>
+              Inventory Information
+            </h4>
 
             <FormGroup
               label={'Inventory Account'}
               inline={true}
-              intent={(errors.inventory_account_id && errors.inventory_account_id) && Intent.DANGER}
+              intent={(errors.inventory_account_id && touched.inventory_account_id) && Intent.DANGER}
               helperText={<ErrorMessage {...formik} name="inventory_account_id" />}
               className={classNames(
                 'form-group--item-inventory_account',
@@ -312,8 +355,8 @@ const ItemForm = ({
             <FormGroup
               label={'Opening Stock'}
               className={'form-group--item-stock'}
-              intent={formik.errors.cost_price && Intent.DANGER}
-              helperText={formik.errors.stock && formik.errors.stock}
+              // intent={errors.cost_price && Intent.DANGER}
+              // helperText={formik.errors.stock && formik.errors.stock}
               inline={true}
             >
               <InputGroup
@@ -341,4 +384,5 @@ const ItemForm = ({
 export default compose(
   AccountsConnect,
   ItemsConnect,
+  ItemCategoryConnect,
 )(ItemForm);

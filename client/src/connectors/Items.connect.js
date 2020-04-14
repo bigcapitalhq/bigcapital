@@ -24,6 +24,7 @@ export const mapStateToProps = (state, props) => {
       state.items.items, viewPages, state.items.currentPage),
 
     bulkSelected: state.items.bulkActions,
+    itemsTableLoading: state.items.loading,
   };
 };
 
@@ -37,6 +38,14 @@ export const mapDispatchToProps = (dispatch) => ({
   removeBulkActionItem: (id) => dispatch({
     type: t.ITEM_BULK_ACTION_REMOVE, itemId: id,
   }),
+
+  setItemsTableQuery: (key, value) => dispatch({
+    type: t.ITEMS_TABLE_QUERY_SET, key, value,
+  }),
+  addItemsTableQueries: (queries) =>
+    dispatch({
+      type: t.ITEMS_TABLE_QUERIES_ADD, queries,
+    }),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps);

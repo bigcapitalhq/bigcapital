@@ -83,14 +83,14 @@ export default [
     }),
     text: 'Manual Journals'
   },
-
-  // Items
   {
-    path: `${BASE_URL}/items/list`,
+    path: `${BASE_URL}/items/categories`,
     component: LazyLoader({
-      loader: () => import('containers/Dashboard/Items/ItemsList')
+      loader: () => import('containers/Dashboard/Items/ItemsCategoryList')
     })
   },
+
+  
   {
     path: `${BASE_URL}/items/new`,
     component: LazyLoader({
@@ -98,12 +98,15 @@ export default [
     })
   },
 
+  // Items
   {
-    path: `${BASE_URL}/items/ItemCategoriesList`,
+    path: `${BASE_URL}/items`,
     component: LazyLoader({
-      loader: () => import('containers/Dashboard/Items/ItemsCategoryList')
+      loader: () => import('containers/Dashboard/Items/ItemsList')
     })
   },
+
+  
 
   // Financial Reports.
   {

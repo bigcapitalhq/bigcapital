@@ -242,6 +242,7 @@ $form-check-input-indeterminate-bg-image: url("data:image/svg+xml,<svg xmlns='ht
     .#{$ns}-control-indicator {
       border: 1px solid #c6c6c6;
       border-radius: $pt-border-radius;
+      background-color: #fff;
     }
     input:checked ~ .#{$ns}-control-indicator {
       background-image: escape-svg($form-check-input-checked-bg-image);

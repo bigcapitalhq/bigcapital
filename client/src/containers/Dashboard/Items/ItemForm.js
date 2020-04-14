@@ -6,11 +6,13 @@ import ItemForm from 'components/Items/ItemForm';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import ItemsConnect from 'connectors/Items.connect';
 import AccountsConnect from 'connectors/Accounts.connector';
+import ItemCategoryConnect from 'connectors/ItemsCategory.connect';
 import { compose } from 'utils';
 
 const ItemFormContainer = ({
   changePageTitle,
-  fetchAccounts,
+  requestFetchAccounts,
+  requestFetchItemCategories,
 }) => {
   const { id } = useParams();
   useEffect(() => {
@@ -21,11 +23,12 @@ const ItemFormContainer = ({
 
   const fetchHook = useAsync(async () => {
     await Promise.all([
-      fetchAccounts(),
+      requestFetchAccounts(),
+      requestFetchItemCategories(),
     ]);
   });
   return (
-    <DashboardInsider isLoading={fetchHook.loading} name={'item-form'}>
+    <DashboardInsider loading={fetchHook.loading} name={'item-form'}>
       <ItemForm />
     </DashboardInsider>
   );
@@ -35,4 +38,5 @@ export default compose(
   DashboardConnect,
   ItemsConnect,
   AccountsConnect,
+  ItemCategoryConnect,
 )(ItemFormContainer);

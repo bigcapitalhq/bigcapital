@@ -147,6 +147,12 @@ function ManualJournalsDataTable({
     onFetchData && onFetchData();
   }, [onFetchData]);
 
+  const selectionColumn = useMemo(() => ({
+    minWidth: 42,
+    width: 42,
+    maxWidth: 42,
+  }), []);
+
   return (
     <LoadingIndicator loading={manualJournalsLoading} spinnerSize={30}>
       <DataTable
@@ -154,7 +160,7 @@ function ManualJournalsDataTable({
         data={manualJournals}
         onFetchData={handleDataTableFetchData}
         manualSortBy={true}
-        selectionColumn={true}
+        selectionColumn={selectionColumn}
       />
     </LoadingIndicator>
   );

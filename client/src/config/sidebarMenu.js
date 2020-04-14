@@ -19,7 +19,7 @@ export default [
     children: [
       {
         text: 'Items List',
-        href: '/dashboard/items/list'
+        href: '/dashboard/items'
       },
       {
         text: 'New Item',
@@ -27,7 +27,7 @@ export default [
       },
       {
         text: 'Category List',
-        href: '/dashboard/items/ItemCategoriesList'
+        href: '/dashboard/items/categories'
       },
     ]
   },

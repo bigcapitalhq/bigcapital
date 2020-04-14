@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { useRouteMatch, useHistory } from 'react-router-dom';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 
@@ -13,7 +13,7 @@ import {
   Position,
   Button,
   Classes,
-  Intent
+  Intent,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
 import Icon from 'components/Icon';
@@ -28,8 +28,9 @@ const ItemsActionsBar = ({
   getResourceFields,
   getResourceViews,
   views,
-  onFilterChange,
-  bulkSelected
+  onFilterChanged,
+  bulkSelected,
+  addItemsTableQueries,
 }) => {
   const { path } = useRouteMatch();
   const history = useHistory();
@@ -46,7 +47,12 @@ const ItemsActionsBar = ({
 
   const filterDropdown = FilterDropdown({
     fields: itemsFields,
-    onFilterChange
+    onFilterChange: (filterConditions) => {
+      addItemsTableQueries({
+        filter_roles: filterConditions || '',  
+      });
+      onFilterChanged && onFilterChanged(filterConditions);
+    }
   });
 
   const hasBulkActionsSelected = useMemo(
@@ -54,9 +60,9 @@ const ItemsActionsBar = ({
     [bulkSelected]
   );
 
-  const onClickNewCategory = () => {
+  const onClickNewCategory = useCallback(() => {
     openDialog('item-form', {});
-  };
+  }, [openDialog]);
 
   return (
     <DashboardActionsBar>

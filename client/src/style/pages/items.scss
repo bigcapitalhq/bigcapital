@@ -45,4 +45,12 @@
       width: 350px;
     }  
   }
+
+  .form-group--active{
+    margin-bottom: 5px;
+
+    .bp3-control.bp3-checkbox{
+      margin: 0;
+    }
+  }
 }

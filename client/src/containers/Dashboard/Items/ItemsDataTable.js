@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo} from 'react';
+import React, {useEffect, useCallback, useMemo} from 'react';
 import {
   Button,
   Popover,
@@ -6,87 +6,76 @@ import {
   MenuItem,
   MenuDivider,
   Position,
-  Checkbox,
 } from '@blueprintjs/core'
 import LoadingIndicator from 'components/LoadingIndicator';
 import CustomViewConnect from 'connectors/View.connector';
 import ItemsConnect from 'connectors/Items.connect';
-import {useParams} from 'react-router-dom'
 import {compose} from 'utils';
-import useAsync from 'hooks/async';
 import DataTable from 'components/DataTable';
 import Icon from 'components/Icon';
-import {handleBooleanChange} from 'utils';
+import Money from 'components/Money';
+
 
 const ItemsDataTable = ({
-  requestFetchItems,
-  filterConditions,
+  itemsTableLoading,
   currentPageItems,
   onEditItem,
   onDeleteItem,
-  addBulkActionItem,
-  removeBulkActionItem,
+  onFetchData,
 }) => {
-  const { custom_view_id: customViewId } = useParams();
-
-  const fetchHook = useAsync(async () => {
-    await Promise.all([
-      requestFetchItems({
-        custom_view_id: customViewId,
-        stringified_filter_roles: JSON.stringify(filterConditions),
-      }),
-    ]);
-  });
-
   const handleEditItem = (item) => () => { onEditItem(item); };
   const handleDeleteItem = (item) => () => { onDeleteItem(item); };
-  const handleClickCheckboxBulk = (item) => handleBooleanChange((value) => {
-    if (value) {
-      addBulkActionItem(item.id);
-    } else {
-      removeBulkActionItem(item.id);
-    }
-  });
-
-  const actionMenuList = (item) =>
+  
+  const actionMenuList = useCallback((item) =>
     (<Menu>
       <MenuItem text="View Details" />
       <MenuDivider />
       <MenuItem text="Edit Item" onClick={handleEditItem(item)} />
       <MenuItem text="Delete Item" onClick={handleDeleteItem(item)} />
-    </Menu>);
+    </Menu>), [handleEditItem, handleDeleteItem]);
 
   const columns = useMemo(() => [
-    {
-      id: 'bulk_select',
-      Cell: ({ cell }) => 
-        (<Checkbox onChange={handleClickCheckboxBulk(cell.row.original)} />),
-    },
     {
       Header: 'Item Name',
       accessor: 'name',
       className: "actions",
     },
     {
-      Header: 'Cost Account',
-      accessor: 'cost_account.name',
-      className: "cost-account",
-    },
-    {
-      Header: 'Sell Account',
-      accessor: 'sell_account.name',
-      className: "sell-account",
-    },
-    {
-      Header: 'Inventory Account',
-      accessor: 'inventory_account.name',
-      className: "inventory-account",
+      Header: 'SKU',
+      accessor: 'sku',
+      className: "sku",
     },
     {
       Header: 'Category',
       accessor: 'category.name',
       className: 'category',
     },
+    {
+      Header: 'Sell Price',
+      accessor: row => (<Money amount={row.sell_price} currency={'USD'} />),
+      className: 'sell-price',
+    },
+    {
+      Header: 'Cost Price',
+      accessor: row => (<Money amount={row.cost_price} currency={'USD'} />),
+      className: 'cost-price',
+    },
+    // {
+    //   Header: 'Cost Account',
+    //   accessor: 'cost_account.name',
+    //   className: "cost-account",
+    // },
+    // {
+    //   Header: 'Sell Account',
+    //   accessor: 'sell_account.name',
+    //   className: "sell-account",
+    // },
+    // {
+    //   Header: 'Inventory Account',
+    //   accessor: 'inventory_account.name',
+    //   className: "inventory-account",
+    // },
+    
     {
       id: 'actions',
       Cell: ({ cell }) => (
@@ -96,14 +85,28 @@ const ItemsDataTable = ({
           <Button icon={<Icon icon="ellipsis-h" />} />
         </Popover>
       ),
+      className: 'actions',
+      width: 50,
     },
-  ]);
+  ], [actionMenuList]);
+
+  const selectionColumn = useMemo(() => ({
+    minWidth: 42,
+    width: 42,
+    maxWidth: 42,
+  }), []);
+
+  const handleFetchData = useCallback((...args) => {
+    onFetchData && onFetchData(...args)
+  }, [onFetchData])
 
   return (
-    <LoadingIndicator loading={fetchHook.pending} spinnerSize={30}>
+    <LoadingIndicator loading={itemsTableLoading} spinnerSize={30}>
       <DataTable
         columns={columns}
-        data={currentPageItems} />
+        data={currentPageItems}
+        selectionColumn={selectionColumn}
+        onFetchData={handleFetchData} />
     </LoadingIndicator>
   );
 };
