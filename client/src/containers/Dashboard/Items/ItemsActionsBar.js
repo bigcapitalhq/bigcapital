@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback, useState } from 'react';
 import { useRouteMatch, useHistory } from 'react-router-dom';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 
@@ -34,11 +34,10 @@ const ItemsActionsBar = ({
 }) => {
   const { path } = useRouteMatch();
   const history = useHistory();
-  const viewsMenuItems = views.map(view => {
-    return (
-      <MenuItem href={`${path}/${view.id}/custom_view`} text={view.name} />
-    );
-  });
+  const [filterCount, setFilterCount] = useState(0);
+
+  const viewsMenuItems = views.map(view => 
+    (<MenuItem href={`${path}/${view.id}/custom_view`} text={view.name} />));
 
   const onClickNewItem = () => {
     history.push('/dashboard/items/new');
@@ -48,6 +47,7 @@ const ItemsActionsBar = ({
   const filterDropdown = FilterDropdown({
     fields: itemsFields,
     onFilterChange: (filterConditions) => {
+      setFilterCount(filterConditions.length);
       addItemsTableQueries({
         filter_roles: filterConditions || '',  
       });
@@ -90,7 +90,7 @@ const ItemsActionsBar = ({
         >
           <Button
             className={classNames(Classes.MINIMAL, 'button--filter')}
-            text='Filter'
+            text={filterCount <= 0 ? 'Filter' : `${filterCount} filters applied`}
             icon={<Icon icon='filter' />}
           />
         </Popover>

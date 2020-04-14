@@ -34,6 +34,7 @@ function AccountsActionsBar({
   const onClickNewAccount = () => { openDialog('account-form', {}); };
 
   const accountsFields = getResourceFields('accounts');
+  const [filterCount, setFilterCount] = useState(0);
 
   const viewsMenuItems = views.map((view) => {
     return (<MenuItem href={`${path}/${view.id}/custom_view`} text={view.name} />);
@@ -43,6 +44,7 @@ function AccountsActionsBar({
   const filterDropdown = FilterDropdown({
     fields: accountsFields,
     onFilterChange: (filterConditions) => {
+      setFilterCount(filterConditions.length || 0);
       addAccountsTableQueries({
         filter_roles: filterConditions || '',  
       });
@@ -81,9 +83,8 @@ function AccountsActionsBar({
 
           <Button
             className={classNames(Classes.MINIMAL, 'button--filter')}
-            text="Filter"
-            icon={ <Icon icon="filter" /> } />
-
+            text={filterCount <= 0 ? 'Filter' : `${filterCount} filters applied`}
+            icon={ <Icon icon="filter" /> }/>
         </Popover>
 
         {hasSelectedRows && (
@@ -93,7 +94,6 @@ function AccountsActionsBar({
             text='Archive'
           />
         )}
-
         {hasSelectedRows && (
           <Button
             className={Classes.MINIMAL}
