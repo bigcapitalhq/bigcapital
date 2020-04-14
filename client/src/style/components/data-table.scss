@@ -144,40 +144,36 @@
       }
     }
 
-    .tr .th.expander,
-    .tr .td.expander{
-      padding: 0;
-
-      .toggle{
+    .tr .th,
+    .tr .td{
+      .expand-toggle{
         cursor: pointer;
-        display: block;
-        padding: 14px 8px;
+        display: inline-block;
+        padding: 0 8px 0 0;
         padding-left: 0;
+        margin: auto 0;
         margin-left: 4px;
+
+        .arrow-right{
+          width: 0;
+          height: 0;
+          border-top: 5px solid transparent;
+          border-bottom: 5px solid transparent;
+          border-left: 8px solid #acacac;
+          display: block;
+        }
+  
+        .arrow-down{
+          width: 0; 
+          height: 0; 
+          border-left: 5px solid transparent;
+          border-right: 5px solid transparent;
+          border-top: 8px solid #acacac;
+          display: block;
+        }
       }
       
-      .arrow-right{
-        width: 0;
-        height: 0;
-        border-top: 5px solid transparent;
-        border-bottom: 5px solid transparent;
-        border-left: 8px solid #acacac;
-        display: block;
-      }
-
-      .arrow-down{
-        width: 0; 
-        height: 0; 
-        border-left: 5px solid transparent;
-        border-right: 5px solid transparent;
-        border-top: 8px solid #acacac;
-        display: block;
-      }
-
-      + .td,
-      + .th{
-        padding-left: 0;
-      }
+       
     }
   }
 
@@ -202,14 +198,16 @@
 
   &--financial-report{
   
-    .thead{
-      .tr .th{
-        background: transparent;
-        border-top: 1px solid #666;
-        border-bottom: 1px solid #666;
-
-        padding: 10px 0.4rem;
-        color: #222;
+    .table {
+      .thead{
+        .tr .th{
+          background: transparent;
+          border-top: 1px solid #666;
+          border-bottom: 1px solid #666;
+  
+          padding: 10px 0.4rem;
+          color: #222;
+        }
       }
     }  
   }

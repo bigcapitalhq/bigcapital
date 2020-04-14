@@ -136,10 +136,12 @@ export const defaultExpanderReducer = (tableRows, level) => {
   return expended;
 }
 
-
 export function formattedAmount(cents, currency) {
   const { symbol, decimal_digits: precision } = Currency[currency];
   const amount = cents / Math.pow(10, precision);
 
   return accounting.formatMoney(amount, { symbol, precision });
 }
+
+export const ConditionalWrapper = ({ condition, wrapper, children }) => 
+  condition ? wrapper(children) : children;

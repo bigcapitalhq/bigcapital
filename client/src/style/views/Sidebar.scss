@@ -52,9 +52,10 @@ $sidebar-popover-submenu-bg: rgb(1, 20, 62);
       font-size: 15px;
       font-weight: 400; 
 
-      &:hover{
+      &:hover,
+      &.bp3-active{
         background: #012470;
-        color: #b2bbd0;
+        color: #c1c9dd;
       }
       &:focus,
       &:active{
@@ -89,7 +90,8 @@ $sidebar-popover-submenu-bg: rgb(1, 20, 62);
           font-size: 15px;
           color: #8a95b6;
 
-          &:hover{
+          &:hover,
+          &.bp3-active{
             background: transparent;
             color: #C5CBE3;
           }

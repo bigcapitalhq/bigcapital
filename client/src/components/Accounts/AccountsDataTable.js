@@ -69,45 +69,6 @@ function AccountsDataTable({
   );
   const columns = useMemo(() => [
     {
-      // Build our expander column
-      id: 'expander', // Make sure it has an ID
-      className: 'expander',
-      Header: ({
-        getToggleAllRowsExpandedProps,
-        isAllRowsExpanded
-      }) => (
-        <span {...getToggleAllRowsExpandedProps()} className="toggle">
-          {isAllRowsExpanded ?
-            (<span class="arrow-down" />) :
-            (<span class="arrow-right" />)
-          }
-        </span>
-      ),
-      Cell: ({ row }) =>
-        // Use the row.canExpand and row.getToggleRowExpandedProps prop getter
-        // to build the toggle for expanding a row
-        row.canExpand ? (
-          <span
-            {...row.getToggleRowExpandedProps({
-              style: {
-                // We can even use the row.depth property
-                // and paddingLeft to indicate the depth
-                // of the row
-                paddingLeft: `${row.depth * 2}rem`,
-              },
-              className: 'toggle',
-            })}
-          >
-            {row.isExpanded ?
-              (<span class="arrow-down" />) :
-              (<span class="arrow-right" />)
-            }
-          </span>
-        ) : null,
-      width: 20,
-      disableResizing: true,
-    },
-    {
       id: 'name',
       Header: 'Account Name',
       accessor: row => {
@@ -197,7 +158,9 @@ function AccountsDataTable({
         data={accounts}
         onFetchData={handleDatatableFetchData}
         manualSortBy={true}
-        selectionColumn={selectionColumn} />
+        selectionColumn={selectionColumn}
+        expandable={true} 
+        treeGraph={true} />
     </LoadingIndicator>    
   );
 }

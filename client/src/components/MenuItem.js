@@ -122,7 +122,7 @@ export default class MenuItem extends AbstractPureComponent2 {
     constructor(props) {
         super(props);
         this.state = {
-          isCollapseActive: false,
+          isCollapseActive: this.props.callapseActive || false,
         };
       }
 
@@ -191,6 +191,13 @@ export default class MenuItem extends AbstractPureComponent2 {
             this.maybeRenderCollapse(target, children) :
             this.maybeRenderPopover(target, children)
         }</li>;
+    }
+
+    componentWillReceiveProps(nextProps){
+      if(nextProps.callapseActive!==this.props.callapseActive){
+        //Perform some operation
+        this.setState({ isCollapseActive: nextProps.callapseActive });
+      }
     }
 
     maybeRenderLabel(labelElement) {

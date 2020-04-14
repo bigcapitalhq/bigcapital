@@ -12,7 +12,7 @@ import {
 import {Checkbox} from '@blueprintjs/core';
 import classnames from 'classnames';
 import { FixedSizeList } from 'react-window'
-import Icon from 'components/Icon';
+import { ConditionalWrapper } from 'utils';
 
 const IndeterminateCheckbox = React.forwardRef(
   ({ indeterminate, ...rest }, ref) => {
@@ -38,6 +38,8 @@ export default function DataTable({
   fixedSizeHeight = 100,
   fixedItemSize = 30,
   payload, 
+  expandable = false,
+  expandToggleColumn = 2,
 }) {
   const {
     getTableProps,
@@ -56,6 +58,8 @@ export default function DataTable({
     setPageSize,
     selectedFlatRows,
     totalColumnsWidth,
+    getToggleAllRowsExpandedProps,
+    isAllRowsExpanded,
 
     // Get the state from the instance
     state: { pageIndex, pageSize, sortBy, selectedRowIds },
@@ -116,6 +120,32 @@ export default function DataTable({
     onFetchData && onFetchData({ pageIndex, pageSize, sortBy })
   }, [pageIndex, pageSize, sortBy]);
 
+  // Renders table cell.
+  const RenderCell = useCallback(({ row, cell, index }) => (
+    <ConditionalWrapper
+      condition={expandToggleColumn === index && expandable}
+      wrapper={(children) => (<div style={{  
+        'padding-left': `${row.depth * 1.5}rem`,
+      }}>{children}</div>)}
+    >
+      {
+        // Use the row.canExpand and row.getToggleRowExpandedProps prop getter
+        // to build the toggle for expanding a row
+        (row.canExpand && expandable && index === expandToggleColumn) && (
+          <span {...row.getToggleRowExpandedProps({       
+            className: 'expand-toggle',
+          })}>
+            <span className={classnames({
+              'arrow-down': row.isExpanded,
+              'arrow-right': !row.isExpanded,
+            })} />
+          </span>
+        )
+      }
+      { cell.render('Cell') }
+    </ConditionalWrapper>
+  ), [expandable, expandToggleColumn]);
+
   // Renders table row.
   const RenderRow = useCallback(({ style = {}, row }) => {
     prepareRow(row);    
@@ -123,16 +153,18 @@ export default function DataTable({
 
     return (
       <div {...row.getRowProps({
-        className: classnames('tr', rowClasses),
-        style
+        className: classnames('tr', rowClasses), style
       })}>
-        {row.cells.map((cell) => {
+        {row.cells.map((cell, i) => {
+          const index = i + 1;
           return <div {...cell.getCellProps({
             className: classnames(cell.column.className || '', 'td'),
-          })}>{ cell.render('Cell') }</div>
+          })}>
+            { RenderCell({ cell, row, index }) }
+          </div>
         })}
       </div>);
-  }, [prepareRow, rowClassNames]);
+  }, [prepareRow, rowClassNames, expandable, RenderCell, expandToggleColumn]);
 
   // Renders virtualize circle table rows.
   const RenderVirtualizedRows = useCallback(({ index, style }) => {
@@ -144,6 +176,7 @@ export default function DataTable({
     return page.map((row, index) => RenderRow({ row }));
   }, [RenderRow, page]);
 
+  // Renders fixed size tbody.
   const RenderTBody = useCallback(() => {
     return (virtualizedRows) ? (
       <FixedSizeList
@@ -154,19 +187,31 @@ export default function DataTable({
         {RenderVirtualizedRows}
       </FixedSizeList>
     ) : RenderPage();
-  }, [fixedSizeHeight, rows, fixedItemSize, virtualizedRows,
-    RenderVirtualizedRows, RenderPage])
+  }, [fixedSizeHeight, rows, fixedItemSize, virtualizedRows, RenderVirtualizedRows, RenderPage]);
 
   return (
-    <div className={classnames('bigcapital-datatable', className, {'has-sticky-header': stickyHeader})}>
+    <div className={classnames(
+      'bigcapital-datatable',
+      className,
+      {'has-sticky-header': stickyHeader, 'is-expandable': expandable})}>
       <div {...getTableProps()} className="table"> 
         <div className="thead">
           {headerGroups.map(headerGroup => (
             <div {...headerGroup.getHeaderGroupProps()} className="tr">
-              {headerGroup.headers.map(column => (
+              {headerGroup.headers.map((column, index) => (
                 <div {...column.getHeaderProps({
                   className: classnames(column.className || '', 'th'),
                 })}>
+                  {(expandable && (index + 1) === expandToggleColumn) && (
+                    <span
+                      {...getToggleAllRowsExpandedProps()}
+                      className="expand-toggle">
+                      <span className={classnames({
+                        'arrow-down': isAllRowsExpanded,
+                        'arrow-right': !isAllRowsExpanded,
+                      })} />
+                    </span>)}
+
                   <div {...column.getSortByToggleProps()}>
                     {column.render('Header')}
 

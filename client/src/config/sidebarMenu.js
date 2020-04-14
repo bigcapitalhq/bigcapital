@@ -129,6 +129,6 @@ export default [
   },
   {
     text: 'Auditing System',
-    href: '/dashboard/accounts'
+    href: '/dashboard/auditing/list'
   }
 ];

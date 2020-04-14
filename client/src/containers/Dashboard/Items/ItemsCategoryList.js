@@ -15,7 +15,8 @@ const ItemCategoriesList = ({
   changePageTitle,
   views,
   requestFetchItemCategories,
-  requestEditItemCategory
+  requestEditItemCategory,
+  requestDeleteItemCategory,
 }) => {
   const { id } = useParams();
   const [deleteCategory, setDeleteCategory] = useState(false);
@@ -40,7 +41,7 @@ const ItemCategoriesList = ({
   };
 
   const handelConfirmCategoryDelete = useCallback(() => {
-    requestEditItemCategory(deleteCategory.id).then(() => {
+    requestDeleteItemCategory(deleteCategory.id).then(() => {
       setDeleteCategory(false);
       AppToaster.show({
         message: 'the_category_has_been_delete'
