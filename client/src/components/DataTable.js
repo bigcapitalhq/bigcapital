@@ -77,6 +77,7 @@ export default function DataTable({
       manualSortBy,
       expandSubRows,
       payload,
+      autoResetSelectedRows: false,
     },
     useSortBy,
     useExpanded,

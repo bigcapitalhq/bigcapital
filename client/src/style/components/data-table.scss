@@ -115,13 +115,16 @@
       overflow-x: hidden;
 
       .tr .td{
-        border-bottom: 1px solid #E0E2E2;
+        border-bottom: 1px solid #E8E8E8;
         align-items: center;
 
         .placeholder{
           color: #999;
         }
       }      
+      .tr:hover .td{
+        background: #fafafa;
+      }
       .td.actions .#{$ns}-button{
         background: #E6EFFB;
         border: 0;
