@@ -1,5 +1,8 @@
 
 export default class MetableCollection {
+  /**
+   * Constructor method.
+   */
   constructor() {
     this.metadata = [];
     this.KEY_COLUMN = 'key';
@@ -22,12 +25,28 @@ export default class MetableCollection {
   }
 
   /**
+   * Sets a extra columns.
+   * @param {Array} columns -
+   */
+  setExtraColumns(columns) {
+    this.extraColumns = columns;
+  }
+
+  /**
    * Find the given metadata key.
    * @param {String} key -
    * @return {object} - Metadata object.
    */
-  findMeta(key) {
-    return this.allMetadata().find((meta) => meta.key === key);
+  findMeta(payload) {
+    const { key, extraColumns } = this.parsePayload(payload);
+
+    return this.allMetadata().find((meta) => {
+      const isSameKey = meta.key === key;
+      const sameExtraColumns = this.extraColumns.some((extraColumn) => {
+        return !extraColumns || (extraColumns[extraColumn] === meta[extraColumn]);
+      });
+      return isSameKey && sameExtraColumns;
+    });
   }
 
   /**
@@ -42,8 +61,8 @@ export default class MetableCollection {
    * @param {String} key -
    * @param {Mixied} defaultValue -
    */
-  getMeta(key, defaultValue) {
-    const metadata = this.findMeta(key);
+  getMeta(payload, defaultValue) {
+    const metadata = this.findMeta(payload);
     return metadata ? metadata.value : defaultValue || false;
   }
 
@@ -79,7 +98,7 @@ export default class MetableCollection {
    * @param {String} key -
    * @param {String} value -
    */
-  setMeta(key, value, payload) {
+  setMeta(payload, ...args) {
     if (Array.isArray(key)) {
       const metadata = key;
 
@@ -88,16 +107,21 @@ export default class MetableCollection {
       });
       return;
     }
-    const metadata = this.findMeta(key);
+    const { key, value, ...extraColumns } = this.parsePayload(payload, args[0]);
+    const metadata = this.findMeta(payload);
 
     if (metadata) {
       metadata.value = value;
       metadata.markAsUpdated = true;
     } else {
       this.metadata.push({
-        value, key, ...payload, markAsInserted: true,
+        value, key, ...extraColumns, markAsInserted: true,
       });
     }
+  }
+
+  parsePayload(payload, value) {
+    return typeof payload !== 'object' ? { key: payload, value } : { ...payload };
   }
 
   /**
@@ -111,7 +135,7 @@ export default class MetableCollection {
 
     if (deleted.length > 0) {
       deleted.forEach((meta) => {
-        const deleteOper = this.model.query().beforeRun((query, result) => {
+        const deleteOper = this.model.query().onBuild((query, result) => {
           this.extraQuery(query, meta);
           return result;
         }).delete();

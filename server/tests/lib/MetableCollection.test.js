@@ -12,6 +12,17 @@ describe('MetableCollection', () => {
       const foundMeta = metadataCollection.findMeta(option.key);
       expect(foundMeta).to.be.an('object');
     });
+
+    it('Should retrieve the found meta with extra columns.', async () => {
+      const option = await create('option');
+      const metadataCollection = await Option.query();
+
+      const foundMeta = metadataCollection.findMeta({
+        key: option.key,
+        group: option.group,
+      });
+      expect(foundMeta).to.be.an('object');
+    });
   });
 
   describe('allMetadata', () => {
@@ -49,6 +60,21 @@ describe('MetableCollection', () => {
 
       expect(metadataCollection.metadata.length).equals(1);
     });
+
+    it('Should sets the meta value with extra columns', async () => {
+      const metadataCollection = new MetadataCollection();
+      metadataCollection.setMeta({
+        key: 'key',
+        value: 'value',
+        group: 'group-1',
+      });
+
+      expect(metadataCollection.metadata.length).equals(1);
+      
+      expect(metadataCollection.metadata[0].key).equals('key');
+      expect(metadataCollection.metadata[0].value).equals('value');
+      expect(metadataCollection.metadata[0].group).equals('group-1');
+    });
   });
 
   describe('removeAllMeta()', () => {
@@ -82,7 +108,7 @@ describe('MetableCollection', () => {
 
     it('Should save updated the exist metadata.', async () => {
       const option = await create('option');
-      const metadataCollection = new MetadataCollection();
+      const metadataCollection = await Option.query();
 
       metadataCollection.setModel(Option);
       metadataCollection.setMeta(option.key, 'value');
@@ -90,23 +116,24 @@ describe('MetableCollection', () => {
 
       await metadataCollection.saveMeta();
 
-      const storedMetadata = await Option.query().where('key', option.key).first();
-      expect(storedMetadata.value).equals('value');
+      const storedMetadata = await Option.query().where('key', option.key);
+
+      expect(storedMetadata.metadata[0].value).equals('value');
+      expect(storedMetadata.metadata[0].key).equals(option.key);
+      expect(storedMetadata.metadata[0].group).equals(option.group);
     });
 
     it('Should delete the removed metadata from storage.', async () => {
       const option = await create('option');
 
-      const options = await Option.query();
-      const metadataCollection = MetadataCollection.from(options);
-      metadataCollection.setModel(Option);
+      const metadataCollection = await Option.query();
       metadataCollection.removeMeta(option.key);
 
       expect(metadataCollection.metadata.length).equals(1);
       await metadataCollection.saveMeta();
 
       const storedMetadata = await Option.query();
-      expect(storedMetadata.length).equals(0);
+      expect(storedMetadata.metadata.length).equals(0);
     });
 
     it('Should save instered new metadata with extra columns.', async () => {
@@ -116,8 +143,11 @@ describe('MetableCollection', () => {
       metadataCollection.extraColumns = ['resource_id'];
 
       metadataCollection.setModel(ResourceFieldMetadata);
-      metadataCollection.setMeta('key', 'value', { resource_id: resource.id });
-
+      metadataCollection.setMeta({
+        key: 'key',
+        value: 'value',
+        resource_id: resource.id,
+      });
       await metadataCollection.saveMeta();
 
       const storedMetadata = await ResourceFieldMetadata.query().first();

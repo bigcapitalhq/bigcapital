@@ -608,7 +608,7 @@ describe('routes: `/accounting`', () => {
     });
   });
 
-  describe.only('route: POST `accounting/manual-journals/:id/publish`', () => {
+  describe('route: POST `accounting/manual-journals/:id/publish`', () => {
 
     it('Should response not found in case the manual journal id was not exists.', async () => {
       const manualJournal = await create('manual_journal');
