@@ -220,7 +220,7 @@ describe('JournalPoster', () => {
 
   });
 
-  describe.only('removeEntries', () => {
+  describe('removeEntries', () => {
     it('Should remove all entries in the collection.', () => {
       const journalPoster = new JournalPoster();
       const journalEntry1 = new JournalEntry({

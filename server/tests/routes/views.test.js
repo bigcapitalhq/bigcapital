@@ -11,7 +11,7 @@ import ViewColumn from '../../src/models/ViewColumn';
 
 let loginRes;
 
-describe('routes: `/views`', () => {
+describe.only('routes: `/views`', () => {
   beforeEach(async () => {
     loginRes = await login();
   });
@@ -40,8 +40,6 @@ describe('routes: `/views`', () => {
         .set('x-access-token', loginRes.body.token)
         .query({ resource_name: 'resource_name' })
         .send();
-
-      // console.log(res.body);
 
       expect(res.status).equals(200);
       expect(res.body.views.length).equals(1);
@@ -116,11 +114,11 @@ describe('routes: `/views`', () => {
 
       expect(res.status).equals(200);
       expect(res.body.view.name).equals(resourceView.name);
-      expect(res.body.view.resourceId).equals(resourceView.resourceId);
-      expect(res.body.view.rolesLogicExpression).equals(resourceView.rolesLogicExpression);
+      expect(res.body.view.resource_id).equals(resourceView.resourceId);
+      expect(res.body.view.roles_logic_expression).equals(resourceView.rolesLogicExpression);
 
-      expect(res.body.view.viewRoles.length).equals(1);
-      expect(res.body.view.viewRoles[0].viewId).equals(viewRole.viewId);
+      expect(res.body.view.roles.length).equals(1);
+      expect(res.body.view.roles[0].view_id).equals(viewRole.viewId);
     });
   });
 
@@ -132,7 +130,7 @@ describe('routes: `/views`', () => {
       expect(res.body.message).equals('unauthorized');
     });
 
-    it('Should `label` be required.', async () => {
+    it('Should `name` be required.', async () => {
       await create('resource');
       const res = await request()
         .post('/api/views')
@@ -141,7 +139,7 @@ describe('routes: `/views`', () => {
       expect(res.status).equals(422);
       expect(res.body.code).equals('validation_error');
       expect(res.body.errors).include.something.deep.equals({
-        msg: 'Invalid value', param: 'label', location: 'body',
+        msg: 'Invalid value', param: 'name', location: 'body',
       });
     });
 
@@ -255,7 +253,7 @@ describe('routes: `/views`', () => {
         .set('x-access-token', loginRes.body.token)
         .send({
           resource_name: 'not_found',
-          label: 'View Label',
+          name: 'View Label',
           columns: [
             { key: 'amount', index: 1 },
             { key: 'thumbnail', index: 1 },
@@ -267,6 +265,7 @@ describe('routes: `/views`', () => {
             comparator: 'equals',
             value: '100',
           }],
+          logic_expression: '1',
         });
 
       expect(res.status).equals(404);
@@ -288,7 +287,7 @@ describe('routes: `/views`', () => {
         .send({
           resource_name: resource.name,
           logic_expression: '100 && 100',
-          label: 'View Label',
+          name: 'View Label',
           columns: [
             { key: 'amount', index: 1 },
           ],
@@ -303,7 +302,7 @@ describe('routes: `/views`', () => {
       expect(res.body.errors).include.something.that.deep.equals({
         type: 'VIEW.ROLES.LOGIC.EXPRESSION.INVALID', code: 400,
       });
-    })
+    });
 
     it('Should response the roles fields not exist in case role field was not exist.', async () => {
       const resource = await create('resource');
@@ -314,7 +313,8 @@ describe('routes: `/views`', () => {
         .set('x-access-token', loginRes.body.token)
         .send({
           resource_name: resource.name,
-          label: 'View Label',
+          name: 'View Label',
+          logic_expression: '1',
           columns: [
             { key: 'amount', index: 1 },
             { key: 'thumbnail', index: 1 },
@@ -345,7 +345,8 @@ describe('routes: `/views`', () => {
         .set('x-access-token', loginRes.body.token)
         .send({
           resource_name: resource.name,
-          label: 'View Label',
+          name: 'View Label',
+          logic_expression: '1',
           columns: [
             { key: 'amount', index: 1 },
             { key: 'thumbnail', index: 2 },
@@ -376,7 +377,8 @@ describe('routes: `/views`', () => {
         .set('x-access-token', loginRes.body.token)
         .send({
           resource_name: resource.name,
-          label: 'View Label',
+          name: 'View Label',
+          logic_expression: '1',
           columns: [
             { key: 'amount', index: 1 },
           ],
@@ -405,19 +407,20 @@ describe('routes: `/views`', () => {
 
       const res = await request()
         .post('/api/views')
+        .set('x-access-token', loginRes.body.token)
         .send({
           resource_name: resource.name,
-          label: 'View Label',
+          name: 'View Label',
           columns: [{ key: 'amount', index: 1 }],
+          logic_expression: '1',
           roles: [{
             index: 1,
             field_key: 'amount',
             comparator: 'equals',
             value: '100',
           }],
-        })
-        .set('x-access-token', loginRes.body.token);
-        
+        });
+
       const viewRoles = await ViewRole.query().where('view_id', res.body.id);
 
       expect(viewRoles.length).equals(1);
@@ -440,7 +443,8 @@ describe('routes: `/views`', () => {
         .set('x-access-token', loginRes.body.token)
         .send({
           resource_name: resource.name,
-          label: 'View Label',
+          name: 'View Label',
+          logic_expression: '1',
           columns: [
             { key: 'amount', index: 1 },
           ],
@@ -455,103 +459,111 @@ describe('routes: `/views`', () => {
       const viewColumns = await ViewColumn.query().where('view_id', res.body.id);
       expect(viewColumns.length).equals(1);
     });
+
+   
   });
 
-  describe('POST: `/views/:view_id`', () => {
-    it('Should `label` be required.', async () => {
+  describe.only('POST: `/views/:view_id`', () => {
+    it('Should `name` be required.', async () => {
       const view = await create('view');
-      const res = await request().post(`/api/views/${view.id}`);
+      const res = await request()
+        .post(`/api/views/${view.id}`)
+        .set('x-access-token', loginRes.body.token)
+        .send();
 
       expect(res.status).equals(422);
       expect(res.body.code).equals('validation_error');
-
-      const paramsErrors = res.body.errors.map((error) => error.param);
-      expect(paramsErrors).to.include('label');
+      expect(res.body.errors).include.something.deep.equals({
+        msg: 'Invalid value', param: 'name', location: 'body',
+      });
     });
 
     it('Should columns be minimum limited', async () => {
       const view = await create('view');
-      const res = await request().post(`/api/views/${view.id}`, {
-        label: 'View Label',
-        columns: [],
-      });
+      const res = await request()
+        .post(`/api/views/${view.id}`, {
+          label: 'View Label',
+          columns: [],
+        })
+        .set('x-access-token', loginRes.body.token)
+        .send();
 
       expect(res.status).equals(422);
       expect(res.body.code).equals('validation_error');
-
-      const paramsErrors = res.body.errors.map((error) => error.param);
-      expect(paramsErrors).to.include('columns');
+      expect(res.body.errors).include.something.deep.equals({
+        msg: 'Invalid value', param: 'columns', location: 'body',
+      });
     });
 
     it('Should columns be array.', async () => {
       const view = await create('view');
-      const res = await request().post(`/api/views/${view.id}`, {
-        label: 'View Label',
-        columns: 'not_array',
-      });
+      const res = await request()
+        .post(`/api/views/${view.id}`, {
+          label: 'View Label',
+          columns: 'not_array',
+        })
+        .set('x-access-token', loginRes.body.token)
+        .send();
 
       expect(res.status).equals(422);
       expect(res.body.code).equals('validation_error');
-
-      const paramsErrors = res.body.errors.map((error) => error.param);
-      expect(paramsErrors).to.include('columns');
+      expect(res.body.errors).include.something.deep.equals({
+        msg: 'Invalid value', param: 'code', location: 'body',
+      });
     });
 
-    it('Should `roles.*.field` be required.', async () => {
+    it('Should `roles.*.field_key` be required.', async () => {
       const view = await create('view');
-      const res = await request().post(`/api/views/${view.id}`).send({
-        label: 'View Label',
-        roles: [{}],
-      });
+      const res = await request()
+        .post(`/api/views/${view.id}`)
+        .set('x-access-token', loginRes.body.token)
+        .send({
+          label: 'View Label',
+          roles: [{}],
+        });
 
       expect(res.status).equals(422);
       expect(res.body.code).equals('validation_error');
-
-      const paramsErrors = res.body.errors.map((error) => error.param);
-      expect(paramsErrors).to.include('roles[0].field');
+      expect(res.body.errors).include.something.deep.equals({
+        msg: 'Invalid value', param: 'roles', location: 'body',
+      });
     });
 
-    it('Should `roles.*.comparator` be valid.', async () => {
+    it('Should `roles.*.comparator` be required.', async () => {
       const view = await create('view');
-      const res = await request().post(`/api/views/${view.id}`).send({
-        label: 'View Label',
-        roles: [{}],
-      });
+      const res = await request()
+        .post(`/api/views/${view.id}`)
+        .set('x-access-token', loginRes.body.token)
+        .send({
+          label: 'View Label',
+          roles: [{}],
+        });
 
       expect(res.status).equals(422);
       expect(res.body.code).equals('validation_error');
-
-      const paramsErrors = res.body.errors.map((error) => error.param);
-      expect(paramsErrors).to.include('roles[0].comparator');
+      expect(res.body.errors).include.something.deep.equals({
+        msg: 'Invalid value', param: 'roles[0].comparator', location: 'body',
+      });
     });
 
     it('Should `roles.*.index` be number as integer.', async () => {
       const view = await create('view');
-      const res = await request().post(`/api/views/${view.id}`).send({
-        label: 'View Label',
-        roles: [{ index: 'not_numeric' }],
-      });
+      const res = await request()
+        .post(`/api/views/${view.id}`)
+        .set('x-access-token', loginRes.body.token)
+        .send({
+          label: 'View Label',
+          roles: [{ index: 'not_numeric' }],
+        });
 
       expect(res.status).equals(422);
       expect(res.body.code).equals('validation_error');
-
-      const paramsErrors = res.body.errors.map((error) => error.param);
-      expect(paramsErrors).to.include('roles[0].index');
-    });
-
-    it('Should response not found in case resource was not exist.', async () => {
-      const res = await request().post('/api/views/100').send({
-        label: 'View Label',
-        columns: ['amount', 'thumbnail', 'status'],
-        roles: [{
-          index: 1,
-          field: 'amount',
-          comparator: 'equals',
-          value: '100',
-        }],
+      expect(res.body.errors).include.something.deep.equals({
+        msg: 'Invalid value',
+        param: 'roles[0].index',
+        location: 'body',
+        value: 'not_numeric',
       });
-
-      expect(res.status).equals(404);
     });
 
     it('Should response the roles fields not exist in case role field was not exist.', async () => {
@@ -560,21 +572,291 @@ describe('routes: `/views`', () => {
         resource_id: view.resource_id,
         label_name: 'Amount',
       });
-      const res = await request().post(`/api/views/${view.id}`).send({
-        label: 'View Label',
-        columns: ['amount', 'thumbnail', 'status'],
-        roles: [{
-          index: 1,
-          field: 'price',
-          comparator: 'equals',
-          value: '100',
-        }],
-      });
-
+      const res = await request()
+        .post(`/api/views/${view.id}`)
+        .set('x-access-token', loginRes.body.token)
+        .send({
+          name: 'View Label',
+          logic_expression: '1',
+          columns: [{
+            key: 'amount',
+            index: 1,
+          }, {
+            key: 'thumbnail',
+            index: 2,
+          }, {
+            key: 'status',
+            index: 3,
+          }],
+          roles: [{
+            index: 1,
+            field_key: 'price',
+            comparator: 'equals',
+            value: '100',
+          }],
+        });
       expect(res.body.errors).include.something.that.deep.equals({
         type: 'RESOURCE_FIELDS_NOT_EXIST', code: 100, fields: ['price'],
       });
     });
+
+    it('Should response the resource columns not exists in case the column keys was not exist.', async () => {
+      const view = await create('view');
+      await create('resource_field', {
+        resource_id: view.resource_id,
+        label_name: 'Amount',
+      });
+      const res = await request()
+        .post(`/api/views/${view.id}`)
+        .set('x-access-token', loginRes.body.token)
+        .send({
+          name: 'View Label',
+          logic_expression: '1',
+          columns: [{
+            key: 'amount',
+            index: 1,
+          }, {
+            key: 'thumbnail',
+            index: 2,
+          }, {
+            key: 'status',
+            index: 3,
+          }],
+          roles: [{
+            index: 1,
+            field_key: 'price',
+            comparator: 'equals',
+            value: '100',
+          }],
+        });
+      expect(res.body.errors).include.something.that.deep.equals({
+        type: 'RESOURCE_COLUMNS_NOT_EXIST',
+        code: 200,
+        columns: ['amount', 'thumbnail', 'status'],
+      });
+    });
+
+    it('Should validate the logic expressions with the given conditions.', () => {
+
+    });
+
+    it('Should delete the view roles that not presented the post data.', async () => {
+      const resource = await create('resource');
+      const resourceField = await create('resource_field', {
+        resource_id: resource.id,
+        label_name: 'Amount',
+        key: 'amount',
+      });
+
+      const view = await create('view', { resource_id: resource.id });
+      const viewRole = await create('view_role', {
+        view_id: view.id,
+        field_id: resourceField.id,
+      });
+      const res = await request()
+        .post(`/api/views/${view.id}`)
+        .set('x-access-token', loginRes.body.token)
+        .send({
+          name: 'View Label',
+          logic_expression: '1',
+          columns: [{
+            key: resourceField.key,
+            index: 1,
+          }],
+          roles: [{
+            index: 1,
+            field_key: resourceField.key,
+            comparator: 'equals',
+            value: '100',
+          }],
+        });
+
+      const foundViewRole = await ViewRole.query().where('id', viewRole.id);
+      expect(foundViewRole.length).equals(0);
+    });
+
+    it('Should update the view roles that presented in the given data.', async () => {
+      const resource = await create('resource');
+      const resourceField = await create('resource_field', {
+        resource_id: resource.id,
+        label_name: 'Amount',
+        key: 'amount',
+      });
+
+      const view = await create('view', { resource_id: resource.id });
+      const viewRole = await create('view_role', {
+        view_id: view.id,
+        field_id: resourceField.id,
+      });
+      const res = await request()
+        .post(`/api/views/${view.id}`)
+        .set('x-access-token', loginRes.body.token)
+        .send({
+          name: 'View Label',
+          logic_expression: '1',
+          columns: [{
+            key: resourceField.key,
+            index: 1,
+          }],
+          roles: [{
+            id: viewRole.id,
+            index: 1,
+            field_key: resourceField.key,
+            comparator: 'equals',
+            value: '100',
+          }],
+        });
+
+      const foundViewRole = await ViewRole.query().where('id', viewRole.id);
+
+      expect(foundViewRole.length).equals(1);
+      expect(foundViewRole[0].id).equals(1);
+      expect(foundViewRole[0].index).equals(1);
+      expect(foundViewRole[0].value).equals('100');
+      expect(foundViewRole[0].comparator).equals('equals');
+    });
+
+    it('Should response not found roles ids in case not exists in the storage.', async () => {
+      const resource = await create('resource');
+      const resourceField = await create('resource_field', {
+        resource_id: resource.id,
+        label_name: 'Amount',
+        key: 'amount',
+      });
+      const view = await create('view', { resource_id: resource.id });
+
+      const res = await request()
+        .post(`/api/views/${view.id}`)
+        .set('x-access-token', loginRes.body.token)
+        .send({
+          name: 'View Label',
+          logic_expression: '1',
+          columns: [{
+            key: resourceField.key,
+            index: 1,
+          }],
+          roles: [{
+            id: 1,
+            index: 1,
+            field_key: resourceField.key,
+            comparator: 'equals',
+            value: '100',
+          }],
+        });
+
+      expect(res.body.errors).include.something.that.deep.equals({
+        type: 'VIEW.ROLES.IDS.NOT.FOUND', code: 500, ids: [1],
+      });
+    });
+
+    it('Should delete columns from storage in case view columns ids not presented.', async () => {
+      const resource = await create('resource');
+      const resourceField = await create('resource_field', {
+        resource_id: resource.id,
+        label_name: 'Amount',
+        key: 'amount',
+      });
+      const view = await create('view', { resource_id: resource.id });
+      const viewColumn = await create('view_column', { view_id: view.id });
+
+      const res = await request()
+        .post(`/api/views/${view.id}`)
+        .set('x-access-token', loginRes.body.token)
+        .send({
+          name: 'View Label',
+          logic_expression: '1',
+          columns: [{
+            key: resourceField.key,
+            index: 1,
+          }],
+          roles: [{
+            index: 1,
+            field_key: resourceField.key,
+            comparator: 'equals',
+            value: '100',
+          }],
+        });
+
+      // console.log(res.status, res.body);
+      const foundViewColumns = await ViewColumn.query().where('id', viewColumn.id);
+      expect(foundViewColumns.length).equals(0);
+    });
+
+    it('Should insert columns to the storage if where new columns', async () => {
+      const resource = await create('resource');
+      const resourceField = await create('resource_field', {
+        resource_id: resource.id,
+        label_name: 'Amount',
+        key: 'amount',
+      });
+      const view = await create('view', { resource_id: resource.id });
+
+      const res = await request()
+        .post(`/api/views/${view.id}`)
+        .set('x-access-token', loginRes.body.token)
+        .send({
+          name: 'View Label',
+          logic_expression: '1',
+          columns: [{
+            key: resourceField.key,
+            index: 1,
+          }],
+          roles: [{
+            index: 1,
+            field_key: resourceField.key,
+            comparator: 'equals',
+            value: '100',
+          }],
+        });
+
+      const foundViewColumns = await ViewColumn.query().where('view_id', view.id);
+
+      expect(foundViewColumns.length).equals(1);
+      expect(foundViewColumns[0].viewId).equals(view.id);
+      expect(foundViewColumns[0].index).equals(1);
+      expect(foundViewColumns[0].fieldId).equals(resourceField.id);
+    });
+
+
+    it('Should update columns on the storage.', async () => {
+      const resource = await create('resource');
+      const resourceField = await create('resource_field', {
+        resource_id: resource.id,
+        label_name: 'Amount',
+        key: 'amount',
+      });
+      const view = await create('view', { resource_id: resource.id });
+      const viewColumn = await create('view_column', { view_id: view.id });
+
+      const res = await request()
+        .post(`/api/views/${view.id}`)
+        .set('x-access-token', loginRes.body.token)
+        .send({
+          name: 'View Label',
+          logic_expression: '1',
+          columns: [{ 
+            id: viewColumn.id,
+            key: resourceField.key,
+            index: 10,
+          }],
+          roles: [{
+            index: 1,
+            field_key: resourceField.key,
+            comparator: 'equals',
+            value: '100',
+          }],
+        });
+
+      console.log(res.body)
+
+      const foundViewColumns = await ViewColumn.query().where('id', viewColumn.id);
+
+      expect(foundViewColumns.length).equals(1);
+      expect(foundViewColumns[0].id).equals(viewColumn.id);
+      expect(foundViewColumns[0].viewId).equals(view.id);
+      expect(foundViewColumns[0].index).equals(10);
+      // expect(foundViewColumns[0].fieldId).equals();
+    })
   });
 
   describe('DELETE: `/views/:resource_id`', () => {

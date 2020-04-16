@@ -1,4 +1,4 @@
-import { difference, pick } from 'lodash';
+import { difference, intersection, pick } from 'lodash';
 import express from 'express';
 import {
   check,
@@ -14,7 +14,7 @@ import View from '@/models/View';
 import ViewRole from '@/models/ViewRole';
 import ViewColumn from '@/models/ViewColumn';
 import {
-  validateViewLogicExpression,
+  validateViewRoles,
 } from '@/lib/ViewRolesBuilder';
 
 export default {
@@ -161,7 +161,7 @@ export default {
           code: 'validation_error', ...validationErrors,
         });
       }
-      const form = { ...req.body };
+      const form = { roles: [], ...req.body };
       const resource = await Resource.query().where('name', form.resource_name).first();
 
       if (!resource) {
@@ -190,7 +190,7 @@ export default {
         errorReasons.push({ type: 'COLUMNS_NOT_EXIST', code: 200, columns: notFoundColumns });
       }
       // Validates the view conditional logic expression.
-      if (!validateViewLogicExpression(form.logic_expression, form.roles.map((r) => r.index))) {
+      if (!validateViewRoles(form.roles, form.logic_expression)) {
         errorReasons.push({ type: 'VIEW.ROLES.LOGIC.EXPRESSION.INVALID', code: 400 });
       }
       if (errorReasons.length > 0) {
@@ -234,13 +234,24 @@ export default {
     },
   },
 
+  /**
+   * Edit the given custom view metadata.
+   */
   editView: {
     validation: [
       param('view_id').exists().isNumeric().toInt(),
-      check('label').exists().escape().trim(),
-      check('columns').isArray({ min: 3 }),
+      check('name').exists().escape().trim(),
+      check('logic_expression').exists().trim().escape(),
+
+      check('columns').exists().isArray({ min: 1 }),
+
+      check('columns.*.id').optional().isNumeric().toInt(),    
+      check('columns.*.key').exists().escape().trim(),
+      check('columns.*.index').exists().isNumeric().toInt(),
+
       check('roles').isArray(),
-      check('roles.*.field').exists().escape().trim(),
+      check('roles.*.id').optional().isNumeric().toInt(),
+      check('roles.*.field_key').exists().escape().trim(),
       check('roles.*.comparator').exists(),
       check('roles.*.value').exists(),
       check('roles.*.index').exists().isNumeric().toInt(),
@@ -254,13 +265,155 @@ export default {
           code: 'validation_error', ...validationErrors,
         });
       }
-      const view = await View.where('id', viewId).fetch();
+      const view = await View.query().where('id', viewId)
+        .withGraphFetched('roles.field')
+        .withGraphFetched('columns')
+        .first();
 
       if (!view) {
         return res.boom.notFound(null, {
           errors: [{ type: 'ROLE_NOT_FOUND', code: 100 }],
         });
       }
+      const form = { ...req.body };
+      const resource = await Resource.query()
+        .where('id', view.resourceId)
+        .withGraphFetched('fields')
+        .withGraphFetched('views')
+        .first();
+
+      const errorReasons = [];
+      const fieldsSlugs = form.roles.map((role) => role.field_key);
+      const resourceFieldsKeys = resource.fields.map((f) => f.key);
+      const resourceFieldsKeysMap = new Map(resource.fields.map((field) => [field.key, field]));
+      const columnsKeys = form.columns.map((c) => c.key);
+
+      // The difference between the stored resource fields and submit fields keys.
+      const notFoundFields = difference(fieldsSlugs, resourceFieldsKeys);
+
+      // Validate not found resource fields keys.
+      if (notFoundFields.length > 0) {
+        errorReasons.push({
+          type: 'RESOURCE_FIELDS_NOT_EXIST', code: 100, fields: notFoundFields,
+        });
+      }
+      // The difference between the stored resource fields and the submit columns keys.
+      const notFoundColumns = difference(columnsKeys, resourceFieldsKeys);
+
+      // Validate not found view columns.
+      if (notFoundColumns.length > 0) {
+        errorReasons.push({ type: 'RESOURCE_COLUMNS_NOT_EXIST', code: 200, columns: notFoundColumns });
+      }
+      // Validates the view conditional logic expression.
+      if (!validateViewRoles(form.roles, form.logic_expression)) {
+        errorReasons.push({ type: 'VIEW.ROLES.LOGIC.EXPRESSION.INVALID', code: 400 });
+      }
+
+      const viewRolesIds = view.roles.map((r) => r.id);
+      const viewColumnsIds = view.columns.map((c) => c.id);
+
+      const formUpdatedRoles = form.roles.filter((r) => r.id);
+      const formInsertRoles = form.roles.filter((r) => !r.id);
+
+      const formRolesIds = formUpdatedRoles.map((r) => r.id);
+
+      const formUpdatedColumns = form.columns.filter((r) => r.id);
+      const formInsertedColumns = form.columns.filter((r) => !r.id);
+      const formColumnsIds = formUpdatedColumns.map((r) => r.id);
+
+      const rolesIdsShouldDeleted = difference(viewRolesIds, formRolesIds);
+      const columnsIdsShouldDelete = difference(viewColumnsIds, formColumnsIds);
+
+      const notFoundViewRolesIds = difference(formRolesIds, viewRolesIds);
+      const notFoundViewColumnsIds = difference(viewColumnsIds, viewColumnsIds);
+
+      // Validate the not found view roles ids.
+      if (notFoundViewRolesIds.length) {
+        errorReasons.push({ type: 'VIEW.ROLES.IDS.NOT.FOUND', code: 500, ids: notFoundViewRolesIds });
+      }
+      // Validate the not found view columns ids.
+      if (notFoundViewColumnsIds.length) {
+        errorReasons.push({ type: 'VIEW.COLUMNS.IDS.NOT.FOUND', code: 600, ids: notFoundViewColumnsIds });
+      }
+      if (errorReasons.length > 0) {
+        return res.status(400).send({ errors: errorReasons });
+      }
+      const asyncOpers = [];
+
+      // Save view details.
+      await View.query()
+        .where('id', view.id)
+        .patch({
+          name: form.name,
+          roles_logic_expression: form.logic_expression,
+        });
+
+      // Update view roles.
+      if (formUpdatedRoles.length > 0) {
+        formUpdatedRoles.forEach((role) => {
+          const fieldModel = resourceFieldsKeysMap.get(role.field_key);
+          const updateOper = ViewRole.query()
+            .where('id', role.id)
+            .update({
+              ...pick(role, ['comparator', 'value', 'index']),
+              field_id: fieldModel.id,
+            });
+          asyncOpers.push(updateOper);
+        });
+      }
+      // Insert a new view roles.
+      if (formInsertRoles.length > 0) {
+        formInsertRoles.forEach((role) => {
+          const fieldModel = resourceFieldsKeysMap.get(role.field_key);
+          const insertOper = ViewRole.query()
+            .insert({
+              ...pick(role, ['comparator', 'value', 'index']),
+              field_id: fieldModel.id,
+              view_id: view.id,
+            });
+          asyncOpers.push(insertOper);
+        });
+      }
+      // Delete view roles.
+      if (rolesIdsShouldDeleted.length > 0) {
+        const deleteOper = ViewRole.query()
+          .where('id', rolesIdsShouldDeleted)
+          .delete();
+        asyncOpers.push(deleteOper);
+      }
+      // Insert a new view columns to the storage.
+      if (formInsertedColumns.length > 0) {
+        formInsertedColumns.forEach((column) => {
+          const fieldModel = resourceFieldsKeysMap.get(column.key);
+          const insertOper = ViewColumn.query()
+            .insert({
+              field_id: fieldModel.id,
+              index: column.index,
+              view_id: view.id,
+            });
+          asyncOpers.push(insertOper);
+        });
+      }
+      // Update the view columns on the storage.
+      if (formUpdatedColumns.length > 0) {
+        formUpdatedColumns.forEach((column) => {
+          const updateOper = ViewColumn.query()
+            .where('id', column.id)
+            .update({
+              index: column.index,
+            });
+          asyncOpers.push(updateOper);
+        });
+      }
+      // Delete the view columns from the storage.
+      if (columnsIdsShouldDelete.length > 0) {
+        const deleteOper = ViewColumn.query()
+          .whereIn('id', columnsIdsShouldDelete)
+          .delete();
+        asyncOpers.push(deleteOper);
+      }
+      await Promise.all(asyncOpers);
+
       return res.status(200).send();
     },
   },
