@@ -29,9 +29,8 @@ export function getRoleFieldColumn(tableName, columnKey) {
  */
 export function buildRoleQuery(tableName, role) {
   const fieldRelation = getRoleFieldColumn(tableName, role.columnKey);
-  const comparatorColumn = fieldRelation.relation || `${tableName}.${fieldRelation.column}`;
+  const comparatorColumn = fieldRelation.relationColumn || `${tableName}.${fieldRelation.column}`;
 
-  console.log(comparatorColumn, role.value);
   switch (role.comparator) {
     case 'equals':
     default:
@@ -44,6 +43,7 @@ export function buildRoleQuery(tableName, role) {
         builder.whereNot(comparatorColumn, role.value);
       };
     case 'contain':
+    case 'contains':
       return (builder) => {
         builder.where(comparatorColumn, 'LIKE', `%${role.value}%`);
       };
@@ -78,6 +78,17 @@ export function buildFilterRolesJoins(tableName, roles) {
   };
 }
 
+export function buildSortColumnJoin(tableName, sortColumnKey) {
+  return (builder) => {
+    const fieldColumn = getRoleFieldColumn(tableName, sortColumnKey);
+
+    if (fieldColumn.relation) {
+      const joinTable = getTableFromRelationColumn(fieldColumn.relation);
+      builder.join(joinTable, `${tableName}.${fieldColumn.column}`, '=', fieldColumn.relation);
+    }
+  }
+}
+
 /**
  * Builds database query from stored view roles.
  *
@@ -110,7 +121,6 @@ export function buildFilterRolesQuery(tableName, roles, logicExpression = '') {
  */
 export const buildFilterQuery = (tableName, roles, logicExpression) => {
   return (builder) => {
-    buildFilterRolesJoins(tableName, roles)(builder);
     buildFilterRolesQuery(tableName, roles, logicExpression)(builder);
   };
 };
@@ -148,4 +158,28 @@ export function mapViewRolesToConditionals(viewRoles) {
     slug: viewRole.field.slug,
     index: viewRole.index,
   }));
+}
+
+
+export function mapFilterRolesToDynamicFilter(roles) {
+  return roles.map((role) => ({
+    ...role,
+    columnKey: role.fieldKey,
+  }));
+}
+
+/**
+ * Builds sort column query.
+ * @param {String} tableName -
+ * @param {String} columnKey -
+ * @param {String} sortDirection -
+ */
+export function buildSortColumnQuery(tableName, columnKey, sortDirection) {
+  const fieldRelation = getRoleFieldColumn(tableName, columnKey);
+  const sortColumn = fieldRelation.relation || `${tableName}.${fieldRelation.column}`;
+
+  return (builder) => {
+    builder.orderBy(sortColumn, sortDirection);
+    buildSortColumnJoin(tableName, columnKey)(builder);
+  };
 }

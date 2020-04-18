@@ -37,12 +37,12 @@ export default class NestedSet {
 
   toTree() {
     const map = this.linkChildren();
-    const tree = {};
+    const tree = [];
 
     this.items.forEach((item) => {
       const parentNodeId = item[this.options.parentId];
       if (!parentNodeId) {
-        tree[item.id] = map[item.id];
+        tree.push(map[item.id]);
       }
     });
     this.collection = Object.values(tree);

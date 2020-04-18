@@ -209,7 +209,7 @@ export default {
 
       form.roles.forEach((role) => {
         const fieldModel = resourceFieldsKeysMap.get(role.field_key);
-        
+
         const saveViewRoleOper = ViewRole.query().insert({
           ...pick(role, ['comparator', 'value', 'index']),
           field_id: fieldModel.id,
@@ -245,7 +245,7 @@ export default {
 
       check('columns').exists().isArray({ min: 1 }),
 
-      check('columns.*.id').optional().isNumeric().toInt(),    
+      check('columns.*.id').optional().isNumeric().toInt(),
       check('columns.*.key').exists().escape().trim(),
       check('columns.*.index').exists().isNumeric().toInt(),
 

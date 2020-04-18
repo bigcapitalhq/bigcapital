@@ -1,22 +1,25 @@
 import { difference } from 'lodash';
+import DynamicFilterRoleAbstructor from '@/lib/DynamicFilter/DynamicFilterRoleAbstructor';
 import {
   buildFilterQuery,
-} from '../ViewRolesBuilder';
+} from '@/lib/ViewRolesBuilder';
 
-export default class FilterRoles {
+export default class FilterRoles extends DynamicFilterRoleAbstructor {
   /**
    * Constructor method.
    * @param {Array} filterRoles -
    * @param {Array} resourceFields -
    */
-  constructor(tableName, filterRoles, resourceFields) {
+  constructor(filterRoles, resourceFields) {
+    super();
+
     this.filterRoles = filterRoles.map((role, index) => ({
       ...role,
       index: index + 1,
       columnKey: role.field_key,
+      comparator: role.comparator === 'AND' ? '&&' : '||',
     }));
     this.resourceFields = resourceFields;
-    this.tableName = tableName;
   }
 
   validateFilterRoles() {
@@ -36,10 +39,12 @@ export default class FilterRoles {
     return expression.trim();
   }
 
-  // @public
+  /**
+   * Builds database query of view roles.
+   */
   buildQuery() {
-    const logicExpression = this.buildLogicExpression();
     return (builder) => {
+      const logicExpression = this.buildLogicExpression();
       buildFilterQuery(this.tableName, this.filterRoles, logicExpression)(builder);
     };
   }

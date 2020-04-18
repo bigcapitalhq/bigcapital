@@ -25,6 +25,7 @@ export default {
     'type': {
       column: 'account_type_id',
       relation: 'account_types.id',
+      relationColumn: 'account_types.name',
     },
     'description': {
       column: 'description',

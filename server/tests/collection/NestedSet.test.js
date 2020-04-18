@@ -4,13 +4,14 @@ import NestedSet from '@/collection/NestedSet';
 describe('NestedSet', () => {
   it('Should link parent and children nodes.', () => {
     const flattenArray = [
+      { id: 10 },
       { id: 1 },
       {
-        id: 2,
+        id: 3,
         parent_id: 1,
       },
       {
-        id: 3,
+        id: 2,
         parent_id: 1,
       },
       {
@@ -18,14 +19,17 @@ describe('NestedSet', () => {
         parent_id: 3,
       },
     ];
-
     const collection = new NestedSet(flattenArray);
     const treeGroups = collection.toTree();
 
-    expect(treeGroups[0].id).equals(1);
-    expect(treeGroups[0].children[0].id).equals(2);
-    expect(treeGroups[0].children[1].id).equals(3);
-    expect(treeGroups[0].children[1].children[0].id).equals(4);
+    expect(treeGroups[0].id).equals(10);
+    expect(treeGroups[1].id).equals(1);
+
+    expect(treeGroups[1].children.length).equals(2);
+    expect(treeGroups[1].children[0].id).equals(3);
+    expect(treeGroups[1].children[1].id).equals(2);
+
+    expect(treeGroups[1].children[0].children[0].id).equals(4);
   });
 
   it('Should flatten the nested set collection.', () => {

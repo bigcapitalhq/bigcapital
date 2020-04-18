@@ -288,7 +288,7 @@ describe('JournalPoster', () => {
       expect(journalPoster.deletedEntriesIds[1]).equals(2);
     });
 
-    it.only('Should revert the account balance after remove the entries.', () => {
+    it('Should revert the account balance after remove the entries.', () => {
       const journalPoster = new JournalPoster();
       const journalEntry1 = new JournalEntry({
         id: 1,

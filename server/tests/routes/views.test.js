@@ -11,7 +11,7 @@ import ViewColumn from '../../src/models/ViewColumn';
 
 let loginRes;
 
-describe.only('routes: `/views`', () => {
+describe('routes: `/views`', () => {
   beforeEach(async () => {
     loginRes = await login();
   });
@@ -463,7 +463,7 @@ describe.only('routes: `/views`', () => {
    
   });
 
-  describe.only('POST: `/views/:view_id`', () => {
+  describe('POST: `/views/:view_id`', () => {
     it('Should `name` be required.', async () => {
       const view = await create('view');
       const res = await request()

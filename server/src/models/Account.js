@@ -4,6 +4,7 @@ import { flatten } from 'lodash';
 import BaseModel from '@/models/Model';
 import {
   buildFilterQuery,
+  buildSortColumnQuery,
 } from '@/lib/ViewRolesBuilder';
 export default class Account extends BaseModel {
   /**
@@ -33,6 +34,9 @@ export default class Account extends BaseModel {
       viewRolesBuilder(query, conditionals, expression) {
         buildFilterQuery(Account.tableName, conditionals, expression)(query);
       },
+      sortColumnBuilder(query, columnKey, direction) {
+        buildSortColumnQuery(Account.tableName, columnKey, direction)(query);
+      }
     };
   }
 

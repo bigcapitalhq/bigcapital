@@ -1,20 +1,32 @@
 import express from 'express';
-import { check, validationResult, param, query } from 'express-validator';
+import {
+  check,
+  validationResult,
+  param,
+  query,
+} from 'express-validator';
+import { difference } from 'lodash';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
 import Account from '@/models/Account';
 import AccountType from '@/models/AccountType';
 import AccountTransaction from '@/models/AccountTransaction';
 import JournalPoster from '@/services/Accounting/JournalPoster';
 import AccountBalance from '@/models/AccountBalance';
+import NestedSet from '@/collection/NestedSet';
 import Resource from '@/models/Resource';
 import View from '@/models/View';
 import JWTAuth from '@/http/middleware/jwtAuth';
-import NestedSet from '../../collection/NestedSet';
 import {
   mapViewRolesToConditionals,
-  validateViewRoles,
+  mapFilterRolesToDynamicFilter,
 } from '@/lib/ViewRolesBuilder';
-import FilterRoles from '@/lib/FilterRoles';
+import {
+  DynamicFilter,
+  DynamicFilterSortBy,
+  DynamicFilterViews,
+  DynamicFilterFilterRoles,
+} from '@/lib/DynamicFilter';
+
 
 export default {
   /**
@@ -39,6 +51,10 @@ export default {
     router.get('/',
       this.getAccountsList.validation,
       asyncMiddleware(this.getAccountsList.handler));
+
+    router.delete('/',
+      this.deleteBulkAccounts.validation,
+      asyncMiddleware(this.deleteBulkAccounts.handler));
 
     router.delete('/:id',
       this.deleteAccount.validation,
@@ -69,7 +85,7 @@ export default {
   newAccount: {
     validation: [
       check('name').exists().isLength({ min: 3 }).trim().escape(),
-      check('code').exists().isLength({ max: 10 }).trim().escape(),
+      check('code').optional().isLength({ max: 10 }).trim().escape(),
       check('account_type_id').exists().isNumeric().toInt(),
       check('description').optional().trim().escape(),
     ],
@@ -217,6 +233,9 @@ export default {
       query('custom_view_id').optional().isNumeric().toInt(),
 
       query('stringified_filter_roles').optional().isJSON(),
+
+      query('column_sort_order').optional(),
+      query('sort_order').optional().isIn(['desc', 'asc']),
     ],
     async handler(req, res) {
       const validationErrors = validationResult(req);
@@ -226,55 +245,77 @@ export default {
           code: 'validation_error', ...validationErrors,
         });
       }
-
       const filter = {
         account_types: [],
         display_type: 'tree',
         filter_roles: [],
+        sort_order: 'asc',
         ...req.query,
       };
       if (filter.stringified_filter_roles) {
         filter.filter_roles = JSON.parse(filter.stringified_filter_roles);
       }
       const errorReasons = [];
-      const viewConditionals = [];
 
       const accountsResource = await Resource.query()
-        .where('name', 'accounts').withGraphFetched('fields').first();
+        .where('name', 'accounts')
+        .withGraphFetched('fields')
+        .first();
 
       if (!accountsResource) {
         return res.status(400).send({
           errors: [{ type: 'ACCOUNTS_RESOURCE_NOT_FOUND', code: 200 }],
         });
       }
+      const resourceFieldsKeys = accountsResource.fields.map((c) => c.key);
+
       const view = await View.query().onBuild((builder) => {
         if (filter.custom_view_id) {
           builder.where('id', filter.custom_view_id);
         } else {
           builder.where('favourite', true);
         }
-        builder.where('resource_id', accountsResource.id);
+        // builder.where('resource_id', accountsResource.id);
         builder.withGraphFetched('roles.field');
         builder.withGraphFetched('columns');
         builder.first();
       });
+      const dynamicFilter = new DynamicFilter(Account.tableName);
 
-      if (view && view.roles.length > 0) {
-        viewConditionals.push(
-          ...mapViewRolesToConditionals(view.roles),
-        );
-        if (!validateViewRoles(viewConditionals, view.rolesLogicExpression)) {
-          errorReasons.push({ type: 'VIEW.LOGIC.EXPRESSION.INVALID', code: 400 });
+      if (filter.column_sort_order) {
+        if (resourceFieldsKeys.indexOf(filter.column_sort_order) === -1) {
+          errorReasons.push({ type: 'COLUMN.SORT.ORDER.NOT.FOUND', code: 300 });
         }
+        const sortByFilter = new DynamicFilterSortBy(
+          filter.column_sort_order,
+          filter.sort_order,
+        );
+        dynamicFilter.setFilter(sortByFilter);
       }
 
-      // Validate the accounts resource fields.
-      const filterRoles = new FilterRoles(Account.tableName,
-        filter.filter_roles.map((role) => ({ ...role, columnKey: role.fieldKey })),
-        accountsResource.fields);
+      // View roles.
+      if (view && view.roles.length > 0) { 
+        const viewFilter = new DynamicFilterViews(
+          mapViewRolesToConditionals(view.roles),
+          view.rolesLogicExpression,
+        );
+        if (!viewFilter.validateFilterRoles()) {
+          errorReasons.push({ type: 'VIEW.LOGIC.EXPRESSION.INVALID', code: 400 });
+        }
+        dynamicFilter.setFilter(viewFilter);
+      }
+      // Filter roles.
+      if (filter.filter_roles.length > 0) {
+        // Validate the accounts resource fields.
+        const filterRoles = new DynamicFilterFilterRoles(
+          mapFilterRolesToDynamicFilter(filter.filter_roles),
+          accountsResource.fields,
+        );
+        dynamicFilter.setFilter(filterRoles);
 
-      if (filterRoles.validateFilterRoles().length > 0) {
-        errorReasons.push({ type: 'ACCOUNTS.RESOURCE.HAS.NO.GIVEN.FIELDS', code: 500 });
+        if (filterRoles.validateFilterRoles().length > 0) {
+          errorReasons.push({ type: 'ACCOUNTS.RESOURCE.HAS.NO.GIVEN.FIELDS', code: 500 });
+        }
       }
       if (errorReasons.length > 0) {
         return res.status(400).send({ errors: errorReasons });
@@ -284,33 +325,14 @@ export default {
         builder.withGraphFetched('type');
         builder.withGraphFetched('balance');
 
-        // Build custom view conditions query.
-        if (viewConditionals.length > 0) {
-          builder.modify('viewRolesBuilder', viewConditionals, view.rolesLogicExpression);
-        }
-        // Build filter query.
-        if (filter.filter_roles.length > 0) {
-          filterRoles.buildQuery()(builder);
-        }
+        dynamicFilter.buildQuery()(builder);
       });
 
       const nestedAccounts = new NestedSet(accounts, { parentId: 'parentAccountId' });
-      const groupsAccounts = nestedAccounts.toTree();
-      const accountsList = [];
+      const nestedSetAccounts = nestedAccounts.toTree();
 
-      if (filter.display_type === 'tree') {
-        accountsList.push(...groupsAccounts);
-      } else if (filter.display_type === 'flat') {
-        const flattenAccounts = nestedAccounts.flattenTree((account, parentAccount) => {
-          if (parentAccount) {
-            account.name = `${parentAccount.name} ― ${account.name}`;
-          }
-          return account;
-        });
-        accountsList.push(...flattenAccounts);
-      }
       return res.status(200).send({
-        accounts: accountsList,
+        accounts: nestedSetAccounts,
         ...(view) ? {
           customViewId: view.id,
         } : {},
@@ -422,6 +444,59 @@ export default {
       //   .where('account_id', fromAccount);
 
       // return res.status(200).send();
+    },
+  },
+
+  deleteBulkAccounts: {
+    validation: [
+      query('ids').isArray(),
+      query('ids.*').isNumeric().toInt(),
+    ],
+    async handler(req, res) {
+      const validationErrors = validationResult(req);
+
+      if (!validationErrors.isEmpty()) {
+        return res.boom.badData(null, {
+          code: 'validation_error', ...validationErrors,
+        });
+      }
+      const filter = { ids: [], ...req.query };
+      const accounts = await Account.query().onBuild((builder) => {
+        if (filter.ids.length) {
+          builder.whereIn('id', filter.ids);
+        }
+      });
+      const accountsIds = accounts.map(a => a.id);
+      const notFoundAccounts = difference(filter.ids, accountsIds);
+
+      if (notFoundAccounts.length > 0) {
+        return res.status(404).send({
+          errors: [{ type: 'ACCOUNTS.IDS.NOT.FOUND', code: 200, ids: notFoundAccounts }],
+        });
+      }
+      const accountsTransactions = await AccountTransaction.query()
+        .whereIn('account_id', accountsIds)
+        .count('id as transactions_count')
+        .groupBy('account_id')
+        .select('account_id');
+
+      const accountsHasTransactions = [];
+
+      accountsTransactions.forEach((transaction) => {
+        if (transaction.transactionsCount > 0) {
+          accountsHasTransactions.push(transaction.accountId);
+        }
+      });
+      if (accountsHasTransactions.length > 0) {
+        return res.status(400).send({
+          errors: [{ type: 'ACCOUNTS.HAS.TRANSACTIONS', code: 300, ids: accountsHasTransactions }],
+        });
+      }
+      await Account.query()
+        .whereIn('id', accounts.map((a) => a.id))
+        .delete();
+
+      return res.status(200).send();
     },
   },
 };
