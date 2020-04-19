@@ -250,6 +250,14 @@ factory.define('currency', 'currencies', async () => {
   };
 });
 
+factory.define('exchange_rate', 'exchange_rates', async () => {
+  return {
+    date: '2020-02-02',
+    currency_code: 'USD',
+    exchange_rate: faker.random.number(),
+  };
+});
+
 factory.define('budget', 'budgets', async () => {
   return {
     name: faker.lorem.slug(),

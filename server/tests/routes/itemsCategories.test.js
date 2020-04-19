@@ -209,7 +209,7 @@ describe('routes: /item_categories/', () => {
     });
   });
 
-  describe.only('GET: `/item_categories`', () => {
+  describe('GET: `/item_categories`', () => {
 
     it('Should retrieve list of item categories.', async () => {
       const category1 = await create('item_category');

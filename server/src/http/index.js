@@ -21,6 +21,7 @@ import Suppliers from '@/http/controllers/Suppliers';
 import Bills from '@/http/controllers/Bills';
 import CurrencyAdjustment from './controllers/CurrencyAdjustment';
 import Resources from './controllers/Resources';
+import ExchangeRates from '@/http/controllers/ExchangeRates';
 // import SalesReports from '@/http/controllers/SalesReports';
 // import PurchasesReports from '@/http/controllers/PurchasesReports';
 
@@ -47,6 +48,7 @@ export default (app) => {
   // app.use('/api/bills', Bills.router());
   app.use('/api/budget', Budget.router());
   app.use('/api/resources', Resources.router());
+  app.use('/api/exchange_rates', ExchangeRates.router());
   // app.use('/api/currency_adjustment', CurrencyAdjustment.router());
   // app.use('/api/reports/sales', SalesReports.router());
   // app.use('/api/reports/purchases', PurchasesReports.router());
