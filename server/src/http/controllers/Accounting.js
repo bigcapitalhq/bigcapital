@@ -13,9 +13,15 @@ import Resource from '@/models/Resource';
 import View from '@/models/View';
 import {
   mapViewRolesToConditionals,
-  validateViewRoles,
+  mapFilterRolesToDynamicFilter,
 } from '@/lib/ViewRolesBuilder';
-import FilterRoles from '@/lib/FilterRoles';
+import {
+  DynamicFilter,
+  DynamicFilterSortBy,
+  DynamicFilterViews,
+  DynamicFilterFilterRoles,
+} from '@/lib/DynamicFilter';
+
 
 export default {
   /**
@@ -78,6 +84,8 @@ export default {
       }
       const filter = {
         filter_roles: [],
+        page: 1,
+        page_size: 10,
         ...req.query,
       };
       if (filter.stringified_filter_roles) {
@@ -85,7 +93,6 @@ export default {
       }
 
       const errorReasons = [];
-      const viewConditionals = [];
       const manualJournalsResource = await Resource.query()
         .where('name', 'manual_journals')
         .withGraphFetched('fields')
@@ -109,27 +116,52 @@ export default {
         builder.first();
       });
 
+      const resourceFieldsKeys = manualJournalsResource.fields.map((c) => c.key);
+      const dynamicFilter = new DynamicFilter(ManualJournal.tableName);
+
+      // Dynamic filter with view roles.
       if (view && view.roles.length > 0) {
-        viewConditionals.push(
-          ...mapViewRolesToConditionals(view.roles),
+        const viewFilter = new DynamicFilterViews(
+          mapViewRolesToConditionals(view.roles),
+          view.rolesLogicExpression,
         );
-        if (!validateViewRoles(viewConditionals, view.rolesLogicExpression)) {
+        if (!viewFilter.validateFilterRoles()) {
           errorReasons.push({ type: 'VIEW.LOGIC.EXPRESSION.INVALID', code: 400 });
         }
+        dynamicFilter.setFilter(viewFilter);
       }
-      // Validate the accounts resource fields.
-      const filterRoles = new FilterRoles(Resource.tableName,
-        filter.filter_roles.map((role) => ({ ...role, columnKey: role.fieldKey })),
-        manualJournalsResource.fields);
 
-      if (filterRoles.validateFilterRoles().length > 0) {
-        errorReasons.push({ type: 'ACCOUNTS.RESOURCE.HAS.NO.GIVEN.FIELDS', code: 500 });
+      // Dynamic filter with filter roles.
+      if (filter.filter_roles.length > 0) {
+        // Validate the accounts resource fields.
+        const filterRoles = new DynamicFilterFilterRoles(
+          mapFilterRolesToDynamicFilter(filter.filter_roles),
+          manualJournalsResource.fields,
+        );
+        dynamicFilter.setFilter(filterRoles);
+
+        if (filterRoles.validateFilterRoles().length > 0) {
+          errorReasons.push({ type: 'MANUAL.JOURNAL.HAS.NO.FIELDS', code: 500 });
+        }
+      }
+      // Dynamic filter with column sort order.
+      if (filter.column_sort_order) {
+        if (resourceFieldsKeys.indexOf(filter.column_sort_order) === -1) {
+          errorReasons.push({ type: 'COLUMN.SORT.ORDER.NOT.FOUND', code: 300 });
+        }
+        const sortByFilter = new DynamicFilterSortBy(
+          filter.column_sort_order,
+          filter.sort_order,
+        );
+        dynamicFilter.setFilter(sortByFilter);
       }
       if (errorReasons.length > 0) {
         return res.status(400).send({ errors: errorReasons });
       }
       // Manual journals.
-      const manualJournals = await ManualJournal.query();
+      const manualJournals = await ManualJournal.query().onBuild((builder) => {
+        dynamicFilter.buildQuery()(builder);
+      }).pagination(filter.page - 1, filter.page_size);
 
       return res.status(200).send({
         manualJournals,

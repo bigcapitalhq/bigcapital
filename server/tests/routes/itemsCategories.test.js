@@ -209,7 +209,7 @@ describe('routes: /item_categories/', () => {
     });
   });
 
-  describe('GET: `/item_categories`', () => {
+  describe.only('GET: `/item_categories`', () => {
 
     it('Should retrieve list of item categories.', async () => {
       const category1 = await create('item_category');
@@ -229,6 +229,22 @@ describe('routes: /item_categories/', () => {
       expect(res.body.categories[0].description).to.be.a('string');
 
       expect(res.body.categories[1].parent_category_id).to.be.a('number');
+    });
+
+
+    it('Should retrieve of related items.', async () => {
+      const category1 = await create('item_category');
+      const category2 = await create('item_category', { parent_category_id: category1.id });
+
+      await create('item', { category_id: category1.id });
+
+      const res = await request()
+        .get('/api/item_categories')
+        .set('x-access-token', loginRes.body.token)
+        .send();
+
+      expect(res.body.categories[0].count).to.be.a('number');
+      expect(res.body.categories[0].count).equals(1);
     });
   });
 

@@ -1,6 +1,5 @@
 import express from 'express';
-import { check, query, oneOf, validationResult } from 'express-validator';
-import moment from 'moment';
+import { check, query, validationResult } from 'express-validator';
 import { difference } from 'lodash';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
 import jwtAuth from '@/http/middleware/jwtAuth';
@@ -13,9 +12,15 @@ import Authorization from '@/http/middleware/authorization';
 import View from '@/models/View';
 import {
   mapViewRolesToConditionals,
-  validateViewRoles,
+  mapFilterRolesToDynamicFilter,
 } from '@/lib/ViewRolesBuilder';
-import FilterRoles from '@/lib/FilterRoles';
+import {
+  DynamicFilter,
+  DynamicFilterSortBy,
+  DynamicFilterViews,
+  DynamicFilterFilterRoles,
+} from '@/lib/DynamicFilter';
+
 
 export default {
 
@@ -64,7 +69,9 @@ export default {
       check('sell_account_id').exists().isInt().toInt(),
       check('inventory_account_id')
         .if(check('type').equals('inventory'))
-        .exists().isInt().toInt(),
+        .exists()
+        .isInt()
+        .toInt(),
       check('category_id').optional().isInt().toInt(),
 
       check('custom_fields').optional().isArray({ min: 1 }),
@@ -159,7 +166,11 @@ export default {
   editItem: {
     validation: [
       check('name').exists(),
-      check('type').exists().trim().escape().isIn(['product', 'service']),
+      check('type')
+        .exists()
+        .trim()
+        .escape()
+        .isIn(['product', 'service']),
       check('cost_price').exists().isNumeric(),
       check('sell_price').exists().isNumeric(),
       check('cost_account_id').exists().isInt(),
@@ -281,7 +292,7 @@ export default {
         ]});
       }
       const filter = {
-        column_sort_order: 'created_at',
+        column_sort_order: '',
         sort_order: '',
         page: 1,
         page_size: 10,
@@ -304,20 +315,45 @@ export default {
         builder.withGraphFetched('columns');
         builder.first();
       });
+      const resourceFieldsKeys = itemsResource.fields.map((c) => c.key);
+      const dynamicFilter = new DynamicFilter(Item.tableName);
+
+      // Dynamic filter with view roles.
       if (view && view.roles.length > 0) {
-        viewConditions.push(
-          ...mapViewRolesToConditionals(view.roles),
+        const viewFilter = new DynamicFilterViews(
+          mapViewRolesToConditionals(view.roles),
+          view.rolesLogicExpression,
         );
-        if (!validateViewRoles(viewConditions, view.rolesLogicExpression)) {
+        if (!viewFilter.validateFilterRoles()) {
           errorReasons.push({ type: 'VIEW.LOGIC.EXPRESSION.INVALID', code: 400 });
         }
+        dynamicFilter.setFilter(viewFilter);
       }
-      const filterConditions = new FilterRoles(Item.tableName,
-        filter.filter_roles.map((role) => ({ ...role, columnKey: role.fieldKey })),
-        itemsResource.fields,
-      );
-      if (filterConditions.validateFilterRoles().length > 0) {
-        errorReasons.push({ type: 'ITEMS.RESOURCE.HAS.NO.FIELDS', code: 500 });
+
+      // Dynamic filter with filter roles.
+      if (filter.filter_roles.length > 0) {
+        // Validate the accounts resource fields.
+        const filterRoles = new DynamicFilterFilterRoles(
+          mapFilterRolesToDynamicFilter(filter.filter_roles),
+          itemsResource.fields,
+        );
+        dynamicFilter.setFilter(filterRoles);
+
+        if (filterRoles.validateFilterRoles().length > 0) {
+          errorReasons.push({ type: 'ITEMS.RESOURCE.HAS.NO.FIELDS', code: 500 });
+        }
+      }
+
+      // Dynamic filter with column sort order.
+      if (filter.column_sort_order) {
+        if (resourceFieldsKeys.indexOf(filter.column_sort_order) === -1) {
+          errorReasons.push({ type: 'COLUMN.SORT.ORDER.NOT.FOUND', code: 300 });
+        }
+        const sortByFilter = new DynamicFilterSortBy(
+          filter.column_sort_order,
+          filter.sort_order,
+        );
+        dynamicFilter.setFilter(sortByFilter);
       }
       if (errorReasons.length > 0) {
         return res.status(400).send({ errors: errorReasons });
@@ -328,14 +364,7 @@ export default {
         builder.withGraphFetched('inventoryAccount');
         builder.withGraphFetched('category');
 
-        builder.modify('sortBy', filter.column_sort_order, filter.sort_order);
-
-        if (viewConditions.length > 0) {
-          builder.modify('viewRolesBuilder', viewConditions, view.rolesLogicExpression);
-        }
-        if (filter.filter_roles.length > 0) {
-          filterConditions.buildQuery()(builder);
-        }
+        dynamicFilter.buildQuery()(builder);
       }).pagination(filter.page - 1, filter.page_size);
 
       return res.status(200).send({

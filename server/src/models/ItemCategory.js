@@ -24,8 +24,8 @@ export default class ItemCategory extends BaseModel {
         relation: Model.HasManyRelation,
         modelClass: Item.default,
         join: {
-          from: 'items_categories.itemId',
-          to: 'items.id',
+          from: 'items_categories.id',
+          to: 'items.categoryId',
         },
       },
     };

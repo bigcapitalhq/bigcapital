@@ -86,7 +86,7 @@ export function buildSortColumnJoin(tableName, sortColumnKey) {
       const joinTable = getTableFromRelationColumn(fieldColumn.relation);
       builder.join(joinTable, `${tableName}.${fieldColumn.column}`, '=', fieldColumn.relation);
     }
-  }
+  };
 }
 
 /**

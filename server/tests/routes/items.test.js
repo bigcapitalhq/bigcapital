@@ -86,7 +86,7 @@ describe('routes: `/items`', () => {
 
       expect(res.status).equals(422);
       expect(res.body.code).equals('validation_error');
-        expect(res.body.errors).include.something.deep.equals({ 
+      expect(res.body.errors).include.something.deep.equals({
         value: 'not_numeric',
         msg: 'Invalid value',
         param: 'cost_price',
@@ -551,7 +551,6 @@ describe('routes: `/items`', () => {
     });
 
     it('Should retrieve ordered items based on the given `column_sort_order` and `sort_order` query.', async () => {
-      await create('resource', { name: 'items' });
       await create('item', { name: 'ahmed' });
       await create('item', { name: 'mohamed' });
 
@@ -585,12 +584,6 @@ describe('routes: `/items`', () => {
     });
 
     it('Should retrieve filtered items based on custom view conditions.', async () => {
-      const resource = await create('resource', { name: 'items' });
-      const resourceField = await create('resource_field', {
-        label_name: 'Type',
-        key: 'type',
-        resource_id: resource.id,
-      });
       const item1 = await create('item', { type: 'service' });
       const item2 = await create('item', { type: 'service' });
       const item3 = await create('item', { type: 'inventory' });
@@ -598,13 +591,13 @@ describe('routes: `/items`', () => {
 
       const view = await create('view', {
         name: 'Items Inventory',
-        resource_id: resource.id,
+        resource_id: 2,
         roles_logic_expression: '1',
       });
       const viewCondition = await create('view_role', {
         view_id: view.id,
         index: 1,
-        field_id: resourceField,
+        field_id: 11,
         value: 'inventory',
         comparator: 'equals',
       });
@@ -625,17 +618,6 @@ describe('routes: `/items`', () => {
     });
 
     it('Should retrieve filtered items based on filtering conditions.', async () => {
-      const resource = await create('resource', { name: 'items' });
-      const resourceField = await create('resource_field', {
-        label_name: 'Type',
-        key: 'type',
-        resource_id: resource.id,
-      });
-      const resourceNameField = await create('resource_field', {
-        label_name: 'item name',
-        key: 'name',
-        resource_id: resource.id,
-      });
       const item1 = await create('item', { type: 'service' });
       const item2 = await create('item', { type: 'service', name: 'target' });
       const item3 = await create('item', { type: 'inventory' });
@@ -647,13 +629,13 @@ describe('routes: `/items`', () => {
         .query({
           stringified_filter_roles: JSON.stringify([
             {
-              condition: '&&',
+              condition: 'AND',
               field_key: 'type',
               comparator: 'equals',
               value: 'inventory',
             },
             {
-              condition: '||',
+              condition: 'OR',
               field_key: 'name',
               comparator: 'equals',
               value: 'target',

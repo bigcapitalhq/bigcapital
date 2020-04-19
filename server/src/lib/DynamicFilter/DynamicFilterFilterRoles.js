@@ -17,7 +17,7 @@ export default class FilterRoles extends DynamicFilterRoleAbstructor {
       ...role,
       index: index + 1,
       columnKey: role.field_key,
-      comparator: role.comparator === 'AND' ? '&&' : '||',
+      condition: role.comparator === 'AND' ? '&&' : '||',
     }));
     this.resourceFields = resourceFields;
   }
