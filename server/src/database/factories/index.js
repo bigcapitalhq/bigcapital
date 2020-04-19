@@ -243,6 +243,13 @@ factory.define('option', 'options', async () => {
   };
 });
 
+factory.define('currency', 'currencies', async () => {
+  return {
+    currency_name: faker.lorem.slug(),
+    currency_code: 'USD',
+  };
+});
+
 factory.define('budget', 'budgets', async () => {
   return {
     name: faker.lorem.slug(),
