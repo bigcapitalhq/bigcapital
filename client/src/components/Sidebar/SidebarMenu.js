@@ -32,7 +32,7 @@ export default function SidebarMenu() {
             dropdownType={item.dropdownType || 'collapse'}
             caretIconSize={15}
             onClick={handleItemClick}
-            callapseActive={!!isActive}
+            // callapseActive={!!isActive}
             className={classNames({ 'is-active': isActive })} />
       );
     });

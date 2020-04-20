@@ -1,8 +1,10 @@
-import { createReducer } from "@reduxjs/toolkit";
+import { createReducer } from '@reduxjs/toolkit';
 import t from 'store/types';
 
 const initialState = {
-  list: {},
+  list: {
+    results: [],
+  },
   userById: {},
 };
 
@@ -14,12 +16,12 @@ export default createReducer(initialState, {
   [t.USER_DETAILS_SET]: (state, action) => {
     state.userById[action.user.id] = action.user;
   },
-})
+});
 
 /**
  * Retrieve the user details of the given user id,
- * @param {Object} state 
- * @param {Numeric} id 
+ * @param {Object} state
+ * @param {Numeric} id
  */
 export const getUserDetails = (state, id) => {
   return state.users.userById[id];

@@ -1,9 +1,9 @@
+@import './normalize.scss';
 
-@import "./normalize.scss";
+$pt-popover-box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.02),
+  0 2px 4px rgba(16, 22, 26, 0.1), 0 8px 24px rgba(16, 22, 26, 0.1);
 
-$pt-popover-box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.02), 0 2px 4px rgba(16, 22, 26, 0.1), 0 8px 24px rgba(16, 22, 26, 0.1);
-
-@import "@blueprintjs/core/src/common/_variables.scss";
+@import '@blueprintjs/core/src/common/_variables.scss';
 // @import "@blueprintjs/core/src/common/colors.scss";
 
 $menu-item-color-hover: $light-gray4;
@@ -12,41 +12,43 @@ $menu-item-color-active: $light-gray3;
 $breadcrumbs-collapsed-icon: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='#6B8193' enable-background='new 0 0 16 16' xml:space='preserve'><g><circle cx='2' cy='8.03' r='2'/><circle cx='14' cy='8.03' r='2'/><circle cx='8' cy='8.03' r='2'/></g></svg>");
 
 // Blueprint framework.
-@import "@blueprintjs/core/src/blueprint.scss";
-@import "@blueprintjs/datetime/src/blueprint-datetime.scss";
+@import '@blueprintjs/core/src/blueprint.scss';
+@import '@blueprintjs/datetime/src/blueprint-datetime.scss';
 
-@import "basscss";
+@import 'basscss';
 
-$pt-font-family: Noto Sans, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Open Sans, Helvetica Neue, Icons16, sans-serif;
+$pt-font-family: Noto Sans, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
+  Oxygen, Ubuntu, Cantarell, Open Sans, Helvetica Neue, Icons16, sans-serif;
 
-@import "functions";
+@import 'functions';
 
 // Objects
-@import "objects/form";
-@import "objects/typography";
-@import "objects/buttons";
+@import 'objects/form';
+@import 'objects/typography';
+@import 'objects/buttons';
 
 // Components
-@import "components/data-table";
-@import "components/dialog";
-  
+@import 'components/data-table';
+@import 'components/dialog';
+
 // Pages
-@import "pages/dashboard";
-@import "pages/accounts-chart";
-@import "pages/authentication";
-@import "pages/expense-form";
-@import "pages/financial-statements";
-@import "pages/make-journal-entries";
-@import "pages/preferences";
-@import "pages/view-form";
-@import "pages/manual-journals";
-@import "pages/item-category";
-@import "pages/items";
+@import 'pages/dashboard';
+@import 'pages/accounts-chart';
+@import 'pages/authentication';
+@import 'pages/expense-form';
+@import 'pages/financial-statements';
+@import 'pages/make-journal-entries';
+@import 'pages/preferences';
+@import 'pages/view-form';
+@import 'pages/manual-journals';
+@import 'pages/item-category';
+@import 'pages/items';
+@import 'pages/invite-form.scss';
 
 // Views
-@import "views/filter-dropdown";
-@import "views/sidebar";
+@import 'views/filter-dropdown';
+@import 'views/sidebar';
 
-.#{$ns}-tooltip{
+.#{$ns}-tooltip {
   box-shadow: none;
 }

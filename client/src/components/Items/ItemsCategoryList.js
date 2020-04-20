@@ -5,25 +5,34 @@ import DialogConnect from 'connectors/Dialog.connector';
 import LoadingIndicator from 'components/LoadingIndicator';
 import { compose } from 'utils';
 import DataTable from 'components/DataTable';
-import { Button, Popover, Menu, MenuItem, Position } from '@blueprintjs/core';
+import {
+  Button,
+  Popover,
+  Menu,
+  MenuItem,
+  Position,
+  Classes,
+  Tooltip,
+} from '@blueprintjs/core';
 
 const ItemsCategoryList = ({
   categories,
   onFetchData,
   onDeleteCategory,
   onEditCategory,
-  openDialog
+  openDialog,
+  count,
 }) => {
-  const handelEditCategory = category => () => {
+  const handelEditCategory = (category) => () => {
     openDialog('item-form', { action: 'edit', id: category.id });
     onEditCategory(category.id);
   };
 
-  const handleDeleteCategory = category => () => {
+  const handleDeleteCategory = (category) => () => {
     onDeleteCategory(category);
   };
 
-  const actionMenuList = category => (
+  const actionMenuList = (category) => (
     <Menu>
       <MenuItem text='Edit Category' onClick={handelEditCategory(category)} />
       <MenuItem
@@ -38,17 +47,22 @@ const ItemsCategoryList = ({
       {
         id: 'name',
         Header: 'Category Name',
-        accessor: 'name'
+        accessor: 'name',
+        width: 150,
       },
       {
         id: 'description',
         Header: 'Description',
-        accessor: 'description'
+        accessor: 'description',
+        className: 'description',
+        width: 150,
       },
       {
         id: 'count',
         Header: 'Count',
-        // accessor: ''
+        accessor: () => <span>{count}</span>,
+        className: 'count',
+        width: 50,
       },
       {
         id: 'actions',
@@ -62,9 +76,9 @@ const ItemsCategoryList = ({
           </Popover>
         ),
         className: 'actions',
-        width: 50
+        width: 50,
         // canResize: false
-      }
+      },
     ],
     []
   );
@@ -72,6 +86,7 @@ const ItemsCategoryList = ({
   const handelFetchData = useCallback(() => {
     onFetchData && onFetchData();
   }, []);
+
 
   return (
     <LoadingIndicator spinnerSize={30}>
@@ -81,6 +96,8 @@ const ItemsCategoryList = ({
         onFetchData={handelFetchData}
         manualSortBy={true}
         selectionColumn={true}
+        expandable={true}
+        treeGraph={true}
       />
     </LoadingIndicator>
   );
