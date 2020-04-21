@@ -1,23 +1,14 @@
 /* eslint-disable consistent-return */
 import jwt from 'jsonwebtoken';
 import SystemUser from '@/system/models/SystemUser';
-// import Auth from '@/models/Auth';
 
 const authMiddleware = (req, res, next) => {
   const { JWT_SECRET_KEY } = process.env;
   const token = req.headers['x-access-token'] || req.query.token;
 
-  const onError = () => {
-    // Auth.loggedOut();
-    res.status(401).send({
-      success: false,
-      message: 'unauthorized',
-    });
-  };
+  const onError = () => { res.boom.unauthorized(); };
 
-  if (!token) {
-    return onError();
-  }
+  if (!token) { return onError(); }
 
   const verify = new Promise((resolve, reject) => {
     jwt.verify(token, JWT_SECRET_KEY, async (error, decoded) => {
@@ -26,7 +17,6 @@ const authMiddleware = (req, res, next) => {
       } else {
         // eslint-disable-next-line no-underscore-dangle
         req.user = await SystemUser.query().findById(decoded._id);
-        // Auth.setAuthenticatedUser(req.user);
 
         if (!req.user) {
           return onError();

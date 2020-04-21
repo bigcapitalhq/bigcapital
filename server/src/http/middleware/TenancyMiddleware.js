@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import TenantsManager from '@/system/TenantsManager';
-import Model from '@/models/Model';
+import TenantModel from '@/models/TenantModel';
 
 function loadModelsFromDirectory() {
   const models = {};
@@ -18,23 +18,29 @@ function loadModelsFromDirectory() {
 }
 
 export default async (req, res, next) => {
-  const { organization: organizationId } = req.query;
-  const notFoundOrganization = () => res.status(400).send({
-    errors: [{ type: 'ORGANIZATION.ID.NOT.FOUND' }],
-  });
+  const organizationId = req.headers['organization-id'] || req.query.organization;
+  const notFoundOrganization = () => res.boom.unauthorized(
+    'Organization identication not found.',
+    { errors: [{ type: 'ORGANIZATION.ID.NOT.FOUND', code: 100 }] },
+  );
 
   if (!organizationId) {
     return notFoundOrganization();
   }
   const tenant = await TenantsManager.getTenant(organizationId);
 
+  // When the given organization id not found on the system storage.
   if (!tenant) {
     return notFoundOrganization();
+  }
+  // When user tenant not match the given organization id.
+  if (tenant.id !== req.user.tenantId) {
+    return res.boom.unauthorized();
   }
   const knex = TenantsManager.knexInstance(organizationId);
   const models = loadModelsFromDirectory();
 
-  Model.knexBinded = knex;
+  TenantModel.knexBinded = knex;
 
   req.knex = knex;
   req.organizationId = organizationId;
@@ -42,7 +48,7 @@ export default async (req, res, next) => {
     ...Object.values(models).reduce((acc, model) => {
       if (model.resource
         && model.resource.default
-        && Object.getPrototypeOf(model.resource.default) === Model) {
+        && Object.getPrototypeOf(model.resource.default) === TenantModel) {
         acc[model.name] = model.resource.default.bindKnex(knex);
       }
       return acc;

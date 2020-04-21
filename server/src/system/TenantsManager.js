@@ -1,4 +1,5 @@
 import Knex from 'knex';
+import { knexSnakeCaseMappers } from 'objection';
 import Tenant from '@/system/models/Tenant';
 import config from '@/../config/config';
 
@@ -50,7 +51,10 @@ export default class TenantsManager {
     let knex = knexCache.get(organizationId);
 
     if (!knex) {
-      knex = Knex(this.getTenantKnexConfig(organizationId));
+      knex = Knex({
+        ...this.getTenantKnexConfig(organizationId),
+        ...knexSnakeCaseMappers({ upperCase: true }),
+      });
       knexCache.set(organizationId, knex);
     }
     return knex;
