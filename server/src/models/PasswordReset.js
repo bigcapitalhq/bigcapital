@@ -1,6 +1,6 @@
-import Model from '@/models/Model';
+import TenantModel from '@/models/TenantModel';
 
-export default class PasswordResets extends Model {
+export default class PasswordResets extends TenantModel {
   /**
    * Table name
    */

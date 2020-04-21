@@ -1,11 +1,10 @@
 import { Model } from 'objection';
-import path from 'path';
-import BaseModel from '@/models/Model';
+import TenantModel from '@/models/TenantModel';
 import {
   buildFilterQuery,
 } from '@/lib/ViewRolesBuilder';
 
-export default class Item extends BaseModel {
+export default class Item extends TenantModel {
   /**
    * Table name
    */
@@ -35,23 +34,11 @@ export default class Item extends BaseModel {
 
     return {
       /**
-       * Item may has many meta data.
-       */
-      metadata: {
-        relation: Model.HasManyRelation,
-        modelBase: path.join(__dirname, 'ItemMetadata'),
-        join: {
-          from: 'items.id',
-          to: 'items_metadata.item_id',
-        },
-      },
-
-      /**
        * Item may belongs to cateogory model.
        */
       category: {
         relation: Model.BelongsToOneRelation,
-        modelClass: ItemCategory.default,
+        modelClass: this.relationBindKnex(ItemCategory.default),
         join: {
           from: 'items.categoryId',
           to: 'items_categories.id',
@@ -60,7 +47,7 @@ export default class Item extends BaseModel {
 
       costAccount: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Account.default,
+        modelClass: this.relationBindKnex(Account.default),
         join: {
           from: 'items.costAccountId',
           to: 'accounts.id',
@@ -69,7 +56,7 @@ export default class Item extends BaseModel {
 
       sellAccount: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Account.default,
+        modelClass: this.relationBindKnex(Account.default),
         join: {
           from: 'items.sellAccountId',
           to: 'accounts.id',
@@ -78,7 +65,7 @@ export default class Item extends BaseModel {
 
       inventoryAccount: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Account.default,
+        modelClass: this.relationBindKnex(Account.default),
         join: {
           from: 'items.inventoryAccountId',
           to: 'accounts.id',

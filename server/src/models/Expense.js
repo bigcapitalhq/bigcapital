@@ -1,7 +1,8 @@
 import { Model } from 'objection';
-import BaseModel from '@/models/Model';
-import {viewRolesBuilder} from '@/lib/ViewRolesBuilder';
-export default class Expense extends BaseModel {
+import TenantModel from '@/models/TenantModel';
+import { viewRolesBuilder } from '@/lib/ViewRolesBuilder';
+
+export default class Expense extends TenantModel {
   /**
    * Table name
    */
@@ -60,12 +61,12 @@ export default class Expense extends BaseModel {
    */
   static get relationMappings() {
     const Account = require('@/models/Account');
-    const User = require('@/models/User');
-
+    const User = require('@/models/TenantUser');
+    
     return {
       paymentAccount: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Account.default,
+        modelClass: this.relationBindKnex(Account.default),
         join: {
           from: 'expenses.paymentAccountId',
           to: 'accounts.id',
@@ -74,7 +75,7 @@ export default class Expense extends BaseModel {
 
       expenseAccount: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Account.default,
+        modelClass: this.relationBindKnex(Account.default),
         join: {
           from: 'expenses.expenseAccountId',
           to: 'accounts.id',
@@ -83,7 +84,7 @@ export default class Expense extends BaseModel {
 
       user: {
         relation: Model.BelongsToOneRelation,
-        modelClass: User.default,
+        modelClass: this.relationBindKnex(User.default),
         join: {
           from: 'expenses.userId',
           to: 'users.id',

@@ -7,15 +7,10 @@ import {
 } from 'express-validator';
 import { difference } from 'lodash';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
-import Account from '@/models/Account';
-import AccountType from '@/models/AccountType';
-import AccountTransaction from '@/models/AccountTransaction';
 import JournalPoster from '@/services/Accounting/JournalPoster';
-import AccountBalance from '@/models/AccountBalance';
 import NestedSet from '@/collection/NestedSet';
-import Resource from '@/models/Resource';
-import View from '@/models/View';
 import JWTAuth from '@/http/middleware/jwtAuth';
+import TenancyMiddleware from '@/http/middleware/TenancyMiddleware';
 import {
   mapViewRolesToConditionals,
   mapFilterRolesToDynamicFilter,
@@ -36,6 +31,8 @@ export default {
     const router = express.Router();
 
     router.use(JWTAuth);
+    router.use(TenancyMiddleware);
+
     router.post('/',
       this.newAccount.validation,
       asyncMiddleware(this.newAccount.handler));
@@ -84,8 +81,12 @@ export default {
    */
   newAccount: {
     validation: [
-      check('name').exists().isLength({ min: 3 }).trim().escape(),
-      check('code').optional().isLength({ max: 10 }).trim().escape(),
+      check('name').exists().isLength({ min: 3 })
+        .trim()
+        .escape(),
+      check('code').optional().isLength({ max: 10 })
+        .trim()
+        .escape(),
       check('account_type_id').exists().isNumeric().toInt(),
       check('description').optional().trim().escape(),
     ],
@@ -98,6 +99,7 @@ export default {
         });
       }
       const form = { ...req.body };
+      const { AccountType, Account } = req.models;
 
       const foundAccountCodePromise = form.code
         ? Account.query().where('code', form.code) : null;
@@ -131,8 +133,12 @@ export default {
   editAccount: {
     validation: [
       param('id').exists().toInt(),
-      check('name').exists().isLength({ min: 3 }).trim().escape(),
-      check('code').exists().isLength({ max: 10 }).trim().escape(),
+      check('name').exists().isLength({ min: 3 })
+        .trim()
+        .escape(),
+      check('code').exists().isLength({ max: 10 })
+        .trim()
+        .escape(),
       check('account_type_id').exists().isNumeric().toInt(),
       check('description').optional().trim().escape(),
     ],
@@ -145,6 +151,7 @@ export default {
           code: 'validation_error', ...validationErrors,
         });
       }
+      const { Account, AccountType } = req.models;
       const form = { ...req.body };
       const account = await Account.query().findById(id);
 
@@ -185,6 +192,7 @@ export default {
     ],
     async handler(req, res) {
       const { id } = req.params;
+      const { Account } = req.models;
       const account = await Account.query().where('id', id).first();
 
       if (!account) {
@@ -203,6 +211,7 @@ export default {
     ],
     async handler(req, res) {
       const { id } = req.params;
+      const { Account, AccountTransaction } = req.models;
       const account = await Account.query().findById(id);
 
       if (!account) {
@@ -255,6 +264,8 @@ export default {
       if (filter.stringified_filter_roles) {
         filter.filter_roles = JSON.parse(filter.stringified_filter_roles);
       }
+
+      const { Resource, Account, View } = req.models;
       const errorReasons = [];
 
       const accountsResource = await Resource.query()
@@ -294,7 +305,7 @@ export default {
       }
 
       // View roles.
-      if (view && view.roles.length > 0) { 
+      if (view && view.roles.length > 0) {
         const viewFilter = new DynamicFilterViews(
           mapViewRolesToConditionals(view.roles),
           view.rolesLogicExpression,
@@ -349,6 +360,11 @@ export default {
     ],
     async handler(req, res) {
       const { id } = req.params;
+      const {
+        Account,
+        AccountTransaction,
+        AccountBalance,
+      } = req.models;
       const account = await Account.findById(id);
 
       if (!account) {
@@ -381,6 +397,7 @@ export default {
     ],
     async handler(req, res) {
       const { id } = req.params;
+      const { Account } = req.models;
       const account = await Account.findById(id);
 
       if (!account) {
@@ -403,6 +420,7 @@ export default {
     ],
     async handler(req, res) {
       const { id } = req.params;
+      const { Account } = req.models;
       const account = await Account.findById(id);
 
       if (!account) {
@@ -461,12 +479,14 @@ export default {
         });
       }
       const filter = { ids: [], ...req.query };
+      const { Account, AccountTransaction } = req.models;
+
       const accounts = await Account.query().onBuild((builder) => {
         if (filter.ids.length) {
           builder.whereIn('id', filter.ids);
         }
       });
-      const accountsIds = accounts.map(a => a.id);
+      const accountsIds = accounts.map((a) => a.id);
       const notFoundAccounts = difference(filter.ids, accountsIds);
 
       if (notFoundAccounts.length > 0) {

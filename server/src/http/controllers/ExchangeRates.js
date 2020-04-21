@@ -1,9 +1,13 @@
 import express from 'express';
-import { check, param, query, validationResult } from 'express-validator';
+import {
+  check,
+  param,
+  query,
+  validationResult,
+} from 'express-validator';
 import moment from 'moment';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
 import jwtAuth from '@/http/middleware/jwtAuth';
-import ExchangeRate from '@/models/ExchangeRate';
 
 export default {
   /**
@@ -53,11 +57,12 @@ export default {
         page_size: 10,
         ...req.query,
       };
+      const { ExchangeRate } = req.models;
       const exchangeRates = await ExchangeRate.query()
         .pagination(filter.page - 1, filter.page_size);
 
       return res.status(200).send({ exchange_rates: exchangeRates });
-    }
+    },
   },
 
   /**
@@ -77,7 +82,7 @@ export default {
           code: 'validation_error', ...validationErrors,
         });
       }
-
+      const { ExchangeRate } = req.models;
       const form = { ...req.body };
       const foundExchangeRate = await ExchangeRate.query()
         .where('currency_code', form.currency_code)
@@ -87,7 +92,7 @@ export default {
         return res.status(400).send({
           errors: [{ type: 'EXCHANGE.RATE.DATE.PERIOD.DEFINED', code: 200 }],
         });
-      }      
+      }
       await ExchangeRate.query().insert({
         ...form,
         date: moment(form.date).format('YYYY-MM-DD'),
@@ -116,6 +121,7 @@ export default {
       }
       const { id } = req.params;
       const form = { ...req.body };
+      const { ExchangeRate } = req.models;
 
       const foundExchangeRate = await ExchangeRate.query()
         .where('id', id);
@@ -148,19 +154,18 @@ export default {
           code: 'validation_error', ...validationErrors,
         });
       }
-      const { id } = req.params;  
-      const foundExchangeRate = await ExchangeRate.query()
-        .where('id', id);
+      const { id } = req.params;
+      const { ExchangeRate } = req.models;
+      const foundExchangeRate = await ExchangeRate.query().where('id', id);
 
       if (!foundExchangeRate.length) {
         return res.status(404).send({
           errors: [{ type: 'EXCHANGE.RATE.NOT.FOUND', code: 200 }],
         });
       }
-      await ExchangeRate.query()
-        .where('id', id).delete();
+      await ExchangeRate.query().where('id', id).delete();
 
       return res.status(200).send({ id });
-    }
+    },
   },
 }

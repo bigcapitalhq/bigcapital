@@ -1,9 +1,9 @@
 import { snakeCase } from 'lodash';
 import { Model } from 'objection';
 import path from 'path';
-import BaseModel from '@/models/Model';
+import TenantModel from '@/models/TenantModel';
 
-export default class ResourceField extends BaseModel {
+export default class ResourceField extends TenantModel {
   /**
    * Table name.
    */
@@ -51,15 +51,17 @@ export default class ResourceField extends BaseModel {
    * Relationship mapping.
    */
   static get relationMappings() {
+    const Resource = require('@/models/Resource');
+
     return {
       /**
        * Resource field may belongs to resource model.
        */
       resource: {
         relation: Model.BelongsToOneRelation,
-        modelBase: path.join(__dirname, 'Resource'),
+        modelClass: this.relationBindKnex(Resource.default),
         join: {
-          from: 'resource_fields.resource_id',
+          from: 'resource_fields.resourceId',
           to: 'resources.id',
         },
       },

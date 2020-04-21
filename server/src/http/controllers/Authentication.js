@@ -5,11 +5,18 @@ import path from 'path';
 import fs from 'fs';
 import Mustache from 'mustache';
 import jwt from 'jsonwebtoken';
-import asyncMiddleware from '../middleware/asyncMiddleware';
-import User from '@/models/User';
-import PasswordReset from '@/models/PasswordReset';
+import { pick } from 'lodash';
+import uniqid from 'uniqid';
+import Logger from '@/services/Logger';
+import asyncMiddleware from '@/http/middleware/asyncMiddleware';
+import SystemUser from '@/system/models/SystemUser';
 import mail from '@/services/mail';
 import { hashPassword } from '@/utils';
+import dbManager from '@/database/manager';
+import Tenant from '@/system/models/Tenant';
+import TenantUser from '@/models/TenantUser';
+import TenantsManager from '@/system/TenantsManager';
+import TenantModel from '@/models/TenantModel';
 
 export default {
   /**
@@ -21,6 +28,10 @@ export default {
     router.post('/login',
       this.login.validation,
       asyncMiddleware(this.login.handler));
+
+    router.post('/register',
+      this.register.validation,
+      asyncMiddleware(this.register.handler));
 
     router.post('/send_reset_password',
       this.sendResetPassword.validation,
@@ -49,12 +60,15 @@ export default {
           code: 'validation_error', ...validationErrors,
         });
       }
-      const { crediential, password } = req.body;
+      const form = { ...req.body };
       const { JWT_SECRET_KEY } = process.env;
 
-      const user = await User.query()
-        .where('email', crediential)
-        .orWhere('phone_number', crediential)
+      Logger.log('info', 'Someone trying to login.', { form });
+
+      const user = await SystemUser.query()
+        .withGraphFetched('tenant')
+        .where('email', form.crediential)
+        .orWhere('phone_number', form.crediential)
         .first();
 
       if (!user) {
@@ -62,7 +76,7 @@ export default {
           errors: [{ type: 'INVALID_DETAILS', code: 100 }],
         });
       }
-      if (!user.verifyPassword(password)) {
+      if (!user.verifyPassword(form.password)) {
         return res.boom.badRequest(null, {
           errors: [{ type: 'INVALID_DETAILS', code: 100 }],
         });
@@ -74,13 +88,86 @@ export default {
       }
       // user.update({ last_login_at: new Date() });
 
-      const token = jwt.sign({
-        email: user.email,
-        _id: user.id,
-      }, JWT_SECRET_KEY, {
-        expiresIn: '1d',
-      });
+      const token = jwt.sign(
+        { email: user.email, _id: user.id },
+        JWT_SECRET_KEY,
+        { expiresIn: '1d' },
+      );
+      Logger.log('info', 'Logging success.', { form });
+
       return res.status(200).send({ token, user });
+    },
+  },
+
+  /**
+   * Registers a new organization.
+   */
+  register: {
+    validation: [
+      check('organization_name').exists().trim().escape(),
+      check('first_name').exists().trim().escape(),
+      check('last_name').exists().trim().escape(),
+      check('email').exists().trim().escape(),
+      check('phone_number').exists().trim().escape(),
+      check('password').exists().trim().escape(),
+      check('country').exists().trim().escape(),
+    ],
+    async handler(req, res) {
+      const validationErrors = validationResult(req);
+
+      if (!validationErrors.isEmpty()) {
+        return res.boom.badData(null, {
+          code: 'validation_error', ...validationErrors,
+        });
+      }
+      const form = { ...req.body };
+      Logger.log('info', 'Someone trying to register.', { form });
+
+      const user = await SystemUser.query()
+        .where('email', form.email)
+        .orWhere('phone_number', form.phone_number)
+        .first();
+
+      if (user && user.phoneNumber === form.phone_number) {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'PHONE_NUMBER_EXISTS', code: 100 }],
+        });
+      }
+      if (user && user.email === form.email) {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'EMAIL_EXISTS', code: 200 }],
+        });
+      }
+      const organizationId = uniqid();
+      const tenantOrganization = await Tenant.query().insert({
+        organization_id: organizationId,
+      });
+
+      const hashedPassword = await hashPassword(form.password);
+      const userInsert = {
+        ...pick(form, ['first_name', 'last_name', 'email', 'phone_number']),
+        password: hashedPassword,
+        active: true,
+      };
+      const registeredUser = await SystemUser.query().insert({
+        ...userInsert,
+        tenant_id: tenantOrganization.id,
+      });
+      await dbManager.createDb(`bigcapital_tenant_${organizationId}`);
+
+      const tenantDb = TenantsManager.knexInstance(organizationId);
+      await tenantDb.migrate.latest();
+
+      TenantModel.knexBinded = tenantDb;
+
+      await TenantUser.bindKnex(tenantDb).query().insert({
+        ...userInsert,
+      });
+      Logger.log('info', 'New tenant has been created.', { organizationId });
+
+      return res.status(200).send({
+        organization_id: organizationId,
+      });
     },
   },
 

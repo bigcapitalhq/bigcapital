@@ -1,7 +1,7 @@
-import BaseModel from '@/models/Model';
+import TenantModel from '@/models/TenantModel';
 import Auth from './Auth';
 
-export default class Setting extends BaseModel {
+export default class Setting extends TenantModel {
   /**
    * Table name
    */

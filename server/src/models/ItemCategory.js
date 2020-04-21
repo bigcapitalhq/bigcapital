@@ -1,8 +1,8 @@
 import path from 'path';
 import { Model } from 'objection';
-import BaseModel from '@/models/Model';
+import TenantModel from '@/models/TenantModel';
 
-export default class ItemCategory extends BaseModel {
+export default class ItemCategory extends TenantModel {
   /**
    * Table name.
    */
@@ -22,7 +22,7 @@ export default class ItemCategory extends BaseModel {
        */
       items: {
         relation: Model.HasManyRelation,
-        modelClass: Item.default,
+        modelClass: this.relationBindKnex(Item.default),
         join: {
           from: 'items_categories.id',
           to: 'items.categoryId',

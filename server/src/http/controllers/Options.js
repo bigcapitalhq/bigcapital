@@ -2,7 +2,6 @@ import express from 'express';
 import { body, query, validationResult } from 'express-validator';
 import { pick } from 'lodash';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
-import Option from '@/models/Option';
 import jwtAuth from '@/http/middleware/jwtAuth';
 
 export default {
@@ -43,6 +42,7 @@ export default {
           code: 'VALIDATION_ERROR', ...validationErrors,
         });
       }
+      const { Option } = req.models;
       const form = { ...req.body };
       const optionsCollections = await Option.query();
 
@@ -53,7 +53,7 @@ export default {
         errorReasons.push({
           type: 'OPTIONS.KEY.NOT.DEFINED',
           code: 200,
-          keys: notDefinedOptions.map(o => ({ ...pick(o, ['key', 'group']) })),
+          keys: notDefinedOptions.map((o) => ({ ...pick(o, ['key', 'group']) })),
         });
       }
       if (errorReasons.length) {
@@ -84,6 +84,7 @@ export default {
           code: 'VALIDATION_ERROR', ...validationErrors,
         });
       }
+      const { Option } = req.models;
       const filter = { ...req.query };
       const options = await Option.query().onBuild((builder) => {
         if (filter.key) {
@@ -93,7 +94,6 @@ export default {
           builder.where('group', filter.group);
         }
       });
-      
       return res.status(200).send({ options: options.metadata });
     },
   },

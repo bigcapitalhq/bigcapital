@@ -1,6 +1,6 @@
 /* eslint-disable consistent-return */
 import jwt from 'jsonwebtoken';
-import User from '@/models/User';
+import SystemUser from '@/system/models/SystemUser';
 // import Auth from '@/models/Auth';
 
 const authMiddleware = (req, res, next) => {
@@ -25,7 +25,7 @@ const authMiddleware = (req, res, next) => {
         reject(error);
       } else {
         // eslint-disable-next-line no-underscore-dangle
-        req.user = await User.query().findById(decoded._id);
+        req.user = await SystemUser.query().findById(decoded._id);
         // Auth.setAuthenticatedUser(req.user);
 
         if (!req.user) {

@@ -3,7 +3,7 @@ import { Model } from 'objection';
 import BaseModel from '@/models/Model';
 // import PermissionsService from '@/services/PermissionsService';
 
-export default class User extends BaseModel {
+export default class TenantUser extends BaseModel {
   // ...PermissionsService
 
   static get virtualAttributes() {
@@ -26,7 +26,7 @@ export default class User extends BaseModel {
     return {
       roles: {
         relation: Model.ManyToManyRelation,
-        modelClass: Role.default,
+        modelClass: this.relationBindKnex(Role.default),
         join: {
           from: 'users.id',
           through: {

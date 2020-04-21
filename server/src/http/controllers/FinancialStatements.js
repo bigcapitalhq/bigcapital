@@ -3,10 +3,7 @@ import { query, oneOf, validationResult } from 'express-validator';
 import moment from 'moment';
 import { pick, difference, groupBy } from 'lodash';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
-import AccountTransaction from '@/models/AccountTransaction';
 import jwtAuth from '@/http/middleware/jwtAuth';
-import AccountType from '@/models/AccountType';
-import Account from '@/models/Account';
 import JournalPoster from '@/services/Accounting/JournalPoster';
 import { dateRangeCollection } from '@/utils';
 
@@ -89,6 +86,7 @@ export default {
           code: 'validation_error', ...validationErrors,
         });
       }
+      const { AccountTransaction } = req.models;
       const filter = {
         from_date: moment().startOf('year').format('YYYY-MM-DD'),
         to_date: moment().endOf('year').format('YYYY-MM-DD'),
@@ -119,9 +117,9 @@ export default {
 
       const formatNumber = formatNumberClosure(filter.number_format);
 
-      const journalGrouped = groupBy(accountsJournalEntries, (entry) => {
-        return `${entry.referenceId}-${entry.referenceType}`;
-      });
+      const journalGrouped = groupBy(accountsJournalEntries,
+        (entry) => `${entry.referenceId}-${entry.referenceType}`);
+
       const journal = Object.keys(journalGrouped).map((key) => {
         const transactionsGroup = journalGrouped[key];
 
@@ -169,6 +167,7 @@ export default {
           code: 'validation_error', ...validationErrors,
         });
       }
+      const { AccountTransaction, Account } = req.models;
       const filter = {
         from_date: moment().startOf('year').format('YYYY-MM-DD'),
         to_date: moment().endOf('year').format('YYYY-MM-DD'),
@@ -289,6 +288,7 @@ export default {
           code: 'validation_error', ...validationErrors,
         });
       }
+      const { Account, AccountType } = req.models;
       const filter = {
         display_columns_type: 'total',
         display_columns_by: '',
@@ -327,22 +327,20 @@ export default {
           filter.from_date, filter.to_date, comparatorDateType,
         ) : [];
 
-      const totalPeriods = (account) => {
+      const totalPeriods = (account) => ({
         // Gets the date range set from start to end date.
-        return {
-          total_periods: dateRangeSet.map((date) => {
-            const balance = journalEntries.getClosingBalance(account.id, date, comparatorDateType);
-            return {
-              date,
-              formatted_amount: balanceFormatter(balance),
-              amount: balance,
-            };
-          }),
-        };
-      };
+        total_periods: dateRangeSet.map((date) => {
+          const balance = journalEntries.getClosingBalance(account.id, date, comparatorDateType);
+          return {
+            date,
+            formatted_amount: balanceFormatter(balance),
+            amount: balance,
+          };
+        }),
+      });
 
-      const accountsMapper = (balanceSheetAccounts) => {
-        return balanceSheetAccounts.map((account) => {
+      const accountsMapper = (balanceSheetAccounts) => [
+        ...balanceSheetAccounts.map((account) => {
           // Calculates the closing balance to the given date.
           const closingBalance = journalEntries.getClosingBalance(account.id, filter.to_date);
 
@@ -358,8 +356,8 @@ export default {
               date: filter.to_date,
             },
           };
-        });
-      };
+        }),
+      ];
       // Retrieve all assets accounts.
       const assetsAccounts = accounts.filter((account) => (
         account.type.normal === 'debit'
@@ -414,6 +412,9 @@ export default {
           code: 'validation_error', ...validationErrors,
         });
       }
+      const {
+        Account,
+      } = req.models;
       const filter = {
         from_date: moment().startOf('year').format('YYYY-MM-DD'),
         to_date: moment().endOf('year').format('YYYY-MM-DD'),
@@ -490,6 +491,7 @@ export default {
           code: 'validation_error', ...validationErrors,
         });
       }
+      const { Account, AccountType } = req.models;
       const filter = {
         from_date: moment().startOf('year').format('YYYY-MM-DD'),
         to_date: moment().endOf('year').format('YYYY-MM-DD'),

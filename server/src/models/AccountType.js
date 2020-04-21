@@ -1,8 +1,8 @@
 // import path from 'path';
 import { Model } from 'objection';
-import BaseModel from '@/models/Model';
+import TenantModel from '@/models/TenantModel';
 
-export default class AccountType extends BaseModel {
+export default class AccountType extends TenantModel {
   /**
    * Table name
    */
@@ -22,7 +22,7 @@ export default class AccountType extends BaseModel {
        */
       accounts: {
         relation: Model.HasManyRelation,
-        modelClass: Account.default,
+        modelClass: this.relationBindKnex(Account.default),
         join: {
           from: 'account_types.id',
           to: 'accounts.accountTypeId',

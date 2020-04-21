@@ -1,4 +1,4 @@
-import { difference, intersection, pick } from 'lodash';
+import { difference, pick } from 'lodash';
 import express from 'express';
 import {
   check,
@@ -9,10 +9,6 @@ import {
 } from 'express-validator';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
 import jwtAuth from '@/http/middleware/jwtAuth';
-import Resource from '@/models/Resource';
-import View from '@/models/View';
-import ViewRole from '@/models/ViewRole';
-import ViewColumn from '@/models/ViewColumn';
 import {
   validateViewRoles,
 } from '@/lib/ViewRolesBuilder';
@@ -62,6 +58,7 @@ export default {
       ]),
     ],
     async handler(req, res) {
+      const { Resource, View } = req.models;
       const filter = { ...req.query };
 
       const resource = await Resource.query().onBuild((builder) => {
@@ -113,6 +110,7 @@ export default {
       param('view_id').exists().isNumeric().toInt(),
     ],
     async handler(req, res) {
+      const { View } = req.models;
       const { view_id: viewId } = req.params;
       const view = await View.query().findById(viewId);
 
@@ -161,6 +159,12 @@ export default {
           code: 'validation_error', ...validationErrors,
         });
       }
+      const {
+        Resource,
+        View,
+        ViewColumn,
+        ViewRole,
+      } = req.models;
       const form = { roles: [], ...req.body };
       const resource = await Resource.query().where('name', form.resource_name).first();
 
@@ -265,6 +269,9 @@ export default {
           code: 'validation_error', ...validationErrors,
         });
       }
+      const {
+        View, ViewRole, ViewColumn, Resource,
+      } = req.models;
       const view = await View.query().where('id', viewId)
         .withGraphFetched('roles.field')
         .withGraphFetched('columns')

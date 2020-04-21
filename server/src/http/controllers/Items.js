@@ -3,13 +3,6 @@ import { check, query, validationResult } from 'express-validator';
 import { difference } from 'lodash';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
 import jwtAuth from '@/http/middleware/jwtAuth';
-import Item from '@/models/Item';
-import Account from '@/models/Account';
-import ItemCategory from '@/models/ItemCategory';
-import Resource from '@/models/Resource';
-import ResourceField from '@/models/ResourceField';
-import Authorization from '@/http/middleware/authorization';
-import View from '@/models/View';
 import {
   mapViewRolesToConditionals,
   mapFilterRolesToDynamicFilter,
@@ -23,10 +16,11 @@ import {
 
 
 export default {
-
+  /**
+   * Router constructor.
+   */
   router() {
     const router = express.Router();
-    const permit = Authorization('items');
 
     router.use(jwtAuth);
 
@@ -35,17 +29,12 @@ export default {
       asyncMiddleware(this.editItem.handler));
 
     router.post('/',
-      // permit('create'),
       this.newItem.validation,
       asyncMiddleware(this.newItem.handler));
 
     router.delete('/:id',
       this.deleteItem.validation,
       asyncMiddleware(this.deleteItem.handler));
-
-    // router.get('/:id',
-    //   this.getCategory.validation,
-    //   asyncMiddleware(this.getCategory.handler));
 
     router.get('/',
       this.listItems.validation,
@@ -92,12 +81,19 @@ export default {
         custom_fields: [],
         ...req.body,
       };
+      const {
+        Account,
+        Resource,
+        ResourceField,
+        ItemCategory,
+        Item,
+      } = req.models;
       const errorReasons = [];
 
       const costAccountPromise = Account.query().findById(form.cost_account_id);
       const sellAccountPromise = Account.query().findById(form.sell_account_id);
-      const inventoryAccountPromise = (form.type === 'inventory') ? 
-        Account.query().findByid(form.inventory_account_id) : null;
+      const inventoryAccountPromise = (form.type === 'inventory')
+        ? Account.query().findByid(form.inventory_account_id) : null;
 
       const itemCategoryPromise = (form.category_id)
         ? ItemCategory.query().findById(form.category_id) : null;
@@ -108,9 +104,9 @@ export default {
 
         // Get resource id than get all resource fields.
         const resource = await Resource.where('name', 'items').fetch();
-        const fields = await ResourceField.query((query) => {
-          query.where('resource_id', resource.id);
-          query.whereIn('key', customFieldsKeys);
+        const fields = await ResourceField.query((builder) => {
+          builder.where('resource_id', resource.id);
+          builder.whereIn('key', customFieldsKeys);
         }).fetchAll();
 
         const storedFieldsKey = fields.map((f) => f.attributes.key);
@@ -186,18 +182,19 @@ export default {
           code: 'validation_error', ...validationErrors,
         });
       }
-
+      const { Account, Item, ItemCategory } = req.models;
       const { id } = req.params;
+
       const form = {
         custom_fields: [],
         ...req.body,
       };
       const item = await Item.query().findById(id);
-      
+
       if (!item) {
-        return res.boom.notFound(null, { errors: [
-          { type: 'ITEM.NOT.FOUND', code: 100 },
-        ]});
+        return res.boom.notFound(null, {
+          errors: [{ type: 'ITEM.NOT.FOUND', code: 100 }],
+        });
       }
       const errorReasons = [];
 
@@ -244,6 +241,7 @@ export default {
     validation: [],
     async handler(req, res) {
       const { id } = req.params;
+      const { Item } = req.models;
       const item = await Item.query().findById(id);
 
       if (!item) {
@@ -251,7 +249,6 @@ export default {
           errors: [{ type: 'ITEM_NOT_FOUND', code: 100 }],
         });
       }
-
       // Delete the fucking the given item id.
       await Item.query().findById(item.id).delete();
 
@@ -281,15 +278,16 @@ export default {
       }
       const errorReasons = [];
       const viewConditions = [];
+      const { Resource, Item, View } = req.models;
       const itemsResource = await Resource.query()
         .where('name', 'items')
         .withGraphFetched('fields')
         .first();
 
       if (!itemsResource) {
-        return res.status(400).send({ errors: [
-          {type: 'ITEMS_RESOURCE_NOT_FOUND', code: 200},
-        ]});
+        return res.status(400).send({
+          errors: [{ type: 'ITEMS_RESOURCE_NOT_FOUND', code: 200 }],
+        });
       }
       const filter = {
         column_sort_order: '',

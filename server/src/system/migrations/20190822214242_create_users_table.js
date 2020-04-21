@@ -11,7 +11,12 @@ exports.up = function (knex) {
     table.integer('role_id').unique();
     table.string('language');
     table.date('last_login_at');
+    table.integer('tenant_id').unsigned();
     table.timestamps();
+  }).then(() => {
+    // knex.seed.run({
+    //   specific: 'seed_users.js',
+    // })
   });
 };
 

@@ -36,7 +36,7 @@ export default {
   setExtraColumns(columns) {
     this.extraColumns = columns;
   },
- 
+
   /**
    * Metadata database query.
    * @param {Object} query -
@@ -117,7 +117,7 @@ export default {
       metadata.markAsDeleted = true;
     }
     this.shouldReload = true;
-  
+  },
 
   /**
    * Remove all meta data of the given group.

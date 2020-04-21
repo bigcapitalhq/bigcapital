@@ -3,8 +3,9 @@ import helmet from 'helmet';
 import boom from 'express-boom';
 import i18n from 'i18n';
 import '../config';
+import '@/database/objection';
 import routes from '@/http';
-import '@/models';
+
 
 const app = express();
 

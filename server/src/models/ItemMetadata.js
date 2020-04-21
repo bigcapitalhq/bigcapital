@@ -1,8 +1,7 @@
-import path from 'path';
 import { Model } from 'objection';
-import BaseModel from '@/models/Model';
+import TenantModel from '@/models/TenantModel';
 
-export default class ItemMetadata extends BaseModel {
+export default class ItemMetadata extends TenantModel {
   /**
    * Table name
    */
@@ -21,13 +20,15 @@ export default class ItemMetadata extends BaseModel {
    * Relationship mapping.
    */
   static get relationMappings() {
+    const Item = require('@/models/Item');
+
     return {
       /**
        * Item category may has many items.
        */
       items: {
         relation: Model.BelongsToOneRelation,
-        modelBase: path.join(__dirname, 'Item'),
+        modelBase: this.relationBindKnex(Item.default),
         join: {
           from: 'items_metadata.item_id',
           to: 'items.id',

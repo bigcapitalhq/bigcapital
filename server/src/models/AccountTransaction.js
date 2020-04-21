@@ -1,8 +1,8 @@
 import { Model } from 'objection';
 import moment from 'moment';
-import BaseModel from '@/models/Model';
+import TenantModel from '@/models/TenantModel';
 
-export default class AccountTransaction extends BaseModel {
+export default class AccountTransaction extends TenantModel {
   /**
    * Table name
    */
@@ -70,7 +70,7 @@ export default class AccountTransaction extends BaseModel {
     return {
       account: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Account.default,
+        modelClass: this.relationBindKnex(Account.default),
         join: {
           from: 'accounts_transactions.accountId',
           to: 'accounts.id',

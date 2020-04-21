@@ -1,7 +1,7 @@
 import { Model } from 'objection';
-import BaseModel from '@/models/Model';
+import TenantModel from '@/models/TenantModel';
 
-export default class ViewColumn extends BaseModel {
+export default class ViewColumn extends TenantModel {
   /**
    * Table name.
    */
@@ -29,9 +29,9 @@ export default class ViewColumn extends BaseModel {
        */
       field: {
         relation: Model.BelongsToOneRelation,
-        modelClass: ResourceField.default,
+        modelClass: this.relationBindKnex(ResourceField.default),
         join: {
-          from: 'view_columns.fieldId',
+          from: 'view_has_columns.fieldId',
           to: 'resource_fields.id',
         },
       },

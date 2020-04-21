@@ -2,11 +2,9 @@ import express from 'express';
 import {
   param,
   query,
-  validationResult,
 } from 'express-validator';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
 import jwtAuth from '@/http/middleware/jwtAuth';
-import Resource from '@/models/Resource';
 
 export default {
   /**
@@ -37,6 +35,7 @@ export default {
     ],
     async handler(req, res) {
       const { resource_slug: resourceSlug } = req.params;
+      const { Resource } = req.models;
 
       const resource = await Resource.query()
         .where('name', resourceSlug)
@@ -74,6 +73,7 @@ export default {
     ],
     async handler(req, res) {
       const { resource_slug: resourceSlug } = req.params;
+      const { Resource } = req.models;
 
       const resource = await Resource.query()
         .where('name', resourceSlug)

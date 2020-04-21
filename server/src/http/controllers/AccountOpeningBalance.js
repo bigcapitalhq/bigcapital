@@ -2,12 +2,10 @@ import express from 'express';
 import { check, validationResult, oneOf } from 'express-validator';
 import { difference } from 'lodash';
 import moment from 'moment';
-import asyncMiddleware from '../middleware/asyncMiddleware';
+import asyncMiddleware from '@/http/middleware/asyncMiddleware';
 import jwtAuth from '@/http/middleware/jwtAuth';
-import Account from '@/models/Account';
 import JournalPoster from '@/services/Accounting/JournalPoster';
 import JournalEntry from '@/services/Accounting/JournalEntry';
-import ManualJournal from '@/models/ManualJournal';
 
 export default {
   /**
@@ -57,11 +55,13 @@ export default {
       const date = moment(form.date).format('YYYY-MM-DD');
 
       const accountsIds = accounts.map((account) => account.id);
+
+      const { Account, ManualJournal } = req.models;
       const storedAccounts = await Account.query()
         .select(['id']).whereIn('id', accountsIds)
         .withGraphFetched('type');
 
-      const accountsCollection = new Map(storedAccounts.map(i => [i.id, i]));
+      const accountsCollection = new Map(storedAccounts.map((i) => [i.id, i]));
 
       // Get the stored accounts Ids and difference with submit accounts.
       const accountsStoredIds = storedAccounts.map((account) => account.id);

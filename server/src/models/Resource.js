@@ -1,8 +1,7 @@
-import path from 'path';
 import { Model } from 'objection';
-import BaseModel from '@/models/Model';
+import TenantModel from '@/models/TenantModel';
 
-export default class Resource extends BaseModel {
+export default class Resource extends TenantModel {
   /**
    * Table name.
    */
@@ -31,7 +30,7 @@ export default class Resource extends BaseModel {
        */
       views: {
         relation: Model.HasManyRelation,
-        modelClass: View.default,
+        modelClass: this.relationBindKnex(View.default),
         join: {
           from: 'resources.id',
           to: 'views.resourceId',
@@ -43,7 +42,7 @@ export default class Resource extends BaseModel {
        */
       fields: {
         relation: Model.HasManyRelation,
-        modelClass: ResourceField.default,
+        modelClass: this.relationBindKnex(ResourceField.default),
         join: {
           from: 'resources.id',
           to: 'resource_fields.resourceId',
@@ -55,7 +54,7 @@ export default class Resource extends BaseModel {
        */
       permissions: {
         relation: Model.ManyToManyRelation,
-        modelClass: Permission.default,
+        modelClass: this.relationBindKnex(Permission.default),
         join: {
           from: 'resources.id',
           through: {

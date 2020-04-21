@@ -1,7 +1,7 @@
 import { Model } from 'objection';
-import BaseModel from '@/models/Model';
+import TenantModel from '@/models/TenantModel';
 
-export default class AccountBalance extends BaseModel {
+export default class AccountBalance extends TenantModel {
   /**
    * Table name
    */
@@ -18,9 +18,9 @@ export default class AccountBalance extends BaseModel {
     return {
       account: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Account.default,
+        modelClass: this.relationBindKnex(Account.default),
         join: {
-          from: 'account_balance.account_id',
+          from: 'account_balances.account_id',
           to: 'accounts.id',
         },
       },

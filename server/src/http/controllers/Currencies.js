@@ -1,7 +1,6 @@
 import express from 'express';
 import { check, param, validationResult } from 'express-validator';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
-import Currency from '@/models/Currency';
 import jwtAuth from '@/http/middleware/jwtAuth';
 
 export default {
@@ -17,7 +16,7 @@ export default {
     router.post('/',
       this.newCurrency.validation,
       asyncMiddleware(this.newCurrency.handler));
-    
+
     router.post('/:id',
       this.editCurrency.validation,
       asyncMiddleware(this.editCurrency.handler));
@@ -35,6 +34,7 @@ export default {
   all: {
     validation: [],
     async handler(req, res) {
+      const { Currency } = req.models;
       const currencies = await Currency.query();
 
       return res.status(200).send({
@@ -59,6 +59,7 @@ export default {
         });
       }
       const form = { ...req.body };
+      const { Currency } = req.models;
 
       const foundCurrency = await Currency.query()
         .where('currency_code', form.currency_code);
@@ -89,6 +90,7 @@ export default {
           code: 'validation_error', ...validationErrors,
         });
       }
+      const { Currency } = req.models;
       const { currency_code: currencyCode } = req.params;
 
       await Currency.query()
@@ -115,23 +117,19 @@ export default {
       }
       const form = { ...req.body };
       const { id } = req.params;
+      const { Currency } = req.models;
 
       const foundCurrency = await Currency.query()
-        .where('currency_code', form.currency_code)
-        .whereNot('id', id);
+        .where('currency_code', form.currency_code).whereNot('id', id);
 
       if (foundCurrency.length > 0) {
         return res.status(400).send({
           errors: [{ type: 'CURRENCY.CODE.ALREADY.EXISTS', code: 100 }],
         });
       }
-      await Currency.query()
-        .where('id', id)
-        .update({ ...form });
+      await Currency.query().where('id', id).update({ ...form });
 
-      return res.status(200).send({
-        currency: { ...form },
-      });
+      return res.status(200).send({ currency: { ...form } });
     },
   },
 };

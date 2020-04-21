@@ -1,7 +1,7 @@
 import { Model } from 'objection';
-import BaseModel from '@/models/Model';
+import TenantModel from '@/models/TenantModel';
 
-export default class Role extends BaseModel {
+export default class Role extends TenantModel {
   /**
    * Table name of Role model.
    * @type {String}
@@ -23,7 +23,7 @@ export default class Role extends BaseModel {
   static get relationMappings() {
     const Permission = require('@/models/Permission');
     const Resource = require('@/models/Resource');
-    const User = require('@/models/User');
+    const User = require('@/models/TenantUser');
     const ResourceField = require('@/models/ResourceField');
 
     return {
@@ -32,7 +32,7 @@ export default class Role extends BaseModel {
        */
       permissions: {
         relation: Model.ManyToManyRelation,
-        modelClass: Permission.default,
+        modelClass: Permission.default.bindKnex(this.knexBinded),
         join: {
           from: 'roles.id',
           through: {
@@ -48,7 +48,7 @@ export default class Role extends BaseModel {
        */
       resources: {
         relation: Model.ManyToManyRelation,
-        modelClass: Resource.default,
+        modelClass: Resource.default.bindKnex(this.knexBinded),
         join: {
           from: 'roles.id',
           through: {
@@ -64,11 +64,11 @@ export default class Role extends BaseModel {
        */
       field: {
         relation: Model.BelongsToOneRelation,
-        modelClass: ResourceField.default,
+        modelClass: ResourceField.default.bindKnex(this.knexBinded),
         join: {
           from: 'roles.fieldId',
           to: 'resource_fields.id',
-        }
+        },
       },
 
       /**
@@ -76,7 +76,7 @@ export default class Role extends BaseModel {
        */
       users: {
         relation: Model.ManyToManyRelation,
-        modelClass: User.default,
+        modelClass: User.default.bindKnex(this.knexBinded),
         join: {
           from: 'roles.id',
           through: {

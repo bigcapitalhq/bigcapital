@@ -1,6 +1,6 @@
-import BaseModel from '@/models/Model';
+import TenantModel from '@/models/Model';
 
-export default class Budget extends BaseModel {
+export default class Budget extends TenantModel {
   /**
    * Table name
    */

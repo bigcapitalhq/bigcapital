@@ -1,7 +1,7 @@
 import { Model } from 'objection';
-import BaseModel from '@/models/Model';
+import TenantModel from '@/models/TenantModel';
 
-export default class ViewRole extends BaseModel {
+export default class ViewRole extends TenantModel {
 
   /**
    * Virtual attributes.
@@ -43,7 +43,7 @@ export default class ViewRole extends BaseModel {
        */
       view: {
         relation: Model.BelongsToOneRelation,
-        modelClass: View.default,
+        modelClass: this.relationBindKnex(View.default),
         join: {
           from: 'view_roles.viewId',
           to: 'views.id',
@@ -55,7 +55,7 @@ export default class ViewRole extends BaseModel {
        */
       field: {
         relation: Model.BelongsToOneRelation,
-        modelClass: ResourceField.default,
+        modelClass: this.relationBindKnex(ResourceField.default),
         join: {
           from: 'view_roles.fieldId',
           to: 'resource_fields.id',

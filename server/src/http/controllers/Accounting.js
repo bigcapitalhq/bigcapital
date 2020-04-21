@@ -1,16 +1,11 @@
-import { check, query, oneOf, validationResult, param } from 'express-validator';
+import { check, query, validationResult, param } from 'express-validator';
 import express from 'express';
 import { difference } from 'lodash';
 import moment from 'moment';
-import Account from '@/models/Account';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
 import JWTAuth from '@/http/middleware/jwtAuth';
 import JournalPoster from '@/services/Accounting/JournalPoster';
 import JournalEntry from '@/services/Accounting/JournalEntry';
-import ManualJournal from '@/models/JournalEntry';
-import AccountTransaction from '@/models/AccountTransaction';
-import Resource from '@/models/Resource';
-import View from '@/models/View';
 import {
   mapViewRolesToConditionals,
   mapFilterRolesToDynamicFilter,
@@ -55,6 +50,10 @@ export default {
       this.deleteManualJournal.validation,
       asyncMiddleware(this.deleteManualJournal.handler));
 
+    router.delete('/manual-journals',
+      this.deleteBulkManualJournals.validation,
+      asyncMiddleware(this.deleteBulkManualJournals.handler));
+
     router.post('/recurring-journal-entries',
       this.recurringJournalEntries.validation,
       asyncMiddleware(this.recurringJournalEntries.handler));
@@ -91,6 +90,7 @@ export default {
       if (filter.stringified_filter_roles) {
         filter.filter_roles = JSON.parse(filter.stringified_filter_roles);
       }
+      const { Resource, View, ManualJournal } = req.models;
 
       const errorReasons = [];
       const manualJournalsResource = await Resource.query()
@@ -200,6 +200,8 @@ export default {
         reference: '',
         ...req.body,
       };
+      const { ManualJournal, Account } = req.models;
+
       let totalCredit = 0;
       let totalDebit = 0;
 
@@ -341,6 +343,10 @@ export default {
         ...req.body,
       };
       const { id } = req.params;
+      const {
+        ManualJournal, AccountTransaction, Account,
+      } = req.models;
+
       const manualJournal = await ManualJournal.query().where('id', id).first();
 
       if (!manualJournal) {
@@ -456,6 +462,11 @@ export default {
           code: 'validation_error', ...validationErrors,
         });
       }
+      const {
+        ManualJournal,
+        AccountTransaction,
+      } = req.models;
+
       const { id } = req.params;
       const manualJournal = await ManualJournal.query()
         .where('id', id).first();
@@ -508,6 +519,10 @@ export default {
           code: 'validation_error', ...validationErrors,
         });
       }
+      const {
+        ManualJournal, AccountTransaction,
+      } = req.models;
+
       const { id } = req.params;
       const manualJournal = await ManualJournal.query()
         .where('id', id).first();
@@ -549,6 +564,9 @@ export default {
         });
       }
       const { id } = req.params;
+      const {
+        ManualJournal, AccountTransaction,
+      } = req.models;
       const manualJournal = await ManualJournal.query()
         .where('id', id).first();
 
@@ -614,6 +632,7 @@ export default {
       }
       const errorReasons = [];
       const form = { ...req.body };
+      const { Account } = req.models;
 
       const foundAccounts = await Account.query()
         .where('id', form.credit_account_id)
@@ -642,4 +661,54 @@ export default {
       return res.status(200).send();
     },
   },
+
+
+  /**
+   * Deletes bulk manual journals.
+   */
+  deleteBulkManualJournals: {
+    validation: [
+      query('ids').isArray({ min: 2 }),
+      query('ids.*').isNumeric().toInt(),
+    ],
+    async handler(req, res) {
+      const validationErrors = validationResult(req);
+
+      if (!validationErrors.isEmpty()) {
+        return res.boom.badData(null, {
+          code: 'validation_error', ...validationErrors,
+        });
+      }
+      const filter = { ...req.query };
+      const { ManualJournal, AccountTransaction } = req.models;
+
+      const manualJournals = await ManualJournal.query()
+        .whereIn('id', filter.ids);
+
+      const notFoundManualJournals = difference(filter.ids, manualJournals.map(m => m.id));
+
+      if (notFoundManualJournals.length > 0) {
+        return res.status(404).send({
+          errors: [{ type: 'MANUAL.JOURNAL.NOT.FOUND', code: 200 }],
+        });
+      }
+      const transactions = await AccountTransaction.query()
+        .whereIn('reference_type', ['Journal', 'ManualJournal'])
+        .whereIn('reference_id', filter.ids);
+
+      const journal = new JournalPoster();
+
+      journal.loadEntries(transactions);
+      journal.removeEntries();
+
+      await ManualJournal.query()
+        .whereIn('id', filter.ids).delete();
+
+      await Promise.all([
+        journal.deleteEntries(),
+        journal.saveBalance(),
+      ]);
+      return res.status(200).send({ ids: filter.ids });
+    },
+  }
 };

@@ -1,8 +1,7 @@
-import path from 'path';
 import { Model } from 'objection';
-import BaseModel from '@/models/Model';
+import TenantModel from '@/models/TenantModel';
 
-export default class View extends BaseModel {
+export default class View extends TenantModel {
   /**
    * Table name.
    */
@@ -24,7 +23,7 @@ export default class View extends BaseModel {
        */
       resource: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Resource.default,
+        modelClass: this.relationBindKnex(Resource.default),
         join: {
           from: 'views.resourceId',
           to: 'resources.id',
@@ -36,7 +35,7 @@ export default class View extends BaseModel {
        */
       columns: {
         relation: Model.HasManyRelation,
-        modelClass: ViewColumn.default,
+        modelClass: this.relationBindKnex(ViewColumn.default),
         join: {
           from: 'views.id',
           to: 'view_has_columns.viewId',
@@ -48,7 +47,7 @@ export default class View extends BaseModel {
        */
       roles: {
         relation: Model.HasManyRelation,
-        modelClass: ViewRole.default,
+        modelClass: this.relationBindKnex(ViewRole.default),
         join: {
           from: 'views.id',
           to: 'view_roles.viewId',

@@ -1,12 +1,13 @@
 /* eslint-disable global-require */
 import { Model } from 'objection';
 import { flatten } from 'lodash';
-import BaseModel from '@/models/Model';
+import TenantModel from '@/models/TenantModel';
 import {
   buildFilterQuery,
   buildSortColumnQuery,
 } from '@/lib/ViewRolesBuilder';
-export default class Account extends BaseModel {
+
+export default class Account extends TenantModel {
   /**
    * Table name
    */
@@ -36,7 +37,7 @@ export default class Account extends BaseModel {
       },
       sortColumnBuilder(query, columnKey, direction) {
         buildSortColumnQuery(Account.tableName, columnKey, direction)(query);
-      }
+      },
     };
   }
 
@@ -54,7 +55,7 @@ export default class Account extends BaseModel {
        */
       type: {
         relation: Model.BelongsToOneRelation,
-        modelClass: AccountType.default,
+        modelClass: this.relationBindKnex(AccountType.default),
         join: {
           from: 'accounts.accountTypeId',
           to: 'account_types.id',
@@ -66,7 +67,7 @@ export default class Account extends BaseModel {
        */
       balance: {
         relation: Model.HasOneRelation,
-        modelClass: AccountBalance.default,
+        modelClass: this.relationBindKnex(AccountBalance.default),
         join: {
           from: 'accounts.id',
           to: 'account_balances.accountId',
@@ -78,7 +79,7 @@ export default class Account extends BaseModel {
        */
       transactions: {
         relation: Model.HasManyRelation,
-        modelClass: AccountTransaction.default,
+        modelClass: this.relationBindKnex(AccountTransaction.default),
         join: {
           from: 'accounts.id',
           to: 'accounts_transactions.accountId',

@@ -8,14 +8,9 @@ import {
 import moment from 'moment';
 import { difference, chain, omit } from 'lodash';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
-import Expense from '@/models/Expense';
-import Account from '@/models/Account';
 import JournalPoster from '@/services/Accounting/JournalPoster';
 import JournalEntry from '@/services/Accounting/JournalEntry';
 import JWTAuth from '@/http/middleware/jwtAuth';
-import AccountTransaction from '@/models/AccountTransaction';
-import View from '@/models/View';
-import Resource from '../../models/Resource';
 import ResourceCustomFieldRepository from '@/services/CustomFields/ResourceCustomFieldRepository';
 import {
   validateViewRoles,
@@ -92,6 +87,7 @@ export default {
         custom_fields: [],
         ...req.body,
       };
+      const { Account, Expense } = req.models;
       // Convert the date to the general format.
       form.date = moment(form.date).format('YYYY-MM-DD');
 
@@ -174,6 +170,7 @@ export default {
           code: 'validation_error', ...validationErrors,
         });
       }
+      const { Account, Expense } = req.models;
       const form = { ...req.body };
       const errorReasons = [];
 
@@ -268,6 +265,7 @@ export default {
       }
 
       const { id } = req.params;
+      const { Expense, AccountTransaction } = req.models;
       const errorReasons = [];
       const expense = await Expense.query().findById(id);
 
@@ -277,7 +275,6 @@ export default {
       if (errorReasons.length > 0) {
         return res.status(400).send({ errors: errorReasons });
       }
-
       if (expense.published) {
         errorReasons.push({ type: 'EXPENSE.ALREADY.PUBLISHED', code: 200 });
       }
@@ -337,6 +334,7 @@ export default {
         page: 1,
         ...req.query,
       };
+      const { Resource, View, Expense } = req.models;
       const errorReasons = [];
       const expenseResource = await Resource.query().where('name', 'expenses').first();
 
@@ -364,7 +362,7 @@ export default {
         viewConditionals = mapViewRolesToConditionals(view.viewRoles);
 
         if (!validateViewRoles(viewConditionals, view.rolesLogicExpression)) {
-          errorReasons.push({ type: 'VIEW.LOGIC.EXPRESSION.INVALID', code: 400 })
+          errorReasons.push({ type: 'VIEW.LOGIC.EXPRESSION.INVALID', code: 400 });
         }
       }
       if (!view && filter.custom_view_id) {
@@ -391,7 +389,7 @@ export default {
 
       return res.status(200).send({
         ...(view) ? {
-          customViewId: view.id, 
+          customViewId: view.id,
           viewColumns: view.columns,
           viewConditionals,
         } : {},
@@ -416,6 +414,7 @@ export default {
         });
       }
       const { id } = req.params;
+      const { Expense, AccountTransaction } = req.models;
       const expenseTransaction = await Expense.query().findById(id);
 
       if (!expenseTransaction) {
@@ -463,6 +462,7 @@ export default {
         });
       }
       const { id } = req.params;
+      const { Expense } = req.models;
       const expenseTransaction = await Expense.query().findById(id);
 
       if (!expenseTransaction) {
@@ -489,6 +489,7 @@ export default {
         });
       }
       const { id } = req.params;
+      const { Expense } = req.models;
       const expenseTransaction = await Expense.query().findById(id);
 
       if (!expenseTransaction) {

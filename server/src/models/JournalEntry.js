@@ -1,6 +1,6 @@
-import BaseModel from '@/models/Model';
+import TenantModel from '@/models/TenantModel';
 
-export default class JournalEntry extends BaseModel {
+export default class JournalEntry extends TenantModel {
   /**
    * Table name.
    */

@@ -1,9 +1,18 @@
 import { Model } from 'objection';
-import {transform, snakeCase} from 'lodash';
-import {mapKeysDeep} from '@/utils';
+import { snakeCase } from 'lodash';
+import { mapKeysDeep } from '@/utils';
 import PaginationQueryBuilder from '@/models/Pagination';
 
 export default class ModelBase extends Model {
+
+  static get knexBinded() {
+    return this.knexBindInstance;
+  }
+
+  static set knexBinded(knex) {
+    this.knexBindInstance = knex;
+  }
+
   static get collection() {
     return Array;
   }
@@ -22,11 +31,14 @@ export default class ModelBase extends Model {
       return snakeCase(key);
     });
     const parsedJson = super.$formatJson(transformed, opt);
-
     return parsedJson;
   }
 
   static get QueryBuilder() {
     return PaginationQueryBuilder;
+  }
+
+  static relationBindKnex(model) {
+    return this.knexBinded ? model.bindKnex(this.knexBinded) : model;
   }
 }
