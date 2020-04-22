@@ -14,6 +14,7 @@ import financialStatements from './financialStatement/financialStatements.types'
 import itemCategories from './itemCategories/itemsCategory.type';
 import settings from './settings/settings.type';
 import search from './search/search.type';
+import register from './registers/register.type';
 
 export default {
   ...authentication,
@@ -32,4 +33,5 @@ export default {
   ...settings,
   ...accounting,
   ...search,
+  ...register,
 };
