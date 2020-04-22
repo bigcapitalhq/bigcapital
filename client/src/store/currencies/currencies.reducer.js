@@ -1,18 +1,22 @@
-import {createReducer} from '@reduxjs/toolkit'
+import { createReducer } from '@reduxjs/toolkit';
 import t from 'store/types';
 
 const initialState = {
-  all: [],
-  registered: [],
+  preferences: {
+    currencies: [],
+  },
 };
 
 export default createReducer(initialState, {
   [t.CURRENCIES_REGISTERED_SET]: (state, action) => {
-    state.registered = action.currencies;
-  },
+    const _currencies = {};
 
-  [t.CURRENCIES_ALL_SET]: (state, action) => {
-    state.all = action.currencies;
+    action.currencies.forEach((currency) => {
+      _currencies[currency.currency_code] = currency;
+    });
+    state.preferences.currencies = {
+      ...state.preferences.currencies,
+      ..._currencies,
+    };
   },
 });
-
