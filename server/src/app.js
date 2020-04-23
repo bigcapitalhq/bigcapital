@@ -12,19 +12,13 @@ global.rootPath = rootPath.path;
 
 const app = express();
 
-// i18n.configure({
-//   // setup some locales - other locales default to en silently
-//   locales: ['en'],
-
-//   // sets a custom cookie name to parse locale settings from.
-//   cookie: 'yourcookiename',
-
-//   // where to store json files - defaults to './locales'
-//   directory: `${__dirname}/resources/locale`,
-// });
+i18n.configure({
+  locales: ['en'],
+  directory: `${__dirname}/resources/locale`,
+});
 
 // i18n init parses req for language headers, cookies, etc.
-// app.use(i18n.init);
+app.use(i18n.init);
 
 // Express configuration
 app.set('port', process.env.PORT || 3000);
@@ -34,7 +28,6 @@ app.use(boom());
 app.use(express.json());
 app.use(fileUpload({
   createParentPath: true,
-  // safeFileNames: true,
 }));
 
 routes(app);

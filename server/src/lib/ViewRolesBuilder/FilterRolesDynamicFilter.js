@@ -7,8 +7,8 @@ import {
 export default class ViewRolesDynamicFilter extends DynamicFilterRoleAbstructor {
   /**
    * Constructor method.
-   * @param {*} filterRoles 
-   * @param {*} logicExpression 
+   * @param {*} filterRoles -
+   * @param {*} logicExpression -
    */
   constructor(filterRoles, logicExpression) {
     super();

@@ -147,11 +147,11 @@ export default {
       const hashedPassword = await hashPassword(form.password);
       const userInsert = {
         ...pick(form, ['first_name', 'last_name', 'email', 'phone_number']),
-        password: hashedPassword,
         active: true,
       };
       const registeredUser = await SystemUser.query().insert({
         ...userInsert,
+        password: hashedPassword,
         tenant_id: tenantOrganization.id,
       });
       await dbManager.createDb(`bigcapital_tenant_${organizationId}`);
@@ -225,6 +225,7 @@ export default {
       mail.sendMail(mailOptions, (error) => {
         if (error) {
           Logger.log('error', 'Failed send reset password mail', { error, form });
+          return;
         }
         Logger.log('info', 'User has been sent reset password email successfuly.', { form });
       });
@@ -253,6 +254,7 @@ export default {
           code: 'validation_error', ...validationErrors,
         });
       }
+      Logger.log('info', 'User trying to reset password.');
       const { token } = req.params;
       const { password } = req.body;
 
@@ -284,6 +286,7 @@ export default {
 
       // Delete the reset password token.
       await PasswordReset.query().where('token', token).delete();
+      Logger.log('info', 'User password has been reset successfully.');
 
       return res.status(200).send({});
     },
