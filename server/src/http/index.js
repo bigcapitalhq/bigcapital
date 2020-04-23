@@ -25,6 +25,7 @@ import Resources from './controllers/Resources';
 import ExchangeRates from '@/http/controllers/ExchangeRates';
 // import SalesReports from '@/http/controllers/SalesReports';
 // import PurchasesReports from '@/http/controllers/PurchasesReports';
+import Media from '@/http/controllers/Media';
 
 export default (app) => {
   // app.use('/api/oauth2', OAuth2.router());
@@ -51,6 +52,7 @@ export default (app) => {
   // app.use('/api/budget', Budget.router());
   app.use('/api/resources', Resources.router());
   app.use('/api/exchange_rates', ExchangeRates.router());
+  app.use('/api/media', Media.router());
   // app.use('/api/currency_adjustment', CurrencyAdjustment.router());
   // app.use('/api/reports/sales', SalesReports.router());
   // app.use('/api/reports/purchases', PurchasesReports.router());

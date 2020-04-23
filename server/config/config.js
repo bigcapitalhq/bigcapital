@@ -22,4 +22,11 @@ module.exports = {
     superUser: 'root',
     superPassword: '123123123',
   },
+  mail: {
+    host: 'smtp.mailtrap.io',
+    port: 587,
+    secure: false,
+    username: '842f331d3dc005',
+    password: '172f97b34f1a17',
+  }
 };

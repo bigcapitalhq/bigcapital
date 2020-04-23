@@ -147,11 +147,11 @@ export default {
       const hashedPassword = await hashPassword(form.password);
       const userInsert = {
         ...pick(form, ['first_name', 'last_name', 'email', 'phone_number']),
-        password: hashedPassword,
         active: true,
       };
       const registeredUser = await SystemUser.query().insert({
         ...userInsert,
+        password: hashedPassword,
         tenant_id: tenantOrganization.id,
       });
       await dbManager.createDb(`bigcapital_tenant_${organizationId}`);
