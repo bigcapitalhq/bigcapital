@@ -2,6 +2,11 @@ import React, { useEffect, useMemo } from 'react';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { useIntl } from 'react-intl';
+import ErrorMessage from 'components/ErrorMessage';
+import AppToaster from 'components/AppToaster';
+import { compose } from 'utils';
+import InviteFormConnect from 'connectors/InviteForm.connect';
+import { useParams } from 'react-router-dom';
 import {
   Button,
   InputGroup,
@@ -10,56 +15,54 @@ import {
   HTMLSelect,
 } from '@blueprintjs/core';
 
-import RegisterFromConnect from 'connectors/RegisterForm.connect';
-import ErrorMessage from 'components/ErrorMessage';
-import AppToaster from 'components/AppToaster';
-import { compose } from 'utils';
-
-function Register({ requestSubmitRegister }) {
+function Invite({ requestSubmitInvite }) {
   const intl = useIntl();
+  let params = useParams('accept/:token');
+
+  const { token } = params;
 
   const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
-  const Country = useMemo(
+  const language = useMemo(
     () => [
       { value: null, label: 'Select Country' },
-      { value: 'libya', label: 'Libya' },
+      { value: 'Arabic', label: 'Arabic' },
+      { value: 'English', label: 'English' },
     ],
     []
   );
-
   const ValidationSchema = Yup.object().shape({
-    organization_name: Yup.string().required(
-      intl.formatMessage({ id: 'required' })
-    ),
     first_name: Yup.string().required(intl.formatMessage({ id: 'required' })),
 
     last_name: Yup.string().required(intl.formatMessage({ id: 'required' })),
+
     email: Yup.string()
       .email()
       .required(intl.formatMessage({ id: 'required' })),
     phone_number: Yup.string()
       .matches(phoneRegExp)
       .required(intl.formatMessage({ id: 'required' })),
+    language: Yup.string().required(
+      intl.formatMessage({
+        id: 'required',
+      })
+    ),
     password: Yup.string()
-      .min(4, 'Password has to be longer than 8 characters!')
+      .min(4, 'Password has to be longer than 4 characters!')
       .required('Password is required!'),
-    country: Yup.string().required(intl.formatMessage({ id: 'required' })),
   });
 
   const initialValues = useMemo(
     () => ({
-      organization_name: '',
       first_name: '',
       last_name: '',
       email: '',
       phone_number: '',
+      language: '',
       password: '',
-      country: '',
     }),
     []
   );
-
   const formik = useFormik({
     enableReinitialize: true,
     validationSchema: ValidationSchema,
@@ -67,7 +70,7 @@ function Register({ requestSubmitRegister }) {
       ...initialValues,
     },
     onSubmit: (values, { setSubmitting }) => {
-      requestSubmitRegister(values)
+      requestSubmitInvite(values, token)
         .then((response) => {
           AppToaster.show({
             message: 'success',
@@ -84,29 +87,8 @@ function Register({ requestSubmitRegister }) {
   const requiredSpan = useMemo(() => <span class='required'>*</span>, []);
 
   return (
-    <div className={'register-form'}>
+    <div className={'invite-form'}>
       <form onSubmit={formik.handleSubmit}>
-        <FormGroup
-          label={'Organization Name'}
-          labelInfo={requiredSpan}
-          className={'form-group--name'}
-          intent={
-            errors.organization_name &&
-            touched.organization_name &&
-            Intent.DANGER
-          }
-          helperText={<ErrorMessage name={'organization_name'} {...formik} />}
-        >
-          <InputGroup
-            intent={
-              errors.organization_name &&
-              touched.organization_name &&
-              Intent.DANGER
-            }
-            {...formik.getFieldProps('organization_name')}
-          />
-        </FormGroup>
-
         <FormGroup
           label={'First Name'}
           labelInfo={requiredSpan}
@@ -133,20 +115,6 @@ function Register({ requestSubmitRegister }) {
         </FormGroup>
 
         <FormGroup
-          label={'Country'}
-          labelInfo={requiredSpan}
-          className={'form-group--country'}
-          intent={errors.country && touched.country && Intent.DANGER}
-          helperText={<ErrorMessage name={'country'} {...formik} />}
-        >
-          <HTMLSelect
-            fill={true}
-            options={Country}
-            {...formik.getFieldProps('country')}
-          />
-        </FormGroup>
-
-        <FormGroup
           label={'Phone Number'}
           labelInfo={requiredSpan}
           className={'form-group--phone_number'}
@@ -160,6 +128,21 @@ function Register({ requestSubmitRegister }) {
             {...formik.getFieldProps('phone_number')}
           />
         </FormGroup>
+
+        <FormGroup
+          label={'Language'}
+          labelInfo={requiredSpan}
+          className={'form-group--language'}
+          intent={errors.language && touched.language && Intent.DANGER}
+          helperText={<ErrorMessage name={'language'} {...formik} />}
+        >
+          <HTMLSelect
+            fill={true}
+            options={language}
+            {...formik.getFieldProps('language')}
+          />
+        </FormGroup>
+
         <FormGroup
           label={'Email'}
           labelInfo={requiredSpan}
@@ -172,7 +155,6 @@ function Register({ requestSubmitRegister }) {
             {...formik.getFieldProps('email')}
           />
         </FormGroup>
-
         <FormGroup
           label={'Password'}
           labelInfo={requiredSpan}
@@ -190,7 +172,7 @@ function Register({ requestSubmitRegister }) {
 
         <div class='form__floating-footer'>
           <Button intent={Intent.PRIMARY} type='submit'>
-            Register
+            Invite
           </Button>
         </div>
       </form>
@@ -198,4 +180,4 @@ function Register({ requestSubmitRegister }) {
   );
 }
 
-export default compose(RegisterFromConnect)(Register);
+export default compose(InviteFormConnect)(Invite);
