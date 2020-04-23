@@ -1,9 +1,9 @@
 import { mixin } from 'objection';
-import BaseModel from '@/models/Model';
+import TenantModel from '@/models/TenantModel';
 import MetableCollection from '@/lib/Metable/MetableCollection';
 import definedOptions from '@/data/options';
 
-export default class Option extends mixin(BaseModel, [mixin]) {
+export default class Option extends mixin(TenantModel, [mixin]) {
   /**
    * Table name.
    */

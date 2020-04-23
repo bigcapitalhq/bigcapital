@@ -15,6 +15,7 @@
   "license": "ISC",
   "dependencies": {
     "@hapi/boom": "^7.4.3",
+    "app-root-path": "^3.0.0",
     "bcryptjs": "^2.4.3",
     "bookshelf": "^0.15.1",
     "bookshelf-cascade-delete": "^2.0.1",
@@ -26,6 +27,7 @@
     "errorhandler": "^1.5.1",
     "express": "^4.17.1",
     "express-boom": "^3.0.0",
+    "express-fileupload": "^1.1.7-alpha.3",
     "express-oauth-server": "^2.0.0",
     "express-validator": "^6.2.0",
     "helmet": "^3.21.0",

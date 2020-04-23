@@ -9,6 +9,7 @@ exports.up = function(knex) {
     table.date('date');
     table.boolean('status').defaultTo(false);
     table.string('description');
+    table.string('attachment_file');
     table.integer('user_id').unsigned();
     table.timestamps();
   });

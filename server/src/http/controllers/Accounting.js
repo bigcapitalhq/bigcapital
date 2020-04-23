@@ -6,6 +6,7 @@ import asyncMiddleware from '@/http/middleware/asyncMiddleware';
 import JWTAuth from '@/http/middleware/jwtAuth';
 import JournalPoster from '@/services/Accounting/JournalPoster';
 import JournalEntry from '@/services/Accounting/JournalEntry';
+import TenancyMiddleware from '@/http/middleware/TenancyMiddleware';
 import {
   mapViewRolesToConditionals,
   mapFilterRolesToDynamicFilter,
@@ -25,6 +26,7 @@ export default {
   router() {
     const router = express.Router();
     router.use(JWTAuth);
+    router.use(TenancyMiddleware);
 
     router.get('/manual-journals/:id',
       this.getManualJournal.validation,
@@ -185,6 +187,7 @@ export default {
       check('entries.*.debit').optional({ nullable: true }).isNumeric().toInt(),
       check('entries.*.account_id').isNumeric().toInt(),
       check('entries.*.note').optional(),
+      check('attachment').optional(),
     ],
     async handler(req, res) {
       const validationErrors = validationResult(req);
@@ -243,9 +246,28 @@ export default {
       if (journalNumber.length > 0) {
         errorReasons.push({ type: 'JOURNAL.NUMBER.ALREADY.EXISTS', code: 300 });
       }
+
+      const { attachment } = req.files;
+      const supportedMimes = ['image/png', 'image/jpeg'];
+
+      if (attachment && supportedMimes.indexOf(attachment.mimeType) === -1) {
+        errorReasons.push({ type: 'ATTACHMENT.MINETYPE.NOT.SUPPORTED', code: 400 });
+      }
       if (errorReasons.length > 0) {
         return res.status(400).send({ errors: errorReasons });
       }
+
+      if (attachment) {
+        const publicPath = 'storage/app/public/';
+        try {
+          await attachment.mv(`${publicPath}${req.organizationId}/${attachment.md5}.png`);
+        } catch (error) {
+          return res.status(400).send({
+            errors: [{ type: 'ATTACHMENT.UPLOAD.FAILED', code: 600 }],
+          });
+        }
+      }
+
       // Save manual journal transaction.
       const manualJournal = await ManualJournal.query().insert({
         reference: form.reference,
@@ -256,6 +278,7 @@ export default {
         description: form.description,
         status: form.status,
         user_id: user.id,
+        attachment_file: (attachment) ? `${attachment.md5}.png` : null,
       });
       const journalPoster = new JournalPoster();
 
@@ -279,7 +302,6 @@ export default {
           journalPoster.credit(jouranlEntry);
         }
       });
-
       // Saves the journal entries and accounts balance changes.
       await Promise.all([
         journalPoster.saveEntries(),

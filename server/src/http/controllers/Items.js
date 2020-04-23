@@ -1,8 +1,10 @@
 import express from 'express';
 import { check, query, validationResult } from 'express-validator';
 import { difference } from 'lodash';
+import fs from 'fs';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
 import jwtAuth from '@/http/middleware/jwtAuth';
+import TenancyMiddleware from '@/http/middleware/TenancyMiddleware';
 import {
   mapViewRolesToConditionals,
   mapFilterRolesToDynamicFilter,
@@ -13,7 +15,10 @@ import {
   DynamicFilterViews,
   DynamicFilterFilterRoles,
 } from '@/lib/DynamicFilter';
+import Logger from '@/services/Logger';
+import ConfiguredMiddleware from '@/http/middleware/ConfiguredMiddleware';
 
+const fsPromises = fs.promises;
 
 export default {
   /**
@@ -23,6 +28,8 @@ export default {
     const router = express.Router();
 
     router.use(jwtAuth);
+    router.use(TenancyMiddleware);
+    router.use(ConfiguredMiddleware);
 
     router.post('/:id',
       this.editItem.validation,
@@ -68,6 +75,7 @@ export default {
       check('custom_fields.*.value').exists(),
 
       check('note').optional(),
+      check('attachment').optional(),
     ],
     async handler(req, res) {
       const validationErrors = validationResult(req);
@@ -118,6 +126,13 @@ export default {
           errorReasons.push({ type: 'FIELD_KEY_NOT_FOUND', code: 150, fields: notFoundFields });
         }
       }
+      const { attachment } = req.files;
+      const attachmentsMimes = ['image/png', 'image/jpeg'];
+
+      // Validate the attachment.
+      if (attachment && attachmentsMimes.indexOf(attachment.mimetype) === -1) {
+        errorReasons.push({ type: 'ATTACHMENT.MINETYPE.NOT.SUPPORTED', code: 160 });
+      }
       const [
         costAccount,
         sellAccount,
@@ -142,6 +157,11 @@ export default {
       if (errorReasons.length > 0) {
         return res.boom.badRequest(null, { errors: errorReasons });
       }
+      if (attachment) {
+        const publicPath = 'storage/app/public/';
+        await attachment.mv(`${publicPath}${req.organizationId}/${attachment.md5}.png`);
+      }
+
       const item = await Item.query().insertAndFetch({
         name: form.name,
         type: form.type,
@@ -151,6 +171,7 @@ export default {
         cost_account_id: form.cost_account_id,
         currency_code: form.currency_code,
         note: form.note,
+        attachment_file: (attachment) ? `${attachment.md5}.png` : null,
       });
       return res.status(200).send({ id: item.id });
     },
@@ -173,6 +194,8 @@ export default {
       check('sell_account_id').exists().isInt(),
       check('category_id').optional().isInt(),
       check('note').optional(),
+      check('attachment').optional(),
+      check('')
     ],
     async handler(req, res) {
       const validationErrors = validationResult(req);
@@ -215,8 +238,33 @@ export default {
       if (!itemCategory && form.category_id) {
         errorReasons.push({ type: 'ITEM_CATEGORY_NOT_FOUND', code: 140 });
       }
+
+      const { attachment } = req.files;
+      const attachmentsMimes = ['image/png', 'image/jpeg'];
+
+      // Validate the attachment.
+      if (attachment && attachmentsMimes.indexOf(attachment.mimetype) === -1) {
+        errorReasons.push({ type: 'ATTACHMENT.MINETYPE.NOT.SUPPORTED', code: 160 });
+      }
       if (errorReasons.length > 0) {
         return res.boom.badRequest(null, { errors: errorReasons });
+      }
+      if (attachment) {
+        const publicPath = 'storage/app/public/';
+        const tenantPath = `${publicPath}${req.organizationId}`;
+        try {
+          await fsPromises.unlink(`${tenantPath}/${item.attachmentFile}`);
+        } catch (error) {
+          Logger.log('error', 'Delete item attachment file delete failed.', { error });
+        }
+
+        try {
+          await attachment.mv(`${tenantPath}/${attachment.md5}.png`);
+        } catch (error) {
+          return res.status(400).send({
+            errors: [{ type: 'ATTACHMENT.UPLOAD.FAILED', code: 600 }],
+          });
+        }
       }
 
       const updatedItem = await Item.query().findById(id).patch({
@@ -229,6 +277,7 @@ export default {
         cost_account_id: form.cost_account_id,
         category_id: form.category_id,
         note: form.note,
+        attachment_file: (attachment) ? item.attachmentFile : null,
       });
       return res.status(200).send({ id: updatedItem.id });
     },
@@ -252,6 +301,16 @@ export default {
       // Delete the fucking the given item id.
       await Item.query().findById(item.id).delete();
 
+      if (item.attachmentFile) {
+        const publicPath = 'storage/app/public/';
+        const tenantPath = `${publicPath}${req.organizationId}`;
+
+        try {
+          await fsPromises.unlink(`${tenantPath}/${item.attachmentFile}`);
+        } catch (error) {
+          Logger.log('error', 'Delete item attachment file delete failed.', { error });
+        }
+      }
       return res.status(200).send();
     },
   },

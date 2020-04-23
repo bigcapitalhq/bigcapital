@@ -1,5 +1,6 @@
 // import OAuth2 from '@/http/controllers/OAuth2';
 import Authentication from '@/http/controllers/Authentication';
+import InviteUsers from '@/http/controllers/InviteUsers';
 // import Users from '@/http/controllers/Users';
 // import Roles from '@/http/controllers/Roles';
 import Items from '@/http/controllers/Items';
@@ -28,6 +29,7 @@ import ExchangeRates from '@/http/controllers/ExchangeRates';
 export default (app) => {
   // app.use('/api/oauth2', OAuth2.router());
   app.use('/api/auth', Authentication.router());
+  app.use('/api/invite', InviteUsers.router());
   app.use('/api/currencies', Currencies.router());
   // app.use('/api/users', Users.router());
   // app.use('/api/roles', Roles.router());

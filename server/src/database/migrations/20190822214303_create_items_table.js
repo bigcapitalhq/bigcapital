@@ -14,6 +14,7 @@ exports.up = function (knex) {
     table.text('note').nullable();
     table.integer('category_id').unsigned();
     table.integer('user_id').unsigned();
+    table.string('attachment_file');
     table.timestamps();
   });
 };

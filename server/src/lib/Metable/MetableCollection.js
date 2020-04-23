@@ -249,7 +249,6 @@ export default class MetableCollection {
     this.metadata.push(meta);
   }
 
-
   toArray() {
     return this.metadata;
   }

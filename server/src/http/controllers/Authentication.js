@@ -17,6 +17,7 @@ import Tenant from '@/system/models/Tenant';
 import TenantUser from '@/models/TenantUser';
 import TenantsManager from '@/system/TenantsManager';
 import TenantModel from '@/models/TenantModel';
+import PasswordReset from '@/system/models/PasswordReset';
 
 export default {
   /**
@@ -187,44 +188,47 @@ export default {
           code: 'validation_error', ...validationErrors,
         });
       }
-      const { email } = req.body;
-      const user = await User.where('email', email).fetch();
+      const form = { ...req.body };
+      Logger.log('info', 'User trying to send reset password.', { form });
+
+      const user = await SystemUser.query().where('email', form.email).first();
 
       if (!user) {
-        return res.status(422).send();
+        return res.status(400).send({
+          errors: [{ type: 'EMAIL.NOT.REGISTERED', code: 200 }],
+        });
       }
       // Delete all stored tokens of reset password that associate to the give email.
-      await PasswordReset.where({ email }).destroy({ require: false });
+      await PasswordReset.query()
+        .where('email', form.email)
+        .delete();
 
-      const passwordReset = PasswordReset.forge({
-        email,
-        token: '123123',
-      });
-      await passwordReset.save();
+      const token = uniqid();
+      const passwordReset = await PasswordReset.query()
+        .insert({ email: form.email, token });
 
-      const filePath = path.join(__dirname, '../../views/mail/ResetPassword.html');
+      const filePath = path.join(global.rootPath, 'views/mail/ResetPassword.html');
       const template = fs.readFileSync(filePath, 'utf8');
       const rendered = Mustache.render(template, {
-        url: `${req.protocol}://${req.hostname}/reset/${passwordReset.attributes.token}`,
-        first_name: user.attributes.first_name,
-        last_name: user.attributes.last_name,
-        contact_us_email: process.env.CONTACT_US_EMAIL,
+        url: `${req.protocol}://${req.hostname}/reset/${passwordReset.token}`,
+        first_name: user.firstName,
+        last_name: user.lastName,
+        // contact_us_email: config.contactUsMail,
       });
 
       const mailOptions = {
-        to: user.attributes.email,
+        to: user.email,
         from: `${process.env.MAIL_FROM_NAME} ${process.env.MAIL_FROM_ADDRESS}`,
-        subject: 'Ratteb Password Reset',
+        subject: 'Bigcapital - Password Reset',
         html: rendered,
       };
-
-      // eslint-disable-next-line consistent-return
       mail.sendMail(mailOptions, (error) => {
         if (error) {
-          return res.status(400).send();
+          Logger.log('error', 'Failed send reset password mail', { error, form });
         }
-        res.status(200).send({ data: { email: passwordReset.attributes.email } });
+        Logger.log('info', 'User has been sent reset password email successfuly.', { form });
       });
+      res.status(200).send({ email: passwordReset.email });
     },
   },
 
@@ -246,7 +250,7 @@ export default {
 
       if (!validationErrors.isEmpty()) {
         return res.boom.badData(null, {
-          code: 'VALIDATION_ERROR', ...validationErrors,
+          code: 'validation_error', ...validationErrors,
         });
       }
       const { token } = req.params;
@@ -262,9 +266,9 @@ export default {
           errors: [{ type: 'TOKEN_INVALID', code: 100 }],
         });
       }
-      const user = await User.where({
-        email: tokenModel.email,
-      });
+      const user = await SystemUser.query()
+        .where('email', tokenModel.email).first();
+
       if (!user) {
         return res.boom.badRequest(null, {
           errors: [{ type: 'USER_NOT_FOUND', code: 120 }],
@@ -272,10 +276,14 @@ export default {
       }
       const hashedPassword = await hashPassword(password);
 
-      user.password = hashedPassword;
-      await user.save();
+      await SystemUser.query()
+        .where('email', tokenModel.email)
+        .update({
+          password: hashedPassword,
+        });
 
-      await PasswordReset.where('email', user.get('email')).destroy({ require: false });
+      // Delete the reset password token.
+      await PasswordReset.query().where('token', token).delete();
 
       return res.status(200).send({});
     },

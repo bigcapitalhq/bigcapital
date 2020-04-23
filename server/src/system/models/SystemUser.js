@@ -21,7 +21,7 @@ export default class SystemUser extends SystemModel {
         relation: Model.BelongsToOneRelation,
         modelClass: Tenant.default,
         join: {
-          from: 'users.tenant_id',
+          from: 'users.tenantId',
           to: 'tenants.id',
         },
       },
