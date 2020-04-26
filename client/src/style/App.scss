@@ -50,3 +50,14 @@ $pt-font-family: Noto Sans, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
 .#{$ns}-tooltip{
   box-shadow: none;
 }
+
+
+[data-icon='bigcapital'] {
+  path{
+    fill: #004dd0;
+  }
+  .path-1,
+  .path-13{
+    fill: #2d95fd;
+  }
+}

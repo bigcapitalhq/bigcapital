@@ -83,7 +83,7 @@ export default class Icon extends React.Component{
     if (pathStrings == null) {
       return null;
     }
-    return pathStrings.map((d, i) => <path key={i} d={d} fillRule="evenodd" />);
+    return pathStrings.map((d, i) => <path key={i} d={d} className={`path-${i + 1}`} fillRule="evenodd" />);
   }
 }
 
