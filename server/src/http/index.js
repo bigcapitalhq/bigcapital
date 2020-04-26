@@ -1,4 +1,5 @@
 // import OAuth2 from '@/http/controllers/OAuth2';
+import express from 'express';
 import Authentication from '@/http/controllers/Authentication';
 import InviteUsers from '@/http/controllers/InviteUsers';
 // import Users from '@/http/controllers/Users';
@@ -26,33 +27,43 @@ import ExchangeRates from '@/http/controllers/ExchangeRates';
 // import SalesReports from '@/http/controllers/SalesReports';
 // import PurchasesReports from '@/http/controllers/PurchasesReports';
 import Media from '@/http/controllers/Media';
+import JWTAuth from '@/http/middleware/jwtAuth';
+import TenancyMiddleware from '@/http/middleware/TenancyMiddleware';
 
 export default (app) => {
   // app.use('/api/oauth2', OAuth2.router());
   app.use('/api/auth', Authentication.router());
-  app.use('/api/invite', InviteUsers.router());
-  app.use('/api/currencies', Currencies.router());
+
+  const dashboard = express.Router();
+
+  dashboard.use(JWTAuth);
+  dashboard.use(TenancyMiddleware);
+  
+  dashboard.use('/api/invite', InviteUsers.router());
+  dashboard.use('/api/currencies', Currencies.router());
   // app.use('/api/users', Users.router());
   // app.use('/api/roles', Roles.router());
-  app.use('/api/accounts', Accounts.router());
-  app.use('/api/account_types', AccountTypes.router());
-  app.use('/api/accounting', Accounting.router());
+  dashboard.use('/api/accounts', Accounts.router());
+  dashboard.use('/api/account_types', AccountTypes.router());
+  dashboard.use('/api/accounting', Accounting.router());
   // app.use('/api/accounts_opening_balances', AccountOpeningBalance.router());
-  app.use('/api/views', Views.router());
+  dashboard.use('/api/views', Views.router());
   // app.use('/api/fields', CustomFields.router());
-  app.use('/api/items', Items.router());
-  app.use('/api/item_categories', ItemCategories.router());
+  dashboard.use('/api/items', Items.router());
+  dashboard.use('/api/item_categories', ItemCategories.router());
   // app.use('/api/expenses', Expenses.router());
-  app.use('/api/financial_statements', FinancialStatements.router());
-  app.use('/api/options', Options.router());
+  dashboard.use('/api/financial_statements', FinancialStatements.router());
+  dashboard.use('/api/options', Options.router());
   // app.use('/api/budget_reports', BudgetReports.router());
   // app.use('/api/customers', Customers.router());
   // app.use('/api/suppliers', Suppliers.router());
   // app.use('/api/bills', Bills.router());
   // app.use('/api/budget', Budget.router());
-  app.use('/api/resources', Resources.router());
-  app.use('/api/exchange_rates', ExchangeRates.router());
-  app.use('/api/media', Media.router());
+  dashboard.use('/api/resources', Resources.router());
+  dashboard.use('/api/exchange_rates', ExchangeRates.router());
+  dashboard.use('/api/media', Media.router());
+
+  app.use('/', dashboard);  
   // app.use('/api/currency_adjustment', CurrencyAdjustment.router());
   // app.use('/api/reports/sales', SalesReports.router());
   // app.use('/api/reports/purchases', PurchasesReports.router());

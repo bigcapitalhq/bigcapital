@@ -48,9 +48,7 @@ const createStore = (initialState = {
 
   store.subscribe(() => {
     saveState({
-      authentication: {
-        token: store.getState().authentication.token,
-      },
+      authentication: store.getState().authentication,
     });
   });
   return store;

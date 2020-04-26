@@ -106,8 +106,6 @@ export default [
     })
   },
 
-  
-
   // Financial Reports.
   {
     path: `${BASE_URL}/accounting/general-ledger`,

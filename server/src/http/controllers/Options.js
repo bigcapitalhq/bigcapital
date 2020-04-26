@@ -2,7 +2,6 @@ import express from 'express';
 import { body, query, validationResult } from 'express-validator';
 import { pick } from 'lodash';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
-import jwtAuth from '@/http/middleware/jwtAuth';
 
 export default {
   /**
@@ -10,8 +9,6 @@ export default {
    */
   router() {
     const router = express.Router();
-
-    router.use(jwtAuth);
 
     router.post('/',
       this.saveOptions.validation,

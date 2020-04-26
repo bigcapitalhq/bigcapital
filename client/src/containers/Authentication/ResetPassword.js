@@ -14,26 +14,32 @@ import AppToaster from 'components/AppToaster';
 import { compose } from 'utils';
 import SendResetPasswordConnect from 'connectors/ResetPassword.connect';
 
-function ResetPassword({ requestSendResetPassword }) {
+function ResetPassword({
+  requestSendResetPassword,
+}) {
   const intl = useIntl();
   const ValidationSchema = Yup.object().shape({
     password: Yup.string()
       .min(4, 'Password has to be longer than 4 characters!')
       .required('Password is required!'),
-
     confirm_password: Yup.string()
       .oneOf([Yup.ref('password'), null], 'Passwords must match')
       .required('Confirm Password is required'),
   });
 
-  const initialValues = useMemo(
-    () => ({
-      password: '',
-      confirm_password: '',
-    }),
-    []
-  );
-  const formik = useFormik({
+  const initialValues = useMemo(() => ({
+    password: '',
+    confirm_password: '',
+  }), []);
+
+  const {
+    errors,
+    values,
+    touched,
+    getFieldMeta,
+    getFieldProps,
+    handleSubmit,
+  } = useFormik({
     enableReinitialize: true,
     validationSchema: ValidationSchema,
     initialValues: {
@@ -53,26 +59,26 @@ function ResetPassword({ requestSendResetPassword }) {
     },
   });
 
-  const { errors, values, touched } = useMemo(() => formik, [formik]);
   const requiredSpan = useMemo(() => <span class='required'>*</span>, []);
 
   return (
     <div className={'sendRestPassword-form'}>
-      <form onSubmit={formik.handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <FormGroup
           label={'Password'}
           labelInfo={requiredSpan}
           className={'form-group--password'}
           intent={errors.password && touched.password && Intent.DANGER}
-          helperText={<ErrorMessage name={'password'} {...formik} />}
+          helperText={<ErrorMessage name={'password'} />}
         >
           <InputGroup
             lang={true}
             type={'password'}
             intent={errors.password && touched.password && Intent.DANGER}
-            {...formik.getFieldProps('password')}
+            {...getFieldProps('password')}
           />
         </FormGroup>
+
         <FormGroup
           label={'Confirm Password'}
           labelInfo={requiredSpan}
@@ -80,7 +86,7 @@ function ResetPassword({ requestSendResetPassword }) {
           intent={
             errors.confirm_password && touched.confirm_password && Intent.DANGER
           }
-          helperText={<ErrorMessage name={'confirm_password'} {...formik} />}
+          helperText={<ErrorMessage name={'confirm_password'} />}
         >
           <InputGroup
             lang={true}
@@ -90,9 +96,10 @@ function ResetPassword({ requestSendResetPassword }) {
               touched.confirm_password &&
               Intent.DANGER
             }
-            {...formik.getFieldProps('confirm_password')}
+            {...getFieldProps('confirm_password')}
           />
         </FormGroup>
+
         <div class='form__floating-footer'>
           <Button intent={Intent.PRIMARY} type='submit'>
             Reset Password

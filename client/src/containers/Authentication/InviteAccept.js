@@ -23,30 +23,18 @@ function Invite({ requestSubmitInvite }) {
 
   const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
-  const language = useMemo(
-    () => [
-      { value: null, label: 'Select Country' },
-      { value: 'Arabic', label: 'Arabic' },
-      { value: 'English', label: 'English' },
-    ],
-    []
-  );
+  const language = useMemo(() => [
+    { value: null, label: 'Select Country' },
+    { value: 'Arabic', label: 'Arabic' },
+    { value: 'English', label: 'English' },
+  ], []);
+
   const ValidationSchema = Yup.object().shape({
-    first_name: Yup.string().required(intl.formatMessage({ id: 'required' })),
-
-    last_name: Yup.string().required(intl.formatMessage({ id: 'required' })),
-
-    email: Yup.string()
-      .email()
-      .required(intl.formatMessage({ id: 'required' })),
-    phone_number: Yup.string()
-      .matches(phoneRegExp)
-      .required(intl.formatMessage({ id: 'required' })),
-    language: Yup.string().required(
-      intl.formatMessage({
-        id: 'required',
-      })
-    ),
+    first_name: Yup.string().required(),
+    last_name: Yup.string().required(),
+    email: Yup.string().email().required(),
+    phone_number: Yup.string().matches(phoneRegExp).required(),
+    language: Yup.string().required(),
     password: Yup.string()
       .min(4, 'Password has to be longer than 4 characters!')
       .required('Password is required!'),
@@ -63,54 +51,58 @@ function Invite({ requestSubmitInvite }) {
     }),
     []
   );
-  const formik = useFormik({
+  const {
+    handleSubmit,
+    errors,
+    values,
+    touched,
+    getFieldProps,
+  } = useFormik({
     enableReinitialize: true,
     validationSchema: ValidationSchema,
     initialValues: {
       ...initialValues,
     },
     onSubmit: (values, { setSubmitting }) => {
-      requestSubmitInvite(values, token)
-        .then((response) => {
-          AppToaster.show({
-            message: 'success',
-          });
-          setSubmitting(false);
-        })
-        .catch((error) => {
-          setSubmitting(false);
+      requestSubmitInvite(values, token).then((response) => {
+        AppToaster.show({
+          message: 'success',
         });
+        setSubmitting(false);
+      })
+      .catch((error) => {
+        setSubmitting(false);
+      });
     },
   });
-
-  const { errors, values, touched } = useMemo(() => formik, [formik]);
   const requiredSpan = useMemo(() => <span class='required'>*</span>, []);
 
   return (
     <div className={'invite-form'}>
-      <form onSubmit={formik.handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <FormGroup
           label={'First Name'}
           labelInfo={requiredSpan}
           className={'form-group--first_name'}
           intent={errors.first_name && touched.first_name && Intent.DANGER}
-          helperText={<ErrorMessage name={'first_name'} {...formik} />}
+          helperText={<ErrorMessage name={'first_name'} />}
         >
           <InputGroup
             intent={errors.first_name && touched.first_name && Intent.DANGER}
-            {...formik.getFieldProps('first_name')}
+            {...getFieldProps('first_name')}
           />
         </FormGroup>
+
         <FormGroup
           label={'Last Name'}
           labelInfo={requiredSpan}
           className={'form-group--last_name'}
           intent={errors.last_name && touched.last_name && Intent.DANGER}
-          helperText={<ErrorMessage name={'last_name'} {...formik} />}
+          helperText={<ErrorMessage name={'last_name'} />}
         >
           <InputGroup
             intent={errors.last_name && touched.last_name && Intent.DANGER}
-            {...formik.getFieldProps('last_name')}
+            {...getFieldProps('last_name')}
           />
         </FormGroup>
 
@@ -119,13 +111,11 @@ function Invite({ requestSubmitInvite }) {
           labelInfo={requiredSpan}
           className={'form-group--phone_number'}
           intent={errors.phone_number && touched.phone_number && Intent.DANGER}
-          helperText={<ErrorMessage name={'phone_number'} {...formik} />}
+          helperText={<ErrorMessage name={'phone_number'} />}
         >
           <InputGroup
-            intent={
-              errors.phone_number && touched.phone_number && Intent.DANGER
-            }
-            {...formik.getFieldProps('phone_number')}
+            intent={(errors.phone_number && touched.phone_number) && Intent.DANGER}
+            {...getFieldProps('phone_number')}
           />
         </FormGroup>
 
@@ -133,13 +123,13 @@ function Invite({ requestSubmitInvite }) {
           label={'Language'}
           labelInfo={requiredSpan}
           className={'form-group--language'}
-          intent={errors.language && touched.language && Intent.DANGER}
-          helperText={<ErrorMessage name={'language'} {...formik} />}
+          intent={(errors.language && touched.language) && Intent.DANGER}
+          helperText={<ErrorMessage name={'language'} />}
         >
           <HTMLSelect
             fill={true}
             options={language}
-            {...formik.getFieldProps('language')}
+            {...getFieldProps('language')}
           />
         </FormGroup>
 
@@ -147,26 +137,27 @@ function Invite({ requestSubmitInvite }) {
           label={'Email'}
           labelInfo={requiredSpan}
           className={'form-group--email'}
-          intent={errors.email && touched.email && Intent.DANGER}
-          helperText={<ErrorMessage name={'email'} {...formik} />}
+          intent={(errors.email && touched.email) && Intent.DANGER}
+          helperText={<ErrorMessage name={'email'} />}
         >
           <InputGroup
             intent={errors.email && touched.email && Intent.DANGER}
-            {...formik.getFieldProps('email')}
+            {...getFieldProps('email')}
           />
         </FormGroup>
+
         <FormGroup
           label={'Password'}
           labelInfo={requiredSpan}
           className={'form-group--password'}
-          intent={errors.password && touched.password && Intent.DANGER}
-          helperText={<ErrorMessage name={'password'} {...formik} />}
+          intent={(errors.password && touched.password) && Intent.DANGER}
+          helperText={<ErrorMessage name={'password'} />}
         >
           <InputGroup
             lang={true}
             type={'password'}
-            intent={errors.password && touched.password && Intent.DANGER}
-            {...formik.getFieldProps('password')}
+            intent={(errors.password && touched.password) && Intent.DANGER}
+            {...getFieldProps('password')}
           />
         </FormGroup>
 

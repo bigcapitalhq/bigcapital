@@ -1,13 +1,13 @@
 import express from 'express';
 import { check, param, validationResult } from 'express-validator';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
-import jwtAuth from '@/http/middleware/jwtAuth';
 
 export default {
-
+  /**
+   * Router constructor.
+   */
   router() {
     const router = express.Router();
-    router.use(jwtAuth);
 
     router.get('/',
       this.all.validation,

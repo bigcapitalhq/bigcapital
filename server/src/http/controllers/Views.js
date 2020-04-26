@@ -8,7 +8,6 @@ import {
   validationResult,
 } from 'express-validator';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
-import jwtAuth from '@/http/middleware/jwtAuth';
 import {
   validateViewRoles,
 } from '@/lib/ViewRolesBuilder';
@@ -21,8 +20,6 @@ export default {
    */
   router() {
     const router = express.Router();
-
-    router.use(jwtAuth);
 
     router.get('/',
       this.listViews.validation,

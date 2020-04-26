@@ -3,6 +3,7 @@ import t from 'store/types';
 
 const initialState = {
   token: '',
+  organization: '',
   user: '',
   locale: '',
   errors: [],
@@ -10,8 +11,10 @@ const initialState = {
 
 export default createReducer(initialState, {
   [t.LOGIN_SUCCESS]: (state, action) => {
-    state.token = action.token;
-    state.user = action.user;
+    const { token, user } = action.payload;
+    state.token = token;
+    state.user = user;
+    state.organization = user.tenant.organization_id;
   },
 
   [t.LOGIN_FAILURE]: (state, action) => {
@@ -21,6 +24,7 @@ export default createReducer(initialState, {
   [t.LOGOUT]: (state) => {
     state.token = '';
     state.user = {};
+    state.organization = '';
   },
 
   [t.LOGIN_CLEAR_ERRORS]: (state) => {

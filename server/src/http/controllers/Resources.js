@@ -4,7 +4,6 @@ import {
   query,
 } from 'express-validator';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
-import jwtAuth from '@/http/middleware/jwtAuth';
 
 export default {
   /**
@@ -12,8 +11,6 @@ export default {
    */
   router() {
     const router = express.Router();
-
-    router.use(jwtAuth);
 
     router.get('/:resource_slug/columns',
       this.resourceColumns.validation,

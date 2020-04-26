@@ -9,8 +9,6 @@ import { difference } from 'lodash';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
 import JournalPoster from '@/services/Accounting/JournalPoster';
 import NestedSet from '@/collection/NestedSet';
-import JWTAuth from '@/http/middleware/jwtAuth';
-import TenancyMiddleware from '@/http/middleware/TenancyMiddleware';
 import {
   mapViewRolesToConditionals,
   mapFilterRolesToDynamicFilter,
@@ -29,9 +27,6 @@ export default {
    */
   router() {
     const router = express.Router();
-
-    router.use(JWTAuth);
-    router.use(TenancyMiddleware);
 
     router.post('/',
       this.newAccount.validation,
@@ -243,7 +238,7 @@ export default {
 
       query('stringified_filter_roles').optional().isJSON(),
 
-      query('column_sort_order').optional(),
+      query('column_sort_by').optional(),
       query('sort_order').optional().isIn(['desc', 'asc']),
     ],
     async handler(req, res) {
@@ -293,12 +288,13 @@ export default {
       });
       const dynamicFilter = new DynamicFilter(Account.tableName);
 
-      if (filter.column_sort_order) {
-        if (resourceFieldsKeys.indexOf(filter.column_sort_order) === -1) {
+      if (filter.column_sort_by) {
+        console.log(filter);
+        if (resourceFieldsKeys.indexOf(filter.column_sort_by) === -1) {
           errorReasons.push({ type: 'COLUMN.SORT.ORDER.NOT.FOUND', code: 300 });
         }
         const sortByFilter = new DynamicFilterSortBy(
-          filter.column_sort_order,
+          filter.column_sort_by,
           filter.sort_order,
         );
         dynamicFilter.setFilter(sortByFilter);

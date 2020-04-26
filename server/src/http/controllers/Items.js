@@ -3,8 +3,6 @@ import { check, query, validationResult } from 'express-validator';
 import { difference } from 'lodash';
 import fs from 'fs';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
-import jwtAuth from '@/http/middleware/jwtAuth';
-import TenancyMiddleware from '@/http/middleware/TenancyMiddleware';
 import {
   mapViewRolesToConditionals,
   mapFilterRolesToDynamicFilter,
@@ -16,7 +14,6 @@ import {
   DynamicFilterFilterRoles,
 } from '@/lib/DynamicFilter';
 import Logger from '@/services/Logger';
-import ConfiguredMiddleware from '@/http/middleware/ConfiguredMiddleware';
 
 const fsPromises = fs.promises;
 
@@ -26,10 +23,6 @@ export default {
    */
   router() {
     const router = express.Router();
-
-    router.use(jwtAuth);
-    router.use(TenancyMiddleware);
-    router.use(ConfiguredMiddleware);
 
     router.post('/:id',
       this.editItem.validation,

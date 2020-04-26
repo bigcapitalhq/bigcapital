@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import {Link} from 'react-router-dom';
+import {Link, useHistory} from 'react-router-dom';
 import * as Yup from 'yup';
 import {useFormik} from 'formik';
 import {connect} from 'react-redux';
@@ -11,7 +11,7 @@ import {
   FormGroup,
 } from "@blueprintjs/core";
 import login from 'store/authentication/authentication.actions';
-import {hasErrorType} from 'store/authentication/authentication.reducer';
+import {hasErrorType, isAuthenticated} from 'store/authentication/authentication.reducer';
 import AuthenticationToaster from 'components/AppToaster';
 import t from 'store/types';
 
@@ -26,6 +26,7 @@ function Login({
   hasError,
 }) {
   const intl = useIntl();
+  const history = useHistory();
 
   // Validation schema.
   const loginValidationSchema = Yup.object().shape({
@@ -110,7 +111,7 @@ function Login({
             {...formik.getFieldProps('password')} />
         </FormGroup>
 
-        <Button 
+        <Button
           type="submit"
           fill={true}
           large={true}>
@@ -119,8 +120,12 @@ function Login({
       </form>
 
       <div className="authentication-page__footer">
-        <Link to="/auth/reset_password">
+        <Link to="/auth/send_reset_password">
           {intl.formatMessage({'id': 'reset_password '})}
+        </Link>
+
+        <Link to="/auth/register">
+          {intl.formatMessage({'id': 'register '})}
         </Link>
       </div>
     </div>

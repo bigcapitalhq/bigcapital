@@ -1,10 +1,12 @@
 
 import express from 'express';
-import { check, param, query, validationResult } from 'express-validator';
+import {
+  param,
+  query,
+  validationResult,
+} from 'express-validator';
 import fs from 'fs';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
-import TenancyMiddleware from '@/http/middleware/TenancyMiddleware';
-import jwtAuth from '@/http/middleware/jwtAuth';
 import Logger from '@/services/Logger';
 
 const fsPromises = fs.promises;
@@ -15,9 +17,6 @@ export default {
    */
   router() {
     const router = express.Router();
-
-    router.use(jwtAuth);
-    router.use(TenancyMiddleware);
 
     router.post('/upload',
       this.upload.validation,

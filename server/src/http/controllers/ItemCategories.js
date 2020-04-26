@@ -6,10 +6,6 @@ import {
   query,
 } from 'express-validator';
 import asyncMiddleware from '../middleware/asyncMiddleware';
-import ItemCategory from '@/models/ItemCategory';
-import Authorization from '@/http/middleware/authorization';
-import JWTAuth from '@/http/middleware/jwtAuth';
-import Resource from '@/models/Resource';
 import {
   DynamicFilter,
   DynamicFilterSortBy,
@@ -26,8 +22,6 @@ export default {
   router() {
     const router = express.Router();
     // const permit = Authorization('items_categories');
-
-    router.use(JWTAuth);
 
     router.post('/:id',
       this.editCategory.validation,
@@ -62,7 +56,10 @@ export default {
         .optional({ nullable: true, checkFalsy: true })
         .isNumeric()
         .toInt(),
-      check('description').optional().trim().escape()
+      check('description')
+        .optional()
+        .trim()
+        .escape(),
     ],
     async handler(req, res) {
       const validationErrors = validationResult(req);
@@ -74,6 +71,7 @@ export default {
       }
       const { user } = req;
       const form = { ...req.body };
+      const { ItemCategory } = req.models;
 
       if (form.parent_category_id) {
         const foundParentCategory = await ItemCategory.query()
@@ -82,7 +80,7 @@ export default {
 
         if (!foundParentCategory) {
           return res.boom.notFound('The parent category ID is not found.', {
-            errors: [{ type: 'PARENT_CATEGORY_NOT_FOUND', code: 100 }]
+            errors: [{ type: 'PARENT_CATEGORY_NOT_FOUND', code: 100 }],
           });
         }
       }
@@ -91,7 +89,7 @@ export default {
         user_id: user.id,
       });
       return res.status(200).send({ category });
-    }
+    },
   },
 
   /**
@@ -119,18 +117,19 @@ export default {
       }
 
       const form = { ...req.body };
+      const { ItemCategory } = req.models;
       const itemCategory = await ItemCategory.query()
         .where('id', id)
         .first();
 
       if (!itemCategory) {
         return res.boom.notFound({
-          errors: [{ type: 'ITEM_CATEGORY.NOT.FOUND', code: 100 }]
+          errors: [{ type: 'ITEM_CATEGORY.NOT.FOUND', code: 100 }],
         });
       }
       if (
-        form.parent_category_id &&
-        form.parent_category_id !== itemCategory.parent_category_id
+        form.parent_category_id
+        && form.parent_category_id !== itemCategory.parent_category_id
       ) {
         const foundParentCategory = await ItemCategory.query()
           .where('id', form.parent_category_id)
@@ -138,7 +137,7 @@ export default {
 
         if (!foundParentCategory) {
           return res.boom.notFound('The parent category ID is not found.', {
-            errors: [{ type: 'PARENT_CATEGORY_NOT_FOUND', code: 100 }]
+            errors: [{ type: 'PARENT_CATEGORY_NOT_FOUND', code: 100 }],
           });
         }
       }
@@ -155,10 +154,11 @@ export default {
    */
   deleteItem: {
     validation: [
-      param('id').exists().toInt()
+      param('id').exists().toInt(),
     ],
     async handler(req, res) {
       const { id } = req.params;
+      const { ItemCategory } = req.models;
       const itemCategory = await ItemCategory.query()
         .where('id', id)
         .first();
@@ -166,13 +166,12 @@ export default {
       if (!itemCategory) {
         return res.boom.notFound();
       }
-
       await ItemCategory.query()
         .where('id', itemCategory.id)
         .delete();
 
       return res.status(200).send();
-    }
+    },
   },
 
   /**
@@ -193,15 +192,16 @@ export default {
         });
       }
 
+      const { Resource, ItemCategory } = req.models;
       const categoriesResource = await Resource.query()
         .where('name', 'items_categories')
         .withGraphFetched('fields')
         .first();
 
       if (!categoriesResource) {
-        return res.status(400).send({ errors: [
-          { type: 'ITEMS.CATEGORIES.RESOURCE.NOT.FOUND', code: 200, }
-        ]});
+        return res.status(400).send({
+          errors: [{ type: 'ITEMS.CATEGORIES.RESOURCE.NOT.FOUND', code: 200 }],
+        });
       }
 
       const filter = {
@@ -256,7 +256,7 @@ export default {
       });
 
       return res.status(200).send({ categories });
-    }
+    },
   },
 
   /**
@@ -266,15 +266,16 @@ export default {
     validation: [param('category_id').toInt()],
     async handler(req, res) {
       const { category_id: categoryId } = req.params;
+      const { ItemCategory } = req.models;
       const item = await ItemCategory.where('id', categoryId).fetch();
 
       if (!item) {
         return res.boom.notFound(null, {
-          errors: [{ type: 'CATEGORY_NOT_FOUND', code: 100 }]
+          errors: [{ type: 'CATEGORY_NOT_FOUND', code: 100 }],
         });
       }
 
       return res.status(200).send({ category: item.toJSON() });
-    }
-  }
+    },
+  },
 };

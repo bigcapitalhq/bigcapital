@@ -3,10 +3,8 @@ import express from 'express';
 import { difference } from 'lodash';
 import moment from 'moment';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
-import JWTAuth from '@/http/middleware/jwtAuth';
 import JournalPoster from '@/services/Accounting/JournalPoster';
 import JournalEntry from '@/services/Accounting/JournalEntry';
-import TenancyMiddleware from '@/http/middleware/TenancyMiddleware';
 import {
   mapViewRolesToConditionals,
   mapFilterRolesToDynamicFilter,
@@ -25,8 +23,6 @@ export default {
    */
   router() {
     const router = express.Router();
-    router.use(JWTAuth);
-    router.use(TenancyMiddleware);
 
     router.get('/manual-journals/:id',
       this.getManualJournal.validation,
@@ -93,6 +89,8 @@ export default {
         filter.filter_roles = JSON.parse(filter.stringified_filter_roles);
       }
       const { Resource, View, ManualJournal } = req.models;
+
+      console.log(req.models);
 
       const errorReasons = [];
       const manualJournalsResource = await Resource.query()

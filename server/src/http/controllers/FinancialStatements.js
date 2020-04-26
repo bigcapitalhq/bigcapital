@@ -3,7 +3,6 @@ import { query, oneOf, validationResult } from 'express-validator';
 import moment from 'moment';
 import { pick, difference, groupBy } from 'lodash';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
-import jwtAuth from '@/http/middleware/jwtAuth';
 import JournalPoster from '@/services/Accounting/JournalPoster';
 import { dateRangeCollection } from '@/utils';
 
@@ -25,7 +24,6 @@ export default {
    */
   router() {
     const router = express.Router();
-    router.use(jwtAuth);
 
     router.get('/journal',
       this.journal.validation,

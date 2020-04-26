@@ -5,11 +5,14 @@ const http = axios.create();
 
 http.interceptors.request.use((request) => {
   const state = store.getState();
-  const token = state.authentication.token;
+  const { token, organization } = state.authentication;
   const locale = 'en';
 
   if (token) {
     request.headers.common['x-access-token'] = token;
+  }
+  if (organization) {
+    request.headers.common['organization-id'] = organization;
   }
   if (locale) {
     request.headers.common['Accept-Language'] = locale;

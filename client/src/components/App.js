@@ -2,14 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { IntlProvider } from 'react-intl';
 import { connect } from 'react-redux';
-import { Router } from 'react-router';
+import { Router, Switch } from 'react-router';
+import { createBrowserHistory } from 'history';
 import PrivateRoute from 'components/PrivateRoute';
 import Authentication from 'components/Authentication';
 import Dashboard from 'components/Dashboard/Dashboard';
 import { isAuthenticated } from 'store/authentication/authentication.reducer'
 import messages from 'lang/en';
 import 'style/App.scss';
-import { createBrowserHistory } from 'history';
 
 function App(props) {
   const history = createBrowserHistory();

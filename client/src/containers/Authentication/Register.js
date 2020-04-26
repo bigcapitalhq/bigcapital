@@ -9,37 +9,27 @@ import {
   FormGroup,
   HTMLSelect,
 } from '@blueprintjs/core';
-
 import RegisterFromConnect from 'connectors/RegisterForm.connect';
 import ErrorMessage from 'components/ErrorMessage';
 import AppToaster from 'components/AppToaster';
-import { compose } from 'utils';
+import { compose, regExpCollection } from 'utils';
 
-function Register({ requestSubmitRegister }) {
+function Register({
+  requestSubmitRegister,
+}) {
   const intl = useIntl();
-
-  const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
-
-  const Country = useMemo(
-    () => [
-      { value: null, label: 'Select Country' },
-      { value: 'libya', label: 'Libya' },
-    ],
-    []
-  );
+  const Country = useMemo(() => [
+    { value: null, label: 'Select Country' },
+    { value: 'libya', label: 'Libya' },
+  ], []);
 
   const ValidationSchema = Yup.object().shape({
-    organization_name: Yup.string().required(
-      intl.formatMessage({ id: 'required' })
-    ),
-    first_name: Yup.string().required(intl.formatMessage({ id: 'required' })),
-
-    last_name: Yup.string().required(intl.formatMessage({ id: 'required' })),
-    email: Yup.string()
-      .email()
-      .required(intl.formatMessage({ id: 'required' })),
+    organization_name: Yup.string().required(),
+    first_name: Yup.string().required(),
+    last_name: Yup.string().required(),
+    email: Yup.string().email().required(),
     phone_number: Yup.string()
-      .matches(phoneRegExp)
+      .matches(regExpCollection.phoneNumber)
       .required(intl.formatMessage({ id: 'required' })),
     password: Yup.string()
       .min(4, 'Password has to be longer than 8 characters!')
@@ -47,20 +37,24 @@ function Register({ requestSubmitRegister }) {
     country: Yup.string().required(intl.formatMessage({ id: 'required' })),
   });
 
-  const initialValues = useMemo(
-    () => ({
-      organization_name: '',
-      first_name: '',
-      last_name: '',
-      email: '',
-      phone_number: '',
-      password: '',
-      country: '',
-    }),
-    []
-  );
+  const initialValues = useMemo(() => ({
+    organization_name: '',
+    first_name: '',
+    last_name: '',
+    email: '',
+    phone_number: '',
+    password: '',
+    country: '',
+  }), []);
 
-  const formik = useFormik({
+  const {
+    getFieldProps,
+    getFieldMeta,
+    errors,
+    values,
+    touched,
+    handleSubmit,
+  } = useFormik({
     enableReinitialize: true,
     validationSchema: ValidationSchema,
     initialValues: {
@@ -80,30 +74,28 @@ function Register({ requestSubmitRegister }) {
     },
   });
 
-  const { errors, values, touched } = useMemo(() => formik, [formik]);
   const requiredSpan = useMemo(() => <span class='required'>*</span>, []);
 
   return (
     <div className={'register-form'}>
-      <form onSubmit={formik.handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <FormGroup
           label={'Organization Name'}
           labelInfo={requiredSpan}
           className={'form-group--name'}
           intent={
-            errors.organization_name &&
-            touched.organization_name &&
+            (errors.organization_name && touched.organization_name) &&
             Intent.DANGER
           }
-          helperText={<ErrorMessage name={'organization_name'} {...formik} />}
+          helperText={<ErrorMessage name={'organization_name'} />}
         >
           <InputGroup
             intent={
-              errors.organization_name &&
-              touched.organization_name &&
+              (errors.organization_name &&
+              touched.organization_name) &&
               Intent.DANGER
             }
-            {...formik.getFieldProps('organization_name')}
+            {...getFieldProps('organization_name')}
           />
         </FormGroup>
 
@@ -111,24 +103,25 @@ function Register({ requestSubmitRegister }) {
           label={'First Name'}
           labelInfo={requiredSpan}
           className={'form-group--first_name'}
-          intent={errors.first_name && touched.first_name && Intent.DANGER}
-          helperText={<ErrorMessage name={'first_name'} {...formik} />}
+          intent={(errors.first_name && touched.first_name) && Intent.DANGER}
+          helperText={<ErrorMessage name={'first_name'} />}
         >
           <InputGroup
             intent={errors.first_name && touched.first_name && Intent.DANGER}
-            {...formik.getFieldProps('first_name')}
+            {...getFieldProps('first_name')}
           />
         </FormGroup>
+
         <FormGroup
           label={'Last Name'}
           labelInfo={requiredSpan}
           className={'form-group--last_name'}
           intent={errors.last_name && touched.last_name && Intent.DANGER}
-          helperText={<ErrorMessage name={'last_name'} {...formik} />}
+          helperText={<ErrorMessage name={'last_name'} />}
         >
           <InputGroup
             intent={errors.last_name && touched.last_name && Intent.DANGER}
-            {...formik.getFieldProps('last_name')}
+            {...getFieldProps('last_name')}
           />
         </FormGroup>
 
@@ -136,13 +129,13 @@ function Register({ requestSubmitRegister }) {
           label={'Country'}
           labelInfo={requiredSpan}
           className={'form-group--country'}
-          intent={errors.country && touched.country && Intent.DANGER}
-          helperText={<ErrorMessage name={'country'} {...formik} />}
+          intent={(errors.country && touched.country) && Intent.DANGER}
+          helperText={<ErrorMessage name={'country'} />}
         >
           <HTMLSelect
             fill={true}
             options={Country}
-            {...formik.getFieldProps('country')}
+            {...getFieldProps('country')}
           />
         </FormGroup>
 
@@ -150,26 +143,25 @@ function Register({ requestSubmitRegister }) {
           label={'Phone Number'}
           labelInfo={requiredSpan}
           className={'form-group--phone_number'}
-          intent={errors.phone_number && touched.phone_number && Intent.DANGER}
-          helperText={<ErrorMessage name={'phone_number'} {...formik} />}
+          intent={(errors.phone_number && touched.phone_number) && Intent.DANGER}
+          helperText={<ErrorMessage name={'phone_number'}  />}
         >
           <InputGroup
-            intent={
-              errors.phone_number && touched.phone_number && Intent.DANGER
-            }
-            {...formik.getFieldProps('phone_number')}
+            intent={(errors.phone_number && touched.phone_number) && Intent.DANGER}
+            {...getFieldProps('phone_number')}
           />
         </FormGroup>
+
         <FormGroup
           label={'Email'}
           labelInfo={requiredSpan}
           className={'form-group--email'}
-          intent={errors.email && touched.email && Intent.DANGER}
-          helperText={<ErrorMessage name={'email'} {...formik} />}
+          intent={(errors.email && touched.email) && Intent.DANGER}
+          helperText={<ErrorMessage name={'email'} />}
         >
           <InputGroup
             intent={errors.email && touched.email && Intent.DANGER}
-            {...formik.getFieldProps('email')}
+            {...getFieldProps('email')}
           />
         </FormGroup>
 
@@ -177,14 +169,14 @@ function Register({ requestSubmitRegister }) {
           label={'Password'}
           labelInfo={requiredSpan}
           className={'form-group--password'}
-          intent={errors.password && touched.password && Intent.DANGER}
-          helperText={<ErrorMessage name={'password'} {...formik} />}
+          intent={(errors.password && touched.password) && Intent.DANGER}
+          helperText={<ErrorMessage name={'password'} />}
         >
           <InputGroup
             lang={true}
             type={'password'}
-            intent={errors.password && touched.password && Intent.DANGER}
-            {...formik.getFieldProps('password')}
+            intent={(errors.password && touched.password) && Intent.DANGER}
+            {...getFieldProps('password')}
           />
         </FormGroup>
 
@@ -198,4 +190,6 @@ function Register({ requestSubmitRegister }) {
   );
 }
 
-export default compose(RegisterFromConnect)(Register);
+export default compose(
+  RegisterFromConnect,
+)(Register);

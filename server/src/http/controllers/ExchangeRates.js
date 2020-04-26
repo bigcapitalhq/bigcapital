@@ -7,7 +7,6 @@ import {
 } from 'express-validator';
 import moment from 'moment';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
-import jwtAuth from '@/http/middleware/jwtAuth';
 
 export default {
   /**
@@ -15,7 +14,6 @@ export default {
    */
   router() {
     const router = express.Router();
-    router.use(jwtAuth);
 
     router.get('/',
       this.exchangeRates.validation,

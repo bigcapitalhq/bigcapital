@@ -12,13 +12,13 @@ global.rootPath = rootPath.path;
 
 const app = express();
 
-i18n.configure({
-  locales: ['en'],
-  directory: `${__dirname}/resources/locale`,
-});
+// i18n.configure({
+//   locales: ['en'],
+//   directory: `${__dirname}/resources/locale`,
+// });
 
-// i18n init parses req for language headers, cookies, etc.
-app.use(i18n.init);
+// // i18n init parses req for language headers, cookies, etc.
+// app.use(i18n.init);
 
 // Express configuration
 app.set('port', process.env.PORT || 3000);

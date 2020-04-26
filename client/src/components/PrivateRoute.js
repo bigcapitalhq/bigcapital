@@ -15,6 +15,7 @@ function PrivateRoute({
   return (
     <Route
       {...rest}
+      path="/dashboard"
       render={_props =>
         isAuthenticated ? (<Component {..._props} />) :
         (

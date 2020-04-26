@@ -1,12 +1,27 @@
-import React from 'react';
+import React, { useMemo, useCallback } from 'react';
 import {connect} from 'react-redux';
-import {Menu, MenuItem, MenuDivider, Button, Popover} from '@blueprintjs/core';
+import {useHistory} from 'react-router-dom';
+import {
+  Menu,
+  MenuItem,
+  MenuDivider,
+  Button,
+  Popover
+} from '@blueprintjs/core';
 import t from 'store/types';
 
 function DashboardTopbarUser({ logout }) {
-  const onClickLogout = () => { logout(); };
+  const history = useHistory();
+  
+  const onClickLogout = useCallback(() => {
+    logout();
 
-  const userAvatarDropMenu = (
+    setTimeout(() => {
+      history.push('/auth/login');
+    }, 100);    
+  }, [history, logout]);
+
+  const userAvatarDropMenu = useMemo(() => (
     <Menu>
       <MenuItem icon="graph" text="Graph" />
       <MenuItem icon="map" text="Map" />
@@ -15,7 +30,7 @@ function DashboardTopbarUser({ logout }) {
       <MenuDivider />
       <MenuItem icon="cog" text="Logout" onClick={onClickLogout} />
     </Menu>
-  );
+  ), [onClickLogout]);
 
   return (
     <Popover content={userAvatarDropMenu}>

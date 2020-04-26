@@ -7,12 +7,14 @@ export default function login({ form }) {
       ApiService.post('auth/login', form).then(response => {
         const { data } = response;
 
-        dispatch({type: t.LOGIN_CLEAR_ERRORS});
+        dispatch({ type: t.LOGIN_CLEAR_ERRORS });
         if (data.token && data.user) {
           dispatch({
             type: t.LOGIN_SUCCESS,
-            user: data.user,
-            token: data.token,
+            payload: {
+              user: data.user,
+              token: data.token,
+            },            
           });
         }
         resolve(response);

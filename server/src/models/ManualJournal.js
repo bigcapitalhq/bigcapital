@@ -1,4 +1,4 @@
-import TenantModel from '@/models/Model';
+import TenantModel from '@/models/TenantModel';
 
 export default class ManualJournal extends TenantModel {
   /**

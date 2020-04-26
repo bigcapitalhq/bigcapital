@@ -126,7 +126,7 @@ function AccountsChart({
     addAccountsTableQueries({
       ...(sortBy.length > 0) ? {
         column_sort_by: sortBy[0].id,
-        sort_by: sortBy[0].desc ? 'desc' : 'asc',
+        sort_order: sortBy[0].desc ? 'desc' : 'asc',
       } : {},
     });
     fetchAccountsHook.execute();

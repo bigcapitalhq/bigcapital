@@ -1,5 +1,4 @@
 import express from 'express';
-import JWTAuth from '@/http/middleware/jwtAuth';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
 
 export default {
@@ -8,7 +7,6 @@ export default {
    */
   router() {
     const router = express.Router();
-    router.use(JWTAuth);
 
     router.get('/',
       this.getAccountTypesList.validation,
