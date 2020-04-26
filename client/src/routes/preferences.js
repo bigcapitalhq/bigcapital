@@ -2,6 +2,7 @@ import General from 'containers/Dashboard/Preferences/General';
 import Users from 'containers/Dashboard/Preferences/Users';
 import Accountant from 'containers/Dashboard/Preferences/Accountant';
 import Accounts from 'containers/Dashboard/Preferences/Accounts';
+import CurrenciesList from 'containers/Dashboard/Preferences/CurrenciesList'
 
 const BASE_URL = '/dashboard/preferences';
 
@@ -16,6 +17,11 @@ export default [
     path: `${BASE_URL}/users`,
     name: 'dashboard.preferences.users',
     component: Users,
+    exact: true,
+  },
+  {
+    path: `${BASE_URL}/currencies`,
+    component: CurrenciesList,
     exact: true,
   },
   {
