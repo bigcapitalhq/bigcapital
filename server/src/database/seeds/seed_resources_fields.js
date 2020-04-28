@@ -40,10 +40,19 @@ exports.seed = (knex) => {
           predefined: 1,
           columnable: true,
         },
+        {
+          id: 6,
+          resource_id: 1,
+          label_name: 'Root type',
+          data_type: 'textbox',
+          key: 'root_type',
+          predefined: 1,
+          columnable: true,
+        },
 
         // Expenses
         {
-          id: 6,
+          id: 7,
           resource_id: 3,
           label_name: 'Date',
           data_type: 'date',
@@ -51,7 +60,7 @@ exports.seed = (knex) => {
           columnable: true,
         },
         {
-          id: 7,
+          id: 8,
           resource_id: 3,
           label_name: 'Expense Account',
           data_type: 'options',
@@ -59,7 +68,7 @@ exports.seed = (knex) => {
           columnable: true,
         },
         {
-          id: 8,
+          id: 9,
           resource_id: 3,
           label_name: 'Payment Account',
           data_type: 'options',
@@ -67,7 +76,7 @@ exports.seed = (knex) => {
           columnable: true,
         },
         {
-          id: 9,
+          id: 10,
           resource_id: 3,
           label_name: 'Amount',
           data_type: 'number',
@@ -77,7 +86,7 @@ exports.seed = (knex) => {
 
         // Items
         {
-          id: 10,
+          id: 11,
           resource_id: 2,
           label_name: 'Name',
           key: 'name',
@@ -86,7 +95,7 @@ exports.seed = (knex) => {
           columnable: true,
         },
         {
-          id: 11,
+          id: 12,
           resource_id: 2,
           label_name: 'Type',
           key: 'type',

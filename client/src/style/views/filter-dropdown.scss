@@ -21,7 +21,14 @@
     margin-bottom: 0;
 
     &:not(:last-of-type) {
-      padding-right: 15px;
+      padding-right: 12px;
+    }
+    .bp3-html-select select,
+    .bp3-select select{
+      padding: 0 20px 0 6px;
+    }
+    .bp3-input{
+      padding: 0 6px;
     }
   }
 

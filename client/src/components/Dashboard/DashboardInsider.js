@@ -6,7 +6,7 @@ export default function DashboardInsider({
   loading,
   children,
   name,
-  mount = true,
+  mount = false,
 }) {
   return (
     <div className={classnames({

@@ -8,6 +8,7 @@ import {
   fetchAccountsTable,
   submitAccount,
   fetchAccount,
+  deleteBulkAccounts,
 } from 'store/accounts/accounts.actions';
 import {
   getAccountsItems,
@@ -26,6 +27,7 @@ const mapStateToProps = (state, props) => ({
 
   tableQuery: state.accounts.tableQuery,
   accountsLoading: state.accounts.loading,
+  accountErrors: state.accounts.errors,
 
   getAccountById: (id) => getItemById(state.accounts.items, id),
 });
@@ -38,6 +40,7 @@ const mapActionsToProps = (dispatch) => ({
   requestInactiveAccount: (id) => dispatch(inactiveAccount({ id })),
   requestFetchAccount: (id) => dispatch(fetchAccount({ id })),
   requestFetchAccountsTable: (query = {}) => dispatch(fetchAccountsTable({ query: { ...query } })),
+  requestDeleteBulkAccounts: (ids) => dispatch(deleteBulkAccounts({ ids })),
 
   changeCurrentView: (id) => dispatch({
     type: t.ACCOUNTS_SET_CURRENT_VIEW,
@@ -50,7 +53,7 @@ const mapActionsToProps = (dispatch) => ({
     type: 'ACCOUNTS_TABLE_QUERIES_ADD', queries,
   }),
   setSelectedRowsAccounts: (ids) => dispatch({
-    type: t.ACCOUNTS_SELECTED_ROWS_SET, ids,
+    type: t.ACCOUNTS_SELECTED_ROWS_SET, payload: { ids },
   }),
 });
 

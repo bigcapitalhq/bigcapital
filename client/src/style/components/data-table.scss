@@ -111,9 +111,6 @@
     }
 
     .tbody{
-      overflow-y: scroll;
-      overflow-x: hidden;
-
       .tr .td{
         border-bottom: 1px solid #E8E8E8;
         align-items: center;
@@ -145,6 +142,10 @@
           align-items: center;
         }
       }
+
+      > .loading{
+        padding-top: 50px;
+      }
     }
 
     .tr .th,
@@ -175,8 +176,6 @@
           display: block;
         }
       }
-      
-       
     }
   }
 
@@ -197,6 +196,13 @@
         position: sticky;
       }
     }
+  }
+
+  &.has-virtualized-rows{
+    .tbody{
+      overflow-y: scroll;
+      overflow-x: hidden;
+    }    
   }
 
   &--financial-report{

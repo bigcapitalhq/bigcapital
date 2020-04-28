@@ -18,6 +18,14 @@ const mapActionsToProps = (dispatch) => ({
   setTopbarEditView: (id) => dispatch({
     type: t.SET_TOPBAR_EDIT_VIEW, id,
   }),
+
+  setDashboardRequestLoading: () => dispatch({
+    type: t.SET_DASHBOARD_REQUEST_LOADING,
+  }),
+
+  setDashboardRequestCompleted: () => dispatch({
+    type: t.SET_DASHBOARD_REQUEST_COMPLETED,
+  }),
 });
 
 export default connect(mapStateToProps, mapActionsToProps);

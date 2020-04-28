@@ -145,3 +145,10 @@ export function formattedAmount(cents, currency) {
 
 export const ConditionalWrapper = ({ condition, wrapper, children }) => 
   condition ? wrapper(children) : children;
+
+export const checkRequiredProperties = (obj, properties) => {
+  return properties.some((prop) => {
+    const value = obj[prop];
+    return (value === '' || value === null || value === undefined);
+  })
+}

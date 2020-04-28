@@ -7,11 +7,11 @@ const initialState = {
   views: {},
   accountsTypes: [],
   accountsById: {},
-  accountFormErrors: [],
-  datatableQuery: {},
+  tableQuery: {},
   currentViewId: -1,
   selectedRows: [],
   loading: false,
+  errors: [],
 };
 
 const accountsReducer = createReducer(initialState, {
@@ -34,8 +34,7 @@ const accountsReducer = createReducer(initialState, {
     state.views[viewId] = {
       ...view,
       ids: action.accounts.map(i => i.id),
-    };  
-    state.accounts = action.accounts;
+    };
   },
 
   [t.ACCOUNT_TYPES_LIST_SET]: (state, action) => {
@@ -53,7 +52,8 @@ const accountsReducer = createReducer(initialState, {
   },
 
   [t.ACCOUNTS_SELECTED_ROWS_SET]: (state, action) => {
-    state.selectedRows.push(...action.ids);
+    const { ids } = action.payload;
+    state.selectedRows = [];
   },
 
   [t.ACCOUNTS_SET_CURRENT_VIEW]: (state, action) => {  
@@ -62,6 +62,27 @@ const accountsReducer = createReducer(initialState, {
 
   [t.ACCOUNTS_TABLE_LOADING]: (state, action) => {
     state.loading = action.loading;
+  },
+
+  [t.ACCOUNT_ERRORS_SET]: (state, action) => {
+    const { errors } = action.payload;
+    state.errors = errors;
+  },
+
+  [t.ACCOUNT_ERRORS_CLEAR]: (state, action) => {
+    state.errors = [];
+  },
+
+  [t.ACCOUNTS_BULK_DELETE]: (state, action) => {
+    const { ids } = action.payload;
+    const items = { ...state.items };
+
+    ids.forEach((id) => {
+      if (typeof items[id] !== 'undefined') {
+        delete items[id];
+      }
+    });
+    state.items = items;
   },
 });
 

@@ -2,8 +2,6 @@ import React, { useEffect, useState, useCallback } from 'react';
 import {
   Route,
   Switch,
-  useParams,
-  useRouteMatch
 } from 'react-router-dom';
 import useAsync from 'hooks/async';
 import { Alert, Intent } from '@blueprintjs/core';
@@ -21,56 +19,71 @@ import { compose } from 'utils';
 
 function AccountsChart({
   changePageTitle,
-  requestFetchAccounts,
   requestDeleteAccount,
   requestInactiveAccount,
   fetchResourceViews,
   fetchResourceFields,
-  getResourceFields,
   requestFetchAccountsTable,
-  addAccountsTableQueries
+  addAccountsTableQueries,
+  requestDeleteBulkAccounts,
+  setDashboardRequestLoading,
+  setDashboardRequestCompleted,
 }) {
-  const [state, setState] = useState({
-    deleteAlertActive: false,
-    restoreAlertActive: false,
-    inactiveAlertActive: false,
-    targetAccount: {},
-  });
   const [deleteAccount, setDeleteAccount] = useState(false);
   const [inactiveAccount, setInactiveAccount] = useState(false);
- 
+  const [bulkDelete, setBulkDelete] = useState(false);
+  const [selectedRows, setSelectedRows] = useState([]);
+
+  // Fetch accounts resource views and fields.
   const fetchHook = useAsync(async () => {
+    setDashboardRequestLoading();
+
     await Promise.all([
       fetchResourceViews('accounts'),
       fetchResourceFields('accounts'),
     ]);
+    setDashboardRequestCompleted();
   });
 
   // Fetch accounts list according to the given custom view id.
   const fetchAccountsHook = useAsync(async () => {
+    setDashboardRequestLoading();
+
     await Promise.all([
       requestFetchAccountsTable(),
     ]);
+    setDashboardRequestCompleted();
   }, false);
 
   useEffect(() => {
     changePageTitle('Chart of Accounts');
-  }, []);
-
+  }, [changePageTitle]);
+  
   // Handle click and cancel/confirm account delete
   const handleDeleteAccount = (account) => { setDeleteAccount(account); };
   
   // handle cancel delete account alert.
-  const handleCancelAccountDelete = () => { setDeleteAccount(false); };
+  const handleCancelAccountDelete = useCallback(() => { setDeleteAccount(false); }, []);
   
   // Handle confirm account delete
   const handleConfirmAccountDelete = useCallback(() => {
     requestDeleteAccount(deleteAccount.id).then(() => {
       setDeleteAccount(false);
-      fetchAccountsHook.execute();
       AppToaster.show({ message: 'the_account_has_been_deleted' });
+    }).catch(errors => {
+      setDeleteAccount(false);
+      if (errors.find((e) => e.type === 'ACCOUNT.PREDEFINED')) {
+        AppToaster.show({
+          message: 'cannot_delete_predefined_account'
+        });
+      }
+      if (errors.find((e) => e.type === 'ACCOUNT.HAS.ASSOCIATED.TRANSACTIONS')) {
+        AppToaster.show({
+          message: 'cannot_delete_account_has_associated_transactions'
+        });
+      }
     });
-  }, [deleteAccount]);
+  }, [deleteAccount, requestDeleteAccount]);
 
   // Handle cancel/confirm account inactive.
   const handleInactiveAccount = useCallback((account) => {
@@ -91,13 +104,7 @@ function AccountsChart({
     });
   }, [inactiveAccount]);
 
-  /**
-   * Handle cancel/confirm account restore.
-   */
-  const handleCancelAccountRestore = () => {
-    
-  };
-
+ 
   const handleEditAccount = (account) => {
 
   };
@@ -106,22 +113,43 @@ function AccountsChart({
     
   };
 
-  const handleConfirmAccountRestore = (account) => {
+  const handleBulkDelete = useCallback((accountsIds) => {
+    setBulkDelete(accountsIds);
+  }, [setBulkDelete]);
 
-  };
-  const handleDeleteBulkAccounts = (accounts) => {
+  const handleConfirmBulkDelete = useCallback(() => {
+    requestDeleteBulkAccounts(bulkDelete).then(() => {
+      setBulkDelete(false);
+      AppToaster.show({ message: 'the_accounts_have_been_deleted' });
+    }).catch((error) => {
+      setBulkDelete(false);
+    });
+  }, [requestDeleteBulkAccounts, bulkDelete]);
 
-  };
+  const handleCancelBulkDelete = useCallback(() => {
+    setBulkDelete(false);
+  }, []);
 
-  const handleSelectedRowsChange = (accounts) => {
-    console.log(accounts);
-  };
+  const handleBulkArchive = useCallback((accounts) => {
 
+  }, []);
+
+  // Handle selected rows change.
+  const handleSelectedRowsChange = useCallback((accounts) => {
+    setSelectedRows(accounts);
+  }, [setSelectedRows]);
+
+  // Refetches accounts data table when current custom view changed.
   const handleFilterChanged = useCallback(() => { 
     fetchAccountsHook.execute();
   }, [fetchAccountsHook]);
 
-  const handleViewChanged = useCallback(() => { fetchAccountsHook.execute(); }, []);
+  // Refetch accounts data table when current custom view changed.
+  const handleViewChanged = useCallback(() => {
+    fetchAccountsHook.execute();
+  }, [fetchAccountsHook]);
+
+  // Handle fetch data of accounts datatable.
   const handleFetchData = useCallback(({ pageIndex, pageSize, sortBy }) => {
     addAccountsTableQueries({
       ...(sortBy.length > 0) ? {
@@ -135,26 +163,29 @@ function AccountsChart({
   return (
     <DashboardInsider loading={fetchHook.pending} name={'accounts-chart'}>
       <DashboardActionsBar
-        onFilterChanged={handleFilterChanged} />
+        selectedRows={selectedRows}
+        onFilterChanged={handleFilterChanged}
+        onBulkDelete={handleBulkDelete}
+        onBulkArchive={handleBulkArchive} />
+
       <DashboardPageContent>
         <Switch>
           <Route
             exact={true}
             path={[
               '/dashboard/accounts/:custom_view_id/custom_view',
-              '/dashboard/accounts'
+              '/dashboard/accounts',
             ]}>
             <AccountsViewsTabs
-              onViewChanged={handleViewChanged}
-              onDeleteBulkAccounts={handleDeleteBulkAccounts} />
+              onViewChanged={handleViewChanged} />
 
             <AccountsDataTable
-              onSelectedRowsChange={handleSelectedRowsChange}
               onDeleteAccount={handleDeleteAccount}
               onInactiveAccount={handleInactiveAccount}
               onRestoreAccount={handleRestoreAccount}
               onEditAccount={handleEditAccount}
-              onFetchData={handleFetchData} />
+              onFetchData={handleFetchData}
+              onSelectedRowsChange={handleSelectedRowsChange} />
           </Route>
         </Switch>
 
@@ -180,6 +211,20 @@ function AccountsChart({
           isOpen={inactiveAccount}
           onCancel={handleCancelInactiveAccount}
           onConfirm={handleConfirmAccountActive}>
+          <p>
+          Are you sure you want to move <b>filename</b> to Trash? You will be able to restore it later,
+          but it will become private to you.
+          </p>
+        </Alert>
+
+        <Alert
+          cancelButtonText="Cancel"
+          confirmButtonText="Delete"
+          icon="trash"
+          intent={Intent.DANGER}
+          isOpen={bulkDelete}
+          onCancel={handleCancelBulkDelete}
+          onConfirm={handleConfirmBulkDelete}>
           <p>
           Are you sure you want to move <b>filename</b> to Trash? You will be able to restore it later,
           but it will become private to you.

@@ -33,6 +33,11 @@ export default {
     'code': {
       column: 'code',
     },
+    'root_type': {
+      column: 'account_type_id',
+      relation: 'account_types.id',
+      relationColumn: 'account_types.root_type',
+    },
   },
 
   'items': {

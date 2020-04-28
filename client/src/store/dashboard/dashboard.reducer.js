@@ -7,6 +7,7 @@ const initialState = {
   preferencesPageTitle: '',
   dialogs: {},
   topbarEditViewId: 1,
+  requestsLoading: 0,
 };
 
 export default createReducer(initialState, {
@@ -42,6 +43,15 @@ export default createReducer(initialState, {
 
   [t.SET_TOPBAR_EDIT_VIEW]: (state, action) => {
     state.topbarEditViewId = action.id;
+  },
+
+  [t.SET_DASHBOARD_REQUEST_LOADING]: (state, action) => {
+    state.requestsLoading = state.requestsLoading + 1;
+  },
+
+  [t.SET_DASHBOARD_REQUEST_COMPLETED]: (state, action) => {
+    const requestsLoading = state.requestsLoading - 1;
+    state.requestsLoading = Math.max(requestsLoading, 0);
   }
 });
 

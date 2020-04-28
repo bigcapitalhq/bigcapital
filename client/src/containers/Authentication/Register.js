@@ -12,7 +12,7 @@ import {
 import RegisterFromConnect from 'connectors/RegisterForm.connect';
 import ErrorMessage from 'components/ErrorMessage';
 import AppToaster from 'components/AppToaster';
-import { compose, regExpCollection } from 'utils';
+import { compose } from 'utils';
 
 function Register({
   requestSubmitRegister,
@@ -29,7 +29,6 @@ function Register({
     last_name: Yup.string().required(),
     email: Yup.string().email().required(),
     phone_number: Yup.string()
-      .matches(regExpCollection.phoneNumber)
       .required(intl.formatMessage({ id: 'required' })),
     password: Yup.string()
       .min(4, 'Password has to be longer than 8 characters!')

@@ -210,12 +210,12 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      height: 100%;
     }
   }
 
   &__page-content{
     // padding: 22px;
-
 
     .bigcapital-datatable{
 
@@ -228,6 +228,10 @@
           }
         }
       }
+    }
+
+    .dashboard__loading-indicator{
+      padding-top: 150px;
     }
   }
 

@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo} from 'react';
+import React, {useEffect, useMemo, useCallback, useRef} from 'react';
 import {
   FormGroup,
   InputGroup,
@@ -10,67 +10,94 @@ import {
 import { useFormik } from 'formik';
 import { isEqual } from 'lodash';
 import { usePrevious } from 'react-use';
+import { debounce } from 'lodash';
 import Icon from 'components/Icon';
+import { checkRequiredProperties } from 'utils';
 
 export default function FilterDropdown({
   fields,
   onFilterChange,
 }) {
-  const conditionalsItems = [
+  const conditionalsItems = useMemo(() => [
     { value: 'and', label: 'AND' },
     { value: 'or', label: 'OR' },
-  ];
-  const resourceFields = [
+  ], []);
+
+  const resourceFields = useMemo(() => [
     ...fields.map((field) => ({ value: field.key, label: field.label_name, })),
-  ];
-  const compatatorsItems = [
+  ], [fields]);
+
+  const compatatorsItems = useMemo(() => [
     {value: '', label: 'Select a compatator'},
     {value: 'equals', label: 'Equals'},
     {value: 'not_equal', label: 'Not Equal'},
     {value: 'contain', label: 'Contain'},
     {value: 'not_contain', label: 'Not Contain'},
-  ];
-  const defaultFilterCondition = {
+  ], []);
+
+  const defaultFilterCondition = useMemo(() => ({
     condition: 'and',
     field_key: fields.length > 0 ? fields[0].key : '',
     compatator: 'equals',
     value: '',
-  };
-  const formik = useFormik({
+  }), [fields]);
+
+  const {
+    setFieldValue,
+    getFieldProps,
+    values,
+    errors,
+    touched,
+  } = useFormik({
+    enableReinitialize: true,
     initialValues: {
       conditions: [ defaultFilterCondition ],
     },
   });
 
-  const onClickNewFilter = () => {
-    formik.setFieldValue('conditions', [
-      ...formik.values.conditions, defaultFilterCondition,
+  const onClickNewFilter = useCallback(() => {
+    setFieldValue('conditions', [
+      ...values.conditions, defaultFilterCondition,
     ]);
-  };
+  }, [values, defaultFilterCondition, setFieldValue]);
+
   const filteredFilterConditions = useMemo(() => {
-    return formik.values.conditions.filter(condition => !!condition.value);
-  }, [formik.values.conditions]);
+    const requiredProps = ['field_key', 'condition', 'compatator', 'value'];
+
+    return values.conditions
+      .filter((condition) => 
+        !checkRequiredProperties(condition, requiredProps));
+  }, [values.conditions]);
 
   const prevConditions = usePrevious(filteredFilterConditions);
-  
-  const onClickRemoveCondition = (index) => () => {
-    if (formik.values.conditions.length === 1) { return; }
 
-    const conditions = [ ...formik.values.conditions ];
-    conditions.splice(index, 1);
-    formik.setFieldValue('conditions', [ ...conditions ]);
-  }
-
+  const onFilterChangeThrottled = useRef(debounce((conditions) => {
+    onFilterChange && onFilterChange(conditions);
+  }, 1000));
+ 
   useEffect(() => {
-    if (!isEqual(filteredFilterConditions, prevConditions)) {
-      onFilterChange(filteredFilterConditions);
+    if (!isEqual(prevConditions, filteredFilterConditions) && prevConditions) {
+      onFilterChangeThrottled.current(filteredFilterConditions);
     }
-  }, [filteredFilterConditions])
+  }, [filteredFilterConditions]);
+
+  // Handle click remove condition.
+  const onClickRemoveCondition = (index) => () => {
+    if (values.conditions.length === 1) {
+      setFieldValue('conditions', [
+        defaultFilterCondition,
+      ]);
+      return;
+    }
+    const conditions = [ ...values.conditions ];
+    conditions.splice(index, 1);
+    setFieldValue('conditions', [ ...conditions ]);
+  };
 
   return (
     <div class="filter-dropdown">
       <div class="filter-dropdown__body">
-        {formik.values.conditions.map((condition, index) => (
+        {values.conditions.map((condition, index) => (
           <div class="filter-dropdown__condition">
             <FormGroup
               className={'form-group--condition'}>
@@ -78,7 +105,7 @@ export default function FilterDropdown({
                 options={conditionalsItems}
                 className={Classes.FILL}
                 disabled={index > 1}
-                {...formik.getFieldProps(`conditions[${index}].condition`)} />
+                {...getFieldProps(`conditions[${index}].condition`)} />
             </FormGroup>
 
             <FormGroup
@@ -87,7 +114,7 @@ export default function FilterDropdown({
                 options={resourceFields}
                 value={1}
                 className={Classes.FILL}
-                {...formik.getFieldProps(`conditions[${index}].field_key`)} />
+                {...getFieldProps(`conditions[${index}].field_key`)} />
             </FormGroup>
 
             <FormGroup
@@ -95,14 +122,14 @@ export default function FilterDropdown({
               <HTMLSelect
                 options={compatatorsItems}
                 className={Classes.FILL}
-                {...formik.getFieldProps(`conditions[${index}].compatator`)} />
+                {...getFieldProps(`conditions[${index}].compatator`)} />
             </FormGroup>
 
             <FormGroup
               className={'form-group--value'}>
               <InputGroup
                 placeholder="Value"
-                {...formik.getFieldProps(`conditions[${index}].value`)} />
+                {...getFieldProps(`conditions[${index}].value`)} />
             </FormGroup>
 
             <Button 

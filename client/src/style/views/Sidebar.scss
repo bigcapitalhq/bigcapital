@@ -18,22 +18,14 @@ $sidebar-popover-submenu-bg: rgb(1, 20, 62);
     overflow-x: hidden;
     height: 100%;
   }
-
-
   &__head{
-    padding: 16px 10px;
+    padding: 16px 12px;
    
-    &-company-meta{
+    &-logo{
+      margin-top: 4px;
 
-      .company-name{
-        font-size: 16px;
-        font-weight: 200;
-        margin-bottom: 5px;
-        color: rgba(255, 255, 255, 0.75);
-      }
-      .company-meta{
-        color: rgba(255, 255, 255, 0.4);
-        font-size: 12px;
+      svg{
+        opacity: 0.35;
       }
     }
   }

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useCallback } from 'react';
 import Icon from 'components/Icon';
 import {
   Button,
@@ -29,6 +29,8 @@ function AccountsActionsBar({
   getResourceFields,
   addAccountsTableQueries,
   onFilterChanged,
+  onBulkDelete,
+  onBulkArchive,
 }) {
   const {path} = useRouteMatch();
   const onClickNewAccount = () => { openDialog('account-form', {}); };
@@ -51,6 +53,15 @@ function AccountsActionsBar({
       onFilterChanged && onFilterChanged(filterConditions);
     },
   });
+
+  const handleBulkArchive = useCallback(() => {
+    onBulkArchive && onBulkArchive(selectedRows.map(r => r.id));
+  }, [onBulkArchive, selectedRows]);
+
+  const handleBulkDelete = useCallback(() => {
+    onBulkDelete && onBulkDelete(selectedRows.map(r => r.id));
+  }, [onBulkDelete, selectedRows]);
+
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -77,6 +88,7 @@ function AccountsActionsBar({
           onClick={onClickNewAccount}
         />
         <Popover
+          minimal={true}
           content={filterDropdown}
           interactionKind={PopoverInteractionKind.CLICK}
           position={Position.BOTTOM_LEFT}>
@@ -92,6 +104,7 @@ function AccountsActionsBar({
             className={Classes.MINIMAL}
             icon={<Icon icon='archive' iconSize={15} />}
             text='Archive'
+            onClick={handleBulkArchive}
           />
         )}
         {hasSelectedRows && (
@@ -100,6 +113,7 @@ function AccountsActionsBar({
             icon={<Icon icon='trash' iconSize={15} />}
             text='Delete'
             intent={Intent.DANGER}
+            onClick={handleBulkDelete}
           />
         )}
         <Button

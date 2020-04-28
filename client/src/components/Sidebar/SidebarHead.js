@@ -1,23 +1,12 @@
 import React from 'react';
 import appMeta from 'config/app';
+import Icon from 'components/Icon';
 
 export default function() {
   return (
     <div className="sidebar__head">
       <div className="sidebar__head-logo">
-
-      </div>
-
-      <div className="sidebar__head-company-meta">
-        <div className="company-name">
-          { appMeta.app_name } 
-        </div>
-
-        <div className="company-meta">
-          <span class="version">
-          { appMeta.app_version }
-          </span>
-        </div>
+        <Icon icon={'bigcapital'} width={140} height={28} className="bigcapital--alt" />
       </div>
     </div>
   );

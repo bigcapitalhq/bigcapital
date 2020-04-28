@@ -1,18 +1,18 @@
-import React, {useEffect, useMemo, useCallback} from 'react';
+import React, {useEffect, useRef, useCallback} from 'react';
 import {
   useTable,
   useExpanded,
   useRowSelect,
   usePagination,
   useResizeColumns,
-  useAsyncDebounce,
   useSortBy,
   useFlexLayout
-} from 'react-table'
-import {Checkbox} from '@blueprintjs/core';
+} from 'react-table';
+import { Checkbox, Spinner } from '@blueprintjs/core';
 import classnames from 'classnames';
 import { FixedSizeList } from 'react-window'
 import { ConditionalWrapper } from 'utils';
+import { useUpdateEffect } from 'hooks';
 
 const IndeterminateCheckbox = React.forwardRef(
   ({ indeterminate, ...rest }, ref) => {
@@ -40,6 +40,8 @@ export default function DataTable({
   payload, 
   expandable = false,
   expandToggleColumn = 2,
+  noInitialFetch = false,
+  spinnerProps = { size: 40 },
 }) {
   const {
     getTableProps,
@@ -62,7 +64,7 @@ export default function DataTable({
     isAllRowsExpanded,
 
     // Get the state from the instance
-    state: { pageIndex, pageSize, sortBy, selectedRowIds },
+    state: { pageIndex, pageSize, sortBy, selectedRowIds, selectedRows },
   } = useTable(
     {
       columns,
@@ -115,11 +117,21 @@ export default function DataTable({
       ])
     }
   );
+
+  const isInitialMount = useRef(noInitialFetch);
  
   // When these table states change, fetch new data!
   useEffect(() => {
-    onFetchData && onFetchData({ pageIndex, pageSize, sortBy })
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+    } else {
+      onFetchData && onFetchData({ pageIndex, pageSize, sortBy })
+    }
   }, [pageIndex, pageSize, sortBy]);
+
+  useUpdateEffect(() => {
+    onSelectedRowsChange && onSelectedRowsChange(selectedFlatRows);
+  }, [selectedRowIds, onSelectedRowsChange]);
 
   // Renders table cell.
   const RenderCell = useCallback(({ row, cell, index }) => (
@@ -188,13 +200,18 @@ export default function DataTable({
         {RenderVirtualizedRows}
       </FixedSizeList>
     ) : RenderPage();
-  }, [fixedSizeHeight, rows, fixedItemSize, virtualizedRows, RenderVirtualizedRows, RenderPage]);
+  }, [fixedSizeHeight, rows, fixedItemSize, virtualizedRows,
+    RenderVirtualizedRows, RenderPage]);
 
   return (
     <div className={classnames(
       'bigcapital-datatable',
       className,
-      {'has-sticky-header': stickyHeader, 'is-expandable': expandable})}>
+      {
+        'has-sticky-header': stickyHeader,
+        'is-expandable': expandable,
+        'has-virtualized-rows': virtualizedRows,
+      })}>
       <div {...getTableProps()} className="table"> 
         <div className="thead">
           {headerGroups.map(headerGroup => (
@@ -240,13 +257,16 @@ export default function DataTable({
           ))}
         </div>
         <div {...getTableBodyProps()} className="tbody">
-          { RenderTBody() }
-        
-          { (page.length === 0) && (
+          { !loading && RenderTBody() }
+
+          { !loading && (page.length === 0) && (
             <div className={'tr no-results'}>
               <div class="td">{ noResults }</div>
             </div>
           )}
+          { loading && (
+            <div class="loading"><Spinner size={spinnerProps.size} /></div>
+          ) }
         </div>
       </div>
     </div>

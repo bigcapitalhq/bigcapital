@@ -1,3 +1,4 @@
+import { omit } from 'lodash';
 import ApiService from 'services/ApiService';
 import t from 'store/types';
 
@@ -41,14 +42,20 @@ export const fetchAccountsList = ({ query } = {}) => {
 export const fetchAccountsTable = ({ query } = {}) => {
   return (dispatch, getState) =>
     new Promise((resolve, reject) => {
-      const pageQuery = getState().accounts.tableQuery;
+      let pageQuery = getState().accounts.tableQuery;
 
+      if (pageQuery.filter_roles) {
+        pageQuery = {
+          ...omit(pageQuery, ['filter_roles']),
+          stringified_filter_roles: JSON.stringify(pageQuery.filter_roles) || '',
+        };
+      }
       dispatch({
         type: t.ACCOUNTS_TABLE_LOADING,
         loading: true,
       });
       ApiService.get('accounts', { params: { ...pageQuery, ...query } })
-        .then(response => {
+        .then((response) => {
           dispatch({
             type: t.ACCOUNTS_PAGE_SET,
             accounts: response.data.accounts,
@@ -64,7 +71,7 @@ export const fetchAccountsTable = ({ query } = {}) => {
           });
           resolve(response);
         })
-        .catch(error => {
+        .catch((error) => {
           reject(error);
         });
     });
@@ -89,9 +96,12 @@ export const fetchAccountsDataTable = ({ query }) => {
 export const submitAccount = ({ form }) => {
   return dispatch =>
     new Promise((resolve, reject) => {
+      
       ApiService.post('accounts', form)
         .then(response => {
-          dispatch({ type: t.CLEAR_ACCOUNT_FORM_ERRORS });
+          dispatch({
+            type: t.ACCOUNT_ERRORS_CLEAR,
+          });
           resolve(response);
         })
         .catch(error => {
@@ -99,11 +109,16 @@ export const submitAccount = ({ form }) => {
           const { data } = response;
           const { errors } = data;
 
-          dispatch({ type: t.CLEAR_ACCOUNT_FORM_ERRORS });
+          dispatch({
+            type: t.ACCOUNT_ERRORS_CLEAR,
+          });
           if (errors) {
-            dispatch({ type: t.ACCOUNT_FORM_ERRORS, errors });
+            dispatch({
+              type: t.ACCOUNT_ERRORS_SET,
+              payload: { errors },
+            });
           }
-          reject(error);
+          reject(errors);
         });
     });
 };
@@ -125,7 +140,7 @@ export const editAccount = ({ id, form }) => {
           if (errors) {
             dispatch({ type: t.ACCOUNT_FORM_ERRORS, errors });
           }
-          reject(error);
+          reject(errors);
         });
     });
 };
@@ -143,11 +158,25 @@ export const deleteAccount = ({ id }) => {
     ApiService.delete(`accounts/${id}`).then((response) => {
       dispatch({ type: t.ACCOUNT_DELETE, id });
       resolve(response);
-    }).catch(error => { reject(error); });
+    }).catch((error) => {
+      reject(error.response.data.errors || []);
+    });
   });
 };
 
-export const deleteBulkAccounts = ({ ids }) => {};
+export const deleteBulkAccounts = ({ ids }) => {
+  return dispatch => new Promise((resolve, reject) => {
+    ApiService.delete(`accounts`, { params: { ids }}).then((response) => {
+      dispatch({
+        type: t.ACCOUNTS_BULK_DELETE,
+        payload: { ids }
+      });
+      resolve(response);
+    }).catch((error) => {
+      reject(error.response.data.errors || []);
+    });
+  });
+};
 
 export const fetchAccount = ({ id }) => {
   return dispatch =>

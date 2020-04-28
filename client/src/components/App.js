@@ -8,6 +8,7 @@ import PrivateRoute from 'components/PrivateRoute';
 import Authentication from 'components/Authentication';
 import Dashboard from 'components/Dashboard/Dashboard';
 import { isAuthenticated } from 'store/authentication/authentication.reducer'
+import Progress from 'components/NProgress/Progress';
 import messages from 'lang/en';
 import 'style/App.scss';
 
@@ -22,6 +23,8 @@ function App(props) {
           <PrivateRoute isAuthenticated={props.isAuthorized} component={Dashboard} />
         </Router>
       </div>
+
+      <Progress isAnimating={props.isLoading} />
     </IntlProvider>
   );
 }
@@ -37,5 +40,6 @@ App.propTypes = {
 
 const mapStateToProps = (state) => ({
   isAuthorized: isAuthenticated(state),
+  isLoading: !!state.dashboard.requestsLoading,
 });
 export default connect(mapStateToProps)(App);

@@ -212,6 +212,11 @@ export default {
       if (!account) {
         return res.boom.notFound();
       }
+      if (account.predefined) {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'ACCOUNT.PREDEFINED' , code: 200 }],
+        });
+      }
       const accountTransactions = await AccountTransaction.query()
         .where('account_id', account.id);
 
@@ -289,7 +294,6 @@ export default {
       const dynamicFilter = new DynamicFilter(Account.tableName);
 
       if (filter.column_sort_by) {
-        console.log(filter);
         if (resourceFieldsKeys.indexOf(filter.column_sort_by) === -1) {
           errorReasons.push({ type: 'COLUMN.SORT.ORDER.NOT.FOUND', code: 300 });
         }

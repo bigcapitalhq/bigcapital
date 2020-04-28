@@ -39,6 +39,8 @@ export default class Icon extends React.Component{
       color,
       htmlTitle,
       iconSize = Icon.SIZE_STANDARD,
+      height,
+      width,
       intent,
       title = icon,
       tagName = "span",
@@ -57,6 +59,9 @@ export default class Icon extends React.Component{
     const classes = classNames(Classes.ICON, Classes.iconClass(icon), Classes.intentClass(intent), className);
     const viewBox = iconPath.viewBox;
 
+    const computedHeight = height || iconSize;
+    const computedWidth = width || iconSize;
+
     return React.createElement(
       tagName,
       {
@@ -64,7 +69,7 @@ export default class Icon extends React.Component{
         className: classes,
         title: htmlTitle,
       },
-      <svg fill={color} data-icon={icon} width={iconSize} height={iconSize} viewBox={viewBox}>
+      <svg fill={color} data-icon={icon} width={computedWidth} height={computedHeight} viewBox={viewBox}>
         {title && <desc>{title}</desc>}
         {paths}
       </svg>,

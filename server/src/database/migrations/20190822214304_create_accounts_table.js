@@ -9,6 +9,7 @@ exports.up = function (knex) {
     table.text('description');
     table.boolean('active').defaultTo(true);
     table.integer('index').unsigned();
+    table.boolean('predefined').defaultTo(false);
     table.timestamps();
   }).then(() => {
     return knex.seed.run({

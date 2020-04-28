@@ -38,7 +38,7 @@ function AccountFormDialog({
   closeDialog,
   requestSubmitAccount,
   requestEditAccount,
-  getAccountById
+  getAccountById,
 }) {
   const intl = useIntl();
   const accountFormValidationSchema = Yup.object().shape({
@@ -57,11 +57,22 @@ function AccountFormDialog({
   }), []);
 
   const [selectedAccountType, setSelectedAccountType] = useState(null);
-  const [selectedSubaccount, setSelectedSubaccount] = useState(null);
+  const [selectedSubaccount, setSelectedSubaccount] = useState(
+    payload.action === 'new_child' ? 
+      accounts.find(a => a.id === payload.id) : null,
+  );
 
   const editAccount = useMemo(() =>
     payload.action === 'edit' ? getAccountById(payload.id) : null,
     [payload, getAccountById]);
+
+  const transformApiErrors = (errors) => {
+    const fields = {};
+    if (errors.find(e => e.type === 'NOT_UNIQUE_CODE')) {
+      fields.code = 'Account code is not unqiue.'
+    }
+    return fields;
+  };
 
   // Formik
   const formik = useFormik({
@@ -71,21 +82,22 @@ function AccountFormDialog({
         ? editAccount : initialValues,
     },
     validationSchema: accountFormValidationSchema,
-    onSubmit: (values, { setSubmitting }) => {
+    onSubmit: (values, { setSubmitting, setErrors }) => {
       const exclude = ['subaccount'];
 
       if (payload.action === 'edit') {
         requestEditAccount({
           payload: payload.id,
-          form: { ...omit(values, exclude) }
+          form: { ...omit(values, [...exclude, 'account_type_id']) }
         }).then(response => {
           closeDialog(name);
           AppToaster.show({
             message: 'the_account_has_been_edited'
           });
           setSubmitting(false);
-        }).catch(() => {
+        }).catch((errors) => {
           setSubmitting(false); 
+          setErrors(transformApiErrors(errors));
         });
       } else {
         requestSubmitAccount({ form: { ...omit(values, exclude) } }).then(response => {
@@ -94,8 +106,9 @@ function AccountFormDialog({
             message: 'the_account_has_been_submit'
           });
           setSubmitting(false);
-        }).catch(() => {
+        }).catch((errors) => {
           setSubmitting(false);
+          setErrors(transformApiErrors(errors));
         });
       }
     }
@@ -187,9 +200,7 @@ function AccountFormDialog({
     return (<span>{'Sub account?'} <Icon icon="info-circle" iconSize={12} /></span>);
   }, []);
 
-  const requiredSpan = useMemo(() => (
-    <span class="required">*</span>
-  ), []);
+  const requiredSpan = useMemo(() => (<span class="required">*</span>), []);
 
   return (
     <Dialog
@@ -232,6 +243,7 @@ function AccountFormDialog({
                 rightIcon='caret-down'
                 text={selectedAccountType ?
                   selectedAccountType.name : 'Select account type'}
+                disabled={payload.action === 'edit'}
               />
             </Select>
           </FormGroup>

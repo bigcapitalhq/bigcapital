@@ -19,6 +19,7 @@ import ViewConnect from 'connectors/View.connector';
 import LoadingIndicator from 'components/LoadingIndicator';
 import DataTable from 'components/DataTable';
 import Money from 'components/Money';
+import { useUpdateEffect } from 'hooks';
 
 function AccountsDataTable({
   accounts,
@@ -31,9 +32,16 @@ function AccountsDataTable({
   setTopbarEditView,
   accountsLoading,
   onFetchData,
-  setSelectedRowsAccounts,
+  onSelectedRowsChange
 }) {
-  const { custom_view_id: customViewId } = useParams();
+  const {custom_view_id: customViewId} = useParams();
+  const [initialMount, setInitialMount] = useState(false);
+
+  useUpdateEffect(() => {
+    if (!accountsLoading) {
+      setInitialMount(true);
+    }
+  }, [accountsLoading, setInitialMount]);
 
   useEffect(() => {
     const viewMeta = getViewItem(customViewId);
@@ -52,12 +60,20 @@ function AccountsDataTable({
     openDialog('account-form', { action: 'edit', id: account.id });
   }, [openDialog]);
 
-  const actionMenuList = useCallback(account => (
+  const handleNewParentAccount = useCallback((account) => {
+    openDialog('account-form', { action: 'new_child', id: account.id });
+  }, [openDialog]);
+
+  const actionMenuList = useCallback((account) => (
     <Menu>
       <MenuItem text='View Details' />
       <MenuDivider />
-      <MenuItem text='Edit Account' onClick={handleEditAccount(account)} />
-      <MenuItem text='New Account' />
+      <MenuItem
+        text='Edit Account'
+        onClick={handleEditAccount(account)} />
+      <MenuItem
+        text='New Account'
+        onClick={() => handleNewParentAccount(account)} />
       <MenuDivider />
       <MenuItem
         text='Inactivate Account'
@@ -152,17 +168,22 @@ function AccountsDataTable({
     onFetchData && onFetchData(...params);
   }, []);
 
+  const handleSelectedRowsChange = useCallback((selectedRows) => {
+    onSelectedRowsChange && onSelectedRowsChange(selectedRows.map(s => s.original));
+  }, [onSelectedRowsChange]);
+
   return (
-    <LoadingIndicator loading={accountsLoading} spinnerSize={30}>
-      <DataTable
-        columns={columns}
-        data={accounts}
-        onFetchData={handleDatatableFetchData}
-        manualSortBy={true}
-        selectionColumn={selectionColumn}
-        expandable={true} 
-        treeGraph={true} />
-    </LoadingIndicator>    
+    <DataTable
+      columns={columns}
+      data={accounts}
+      onFetchData={handleDatatableFetchData}
+      manualSortBy={true}
+      selectionColumn={selectionColumn}
+      expandable={true} 
+      treeGraph={true}
+      onSelectedRowsChange={handleSelectedRowsChange}
+      loading={accountsLoading && !initialMount}
+      spinnerProps={{size: 30}} />
   );
 }
 

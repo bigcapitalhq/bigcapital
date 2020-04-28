@@ -10,20 +10,22 @@ exports.seed = (knex) => {
           name: 'Petty Cash',
           account_type_id: 2,
           parent_account_id: null,
-          code: '10000',
+          code: '1000',
           description: '',
           active: 1,
           index: 1,
+          predefined: 1,
         },
         {
           id: 2,
           name: 'Bank',
           account_type_id: 2,
           parent_account_id: null,
-          code: '20000',
+          code: '2000',
           description: '',
           active: 1,
           index: 1,
+          predefined: 1,
         },
         {
           id: 3,
@@ -34,6 +36,7 @@ exports.seed = (knex) => {
           description: '',
           active: 1,
           index: 1,
+          predefined: 1,
         },
         {
           id: 4,
@@ -44,6 +47,7 @@ exports.seed = (knex) => {
           description: '',
           active: 1,
           index: 1,
+          predefined: 1,
         },
         {
           id: 5,
@@ -54,6 +58,7 @@ exports.seed = (knex) => {
           description: '',
           active: 1,
           index: 1,
+          predefined: 1,
         },
         {
           id: 6,
@@ -64,6 +69,7 @@ exports.seed = (knex) => {
           description: '',
           active: 1,
           index: 1,
+          predefined: 1,
         },
         {
           id: 7,
@@ -74,6 +80,7 @@ exports.seed = (knex) => {
           description: '',
           active: 1,
           index: 1,
+          predefined: 1,
         },
         {
           id: 8,
@@ -84,6 +91,7 @@ exports.seed = (knex) => {
           description: '',
           active: 1,
           index: 1,
+          predefined: 1,
         },
         {
           id: 9,
@@ -94,6 +102,7 @@ exports.seed = (knex) => {
           description: '',
           active: 1,
           index: 1,
+          predefined: 1,
         }
       ]);
     });
