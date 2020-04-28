@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import {
@@ -10,16 +10,24 @@ import {
   Classes,
 } from '@blueprintjs/core';
 
-import { optionsMapToArray, momentFormatter } from 'utils';
+import { optionsMapToArray, momentFormatter, optionsArrayToMap } from 'utils';
 import { TimezonePicker } from '@blueprintjs/timezone';
 import { Select } from '@blueprintjs/select';
 import classNames from 'classnames';
 import ErrorMessage from 'components/ErrorMessage';
 import Icon from 'components/Icon';
+import { compose } from 'utils';
+import SettingsConnect from 'connectors/Settings.connect';
+import AppToaster from 'components/AppToaster';
+import { useIntl } from 'react-intl';
+import useAsync from 'hooks/async';
 
-function GeneralPreferences(props) {
+function GeneralPreferences({
+  organizationSettings,
+  requestSubmitOptions,
+  requestFetchOptions,
+}) {
   const [selectedItems, setSelectedItems] = useState({});
-  const [disableItems, setDisableItems] = useState(false);
   const [timeZone, setTimeZone] = useState('');
 
   const businessLocation = [
@@ -28,8 +36,8 @@ function GeneralPreferences(props) {
     { id: 212, name: 'Morocco', code: 'MA' },
   ];
   const languagesDisplay = [
-    { name: 'EN', label: 'English' },
-    { name: 'Arb', label: 'Arabic' },
+    { id: 0, name: 'EN', label: 'English' },
+    { id: 1, name: 'Arb', label: 'Arabic' },
   ];
   const currencies = [
     { id: 0, name: 'US Dollar', code: 'USD' },
@@ -41,33 +49,58 @@ function GeneralPreferences(props) {
     { id: 1, name: 'August-December', label: 'August-December' },
   ];
   const dateFormat = [
-    { name: '04/11/2020', format: 'MM-DD-YY' },
-    { name: '2020/03/21', format: 'YY/MM/DD' },
-    { name: 'Apr 11, 2020', format: 'MMMM yyyy' },
-    { name: 'Saturday, Apr 11, 2020', format: 'EEEE, MMM d, yyyy' },
+    { id: 1, name: '04/11/2020', format: 'MM-DD-YY' },
+    { id: 3, name: '2020/03/21', format: 'YY/MM/DD' },
+    { id: 4, name: 'Apr 11, 2020', format: 'MMMM yyyy' },
+    { id: 6, name: 'Saturday, Apr 11, 2020', format: 'EEEE, MMM d, yyyy' },
   ];
+
+  const intl = useIntl();
+
   const validationSchema = Yup.object().shape({
-    organization_name: Yup.string().required('required field'),
-    organization_industry: Yup.string().required('required field'),
-    business_location: Yup.string().required('required field'),
-    base_currency: Yup.string().required('required field'),
-    fiscal_year: Yup.string().required('required field'),
-    language: Yup.string().required('required field'),
-    time_zone: Yup.date().required('required field'),
-    date_format: Yup.date().required('required field'),
+    name: Yup.string().required(intl.formatMessage({ id: 'required' })),
+    industry: Yup.string().required(intl.formatMessage({ id: 'required' })),
+    location: Yup.string().required(intl.formatMessage({ id: 'required' })),
+    base_currency: Yup.string().required(
+      intl.formatMessage({ id: 'required' })
+    ),
+    fiscal_year: Yup.string().required(intl.formatMessage({ id: 'required' })),
+    language: Yup.string().required(intl.formatMessage({ id: 'required' })),
+    // time_zone: Yup.object().required(intl.formatMessage({ id: 'required' })),
+    date_format: Yup.date().required(intl.formatMessage({ id: 'required' })),
   });
+  console.log(organizationSettings.name);
 
   const formik = useFormik({
     enableReinitialize: true,
-    initialValues: {},
+    initialValues: {
+      ...organizationSettings,
+    },
     validationSchema: validationSchema,
-    onSubmit: (values) => {
+
+    onSubmit: (values, { setSubmitting }) => {
       const options = optionsMapToArray(values).map((option) => {
-        return { ...option, group: 'general' };
+        return { key: option.key, ...option, group: 'organization' };
       });
+
+      requestSubmitOptions({ options })
+        .then((response) => {
+          AppToaster.show({
+            message: 'The_Options_has_been_Submit',
+          });
+          setSubmitting(false);
+        })
+        .catch((error) => {
+          setSubmitting(false);
+        });
     },
   });
+
   const { errors, values, touched } = useMemo(() => formik, [formik]);
+
+  const fetchHook = useAsync(async () => {
+    await Promise.all([requestFetchOptions()]);
+  });
 
   const businessLocationItem = (item, { handleClick }) => (
     <MenuItem
@@ -107,7 +140,7 @@ function GeneralPreferences(props) {
     />
   );
 
-  const data_Format = (item, { handleClick }) => (
+  const date_format = (item, { handleClick }) => (
     <MenuItem
       className={'preferences-menu'}
       key={item.id}
@@ -126,6 +159,7 @@ function GeneralPreferences(props) {
       formik.setFieldValue(filedName, filed.name);
     };
   };
+
   const getSelectedItemLabel = (filedName, defaultLabel) => {
     return typeof selectedItems[filedName] !== 'undefined'
       ? selectedItems[filedName].name
@@ -140,42 +174,26 @@ function GeneralPreferences(props) {
         <FormGroup
           label={'Organization Name'}
           inline={true}
-          intent={
-            errors.organization_name &&
-            touched.organization_name &&
-            Intent.DANGER
-          }
-          helperText={<ErrorMessage name='organization_name' {...formik} />}
+          intent={errors.name && touched.name && Intent.DANGER}
+          helperText={<ErrorMessage name='name' {...formik} />}
         >
           <InputGroup
-            medium={true}
-            intent={
-              errors.organization_name &&
-              touched.organization_name &&
-              Intent.DANGER
-            }
-            {...formik.getFieldProps('organization_name')}
+            medium={'true'}
+            intent={errors.name && touched.name && Intent.DANGER}
+            {...formik.getFieldProps('name')}
           />
         </FormGroup>
 
         <FormGroup
           label={'Organization Industry'}
           inline={true}
-          intent={
-            errors.organization_industry &&
-            touched.organization_industry &&
-            Intent.DANGER
-          }
-          helperText={<ErrorMessage name='organization_industry' {...formik} />}
+          intent={errors.industry && touched.industry && Intent.DANGER}
+          helperText={<ErrorMessage name='industry' {...formik} />}
         >
           <InputGroup
-            medium={true}
-            intent={
-              errors.organization_industry &&
-              touched.organization_industry &&
-              Intent.DANGER
-            }
-            {...formik.getFieldProps('organization_industry')}
+            medium={'true'}
+            intent={errors.industry && touched.industry && Intent.DANGER}
+            {...formik.getFieldProps('industry')}
           />
         </FormGroup>
 
@@ -187,26 +205,22 @@ function GeneralPreferences(props) {
             Classes.FILL
           )}
           inline={true}
-          helperText={<ErrorMessage name='business_location' {...formik} />}
-          intent={
-            errors.business_location &&
-            touched.business_location &&
-            Intent.DANGER
-          }
+          helperText={<ErrorMessage name='location' {...formik} />}
+          intent={errors.location && touched.location && Intent.DANGER}
         >
           <Select
             items={businessLocation}
             noResults={<MenuItem disabled={true} text='No result.' />}
             itemRenderer={businessLocationItem}
             popoverProps={{ minimal: true }}
-            onItemSelect={onItemsSelect('business_location')}
+            onItemSelect={onItemsSelect('location')}
           >
             <Button
               fill={true}
               rightIcon='caret-down'
               text={getSelectedItemLabel(
-                'business_location',
-                'Business Location'
+                'location',
+                organizationSettings.location
               )}
             />
           </Select>
@@ -235,7 +249,10 @@ function GeneralPreferences(props) {
             <Button
               fill={true}
               rightIcon='caret-down'
-              text={getSelectedItemLabel('base_currency', 'Base Currency')}
+              text={getSelectedItemLabel(
+                'base_currency',
+                organizationSettings.base_currency
+              )}
             />
           </Select>
         </FormGroup>
@@ -261,7 +278,10 @@ function GeneralPreferences(props) {
             <Button
               fill={true}
               rightIcon='caret-down'
-              text={getSelectedItemLabel('fiscal_year', 'Fiscal Year')}
+              text={getSelectedItemLabel(
+                'fiscal_year',
+                organizationSettings.fiscal_year
+              )}
             />
           </Select>
         </FormGroup>
@@ -286,11 +306,13 @@ function GeneralPreferences(props) {
           >
             <Button
               rightIcon='caret-down'
-              text={getSelectedItemLabel('language', 'English')}
+              text={getSelectedItemLabel(
+                'language',
+                organizationSettings.language
+              )}
             />
           </Select>
         </FormGroup>
-
         <FormGroup
           label={'Time Zone'}
           inline={true}
@@ -309,30 +331,30 @@ function GeneralPreferences(props) {
             valueDisplayFormat='composite'
           />
         </FormGroup>
-
         <FormGroup
           label={'Date Format'}
           inline={true}
           className={classNames(
-            'form-group--date-format',
+            'form-group--language',
             'form-group--select-list',
             Classes.FILL
           )}
-          intent={errors.date_format && touched.data_Format && Intent.DANGER}
+          intent={errors.date_format && touched.date_format && Intent.DANGER}
           helperText={<ErrorMessage name='date_format' {...formik} />}
-          minimal={true}
         >
           <Select
             items={dateFormat}
             noResults={<MenuItem disabled={true} text='No result.' />}
-            itemRenderer={data_Format}
-            popoverProps={{ minimal: true }}
+            itemRenderer={date_format}
+            popoverProp={{ minimal: true }}
             onItemSelect={onItemsSelect('date_format')}
           >
             <Button
-              fill={true}
               rightIcon='caret-down'
-              text={getSelectedItemLabel('fiscal_year', 'Fiscal Year')}
+              text={getSelectedItemLabel(
+                'date_format',
+                organizationSettings.date_format
+              )}
             />
           </Select>
         </FormGroup>
@@ -352,4 +374,4 @@ function GeneralPreferences(props) {
   );
 }
 
-export default GeneralPreferences;
+export default compose(SettingsConnect)(GeneralPreferences);

@@ -89,7 +89,7 @@ function AccountFormDialog({
         requestEditAccount({
           payload: payload.id,
           form: { ...omit(values, [...exclude, 'account_type_id']) }
-        }).then(response => {
+        }).then((response) => {
           closeDialog(name);
           AppToaster.show({
             message: 'the_account_has_been_edited'

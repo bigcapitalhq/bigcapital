@@ -29,17 +29,18 @@ function UsersPreferences({
           onChange={onChangeTabs}>
           <Tab id="users" title="Users" />
           <Tab id="roles" title="Roles" />
-        </Tabs>
+     
 
         <div class="preferences__tabs-extra-actions">
           <Button
             intent={Intent.PRIMARY}
-            onClick={onClickNewUser}>New User</Button>
+            onClick={onClickNewUser}>New invite</Button>
 
           <Button
             intent={Intent.PRIMARY}
             onClick={onClickNewUser}>New Role</Button>
         </div>
+        </Tabs>
       </div>
       <PreferencesSubContent preferenceTab="users" />
     </div>

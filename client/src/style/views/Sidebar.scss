@@ -1,22 +1,37 @@
-
-$sidebar-background: #01194E;
+$sidebar-background: #01194e;
 $sidebar-text-color: #fff;
 $sidebar-width: 220px;
 $sidebar-menu-item-color: #b8c0d5;
 
 $sidebar-popover-submenu-bg: rgb(1, 20, 62);
 
-.sidebar{
+.sidebar {
   background: $sidebar-background;
   color: $sidebar-text-color;
   width: $sidebar-width;
   position: fixed;
   height: 100%;
 
-  &__inner{
-    overflow-y: scroll;
-    overflow-x: hidden;
-    height: 100%;
+  .ScrollbarsCustom-Track {
+    &.ScrollbarsCustom-TrackY,
+    &.ScrollbarsCustom-TrackX{
+      background: rgba(0, 0, 0, 0);
+    }
+  }
+  .ScrollbarsCustom-Thumb{
+    &.ScrollbarsCustom-ThumbX,
+    &.ScrollbarsCustom-ThumbY {
+      background: rgba(0, 0, 0, 0);
+    }      
+  }
+
+  &:hover {
+    .ScrollbarsCustom-Thumb{
+      &.ScrollbarsCustom-ThumbX,
+      &.ScrollbarsCustom-ThumbY {
+        background: rgba(255, 255, 255, 0.25);
+      }      
+    }
   }
   &__head{
     padding: 16px 12px;
@@ -30,79 +45,78 @@ $sidebar-popover-submenu-bg: rgb(1, 20, 62);
     }
   }
 
-  &-menu{
+  &-menu {
     background: transparent;
     padding: 0;
     min-width: $sidebar-width;
     border-radius: 0;
     padding-bottom: 2rem;
 
-    .#{$ns}-menu-item{
+    .#{$ns}-menu-item {
       color: $sidebar-menu-item-color;
       border-radius: 0;
       padding: 10px 16px;
       font-size: 15px;
-      font-weight: 400; 
+      font-weight: 400;
 
       &:hover,
-      &.bp3-active{
+      &.bp3-active {
         background: #012470;
         color: #c1c9dd;
       }
       &:focus,
-      &:active{
-       background: #01143e;
+      &:active {
+        background: #01143e;
       }
 
-      > .#{$ns}-icon{
+      > .#{$ns}-icon {
         color: #767b9b;
         margin-right: 14px;
         margin-top: 0;
       }
-      > .#{$ns}-icon-caret-right{
+      > .#{$ns}-icon-caret-right {
         margin-right: -4px;
         margin-top: 3px;
         color: #42547b;
       }
     }
 
-    .#{$ns}-submenu{
-
-      .#{$ns}-collapse{
+    .#{$ns}-submenu {
+      .#{$ns}-collapse {
         border-left: 2px solid rgba(255, 255, 255, 0.15);
 
-        &-body{
+        &-body {
           background-color: rgb(11, 34, 85);
           padding-bottom: 6px;
           padding-top: 6px;
         }
 
-        .#{$ns}-menu-item{
+        .#{$ns}-menu-item {
           padding: 7px 16px 7px 18px;
           font-size: 15px;
           color: #8a95b6;
 
           &:hover,
-          &.bp3-active{
+          &.bp3-active {
             background: transparent;
-            color: #C5CBE3;
+            color: #c5cbe3;
           }
         }
       }
-      .#{$ns}-popover{
+      .#{$ns}-popover {
         padding: 0;
 
-        &-content{
+        &-content {
           box-shadow: 0 0 0;
         }
       }
     }
-    .#{$ns}-popover-target.#{$ns}-popover-open .#{$ns}-menu-item{
+    .#{$ns}-popover-target.#{$ns}-popover-open .#{$ns}-menu-item {
       color: $sidebar-menu-item-color;
     }
-    .#{$ns}-menu-divider{
-      border-top-color: #1D366A;
-      color: #6B708C;
+    .#{$ns}-menu-divider {
+      border-top-color: #1d366a;
+      color: #6b708c;
       margin: 4px 0;
     }
   }

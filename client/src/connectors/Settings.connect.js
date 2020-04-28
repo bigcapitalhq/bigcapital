@@ -1,4 +1,10 @@
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
+import {
+  FetchOption,
+  FetchOptions,
+  submitOptions,
+} from 'store/settings/settings.actions';
+
 
 export const mapStateToProps = (state, props) => {
   return {
@@ -7,7 +13,8 @@ export const mapStateToProps = (state, props) => {
 };
 
 export const mapDispatchToProps = (dispatch) => ({
-  
+  requestSubmitOptions: (form) => dispatch(submitOptions({ form })),
+  requestFetchOptions: () => dispatch(FetchOptions({})),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps);
