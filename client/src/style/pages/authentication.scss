@@ -1,26 +1,266 @@
-
-
-.authentication-page{
-  &__form-wrapper{
+.authentication-page {
+  &__form-wrapper {
     width: 100%;
-    max-width: 350px;
+    max-width: 450px;
     padding: 15px;
     margin: 0 auto;
   }
 
-  .login-page{
+  // Login Form
+  .login-form {
+    width: 385px;
 
-    .input-group{
-      &--email-phone-number{
-        margin-bottom: 1rem;
+    &__icon-section {
+      margin: 0 auto;
+    }
+
+    &__label-section {
+      h3 {
+        font-weight: normal;
+        margin: 0;
+        font-size: 24px;
+        margin-bottom: 14px;
       }
-      &--password{
-        margin-bottom: 1rem;
+      a {
+        text-decoration: underline;
+        color: #0040bd;
+      }
+      margin-bottom: 30px;
+    }
+    .bp3-form-group {
+      .bp3-form-content {
+        width: 384px;
+        min-height: 40px;
+      }
+    }
+    .bp3-icon-eye-open {
+      display: inline-block;
+      justify-content: space-between;
+      flex: 0 0 auto;
+      vertical-align: text-bottom;
+      margin: 0px 5px 0px 265px;
+    }
+
+    &__checkbox-section {
+      margin: -10px 0 30px 0px;
+    }
+
+    &__floating-footer-section {
+      margin: 0px 0px 24px 0px;
+
+      .btn-login {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #0052cc;
+        min-height: 45px;
       }
     }
   }
-  &__footer{
-    margin-top: 1rem;
-    text-align: center;
+
+  //Register Form
+
+  .register-form {
+    width: 384px;
+
+    &__icon-section {
+      margin: 0 auto;
+    }
+
+    &__label-section {
+      h3 {
+        font-weight: normal;
+        margin: 0;
+        font-size: 24px;
+        margin-bottom: 14px;
+      }
+      margin-bottom: 35px;
+
+      a {
+        text-decoration: underline;
+        color: #0040bd;
+      }
+    }
+    .bp3-input {
+      min-height: 40px;
+    }
+
+    &__statement-section {
+      margin-top: -10px;
+      p {
+        font-size: 13px;
+        margin-top: -10px;
+        margin-bottom: 20px;
+        line-height: 25px;
+      }
+    }
+    .bp3-icon-eye-open {
+      display: inline-block;
+      justify-content: space-between;
+      flex: 0 0 auto;
+      vertical-align: text-bottom;
+      margin: 0px 5px 0px 265px;
+    }
+
+    &__floating-footer-section {
+      margin: 25px 0px 25px 0px;
+
+      .btn-register {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #0052cc;
+        min-height: 45px;
+        width: 100%;
+      }
+    }
   }
+
+  // Send Reset Form
+
+  .reset-form {
+    width: 385px;
+    &__icon-section {
+      margin: 0 auto;
+    }
+
+    &__label-section {
+      h3 {
+        font-weight: normal;
+        margin: 0;
+        font-size: 24px;
+        margin-bottom: 14px;
+      }
+      margin-bottom: 30px;
+    }
+
+    &__footer-section {
+      padding: 14px 16px;
+      border-top: 1px solid #ececec;
+      margin: 0px 0px 25px auto;
+      border-bottom: 1px solid #ececec;
+      text-align: center;
+
+      a {
+        text-decoration: none;
+        color: #0040bd;
+      }
+    }
+
+    &__floating-section {
+      margin: 30px 0px 25px auto;
+
+      .btn-send {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #0052cc;
+        min-height: 45px;
+        width: 100%;
+      }
+    }
+  }
+
+  // Reset New Password Form
+
+  .submit-np-form {
+    width: 384px;
+
+    &__icon-section {
+      margin: 0 auto;
+    }
+    &__label-section {
+      h3 {
+        font-weight: normal;
+        margin: 0;
+        font-size: 24px;
+        margin-bottom: 14px;
+      }
+      a {
+        text-decoration: underline;
+        color: #0040bd;
+      }
+      margin-bottom: 30px;
+    }
+
+    .bp3-input {
+      min-height: 40px;
+    }
+    &__floating-footer-section {
+      margin: 20px 0px 30px auto;
+
+      .btn-new {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #0052cc;
+        min-height: 45px;
+        width: 100%;
+      }
+    }
+  }
+
+  // Invite Accept Form
+
+  .invite-form {
+    width: 384px;
+
+    &__icon-section {
+      margin: 0 auto;
+    }
+    &__label-section {
+      h3 {
+        font-weight: normal;
+        margin: 0;
+        font-size: 24px;
+        margin-bottom: 14px;
+      }
+      margin-bottom: 30px;
+    }
+    .bp3-input {
+      min-height: 40px;
+    }
+    .bp3-icon-eye-open {
+      display: inline-block;
+      justify-content: space-between;
+      flex: 0 0 auto;
+      vertical-align: text-bottom;
+      margin: 0px 5px 0px 265px;
+    }
+
+    &__statement-section {
+      margin-top: -10px;
+      p {
+        font-size: 13px;
+        margin-bottom: 20px;
+        line-height: 25px;
+      }
+    }
+
+    &__floating-footer {
+      margin: 20px 0px 20px auto;
+
+      .btn-invite {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #0052cc;
+        min-height: 45px;
+        width: 100%;
+      }
+    }
+  }
+
+  .bp3-icon-bigcapital {
+    display: inline-block;
+    flex: 0 0 auto;
+    vertical-align: text-bottom;
+    margin-left: 100px;
+  }
+}
+
+// Copyright Page
+.copyright-page {
+  text-align: center;
+  line-height: 14px;
 }

@@ -1,42 +1,47 @@
-import React, { useEffect } from "react";
-import {Link, useHistory} from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useHistory } from 'react-router-dom';
 import * as Yup from 'yup';
-import {useFormik} from 'formik';
-import {connect} from 'react-redux';
-import {useIntl} from 'react-intl';
+import { useFormik } from 'formik';
+import { connect } from 'react-redux';
+import { useIntl } from 'react-intl';
 import {
   Button,
   InputGroup,
   Intent,
   FormGroup,
-} from "@blueprintjs/core";
+  Checkbox,
+  Icon,
+} from '@blueprintjs/core';
 import login from 'store/authentication/authentication.actions';
-import {hasErrorType, isAuthenticated} from 'store/authentication/authentication.reducer';
+import {
+  hasErrorType,
+  isAuthenticated,
+} from 'store/authentication/authentication.reducer';
 import AuthenticationToaster from 'components/AppToaster';
 import t from 'store/types';
+import ErrorMessage from 'components/ErrorMessage';
+import IconLog from 'components/Icon';
+import Copyright from './copyright';
 
 const ERRORS_TYPES = {
   INVALID_DETAILS: 'INVALID_DETAILS',
   USER_INACTIVE: 'USER_INACTIVE',
 };
-function Login({
-  login,
-  errors,
-  clearErrors,
-  hasError,
-}) {
+function Login({ login, errors, clearErrors, hasError }) {
   const intl = useIntl();
   const history = useHistory();
+  
+
+  const [shown, setShown] = useState(false);
 
   // Validation schema.
-  const loginValidationSchema = Yup.object().shape({
-    crediential: Yup
-      .string()
-      .required(intl.formatMessage({'id': 'required'}))
-      .email(intl.formatMessage({id: 'invalid_email_or_phone_numner'})),
-    password: Yup
-      .string()
-      .required(intl.formatMessage({id: 'required'}))
+  const loginValidationSchema = 
+  Yup.object().shape({
+    crediential: Yup.string()
+      .required(intl.formatMessage({ id: 'required' }))
+      .email(intl.formatMessage({ id: 'invalid_email_or_phone_numner' })),
+    password: Yup.string()
+      .required(intl.formatMessage({ id: 'required' }))
       .min(4),
   });
 
@@ -65,11 +70,13 @@ function Login({
     }
     if (hasError(ERRORS_TYPES.USER_INACTIVE)) {
       toastBuilders.push({
-        message: intl.formatMessage({ id: 'the_user_has_been_suspended_from_admin' }),
+        message: intl.formatMessage({
+          id: 'the_user_has_been_suspended_from_admin',
+        }),
         intent: Intent.WARNING,
       });
     }
-    toastBuilders.forEach(builder => {
+    toastBuilders.forEach((builder) => {
       AuthenticationToaster.show(builder);
     });
   }, [hasError, intl]);
@@ -81,53 +88,87 @@ function Login({
     }
   });
 
+  const passwordRevealer = () => {
+    setShown(!shown);
+  };
+
   return (
-    <div className="login-page">
+    <div className='login-form'>
+      <IconLog
+        className={'login-form__icon-section'}
+        icon='bigcapital'
+        iconSize={150}
+      />
       <form onSubmit={formik.handleSubmit}>
-        <FormGroup
-          className={'form-group--crediential'}
-          intent={formik.errors.crediential && Intent.DANGER}
-          helperText={formik.errors.crediential && formik.errors.crediential}>
+        <div className={'login-form__label-section'}>
+          <h3>Log in</h3>
+          Need a Bigcapital account ?
+          <Link to='/auth/register'> Create an account</Link>
+        </div>
+        <div>
+          <FormGroup
+            label={'Email or Phone Number'}
+            intent={
+              formik.errors.crediential &&
+              formik.touched.crediential &&
+              Intent.DANGER
+            }
+            helperText={<ErrorMessage name={'crediential'} {...formik} />}
+          >
+            <InputGroup
+              intent={
+                formik.errors.crediential &&
+                formik.touched.crediential &&
+                Intent.DANGER
+              }
+              large={true}
+              {...formik.getFieldProps('crediential')}
+            />
+          </FormGroup>
+        </div>
+        <div>
+          <FormGroup
+            label={'Password'}
+            labelInfo={
+              <span onClick={() => passwordRevealer()}>
+                <Icon icon='eye-open' />
+                Show
+              </span>
+            }
+            intent={
+              formik.errors.password && formik.touched.password && Intent.DANGER
+            }
+            helperText={<ErrorMessage name={'password'} {...formik} />}
+          >
+            <InputGroup
+              large={true}
+              intent={
+                formik.errors.password &&
+                formik.touched.password &&
+                Intent.DANGER
+              }
+              type={shown ? 'text' : 'password'}
+              {...formik.getFieldProps('password')}
+            />
+          </FormGroup>
+        </div>
+        <div className={'login-form__checkbox-section'}>
+          <Checkbox>Keep me logged in</Checkbox>
+        </div>
 
-          <InputGroup
-            leftIcon="user"
-            placeholder={intl.formatMessage({'id': 'email_or_phone_number'})}
-            large={true}
-            intent={formik.errors.crediential && Intent.DANGER}
-            {...formik.getFieldProps('crediential')} />
-        </FormGroup>
-
-        <FormGroup
-          className={'form-group--password'}
-          intent={formik.errors.password && Intent.DANGER}
-          helperText={formik.errors.password && formik.errors.password}>
-
-          <InputGroup
-            leftIcon="info-sign"
-            placeholder={intl.formatMessage({'id': 'password'})}
-            large={true}
-            intent={formik.errors.password && Intent.DANGER}
-            type={"password"}
-            {...formik.getFieldProps('password')} />
-        </FormGroup>
-
-        <Button
-          type="submit"
-          fill={true}
-          large={true}>
-          {intl.formatMessage({'id': 'login '})}
-        </Button>
+        <div className={'login-form__floating-footer-section'}>
+          <Button
+            className={'btn-login'}
+            type={'submit'}
+            intent={Intent.PRIMARY}
+            fill={true}
+            lang={true}
+          >
+            {intl.formatMessage({ id: 'Log in' })}
+          </Button>
+        </div>
       </form>
-
-      <div className="authentication-page__footer">
-        <Link to="/auth/send_reset_password">
-          {intl.formatMessage({'id': 'reset_password '})}
-        </Link>
-
-        <Link to="/auth/register">
-          {intl.formatMessage({'id': 'register '})}
-        </Link>
-      </div>
+      <Copyright />
     </div>
   );
 }
@@ -138,7 +179,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  login: form => dispatch(login({ form })),
+  login: (form) => dispatch(login({ form })),
   clearErrors: () => dispatch({ type: t.LOGIN_CLEAR_ERRORS }),
 });
 

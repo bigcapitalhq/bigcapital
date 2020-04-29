@@ -12,11 +12,12 @@ import {
 import ErrorMessage from 'components/ErrorMessage';
 import AppToaster from 'components/AppToaster';
 import { compose } from 'utils';
-import SendResetPasswordConnect from 'connectors/ResetPassword.connect';
+import ResetPasswordConnect from 'connectors/ResetPassword.connect';
+import Icon from 'components/Icon';
+import Copyright from './copyright';
+import { Link } from 'react-router-dom';
 
-function ResetPassword({
-  requestSendResetPassword,
-}) {
+function ResetPassword({ requestSendResetPassword }) {
   const intl = useIntl();
   const ValidationSchema = Yup.object().shape({
     password: Yup.string()
@@ -27,19 +28,15 @@ function ResetPassword({
       .required('Confirm Password is required'),
   });
 
-  const initialValues = useMemo(() => ({
-    password: '',
-    confirm_password: '',
-  }), []);
+  const initialValues = useMemo(
+    () => ({
+      password: '',
+      confirm_password: '',
+    }),
+    []
+  );
 
-  const {
-    errors,
-    values,
-    touched,
-    getFieldMeta,
-    getFieldProps,
-    handleSubmit,
-  } = useFormik({
+  const formik= useFormik({
     enableReinitialize: true,
     validationSchema: ValidationSchema,
     initialValues: {
@@ -62,52 +59,66 @@ function ResetPassword({
   const requiredSpan = useMemo(() => <span class='required'>*</span>, []);
 
   return (
-    <div className={'sendRestPassword-form'}>
-      <form onSubmit={handleSubmit}>
-        <FormGroup
-          label={'Password'}
-          labelInfo={requiredSpan}
-          className={'form-group--password'}
-          intent={errors.password && touched.password && Intent.DANGER}
-          helperText={<ErrorMessage name={'password'} />}
-        >
-          <InputGroup
-            lang={true}
-            type={'password'}
-            intent={errors.password && touched.password && Intent.DANGER}
-            {...getFieldProps('password')}
-          />
-        </FormGroup>
-
-        <FormGroup
-          label={'Confirm Password'}
-          labelInfo={requiredSpan}
-          className={'form-group--confirm_password'}
-          intent={
-            errors.confirm_password && touched.confirm_password && Intent.DANGER
-          }
-          helperText={<ErrorMessage name={'confirm_password'} />}
-        >
-          <InputGroup
-            lang={true}
-            type={'password'}
+    <div className={'submit-np-form'}>
+      <div>
+        <Icon
+          className={'submit-np-form__icon-section'}
+          icon='bigcapital'
+          iconSize={150}
+        />
+      </div>
+      <form onSubmit={formik.handleSubmit}>
+        <div className={'submit-np-form__label-section'}>
+          <h3>Choose a new password</h3>
+          You remembered your password ? <Link to='/auth/login'>Login</Link>
+        </div>
+        <div>
+          <FormGroup
+            label={'Password'}
+            intent={formik.errors.password && formik.touched.password && Intent.DANGER}
+            helperText={<ErrorMessage name={'password'} {...formik} />}
+          >
+            <InputGroup
+              lang={true}
+              type={'password'}
+              intent={formik.errors.password && formik.touched.password && Intent.DANGER}
+              {...formik.getFieldProps('password')}
+            />
+          </FormGroup>
+        </div>
+        <div>
+          <FormGroup
+            label={'New Password'}
+            labelInfo={'(again):'}
             intent={
-              errors.confirm_password &&
-              touched.confirm_password &&
+              formik.errors.confirm_password &&
+              formik.touched.confirm_password &&
               Intent.DANGER
             }
-            {...getFieldProps('confirm_password')}
-          />
-        </FormGroup>
+            helperText={<ErrorMessage name={'confirm_password'} {...formik} />}
+          >
+            <InputGroup
+              lang={true}
+              type={'password'}
+              intent={
+                formik.errors.confirm_password &&
+                formik.touched.confirm_password &&
+                Intent.DANGER
+              }
+              {...formik.getFieldProps('confirm_password')}
+            />
+          </FormGroup>
+        </div>
 
-        <div class='form__floating-footer'>
-          <Button intent={Intent.PRIMARY} type='submit'>
-            Reset Password
+        <div class='submit-np-form__floating-footer-section'>
+          <Button className={'btn-new'} intent={Intent.PRIMARY} type='submit'>
+            Submit
           </Button>
         </div>
       </form>
+      <Copyright />
     </div>
   );
 }
 
-export default compose(SendResetPasswordConnect)(ResetPassword);
+export default compose(ResetPasswordConnect)(ResetPassword);
