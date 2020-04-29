@@ -14,7 +14,7 @@ export default [
     path: `${BASE_URL}/register`,
     name: 'auth.register',
     component: LazyLoader({
-      loader: () => import('containers/Authentication/Register'),
+    loader: () => import('containers/Authentication/Register'),
     }),
   },
   {

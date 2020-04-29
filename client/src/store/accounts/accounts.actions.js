@@ -18,25 +18,32 @@ export const fetchAccountTypes = () => {
 };
 
 export const fetchAccountsList = ({ query } = {}) => {
-  return dispatch =>
-    new Promise((resolve, reject) => {
-      ApiService.get('accounts', { params: query })
-        .then(response => {
-          dispatch({
-            type: t.ACCOUNTS_PAGE_SET,
-            accounts: response.data.accounts,
-            customViewId: response.data.customViewId
-          });
-          dispatch({
-            type: t.ACCOUNTS_ITEMS_SET,
-            accounts: response.data.accounts
-          });
-          resolve(response);
-        })
-        .catch(error => {
-          reject(error);
-        });
+  return dispatch => new Promise((resolve, reject) => {
+    dispatch({
+      type: t.SET_DASHBOARD_REQUEST_LOADING,
     });
+    ApiService.get('accounts', { params: query }).then(response => {
+      dispatch({
+        type: t.ACCOUNTS_PAGE_SET,
+        accounts: response.data.accounts,
+        customViewId: response.data.customViewId
+      });
+      dispatch({
+        type: t.ACCOUNTS_ITEMS_SET,
+        accounts: response.data.accounts
+      });
+      dispatch({
+        type: t.SET_DASHBOARD_REQUEST_COMPLETED,
+      });
+      resolve(response);
+    })
+    .catch((error) => {
+      dispatch({
+        type: t.SET_DASHBOARD_REQUEST_COMPLETED,
+      });
+      reject(error);
+    });
+  });
 };
 
 export const fetchAccountsTable = ({ query } = {}) => {
@@ -54,6 +61,9 @@ export const fetchAccountsTable = ({ query } = {}) => {
         type: t.ACCOUNTS_TABLE_LOADING,
         loading: true,
       });
+      dispatch({
+        type: t.SET_DASHBOARD_REQUEST_LOADING,
+      });
       ApiService.get('accounts', { params: { ...pageQuery, ...query } })
         .then((response) => {
           dispatch({
@@ -69,9 +79,15 @@ export const fetchAccountsTable = ({ query } = {}) => {
             type: t.ACCOUNTS_TABLE_LOADING,
             loading: false,
           });
+          dispatch({
+            type: t.SET_DASHBOARD_REQUEST_COMPLETED,
+          });
           resolve(response);
         })
         .catch((error) => {
+          dispatch({
+            type: t.SET_DASHBOARD_REQUEST_COMPLETED,
+          });
           reject(error);
         });
     });
@@ -96,11 +112,16 @@ export const fetchAccountsDataTable = ({ query }) => {
 export const submitAccount = ({ form }) => {
   return dispatch =>
     new Promise((resolve, reject) => {
-      
+      dispatch({
+        type: t.SET_DASHBOARD_REQUEST_LOADING,
+      });
       ApiService.post('accounts', form)
         .then(response => {
           dispatch({
             type: t.ACCOUNT_ERRORS_CLEAR,
+          });
+          dispatch({
+            type: t.SET_DASHBOARD_REQUEST_COMPLETED,
           });
           resolve(response);
         })
@@ -118,31 +139,42 @@ export const submitAccount = ({ form }) => {
               payload: { errors },
             });
           }
+          dispatch({
+            type: t.SET_DASHBOARD_REQUEST_COMPLETED,
+          });
           reject(errors);
         });
     });
 };
 
 export const editAccount = ({ id, form }) => {
-  return dispatch =>
-    new Promise((resolve, reject) => {
-      ApiService.post(`accounts/${id}`, form)
-        .then(response => {
-          dispatch({ type: t.CLEAR_ACCOUNT_FORM_ERRORS });
-          resolve(response);
-        })
-        .catch(error => {
-          const { response } = error;
-          const { data } = response;
-          const { errors } = data;
-
-          dispatch({ type: t.CLEAR_ACCOUNT_FORM_ERRORS });
-          if (errors) {
-            dispatch({ type: t.ACCOUNT_FORM_ERRORS, errors });
-          }
-          reject(errors);
-        });
+  return dispatch => new Promise((resolve, reject) => {
+    dispatch({
+      type: t.SET_DASHBOARD_REQUEST_LOADING,
     });
+    ApiService.post(`accounts/${id}`, form)
+      .then(response => {
+        dispatch({ type: t.CLEAR_ACCOUNT_FORM_ERRORS });
+        dispatch({
+          type: t.SET_DASHBOARD_REQUEST_COMPLETED,
+        });
+        resolve(response);
+      })
+      .catch(error => {
+        const { response } = error;
+        const { data } = response;
+        const { errors } = data;
+
+        dispatch({ type: t.CLEAR_ACCOUNT_FORM_ERRORS });
+        if (errors) {
+          dispatch({ type: t.ACCOUNT_FORM_ERRORS, errors });
+        }
+        dispatch({
+          type: t.SET_DASHBOARD_REQUEST_COMPLETED,
+        });
+        reject(errors);
+      });
+  });
 };
 
 export const activeAccount = ({ id }) => {

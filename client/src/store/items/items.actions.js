@@ -11,11 +11,14 @@ export const editItem = ({ id, form }) => {
 
 export const fetchItems = ({ query }) => {
   return (dispatch, getState) => new Promise((resolve, reject) => {
-    const pageQuery = getState().accounts.tableQuery;
+    const pageQuery = getState().items.tableQuery;
 
     dispatch({
       type: t.ITEMS_TABLE_LOADING,
       payload: { loading: true },
+    });
+    dispatch({
+      type: t.SET_DASHBOARD_REQUEST_LOADING,
     });
     ApiService.get(`items`, { params: { ...pageQuery, ...query } }).then(response => {    
       dispatch({
@@ -32,8 +35,16 @@ export const fetchItems = ({ query }) => {
         type: t.ITEMS_TABLE_LOADING,
         payload: { loading: false },
       });
+      dispatch({
+        type: t.SET_DASHBOARD_REQUEST_COMPLETED,
+      });
       resolve(response);
-    }).catch(error => { reject(error); });
+    }).catch((error) => {
+      dispatch({
+        type: t.SET_DASHBOARD_REQUEST_COMPLETED,
+      });
+      reject(error);
+    });
   });
 };
 

@@ -9,7 +9,8 @@ export default function DashboardContentRoute() {
       <Switch>
         { routes.map((route, index) => (
           <Route
-            key={index}
+            exact
+            // key={index}
             path={`${route.path}`}
             component={route.component} />
         ))}

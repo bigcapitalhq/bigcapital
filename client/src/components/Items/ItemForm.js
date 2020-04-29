@@ -22,15 +22,15 @@ import classNames from 'classnames';
 import Icon from 'components/Icon';
 import ItemCategoryConnect from 'connectors/ItemsCategory.connect';
 import MoneyInputGroup from 'components/MoneyInputGroup';
-
+import {useHistory} from 'react-router-dom';
 
 const ItemForm = ({
   requestSubmitItem,
   accounts,
   categories,
-  categoriesList,
 }) => {
   const [selectedAccounts, setSelectedAccounts] = useState({});
+  const history = useHistory();
 
   const ItemTypeDisplay = useMemo(() => ([
     { value: null, label: 'Select Item Type' },
@@ -43,7 +43,7 @@ const ItemForm = ({
     active: Yup.boolean(),
     name: Yup.string().required(),
     type: Yup.string().trim().required(),
-    sku: Yup.string().required(),
+    sku: Yup.string().trim(),
     cost_price: Yup.number(),
     sell_price: Yup.number(),
     cost_account_id: Yup.number().required(),
@@ -71,7 +71,14 @@ const ItemForm = ({
     note: '',
   }), []);
 
-  const formik = useFormik({
+  const {
+    getFieldProps,
+    setFieldValue,
+    values,
+    touched,
+    errors,
+    handleSubmit,
+  } = useFormik({
     enableReinitialize: true,
     validationSchema: validationSchema,
     initialValues: {
@@ -83,13 +90,13 @@ const ItemForm = ({
           message: 'The_Items_has_been_Submit'
         });
         setSubmitting(false);
+        history.push('/dashboard/items');
       })
       .catch((error) => {
         setSubmitting(false);
       });
     }
   });
-  const {errors, values, touched} = useMemo(() => formik, [formik]);
 
   const accountItem = useCallback((item, { handleClick }) => (
     <MenuItem key={item.id} text={item.name} label={item.code} onClick={handleClick} />
@@ -112,9 +119,9 @@ const ItemForm = ({
         ...selectedAccounts,
         [filedName]: account
       });
-      formik.setFieldValue(filedName, account.id);
+      setFieldValue(filedName, account.id);
     };
-  }, [formik, selectedAccounts]);
+  }, [setFieldValue, selectedAccounts]);
 
   const categoryItem = useCallback((item, { handleClick }) => (
     <MenuItem text={item.name} onClick={handleClick} />
@@ -129,12 +136,12 @@ const ItemForm = ({
   const infoIcon = useMemo(() => (<Icon icon="info-circle" iconSize={12} />), []);
 
   const handleMoneyInputChange = (fieldKey) => (e, value) => {
-    formik.setFieldValue(fieldKey, value);
+    setFieldValue(fieldKey, value);
   };
 
   return (
     <div class='item-form'>
-      <form onSubmit={formik.handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <div class="item-form__primary-section">
           <FormGroup
             medium={true}
@@ -142,13 +149,13 @@ const ItemForm = ({
             labelInfo={requiredSpan}
             className={'form-group--item-type'}
             intent={(errors.type && touched.type) && Intent.DANGER}
-            helperText={<ErrorMessage {...formik} name="type" />}
+            helperText={<ErrorMessage {...{errors, touched}} name="type" />}
             inline={true}
           >
             <HTMLSelect
               fill={true}
               options={ItemTypeDisplay}
-              {...formik.getFieldProps('type')}
+              {...getFieldProps('type')}
             />
           </FormGroup>
 
@@ -157,13 +164,13 @@ const ItemForm = ({
             labelInfo={requiredSpan}
             className={'form-group--item-name'}
             intent={(errors.name && touched.name) && Intent.DANGER}
-            helperText={<ErrorMessage {...formik} name="name" />}
+            helperText={<ErrorMessage {...{errors, touched}} name="name" />}
             inline={true}
           >
             <InputGroup
               medium={true}
               intent={(errors.name && touched.name) && Intent.DANGER}
-              {...formik.getFieldProps('name')}
+              {...getFieldProps('name')}
             />
           </FormGroup>
 
@@ -172,13 +179,13 @@ const ItemForm = ({
             labelInfo={infoIcon}
             className={'form-group--item-sku'}
             intent={(errors.sku && touched.sku) && Intent.DANGER}
-            helperText={<ErrorMessage {...formik} name="sku" />}
+            helperText={<ErrorMessage {...{errors, touched}} name="sku" />}
             inline={true}
           >
             <InputGroup
               medium={true}
               intent={(errors.sku && touched.sku) && Intent.DANGER}
-              {...formik.getFieldProps('sku')}
+              {...getFieldProps('sku')}
             />
           </FormGroup>
 
@@ -187,7 +194,7 @@ const ItemForm = ({
             labelInfo={infoIcon}
             inline={true}
             intent={(errors.category_id && touched.category_id) && Intent.DANGER}
-            helperText={<ErrorMessage {...formik} name="category" />}
+            helperText={<ErrorMessage {...{errors, touched}} name="category" />}
             className={classNames(
               'form-group--select-list',
               'form-group--category',
@@ -195,7 +202,7 @@ const ItemForm = ({
             )}
           >
             <Select
-              items={categoriesList}
+              items={categories}
               itemRenderer={categoryItem}
               itemPredicate={filterAccounts}
               popoverProps={{ minimal: true }}
@@ -218,7 +225,7 @@ const ItemForm = ({
               inline={true}
               label={'Active'}
               defaultChecked={values.active}
-              {...formik.getFieldProps('active')}
+              {...getFieldProps('active')}
             />
           </FormGroup>
         </div>
@@ -231,7 +238,7 @@ const ItemForm = ({
               label={'Selling Price'}
               className={'form-group--item-selling-price'}
               intent={(errors.selling_price && touched.selling_price) && Intent.DANGER}
-              helperText={<ErrorMessage {...formik} name="selling_price" />}
+              helperText={<ErrorMessage {...{errors, touched}} name="selling_price" />}
               inline={true}
             >
               <MoneyInputGroup
@@ -249,7 +256,7 @@ const ItemForm = ({
               labelInfo={infoIcon}
               inline={true}
               intent={(errors.sell_account_id && touched.sell_account_id) && Intent.DANGER}
-              helperText={<ErrorMessage {...formik} name="sell_account_id" />}
+              helperText={<ErrorMessage {...{errors, touched}} name="sell_account_id" />}
               className={classNames(
                 'form-group--sell-account',
                 'form-group--select-list',
@@ -280,7 +287,7 @@ const ItemForm = ({
               label={'Cost Price'}
               className={'form-group--item-cost-price'}
               intent={(errors.cost_price && touched.cost_price) && Intent.DANGER}
-              helperText={<ErrorMessage {...formik} name="cost_price" />}
+              helperText={<ErrorMessage {...{errors, touched}} name="cost_price" />}
               inline={true}
             >
               <MoneyInputGroup
@@ -298,7 +305,7 @@ const ItemForm = ({
               labelInfo={infoIcon}
               inline={true}
               intent={(errors.cost_account_id && touched.cost_account_id) && Intent.DANGER}
-              helperText={<ErrorMessage {...formik} name="cost_account_id" />}
+              helperText={<ErrorMessage {...{errors, touched}} name="cost_account_id" />}
               className={classNames(
                 'form-group--cost-account',
                 'form-group--select-list',
@@ -331,7 +338,7 @@ const ItemForm = ({
               label={'Inventory Account'}
               inline={true}
               intent={(errors.inventory_account_id && touched.inventory_account_id) && Intent.DANGER}
-              helperText={<ErrorMessage {...formik} name="inventory_account_id" />}
+              helperText={<ErrorMessage {...{errors, touched}} name="inventory_account_id" />}
               className={classNames(
                 'form-group--item-inventory_account',
                 'form-group--select-list',
@@ -361,8 +368,8 @@ const ItemForm = ({
             >
               <InputGroup
                 medium={true}
-                intent={formik.errors.stock && Intent.DANGER}
-                {...formik.getFieldProps('stock')}
+                intent={errors.stock && Intent.DANGER}
+                {...getFieldProps('stock')}
               />
             </FormGroup>
           </Col>

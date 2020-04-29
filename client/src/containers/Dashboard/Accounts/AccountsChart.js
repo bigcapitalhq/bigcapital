@@ -26,8 +26,6 @@ function AccountsChart({
   requestFetchAccountsTable,
   addAccountsTableQueries,
   requestDeleteBulkAccounts,
-  setDashboardRequestLoading,
-  setDashboardRequestCompleted,
 }) {
   const [deleteAccount, setDeleteAccount] = useState(false);
   const [inactiveAccount, setInactiveAccount] = useState(false);
@@ -36,23 +34,17 @@ function AccountsChart({
 
   // Fetch accounts resource views and fields.
   const fetchHook = useAsync(async () => {
-    setDashboardRequestLoading();
-
     await Promise.all([
       fetchResourceViews('accounts'),
       fetchResourceFields('accounts'),
     ]);
-    setDashboardRequestCompleted();
   });
 
   // Fetch accounts list according to the given custom view id.
   const fetchAccountsHook = useAsync(async () => {
-    setDashboardRequestLoading();
-
     await Promise.all([
       requestFetchAccountsTable(),
     ]);
-    setDashboardRequestCompleted();
   }, false);
 
   useEffect(() => {
@@ -102,7 +94,7 @@ function AccountsChart({
       requestFetchAccountsTable();
       AppToaster.show({ message: 'the_account_has_been_inactivated' });
     });
-  }, [inactiveAccount]);
+  }, [inactiveAccount, requestFetchAccountsTable, requestInactiveAccount]);
 
  
   const handleEditAccount = (account) => {

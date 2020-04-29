@@ -15,11 +15,12 @@ const ItemFormContainer = ({
   requestFetchItemCategories,
 }) => {
   const { id } = useParams();
+
   useEffect(() => {
     id ?
       changePageTitle('Edit Item Details') :
       changePageTitle('New Item');
-  }, []);
+  }, [id, changePageTitle]);
 
   const fetchHook = useAsync(async () => {
     await Promise.all([

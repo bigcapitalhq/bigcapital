@@ -12,17 +12,17 @@ import moment from 'moment';
 import {momentFormatter} from 'utils';
 import Icon from 'components/Icon';
 import CurrenciesSelectList from 'components/CurrenciesSelectList';
-
+import ErrorMessage from 'components/ErrorMessage';
 
 export default function MakeJournalEntriesHeader({
-  formik
+  formik: { errors, touched, setFieldValue, getFieldProps }
 }) {
   const intl = useIntl();
  
   const handleDateChange = useCallback((date) => {
     const formatted = moment(date).format('YYYY-MM-DD');
-    formik.setFieldValue('date', formatted);
-  }, [formik]);
+    setFieldValue('date', formatted);
+  }, [setFieldValue]);
 
   const infoIcon = useMemo(() =>
     (<Icon icon="info-circle" iconSize={12} />), []);
@@ -35,22 +35,22 @@ export default function MakeJournalEntriesHeader({
             label={'Journal number'}
             labelInfo={infoIcon}
             className={'form-group--journal-number'}
-            intent={formik.errors.journal_number && Intent.DANGER}
-            helperText={formik.errors.journal_number && formik.errors.journal_number}
+            intent={(errors.journal_number && touched.journal_number) && Intent.DANGER}
+            helperText={<ErrorMessage name="journal_number" {...{errors, touched}} />}
             fill={true}>
 
             <InputGroup
-              intent={formik.errors.journal_number && Intent.DANGER}
+              intent={(errors.journal_number && touched.journal_number) && Intent.DANGER}
               fill={true}
-              {...formik.getFieldProps('journal_number')} />
+              {...getFieldProps('journal_number')} />
           </FormGroup>
         </Col>
 
         <Col sm={2}>
           <FormGroup
             label={intl.formatMessage({'id': 'date'})}
-            intent={formik.errors.date && Intent.DANGER}
-            helperText={formik.errors.date && formik.errors.date}
+            intent={(errors.date && touched.date) && Intent.DANGER}
+            helperText={<ErrorMessage name="date" {...{errors, touched}} />}
             minimal={true}>
 
             <DateInput
@@ -65,14 +65,14 @@ export default function MakeJournalEntriesHeader({
           <FormGroup
             label={intl.formatMessage({'id': 'description'})}
             className={'form-group--description'}
-            intent={formik.errors.name && Intent.DANGER}
-            helperText={formik.errors.name && formik.errors.label}
+            intent={(errors.name && touched.name) && Intent.DANGER}
+            helperText={<ErrorMessage name="description" {...{errors, touched}} />}
             fill={true}>
 
             <InputGroup
-              intent={formik.errors.name && Intent.DANGER}
+              intent={(errors.name && touched.name) && Intent.DANGER}
               fill={true}
-              {...formik.getFieldProps('description')} />
+              {...getFieldProps('description')} />
           </FormGroup>
         </Col>
       </Row>
@@ -83,14 +83,14 @@ export default function MakeJournalEntriesHeader({
             label={'Reference'}
             labelInfo={infoIcon}
             className={'form-group--reference'}
-            intent={formik.errors.reference && Intent.DANGER}
-            helperText={formik.errors.reference && formik.errors.reference}
+            intent={(errors.reference && touched.reference) && Intent.DANGER}
+            helperText={<ErrorMessage name="reference" {...{errors, touched}} />}
             fill={true}>
 
             <InputGroup
-              intent={formik.errors.reference && Intent.DANGER}
+              intent={(errors.reference && touched.reference) && Intent.DANGER}
               fill={true}
-              {...formik.getFieldProps('reference')} />
+              {...getFieldProps('reference')} />
           </FormGroup>
         </Col>
 

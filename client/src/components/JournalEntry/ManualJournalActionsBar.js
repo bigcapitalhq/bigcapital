@@ -25,7 +25,9 @@ function ManualJournalActionsBar({
   views,
   getResourceFields,
   addManualJournalsTableQueries,
-  onFilterChanged
+  onFilterChanged,
+  selectedRows,
+  onBulkDelete
 }) {
   const { path } = useRouteMatch();
   const history = useHistory();
@@ -50,6 +52,13 @@ function ManualJournalActionsBar({
       onFilterChanged && onFilterChanged(filterConditions);
     }
   });
+  const hasSelectedRows = useMemo(() => selectedRows.length > 0, [selectedRows]);
+
+  // Handle delete button click.
+  const handleBulkDelete = useCallback(() => {
+    onBulkDelete && onBulkDelete(selectedRows.map(r => r.id));
+  }, [onBulkDelete, selectedRows]);
+
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -85,12 +94,13 @@ function ManualJournalActionsBar({
           />
         </Popover>
 
-        { (false) && (
+        {(hasSelectedRows) && (
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon='trash' iconSize={15} />}
             text='Delete'
             intent={Intent.DANGER}
+            onClick={handleBulkDelete}
           />
         )}
         <Button

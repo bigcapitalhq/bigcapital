@@ -21,8 +21,10 @@ export const mapStateToProps = (state, props) => {
   return {
     views: getResourceViews(state, 'items'),
     currentPageItems: getCurrentPageResults(
-      state.items.items, viewPages, state.items.currentPage),
-
+      state.items.items,
+      viewPages,
+      state.items.currentPage,
+    ),
     bulkSelected: state.items.bulkActions,
     itemsTableLoading: state.items.loading,
   };

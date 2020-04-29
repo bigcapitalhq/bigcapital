@@ -15,11 +15,8 @@ function DashboardTopbarUser({ logout }) {
   
   const onClickLogout = useCallback(() => {
     logout();
-
-    setTimeout(() => {
-      history.push('/auth/login');
-    }, 100);    
-  }, [history, logout]);
+    history.go('/auth/login');
+  }, [logout, history]);
 
   const userAvatarDropMenu = useMemo(() => (
     <Menu>

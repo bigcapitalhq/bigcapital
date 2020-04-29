@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import Icon from 'components/Icon';
 import ItemsCategoryConnect from 'connectors/ItemsCategory.connect';
 import DialogConnect from 'connectors/Dialog.connector';
@@ -11,8 +11,6 @@ import {
   Menu,
   MenuItem,
   Position,
-  Classes,
-  Tooltip,
 } from '@blueprintjs/core';
 
 const ItemsCategoryList = ({
@@ -22,6 +20,7 @@ const ItemsCategoryList = ({
   onEditCategory,
   openDialog,
   count,
+  onSelectedRowsChange,
 }) => {
   const handelEditCategory = (category) => () => {
     openDialog('item-form', { action: 'edit', id: category.id });
@@ -42,51 +41,51 @@ const ItemsCategoryList = ({
     </Menu>
   );
 
-  const columns = useMemo(
-    () => [
-      {
-        id: 'name',
-        Header: 'Category Name',
-        accessor: 'name',
-        width: 150,
-      },
-      {
-        id: 'description',
-        Header: 'Description',
-        accessor: 'description',
-        className: 'description',
-        width: 150,
-      },
-      {
-        id: 'count',
-        Header: 'Count',
-        accessor: () => <span>{count}</span>,
-        className: 'count',
-        width: 50,
-      },
-      {
-        id: 'actions',
-        Header: '',
-        Cell: ({ cell }) => (
-          <Popover
-            content={actionMenuList(cell.row.original)}
-            position={Position.RIGHT_BOTTOM}
-          >
-            <Button icon={<Icon icon='ellipsis-h' />} />
-          </Popover>
-        ),
-        className: 'actions',
-        width: 50,
-        // canResize: false
-      },
-    ],
-    []
-  );
+  const columns = useMemo(() => [
+    {
+      id: 'name',
+      Header: 'Category Name',
+      accessor: 'name',
+      width: 150,
+    },
+    {
+      id: 'description',
+      Header: 'Description',
+      accessor: 'description',
+      className: 'description',
+      width: 150,
+    },
+    {
+      id: 'count',
+      Header: 'Count',
+      accessor: (r) => r.count || '',
+      className: 'count',
+      width: 50,
+    },
+    {
+      id: 'actions',
+      Header: '',
+      Cell: ({ cell }) => (
+        <Popover
+          content={actionMenuList(cell.row.original)}
+          position={Position.RIGHT_BOTTOM}
+        >
+          <Button icon={<Icon icon='ellipsis-h' />} />
+        </Popover>
+      ),
+      className: 'actions',
+      width: 50,
+      disableResizing: false
+    },
+  ], [actionMenuList]);
 
   const handelFetchData = useCallback(() => {
     onFetchData && onFetchData();
   }, []);
 
+  const handleSelectedRowsChange = useCallback((selectedRows) => {
+    onSelectedRowsChange && onSelectedRowsChange(selectedRows.map(s => s.original));
+  }, [onSelectedRowsChange]);
 
   return (
     <LoadingIndicator spinnerSize={30}>
@@ -97,10 +96,13 @@ const ItemsCategoryList = ({
         manualSortBy={true}
         selectionColumn={true}
         expandable={true}
-        treeGraph={true}
+        onSelectedRowsChange={handleSelectedRowsChange}
       />
     </LoadingIndicator>
   );
 };
 
-export default compose(DialogConnect, ItemsCategoryConnect)(ItemsCategoryList);
+export default compose(
+  DialogConnect,
+  ItemsCategoryConnect,
+)(ItemsCategoryList);

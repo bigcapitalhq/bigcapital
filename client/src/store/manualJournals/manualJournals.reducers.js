@@ -1,5 +1,6 @@
 import t from 'store/types';
 import { createReducer } from '@reduxjs/toolkit';
+import { createTableQueryReducers } from 'store/queryReducers';
 import { omit } from 'lodash';
 
 const initialState = {
@@ -10,7 +11,7 @@ const initialState = {
   tableQuery: {},
 };
 
-export default createReducer(initialState, {
+const reducer = createReducer(initialState, {
   
   [t.MANUAL_JOURNAL_SET]: (state, action) => {
     const { id, manualJournal } = action.payload;
@@ -59,9 +60,22 @@ export default createReducer(initialState, {
   [t.MANUAL_JOURNAL_REMOVE]: (state, action) => {
     const { id } = action.payload;
     state.items = omit(state.items, [id]);
-  }
+  },
+
+  [t.MANUAL_JOURNALS_BULK_DELETE]: (state, action) => {
+    const { ids } = action.payload;
+    const items = { ...state.items };
+
+    ids.forEach((id) => {
+      if (typeof items[id] !== 'undefined') {
+        delete items[id];
+      }
+    });
+    state.items = items;
+  },
 });
 
+export default createTableQueryReducers('manual_journals', reducer);
 
 export const getManualJournal = (state, id) => {
   return state.manualJournals.items[id];

@@ -5,6 +5,7 @@ import { BrowserRouter } from 'react-router-dom';
 import App from 'components/App';
 import * as serviceWorker from 'serviceWorker';
 import createStore from 'store/createStore';
+import AppProgress from 'components/NProgress/AppProgress';
 
 ReactDOM.render(
   <Provider store={createStore}>
@@ -13,6 +14,13 @@ ReactDOM.render(
     </BrowserRouter>
   </Provider>,
   document.getElementById('root')
+);
+
+ReactDOM.render(
+  <Provider store={createStore}>
+    <AppProgress />
+  </Provider>,
+  document.getElementById('nprogress')
 );
 
 // If you want your app to work offline and load faster, you can change

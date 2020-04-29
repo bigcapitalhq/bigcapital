@@ -12,19 +12,24 @@ import Progress from 'components/NProgress/Progress';
 import messages from 'lang/en';
 import 'style/App.scss';
 
-function App(props) {
+function App({
+  isAuthorized,
+  locale,
+}) {
   const history = createBrowserHistory();
 
+  history.listen((location, action) => {
+    console.log(`new location via ${action}`, location);
+  });
+
   return (
-    <IntlProvider locale={props.locale} messages={messages}>
+    <IntlProvider locale={locale} messages={messages}>
       <div className="App">
         <Router history={history}>
-          <Authentication isAuthenticated={props.isAuthorized} />
-          <PrivateRoute isAuthenticated={props.isAuthorized} component={Dashboard} />
+          <Authentication isAuthenticated={isAuthorized} />
+          <PrivateRoute isAuthenticated={isAuthorized} component={Dashboard} />
         </Router>
       </div>
-
-      <Progress isAnimating={props.isLoading} />
     </IntlProvider>
   );
 }
@@ -33,13 +38,10 @@ App.defaultProps = {
   locale: 'en',
 };
 
-App.propTypes = {
-  locale: PropTypes.string,
-  isAuthorized: PropTypes.bool,
+const mapStateToProps = (state) => {
+  return {
+    isAuthorized: isAuthenticated(state),
+  };
 };
 
-const mapStateToProps = (state) => ({
-  isAuthorized: isAuthenticated(state),
-  isLoading: !!state.dashboard.requestsLoading,
-});
 export default connect(mapStateToProps)(App);

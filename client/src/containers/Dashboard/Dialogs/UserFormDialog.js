@@ -8,11 +8,7 @@ import {
   FormGroup,
   InputGroup,
   Intent,
-  TextArea,
-  MenuItem,
-  Checkbox,
   Classes,
-  HTMLSelect,
 } from '@blueprintjs/core';
 import UserFormDialogConnect from 'connectors/UserFormDialog.connector';
 import DialogReduxConnect from 'components/DialogReduxConnect';
@@ -22,7 +18,6 @@ import { objectKeysTransform } from 'utils';
 import { pick, snakeCase } from 'lodash';
 import ErrorMessage from 'components/ErrorMessage';
 import classNames from 'classnames';
-import Icon from 'components/Icon';
 import { compose } from 'utils';
 
 function UserFormDialog({
@@ -32,7 +27,6 @@ function UserFormDialog({
   name,
   payload,
   isOpen,
-  userDetails,
   closeDialog,
 }) {
   const intl = useIntl();
@@ -83,11 +77,6 @@ function UserFormDialog({
     },
   });
   const { values, errors, touched } = useMemo(() => formik, [formik]);
-
-  const statusOptions = [
-    { value: 1, label: 'Active' },
-    { value: 2, label: 'Inactive' },
-  ];
 
   const onDialogOpening = () => {
     fetchHook.execute();

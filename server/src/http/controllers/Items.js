@@ -51,7 +51,7 @@ export default {
       check('name').exists(),
       check('type').exists().trim().escape()
         .isIn(['service', 'non-inventory', 'inventory']),
-      check('sku').optional().trim().escape(),
+      check('sku').optional({ nullable: true }).trim().escape(),
       check('cost_price').exists().isNumeric().toFloat(),
       check('sell_price').exists().isNumeric().toFloat(),
       check('cost_account_id').exists().isInt().toInt(),
@@ -61,14 +61,13 @@ export default {
         .exists()
         .isInt()
         .toInt(),
-      check('category_id').optional().isInt().toInt(),
+      check('category_id').optional({ nullable: true }).isInt().toInt(),
 
       check('custom_fields').optional().isArray({ min: 1 }),
       check('custom_fields.*.key').exists().isNumeric().toInt(),
       check('custom_fields.*.value').exists(),
 
       check('note').optional(),
-      check('attachment').optional(),
     ],
     async handler(req, res) {
       const validationErrors = validationResult(req);
@@ -119,13 +118,6 @@ export default {
           errorReasons.push({ type: 'FIELD_KEY_NOT_FOUND', code: 150, fields: notFoundFields });
         }
       }
-      const { attachment } = req.files;
-      const attachmentsMimes = ['image/png', 'image/jpeg'];
-
-      // Validate the attachment.
-      if (attachment && attachmentsMimes.indexOf(attachment.mimetype) === -1) {
-        errorReasons.push({ type: 'ATTACHMENT.MINETYPE.NOT.SUPPORTED', code: 160 });
-      }
       const [
         costAccount,
         sellAccount,
@@ -150,10 +142,6 @@ export default {
       if (errorReasons.length > 0) {
         return res.boom.badRequest(null, { errors: errorReasons });
       }
-      if (attachment) {
-        const publicPath = 'storage/app/public/';
-        await attachment.mv(`${publicPath}${req.organizationId}/${attachment.md5}.png`);
-      }
 
       const item = await Item.query().insertAndFetch({
         name: form.name,
@@ -164,7 +152,6 @@ export default {
         cost_account_id: form.cost_account_id,
         currency_code: form.currency_code,
         note: form.note,
-        attachment_file: (attachment) ? `${attachment.md5}.png` : null,
       });
       return res.status(200).send({ id: item.id });
     },

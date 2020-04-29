@@ -20,25 +20,29 @@ const ItemCategoriesList = ({
 }) => {
   const { id } = useParams();
   const [deleteCategory, setDeleteCategory] = useState(false);
+  const [selectedRows, setSelectedRows] = useState([]);
 
   useEffect(() => {
     id
       ? changePageTitle('Edit Item Details')
       : changePageTitle('Categories List');
-  }, []);
+  }, [id, changePageTitle]);
 
   const fetchHook = useAsync(async () => {
-    await Promise.all([requestFetchItemCategories()]);
+    await Promise.all([
+      requestFetchItemCategories(),
+    ]);
   }, false);
 
-  const handelDeleteCategory = category => {
+  const handelDeleteCategory = useCallback((category) => {
     setDeleteCategory(category);
-  };
+  }, [setDeleteCategory]);
 
   const handelEditCategory = category => {};
-  const handelCancelCategoryDelete = () => {
+
+  const handelCancelCategoryDelete = useCallback(() => {
     setDeleteCategory(false);
-  };
+  }, [setDeleteCategory]);
 
   const handelConfirmCategoryDelete = useCallback(() => {
     requestDeleteItemCategory(deleteCategory.id).then(() => {
@@ -47,23 +51,30 @@ const ItemCategoriesList = ({
         message: 'the_category_has_been_delete'
       });
     });
-  }, [deleteCategory]);
+  }, [deleteCategory, requestDeleteItemCategory, setDeleteCategory]);
 
   const handleFetchData = useCallback(() => {
     fetchHook.execute();
   }, []);
+
+  // Handle selected rows change.
+  const handleSelectedRowsChange = useCallback((accounts) => {
+    setSelectedRows(accounts);
+  }, [setSelectedRows]);
+
   return (
     <DashboardInsider loading={fetchHook.pending}>
       <ItemsCategoryActionsBar
         views={views}
         onDeleteCategory={handelDeleteCategory}
+        selectedRows={selectedRows}
       />
       <DashboardPageContent>
         <ItemsCategoryList
           onDeleteCategory={handelDeleteCategory}
           onFetchData={handleFetchData}
           onEditCategory={handelEditCategory}
-          categories
+          onSelectedRowsChange={handleSelectedRowsChange} 
         />
 
         <Alert

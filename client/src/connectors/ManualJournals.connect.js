@@ -3,6 +3,7 @@ import {
   deleteManualJournal,
   fetchManualJournalsTable,
   publishManualJournal,
+  deleteBulkManualJournals,
 } from 'store/manualJournals/manualJournals.actions';
 import { getResourceViews } from 'store/customViews/customViews.selectors';
 import t from 'store/types';
@@ -26,14 +27,14 @@ const mapActionsToProps = (dispatch) => ({
     }),
   addManualJournalsTableQueries: (queries) =>
     dispatch({
-      type: 'MANUAL_JOURNALS_TABLE_QUERIES_ADD',
+      type: t.MANUAL_JOURNALS_TABLE_QUERIES_ADD,
       queries,
     }),
   fetchManualJournalsTable: (query = {}) =>
     dispatch(fetchManualJournalsTable({ query: { ...query } })),
 
-  requestPublishManualJournal: (id) => 
-    dispatch(publishManualJournal({ id })),
+  requestPublishManualJournal: (id) => dispatch(publishManualJournal({ id })),
+  requestDeleteBulkManualJournals: (ids) => dispatch(deleteBulkManualJournals({ ids })),
 });
 
 export default connect(mapStateToProps, mapActionsToProps);

@@ -47,6 +47,22 @@ export const deleteManualJournal = ({ id }) => {
     });
 };
 
+
+export const deleteBulkManualJournals = ({ ids }) => {
+  return (dispatch) => new Promise((resolve, reject) => {
+    ApiService.delete('accounting/manual-journals', { params: { ids } })
+      .then((response) => {
+        dispatch({
+          type: t.MANUAL_JOURNALS_BULK_DELETE,
+          payload: { ids },
+        });
+        resolve(response);
+      }).catch((error) => {
+        reject(error.response.data.errors || []);
+      });
+  });
+};
+
 export const publishManualJournal = ({ id }) => {
   return (dispatch) =>
     new Promise((resolve, reject) => {
@@ -67,6 +83,9 @@ export const fetchManualJournalsTable = ({ query } = {}) => {
     new Promise((resolve, reject) => {
       const pageQuery = getState().manualJournals.tableQuery;
       dispatch({
+        type: t.SET_DASHBOARD_REQUEST_LOADING,
+      });
+      dispatch({
         type: t.MANUAL_JOURNALS_TABLE_LOADING,
         loading: true,
       });
@@ -74,19 +93,21 @@ export const fetchManualJournalsTable = ({ query } = {}) => {
         params: { ...pageQuery, ...query },
       })
         .then((response) => {
-          
           dispatch({
             type: t.MANUAL_JOURNALS_PAGE_SET,
-            manual_journals: response.data.manualJournals,
-            customViewId: response.data.customViewId,
+            manual_journals: response.data.manualJournals.results,
+            customViewId: response.data.customViewId ||  -1,
           });
           dispatch({
             type: t.MANUAL_JOURNALS_ITEMS_SET,
-            manual_journals: response.data.manualJournals,
+            manual_journals: response.data.manualJournals.results,
           });
           dispatch({
             type: t.MANUAL_JOURNALS_TABLE_LOADING,
             loading: false,
+          });
+          dispatch({
+            type: t.SET_DASHBOARD_REQUEST_COMPLETED,
           });
           resolve(response);
         })

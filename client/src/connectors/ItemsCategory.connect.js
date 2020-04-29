@@ -12,8 +12,7 @@ export const mapStateToProps = (state, props) => {
   const dialogPayload = getDialogPayload(state, 'item-form');
 
   return {
-    categories: state.itemCategories.categories,
-    count: 1,
+    categories: Object.values(state.itemCategories.categories),
     name: 'item-form',
     payload: { action: 'new', id: null },
     editItemCategory:

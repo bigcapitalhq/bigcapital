@@ -11,7 +11,7 @@ import {
   FormGroup,
 } from "@blueprintjs/core";
 import login from 'store/authentication/authentication.actions';
-import {hasErrorType, isAuthenticated} from 'store/authentication/authentication.reducer';
+import {hasErrorType} from 'store/authentication/authentication.reducer';
 import AuthenticationToaster from 'components/AppToaster';
 import t from 'store/types';
 
@@ -21,9 +21,6 @@ const ERRORS_TYPES = {
 };
 function Login({
   login,
-  errors,
-  clearErrors,
-  hasError,
 }) {
   const intl = useIntl();
   const history = useHistory();
@@ -51,34 +48,27 @@ function Login({
       login({
         crediential: values.crediential,
         password: values.password,
+      }).then(() => {
+        history.go('/dashboard/homepage');
+      }).catch((errors) => {
+        const toastBuilders = [];
+        if (errors.find((e) => e.type === ERRORS_TYPES.INVALID_DETAILS)) {
+          toastBuilders.push({
+            message: intl.formatMessage({ id: 'invalid_email_or_phone_numner' }),
+            intent: Intent.WARNING,
+          });
+        }
+        if (errors.find((e) => e.type === ERRORS_TYPES.USER_INACTIVE)) {
+          toastBuilders.push({
+            message: intl.formatMessage({ id: 'the_user_has_been_suspended_from_admin' }),
+            intent: Intent.WARNING,
+          });
+        }
+        toastBuilders.forEach(builder => {
+          AuthenticationToaster.show(builder);
+        });
       });
     },
-  });
-
-  useEffect(() => {
-    const toastBuilders = [];
-    if (hasError(ERRORS_TYPES.INVALID_DETAILS)) {
-      toastBuilders.push({
-        message: intl.formatMessage({ id: 'invalid_email_or_phone_numner' }),
-        intent: Intent.WARNING,
-      });
-    }
-    if (hasError(ERRORS_TYPES.USER_INACTIVE)) {
-      toastBuilders.push({
-        message: intl.formatMessage({ id: 'the_user_has_been_suspended_from_admin' }),
-        intent: Intent.WARNING,
-      });
-    }
-    toastBuilders.forEach(builder => {
-      AuthenticationToaster.show(builder);
-    });
-  }, [hasError, intl]);
-
-  // Handle unmount component
-  useEffect(() => () => {
-    if (errors.length > 0) {
-      clearErrors();
-    }
   });
 
   return (

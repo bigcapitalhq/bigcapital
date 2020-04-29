@@ -1,7 +1,5 @@
-import React, { useMemo } from 'react';
-import {} from 'reselect';
+import React, { useCallback, useMemo } from 'react';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
-
 import { compose } from 'utils';
 import {
   NavbarGroup,
@@ -20,21 +18,24 @@ import DialogConnect from 'connectors/Dialog.connector';
 import FilterDropdown from 'components/FilterDropdown';
 import ResourceConnect from 'connectors/Resource.connector';
 
+
 const ItemsCategoryActionsBar = ({
   openDialog,
   onDeleteCategory,
   onFilterChanged,
   getResourceFields,
+  selectedRows,
 }) => {
-  const onClickNewCategory = () => {
+  const onClickNewCategory = useCallback(() => {
     openDialog('item-form', {});
-  };
+  }, [openDialog]);
 
-  const handleDeleteCategory = (category) => {
-    onDeleteCategory(category);
-  };
+  const handleDeleteCategory = useCallback((category) => {
+    onDeleteCategory(selectedRows);
+  }, [selectedRows, onDeleteCategory]);
 
   const categoriesFields = getResourceFields('itemCategories');
+  const hasSelectedRows = useMemo(() => selectedRows.length > 0, [selectedRows]);
 
   const filterDropdown = FilterDropdown({
     fields: categoriesFields,
@@ -63,14 +64,15 @@ const ItemsCategoryActionsBar = ({
           />
         </Popover>
 
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon='trash' iconSize={15} />}
-          text='Delete Category'
-          intent={Intent.DANGER}
-          onClick={handleDeleteCategory}
-        />
-
+        { hasSelectedRows && (
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon='trash' iconSize={15} />}
+            text='Delete'
+            intent={Intent.DANGER}
+            onClick={handleDeleteCategory}
+          />
+        )}
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon='file-import' />}

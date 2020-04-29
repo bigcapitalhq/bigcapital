@@ -2,7 +2,7 @@ import React, {useMemo, useCallback} from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { useAsync } from 'react-use';
 import MakeJournalEntriesForm from './MakeJournalEntriesForm';
-import LoadingIndicator from 'components/LoadingIndicator';
+import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import DashboardConnect from 'connectors/Dashboard.connector';
 import {compose} from 'utils';
 import MakeJournalEntriesConnect from 'connectors/MakeJournalEntries.connect';
@@ -36,12 +36,12 @@ function MakeJournalEntriesPage({
   }, [history]);
 
   return (
-    <LoadingIndicator loading={fetchJournal.loading} mount={false}>
+    <DashboardInsider loading={fetchJournal.pending} name={'make-journal-page'}>
       <MakeJournalEntriesForm
         onFormSubmit={handleFormSubmit}
         editJournal={editJournal}
         onCancelForm={handleCancel} />
-    </LoadingIndicator>
+    </DashboardInsider>
   );
 }
 

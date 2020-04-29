@@ -21,8 +21,11 @@ export default function SidebarMenu() {
       };
       return (
         (item.divider) ? 
-          <MenuDivider title={item.title} /> :
+          <MenuDivider
+            key={index}
+            title={item.title} /> :
           <MenuItem
+            key={index}
             active={isActive}
             icon={<Icon icon={item.icon} iconSize={item.iconSize} />}
             text={item.text}

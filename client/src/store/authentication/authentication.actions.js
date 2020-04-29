@@ -21,16 +21,9 @@ export default function login({ form }) {
       }).catch((error) => {
         const { response } = error;
         const { data } = response;
-        const { errors } = data;
+        const { errors = [] } = data;
 
-        dispatch({type: t.LOGIN_CLEAR_ERRORS});
-
-        if (errors){
-          dispatch({
-            type: t.LOGIN_FAILURE, errors,
-          });
-        }
-        reject(error);
+        reject(errors);
       });
     });
   }

@@ -93,9 +93,9 @@ export default function DataTable({
         ...(selectionColumn) ? [{
           id: 'selection',
           disableResizing: true,
-          minWidth: 35,
-          width: 35,
-          maxWidth: 35,
+          minWidth: 42,
+          width: 42,
+          maxWidth: 42,
           // The header can use the table's getToggleAllRowsSelectedProps method
           // to render a checkbox
           Header: ({ getToggleAllRowsSelectedProps }) => (

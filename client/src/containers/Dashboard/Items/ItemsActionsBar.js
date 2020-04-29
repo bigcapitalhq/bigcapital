@@ -29,8 +29,8 @@ const ItemsActionsBar = ({
   getResourceViews,
   views,
   onFilterChanged,
-  bulkSelected,
   addItemsTableQueries,
+  selectedRows = [],
 }) => {
   const { path } = useRouteMatch();
   const history = useHistory();
@@ -43,6 +43,7 @@ const ItemsActionsBar = ({
     history.push('/dashboard/items/new');
   };
   const itemsFields = getResourceFields('items');
+  const hasSelectedRows = useMemo(() => selectedRows.length > 0, [selectedRows]);
 
   const filterDropdown = FilterDropdown({
     fields: itemsFields,
@@ -54,12 +55,7 @@ const ItemsActionsBar = ({
       onFilterChanged && onFilterChanged(filterConditions);
     }
   });
-
-  const hasBulkActionsSelected = useMemo(
-    () => !!Object.keys(bulkSelected).length,
-    [bulkSelected]
-  );
-
+ 
   const onClickNewCategory = useCallback(() => {
     openDialog('item-form', {});
   }, [openDialog]);
@@ -108,7 +104,7 @@ const ItemsActionsBar = ({
           onClick={onClickNewCategory}
         />
 
-        {hasBulkActionsSelected && (
+        {hasSelectedRows && (
           <Button
             className={Classes.MINIMAL}
             intent={Intent.DANGER}

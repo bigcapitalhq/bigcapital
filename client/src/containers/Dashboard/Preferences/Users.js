@@ -1,25 +1,24 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {
   Tabs,
   Tab,
   Button,
   Intent,
 } from '@blueprintjs/core';
-import { useHistory } from 'react-router-dom';
 import PreferencesSubContent from 'components/Preferences/PreferencesSubContent';
 import connector from 'connectors/UsersPreferences.connector';
 
 function UsersPreferences({
   openDialog,
 }) {
-  const history = useHistory();
   const onChangeTabs = (currentTabId) => {
 
   };
 
-  const onClickNewUser = () => {
+  const onClickNewUser = useCallback(() => {
     openDialog('user-form');
-  };
+  }, [openDialog]);
+
   return (
     <div class="preferences__inside-content preferences__inside-content--users-roles">
       <div class="preferences__tabs">

@@ -1,4 +1,4 @@
-import React, {useEffect, useCallback, useMemo} from 'react';
+import React, {useState, useEffect, useCallback, useMemo} from 'react';
 import {
   Button,
   Popover,
@@ -7,7 +7,6 @@ import {
   MenuDivider,
   Position,
 } from '@blueprintjs/core'
-import LoadingIndicator from 'components/LoadingIndicator';
 import CustomViewConnect from 'connectors/View.connector';
 import ItemsConnect from 'connectors/Items.connect';
 import {compose} from 'utils';
@@ -22,7 +21,16 @@ const ItemsDataTable = ({
   onEditItem,
   onDeleteItem,
   onFetchData,
+  onSelectedRowsChange,
 }) => {
+  const [initialMount, setInitialMount] = useState(false);
+
+  useEffect(() => {
+    if (!itemsTableLoading) {
+      setInitialMount(true);
+    }
+  }, [itemsTableLoading, setInitialMount]);
+
   const handleEditItem = (item) => () => { onEditItem(item); };
   const handleDeleteItem = (item) => () => { onDeleteItem(item); };
   
@@ -75,7 +83,6 @@ const ItemsDataTable = ({
     //   accessor: 'inventory_account.name',
     //   className: "inventory-account",
     // },
-    
     {
       id: 'actions',
       Cell: ({ cell }) => (
@@ -98,16 +105,21 @@ const ItemsDataTable = ({
 
   const handleFetchData = useCallback((...args) => {
     onFetchData && onFetchData(...args)
-  }, [onFetchData])
+  }, [onFetchData]);
+
+  const handleSelectedRowsChange = useCallback((selectedRows) => {
+    onSelectedRowsChange && onSelectedRowsChange(selectedRows.map(s => s.original));
+  }, [onSelectedRowsChange]);
 
   return (
-    <LoadingIndicator loading={itemsTableLoading} spinnerSize={30}>
-      <DataTable
-        columns={columns}
-        data={currentPageItems}
-        selectionColumn={selectionColumn}
-        onFetchData={handleFetchData} />
-    </LoadingIndicator>
+    <DataTable
+      columns={columns}
+      data={currentPageItems}
+      selectionColumn={selectionColumn}
+      onFetchData={handleFetchData}
+      loading={itemsTableLoading && !initialMount}
+      noInitialFetch={true}
+      onSelectedRowsChange={handleSelectedRowsChange} />
   );
 };
 

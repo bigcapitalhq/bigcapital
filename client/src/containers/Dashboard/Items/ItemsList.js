@@ -31,6 +31,7 @@ function ItemsList({
   addItemsTableQueries,
 }) {
   const [deleteItem, setDeleteItem] = useState(false);
+  const [selectedRows, setSelectedRows] = useState([]);
 
   useEffect(() => {
     changePageTitle('Items List');
@@ -49,16 +50,19 @@ function ItemsList({
     ])
   });
 
+  // Handle click delete item.
   const handleDeleteItem = useCallback((item) => {
     setDeleteItem(item);
   }, [setDeleteItem]);
 
   const handleEditItem = () => {};
 
+  // Handle cancel delete the item.
   const handleCancelDeleteItem = useCallback(() => {
     setDeleteItem(false);
   }, [setDeleteItem]);
 
+  // handle confirm delete item.
   const handleConfirmDeleteItem = useCallback(() => {
     requestDeleteItem(deleteItem.id).then(() => {
       AppToaster.show({ message: 'the_item_has_been_deleted' });
@@ -69,25 +73,33 @@ function ItemsList({
   const handleFetchData = useCallback(({ pageIndex, pageSize, sortBy  }) => {
     addItemsTableQueries({
       ...(sortBy.length > 0) ? {
-        column_sort_by: sortBy[0].id,
-        sort_by: sortBy[0].desc ? 'desc' : 'asc',
+        column_sort_order: sortBy[0].id,
+        sort_order: sortBy[0].desc ? 'desc' : 'asc',
       } : {},
     });
     fetchItems.execute();
   }, [fetchItems, addItemsTableQueries]);
 
+  // Handle filter change to re-fetch the items.
   const handleFilterChanged = useCallback(() => {
     fetchItems.execute();
   }, [fetchItems]);
 
+  // Handle custom view change to re-fetch the items.
   const handleCustomViewChanged = useCallback(() => {    
     fetchItems.execute();
   }, [fetchItems]);
+
+  // Handle selected rows change.
+  const handleSelectedRowsChange = useCallback((accounts) => {
+    setSelectedRows(accounts);
+  }, [setSelectedRows]);
   
   return (
     <DashboardInsider isLoading={fetchHook.pending} name={'items-list'}>
       <ItemsActionsBar
         onFilterChanged={handleFilterChanged}
+        selectedRows={selectedRows}
         views={views} />
 
       <DashboardPageContent>
@@ -98,12 +110,14 @@ function ItemsList({
               '/dashboard/items/:custom_view_id/custom_view',
               '/dashboard/items'
             ]}>
-            <ItemsViewsTabs onViewChanged={handleCustomViewChanged} />
+            <ItemsViewsTabs
+              onViewChanged={handleCustomViewChanged} />
 
             <ItemsDataTable
               onDeleteItem={handleDeleteItem}
               onEditItem={handleEditItem}
-              onFetchData={handleFetchData} />
+              onFetchData={handleFetchData}
+              onSelectedRowsChange={handleSelectedRowsChange} />
 
             <Alert
               cancelButtonText="Cancel"

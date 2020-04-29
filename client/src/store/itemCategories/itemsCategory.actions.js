@@ -8,20 +8,25 @@ export const submitItemCategory = ({ form }) => {
 };
 
 export const fetchItemCategories = () => {
-  return (dispatch, getState) =>
-    new Promise((resolve, reject) => {
-      ApiService.get('item_categories')
-        .then((response) => {
-          dispatch({
-            type: t.ITEMS_CATEGORY_LIST_SET,
-            categories: response.data.categories,
-          });
-          resolve(response);
-        })
-        .catch((error) => {
-          reject(error);
-        });
+  return (dispatch, getState) => new Promise((resolve, reject) => {
+    dispatch({
+      type: t.SET_DASHBOARD_REQUEST_LOADING,
     });
+    ApiService.get('item_categories')
+      .then((response) => {
+        dispatch({
+          type: t.ITEMS_CATEGORY_LIST_SET,
+          categories: response.data.categories,
+        });
+        dispatch({
+          type: t.SET_DASHBOARD_REQUEST_COMPLETED,
+        });
+        resolve(response);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
 };
 
 export const editItemCategory = (id, form) => {

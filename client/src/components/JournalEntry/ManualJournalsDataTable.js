@@ -8,7 +8,7 @@ import {
   MenuDivider,
   Position,
 } from '@blueprintjs/core';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import Icon from 'components/Icon';
 import { compose } from 'utils';
 import moment from 'moment';
@@ -16,7 +16,7 @@ import ManualJournalsConnect from 'connectors/ManualJournals.connect';
 import DialogConnect from 'connectors/Dialog.connector';
 import DashboardConnect from 'connectors/Dashboard.connector';
 import ViewConnect from 'connectors/View.connector';
-import LoadingIndicator from 'components/LoadingIndicator';
+import { useUpdateEffect } from 'hooks';
 import DataTable from 'components/DataTable';
 import Money from 'components/Money';
 
@@ -31,8 +31,16 @@ function ManualJournalsDataTable({
   onEditJournal,
   onDeleteJournal,
   onPublishJournal,
+  onSelectedRowsChange,
 }) {
   const { custom_view_id: customViewId } = useParams();
+  const [initialMount, setInitialMount] = useState(false);
+
+  useUpdateEffect(() => {
+    if (!manualJournalsLoading) {
+      setInitialMount(true);
+    }
+  }, [manualJournalsLoading, setInitialMount]);
 
   useEffect(() => {
     const viewMeta = getViewItem(customViewId);
@@ -42,7 +50,25 @@ function ManualJournalsDataTable({
       setTopbarEditView(customViewId);
     }
     changePageSubtitle(customViewId && viewMeta ? viewMeta.name : '');
-  }, [customViewId]);
+  }, [
+    customViewId,
+    changeCurrentView,
+    changePageSubtitle,
+    setTopbarEditView,
+    getViewItem,
+  ]);
+
+  const handlePublishJournal = useCallback((journal) => () => {
+    onPublishJournal && onPublishJournal(journal);
+  }, [onPublishJournal]);
+
+  const handleEditJournal = useCallback((journal) => () => {
+    onEditJournal && onEditJournal(journal);
+  }, [onEditJournal]);
+
+  const handleDeleteJournal = useCallback((journal) => () => {
+    onDeleteJournal && onDeleteJournal(journal);
+  }, [onDeleteJournal]);
 
   const actionMenuList = (journal) => (
     <Menu>
@@ -51,21 +77,15 @@ function ManualJournalsDataTable({
       {!journal.status && (
         <MenuItem
           text="Publish Journal"
-          onClick={() => {
-            onPublishJournal && onPublishJournal(journal);          
-          }} />
+          onClick={handlePublishJournal(journal)} />
       )}      
       <MenuItem
         text='Edit Journal'
-        onClick={() => {
-          onEditJournal && onEditJournal(journal);
-        }} />
+        onClick={handleEditJournal(journal)} />
       <MenuItem
         text='Delete Journal'
         intent={Intent.DANGER}
-        onClick={() => {
-          onDeleteJournal && onDeleteJournal(journal);
-        }} />
+        onClick={handleDeleteJournal(journal)} />
     </Menu>
   );
 
@@ -143,26 +163,25 @@ function ManualJournalsDataTable({
     },
   ], []);
 
-  const handleDataTableFetchData = useCallback(() => {
-    onFetchData && onFetchData();
+  const handleDataTableFetchData = useCallback((...args) => {
+    onFetchData && onFetchData(...args);
   }, [onFetchData]);
 
-  const selectionColumn = useMemo(() => ({
-    minWidth: 42,
-    width: 42,
-    maxWidth: 42,
-  }), []);
+  const handleSelectedRowsChange = useCallback((selectedRows) => {
+    onSelectedRowsChange && onSelectedRowsChange(selectedRows.map(s => s.original));
+  }, [onSelectedRowsChange]);
 
   return (
-    <LoadingIndicator loading={manualJournalsLoading} spinnerSize={30}>
-      <DataTable
-        columns={columns}
-        data={manualJournals}
-        onFetchData={handleDataTableFetchData}
-        manualSortBy={true}
-        selectionColumn={selectionColumn}
-      />
-    </LoadingIndicator>
+    <DataTable
+      columns={columns}
+      data={manualJournals}
+      onFetchData={handleDataTableFetchData}
+      manualSortBy={true}
+      selectionColumn={true}
+      noInitialFetch={true}
+      loading={manualJournalsLoading && !initialMount}
+      onSelectedRowsChange={handleSelectedRowsChange}
+    />
   );
 }
 
