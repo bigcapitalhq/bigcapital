@@ -6,7 +6,7 @@ export const fetchGeneralLedger = ({ query }) => {
     dispatch({
       type: t.GENERAL_LEDGER_SHEET_LOADING,
       loading: true,
-    })
+    });
     ApiService.get('/financial_statements/general_ledger', { params: query }).then((response) => {
       dispatch({
         type: t.GENERAL_LEDGER_STATEMENT_SET,
@@ -24,6 +24,9 @@ export const fetchGeneralLedger = ({ query }) => {
 export const fetchBalanceSheet = ({ query }) => {
   return (dispatch) => new Promise((resolve, reject) => {
     dispatch({
+      type: t.SET_DASHBOARD_REQUEST_LOADING,
+    });
+    dispatch({
       type: t.BALANCE_SHEET_LOADING,
       loading: true,
     });
@@ -36,6 +39,9 @@ export const fetchBalanceSheet = ({ query }) => {
       dispatch({
         type: t.BALANCE_SHEET_LOADING,
         loading: false,
+      });
+      dispatch({
+        type: t.SET_DASHBOARD_REQUEST_COMPLETED,
       });
       resolve(response);
     }).catch((error) => { reject(error); });

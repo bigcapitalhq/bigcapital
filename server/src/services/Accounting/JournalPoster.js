@@ -86,7 +86,8 @@ export default class JournalPoster {
     let balanceAccounts = [];
 
     balancesList.forEach((balance) => {
-      const oper = AccountBalance.query().findOne('account_id', balance.account_id);
+      const oper = AccountBalance.tenant()
+        .query().findOne('account_id', balance.account_id);
       balanceFindOneOpers.push(oper);
     });
     balanceAccounts = await Promise.all(balanceFindOneOpers);
@@ -99,13 +100,13 @@ export default class JournalPoster {
         account && account.account_id === balance.account_id
       ));
       if (foundAccBalance) {
-        const query = AccountBalance
+        const query = AccountBalance.tenant()
           .query()[method]('amount', Math.abs(balance.amount))
           .where('account_id', balance.account_id);
 
         balanceUpdateOpers.push(query);
       } else {
-        const query = AccountBalance.query().insert({
+        const query = AccountBalance.tenant().query().insert({
           account_id: balance.account_id,
           amount: balance.amount,
           currency_code: 'USD',
@@ -125,7 +126,7 @@ export default class JournalPoster {
     const saveOperations = [];
 
     this.entries.forEach((entry) => {
-      const oper = AccountTransaction.query().insert({
+      const oper = AccountTransaction.tenant().query().insert({
         accountId: entry.account,
         ...pick(entry, ['credit', 'debit', 'transactionType', 'date', 'userId',
           'referenceType', 'referenceId', 'note']),
