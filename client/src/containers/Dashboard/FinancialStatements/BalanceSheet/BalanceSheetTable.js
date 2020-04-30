@@ -103,7 +103,6 @@ function BalanceSheetTable({
     onFetchData && onFetchData();
   }, [onFetchData]);
 
-
   // Calculates the default expanded rows of balance sheet table.
   const expandedRows = useMemo(() => 
     defaultExpanderReducer(balanceSheetAccounts, 1),

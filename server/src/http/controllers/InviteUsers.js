@@ -3,7 +3,7 @@ import uniqid from 'uniqid';
 import {
   check,
   body,
-  query,
+  param,
   validationResult,
 } from 'express-validator';
 import path from 'path';
@@ -21,6 +21,7 @@ import jwtAuth from '@/http/middleware/jwtAuth';
 import TenancyMiddleware from '@/http/middleware/TenancyMiddleware';
 import TenantModel from '@/models/TenantModel';
 import Logger from '@/services/Logger';
+import Option from '@/models/Option';
 
 export default {
   /**
@@ -36,9 +37,13 @@ export default {
       this.invite.validation,
       asyncMiddleware(this.invite.handler));
 
-    router.post('/accept',
+    router.post('/accept/:token',
       this.accept.validation,
       asyncMiddleware(this.accept.handler));
+
+    router.get('/invited/:token',
+      this.invited.validation,
+      asyncMiddleware(this.invited.handler));
 
     return router;
   },
@@ -112,22 +117,24 @@ export default {
       check('first_name').exists().trim().escape(),
       check('last_name').exists().trim().escape(),
       check('phone_number').exists().trim().escape(),
-      check('language').exists().isIn(['ar', 'en']),
+      // check('language').exists().isIn(['ar', 'en']),
       check('password').exists().trim().escape(),
-
-      query('token').exists().trim().escape(),
+      param('token').exists().trim().escape(),
     ],
     async handler(req, res) {
+      const { token } = req.params;
       const inviteToken = await Invite.query()
-        .where('token', req.query.token).first();
+        .where('token', token).first();
 
       if (!inviteToken) {
         return res.status(404).send({
           errors: [{ type: 'INVITE.TOKEN.NOT.FOUND', code: 300 }],
         });
       }
-      const form = { ...req.body };
-
+      const form = {
+        language: 'en',
+        ...req.body,
+      };
       const systemUser = await SystemUser.query()
         .where('phone_number', form.phone_number)
         .first();
@@ -157,7 +164,6 @@ export default {
         phone_number: form.phone_number,
         language: form.language,
         active: 1,
-        password: hashedPassword,
       };
       TenantModel.knexBinded = tenantDb;
 
@@ -171,16 +177,52 @@ export default {
       }
       const insertUserOper = TenantUser.bindKnex(tenantDb)
         .query().insert({ ...userForm });
-      const insertSysUserOper = SystemUser.query().insert({ ...userForm });
+      const insertSysUserOper = SystemUser.query().insert({
+        ...userForm,
+        password: hashedPassword,
+      });
 
       await Promise.all([
         insertUserOper,
         insertSysUserOper,
       ]);
-      await Invite.query()
-        .where('token', req.query.token).delete();
+      await Invite.query().where('token', token).delete();
 
       return res.status(200).send();
-    }
-  }
+    },
+  },
+
+  /**
+   * Get 
+   */
+  invited: {
+    validation: [
+      param('token').exists().trim().escape(),
+    ],
+    async handler(req, res) {
+      const { token } = req.params;
+      const inviteToken = await Invite.query()
+        .where('token', token).first();
+
+      if (!inviteToken) {
+        return res.status(404).send({
+          errors: [{ type: 'INVITE.TOKEN.NOT.FOUND', code: 300 }],
+        });
+      }
+      // Find the tenant that associated to the given token.
+      const tenant = await Tenant.query()
+        .where('id', inviteToken.tenantId).first();
+
+      const tenantDb = TenantsManager.knexInstance(tenant.organizationId);
+      const organizationOptions = await Option.bindKnex(tenantDb).query()
+        .where('key', 'organization_name');
+
+      return res.status(200).send({
+        data: {
+          organization_name: organizationOptions.getMeta('organization_name', '')          ,
+          invited_email: inviteToken.email,
+        },
+      });
+    },
+  },
 }

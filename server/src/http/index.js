@@ -33,13 +33,13 @@ import TenancyMiddleware from '@/http/middleware/TenancyMiddleware';
 export default (app) => {
   // app.use('/api/oauth2', OAuth2.router());
   app.use('/api/auth', Authentication.router());
+  app.use('/api/invite', InviteUsers.router());
 
   const dashboard = express.Router();
 
   dashboard.use(JWTAuth);
   dashboard.use(TenancyMiddleware);
-  
-  dashboard.use('/api/invite', InviteUsers.router());
+
   dashboard.use('/api/currencies', Currencies.router());
   // app.use('/api/users', Users.router());
   // app.use('/api/roles', Roles.router());

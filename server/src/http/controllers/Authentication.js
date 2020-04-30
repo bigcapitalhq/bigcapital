@@ -260,7 +260,7 @@ export default {
 
       const tokenModel = await PasswordReset.query()
         .where('token', token)
-        .where('created_at', '>=', Date.now() - 3600000)
+        // .where('created_at', '>=', Date.now() - 3600000)
         .first();
 
       if (!tokenModel) {

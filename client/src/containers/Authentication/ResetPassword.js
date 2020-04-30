@@ -7,17 +7,22 @@ import {
   InputGroup,
   Intent,
   FormGroup,
-  HTMLSelect,
+  Position,
 } from '@blueprintjs/core';
+import { Link, useParams, useHistory } from 'react-router-dom';
 import ErrorMessage from 'components/ErrorMessage';
 import AppToaster from 'components/AppToaster';
 import { compose } from 'utils';
-import SendResetPasswordConnect from 'connectors/ResetPassword.connect';
+import AuthenticationConnect from 'connectors/Authentication.connect';
+import AuthInsider from 'containers/Authentication/AuthInsider';
 
 function ResetPassword({
-  requestSendResetPassword,
+  requestResetPassword,
 }) {
   const intl = useIntl();
+  const { token } = useParams();
+  const history = useHistory();
+
   const ValidationSchema = Yup.object().shape({
     password: Yup.string()
       .min(4, 'Password has to be longer than 4 characters!')
@@ -33,12 +38,13 @@ function ResetPassword({
   }), []);
 
   const {
-    errors,
-    values,
     touched,
-    getFieldMeta,
-    getFieldProps,
+    values,
+    errors,
     handleSubmit,
+    setFieldValue,
+    getFieldProps,
+    isSubmitting,
   } = useFormik({
     enableReinitialize: true,
     validationSchema: ValidationSchema,
@@ -46,68 +52,84 @@ function ResetPassword({
       ...initialValues,
     },
     onSubmit: (values, { setSubmitting }) => {
-      requestSendResetPassword(values.password)
+      requestResetPassword(values, token)
         .then((response) => {
           AppToaster.show({
-            message: 'success',
+            message: 'The password for your account was successfully updated.',
+            intent: Intent.DANGER,
+            position: Position.BOTTOM,
           });
+          history.push('/auth/login');
           setSubmitting(false);
         })
-        .catch((error) => {
+        .catch((errors) => {
+          if (errors.find(e => e.type === 'TOKEN_INVALID')) {
+            AppToaster.show({
+              message: 'An unexpected error occurred',
+              intent: Intent.DANGER,
+              position: Position.BOTTOM,
+            });
+            history.push('/auth/login');
+          }
           setSubmitting(false);
         });
     },
   });
 
-  const requiredSpan = useMemo(() => <span class='required'>*</span>, []);
-
   return (
-    <div className={'sendRestPassword-form'}>
-      <form onSubmit={handleSubmit}>
-        <FormGroup
-          label={'Password'}
-          labelInfo={requiredSpan}
-          className={'form-group--password'}
-          intent={errors.password && touched.password && Intent.DANGER}
-          helperText={<ErrorMessage name={'password'} />}
-        >
-          <InputGroup
-            lang={true}
-            type={'password'}
-            intent={errors.password && touched.password && Intent.DANGER}
-            {...getFieldProps('password')}
-          />
-        </FormGroup>
-
-        <FormGroup
-          label={'Confirm Password'}
-          labelInfo={requiredSpan}
-          className={'form-group--confirm_password'}
-          intent={
-            errors.confirm_password && touched.confirm_password && Intent.DANGER
-          }
-          helperText={<ErrorMessage name={'confirm_password'} />}
-        >
-          <InputGroup
-            lang={true}
-            type={'password'}
-            intent={
-              errors.confirm_password &&
-              touched.confirm_password &&
-              Intent.DANGER
-            }
-            {...getFieldProps('confirm_password')}
-          />
-        </FormGroup>
-
-        <div class='form__floating-footer'>
-          <Button intent={Intent.PRIMARY} type='submit'>
-            Reset Password
-          </Button>
+    <AuthInsider>
+      <div className={'submit-np-form'}>       
+        <div className={'authentication-page__label-section'}>
+          <h3>Choose a new password</h3>
+          You remembered your password ? <Link to='/auth/login'>Login</Link>
         </div>
-      </form>
-    </div>
+
+        <form onSubmit={handleSubmit}>
+          <FormGroup
+            label={'Password'}
+            intent={(errors.password && touched.password) && Intent.DANGER}
+            helperText={<ErrorMessage name={'password'} {...{errors, touched}} />}
+            className={'form-group--password'}
+          >
+            <InputGroup
+              lang={true}
+              type={'password'}
+              intent={errors.password && touched.password && Intent.DANGER}
+              {...getFieldProps('password')}
+            />
+          </FormGroup>
+        
+          <FormGroup
+            label={'New Password'}
+            labelInfo={'(again):'}
+            intent={(errors.confirm_password && touched.confirm_password) && Intent.DANGER}
+            helperText={<ErrorMessage name={'confirm_password'} {...{errors, touched}} />}
+            className={'form-group--confirm-password'}
+          >
+            <InputGroup
+              lang={true}
+              type={'password'}
+              intent={(errors.confirm_password && touched.confirm_password) && Intent.DANGER}
+              {...getFieldProps('confirm_password')}
+            />
+          </FormGroup>
+
+          <div className={'authentication-page__submit-button-wrap'}>
+            <Button
+              fill={true}
+              className={'btn-new'}
+              intent={Intent.PRIMARY}
+              type='submit'
+              loading={isSubmitting}>
+              Submit new password
+            </Button>
+          </div>
+        </form>
+      </div>
+    </AuthInsider>
   );
 }
 
-export default compose(SendResetPasswordConnect)(ResetPassword);
+export default compose(
+  AuthenticationConnect,
+)(ResetPassword);

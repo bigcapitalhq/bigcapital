@@ -1,135 +1,169 @@
-import React, { useEffect } from "react";
-import {Link, useHistory} from 'react-router-dom';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Link, useHistory } from 'react-router-dom';
 import * as Yup from 'yup';
-import {useFormik} from 'formik';
-import {connect} from 'react-redux';
-import {useIntl} from 'react-intl';
+import { useFormik } from 'formik';
+import { connect } from 'react-redux';
+import { useIntl } from 'react-intl';
 import {
   Button,
   InputGroup,
   Intent,
   FormGroup,
-} from "@blueprintjs/core";
-import login from 'store/authentication/authentication.actions';
-import {hasErrorType} from 'store/authentication/authentication.reducer';
+  Checkbox,
+  Position,
+} from '@blueprintjs/core';
 import AuthenticationToaster from 'components/AppToaster';
-import t from 'store/types';
+import ErrorMessage from 'components/ErrorMessage';
+import AuthInsider from 'containers/Authentication/AuthInsider';
+import Icon from 'components/Icon';
+import AuthenticationConnect from 'connectors/Authentication.connect';
+import { compose } from 'utils';
 
 const ERRORS_TYPES = {
   INVALID_DETAILS: 'INVALID_DETAILS',
   USER_INACTIVE: 'USER_INACTIVE',
 };
 function Login({
-  login,
+  requestLogin,
 }) {
   const intl = useIntl();
   const history = useHistory();
+  const [shown, setShown] = useState(false);
+  const passwordRevealer = () => { setShown(!shown); };
 
   // Validation schema.
-  const loginValidationSchema = Yup.object().shape({
-    crediential: Yup
-      .string()
-      .required(intl.formatMessage({'id': 'required'}))
-      .email(intl.formatMessage({id: 'invalid_email_or_phone_numner'})),
-    password: Yup
-      .string()
-      .required(intl.formatMessage({id: 'required'}))
+  const loginValidationSchema =  Yup.object().shape({
+    crediential: Yup.string()
+      .required(intl.formatMessage({ id: 'required' }))
+      .email(intl.formatMessage({ id: 'invalid_email_or_phone_numner' })),
+    password: Yup.string()
+      .required(intl.formatMessage({ id: 'required' }))
       .min(4),
   });
 
   // Formik validation schema and submit handler.
-  const formik = useFormik({
+  const {
+    values,
+    touched,
+    errors,
+    handleSubmit,
+    getFieldProps,
+    isSubmitting,
+  } = useFormik({
     initialValues: {
       crediential: '',
       password: '',
     },
     validationSchema: loginValidationSchema,
-    onSubmit: async (values) => {
-      login({
+    onSubmit: (values, { setSubmitting }) => {
+      requestLogin({
         crediential: values.crediential,
         password: values.password,
       }).then(() => {
         history.go('/dashboard/homepage');
+        setSubmitting(false);
       }).catch((errors) => {
         const toastBuilders = [];
         if (errors.find((e) => e.type === ERRORS_TYPES.INVALID_DETAILS)) {
           toastBuilders.push({
-            message: intl.formatMessage({ id: 'invalid_email_or_phone_numner' }),
-            intent: Intent.WARNING,
+            message: `The email and password you entered did not match our records.
+              Please double-check and try again.`,
+            intent: Intent.DANGER,
+            position: Position.BOTTOM,
           });
         }
         if (errors.find((e) => e.type === ERRORS_TYPES.USER_INACTIVE)) {
           toastBuilders.push({
             message: intl.formatMessage({ id: 'the_user_has_been_suspended_from_admin' }),
-            intent: Intent.WARNING,
+            intent: Intent.DANGER,
           });
         }
         toastBuilders.forEach(builder => {
           AuthenticationToaster.show(builder);
         });
+        setSubmitting(false);
       });
     },
   });
 
+  const passwordRevealerTmp = useMemo(() => (
+    <span class="password-revealer" onClick={() => passwordRevealer()}>
+      {(shown) ? (
+        <><Icon icon='eye-slash' /> <span class="text">Hide</span></>
+      ) : (
+        <><Icon icon='eye' /> <span class="text">Show</span></>
+      )} 
+    </span>), [shown, passwordRevealer]);
+
   return (
-    <div className="login-page">
-      <form onSubmit={formik.handleSubmit}>
-        <FormGroup
-          className={'form-group--crediential'}
-          intent={formik.errors.crediential && Intent.DANGER}
-          helperText={formik.errors.crediential && formik.errors.crediential}>
+    <AuthInsider>
+      <div className='login-form'>
+        <div className={'authentication-page__label-section'}>
+          <h3>Log in</h3>
+          Need a Bigcapital account ?
+          <Link to='/auth/register'> Create an account</Link>
+        </div>
 
-          <InputGroup
-            leftIcon="user"
-            placeholder={intl.formatMessage({'id': 'email_or_phone_number'})}
-            large={true}
-            intent={formik.errors.crediential && Intent.DANGER}
-            {...formik.getFieldProps('crediential')} />
-        </FormGroup>
+        <form onSubmit={handleSubmit} className={'authentication-page__form'}>
+          <FormGroup
+            label={'Email or Phone Number'}
+            intent={(errors.crediential && touched.crediential) && Intent.DANGER}
+            helperText={<ErrorMessage name={'crediential'} {...{errors, touched}} />}
+            className={'form-group--crediential'}
+          >
+            <InputGroup
+              intent={(errors.crediential && touched.crediential) && Intent.DANGER}
+              large={true}
+              placeholder={'name@company.com'}
+              {...getFieldProps('crediential')}
+            />
+          </FormGroup>
+      
+          <FormGroup
+            label={'Password'}
+            labelInfo={passwordRevealerTmp}
+            intent={(errors.password && touched.password) && Intent.DANGER}
+            helperText={<ErrorMessage name={'password'} {...{errors, touched}} />}
+            className={'form-group--password has-password-revealer'} 
+          >
+            <InputGroup
+              large={true}
+              intent={(errors.password && touched.password) && Intent.DANGER}
+              type={shown ? 'text' : 'password'}
+              placeholder={'password'}
+              {...getFieldProps('password')}
+            />
+          </FormGroup>
+        
+          <div className={'login-form__checkbox-section'}>
+            <Checkbox
+              large={true}
+              className={'checkbox--remember-me'}>
+                Keep me logged in
+            </Checkbox>
+          </div>
 
-        <FormGroup
-          className={'form-group--password'}
-          intent={formik.errors.password && Intent.DANGER}
-          helperText={formik.errors.password && formik.errors.password}>
-
-          <InputGroup
-            leftIcon="info-sign"
-            placeholder={intl.formatMessage({'id': 'password'})}
-            large={true}
-            intent={formik.errors.password && Intent.DANGER}
-            type={"password"}
-            {...formik.getFieldProps('password')} />
-        </FormGroup>
-
-        <Button
-          type="submit"
-          fill={true}
-          large={true}>
-          {intl.formatMessage({'id': 'login '})}
-        </Button>
-      </form>
-
-      <div className="authentication-page__footer">
-        <Link to="/auth/send_reset_password">
-          {intl.formatMessage({'id': 'reset_password '})}
-        </Link>
-
-        <Link to="/auth/register">
-          {intl.formatMessage({'id': 'register '})}
-        </Link>
+          <div className={'authentication-page__submit-button-wrap'}>
+            <Button
+              type={'submit'}
+              intent={Intent.PRIMARY}
+              fill={true}
+              lang={true}
+              loading={isSubmitting}
+            >
+              {intl.formatMessage({ id: 'Log in' })}
+            </Button>
+          </div>
+        </form>
+      
+        <div class="authentication-page__footer-links">
+          <Link to={'/auth/send_reset_password'}>Forget my password</Link>
+        </div>
       </div>
-    </div>
+    </AuthInsider>
   );
 }
 
-const mapStateToProps = (state) => ({
-  hasError: (errorType) => hasErrorType(state, errorType),
-  errors: state.authentication.errors,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  login: form => dispatch(login({ form })),
-  clearErrors: () => dispatch({ type: t.LOGIN_CLEAR_ERRORS }),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default compose(
+  AuthenticationConnect
+)(Login);

@@ -1,26 +1,183 @@
 
 
-.authentication-page{
-  &__form-wrapper{
+.authentication-insider{
+  margin-top: 80px;
+  margin-bottom: 40px;
+
+  &__logo-section{
+    text-align: center;
+    margin-bottom: 60px;
+  }
+
+  &__content{
+    position: relative;
+  }
+
+  &__footer{
+    .auth-copyright{
+      text-align: center;
+      font-size: 12px;
+      color: #666;
+
+      .bp3-icon-bigcapital{
+        margin-top: 9px;
+
+        svg{
+          path{
+            fill: #A3A3A3;
+          }
+        }
+      }
+    }
+  }
+}
+
+.authentication-page {
+
+  &__goto-bigcapital{
+    position: fixed;
+    margin-top: 30px;
+    margin-left: 30px;
+    color: #777;
+  }
+  
+  .bp3-input {
+    min-height: 40px;
+    border: 2px solid #E3E3E3;
+  }
+  .bp3-form-group{
+    margin-bottom: 25px;
+
+    &.bp3-intent-danger{
+      .bp3-input{
+        border-color: #eea9a9;
+      }
+    }
+  }
+
+  .bp3-form-group.has-password-revealer{
+
+    .bp3-label{
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .password-revealer{
+      .text{
+        font-size: 12px;
+      }
+    }
+  }
+
+  .bp3-button.bp3-fill.bp3-intent-primary{
+    font-size: 16px;
+  }
+
+  &__label-section{
+    margin-bottom: 34px;
+    color: #555;
+    
+    h3{
+      font-weight: 500;
+      font-size: 28px;
+      color: #444;
+      margin: 0 0 12px;
+    }
+
+    a {
+      text-decoration: underline;
+      color: #0040bd;
+    }
+  }
+
+  &__form-wrapper {
     width: 100%;
-    max-width: 350px;
+    max-width: 415px;
     padding: 15px;
     margin: 0 auto;
   }
 
-  .login-page{
+  &__footer-links{
+    padding: 9px;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+    margin-bottom: 1.2rem;
 
-    .input-group{
-      &--email-phone-number{
-        margin-bottom: 1rem;
-      }
-      &--password{
-        margin-bottom: 1rem;
+    a{
+      color: #0052cc;
+    }
+  }
+
+  &__loading-overlay{
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: rgba(252, 253, 255, 0.5);
+    display: flex;
+    justify-content: center;
+  }
+
+  &__submit-button-wrap {
+    margin: 0px 0px 24px 0px;
+
+    .bp3-button {
+      background-color: #0052cc;
+      min-height: 45px;
+    }
+  }
+
+  // Login Form
+  // ------------------------------
+  .login-form {
+
+    .checkbox{
+      &--remember-me{
+        margin: -4px 0 28px 0px;
+        font-size: 14px;
       }
     }
   }
-  &__footer{
-    margin-top: 1rem;
-    text-align: center;
+
+  // Register Form
+  .register-form {
+
+    &__agreement-section {
+      margin-top: -10px;
+      
+      p {
+        font-size: 13px;
+        margin-top: -10px;
+        margin-bottom: 24px;
+        line-height: 1.65;
+      }
+    }
+
+    &__submit-button-wrap {
+      margin: 25px 0px 25px 0px;
+
+      .bp3-button {
+        min-height: 45px;
+        background-color: #0052cc;
+      }
+    }
+  }
+
+  .invite-form {
+
+    &__statement-section {
+      margin-top: -10px;
+      p {
+        font-size: 13px;
+        margin-bottom: 20px;
+        line-height: 1.65;
+      }
+    }
+
+    .authentication-page__loading-overlay{
+      background: rgba(252, 253, 255, 0.9);
+    }
   }
 }

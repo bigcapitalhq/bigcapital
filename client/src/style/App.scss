@@ -55,19 +55,17 @@ $pt-font-family: Noto Sans, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
   box-shadow: none;
 }
 
-
 [data-icon='bigcapital'] {
-  path{
+  path {
     fill: #004dd0;
   }
   .path-1,
-  .path-13{
+  .path-13 {
     fill: #2d95fd;
   }
 }
 
 .bigcapital--alt{
-
 
   svg{
     path,
@@ -76,4 +74,12 @@ $pt-font-family: Noto Sans, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
       fill: #fff;
     }
   }
+}
+// =======
+body.authentication {
+  background-color: #fcfdff;
+}
+
+.bp3-toast{
+  box-shadow: none;
 }

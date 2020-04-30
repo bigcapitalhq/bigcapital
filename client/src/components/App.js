@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { IntlProvider } from 'react-intl';
 import { connect } from 'react-redux';
-import { Router, Switch } from 'react-router';
+import { Router, Switch, Redirect } from 'react-router';
 import { createBrowserHistory } from 'history';
 import PrivateRoute from 'components/PrivateRoute';
 import Authentication from 'components/Authentication';

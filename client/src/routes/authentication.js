@@ -25,7 +25,7 @@ export default [
     }),
   },
   {
-    path: `${BASE_URL}/reset_password`,
+    path: `${BASE_URL}/reset_password/:token`,
     name: 'auth.send.reset_password',
     component: LazyLoader({
       loader: () => import('containers/Authentication/ResetPassword'),
