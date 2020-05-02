@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import BodyClassName from 'react-body-classname'; 
 import { Route, Redirect } from 'react-router-dom';
 
 const propTypes = {
@@ -13,19 +14,21 @@ function PrivateRoute({
   ...rest
 }) {
   return (
-    <Route
-      {...rest}
-      path="/dashboard"
-      render={_props =>
-        isAuthenticated ? (<Component {..._props} />) :
-        (
-          <Redirect
-            to={{
-              pathname: '/auth/login',
-            }}
-          />
-        )}
-    />
+    <BodyClassName className={''}>
+      <Route
+        {...rest}
+        path="/dashboard"
+        render={_props =>
+          isAuthenticated ? (<Component {..._props} />) :
+          (
+            <Redirect
+              to={{
+                pathname: '/auth/login',
+              }}
+            />
+          )}
+      />
+    </BodyClassName>
   );
 }
 

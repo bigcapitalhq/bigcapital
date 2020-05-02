@@ -7,10 +7,10 @@ export default function({ isAuthenticated =false, ...rest }) {
   const to = {pathname: '/dashboard/homepage'};
 
   return (
-    <BodyClassName className={'authentication'}>
-      <Route path="/auth">
-        { (isAuthenticated) ?
-          (<Redirect to={to} />) : (
+    <Route path="/auth">
+      { (isAuthenticated) ?
+        (<Redirect to={to} />) : (
+        <BodyClassName className={'authentication'}>
           <Switch>
             <div class="authentication-page">
               <Link
@@ -30,9 +30,10 @@ export default function({ isAuthenticated =false, ...rest }) {
                 ))}
               </div>
             </div>
-          </Switch>)
-        }
-      </Route>
-    </BodyClassName>
+          </Switch>
+        </BodyClassName>
+        )
+      }
+    </Route>
   );
 }

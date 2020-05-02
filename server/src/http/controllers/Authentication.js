@@ -129,15 +129,16 @@ export default {
         .orWhere('phone_number', form.phone_number)
         .first();
 
+      const errorReasons = [];
+
       if (user && user.phoneNumber === form.phone_number) {
-        return res.boom.badRequest(null, {
-          errors: [{ type: 'PHONE_NUMBER_EXISTS', code: 100 }],
-        });
+        errorReasons.push({ type: 'PHONE_NUMBER_EXISTS', code: 100 });
       }
       if (user && user.email === form.email) {
-        return res.boom.badRequest(null, {
-          errors: [{ type: 'EMAIL_EXISTS', code: 200 }],
-        });
+        errorReasons.push({ type: 'EMAIL_EXISTS', code: 200 });
+      }
+      if (errorReasons.length > 0) {
+        return res.status(400).send({ errors: errorReasons });
       }
       const organizationId = uniqid();
       const tenantOrganization = await Tenant.query().insert({

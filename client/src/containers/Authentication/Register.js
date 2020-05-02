@@ -63,7 +63,7 @@ function Register({
       ...initialValues,
       country: 'libya'
     },
-    onSubmit: (values, { setSubmitting }) => {
+    onSubmit: (values, { setSubmitting, setErrors }) => {
       requestRegister(values)
         .then((response) => {
           AppToaster.show({
@@ -72,7 +72,17 @@ function Register({
           setSubmitting(false);
           history.push('/auth/login');
         })
-        .catch((error) => {
+        .catch((errors) => {
+          if (errors.some(e => e.type === 'PHONE_NUMBER_EXISTS')) {
+            setErrors({
+              phone_number: 'The phone number is already used in another account.'
+            });
+          }
+          if (errors.some(e => e.type === 'EMAIL_EXISTS')) {
+            setErrors({
+              email: 'The email is already used in another account.'
+            });
+          }
           setSubmitting(false);
         });
     },
