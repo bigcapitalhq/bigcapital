@@ -5,10 +5,8 @@ import {
   param,
   validationResult,
 } from 'express-validator';
-import User from '@/models/User';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
-import jwtAuth from '@/http/middleware/jwtAuth';
-import Authorization from '@/http/middleware/authorization';
+import SystemUser from '@/system/models/SystemUser';
 
 export default {
 
@@ -17,95 +15,32 @@ export default {
    */
   router() {
     const router = express.Router();
-    // const permit = Authorization('users');
 
-    router.use(jwtAuth);
+    router.put('/:id/inactive',
+      this.inactiveUser.validation,
+      asyncMiddleware(this.inactiveUser.handler));
 
-    router.post('/',
-      // permit('create'),
-      this.newUser.validation,
-      asyncMiddleware(this.newUser.handler));
-
+    router.put('/:id/active',
+      this.activeUser.validation,
+      asyncMiddleware(this.activeUser.handler));
+  
     router.post('/:id',
-      // permit('create', 'edit'),
       this.editUser.validation,
       asyncMiddleware(this.editUser.handler));
 
     router.get('/',
-      // permit('view'),
       this.listUsers.validation,
       asyncMiddleware(this.listUsers.handler));
 
     router.get('/:id',
-      // permit('view'),
       this.getUser.validation,
       asyncMiddleware(this.getUser.handler));
 
     router.delete('/:id',
-      // permit('create', 'edit', 'delete'),
       this.deleteUser.validation,
       asyncMiddleware(this.deleteUser.handler));
 
     return router;
-  },
-
-  /**
-   * Creates a new user.
-   */
-  newUser: {
-    validation: [
-      check('first_name').trim().escape().exists(),
-      check('last_name').trim().escape().exists(),
-      check('email').exists().isEmail(),
-      check('phone_number').optional().isMobilePhone(),
-      check('password').isLength({ min: 4 }).exists().custom((value, { req }) => {
-        if (value !== req.body.confirm_password) {
-          throw new Error("Passwords don't match");
-        } else {
-          return value;
-        }
-      }),
-      check('status').exists().isBoolean().toBoolean(),
-    ],
-    async handler(req, res) {
-      const validationErrors = validationResult(req);
-
-      if (!validationErrors.isEmpty()) {
-        return res.boom.badData(null, {
-          code: 'validation_error', ...validationErrors,
-        });
-      }
-      const { email, phone_number: phoneNumber } = req.body;
-
-      const foundUsers = await User.query()
-        .where('email', email)
-        .orWhere('phone_number', phoneNumber);
-
-      const foundUserEmail = foundUsers.find((u) => u.email === email);
-      const foundUserPhone = foundUsers.find((u) => u.phoneNumber === phoneNumber);
-
-      const errorReasons = [];
-
-      if (foundUserEmail) {
-        errorReasons.push({ type: 'EMAIL_ALREADY_EXIST', code: 100 });
-      }
-      if (foundUserPhone) {
-        errorReasons.push({ type: 'PHONE_NUMBER_ALREADY_EXIST', code: 120 });
-      }
-      if (errorReasons.length > 0) {
-        return res.boom.badRequest(null, { errors: errorReasons });
-      }
-
-      const user = await User.query().insert({
-        first_name: req.body.first_name,
-        last_name: req.body.last_name,
-        email: req.body.email,
-        phone_number: req.body.phone_number,
-        active: req.body.status,
-      });
-
-      return res.status(200).send({ user });
-    },
   },
 
   /**
@@ -118,14 +53,6 @@ export default {
       check('last_name').exists(),
       check('email').exists().isEmail(),
       check('phone_number').optional().isMobilePhone(),
-      check('password').isLength({ min: 4 }).exists().custom((value, { req }) => {
-        if (value !== req.body.confirm_password) {
-          throw new Error("Passwords don't match");
-        } else {
-          return value;
-        }
-      }),
-      check('status').exists().isBoolean().toBoolean(),
     ],
     async handler(req, res) {
       const { id } = req.params;
@@ -136,22 +63,19 @@ export default {
           code: 'validation_error', ...validationErrors,
         });
       }
-      const user = await User.query().where('id', id).first();
+      const { TenantUser } = req.models;
+      const { user } = req;
+      const form = { ...req.body };
 
-      if (!user) {
-        return res.boom.notFound();
-      }
-      const { email, phone_number: phoneNumber } = req.body;
-
-      const foundUsers = await User.query()
+      const foundUsers = await TenantUser.query()
         .whereNot('id', id)
         .andWhere((q) => {
-          q.where('email', email);
-          q.orWhere('phone_number', phoneNumber);
+          q.where('email', form.email);
+          q.orWhere('phone_number', form.phone_number);
         });
 
-      const foundUserEmail = foundUsers.find((u) => u.email === email);
-      const foundUserPhone = foundUsers.find((u) => u.phoneNumber === phoneNumber);
+      const foundUserEmail = foundUsers.find((u) => u.email === form.email);
+      const foundUserPhone = foundUsers.find((u) => u.phoneNumber === form.phone_number);
 
       const errorReasons = [];
 
@@ -164,14 +88,21 @@ export default {
       if (errorReasons.length > 0) {
         return res.boom.badRequest(null, { errors: errorReasons });
       }
+      const userForm = {
+        first_name: form.first_name,
+        last_name: form.last_name,
+        email: form.email,
+        phone_number: form.phone_number,
+      };
+      const updateTenantUser = TenantUser.query()
+        .where('id', id).update({ ...userForm });
 
-      await User.query().where('id', id).update({
-        first_name: req.body.first_name,
-        last_name: req.body.last_name,
-        email: req.body.email,
-        phone_number: req.body.phone_number,
-        active: req.body.status,
-      });
+      const updateSystemUser = SystemUser.query()
+        .where('id', user.id).update({ ...userForm });
+
+      await Promise.all([
+        updateTenantUser, updateSystemUser,
+      ]);
       return res.status(200).send();
     },
   },
@@ -180,18 +111,26 @@ export default {
    * Soft deleting the given user.
    */
   deleteUser: {
-    validation: [],
+    validation: [
+      param('id').exists().isNumeric().toInt(),
+    ],
     async handler(req, res) {
       const { id } = req.params;
-      const user = await User.query().where('id', id).first();
+      const { TenantUser } = req.models;
+      const user = await TenantUser.query().where('id', id).first();
 
       if (!user) {
         return res.boom.notFound(null, {
           errors: [{ type: 'USER_NOT_FOUND', code: 100 }],
         });
       }
-      await User.query().where('id', id).delete();
+      const tenantUserDel = TenantUser.query().where('id', id).delete();
+      const systemUserDel = SystemUser.query().where('id', id).delete();
 
+      await Promise.all([
+        tenantUserDel,
+        systemUserDel,
+      ]);
       return res.status(200).send();
     },
   },
@@ -205,7 +144,8 @@ export default {
     ],
     async handler(req, res) {
       const { id } = req.params;
-      const user = await User.query().where('id', id).first();
+      const { TenantUser } = req.models;
+      const user = await TenantUser.query().where('id', id).first();
 
       if (!user) {
         return res.boom.notFound();
@@ -224,20 +164,86 @@ export default {
     ],
     async handler(req, res) {
       const filter = {
-        first_name: '',
-        last_name: '',
-        email: '',
-        phone_number: '',
-
         page_size: 10,
         page: 1,
         ...req.query,
       };
-
-      const users = await User.query()
+      const { TenantUser } = req.models;
+      const users = await TenantUser.query()
         .page(filter.page - 1, filter.page_size);
 
       return res.status(200).send({ users });
+    },
+  },
+
+  inactiveUser: {
+    validation: [
+      param('id').exists().isNumeric().toInt(),
+    ],
+    async handler(req, res) {
+      const validationErrors = validationResult(req);
+
+      if (!validationErrors.isEmpty()) {
+        return res.boom.badData(null, {
+          code: 'validation_error', ...validationErrors,
+        });
+      }
+      const { id } = req.params;
+      const { user } = req;
+      const { TenantUser } = req.models;
+      const tenantUser = TenantUser.query().where('id', id).first();
+
+      if (!tenantUser) {
+        return res.boom.notFound(null, {
+          errors: [{ type: 'USER.NOT.FOUND', code: 100 }],
+        });
+      }
+      const updateTenantUser = TenantUser.query()
+        .where('id', id).update({ active: false });
+
+      const updateSystemUser = SystemUser.query()
+        .where('id', user.id).update({ active: false });
+      
+      await Promise.all([
+        updateTenantUser, updateSystemUser,
+      ]);
+
+      return res.status(200).send({ id: tenantUser.id });
+    },
+  },
+
+  activeUser: {
+    validation: [
+      param('id').exists().isNumeric().toInt(),
+    ],
+    async handler(req, res) {
+      const validationErrors = validationResult(req);
+
+      if (!validationErrors.isEmpty()) {
+        return res.boom.badData(null, {
+          code: 'validation_error', ...validationErrors,
+        });
+      }
+      const { id } = req.params;
+      const { user } = req;
+      const { TenantUser } = req.models;
+      const tenantUser = TenantUser.query().where('id', id).first();
+
+      if (!tenantUser) {
+        return res.boom.notFound(null, {
+          errors: [{ type: 'USER.NOT.FOUND', code: 100 }],
+        });
+      }
+      const updateTenantUser = TenantUser.query()
+        .where('id', id).update({ active: true });
+
+      const updateSystemUser = SystemUser.query()
+        .where('id', user.id).update({ active: true });
+      
+      await Promise.all([
+        updateTenantUser, updateSystemUser,
+      ]);
+      return res.status(200).send({ id: tenantUser.id });
     },
   },
 };

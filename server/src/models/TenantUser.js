@@ -1,9 +1,9 @@
 import bcrypt from 'bcryptjs';
 import { Model } from 'objection';
-import BaseModel from '@/models/Model';
+import TenantModel from '@/models/TenantModel';
 // import PermissionsService from '@/services/PermissionsService';
 
-export default class TenantUser extends BaseModel {
+export default class TenantUser extends TenantModel {
   // ...PermissionsService
 
   static get virtualAttributes() {

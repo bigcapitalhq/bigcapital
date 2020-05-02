@@ -2,7 +2,7 @@
 import express from 'express';
 import Authentication from '@/http/controllers/Authentication';
 import InviteUsers from '@/http/controllers/InviteUsers';
-// import Users from '@/http/controllers/Users';
+import Users from '@/http/controllers/Users';
 // import Roles from '@/http/controllers/Roles';
 import Items from '@/http/controllers/Items';
 import ItemCategories from '@/http/controllers/ItemCategories';
@@ -41,7 +41,7 @@ export default (app) => {
   dashboard.use(TenancyMiddleware);
 
   dashboard.use('/api/currencies', Currencies.router());
-  // app.use('/api/users', Users.router());
+  dashboard.use('/api/users', Users.router());
   // app.use('/api/roles', Roles.router());
   dashboard.use('/api/accounts', Accounts.router());
   dashboard.use('/api/account_types', AccountTypes.router());
