@@ -21,30 +21,48 @@ import DialogConnect from 'connectors/Dialog.connector';
 import DashboardConnect from 'connectors/Dashboard.connector';
 
 function UsersListPreferences({
-  fetchUsers,
+  requestFetchUsers,
   usersList,
   openDialog,
   closeDialog,
-  deleteUser,
+  requestDeleteUser,
+  requestInactiveUser,
   onFetchData,
 }) {
   const [deleteUserState, setDeleteUserState] = useState(false);
   const [inactiveUserState, setInactiveUserState] = useState(false);
 
   const asyncHook = useAsync(async () => {
-    await Promise.all([fetchUsers()]);
+    await Promise.all([requestFetchUsers()]);
   }, []);
 
-  const onInactiveUser = (user) => {};
+  const onInactiveUser = (user) => {
+    setInactiveUserState(user);
+  };
+  
+  // Handle cancel inactive user alert
+  const handleCancelInactiveUser = useCallback(() => {
+    setInactiveUserState(false);
+  }, []);
+
+  // handel confirm user activation
+  const handleConfirmUserActive = useCallback(() => {
+    requestInactiveUser(inactiveUserState.id).then(() => {
+      setInactiveUserState(false);
+      requestFetchUsers();
+      AppToaster.show({ message: 'the_user_has_been_inactivated' });
+    });
+  }, [inactiveUserState, requestInactiveUser, requestFetchUsers]);
 
   const onDeleteUser = (user) => {
     setDeleteUserState(user);
   };
+
   const handleCancelUserDelete = () => {
     setDeleteUserState(false);
   };
 
-  const onEditUser = (user) => () => {
+  const onEditInviteUser = (user) => () => {
     const form = Object.keys(user).reduce((obj, key) => {
       const camelKey = snakeCase(key);
       obj[camelKey] = user[key];
@@ -54,12 +72,22 @@ function UsersListPreferences({
     openDialog('user-form', { action: 'edit', user: form });
   };
 
+  const onEditUser = (user) => () => {
+    const form = Object.keys(user).reduce((obj, key) => {
+      const camelKey = snakeCase(key);
+      obj[camelKey] = user[key];
+      return obj;
+    }, {});
+
+    openDialog('userList-form', { action: 'edit', user: form });
+  };
+
   const handleConfirmUserDelete = () => {
     if (!deleteUserState) {
       return;
     }
 
-    deleteUser(deleteUserState.id).then((response) => {
+    requestDeleteUser(deleteUserState.id).then((response) => {
       setDeleteUserState(false);
       AppToaster.show({
         message: 'the_user_has_been_deleted',
@@ -67,16 +95,18 @@ function UsersListPreferences({
     });
   };
 
-  const actionMenuList = (user) => (
-    <Menu>
-      <MenuItem text='Edit User' onClick={onEditUser(user)} />
-      <MenuItem text='New Account' />
-      <MenuDivider />
-      <MenuItem text='Inactivate User' onClick={() => onInactiveUser(user)} />
-      <MenuItem text='Delete User' onClick={() => onDeleteUser(user)} />
-    </Menu>
+  const actionMenuList = useCallback(
+    (user) => (
+      <Menu>
+        <MenuItem text='Edit User' onClick={onEditUser(user)} />
+        <MenuDivider />
+        <MenuItem text='Edit Invite ' onClick={onEditInviteUser(user)} />
+        <MenuItem text='Inactivate User' onClick={() => onInactiveUser(user)} />
+        <MenuItem text='Delete User' onClick={() => onDeleteUser(user)} />
+      </Menu>
+    ),
+    []
   );
-  console.log(usersList, 'X');
 
   const columns = useMemo(
     () => [
@@ -145,6 +175,21 @@ function UsersListPreferences({
         isOpen={deleteUserState}
         onCancel={handleCancelUserDelete}
         onConfirm={handleConfirmUserDelete}
+      >
+        <p>
+          Are you sure you want to move <b>filename</b> to Trash? You will be
+          able to restore it later, but it will become private to you.
+        </p>
+      </Alert>
+
+      <Alert
+        cancelButtonText='Cancel'
+        confirmButtonText='Inactivate'
+        icon='trash'
+        intent={Intent.WARNING}
+        isOpen={inactiveUserState}
+        onCancel={handleCancelInactiveUser}
+        onConfirm={handleConfirmUserActive}
       >
         <p>
           Are you sure you want to move <b>filename</b> to Trash? You will be
