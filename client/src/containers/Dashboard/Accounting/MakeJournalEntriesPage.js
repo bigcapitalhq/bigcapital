@@ -1,6 +1,6 @@
 import React, {useMemo, useCallback} from 'react';
 import { useParams, useHistory } from 'react-router-dom';
-import { useAsync } from 'react-use';
+import useAsync from 'hooks/async';
 import MakeJournalEntriesForm from './MakeJournalEntriesForm';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import DashboardConnect from 'connectors/Dashboard.connector';
@@ -22,6 +22,7 @@ function MakeJournalEntriesPage({
       (id) && fetchManualJournal(id),
     ]);
   });
+
   const editJournal = useMemo(() =>
     getManualJournal(id) || null,
     [getManualJournal, id]);

@@ -3,7 +3,9 @@ import t from 'store/types';
 import { optionsArrayToMap } from 'utils';
 const initialState = {
   data: {
-    organization: {},
+    organization: {
+      name: 'Bigcapital, Limited Liabilities',
+    },
   },
 };
 

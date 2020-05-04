@@ -9,9 +9,10 @@ import {
   compose,
   defaultExpanderReducer,
 } from 'utils';
+import SettingsConnect from 'connectors/Settings.connect';
 
 function BalanceSheetTable({
-  companyName,
+  organizationSettings,
   balanceSheetAccounts,
   balanceSheetColumns,
   balanceSheetQuery,
@@ -110,7 +111,7 @@ function BalanceSheetTable({
 
   return (
     <FinancialSheet
-      companyName={companyName}
+      companyName={organizationSettings.name}
       sheetType={'Balance Sheet'}
       fromDate={balanceSheetQuery.from_date}
       toDate={balanceSheetQuery.to_date}
@@ -122,8 +123,9 @@ function BalanceSheetTable({
         columns={columns}
         data={balanceSheetAccounts}
         onFetchData={handleFetchData}
+        expanded={expandedRows}
         expandSubRows={true}
-        expanded={expandedRows} />
+        noInitialFetch={true} />
     </FinancialSheet>
   );
 }
@@ -131,4 +133,5 @@ function BalanceSheetTable({
 export default compose(
   BalanceSheetConnect,
   BalanceSheetTableConnect,
+  SettingsConnect,
 )(BalanceSheetTable);

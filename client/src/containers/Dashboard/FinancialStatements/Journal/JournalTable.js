@@ -89,7 +89,8 @@ function JournalSheetTable({
         data={data}
         onFetchData={handleFetchData}
         noResults={"This report does not contain any data."}
-        expanded={expandedRows} />
+        expanded={expandedRows}
+        noInitialFetch={true} />
     </FinancialSheet>
   );
 }

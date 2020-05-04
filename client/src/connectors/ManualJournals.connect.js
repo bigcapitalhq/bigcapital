@@ -14,6 +14,7 @@ import {
 const mapStateToProps = (state, props) => ({
   views: getResourceViews(state, 'manual_journals'),
   manualJournals: getManualJournalsItems(state, state.manualJournals.currentViewId),
+  manualJournalsItems: state.manualJournals.items,
   tableQuery: state.manualJournals.tableQuery,
   manualJournalsLoading: state.manualJournals.loading,
 });

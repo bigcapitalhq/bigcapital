@@ -1,5 +1,10 @@
-import React, {useMemo, useState, useEffect, useCallback} from 'react';
+import React, {useMemo, useState, useEffect, useRef, useCallback} from 'react';
 import * as Yup from 'yup';
+import {
+  ProgressBar,
+  Classes,
+  Intent,
+} from '@blueprintjs/core';
 import MakeJournalEntriesHeader from './MakeJournalEntriesHeader';
 import MakeJournalEntriesFooter from './MakeJournalEntriesFooter';
 import MakeJournalEntriesTable from './MakeJournalEntriesTable';
@@ -7,12 +12,18 @@ import {useFormik} from "formik";
 import MakeJournalEntriesConnect from 'connectors/MakeJournalEntries.connect';
 import AccountsConnect from 'connectors/Accounts.connector';
 import DashboardConnect from 'connectors/Dashboard.connector';
-import {compose} from 'utils';
+import {compose, saveFilesInAsync} from 'utils';
 import moment from 'moment';
 import AppToaster from 'components/AppToaster';
 import {pick} from 'lodash';
+import Dragzone from 'components/Dragzone';
+import MediaConnect from 'connectors/Media.connect';
+import classNames from 'classnames';
+import ManualJournalsConnect from 'connectors/ManualJournals.connect';
+import useMedia from 'hooks/useMedia';
 
 function MakeJournalEntriesForm({
+  requestSubmitMedia,
   requestMakeJournalEntries,
   requestEditManualJournal,
   changePageTitle,
@@ -20,7 +31,21 @@ function MakeJournalEntriesForm({
   editJournal,
   onFormSubmit,
   onCancelForm,
+
+  requestDeleteMedia,
+  manualJournalsItems
 }) {
+  const { setFiles, saveMedia, deletedFiles, setDeletedFiles, deleteMedia } = useMedia({
+    saveCallback: requestSubmitMedia,
+    deleteCallback: requestDeleteMedia,
+  });
+  const handleDropFiles = useCallback((_files) => {
+    setFiles(_files.filter((file) => file.uploaded === false));
+  }, []);
+
+  const savedMediaIds = useRef([]);
+  const clearSavedMediaIds = () => { savedMediaIds.current = []; }
+
   useEffect(() => {
     if (editJournal && editJournal.id) {
       changePageTitle('Edit Journal');
@@ -61,7 +86,7 @@ function MakeJournalEntriesForm({
     note: '',
   }), []);
 
-  const initialValues = useMemo(() => ({
+  const defaultInitialValues = useMemo(() => ({
     journal_number: '',
     date: moment(new Date()).format('YYYY-MM-DD'),
     description: '',
@@ -74,20 +99,33 @@ function MakeJournalEntriesForm({
     ],
   }), [defaultEntry]);
 
+  const initialValues = useMemo(() => ({
+    ...(editJournal) ? {
+      ...pick(editJournal, Object.keys(defaultInitialValues)),
+      entries: editJournal.entries.map((entry) => ({
+        ...pick(entry, Object.keys(defaultEntry)),
+      })),
+    } : {
+      ...defaultInitialValues,
+    }
+  }), [editJournal, defaultInitialValues, defaultEntry]);
+
+  const initialAttachmentFiles = useMemo(() => {
+    return editJournal && editJournal.media
+      ? editJournal.media.map((attach) => ({
+        preview: attach.attachment_file,
+        uploaded: true,
+        metadata: { ...attach },
+      })) : [];
+  }, [editJournal]);
+
   const formik = useFormik({
     enableReinitialize: true,
     validationSchema,
     initialValues: {
-      ...(editJournal) ? {
-        ...pick(editJournal, Object.keys(initialValues)),
-        entries: editJournal.entries.map((entry) => ({
-          ...pick(entry, Object.keys(defaultEntry)),
-        }))
-      } : {
-        ...initialValues,
-      }
+      ...initialValues,
     },
-    onSubmit: (values, actions) => {
+    onSubmit: async (values, actions) => {
       const entries = values.entries.filter((entry) => (
         (entry.credit || entry.debit)
       ));
@@ -99,6 +137,7 @@ function MakeJournalEntriesForm({
       const totalCredit = getTotal('credit');
       const totalDebit = getTotal('debit');
 
+      // Validate the total credit should be eqials total debit.
       if (totalCredit !== totalDebit) {
         AppToaster.show({
           message: 'credit_and_debit_not_equal',
@@ -108,29 +147,51 @@ function MakeJournalEntriesForm({
       }
       const form = { ...values, status: payload.publish, entries };
 
-      if (editJournal && editJournal.id) {
-        requestEditManualJournal(editJournal.id, form)
-          .then((response) => {
-            AppToaster.show({
-              message: 'manual_journal_has_been_edited',
-            }); 
-            actions.setSubmitting(false);
-            saveInvokeSubmit({ action: 'update', ...payload });
-          }).catch((error) => {
-            actions.setSubmitting(false);
-          });
-      } else {
-        requestMakeJournalEntries(form)
-          .then((response) => {
-            AppToaster.show({
-              message: 'manual_journal_has_been_submit',
-            }); 
-            actions.setSubmitting(false);
-            saveInvokeSubmit({ action: 'new', ...payload });
-          }).catch((error) => {
-            actions.setSubmitting(false);
-          });
-      }
+      const saveJournal = (mediaIds) => new Promise((resolve, reject) => {
+        const requestForm = { ...form, media_ids: mediaIds };
+
+        if (editJournal && editJournal.id) {
+          requestEditManualJournal(editJournal.id, requestForm)
+            .then((response) => {
+              AppToaster.show({
+                message: 'manual_journal_has_been_edited',
+              }); 
+              actions.setSubmitting(false);
+              saveInvokeSubmit({ action: 'update', ...payload });
+              clearSavedMediaIds([]);
+              resolve(response);
+            }).catch((error) => {
+              actions.setSubmitting(false);
+              reject(error);
+            });
+        } else {
+          requestMakeJournalEntries(requestForm)
+            .then((response) => {
+              AppToaster.show({
+                message: 'manual_journal_has_been_submit',
+              }); 
+              actions.setSubmitting(false);
+              saveInvokeSubmit({ action: 'new', ...payload });
+              clearSavedMediaIds();
+              resolve(response);
+            }).catch((error) => {
+              actions.setSubmitting(false);
+              reject(error);
+            });
+        }
+      });
+
+      Promise.all([
+        saveMedia(),
+        deleteMedia(),
+      ]).then(([savedMediaResponses]) => {
+        const mediaIds = savedMediaResponses.map(res => res.data.media.id);
+        savedMediaIds.current = mediaIds;
+
+        return savedMediaResponses;
+      }).then(() => {
+        return saveJournal(savedMediaIds.current);
+      });
     },
   });
 
@@ -143,22 +204,45 @@ function MakeJournalEntriesForm({
     onCancelForm && onCancelForm(payload); 
   }, [onCancelForm]);
 
+  const handleDeleteFile = useCallback((_deletedFiles) => {
+    _deletedFiles.forEach((deletedFile) => {
+      if (deletedFile.uploaded && deletedFile.metadata.id) {
+        setDeletedFiles([
+          ...deletedFiles, deletedFile.metadata.id,
+        ]);
+      }
+    });
+  }, [setDeletedFiles, deletedFiles]);  
+
   return (
     <div class="make-journal-entries">
       <form onSubmit={formik.handleSubmit}>
         <MakeJournalEntriesHeader formik={formik} />
-        <MakeJournalEntriesTable formik={formik} defaultRow={defaultEntry} />
+
+        <MakeJournalEntriesTable
+          initialValues={initialValues}
+          formik={formik}
+          defaultRow={defaultEntry} />
+
         <MakeJournalEntriesFooter
           formik={formik}
           onSubmitClick={handleSubmitClick}
           onCancelClick={handleCancelClick} />
       </form>
+
+      <Dragzone
+        initialFiles={initialAttachmentFiles}
+        onDrop={handleDropFiles}
+        onDeleteFile={handleDeleteFile}
+        hint={'Attachments: Maxiumum size: 20MB'} />
     </div>
   );
 }
 
 export default compose(
+  ManualJournalsConnect,
   MakeJournalEntriesConnect,
   AccountsConnect,
   DashboardConnect,
+  MediaConnect,
 )(MakeJournalEntriesForm);

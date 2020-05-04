@@ -1,4 +1,4 @@
-import React, {useState, useMemo, useCallback} from 'react';
+import React, {useState, useMemo, useEffect, useCallback} from 'react';
 import {
   Button,
   Intent,
@@ -74,34 +74,36 @@ const NoteCellRenderer = (chainedComponent) => (props) => {
  * Make journal entries table component.
  */
 function MakeJournalEntriesTable({
-  formik,
+  formik: { errors, values, setFieldValue },
   accounts,
   onClickRemoveRow,
   onClickAddNewRow,
   defaultRow,
+  initialValues,
 }) {
-  const [rows, setRow] = useState([
-    ...formik.values.entries.map((e) => ({ ...e, rowType: 'editor'})),
-    defaultRow,
-    defaultRow,
-  ]);
+  const [rows, setRow] = useState([]);
+
+  useEffect(() => { 
+    setRow([
+      ...initialValues.entries.map((e) => ({ ...e, rowType: 'editor'})),
+      defaultRow,
+      defaultRow,
+    ])
+  }, [initialValues, defaultRow])
 
   // Handles update datatable data.
   const handleUpdateData = useCallback((rowIndex, columnId, value) => {
     const newRows = rows.map((row, index) => {
       if (index === rowIndex) {
-        return {
-          ...rows[rowIndex],
-          [columnId]: value,
-        };
+        return { ...rows[rowIndex], [columnId]: value };
       }
       return { ...row };
     });
     setRow(newRows);
-    formik.setFieldValue('entries', newRows.map(row => ({
+    setFieldValue('entries', newRows.map(row => ({
       ...omit(row, ['rowType']),
     })));
-  }, [rows, formik]);
+  }, [rows, setFieldValue]);
 
   // Handles click remove datatable row.
   const handleRemoveRow = useCallback((rowIndex) => {
@@ -109,12 +111,12 @@ function MakeJournalEntriesTable({
     const newRows = rows.filter((row, index) => index !== removeIndex);
     
     setRow([ ...newRows ]);
-    formik.setFieldValue('entries', newRows
+    setFieldValue('entries', newRows
       .filter(row => row.rowType === 'editor')
       .map(row => ({ ...omit(row, ['rowType']) })
     ));
     onClickRemoveRow && onClickRemoveRow(removeIndex);
-  }, [rows, formik, onClickRemoveRow]);
+  }, [rows, setFieldValue, onClickRemoveRow]);
 
   // Memorized data table columns.
   const columns = useMemo(() => [
@@ -196,7 +198,7 @@ function MakeJournalEntriesTable({
         rowClassNames={rowClassNames}
         payload={{
           accounts,
-          errors: formik.errors.entries || [],
+          errors: errors.entries || [],
           updateData: handleUpdateData,
           removeRow: handleRemoveRow,
         }}/>

@@ -82,15 +82,13 @@ export default {
       const filter = {
         filter_roles: [],
         page: 1,
-        page_size: 10,
+        page_size: 999,
         ...req.query,
       };
       if (filter.stringified_filter_roles) {
         filter.filter_roles = JSON.parse(filter.stringified_filter_roles);
       }
       const { Resource, View, ManualJournal } = req.models;
-
-      console.log(req.models);
 
       const errorReasons = [];
       const manualJournalsResource = await Resource.query()
@@ -185,6 +183,8 @@ export default {
       check('entries.*.debit').optional({ nullable: true }).isNumeric().toInt(),
       check('entries.*.account_id').isNumeric().toInt(),
       check('entries.*.note').optional(),
+      check('media_ids').optional().isArray(),
+      check('media_ids.*').exists().isNumeric().toInt(),
     ],
     async handler(req, res) {
       const validationErrors = validationResult(req);
@@ -198,9 +198,10 @@ export default {
         date: new Date(),
         transaction_type: 'journal',
         reference: '',
+        media_ids: [],
         ...req.body,
       };
-      const { ManualJournal, Account } = req.models;
+      const { ManualJournal, Account, Media, MediaLink } = req.models;
 
       let totalCredit = 0;
       let totalDebit = 0;
@@ -233,6 +234,14 @@ export default {
 
       const storedAccountsIds = accounts.map((account) => account.id);
 
+      if (form.media_ids.length > 0) {
+        const storedMedia = await Media.query().whereIn('id', form.media_ids);
+        const notFoundMedia = difference(form.media_ids, storedMedia.map((m) => m.id));
+        
+        if (notFoundMedia.length > 0) {
+          errorReasons.push({ type: 'MEDIA.IDS.NOT.FOUND', code: 400, ids: notFoundMedia });
+        }
+      }
       if (difference(accountsIds, storedAccountsIds).length > 0) {
         errorReasons.push({ type: 'ACCOUNTS.IDS.NOT.FOUND', code: 200 });
       }
@@ -279,8 +288,22 @@ export default {
           journalPoster.credit(jouranlEntry);
         }
       });
+
+      // Save linked media to the journal model.
+      const bulkSaveMediaLink = [];
+
+      form.media_ids.forEach((mediaId) => {
+        const oper = MediaLink.query().insert({
+          model_name: 'Journal',
+          model_id: manualJournal.id,
+          media_id: mediaId,
+        });
+        bulkSaveMediaLink.push(oper);
+      });
+
       // Saves the journal entries and accounts balance changes.
       await Promise.all([
+        ...bulkSaveMediaLink,
         journalPoster.saveEntries(),
         (form.status) && journalPoster.saveBalance(),
       ]);
@@ -313,6 +336,9 @@ export default {
     },
   },
 
+  /**
+   * Edit the given manual journal.
+   */
   editManualJournal: {
     validation: [
       param('id').exists().isNumeric().toInt(),
@@ -326,6 +352,8 @@ export default {
       check('entries.*.debit').optional({ nullable: true }).isNumeric().toInt(),
       check('entries.*.account_id').isNumeric().toInt(),
       check('entries.*.note').optional(),
+      check('media_ids').optional().isArray(),
+      check('media_ids.*').isNumeric().toInt(),
     ],
     async handler(req, res) {
       const validationErrors = validationResult(req);
@@ -339,14 +367,17 @@ export default {
         date: new Date(),
         transaction_type: 'journal',
         reference: '',
+        media_ids: [],
         ...req.body,
       };
       const { id } = req.params;
       const {
-        ManualJournal, AccountTransaction, Account,
+        ManualJournal, AccountTransaction, Account, Media, MediaLink,
       } = req.models;
 
-      const manualJournal = await ManualJournal.query().where('id', id).first();
+      const manualJournal = await ManualJournal.query()
+        .where('id', id)
+        .withGraphFetched('media').first();
 
       if (!manualJournal) {
         return res.status(4040).send({
@@ -395,6 +426,16 @@ export default {
       if (difference(accountsIds, storedAccountsIds).length > 0) {
         errorReasons.push({ type: 'ACCOUNTS.IDS.NOT.FOUND', code: 200 });
       }
+
+      // Validate if media ids was not already exists on the storage.
+      if (form.media_ids.length > 0) {
+        const storedMedia = await Media.query().whereIn('id', form.media_ids);
+        const notFoundMedia = difference(form.media_ids, storedMedia.map((m) => m.id));
+
+        if (notFoundMedia.length > 0) {
+          errorReasons.push({ type: 'MEDIA.IDS.NOT.FOUND', code: 400, ids: notFoundMedia });
+        }
+      }
       if (errorReasons.length > 0) {
         return res.status(400).send({ errors: errorReasons });
       }
@@ -439,7 +480,23 @@ export default {
           journal.credit(jouranlEntry);
         }
       });
+
+      // Save links of new inserted media that associated to the journal model.
+      const journalMediaIds = manualJournal.media.map((m) => m.id);
+      const newInsertedMedia = difference(form.media_ids, journalMediaIds);
+      const bulkSaveMediaLink = [];
+
+      newInsertedMedia.forEach((mediaId) => {
+        const oper = MediaLink.query().insert({
+          model_name: 'Journal',
+          model_id: manualJournal.id,
+          media_id: mediaId,
+        });
+        bulkSaveMediaLink.push(oper);
+      });
+
       await Promise.all([
+        ...bulkSaveMediaLink,
         journal.deleteEntries(),
         journal.saveEntries(),
         journal.saveBalance(),
@@ -524,7 +581,9 @@ export default {
 
       const { id } = req.params;
       const manualJournal = await ManualJournal.query()
-        .where('id', id).first();
+        .where('id', id)
+        .withGraphFetched('media')
+        .first();
 
       if (!manualJournal) {
         return res.status(404).send({
@@ -564,7 +623,9 @@ export default {
       }
       const { id } = req.params;
       const {
-        ManualJournal, AccountTransaction,
+        ManualJournal,
+        AccountTransaction,
+        MediaLink,
       } = req.models;
       const manualJournal = await ManualJournal.query()
         .where('id', id).first();
@@ -582,6 +643,11 @@ export default {
       const journal = new JournalPoster();
       journal.loadEntries(transactions);
       journal.removeEntries();
+
+      await MediaLink.query()
+        .where('model_name', 'Journal')
+        .where('model_id', manualJournal.id)
+        .delete();
 
       await ManualJournal.query()
         .where('id', manualJournal.id)
@@ -678,7 +744,7 @@ export default {
         });
       }
       const filter = { ...req.query };
-      const { ManualJournal, AccountTransaction } = req.models;
+      const { ManualJournal, AccountTransaction, MediaLink } = req.models;
 
       const manualJournals = await ManualJournal.query()
         .whereIn('id', filter.ids);
@@ -698,6 +764,11 @@ export default {
 
       journal.loadEntries(transactions);
       journal.removeEntries();
+
+      await MediaLink.query()
+        .where('model_name', 'Journal')
+        .whereIn('model_id', filter.ids)
+        .delete();
 
       await ManualJournal.query()
         .whereIn('id', filter.ids).delete();

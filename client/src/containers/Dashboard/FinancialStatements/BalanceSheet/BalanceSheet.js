@@ -34,7 +34,7 @@ function BalanceSheet({
     await Promise.all([
       fetchBalanceSheet({ ...query }),
     ]);
-  });
+  }, false);
 
   // Handle fetch the data of balance sheet.
   const handleFetchData = useCallback(() => { fetchHook.execute(); }, [fetchHook]);

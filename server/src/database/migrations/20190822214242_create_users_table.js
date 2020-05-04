@@ -10,6 +10,8 @@ exports.up = function (knex) {
     table.integer('role_id').unique();
     table.string('language');
     table.date('last_login_at');
+
+    table.date('invite_accepted_at');
     table.timestamps();
   });
 };

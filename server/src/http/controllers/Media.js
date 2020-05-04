@@ -119,7 +119,7 @@ export default {
           code: 'validation_error', ...validationErrors,
         });
       }
-      const { Media } = req.models;
+      const { Media, MediaLink } = req.models;
       const { id } = req.params;
       const media = await Media.query().where('id', id).first();
 
@@ -137,6 +137,8 @@ export default {
       } catch (error) {
         Logger.log('error', 'Delete item attachment file delete failed.', { error });
       }
+
+      await MediaLink.query().where('media_id', media.id).delete();
       await Media.query().where('id', media.id).delete();
 
       return res.status(200).send();

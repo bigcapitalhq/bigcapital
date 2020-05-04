@@ -10,8 +10,10 @@ exports.up = function (knex) {
     table.boolean('active');
     table.integer('role_id').unique();
     table.string('language');
-    table.date('last_login_at');
+    
     table.integer('tenant_id').unsigned();
+
+    table.date('last_login_at');
     table.timestamps();
   }).then(() => {
     // knex.seed.run({

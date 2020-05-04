@@ -180,7 +180,7 @@ export default class JournalPoster {
 
   async deleteEntries() {
     if (this.deletedEntriesIds.length > 0) {
-      await AccountTransaction.query()
+      await AccountTransaction.tenant().query()
         .whereIn('id', this.deletedEntriesIds)
         .delete();
     }

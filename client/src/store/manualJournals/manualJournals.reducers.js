@@ -11,27 +11,32 @@ const initialState = {
   tableQuery: {},
 };
 
+const defaultJournal = {
+  entries: [],
+};
+
 const reducer = createReducer(initialState, {
   
   [t.MANUAL_JOURNAL_SET]: (state, action) => {
     const { id, manualJournal } = action.payload;
-    state.items[id] = manualJournal;
+    state.items[id] = { ...defaultJournal, ...manualJournal };
   },
 
   [t.MANUAL_JOURNAL_PUBLISH]: (state, action) => {
     const { id } = action.payload;
     const item = state.items[id] || {};
 
-    state.items[id] = {
-      ...item, status: 1,
-    };
+    state.items[id] = { ...item, status: 1 };
   },
 
   [t.MANUAL_JOURNALS_ITEMS_SET]: (state, action) => {
     const _manual_journals = {};
 
     action.manual_journals.forEach((manual_journal) => {
-      _manual_journals[manual_journal.id] = manual_journal;
+      _manual_journals[manual_journal.id] = {
+        ...defaultJournal,
+        ...manual_journal,
+      };
     });
     state.items = {
       ...state.items,

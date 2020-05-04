@@ -1,6 +1,7 @@
 import moment from 'moment';
 import _ from 'lodash';
 import Currency from 'js-money/lib/currency';
+import PProgress from 'p-progress';
 import accounting from 'accounting';
 
 
@@ -151,4 +152,22 @@ export const checkRequiredProperties = (obj, properties) => {
     const value = obj[prop];
     return (value === '' || value === null || value === undefined);
   })
+}
+
+export const saveFilesInAsync = (files, actionCb, extraTasks) => {
+  const opers = [];
+
+  files.forEach((file) => {
+    const formData = new FormData();
+    formData.append('attachment', file.file);
+    const oper = new PProgress((resolve, reject, progress) => {
+      actionCb(formData, file, (requestProgress) => {
+        progress(requestProgress);
+      })
+      .then((data) => { resolve(data); })
+      .catch(error => { reject(error); })
+    });
+    opers.push(oper);
+  });
+  return PProgress.all(opers);
 }

@@ -126,7 +126,8 @@ function ProfitLossSheetTable({
         data={profitLossTableRows}
         onFetchData={handleFetchData}
         expanded={expandedRows}
-        rowClassNames={rowClassNames} />
+        rowClassNames={rowClassNames}
+        noInitialFetch={true} />
     </FinancialSheet>
   );
 }

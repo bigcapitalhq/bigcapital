@@ -68,6 +68,9 @@ export default {
       check('custom_fields.*.value').exists(),
 
       check('note').optional(),
+
+      check('media_ids').optional().isArray(),
+      check('media_ids.*').exists().isNumeric().toInt(),
     ],
     async handler(req, res) {
       const validationErrors = validationResult(req);

@@ -23,14 +23,33 @@ import Icon from 'components/Icon';
 import ItemCategoryConnect from 'connectors/ItemsCategory.connect';
 import MoneyInputGroup from 'components/MoneyInputGroup';
 import {useHistory} from 'react-router-dom';
+import Dragzone from 'components/Dragzone';
+import MediaConnect from 'connectors/Media.connect';
+import useMedia from 'hooks/useMedia';
 
 const ItemForm = ({
   requestSubmitItem,
+  
   accounts,
   categories,
+
+  requestSubmitMedia,
+  requestDeleteMedia,
 }) => {
   const [selectedAccounts, setSelectedAccounts] = useState({});
   const history = useHistory();
+
+  const {
+    files,
+    setFiles,
+    saveMedia,
+    deletedFiles,
+    setDeletedFiles,
+    deleteMedia,
+  } = useMedia({
+    saveCallback: requestSubmitMedia,
+    deleteCallback: requestDeleteMedia,
+  })
 
   const ItemTypeDisplay = useMemo(() => ([
     { value: null, label: 'Select Item Type' },
@@ -85,15 +104,27 @@ const ItemForm = ({
       ...initialValues,
     },
     onSubmit: (values, { setSubmitting }) => {
-      requestSubmitItem(values).then((response) => {
-        AppToaster.show({
-          message: 'The_Items_has_been_Submit'
+      const saveItem = (mediaIds) => {
+        const formValues = { ...values, media_ids: mediaIds };
+
+        return requestSubmitItem(formValues).then((response) => {
+          AppToaster.show({
+            message: 'The_Items_has_been_submit'
+          });
+          setSubmitting(false);
+          history.push('/dashboard/items');
+        })
+        .catch((error) => {
+          setSubmitting(false);
         });
-        setSubmitting(false);
-        history.push('/dashboard/items');
-      })
-      .catch((error) => {
-        setSubmitting(false);
+      };
+
+      Promise.all([
+        saveMedia(),
+        deleteMedia(),
+      ]).then(([savedMediaResponses]) => {
+        const mediaIds = savedMediaResponses.map(res => res.data.media.id);
+        return saveItem(mediaIds);
       });
     }
   });
@@ -139,95 +170,126 @@ const ItemForm = ({
     setFieldValue(fieldKey, value);
   };
 
+  const initialAttachmentFiles = useMemo(() => {
+    return [];
+  }, []);
+
+  const handleDropFiles = useCallback((_files) => {
+    setFiles(_files.filter((file) => file.uploaded === false));
+  }, []);
+
+  const handleDeleteFile = useCallback((_deletedFiles) => {
+    _deletedFiles.forEach((deletedFile) => {
+      if (deletedFile.uploaded && deletedFile.metadata.id) {
+        setDeletedFiles([
+          ...deletedFiles, deletedFile.metadata.id,
+        ]);
+      }
+    });
+  }, [setDeletedFiles, deletedFiles]);  
+
   return (
     <div class='item-form'>
       <form onSubmit={handleSubmit}>
         <div class="item-form__primary-section">
-          <FormGroup
-            medium={true}
-            label={'Item Type'}
-            labelInfo={requiredSpan}
-            className={'form-group--item-type'}
-            intent={(errors.type && touched.type) && Intent.DANGER}
-            helperText={<ErrorMessage {...{errors, touched}} name="type" />}
-            inline={true}
-          >
-            <HTMLSelect
-              fill={true}
-              options={ItemTypeDisplay}
-              {...getFieldProps('type')}
-            />
-          </FormGroup>
+          <Row>
+            <Col xs={7}>
+              <FormGroup
+                medium={true}
+                label={'Item Type'}
+                labelInfo={requiredSpan}
+                className={'form-group--item-type'}
+                intent={(errors.type && touched.type) && Intent.DANGER}
+                helperText={<ErrorMessage {...{errors, touched}} name="type" />}
+                inline={true}
+              >
+                <HTMLSelect
+                  fill={true}
+                  options={ItemTypeDisplay}
+                  {...getFieldProps('type')}
+                />
+              </FormGroup>
 
-          <FormGroup
-            label={'Item Name'}
-            labelInfo={requiredSpan}
-            className={'form-group--item-name'}
-            intent={(errors.name && touched.name) && Intent.DANGER}
-            helperText={<ErrorMessage {...{errors, touched}} name="name" />}
-            inline={true}
-          >
-            <InputGroup
-              medium={true}
-              intent={(errors.name && touched.name) && Intent.DANGER}
-              {...getFieldProps('name')}
-            />
-          </FormGroup>
+              <FormGroup
+                label={'Item Name'}
+                labelInfo={requiredSpan}
+                className={'form-group--item-name'}
+                intent={(errors.name && touched.name) && Intent.DANGER}
+                helperText={<ErrorMessage {...{errors, touched}} name="name" />}
+                inline={true}
+              >
+                <InputGroup
+                  medium={true}
+                  intent={(errors.name && touched.name) && Intent.DANGER}
+                  {...getFieldProps('name')}
+                />
+              </FormGroup>
 
-          <FormGroup
-            label={'SKU'}
-            labelInfo={infoIcon}
-            className={'form-group--item-sku'}
-            intent={(errors.sku && touched.sku) && Intent.DANGER}
-            helperText={<ErrorMessage {...{errors, touched}} name="sku" />}
-            inline={true}
-          >
-            <InputGroup
-              medium={true}
-              intent={(errors.sku && touched.sku) && Intent.DANGER}
-              {...getFieldProps('sku')}
-            />
-          </FormGroup>
+              <FormGroup
+                label={'SKU'}
+                labelInfo={infoIcon}
+                className={'form-group--item-sku'}
+                intent={(errors.sku && touched.sku) && Intent.DANGER}
+                helperText={<ErrorMessage {...{errors, touched}} name="sku" />}
+                inline={true}
+              >
+                <InputGroup
+                  medium={true}
+                  intent={(errors.sku && touched.sku) && Intent.DANGER}
+                  {...getFieldProps('sku')}
+                />
+              </FormGroup>
 
-          <FormGroup
-            label={'Category'}
-            labelInfo={infoIcon}
-            inline={true}
-            intent={(errors.category_id && touched.category_id) && Intent.DANGER}
-            helperText={<ErrorMessage {...{errors, touched}} name="category" />}
-            className={classNames(
-              'form-group--select-list',
-              'form-group--category',
-              Classes.FILL,
-            )}
-          >
-            <Select
-              items={categories}
-              itemRenderer={categoryItem}
-              itemPredicate={filterAccounts}
-              popoverProps={{ minimal: true }}
-              onItemSelect={onItemAccountSelect('category_id')}
-            >
-              <Button
-                fill={true}
-                rightIcon='caret-down'
-                text={getSelectedAccountLabel('category_id', 'Select category')}
-              />
-            </Select>
-          </FormGroup>
+              <FormGroup
+                label={'Category'}
+                labelInfo={infoIcon}
+                inline={true}
+                intent={(errors.category_id && touched.category_id) && Intent.DANGER}
+                helperText={<ErrorMessage {...{errors, touched}} name="category" />}
+                className={classNames(
+                  'form-group--select-list',
+                  'form-group--category',
+                  Classes.FILL,
+                )}
+              >
+                <Select
+                  items={categories}
+                  itemRenderer={categoryItem}
+                  itemPredicate={filterAccounts}
+                  popoverProps={{ minimal: true }}
+                  onItemSelect={onItemAccountSelect('category_id')}
+                >
+                  <Button
+                    fill={true}
+                    rightIcon='caret-down'
+                    text={getSelectedAccountLabel('category_id', 'Select category')}
+                  />
+                </Select>
+              </FormGroup>
 
-          <FormGroup
-            label={' '}
-            inline={true}
-            className={'form-group--active'}
-          >
-            <Checkbox
-              inline={true}
-              label={'Active'}
-              defaultChecked={values.active}
-              {...getFieldProps('active')}
-            />
-          </FormGroup>
+              <FormGroup
+                label={' '}
+                inline={true}
+                className={'form-group--active'}
+              >
+                <Checkbox
+                  inline={true}
+                  label={'Active'}
+                  defaultChecked={values.active}
+                  {...getFieldProps('active')}
+                />
+              </FormGroup>
+            </Col>
+
+            <Col xs={3}>
+              <Dragzone
+                initialFiles={initialAttachmentFiles}
+                onDrop={handleDropFiles}
+                onDeleteFile={handleDeleteFile}
+                hint={'Attachments: Maxiumum size: 20MB'}
+                className={'mt2'} />
+            </Col>
+          </Row>
         </div>
 
         <Row gutterWidth={16} className={'item-form__accounts-section'}>
@@ -258,8 +320,7 @@ const ItemForm = ({
               intent={(errors.sell_account_id && touched.sell_account_id) && Intent.DANGER}
               helperText={<ErrorMessage {...{errors, touched}} name="sell_account_id" />}
               className={classNames(
-                'form-group--sell-account',
-                'form-group--select-list',
+                'form-group--sell-account', 'form-group--select-list',
                 Classes.FILL)}
             >
               <Select
@@ -392,4 +453,5 @@ export default compose(
   AccountsConnect,
   ItemsConnect,
   ItemCategoryConnect,
+  MediaConnect,
 )(ItemForm);

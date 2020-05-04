@@ -6,8 +6,8 @@ export default {
     return axios.get(`/api/${resource}`, params);
   },
 
-  post(resource, params) {
-    return axios.post(`/api/${resource}`, params);
+  post(resource, params, config) {
+    return axios.post(`/api/${resource}`, params, config);
   },
 
   update(resource, slug, params) {
