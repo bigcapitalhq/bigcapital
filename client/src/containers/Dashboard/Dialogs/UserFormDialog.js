@@ -21,9 +21,9 @@ import classNames from 'classnames';
 import { compose } from 'utils';
 
 function UserFormDialog({
-  fetchUser,
-  submitUser,
-  editUser,
+  requestFetchUser,
+  requestSubmitInvite,
+  requestEditUser,
   name,
   payload,
   isOpen,
@@ -32,12 +32,12 @@ function UserFormDialog({
   const intl = useIntl();
   const fetchHook = useAsync(async () => {
     await Promise.all([
-      ...(payload.action === 'edit' ? [fetchUser(payload.user.id)] : []),
+      ...(payload.action === 'edit' ? [requestFetchUser(payload.user.id)] : []),
     ]);
   }, false);
 
   const validationSchema = Yup.object().shape({
-    email: Yup.string().email().required(),
+    email: Yup.string().email().required(intl.formatMessage({id:'required'})),
   });
 
   const initialValues = {
@@ -47,7 +47,6 @@ function UserFormDialog({
         objectKeysTransform(payload.user, snakeCase),
         Object.keys(validationSchema.fields)
       )),
-    password: '',
   };
 
   const formik = useFormik({
@@ -57,17 +56,16 @@ function UserFormDialog({
     onSubmit: (values) => {
       const form = {
         ...values,
-        confirm_password: values.password,
       };
       if (payload.action === 'edit') {
-        editUser(payload.user.id, form).then((response) => {
+        requestEditUser(payload.user.id, form).then((response) => {
           AppToaster.show({
             message: 'the_user_details_has_been_updated',
           });
           closeDialog(name);
         });
       } else {
-        submitUser(form).then((response) => {
+        requestSubmitInvite(form).then((response) => {
           AppToaster.show({
             message: 'the_user_has_been_invited',
           });
@@ -93,7 +91,7 @@ function UserFormDialog({
   return (
     <Dialog
       name={name}
-      title={payload.action === 'edit' ? 'Edit invite' : 'New invite'}
+      title={payload.action === 'edit' ? 'Edit invite' : 'invite User'}
       className={classNames({
         'dialog--loading': fetchHook.pending,
         'dialog--invite-form': true,
@@ -107,19 +105,6 @@ function UserFormDialog({
     >
       <form onSubmit={formik.handleSubmit}>
         <div className={Classes.DIALOG_BODY}>
-          <FormGroup
-            label={'Email'}
-            className={'form-group--email'}
-            intent={errors.email && touched.email && Intent.DANGER}
-            helperText={<ErrorMessage name='email' {...formik} />}
-            inline={true}
-          >
-            <InputGroup
-              medium={true}
-              intent={errors.email && touched.email && Intent.DANGER}
-              {...formik.getFieldProps('email')}
-            />
-          </FormGroup>
           <FormGroup
             label={'Email'}
             className={'form-group--email'}
