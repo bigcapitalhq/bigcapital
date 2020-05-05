@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { useIntl } from 'react-intl';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -49,7 +49,14 @@ function UserFormDialog({
       )),
   };
 
-  const formik = useFormik({
+  const {
+    values,
+    errors,
+    touched,
+    resetForm,
+    getFieldProps,
+    handleSubmit,
+  } = useFormik({
     enableReinitialize: true,
     initialValues,
     validationSchema,
@@ -74,15 +81,13 @@ function UserFormDialog({
       }
     },
   });
-  const { values, errors, touched } = useMemo(() => formik, [formik]);
-
   const onDialogOpening = () => {
     fetchHook.execute();
   };
 
-  const onDialogClosed = () => {
-    formik.resetForm();
-  };
+  const onDialogClosed = useCallback(() => {
+    resetForm();
+  }, [resetForm]);
 
   const handleClose = () => {
     closeDialog(name);
@@ -103,19 +108,21 @@ function UserFormDialog({
       onClosed={onDialogClosed}
       onOpening={onDialogOpening}
     >
-      <form onSubmit={formik.handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <div className={Classes.DIALOG_BODY}>
+          <p class="mb2">Your teammate will get an email that gives them access to your team.</p>
+
           <FormGroup
             label={'Email'}
-            className={'form-group--email'}
-            intent={errors.email && touched.email && Intent.DANGER}
-            helperText={<ErrorMessage name='email' {...formik} />}
+            className={classNames('form-group--email', Classes.FILL)}
+            intent={(errors.email && touched.email) && Intent.DANGER}
+            helperText={<ErrorMessage name='email' {...{errors, touched}} />}
             inline={true}
           >
             <InputGroup
               medium={true}
-              intent={errors.email && touched.email && Intent.DANGER}
-              {...formik.getFieldProps('email')}
+              intent={(errors.email && touched.email) && Intent.DANGER}
+              {...getFieldProps('email')}
             />
           </FormGroup>
         </div>

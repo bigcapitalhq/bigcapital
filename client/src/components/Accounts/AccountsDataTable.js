@@ -21,7 +21,9 @@ import DataTable from 'components/DataTable';
 import Money from 'components/Money';
 import { useUpdateEffect } from 'hooks';
 
+
 function AccountsDataTable({
+  loading,
   accounts,
   onDeleteAccount,
   onInactiveAccount,
@@ -34,7 +36,6 @@ function AccountsDataTable({
   onFetchData,
   onSelectedRowsChange
 }) {
-  const {custom_view_id: customViewId} = useParams();
   const [initialMount, setInitialMount] = useState(false);
 
   useUpdateEffect(() => {
@@ -42,19 +43,6 @@ function AccountsDataTable({
       setInitialMount(true);
     }
   }, [accountsLoading, setInitialMount]);
-
-  useEffect(() => {
-    const viewMeta = getViewItem(customViewId);
-
-    if (customViewId) {
-      changeCurrentView(customViewId);
-      setTopbarEditView(customViewId);
-    }
-    changePageSubtitle((customViewId && viewMeta) ? viewMeta.name : '');
-  }, [customViewId]);
-
-  // Clear page subtitle when unmount the page.
-  useEffect(() => () => { changePageSubtitle(''); }, []);
 
   const handleEditAccount = useCallback((account) => () => {
     openDialog('account-form', { action: 'edit', id: account.id });
@@ -173,17 +161,19 @@ function AccountsDataTable({
   }, [onSelectedRowsChange]);
 
   return (
-    <DataTable
-      columns={columns}
-      data={accounts}
-      onFetchData={handleDatatableFetchData}
-      manualSortBy={true}
-      selectionColumn={selectionColumn}
-      expandable={true} 
-      treeGraph={true}
-      onSelectedRowsChange={handleSelectedRowsChange}
-      loading={accountsLoading && !initialMount}
-      spinnerProps={{size: 30}} />
+    <LoadingIndicator loading={loading} mount={false}>
+      <DataTable
+        columns={columns}
+        data={accounts}
+        onFetchData={handleDatatableFetchData}
+        manualSortBy={true}
+        selectionColumn={selectionColumn}
+        expandable={true} 
+        treeGraph={true}
+        onSelectedRowsChange={handleSelectedRowsChange}
+        loading={accountsLoading && !initialMount}
+        spinnerProps={{size: 30}} />
+    </LoadingIndicator>
   );
 }
 

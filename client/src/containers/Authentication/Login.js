@@ -12,7 +12,7 @@ import {
   Checkbox,
   Position,
 } from '@blueprintjs/core';
-import AuthenticationToaster from 'components/AppToaster';
+import Toaster from 'components/AppToaster';
 import ErrorMessage from 'components/ErrorMessage';
 import AuthInsider from 'containers/Authentication/AuthInsider';
 import Icon from 'components/Icon';
@@ -69,7 +69,6 @@ function Login({
             message: `The email and password you entered did not match our records.
               Please double-check and try again.`,
             intent: Intent.DANGER,
-            position: Position.BOTTOM,
           });
         }
         if (errors.find((e) => e.type === ERRORS_TYPES.USER_INACTIVE)) {
@@ -79,7 +78,7 @@ function Login({
           });
         }
         toastBuilders.forEach(builder => {
-          AuthenticationToaster.show(builder);
+          Toaster.show(builder);
         });
         setSubmitting(false);
       });
@@ -114,7 +113,6 @@ function Login({
             <InputGroup
               intent={(errors.crediential && touched.crediential) && Intent.DANGER}
               large={true}
-              placeholder={'name@company.com'}
               {...getFieldProps('crediential')}
             />
           </FormGroup>
@@ -130,7 +128,6 @@ function Login({
               large={true}
               intent={(errors.password && touched.password) && Intent.DANGER}
               type={shown ? 'text' : 'password'}
-              placeholder={'password'}
               {...getFieldProps('password')}
             />
           </FormGroup>

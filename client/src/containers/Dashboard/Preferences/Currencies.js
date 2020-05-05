@@ -11,9 +11,7 @@ function Currencies({ openDialog }) {
   return (
     <div className={'preferences__inside-content'}>
       <div className={'preferences__tabs'}>
-        <Button intent={Intent.PRIMARY} onClick={onClickNewCurrency}>
-          New Currency
-        </Button>
+        
       </div>
     </div>
   );

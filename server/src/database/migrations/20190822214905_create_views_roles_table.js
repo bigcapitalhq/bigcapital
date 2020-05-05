@@ -9,7 +9,7 @@ exports.up = function (knex) {
     table.integer('view_id').unsigned();
   }).then(() => {
     return knex.seed.run({
-      specific: 'seed_views_role.js',
+      specific: 'seed_views_roles.js',
     });
   });
 };

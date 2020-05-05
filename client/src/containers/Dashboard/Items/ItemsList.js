@@ -41,7 +41,7 @@ function ItemsList({
     await Promise.all([
       fetchResourceViews('items'),
       fetchResourceFields('items'),
-    ])
+    ]);
   });
 
   const fetchItems = useAsync(async () => {

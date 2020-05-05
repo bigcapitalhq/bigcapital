@@ -7,7 +7,7 @@ import PreferencesContent from 'components/Preferences/PreferencesContent';
 import PreferencesSidebar from 'components/Preferences/PreferencesSidebar';
 import Search from 'containers/Dashboard/GeneralSearch/Search';
 
-export default function () {
+export default function Dashboard() {
   return (
     <div className='dashboard'>
       <Switch>

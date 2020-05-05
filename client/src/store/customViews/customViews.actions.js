@@ -27,7 +27,7 @@ export const fetchView = ({ id }) => {
 
 export const fetchResourceViews = ({ resourceSlug }) => {
   return (dispatch) => new Promise((resolve, reject) => {
-    ApiService.get('views', { query: { resource_name: resourceSlug } })
+    ApiService.get('views', { params: { resource_name: resourceSlug } })
       .then((response) => {
         dispatch({
           type: t.RESOURCE_VIEWS_SET,

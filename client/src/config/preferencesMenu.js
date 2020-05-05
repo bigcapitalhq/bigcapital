@@ -23,34 +23,4 @@ export default [
     disabled: false,
     href: '/dashboard/preferences/accounts',
   },
-  {
-    text: 'Credit Notes',
-    disabled: false,
-    href: '/dashboard/preferences/credit_note',
-  },
-  {
-    text: 'Debit Notes',
-    disabled: false,
-    href: '/dashboard/preferences/debit_note',
-  },
-  {
-    text: 'Accountant',
-    disabled: false,
-    href: '/dashboard/preferences/accountant',
-  },
-  {
-    text: 'Accounts',
-    disabled: false,
-    href: '/dashboard/preferences/accounts',
-  },
-  {
-    text: 'Credit Notes',
-    disabled: false,
-    href: '/dashboard/preferences/credit_note',
-  },
-  {
-    text: 'Debit Notes',
-    disabled: false,
-    href: '/dashboard/preferences/debit_note',
-  },
 ];

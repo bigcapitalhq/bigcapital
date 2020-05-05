@@ -83,10 +83,7 @@ function UsersListPreferences({
   };
 
   const handleConfirmUserDelete = () => {
-    if (!deleteUserState) {
-      return;
-    }
-
+    if (!deleteUserState) { return; }
     requestDeleteUser(deleteUserState.id).then((response) => {
       setDeleteUserState(false);
       AppToaster.show({

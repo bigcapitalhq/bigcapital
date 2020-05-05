@@ -14,7 +14,7 @@ import {
 } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { connect } from 'react-redux';
-import { useRouteMatch } from 'react-router-dom';
+import { useRouteMatch, useHistory } from 'react-router-dom';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import DialogConnect from 'connectors/Dialog.connector';
 import AccountsConnect from 'connectors/Accounts.connector';
@@ -32,14 +32,21 @@ function AccountsActionsBar({
   onBulkDelete,
   onBulkArchive,
 }) {
-  const {path} = useRouteMatch();
+  const history = useHistory();
+
   const onClickNewAccount = () => { openDialog('account-form', {}); };
 
   const accountsFields = getResourceFields('accounts');
   const [filterCount, setFilterCount] = useState(0);
 
+  const onClickViewItem = (view) => {
+    history.push(view
+      ? `/dashboard/accounts/${view.id}/custom_view` :
+        '/dashboard/accounts');
+  };
+
   const viewsMenuItems = views.map((view) => {
-    return (<MenuItem href={`${path}/${view.id}/custom_view`} text={view.name} />);
+    return (<MenuItem onClick={() => onClickViewItem(view)} text={view.name} />);
   });
   const hasSelectedRows = useMemo(() => selectedRows.length > 0, [selectedRows]);
  
@@ -131,15 +138,8 @@ function AccountsActionsBar({
   );
 }
 
-const mapStateToProps = state => {
-  return {
-    // selectedRows: state.accounts.selectedRows
-  };
-};
-
 export default compose(
   DialogConnect,
   AccountsConnect,
   ResourceConnect,
-  connect(mapStateToProps),
 )(AccountsActionsBar);

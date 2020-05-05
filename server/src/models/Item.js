@@ -12,6 +12,9 @@ export default class Item extends TenantModel {
     return 'items';
   }
 
+  /**
+   * Model modifiers.
+   */
   static get modifiers() {
     const TABLE_NAME = Item.tableName;
 
@@ -29,6 +32,7 @@ export default class Item extends TenantModel {
    * Relationship mapping.
    */
   static get relationMappings() {
+    const Media = require('@/models/Media');
     const Account = require('@/models/Account');
     const ItemCategory = require('@/models/ItemCategory');
 
@@ -70,6 +74,19 @@ export default class Item extends TenantModel {
           from: 'items.inventoryAccountId',
           to: 'accounts.id',
         },
+      },
+
+      media: {
+        relation: Model.ManyToManyRelation,
+        modelClass: this.relationBindKnex(Media.default),
+        join: {
+          from: 'items.id',
+          through: {
+            from: 'media_links.model_id',
+            to: 'media_links.media_id',
+          },
+          to: 'media.id',
+        }
       },
     };
   }

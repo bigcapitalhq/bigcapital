@@ -6,8 +6,8 @@ export const submitMedia = ({ form, config }) => {
   };
 };
 
-export const deleteMedia = ({ id }) => {
+export const deleteMedia = ({ ids }) => {
   return (dispatch) => {
-    return ApiService.delete('media', { params: { id } });
+    return ApiService.delete('media', { params: { ids } });
   }
 };

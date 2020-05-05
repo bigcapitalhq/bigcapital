@@ -10,7 +10,7 @@ export const mapStateToProps = (state, props) => ({
 
 export const mapDispatchToProps = (dispatch) => ({
   requestSubmitMedia: (form, config) => dispatch(submitMedia({ form, config })),
-  requestDeleteMedia: (id) => dispatch(deleteMedia({ id })),
+  requestDeleteMedia: (ids) => dispatch(deleteMedia({ ids })),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps);

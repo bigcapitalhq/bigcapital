@@ -79,6 +79,20 @@ const ItemsActionsBar = ({
 
         <NavbarDivider />
 
+        <Button
+          className={Classes.MINIMAL}
+          icon={<Icon icon='plus' />}
+          text='New Item'
+          onClick={onClickNewItem}
+        />
+
+        <Button
+          className={Classes.MINIMAL}
+          icon={<Icon icon='plus' />}
+          text='New Category'
+          onClick={onClickNewCategory}
+        />
+
         <Popover
           content={filterDropdown}
           interactionKind={PopoverInteractionKind.CLICK}
@@ -90,19 +104,6 @@ const ItemsActionsBar = ({
             icon={<Icon icon='filter' />}
           />
         </Popover>
-
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon='plus' />}
-          text='New Item'
-          onClick={onClickNewItem}
-        />
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon='plus' />}
-          text='New Category'
-          onClick={onClickNewCategory}
-        />
 
         {hasSelectedRows && (
           <Button

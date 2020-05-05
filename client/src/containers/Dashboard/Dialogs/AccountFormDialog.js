@@ -7,7 +7,8 @@ import {
   Intent,
   TextArea,
   MenuItem,
-  Checkbox
+  Checkbox,
+  Position
 } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
 import * as Yup from 'yup';
@@ -92,7 +93,8 @@ function AccountFormDialog({
         }).then((response) => {
           closeDialog(name);
           AppToaster.show({
-            message: 'the_account_has_been_edited'
+            message: 'the_account_has_been_edited',
+            intent: Intent.SUCCESS,
           });
           setSubmitting(false);
         }).catch((errors) => {
@@ -103,7 +105,9 @@ function AccountFormDialog({
         requestSubmitAccount({ form: { ...omit(values, exclude) } }).then(response => {
           closeDialog(name);
           AppToaster.show({
-            message: 'the_account_has_been_submit'
+            message: 'the_account_has_been_submit',
+            intent: Intent.SUCCESS,
+            position: Position.BOTTOM,
           });
           setSubmitting(false);
         }).catch((errors) => {

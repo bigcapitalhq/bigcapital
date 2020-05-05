@@ -19,8 +19,6 @@ import DialogConnect from 'connectors/Dialog.connector';
 import DashboardConnect from 'connectors/Dashboard.connector';
 import LoadingIndicator from 'components/LoadingIndicator';
 import DataTable from 'components/DataTable';
-import Currencies from './Currencies';
-import useAsync from 'hooks/async';
 import AppToaster from 'components/AppToaster';
 
 function CurrenciesList({
@@ -109,11 +107,9 @@ function CurrenciesList({
   const handleDatatableFetchData = useCallback(() => {
     onFetchData && onFetchData();
   }, []);
-  console.log({ currencies }, 'X');
 
   return (
     <LoadingIndicator>
-      <Currencies />
       <DataTable
         columns={columns}
         data={Object.values(currencies)}

@@ -32,6 +32,8 @@ function AccountsChart({
   const [bulkDelete, setBulkDelete] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
 
+  const [tableLoading, setTableLoading] = useState(false);
+
   // Fetch accounts resource views and fields.
   const fetchHook = useAsync(async () => {
     await Promise.all([
@@ -66,7 +68,8 @@ function AccountsChart({
       setDeleteAccount(false);
       if (errors.find((e) => e.type === 'ACCOUNT.PREDEFINED')) {
         AppToaster.show({
-          message: 'cannot_delete_predefined_account'
+          message: 'cannot_delete_predefined_account',
+          intent: Intent.DANGER,
         });
       }
       if (errors.find((e) => e.type === 'ACCOUNT.HAS.ASSOCIATED.TRANSACTIONS')) {
@@ -96,7 +99,7 @@ function AccountsChart({
     });
   }, [inactiveAccount, requestFetchAccountsTable, requestInactiveAccount]);
 
- 
+
   const handleEditAccount = (account) => {
 
   };
@@ -138,7 +141,11 @@ function AccountsChart({
 
   // Refetch accounts data table when current custom view changed.
   const handleViewChanged = useCallback(() => {
-    fetchAccountsHook.execute();
+    setTableLoading(true);
+
+    fetchAccountsHook.execute().finally(() => {
+      setTableLoading(false);  
+    });
   }, [fetchAccountsHook]);
 
   // Handle fetch data of accounts datatable.
@@ -177,7 +184,8 @@ function AccountsChart({
               onRestoreAccount={handleRestoreAccount}
               onEditAccount={handleEditAccount}
               onFetchData={handleFetchData}
-              onSelectedRowsChange={handleSelectedRowsChange} />
+              onSelectedRowsChange={handleSelectedRowsChange}
+              loading={tableLoading} />
           </Route>
         </Switch>
 

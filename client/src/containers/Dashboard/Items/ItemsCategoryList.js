@@ -63,7 +63,7 @@ const ItemCategoriesList = ({
   }, [setSelectedRows]);
 
   return (
-    <DashboardInsider loading={fetchHook.pending}>
+    <DashboardInsider loading={fetchHook.pending} name="items-categories">
       <ItemsCategoryActionsBar
         views={views}
         onDeleteCategory={handelDeleteCategory}

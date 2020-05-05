@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { useIntl } from 'react-intl';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -90,9 +90,9 @@ function InviteUserDialog({
     fetchHook.execute();
   };
 
-  const onDialogClosed = () => {
+  const onDialogClosed = useCallback(() => {
     formik.resetForm();
-  };
+  }, [formik.resetForm]);
 
   const handleClose = () => {
     closeDialog(name);

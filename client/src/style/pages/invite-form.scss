@@ -1,24 +1,13 @@
 
 .dialog--invite-form {
   &.bp3-dialog {
-    width: 400px;
+    width: 450px;
   }
   &:not(.dialog--loading) .bp3-dialog-body {
     margin-bottom: 25px;
   }
   .bp3-dialog-body {
-    // margin-right: 50px;
-    .bp3-form-group.bp3-inline {
-      .bp3-label {
-        min-width: 70px;
-      }
-
-      &.form-group--email {
-        .bp3-form-content {
-          width: 250px;
-        }
-      }
-    }
+  
     .bp3-dialog-footer-actions {
       margin-right: 30px;
       display: flex;

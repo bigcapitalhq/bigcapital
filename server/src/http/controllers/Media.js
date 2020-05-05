@@ -6,6 +6,7 @@ import {
   validationResult,
 } from 'express-validator';
 import fs from 'fs';
+import { difference } from 'lodash';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
 import Logger from '@/services/Logger';
 
@@ -22,7 +23,7 @@ export default {
       this.upload.validation,
       asyncMiddleware(this.upload.handler));
 
-    router.delete('/delete/:id',
+    router.delete('/',
       this.delete.validation,
       asyncMiddleware(this.delete.handler));
 
@@ -109,7 +110,8 @@ export default {
    */
   delete: {
     validation: [
-      param('id').exists().isNumeric().toInt(),
+      query('ids').exists().isArray(),
+      query('ids.*').exists().isNumeric().toInt(),
     ],
     async handler(req, res) {
       const validationErrors = validationResult(req);
@@ -120,26 +122,37 @@ export default {
         });
       }
       const { Media, MediaLink } = req.models;
-      const { id } = req.params;
-      const media = await Media.query().where('id', id).first();
+      const ids = Array.isArray(req.query.ids) ? req.query.ids : [req.query.ids];
+      const media = await Media.query().whereIn('id', ids);
+      const mediaIds = media.map((m) => m.id);
+      const notFoundMedia = difference(ids, mediaIds);
 
-      if (!media) {
+      if (notFoundMedia.length) {
         return res.status(400).send({
-          errors: [{ type: 'MEDIA.ID.NOT.FOUND', code: 200 }],
+          errors: [{ type: 'MEDIA.IDS.NOT.FOUND', code: 200, ids: notFoundMedia }],
         });
       }
       const publicPath = 'storage/app/public/';
       const tenantPath = `${publicPath}${req.organizationId}`;
+      const unlinkOpers = [];
 
-      try {
-        await fsPromises.unlink(`${tenantPath}/${media.attachmentFile}`);
-        Logger.log('error', 'Attachment file has been deleted.');
-      } catch (error) {
-        Logger.log('error', 'Delete item attachment file delete failed.', { error });
-      }
+      media.forEach((mediaModel) => {
+        const oper = fsPromises.unlink(`${tenantPath}/${mediaModel.attachmentFile}`);
+        unlinkOpers.push(oper);
+      });
+      await Promise.all(unlinkOpers).then((resolved) => {
+        resolved.forEach(() => {
+          Logger.log('error', 'Attachment file has been deleted.');
+        }); 
+      })
+      .catch((errors) => {
+        errors.forEach((error) => {
+          Logger.log('error', 'Delete item attachment file delete failed.', { error });
+        })
+      });
 
-      await MediaLink.query().where('media_id', media.id).delete();
-      await Media.query().where('id', media.id).delete();
+      await MediaLink.query().whereIn('media_id', mediaIds).delete();
+      await Media.query().whereIn('id', mediaIds).delete();
 
       return res.status(200).send();
     },

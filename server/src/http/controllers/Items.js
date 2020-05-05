@@ -82,6 +82,7 @@ export default {
       }
       const form = {
         custom_fields: [],
+        media_ids: [],
         ...req.body,
       };
       const {
@@ -90,6 +91,7 @@ export default {
         ResourceField,
         ItemCategory,
         Item,
+        MediaLink,
       } = req.models;
       const errorReasons = [];
 
@@ -146,6 +148,7 @@ export default {
         return res.boom.badRequest(null, { errors: errorReasons });
       }
 
+      const bulkSaveMediaLinks = [];
       const item = await Item.query().insertAndFetch({
         name: form.name,
         type: form.type,
@@ -156,6 +159,20 @@ export default {
         currency_code: form.currency_code,
         note: form.note,
       });
+
+      form.media_ids.forEach((mediaId) => {
+        const oper = MediaLink.query().insert({
+          model_name: 'Item',
+          media_id: mediaId,
+          model_id: item.id,
+        });
+        bulkSaveMediaLinks.push(oper);
+      });
+
+      // Save the media links.
+      await Promise.all([
+        ...bulkSaveMediaLinks,
+      ]);
       return res.status(200).send({ id: item.id });
     },
   },
@@ -188,14 +205,14 @@ export default {
           code: 'validation_error', ...validationErrors,
         });
       }
-      const { Account, Item, ItemCategory } = req.models;
+      const { Account, Item, ItemCategory, MediaLink } = req.models;
       const { id } = req.params;
 
       const form = {
         custom_fields: [],
         ...req.body,
       };
-      const item = await Item.query().findById(id);
+      const item = await Item.query().findById(id).withGraphFetched('media');
 
       if (!item) {
         return res.boom.notFound(null, {
@@ -235,12 +252,12 @@ export default {
       if (attachment) {
         const publicPath = 'storage/app/public/';
         const tenantPath = `${publicPath}${req.organizationId}`;
+
         try {
           await fsPromises.unlink(`${tenantPath}/${item.attachmentFile}`);
         } catch (error) {
           Logger.log('error', 'Delete item attachment file delete failed.', { error });
         }
-
         try {
           await attachment.mv(`${tenantPath}/${attachment.md5}.png`);
         } catch (error) {
@@ -262,6 +279,22 @@ export default {
         note: form.note,
         attachment_file: (attachment) ? item.attachmentFile : null,
       });
+
+      // Save links of new inserted media that associated to the item model.
+      const itemMediaIds = item.media.map((m) => m.id);
+      const newInsertedMedia = difference(form.media_ids, itemMediaIds);
+      const bulkSaveMediaLink = [];
+
+      newInsertedMedia.forEach((mediaId) => {
+        const oper = MediaLink.query().insert({
+          model_name: 'Journal',
+          model_id: manualJournal.id,
+          media_id: mediaId,
+        });
+        bulkSaveMediaLink.push(oper);
+      });
+      await Promise.all([ ...newInsertedMedia ]);
+
       return res.status(200).send({ id: updatedItem.id });
     },
   },
