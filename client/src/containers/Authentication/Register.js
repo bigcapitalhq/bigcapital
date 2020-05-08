@@ -11,12 +11,13 @@ import {
 } from '@blueprintjs/core';
 import { Row, Col } from 'react-grid-system';
 import { Link, useHistory } from 'react-router-dom';
-import AuthenticationConnect from 'connectors/Authentication.connect';
+import withAuthenticationActions from './withAuthenticationActions';
 import ErrorMessage from 'components/ErrorMessage';
 import AppToaster from 'components/AppToaster';
 import AuthInsider from 'containers/Authentication/AuthInsider';
 import { compose } from 'utils';
 import Icon from 'components/Icon';
+import { If } from 'components';
 
 function Register({
   requestRegister,
@@ -212,16 +213,16 @@ function Register({
           </div>
         </form>
 
-        { isSubmitting && (
+        <If condition={isSubmitting}>
           <div class="authentication-page__loading-overlay">
             <Spinner size={50} />
           </div>
-        )}
+        </If>
       </div>
     </AuthInsider>
   );
 }
 
 export default compose(
-  AuthenticationConnect,
+  withAuthenticationActions,
 )(Register);

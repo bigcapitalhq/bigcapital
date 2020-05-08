@@ -1,6 +1,6 @@
-import AccountsCustomFields from "containers/Dashboard/Preferences/AccountsCustomFields";
-import UsersList from 'containers/Dashboard/Preferences/UsersList';
-import RolesList from 'containers/Dashboard/Preferences/RolesList';
+import AccountsCustomFields from "containers/Preferences/AccountsCustomFields";
+import UsersList from 'containers/Preferences/UsersList';
+import RolesList from 'containers/Preferences/RolesList';
 
 export default {
   accounts: [

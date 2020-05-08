@@ -1,8 +1,8 @@
-import General from 'containers/Dashboard/Preferences/General';
-import Users from 'containers/Dashboard/Preferences/Users';
-import Accountant from 'containers/Dashboard/Preferences/Accountant';
-import Accounts from 'containers/Dashboard/Preferences/Accounts';
-import CurrenciesList from 'containers/Dashboard/Preferences/CurrenciesList'
+import General from 'containers/Preferences/General';
+import Users from 'containers/Preferences/Users';
+import Accountant from 'containers/Preferences/Accountant';
+import Accounts from 'containers/Preferences/Accounts';
+import CurrenciesList from 'containers/Preferences/CurrenciesList'
 
 const BASE_URL = '/dashboard/preferences';
 

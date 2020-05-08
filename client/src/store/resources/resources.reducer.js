@@ -7,6 +7,21 @@ const initialState = {
   columns: {},
   resourceFields: {},
   resourceColumns: {},
+
+  metadata: {
+    'accounts': {
+      label: 'Accounts',
+      baseRoute: '/dashboard/accounts',
+    },
+    'items': {
+      label: 'Items',
+      baseRoute: '/dashboard/items',
+    },
+    'manual_journals': {
+      label: 'Journals',
+      baseRoute: '/dashboard/accounting/manual-journals',
+    }
+  }
 };
 
 export default createReducer(initialState, {
@@ -41,6 +56,7 @@ export default createReducer(initialState, {
  * Retrieve resource fields of the given resource slug.
  * @param {Object} state 
  * @param {String} resourceSlug 
+ * @return {Array}
  */
 export const getResourceFields = (state, resourceSlug) => {
   const resourceIds = state.resources.resourceFields[resourceSlug];
@@ -52,6 +68,7 @@ export const getResourceFields = (state, resourceSlug) => {
  * Retrieve resource columns of the given resource slug.
  * @param {State} state 
  * @param {String} resourceSlug -
+ * @return {Array}
  */
 export const getResourceColumns = (state, resourceSlug) => {
   const resourceIds = state.resources.resourceColumns[resourceSlug];
@@ -75,4 +92,8 @@ export const getResourceField = (state, fieldId) => {
  */
 export const getResourceColumn = (state, columnId) => {
   return state.resources.columns[columnId];
+};
+
+export const getResourceMetadata = (state, resourceSlug) => {
+  return state.resources.metadata[resourceSlug];
 };

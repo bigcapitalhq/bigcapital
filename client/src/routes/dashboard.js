@@ -7,7 +7,7 @@ export default [
   {
     path: `${BASE_URL}/homepage`,
     component: LazyLoader({
-      loader: () => import('containers/Dashboard/Homepage')
+      loader: () => import('containers/Homepage/Homepage')
     }),
   },
 
@@ -15,7 +15,7 @@ export default [
   {
     path: `${BASE_URL}/accounts`,
     component: LazyLoader({
-      loader: () => import('containers/Dashboard/Accounts/AccountsChart')
+      loader: () => import('containers/Accounts/AccountsChart')
     })
   },
 
@@ -23,13 +23,13 @@ export default [
   {
     path: `${BASE_URL}/custom_views/:resource_slug/new`,
     component: LazyLoader({
-      loader: () => import('containers/Dashboard/Views/ViewFormPage')
+      loader: () => import('containers/Views/ViewFormPage')
     })
   },
   {
     path: `${BASE_URL}/custom_views/:view_id/edit`,
     component: LazyLoader({
-      loader: () => import('containers/Dashboard/Views/ViewFormPage')
+      loader: () => import('containers/Views/ViewFormPage')
     })
   },
 
@@ -37,13 +37,13 @@ export default [
   {
     path: `${BASE_URL}/expenses/new`,
     component: LazyLoader({
-      loader: () => import('containers/Dashboard/Expenses/ExpenseForm')
+      loader: () => import('containers/Expenses/ExpenseForm')
     }),
   },
   {
     path: `${BASE_URL}/expenses`,
     component: LazyLoader({
-      loader: () => import('containers/Dashboard/Expenses/ExpensesList')
+      loader: () => import('containers/Expenses/ExpensesList')
     })
   },
 
@@ -52,33 +52,33 @@ export default [
     path: `${BASE_URL}/accounting/make-journal-entry`,
     component: LazyLoader({
       loader: () =>
-        import('containers/Dashboard/Accounting/MakeJournalEntriesPage')
+        import('containers/Accounting/MakeJournalEntriesPage')
     }),
   },
   {
     path: `${BASE_URL}/accounting/manual-journals/:id/edit`,
     component: LazyLoader({
       loader: () =>
-        import('containers/Dashboard/Accounting/MakeJournalEntriesPage')
+        import('containers/Accounting/MakeJournalEntriesPage')
     }),
   },
   {
     path: `${BASE_URL}/accounting/manual-journals`,
     component: LazyLoader({
       loader: () =>
-        import('containers/Dashboard/Accounting/ManualJournalsTable')
+        import('containers/Accounting/ManualJournalsList')
     }),
   },
   {
     path: `${BASE_URL}/items/categories`,
     component: LazyLoader({
-      loader: () => import('containers/Dashboard/Items/ItemsCategoryList')
+      loader: () => import('containers/Items/ItemCategoriesList')
     })
   },  
   {
     path: `${BASE_URL}/items/new`,
     component: LazyLoader({
-      loader: () => import('containers/Dashboard/Items/ItemForm')
+      loader: () => import('containers/Items/ItemFormPage')
     })
   },
 
@@ -86,7 +86,7 @@ export default [
   {
     path: `${BASE_URL}/items`,
     component: LazyLoader({
-      loader: () => import('containers/Dashboard/Items/ItemsList')
+      loader: () => import('containers/Items/ItemsList')
     })
   },
 
@@ -96,7 +96,7 @@ export default [
     component: LazyLoader({
       loader: () =>
         import(
-          'containers/Dashboard/FinancialStatements/GeneralLedger/GeneralLedger'
+          'containers/FinancialStatements/GeneralLedger/GeneralLedger'
         )
     })
   },
@@ -105,7 +105,7 @@ export default [
     component: LazyLoader({
       loader: () =>
         import(
-          'containers/Dashboard/FinancialStatements/BalanceSheet/BalanceSheet'
+          'containers/FinancialStatements/BalanceSheet/BalanceSheet'
         )
     })
   },
@@ -114,7 +114,7 @@ export default [
     component: LazyLoader({
       loader: () =>
         import(
-          'containers/Dashboard/FinancialStatements/TrialBalanceSheet/TrialBalanceSheet'
+          'containers/FinancialStatements/TrialBalanceSheet/TrialBalanceSheet'
         )
     })
   },
@@ -123,7 +123,7 @@ export default [
     component: LazyLoader({
       loader: () =>
         import(
-          'containers/Dashboard/FinancialStatements/ProfitLossSheet/ProfitLossSheet'
+          'containers/FinancialStatements/ProfitLossSheet/ProfitLossSheet'
         )
     })
   },
@@ -131,7 +131,7 @@ export default [
     path: `${BASE_URL}/accounting/journal-sheet`,
     component: LazyLoader({
       loader: () =>
-        import('containers/Dashboard/FinancialStatements/Journal/Journal')
+        import('containers/FinancialStatements/Journal/Journal')
     })
   },
 ];

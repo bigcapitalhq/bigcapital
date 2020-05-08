@@ -5,11 +5,16 @@ import { useIntl } from 'react-intl';
 import { Link, useHistory } from 'react-router-dom';
 import { Button, InputGroup, Intent, FormGroup } from '@blueprintjs/core';
 import { FormattedMessage } from 'react-intl';
-import ErrorMessage from 'components/ErrorMessage';
-import AuthenticationConnect from 'connectors/Authentication.connect';
+
 import { compose } from 'utils';
+
 import AppToaster from 'components/AppToaster';
+import ErrorMessage from 'components/ErrorMessage';
+
 import AuthInsider from 'containers/Authentication/AuthInsider';
+
+import withAuthenticationActions from './withAuthenticationActions';
+
 
 function SendResetPassword({
   requestSendResetPassword,
@@ -65,6 +70,7 @@ function SendResetPassword({
         });
     },
   });
+
   return (
     <AuthInsider>
       <div class='reset-form'>        
@@ -110,5 +116,5 @@ function SendResetPassword({
 }
 
 export default compose(
-  AuthenticationConnect,
+  withAuthenticationActions,
 )(SendResetPassword);

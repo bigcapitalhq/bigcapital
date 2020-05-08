@@ -2,7 +2,8 @@ import t from 'store/types';
 import { createReducer } from '@reduxjs/toolkit';
 
 const initialState = {
-  categories: {}
+  categories: {},
+  loading: false,
 };
 
 export default createReducer(initialState, {

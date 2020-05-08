@@ -92,6 +92,10 @@ const itemsReducer = createReducer(initialState, {
     const { loading } = action.payload;
     state.loading = !!loading;
   },
+
+  [t.ITEMS_SET_CURRENT_VIEW]: (state, action) => {  
+    state.currentViewId = action.currentViewId;
+  },
 });
 
 export default createTableQueryReducers('items', itemsReducer);

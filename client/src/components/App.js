@@ -8,7 +8,9 @@ import PrivateRoute from 'components/PrivateRoute';
 import Authentication from 'components/Authentication';
 import Dashboard from 'components/Dashboard/Dashboard';
 import { isAuthenticated } from 'store/authentication/authentication.reducer'
-import Progress from 'components/NProgress/Progress';
+import { ReactQueryConfigProvider } from 'react-query';
+import { ReactQueryDevtools } from "react-query-devtools";
+
 import messages from 'lang/en';
 import 'style/App.scss';
 
@@ -22,13 +24,22 @@ function App({
     console.log(`new location via ${action}`, location);
   });
 
+  const queryConfig = {
+    refetchAllOnWindowFocus: false,
+    cacheTime: 10000,
+    staleTime: 10000,
+  };
   return (
     <IntlProvider locale={locale} messages={messages}>
       <div className="App">
-        <Router history={history}>
-          <Authentication isAuthenticated={isAuthorized} />
-          <PrivateRoute isAuthenticated={isAuthorized} component={Dashboard} />
-        </Router>
+        <ReactQueryConfigProvider config={queryConfig}>
+          <Router history={history}>
+            <Authentication isAuthenticated={isAuthorized} />
+            <PrivateRoute isAuthenticated={isAuthorized} component={Dashboard} />
+          </Router>
+
+          <ReactQueryDevtools />
+        </ReactQueryConfigProvider>
       </div>
     </IntlProvider>
   );

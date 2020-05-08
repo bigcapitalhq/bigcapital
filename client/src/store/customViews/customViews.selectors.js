@@ -1,5 +1,5 @@
 import {pickItemsFromIds} from 'store/selectors';
-
+import { getResourceField, getResourceColumn } from 'store/resources/resources.reducer';
 
 export const getResourceViews = (state, resourceName) => {
   const resourceViewsIds = state.views.resourceViews[resourceName] || [];
@@ -7,7 +7,16 @@ export const getResourceViews = (state, resourceName) => {
 };
 
 export const getViewMeta = (state, viewId) => {
-  return state.views.viewsMeta[viewId] || {};
+  const view = { ...state.views.viewsMeta[viewId] } || {};
+    
+  if (view.columns) {
+    view.columns = view.columns.map((column) => {
+      return {
+        ...getResourceColumn(state, column.field_id),
+      };
+    });
+  }
+  return view;
 };
 
 export const getViewItem = (state, viewId) => {

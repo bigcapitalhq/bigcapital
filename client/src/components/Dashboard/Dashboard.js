@@ -5,7 +5,7 @@ import DashboardContent from 'components/Dashboard/DashboardContent';
 import DialogsContainer from 'components/DialogsContainer';
 import PreferencesContent from 'components/Preferences/PreferencesContent';
 import PreferencesSidebar from 'components/Preferences/PreferencesSidebar';
-import Search from 'containers/Dashboard/GeneralSearch/Search';
+import Search from 'containers/GeneralSearch/Search';
 
 export default function Dashboard() {
   return (

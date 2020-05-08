@@ -49,7 +49,6 @@ const useMedia = ({ saveCallback, deleteCallback }) => {
   }, [files, openProgressToast, saveCallback]);
 
   const deleteMedia = useCallback(() => {
-    debugger;
     return deletedFiles.length > 0
       ? deleteCallback(deletedFiles) : Promise.resolve();
   }, [deletedFiles, deleteCallback]);

@@ -6,7 +6,7 @@ const initialState = {
   pageSubtitle: 'Hello World',
   preferencesPageTitle: '',
   dialogs: {},
-  topbarEditViewId: 1,
+  topbarEditViewId: null,
   requestsLoading: 0,
 };
 

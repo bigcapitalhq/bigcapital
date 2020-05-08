@@ -1,18 +1,16 @@
 
 import React from 'react';
-import {connect} from 'react-redux';
 import Progress from './Progress';
+import {queryCache, useIsFetching} from 'react-query';
 
 function AppProgress({
-  isAnimating,
+
 }) {
+  const isFetching = useIsFetching();
+
   return (
-    <Progress isAnimating={isAnimating} />
+    <Progress isAnimating={isFetching} />
   );
 };
-
-const mapStateToProps = (state) => ({
-  isAnimating: state.dashboard.requestsLoading > 0,
-});
-
-export default connect(mapStateToProps)(AppProgress);
+ 
+export default AppProgress;

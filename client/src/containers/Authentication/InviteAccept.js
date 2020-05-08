@@ -5,7 +5,7 @@ import { useIntl } from 'react-intl';
 import ErrorMessage from 'components/ErrorMessage';
 import AppToaster from 'components/AppToaster';
 import { compose } from 'utils';
-import AuthenticationConnect from 'connectors/Authentication.connect';
+import withAuthenticationActions from './withAuthenticationActions';
 import { useParams } from 'react-router-dom';
 import {
   Button,
@@ -20,6 +20,7 @@ import { Row, Col } from 'react-grid-system';
 import AuthInsider from 'containers/Authentication/AuthInsider';
 import { Link, useHistory } from 'react-router-dom';
 import useAsync from 'hooks/async';
+
 
 function Invite({
   requestInviteAccept,
@@ -224,4 +225,6 @@ function Invite({
   );
 }
 
-export default compose(AuthenticationConnect)(Invite);
+export default compose(
+  withAuthenticationActions,
+)(Invite);

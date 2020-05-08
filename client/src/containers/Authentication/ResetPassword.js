@@ -13,8 +13,9 @@ import { Link, useParams, useHistory } from 'react-router-dom';
 import ErrorMessage from 'components/ErrorMessage';
 import AppToaster from 'components/AppToaster';
 import { compose } from 'utils';
-import AuthenticationConnect from 'connectors/Authentication.connect';
+import withAuthenticationActions from './withAuthenticationActions';
 import AuthInsider from 'containers/Authentication/AuthInsider';
+
 
 function ResetPassword({
   requestResetPassword,
@@ -131,5 +132,5 @@ function ResetPassword({
 }
 
 export default compose(
-  AuthenticationConnect,
+  withAuthenticationActions,
 )(ResetPassword);

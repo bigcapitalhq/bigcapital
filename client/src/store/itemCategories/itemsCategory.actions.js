@@ -12,6 +12,12 @@ export const fetchItemCategories = () => {
     dispatch({
       type: t.SET_DASHBOARD_REQUEST_LOADING,
     });
+    dispatch({
+      type: t.ITEM_CATEGORIES_TABLE_LOADING,
+      payload: {
+        loading: true,
+      }
+    });
     ApiService.get('item_categories')
       .then((response) => {
         dispatch({
@@ -20,6 +26,12 @@ export const fetchItemCategories = () => {
         });
         dispatch({
           type: t.SET_DASHBOARD_REQUEST_COMPLETED,
+        });
+        dispatch({
+          type: t.ITEM_CATEGORIES_TABLE_LOADING,
+          payload: {
+            loading: false,
+          }
         });
         resolve(response);
       })

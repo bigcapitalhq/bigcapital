@@ -2,7 +2,8 @@ import t from 'store/types';
 import { createReducer } from '@reduxjs/toolkit';
 
 const initialState = {
-  categories: {}
+  categories: {},
+  loading: false,
 };
 
 export default createReducer(initialState, {
@@ -18,11 +19,20 @@ export default createReducer(initialState, {
     };
   },
 
+  [t.ITEM_CATEGORIES_TABLE_SET]: (state, action) => {
+
+  },
+
   [t.CATEGORY_DELETE]: (state, action) => {
     if (typeof state.categories[action.id] !== 'undefined') {
       delete state.categories[action.id];
     }
-  }
+  },
+
+  [t.ITEM_CATEGORIES_TABLE_LOADING]: (state, action ) => {
+    const { loading } = action.payload;
+    state.loading = !!loading;
+  },
 });
 
 export const getCategoryId = (state, id) => {

@@ -40,6 +40,10 @@ export default {
     router.get('/:view_id',
       asyncMiddleware(this.getView.handler));
 
+    router.get('/:view_id/resource',
+      this.getViewResource.validation,
+      asyncMiddleware(this.getViewResource.handler));
+
     return router;
   },
 
@@ -83,6 +87,8 @@ export default {
     ],
     async handler(req, res) {
       const { view_id: viewId } = req.params;
+      const { View } = req.models;
+
       const view = await View.query()
         .where('id', viewId)
         .withGraphFetched('resource')
@@ -381,7 +387,7 @@ export default {
       // Delete view roles.
       if (rolesIdsShouldDeleted.length > 0) {
         const deleteOper = ViewRole.query()
-          .where('id', rolesIdsShouldDeleted)
+          .whereIn('id', rolesIdsShouldDeleted)
           .delete();
         asyncOpers.push(deleteOper);
       }
@@ -420,5 +426,48 @@ export default {
 
       return res.status(200).send();
     },
+  },
+
+  /**
+   * Retrieve resource columns that associated to the given custom view.
+   */
+  getViewResource: {
+    validation: [
+      param('view_id').exists().isNumeric().toInt(),
+    ],
+    async handler(req, res) {
+      const { view_id: viewId } = req.params;
+      const { View } = req.models;
+      
+      const view = await View.query()
+        .where('id', viewId)
+        .withGraphFetched('resource.fields')
+        .first();
+
+      if (!view) {
+        return res.boom.notFound(null, {
+          errors: [{ type: 'VIEW.NOT.FOUND', code: 100 }],
+        });
+      }
+      if (!view.resource) {
+        return res.boom.badData(null, {
+          errors: [{ type: 'VIEW.HAS.NOT.ASSOCIATED.RESOURCE', code: 200 }],
+        });
+      }
+
+      const resourceColumns = view.resource.fields
+        .filter((field) => field.columnable)
+        .map((field) => ({
+          id: field.id,
+          label: field.labelName,
+          key: field.key,
+        }));
+
+      return res.status(200).send({
+        resource_slug: view.resource.name,
+        resource_columns: resourceColumns,
+        resource_fields: view.resource.fields,
+      });
+    }
   },
 };

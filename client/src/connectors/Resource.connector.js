@@ -8,19 +8,21 @@ import {
   getResourceFields,
   getResourceColumn,
   getResourceField,
+  getResourceMetadata,
 } from 'store/resources/resources.reducer';
 
 export const mapStateToProps = (state, props) => ({
-  getResourceColumns: (resourceSlug) => getResourceColumns(state, resourceSlug),
-  getResourceFields: (resourceSlug) => getResourceFields(state, resourceSlug),
+  // getResourceColumns: (resourceSlug) => getResourceColumns(state, resourceSlug),
+  // getResourceFields: (resourceSlug) => getResourceFields(state, resourceSlug),
+  // getResourceMetadata: (resourceSlug) => getResourceMetadata(state, resourceSlug),
 
-  getResourceColumn: (columnId) => getResourceColumn(state, columnId),
-  getResourceField: (fieldId) => getResourceField(state, fieldId),
+  // getResourceColumn: (columnId) => getResourceColumn(state, columnId),
+  // getResourceField: (fieldId) => getResourceField(state, fieldId),
 });
 
 export const mapDispatchToProps = (dispatch) => ({
-  fetchResourceFields: (resourceSlug) => dispatch(fetchResourceFields({ resourceSlug })),
-  fetchResourceColumns: (resourceSlug) => dispatch(fetchResourceColumns({ resourceSlug })),
+  requestFetchResourceFields: (resourceSlug) => dispatch(fetchResourceFields({ resourceSlug })),
+  requestFetchResourceColumns: (resourceSlug) => dispatch(fetchResourceColumns({ resourceSlug })),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps);

@@ -1,8 +1,8 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import DashboardTopbarUser from 'components/Dashboard/TopbarUser';
-import UsersActions from 'containers/Dashboard/Preferences/UsersActions';
-import CurrenciesActions from 'containers/Dashboard/Preferences/CurrenciesActions';
+import UsersActions from 'containers/Preferences/UsersActions';
+import CurrenciesActions from 'containers/Preferences/CurrenciesActions';
 
 
 export default function PreferencesTopbar() {

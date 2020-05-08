@@ -5,7 +5,12 @@ export const makeJournalEntries = ({ form }) => {
   return (dispatch) => new Promise((resolve, reject) => {
     ApiService.post('accounting/make-journal-entries', form).then((response) => {
       resolve(response);
-    }).catch((error) => { reject(error); });
+    }).catch((error) => {
+      const { response } = error;
+      const { data } = response;
+
+      reject(data?.errors);
+    });
   });
 };
 
@@ -28,7 +33,12 @@ export const editManualJournal = ({ form, id }) => {
   return (dispatch) => new Promise((resolve, reject) => {
     ApiService.post(`accounting/manual-journals/${id}`, form).then((response) => {
       resolve(response);
-    }).catch((error) => { reject(error); });
+    }).catch((error) => {
+      const { response } = error;
+      const { data } = response;
+
+      reject(data?.errors);
+    });
   });
 };
 

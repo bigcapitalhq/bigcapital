@@ -3,7 +3,7 @@ import { Redirect, Route, Switch, Link } from 'react-router-dom';
 import BodyClassName from 'react-body-classname'; 
 import authenticationRoutes from 'routes/authentication';
 
-export default function({ isAuthenticated =false, ...rest }) {
+export default function AuthenticationWrapper({ isAuthenticated =false, ...rest }) {
   const to = {pathname: '/dashboard/homepage'};
 
   return (

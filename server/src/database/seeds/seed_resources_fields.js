@@ -103,6 +103,35 @@ exports.seed = (knex) => {
           predefined: 1,
           columnable: true,
         },
+
+        // Manual Journals
+        {
+          id: 13,
+          resource_id: 4,
+          label_name: 'Transaction type',
+          key: 'transaction_key',
+          data_type: 'textbox',
+          predefined: 1,
+          columnable: true,
+        },
+        {
+          id: 14,
+          resource_id: 4,
+          label_name: 'Amount',
+          key: 'amount',
+          data_type: 'textbox',
+          predefined: 1,
+          columnable: true,
+        },
+        {
+          id: 15,
+          resource_id: 4,
+          label_name: 'Journal No.',
+          key: 'journal_number',
+          data_type: 'textbox',
+          predefined: 1,
+          columnable: true,
+        },
       ]);
     });
 };

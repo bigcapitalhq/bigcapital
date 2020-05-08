@@ -43,3 +43,21 @@ export const fetchResourceViews = ({ resourceSlug }) => {
       .catch((error) => { reject(error); });
   });
 };
+
+export const fetchViewResource = ({ id }) => {
+  return (dispatch) => new Promise((resolve, reject) => {
+    ApiService.get(`views/${id}/resource`).then((response) => {
+      dispatch({
+        type: t.RESOURCE_COLUMNS_SET,
+        columns: response.data.resource_columns,
+        resource_slug: response.data.resource_slug
+      });
+      dispatch({
+        type: t.RESOURCE_FIELDS_SET,
+        fields: response.data.resource_fields, 
+        resource_slug: response.data.resource_slug,
+      });
+      resolve(response);
+    }).catch((error) => { reject(error); });
+  });
+}

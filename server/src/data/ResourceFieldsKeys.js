@@ -40,12 +40,35 @@ export default {
     },
   },
 
+  // Items
   'items': {
     'type': {
       column: 'type',
     },
     'name': {
       column: 'name',
+    },
+  },
+
+  // Manual Journals
+  'manual_journals': {
+    'type': {
+      column: 'transaction_type',
+    },
+    'status': {
+      column: 'status',
+    },
+    'date': {
+      column: 'date',
+    },
+    'journal_number': {
+      column: 'journal_number',
+    },
+    'amount': {
+      column: 'amount',
+    },
+    'created_at': {
+      column: 'created_at',
     },
   }
 };

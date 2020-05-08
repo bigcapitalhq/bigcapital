@@ -1,8 +1,7 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import { connect } from 'react-redux';
 import { useIntl } from 'react-intl';
 import {
   Button,
@@ -10,13 +9,12 @@ import {
   Intent,
   FormGroup,
   Checkbox,
-  Position,
 } from '@blueprintjs/core';
 import Toaster from 'components/AppToaster';
 import ErrorMessage from 'components/ErrorMessage';
 import AuthInsider from 'containers/Authentication/AuthInsider';
 import Icon from 'components/Icon';
-import AuthenticationConnect from 'connectors/Authentication.connect';
+import withAuthenticationActions from './withAuthenticationActions';
 import { compose } from 'utils';
 
 const ERRORS_TYPES = {
@@ -162,5 +160,5 @@ function Login({
 }
 
 export default compose(
-  AuthenticationConnect
+  withAuthenticationActions,
 )(Login);

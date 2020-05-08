@@ -1,9 +1,9 @@
 import React from 'react';
-import AccountFormDialog from 'containers/Dashboard/Dialogs/AccountFormDialog';
-import UserFormDialog from 'containers/Dashboard/Dialogs/UserFormDialog';
-import ItemCategoryDialog from 'containers/Dashboard/Dialogs/ItemCategoryDialog';
-import CurrencyDialog from 'containers/Dashboard/Dialogs/CurrencyDialog';
-import InviteUserDialog from 'containers/Dashboard/Dialogs/InviteUserDialog';
+import AccountFormDialog from 'containers/Dialogs/AccountFormDialog';
+import UserFormDialog from 'containers/Dialogs/UserFormDialog';
+import ItemCategoryDialog from 'containers/Dialogs/ItemCategoryDialog';
+import CurrencyDialog from 'containers/Dialogs/CurrencyDialog';
+import InviteUserDialog from 'containers/Dialogs/InviteUserDialog';
 
 export default function DialogsContainer() {
   return (
