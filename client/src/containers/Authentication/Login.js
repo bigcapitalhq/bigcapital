@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import { useIntl } from 'react-intl';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 import {
   Button,
   InputGroup,
@@ -13,9 +13,14 @@ import {
 import Toaster from 'components/AppToaster';
 import ErrorMessage from 'components/ErrorMessage';
 import AuthInsider from 'containers/Authentication/AuthInsider';
+
 import Icon from 'components/Icon';
+import { If } from 'components';
+
 import withAuthenticationActions from './withAuthenticationActions';
+
 import { compose } from 'utils';
+
 
 const ERRORS_TYPES = {
   INVALID_DETAILS: 'INVALID_DETAILS',
@@ -24,7 +29,7 @@ const ERRORS_TYPES = {
 function Login({
   requestLogin,
 }) {
-  const intl = useIntl();
+  const { formatMessage } = useIntl();
   const history = useHistory();
   const [shown, setShown] = useState(false);
   const passwordRevealer = () => { setShown(!shown); };
@@ -32,10 +37,10 @@ function Login({
   // Validation schema.
   const loginValidationSchema =  Yup.object().shape({
     crediential: Yup.string()
-      .required(intl.formatMessage({ id: 'required' }))
-      .email(intl.formatMessage({ id: 'invalid_email_or_phone_numner' })),
+      .required(formatMessage({ id: 'required' }))
+      .email(formatMessage({ id: 'invalid_email_or_phone_numner' })),
     password: Yup.string()
-      .required(intl.formatMessage({ id: 'required' }))
+      .required(formatMessage({ id: 'required' }))
       .min(4),
   });
 
@@ -64,14 +69,13 @@ function Login({
         const toastBuilders = [];
         if (errors.find((e) => e.type === ERRORS_TYPES.INVALID_DETAILS)) {
           toastBuilders.push({
-            message: `The email and password you entered did not match our records.
-              Please double-check and try again.`,
+            message: formatMessage('email_and_password_entered_did_not_match'),
             intent: Intent.DANGER,
           });
         }
         if (errors.find((e) => e.type === ERRORS_TYPES.USER_INACTIVE)) {
           toastBuilders.push({
-            message: intl.formatMessage({ id: 'the_user_has_been_suspended_from_admin' }),
+            message: formatMessage({ id: 'the_user_has_been_suspended_from_admin' }),
             intent: Intent.DANGER,
           });
         }
@@ -85,25 +89,26 @@ function Login({
 
   const passwordRevealerTmp = useMemo(() => (
     <span class="password-revealer" onClick={() => passwordRevealer()}>
-      {(shown) ? (
-        <><Icon icon='eye-slash' /> <span class="text">Hide</span></>
-      ) : (
-        <><Icon icon='eye' /> <span class="text">Show</span></>
-      )} 
+      <If condition={shown}>
+        <><Icon icon='eye-slash' /> <span class="text"><T id={'hide'} /></span></>
+      </If>
+      <If condition={!shown}>
+        <><Icon icon='eye' /> <span class="text"><T id={'show'} /></span></>
+      </If>
     </span>), [shown, passwordRevealer]);
 
   return (
     <AuthInsider>
       <div className='login-form'>
         <div className={'authentication-page__label-section'}>
-          <h3>Log in</h3>
-          Need a Bigcapital account ?
-          <Link to='/auth/register'> Create an account</Link>
+          <h3><T id={'log_in'} /></h3>
+          <T id={'need_bigcapital_account?'} />
+          <Link to='/auth/register'> <T id={'create_an_account'} /></Link>
         </div>
 
         <form onSubmit={handleSubmit} className={'authentication-page__form'}>
           <FormGroup
-            label={'Email or Phone Number'}
+            label={<T id={'email_or_phone_number'} />}
             intent={(errors.crediential && touched.crediential) && Intent.DANGER}
             helperText={<ErrorMessage name={'crediential'} {...{errors, touched}} />}
             className={'form-group--crediential'}
@@ -116,7 +121,7 @@ function Login({
           </FormGroup>
       
           <FormGroup
-            label={'Password'}
+            label={<T id={'password'} />}
             labelInfo={passwordRevealerTmp}
             intent={(errors.password && touched.password) && Intent.DANGER}
             helperText={<ErrorMessage name={'password'} {...{errors, touched}} />}
@@ -134,7 +139,7 @@ function Login({
             <Checkbox
               large={true}
               className={'checkbox--remember-me'}>
-                Keep me logged in
+                <T id={'keep_me_logged_in'} />
             </Checkbox>
           </div>
 
@@ -146,13 +151,15 @@ function Login({
               lang={true}
               loading={isSubmitting}
             >
-              {intl.formatMessage({ id: 'Log in' })}
+              <T id={'log_in'} />
             </Button>
           </div>
         </form>
       
         <div class="authentication-page__footer-links">
-          <Link to={'/auth/send_reset_password'}>Forget my password</Link>
+          <Link to={'/auth/send_reset_password'}>
+            <T id={'forget_my_password'} />
+          </Link>
         </div>
       </div>
     </AuthInsider>
