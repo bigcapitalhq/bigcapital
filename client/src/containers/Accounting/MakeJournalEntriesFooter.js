@@ -1,9 +1,6 @@
-import React, {useMemo} from 'react';
-import {
-  Intent,
-  Button,
-} from '@blueprintjs/core';
-import { FormattedList } from 'react-intl';
+import React, { useMemo } from 'react';
+import { Intent, Button } from '@blueprintjs/core';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 
 export default function MakeJournalEntriesFooter({
   formik: { isSubmitting },
@@ -12,15 +9,16 @@ export default function MakeJournalEntriesFooter({
 }) {
   return (
     <div>
-      <div class="form__floating-footer">
+      <div class='form__floating-footer'>
         <Button
           disabled={isSubmitting}
           intent={Intent.PRIMARY}
           name={'save'}
           onClick={() => {
             onSubmitClick({ publish: true, redirect: true });
-          }}>
-          Save
+          }}
+        >
+          <T id={'save'} />
         </Button>
 
         <Button
@@ -29,26 +27,29 @@ export default function MakeJournalEntriesFooter({
           className={'ml1'}
           name={'save_and_new'}
           onClick={() => {
-            onSubmitClick({ publish: true, redirect: false }); 
-          }}>
-          Save & New
+            onSubmitClick({ publish: true, redirect: false });
+          }}
+        >
+          <T id={'save_new'} />
         </Button>
 
         <Button
           disabled={isSubmitting}
           className={'button-secondary ml1'}
           onClick={() => {
-            onSubmitClick({ publish: false, redirect: false }); 
-          }}>
-          Save as Draft
+            onSubmitClick({ publish: false, redirect: false });
+          }}
+        >
+          <T id={'save_as_draft'} />
         </Button>
 
         <Button
           className={'button-secondary ml1'}
           onClick={() => {
             onCancelClick && onCancelClick();
-          }}>
-          Cancel
+          }}
+        >
+          <T id={'cancel'}/>
         </Button>
       </div>
     </div>

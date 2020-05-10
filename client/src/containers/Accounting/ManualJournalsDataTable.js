@@ -24,7 +24,7 @@ import withDashboardActions from 'containers/Dashboard/withDashboard';
 import withViewDetails from 'containers/Views/withViewDetails';
 import withManualJournals from 'containers/Accounting/withManualJournals';
 import withManualJournalsActions from 'containers/Accounting/withManualJournalsActions';
-
+import { FormattedMessage as T, useIntl } from 'react-intl';
 
 function ManualJournalsDataTable({
   loading,
@@ -47,7 +47,7 @@ function ManualJournalsDataTable({
 }) {
   const { custom_view_id: customViewId } = useParams();
   const [initialMount, setInitialMount] = useState(false);
-
+  const { formatMessage } = useIntl();
   useUpdateEffect(() => {
     if (!manualJournalsLoading) {
       setInitialMount(true);
@@ -68,118 +68,140 @@ function ManualJournalsDataTable({
     viewMeta,
   ]);
 
-  const handlePublishJournal = useCallback((journal) => () => {
-    onPublishJournal && onPublishJournal(journal);
-  }, [onPublishJournal]);
+  const handlePublishJournal = useCallback(
+    (journal) => () => {
+      onPublishJournal && onPublishJournal(journal);
+    },
+    [onPublishJournal]
+  );
 
-  const handleEditJournal = useCallback((journal) => () => {
-    onEditJournal && onEditJournal(journal);
-  }, [onEditJournal]);
+  const handleEditJournal = useCallback(
+    (journal) => () => {
+      onEditJournal && onEditJournal(journal);
+    },
+    [onEditJournal]
+  );
 
-  const handleDeleteJournal = useCallback((journal) => () => {
-    onDeleteJournal && onDeleteJournal(journal);
-  }, [onDeleteJournal]);
+  const handleDeleteJournal = useCallback(
+    (journal) => () => {
+      onDeleteJournal && onDeleteJournal(journal);
+    },
+    [onDeleteJournal]
+  );
 
   const actionMenuList = (journal) => (
     <Menu>
-      <MenuItem text='View Details' />
+      <MenuItem text={<T id={'view_details'} />} />
       <MenuDivider />
       {!journal.status && (
         <MenuItem
-          text="Publish Journal"
-          onClick={handlePublishJournal(journal)} />
-      )}      
+          text={<T id={'publish_journal'} />}
+          onClick={handlePublishJournal(journal)}
+        />
+      )}
       <MenuItem
-        text='Edit Journal'
-        onClick={handleEditJournal(journal)} />
+        text={<T id={'edit_journal'} />}
+        onClick={handleEditJournal(journal)}
+      />
       <MenuItem
-        text='Delete Journal'
+        text={<T id={'delete_journal'} />}
         intent={Intent.DANGER}
-        onClick={handleDeleteJournal(journal)} />
+        onClick={handleDeleteJournal(journal)}
+      />
     </Menu>
   );
 
-  const columns = useMemo(() => [
-    {
-      id: 'date',
-      Header: 'Date',
-      accessor: r => moment().format('YYYY-MM-DD'),
-      disableResizing: true,
-      width: 150,
-      className: 'date',
-    },
-    {
-      id: 'amount',
-      Header: 'Amount',
-      accessor: r => (<Money amount={r.amount} currency={'USD'} />),
-      disableResizing: true,
-      className: 'amount',
-    },
-    {
-      id: 'journal_number',
-      Header: 'Journal No.',
-      accessor: 'journal_number',
-      disableResizing: true,
-      className: 'journal_number',
-    },
-    {
-      id: 'status',
-      Header: 'Status',
-      accessor: (r) => {
-        return r.status ? 'Published' : 'Draft';
+  const columns = useMemo(
+    () => [
+      {
+        id: 'date',
+        Header: formatMessage({ id: 'date' }),
+        accessor: (r) => moment().format('YYYY-MM-DD'),
+        disableResizing: true,
+        width: 150,
+        className: 'date',
       },
-      disableResizing: true,
-      width: 100,
-      className: 'status',
-    },
-    {
-      id: 'note',
-      Header: 'Note',
-      accessor: r => (<Icon icon={'file-alt'} iconSize={16} />),
-      disableResizing: true,
-      disableSorting: true,
-      width: 100,
-      className: 'note',
-    },
-    {
-      id: 'transaction_type',
-      Header: 'Transaction type ',
-      accessor: 'transaction_type',
-      width: 100,
-      className: 'transaction_type',
-    },
-    {
-      id: 'created_at',
-      Header: 'Created At',
-      accessor: r => moment().format('YYYY-MM-DD'),
-      disableResizing: true,
-      width: 150,
-      className: 'created_at',
-    },
-    {
-      id: 'actions',
-      Header: '',
-      Cell: ({ cell }) => (
-        <Popover
-          content={actionMenuList(cell.row.original)}
-          position={Position.RIGHT_BOTTOM}
-        >
-          <Button icon={<Icon icon='ellipsis-h' />} />
-        </Popover>
-      ),
-      className: 'actions',
-      width: 50,
-      disableResizing: true,
-    },
-  ], []);
+      {
+        id: 'amount',
+        Header: formatMessage({ id: 'amount' }),
+        accessor: (r) => <Money amount={r.amount} currency={'USD'} />,
+        disableResizing: true,
+        className: 'amount',
+      },
+      {
+        id: 'journal_number',
+        Header: formatMessage({id:'journal_no'}),
+        accessor: 'journal_number',
+        disableResizing: true,
+        className: 'journal_number',
+      },
+      {
+        id: 'status',
+        Header: formatMessage({id:'status'}),
+        accessor: (r) => {
+          return r.status ? 'Published' : 'Draft';
+        },
+        disableResizing: true,
+        width: 100,
+        className: 'status',
+      },
+      {
+        id: 'note',
+        Header: formatMessage({id:'note'}),
+        accessor: (r) => <Icon icon={'file-alt'} iconSize={16} />,
+        disableResizing: true,
+        disableSorting: true,
+        width: 100,
+        className: 'note',
+      },
+      {
+        id: 'transaction_type',
+        Header: formatMessage({id:'transaction_type'}),
+        accessor: 'transaction_type',
+        width: 100,
+        className: 'transaction_type',
+      },
+      {
+        id: 'created_at',
+        Header: formatMessage({id:'created_at'}),
+        accessor: (r) => moment().format('YYYY-MM-DD'),
+        disableResizing: true,
+        width: 150,
+        className: 'created_at',
+      },
+      {
+        id: 'actions',
+        Header: '',
+        Cell: ({ cell }) => (
+          <Popover
+            content={actionMenuList(cell.row.original)}
+            position={Position.RIGHT_BOTTOM}
+          >
+            <Button icon={<Icon icon='ellipsis-h' />} />
+          </Popover>
+        ),
+        className: 'actions',
+        width: 50,
+        disableResizing: true,
+      },
+    ],
+    []
+  );
 
-  const handleDataTableFetchData = useCallback((...args) => {
-    onFetchData && onFetchData(...args);
-  }, [onFetchData]);
+  const handleDataTableFetchData = useCallback(
+    (...args) => {
+      onFetchData && onFetchData(...args);
+    },
+    [onFetchData]
+  );
 
-  const handleSelectedRowsChange = useCallback((selectedRows) => {
-    onSelectedRowsChange && onSelectedRowsChange(selectedRows.map(s => s.original));
-  }, [onSelectedRowsChange]);
+  const handleSelectedRowsChange = useCallback(
+    (selectedRows) => {
+      onSelectedRowsChange &&
+        onSelectedRowsChange(selectedRows.map((s) => s.original));
+    },
+    [onSelectedRowsChange]
+  );
 
   return (
     <LoadingIndicator loading={loading} mount={false}>
@@ -203,5 +225,5 @@ export default compose(
   // withViewsActions,
   withManualJournalsActions,
   withManualJournals,
-  withViewDetails,
+  withViewDetails
 )(ManualJournalsDataTable);

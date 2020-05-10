@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import { useIntl } from 'react-intl';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 import { Link, useHistory } from 'react-router-dom';
 import { Button, InputGroup, Intent, FormGroup } from '@blueprintjs/core';
 import { FormattedMessage } from 'react-intl';
@@ -15,23 +15,23 @@ import AuthInsider from 'containers/Authentication/AuthInsider';
 
 import withAuthenticationActions from './withAuthenticationActions';
 
-
-function SendResetPassword({
-  requestSendResetPassword,
-}) {
-  const intl = useIntl();
+function SendResetPassword({ requestSendResetPassword }) {
+  const { formatMessage } = useIntl();
   const history = useHistory();
 
   // Validation schema.
   const ValidationSchema = Yup.object().shape({
     crediential: Yup.string('')
-      .required(intl.formatMessage({ id: 'required' }))
-      .email(intl.formatMessage({ id: 'invalid_email_or_phone_numner' })),
+      .required(formatMessage({ id: 'required' }))
+      .email(formatMessage({ id: 'invalid_email_or_phone_numner' })),
   });
 
-  const initialValues = useMemo(() => ({
-    crediential: '',
-  }), []);
+  const initialValues = useMemo(
+    () => ({
+      crediential: '',
+    }),
+    []
+  );
 
   // Formik validation
   const {
@@ -60,9 +60,9 @@ function SendResetPassword({
           setSubmitting(false);
         })
         .catch((errors) => {
-          if (errors.find(e => e.type === 'EMAIL.NOT.REGISTERED')){
+          if (errors.find((e) => e.type === 'EMAIL.NOT.REGISTERED')) {
             AppToaster.show({
-              message: 'We couldn\'t find your account with that email',
+              message: "We couldn't find your account with that email",
               intent: Intent.DANGER,
             });
           }
@@ -73,21 +73,29 @@ function SendResetPassword({
 
   return (
     <AuthInsider>
-      <div class='reset-form'>        
+      <div class='reset-form'>
         <div className={'authentication-page__label-section'}>
-          <h3>Reset Your Password</h3>
-          <p>Enter your email address and we’ll send you a link to reset your password.</p>
+          <h3>
+            <T id={'reset_your_password'} />
+          </h3>
+          <p>
+            <T id={'we_ll_send_you_a_link_to_reset_your_password'} />
+          </p>
         </div>
 
         <form onSubmit={handleSubmit} className={'send-reset-password'}>
           <FormGroup
             label={'Email or Phone Number'}
-            intent={(errors.crediential && touched.crediential) && Intent.DANGER}
-            helperText={<ErrorMessage name={'crediential'} {...{errors, touched}} />}
+            intent={errors.crediential && touched.crediential && Intent.DANGER}
+            helperText={
+              <ErrorMessage name={'crediential'} {...{ errors, touched }} />
+            }
             className={'form-group--crediential'}
           >
             <InputGroup
-              intent={(errors.crediential && touched.crediential) && Intent.DANGER}
+              intent={
+                errors.crediential && touched.crediential && Intent.DANGER
+              }
               large={true}
               {...getFieldProps('crediential')}
             />
@@ -100,14 +108,14 @@ function SendResetPassword({
               fill={true}
               loading={isSubmitting}
             >
-              {intl.formatMessage({ id: 'Send password reset link' })}
+              <T id={'send_password_reset_link'} />
             </Button>
           </div>
         </form>
 
         <div class='authentication-page__footer-links'>
           <Link to='/auth/login'>
-            <FormattedMessage id='Return to log in' />
+            <T id={'return_to_log_in'} />
           </Link>
         </div>
       </div>
@@ -115,6 +123,4 @@ function SendResetPassword({
   );
 }
 
-export default compose(
-  withAuthenticationActions,
-)(SendResetPassword);
+export default compose(withAuthenticationActions)(SendResetPassword);

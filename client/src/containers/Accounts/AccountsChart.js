@@ -23,6 +23,7 @@ import withAccounts from 'containers/Accounts/withAccounts';
 
 import { compose } from 'utils';
 
+import { FormattedMessage as T, useIntl } from 'react-intl';
 
 function AccountsChart({
 
@@ -225,8 +226,8 @@ function AccountsChart({
         </Alert>
 
         <Alert
-          cancelButtonText="Cancel"
-          confirmButtonText="Inactivate"
+          cancelButtonText={<T id={'cancel'}/>}
+          confirmButtonText={<T id={'inactivate'}/>}
           icon="trash"
           intent={Intent.WARNING}
           isOpen={inactiveAccount}
@@ -239,8 +240,8 @@ function AccountsChart({
         </Alert>
 
         <Alert
-          cancelButtonText="Cancel"
-          confirmButtonText="Delete"
+       cancelButtonText={<T id={'cancel'}/>}
+          confirmButtonText={<T id={'delete'}/>}
           icon="trash"
           intent={Intent.DANGER}
           isOpen={bulkDelete}

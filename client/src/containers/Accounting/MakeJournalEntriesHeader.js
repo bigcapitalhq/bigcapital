@@ -6,7 +6,7 @@ import {
   Position,
 } from '@blueprintjs/core';
 import {DateInput} from '@blueprintjs/datetime';
-import {useIntl} from 'react-intl';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 import {Row, Col} from 'react-grid-system';
 import moment from 'moment';
 import {momentFormatter} from 'utils';
@@ -17,7 +17,7 @@ import ErrorMessage from 'components/ErrorMessage';
 export default function MakeJournalEntriesHeader({
   formik: { errors, touched, setFieldValue, getFieldProps }
 }) {
-  const intl = useIntl();
+  const {formatMessage} = useIntl();
  
   const handleDateChange = useCallback((date) => {
     const formatted = moment(date).format('YYYY-MM-DD');
@@ -32,7 +32,7 @@ export default function MakeJournalEntriesHeader({
       <Row>
         <Col sm={3}>
           <FormGroup
-            label={'Journal number'}
+            label={<T id={'journal_number'}/>}
             labelInfo={infoIcon}
             className={'form-group--journal-number'}
             intent={(errors.journal_number && touched.journal_number) && Intent.DANGER}
@@ -48,7 +48,7 @@ export default function MakeJournalEntriesHeader({
 
         <Col sm={2}>
           <FormGroup
-            label={intl.formatMessage({'id': 'date'})}
+          label={<T id={'date'}/>}
             intent={(errors.date && touched.date) && Intent.DANGER}
             helperText={<ErrorMessage name="date" {...{errors, touched}} />}
             minimal={true}>
@@ -63,7 +63,7 @@ export default function MakeJournalEntriesHeader({
 
         <Col sm={4}>
           <FormGroup
-            label={intl.formatMessage({'id': 'description'})}
+            label={<T id={'description'}/>}
             className={'form-group--description'}
             intent={(errors.name && touched.name) && Intent.DANGER}
             helperText={<ErrorMessage name="description" {...{errors, touched}} />}
@@ -80,7 +80,7 @@ export default function MakeJournalEntriesHeader({
       <Row>
         <Col sm={3}>
           <FormGroup
-            label={'Reference'}
+            label={<T id={'reference'}/>}
             labelInfo={infoIcon}
             className={'form-group--reference'}
             intent={(errors.reference && touched.reference) && Intent.DANGER}

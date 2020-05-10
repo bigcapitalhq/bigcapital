@@ -16,20 +16,21 @@ import { Select } from '@blueprintjs/select';
 import AppToaster from 'components/AppToaster';
 import AccountsConnect from 'connectors/Accounts.connector';
 import ItemsConnect from 'connectors/Items.connect';
-import {compose} from 'utils';
+import { compose } from 'utils';
 import ErrorMessage from 'components/ErrorMessage';
 import classNames from 'classnames';
 import Icon from 'components/Icon';
 import ItemCategoryConnect from 'connectors/ItemsCategory.connect';
 import MoneyInputGroup from 'components/MoneyInputGroup';
-import {useHistory} from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import Dragzone from 'components/Dragzone';
 import MediaConnect from 'connectors/Media.connect';
 import useMedia from 'hooks/useMedia';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 
 const ItemForm = ({
   requestSubmitItem,
-  
+
   accounts,
   categories,
 
@@ -49,14 +50,17 @@ const ItemForm = ({
   } = useMedia({
     saveCallback: requestSubmitMedia,
     deleteCallback: requestDeleteMedia,
-  })
+  });
 
-  const ItemTypeDisplay = useMemo(() => ([
-    { value: null, label: 'Select Item Type' },
-    { value: 'service', label: 'Service' },
-    { value: 'inventory', label: 'Inventory' },
-    { value: 'non-inventory', label: 'Non-Inventory' }
-  ]), []);
+  const ItemTypeDisplay = useMemo(
+    () => [
+      { value: null, label: 'Select Item Type' },
+      { value: 'service', label: 'Service' },
+      { value: 'inventory', label: 'Inventory' },
+      { value: 'non-inventory', label: 'Non-Inventory' },
+    ],
+    []
+  );
 
   const validationSchema = Yup.object().shape({
     active: Yup.boolean(),
@@ -73,22 +77,25 @@ const ItemForm = ({
       otherwise: Yup.number().nullable(),
     }),
     category_id: Yup.number().nullable(),
-    stock: Yup.string() || Yup.boolean()
+    stock: Yup.string() || Yup.boolean(),
   });
 
-  const initialValues = useMemo(() => ({
-    active: true,
-    name: '',
-    type: '',
-    sku: '',
-    cost_price: 0,
-    sell_price: 0,
-    cost_account_id: null,
-    sell_account_id: null,
-    inventory_account_id: null,
-    category_id: null,
-    note: '',
-  }), []);
+  const initialValues = useMemo(
+    () => ({
+      active: true,
+      name: '',
+      type: '',
+      sku: '',
+      cost_price: 0,
+      sell_price: 0,
+      cost_account_id: null,
+      sell_account_id: null,
+      inventory_account_id: null,
+      category_id: null,
+      note: '',
+    }),
+    []
+  );
 
   const {
     getFieldProps,
@@ -107,31 +114,39 @@ const ItemForm = ({
       const saveItem = (mediaIds) => {
         const formValues = { ...values, media_ids: mediaIds };
 
-        return requestSubmitItem(formValues).then((response) => {
-          AppToaster.show({
-            message: 'The_Items_has_been_submit'
+        return requestSubmitItem(formValues)
+          .then((response) => {
+            AppToaster.show({
+              message: 'The_Items_has_been_submit',
+            });
+            setSubmitting(false);
+            history.push('/dashboard/items');
+          })
+          .catch((error) => {
+            setSubmitting(false);
           });
-          setSubmitting(false);
-          history.push('/dashboard/items');
-        })
-        .catch((error) => {
-          setSubmitting(false);
-        });
       };
 
-      Promise.all([
-        saveMedia(),
-        deleteMedia(),
-      ]).then(([savedMediaResponses]) => {
-        const mediaIds = savedMediaResponses.map(res => res.data.media.id);
-        return saveItem(mediaIds);
-      });
-    }
+      Promise.all([saveMedia(), deleteMedia()]).then(
+        ([savedMediaResponses]) => {
+          const mediaIds = savedMediaResponses.map((res) => res.data.media.id);
+          return saveItem(mediaIds);
+        }
+      );
+    },
   });
 
-  const accountItem = useCallback((item, { handleClick }) => (
-    <MenuItem key={item.id} text={item.name} label={item.code} onClick={handleClick} />
-  ), []);
+  const accountItem = useCallback(
+    (item, { handleClick }) => (
+      <MenuItem
+        key={item.id}
+        text={item.name}
+        label={item.code}
+        onClick={handleClick}
+      />
+    ),
+    []
+  );
 
   // Filter Account Items
   const filterAccounts = (query, account, _index, exactMatch) => {
@@ -144,27 +159,37 @@ const ItemForm = ({
     }
   };
 
-  const onItemAccountSelect = useCallback((filedName) => {
-    return (account) => {
-      setSelectedAccounts({
-        ...selectedAccounts,
-        [filedName]: account
-      });
-      setFieldValue(filedName, account.id);
-    };
-  }, [setFieldValue, selectedAccounts]);
+  const onItemAccountSelect = useCallback(
+    (filedName) => {
+      return (account) => {
+        setSelectedAccounts({
+          ...selectedAccounts,
+          [filedName]: account,
+        });
+        setFieldValue(filedName, account.id);
+      };
+    },
+    [setFieldValue, selectedAccounts]
+  );
 
-  const categoryItem = useCallback((item, { handleClick }) => (
-    <MenuItem text={item.name} onClick={handleClick} />
-  ), []);
+  const categoryItem = useCallback(
+    (item, { handleClick }) => (
+      <MenuItem text={item.name} onClick={handleClick} />
+    ),
+    []
+  );
 
-  const getSelectedAccountLabel = useCallback((fieldName, defaultLabel) => {
-    return typeof selectedAccounts[fieldName] !== 'undefined'
-      ? selectedAccounts[fieldName].name : defaultLabel;
-  }, [selectedAccounts]);
+  const getSelectedAccountLabel = useCallback(
+    (fieldName, defaultLabel) => {
+      return typeof selectedAccounts[fieldName] !== 'undefined'
+        ? selectedAccounts[fieldName].name
+        : defaultLabel;
+    },
+    [selectedAccounts]
+  );
 
-  const requiredSpan = useMemo(() => (<span class="required">*</span>), []);
-  const infoIcon = useMemo(() => (<Icon icon="info-circle" iconSize={12} />), []);
+  const requiredSpan = useMemo(() => <span class='required'>*</span>, []);
+  const infoIcon = useMemo(() => <Icon icon='info-circle' iconSize={12} />, []);
 
   const handleMoneyInputChange = (fieldKey) => (e, value) => {
     setFieldValue(fieldKey, value);
@@ -178,31 +203,36 @@ const ItemForm = ({
     setFiles(_files.filter((file) => file.uploaded === false));
   }, []);
 
-  const handleDeleteFile = useCallback((_deletedFiles) => {
-    _deletedFiles.forEach((deletedFile) => {
-      if (deletedFile.uploaded && deletedFile.metadata.id) {
-        setDeletedFiles([
-          ...deletedFiles, deletedFile.metadata.id,
-        ]);
-      }
-    });
-  }, [setDeletedFiles, deletedFiles]);  
+  const handleDeleteFile = useCallback(
+    (_deletedFiles) => {
+      _deletedFiles.forEach((deletedFile) => {
+        if (deletedFile.uploaded && deletedFile.metadata.id) {
+          setDeletedFiles([...deletedFiles, deletedFile.metadata.id]);
+        }
+      });
+    },
+    [setDeletedFiles, deletedFiles]
+  );
 
-  const handleCancelClickBtn = () => { history.goBack(); };
+  const handleCancelClickBtn = () => {
+    history.goBack();
+  };
 
   return (
     <div class='item-form'>
       <form onSubmit={handleSubmit}>
-        <div class="item-form__primary-section">
+        <div class='item-form__primary-section'>
           <Row>
             <Col xs={7}>
               <FormGroup
                 medium={true}
-                label={'Item Type'}
+                label={<T id={'item_type'} />}
                 labelInfo={requiredSpan}
                 className={'form-group--item-type'}
-                intent={(errors.type && touched.type) && Intent.DANGER}
-                helperText={<ErrorMessage {...{errors, touched}} name="type" />}
+                intent={errors.type && touched.type && Intent.DANGER}
+                helperText={
+                  <ErrorMessage {...{ errors, touched }} name='type' />
+                }
                 inline={true}
               >
                 <HTMLSelect
@@ -213,45 +243,53 @@ const ItemForm = ({
               </FormGroup>
 
               <FormGroup
-                label={'Item Name'}
+                label={<T id={'item_name'} />}
                 labelInfo={requiredSpan}
                 className={'form-group--item-name'}
-                intent={(errors.name && touched.name) && Intent.DANGER}
-                helperText={<ErrorMessage {...{errors, touched}} name="name" />}
+                intent={errors.name && touched.name && Intent.DANGER}
+                helperText={
+                  <ErrorMessage {...{ errors, touched }} name='name' />
+                }
                 inline={true}
               >
                 <InputGroup
                   medium={true}
-                  intent={(errors.name && touched.name) && Intent.DANGER}
+                  intent={errors.name && touched.name && Intent.DANGER}
                   {...getFieldProps('name')}
                 />
               </FormGroup>
 
               <FormGroup
-                label={'SKU'}
+                label={<T id={'sku'} />}
                 labelInfo={infoIcon}
                 className={'form-group--item-sku'}
-                intent={(errors.sku && touched.sku) && Intent.DANGER}
-                helperText={<ErrorMessage {...{errors, touched}} name="sku" />}
+                intent={errors.sku && touched.sku && Intent.DANGER}
+                helperText={
+                  <ErrorMessage {...{ errors, touched }} name='sku' />
+                }
                 inline={true}
               >
                 <InputGroup
                   medium={true}
-                  intent={(errors.sku && touched.sku) && Intent.DANGER}
+                  intent={errors.sku && touched.sku && Intent.DANGER}
                   {...getFieldProps('sku')}
                 />
               </FormGroup>
 
               <FormGroup
-                label={'Category'}
+                label={<T id={'category'} />}
                 labelInfo={infoIcon}
                 inline={true}
-                intent={(errors.category_id && touched.category_id) && Intent.DANGER}
-                helperText={<ErrorMessage {...{errors, touched}} name="category" />}
+                intent={
+                  errors.category_id && touched.category_id && Intent.DANGER
+                }
+                helperText={
+                  <ErrorMessage {...{ errors, touched }} name='category' />
+                }
                 className={classNames(
                   'form-group--select-list',
                   'form-group--category',
-                  Classes.FILL,
+                  Classes.FILL
                 )}
               >
                 <Select
@@ -264,7 +302,10 @@ const ItemForm = ({
                   <Button
                     fill={true}
                     rightIcon='caret-down'
-                    text={getSelectedAccountLabel('category_id', 'Select category')}
+                    text={getSelectedAccountLabel(
+                      'category_id',
+                      'Select category'
+                    )}
                   />
                 </Select>
               </FormGroup>
@@ -276,7 +317,7 @@ const ItemForm = ({
               >
                 <Checkbox
                   inline={true}
-                  label={'Active'}
+                  label={<T id={'active'}/>}
                   defaultChecked={values.active}
                   {...getFieldProps('active')}
                 />
@@ -289,20 +330,25 @@ const ItemForm = ({
                 onDrop={handleDropFiles}
                 onDeleteFile={handleDeleteFile}
                 hint={'Attachments: Maxiumum size: 20MB'}
-                className={'mt2'} />
+                className={'mt2'}
+              />
             </Col>
           </Row>
         </div>
 
         <Row gutterWidth={16} className={'item-form__accounts-section'}>
           <Col width={404}>
-            <h4>Purchase Information</h4>
+            <h4><T id={'purchase_information'}/></h4>
 
             <FormGroup
-              label={'Selling Price'}
+              label={<T id={'selling_price'}/>}
               className={'form-group--item-selling-price'}
-              intent={(errors.selling_price && touched.selling_price) && Intent.DANGER}
-              helperText={<ErrorMessage {...{errors, touched}} name="selling_price" />}
+              intent={
+                errors.selling_price && touched.selling_price && Intent.DANGER
+              }
+              helperText={
+                <ErrorMessage {...{ errors, touched }} name='selling_price' />
+              }
               inline={true}
             >
               <MoneyInputGroup
@@ -311,19 +357,31 @@ const ItemForm = ({
                 onChange={handleMoneyInputChange('selling_price')}
                 inputGroupProps={{
                   medium: true,
-                  intent: (errors.selling_price && touched.selling_price) && Intent.DANGER,
-                }} />
+                  intent:
+                    errors.selling_price &&
+                    touched.selling_price &&
+                    Intent.DANGER,
+                }}
+              />
             </FormGroup>
 
             <FormGroup
-              label={'Account'}
+              label={<T id={'account'} />}
               labelInfo={infoIcon}
               inline={true}
-              intent={(errors.sell_account_id && touched.sell_account_id) && Intent.DANGER}
-              helperText={<ErrorMessage {...{errors, touched}} name="sell_account_id" />}
+              intent={
+                errors.sell_account_id &&
+                touched.sell_account_id &&
+                Intent.DANGER
+              }
+              helperText={
+                <ErrorMessage {...{ errors, touched }} name='sell_account_id' />
+              }
               className={classNames(
-                'form-group--sell-account', 'form-group--select-list',
-                Classes.FILL)}
+                'form-group--sell-account',
+                'form-group--select-list',
+                Classes.FILL
+              )}
             >
               <Select
                 items={accounts}
@@ -335,7 +393,10 @@ const ItemForm = ({
                 <Button
                   fill={true}
                   rightIcon='caret-down'
-                  text={getSelectedAccountLabel('sell_account_id', 'Select account')}
+                  text={getSelectedAccountLabel(
+                    'sell_account_id',
+                    'Select account'
+                  )}
                 />
               </Select>
             </FormGroup>
@@ -343,14 +404,16 @@ const ItemForm = ({
 
           <Col width={404}>
             <h4>
-              Sales Information
+              <T id={'sales_information'} />
             </h4>
 
             <FormGroup
-              label={'Cost Price'}
+              label={<T id={'cost_price'} />}
               className={'form-group--item-cost-price'}
-              intent={(errors.cost_price && touched.cost_price) && Intent.DANGER}
-              helperText={<ErrorMessage {...{errors, touched}} name="cost_price" />}
+              intent={errors.cost_price && touched.cost_price && Intent.DANGER}
+              helperText={
+                <ErrorMessage {...{ errors, touched }} name='cost_price' />
+              }
               inline={true}
             >
               <MoneyInputGroup
@@ -359,21 +422,30 @@ const ItemForm = ({
                 onChange={handleMoneyInputChange('cost_price')}
                 inputGroupProps={{
                   medium: true,
-                  intent: (errors.cost_price && touched.cost_price) && Intent.DANGER,
-                }} />
+                  intent:
+                    errors.cost_price && touched.cost_price && Intent.DANGER,
+                }}
+              />
             </FormGroup>
 
             <FormGroup
-              label={'Account'}
+              label={<T id={'account'} />}
               labelInfo={infoIcon}
               inline={true}
-              intent={(errors.cost_account_id && touched.cost_account_id) && Intent.DANGER}
-              helperText={<ErrorMessage {...{errors, touched}} name="cost_account_id" />}
+              intent={
+                errors.cost_account_id &&
+                touched.cost_account_id &&
+                Intent.DANGER
+              }
+              helperText={
+                <ErrorMessage {...{ errors, touched }} name='cost_account_id' />
+              }
               className={classNames(
                 'form-group--cost-account',
                 'form-group--select-list',
-                Classes.FILL)}
-              >
+                Classes.FILL
+              )}
+            >
               <Select
                 items={accounts}
                 itemRenderer={accountItem}
@@ -384,7 +456,10 @@ const ItemForm = ({
                 <Button
                   fill={true}
                   rightIcon='caret-down'
-                  text={getSelectedAccountLabel('cost_account_id', 'Select account')}
+                  text={getSelectedAccountLabel(
+                    'cost_account_id',
+                    'Select account'
+                  )}
                 />
               </Select>
             </FormGroup>
@@ -394,19 +469,29 @@ const ItemForm = ({
         <Row className={'item-form__accounts-section mt2'}>
           <Col width={404}>
             <h4>
-              Inventory Information
+              <T id={'inventory_information'} />
             </h4>
 
             <FormGroup
-              label={'Inventory Account'}
+              label={<T id={'inventory_account'}/>}
               inline={true}
-              intent={(errors.inventory_account_id && touched.inventory_account_id) && Intent.DANGER}
-              helperText={<ErrorMessage {...{errors, touched}} name="inventory_account_id" />}
+              intent={
+                errors.inventory_account_id &&
+                touched.inventory_account_id &&
+                Intent.DANGER
+              }
+              helperText={
+                <ErrorMessage
+                  {...{ errors, touched }}
+                  name='inventory_account_id'
+                />
+              }
               className={classNames(
                 'form-group--item-inventory_account',
                 'form-group--select-list',
-                Classes.FILL)}
-              >
+                Classes.FILL
+              )}
+            >
               <Select
                 items={accounts}
                 itemRenderer={accountItem}
@@ -417,13 +502,16 @@ const ItemForm = ({
                 <Button
                   fill={true}
                   rightIcon='caret-down'
-                  text={getSelectedAccountLabel('inventory_account_id','Select account')}
+                  text={getSelectedAccountLabel(
+                    'inventory_account_id',
+                    'Select account'
+                  )}
                 />
               </Select>
             </FormGroup>
 
             <FormGroup
-              label={'Opening Stock'}
+              label={<T id={'opening_stock'}/>}
               className={'form-group--item-stock'}
               // intent={errors.cost_price && Intent.DANGER}
               // helperText={formik.errors.stock && formik.errors.stock}
@@ -440,11 +528,13 @@ const ItemForm = ({
 
         <div class='form__floating-footer'>
           <Button intent={Intent.PRIMARY} type='submit'>
-            Save
+            <T id={'save'}/>
           </Button>
 
-          <Button className={'ml1'}>Save as Draft</Button>
-          <Button className={'ml1'} onClick={handleCancelClickBtn}>Close</Button>
+          <Button className={'ml1'}><T id={'save_as_draft'}/></Button>
+          <Button className={'ml1'} onClick={handleCancelClickBtn}>
+            <T id={'close'}/>
+          </Button>
         </div>
       </form>
     </div>
@@ -455,5 +545,5 @@ export default compose(
   AccountsConnect,
   ItemsConnect,
   ItemCategoryConnect,
-  MediaConnect,
+  MediaConnect
 )(ItemForm);

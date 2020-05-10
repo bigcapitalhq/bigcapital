@@ -11,7 +11,7 @@ import {
 import { Select } from '@blueprintjs/select';
 import { pick } from 'lodash';
 import * as Yup from 'yup';
-import { useIntl } from 'react-intl';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 import { useFormik } from 'formik';
 import { compose } from 'utils';
 import { useQuery } from 'react-query';
@@ -55,13 +55,13 @@ function ItemCategoryDialog({
   requestEditItemCategory,
 }) {
   const [selectedParentCategory, setParentCategory] = useState(null);
-  const intl = useIntl();
+  const {formatMessage} = useIntl();
 
   const fetchList = useQuery(['items-categories-list'],
     () => requestFetchItemCategories());
 
   const ValidationSchema = Yup.object().shape({
-    name: Yup.string().required(intl.formatMessage({ id: 'required' })),
+    name: Yup.string().required(formatMessage({ id: 'required' })),
     parent_category_id: Yup.string().nullable(),
     description: Yup.string().trim()
   });
@@ -149,7 +149,7 @@ function ItemCategoryDialog({
   return (
     <Dialog
       name={name}
-      title={payload.action === 'edit' ? 'Edit Category' : ' New Category'}
+      title={payload.action === 'edit' ? <T id={'edit_category'}/> : <T id={'new_category'}/>}
       className={classNames({
         'dialog--loading': fetchList.isFetching,
       },
@@ -164,7 +164,7 @@ function ItemCategoryDialog({
       <form onSubmit={formik.handleSubmit}>
         <div className={Classes.DIALOG_BODY}>
           <FormGroup
-            label={'Category Name'}
+            label={<T id={'category_name'}/>}
             labelInfo={requiredSpan}
             className={'form-group--category-name'}
             intent={(errors.name && touched.name) && Intent.DANGER}
@@ -179,7 +179,7 @@ function ItemCategoryDialog({
           </FormGroup>
 
           <FormGroup
-            label={'Parent Category'}
+            label={<T id={'parent_category'}/>}
             labelInfo={infoIcon}
             className={classNames(
               'form-group--select-list',
@@ -207,7 +207,7 @@ function ItemCategoryDialog({
           </FormGroup>
 
           <FormGroup
-            label={'Description'}
+            label={<T id={'description'}/>}
             className={'form-group--description'}
             intent={(errors.description && touched.description) && Intent.DANGER}
             helperText={(<ErrorMessage name="description" {...formik} />)}
@@ -222,9 +222,9 @@ function ItemCategoryDialog({
         </div>
         <div className={Classes.DIALOG_FOOTER}>
           <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-            <Button onClick={handleClose}>Close</Button>
+            <Button onClick={handleClose}><T id={'close'}/></Button>
             <Button intent={Intent.PRIMARY} type='submit'>
-              {payload.action === 'edit' ? 'Edit' : 'Submit'}
+            {payload.action === 'edit' ? <T id={'edit'}/> : <T id={'submit'}/>}
             </Button>
           </div>
         </div>

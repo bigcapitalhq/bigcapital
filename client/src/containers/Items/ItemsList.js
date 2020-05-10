@@ -23,6 +23,7 @@ import withDashboardActions from 'containers/Dashboard/withDashboard';
 import withItemsActions from 'containers/Items/withItemsActions';
 import withViewsActions from 'containers/Views/withViewsActions';
 
+import { FormattedMessage as T, useIntl } from 'react-intl';
 
 function ItemsList({
   // #withDashboard
@@ -144,8 +145,8 @@ function ItemsList({
               onSelectedRowsChange={handleSelectedRowsChange} />
 
             <Alert
-              cancelButtonText="Cancel"
-              confirmButtonText="Move to Trash"
+              cancelButtonText={<T id={'cancel'}/>}
+              confirmButtonText={<T id={'move_to_trash'}/>}
               icon="trash"
               intent={Intent.DANGER}
               isOpen={deleteItem}

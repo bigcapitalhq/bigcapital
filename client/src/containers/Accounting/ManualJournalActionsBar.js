@@ -23,6 +23,7 @@ import withResourceDetail from 'containers/Resources/withResourceDetails';
 import withManualJournals from 'containers/Accounting/withManualJournals';
 import withManualJournalsActions from 'containers/Accounting/withManualJournalsActions';
 
+import { FormattedMessage as T, useIntl } from 'react-intl';
 
 function ManualJournalActionsBar({
   resourceName = 'manual_journal',
@@ -37,6 +38,7 @@ function ManualJournalActionsBar({
 }) {
   const { path } = useRouteMatch();
   const history = useHistory();
+  const {formatMessage} = useIntl();
 
   const viewsMenuItems = manualJournalsViews.map(view => {
     return (
@@ -76,7 +78,7 @@ function ManualJournalActionsBar({
           <Button
             className={classNames(Classes.MINIMAL, 'button--table-views')}
             icon={<Icon icon='table' />}
-            text='Table Views'
+            text={<T id={'table_views'}/>}
             rightIcon={'caret-down'}
           />
         </Popover>
@@ -84,7 +86,7 @@ function ManualJournalActionsBar({
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon='plus' />}
-          text='New Journal'
+          text={<T id={'new_journal'}/>}
           onClick={onClickNewManualJournal}
         />
         <Popover
@@ -103,7 +105,7 @@ function ManualJournalActionsBar({
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon='trash' iconSize={15} />}
-            text='Delete'
+            text={<T id={'delete'}/>}
             intent={Intent.DANGER}
             onClick={handleBulkDelete}
           />
@@ -111,12 +113,12 @@ function ManualJournalActionsBar({
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon='file-import' />}
-          text='Import'
+          text={<T id={'import'}/>}
         />
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon='file-export' />}
-          text='Export'
+          text={<T id={'export'}/>}
         />
       </NavbarGroup>
     </DashboardActionsBar>

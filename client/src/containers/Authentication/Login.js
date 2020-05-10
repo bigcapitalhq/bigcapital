@@ -69,7 +69,7 @@ function Login({
         const toastBuilders = [];
         if (errors.find((e) => e.type === ERRORS_TYPES.INVALID_DETAILS)) {
           toastBuilders.push({
-            message: formatMessage('email_and_password_entered_did_not_match'),
+            message: formatMessage({id:'email_and_password_entered_did_not_match'}),
             intent: Intent.DANGER,
           });
         }
@@ -102,7 +102,7 @@ function Login({
       <div className='login-form'>
         <div className={'authentication-page__label-section'}>
           <h3><T id={'log_in'} /></h3>
-          <T id={'need_bigcapital_account?'} />
+          <T id={'need_bigcapital_account'} />
           <Link to='/auth/register'> <T id={'create_an_account'} /></Link>
         </div>
 

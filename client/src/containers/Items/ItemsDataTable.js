@@ -15,6 +15,9 @@ import Money from 'components/Money';
 import withItems from 'containers/Items/withItems';
 import LoadingIndicator from 'components/LoadingIndicator';
 
+import { FormattedMessage as T, useIntl } from 'react-intl';
+
+
 const ItemsDataTable = ({
   loading,
 
@@ -27,6 +30,8 @@ const ItemsDataTable = ({
   onFetchData,
   onSelectedRowsChange,
 }) => {
+  
+  const {formatMessage} = useIntl();
   const [initialMount, setInitialMount] = useState(false);
 
   useEffect(() => {
@@ -40,35 +45,35 @@ const ItemsDataTable = ({
   
   const actionMenuList = useCallback((item) =>
     (<Menu>
-      <MenuItem text="View Details" />
+      <MenuItem text={<T id={'view_details'}/>} />
       <MenuDivider />
-      <MenuItem text="Edit Item" onClick={handleEditItem(item)} />
-      <MenuItem text="Delete Item" onClick={handleDeleteItem(item)} />
+      <MenuItem text={<T id={'edit_item'}/>} onClick={handleEditItem(item)} />
+      <MenuItem text={<T id={'delete_item'}/>} onClick={handleDeleteItem(item)} />
     </Menu>), [handleEditItem, handleDeleteItem]);
 
   const columns = useMemo(() => [
     {
-      Header: 'Item Name',
+      Header: formatMessage({id:'item_name'}),
       accessor: 'name',
       className: "actions",
     },
     {
-      Header: 'SKU',
+      Header: formatMessage({id:'sku'}),
       accessor: 'sku',
       className: "sku",
     },
     {
-      Header: 'Category',
+      Header: formatMessage({id:'category'}),
       accessor: 'category.name',
       className: 'category',
     },
     {
-      Header: 'Sell Price',
+      Header: formatMessage({id:'sell_price'}),
       accessor: row => (<Money amount={row.sell_price} currency={'USD'} />),
       className: 'sell-price',
     },
     {
-      Header: 'Cost Price',
+      Header: formatMessage({id:'cost_price'}),
       accessor: row => (<Money amount={row.cost_price} currency={'USD'} />),
       className: 'cost-price',
     },

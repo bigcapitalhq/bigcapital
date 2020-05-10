@@ -1,16 +1,16 @@
 export default [
   {
-    divider: true
+    divider: true,
   },
   {
     icon: 'homepage',
     iconSize: 20,
     text: 'Homepage',
     disabled: false,
-    href: '/dashboard/homepage'
+    href: '/dashboard/homepage',
   },
   {
-    divider: true
+    divider: true,
   },
   {
     icon: 'homepage',
@@ -19,20 +19,20 @@ export default [
     children: [
       {
         text: 'Items List',
-        href: '/dashboard/items'
+        href: '/dashboard/items',
       },
       {
         text: 'New Item',
-        href: '/dashboard/items/new'
+        href: '/dashboard/items/new',
       },
       {
         text: 'Category List',
-        href: '/dashboard/items/categories'
+        href: '/dashboard/items/categories',
       },
-    ]
+    ],
   },
   {
-    divider: true
+    divider: true,
   },
   {
     icon: 'balance-scale',
@@ -41,29 +41,33 @@ export default [
     children: [
       {
         text: 'Accounts Chart',
-        href: '/dashboard/accounts'
+        href: '/dashboard/accounts',
       },
       {
         text: 'Manual Journal',
-        href: '/dashboard/accounting/manual-journals'
+        href: '/dashboard/accounting/manual-journals',
       },
       {
         text: 'Make Journal',
-        href: '/dashboard/accounting/make-journal-entry'
+        href: '/dashboard/accounting/make-journal-entry',
       },
-    ]
+      {
+        text: 'Exchange Rate',
+        href: '/dashboard/ExchangeRates',
+      },
+    ],
   },
   {
     icon: 'university',
     iconSize: 20,
     text: 'Banking',
-    children: []
+    children: [],
   },
   {
     icon: 'shopping-cart',
     iconSize: 20,
     text: 'Sales',
-    children: []
+    children: [],
   },
   {
     icon: 'balance-scale',
@@ -74,9 +78,9 @@ export default [
         icon: 'cut',
         text: 'cut',
         label: '⌘C',
-        disabled: false
-      }
-    ]
+        disabled: false,
+      },
+    ],
   },
   {
     icon: 'analytics',
@@ -85,25 +89,25 @@ export default [
     children: [
       {
         text: 'Balance Sheet',
-        href: '/dashboard/accounting/balance-sheet'
+        href: '/dashboard/accounting/balance-sheet',
       },
       {
         text: 'Trial Balance Sheet',
-        href: '/dashboard/accounting/trial-balance-sheet'
+        href: '/dashboard/accounting/trial-balance-sheet',
       },
       {
         text: 'Journal',
-        href: '/dashboard/accounting/journal-sheet'
+        href: '/dashboard/accounting/journal-sheet',
       },
       {
         text: 'General Ledger',
-        href: '/dashboard/accounting/general-ledger'
+        href: '/dashboard/accounting/general-ledger',
       },
       {
         text: 'Profit Loss Sheet',
-        href: '/dashboard/accounting/profit-loss-sheet'
-      }
-    ]
+        href: '/dashboard/accounting/profit-loss-sheet',
+      },
+    ],
   },
   {
     text: 'Expenses',
@@ -112,23 +116,23 @@ export default [
     children: [
       {
         text: 'Expenses List',
-        href: '/dashboard/expenses'
+        href: '/dashboard/expenses',
       },
       {
         text: 'New Expenses',
-        href: '/dashboard/expenses/new'
-      }
-    ]
+        href: '/dashboard/expenses/new',
+      },
+    ],
   },
   {
-    divider: true
+    divider: true,
   },
   {
     text: 'Preferences',
-    href: '/dashboard/preferences'
+    href: '/dashboard/preferences',
   },
   {
     text: 'Auditing System',
-    href: '/dashboard/auditing/list'
-  }
+    href: '/dashboard/auditing/list',
+  },
 ];

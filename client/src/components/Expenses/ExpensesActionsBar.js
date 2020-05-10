@@ -16,6 +16,7 @@ import { useRouteMatch } from 'react-router-dom'
 import classNames from 'classnames';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import Icon from 'components/Icon';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 
 export default function ExpensesActionsBar({
 
@@ -39,7 +40,7 @@ export default function ExpensesActionsBar({
           <Button
             className={classNames(Classes.MINIMAL, 'button--table-views')}
             icon={<Icon icon='table' />}
-            text='Table Views'
+            text={<T id={'table_views'}/>}
             rightIcon={'caret-down'}
           />
         </Popover>
@@ -50,31 +51,31 @@ export default function ExpensesActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon='plus' />}
           href='/dashboard/expenses/new'
-          text='New Expense'
+          text={<T id={'new_expense'}/>}
           onClick={onClickNewAccount}
         />
         <Button
           className={Classes.MINIMAL}
           intent={Intent.DANGER}
           icon={<Icon icon='plus' />}
-          text='Delete'
+          text={<T id={'delete'}/>}
           onClick={onClickNewAccount}
         />
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon='plus' />}
-          text='Bulk Update'
+          text={<T id={'bulk_update'}/>}
           onClick={onClickNewAccount}
         />
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon='file-import' />}
-          text='Import'
+          text={<T id={'import'}/>}
         />
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon='file-export' />}
-          text='Export'
+          text={<T id={'export'}/>}
         />
       </NavbarGroup>
     </DashboardActionsBar>

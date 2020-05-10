@@ -3,6 +3,7 @@ import { Route, Switch, useHistory } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import { Alert, Intent } from '@blueprintjs/core';
 import AppToaster from 'components/AppToaster';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
@@ -16,7 +17,6 @@ import withManualJournalsActions from 'containers/Accounting/withManualJournalsA
 import withViewsActions from 'containers/Views/withViewsActions';
 
 import { compose } from 'utils';
-
 
 /**
  * Manual journals table.
@@ -42,17 +42,21 @@ function ManualJournalsTable({
     return requestFetchResourceViews('manual_journals');
   });
 
-  const fetchManualJournals = useQuery('manual-journals-table', () => 
-    requestFetchManualJournalsTable());
+  const fetchManualJournals = useQuery('manual-journals-table', () =>
+    requestFetchManualJournalsTable()
+  );
 
   useEffect(() => {
     changePageTitle('Manual Journals');
   }, [changePageTitle]);
 
   // Handle delete manual journal click.
-  const handleDeleteJournal = useCallback((journal) => {
-    setDeleteManualJournal(journal);
-  }, [setDeleteManualJournal]);
+  const handleDeleteJournal = useCallback(
+    (journal) => {
+      setDeleteManualJournal(journal);
+    },
+    [setDeleteManualJournal]
+  );
 
   // Handle cancel delete manual journal.
   const handleCancelManualJournalDelete = useCallback(() => {
@@ -67,30 +71,35 @@ function ManualJournalsTable({
     });
   }, [deleteManualJournal, requestDeleteManualJournal]);
 
-  const handleBulkDelete = useCallback((accountsIds) => {
-    setBulkDelete(accountsIds);
-  }, [setBulkDelete]);
+  const handleBulkDelete = useCallback(
+    (accountsIds) => {
+      setBulkDelete(accountsIds);
+    },
+    [setBulkDelete]
+  );
 
   const handleConfirmBulkDelete = useCallback(() => {
-    requestDeleteBulkManualJournals(bulkDelete).then(() => {
-      setBulkDelete(false);
-      AppToaster.show({ message: 'the_accounts_have_been_deleted' });
-    }).catch((error) => {
-      setBulkDelete(false);
-    });
-  }, [
-    requestDeleteBulkManualJournals,
-    bulkDelete,
-  ]);
+    requestDeleteBulkManualJournals(bulkDelete)
+      .then(() => {
+        setBulkDelete(false);
+        AppToaster.show({ message: 'the_accounts_have_been_deleted' });
+      })
+      .catch((error) => {
+        setBulkDelete(false);
+      });
+  }, [requestDeleteBulkManualJournals, bulkDelete]);
 
   const handleCancelBulkDelete = useCallback(() => {
     setBulkDelete(false);
   }, []);
 
-  const handleEditJournal = useCallback((journal) => {
-    history.push(`/dashboard/accounting/manual-journals/${journal.id}/edit`);
-  }, [history]);
-  
+  const handleEditJournal = useCallback(
+    (journal) => {
+      history.push(`/dashboard/accounting/manual-journals/${journal.id}/edit`);
+    },
+    [history]
+  );
+
   // Handle filter change to re-fetch data-table.
   const handleFilterChanged = useCallback(() => {
     fetchManualJournals.refetch();
@@ -102,36 +111,49 @@ function ManualJournalsTable({
   }, [fetchManualJournals]);
 
   // Handle fetch data of manual jouranls datatable.
-  const handleFetchData = useCallback(({ pageIndex, pageSize, sortBy }) => {
-    addManualJournalsTableQueries({
-      ...(sortBy.length > 0) ? {
-        column_sort_by: sortBy[0].id,
-        sort_order: sortBy[0].desc ? 'desc' : 'asc',
-      } : {},
-    });
-  }, [
-    addManualJournalsTableQueries,
-  ]);
+  const handleFetchData = useCallback(
+    ({ pageIndex, pageSize, sortBy }) => {
+      addManualJournalsTableQueries({
+        ...(sortBy.length > 0
+          ? {
+              column_sort_by: sortBy[0].id,
+              sort_order: sortBy[0].desc ? 'desc' : 'asc',
+            }
+          : {}),
+      });
+    },
+    [addManualJournalsTableQueries]
+  );
 
-  const handlePublishJournal = useCallback((journal) => {
-    requestPublishManualJournal(journal.id).then(() => {
-      AppToaster.show({ message: 'the_manual_journal_id_has_been_published' });
-    })
-  }, [requestPublishManualJournal]);
+  const handlePublishJournal = useCallback(
+    (journal) => {
+      requestPublishManualJournal(journal.id).then(() => {
+        AppToaster.show({
+          message: 'the_manual_journal_id_has_been_published',
+        });
+      });
+    },
+    [requestPublishManualJournal]
+  );
 
   // Handle selected rows change.
-  const handleSelectedRowsChange = useCallback((accounts) => {
-    setSelectedRows(accounts);
-  }, [setSelectedRows]);
+  const handleSelectedRowsChange = useCallback(
+    (accounts) => {
+      setSelectedRows(accounts);
+    },
+    [setSelectedRows]
+  );
 
   return (
     <DashboardInsider
       loading={fetchViews.isFetching || fetchManualJournals.isFetching}
-      name={'manual-journals'}>
+      name={'manual-journals'}
+    >
       <ManualJournalsActionsBar
         onBulkDelete={handleBulkDelete}
         selectedRows={selectedRows}
-        onFilterChanged={handleFilterChanged} />
+        onFilterChanged={handleFilterChanged}
+      />
 
       <DashboardPageContent>
         <Switch>
@@ -140,9 +162,9 @@ function ManualJournalsTable({
             path={[
               '/dashboard/accounting/manual-journals/:custom_view_id/custom_view',
               '/dashboard/accounting/manual-journals',
-            ]}>
-            <ManualJournalsViewTabs
-              onViewChanged={handleViewChanged} />
+            ]}
+          >
+            <ManualJournalsViewTabs onViewChanged={handleViewChanged} />
           </Route>
         </Switch>
 
@@ -151,11 +173,12 @@ function ManualJournalsTable({
           onFetchData={handleFetchData}
           onEditJournal={handleEditJournal}
           onPublishJournal={handlePublishJournal}
-          onSelectedRowsChange={handleSelectedRowsChange} />
+          onSelectedRowsChange={handleSelectedRowsChange}
+        />
 
         <Alert
-          cancelButtonText='Cancel'
-          confirmButtonText='Move to Trash'
+          cancelButtonText={<T id={'cancel'} />}
+          confirmButtonText={<T id={'move_to_trash'} />}
           icon='trash'
           intent={Intent.DANGER}
           isOpen={deleteManualJournal}
@@ -169,8 +192,8 @@ function ManualJournalsTable({
         </Alert>
 
         <Alert
-          cancelButtonText='Cancel'
-          confirmButtonText='Move to Trash'
+          cancelButtonText={<T id={'cancel'} />}
+          confirmButtonText={<T id={'move_to_trash'} />}
           icon='trash'
           intent={Intent.DANGER}
           isOpen={bulkDelete}
@@ -190,5 +213,5 @@ function ManualJournalsTable({
 export default compose(
   withDashboardActions,
   withManualJournalsActions,
-  withViewsActions,
+  withViewsActions
 )(ManualJournalsTable);

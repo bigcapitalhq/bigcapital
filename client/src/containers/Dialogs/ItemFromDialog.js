@@ -5,10 +5,10 @@ import {
   FormGroup,
   InputGroup,
   Intent,
-  TextArea
+  TextArea,
 } from '@blueprintjs/core';
 import * as Yup from 'yup';
-import { useIntl } from 'react-intl';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 import { useFormik } from 'formik';
 import { compose } from 'utils';
 import Dialog from 'components/Dialog';
@@ -25,30 +25,30 @@ function ItemFromDialog({
   submitItemCategory,
   fetchCategory,
   openDialog,
-  closeDialog
+  closeDialog,
 }) {
   const [state, setState] = useState({});
-  const intl = useIntl();
+  const { formatMessage } = useIntl();
   const ValidationSchema = Yup.object().shape({
-    name: Yup.string().required(intl.formatMessage({ id: 'required' })),
-    description: Yup.string().trim()
+    name: Yup.string().required(formatMessage({ id: 'required' })),
+    description: Yup.string().trim(),
   });
 
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {},
     validationSchema: ValidationSchema,
-    onSubmit: values => {
+    onSubmit: (values) => {
       submitItemCategory({ values })
-        .then(response => {
+        .then((response) => {
           AppToaster.show({
-            message: 'the_category_has_been_submit'
+            message: 'the_category_has_been_submit',
           });
         })
-        .catch(error => {
+        .catch((error) => {
           alert(error.message);
         });
-    }
+    },
   });
 
   const fetchHook = useAsync(async () => {
@@ -71,10 +71,12 @@ function ItemFromDialog({
   return (
     <Dialog
       name={name}
-      title={payload.action === 'new' ? 'New' : ' New Category'}
+      title={
+        payload.action === 'new' ? <T id={'new'} /> : <T id={'new_category'} />
+      }
       className={{
         'dialog--loading': state.isLoading,
-        'dialog--item-form': true
+        'dialog--item-form': true,
       }}
       isOpen={isOpen}
       onClosed={onDialogClosed}
@@ -84,7 +86,7 @@ function ItemFromDialog({
       <form onSubmit={formik.handleSubmit}>
         <div className={Classes.DIALOG_BODY}>
           <FormGroup
-            label={'Category Name'}
+            label={<T id={'category_name'} />}
             className={'form-group--category-name'}
             intent={formik.errors.name && Intent.DANGER}
             helperText={formik.errors.name && formik.errors.name}
@@ -97,7 +99,7 @@ function ItemFromDialog({
             />
           </FormGroup>
           <FormGroup
-            label={'Description'}
+            label={<T id={'description'} />}
             className={'form-group--description'}
             intent={formik.errors.description && Intent.DANGER}
             helperText={formik.errors.description && formik.errors.credential}
@@ -112,9 +114,15 @@ function ItemFromDialog({
         </div>
         <div className={Classes.DIALOG_FOOTER}>
           <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-            <Button onClick={handleClose}>Close</Button>
+            <Button onClick={handleClose}>
+              <T id={'close'} />
+            </Button>
             <Button intent={Intent.PRIMARY} type='submit'>
-              {payload.action === 'new' ? 'New' : 'Submit'}
+              {payload.action === 'new' ? (
+                <T id={'new'} />
+              ) : (
+                <T id={'submit'} />
+              )}
             </Button>
           </div>
         </div>

@@ -23,6 +23,8 @@ import withAccounts from 'containers/Accounts/withAccounts';
 
 import {If} from 'components';
 
+import { FormattedMessage as T, useIntl } from 'react-intl';
+
 function AccountsDataTable({
   // # withAccounts  
   accounts,
@@ -39,7 +41,7 @@ function AccountsDataTable({
   onInactiveAccount,
 }) {
   const [initialMount, setInitialMount] = useState(false);
-
+  const {formatMessage} = useIntl();
   useUpdateEffect(() => {
     if (!accountsLoading) {
       setInitialMount(true);
@@ -59,17 +61,17 @@ function AccountsDataTable({
       <MenuItem text='View Details' />
       <MenuDivider />
       <MenuItem
-        text='Edit Account'
+        text={<T id={'edit_account'}/>}
         onClick={handleEditAccount(account)} />
       <MenuItem
-        text='New Account'
+        text={<T id={'new_account'}/>}
         onClick={() => handleNewParentAccount(account)} />
       <MenuDivider />
       <MenuItem
-        text='Inactivate Account'
+        text={<T id={'inactivate_account'}/>}
         onClick={() => onInactiveAccount(account)} />
       <MenuItem
-        text='Delete Account'
+        text={<T id={'delete_account'}/>}
         onClick={() => onDeleteAccount(account)} />
     </Menu>
   ), [handleEditAccount, onDeleteAccount, onInactiveAccount]);
@@ -77,7 +79,7 @@ function AccountsDataTable({
   const columns = useMemo(() => [
     {
       id: 'name',
-      Header: 'Account Name',
+      Header:formatMessage({id:'account_name'}),
       accessor: row => {
         return (row.description) ?
           (<Tooltip
@@ -93,21 +95,21 @@ function AccountsDataTable({
     },
     {
       id: 'code',
-      Header: 'Code',
+      Header:formatMessage({id:'code'}),
       accessor: 'code',
       className: 'code',
       width: 100,
     },
     {
       id: 'type',
-      Header: 'Type',
+      Header:formatMessage({id:'type'}),
       accessor: 'type.name',
       className: 'type',
       width: 120,
     },
     {
       id: 'normal',
-      Header: 'Normal',
+      Header: formatMessage({id:'normal'}),
       Cell: ({ cell }) => {
         const account = cell.row.original;
         const type = account.type ? account.type.normal : '';
@@ -120,7 +122,7 @@ function AccountsDataTable({
     },
     {
       id: 'balance',
-      Header: 'Balance',
+      Header: formatMessage({id:'balance'}),
       Cell: ({ cell }) => {
         const account = cell.row.original;
         const {balance = null} = account;

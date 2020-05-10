@@ -11,6 +11,7 @@ import withDashboard from 'containers/Dashboard/withDashboard';
 import AppToaster from 'components/AppToaster';
 import {compose} from 'utils';
 import { If } from 'components';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 
 // @flow
 function ViewFormPage({
@@ -83,8 +84,8 @@ function ViewFormPage({
             onDelete={handleDeleteView} />
 
           <Alert
-            cancelButtonText="Cancel"
-            confirmButtonText="Move to Trash"
+            cancelButtonText={<T id={'cancel'}/>}
+            confirmButtonText={<T id={'move_to_trash'}/>}
             icon="trash"
             intent={Intent.DANGER}
             isOpen={stateDeleteView}
@@ -98,7 +99,7 @@ function ViewFormPage({
         </If>
 
         <If condition={fetchHook.error}>
-          <h4>Something wrong</h4>
+          <h4><T id={'something_wrong'}/></h4>
         </If>
       </DashboardPageContent>
     </DashboardInsider>   

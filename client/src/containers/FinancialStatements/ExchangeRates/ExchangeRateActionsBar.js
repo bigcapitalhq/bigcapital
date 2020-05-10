@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useState, useMemo } from 'react';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import { compose } from 'utils';
 import {
@@ -10,52 +10,55 @@ import {
   Position,
   PopoverInteractionKind,
 } from '@blueprintjs/core';
-import classNames from 'classnames';
 import { connect } from 'react-redux';
-import { If } from 'components';
-
+import classNames from 'classnames';
 import Icon from 'components/Icon';
-import DialogConnect from 'connectors/Dialog.connector';
+import DashboardConnect from 'connectors/Dashboard.connector';
 import FilterDropdown from 'components/FilterDropdown';
-
+import  ExchangeRatesDialogConnect from 'connectors/ExchangeRatesFromDialog.connect';
 import withResourceDetail from 'containers/Resources/withResourceDetails';
-import withDashboard from 'containers/Dashboard/withDashboard';
-
 import { FormattedMessage as T, useIntl } from 'react-intl';
 
-const ItemsCategoryActionsBar = ({
-  resourceName = 'item_category',
-  resourceFields,
 
+function ExchangeRateActionsBar({
   openDialog,
-  onDeleteCategory,
+  onDeleteExchangeRate,
   onFilterChanged,
-  selectedRows,
-}) => {
-  const onClickNewCategory = useCallback(() => {
-    openDialog('item-form', {});
+  resourceFields,
+  selectedRows = [],
+}) {
+  const onClickNewExchangeRate = useCallback(() => {
+    openDialog('exchangeRate-form', {});
   }, [openDialog]);
 
-  const handleDeleteCategory = useCallback((category) => {
-    onDeleteCategory(selectedRows);
-  }, [selectedRows, onDeleteCategory]);
-
-  const hasSelectedRows = useMemo(() => selectedRows.length > 0, [selectedRows]);
+  const handelDeleteExchangeRate = useCallback(
+    (exchangeRate) => {
+      onDeleteExchangeRate(exchangeRate);
+    },
+    [selectedRows, onDeleteExchangeRate]
+  );
+  const [filterCount, setFilterCount] = useState(0);
+  const hasSelectedRows = useMemo(() => selectedRows.length > 0, [
+    selectedRows,
+  ]);
 
   const filterDropdown = FilterDropdown({
     fields: resourceFields,
     onFilterChange: (filterConditions) => {
+      setFilterCount(filterConditions.length || 0);
+
       onFilterChanged && onFilterChanged(filterConditions);
     },
   });
+
   return (
     <DashboardActionsBar>
       <NavbarGroup>
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon='plus' />}
-          text={<T id={'new_category'}/>}
-          onClick={onClickNewCategory}
+          text={<T id={'new_exchange_rate'}/>}
+          onClick={onClickNewExchangeRate}
         />
         <Popover
           minimal={true}
@@ -65,21 +68,21 @@ const ItemsCategoryActionsBar = ({
         >
           <Button
             className={classNames(Classes.MINIMAL, 'button--filter')}
-            text={<T id={'filter'}/>}
+            text={
+              filterCount <= 0 ? <T id={'filter'}/> : `${filterCount} filters applied`
+            }
             icon={<Icon icon='filter' />}
           />
         </Popover>
-
-        <If condition={hasSelectedRows}>
+        {hasSelectedRows && (
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon='trash' iconSize={15} />}
             text={<T id={'delete'}/>}
             intent={Intent.DANGER}
-            onClick={handleDeleteCategory}
+            onClick={handelDeleteExchangeRate}
           />
-        </If>
-
+        )}
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon='file-import' />}
@@ -93,17 +96,17 @@ const ItemsCategoryActionsBar = ({
       </NavbarGroup>
     </DashboardActionsBar>
   );
-};
+}
 
 const mapStateToProps = (state, props) => ({
-  resourceName: 'items_categories',
+  resourceName: 'exchange_rates',
 });
 
-const withItemsCategoriesActionsBar = connect(mapStateToProps);
+const withExchangeRateActionBar = connect(mapStateToProps);
 
 export default compose(
-  withItemsCategoriesActionsBar,
-  DialogConnect,
-  withDashboard,
-  withResourceDetail 
-)(ItemsCategoryActionsBar);
+  withExchangeRateActionBar,
+  DashboardConnect,
+  ExchangeRatesDialogConnect,
+  withResourceDetail
+)(ExchangeRateActionsBar);

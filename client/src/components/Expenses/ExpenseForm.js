@@ -13,7 +13,7 @@ import {
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { Select } from '@blueprintjs/select';
-import { useIntl } from 'react-intl';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 import { momentFormatter } from 'utils';
 import moment from 'moment';
 import AppToaster from 'components/AppToaster';
@@ -25,8 +25,7 @@ export default function ExpenseForm({
   expenseDetails,
   currencies
 }) {
-  const intl = useIntl();
-  console.log({ accounts });
+  const {formatMessage} = useIntl();
 
   const [state, setState] = useState({
     selectedExpenseAccount: null,
@@ -121,7 +120,7 @@ export default function ExpenseForm({
     <div class='expense-form'>
       <form onSubmit={formik.handleSubmit}>
         <FormGroup
-          label={'Date'}
+          label={<T id={'date'}/>}
           inline={true}
           intent={formik.errors.date && Intent.DANGER}
           helperText={formik.errors.date && formik.errors.date}
@@ -135,7 +134,7 @@ export default function ExpenseForm({
         </FormGroup>
 
         <FormGroup
-          label={'Expense Account'}
+          label={<T id={'expense_account'}/>}
           className={'form-group--expense-account'}
           inline={true}
           intent={formik.errors.expense_account_id && Intent.DANGER}
@@ -159,7 +158,7 @@ export default function ExpenseForm({
         </FormGroup>
 
         <FormGroup
-          label={'Amount'}
+          label={<T id={'amount'}/>}
           className={'form-group--amount'}
           intent={formik.errors.amount && Intent.DANGER}
           helperText={formik.errors.amount && formik.errors.amount}
@@ -191,7 +190,7 @@ export default function ExpenseForm({
         </FormGroup>
 
         <FormGroup
-          label={'Exchange Rate'}
+          label={<T id={'exchange_rate'}/>}
           className={'form-group--exchange-rate'}
           inline={true}
         >
@@ -199,7 +198,7 @@ export default function ExpenseForm({
         </FormGroup>
 
         <FormGroup
-          label={'Payment Account'}
+          label={<T id={'payment_account'}/>}
           className={'form-group--payment-account'}
           inline={true}
           intent={formik.errors.payment_account_id && Intent.DANGER}
@@ -223,7 +222,7 @@ export default function ExpenseForm({
         </FormGroup>
 
         <FormGroup
-          label={'Description'}
+          label={<T id={'description'}/>}
           className={'form-group--description'}
           inline={true}
         >
@@ -236,10 +235,10 @@ export default function ExpenseForm({
 
         <div class='form__floating-footer'>
           <Button intent={Intent.PRIMARY} type='submit'>
-            Save
+        <T id={'save'}/>
           </Button>
-          <Button>Save as Draft</Button>
-          <Button onClick={handleClose}>Close</Button>
+          <Button><T id={'save_as_draft'}/></Button>
+          <Button onClick={handleClose}><T id={'close'}/></Button>
         </div>
       </form>
     </div>
