@@ -7,10 +7,12 @@ import {
   Intent,
   Alert,
 } from '@blueprintjs/core';
-import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import { useQuery } from 'react-query';
+
+import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import ItemsActionsBar from 'containers/Items/ItemsActionsBar';
 import { compose } from 'utils';
+
 import ItemsDataTable from './ItemsDataTable';
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 
@@ -33,15 +35,12 @@ function ItemsList({
   requestFetchResourceFields,
 
   // #withItems
-  itemsViews,
-  itemsCurrentPage,
   itemsTableQuery,
 
   // #withItemsActions
   requestDeleteItem,
   requestFetchItems,
   addItemsTableQueries,
-  changeItemsCurrentView
 }) {
   const [deleteItem, setDeleteItem] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
@@ -121,8 +120,7 @@ function ItemsList({
 
       <ItemsActionsBar
         onFilterChanged={handleFilterChanged}
-        selectedRows={selectedRows}
-        views={itemsViews} />
+        selectedRows={selectedRows} />
 
       <DashboardPageContent>
         <Switch>
@@ -133,9 +131,8 @@ function ItemsList({
               '/dashboard/items'
             ]}>
             <ItemsViewsTabs
-              itemsViews={itemsViews}
-              onViewChanged={handleCustomViewChanged} />
-
+              onViewChanged={handleCustomViewChanged} /> 
+ 
             <ItemsDataTable
               loading={tableLoading}
               onDeleteItem={handleDeleteItem}
@@ -164,7 +161,9 @@ function ItemsList({
 }
 
 export default compose(
-  withItems,
+  withItems(({ itemsTableQuery }) => ({
+    itemsTableQuery,
+  })),
   withResourceActions,
   withDashboardActions,
   withItemsActions,

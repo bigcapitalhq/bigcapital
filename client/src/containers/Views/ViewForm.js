@@ -32,7 +32,6 @@ function ViewForm({
 
   viewId,
   viewMeta,
-  viewItem,
 
   resourceName,
   resourceColumns,

@@ -76,13 +76,16 @@ const NoteCellRenderer = (chainedComponent) => (props) => {
 /**
  * Make journal entries table component.
  */
-function MakeJournalEntriesTable({
-  formik: { errors, values, setFieldValue },
+function MakeJournalEntriesTable({  
+  // #withAccounts
   accounts,
+
+  // #ownPorps
   onClickRemoveRow,
   onClickAddNewRow,
   defaultRow,
   initialValues,
+  formik: { errors, values, setFieldValue },
 }) {
   const [rows, setRow] = useState([]);
 
@@ -226,5 +229,7 @@ function MakeJournalEntriesTable({
 }
 
 export default compose(
-  withAccounts,
+  withAccounts(({ accounts }) => ({
+    accounts,
+  })),
 )(MakeJournalEntriesTable);

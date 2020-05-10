@@ -1,10 +1,4 @@
 import React, { useCallback, useMemo } from 'react';
-import Icon from 'components/Icon';
-import ItemsCategoryConnect from 'connectors/ItemsCategory.connect';
-import DialogConnect from 'connectors/Dialog.connector';
-import LoadingIndicator from 'components/LoadingIndicator';
-import { compose } from 'utils';
-import DataTable from 'components/DataTable';
 import {
   Button,
   Popover,
@@ -12,9 +6,19 @@ import {
   MenuItem,
   Position,
 } from '@blueprintjs/core';
+import Icon from 'components/Icon';
+import LoadingIndicator from 'components/LoadingIndicator';
+import { compose } from 'utils';
+import DataTable from 'components/DataTable';
+
+import DialogConnect from 'connectors/Dialog.connector';
+import withItemCategories from './withItemCategories';
+
 
 const ItemsCategoryList = ({
-  categories,
+  // #withItemCategories
+  categoriesList,
+
   onFetchData,
   onDeleteCategory,
   onEditCategory,
@@ -91,7 +95,7 @@ const ItemsCategoryList = ({
     <LoadingIndicator spinnerSize={30}>
       <DataTable
         columns={columns}
-        data={Object.values(categories)}
+        data={categoriesList}
         onFetchData={handelFetchData}
         manualSortBy={true}
         selectionColumn={true}
@@ -104,5 +108,7 @@ const ItemsCategoryList = ({
 
 export default compose(
   DialogConnect,
-  ItemsCategoryConnect,
+  withItemCategories(({ categoriesList }) => ({
+    categoriesList,
+  })),
 )(ItemsCategoryList);

@@ -1,22 +1,32 @@
-import React, {useState, useMemo, useCallback, useEffect} from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
 import moment from 'moment';
-import useAsync from 'hooks/async';
 import {compose} from 'utils';
+import { useQuery } from 'react-query';
+
 import ProfitLossSheetHeader from './ProfitLossSheetHeader';
 import ProfitLossSheetTable from './ProfitLossSheetTable';
-import DashboardConnect from 'connectors/Dashboard.connector';
-import ProfitLossSheetConnect from 'connectors/ProfitLossSheet.connect';
+import ProfitLossActionsBar from './ProfitLossActionsBar';
+
 import DashboardInsider from 'components/Dashboard/DashboardInsider'
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent'
-import ProfitLossActionsBar from './ProfitLossActionsBar';
+
+import withDashboard from 'containers/Dashboard/withDashboard';
+import withProfitLossActions from './withProfitLossActions';
+import withProfitLoss from './withProfitLoss';
 import SettingsConnect from 'connectors/Settings.connect';
 
 
 function ProfitLossSheet({
+  // #withDashboard
   changePageTitle,
+
+  // #withProfitLossActions
   fetchProfitLossSheet,
-  getProfitLossSheetIndex,
+
+  // #withProfitLoss
   profitLossSheetLoading,
+
+  // #withPreferences
   organizationSettings,
 }) {
   const [filter, setFilter] = useState({
@@ -31,16 +41,8 @@ function ProfitLossSheet({
   }, [changePageTitle]);
 
   // Fetches profit/loss sheet.
-  const fetchHook = useAsync((query = filter) => {
-    return Promise.all([
-      fetchProfitLossSheet(query),
-    ]);
-  }, false);
-
-  // Retrieve profit/loss sheet index based on the given filter query.
-  const profitLossSheetIndex = useMemo(() =>
-    getProfitLossSheetIndex(filter),
-    [getProfitLossSheetIndex, filter]);
+  const fetchHook = useQuery(['profit-loss', filter],
+    (key, query) => { fetchProfitLossSheet(query); });
 
   // Handle submit filter.
   const handleSubmitFilter = useCallback((filter) => {
@@ -50,16 +52,17 @@ function ProfitLossSheet({
       to_date: moment(filter.to_date).format('YYYY-MM-DD'),
     };
     setFilter(_filter);
-    fetchHook.execute(_filter);
-  }, [fetchHook]);
+  }, []);
 
   // Handle fetch data of profit/loss sheet table.
-  const handleFetchData = useCallback(() => { fetchHook.execute(); }, [fetchHook]);
+  const handleFetchData = useCallback(() => {
+    fetchHook.refetch();
+  }, [fetchHook]);
 
   return (
     <DashboardInsider>
-      <ProfitLossActionsBar  />
-      
+      <ProfitLossActionsBar />
+ 
       <DashboardPageContent>
         <div class="financial-statement">
           <ProfitLossSheetHeader
@@ -69,7 +72,7 @@ function ProfitLossSheet({
           <div class="financial-statement__body">
             <ProfitLossSheetTable
               companyName={organizationSettings.name}
-              profitLossSheetIndex={profitLossSheetIndex}
+              profitLossQuery={filter}
               onFetchData={handleFetchData}
               loading={profitLossSheetLoading} />
           </div> 
@@ -80,7 +83,10 @@ function ProfitLossSheet({
 }
 
 export default compose(
-  DashboardConnect,
-  ProfitLossSheetConnect,
+  withDashboard,
+  withProfitLossActions,
+  withProfitLoss(({ profitLossSheetLoading }) => ({
+    profitLossSheetLoading,
+  })),
   SettingsConnect,
 )(ProfitLossSheet);

@@ -1,17 +1,28 @@
 import React, {useEffect, useState, useCallback, useMemo} from 'react';
+import { connect } from 'react-redux';
 import FinancialSheet from 'components/FinancialSheet';
 import DataTable from 'components/DataTable';
 import Money from 'components/Money';
+import {
+  getFinancialSheetIndexByQuery,
+} from 'store/financialStatement/financialStatements.selectors';
 
-export default function TrialBalanceSheetTable({
-  trialBalanceSheetAccounts,
-  trialBalanceSheetIndex,
+import withTrialBalance from './withTrialBalance';
+
+import { compose } from 'utils';
+
+
+function TrialBalanceSheetTable({
+  // #withTrialBalanceDetail
+  trialBalanceAccounts,
+
+  // #withTrialBalanceTable
+  trialBalanceIndex,
+
   onFetchData,
   loading,
   companyName,
 }) {
-  const [data, setData] = useState([]);
-
   const columns = useMemo(() => [
     {
       // Build our expander column
@@ -98,8 +109,25 @@ export default function TrialBalanceSheetTable({
       <DataTable
         className="bigcapital-datatable--financial-report"
         columns={columns}
-        data={trialBalanceSheetAccounts}
+        data={trialBalanceAccounts}
         onFetchData={handleFetchData} />
     </FinancialSheet>
   ); 
 }
+
+
+const mapStateToProps = (state, props) => {
+  const { trialBalanceQuery } = props;
+  return {
+    trialBalanceIndex: getFinancialSheetIndexByQuery(state.financialStatements.trialBalance.sheets, trialBalanceQuery),
+  };
+};
+
+const withTrialBalanceTable = connect(mapStateToProps);
+
+export default compose(
+  withTrialBalanceTable,
+  withTrialBalance(({ trialBalanceAccounts }) => ({
+    trialBalanceAccounts,
+  })),
+)(TrialBalanceSheetTable);

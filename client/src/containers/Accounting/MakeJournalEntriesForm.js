@@ -23,12 +23,15 @@ import {compose} from 'utils';
 
 
 function MakeJournalEntriesForm({
+  // #withMedia
   requestSubmitMedia,
   requestDeleteMedia,
 
+  // #withJournalsActions
   requestMakeJournalEntries,
   requestEditManualJournal,
 
+  // #withDashboard
   changePageTitle,
   changePageSubtitle,
 
@@ -252,8 +255,6 @@ function MakeJournalEntriesForm({
 }
 
 export default compose(
-  // ManualJournalsConnect,
-  // MakeJournalEntriesConnect,
   withJournalsActions,
   withManualJournalDetail,
   withAccountsActions,

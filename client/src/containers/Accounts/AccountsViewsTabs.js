@@ -20,6 +20,7 @@ import withAccounts from 'containers/Accounts/withAccounts';
 import withAccountsTableActions from 'containers/Accounts/withAccountsTableActions';
 import withViewDetail from 'containers/Views/withViewDetails';
 
+
 function AccountsViewsTabs({
   // #withViewDetail
   viewId,
@@ -62,7 +63,6 @@ function AccountsViewsTabs({
   useUpdateEffect(() => {
     onViewChanged && onViewChanged(customViewId);
   }, [customViewId]);
-
 
   // Handle click a new view tab.
   const handleClickNewView = () => {
@@ -115,7 +115,6 @@ function AccountsViewsTabs({
 }
 
 const mapStateToProps = (state, ownProps) => ({
-
   // Mapping view id from matched route params.
   viewId: ownProps.match.params.custom_view_id,
 });
@@ -126,7 +125,9 @@ export default compose(
   withRouter,
   withAccountsViewsTabs,
   withDashboard,
-  withAccounts,
+  withAccounts(({ accountsViews }) => ({
+    accountsViews,
+  })),
   withAccountsTableActions,
   withViewDetail
 )(AccountsViewsTabs);

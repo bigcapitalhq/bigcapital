@@ -7,6 +7,7 @@ import {
   getFinancialSheet,
 } from 'store/financialStatement/financialStatements.selectors';
 
+
 export const mapStateToProps = (state, props) => ({
   getJournalSheetIndex: (query) => getFinancialSheetIndexByQuery(state.financialStatements.journal.sheets, query),
   getJournalSheet: (index) => getFinancialSheet(state.financialStatements.journal.sheets, index),

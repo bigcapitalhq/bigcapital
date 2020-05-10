@@ -28,9 +28,9 @@ export default function JournalHeader({
       from_date: Yup.date().required(),
       to_date: Yup.date().min(Yup.ref('from_date')).required(),
     }),
-    onSubmit: (values, actions) => {
+    onSubmit: (values, { setSubmitting }) => {
       onSubmitFilter(values);
-      actions.setSubmitting(false);
+      setSubmitting(false);
     },
   });
 

@@ -5,16 +5,15 @@ import {
   getResourceMetadata,
 } from 'store/resources/resources.reducer';
 
-export const mapStateToProps = (state, props) => {
-  const { resourceName } = props;
-
-  console.log(props, 'XX');
-
-  return {
-    resourceFields: getResourceFields(state, resourceName),
-    resourceColumns: getResourceColumns(state, resourceName),
-    resourceMetadata: getResourceMetadata(state, resourceName),
-  };
+export default (mapState) => {
+  const mapStateToProps = (state, props) => {
+    const { resourceName } = props;
+    const mapped =  {
+      resourceFields: getResourceFields(state, resourceName),
+      resourceColumns: getResourceColumns(state, resourceName),
+      resourceMetadata: getResourceMetadata(state, resourceName),
+    };
+    return mapState ? mapState(mapped, state, props) : mapped;
+  };  
+  return connect(mapStateToProps);
 };
-
-export default connect(mapStateToProps);

@@ -6,5 +6,5 @@ export default function PreferencesPage() {
     <div class="preferences-page">
       <PreferencesSidebar />
     </div>
-  )
+  );
 }

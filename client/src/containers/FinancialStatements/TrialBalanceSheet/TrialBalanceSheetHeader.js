@@ -1,30 +1,22 @@
 import React, {useState, useCallback, useMemo} from 'react';
-import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
+import * as Yup from 'yup';
 import {Row, Col} from 'react-grid-system';
+import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
 import { 
   Button,
-  FormGroup,
-  Position,
-  MenuItem,
-  RadioGroup,
-  Radio,
-  HTMLSelect,
-  Intent,
-  Popover,
 } from "@blueprintjs/core";
 import moment from 'moment';
 import {useIntl} from 'react-intl';
 import { useFormik } from 'formik';
-import * as Yup from 'yup';
-import Icon from 'components/Icon';
+
 import FinancialStatementDateRange from 'containers/FinancialStatements/FinancialStatementDateRange';
+
 
 export default function TrialBalanceSheetHeader({
   pageFilter,
   onSubmitFilter,
 }) {
   const intl = useIntl();
-
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
@@ -36,9 +28,9 @@ export default function TrialBalanceSheetHeader({
       from_date: Yup.date().required(),
       to_date: Yup.date().min(Yup.ref('from_date')).required(),
     }),
-    onSubmit: (values, actions) => {
+    onSubmit: (values, { setSubmitting }) => {
       onSubmitFilter(values);
-      actions.setSubmitting(false);
+      setSubmitting(false);
     }
   });
 

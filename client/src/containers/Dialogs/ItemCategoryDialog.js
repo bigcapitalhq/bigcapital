@@ -14,7 +14,7 @@ import * as Yup from 'yup';
 import { useIntl } from 'react-intl';
 import { useFormik } from 'formik';
 import { compose } from 'utils';
-import { useQuery } from 'react-query';
+import { useQuery, queryCache } from 'react-query';
 import classNames from 'classnames';
 
 import AppToaster from 'components/AppToaster';
@@ -73,7 +73,16 @@ function ItemCategoryDialog({
   }), []);
 
   // Formik
-  const formik = useFormik({
+  const {
+    errors,
+    values,
+    touched,
+    setFieldValue,
+    handleSubmit,
+    resetForm,
+    getFieldProps,
+    isSubmitting,
+  } = useFormik({
     enableReinitialize: true,
     initialValues: {
       ...(payload.action === 'edit' &&
@@ -85,9 +94,11 @@ function ItemCategoryDialog({
         requestEditItemCategory(payload.id, values).then(response => {
           closeDialog(name);
           AppToaster.show({
-            message: 'the_category_has_been_edited'
+            message: 'the_category_has_been_edited',
+            intent: Intent.SUCCESS,
           });
           setSubmitting(false);
+          queryCache.refetchQueries('items-categories-table', { force: true });
         }).catch((error) => {
           setSubmitting(false);
         });
@@ -96,9 +107,11 @@ function ItemCategoryDialog({
           .then((response) => {
             closeDialog(name);
             AppToaster.show({
-              message: 'the_category_has_been_submit'
+              message: 'the_category_has_been_submit',
+              intent: Intent.SUCCESS,
             });
             setSubmitting(false);
+            queryCache.refetchQueries('items-categories-table', { force: true });
           })
           .catch((error) => {
             setSubmitting(false);
@@ -106,7 +119,6 @@ function ItemCategoryDialog({
       }
     }
   });
-  const { values, errors, touched } = useMemo(() => formik, [formik]);
 
   const filterItemCategory = useCallback((query, category, _index, exactMatch) => {
     const normalizedTitle = category.name.toLowerCase();
@@ -135,13 +147,13 @@ function ItemCategoryDialog({
 
   const onChangeParentCategory = useCallback((parentCategory) => {
     setParentCategory(parentCategory);
-    formik.setFieldValue('parent_category_id', parentCategory.id);
-  }, [formik]);
+    setFieldValue('parent_category_id', parentCategory.id);
+  }, [setFieldValue]);
 
   const onDialogClosed = useCallback(() => {
-    formik.resetForm();
+    resetForm();
     closeDialog(name);
-  }, [formik, closeDialog, name]);
+  }, [resetForm, closeDialog, name]);
 
   const requiredSpan = useMemo(() => (<span class="required">*</span>), []);
   const infoIcon = useMemo(() => (<Icon icon="info-circle" iconSize={12} />), []);
@@ -161,20 +173,20 @@ function ItemCategoryDialog({
       isLoading={fetchList.isFetching}
       onClose={handleClose}
     >
-      <form onSubmit={formik.handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <div className={Classes.DIALOG_BODY}>
           <FormGroup
             label={'Category Name'}
             labelInfo={requiredSpan}
             className={'form-group--category-name'}
             intent={(errors.name && touched.name) && Intent.DANGER}
-            helperText={(<ErrorMessage name="name" {...formik} />)}
+            helperText={(<ErrorMessage name="name" {...{ errors, touched }} />)}
             inline={true}
           >
             <InputGroup
               medium={true}
               intent={(errors.name && touched.name) && Intent.DANGER}
-              {...formik.getFieldProps('name')}
+              {...getFieldProps('name')}
             />
           </FormGroup>
 
@@ -187,7 +199,7 @@ function ItemCategoryDialog({
               Classes.FILL,
             )}
             inline={true}
-            helperText={(<ErrorMessage name="parent_category_id" {...formik} />)}
+            helperText={(<ErrorMessage name="parent_category_id" {...{errors, touched}} />)}
             intent={(errors.parent_category_id && touched.parent_category_id) && Intent.DANGER}
           >
             <Select
@@ -210,20 +222,21 @@ function ItemCategoryDialog({
             label={'Description'}
             className={'form-group--description'}
             intent={(errors.description && touched.description) && Intent.DANGER}
-            helperText={(<ErrorMessage name="description" {...formik} />)}
+            helperText={(<ErrorMessage name="description" {...{errors, touched}} />)}
             inline={true}
           >
             <TextArea
               growVertically={true}
               large={true}
-              {...formik.getFieldProps('description')}
+              {...getFieldProps('description')}
             />
           </FormGroup>
         </div>
+
         <div className={Classes.DIALOG_FOOTER}>
           <div className={Classes.DIALOG_FOOTER_ACTIONS}>
             <Button onClick={handleClose}>Close</Button>
-            <Button intent={Intent.PRIMARY} type='submit'>
+            <Button intent={Intent.PRIMARY} type='submit' disabled={isSubmitting}>
               {payload.action === 'edit' ? 'Edit' : 'Submit'}
             </Button>
           </div>
@@ -238,7 +251,7 @@ const mapStateToProps = (state, props) => {
   const dialogPayload = getDialogPayload(state, 'item-category-form');
 
   return {
-    name: 'account-form',
+    name: 'item-category-form',
     payload: {action: 'new', id: null, ...dialogPayload},
 
     itemCategoryId: dialogPayload?.id || null,
@@ -248,10 +261,12 @@ const mapStateToProps = (state, props) => {
 const withItemCategoryDialog = connect(mapStateToProps);
 
 export default compose( 
+  withItemCategoryDialog,
   DialogConnect,
   DialogReduxConnect,
-  withItemCategoryDialog,
   withItemCategoryDetail,
-  withItemCategories,
+  withItemCategories(({ categoriesList }) => ({
+    categoriesList
+  })),
   withItemCategoriesActions 
 )(ItemCategoryDialog);

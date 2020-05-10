@@ -33,7 +33,10 @@ function AccountsActionsBar({
   openDialog,
   accountsViews,
 
+  // #withResourceDetail
   resourceFields,
+
+  // #withAccountsActions
   addAccountsTableQueries,
 
   selectedRows = [],
@@ -151,7 +154,11 @@ const withAccountsActionsBar = connect(mapStateToProps);
 export default compose(
   withAccountsActionsBar,
   DialogConnect,
-  withAccounts,
-  withResourceDetail,
+  withAccounts(({ accountsViews }) => ({
+    accountsViews,
+  })),
+  withResourceDetail(({ resourceFields }) => ({
+    resourceFields,
+  })),
   withAccountsTableActions,
 )(AccountsActionsBar);

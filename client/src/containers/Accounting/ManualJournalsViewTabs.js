@@ -12,15 +12,26 @@ import { useParams } from 'react-router-dom';
 import Icon from 'components/Icon';
 import { Link } from 'react-router-dom';
 import { compose } from 'utils';
-import ManualJournalsConnect from 'connectors/ManualJournals.connect';
-import DashboardConnect from 'connectors/Dashboard.connector';
+
 import { useUpdateEffect } from 'hooks';
 
+import withManualJournals from './withManualJournals';
+import withManualJournalsActions from './withManualJournalsActions';
+import withDashboard from 'containers/Dashboard/withDashboard';
+
+
 function ManualJournalsViewTabs({
-  views,
-  setTopbarEditView,
-  customViewChanged,
+  // #withManualJournals
+  manualJournalsViews,
+  
+  // #withManualJournalsActions
   addManualJournalsTableQueries,
+
+  // #withDashboard
+  setTopbarEditView,
+
+  // #ownProps
+  customViewChanged,
   onViewChanged,
 }) {
   const history = useHistory();
@@ -49,7 +60,7 @@ function ManualJournalsViewTabs({
     });
   }, [customViewId]);
 
-  const tabs = views.map((view) => {
+  const tabs = manualJournalsViews.map((view) => {
     const baseUrl = '/dashboard/accounting/manual-journals';
     const link = (
       <Link
@@ -91,6 +102,9 @@ function ManualJournalsViewTabs({
 }
 
 export default compose(
-  ManualJournalsConnect,
-  DashboardConnect
+  withManualJournals(({ manualJournalsViews }) => ({
+    manualJournalsViews,
+  })),
+  withManualJournalsActions,
+  withDashboard 
 )(ManualJournalsViewTabs);

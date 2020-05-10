@@ -22,15 +22,17 @@ import { compose } from 'utils';
  * Manual journals table.
  */
 function ManualJournalsTable({
+  // #withDashboardActions
   changePageTitle,
 
+  // #withViewsActions
   requestFetchResourceViews,
 
+  // #withManualJournalsActions
   requestFetchManualJournalsTable,
   requestDeleteManualJournal,
   requestPublishManualJournal,
   requestDeleteBulkManualJournals,
-
   addManualJournalsTableQueries,
 }) {
   const history = useHistory();
@@ -141,8 +143,7 @@ function ManualJournalsTable({
               '/dashboard/accounting/manual-journals/:custom_view_id/custom_view',
               '/dashboard/accounting/manual-journals',
             ]}>
-            <ManualJournalsViewTabs
-              onViewChanged={handleViewChanged} />
+            
           </Route>
         </Switch>
 

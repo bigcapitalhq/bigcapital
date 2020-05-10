@@ -1,18 +1,25 @@
-import React, {useState, useMemo, useCallback} from 'react';
+import React, { useMemo, useCallback } from 'react';
+import { connect } from 'react-redux';
 import FinancialSheet from 'components/FinancialSheet';
 import DataTable from 'components/DataTable';
 import Money from 'components/Money';
-import ProfitLossSheetConnect from 'connectors/ProfitLossSheet.connect';
-import ProfitLossSheetTableConnect from 'connectors/ProfitLossTable.connect';
+
 import { compose, defaultExpanderReducer } from 'utils';
+import {
+  getFinancialSheetIndexByQuery,
+} from 'store/financialStatement/financialStatements.selectors';
+import withProfitLossDetail from './withProfitLoss';
 
 
 function ProfitLossSheetTable({
-  loading,
-  onFetchData,
+  // #withProfitLoss
   profitLossTableRows,
   profitLossQuery,
   profitLossColumns,
+
+  // #ownProps
+  loading,
+  onFetchData,
   companyName,
 }) {
   const columns = useMemo(() => [
@@ -132,7 +139,20 @@ function ProfitLossSheetTable({
   );
 }
 
+const mapStateToProps = (state, props) => ({
+  profitLossIndex: getFinancialSheetIndexByQuery(
+    state.financialStatements.profitLoss.sheets,
+    props.profitLossQuery,
+  ),
+});
+
+const withProfitLossTable = connect(mapStateToProps);
+
 export default compose(
-  ProfitLossSheetConnect,
-  ProfitLossSheetTableConnect,
+  withProfitLossTable,
+  withProfitLossDetail(({ profitLossQuery, profitLossColumns, profitLossTableRows }) => ({
+    profitLossColumns,
+    profitLossQuery,
+    profitLossTableRows,
+  })),
 )(ProfitLossSheetTable);

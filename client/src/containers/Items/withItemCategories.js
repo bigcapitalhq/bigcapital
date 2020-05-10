@@ -1,11 +1,13 @@
 import { connect } from 'react-redux';
 
-
-export const mapStateToProps = (state, props) => {
-  return {
-    categoriesList: Object.values(state.itemCategories.categories),
-    categoriesTableLoading: state.itemCategories.loading,
+export default (mapState) => {
+  const mapStateToProps = (state, props) => {
+    const mapped = {
+      categoriesList: Object.values(state.itemCategories.categories),
+      categoriesTableLoading: state.itemCategories.loading,
+    };
+    return mapState ? mapState(mapped, state, props) : mapState;
   };
+  
+  return connect(mapStateToProps);
 };
-
-export default connect(mapStateToProps);

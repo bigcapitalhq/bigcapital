@@ -1,22 +1,32 @@
 import React, { useEffect, useCallback, useState, useMemo } from 'react';
 import TrialBalanceSheetHeader from "./TrialBalanceSheetHeader";
 import TrialBalanceSheetTable from './TrialBalanceSheetTable';
-import useAsync from 'hooks/async';
+import { useQuery } from 'react-query';
 import moment from 'moment';
 import {compose} from 'utils';
-import TrialBalanceSheetConnect from 'connectors/TrialBalanceSheet.connect';
-import DashboardConnect from 'connectors/Dashboard.connector';
+
+import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
+
 import TrialBalanceActionsBar from './TrialBalanceActionsBar';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
-import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
+
+import withDashboard from 'containers/Dashboard/withDashboard';
+import withTrialBalanceActions from './withTrialBalanceActions';
+import withTrialBalance from './withTrialBalance';
 import SettingsConnect from 'connectors/Settings.connect';
 
+
 function TrialBalanceSheet({
+  // #withDashboard
   changePageTitle,
+
+  // #withTrialBalanceActions
   fetchTrialBalanceSheet,
-  getTrialBalanceSheetIndex,
-  getTrialBalanceAccounts,
+
+  // #withTrialBalance
   trialBalanceSheetLoading,
+
+  // #withPreferences
   organizationSettings,
 }) {
   const [filter, setFilter] = useState({
@@ -26,24 +36,13 @@ function TrialBalanceSheet({
     none_zero: false,
   });
 
-  const fetchHook = useAsync((query = filter) => {
-    return Promise.all([
-      fetchTrialBalanceSheet(query),
-    ]);
-  }, false);
+  const fetchHook = useQuery(['trial-balance', filter],
+    (key, query) => { fetchTrialBalanceSheet(query); });
 
   // handle fetch data of trial balance table.
-  const handleFetchData = useCallback(() => { fetchHook.execute() }, [fetchHook]);
-
-  // Retrieve balance sheet index by the given filter query.
-  const trialBalanceSheetIndex = useMemo(() => 
-    getTrialBalanceSheetIndex(filter),
-    [getTrialBalanceSheetIndex, filter]);
-
-  // Retrieve balance sheet accounts bu the given sheet index.
-  const trialBalanceAccounts = useMemo(() =>
-    getTrialBalanceAccounts(trialBalanceSheetIndex),
-    [getTrialBalanceAccounts, trialBalanceSheetIndex]);
+  const handleFetchData = useCallback(() => {
+    fetchHook.refetch()
+  }, [fetchHook]);
 
   // Change page title of the dashboard.
   useEffect(() => {
@@ -57,8 +56,7 @@ function TrialBalanceSheet({
       to_date: moment(filter.to_date).format('YYYY-MM-DD'),
     };
     setFilter(parsedFilter);
-    fetchHook.execute(parsedFilter);
-  }, [setFilter, fetchHook]);
+  }, [setFilter]);
 
   return (
     <DashboardInsider>
@@ -73,8 +71,7 @@ function TrialBalanceSheet({
           <div class="financial-statement__body">
             <TrialBalanceSheetTable
               companyName={organizationSettings.name}
-              trialBalanceSheetAccounts={trialBalanceAccounts}
-              trialBalanceSheetIndex={trialBalanceSheetIndex}
+              trialBalanceQuery={filter}
               onFetchData={handleFetchData}
               loading={trialBalanceSheetLoading} />
           </div>
@@ -85,7 +82,10 @@ function TrialBalanceSheet({
 }
 
 export default compose(
-  DashboardConnect,
-  TrialBalanceSheetConnect,
+  withDashboard,
+  withTrialBalanceActions,
+  withTrialBalance(({ trialBalanceSheetLoading }) => ({
+    trialBalanceSheetLoading,
+  })),
   SettingsConnect,
 )(TrialBalanceSheet);

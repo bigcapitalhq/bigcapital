@@ -5,12 +5,15 @@ import { Intent, Alert } from '@blueprintjs/core';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import ViewForm from 'containers/Views/ViewForm';
-import withResourcesActions from 'containers/Resources/withResourcesActions';
-import withViewsActions from 'containers/Views/withViewsActions';
-import withDashboard from 'containers/Dashboard/withDashboard';
+
 import AppToaster from 'components/AppToaster';
 import {compose} from 'utils';
 import { If } from 'components';
+
+import withResourcesActions from 'containers/Resources/withResourcesActions';
+import withViewsActions from 'containers/Views/withViewsActions';
+import withDashboard from 'containers/Dashboard/withDashboard';
+
 
 // @flow
 function ViewFormPage({

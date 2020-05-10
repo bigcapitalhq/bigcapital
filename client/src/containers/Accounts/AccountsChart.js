@@ -64,7 +64,8 @@ function AccountsChart({
 
   // Fetch accounts list according to the given custom view id.
   const fetchAccountsHook = useQuery(['accounts-table', accountsTableQuery],
-    () => requestFetchAccountsTable());
+    () => requestFetchAccountsTable(),
+    { refetchInterval: 3000 });
 
   useEffect(() => {
     changePageTitle('Chart of Accounts');
@@ -262,6 +263,7 @@ export default compose(
   withViewsActions,
   withResourceActions,
   withDashboardActions,
-
-  withAccounts,
+  withAccounts(({ accountsTableQuery }) => ({
+    accountsTableQuery,
+  })),
 )(AccountsChart);

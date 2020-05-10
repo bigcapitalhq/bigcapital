@@ -14,10 +14,12 @@ import {
 } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { useRouteMatch, useHistory } from 'react-router-dom';
+import { compose } from 'utils';
+
+import FilterDropdown from 'components/FilterDropdown';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import DialogConnect from 'connectors/Dialog.connector';
-import { compose } from 'utils';
-import FilterDropdown from 'components/FilterDropdown';
+import { If } from 'components';
 
 import withResourceDetail from 'containers/Resources/withResourceDetails';
 import withManualJournals from 'containers/Accounting/withManualJournals';
@@ -25,10 +27,14 @@ import withManualJournalsActions from 'containers/Accounting/withManualJournalsA
 
 
 function ManualJournalActionsBar({
+  // #withResourceDetail
   resourceName = 'manual_journal',
   resourceFields,
 
+  // #withManualJournals
   manualJournalsViews,
+
+  // #withManualJournalsActions
   addManualJournalsTableQueries,
 
   onFilterChanged,
@@ -80,7 +86,9 @@ function ManualJournalActionsBar({
             rightIcon={'caret-down'}
           />
         </Popover>
+
         <NavbarDivider />
+
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon='plus' />}
@@ -99,7 +107,7 @@ function ManualJournalActionsBar({
           />
         </Popover>
 
-        {(hasSelectedRows) && (
+        <If condition={hasSelectedRows}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon='trash' iconSize={15} />}
@@ -107,7 +115,8 @@ function ManualJournalActionsBar({
             intent={Intent.DANGER}
             onClick={handleBulkDelete}
           />
-        )}
+        </If>
+
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon='file-import' />}
@@ -125,7 +134,11 @@ function ManualJournalActionsBar({
 
 export default compose(
   DialogConnect,
-  withResourceDetail,
-  withManualJournals,
+  withResourceDetail(({ resourceFields }) => ({
+    resourceFields,
+  })),
+  withManualJournals(({ manualJournalsViews }) => ({
+    manualJournalsViews,
+  })),
   withManualJournalsActions,
 )(ManualJournalActionsBar);

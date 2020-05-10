@@ -21,14 +21,13 @@ import withDashboardActions from 'containers/Dashboard/withDashboard';
 import withAccountsActions from 'containers/Accounts/withAccountsActions';
 import withAccounts from 'containers/Accounts/withAccounts';
 
-import {If} from 'components';
 
 function AccountsDataTable({
-  // # withAccounts  
+  // #withAccounts  
   accounts,
   accountsLoading,
   
-  // # withDialog.
+  // #withDialog.
   openDialog,
 
   // own properties
@@ -164,9 +163,6 @@ function AccountsDataTable({
 
   return (
     <LoadingIndicator loading={loading} mount={false}>
-      <If condition={loading}>
-        asdasdsadsa
-      </If>
       <DataTable
         noInitialFetch={true}
         columns={columns}
@@ -187,5 +183,8 @@ export default compose(
   DialogConnect,
   withDashboardActions,
   withAccountsActions,
-  withAccounts,
+  withAccounts(({ accountsLoading, accounts }) => ({
+    accountsLoading,
+    accounts,
+  })),
 )(AccountsDataTable);

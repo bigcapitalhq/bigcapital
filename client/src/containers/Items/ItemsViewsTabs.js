@@ -18,6 +18,7 @@ import {useUpdateEffect} from 'hooks';
 import withItemsActions from 'containers/Items/withItemsActions';
 import withDashboard from 'containers/Dashboard/withDashboard';
 import withViewDetail from 'containers/Views/withViewDetails';
+import withItems from 'containers/Items/withItems';
 
 
 function ItemsViewsTabs({
@@ -25,6 +26,7 @@ function ItemsViewsTabs({
   viewId,
   viewItem,
 
+  // #withItems
   itemsViews,
 
   // #withItemsActions
@@ -121,4 +123,7 @@ export default compose(
   withDashboard,
   withItemsActions,
   withViewDetail,
+  withItems( ({ itemsViews }) => ({
+    itemsViews,
+  }))
 )(ItemsViewsTabs);

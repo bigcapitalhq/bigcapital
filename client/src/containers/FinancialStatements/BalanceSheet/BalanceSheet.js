@@ -1,23 +1,34 @@
 import React, {useEffect, useMemo, useCallback, useState} from 'react';
-import DashboardConnect from 'connectors/Dashboard.connector';
+
 import {compose} from 'utils';
-import useAsync from 'hooks/async';
-import BalanceSheetConnect from 'connectors/BalanceSheet.connect';
-import {useIntl} from 'react-intl';
+import { useQuery } from 'react-query';
+import { useIntl } from 'react-intl';
+import moment from 'moment';
+
 import BalanceSheetHeader from './BalanceSheetHeader';
 import BalanceSheetTable from './BalanceSheetTable';
-import moment from 'moment';
+
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import BalanceSheetActionsBar from './BalanceSheetActionsBar';
 import SettingsConnect from 'connectors/Settings.connect';
 
+import withDashboard from 'containers/Dashboard/withDashboard';
+import withBalanceSheetActions from './withBalanceSheetActions';
+import withBalanceSheetDetail from './withBalanceSheetDetail';
+
+
 function BalanceSheet({
-  fetchBalanceSheet,
+  // #withDashboard
   changePageTitle,
-  balanceSheetLoading, 
-  getBalanceSheetIndex,
-  getBalanceSheet,
+
+  // #withBalanceSheetActions
+  fetchBalanceSheet,
+  
+  // #withBalanceSheetDetail
+  balanceSheetLoading,
+
+  // #withPreferences
   organizationSettings
 }) {
   const intl = useIntl();
@@ -30,23 +41,17 @@ function BalanceSheet({
     none_zero: false,
   });
  
-  const fetchHook = useAsync(async (query = filter) => { 
-    await Promise.all([
-      fetchBalanceSheet({ ...query }),
-    ]);
-  }, false);
+  const fetchHook = useQuery(['balance-sheet', filter],
+    (key, query) => { fetchBalanceSheet({ ...query }); });
 
   // Handle fetch the data of balance sheet.
-  const handleFetchData = useCallback(() => { fetchHook.execute(); }, [fetchHook]);
+  const handleFetchData = useCallback(() => {
+    fetchHook.refetch();
+  }, [fetchHook]);
 
   useEffect(() => {
     changePageTitle('Balance Sheet');
   }, []);
-
-  // Retrieve balance sheet index by the given filter query.
-  const balanceSheetIndex = useMemo(() => 
-    getBalanceSheetIndex(filter),
-    [filter, getBalanceSheetIndex]);
 
   // Handle re-fetch balance sheet after filter change.
   const handleFilterSubmit = useCallback((filter) => {
@@ -56,8 +61,7 @@ function BalanceSheet({
       to_date: moment(filter.to_date).format('YYYY-MM-DD'),
     };
     setFilter({ ..._filter });
-    fetchHook.execute(_filter);
-  }, [setFilter, fetchHook]);
+  }, [setFilter]);
 
   return (
     <DashboardInsider>
@@ -73,7 +77,7 @@ function BalanceSheet({
             <BalanceSheetTable
               companyName={organizationSettings.name}
               loading={balanceSheetLoading}
-              balanceSheetIndex={balanceSheetIndex}
+              balanceSheetQuery={filter}
               onFetchData={handleFetchData} />
           </div>
         </div>
@@ -83,7 +87,11 @@ function BalanceSheet({
 }
 
 export default compose(
-  DashboardConnect,
-  BalanceSheetConnect,
+  withDashboard,
+  withBalanceSheetActions,
+  withBalanceSheetDetail(({ balanceSheetLoading }) => ({
+    balanceSheetLoading,
+  })),
+  // BalanceSheetConnect,
   SettingsConnect,
 )(BalanceSheet);

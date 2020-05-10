@@ -24,7 +24,10 @@ export default compose(
   AccountFormDialogConnect,
   withAccountsActions,
   withAccountDetail,
-  withAccounts,
+  withAccounts(({ accountsTypes, accounts }) => ({
+    accountsTypes,
+    accounts,
+  })),
   DialogReduxConnect,
   DialogConnect,
 );

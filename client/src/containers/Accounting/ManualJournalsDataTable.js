@@ -202,6 +202,9 @@ export default compose(
   withDashboardActions,
   // withViewsActions,
   withManualJournalsActions,
-  withManualJournals,
+  withManualJournals(({ manualJournals, manualJournalsLoading, }) => ({
+    manualJournals,
+    manualJournalsLoading,
+  })),
   withViewDetails,
 )(ManualJournalsDataTable);

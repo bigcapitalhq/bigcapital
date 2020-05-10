@@ -15,9 +15,11 @@ import Money from 'components/Money';
 import withItems from 'containers/Items/withItems';
 import LoadingIndicator from 'components/LoadingIndicator';
 
+
 const ItemsDataTable = ({
   loading,
 
+  // #withItems
   itemsTableLoading,
   itemsCurrentPage,
 
@@ -130,5 +132,8 @@ const ItemsDataTable = ({
 };
 
 export default compose(
-  withItems,
+  withItems(({ itemsCurrentPage, itemsTableLoading }) => ({
+    itemsCurrentPage,
+    itemsTableLoading,
+  })),
 )(ItemsDataTable);

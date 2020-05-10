@@ -28,6 +28,7 @@ const ItemsActionsBar = ({
   resourceName = 'items',
   resourceFields,
 
+  // #withItems
   itemsViews,
 
   onFilterChanged,
@@ -128,6 +129,10 @@ const ItemsActionsBar = ({
 
 export default compose(
   DialogConnect,
-  withItems,
-  withResourceDetail,
+  withItems(({ itemsViews }) => ({
+    itemsViews,
+  })),
+  withResourceDetail(({ resourceFields }) => ({
+    resourceFields,
+  })),
 )(ItemsActionsBar);

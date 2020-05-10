@@ -1,18 +1,25 @@
-import React, {useState, useEffect, useCallback, useMemo} from 'react';
+import React, { useCallback, useMemo } from 'react';
+import {connect} from 'react-redux';
+import moment from 'moment';
+
 import FinancialSheet from 'components/FinancialSheet';
 import DataTable from 'components/DataTable';
 import {compose, defaultExpanderReducer} from 'utils';
-import moment from 'moment';
-import JournalConnect from 'connectors/Journal.connect';
-import {
-  getFinancialSheet,
-} from 'store/financialStatement/financialStatements.selectors';
-import {connect} from 'react-redux';
+
 import Money from 'components/Money';
+import {
+  getFinancialSheetIndexByQuery,
+} from 'store/financialStatement/financialStatements.selectors';
+
+import withJournal from './withJournal';
+
 
 function JournalSheetTable({
+  // #withJournal
+  journalSheetTableRows,
+
+  // #ownProps
   onFetchData,
-  data,
   loading,
   companyName,
 }) {
@@ -73,7 +80,7 @@ function JournalSheetTable({
   }, [onFetchData]);
 
   // Default expanded rows of general journal table.
-  const expandedRows = useMemo(() => defaultExpanderReducer(data, 1), [data]);
+  const expandedRows = useMemo(() => defaultExpanderReducer([], 1), []);
 
   return (
     <FinancialSheet
@@ -82,11 +89,11 @@ function JournalSheetTable({
       date={new Date()}
       name="journal"
       loading={loading}>
-      
+ 
       <DataTable
         className="bigcapital-datatable--financial-report"
         columns={columns}
-        data={data}
+        data={journalSheetTableRows}
         onFetchData={handleFetchData}
         noResults={"This report does not contain any data."}
         expanded={expandedRows}
@@ -95,6 +102,19 @@ function JournalSheetTable({
   );
 }
 
+
+const mapStateToProps = (state, props) => {
+  const { journalQuery } = props;
+  return {
+    journalIndex: getFinancialSheetIndexByQuery(state.financialStatements.journal.sheets, journalQuery) 
+  };
+}
+
+const withJournalTable = connect(mapStateToProps);
+
 export default compose(
-  JournalConnect,
+  withJournalTable,
+  withJournal(({ journalSheetTableRows }) => ({
+    journalSheetTableRows
+  })),
 )(JournalSheetTable);

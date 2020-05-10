@@ -1,23 +1,30 @@
-import React, {useMemo, useState, useCallback, useEffect} from 'react';
-import moment from 'moment';
+import React, {useMemo, useCallback } from 'react';
+import { connect } from 'react-redux';
+
 import Money from 'components/Money';
 import FinancialSheet from 'components/FinancialSheet';
 import DataTable from 'components/DataTable';
-import BalanceSheetConnect from 'connectors/BalanceSheet.connect';
-import BalanceSheetTableConnect from 'connectors/BalanceSheetTable.connect';
-import {
-  compose,
-  defaultExpanderReducer,
-} from 'utils';
+
 import SettingsConnect from 'connectors/Settings.connect';
+import withBalanceSheetDetail from './withBalanceSheetDetail';
+import {
+  getFinancialSheetIndexByQuery,
+} from 'store/financialStatement/financialStatements.selectors';
+
+import { compose, defaultExpanderReducer } from 'utils';
+
 
 function BalanceSheetTable({
+  // #withPreferences
   organizationSettings,
+
+  // #withBalanceSheetDetail
   balanceSheetAccounts,
   balanceSheetColumns,
   balanceSheetQuery,
+
+  // #ownProps
   onFetchData,
-  asDate,
   loading,
 }) {
   const columns = useMemo(() => [
@@ -130,8 +137,27 @@ function BalanceSheetTable({
   );
 }
 
+const mapStateToProps = (state, props) => {
+  const { balanceSheetQuery } = props;
+  return {
+    balanceSheetIndex: getFinancialSheetIndexByQuery(
+      state.financialStatements.balanceSheet.sheets,
+      balanceSheetQuery,
+    ),
+  };
+};
+
+const withBalanceSheetTable = connect(mapStateToProps);
+
 export default compose(
-  BalanceSheetConnect,
-  BalanceSheetTableConnect,
+  withBalanceSheetTable,
+  withBalanceSheetDetail(({
+    balanceSheetAccounts,
+    balanceSheetColumns,
+    balanceSheetQuery }) => ({
+      balanceSheetAccounts,
+      balanceSheetColumns,
+      balanceSheetQuery,
+    })),
   SettingsConnect,
 )(BalanceSheetTable);

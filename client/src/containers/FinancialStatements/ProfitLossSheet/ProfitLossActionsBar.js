@@ -3,12 +3,7 @@ import {
   NavbarGroup,
   Button,
   Classes,
-  NavbarHeading,
   NavbarDivider,
-  Intent,
-  Popover,
-  PopoverInteractionKind,
-  Position,
 } from '@blueprintjs/core';
 import Icon from 'components/Icon';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar'

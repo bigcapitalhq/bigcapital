@@ -46,7 +46,6 @@ function MakeJournalEntriesPage({
 }
 
 export default compose(
-  // DashboardConnect,
   withAccountsActions,
   withManualJournalsActions,
 )(MakeJournalEntriesPage);

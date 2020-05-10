@@ -23,16 +23,20 @@ import withDashboard from 'containers/Dashboard/withDashboard';
 
 
 const ItemsCategoryActionsBar = ({
+  // #withResourceDetail
   resourceName = 'item_category',
   resourceFields,
-
+  
+  // #withDialog
   openDialog,
+
+  // #ownProps
   onDeleteCategory,
   onFilterChanged,
   selectedRows,
 }) => {
   const onClickNewCategory = useCallback(() => {
-    openDialog('item-form', {});
+    openDialog('item-category-form', {});
   }, [openDialog]);
 
   const handleDeleteCategory = useCallback((category) => {
@@ -104,5 +108,7 @@ export default compose(
   withItemsCategoriesActionsBar,
   DialogConnect,
   withDashboard,
-  withResourceDetail 
+  withResourceDetail(({ resourceFields }) => ({
+    resourceFields,
+  })) 
 )(ItemsCategoryActionsBar);
