@@ -2,9 +2,7 @@ import { createReducer } from '@reduxjs/toolkit';
 import t from 'store/types';
 
 const initialState = {
-  preferences: {
-    currencies: [],
-  },
+  data: {},
 };
 
 export default createReducer(initialState, {
@@ -14,8 +12,8 @@ export default createReducer(initialState, {
     action.currencies.forEach((currency) => {
       _currencies[currency.currency_code] = currency;
     });
-    state.preferences.currencies = {
-      ...state.preferences.currencies,
+    state.data = {
+      ...state.data,
       ..._currencies,
     };
   },

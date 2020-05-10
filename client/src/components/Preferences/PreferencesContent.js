@@ -1,8 +1,10 @@
 import React from 'react';
+
 import PreferencesTopbar from 'components/Preferences/PreferencesTopbar';
 import PreferencesContentRoute from 'components/Preferences/PreferencesContentRoute';
 
-export default function () {
+
+export default function PreferencesContent() {
   return (
     <div className='dashboard-content dashboard-content--preferences'>
       <PreferencesTopbar pageTitle={'asdad'} />

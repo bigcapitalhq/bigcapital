@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback } from 'react';
-import { useAsync } from 'react-use';
+import { useQuery } from 'react-query';
 import DataTable from 'components/DataTable';
 import {
   Alert,
@@ -11,30 +11,42 @@ import {
   Position,
   Intent,
 } from '@blueprintjs/core';
+import { snakeCase } from 'lodash';
+
 import Icon from 'components/Icon';
 import LoadingIndicator from 'components/LoadingIndicator';
-import { snakeCase } from 'lodash';
-import UserListConnect from 'connectors/UsersList.connector';
+
 import AppToaster from 'components/AppToaster';
-import { compose } from 'utils';
+
 import DialogConnect from 'connectors/Dialog.connector';
-import DashboardConnect from 'connectors/Dashboard.connector';
+import withDashboard from 'containers/Dashboard/withDashboard';
+import withUsers from 'containers/Users/withUsers';
+import withUsersActions from 'containers/Users/withUsersActions';
+
+import { compose } from 'utils';
+
 
 function UsersListPreferences({
-  requestFetchUsers,
-  usersList,
+  // #withDialog
   openDialog,
   closeDialog,
+
+  // #withUsers  
+  usersList,
+  
+  // #withUsersActions
   requestDeleteUser,
   requestInactiveUser,
+  requestFetchUsers,
+
+  // #ownProps
   onFetchData,
 }) {
   const [deleteUserState, setDeleteUserState] = useState(false);
   const [inactiveUserState, setInactiveUserState] = useState(false);
 
-  const asyncHook = useAsync(async () => {
-    await Promise.all([requestFetchUsers()]);
-  }, []);
+  const fetchUsers = useQuery('users-table', 
+    () => requestFetchUsers());
 
   const onInactiveUser = (user) => {
     setInactiveUserState(user);
@@ -49,7 +61,6 @@ function UsersListPreferences({
   const handleConfirmUserActive = useCallback(() => {
     requestInactiveUser(inactiveUserState.id).then(() => {
       setInactiveUserState(false);
-      requestFetchUsers();
       AppToaster.show({ message: 'the_user_has_been_inactivated' });
     });
   }, [inactiveUserState, requestInactiveUser, requestFetchUsers]);
@@ -105,50 +116,47 @@ function UsersListPreferences({
     []
   );
 
-  const columns = useMemo(
-    () => [
-      {
-        id: 'full_name',
-        Header: 'Full Name',
-        accessor: 'full_name',
-        width: 170,
-      },
-      {
-        id: 'email',
-        Header: 'Email',
-        accessor: 'email',
-        width: 150,
-      },
-      {
-        id: 'phone_number',
-        Header: 'Phone Number',
-        accessor: 'phone_number',
-        width: 150,
-      },
-      {
-        id: 'active',
-        Header: 'Status',
-        accessor: (user) =>
-          user.active ? <span>Active</span> : <span>Inactivate</span>,
-        width: 50,
-      },
-      {
-        id: 'actions',
-        Header: '',
-        Cell: ({ cell }) => (
-          <Popover
-            content={actionMenuList(cell.row.original)}
-            position={Position.RIGHT_TOP}
-          >
-            <Button icon={<Icon icon='ellipsis-h' />} />
-          </Popover>
-        ),
-        className: 'actions',
-        width: 50,
-      },
-    ],
-    [actionMenuList]
-  );
+  const columns = useMemo(() => [
+    {
+      id: 'full_name',
+      Header: 'Full Name',
+      accessor: 'full_name',
+      width: 170,
+    },
+    {
+      id: 'email',
+      Header: 'Email',
+      accessor: 'email',
+      width: 150,
+    },
+    {
+      id: 'phone_number',
+      Header: 'Phone Number',
+      accessor: 'phone_number',
+      width: 150,
+    },
+    {
+      id: 'active',
+      Header: 'Status',
+      accessor: (user) =>
+        user.active ? <span>Active</span> : <span>Inactivate</span>,
+      width: 50,
+    },
+    {
+      id: 'actions',
+      Header: '',
+      Cell: ({ cell }) => (
+        <Popover
+          content={actionMenuList(cell.row.original)}
+          position={Position.RIGHT_TOP}
+        >
+          <Button icon={<Icon icon='ellipsis-h' />} />
+        </Popover>
+      ),
+      className: 'actions',
+      width: 50,
+    },
+  ], [actionMenuList]);
 
   const handelDataTableFetchData = useCallback(() => {
     onFetchData && onFetchData();
@@ -160,6 +168,7 @@ function UsersListPreferences({
         columns={columns}
         data={usersList}
         onFetchData={handelDataTableFetchData()}
+        loading={fetchUsers.isFetching}
         manualSortBy={true}
         expandable={false}
       />
@@ -198,7 +207,8 @@ function UsersListPreferences({
 }
 
 export default compose(
-  UserListConnect,
   DialogConnect,
-  DashboardConnect
+  withDashboard,
+  withUsers,
+  withUsersActions,
 )(UsersListPreferences);

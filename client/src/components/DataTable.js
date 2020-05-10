@@ -13,6 +13,7 @@ import classnames from 'classnames';
 import { FixedSizeList } from 'react-window'
 import { ConditionalWrapper } from 'utils';
 import { useUpdateEffect } from 'hooks';
+import { If } from 'components';
 
 const IndeterminateCheckbox = React.forwardRef(
   ({ indeterminate, ...rest }, ref) => {
@@ -257,16 +258,19 @@ export default function DataTable({
           ))}
         </div>
         <div {...getTableBodyProps()} className="tbody">
-          { !loading && RenderTBody() }
-
-          { !loading && (page.length === 0) && (
+          <If condition={!loading}>
+            { RenderTBody() }
+          </If>
+          
+          <If condition={!loading && (page.length === 0)}>
             <div className={'tr no-results'}>
               <div class="td">{ noResults }</div>
             </div>
-          )}
-          { loading && (
+          </If>
+
+          <If condition={loading}>
             <div class="loading"><Spinner size={spinnerProps.size} /></div>
-          ) }
+          </If>
         </div>
       </div>
     </div>

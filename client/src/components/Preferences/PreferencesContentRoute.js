@@ -2,6 +2,7 @@ import React from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import preferencesRoutes from 'routes/preferences'
 
+
 export default function DashboardContentRoute() {
   const defaultTab = '/dashboard/preferences/general';
 

@@ -1,20 +1,19 @@
-import AccountsCustomFields from "containers/Preferences/AccountsCustomFields";
-import UsersList from 'containers/Preferences/UsersList';
-import RolesList from 'containers/Preferences/RolesList';
+// import AccountsCustomFields from "containers/Preferences/AccountsCustomFields";
+import UsersList from 'containers/Preferences/Users/UsersList';
+import RolesList from 'containers/Preferences/Users/RolesList';
 
 export default {
   accounts: [
-    {
-      path: '',
-      component: AccountsCustomFields,
-      exact: true,
-    },
-    {
-      name: 'dashboard.preferences.accounts.custom_fields',
-      path: 'custom_fields',
-      component: AccountsCustomFields,
-      exact: true,
-    },
+    // {
+    //   path: '',
+    //   component: AccountsCustomFields,
+    //   exact: true,
+    // },
+    // {
+    //   path: 'custom_fields',
+    //   component: AccountsCustomFields,
+    //   exact: true,
+    // },
   ],
   users: [
     {
@@ -23,7 +22,6 @@ export default {
       exact: true,
     },
     {
-      name: 'dashboard.preferences.users.roles',
       path: '/roles',
       component: RolesList,
       exact: true,

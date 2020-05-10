@@ -9,26 +9,35 @@ import {
   MenuItem,
   Classes,
 } from '@blueprintjs/core';
-
-import { optionsMapToArray, momentFormatter, optionsArrayToMap } from 'utils';
+import classNames from 'classnames';
 import { TimezonePicker } from '@blueprintjs/timezone';
 import { Select } from '@blueprintjs/select';
-import classNames from 'classnames';
-import ErrorMessage from 'components/ErrorMessage';
-import Icon from 'components/Icon';
-import { compose } from 'utils';
-import SettingsConnect from 'connectors/Settings.connect';
-import AppToaster from 'components/AppToaster';
 import { useIntl } from 'react-intl';
-import useAsync from 'hooks/async';
+import { useQuery } from 'react-query';
+
+import { compose, optionsMapToArray } from 'utils';
+
+import ErrorMessage from 'components/ErrorMessage';
+import AppToaster from 'components/AppToaster';
+
+import withSettings from 'containers/Settings/withSettings';
+import withSettingsActions from 'containers/Settings/withSettingsActions';
+
 
 function GeneralPreferences({
+  // #withSettings
   organizationSettings,
+
+  // #withSettingsActions
   requestSubmitOptions,
   requestFetchOptions,
 }) {
+  const intl = useIntl();
   const [selectedItems, setSelectedItems] = useState({});
   const [timeZone, setTimeZone] = useState('');
+
+  const fetchHook = useQuery(['settings'],
+    () => { requestFetchOptions(); });
 
   const businessLocation = [
     { id: 218, name: 'LIBYA', code: 'LY' },
@@ -55,8 +64,6 @@ function GeneralPreferences({
     { id: 6, name: 'Saturday, Apr 11, 2020', format: 'EEEE, MMM d, yyyy' },
   ];
 
-  const intl = useIntl();
-
   const validationSchema = Yup.object().shape({
     name: Yup.string().required(intl.formatMessage({ id: 'required' })),
     industry: Yup.string().required(intl.formatMessage({ id: 'required' })),
@@ -69,15 +76,22 @@ function GeneralPreferences({
     // time_zone: Yup.object().required(intl.formatMessage({ id: 'required' })),
     date_format: Yup.date().required(intl.formatMessage({ id: 'required' })),
   });
-  console.log(organizationSettings.name);
 
-  const formik = useFormik({
+  const {
+    errors,
+    values,
+    touched,
+    isSubmitting,
+    setFieldValue,
+    getFieldProps,
+    handleSubmit,
+    resetForm,
+  } = useFormik({
     enableReinitialize: true,
     initialValues: {
       ...organizationSettings,
     },
-    validationSchema: validationSchema,
-
+    validationSchema,
     onSubmit: (values, { setSubmitting }) => {
       const options = optionsMapToArray(values).map((option) => {
         return { key: option.key, ...option, group: 'organization' };
@@ -94,12 +108,6 @@ function GeneralPreferences({
           setSubmitting(false);
         });
     },
-  });
-
-  const { errors, values, touched } = useMemo(() => formik, [formik]);
-
-  const fetchHook = useAsync(async () => {
-    await Promise.all([requestFetchOptions()]);
   });
 
   const businessLocationItem = (item, { handleClick }) => (
@@ -156,7 +164,7 @@ function GeneralPreferences({
         ...selectedItems,
         [filedName]: filed,
       });
-      formik.setFieldValue(filedName, filed.name);
+      setFieldValue(filedName, filed.name);
     };
   };
 
@@ -170,30 +178,30 @@ function GeneralPreferences({
 
   return (
     <div className='preferences__inside-content--general'>
-      <form onSubmit={formik.handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <FormGroup
           label={'Organization Name'}
           inline={true}
-          intent={errors.name && touched.name && Intent.DANGER}
-          helperText={<ErrorMessage name='name' {...formik} />}
+          intent={(errors.name && touched.name) && Intent.DANGER}
+          helperText={<ErrorMessage name='name' {...{errors, touched}} />}
         >
           <InputGroup
             medium={'true'}
-            intent={errors.name && touched.name && Intent.DANGER}
-            {...formik.getFieldProps('name')}
+            intent={(errors.name && touched.name) && Intent.DANGER}
+            {...getFieldProps('name')}
           />
         </FormGroup>
 
         <FormGroup
           label={'Organization Industry'}
           inline={true}
-          intent={errors.industry && touched.industry && Intent.DANGER}
-          helperText={<ErrorMessage name='industry' {...formik} />}
+          intent={(errors.industry && touched.industry) && Intent.DANGER}
+          helperText={<ErrorMessage name='industry' {...{errors, touched}} />}
         >
           <InputGroup
             medium={'true'}
-            intent={errors.industry && touched.industry && Intent.DANGER}
-            {...formik.getFieldProps('industry')}
+            intent={(errors.industry && touched.industry) && Intent.DANGER}
+            {...getFieldProps('industry')}
           />
         </FormGroup>
 
@@ -205,8 +213,8 @@ function GeneralPreferences({
             Classes.FILL
           )}
           inline={true}
-          helperText={<ErrorMessage name='location' {...formik} />}
-          intent={errors.location && touched.location && Intent.DANGER}
+          helperText={<ErrorMessage name='location' {...{errors, touched}} />}
+          intent={(errors.location && touched.location) && Intent.DANGER}
         >
           <Select
             items={businessLocation}
@@ -234,10 +242,8 @@ function GeneralPreferences({
             Classes.FILL
           )}
           inline={true}
-          helperText={<ErrorMessage name='base_currency' {...formik} />}
-          intent={
-            errors.base_currency && touched.base_currency && Intent.DANGER
-          }
+          helperText={<ErrorMessage name='base_currency' {...{ errors, touched }} />}
+          intent={(errors.base_currency && touched.base_currency) && Intent.DANGER}
         >
           <Select
             items={currencies}
@@ -265,8 +271,8 @@ function GeneralPreferences({
             Classes.FILL
           )}
           inline={true}
-          helperText={<ErrorMessage name='fiscal_year' {...formik} />}
-          intent={errors.fiscal_year && touched.fiscal_year && Intent.DANGER}
+          helperText={<ErrorMessage name='fiscal_year' {...{errors, touched}} />}
+          intent={(errors.fiscal_year && touched.fiscal_year) && Intent.DANGER}
         >
           <Select
             items={fiscalYear}
@@ -294,8 +300,8 @@ function GeneralPreferences({
             'form-group--select-list',
             Classes.FILL
           )}
-          intent={errors.language && touched.language && Intent.DANGER}
-          helperText={<ErrorMessage name='language' {...formik} />}
+          intent={(errors.language && touched.language) && Intent.DANGER}
+          helperText={<ErrorMessage name='language' {...{errors, touched}} />}
         >
           <Select
             items={languagesDisplay}
@@ -321,8 +327,8 @@ function GeneralPreferences({
             'form-group--select-list',
             Classes.FILL
           )}
-          intent={errors.time_zone && touched.time_zone && Intent.DANGER}
-          helperText={<ErrorMessage name='time_zone' {...formik} />}
+          intent={(errors.time_zone && touched.time_zone) && Intent.DANGER}
+          helperText={<ErrorMessage name='time_zone' {...{errors, touched}} />}
         >
           <TimezonePicker
             value={timeZone}
@@ -339,8 +345,8 @@ function GeneralPreferences({
             'form-group--select-list',
             Classes.FILL
           )}
-          intent={errors.date_format && touched.date_format && Intent.DANGER}
-          helperText={<ErrorMessage name='date_format' {...formik} />}
+          intent={(errors.date_format && touched.date_format) && Intent.DANGER}
+          helperText={<ErrorMessage name='date_format' {...{errors, touched}} />}
         >
           <Select
             items={dateFormat}
@@ -374,4 +380,7 @@ function GeneralPreferences({
   );
 }
 
-export default compose(SettingsConnect)(GeneralPreferences);
+export default compose(
+  withSettings,
+  withSettingsActions,
+)(GeneralPreferences);

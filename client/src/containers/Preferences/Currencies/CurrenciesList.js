@@ -4,41 +4,53 @@ import {
   Popover,
   Menu,
   MenuItem,
-  MenuDivider,
   Position,
-  Classes,
-  Tooltip,
   Alert,
   Intent,
 } from '@blueprintjs/core';
+import { useQuery } from 'react-query';
+
 import Icon from 'components/Icon';
-import { snakeCase } from 'lodash';
 import { compose } from 'utils';
-import CurrencyFromDialogConnect from 'connectors/CurrencyFromDialog.connect';
 import DialogConnect from 'connectors/Dialog.connector';
-import DashboardConnect from 'connectors/Dashboard.connector';
+
 import LoadingIndicator from 'components/LoadingIndicator';
 import DataTable from 'components/DataTable';
 import AppToaster from 'components/AppToaster';
 
+import withDashboard from 'connectors/Dashboard.connector';
+import withCurrencies from 'containers/Currencies/withCurrencies';
+import withCurrenciesActions from 'containers/Currencies/withCurrenciesActions';
+
+
 function CurrenciesList({
-  currencies,
+  // #withCurrencies
+  currenciesList,
+
+  // #withCurrenciesActions
+  requestDeleteCurrency,
+  requestFetchCurrencies,
+
+  // #withDialog
   openDialog,
   onFetchData,
-  requestDeleteCurrency,
 }) {
   const [deleteCurrencyState, setDeleteCurrencyState] = useState(false);
 
-  const handleEditCurrency = (currency) => () => {
+  const fetchCurrencies = useQuery(['currencies-table'],
+    () => requestFetchCurrencies());
+
+  const handleEditCurrency = (currency) => {
     openDialog('currency-form', {
       action: 'edit',
-      currency_code: currency.currency_code,
+      currencyCode: currency.currency_code,
     });
   };
 
   const onDeleteCurrency = (currency) => {
     setDeleteCurrencyState(currency);
   };
+
   const handleCancelCurrencyDelete = () => {
     setDeleteCurrencyState(false);
   };
@@ -54,56 +66,51 @@ function CurrenciesList({
     );
   }, [deleteCurrencyState]);
 
-  const actionMenuList = useCallback(
-    (currency) => (
-      <Menu>
-        <MenuItem text='Edit Currency' onClick={handleEditCurrency(currency)} />
+  const actionMenuList = useCallback((currency) => (
+    <Menu>
+      <MenuItem
+        text='Edit Currency'
+        onClick={() => handleEditCurrency(currency)} />
 
-        <MenuItem
-          text='Delete Currency'
-          onClick={() => onDeleteCurrency(currency)}
-        />
-      </Menu>
-    ),
-    []
-  );
+      <MenuItem
+        text='Delete Currency'
+        onClick={() => onDeleteCurrency(currency)}
+      />
+    </Menu>
+  ), []);
 
-  const columns = useMemo(
-    () => [
-      {
-        id: 'currency_name',
-        Header: 'Currency Name',
-        accessor: 'currency_name',
-        width: 100,
-      },
-      {
-        id: 'currency_code',
-        Header: 'Currency Code',
-        accessor: 'currency_code',
-        className: 'currency_code',
-        width: 100,
-      },
-      {
-        Header: 'Currency sign',
-        width: 50,
-      },
-      {
-        id: 'actions',
-        Header: '',
-        Cell: ({ cell }) => (
-          <Popover
-            content={actionMenuList(cell.row.original)}
-            position={Position.RIGHT_TOP}
-          >
-            <Button icon={<Icon icon='ellipsis-h' />} />
-          </Popover>
-        ),
-        className: 'actions',
-        width: 50,
-      },
-    ],
-    [actionMenuList]
-  );
+  const columns = useMemo(() => [
+    {
+      Header: 'Currency Name',
+      accessor: 'currency_name',
+      width: 100,
+    },
+    {
+      Header: 'Currency Code',
+      accessor: 'currency_code',
+      className: 'currency_code',
+      width: 100,
+    },
+    {
+      Header: 'Currency sign',
+      width: 50,
+    },
+    {
+      id: 'actions',
+      Header: '',
+      Cell: ({ cell }) => (
+        <Popover
+          content={actionMenuList(cell.row.original)}
+          position={Position.RIGHT_TOP}
+        >
+          <Button icon={<Icon icon='ellipsis-h' />} />
+        </Popover>
+      ),
+      className: 'actions',
+      width: 50,
+    },
+  ], [actionMenuList]);
+
   const handleDatatableFetchData = useCallback(() => {
     onFetchData && onFetchData();
   }, []);
@@ -112,9 +119,9 @@ function CurrenciesList({
     <LoadingIndicator>
       <DataTable
         columns={columns}
-        data={Object.values(currencies)}
-        onFetchData={handleDatatableFetchData()}
-        selectionColumn={true}
+        data={currenciesList}
+        loading={fetchCurrencies.isFetching}
+        selectionColumn={false}
       />
 
       <Alert
@@ -136,7 +143,10 @@ function CurrenciesList({
 }
 
 export default compose(
-  CurrencyFromDialogConnect,
+  withCurrencies(({ currenciesList }) => ({
+    currenciesList,
+  })),
+  withCurrenciesActions,
   DialogConnect,
-  DashboardConnect
+  withDashboard
 )(CurrenciesList);

@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import {
   Button,
   Classes,
@@ -9,26 +9,40 @@ import {
 import * as Yup from 'yup';
 import { useIntl } from 'react-intl';
 import { useFormik } from 'formik';
+import { useQuery } from 'react-query';
+import { connect } from 'react-redux';
+
 import { compose } from 'utils';
 import Dialog from 'components/Dialog';
-import useAsync from 'hooks/async';
+
 import AppToaster from 'components/AppToaster';
 import DialogConnect from 'connectors/Dialog.connector';
 import DialogReduxConnect from 'components/DialogReduxConnect';
-import CurrencyFromDialogConnect from 'connectors/CurrencyFromDialog.connect';
+import withCurrency from 'containers/Currencies/withCurrency';
+import withCurrenciesActions from 'containers/Currencies/withCurrenciesActions';
+
 import ErrorMessage from 'components/ErrorMessage';
 import classNames from 'classnames';
 import { pick } from 'lodash';
+import { getDialogPayload } from 'store/dashboard/dashboard.reducer';
+
 
 function CurrencyDialog({
   name,
   payload,
   isOpen,
+
+  // #withDialog
   closeDialog,
+
+  // #withCurrency
+  currencyCode,
+  currency,
+
+  // #wihtCurrenciesActions
   requestFetchCurrencies,
   requestSubmitCurrencies,
   requestEditCurrency,
-  editCurrency,
 }) {
   const intl = useIntl();
 
@@ -40,70 +54,72 @@ function CurrencyDialog({
       .max(4)
       .required(intl.formatMessage({ id: 'required' })),
   });
-  const initialValues = useMemo(
-    () => ({
-      currency_name: '',
-      currency_code: '',
-    }),
-    []
-  );
+  const initialValues = useMemo(() => ({
+    currency_name: '',
+    currency_code: '',
+  }), []);
 
-  const formik = useFormik({
+  const {
+    values, 
+    errors,
+    touched,
+    setFieldValue,
+    getFieldProps,
+    isSubmitting,
+    handleSubmit,
+    resetForm,
+  } = useFormik({
     enableReinitialize: true,
-
     initialValues: {
       ...(payload.action === 'edit' &&
-        pick(editCurrency, Object.keys(initialValues))),
+        pick(currency, Object.keys(initialValues))),
     },
-
     validationSchema: ValidationSchema,
     onSubmit: (values, { setSubmitting }) => {
       if (payload.action === 'edit') {
-        requestEditCurrency(editCurrency.id, values)
-          .then((response) => {
-            closeDialog(name);
-            AppToaster.show({
-              message: 'the_currency_has_been_edited',
-            });
-            setSubmitting(false);
-          })
-          .catch((error) => {
-            setSubmitting(false);
+        requestEditCurrency(currency.id, values).then((response) => {
+          closeDialog(name);
+          AppToaster.show({
+            message: 'the_currency_has_been_edited',
+            intent: Intent.SUCCESS,
           });
+          setSubmitting(false);
+        })
+        .catch((error) => {
+          setSubmitting(false);
+        });
       } else {
-        requestSubmitCurrencies(values)
-          .then((response) => {
-            closeDialog(name);
-            AppToaster.show({
-              message: 'the_currency_has_been_submit',
-            });
-            setSubmitting(false);
-          })
-          .catch((error) => {
-            setSubmitting(false);
+        requestSubmitCurrencies(values).then((response) => {
+          closeDialog(name);
+          AppToaster.show({
+            message: 'the_currency_has_been_submit',
+            intent: Intent.SUCCESS,
           });
+          setSubmitting(false);
+        })
+        .catch((error) => {
+          setSubmitting(false);
+        });
       }
     },
   });
-
-  const { values, errors, touched } = useMemo(() => formik, [formik]);
 
   const handleClose = useCallback(() => {
     closeDialog(name);
   }, [name, closeDialog]);
 
-  const fetchHook = useAsync(async () => {
-    await Promise.all([requestFetchCurrencies()]);
-  });
+  const fetchCurrencies = useQuery('currencies',
+    () => { requestFetchCurrencies(); },
+    { manual: true });
 
   const onDialogOpening = useCallback(() => {
-    fetchHook.execute();
-  }, [fetchHook]);
+    fetchCurrencies.refetch();
+  }, [fetchCurrencies]);
 
   const onDialogClosed = useCallback(() => {
-    formik.resetForm();
+    resetForm();
     closeDialog(name);
-  }, [formik, closeDialog, name]);
+  }, [closeDialog, name]);
 
   const requiredSpan = useMemo(() => <span className={'required'}>*</span>, []);
 
@@ -113,59 +129,53 @@ function CurrencyDialog({
       title={payload.action === 'edit' ? 'Edit Currency' : ' New Currency'}
       className={classNames(
         {
-          'dialog--loading': fetchHook.pending,
+          'dialog--loading': fetchCurrencies.isFetching,
         },
         'dialog--currency-form'
       )}
       isOpen={isOpen}
       onClosed={onDialogClosed}
       onOpening={onDialogOpening}
-      isLoading={fetchHook.pending}
+      isLoading={fetchCurrencies.isFetching}
       onClose={handleClose}
     >
-      <form onSubmit={formik.handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <div className={Classes.DIALOG_BODY}>
           <FormGroup
             label={'Currency Name'}
             labelInfo={requiredSpan}
             className={'form-group--currency-name'}
-            intent={
-              errors.currency_name && touched.currency_name && Intent.DANGER
-            }
-            helperText={<ErrorMessage name='currency_name' {...formik} />}
+            intent={(errors.currency_name && touched.currency_name) && Intent.DANGER}
+            helperText={<ErrorMessage name='currency_name' {...{errors, touched}} />}
             inline={true}
           >
             <InputGroup
               medium={true}
-              intent={
-                errors.currency_name && touched.currency_name && Intent.DANGER
-              }
-              {...formik.getFieldProps('currency_name')}
+              intent={(errors.currency_name && touched.currency_name) && Intent.DANGER}
+              {...getFieldProps('currency_name')}
             />
           </FormGroup>
+
           <FormGroup
             label={'Currency Code'}
             labelInfo={requiredSpan}
             className={'form-group--currency-code'}
-            intent={
-              errors.currency_code && touched.currency_code && Intent.DANGER
-            }
-            helperText={<ErrorMessage name='currency_code' {...formik} />}
+            intent={(errors.currency_code && touched.currency_code) && Intent.DANGER}
+            helperText={<ErrorMessage name='currency_code' {...{errors, touched}} />}
             inline={true}
           >
             <InputGroup
               medium={true}
-              intent={
-                errors.currency_code && touched.currency_code && Intent.DANGER
-              }
-              {...formik.getFieldProps('currency_code')}
+              intent={(errors.currency_code && touched.currency_code) && Intent.DANGER}
+              {...getFieldProps('currency_code')}
             />
           </FormGroup>
         </div>
+
         <div className={Classes.DIALOG_FOOTER}>
           <div className={Classes.DIALOG_FOOTER_ACTIONS}>
             <Button onClick={handleClose}>Close</Button>
-            <Button intent={Intent.PRIMARY} type='submit'>
+            <Button intent={Intent.PRIMARY} type='submit' disabled={isSubmitting}>
               {payload.action === 'edit' ? 'Edit' : 'Submit'}
             </Button>
           </div>
@@ -175,8 +185,22 @@ function CurrencyDialog({
   );
 }
 
+const mapStateToProps = (state, props) => {
+  const dialogPayload = getDialogPayload(state, 'currency-form');
+
+  return {
+    name: 'currency-form',
+    payload: { action: 'new', currencyCode: null, ...dialogPayload },
+    currencyCode: dialogPayload?.currencyCode || null,
+  }
+}
+
+const withCurrencyFormDialog = connect(mapStateToProps);
+
 export default compose(
-  CurrencyFromDialogConnect,
+  withCurrencyFormDialog,
   DialogConnect,
-  DialogReduxConnect
+  DialogReduxConnect,
+  withCurrenciesActions,
+  withCurrency,
 )(CurrencyDialog);
