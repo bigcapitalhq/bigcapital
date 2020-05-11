@@ -1,41 +1,40 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo,useState } from 'react';
 import Icon from 'components/Icon';
 import DialogConnect from 'connectors/Dialog.connector';
 import LoadingIndicator from 'components/LoadingIndicator';
 import DataTable from 'components/DataTable';
 import { Button, Popover, Menu, MenuItem, Position } from '@blueprintjs/core';
 
-import withExchangeRates from 'containers/FinancialStatements/ExchangeRates/withExchangeRates';
 import withExchangeRatesActions from 'containers/FinancialStatements/ExchangeRates/withExchangeRatesActions';
+import withExchangeRates from 'containers/FinancialStatements/ExchangeRates/withExchangeRates';
 
 import { compose } from 'utils';
 
 import { FormattedMessage as T, useIntl } from 'react-intl';
 
 function ExchangeRateTable({
+  // #withExchangeRates
   exchangeRatesList,
-  onFetchData,
+  exchangeRatesLoading,
+  // #withDialog.
   openDialog,
+
+  // own properties
+  loading,
+  onFetchData,
   onDeleteExchangeRate,
   onEditExchangeRate,
   onSelectedRowsChange,
 }) {
 
-  const {formatMessage} = useIntl();
-
+  const [initialMount, setInitialMount] = useState(false);
+  const { formatMessage } = useIntl();
 
   const handelEditExchangeRate = (exchange_rate) => () => {
     openDialog('exchangeRate-form', { action: 'edit', id: exchange_rate.id });
     onEditExchangeRate(exchange_rate.id);
   };
 
-  // const handelEditExchangeRate = useCallback(
-  //   (exchange_rate) => () => {
-  //     openDialog('exchangeRate-form', { action: 'edit', id: exchange_rate.id });
-  //     onEditExchangeRate(exchange_rate.id);
-  //   },
-  //   [openDialog]
-  // );
 
   const handleDeleteExchangeRate = (exchange_rate) => () => {
     onDeleteExchangeRate(exchange_rate);
@@ -45,36 +44,36 @@ function ExchangeRateTable({
     (ExchangeRate) => (
       <Menu>
         <MenuItem
-          text={<T id={'edit_exchange_rate'}/>}
+          text={<T id={'edit_exchange_rate'} />}
           onClick={handelEditExchangeRate(ExchangeRate)}
         />
         <MenuItem
-          text={<T id={'delete_exchange_rate'}/>}
+          text={<T id={'delete_exchange_rate'} />}
           onClick={handleDeleteExchangeRate(ExchangeRate)}
         />
       </Menu>
     ),
-    []
+    [handelEditExchangeRate, handleDeleteExchangeRate]
   );
 
   const columns = useMemo(
     () => [
       {
         id: 'date',
-        Header: formatMessage({id:'date'}),
+        Header: formatMessage({ id: 'date' }),
         // accessor: 'date',
         width: 150,
       },
       {
         id: 'currency_code',
-        Header: formatMessage({id:'currency_code'}),
+        Header: formatMessage({ id: 'currency_code' }),
         accessor: 'currency_code',
         className: 'currency_code',
         width: 150,
       },
       {
         id: 'exchange_rate',
-        Header: formatMessage({id:'exchange_rate'}),
+        Header: formatMessage({ id: 'exchange_rate' }),
         accessor: 'exchange_rate',
         className: 'exchange_rate',
         width: 150,
@@ -126,6 +125,7 @@ function ExchangeRateTable({
       columns={columns}
       data={exchangeRatesList}
       onFetchData={handelFetchData}
+      loading={exchangeRatesLoading && !initialMount}
       manualSortBy={true}
       selectionColumn={selectionColumn}
       expandable={true}
@@ -139,5 +139,8 @@ function ExchangeRateTable({
 export default compose(
   DialogConnect,
   withExchangeRatesActions,
-  withExchangeRates
+  withExchangeRates(({ exchangeRatesList ,exchangeRatesLoading }) => ({
+    exchangeRatesList,
+    exchangeRatesLoading
+  }))
 )(ExchangeRateTable);

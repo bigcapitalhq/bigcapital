@@ -1,8 +1,14 @@
 import { connect } from 'react-redux';
 import { getResourceViews } from 'store/customViews/customViews.selectors';
 
-const mapStateToProps = (state, props) => ({
-  exchangeRatesList: Object.values(state.exchangeRates.exchangeRates),
-});
+export default (mapState) => {
+  const mapStateToProps = (state, props) => {
+    const mapped = {
+      exchangeRatesList: Object.values(state.exchangeRates.exchangeRates),
+      exchangeRatesLoading: state.exchangeRates.loading,
+    };
+    return mapState ? mapState(mapped, state, props) : mapped;
+  };
 
-export default connect(mapStateToProps);
+  return connect(mapStateToProps);
+};

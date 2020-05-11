@@ -5,13 +5,16 @@ import { Intent, Alert } from '@blueprintjs/core';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import ViewForm from 'containers/Views/ViewForm';
-import withResourcesActions from 'containers/Resources/withResourcesActions';
-import withViewsActions from 'containers/Views/withViewsActions';
-import withDashboard from 'containers/Dashboard/withDashboard';
+
 import AppToaster from 'components/AppToaster';
 import {compose} from 'utils';
 import { If } from 'components';
 import { FormattedMessage as T, useIntl } from 'react-intl';
+
+import withResourcesActions from 'containers/Resources/withResourcesActions';
+import withViewsActions from 'containers/Views/withViewsActions';
+import withDashboard from 'containers/Dashboard/withDashboard';
+
 
 // @flow
 function ViewFormPage({
@@ -27,6 +30,7 @@ function ViewFormPage({
 }) {
   const { resource_slug: resourceSlug, view_id: viewId } = useParams();
   const [stateDeleteView, setStateDeleteView] = useState(null);
+  const {formatMessage} =useIntl()
 
   const fetchHook = useAsync(async () => {
     return Promise.all([
@@ -44,9 +48,9 @@ function ViewFormPage({
 
   useEffect(() => {
     if (viewId) {
-      changePageTitle('Edit Custom View');
+      changePageTitle(formatMessage({id:'edit_custom_view'}));
     } else {
-      changePageTitle('New Custom View');
+      changePageTitle(formatMessage({id:'new_custom_view'}));
     }
     return () => {
       changePageTitle('');

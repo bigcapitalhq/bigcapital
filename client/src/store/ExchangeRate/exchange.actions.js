@@ -7,6 +7,10 @@ export const fetchExchangeRates = () => {
       dispatch({
         type: t.SET_DASHBOARD_REQUEST_LOADING,
       });
+      dispatch({
+        type: t.EXCHANGE_RATE_TABLE_LOADING,
+        loading: true,
+      });
       ApiService.get('exchange_rates')
         .then((response) => {
           dispatch({
@@ -15,6 +19,10 @@ export const fetchExchangeRates = () => {
           });
           dispatch({
             type: t.SET_DASHBOARD_REQUEST_COMPLETED,
+          });
+          dispatch({
+            type: t.EXCHANGE_RATE_TABLE_LOADING,
+            loading: false,
           });
           resolve(response);
         })

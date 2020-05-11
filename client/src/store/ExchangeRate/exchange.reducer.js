@@ -17,4 +17,7 @@ export default createReducer(initialState, {
       ..._exchangeRates,
     };
   },
+  [t.EXCHANGE_RATE_TABLE_LOADING]: (state, action) => {
+    state.loading = action.loading;
+  },
 });

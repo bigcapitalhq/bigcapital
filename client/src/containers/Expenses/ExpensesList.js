@@ -18,8 +18,9 @@ function ExpensesList({
   getResourceViews,
   changePageTitle
 }) {
+  const {formatMessage} =useIntl()
   useEffect(() => {
-    changePageTitle('Expenses List');
+    changePageTitle(formatMessage({id:'expenses_list'}));
   }, []);
 
   const [deleteExpenseState, setDeleteExpense] = useState();

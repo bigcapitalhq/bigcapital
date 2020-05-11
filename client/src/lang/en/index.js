@@ -149,7 +149,22 @@ bulk_update:'Bulk Update',
 all_accounts:'All accounts',
 go_to_bigcapital_com:'← Go to bigcapital.com',
 currency:'Currency',
-new_conditional:'+ New Conditional'
+new_conditional:'+ New Conditional',
+chart_of_accounts:'Chart of Accounts',
+exchange_rate_details:'Exchange Rate Details',
+exchange_rate_list:'Exchange Rate List',
+manual_journals:'Manual Journals',
+edit_expense_details:'Edit Expense Details',
+expenses_list:'Expenses List',
+edit_category_details:'Edit Category Details',
+category_list:'Category List',
+edit_item_details:'Edit Item Details',
+items_list:'Items List',
+edit_custom_view:'Edit Custom View',
+new_custom_view:'New Custom View',
+view_name:'View Name',
+new_conditional:'New Conditional'
+
 
 
 

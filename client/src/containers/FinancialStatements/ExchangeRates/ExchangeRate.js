@@ -18,9 +18,12 @@ import { compose } from 'utils';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 
 function ExchangeRate({
-  views,
+  // #withDashboard
   changePageTitle,
+
+  //#withExchangeRatesActions
   requestFetchResourceFields,
+
   requestFetchExchangeRates,
   requestDeleteExchangeRate,
   addExchangeRatesTableQueries,
@@ -28,15 +31,21 @@ function ExchangeRate({
   const { id } = useParams();
   const [deleteExchangeRate, setDeleteExchangeRate] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
+  const { formatMessage } = useIntl();
+ 
+  // const fetchExchangeRates = useQuery('exchange-rates-table', () => {
+  //   return Promise.all([requestFetchExchangeRates()]);
+  // });
 
-  const fetchHook = useQuery('exchange-rates', () => {
-    return Promise.all([requestFetchExchangeRates()]);
-  });
+   const fetchExchangeRates = useQuery('exchange-rates-table',
+    () => requestFetchExchangeRates(),
+    { refetchInterval: 3000 });
+
 
   useEffect(() => {
     id
-      ? changePageTitle('Exchange Rate Details')
-      : changePageTitle('Exchange Rate List');
+      ? changePageTitle(formatMessage({id:'exchange_rate_details'}))
+      : changePageTitle(formatMessage({id:'exchange_rate_list'}));
   }, [id, changePageTitle]);
 
   const handelDeleteExchangeRate = useCallback(
@@ -84,9 +93,8 @@ function ExchangeRate({
   );
 
   return (
-    <DashboardInsider loading={fetchHook.pending}>
+    <DashboardInsider>
       <ExchangeRateActionsBar
-        views={views}
         onDeleteExchangeRate={handelDeleteExchangeRate}
         selectedRows={selectedRows}
       />
@@ -98,8 +106,8 @@ function ExchangeRate({
           onSelectedRowsChange={handleSelectedRowsChange}
         />
         <Alert
-          cancelButtonText={<T id={'cancel'}/>}
-          confirmButtonText={<T id={'move_to_trash'}/>}
+          cancelButtonText={<T id={'cancel'} />}
+          confirmButtonText={<T id={'move_to_trash'} />}
           icon='trash'
           intent={Intent.DANGER}
           isOpen={deleteExchangeRate}
@@ -118,5 +126,6 @@ function ExchangeRate({
 
 export default compose(
   withExchangeRatesActions,
+  withResourceActions,
   withDashboardActions
 )(ExchangeRate);

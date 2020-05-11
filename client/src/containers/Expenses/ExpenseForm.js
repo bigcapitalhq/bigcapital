@@ -4,6 +4,7 @@ import {useParams} from 'react-router-dom';
 import Connector from 'connectors/ExpenseForm.connector';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import ExpenseForm from 'components/Expenses/ExpenseForm';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 
 function ExpenseFormContainer({
   fetchAccounts,
@@ -15,12 +16,12 @@ function ExpenseFormContainer({
   currencies,
 }) {
   const { id } = useParams();
-
+  const { formatMessage } = useIntl();
   useEffect(() => {
     if (id) {
-      changePageTitle('Edit Expense Details');
+      changePageTitle(formatMessage({id:'edit_expense_details'}));
     } else {
-      changePageTitle('New Expense');
+      changePageTitle(formatMessage({id:'new_expense'}));
     }
   }, []);
 

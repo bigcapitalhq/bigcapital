@@ -21,14 +21,19 @@ import MediaConnect from 'connectors/Media.connect';
 import useMedia from 'hooks/useMedia';
 import {compose} from 'utils';
 
+import { FormattedMessage as T, useIntl } from 'react-intl';
+
 
 function MakeJournalEntriesForm({
+  // #withMedia
   requestSubmitMedia,
   requestDeleteMedia,
 
+  // #withJournalsActions
   requestMakeJournalEntries,
   requestEditManualJournal,
 
+  // #withDashboard
   changePageTitle,
   changePageSubtitle,
 
@@ -47,13 +52,14 @@ function MakeJournalEntriesForm({
 
   const savedMediaIds = useRef([]);
   const clearSavedMediaIds = () => { savedMediaIds.current = []; }
+const {formatMessage}  =useIntl()
 
   useEffect(() => {
     if (manualJournal && manualJournal.id) {
-      changePageTitle('Edit Journal');
+      changePageTitle(formatMessage({id:'edit_journal'}));
       changePageSubtitle(`No. ${manualJournal.journal_number}`);
     } else {
-      changePageTitle('New Journal');  
+      changePageTitle(formatMessage({id:'new_journal'}));  
     }
   }, [changePageTitle, changePageSubtitle, manualJournal]);
 
@@ -252,8 +258,6 @@ function MakeJournalEntriesForm({
 }
 
 export default compose(
-  // ManualJournalsConnect,
-  // MakeJournalEntriesConnect,
   withJournalsActions,
   withManualJournalDetail,
   withAccountsActions,

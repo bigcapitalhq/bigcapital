@@ -22,22 +22,24 @@ import { compose } from 'utils';
  * Manual journals table.
  */
 function ManualJournalsTable({
+  // #withDashboardActions
   changePageTitle,
 
+  // #withViewsActions
   requestFetchResourceViews,
 
+  // #withManualJournalsActions
   requestFetchManualJournalsTable,
   requestDeleteManualJournal,
   requestPublishManualJournal,
   requestDeleteBulkManualJournals,
-
   addManualJournalsTableQueries,
 }) {
   const history = useHistory();
   const [deleteManualJournal, setDeleteManualJournal] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
   const [bulkDelete, setBulkDelete] = useState(false);
-
+  const { formatMessage } = useIntl();
   const fetchViews = useQuery('journals-resource-views', () => {
     return requestFetchResourceViews('manual_journals');
   });
@@ -47,7 +49,7 @@ function ManualJournalsTable({
   );
 
   useEffect(() => {
-    changePageTitle('Manual Journals');
+    changePageTitle(formatMessage({id:'manual_journals'}));
   }, [changePageTitle]);
 
   // Handle delete manual journal click.
@@ -163,9 +165,7 @@ function ManualJournalsTable({
               '/dashboard/accounting/manual-journals/:custom_view_id/custom_view',
               '/dashboard/accounting/manual-journals',
             ]}
-          >
-            <ManualJournalsViewTabs onViewChanged={handleViewChanged} />
-          </Route>
+          ></Route>
         </Switch>
 
         <ManualJournalsDataTable

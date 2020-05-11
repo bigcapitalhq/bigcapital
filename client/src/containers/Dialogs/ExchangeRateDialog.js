@@ -13,32 +13,36 @@ import * as Yup from 'yup';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { useFormik } from 'formik';
 import Dialog from 'components/Dialog';
+import AppToaster from 'components/AppToaster';
 
 import { useQuery, queryCache } from 'react-query';
-import AppToaster from 'components/AppToaster';
 import ErrorMessage from 'components/ErrorMessage';
 import classNames from 'classnames';
 import { Select } from '@blueprintjs/select';
 import moment from 'moment';
 import { DateInput } from '@blueprintjs/datetime';
 import { momentFormatter } from 'utils';
-import ExchangeRatesDialogConnect from 'connectors/ExchangeRatesFromDialog.connect';
+
+import CurrencyFromDialogConnect from 'connectors/CurrencyFromDialog.connect'
+import withExchangeRatesDialog from 'containers/FinancialStatements/ExchangeRates/withExchangeRateDialog';
+import withExchangeRate from 'containers/FinancialStatements/ExchangeRates/withExchangeRates'
 
 function ExchangeRateDialog({
   name,
   payload,
   isOpen,
 
-  openDialog,
+  // #withDialog
+  
   closeDialog,
   currencies,
-
+// #withExchangeRatesActions
   requestSubmitExchangeRate,
   requestFetchExchangeRates,
   requestEditExchangeRate,
   requestFetchCurrencies,
   editExchangeRate,
-  addExchangeRatesTableQueries,
+
 }) {
   const {formatMessage} = useIntl();
 
@@ -107,9 +111,14 @@ function ExchangeRateDialog({
     closeDialog(name);
   }, [name, closeDialog]);
 
-  const fetchHook = useQuery('exchange-rates-dialog', () => {
-    return Promise.all([requestFetchExchangeRates(), requestFetchCurrencies()]);
-  });
+  // const fetchHook = useQuery('exchange-rates-dialog', () => {
+  //   return Promise.all([requestFetchExchangeRates(), requestFetchCurrencies()]);
+  // });
+
+  const fetchExchangeRatesDialog = useQuery('exchange-rates-dialog',
+  () => requestFetchExchangeRates(),
+  { refetchInterval: 3000 });
+
 
   const onDialogClosed = useCallback(() => {
     formik.resetForm();
@@ -117,8 +126,8 @@ function ExchangeRateDialog({
   }, [formik, closeDialog, name]);
 
   const onDialogOpening = useCallback(() => {
-    fetchHook.refetch();
-  }, [fetchHook]);
+    fetchExchangeRatesDialog.refetch();
+  }, [fetchExchangeRatesDialog]);
 
   const handleDateChange = useCallback(
     (date) => {
@@ -185,14 +194,14 @@ function ExchangeRateDialog({
       }
       className={classNames(
         {
-          'dialog--loading': fetchHook.pending,
+          'dialog--loading': fetchExchangeRatesDialog.pending,
         },
         'dialog--exchangeRate-form'
       )}
       isOpen={isOpen}
       onClosed={onDialogClosed}
       onOpening={onDialogOpening}
-      isLoading={fetchHook.pending}
+      isLoading={fetchExchangeRatesDialog.pending}
       onClose={handleClose}
     >
       <form onSubmit={formik.handleSubmit}>
@@ -279,4 +288,4 @@ function ExchangeRateDialog({
   );
 }
 
-export default ExchangeRatesDialogConnect(ExchangeRateDialog);
+export default withExchangeRatesDialog(ExchangeRateDialog);
