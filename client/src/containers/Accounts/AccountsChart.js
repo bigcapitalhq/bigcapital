@@ -1,10 +1,11 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import {
   Route,
   Switch,
 } from 'react-router-dom';
 import { Alert, Intent } from '@blueprintjs/core';
 import { useQuery } from 'react-query'
+import { useIntl } from 'react-intl';
 
 import AppToaster from 'components/AppToaster';
 
@@ -22,6 +23,7 @@ import withViewsActions from 'containers/Views/withViewsActions';
 import withAccounts from 'containers/Accounts/withAccounts';
 
 import { compose } from 'utils';
+import { FormattedMessage as T, FormattedHTMLMessage } from 'react-intl';
 
 
 function AccountsChart({
@@ -32,6 +34,7 @@ function AccountsChart({
   // #withAccountsActions
   requestDeleteAccount,
   requestInactiveAccount,
+  requestActivateAccount,
 
   // #withViewsActions
   requestFetchResourceViews,
@@ -47,8 +50,11 @@ function AccountsChart({
   // #withAccounts
   accountsTableQuery,
 }) {
+  const { formatMessage } = useIntl();
+
   const [deleteAccount, setDeleteAccount] = useState(false);
   const [inactiveAccount, setInactiveAccount] = useState(false);
+  const [activateAccount, setActivateAccount] = useState(false);
   const [bulkDelete, setBulkDelete] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
 
@@ -64,8 +70,7 @@ function AccountsChart({
 
   // Fetch accounts list according to the given custom view id.
   const fetchAccountsHook = useQuery(['accounts-table', accountsTableQuery],
-    () => requestFetchAccountsTable(),
-    { refetchInterval: 3000 });
+    () => requestFetchAccountsTable());
 
   useEffect(() => {
     changePageTitle('Chart of Accounts');
@@ -76,25 +81,34 @@ function AccountsChart({
   
   // handle cancel delete account alert.
   const handleCancelAccountDelete = useCallback(() => { setDeleteAccount(false); }, []);
+
+  const handleDeleteErrors = (errors) => {
+    if (errors.find((e) => e.type === 'ACCOUNT.PREDEFINED')) {
+      AppToaster.show({
+        message: formatMessage({
+          id: 'you_could_not_delete_predefined_accounts',
+        }),
+        intent: Intent.DANGER,
+      });
+    }
+    if (errors.find((e) => e.type === 'ACCOUNT.HAS.ASSOCIATED.TRANSACTIONS')) {
+      AppToaster.show({
+        message: 'cannot_delete_account_has_associated_transactions'
+      });
+    }
+  }
   
   // Handle confirm account delete
   const handleConfirmAccountDelete = useCallback(() => {
     requestDeleteAccount(deleteAccount.id).then(() => {
       setDeleteAccount(false);
-      AppToaster.show({ message: 'the_account_has_been_deleted' });
+      AppToaster.show({
+        message: formatMessage({ id: 'the_account_has_been_successfully_deleted' }),
+        intent: Intent.SUCCESS,
+      });
     }).catch(errors => {
       setDeleteAccount(false);
-      if (errors.find((e) => e.type === 'ACCOUNT.PREDEFINED')) {
-        AppToaster.show({
-          message: 'cannot_delete_predefined_account',
-          intent: Intent.DANGER,
-        });
-      }
-      if (errors.find((e) => e.type === 'ACCOUNT.HAS.ASSOCIATED.TRANSACTIONS')) {
-        AppToaster.show({
-          message: 'cannot_delete_account_has_associated_transactions'
-        });
-      }
+      handleDeleteErrors(errors);
     });
   }, [deleteAccount, requestDeleteAccount]);
 
@@ -112,11 +126,34 @@ function AccountsChart({
   const handleConfirmAccountActive = useCallback(() => {
     requestInactiveAccount(inactiveAccount.id).then(() => {
       setInactiveAccount(false);
-      requestFetchAccountsTable();
-      AppToaster.show({ message: 'the_account_has_been_inactivated' });
+      AppToaster.show({
+        message: formatMessage({
+          id: 'the_account_has_been_successfully_inactivated',
+        }),
+        intent: Intent.SUCCESS,
+      });
     });
-  }, [inactiveAccount, requestFetchAccountsTable, requestInactiveAccount]);
+  }, [inactiveAccount, requestInactiveAccount]);
 
+  const handleActivateAccount = useCallback((account) => {
+    setActivateAccount(account);
+  });
+
+  const handleCancelActivateAccount = useCallback(() => {
+    setActivateAccount(false);
+  });
+
+  const handleConfirmAccountActivate = useCallback(() => {
+    requestActivateAccount(activateAccount.id).then(() => {
+      setActivateAccount(false);
+      AppToaster.show({
+        message: formatMessage({
+          id: 'the_account_has_been_successfully_activated',
+        }),
+        intent: Intent.SUCCESS,
+      });
+    });
+  });
 
   const handleEditAccount = (account) => {
 
@@ -133,9 +170,13 @@ function AccountsChart({
   const handleConfirmBulkDelete = useCallback(() => {
     requestDeleteBulkAccounts(bulkDelete).then(() => {
       setBulkDelete(false);
-      AppToaster.show({ message: 'the_accounts_have_been_deleted' });
-    }).catch((error) => {
+      AppToaster.show({
+        message: formatMessage({ id: 'the_accounts_has_been_successfully_deleted' }),
+        intent: Intent.SUCCESS,
+      });
+    }).catch((errors) => {
       setBulkDelete(false);
+      handleDeleteErrors(errors);
     });
   }, [requestDeleteBulkAccounts, bulkDelete]);
 
@@ -179,6 +220,9 @@ function AccountsChart({
     fetchAccountsHook.refetch();
   }, [fetchAccountsHook, addAccountsTableQueries]);
 
+  // Calculates the data table selected rows count.
+  const selectedRowsCount = useMemo(() => Object.values(selectedRows).length, [selectedRows]);
+
   return (
     <DashboardInsider
       loading={fetchHook.isFetching}
@@ -203,6 +247,7 @@ function AccountsChart({
             <AccountsDataTable
               onDeleteAccount={handleDeleteAccount}
               onInactiveAccount={handleInactiveAccount}
+              onActivateAccount={handleActivateAccount}
               onRestoreAccount={handleRestoreAccount}
               onEditAccount={handleEditAccount}
               onFetchData={handleFetchData}
@@ -213,43 +258,52 @@ function AccountsChart({
 
         <Alert
           cancelButtonText="Cancel"
-          confirmButtonText="Move to Trash"
+          confirmButtonText="Delete"
           icon="trash"
           intent={Intent.DANGER}
           isOpen={deleteAccount}
           onCancel={handleCancelAccountDelete}
           onConfirm={handleConfirmAccountDelete}>
           <p>
-          Are you sure you want to move <b>filename</b> to Trash? You will be able to restore it later,
-          but it will become private to you.
+            <FormattedHTMLMessage
+              id={'once_delete_this_account_you_will_able_to_restore_it'} />
           </p>
         </Alert>
 
         <Alert
           cancelButtonText="Cancel"
           confirmButtonText="Inactivate"
-          icon="trash"
           intent={Intent.WARNING}
           isOpen={inactiveAccount}
           onCancel={handleCancelInactiveAccount}
           onConfirm={handleConfirmAccountActive}>
           <p>
-          Are you sure you want to move <b>filename</b> to Trash? You will be able to restore it later,
-          but it will become private to you.
+            <T id={'are_sure_to_inactive_this_account'} />
           </p>
         </Alert>
 
         <Alert
           cancelButtonText="Cancel"
-          confirmButtonText="Delete"
+          confirmButtonText="Activate"
+          intent={Intent.WARNING}
+          isOpen={activateAccount}
+          onCancel={handleCancelActivateAccount}
+          onConfirm={handleConfirmAccountActivate}>
+          <p>
+            <T id={'are_sure_to_activate_this_account'} />
+          </p>
+        </Alert>
+
+        <Alert
+          cancelButtonText="Cancel"
+          confirmButtonText={`Delete (${selectedRowsCount})`}
           icon="trash"
           intent={Intent.DANGER}
           isOpen={bulkDelete}
           onCancel={handleCancelBulkDelete}
           onConfirm={handleConfirmBulkDelete}>
           <p>
-          Are you sure you want to move <b>filename</b> to Trash? You will be able to restore it later,
-          but it will become private to you.
+            <T id={'once_delete_these_accounts_you_will_not_able_restore_them'} />
           </p>
         </Alert>
       </DashboardPageContent>

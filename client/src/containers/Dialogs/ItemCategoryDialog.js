@@ -55,13 +55,13 @@ function ItemCategoryDialog({
   requestEditItemCategory,
 }) {
   const [selectedParentCategory, setParentCategory] = useState(null);
-  const intl = useIntl();
+  const { formatMessage } = useIntl();
 
   const fetchList = useQuery(['items-categories-list'],
     () => requestFetchItemCategories());
 
-  const ValidationSchema = Yup.object().shape({
-    name: Yup.string().required(intl.formatMessage({ id: 'required' })),
+  const validationSchema = Yup.object().shape({
+    name: Yup.string().required(),
     parent_category_id: Yup.string().nullable(),
     description: Yup.string().trim()
   });
@@ -88,13 +88,15 @@ function ItemCategoryDialog({
       ...(payload.action === 'edit' &&
         pick(itemCategory, Object.keys(initialValues)))
     },
-    validationSchema: ValidationSchema,
+    validationSchema,
     onSubmit: (values, { setSubmitting }) => {
       if (payload.action === 'edit') {
         requestEditItemCategory(payload.id, values).then(response => {
           closeDialog(name);
           AppToaster.show({
-            message: 'the_category_has_been_edited',
+            message: formatMessage({
+              id: 'the_item_category_has_been_successfully_edited',
+            }),
             intent: Intent.SUCCESS,
           });
           setSubmitting(false);
@@ -107,7 +109,9 @@ function ItemCategoryDialog({
           .then((response) => {
             closeDialog(name);
             AppToaster.show({
-              message: 'the_category_has_been_submit',
+              message: formatMessage({
+                id: 'the_item_category_has_been_successfully_created',
+              }),
               intent: Intent.SUCCESS,
             });
             setSubmitting(false);

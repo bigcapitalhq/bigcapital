@@ -23,13 +23,12 @@ import { compose } from 'utils';
 function UserFormDialog({
   requestFetchUser,
   requestSubmitInvite,
-  requestEditUser,
   name,
   payload,
   isOpen,
   closeDialog,
 }) {
-  const intl = useIntl();
+  const { formatMessage } = useIntl();
   const fetchHook = useAsync(async () => {
     await Promise.all([
       ...(payload.action === 'edit' ? [requestFetchUser(payload.user.id)] : []),
@@ -37,7 +36,7 @@ function UserFormDialog({
   }, false);
 
   const validationSchema = Yup.object().shape({
-    email: Yup.string().email().required(intl.formatMessage({id:'required'})),
+    email: Yup.string().email().required(),
   });
 
   const initialValues = {
@@ -56,29 +55,23 @@ function UserFormDialog({
     resetForm,
     getFieldProps,
     handleSubmit,
+    isSubmitting,
   } = useFormik({
     enableReinitialize: true,
     initialValues,
     validationSchema,
     onSubmit: (values) => {
-      const form = {
-        ...values,
-      };
-      if (payload.action === 'edit') {
-        requestEditUser(payload.user.id, form).then((response) => {
-          AppToaster.show({
-            message: 'the_user_details_has_been_updated',
-          });
-          closeDialog(name);
+      const form = { ...values };
+
+      requestSubmitInvite(form).then((response) => {
+        AppToaster.show({
+          message: formatMessage({
+            id: 'teammate_invited_to_organization_account',
+          }),
+          intent: Intent.SUCCESS,
         });
-      } else {
-        requestSubmitInvite(form).then((response) => {
-          AppToaster.show({
-            message: 'the_user_has_been_invited',
-          });
-          closeDialog(name);
-        });
-      }
+        closeDialog(name);
+      });
     },
   });
   const onDialogOpening = () => {
@@ -89,9 +82,7 @@ function UserFormDialog({
     resetForm();
   }, [resetForm]);
 
-  const handleClose = () => {
-    closeDialog(name);
-  };
+  const handleClose = () => { closeDialog(name); };
 
   return (
     <Dialog
@@ -130,7 +121,7 @@ function UserFormDialog({
         <div className={Classes.DIALOG_FOOTER}>
           <div className={Classes.DIALOG_FOOTER_ACTIONS}>
             <Button onClick={handleClose}>Close</Button>
-            <Button intent={Intent.PRIMARY} type='submit'>
+            <Button intent={Intent.PRIMARY} type='submit' disabled={isSubmitting}>
               {payload.action === 'edit' ? 'Edit' : 'invite'}
             </Button>
           </div>

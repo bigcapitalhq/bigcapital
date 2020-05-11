@@ -177,7 +177,7 @@ export const editAccount = ({ id, form }) => {
   });
 };
 
-export const activeAccount = ({ id }) => {
+export const activateAccount = ({ id }) => {
   return dispatch => ApiService.post(`accounts/${id}/active`);
 };
 
@@ -205,7 +205,11 @@ export const deleteBulkAccounts = ({ ids }) => {
       });
       resolve(response);
     }).catch((error) => {
-      reject(error.response.data.errors || []);
+      const { response } = error;
+      const { data } = response;
+      const { errors } = data;
+
+      reject(errors);
     });
   });
 };

@@ -49,14 +49,14 @@ function AccountFormDialog({
 
   // #withDialog
   closeDialog,
-}) {
-  const intl = useIntl();
+}) { 
+  const { formatMessage } = useIntl();
   const accountFormValidationSchema = Yup.object().shape({
-    name: Yup.string().required(intl.formatMessage({ id: 'required' })),
+    name: Yup.string().required(formatMessage({ id: 'required' })),
     code: Yup.number(),
     account_type_id: Yup.string()
       .nullable()
-      .required(intl.formatMessage({ id: 'required' })),
+      .required(formatMessage({ id: 'required' })),
     description: Yup.string().trim()
   });
 
@@ -89,6 +89,7 @@ function AccountFormDialog({
     validationSchema: accountFormValidationSchema,
     onSubmit: (values, { setSubmitting, setErrors }) => {
       const exclude = ['subaccount'];
+      const toastAccountName = (values.code) ? `${values.code} - ${values.name}` : values.name;
 
       if (payload.action === 'edit') {
         requestEditAccount({
@@ -97,7 +98,12 @@ function AccountFormDialog({
         }).then((response) => {
           closeDialog(name);
           AppToaster.show({
-            message: 'the_account_has_been_edited',
+            message: formatMessage({
+              id: 'service_has_been_successful_edited',
+            }, {
+              name: toastAccountName,
+              service: formatMessage({ id: 'account' }),
+            }),
             intent: Intent.SUCCESS,
           });
           setSubmitting(false);
@@ -110,7 +116,12 @@ function AccountFormDialog({
         requestSubmitAccount({ form: { ...omit(values, exclude) } }).then((response) => {
           closeDialog(name);
           AppToaster.show({
-            message: 'the_account_has_been_submit',
+            message: formatMessage({
+              id: 'service_has_been_successful_created',  
+            }, {
+              name: toastAccountName,
+              service: formatMessage({ id: 'account' }),
+            }),
             intent: Intent.SUCCESS,
             position: Position.BOTTOM,
           });

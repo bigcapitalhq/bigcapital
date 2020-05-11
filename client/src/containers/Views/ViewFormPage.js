@@ -2,6 +2,8 @@ import React, {useEffect, useState, useMemo, useCallback} from 'react';
 import { useAsync } from 'react-use';
 import { useParams } from 'react-router-dom';
 import { Intent, Alert } from '@blueprintjs/core';
+import { FormattedHTMLMessage, useIntl } from 'react-intl';
+
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import ViewForm from 'containers/Views/ViewForm';
@@ -29,6 +31,8 @@ function ViewFormPage({
 }) {
   const { resource_slug: resourceSlug, view_id: viewId } = useParams();
   const [stateDeleteView, setStateDeleteView] = useState(null);
+
+  const { formatMessage } = useIntl();  
 
   const fetchHook = useAsync(async () => {
     return Promise.all([
@@ -67,7 +71,9 @@ function ViewFormPage({
     requestDeleteView(stateDeleteView.id).then((response) => {
       setStateDeleteView(null);
       AppToaster.show({
-        message: 'the_custom_view_has_been_deleted',
+        message: formatMessage({
+          id: 'the_custom_view_has_been_successfully_deleted',
+        }),
         intent: Intent.SUCCESS,
       });
     })
@@ -87,15 +93,15 @@ function ViewFormPage({
 
           <Alert
             cancelButtonText="Cancel"
-            confirmButtonText="Move to Trash"
+            confirmButtonText="Delete"
             icon="trash"
             intent={Intent.DANGER}
             isOpen={stateDeleteView}
             onCancel={handleCancelDeleteView}
             onConfirm={handleConfirmDeleteView}>
             <p>
-            Are you sure you want to move <b>filename</b> to Trash? You will be able to restore it later,
-            but it will become private to you.
+              <FormattedHTMLMessage
+                id={'once_delete_these_views_you_will_not_able_restore_them'} />
             </p>
           </Alert>
         </If>

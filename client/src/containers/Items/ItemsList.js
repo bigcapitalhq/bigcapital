@@ -8,6 +8,7 @@ import {
   Alert,
 } from '@blueprintjs/core';
 import { useQuery } from 'react-query';
+import { FormattedHTMLMessage, useIntl } from 'react-intl';
 
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import ItemsActionsBar from 'containers/Items/ItemsActionsBar';
@@ -24,6 +25,7 @@ import withResourceActions from 'containers/Resources/withResourcesActions';
 import withDashboardActions from 'containers/Dashboard/withDashboard';
 import withItemsActions from 'containers/Items/withItemsActions';
 import withViewsActions from 'containers/Views/withViewsActions';
+
 
 
 function ItemsList({
@@ -45,6 +47,8 @@ function ItemsList({
   const [deleteItem, setDeleteItem] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
   const [tableLoading, setTableLoading] = useState(false);
+
+  const { formatMessage } = useIntl();
 
   useEffect(() => {
     changePageTitle('Items List');
@@ -75,7 +79,12 @@ function ItemsList({
   // handle confirm delete item.
   const handleConfirmDeleteItem = useCallback(() => {
     requestDeleteItem(deleteItem.id).then(() => {
-      AppToaster.show({ message: 'the_item_has_been_deleted' });
+      AppToaster.show({
+        message: formatMessage({
+          id: 'the_item_has_been_successfully_deleted',
+        }),
+        intent: Intent.SUCCESS,
+      });
       setDeleteItem(false);
     });
   }, [requestDeleteItem, deleteItem]);
@@ -142,15 +151,15 @@ function ItemsList({
 
             <Alert
               cancelButtonText="Cancel"
-              confirmButtonText="Move to Trash"
+              confirmButtonText="Delete"
               icon="trash"
               intent={Intent.DANGER}
               isOpen={deleteItem}
               onCancel={handleCancelDeleteItem}
               onConfirm={handleConfirmDeleteItem}>
               <p>
-              Are you sure you want to move <b>filename</b> to Trash? You will be able to restore it later,
-              but it will become private to you.
+                <FormattedHTMLMessage
+                  id={'once_delete_this_item_you_will_able_to_restore_it'} />
               </p>
             </Alert>
           </Route>

@@ -12,6 +12,7 @@ import {
   Checkbox,
 } from '@blueprintjs/core';
 import { Row, Col } from 'react-grid-system';
+import { useIntl } from 'react-intl';
 import { Select } from '@blueprintjs/select';
 import AppToaster from 'components/AppToaster';
 import AccountsConnect from 'connectors/Accounts.connector';
@@ -27,6 +28,7 @@ import Dragzone from 'components/Dragzone';
 import MediaConnect from 'connectors/Media.connect';
 import useMedia from 'hooks/useMedia';
 
+
 const ItemForm = ({
   requestSubmitItem,
   
@@ -38,6 +40,7 @@ const ItemForm = ({
 }) => {
   const [selectedAccounts, setSelectedAccounts] = useState({});
   const history = useHistory();
+  const { formatMessage } = useIntl();
 
   const {
     files,
@@ -49,7 +52,7 @@ const ItemForm = ({
   } = useMedia({
     saveCallback: requestSubmitMedia,
     deleteCallback: requestDeleteMedia,
-  })
+  });
 
   const ItemTypeDisplay = useMemo(() => ([
     { value: null, label: 'Select Item Type' },
@@ -97,6 +100,7 @@ const ItemForm = ({
     touched,
     errors,
     handleSubmit,
+    isSubmitting,
   } = useFormik({
     enableReinitialize: true,
     validationSchema: validationSchema,
@@ -109,7 +113,13 @@ const ItemForm = ({
 
         return requestSubmitItem(formValues).then((response) => {
           AppToaster.show({
-            message: 'The_Items_has_been_submit'
+            message: formatMessage({
+              id: 'service_has_been_successful_created',
+            }, {
+              name: values.name,
+              service: formatMessage({ id: 'item' }),
+            }),
+            intent: Intent.SUCCESS,
           });
           setSubmitting(false);
           history.push('/dashboard/items');
@@ -439,11 +449,11 @@ const ItemForm = ({
         </Row>
 
         <div class='form__floating-footer'>
-          <Button intent={Intent.PRIMARY} type='submit'>
+          <Button intent={Intent.PRIMARY} disabled={isSubmitting} type='submit'>
             Save
           </Button>
 
-          <Button className={'ml1'}>Save as Draft</Button>
+          <Button className={'ml1'} disabled={isSubmitting}>Save as Draft</Button>
           <Button className={'ml1'} onClick={handleCancelClickBtn}>Close</Button>
         </div>
       </form>

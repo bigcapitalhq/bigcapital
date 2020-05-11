@@ -27,4 +27,37 @@ export default {
   'need_bigcapital_account?': 'Need a Bigcapital account ?',
   'show': 'Show',
   'hide': 'Hide',
+  'item': 'Item',
+  'account': 'Account',
+  'service_has_been_successful_created': '{service} {name} has been successfully created.',
+  'service_has_been_successful_edited': '{service} {name} has been successfully edited.',
+  'you_are_about_permanently_delete_this_journal': `You're about to permanently delete this journal and all its transactions on accounts and attachments, and all of its data. <br /><br />If you're not sure, you can archive this journal instead.`,
+  'once_delete_these_accounts_you_will_not_able_restore_them': 'Once you delete these accounts, you won\'t be able to retrieve them later. Are you sure you want to delete them?',
+  'once_delete_these_service_you_will_not_able_restore_it': 'Once you delete these {service}, you won\'t be able to retrieve them later. Are you sure you want to delete this {service}?',
+  'you_could_not_delete_predefined_accounts': 'You could\'t delete predefined accounts.',
+  'cannot_delete_account_has_associated_transactions': 'you could\'t not delete account that has associated transactions.',
+  'the_account_has_been_successfully_inactivated': 'The account has been successfully inactivated.',
+  'the_account_has_been_successfully_activated': 'The account has been successfully activated.',
+  'the_account_has_been_successfully_deleted': 'The account has been successfully deleted.',
+  'the_accounts_has_been_successfully_deleted': 'The accounts have been successfully deleted.',
+  'are_sure_to_inactive_this_account': 'Are you sure you want to inactive this account? You will be able to activate it later',
+  'are_sure_to_activate_this_account': 'Are you sure you want to activate this account? You will be able to inactivate it later',
+
+  'once_delete_this_account_you_will_able_to_restore_it': `Once you delete this account, you won\'t be able to restore it later. Are you sure you want to delete this account?<br /><br />If you're not sure, you can inactivate this account instead.`,
+  'the_journal_has_been_successfully_created': 'The journal #{number} has been successfully created.',
+  'the_journal_has_been_successfully_edited': 'The journal #{number} has been successfully edited.',
+
+  'credit': 'Credit',
+  'debit': 'Debit',
+
+  'once_delete_this_item_you_will_able_to_restore_it': `Once you delete this item, you won\'t be able to restore the item later. Are you sure you want to delete ?<br /><br />If you're not sure, you can inactivate it instead.`,
+  'the_item_has_been_successfully_deleted': 'The item has been successfully deleted.',
+
+  'the_item_category_has_been_successfully_created': 'The item category has been successfully created.',
+  'the_item_category_has_been_successfully_edited': 'The item category has been successfully edited.',
+
+  'once_delete_these_views_you_will_not_able_restore_them': 'Once you delete the custom view, you won\'t be able to restore it later. Are you sure you want to delete this view?',
+  'the_custom_view_has_been_successfully_deleted': 'The custom view has been successfully deleted.',
+
+  'teammate_invited_to_organization_account': 'Your teammate has been invited to the organization account.'
 };

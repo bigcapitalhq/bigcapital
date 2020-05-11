@@ -18,7 +18,7 @@ const viewFormConnect = connect(mapStateToProps);
 export default compose(
   withDashboard,
   withViewsActions,
-  withViewsDetails(),
+  withViewsDetails,
   viewFormConnect,
   withResourceDetail(),
 );

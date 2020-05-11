@@ -9,6 +9,8 @@ import {
   Classes,
   Tooltip,
 } from '@blueprintjs/core';
+import { useIntl } from 'react-intl';
+
 import Icon from 'components/Icon';
 import { compose } from 'utils';
 import DialogConnect from 'connectors/Dialog.connector';
@@ -20,6 +22,8 @@ import { useUpdateEffect } from 'hooks';
 import withDashboardActions from 'containers/Dashboard/withDashboard';
 import withAccountsActions from 'containers/Accounts/withAccountsActions';
 import withAccounts from 'containers/Accounts/withAccounts';
+
+import { If } from 'components';
 
 
 function AccountsDataTable({
@@ -36,8 +40,10 @@ function AccountsDataTable({
   onSelectedRowsChange,
   onDeleteAccount,
   onInactiveAccount,
+  onActivateAccount,
 }) {
   const [initialMount, setInitialMount] = useState(false);
+  const { formatMessage } = useIntl();
 
   useUpdateEffect(() => {
     if (!accountsLoading) {
@@ -64,9 +70,16 @@ function AccountsDataTable({
         text='New Account'
         onClick={() => handleNewParentAccount(account)} />
       <MenuDivider />
-      <MenuItem
-        text='Inactivate Account'
-        onClick={() => onInactiveAccount(account)} />
+      <If condition={account.active}>
+        <MenuItem
+          text='Inactivate Account'
+          onClick={() => onInactiveAccount(account)} />
+      </If>
+      <If condition={!account.active}>
+        <MenuItem
+          text='Activate Account'
+          onClick={() => onActivateAccount(account)} />
+      </If>
       <MenuItem
         text='Delete Account'
         onClick={() => onDeleteAccount(account)} />
@@ -109,10 +122,18 @@ function AccountsDataTable({
       Header: 'Normal',
       Cell: ({ cell }) => {
         const account = cell.row.original;
-        const type = account.type ? account.type.normal : '';
-        const arrowDirection = type === 'credit' ? 'down' : 'up';
+        const normal = account.type ? account.type.normal : '';
+        const arrowDirection = normal === 'credit' ? 'down' : 'up';
 
-        return (<Icon icon={`arrow-${arrowDirection}`} />);
+        return (
+          <Tooltip
+            className={Classes.TOOLTIP_INDICATOR}
+            content={formatMessage({ id: normal })}
+            position={Position.RIGHT}
+            hoverOpenDelay={500}>
+            <Icon icon={`arrow-${arrowDirection}`} />
+          </Tooltip>
+        );
       },
       className: 'normal',
       width: 75,

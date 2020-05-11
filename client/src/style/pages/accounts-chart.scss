@@ -25,6 +25,15 @@
         .code{
           color: #666;
         }
+        .normal{
+          .bp3-popover-wrapper{
+            width: 100%;
+          }
+          .bp3-tooltip-indicator{
+            cursor: initial;
+            border-bottom: 0;
+          }
+        }
         .actions{
           padding-right: 18px;
           justify-content: right;

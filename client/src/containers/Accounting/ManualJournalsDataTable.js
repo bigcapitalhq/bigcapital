@@ -2,7 +2,9 @@ import React, { useEffect, useCallback, useState, useMemo } from 'react';
 import {
   Intent,
   Button,
+  Classes,
   Popover,
+  Tooltip,
   Menu,
   MenuItem,
   MenuDivider,
@@ -24,6 +26,8 @@ import withDashboardActions from 'containers/Dashboard/withDashboard';
 import withViewDetails from 'containers/Views/withViewDetails';
 import withManualJournals from 'containers/Accounting/withManualJournals';
 import withManualJournalsActions from 'containers/Accounting/withManualJournalsActions';
+
+import { If } from 'components';
 
 
 function ManualJournalsDataTable({
@@ -135,7 +139,17 @@ function ManualJournalsDataTable({
     {
       id: 'note',
       Header: 'Note',
-      accessor: r => (<Icon icon={'file-alt'} iconSize={16} />),
+      accessor: (row) => (
+        <If condition={row.description}>
+          <Tooltip
+            className={Classes.TOOLTIP_INDICATOR}
+            content={row.description}
+            position={Position.TOP}
+            hoverOpenDelay={250}>
+            <Icon icon={'file-alt'} iconSize={16} />
+          </Tooltip>
+        </If>
+      ),
       disableResizing: true,
       disableSorting: true,
       width: 100,

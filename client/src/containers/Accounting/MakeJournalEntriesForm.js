@@ -3,6 +3,7 @@ import * as Yup from 'yup';
 import {useFormik} from "formik";
 import moment from 'moment';
 import { Intent } from '@blueprintjs/core';
+import { useIntl } from 'react-intl';
 
 import MakeJournalEntriesHeader from './MakeJournalEntriesHeader';
 import MakeJournalEntriesFooter from './MakeJournalEntriesFooter';
@@ -40,6 +41,7 @@ function MakeJournalEntriesForm({
   onFormSubmit,
   onCancelForm, 
 }) {
+  const { formatMessage } = useIntl();
   const { setFiles, saveMedia, deletedFiles, setDeletedFiles, deleteMedia } = useMedia({
     saveCallback: requestSubmitMedia,
     deleteCallback: requestDeleteMedia,
@@ -159,7 +161,11 @@ function MakeJournalEntriesForm({
           requestEditManualJournal(manualJournal.id, requestForm)
             .then((response) => {
               AppToaster.show({
-                message: 'manual_journal_has_been_edited',
+                message: formatMessage({
+                  id: 'the_journal_has_been_successfully_edited',
+                }, {
+                  number: values.journal_number,
+                }),
                 intent: Intent.SUCCESS,
               }); 
               setSubmitting(false);
@@ -178,9 +184,13 @@ function MakeJournalEntriesForm({
           requestMakeJournalEntries(requestForm)
             .then((response) => {
               AppToaster.show({
-                message: 'manual_journal_has_been_submit',
+                message: formatMessage({
+                  id: 'the_journal_has_been_successfully_created',
+                }, {
+                  number: values.journal_number,
+                }),
                 intent: Intent.SUCCESS,
-              }); 
+              });
               setSubmitting(false);
               saveInvokeSubmit({ action: 'new', ...payload });
               clearSavedMediaIds();

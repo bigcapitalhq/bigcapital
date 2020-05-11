@@ -398,14 +398,16 @@ export default {
     async handler(req, res) {
       const { id } = req.params;
       const { Account } = req.models;
-      const account = await Account.findById(id);
+      const account = await Account.query().findById(id);
 
       if (!account) {
         return res.status(400).send({
           errors: [{ type: 'ACCOUNT.NOT.FOUND', code: 100 }],
         });
       }
-      await account.patch({ active: true });
+      await Account.query()
+        .where('id', id)
+        .patch({ active: true });
 
       return res.status(200).send({ id: account.id });
     },
@@ -421,14 +423,16 @@ export default {
     async handler(req, res) {
       const { id } = req.params;
       const { Account } = req.models;
-      const account = await Account.findById(id);
+      const account = await Account.query().findById(id);
 
       if (!account) {
         return res.status(400).send({
           errors: [{ type: 'ACCOUNT.NOT.FOUND', code: 100 }],
         });
       }
-      await account.patch({ active: false });
+      await Account.query()
+        .where('id', id)
+        .patch({ active: false });
 
       return res.status(200).send({ id: account.id });
     },
@@ -488,10 +492,23 @@ export default {
       });
       const accountsIds = accounts.map((a) => a.id);
       const notFoundAccounts = difference(filter.ids, accountsIds);
+      const predefinedAccounts = accounts.filter(account => account.predefined);
+      const errorReasons = [];
 
       if (notFoundAccounts.length > 0) {
         return res.status(404).send({
-          errors: [{ type: 'ACCOUNTS.IDS.NOT.FOUND', code: 200, ids: notFoundAccounts }],
+          errors: [{
+            type: 'ACCOUNTS.IDS.NOT.FOUND',
+            code: 200,
+            ids: notFoundAccounts,
+          }],
+        });
+      }
+      if (predefinedAccounts.length > 0) {
+        errorReasons.push({
+          type: 'ACCOUNT.PREDEFINED',
+          code: 200,
+          ids: predefinedAccounts.map(a => a.id),
         });
       }
       const accountsTransactions = await AccountTransaction.query()
@@ -508,9 +525,14 @@ export default {
         }
       });
       if (accountsHasTransactions.length > 0) {
-        return res.status(400).send({
-          errors: [{ type: 'ACCOUNTS.HAS.TRANSACTIONS', code: 300, ids: accountsHasTransactions }],
+        errorReasons.push({
+          type: 'ACCOUNT.HAS.ASSOCIATED.TRANSACTIONS',
+          code: 300,
+          ids: accountsHasTransactions
         });
+      }
+      if (errorReasons.length > 0) {
+        return res.status(400).send({ errors: errorReasons });
       }
       await Account.query()
         .whereIn('id', accounts.map((a) => a.id))

@@ -4,6 +4,7 @@ import {
   fetchAccountsList,
   deleteAccount,
   inactiveAccount,
+  activateAccount,
   submitAccount,
   fetchAccount,
   deleteBulkAccounts,
@@ -15,6 +16,7 @@ const mapActionsToProps = (dispatch) => ({
   requestSubmitAccount: ({ form }) => dispatch(submitAccount({ form })),
   requestDeleteAccount: (id) => dispatch(deleteAccount({ id })),
   requestInactiveAccount: (id) => dispatch(inactiveAccount({ id })),
+  requestActivateAccount: (id) => dispatch(activateAccount({ id })),
   requestFetchAccount: (id) => dispatch(fetchAccount({ id })),
   requestDeleteBulkAccounts: (ids) => dispatch(deleteBulkAccounts({ ids })),
 });
