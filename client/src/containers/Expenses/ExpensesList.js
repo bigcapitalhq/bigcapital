@@ -8,6 +8,7 @@ import ExpensesViewsTabs from 'components/Expenses/ExpensesViewsTabs';
 import ExpensesTable from 'components/Expenses/ExpensesTable';
 import connector from 'connectors/ExpensesList.connector';
 import AppToaster from 'components/AppToaster';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 
 function ExpensesList({
   fetchExpenses,
@@ -17,8 +18,9 @@ function ExpensesList({
   getResourceViews,
   changePageTitle
 }) {
+  const {formatMessage} =useIntl()
   useEffect(() => {
-    changePageTitle('Expenses List');
+    changePageTitle(formatMessage({id:'expenses_list'}));
   }, []);
 
   const [deleteExpenseState, setDeleteExpense] = useState();
@@ -59,8 +61,8 @@ function ExpensesList({
       </DashboardPageContent>
 
       <Alert
-        cancelButtonText='Cancel'
-        confirmButtonText='Move to Trash'
+        cancelButtonText={<T id={'cancel'}/>}
+        confirmButtonText={<T id={'move_to_trash'}/>}
         icon='trash'
         intent={Intent.DANGER}
         isOpen={deleteExpenseState}

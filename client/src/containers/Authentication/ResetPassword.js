@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo } from 'react';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import { useIntl } from 'react-intl';
+
 import {
   Button,
   InputGroup,
@@ -15,12 +15,10 @@ import AppToaster from 'components/AppToaster';
 import { compose } from 'utils';
 import withAuthenticationActions from './withAuthenticationActions';
 import AuthInsider from 'containers/Authentication/AuthInsider';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 
-
-function ResetPassword({
-  requestResetPassword,
-}) {
-  const intl = useIntl();
+function ResetPassword({ requestResetPassword }) {
+  const { formatMessage } = useIntl();
   const { token } = useParams();
   const history = useHistory();
 
@@ -33,10 +31,13 @@ function ResetPassword({
       .required('Confirm Password is required'),
   });
 
-  const initialValues = useMemo(() => ({
-    password: '',
-    confirm_password: '',
-  }), []);
+  const initialValues = useMemo(
+    () => ({
+      password: '',
+      confirm_password: '',
+    }),
+    []
+  );
 
   const {
     touched,
@@ -56,7 +57,7 @@ function ResetPassword({
       requestResetPassword(values, token)
         .then((response) => {
           AppToaster.show({
-            message: 'The password for your account was successfully updated.',
+            message: formatMessage('password_successfully_updated'),
             intent: Intent.DANGER,
             position: Position.BOTTOM,
           });
@@ -64,9 +65,9 @@ function ResetPassword({
           setSubmitting(false);
         })
         .catch((errors) => {
-          if (errors.find(e => e.type === 'TOKEN_INVALID')) {
+          if (errors.find((e) => e.type === 'TOKEN_INVALID')) {
             AppToaster.show({
-              message: 'An unexpected error occurred',
+              message: formatMessage('an_unexpected_error_occurred'),
               intent: Intent.DANGER,
               position: Position.BOTTOM,
             });
@@ -79,17 +80,24 @@ function ResetPassword({
 
   return (
     <AuthInsider>
-      <div className={'submit-np-form'}>       
+      <div className={'submit-np-form'}>
         <div className={'authentication-page__label-section'}>
-          <h3>Choose a new password</h3>
-          You remembered your password ? <Link to='/auth/login'>Login</Link>
+          <h3>
+            <T id={'choose_a_new_password'} />
+          </h3>
+          <T id={'you_remembered_your_password'} />{' '}
+          <Link to='/auth/login'>
+            <T id={'login'} />
+          </Link>
         </div>
 
         <form onSubmit={handleSubmit}>
           <FormGroup
-            label={'Password'}
-            intent={(errors.password && touched.password) && Intent.DANGER}
-            helperText={<ErrorMessage name={'password'} {...{errors, touched}} />}
+            label={<T id={'password'} />}
+            intent={errors.password && touched.password && Intent.DANGER}
+            helperText={
+              <ErrorMessage name={'password'} {...{ errors, touched }} />
+            }
             className={'form-group--password'}
           >
             <InputGroup
@@ -99,18 +107,31 @@ function ResetPassword({
               {...getFieldProps('password')}
             />
           </FormGroup>
-        
+
           <FormGroup
-            label={'New Password'}
+            label={<T id={'new_password'} />}
             labelInfo={'(again):'}
-            intent={(errors.confirm_password && touched.confirm_password) && Intent.DANGER}
-            helperText={<ErrorMessage name={'confirm_password'} {...{errors, touched}} />}
+            intent={
+              errors.confirm_password &&
+              touched.confirm_password &&
+              Intent.DANGER
+            }
+            helperText={
+              <ErrorMessage
+                name={'confirm_password'}
+                {...{ errors, touched }}
+              />
+            }
             className={'form-group--confirm-password'}
           >
             <InputGroup
               lang={true}
               type={'password'}
-              intent={(errors.confirm_password && touched.confirm_password) && Intent.DANGER}
+              intent={
+                errors.confirm_password &&
+                touched.confirm_password &&
+                Intent.DANGER
+              }
               {...getFieldProps('confirm_password')}
             />
           </FormGroup>
@@ -121,8 +142,9 @@ function ResetPassword({
               className={'btn-new'}
               intent={Intent.PRIMARY}
               type='submit'
-              loading={isSubmitting}>
-              Submit new password
+              loading={isSubmitting}
+            >
+              <T id={'submit_new_password'} />
             </Button>
           </div>
         </form>
@@ -131,6 +153,4 @@ function ResetPassword({
   );
 }
 
-export default compose(
-  withAuthenticationActions,
-)(ResetPassword);
+export default compose(withAuthenticationActions)(ResetPassword);

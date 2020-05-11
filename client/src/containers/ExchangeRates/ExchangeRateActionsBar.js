@@ -1,6 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
-import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
-import { compose } from 'utils';
+import React, { useCallback, useState, useMemo } from 'react';
 import {
   NavbarGroup,
   Button,
@@ -11,55 +9,64 @@ import {
   PopoverInteractionKind,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { connect } from 'react-redux';
-import { If } from 'components';
-
 import Icon from 'components/Icon';
+import { connect } from 'react-redux';
+
+import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import DialogConnect from 'connectors/Dialog.connector';
+
 import FilterDropdown from 'components/FilterDropdown';
-
 import withResourceDetail from 'containers/Resources/withResourceDetails';
-import withDashboard from 'containers/Dashboard/withDashboard';
 
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { compose } from 'utils';
+import { FormattedMessage as T } from 'react-intl';
 
-const ItemsCategoryActionsBar = ({
-  // #withResourceDetail
-  resourceName = 'item_category',
-  resourceFields,
-  
-  // #withDialog
+
+function ExchangeRateActionsBar({
+  // #withDialog.
   openDialog,
 
-  // #ownProps
-  onDeleteCategory,
+  // #withResourceDetail
+  resourceFields,
+
+  selectedRows = [],
+  onDeleteExchangeRate,
   onFilterChanged,
-  selectedRows,
-}) => {
-  const onClickNewCategory = useCallback(() => {
-    openDialog('item-category-form', {});
-  }, [openDialog]);
+}) {
+  const [filterCount, setFilterCount] = useState(0);
 
-  const handleDeleteCategory = useCallback((category) => {
-    onDeleteCategory(selectedRows);
-  }, [selectedRows, onDeleteCategory]);
-
-  const hasSelectedRows = useMemo(() => selectedRows.length > 0, [selectedRows]);
+  const onClickNewExchangeRate = () => {
+    openDialog('exchangeRate-form', {});
+  };
 
   const filterDropdown = FilterDropdown({
     fields: resourceFields,
     onFilterChange: (filterConditions) => {
+      setFilterCount(filterConditions.length || 0);
+
       onFilterChanged && onFilterChanged(filterConditions);
     },
   });
+
+  const handelDeleteExchangeRate = useCallback(
+    (exchangeRate) => {
+      onDeleteExchangeRate(exchangeRate);
+    },
+    [selectedRows, onDeleteExchangeRate]
+  );
+
+  const hasSelectedRows = useMemo(() => selectedRows.length > 0, [
+    selectedRows,
+  ]);
+
   return (
     <DashboardActionsBar>
       <NavbarGroup>
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon='plus' />}
-          text={<T id={'new_category'}/>}
-          onClick={onClickNewCategory}
+          text={<T id={'new_exchange_rate'} />}
+          onClick={onClickNewExchangeRate}
         />
         <Popover
           minimal={true}
@@ -69,47 +76,50 @@ const ItemsCategoryActionsBar = ({
         >
           <Button
             className={classNames(Classes.MINIMAL, 'button--filter')}
-            text={<T id={'filter'}/>}
+            text={
+              filterCount <= 0 ? (
+                <T id={'filter'} />
+              ) : (
+                `${filterCount} filters applied`
+              )
+            }
             icon={<Icon icon='filter' />}
           />
         </Popover>
-
-        <If condition={hasSelectedRows}>
+        {hasSelectedRows && (
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon='trash' iconSize={15} />}
-            text={<T id={'delete'}/>}
+            text={<T id={'delete'} />}
             intent={Intent.DANGER}
-            onClick={handleDeleteCategory}
+            onClick={handelDeleteExchangeRate}
           />
-        </If>
-
+        )}
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon='file-import' />}
-          text={<T id={'import'}/>}
+          text={<T id={'import'} />}
         />
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon='file-export' />}
-          text={<T id={'export'}/>}
+          text={<T id={'export'} />}
         />
       </NavbarGroup>
     </DashboardActionsBar>
   );
-};
+}
 
 const mapStateToProps = (state, props) => ({
-  resourceName: 'items_categories',
+  resourceName: 'exchange_rates',
 });
 
-const withItemsCategoriesActionsBar = connect(mapStateToProps);
+const withExchangeRateActionBar = connect(mapStateToProps);
 
 export default compose(
-  withItemsCategoriesActionsBar,
+  withExchangeRateActionBar,
   DialogConnect,
-  withDashboard,
   withResourceDetail(({ resourceFields }) => ({
     resourceFields,
-  })) 
-)(ItemsCategoryActionsBar);
+  }))
+)(ExchangeRateActionsBar);

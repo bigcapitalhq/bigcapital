@@ -12,6 +12,7 @@ import DashboardTopbarUser from 'components/Dashboard/TopbarUser';
 import Icon from 'components/Icon';
 import SearchConnect from 'connectors/Search.connect';
 import { compose } from 'utils';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 
 function DashboardTopbar({
   pageTitle,
@@ -77,18 +78,18 @@ function DashboardTopbar({
               onClick={() => openGlobalSearch(true)}
               className={Classes.MINIMAL}
               icon='home'
-              text='Search'
+              text={<T id={'search'}/>}
             />
 
             <Button
               className={Classes.MINIMAL}
               icon='document'
-              text='Filters'
+              text={<T id={'filters'}/>}
             />
             <Button
               className={Classes.MINIMAL}
               icon='document'
-              text='Add order'
+              text={<T id={'add_order'}/>}
             />
             <Button className={Classes.MINIMAL} icon='document' text='More' />
           </NavbarGroup>

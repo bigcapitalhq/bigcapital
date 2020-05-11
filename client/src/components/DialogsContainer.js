@@ -4,10 +4,12 @@ import UserFormDialog from 'containers/Dialogs/UserFormDialog';
 import ItemCategoryDialog from 'containers/Dialogs/ItemCategoryDialog';
 import CurrencyDialog from 'containers/Dialogs/CurrencyDialog';
 import InviteUserDialog from 'containers/Dialogs/InviteUserDialog';
+import ExchangeRateDialog from 'containers/Dialogs/ExchangeRateDialog';
 
 export default function DialogsContainer() {
   return (
     <React.Fragment>
+      <ExchangeRateDialog />
       <InviteUserDialog />
       <CurrencyDialog />
       <ItemCategoryDialog />

@@ -8,7 +8,7 @@ import {
   Alert,
 } from '@blueprintjs/core';
 import { useQuery } from 'react-query';
-import { FormattedHTMLMessage, useIntl } from 'react-intl';
+import { FormattedMessage as T, FormattedHTMLMessage, useIntl } from 'react-intl';
 
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import ItemsActionsBar from 'containers/Items/ItemsActionsBar';
@@ -25,7 +25,6 @@ import withResourceActions from 'containers/Resources/withResourcesActions';
 import withDashboardActions from 'containers/Dashboard/withDashboard';
 import withItemsActions from 'containers/Items/withItemsActions';
 import withViewsActions from 'containers/Views/withViewsActions';
-
 
 
 function ItemsList({
@@ -150,8 +149,8 @@ function ItemsList({
               onSelectedRowsChange={handleSelectedRowsChange} />
 
             <Alert
-              cancelButtonText="Cancel"
-              confirmButtonText="Delete"
+              cancelButtonText={<T id={'cancel'}/>}
+              confirmButtonText={<T id={'delete'}/>}
               icon="trash"
               intent={Intent.DANGER}
               isOpen={deleteItem}

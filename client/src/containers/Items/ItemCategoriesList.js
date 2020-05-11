@@ -9,6 +9,7 @@ import ItemsCategoryActionsBar from 'containers/Items/ItemsCategoryActionsBar';
 import withDashboardActions from 'containers/Dashboard/withDashboard';
 import withItemCategoriesActions from 'containers/Items/withItemCategoriesActions';
 import { compose } from 'utils';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 
 
 const ItemCategoryList = ({
@@ -20,11 +21,11 @@ const ItemCategoryList = ({
 }) => {
   const { id } = useParams();
   const [selectedRows, setSelectedRows] = useState([]);
-
+  const {formatMessage} =useIntl()
   useEffect(() => {
     id
-      ? changePageTitle('Edit Category Details')
-      : changePageTitle('Category List');
+      ? changePageTitle(formatMessage({id:'edit_category_details'}))
+      : changePageTitle(formatMessage({id:'category_list'}));
   }, []);
 
   const fetchCategories = useQuery('items-categories-table',

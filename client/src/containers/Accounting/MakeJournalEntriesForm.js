@@ -1,9 +1,10 @@
 import React, {useMemo, useState, useEffect, useRef, useCallback} from 'react';
 import * as Yup from 'yup';
-import {useFormik} from "formik";
+import { useFormik } from "formik";
 import moment from 'moment';
 import { Intent } from '@blueprintjs/core';
-import { useIntl } from 'react-intl';
+import { FormattedMessage as T, useIntl } from 'react-intl';
+import { pick } from 'lodash';
 
 import MakeJournalEntriesHeader from './MakeJournalEntriesHeader';
 import MakeJournalEntriesFooter from './MakeJournalEntriesFooter';
@@ -15,7 +16,6 @@ import withAccountsActions from 'containers/Accounts/withAccountsActions';
 import withDashboardActions from 'containers/Dashboard/withDashboard';
 
 import AppToaster from 'components/AppToaster';
-import {pick} from 'lodash';
 import Dragzone from 'components/Dragzone';
 import MediaConnect from 'connectors/Media.connect';
 
@@ -55,10 +55,10 @@ function MakeJournalEntriesForm({
 
   useEffect(() => {
     if (manualJournal && manualJournal.id) {
-      changePageTitle('Edit Journal');
+      changePageTitle(formatMessage({id:'edit_journal'}));
       changePageSubtitle(`No. ${manualJournal.journal_number}`);
     } else {
-      changePageTitle('New Journal');  
+      changePageTitle(formatMessage({id:'new_journal'}));  
     }
   }, [changePageTitle, changePageSubtitle, manualJournal]);
 

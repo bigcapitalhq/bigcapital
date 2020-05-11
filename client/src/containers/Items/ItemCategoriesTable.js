@@ -6,6 +6,8 @@ import {
   MenuItem,
   Position,
 } from '@blueprintjs/core';
+import { FormattedMessage as T, useIntl } from 'react-intl';
+
 import Icon from 'components/Icon';
 import LoadingIndicator from 'components/LoadingIndicator';
 import { compose } from 'utils';
@@ -19,13 +21,15 @@ const ItemsCategoryList = ({
   // #withItemCategories
   categoriesList,
 
+  // #ownProps
   onFetchData,
   onDeleteCategory,
   onEditCategory,
   openDialog,
-  count,
   onSelectedRowsChange,
 }) => {
+
+  const {formatMessage} = useIntl();
   const handelEditCategory = (category) => () => {
     openDialog('item-form', { action: 'edit', id: category.id });
     onEditCategory(category.id);
@@ -37,9 +41,9 @@ const ItemsCategoryList = ({
 
   const actionMenuList = (category) => (
     <Menu>
-      <MenuItem text='Edit Category' onClick={handelEditCategory(category)} />
+      <MenuItem text={<T id={'edit_category'} />} onClick={handelEditCategory(category)} />
       <MenuItem
-        text='Delete Category'
+        text={<T id={'delete_category'}/>}
         onClick={handleDeleteCategory(category)}
       />
     </Menu>
@@ -48,20 +52,20 @@ const ItemsCategoryList = ({
   const columns = useMemo(() => [
     {
       id: 'name',
-      Header: 'Category Name',
+      Header: formatMessage({ id:'category_name' }),
       accessor: 'name',
       width: 150,
     },
     {
       id: 'description',
-      Header: 'Description',
+      Header: formatMessage({ id:'description' }),
       accessor: 'description',
       className: 'description',
       width: 150,
     },
     {
       id: 'count',
-      Header: 'Count',
+      Header: formatMessage({ id:'count' }),
       accessor: (r) => r.count || '',
       className: 'count',
       width: 50,

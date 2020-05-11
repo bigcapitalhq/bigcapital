@@ -21,6 +21,7 @@ import DialogConnect from 'connectors/Dialog.connector';
 import withResourceDetail from 'containers/Resources/withResourceDetails';
 import withItems from 'containers/Items/withItems';
 import { If } from 'components';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 
 const ItemsActionsBar = ({
   openDialog,
@@ -70,7 +71,7 @@ const ItemsActionsBar = ({
           <Button
             className={classNames(Classes.MINIMAL, 'button--table-views')}
             icon={<Icon icon='table' />}
-            text='Table Views'
+            text={<T id={'table_views'}/>}
             rightIcon={'caret-down'}
           />
         </Popover>
@@ -80,14 +81,14 @@ const ItemsActionsBar = ({
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon='plus' />}
-          text='New Item'
+          text={<T id={'new_item'}/>}
           onClick={onClickNewItem}
         />
 
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon='plus' />}
-          text='New Category'
+          text={<T id={'new_category'}/>}
           onClick={onClickNewCategory}
         />
 
@@ -98,7 +99,7 @@ const ItemsActionsBar = ({
         >
           <Button
             className={classNames(Classes.MINIMAL, 'button--filter')}
-            text={filterCount <= 0 ? 'Filter' : `${filterCount} filters applied`}
+            text={filterCount <= 0 ? <T id={'filter'}/> : `${filterCount} filters applied`}
             icon={<Icon icon='filter' />}
           />
         </Popover>
@@ -108,19 +109,19 @@ const ItemsActionsBar = ({
             className={Classes.MINIMAL}
             intent={Intent.DANGER}
             icon={<Icon icon='trash' />}
-            text='Delete'
+            text={<T id={'delete'}/>}
           />
         </If>
 
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon='file-import' />}
-          text='Import'
+          text={<T id={'import'}/>}
         />
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon='file-export' />}
-          text='Export'
+          text={<T id={'export'}/>}
         />
       </NavbarGroup>
     </DashboardActionsBar>

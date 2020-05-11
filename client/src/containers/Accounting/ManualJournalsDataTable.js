@@ -11,6 +11,8 @@ import {
   Position,
 } from '@blueprintjs/core';
 import { useParams } from 'react-router-dom';
+import { FormattedMessage as T, useIntl } from 'react-intl';
+
 import Icon from 'components/Icon';
 import { compose } from 'utils';
 import moment from 'moment';
@@ -20,14 +22,13 @@ import DialogConnect from 'connectors/Dialog.connector';
 
 import { useUpdateEffect } from 'hooks';
 import DataTable from 'components/DataTable';
-import Money from 'components/Money';
 
 import withDashboardActions from 'containers/Dashboard/withDashboard';
 import withViewDetails from 'containers/Views/withViewDetails';
 import withManualJournals from 'containers/Accounting/withManualJournals';
 import withManualJournalsActions from 'containers/Accounting/withManualJournalsActions';
 
-import { If } from 'components';
+import { If, Money } from 'components';
 
 
 function ManualJournalsDataTable({
@@ -52,6 +53,8 @@ function ManualJournalsDataTable({
   const { custom_view_id: customViewId } = useParams();
   const [initialMount, setInitialMount] = useState(false);
 
+  const { formatMessage } = useIntl();
+
   useUpdateEffect(() => {
     if (!manualJournalsLoading) {
       setInitialMount(true);
@@ -72,63 +75,75 @@ function ManualJournalsDataTable({
     viewMeta,
   ]);
 
-  const handlePublishJournal = useCallback((journal) => () => {
-    onPublishJournal && onPublishJournal(journal);
-  }, [onPublishJournal]);
+  const handlePublishJournal = useCallback(
+    (journal) => () => {
+      onPublishJournal && onPublishJournal(journal);
+    },
+    [onPublishJournal]
+  );
 
-  const handleEditJournal = useCallback((journal) => () => {
-    onEditJournal && onEditJournal(journal);
-  }, [onEditJournal]);
+  const handleEditJournal = useCallback(
+    (journal) => () => {
+      onEditJournal && onEditJournal(journal);
+    },
+    [onEditJournal]
+  );
 
-  const handleDeleteJournal = useCallback((journal) => () => {
-    onDeleteJournal && onDeleteJournal(journal);
-  }, [onDeleteJournal]);
+  const handleDeleteJournal = useCallback(
+    (journal) => () => {
+      onDeleteJournal && onDeleteJournal(journal);
+    },
+    [onDeleteJournal]
+  );
 
   const actionMenuList = (journal) => (
     <Menu>
-      <MenuItem text='View Details' />
+      <MenuItem text={<T id={'view_details'} />} />
       <MenuDivider />
       {!journal.status && (
         <MenuItem
-          text="Publish Journal"
-          onClick={handlePublishJournal(journal)} />
-      )}      
+          text={<T id={'publish_journal'} />}
+          onClick={handlePublishJournal(journal)}
+        />
+      )}
       <MenuItem
-        text='Edit Journal'
-        onClick={handleEditJournal(journal)} />
+        text={<T id={'edit_journal'} />}
+        onClick={handleEditJournal(journal)}
+      />
       <MenuItem
-        text='Delete Journal'
+        text={<T id={'delete_journal'} />}
         intent={Intent.DANGER}
-        onClick={handleDeleteJournal(journal)} />
+        onClick={handleDeleteJournal(journal)}
+      />
     </Menu>
   );
 
   const columns = useMemo(() => [
     {
       id: 'date',
-      Header: 'Date',
-      accessor: r => moment().format('YYYY-MM-DD'),
+      Header: formatMessage({ id: 'date' }),
+      accessor: (r) => moment().format('YYYY-MM-DD'),
       disableResizing: true,
       width: 150,
       className: 'date',
     },
     {
       id: 'amount',
-      Header: 'Amount',
+      Header: formatMessage({ id: 'amount' }),
       accessor: r => (<Money amount={r.amount} currency={'USD'} />),
       disableResizing: true,
       className: 'amount',
     },
     {
       id: 'journal_number',
-      Header: 'Journal No.',
+      Header: formatMessage({ id: 'journal_no' }),
       accessor: 'journal_number',
       disableResizing: true,
       className: 'journal_number',
     },
     {
       id: 'status',
-      Header: 'Status',
+      Header: formatMessage({ id: 'status' }),
       accessor: (r) => {
         return r.status ? 'Published' : 'Draft';
       },
@@ -138,7 +153,7 @@ function ManualJournalsDataTable({
     },
     {
       id: 'note',
-      Header: 'Note',
+      Header: formatMessage({ id: 'note' }),
       accessor: (row) => (
         <If condition={row.description}>
           <Tooltip
@@ -157,14 +172,14 @@ function ManualJournalsDataTable({
     },
     {
       id: 'transaction_type',
-      Header: 'Transaction type ',
+      Header: formatMessage({ id: 'transaction_type' }),
       accessor: 'transaction_type',
       width: 100,
       className: 'transaction_type',
     },
     {
       id: 'created_at',
-      Header: 'Created At',
+      Header: formatMessage({ id: 'created_at' }),
       accessor: r => moment().format('YYYY-MM-DD'),
       disableResizing: true,
       width: 150,
@@ -192,7 +207,7 @@ function ManualJournalsDataTable({
   }, [onFetchData]);
 
   const handleSelectedRowsChange = useCallback((selectedRows) => {
-    onSelectedRowsChange && onSelectedRowsChange(selectedRows.map(s => s.original));
+    onSelectedRowsChange && onSelectedRowsChange(selectedRows.map((s) => s.original));
   }, [onSelectedRowsChange]);
 
   return (
@@ -214,7 +229,6 @@ function ManualJournalsDataTable({
 export default compose(
   DialogConnect,
   withDashboardActions,
-  // withViewsActions,
   withManualJournalsActions,
   withManualJournals(({ manualJournals, manualJournalsLoading, }) => ({
     manualJournals,

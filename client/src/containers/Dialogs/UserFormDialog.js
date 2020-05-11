@@ -1,5 +1,5 @@
 import React, { useMemo, useCallback } from 'react';
-import { useIntl } from 'react-intl';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import {
@@ -87,7 +87,13 @@ function UserFormDialog({
   return (
     <Dialog
       name={name}
-      title={payload.action === 'edit' ? 'Edit invite' : 'invite User'}
+      title={
+        payload.action === 'edit' ? (
+          <T id={'edit_invite'} />
+        ) : (
+          <T id={'invite_user'} />
+        )
+      }
       className={classNames({
         'dialog--loading': fetchHook.pending,
         'dialog--invite-form': true,
@@ -101,18 +107,20 @@ function UserFormDialog({
     >
       <form onSubmit={handleSubmit}>
         <div className={Classes.DIALOG_BODY}>
-          <p class="mb2">Your teammate will get an email that gives them access to your team.</p>
+          <p class='mb2'>
+            <T id={'your_access_to_your_team'} />
+          </p>
 
           <FormGroup
-            label={'Email'}
+            label={<T id={'email'} />}
             className={classNames('form-group--email', Classes.FILL)}
-            intent={(errors.email && touched.email) && Intent.DANGER}
-            helperText={<ErrorMessage name='email' {...{errors, touched}} />}
+            intent={errors.email && touched.email && Intent.DANGER}
+            helperText={<ErrorMessage name='email' {...{ errors, touched }} />}
             inline={true}
           >
             <InputGroup
               medium={true}
-              intent={(errors.email && touched.email) && Intent.DANGER}
+              intent={errors.email && touched.email && Intent.DANGER}
               {...getFieldProps('email')}
             />
           </FormGroup>
@@ -120,9 +128,9 @@ function UserFormDialog({
 
         <div className={Classes.DIALOG_FOOTER}>
           <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-            <Button onClick={handleClose}>Close</Button>
+            <Button onClick={handleClose}><T id={'cancel'} /></Button>
             <Button intent={Intent.PRIMARY} type='submit' disabled={isSubmitting}>
-              {payload.action === 'edit' ? 'Edit' : 'invite'}
+              {payload.action === 'edit' ? <T id={'edit'} /> : <T id={'invite'} />}
             </Button>
           </div>
         </div>

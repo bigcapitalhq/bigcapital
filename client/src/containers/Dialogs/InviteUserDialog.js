@@ -1,5 +1,5 @@
 import React, { useMemo, useCallback } from 'react';
-import { useIntl } from 'react-intl';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import {
@@ -28,7 +28,7 @@ function InviteUserDialog({
   requestFetchUser,
   requestEditUser,
 }) {
-  const intl = useIntl();
+  const { formatMessage } = useIntl();
 
   const fetchHook = useAsync(async () => {
     await Promise.all([
@@ -37,12 +37,12 @@ function InviteUserDialog({
   }, false);
 
   const validationSchema = Yup.object().shape({
-    first_name: Yup.string().required(intl.formatMessage({ id: 'required' })),
-    last_name: Yup.string().required(intl.formatMessage({ id: 'required' })),
+    first_name: Yup.string().required(formatMessage({ id: 'required' })),
+    last_name: Yup.string().required(formatMessage({ id: 'required' })),
     email: Yup.string()
       .email()
-      .required(intl.formatMessage({ id: 'required' })),
-    phone_number: Yup.number().required(intl.formatMessage({ id: 'required' })),
+      .required(formatMessage({ id: 'required' })),
+    phone_number: Yup.number().required(formatMessage({ id: 'required' })),
   });
 
   const initialValues = useMemo(
@@ -101,7 +101,7 @@ function InviteUserDialog({
   return (
     <Dialog
       name={name}
-      title={payload.action === 'edit' ? 'Edit invite' : ''}
+      title={payload.action === 'edit' ? <T id={'edit_invite'} /> : ''}
       className={classNames({
         'dialog--loading': fetchHook.pending,
         'dialog--invite-user': true,
@@ -116,7 +116,7 @@ function InviteUserDialog({
       <form onSubmit={formik.handleSubmit}>
         <div className={Classes.DIALOG_BODY}>
           <FormGroup
-            label={'First Name'}
+            label={<T id={'first_name'} />}
             className={'form-group--first-name'}
             intent={errors.first_name && touched.first_name && Intent.DANGER}
             helperText={<ErrorMessage name='first_name' {...formik} />}
@@ -129,7 +129,7 @@ function InviteUserDialog({
           </FormGroup>
 
           <FormGroup
-            label={'Last Name'}
+            label={<T id={'last_name'} />}
             className={'form-group--last-name'}
             intent={errors.last_name && touched.last_name && Intent.DANGER}
             helperText={<ErrorMessage name='last_name' {...formik} />}
@@ -142,7 +142,7 @@ function InviteUserDialog({
           </FormGroup>
 
           <FormGroup
-            label={'Email'}
+            label={<T id={'email'} />}
             className={'form-group--email'}
             intent={errors.email && touched.email && Intent.DANGER}
             helperText={<ErrorMessage name='email' {...formik} />}
@@ -156,7 +156,7 @@ function InviteUserDialog({
           </FormGroup>
 
           <FormGroup
-            label={'Phone Number'}
+            label={<T id={'phone_number'} />}
             className={'form-group--phone-number'}
             intent={
               errors.phone_number && touched.phone_number && Intent.DANGER
@@ -175,9 +175,9 @@ function InviteUserDialog({
 
         <div className={Classes.DIALOG_FOOTER}>
           <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-            <Button onClick={handleClose}>Close</Button>
+            <Button onClick={handleClose}><T id={'close'}/></Button>
             <Button intent={Intent.PRIMARY} type='submit'>
-              {payload.action === 'edit' ? 'Edit' : ''}
+              {payload.action === 'edit' ? <T id={'edit'}/> : ''}
             </Button>
           </div>
         </div>

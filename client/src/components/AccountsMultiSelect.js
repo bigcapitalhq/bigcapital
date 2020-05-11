@@ -6,6 +6,7 @@ import {
 } from '@blueprintjs/core';
 // import {Select} from '@blueprintjs/select';
 import MultiSelect from 'components/MultiSelect';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 
 export default function AccountsMultiSelect({
   accounts,
@@ -58,7 +59,7 @@ export default function AccountsMultiSelect({
       <Button
         rightIcon='caret-down'
         text={countSelectedAccounts === 0 ?
-          'All accounts' :
+         <T id={'all_accounts'}/>:
           `(${countSelectedAccounts}) Selected accounts`
         }
       />

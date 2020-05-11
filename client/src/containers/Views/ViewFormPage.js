@@ -2,7 +2,7 @@ import React, {useEffect, useState, useMemo, useCallback} from 'react';
 import { useAsync } from 'react-use';
 import { useParams } from 'react-router-dom';
 import { Intent, Alert } from '@blueprintjs/core';
-import { FormattedHTMLMessage, useIntl } from 'react-intl';
+import { FormattedMessage as T, FormattedHTMLMessage, useIntl } from 'react-intl';
 
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
@@ -50,23 +50,27 @@ function ViewFormPage({
 
   useEffect(() => {
     if (viewId) {
-      changePageTitle('Edit Custom View');
+      changePageTitle(formatMessage({id:'edit_custom_view'}));
     } else {
-      changePageTitle('New Custom View');
+      changePageTitle(formatMessage({id:'new_custom_view'}));
     }
     return () => {
       changePageTitle('');
     };
   }, [viewId, changePageTitle]);
 
+
+  // Handle delete view button click.
   const handleDeleteView = useCallback((view) => {
     setStateDeleteView(view);
   }, []);
 
+  // Handle cancel delete button click.
   const handleCancelDeleteView = useCallback(() => {
     setStateDeleteView(null);
   }, []);
 
+  // Handle confirm delete custom view.
   const handleConfirmDeleteView = useCallback(() => {
     requestDeleteView(stateDeleteView.id).then((response) => {
       setStateDeleteView(null);
@@ -92,8 +96,8 @@ function ViewFormPage({
             onDelete={handleDeleteView} />
 
           <Alert
-            cancelButtonText="Cancel"
-            confirmButtonText="Delete"
+            cancelButtonText={<T id={'cancel'}/>}
+            confirmButtonText={<T id={'delete'}/>}
             icon="trash"
             intent={Intent.DANGER}
             isOpen={stateDeleteView}
@@ -107,7 +111,7 @@ function ViewFormPage({
         </If>
 
         <If condition={fetchHook.error}>
-          <h4>Something wrong</h4>
+          <h4><T id={'something_wrong'}/></h4>
         </If>
       </DashboardPageContent>
     </DashboardInsider>   

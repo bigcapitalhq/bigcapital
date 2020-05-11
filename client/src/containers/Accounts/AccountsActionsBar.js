@@ -27,6 +27,7 @@ import withAccountsTableActions from 'containers/Accounts/withAccountsTableActio
 import withAccounts from 'containers/Accounts/withAccounts';
 
 import {compose} from 'utils';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 
 
 function AccountsActionsBar({
@@ -89,7 +90,7 @@ function AccountsActionsBar({
           <Button
             className={classNames(Classes.MINIMAL, 'button--table-views')}
             icon={<Icon icon='table' />}
-            text='Table Views'
+            text={<T id={'table_views'}/>}
             rightIcon={'caret-down'}
           />
         </Popover>
@@ -99,7 +100,7 @@ function AccountsActionsBar({
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon='plus' />}
-          text='New Account'
+          text={<T id={'new_account'}/>}
           onClick={onClickNewAccount}
         />
         <Popover
@@ -110,7 +111,7 @@ function AccountsActionsBar({
 
           <Button
             className={classNames(Classes.MINIMAL, 'button--filter')}
-            text={filterCount <= 0 ? 'Filter' : `${filterCount} filters applied`}
+            text={filterCount <= 0 ? <T id={'filter'}/> : `${filterCount} filters applied`}
             icon={ <Icon icon="filter" /> }/>
         </Popover>
 
@@ -118,13 +119,13 @@ function AccountsActionsBar({
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon='archive' iconSize={15} />}
-            text='Archive'
+            text={<T id={'archive'}/>}
             onClick={handleBulkArchive}
           />
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon='trash' iconSize={15} />}
-            text='Delete'
+            text={<T id={'delete'}/>}
             intent={Intent.DANGER}
             onClick={handleBulkDelete}
           />
@@ -133,12 +134,12 @@ function AccountsActionsBar({
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon='file-import' />}
-          text='Import'
+          text={<T id={'import'}/>}
         />
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon='file-export' />}
-          text='Export'
+          text={<T id={'export'}/>}
         />
       </NavbarGroup>
     </DashboardActionsBar>

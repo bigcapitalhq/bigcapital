@@ -13,6 +13,7 @@ import { usePrevious } from 'react-use';
 import { debounce } from 'lodash';
 import Icon from 'components/Icon';
 import { checkRequiredProperties } from 'utils';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 
 export default function FilterDropdown({
   fields,
@@ -146,7 +147,7 @@ export default function FilterDropdown({
           minimal={true}
           intent={Intent.PRIMARY}
           onClick={onClickNewFilter}>
-          + New Conditional
+      <T id={'new_conditional'}/>
         </Button>
       </div>
     </div>

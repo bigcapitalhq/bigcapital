@@ -7,7 +7,7 @@ import {
   Intent,
 } from '@blueprintjs/core';
 import * as Yup from 'yup';
-import { useIntl } from 'react-intl';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 import { useFormik } from 'formik';
 import { useQuery } from 'react-query';
 import { connect } from 'react-redux';
@@ -44,15 +44,15 @@ function CurrencyDialog({
   requestSubmitCurrencies,
   requestEditCurrency,
 }) {
-  const intl = useIntl();
+  const {formatMessage} = useIntl();
 
   const ValidationSchema = Yup.object().shape({
     currency_name: Yup.string().required(
-      intl.formatMessage({ id: 'required' })
+      formatMessage({ id: 'required' })
     ),
     currency_code: Yup.string()
       .max(4)
-      .required(intl.formatMessage({ id: 'required' })),
+      .required(formatMessage({ id: 'required' })),
   });
   const initialValues = useMemo(() => ({
     currency_name: '',
@@ -126,7 +126,7 @@ function CurrencyDialog({
   return (
     <Dialog
       name={name}
-      title={payload.action === 'edit' ? 'Edit Currency' : ' New Currency'}
+      title={payload.action === 'edit' ? <T id={'edit_currency'}/> : <T id={'new_currency'}/>}
       className={classNames(
         {
           'dialog--loading': fetchCurrencies.isFetching,
@@ -142,7 +142,7 @@ function CurrencyDialog({
       <form onSubmit={handleSubmit}>
         <div className={Classes.DIALOG_BODY}>
           <FormGroup
-            label={'Currency Name'}
+            label={<T id={'currency_name'}/>}
             labelInfo={requiredSpan}
             className={'form-group--currency-name'}
             intent={(errors.currency_name && touched.currency_name) && Intent.DANGER}
@@ -157,7 +157,7 @@ function CurrencyDialog({
           </FormGroup>
 
           <FormGroup
-            label={'Currency Code'}
+            label={<T id={'currency_code'}/>}
             labelInfo={requiredSpan}
             className={'form-group--currency-code'}
             intent={(errors.currency_code && touched.currency_code) && Intent.DANGER}
@@ -174,9 +174,9 @@ function CurrencyDialog({
 
         <div className={Classes.DIALOG_FOOTER}>
           <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-            <Button onClick={handleClose}>Close</Button>
+            <Button onClick={handleClose}><T id={'cancel'} /></Button>
             <Button intent={Intent.PRIMARY} type='submit' disabled={isSubmitting}>
-              {payload.action === 'edit' ? 'Edit' : 'Submit'}
+              {payload.action === 'edit' ? <T id={'edit'} /> : <T id={'submit'} /> }
             </Button>
           </div>
         </div>

@@ -36,7 +36,6 @@ export default function AccountsSelectList({
       filterable={true}
       onItemSelect={onAccountSelect}>
       <Button
-        rightIcon='caret-down'
         text={selectedAccount ? selectedAccount.name : defautlSelectText}
       />
     </Select>

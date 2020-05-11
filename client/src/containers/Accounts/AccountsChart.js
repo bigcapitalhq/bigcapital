@@ -5,7 +5,7 @@ import {
 } from 'react-router-dom';
 import { Alert, Intent } from '@blueprintjs/core';
 import { useQuery } from 'react-query'
-import { useIntl } from 'react-intl';
+import { FormattedMessage as T, FormattedHTMLMessage, useIntl } from 'react-intl';
 
 import AppToaster from 'components/AppToaster';
 
@@ -23,7 +23,6 @@ import withViewsActions from 'containers/Views/withViewsActions';
 import withAccounts from 'containers/Accounts/withAccounts';
 
 import { compose } from 'utils';
-import { FormattedMessage as T, FormattedHTMLMessage } from 'react-intl';
 
 
 function AccountsChart({
@@ -68,16 +67,21 @@ function AccountsChart({
   });
 
   // Fetch accounts list according to the given custom view id.
-  const fetchAccountsHook = useQuery(['accounts-table', accountsTableQuery],
-    () => requestFetchAccountsTable());
+  const fetchAccountsHook = useQuery(
+    ['accounts-table', accountsTableQuery],
+    () => requestFetchAccountsTable(),
+    { refetchInterval: 3000 }
+  );
 
   useEffect(() => {
-    changePageTitle('Chart of Accounts');
+    changePageTitle(formatMessage({ id: 'chart_of_accounts' }));
   }, [changePageTitle]);
-  
+
   // Handle click and cancel/confirm account delete
-  const handleDeleteAccount = (account) => { setDeleteAccount(account); };
-  
+  const handleDeleteAccount = (account) => {
+    setDeleteAccount(account);
+  };
+
   // handle cancel delete account alert.
   const handleCancelAccountDelete = useCallback(() => { setDeleteAccount(false); }, []);
 
@@ -157,13 +161,7 @@ function AccountsChart({
     });
   });
 
-  const handleEditAccount = (account) => {
-
-  };
-
-  const handleRestoreAccount = (account) => {
-    
-  };
+  const handleRestoreAccount = (account) => {};
 
   // Handle accounts bulk delete button click.,
   const handleBulkDelete = useCallback((accountsIds) => {
@@ -189,17 +187,22 @@ function AccountsChart({
     setBulkDelete(false);
   }, []);
 
-  const handleBulkArchive = useCallback((accounts) => {
+  const handleBulkArchive = useCallback((accounts) => {}, []);
+
+  const handleEditAccount = useCallback(() => {
 
   }, []);
 
   // Handle selected rows change.
-  const handleSelectedRowsChange = useCallback((accounts) => {
-    setSelectedRows(accounts);
-  }, [setSelectedRows]);
+  const handleSelectedRowsChange = useCallback(
+    (accounts) => {
+      setSelectedRows(accounts);
+    },
+    [setSelectedRows]
+  );
 
   // Refetches accounts data table when current custom view changed.
-  const handleFilterChanged = useCallback(() => { 
+  const handleFilterChanged = useCallback(() => {
     fetchAccountsHook.refetch();
   }, [fetchAccountsHook]);
 
@@ -215,28 +218,32 @@ function AccountsChart({
   }, [tableLoading, fetchAccountsHook.isFetching]);
 
   // Handle fetch data of accounts datatable.
-  const handleFetchData = useCallback(({ pageIndex, pageSize, sortBy }) => {
-    addAccountsTableQueries({
-      ...(sortBy.length > 0) ? {
-        column_sort_by: sortBy[0].id,
-        sort_order: sortBy[0].desc ? 'desc' : 'asc',
-      } : {},
-    });
-    fetchAccountsHook.refetch();
-  }, [fetchAccountsHook, addAccountsTableQueries]);
+  const handleFetchData = useCallback(
+    ({ pageIndex, pageSize, sortBy }) => {
+      addAccountsTableQueries({
+        ...(sortBy.length > 0
+          ? {
+              column_sort_by: sortBy[0].id,
+              sort_order: sortBy[0].desc ? 'desc' : 'asc',
+            }
+          : {}),
+      });
+      fetchAccountsHook.refetch();
+    },
+    [fetchAccountsHook, addAccountsTableQueries]
+  );
 
   // Calculates the data table selected rows count.
   const selectedRowsCount = useMemo(() => Object.values(selectedRows).length, [selectedRows]);
 
   return (
-    <DashboardInsider
-      loading={fetchHook.isFetching}
-      name={'accounts-chart'}>
+    <DashboardInsider loading={fetchHook.isFetching} name={'accounts-chart'}>
       <DashboardActionsBar
         selectedRows={selectedRows}
         onFilterChanged={handleFilterChanged}
         onBulkDelete={handleBulkDelete}
-        onBulkArchive={handleBulkArchive} />
+        onBulkArchive={handleBulkArchive}
+      />
 
       <DashboardPageContent>
         <Switch>
@@ -245,9 +252,9 @@ function AccountsChart({
             path={[
               '/dashboard/accounts/:custom_view_id/custom_view',
               '/dashboard/accounts',
-            ]}>
-            <AccountsViewsTabs
-              onViewChanged={handleViewChanged} />
+            ]}
+          >
+            <AccountsViewsTabs onViewChanged={handleViewChanged} />
 
             <AccountsDataTable
               onDeleteAccount={handleDeleteAccount}
@@ -257,7 +264,8 @@ function AccountsChart({
               onEditAccount={handleEditAccount}
               onFetchData={handleFetchData}
               onSelectedRowsChange={handleSelectedRowsChange}
-              loading={tableLoading} />
+              loading={tableLoading}
+            />
           </Route>
         </Switch>
 
@@ -268,7 +276,8 @@ function AccountsChart({
           intent={Intent.DANGER}
           isOpen={deleteAccount}
           onCancel={handleCancelAccountDelete}
-          onConfirm={handleConfirmAccountDelete}>
+          onConfirm={handleConfirmAccountDelete}
+        >
           <p>
             <FormattedHTMLMessage
               id={'once_delete_this_account_you_will_able_to_restore_it'} />
@@ -276,20 +285,21 @@ function AccountsChart({
         </Alert>
 
         <Alert
-          cancelButtonText="Cancel"
-          confirmButtonText="Inactivate"
+          cancelButtonText={<T id={'cancel'} />}
+          confirmButtonText={<T id={'inactivate'} />}
           intent={Intent.WARNING}
           isOpen={inactiveAccount}
           onCancel={handleCancelInactiveAccount}
-          onConfirm={handleConfirmAccountActive}>
+          onConfirm={handleConfirmAccountActive}
+        >
           <p>
             <T id={'are_sure_to_inactive_this_account'} />
           </p>
         </Alert>
 
         <Alert
-          cancelButtonText="Cancel"
-          confirmButtonText="Activate"
+          cancelButtonText={<T id={'cancel'} />}
+          confirmButtonText={<T id={'activate'} />}
           intent={Intent.WARNING}
           isOpen={activateAccount}
           onCancel={handleCancelActivateAccount}
@@ -306,7 +316,8 @@ function AccountsChart({
           intent={Intent.DANGER}
           isOpen={bulkDelete}
           onCancel={handleCancelBulkDelete}
-          onConfirm={handleConfirmBulkDelete}>
+          onConfirm={handleConfirmBulkDelete}
+        >
           <p>
             <T id={'once_delete_these_accounts_you_will_not_able_restore_them'} />
           </p>

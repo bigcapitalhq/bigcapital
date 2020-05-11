@@ -10,6 +10,7 @@ import {
   Select
 } from '@blueprintjs/select';
 
+import { FormattedMessage as T, useIntl } from 'react-intl';
 
 export default function CurrenciesSelectList(props) {
   const {formGroupProps, selectProps, onItemSelect} = props;
@@ -39,7 +40,7 @@ export default function CurrenciesSelectList(props) {
 
   return (
     <FormGroup
-      label={'Currency'}
+      label={<T id={'currency'}/>}
       className={'form-group--select-list form-group--currency'}
       {...formGroupProps}
     >
