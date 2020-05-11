@@ -94,18 +94,43 @@ $form-check-input-indeterminate-bg-image: url("data:image/svg+xml,<svg xmlns='ht
   }
 }
 
-.bp3-datepicker-caption select{
-  
+
+.#{$ns}-html-select{
+  .bp3-icon-double-caret-vertical{
+    display: none;
+  }
+}
+.bp3-datepicker-caption select{  
   &,
   &:hover{
     border-color: transparent;
   }
 }
 
+// Dropdown arrow to html select and select list.
+.#{$ns}-html-select::after,
+.form-group--select-list .#{$ns}-button::after{
+  content: '';
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid #8d8d8d;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  margin-top: -2px;
+  margin-right: 12px;
+  border-radius: 1px;
+}
+
 .form-group--select-list{
 
-  .#{$ns}-icon-caret-down{
+  .#{$ns}-button{
     color: #8D8D8D;
+    position: relative;
+    padding-right: 25px;
   }
 
   &.bp3-fill{

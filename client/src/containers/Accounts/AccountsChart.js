@@ -27,7 +27,6 @@ import { FormattedMessage as T, FormattedHTMLMessage } from 'react-intl';
 
 
 function AccountsChart({
-
   // #withDashboard
   changePageTitle,
 
@@ -135,14 +134,17 @@ function AccountsChart({
     });
   }, [inactiveAccount, requestInactiveAccount]);
 
+  // Handle activate account click.
   const handleActivateAccount = useCallback((account) => {
     setActivateAccount(account);
   });
 
+  // Handle activate account alert cancel.
   const handleCancelActivateAccount = useCallback(() => {
     setActivateAccount(false);
   });
 
+  // Handle activate account confirm.
   const handleConfirmAccountActivate = useCallback(() => {
     requestActivateAccount(activateAccount.id).then(() => {
       setActivateAccount(false);
@@ -163,10 +165,12 @@ function AccountsChart({
     
   };
 
+  // Handle accounts bulk delete button click.,
   const handleBulkDelete = useCallback((accountsIds) => {
     setBulkDelete(accountsIds);
   }, [setBulkDelete]);
 
+  // Handle confirm accounts bulk delete.
   const handleConfirmBulkDelete = useCallback(() => {
     requestDeleteBulkAccounts(bulkDelete).then(() => {
       setBulkDelete(false);
@@ -180,6 +184,7 @@ function AccountsChart({
     });
   }, [requestDeleteBulkAccounts, bulkDelete]);
 
+  // Handle cancel accounts bulk delete.
   const handleCancelBulkDelete = useCallback(() => {
     setBulkDelete(false);
   }, []);
