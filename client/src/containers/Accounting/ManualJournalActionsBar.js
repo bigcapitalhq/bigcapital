@@ -27,6 +27,7 @@ import withManualJournalsActions from 'containers/Accounting/withManualJournalsA
 
 import { FormattedMessage as T, useIntl } from 'react-intl';
 
+
 function ManualJournalActionsBar({
   // #withResourceDetail
   resourceName = 'manual_journal',

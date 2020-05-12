@@ -180,7 +180,7 @@ export default {
   getList: {
     validation: [
       query('column_sort_order').optional().trim().escape(),
-      query('sort_order').optional().isInt(['desc', 'asc']),
+      query('sort_order').optional().trim().escape().isIn(['desc', 'asc']),
       query('stringified_filter_roles').optional().isJSON(),
     ],
     async handler(req, res) {

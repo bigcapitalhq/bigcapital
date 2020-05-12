@@ -77,14 +77,14 @@ const itemsReducer = createReducer(initialState, {
   },
 
   [t.ITEM_DELETE]: (state, action) => {
-    const { itemId } = action;
+    const { id } = action.payload;
+    const items = { ...state.items };
 
-    if (state.items[itemId]) {
-      const item = state.items[itemId];
-      const itemPageNumber = item._page_number;
+    if (items[id]) {
+      const item = items[id];
 
-      delete state.items[itemId];
-
+      delete items[id];
+      state.items = items;
     }
   },
 

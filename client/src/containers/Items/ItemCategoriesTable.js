@@ -13,7 +13,6 @@ import LoadingIndicator from 'components/LoadingIndicator';
 import { compose } from 'utils';
 import DataTable from 'components/DataTable';
 
-import DialogConnect from 'connectors/Dialog.connector';
 import withItemCategories from './withItemCategories';
 
 
@@ -25,26 +24,21 @@ const ItemsCategoryList = ({
   onFetchData,
   onDeleteCategory,
   onEditCategory,
-  openDialog,
   onSelectedRowsChange,
 }) => {
-
   const {formatMessage} = useIntl();
-  const handelEditCategory = (category) => () => {
-    openDialog('item-form', { action: 'edit', id: category.id });
-    onEditCategory(category.id);
-  };
 
-  const handleDeleteCategory = (category) => () => {
-    onDeleteCategory(category);
-  };
+  const handelEditCategory = (category) => { onEditCategory(category); };
+  const handleDeleteCategory = (category) => { onDeleteCategory(category); };
 
   const actionMenuList = (category) => (
     <Menu>
-      <MenuItem text={<T id={'edit_category'} />} onClick={handelEditCategory(category)} />
+      <MenuItem
+        text={<T id={'edit_category'} />}
+        onClick={() => handelEditCategory(category)} />
       <MenuItem
         text={<T id={'delete_category'}/>}
-        onClick={handleDeleteCategory(category)}
+        onClick={() => handleDeleteCategory(category)}
       />
     </Menu>
   );
@@ -87,8 +81,8 @@ const ItemsCategoryList = ({
     },
   ], [actionMenuList]);
 
-  const handelFetchData = useCallback(() => {
-    onFetchData && onFetchData();
+  const handelFetchData = useCallback((...params) => {
+    onFetchData && onFetchData(...params);
   }, []);
 
   const handleSelectedRowsChange = useCallback((selectedRows) => {
@@ -111,7 +105,6 @@ const ItemsCategoryList = ({
 };
 
 export default compose(
-  DialogConnect,
   withItemCategories(({ categoriesList }) => ({
     categoriesList,
   })),

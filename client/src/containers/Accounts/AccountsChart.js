@@ -70,7 +70,6 @@ function AccountsChart({
   const fetchAccountsHook = useQuery(
     ['accounts-table', accountsTableQuery],
     () => requestFetchAccountsTable(),
-    { refetchInterval: 3000 }
   );
 
   useEffect(() => {
@@ -270,8 +269,8 @@ function AccountsChart({
         </Switch>
 
         <Alert
-          cancelButtonText="Cancel"
-          confirmButtonText="Delete"
+          cancelButtonText={<T id={'cancel'} />}
+          confirmButtonText={<T id={'delete'} />}
           icon="trash"
           intent={Intent.DANGER}
           isOpen={deleteAccount}

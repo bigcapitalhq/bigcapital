@@ -24,8 +24,10 @@ export default createReducer(initialState, {
   },
 
   [t.CATEGORY_DELETE]: (state, action) => {
-    if (typeof state.categories[action.id] !== 'undefined') {
-      delete state.categories[action.id];
+    const { id } = action.payload;
+
+    if (typeof state.categories[id] !== 'undefined') {
+      delete state.categories[id];
     }
   },
 

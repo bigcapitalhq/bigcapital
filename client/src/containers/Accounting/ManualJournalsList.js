@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { Route, Switch, useHistory } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import { Alert, Intent } from '@blueprintjs/core';
@@ -36,17 +36,20 @@ function ManualJournalsTable({
   addManualJournalsTableQueries,
 }) {
   const history = useHistory();
+
   const [deleteManualJournal, setDeleteManualJournal] = useState(false);
+  const [deleteBulk, setDeleteBulk] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
   const [bulkDelete, setBulkDelete] = useState(false);
+
   const { formatMessage } = useIntl();
+
   const fetchViews = useQuery('journals-resource-views', () => {
     return requestFetchResourceViews('manual_journals');
   });
 
-  const fetchManualJournals = useQuery('manual-journals-table', () =>
-    requestFetchManualJournalsTable()
-  );
+  const fetchManualJournals = useQuery('manual-journals-table',
+    () => requestFetchManualJournalsTable());
 
   useEffect(() => {
     changePageTitle(formatMessage({id:'manual_journals'}));
@@ -68,10 +71,23 @@ function ManualJournalsTable({
   // Handle confirm delete manual journal.
   const handleConfirmManualJournalDelete = useCallback(() => {
     requestDeleteManualJournal(deleteManualJournal.id).then(() => {
+      AppToaster.show({
+        message: formatMessage({
+          id: 'the_journal_has_been_successfully_deleted',
+        }, {
+          number: deleteManualJournal.journal_number,
+        }),
+        intent: Intent.SUCCESS,
+      });
       setDeleteManualJournal(false);
-      AppToaster.show({ message: 'the_manual_Journal_has_been_deleted' });
     });
   }, [deleteManualJournal, requestDeleteManualJournal]);
+
+
+  // Calculates the selected rows count.
+  const selectedRowsCount = useMemo(
+    () => Object.values(selectedRows).length,
+    [selectedRows]);
 
   const handleBulkDelete = useCallback(
     (accountsIds) => {
@@ -80,17 +96,26 @@ function ManualJournalsTable({
     [setBulkDelete]
   );
 
+  // Handle confirm journals bulk delete.
   const handleConfirmBulkDelete = useCallback(() => {
     requestDeleteBulkManualJournals(bulkDelete)
       .then(() => {
+        AppToaster.show({
+          message: formatMessage({
+            id: 'the_journals_has_been_successfully_deleted',
+          }, {
+            count: selectedRowsCount,
+          }),
+          intent: Intent.SUCCESS,
+        });
         setBulkDelete(false);
-        AppToaster.show({ message: 'the_accounts_have_been_deleted' });
       })
       .catch((error) => {
         setBulkDelete(false);
       });
   }, [requestDeleteBulkManualJournals, bulkDelete]);
 
+  // Handle cancel bulk delete alert.
   const handleCancelBulkDelete = useCallback(() => {
     setBulkDelete(false);
   }, []);
@@ -104,28 +129,23 @@ function ManualJournalsTable({
 
   // Handle filter change to re-fetch data-table.
   const handleFilterChanged = useCallback(() => {
-    fetchManualJournals.refetch();
+    
   }, [fetchManualJournals]);
 
   // Handle view change to re-fetch data table.
   const handleViewChanged = useCallback(() => {
-    fetchManualJournals.refetch();
+    
   }, [fetchManualJournals]);
 
   // Handle fetch data of manual jouranls datatable.
-  const handleFetchData = useCallback(
-    ({ pageIndex, pageSize, sortBy }) => {
-      addManualJournalsTableQueries({
-        ...(sortBy.length > 0
-          ? {
-              column_sort_by: sortBy[0].id,
-              sort_order: sortBy[0].desc ? 'desc' : 'asc',
-            }
-          : {}),
-      });
-    },
-    [addManualJournalsTableQueries]
-  );
+  const handleFetchData = useCallback(({ pageIndex, pageSize, sortBy }) => {
+    addManualJournalsTableQueries({
+      ...(sortBy.length > 0) ? {
+        column_sort_by: sortBy[0].id,
+        sort_order: sortBy[0].desc ? 'desc' : 'asc',
+      } : {},
+    });
+  }, [addManualJournalsTableQueries]);
 
   const handlePublishJournal = useCallback(
     (journal) => {
@@ -165,45 +185,40 @@ function ManualJournalsTable({
               '/dashboard/accounting/manual-journals/:custom_view_id/custom_view',
               '/dashboard/accounting/manual-journals',
             ]}> 
+            <ManualJournalsViewTabs />
+
+            <ManualJournalsDataTable
+              onDeleteJournal={handleDeleteJournal}
+              onFetchData={handleFetchData}
+              onEditJournal={handleEditJournal}
+              onPublishJournal={handlePublishJournal}
+              onSelectedRowsChange={handleSelectedRowsChange}
+            />
           </Route>
         </Switch>
 
-        <ManualJournalsDataTable
-          onDeleteJournal={handleDeleteJournal}
-          onFetchData={handleFetchData}
-          onEditJournal={handleEditJournal}
-          onPublishJournal={handlePublishJournal}
-          onSelectedRowsChange={handleSelectedRowsChange}
-        />
-
         <Alert
           cancelButtonText={<T id={'cancel'} />}
-          confirmButtonText={<T id={'move_to_trash'} />}
+          confirmButtonText={<T id={'delete'} />}
           icon='trash'
           intent={Intent.DANGER}
           isOpen={deleteManualJournal}
           onCancel={handleCancelManualJournalDelete}
           onConfirm={handleConfirmManualJournalDelete}
         >
-          <p>
-            Are you sure you want to move <b>filename</b> to Trash? You will be
-            able to restore it later, but it will become private to you.
-          </p>
+          <p><T id={'once_delete_this_journal_category_you_will_able_to_restore_it'} /></p>
         </Alert>
 
         <Alert
           cancelButtonText={<T id={'cancel'} />}
-          confirmButtonText={<T id={'move_to_trash'} />}
+          confirmButtonText={<T id={'delete_count'} values={{ count: selectedRowsCount }} />}
           icon='trash'
           intent={Intent.DANGER}
           isOpen={bulkDelete}
           onCancel={handleCancelBulkDelete}
           onConfirm={handleConfirmBulkDelete}
         >
-          <p>
-            Are you sure you want to move <b>filename</b> to Trash? You will be
-            able to restore it later, but it will become private to you.
-          </p>
+          <p><T id={'once_delete_these_journalss_you_will_not_able_restore_them'} /></p>
         </Alert>
       </DashboardPageContent>
     </DashboardInsider>

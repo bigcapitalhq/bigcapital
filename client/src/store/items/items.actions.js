@@ -65,5 +65,14 @@ export const fetchItem = ({ id }) => {
 };
 
 export const deleteItem = ({ id }) => {
-  return dispatch => ApiService.delete(`items/${id}`);
+  return dispatch => new Promise((resolve, reject) => {
+    ApiService.delete(`items/${id}`)
+      .then((response) => {
+        dispatch({
+          type: t.ITEM_DELETE,
+          payload: { id },
+        });
+        resolve(response);
+      }).catch((error) => { reject(error); });
+  });
 };

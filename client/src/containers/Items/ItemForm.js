@@ -14,6 +14,7 @@ import {
 import { Row, Col } from 'react-grid-system';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { Select } from '@blueprintjs/select';
+import { queryCache } from 'react-query';
 
 import AppToaster from 'components/AppToaster';
 import AccountsConnect from 'connectors/Accounts.connector';
@@ -55,15 +56,12 @@ const ItemForm = ({
     deleteCallback: requestDeleteMedia,
   });
 
-  const ItemTypeDisplay = useMemo(
-    () => [
-      { value: null, label: 'Select Item Type' },
-      { value: 'service', label: 'Service' },
-      { value: 'inventory', label: 'Inventory' },
-      { value: 'non-inventory', label: 'Non-Inventory' },
-    ],
-    []
-  );
+  const ItemTypeDisplay = useMemo(() => [
+    { value: null, label: 'Select Item Type' },
+    { value: 'service', label: 'Service' },
+    { value: 'inventory', label: 'Inventory' },
+    { value: 'non-inventory', label: 'Non-Inventory' },
+  ], []);
 
   const validationSchema = Yup.object().shape({
     active: Yup.boolean(),
@@ -128,6 +126,8 @@ const ItemForm = ({
             }),
             intent: Intent.SUCCESS,
           });
+          queryCache.removeQueries(['items-table']);
+          history.push('/dashboard/items');
         });
       };
 

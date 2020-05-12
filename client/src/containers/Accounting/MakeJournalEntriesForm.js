@@ -132,7 +132,7 @@ function MakeJournalEntriesForm({
     initialValues: {
       ...initialValues,
     },
-    onSubmit: async (values, { setErrors, setSubmitting }) => {
+    onSubmit: async (values, { setErrors, setSubmitting, resetForm }) => {
       const entries = values.entries.filter((entry) => (
         (entry.credit || entry.debit)
       ));
@@ -171,11 +171,12 @@ function MakeJournalEntriesForm({
               setSubmitting(false);
               saveInvokeSubmit({ action: 'update', ...payload });
               clearSavedMediaIds([]);
+              resetForm();
               resolve(response);
             }).catch((errors) => {
               if (errors.find(e => e.type === 'JOURNAL.NUMBER.ALREADY.EXISTS')) {
                 setErrors({
-                  journal_number: 'Journal number is already used.',
+                  journal_number: formatMessage({ id: 'journal_number_is_already_used' }),
                 });
               }
               setSubmitting(false);
@@ -194,11 +195,12 @@ function MakeJournalEntriesForm({
               setSubmitting(false);
               saveInvokeSubmit({ action: 'new', ...payload });
               clearSavedMediaIds();
+              resetForm();
               resolve(response);
             }).catch((errors) => {
               if (errors.find(e => e.type === 'JOURNAL.NUMBER.ALREADY.EXISTS')) {
                 setErrors({
-                  journal_number: 'Journal number is already used.',
+                  journal_number: formatMessage({ id: 'journal_number_is_already_used' }),
                 });
               }
               setSubmitting(false);

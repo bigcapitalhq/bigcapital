@@ -9,6 +9,7 @@ import {
   MenuItem,
   MenuDivider,
   Position,
+  Tag,
 } from '@blueprintjs/core';
 import { useParams } from 'react-router-dom';
 import { FormattedMessage as T, useIntl } from 'react-intl';
@@ -145,7 +146,9 @@ function ManualJournalsDataTable({
       id: 'status',
       Header: formatMessage({ id: 'status' }),
       accessor: (r) => {
-        return r.status ? 'Published' : 'Draft';
+        return r.status
+          ? <Tag minimal={true}><T id={'published'} /></Tag> :
+          <Tag minimal={true} intent={Intent.WARNING}><T id={'draft'} /></Tag>;
       },
       disableResizing: true,
       width: 100,

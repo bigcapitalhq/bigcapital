@@ -8,12 +8,14 @@ import {
   Tab,
   Button,
 } from '@blueprintjs/core';
-import { useParams } from 'react-router-dom';
-import Icon from 'components/Icon';
+import { useParams, withRouter } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import { compose } from 'utils';
+import { connect } from 'react-redux';
+import { FormattedMessage as T } from 'react-intl';
 
 import { useUpdateEffect } from 'hooks';
+import { compose } from 'utils';
+import Icon from 'components/Icon';
 
 import withManualJournals from './withManualJournals';
 import withManualJournalsActions from './withManualJournalsActions';
@@ -85,10 +87,14 @@ function ManualJournalsViewTabs({
           <Tab
             id='all'
             title={
-              <Link to={`/dashboard/accounting/manual-journals`}>All</Link>
+              <Link to={`/dashboard/accounting/manual-journals`}>
+                <T id={'all'} />
+              </Link>
             }
           />
-          {tabs}
+
+          { tabs }
+
           <Button
             className='button--new-view'
             icon={<Icon icon='plus' />}
@@ -101,7 +107,16 @@ function ManualJournalsViewTabs({
   );
 }
 
+const mapStateToProps = (state, ownProps) => ({
+  // Mapping view id from matched route params.
+  viewId: ownProps.match.params.custom_view_id,
+});
+
+const withManualJournalsViewTabs = connect(mapStateToProps);
+
 export default compose(
+  withRouter,
+  withManualJournalsViewTabs,
   withManualJournals(({ manualJournalsViews }) => ({
     manualJournalsViews,
   })),

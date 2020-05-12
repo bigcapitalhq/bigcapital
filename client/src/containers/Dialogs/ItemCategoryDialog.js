@@ -256,7 +256,6 @@ const mapStateToProps = (state, props) => {
   return {
     name: 'item-category-form',
     payload: {action: 'new', id: null, ...dialogPayload},
-
     itemCategoryId: dialogPayload?.id || null,
   };
 };

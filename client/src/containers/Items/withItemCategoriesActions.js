@@ -8,7 +8,7 @@ import {
 
 export const mapDispatchToProps = (dispatch) => ({
   requestSubmitItemCategory: (form) => dispatch(submitItemCategory({ form })),
-  requestFetchItemCategories: () => dispatch(fetchItemCategories()),
+  requestFetchItemCategories: (query) => dispatch(fetchItemCategories({ query })),
   requestDeleteItemCategory: (id) => dispatch(deleteItemCategory(id)),
   requestEditItemCategory: (id, form) => dispatch(editItemCategory(id, form)),
 });

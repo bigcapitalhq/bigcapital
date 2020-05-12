@@ -7,7 +7,7 @@ export const submitItemCategory = ({ form }) => {
   };
 };
 
-export const fetchItemCategories = () => {
+export const fetchItemCategories = ({ query }) => {
   return (dispatch, getState) => new Promise((resolve, reject) => {
     dispatch({
       type: t.SET_DASHBOARD_REQUEST_LOADING,
@@ -18,7 +18,7 @@ export const fetchItemCategories = () => {
         loading: true,
       }
     });
-    ApiService.get('item_categories')
+    ApiService.get('item_categories', { params: { ...query } })
       .then((response) => {
         dispatch({
           type: t.ITEMS_CATEGORY_LIST_SET,
@@ -70,7 +70,7 @@ export const deleteItemCategory = (id) => {
         .then((response) => {
           dispatch({
             type: t.CATEGORY_DELETE,
-            id,
+            payload: { id },
           });
           resolve(response);
         })
