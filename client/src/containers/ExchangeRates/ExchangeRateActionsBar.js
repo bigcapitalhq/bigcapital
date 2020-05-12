@@ -19,7 +19,7 @@ import FilterDropdown from 'components/FilterDropdown';
 import withResourceDetail from 'containers/Resources/withResourceDetails';
 
 import { compose } from 'utils';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T ,useIntl } from 'react-intl';
 
 
 function ExchangeRateActionsBar({
@@ -34,6 +34,7 @@ function ExchangeRateActionsBar({
   onFilterChanged,
 }) {
   const [filterCount, setFilterCount] = useState(0);
+const {formatMessage} =useIntl()
 
   const onClickNewExchangeRate = () => {
     openDialog('exchangeRate-form', {});
@@ -80,7 +81,7 @@ function ExchangeRateActionsBar({
               filterCount <= 0 ? (
                 <T id={'filter'} />
               ) : (
-                `${filterCount} filters applied`
+                `${filterCount} ${formatMessage({id:'filters_applied'})}`
               )
             }
             icon={<Icon icon='filter' />}

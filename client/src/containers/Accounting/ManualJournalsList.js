@@ -97,7 +97,7 @@ function ManualJournalsTable({
 
   const handleEditJournal = useCallback(
     (journal) => {
-      history.push(`/dashboard/accounting/manual-journals/${journal.id}/edit`);
+      history.push(`/manual-journals/${journal.id}/edit`);
     },
     [history]
   );
@@ -162,8 +162,8 @@ function ManualJournalsTable({
           <Route
             exact={true}
             path={[
-              '/dashboard/accounting/manual-journals/:custom_view_id/custom_view',
-              '/dashboard/accounting/manual-journals',
+              '/manual-journals/:custom_view_id/custom_view',
+              '/manual-journals',
             ]}> 
           </Route>
         </Switch>

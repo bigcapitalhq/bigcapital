@@ -82,7 +82,7 @@ function ExchangeRateDialog({
           .then((response) => {
             closeDialog(name);
             AppToaster.show({
-              message: 'the_exchange_rate_has_been_edited',
+              message: formatMessage({id:'the_exchange_rate_has_been_successfully_edited'})
             });
             setSubmitting(false);
           })
@@ -94,7 +94,7 @@ function ExchangeRateDialog({
           .then((response) => {
             closeDialog(name);
             AppToaster.show({
-              message: 'the_exchangeRate_has_been_submit',
+              message: formatMessage({id:'the_exchange_rate_has_been_successfully_created'})
             });
             setSubmitting(false);
           })

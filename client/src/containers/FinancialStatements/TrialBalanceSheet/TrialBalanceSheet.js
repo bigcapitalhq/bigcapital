@@ -14,6 +14,7 @@ import withDashboard from 'containers/Dashboard/withDashboard';
 import withTrialBalanceActions from './withTrialBalanceActions';
 import withTrialBalance from './withTrialBalance';
 import SettingsConnect from 'connectors/Settings.connect';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 
 
 function TrialBalanceSheet({
@@ -44,9 +45,11 @@ function TrialBalanceSheet({
     fetchHook.refetch()
   }, [fetchHook]);
 
+  const {formatMessage} =useIntl();
+
   // Change page title of the dashboard.
   useEffect(() => {
-    changePageTitle('Trial Balance Sheet');
+    changePageTitle(formatMessage({id:'trial_balance_sheet'}));
   }, []);
 
   const handleFilterSubmit = useCallback((filter) => {

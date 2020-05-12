@@ -4,7 +4,7 @@ import Accountant from 'containers/Preferences/Accountant/Accountant';
 import Accounts from 'containers/Preferences/Accounts/Accounts';
 import CurrenciesList from 'containers/Preferences/Currencies/CurrenciesList'
 
-const BASE_URL = '/dashboard/preferences';
+const BASE_URL = '/preferences';
 
 export default [
   {

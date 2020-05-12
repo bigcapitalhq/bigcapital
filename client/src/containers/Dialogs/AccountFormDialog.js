@@ -375,7 +375,7 @@ function AccountFormDialog({
                   text={
                     selectedSubaccount
                       ? selectedSubaccount.name
-                      : 'Select Parent Account'
+                      : <T id={'select_parent_account'}/>
                   }
                 />
               </Select>

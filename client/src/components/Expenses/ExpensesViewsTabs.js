@@ -17,7 +17,7 @@ function AccountsViewsTabs({ views }) {
   const {path} = useRouteMatch();
 
   const handleClickNewView = () => {
-    history.push('/dashboard/custom_views/new');
+    history.push('/custom_views/new');
   };
 
   const tabs = views.map((view) => {

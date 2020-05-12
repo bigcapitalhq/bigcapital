@@ -50,7 +50,7 @@ function ItemsList({
   const { formatMessage } = useIntl();
 
   useEffect(() => {
-    changePageTitle('Items List');
+    changePageTitle(formatMessage({id:'items_list'}));
   }, [changePageTitle]);
 
   const fetchHook = useQuery('items-resource', () => {
@@ -135,8 +135,8 @@ function ItemsList({
           <Route
             exact={true}
             path={[
-              '/dashboard/items/:custom_view_id/custom_view',
-              '/dashboard/items'
+              '/items/:custom_view_id/custom_view',
+              '/items'
             ]}>
             <ItemsViewsTabs
               onViewChanged={handleCustomViewChanged} /> 

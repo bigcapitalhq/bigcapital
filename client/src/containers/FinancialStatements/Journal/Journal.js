@@ -14,6 +14,7 @@ import SettingsConnect from 'connectors/Settings.connect';
 import withDashboard from 'containers/Dashboard/withDashboard';
 import withJournal from './withJournal';
 import withJournalActions from './withJournalActions';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 
 
 function Journal({
@@ -34,9 +35,9 @@ function Journal({
     to_date: moment().endOf('year').format('YYYY-MM-DD'),
     basis: 'accural'
   });
-
+const {formatMessage} =useIntl();
   useEffect(() => {
-    changePageTitle('Journal Sheet');
+    changePageTitle(formatMessage({id:'journal_sheet'}));
   }, []);
 
   const fetchHook = useQuery(['journal', filter],

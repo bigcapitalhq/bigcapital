@@ -42,7 +42,7 @@ function ItemFromDialog({
       submitItemCategory({ values })
         .then((response) => {
           AppToaster.show({
-            message: 'the_category_has_been_submit',
+            message: formatMessage({id:'the_category_has_been_successfully_created'}),
           });
         })
         .catch((error) => {

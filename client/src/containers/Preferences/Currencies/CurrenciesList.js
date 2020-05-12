@@ -21,6 +21,7 @@ import AppToaster from 'components/AppToaster';
 import withDashboard from 'connectors/Dashboard.connector';
 import withCurrencies from 'containers/Currencies/withCurrencies';
 import withCurrenciesActions from 'containers/Currencies/withCurrenciesActions';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 
 
 function CurrenciesList({
@@ -36,7 +37,7 @@ function CurrenciesList({
   onFetchData,
 }) {
   const [deleteCurrencyState, setDeleteCurrencyState] = useState(false);
-
+  const { formatMessage } = useIntl()
   const fetchCurrencies = useQuery(['currencies-table'],
     () => requestFetchCurrencies());
 
@@ -60,7 +61,7 @@ function CurrenciesList({
       (response) => {
         setDeleteCurrencyState(false);
         AppToaster.show({
-          message: 'the_Currency_has_been_deleted',
+          message: formatMessage({id:'the_currency_has_been_successfully_deleted'}),
         });
       }
     );
@@ -69,11 +70,11 @@ function CurrenciesList({
   const actionMenuList = useCallback((currency) => (
     <Menu>
       <MenuItem
-        text='Edit Currency'
+        text={<T id={'edit_currency'} />}
         onClick={() => handleEditCurrency(currency)} />
 
       <MenuItem
-        text='Delete Currency'
+        text={<T id={'delete_currency'} />}
         onClick={() => onDeleteCurrency(currency)}
       />
     </Menu>
@@ -81,12 +82,12 @@ function CurrenciesList({
 
   const columns = useMemo(() => [
     {
-      Header: 'Currency Name',
+      Header: formatMessage({id:'currency_name'}),
       accessor: 'currency_name',
       width: 100,
     },
     {
-      Header: 'Currency Code',
+      Header: formatMessage({id:'currency_code'}),
       accessor: 'currency_code',
       className: 'currency_code',
       width: 100,
@@ -125,8 +126,8 @@ function CurrenciesList({
       />
 
       <Alert
-        cancelButtonText='Cancel'
-        confirmButtonText='Move to Trash'
+        cancelButtonText={<T id={'cancel'}/>}
+        confirmButtonText={<T id={'move_to_trash'}/>}
         icon='trash'
         intent={Intent.DANGER}
         isOpen={deleteCurrencyState}

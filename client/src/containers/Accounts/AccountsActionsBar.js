@@ -51,7 +51,7 @@ function AccountsActionsBar({
   const onClickNewAccount = () => { openDialog('account-form', {}); };
   const onClickViewItem = (view) => {
     history.push(view
-      ? `/dashboard/accounts/${view.id}/custom_view` : '/dashboard/accounts');
+      ? `/accounts/${view.id}/custom_view` : '/accounts');
   };
 
   const viewsMenuItems = accountsViews.map((view) => {

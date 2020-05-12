@@ -18,6 +18,7 @@ import {connect} from 'react-redux';
 import {
   fetchResourceFields,
 } from 'store/customFields/customFields.actions';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 
 function AccountsCustomFields({ fetchResourceFields, fields }) {
   const fetchHook = useAsync(async () => {
@@ -30,13 +31,13 @@ function AccountsCustomFields({ fetchResourceFields, fields }) {
 
   const actionMenuList = (column) => (
     <Menu>
-      <MenuItem text="View Details" />
+      <MenuItem text={<T id={'view_details'}/>} />
       <MenuDivider />
-      <MenuItem text="Edit Account" />
-      <MenuItem text="New Account" />
+      <MenuItem text={<T id={'edit_account'}/>} />
+      <MenuItem text={<T id={'new_account'}/>} />
       <MenuDivider />
-      <MenuItem text="Inactivate Account" />
-      <MenuItem text="Delete Account" />
+      <MenuItem text={<T id={'inactivate_account'}/>} />
+      <MenuItem text={<T id={'delete_account'}/>} />
     </Menu>
   );
 

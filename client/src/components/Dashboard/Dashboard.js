@@ -11,13 +11,13 @@ export default function Dashboard() {
   return (
     <div className='dashboard'>
       <Switch>
-        <Route path='/dashboard/preferences'>
+        <Route path='/preferences'>
           <Sidebar />
           <PreferencesSidebar />
           <PreferencesContent />
         </Route>
 
-        <Route path='/dashboard'>
+        <Route path='/'>
           <Sidebar />
           <DashboardContent />
         </Route>

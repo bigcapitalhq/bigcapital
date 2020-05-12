@@ -10,6 +10,7 @@ import {
 import withTrialBalance from './withTrialBalance';
 
 import { compose } from 'utils';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 
 
 function TrialBalanceSheetTable({
@@ -23,6 +24,9 @@ function TrialBalanceSheetTable({
   loading,
   companyName,
 }) {
+
+  const {formatMessage} =useIntl();
+
   const columns = useMemo(() => [
     {
       // Build our expander column
@@ -64,30 +68,30 @@ function TrialBalanceSheetTable({
       disableResizing: true,
     },
     {
-      Header: 'Account Name',
+      Header: formatMessage({id:'account_name'}),
       accessor: 'name',
       className: "name",
     },
     {
-      Header: 'Code', 
+      Header: formatMessage({id:'code'}), 
       accessor: 'code',
       className: "code",
       width: 120,
     },
     {
-      Header: 'Credit',
+      Header: formatMessage({id:'credit'}),
       accessor: r => (<Money amount={r.credit} currency="USD" />),
       className: 'credit',
       width: 120,
     },
     {
-      Header: 'Debit',
+      Header: formatMessage({id:'debit'}),
       accessor: r => (<Money amount={r.debit} currency="USD" />),
       className: 'debit',
       width: 120,
     },
     {
-      Header: 'Balance',
+      Header: formatMessage({id:'balance'}),
       accessor: r => (<Money amount={r.balance} currency="USD" />),
       className: 'balance',
       width: 120,

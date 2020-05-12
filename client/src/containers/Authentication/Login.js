@@ -38,7 +38,7 @@ function Login({
   const loginValidationSchema =  Yup.object().shape({
     crediential: Yup.string()
       .required(formatMessage({ id: 'required' }))
-      .email(formatMessage({ id: 'invalid_email_or_phone_numner' })),
+      .email(formatMessage({ id: 'invalid_email_or_phone_number' })),
     password: Yup.string()
       .required(formatMessage({ id: 'required' }))
       .min(4),
@@ -63,7 +63,7 @@ function Login({
         crediential: values.crediential,
         password: values.password,
       }).then(() => {
-        history.go('/dashboard/homepage');
+        history.go('/homepage');
         setSubmitting(false);
       }).catch((errors) => {
         const toastBuilders = [];

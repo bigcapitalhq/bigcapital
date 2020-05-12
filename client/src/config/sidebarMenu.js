@@ -1,3 +1,5 @@
+import React  from 'react'
+import { FormattedMessage as T, useIntl } from 'react-intl';
 
 export default [
   {
@@ -6,9 +8,9 @@ export default [
   {
     icon: 'homepage',
     iconSize: 20,
-    text: 'Homepage',
+    text: <T id={'homepage'}/>,
     disabled: false,
-    href: '/dashboard/homepage',
+   href: '/homepage',
   },
   {
     divider: true,
@@ -16,19 +18,19 @@ export default [
   {
     icon: 'homepage',
     iconSize: 20,
-    text: 'Items',
+    text: <T id={'items'}/>,
     children: [
       {
-        text: 'Items List',
-        href: '/dashboard/items',
+        text: <T id={'items_list'}/>,
+        href: '/items',
       },
       {
-        text: 'New Item',
-        href: '/dashboard/items/new',
+        text: <T id={'new_item'}/>,
+        href: '/items/new',
       },
       {
-        text: 'Category List',
-        href: '/dashboard/items/categories',
+        text: <T id={'category_list'}/>,
+        href: '/items/categories',
       },
     ],
   },
@@ -38,42 +40,42 @@ export default [
   {
     icon: 'balance-scale',
     iconSize: 20,
-    text: 'Financial',
+    text: <T id={'financial'}/>,
     children: [
       {
-        text: 'Accounts Chart',
-        href: '/dashboard/accounts',
+        text: <T id={'accounts_chart'}/>,
+        href: '/accounts',
       },
       {
-        text: 'Manual Journal',
-        href: '/dashboard/accounting/manual-journals',
+        text: <T id={'manual_journal'}/>,
+        href: '/manual-journals',
       },
       {
-        text: 'Make Journal',
-        href: '/dashboard/accounting/make-journal-entry',
+        text: <T id={'make_journal'}/>,
+        href: '/make-journal-entry',
       },
       {
-        text: 'Exchange Rate',
-        href: '/dashboard/ExchangeRates',
+        text: <T id={'exchange_rate'}/>,
+        href: '/ExchangeRates',
       },
     ],
   },
   {
     icon: 'university',
     iconSize: 20,
-    text: 'Banking',
+    text: <T id={'banking'}/>,
     children: [],
   },
   {
     icon: 'shopping-cart',
     iconSize: 20,
-    text: 'Sales',
+    text: <T id={'sales'}/>,
     children: [],
   },
   {
     icon: 'balance-scale',
     iconSize: 20,
-    text: 'Purchases',
+    text: <T id={'purchases'}/>,
     children: [
       {
         icon: 'cut',
@@ -86,42 +88,42 @@ export default [
   {
     icon: 'analytics',
     iconSize: 18,
-    text: 'Financial Reports',
+    text: <T id={'financial_reports'}/>,
     children: [
       {
-        text: 'Balance Sheet',
-        href: '/dashboard/accounting/balance-sheet',
+        text: <T id={'balance_sheet'}/>,
+        href: '/balance-sheet',
       },
       {
-        text: 'Trial Balance Sheet',
-        href: '/dashboard/accounting/trial-balance-sheet',
+        text: <T id={'trial_balance_sheet'}/>,
+        href: '/trial-balance-sheet',
       },
       {
-        text: 'Journal',
-        href: '/dashboard/accounting/journal-sheet',
+        text: <T id={'journal'}/>,
+        href: '/journal-sheet',
       },
       {
-        text: 'General Ledger',
-        href: '/dashboard/accounting/general-ledger',
+        text: <T id={'general_ledger'}/>,
+        href: '/general-ledger',
       },
       {
-        text: 'Profit Loss Sheet',
-        href: '/dashboard/accounting/profit-loss-sheet',
+        text: <T id={'profit_loss_sheet'}/>,
+        href: '/profit-loss-sheet',
       },
     ],
   },
   {
-    text: 'Expenses',
+    text: <T id={'expenses'}/>,
     icon: 'receipt',
     iconSize: 18,
     children: [
       {
-        text: 'Expenses List',
-        href: '/dashboard/expenses',
+        text: <T id={'expenses'}/>,
+        href: '/expenses',
       },
       {
-        text: 'New Expenses',
-        href: '/dashboard/expenses/new',
+        text: <T id={'new_expenses'}/>,
+        href: '/expenses/new',
       },
     ],
   },
@@ -129,11 +131,11 @@ export default [
     divider: true,
   },
   {
-    text: 'Preferences',
-    href: '/dashboard/preferences',
+    text: <T id={'preferences'}/>,
+    href: '/preferences',
   },
   {
-    text: 'Auditing System',
-    href: '/dashboard/auditing/list',
+    text: <T id={'auditing_system'}/>,
+    href: '/auditing/list',
   },
 ];

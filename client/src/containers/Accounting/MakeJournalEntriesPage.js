@@ -26,11 +26,11 @@ function MakeJournalEntriesPage({
 
   const handleFormSubmit = useCallback((payload) => {
     payload.redirect && 
-      history.push('/dashboard/accounting/manual-journals');
+      history.push('/manual-journals');
   }, [history]);
 
   const handleCancel = useCallback(() => {
-    history.push('/dashboard/accounting/manual-journals');
+    history.push('/manual-journals');
   }, [history]);
 
   return (

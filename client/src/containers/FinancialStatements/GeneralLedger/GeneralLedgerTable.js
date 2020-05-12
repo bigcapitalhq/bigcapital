@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback, useMemo} from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import FinancialSheet from 'components/FinancialSheet';
 import DataTable from 'components/DataTable';
 import Money from 'components/Money';
@@ -6,6 +6,7 @@ import moment from 'moment';
 import {
   defaultExpanderReducer,
 } from 'utils';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 
 
 const ROW_TYPE = {
@@ -21,9 +22,10 @@ export default function GeneralLedgerTable({
   loading,
   data,
 }) {
+  
   // Account name column accessor.
   const accountNameAccessor = useCallback((row) => {
-    switch(row.rowType) {
+    switch (row.rowType) {
       case ROW_TYPE.OPENING_BALANCE:
         return 'Opening Balance';
       case ROW_TYPE.CLOSING_BALANCE:
@@ -49,32 +51,32 @@ export default function GeneralLedgerTable({
     const transaction = cell.row.original
 
     if (transaction.rowType === ROW_TYPE.ACCOUNT) {
-      return (!cell.row.isExpanded) ? 
+      return (!cell.row.isExpanded) ?
         (<Money amount={transaction.closing.amount} currency={"USD"} />) : '';
     }
     return (<Money amount={transaction.amount} currency={"USD"} />);
   }, []);
 
   const referenceLink = useCallback((row) => {
-    return (<a href="">{ row.referenceId }</a>);
+    return (<a href="">{row.referenceId}</a>);
   });
-
+  const { formatMessage } = useIntl();
   const columns = useMemo(() => [
     {
       // Build our expander column
       id: 'expander', // Make sure it has an ID
-      className: 'expander',      
+      className: 'expander',
       Header: ({
         getToggleAllRowsExpandedProps,
         isAllRowsExpanded
       }) => (
-        <span {...getToggleAllRowsExpandedProps()} className="toggle">
-          {isAllRowsExpanded ?
-            (<span class="arrow-down" />) :
-            (<span class="arrow-right" />)
-          }
-        </span>
-      ),
+          <span {...getToggleAllRowsExpandedProps()} className="toggle">
+            {isAllRowsExpanded ?
+              (<span class="arrow-down" />) :
+              (<span class="arrow-right" />)
+            }
+          </span>
+        ),
       Cell: ({ row }) =>
         // Use the row.canExpand and row.getToggleRowExpandedProps prop getter
         // to build the toggle for expanding a row
@@ -100,37 +102,37 @@ export default function GeneralLedgerTable({
       disableResizing: true,
     },
     {
-      Header: 'Account Name',
+      Header: formatMessage({id:'account_name'}),
       accessor: accountNameAccessor,
       className: "name",
     },
     {
-      Header: 'Date',
+      Header: formatMessage({id:'date'}),
       accessor: dateAccessor,
       className: "date",
     },
     {
-      Header: 'Transaction Type',
+      Header: formatMessage({id:'transaction_type'}),
       accessor: 'referenceType',
       className: 'transaction_type',
     },
     {
-      Header: 'Trans. NUM',
+      Header: formatMessage({id:'trans_num'}),
       accessor: referenceLink,
       className: 'transaction_number'
     },
     {
-      Header: 'Description',
+      Header: formatMessage({id:'description'}),
       accessor: 'note',
       className: 'description',
     },
     {
-      Header: 'Amount',
+      Header: formatMessage({id:'amount'}),
       Cell: amountCell,
       className: 'amount'
     },
     {
-      Header: 'Balance',
+      Header: formatMessage({id:'balance'}),
       Cell: amountCell,
       className: 'balance',
     },
@@ -159,7 +161,7 @@ export default function GeneralLedgerTable({
         expanded={expandedRows}
         virtualizedRows={true}
         fixedItemSize={37}
-        fixedSizeHeight={1000}  />
+        fixedSizeHeight={1000} />
     </FinancialSheet>
-  ); 
+  );
 }

@@ -36,7 +36,7 @@ function ExpensesList({
     deleteExpense(deleteExpenseState.id).then(() => {
       setDeleteExpense(false);
       AppToaster.show({
-        message: 'the_expense_has_been_deleted'
+        message: formatMessage({id:'the_expense_has_been_successfully_deleted'})
       });
     });
   };

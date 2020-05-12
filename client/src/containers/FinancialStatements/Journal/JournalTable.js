@@ -12,6 +12,7 @@ import {
 } from 'store/financialStatement/financialStatements.selectors';
 
 import withJournal from './withJournal';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 
 
 function JournalSheetTable({
@@ -30,46 +31,48 @@ function JournalSheetTable({
   const exceptRowTypes = (rowType, value, types) => {
     return (types.indexOf(rowType) !== -1) ? '' : value;    
   };
+const {formatMessage} =useIntl();
+
   const columns = useMemo(() => [
     {
-      Header: 'Date',
+      Header: formatMessage({id:'date'}),
       accessor: r => rowTypeFilter(r.rowType, moment(r.date).format('YYYY/MM/DD'), ['first_entry']),
       className: 'date',
       width: 85,
     },
     {
-      Header: 'Transaction Type',
+      Header: formatMessage({id:'transaction_type'}),
       accessor: r => rowTypeFilter(r.rowType, r.transaction_type, ['first_entry']),
       className: "transaction_type",
       width: 145,
     },
     {
-      Header: 'Num.',
+      Header: formatMessage({id:'num'}),
       accessor: r => rowTypeFilter(r.rowType, r.reference_id, ['first_entry']),
       className: 'reference_id',
       width: 70,
     },
     {
-      Header: 'Description',
+      Header: formatMessage({id:'description'}),
       accessor: 'note',
     },
     {
-      Header: 'Acc. Code',
+      Header: formatMessage({id:'acc_code'}),
       accessor: 'account.code',
       width: 120,
       className: 'account_code',
     },
     {
-      Header: 'Account',
+      Header: formatMessage({id:'account'}),
       accessor: 'account.name',
     },
     {
-      Header: 'Credit',
+      Header: formatMessage({id:'credit'}),
       accessor: r => exceptRowTypes(
         r.rowType, (<Money amount={r.credit} currency={'USD'} />), ['space_entry']),
     },
     {
-      Header: 'Debit',
+      Header: formatMessage({id:'debit'}),
       accessor: r => exceptRowTypes(
         r.rowType, (<Money amount={r.debit} currency={'USD'} />), ['space_entry']),
     },

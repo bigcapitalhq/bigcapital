@@ -74,7 +74,7 @@ function InviteUserDialog({
           .then((response) => {
             closeDialog(name);
             AppToaster.show({
-              message: 'the_user_details_has_been_updated',
+              message: formatMessage({id:'the_user_details_has_been_updated'}),
             });
             setSubmitting(false);
           })

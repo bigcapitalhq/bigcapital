@@ -52,8 +52,7 @@ function SendResetPassword({ requestSendResetPassword }) {
       requestSendResetPassword(values.crediential)
         .then((response) => {
           AppToaster.show({
-            message: `Check your email for a link to reset your password.
-              If it doesn’t appear within a few minutes, check your spam folder.`,
+            message: formatMessage({id:'check_your_email_for_a_link_to_reset'}),
             intent: Intent.SUCCESS,
           });
           history.push('/auth/login');
@@ -62,7 +61,7 @@ function SendResetPassword({ requestSendResetPassword }) {
         .catch((errors) => {
           if (errors.find((e) => e.type === 'EMAIL.NOT.REGISTERED')) {
             AppToaster.show({
-              message: "We couldn't find your account with that email",
+              message: formatMessage({id:'we_couldn_t_find_your_account_with_that_email'}),
               intent: Intent.DANGER,
             });
           }

@@ -20,6 +20,7 @@ import withDashboard from 'containers/Dashboard/withDashboard';
 import withViewDetail from 'containers/Views/withViewDetails';
 import withItems from 'containers/Items/withItems';
 
+import { FormattedMessage as T, useIntl } from 'react-intl';
 
 function ItemsViewsTabs({
   // #withViewDetail
@@ -45,7 +46,7 @@ function ItemsViewsTabs({
 
   const handleClickNewView = () => {
     setTopbarEditView(null);
-    history.push('/dashboard/custom_views/items/new');
+    history.push('/custom_views/items/new');
   };
 
   const handleViewLinkClick = () => {
@@ -73,7 +74,7 @@ function ItemsViewsTabs({
   }, [customViewId]);
 
   const tabs = itemsViews.map(view => {
-    const baseUrl = '/dashboard/items';
+    const baseUrl = '/items';
     const link = (
       <Link to={`${baseUrl}/${view.id}/custom_view`} onClick={handleViewLinkClick}>
         {view.name}
@@ -93,7 +94,7 @@ function ItemsViewsTabs({
         >
           <Tab
             id='all'
-            title={<Link to={`/dashboard/items`}>All</Link>}
+            title={<Link to={`/items`}><T id={'all'}/></Link>}
             onClick={handleViewLinkClick} />
 
           {tabs}

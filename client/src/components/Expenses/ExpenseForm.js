@@ -52,7 +52,7 @@ export default function ExpenseForm({
       submitExpense(values)
         .then(response => {
           AppToaster.show({
-            message: 'the_expense_has_been_submit'
+            message: formatMessage({id:'the_expense_has_been_successfully_created'})
           });
         })
         .catch(error => {});
@@ -108,11 +108,11 @@ export default function ExpenseForm({
 
   const paymentAccountLabel = state.selectedPaymentAccount
     ? state.selectedPaymentAccount.name
-    : 'Select Payment Account';
+    : <T id={'select_payment_account'}/>;
 
   const expenseAccountLabel = state.selectedExpenseAccount
     ? state.selectedExpenseAccount.name
-    : 'Select Expense Account';
+    : <T id={'select_expense_account'}/>;
 
   const handleClose = () => {};
 

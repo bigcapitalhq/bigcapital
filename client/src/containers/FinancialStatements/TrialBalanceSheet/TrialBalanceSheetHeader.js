@@ -1,12 +1,12 @@
-import React, {useState, useCallback, useMemo} from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import * as Yup from 'yup';
-import {Row, Col} from 'react-grid-system';
+import { Row, Col } from 'react-grid-system';
 import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
-import { 
+import {
   Button,
 } from "@blueprintjs/core";
 import moment from 'moment';
-import {useIntl} from 'react-intl';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 import { useFormik } from 'formik';
 
 import FinancialStatementDateRange from 'containers/FinancialStatements/FinancialStatementDateRange';
@@ -16,7 +16,7 @@ export default function TrialBalanceSheetHeader({
   pageFilter,
   onSubmitFilter,
 }) {
-  const intl = useIntl();
+  const { formatMessage } = useIntl();
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
@@ -49,7 +49,7 @@ export default function TrialBalanceSheetHeader({
             onClick={handleSubmitClick}
             disabled={formik.isSubmitting}
             className={'button--submit-filter'}>
-            { 'Run Report' }
+            <T id={'run_report'} />
           </Button>
         </Col>
       </Row>

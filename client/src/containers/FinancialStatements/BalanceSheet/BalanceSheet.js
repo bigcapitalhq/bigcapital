@@ -1,8 +1,7 @@
-import React, {useEffect, useMemo, useCallback, useState} from 'react';
+import React, { useEffect, useMemo, useCallback, useState } from 'react';
 
-import {compose} from 'utils';
+import { compose } from 'utils';
 import { useQuery } from 'react-query';
-import { useIntl } from 'react-intl';
 import moment from 'moment';
 
 import BalanceSheetHeader from './BalanceSheetHeader';
@@ -17,6 +16,8 @@ import withDashboard from 'containers/Dashboard/withDashboard';
 import withBalanceSheetActions from './withBalanceSheetActions';
 import withBalanceSheetDetail from './withBalanceSheetDetail';
 
+import { FormattedMessage as T, useIntl } from 'react-intl';
+
 
 function BalanceSheet({
   // #withDashboard
@@ -24,14 +25,14 @@ function BalanceSheet({
 
   // #withBalanceSheetActions
   fetchBalanceSheet,
-  
+
   // #withBalanceSheetDetail
   balanceSheetLoading,
 
   // #withPreferences
   organizationSettings
 }) {
-  const intl = useIntl();
+  const { formatMessage } = useIntl();
   const [filter, setFilter] = useState({
     from_date: moment().startOf('year').format('YYYY-MM-DD'),
     to_date: moment().endOf('year').format('YYYY-MM-DD'),
@@ -40,7 +41,7 @@ function BalanceSheet({
     display_columns_by: '',
     none_zero: false,
   });
- 
+
   const fetchHook = useQuery(['balance-sheet', filter],
     (key, query) => { fetchBalanceSheet({ ...query }); });
 
@@ -50,7 +51,7 @@ function BalanceSheet({
   }, [fetchHook]);
 
   useEffect(() => {
-    changePageTitle('Balance Sheet');
+    changePageTitle(formatMessage({ id: 'balance_sheet' }));
   }, []);
 
   // Handle re-fetch balance sheet after filter change.

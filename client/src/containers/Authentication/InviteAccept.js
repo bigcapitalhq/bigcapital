@@ -148,7 +148,7 @@ function Invite({ requestInviteAccept, requestInviteMetaByToken }) {
           </h3>
           <p>
             <T id={'enter_your_personal_information'} />
-            <b>{inviteValue.organization_name}</b> Organization.
+            <b>{inviteValue.organization_name}</b> <T id={'organization'}/>
           </p>
         </div>
 

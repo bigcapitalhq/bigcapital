@@ -24,6 +24,7 @@ import withUsers from 'containers/Users/withUsers';
 import withUsersActions from 'containers/Users/withUsersActions';
 
 import { compose } from 'utils';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 
 
 function UsersListPreferences({
@@ -33,7 +34,7 @@ function UsersListPreferences({
 
   // #withUsers  
   usersList,
-  
+
   // #withUsersActions
   requestDeleteUser,
   requestInactiveUser,
@@ -44,14 +45,14 @@ function UsersListPreferences({
 }) {
   const [deleteUserState, setDeleteUserState] = useState(false);
   const [inactiveUserState, setInactiveUserState] = useState(false);
-
-  const fetchUsers = useQuery('users-table', 
+  const { formatMessage } = useIntl()
+  const fetchUsers = useQuery('users-table',
     () => requestFetchUsers());
 
   const onInactiveUser = (user) => {
     setInactiveUserState(user);
   };
-  
+
   // Handle cancel inactive user alert
   const handleCancelInactiveUser = useCallback(() => {
     setInactiveUserState(false);
@@ -61,7 +62,7 @@ function UsersListPreferences({
   const handleConfirmUserActive = useCallback(() => {
     requestInactiveUser(inactiveUserState.id).then(() => {
       setInactiveUserState(false);
-      AppToaster.show({ message: 'the_user_has_been_inactivated' });
+      AppToaster.show({ message: formatMessage({id:'the_user_has_been_successfully_inactivated'}) });
     });
   }, [inactiveUserState, requestInactiveUser, requestFetchUsers]);
 
@@ -98,7 +99,7 @@ function UsersListPreferences({
     requestDeleteUser(deleteUserState.id).then((response) => {
       setDeleteUserState(false);
       AppToaster.show({
-        message: 'the_user_has_been_deleted',
+        message: formatMessage({id:'the_user_has_been_successfully_deleted'}),
       });
     });
   };
@@ -106,11 +107,11 @@ function UsersListPreferences({
   const actionMenuList = useCallback(
     (user) => (
       <Menu>
-        <MenuItem text='Edit User' onClick={onEditUser(user)} />
+        <MenuItem text={<T id={'edit_user'} />} onClick={onEditUser(user)} />
         <MenuDivider />
-        <MenuItem text='Edit Invite ' onClick={onEditInviteUser(user)} />
-        <MenuItem text='Inactivate User' onClick={() => onInactiveUser(user)} />
-        <MenuItem text='Delete User' onClick={() => onDeleteUser(user)} />
+        <MenuItem text={<T id={'edit_invite'} />} onClick={onEditInviteUser(user)} />
+        <MenuItem text={<T id={'inactivate_user'} />} onClick={() => onInactiveUser(user)} />
+        <MenuItem text={<T id={'delete_user'} />} onClick={() => onDeleteUser(user)} />
       </Menu>
     ),
     []
@@ -119,25 +120,25 @@ function UsersListPreferences({
   const columns = useMemo(() => [
     {
       id: 'full_name',
-      Header: 'Full Name',
-      accessor: 'full_name',
+      Header:formatMessage({id:'full_name'}),
+        accessor: 'full_name',
       width: 170,
     },
     {
       id: 'email',
-      Header: 'Email',
+      Header: formatMessage({id:'email'}),
       accessor: 'email',
       width: 150,
     },
     {
       id: 'phone_number',
-      Header: 'Phone Number',
+      Header: formatMessage({id:'phone_number'}),
       accessor: 'phone_number',
       width: 150,
     },
     {
       id: 'active',
-      Header: 'Status',
+      Header: formatMessage({id:'status'}),
       accessor: (user) =>
         user.active ? <span>Active</span> : <span>Inactivate</span>,
       width: 50,
@@ -174,8 +175,8 @@ function UsersListPreferences({
       />
 
       <Alert
-        cancelButtonText='Cancel'
-        confirmButtonText='Move to Trash'
+        cancelButtonText={<T id={'cancel'}/>}
+        confirmButtonText={<T id={'move_to_trash'}/>}
         icon='trash'
         intent={Intent.DANGER}
         isOpen={deleteUserState}
@@ -189,8 +190,8 @@ function UsersListPreferences({
       </Alert>
 
       <Alert
-        cancelButtonText='Cancel'
-        confirmButtonText='Inactivate'
+        cancelButtonText={<T id={'cancel'}/>}
+        confirmButtonText={<T id={'inactivate'}/>}
         icon='trash'
         intent={Intent.WARNING}
         isOpen={inactiveUserState}

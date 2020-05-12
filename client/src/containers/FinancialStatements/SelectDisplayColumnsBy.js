@@ -6,6 +6,7 @@ import {
   FormGroup,
   MenuItem,
 } from '@blueprintjs/core';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 
 export default function SelectsListColumnsBy(props) {
   const { onItemSelect, formGroupProps, selectListProps } = props;
@@ -30,12 +31,12 @@ export default function SelectsListColumnsBy(props) {
   }, [setItemSelected, onItemSelect]);
 
   const buttonLabel = useMemo(() => 
-    itemSelected ? itemSelected.name : 'Select display columns by...',
+    itemSelected ? itemSelected.name : <T id={'select_display_columns_by'}/>,
     [itemSelected]);
 
   return (
     <FormGroup
-      label={'Display report columns'}
+      label={<T id={'display_report_columns'}/>}
       className="form-group-display-columns-by form-group--select-list bp3-fill"
       inline={false}
       {...formGroupProps}>

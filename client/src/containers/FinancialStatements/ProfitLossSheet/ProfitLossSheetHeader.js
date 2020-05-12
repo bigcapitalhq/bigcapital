@@ -1,11 +1,11 @@
-import React, {useCallback} from 'react';
-import {Row, Col} from 'react-grid-system';
+import React, { useCallback } from 'react';
+import { Row, Col } from 'react-grid-system';
 import {
   Button,
 } from '@blueprintjs/core';
 import moment from 'moment';
-import {useFormik} from 'formik';
-import {useIntl} from 'react-intl';
+import { useFormik } from 'formik';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 import * as Yup from 'yup';
 import FinancialStatementDateRange from 'containers/FinancialStatements/FinancialStatementDateRange';
 import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
@@ -17,7 +17,7 @@ export default function JournalHeader({
   pageFilter,
   onSubmitFilter,
 }) {
-  const intl = useIntl();
+  const { formatMessage } = useIntl();
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
@@ -60,7 +60,7 @@ export default function JournalHeader({
 
         <Col sm={3}>
           <RadiosAccountingBasis
-            selectedValue={formik.values.basis} 
+            selectedValue={formik.values.basis}
             onChange={handleAccountingBasisChange} />
         </Col>
 
@@ -69,7 +69,7 @@ export default function JournalHeader({
             type="submit"
             onClick={handleSubmitClick}
             className={'button--submit-filter mt2'}>
-            { 'Run Report' }
+            <T id={'run_report'} />
           </Button>
         </Col>
       </Row>

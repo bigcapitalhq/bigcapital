@@ -12,7 +12,6 @@ import {
 import classNames from 'classnames';
 import { TimezonePicker } from '@blueprintjs/timezone';
 import { Select } from '@blueprintjs/select';
-import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
 
 import { compose, optionsMapToArray } from 'utils';
@@ -22,6 +21,7 @@ import AppToaster from 'components/AppToaster';
 
 import withSettings from 'containers/Settings/withSettings';
 import withSettingsActions from 'containers/Settings/withSettingsActions';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 
 
 function GeneralPreferences({
@@ -180,7 +180,7 @@ function GeneralPreferences({
     <div className='preferences__inside-content--general'>
       <form onSubmit={handleSubmit}>
         <FormGroup
-          label={'Organization Name'}
+          label={<T id={'organization_name'}/>}
           inline={true}
           intent={(errors.name && touched.name) && Intent.DANGER}
           helperText={<ErrorMessage name='name' {...{errors, touched}} />}
@@ -193,7 +193,7 @@ function GeneralPreferences({
         </FormGroup>
 
         <FormGroup
-          label={'Organization Industry'}
+          label={<T id={'organization_industry'}/>}
           inline={true}
           intent={(errors.industry && touched.industry) && Intent.DANGER}
           helperText={<ErrorMessage name='industry' {...{errors, touched}} />}
@@ -206,7 +206,7 @@ function GeneralPreferences({
         </FormGroup>
 
         <FormGroup
-          label={'Business Location'}
+          label={<T id={'business_location'}/>}
           className={classNames(
             'form-group--business-location',
             'form-group--select-list',
@@ -235,7 +235,7 @@ function GeneralPreferences({
         </FormGroup>
 
         <FormGroup
-          label={'Base Currency'}
+          label={<T id={'base_currency'}/>}
           className={classNames(
             'form-group--base-currency',
             'form-group--select-list',
@@ -264,7 +264,7 @@ function GeneralPreferences({
         </FormGroup>
 
         <FormGroup
-          label={'Fiscal Year'}
+          label={<T id={'fiscal_year'}/>}
           className={classNames(
             'form-group--fiscal-year',
             'form-group--select-list',
@@ -293,7 +293,7 @@ function GeneralPreferences({
         </FormGroup>
 
         <FormGroup
-          label={'Language'}
+          label={<T id={'language'}/>}
           inline={true}
           className={classNames(
             'form-group--language',
@@ -320,7 +320,7 @@ function GeneralPreferences({
           </Select>
         </FormGroup>
         <FormGroup
-          label={'Time Zone'}
+          label={<T id={'time_zone'}/>}
           inline={true}
           className={classNames(
             'form-group--time-zone',
@@ -338,7 +338,7 @@ function GeneralPreferences({
           />
         </FormGroup>
         <FormGroup
-          label={'Date Format'}
+          label={<T id={'date_format'}/>}
           inline={true}
           className={classNames(
             'form-group--language',
@@ -371,9 +371,9 @@ function GeneralPreferences({
             intent={Intent.PRIMARY}
             type='submit'
           >
-            {'Save'}
+            <T id={'save'}/>
           </Button>
-          <Button onClick={'handleClose'}>Close</Button>
+          <Button onClick={'handleClose'}><T id={'close'}/></Button>
         </div>
       </form>
     </div>

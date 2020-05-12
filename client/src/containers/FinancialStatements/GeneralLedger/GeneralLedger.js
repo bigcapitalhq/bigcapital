@@ -5,12 +5,13 @@ import useAsync from 'hooks/async';
 import DashboardConnect from 'connectors/Dashboard.connector';
 import GeneralLedgerConnect from 'connectors/GeneralLedgerSheet.connect';
 import GeneralLedgerHeader from './GeneralLedgerHeader';
-import {compose} from 'utils';
+import { compose } from 'utils';
 import DashboardInsider from 'components/Dashboard/DashboardInsider'
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import GeneralLedgerActionsBar from './GeneralLedgerActionsBar';
 import AccountsConnect from 'connectors/Accounts.connector';
 import SettingsConnect from 'connectors/Settings.connect';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 
 function GeneralLedger({
   changePageTitle,
@@ -21,6 +22,7 @@ function GeneralLedger({
   requestFetchAccounts,
   organizationSettings,
 }) {
+  const { formatMessage } = useIntl()
   const [filter, setFilter] = useState({
     from_date: moment().startOf('year').format('YYYY-MM-DD'),
     to_date: moment().endOf('year').format('YYYY-MM-DD'),
@@ -30,7 +32,7 @@ function GeneralLedger({
 
   // Change page title of the dashboard.
   useEffect(() => {
-    changePageTitle('General Ledger');
+    changePageTitle(formatMessage({id:'general_ledger'}));
   }, []);
 
   const fetchHook = useAsync(() => {
@@ -45,7 +47,7 @@ function GeneralLedger({
     ]);
   }, false);
 
-  const generalLedgerSheetIndex = useMemo(() => 
+  const generalLedgerSheetIndex = useMemo(() =>
     getGeneralLedgerSheetIndex(filter),
     [getGeneralLedgerSheetIndex, filter]);
 
@@ -55,7 +57,7 @@ function GeneralLedger({
 
   // Handle fetch data of trial balance table.
   const handleFetchData = useCallback(() => { fetchSheet.execute() }, [fetchSheet]);
-  
+
   // Handle financial statement filter change.
   const handleFilterSubmit = useCallback((filter) => {
     const parsedFilter = {
@@ -67,7 +69,7 @@ function GeneralLedger({
     fetchSheet.execute(parsedFilter);
   }, [setFilter, fetchSheet]);
 
-  const handleFilterChanged = () => {};
+  const handleFilterChanged = () => { };
 
   return (
     <DashboardInsider>
