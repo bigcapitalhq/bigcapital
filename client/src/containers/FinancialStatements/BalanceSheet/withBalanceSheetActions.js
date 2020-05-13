@@ -3,7 +3,7 @@ import {
   fetchBalanceSheet,
 } from 'store/financialStatement/financialStatements.actions';
 
-export const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch) => ({
   fetchBalanceSheet: (query = {}) => dispatch(fetchBalanceSheet({ query })),  
 });
 

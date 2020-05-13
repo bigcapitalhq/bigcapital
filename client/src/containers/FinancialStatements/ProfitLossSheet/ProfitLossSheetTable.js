@@ -122,7 +122,8 @@ function ProfitLossSheetTable({
     <FinancialSheet
       companyName={companyName}
       sheetType={'Profit/Loss Sheet'}
-      date={new Date()}
+      fromDate={profitLossQuery.from_date}
+      toDate={profitLossQuery.to_date}
       name="profit-loss-sheet"
       loading={loading}
       basis={profitLossQuery.basis}>
@@ -133,8 +134,7 @@ function ProfitLossSheetTable({
         data={profitLossTableRows}
         onFetchData={handleFetchData}
         expanded={expandedRows}
-        rowClassNames={rowClassNames}
-        noInitialFetch={true} />
+        rowClassNames={rowClassNames} />
     </FinancialSheet>
   );
 }

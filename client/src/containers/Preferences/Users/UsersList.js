@@ -10,6 +10,7 @@ import {
   MenuDivider,
   Position,
   Intent,
+  Tag
 } from '@blueprintjs/core';
 import { snakeCase } from 'lodash';
 
@@ -138,9 +139,11 @@ function UsersListPreferences({
     {
       id: 'active',
       Header: 'Status',
-      accessor: (user) =>
-        user.active ? <span>Active</span> : <span>Inactivate</span>,
+      accessor: (user) => user.active ?
+        <Tag intent={Intent.SUCCESS} minimal={true}>Active</Tag> :
+        <Tag intent={Intent.WARNING} minimal={true}>Inactivate</Tag>,
       width: 50,
+      className: 'status',
     },
     {
       id: 'actions',

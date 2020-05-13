@@ -1,11 +1,19 @@
 import React, {useEffect, useState, useCallback, useMemo} from 'react';
+import moment from 'moment';
+import { connect } from 'react-redux';
+import {
+  defaultExpanderReducer,
+  compose
+} from 'utils';
+
 import FinancialSheet from 'components/FinancialSheet';
 import DataTable from 'components/DataTable';
 import Money from 'components/Money';
-import moment from 'moment';
+
 import {
-  defaultExpanderReducer,
-} from 'utils';
+  getFinancialSheetIndexByQuery,
+} from 'store/financialStatement/financialStatements.selectors';
+import withGeneralLedger from './withGeneralLedger';
 
 
 const ROW_TYPE = {
@@ -13,13 +21,15 @@ const ROW_TYPE = {
   OPENING_BALANCE: 'opening_balance',
   ACCOUNT: 'account_name',
   TRANSACTION: 'transaction',
-}
+};
 
-export default function GeneralLedgerTable({
+function GeneralLedgerTable({
   companyName,
   onFetchData,
-  loading,
-  data,
+
+  generalLedgerSheetLoading,
+  generalLedgerTableRows,
+  generalLedgerQuery,
 }) {
   // Account name column accessor.
   const accountNameAccessor = useCallback((row) => {
@@ -141,20 +151,23 @@ export default function GeneralLedgerTable({
   }, [onFetchData]);
 
   // Default expanded rows of general ledger table.
-  const expandedRows = useMemo(() => defaultExpanderReducer(data, 1), [data]);
+  const expandedRows = useMemo(
+    () => defaultExpanderReducer(generalLedgerTableRows, 1),
+    [generalLedgerTableRows]);
 
   return (
     <FinancialSheet
       companyName={companyName}
       sheetType={'General Ledger Sheet'}
-      date={new Date()}
+      fromDate={generalLedgerQuery.from_date}
+      toDate={generalLedgerQuery.to_date}
       name="general-ledger"
-      loading={loading}>
+      loading={generalLedgerSheetLoading}>
 
       <DataTable
         className="bigcapital-datatable--financial-report"
         columns={columns}
-        data={data}
+        data={generalLedgerTableRows}
         onFetchData={handleFetchData}
         expanded={expandedRows}
         virtualizedRows={true}
@@ -163,3 +176,29 @@ export default function GeneralLedgerTable({
     </FinancialSheet>
   ); 
 }
+
+const mapStateToProps = (state, props) => {
+  const { generalLedgerQuery } = props;
+
+  return {
+    generalLedgerIndex: getFinancialSheetIndexByQuery(
+      state.financialStatements.generalLedger.sheets,
+      generalLedgerQuery,
+    ),
+  };
+};
+
+const withGeneralLedgerTable = connect(mapStateToProps);
+
+export default compose(
+  withGeneralLedgerTable,
+  withGeneralLedger(({
+    generalLedgerTableRows,
+    generalLedgerSheetLoading,
+    generalLedgerQuery,
+  }) => ({
+    generalLedgerTableRows,
+    generalLedgerSheetLoading,
+    generalLedgerQuery
+  })),
+)(GeneralLedgerTable);

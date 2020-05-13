@@ -34,6 +34,7 @@ function ProfitLossSheet({
     from_date: moment().startOf('year').format('YYYY-MM-DD'),
     to_date: moment().endOf('year').format('YYYY-MM-DD'),
   });
+  const [refetch, setRefetch] = useState(false);
 
   // Change page title of the dashboard.
   useEffect(() => {
@@ -42,7 +43,8 @@ function ProfitLossSheet({
 
   // Fetches profit/loss sheet.
   const fetchHook = useQuery(['profit-loss', filter],
-    (key, query) => { fetchProfitLossSheet(query); });
+    (key, query) => fetchProfitLossSheet(query),
+    { manual: true });
 
   // Handle submit filter.
   const handleSubmitFilter = useCallback((filter) => {
@@ -52,12 +54,20 @@ function ProfitLossSheet({
       to_date: moment(filter.to_date).format('YYYY-MM-DD'),
     };
     setFilter(_filter);
+    setRefetch(true);
   }, []);
 
   // Handle fetch data of profit/loss sheet table.
   const handleFetchData = useCallback(() => {
-    fetchHook.refetch();
+    setRefetch(true);
   }, [fetchHook]);
+
+  useEffect(() => {
+    if (refetch) {
+      fetchHook.refetch({ force: true });
+      setRefetch(false);
+    }
+  }, [fetchHook, refetch]);
 
   return (
     <DashboardInsider>

@@ -3,6 +3,7 @@ import {
   getFinancialSheetIndexByQuery,
   getFinancialSheet,
   getFinancialSheetTableRows,
+  getFinancialSheetQuery,
 } from 'store/financialStatement/financialStatements.selectors';
 
 export default (mapState) => {
@@ -10,8 +11,18 @@ export default (mapState) => {
     const { journalIndex } = props;
 
     const mapped = {
-      journalSheet: getFinancialSheet(state.financialStatements.journal.sheets, journalIndex),
-      journalSheetTableRows: getFinancialSheetTableRows(state.financialStatements.journal.sheets, journalIndex),
+      journalSheet: getFinancialSheet(
+        state.financialStatements.journal.sheets,
+        journalIndex
+      ),
+      journalSheetTableRows: getFinancialSheetTableRows(
+        state.financialStatements.journal.sheets,
+        journalIndex
+      ),
+      journalSheetQuery: getFinancialSheetQuery(
+        state.financialStatements.journal.sheets,
+        journalIndex,
+      ),
       journalSheetLoading: state.financialStatements.journal.loading,
     };
     return mapState ? mapState(mapped, state, props) : mapped;

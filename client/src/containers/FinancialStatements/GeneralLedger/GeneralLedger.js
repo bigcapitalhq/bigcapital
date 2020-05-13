@@ -1,24 +1,33 @@
 import React, { useEffect, useCallback, useState, useMemo } from 'react';
 import moment from 'moment';
 import GeneralLedgerTable from 'containers/FinancialStatements/GeneralLedger/GeneralLedgerTable';
-import useAsync from 'hooks/async';
-import DashboardConnect from 'connectors/Dashboard.connector';
-import GeneralLedgerConnect from 'connectors/GeneralLedgerSheet.connect';
+import { useQuery } from 'react-query';
+
 import GeneralLedgerHeader from './GeneralLedgerHeader';
+
 import {compose} from 'utils';
+
 import DashboardInsider from 'components/Dashboard/DashboardInsider'
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import GeneralLedgerActionsBar from './GeneralLedgerActionsBar';
-import AccountsConnect from 'connectors/Accounts.connector';
-import SettingsConnect from 'connectors/Settings.connect';
+
+import withGeneralLedgerActions from './withGeneralLedgerActions';
+import withDashboard from 'containers/Dashboard/withDashboard';
+import withAccountsActions from 'containers/Accounts/withAccountsActions';
+import withSettings from 'containers/Settings/withSettings';
+
 
 function GeneralLedger({
+  // #withDashboard
   changePageTitle,
-  getGeneralLedgerSheetIndex,
-  getGeneralLedgerSheet,
+
+  // #withGeneralLedgerActions
   fetchGeneralLedger,
-  generalLedgerSheetLoading,
+  
+  // #withAccountsActions
   requestFetchAccounts,
+
+  // #withSettings
   organizationSettings,
 }) {
   const [filter, setFilter] = useState({
@@ -27,34 +36,32 @@ function GeneralLedger({
     basis: 'accural',
     none_zero: true,
   });
+  const [refetch, setRefetch] = useState(false);
 
   // Change page title of the dashboard.
   useEffect(() => {
     changePageTitle('General Ledger');
   }, []);
 
-  const fetchHook = useAsync(() => {
-    return Promise.all([
-      requestFetchAccounts(),
-    ]);
-  });
+  const fetchAccounts = useQuery(['accounts-list'],
+    () => requestFetchAccounts());
 
-  const fetchSheet = useAsync((query = filter) => {
-    return Promise.all([
-      fetchGeneralLedger(query),
-    ]);
-  }, false);
+  const fetchSheet = useQuery(['general-ledger', filter],
+    (key, query) => fetchGeneralLedger(query),
+    { manual: true });
 
-  const generalLedgerSheetIndex = useMemo(() => 
-    getGeneralLedgerSheetIndex(filter),
-    [getGeneralLedgerSheetIndex, filter]);
-
-  const generalLedgerSheet = useMemo(() =>
-    getGeneralLedgerSheet(generalLedgerSheetIndex),
-    [generalLedgerSheetIndex, getGeneralLedgerSheet])
+  // Refetch general ledger sheet effect.
+  useEffect(() => {
+    if (refetch) {
+      fetchSheet.refetch({ force: true });
+      setRefetch(false);
+    }
+  }, [fetchSheet, refetch]);
 
   // Handle fetch data of trial balance table.
-  const handleFetchData = useCallback(() => { fetchSheet.execute() }, [fetchSheet]);
+  const handleFetchData = useCallback(() => {
+    setRefetch(true);
+  }, []);
   
   // Handle financial statement filter change.
   const handleFilterSubmit = useCallback((filter) => {
@@ -64,14 +71,15 @@ function GeneralLedger({
       to_date: moment(filter.to_date).format('YYYY-MM-DD'),
     };
     setFilter(parsedFilter);
-    fetchSheet.execute(parsedFilter);
-  }, [setFilter, fetchSheet]);
+    setRefetch(true);
+  }, [setFilter]);
 
   const handleFilterChanged = () => {};
 
   return (
     <DashboardInsider>
-      <GeneralLedgerActionsBar onFilterChanged={handleFilterChanged} />
+      <GeneralLedgerActionsBar
+        onFilterChanged={handleFilterChanged} />
 
       <DashboardPageContent>
         <div class="financial-statement financial-statement--general-ledger">
@@ -82,11 +90,7 @@ function GeneralLedger({
           <div class="financial-statement__table">
             <GeneralLedgerTable
               companyName={organizationSettings.name}
-              loading={generalLedgerSheetLoading}
-              data={[
-                ... (generalLedgerSheet) ?
-                  generalLedgerSheet.tableRows : [],
-              ]}
+              generalLedgerQuery={filter}
               onFetchData={handleFetchData} />
           </div>
         </div>
@@ -96,8 +100,8 @@ function GeneralLedger({
 }
 
 export default compose(
-  DashboardConnect,
-  AccountsConnect,
-  GeneralLedgerConnect,
-  SettingsConnect,
+  withGeneralLedgerActions,
+  withDashboard,
+  withAccountsActions,
+  withSettings,
 )(GeneralLedger);

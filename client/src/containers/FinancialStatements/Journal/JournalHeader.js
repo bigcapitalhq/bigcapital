@@ -5,9 +5,10 @@ import {
   Intent,
 } from '@blueprintjs/core';
 import moment from 'moment';
-import {useFormik} from 'formik';
-import {useIntl} from 'react-intl';
+import { useFormik } from 'formik';
+import { useIntl } from 'react-intl';
 import * as Yup from 'yup';
+
 import FinancialStatementDateRange from 'containers/FinancialStatements/FinancialStatementDateRange';
 import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
 

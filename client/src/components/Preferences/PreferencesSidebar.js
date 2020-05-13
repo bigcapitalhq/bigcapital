@@ -1,15 +1,18 @@
 import React from 'react';
 import {Menu, MenuItem, MenuDivider} from '@blueprintjs/core';
-import {useHistory} from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import preferencesMenu from 'config/preferencesMenu';
 
 export default function PreferencesSidebar() {
   const history = useHistory();
-  
+  const location = useLocation();
+
   const items = preferencesMenu.map((item) => (
     (item.divider) ?
-      <MenuDivider title={item.title} /> : 
+      <MenuDivider
+        title={item.title} /> : 
       <MenuItem
+        active={(item.href && item.href === location.pathname)}
         text={item.text}
         label={item.label}
         disabled={item.disabled}

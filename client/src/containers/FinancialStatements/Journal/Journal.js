@@ -12,7 +12,6 @@ import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import SettingsConnect from 'connectors/Settings.connect';
 
 import withDashboard from 'containers/Dashboard/withDashboard';
-import withJournal from './withJournal';
 import withJournalActions from './withJournalActions';
 
 
@@ -23,9 +22,6 @@ function Journal({
   // #withDashboard
   changePageTitle,  
 
-  // #withJournal
-  journalSheetLoading,
-
   // #withPreferences
   organizationSettings,
 }) {
@@ -34,13 +30,15 @@ function Journal({
     to_date: moment().endOf('year').format('YYYY-MM-DD'),
     basis: 'accural'
   });
+  const [refetch, setRefetch] = useState(false);
 
   useEffect(() => {
     changePageTitle('Journal Sheet');
   }, []);
 
   const fetchHook = useQuery(['journal', filter],
-    (key, query) => { requestFetchJournalSheet(query); });
+    (key, query) => { requestFetchJournalSheet(query); },
+    { manual: true });
 
   // Handle financial statement filter change.
   const handleFilterSubmit = useCallback((filter) => {
@@ -50,6 +48,7 @@ function Journal({
       to_date: moment(filter.to_date).format('YYYY-MM-DD'),
     };
     setFilter(_filter);
+    setRefetch(true);
   }, [fetchHook]);
 
   const handlePrintClick = useCallback(() => {
@@ -61,13 +60,20 @@ function Journal({
   }, []);
 
   const handleFetchData = useCallback(({ sortBy, pageIndex, pageSize }) => {
-    fetchHook.refetch();
-  }, [fetchHook]);
+    setRefetch(true);
+  }, []);
+
+  useEffect(() => {
+    if (refetch) {
+      fetchHook.refetch({ force: true });
+      setRefetch(false);
+    }
+  }, [refetch, fetchHook])
 
   return (
     <DashboardInsider>
       <JournalActionsBar
-        onFilterChanged={() => {}}
+        onSubmitFilter={handleFilterSubmit}
         onPrintClick={handlePrintClick}
         onExportClick={handleExportClick} />
 
@@ -81,7 +87,6 @@ function Journal({
             <JournalTable
               companyName={organizationSettings.name}
               journalQuery={filter}
-              loading={journalSheetLoading}
               onFetchData={handleFetchData} />
           </div>
         </div>
@@ -93,8 +98,5 @@ function Journal({
 export default compose(
   withDashboard,
   withJournalActions,
-  withJournal(({ journalSheetLoading }) => ({
-    journalSheetLoading,
-  })),
   SettingsConnect,
 )(Journal);

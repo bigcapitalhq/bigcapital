@@ -91,8 +91,14 @@
     .#{$ns}-menu-item {
       padding: 10px 18px;
       font-size: 15px;
-      font-weight: 300;
+      font-weight: 400;
       color: #333;
+
+      &:hover,
+      &.#{$ns}-active{
+        background-color: #ebf1f5;
+        color: #333;
+      }
     }
   }
 }
@@ -107,6 +113,17 @@
     }
     .bp3-form-content {
       width: 384px;
+    }
+  }
+}
+
+
+// Users/Roles List.
+// ---------------------------------
+.preferences__inside-content--users-roles{
+  .bigcapital-datatable{
+    .td.status{
+      text-transform: uppercase;
     }
   }
 }

@@ -11,9 +11,9 @@ import BalanceSheetTable from './BalanceSheetTable';
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import BalanceSheetActionsBar from './BalanceSheetActionsBar';
-import SettingsConnect from 'connectors/Settings.connect';
 
 import withDashboard from 'containers/Dashboard/withDashboard';
+import withSettings from 'containers/Settings/withSettings';
 import withBalanceSheetActions from './withBalanceSheetActions';
 import withBalanceSheetDetail from './withBalanceSheetDetail';
 
@@ -40,14 +40,16 @@ function BalanceSheet({
     display_columns_by: '',
     none_zero: false,
   });
+  const [refetch, setRefetch] = useState(false);
  
   const fetchHook = useQuery(['balance-sheet', filter],
-    (key, query) => { fetchBalanceSheet({ ...query }); });
+    (key, query) => fetchBalanceSheet({ ...query }),
+    { manual: true });
 
   // Handle fetch the data of balance sheet.
   const handleFetchData = useCallback(() => {
-    fetchHook.refetch();
-  }, [fetchHook]);
+    setRefetch(true);
+  }, []);
 
   useEffect(() => {
     changePageTitle('Balance Sheet');
@@ -61,7 +63,16 @@ function BalanceSheet({
       to_date: moment(filter.to_date).format('YYYY-MM-DD'),
     };
     setFilter({ ..._filter });
+    setRefetch(true);
   }, [setFilter]);
+
+  // Refetch sheet effect.
+  useEffect(() => {
+    if (refetch) {
+      fetchHook.refetch({ force: true });
+      setRefetch(false);
+    }    
+  }, [refetch])
 
   return (
     <DashboardInsider>
@@ -92,6 +103,5 @@ export default compose(
   withBalanceSheetDetail(({ balanceSheetLoading }) => ({
     balanceSheetLoading,
   })),
-  // BalanceSheetConnect,
-  SettingsConnect,
+  withSettings,
 )(BalanceSheet);

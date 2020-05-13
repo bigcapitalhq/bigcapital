@@ -1,7 +1,6 @@
 import React, {useState, useCallback, useMemo} from 'react';
 import * as Yup from 'yup';
 import {Row, Col} from 'react-grid-system';
-import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
 import { 
   Button,
 } from "@blueprintjs/core";
@@ -9,6 +8,7 @@ import moment from 'moment';
 import {useIntl} from 'react-intl';
 import { useFormik } from 'formik';
 
+import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
 import FinancialStatementDateRange from 'containers/FinancialStatements/FinancialStatementDateRange';
 
 

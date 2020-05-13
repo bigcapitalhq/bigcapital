@@ -18,6 +18,7 @@ function TrialBalanceSheetTable({
 
   // #withTrialBalanceTable
   trialBalanceIndex,
+  trialBalanceQuery,
 
   onFetchData,
   loading,
@@ -102,7 +103,8 @@ function TrialBalanceSheetTable({
     <FinancialSheet
       companyName={companyName}
       sheetType={'Trial Balance Sheet'}
-      date={new Date()}
+      fromDate={trialBalanceQuery.from_date}
+      toDate={trialBalanceQuery.to_date}
       name="trial-balance"
       loading={loading}>
 
@@ -119,7 +121,10 @@ function TrialBalanceSheetTable({
 const mapStateToProps = (state, props) => {
   const { trialBalanceQuery } = props;
   return {
-    trialBalanceIndex: getFinancialSheetIndexByQuery(state.financialStatements.trialBalance.sheets, trialBalanceQuery),
+    trialBalanceIndex: getFinancialSheetIndexByQuery(
+      state.financialStatements.trialBalance.sheets,
+      trialBalanceQuery,
+    ),
   };
 };
 

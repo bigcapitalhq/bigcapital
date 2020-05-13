@@ -13,7 +13,7 @@ import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import withDashboard from 'containers/Dashboard/withDashboard';
 import withTrialBalanceActions from './withTrialBalanceActions';
 import withTrialBalance from './withTrialBalance';
-import SettingsConnect from 'connectors/Settings.connect';
+import withSettings from 'containers/Settings/withSettings';
 
 
 function TrialBalanceSheet({
@@ -35,13 +35,15 @@ function TrialBalanceSheet({
     basis: 'accural',
     none_zero: false,
   });
+  const [refetch, setRefetch] = useState(false);
 
   const fetchHook = useQuery(['trial-balance', filter],
-    (key, query) => { fetchTrialBalanceSheet(query); });
+    (key, query) => fetchTrialBalanceSheet(query),
+    { manual: true });
 
   // handle fetch data of trial balance table.
   const handleFetchData = useCallback(() => {
-    fetchHook.refetch()
+    setRefetch(true);
   }, [fetchHook]);
 
   // Change page title of the dashboard.
@@ -56,7 +58,16 @@ function TrialBalanceSheet({
       to_date: moment(filter.to_date).format('YYYY-MM-DD'),
     };
     setFilter(parsedFilter);
-  }, [setFilter]);
+    setRefetch(true);
+  }, []);
+
+  // Refetch sheet effect.
+  useEffect(() => {
+    if (refetch) {
+      fetchHook.refetch({ force: true });
+      setRefetch(false);
+    }
+  }, [fetchHook]);
 
   return (
     <DashboardInsider>
@@ -87,5 +98,5 @@ export default compose(
   withTrialBalance(({ trialBalanceSheetLoading }) => ({
     trialBalanceSheetLoading,
   })),
-  SettingsConnect,
+  withSettings,
 )(TrialBalanceSheet);

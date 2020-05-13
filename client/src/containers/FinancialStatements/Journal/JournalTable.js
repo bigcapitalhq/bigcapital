@@ -17,10 +17,11 @@ import withJournal from './withJournal';
 function JournalSheetTable({
   // #withJournal
   journalSheetTableRows,
+  journalSheetLoading,
+  journalSheetQuery,
 
   // #ownProps
   onFetchData,
-  loading,
   companyName,
 }) {
   const rowTypeFilter = (rowType, value, types) => {
@@ -86,9 +87,10 @@ function JournalSheetTable({
     <FinancialSheet
       companyName={companyName}
       sheetType={'Journal Sheet'}
-      date={new Date()}
+      fromDate={journalSheetQuery.from_date}
+      toDate={journalSheetQuery.to_date}
       name="journal"
-      loading={loading}>
+      loading={journalSheetLoading}>
  
       <DataTable
         className="bigcapital-datatable--financial-report"
@@ -106,7 +108,10 @@ function JournalSheetTable({
 const mapStateToProps = (state, props) => {
   const { journalQuery } = props;
   return {
-    journalIndex: getFinancialSheetIndexByQuery(state.financialStatements.journal.sheets, journalQuery) 
+    journalIndex: getFinancialSheetIndexByQuery(
+      state.financialStatements.journal.sheets,
+      journalQuery,
+    ) 
   };
 }
 
@@ -114,7 +119,9 @@ const withJournalTable = connect(mapStateToProps);
 
 export default compose(
   withJournalTable,
-  withJournal(({ journalSheetTableRows }) => ({
-    journalSheetTableRows
+  withJournal(({ journalSheetTableRows, journalSheetLoading, journalSheetQuery }) => ({
+    journalSheetTableRows,
+    journalSheetLoading,
+    journalSheetQuery,
   })),
 )(JournalSheetTable);

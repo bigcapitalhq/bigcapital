@@ -131,8 +131,7 @@ function BalanceSheetTable({
         data={balanceSheetAccounts}
         onFetchData={handleFetchData}
         expanded={expandedRows}
-        expandSubRows={true}
-        noInitialFetch={true} />
+        expandSubRows={true} />
     </FinancialSheet>
   );
 }
