@@ -2,6 +2,20 @@ import Knex from 'knex';
 import { knexSnakeCaseMappers } from 'objection';
 import Tenant from '@/system/models/Tenant';
 import config from '@/../config/config';
+import TenantModel from '@/models/TenantModel';
+import uniqid from 'uniqid';
+import dbManager from '@/database/manager';
+import { omit } from 'lodash';
+
+import SystemUser from '@/system/models/SystemUser';
+import TenantUser from '@/models/TenantUser';
+// import TenantModel from '@/models/TenantModel';
+
+// const TenantWebsite: {
+//   tenantDb: Knex,
+//   tenantId: Number,
+//   tenantOrganizationId: String,
+// }
 
 export default class TenantsManager {
 
@@ -14,6 +28,65 @@ export default class TenantsManager {
       .where('organization_id', organizationId).first();
 
     return tenant;
+  }
+
+  /**
+   * Creates a new tenant database.
+   * @param {Integer} uniqId 
+   * @return {TenantWebsite}
+   */
+  static async createTenant(uniqId) {
+    const organizationId = uniqId || uniqid();
+    const tenantOrganization = await Tenant.query().insert({
+      organization_id: organizationId,
+    });
+
+    const tenantDbName = `bigcapital_tenant_${organizationId}`;
+    await dbManager.createDb(tenantDbName);
+
+    const tenantDb = TenantsManager.knexInstance(organizationId);
+    await tenantDb.migrate.latest();
+    
+    return {
+      tenantDb,
+      tenantId: tenantOrganization.id,
+      organizationId,
+    };
+  }
+
+  /**
+   * Drop tenant database of the given tenant website.
+   * @param {TenantWebsite} tenantWebsite 
+   */
+  static async dropTenant(tenantWebsite) {
+    const tenantDbName = `bigcapital_tenant_${tenantWebsite.organizationId}`;
+    await dbManager.dropDb(tenantDbName);
+
+    await SystemUser.query()
+      .where('tenant_id', tenantWebsite.tenantId);
+  }
+
+  /**
+   * Creates a user that associate to the given tenant.
+   */
+  static async createTenantUser(tenantWebsite, user) {
+    const userInsert = { ...user };
+
+    const systemUser = await SystemUser.query().insert({
+      ...user,
+      tenant_id: tenantWebsite.tenantId,
+    });
+    TenantModel.knexBinded = tenantWebsite.tenantDb;
+
+    const tenantUser = await TenantUser.bindKnex(tenantWebsite.tenantDb)
+      .query()
+      .insert({
+        ...omit(userInsert, ['password']),
+      });
+    return {
+      ...tenantUser,
+      ...systemUser
+    };
   }
 
   /**
@@ -43,6 +116,7 @@ export default class TenantsManager {
       seeds: {
         directory: config.tenant.seeds_dir,
       },
+      pool: { min: 0, max: 5 },
     };
   }
 

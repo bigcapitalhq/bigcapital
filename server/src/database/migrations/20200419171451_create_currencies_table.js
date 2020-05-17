@@ -4,7 +4,7 @@ exports.up = function(knex) {
     table.increments();
     table.string('currency_name');
     table.string('currency_code', 4);
-  })
+  }).raw('ALTER TABLE `CURRENCIES` AUTO_INCREMENT = 1000');
 };
 
 exports.down = function(knex) {

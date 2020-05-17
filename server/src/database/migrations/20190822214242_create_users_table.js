@@ -13,7 +13,7 @@ exports.up = function (knex) {
 
     table.date('invite_accepted_at');
     table.timestamps();
-  });
+  }).raw('ALTER TABLE `USERS` AUTO_INCREMENT = 1000');;
 };
 
 exports.down = function (knex) {

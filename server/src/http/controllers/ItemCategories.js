@@ -5,6 +5,7 @@ import {
   validationResult,
   query,
 } from 'express-validator';
+import { difference } from 'lodash';
 import asyncMiddleware from '../middleware/asyncMiddleware';
 import {
   DynamicFilter,
@@ -14,6 +15,7 @@ import {
 import {
   mapFilterRolesToDynamicFilter,
 } from '@/lib/ViewRolesBuilder';
+
 
 export default {
   /**
@@ -31,6 +33,10 @@ export default {
       this.newCategory.validation,
       asyncMiddleware(this.newCategory.handler));
 
+    router.delete('/bulk',
+      this.bulkDeleteCategories.validation,
+      asyncMiddleware(this.bulkDeleteCategories.handler));
+
     router.delete('/:id',
       this.deleteItem.validation,
       asyncMiddleware(this.deleteItem.handler));
@@ -42,6 +48,8 @@ export default {
     router.get('/',
       this.getList.validation,
       asyncMiddleware(this.getList.handler));
+
+    
 
     return router;
   },
@@ -145,7 +153,7 @@ export default {
         .where('id', id)
         .update({ ...form });
 
-      return res.status(200).send({ id: updateItemCategory });
+      return res.status(200).send({ id });
     },
   },
 
@@ -274,8 +282,46 @@ export default {
           errors: [{ type: 'CATEGORY_NOT_FOUND', code: 100 }],
         });
       }
-
       return res.status(200).send({ category: item.toJSON() });
+    },
+  },
+
+
+  /**
+   * Bulk delete the given item categories.
+   */
+  bulkDeleteCategories: {
+    validation: [
+      query('ids').isArray({ min: 2 }),
+      query('ids.*').isNumeric().toInt(),
+    ],
+    async handler(req, res) {
+      const validationErrors = validationResult(req);
+
+      if (!validationErrors.isEmpty()) {
+        return res.boom.badData(null, {
+          code: 'validation_error', ...validationErrors,
+        });
+      }
+      const filter = {
+        ids: [],
+        ...req.query,
+      };
+      const { ItemCategory } = req.models;
+      
+      const itemCategories = await ItemCategory.query().whereIn('id', filter.ids);
+      const itemCategoriesIds = itemCategories.map((category) => category.id);
+      const notFoundCategories = difference(filter.ids, itemCategoriesIds);
+
+      if (notFoundCategories.length > 0) {
+        return res.status(400).send({
+          errors: [{ type: 'ITEM.CATEGORIES.IDS.NOT.FOUND', code: 200 }],
+        });
+      }
+
+      await ItemCategory.query().whereIn('id', filter.ids).delete();
+
+      return res.status(200).send({ ids: filter.ids });
     },
   },
 };

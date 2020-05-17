@@ -1,30 +1,26 @@
 import {
   request,
   expect,
-  create,
-  login,
 } from '~/testInit';
 import moment from 'moment';
 import ManualJournal from '@/models/ManualJournal';
 import AccountTransaction from '@/models/AccountTransaction';
 import AccountBalance from '@/models/AccountBalance';
+import {
+  tenantWebsite,
+  tenantFactory,
+  loginRes
+} from '~/dbInit';
 
-let loginRes;
 
 describe('routes: `/accounting`', () => {
-  beforeEach(async () => {
-    loginRes = await login();
-  });
-  afterEach(() => {
-    loginRes = null;
-  });
-
   describe('route: `/accounting/make-journal-entries`', async () => {
     it('Should sumation of credit or debit does not equal zero.', async () => {
-      const account = await create('account');
+      const account = await tenantFactory.create('account');
       const res = await request()
         .post('/api/accounting/make-journal-entries')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           date: new Date().toISOString(),
           journal_number: '123',
@@ -50,10 +46,11 @@ describe('routes: `/accounting`', () => {
     });
 
     it('Should all credit entries equal debit.', async () => {
-      const account = await create('account');
+      const account = await tenantFactory.create('account');
       const res = await request()
         .post('/api/accounting/make-journal-entries')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           date: new Date().toISOString(),
           journal_number: '123',
@@ -79,12 +76,13 @@ describe('routes: `/accounting`', () => {
     });
 
     it('Should journal reference be not exists.', async () => {
-      const manualJournal = await create('manual_journal');
-      const account = await create('account');
+      const manualJournal = await tenantFactory.create('manual_journal');
+      const account = await tenantFactory.create('account');
 
       const res = await request()
         .post('/api/accounting/make-journal-entries')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           date: new Date().toISOString(),
           journal_number: manualJournal.journalNumber,
@@ -113,6 +111,7 @@ describe('routes: `/accounting`', () => {
       const res = await request()
         .post('/api/accounting/make-journal-entries')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           date: new Date().toISOString(),
           journal_number: '123',
@@ -138,12 +137,13 @@ describe('routes: `/accounting`', () => {
     });
 
     it('Should discard journal entries that has null credit and debit amount.', async () => {
-      const account1 = await create('account');
-      const account2 = await create('account');
+      const account1 = await tenantFactory.create('account');
+      const account2 = await tenantFactory.create('account');
 
       const res = await request()
         .post('/api/accounting/make-journal-entries')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           date: new Date().toISOString(),
           journal_number: '1000',
@@ -169,12 +169,13 @@ describe('routes: `/accounting`', () => {
     });
 
     it('Should store manual journal transaction to the storage.', async () => {
-      const account1 = await create('account');
-      const account2 = await create('account');
+      const account1 = await tenantFactory.create('account');
+      const account2 = await tenantFactory.create('account');
 
       const res = await request()
         .post('/api/accounting/make-journal-entries')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           date: new Date('2020-2-2').toISOString(),
           journal_number: '1000',
@@ -192,7 +193,7 @@ describe('routes: `/accounting`', () => {
           ],
         });
 
-      const foundManualJournal = await ManualJournal.query();
+      const foundManualJournal = await ManualJournal.tenant().query();
 
       expect(foundManualJournal.length).equals(1);
       
@@ -202,17 +203,19 @@ describe('routes: `/accounting`', () => {
       expect(foundManualJournal[0].amount).equals(1000);
       expect(moment(foundManualJournal[0].date).format('YYYY-MM-DD')).equals('2020-02-02');
       expect(foundManualJournal[0].description).equals('Description here.');
-      expect(foundManualJournal[0].userId).to.be.a('integer');
+      expect(foundManualJournal[0].userId).to.be.a('number');
     });
 
     it('Should store journal transactions to the storage.', async () => {
-      const account1 = await create('account');
-      const account2 = await create('account');
+      const account1 = await tenantFactory.create('account');
+      const account2 = await tenantFactory.create('account');
 
       const res = await request()
         .post('/api/accounting/make-journal-entries')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
+          journal_number: '1',
           date: new Date('2020-1-1').toISOString(),
           reference: '1000',
           memo: 'Description here.',
@@ -230,7 +233,7 @@ describe('routes: `/accounting`', () => {
           ],
         });
 
-      const foundAccountsTransactions = await AccountTransaction.query();
+      const foundAccountsTransactions = await AccountTransaction.tenant().query();
 
       expect(foundAccountsTransactions.length).equals(2);
 
@@ -238,14 +241,14 @@ describe('routes: `/accounting`', () => {
       expect(foundAccountsTransactions[0].debit).equals(null);
       expect(foundAccountsTransactions[0].accountId).equals(account1.id);
       expect(foundAccountsTransactions[0].note).equals('First note');
-      expect(foundAccountsTransactions[0].transactionType).equals('Journal');
+      expect(foundAccountsTransactions[0].referenceType).equals('Journal');
       expect(foundAccountsTransactions[0].userId).equals(1);
 
       expect(foundAccountsTransactions[1].credit).equals(null);
       expect(foundAccountsTransactions[1].debit).equals(1000);
       expect(foundAccountsTransactions[1].accountId).equals(account2.id);
       expect(foundAccountsTransactions[1].note).equals('Second note');
-      expect(foundAccountsTransactions[1].transactionType).equals('Journal');
+      expect(foundAccountsTransactions[1].referenceType).equals('Journal');
       expect(foundAccountsTransactions[1].userId).equals(1);
     });
   });
@@ -255,17 +258,19 @@ describe('routes: `/accounting`', () => {
       const res = await request()
         .post('/api/manual-journal/1000')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send();
 
       expect(res.status).equals(404);
     });
 
     it('Should sumation of credit or debit be equal zero.', async () => {
-      const manualJournal = await create('manual_journal');
+      const manualJournal = await tenantFactory.create('manual_journal');
 
       const res = await request()
-        .post(`/api/accounting/manual-journal/${manualJournal.id}`)
+        .post(`/api/accounting/manual-journals/${manualJournal.id}`)
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           date: new Date().toISOString(),
           journal_number: '123',
@@ -292,11 +297,12 @@ describe('routes: `/accounting`', () => {
     });
 
     it('Should all credit and debit sumation be equal.', async () => {
-      const manualJournal = await create('manual_journal');
+      const manualJournal = await tenantFactory.create('manual_journal');
 
       const res = await request()
-        .post(`/api/accounting/manual-journal/${manualJournal.id}`)
+        .post(`/api/accounting/manual-journals/${manualJournal.id}`)
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           date: new Date().toISOString(),
           journal_number: '123',
@@ -322,8 +328,8 @@ describe('routes: `/accounting`', () => {
     });
 
     it('Should response journal number already exists in case another one on the storage.', async () => {
-      const manualJournal = await create('manual_journal');
-      const manualJournal2 = await create('manual_journal');
+      const manualJournal = await tenantFactory.create('manual_journal');
+      const manualJournal2 = await tenantFactory.create('manual_journal');
 
       const jsonBody = {
         date: new Date().toISOString(),
@@ -343,8 +349,9 @@ describe('routes: `/accounting`', () => {
       };
 
       const res = await request()
-        .post(`/api/accounting/manual-journal/${manualJournal.id}`)
+        .post(`/api/accounting/manual-journals/${manualJournal.id}`)
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           ...jsonBody,
           journal_number: manualJournal2.journalNumber,
@@ -356,8 +363,8 @@ describe('routes: `/accounting`', () => {
     });
 
     it('Should not response journal number exists in case was unique number.', async () => {
-      const manualJournal = await create('manual_journal');
-      const manualJournal2 = await create('manual_journal');
+      const manualJournal = await tenantFactory.create('manual_journal');
+      const manualJournal2 = await tenantFactory.create('manual_journal');
 
       const jsonBody = {
         date: new Date().toISOString(),
@@ -376,8 +383,9 @@ describe('routes: `/accounting`', () => {
         ],
       };
       const res = await request()
-        .post(`/api/accounting/manual-journal/${manualJournal.id}`)
+        .post(`/api/accounting/manual-journals/${manualJournal.id}`)
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           ...jsonBody,
           journal_number: manualJournal.journalNumber,
@@ -390,8 +398,8 @@ describe('routes: `/accounting`', () => {
     })
 
     it('Should response error in case account id not exists in one of the given entries.', async () => {
-      const manualJournal = await create('manual_journal');
-      const manualJournal2 = await create('manual_journal');
+      const manualJournal = await tenantFactory.create('manual_journal');
+      const manualJournal2 = await tenantFactory.create('manual_journal');
 
       const jsonBody = {
         date: new Date().toISOString(),
@@ -410,8 +418,9 @@ describe('routes: `/accounting`', () => {
         ],
       };
       const res = await request()
-        .post(`/api/accounting/manual-journal/${manualJournal.id}`)
+        .post(`/api/accounting/manual-journals/${manualJournal.id}`)
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           ...jsonBody,
           journal_number: manualJournal.journalNumber,
@@ -424,13 +433,14 @@ describe('routes: `/accounting`', () => {
     });
 
     it('Should update the given manual journal transaction in the storage.', async () => {
-      const manualJournal = await create('manual_journal');
-      const account1 = await create('account');
-      const account2 = await create('account');
+      const manualJournal = await tenantFactory.create('manual_journal');
+      const account1 = await tenantFactory.create('account');
+      const account2 = await tenantFactory.create('account');
 
       const res = await request()
-        .post(`/api/accounting/manual-journal/${manualJournal.id}`)
+        .post(`/api/accounting/manual-journals/${manualJournal.id}`)
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           journal_number: '123',
           date: new Date().toISOString(),
@@ -450,7 +460,7 @@ describe('routes: `/accounting`', () => {
           ],
         });
       
-      const foundManualJournal = await ManualJournal.query()
+      const foundManualJournal = await ManualJournal.tenant().query()
         .where('id', manualJournal.id);
 
       expect(foundManualJournal.length).equals(1);
@@ -460,21 +470,22 @@ describe('routes: `/accounting`', () => {
     });
 
     it('Should update account transactions that associated to the manual journal transaction.', async () => {
-      const manualJournal = await create('manual_journal');
-      const account1 = await create('account');
-      const account2 = await create('account');
-      const transaction = await create('account_transaction', {
+      const manualJournal = await tenantFactory.create('manual_journal');
+      const account1 = await tenantFactory.create('account');
+      const account2 = await tenantFactory.create('account');
+      const transaction = await tenantFactory.create('account_transaction', {
         reference_type: 'Journal',
         reference_id: manualJournal.id,
       });
-      const transaction2 = await create('account_transaction', {
+      const transaction2 = await tenantFactory.create('account_transaction', {
         reference_type: 'Journal',
         reference_id: manualJournal.id,
       });
 
       const res = await request()
-        .post(`/api/accounting/manual-journal/${manualJournal.id}`)
+        .post(`/api/accounting/manual-journals/${manualJournal.id}`)
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           journal_number: '123',
           date: new Date().toISOString(),
@@ -496,7 +507,7 @@ describe('routes: `/accounting`', () => {
           ],
         });
 
-      const foundTransactions = await AccountTransaction.query();
+      const foundTransactions = await AccountTransaction.tenant().query();
     
       expect(foundTransactions.length).equals(2);
       expect(foundTransactions[0].credit).equals(0);
@@ -516,6 +527,7 @@ describe('routes: `/accounting`', () => {
       const res = await request()
         .delete('/api/accounting/manual-journals/1000')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send();
 
       expect(res.status).equals(404);
@@ -525,33 +537,36 @@ describe('routes: `/accounting`', () => {
     });
 
     it('Should delete manual journal transactions from storage.', async () => {
-      const manualJournal = await create('manual_journal');
+      const manualJournal = await tenantFactory.create('manual_journal');
 
       const res = await request()
         .delete(`/api/accounting/manual-journals/${manualJournal.id}`)
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send();
-      const foundManualTransaction = await ManualJournal.query()
+
+      const foundManualTransaction = await ManualJournal.tenant().query()
         .where('id', manualJournal.id).first();
 
       expect(foundManualTransaction).equals(undefined);
     });
 
     it('Should delete associated transactions of journal transaction.', async () => {
-      const manualJournal = await create('manual_journal');
-      const transaction1 = await create('account_transaction', {
+      const manualJournal = await tenantFactory.create('manual_journal');
+      const transaction1 = await tenantFactory.create('account_transaction', {
         reference_type: 'Journal', reference_id: manualJournal.id,
       });
-      const transaction2 = await create('account_transaction', {
+      const transaction2 = await tenantFactory.create('account_transaction', {
         reference_type: 'Journal', reference_id: manualJournal.id,
       });
 
       const res = await request()
         .delete(`/api/accounting/manual-journals/${manualJournal.id}`)
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send();
 
-      const foundTransactions = await AccountTransaction.query();
+      const foundTransactions = await AccountTransaction.tenant().query();
       expect(foundTransactions.length).equals(0);
     });
 
@@ -565,6 +580,7 @@ describe('routes: `/accounting`', () => {
       const res = await request()
         .delete('/api/accounting/manual-journals/100')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send();
 
       expect(res.status).equals(404);
@@ -582,12 +598,13 @@ describe('routes: `/accounting`', () => {
   describe('route: `accounting/manual-journals`', async () => {
 
     it('Should retrieve all manual journals with pagination meta.', async () => {
-      const manualJournal1 = await create('manual_journal');
-      const manualJournal2 = await create('manual_journal');
+      const manualJournal1 = await tenantFactory.create('manual_journal');
+      const manualJournal2 = await tenantFactory.create('manual_journal');
 
       const res = await request()
         .get('/api/accounting/manual-journals')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send();
 
       expect(res.status).equals(200);
@@ -599,11 +616,12 @@ describe('routes: `/accounting`', () => {
   describe('route: POST `accounting/manual-journals/:id/publish`', () => {
 
     it('Should response not found in case the manual journal id was not exists.', async () => {
-      const manualJournal = await create('manual_journal');
+      const manualJournal = await tenantFactory.create('manual_journal');
 
       const res = await request()
         .post('/api/accounting/manual-journals/123/publish')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send();
 
       expect(res.status).equals(404);
@@ -613,10 +631,12 @@ describe('routes: `/accounting`', () => {
     });
 
     it('Should response published ready.', async () => {
-      const manualJournal = await create('manual_journal', { status: 0 });
+      const manualJournal = await tenantFactory.create('manual_journal', { status: 1 });
+      
       const res = await request()
         .post(`/api/accounting/manual-journals/${manualJournal.id}/publish`)
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send();
 
       expect(res.status).equals(400);
@@ -626,13 +646,13 @@ describe('routes: `/accounting`', () => {
     });
 
     it('Should update all accounts transactions to not draft.', async () => {
-      const manualJournal = await create('manual_journal');
-      const transaction = await create('account_transaction', {
+      const manualJournal = await tenantFactory.create('manual_journal', { status: 0 });
+      const transaction = await tenantFactory.create('account_transaction', {
         reference_type: 'Journal',
         reference_id: manualJournal.id,
         draft: 1,
       });
-      const transaction2 = await create('account_transaction', {
+      const transaction2 = await tenantFactory.create('account_transaction', {
         reference_type: 'Journal',
         reference_id: manualJournal.id,
         draft: 1,
@@ -640,9 +660,10 @@ describe('routes: `/accounting`', () => {
       const res = await request()
         .post(`/api/accounting/manual-journals/${manualJournal.id}/publish`)
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send();
 
-      const foundTransactions = await AccountTransaction.query()
+      const foundTransactions = await AccountTransaction.tenant().query()
         .whereIn('id', [transaction.id, transaction2.id]);
 
       expect(foundTransactions[0].draft).equals(0);

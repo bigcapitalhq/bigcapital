@@ -7,7 +7,7 @@ exports.up = (knex) => {
     table.string('root_type');
     table.boolean('balance_sheet');
     table.boolean('income_sheet');
-  }).then(() => {
+  }).raw('ALTER TABLE `ACCOUNT_TYPES` AUTO_INCREMENT = 1000').then(() => {
     return knex.seed.run({
       specific: 'seed_account_types.js',
     });

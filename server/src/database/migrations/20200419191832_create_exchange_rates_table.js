@@ -5,7 +5,7 @@ exports.up = function(knex) {
     table.string('currency_code', 4);
     table.decimal('exchange_rate');
     table.date('date');
-  });
+  }).raw('ALTER TABLE `EXCHANGE_RATES` AUTO_INCREMENT = 1000');
 };
 
 exports.down = function(knex) {

@@ -1,35 +1,30 @@
 import {
   request,
   expect,
-  login,
-  create,
 } from '~/testInit';
 import View from '@/models/View';
 import ViewRole from '@/models/ViewRole';
 import '@/models/ResourceField';
 import ViewColumn from '../../src/models/ViewColumn';
+import {
+  tenantWebsite,
+  tenantFactory,
+  loginRes
+} from '~/dbInit';
 
-let loginRes;
 
 describe('routes: `/views`', () => {
-  beforeEach(async () => {
-    loginRes = await login();
-  });
-  afterEach(() => {
-    loginRes = null;
-  });
-
   describe('GET: `/views`', () => {
     it('Should response unauthorized in case the user was not authorized.', async () => {
       const res = await request().get('/api/views');
 
       expect(res.status).equals(401);
-      expect(res.body.message).equals('unauthorized');
+      expect(res.body.message).equals('Unauthorized');
     });
 
     it('Should retrieve all views of the given resource name.', async () => {
-      const resource = await create('resource', { name: 'resource_name' });
-      const resourceFields = await create('view', {
+      const resource = await tenantFactory.create('resource', { name: 'resource_name' });
+      const resourceFields = await tenantFactory.create('view', {
         name: 'Resource View',
         resource_id: resource.id,
         roles_logic_expression: '',
@@ -38,6 +33,7 @@ describe('routes: `/views`', () => {
       const res = await request()
         .get('/api/views')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({ resource_name: 'resource_name' })
         .send();
 
@@ -48,8 +44,8 @@ describe('routes: `/views`', () => {
 
   describe('GET `/views/:id`', () => {
     it('Should response unauthorized in case the user was not authorized.', async () => {
-      const resource = await create('resource', { name: 'resource_name' });
-      const resourceView = await create('view', {
+      const resource = await tenantFactory.create('resource', { name: 'resource_name' });
+      const resourceView = await tenantFactory.create('view', {
         name: 'Resource View',
         resource_id: resource.id,
         roles_logic_expression: '',
@@ -61,12 +57,12 @@ describe('routes: `/views`', () => {
         .send();
 
       expect(res.status).equals(401);
-      expect(res.body.message).equals('unauthorized');
+      expect(res.body.message).equals('Unauthorized');
     });
 
     it('Should response not found in case the given view was not found.', async () => {
-      const resource = await create('resource', { name: 'resource_name' });
-      const resourceView = await create('view', {
+      const resource = await tenantFactory.create('resource', { name: 'resource_name' });
+      const resourceView = await tenantFactory.create('view', {
         name: 'Resource View',
         resource_id: resource.id,
         roles_logic_expression: '',
@@ -75,6 +71,7 @@ describe('routes: `/views`', () => {
       const res = await request()
         .get('/api/views/123')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send();
 
       expect(res.status).equals(404);
@@ -84,13 +81,13 @@ describe('routes: `/views`', () => {
     });
 
     it('Should retrieve details of the given view with associated graphs.', async () => {
-      const resource = await create('resource', { name: 'resource_name' });
-      const resourceView = await create('view', {
+      const resource = await tenantFactory.create('resource', { name: 'resource_name' });
+      const resourceView = await tenantFactory.create('view', {
         name: 'Resource View',
         resource_id: resource.id,
         roles_logic_expression: '1 AND 2',
       });
-      const resourceField = await create('resource_field', {
+      const resourceField = await tenantFactory.create('resource_field', {
         label_name: 'Expense Account',
         key: 'expense_account',
         data_type: 'integer',
@@ -99,7 +96,7 @@ describe('routes: `/views`', () => {
         predefined: true,
         builtin: true,
       });
-      const viewRole = await create('view_role', {
+      const viewRole = await tenantFactory.create('view_role', {
         view_id: resourceView.id,
         index: 1,
         field_id: resourceField.id,
@@ -110,6 +107,7 @@ describe('routes: `/views`', () => {
       const res = await request()
         .get(`/api/views/${resourceView.id}`)
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send();
 
       expect(res.status).equals(200);
@@ -127,14 +125,15 @@ describe('routes: `/views`', () => {
       const res = await request().post('/api/views');
 
       expect(res.status).equals(401);
-      expect(res.body.message).equals('unauthorized');
+      expect(res.body.message).equals('Unauthorized');
     });
 
     it('Should `name` be required.', async () => {
-      await create('resource');
+      await tenantFactory.create('resource');
       const res = await request()
         .post('/api/views')
-        .set('x-access-token', loginRes.body.token);
+        .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId);
 
       expect(res.status).equals(422);
       expect(res.body.code).equals('validation_error');
@@ -144,10 +143,11 @@ describe('routes: `/views`', () => {
     });
 
     it('Should `resource_name` be required.', async () => {
-      await create('resource');
+      await tenantFactory.create('resource');
       const res = await request()
         .post('/api/views')
-        .set('x-access-token', loginRes.body.token);
+        .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId);
 
       expect(res.status).equals(422);
       expect(res.body.code).equals('validation_error');
@@ -157,13 +157,14 @@ describe('routes: `/views`', () => {
     });
 
     it('Should `columns` be minimum limited', async () => {
-      await create('resource');
+      await tenantFactory.create('resource');
       const res = await request()
         .post('/api/views', {
           label: 'View Label',
           columns: [],
         })
-        .set('x-access-token', loginRes.body.token);
+        .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId);
 
       expect(res.status).equals(422);
       expect(res.body.code).equals('validation_error');
@@ -173,13 +174,14 @@ describe('routes: `/views`', () => {
     });
 
     it('Should `columns` be array.', async () => {
-      await create('resource');
+      await tenantFactory.create('resource');
       const res = await request()
         .post('/api/views', {
           label: 'View Label',
           columns: 'not_array',
         })
-        .set('x-access-token', loginRes.body.token);
+        .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId);
 
       expect(res.status).equals(422);
       expect(res.body.code).equals('validation_error');
@@ -189,10 +191,11 @@ describe('routes: `/views`', () => {
     });
 
     it('Should `roles.*.field_key` be required.', async () => {
-      const resource = await create('resource');
+      const resource = await tenantFactory.create('resource');
       const res = await request()
         .post('/api/views')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           resource_name: resource.name,
           label: 'View Label',
@@ -207,10 +210,11 @@ describe('routes: `/views`', () => {
     });
 
     it('Should `roles.*.comparator` be valid.', async () => {
-      const resource = await create('resource');
+      const resource = await tenantFactory.create('resource');
       const res = await request()
         .post('/api/views')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           resource_name: resource.name,
           label: 'View Label',
@@ -225,7 +229,7 @@ describe('routes: `/views`', () => {
     });
 
     it('Should `roles.*.index` be number as integer.', async () => {
-      const resource = await create('resource');
+      const resource = await tenantFactory.create('resource');
       const res = await request()
         .post('/api/views')
         .send({
@@ -235,7 +239,8 @@ describe('routes: `/views`', () => {
             { index: 'not_numeric' },
           ],
         })
-        .set('x-access-token', loginRes.body.token);
+        .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId);
 
       expect(res.status).equals(422);
       expect(res.body.code).equals('validation_error');
@@ -251,6 +256,7 @@ describe('routes: `/views`', () => {
       const res = await request()
         .post('/api/views')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           resource_name: 'not_found',
           name: 'View Label',
@@ -275,8 +281,8 @@ describe('routes: `/views`', () => {
     });
 
     it('Should response invalid logic expression.', async () =>{
-      const resource = await create('resource');
-      await create('resource_field', {
+      const resource = await tenantFactory.create('resource');
+      await tenantFactory.create('resource_field', {
         resource_id: resource.id,
         label_name: 'Amount',
         key: 'amount',
@@ -284,6 +290,7 @@ describe('routes: `/views`', () => {
       const res = await request()
         .post('/api/views')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           resource_name: resource.name,
           logic_expression: '100 && 100',
@@ -305,12 +312,13 @@ describe('routes: `/views`', () => {
     });
 
     it('Should response the roles fields not exist in case role field was not exist.', async () => {
-      const resource = await create('resource');
-      await create('resource_field', { resource_id: resource.id, label_name: 'Amount' });
+      const resource = await tenantFactory.create('resource');
+      await tenantFactory.create('resource_field', { resource_id: resource.id, label_name: 'Amount' });
 
       const res = await request()
         .post('/api/views')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           resource_name: resource.name,
           name: 'View Label',
@@ -334,8 +342,8 @@ describe('routes: `/views`', () => {
     });
 
     it('Should response the columns that not exists in case column was not exist.', async () => {
-      const resource = await create('resource');
-      const resourceField = await create('resource_field', {
+      const resource = await tenantFactory.create('resource');
+      const resourceField = await tenantFactory.create('resource_field', {
         resource_id: resource.id,
         label_name: 'Amount',
         key: 'amount',
@@ -343,6 +351,7 @@ describe('routes: `/views`', () => {
       const res = await request()
         .post('/api/views')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           resource_name: resource.name,
           name: 'View Label',
@@ -366,8 +375,8 @@ describe('routes: `/views`', () => {
     });
 
     it('Should save the given details of the view.', async () => {
-      const resource = await create('resource');
-      await create('resource_field', {
+      const resource = await tenantFactory.create('resource');
+      await tenantFactory.create('resource_field', {
         resource_id: resource.id,
         label_name: 'Amount',
         key: 'amount',
@@ -375,6 +384,7 @@ describe('routes: `/views`', () => {
       const res = await request()
         .post('/api/views')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           resource_name: resource.name,
           name: 'View Label',
@@ -390,7 +400,7 @@ describe('routes: `/views`', () => {
           }],
         });
 
-      const storedView = await View.query().where('name', 'View Label').first();
+      const storedView = await View.tenant().query().where('name', 'View Label').first();
 
       expect(storedView.name).equals('View Label');
       expect(storedView.predefined).equals(0);
@@ -398,8 +408,8 @@ describe('routes: `/views`', () => {
     });
 
     it('Should save the given details of view fields that associated to the given view id.', async () => {
-      const resource = await create('resource');
-      const resourceField = await create('resource_field', {
+      const resource = await tenantFactory.create('resource');
+      const resourceField = await tenantFactory.create('resource_field', {
         resource_id: resource.id,
         label_name: 'Amount',
         key: 'amount',
@@ -408,6 +418,7 @@ describe('routes: `/views`', () => {
       const res = await request()
         .post('/api/views')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           resource_name: resource.name,
           name: 'View Label',
@@ -421,7 +432,7 @@ describe('routes: `/views`', () => {
           }],
         });
 
-      const viewRoles = await ViewRole.query().where('view_id', res.body.id);
+      const viewRoles = await ViewRole.tenant().query().where('view_id', res.body.id);
 
       expect(viewRoles.length).equals(1);
       expect(viewRoles[0].index).equals(1);
@@ -431,8 +442,8 @@ describe('routes: `/views`', () => {
     });
 
     it('Should save columns that associated to the given view.', async () => {
-      const resource = await create('resource');
-      const resourceField = await create('resource_field', {
+      const resource = await tenantFactory.create('resource');
+      const resourceField = await tenantFactory.create('resource_field', {
         resource_id: resource.id,
         label_name: 'Amount',
         key: 'amount',
@@ -441,6 +452,7 @@ describe('routes: `/views`', () => {
       const res = await request()
         .post('/api/views')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           resource_name: resource.name,
           name: 'View Label',
@@ -456,7 +468,7 @@ describe('routes: `/views`', () => {
           }],
         });
 
-      const viewColumns = await ViewColumn.query().where('view_id', res.body.id);
+      const viewColumns = await ViewColumn.tenant().query().where('view_id', res.body.id);
       expect(viewColumns.length).equals(1);
     });
 
@@ -465,10 +477,11 @@ describe('routes: `/views`', () => {
 
   describe('POST: `/views/:view_id`', () => {
     it('Should `name` be required.', async () => {
-      const view = await create('view');
+      const view = await tenantFactory.create('view');
       const res = await request()
         .post(`/api/views/${view.id}`)
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send();
 
       expect(res.status).equals(422);
@@ -479,13 +492,14 @@ describe('routes: `/views`', () => {
     });
 
     it('Should columns be minimum limited', async () => {
-      const view = await create('view');
+      const view = await tenantFactory.create('view');
       const res = await request()
         .post(`/api/views/${view.id}`, {
           label: 'View Label',
           columns: [],
         })
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send();
 
       expect(res.status).equals(422);
@@ -496,27 +510,31 @@ describe('routes: `/views`', () => {
     });
 
     it('Should columns be array.', async () => {
-      const view = await create('view');
+      const view = await tenantFactory.create('view');
       const res = await request()
         .post(`/api/views/${view.id}`, {
           label: 'View Label',
           columns: 'not_array',
         })
         .set('x-access-token', loginRes.body.token)
-        .send();
+        .set('organization-id', tenantWebsite.organizationId)
+        .send({
+          columns: 'columns'
+        });
 
       expect(res.status).equals(422);
       expect(res.body.code).equals('validation_error');
       expect(res.body.errors).include.something.deep.equals({
-        msg: 'Invalid value', param: 'code', location: 'body',
+        msg: 'Invalid value', param: 'columns', location: 'body', value: 'columns',
       });
     });
 
     it('Should `roles.*.field_key` be required.', async () => {
-      const view = await create('view');
+      const view = await tenantFactory.create('view');
       const res = await request()
         .post(`/api/views/${view.id}`)
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           label: 'View Label',
           roles: [{}],
@@ -525,15 +543,16 @@ describe('routes: `/views`', () => {
       expect(res.status).equals(422);
       expect(res.body.code).equals('validation_error');
       expect(res.body.errors).include.something.deep.equals({
-        msg: 'Invalid value', param: 'roles', location: 'body',
+        msg: 'Invalid value', param: 'roles[0].field_key', location: 'body',
       });
     });
 
     it('Should `roles.*.comparator` be required.', async () => {
-      const view = await create('view');
+      const view = await tenantFactory.create('view');
       const res = await request()
         .post(`/api/views/${view.id}`)
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           label: 'View Label',
           roles: [{}],
@@ -547,10 +566,11 @@ describe('routes: `/views`', () => {
     });
 
     it('Should `roles.*.index` be number as integer.', async () => {
-      const view = await create('view');
+      const view = await tenantFactory.create('view');
       const res = await request()
         .post(`/api/views/${view.id}`)
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           label: 'View Label',
           roles: [{ index: 'not_numeric' }],
@@ -567,14 +587,15 @@ describe('routes: `/views`', () => {
     });
 
     it('Should response the roles fields not exist in case role field was not exist.', async () => {
-      const view = await create('view');
-      await create('resource_field', {
+      const view = await tenantFactory.create('view');
+      await tenantFactory.create('resource_field', {
         resource_id: view.resource_id,
         label_name: 'Amount',
       });
       const res = await request()
         .post(`/api/views/${view.id}`)
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           name: 'View Label',
           logic_expression: '1',
@@ -601,14 +622,15 @@ describe('routes: `/views`', () => {
     });
 
     it('Should response the resource columns not exists in case the column keys was not exist.', async () => {
-      const view = await create('view');
-      await create('resource_field', {
+      const view = await tenantFactory.create('view');
+      await tenantFactory.create('resource_field', {
         resource_id: view.resource_id,
         label_name: 'Amount',
       });
       const res = await request()
         .post(`/api/views/${view.id}`)
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           name: 'View Label',
           logic_expression: '1',
@@ -641,21 +663,22 @@ describe('routes: `/views`', () => {
     });
 
     it('Should delete the view roles that not presented the post data.', async () => {
-      const resource = await create('resource');
-      const resourceField = await create('resource_field', {
+      const resource = await tenantFactory.create('resource');
+      const resourceField = await tenantFactory.create('resource_field', {
         resource_id: resource.id,
         label_name: 'Amount',
         key: 'amount',
       });
 
-      const view = await create('view', { resource_id: resource.id });
-      const viewRole = await create('view_role', {
+      const view = await tenantFactory.create('view', { resource_id: resource.id });
+      const viewRole = await tenantFactory.create('view_role', {
         view_id: view.id,
         field_id: resourceField.id,
       });
       const res = await request()
         .post(`/api/views/${view.id}`)
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           name: 'View Label',
           logic_expression: '1',
@@ -671,26 +694,27 @@ describe('routes: `/views`', () => {
           }],
         });
 
-      const foundViewRole = await ViewRole.query().where('id', viewRole.id);
+      const foundViewRole = await ViewRole.tenant().query().where('id', viewRole.id);
       expect(foundViewRole.length).equals(0);
     });
 
     it('Should update the view roles that presented in the given data.', async () => {
-      const resource = await create('resource');
-      const resourceField = await create('resource_field', {
+      const resource = await tenantFactory.create('resource');
+      const resourceField = await tenantFactory.create('resource_field', {
         resource_id: resource.id,
         label_name: 'Amount',
         key: 'amount',
       });
 
-      const view = await create('view', { resource_id: resource.id });
-      const viewRole = await create('view_role', {
+      const view = await tenantFactory.create('view', { resource_id: resource.id });
+      const viewRole = await tenantFactory.create('view_role', {
         view_id: view.id,
         field_id: resourceField.id,
       });
       const res = await request()
         .post(`/api/views/${view.id}`)
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           name: 'View Label',
           logic_expression: '1',
@@ -707,27 +731,28 @@ describe('routes: `/views`', () => {
           }],
         });
 
-      const foundViewRole = await ViewRole.query().where('id', viewRole.id);
+      const foundViewRole = await ViewRole.tenant().query().where('id', viewRole.id);
 
       expect(foundViewRole.length).equals(1);
-      expect(foundViewRole[0].id).equals(1);
+      expect(foundViewRole[0].id).equals(viewRole.id);
       expect(foundViewRole[0].index).equals(1);
       expect(foundViewRole[0].value).equals('100');
       expect(foundViewRole[0].comparator).equals('equals');
     });
 
     it('Should response not found roles ids in case not exists in the storage.', async () => {
-      const resource = await create('resource');
-      const resourceField = await create('resource_field', {
+      const resource = await tenantFactory.create('resource');
+      const resourceField = await tenantFactory.create('resource_field', {
         resource_id: resource.id,
         label_name: 'Amount',
         key: 'amount',
       });
-      const view = await create('view', { resource_id: resource.id });
+      const view = await tenantFactory.create('view', { resource_id: resource.id });
 
       const res = await request()
         .post(`/api/views/${view.id}`)
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           name: 'View Label',
           logic_expression: '1',
@@ -750,18 +775,19 @@ describe('routes: `/views`', () => {
     });
 
     it('Should delete columns from storage in case view columns ids not presented.', async () => {
-      const resource = await create('resource');
-      const resourceField = await create('resource_field', {
+      const resource = await tenantFactory.create('resource');
+      const resourceField = await tenantFactory.create('resource_field', {
         resource_id: resource.id,
         label_name: 'Amount',
         key: 'amount',
       });
-      const view = await create('view', { resource_id: resource.id });
-      const viewColumn = await create('view_column', { view_id: view.id });
+      const view = await tenantFactory.create('view', { resource_id: resource.id });
+      const viewColumn = await tenantFactory.create('view_column', { view_id: view.id });
 
       const res = await request()
         .post(`/api/views/${view.id}`)
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           name: 'View Label',
           logic_expression: '1',
@@ -778,22 +804,23 @@ describe('routes: `/views`', () => {
         });
 
       // console.log(res.status, res.body);
-      const foundViewColumns = await ViewColumn.query().where('id', viewColumn.id);
+      const foundViewColumns = await ViewColumn.tenant().query().where('id', viewColumn.id);
       expect(foundViewColumns.length).equals(0);
     });
 
     it('Should insert columns to the storage if where new columns', async () => {
-      const resource = await create('resource');
-      const resourceField = await create('resource_field', {
+      const resource = await tenantFactory.create('resource');
+      const resourceField = await tenantFactory.create('resource_field', {
         resource_id: resource.id,
         label_name: 'Amount',
         key: 'amount',
       });
-      const view = await create('view', { resource_id: resource.id });
+      const view = await tenantFactory.create('view', { resource_id: resource.id });
 
       const res = await request()
         .post(`/api/views/${view.id}`)
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           name: 'View Label',
           logic_expression: '1',
@@ -809,7 +836,7 @@ describe('routes: `/views`', () => {
           }],
         });
 
-      const foundViewColumns = await ViewColumn.query().where('view_id', view.id);
+      const foundViewColumns = await ViewColumn.tenant().query().where('view_id', view.id);
 
       expect(foundViewColumns.length).equals(1);
       expect(foundViewColumns[0].viewId).equals(view.id);
@@ -819,18 +846,19 @@ describe('routes: `/views`', () => {
 
 
     it('Should update columns on the storage.', async () => {
-      const resource = await create('resource');
-      const resourceField = await create('resource_field', {
+      const resource = await tenantFactory.create('resource');
+      const resourceField = await tenantFactory.create('resource_field', {
         resource_id: resource.id,
         label_name: 'Amount',
         key: 'amount',
       });
-      const view = await create('view', { resource_id: resource.id });
-      const viewColumn = await create('view_column', { view_id: view.id });
+      const view = await tenantFactory.create('view', { resource_id: resource.id });
+      const viewColumn = await tenantFactory.create('view_column', { view_id: view.id });
 
       const res = await request()
         .post(`/api/views/${view.id}`)
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           name: 'View Label',
           logic_expression: '1',
@@ -849,7 +877,7 @@ describe('routes: `/views`', () => {
 
       console.log(res.body)
 
-      const foundViewColumns = await ViewColumn.query().where('id', viewColumn.id);
+      const foundViewColumns = await ViewColumn.tenant().query().where('id', viewColumn.id);
 
       expect(foundViewColumns.length).equals(1);
       expect(foundViewColumns[0].id).equals(viewColumn.id);
@@ -861,10 +889,11 @@ describe('routes: `/views`', () => {
 
   describe('DELETE: `/views/:resource_id`', () => {
     it('Should not delete predefined view.', async () => {
-      const view = await create('view', { predefined: true });
+      const view = await tenantFactory.create('view', { predefined: true });
       const res = await request()
         .delete(`/api/views/${view.id}`)
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send();
 
       expect(res.status).equals(400);
@@ -877,6 +906,7 @@ describe('routes: `/views`', () => {
       const res = await request()
         .delete('/api/views/100')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send();
 
       expect(res.status).equals(404);
@@ -886,19 +916,20 @@ describe('routes: `/views`', () => {
     });
 
     it('Should delete the given view and associated view columns and roles.', async () => {
-      const view = await create('view', { predefined: false });
-      await create('view_role', { view_id: view.id });
-      await create('view_column', { view_id: view.id });
+      const view = await tenantFactory.create('view', { predefined: false });
+      await tenantFactory.create('view_role', { view_id: view.id });
+      await tenantFactory.create('view_column', { view_id: view.id });
 
       const res = await request()
         .delete(`/api/views/${view.id}`)
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send();
 
       expect(res.body.id).equals(view.id);
 
-      const foundViews = await View.query().where('id', view.id);
-      const foundViewRoles = await ViewRole.query().where('view_id', view.id);
+      const foundViews = await View.tenant().query().where('id', view.id);
+      const foundViewRoles = await ViewRole.tenant().query().where('view_id', view.id);
 
       expect(foundViews).to.have.lengthOf(0);
       expect(foundViewRoles).to.have.lengthOf(0);

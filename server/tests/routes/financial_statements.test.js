@@ -1,57 +1,68 @@
 import moment from 'moment';
 import {
-  expect,
   request,
+  expect,
   login,
-  create,
+  createTenantFactory,
+  createTenant,
+  dropTenant,
 } from '~/testInit';
 
+let tenantWebsite;
+let tenantFactory;
 let loginRes;
 let creditAccount;
 let debitAccount;
 
 describe('routes: `/financial_statements`', () => {
   beforeEach(async () => {
-    loginRes = await login();
+    tenantWebsite = await createTenant();
+    tenantFactory = createTenantFactory(tenantWebsite.tenantDb);
+
+    loginRes = await login(tenantWebsite);
 
     // Balance sheet types.
-    const creditAccType = await create('account_type', { normal: 'credit', balance_sheet: true });
-    const debitAccType = await create('account_type', { normal: 'debit', balance_sheet: true });
+    const creditAccType = await tenantFactory.create('account_type', { normal: 'credit', balance_sheet: true });
+    const debitAccType = await tenantFactory.create('account_type', { normal: 'debit', balance_sheet: true });
 
     // Income statement types.
-    const incomeType = await create('account_type', { normal: 'credit', income_sheet: true });
-    const expenseType = await create('account_type', { normal: 'debit', income_sheet: true });
+    const incomeType = await tenantFactory.create('account_type', { normal: 'credit', income_sheet: true });
+    const expenseType = await tenantFactory.create('account_type', { normal: 'debit', income_sheet: true });
 
     // Assets & liabilites accounts.
-    creditAccount = await create('account', { account_type_id: creditAccType.id });
-    debitAccount = await create('account', { account_type_id: debitAccType.id });
+    creditAccount = await tenantFactory.create('account', { account_type_id: creditAccType.id });
+    debitAccount = await tenantFactory.create('account', { account_type_id: debitAccType.id });
 
     // Income && expenses accounts.
-    const incomeAccount = await create('account', { account_type_id: incomeType.id });
-    const expenseAccount = await create('account', { account_type_id: expenseType.id });
-    const income2Account = await create('account', { account_type_id: incomeType.id });
+    const incomeAccount = await tenantFactory.create('account', { account_type_id: incomeType.id });
+    const expenseAccount = await tenantFactory.create('account', { account_type_id: expenseType.id });
+    const income2Account = await tenantFactory.create('account', { account_type_id: incomeType.id });
 
     const accountTransactionMixied = { date: '2020-1-10' };
 
-    await create('account_transaction', {
+    await tenantFactory.create('account_transaction', {
       credit: 1000, debit: 0, account_id: creditAccount.id, referenceType: 'Expense', ...accountTransactionMixied,
     });
-    await create('account_transaction', {
+    await tenantFactory.create('account_transaction', {
       credit: 1000, debit: 0, account_id: creditAccount.id, ...accountTransactionMixied,
     });
-    await create('account_transaction', {
+    await tenantFactory.create('account_transaction', {
       debit: 2000, credit: 0, account_id: debitAccount.id, ...accountTransactionMixied,
     });
-    await create('account_transaction', {
+    await tenantFactory.create('account_transaction', {
       debit: 2000, credit: 0, account_id: debitAccount.id, ...accountTransactionMixied,
     });
-    await create('account_transaction', { credit: 2000, account_id: incomeAccount.id, ...accountTransactionMixied });
-    await create('account_transaction', { debit: 6000, account_id: expenseAccount.id, ...accountTransactionMixied });
+    await tenantFactory.create('account_transaction', { credit: 2000, account_id: incomeAccount.id, ...accountTransactionMixied });
+    await tenantFactory.create('account_transaction', { debit: 6000, account_id: expenseAccount.id, ...accountTransactionMixied });
   });
 
-  afterEach(() => {
+  afterEach(async () => {
+    await dropTenant(tenantWebsite);
+
     loginRes = null;
+    tenantFactory = null;
   });
+
   describe('routes: `/financial_statements/journal`', () => {
     it('Should response unauthorized in case the user was not authorized.', async () => {
       const res = await request()
@@ -65,6 +76,7 @@ describe('routes: `/financial_statements`', () => {
       const res = await request()
         .get('/api/financial_statements/journal')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send();
 
       expect(res.status).equals(200);
@@ -83,6 +95,7 @@ describe('routes: `/financial_statements`', () => {
       const res = await request()
         .get('/api/financial_statements/journal')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           from_date: '2018-01-01',
           to_date: '2019-01-01',
@@ -96,6 +109,7 @@ describe('routes: `/financial_statements`', () => {
       const res = await request()
         .get('/api/financial_statements/journal')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           account_ids: [creditAccount.id],
         })
@@ -108,6 +122,7 @@ describe('routes: `/financial_statements`', () => {
       const res = await request()
         .get('/api/financial_statements/journal')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           transaction_types: ['Expense'],
         });
@@ -119,6 +134,7 @@ describe('routes: `/financial_statements`', () => {
       const res = await request()
         .get('/api/financial_statements/journal')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           from_range: 2000,
           to_range: 2000,
@@ -140,6 +156,7 @@ describe('routes: `/financial_statements`', () => {
       const res = await request()
         .get('/api/financial_statements/journal')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           number_format: {
             divide_1000: true,
@@ -167,6 +184,7 @@ describe('routes: `/financial_statements`', () => {
       const res = await request()
         .get('/api/financial_statements/general_ledger')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send();
 
       expect(res.body.query.from_date).equals(moment().startOf('year').format('YYYY-MM-DD'));
@@ -182,6 +200,7 @@ describe('routes: `/financial_statements`', () => {
       const res = await request()
         .get('/api/financial_statements/general_ledger')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send();
 
       expect(res.body.accounts).is.an('array');
@@ -201,6 +220,7 @@ describe('routes: `/financial_statements`', () => {
       const res = await request()
         .get('/api/financial_statements/general_ledger')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send();
 
       const targetAccount = res.body.accounts.find((a) => a.id === creditAccount.id);
@@ -218,6 +238,7 @@ describe('routes: `/financial_statements`', () => {
       const res = await request()
         .get('/api/financial_statements/general_ledger')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           from_date: '2020-01-20',
           to_date: '2020-03-30',
@@ -240,6 +261,7 @@ describe('routes: `/financial_statements`', () => {
       const res = await request()
         .get('/api/financial_statements/general_ledger')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           none_zero: true,
         })
@@ -262,6 +284,7 @@ describe('routes: `/financial_statements`', () => {
       const res = await request()
         .get('/api/financial_statements/general_ledger')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           from_date: '2020-01-20',
           to_date: '2020-03-30',
@@ -277,6 +300,7 @@ describe('routes: `/financial_statements`', () => {
       const res = await request()
         .get('/api/financial_statements/general_ledger')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           from_date: '2020-01-20',
           to_date: '2020-03-30',
@@ -293,6 +317,7 @@ describe('routes: `/financial_statements`', () => {
       const res = await request()
         .get('/api/financial_statements/general_ledger')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           from_date: '2020-01-01',
           to_date: '2020-03-30',
@@ -311,6 +336,7 @@ describe('routes: `/financial_statements`', () => {
       const res = await request()
         .get('/api/financial_statements/general_ledger')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           from_date: '2020-01-01',
           to_date: '2020-03-30',
@@ -326,13 +352,14 @@ describe('routes: `/financial_statements`', () => {
     });
 
     it('Should amount transactions rounded with no decimals when `number_format.no_cents` is `true`.', async () => {
-      await create('account_transaction', {
+      await tenantFactory.create('account_transaction', {
         debit: 0.25, credit: 0, account_id: debitAccount.id, date: '2020-1-10',
       });
 
       const res = await request()
         .get('/api/financial_statements/general_ledger')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           from_date: '2020-01-01',
           to_date: '2020-03-30',
@@ -351,6 +378,7 @@ describe('routes: `/financial_statements`', () => {
       const res = await request()
         .get('/api/financial_statements/general_ledger')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           from_date: '2020-01-01',
           to_date: '2020-03-30',
@@ -376,6 +404,7 @@ describe('routes: `/financial_statements`', () => {
       const res = await request()
         .get('/api/financial_statements/balance_sheet')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           display_columns_by: 'year',
           from_date: '2020-01-01',
@@ -397,6 +426,7 @@ describe('routes: `/financial_statements`', () => {
       const res = await request()
         .get('/api/financial_statements/balance_sheet')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           display_columns_by: 'year',
         })
@@ -410,6 +440,7 @@ describe('routes: `/financial_statements`', () => {
       const res = await request()
         .get('/api/financial_statements/balance_sheet')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           display_columns_type: 'total',
           from_date: '2012-01-01',
@@ -431,6 +462,7 @@ describe('routes: `/financial_statements`', () => {
       const res = await request()
         .get('/api/financial_statements/balance_sheet')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           display_columns_by: 'year',
           from_date: '2012-01-01',
@@ -484,6 +516,7 @@ describe('routes: `/financial_statements`', () => {
       const res = await request()
         .get('/api/financial_statements/balance_sheet')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           display_columns_by: 'day',
           from_date: '2020-01-08',
@@ -504,6 +537,7 @@ describe('routes: `/financial_statements`', () => {
       const res = await request()
         .get('/api/financial_statements/balance_sheet')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           display_columns_by: 'month',
           from_date: '2019-07-01',
@@ -534,6 +568,7 @@ describe('routes: `/financial_statements`', () => {
       const res = await request()
         .get('/api/financial_statements/balance_sheet')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           display_columns_by: 'quarter',
           from_date: '2020-01-01',
@@ -551,12 +586,13 @@ describe('routes: `/financial_statements`', () => {
     });
 
     it('Should retrieve the balance sheet amounts without cents.', async () => {
-      await create('account_transaction', {
+      await tenantFactory.create('account_transaction', {
         debit: 0.25, credit: 0, account_id: debitAccount.id, date: '2020-1-10',
       });
       const res = await request()
         .get('/api/financial_statements/balance_sheet')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           display_columns_by: 'quarter',
           from_date: '2020-01-01',
@@ -580,6 +616,7 @@ describe('routes: `/financial_statements`', () => {
       const res = await request()
         .get('/api/financial_statements/balance_sheet')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           display_columns_by: 'quarter',
           from_date: '2020',
@@ -603,6 +640,7 @@ describe('routes: `/financial_statements`', () => {
       const res = await request()
         .get('/api/financial_statements/balance_sheet')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           display_columns_by: 'quarter',
           from_date: '2002',
@@ -632,6 +670,7 @@ describe('routes: `/financial_statements`', () => {
       const res = await request()
         .get('/api/financial_statements/trial_balance_sheet')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send();
 
       const foundCreditAccount = res.body.items.find((item) => {
@@ -646,6 +685,7 @@ describe('routes: `/financial_statements`', () => {
       const res = await request()
         .get('/api/financial_statements/trial_balance_sheet')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           // There is no transactions between these dates.
           from_date: '2002-01-01',
@@ -661,6 +701,7 @@ describe('routes: `/financial_statements`', () => {
       const res = await request()
         .get('/api/financial_statements/trial_balance_sheet')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           // There is no transactions between these dates.
           from_date: '2020-01-05',
@@ -680,6 +721,7 @@ describe('routes: `/financial_statements`', () => {
       const res = await request()
         .get('/api/financial_statements/trial_balance_sheet')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           // There is no transactions between these dates.
           from_date: '2020-01-05',
@@ -702,6 +744,7 @@ describe('routes: `/financial_statements`', () => {
       const res = await request()
         .get('/api/financial_statements/trial_balance_sheet')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           // There is no transactions between these dates.
           from_date: '2020-01-05',
@@ -732,6 +775,7 @@ describe('routes: `/financial_statements`', () => {
       const res = await request()
         .get('/api/financial_statements/profit_loss_sheet')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           from_date: '2020-01-01',
           to_date: '2020-12-12',
@@ -755,6 +799,7 @@ describe('routes: `/financial_statements`', () => {
       const res = await request()
         .get('/api/financial_statements/profit_loss_sheet')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           from_date: moment().startOf('year').format('YYYY-MM-DD'),
           to_date: moment().endOf('year').format('YYYY-MM-DD'),
@@ -773,6 +818,7 @@ describe('routes: `/financial_statements`', () => {
       const res = await request()
         .get('/api/financial_statements/profit_loss_sheet')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           from_date: moment('2020-01-01').startOf('month').format('YYYY-MM-DD'),
           to_date: moment('2020-01-01').endOf('month').format('YYYY-MM-DD'),
@@ -801,6 +847,7 @@ describe('routes: `/financial_statements`', () => {
       const res = await request()
         .get('/api/financial_statements/profit_loss_sheet')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           from_date: moment('2020-01-01').startOf('month').format('YYYY-MM-DD'),
           to_date: moment('2020-01-01').endOf('month').format('YYYY-MM-DD'),
@@ -818,6 +865,7 @@ describe('routes: `/financial_statements`', () => {
       const res = await request()
         .get('/api/financial_statements/profit_loss_sheet')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           from_date: moment('2020-01-01').startOf('month').format('YYYY-MM-DD'),
           to_date: toDate,
@@ -838,6 +886,7 @@ describe('routes: `/financial_statements`', () => {
       const res = await request()
         .get('/api/financial_statements/profit_loss_sheet')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           from_date: '2020-01-01',
           to_date: '2021-01-01',
@@ -854,6 +903,7 @@ describe('routes: `/financial_statements`', () => {
       const res = await request()
         .get('/api/financial_statements/profit_loss_sheet')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           from_date: '2020-01-01',
           to_date: '2021-01-01',
@@ -870,6 +920,7 @@ describe('routes: `/financial_statements`', () => {
       const res = await request()
         .get('/api/financial_statements/profit_loss_sheet')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           from_date: '2019-12-01',
           to_date: '2020-12-01',
@@ -887,6 +938,7 @@ describe('routes: `/financial_statements`', () => {
       const res = await request()
         .get('/api/financial_statements/profit_loss_sheet')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           from_date: '2019-12-01',
           to_date: '2020-12-01',
@@ -904,6 +956,7 @@ describe('routes: `/financial_statements`', () => {
       const res = await request()
         .get('/api/financial_statements/profit_loss_sheet')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           from_date: '2019-12-01',
           to_date: '2020-12-01',
@@ -920,6 +973,7 @@ describe('routes: `/financial_statements`', () => {
       const res = await request()
         .get('/api/financial_statements/profit_loss_sheet')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           from_date: '2019-12-01',
           to_date: '2020-12-01',
@@ -942,6 +996,7 @@ describe('routes: `/financial_statements`', () => {
       const res = await request()
         .get('/api/financial_statements/profit_loss_sheet')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           from_date: '2020-01-01',
           to_date: '2021-01-01',

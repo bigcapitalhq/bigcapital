@@ -1,6 +1,16 @@
-import { request, expect, create } from '~/testInit';
+import { request, expect, createUser } from '~/testInit';
 import { hashPassword } from '@/utils';
 import knex from '@/database/knex';
+import {
+  tenantWebsite,
+  tenantFactory,
+  systemFactory,
+  loginRes
+} from '~/dbInit';
+import TenantUser from '@/models/TenantUser';
+import PasswordReset from '@/system/models/PasswordReset';
+import SystemUser from '@/system/models/SystemUser';
+
 
 describe('routes: /auth/', () => {
   describe('POST `/api/auth/login`', () => {
@@ -59,33 +69,35 @@ describe('routes: /auth/', () => {
     });
 
     it('Should not authenticate in case user was not active.', async () => {
-      const user = await create('user', { active: false });
-      const res = await request().post('/api/auth/login').send({
-        crediential: user.email,
-        password: 'incorrect_password',
+      const user = await createUser(tenantWebsite, {
+        active: false,
+        email: 'admin@admin.com',
       });
 
+      const res = await request().post('/api/auth/login').send({
+        crediential: 'admin@admin.com',
+        password: 'admin',
+      });
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.that.deep.equals({
-        type: 'INCORRECT_PASSWORD', code: 110,
+        type: 'USER_INACTIVE', code: 110,
       });
     });
 
     it('Should authenticate with correct email and password and active user.', async () => {
-      const user = await create('user', {
-        password: hashPassword('admin'),
+      const user = await createUser(tenantWebsite, {
+        email: 'admin@admin.com',
       });
       const res = await request().post('/api/auth/login').send({
         crediential: user.email,
         password: 'admin',
       });
-
       expect(res.status).equals(200);
     });
 
     it('Should autheticate success with correct phone number and password.', async () => {
       const password = await hashPassword('admin');
-      const user = await create('user', {
+      const user = await createUser(tenantWebsite, {
         phone_number: '0920000000',
         password,
       });
@@ -98,15 +110,20 @@ describe('routes: /auth/', () => {
     });
 
     it('Should last login date be saved after success login.', async () => {
-      const user = await create('user', {
-        password: hashPassword('admin'),
+      const user = await createUser(tenantWebsite, {
+        email: 'admin@admin.com',
       });
       const res = await request().post('/api/auth/login').send({
         crediential: user.email,
         password: 'admin',
       });
-
+      const foundUserAfterUpdate = await TenantUser.tenant().query()
+        .where('email', user.email)
+        .where('first_name', user.first_name)
+        .first();
+ 
       expect(res.status).equals(200);
+      expect(foundUserAfterUpdate.lastLoginAt).to.not.be.null;
     });
   });
 
@@ -132,17 +149,18 @@ describe('routes: /auth/', () => {
         email: 'admin@admin.com',
       });
 
-      expect(res.status).equals(422);
+      expect(res.status).equals(400);
       expect(res.body.errors).include.something.that.deep.equals({
-        type: 'EMAIL_NOT_FOUND', code: 100,
+        type: 'EMAIL.NOT.REGISTERED', code: 200,
       });
     });
 
     it('Should delete all already tokens that associate to the given email.', async () => {
-      const user = await create('user');
+      const user = await createUser(tenantWebsite);
       const token = '123123';
 
       await knex('password_resets').insert({ email: user.email, token });
+
       await request().post('/api/auth/send_reset_password').send({
         email: user.email,
       });
@@ -153,7 +171,7 @@ describe('routes: /auth/', () => {
     });
 
     it('Should store new token associate with the given email.', async () => {
-      const user = await create('user');
+      const user = await createUser(tenantWebsite);
       await request().post('/api/auth/send_reset_password').send({
         email: user.email,
       });
@@ -164,7 +182,7 @@ describe('routes: /auth/', () => {
     });
 
     it('Should response success if the email was exist.', async () => {
-      const user = await create('user');
+      const user = await createUser(tenantWebsite);
       const res = await request().post('/api/auth/send_reset_password').send({
         email: user.email,
       });
@@ -183,63 +201,88 @@ describe('routes: /auth/', () => {
     });
 
     it('Should `password` be required.', async () => {
-      const passwordReset = await create('password_reset');
-      const res = await request().post(`/api/reset/${passwordReset.token}`).send();
+      const user = await createUser(tenantWebsite);
+      const passwordReset = await systemFactory.create('password_reset', {
+        email: user.email,
+      });
+
+      const res = await request()
+        .post(`/api/auth/reset/${passwordReset.token}`)
+        .send();
 
       expect(res.status).equals(422);
-      expect(res.body.code).equals('VALIDATION_ERROR');
+      expect(res.body.code).equals('validation_error');
 
       const paramsErrors = res.body.errors.map((error) => error.param);
       expect(paramsErrors).to.include('password');
     });
 
     it('Should password and confirm_password be equal.', async () => {
-      const passwordReset = await create('password_reset');
-      const res = await request().post(`/api/reset/${passwordReset.token}`).send({
-        password: '123123',
+      const user = await createUser(tenantWebsite);
+      const passwordReset = await systemFactory.create('password_reset', {
+        email: user.email,
       });
 
+      const res = await request()
+        .post(`/api/auth/reset/${passwordReset.token}`)
+        .send({
+          password: '123123',
+        });
+
       expect(res.status).equals(422);
-      expect(res.body.code).equals('VALIDATION_ERROR');
+      expect(res.body.code).equals('validation_error');
 
       const paramsErrors = res.body.errors.map((error) => error.param);
       expect(paramsErrors).to.include('password');
     });
 
     it('Should response success with correct data form.', async () => {
-      const passwordReset = await create('password_reset');
-      const res = await request().post(`/api/reset/${passwordReset.token}`).send({
-        password: '123123',
-        confirm_password: '123123',
+      const user = await createUser(tenantWebsite);
+      const passwordReset = await systemFactory.create('password_reset', {
+        email: user.email,
       });
 
+      const res = await request()
+        .post(`/api/auth/reset/${passwordReset.token}`)
+        .send({
+          password: '123123',
+          confirm_password: '123123',
+        });
       expect(res.status).equals(200);
     });
 
     it('Should token be deleted after success response.', async () => {
-      const passwordReset = await create('password_reset');
-      await request().post(`/api/reset/${passwordReset.token}`).send({
-        password: '123123',
-        confirm_password: '123123',
+      const user = await createUser(tenantWebsite);
+      const passwordReset = await systemFactory.create('password_reset', {
+        email: user.email,
       });
+      await request()
+        .post(`/api/auth/reset/${passwordReset.token}`)
+        .send({
+          password: '123123',
+          confirm_password: '123123',
+        });
 
-      const foundTokens = await knex('password_resets').where('email', passwordReset.email);
+      const foundTokens = await PasswordReset.query().where('email', passwordReset.email);
+
       expect(foundTokens).to.have.lengthOf(0);
     });
 
     it('Should password be updated after success response.', async () => {
-      const user = await create('user');
-      const passwordReset = await create('password_reset', { user_id: user.id });
+      const user = await createUser(tenantWebsite);
+      const passwordReset = await systemFactory.create('password_reset', {
+        email: user.email,
+      });
 
-      await request().post(`/api/reset/${passwordReset.token}`).send({
+      const res = await request().post(`/api/auth/reset/${passwordReset.token}`).send({
         password: '123123',
         confirm_password: '123123',
       });
+      const systemUserPasswordUpdated = await SystemUser.query()
+        .where('id', user.id).first();
 
-      const foundUser = await knex('users').where('id', user.id);
-
-      expect(foundUser.id).equals(user.id);
-      expect(foundUser.password).not.equals(user.password);
+      expect(systemUserPasswordUpdated.id).equals(user.id);
+      expect(systemUserPasswordUpdated.password).not.equals(user.password);
     });
   });
 });

@@ -12,6 +12,7 @@ const configEnv = {
   migrations: {
     directory: config.system.migrations_dir,
   },
+  pool: { min: 0, max: 7 },
 };
 
 module.exports = {

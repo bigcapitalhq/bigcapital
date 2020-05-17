@@ -5,6 +5,8 @@ exports.up = function (knex) {
     table.integer('view_id').unsigned();
     table.integer('field_id').unsigned();
     table.integer('index').unsigned();
+  }).raw('ALTER TABLE `ITEMS_CATEGORIES` AUTO_INCREMENT = 1000').then(() => {
+
   });
 };
 

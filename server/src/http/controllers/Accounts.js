@@ -68,6 +68,10 @@ export default {
       this.transferToAnotherAccount.validation,
       asyncMiddleware(this.transferToAnotherAccount.handler));
 
+    router.post('/bulk/:type(activate|inactivate)',
+      this.bulkInactivateAccounts.validation,
+      asyncMiddleware(this.bulkInactivateAccounts.handler));
+
     return router;
   },
 
@@ -541,4 +545,47 @@ export default {
       return res.status(200).send();
     },
   },
+
+  /**
+   * Bulk acvtivate/inactivate the given accounts.
+   */
+  bulkInactivateAccounts: {
+    validation: [
+      query('ids').isArray({ min: 2 }),
+      query('ids.*').isNumeric().toInt(),
+      param('type').exists().isIn(['activate', 'inactivate']),
+    ],
+    async handler(req, res) {
+      const validationErrors = validationResult(req);
+
+      if (!validationErrors.isEmpty()) {
+        return res.boom.badData(null, {
+          code: 'validation_error', ...validationErrors,
+        });
+      }
+      const filter = {
+        ids: [],
+        ...req.query,
+      };
+      const { Account } = req.models;
+      const { type } = req.params;
+
+      const storedAccounts = await Account.query().whereIn('id', filter.ids);
+      const storedAccountsIds = storedAccounts.map((account) => account.id);
+      const notFoundAccounts = difference(filter.ids, storedAccountsIds);
+
+      if (notFoundAccounts.length > 0) {
+        return res.status(400).send({
+          errors: [{ type: 'ACCOUNTS.NOT.FOUND', code: 200 }],
+        });
+      }
+      const updatedAccounts = await Account.query()
+        .whereIn('id', storedAccountsIds)
+        .patch({
+          active: type === 'activate' ? 1 : 0,
+        });
+
+      return res.status(200).send({ ids: storedAccountsIds });
+    }
+  }
 };

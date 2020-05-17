@@ -1,54 +1,88 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import chaiThings from 'chai-things';
-
-import knex from '@/database/knex';
-import '@/models';
+import systemDb from '@/database/knex';
 import app from '@/app';
-import factory from '@/database/factories';
-import dbManager from '@/database/manager';
-// import { hashPassword } from '@/utils';
+import createTenantFactory from '@/database/factories';
+import TenantsManager from '@/system/TenantsManager';
+import faker from 'faker';
+import { hashPassword } from '@/utils';
+import TenantModel from '@/models/TenantModel';
+import createSystemFactory from '@/database/factories/system';
 
-const request = () => chai.request(app);
+
 const { expect } = chai;
-
-const login = async (givenUser) => {
-  const user = !givenUser ? await factory.create('user') : givenUser;
-
-  const response = request()
-    .post('/api/auth/login')
-    .send({
-      crediential: user.email,
-      password: 'admin',
-    });
-  return response;
-};
-
-before(async () => {
-  await dbManager.closeKnex();
-  await dbManager.close();
-  // await dbManager.dropDb();
-  // await dbManager.createDb();
-});
+const request = () => chai.request(app);
 
 beforeEach(async () => {
-  await knex.migrate.rollback();
-  await knex.migrate.latest();
+  // Rollback/migrate the system database.
+  await systemDb.migrate.rollback();
+  await systemDb.migrate.latest();
 });
 
-after(async () => {
+afterEach(async () => {
 });
 
 chai.use(chaiHttp);
 chai.use(chaiThings);
 
-const create = async (name, data) => factory.create(name, data);
-const make = async (name, data) => factory.build(name, data);
+// Create tenant database.
+const createTenant = () => {  
+  return TenantsManager.createTenant();
+};
+
+// Drops tenant database.
+const dropTenant = async (tenantWebsite) => {
+  return TenantsManager.dropTenant(tenantWebsite);
+};
+
+// Create a new user that associate to the given tenant Db.
+const createUser = async (tenantWebsite, givenUser) => {
+  const userPassword = (givenUser && givenUser.password) ? givenUser.password : 'admin'
+  const hashedPassword = await hashPassword(userPassword);
+
+  const userInfo = {
+    first_name: faker.lorem.word(),
+    last_name: faker.lorem.word(),
+    email: faker.internet.email(),
+    active: 1,
+    phone_number: faker.phone.phoneNumberFormat().replace('-', ''),
+    password: hashedPassword,
+    ...givenUser,
+  };
+  const user = await TenantsManager.createTenantUser(tenantWebsite, userInfo);
+  return user;
+};
+
+const login = async (tenantWebsite, givenUser) => {
+  let user = givenUser;
+
+  if (!givenUser && tenantWebsite) {
+    const createdUser = await createUser(tenantWebsite, givenUser);
+    user = createdUser;
+  }
+  return request()
+    .post('/api/auth/login')
+    .send({
+      crediential: user.email,
+      password: 'admin',
+    });
+};
+
+const bindTenantModel = (tenantDb) => {
+  TenantModel.knexBinded = tenantDb;
+};
+
+const systemFactory = createSystemFactory();
 
 export {
   login,
-  create,
-  make,
+  systemFactory,
+  createTenantFactory, 
+  createTenant,
+  createUser,
+  dropTenant,
   expect,
   request,
+  bindTenantModel,
 };

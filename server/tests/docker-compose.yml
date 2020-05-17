@@ -1,4 +1,4 @@
-on: '2'  
+
 services:  
     mysql:
         image: mysql/mysql-server:5.7
@@ -9,3 +9,6 @@ services:
             - MYSQL_DATABASE=moosher_test
             - MYSQL_USER=moosher
             - MYSQL_PASSWORD=moosher
+        tmpfs:
+            - /var/lib/mysql/:rw,noexec,nosuid,size=600m
+            - /tmp/:rw,noexec,nosuid,size=50m

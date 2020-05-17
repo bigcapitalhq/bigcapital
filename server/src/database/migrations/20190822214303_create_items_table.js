@@ -4,6 +4,7 @@ exports.up = function (knex) {
     table.increments();
     table.string('name');
     table.string('type');
+    table.string('sku');
     table.decimal('cost_price').unsigned();
     table.decimal('sell_price').unsigned();
     table.string('currency_code', 3);
@@ -15,7 +16,7 @@ exports.up = function (knex) {
     table.integer('category_id').unsigned();
     table.integer('user_id').unsigned();
     table.timestamps();
-  });
+  }).raw('ALTER TABLE `ITEMS` AUTO_INCREMENT = 1000');;
 };
 
 exports.down = (knex) => knex.schema.dropTableIfExists('items');

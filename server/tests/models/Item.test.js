@@ -2,27 +2,21 @@ import { create, expect } from '~/testInit';
 import Item from '@/models/Item';
 // eslint-disable-next-line no-unused-vars
 import itemCategory from '@/models/ItemCategory';
-import '@/models/ItemMetadata';
+import {
+  tenantWebsite,
+  tenantFactory,
+  loginRes
+} from '~/dbInit';
+
 
 describe('Model: Item', () => {
   it('Should item model belongs to the associated category model.', async () => {
-    const category = await create('item_category');
-    const item = await create('item', { category_id: category.id });
+    const category = await tenantFactory.create('item_category');
+    const item = await tenantFactory.create('item', { category_id: category.id });
 
-    const itemModel = await Item.query().where('id', item.id);
+    const itemModel = await Item.tenant().query().where('id', item.id).first();
     const itemCategoryModel = await itemModel.$relatedQuery('category');
 
-    expect(itemCategoryModel.attributes.id).equals(category.id);
-  });
-
-  it('Should item model has many metadata that assciated to the item model.', async () => {
-    const item = await create('item');
-    await create('item_metadata', { item_id: item.id });
-    await create('item_metadata', { item_id: item.id });
-
-    const itemModel = await Item.query().where('id', item.id);
-    const itemMetadataCollection = await itemModel.$relatedQuery('metadata');
-
-    expect(itemMetadataCollection.length).equals(2);
+    expect(itemCategoryModel.id).equals(category.id);
   });
 });

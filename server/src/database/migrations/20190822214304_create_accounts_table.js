@@ -1,7 +1,7 @@
 
 exports.up = function (knex) {
   return knex.schema.createTable('accounts', (table) => {
-    table.increments();
+    table.bigIncrements('id').comment('Auto-generated id');;
     table.string('name');
     table.integer('account_type_id');
     table.integer('parent_account_id');
@@ -11,7 +11,7 @@ exports.up = function (knex) {
     table.integer('index').unsigned();
     table.boolean('predefined').defaultTo(false);
     table.timestamps();
-  }).then(() => {
+  }).raw('ALTER TABLE `ACCOUNTS` AUTO_INCREMENT = 1000').then(() => {
     return knex.seed.run({
       specific: 'seed_accounts.js',
     });

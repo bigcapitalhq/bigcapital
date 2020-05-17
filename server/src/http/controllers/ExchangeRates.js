@@ -6,6 +6,7 @@ import {
   validationResult,
 } from 'express-validator';
 import moment from 'moment';
+import { difference } from 'lodash';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
 
 export default {
@@ -26,6 +27,10 @@ export default {
     router.post('/:id',
       this.editExchangeRate.validation,
       asyncMiddleware(this.editExchangeRate.handler));
+
+    router.delete('/bulk',
+      this.bulkDeleteExchangeRates.validation,
+      asyncMiddleware(this.bulkDeleteExchangeRates.handler));
 
     router.delete('/:id',
       this.deleteExchangeRate.validation,
@@ -164,6 +169,41 @@ export default {
       await ExchangeRate.query().where('id', id).delete();
 
       return res.status(200).send({ id });
+    },
+  },
+
+  bulkDeleteExchangeRates: {
+    validation: [
+      query('ids').isArray({ min: 2 }),
+      query('ids.*').isNumeric().toInt(),
+    ],
+    async handler(req, res) {
+      const validationErrors = validationResult(req);
+
+      if (!validationErrors.isEmpty()) {
+        return res.boom.badData(null, {
+          code: 'validation_error', ...validationErrors,
+        });
+      }
+
+      const filter = {
+        ids: [],
+        ...req.query,
+      };
+      const { ExchangeRate } = req.models;
+      
+      const exchangeRates = await ExchangeRate.query().whereIn('id', filter.ids);
+      const exchangeRatesIds = exchangeRates.map((category) => category.id);
+      const notFoundExRates = difference(filter.ids, exchangeRatesIds);
+      
+      if (notFoundExRates.length > 0) {
+        return res.status(400).send({
+          errors: [{ type: 'EXCHANGE.RATES.IS.NOT.FOUND', code: 200, ids: notFoundExRates }],
+        });
+      }
+      await ExchangeRate.query().whereIn('id', exchangeRatesIds).delete();
+
+      return res.status(200).send({ ids: exchangeRatesIds });
     },
   },
 }

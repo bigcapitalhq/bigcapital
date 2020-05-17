@@ -1,21 +1,24 @@
-import { request, expect, create, login } from '~/testInit';
+import {
+  request,
+  expect,
+} from '~/testInit';
 import Account from '@/models/Account';
+import {
+  tenantWebsite,
+  tenantFactory,
+  loginRes
+} from '~/dbInit';
 
-let loginRes;
 
 describe('routes: /accounts/', () => {
-  beforeEach(async () => {
-    loginRes = await login();
-  });
-  afterEach(() => {
-    loginRes = null;
-  });
   describe('POST `/accounts`', () => {
     it('Should `name` be required.', async () => {
       const res = await request()
         .post('/api/accounts')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send();
+
       expect(res.status).equals(422);
       expect(res.body.code).equals('validation_error');
     });
@@ -24,6 +27,7 @@ describe('routes: /accounts/', () => {
       const res = await request()
         .post('/api/accounts')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send();
 
       expect(res.status).equals(422);
@@ -34,6 +38,7 @@ describe('routes: /accounts/', () => {
       const res = await request()
         .post('/api/accounts')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send();
 
       expect(res.status).equals(422);
@@ -41,10 +46,11 @@ describe('routes: /accounts/', () => {
     });
 
     it('Should response type not found in case `account_type_id` was not exist.', async () => {
-      const account = await create('account');
+      const account = await tenantFactory.create('account');
       const res = await request()
         .post('/api/accounts')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           name: 'Account Name',
           description: account.description,
@@ -59,10 +65,11 @@ describe('routes: /accounts/', () => {
     });
 
     it('Should account code be unique in the storage.', async () => {
-      const account = await create('account');
+      const account = await tenantFactory.create('account');
       const res = await request()
         .post('/api/accounts')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           name: account.name,
           description: account.description,
@@ -77,10 +84,11 @@ describe('routes: /accounts/', () => {
     });
 
     it('Should response success with correct data form.', async () => {
-      const account = await create('account');
+      const account = await tenantFactory.create('account');
       const res = await request()
         .post('/api/accounts')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           name: 'Name',
           description: 'description here',
@@ -93,9 +101,11 @@ describe('routes: /accounts/', () => {
     });
 
     it('Should store account data in the storage.', async () => {
-      const account = await create('account');
+      const account = await tenantFactory.create('account');
+
       const res = await request().post('/api/accounts')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           name: 'Account Name',
           description: 'desc here',
@@ -103,12 +113,10 @@ describe('routes: /accounts/', () => {
           parent_account_id: account.id,
         });
 
-
-
-      const accountModel = await Account.query()
+      const accountModel = await Account.tenant().query()
         .where('name', 'Account Name')
         .first();
-      
+
       expect(accountModel).a.an('object');
       expect(accountModel.description).equals('desc here');
       expect(accountModel.accountTypeId).equals(account.accountTypeId);
@@ -118,10 +126,11 @@ describe('routes: /accounts/', () => {
 
   describe('POST `/accounts/:id`', () => {
     it('Should `name` be required.', async () => {
-      const account = await create('account');
+      const account = await tenantFactory.create('account');
       const res = await request()
         .post(`/api/accounts/${account.id}`)
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send();
 
       expect(res.status).equals(422);
@@ -129,10 +138,11 @@ describe('routes: /accounts/', () => {
     });
 
     it('Should `account_type_id` be required.', async () => {
-      const account = await create('account');
+      const account = await tenantFactory.create('account');
       const res = await request()
         .post(`/api/accounts/${account.id}`)
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send();
 
       expect(res.status).equals(422);
@@ -140,10 +150,11 @@ describe('routes: /accounts/', () => {
     });
 
     it('Should max length of `code` be limited.', async () => {
-      const account = await create('account');
+      const account = await tenantFactory.create('account');
       const res = await request()
         .post(`/api/accounts/${account.id}`)
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send();
 
       expect(res.status).equals(422);
@@ -154,17 +165,19 @@ describe('routes: /accounts/', () => {
       const res = await request()
         .post('/api/accounts')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send();
 
       expect(res.status).equals(422);
     });
 
     it('Should account code be unique in the storage.', async () => {
-      await create('account', { code: 'ABCD' });
-      const account = await create('account');
+      await tenantFactory.create('account', { code: 'ABCD' });
+      const account = await tenantFactory.create('account');
       const res = await request()
         .post(`/api/accounts/${account.id}`)
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           name: 'name',
           code: 'ABCD',
@@ -178,10 +191,11 @@ describe('routes: /accounts/', () => {
     });
 
     it('Should response success with correct data form.', async () => {
-      const account = await create('account');
+      const account = await tenantFactory.create('account');
       const res = await request()
         .post('/api/accounts')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           name: 'Name',
           description: 'description here',
@@ -195,26 +209,15 @@ describe('routes: /accounts/', () => {
   });
 
   describe('GET: `/accounts`', () => {
-    // it('Should retrieve accounts resource not found.', async () => {
-    //   const res = await request()
-    //     .get('/api/accounts')
-    //     .set('x-access-token', loginRes.body.token)
-    //     .send();
-
-    //   expect(res.status).equals(400);
-    //   expect(res.body.errors).include.something.that.deep.equals({
-    //     type: 'ACCOUNTS_RESOURCE_NOT_FOUND', code: 200,
-    //   });
-    // });
-
     it('Should retrieve chart of accounts', async () => {
-      await create('resource', { name: 'accounts' });
-      const account = await create('account');
-      await create('account', { parent_account_id: account.id });
+      await tenantFactory.create('resource', { name: 'accounts' });
+      const account = await tenantFactory.create('account');
+      await tenantFactory.create('account', { parent_account_id: account.id });
 
       const res = await request()
         .get('/api/accounts')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send();
 
       expect(res.status).equals(200);
@@ -222,9 +225,9 @@ describe('routes: /accounts/', () => {
     });
 
     it('Should retrieve accounts based on view roles conditionals of the custom view.', async () => {
-      const resource = await create('resource', { name: 'accounts' });
+      const resource = await tenantFactory.create('resource', { name: 'accounts' });
       
-      const accountTypeField = await create('resource_field', {
+      const accountTypeField = await tenantFactory.create('resource_field', {
         label_name: 'Account type',
         key: 'type',
         resource_id: resource.id,
@@ -232,28 +235,28 @@ describe('routes: /accounts/', () => {
         predefined: true,
       });
 
-      const accountNameField = await create('resource_field', {
+      const accountNameField = await tenantFactory.create('resource_field', {
         label_name: 'Account Name',
         key: 'name',
         resource_id: resource.id,
         active: true,
         predefined: true,
       });
-      const accountsView = await create('view', {
+      const accountsView = await tenantFactory.create('view', {
         name: 'Accounts View',
         resource_id: resource.id,
         roles_logic_expression: '1 AND 2',
       });
-      const accountType = await create('account_type');
+      const accountType = await tenantFactory.create('account_type');
 
-      await create('view_role', {
+      await tenantFactory.create('view_role', {
         view_id: accountsView.id,
         index: 1,
         field_id: accountTypeField.id,
         value: accountType.name,
         comparator: 'equals',
       });
-      await create('view_role', {
+      await tenantFactory.create('view_role', {
         view_id: accountsView.id,
         index: 2,
         field_id: accountNameField.id,
@@ -261,14 +264,17 @@ describe('routes: /accounts/', () => {
         comparator: 'contains',
       });
 
-      await create('account', { name: 'account-1', account_type_id: accountType.id });
-      await create('account', { name: 'account-2', account_type_id: accountType.id });
-      await create('account', { name: 'account-3' });
+      await tenantFactory.create('account', { name: 'account-1', account_type_id: accountType.id });
+      await tenantFactory.create('account', { name: 'account-2', account_type_id: accountType.id });
+      await tenantFactory.create('account', { name: 'account-3' });
 
       const res = await request()
         .get('/api/accounts')
         .set('x-access-token', loginRes.body.token)
-        .query({ custom_view_id: accountsView.id })
+        .set('organization-id', tenantWebsite.organizationId)
+        .query({
+          custom_view_id: accountsView.id
+        })
         .send();
 
       expect(res.body.accounts.length).equals(2);
@@ -279,23 +285,23 @@ describe('routes: /accounts/', () => {
     });
 
     it('Should retrieve accounts based on view roles conditionals with relation join column.', async () => {
-      const resource = await create('resource', { name: 'accounts' });
+      const resource = await tenantFactory.create('resource', { name: 'accounts' });
       
-      const accountTypeField = await create('resource_field', {
+      const accountTypeField = await tenantFactory.create('resource_field', {
         label_name: 'Account type',
         key: 'type',
         resource_id: resource.id,
         active: true,
         predefined: true,
       });
-      const accountsView = await create('view', {
+      const accountsView = await tenantFactory.create('view', {
         name: 'Accounts View',
         resource_id: resource.id,
         roles_logic_expression: '1',
       });
 
-      const accountType = await create('account_type');
-      const accountsViewRole = await create('view_role', {
+      const accountType = await tenantFactory.create('account_type');
+      const accountsViewRole = await tenantFactory.create('view_role', {
         view_id: accountsView.id,
         index: 1,
         field_id: accountTypeField.id,
@@ -303,13 +309,14 @@ describe('routes: /accounts/', () => {
         comparator: 'equals',
       });
 
-      await create('account', { account_type_id: accountType.id });
-      await create('account');
-      await create('account');
+      await tenantFactory.create('account', { account_type_id: accountType.id });
+      await tenantFactory.create('account');
+      await tenantFactory.create('account');
 
       const res = await request()
         .get('/api/accounts')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           custom_view_id: accountsView.id
         })
@@ -320,15 +327,16 @@ describe('routes: /accounts/', () => {
     });
 
     it('Should retrieve accounts and child accounts in nested set graph.', async () => {
-      const resource = await create('resource', { name: 'accounts' });
+      const resource = await tenantFactory.create('resource', { name: 'accounts' });
 
-      const account1 = await create('account');
-      const account2 = await create('account', { parent_account_id: account1.id });
-      const account3 = await create('account', { parent_account_id: account2.id });
+      const account1 = await tenantFactory.create('account');
+      const account2 = await tenantFactory.create('account', { parent_account_id: account1.id });
+      const account3 = await tenantFactory.create('account', { parent_account_id: account2.id });
 
       const res = await request()
         .get('/api/accounts')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({ display_type: 'tree' })
         .send();
 
@@ -346,15 +354,16 @@ describe('routes: /accounts/', () => {
     });
 
     it('Should retrieve bad request when `filter_roles.*.field_key` not found in accounts resource.', async () => {
-      const resource = await create('resource', { name: 'accounts' });
+      const resource = await tenantFactory.create('resource', { name: 'accounts' });
 
-      const account1 = await create('account', { name: 'ahmed' });
-      const account2 = await create('account');
-      const account3 = await create('account');
+      const account1 = await tenantFactory.create('account', { name: 'ahmed' });
+      const account2 = await tenantFactory.create('account');
+      const account3 = await tenantFactory.create('account');
 
       const res = await request()
         .get('/api/accounts')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           stringified_filter_roles: JSON.stringify([{
             condition: 'AND',
@@ -379,27 +388,28 @@ describe('routes: /accounts/', () => {
     });
 
     it('Should retrieve filtered accounts according to the given account type filter condition.', async () => {
-      const resource = await create('resource', { name: 'accounts' });
-      const keyField = await create('resource_field', {
+      const resource = await tenantFactory.create('resource', { name: 'accounts' });
+      const keyField = await tenantFactory.create('resource_field', {
         key: 'type',
         resource_id: resource.id,
       });
-      const nameFiled = await create('resource_field', {
+      const nameFiled = await tenantFactory.create('resource_field', {
         key: 'name',
         resource_id: resource.id,
       });
-      const accountType = await create('account_type');
+      const accountType = await tenantFactory.create('account_type');
 
-      const account1 = await create('account', {
+      const account1 = await tenantFactory.create('account', {
         name: 'ahmed',
         account_type_id: accountType.id
       });
-      const account2 = await create('account');
-      const account3 = await create('account');
+      const account2 = await tenantFactory.create('account');
+      const account3 = await tenantFactory.create('account');
 
       const res = await request()
         .get('/api/accounts')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           stringified_filter_roles: JSON.stringify([{
             condition: '&&',
@@ -418,19 +428,20 @@ describe('routes: /accounts/', () => {
     });
 
     it('Shoud retrieve filtered accounts according to the given account description filter condition.', async () => {
-      const resource = await create('resource', { name: 'accounts' });
-      const resourceField = await create('resource_field', {
+      const resource = await tenantFactory.create('resource', { name: 'accounts' });
+      const resourceField = await tenantFactory.create('resource_field', {
         key: 'description',
         resource_id: resource.id,
       });
 
-      const account1 = await create('account', { name: 'ahmed', description: 'here' });
-      const account2 = await create('account');
-      const account3 = await create('account');
+      const account1 = await tenantFactory.create('account', { name: 'ahmed', description: 'here' });
+      const account2 = await tenantFactory.create('account');
+      const account3 = await tenantFactory.create('account');
 
       const res = await request()
         .get('/api/accounts')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           stringified_filter_roles: JSON.stringify([{
             condition: 'AND',
@@ -445,24 +456,25 @@ describe('routes: /accounts/', () => {
     });
 
     it('Should retrieve filtered accounts based on given filter roles between OR conditions.', async () => {
-      const resource = await create('resource', { name: 'accounts' });
-      const resourceField = await create('resource_field', {
+      const resource = await tenantFactory.create('resource', { name: 'accounts' });
+      const resourceField = await tenantFactory.create('resource_field', {
         key: 'description',
         resource_id: resource.id,
       });
 
-      const resourceCodeField = await create('resource_field', {
+      const resourceCodeField = await tenantFactory.create('resource_field', {
         key: 'code',
         resource_id: resource.id,
       });
 
-      const account1 = await create('account', { name: 'ahmed', description: 'target' });
-      const account2 = await create('account', { description: 'target' });
-      const account3 = await create('account');
+      const account1 = await tenantFactory.create('account', { name: 'ahmed', description: 'target' });
+      const account2 = await tenantFactory.create('account', { description: 'target' });
+      const account3 = await tenantFactory.create('account');
 
       const res = await request()
         .get('/api/accounts')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           stringified_filter_roles: JSON.stringify([{
             condition: '&&',
@@ -484,26 +496,26 @@ describe('routes: /accounts/', () => {
     });
 
     it('Should retrieve filtered accounts from custom view and filter roles.', async () => {
-      const resource = await create('resource', { name: 'accounts' });
-      const accountTypeField = await create('resource_field', {
+      const resource = await tenantFactory.create('resource', { name: 'accounts' });
+      const accountTypeField = await tenantFactory.create('resource_field', {
         key: 'type', resource_id: resource.id,
       });
-      const accountDescriptionField = await create('resource_field', {
+      const accountDescriptionField = await tenantFactory.create('resource_field', {
         key: 'description', resource_id: resource.id,
       });
 
-      const accountType = await create('account_type', { name: 'type-name' });
+      const accountType = await tenantFactory.create('account_type', { name: 'type-name' });
 
-      const account1 = await create('account', { name: 'ahmed-1' });
-      const account2 = await create('account', { name: 'ahmed-2', account_type_id: accountType.id, description: 'target' });
-      const account3 = await create('account', { name: 'ahmed-3' });
+      const account1 = await tenantFactory.create('account', { name: 'ahmed-1' });
+      const account2 = await tenantFactory.create('account', { name: 'ahmed-2', account_type_id: accountType.id, description: 'target' });
+      const account3 = await tenantFactory.create('account', { name: 'ahmed-3' });
 
-      const accountsView = await create('view', {
+      const accountsView = await tenantFactory.create('view', {
         name: 'Accounts View',
         resource_id: resource.id,
         roles_logic_expression: '1',
       });
-      const accountsViewRole = await create('view_role', {
+      const accountsViewRole = await tenantFactory.create('view_role', {
         view_id: accountsView.id,
         field_id: accountTypeField.id,
         index: 1,
@@ -514,6 +526,7 @@ describe('routes: /accounts/', () => {
       const res = await request()
         .get('/api/accounts')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           custom_view_id: accountsView.id,
           stringified_filter_roles: JSON.stringify([{
@@ -530,12 +543,13 @@ describe('routes: /accounts/', () => {
     });
 
     it('Should validate the given `column_sort_order` column on the accounts resource.', async () => {
-      const resource = await create('resource', { name: 'accounts' });
+      const resource = await tenantFactory.create('resource', { name: 'accounts' });
       const res = await request()
         .get('/api/accounts')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({ 
-          column_sort_order: 'not_found',
+          column_sort_by: 'not_found',
           sort_order: 'desc',
         });
       
@@ -545,18 +559,19 @@ describe('routes: /accounts/', () => {
     });
 
     it('Should sorting the given `column_sort_order` column on asc direction,', async () => {
-      const resource = await create('resource', { name: 'accounts' });
-      const resourceField = await create('resource_field', {
+      const resource = await tenantFactory.create('resource', { name: 'accounts' });
+      const resourceField = await tenantFactory.create('resource_field', {
         key: 'name', resource_id: resource.id,
       });
-      const accounts1 = await create('account', { name: 'A' });
-      const accounts2 = await create('account', { name: 'B' });
+      const accounts1 = await tenantFactory.create('account', { name: 'A' });
+      const accounts2 = await tenantFactory.create('account', { name: 'B' });
 
       const res = await request()
         .get('/api/accounts')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
-          column_sort_order: 'name',
+          column_sort_by: 'name',
           sort_order: 'asc',
         });
 
@@ -567,25 +582,25 @@ describe('routes: /accounts/', () => {
     });
 
     it('Should sorting the given `column_sort_order` columnw with relation on another table on asc direction.', async () => {
-      const resource = await create('resource', { name: 'accounts' });
-      const resourceField = await create('resource_field', {
+      const resource = await tenantFactory.create('resource', { name: 'accounts' });
+      const resourceField = await tenantFactory.create('resource_field', {
         key: 'type', resource_id: resource.id,
       });
-      const accounts1 = await create('account', { name: 'A' });
-      const accounts2 = await create('account', { name: 'B' });
+      const accounts1 = await tenantFactory.create('account', { name: 'A' });
+      const accounts2 = await tenantFactory.create('account', { name: 'B' });
 
       const res = await request()
         .get('/api/accounts')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
-          column_sort_order: 'name',
+          column_sort_by: 'name',
           sort_order: 'asc',
         });
 
       expect(res.body.accounts[0].name).equals('A');
       expect(res.body.accounts[1].name).equals('B');
     });
-
   });
 
   describe('DELETE: `/accounts`', () => {
@@ -593,28 +608,31 @@ describe('routes: /accounts/', () => {
       const res = await request()
         .delete('/api/accounts/10')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send();
 
       expect(res.status).equals(404);
     });
 
     it('Should delete the give account from the storage.', async () => {
-      const account = await create('account');
+      const account = await tenantFactory.create('account');
       await request()
         .delete(`/api/accounts/${account.id}`)
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send();
 
-      const foundAccounts = await Account.query().where('id', account.id);
+      const foundAccounts = await Account.tenant().query().where('id', account.id);
       expect(foundAccounts).to.have.lengthOf(0);
     });
 
     it('Should not delete the given account in case account has associated transactions.', async () => {
-      const accountTransaction = await create('account_transaction');
+      const accountTransaction = await tenantFactory.create('account_transaction');
 
       const res = await request()
         .delete(`/api/accounts/${accountTransaction.accountId}`)
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send();
 
       expect(res.status).equals(400);
@@ -624,12 +642,12 @@ describe('routes: /accounts/', () => {
     });
   });
 
-
   describe('DELETE: `/accounts?ids=`', () => {
     it('Should response in case on of accounts ids was not exists.', async () => {
       const res = await request()
         .delete('/api/accounts')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           ids: [100, 200],
         })
@@ -642,31 +660,33 @@ describe('routes: /accounts/', () => {
     });
 
     it('Should response bad request in case one of accounts has transactions.', async () => {
-      const accountTransaction = await create('account_transaction');
-      const accountTransaction2 = await create('account_transaction');
+      const accountTransaction = await tenantFactory.create('account_transaction');
+      const accountTransaction2 = await tenantFactory.create('account_transaction');
 
       const res = await request()
         .delete('/api/accounts')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           ids: [accountTransaction.accountId, accountTransaction2.accountId],
         })
         .send();
 
       expect(res.body.errors).include.something.that.deep.equals({
-        type: 'ACCOUNTS.HAS.TRANSACTIONS',
+        type: 'ACCOUNT.HAS.ASSOCIATED.TRANSACTIONS',
         code: 300,
         ids: [accountTransaction.accountId, accountTransaction2.accountId],
       });
     });
 
     it('Should delete the given accounts from the storage.', async () => {
-      const account1 = await create('account');
-      const account2 = await create('account');
+      const account1 = await tenantFactory.create('account');
+      const account2 = await tenantFactory.create('account');
 
       const res = await request()
         .delete('/api/accounts')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           ids: [account1.id, account2.id],
         })
@@ -674,9 +694,66 @@ describe('routes: /accounts/', () => {
 
       expect(res.status).equals(200);
 
-      const foundAccounts = await Account.query()
+      const foundAccounts = await Account.tenant().query()
         .whereIn('id', [account1.id, account2.id]);
+
       expect(foundAccounts.length).equals(0);
+    });
+  });
+
+  describe('POST: `/api/accounts/bulk/activate|inactivate', () => {
+    it('Should response if there one of accounts ids were not found.', async () => {
+      const res = await request()
+        .post('/api/accounts/bulk/activate')
+        .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
+        .query({
+          ids: [123123, 321321],
+        })
+        .send();
+
+      expect(res.status).equals(400);
+      expect(res.body.errors).include.something.that.deep.equals({
+        type: 'ACCOUNTS.NOT.FOUND', code: 200,
+      });
+    });
+
+    it('Should activate all the given accounts.', async () => {
+      const accountA = await tenantFactory.create('account', { active: 1 });
+      const accountB = await tenantFactory.create('account', { active: 1 });
+      
+      const res = await request()
+        .post('/api/accounts/bulk/inactivate')
+        .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
+        .query({
+          ids: [accountA.id, accountB.id],
+        })
+        .send();
+
+      const updatedAccounts = await Account.tenant().query().whereIn('id', [accountA.id, accountB.id]);
+
+      expect(updatedAccounts[0].active).equals(0);
+      expect(updatedAccounts[1].active).equals(0);
+    });
+
+    it('Should inactivate all the given accounts.', async () => {
+      const accountA = await tenantFactory.create('account', { active: 0 });
+      const accountB = await tenantFactory.create('account', { active: 0 });
+      
+      const res = await request()
+        .post('/api/accounts/bulk/activate')
+        .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
+        .query({
+          ids: [accountA.id, accountB.id],
+        })
+        .send();
+
+      const updatedAccounts = await Account.tenant().query().whereIn('id', [accountA.id, accountB.id]);
+
+      expect(updatedAccounts[0].active).equals(1);
+      expect(updatedAccounts[1].active).equals(1);
     });
   });
 });

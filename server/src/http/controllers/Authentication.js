@@ -7,6 +7,7 @@ import Mustache from 'mustache';
 import jwt from 'jsonwebtoken';
 import { pick } from 'lodash';
 import uniqid from 'uniqid';
+import moment from 'moment';
 import Logger from '@/services/Logger';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
 import SystemUser from '@/system/models/SystemUser';
@@ -18,6 +19,7 @@ import TenantUser from '@/models/TenantUser';
 import TenantsManager from '@/system/TenantsManager';
 import TenantModel from '@/models/TenantModel';
 import PasswordReset from '@/system/models/PasswordReset';
+
 
 export default {
   /**
@@ -51,7 +53,7 @@ export default {
   login: {
     validation: [
       check('crediential').exists().isEmail(),
-      check('password').exists().isLength({ min: 4 }),
+      check('password').exists().isLength({ min: 5 }),
     ],
     async handler(req, res) {
       const validationErrors = validationResult(req);
@@ -87,7 +89,17 @@ export default {
           errors: [{ type: 'USER_INACTIVE', code: 110 }],
         });
       }
-      // user.update({ last_login_at: new Date() });
+      const lastLoginAt = moment().format('YYYY/MM/DD HH:mm:ss');
+
+      const updateTenantUser = TenantUser.tenant().query()
+        .where('id', user.id)
+        .update({ last_login_at: lastLoginAt });
+
+      const updateSystemUser = SystemUser.query()
+        .where('id', user.id)
+        .update({ last_login_at: lastLoginAt });
+
+      await Promise.all([updateTenantUser, updateSystemUser]);
 
       const token = jwt.sign(
         { email: user.email, _id: user.id },

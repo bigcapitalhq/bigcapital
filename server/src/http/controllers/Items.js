@@ -17,6 +17,7 @@ import Logger from '@/services/Logger';
 
 const fsPromises = fs.promises;
 
+
 export default {
   /**
    * Router constructor.
@@ -80,6 +81,7 @@ export default {
           code: 'validation_error', ...validationErrors,
         });
       }
+      const { user } = req;
       const form = {
         custom_fields: [],
         media_ids: [],
@@ -129,8 +131,10 @@ export default {
         itemCategory,
         inventoryAccount,
       ] = await Promise.all([
-        costAccountPromise, sellAccountPromise,
-        itemCategoryPromise, inventoryAccountPromise,
+        costAccountPromise,
+        sellAccountPromise,
+        itemCategoryPromise,
+        inventoryAccountPromise,
       ]);
       if (!costAccount) {
         errorReasons.push({ type: 'COST_ACCOUNT_NOT_FOUND', code: 100 });
@@ -152,11 +156,14 @@ export default {
       const item = await Item.query().insertAndFetch({
         name: form.name,
         type: form.type,
+        sku: form.sku,
         cost_price: form.cost_price,
         sell_price: form.sell_price,
         sell_account_id: form.sell_account_id,
         cost_account_id: form.cost_account_id,
         currency_code: form.currency_code,
+        category_id: form.category_id,
+        user_id: user.id,
         note: form.note,
       });
 
@@ -239,7 +246,7 @@ export default {
         errorReasons.push({ type: 'ITEM_CATEGORY_NOT_FOUND', code: 140 });
       }
 
-      const { attachment } = req.files;
+      const attachment = req.files && req.files.attachment ? req.files.attachment : null;
       const attachmentsMimes = ['image/png', 'image/jpeg'];
 
       // Validate the attachment.
@@ -277,7 +284,6 @@ export default {
         cost_account_id: form.cost_account_id,
         category_id: form.category_id,
         note: form.note,
-        attachment_file: (attachment) ? item.attachmentFile : null,
       });
 
       // Save links of new inserted media that associated to the item model.

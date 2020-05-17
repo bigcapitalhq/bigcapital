@@ -1,21 +1,16 @@
 import {
   request,
-  create,
   expect,
-  login,
 } from '~/testInit';
-import knex from '@/database/knex';
 import Item from '@/models/Item';
+import {
+  tenantWebsite,
+  tenantFactory,
+  loginRes
+} from '~/dbInit';
 
-let loginRes;
 
 describe('routes: `/items`', () => {
-  beforeEach(async () => {
-    loginRes = await login();
-  });
-  afterEach(() => {
-    loginRes = null;
-  });
   describe('POST: `/items`', () => {
     it('Should not create a new item if the user was not authorized.', async () => {
       const res = await request()
@@ -23,21 +18,14 @@ describe('routes: `/items`', () => {
         .send();
 
       expect(res.status).equals(401);
-      expect(res.body.message).equals('unauthorized');
-    });
-
-    it('Should user have create permission to create a new item.', async () => {
-      const loginRes = await login();
-      const res = await request().post('/api/items')
-        .set('x-access-token', loginRes.body.token).send();
-
-      expect(res.status).equals(401);
+      expect(res.body.message).equals('Unauthorized');
     });
 
     it('Should `name` be required.', async () => {
       const res = await request()
         .post('/api/items')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send();
 
       expect(res.status).equals(422);
@@ -51,6 +39,7 @@ describe('routes: `/items`', () => {
       const res = await request()
         .post('/api/items')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send();
 
       expect(res.status).equals(422);
@@ -64,6 +53,7 @@ describe('routes: `/items`', () => {
       const res = await request()
         .post('/api/items')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           type: 'not-defined',
         });
@@ -80,6 +70,7 @@ describe('routes: `/items`', () => {
       const res = await request()
         .post('/api/items')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           cost_price: 'not_numeric',
         });
@@ -98,6 +89,7 @@ describe('routes: `/items`', () => {
       const res = await request()
         .post('/api/items')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           sell_price: 'not_numeric',
         });
@@ -116,6 +108,7 @@ describe('routes: `/items`', () => {
       const res = await request()
         .post('/api/items')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           cost_account_id: 'not_numeric',
         });
@@ -134,6 +127,7 @@ describe('routes: `/items`', () => {
       const res = await request()
         .post('/api/items')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           sell_account_id: 'not_numeric',
         });
@@ -160,6 +154,7 @@ describe('routes: `/items`', () => {
       const res = await request()
         .post('/api/items')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           name: 'Item Name',
           type: 'inventory',
@@ -180,6 +175,7 @@ describe('routes: `/items`', () => {
       const res = await request()
         .post('/api/items')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           name: 'Item Name',
           type: 'service',
@@ -200,6 +196,7 @@ describe('routes: `/items`', () => {
       const res = await request()
         .post('/api/items')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           name: 'Item Name',
           type: 'service',
@@ -219,6 +216,7 @@ describe('routes: `/items`', () => {
       const res = await request()
         .post('/api/items')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           name: 'Item Name',
           type: 'service',
@@ -238,6 +236,7 @@ describe('routes: `/items`', () => {
       const res = await request()
         .post('/api/items')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           name: 'Item Name',
           type: 'service',
@@ -255,13 +254,14 @@ describe('routes: `/items`', () => {
     });
 
     it('Should response success with correct data format.', async () => {
-      const account = await create('account');
-      const anotherAccount = await create('account');
-      const itemCategory = await create('item_category');
+      const account = await tenantFactory.create('account');
+      const anotherAccount = await tenantFactory.create('account');
+      const itemCategory = await tenantFactory.create('item_category');
 
       const res = await request()
         .post('/api/items')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           name: 'Item Name',
           type: 'service',
@@ -274,6 +274,42 @@ describe('routes: `/items`', () => {
 
       expect(res.status).equals(200);
     });
+
+    it('Should store the given item details to the storage.', async () => {
+      const account = await tenantFactory.create('account');
+      const anotherAccount = await tenantFactory.create('account');
+      const itemCategory = await tenantFactory.create('item_category');
+
+      const res = await request()
+        .post('/api/items')
+        .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
+        .send({
+          name: 'Item Name',
+          type: 'service',
+          sku: 'SKU CODE',
+          sell_price: 10.2,
+          cost_price: 20.2,
+          sell_account_id: account.id,
+          cost_account_id: anotherAccount.id,
+          category_id: itemCategory.id,
+          note: 'note about item'
+        });
+
+      const storedItem = await Item.tenant().query().where('id', res.body.id).first();
+
+      expect(storedItem.name).equals('Item Name');
+      expect(storedItem.type).equals('service');
+
+      expect(storedItem.sellPrice).equals(10.2);
+      expect(storedItem.costPrice).equals(20.2);
+      expect(storedItem.sellAccountId).equals(account.id);
+      expect(storedItem.costAccountId).equals(anotherAccount.id);
+      expect(storedItem.categoryId).equals(itemCategory.id);
+      expect(storedItem.sku).equals('SKU CODE');
+      expect(storedItem.note).equals('note about item');
+      expect(storedItem.userId).is.not.null;
+    });
   });
 
   describe('POST: `items/:id`', () => {
@@ -281,6 +317,7 @@ describe('routes: `/items`', () => {
       const res = await request()
         .post('/api/items/100')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           name: 'Item Name',
           type: 'product',
@@ -298,10 +335,11 @@ describe('routes: `/items`', () => {
     });
 
     it('Should `name` be required.', async () => {
-      const item = await create('item');
+      const item = await tenantFactory.create('item');
       const res = await request()
         .post(`/api/items/${item.id}`)
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send();
 
       expect(res.status).equals(422);
@@ -312,10 +350,11 @@ describe('routes: `/items`', () => {
     });
 
     it('Should `type` be required.', async () => {
-      const item = await create('item');
+      const item = await tenantFactory.create('item');
       const res = await request()
         .post(`/api/items/${item.id}`)
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send();
 
       expect(res.status).equals(422);
@@ -326,10 +365,11 @@ describe('routes: `/items`', () => {
     });
 
     it('Should `sell_price` be numeric.', async () => {
-      const item = await create('item');
+      const item = await tenantFactory.create('item');
       const res = await request()
         .post(`/api/items/${item.id}`)
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           sell_price: 'not_numeric',
         });
@@ -345,10 +385,11 @@ describe('routes: `/items`', () => {
     });
 
     it('Should `cost_price` be numeric.', async () => {
-      const item = await create('item');
+      const item = await tenantFactory.create('item');
       const res = await request()
         .post(`/api/items/${item.id}`)
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           cost_price: 'not_numeric',
         });
@@ -364,10 +405,11 @@ describe('routes: `/items`', () => {
     });
 
     it('Should `sell_account_id` be integer.', async () => {
-      const item = await create('item');
+      const item = await tenantFactory.create('item');
       const res = await request()
         .post(`/api/items/${item.id}`)
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           sell_account_id: 'not_numeric',
         });
@@ -383,10 +425,11 @@ describe('routes: `/items`', () => {
     });
 
     it('Should `cost_account_id` be integer.', async () => {
-      const item = await create('item');
+      const item = await tenantFactory.create('item');
       const res = await request()
         .post(`/api/items/${item.id}`)
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           cost_account_id: 'not_numeric',
         });
@@ -401,11 +444,12 @@ describe('routes: `/items`', () => {
       });
     });
 
-    it('Should response bad request in case cost account was not exist.', async () => {
-      const item = await create('item');
+    it ('Should response bad request in case cost account was not exist.', async () => {
+      const item = await tenantFactory.create('item');
       const res = await request()
         .post(`/api/items/${item.id}`)
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           name: 'Item Name',
           type: 'service',
@@ -422,17 +466,18 @@ describe('routes: `/items`', () => {
     });
 
     it('Should response bad request in case sell account was not exist.', async () => {
-      const item = await create('item');
+      const item = await tenantFactory.create('item');
       const res = await request()
         .post(`/api/items/${item.id}`)
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           name: 'Item Name',
           type: 'product',
           sell_price: 10.2,
           cost_price: 20.2,
-          sell_account_id: 10,
-          cost_account_id: 20,
+          sell_account_id: 1000000,
+          cost_account_id: 1000000,
         });
 
       expect(res.status).equals(400);
@@ -442,14 +487,15 @@ describe('routes: `/items`', () => {
     });
 
     it('Should update details of the given item.', async () => {
-      const account = await create('account');
-      const anotherAccount = await create('account');
-      const itemCategory = await create('item_category');
+      const account = await tenantFactory.create('account');
+      const anotherAccount = await tenantFactory.create('account');
+      const itemCategory = await tenantFactory.create('item_category');
 
-      const item = await create('item');
+      const item = await tenantFactory.create('item');
       const res = await request()
         .post(`/api/items/${item.id}`)
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           name: 'New Item Name',
           type: 'service',
@@ -460,7 +506,7 @@ describe('routes: `/items`', () => {
           category_id: itemCategory.id,
         });
 
-      const updatedItem = await Item.query().findById(item.id);
+      const updatedItem = await Item.tenant().query().findById(item.id);
 
       expect(updatedItem.name).equals('New Item Name');
       expect(updatedItem.type).equals('service');
@@ -477,29 +523,32 @@ describe('routes: `/items`', () => {
       const res = await request()
         .delete('/api/items/10')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send();
 
       expect(res.status).equals(404);
     });
 
     it('Should response success in case was exist.', async () => {
-      const item = await create('item');
+      const item = await tenantFactory.create('item');
       const res = await request()
         .delete(`/api/items/${item.id}`)
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send();
 
       expect(res.status).equals(200);
     });
 
     it('Should delete the given item from the storage.', async () => {
-      const item = await create('item');
+      const item = await tenantFactory.create('item');
       await request()
         .delete(`/api/items/${item.id}`)
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send();
 
-      const storedItems = await Item.query().where('id', item.id);
+      const storedItems = await Item.tenant().query().where('id', item.id);
       expect(storedItems).to.have.lengthOf(0);
     });
   });
@@ -511,31 +560,17 @@ describe('routes: `/items`', () => {
         .send();
 
       expect(res.status).equals(401);
-      expect(res.body.message).equals('unauthorized');
-    });
-
-    it('Should response items resource not found.', async () => {
-      await create('item');
-
-      const res = await request()
-        .get('/api/items')
-        .set('x-access-token', loginRes.body.token)
-        .send();
-
-      expect(res.status).equals(400);
-      expect(res.body.errors).include.something.that.deep.equal({
-        type: 'ITEMS_RESOURCE_NOT_FOUND',
-        code: 200,
-      });
+      expect(res.body.message).equals('Unauthorized');
     });
 
     it('Should retrieve items list with associated accounts.', async () => {
-      await create('resource', { name: 'items' });
-      await create('item');
+      await tenantFactory.create('resource', { name: 'items' });
+      await tenantFactory.create('item');
 
       const res = await request()
         .get('/api/items')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send();
 
       expect(res.status).equals(200);
@@ -551,12 +586,13 @@ describe('routes: `/items`', () => {
     });
 
     it('Should retrieve ordered items based on the given `column_sort_order` and `sort_order` query.', async () => {
-      await create('item', { name: 'ahmed' });
-      await create('item', { name: 'mohamed' });
+      await tenantFactory.create('item', { name: 'ahmed' });
+      await tenantFactory.create('item', { name: 'mohamed' });
 
       const res = await request()
         .get('/api/items')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           column_sort_order: 'name',
           sort_order: 'desc',
@@ -569,11 +605,12 @@ describe('routes: `/items`', () => {
     });
 
     it('Should retrieve pagination meta of items list.', async () => {
-      await create('resource', { name: 'items' });
+      await tenantFactory.create('resource', { name: 'items' });
 
       const res = await request()
         .get('/api/items')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send();
 
       expect(res.body.items.results).to.be.a('array');
@@ -584,26 +621,27 @@ describe('routes: `/items`', () => {
     });
 
     it('Should retrieve filtered items based on custom view conditions.', async () => {
-      const item1 = await create('item', { type: 'service' });
-      const item2 = await create('item', { type: 'service' });
-      const item3 = await create('item', { type: 'inventory' });
-      const item4 = await create('item', { type: 'inventory' });
+      const item1 = await tenantFactory.create('item', { type: 'service' });
+      const item2 = await tenantFactory.create('item', { type: 'service' });
+      const item3 = await tenantFactory.create('item', { type: 'inventory' });
+      const item4 = await tenantFactory.create('item', { type: 'inventory' });
 
-      const view = await create('view', {
+      const view = await tenantFactory.create('view', {
         name: 'Items Inventory',
         resource_id: 2,
         roles_logic_expression: '1',
       });
-      const viewCondition = await create('view_role', {
+      const viewCondition = await tenantFactory.create('view_role', {
         view_id: view.id,
         index: 1,
-        field_id: 11,
+        field_id: 12,
         value: 'inventory',
         comparator: 'equals',
       });
       const res = await request()
         .get('/api/items')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           custom_view_id: view.id,
         })
@@ -618,14 +656,15 @@ describe('routes: `/items`', () => {
     });
 
     it('Should retrieve filtered items based on filtering conditions.', async () => {
-      const item1 = await create('item', { type: 'service' });
-      const item2 = await create('item', { type: 'service', name: 'target' });
-      const item3 = await create('item', { type: 'inventory' });
-      const item4 = await create('item', { type: 'inventory' });
+      const item1 = await tenantFactory.create('item', { type: 'service' });
+      const item2 = await tenantFactory.create('item', { type: 'service', name: 'target' });
+      const item3 = await tenantFactory.create('item', { type: 'inventory' });
+      const item4 = await tenantFactory.create('item', { type: 'inventory' });
 
       const res = await request()
         .get('/api/items')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           stringified_filter_roles: JSON.stringify([
             {

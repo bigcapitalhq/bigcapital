@@ -18,13 +18,16 @@ export default class Option extends mixin(TenantModel, [mixin]) {
   static query(...args) {
     return super.query(...args).runAfter((result) => {
       if (result instanceof MetableCollection) {
-        result.setModel(Option);
+        result.setModel(this.tenant());
         result.setExtraColumns(['group']);
       }
       return result;
     });
   }
 
+  /**
+   * Model collection.
+   */
   static get collection() {
     return MetableCollection;
   }

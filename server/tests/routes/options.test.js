@@ -1,23 +1,16 @@
-import knex from '@/database/knex';
 import {
   request,
   expect,
-  create,
-  make,
-  login,
 } from '~/testInit';
 import Option from '@/models/Option';
+import {
+  tenantWebsite,
+  tenantFactory,
+  loginRes
+} from '~/dbInit';
 
-let loginRes;
 
 describe('routes: `/options`', () => {
-  beforeEach(async () => {
-    loginRes = await login();
-  });
-  afterEach(() => {
-    loginRes = null;
-  });
-
   describe('POST: `/options/`', () => {
     it('Should response unauthorized if the user was not logged in.', async () => {
       const res = await request()
@@ -25,13 +18,14 @@ describe('routes: `/options`', () => {
         .send();
 
       expect(res.status).equals(401);
-      expect(res.body.message).equals('unauthorized');
+      expect(res.body.message).equals('Unauthorized');
     });
 
     it('Should response the options key and group is not defined.', async () => {
       const res = await request()
         .post('/api/options')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           options: [
             {
@@ -56,6 +50,7 @@ describe('routes: `/options`', () => {
       const res = await request()
         .post('/api/options')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .send({
           options: [{
             key: 'name',
@@ -65,7 +60,7 @@ describe('routes: `/options`', () => {
         });
       expect(res.status).equals(200);
 
-      const storedOptions = await Option.query()
+      const storedOptions = await Option.tenant().query()
         .where('group', 'organization')
         .where('key', 'name');
 
@@ -83,16 +78,17 @@ describe('routes: `/options`', () => {
         .send();
 
       expect(res.status).equals(401);
-      expect(res.body.message).equals('unauthorized');
+      expect(res.body.message).equals('Unauthorized');
     });
 
     it('Should retrieve options the associated to the given group.', async () => {
-      await create('option', { group: 'organization', key: 'name' });
-      await create('option', { group: 'organization', key: 'base_currency' });
+      await tenantFactory.create('option', { group: 'organization', key: 'name' });
+      await tenantFactory.create('option', { group: 'organization', key: 'base_currency' });
 
       const res = await request()
         .get('/api/options')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           group: 'organization',
         })
@@ -104,12 +100,13 @@ describe('routes: `/options`', () => {
     });
 
     it('Should retrieve options that associated to the given key.', async () => {
-      await create('option', { group: 'organization', key: 'base_currency' });
-      await create('option', { group: 'organization', key: 'name' });
+      await tenantFactory.create('option', { group: 'organization', key: 'base_currency' });
+      await tenantFactory.create('option', { group: 'organization', key: 'name' });
 
       const res = await request()
         .get('/api/options')
         .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
         .query({
           key: 'name',
         })
