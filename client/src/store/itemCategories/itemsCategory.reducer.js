@@ -35,6 +35,17 @@ export default createReducer(initialState, {
     const { loading } = action.payload;
     state.loading = !!loading;
   },
+  [t.ITEM_CATEGORIES_BULK_DELETE]:(state,action)=>{
+    const {ids} =action.payload;
+    const {categories} = {...state.categories};
+    ids.forEach((id)=>{
+
+      if(typeof categories[id] !=='undefined'){
+        delete categories[id]
+      }
+    });
+    state.categories =categories
+  }
 });
 
 export const getCategoryId = (state, id) => {

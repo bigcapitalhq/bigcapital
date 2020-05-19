@@ -4,6 +4,7 @@ import {
   fetchExchangeRates,
   deleteExchangeRate,
   editExchangeRate,
+  deleteBulkExchangeRates
 } from 'store/ExchangeRate/exchange.actions';
 
 const mapActionsToProps = (dispatch) => ({
@@ -11,6 +12,7 @@ const mapActionsToProps = (dispatch) => ({
   requestFetchExchangeRates: () => dispatch(fetchExchangeRates()),
   requestDeleteExchangeRate: (id) => dispatch(deleteExchangeRate(id)),
   requestEditExchangeRate: (id, form) => dispatch(editExchangeRate(id, form)),
+  requestDeleteBulkExchangeRates:(ids)=>dispatch(deleteBulkExchangeRates({ids})),
   addExchangeRatesTableQueries: (queries) =>
     dispatch({
       type: 'ExchangeRates_TABLE_QUERIES_ADD',

@@ -13,7 +13,7 @@ import Icon from 'components/Icon';
 import { connect } from 'react-redux';
 
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
-import DialogConnect from 'connectors/Dialog.connector';
+import withDialog from 'connectors/Dialog.connector';
 
 import FilterDropdown from 'components/FilterDropdown';
 import withResourceDetail from 'containers/Resources/withResourceDetails';
@@ -28,10 +28,12 @@ function ExchangeRateActionsBar({
 
   // #withResourceDetail
   resourceFields,
-
+  
+  // #ownProps
   selectedRows = [],
   onDeleteExchangeRate,
   onFilterChanged,
+  onBulkDelete
 }) {
   const [filterCount, setFilterCount] = useState(0);
 
@@ -48,16 +50,20 @@ function ExchangeRateActionsBar({
     },
   });
 
-  const handelDeleteExchangeRate = useCallback(
-    (exchangeRate) => {
-      onDeleteExchangeRate(exchangeRate);
-    },
-    [selectedRows, onDeleteExchangeRate]
-  );
+  // const handelDeleteExchangeRate = useCallback(
+  //   (exchangeRate) => {
+  //     onDeleteExchangeRate(exchangeRate);
+  //   },
+  //   [selectedRows, onDeleteExchangeRate]
+  // );
 
   const hasSelectedRows = useMemo(() => selectedRows.length > 0, [
     selectedRows,
   ]);
+
+  const handelBulkDelete =useCallback(()=>{
+    onBulkDelete && onBulkDelete(selectedRows.map(r=>r.id));
+  },[onBulkDelete,selectedRows])
 
   return (
     <DashboardActionsBar>
@@ -92,7 +98,7 @@ function ExchangeRateActionsBar({
             icon={<Icon icon='trash' iconSize={15} />}
             text={<T id={'delete'} />}
             intent={Intent.DANGER}
-            onClick={handelDeleteExchangeRate}
+            onClick={handelBulkDelete}
           />
         )}
         <Button
@@ -118,7 +124,7 @@ const withExchangeRateActionBar = connect(mapStateToProps);
 
 export default compose(
   withExchangeRateActionBar,
-  DialogConnect,
+  withDialog,
   withResourceDetail(({ resourceFields }) => ({
     resourceFields,
   }))

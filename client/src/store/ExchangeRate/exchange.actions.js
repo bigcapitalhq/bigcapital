@@ -63,3 +63,19 @@ export const editExchangeRate = (id, form) => {
         });
     });
 };
+
+
+
+export const deleteBulkExchangeRates = ({ ids }) => {
+  return dispatch => new Promise((resolve, reject) => {
+    ApiService.delete(`exchange_rates/bulk`, { params: { ids }}).then((response) => {
+      dispatch({
+        type: t.EXCHANGE_RATES_BULK_DELETE,
+        payload: { ids }
+      });
+      resolve(response);
+    }).catch((error) => {
+      reject(error);
+    });
+  });
+};

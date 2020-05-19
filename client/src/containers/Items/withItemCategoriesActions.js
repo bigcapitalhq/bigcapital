@@ -4,6 +4,8 @@ import {
   submitItemCategory,
   deleteItemCategory,
   editItemCategory,
+  deleteBulkItemCategories
+ 
 } from 'store/itemCategories/itemsCategory.actions';
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -11,6 +13,7 @@ export const mapDispatchToProps = (dispatch) => ({
   requestFetchItemCategories: (query) => dispatch(fetchItemCategories({ query })),
   requestDeleteItemCategory: (id) => dispatch(deleteItemCategory(id)),
   requestEditItemCategory: (id, form) => dispatch(editItemCategory(id, form)),
+  requestDeleteBulkItemCategories:(ids)=>dispatch(deleteBulkItemCategories({ids}))
 });
 
 export default connect(null, mapDispatchToProps);

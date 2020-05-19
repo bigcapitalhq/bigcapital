@@ -44,6 +44,8 @@ function AccountsActionsBar({
   onFilterChanged,
   onBulkDelete,
   onBulkArchive,
+  onBulkActivate,
+  onBulkInactive
 }) {
   const history = useHistory();
   const [filterCount, setFilterCount] = useState(0);
@@ -77,6 +79,17 @@ function AccountsActionsBar({
   const handleBulkDelete = useCallback(() => {
     onBulkDelete && onBulkDelete(selectedRows.map(r => r.id));
   }, [onBulkDelete, selectedRows]);
+
+  const handelBulkActivate =useCallback(()=>{
+
+    onBulkActivate && onBulkActivate(selectedRows.map(r=>r.id))
+  },[onBulkActivate,selectedRows])
+
+const handelBulkInactive =useCallback(()=>{
+
+onBulkInactive && onBulkInactive(selectedRows.map(r=>r.id))
+
+},[onBulkInactive,selectedRows])
 
   return (
     <DashboardActionsBar>
@@ -116,11 +129,18 @@ function AccountsActionsBar({
         </Popover>
 
         <If condition={hasSelectedRows}>
+       
           <Button
             className={Classes.MINIMAL}
+            icon={<Icon icon='multi-select' iconSize={15} />}
+            text={<T id={'activate'}/>}
+            onClick={handelBulkActivate}
+          />
+             <Button
+            className={Classes.MINIMAL}
             icon={<Icon icon='archive' iconSize={15} />}
-            text={<T id={'archive'}/>}
-            onClick={handleBulkArchive}
+            text={<T id={'inactivate'}/>}
+            onClick={handelBulkInactive}
           />
           <Button
             className={Classes.MINIMAL}

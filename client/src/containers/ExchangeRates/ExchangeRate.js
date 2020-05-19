@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback,useMemo } from 'react';
 import { useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
 import { Alert, Intent } from '@blueprintjs/core';
@@ -15,7 +15,7 @@ import withExchangeRatesActions from 'containers/ExchangeRates/withExchangeRates
 
 import { compose } from 'utils';
 
-import { FormattedMessage as T, useIntl } from 'react-intl';
+  import { FormattedMessage as T, useIntl, FormattedHTMLMessage } from 'react-intl';
 
 function ExchangeRate({
   // #withDashboard
@@ -28,19 +28,21 @@ function ExchangeRate({
   requestFetchExchangeRates,
   requestDeleteExchangeRate,
   addExchangeRatesTableQueries,
+  requestDeleteBulkExchangeRates,
+
 }) {
   const { id } = useParams();
   const [deleteExchangeRate, setDeleteExchangeRate] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
   const { formatMessage } = useIntl();
- 
+  const [bulkDelete, setBulkDelete] = useState(false);
+
   // const fetchExchangeRates = useQuery('exchange-rates-table', () => {
   //   return Promise.all([requestFetchExchangeRates()]);
   // });
 
    const fetchExchangeRates = useQuery('exchange-rates-table',
-    () => requestFetchExchangeRates(),
-    { refetchInterval: 3000 });
+    () => requestFetchExchangeRates());
 
 
   useEffect(() => {
@@ -93,11 +95,48 @@ function ExchangeRate({
     [setSelectedRows]
   );
 
+ // Handle Exchange Rates bulk delete.
+ const handleBulkDelete = useCallback(
+  (exchangeRates) => {
+    setBulkDelete(exchangeRates);
+  },
+  [setBulkDelete]
+);
+
+ //Handel cancel itemCategories bulk delete.
+ const handleCancelBulkDelete =useCallback(()=>{
+  setBulkDelete(false)
+},[])
+
+// handle confirm Exchange Rates bulk delete.
+const handleConfirmBulkDelete = useCallback(() => {
+  requestDeleteBulkExchangeRates(bulkDelete)
+    .then(() => {
+      setBulkDelete(false);
+      AppToaster.show({
+        message: formatMessage({
+          id: 'the_exchange_rates_has_been_successfully_deleted',
+        }),
+        intent: Intent.SUCCESS,
+      });
+    })
+    .catch((errors) => {
+      setBulkDelete(false);
+    });
+}, [requestDeleteBulkExchangeRates, bulkDelete]);
+
+
+  // Calculates the data table selected rows count.
+  const selectedRowsCount = useMemo(() => Object.values(selectedRows).length, [selectedRows]);
+
+
   return (
     <DashboardInsider>
       <ExchangeRateActionsBar
         onDeleteExchangeRate={handelDeleteExchangeRate}
         selectedRows={selectedRows}
+        onBulkDelete={handleBulkDelete}
+
       />
       <DashboardPageContent>
         <ExchangeRateTable
@@ -116,10 +155,25 @@ function ExchangeRate({
           onConfirm={handelConfirmExchangeRateDelete}
         >
           <p>
-            Are you sure you want to move <b>filename</b> to Trash? You will be
-            able to restore it later, but it will become private to you.
+            <FormattedHTMLMessage id={'once_delete_this_exchange_rate_you_will_able_to_restore_it'}/>
           </p>
         </Alert>
+        <Alert
+        cancelButtonText={<T id={'cancel'} />}
+        confirmButtonText={`${formatMessage({id:'delete'})} (${selectedRowsCount})`}
+        icon='trash'
+        intent={Intent.DANGER}
+        isOpen={bulkDelete}
+        onCancel={handleCancelBulkDelete}
+        onConfirm={handleConfirmBulkDelete}
+      >
+        <p>
+          <FormattedHTMLMessage
+            id={'once_delete_these_exchange_rates_you_will_not_able_restore_them'}
+          />
+        </p>
+      </Alert>
+
       </DashboardPageContent>
     </DashboardInsider>
   );

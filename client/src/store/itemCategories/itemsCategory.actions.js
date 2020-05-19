@@ -79,3 +79,17 @@ export const deleteItemCategory = (id) => {
         });
     });
 };
+
+export const deleteBulkItemCategories = ({ ids }) => {
+  return dispatch => new Promise((resolve, reject) => {
+    ApiService.delete(`item_categories/bulk`, { params: { ids }}).then((response) => {
+      dispatch({
+        type: t.ITEM_CATEGORIES_BULK_DELETE,
+        payload: { ids }
+      });
+      resolve(response);
+    }).catch((error) => {
+      reject(error);
+    });
+  });
+};

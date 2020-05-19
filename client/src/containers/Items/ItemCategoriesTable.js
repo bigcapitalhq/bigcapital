@@ -89,16 +89,26 @@ const ItemsCategoryList = ({
     onSelectedRowsChange && onSelectedRowsChange(selectedRows.map(s => s.original));
   }, [onSelectedRowsChange]);
 
+  const selectionColumn = useMemo(() => ({
+    minWidth: 42,
+    width: 42,
+    maxWidth: 42,
+  }), []);
+
+
   return (
-    <LoadingIndicator spinnerSize={30}>
+    <LoadingIndicator mount={false} >
       <DataTable
+        noInitialFetch={true}
         columns={columns}
         data={categoriesList}
         onFetchData={handelFetchData}
         manualSortBy={true}
-        selectionColumn={true}
+        selectionColumn={selectionColumn}
         expandable={true}
         onSelectedRowsChange={handleSelectedRowsChange}
+        treeGraph={true}
+        spinnerProps={{size:30}}
       />
     </LoadingIndicator>
   );

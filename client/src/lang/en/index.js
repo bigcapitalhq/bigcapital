@@ -203,4 +203,15 @@ export default {
   'all': 'All',
   'once_delete_these_journalss_you_will_not_able_restore_them': 'Once you delete these journals, you won\'t be able to retrieve them later. Are you sure you want to delete them?',
   'journal_number_is_already_used': 'Journal number is already used.',
+  
+  the_item_categories_has_been_successfully_deleted:'The item categories has been successfully deleted',
+  once_delete_these_item_categories_you_will_not_able_restore_them:'Once you delete these item categories, you won\'t be able to retrieve them later. Are you sure you want to delete them?',
+  once_delete_this_exchange_rate_you_will_able_to_restore_it: `Once you delete this exchange rate, you won\'t be able to restore it later. Are you sure you want to delete?`,
+  once_delete_these_exchange_rates_you_will_not_able_restore_them:'Once you delete these item categories, you won\'t be able to retrieve them later. Are you sure you want to delete them?',
+  the_accounts_has_been_successfully_activated:'The Accounts has been Successfully activated',
+  are_sure_to_activate_this_accounts: 'Are you sure you want to activate this accounts? You will be able to inactivate it later',
+  are_sure_to_inactive_this_accounts: 'Are you sure you want to inactive this accounts? You will be able to activate it later',
+  the_accounts_has_been_successfully_inactivated: 'The accounts has been successfully inactivated.',
+
+
 };
