@@ -37,12 +37,12 @@ function InviteUserDialog({
   }, false);
 
   const validationSchema = Yup.object().shape({
-    first_name: Yup.string().required(formatMessage({ id: 'required' })),
-    last_name: Yup.string().required(formatMessage({ id: 'required' })),
+    first_name: Yup.string().required().label(formatMessage({id:'first_name_'})),
+    last_name: Yup.string().required().label(formatMessage({id:'last_name_'})),
     email: Yup.string()
       .email()
-      .required(formatMessage({ id: 'required' })),
-    phone_number: Yup.number().required(formatMessage({ id: 'required' })),
+      .required().label(formatMessage({id:'email'})),
+    phone_number: Yup.number().required().label(formatMessage({id:'phone_number_'})),
   });
 
   const initialValues = useMemo(

@@ -67,13 +67,13 @@ const ItemForm = ({
 
   const validationSchema = Yup.object().shape({
     active: Yup.boolean(),
-    name: Yup.string().required(),
-    type: Yup.string().trim().required(),
+    name: Yup.string().required().label(formatMessage({id:'item_name_'})),
+    type: Yup.string().trim().required().label(formatMessage({id:'item_type_'})),
     sku: Yup.string().trim(),
     cost_price: Yup.number(),
     sell_price: Yup.number(),
-    cost_account_id: Yup.number().required(),
-    sell_account_id: Yup.number().required(),
+    cost_account_id: Yup.number().required().label(formatMessage({id:'cost_account_id'})),
+    sell_account_id: Yup.number().required().label(formatMessage({id:'sell_account_id'})),
     inventory_account_id: Yup.number().when('type', {
       is: (value) => value === 'inventory',
       then: Yup.number().required(),

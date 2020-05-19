@@ -1,10 +1,10 @@
 export default {
   hello_world: 'Hello World',
-  email_or_phone_number: 'Email or phone number',
+  'email_or_phone_number': 'Email or phone number',
   password: 'Password',
   login: 'Login',
   invalid_email_or_phone_number: 'Invalid email or phone number.',
-  required: 'Required',
+  'required': 'Required',
   reset_password: 'Reset Password',
   the_user_has_been_suspended_from_admin: 'The user has been suspended from the administrator.',
   email_and_password_entered_did_not_match:
@@ -75,7 +75,6 @@ export default {
   new_exchange_rate: 'New Exchange Rate',
   delete_exchange_rate: 'Delete Exchange Rate',
   exchange_rate: 'Exchange Rate',
-  currency_code: 'Currency Code',
   edit_invite: 'Edit invite',
   edit_category: 'Edit Category',
   delete_category: 'Delete Category',
@@ -116,7 +115,7 @@ export default {
   cancel: 'Cancel',
   move_to_trash: 'Move to Trash',
   save_new: 'Save & New',
-  journal_number: 'Journal number',
+  journal_number: 'Journal Number',
   credit_currency: 'Credit ({currency})',
   debit_currency: 'Debit ({currency})',
   note: 'Note',
@@ -292,16 +291,35 @@ run_report:'Run Report',
 num:'Num.',
 acc_code:'Acc. Code',
 display_report_columns:'Display report columns',
-select_display_columns_by:'Select display columns by...'
+select_display_columns_by:'Select display columns by...',
+credit_and_debit_not_equal:'credit and debit not equal',
+the_currency_has_been_successfully_edited:'The currency has been successfully edited',
+the_currency_has_been_successfully_created:'The currency has been successfully created',
 
-
-
-
-
-
-
-
-
+// Name Labels
+expense_account_id :'Expense account',
+payment_account_id: 'Payment account',
+currency_code_: 'Currency code',
+publish:'Publish',
+exchange_rate_:'Exchange rate',
+journal_number_:'Journal number',
+first_name_: 'First name',
+last_name_:'Last name',
+phone_number_:'Phone number',
+organization_name_:'Organization name',
+confirm_password:'Confirm password',
+crediential:'Email or Phone number',
+account_type_id:'Account type',
+account_name_:'Account name',
+currency_name_:'Currency name',
+cost_account_id:'Cost account',
+sell_account_id:'Sell account',
+item_type_:'Item type',
+item_name_:'Item name',
+organization_industry_:'Organization industry',
+base_currency_:'Base currency',
+date_format_:'Date format',
+view_name_:'View name'
 };
 
 

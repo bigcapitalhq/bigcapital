@@ -49,9 +49,9 @@ function ExchangeRateDialog({
   const [selectedItems, setSelectedItems] = useState({});
 
   const validationSchema = Yup.object().shape({
-    exchange_rate: Yup.number().required(),
-    currency_code: Yup.string().max(3).required(),
-    date: Yup.date().required(),
+    exchange_rate: Yup.number().required().label(formatMessage({id:'exchange_rate_'})),
+    currency_code: Yup.string().max(3).required(formatMessage({id:'currency_code_'})),
+    date: Yup.date().required().label(formatMessage({id:'date'})),
   });
 
   const initialValues = useMemo(() => ({

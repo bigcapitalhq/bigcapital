@@ -12,15 +12,6 @@ const PureBreadcrumbs = ({ breadcrumbs }) => (
       </span>
     ))}
   </div>
-
-  // <div>
-  //   {breadcrumbs.map(({ breadcrumb, match }, index) => (
-  //     <div key={match.url}>
-  //       <Link to={match.url || ""}>{breadcrumb}</Link>
-  //       {index < breadcrumbs.length - 1 && ">"}
-  //     </div>
-  //   ))}
-  // </div>
 );
-
+  
 export default withBreadcrumbs(routes)(PureBreadcrumbs);

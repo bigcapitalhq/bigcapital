@@ -32,7 +32,7 @@ function GeneralPreferences({
   requestSubmitOptions,
   requestFetchOptions,
 }) {
-  const intl = useIntl();
+  const {formatMessage} = useIntl();
   const [selectedItems, setSelectedItems] = useState({});
   const [timeZone, setTimeZone] = useState('');
 
@@ -65,16 +65,16 @@ function GeneralPreferences({
   ];
 
   const validationSchema = Yup.object().shape({
-    name: Yup.string().required(intl.formatMessage({ id: 'required' })),
-    industry: Yup.string().required(intl.formatMessage({ id: 'required' })),
-    location: Yup.string().required(intl.formatMessage({ id: 'required' })),
+    name: Yup.string().required().label(formatMessage({id:'organization_name_'})),
+    industry: Yup.string().required().label(formatMessage({id:'organization_industry_'})),
+    location: Yup.string().required().label(formatMessage({id:'location'})),
     base_currency: Yup.string().required(
-      intl.formatMessage({ id: 'required' })
+      formatMessage({ id: 'required' })
     ),
-    fiscal_year: Yup.string().required(intl.formatMessage({ id: 'required' })),
-    language: Yup.string().required(intl.formatMessage({ id: 'required' })),
-    // time_zone: Yup.object().required(intl.formatMessage({ id: 'required' })),
-    date_format: Yup.date().required(intl.formatMessage({ id: 'required' })),
+    fiscal_year: Yup.string().required().label(formatMessage({id:'base_currency_'})),
+    language: Yup.string().required().label(formatMessage({id:'language'})),
+    // time_zone: Yup.object().required()..label(formatMessage({id:''})),
+    date_format: Yup.date().required().label(formatMessage({id:'date_format_'})),
   });
 
   const {

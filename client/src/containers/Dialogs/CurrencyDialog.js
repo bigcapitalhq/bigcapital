@@ -46,13 +46,11 @@ function CurrencyDialog({
 }) {
   const {formatMessage} = useIntl();
 
-  const ValidationSchema = Yup.object().shape({
-    currency_name: Yup.string().required(
-      formatMessage({ id: 'required' })
-    ),
+  const validationSchema = Yup.object().shape({
+    currency_name: Yup.string().required().label(formatMessage({id:'currency_name_'})),
     currency_code: Yup.string()
       .max(4)
-      .required(formatMessage({ id: 'required' })),
+      .required().label(formatMessage({id:'currency_code_'})),
   });
   const initialValues = useMemo(() => ({
     currency_name: '',
@@ -63,9 +61,9 @@ function CurrencyDialog({
     values, 
     errors,
     touched,
+    isSubmitting,
     setFieldValue,
     getFieldProps,
-    isSubmitting,
     handleSubmit,
     resetForm,
   } = useFormik({
@@ -74,13 +72,13 @@ function CurrencyDialog({
       ...(payload.action === 'edit' &&
         pick(currency, Object.keys(initialValues))),
     },
-    validationSchema: ValidationSchema,
+    validationSchema: validationSchema,
     onSubmit: (values, { setSubmitting }) => {
       if (payload.action === 'edit') {
         requestEditCurrency(currency.id, values).then((response) => {
           closeDialog(name);
           AppToaster.show({
-            message: 'the_currency_has_been_edited',
+            message: formatMessage({id:'the_currency_has_been_successfully_edited'}),
             intent: Intent.SUCCESS,
           });
           setSubmitting(false);
@@ -92,7 +90,7 @@ function CurrencyDialog({
         requestSubmitCurrencies(values).then((response) => {
           closeDialog(name);
           AppToaster.show({
-            message: 'the_currency_has_been_submit',
+            message: formatMessage({id:'the_currency_has_been_successfully_created'}),
             intent: Intent.SUCCESS,
           });
           setSubmitting(false);

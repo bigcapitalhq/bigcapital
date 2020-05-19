@@ -30,7 +30,7 @@ function ItemFromDialog({
   const [state, setState] = useState({});
   const { formatMessage } = useIntl();
   const ValidationSchema = Yup.object().shape({
-    name: Yup.string().required(formatMessage({ id: 'required' })),
+    name: Yup.string().required().label(formatMessage({id:'category_name_'})),
     description: Yup.string().trim(),
   });
 

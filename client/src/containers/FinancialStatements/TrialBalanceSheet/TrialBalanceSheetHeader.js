@@ -25,8 +25,8 @@ export default function TrialBalanceSheetHeader({
       to_date: moment(pageFilter.to_date).toDate()
     },
     validationSchema: Yup.object().shape({
-      from_date: Yup.date().required(),
-      to_date: Yup.date().min(Yup.ref('from_date')).required(),
+      from_date: Yup.date().required().label(formatMessage({id:'from_date'})),
+      to_date: Yup.date().min(Yup.ref('from_date')).required().label(formatMessage({id:'to_date'})),
     }),
     onSubmit: (values, { setSubmitting }) => {
       onSubmitFilter(values);

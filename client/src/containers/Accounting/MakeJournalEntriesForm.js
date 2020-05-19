@@ -63,8 +63,8 @@ function MakeJournalEntriesForm({
   }, [changePageTitle, changePageSubtitle, manualJournal]);
 
   const validationSchema = Yup.object().shape({
-    journal_number: Yup.string().required(),
-    date: Yup.date().required(),
+    journal_number: Yup.string().required().label(formatMessage({id:'journal_number_'})),
+    date: Yup.date().required().label(formatMessage({id:'date'})),
     reference: Yup.string(),
     description: Yup.string(),
     entries: Yup.array().of(
@@ -147,7 +147,7 @@ function MakeJournalEntriesForm({
       // Validate the total credit should be eqials total debit.
       if (totalCredit !== totalDebit) {
         AppToaster.show({
-          message: 'credit_and_debit_not_equal',
+          message: formatMessage({id:'credit_and_debit_not_equal'}),
         });
         setSubmitting(false);
         return;

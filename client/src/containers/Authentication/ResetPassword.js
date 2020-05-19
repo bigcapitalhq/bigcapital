@@ -17,18 +17,21 @@ import withAuthenticationActions from './withAuthenticationActions';
 import AuthInsider from 'containers/Authentication/AuthInsider';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 
+
+
 function ResetPassword({ requestResetPassword }) {
   const { formatMessage } = useIntl();
   const { token } = useParams();
   const history = useHistory();
 
+  
   const ValidationSchema = Yup.object().shape({
     password: Yup.string()
-      .min(4, 'Password has to be longer than 4 characters!')
-      .required('Password is required!'),
+      .min(4)
+      .required().label(formatMessage({id:'password'})),
     confirm_password: Yup.string()
-      .oneOf([Yup.ref('password'), null], 'Passwords must match')
-      .required('Confirm Password is required'),
+      .oneOf([Yup.ref('password'), null])
+      .required().label(formatMessage({id:'confirm_password'})),
   });
 
   const initialValues = useMemo(

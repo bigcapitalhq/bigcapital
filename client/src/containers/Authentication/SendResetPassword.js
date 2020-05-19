@@ -4,7 +4,6 @@ import { useFormik } from 'formik';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { Link, useHistory } from 'react-router-dom';
 import { Button, InputGroup, Intent, FormGroup } from '@blueprintjs/core';
-import { FormattedMessage } from 'react-intl';
 
 import { compose } from 'utils';
 
@@ -21,9 +20,9 @@ function SendResetPassword({ requestSendResetPassword }) {
 
   // Validation schema.
   const ValidationSchema = Yup.object().shape({
-    crediential: Yup.string('')
-      .required(formatMessage({ id: 'required' }))
-      .email(formatMessage({ id: 'invalid_email_or_phone_numner' })),
+    crediential: Yup.string()
+      .required()
+      .email().label(formatMessage({id:''})),
   });
 
   const initialValues = useMemo(
