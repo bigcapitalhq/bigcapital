@@ -20,4 +20,18 @@ export default createReducer(initialState, {
   [t.EXCHANGE_RATE_TABLE_LOADING]: (state, action) => {
     state.loading = action.loading;
   },
+
+  [t.EXCHANGE_RATES_BULK_DELETE]:(state,action)=>{
+
+    const {ids} =action.payload;
+    const {exchange_rate} = {...state.exchangeRates};
+    ids.forEach((id)=>{
+      if(typeof exchange_rate[id] !=='undefined'){
+        delete exchange_rate[id]
+      }
+    });
+    state.exchangeRates =exchange_rate
+  }
+
 });
+

@@ -185,6 +185,39 @@ export const inactiveAccount = ({ id }) => {
   return dispatch => ApiService.post(`accounts/${id}/inactive`);
 };
 
+export const bulkActivateAccounts =({ids})=>{
+  
+  return dispatch => new Promise((resolve, reject) => {
+ 
+    ApiService.post(`accounts/bulk/activate`, null, { params: { ids }}).then((response) => {
+      dispatch({        
+        type: t.BULK_ACTIVATE_ACCOUNTS,
+        payload: { ids }
+      });
+      resolve(response);
+    }).catch((error) => {
+      reject(error);
+    });
+  });
+}
+
+export const bulkInactiveAccounts =({ids})=>{
+  
+  return dispatch => new Promise((resolve, reject) => {
+ 
+    ApiService.post(`accounts/bulk/inactivate`, null, { params: { ids }}).then((response) => {
+      dispatch({        
+        type: t.BULK_INACTIVATE_ACCOUNTS,
+        payload: { ids }
+      });
+      resolve(response);
+    }).catch((error) => {
+      reject(error);
+    });
+  });
+}
+
+
 export const deleteAccount = ({ id }) => {
   return dispatch => new Promise((resolve, reject) => {
     ApiService.delete(`accounts/${id}`).then((response) => {

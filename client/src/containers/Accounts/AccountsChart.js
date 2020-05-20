@@ -44,6 +44,8 @@ function AccountsChart({
   requestFetchAccountsTable,
   requestDeleteBulkAccounts,
   addAccountsTableQueries,
+  requestBulkActivateAccounts,
+  requestBulkInactiveAccounts,
 
   // #withAccounts
   accountsTableQuery,
@@ -55,7 +57,8 @@ function AccountsChart({
   const [activateAccount, setActivateAccount] = useState(false);
   const [bulkDelete, setBulkDelete] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
-
+  const [bulkActivate,setBulkActivate] =useState(false);
+  const [bulkInactiveAccounts,setBulkInactiveAccounts] =useState(false)
   const [tableLoading, setTableLoading] = useState(false);
 
   // Fetch accounts resource views and fields.
@@ -235,6 +238,65 @@ function AccountsChart({
   // Calculates the data table selected rows count.
   const selectedRowsCount = useMemo(() => Object.values(selectedRows).length, [selectedRows]);
 
+ 
+
+ // Handle bulk Activate accounts button click.,
+  const handleBulkActivate = useCallback((bulkActivateIds) => {
+    setBulkActivate(bulkActivateIds);
+}, [setBulkActivate]);
+
+
+ // Handle cancel Bulk Activate accounts bulk delete.
+  const handleCancelBulkActivate = useCallback(() => {
+  setBulkActivate(false);
+}, []);
+
+ // Handle Bulk activate account confirm.
+const handleConfirmBulkActivate = useCallback(() => {
+  requestBulkActivateAccounts(bulkActivate).then(() => {
+    setBulkActivate(false);
+    AppToaster.show({
+      message: formatMessage({ id: 'the_accounts_has_been_successfully_activated' }),
+      intent: Intent.SUCCESS,
+    });
+  }).catch((errors) => {
+    setBulkActivate(false);
+   
+  });
+}, [requestBulkActivateAccounts, bulkActivate]);
+
+
+
+ // Handle bulk Inactive accounts button click.,
+ const handleBulkInactive = useCallback((bulkInactiveIds) => {
+  setBulkInactiveAccounts(bulkInactiveIds);
+}, [setBulkInactiveAccounts]);
+
+
+  // Handle cancel Bulk Inactive accounts bulk delete.
+  const handleCancelBulkInactive = useCallback(() => {
+    setBulkInactiveAccounts(false);
+  }, []);
+
+ // Handle Bulk Inactive accounts confirm.
+ const handleConfirmBulkInactive = useCallback(() => {
+  requestBulkInactiveAccounts(bulkInactiveAccounts).then(() => {
+    setBulkInactiveAccounts(false);
+    AppToaster.show({
+      message: formatMessage({ id: 'the_accounts_has_been_successfully_inactivated' }),
+      intent: Intent.SUCCESS,
+    });
+  }).catch((errors) => {
+    setBulkInactiveAccounts(false);
+   
+  });
+}, [requestBulkInactiveAccounts, bulkInactiveAccounts]);
+
+
+
+
+
+
   return (
     <DashboardInsider loading={fetchHook.isFetching} name={'accounts-chart'}>
       <DashboardActionsBar
@@ -242,6 +304,8 @@ function AccountsChart({
         onFilterChanged={handleFilterChanged}
         onBulkDelete={handleBulkDelete}
         onBulkArchive={handleBulkArchive}
+        onBulkActivate={handleBulkActivate}
+        onBulkInactive={handleBulkInactive}
       />
 
       <DashboardPageContent>
@@ -319,6 +383,29 @@ function AccountsChart({
         >
           <p>
             <T id={'once_delete_these_accounts_you_will_not_able_restore_them'} />
+          </p>
+        </Alert>
+
+        <Alert
+          cancelButtonText={<T id={'cancel'} />}
+          confirmButtonText={`${formatMessage({id:'activate'})} (${selectedRowsCount})`}
+          intent={Intent.WARNING}
+          isOpen={bulkActivate}
+          onCancel={handleCancelBulkActivate}
+          onConfirm={handleConfirmBulkActivate}>
+          <p>
+            <T id={'are_sure_to_activate_this_accounts'} />
+          </p>
+        </Alert>
+        <Alert
+          cancelButtonText={<T id={'cancel'} />}
+          confirmButtonText={`${formatMessage({id:'inactivate'})} (${selectedRowsCount})`}
+          intent={Intent.WARNING}
+          isOpen={bulkInactiveAccounts}
+          onCancel={handleCancelBulkInactive}
+          onConfirm={handleConfirmBulkInactive}>
+          <p>
+            <T id={'are_sure_to_inactive_this_accounts'} />
           </p>
         </Alert>
       </DashboardPageContent>
