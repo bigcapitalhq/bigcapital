@@ -32,14 +32,14 @@ export default function ExpenseForm({
     selectedPaymentAccount: null
   });
   const validationSchema = Yup.object().shape({
-    date: Yup.date().required(),
-    description: Yup.string().trim(),
-    expense_account_id: Yup.number().required(),
-    payment_account_id: Yup.number().required(),
-    amount: Yup.number().required(),
-    currency_code: Yup.string().required(),
-    publish: Yup.boolean(),
-    exchange_rate: Yup.number()
+    date: Yup.date().required().label(formatMessage({id:'date'})),
+    description: Yup.string().trim().label(formatMessage({id:'description'})),
+    expense_account_id: Yup.number().required().label(formatMessage({id:'expense_account_id'})),
+    payment_account_id: Yup.number().required().label(formatMessage({id:'payment_account_id'})),
+    amount: Yup.number().required().label(formatMessage({id:'amount'})),
+    currency_code: Yup.string().required().label(formatMessage({id:'currency_code_'})),
+    publish: Yup.boolean().label(formatMessage({id:'publish'})),
+    exchange_rate: Yup.number().label(formatMessage({id:'exchange_rate_'}))
   });
 
   const formik = useFormik({
@@ -52,7 +52,7 @@ export default function ExpenseForm({
       submitExpense(values)
         .then(response => {
           AppToaster.show({
-            message: 'the_expense_has_been_submit'
+            message: formatMessage({id:'the_expense_has_been_successfully_created'})
           });
         })
         .catch(error => {});
@@ -108,11 +108,11 @@ export default function ExpenseForm({
 
   const paymentAccountLabel = state.selectedPaymentAccount
     ? state.selectedPaymentAccount.name
-    : 'Select Payment Account';
+    : <T id={'select_payment_account'}/>;
 
   const expenseAccountLabel = state.selectedExpenseAccount
     ? state.selectedExpenseAccount.name
-    : 'Select Expense Account';
+    : <T id={'select_expense_account'}/>;
 
   const handleClose = () => {};
 

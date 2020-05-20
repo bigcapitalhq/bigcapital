@@ -1,11 +1,10 @@
-import React, {useState, useCallback, useMemo} from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import * as Yup from 'yup';
-import {Row, Col} from 'react-grid-system';
-import { 
-  Button,
-} from "@blueprintjs/core";
+import { Row, Col } from 'react-grid-system';
+import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
+import { Button } from "@blueprintjs/core";
 import moment from 'moment';
-import {useIntl} from 'react-intl';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 import { useFormik } from 'formik';
 
 import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
@@ -16,7 +15,7 @@ export default function TrialBalanceSheetHeader({
   pageFilter,
   onSubmitFilter,
 }) {
-  const intl = useIntl();
+  const { formatMessage } = useIntl();
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
@@ -25,8 +24,8 @@ export default function TrialBalanceSheetHeader({
       to_date: moment(pageFilter.to_date).toDate()
     },
     validationSchema: Yup.object().shape({
-      from_date: Yup.date().required(),
-      to_date: Yup.date().min(Yup.ref('from_date')).required(),
+      from_date: Yup.date().required().label(formatMessage({id:'from_date'})),
+      to_date: Yup.date().min(Yup.ref('from_date')).required().label(formatMessage({id:'to_date'})),
     }),
     onSubmit: (values, { setSubmitting }) => {
       onSubmitFilter(values);
@@ -49,7 +48,7 @@ export default function TrialBalanceSheetHeader({
             onClick={handleSubmitClick}
             disabled={formik.isSubmitting}
             className={'button--submit-filter'}>
-            { 'Run Report' }
+            <T id={'run_report'} />
           </Button>
         </Col>
       </Row>

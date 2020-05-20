@@ -52,11 +52,11 @@ function AccountFormDialog({
 }) { 
   const { formatMessage } = useIntl();
   const accountFormValidationSchema = Yup.object().shape({
-    name: Yup.string().required(formatMessage({ id: 'required' })),
+    name: Yup.string().required().label(formatMessage({id:'account_name_'})),
     code: Yup.number(),
     account_type_id: Yup.string()
       .nullable()
-      .required(formatMessage({ id: 'required' })),
+      .required().label(formatMessage({id:'account_type_id'})),
     description: Yup.string().trim()
   });
 
@@ -375,7 +375,7 @@ function AccountFormDialog({
                   text={
                     selectedSubaccount
                       ? selectedSubaccount.name
-                      : 'Select Parent Account'
+                      : <T id={'select_parent_account'}/>
                   }
                 />
               </Select>

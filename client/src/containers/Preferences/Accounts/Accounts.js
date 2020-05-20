@@ -2,16 +2,17 @@ import React from 'react';
 import {Tabs, Tab} from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 import PreferencesSubContent from 'components/Preferences/PreferencesSubContent';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 
 export default function AccountsPreferences() {
   const history = useHistory();
   const onChangeTabs = (currentTabId) => {
     switch(currentTabId) {
       default:
-        history.push('/dashboard/preferences/accounts/general');
+        history.push('/preferences/accounts/general');
         break;
       case 'custom_fields':
-        history.push('/dashboard/preferences/accounts/custom_fields');
+        history.push('/preferences/accounts/custom_fields');
         break;
     }
   };
@@ -21,8 +22,8 @@ export default function AccountsPreferences() {
         animate={true}
         large={true}
         onChange={onChangeTabs}>
-        <Tab id="general" title="General" />
-        <Tab id="custom_fields" title="Custom Fields" />
+        <Tab id="general" title={<T id={'general'}/>} />
+        <Tab id="custom_fields" title={<T id={'custom_fields'}/>} />
       </Tabs>
 
       <PreferencesSubContent preferenceTab="accounts" />

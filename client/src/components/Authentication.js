@@ -8,7 +8,7 @@ export default function AuthenticationWrapper({
   isAuthenticated = false,
   ...rest
 }) {
-  const to = { pathname: '/dashboard/homepage' };
+  const to = { pathname: '/homepage' };
 
   return (
     <Route path='/auth'>

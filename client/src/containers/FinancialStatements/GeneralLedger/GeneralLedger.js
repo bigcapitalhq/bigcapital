@@ -30,6 +30,7 @@ function GeneralLedger({
   // #withSettings
   organizationSettings,
 }) {
+  const { formatMessage } = useIntl()
   const [filter, setFilter] = useState({
     from_date: moment().startOf('year').format('YYYY-MM-DD'),
     to_date: moment().endOf('year').format('YYYY-MM-DD'),
@@ -40,7 +41,7 @@ function GeneralLedger({
 
   // Change page title of the dashboard.
   useEffect(() => {
-    changePageTitle('General Ledger');
+    changePageTitle(formatMessage({id:'general_ledger'}));
   }, []);
 
   const fetchAccounts = useQuery(['accounts-list'],
@@ -74,7 +75,7 @@ function GeneralLedger({
     setRefetch(true);
   }, [setFilter]);
 
-  const handleFilterChanged = () => {};
+  const handleFilterChanged = () => { };
 
   return (
     <DashboardInsider>

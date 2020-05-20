@@ -24,7 +24,7 @@ function DashboardTopbar({
   const history = useHistory();
 
   const handlerClickEditView = () => {
-    history.push(`/dashboard/custom_views/${editViewId}/edit`);
+    history.push(`/custom_views/${editViewId}/edit`);
   };
 
   const maybleRenderPageSubtitle = pageSubtitle && <h3>{pageSubtitle}</h3>;
@@ -48,7 +48,7 @@ function DashboardTopbar({
               role='img'
               focusable='false'
             >
-              <title>Menu</title>
+              <title><T id={'menu'}/></title>
               <path
                 stroke='currentColor'
                 stroke-linecap='round'

@@ -49,9 +49,9 @@ function ExchangeRateDialog({
   const [selectedItems, setSelectedItems] = useState({});
 
   const validationSchema = Yup.object().shape({
-    exchange_rate: Yup.number().required(),
-    currency_code: Yup.string().max(3).required(),
-    date: Yup.date().required(),
+    exchange_rate: Yup.number().required().label(formatMessage({id:'exchange_rate_'})),
+    currency_code: Yup.string().max(3).required(formatMessage({id:'currency_code_'})),
+    date: Yup.date().required().label(formatMessage({id:'date'})),
   });
 
   const initialValues = useMemo(() => ({
@@ -82,7 +82,7 @@ function ExchangeRateDialog({
           .then((response) => {
             closeDialog(name);
             AppToaster.show({
-              message: 'the_exchange_rate_has_been_edited',
+              message: formatMessage({id:'the_exchange_rate_has_been_successfully_edited'})
             });
             setSubmitting(false);
           })
@@ -94,7 +94,7 @@ function ExchangeRateDialog({
           .then((response) => {
             closeDialog(name);
             AppToaster.show({
-              message: 'the_exchangeRate_has_been_submit',
+              message: formatMessage({id:'the_exchange_rate_has_been_successfully_created'})
             });
             setSubmitting(false);
           })

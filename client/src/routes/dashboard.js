@@ -1,136 +1,153 @@
 import LazyLoader from 'components/LazyLoader';
 
-const BASE_URL = '/dashboard';
+// const BASE_URL = '/dashboard';
 
 export default [
   // Homepage
   {
-    path: `${BASE_URL}/homepage`,
+    path: `/homepage`,
     component: LazyLoader({
       loader: () => import('containers/Homepage/Homepage'),
     }),
+    breadcrumb: 'Home',
   },
 
   // Accounts.
   {
-    path: `${BASE_URL}/accounts`,
+    path: `/accounts`,
     component: LazyLoader({
       loader: () => import('containers/Accounts/AccountsChart'),
     }),
+    breadcrumb: 'Accounts Chart',
   },
 
   // Custom views.
   {
-    path: `${BASE_URL}/custom_views/:resource_slug/new`,
+    path: `/custom_views/:resource_slug/new`,
     component: LazyLoader({
       loader: () => import('containers/Views/ViewFormPage'),
     }),
+    breadcrumb: 'New',
   },
   {
-    path: `${BASE_URL}/custom_views/:view_id/edit`,
+    path: `/custom_views/:view_id/edit`,
     component: LazyLoader({
       loader: () => import('containers/Views/ViewFormPage'),
     }),
+    breadcrumb: 'Edit',
   },
 
   // Expenses.
   {
-    path: `${BASE_URL}/expenses/new`,
+    path: `/expenses/new`,
     component: LazyLoader({
       loader: () => import('containers/Expenses/ExpenseForm'),
     }),
+    breadcrumb: 'New Expense',
   },
   {
-    path: `${BASE_URL}/expenses`,
+    path: `/expenses`,
     component: LazyLoader({
       loader: () => import('containers/Expenses/ExpensesList'),
     }),
+    breadcrumb: 'Expenses',
   },
 
   // Accounting
   {
-    path: `${BASE_URL}/accounting/make-journal-entry`,
+    path: `/make-journal-entry`,
     component: LazyLoader({
       loader: () => import('containers/Accounting/MakeJournalEntriesPage'),
     }),
+    breadcrumb: 'Make Journal Entry',
   },
   {
-    path: `${BASE_URL}/accounting/manual-journals/:id/edit`,
+    path: `/manual-journals/:id/edit`,
     component: LazyLoader({
       loader: () => import('containers/Accounting/MakeJournalEntriesPage'),
     }),
+    breadcrumb: 'Edit',
   },
   {
-    path: `${BASE_URL}/accounting/manual-journals`,
+    path: `/manual-journals`,
     component: LazyLoader({
       loader: () => import('containers/Accounting/ManualJournalsList'),
     }),
+    breadcrumb: 'Manual Journals',
   },
   {
-    path: `${BASE_URL}/items/categories`,
+    path: `/items/categories`,
     component: LazyLoader({
       loader: () => import('containers/Items/ItemCategoriesList'),
     }),
+    breadcrumb: 'Categories',
   },
   {
-    path: `${BASE_URL}/items/new`,
+    path: `/items/new`,
     component: LazyLoader({
       loader: () => import('containers/Items/ItemFormPage'),
     }),
+    breadcrumb: 'New Item',
   },
 
   // Items
   {
-    path: `${BASE_URL}/items`,
+    path: `/items`,
     component: LazyLoader({
       loader: () => import('containers/Items/ItemsList'),
     }),
+    breadcrumb: 'Items',
   },
 
   // Financial Reports.
   {
-    path: `${BASE_URL}/accounting/general-ledger`,
+    path: `/general-ledger`,
     component: LazyLoader({
       loader: () =>
         import('containers/FinancialStatements/GeneralLedger/GeneralLedger'),
     }),
+    breadcrumb: 'General Ledger',
   },
   {
-    path: `${BASE_URL}/accounting/balance-sheet`,
+    path: `/balance-sheet`,
     component: LazyLoader({
       loader: () =>
         import('containers/FinancialStatements/BalanceSheet/BalanceSheet'),
     }),
+    breadcrumb: 'Balance Sheet',
   },
   {
-    path: `${BASE_URL}/accounting/trial-balance-sheet`,
+    path: `/trial-balance-sheet`,
     component: LazyLoader({
       loader: () =>
         import(
           'containers/FinancialStatements/TrialBalanceSheet/TrialBalanceSheet'
         ),
+      breadcrumb: 'Trial Balance Sheet',
     }),
   },
   {
-    path: `${BASE_URL}/accounting/profit-loss-sheet`,
+    path: `/profit-loss-sheet`,
     component: LazyLoader({
       loader: () =>
         import(
           'containers/FinancialStatements/ProfitLossSheet/ProfitLossSheet'
         ),
+      breadcrumb: 'Profit Loss Sheet',
     }),
   },
   {
-    path: `${BASE_URL}/accounting/journal-sheet`,
+    path: `/journal-sheet`,
     component: LazyLoader({
       loader: () => import('containers/FinancialStatements/Journal/Journal'),
     }),
+    breadcrumb: 'Journal Sheet',
   },
   {
-    path: `${BASE_URL}/ExchangeRates`,
+    path: `/ExchangeRates`,
     component: LazyLoader({
-      loader: () =>
-        import('containers/ExchangeRates/ExchangeRate'),
+      loader: () => import('containers/ExchangeRates/ExchangeRate'),
     }),
+    breadcrumb: 'Exchange Rates',
   },
 ];

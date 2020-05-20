@@ -72,12 +72,12 @@ function AccountsDataTable({
       <MenuDivider />
       <If condition={account.active}>
         <MenuItem
-          text='Inactivate Account'
+          text={<T id={'inactivate_account'}/>}
           onClick={() => onInactiveAccount(account)} />
       </If>
       <If condition={!account.active}>
         <MenuItem
-          text='Activate Account'
+          text={<T id={'activate_account'}/>}
           onClick={() => onActivateAccount(account)} />
       </If>
       <MenuItem

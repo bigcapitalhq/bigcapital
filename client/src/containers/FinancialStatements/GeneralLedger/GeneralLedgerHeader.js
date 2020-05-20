@@ -1,6 +1,7 @@
 import React, {useState, useMemo, useEffect, useCallback} from 'react';
 import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
-import {useIntl} from 'react-intl';
+import { FormattedMessage as T, useIntl } from 'react-intl';
+
 import {
   Button,
   FormGroup,
@@ -19,13 +20,12 @@ import FinancialStatementDateRange from 'containers/FinancialStatements/Financia
 import * as Yup from 'yup';
 import RadiosAccountingBasis from '../RadiosAccountingBasis';
 
-
 function GeneralLedgerHeader({
   onSubmitFilter,
   pageFilter,
   accounts,
 }) {
-  const intl = useIntl();
+  const {formatMessage} = useIntl();
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -64,7 +64,7 @@ function GeneralLedgerHeader({
       <Row>
         <Col sm={3}>
           <FormGroup
-            label={'Specific Accounts'}
+            label={<T id={'specific_accounts'}/>}
             className={classNames('form-group--select-list', Classes.FILL)}
           >
             <AccountsMultiSelect
@@ -84,7 +84,7 @@ function GeneralLedgerHeader({
             onClick={handleSubmitClick}
             disabled={formik.isSubmitting}
             className={'button--submit-filter mt2'}>
-            { 'Calculate Report' }
+            <T id={'calculate_report'}/>
           </Button>
         </Col>
       </Row>

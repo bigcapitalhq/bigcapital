@@ -38,23 +38,26 @@ const ItemsActionsBar = ({
   const { path } = useRouteMatch();
   const history = useHistory();
   const [filterCount, setFilterCount] = useState(0);
-
-  const viewsMenuItems = itemsViews.map(view => 
-    (<MenuItem href={`${path}/${view.id}/custom_view`} text={view.name} />));
+  const { formatMessage } = useIntl();
+  const viewsMenuItems = itemsViews.map((view) => (
+    <MenuItem href={`${path}/${view.id}/custom_view`} text={view.name} />
+  ));
 
   const onClickNewItem = () => {
-    history.push('/dashboard/items/new');
+    history.push('/items/new');
   };
-  const hasSelectedRows = useMemo(() => selectedRows.length > 0, [selectedRows]);
+  const hasSelectedRows = useMemo(() => selectedRows.length > 0, [
+    selectedRows,
+  ]);
 
   const filterDropdown = FilterDropdown({
     fields: resourceFields,
     onFilterChange: (filterConditions) => {
       setFilterCount(filterConditions.length);
       onFilterChanged && onFilterChanged(filterConditions);
-    }
+    },
   });
- 
+
   const onClickNewCategory = useCallback(() => {
     openDialog('item-form', {});
   }, [openDialog]);
@@ -71,7 +74,7 @@ const ItemsActionsBar = ({
           <Button
             className={classNames(Classes.MINIMAL, 'button--table-views')}
             icon={<Icon icon='table' />}
-            text={<T id={'table_views'}/>}
+            text={<T id={'table_views'} />}
             rightIcon={'caret-down'}
           />
         </Popover>
@@ -81,14 +84,14 @@ const ItemsActionsBar = ({
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon='plus' />}
-          text={<T id={'new_item'}/>}
+          text={<T id={'new_item'} />}
           onClick={onClickNewItem}
         />
 
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon='plus' />}
-          text={<T id={'new_category'}/>}
+          text={<T id={'new_category'} />}
           onClick={onClickNewCategory}
         />
 
@@ -99,7 +102,13 @@ const ItemsActionsBar = ({
         >
           <Button
             className={classNames(Classes.MINIMAL, 'button--filter')}
-            text={filterCount <= 0 ? <T id={'filter'}/> : `${filterCount} filters applied`}
+            text={
+              filterCount <= 0 ? (
+                <T id={'filter'} />
+              ) : (
+                `${filterCount} ${formatMessage({ id: 'filters_applied' })}`
+              )
+            }
             icon={<Icon icon='filter' />}
           />
         </Popover>
@@ -109,19 +118,19 @@ const ItemsActionsBar = ({
             className={Classes.MINIMAL}
             intent={Intent.DANGER}
             icon={<Icon icon='trash' />}
-            text={<T id={'delete'}/>}
+            text={<T id={'delete'} />}
           />
         </If>
 
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon='file-import' />}
-          text={<T id={'import'}/>}
+          text={<T id={'import'} />}
         />
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon='file-export' />}
-          text={<T id={'export'}/>}
+          text={<T id={'export'} />}
         />
       </NavbarGroup>
     </DashboardActionsBar>
@@ -135,5 +144,5 @@ export default compose(
   })),
   withResourceDetail(({ resourceFields }) => ({
     resourceFields,
-  })),
+  }))
 )(ItemsActionsBar);

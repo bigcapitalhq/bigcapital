@@ -17,7 +17,7 @@ function PrivateRoute({
     <BodyClassName className={''}>
       <Route
         {...rest}
-        path="/dashboard"
+        path="/"
         render={_props =>
           isAuthenticated ? (<Component {..._props} />) :
           (

@@ -1,6 +1,8 @@
 import React, { useMemo, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import * as Yup from 'yup';
+
+
 import { useFormik } from 'formik';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import {
@@ -34,14 +36,15 @@ function Login({
   const [shown, setShown] = useState(false);
   const passwordRevealer = () => { setShown(!shown); };
 
+
   // Validation schema.
-  const loginValidationSchema =  Yup.object().shape({
+  const loginValidationSchema = Yup.object().shape({
     crediential: Yup.string()
-      .required(formatMessage({ id: 'required' }))
-      .email(formatMessage({ id: 'invalid_email_or_phone_numner' })),
+      .required()
+      .email().label(formatMessage({id:'email'})),
     password: Yup.string()
-      .required(formatMessage({ id: 'required' }))
-      .min(4),
+      .required()
+      .min(4).label(formatMessage({id:'password'}))
   });
 
   // Formik validation schema and submit handler.
@@ -63,13 +66,13 @@ function Login({
         crediential: values.crediential,
         password: values.password,
       }).then(() => {
-        history.go('/dashboard/homepage');
+        history.go('/homepage');
         setSubmitting(false);
       }).catch((errors) => {
         const toastBuilders = [];
         if (errors.find((e) => e.type === ERRORS_TYPES.INVALID_DETAILS)) {
           toastBuilders.push({
-            message: formatMessage({id:'email_and_password_entered_did_not_match'}),
+            message: formatMessage({ id: 'email_and_password_entered_did_not_match' }),
             intent: Intent.DANGER,
           });
         }
@@ -110,7 +113,7 @@ function Login({
           <FormGroup
             label={<T id={'email_or_phone_number'} />}
             intent={(errors.crediential && touched.crediential) && Intent.DANGER}
-            helperText={<ErrorMessage name={'crediential'} {...{errors, touched}} />}
+            helperText={<ErrorMessage name={'crediential'} {...{ errors, touched }} />}
             className={'form-group--crediential'}
           >
             <InputGroup
@@ -119,13 +122,13 @@ function Login({
               {...getFieldProps('crediential')}
             />
           </FormGroup>
-      
+
           <FormGroup
             label={<T id={'password'} />}
             labelInfo={passwordRevealerTmp}
             intent={(errors.password && touched.password) && Intent.DANGER}
-            helperText={<ErrorMessage name={'password'} {...{errors, touched}} />}
-            className={'form-group--password has-password-revealer'} 
+            helperText={<ErrorMessage name={'password'} {...{ errors, touched }} />}
+            className={'form-group--password has-password-revealer'}
           >
             <InputGroup
               large={true}
@@ -134,12 +137,12 @@ function Login({
               {...getFieldProps('password')}
             />
           </FormGroup>
-        
+
           <div className={'login-form__checkbox-section'}>
             <Checkbox
               large={true}
               className={'checkbox--remember-me'}>
-                <T id={'keep_me_logged_in'} />
+              <T id={'keep_me_logged_in'} />
             </Checkbox>
           </div>
 
@@ -155,7 +158,7 @@ function Login({
             </Button>
           </div>
         </form>
-      
+
         <div class="authentication-page__footer-links">
           <Link to={'/auth/send_reset_password'}>
             <T id={'forget_my_password'} />

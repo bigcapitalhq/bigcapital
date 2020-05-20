@@ -14,6 +14,7 @@ import Icon from 'components/Icon';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar'
 import classNames from 'classnames';
 import FilterDropdown from 'components/FilterDropdown';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 
 export default function GeneralLedgerActionsBar({
 
@@ -31,19 +32,19 @@ export default function GeneralLedgerActionsBar({
         <Button
           className={classNames(Classes.MINIMAL, 'button--table-views')}
           icon={<Icon icon='cog' />}
-          text='Customize Report'
+          text={<T id={'customize_report'}/>}
         />
         <NavbarDivider />
 
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon='file-export' />}
-          text='Print'
+          text={<T id={'print'}/>}
         />
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon='file-export' />}
-          text='Export'
+          text={<T id={'export'}/>}
         />
       </NavbarGroup>
     </DashboardActionsBar>

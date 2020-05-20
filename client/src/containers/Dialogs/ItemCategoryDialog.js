@@ -61,7 +61,7 @@ function ItemCategoryDialog({
     () => requestFetchItemCategories());
 
   const validationSchema = Yup.object().shape({
-    name: Yup.string().required(),
+    name: Yup.string().required().label(formatMessage({id:'category_name_'})),
     parent_category_id: Yup.string().nullable(),
     description: Yup.string().trim()
   });

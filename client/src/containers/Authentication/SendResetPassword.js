@@ -4,7 +4,6 @@ import { useFormik } from 'formik';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { Link, useHistory } from 'react-router-dom';
 import { Button, InputGroup, Intent, FormGroup } from '@blueprintjs/core';
-import { FormattedMessage } from 'react-intl';
 
 import { compose } from 'utils';
 
@@ -21,9 +20,9 @@ function SendResetPassword({ requestSendResetPassword }) {
 
   // Validation schema.
   const ValidationSchema = Yup.object().shape({
-    crediential: Yup.string('')
-      .required(formatMessage({ id: 'required' }))
-      .email(formatMessage({ id: 'invalid_email_or_phone_numner' })),
+    crediential: Yup.string()
+      .required()
+      .email().label(formatMessage({id:''})),
   });
 
   const initialValues = useMemo(
@@ -52,8 +51,7 @@ function SendResetPassword({ requestSendResetPassword }) {
       requestSendResetPassword(values.crediential)
         .then((response) => {
           AppToaster.show({
-            message: `Check your email for a link to reset your password.
-              If it doesn’t appear within a few minutes, check your spam folder.`,
+            message: formatMessage({id:'check_your_email_for_a_link_to_reset'}),
             intent: Intent.SUCCESS,
           });
           history.push('/auth/login');
@@ -62,7 +60,7 @@ function SendResetPassword({ requestSendResetPassword }) {
         .catch((errors) => {
           if (errors.find((e) => e.type === 'EMAIL.NOT.REGISTERED')) {
             AppToaster.show({
-              message: "We couldn't find your account with that email",
+              message: formatMessage({id:'we_couldn_t_find_your_account_with_that_email'}),
               intent: Intent.DANGER,
             });
           }

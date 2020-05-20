@@ -68,7 +68,7 @@ function ExchangeRate({
     requestDeleteExchangeRate(deleteExchangeRate.id).then(() => {
       setDeleteExchangeRate(false);
       AppToaster.show({
-        message: 'the_exchange_rate_has_been_delete',
+        message: formatMessage({id:'the_exchange_rate_has_been_successfully_deleted'}),
       });
     });
   }, [deleteExchangeRate, requestDeleteExchangeRate]);

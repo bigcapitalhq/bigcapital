@@ -1,5 +1,5 @@
-import React, {useCallback} from 'react';
-import {Row, Col} from 'react-grid-system';
+import React, { useCallback } from 'react';
+import { Row, Col } from 'react-grid-system';
 import {
   Button,
   Intent,
@@ -17,7 +17,7 @@ export default function JournalHeader({
   pageFilter,
   onSubmitFilter,
 }) {
-  const intl = useIntl();
+  const { formatMessage } = useIntl();
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
@@ -38,18 +38,18 @@ export default function JournalHeader({
   const handleSubmitClick = useCallback(() => {
     formik.submitForm();
   }, [formik]);
-  
+
   return (
     <FinancialStatementHeader>
       <FinancialStatementDateRange formik={formik} />
-      
+
       <Row>
         <Col sm={3}>
           <Button
             type="submit"
             onClick={handleSubmitClick}
             className={'button--submit-filter'}>
-            { 'Run Report' }
+            <T id={'run_report'} />
           </Button>
         </Col>
       </Row>

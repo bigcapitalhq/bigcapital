@@ -11,16 +11,16 @@ export default function PreferencesTopbar() {
       <h2>Accounts</h2>
 
       <div class="preferences__topbar-actions">
-        <Route pathname="/dashboard/preferences">
+        <Route pathname="/preferences">
           <Switch>
             <Route
               exact
-              path={'/dashboard/preferences/users'}
+              path={'/preferences/users'}
               component={UsersActions} />
 
             <Route
               exact
-              path={'/dashboard/preferences/currencies'}
+              path={'/preferences/currencies'}
               component={CurrenciesActions} />
           </Switch>
         </Route>

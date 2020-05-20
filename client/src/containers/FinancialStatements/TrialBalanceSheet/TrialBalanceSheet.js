@@ -1,19 +1,21 @@
 import React, { useEffect, useCallback, useState, useMemo } from 'react';
-import TrialBalanceSheetHeader from "./TrialBalanceSheetHeader";
-import TrialBalanceSheetTable from './TrialBalanceSheetTable';
 import { useQuery } from 'react-query';
 import moment from 'moment';
-import {compose} from 'utils';
+import { useIntl } from 'react-intl';
 
-import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
-
+import TrialBalanceSheetHeader from "./TrialBalanceSheetHeader";
+import TrialBalanceSheetTable from './TrialBalanceSheetTable';
 import TrialBalanceActionsBar from './TrialBalanceActionsBar';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 
+import { compose } from 'utils';
+
+import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import withDashboard from 'containers/Dashboard/withDashboard';
 import withTrialBalanceActions from './withTrialBalanceActions';
 import withTrialBalance from './withTrialBalance';
 import withSettings from 'containers/Settings/withSettings';
+
 
 
 function TrialBalanceSheet({
@@ -36,6 +38,7 @@ function TrialBalanceSheet({
     none_zero: false,
   });
   const [refetch, setRefetch] = useState(false);
+  const { formatMessage } = useIntl();
 
   const fetchHook = useQuery(['trial-balance', filter],
     (key, query) => fetchTrialBalanceSheet(query),
@@ -48,7 +51,7 @@ function TrialBalanceSheet({
 
   // Change page title of the dashboard.
   useEffect(() => {
-    changePageTitle('Trial Balance Sheet');
+    changePageTitle(formatMessage({id:'trial_balance_sheet'}));
   }, []);
 
   const handleFilterSubmit = useCallback((filter) => {

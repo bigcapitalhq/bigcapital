@@ -12,6 +12,7 @@ import {
 } from 'store/financialStatement/financialStatements.selectors';
 
 import { compose, defaultExpanderReducer } from 'utils';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 
 
 function BalanceSheetTable({
@@ -27,6 +28,8 @@ function BalanceSheetTable({
   onFetchData,
   loading,
 }) {
+
+  const {formatMessage} = useIntl();
   const columns = useMemo(() => [
     {
       // Build our expander column
@@ -68,18 +71,18 @@ function BalanceSheetTable({
       disableResizing: true,
     },
     {
-      Header: 'Account Name',
+      Header: formatMessage({id:'account_name'}),
       accessor: 'name',
       className: "account_name",
     },
     {
-      Header: 'Code', 
+      Header: formatMessage({id:'code'}),
       accessor: 'code',
       className: "code",
     },
     ...(balanceSheetQuery.display_columns_type === 'total') ? [
       {
-        Header: 'Total',
+        Header: formatMessage({id:'total'}),
         accessor: 'balance.formatted_amount',
         Cell: ({ cell }) => {
           const row = cell.row.original;
