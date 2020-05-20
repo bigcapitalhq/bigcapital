@@ -7,4 +7,11 @@ export default class TenantModel extends BaseModel {
     }
     return super.bindKnex(this.knexBinded);
   }
+
+  /**
+   * Allow to embed models to express request.
+   */
+  static requestModel() {
+    return true;
+  }
 }

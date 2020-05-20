@@ -192,7 +192,7 @@ export default {
     async handler(req, res) {
       const { id } = req.params;
       const { Account } = req.models;
-      const account = await Account.query().where('id', id).first();
+      const account = await Account.query().remember().where('id', id).first();
 
       if (!account) {
         return res.boom.notFound();
@@ -273,6 +273,7 @@ export default {
       const errorReasons = [];
 
       const accountsResource = await Resource.query()
+        .remember()
         .where('name', 'accounts')
         .withGraphFetched('fields')
         .first();
@@ -294,6 +295,8 @@ export default {
         builder.withGraphFetched('roles.field');
         builder.withGraphFetched('columns');
         builder.first();
+
+        builder.remember();
       });
       const dynamicFilter = new DynamicFilter(Account.tableName);
 
@@ -335,13 +338,15 @@ export default {
       if (errorReasons.length > 0) {
         return res.status(400).send({ errors: errorReasons });
       }
-      const accounts = await Account.query().onBuild((builder) => {
-        builder.modify('filterAccountTypes', filter.account_types);
-        builder.withGraphFetched('type');
-        builder.withGraphFetched('balance');
+      const accounts = await Account.query()
+        .remember()
+        .onBuild((builder) => {
+          builder.modify('filterAccountTypes', filter.account_types);
+          builder.withGraphFetched('type');
+          builder.withGraphFetched('balance');
 
-        dynamicFilter.buildQuery()(builder);
-      });
+          dynamicFilter.buildQuery()(builder);
+        });
 
       const nestedAccounts = new NestedSet(accounts, { parentId: 'parentAccountId' });
       const nestedSetAccounts = nestedAccounts.toTree();

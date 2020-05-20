@@ -1,6 +1,8 @@
 import { Model } from 'objection';
 import moment from 'moment';
 import TenantModel from '@/models/TenantModel';
+import CachableQueryBuilder from '@/lib/Cachable/CachableQueryBuilder';
+
 
 export default class AccountTransaction extends TenantModel {
   /**
@@ -8,6 +10,13 @@ export default class AccountTransaction extends TenantModel {
    */
   static get tableName() {
     return 'accounts_transactions';
+  }
+
+  /**
+   * Extend query builder model.
+   */
+  static get QueryBuilder() {
+    return CachableQueryBuilder;
   }
 
   /**

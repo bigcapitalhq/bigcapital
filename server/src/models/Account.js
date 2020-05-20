@@ -1,18 +1,29 @@
 /* eslint-disable global-require */
-import { Model } from 'objection';
+import { Model, mixin } from 'objection';
 import { flatten } from 'lodash';
 import TenantModel from '@/models/TenantModel';
 import {
   buildFilterQuery,
   buildSortColumnQuery,
 } from '@/lib/ViewRolesBuilder';
+import CachableQueryBuilder from '@/lib/Cachable/CachableQueryBuilder';
+import CachableModel from '@/lib/Cachable/CachableModel';
+import DateSession from '@/models/DateSession';
 
-export default class Account extends TenantModel {
+
+export default class Account extends mixin(TenantModel, [CachableModel, DateSession]) {
   /**
    * Table name
    */
   static get tableName() {
     return 'accounts';
+  }
+
+  /**
+   * Extend query builder model.
+   */
+  static get QueryBuilder() {
+    return CachableQueryBuilder;
   }
 
   /**

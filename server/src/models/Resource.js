@@ -1,12 +1,21 @@
-import { Model } from 'objection';
+import { Model, mixin } from 'objection';
 import TenantModel from '@/models/TenantModel';
+import CachableQueryBuilder from '@/lib/Cachable/CachableQueryBuilder';
+import CachableModel from '@/lib/Cachable/CachableModel';
 
-export default class Resource extends TenantModel {
+export default class Resource extends mixin(TenantModel, [CachableModel]) {
   /**
    * Table name.
    */
   static get tableName() {
     return 'resources';
+  }
+
+  /**
+   * Extend query builder model.
+   */
+  static get QueryBuilder() {
+    return CachableQueryBuilder;
   }
 
   /**

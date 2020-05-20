@@ -42,8 +42,8 @@ exports.seed = (knex) => {
           name: 'Equity',
           normal: 'credit',
           root_type: 'equity',
-          balance_sheet: false,
-          income_sheet: true,
+          balance_sheet: true,
+          income_sheet: false,
         },
         {
           id: 6,

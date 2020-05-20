@@ -2,7 +2,7 @@ import { mixin } from 'objection';
 import SystemModel from '@/system/models/SystemModel';
 import MetableCollection from '@/lib/Metable/MetableCollection';
 
-export default class Option extends mixin(SystemModel, [mixin]) {
+export default class Option extends SystemModel {
   /**
    * Table name.
    */

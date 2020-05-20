@@ -4,6 +4,7 @@ import JournalEntry from '@/services/Accounting/JournalEntry';
 import AccountTransaction from '@/models/AccountTransaction';
 import AccountBalance from '@/models/AccountBalance';
 import {promiseSerial} from '@/utils';
+import Account from '../../models/Account';
 
 export default class JournalPoster {
   /**
@@ -85,6 +86,8 @@ export default class JournalPoster {
     const balanceFindOneOpers = [];
     let balanceAccounts = [];
 
+    const effectAccountsOpers = [];
+
     balancesList.forEach((balance) => {
       const oper = AccountBalance.tenant()
         .query().findOne('account_id', balance.account_id);
@@ -113,10 +116,65 @@ export default class JournalPoster {
         });
         balanceInsertOpers.push(query);
       }
+
+      const effectedAccountsOper = this.effectAssociatedAccountsBalance(
+        balance.accountId, amount, 'USD', method,
+      );
+      effectAccountsOpers.push(effectedAccountsOper);
     });
     await Promise.all([
       ...balanceUpdateOpers, ...balanceInsertOpers,
     ]);
+  }
+
+
+  /**
+   * Effect associated descendants and parent accounts
+   * of the given account id.
+   * @param {Number} accountId 
+   * @param {Number} amount 
+   * @param {String} currencyCode 
+   * @param {*} method 
+   */
+  async effectAssociatedAccountsBalance(accountId, amount, currencyCode = 'USD', method) {
+    const accounts = await Account.query().withGraphFetched('balance');
+
+    const accountsDecendences = accounts.getDescendants();
+
+    const asyncOpers = [];
+    const accountsInsertBalance = [];
+    const accountsUpdateBalance = [];
+
+    accounts.forEach((account) => {
+      const accountBalances = account.balance;
+      const currencyBalance = accountBalances
+        .find(balance => balance.currencyCode === currencyCode);
+
+      if (currencyBalance) {
+        accountsInsertBalance.push(account.id);
+      } else {
+        accountsUpdateBalance.push(account.id);
+      }
+    });
+
+    accountsInsertBalance.forEach((accountId) => {
+      const oper = AccountBalance.tenant().query().insert({
+        account_id: accountId,
+        amount: method === 'decrement' ? amount * -1 : amount,
+        currency_code: currencyCode,
+      });
+      asyncOpers.push(oper);
+    });
+
+    if (accountsUpdateBalance.length > 0) {
+      const oper = AccountBalance.tenant().query()
+        .whereIn('account_id', accountsUpdateBalance);
+        [method]('amount', Math.abs(amount))
+        .where('currency_code', currencyCode);
+
+      asyncOpers.push(oper);
+    }
+    await Promise.all(asyncOpers);
   }
 
   /**
@@ -233,9 +291,9 @@ export default class JournalPoster {
       result.debit += entry.debit;
 
       if (entry.accountNormal === 'credit') {
-        result.balance += (entry.credit) ? entry.credit : -1 * entry.debit;
+        result.balance += entry.credit - entry.debit;
       } else if (entry.accountNormal === 'debit') {
-        result.balance += (entry.debit) ? entry.debit : -1 * entry.credit;
+        result.balance += entry.debit - entry.credit;
       }
     });
     return result;

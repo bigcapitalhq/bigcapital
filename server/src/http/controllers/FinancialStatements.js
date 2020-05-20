@@ -107,6 +107,7 @@ export default {
       filter.account_ids = filter.account_ids.map((id) => parseInt(id, 10));
 
       const accountsJournalEntries = await AccountTransaction.query()
+        .remember()
         .modify('filterDateRange', filter.from_date, filter.to_date)
         .modify('filterAccounts', filter.account_ids)
         .modify('filterTransactionTypes', filter.transaction_types)
@@ -197,6 +198,7 @@ export default {
         return res.status(400).send({ error: errorReasons });
       }
       const accounts = await Account.query()
+        .remember('general_ledger_accounts')
         .orderBy('index', 'DESC')
         .modify('filterAccounts', filter.accounts_ids)
         .withGraphFetched('type')
@@ -206,11 +208,13 @@ export default {
         });
 
       const openingBalanceTransactions = await AccountTransaction.query()
+        .remember()
         .modify('filterDateRange', null, filter.from_date)
         .modify('sumationCreditDebit')
         .withGraphFetched('account.type');
 
       const closingBalanceTransactions = await AccountTransaction.query()
+        .remember()
         .modify('filterDateRange', null, filter.to_date)
         .modify('sumationCreditDebit')
         .withGraphFetched('account.type');
@@ -226,7 +230,7 @@ export default {
 
       const items = accounts
         .filter((account) => (
-          account.transactions.length > 0 || filter.none_zero
+          account.transactions.length > 0 || !filter.none_zero
         ))
         .map((account) => ({
           ...pick(account, ['id', 'name', 'code', 'index']),
@@ -248,11 +252,11 @@ export default {
           ],
           opening: {
             date: filter.from_date,
-            amount: opeingBalanceCollection.getClosingBalance(account.id),
+            amount: formatNumber(opeingBalanceCollection.getClosingBalance(account.id)),
           },
           closing: {
             date: filter.to_date,
-            amount: closingBalanceCollection.getClosingBalance(account.id),
+            amount: formatNumber(closingBalanceCollection.getClosingBalance(account.id)),
           },
         }));
 
@@ -276,6 +280,8 @@ export default {
         .isIn(['year', 'month', 'week', 'day', 'quarter']),
       query('number_format.no_cents').optional().isBoolean().toBoolean(),
       query('number_format.divide_1000').optional().isBoolean().toBoolean(),
+      query('account_ids').isArray().optional(),
+      query('account_ids.*').isNumeric().toInt(),
       query('none_zero').optional().isBoolean().toBoolean(),
     ],
     async handler(req, res) {
@@ -298,13 +304,20 @@ export default {
         },
         none_zero: false,
         basis: 'cash',
+        account_ids: [],
         ...req.query,
       };
+      if (!Array.isArray(filter.account_ids)) {
+        filter.account_ids = [filter.account_ids];
+      }
+
       const balanceSheetTypes = await AccountType.query().where('balance_sheet', true);
 
       // Fetch all balance sheet accounts.
       const accounts = await Account.query()
+        .remember('balance_sheet_accounts')
         .whereIn('account_type_id', balanceSheetTypes.map((a) => a.id))
+        .modify('filterAccounts', filter.account_ids)
         .withGraphFetched('type')
         .withGraphFetched('transactions')
         .modifyGraph('transactions', (builder) => {
@@ -313,6 +326,7 @@ export default {
 
       const journalEntriesCollected = Account.collectJournalEntries(accounts);
       const journalEntries = new JournalPoster();
+
       journalEntries.loadEntries(journalEntriesCollected);
 
       // Account balance formmatter based on the given query.
@@ -378,10 +392,12 @@ export default {
         accounts: [
           {
             name: 'Assets',
+            type: 'assets',
             children: [...assets],
           },
           {
             name: 'Liabilities & Equity',
+            type: 'liabilities_equity',
             children: [...liabilitiesEquity],
           },
         ],
@@ -426,6 +442,7 @@ export default {
       };
 
       const accounts = await Account.query()
+        .remember('trial_balance_accounts')
         .withGraphFetched('type')
         .withGraphFetched('transactions')
         .modifyGraph('transactions', (builder) => {
@@ -474,7 +491,7 @@ export default {
       query('number_format.no_cents').optional().isBoolean(),
       query('number_format.divide_1000').optional().isBoolean(),
       query('basis').optional(),
-      query('none_zero').optional(),
+      query('none_zero').optional().isBoolean().toBoolean(),
       query('display_columns_type').optional().isIn([
         'total', 'date_periods',
       ]),
@@ -507,6 +524,7 @@ export default {
 
       // Fetch all income accounts from storage.
       const accounts = await Account.query()
+        .remember('profit_loss_accounts')
         .whereIn('account_type_id', incomeStatementTypes.map((t) => t.id))
         .withGraphFetched('type')
         .withGraphFetched('transactions');
