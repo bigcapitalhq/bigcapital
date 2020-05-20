@@ -36,7 +36,7 @@ function UserFormDialog({
   }, false);
 
   const validationSchema = Yup.object().shape({
-    email: Yup.string().email().required(),
+    email: Yup.string().email().required().label(formatMessage({id:'email'})),
   });
 
   const initialValues = {

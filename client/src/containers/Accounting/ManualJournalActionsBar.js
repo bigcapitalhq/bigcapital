@@ -54,7 +54,7 @@ function ManualJournalActionsBar({
   });
 
   const onClickNewManualJournal = useCallback(() => {
-    history.push('/dashboard/accounting/make-journal-entry');
+    history.push('/make-journal-entry');
   }, [history]);
 
   const filterDropdown = FilterDropdown({

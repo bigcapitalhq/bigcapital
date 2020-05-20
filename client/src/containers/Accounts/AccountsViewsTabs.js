@@ -19,7 +19,7 @@ import withDashboard from 'containers/Dashboard/withDashboard';
 import withAccounts from 'containers/Accounts/withAccounts';
 import withAccountsTableActions from 'containers/Accounts/withAccountsTableActions';
 import withViewDetail from 'containers/Views/withViewDetails';
-
+import { FormattedMessage as T, useIntl } from 'react-intl';
 
 function AccountsViewsTabs({
   // #withViewDetail
@@ -67,7 +67,7 @@ function AccountsViewsTabs({
   // Handle click a new view tab.
   const handleClickNewView = () => {
     setTopbarEditView(null);
-    history.push('/dashboard/custom_views/accounts/new');
+    history.push('/custom_views/accounts/new');
   };
 
   // Handle view tab link click.
@@ -76,7 +76,7 @@ function AccountsViewsTabs({
   };
 
   const tabs = accountsViews.map((view) => {
-    const baseUrl = '/dashboard/accounts';
+    const baseUrl = '/accounts';
 
     const link = (
       <Link
@@ -98,7 +98,7 @@ function AccountsViewsTabs({
         >
           <Tab
             id={'all'}
-            title={<Link to={`/dashboard/accounts`}>All</Link>}
+            title={<Link to={`/accounts`}><T id={'all'}/></Link>}
             onClick={handleViewLinkClick}
           />
           { tabs }

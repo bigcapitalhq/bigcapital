@@ -98,7 +98,7 @@ function AccountsChart({
     }
     if (errors.find((e) => e.type === 'ACCOUNT.HAS.ASSOCIATED.TRANSACTIONS')) {
       AppToaster.show({
-        message: 'cannot_delete_account_has_associated_transactions'
+        message: formatMessage({id:'cannot_delete_account_has_associated_transactions'})
       });
     }
   }
@@ -313,8 +313,8 @@ const handleConfirmBulkActivate = useCallback(() => {
           <Route
             exact={true}
             path={[
-              '/dashboard/accounts/:custom_view_id/custom_view',
-              '/dashboard/accounts',
+              '/accounts/:custom_view_id/custom_view',
+              '/accounts',
             ]}
           >
             <AccountsViewsTabs onViewChanged={handleViewChanged} />
@@ -373,8 +373,8 @@ const handleConfirmBulkActivate = useCallback(() => {
         </Alert>
 
         <Alert
-          cancelButtonText="Cancel"
-          confirmButtonText={`Delete (${selectedRowsCount})`}
+          cancelButtonText={<T id={'cancel'}/>}
+          confirmButtonText={`${formatMessage({id:'delete'})} (${selectedRowsCount})`}
           icon="trash"
           intent={Intent.DANGER}
           isOpen={bulkDelete}

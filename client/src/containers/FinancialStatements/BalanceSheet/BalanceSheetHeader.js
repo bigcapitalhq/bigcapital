@@ -1,13 +1,12 @@
-import React, {useMemo, useCallback} from 'react';
+import React, { useMemo, useCallback } from 'react';
 import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
-import {Row, Col} from 'react-grid-system';
-import { 
+import { Row, Col } from 'react-grid-system';
+import {
   Button,
   FormGroup,
   MenuItem,
 } from "@blueprintjs/core";
 import SelectList from 'components/SelectList';
-import {useIntl} from 'react-intl';
 import moment from 'moment';
 import Icon from 'components/Icon';
 import { useFormik } from 'formik';
@@ -15,13 +14,14 @@ import * as Yup from 'yup';
 import FinancialStatementDateRange from 'containers/FinancialStatements/FinancialStatementDateRange';
 import SelectDisplayColumnsBy from '../SelectDisplayColumnsBy';
 import RadiosAccountingBasis from '../RadiosAccountingBasis';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 
 
 export default function BalanceSheetHeader({
   onSubmitFilter,
   pageFilter,
 }) {
-  const intl = useIntl();
+  const { formatMessage } = useIntl();
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -32,8 +32,8 @@ export default function BalanceSheetHeader({
       to_date: moment(pageFilter.to_date).toDate(),
     },
     validationSchema: Yup.object().shape({
-      from_date: Yup.date().required(),
-      to_date: Yup.date().min(Yup.ref('from_date')).required(),
+      from_date: Yup.date().required().label(formatMessage({id:'from_data'})),
+      to_date: Yup.date().min(Yup.ref('from_date')).required().label(formatMessage({id:'to_date'})),
     }),
     onSubmit: (values, actions) => {
       onSubmitFilter(values);
@@ -50,18 +50,18 @@ export default function BalanceSheetHeader({
   // Handle submit filter submit button.
   const handleSubmitClick = useCallback(() => {
     formik.submitForm();
-  }, [formik]);  
+  }, [formik]);
 
   const filterAccountsOptions = useMemo(() => [
-    {key: '', name: 'Accounts with Zero Balance'},
-    {key: 'all-trans', name: 'All Transactions' },
+    { key: '', name: formatMessage({ id: 'accounts_with_zero_balance' }) },
+    { key: 'all-trans', name: formatMessage({ id: 'all_transactions' }) },
   ], []);
 
   const filterAccountRenderer = useCallback((item, { handleClick, modifiers, query }) => {
     return (<MenuItem text={item.name} key={item.id} onClick={handleClick} />);
   }, []);
 
-  const infoIcon = useMemo(() => 
+  const infoIcon = useMemo(() =>
     (<Icon icon="info-circle" iconSize={12} />), []);
 
   const handleAccountingBasisChange = useCallback((value) => {
@@ -80,7 +80,7 @@ export default function BalanceSheetHeader({
 
         <Col sm={3}>
           <FormGroup
-            label={'Filter Accounts'}
+            label={<T id={'filter_accounts'} />}
             className="form-group--select-list bp3-fill"
             inline={false}>
 
@@ -95,8 +95,8 @@ export default function BalanceSheetHeader({
 
         <Col sm={3}>
           <RadiosAccountingBasis
-            selectedValue={formik.values.basis} 
-            onChange={handleAccountingBasisChange} />          
+            selectedValue={formik.values.basis}
+            onChange={handleAccountingBasisChange} />
         </Col>
 
         <Col sm={3}>
@@ -105,7 +105,7 @@ export default function BalanceSheetHeader({
             onClick={handleSubmitClick}
             disabled={formik.isSubmitting}
             className={'button--submit-filter mt2'}>
-            { 'Calculate Report' }
+            <T id={'calculate_report'} />
           </Button>
         </Col>
       </Row>

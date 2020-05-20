@@ -50,7 +50,7 @@ export default function ExpensesActionsBar({
         <AnchorButton
           className={Classes.MINIMAL}
           icon={<Icon icon='plus' />}
-          href='/dashboard/expenses/new'
+          href='/expenses/new'
           text={<T id={'new_expense'}/>}
           onClick={onClickNewAccount}
         />

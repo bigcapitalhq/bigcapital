@@ -1,5 +1,7 @@
-import React, {useEffect, useState, useCallback, useMemo} from 'react';
+import React, {useCallback, useMemo} from 'react';
 import { connect } from 'react-redux';
+import { useIntl } from 'react-intl';
+
 import FinancialSheet from 'components/FinancialSheet';
 import DataTable from 'components/DataTable';
 import Money from 'components/Money';
@@ -24,6 +26,9 @@ function TrialBalanceSheetTable({
   loading,
   companyName,
 }) {
+
+  const {formatMessage} =useIntl();
+
   const columns = useMemo(() => [
     {
       // Build our expander column
@@ -35,8 +40,7 @@ function TrialBalanceSheetTable({
       }) => (
         <span {...getToggleAllRowsExpandedProps()} className="toggle">
           {isAllRowsExpanded ?
-            (<span class="arrow-down" />) :
-            (<span class="arrow-right" />)
+            (<span class="arrow-down" />) : (<span class="arrow-right" />)
           }
         </span>
       ),
@@ -55,40 +59,37 @@ function TrialBalanceSheetTable({
               className: 'toggle',
             })}
           >
-            {row.isExpanded ?
-              (<span class="arrow-down" />) :
-              (<span class="arrow-right" />)
-            }
+            {row.isExpanded ? (<span class="arrow-down" />) : (<span class="arrow-right" />) }
           </span>
         ) : null,
       width: 20,
       disableResizing: true,
     },
     {
-      Header: 'Account Name',
+      Header: formatMessage({id:'account_name'}),
       accessor: 'name',
       className: "name",
     },
     {
-      Header: 'Code', 
+      Header: formatMessage({id:'code'}), 
       accessor: 'code',
       className: "code",
       width: 120,
     },
     {
-      Header: 'Credit',
+      Header: formatMessage({id:'credit'}),
       accessor: r => (<Money amount={r.credit} currency="USD" />),
       className: 'credit',
       width: 120,
     },
     {
-      Header: 'Debit',
+      Header: formatMessage({id:'debit'}),
       accessor: r => (<Money amount={r.debit} currency="USD" />),
       className: 'debit',
       width: 120,
     },
     {
-      Header: 'Balance',
+      Header: formatMessage({id:'balance'}),
       accessor: r => (<Money amount={r.balance} currency="USD" />),
       className: 'balance',
       width: 120,

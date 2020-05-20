@@ -33,14 +33,14 @@ function Invite({ requestInviteAccept, requestInviteMetaByToken }) {
   }, [shown]);
 
   const ValidationSchema = Yup.object().shape({
-    first_name: Yup.string().required(formatMessage({ id: 'required' })),
-    last_name: Yup.string().required(formatMessage({ id: 'required' })),
+    first_name: Yup.string().required().label(formatMessage({id:'first_name_'})),
+    last_name: Yup.string().required().label(formatMessage({id:'last_name_'})),
     phone_number: Yup.string()
       .matches()
-      .required(formatMessage({ id: 'required' })),
+      .required().label(formatMessage({id:''})),
     password: Yup.string()
-      .min(4, 'Password has to be longer than 4 characters!')
-      .required('Password is required!'),
+      .min(4)
+      .required().label(formatMessage({id:'password'}))
   });
 
   const inviteMeta = useAsync(() => {
@@ -148,7 +148,7 @@ function Invite({ requestInviteAccept, requestInviteMetaByToken }) {
           </h3>
           <p>
             <T id={'enter_your_personal_information'} />
-            <b>{inviteValue.organization_name}</b> Organization.
+            <b>{inviteValue.organization_name}</b> <T id={'organization'}/>
           </p>
         </div>
 

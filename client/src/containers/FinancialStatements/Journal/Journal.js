@@ -1,8 +1,9 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { useQuery } from 'react-query';
-import {compose} from 'utils';
-
 import moment from 'moment';
+import { useIntl } from 'react-intl';
+
+import { compose } from 'utils';
 import JournalTable from './JournalTable';
 
 import JournalHeader from './JournalHeader';
@@ -13,6 +14,7 @@ import SettingsConnect from 'connectors/Settings.connect';
 
 import withDashboard from 'containers/Dashboard/withDashboard';
 import withJournalActions from './withJournalActions';
+
 
 
 function Journal({
@@ -30,10 +32,11 @@ function Journal({
     to_date: moment().endOf('year').format('YYYY-MM-DD'),
     basis: 'accural'
   });
+  const { formatMessage } = useIntl();
   const [refetch, setRefetch] = useState(false);
 
   useEffect(() => {
-    changePageTitle('Journal Sheet');
+    changePageTitle(formatMessage({id:'journal_sheet'}));
   }, []);
 
   const fetchHook = useQuery(['journal', filter],

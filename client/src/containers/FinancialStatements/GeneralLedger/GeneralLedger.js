@@ -2,10 +2,11 @@ import React, { useEffect, useCallback, useState, useMemo } from 'react';
 import moment from 'moment';
 import GeneralLedgerTable from 'containers/FinancialStatements/GeneralLedger/GeneralLedgerTable';
 import { useQuery } from 'react-query';
+import { useIntl } from 'react-intl';
 
 import GeneralLedgerHeader from './GeneralLedgerHeader';
 
-import {compose} from 'utils';
+import { compose } from 'utils';
 
 import DashboardInsider from 'components/Dashboard/DashboardInsider'
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
@@ -30,6 +31,7 @@ function GeneralLedger({
   // #withSettings
   organizationSettings,
 }) {
+  const { formatMessage } = useIntl()
   const [filter, setFilter] = useState({
     from_date: moment().startOf('year').format('YYYY-MM-DD'),
     to_date: moment().endOf('year').format('YYYY-MM-DD'),
@@ -40,7 +42,7 @@ function GeneralLedger({
 
   // Change page title of the dashboard.
   useEffect(() => {
-    changePageTitle('General Ledger');
+    changePageTitle(formatMessage({id:'general_ledger'}));
   }, []);
 
   const fetchAccounts = useQuery(['accounts-list'],
@@ -74,7 +76,7 @@ function GeneralLedger({
     setRefetch(true);
   }, [setFilter]);
 
-  const handleFilterChanged = () => {};
+  const handleFilterChanged = () => { };
 
   return (
     <DashboardInsider>

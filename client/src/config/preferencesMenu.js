@@ -1,26 +1,29 @@
+import React  from 'react'
+import { FormattedMessage as T, useIntl } from 'react-intl';
+
 export default [
   {
-    text: 'General',
+    text: <T id={'general'}/>,
     disabled: false,
-    href: '/dashboard/preferences/general',
+    href: '/preferences/general',
   },
   {
-    text: 'Users',
-    href: '/dashboard/preferences/users',
+    text: <T id={'users'}/>,
+    href: '/preferences/users',
   },
   {
-    text: 'Currencies',
+    text: <T id={'currencies'}/>,
    
-    href: '/dashboard/preferences/currencies',
+    href: '/preferences/currencies',
   },
   {
-    text: 'Accountant',
+    text: <T id={'accountant'}/>,
     disabled: false,
-    href: '/dashboard/preferences/accountant',
+    href: '/preferences/accountant',
   },
   {
-    text: 'Accounts',
+    text: <T id={'accounts'}/>,
     disabled: false,
-    href: '/dashboard/preferences/accounts',
+    href: '/preferences/accounts',
   },
 ];

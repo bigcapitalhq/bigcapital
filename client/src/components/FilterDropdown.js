@@ -19,9 +19,11 @@ export default function FilterDropdown({
   fields,
   onFilterChange,
 }) {
+  const {formatMessage} =useIntl();
+
   const conditionalsItems = useMemo(() => [
-    { value: 'and', label: 'AND' },
-    { value: 'or', label: 'OR' },
+    { value: 'and', label:formatMessage({id:'and'})  },
+    { value: 'or', label: formatMessage({id:'or'}) },
   ], []);
 
   const resourceFields = useMemo(() => [
@@ -29,11 +31,11 @@ export default function FilterDropdown({
   ], [fields]);
 
   const compatatorsItems = useMemo(() => [
-    {value: '', label: 'Select a compatator'},
-    {value: 'equals', label: 'Equals'},
-    {value: 'not_equal', label: 'Not Equal'},
-    {value: 'contain', label: 'Contain'},
-    {value: 'not_contain', label: 'Not Contain'},
+    {value: '', label:formatMessage({id:'select_a_comparator'})},
+    {value: 'equals', label: formatMessage({id:'equals'})},
+    {value: 'not_equal', label: formatMessage({id:'not_equal'})},
+    {value: 'contain', label: formatMessage({id:'contain'})},
+    {value: 'not_contain', label: formatMessage({id:'not_contain'})},
   ], []);
 
   const defaultFilterCondition = useMemo(() => ({

@@ -9,20 +9,20 @@ import {
 
 export default function RadiosAccountingBasis(props) {
   const { onChange, ...rest } = props;
-  const intl = useIntl();
+  const {formatMessage} = useIntl();
 
   return (
     <RadioGroup
       inline={true}
-      label={intl.formatMessage({'id': 'accounting_basis'})}
+      label={formatMessage({'id': 'accounting_basis'})}
       name="basis"
       onChange={handleStringChange((value) => {
         onChange && onChange(value);
       })}
       className={'radio-group---accounting-basis'}
       {...rest}>
-      <Radio label="Cash" value="cash" />
-      <Radio label="Accural" value="accural" />
+      <Radio label={formatMessage({id:'cash'})} value="cash" />
+      <Radio label={formatMessage({id:'accrual'})} value="accural" />
     </RadioGroup>
   );
 }

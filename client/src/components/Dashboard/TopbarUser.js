@@ -9,6 +9,7 @@ import {
   Popover
 } from '@blueprintjs/core';
 import t from 'store/types';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 
 function DashboardTopbarUser({ logout }) {
   const history = useHistory();
@@ -20,12 +21,12 @@ function DashboardTopbarUser({ logout }) {
 
   const userAvatarDropMenu = useMemo(() => (
     <Menu>
-      <MenuItem icon="graph" text="Graph" />
-      <MenuItem icon="map" text="Map" />
-      <MenuItem icon="th" text="Table" shouldDismissPopover={false} />
-      <MenuItem icon="zoom-to-fit" text="Nucleus" disabled={true} />
+      <MenuItem icon="graph" text={<T id={'menu'}/>} />
+      <MenuItem icon="map" text={<T id={'graph'}/>} />
+      <MenuItem icon="th" text={<T id={'table'}/>} shouldDismissPopover={false} />
+      <MenuItem icon="zoom-to-fit" text={<T id={'nucleus'}/>} disabled={true} />
       <MenuDivider />
-      <MenuItem icon="cog" text="Logout" onClick={onClickLogout} />
+      <MenuItem icon="cog" text={<T id={'logout'}/>} onClick={onClickLogout} />
     </Menu>
   ), [onClickLogout]);
 

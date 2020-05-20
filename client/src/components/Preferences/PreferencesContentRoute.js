@@ -4,11 +4,11 @@ import preferencesRoutes from 'routes/preferences'
 
 
 export default function DashboardContentRoute() {
-  const defaultTab = '/dashboard/preferences/general';
+  const defaultTab = '/preferences/general';
 
   return (
-    <Route pathname="/dashboard/preferences">
-      <Redirect from='/dashboard/preferences' to={defaultTab} />
+    <Route pathname="/preferences">
+      <Redirect from='/preferences' to={defaultTab} />
 
       <Switch>
         { preferencesRoutes.map((route, index) => (

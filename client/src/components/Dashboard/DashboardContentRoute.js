@@ -5,7 +5,7 @@ import routes from 'routes/dashboard'
 export default function DashboardContentRoute() {
 
   return (
-    <Route pathname="/dashboard">
+    <Route pathname="/">
       <Switch>
         { routes.map((route, index) => (
           <Route

@@ -9,6 +9,7 @@ import {
   getFinancialSheetIndexByQuery,
 } from 'store/financialStatement/financialStatements.selectors';
 import withProfitLossDetail from './withProfitLoss';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 
 
 function ProfitLossSheetTable({
@@ -22,6 +23,9 @@ function ProfitLossSheetTable({
   onFetchData,
   companyName,
 }) {
+
+  const {formatMessage} =useIntl();
+
   const columns = useMemo(() => [
     {
       // Build our expander column
@@ -63,18 +67,18 @@ function ProfitLossSheetTable({
       disableResizing: true,
     },  
     {
-      Header: 'Account Name',
+      Header: formatMessage({id:'account_name'}),
       accessor: 'name',
       className: "name",
     },
     {
-      Header: 'Acc. Code',
+      Header: formatMessage({id:'acc_code'}),
       accessor: 'code',
       className: "account_code",
     },
     ...(profitLossQuery.display_columns_type === 'total') ? [
       {
-        Header: 'Total',
+        Header: formatMessage({id:'total'}),
         Cell: ({ cell }) => {
           const row = cell.row.original;
           if (row.total) {

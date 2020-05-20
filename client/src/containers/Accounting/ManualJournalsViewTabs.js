@@ -41,7 +41,7 @@ function ManualJournalsViewTabs({
 
   const handleClickNewView = () => {
     setTopbarEditView(null);
-    history.push('/dashboard/custom_views/manual_journals/new');
+    history.push('/custom_views/manual_journals/new');
   };
   const handleViewLinkClick = () => {
     setTopbarEditView(customViewId);
@@ -63,7 +63,7 @@ function ManualJournalsViewTabs({
   }, [customViewId]);
 
   const tabs = manualJournalsViews.map((view) => {
-    const baseUrl = '/dashboard/accounting/manual-journals';
+    const baseUrl = '/manual-journals';
     const link = (
       <Link
         to={`${baseUrl}/${view.id}/custom_view`}

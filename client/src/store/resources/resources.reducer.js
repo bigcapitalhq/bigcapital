@@ -11,15 +11,15 @@ const initialState = {
   metadata: {
     'accounts': {
       label: 'Accounts',
-      baseRoute: '/dashboard/accounts',
+      baseRoute: '/accounts',
     },
     'items': {
       label: 'Items',
-      baseRoute: '/dashboard/items',
+      baseRoute: '/items',
     },
     'manual_journals': {
       label: 'Journals',
-      baseRoute: '/dashboard/accounting/manual-journals',
+      baseRoute: '/manual-journals',
     }
   }
 };
