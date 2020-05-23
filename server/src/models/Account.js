@@ -9,7 +9,8 @@ import {
 import CachableQueryBuilder from '@/lib/Cachable/CachableQueryBuilder';
 import CachableModel from '@/lib/Cachable/CachableModel';
 import DateSession from '@/models/DateSession';
-
+import { flatToNestedArray } from '@/utils';
+import DependencyGraph from '@/lib/DependencyGraph';
 
 export default class Account extends mixin(TenantModel, [CachableModel, DateSession]) {
   /**
@@ -24,6 +25,25 @@ export default class Account extends mixin(TenantModel, [CachableModel, DateSess
    */
   static get QueryBuilder() {
     return CachableQueryBuilder;
+  }
+
+  static query(...args) {
+    return super.query(...args).runAfter((result) => {
+      if (Array.isArray(result)) {
+        return this.isDepGraph ?
+          Account.toDependencyGraph(result) :
+          this.collection.from(result);
+      }
+      return result;
+    });
+  }
+
+  /**
+   * Convert the array result to dependency graph.
+   */
+  static depGraph() {
+    this.isDepGraph = true;
+    return this;
   }
 
   /**
@@ -105,5 +125,20 @@ export default class Account extends mixin(TenantModel, [CachableModel, DateSess
       ...transaction,
       accountNormal: account.type.normal,
     }))));
+  }
+
+  /**
+   * Converts flatten accounts list to nested array. 
+   * @param {Array} accounts 
+   * @param {Object} options 
+   */
+  static toNestedArray(accounts, options = { children: 'children' }) {
+    return flatToNestedArray(accounts, { id: 'id', parentId: 'parentAccountId' })
+  }
+
+  static toDependencyGraph(accounts) {
+    return DependencyGraph.fromArray(
+      accounts, { itemId: 'id', parentItemId: 'parentAccountId' }
+    );
   }
 }

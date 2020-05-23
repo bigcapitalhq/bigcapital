@@ -112,6 +112,7 @@ export default {
         builder.withGraphFetched('roles.field');
         builder.withGraphFetched('columns');
         builder.first();
+        builder.remember();
       });
 
       const resourceFieldsKeys = manualJournalsResource.fields.map((c) => c.key);
@@ -229,8 +230,10 @@ export default {
         errorReasons.push({ type: 'CREDIT.DEBIT.NOT.EQUALS', code: 100 });
       }
       const accountsIds = entries.map((entry) => entry.account_id);
-      const accounts = await Account.query().whereIn('id', accountsIds)
-        .withGraphFetched('type');
+      const accounts = await Account.query()
+        .whereIn('id', accountsIds)
+        .withGraphFetched('type')
+        .remember();
 
       const storedAccountsIds = accounts.map((account) => account.id);
 
@@ -266,7 +269,9 @@ export default {
         status: form.status,
         user_id: user.id,
       });
-      const journalPoster = new JournalPoster();
+
+      const accountsDepGraph = await Account.depGraph().query().remember();
+      const journalPoster = new JournalPoster(accountsDepGraph);
 
       entries.forEach((entry) => {
         const account = accounts.find((a) => a.id === entry.account_id);
@@ -456,7 +461,9 @@ export default {
         .where('reference_id', manualJournal.id)
         .withGraphFetched('account.type');
 
-      const journal = new JournalPoster();
+      const accountsDepGraph = await Account.depGraph().query().remember();
+      const journal = new JournalPoster(accountsDepGraph);
+
       journal.loadEntries(transactions);
       journal.removeEntries();
 
@@ -521,6 +528,7 @@ export default {
       const {
         ManualJournal,
         AccountTransaction,
+        Account,
       } = req.models;
 
       const { id } = req.params;
@@ -546,7 +554,9 @@ export default {
         .where('reference_id', manualJournal.id)
         .withGraphFetched('account.type');
 
-      const journal = new JournalPoster();
+      const accountsDepGraph = await Account.depGraph().query().remember();
+      const journal = new JournalPoster(accountsDepGraph);
+
       journal.loadEntries(transactions);
       journal.calculateEntriesBalanceChange();
 
@@ -626,7 +636,9 @@ export default {
         ManualJournal,
         AccountTransaction,
         MediaLink,
+        Account,
       } = req.models;
+
       const manualJournal = await ManualJournal.query()
         .where('id', id).first();
 
@@ -640,7 +652,9 @@ export default {
         .where('reference_id', manualJournal.id)
         .withGraphFetched('account.type');
 
-      const journal = new JournalPoster();
+      const accountsDepGraph = await Account.depGraph().query().remember();
+      const journal = new JournalPoster(accountsDepGraph);
+
       journal.loadEntries(transactions);
       journal.removeEntries();
 
@@ -744,7 +758,7 @@ export default {
         });
       }
       const filter = { ...req.query };
-      const { ManualJournal, AccountTransaction, MediaLink } = req.models;
+      const { ManualJournal, AccountTransaction, Account, MediaLink } = req.models;
 
       const manualJournals = await ManualJournal.query()
         .whereIn('id', filter.ids);
@@ -760,7 +774,8 @@ export default {
         .whereIn('reference_type', ['Journal', 'ManualJournal'])
         .whereIn('reference_id', filter.ids);
 
-      const journal = new JournalPoster();
+      const accountsDepGraph = await Account.depGraph().query().remember();
+      const journal = new JournalPoster(accountsDepGraph);
 
       journal.loadEntries(transactions);
       journal.removeEntries();

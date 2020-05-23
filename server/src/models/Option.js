@@ -32,6 +32,11 @@ export default class Option extends TenantModel {
     return MetableCollection;
   }
 
+  /**
+   * Validates the given options is defined or either not.
+   * @param {Array} options 
+   * @return {Boolean}
+   */
   static validateDefined(options) {
     const notDefined = [];
 

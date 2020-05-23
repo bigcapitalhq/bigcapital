@@ -10,7 +10,7 @@ import {
 } from '~/dbInit';
 
 
-describe('routes: `/items`', () => {
+describe.only('routes: `/items`', () => {
   describe('POST: `/items`', () => {
     it('Should not create a new item if the user was not authorized.', async () => {
       const res = await request()
@@ -550,6 +550,43 @@ describe('routes: `/items`', () => {
 
       const storedItems = await Item.tenant().query().where('id', item.id);
       expect(storedItems).to.have.lengthOf(0);
+    });
+  });
+
+  describe('DELETE: `items?ids=`', () => {
+    it('Should response in case one of items ids where not exists.', async () => {
+      const res = await request()
+        .delete('/api/items')
+        .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
+        .query({
+          ids: [100, 200],
+        })
+        .send();
+
+      expect(res.status).equals(404);
+      expect(res.body.errors).include.something.that.deep.equals({
+        type: 'ITEMS.NOT.FOUND', code: 200, ids: [100, 200],
+      });
+    });
+
+    it('Should delete the given items from the storage.', async () => {
+      const item1 = await tenantFactory.create('item');
+      const item2 = await tenantFactory.create('item');
+
+      const res = await request()
+        .delete('/api/items')
+        .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
+        .query({
+          ids: [item1.id, item2.id],
+        })
+        .send();
+
+      const foundItems = await Item.tenant().query();
+
+      expect(res.status).equals(200);
+      expect(foundItems.length).equals(0)
     });
   });
 

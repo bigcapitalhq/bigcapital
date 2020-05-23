@@ -1,10 +1,12 @@
-import { Model } from 'objection';
+import { Model, mixin } from 'objection';
 import moment from 'moment';
 import TenantModel from '@/models/TenantModel';
 import CachableQueryBuilder from '@/lib/Cachable/CachableQueryBuilder';
+import CachableModel from '@/lib/Cachable/CachableModel';
+import DateSession from '@/models/DateSession';
 
 
-export default class AccountTransaction extends TenantModel {
+export default class AccountTransaction extends mixin(TenantModel, [CachableModel, DateSession]) {
   /**
    * Table name
    */

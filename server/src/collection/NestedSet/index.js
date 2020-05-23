@@ -10,8 +10,13 @@ export default class NestedSet {
       id: 'id',
       ...options,
     };
+    this.items = items || [];
+    this.tree = this.linkChildren();
+  }
+
+  setItems(items) {
     this.items = items;
-    this.collection = {};
+    this.tree = this.linkChildren();
   }
 
   /**
@@ -23,37 +28,71 @@ export default class NestedSet {
     const map = {};
     this.items.forEach((item) => {
       map[item.id] = item;
-      map[item.id].children = [];
+      map[item.id].children = {};
     });
 
     this.items.forEach((item) => {
       const parentNodeId = item[this.options.parentId];
       if (parentNodeId) {
-        map[parentNodeId].children.push(item);
+        map[parentNodeId].children[item.id] = item;
       }
     });
     return map;
   }
 
-  toTree() {
-    const map = this.linkChildren();
-    const tree = [];
+  toArray() {
+    const stack = [];
+    const treeNodes = this.items.map((i) => ({ ...i }));
 
-    this.items.forEach((item) => {
-      const parentNodeId = item[this.options.parentId];
-      if (!parentNodeId) {
-        tree.push(map[item.id]);
-      }
-    });
-    this.collection = Object.values(tree);
-    return this.collection;
+    const walk = (nodes) => {
+      nodes.forEach((node) => {
+        if (!node[this.options.parentId]) {
+          stack.push(node);
+        }
+        if (node.children) {
+          const childrenNodes = Object.values(node.children)
+            .map((i) => ({ ...i }));
+
+          node.children = childrenNodes;
+          walk(childrenNodes);
+        }
+      });
+    };
+    walk(treeNodes);
+    return stack;
   }
 
   getTree() {
-    return this.collection;
+    return this.tree;
   }
 
-  flattenTree(nodeMapper) {
+  getElementById(id) {
+    return this.tree[id] || null
+  }
+
+  getParents(id) {
+    const item = this.getElementById(id);
+    const parents = [];
+    let index = 0;
+
+    const walk = (_item) => {
+      if (!item) return;
+
+      if (index) {
+        parents.push(_item);
+      }
+      if (_item[this.options.parentId]) {
+        const parentItem = this.getElementById(_item[this.options.parentId]);  
+
+        index++;
+        walk(parentItem);
+      }      
+    };
+    walk(item);
+    return parents;
+  }
+
+  toFlattenArray(nodeMapper) {
     const flattenTree = [];
 
     const traversal = (nodes, parentNode) => {

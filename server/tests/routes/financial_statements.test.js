@@ -11,6 +11,7 @@ import {
 
 let creditAccount;
 let debitAccount;
+let incomeAccount;
 let incomeType;
 
 describe('routes: `/financial_statements`', () => {
@@ -28,7 +29,7 @@ describe('routes: `/financial_statements`', () => {
     debitAccount = await tenantFactory.create('account', { account_type_id: assetType.id });
 
     // Income && expenses accounts.
-    const incomeAccount = await tenantFactory.create('account', { account_type_id: incomeType.id });
+    incomeAccount = await tenantFactory.create('account', { account_type_id: incomeType.id });
     const expenseAccount = await tenantFactory.create('account', { account_type_id: expenseType.id });
     // const income2Account = await tenantFactory.create('account', { account_type_id: incomeType.id });
 
@@ -183,8 +184,8 @@ describe('routes: `/financial_statements`', () => {
 
       const journal = res.body.journal.find((j) => j.id === '1-Expense');
 
-      expect(journal.credit).equals(1);
-      expect(journal.debit).equals(1);
+      expect(journal.formatted_credit).equals(1);
+      expect(journal.formatted_debit).equals(1);
     });
   });
 
@@ -244,10 +245,10 @@ describe('routes: `/financial_statements`', () => {
 
       expect(targetAccount).to.be.an('object');
       expect(targetAccount.opening).to.deep.equal({
-        amount: 0, date: '2020-01-01',
+        amount: 0, formatted_amount: 0, date: '2020-01-01',
       });
       expect(targetAccount.closing).to.deep.equal({
-        amount: 4000, date: '2020-12-31',
+        amount: 4000, formatted_amount: 4000, date: '2020-12-31',
       });
     });
 
@@ -263,16 +264,14 @@ describe('routes: `/financial_statements`', () => {
         })
         .send();
 
-      console.log(res.body);
-
       const targetAccount = res.body.accounts.find((a) => a.id === creditAccount.id);
 
       expect(targetAccount).to.be.an('object');
       expect(targetAccount.opening).to.deep.equal({
-        amount: 4000, date: '2020-01-01',
+        amount: 0, formatted_amount: 0, date: '2018-01-01',
       });
       expect(targetAccount.closing).to.deep.equal({
-        amount: 4000, date: '2020-03-30',
+        amount: 4000, formatted_amount: 4000, date: '2020-03-30',
       });
     });
 
@@ -286,10 +285,25 @@ describe('routes: `/financial_statements`', () => {
         })
         .send();
 
-  
     })
  
     it('Should retrieve accounts transactions only that between date range.', async () => {
+      const res = await request()
+        .get('/api/financial_statements/general_ledger')
+        .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
+        .query({
+          from_date: '2020-01-01',
+          to_date: '2020-03-30',
+          none_zero: true,
+        })
+        .send();
+
+
+      // console.log(res.body.accounts);
+    });
+
+    it('Should retrieve no accounts with given date period has not transactions.', async () => {
       const res = await request()
         .get('/api/financial_statements/general_ledger')
         .set('x-access-token', loginRes.body.token)
@@ -301,23 +315,7 @@ describe('routes: `/financial_statements`', () => {
         })
         .send();
 
-    });
-
-    it('Should not retrieve all accounts that have no transactions in the given date range when `none_zero` is `false`.', async () => {
-      const res = await request()
-        .get('/api/financial_statements/general_ledger')
-        .set('x-access-token', loginRes.body.token)
-        .set('organization-id', tenantWebsite.organizationId)
-        .query({
-          from_date: '2020-01-20',
-          to_date: '2020-03-30',
-          none_zero: false,
-        })
-        .send();
-
-      res.body.accounts.forEach((account) => {
-        expect(account.transactions.length).not.equals(0);
-      });
+      expect(res.body.accounts.length).equals(0);
     });
 
     it('Should retrieve all accounts even it have no transactions in the given date range when `none_zero` is `true`', async () => {
@@ -335,7 +333,7 @@ describe('routes: `/financial_statements`', () => {
       const accountsNoTransactions = res.body.accounts.filter(a => a.transactions.length === 0);
       const accountsWithTransactions = res.body.accounts.filter(a => a.transactions.length > 0);
 
-      expect(accountsNoTransactions.length).not.equals(0);
+      expect(accountsNoTransactions.length).equals(0);
       expect(accountsWithTransactions.length).not.equals(0);
     });
 
@@ -347,6 +345,7 @@ describe('routes: `/financial_statements`', () => {
         .query({
           from_date: '2020-01-01',
           to_date: '2020-03-30',
+          accounts_ids: [creditAccount.id],
           number_format: {
             divide_1000: true,
           },
@@ -358,6 +357,8 @@ describe('routes: `/financial_statements`', () => {
         name: creditAccount.name,
         code: creditAccount.code, 
         index: null,
+        parentAccountId: null,
+        children: [],
         transactions: [
           {
             id: 1002,
@@ -367,11 +368,12 @@ describe('routes: `/financial_statements`', () => {
             referenceId: null,
             date: '2020-01-09T22:00:00.000Z',
             createdAt: null,
-            amount: 4
+            formatted_amount: 4,
+            amount: 4000,
           }
         ],
-        opening: { date: '2020-01-01', amount: 0 },
-        closing: { date: '2020-03-30', amount: 4 }
+        opening: { date: '2020-01-01', formatted_amount: 0, amount: 0 },
+        closing: { date: '2020-03-30', formatted_amount: 4, amount: 4000 }
       });
     });
 
@@ -395,7 +397,7 @@ describe('routes: `/financial_statements`', () => {
         })
         .send();
 
-      expect(res.body.accounts[0].transactions[2].amount).equal(2);
+      expect(res.body.accounts[0].transactions[2].formatted_amount).equal(2);
     });
 
     it('Should retrieve only accounts that given in the query.', async () => {
@@ -412,6 +414,25 @@ describe('routes: `/financial_statements`', () => {
         .send();
 
       expect(res.body.accounts.length).equals(1);
+    });
+
+    it('Should retrieve accounts in nested array structure as parent/children accounts.', async () => {
+      const childAccount = await tenantFactory.create('account', {
+        parent_account_id: debitAccount.id,
+        account_type_id: 1
+      });
+
+      const res = await request()
+        .get('/api/financial_statements/general_ledger')
+        .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
+        .query({
+          accounts_ids: [childAccount.id, debitAccount.id],
+        })
+        .send();
+
+      expect(res.body.accounts[0].children.length).equals(1);
+      expect(res.body.accounts[0].children[0].id).equals(childAccount.id);
     });
   });
 
@@ -480,6 +501,8 @@ describe('routes: `/financial_statements`', () => {
         index: null,
         name: debitAccount.name,
         code: debitAccount.code,
+        parentAccountId: null,
+        children: [],
         total: { formatted_amount: 5000, amount: 5000, date: '2032-02-02' }
       });
 
@@ -488,6 +511,8 @@ describe('routes: `/financial_statements`', () => {
         index: null,
         name: creditAccount.name,
         code: creditAccount.code,
+        parentAccountId: null,
+        children: [],
         total: { formatted_amount: 4000, amount: 4000, date: '2032-02-02' }
       });
     });
@@ -565,6 +590,8 @@ describe('routes: `/financial_statements`', () => {
         index: debitAccount.index,
         name: debitAccount.name,
         code: debitAccount.code,
+        parentAccountId: null,
+        children: [],
         total_periods: [
           { date: '2020-01-08', formatted_amount: 0, amount: 0 },
           { date: '2020-01-09', formatted_amount: 0, amount: 0 },
@@ -579,6 +606,8 @@ describe('routes: `/financial_statements`', () => {
         index: creditAccount.index,
         name: creditAccount.name,
         code: creditAccount.code,
+        parentAccountId: null,
+        children: [],
         total_periods: [
           { date: '2020-01-08', formatted_amount: 0, amount: 0 },
           { date: '2020-01-09', formatted_amount: 0, amount: 0 },
@@ -608,6 +637,8 @@ describe('routes: `/financial_statements`', () => {
         index: debitAccount.index,
         name: debitAccount.name,
         code: debitAccount.code,
+        parentAccountId: null,
+        children: [],
         total_periods: [
           { date: '2019-07', formatted_amount: 0, amount: 0 },
           { date: '2019-08', formatted_amount: 0, amount: 0 },
@@ -644,6 +675,8 @@ describe('routes: `/financial_statements`', () => {
         index: debitAccount.index,
         name: debitAccount.name,
         code: debitAccount.code,
+        parentAccountId: null,
+        children: [],
         total_periods: [
           { date: '2020-03', formatted_amount: 5000, amount: 5000 },
           { date: '2020-06', formatted_amount: 5000, amount: 5000 },
@@ -678,6 +711,8 @@ describe('routes: `/financial_statements`', () => {
         index: debitAccount.index,
         name: debitAccount.name,
         code: debitAccount.code,
+        parentAccountId: null,
+        children: [],
         total_periods: [
           { date: '2020-03', formatted_amount: 5000, amount: 5000.25 },
           { date: '2020-06', formatted_amount: 5000, amount: 5000.25 },
@@ -709,6 +744,8 @@ describe('routes: `/financial_statements`', () => {
         index: debitAccount.index,
         name: debitAccount.name,
         code: debitAccount.code,
+        parentAccountId: null,
+        children: [],
         total_periods: [
           { date: '2020-03', formatted_amount: 5, amount: 5000 },
           { date: '2020-06', formatted_amount: 5, amount: 5000 },
@@ -739,6 +776,104 @@ describe('routes: `/financial_statements`', () => {
       expect(res.body.accounts[0].children.length).equals(0);
       expect(res.body.accounts[1].children.length).equals(0);
     });
+
+    it('Should retrieve accounts in nested structure parent and children accounts.', async () => {
+      const childAccount = await tenantFactory.create('account', {
+        parent_account_id: debitAccount.id,
+        account_type_id: 1
+      });
+      const res = await request()
+        .get('/api/financial_statements/balance_sheet')
+        .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
+        .query({
+          none_zero: false,
+          account_ids: [childAccount.id, debitAccount.id]
+        })
+        .send();
+
+      expect(res.body.accounts[0].children).include.something.deep.equals({
+        id: debitAccount.id,
+        index: null,
+        name: debitAccount.name,
+        code: debitAccount.code,
+        parentAccountId: null,
+        total: { formatted_amount: 5000, amount: 5000, date: '2020-12-31' },
+        children: [
+          {
+            id: childAccount.id,
+            index: null,
+            name: childAccount.name,
+            code: childAccount.code,
+            parentAccountId: debitAccount.id,
+            total: { formatted_amount: 0, amount: 0, date: '2020-12-31' },
+            children: [],
+          }
+        ]
+      });
+    });
+    
+    it('Should parent account balance sumation of total balane all children accounts.', async () => {
+      const childAccount = await tenantFactory.create('account', {
+        parent_account_id: debitAccount.id,
+        account_type_id: 1
+      });
+      await tenantFactory.create('account_transaction', {
+        credit: 0, debit: 1000, account_id: childAccount.id, date: '2020-1-10'
+      });
+
+      const res = await request()
+        .get('/api/financial_statements/balance_sheet')
+        .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
+        .query({
+          none_zero: false,
+          account_ids: [childAccount.id, debitAccount.id]
+        })
+        .send();
+
+      expect(res.body.accounts[0].children[0].total.amount).equals(6000);
+      expect(res.body.accounts[0].children[0].total.formatted_amount).equals(6000);
+    });
+
+    it('Should parent account balance sumation of total periods amounts all children accounts.', async () => {
+      const childAccount = await tenantFactory.create('account', {
+        parent_account_id: debitAccount.id,
+        account_type_id: 1
+      });
+      await tenantFactory.create('account_transaction', {
+        credit: 0, debit: 1000, account_id: childAccount.id, date: '2020-2-10'
+      });
+
+      const res = await request()
+        .get('/api/financial_statements/balance_sheet')
+        .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
+        .query({
+          none_zero: false,
+          account_ids: [childAccount.id, debitAccount.id],
+          display_columns_type: 'date_periods',
+          display_columns_by: 'month',
+          from_date: '2020-01-01',
+          to_date: '2020-12-12',
+        })
+        .send();
+
+      expect(res.body.accounts[0].children[0].total_periods).deep.equals([
+        { amount: 5000, formatted_amount: 5000, date: '2020-01' },
+        { amount: 6000, formatted_amount: 6000, date: '2020-02' },
+        { amount: 6000, formatted_amount: 6000, date: '2020-03' },
+        { amount: 6000, formatted_amount: 6000, date: '2020-04' },
+        { amount: 6000, formatted_amount: 6000, date: '2020-05' },
+        { amount: 6000, formatted_amount: 6000, date: '2020-06' },
+        { amount: 6000, formatted_amount: 6000, date: '2020-07' },
+        { amount: 6000, formatted_amount: 6000, date: '2020-08' },
+        { amount: 6000, formatted_amount: 6000, date: '2020-09' },
+        { amount: 6000, formatted_amount: 6000, date: '2020-10' },
+        { amount: 6000, formatted_amount: 6000, date: '2020-11' },
+        { amount: 6000, formatted_amount: 6000, date: '2020-12' }
+      ])
+    });
   });
 
   describe('routes: `/financial_statements/trial_balance`', () => {
@@ -758,22 +893,37 @@ describe('routes: `/financial_statements`', () => {
         .send();
 
       expect(res.body.accounts).include.something.deep.equals({
-        account_id: debitAccount.id,
+        id: debitAccount.id,
         name: debitAccount.name,
         code: debitAccount.code,
+        parentAccountId: null,
         accountNormal: 'debit',
         credit: 1000,
         debit: 6000,
         balance: 5000,
+
+        formatted_credit: 1000,
+        formatted_debit: 6000,
+        formatted_balance: 5000,
+
+        children: [],
       });
       expect(res.body.accounts).include.something.deep.equals({
-        account_id: creditAccount.id,
+        id: creditAccount.id,
         name: creditAccount.name,
         code: creditAccount.code,
         accountNormal: 'credit',
+        parentAccountId: null,
+
         credit: 4000,
         debit: 0,
         balance: 4000,
+
+        formatted_credit: 4000,
+        formatted_debit: 0,
+        formatted_balance: 4000,
+
+        children: [],
       });
     });
 
@@ -807,13 +957,20 @@ describe('routes: `/financial_statements`', () => {
         .send();
 
       expect(res.body.accounts).include.something.deep.equals({
-        account_id: creditAccount.id,
+        id: creditAccount.id,
         name: creditAccount.name,
         code: creditAccount.code,
         accountNormal: 'credit',
+        parentAccountId: null,
         credit: 4000,
         debit: 0,
-        balance: 4000
+        balance: 4000,
+
+        formatted_credit: 4000,
+        formatted_debit: 0,
+        formatted_balance: 4000,
+
+        children: []
       });
     });
 
@@ -833,13 +990,21 @@ describe('routes: `/financial_statements`', () => {
         .send();
 
       expect(res.body.accounts).include.something.deep.equals({
-        account_id: creditAccount.id,
+        id: creditAccount.id,
         name: creditAccount.name,
         code: creditAccount.code,
         accountNormal: 'credit',
-        credit: 4,
+        parentAccountId: null,
+
+        credit: 4000,
         debit: 0,
-        balance: 4
+        balance: 4000,
+
+        formatted_credit: 4,
+        formatted_debit: 0,
+        formatted_balance: 4,
+
+        children: [],
       });
     });
 
@@ -861,6 +1026,25 @@ describe('routes: `/financial_statements`', () => {
 
     it('Should retrieve associated account details in accounts list.', async () => {
 
+    });
+
+    it('Should retrieve account with nested array structure as parent/children accounts.', async () => {
+      const childAccount = await tenantFactory.create('account', {
+        parent_account_id: debitAccount.id,
+        account_type_id: 1
+      });
+
+      const res = await request()
+        .get('/api/financial_statements/trial_balance_sheet')
+        .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
+        .query({
+          account_ids: [debitAccount.id, childAccount.id],
+        })
+        .send();
+
+      expect(res.body.accounts[0].children.length).equals(1);
+      expect(res.body.accounts[0].children[0].id).equals(childAccount.id);
     });
   });
 
@@ -955,7 +1139,7 @@ describe('routes: `/financial_statements`', () => {
         .set('organization-id', tenantWebsite.organizationId)
         .query({
           from_date: moment('2020-01-01').startOf('month').format('YYYY-MM-DD'),
-          to_date: moment('2020-01-01').endOf('month').format('YYYY-MM-DD'),
+          to_date: moment('2020-01-31').endOf('month').format('YYYY-MM-DD'),
           display_columns_type: 'total',
           display_columns_by: 'month',
           none_zero: false,
@@ -967,6 +1151,8 @@ describe('routes: `/financial_statements`', () => {
         index: zeroAccount.index,
         name: zeroAccount.name,
         code: zeroAccount.code,
+        parentAccountId: null,
+        children: [],
         total: { amount: 0, date: '2020-01-31', formatted_amount: 0 },
       });
     });
@@ -1119,6 +1305,91 @@ describe('routes: `/financial_statements`', () => {
         .send();
 
       expect(res.body.profitLoss.income.accounts.length).equals(1);
+    });
+
+    it('Should retrieve accounts in nested array structure as parent/children accounts.', async () => {
+      const childAccount = await tenantFactory.create('account', {
+        parent_account_id: incomeAccount.id,
+        account_type_id: 7
+      });
+
+      const res = await request()
+        .get('/api/financial_statements/profit_loss_sheet')
+        .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
+        .query({
+          account_ids: [childAccount.id, incomeAccount.id],
+        })
+        .send();
+
+      expect(res.body.profitLoss.income.accounts.length).equals(1);
+      expect(res.body.profitLoss.income.accounts[0].children.length).equals(1);
+      expect(res.body.profitLoss.income.accounts[0].children[0].id).equals(childAccount.id);
+    });
+
+    it('Should parent account credit/debit sumation of total periods amounts all children accounts.', async () => {
+      const childAccount = await tenantFactory.create('account', {
+        parent_account_id: incomeAccount.id,
+        account_type_id: 7,
+      });
+      await tenantFactory.create('account_transaction', {
+        credit: 1000, debit: 0, account_id: childAccount.id, date: '2020-2-10'
+      });
+
+      const res = await request()
+        .get('/api/financial_statements/profit_loss_sheet')
+        .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
+        .query({
+          account_ids: [childAccount.id, incomeAccount.id],
+          from_date: '2020-01-01',
+          to_date: '2020-12-12',
+        })
+        .send();
+
+      expect(res.body.profitLoss.income.accounts[0].total).deep.equals({
+        amount: 3000, date: '2020-12-12', formatted_amount: 3000
+      });
+    });
+
+    it('Should parent account credit/debit sumation of total date periods.', async () => {
+      const childAccount = await tenantFactory.create('account', {
+        parent_account_id: incomeAccount.id,
+        account_type_id: 7,
+      });
+      await tenantFactory.create('account_transaction', {
+        credit: 1000, debit: 0, account_id: childAccount.id, date: '2020-2-10'
+      });
+
+      const res = await request()
+        .get('/api/financial_statements/profit_loss_sheet')
+        .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
+        .query({
+          account_ids: [childAccount.id, incomeAccount.id],
+          display_columns_type: 'date_periods',
+          display_columns_by: 'month',
+          from_date: '2020-01-01',
+          to_date: '2020-12-12',
+        })
+        .send();
+
+      const periods = [
+        { date: '2020-01', amount: 2000, formatted_amount: 2000 },
+        { date: '2020-02', amount: 3000, formatted_amount: 3000 },
+        { date: '2020-03', amount: 3000, formatted_amount: 3000 },
+        { date: '2020-04', amount: 3000, formatted_amount: 3000 },
+        { date: '2020-05', amount: 3000, formatted_amount: 3000 },
+        { date: '2020-06', amount: 3000, formatted_amount: 3000 },
+        { date: '2020-07', amount: 3000, formatted_amount: 3000 },
+        { date: '2020-08', amount: 3000, formatted_amount: 3000 },
+        { date: '2020-09', amount: 3000, formatted_amount: 3000 },
+        { date: '2020-10', amount: 3000, formatted_amount: 3000 },
+        { date: '2020-11', amount: 3000, formatted_amount: 3000 },
+        { date: '2020-12', amount: 3000, formatted_amount: 3000 }
+      ];
+      expect(res.body.profitLoss.income.accounts[0].periods).deep.equals(periods);
+      expect(res.body.profitLoss.income.total_periods).deep.equals(periods);
     });
   });
 });
