@@ -3,6 +3,7 @@ import {
   fetchItems,
   deleteItem,
   submitItem,
+  editItem,
 } from 'store/items/items.actions';
 import t from 'store/types';
 
@@ -10,6 +11,7 @@ export const mapDispatchToProps = (dispatch) => ({
   requestFetchItems: (query) => dispatch(fetchItems({ query })),
   requestDeleteItem: (id) => dispatch(deleteItem({ id })),
   requestSubmitItem: (form) => dispatch(submitItem({ form })),
+  requestEditItem:(id,form) => dispatch(editItem({id,form})),
   addBulkActionItem: (id) => dispatch({
     type: t.ITEM_BULK_ACTION_ADD, itemId: id
   }),

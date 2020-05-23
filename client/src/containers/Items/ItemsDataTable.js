@@ -8,7 +8,6 @@ import {
   Position,
 } from '@blueprintjs/core'
 import { FormattedMessage as T, useIntl } from 'react-intl';
-
 import {compose} from 'utils';
 import DataTable from 'components/DataTable';
 import Icon from 'components/Icon';
@@ -16,7 +15,6 @@ import Money from 'components/Money';
 
 import withItems from 'containers/Items/withItems';
 import LoadingIndicator from 'components/LoadingIndicator';
-
 
 const ItemsDataTable = ({
   loading,
@@ -31,17 +29,25 @@ const ItemsDataTable = ({
   onFetchData,
   onSelectedRowsChange,
 }) => {
+
   
   const {formatMessage} = useIntl();
   const [initialMount, setInitialMount] = useState(false);
-
+  
   useEffect(() => {
     if (!itemsTableLoading) {
       setInitialMount(true);
     }
   }, [itemsTableLoading, setInitialMount]);
 
-  const handleEditItem = (item) => () => { onEditItem(item); };
+  const handleEditItem = useCallback(
+    (item) => () => {
+      onEditItem && onEditItem(item);
+    },
+    [onEditItem]
+  );
+
+
   const handleDeleteItem = (item) => () => { onDeleteItem(item); };
   
   const actionMenuList = useCallback((item) =>
@@ -51,8 +57,9 @@ const ItemsDataTable = ({
       <MenuItem text={<T id={'edit_item'}/>} onClick={handleEditItem(item)} />
       <MenuItem text={<T id={'delete_item'}/>} onClick={handleDeleteItem(item)} />
     </Menu>), [handleEditItem, handleDeleteItem]);
-
+ 
   const columns = useMemo(() => [
+    
     {
       Header: formatMessage({ id:'item_name' }),
       accessor: 'name',
@@ -136,6 +143,7 @@ const ItemsDataTable = ({
 };
 
 export default compose(
+
   withItems(({ itemsCurrentPage, itemsTableLoading }) => ({
     itemsCurrentPage,
     itemsTableLoading,

@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useEffect,useCallback } from 'react';
+import { useParams,useHistory } from 'react-router-dom';
 import { useQuery } from 'react-query';
 
 import ItemForm from 'containers/Items/ItemForm';
@@ -11,6 +11,7 @@ import withItemCategoriesActions from 'containers/Items/withItemCategoriesAction
 
 import { compose } from 'utils';
 import { FormattedMessage as T, useIntl } from 'react-intl';
+import withItemsActions from './withItemsActions';
 
 
 const ItemFormContainer = ({
@@ -20,16 +21,15 @@ const ItemFormContainer = ({
   // #withAccountsActions
   requestFetchAccounts,
 
+  // #withItemsActions
+  requestFetchItems,
+
   // #withItemCategoriesActions
   requestFetchItemCategories,
 }) => {
   const { id } = useParams();
   const {formatMessage} =useIntl()
-  useEffect(() => {
-    id ?
-      changePageTitle(formatMessage({id:'edit_item_details'})) :
-      changePageTitle(formatMessage({id:'new_item'}));
-  }, [id, changePageTitle]);
+  const history = useHistory();
 
   const fetchAccounts = useQuery('accounts-list',
     (key) => requestFetchAccounts());
@@ -37,11 +37,30 @@ const ItemFormContainer = ({
   const fetchCategories = useQuery('item-categories-list',
     (key) => requestFetchItemCategories());
 
+ const fetchItemDetail = useQuery(
+  id && ['item-detail-list', id],
+  (key) => requestFetchItems());
+
+const handleFormSubmit =useCallback((payload)=>{
+
+  payload.redirect && history.push('/items/new');
+
+},[history]) 
+
+const handleCancel =useCallback(()=>{
+
+  history.push('/items/new');
+},[])
+
   return (
     <DashboardInsider
-      loading={fetchAccounts.isFetching || fetchCategories.isFetching}
+      loading={fetchItemDetail.isFetching || fetchAccounts.isFetching || fetchCategories.isFetching }
       name={'item-form'}>
-      <ItemForm />
+      <ItemForm 
+      itemId={id} 
+      onFormSubmit={handleFormSubmit}
+      onCancelForm={handleCancel}
+      />
     </DashboardInsider>
   );
 };
@@ -50,4 +69,5 @@ export default compose(
   withDashboard,
   withAccountsActions,
   withItemCategoriesActions,
+  withItemsActions
 )(ItemFormContainer);

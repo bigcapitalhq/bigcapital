@@ -2,6 +2,7 @@ import React, { useEffect, useCallback, useState } from 'react';
 import {
   Route,
   Switch,
+  useHistory
 } from 'react-router-dom';
 import {
   Intent,
@@ -49,6 +50,8 @@ function ItemsList({
 
   const { formatMessage } = useIntl();
 
+  const history = useHistory();
+
   useEffect(() => {
     changePageTitle(formatMessage({id:'items_list'}));
   }, [changePageTitle]);
@@ -68,7 +71,14 @@ function ItemsList({
     setDeleteItem(item);
   }, [setDeleteItem]);
 
-  const handleEditItem = () => {};
+  const handleEditItem = useCallback(
+    (item) => {
+      history.push(`/items/${item.id}/edit`);
+    },
+    [history]
+  );
+
+ 
 
   // Handle cancel delete the item.
   const handleCancelDeleteItem = useCallback(() => {
@@ -121,6 +131,9 @@ function ItemsList({
     setSelectedRows(accounts);
   }, [setSelectedRows]);
   
+ 
+
+
   return (
     <DashboardInsider
       isLoading={fetchHook.isFetching}
