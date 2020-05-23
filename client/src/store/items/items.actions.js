@@ -76,3 +76,19 @@ export const deleteItem = ({ id }) => {
       }).catch((error) => { reject(error); });
   });
 };
+
+
+
+export const deleteBulkItems = ({ ids }) => {
+  return dispatch => new Promise((resolve, reject) => {
+    ApiService.delete(`items`, { params: { ids }}).then((response) => {
+      dispatch({
+        type: t.ITEMS_BULK_DELETE,
+        payload: { ids }
+      });
+      resolve(response);
+    }).catch((error) => {
+      reject(error);
+    });
+  });
+};

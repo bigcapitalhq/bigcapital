@@ -203,7 +203,7 @@ export default {
       check('sell_price').exists().isNumeric(),
       check('cost_account_id').exists().isInt(),
       check('sell_account_id').exists().isInt(),
-      check('category_id').optional().isInt(),
+      check('category_id').optional({ nullable: true }).isInt().toInt(),
       check('note').optional(),
       check('attachment').optional(),
       check('')

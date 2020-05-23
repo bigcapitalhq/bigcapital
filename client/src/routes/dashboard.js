@@ -83,6 +83,13 @@ export default [
     breadcrumb: 'Categories',
   },
   {
+    path: `/items/:id/edit`,
+    component: LazyLoader({
+      loader: () => import('containers/Items/ItemFormPage'),
+    }),
+    breadcrumb: 'Edit Item',
+  },
+  {
     path: `/items/new`,
     component: LazyLoader({
       loader: () => import('containers/Items/ItemFormPage'),

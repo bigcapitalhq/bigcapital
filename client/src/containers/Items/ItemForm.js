@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback,useEffect } from 'react';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import {
@@ -15,35 +15,60 @@ import { Row, Col } from 'react-grid-system';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { Select } from '@blueprintjs/select';
 import { queryCache } from 'react-query';
-
+import {useParams ,useHistory} from 'react-router-dom';
 import AppToaster from 'components/AppToaster';
-import AccountsConnect from 'connectors/Accounts.connector';
-import ItemsConnect from 'connectors/Items.connect';
 import { compose } from 'utils';
 import ErrorMessage from 'components/ErrorMessage';
 import classNames from 'classnames';
 import Icon from 'components/Icon';
-import ItemCategoryConnect from 'connectors/ItemsCategory.connect';
+import withItemsActions from 'containers/Items/withItemsActions';
+import withItemCategories from 'containers/Items/withItemCategories'
+import withAccounts from 'containers/Accounts/withAccounts';
+import withMediaActions from 'containers/Media/withMediaActions';
+
 import MoneyInputGroup from 'components/MoneyInputGroup';
-import { useHistory } from 'react-router-dom';
 import Dragzone from 'components/Dragzone';
-import MediaConnect from 'connectors/Media.connect';
 import useMedia from 'hooks/useMedia';
+import withItems from './withItems';
+import withItemDetail from 'containers/Items/withItemDetail'
+import { pick } from 'lodash';
+import withDashboardActions from 'containers/Dashboard/withDashboard';
+import withAccountDetail from 'containers/Accounts/withAccountDetail';
 
 
 const ItemForm = ({
+
+  // #withItemActions
   requestSubmitItem,
+  requestEditItem,
 
   accounts,
-  categories,
+  itemDetail,
+  onFormSubmit,
+  onCancelForm, 
+  
 
+  // #withDashboard
+    changePageTitle,
+
+ // #withItemCategories
+  categoriesList,
+
+  
+
+// #withMediaActions
   requestSubmitMedia,
   requestDeleteMedia,
+
+  
 }) => {
+
   const [selectedAccounts, setSelectedAccounts] = useState({});
+  const [payload, setPayload] = useState({});
+  
   const history = useHistory();
   const { formatMessage } = useIntl();
-
+  const {id} =useParams();
   const {
     files,
     setFiles,
@@ -81,7 +106,7 @@ const ItemForm = ({
     stock: Yup.string() || Yup.boolean(),
   });
 
-  const initialValues = useMemo(
+  const defaultInitialValues = useMemo(
     () => ({
       active: true,
       name: '',
@@ -97,6 +122,24 @@ const ItemForm = ({
     }),
     []
   );
+  const initialValues = useMemo(() => ({
+    ...(itemDetail) ? {
+      ...pick(itemDetail, Object.keys(defaultInitialValues)),
+ 
+    } : {
+      ...defaultInitialValues,
+    }
+  }), [itemDetail, defaultInitialValues]);
+
+  const saveInvokeSubmit = useCallback((payload) => {
+    onFormSubmit && onFormSubmit(payload)
+  }, [onFormSubmit]);
+
+  useEffect(() => {
+    itemDetail && itemDetail.id ?
+      changePageTitle(formatMessage({id:'edit_item_details'})) :
+      changePageTitle(formatMessage({id:'new_item'}));
+  }, [changePageTitle,itemDetail]);
 
   const {
     getFieldProps,
@@ -112,24 +155,49 @@ const ItemForm = ({
     initialValues: {
       ...initialValues,
     },
-    onSubmit: (values, { setSubmitting }) => {
+    onSubmit: (values, { setSubmitting,resetForm,setErrors }) => {
+
       const saveItem = (mediaIds) => {
         const formValues = { ...values, media_ids: mediaIds };
+        if(itemDetail && itemDetail.id ){
 
-        return requestSubmitItem(formValues).then((response) => {
-          AppToaster.show({
-            message: formatMessage({
-              id: 'service_has_been_successful_created',
-            }, {
-              name: values.name,
-              service: formatMessage({ id: 'item' }),
-            }),
-            intent: Intent.SUCCESS,
+          requestEditItem(itemDetail.id,formValues)
+          .then((response)=>{
+            AppToaster.show({
+              message:formatMessage({
+                id:'the_item_has_been_successfully_edited',
+              },{
+                number:itemDetail.id
+              }),
+              intent:Intent.SUCCESS
+            });
+            setSubmitting(false);
+            saveInvokeSubmit({action:'update',...payload})
+            history.push('/items');
+            resetForm();
+          }).catch((errors)=>{
+            setSubmitting(false)
           });
-          queryCache.removeQueries(['items-table']);
-          history.push('/dashboard/items');
-        });
-      };
+
+        }else{
+         
+          requestSubmitItem(formValues).then((response) => {
+            AppToaster.show({
+              message: formatMessage({
+                id: 'service_has_been_successful_created',
+              }, {
+                name: values.name,
+                service: formatMessage({ id: 'item' }),
+              }),
+              intent: Intent.SUCCESS,
+            });
+            queryCache.removeQueries(['items-table']);
+            history.push('/items');
+          });
+        };
+        }
+
+         
 
       Promise.all([saveMedia(), deleteMedia()]).then(
         ([savedMediaResponses]) => {
@@ -152,6 +220,7 @@ const ItemForm = ({
     []
   );
 
+
   // Filter Account Items
   const filterAccounts = (query, account, _index, exactMatch) => {
     const normalizedTitle = account.name.toLowerCase();
@@ -163,6 +232,7 @@ const ItemForm = ({
     }
   };
 
+  
   const onItemAccountSelect = useCallback(
     (filedName) => {
       return (account) => {
@@ -183,6 +253,7 @@ const ItemForm = ({
     []
   );
 
+
   const getSelectedAccountLabel = useCallback(
     (fieldName, defaultLabel) => {
       return typeof selectedAccounts[fieldName] !== 'undefined'
@@ -199,10 +270,18 @@ const ItemForm = ({
     setFieldValue(fieldKey, value);
   };
 
-  const initialAttachmentFiles = useMemo(() => {
-    return [];
-  }, []);
-
+ 
+  const initialAttachmentFiles =useMemo(()=>{
+    return itemDetail && itemDetail.media
+    ? itemDetail.media.map((attach)=>({
+    
+      preview:attach.attachment_file,
+      upload:true,
+      metadata:{...attach}
+    
+    })):[];
+    
+      },[itemDetail])
   const handleDropFiles = useCallback((_files) => {
     setFiles(_files.filter((file) => file.uploaded === false));
   }, []);
@@ -297,7 +376,7 @@ const ItemForm = ({
                 )}
               >
                 <Select
-                  items={categories}
+                  items={categoriesList}
                   itemRenderer={categoryItem}
                   itemPredicate={filterAccounts}
                   popoverProps={{ minimal: true }}
@@ -532,7 +611,8 @@ const ItemForm = ({
 
         <div class='form__floating-footer'>
           <Button intent={Intent.PRIMARY} disabled={isSubmitting} type='submit'>
-            <T id={'save'}/> 
+          
+           { itemDetail && itemDetail.id ? <T id={'edit'}/> : <T id={'save'}/> }
           </Button>
 
           <Button className={'ml1'} disabled={isSubmitting}>
@@ -549,8 +629,15 @@ const ItemForm = ({
 };
 
 export default compose(
-  AccountsConnect,
-  ItemsConnect,
-  ItemCategoryConnect,
-  MediaConnect
+  withAccounts(({accounts})=>({
+    accounts,
+  })),
+  withAccountDetail,
+  withItemsActions,
+  withItemDetail,
+  withItemCategories(({ categoriesList }) => ({
+    categoriesList,
+  })),
+  withDashboardActions,
+  withMediaActions,
 )(ItemForm);

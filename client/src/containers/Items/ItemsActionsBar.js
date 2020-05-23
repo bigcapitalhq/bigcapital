@@ -17,7 +17,7 @@ import { compose } from 'utils';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import Icon from 'components/Icon';
 import FilterDropdown from 'components/FilterDropdown';
-import DialogConnect from 'connectors/Dialog.connector';
+import withDialog from 'connectors/Dialog.connector';
 import withResourceDetail from 'containers/Resources/withResourceDetails';
 import withItems from 'containers/Items/withItems';
 import { If } from 'components';
@@ -34,6 +34,7 @@ const ItemsActionsBar = ({
 
   onFilterChanged,
   selectedRows = [],
+  onBulkDelete,
 }) => {
   const { path } = useRouteMatch();
   const history = useHistory();
@@ -43,9 +44,11 @@ const ItemsActionsBar = ({
     <MenuItem href={`${path}/${view.id}/custom_view`} text={view.name} />
   ));
 
-  const onClickNewItem = () => {
+ 
+  const onClickNewItem = useCallback(() => {
     history.push('/items/new');
-  };
+  }, [history]);
+
   const hasSelectedRows = useMemo(() => selectedRows.length > 0, [
     selectedRows,
   ]);
@@ -61,6 +64,11 @@ const ItemsActionsBar = ({
   const onClickNewCategory = useCallback(() => {
     openDialog('item-form', {});
   }, [openDialog]);
+  
+  const handleBulkDelete = useCallback(() => {
+    onBulkDelete && onBulkDelete(selectedRows.map(r => r.id));
+  }, [onBulkDelete, selectedRows]);
+
 
   return (
     <DashboardActionsBar>
@@ -116,9 +124,10 @@ const ItemsActionsBar = ({
         <If condition={hasSelectedRows}>
           <Button
             className={Classes.MINIMAL}
+            icon={<Icon icon='trash' iconSize={15} />}
+            text={<T id={'delete'}/>}
             intent={Intent.DANGER}
-            icon={<Icon icon='trash' />}
-            text={<T id={'delete'} />}
+            onClick={handleBulkDelete}
           />
         </If>
 
@@ -138,7 +147,7 @@ const ItemsActionsBar = ({
 };
 
 export default compose(
-  DialogConnect,
+  withDialog,
   withItems(({ itemsViews }) => ({
     itemsViews,
   })),
