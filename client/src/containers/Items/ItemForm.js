@@ -15,7 +15,7 @@ import { Row, Col } from 'react-grid-system';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { Select } from '@blueprintjs/select';
 import { queryCache } from 'react-query';
-import {useParams} from 'react-router-dom';
+import {useParams ,useHistory} from 'react-router-dom';
 import AppToaster from 'components/AppToaster';
 import { compose } from 'utils';
 import ErrorMessage from 'components/ErrorMessage';
@@ -27,13 +27,13 @@ import withAccounts from 'containers/Accounts/withAccounts';
 import withMediaActions from 'containers/Media/withMediaActions';
 
 import MoneyInputGroup from 'components/MoneyInputGroup';
-import { useHistory } from 'react-router-dom';
 import Dragzone from 'components/Dragzone';
 import useMedia from 'hooks/useMedia';
 import withItems from './withItems';
 import withItemDetail from 'containers/Items/withItemDetail'
 import { pick } from 'lodash';
 import withDashboardActions from 'containers/Dashboard/withDashboard';
+import withAccountDetail from 'containers/Accounts/withAccountDetail';
 
 
 const ItemForm = ({
@@ -42,11 +42,10 @@ const ItemForm = ({
   requestSubmitItem,
   requestEditItem,
 
- 
   accounts,
-  accountsTypes,
   itemDetail,
-
+  onFormSubmit,
+  onCancelForm, 
   
 
   // #withDashboard
@@ -65,7 +64,7 @@ const ItemForm = ({
 }) => {
 
   const [selectedAccounts, setSelectedAccounts] = useState({});
-  const [selectedAccountType, setSelectedAccountType] = useState(null);
+  const [payload, setPayload] = useState({});
   
   const history = useHistory();
   const { formatMessage } = useIntl();
@@ -132,6 +131,9 @@ const ItemForm = ({
     }
   }), [itemDetail, defaultInitialValues]);
 
+  const saveInvokeSubmit = useCallback((payload) => {
+    onFormSubmit && onFormSubmit(payload)
+  }, [onFormSubmit]);
 
   useEffect(() => {
     itemDetail && itemDetail.id ?
@@ -170,6 +172,8 @@ const ItemForm = ({
               intent:Intent.SUCCESS
             });
             setSubmitting(false);
+            saveInvokeSubmit({action:'update',...payload})
+            history.push('/items');
             resetForm();
           }).catch((errors)=>{
             setSubmitting(false)
@@ -229,18 +233,6 @@ const ItemForm = ({
   };
 
   
-// Set default
-  // useEffect(()=>{
-
-  //   if(itemDetail && itemDetail.id){
-  //     const defaultType = itemDetail.find(
-  //       (t) => t.id === itemDetail.id
-  //     );
-
-  //     defaultType && setSelectedAccountType(defaultType);
-  //   }
-
-  // },[])
   const onItemAccountSelect = useCallback(
     (filedName) => {
       return (account) => {
@@ -637,10 +629,10 @@ const ItemForm = ({
 };
 
 export default compose(
-  withAccounts(({accounts,accountsTypes})=>({
+  withAccounts(({accounts})=>({
     accounts,
-    accountsTypes
   })),
+  withAccountDetail,
   withItemsActions,
   withItemDetail,
   withItemCategories(({ categoriesList }) => ({

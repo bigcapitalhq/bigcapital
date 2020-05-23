@@ -322,7 +322,10 @@ export default {
   organization_industry_:'Organization industry',
   base_currency_:'Base currency',
   date_format_:'Date format',
-  view_name_:'View name'
+  category_name_:'Category name',
+  view_name_:'View name',
+  the_items_has_been_successfully_deleted: 'The items have been successfully deleted.',
+  once_delete_these_items_you_will_not_able_restore_them: 'Once you delete these items, you won\'t be able to retrieve them later. Are you sure you want to delete them?',
 };
 
 

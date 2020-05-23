@@ -137,6 +137,9 @@ const ItemsDataTable = ({
         onFetchData={handleFetchData}
         loading={itemsTableLoading && !initialMount}
         noInitialFetch={true}
+        expandable={true} 
+        treeGraph={true}
+        spinnerProps={{size: 30}}
         onSelectedRowsChange={handleSelectedRowsChange} />
     </LoadingIndicator>
   );
