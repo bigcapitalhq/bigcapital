@@ -348,11 +348,10 @@ export default {
           dynamicFilter.buildQuery()(builder);
         });
 
-      const nestedAccounts = new NestedSet(accounts, { parentId: 'parentAccountId' });
-      const nestedSetAccounts = nestedAccounts.toTree();
+      const nestedAccounts = Account.toNestedArray(accounts);
 
       return res.status(200).send({
-        accounts: nestedSetAccounts,
+        accounts: nestedAccounts,
         ...(view) ? {
           customViewId: view.id,
         } : {},

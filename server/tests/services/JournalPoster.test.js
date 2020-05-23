@@ -1,13 +1,26 @@
-import { expect, create } from '~/testInit';
+import { expect } from '~/testInit';
 import JournalPoster from '@/services/Accounting/JournalPoster';
 import JournalEntry from '@/services/Accounting/JournalEntry';
 import AccountBalance from '@/models/AccountBalance';
 import AccountTransaction from '@/models/AccountTransaction';
+import Account from '@/models/Account';
+import {
+  tenantWebsite,
+  tenantFactory,
+  loginRes
+} from '~/dbInit';
+import { omit } from 'lodash';
+import DependencyGraph from '@/lib/DependencyGraph';
+
+let accountsDepGraph;
 
 describe('JournalPoster', () => {
+  beforeEach(async () => {
+    accountsDepGraph = await Account.tenant().depGraph().query().remember();
+  });
   describe('credit()', () => {
     it('Should write credit entry to journal entries stack.', () => {
-      const journalEntries = new JournalPoster();
+      const journalEntries = new JournalPoster(accountsDepGraph);
       const journalEntry = new JournalEntry({
         referenceId: 1,
         referenceType: 'Expense',
@@ -21,7 +34,7 @@ describe('JournalPoster', () => {
 
   describe('debit()', () => {
     it('Should write debit entry to journal entries stack.', () => {
-      const journalEntries = new JournalPoster();
+      const journalEntries = new JournalPoster(accountsDepGraph);
       const journalEntry = new JournalEntry({
         referenceId: 1,
         referenceType: 'Expense',
@@ -36,7 +49,7 @@ describe('JournalPoster', () => {
 
   describe('setBalanceChange()', () => {
     it('Should increment balance amount after credit entry with credit normal account.', () => {
-      const journalEntries = new JournalPoster();
+      const journalEntries = new JournalPoster(accountsDepGraph);
       const journalEntry = new JournalEntry({
         referenceId: 1,
         referenceType: 'Expense',
@@ -50,7 +63,7 @@ describe('JournalPoster', () => {
     });
 
     it('Should decrement balance amount after debit entry wiht debit normal account.', () => {
-      const journalEntries = new JournalPoster();
+      const journalEntries = new JournalPoster(accountsDepGraph);
       const journalEntry = new JournalEntry({
         referenceId: 1,
         referenceType: 'Expense',
@@ -65,7 +78,7 @@ describe('JournalPoster', () => {
 
   describe('saveEntries()', () => {
     it('Should save all stacked entries to the storage.', async () => {
-      const journalEntries = new JournalPoster();
+      const journalEntries = new JournalPoster(accountsDepGraph);
       const journalEntry = new JournalEntry({
         referenceId: 1,
         referenceType: 'Expense',
@@ -77,7 +90,7 @@ describe('JournalPoster', () => {
       journalEntries.debit(journalEntry);
       await journalEntries.saveEntries();
 
-      const storedJournalEntries = await AccountTransaction.query();
+      const storedJournalEntries = await AccountTransaction.tenant().query();
 
       expect(storedJournalEntries.length).equals(1);
       expect(storedJournalEntries[0]).to.deep.include({
@@ -92,9 +105,10 @@ describe('JournalPoster', () => {
 
   describe('saveBalance()', () => {
     it('Should save account balance increment.', async () => {
-      const account = await create('account');
+      const account = await tenantFactory.create('account');
+      const depGraph = await Account.tenant().depGraph().query();
 
-      const journalEntries = new JournalPoster();
+      const journalEntries = new JournalPoster(depGraph);
       const journalEntry = new JournalEntry({
         referenceId: 1,
         referenceType: 'Expense',
@@ -106,16 +120,17 @@ describe('JournalPoster', () => {
 
       await journalEntries.saveBalance();
 
-      const storedAccountBalance = await AccountBalance.query();
+      const storedAccountBalance = await AccountBalance.tenant().query();
 
       expect(storedAccountBalance.length).equals(1);
       expect(storedAccountBalance[0].amount).equals(100);
     });
 
     it('Should save account balance decrement.', async () => {
-      const account = await create('account');
+      const account = await tenantFactory.create('account');
+      const depGraph = await Account.tenant().depGraph().query();
 
-      const journalEntries = new JournalPoster();
+      const journalEntries = new JournalPoster(depGraph);
       const journalEntry = new JournalEntry({
         referenceId: 1,
         referenceType: 'Expense',
@@ -127,7 +142,7 @@ describe('JournalPoster', () => {
 
       await journalEntries.saveBalance();
 
-      const storedAccountBalance = await AccountBalance.query();
+      const storedAccountBalance = await AccountBalance.tenant().query();
 
       expect(storedAccountBalance.length).equals(1);
       expect(storedAccountBalance[0].amount).equals(-100);
@@ -136,7 +151,7 @@ describe('JournalPoster', () => {
 
   describe('getClosingBalance', () => {
     it('Should retrieve closing balance the given account id.', () => {
-      const journalEntries = new JournalPoster();
+      const journalEntries = new JournalPoster(accountsDepGraph);
       const journalEntry = new JournalEntry({
         referenceId: 1,
         referenceType: 'Expense',
@@ -161,7 +176,7 @@ describe('JournalPoster', () => {
     });
 
     it('Should retrieve closing balance the given closing date period.', () => {
-      const journalEntries = new JournalPoster();
+      const journalEntries = new JournalPoster(accountsDepGraph);
       const journalEntry = new JournalEntry({
         referenceId: 1,
         referenceType: 'Expense',
@@ -188,7 +203,7 @@ describe('JournalPoster', () => {
 
   describe('getTrialBalance(account, closeDate, dateType)', () => {
     it('Should retrieve the trial balance of the given account id.', () => {
-      const journalEntries = new JournalPoster();
+      const journalEntries = new JournalPoster(accountsDepGraph);
       const journalEntry = new JournalEntry({
         referenceId: 1,
         referenceType: 'Expense',
@@ -222,7 +237,7 @@ describe('JournalPoster', () => {
 
   describe('removeEntries', () => {
     it('Should remove all entries in the collection.', () => {
-      const journalPoster = new JournalPoster();
+      const journalPoster = new JournalPoster(accountsDepGraph);
       const journalEntry1 = new JournalEntry({
         id: 1,
         credit: 1000,
@@ -244,7 +259,7 @@ describe('JournalPoster', () => {
     });
 
     it('Should remove the given entries ids from the collection.', () => {
-      const journalPoster = new JournalPoster();
+      const journalPoster = new JournalPoster(accountsDepGraph);
       const journalEntry1 = new JournalEntry({
         id: 1,
         credit: 1000,
@@ -265,7 +280,7 @@ describe('JournalPoster', () => {
     });
 
     it('Should the removed entries ids be stacked to deleted entries ids.', () => {
-      const journalPoster = new JournalPoster();
+      const journalPoster = new JournalPoster(accountsDepGraph);
       const journalEntry1 = new JournalEntry({
         id: 1,
         credit: 1000,
@@ -289,7 +304,7 @@ describe('JournalPoster', () => {
     });
 
     it('Should revert the account balance after remove the entries.', () => {
-      const journalPoster = new JournalPoster();
+      const journalPoster = new JournalPoster(accountsDepGraph);
       const journalEntry1 = new JournalEntry({
         id: 1,
         credit: 1000,
@@ -315,6 +330,59 @@ describe('JournalPoster', () => {
   describe('deleteEntries', () => {
     it('Should delete all entries from the storage based on the stacked deleted entries ids.', () => {
 
+    });
+  });
+
+  describe('effectParentAccountsBalance()', () => {
+    it('Should all parent accounts increment after one of child accounts balance increment.', async () => {
+      const debitType = await tenantFactory.create('account_type', { normal: 'debit', balance_sheet: true });
+      const mixin = { account_type_id: debitType.id };
+
+      const accountA = await tenantFactory.create('account', { ...mixin });
+      const accountB = await tenantFactory.create('account', { ...mixin });
+
+      const accountAC = await tenantFactory.create('account', { parent_account_id: accountA.id, ...mixin });
+      const accountBD = await tenantFactory.create('account', { ...mixin });
+
+      const depGraph = await Account.tenant().depGraph().query();
+      const journalPoster = new JournalPoster(depGraph);
+      const journalEntryA = new JournalEntry({
+        id: 1,
+        debit: 1000,
+        account: accountAC.id,
+        accountNormal: 'debit',
+      });
+      const journalEntryB = new JournalEntry({
+        id: 1,
+        debit: 1000,
+        account: accountBD.id,
+        accountNormal: 'debit',
+      });
+
+      journalPoster.debit(journalEntryA);
+      journalPoster.debit(journalEntryB);
+      
+      await journalPoster.saveBalance();
+
+      const accountBalances = await AccountBalance.tenant().query();
+      const simplifiedArray = accountBalances.map(x => ({ ...omit(x, ['id']) }));
+
+      expect(simplifiedArray.length).equals(3);
+      expect(simplifiedArray).to.include.something.deep.equals({
+        accountId: accountA.id,
+        amount: 1000,
+        currencyCode: 'USD'
+      });
+      expect(simplifiedArray).to.include.something.deep.equals({
+        accountId: accountAC.id,
+        amount: 1000,
+        currencyCode: 'USD'
+      });      
+      expect(simplifiedArray).to.include.something.deep.equals({
+        accountId: accountBD.id,
+        amount: 1000,
+        currencyCode: 'USD'
+      });
     });
   });
 

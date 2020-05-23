@@ -2,61 +2,129 @@ import { expect } from '~/testInit';
 import NestedSet from '@/collection/NestedSet';
 
 describe('NestedSet', () => {
-  it('Should link parent and children nodes.', () => {
-    const flattenArray = [
-      { id: 10 },
-      { id: 1 },
-      {
+  describe('linkChildren()', () => {  
+    it('Should link parent and children nodes.', () => {
+      const flattenArray = [
+        { id: 10 },
+        { id: 1 },
+        {
+          id: 3,
+          parent_id: 1,
+        },
+        {
+          id: 2,
+          parent_id: 1,
+        },
+        {
+          id: 4,
+          parent_id: 3,
+        },
+      ];
+      const nestSet = new NestedSet(flattenArray);
+      const treeGroups = nestSet.linkChildren();
+
+      expect(treeGroups['1']).deep.equals({
+        id: 1,
+        children: {
+          '2': { id: 2, parent_id: 1, children: {} },
+          '3': {
+            id: 3, parent_id: 1, children: {
+              '4': { id: 4, parent_id: 3, children: {} }
+            }
+          }
+        }
+      });
+      expect(treeGroups['2']).deep.equals({
+        id: 2, parent_id: 1, children: {},
+      });
+      expect(treeGroups['3']).deep.equals({      
         id: 3,
         parent_id: 1,
-      },
-      {
-        id: 2,
-        parent_id: 1,
-      },
-      {
-        id: 4,
-        parent_id: 3,
-      },
-    ];
-    const collection = new NestedSet(flattenArray);
-    const treeGroups = collection.toTree();
-
-    expect(treeGroups[0].id).equals(10);
-    expect(treeGroups[1].id).equals(1);
-
-    expect(treeGroups[1].children.length).equals(2);
-    expect(treeGroups[1].children[0].id).equals(3);
-    expect(treeGroups[1].children[1].id).equals(2);
-
-    expect(treeGroups[1].children[0].children[0].id).equals(4);
+        children: { '4': { id: 4, parent_id: 3, children: {} } }
+      });
+      expect(treeGroups['4']).deep.equals({
+        id: 4, parent_id: 3, children: {},
+      });
+    });
   });
 
-  it('Should flatten the nested set collection.', () => {
-    const flattenArray = [
-      { id: 1 },
-      {
-        id: 2,
-        parent_id: 1,
-      },
-      {
-        id: 3,
-        parent_id: 1,
-      },
-      {
-        id: 4,
-        parent_id: 3,
-      },
-    ];
+  describe('toArray()', () => {
+    it('Should retrieve nested sets as array.', () => {
+      const flattenArray = [
+        { id: 10 },
+        { id: 1 },
+        {
+          id: 3,
+          parent_id: 1,
+        },
+        {
+          id: 2,
+          parent_id: 1,
+        },
+        {
+          id: 4,
+          parent_id: 3,
+        },
+      ];
+      const nestSet = new NestedSet(flattenArray);
+      const treeArray = nestSet.toArray();
 
-    const collection = new NestedSet(flattenArray);
-    const treeGroups = collection.toTree();
-    const flatten = collection.flattenTree();
+      expect(treeArray[0]).deep.equals({
+        id: 10, children: [],
+      });
+      expect(treeArray[1]).deep.equals({
+        id: 1,
+        children: [
+          { id: 2, parent_id: 1, children: [] },
+          { id: 3, parent_id: 1, children: [{
+            id: 4, parent_id: 3, children: []
+          }] }
+        ]
+      });
+    });
+  });
 
-    expect(flatten.length).equals(4);
-    expect(flatten[0].id).equals(1);
-    expect(flatten[1].id).equals(2);
-    expect(flatten[2].id).equals(3);
-    expect(flatten[3].id).equals(4);
+  describe('getParents(id)', () => {
+    it('Should retrieve parent nodes of the given node id.', () => {
+      const flattenArray = [
+        { id: 10 },
+        { id: 1 },
+        {
+          id: 3,
+          parent_id: 1,
+        },
+        {
+          id: 2,
+          parent_id: 1,
+        },
+        {
+          id: 4,
+          parent_id: 3,
+        },
+      ];
+      const nestSet = new NestedSet(flattenArray);
+      const parentNodes = nestSet.getParents(4);
+    
+      expect(parentNodes).deep.equals([
+        { id: 4, parent_id: 3, children: {} },
+        {      
+          id: 3,
+          parent_id: 1,
+          children: { '4': { id: 4, parent_id: 3, children: {} } } 
+        },
+        {
+          id: 1,
+          children: {
+            '2': { id: 2, parent_id: 1, children: {} },
+            '3': {
+              id: 3, parent_id: 1, children: {
+                '4': { id: 4, parent_id: 3, children: {} }
+              }
+            }
+          }
+        }
+      ]);
+    });
   })
+
 });

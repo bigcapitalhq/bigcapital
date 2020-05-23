@@ -8,6 +8,7 @@ import {
   systemFactory,
   dropTenant,
 } from '~/testInit';
+import CacheService from '@/services/Cache';
 
 let tenantWebsite;
 let tenantFactory;
@@ -19,6 +20,8 @@ beforeEach(async () => {
 
   bindTenantModel(tenantWebsite.tenantDb);
   loginRes = await login(tenantWebsite);
+
+  CacheService.flush();
 });
 
 afterEach(async () => {

@@ -337,7 +337,6 @@ describe('routes: /accounts/', () => {
         .get('/api/accounts')
         .set('x-access-token', loginRes.body.token)
         .set('organization-id', tenantWebsite.organizationId)
-        .query({ display_type: 'tree' })
         .send();
 
       expect(res.status).equals(200);

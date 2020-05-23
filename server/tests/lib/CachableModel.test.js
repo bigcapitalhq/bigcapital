@@ -10,7 +10,7 @@ import {
 } from '~/dbInit';
 import { times } from 'lodash';
 
-describe.only('CachableModel', () => {
+describe('CachableModel', () => {
   describe('remember()', () => {
     it('Should retrieve the data from the storage.', async () => {
       

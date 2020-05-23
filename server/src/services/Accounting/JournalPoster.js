@@ -4,16 +4,21 @@ import JournalEntry from '@/services/Accounting/JournalEntry';
 import AccountTransaction from '@/models/AccountTransaction';
 import AccountBalance from '@/models/AccountBalance';
 import {promiseSerial} from '@/utils';
-import Account from '../../models/Account';
+import Account from '@/models/Account';
+import NestedSet from '../../collection/NestedSet';
+
 
 export default class JournalPoster {
   /**
    * Journal poster constructor.
    */
-  constructor() {
+  constructor(accountsGraph) {
     this.entries = [];
     this.balancesChange = {};
     this.deletedEntriesIds = [];
+
+    this.accountsBalanceTable = {};
+    this.accountsGraph = accountsGraph;
   }
 
   /**
@@ -29,7 +34,7 @@ export default class JournalPoster {
   }
 
   /**
-   * Writes the debit entry for the given account.
+   * Writes the debit entr y for the given account.
    * @param {JournalEntry} entry -
    */
   debit(entryModel) {
@@ -45,18 +50,47 @@ export default class JournalPoster {
    * @param {JournalEntry} entry
    * @param {String} type
    */
-  setAccountBalanceChange(entry, type) {
-    if (!this.balancesChange[entry.account]) {
-      this.balancesChange[entry.account] = 0;
+  setAccountBalanceChange(entry, entryType) {
+    const depAccountsIds = this.accountsGraph.dependantsOf(entry.account);
+
+    const balanceChangeEntry = {
+      debit: entry.debit,
+      credit: entry.credit,
+      entryType,
+      accountNormal: entry.accountNormal,
+    };
+    this._setAccountBalanceChange({
+      ...balanceChangeEntry,
+      accountId: entry.account,
+    });
+
+    // Effect parent accounts of the given account id.
+    depAccountsIds.forEach((accountId) => {
+      this._setAccountBalanceChange({
+        ...balanceChangeEntry,
+        accountId,
+      });
+    });
+  }
+
+  /**
+   * Sets account balance change.
+   * @private
+   */
+  _setAccountBalanceChange({
+    accountId, accountNormal, debit, credit, entryType
+  }) {
+    if (!this.balancesChange[accountId]) {
+      this.balancesChange[accountId] = 0;
     }
     let change = 0;
 
-    if (entry.accountNormal === 'credit') {
-      change = (type === 'credit') ? entry.credit : -1 * entry.debit;
-    } else if (entry.accountNormal === 'debit') {
-      change = (type === 'debit') ? entry.debit : -1 * entry.credit;
+    if (accountNormal === 'credit') {
+      change = (entryType === 'credit') ? credit : -1 * debit;
+    } else if (accountNormal === 'debit') {
+      change = (entryType === 'debit') ? debit : -1 * credit;
     }
-    this.balancesChange[entry.account] += change;
+    this.balancesChange[accountId] += change;
   }
 
   /**
@@ -86,11 +120,10 @@ export default class JournalPoster {
     const balanceFindOneOpers = [];
     let balanceAccounts = [];
 
-    const effectAccountsOpers = [];
-
     balancesList.forEach((balance) => {
       const oper = AccountBalance.tenant()
-        .query().findOne('account_id', balance.account_id);
+        .query()
+        .findOne('account_id', balance.account_id);
       balanceFindOneOpers.push(oper);
     });
     balanceAccounts = await Promise.all(balanceFindOneOpers);
@@ -102,9 +135,11 @@ export default class JournalPoster {
       const foundAccBalance = balanceAccounts.some((account) => (
         account && account.account_id === balance.account_id
       ));
+
       if (foundAccBalance) {
         const query = AccountBalance.tenant()
-          .query()[method]('amount', Math.abs(balance.amount))
+          .query()
+          [method]('amount', Math.abs(balance.amount))
           .where('account_id', balance.account_id);
 
         balanceUpdateOpers.push(query);
@@ -116,65 +151,10 @@ export default class JournalPoster {
         });
         balanceInsertOpers.push(query);
       }
-
-      const effectedAccountsOper = this.effectAssociatedAccountsBalance(
-        balance.accountId, amount, 'USD', method,
-      );
-      effectAccountsOpers.push(effectedAccountsOper);
     });
     await Promise.all([
       ...balanceUpdateOpers, ...balanceInsertOpers,
     ]);
-  }
-
-
-  /**
-   * Effect associated descendants and parent accounts
-   * of the given account id.
-   * @param {Number} accountId 
-   * @param {Number} amount 
-   * @param {String} currencyCode 
-   * @param {*} method 
-   */
-  async effectAssociatedAccountsBalance(accountId, amount, currencyCode = 'USD', method) {
-    const accounts = await Account.query().withGraphFetched('balance');
-
-    const accountsDecendences = accounts.getDescendants();
-
-    const asyncOpers = [];
-    const accountsInsertBalance = [];
-    const accountsUpdateBalance = [];
-
-    accounts.forEach((account) => {
-      const accountBalances = account.balance;
-      const currencyBalance = accountBalances
-        .find(balance => balance.currencyCode === currencyCode);
-
-      if (currencyBalance) {
-        accountsInsertBalance.push(account.id);
-      } else {
-        accountsUpdateBalance.push(account.id);
-      }
-    });
-
-    accountsInsertBalance.forEach((accountId) => {
-      const oper = AccountBalance.tenant().query().insert({
-        account_id: accountId,
-        amount: method === 'decrement' ? amount * -1 : amount,
-        currency_code: currencyCode,
-      });
-      asyncOpers.push(oper);
-    });
-
-    if (accountsUpdateBalance.length > 0) {
-      const oper = AccountBalance.tenant().query()
-        .whereIn('account_id', accountsUpdateBalance);
-        [method]('amount', Math.abs(amount))
-        .where('currency_code', currencyCode);
-
-      asyncOpers.push(oper);
-    }
-    await Promise.all(asyncOpers);
   }
 
   /**
@@ -236,6 +216,9 @@ export default class JournalPoster {
     );
   }
 
+  /**
+   * Delete all the stacked entries.
+   */
   async deleteEntries() {
     if (this.deletedEntriesIds.length > 0) {
       await AccountTransaction.tenant().query()
@@ -270,6 +253,29 @@ export default class JournalPoster {
   }
 
   /**
+   * Retrieve the given account balance with dependencies accounts.
+   * @param {Number} accountId 
+   * @param {Date} closingDate 
+   * @param {String} dateType 
+   * @return {Number}
+   */
+  getAccountBalance(accountId, closingDate, dateType) {
+    const accountNode = this.accountsGraph.getNodeData(accountId);
+    const depAccountsIds = this.accountsGraph.dependenciesOf(accountId);
+    const depAccounts = depAccountsIds.map((id) => this.accountsGraph.getNodeData(id));
+    let balance = 0;
+
+    [...depAccounts, accountNode].forEach((account) => {
+      // if (!this.accountsBalanceTable[account.id]) {
+        const closingBalance = this.getClosingBalance(account.id, closingDate, dateType);
+        this.accountsBalanceTable[account.id] = closingBalance;
+      // }
+      balance += this.accountsBalanceTable[account.id];
+    });
+    return balance;
+  }
+
+  /**
    * Retrieve the credit/debit sumation for the given account and date.
    * @param {Number} account -
    * @param {Date|String} closingDate -
@@ -300,6 +306,30 @@ export default class JournalPoster {
   }
 
   /**
+   * Retrieve trial balance of the given account with depends.
+   * @param {Number} accountId 
+   * @param {Date} closingDate 
+   * @param {String} dateType 
+   * @return {Number}
+   */ 
+  getTrialBalanceWithDepands(accountId, closingDate, dateType) {
+    const accountNode = this.accountsGraph.getNodeData(accountId);
+    const depAccountsIds = this.accountsGraph.dependenciesOf(accountId);
+    const depAccounts = depAccountsIds.map((id) => this.accountsGraph.getNodeData(id));
+
+    const trialBalance = { credit: 0, debit: 0, balance: 0 };
+
+    [...depAccounts, accountNode].forEach((account) => {
+      const _trialBalance = this.getTrialBalance(account.id, closingDate, dateType);
+
+      trialBalance.credit += _trialBalance.credit;
+      trialBalance.debit += _trialBalance.debit;
+      trialBalance.balance += _trialBalance.balance;
+    });
+    return trialBalance;
+  }
+
+  /**
    * Load fetched accounts journal entries.
    * @param {Array} entries -
    */
@@ -323,9 +353,5 @@ export default class JournalPoster {
         this.setAccountBalanceChange(entry, 'debit');
       }
     });
-  }
-
-  static loadAccounts() {
-
   }
 }

@@ -37,6 +37,10 @@ export default {
       this.deleteItem.validation,
       asyncMiddleware(this.deleteItem.handler));
 
+    router.delete('/',
+      this.bulkDeleteItems.validation,
+      asyncMiddleware(this.bulkDeleteItems.handler));
+
     router.get('/',
       this.listItems.validation,
       asyncMiddleware(this.listItems.handler));
@@ -333,6 +337,44 @@ export default {
           Logger.log('error', 'Delete item attachment file delete failed.', { error });
         }
       }
+      return res.status(200).send();
+    },
+  },
+
+  /**
+   * Bulk delete the given items ids.
+   */
+  bulkDeleteItems: {
+    validation: [
+      query('ids').isArray({ min: 2 }),
+      query('ids.*').isNumeric().toInt(),
+    ],
+    async handler(req, res) {
+      const validationErrors = validationResult(req);
+
+      if (!validationErrors.isEmpty()) {
+        return res.boom.badData(null, {
+          code: 'validation_error', ...validationErrors,
+        });
+      }
+      const filter = { ids: [], ...req.query };
+      const { Item } = req.models;
+
+      const items = await Item.query().whereIn('id', filter.ids);
+
+      const storedItemsIds = items.map((a) => a.id);
+      const notFoundItems = difference(filter.ids, storedItemsIds);
+
+      // Validate the not found items.
+      if (notFoundItems.length > 0) {
+        return res.status(404).send({
+          errors: [{ type: 'ITEMS.NOT.FOUND', code: 200, ids: notFoundItems }],
+        });
+      }
+
+      // Delete the given items ids.
+      await Item.query().whereIn('id', storedItemsIds).delete();
+
       return res.status(200).send();
     },
   },

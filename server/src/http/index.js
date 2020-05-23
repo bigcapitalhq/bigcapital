@@ -30,6 +30,7 @@ import Media from '@/http/controllers/Media';
 import JWTAuth from '@/http/middleware/jwtAuth';
 import TenancyMiddleware from '@/http/middleware/TenancyMiddleware';
 
+
 export default (app) => {
   // app.use('/api/oauth2', OAuth2.router());
   app.use('/api/auth', Authentication.router());
