@@ -125,7 +125,7 @@ function ProfitLossSheetTable({
   return (
     <FinancialSheet
       companyName={companyName}
-      sheetType={'Profit/Loss Sheet'}
+      sheetType={<T id={'profit_loss_sheet'} />}
       fromDate={profitLossQuery.from_date}
       toDate={profitLossQuery.to_date}
       name="profit-loss-sheet"

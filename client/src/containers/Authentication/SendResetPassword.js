@@ -22,7 +22,7 @@ function SendResetPassword({ requestSendResetPassword }) {
   const ValidationSchema = Yup.object().shape({
     crediential: Yup.string()
       .required()
-      .email().label(formatMessage({id:''})),
+      .email().label(formatMessage({ id: 'email' })),
   });
 
   const initialValues = useMemo(
