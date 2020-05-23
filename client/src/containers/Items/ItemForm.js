@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useCallback,useEffect } from 'react';
 import * as Yup from 'yup';
-import { useFormik } from 'formik';
+import { useFormik, Formik } from 'formik';
 import {
   FormGroup,
   MenuItem,
@@ -13,31 +13,32 @@ import {
 } from '@blueprintjs/core';
 import { Row, Col } from 'react-grid-system';
 import { FormattedMessage as T, useIntl } from 'react-intl';
-import { Select } from '@blueprintjs/select';
 import { queryCache } from 'react-query';
-import {useParams ,useHistory} from 'react-router-dom';
-import AppToaster from 'components/AppToaster';
-import { compose } from 'utils';
-import ErrorMessage from 'components/ErrorMessage';
+import { useParams, useHistory } from 'react-router-dom';
+import { pick } from 'lodash';
 import classNames from 'classnames';
+
+import AppToaster from 'components/AppToaster';
+import ErrorMessage from 'components/ErrorMessage';
 import Icon from 'components/Icon';
+import MoneyInputGroup from 'components/MoneyInputGroup';
+import Dragzone from 'components/Dragzone';
+import { ListSelect } from 'components';
+
 import withItemsActions from 'containers/Items/withItemsActions';
 import withItemCategories from 'containers/Items/withItemCategories'
 import withAccounts from 'containers/Accounts/withAccounts';
 import withMediaActions from 'containers/Media/withMediaActions';
-
-import MoneyInputGroup from 'components/MoneyInputGroup';
-import Dragzone from 'components/Dragzone';
 import useMedia from 'hooks/useMedia';
 import withItems from './withItems';
 import withItemDetail from 'containers/Items/withItemDetail'
-import { pick } from 'lodash';
 import withDashboardActions from 'containers/Dashboard/withDashboard';
 import withAccountDetail from 'containers/Accounts/withAccountDetail';
 
+import { compose } from 'utils';
+
 
 const ItemForm = ({
-
   // #withItemActions
   requestSubmitItem,
   requestEditItem,
@@ -46,24 +47,17 @@ const ItemForm = ({
   itemDetail,
   onFormSubmit,
   onCancelForm, 
-  
 
   // #withDashboard
-    changePageTitle,
+  changePageTitle,
 
- // #withItemCategories
+  // #withItemCategories
   categoriesList,
 
-  
-
-// #withMediaActions
+  // #withMediaActions
   requestSubmitMedia,
-  requestDeleteMedia,
-
-  
+  requestDeleteMedia,  
 }) => {
-
-  const [selectedAccounts, setSelectedAccounts] = useState({});
   const [payload, setPayload] = useState({});
   
   const history = useHistory();
@@ -232,35 +226,17 @@ const ItemForm = ({
     }
   };
 
-  
-  const onItemAccountSelect = useCallback(
-    (filedName) => {
-      return (account) => {
-        setSelectedAccounts({
-          ...selectedAccounts,
-          [filedName]: account,
-        });
-        setFieldValue(filedName, account.id);
-      };
-    },
-    [setFieldValue, selectedAccounts]
-  );
+  const onItemAccountSelect = useCallback((filedName) => {
+    return (account) => {
+      setFieldValue(filedName, account.id);
+    };
+  }, [setFieldValue]);
 
   const categoryItem = useCallback(
     (item, { handleClick }) => (
       <MenuItem text={item.name} onClick={handleClick} />
     ),
     []
-  );
-
-
-  const getSelectedAccountLabel = useCallback(
-    (fieldName, defaultLabel) => {
-      return typeof selectedAccounts[fieldName] !== 'undefined'
-        ? selectedAccounts[fieldName].name
-        : defaultLabel;
-    },
-    [selectedAccounts]
   );
 
   const requiredSpan = useMemo(() => <span class='required'>*</span>, []);
@@ -307,6 +283,8 @@ const ItemForm = ({
         <div class='item-form__primary-section'>
           <Row>
             <Col xs={7}>
+
+              {/* Item type */}
               <FormGroup
                 medium={true}
                 label={<T id={'item_type'} />}
@@ -324,7 +302,8 @@ const ItemForm = ({
                   {...getFieldProps('type')}
                 />
               </FormGroup>
-
+              
+              {/* Item name */}
               <FormGroup
                 label={<T id={'item_name'} />}
                 labelInfo={requiredSpan}
@@ -342,14 +321,13 @@ const ItemForm = ({
                 />
               </FormGroup>
 
+              {/* SKU */}
               <FormGroup
                 label={<T id={'sku'} />}
                 labelInfo={infoIcon}
                 className={'form-group--item-sku'}
                 intent={errors.sku && touched.sku && Intent.DANGER}
-                helperText={
-                  <ErrorMessage {...{ errors, touched }} name='sku' />
-                }
+                helperText={<ErrorMessage {...{ errors, touched }} name='sku' />}
                 inline={true}
               >
                 <InputGroup
@@ -359,6 +337,7 @@ const ItemForm = ({
                 />
               </FormGroup>
 
+              {/* Item category */}
               <FormGroup
                 label={<T id={'category'} />}
                 labelInfo={infoIcon}
@@ -375,24 +354,22 @@ const ItemForm = ({
                   Classes.FILL
                 )}
               >
-                <Select
+                <ListSelect
                   items={categoriesList}
                   itemRenderer={categoryItem}
                   itemPredicate={filterAccounts}
                   popoverProps={{ minimal: true }}
                   onItemSelect={onItemAccountSelect('category_id')}
-                >
-                  <Button
-                    fill={true}
-                    rightIcon='caret-down'
-                    text={getSelectedAccountLabel(
-                      'category_id',
-                      formatMessage({id:'select_category'})
-                    )}
-                  />
-                </Select>
-              </FormGroup>
 
+                  selectedItem={values.category_id}
+                  selectedItemProp={'id'}
+                  
+                  defaultText={<T id={'select_category'} />}
+                  labelProp={'name'}
+                />
+              </FormGroup>
+                
+              {/* Active checkbox */}
               <FormGroup
                 label={' '}
                 inline={true}
@@ -426,9 +403,7 @@ const ItemForm = ({
             <FormGroup
               label={<T id={'selling_price'}/>}
               className={'form-group--item-selling-price'}
-              intent={
-                errors.selling_price && touched.selling_price && Intent.DANGER
-              }
+              intent={errors.selling_price && touched.selling_price && Intent.DANGER}
               helperText={
                 <ErrorMessage {...{ errors, touched }} name='selling_price' />
               }
@@ -447,7 +422,8 @@ const ItemForm = ({
                 }}
               />
             </FormGroup>
-
+              
+            {/* Selling account */}
             <FormGroup
               label={<T id={'account'} />}
               labelInfo={infoIcon}
@@ -466,30 +442,26 @@ const ItemForm = ({
                 Classes.FILL
               )}
             >
-              <Select
+              <ListSelect
                 items={accounts}
                 itemRenderer={accountItem}
                 itemPredicate={filterAccounts}
                 popoverProps={{ minimal: true }}
                 onItemSelect={onItemAccountSelect('sell_account_id')}
-              >
-                <Button
-                  fill={true}
-                  rightIcon='caret-down'
-                  text={getSelectedAccountLabel(
-                    'sell_account_id',
-                    formatMessage({id:'select_account'})
-                  )}
-                />
-              </Select>
+
+                selectedItem={values.sell_account_id}
+                selectedItemProp={'id'}
+
+                defaultText={<T id={'select_account'} />}
+                labelProp={'name'}
+              />
             </FormGroup>
           </Col>
 
           <Col width={404}>
-            <h4>
-              <T id={'sales_information'} />
-            </h4>
+            <h4><T id={'sales_information'} /></h4>
 
+            {/* Cost price */}
             <FormGroup
               label={<T id={'cost_price'} />}
               className={'form-group--item-cost-price'}
@@ -529,23 +501,18 @@ const ItemForm = ({
                 Classes.FILL
               )}
             >
-              <Select
+              <ListSelect
                 items={accounts}
                 itemRenderer={accountItem}
                 itemPredicate={filterAccounts}
                 popoverProps={{ minimal: true }}
                 onItemSelect={onItemAccountSelect('cost_account_id')}
-              >
-                <Button
-                  fill={true}
-                  rightIcon='caret-down'
-                  text={getSelectedAccountLabel(
-                    'cost_account_id',
-                    formatMessage({id:'select_account'})
-                    
-                  )}
-                />
-              </Select>
+
+                defaultText={<T id={'select_account'} />} 
+                labelProp={'name'}
+                selectedItem={values.cost_account_id}
+                selectedItemProp={'id'}
+              />
             </FormGroup>
           </Col>
         </Row>
@@ -564,35 +531,24 @@ const ItemForm = ({
                 touched.inventory_account_id &&
                 Intent.DANGER
               }
-              helperText={
-                <ErrorMessage
-                  {...{ errors, touched }}
-                  name='inventory_account_id'
-                />
-              }
+              helperText={<ErrorMessage {...{ errors, touched }} name='inventory_account_id' />}
               className={classNames(
                 'form-group--item-inventory_account',
                 'form-group--select-list',
                 Classes.FILL
               )}
             >
-              <Select
+              <ListSelect
                 items={accounts}
                 itemRenderer={accountItem}
                 itemPredicate={filterAccounts}
                 popoverProps={{ minimal: true }}
                 onItemSelect={onItemAccountSelect('inventory_account_id')}
-              >
-                <Button
-                  fill={true}
-                  rightIcon='caret-down'
-                  text={getSelectedAccountLabel(
-                    'inventory_account_id',
-                    formatMessage({id:'select_account'})
-
-                  )}
-                />
-              </Select>
+                
+                defaultText={<T id={'select_account'} />}
+                labelProp={'name'}
+                selectedItem={values.inventory_account_id}
+                selectedItemProp={'id'} />
             </FormGroup>
 
             <FormGroup

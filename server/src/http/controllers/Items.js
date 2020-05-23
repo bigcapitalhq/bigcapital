@@ -104,7 +104,7 @@ export default {
       const costAccountPromise = Account.query().findById(form.cost_account_id);
       const sellAccountPromise = Account.query().findById(form.sell_account_id);
       const inventoryAccountPromise = (form.type === 'inventory')
-        ? Account.query().findByid(form.inventory_account_id) : null;
+        ? Account.query().findById(form.inventory_account_id) : null;
 
       const itemCategoryPromise = (form.category_id)
         ? ItemCategory.query().findById(form.category_id) : null;

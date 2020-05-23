@@ -28,6 +28,9 @@ import Icon from 'components/Icon';
 import ErrorMessage from 'components/ErrorMessage';
 import { fetchAccountTypes } from 'store/accounts/accounts.actions';
 
+
+import {ListSelect} from 'components';
+
 function AccountFormDialog({
   name,
   payload,
@@ -229,7 +232,6 @@ function AccountFormDialog({
 
   const onChangeAccountType = useCallback(
     (accountType) => {
-      setSelectedAccountType(accountType);
       formik.setFieldValue('account_type_id', accountType.id);
     },
     [setSelectedAccountType, formik]
@@ -294,19 +296,20 @@ function AccountFormDialog({
               errors.account_type_id && touched.account_type_id && Intent.DANGER
             }
           >
-            <Select
+            <ListSelect
               items={accountsTypes}
               noResults={<MenuItem disabled={true} text='No results.' />}
               itemRenderer={accountTypeItem}
               itemPredicate={filterAccountTypeItems}
               popoverProps={{ minimal: true }}
               onItemSelect={onChangeAccountType}
-            >
-              <Button
-                text={selectedAccountType ? selectedAccountType.name : <T id={'select_account_type'} />}
-                disabled={payload.action === 'edit'}
-              />
-            </Select>
+
+              selectedItem={formik.values.account_type_id}
+              selectedItemProp={'id'}
+              
+              defaultText={<T id={'select_account_type'} />}
+              labelProp={'name'}
+              buttonProps={{ disabled: payload.action === 'edit' }} />
           </FormGroup>
 
           <FormGroup
