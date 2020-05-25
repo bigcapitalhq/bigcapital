@@ -1,8 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import * as Yup from 'yup';
-
-
 import { useFormik } from 'formik';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import {
@@ -12,6 +10,7 @@ import {
   FormGroup,
   Checkbox,
 } from '@blueprintjs/core';
+
 import Toaster from 'components/AppToaster';
 import ErrorMessage from 'components/ErrorMessage';
 import AuthInsider from 'containers/Authentication/AuthInsider';
@@ -49,7 +48,6 @@ function Login({
 
   // Formik validation schema and submit handler.
   const {
-    values,
     touched,
     errors,
     handleSubmit,

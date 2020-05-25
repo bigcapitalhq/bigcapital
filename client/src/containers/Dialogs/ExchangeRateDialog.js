@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import {
   Button,
   Classes,
@@ -12,16 +12,16 @@ import { pick } from 'lodash';
 import * as Yup from 'yup';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { useFormik } from 'formik';
-import Dialog from 'components/Dialog';
-import AppToaster from 'components/AppToaster';
-
-import { useQuery, queryCache } from 'react-query';
-import ErrorMessage from 'components/ErrorMessage';
-import classNames from 'classnames';
 import { Select } from '@blueprintjs/select';
+import { useQuery } from 'react-query';
 import moment from 'moment';
 import { DateInput } from '@blueprintjs/datetime';
 import { momentFormatter } from 'utils';
+
+import AppToaster from 'components/AppToaster';
+import Dialog from 'components/Dialog';
+import ErrorMessage from 'components/ErrorMessage';
+import classNames from 'classnames';
 
 import withExchangeRatesDialog from './ExchangeRateDialog.container';
 
@@ -61,7 +61,6 @@ function ExchangeRateDialog({
   }), []);
 
   const {
-    values,
     touched,
     errors,
     isSubmitting,
@@ -117,7 +116,7 @@ function ExchangeRateDialog({
   const onDialogClosed = useCallback(() => {
     resetForm();
     closeDialog(name);
-  }, [closeDialog, name]);
+  }, [closeDialog, name,resetForm]);
 
   const onDialogOpening = useCallback(() => {
     fetchExchangeRatesDialog.refetch();

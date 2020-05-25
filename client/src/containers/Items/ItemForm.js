@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useCallback,useEffect } from 'react';
 import * as Yup from 'yup';
-import { useFormik, Formik } from 'formik';
+import { useFormik } from 'formik';
 import {
   FormGroup,
   MenuItem,
@@ -14,7 +14,7 @@ import {
 import { Row, Col } from 'react-grid-system';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { queryCache } from 'react-query';
-import { useParams, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { pick } from 'lodash';
 import classNames from 'classnames';
 
@@ -30,7 +30,6 @@ import withItemCategories from 'containers/Items/withItemCategories'
 import withAccounts from 'containers/Accounts/withAccounts';
 import withMediaActions from 'containers/Media/withMediaActions';
 import useMedia from 'hooks/useMedia';
-import withItems from './withItems';
 import withItemDetail from 'containers/Items/withItemDetail'
 import withDashboardActions from 'containers/Dashboard/withDashboard';
 import withAccountDetail from 'containers/Accounts/withAccountDetail';
@@ -62,9 +61,7 @@ const ItemForm = ({
   
   const history = useHistory();
   const { formatMessage } = useIntl();
-  const {id} =useParams();
   const {
-    files,
     setFiles,
     saveMedia,
     deletedFiles,
@@ -80,7 +77,7 @@ const ItemForm = ({
     { value: 'service', label: formatMessage({id:'service'}) },
     { value: 'inventory', label: formatMessage({id:'inventory'}) },
     { value: 'non-inventory', label: formatMessage({id:'non_inventory'}) },
-  ], []);
+  ], [formatMessage]);
 
   const validationSchema = Yup.object().shape({
     active: Yup.boolean(),
@@ -133,7 +130,7 @@ const ItemForm = ({
     itemDetail && itemDetail.id ?
       changePageTitle(formatMessage({id:'edit_item_details'})) :
       changePageTitle(formatMessage({id:'new_item'}));
-  }, [changePageTitle,itemDetail]);
+  }, [changePageTitle,itemDetail,formatMessage]);
 
   const {
     getFieldProps,
@@ -270,7 +267,7 @@ const ItemForm = ({
         }
       });
     },
-    [setDeletedFiles, deletedFiles]
+    [setDeletedFiles, deletedFiles,]
   );
 
   const handleCancelClickBtn = () => {

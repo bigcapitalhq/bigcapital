@@ -5,21 +5,19 @@ import {
   Classes,
   NavbarDivider,
 } from '@blueprintjs/core';
+import { FormattedMessage as T } from 'react-intl';
 import Icon from 'components/Icon';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar'
 import classNames from 'classnames';
-import FilterDropdown from 'components/FilterDropdown';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+// import FilterDropdown from 'components/FilterDropdown';
 
-export default function ProfitLossActionsBar({
-
-}) {
-  const filterDropdown = FilterDropdown({
-    fields: [],
-    onFilterChange: (filterConditions) => {
+export default function ProfitLossActionsBar() {
+  // const filterDropdown = FilterDropdown({
+  //   fields: [],
+  //   onFilterChange: (filterConditions) => {
       
-    },
-  });
+  //   },
+  // });
 
   return (
     <DashboardActionsBar>

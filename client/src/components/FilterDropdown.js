@@ -24,7 +24,7 @@ export default function FilterDropdown({
   const conditionalsItems = useMemo(() => [
     { value: 'and', label:formatMessage({id:'and'})  },
     { value: 'or', label: formatMessage({id:'or'}) },
-  ], []);
+  ], [formatMessage]);
 
   const resourceFields = useMemo(() => [
     ...fields.map((field) => ({ value: field.key, label: field.label_name, })),
@@ -36,7 +36,7 @@ export default function FilterDropdown({
     {value: 'not_equal', label: formatMessage({id:'not_equal'})},
     {value: 'contain', label: formatMessage({id:'contain'})},
     {value: 'not_contain', label: formatMessage({id:'not_contain'})},
-  ], []);
+  ], [formatMessage]);
 
   const defaultFilterCondition = useMemo(() => ({
     condition: 'and',
@@ -49,8 +49,6 @@ export default function FilterDropdown({
     setFieldValue,
     getFieldProps,
     values,
-    errors,
-    touched,
   } = useFormik({
     enableReinitialize: true,
     initialValues: {
@@ -82,7 +80,7 @@ export default function FilterDropdown({
     if (!isEqual(prevConditions, filteredFilterConditions) && prevConditions) {
       onFilterChangeThrottled.current(filteredFilterConditions);
     }
-  }, [filteredFilterConditions]);
+  }, [filteredFilterConditions,prevConditions]);
 
   // Handle click remove condition.
   const onClickRemoveCondition = (index) => () => {

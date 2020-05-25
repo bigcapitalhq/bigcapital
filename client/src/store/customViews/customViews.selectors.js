@@ -1,5 +1,5 @@
 import {pickItemsFromIds} from 'store/selectors';
-import { getResourceField, getResourceColumn } from 'store/resources/resources.reducer';
+import {getResourceColumn } from 'store/resources/resources.reducer';
 
 export const getResourceViews = (state, resourceName) => {
   const resourceViewsIds = state.views.resourceViews[resourceName] || [];

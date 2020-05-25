@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState, useMemo } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 import { useQuery } from 'react-query';
 import moment from 'moment';
 import { useIntl } from 'react-intl';
@@ -52,7 +52,7 @@ function TrialBalanceSheet({
   // Change page title of the dashboard.
   useEffect(() => {
     changePageTitle(formatMessage({id:'trial_balance_sheet'}));
-  }, []);
+  }, [changePageTitle,formatMessage]);
 
   const handleFilterSubmit = useCallback((filter) => {
     const parsedFilter = {

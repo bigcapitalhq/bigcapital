@@ -1,16 +1,15 @@
 import React, { useCallback, useMemo,useState } from 'react';
 import Icon from 'components/Icon';
 import DialogConnect from 'connectors/Dialog.connector';
-import LoadingIndicator from 'components/LoadingIndicator';
 import DataTable from 'components/DataTable';
 import { Button, Popover, Menu, MenuItem, Position } from '@blueprintjs/core';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 
 import withExchangeRatesActions from 'containers/ExchangeRates/withExchangeRatesActions';
 import withExchangeRates from 'containers/ExchangeRates/withExchangeRates';
 
 import { compose } from 'utils';
 
-import { FormattedMessage as T, useIntl } from 'react-intl';
 
 function ExchangeRateTable({
   // #withExchangeRates
@@ -91,7 +90,7 @@ function ExchangeRateTable({
       width: 50,
       disableResizing: false,
     },
-  ], [actionMenuList]);
+  ], [actionMenuList,formatMessage]);
 
   const selectionColumn = useMemo(() => ({
     minWidth: 42,

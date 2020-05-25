@@ -1,7 +1,6 @@
 import React from 'react';
 import appMeta from 'config/app';
 import Icon from 'components/Icon';
-
 export default function() {
   return (
     <div className="sidebar__head">

@@ -28,10 +28,9 @@ const ItemsCategoryList = ({
 }) => {
   const {formatMessage} = useIntl();
 
-  const handelEditCategory = (category) => { onEditCategory(category); };
-  const handleDeleteCategory = (category) => { onDeleteCategory(category); };
-
-  const actionMenuList = (category) => (
+  const handelEditCategory=useCallback((category)=>{onEditCategory(category);},[onEditCategory])
+  const handleDeleteCategory =useCallback((category)=>{onDeleteCategory(category);},[onDeleteCategory])
+  const actionMenuList = useCallback((category) => (
     <Menu>
       <MenuItem
         text={<T id={'edit_category'} />}
@@ -41,7 +40,8 @@ const ItemsCategoryList = ({
         onClick={() => handleDeleteCategory(category)}
       />
     </Menu>
-  );
+  ), [handelEditCategory,handleDeleteCategory]);
+
 
   const columns = useMemo(() => [
     {
@@ -79,11 +79,11 @@ const ItemsCategoryList = ({
       width: 50,
       disableResizing: false
     },
-  ], [actionMenuList]);
+  ], [actionMenuList,formatMessage]);
 
   const handelFetchData = useCallback((...params) => {
     onFetchData && onFetchData(...params);
-  }, []);
+  }, [onFetchData]);
 
   const handleSelectedRowsChange = useCallback((selectedRows) => {
     onSelectedRowsChange && onSelectedRowsChange(selectedRows.map(s => s.original));

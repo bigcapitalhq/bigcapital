@@ -8,8 +8,9 @@ import {
   Button,
   Popover
 } from '@blueprintjs/core';
+import { FormattedMessage as T } from 'react-intl';
 import t from 'store/types';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+
 
 function DashboardTopbarUser({ logout }) {
   const history = useHistory();

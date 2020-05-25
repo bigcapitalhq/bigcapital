@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState, useMemo } from 'react';
+import React, {useCallback, useState, useMemo } from 'react';
 import {
   Button,
   Popover,
@@ -84,7 +84,7 @@ function AccountsDataTable({
         text={<T id={'delete_account'}/>}
         onClick={() => onDeleteAccount(account)} />
     </Menu>
-  ), [handleEditAccount, onDeleteAccount, onInactiveAccount]);
+  ), [handleEditAccount, onDeleteAccount, onInactiveAccount,handleNewParentAccount]);
 
   const columns = useMemo(() => [
     {
@@ -166,7 +166,7 @@ function AccountsDataTable({
       className: 'actions',
       width: 50,
     }
-  ], [actionMenuList]);
+  ], [actionMenuList,formatMessage]);
 
   const selectionColumn = useMemo(() => ({
     minWidth: 50,

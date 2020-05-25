@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useMemo, useCallback} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import { useAsync } from 'react-use';
 import { useParams } from 'react-router-dom';
 import { Intent, Alert } from '@blueprintjs/core';
@@ -57,7 +57,7 @@ function ViewFormPage({
     return () => {
       changePageTitle('');
     };
-  }, [viewId, changePageTitle]);
+  }, [viewId, changePageTitle,formatMessage]);
 
 
   // Handle delete view button click.

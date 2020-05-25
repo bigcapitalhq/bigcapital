@@ -1,8 +1,8 @@
 import React, { useMemo, useState, useCallback } from 'react';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import { FormattedMessage as T, useIntl } from 'react-intl';
-
+import { Row, Col } from 'react-grid-system';
+import { Link, useHistory } from 'react-router-dom';
 import {
   Button,
   InputGroup,
@@ -10,16 +10,17 @@ import {
   FormGroup,
   Spinner,
 } from '@blueprintjs/core';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 
-import { Row, Col } from 'react-grid-system';
-import { Link, useHistory } from 'react-router-dom';
-import withAuthenticationActions from './withAuthenticationActions';
-import ErrorMessage from 'components/ErrorMessage';
 import AppToaster from 'components/AppToaster';
-import AuthInsider from 'containers/Authentication/AuthInsider';
-import { compose } from 'utils';
+
+import ErrorMessage from 'components/ErrorMessage';
 import Icon from 'components/Icon';
 import { If } from 'components';
+import AuthInsider from 'containers/Authentication/AuthInsider';
+import withAuthenticationActions from './withAuthenticationActions';
+
+import { compose } from 'utils';
 
 function Register({ requestRegister }) {
   const { formatMessage } = useIntl();
@@ -60,8 +61,6 @@ function Register({ requestRegister }) {
   const {
     errors,
     touched,
-    values,
-    setFieldValue,
     handleSubmit,
     getFieldProps,
     isSubmitting,

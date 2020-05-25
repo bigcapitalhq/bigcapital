@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from 'react';
+import React, {useCallback } from 'react';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -10,14 +10,15 @@ import {
   Intent,
   Classes,
 } from '@blueprintjs/core';
-import UserFormDialogConnect from 'connectors/UserFormDialog.connector';
-import DialogReduxConnect from 'components/DialogReduxConnect';
-import AppToaster from 'components/AppToaster';
-import useAsync from 'hooks/async';
 import { objectKeysTransform } from 'utils';
 import { pick, snakeCase } from 'lodash';
-import ErrorMessage from 'components/ErrorMessage';
 import classNames from 'classnames';
+
+import AppToaster from 'components/AppToaster';
+import DialogReduxConnect from 'components/DialogReduxConnect';
+import ErrorMessage from 'components/ErrorMessage';
+import useAsync from 'hooks/async';
+import UserFormDialogConnect from 'connectors/UserFormDialog.connector';
 import { compose } from 'utils';
 
 function UserFormDialog({
@@ -49,7 +50,6 @@ function UserFormDialog({
   };
 
   const {
-    values,
     errors,
     touched,
     resetForm,

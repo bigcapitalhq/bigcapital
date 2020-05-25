@@ -77,7 +77,7 @@ function AccountsChart({
 
   useEffect(() => {
     changePageTitle(formatMessage({ id: 'chart_of_accounts' }));
-  }, [changePageTitle]);
+  }, [changePageTitle,formatMessage]);
 
   // Handle click and cancel/confirm account delete
   const handleDeleteAccount = (account) => {
@@ -115,7 +115,7 @@ function AccountsChart({
       setDeleteAccount(false);
       handleDeleteErrors(errors);
     });
-  }, [deleteAccount, requestDeleteAccount]);
+  }, [deleteAccount, requestDeleteAccount,formatMessage]);
 
   // Handle cancel/confirm account inactive.
   const handleInactiveAccount = useCallback((account) => {
@@ -138,7 +138,7 @@ function AccountsChart({
         intent: Intent.SUCCESS,
       });
     });
-  }, [inactiveAccount, requestInactiveAccount]);
+  }, [inactiveAccount, requestInactiveAccount,formatMessage]);
 
   // Handle activate account click.
   const handleActivateAccount = useCallback((account) => {
@@ -182,7 +182,7 @@ function AccountsChart({
       setBulkDelete(false);
       handleDeleteErrors(errors);
     });
-  }, [requestDeleteBulkAccounts, bulkDelete]);
+  }, [requestDeleteBulkAccounts, bulkDelete,formatMessage]);
 
   // Handle cancel accounts bulk delete.
   const handleCancelBulkDelete = useCallback(() => {
@@ -263,7 +263,7 @@ const handleConfirmBulkActivate = useCallback(() => {
     setBulkActivate(false);
    
   });
-}, [requestBulkActivateAccounts, bulkActivate]);
+}, [requestBulkActivateAccounts, bulkActivate,formatMessage]);
 
 
 

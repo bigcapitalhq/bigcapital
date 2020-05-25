@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useCallback, useState } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 
 import { compose } from 'utils';
 import { useQuery } from 'react-query';
@@ -16,7 +16,7 @@ import withSettings from 'containers/Settings/withSettings';
 import withBalanceSheetActions from './withBalanceSheetActions';
 import withBalanceSheetDetail from './withBalanceSheetDetail';
 
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import {useIntl } from 'react-intl';
 
 
 function BalanceSheet({
@@ -54,7 +54,7 @@ function BalanceSheet({
 
   useEffect(() => {
     changePageTitle(formatMessage({ id: 'balance_sheet' }));
-  }, []);
+  }, [changePageTitle,formatMessage]);
 
   // Handle re-fetch balance sheet after filter change.
   const handleFilterSubmit = useCallback((filter) => {

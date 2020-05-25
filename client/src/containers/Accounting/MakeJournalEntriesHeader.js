@@ -6,10 +6,11 @@ import {
   Position,
 } from '@blueprintjs/core';
 import {DateInput} from '@blueprintjs/datetime';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'react-intl';
 import {Row, Col} from 'react-grid-system';
 import moment from 'moment';
 import {momentFormatter} from 'utils';
+
 import Icon from 'components/Icon';
 import CurrenciesSelectList from 'components/CurrenciesSelectList';
 import ErrorMessage from 'components/ErrorMessage';
@@ -17,7 +18,6 @@ import ErrorMessage from 'components/ErrorMessage';
 export default function MakeJournalEntriesHeader({
   formik: { errors, touched, setFieldValue, getFieldProps }
 }) {
-  const {formatMessage} = useIntl();
  
   const handleDateChange = useCallback((date) => {
     const formatted = moment(date).format('YYYY-MM-DD');

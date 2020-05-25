@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 
@@ -10,12 +10,14 @@ import {
   Position,
 } from '@blueprintjs/core';
 import { Link, useParams, useHistory } from 'react-router-dom';
-import ErrorMessage from 'components/ErrorMessage';
-import AppToaster from 'components/AppToaster';
-import { compose } from 'utils';
-import withAuthenticationActions from './withAuthenticationActions';
-import AuthInsider from 'containers/Authentication/AuthInsider';
 import { FormattedMessage as T, useIntl } from 'react-intl';
+
+import AppToaster from 'components/AppToaster';
+import ErrorMessage from 'components/ErrorMessage';
+import AuthInsider from 'containers/Authentication/AuthInsider';
+import withAuthenticationActions from './withAuthenticationActions';
+
+import { compose } from 'utils';
 
 
 
@@ -44,10 +46,8 @@ function ResetPassword({ requestResetPassword }) {
 
   const {
     touched,
-    values,
     errors,
     handleSubmit,
-    setFieldValue,
     getFieldProps,
     isSubmitting,
   } = useFormik({

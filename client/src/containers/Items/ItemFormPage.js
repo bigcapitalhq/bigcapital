@@ -1,17 +1,16 @@
-import React, { useEffect,useCallback } from 'react';
+import React, {useCallback } from 'react';
 import { useParams,useHistory } from 'react-router-dom';
 import { useQuery } from 'react-query';
 
-import ItemForm from 'containers/Items/ItemForm';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
+import ItemForm from 'containers/Items/ItemForm';
 
 import withDashboard from 'containers/Dashboard/withDashboard';
 import withAccountsActions from 'containers/Accounts/withAccountsActions';
 import withItemCategoriesActions from 'containers/Items/withItemCategoriesActions';
+import withItemsActions from './withItemsActions';
 
 import { compose } from 'utils';
-import { FormattedMessage as T, useIntl } from 'react-intl';
-import withItemsActions from './withItemsActions';
 
 
 const ItemFormContainer = ({
@@ -28,7 +27,6 @@ const ItemFormContainer = ({
   requestFetchItemCategories,
 }) => {
   const { id } = useParams();
-  const {formatMessage} =useIntl()
   const history = useHistory();
 
   const fetchAccounts = useQuery('accounts-list',
@@ -50,7 +48,7 @@ const handleFormSubmit =useCallback((payload)=>{
 const handleCancel =useCallback(()=>{
 
   history.push('/items/new');
-},[])
+},[history])
 
   return (
     <DashboardInsider

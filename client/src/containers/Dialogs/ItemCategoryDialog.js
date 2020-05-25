@@ -16,6 +16,7 @@ import { useFormik } from 'formik';
 import { compose } from 'utils';
 import { useQuery, queryCache } from 'react-query';
 import classNames from 'classnames';
+import {connect} from 'react-redux';
 
 import AppToaster from 'components/AppToaster';
 import ErrorMessage from 'components/ErrorMessage';
@@ -24,7 +25,6 @@ import Dialog from 'components/Dialog';
 import DialogConnect from 'connectors/Dialog.connector';
 import DialogReduxConnect from 'components/DialogReduxConnect';
 
-import {connect} from 'react-redux';
 import { getDialogPayload } from 'store/dashboard/dashboard.reducer';
 import withItemCategoryDetail from 'containers/Items/withItemCategoryDetail';
 import withItemCategories from 'containers/Items/withItemCategories';
@@ -75,7 +75,6 @@ function ItemCategoryDialog({
   // Formik
   const {
     errors,
-    values,
     touched,
     setFieldValue,
     handleSubmit,

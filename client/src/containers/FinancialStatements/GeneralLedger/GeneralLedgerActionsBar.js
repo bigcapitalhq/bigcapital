@@ -3,25 +3,21 @@ import {
   NavbarGroup,
   Button,
   Classes,
-  NavbarHeading,
   NavbarDivider,
-  Intent,
   Popover,
   PopoverInteractionKind,
   Position,
 } from '@blueprintjs/core';
+import { FormattedMessage as T } from 'react-intl';
 import Icon from 'components/Icon';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar'
 import classNames from 'classnames';
 import FilterDropdown from 'components/FilterDropdown';
-import { FormattedMessage as T, useIntl } from 'react-intl';
 
 /**
  * General ledger actions bar.
  */
-export default function GeneralLedgerActionsBar({
-
-}) {
+export default function GeneralLedgerActionsBar() {
   const filterDropdown = FilterDropdown({
     fields: [],
     onFilterChange: (filterConditions) => {

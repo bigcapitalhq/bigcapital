@@ -4,7 +4,7 @@ import {useParams} from 'react-router-dom';
 import Connector from 'connectors/ExpenseForm.connector';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import ExpenseForm from 'components/Expenses/ExpenseForm';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
 
 function ExpenseFormContainer({
   fetchAccounts,
@@ -23,7 +23,7 @@ function ExpenseFormContainer({
     } else {
       changePageTitle(formatMessage({id:'new_expense'}));
     }
-  }, []);
+  }, [id,changePageTitle,formatMessage]);
 
   const fetchHook = useAsync(async () => {
     await Promise.all([

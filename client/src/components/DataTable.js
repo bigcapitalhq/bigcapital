@@ -51,21 +51,12 @@ export default function DataTable({
     prepareRow,
     page,
     rows,
-    canPreviousPage,
-    canNextPage,
-    pageOptions,
-    pageCount,
-    gotoPage,
-    nextPage,
-    previousPage,
-    setPageSize,
     selectedFlatRows,
-    totalColumnsWidth,
     getToggleAllRowsExpandedProps,
     isAllRowsExpanded,
 
     // Get the state from the instance
-    state: { pageIndex, pageSize, sortBy, selectedRowIds, selectedRows },
+    state: { pageIndex, pageSize, sortBy, selectedRowIds},
   } = useTable(
     {
       columns,
@@ -128,7 +119,7 @@ export default function DataTable({
     } else {
       onFetchData && onFetchData({ pageIndex, pageSize, sortBy })
     }
-  }, [pageIndex, pageSize, sortBy]);
+  }, [pageIndex, pageSize, sortBy,onFetchData]);
 
   useUpdateEffect(() => {
     onSelectedRowsChange && onSelectedRowsChange(selectedFlatRows);

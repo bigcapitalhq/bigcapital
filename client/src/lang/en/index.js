@@ -1,10 +1,10 @@
 export default {
   hello_world: 'Hello World',
-  'email_or_phone_number': 'Email or phone number',
+  email_or_phone_number: 'Email or phone number',
   password: 'Password',
-  login: 'Login',
+  login:'Login',
   invalid_email_or_phone_number: 'Invalid email or phone number.',
-  'required': 'Required',
+  required: 'Required',
   reset_password: 'Reset Password',
   the_user_has_been_suspended_from_admin: 'The user has been suspended from the administrator.',
   email_and_password_entered_did_not_match:
@@ -17,7 +17,6 @@ export default {
   description: 'Description',
   from_date: 'From date',
   to_date: 'To date',
-  accounting_basis: 'Accounting basis',
   report_date_range: 'Report date range',
   log_in: 'Log in',
   forget_my_password: 'Forget my password',
@@ -38,7 +37,7 @@ export default {
   signing_in_or_creating:
   'By signing in or creating an account, you agree with our',
   terms_conditions: 'Terms & Conditions',
-  and: 'and',
+  and: 'And',
   privacy_statement: 'Privacy Statement',
   create_account: 'Create Account',
   success: 'Success',
@@ -82,7 +81,6 @@ export default {
   category_name: 'Category Name',
   parent_category: 'Parent Category',
   new: 'New',
-  new_category: 'New Category',
   invite_user: 'invite User',
   your_access_to_your_team: 'Your teammate will get an email that gives them access to your team.',
   invite: 'invite',
@@ -167,7 +165,6 @@ export default {
   edit_custom_view: 'Edit Custom View',
   new_custom_view: 'New Custom View',
   view_name: 'View Name',
-  new_conditional: 'New Conditional',
   item: 'Item',
   service_has_been_successful_created: '{service} {name} has been successfully created.',
   service_has_been_successful_edited: '{service} {name} has been successfully edited.',
@@ -185,6 +182,9 @@ export default {
   once_delete_this_account_you_will_able_to_restore_it: `Once you delete this account, you won\'t be able to restore it later. Are you sure you want to delete this account?<br /><br />If you're not sure, you can inactivate this account instead.`,
   the_journal_has_been_successfully_created: 'The journal #{number} has been successfully created.',
   the_journal_has_been_successfully_edited: 'The journal #{number} has been successfully edited.',
+  the_journal_has_been_successfully_deleted:'The journal has been successfully deleted',
+  the_manual_journal_id_has_been_published:'The manual journal id has been published',
+
   credit: 'Credit',
   debit: 'Debit',
   once_delete_this_item_you_will_able_to_restore_it: `Once you delete this item, you won\'t be able to restore the item later. Are you sure you want to delete ?<br /><br />If you're not sure, you can inactivate it instead.`,
@@ -204,7 +204,6 @@ export default {
   the_expense_has_been_successfully_created: 'The expense has been successfully created.',
   select_payment_account:'Select Payment Account',
   select_expense_account:'Select Expense Account',
-  and:'And',
   or:'OR',
   select_a_comparator:'Select a comparator',
   equals:'Equals',
@@ -222,15 +221,11 @@ export default {
   accountant:'Accountant',
   accounts:'Accounts',
   homepage:'Homepage',
-  items_list:'Items List',
-  new_item:'New Item',
   items:'Items',
-  category_list:'Category List',
   financial:'Financial',
   accounts_chart:'Accounts Chart',
   manual_journal:'Manual Journal',
   make_journal:'Make Journal',
-  exchange_rate:'Exchange Rate',
   banking:'Banking',
   sales:'Sales',
   purchases:'Purchases',
@@ -241,7 +236,6 @@ export default {
   general_ledger:'General Ledger',
   profit_loss_sheet:'Profit Loss Sheet',
   expenses:'Expenses',
-  expenses_list:'Expenses List',
   new_expenses:'New Expenses',
   preferences:'Preferences',
   auditing_system:'Auditing System',
@@ -273,7 +267,6 @@ export default {
   time_zone:'Time Zone',
   date_format:'Date Format',
   edit_user:'Edit User',
-  edit_invite:'Edit Invite',
   inactivate_user:'Inactivate User',
   delete_user:'Delete User',
   full_name:'Full Name',
@@ -281,7 +274,6 @@ export default {
   the_user_has_been_successfully_deleted: 'The user has been successfully deleted.',
   customize_report:'Customize Report',
   print:'Print',
-  export:'Export',
   accounts_with_zero_balance:'Accounts with Zero Balance',
   all_transactions:'All Transactions',
   filter_accounts:'Filter Accounts',
@@ -298,7 +290,7 @@ export default {
   credit_and_debit_not_equal:'credit and debit not equal',
   the_currency_has_been_successfully_edited:'The currency has been successfully edited',
   the_currency_has_been_successfully_created:'The currency has been successfully created',
-
+  
   // Name Labels
   expense_account_id :'Expense account',
   payment_account_id: 'Payment account',
@@ -326,7 +318,10 @@ export default {
   view_name_:'View name',
   the_items_has_been_successfully_deleted: 'The items have been successfully deleted.',
   once_delete_these_items_you_will_not_able_restore_them: 'Once you delete these items, you won\'t be able to retrieve them later. Are you sure you want to delete them?',
+  once_delete_this_item_category_you_will_able_to_restore_it:`Once you delete this item category, you won\'t be able to restore the item category later. Are you sure you want to delete ?<br /><br />If you're not sure, you can inactivate it instead.`,
 };
+
+
 
 
 

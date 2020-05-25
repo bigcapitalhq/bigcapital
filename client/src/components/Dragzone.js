@@ -1,6 +1,5 @@
-import React, { useState, useMemo, useCallback, useEffect } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import { useDropzone } from 'react-dropzone'
-import { pullAt } from 'lodash';
 import classNames from 'classnames';
 import Icon from 'components/Icon';
 

@@ -6,15 +6,16 @@ import {
   FormGroup,
   MenuItem,
 } from "@blueprintjs/core";
-import SelectList from 'components/SelectList';
 import moment from 'moment';
-import Icon from 'components/Icon';
-import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { useFormik } from 'formik';
+import { FormattedMessage as T, useIntl } from 'react-intl';
+
+import Icon from 'components/Icon';
+import SelectList from 'components/SelectList';
 import FinancialStatementDateRange from 'containers/FinancialStatements/FinancialStatementDateRange';
 import SelectDisplayColumnsBy from '../SelectDisplayColumnsBy';
 import RadiosAccountingBasis from '../RadiosAccountingBasis';
-import { FormattedMessage as T, useIntl } from 'react-intl';
 
 
 export default function BalanceSheetHeader({
@@ -45,7 +46,7 @@ export default function BalanceSheetHeader({
   const onItemSelectDisplayColumns = useCallback((item) => {
     formik.setFieldValue('display_columns_type', item.type);
     formik.setFieldValue('display_columns_by', item.by);
-  }, []);
+  }, [formik]);
 
   // Handle submit filter submit button.
   const handleSubmitClick = useCallback(() => {
@@ -55,7 +56,7 @@ export default function BalanceSheetHeader({
   const filterAccountsOptions = useMemo(() => [
     { key: '', name: formatMessage({ id: 'accounts_with_zero_balance' }) },
     { key: 'all-trans', name: formatMessage({ id: 'all_transactions' }) },
-  ], []);
+  ], [formatMessage]);
 
   const filterAccountRenderer = useCallback((item, { handleClick, modifiers, query }) => {
     return (<MenuItem text={item.name} key={item.id} onClick={handleClick} />);

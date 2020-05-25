@@ -2,7 +2,7 @@ import React from 'react';
 import { Redirect, Route, Switch, Link } from 'react-router-dom';
 import BodyClassName from 'react-body-classname';
 import authenticationRoutes from 'routes/authentication';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'react-intl';
 
 export default function AuthenticationWrapper({
   isAuthenticated = false,

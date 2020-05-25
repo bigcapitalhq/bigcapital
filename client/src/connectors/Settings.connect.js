@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
 import {
-  FetchOption,
   FetchOptions,
   submitOptions,
 } from 'store/settings/settings.actions';

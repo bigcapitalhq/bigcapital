@@ -20,7 +20,6 @@ import {
   DISPLAYNAME_PREFIX,
   Popover,
   Position,
-  TagInput,
   Utils,
 } from "@blueprintjs/core";
 import {

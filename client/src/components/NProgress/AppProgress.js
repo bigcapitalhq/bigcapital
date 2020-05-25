@@ -1,11 +1,8 @@
-
 import React from 'react';
 import Progress from './Progress';
-import {queryCache, useIsFetching} from 'react-query';
+import {useIsFetching} from 'react-query';
 
-function AppProgress({
-
-}) {
+function AppProgress() {
   const isFetching = useIsFetching();
 
   return (

@@ -7,12 +7,15 @@ import {
   Button,
   Classes,
 } from '@blueprintjs/core';
-import DashboardBreadcrumbs from 'components/Dashboard/DashboardBreadcrumbs';
+import { FormattedMessage as T } from 'react-intl';
+
 import DashboardTopbarUser from 'components/Dashboard/TopbarUser';
-import Icon from 'components/Icon';
+import DashboardBreadcrumbs from 'components/Dashboard/DashboardBreadcrumbs';
 import SearchConnect from 'connectors/Search.connect';
+import Icon from 'components/Icon';
+
 import { compose } from 'utils';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+
 
 function DashboardTopbar({
   pageTitle,

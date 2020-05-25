@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
 import t from 'store/types';
-import { generalSearch } from 'store/search/search.actions';
 
 export const mapStateToProps = (state, props) => ({
   resultSearch: state.globalSearch.searches,

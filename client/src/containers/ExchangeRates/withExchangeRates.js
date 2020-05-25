@@ -1,5 +1,4 @@
 import { connect } from 'react-redux';
-import { getResourceViews } from 'store/customViews/customViews.selectors';
 
 export default (mapState) => {
   const mapStateToProps = (state, props) => {

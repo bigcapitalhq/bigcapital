@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useCallback } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import Icon from 'components/Icon';
 import {
   Button,
@@ -14,7 +14,8 @@ import {
 } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { useRouteMatch, useHistory } from 'react-router-dom';
-import { compose } from 'utils';
+import { FormattedMessage as T } from 'react-intl';
+
 
 import FilterDropdown from 'components/FilterDropdown';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
@@ -25,7 +26,8 @@ import withResourceDetail from 'containers/Resources/withResourceDetails';
 import withManualJournals from 'containers/Accounting/withManualJournals';
 import withManualJournalsActions from 'containers/Accounting/withManualJournalsActions';
 
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { compose } from 'utils';
+
 
 
 function ManualJournalActionsBar({
@@ -45,7 +47,6 @@ function ManualJournalActionsBar({
 }) {
   const { path } = useRouteMatch();
   const history = useHistory();
-  const {formatMessage} = useIntl();
 
   const viewsMenuItems = manualJournalsViews.map(view => {
     return (

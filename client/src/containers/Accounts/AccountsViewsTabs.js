@@ -1,4 +1,4 @@
-import React, {useEffect, useCallback} from 'react';
+import React, {useEffect} from 'react';
 import { useHistory } from 'react-router';
 import { connect } from 'react-redux';
 import {
@@ -12,14 +12,15 @@ import {
 import { useParams, withRouter } from 'react-router-dom';
 import Icon from 'components/Icon';
 import { Link } from 'react-router-dom';
-import { compose } from 'utils';
+import { FormattedMessage as T } from 'react-intl';
 import {useUpdateEffect} from 'hooks';
 
 import withDashboard from 'containers/Dashboard/withDashboard';
 import withAccounts from 'containers/Accounts/withAccounts';
 import withAccountsTableActions from 'containers/Accounts/withAccountsTableActions';
 import withViewDetail from 'containers/Views/withViewDetails';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+
+import { compose } from 'utils';
 
 function AccountsViewsTabs({
   // #withViewDetail

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import {Menu, MenuDivider, Collapse} from "@blueprintjs/core";
+import React from 'react';
+import {Menu, MenuDivider} from "@blueprintjs/core";
 import {useHistory, useLocation} from 'react-router-dom';
 import sidebarMenuList from 'config/sidebarMenu';
 import Icon from 'components/Icon';

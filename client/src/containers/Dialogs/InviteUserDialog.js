@@ -10,14 +10,17 @@ import {
   Intent,
   Classes,
 } from '@blueprintjs/core';
-import UserListDialogConnect from 'connectors/UsersList.connector';
-import DialogReduxConnect from 'components/DialogReduxConnect';
-import useAsync from 'hooks/async';
 import { objectKeysTransform } from 'utils';
 import { pick, snakeCase } from 'lodash';
-import ErrorMessage from 'components/ErrorMessage';
-import classNames from 'classnames';
+
 import AppToaster from 'components/AppToaster';
+
+import DialogReduxConnect from 'components/DialogReduxConnect';
+import UserListDialogConnect from 'connectors/UsersList.connector';
+import ErrorMessage from 'components/ErrorMessage';
+import useAsync from 'hooks/async';
+import classNames from 'classnames';
+
 import { compose } from 'utils';
 
 function InviteUserDialog({
@@ -84,7 +87,7 @@ function InviteUserDialog({
       }
     },
   });
-  const { values, errors, touched } = useMemo(() => formik, [formik]);
+  const { errors, touched } = useMemo(() => formik, [formik]);
 
   const onDialogOpening = () => {
     fetchHook.execute();

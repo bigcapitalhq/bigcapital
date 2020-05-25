@@ -14,13 +14,13 @@ import { connect } from 'react-redux';
 import { FormattedMessage as T } from 'react-intl';
 
 import { useUpdateEffect } from 'hooks';
-import { compose } from 'utils';
 import Icon from 'components/Icon';
 
 import withManualJournals from './withManualJournals';
 import withManualJournalsActions from './withManualJournalsActions';
 import withDashboard from 'containers/Dashboard/withDashboard';
 
+import { compose } from 'utils';
 
 function ManualJournalsViewTabs({
   // #withManualJournals
@@ -60,7 +60,7 @@ function ManualJournalsViewTabs({
     addManualJournalsTableQueries({
       custom_view_id: customViewId,
     });
-  }, [customViewId]);
+  }, [customViewId,addManualJournalsTableQueries]);
 
   const tabs = manualJournalsViews.map((view) => {
     const baseUrl = '/manual-journals';

@@ -8,13 +8,13 @@ import {
   Position,
 } from '@blueprintjs/core'
 import { FormattedMessage as T, useIntl } from 'react-intl';
-import {compose} from 'utils';
 import DataTable from 'components/DataTable';
 import Icon from 'components/Icon';
 import Money from 'components/Money';
 
-import withItems from 'containers/Items/withItems';
 import LoadingIndicator from 'components/LoadingIndicator';
+import withItems from 'containers/Items/withItems';
+import {compose} from 'utils';
 
 const ItemsDataTable = ({
   loading,
@@ -48,8 +48,8 @@ const ItemsDataTable = ({
   );
 
 
-  const handleDeleteItem = (item) => () => { onDeleteItem(item); };
-  
+  // const handleDeleteItem = (item) => () => { onDeleteItem(item); };
+  const handleDeleteItem =useCallback((item)=>()=>{onDeleteItem(item)},[onDeleteItem])
   const actionMenuList = useCallback((item) =>
     (<Menu>
       <MenuItem text={<T id={'view_details'}/>} />
@@ -112,7 +112,7 @@ const ItemsDataTable = ({
       className: 'actions',
       width: 50,
     },
-  ], [actionMenuList]);
+  ], [actionMenuList,formatMessage]);
 
   const selectionColumn = useMemo(() => ({
     minWidth: 42,
@@ -122,7 +122,7 @@ const ItemsDataTable = ({
 
   const handleFetchData = useCallback((...args) => {
     onFetchData && onFetchData(...args)
-  }, [onFetchData]);
+  }, []);
 
   const handleSelectedRowsChange = useCallback((selectedRows) => {
     onSelectedRowsChange && onSelectedRowsChange(selectedRows.map(s => s.original));
@@ -152,3 +152,7 @@ export default compose(
     itemsTableLoading,
   })),
 )(ItemsDataTable);
+
+
+
+

@@ -1,5 +1,5 @@
 import React  from 'react'
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T} from 'react-intl';
 
 export default [
   {
