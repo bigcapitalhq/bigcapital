@@ -13,6 +13,9 @@
   },
   "author": "Ahmed Bouhuolia, <a.bouhuolia@gmail.com>",
   "license": "ISC",
+  "bin": {
+    "bigcapital": "./bin/bigcapital.js"
+  },
   "dependencies": {
     "@hapi/boom": "^7.4.3",
     "app-root-path": "^3.0.0",
@@ -61,6 +64,7 @@
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
     "chai-things": "^0.2.0",
+    "colorette": "^1.2.0",
     "commander": "^5.0.0",
     "cross-env": "^5.2.0",
     "eslint": "^6.2.1",
@@ -70,6 +74,7 @@
     "eslint-loader": "^2.2.1",
     "eslint-plugin-import": "^2.19.1",
     "faker": "^4.1.0",
+    "getopts": "^2.2.5",
     "knex-factory": "0.0.6",
     "mocha": "^5.2.0",
     "mocha-webpack": "^2.0.0-beta.0",
