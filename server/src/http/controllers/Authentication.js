@@ -1,4 +1,3 @@
-
 import express from 'express';
 import { check, validationResult } from 'express-validator';
 import path from 'path';
@@ -176,6 +175,7 @@ export default {
 
       await TenantUser.bindKnex(tenantDb).query().insert({
         ...userInsert,
+        invite_accepted_at: moment().format('YYYY/MM/DD HH:mm:ss'),
       });
       Logger.log('info', 'New tenant has been created.', { organizationId });
 

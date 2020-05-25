@@ -9,6 +9,7 @@ import {
 import path from 'path';
 import fs from 'fs';
 import Mustache from 'mustache';
+import moment from 'moment';
 import mail from '@/services/mail';
 import { hashPassword } from '@/utils';
 import SystemUser from '@/system/models/SystemUser';
@@ -64,10 +65,10 @@ export default {
         });
       }
       const form = { ...req.body };
-      const foundUser = await SystemUser.query()
-        .where('email', form.email).first();
-
       const { user } = req;
+      const { TenantUser } = req.models;
+      const foundUser = await SystemUser.query()
+        .where('email', form.email).first();      
 
       if (foundUser) {
         return res.status(400).send({
@@ -79,6 +80,10 @@ export default {
         email: form.email,
         tenant_id: user.tenantId,
         token,
+      });
+      const tenantUser = await TenantUser.query().insert({
+        first_name: form.email,
+        email: form.email,
       });
       const { Option } = req.models;
       const organizationOptions = await Option.query()
@@ -117,11 +122,18 @@ export default {
       check('first_name').exists().trim().escape(),
       check('last_name').exists().trim().escape(),
       check('phone_number').exists().trim().escape(),
-      // check('language').exists().isIn(['ar', 'en']),
       check('password').exists().trim().escape(),
       param('token').exists().trim().escape(),
     ],
     async handler(req, res) {
+      const validationErrors = validationResult(req);
+
+      if (!validationErrors.isEmpty()) {
+        return res.boom.badData(null, {
+          code: 'validation_error', ...validationErrors,
+        });
+      }
+
       const { token } = req.params;
       const inviteToken = await Invite.query()
         .where('token', token).first();
@@ -160,7 +172,7 @@ export default {
       const userForm = {
         first_name: form.first_name,
         last_name: form.last_name,
-        email: form.email,
+        email: inviteToken.email,
         phone_number: form.phone_number,
         language: form.language,
         active: 1,
@@ -175,19 +187,29 @@ export default {
           errors: [{ type: 'PHONE_NUMBER.ALREADY.EXISTS', code: 400 }],
         });
       }
+
       const insertUserOper = TenantUser.bindKnex(tenantDb)
-        .query().insert({ ...userForm });
+        .query()
+        .where('email', userForm.email)
+        .patch({
+          ...userForm,
+          invite_accepted_at: moment().format('YYYY/MM/DD'),
+        });
+
       const insertSysUserOper = SystemUser.query().insert({
         ...userForm,
         password: hashedPassword,
+        tenant_id: inviteToken.tenantId,
       });
+
+      const deleteInviteTokenOper = Invite.query()
+        .where('token', inviteToken.token).delete();
 
       await Promise.all([
         insertUserOper,
         insertSysUserOper,
+        deleteInviteTokenOper,
       ]);
-      await Invite.query().where('token', token).delete();
-
       return res.status(200).send();
     },
   },

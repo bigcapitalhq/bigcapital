@@ -1,8 +1,10 @@
-import { Model } from 'objection';
+import { Model, mixin } from 'objection';
 import bcrypt from 'bcryptjs';
 import SystemModel from '@/system/models/SystemModel';
+import DateSession from '@/models/DateSession';
 
-export default class SystemUser extends SystemModel {
+
+export default class SystemUser extends mixin(SystemModel, [DateSession]) {
   /**
    * Table name.
    */

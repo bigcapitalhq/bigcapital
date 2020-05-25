@@ -37,7 +37,8 @@ function Invite({ requestInviteAccept, requestInviteMetaByToken }) {
     last_name: Yup.string().required().label(formatMessage({id:'last_name_'})),
     phone_number: Yup.string()
       .matches()
-      .required().label(formatMessage({id:''})),
+      .required()
+      .label(formatMessage({id:'phone_number'})),
     password: Yup.string()
       .min(4)
       .required().label(formatMessage({id:'password'}))

@@ -1,11 +1,13 @@
 import bcrypt from 'bcryptjs';
-import { Model } from 'objection';
+import { Model, mixin } from 'objection';
 import TenantModel from '@/models/TenantModel';
+import DateSession from '@/models/DateSession';
 // import PermissionsService from '@/services/PermissionsService';
 
-export default class TenantUser extends TenantModel {
-  // ...PermissionsService
-
+export default class TenantUser extends mixin(TenantModel, [DateSession]) {
+  /**
+   * Virtual attributes.
+   */
   static get virtualAttributes() {
     return ['fullName'];
   }
@@ -49,6 +51,6 @@ export default class TenantUser extends TenantModel {
   }
 
   fullName() {
-    return `${this.firstName} ${this.lastName}`;
+    return `${this.firstName} ${this.lastName || ''}`;
   }
 }
