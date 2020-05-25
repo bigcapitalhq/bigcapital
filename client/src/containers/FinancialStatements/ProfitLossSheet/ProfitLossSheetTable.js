@@ -26,46 +26,7 @@ function ProfitLossSheetTable({
 
   const {formatMessage} =useIntl();
 
-  const columns = useMemo(() => [
-    {
-      // Build our expander column
-      id: 'expander', // Make sure it has an ID
-      className: 'expander',
-      Header: ({
-        getToggleAllRowsExpandedProps,
-        isAllRowsExpanded
-      }) => (
-        <span {...getToggleAllRowsExpandedProps()} className="toggle">
-          {isAllRowsExpanded ?
-            (<span class="arrow-down" />) :
-            (<span class="arrow-right" />)
-          }
-        </span>
-      ),
-      Cell: ({ row }) =>
-        // Use the row.canExpand and row.getToggleRowExpandedProps prop getter
-        // to build the toggle for expanding a row
-        row.canExpand ? (
-          <span
-            {...row.getToggleRowExpandedProps({
-              style: {
-                // We can even use the row.depth property
-                // and paddingLeft to indicate the depth
-                // of the row
-                paddingLeft: `${row.depth * 2}rem`,
-              },
-              className: 'toggle',
-            })}
-          >
-            {row.isExpanded ?
-              (<span class="arrow-down" />) :
-              (<span class="arrow-right" />)
-            }
-          </span>
-        ) : null,
-      width: 20,
-      disableResizing: true,
-    },  
+  const columns = useMemo(() => [ 
     {
       Header: formatMessage({id:'account_name'}),
       accessor: 'name',
@@ -116,11 +77,9 @@ function ProfitLossSheetTable({
     [profitLossTableRows]);
 
   // Retrieve conditional datatable row classnames.
-  const rowClassNames = useCallback((row) => {
-    return {
-      [`row--${row.rowType}`]: row.rowType,
-    };
-  }, []);
+  const rowClassNames = useCallback((row) => ({
+    [`row--${row.rowType}`]: row.rowType,
+  }), []);
 
   return (
     <FinancialSheet
@@ -138,7 +97,9 @@ function ProfitLossSheetTable({
         data={profitLossTableRows}
         onFetchData={handleFetchData}
         expanded={expandedRows}
-        rowClassNames={rowClassNames} />
+        rowClassNames={rowClassNames}
+        expandable={true}
+        expandToggleColumn={1} />
     </FinancialSheet>
   );
 }

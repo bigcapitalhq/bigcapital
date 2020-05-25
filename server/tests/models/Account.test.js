@@ -7,7 +7,7 @@ import {
   tenantFactory,
   tenantWebsite
 } from '~/dbInit';
-
+import DependencyGraph from '@/lib/DependencyGraph';
 
 describe('Model: Account', () => {
   it('Should account model belongs to the associated account type model.', async () => {
@@ -41,5 +41,10 @@ describe('Model: Account', () => {
     const transactionsModels = await accountModel.$relatedQuery('transactions');
 
     expect(transactionsModels.length).equals(1);
+  });
+
+  it('Should retrieve dependency graph.', async () => {
+    const accountsDepGraph = await Account.tenant().depGraph().query();
+    expect(accountsDepGraph).to.be.an.instanceOf(DependencyGraph);
   });
 });

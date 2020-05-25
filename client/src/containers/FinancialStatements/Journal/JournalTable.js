@@ -25,6 +25,8 @@ function JournalSheetTable({
   onFetchData,
   companyName,
 }) {
+  const { formatMessage } = useIntl();
+
   const rowTypeFilter = (rowType, value, types) => {
     return (types.indexOf(rowType) === -1) ? '' : value;
   };
@@ -32,7 +34,6 @@ function JournalSheetTable({
   const exceptRowTypes = (rowType, value, types) => {
     return (types.indexOf(rowType) !== -1) ? '' : value;    
   };
-const {formatMessage} =useIntl();
 
   const columns = useMemo(() => [
     {
@@ -100,9 +101,8 @@ const {formatMessage} =useIntl();
         columns={columns}
         data={journalSheetTableRows}
         onFetchData={handleFetchData}
-        noResults={"This report does not contain any data."}
-        expanded={expandedRows}
-        noInitialFetch={true} />
+        noResults={"This report does not contain any data between date period."}
+        expanded={expandedRows} />
     </FinancialSheet>
   );
 }

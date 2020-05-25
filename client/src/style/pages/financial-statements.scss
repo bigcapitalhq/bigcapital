@@ -39,12 +39,12 @@
 }
 
 .financial-sheet{
-  border: 1px solid #E2E2E2;
+  border: 1px solid #EEE;
   min-width: 640px;
   width: auto;
   padding: 30px 20px;
   max-width: 100%;
-  margin: 25px auto 35px;
+  margin: 15px auto 35px;
   min-height: 400px;
   display: flex;
   flex-direction: column;
@@ -109,6 +109,27 @@
   &--trial-balance{
     min-width: 720px;
   }
+  &--general-ledger{
+    .table .tbody{
+     
+      .tr.row-type{
+
+        &--opening_balance,
+        &--closing_balance{
+          background-color: #fbfbfb;
+        }
+
+        &--closing_balance .td{
+          border-bottom-color: #666;
+        }
+
+        &--account_name .td.name{
+          font-weight: 500;
+        }
+      }
+    }
+  }
+
   &--general-ledger,
   &--journal{
     width: auto;

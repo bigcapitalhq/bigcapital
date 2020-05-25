@@ -27,6 +27,10 @@ export default class Account extends mixin(TenantModel, [CachableModel, DateSess
     return CachableQueryBuilder;
   }
 
+  /**
+   * Query return override.
+   * @param  {...any} args 
+   */
   static query(...args) {
     return super.query(...args).runAfter((result) => {
       if (Array.isArray(result)) {

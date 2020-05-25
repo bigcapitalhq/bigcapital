@@ -16,7 +16,6 @@ import withDashboard from 'containers/Dashboard/withDashboard';
 import withJournalActions from './withJournalActions';
 
 
-
 function Journal({
   // #withJournalActions
   requestFetchJournalSheet,
@@ -40,7 +39,7 @@ function Journal({
   }, []);
 
   const fetchHook = useQuery(['journal', filter],
-    (key, query) => { requestFetchJournalSheet(query); },
+    (key, query) => requestFetchJournalSheet(query),
     { manual: true });
 
   // Handle financial statement filter change.

@@ -10,7 +10,7 @@ import {
 } from '~/dbInit';
 
 
-describe.only('routes: `/items`', () => {
+describe('routes: `/items`', () => {
   describe('POST: `/items`', () => {
     it('Should not create a new item if the user was not authorized.', async () => {
       const res = await request()

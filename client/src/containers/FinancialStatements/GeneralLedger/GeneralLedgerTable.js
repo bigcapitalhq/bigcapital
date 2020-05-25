@@ -157,6 +157,10 @@ function GeneralLedgerTable({
     () => defaultExpanderReducer(generalLedgerTableRows, 1),
     [generalLedgerTableRows]);
 
+  const rowClassNames = (row) => ([
+    `row-type--${row.original.rowType}`,
+  ]);
+
   return (
     <FinancialSheet
       companyName={companyName}
@@ -171,10 +175,13 @@ function GeneralLedgerTable({
         columns={columns}
         data={generalLedgerTableRows}
         onFetchData={handleFetchData}
+        rowClassNames={rowClassNames}
         expanded={expandedRows}
         virtualizedRows={true}
         fixedItemSize={37}
-        fixedSizeHeight={1000} />
+        fixedSizeHeight={1000}
+        expandable={true}
+        expandToggleColumn={1} />
     </FinancialSheet>
   ); 
 }

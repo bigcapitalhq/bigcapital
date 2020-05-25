@@ -270,7 +270,7 @@ export default {
         user_id: user.id,
       });
 
-      const accountsDepGraph = await Account.depGraph().query().remember();
+      const accountsDepGraph = await Account.depGraph().query();
       const journalPoster = new JournalPoster(accountsDepGraph);
 
       entries.forEach((entry) => {
