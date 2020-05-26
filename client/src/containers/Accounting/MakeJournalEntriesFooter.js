@@ -1,6 +1,6 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { Intent, Button } from '@blueprintjs/core';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'react-intl';
 
 export default function MakeJournalEntriesFooter({
   formik: { isSubmitting },

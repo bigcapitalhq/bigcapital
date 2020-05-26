@@ -18,7 +18,6 @@ export default {
   description: 'Description',
   from_date: 'From date',
   to_date: 'To date',
-  accounting_basis: 'Accounting basis',
   report_date_range: 'Report date range',
   log_in: 'Log in',
   forget_my_password: 'Forget my password',
@@ -39,7 +38,7 @@ export default {
   signing_in_or_creating:
     'By signing in or creating an account, you agree with our',
   terms_conditions: 'Terms & Conditions',
-  and: 'and',
+  and: 'And',
   privacy_statement: 'Privacy Statement',
   create_account: 'Create Account',
   success: 'Success',
@@ -85,7 +84,6 @@ export default {
   category_name: 'Category Name',
   parent_category: 'Parent Category',
   new: 'New',
-  new_category: 'New Category',
   invite_user: 'invite User',
   your_access_to_your_team:
     'Your teammate will get an email that gives them access to your team.',
@@ -171,7 +169,6 @@ export default {
   edit_custom_view: 'Edit Custom View',
   new_custom_view: 'New Custom View',
   view_name: 'View Name',
-  new_conditional: 'New Conditional',
   item: 'Item',
   service_has_been_successful_created:
     '{service} {name} has been successfully created.',
@@ -203,6 +200,11 @@ export default {
     'The journal #{number} has been successfully created.',
   the_journal_has_been_successfully_edited:
     'The journal #{number} has been successfully edited.',
+  the_journal_has_been_successfully_deleted:
+    'The journal has been successfully deleted',
+  the_manual_journal_id_has_been_published:
+    'The manual journal id has been published',
+
   credit: 'Credit',
   debit: 'Debit',
   once_delete_this_item_you_will_able_to_restore_it: `Once you delete this item, you won\'t be able to restore the item later. Are you sure you want to delete ?<br /><br />If you're not sure, you can inactivate it instead.`,

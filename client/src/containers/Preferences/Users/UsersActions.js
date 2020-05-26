@@ -13,7 +13,7 @@ function UsersActions({
 }) {
   const onClickNewUser = useCallback(() => {
     openDialog('user-form');
-  }, []);
+  }, [openDialog]);
 
   return (
     <div claass="preferences-actions">

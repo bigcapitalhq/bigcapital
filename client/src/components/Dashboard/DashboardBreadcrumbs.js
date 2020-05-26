@@ -5,7 +5,6 @@ import {
   Classes,
   Boundary,
 } from '@blueprintjs/core';
-import classNames from 'classnames';
 import withBreadcrumbs from 'react-router-breadcrumbs-hoc';
 import routes from 'routes/dashboard';
 import { useHistory } from 'react-router-dom';

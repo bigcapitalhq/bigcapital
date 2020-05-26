@@ -8,6 +8,7 @@ import {
   Position,
   PopoverInteractionKind,
 } from '@blueprintjs/core';
+import { FormattedMessage as T } from 'react-intl';
 import classNames from 'classnames';
 import { connect } from 'react-redux';
 import { If } from 'components';
@@ -21,7 +22,6 @@ import withDialog from 'connectors/Dialog.connector';
 import withDashboard from 'containers/Dashboard/withDashboard';
 
 import { compose } from 'utils';
-import { FormattedMessage as T, useIntl } from 'react-intl';
 
 const ItemsCategoryActionsBar = ({
   // #withResourceDetail

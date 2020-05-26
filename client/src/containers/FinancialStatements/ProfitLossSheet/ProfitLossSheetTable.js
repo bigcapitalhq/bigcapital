@@ -1,5 +1,7 @@
 import React, { useMemo, useCallback } from 'react';
 import { connect } from 'react-redux';
+import { FormattedMessage as T, useIntl } from 'react-intl';
+
 import FinancialSheet from 'components/FinancialSheet';
 import DataTable from 'components/DataTable';
 import Money from 'components/Money';
@@ -9,7 +11,6 @@ import {
   getFinancialSheetIndexByQuery,
 } from 'store/financialStatement/financialStatements.selectors';
 import withProfitLossDetail from './withProfitLoss';
-import { FormattedMessage as T, useIntl } from 'react-intl';
 
 
 function ProfitLossSheetTable({
@@ -64,7 +65,7 @@ function ProfitLossSheetTable({
         width: 100,
       })))
     : [],
-  ], [profitLossQuery.display_columns_type, profitLossColumns]);
+  ], [profitLossQuery.display_columns_type, profitLossColumns,formatMessage]);
 
   // Handle data table fetch data.
   const handleFetchData = useCallback((...args) => {

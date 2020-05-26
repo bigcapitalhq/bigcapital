@@ -13,14 +13,13 @@ import {
   Intent,
 } from '@blueprintjs/core';
 import { useRouteMatch } from 'react-router-dom'
+import { FormattedMessage as T } from 'react-intl';
 import classNames from 'classnames';
+
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import Icon from 'components/Icon';
-import { FormattedMessage as T, useIntl } from 'react-intl';
 
-export default function ExpensesActionsBar({
-
-}) {
+export default function ExpensesActionsBar() {
   const {path} = useRouteMatch();
   const onClickNewAccount = () => {};
   const views = [];

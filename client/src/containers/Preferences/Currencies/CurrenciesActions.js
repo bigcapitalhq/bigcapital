@@ -12,7 +12,7 @@ function CurrenciesActions({
 }) {
   const handleClickNewCurrency = useCallback(() => {
     openDialog('currency-form');
-  }, []);
+  }, [openDialog]);
 
   return (
     <div class="users-actions">

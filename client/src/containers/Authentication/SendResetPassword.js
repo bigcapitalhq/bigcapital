@@ -34,12 +34,10 @@ function SendResetPassword({ requestSendResetPassword }) {
 
   // Formik validation
   const {
-    values,
     errors,
     touched,
     handleSubmit,
     getFieldProps,
-    setFieldValue,
     isSubmitting,
   } = useFormik({
     enableReinitialize: true,

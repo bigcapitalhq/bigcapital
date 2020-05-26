@@ -98,7 +98,7 @@ function ItemsList({
       });
       setDeleteItem(false);
     });
-  }, [requestDeleteItem, deleteItem]);
+  }, [requestDeleteItem, deleteItem,formatMessage]);
 
   // Handle fetch data table.
   const handleFetchData = useCallback(({ pageIndex, pageSize, sortBy  }) => {
@@ -155,7 +155,7 @@ function ItemsList({
     }).catch((errors) => {
       setBulkDelete(false);
     });
-  }, [requestDeleteBulkItems, bulkDelete]);
+  }, [requestDeleteBulkItems, bulkDelete,formatMessage]);
 
     // Handle cancel accounts bulk delete.
     const handleCancelBulkDelete = useCallback(() => {

@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState, useMemo } from 'react';
+import React, { useEffect, useCallback, useState} from 'react';
 import moment from 'moment';
 import GeneralLedgerTable from 'containers/FinancialStatements/GeneralLedger/GeneralLedgerTable';
 import { useQuery } from 'react-query';
@@ -43,7 +43,7 @@ function GeneralLedger({
   // Change page title of the dashboard.
   useEffect(() => {
     changePageTitle(formatMessage({id:'general_ledger'}));
-  }, []);
+  }, [changePageTitle,formatMessage]);
 
   const fetchAccounts = useQuery(['accounts-list'],
     () => requestFetchAccounts());

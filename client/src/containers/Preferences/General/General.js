@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo, useEffect } from 'react';
+import React, { useState} from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import {
@@ -13,6 +13,7 @@ import classNames from 'classnames';
 import { TimezonePicker } from '@blueprintjs/timezone';
 import { Select } from '@blueprintjs/select';
 import { useQuery } from 'react-query';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 
 import { compose, optionsMapToArray } from 'utils';
 
@@ -21,7 +22,6 @@ import AppToaster from 'components/AppToaster';
 
 import withSettings from 'containers/Settings/withSettings';
 import withSettingsActions from 'containers/Settings/withSettingsActions';
-import { FormattedMessage as T, useIntl } from 'react-intl';
 
 
 function GeneralPreferences({
@@ -79,13 +79,10 @@ function GeneralPreferences({
 
   const {
     errors,
-    values,
     touched,
-    isSubmitting,
     setFieldValue,
     getFieldProps,
     handleSubmit,
-    resetForm,
   } = useFormik({
     enableReinitialize: true,
     initialValues: {

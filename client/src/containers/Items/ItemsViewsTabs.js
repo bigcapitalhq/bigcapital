@@ -20,7 +20,7 @@ import withDashboard from 'containers/Dashboard/withDashboard';
 import withViewDetail from 'containers/Views/withViewDetails';
 import withItems from 'containers/Items/withItems';
 
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T} from 'react-intl';
 
 function ItemsViewsTabs({
   // #withViewDetail

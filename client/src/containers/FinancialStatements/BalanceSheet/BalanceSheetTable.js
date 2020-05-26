@@ -1,5 +1,6 @@
 import React, {useMemo, useCallback } from 'react';
 import { connect } from 'react-redux';
+import { useIntl } from 'react-intl';
 
 import Money from 'components/Money';
 import FinancialSheet from 'components/FinancialSheet';
@@ -12,7 +13,6 @@ import {
 } from 'store/financialStatement/financialStatements.selectors';
 
 import { compose, defaultExpanderReducer } from 'utils';
-import { FormattedMessage as T, useIntl } from 'react-intl';
 
 
 function BalanceSheetTable({
@@ -108,7 +108,7 @@ function BalanceSheetTable({
         width: 100,
       })))
     : [],
-  ], [balanceSheetQuery, balanceSheetColumns]);
+  ], [balanceSheetQuery, balanceSheetColumns,formatMessage]);
   
   const handleFetchData = useCallback(() => {
     onFetchData && onFetchData();

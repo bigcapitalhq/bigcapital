@@ -21,7 +21,7 @@ function ExpensesList({
   const {formatMessage} =useIntl()
   useEffect(() => {
     changePageTitle(formatMessage({id:'expenses_list'}));
-  }, []);
+  }, [changePageTitle,formatMessage]);
 
   const [deleteExpenseState, setDeleteExpense] = useState();
 

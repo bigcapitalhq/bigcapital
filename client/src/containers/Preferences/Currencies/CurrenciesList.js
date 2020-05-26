@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState, useMemo } from 'react';
+import React, { useCallback, useState, useMemo } from 'react';
 import {
   Button,
   Popover,
@@ -41,17 +41,25 @@ function CurrenciesList({
   const fetchCurrencies = useQuery(['currencies-table'],
     () => requestFetchCurrencies());
 
-  const handleEditCurrency = (currency) => {
+  // const handleEditCurrency = (currency) => {
+  //   openDialog('currency-form', {
+  //     action: 'edit',
+  //     currencyCode: currency.currency_code,
+  //   });
+  // };
+  const handleEditCurrency =useCallback((currency)=>{
     openDialog('currency-form', {
-      action: 'edit',
-      currencyCode: currency.currency_code,
-    });
-  };
+          action: 'edit',
+          currencyCode: currency.currency_code,
+        });
+  },[openDialog])
 
-  const onDeleteCurrency = (currency) => {
-    setDeleteCurrencyState(currency);
-  };
 
+  // const onDeleteCurrency = (currency) => {
+  //   setDeleteCurrencyState(currency);
+  // };
+
+  const onDeleteCurrency =useCallback((currency)=>{setDeleteCurrencyState(currency);},[])
   const handleCancelCurrencyDelete = () => {
     setDeleteCurrencyState(false);
   };
@@ -65,7 +73,7 @@ function CurrenciesList({
         });
       }
     );
-  }, [deleteCurrencyState]);
+  }, [requestDeleteCurrency,deleteCurrencyState,formatMessage]);
 
   const actionMenuList = useCallback((currency) => (
     <Menu>
@@ -78,7 +86,7 @@ function CurrenciesList({
         onClick={() => onDeleteCurrency(currency)}
       />
     </Menu>
-  ), []);
+  ), [handleEditCurrency,onDeleteCurrency]);
 
   const columns = useMemo(() => [
     {
@@ -110,11 +118,11 @@ function CurrenciesList({
       className: 'actions',
       width: 50,
     },
-  ], [actionMenuList]);
+  ], [actionMenuList,formatMessage]);
 
   const handleDatatableFetchData = useCallback(() => {
     onFetchData && onFetchData();
-  }, []);
+  }, [onFetchData]);
 
   return (
     <LoadingIndicator>

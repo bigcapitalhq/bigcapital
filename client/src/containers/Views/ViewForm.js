@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useFormik } from 'formik';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 
-import { useParams, useHistory } from 'react-router-dom';
+import {useHistory } from 'react-router-dom';
 import {
   InputGroup,
   FormGroup,
@@ -48,7 +48,7 @@ function ViewForm({
     return () => {
       changePageSubtitle('');
     };
-  }, []);
+  }, [changePageSubtitle,resourceMetadata.label]);
 
   const [draggedColumns, setDraggedColumn] = useState([
     ...(viewMeta && viewMeta.columns ? viewMeta.columns : []),

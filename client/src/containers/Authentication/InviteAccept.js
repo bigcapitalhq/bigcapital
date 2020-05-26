@@ -1,12 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import { FormattedMessage as T, useIntl } from 'react-intl';
-import ErrorMessage from 'components/ErrorMessage';
-import AppToaster from 'components/AppToaster';
-import { compose } from 'utils';
-import withAuthenticationActions from './withAuthenticationActions';
-import { useParams } from 'react-router-dom';
 import {
   Button,
   InputGroup,
@@ -15,13 +9,23 @@ import {
   Position,
   Spinner,
 } from '@blueprintjs/core';
+import { useParams } from 'react-router-dom';
+import { Row, Col } from 'react-grid-system';
+import { Link, useHistory } from 'react-router-dom';
+import { FormattedMessage as T, useIntl } from 'react-intl';
+
+
+import AppToaster from 'components/AppToaster';
+import ErrorMessage from 'components/ErrorMessage';
 
 import Icon from 'components/Icon';
-import { Row, Col } from 'react-grid-system';
-import AuthInsider from 'containers/Authentication/AuthInsider';
-import { Link, useHistory } from 'react-router-dom';
-import useAsync from 'hooks/async';
 import { If } from 'components';
+import useAsync from 'hooks/async';
+import AuthInsider from 'containers/Authentication/AuthInsider';
+
+import withAuthenticationActions from './withAuthenticationActions';
+
+import { compose } from 'utils';
 
 function Invite({ requestInviteAccept, requestInviteMetaByToken }) {
   const { formatMessage } = useIntl();
@@ -75,7 +79,6 @@ function Invite({ requestInviteAccept, requestInviteMetaByToken }) {
   );
 
   const {
-    values,
     touched,
     errors,
     handleSubmit,

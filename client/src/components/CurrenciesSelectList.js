@@ -10,7 +10,7 @@ import {
   Select
 } from '@blueprintjs/select';
 
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'react-intl';
 
 export default function CurrenciesSelectList(props) {
   const {formGroupProps, selectProps, onItemSelect} = props;

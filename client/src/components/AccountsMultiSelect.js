@@ -4,9 +4,8 @@ import {
   MenuItem,
   Button
 } from '@blueprintjs/core';
-// import {Select} from '@blueprintjs/select';
 import MultiSelect from 'components/MultiSelect';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'react-intl';
 
 export default function AccountsMultiSelect({
   accounts,

@@ -1,5 +1,5 @@
 import t from 'store/types';
-import { createReducer, combineReducers } from '@reduxjs/toolkit';
+import { createReducer} from '@reduxjs/toolkit';
 import { createTableQueryReducers } from 'store/queryReducers';
 
 const initialState = {

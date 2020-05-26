@@ -97,8 +97,29 @@ function ManualJournalsDataTable({
     [onDeleteJournal]
   );
 
-  const actionMenuList = (journal) => (
-    <Menu>
+  // const actionMenuList = (journal) => (
+  //   <Menu>
+  //     <MenuItem text={<T id={'view_details'} />} />
+  //     <MenuDivider />
+  //     {!journal.status && (
+  //       <MenuItem
+  //         text={<T id={'publish_journal'} />}
+  //         onClick={handlePublishJournal(journal)}
+  //       />
+  //     )}
+  //     <MenuItem
+  //       text={<T id={'edit_journal'} />}
+  //       onClick={handleEditJournal(journal)}
+  //     />
+  //     <MenuItem
+  //       text={<T id={'delete_journal'} />}
+  //       intent={Intent.DANGER}
+  //       onClick={handleDeleteJournal(journal)}
+  //     />
+  //   </Menu>
+  // );
+  const actionMenuList =useCallback((journal)=>(
+  <Menu>
       <MenuItem text={<T id={'view_details'} />} />
       <MenuDivider />
       {!journal.status && (
@@ -117,7 +138,7 @@ function ManualJournalsDataTable({
         onClick={handleDeleteJournal(journal)}
       />
     </Menu>
-  );
+  ),[handleEditJournal,handleDeleteJournal,handlePublishJournal]);
 
   const columns = useMemo(() => [
     {
@@ -203,7 +224,7 @@ function ManualJournalsDataTable({
       width: 50,
       disableResizing: true,
     },
-  ], []);
+  ], [actionMenuList,formatMessage]);
 
   const handleDataTableFetchData = useCallback((...args) => {
     onFetchData && onFetchData(...args);

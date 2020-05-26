@@ -59,7 +59,7 @@ function TrialBalanceSheetTable({
       className: 'balance',
       width: 120,
     }
-  ], []);
+  ], [formatMessage]);
 
   const handleFetchData = useCallback(() => {
     onFetchData && onFetchData();

@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback,useMemo } from 'react';
 import { useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
 import { Alert, Intent } from '@blueprintjs/core';
+import { FormattedMessage as T, useIntl, FormattedHTMLMessage } from 'react-intl';
 import AppToaster from 'components/AppToaster';
 
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
@@ -15,7 +16,6 @@ import withExchangeRatesActions from 'containers/ExchangeRates/withExchangeRates
 
 import { compose } from 'utils';
 
-  import { FormattedMessage as T, useIntl, FormattedHTMLMessage } from 'react-intl';
 
 function ExchangeRate({
   // #withDashboard
@@ -37,10 +37,6 @@ function ExchangeRate({
   const { formatMessage } = useIntl();
   const [bulkDelete, setBulkDelete] = useState(false);
 
-  // const fetchExchangeRates = useQuery('exchange-rates-table', () => {
-  //   return Promise.all([requestFetchExchangeRates()]);
-  // });
-
    const fetchExchangeRates = useQuery('exchange-rates-table',
     () => requestFetchExchangeRates());
 
@@ -49,7 +45,7 @@ function ExchangeRate({
     id
       ? changePageTitle(formatMessage({id:'exchange_rate_details'}))
       : changePageTitle(formatMessage({id:'exchange_rate_list'}));
-  }, [id, changePageTitle]);
+  }, [id, changePageTitle,formatMessage]);
 
   const handelDeleteExchangeRate = useCallback(
     (exchange_rate) => {
@@ -71,7 +67,7 @@ function ExchangeRate({
         message: formatMessage({id:'the_exchange_rate_has_been_successfully_deleted'}),
       });
     });
-  }, [deleteExchangeRate, requestDeleteExchangeRate]);
+  }, [deleteExchangeRate, requestDeleteExchangeRate,formatMessage]);
 
   // Handle fetch data of Exchange_rates datatable.
   const handleFetchData = useCallback(
@@ -123,7 +119,7 @@ const handleConfirmBulkDelete = useCallback(() => {
     .catch((errors) => {
       setBulkDelete(false);
     });
-}, [requestDeleteBulkExchangeRates, bulkDelete]);
+}, [requestDeleteBulkExchangeRates, bulkDelete,formatMessage]);
 
 
   // Calculates the data table selected rows count.

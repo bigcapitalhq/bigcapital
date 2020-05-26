@@ -6,7 +6,7 @@ import {
   FormGroup,
   MenuItem,
 } from '@blueprintjs/core';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'react-intl';
 
 export default function SelectsListColumnsBy(props) {
   const { onItemSelect, formGroupProps, selectListProps } = props;
@@ -19,7 +19,7 @@ export default function SelectsListColumnsBy(props) {
     {key: 'week', name: 'Date/Week', type: 'date_periods', by: 'month'},
     {key: 'day', name: 'Date/Day', type: 'date_periods', by: 'day'},
     {key: 'quarter', name: 'Date/Quarter', type: 'date_periods', by: 'quarter'},
-  ]);
+  ],[]);
 
   const itemRenderer = useCallback((item, { handleClick, modifiers, query }) => {
     return (<MenuItem text={item.name} key={item.id} onClick={handleClick} />);

@@ -15,6 +15,7 @@ import {
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { FormattedMessage as T } from 'react-intl';
 import { If } from 'components';
 
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
@@ -27,7 +28,6 @@ import withAccountsTableActions from 'containers/Accounts/withAccountsTableActio
 import withAccounts from 'containers/Accounts/withAccounts';
 
 import {compose} from 'utils';
-import { FormattedMessage as T, useIntl } from 'react-intl';
 
 
 function AccountsActionsBar({
@@ -72,9 +72,9 @@ function AccountsActionsBar({
     },
   });
 
-  const handleBulkArchive = useCallback(() => {
-    onBulkArchive && onBulkArchive(selectedRows.map(r => r.id));
-  }, [onBulkArchive, selectedRows]);
+  // const handleBulkArchive = useCallback(() => {
+  //   onBulkArchive && onBulkArchive(selectedRows.map(r => r.id));
+  // }, [onBulkArchive, selectedRows]);
 
   const handleBulkDelete = useCallback(() => {
     onBulkDelete && onBulkDelete(selectedRows.map(r => r.id));

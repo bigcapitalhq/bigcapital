@@ -2,7 +2,7 @@ import React, {useState, useCallback, useMemo} from 'react';
 import {Row, Col} from 'react-grid-system';
 import {momentFormatter} from 'utils';
 import {DateInput} from '@blueprintjs/datetime';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
 
 import {
   HTMLSelect,

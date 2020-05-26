@@ -38,7 +38,6 @@ function ManualJournalsTable({
   const history = useHistory();
 
   const [deleteManualJournal, setDeleteManualJournal] = useState(false);
-  const [deleteBulk, setDeleteBulk] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
   const [bulkDelete, setBulkDelete] = useState(false);
 
@@ -53,7 +52,7 @@ function ManualJournalsTable({
 
   useEffect(() => {
     changePageTitle(formatMessage({id:'manual_journals'}));
-  }, [changePageTitle]);
+  }, [changePageTitle,formatMessage]);
 
   // Handle delete manual journal click.
   const handleDeleteJournal = useCallback(
@@ -81,7 +80,7 @@ function ManualJournalsTable({
       });
       setDeleteManualJournal(false);
     });
-  }, [deleteManualJournal, requestDeleteManualJournal]);
+  }, [deleteManualJournal, requestDeleteManualJournal,formatMessage]);
 
 
   // Calculates the selected rows count.
@@ -113,7 +112,7 @@ function ManualJournalsTable({
       .catch((error) => {
         setBulkDelete(false);
       });
-  }, [requestDeleteBulkManualJournals, bulkDelete]);
+  }, [requestDeleteBulkManualJournals, bulkDelete,formatMessage,selectedRowsCount]);
 
   // Handle cancel bulk delete alert.
   const handleCancelBulkDelete = useCallback(() => {
@@ -133,9 +132,9 @@ function ManualJournalsTable({
   }, [fetchManualJournals]);
 
   // Handle view change to re-fetch data table.
-  const handleViewChanged = useCallback(() => {
+  // const handleViewChanged = useCallback(() => {
     
-  }, [fetchManualJournals]);
+  // }, [fetchManualJournals]);
 
   // Handle fetch data of manual jouranls datatable.
   const handleFetchData = useCallback(({ pageIndex, pageSize, sortBy }) => {
@@ -151,11 +150,11 @@ function ManualJournalsTable({
     (journal) => {
       requestPublishManualJournal(journal.id).then(() => {
         AppToaster.show({
-          message: 'the_manual_journal_id_has_been_published',
+          message: formatMessage({id:'the_manual_journal_id_has_been_published'})
         });
       });
     },
-    [requestPublishManualJournal]
+    [requestPublishManualJournal,formatMessage]
   );
 
   // Handle selected rows change.

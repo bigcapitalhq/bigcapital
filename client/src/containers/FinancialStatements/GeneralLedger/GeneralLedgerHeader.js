@@ -1,31 +1,29 @@
-import React, {useState, useMemo, useEffect, useCallback} from 'react';
-import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
-import { FormattedMessage as T, useIntl } from 'react-intl';
-
+import React, { useCallback} from 'react';
 import {
   Button,
   FormGroup,
   Classes,
 } from '@blueprintjs/core';
 import {Row, Col} from 'react-grid-system';
-import {
-  compose,
-} from 'utils';
 import moment from 'moment';
+import * as Yup from 'yup';
+import {useFormik} from 'formik';
+import { FormattedMessage as T } from 'react-intl';
+
+import AccountsMultiSelect from 'components/AccountsMultiSelect';
+import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
 import AccountsConnect from 'connectors/Accounts.connector'
 import classNames from 'classnames';
-import AccountsMultiSelect from 'components/AccountsMultiSelect';
-import {useFormik} from 'formik';
 import FinancialStatementDateRange from 'containers/FinancialStatements/FinancialStatementDateRange';
-import * as Yup from 'yup';
 import RadiosAccountingBasis from '../RadiosAccountingBasis';
+import {compose} from 'utils';
+
 
 function GeneralLedgerHeader({
   onSubmitFilter,
   pageFilter,
   accounts,
 }) {
-  const {formatMessage} = useIntl();
 
   const formik = useFormik({
     enableReinitialize: true,

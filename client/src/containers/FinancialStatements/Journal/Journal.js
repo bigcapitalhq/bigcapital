@@ -36,7 +36,7 @@ function Journal({
 
   useEffect(() => {
     changePageTitle(formatMessage({id:'journal_sheet'}));
-  }, []);
+  }, [changePageTitle,formatMessage]);
 
   const fetchHook = useQuery(['journal', filter],
     (key, query) => requestFetchJournalSheet(query),

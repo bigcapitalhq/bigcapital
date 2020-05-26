@@ -13,6 +13,7 @@ import {
   Tag
 } from '@blueprintjs/core';
 import { snakeCase } from 'lodash';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 
 import Icon from 'components/Icon';
 import LoadingIndicator from 'components/LoadingIndicator';
@@ -25,7 +26,6 @@ import withUsers from 'containers/Users/withUsers';
 import withUsersActions from 'containers/Users/withUsersActions';
 
 import { compose } from 'utils';
-import { FormattedMessage as T, useIntl } from 'react-intl';
 
 
 function UsersListPreferences({
@@ -65,7 +65,7 @@ function UsersListPreferences({
       setInactiveUserState(false);
       AppToaster.show({ message: formatMessage({id:'the_user_has_been_successfully_inactivated'}) });
     });
-  }, [inactiveUserState, requestInactiveUser, requestFetchUsers]);
+  }, [inactiveUserState, requestInactiveUser, requestFetchUsers,formatMessage]);
 
   const onDeleteUser = (user) => {
     setDeleteUserState(user);
@@ -160,7 +160,7 @@ function UsersListPreferences({
       className: 'actions',
       width: 50,
     },
-  ], [actionMenuList]);
+  ], [actionMenuList,formatMessage]);
 
   const handelDataTableFetchData = useCallback(() => {
     onFetchData && onFetchData();

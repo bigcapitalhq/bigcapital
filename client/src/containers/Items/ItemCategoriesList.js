@@ -12,7 +12,6 @@ import AppToaster from 'components/AppToaster';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import ItemCategoriesDataTable from 'containers/Items/ItemCategoriesTable';
 import ItemsCategoryActionsBar from 'containers/Items/ItemsCategoryActionsBar';
-import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 
 import withDialog from 'connectors/Dialog.connector';
 import withDashboardActions from 'containers/Dashboard/withDashboard';
@@ -46,7 +45,7 @@ const ItemCategoryList = ({
     id
       ? changePageTitle(formatMessage({ id: 'edit_category_details' }))
       : changePageTitle(formatMessage({ id: 'category_list' }));
-  }, []);
+  }, [id,changePageTitle,formatMessage]);
 
   const fetchCategories = useQuery(
     ['items-categories-table', filter],
@@ -126,7 +125,7 @@ const ItemCategoryList = ({
       .catch((errors) => {
         setBulkDelete(false);
       });
-  }, [requestDeleteBulkItemCategories, bulkDelete]);
+  }, [requestDeleteBulkItemCategories, bulkDelete,formatMessage]);
 
 
   //Handel cancel itemCategories bulk delete.

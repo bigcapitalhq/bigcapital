@@ -1,5 +1,5 @@
-import React, { useCallback } from 'react';
-import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
+import React from 'react';
+import { Tabs, Tab } from '@blueprintjs/core';
 import PreferencesSubContent from 'components/Preferences/PreferencesSubContent';
 import connector from 'connectors/UsersPreferences.connector';
 

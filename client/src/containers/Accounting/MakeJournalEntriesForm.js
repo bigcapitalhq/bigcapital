@@ -3,7 +3,7 @@ import * as Yup from 'yup';
 import { useFormik } from "formik";
 import moment from 'moment';
 import { Intent } from '@blueprintjs/core';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
 import { pick } from 'lodash';
 
 import MakeJournalEntriesHeader from './MakeJournalEntriesHeader';
@@ -60,7 +60,7 @@ function MakeJournalEntriesForm({
     } else {
       changePageTitle(formatMessage({id:'new_journal'}));  
     }
-  }, [changePageTitle, changePageSubtitle, manualJournal]);
+  }, [changePageTitle, changePageSubtitle, manualJournal,formatMessage]);
 
   const validationSchema = Yup.object().shape({
     journal_number: Yup.string().required().label(formatMessage({id:'journal_number_'})),

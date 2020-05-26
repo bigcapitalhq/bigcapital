@@ -25,7 +25,7 @@ export default function FinancialSheet({
       cash: formatMessage({id:'cash'}),
       accrual: formatMessage({id:'accrual'}),
     }),
-    []
+    [formatMessage]
   );
   const getBasisLabel = useCallback((b) => methodsLabels[b], [methodsLabels]);
   const basisLabel = useMemo(() => getBasisLabel(basis), [

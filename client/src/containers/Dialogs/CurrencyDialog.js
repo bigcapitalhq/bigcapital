@@ -11,20 +11,21 @@ import { FormattedMessage as T, useIntl } from 'react-intl';
 import { useFormik } from 'formik';
 import { useQuery } from 'react-query';
 import { connect } from 'react-redux';
+import { pick } from 'lodash';
 
-import { compose } from 'utils';
-import Dialog from 'components/Dialog';
 
 import AppToaster from 'components/AppToaster';
-import DialogConnect from 'connectors/Dialog.connector';
+import Dialog from 'components/Dialog';
 import DialogReduxConnect from 'components/DialogReduxConnect';
+import ErrorMessage from 'components/ErrorMessage';
+import classNames from 'classnames';
+import DialogConnect from 'connectors/Dialog.connector';
+import { getDialogPayload } from 'store/dashboard/dashboard.reducer';
+
 import withCurrency from 'containers/Currencies/withCurrency';
 import withCurrenciesActions from 'containers/Currencies/withCurrenciesActions';
 
-import ErrorMessage from 'components/ErrorMessage';
-import classNames from 'classnames';
-import { pick } from 'lodash';
-import { getDialogPayload } from 'store/dashboard/dashboard.reducer';
+import { compose } from 'utils';
 
 
 
@@ -59,11 +60,9 @@ function CurrencyDialog({
   }), []);
 
   const {
-    values, 
     errors,
     touched,
     isSubmitting,
-    setFieldValue,
     getFieldProps,
     handleSubmit,
     resetForm,
@@ -118,7 +117,7 @@ function CurrencyDialog({
   const onDialogClosed = useCallback(() => {
     resetForm();
     closeDialog(name);
-  }, [closeDialog, name]);
+  }, [closeDialog, name,resetForm]);
 
   const requiredSpan = useMemo(() => <span className={'required'}>*</span>, []);
 

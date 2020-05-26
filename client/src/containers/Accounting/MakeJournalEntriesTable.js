@@ -1,5 +1,7 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { Button, Intent } from '@blueprintjs/core';
+import { FormattedMessage as T, useIntl } from 'react-intl';
+
 import DataTable from 'components/DataTable';
 import Icon from 'components/Icon';
 import { compose, formattedAmount } from 'utils';
@@ -9,9 +11,7 @@ import {
   InputGroupCell,
 } from 'components/DataTableCells';
 import { omit } from 'lodash';
-
 import withAccounts from 'containers/Accounts/withAccounts';
-import { FormattedMessage as T, useIntl } from 'react-intl';
 
 // Actions cell renderer.
 const ActionsCellRenderer = ({
@@ -188,7 +188,7 @@ function MakeJournalEntriesTable({
         width: 45,
       },
     ],
-    []
+    [formatMessage]
   );
 
   // Handles click new line.

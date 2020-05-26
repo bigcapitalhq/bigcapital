@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo } from 'react';
 import {connect} from 'react-redux';
 import moment from 'moment';
+import {  useIntl } from 'react-intl';
 
 import FinancialSheet from 'components/FinancialSheet';
 import DataTable from 'components/DataTable';
@@ -12,7 +13,6 @@ import {
 } from 'store/financialStatement/financialStatements.selectors';
 
 import withJournal from './withJournal';
-import { FormattedMessage as T, useIntl } from 'react-intl';
 
 
 function JournalSheetTable({
@@ -78,7 +78,7 @@ function JournalSheetTable({
       accessor: r => exceptRowTypes(
         r.rowType, (<Money amount={r.debit} currency={'USD'} />), ['space_entry']),
     },
-  ], []);
+  ], [formatMessage]);
 
   const handleFetchData = useCallback((...args) => {
     onFetchData && onFetchData(...args)

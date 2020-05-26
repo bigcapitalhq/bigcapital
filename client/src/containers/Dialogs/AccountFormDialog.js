@@ -16,7 +16,7 @@ import { useFormik } from 'formik';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 
 import { omit } from 'lodash';
-import { useQuery, queryCache } from 'react-query';
+import { useQuery } from 'react-query';
 
 import Dialog from 'components/Dialog';
 import AppToaster from 'components/AppToaster';
@@ -228,13 +228,13 @@ function AccountFormDialog({
     fetchAccountsList.refetch();
     fetchAccountsTypes.refetch();
     fetchAccount.refetch();
-  }, []);
+  }, [ fetchAccount, fetchAccountsList, fetchAccountsTypes]);
 
   const onChangeAccountType = useCallback(
     (accountType) => {
       formik.setFieldValue('account_type_id', accountType.id);
     },
-    [setSelectedAccountType, formik]
+    [formik]
   );
 
   // Handles change sub-account.
