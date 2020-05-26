@@ -1,4 +1,4 @@
-import React, {useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -37,7 +37,10 @@ function UserFormDialog({
   }, false);
 
   const validationSchema = Yup.object().shape({
-    email: Yup.string().email().required().label(formatMessage({id:'email'})),
+    email: Yup.string()
+      .email()
+      .required()
+      .label(formatMessage({ id: 'email' })),
   });
 
   const initialValues = {
@@ -45,7 +48,7 @@ function UserFormDialog({
     ...(payload.action === 'edit' &&
       pick(
         objectKeysTransform(payload.user, snakeCase),
-        Object.keys(validationSchema.fields)
+        Object.keys(validationSchema.fields),
       )),
   };
 
@@ -82,7 +85,10 @@ function UserFormDialog({
     resetForm();
   }, [resetForm]);
 
-  const handleClose = () => { closeDialog(name); };
+  // Handles dialog close.
+  const handleClose = useCallback(() => {
+    closeDialog(name);
+  }, [closeDialog, name]);
 
   return (
     <Dialog
@@ -104,10 +110,11 @@ function UserFormDialog({
       isLoading={fetchHook.pending}
       onClosed={onDialogClosed}
       onOpening={onDialogOpening}
+      onClose={handleClose}
     >
       <form onSubmit={handleSubmit}>
         <div className={Classes.DIALOG_BODY}>
-          <p class='mb2'>
+          <p class="mb2">
             <T id={'your_access_to_your_team'} />
           </p>
 
@@ -115,7 +122,7 @@ function UserFormDialog({
             label={<T id={'email'} />}
             className={classNames('form-group--email', Classes.FILL)}
             intent={errors.email && touched.email && Intent.DANGER}
-            helperText={<ErrorMessage name='email' {...{ errors, touched }} />}
+            helperText={<ErrorMessage name="email" {...{ errors, touched }} />}
             inline={true}
           >
             <InputGroup
@@ -128,9 +135,19 @@ function UserFormDialog({
 
         <div className={Classes.DIALOG_FOOTER}>
           <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-            <Button onClick={handleClose}><T id={'cancel'} /></Button>
-            <Button intent={Intent.PRIMARY} type='submit' disabled={isSubmitting}>
-              {payload.action === 'edit' ? <T id={'edit'} /> : <T id={'invite'} />}
+            <Button onClick={handleClose}>
+              <T id={'cancel'} />
+            </Button>
+            <Button
+              intent={Intent.PRIMARY}
+              type="submit"
+              disabled={isSubmitting}
+            >
+              {payload.action === 'edit' ? (
+                <T id={'edit'} />
+              ) : (
+                <T id={'invite'} />
+              )}
             </Button>
           </div>
         </div>
@@ -141,5 +158,5 @@ function UserFormDialog({
 
 export default compose(
   UserFormDialogConnect,
-  DialogReduxConnect
+  DialogReduxConnect,
 )(UserFormDialog);

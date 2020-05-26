@@ -12,6 +12,7 @@ import {
 } from '@blueprintjs/core';
 import { objectKeysTransform } from 'utils';
 import { pick, snakeCase } from 'lodash';
+import { queryCache } from 'react-query';
 
 import AppToaster from 'components/AppToaster';
 
@@ -80,6 +81,7 @@ function InviteUserDialog({
               message: formatMessage({id:'the_user_details_has_been_updated'}),
             });
             setSubmitting(false);
+            queryCache.refetchQueries('users-table',{force:true})
           })
           .catch((error) => {
             setSubmitting(false);
@@ -97,14 +99,15 @@ function InviteUserDialog({
     formik.resetForm();
   }, [formik.resetForm]);
 
-  const handleClose = () => {
-    closeDialog(name);
-  };
+ // Handles dialog close.
+ const handleClose = useCallback(() => {
+  closeDialog(name);
+}, [closeDialog, name]);
 
   return (
     <Dialog
       name={name}
-      title={payload.action === 'edit' ? <T id={'edit_invite'} /> : ''}
+      title={payload.action === 'edit' ? <T id={'edit_user'} /> : ''}
       className={classNames({
         'dialog--loading': fetchHook.pending,
         'dialog--invite-user': true,
@@ -115,6 +118,7 @@ function InviteUserDialog({
       isLoading={fetchHook.pending}
       onClosed={onDialogClosed}
       onOpening={onDialogOpening}
+      onClose={handleClose}
     >
       <form onSubmit={formik.handleSubmit}>
         <div className={Classes.DIALOG_BODY}>
@@ -179,7 +183,7 @@ function InviteUserDialog({
         <div className={Classes.DIALOG_FOOTER}>
           <div className={Classes.DIALOG_FOOTER_ACTIONS}>
             <Button onClick={handleClose}><T id={'close'}/></Button>
-            <Button intent={Intent.PRIMARY} type='submit'>
+            <Button intent={Intent.PRIMARY} type='submit' disabled={formik.isSubmitting} >
               {payload.action === 'edit' ? <T id={'edit'}/> : ''}
             </Button>
           </div>

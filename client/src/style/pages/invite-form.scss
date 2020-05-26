@@ -1,18 +1,20 @@
-
 .dialog--invite-form {
-  &.bp3-dialog {
-    width: 450px;
-  }
-  &:not(.dialog--loading) .bp3-dialog-body {
-    margin-bottom: 25px;
-  }
+  width: 450px;
+
   .bp3-dialog-body {
-  
-    .bp3-dialog-footer-actions {
-      margin-right: 30px;
-      display: flex;
-      justify-content: flex-end;
+    .bp3-form-group.bp3-inline {
+      .bp3-label {
+        min-width: 70px;
+      }
+      .bp3-form-content {
+        width: 250px;
+
+        .bp3-dialog-footer-actions {
+          margin-right: 20px;
+          display: flex;
+          justify-content: flex-end;
+        }
+      }
     }
   }
 }
-
