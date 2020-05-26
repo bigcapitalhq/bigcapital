@@ -3,7 +3,7 @@ import { useQuery } from 'react-query';
 import moment from 'moment';
 import { useIntl } from 'react-intl';
 
-import TrialBalanceSheetHeader from "./TrialBalanceSheetHeader";
+import TrialBalanceSheetHeader from './TrialBalanceSheetHeader';
 import TrialBalanceSheetTable from './TrialBalanceSheetTable';
 import TrialBalanceActionsBar from './TrialBalanceActionsBar';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
@@ -15,8 +15,6 @@ import withDashboard from 'containers/Dashboard/withDashboard';
 import withTrialBalanceActions from './withTrialBalanceActions';
 import withTrialBalance from './withTrialBalance';
 import withSettings from 'containers/Settings/withSettings';
-
-
 
 function TrialBalanceSheet({
   // #withDashboard
@@ -37,40 +35,36 @@ function TrialBalanceSheet({
     basis: 'accural',
     none_zero: false,
   });
-  const [refetch, setRefetch] = useState(false);
   const { formatMessage } = useIntl();
 
-  const fetchHook = useQuery(['trial-balance', filter],
+  const fetchHook = useQuery(
+    ['trial-balance', filter],
     (key, query) => fetchTrialBalanceSheet(query),
-    { manual: true });
+    { manual: true },
+  );
 
   // handle fetch data of trial balance table.
   const handleFetchData = useCallback(() => {
-    setRefetch(true);
-  }, [fetchHook]);
+    fetchHook.refetch({ force: true });
+  }, []);
 
   // Change page title of the dashboard.
   useEffect(() => {
-    changePageTitle(formatMessage({id:'trial_balance_sheet'}));
-  }, [changePageTitle,formatMessage]);
+    changePageTitle(formatMessage({ id: 'trial_balance_sheet' }));
+  }, [changePageTitle, formatMessage]);
 
-  const handleFilterSubmit = useCallback((filter) => {
-    const parsedFilter = {
-      ...filter,
-      from_date: moment(filter.from_date).format('YYYY-MM-DD'),
-      to_date: moment(filter.to_date).format('YYYY-MM-DD'),
-    };
-    setFilter(parsedFilter);
-    setRefetch(true);
-  }, []);
-
-  // Refetch sheet effect.
-  useEffect(() => {
-    if (refetch) {
+  const handleFilterSubmit = useCallback(
+    (filter) => {
+      const parsedFilter = {
+        ...filter,
+        from_date: moment(filter.from_date).format('YYYY-MM-DD'),
+        to_date: moment(filter.to_date).format('YYYY-MM-DD'),
+      };
+      setFilter(parsedFilter);
       fetchHook.refetch({ force: true });
-      setRefetch(false);
-    }
-  }, [fetchHook]);
+    },
+    [fetchHook],
+  );
 
   return (
     <DashboardInsider>
@@ -80,19 +74,21 @@ function TrialBalanceSheet({
         <div class="financial-statement">
           <TrialBalanceSheetHeader
             pageFilter={filter}
-            onSubmitFilter={handleFilterSubmit} />
+            onSubmitFilter={handleFilterSubmit}
+          />
 
           <div class="financial-statement__body">
             <TrialBalanceSheetTable
               companyName={organizationSettings.name}
               trialBalanceQuery={filter}
               onFetchData={handleFetchData}
-              loading={trialBalanceSheetLoading} />
+              loading={trialBalanceSheetLoading}
+            />
           </div>
         </div>
       </DashboardPageContent>
     </DashboardInsider>
-  )
+  );
 }
 
 export default compose(

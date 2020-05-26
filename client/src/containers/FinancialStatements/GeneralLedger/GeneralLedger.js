@@ -38,7 +38,6 @@ function GeneralLedger({
     basis: 'accural',
     none_zero: true,
   });
-  const [refetch, setRefetch] = useState(false);
 
   // Change page title of the dashboard.
   useEffect(() => {
@@ -52,17 +51,9 @@ function GeneralLedger({
     (key, query) => fetchGeneralLedger(query),
     { manual: true });
 
-  // Refetch general ledger sheet effect.
-  useEffect(() => {
-    if (refetch) {
-      fetchSheet.refetch({ force: true });
-      setRefetch(false);
-    }
-  }, [fetchSheet, refetch]);
-
   // Handle fetch data of trial balance table.
   const handleFetchData = useCallback(() => {
-    setRefetch(true);
+    fetchSheet.refetch({ force: true });
   }, []);
   
   // Handle financial statement filter change.
@@ -73,7 +64,7 @@ function GeneralLedger({
       to_date: moment(filter.to_date).format('YYYY-MM-DD'),
     };
     setFilter(parsedFilter);
-    setRefetch(true);
+    fetchSheet.refetch({ force: true });
   }, [setFilter]);
 
   const handleFilterChanged = () => { };

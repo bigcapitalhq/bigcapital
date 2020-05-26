@@ -15,13 +15,12 @@ import SettingsConnect from 'connectors/Settings.connect';
 import withDashboard from 'containers/Dashboard/withDashboard';
 import withJournalActions from './withJournalActions';
 
-
 function Journal({
   // #withJournalActions
   requestFetchJournalSheet,
 
   // #withDashboard
-  changePageTitle,  
+  changePageTitle,
 
   // #withPreferences
   organizationSettings,
@@ -29,72 +28,68 @@ function Journal({
   const [filter, setFilter] = useState({
     from_date: moment().startOf('year').format('YYYY-MM-DD'),
     to_date: moment().endOf('year').format('YYYY-MM-DD'),
-    basis: 'accural'
+    basis: 'accural',
   });
   const { formatMessage } = useIntl();
-  const [refetch, setRefetch] = useState(false);
 
   useEffect(() => {
-    changePageTitle(formatMessage({id:'journal_sheet'}));
-  }, [changePageTitle,formatMessage]);
+    changePageTitle(formatMessage({ id: 'journal_sheet' }));
+  }, [changePageTitle, formatMessage]);
 
-  const fetchHook = useQuery(['journal', filter],
+  const fetchHook = useQuery(
+    ['journal', filter],
     (key, query) => requestFetchJournalSheet(query),
-    { manual: true });
+    { manual: true },
+  );
 
   // Handle financial statement filter change.
-  const handleFilterSubmit = useCallback((filter) => {
-    const _filter = {
-      ...filter,
-      from_date: moment(filter.from_date).format('YYYY-MM-DD'),
-      to_date: moment(filter.to_date).format('YYYY-MM-DD'),
-    };
-    setFilter(_filter);
-    setRefetch(true);
-  }, [fetchHook]);
+  const handleFilterSubmit = useCallback(
+    (filter) => {
+      const _filter = {
+        ...filter,
+        from_date: moment(filter.from_date).format('YYYY-MM-DD'),
+        to_date: moment(filter.to_date).format('YYYY-MM-DD'),
+      };
+      setFilter(_filter);
+      fetchHook.refetch({ force: true });
+    },
+    [fetchHook],
+  );
 
-  const handlePrintClick = useCallback(() => {
+  const handlePrintClick = useCallback(() => {}, []);
 
-  }, []);
-
-  const handleExportClick = useCallback(() => {
-
-  }, []);
+  const handleExportClick = useCallback(() => {}, []);
 
   const handleFetchData = useCallback(({ sortBy, pageIndex, pageSize }) => {
-    setRefetch(true);
+    fetchHook.refetch({ force: true });
   }, []);
-
-  useEffect(() => {
-    if (refetch) {
-      fetchHook.refetch({ force: true });
-      setRefetch(false);
-    }
-  }, [refetch, fetchHook])
 
   return (
     <DashboardInsider>
       <JournalActionsBar
         onSubmitFilter={handleFilterSubmit}
         onPrintClick={handlePrintClick}
-        onExportClick={handleExportClick} />
+        onExportClick={handleExportClick}
+      />
 
       <DashboardPageContent>
         <div class="financial-statement financial-statement--journal">
-          <JournalHeader 
+          <JournalHeader
             pageFilter={filter}
-            onSubmitFilter={handleFilterSubmit} />
-          
+            onSubmitFilter={handleFilterSubmit}
+          />
+
           <div class="financial-statement__table">
             <JournalTable
               companyName={organizationSettings.name}
               journalQuery={filter}
-              onFetchData={handleFetchData} />
+              onFetchData={handleFetchData}
+            />
           </div>
         </div>
       </DashboardPageContent>
     </DashboardInsider>
-  )
+  );
 }
 
 export default compose(
