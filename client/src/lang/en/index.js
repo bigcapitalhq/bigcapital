@@ -266,6 +266,7 @@ export default {
   trial_balance_sheet: 'Trial Balance Sheet',
   journal: 'Journal',
   general_ledger: 'General Ledger',
+  general_ledger_sheet: 'General Ledger Sheet',
   profit_loss_sheet: 'Profit Loss Sheet',
   expenses: 'Expenses',
   expenses_list: 'Expenses List',
@@ -369,4 +370,8 @@ export default {
     "Once you delete these items, you won't be able to retrieve them later. Are you sure you want to delete them?",
   ops_something_went_wrong: 'Something went wrong! Please try again.',
   session_expired: 'Session Expired!',
+  this_report_does_not_contain_any_data_between_date_period: 'This report does not contain any data between date period.',
+  welcome_organization_account_has_been_created: '👋 Welcome, You organization account has been created, Sign in now!',
+  the_phone_number_already_used_in_another_account: 'he phone number is already used in another account',
+  the_email_already_used_in_another_account: 'The email is already used in another account',
 };

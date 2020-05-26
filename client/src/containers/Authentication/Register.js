@@ -31,19 +31,27 @@ function Register({ requestRegister }) {
   }, [shown]);
 
   const ValidationSchema = Yup.object().shape({
-    organization_name: Yup.string().required().label(formatMessage({id:'organization_name_'})),
-    first_name: Yup.string().required().label(formatMessage({id:'first_name_'})),
-    last_name: Yup.string().required().label(formatMessage({id:'last_name_'})),
+    organization_name: Yup.string()
+      .required()
+      .label(formatMessage({ id: 'organization_name_' })),
+    first_name: Yup.string()
+      .required()
+      .label(formatMessage({ id: 'first_name_' })),
+    last_name: Yup.string()
+      .required()
+      .label(formatMessage({ id: 'last_name_' })),
     email: Yup.string()
       .email()
       .required()
       .label(formatMessage({ id: 'email' })),
     phone_number: Yup.string()
       .matches()
-      .required().label(formatMessage({id:'phone_number_'})),
+      .required()
+      .label(formatMessage({ id: 'phone_number_' })),
     password: Yup.string()
       .min(4)
-      .required().label(formatMessage({id:'password'})),
+      .required()
+      .label(formatMessage({ id: 'password' })),
   });
 
   const initialValues = useMemo(
@@ -55,7 +63,7 @@ function Register({ requestRegister }) {
       phone_number: '',
       password: '',
     }),
-    []
+    [],
   );
 
   const {
@@ -75,7 +83,10 @@ function Register({ requestRegister }) {
       requestRegister(values)
         .then((response) => {
           AppToaster.show({
-            message: formatMessage({ id: 'success' }),
+            message: formatMessage({
+              id: 'welcome_organization_account_has_been_created',
+            }),
+            intent: Intent.SUCCESS,
           });
           setSubmitting(false);
           history.push('/auth/login');
@@ -83,13 +94,16 @@ function Register({ requestRegister }) {
         .catch((errors) => {
           if (errors.some((e) => e.type === 'PHONE_NUMBER_EXISTS')) {
             setErrors({
-              phone_number:
-                'The phone number is already used in another account.',
+              phone_number: formatMessage({
+                id: 'the_phone_number_already_used_in_another_account',
+              }),
             });
           }
           if (errors.some((e) => e.type === 'EMAIL_EXISTS')) {
             setErrors({
-              email: 'The email is already used in another account.',
+              email: formatMessage({
+                id: 'the_email_already_used_in_another_account',
+              }),
             });
           }
           setSubmitting(false);
@@ -99,26 +113,26 @@ function Register({ requestRegister }) {
 
   const passwordRevealerTmp = useMemo(
     () => (
-      <span class='password-revealer' onClick={() => passwordRevealer()}>
+      <span class="password-revealer" onClick={() => passwordRevealer()}>
         <If condition={shown}>
           <>
-            <Icon icon='eye-slash' />{' '}
-            <span class='text'>
+            <Icon icon="eye-slash" />{' '}
+            <span class="text">
               <T id={'hide'} />
             </span>
           </>
         </If>
         <If condition={!shown}>
           <>
-            <Icon icon='eye' />{' '}
-            <span class='text'>
+            <Icon icon="eye" />{' '}
+            <span class="text">
               <T id={'show'} />
             </span>
           </>
         </If>
       </span>
     ),
-    [shown, passwordRevealer]
+    [shown, passwordRevealer],
   );
 
   return (
@@ -129,7 +143,7 @@ function Register({ requestRegister }) {
             <T id={'register_a_new_organization'} />
           </h3>
           <T id={'you_have_a_bigcapital_account'} />
-          <Link to='/auth/login'>
+          <Link to="/auth/login">
             {' '}
             <T id={'login'} />
           </Link>
@@ -251,7 +265,7 @@ function Register({ requestRegister }) {
           </FormGroup>
 
           <div className={'register-form__agreement-section'}>
-          <p>
+            <p>
               <T id={'signing_in_or_creating'} /> <br />
               <Link>
                 <T id={'terms_conditions'} />
@@ -268,7 +282,7 @@ function Register({ requestRegister }) {
             <Button
               className={'btn-register'}
               intent={Intent.PRIMARY}
-              type='submit'
+              type="submit"
               fill={true}
               loading={isSubmitting}
             >
@@ -278,7 +292,7 @@ function Register({ requestRegister }) {
         </form>
 
         <If condition={isSubmitting}>
-          <div class='authentication-page__loading-overlay'>
+          <div class="authentication-page__loading-overlay">
             <Spinner size={50} />
           </div>
         </If>
