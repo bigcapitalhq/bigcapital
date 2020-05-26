@@ -13,7 +13,6 @@ export default {
   router() {
     const router = express.Router();
 
-    // router.use('/journal', JournalController);
     router.use('/balance_sheet', BalanceSheetController.router());
     router.use('/profit_loss_sheet', ProfitLossController.router());
     router.use('/general_ledger', GeneralLedgerController.router());
@@ -22,4 +21,4 @@ export default {
 
     return router;
   },
-}
+};

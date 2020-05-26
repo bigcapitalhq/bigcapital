@@ -179,6 +179,23 @@ export default {
       });
       Logger.log('info', 'New tenant has been created.', { organizationId });
 
+      const filePath = path.join(global.rootPath, 'views/mail/Welcome.html');
+      const template = fs.readFileSync(filePath, 'utf8');
+      const rendered = Mustache.render(template, { ...form });
+      const mailOptions = {
+        to: userInsert.email,
+        from: `${process.env.MAIL_FROM_NAME} ${process.env.MAIL_FROM_ADDRESS}`,
+        subject: 'Welcome to Bigcapital',
+        html: rendered,
+      };
+      mail.sendMail(mailOptions, (error) => {
+        if (error) {
+          Logger.log('error', 'Failed send welcome mail', { error, form });
+          return;
+        }
+        Logger.log('info', 'User has been sent welcome email successfuly.', { form });
+      });
+
       return res.status(200).send({
         organization_id: organizationId,
       });
