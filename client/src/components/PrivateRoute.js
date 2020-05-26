@@ -1,37 +1,29 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import BodyClassName from 'react-body-classname'; 
-import { Route, Redirect } from 'react-router-dom';
+import BodyClassName from 'react-body-classname';
+import { Redirect } from 'react-router-dom';
+import withAuthentication from 'containers/Authentication/withAuthentication';
+import { compose } from 'utils';
 
-const propTypes = {
-  isAuthenticated: PropTypes.bool,
-  component: PropTypes.func.isRequired
-};
 
 function PrivateRoute({
   component: Component,
-  isAuthenticated = false,
+  isAuthorized = false,
   ...rest
 }) {
   return (
     <BodyClassName className={''}>
-      <Route
-        {...rest}
-        path="/"
-        render={_props =>
-          isAuthenticated ? (<Component {..._props} />) :
-          (
-            <Redirect
-              to={{
-                pathname: '/auth/login',
-              }}
-            />
-          )}
-      />
+      {(isAuthorized) ? (
+        <Component />
+      ) : (
+        <Redirect
+          to={{
+            pathname: '/auth/login',
+          }}
+        />
+      )}
     </BodyClassName>
   );
 }
 
-PrivateRoute.propTypes = propTypes;
-
-export default PrivateRoute;
+export default compose(withAuthentication)(PrivateRoute);

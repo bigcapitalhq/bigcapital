@@ -26,6 +26,12 @@ export function login({ form }) {
   });
 }
 
+export const logout = () => {
+  return dispatch => dispatch({
+    type: t.LOGOUT, 
+  });
+};
+
 export const register = ({ form }) => {
   return (dispatch) => {
     return new Promise((resolve, reject) => {

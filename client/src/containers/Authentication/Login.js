@@ -66,7 +66,6 @@ function Login({
         crediential: values.crediential,
         password: values.password,
       }).then(() => {
-        history.go('/homepage');
         setSubmitting(false);
       }).catch((errors) => {
         const toastBuilders = [];

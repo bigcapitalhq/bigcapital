@@ -16,6 +16,8 @@ import settings from './settings/settings.reducer';
 import manualJournals from './manualJournals/manualJournals.reducers';
 import globalSearch from './search/search.reducer';
 import exchangeRates from './ExchangeRate/exchange.reducer'
+import globalErrors from './globalErrors/globalErrors.reducer';
+
 
 export default combineReducers({
   authentication,
@@ -33,6 +35,6 @@ export default combineReducers({
   itemCategories,
   settings,
   globalSearch,
-  exchangeRates
-
+  exchangeRates,
+  globalErrors,
 });

@@ -9,14 +9,13 @@ import {
   Popover
 } from '@blueprintjs/core';
 import t from 'store/types';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'react-intl';
 
 function DashboardTopbarUser({ logout }) {
   const history = useHistory();
   
   const onClickLogout = useCallback(() => {
     logout();
-    history.go('/auth/login');
   }, [logout, history]);
 
   const userAvatarDropMenu = useMemo(() => (

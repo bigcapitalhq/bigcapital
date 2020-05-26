@@ -2,22 +2,22 @@ import React from 'react';
 import { Redirect, Route, Switch, Link } from 'react-router-dom';
 import BodyClassName from 'react-body-classname';
 import authenticationRoutes from 'routes/authentication';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'react-intl';
+import withAuthentication from 'containers/Authentication/withAuthentication';
+import { compose } from 'utils';
 
-export default function AuthenticationWrapper({
-  isAuthenticated = false,
-  ...rest
-}) {
+
+function AuthenticationWrapper({ isAuthorized = false, ...rest }) {
   const to = { pathname: '/homepage' };
 
   return (
-    <Route path='/auth'>
-      {isAuthenticated ? (
+    <>
+      {isAuthorized ? (
         <Redirect to={to} />
       ) : (
         <BodyClassName className={'authentication'}>
           <Switch>
-            <div class='authentication-page'>
+            <div class="authentication-page">
               <Link
                 to={'bigcapital.io'}
                 className={'authentication-page__goto-bigcapital'}
@@ -25,7 +25,7 @@ export default function AuthenticationWrapper({
                 <T id={'go_to_bigcapital_com'} />
               </Link>
 
-              <div class='authentication-page__form-wrapper'>
+              <div class="authentication-page__form-wrapper">
                 {authenticationRoutes.map((route, index) => (
                   <Route
                     key={index}
@@ -39,6 +39,8 @@ export default function AuthenticationWrapper({
           </Switch>
         </BodyClassName>
       )}
-    </Route>
+    </>
   );
 }
+
+export default compose(withAuthentication)(AuthenticationWrapper);

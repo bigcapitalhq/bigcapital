@@ -1,28 +1,20 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { IntlProvider } from 'react-intl';
-import { connect } from 'react-redux';
-import { Router, Switch, Redirect } from 'react-router';
+import { Router, Switch, Route } from 'react-router';
 import { createBrowserHistory } from 'history';
+import { ReactQueryConfigProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query-devtools';
+
 import PrivateRoute from 'components/PrivateRoute';
 import Authentication from 'components/Authentication';
 import Dashboard from 'components/Dashboard/Dashboard';
-import { isAuthenticated } from 'store/authentication/authentication.reducer'
-import { ReactQueryConfigProvider } from 'react-query';
-import { ReactQueryDevtools } from "react-query-devtools";
+import GlobalErrors from 'containers/GlobalErrors/GlobalErrors';
 
 import messages from 'lang/en';
 import 'style/App.scss';
 
-function App({
-  isAuthorized,
-  locale,
-}) {
+function App({ locale }) {
   const history = createBrowserHistory();
-
-  history.listen((location, action) => {
-    console.log(`new location via ${action}`, location);
-  });
 
   const queryConfig = {
     refetchAllOnWindowFocus: false,
@@ -34,10 +26,18 @@ function App({
       <div className="App">
         <ReactQueryConfigProvider config={queryConfig}>
           <Router history={history}>
-            <Authentication isAuthenticated={isAuthorized} />
-            <PrivateRoute isAuthenticated={isAuthorized} component={Dashboard} />
+            <Switch>
+              <Route path={'/auth'}>
+                <Authentication />
+              </Route>
+
+              <Route path={'/'}>
+                <PrivateRoute component={Dashboard} />
+              </Route>
+            </Switch>
           </Router>
 
+          <GlobalErrors />
           <ReactQueryDevtools />
         </ReactQueryConfigProvider>
       </div>
@@ -49,10 +49,4 @@ App.defaultProps = {
   locale: 'en',
 };
 
-const mapStateToProps = (state) => {
-  return {
-    isAuthorized: isAuthenticated(state),
-  };
-};
-
-export default connect(mapStateToProps)(App);
+export default App;
