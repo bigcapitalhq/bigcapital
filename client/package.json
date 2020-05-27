@@ -28,6 +28,7 @@
     "basscss": "^8.0.2",
     "camelcase": "^5.3.1",
     "case-sensitive-paths-webpack-plugin": "2.3.0",
+    "cross-env": "^7.0.2",
     "css-loader": "3.4.2",
     "dotenv": "8.2.0",
     "dotenv-expand": "5.1.0",
@@ -101,6 +102,7 @@
   },
   "scripts": {
     "start": "PORT=8000 node scripts/start.js",
+    "start-win": "cross-env PORT=8000 node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
     "flow": "flow"
