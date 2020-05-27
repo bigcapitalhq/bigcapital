@@ -18,6 +18,7 @@ export default (mapState) => {
         trialBalanceIndex
       ),
       trialBalanceSheetLoading: state.financialStatements.trialBalance.loading,
+      trialBalanceSheetFilter: state.financialStatements.trialBalance.filter,
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };

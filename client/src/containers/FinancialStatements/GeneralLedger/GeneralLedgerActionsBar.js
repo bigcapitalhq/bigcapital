@@ -11,19 +11,35 @@ import {
 import { FormattedMessage as T } from 'react-intl';
 import Icon from 'components/Icon';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar'
+import { If } from 'components';
 import classNames from 'classnames';
 import FilterDropdown from 'components/FilterDropdown';
+
+import withGeneralLedger from './withGeneralLedger';
+import withGeneralLedgerActions from './withGeneralLedgerActions';
+
+import { compose } from 'utils';
 
 /**
  * General ledger actions bar.
  */
-export default function GeneralLedgerActionsBar() {
+function GeneralLedgerActionsBar({
+  // #withGeneralLedger
+  generalLedgerSheetFilter,
+
+  // #withGeneralLedgerActions
+  toggleGeneralLedgerSheetFilter,
+}) {
   const filterDropdown = FilterDropdown({
     fields: [],
     onFilterChange: (filterConditions) => {
       
     },
   });
+
+  const handleFilterClick = () => {
+    toggleGeneralLedgerSheetFilter();
+  };
 
   return (
     <DashboardActionsBar>
@@ -33,6 +49,27 @@ export default function GeneralLedgerActionsBar() {
           icon={<Icon icon='cog' />}
           text={<T id={'customize_report'}/>}
         />
+
+        <NavbarDivider />
+
+        <If condition={generalLedgerSheetFilter}>
+          <Button
+            className={Classes.MINIMAL}
+            text={<T id={'hide_filter'} />}
+            icon={<Icon icon="arrow-to-top" />}
+            onClick={handleFilterClick}
+          />
+        </If>
+
+        <If condition={!generalLedgerSheetFilter}>
+          <Button
+            className={Classes.MINIMAL}
+            text={<T id={'show_filter'} />}
+            icon={<Icon icon="arrow-to-bottom" />}
+            onClick={handleFilterClick}
+          />
+        </If>
+
         <NavbarDivider />
 
         <Popover
@@ -60,3 +97,8 @@ export default function GeneralLedgerActionsBar() {
     </DashboardActionsBar>
   );
 }
+
+export default compose(
+  withGeneralLedger(({ generalLedgerSheetFilter }) => ({ generalLedgerSheetFilter })),
+  withGeneralLedgerActions,
+)(GeneralLedgerActionsBar);

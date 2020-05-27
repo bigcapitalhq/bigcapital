@@ -18,13 +18,19 @@ import FinancialStatementDateRange from 'containers/FinancialStatements/Financia
 import RadiosAccountingBasis from '../RadiosAccountingBasis';
 import {compose} from 'utils';
 
+import withGeneralLedger from './withGeneralLedger';
+
 
 function GeneralLedgerHeader({
   onSubmitFilter,
   pageFilter,
-  accounts,
-}) {
 
+  // #withAccounts
+  accounts,
+
+  // #withGeneralLedger
+  generalLedgerSheetFilter,
+}) {
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
@@ -56,7 +62,7 @@ function GeneralLedgerHeader({
   }, [formik]);
   
   return (
-    <FinancialStatementHeader>
+    <FinancialStatementHeader show={generalLedgerSheetFilter}>
       <FinancialStatementDateRange formik={formik} />
 
       <Row>
@@ -91,5 +97,6 @@ function GeneralLedgerHeader({
 }
 
 export default compose(
-  AccountsConnect
+  AccountsConnect,
+  withGeneralLedger(({ generalLedgerSheetFilter }) => ({ generalLedgerSheetFilter })),
 )(GeneralLedgerHeader);

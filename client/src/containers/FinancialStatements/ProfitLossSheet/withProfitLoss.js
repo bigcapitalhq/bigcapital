@@ -19,6 +19,7 @@ export default (mapState) => {
       profitLossTableRows: getFinancialSheetTableRows(state.financialStatements.profitLoss.sheets, profitLossIndex),
 
       profitLossSheetLoading: state.financialStatements.profitLoss.loading,
+      profitLossSheetFilter: state.financialStatements.profitLoss.filter,
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };

@@ -11,24 +11,29 @@ const initialState = {
   balanceSheet: {
     sheets: [],
     loading: false,
+    filter: true,
   },
   trialBalance: {
     sheets: [],
     loading: false,
+    filter: true,
   },
   generalLedger: {
     sheets: [],
     loading: false,
+    filter: true,
   },
   journal: {
     sheets: [],
     loading: false,
     tableRows: [],
+    filter: true,
   },
   profitLoss: {
     sheets: [],
     loading: false,
     tableRows: [],
+    filter: true,
   }
 };
 
@@ -110,6 +115,14 @@ const mapProfitLossToTableRows = (profitLoss) => {
   ]
 };
 
+const financialStatementFilterToggle = (financialName, statePath) => {
+  return {
+    [`${financialName}_FILTER_TOGGLE`]: (state, action) => {
+      state[statePath].filter = !state[statePath].filter;
+    },
+  }
+};
+
 export default createReducer(initialState, {
   [t.BALANCE_SHEET_STATEMENT_SET]: (state, action) => {
     const index  = getFinancialSheetIndexByQuery(state.balanceSheet.sheets, action.query);
@@ -129,6 +142,7 @@ export default createReducer(initialState, {
   [t.BALANCE_SHEET_LOADING]: (state, action) => {
     state.balanceSheet.loading = !!action.loading;
   },
+  ...financialStatementFilterToggle('BALANCE_SHEET', 'balanceSheet'),
 
   [t.TRAIL_BALANCE_STATEMENT_SET]: (state, action) => {
     const index = getFinancialSheetIndexByQuery(state.trialBalance.sheets, action.query);
@@ -146,6 +160,7 @@ export default createReducer(initialState, {
   [t.TRIAL_BALANCE_SHEET_LOADING]: (state, action) => {
     state.trialBalance.loading = !!action.loading;
   },
+  ...financialStatementFilterToggle('TRIAL_BALANCE', 'trialBalance'),
 
   [t.JOURNAL_SHEET_SET]: (state, action) => {
     const index = getFinancialSheetIndexByQuery(state.journal.sheets, action.query);
@@ -165,6 +180,7 @@ export default createReducer(initialState, {
   [t.JOURNAL_SHEET_LOADING]: (state, action) => {
     state.journal.loading = !!action.loading;
   },
+  ...financialStatementFilterToggle('JOURNAL', 'journal'),
 
   [t.GENERAL_LEDGER_STATEMENT_SET]: (state, action) => {
     const index = getFinancialSheetIndexByQuery(state.generalLedger.sheets, action.query);
@@ -184,6 +200,7 @@ export default createReducer(initialState, {
   [t.GENERAL_LEDGER_SHEET_LOADING]: (state, action) => {
     state.generalLedger.loading = !!action.loading;
   },
+  ...financialStatementFilterToggle('GENERAL_LEDGER', 'generalLedger'),
 
   [t.PROFIT_LOSS_SHEET_SET]: (state, action) => {
     const index = getFinancialSheetIndexByQuery(state.profitLoss.sheets, action.query);
@@ -204,4 +221,5 @@ export default createReducer(initialState, {
   [t.PROFIT_LOSS_SHEET_LOADING]: (state, action) => {
     state.profitLoss.loading = !!action.loading;
   },
+  ...financialStatementFilterToggle('PROFIT_LOSS', 'profitLoss'),
 });

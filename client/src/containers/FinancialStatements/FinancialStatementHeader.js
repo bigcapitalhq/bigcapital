@@ -1,9 +1,14 @@
 import React from 'react';
+import classNames from 'classnames';
 
-export default function FinancialStatementHeader({ children }) {
+export default function FinancialStatementHeader({ show, children }) {
   return (
-    <div class="financial-statement__header">
-      { children }
+    <div
+      className={classNames('financial-statement__header', {
+        'is-hidden': !show,
+      })}
+    >
+      {children}
     </div>
   );
 }

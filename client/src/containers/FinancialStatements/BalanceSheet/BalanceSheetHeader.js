@@ -21,6 +21,7 @@ import RadiosAccountingBasis from '../RadiosAccountingBasis';
 export default function BalanceSheetHeader({
   onSubmitFilter,
   pageFilter,
+  show
 }) {
   const { formatMessage } = useIntl();
 
@@ -70,7 +71,7 @@ export default function BalanceSheetHeader({
   }, [formik]);
 
   return (
-    <FinancialStatementHeader>
+    <FinancialStatementHeader show={show}>
       <FinancialStatementDateRange formik={formik} />
 
       <Row>

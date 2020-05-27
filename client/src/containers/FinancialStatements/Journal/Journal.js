@@ -79,7 +79,7 @@ function Journal({
             onSubmitFilter={handleFilterSubmit}
           />
 
-          <div class="financial-statement__table">
+          <div class="financial-statement__body">
             <JournalTable
               companyName={organizationSettings.name}
               journalQuery={filter}

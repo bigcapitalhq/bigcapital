@@ -10,50 +10,90 @@ import {
 } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'react-intl';
 import Icon from 'components/Icon';
-import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar'
+import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import FilterDropdown from 'components/FilterDropdown';
 import classNames from 'classnames';
 
-export default function JournalActionsBar() {
+import { If } from 'components';
+
+import withJournalActions from './withJournalActions';
+import withJournal from './withJournal';
+
+import { compose } from 'utils';
+
+function JournalActionsBar({
+  // #withJournal
+  journalSheetFilter,
+
+  // #withJournalActions
+  toggleJournalSheetFilter,
+}) {
   const filterDropdown = FilterDropdown({
     fields: [],
-    onFilterChange: (filterConditions) => {
-          
-    },
+    onFilterChange: (filterConditions) => {},
   });
+
+  const handleFilterToggleClick = () => {
+    toggleJournalSheetFilter();
+  };
 
   return (
     <DashboardActionsBar>
       <NavbarGroup>
         <Button
           className={classNames(Classes.MINIMAL, 'button--table-views')}
-          icon={<Icon icon='cog' />}
-          text={<T id={'customize_report'}/>}
+          icon={<Icon icon="cog" />}
+          text={<T id={'customize_report'} />}
         />
+        <NavbarDivider />
+
+        <If condition={journalSheetFilter}>
+          <Button
+            className={Classes.MINIMAL}
+            text={<T id={'hide_filter'} />}
+            icon={<Icon icon="arrow-to-top" />}
+            onClick={handleFilterToggleClick}
+          />
+        </If>
+
+        <If condition={!journalSheetFilter}>
+          <Button
+            className={Classes.MINIMAL}
+            text={<T id={'show_filter'} />}
+            icon={<Icon icon="arrow-to-bottom" />}
+            onClick={handleFilterToggleClick}
+          />
+        </If>
         <NavbarDivider />
 
         <Popover
           content={filterDropdown}
           interactionKind={PopoverInteractionKind.CLICK}
-          position={Position.BOTTOM_LEFT}>
-
+          position={Position.BOTTOM_LEFT}
+        >
           <Button
             className={classNames(Classes.MINIMAL, 'button--filter')}
-            text={<T id={'filter'}/>}
-            icon={ <Icon icon="filter" /> } />
+            text={<T id={'filter'} />}
+            icon={<Icon icon="filter" />}
+          />
         </Popover>
 
         <Button
           className={Classes.MINIMAL}
-          icon={<Icon icon='file-export' />}
-          text={<T id={'print'}/>}
+          icon={<Icon icon="file-export" />}
+          text={<T id={'print'} />}
         />
         <Button
           className={Classes.MINIMAL}
-          icon={<Icon icon='file-export' />}
-          text={<T id={'export'}/>}
+          icon={<Icon icon="file-export" />}
+          text={<T id={'export'} />}
         />
       </NavbarGroup>
     </DashboardActionsBar>
-  )
+  );
 }
+
+export default compose(
+  withJournal(({ journalSheetFilter }) => ({ journalSheetFilter })),
+  withJournalActions,
+)(JournalActionsBar);

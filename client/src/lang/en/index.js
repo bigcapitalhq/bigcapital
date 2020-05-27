@@ -373,4 +373,6 @@ export default {
   welcome_organization_account_has_been_created: '👋 Welcome, You organization account has been created, Sign in now!',
   the_phone_number_already_used_in_another_account: 'he phone number is already used in another account',
   the_email_already_used_in_another_account: 'The email is already used in another account',
+  hide_filter: 'Hide filter',
+  show_filter: 'Show filter',
 };

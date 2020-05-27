@@ -1,8 +1,6 @@
 import React, { useCallback } from 'react';
 import { Row, Col } from 'react-grid-system';
-import {
-  Button,
-} from '@blueprintjs/core';
+import { Button } from '@blueprintjs/core';
 import moment from 'moment';
 import { useFormik } from 'formik';
 import { FormattedMessage as T, useIntl } from 'react-intl';
@@ -12,10 +10,17 @@ import FinancialStatementHeader from 'containers/FinancialStatements/FinancialSt
 import SelectsListColumnsBy from '../SelectDisplayColumnsBy';
 import RadiosAccountingBasis from '../RadiosAccountingBasis';
 
+import withProfitLoss from './withProfitLoss';
 
-export default function JournalHeader({
+import { compose } from 'utils';
+
+
+function ProfitLossHeader({
   pageFilter,
   onSubmitFilter,
+
+  // #withProfitLoss
+  profitLossSheetFilter,
 }) {
   const { formatMessage } = useIntl();
   const formik = useFormik({
@@ -23,11 +28,16 @@ export default function JournalHeader({
     initialValues: {
       ...pageFilter,
       from_date: moment(pageFilter.from_date).toDate(),
-      to_date: moment(pageFilter.to_date).toDate()
+      to_date: moment(pageFilter.to_date).toDate(),
     },
     validationSchema: Yup.object().shape({
-      from_date: Yup.date().required().label(formatMessage({id:'from_date'})),
-      to_date: Yup.date().min(Yup.ref('from_date')).required().label(formatMessage({id:'to_date'})),
+      from_date: Yup.date()
+        .required()
+        .label(formatMessage({ id: 'from_date' })),
+      to_date: Yup.date()
+        .min(Yup.ref('from_date'))
+        .required()
+        .label(formatMessage({ id: 'to_date' })),
     }),
     onSubmit: (values, actions) => {
       onSubmitFilter(values);
@@ -36,21 +46,27 @@ export default function JournalHeader({
   });
 
   // Handle item select of `display columns by` field.
-  const handleItemSelectDisplayColumns = useCallback((item) => {
-    formik.setFieldValue('display_columns_type', item.type);
-    formik.setFieldValue('display_columns_by', item.by);
-  }, [formik]);
+  const handleItemSelectDisplayColumns = useCallback(
+    (item) => {
+      formik.setFieldValue('display_columns_type', item.type);
+      formik.setFieldValue('display_columns_by', item.by);
+    },
+    [formik],
+  );
 
   const handleSubmitClick = useCallback(() => {
     formik.submitForm();
   }, [formik]);
 
-  const handleAccountingBasisChange = useCallback((value) => {
-    formik.setFieldValue('basis', value);
-  }, [formik]);
+  const handleAccountingBasisChange = useCallback(
+    (value) => {
+      formik.setFieldValue('basis', value);
+    },
+    [formik],
+  );
 
   return (
-    <FinancialStatementHeader>
+    <FinancialStatementHeader show={profitLossSheetFilter}>
       <FinancialStatementDateRange formik={formik} />
 
       <Row>
@@ -61,14 +77,16 @@ export default function JournalHeader({
         <Col sm={3}>
           <RadiosAccountingBasis
             selectedValue={formik.values.basis}
-            onChange={handleAccountingBasisChange} />
+            onChange={handleAccountingBasisChange}
+          />
         </Col>
 
         <Col sm={3}>
           <Button
             type="submit"
             onClick={handleSubmitClick}
-            className={'button--submit-filter mt2'}>
+            className={'button--submit-filter mt2'}
+          >
             <T id={'run_report'} />
           </Button>
         </Col>
@@ -76,3 +94,7 @@ export default function JournalHeader({
     </FinancialStatementHeader>
   );
 }
+
+export default compose(
+  withProfitLoss(({ profitLossSheetFilter }) => ({ profitLossSheetFilter })),
+)(ProfitLossHeader);

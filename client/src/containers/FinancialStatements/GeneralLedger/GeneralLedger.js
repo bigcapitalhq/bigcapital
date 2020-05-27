@@ -80,7 +80,7 @@ function GeneralLedger({
             pageFilter={filter}
             onSubmitFilter={handleFilterSubmit} />
 
-          <div class="financial-statement__table">
+          <div class="financial-statement__body">
             <GeneralLedgerTable
               companyName={organizationSettings.name}
               generalLedgerQuery={filter}

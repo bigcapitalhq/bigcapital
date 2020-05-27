@@ -5,6 +5,7 @@ import {
 
 export const mapDispatchToProps = (dispatch) => ({
   requestFetchJournalSheet: (query) => dispatch(fetchJournalSheet({ query })),
+  toggleJournalSheetFilter: () => dispatch({ type: 'JOURNAL_FILTER_TOGGLE' }),
 });
 
 export default connect(null, mapDispatchToProps);

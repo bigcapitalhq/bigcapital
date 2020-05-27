@@ -7,6 +7,10 @@
     padding: 25px 26px 25px;
     background: #FDFDFD;
 
+    &.is-hidden{
+      display: none;
+    }
+
     .bp3-form-group,
     .radio-group---accounting-basis{
       
@@ -36,6 +40,14 @@
     align-items: center;
   }
 
+
+  &__header.is-hidden + .financial-statement__body{
+    border-top: 20px solid #FDFDFD;
+
+    .financial-sheet{
+      margin-top: 40px;
+    }
+  }
 }
 
 .financial-sheet{

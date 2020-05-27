@@ -11,12 +11,19 @@ import * as Yup from 'yup';
 import FinancialStatementDateRange from 'containers/FinancialStatements/FinancialStatementDateRange';
 import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
 
+import withJournal from './withJournal';
+import { compose } from 'utils';
 
-export default function JournalHeader({
+/**
+ * Journal sheet header. 
+ */
+function JournalHeader({
   pageFilter,
   onSubmitFilter,
+
+  // #withJournal
+  journalSheetFilter,
 }) {
- 
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
@@ -39,7 +46,7 @@ export default function JournalHeader({
   }, [formik]);
 
   return (
-    <FinancialStatementHeader>
+    <FinancialStatementHeader show={journalSheetFilter}>
       <FinancialStatementDateRange formik={formik} />
 
       <Row>
@@ -56,3 +63,7 @@ export default function JournalHeader({
     </FinancialStatementHeader>
   );
 }
+
+export default compose(
+  withJournal(({ journalSheetFilter }) => ({ journalSheetFilter })),
+)(JournalHeader);

@@ -3,6 +3,7 @@ import React, { useEffect, useCallback, useState } from 'react';
 import { compose } from 'utils';
 import { useQuery } from 'react-query';
 import moment from 'moment';
+import { useIntl } from 'react-intl';
 
 import BalanceSheetHeader from './BalanceSheetHeader';
 import BalanceSheetTable from './BalanceSheetTable';
@@ -10,13 +11,14 @@ import BalanceSheetTable from './BalanceSheetTable';
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import BalanceSheetActionsBar from './BalanceSheetActionsBar';
+import { FinancialStatement } from 'components';
 
 import withDashboard from 'containers/Dashboard/withDashboard';
 import withSettings from 'containers/Settings/withSettings';
 import withBalanceSheetActions from './withBalanceSheetActions';
 import withBalanceSheetDetail from './withBalanceSheetDetail';
 
-import { useIntl } from 'react-intl';
+
 
 function BalanceSheet({
   // #withDashboard
@@ -27,6 +29,7 @@ function BalanceSheet({
 
   // #withBalanceSheetDetail
   balanceSheetLoading,
+  balanceSheetFilter,
 
   // #withPreferences
   organizationSettings,
@@ -75,10 +78,11 @@ function BalanceSheet({
       <BalanceSheetActionsBar />
 
       <DashboardPageContent>
-        <div class="financial-statement">
+        <FinancialStatement>
           <BalanceSheetHeader
             pageFilter={filter}
             onSubmitFilter={handleFilterSubmit}
+            show={balanceSheetFilter}
           />
 
           <div class="financial-statement__body">
@@ -89,7 +93,7 @@ function BalanceSheet({
               onFetchData={handleFetchData}
             />
           </div>
-        </div>
+        </FinancialStatement>
       </DashboardPageContent>
     </DashboardInsider>
   );
@@ -98,8 +102,9 @@ function BalanceSheet({
 export default compose(
   withDashboard,
   withBalanceSheetActions,
-  withBalanceSheetDetail(({ balanceSheetLoading }) => ({
+  withBalanceSheetDetail(({ balanceSheetLoading, balanceSheetFilter }) => ({
     balanceSheetLoading,
+    balanceSheetFilter,
   })),
   withSettings,
 )(BalanceSheet);

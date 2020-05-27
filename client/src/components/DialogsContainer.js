@@ -8,13 +8,13 @@ import ExchangeRateDialog from 'containers/Dialogs/ExchangeRateDialog';
 
 export default function DialogsContainer() {
   return (
-    <React.Fragment>
+    <>
       <ExchangeRateDialog />
       <InviteUserDialog />
       <CurrencyDialog />
       <ItemCategoryDialog />
       <AccountFormDialog />
       <UserFormDialog />
-    </React.Fragment>
+    </>
   );
 }

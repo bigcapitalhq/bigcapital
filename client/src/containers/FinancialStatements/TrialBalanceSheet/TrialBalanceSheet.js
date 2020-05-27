@@ -16,6 +16,7 @@ import withTrialBalanceActions from './withTrialBalanceActions';
 import withTrialBalance from './withTrialBalance';
 import withSettings from 'containers/Settings/withSettings';
 
+
 function TrialBalanceSheet({
   // #withDashboard
   changePageTitle,

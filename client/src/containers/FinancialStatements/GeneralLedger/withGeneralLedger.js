@@ -24,6 +24,7 @@ export default (mapState) => {
         generalLedgerIndex,
       ),
       generalLedgerSheetLoading: state.financialStatements.generalLedger.loading,
+      generalLedgerSheetFilter: state.financialStatements.generalLedger.filter,
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };

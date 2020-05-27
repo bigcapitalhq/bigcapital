@@ -9,6 +9,7 @@ import PrivateRoute from 'components/PrivateRoute';
 import Authentication from 'components/Authentication';
 import Dashboard from 'components/Dashboard/Dashboard';
 import GlobalErrors from 'containers/GlobalErrors/GlobalErrors';
+import AuthenticationDialogs from 'containers/Authentication/AuthenticationDialogs';
 
 import messages from 'lang/en';
 import 'style/App.scss';
@@ -29,6 +30,7 @@ function App({ locale }) {
             <Switch>
               <Route path={'/auth'}>
                 <Authentication />
+                <AuthenticationDialogs />
               </Route>
 
               <Route path={'/'}>

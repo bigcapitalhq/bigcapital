@@ -8,11 +8,17 @@ import { Button } from "@blueprintjs/core";
 
 import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
 import FinancialStatementDateRange from 'containers/FinancialStatements/FinancialStatementDateRange';
+import withTrialBalance from './withTrialBalance';
+
+import { compose } from 'utils';
 
 
-export default function TrialBalanceSheetHeader({
+function TrialBalanceSheetHeader({
   pageFilter,
   onSubmitFilter,
+
+  // #withTrialBalance
+  trialBalanceSheetFilter,
 }) {
   const { formatMessage } = useIntl();
   const formik = useFormik({
@@ -37,7 +43,7 @@ export default function TrialBalanceSheetHeader({
   }, [formik]);
 
   return (
-    <FinancialStatementHeader>
+    <FinancialStatementHeader show={trialBalanceSheetFilter}>
       <FinancialStatementDateRange formik={formik} />
 
       <Row>
@@ -54,3 +60,7 @@ export default function TrialBalanceSheetHeader({
     </FinancialStatementHeader>
   );
 }
+
+export default compose(
+  withTrialBalance(({ trialBalanceSheetFilter }) => ({ trialBalanceSheetFilter })),
+)(TrialBalanceSheetHeader);
