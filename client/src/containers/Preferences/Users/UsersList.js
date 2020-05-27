@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback } from 'react';
-import { queryCache,useQuery } from 'react-query';
+import { queryCache, useQuery } from 'react-query';
 import DataTable from 'components/DataTable';
 import {
   Alert,
@@ -98,29 +98,31 @@ function UsersListPreferences({
 
   // Handle confirm User delete
 
-  const handleConfirmUserDelete =useCallback(()=>{
+  const handleConfirmUserDelete = useCallback(() => {
     if (!deleteUserState) {
       return;
     }
-    requestDeleteUser(deleteUserState.id).then((response) => {
-      setDeleteUserState(false);
-      AppToaster.show({
-        message: formatMessage({
-          id: 'the_user_has_been_successfully_deleted',
-        }),
-        intent:Intent.SUCCESS,
+    requestDeleteUser(deleteUserState.id)
+      .then((response) => {
+        setDeleteUserState(false);
+        AppToaster.show({
+          message: formatMessage({
+            id: 'the_user_has_been_successfully_deleted',
+          }),
+          intent: Intent.SUCCESS,
+        });
+        queryCache.refetchQueries('users-table', { force: true });
+      })
+      .catch((errors) => {
+        setDeleteUserState(false);
       });
-      queryCache.refetchQueries('users-table',{force:true})
-    }).catch((errors)=>{
-      setDeleteUserState(false)
-    })
-  },[deleteUserState,requestDeleteUser,formatMessage])
-
+  }, [deleteUserState, requestDeleteUser, formatMessage]);
 
   const actionMenuList = useCallback(
     (user) => (
       <Menu>
         <MenuItem text={<T id={'edit_user'} />} onClick={onEditUser(user)} />
+        <MenuDivider />
         <MenuItem
           text={<T id={'inactivate_user'} />}
           onClick={() => onInactiveUser(user)}
@@ -155,7 +157,7 @@ function UsersListPreferences({
         width: 120,
       },
       {
-        id: 'active',
+        id: 'status',
         Header: 'Status',
         accessor: (user) =>
           user.active ? (
@@ -167,7 +169,7 @@ function UsersListPreferences({
               <T id={'inactivate'} />
             </Tag>
           ),
-        width: 50,
+        width: 80,
         className: 'status',
       },
       {
@@ -183,6 +185,7 @@ function UsersListPreferences({
         ),
         className: 'actions',
         width: 50,
+        disableResizing: true,
       },
     ],
     [actionMenuList, formatMessage],

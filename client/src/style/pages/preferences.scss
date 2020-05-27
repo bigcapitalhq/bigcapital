@@ -121,7 +121,13 @@
 // Users/Roles List.
 // ---------------------------------
 .preferences__inside-content--users-roles{
+  
   .bigcapital-datatable{
+
+    .table .th,
+    .table .td{
+      padding: 0.8rem 0.5rem;
+    }
     .td.status{
       text-transform: uppercase;
     }
