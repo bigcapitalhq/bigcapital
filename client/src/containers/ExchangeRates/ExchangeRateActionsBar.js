@@ -11,7 +11,7 @@ import {
 import classNames from 'classnames';
 import Icon from 'components/Icon';
 import { connect } from 'react-redux';
-
+import { If } from 'components';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import withDialog from 'connectors/Dialog.connector';
 
@@ -19,8 +19,7 @@ import FilterDropdown from 'components/FilterDropdown';
 import withResourceDetail from 'containers/Resources/withResourceDetails';
 
 import { compose } from 'utils';
-import { FormattedMessage as T ,useIntl } from 'react-intl';
-
+import { FormattedMessage as T, useIntl } from 'react-intl';
 
 function ExchangeRateActionsBar({
   // #withDialog.
@@ -28,15 +27,15 @@ function ExchangeRateActionsBar({
 
   // #withResourceDetail
   resourceFields,
-  
+
   // #ownProps
   selectedRows = [],
   onDeleteExchangeRate,
   onFilterChanged,
-  onBulkDelete
+  onBulkDelete,
 }) {
   const [filterCount, setFilterCount] = useState(0);
-const {formatMessage} =useIntl()
+  const { formatMessage } = useIntl();
 
   const onClickNewExchangeRate = () => {
     openDialog('exchangeRate-form', {});
@@ -51,27 +50,20 @@ const {formatMessage} =useIntl()
     },
   });
 
-  // const handelDeleteExchangeRate = useCallback(
-  //   (exchangeRate) => {
-  //     onDeleteExchangeRate(exchangeRate);
-  //   },
-  //   [selectedRows, onDeleteExchangeRate]
-  // );
-
   const hasSelectedRows = useMemo(() => selectedRows.length > 0, [
     selectedRows,
   ]);
 
-  const handelBulkDelete =useCallback(()=>{
-    onBulkDelete && onBulkDelete(selectedRows.map(r=>r.id));
-  },[onBulkDelete,selectedRows])
+  const handelBulkDelete = useCallback(() => {
+    onBulkDelete && onBulkDelete(selectedRows.map((r) => r.id));
+  }, [onBulkDelete, selectedRows]);
 
   return (
     <DashboardActionsBar>
       <NavbarGroup>
         <Button
           className={Classes.MINIMAL}
-          icon={<Icon icon='plus' />}
+          icon={<Icon icon="plus" />}
           text={<T id={'new_exchange_rate'} />}
           onClick={onClickNewExchangeRate}
         />
@@ -87,29 +79,30 @@ const {formatMessage} =useIntl()
               filterCount <= 0 ? (
                 <T id={'filter'} />
               ) : (
-                `${filterCount} ${formatMessage({id:'filters_applied'})}`
+                `${filterCount} ${formatMessage({ id: 'filters_applied' })}`
               )
             }
-            icon={<Icon icon='filter' />}
+            icon={<Icon icon="filter" />}
           />
         </Popover>
-        {hasSelectedRows && (
+        <If condition={hasSelectedRows}>
           <Button
             className={Classes.MINIMAL}
-            icon={<Icon icon='trash' iconSize={15} />}
+            icon={<Icon icon="trash" iconSize={15} />}
             text={<T id={'delete'} />}
             intent={Intent.DANGER}
             onClick={handelBulkDelete}
           />
-        )}
+        </If>
+
         <Button
           className={Classes.MINIMAL}
-          icon={<Icon icon='file-import' />}
+          icon={<Icon icon="file-import" />}
           text={<T id={'import'} />}
         />
         <Button
           className={Classes.MINIMAL}
-          icon={<Icon icon='file-export' />}
+          icon={<Icon icon="file-export" />}
           text={<T id={'export'} />}
         />
       </NavbarGroup>
@@ -128,5 +121,5 @@ export default compose(
   withDialog,
   withResourceDetail(({ resourceFields }) => ({
     resourceFields,
-  }))
+  })),
 )(ExchangeRateActionsBar);

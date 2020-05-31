@@ -12,7 +12,7 @@
 
   &__inside-content {
     .#{$ns}-tab-list {
-      border-bottom: 1px solid #E5E5E5;
+      border-bottom: 1px solid #e5e5e5;
       padding-left: 15px;
       padding-right: 15px;
       align-items: baseline;
@@ -25,26 +25,39 @@
     }
   }
 
-  &__tabs-extra-actions{
+  &__tabs-extra-actions {
     margin-left: auto;
   }
 
-  &__topbar-actions{
+  &__topbar-actions {
     margin-left: auto;
     padding-right: 15px;
     margin-right: 15px;
     border-right: 1px solid #e5e5e5;
 
-    .bp3-button + .bp3-button{
+    .bp3-button + .bp3-button {
       margin-left: 10px;
     }
   }
 
   &-menu {
-    width: 374px;
+    width: 448px;
   }
+
+
   &-button {
     margin-right: 10px;
+  }
+
+  &__loading-overlay{
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: rgba(252, 253, 255, 0.5);
+    display: flex;
+    justify-content: center;
   }
   &__floating-footer {
     position: fixed;
@@ -95,7 +108,7 @@
       color: #333;
 
       &:hover,
-      &.#{$ns}-active{
+      &.#{$ns}-active {
         background-color: #ebf1f5;
         color: #333;
       }
@@ -106,29 +119,56 @@
 //  Preference
 //---------------------------------
 .preferences__inside-content--general {
+  &:not(.preferences--loading){
+    margin-bottom: 25px;
+  }
+
   .bp3-form-group {
     margin: 25px 20px 20px;
     .bp3-label {
       min-width: 140px;
     }
     .bp3-form-content {
-      width: 384px;
+      width: 55%;
+      .bp3-input-group .bp3-input {
+        position: relative;
+        // width:580px;
+        width: 120%;
+      }
     }
+  }
+  .form-group--time-zone {
+    .bp3-menu {
+      max-height: 300px;
+      max-width: 400px;
+      overflow: auto;
+      padding: 0;
+    }
+    .bp3-text-muted {
+      color: #000000;
+    }
+    .bp3-button:not([class*='bp3-intent-']):not(.bp3-minimal) {
+      background: #fff;
+      box-shadow: 0 0 0 transparent;
+      border: 1px solid #ced4da;
+      padding: 8px;
+    }
+  }
+
+  .preferences-page__loading-overlay{
+    background: rgba(252, 253, 255, 0.9);
   }
 }
 
-
 // Users/Roles List.
 // ---------------------------------
-.preferences__inside-content--users-roles{
-  
-  .bigcapital-datatable{
-
+.preferences__inside-content--users-roles {
+  .bigcapital-datatable {
     .table .th,
-    .table .td{
+    .table .td {
       padding: 0.8rem 0.5rem;
     }
-    .td.status{
+    .td.status {
       text-transform: uppercase;
     }
   }

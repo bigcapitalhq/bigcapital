@@ -10,18 +10,16 @@ export default createReducer(initialState, {
   [t.ITEMS_CATEGORY_LIST_SET]: (state, action) => {
     const _categories = {};
 
-    action.categories.forEach(category => {
+    action.categories.forEach((category) => {
       _categories[category.id] = category;
     });
     state.categories = {
       ...state.categories,
-      ..._categories
+      ..._categories,
     };
   },
 
-  [t.ITEM_CATEGORIES_TABLE_SET]: (state, action) => {
-
-  },
+  [t.ITEM_CATEGORIES_TABLE_SET]: (state, action) => {},
 
   [t.CATEGORY_DELETE]: (state, action) => {
     const { id } = action.payload;
@@ -31,21 +29,19 @@ export default createReducer(initialState, {
     }
   },
 
-  [t.ITEM_CATEGORIES_TABLE_LOADING]: (state, action ) => {
+  [t.ITEM_CATEGORIES_TABLE_LOADING]: (state, action) => {
     const { loading } = action.payload;
     state.loading = !!loading;
   },
-  [t.ITEM_CATEGORIES_BULK_DELETE]:(state,action)=>{
-    const {ids} =action.payload;
-    const {categories} = {...state.categories};
-    ids.forEach((id)=>{
+  [t.ITEM_CATEGORIES_BULK_DELETE]: (state, action) => {
+    const { ids } = action.payload;
 
-      if(typeof categories[id] !=='undefined'){
-        delete categories[id]
+    ids.forEach((id) => {
+      if (typeof state.categories[id] !== 'undefined') {
+        delete state.categories[id];
       }
     });
-    state.categories =categories
-  }
+  },
 });
 
 export const getCategoryId = (state, id) => {

@@ -41,12 +41,19 @@ function InviteUserDialog({
   }, false);
 
   const validationSchema = Yup.object().shape({
-    first_name: Yup.string().required().label(formatMessage({id:'first_name_'})),
-    last_name: Yup.string().required().label(formatMessage({id:'last_name_'})),
+    first_name: Yup.string()
+      .required()
+      .label(formatMessage({ id: 'first_name_' })),
+    last_name: Yup.string()
+      .required()
+      .label(formatMessage({ id: 'last_name_' })),
     email: Yup.string()
       .email()
-      .required().label(formatMessage({id:'email'})),
-    phone_number: Yup.number().required().label(formatMessage({id:'phone_number_'})),
+      .required()
+      .label(formatMessage({ id: 'email' })),
+    phone_number: Yup.number()
+      .required()
+      .label(formatMessage({ id: 'phone_number_' })),
   });
 
   const initialValues = useMemo(
@@ -56,7 +63,7 @@ function InviteUserDialog({
       email: '',
       phone_number: '',
     }),
-    []
+    [],
   );
 
   const formik = useFormik({
@@ -65,7 +72,7 @@ function InviteUserDialog({
       ...(payload.action === 'edit' &&
         pick(
           objectKeysTransform(payload.user, snakeCase),
-          Object.keys(initialValues)
+          Object.keys(initialValues),
         )),
     },
     validationSchema,
@@ -78,10 +85,13 @@ function InviteUserDialog({
           .then((response) => {
             closeDialog(name);
             AppToaster.show({
-              message: formatMessage({id:'the_user_details_has_been_updated'}),
+              message: formatMessage({
+                id: 'the_user_details_has_been_updated',
+              }),
+              intent: Intent.SUCCESS,
             });
             setSubmitting(false);
-            queryCache.refetchQueries('users-table',{force:true})
+            queryCache.refetchQueries('users-table', { force: true });
           })
           .catch((error) => {
             setSubmitting(false);
@@ -99,10 +109,10 @@ function InviteUserDialog({
     formik.resetForm();
   }, [formik.resetForm]);
 
- // Handles dialog close.
- const handleClose = useCallback(() => {
-  closeDialog(name);
-}, [closeDialog, name]);
+  // Handles dialog close.
+  const handleClose = useCallback(() => {
+    closeDialog(name);
+  }, [closeDialog, name]);
 
   return (
     <Dialog
@@ -126,7 +136,7 @@ function InviteUserDialog({
             label={<T id={'first_name'} />}
             className={'form-group--first-name'}
             intent={errors.first_name && touched.first_name && Intent.DANGER}
-            helperText={<ErrorMessage name='first_name' {...formik} />}
+            helperText={<ErrorMessage name="first_name" {...formik} />}
             inline={true}
           >
             <InputGroup
@@ -139,7 +149,7 @@ function InviteUserDialog({
             label={<T id={'last_name'} />}
             className={'form-group--last-name'}
             intent={errors.last_name && touched.last_name && Intent.DANGER}
-            helperText={<ErrorMessage name='last_name' {...formik} />}
+            helperText={<ErrorMessage name="last_name" {...formik} />}
             inline={true}
           >
             <InputGroup
@@ -152,7 +162,7 @@ function InviteUserDialog({
             label={<T id={'email'} />}
             className={'form-group--email'}
             intent={errors.email && touched.email && Intent.DANGER}
-            helperText={<ErrorMessage name='email' {...formik} />}
+            helperText={<ErrorMessage name="email" {...formik} />}
             inline={true}
           >
             <InputGroup
@@ -168,7 +178,7 @@ function InviteUserDialog({
             intent={
               errors.phone_number && touched.phone_number && Intent.DANGER
             }
-            helperText={<ErrorMessage name='phone_number' {...formik} />}
+            helperText={<ErrorMessage name="phone_number" {...formik} />}
             inline={true}
           >
             <InputGroup
@@ -182,9 +192,15 @@ function InviteUserDialog({
 
         <div className={Classes.DIALOG_FOOTER}>
           <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-            <Button onClick={handleClose}><T id={'close'}/></Button>
-            <Button intent={Intent.PRIMARY} type='submit' disabled={formik.isSubmitting} >
-              {payload.action === 'edit' ? <T id={'edit'}/> : ''}
+            <Button onClick={handleClose}>
+              <T id={'close'} />
+            </Button>
+            <Button
+              intent={Intent.PRIMARY}
+              type="submit"
+              disabled={formik.isSubmitting}
+            >
+              {payload.action === 'edit' ? <T id={'edit'} /> : ''}
             </Button>
           </div>
         </div>
@@ -195,5 +211,5 @@ function InviteUserDialog({
 
 export default compose(
   UserListDialogConnect,
-  DialogReduxConnect
+  DialogReduxConnect,
 )(InviteUserDialog);

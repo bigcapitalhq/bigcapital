@@ -8,7 +8,17 @@ export const submitCurrencies = ({ form }) => {
 };
 
 export const deleteCurrency = ({ currency_code }) => {
-  return (dispatch) => ApiService.delete(`currencies/${currency_code}`);
+  return (dispatch) =>
+    new Promise((resolve, reject) => {
+      ApiService.delete(`currencies/${currency_code}`)
+        .then((response) => {
+          dispatch({ type: t.CURRENCY_CODE_DELETE, currency_code });
+          resolve(response);
+        })
+        .catch((error) => {
+          reject(error.response.data.errors || []);
+        });
+    });
 };
 
 export const editCurrency = ({ id, form }) => {
@@ -36,11 +46,19 @@ export const editCurrency = ({ id, form }) => {
 export const fetchCurrencies = () => {
   return (dispatch) =>
     new Promise((resolve, reject) => {
+      dispatch({
+        type: t.CURRENCIES_TABLE_LOADING,
+        loading: true,
+      });
       ApiService.get('currencies')
         .then((response) => {
           dispatch({
             type: t.CURRENCIES_REGISTERED_SET,
             currencies: response.data.currencies,
+          });
+          dispatch({
+            type: t.CURRENCIES_TABLE_LOADING,
+            loading: false,
           });
           resolve(response);
         })

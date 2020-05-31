@@ -1,6 +1,12 @@
-import React, {useMemo, useState, useEffect, useRef, useCallback} from 'react';
+import React, {
+  useMemo,
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+} from 'react';
 import * as Yup from 'yup';
-import { useFormik } from "formik";
+import { useFormik } from 'formik';
 import moment from 'moment';
 import { Intent } from '@blueprintjs/core';
 import { useIntl } from 'react-intl';
@@ -20,8 +26,7 @@ import Dragzone from 'components/Dragzone';
 import MediaConnect from 'connectors/Media.connect';
 
 import useMedia from 'hooks/useMedia';
-import {compose} from 'utils';
-
+import { compose } from 'utils';
 
 function MakeJournalEntriesForm({
   // #withMedia
@@ -39,10 +44,16 @@ function MakeJournalEntriesForm({
   manualJournalId,
   manualJournal,
   onFormSubmit,
-  onCancelForm, 
+  onCancelForm,
 }) {
   const { formatMessage } = useIntl();
-  const { setFiles, saveMedia, deletedFiles, setDeletedFiles, deleteMedia } = useMedia({
+  const {
+    setFiles,
+    saveMedia,
+    deletedFiles,
+    setDeletedFiles,
+    deleteMedia,
+  } = useMedia({
     saveCallback: requestSubmitMedia,
     deleteCallback: requestDeleteMedia,
   });
@@ -51,79 +62,95 @@ function MakeJournalEntriesForm({
   }, []);
 
   const savedMediaIds = useRef([]);
-  const clearSavedMediaIds = () => { savedMediaIds.current = []; }
+  const clearSavedMediaIds = () => {
+    savedMediaIds.current = [];
+  };
 
   useEffect(() => {
     if (manualJournal && manualJournal.id) {
-      changePageTitle(formatMessage({id:'edit_journal'}));
+      changePageTitle(formatMessage({ id: 'edit_journal' }));
       changePageSubtitle(`No. ${manualJournal.journal_number}`);
     } else {
-      changePageTitle(formatMessage({id:'new_journal'}));  
+      changePageTitle(formatMessage({ id: 'new_journal' }));
     }
-  }, [changePageTitle, changePageSubtitle, manualJournal,formatMessage]);
+  }, [changePageTitle, changePageSubtitle, manualJournal, formatMessage]);
 
   const validationSchema = Yup.object().shape({
-    journal_number: Yup.string().required().label(formatMessage({id:'journal_number_'})),
-    date: Yup.date().required().label(formatMessage({id:'date'})),
+    journal_number: Yup.string()
+      .required()
+      .label(formatMessage({ id: 'journal_number_' })),
+    date: Yup.date().label(formatMessage({ id: 'date' })),
     reference: Yup.string(),
     description: Yup.string(),
     entries: Yup.array().of(
       Yup.object().shape({
         credit: Yup.number().nullable(),
         debit: Yup.number().nullable(),
-        account_id: Yup.number().nullable().when(['credit', 'debit'], {
-          is: (credit, debit) => credit || debit,
-          then: Yup.number().required(),
-        }),
+        account_id: Yup.number()
+          .nullable()
+          .when(['credit', 'debit'], {
+            is: (credit, debit) => credit || debit,
+            then: Yup.number().required(),
+          }),
         note: Yup.string().nullable(),
       }),
-    )
+    ),
   });
 
-  const saveInvokeSubmit = useCallback((payload) => {
-    onFormSubmit && onFormSubmit(payload)
-  }, [onFormSubmit]);
+  const saveInvokeSubmit = useCallback(
+    (payload) => {
+      onFormSubmit && onFormSubmit(payload);
+    },
+    [onFormSubmit],
+  );
 
   const [payload, setPayload] = useState({});
 
-  const defaultEntry = useMemo(() => ({
-    account_id: null,
-    credit: 0,
-    debit: 0,
-    note: '',
-  }), []);
+  const defaultEntry = useMemo(
+    () => ({
+      account_id: null,
+      credit: 0,
+      debit: 0,
+      note: '',
+    }),
+    [],
+  );
 
-  const defaultInitialValues = useMemo(() => ({
-    journal_number: '',
-    date: moment(new Date()).format('YYYY-MM-DD'),
-    description: '',
-    reference: '',
-    entries: [
-      defaultEntry,
-      defaultEntry,
-      defaultEntry,
-      defaultEntry,
-    ],
-  }), [defaultEntry]);
+  const defaultInitialValues = useMemo(
+    () => ({
+      journal_number: '',
+      date: moment(new Date()).format('YYYY-MM-DD'),
+      description: '',
+      reference: '',
+      entries: [defaultEntry, defaultEntry, defaultEntry, defaultEntry],
+    }),
+    [defaultEntry],
+  );
 
-  const initialValues = useMemo(() => ({
-    ...(manualJournal) ? {
-      ...pick(manualJournal, Object.keys(defaultInitialValues)),
-      entries: manualJournal.entries.map((entry) => ({
-        ...pick(entry, Object.keys(defaultEntry)),
-      })),
-    } : {
-      ...defaultInitialValues,
-    }
-  }), [manualJournal, defaultInitialValues, defaultEntry]);
+  const initialValues = useMemo(
+    () => ({
+      ...(manualJournal
+        ? {
+            ...pick(manualJournal, Object.keys(defaultInitialValues)),
+            entries: manualJournal.entries.map((entry) => ({
+              ...pick(entry, Object.keys(defaultEntry)),
+            })),
+          }
+        : {
+            ...defaultInitialValues,
+          }),
+    }),
+    [manualJournal, defaultInitialValues, defaultEntry],
+  );
 
   const initialAttachmentFiles = useMemo(() => {
     return manualJournal && manualJournal.media
       ? manualJournal.media.map((attach) => ({
-        preview: attach.attachment_file,
-        uploaded: true,
-        metadata: { ...attach },
-      })) : [];
+          preview: attach.attachment_file,
+          uploaded: true,
+          metadata: { ...attach },
+        }))
+      : [];
   }, [manualJournal]);
 
   const formik = useFormik({
@@ -133,113 +160,136 @@ function MakeJournalEntriesForm({
       ...initialValues,
     },
     onSubmit: async (values, { setErrors, setSubmitting, resetForm }) => {
-      const entries = values.entries.filter((entry) => (
-        (entry.credit || entry.debit)
-      ));
+      const entries = values.entries.filter(
+        (entry) => entry.credit || entry.debit,
+      );
       const getTotal = (type = 'credit') => {
         return entries.reduce((total, item) => {
           return item[type] ? item[type] + total : total;
         }, 0);
-      }
+      };
       const totalCredit = getTotal('credit');
       const totalDebit = getTotal('debit');
 
       // Validate the total credit should be eqials total debit.
       if (totalCredit !== totalDebit) {
         AppToaster.show({
-          message: formatMessage({id:'credit_and_debit_not_equal'}),
+          message: formatMessage({ id: 'credit_and_debit_not_equal' }),
         });
         setSubmitting(false);
         return;
       }
       const form = { ...values, status: payload.publish, entries };
 
-      const saveJournal = (mediaIds) => new Promise((resolve, reject) => {
-        const requestForm = { ...form, media_ids: mediaIds };
+      const saveJournal = (mediaIds) =>
+        new Promise((resolve, reject) => {
+          const requestForm = { ...form, media_ids: mediaIds };
 
-        if (manualJournal && manualJournal.id) {
-          requestEditManualJournal(manualJournal.id, requestForm)
-            .then((response) => {
-              AppToaster.show({
-                message: formatMessage({
-                  id: 'the_journal_has_been_successfully_edited',
-                }, {
-                  number: values.journal_number,
-                }),
-                intent: Intent.SUCCESS,
-              }); 
-              setSubmitting(false);
-              saveInvokeSubmit({ action: 'update', ...payload });
-              clearSavedMediaIds([]);
-              resetForm();
-              resolve(response);
-            }).catch((errors) => {
-              if (errors.find(e => e.type === 'JOURNAL.NUMBER.ALREADY.EXISTS')) {
-                setErrors({
-                  journal_number: formatMessage({ id: 'journal_number_is_already_used' }),
+          if (manualJournal && manualJournal.id) {
+            requestEditManualJournal(manualJournal.id, requestForm)
+              .then((response) => {
+                AppToaster.show({
+                  message: formatMessage(
+                    {
+                      id: 'the_journal_has_been_successfully_edited',
+                    },
+                    {
+                      number: values.journal_number,
+                    },
+                  ),
+                  intent: Intent.SUCCESS,
                 });
-              }
-              setSubmitting(false);
-            });
-        } else {
-          requestMakeJournalEntries(requestForm)
-            .then((response) => {
-              AppToaster.show({
-                message: formatMessage({
-                  id: 'the_journal_has_been_successfully_created',
-                }, {
-                  number: values.journal_number,
-                }),
-                intent: Intent.SUCCESS,
+                setSubmitting(false);
+                saveInvokeSubmit({ action: 'update', ...payload });
+                clearSavedMediaIds([]);
+                resetForm();
+                resolve(response);
+              })
+              .catch((errors) => {
+                if (
+                  errors.find((e) => e.type === 'JOURNAL.NUMBER.ALREADY.EXISTS')
+                ) {
+                  setErrors({
+                    journal_number: formatMessage({
+                      id: 'journal_number_is_already_used',
+                    }),
+                  });
+                }
+                setSubmitting(false);
               });
-              setSubmitting(false);
-              saveInvokeSubmit({ action: 'new', ...payload });
-              clearSavedMediaIds();
-              resetForm();
-              resolve(response);
-            }).catch((errors) => {
-              if (errors.find(e => e.type === 'JOURNAL.NUMBER.ALREADY.EXISTS')) {
-                setErrors({
-                  journal_number: formatMessage({ id: 'journal_number_is_already_used' }),
+          } else {
+            requestMakeJournalEntries(requestForm)
+              .then((response) => {
+                AppToaster.show({
+                  message: formatMessage(
+                    {
+                      id: 'the_journal_has_been_successfully_created',
+                    },
+                    {
+                      number: values.journal_number,
+                    },
+                  ),
+                  intent: Intent.SUCCESS,
                 });
-              }
-              setSubmitting(false);
-            });
-        }
-      });
+                setSubmitting(false);
+                saveInvokeSubmit({ action: 'new', ...payload });
+                clearSavedMediaIds();
+                resetForm();
+                resolve(response);
+              })
+              .catch((errors) => {
+                if (
+                  errors.find((e) => e.type === 'JOURNAL.NUMBER.ALREADY.EXISTS')
+                ) {
+                  setErrors({
+                    journal_number: formatMessage({
+                      id: 'journal_number_is_already_used',
+                    }),
+                  });
+                }
+                setSubmitting(false);
+              });
+          }
+        });
 
-      Promise.all([
-        saveMedia(),
-        deleteMedia(),
-      ]).then(([savedMediaResponses]) => {
-        const mediaIds = savedMediaResponses.map(res => res.data.media.id);
-        savedMediaIds.current = mediaIds;
+      Promise.all([saveMedia(), deleteMedia()])
+        .then(([savedMediaResponses]) => {
+          const mediaIds = savedMediaResponses.map((res) => res.data.media.id);
+          savedMediaIds.current = mediaIds;
 
-        return savedMediaResponses;
-      }).then(() => {
-        return saveJournal(savedMediaIds.current);
-      });
+          return savedMediaResponses;
+        })
+        .then(() => {
+          return saveJournal(savedMediaIds.current);
+        });
     },
   });
 
-  const handleSubmitClick = useCallback((payload) => {
-    setPayload(payload);
-    formik.handleSubmit();
-  }, [setPayload, formik]);
+  const handleSubmitClick = useCallback(
+    (payload) => {
+      setPayload(payload);
+      formik.handleSubmit();
+    },
+    [setPayload, formik],
+  );
 
-  const handleCancelClick = useCallback((payload) => {
-    onCancelForm && onCancelForm(payload); 
-  }, [onCancelForm]);
+  const handleCancelClick = useCallback(
+    (payload) => {
+      onCancelForm && onCancelForm(payload);
+    },
+    [onCancelForm],
+  );
 
-  const handleDeleteFile = useCallback((_deletedFiles) => {
-    _deletedFiles.forEach((deletedFile) => {
-      if (deletedFile.uploaded && deletedFile.metadata.id) {
-        setDeletedFiles([
-          ...deletedFiles, deletedFile.metadata.id,
-        ]);
-      }
-    });
-  }, [setDeletedFiles, deletedFiles]);  
+  const handleDeleteFile = useCallback(
+    (_deletedFiles) => {
+      _deletedFiles.forEach((deletedFile) => {
+        if (deletedFile.uploaded && deletedFile.metadata.id) {
+          setDeletedFiles([...deletedFiles, deletedFile.metadata.id]);
+        }
+      });
+    },
+    [setDeletedFiles, deletedFiles],
+  );
 
   return (
     <div class="make-journal-entries">
@@ -249,19 +299,22 @@ function MakeJournalEntriesForm({
         <MakeJournalEntriesTable
           initialValues={initialValues}
           formik={formik}
-          defaultRow={defaultEntry} />
+          defaultRow={defaultEntry}
+        />
 
         <MakeJournalEntriesFooter
           formik={formik}
           onSubmitClick={handleSubmitClick}
-          onCancelClick={handleCancelClick} />
+          onCancelClick={handleCancelClick}
+        />
       </form>
 
       <Dragzone
         initialFiles={initialAttachmentFiles}
         onDrop={handleDropFiles}
         onDeleteFile={handleDeleteFile}
-        hint={'Attachments: Maxiumum size: 20MB'} />
+        hint={'Attachments: Maxiumum size: 20MB'}
+      />
     </div>
   );
 }

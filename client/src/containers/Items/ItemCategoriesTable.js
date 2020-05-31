@@ -5,6 +5,7 @@ import {
   Menu,
   MenuItem,
   Position,
+  Intent
 } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 
@@ -37,6 +38,7 @@ const ItemsCategoryList = ({
         onClick={() => handelEditCategory(category)} />
       <MenuItem
         text={<T id={'delete_category'}/>}
+        intent={Intent.DANGER}
         onClick={() => handleDeleteCategory(category)}
       />
     </Menu>

@@ -10,7 +10,11 @@ const mapActionsToProps = (dispatch) => ({
   changePageSubtitle: (pageSubtitle) => dispatch({
     type: t.ALTER_DASHBOARD_PAGE_SUBTITLE, pageSubtitle,
   }),
-
+  changePreferencesPageTitle: (pageTitle) =>
+    dispatch({
+      type: 'CHANGE_PREFERENCES_PAGE_TITLE',
+      pageTitle,
+    }),
   setTopbarEditView: (id) => dispatch({
     type: t.SET_TOPBAR_EDIT_VIEW, id,
   }),

@@ -54,7 +54,7 @@ export default function MakeJournalEntriesHeader({
             minimal={true}>
 
             <DateInput
-              {...momentFormatter('YYYY/MM/DD')}
+              {...momentFormatter('YYYY-MM-DD')}
               defaultValue={new Date()}
               onChange={handleDateChange}
               popoverProps={{ position: Position.BOTTOM }} />

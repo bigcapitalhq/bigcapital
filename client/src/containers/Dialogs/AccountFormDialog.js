@@ -28,8 +28,7 @@ import Icon from 'components/Icon';
 import ErrorMessage from 'components/ErrorMessage';
 import { fetchAccountTypes } from 'store/accounts/accounts.actions';
 
-
-import {ListSelect} from 'components';
+import { ListSelect } from 'components';
 
 function AccountFormDialog({
   name,
@@ -52,15 +51,18 @@ function AccountFormDialog({
 
   // #withDialog
   closeDialog,
-}) { 
+}) {
   const { formatMessage } = useIntl();
   const accountFormValidationSchema = Yup.object().shape({
-    name: Yup.string().required().label(formatMessage({id:'account_name_'})),
+    name: Yup.string()
+      .required()
+      .label(formatMessage({ id: 'account_name_' })),
     code: Yup.number(),
     account_type_id: Yup.string()
       .nullable()
-      .required().label(formatMessage({id:'account_type_id'})),
-    description: Yup.string().trim()
+      .required()
+      .label(formatMessage({ id: 'account_type_id' })),
+    description: Yup.string().trim(),
   });
 
   const initialValues = useMemo(
@@ -69,14 +71,14 @@ function AccountFormDialog({
       name: '',
       description: '',
     }),
-    []
+    [],
   );
 
   const [selectedAccountType, setSelectedAccountType] = useState(null);
   const [selectedSubaccount, setSelectedSubaccount] = useState(
     payload.action === 'new_child'
       ? accounts.find((a) => a.id === payload.id)
-      : null
+      : null,
   );
 
   const transformApiErrors = (errors) => {
@@ -96,48 +98,67 @@ function AccountFormDialog({
     validationSchema: accountFormValidationSchema,
     onSubmit: (values, { setSubmitting, setErrors }) => {
       const exclude = ['subaccount'];
-      const toastAccountName = (values.code) ? `${values.code} - ${values.name}` : values.name;
+      const toastAccountName = values.code
+        ? `${values.code} - ${values.name}`
+        : values.name;
 
       if (payload.action === 'edit') {
         requestEditAccount({
           payload: payload.id,
-          form: { ...omit(values, [...exclude, 'account_type_id']) }
+          form: { ...omit(values, [...exclude, 'account_type_id']) },
         }).then((response) => {
           closeDialog(name);
           AppToaster.show({
-            message: formatMessage({
-              id: 'service_has_been_successful_edited',
-            }, {
-              name: toastAccountName,
-              service: formatMessage({ id: 'account' }),
-            }),
+            message: formatMessage(
+              {
+                id: 'service_has_been_successful_edited',
+              },
+              {
+                name: toastAccountName,
+                service: formatMessage({ id: 'account' }),
+              },
+            ),
             intent: Intent.SUCCESS,
           });
         });
       } else {
-        requestSubmitAccount({ form: { ...omit(values, exclude) } }).then((response) => {
-          closeDialog(name);
-          AppToaster.show({
-            message: formatMessage({
-              id: 'service_has_been_successful_created',  
-            }, {
-              name: toastAccountName,
-              service: formatMessage({ id: 'account' }),
-            }),
-            intent: Intent.SUCCESS,
-            position: Position.BOTTOM,
-          });
-        });
+        requestSubmitAccount({ form: { ...omit(values, exclude) } }).then(
+          (response) => {
+            closeDialog(name);
+            AppToaster.show({
+              message: formatMessage(
+                {
+                  id: 'service_has_been_successful_created',
+                },
+                {
+                  name: toastAccountName,
+                  service: formatMessage({ id: 'account' }),
+                },
+              ),
+              intent: Intent.SUCCESS,
+              position: Position.BOTTOM,
+            });
+          },
+        );
       }
     },
   });
   const { errors, values, touched } = useMemo(() => formik, [formik]);
 
+  // const filteredAccounts = accounts.filter(
+  //   (account) => account.accountTypeId === formik.values.account_type_id,
+  // );
+
+  const filteredAccounts = accounts.filter((account) => {
+    return account.account_type_id === values.account_type_id;
+  });
+  console.log(filteredAccounts, 'ERR');
+  console.log(accounts,'ER/u');
   // Set default account type.
   useEffect(() => {
     if (account && account.account_type_id) {
       const defaultType = accountsTypes.find(
-        (t) => t.id === account.account_type_id
+        (t) => t.id === account.account_type_id,
       );
 
       defaultType && setSelectedAccountType(defaultType);
@@ -187,7 +208,7 @@ function AccountFormDialog({
         );
       }
     },
-    []
+    [],
   );
 
   // Handles dialog close.
@@ -199,7 +220,7 @@ function AccountFormDialog({
   const fetchAccountsList = useQuery(
     'accounts-list',
     () => requestFetchAccounts(),
-    { manual: true }
+    { manual: true },
   );
 
   // Fetches accounts types.
@@ -208,14 +229,14 @@ function AccountFormDialog({
     async () => {
       await requestFetchAccountTypes();
     },
-    { manual: true }
+    { manual: true },
   );
 
   // Fetch the given account id on edit mode.
   const fetchAccount = useQuery(
     payload.action === 'edit' && ['account', payload.id],
     (key, id) => requestFetchAccount(id),
-    { manual: true }
+    { manual: true },
   );
 
   const isFetching =
@@ -228,13 +249,13 @@ function AccountFormDialog({
     fetchAccountsList.refetch();
     fetchAccountsTypes.refetch();
     fetchAccount.refetch();
-  }, [ fetchAccount, fetchAccountsList, fetchAccountsTypes]);
+  }, [fetchAccount, fetchAccountsList, fetchAccountsTypes]);
 
   const onChangeAccountType = useCallback(
     (accountType) => {
       formik.setFieldValue('account_type_id', accountType.id);
     },
-    [formik]
+    [formik],
   );
 
   // Handles change sub-account.
@@ -243,7 +264,7 @@ function AccountFormDialog({
       setSelectedSubaccount(account);
       formik.setFieldValue('parent_account_id', account.id);
     },
-    [setSelectedSubaccount, formik]
+    [setSelectedSubaccount, formik],
   );
 
   const onDialogClosed = useCallback(() => {
@@ -252,22 +273,28 @@ function AccountFormDialog({
     setSelectedAccountType(null);
   }, [formik]);
 
-  const infoIcon = useMemo(() => <Icon icon='info-circle' iconSize={12} />, []);
+  const infoIcon = useMemo(() => <Icon icon="info-circle" iconSize={12} />, []);
 
   const subAccountLabel = useMemo(() => {
     return (
       <span>
-        <T id={'sub_account'}/> <Icon icon='info-circle' iconSize={12} />
+        <T id={'sub_account'} /> <Icon icon="info-circle" iconSize={12} />
       </span>
     );
   }, []);
 
-  const requiredSpan = useMemo(() => <span class='required'>*</span>, []);
+  const requiredSpan = useMemo(() => <span class="required">*</span>, []);
 
   return (
     <Dialog
       name={name}
-      title={payload.action === 'edit' ? <T id={'edit_account'}/> : <T id={'new_account'}/>}
+      title={
+        payload.action === 'edit' ? (
+          <T id={'edit_account'} />
+        ) : (
+          <T id={'new_account'} />
+        )
+      }
       className={{
         'dialog--loading': isFetching,
         'dialog--account-form': true,
@@ -283,41 +310,40 @@ function AccountFormDialog({
       <form onSubmit={formik.handleSubmit}>
         <div className={Classes.DIALOG_BODY}>
           <FormGroup
-            label={<T id={'account_type'}/>}
+            label={<T id={'account_type'} />}
             labelInfo={requiredSpan}
             className={classNames(
               'form-group--account-type',
               'form-group--select-list',
-              Classes.FILL
+              Classes.FILL,
             )}
             inline={true}
-            helperText={<ErrorMessage name='account_type_id' {...formik} />}
+            helperText={<ErrorMessage name="account_type_id" {...formik} />}
             intent={
               errors.account_type_id && touched.account_type_id && Intent.DANGER
             }
           >
             <ListSelect
               items={accountsTypes}
-              noResults={<MenuItem disabled={true} text='No results.' />}
+              noResults={<MenuItem disabled={true} text="No results." />}
               itemRenderer={accountTypeItem}
               itemPredicate={filterAccountTypeItems}
               popoverProps={{ minimal: true }}
               onItemSelect={onChangeAccountType}
-
               selectedItem={formik.values.account_type_id}
               selectedItemProp={'id'}
-              
               defaultText={<T id={'select_account_type'} />}
               labelProp={'name'}
-              buttonProps={{ disabled: payload.action === 'edit' }} />
+              buttonProps={{ disabled: payload.action === 'edit' }}
+            />
           </FormGroup>
 
           <FormGroup
-            label={<T id={'account_name'}/>}
+            label={<T id={'account_name'} />}
             labelInfo={requiredSpan}
             className={'form-group--account-name'}
             intent={errors.name && touched.name && Intent.DANGER}
-            helperText={<ErrorMessage name='name' {...formik} />}
+            helperText={<ErrorMessage name="name" {...formik} />}
             inline={true}
           >
             <InputGroup
@@ -328,10 +354,10 @@ function AccountFormDialog({
           </FormGroup>
 
           <FormGroup
-            label={<T id={'account_code'}/>}
+            label={<T id={'account_code'} />}
             className={'form-group--account-code'}
             intent={errors.code && touched.code && Intent.DANGER}
-            helperText={<ErrorMessage name='code' {...formik} />}
+            helperText={<ErrorMessage name="code" {...formik} />}
             inline={true}
             labelInfo={infoIcon}
           >
@@ -356,37 +382,31 @@ function AccountFormDialog({
 
           {values.subaccount && (
             <FormGroup
-              label={<T id={'parent_account'}/>}
+              label={<T id={'parent_account'} />}
               className={classNames(
                 'form-group--parent-account',
                 'form-group--select-list',
-                Classes.FILL
+                Classes.FILL,
               )}
               inline={true}
             >
-              <Select
-                items={accounts}
-                noResults={<MenuItem disabled={true} text='No results.' />}
+              <ListSelect
+                items={filteredAccounts}
+                noResults={<MenuItem disabled={true} text="No results." />}
                 itemRenderer={accountItem}
                 itemPredicate={filterAccountsPredicater}
                 popoverProps={{ minimal: true }}
                 onItemSelect={onChangeSubaccount}
-                {...formik.getFieldProps('parent_account_id')}
-              >
-                <Button
-                  rightIcon='caret-down'
-                  text={
-                    selectedSubaccount
-                      ? selectedSubaccount.name
-                      : <T id={'select_parent_account'}/>
-                  }
-                />
-              </Select>
+                selectedItem={formik.values.parent_account_id}
+                selectedItemProp={'id'}
+                defaultText={<T id={'select_parent_account'} />}
+                labelProp={'name'}
+              />
             </FormGroup>
           )}
 
           <FormGroup
-            label={<T id={'description'}/>}
+            label={<T id={'description'} />}
             className={'form-group--description'}
             intent={formik.errors.description && Intent.DANGER}
             helperText={formik.errors.description && formik.errors.credential}
@@ -402,13 +422,19 @@ function AccountFormDialog({
 
         <div className={Classes.DIALOG_FOOTER}>
           <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-            <Button onClick={handleClose}><T id={'close'}/></Button>
+            <Button onClick={handleClose}>
+              <T id={'close'} />
+            </Button>
             <Button
               intent={Intent.PRIMARY}
               disabled={formik.isSubmitting}
-              type='submit'
+              type="submit"
             >
-              {payload.action === 'edit' ? <T id={'edit'}/> : <T id={'submit'}/>}
+              {payload.action === 'edit' ? (
+                <T id={'edit'} />
+              ) : (
+                <T id={'submit'} />
+              )}
             </Button>
           </div>
         </div>

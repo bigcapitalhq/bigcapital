@@ -13,6 +13,7 @@ import {
 import { objectKeysTransform } from 'utils';
 import { pick, snakeCase } from 'lodash';
 import classNames from 'classnames';
+import { queryCache, useQuery } from 'react-query';
 
 import AppToaster from 'components/AppToaster';
 import DialogReduxConnect from 'components/DialogReduxConnect';
@@ -30,12 +31,17 @@ function UserFormDialog({
   closeDialog,
 }) {
   const { formatMessage } = useIntl();
-  const fetchHook = useAsync(async () => {
-    await Promise.all([
-      ...(payload.action === 'edit' ? [requestFetchUser(payload.user.id)] : []),
-    ]);
-  }, false);
-
+  // const fetchHook = useAsync(async () => {
+  //   await Promise.all([
+  //     ...(payload.action === 'edit' ? [requestFetchUser(payload.user.id)] : []),
+  //   ]);
+  // }, false);
+ 
+    const fetchHook = useQuery(
+      payload.action === 'edit' && ['user-invite-table', payload.user.id],
+      (key, id) => requestFetchUser(id),
+      { manual: true }
+    );
   const validationSchema = Yup.object().shape({
     email: Yup.string()
       .email()
@@ -63,23 +69,30 @@ function UserFormDialog({
     enableReinitialize: true,
     initialValues,
     validationSchema,
-    onSubmit: (values) => {
+    onSubmit: (values,{setSubmitting}) => {
       const form = { ...values };
 
       requestSubmitInvite(form).then((response) => {
+        closeDialog(name);
         AppToaster.show({
           message: formatMessage({
             id: 'teammate_invited_to_organization_account',
           }),
           intent: Intent.SUCCESS,
         });
-        closeDialog(name);
-      });
+        setSubmitting(false);
+        queryCache.refetchQueries('users-table', { force: true });
+      }).catch((errors)=>{
+        setSubmitting(false)
+      })
     },
   });
-  const onDialogOpening = () => {
-    fetchHook.execute();
-  };
+
+  // Handle the dialog opening.
+const onDialogOpening =useCallback(()=>{
+fetchHook.refetch();
+},[fetchHook]);
+
 
   const onDialogClosed = useCallback(() => {
     resetForm();
@@ -104,6 +117,7 @@ function UserFormDialog({
         'dialog--loading': fetchHook.pending,
         'dialog--invite-form': true,
       })}
+      //
       autoFocus={true}
       canEscapeKeyClose={true}
       isOpen={isOpen}

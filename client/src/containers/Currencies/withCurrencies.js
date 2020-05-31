@@ -5,6 +5,7 @@ export default (mapState) => {
     const mapped = {
       currencies: state.currencies.data,
       currenciesList: Object.values(state.currencies.data),
+      currenciesLoading:state.currencies.loading,
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };
