@@ -11,6 +11,10 @@ $form-check-input-indeterminate-bg-image: url("data:image/svg+xml,<svg xmlns='ht
     background: #fff;
     padding: 14px 16px;
     border-top: 1px solid #ececec;
+
+    .has-mini-sidebar &{
+      left: 50px;
+    }
   }
 }
 

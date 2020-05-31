@@ -1,27 +1,15 @@
 
 import { connect } from 'react-redux';
-import t from 'store/types';
 
-const mapActionsToProps = (dispatch) => ({
-  changePageTitle: (pageTitle) => dispatch({
-    type: t.CHANGE_DASHBOARD_PAGE_TITLE, pageTitle
-  }),
-
-  changePageSubtitle: (pageSubtitle) => dispatch({
-    type: t.ALTER_DASHBOARD_PAGE_SUBTITLE, pageSubtitle,
-  }),
-
-  setTopbarEditView: (id) => dispatch({
-    type: t.SET_TOPBAR_EDIT_VIEW, id,
-  }),
-
-  setDashboardRequestLoading: () => dispatch({
-    type: t.SET_DASHBOARD_REQUEST_LOADING,
-  }),
-
-  setDashboardRequestCompleted: () => dispatch({
-    type: t.SET_DASHBOARD_REQUEST_COMPLETED,
-  }),
-});
-
-export default connect(null, mapActionsToProps);
+export default (mapState) => {
+  const mapStateToProps = (state, props) => {
+    const mapped = {
+      pageTitle: state.dashboard.pageTitle,
+      pageSubtitle: state.dashboard.pageSubtitle,
+      editViewId: state.dashboard.topbarEditViewId,
+      sidebarExpended: state.dashboard.sidebarExpended,
+    };
+    return mapState ? mapState(mapped, state, props) : mapped;
+  };
+  return connect(mapStateToProps);
+}

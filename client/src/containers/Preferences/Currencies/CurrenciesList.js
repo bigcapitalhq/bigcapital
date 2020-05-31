@@ -18,7 +18,6 @@ import LoadingIndicator from 'components/LoadingIndicator';
 import DataTable from 'components/DataTable';
 import AppToaster from 'components/AppToaster';
 
-import withDashboard from 'connectors/Dashboard.connector';
 import withCurrencies from 'containers/Currencies/withCurrencies';
 import withCurrenciesActions from 'containers/Currencies/withCurrenciesActions';
 import { FormattedMessage as T, useIntl } from 'react-intl';
@@ -157,5 +156,4 @@ export default compose(
   })),
   withCurrenciesActions,
   DialogConnect,
-  withDashboard
 )(CurrenciesList);

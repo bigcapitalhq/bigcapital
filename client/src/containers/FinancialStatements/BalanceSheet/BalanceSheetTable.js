@@ -103,6 +103,7 @@ function BalanceSheetTable({
         onFetchData={handleFetchData}
         expanded={expandedRows}
         expandSubRows={true}
+        sticky={true}
       />
     </FinancialSheet>
   );

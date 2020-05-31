@@ -25,7 +25,7 @@ import LoadingIndicator from 'components/LoadingIndicator';
 import AppToaster from 'components/AppToaster';
 
 import DialogConnect from 'connectors/Dialog.connector';
-import withDashboard from 'containers/Dashboard/withDashboard';
+import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withUsers from 'containers/Users/withUsers';
 import withUsersActions from 'containers/Users/withUsersActions';
 
@@ -240,7 +240,7 @@ function UsersListPreferences({
 
 export default compose(
   DialogConnect,
-  withDashboard,
+  withDashboardActions,
   withUsers,
   withUsersActions,
 )(UsersListPreferences);

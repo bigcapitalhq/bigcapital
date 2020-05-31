@@ -36,7 +36,10 @@ export default function SidebarMenu() {
             caretIconSize={15}
             onClick={handleItemClick}
             callapseActive={!!isActive}
-            className={classNames({ 'is-active': isActive })} />
+            itemClassName={classNames({
+              'is-active': isActive,
+              'has-icon': !children && item.icon,
+            })} />
       );
     });
   };

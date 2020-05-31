@@ -19,7 +19,7 @@ import FilterDropdown from 'components/FilterDropdown';
 
 import withResourceDetail from 'containers/Resources/withResourceDetails';
 import withDialog from 'connectors/Dialog.connector';
-import withDashboard from 'containers/Dashboard/withDashboard';
+import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 
 import { compose } from 'utils';
 
@@ -117,7 +117,7 @@ const withItemsCategoriesActionsBar = connect(mapStateToProps);
 export default compose(
   withItemsCategoriesActionsBar,
   withDialog,
-  withDashboard,
+  withDashboardActions,
   withResourceDetail(({ resourceFields }) => ({
     resourceFields,
   })) 

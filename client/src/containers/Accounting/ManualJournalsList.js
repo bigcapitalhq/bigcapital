@@ -12,7 +12,7 @@ import ManualJournalsViewTabs from 'containers/Accounting/ManualJournalsViewTabs
 import ManualJournalsDataTable from 'containers/Accounting/ManualJournalsDataTable';
 import ManualJournalsActionsBar from 'containers/Accounting/ManualJournalActionsBar';
 
-import withDashboardActions from 'containers/Dashboard/withDashboard';
+import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withManualJournalsActions from 'containers/Accounting/withManualJournalsActions';
 import withViewsActions from 'containers/Views/withViewsActions';
 

@@ -14,11 +14,12 @@ import { If } from 'components';
 
 import withResourcesActions from 'containers/Resources/withResourcesActions';
 import withViewsActions from 'containers/Views/withViewsActions';
-import withDashboard from 'containers/Dashboard/withDashboard';
+import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 
 
 // @flow
 function ViewFormPage({
+  // #withDashboardActions
   changePageTitle,
   changePageSubtitle,
 
@@ -119,7 +120,7 @@ function ViewFormPage({
 }
 
 export default compose(
-  withDashboard,
+  withDashboardActions,
   withViewsActions,
   withResourcesActions
 )(ViewFormPage);

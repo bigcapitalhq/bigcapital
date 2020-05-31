@@ -1,12 +1,41 @@
 import * as React from 'react';
 import { Scrollbar } from 'react-scrollbars-custom';
+import classNames from 'classnames';
 
-export default function SidebarContainer(props) {
+import withDashboardActions from 'containers/Dashboard/withDashboardActions';
+import withDashboard from 'containers/Dashboard/withDashboard';
+
+import { compose } from 'utils';
+
+function SidebarContainer({
+  // #ownProps
+  children,
+
+  // #withDashboardActions
+  toggleSidebarExpend,
+
+  // #withDashboard
+  sidebarExpended,
+}) {
   return (
-    <div className='sidebar' id='sidebar'>
-      <Scrollbar noDefaultStyles={true}>
-        <div className='sidebar__inner'>{props.children}</div>
-      </Scrollbar>
+    <div
+      className={classNames('sidebar', {
+        'sidebar--mini-sidebar': !sidebarExpended,
+      })}
+      id="sidebar"
+    >
+      <div className={'sidebar__scroll-wrapper'}>
+        <Scrollbar noDefaultStyles={true}>
+          <div className="sidebar__inner">{children}</div>
+        </Scrollbar>
+      </div>
     </div>
   );
 }
+
+export default compose(
+  withDashboardActions,
+  withDashboard(({ sidebarExpended }) => ({
+    sidebarExpended,
+  })),
+)(SidebarContainer);

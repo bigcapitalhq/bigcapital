@@ -12,14 +12,14 @@ import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import SettingsConnect from 'connectors/Settings.connect';
 
-import withDashboard from 'containers/Dashboard/withDashboard';
+import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withJournalActions from './withJournalActions';
 
 function Journal({
   // #withJournalActions
   requestFetchJournalSheet,
 
-  // #withDashboard
+  // #withDashboardActions
   changePageTitle,
 
   // #withPreferences
@@ -93,7 +93,7 @@ function Journal({
 }
 
 export default compose(
-  withDashboard,
+  withDashboardActions,
   withJournalActions,
   SettingsConnect,
 )(Journal);

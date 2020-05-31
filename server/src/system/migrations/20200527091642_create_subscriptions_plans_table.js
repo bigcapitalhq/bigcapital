@@ -16,10 +16,6 @@ exports.up = function(knex) {
     table.string('invoice_interval');
 
     table.timestamps();
-  }).then(() => {
-    return knex.seed.run({
-      specific: 'seed_subscriptions_plans.js'
-    })
   });
 };
 

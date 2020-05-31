@@ -11,14 +11,14 @@ import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import { compose } from 'utils';
 
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
-import withDashboard from 'containers/Dashboard/withDashboard';
+import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withTrialBalanceActions from './withTrialBalanceActions';
 import withTrialBalance from './withTrialBalance';
 import withSettings from 'containers/Settings/withSettings';
 
 
 function TrialBalanceSheet({
-  // #withDashboard
+  // #withDashboardActions
   changePageTitle,
 
   // #withTrialBalanceActions
@@ -93,7 +93,7 @@ function TrialBalanceSheet({
 }
 
 export default compose(
-  withDashboard,
+  withDashboardActions,
   withTrialBalanceActions,
   withTrialBalance(({ trialBalanceSheetLoading }) => ({
     trialBalanceSheetLoading,

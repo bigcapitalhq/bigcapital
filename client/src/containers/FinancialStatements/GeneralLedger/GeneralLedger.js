@@ -13,13 +13,13 @@ import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import GeneralLedgerActionsBar from './GeneralLedgerActionsBar';
 
 import withGeneralLedgerActions from './withGeneralLedgerActions';
-import withDashboard from 'containers/Dashboard/withDashboard';
+import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withAccountsActions from 'containers/Accounts/withAccountsActions';
 import withSettings from 'containers/Settings/withSettings';
 
 
 function GeneralLedger({
-  // #withDashboard
+  // #withDashboardActions
   changePageTitle,
 
   // #withGeneralLedgerActions
@@ -94,7 +94,7 @@ function GeneralLedger({
 
 export default compose(
   withGeneralLedgerActions,
-  withDashboard,
+  withDashboardActions,
   withAccountsActions,
   withSettings,
 )(GeneralLedger);

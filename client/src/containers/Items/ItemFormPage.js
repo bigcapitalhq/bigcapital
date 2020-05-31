@@ -5,7 +5,7 @@ import { useQuery } from 'react-query';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import ItemForm from 'containers/Items/ItemForm';
 
-import withDashboard from 'containers/Dashboard/withDashboard';
+import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withAccountsActions from 'containers/Accounts/withAccountsActions';
 import withItemCategoriesActions from 'containers/Items/withItemCategoriesActions';
 import withItemsActions from './withItemsActions';
@@ -14,7 +14,7 @@ import { compose } from 'utils';
 
 
 const ItemFormContainer = ({
-  // #withDashboard
+  // #withDashboardActions
   changePageTitle,
 
   // #withAccountsActions
@@ -64,7 +64,7 @@ const handleCancel =useCallback(()=>{
 };
 
 export default compose(
-  withDashboard,
+  withDashboardActions,
   withAccountsActions,
   withItemCategoriesActions,
   withItemsActions

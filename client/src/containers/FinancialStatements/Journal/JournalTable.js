@@ -121,6 +121,7 @@ function JournalSheetTable({
           id: 'this_report_does_not_contain_any_data_between_date_period',
         })}
         expanded={expandedRows}
+        sticky={true}
       />
     </FinancialSheet>
   );

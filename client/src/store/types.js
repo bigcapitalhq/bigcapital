@@ -36,5 +36,4 @@ export default {
   ...search,
   ...register,
   ...exchangeRate,
-
 };

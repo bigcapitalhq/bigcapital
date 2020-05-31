@@ -3,10 +3,12 @@ import thunkMiddleware from 'redux-thunk';
 import monitorReducerEnhancer from 'store/enhancers/monitorReducer';
 import loggerMiddleware from 'middleware/logger'
 import rootReducer from 'store/reducers';
-import { loadState, saveState } from 'store/localStorage';
+import persistState from 'redux-localstorage'
+
+const persistPaths = ['dashboard', 'authentication'];
 
 const createStore = (initialState = {
-  ...loadState(),
+  // ...loadState(),
 }) => {
   /**
   |--------------------------------------------------
@@ -25,6 +27,7 @@ const createStore = (initialState = {
   */
   const enhancers = [
     monitorReducerEnhancer,
+    persistState(persistPaths, { key: 'bigcapital' }),
   ];
   let composeEnhancers = compose;
 
@@ -45,12 +48,6 @@ const createStore = (initialState = {
     composeEnhancers(applyMiddleware(...middleware), ...enhancers)
   );
   store.asyncReducers = {};
-
-  store.subscribe(() => {
-    saveState({
-      authentication: store.getState().authentication,
-    });
-  });
   return store;
 };
 export default createStore();

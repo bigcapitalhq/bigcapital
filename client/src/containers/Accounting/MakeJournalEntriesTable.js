@@ -29,9 +29,9 @@ const ActionsCellRenderer = ({
   };
   return (
     <Button
-      icon={<Icon icon='times-circle' iconSize={14} />}
+      icon={<Icon icon="times-circle" iconSize={14} />}
       iconSize={14}
-      className='ml2'
+      className="ml2"
       minimal={true}
       intent={Intent.DANGER}
       onClick={onClickRemoveRole}
@@ -72,7 +72,7 @@ const NoteCellRenderer = (chainedComponent) => (props) => {
 /**
  * Make journal entries table component.
  */
-function MakeJournalEntriesTable({  
+function MakeJournalEntriesTable({
   // #withAccounts
   accounts,
 
@@ -107,10 +107,10 @@ function MakeJournalEntriesTable({
         'entries',
         newRows.map((row) => ({
           ...omit(row, ['rowType']),
-        }))
+        })),
       );
     },
-    [rows, setFieldValue]
+    [rows, setFieldValue],
   );
 
   // Handles click remove datatable row.
@@ -124,11 +124,11 @@ function MakeJournalEntriesTable({
         'entries',
         newRows
           .filter((row) => row.rowType === 'editor')
-          .map((row) => ({ ...omit(row, ['rowType']) }))
+          .map((row) => ({ ...omit(row, ['rowType']) })),
       );
       onClickRemoveRow && onClickRemoveRow(removeIndex);
     },
-    [rows, setFieldValue, onClickRemoveRow]
+    [rows, setFieldValue, onClickRemoveRow],
   );
 
   // Memorized data table columns.
@@ -188,7 +188,7 @@ function MakeJournalEntriesTable({
         width: 45,
       },
     ],
-    [formatMessage]
+    [formatMessage],
   );
 
   // Handles click new line.
@@ -201,15 +201,16 @@ function MakeJournalEntriesTable({
     (row) => ({
       'row--total': rows.length === row.index + 2,
     }),
-    [rows]
+    [rows],
   );
 
   return (
-    <div class='make-journal-entries__table'>
+    <div class="make-journal-entries__table">
       <DataTable
         columns={columns}
         data={rows}
         rowClassNames={rowClassNames}
+        sticky={true}
         payload={{
           accounts,
           errors: errors.entries || [],
@@ -218,7 +219,7 @@ function MakeJournalEntriesTable({
         }}
       />
 
-      <div class='mt1'>
+      <div class="mt1">
         <Button
           small={true}
           className={'button--secondary button--new-line'}

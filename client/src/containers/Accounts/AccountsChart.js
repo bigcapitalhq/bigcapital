@@ -15,7 +15,7 @@ import AccountsViewsTabs from 'containers/Accounts/AccountsViewsTabs';
 import AccountsDataTable from 'containers/Accounts/AccountsDataTable';
 import DashboardActionsBar from 'containers/Accounts/AccountsActionsBar';
 
-import withDashboardActions from 'containers/Dashboard/withDashboard';
+import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withResourceActions from 'containers/Resources/withResourcesActions';
 import withAccountsActions from 'containers/Accounts/withAccountsActions';
 import withAccountsTableActions from 'containers/Accounts/withAccountsTableActions';
@@ -26,7 +26,7 @@ import { compose } from 'utils';
 
 
 function AccountsChart({
-  // #withDashboard
+  // #withDashboardActions
   changePageTitle,
 
   // #withAccountsActions

@@ -10,14 +10,14 @@ import ProfitLossActionsBar from './ProfitLossActionsBar';
 import DashboardInsider from 'components/Dashboard/DashboardInsider'
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent'
 
-import withDashboard from 'containers/Dashboard/withDashboard';
+import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withProfitLossActions from './withProfitLossActions';
 import withProfitLoss from './withProfitLoss';
 import SettingsConnect from 'connectors/Settings.connect';
 
 
 function ProfitLossSheet({
-  // #withDashboard
+  // #withDashboardActions
   changePageTitle,
 
   // #withProfitLossActions
@@ -85,7 +85,7 @@ function ProfitLossSheet({
 }
 
 export default compose(
-  withDashboard,
+  withDashboardActions,
   withProfitLossActions,
   withProfitLoss(({ profitLossSheetLoading }) => ({
     profitLossSheetLoading,

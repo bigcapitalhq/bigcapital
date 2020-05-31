@@ -40,7 +40,6 @@
     align-items: center;
   }
 
-
   &__header.is-hidden + .financial-statement__body{
     border-top: 20px solid #FDFDFD;
 
@@ -84,17 +83,26 @@
   &__table{
     margin-top: 24px;
 
-    .tbody{
-      .code.td{
-        color: #777;
+    .table{
+      .tbody,
+      .thead{
+        .tr .td,
+        .tr .th{
+          background: #fff;
+        }
       }
-    }
-    .tr.no-results{
-      .td{
-        flex-direction: column;
-        padding: 20px;
-        color: #666;
-        align-items: center;
+      .tbody{
+        .code.td{
+          color: #777;
+        }
+      }
+      .tr.no-results{
+        .td{
+          flex-direction: column;
+          padding: 20px;
+          color: #666;
+          align-items: center;
+        }
       }
     }
   }

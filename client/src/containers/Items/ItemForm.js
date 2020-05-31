@@ -31,7 +31,7 @@ import withAccounts from 'containers/Accounts/withAccounts';
 import withMediaActions from 'containers/Media/withMediaActions';
 import useMedia from 'hooks/useMedia';
 import withItemDetail from 'containers/Items/withItemDetail'
-import withDashboardActions from 'containers/Dashboard/withDashboard';
+import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withAccountDetail from 'containers/Accounts/withAccountDetail';
 
 import { compose } from 'utils';
@@ -47,7 +47,7 @@ const ItemForm = ({
   onFormSubmit,
   onCancelForm, 
 
-  // #withDashboard
+  // #withDashboardActions
   changePageTitle,
 
   // #withItemCategories

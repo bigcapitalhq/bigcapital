@@ -80,6 +80,7 @@ function TrialBalanceSheetTable({
         onFetchData={handleFetchData}
         expandable={true}
         expandToggleColumn={1}
+        sticky={true}
       />
     </FinancialSheet>
   );

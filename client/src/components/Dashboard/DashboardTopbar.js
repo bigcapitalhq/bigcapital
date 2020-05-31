@@ -14,14 +14,23 @@ import DashboardBreadcrumbs from 'components/Dashboard/DashboardBreadcrumbs';
 import SearchConnect from 'connectors/Search.connect';
 import Icon from 'components/Icon';
 
+import withDashboardActions from 'containers/Dashboard/withDashboardActions';
+import withDashboard from 'containers/Dashboard/withDashboard';
+
 import { compose } from 'utils';
 
 
 function DashboardTopbar({
+
+  // #withDashboard
   pageTitle,
   pageSubtitle,
   editViewId,
-  globalSearchShow,
+
+  // #withDashboardActions
+  toggleSidebarExpend,
+
+  // #withGlobalSearch
   openGlobalSearch,
 }) {
   const history = useHistory();
@@ -38,11 +47,15 @@ function DashboardTopbar({
       onClick={handlerClickEditView}
     />
   );
+
+  const handleSidebarToggleBtn = () => {
+    toggleSidebarExpend();
+  };
   return (
     <div class='dashboard__topbar'>
       <div class='dashboard__topbar-left'>
         <div class='dashboard__topbar-sidebar-toggle'>
-          <Button minimal={true}>
+          <Button minimal={true} onClick={handleSidebarToggleBtn}>
             <svg
               xmlns='http://www.w3.org/2000/svg'
               width='20'
@@ -106,13 +119,10 @@ function DashboardTopbar({
   );
 }
 
-const mapStateToProps = (state) => ({
-  pageTitle: state.dashboard.pageTitle,
-  pageSubtitle: state.dashboard.pageSubtitle,
-  editViewId: state.dashboard.topbarEditViewId,
-});
-
 export default compose(
   SearchConnect,
-  connect(mapStateToProps)
+  withDashboard(({ pageTitle, pageSubtitle, editViewId }) => ({ 
+    pageTitle, pageSubtitle, editViewId
+  })),
+  withDashboardActions,
 )(DashboardTopbar);

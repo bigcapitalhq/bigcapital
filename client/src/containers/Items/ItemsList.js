@@ -23,13 +23,13 @@ import AppToaster from 'components/AppToaster';
 
 import withItems from 'containers/Items/withItems';
 import withResourceActions from 'containers/Resources/withResourcesActions';
-import withDashboardActions from 'containers/Dashboard/withDashboard';
+import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withItemsActions from 'containers/Items/withItemsActions';
 import withViewsActions from 'containers/Views/withViewsActions';
 
 
 function ItemsList({
-  // #withDashboard
+  // #withDashboardActions
   changePageTitle,
 
   // #withResourceActions

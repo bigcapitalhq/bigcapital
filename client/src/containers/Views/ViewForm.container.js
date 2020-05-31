@@ -1,7 +1,7 @@
 import {connect} from 'react-redux';
 import {compose} from 'utils';
 
-import withDashboard from 'containers/Dashboard/withDashboard';
+import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withResourceDetail from 'containers/Resources/withResourceDetails';
 import withViewsActions from 'containers/Views/withViewsActions';
 import withViewsDetails from 'containers/Views/withViewDetails';
@@ -16,7 +16,7 @@ const mapStateToProps = (state, ownProps) => {
 const viewFormConnect = connect(mapStateToProps);
 
 export default compose(
-  withDashboard,
+  withDashboardActions,
   withViewsActions,
   withViewsDetails,
   viewFormConnect,

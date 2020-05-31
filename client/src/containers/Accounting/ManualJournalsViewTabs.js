@@ -18,7 +18,7 @@ import Icon from 'components/Icon';
 
 import withManualJournals from './withManualJournals';
 import withManualJournalsActions from './withManualJournalsActions';
-import withDashboard from 'containers/Dashboard/withDashboard';
+import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 
 import { compose } from 'utils';
 
@@ -29,7 +29,7 @@ function ManualJournalsViewTabs({
   // #withManualJournalsActions
   addManualJournalsTableQueries,
 
-  // #withDashboard
+  // #withDashboardActions
   setTopbarEditView,
 
   // #ownProps
@@ -121,5 +121,5 @@ export default compose(
     manualJournalsViews,
   })),
   withManualJournalsActions,
-  withDashboard 
+  withDashboardActions 
 )(ManualJournalsViewTabs);

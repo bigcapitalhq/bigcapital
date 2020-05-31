@@ -19,7 +19,7 @@ import DataTable from 'components/DataTable';
 import Money from 'components/Money';
 import { useUpdateEffect } from 'hooks';
 
-import withDashboardActions from 'containers/Dashboard/withDashboard';
+import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withAccountsActions from 'containers/Accounts/withAccountsActions';
 import withAccounts from 'containers/Accounts/withAccounts';
 
@@ -27,7 +27,7 @@ import { If } from 'components';
 
 
 function AccountsDataTable({
-  // #withAccounts  
+  // #withDashboardActions  
   accounts,
   accountsLoading,
   
@@ -193,6 +193,7 @@ function AccountsDataTable({
         selectionColumn={selectionColumn}
         expandable={true} 
         treeGraph={true}
+        sticky={true}
         onSelectedRowsChange={handleSelectedRowsChange}
         loading={accountsLoading && !initialMount}
         spinnerProps={{size: 30}} />

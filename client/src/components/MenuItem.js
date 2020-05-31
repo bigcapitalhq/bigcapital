@@ -136,6 +136,7 @@ export default class MenuItem extends AbstractPureComponent2 {
             intent,
             labelClassName,
             labelElement,
+            itemClassName,
             multiline,
             popoverProps,
             shouldDismissPopover,
@@ -185,7 +186,7 @@ export default class MenuItem extends AbstractPureComponent2 {
             hasSubmenu ? <Icon icon="caret-right" iconSize={caretIconSize} /> : undefined,
         );
 
-        const liClasses = classNames({ [Classes.MENU_SUBMENU]: hasSubmenu });
+        const liClasses = classNames({ [Classes.MENU_SUBMENU]: hasSubmenu }, itemClassName);
         return <li className={liClasses}>{
           (dropdownType === 'collapse') ?
             this.maybeRenderCollapse(target, children) :

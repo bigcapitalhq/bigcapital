@@ -13,7 +13,7 @@ import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import BalanceSheetActionsBar from './BalanceSheetActionsBar';
 import { FinancialStatement } from 'components';
 
-import withDashboard from 'containers/Dashboard/withDashboard';
+import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withSettings from 'containers/Settings/withSettings';
 import withBalanceSheetActions from './withBalanceSheetActions';
 import withBalanceSheetDetail from './withBalanceSheetDetail';
@@ -21,7 +21,7 @@ import withBalanceSheetDetail from './withBalanceSheetDetail';
 
 
 function BalanceSheet({
-  // #withDashboard
+  // #withDashboardActions
   changePageTitle,
 
   // #withBalanceSheetActions
@@ -100,7 +100,7 @@ function BalanceSheet({
 }
 
 export default compose(
-  withDashboard,
+  withDashboardActions,
   withBalanceSheetActions,
   withBalanceSheetDetail(({ balanceSheetLoading, balanceSheetFilter }) => ({
     balanceSheetLoading,

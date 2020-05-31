@@ -202,6 +202,11 @@
     display: flex;
     flex-direction: column;
     margin-left: 220px;
+
+    .sidebar--mini-sidebar + &{
+      margin-left: 50px;
+      width: calc(100% - 50px);
+    }
   }
 
   &__insider{
@@ -215,7 +220,6 @@
   }
 
   &__page-content{
-    // padding: 22px;
 
     .bigcapital-datatable{
 
@@ -307,9 +311,8 @@
   left: calc(50% - 250px);
   z-index: 21;
   border-radius: 3px;
-  -webkit-box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.1),
-    0 4px 8px rgba(16, 22, 26, 0.2), 0 18px 46px 6px rgba(16, 22, 26, 0.2);
-  box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.1), 0 4px 8px rgba(16, 22, 26, 0.2),
+  box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.1),
+    0 4px 8px rgba(16, 22, 26, 0.2),
     0 18px 46px 6px rgba(16, 22, 26, 0.2);
   background-color: #fff;
   width: 500px;

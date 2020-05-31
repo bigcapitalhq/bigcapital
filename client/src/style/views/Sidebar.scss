@@ -7,10 +7,11 @@ $sidebar-popover-submenu-bg: rgb(1, 20, 62);
 
 .sidebar {
   background: $sidebar-background;
-  color: $sidebar-text-color;
   width: $sidebar-width;
+  color: $sidebar-text-color;
   position: fixed;
   height: 100%;
+  z-index: $sidebar-zindex;
 
   .ScrollbarsCustom-Track {
     &.ScrollbarsCustom-TrackY,
@@ -43,6 +44,10 @@ $sidebar-popover-submenu-bg: rgb(1, 20, 62);
         opacity: 0.4;
       }
     }
+  }
+
+  &__scroll-wrapper{
+    height: 100%;
   }
 
   &-menu {
@@ -118,6 +123,77 @@ $sidebar-popover-submenu-bg: rgb(1, 20, 62);
       border-top-color: #1d366a;
       color: #6b708c;
       margin: 4px 0;
+    }
+  }
+
+  &--mini-sidebar{
+    white-space: nowrap;
+    width: 50px;
+
+
+    // Hide text of bigcapital logo.
+    .sidebar__head-logo{
+
+      .bp3-icon-bigcapital{
+        path:not(.path-1):not(.path-2) {
+          opacity: 0;
+        }
+      }
+    }
+
+    // Hide text of menu items and right caret icon.
+    .bp3-collapse,
+    .bp3-icon-caret-right,
+    .bp3-menu-item .bp3-text-overflow-ellipsis{
+      display: none;
+    }
+
+    .sidebar__menu{
+
+      .bp3-menu{
+        > li:not(.bp3-submenu):not(.bp3-menu-divider):not(.has-icon){
+
+          .bp3-menu-item{
+            &:before{
+              content: "";
+              height: 18px;
+              width: 18px;
+              background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' data-icon='ellipsis-h' width='18' height='18' fill='%235c7080' viewBox='0 0 512 512'%3E%3Cdesc%3Eellipsis-h%3C/desc%3E%3Cpath d='M304 256c0 26.5-21.5 48-48 48s-48-21.5-48-48 21.5-48 48-48 48 21.5 48 48zm120-48c-26.5 0-48 21.5-48 48s21.5 48 48 48 48-21.5 48-48-21.5-48-48-48zm-336 0c-26.5 0-48 21.5-48 48s21.5 48 48 48 48-21.5 48-48-21.5-48-48-48z' class='path-1' fill-rule='evenodd'%3E%3C/path%3E%3C/svg%3E");
+            }
+          }
+        }
+      }
+    }
+
+    .sidebar__scroll-wrapper{
+      background: $sidebar-background;
+      transition: min-width 0.15s ease-in-out;
+      min-width: 50px;
+
+      &:hover{
+        min-width: $sidebar-width;
+
+        .sidebar__head-logo{
+
+          .bp3-icon-bigcapital{
+            path:not(.path-1):not(.path-2) {
+              opacity: 1;
+            }
+          }
+        }
+
+        .bp3-collapse,
+        .bp3-icon-caret-right,
+        .bp3-menu-item .bp3-text-overflow-ellipsis{
+          display: block;
+        }
+        .sidebar__menu .bp3-menu > li:not(.bp3-submenu):not(.bp3-menu-divider) .bp3-menu-item{
+          
+          &:before{
+            display: none;
+          }
+        }
+      }      
     }
   }
 }

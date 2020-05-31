@@ -15,7 +15,7 @@ import { Link } from 'react-router-dom';
 import { FormattedMessage as T } from 'react-intl';
 import {useUpdateEffect} from 'hooks';
 
-import withDashboard from 'containers/Dashboard/withDashboard';
+import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withAccounts from 'containers/Accounts/withAccounts';
 import withAccountsTableActions from 'containers/Accounts/withAccountsTableActions';
 import withViewDetail from 'containers/Views/withViewDetails';
@@ -34,7 +34,7 @@ function AccountsViewsTabs({
   addAccountsTableQueries,
   changeAccountsCurrentView,
 
-  // #withDashboard
+  // #withDashboardActions
   setTopbarEditView,
   changePageSubtitle,
 
@@ -125,7 +125,7 @@ const withAccountsViewsTabs = connect(mapStateToProps);
 export default compose(
   withRouter,
   withAccountsViewsTabs,
-  withDashboard,
+  withDashboardActions,
   withAccounts(({ accountsViews }) => ({
     accountsViews,
   })),

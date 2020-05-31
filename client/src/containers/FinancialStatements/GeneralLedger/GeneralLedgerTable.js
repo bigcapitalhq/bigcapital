@@ -154,6 +154,7 @@ function GeneralLedgerTable({
         fixedSizeHeight={1000}
         expandable={true}
         expandToggleColumn={1}
+        sticky={true}
       />
     </FinancialSheet>
   );

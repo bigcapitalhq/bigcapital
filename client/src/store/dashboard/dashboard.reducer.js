@@ -5,6 +5,7 @@ const initialState = {
   pageTitle: '',
   pageSubtitle: 'Hello World',
   preferencesPageTitle: '',
+  sidebarExpended: true,
   dialogs: {},
   topbarEditViewId: null,
   requestsLoading: 0,
@@ -52,6 +53,10 @@ export default createReducer(initialState, {
   [t.SET_DASHBOARD_REQUEST_COMPLETED]: (state, action) => {
     const requestsLoading = state.requestsLoading - 1;
     state.requestsLoading = Math.max(requestsLoading, 0);
+  },
+
+  [t.SIDEBAR_EXPEND_TOGGLE]: (state) => {
+    state.sidebarExpended = !state.sidebarExpended;
   }
 });
 

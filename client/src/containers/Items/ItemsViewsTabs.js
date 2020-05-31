@@ -16,7 +16,7 @@ import { compose } from 'utils';
 import {useUpdateEffect} from 'hooks';
 
 import withItemsActions from 'containers/Items/withItemsActions';
-import withDashboard from 'containers/Dashboard/withDashboard';
+import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withViewDetail from 'containers/Views/withViewDetails';
 import withItems from 'containers/Items/withItems';
 
@@ -34,7 +34,7 @@ function ItemsViewsTabs({
   addItemsTableQueries,
   changeItemsCurrentView,
 
-  // #withDashboard
+  // #withDashboardActions
   setTopbarEditView,
   changePageSubtitle,
 
@@ -121,7 +121,7 @@ const withItemsViewsTabs = connect(mapStateToProps);
 export default compose(
   withRouter,
   withItemsViewsTabs,
-  withDashboard,
+  withDashboardActions,
   withItemsActions,
   withViewDetail,
   withItems( ({ itemsViews }) => ({
