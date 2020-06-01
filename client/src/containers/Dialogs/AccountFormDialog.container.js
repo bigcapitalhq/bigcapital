@@ -1,8 +1,8 @@
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import { compose } from 'utils';
-import DialogConnect from 'connectors/Dialog.connector';
+import withDialog from 'containers/Dialogs/withDialog';
 import DialogReduxConnect from 'components/DialogReduxConnect';
-import {getDialogPayload} from 'store/dashboard/dashboard.reducer';
+import { getDialogPayload } from 'store/dashboard/dashboard.reducer';
 import withAccountsActions from 'containers/Accounts/withAccountsActions';
 import withAccountDetail from 'containers/Accounts/withAccountDetail';
 import withAccounts from 'containers/Accounts/withAccounts';
@@ -12,12 +12,11 @@ export const mapStateToProps = (state, props) => {
 
   return {
     name: 'account-form',
-    payload: {action: 'new', id: null, ...dialogPayload},
+    payload: { action: 'new', id: null, ...dialogPayload },
 
     accountId: dialogPayload?.id || null,
   };
 };
-
 const AccountFormDialogConnect = connect(mapStateToProps);
 
 export default compose(
@@ -29,5 +28,5 @@ export default compose(
     accounts,
   })),
   DialogReduxConnect,
-  DialogConnect,
+  withDialog,
 );

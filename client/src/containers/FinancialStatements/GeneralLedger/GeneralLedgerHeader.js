@@ -12,7 +12,8 @@ import { FormattedMessage as T } from 'react-intl';
 
 import AccountsMultiSelect from 'components/AccountsMultiSelect';
 import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
-import AccountsConnect from 'connectors/Accounts.connector'
+import withAccounts from 'containers/Accounts/withAccounts';
+
 import classNames from 'classnames';
 import FinancialStatementDateRange from 'containers/FinancialStatements/FinancialStatementDateRange';
 import RadiosAccountingBasis from '../RadiosAccountingBasis';
@@ -97,6 +98,6 @@ function GeneralLedgerHeader({
 }
 
 export default compose(
-  AccountsConnect,
+  withAccounts,
   withGeneralLedger(({ generalLedgerSheetFilter }) => ({ generalLedgerSheetFilter })),
 )(GeneralLedgerHeader);

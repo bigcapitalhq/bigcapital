@@ -17,7 +17,7 @@ import withDashboardActions from 'containers/Dashboard/withDashboard';
 
 import AppToaster from 'components/AppToaster';
 import Dragzone from 'components/Dragzone';
-import MediaConnect from 'connectors/Media.connect';
+import withMediaActions from 'containers/Media/withMediaActions';
 
 import useMedia from 'hooks/useMedia';
 import {compose} from 'utils';
@@ -271,5 +271,5 @@ export default compose(
   withManualJournalDetail,
   withAccountsActions,
   withDashboardActions,
-  MediaConnect,
+  withMediaActions,
 )(MakeJournalEntriesForm);

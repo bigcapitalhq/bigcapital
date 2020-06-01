@@ -5,6 +5,7 @@ import {
   deleteUser,
   inactiveUser,
   editUser,
+  submitInvite
 } from 'store/users/users.actions';
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -13,6 +14,8 @@ export const mapDispatchToProps = (dispatch) => ({
   requestDeleteUser: (id) => dispatch(deleteUser({ id })),
   requestInactiveUser: (id) => dispatch(inactiveUser({ id })),
   requestEditUser: (id, form) => dispatch(editUser({ form, id })),
+  requestSubmitInvite: (form) => dispatch(submitInvite({ form })),
+
 });
 
 export default connect(null, mapDispatchToProps);

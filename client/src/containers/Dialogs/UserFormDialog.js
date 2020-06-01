@@ -18,7 +18,10 @@ import AppToaster from 'components/AppToaster';
 import DialogReduxConnect from 'components/DialogReduxConnect';
 import ErrorMessage from 'components/ErrorMessage';
 import useAsync from 'hooks/async';
-import UserFormDialogConnect from 'connectors/UserFormDialog.connector';
+import UserFormDialogConnect from 'containers/Dialogs/UserFormDialog.connector';
+import withUsersActions from 'containers/Users/withUsersActions';
+import withDialog from 'containers/Dialogs/withDialog';
+
 import { compose } from 'utils';
 
 function UserFormDialog({
@@ -158,5 +161,7 @@ function UserFormDialog({
 
 export default compose(
   UserFormDialogConnect,
+  withUsersActions,
+  withDialog,
   DialogReduxConnect,
 )(UserFormDialog);

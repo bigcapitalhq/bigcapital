@@ -12,13 +12,13 @@ import { useQuery } from 'react-query';
 
 import Icon from 'components/Icon';
 import { compose } from 'utils';
-import DialogConnect from 'connectors/Dialog.connector';
+import withDialog from 'containers/Dialogs/withDialog';
 
 import LoadingIndicator from 'components/LoadingIndicator';
 import DataTable from 'components/DataTable';
 import AppToaster from 'components/AppToaster';
 
-import withDashboard from 'connectors/Dashboard.connector';
+import withDashboard from 'containers/Dashboard/withDashboard';
 import withCurrencies from 'containers/Currencies/withCurrencies';
 import withCurrenciesActions from 'containers/Currencies/withCurrenciesActions';
 import { FormattedMessage as T, useIntl } from 'react-intl';
@@ -156,6 +156,6 @@ export default compose(
     currenciesList,
   })),
   withCurrenciesActions,
-  DialogConnect,
+  withDialog,
   withDashboard
 )(CurrenciesList);

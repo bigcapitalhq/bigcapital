@@ -10,7 +10,8 @@ import JournalHeader from './JournalHeader';
 import JournalActionsBar from './JournalActionsBar';
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
-import SettingsConnect from 'connectors/Settings.connect';
+import withSettings from 'containers/Settings/withSettings';
+
 
 import withDashboard from 'containers/Dashboard/withDashboard';
 import withJournalActions from './withJournalActions';
@@ -95,5 +96,5 @@ function Journal({
 export default compose(
   withDashboard,
   withJournalActions,
-  SettingsConnect,
+  withSettings,
 )(Journal);

@@ -19,7 +19,7 @@ import { compose } from 'utils';
 import moment from 'moment';
 
 import LoadingIndicator from 'components/LoadingIndicator';
-import DialogConnect from 'connectors/Dialog.connector';
+import withDialog from 'containers/Dialogs/withDialog';
 
 import { useUpdateEffect } from 'hooks';
 import DataTable from 'components/DataTable';
@@ -251,7 +251,7 @@ function ManualJournalsDataTable({
 }
 
 export default compose(
-  DialogConnect,
+  withDialog,
   withDashboardActions,
   withManualJournalsActions,
   withManualJournals(({ manualJournals, manualJournalsLoading, }) => ({

@@ -11,7 +11,7 @@ import { FormattedMessage as T } from 'react-intl';
 
 import DashboardTopbarUser from 'components/Dashboard/TopbarUser';
 import DashboardBreadcrumbs from 'components/Dashboard/DashboardBreadcrumbs';
-import SearchConnect from 'connectors/Search.connect';
+import withSearch from 'containers/GeneralSearch/withSearch'
 import Icon from 'components/Icon';
 
 import { compose } from 'utils';
@@ -113,6 +113,6 @@ const mapStateToProps = (state) => ({
 });
 
 export default compose(
-  SearchConnect,
+  withSearch,
   connect(mapStateToProps)
 )(DashboardTopbar);

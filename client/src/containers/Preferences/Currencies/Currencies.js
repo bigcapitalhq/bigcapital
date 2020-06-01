@@ -1,8 +1,8 @@
 import React from 'react';
 import { Button, Intent } from '@blueprintjs/core';
 import { compose } from 'utils';
-import DialogConnect from 'connectors/Dialog.connector';
-import CurrencyFromDialogConnect from 'connectors/CurrencyFromDialog.connect';
+import withDialog from 'containers/Dialogs/withDialog';
+
 function Currencies({ openDialog }) {
   const onClickNewCurrency = () => {
     openDialog('currency-form',{});
@@ -17,4 +17,4 @@ function Currencies({ openDialog }) {
   );
 }
 
-export default compose(DialogConnect, CurrencyFromDialogConnect)(Currencies);
+export default compose(withDialog)(Currencies);

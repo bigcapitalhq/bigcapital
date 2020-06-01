@@ -19,7 +19,8 @@ import { FormattedMessage as T } from 'react-intl';
 
 import FilterDropdown from 'components/FilterDropdown';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
-import DialogConnect from 'connectors/Dialog.connector';
+import withDialog from 'containers/Dialogs/withDialog';
+
 import { If } from 'components';
 
 import withResourceDetail from 'containers/Resources/withResourceDetails';
@@ -137,7 +138,7 @@ function ManualJournalActionsBar({
 }
 
 export default compose(
-  DialogConnect,
+  withDialog,
   withResourceDetail(({ resourceFields }) => ({
     resourceFields,
   })),

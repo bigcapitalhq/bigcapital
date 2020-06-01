@@ -13,7 +13,7 @@ import Icon from 'components/Icon';
 import { connect } from 'react-redux';
 
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
-import withDialog from 'connectors/Dialog.connector';
+import withDialog from 'containers/Dialogs/withDialog';
 
 import FilterDropdown from 'components/FilterDropdown';
 import withResourceDetail from 'containers/Resources/withResourceDetails';

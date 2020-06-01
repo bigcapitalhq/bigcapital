@@ -17,7 +17,7 @@ import { compose } from 'utils';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import Icon from 'components/Icon';
 import FilterDropdown from 'components/FilterDropdown';
-import withDialog from 'connectors/Dialog.connector';
+import withDialog from 'containers/Dialogs/withDialog';
 import withResourceDetail from 'containers/Resources/withResourceDetails';
 import withItems from 'containers/Items/withItems';
 import { If } from 'components';
@@ -62,7 +62,7 @@ const ItemsActionsBar = ({
   });
 
   const onClickNewCategory = useCallback(() => {
-    openDialog('item-form', {});
+    openDialog('item-category-form', {});
   }, [openDialog]);
   
   const handleBulkDelete = useCallback(() => {

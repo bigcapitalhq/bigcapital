@@ -4,7 +4,7 @@ import {
   Intent,
 } from '@blueprintjs/core';
 import Icon from 'components/Icon';
-import DialogConnect from 'connectors/Dialog.connector';
+import withDialog from 'containers/Dialogs/withDialog';
 import {compose} from 'utils';
 
 function UsersActions({
@@ -34,5 +34,5 @@ function UsersActions({
 }
 
 export default compose(
-  DialogConnect,
+  withDialog,
 )(UsersActions);

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback,useMemo } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import { Alert, Intent } from '@blueprintjs/core';
@@ -13,10 +13,9 @@ import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import ItemCategoriesDataTable from 'containers/Items/ItemCategoriesTable';
 import ItemsCategoryActionsBar from 'containers/Items/ItemsCategoryActionsBar';
 
-import withDialog from 'connectors/Dialog.connector';
+import withDialog from 'containers/Dialogs/withDialog';
 import withDashboardActions from 'containers/Dashboard/withDashboard';
 import withItemCategoriesActions from 'containers/Items/withItemCategoriesActions';
-
 import { compose } from 'utils';
 
 const ItemCategoryList = ({
@@ -45,11 +44,11 @@ const ItemCategoryList = ({
     id
       ? changePageTitle(formatMessage({ id: 'edit_category_details' }))
       : changePageTitle(formatMessage({ id: 'category_list' }));
-  }, [id,changePageTitle,formatMessage]);
+  }, [id, changePageTitle, formatMessage]);
 
   const fetchCategories = useQuery(
     ['items-categories-table', filter],
-    (key, query) => requestFetchItemCategories(query)
+    (key, query) => requestFetchItemCategories(query),
   );
 
   const handleFilterChanged = useCallback(() => {}, []);
@@ -59,7 +58,7 @@ const ItemCategoryList = ({
     (itemCategories) => {
       setSelectedRows(itemCategories);
     },
-    [setSelectedRows]
+    [setSelectedRows],
   );
 
   // Handle fetch data of accounts datatable.
@@ -107,7 +106,7 @@ const ItemCategoryList = ({
     (itemsCategoriesIds) => {
       setBulkDelete(itemsCategoriesIds);
     },
-    [setBulkDelete]
+    [setBulkDelete],
   );
 
   // handle confirm itemCategories bulk delete.
@@ -125,22 +124,20 @@ const ItemCategoryList = ({
       .catch((errors) => {
         setBulkDelete(false);
       });
-  }, [requestDeleteBulkItemCategories, bulkDelete,formatMessage]);
-
+  }, [requestDeleteBulkItemCategories, bulkDelete, formatMessage]);
 
   //Handel cancel itemCategories bulk delete.
-  const handleCancelBulkDelete =useCallback(()=>{
-    setBulkDelete(false)
-  },[])
+  const handleCancelBulkDelete = useCallback(() => {
+    setBulkDelete(false);
+  }, []);
 
-
-    // Calculates the data table selected rows count.
-    const selectedRowsCount = useMemo(() => Object.values(selectedRows).length, [selectedRows]);
-
+  // Calculates the data table selected rows count.
+  const selectedRowsCount = useMemo(() => Object.values(selectedRows).length, [
+    selectedRows,
+  ]);
 
   return (
     <DashboardInsider name={'item-category-list'}>
-      
       <ItemsCategoryActionsBar
         selectedRows={selectedRows}
         onFilterChanged={handleFilterChanged}
@@ -153,13 +150,12 @@ const ItemCategoryList = ({
         onSelectedRowsChange={handleSelectedRowsChange}
         onDeleteCategory={handleDeleteCategory}
         loading={tableLoading}
-        
       />
 
       <Alert
         cancelButtonText={<T id={'cancel'} />}
         confirmButtonText={<T id={'delete'} />}
-        icon='trash'
+        icon="trash"
         intent={Intent.DANGER}
         isOpen={deleteCategory}
         onCancel={handleCancelItemDelete}
@@ -174,8 +170,10 @@ const ItemCategoryList = ({
 
       <Alert
         cancelButtonText={<T id={'cancel'} />}
-        confirmButtonText={`${formatMessage({id:'delete'})} (${selectedRowsCount})`}
-        icon='trash'
+        confirmButtonText={`${formatMessage({
+          id: 'delete',
+        })} (${selectedRowsCount})`}
+        icon="trash"
         intent={Intent.DANGER}
         isOpen={bulkDelete}
         onCancel={handleCancelBulkDelete}
@@ -183,11 +181,12 @@ const ItemCategoryList = ({
       >
         <p>
           <FormattedHTMLMessage
-            id={'once_delete_these_item_categories_you_will_not_able_restore_them'}
+            id={
+              'once_delete_these_item_categories_you_will_not_able_restore_them'
+            }
           />
         </p>
       </Alert>
-
     </DashboardInsider>
   );
 };

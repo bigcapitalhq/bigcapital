@@ -17,7 +17,9 @@ import { queryCache } from 'react-query';
 import AppToaster from 'components/AppToaster';
 
 import DialogReduxConnect from 'components/DialogReduxConnect';
-import UserListDialogConnect from 'connectors/UsersList.connector';
+import UserListDialogConnect from 'containers/Dialogs/UsersListDialog.connector';
+import withDialog from 'containers/Dialogs/withDialog';
+import withUsersActions from 'containers/Users/withUsersActions';
 import ErrorMessage from 'components/ErrorMessage';
 import useAsync from 'hooks/async';
 import classNames from 'classnames';
@@ -194,6 +196,8 @@ function InviteUserDialog({
 }
 
 export default compose(
+  withDialog,
   UserListDialogConnect,
+  withUsersActions,
   DialogReduxConnect
 )(InviteUserDialog);

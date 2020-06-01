@@ -4,7 +4,7 @@ import {
   Intent,
 } from '@blueprintjs/core';
 import Icon from 'components/Icon';
-import DialogConnect from 'connectors/Dialog.connector';
+import withDialog from 'containers/Dialogs/withDialog';
 import {compose} from 'utils';
 
 function CurrenciesActions({
@@ -27,5 +27,5 @@ function CurrenciesActions({
 }
 
 export default compose(
-  DialogConnect,
+  withDialog,
 )(CurrenciesActions);

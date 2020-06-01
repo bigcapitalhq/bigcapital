@@ -19,13 +19,14 @@ import Dialog from 'components/Dialog';
 import DialogReduxConnect from 'components/DialogReduxConnect';
 import ErrorMessage from 'components/ErrorMessage';
 import classNames from 'classnames';
-import DialogConnect from 'connectors/Dialog.connector';
+import withDialog from 'containers/Dialogs/withDialog';
 import { getDialogPayload } from 'store/dashboard/dashboard.reducer';
 
 import withCurrency from 'containers/Currencies/withCurrency';
 import withCurrenciesActions from 'containers/Currencies/withCurrenciesActions';
 
 import { compose } from 'utils';
+
 
 
 
@@ -197,7 +198,7 @@ const withCurrencyFormDialog = connect(mapStateToProps);
 
 export default compose(
   withCurrencyFormDialog,
-  DialogConnect,
+  withDialog,
   DialogReduxConnect,
   withCurrenciesActions,
   withCurrency,

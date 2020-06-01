@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo,useState } from 'react';
 import Icon from 'components/Icon';
-import DialogConnect from 'connectors/Dialog.connector';
+import withDialog from 'containers/Dialogs/withDialog';
 import DataTable from 'components/DataTable';
 import { Button, Popover, Menu, MenuItem, Position } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
@@ -126,7 +126,7 @@ function ExchangeRateTable({
 }
 
 export default compose(
-  DialogConnect,
+  withDialog,
   withExchangeRatesActions,
   withExchangeRates(({ exchangeRatesList ,exchangeRatesLoading }) => ({
     exchangeRatesList,

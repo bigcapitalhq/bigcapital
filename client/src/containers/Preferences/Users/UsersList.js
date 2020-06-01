@@ -24,10 +24,11 @@ import LoadingIndicator from 'components/LoadingIndicator';
 
 import AppToaster from 'components/AppToaster';
 
-import DialogConnect from 'connectors/Dialog.connector';
+import withDialog from 'containers/Dialogs/withDialog';
 import withDashboard from 'containers/Dashboard/withDashboard';
 import withUsers from 'containers/Users/withUsers';
 import withUsersActions from 'containers/Users/withUsersActions';
+
 
 import { compose } from 'utils';
 
@@ -239,7 +240,7 @@ function UsersListPreferences({
 }
 
 export default compose(
-  DialogConnect,
+  withDialog,
   withDashboard,
   withUsers,
   withUsersActions,

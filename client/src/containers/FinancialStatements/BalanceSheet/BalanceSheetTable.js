@@ -6,7 +6,7 @@ import Money from 'components/Money';
 import FinancialSheet from 'components/FinancialSheet';
 import DataTable from 'components/DataTable';
 
-import SettingsConnect from 'connectors/Settings.connect';
+import withSettings from 'containers/Settings/withSettings';
 import withBalanceSheetDetail from './withBalanceSheetDetail';
 import { getFinancialSheetIndexByQuery } from 'store/financialStatement/financialStatements.selectors';
 
@@ -129,5 +129,5 @@ export default compose(
       balanceSheetQuery,
     }),
   ),
-  SettingsConnect,
+  withSettings,
 )(BalanceSheetTable);

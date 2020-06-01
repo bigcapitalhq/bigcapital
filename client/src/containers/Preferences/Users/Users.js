@@ -1,7 +1,7 @@
 import React from 'react';
 import { Tabs, Tab } from '@blueprintjs/core';
 import PreferencesSubContent from 'components/Preferences/PreferencesSubContent';
-import connector from 'connectors/UsersPreferences.connector';
+import withUserPreferences from 'containers/Preferences/Users/withUserPreferences'
 
 function UsersPreferences({ openDialog }) {
   const onChangeTabs = (currentTabId) => {};
@@ -19,4 +19,4 @@ function UsersPreferences({ openDialog }) {
   );
 }
 
-export default connector(UsersPreferences);
+export default withUserPreferences(UsersPreferences);

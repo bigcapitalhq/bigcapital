@@ -22,7 +22,7 @@ import AppToaster from 'components/AppToaster';
 import ErrorMessage from 'components/ErrorMessage';
 
 import Dialog from 'components/Dialog';
-import DialogConnect from 'connectors/Dialog.connector';
+import withDialog from 'containers/Dialogs/withDialog';
 import DialogReduxConnect from 'components/DialogReduxConnect';
 
 import { getDialogPayload } from 'store/dashboard/dashboard.reducer';
@@ -263,7 +263,7 @@ const withItemCategoryDialog = connect(mapStateToProps);
 
 export default compose( 
   withItemCategoryDialog,
-  DialogConnect,
+  withDialog,
   DialogReduxConnect,
   withItemCategoryDetail,
   withItemCategories(({ categoriesList }) => ({
