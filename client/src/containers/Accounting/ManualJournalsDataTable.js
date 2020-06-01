@@ -228,7 +228,7 @@ function ManualJournalsDataTable({
             content={actionMenuList(cell.row.original)}
             position={Position.RIGHT_BOTTOM}
           >
-            <Button icon={<Icon icon="ellipsis-h" />} />
+            <Button icon={<Icon icon='more-h-16' iconSize={16} />} />
           </Popover>
         ),
         className: 'actions',

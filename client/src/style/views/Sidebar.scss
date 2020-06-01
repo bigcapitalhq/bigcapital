@@ -1,8 +1,7 @@
 $sidebar-background: #01194e;
 $sidebar-text-color: #fff;
 $sidebar-width: 220px;
-$sidebar-menu-item-color: #b8c0d5;
-
+$sidebar-menu-item-color: #cbd1dd;
 $sidebar-popover-submenu-bg: rgb(1, 20, 62);
 
 .sidebar {
@@ -41,7 +40,7 @@ $sidebar-popover-submenu-bg: rgb(1, 20, 62);
       margin-top: 4px;
 
       svg{
-        opacity: 0.4;
+        opacity: 0.45;
       }
     }
   }
@@ -67,7 +66,7 @@ $sidebar-popover-submenu-bg: rgb(1, 20, 62);
       &:hover,
       &.bp3-active {
         background: #012470;
-        color: #c1c9dd;
+        color: $sidebar-menu-item-color;
       }
       &:focus,
       &:active {
@@ -76,7 +75,7 @@ $sidebar-popover-submenu-bg: rgb(1, 20, 62);
 
       > .#{$ns}-icon {
         color: #767b9b;
-        margin-right: 14px;
+        margin-right: 16px;
         margin-top: 0;
       }
       > .#{$ns}-icon-caret-right {
@@ -120,10 +119,15 @@ $sidebar-popover-submenu-bg: rgb(1, 20, 62);
       color: $sidebar-menu-item-color;
     }
     .#{$ns}-menu-divider {
-      border-top-color: #1d366a;
+      border-top-color: #152a55;
       color: #6b708c;
       margin: 4px 0;
     }
+    .#{$ns}-menu-spacer{
+      margin: 4px 0;
+      height: 1px;
+    }
+
   }
 
   &--mini-sidebar{

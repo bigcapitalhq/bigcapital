@@ -46,7 +46,7 @@ function GeneralLedgerActionsBar({
       <NavbarGroup>
         <Button
           className={classNames(Classes.MINIMAL, 'button--table-views')}
-          icon={<Icon icon='cog' />}
+          icon={<Icon icon='cog-16' iconSize={16} />}
           text={<T id={'customize_report'}/>}
         />
 
@@ -69,7 +69,6 @@ function GeneralLedgerActionsBar({
             onClick={handleFilterClick}
           />
         </If>
-
         <NavbarDivider />
 
         <Popover
@@ -80,17 +79,17 @@ function GeneralLedgerActionsBar({
           <Button
             className={classNames(Classes.MINIMAL, 'button--filter')}
             text={<T id={'filter'}/>}
-            icon={ <Icon icon="filter" /> } />
+            icon={<Icon icon="filter-16" iconSize={16} /> } />
         </Popover>
 
         <Button
           className={Classes.MINIMAL}
-          icon={<Icon icon='file-export' />}
+          icon={<Icon icon='print-16' iconSize={16} />}
           text={<T id={'print'}/>}
         />
         <Button
           className={Classes.MINIMAL}
-          icon={<Icon icon='file-export' />}
+          icon={<Icon icon='file-export-16' iconSize={16} />}
           text={<T id={'export'}/>}
         />
       </NavbarGroup>

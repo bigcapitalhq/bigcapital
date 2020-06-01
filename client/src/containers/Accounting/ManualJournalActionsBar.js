@@ -85,7 +85,7 @@ function ManualJournalActionsBar({
         >
           <Button
             className={classNames(Classes.MINIMAL, 'button--table-views')}
-            icon={<Icon icon='table' />}
+            icon={<Icon icon='table-16' iconSize={16} />}
             text={<T id={'table_views'}/>}
             rightIcon={'caret-down'}
           />
@@ -107,14 +107,14 @@ function ManualJournalActionsBar({
           <Button
             className={classNames(Classes.MINIMAL, 'button--filter')}
             text='Filter'
-            icon={<Icon icon='filter' />}
+            icon={<Icon icon='filter-16' iconSize={16} />}
           />
         </Popover>
 
         <If condition={hasSelectedRows}>
           <Button
             className={Classes.MINIMAL}
-            icon={<Icon icon='trash' iconSize={15} />}
+            icon={<Icon icon='trash-16' iconSize={16} />}
             text={<T id={'delete'}/>}
             intent={Intent.DANGER}
             onClick={handleBulkDelete}
@@ -123,12 +123,12 @@ function ManualJournalActionsBar({
 
         <Button
           className={Classes.MINIMAL}
-          icon={<Icon icon='file-import' />}
+          icon={<Icon icon='file-import-16' iconSize={16} />}
           text={<T id={'import'}/>}
         />
         <Button
           className={Classes.MINIMAL}
-          icon={<Icon icon='file-export' />}
+          icon={<Icon icon='file-export-16' iconSize={16} />}
           text={<T id={'export'}/>}
         />
       </NavbarGroup>

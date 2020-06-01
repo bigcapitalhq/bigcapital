@@ -102,7 +102,7 @@ onBulkInactive && onBulkInactive(selectedRows.map(r=>r.id))
         >
           <Button
             className={classNames(Classes.MINIMAL, 'button--table-views')}
-            icon={<Icon icon='table' />}
+            icon={<Icon icon='table-16' iconSize={16} />}
             text={<T id={'table_views'}/>}
             rightIcon={'caret-down'}
           />
@@ -125,26 +125,25 @@ onBulkInactive && onBulkInactive(selectedRows.map(r=>r.id))
           <Button
             className={classNames(Classes.MINIMAL, 'button--filter')}
             text={filterCount <= 0 ? <T id={'filter'}/> : `${filterCount} filters applied`}
-            icon={ <Icon icon="filter" /> }/>
+            icon={ <Icon icon="filter-16" iconSize={16} /> }/>
         </Popover>
 
         <If condition={hasSelectedRows}>
-       
           <Button
             className={Classes.MINIMAL}
-            icon={<Icon icon='multi-select' iconSize={15} />}
+            icon={<Icon icon='play-16' iconSize={16} />}
             text={<T id={'activate'}/>}
             onClick={handelBulkActivate}
           />
-             <Button
+          <Button
             className={Classes.MINIMAL}
-            icon={<Icon icon='archive' iconSize={15} />}
+            icon={<Icon icon='pause-16' iconSize={16} />}
             text={<T id={'inactivate'}/>}
             onClick={handelBulkInactive}
           />
           <Button
             className={Classes.MINIMAL}
-            icon={<Icon icon='trash' iconSize={15} />}
+            icon={<Icon icon='trash-16' iconSize={16} />}
             text={<T id={'delete'}/>}
             intent={Intent.DANGER}
             onClick={handleBulkDelete}
@@ -153,13 +152,18 @@ onBulkInactive && onBulkInactive(selectedRows.map(r=>r.id))
         
         <Button
           className={Classes.MINIMAL}
-          icon={<Icon icon='file-import' />}
-          text={<T id={'import'}/>}
+          icon={<Icon icon='print-16' iconSize={16} />}
+          text={<T id={'print'}/>}
         />
         <Button
           className={Classes.MINIMAL}
-          icon={<Icon icon='file-export' />}
+          icon={<Icon icon='file-export-16' iconSize={16} />}
           text={<T id={'export'}/>}
+        />
+        <Button
+          className={Classes.MINIMAL}
+          icon={<Icon icon='file-import-16' iconSize={16} />}
+          text={<T id={'import'}/>}
         />
       </NavbarGroup>
     </DashboardActionsBar>

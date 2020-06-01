@@ -35,7 +35,7 @@ export default [
     ],
   },
   {
-    divider: true,
+    spacer: true,
   },
   {
     icon: 'balance-scale',

@@ -31,7 +31,7 @@ function TrialBalanceActionsBar({
       <NavbarGroup>
         <Button
           className={classNames(Classes.MINIMAL, 'button--table-views')}
-          icon={<Icon icon="cog" />}
+          icon={<Icon icon="cog-16" iconSize={16} />}
           text={<T id={'customize_report'} />}
         />
         <NavbarDivider />
@@ -58,12 +58,12 @@ function TrialBalanceActionsBar({
 
         <Button
           className={Classes.MINIMAL}
-          icon={<Icon icon="file-export" />}
+          icon={<Icon icon='print-16' iconSize={16} />}
           text={<T id={'print'} />}
         />
         <Button
           className={Classes.MINIMAL}
-          icon={<Icon icon="file-export" />}
+          icon={<Icon icon="file-export-16" iconSize={16} />}
           text={<T id={'export'} />}
         />
       </NavbarGroup>

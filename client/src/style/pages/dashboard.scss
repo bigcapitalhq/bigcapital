@@ -104,6 +104,8 @@
 
     .#{$ns}-navbar{
       box-shadow: none;
+      padding-left: 12px;
+      padding-right: 12px;
 
       &,
       &-group{
@@ -163,7 +165,7 @@
 
     h1{
       font-size: 26px;
-      font-weight: 200;
+      font-weight: 300;
       color: #4d4c4c;
       margin: 0;
     }

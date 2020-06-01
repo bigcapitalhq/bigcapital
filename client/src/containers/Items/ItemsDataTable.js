@@ -29,9 +29,7 @@ const ItemsDataTable = ({
   onFetchData,
   onSelectedRowsChange,
 }) => {
-
-  
-  const {formatMessage} = useIntl();
+  const { formatMessage } = useIntl();
   const [initialMount, setInitialMount] = useState(false);
   
   useEffect(() => {
@@ -106,7 +104,7 @@ const ItemsDataTable = ({
         <Popover
           content={actionMenuList(cell.row.original)}
           position={Position.RIGHT_BOTTOM}>
-          <Button icon={<Icon icon="ellipsis-h" />} />
+          <Button icon={<Icon icon='more-h-16' iconSize={16} />} />
         </Popover>
       ),
       className: 'actions',

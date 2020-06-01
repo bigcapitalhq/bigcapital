@@ -71,7 +71,6 @@ export default function FinancialStatementDateRange({
         <FormGroup
           label={intl.formatMessage({'id': 'from_date'})}
           labelInfo={infoIcon}
-          minimal={true}
           fill={true}
           intent={formik.errors.from_date && Intent.DANGER}>
 
@@ -80,6 +79,7 @@ export default function FinancialStatementDateRange({
             value={formik.values.from_date}
             onChange={handleDateChange('from_date')}
             popoverProps={{ position: Position.BOTTOM }}
+            minimal={true}
             fill={true} />
         </FormGroup>
       </Col>
@@ -87,8 +87,7 @@ export default function FinancialStatementDateRange({
       <Col sm={3}>
         <FormGroup
           label={intl.formatMessage({'id': 'to_date'})}
-          labelInfo={infoIcon}
-          minimal={true}
+          labelInfo={infoIcon}          
           fill={true}
           intent={formik.errors.to_date && Intent.DANGER}>
 
@@ -98,6 +97,7 @@ export default function FinancialStatementDateRange({
             onChange={handleDateChange('to_date')}
             popoverProps={{ position: Position.BOTTOM }}
             fill={true}
+            minimal={true}
             intent={formik.errors.to_date && Intent.DANGER} />
         </FormGroup>
       </Col>

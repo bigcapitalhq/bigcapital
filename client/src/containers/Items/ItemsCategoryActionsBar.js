@@ -79,7 +79,7 @@ const ItemsCategoryActionsBar = ({
           <Button
             className={classNames(Classes.MINIMAL, 'button--filter')}
             text={ filterCount <= 0 ? <T id={'filter'}/> : `${filterCount} filters applied`}
-            icon={<Icon icon='filter' />}
+            icon={<Icon icon='filter-18' iconSize={18} />}
           />
         </Popover>
 
