@@ -23,7 +23,7 @@ import AppToaster from 'components/AppToaster';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withCurrencies from 'containers/Currencies/withCurrencies';
 import withCurrenciesActions from 'containers/Currencies/withCurrenciesActions';
-import DialogConnect from 'connectors/Dialog.connector';
+import withDialogActions from 'containers/Dialog/withDialogActions';
 
 import { compose } from 'utils';
 
@@ -36,7 +36,7 @@ function CurrenciesList({
   requestDeleteCurrency,
   requestFetchCurrencies,
 
-  // #withDialog
+  // #withDialogActions
   openDialog,
 
   // #withDashboardActions
@@ -178,10 +178,10 @@ function CurrenciesList({
 }
 
 export default compose(
-  DialogConnect,
   withDashboardActions,
   withCurrencies(({ currenciesList }) => ({
     currenciesList,
   })),
   withCurrenciesActions,
+  withDialogActions,
 )(CurrenciesList);

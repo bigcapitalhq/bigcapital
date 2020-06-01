@@ -13,7 +13,7 @@ import { FormattedMessage as T, useIntl } from 'react-intl';
 
 import Icon from 'components/Icon';
 import { compose } from 'utils';
-import DialogConnect from 'connectors/Dialog.connector';
+
 import LoadingIndicator from 'components/LoadingIndicator';
 import DataTable from 'components/DataTable';
 import Money from 'components/Money';
@@ -22,6 +22,7 @@ import { useUpdateEffect } from 'hooks';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withAccountsActions from 'containers/Accounts/withAccountsActions';
 import withAccounts from 'containers/Accounts/withAccounts';
+import withDialogActions from 'containers/Dialog/withDialogActions';
 
 import { If } from 'components';
 
@@ -202,7 +203,7 @@ function AccountsDataTable({
 }
 
 export default compose(
-  DialogConnect,
+  withDialogActions,
   withDashboardActions,
   withAccountsActions,
   withAccounts(({ accountsLoading, accounts }) => ({

@@ -11,9 +11,9 @@ import { FormattedMessage as T } from 'react-intl';
 
 import DashboardTopbarUser from 'components/Dashboard/TopbarUser';
 import DashboardBreadcrumbs from 'components/Dashboard/DashboardBreadcrumbs';
-import SearchConnect from 'connectors/Search.connect';
 import Icon from 'components/Icon';
 
+import withSearch from 'containers/GeneralSearch/withSearch'
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withDashboard from 'containers/Dashboard/withDashboard';
 
@@ -120,7 +120,7 @@ function DashboardTopbar({
 }
 
 export default compose(
-  SearchConnect,
+  withSearch,
   withDashboard(({ pageTitle, pageSubtitle, editViewId }) => ({ 
     pageTitle, pageSubtitle, editViewId
   })),

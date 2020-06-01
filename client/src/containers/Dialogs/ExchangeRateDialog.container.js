@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import { compose } from 'utils';
 import { getDialogPayload } from 'store/dashboard/dashboard.reducer';
 
-import DialogConnect from 'connectors/Dialog.connector';
+import withDialogActions from 'containers/Dialog/withDialogActions';
 import DialogReduxConnect from 'components/DialogReduxConnect';
 
 import withExchangeRatesActions from 'containers/ExchangeRates/withExchangeRatesActions';
@@ -31,5 +31,5 @@ export default compose(
     exchangeRatesList,
   })),
   DialogReduxConnect,
-  DialogConnect,
+  withDialogActions,
 );

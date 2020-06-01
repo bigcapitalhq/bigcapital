@@ -25,12 +25,13 @@ import { If } from 'components';
 
 import AppToaster from 'components/AppToaster';
 
-import DialogConnect from 'connectors/Dialog.connector';
+import withDialogActions from 'containers/Dialog/withDialogActions';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withUsers from 'containers/Users/withUsers';
 import withUsersActions from 'containers/Users/withUsersActions';
 
 import { compose } from 'utils';
+
 
 function UsersListPreferences({
   // #withDialog
@@ -258,7 +259,7 @@ function UsersListPreferences({
 }
 
 export default compose(
-  DialogConnect,
+  withDialogActions,
   withDashboardActions,
   withUsers,
   withUsersActions,

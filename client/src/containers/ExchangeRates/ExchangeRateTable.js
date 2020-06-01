@@ -1,10 +1,12 @@
 import React, { useCallback, useMemo, useState, useEffect } from 'react';
-import Icon from 'components/Icon';
-import DialogConnect from 'connectors/Dialog.connector';
-import DataTable from 'components/DataTable';
 import { Button, Popover, Menu, MenuItem, Position,Intent } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
+
+import Icon from 'components/Icon';
+import DataTable from 'components/DataTable';
 import LoadingIndicator from 'components/LoadingIndicator';
+
+import withDialogActions from 'containers/Dialog/withDialogActions';
 import withExchangeRatesActions from 'containers/ExchangeRates/withExchangeRatesActions';
 import withExchangeRates from 'containers/ExchangeRates/withExchangeRates';
 
@@ -14,7 +16,8 @@ function ExchangeRateTable({
   // #withExchangeRates
   exchangeRatesList,
   exchangeRatesLoading,
-  // #withDialog.
+
+  // #withDialogActions.
   openDialog,
 
   // own properties
@@ -134,7 +137,7 @@ function ExchangeRateTable({
 }
 
 export default compose(
-  DialogConnect,
+  withDialogActions,
   withExchangeRatesActions,
   withExchangeRates(({ exchangeRatesList, exchangeRatesLoading }) => ({
     exchangeRatesList,

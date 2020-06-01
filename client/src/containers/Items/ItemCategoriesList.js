@@ -13,10 +13,9 @@ import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import ItemCategoriesDataTable from 'containers/Items/ItemCategoriesTable';
 import ItemsCategoryActionsBar from 'containers/Items/ItemsCategoryActionsBar';
 
-import withDialog from 'connectors/Dialog.connector';
+import withDialogActions from 'containers/Dialog/withDialogActions';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withItemCategoriesActions from 'containers/Items/withItemCategoriesActions';
-
 import { compose } from 'utils';
 
 /**
@@ -35,14 +34,13 @@ const ItemCategoryList = ({
   openDialog,
 }) => {
   const { id } = useParams();
+  const { formatMessage } = useIntl();
 
   const [selectedRows, setSelectedRows] = useState([]);
   const [filter, setFilter] = useState({});
   const [deleteCategory, setDeleteCategory] = useState(false);
   const [bulkDelete, setBulkDelete] = useState(false);
   const [tableLoading, setTableLoading] = useState(false);
-
-  const { formatMessage } = useIntl();
 
   useEffect(() => {
     id
@@ -185,7 +183,7 @@ const ItemCategoryList = ({
       >
         <p>
           <FormattedHTMLMessage
-            id={'once_delete_these_items_you_will_not_able_restore_them'}
+            id={'once_delete_these_item_categories_you_will_not_able_restore_them'}
           />
         </p>
       </Alert>
@@ -196,5 +194,5 @@ const ItemCategoryList = ({
 export default compose(
   withItemCategoriesActions,
   withDashboardActions,
-  withDialog,
+  withDialogActions,
 )(ItemCategoryList);

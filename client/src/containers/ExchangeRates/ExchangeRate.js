@@ -14,7 +14,7 @@ import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import ExchangeRateTable from './ExchangeRateTable';
 import ExchangeRateActionsBar from './ExchangeRateActionsBar';
 
-import withDialog from 'connectors/Dialog.connector';
+import withDialogActions from 'containers/Dialog/withDialogActions';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withResourceActions from 'containers/Resources/withResourcesActions';
 import withExchangeRatesActions from 'containers/ExchangeRates/withExchangeRatesActions';
@@ -200,5 +200,5 @@ export default compose(
   withExchangeRatesActions,
   withResourceActions,
   withDashboardActions,
-  withDialog,
+  withDialogActions,
 )(ExchangeRate);

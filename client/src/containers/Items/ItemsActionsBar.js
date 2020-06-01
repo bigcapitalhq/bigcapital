@@ -13,15 +13,19 @@ import {
   Classes,
   Intent,
 } from '@blueprintjs/core';
-import { compose } from 'utils';
+import { FormattedMessage as T, useIntl } from 'react-intl';
+
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import Icon from 'components/Icon';
 import FilterDropdown from 'components/FilterDropdown';
-import withDialog from 'connectors/Dialog.connector';
+import { If } from 'components';
+
+import withDialogActions from 'containers/Dialog/withDialogActions';
 import withResourceDetail from 'containers/Resources/withResourceDetails';
 import withItems from 'containers/Items/withItems';
-import { If } from 'components';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+
+import { compose } from 'utils';
+
 
 const ItemsActionsBar = ({
   openDialog,
@@ -137,7 +141,7 @@ const ItemsActionsBar = ({
 };
 
 export default compose(
-  withDialog,
+  withDialogActions,
   withItems(({ itemsViews }) => ({
     itemsViews,
   })),

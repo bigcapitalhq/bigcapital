@@ -37,22 +37,6 @@ export default [
     breadcrumb: 'Edit',
   },
 
-  // Expenses.
-  {
-    path: `/expenses/new`,
-    component: LazyLoader({
-      loader: () => import('containers/Expenses/ExpenseForm'),
-    }),
-    breadcrumb: 'New Expense',
-  },
-  {
-    path: `/expenses`,
-    component: LazyLoader({
-      loader: () => import('containers/Expenses/ExpensesList'),
-    }),
-    breadcrumb: 'Expenses',
-  },
-
   // Accounting
   {
     path: `/make-journal-entry`,

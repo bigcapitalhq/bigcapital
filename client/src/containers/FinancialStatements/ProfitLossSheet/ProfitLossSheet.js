@@ -13,7 +13,8 @@ import DashboardPageContent from 'components/Dashboard/DashboardPageContent'
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withProfitLossActions from './withProfitLossActions';
 import withProfitLoss from './withProfitLoss';
-import SettingsConnect from 'connectors/Settings.connect';
+// import SettingsConnect from 'connectors/Settings.connect';
+import withSettings from 'containers/Settings/withSettings';
 
 
 function ProfitLossSheet({
@@ -90,5 +91,5 @@ export default compose(
   withProfitLoss(({ profitLossSheetLoading }) => ({
     profitLossSheetLoading,
   })),
-  SettingsConnect,
+  withSettings,
 )(ProfitLossSheet);

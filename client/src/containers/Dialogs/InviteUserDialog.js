@@ -10,19 +10,20 @@ import {
   Intent,
   Classes,
 } from '@blueprintjs/core';
-import { objectKeysTransform } from 'utils';
+import classNames from 'classnames';
 import { pick, snakeCase } from 'lodash';
 import { queryCache } from 'react-query';
 
 import AppToaster from 'components/AppToaster';
-
 import DialogReduxConnect from 'components/DialogReduxConnect';
-import UserListDialogConnect from 'connectors/UsersList.connector';
+
+import UserListDialogConnect from 'containers/Dialogs/UsersListDialog.connector';
+import withDialogActions from 'containers/Dialog/withDialogActions';
+import withUsersActions from 'containers/Users/withUsersActions';
 import ErrorMessage from 'components/ErrorMessage';
 import useAsync from 'hooks/async';
-import classNames from 'classnames';
 
-import { compose } from 'utils';
+import { compose, objectKeysTransform } from 'utils';
 
 function InviteUserDialog({
   name,
@@ -210,6 +211,8 @@ function InviteUserDialog({
 }
 
 export default compose(
+  withDialogActions,
   UserListDialogConnect,
+  withUsersActions,
   DialogReduxConnect,
 )(InviteUserDialog);

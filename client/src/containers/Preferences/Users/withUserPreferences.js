@@ -10,4 +10,4 @@ export const mapDispatchToProps = (dispatch) => ({
   closeDialog: (name, payload) => dispatch({ type: t.CLOSE_DIALOG, name, payload }),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps);
+export default connect(null, mapDispatchToProps);

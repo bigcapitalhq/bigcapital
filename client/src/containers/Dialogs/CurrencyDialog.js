@@ -18,7 +18,7 @@ import Dialog from 'components/Dialog';
 import DialogReduxConnect from 'components/DialogReduxConnect';
 import ErrorMessage from 'components/ErrorMessage';
 import classNames from 'classnames';
-import DialogConnect from 'connectors/Dialog.connector';
+import withDialogActions from 'containers/Dialog/withDialogActions';
 import { getDialogPayload } from 'store/dashboard/dashboard.reducer';
 
 import withCurrency from 'containers/Currencies/withCurrency';
@@ -31,7 +31,7 @@ function CurrencyDialog({
   payload,
   isOpen,
 
-  // #withDialog
+  // #withDialogActions
   closeDialog,
 
   // #withCurrency
@@ -44,8 +44,7 @@ function CurrencyDialog({
   requestEditCurrency,
 }) {
   const { formatMessage } = useIntl();
-
-    const fetchCurrencies = useQuery('currencies', () =>
+  const fetchCurrencies = useQuery('currencies', () =>
     requestFetchCurrencies(),
   );
 
@@ -236,7 +235,7 @@ const withCurrencyFormDialog = connect(mapStateToProps);
 
 export default compose(
   withCurrencyFormDialog,
-  DialogConnect,
+  withDialogActions,
   DialogReduxConnect,
   withCurrenciesActions,
   withCurrency,

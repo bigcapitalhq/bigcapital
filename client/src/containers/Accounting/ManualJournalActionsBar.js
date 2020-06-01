@@ -16,10 +16,10 @@ import classNames from 'classnames';
 import { useRouteMatch, useHistory } from 'react-router-dom';
 import { FormattedMessage as T } from 'react-intl';
 
-
 import FilterDropdown from 'components/FilterDropdown';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
-import DialogConnect from 'connectors/Dialog.connector';
+import withDialogActions from 'containers/Dialog/withDialogActions';
+
 import { If } from 'components';
 
 import withResourceDetail from 'containers/Resources/withResourceDetails';
@@ -137,7 +137,7 @@ function ManualJournalActionsBar({
 }
 
 export default compose(
-  DialogConnect,
+  withDialogActions,
   withResourceDetail(({ resourceFields }) => ({
     resourceFields,
   })),

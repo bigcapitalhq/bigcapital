@@ -11,16 +11,15 @@ import {
 } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { FormattedMessage as T, useIntl } from 'react-intl';
-
 import { connect } from 'react-redux';
 
 import { If } from 'components';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import Icon from 'components/Icon';
-
 import FilterDropdown from 'components/FilterDropdown';
+
+import withDialogActions from 'containers/Dialog/withDialogActions';
 import withResourceDetail from 'containers/Resources/withResourceDetails';
-import withDialog from 'connectors/Dialog.connector';
 
 import { compose } from 'utils';
 
@@ -28,7 +27,7 @@ import { compose } from 'utils';
  * Exchange rate actions bar.
  */
 function ExchangeRateActionsBar({
-  // #withDialog.
+  // #withDialogActions.
   openDialog,
 
   // #withResourceDetail
@@ -125,7 +124,7 @@ const withExchangeRateActionBar = connect(mapStateToProps);
 
 export default compose(
   withExchangeRateActionBar,
-  withDialog,
+  withDialogActions,
   withResourceDetail(({ resourceFields }) => ({
     resourceFields,
   })),

@@ -23,7 +23,7 @@ import ErrorMessage from 'components/ErrorMessage';
 import { ListSelect } from 'components';
 
 import Dialog from 'components/Dialog';
-import DialogConnect from 'connectors/Dialog.connector';
+import withDialogActions from 'containers/Dialog/withDialogActions';
 import DialogReduxConnect from 'components/DialogReduxConnect';
 
 import { getDialogPayload } from 'store/dashboard/dashboard.reducer';
@@ -317,7 +317,7 @@ const withItemCategoryDialog = connect(mapStateToProps);
 
 export default compose(
   withItemCategoryDialog,
-  DialogConnect,
+  withDialogActions,
   DialogReduxConnect,
   withItemCategoryDetail,
   withItemCategories(({ categoriesList }) => ({

@@ -19,16 +19,14 @@ import { FormattedMessage as T } from 'react-intl';
 import { If } from 'components';
 
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
-import DialogConnect from 'connectors/Dialog.connector';
-
 import FilterDropdown from 'components/FilterDropdown';
 
+import withDialogActions from 'containers/Dialog/withDialogActions';
 import withResourceDetail from 'containers/Resources/withResourceDetails';
 import withAccountsTableActions from 'containers/Accounts/withAccountsTableActions';
 import withAccounts from 'containers/Accounts/withAccounts';
 
-import {compose} from 'utils';
-
+import { compose } from 'utils';
 
 function AccountsActionsBar({
   openDialog,
@@ -45,28 +43,31 @@ function AccountsActionsBar({
   onBulkDelete,
   onBulkArchive,
   onBulkActivate,
-  onBulkInactive
+  onBulkInactive,
 }) {
   const history = useHistory();
   const [filterCount, setFilterCount] = useState(0);
 
-  const onClickNewAccount = () => { openDialog('account-form', {}); };
+  const onClickNewAccount = () => {
+    openDialog('account-form', {});
+  };
   const onClickViewItem = (view) => {
-    history.push(view
-      ? `/accounts/${view.id}/custom_view` : '/accounts');
+    history.push(view ? `/accounts/${view.id}/custom_view` : '/accounts');
   };
 
   const viewsMenuItems = accountsViews.map((view) => {
-    return (<MenuItem onClick={() => onClickViewItem(view)} text={view.name} />);
+    return <MenuItem onClick={() => onClickViewItem(view)} text={view.name} />;
   });
-  const hasSelectedRows = useMemo(() => selectedRows.length > 0, [selectedRows]);
- 
+  const hasSelectedRows = useMemo(() => selectedRows.length > 0, [
+    selectedRows,
+  ]);
+
   const filterDropdown = FilterDropdown({
     fields: resourceFields,
     onFilterChange: (filterConditions) => {
       setFilterCount(filterConditions.length || 0);
       addAccountsTableQueries({
-        filter_roles: filterConditions || '',  
+        filter_roles: filterConditions || '',
       });
       onFilterChanged && onFilterChanged(filterConditions);
     },
@@ -77,19 +78,16 @@ function AccountsActionsBar({
   // }, [onBulkArchive, selectedRows]);
 
   const handleBulkDelete = useCallback(() => {
-    onBulkDelete && onBulkDelete(selectedRows.map(r => r.id));
+    onBulkDelete && onBulkDelete(selectedRows.map((r) => r.id));
   }, [onBulkDelete, selectedRows]);
 
-  const handelBulkActivate =useCallback(()=>{
+  const handelBulkActivate = useCallback(() => {
+    onBulkActivate && onBulkActivate(selectedRows.map((r) => r.id));
+  }, [onBulkActivate, selectedRows]);
 
-    onBulkActivate && onBulkActivate(selectedRows.map(r=>r.id))
-  },[onBulkActivate,selectedRows])
-
-const handelBulkInactive =useCallback(()=>{
-
-onBulkInactive && onBulkInactive(selectedRows.map(r=>r.id))
-
-},[onBulkInactive,selectedRows])
+  const handelBulkInactive = useCallback(() => {
+    onBulkInactive && onBulkInactive(selectedRows.map((r) => r.id));
+  }, [onBulkInactive, selectedRows]);
 
   return (
     <DashboardActionsBar>
@@ -112,16 +110,16 @@ onBulkInactive && onBulkInactive(selectedRows.map(r=>r.id))
 
         <Button
           className={Classes.MINIMAL}
-          icon={<Icon icon='plus' />}
-          text={<T id={'new_account'}/>}
+          icon={<Icon icon="plus" />}
+          text={<T id={'new_account'} />}
           onClick={onClickNewAccount}
         />
         <Popover
           minimal={true}
           content={filterDropdown}
           interactionKind={PopoverInteractionKind.CLICK}
-          position={Position.BOTTOM_LEFT}>
-
+          position={Position.BOTTOM_LEFT}
+        >
           <Button
             className={classNames(Classes.MINIMAL, 'button--filter')}
             text={filterCount <= 0 ? <T id={'filter'}/> : `${filterCount} filters applied`}
@@ -149,7 +147,7 @@ onBulkInactive && onBulkInactive(selectedRows.map(r=>r.id))
             onClick={handleBulkDelete}
           />
         </If>
-        
+
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon='print-16' iconSize={16} />}
@@ -178,7 +176,7 @@ const withAccountsActionsBar = connect(mapStateToProps);
 
 export default compose(
   withAccountsActionsBar,
-  DialogConnect,
+  withDialogActions,
   withAccounts(({ accountsViews }) => ({
     accountsViews,
   })),

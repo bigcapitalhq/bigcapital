@@ -400,4 +400,5 @@ export default {
     'The email is already used in another account',
   hide_filter: 'Hide filter',
   show_filter: 'Show filter',
+  new_role: 'New Role',
 };

@@ -13,23 +13,22 @@ import {
 } from '@blueprintjs/core';
 import { useParams } from 'react-router-dom';
 import { FormattedMessage as T, useIntl } from 'react-intl';
+import moment from 'moment';
 
 import Icon from 'components/Icon';
 import { compose } from 'utils';
-import moment from 'moment';
+import { useUpdateEffect } from 'hooks';
 
 import LoadingIndicator from 'components/LoadingIndicator';
-import DialogConnect from 'connectors/Dialog.connector';
-
-import { useUpdateEffect } from 'hooks';
+import { If, Money } from 'components';
 import DataTable from 'components/DataTable';
 
+import withDialogActions from 'containers/Dialog/withDialogActions';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withViewDetails from 'containers/Views/withViewDetails';
 import withManualJournals from 'containers/Accounting/withManualJournals';
 import withManualJournalsActions from 'containers/Accounting/withManualJournalsActions';
 
-import { If, Money } from 'components';
 
 function ManualJournalsDataTable({
   loading,
@@ -272,7 +271,7 @@ function ManualJournalsDataTable({
 }
 
 export default compose(
-  DialogConnect,
+  withDialogActions,
   withDashboardActions,
   withManualJournalsActions,
   withManualJournals(({ manualJournals, manualJournalsLoading }) => ({

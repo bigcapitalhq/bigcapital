@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo,useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import {
   NavbarGroup,
   NavbarDivider,
@@ -12,14 +12,14 @@ import {
 import { FormattedMessage as T } from 'react-intl';
 import classNames from 'classnames';
 import { connect } from 'react-redux';
-import { If } from 'components';
-import Icon from 'components/Icon';
 
+import Icon from 'components/Icon';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import FilterDropdown from 'components/FilterDropdown';
+import { If } from 'components';
 
 import withResourceDetail from 'containers/Resources/withResourceDetails';
-import withDialog from 'connectors/Dialog.connector';
+import withDialogActions from 'containers/Dialog/withDialogActions';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 
 import { compose } from 'utils';
@@ -27,28 +27,28 @@ import { compose } from 'utils';
 const ItemsCategoryActionsBar = ({
   // #withResourceDetail
   resourceFields,
-  
+
   // #withDialog
   openDialog,
 
   // #ownProps
-  selectedRows=[],
+  selectedRows = [],
   onFilterChanged,
-  onBulkDelete
+  onBulkDelete,
 }) => {
-
   const [filterCount, setFilterCount] = useState(0);
 
   const onClickNewCategory = useCallback(() => {
     openDialog('item-category-form', {});
   }, [openDialog]);
 
-  const hasSelectedRows = useMemo(() => selectedRows.length > 0, [selectedRows]);
+  const hasSelectedRows = useMemo(() => selectedRows.length > 0, [
+    selectedRows,
+  ]);
 
   // const handleDeleteCategory = useCallback((category) => {
   //   onDeleteCategory(selectedRows);
   // }, [selectedRows, onDeleteCategory]);
-
 
   const filterDropdown = FilterDropdown({
     fields: resourceFields,
@@ -58,17 +58,17 @@ const ItemsCategoryActionsBar = ({
     },
   });
 
-  const handelBulkDelete =useCallback(()=>{
-    onBulkDelete && onBulkDelete(selectedRows.map(r=>r.id));
-  },[onBulkDelete,selectedRows])
+  const handelBulkDelete = useCallback(() => {
+    onBulkDelete && onBulkDelete(selectedRows.map((r) => r.id));
+  }, [onBulkDelete, selectedRows]);
 
   return (
     <DashboardActionsBar>
       <NavbarGroup>
         <Button
           className={Classes.MINIMAL}
-          icon={<Icon icon='plus' />}
-          text={<T id={'new_category'}/>}
+          icon={<Icon icon="plus" />}
+          text={<T id={'new_category'} />}
           onClick={onClickNewCategory}
         />
         <NavbarDivider />
@@ -119,9 +119,9 @@ const withItemsCategoriesActionsBar = connect(mapStateToProps);
 
 export default compose(
   withItemsCategoriesActionsBar,
-  withDialog,
+  withDialogActions,
   withDashboardActions,
   withResourceDetail(({ resourceFields }) => ({
     resourceFields,
-  })) 
+  })),
 )(ItemsCategoryActionsBar);

@@ -18,7 +18,11 @@ import { queryCache, useQuery } from 'react-query';
 import AppToaster from 'components/AppToaster';
 import DialogReduxConnect from 'components/DialogReduxConnect';
 import ErrorMessage from 'components/ErrorMessage';
-import UserFormDialogConnect from 'connectors/UserFormDialog.connector';
+
+import UserFormDialogConnect from 'containers/Dialogs/UserFormDialog.connector';
+import withUsersActions from 'containers/Users/withUsersActions';
+import withDialogActions from 'containers/Dialog/withDialogActions';
+
 import { compose } from 'utils';
 
 function UserFormDialog({
@@ -167,5 +171,7 @@ function UserFormDialog({
 
 export default compose(
   UserFormDialogConnect,
+  withUsersActions,
+  withDialogActions,
   DialogReduxConnect,
 )(UserFormDialog);
