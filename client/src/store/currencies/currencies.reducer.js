@@ -17,4 +17,12 @@ export default createReducer(initialState, {
       ..._currencies,
     };
   },
+  [t.CURRENCIES_TABLE_LOADING]: (state, action) => {
+    state.loading = action.loading;
+  },
+  [t.CURRENCY_CODE_DELETE]: (state, action) => {
+    if (typeof state.data[action.currency_code] !== 'undefined') {
+      delete state.data[action.currency_code];
+    }
+  },
 });

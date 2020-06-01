@@ -283,8 +283,7 @@ export default {
     'The exchange rate has been successfully edited',
   the_exchange_rate_has_been_successfully_created:
     'The exchange rate has been successfully created',
-  the_exchange_rate_has_been_successfully_deleted:
-    'The  exchange rate has been successfully deleted.',
+
   the_user_details_has_been_updated: 'The user details has been updated',
   the_category_has_been_successfully_created:
     'The category has been successfully created.',
@@ -329,6 +328,7 @@ export default {
   journal_sheet: 'Journal Sheet',
   run_report: 'Run Report',
   num: 'Num.',
+  inviting: 'INVITING',
   acc_code: 'Acc. Code',
   display_report_columns: 'Display report columns',
   select_display_columns_by: 'Select display columns by...',
@@ -337,7 +337,26 @@ export default {
     'The currency has been successfully edited',
   the_currency_has_been_successfully_created:
     'The currency has been successfully created',
-
+  the_currency_has_been_successfully_deleted:
+    'The currency has been successfully deleted',
+  once_delete_this_currency_you_will_able_to_restore_it: `Once you delete this currency, you won\'t be able to restore it later. Are you sure you want to delete this currency?`,
+  once_delete_this_exchange_rate_you_will_able_to_restore_it: `Once you delete this exchange rate, you won\'t be able to restore it later. Are you sure you want to delete this exchange rate?`,
+  once_delete_these_exchange_rates_you_will_not_able_restore_them: `Once you delete these exchange rates, you won't be able to retrieve them later. Are you sure you want to delete them?`,
+  once_delete_this_item_category_you_will_able_to_restore_it: `Once you delete this item, you won\'t be able to restore it later. Are you sure you want to delete this item?`,
+  select_business_location: 'Select Business Location',
+  select_base_currency: 'Select Base Currency',
+  select_fiscal_year: 'Select Fiscal Year',
+  select_language: 'Select Language',
+  select_date_format: 'Select Date Format',
+  select_time_zone: 'Select Time Zone',
+  select_currency_code: 'Select Currency Code',
+  select_parent_category: 'Select Parent Category',
+  the_options_has_been_successfully_created:
+    'The options has been successfully created',
+  there_is_exchange_rate_in_this_date_with_the_same_currency:
+    'There is exchange rate in this date with the same currency.',
+  the_exchange_rates_has_been_successfully_deleted:
+    'The exchange rates has been successfully deleted',
   // Name Labels
   expense_account_id: 'Expense account',
   payment_account_id: 'Payment account',
@@ -363,16 +382,22 @@ export default {
   date_format_: 'Date format',
   category_name_: 'Category name',
   view_name_: 'View name',
+  time_zone: 'Time zone',
+  location: 'Location',
   the_items_has_been_successfully_deleted:
     'The items have been successfully deleted.',
   once_delete_these_items_you_will_not_able_restore_them:
     "Once you delete these items, you won't be able to retrieve them later. Are you sure you want to delete them?",
   ops_something_went_wrong: 'Something went wrong! Please try again.',
   session_expired: 'Session Expired!',
-  this_report_does_not_contain_any_data_between_date_period: 'This report does not contain any data between date period.',
-  welcome_organization_account_has_been_created: '👋 Welcome, You organization account has been created, Sign in now!',
-  the_phone_number_already_used_in_another_account: 'he phone number is already used in another account',
-  the_email_already_used_in_another_account: 'The email is already used in another account',
+  this_report_does_not_contain_any_data_between_date_period:
+    'This report does not contain any data between date period.',
+  welcome_organization_account_has_been_created:
+    '👋 Welcome, You organization account has been created, Sign in now!',
+  the_phone_number_already_used_in_another_account:
+    'he phone number is already used in another account',
+  the_email_already_used_in_another_account:
+    'The email is already used in another account',
   hide_filter: 'Hide filter',
   show_filter: 'Show filter',
 };

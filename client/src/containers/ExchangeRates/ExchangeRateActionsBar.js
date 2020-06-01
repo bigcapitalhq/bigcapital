@@ -10,18 +10,23 @@ import {
   PopoverInteractionKind,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
-import Icon from 'components/Icon';
+import { FormattedMessage as T, useIntl } from 'react-intl';
+
 import { connect } from 'react-redux';
 
+import { If } from 'components';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
-import withDialog from 'connectors/Dialog.connector';
+import Icon from 'components/Icon';
 
 import FilterDropdown from 'components/FilterDropdown';
 import withResourceDetail from 'containers/Resources/withResourceDetails';
+import withDialog from 'connectors/Dialog.connector';
 
 import { compose } from 'utils';
-import { FormattedMessage as T, useIntl } from 'react-intl';
 
+/**
+ * Exchange rate actions bar.
+ */
 function ExchangeRateActionsBar({
   // #withDialog.
   openDialog,
@@ -51,13 +56,6 @@ function ExchangeRateActionsBar({
     },
   });
 
-  // const handelDeleteExchangeRate = useCallback(
-  //   (exchangeRate) => {
-  //     onDeleteExchangeRate(exchangeRate);
-  //   },
-  //   [selectedRows, onDeleteExchangeRate]
-  // );
-
   const hasSelectedRows = useMemo(() => selectedRows.length > 0, [
     selectedRows,
   ]);
@@ -86,17 +84,15 @@ function ExchangeRateActionsBar({
           <Button
             className={classNames(Classes.MINIMAL, 'button--filter')}
             text={
-              filterCount <= 0 ? (
-                <T id={'filter'} />
-              ) : (
-                `${filterCount} ${formatMessage({ id: 'filters_applied' })}`
-              )
+              filterCount <= 0 ?
+                (<T id={'filter'} />) :
+                (`${filterCount} ${formatMessage({ id: 'filters_applied' })}`)
             }
             icon={<Icon icon="filter-16" iconSize={16} />}
           />
         </Popover>
 
-        {hasSelectedRows && (
+        <If condition={hasSelectedRows}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon="trash-16" iconSize={16} />}
@@ -104,7 +100,8 @@ function ExchangeRateActionsBar({
             intent={Intent.DANGER}
             onClick={handelBulkDelete}
           />
-        )}
+        </If>
+
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon="file-import-16" iconSize={16} />}

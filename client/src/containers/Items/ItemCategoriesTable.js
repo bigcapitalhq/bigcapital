@@ -1,5 +1,11 @@
 import React, { useCallback, useMemo } from 'react';
-import { Button, Popover, Menu, MenuItem, Position } from '@blueprintjs/core';
+import {
+  Button,
+  Popover,
+  Menu,
+  MenuItem,
+  Position,
+} from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 
 import Icon from 'components/Icon';

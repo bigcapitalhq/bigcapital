@@ -16,7 +16,7 @@ function UsersActions({
   }, [openDialog]);
 
   return (
-    <div claass="preferences-actions">
+    <div className="preferences-actions">
       <Button
         icon={<Icon icon='plus' iconSize={12} />}
         onClick={onClickNewUser}

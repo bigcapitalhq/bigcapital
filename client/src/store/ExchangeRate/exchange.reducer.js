@@ -21,17 +21,17 @@ export default createReducer(initialState, {
     state.loading = action.loading;
   },
 
-  [t.EXCHANGE_RATES_BULK_DELETE]:(state,action)=>{
-
-    const {ids} =action.payload;
-    const {exchange_rate} = {...state.exchangeRates};
-    ids.forEach((id)=>{
-      if(typeof exchange_rate[id] !=='undefined'){
-        delete exchange_rate[id]
+  [t.EXCHANGE_RATES_BULK_DELETE]: (state, action) => {
+    const { ids } = action.payload;
+    ids.forEach((id) => {
+      if (typeof state.exchangeRates[id] !== 'undefined') {
+        delete state.exchangeRates[id];
       }
     });
-    state.exchangeRates =exchange_rate
-  }
-
+  },
+  [t.EXCHANGE_RATE_DELETE]: (state, action) => {
+    if (typeof state.exchangeRates[action.id] !== 'undefined') {
+      delete state.exchangeRates[action.id];
+    }
+  },
 });
-

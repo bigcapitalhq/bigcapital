@@ -12,7 +12,7 @@
 
   &__inside-content {
     .#{$ns}-tab-list {
-      border-bottom: 1px solid #E5E5E5;
+      border-bottom: 1px solid #e5e5e5;
       padding-left: 15px;
       padding-right: 15px;
       align-items: baseline;
@@ -25,27 +25,25 @@
     }
   }
 
-  &__tabs-extra-actions{
+  &__tabs-extra-actions {
     margin-left: auto;
   }
 
-  &__topbar-actions{
+  &__topbar-actions {
     margin-left: auto;
     padding-right: 15px;
     margin-right: 15px;
     border-right: 1px solid #e5e5e5;
 
-    .bp3-button + .bp3-button{
+    .bp3-button + .bp3-button {
       margin-left: 10px;
     }
   }
 
-  &-menu {
-    width: 374px;
-  }
   &-button {
     margin-right: 10px;
   }
+
   &__floating-footer {
     position: fixed;
     bottom: 0;
@@ -95,7 +93,7 @@
       color: #333;
 
       &:hover,
-      &.#{$ns}-active{
+      &.#{$ns}-active {
         background-color: #ebf1f5;
         color: #333;
       }
@@ -106,29 +104,54 @@
 //  Preference
 //---------------------------------
 .preferences__inside-content--general {
+
   .bp3-form-group {
     margin: 25px 20px 20px;
+  
     .bp3-label {
-      min-width: 140px;
+      min-width: 180px;
     }
     .bp3-form-content {
-      width: 384px;
+      width: 50%;
+    }
+  }
+
+  .form-group--org-name,
+  .form-group--org-industry{
+
+    .bp3-form-content {
+      position: relative;
+      width: 70%;
+    }
+  }
+  .form-group--time-zone {
+    .bp3-menu {
+      max-height: 300px;
+      max-width: 400px;
+      overflow: auto;
+      padding: 0;
+    }
+    .bp3-text-muted {
+      color: #000000;
+    }
+    .bp3-button:not([class*='bp3-intent-']):not(.bp3-minimal) {
+      background: #fff;
+      box-shadow: 0 0 0 transparent;
+      border: 1px solid #ced4da;
+      padding: 8px;
     }
   }
 }
 
-
 // Users/Roles List.
 // ---------------------------------
-.preferences__inside-content--users-roles{
-  
-  .bigcapital-datatable{
-
+.preferences__inside-content--users-roles {
+  .bigcapital-datatable {
     .table .th,
-    .table .td{
+    .table .td {
       padding: 0.8rem 0.5rem;
     }
-    .td.status{
+    .td.status {
       text-transform: uppercase;
     }
   }

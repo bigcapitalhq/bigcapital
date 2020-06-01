@@ -33,13 +33,34 @@ export const fetchExchangeRates = () => {
 };
 
 export const submitExchangeRate = ({ form }) => {
-  return (dispatch) => {
-    return ApiService.post('exchange_rates', form);
-  };
+  return (dispatch) =>
+    new Promise((resolve, reject) => {
+      ApiService.post('exchange_rates', form).then((response) => {
+        resolve(response);
+      }).catch((error)=>{
+        const {response} = error
+        const {data} = response;
+        reject(data?.errors)
+      })
+    });
 };
 
+// export const deleteExchangeRate = (id) => {
+//   return (dispatch) => ApiService.delete(`exchange_rates/${id}`);
+// }
+
 export const deleteExchangeRate = (id) => {
-  return (dispatch) => ApiService.delete(`exchange_rates/${id}`);
+  return (dispatch) =>
+    new Promise((resolve, reject) => {
+      ApiService.delete(`exchange_rates/${id}`)
+        .then((response) => {
+          dispatch({ type: t.EXCHANGE_RATE_DELETE, id });
+          resolve(response);
+        })
+        .catch((error) => {
+          reject(error.response.data.errors || []);
+        });
+    });
 };
 
 export const editExchangeRate = (id, form) => {
@@ -59,23 +80,24 @@ export const editExchangeRate = (id, form) => {
           if (errors) {
             dispatch({ type: t.CLEAR_EXCHANGE_RATE_FORM_ERRORS, errors });
           }
-          reject(error);
+          reject(data?.errors);
         });
     });
 };
 
-
-
 export const deleteBulkExchangeRates = ({ ids }) => {
-  return dispatch => new Promise((resolve, reject) => {
-    ApiService.delete(`exchange_rates/bulk`, { params: { ids }}).then((response) => {
-      dispatch({
-        type: t.EXCHANGE_RATES_BULK_DELETE,
-        payload: { ids }
-      });
-      resolve(response);
-    }).catch((error) => {
-      reject(error);
+  return (dispatch) =>
+    new Promise((resolve, reject) => {
+      ApiService.delete(`exchange_rates/bulk`, { params: { ids } })
+        .then((response) => {
+          dispatch({
+            type: t.EXCHANGE_RATES_BULK_DELETE,
+            payload: { ids },
+          });
+          resolve(response);
+        })
+        .catch((error) => {
+          reject(error);
+        });
     });
-  });
 };

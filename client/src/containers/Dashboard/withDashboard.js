@@ -8,6 +8,7 @@ export default (mapState) => {
       pageSubtitle: state.dashboard.pageSubtitle,
       editViewId: state.dashboard.topbarEditViewId,
       sidebarExpended: state.dashboard.sidebarExpended,
+      preferencesPageTitle: state.dashboard.preferencesPageTitle,
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };

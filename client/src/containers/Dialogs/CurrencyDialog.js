@@ -9,10 +9,9 @@ import {
 import * as Yup from 'yup';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { useFormik } from 'formik';
-import { useQuery } from 'react-query';
+import { useQuery, queryCache } from 'react-query';
 import { connect } from 'react-redux';
 import { pick } from 'lodash';
-
 
 import AppToaster from 'components/AppToaster';
 import Dialog from 'components/Dialog';
@@ -26,8 +25,6 @@ import withCurrency from 'containers/Currencies/withCurrency';
 import withCurrenciesActions from 'containers/Currencies/withCurrenciesActions';
 
 import { compose } from 'utils';
-
-
 
 function CurrencyDialog({
   name,
@@ -46,18 +43,28 @@ function CurrencyDialog({
   requestSubmitCurrencies,
   requestEditCurrency,
 }) {
-  const {formatMessage} = useIntl();
+  const { formatMessage } = useIntl();
+
+    const fetchCurrencies = useQuery('currencies', () =>
+    requestFetchCurrencies(),
+  );
 
   const validationSchema = Yup.object().shape({
-    currency_name: Yup.string().required().label(formatMessage({id:'currency_name_'})),
+    currency_name: Yup.string()
+      .required()
+      .label(formatMessage({ id: 'currency_name_' })),
     currency_code: Yup.string()
       .max(4)
-      .required().label(formatMessage({id:'currency_code_'})),
+      .required()
+      .label(formatMessage({ id: 'currency_code_' })),
   });
-  const initialValues = useMemo(() => ({
-    currency_name: '',
-    currency_code: '',
-  }), []);
+  const initialValues = useMemo(
+    () => ({
+      currency_name: '',
+      currency_code: '',
+    }),
+    [],
+  );
 
   const {
     errors,
@@ -75,29 +82,37 @@ function CurrencyDialog({
     validationSchema: validationSchema,
     onSubmit: (values, { setSubmitting }) => {
       if (payload.action === 'edit') {
-        requestEditCurrency(currency.id, values).then((response) => {
-          closeDialog(name);
-          AppToaster.show({
-            message: formatMessage({id:'the_currency_has_been_successfully_edited'}),
-            intent: Intent.SUCCESS,
+        requestEditCurrency(currency.id, values)
+          .then((response) => {
+            closeDialog(name);
+            AppToaster.show({
+              message: formatMessage({
+                id: 'the_currency_has_been_successfully_edited',
+              }),
+              intent: Intent.SUCCESS,
+            });
+            setSubmitting(false);
+            queryCache.refetchQueries('currencies', { force: true });
+          })
+          .catch((error) => {
+            setSubmitting(false);
           });
-          setSubmitting(false);
-        })
-        .catch((error) => {
-          setSubmitting(false);
-        });
       } else {
-        requestSubmitCurrencies(values).then((response) => {
-          closeDialog(name);
-          AppToaster.show({
-            message: formatMessage({id:'the_currency_has_been_successfully_created'}),
-            intent: Intent.SUCCESS,
+        requestSubmitCurrencies(values)
+          .then((response) => {
+            closeDialog(name);
+            AppToaster.show({
+              message: formatMessage({
+                id: 'the_currency_has_been_successfully_created',
+              }),
+              intent: Intent.SUCCESS,
+            });
+            setSubmitting(false);
+            queryCache.refetchQueries('currencies', { force: true });
+          })
+          .catch((error) => {
+            setSubmitting(false);
           });
-          setSubmitting(false);
-        })
-        .catch((error) => {
-          setSubmitting(false);
-        });
       }
     },
   });
@@ -106,10 +121,6 @@ function CurrencyDialog({
     closeDialog(name);
   }, [name, closeDialog]);
 
-  const fetchCurrencies = useQuery('currencies',
-    () => { requestFetchCurrencies(); },
-    { manual: true });
-
   const onDialogOpening = useCallback(() => {
     fetchCurrencies.refetch();
   }, [fetchCurrencies]);
@@ -117,19 +128,25 @@ function CurrencyDialog({
   const onDialogClosed = useCallback(() => {
     resetForm();
     closeDialog(name);
-  }, [closeDialog, name,resetForm]);
+  }, [closeDialog, name, resetForm]);
 
   const requiredSpan = useMemo(() => <span className={'required'}>*</span>, []);
 
   return (
     <Dialog
       name={name}
-      title={payload.action === 'edit' ? <T id={'edit_currency'}/> : <T id={'new_currency'}/>}
+      title={
+        payload.action === 'edit' ? (
+          <T id={'edit_currency'} />
+        ) : (
+          <T id={'new_currency'} />
+        )
+      }
       className={classNames(
         {
           'dialog--loading': fetchCurrencies.isFetching,
         },
-        'dialog--currency-form'
+        'dialog--currency-form',
       )}
       isOpen={isOpen}
       onClosed={onDialogClosed}
@@ -140,31 +157,43 @@ function CurrencyDialog({
       <form onSubmit={handleSubmit}>
         <div className={Classes.DIALOG_BODY}>
           <FormGroup
-            label={<T id={'currency_name'}/>}
+            label={<T id={'currency_name'} />}
             labelInfo={requiredSpan}
             className={'form-group--currency-name'}
-            intent={(errors.currency_name && touched.currency_name) && Intent.DANGER}
-            helperText={<ErrorMessage name='currency_name' {...{errors, touched}} />}
+            intent={
+              errors.currency_name && touched.currency_name && Intent.DANGER
+            }
+            helperText={
+              <ErrorMessage name="currency_name" {...{ errors, touched }} />
+            }
             inline={true}
           >
             <InputGroup
               medium={true}
-              intent={(errors.currency_name && touched.currency_name) && Intent.DANGER}
+              intent={
+                errors.currency_name && touched.currency_name && Intent.DANGER
+              }
               {...getFieldProps('currency_name')}
             />
           </FormGroup>
 
           <FormGroup
-            label={<T id={'currency_code'}/>}
+            label={<T id={'currency_code'} />}
             labelInfo={requiredSpan}
             className={'form-group--currency-code'}
-            intent={(errors.currency_code && touched.currency_code) && Intent.DANGER}
-            helperText={<ErrorMessage name='currency_code' {...{errors, touched}} />}
+            intent={
+              errors.currency_code && touched.currency_code && Intent.DANGER
+            }
+            helperText={
+              <ErrorMessage name="currency_code" {...{ errors, touched }} />
+            }
             inline={true}
           >
             <InputGroup
               medium={true}
-              intent={(errors.currency_code && touched.currency_code) && Intent.DANGER}
+              intent={
+                errors.currency_code && touched.currency_code && Intent.DANGER
+              }
               {...getFieldProps('currency_code')}
             />
           </FormGroup>
@@ -172,9 +201,19 @@ function CurrencyDialog({
 
         <div className={Classes.DIALOG_FOOTER}>
           <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-            <Button onClick={handleClose}><T id={'cancel'} /></Button>
-            <Button intent={Intent.PRIMARY} type='submit' disabled={isSubmitting}>
-              {payload.action === 'edit' ? <T id={'edit'} /> : <T id={'submit'} /> }
+            <Button onClick={handleClose}>
+              <T id={'cancel'} />
+            </Button>
+            <Button
+              intent={Intent.PRIMARY}
+              type="submit"
+              disabled={isSubmitting}
+            >
+              {payload.action === 'edit' ? (
+                <T id={'edit'} />
+              ) : (
+                <T id={'submit'} />
+              )}
             </Button>
           </div>
         </div>
@@ -190,8 +229,8 @@ const mapStateToProps = (state, props) => {
     name: 'currency-form',
     payload: { action: 'new', currencyCode: null, ...dialogPayload },
     currencyCode: dialogPayload?.currencyCode || null,
-  }
-}
+  };
+};
 
 const withCurrencyFormDialog = connect(mapStateToProps);
 

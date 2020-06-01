@@ -1,15 +1,14 @@
-import React, { useCallback, useMemo,useState } from 'react';
+import React, { useCallback, useMemo, useState, useEffect } from 'react';
 import Icon from 'components/Icon';
 import DialogConnect from 'connectors/Dialog.connector';
 import DataTable from 'components/DataTable';
-import { Button, Popover, Menu, MenuItem, Position } from '@blueprintjs/core';
+import { Button, Popover, Menu, MenuItem, Position,Intent } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
-
+import LoadingIndicator from 'components/LoadingIndicator';
 import withExchangeRatesActions from 'containers/ExchangeRates/withExchangeRatesActions';
 import withExchangeRates from 'containers/ExchangeRates/withExchangeRates';
 
 import { compose } from 'utils';
-
 
 function ExchangeRateTable({
   // #withExchangeRates
@@ -25,7 +24,6 @@ function ExchangeRateTable({
   onEditExchangeRate,
   onSelectedRowsChange,
 }) {
-
   const [initialMount, setInitialMount] = useState(false);
   const { formatMessage } = useIntl();
 
@@ -47,11 +45,12 @@ function ExchangeRateTable({
         />
         <MenuItem
           text={<T id={'delete_exchange_rate'} />}
+          intent={Intent.DANGER}
           onClick={handleDeleteExchangeRate(ExchangeRate)}
         />
       </Menu>
     ),
-    [handelEditExchangeRate, handleDeleteExchangeRate]
+    [handelEditExchangeRate, handleDeleteExchangeRate],
   );
 
   const columns = useMemo(() => [
@@ -92,24 +91,32 @@ function ExchangeRateTable({
     },
   ], [actionMenuList,formatMessage]);
 
-  const selectionColumn = useMemo(() => ({
-    minWidth: 42,
-    width: 42,
-    maxWidth: 42,
-  }), []);
+  const selectionColumn = useMemo(
+    () => ({
+      minWidth: 42,
+      width: 42,
+      maxWidth: 42,
+    }),
+    [],
+  );
 
   const handelFetchData = useCallback(
     (...params) => {
       onFetchData && onFetchData(...params);
     },
-    [onFetchData]
+    [onFetchData],
   );
 
-  const handelSelectedRowsChange = useCallback((selectRows) => {
-    onSelectedRowsChange && onSelectedRowsChange(selectRows.map((c) => c.original));
-  }, [onSelectedRowsChange]);
+  const handelSelectedRowsChange = useCallback(
+    (selectRows) => {
+      onSelectedRowsChange &&
+        onSelectedRowsChange(selectRows.map((c) => c.original));
+    },
+    [onSelectedRowsChange],
+  );
 
   return (
+    <LoadingIndicator loading={loading} mount={false}>
     <DataTable
       columns={columns}
       data={exchangeRatesList}
@@ -122,14 +129,15 @@ function ExchangeRateTable({
       onSelectedRowsChange={handelSelectedRowsChange}
       spinnerProps={{ size: 30 }}
     />
+    </LoadingIndicator>
   );
 }
 
 export default compose(
   DialogConnect,
   withExchangeRatesActions,
-  withExchangeRates(({ exchangeRatesList ,exchangeRatesLoading }) => ({
+  withExchangeRates(({ exchangeRatesList, exchangeRatesLoading }) => ({
     exchangeRatesList,
-    exchangeRatesLoading
-  }))
+    exchangeRatesLoading,
+  })),
 )(ExchangeRateTable);

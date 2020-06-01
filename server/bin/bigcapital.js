@@ -10,7 +10,7 @@ const {
   success,
   log,
 } = require('./utils');
-const lincenseCommander = require('./license');
+// const lincenseCommander = require('./license');
 
 // - bigcapital system:migrate:latest
 // - bigcapital system:migrate:rollback

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery, queryCache } from 'react-query';
 import { useParams } from 'react-router-dom';
 import { Alert, Intent } from '@blueprintjs/core';
 import {
@@ -14,6 +14,7 @@ import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import ExchangeRateTable from './ExchangeRateTable';
 import ExchangeRateActionsBar from './ExchangeRateActionsBar';
 
+import withDialog from 'connectors/Dialog.connector';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withResourceActions from 'containers/Resources/withResourcesActions';
 import withExchangeRatesActions from 'containers/ExchangeRates/withExchangeRatesActions';
@@ -24,7 +25,7 @@ function ExchangeRate({
   // #withDashboardActions
   changePageTitle,
 
-  //#withResourceActions
+  // #withResourceActions
   requestFetchResourceFields,
 
   // #withExchangeRatesActions
@@ -32,12 +33,16 @@ function ExchangeRate({
   requestDeleteExchangeRate,
   addExchangeRatesTableQueries,
   requestDeleteBulkExchangeRates,
+
+  // #withDialog
+  openDialog,
 }) {
   const { id } = useParams();
   const [deleteExchangeRate, setDeleteExchangeRate] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
   const { formatMessage } = useIntl();
   const [bulkDelete, setBulkDelete] = useState(false);
+  const [filter, setFilter] = useState({});
 
   const fetchExchangeRates = useQuery('exchange-rates-table', () =>
     requestFetchExchangeRates(),
@@ -56,21 +61,28 @@ function ExchangeRate({
     [setDeleteExchangeRate],
   );
 
-  const handelEditExchangeRate = (exchange_rate) => {};
+  const handelEditExchangeRate = (exchange_rate) => {
+    openDialog('exchangeRate-form', { action: 'edit', id: exchange_rate.id });
+  };
 
   const handelCancelExchangeRateDelete = useCallback(() => {
     setDeleteExchangeRate(false);
   }, [setDeleteExchangeRate]);
 
   const handelConfirmExchangeRateDelete = useCallback(() => {
-    requestDeleteExchangeRate(deleteExchangeRate.id).then(() => {
-      setDeleteExchangeRate(false);
-      AppToaster.show({
-        message: formatMessage({
-          id: 'the_exchange_rate_has_been_successfully_deleted',
-        }),
+    requestDeleteExchangeRate(deleteExchangeRate.id)
+      .then(() => {
+        setDeleteExchangeRate(false);
+        AppToaster.show({
+          message: formatMessage({
+            id: 'the_exchange_rates_has_been_successfully_deleted',
+          }),
+          intent: Intent.SUCCESS,
+        });
+      })
+      .catch(() => {
+        setDeleteExchangeRate(false);
       });
-    });
   }, [deleteExchangeRate, requestDeleteExchangeRate, formatMessage]);
 
   // Handle fetch data of Exchange_rates datatable.
@@ -88,6 +100,7 @@ function ExchangeRate({
     [addExchangeRatesTableQueries],
   );
 
+  // Handle selected rows change.
   const handleSelectedRowsChange = useCallback(
     (exchange_rates) => {
       setSelectedRows(exchange_rates);
@@ -97,8 +110,8 @@ function ExchangeRate({
 
   // Handle Exchange Rates bulk delete.
   const handleBulkDelete = useCallback(
-    (exchangeRates) => {
-      setBulkDelete(exchangeRates);
+    (exchangeRatesIds) => {
+      setBulkDelete(exchangeRatesIds);
     },
     [setBulkDelete],
   );
@@ -131,7 +144,7 @@ function ExchangeRate({
   ]);
 
   return (
-    <DashboardInsider>
+    <DashboardInsider loading={fetchExchangeRates.isFetching}>
       <ExchangeRateActionsBar
         onDeleteExchangeRate={handelDeleteExchangeRate}
         selectedRows={selectedRows}
@@ -146,7 +159,7 @@ function ExchangeRate({
         />
         <Alert
           cancelButtonText={<T id={'cancel'} />}
-          confirmButtonText={<T id={'move_to_trash'} />}
+          confirmButtonText={<T id={'delete'} />}
           icon="trash"
           intent={Intent.DANGER}
           isOpen={deleteExchangeRate}
@@ -187,4 +200,5 @@ export default compose(
   withExchangeRatesActions,
   withResourceActions,
   withDashboardActions,
+  withDialog,
 )(ExchangeRate);

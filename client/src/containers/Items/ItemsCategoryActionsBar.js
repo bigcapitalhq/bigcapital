@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo,useState } from 'react';
 import {
   NavbarGroup,
+  NavbarDivider,
   Button,
   Classes,
   Intent,
@@ -70,6 +71,8 @@ const ItemsCategoryActionsBar = ({
           text={<T id={'new_category'}/>}
           onClick={onClickNewCategory}
         />
+        <NavbarDivider />
+
         <Popover
           minimal={true}
           content={filterDropdown}
@@ -79,14 +82,14 @@ const ItemsCategoryActionsBar = ({
           <Button
             className={classNames(Classes.MINIMAL, 'button--filter')}
             text={ filterCount <= 0 ? <T id={'filter'}/> : `${filterCount} filters applied`}
-            icon={<Icon icon='filter-18' iconSize={18} />}
+            icon={<Icon icon='filter-16' iconSize={16} />}
           />
         </Popover>
 
         <If condition={hasSelectedRows}>
           <Button
             className={Classes.MINIMAL}
-            icon={<Icon icon='trash' iconSize={15} />}
+            icon={<Icon icon='trash-16' iconSize={16} />}
             text={<T id={'delete'}/>}
             intent={Intent.DANGER}
             onClick={handelBulkDelete}
@@ -95,12 +98,12 @@ const ItemsCategoryActionsBar = ({
 
         <Button
           className={Classes.MINIMAL}
-          icon={<Icon icon='file-import' />}
+          icon={<Icon icon='file-import-16' iconSize={16} />}
           text={<T id={'import'}/>}
         />
         <Button
           className={Classes.MINIMAL}
-          icon={<Icon icon='file-export' />}
+          icon={<Icon icon='file-export-16' iconSize={16} />}
           text={<T id={'export'}/>}
         />
       </NavbarGroup>

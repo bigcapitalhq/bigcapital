@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { queryCache, useQuery } from 'react-query';
 import DataTable from 'components/DataTable';
 import {
@@ -21,6 +21,7 @@ import {
 
 import Icon from 'components/Icon';
 import LoadingIndicator from 'components/LoadingIndicator';
+import { If } from 'components';
 
 import AppToaster from 'components/AppToaster';
 
@@ -34,7 +35,7 @@ import { compose } from 'utils';
 function UsersListPreferences({
   // #withDialog
   openDialog,
-  closeDialog,
+  changePreferencesPageTitle,
 
   // #withUsers
   usersList,
@@ -52,9 +53,14 @@ function UsersListPreferences({
   const { formatMessage } = useIntl();
   const fetchUsers = useQuery('users-table', () => requestFetchUsers());
 
-  const onInactiveUser = (user) => {
+  useEffect(() => {
+    changePreferencesPageTitle(formatMessage({ id: 'users' }));
+  }, [changePreferencesPageTitle, formatMessage]);
+
+
+  const onInactiveUser = useCallback((user) => {
     setInactiveUserState(user);
-  };
+  }, []);
 
   // Handle cancel inactive user alert
   const handleCancelInactiveUser = useCallback(() => {
@@ -63,38 +69,42 @@ function UsersListPreferences({
 
   // handel confirm user activation
   const handleConfirmUserActive = useCallback(() => {
-    requestInactiveUser(inactiveUserState.id).then(() => {
-      setInactiveUserState(false);
-      AppToaster.show({
-        message: formatMessage({
-          id: 'the_user_has_been_successfully_inactivated',
-        }),
+    requestInactiveUser(inactiveUserState.id)
+      .then(() => {
+        setInactiveUserState(false);
+        AppToaster.show({
+          message: formatMessage({
+            id: 'the_user_has_been_successfully_inactivated',
+          }),
+          intent: Intent.SUCCESS,
+        });
+        queryCache.refetchQueries('users-table', { force: true });
+      })
+      .catch((error) => {
+        setInactiveUserState(false);
       });
-    });
-  }, [
-    inactiveUserState,
-    requestInactiveUser,
-    requestFetchUsers,
-    formatMessage,
-  ]);
+  }, [inactiveUserState, requestInactiveUser, formatMessage]);
 
-  const onDeleteUser = (user) => {
+  const onDeleteUser = useCallback((user) => {
     setDeleteUserState(user);
-  };
+  }, []);
 
   const handleCancelUserDelete = () => {
     setDeleteUserState(false);
   };
 
-  const onEditUser = (user) => () => {
-    const form = Object.keys(user).reduce((obj, key) => {
-      const camelKey = snakeCase(key);
-      obj[camelKey] = user[key];
-      return obj;
-    }, {});
+  const onEditUser = useCallback(
+    (user) => () => {
+      const form = Object.keys(user).reduce((obj, key) => {
+        const camelKey = snakeCase(key);
+        obj[camelKey] = user[key];
+        return obj;
+      }, {});
 
-    openDialog('userList-form', { action: 'edit', user: form });
-  };
+      openDialog('userList-form', { action: 'edit', user: form });
+    },
+    [openDialog],
+  );
 
   // Handle confirm User delete
 
@@ -121,19 +131,24 @@ function UsersListPreferences({
   const actionMenuList = useCallback(
     (user) => (
       <Menu>
-        <MenuItem text={<T id={'edit_user'} />} onClick={onEditUser(user)} />
-        <MenuDivider />
-        <MenuItem
-          text={<T id={'inactivate_user'} />}
-          onClick={() => onInactiveUser(user)}
-        />
+        <If condition={user.invite_accepted_at}>
+          <MenuItem text={<T id={'edit_user'} />} onClick={onEditUser(user)} />
+          <MenuDivider />
+
+          <MenuItem
+            text={<T id={'inactivate_user'} />}
+            onClick={() => onInactiveUser(user)}
+          />
+        </If>
+
         <MenuItem
           text={<T id={'delete_user'} />}
           onClick={() => onDeleteUser(user)}
+          intent={Intent.DANGER}
         />
       </Menu>
     ),
-    [],
+    [onInactiveUser, onDeleteUser, onEditUser],
   );
 
   const columns = useMemo(
@@ -160,7 +175,11 @@ function UsersListPreferences({
         id: 'status',
         Header: 'Status',
         accessor: (user) =>
-          user.active ? (
+          !user.invite_accepted_at ? (
+            <Tag minimal={true}>
+              <T id={'inviting'} />
+            </Tag>
+          ) : user.active ? (
             <Tag intent={Intent.SUCCESS} minimal={true}>
               <T id={'activate'} />
             </Tag>
@@ -193,7 +212,7 @@ function UsersListPreferences({
 
   const handelDataTableFetchData = useCallback(() => {
     onFetchData && onFetchData();
-  }, []);
+  }, [onFetchData]);
 
   return (
     <LoadingIndicator>

@@ -12,19 +12,18 @@ import { pick } from 'lodash';
 import * as Yup from 'yup';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { useFormik } from 'formik';
-import { Select } from '@blueprintjs/select';
-import { useQuery } from 'react-query';
+import { useQuery, queryCache } from 'react-query';
 import moment from 'moment';
 import { DateInput } from '@blueprintjs/datetime';
 import { momentFormatter } from 'utils';
 
 import AppToaster from 'components/AppToaster';
+
 import Dialog from 'components/Dialog';
 import ErrorMessage from 'components/ErrorMessage';
 import classNames from 'classnames';
-
+import { ListSelect } from 'components';
 import withExchangeRatesDialog from './ExchangeRateDialog.container';
-
 
 function ExchangeRateDialog({
   name,
@@ -43,24 +42,37 @@ function ExchangeRateDialog({
   requestEditExchangeRate,
   requestFetchCurrencies,
   editExchangeRate,
-
 }) {
   const { formatMessage } = useIntl();
   const [selectedItems, setSelectedItems] = useState({});
 
   const validationSchema = Yup.object().shape({
-    exchange_rate: Yup.number().required().label(formatMessage({id:'exchange_rate_'})),
-    currency_code: Yup.string().max(3).required(formatMessage({id:'currency_code_'})),
-    date: Yup.date().required().label(formatMessage({id:'date'})),
+    exchange_rate: Yup.number()
+      .required()
+      .label(formatMessage({ id: 'exchange_rate_' })),
+    currency_code: Yup.string()
+      .max(3)
+      .required(formatMessage({ id: 'currency_code_' })),
+    date: Yup.date()
+      .required()
+      .label(formatMessage({ id: 'date' })),
   });
 
-  const initialValues = useMemo(() => ({
-    exchange_rate: '',
-    currency_code: '',
-    date: moment(new Date()).format('YYYY-MM-DD'),
-  }), []);
+  const initialValues = useMemo(
+    () => ({
+      exchange_rate: '',
+      currency_code: '',
+      date: moment(new Date()).format('YYYY-MM-DD'),
+    }),
+    [],
+  );
+
+  const fetchExchangeRatesDialog = useQuery('exchange-rates-dialog', () =>
+    requestFetchExchangeRates(),
+  );
 
   const {
+    values,
     touched,
     errors,
     isSubmitting,
@@ -75,15 +87,19 @@ function ExchangeRateDialog({
       ...(payload.action === 'edit' &&
         pick(editExchangeRate, Object.keys(initialValues))),
     },
-    onSubmit: (values, { setSubmitting }) => {
+    onSubmit: (values, { setSubmitting, setErrors }) => {
       if (payload.action === 'edit') {
         requestEditExchangeRate(payload.id, values)
           .then((response) => {
             closeDialog(name);
             AppToaster.show({
-              message: formatMessage({id:'the_exchange_rate_has_been_successfully_edited'})
+              message: formatMessage({
+                id: 'the_exchange_rate_has_been_successfully_edited',
+              }),
+              intent: Intent.SUCCESS,
             });
             setSubmitting(false);
+            queryCache.removeQueries('exchange-rates-dialog', { force: true });
           })
           .catch((error) => {
             setSubmitting(false);
@@ -93,30 +109,40 @@ function ExchangeRateDialog({
           .then((response) => {
             closeDialog(name);
             AppToaster.show({
-              message: formatMessage({id:'the_exchange_rate_has_been_successfully_created'})
+              message: formatMessage({
+                id: 'the_exchange_rate_has_been_successfully_created',
+              }),
+              intent: Intent.SUCCESS,
             });
             setSubmitting(false);
+            queryCache.refetchQueries('exchange-rates-table', { force: true });
           })
-          .catch((error) => {
-            setSubmitting(false);
+          .catch((errors) => {
+            if (
+              errors.find((e) => e.type === 'EXCHANGE.RATE.DATE.PERIOD.DEFINED')
+            ) {
+              setErrors({
+                exchange_rate: formatMessage({
+                  id:
+                    'there_is_exchange_rate_in_this_date_with_the_same_currency',
+                }),
+              });
+            }
           });
       }
     },
   });
 
-  const requiredSpan = useMemo(() => <span class='required'>*</span>, []);
+  const requiredSpan = useMemo(() => <span class="required">*</span>, []);
 
   const handleClose = useCallback(() => {
     closeDialog(name);
   }, [name, closeDialog]);
 
-  const fetchExchangeRatesDialog = useQuery('exchange-rates-dialog',
-    () => requestFetchExchangeRates());
-
   const onDialogClosed = useCallback(() => {
     resetForm();
     closeDialog(name);
-  }, [closeDialog, name,resetForm]);
+  }, [closeDialog, name, resetForm]);
 
   const onDialogOpening = useCallback(() => {
     fetchExchangeRatesDialog.refetch();
@@ -127,7 +153,7 @@ function ExchangeRateDialog({
       const formatted = moment(date).format('YYYY-MM-DD');
       setFieldValue('date', formatted);
     },
-    [setFieldValue]
+    [setFieldValue],
   );
 
   const onItemsSelect = useCallback(
@@ -140,19 +166,19 @@ function ExchangeRateDialog({
         setFieldValue(filedName, filed.currency_code);
       };
     },
-    [setFieldValue, selectedItems]
+    [setFieldValue, selectedItems],
   );
 
-  const filterCurrencyCode = (query, currency_code, _index, exactMatch) => {
-    const normalizedTitle = currency_code.currency_code.toLowerCase();
+  const filterCurrencyCode = (query, currency, _index, exactMatch) => {
+    const normalizedTitle = currency.currency_code.toLowerCase();
     const normalizedQuery = query.toLowerCase();
 
     if (exactMatch) {
       return normalizedTitle === normalizedQuery;
     } else {
       return (
-        `${currency_code.currency_code} ${normalizedTitle}`.indexOf(
-          normalizedQuery
+        `${currency.currency_code} ${normalizedTitle}`.indexOf(
+          normalizedQuery,
         ) >= 0
       );
     }
@@ -169,20 +195,19 @@ function ExchangeRateDialog({
     );
   }, []);
 
-  const getSelectedItemLabel = useCallback((fieldName, defaultLabel) => {
-    return typeof selectedItems[fieldName] !== 'undefined'
-      ? selectedItems[fieldName].currency_code
-      : defaultLabel;
-  }, [selectedItems]);
-
   return (
     <Dialog
       name={name}
-      title={payload.action === 'edit'
-        ? <T id={'edit_exchange_rate'}/> : <T id={'new_exchange_rate'}/>}
+      title={
+        payload.action === 'edit' ? (
+          <T id={'edit_exchange_rate'} />
+        ) : (
+          <T id={'new_exchange_rate'} />
+        )
+      }
       className={classNames(
-        {'dialog--loading': fetchExchangeRatesDialog.isFetching},
-        'dialog--exchangeRate-form'
+        { 'dialog--loading': fetchExchangeRatesDialog.isFetching },
+        'dialog--exchangeRate-form',
       )}
       isOpen={isOpen}
       onClosed={onDialogClosed}
@@ -193,11 +218,11 @@ function ExchangeRateDialog({
       <form onSubmit={handleSubmit}>
         <div className={Classes.DIALOG_BODY}>
           <FormGroup
-            label={<T id={'date'}/>}
+            label={<T id={'date'} />}
             inline={true}
             labelInfo={requiredSpan}
             intent={errors.date && touched.date && Intent.DANGER}
-            helperText={<ErrorMessage name='date' {...{errors, touched}} />}
+            helperText={<ErrorMessage name="date" {...{ errors, touched }} />}
           >
             <DateInput
               fill={true}
@@ -205,56 +230,71 @@ function ExchangeRateDialog({
               defaultValue={new Date()}
               onChange={handleDateChange}
               popoverProps={{ position: Position.BOTTOM }}
-              // disabled={payload.action === 'edit'}
+              disabled={payload.action === 'edit'}
             />
           </FormGroup>
 
           <FormGroup
-            label={<T id={'exchange_rate'}/>}
+            label={<T id={'exchange_rate'} />}
             labelInfo={requiredSpan}
-            intent={errors.exchange_rate && touched.exchange_rate && Intent.DANGER}
-            helperText={<ErrorMessage name='exchange_rate' {...{errors, touched}} />}
+            intent={
+              errors.exchange_rate && touched.exchange_rate && Intent.DANGER
+            }
+            helperText={
+              <ErrorMessage name="exchange_rate" {...{ errors, touched }} />
+            }
             inline={true}
           >
             <InputGroup
               medium={true}
-              intent={errors.exchange_rate && touched.exchange_rate && Intent.DANGER}
+              intent={
+                errors.exchange_rate && touched.exchange_rate && Intent.DANGER
+              }
               {...getFieldProps('exchange_rate')}
             />
           </FormGroup>
 
           <FormGroup
-            label={<T id={'currency_code'}/>}
+            label={<T id={'currency_code'} />}
             labelInfo={requiredSpan}
             className={classNames('form-group--select-list', Classes.FILL)}
             inline={true}
-            intent={(errors.currency_code && touched.currency_code) && Intent.DANGER}
-            helperText={<ErrorMessage name='currency_code' {...{errors, touched}} />}
+            intent={
+              errors.currency_code && touched.currency_code && Intent.DANGER
+            }
+            helperText={
+              <ErrorMessage name="currency_code" {...{ errors, touched }} />
+            }
           >
-            <Select
+            <ListSelect
               items={currenciesList}
-              noResults={<MenuItem disabled={true} text='No results.' />}
+              noResults={<MenuItem disabled={true} text="No results." />}
               itemRenderer={currencyCodeRenderer}
               itemPredicate={filterCurrencyCode}
               popoverProps={{ minimal: true }}
               onItemSelect={onItemsSelect('currency_code')}
-            >
-              <Button
-                rightIcon='caret-down'
-                fill={true}
-                text={getSelectedItemLabel(
-                  'currency_code',
-                  'select Currency Code'
-                )}
-              />
-            </Select>
+              selectedItem={values.currency_code}
+              selectedItemProp={'currency_code'}
+              defaultText={<T id={'select_currency_code'} />}
+              labelProp={'currency_code'}
+            />
           </FormGroup>
         </div>
         <div className={Classes.DIALOG_FOOTER}>
           <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-            <Button onClick={handleClose}><T id={'close'}/></Button>
-            <Button intent={Intent.PRIMARY} type='submit' disabled={isSubmitting}>
-            {payload.action === 'edit' ? <T id={'edit'}/> : <T id={'submit'}/>}
+            <Button onClick={handleClose}>
+              <T id={'close'} />
+            </Button>
+            <Button
+              intent={Intent.PRIMARY}
+              type="submit"
+              disabled={isSubmitting}
+            >
+              {payload.action === 'edit' ? (
+                <T id={'edit'} />
+              ) : (
+                <T id={'submit'} />
+              )}
             </Button>
           </div>
         </div>

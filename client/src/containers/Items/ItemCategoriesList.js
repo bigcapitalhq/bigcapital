@@ -19,6 +19,9 @@ import withItemCategoriesActions from 'containers/Items/withItemCategoriesAction
 
 import { compose } from 'utils';
 
+/**
+ * Item categories list.
+ */
 const ItemCategoryList = ({
   // #withDashboardActions
   changePageTitle,
@@ -182,9 +185,7 @@ const ItemCategoryList = ({
       >
         <p>
           <FormattedHTMLMessage
-            id={
-              'once_delete_these_item_categories_you_will_not_able_restore_them'
-            }
+            id={'once_delete_these_items_you_will_not_able_restore_them'}
           />
         </p>
       </Alert>
