@@ -5,15 +5,10 @@ import { Redirect } from 'react-router-dom';
 import withAuthentication from 'containers/Authentication/withAuthentication';
 import { compose } from 'utils';
 
-
-function PrivateRoute({
-  component: Component,
-  isAuthorized = false,
-  ...rest
-}) {
+function PrivateRoute({ component: Component, isAuthorized = false, ...rest }) {
   return (
     <BodyClassName className={''}>
-      {(isAuthorized) ? (
+      {isAuthorized ? (
         <Component />
       ) : (
         <Redirect
@@ -26,4 +21,6 @@ function PrivateRoute({
   );
 }
 
-export default compose(withAuthentication)(PrivateRoute);
+export default compose(
+  withAuthentication(({ isAuthorized }) => ({ isAuthorized })),
+)(PrivateRoute);

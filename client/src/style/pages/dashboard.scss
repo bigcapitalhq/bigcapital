@@ -40,7 +40,7 @@
     &-navbar{
       display: flex;
       align-items: center;
-      margin-right: 18px;
+      margin-right: 4px;
 
       .#{$ns}-button{
         color: #1552C8;
@@ -53,6 +53,7 @@
         }
         .#{$ns}-icon{
           color: #1552C8;
+          margin-right: 5px;
         }
       }
     }
@@ -60,20 +61,26 @@
     &-user{
       display: flex;
       align-items: center;
+      margin-right: 14px;
 
-      .#{$ns}-button{
+      .bp3-button:not([class*="bp3-intent-"]):not(.bp3-minimal){
+        padding: 0;
         background-size: contain;
+        background-color: #F6DCFA;
         border-radius: 50%;
-        height: 32px;
-        width: 32px;
-        
+        height: 30px;
+        width: 30px;
+
+        .user-text {
+          font-size: 12px;
+          color: #804f87;
+        }
         &,
         &:hover,
         &:focus{
-          background-color: transparent;
+          background-color: #F6DCFA;
           border: 0;
           box-shadow: none;
-          background-image: url(http://1.gravatar.com/avatar/767fc9c115a1b989744c755db47feb60?size=400);
         }
       }
     }
@@ -318,4 +325,16 @@
     0 18px 46px 6px rgba(16, 22, 26, 0.2);
   background-color: #fff;
   width: 500px;
+}
+
+
+.menu--logged-user-dropdown{
+
+  .menu-item--profile{
+
+    .org{
+      font-size: 12px;
+      color: #777;
+    }    
+  }
 }

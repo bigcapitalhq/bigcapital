@@ -1,5 +1,4 @@
 import React, { useMemo, useCallback } from 'react';
-import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import {
   Menu,
@@ -9,36 +8,42 @@ import {
   Popover,
 } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'react-intl';
-import t from 'store/types';
 
-function DashboardTopbarUser({ logout }) {
+import withAuthentication from 'containers/Authentication/withAuthentication';
+import withAuthenticationActions from 'containers/Authentication/withAuthenticationActions';
+
+import { compose, firstLettersArgs } from 'utils';
+
+function DashboardTopbarUser({ requestLogout, user }) {
   const history = useHistory();
 
   const onClickLogout = useCallback(() => {
-    logout();
-  }, [logout, history]);
+    requestLogout();
+  }, []);
 
   const userAvatarDropMenu = useMemo(
     () => (
-      <Menu>
-        <MenuItem icon="graph" text={<T id={'menu'} />} />
-        <MenuItem icon="map" text={<T id={'graph'} />} />
+      <Menu className={'menu--logged-user-dropdown'}>
         <MenuItem
-          icon="th"
-          text={<T id={'table'} />}
-          shouldDismissPopover={false}
-        />
-        <MenuItem
-          icon="zoom-to-fit"
-          text={<T id={'nucleus'} />}
-          disabled={true}
+          multiline={true}
+          className={'menu-item--profile'}
+          text={
+            <div>
+              <div class="person">
+                {user.first_name} {user.last_name}
+              </div>
+              <div class="org">
+                <T id="organization_id" />: {user.tenant_id}
+              </div>
+            </div>
+          }
         />
         <MenuDivider />
         <MenuItem
-          icon="cog"
-          text={<T id={'logout'} />}
-          onClick={onClickLogout}
+          text={<T id={'preferences'} />}
+          onClick={() => history.push('/preferences')}
         />
+        <MenuItem text={<T id={'logout'} />} onClick={onClickLogout} />
       </Menu>
     ),
     [onClickLogout],
@@ -47,14 +52,15 @@ function DashboardTopbarUser({ logout }) {
   return (
     <Popover content={userAvatarDropMenu}>
       <Button>
-        <div className="user-avatar"></div>
+        <div className="user-text">
+          {firstLettersArgs(user.first_name, user.last_name)}
+        </div>
       </Button>
     </Popover>
   );
 }
 
-const mapDispatchToProps = (dispatch) => ({
-  logout: () => dispatch({ type: t.LOGOUT }),
-});
-
-export default connect(null, mapDispatchToProps)(DashboardTopbarUser);
+export default compose(
+  withAuthentication(({ user }) => ({ user })),
+  withAuthenticationActions,
+)(DashboardTopbarUser);

@@ -56,6 +56,11 @@ $pt-font-family: Noto Sans, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
 @import 'views/filter-dropdown';
 @import 'views/sidebar';
 
+
+.App{
+  min-width: 960px;
+}
+
 .#{$ns}-tooltip {
   box-shadow: none;
 }

@@ -6,7 +6,6 @@ import { FormattedMessage as T } from 'react-intl';
 import withAuthentication from 'containers/Authentication/withAuthentication';
 import { compose } from 'utils';
 
-
 function AuthenticationWrapper({ isAuthorized = false, ...rest }) {
   const to = { pathname: '/homepage' };
 
@@ -43,4 +42,6 @@ function AuthenticationWrapper({ isAuthorized = false, ...rest }) {
   );
 }
 
-export default compose(withAuthentication)(AuthenticationWrapper);
+export default compose(
+  withAuthentication(({ isAuthorized }) => ({ isAuthorized })),
+)(AuthenticationWrapper);

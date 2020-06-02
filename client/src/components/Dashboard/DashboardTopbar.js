@@ -4,6 +4,7 @@ import { useHistory } from 'react-router';
 import {
   Navbar,
   NavbarGroup,
+  NavbarDivider,
   Button,
   Classes,
 } from '@blueprintjs/core';
@@ -93,21 +94,24 @@ function DashboardTopbar({
             <Button
               onClick={() => openGlobalSearch(true)}
               className={Classes.MINIMAL}
-              icon='home'
-              text={<T id={'search'}/>}
+              icon={<Icon icon={'search-24'} iconSize={20} />}
+              text={<T id={'quick_find'}/>}
             />
+            <Button
+              className={Classes.MINIMAL}
+              icon={<Icon icon={'plus-24'} iconSize={20} />}
+              text={<T id={'quick_new'}/>}
+            />
+            <Button
+              className={Classes.MINIMAL}
+              icon={<Icon icon={'notification-24'} iconSize={20} />}
+            />
+            <Button
+              className={Classes.MINIMAL}
+              icon={<Icon icon={'help-24'} iconSize={20} />}
+              text={<T id={'help'} />} />
 
-            <Button
-              className={Classes.MINIMAL}
-              icon='document'
-              text={<T id={'filters'}/>}
-            />
-            <Button
-              className={Classes.MINIMAL}
-              icon='document'
-              text={<T id={'add_order'}/>}
-            />
-            <Button className={Classes.MINIMAL} icon='document' text='More' />
+            <NavbarDivider />
           </NavbarGroup>
         </Navbar>
 

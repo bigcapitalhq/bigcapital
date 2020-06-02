@@ -12,7 +12,7 @@ export default {
     'The email and password you entered did not match our records.',
   field_name_must_be_number: 'field_name_must_be_number',
   name: 'Name',
-  search: 'Search',
+  quick_find: 'Quick find',
   reference: 'Reference',
   date: 'Date',
   description: 'Description',
@@ -401,4 +401,7 @@ export default {
   hide_filter: 'Hide filter',
   show_filter: 'Show filter',
   new_role: 'New Role',
+  quick_new: 'Quick new',
+  help: 'Help',
+  organization_id: 'Orgnization ID',
 };

@@ -171,3 +171,14 @@ export const saveFilesInAsync = (files, actionCb, extraTasks) => {
   });
   return PProgress.all(opers);
 }
+
+export const firstLettersArgs = (...args) => {
+  let letters = [];
+
+  args.forEach((word) => {
+    if (typeof word === 'string') {
+      letters.push(word.charAt(0));
+    }
+  });
+  return letters.join('').toUpperCase();
+}
