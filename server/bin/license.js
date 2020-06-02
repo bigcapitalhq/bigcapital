@@ -16,7 +16,7 @@ commander
   .command('license:generate <license_period>')
   .description('Generates a new license key.')
   .action(async (interval) => {
-    try {  
+    try {
       const sysDb = initSystemKnex();
       let repeat = true;
 
@@ -53,5 +53,3 @@ commander
     });
     exit();
   });
-
-commander.parse(process.argv);
