@@ -2,3 +2,5 @@
 /.env
 /.env.test
 /storage
+package-lock.json
+stdout.log
