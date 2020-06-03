@@ -56,8 +56,8 @@ function GeneralPreferences({
 
   const businessLocation = [{ id: 218, name: 'LIBYA', value: 'libya' }];
   const languagesDisplay = [
-    { id: 0, name: 'English', value: 'EN' },
-    { id: 1, name: 'Arabic', value: 'Arab  ' },
+    { id: 0, name: 'English', value: 'en' },
+    { id: 1, name: 'Arabic', value: 'ar' },
   ];
   const currencies = [
     { id: 0, name: 'US Dollar', value: 'USD' },
@@ -68,20 +68,67 @@ function GeneralPreferences({
   // @todo @mohamed - Translate the months.
   // eg. > `${formatMessage({ id: 'january' })} - ${formatMessage({ id: 'december' })}`
   const fiscalYear = [
-    { id: 0, name: 'January - December', value: 'january' },
-    { id: 1, name: 'February - January', value: 'february' },
-    { id: 2, name: 'March - February', value: 'March' },
-    { id: 3, name: 'April - March', value: 'april' },
-    { id: 4, name: 'May - April', value: 'may' },
-    { id: 5, name: 'June - May', value: 'june' },
-    { id: 6, name: 'July - June', value: 'july' },
-    { id: 7, name: 'August - July', value: 'August' },
-    { id: 8, name: 'September - August', value: 'september' },
-    { id: 9, name: 'October - September', value: 'october' },
-    { id: 10, name: 'November - October', value: 'november' },
-    { id: 11, name: 'December - November', value: 'December' },
+    {
+      id: 0,
+      name: `${formatMessage({ id: 'january' })} - ${formatMessage({ id: 'december' })}`,
+      value: 'january',
+    },
+    {
+      id: 1,
+      name: `${formatMessage({ id: 'february' })} - ${formatMessage({ id: 'january' })}`,
+      value: 'february',
+    },
+    {
+      id: 2,
+      name: `${formatMessage({ id: 'march' })} - ${formatMessage({ id: 'february' })}`,
+      value: 'March',
+    },
+    {
+      id: 3,
+      name: `${formatMessage({ id: 'april' })} - ${formatMessage({ id: 'march' })}`,
+      value: 'april',
+    },
+    {
+      id: 4,
+      name: `${formatMessage({ id: 'may' })} - ${formatMessage({ id: 'april' })}`,
+      value: 'may',
+    },
+    {
+      id: 5,
+      name: `${formatMessage({ id: 'june' })} - ${formatMessage({ id: 'may' })}`,
+      value: 'june',
+    },
+    {
+      id: 6,
+      name: `${formatMessage({ id: 'july' })} - ${formatMessage({ id: 'june' })}`,
+      value: 'july',
+    },
+    {
+      id: 7,
+      name: `${formatMessage({ id: 'august' })} - ${formatMessage({ id: 'july' })}`,
+      value: 'August',
+    },
+    {
+      id: 8,
+      name: `${formatMessage({ id: 'september' })} - ${formatMessage({ id: 'august' })}`,
+      value: 'september',
+    },
+    {
+      id: 9,
+      name: `${formatMessage({ id: 'october' })} - ${formatMessage({ id: 'november' })}`,
+      value: 'october',
+    },
+    {
+      id: 10,
+      name: `${formatMessage({ id: 'november' })} - ${formatMessage({ id: 'october' })}`,
+      value: 'november',
+    },
+    {
+      id: 11,
+      name: `${formatMessage({ id: 'december' })} - ${formatMessage({ id: 'november' })}`,
+      value: 'december',
+    },
   ];
-
   const dateFormat = [
     {
       id: 1,
@@ -186,7 +233,9 @@ function GeneralPreferences({
   });
 
   // @todo @mohamed remove duplicate functions.
-  const businessLocationItem = (item, { handleClick }) => (
+
+  
+  const onItemRenderer = (item, { handleClick }) => (
     <MenuItem
       key={item.id}
       text={item.name}
@@ -199,21 +248,6 @@ function GeneralPreferences({
       key={item.id}
       text={item.name}
       label={item.value}
-      onClick={handleClick}
-    />
-  );
-  const fiscalYearItem = (item, { handleClick }) => (
-    <MenuItem
-      key={item.id}
-      text={item.name}
-      onClick={handleClick}
-    />
-  );
-
-  const languageItem = (item, { handleClick }) => (
-    <MenuItem
-      key={item.id}
-      text={item.name}
       onClick={handleClick}
     />
   );
@@ -300,7 +334,7 @@ function GeneralPreferences({
           <ListSelect
             items={businessLocation}
             noResults={<MenuItem disabled={true} text="No result." />}
-            itemRenderer={businessLocationItem}
+            itemRenderer={onItemRenderer}
             popoverProps={{ minimal: true }}
             onItemSelect={onItemsSelect('location')}
             selectedItem={values.location}
@@ -356,7 +390,7 @@ function GeneralPreferences({
           <ListSelect
             items={fiscalYear}
             noResults={<MenuItem disabled={true} text="No result." />}
-            itemRenderer={fiscalYearItem}
+            itemRenderer={onItemRenderer}
             popoverProps={{ minimal: true }}
             onItemSelect={onItemsSelect('fiscal_year')}
             itemPredicate={filterItems}
@@ -381,7 +415,7 @@ function GeneralPreferences({
           <ListSelect
             items={languagesDisplay}
             noResults={<MenuItem disabled={true} text="No results." />}
-            itemRenderer={languageItem}
+            itemRenderer={onItemRenderer}
             popoverProps={{ minimal: true }}
             onItemSelect={onItemsSelect('language')}
             itemPredicate={filterItems}
