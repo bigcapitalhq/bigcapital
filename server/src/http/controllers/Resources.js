@@ -12,6 +12,10 @@ export default {
   router() {
     const router = express.Router();
 
+    router.get('/:resource_slug/data',
+      this.resourceData.validation,
+      asyncMiddleware(this.resourceData.handler));
+
     router.get('/:resource_slug/columns',
       this.resourceColumns.validation,
       asyncMiddleware(this.resourceColumns.handler));
@@ -21,6 +25,26 @@ export default {
       asyncMiddleware(this.resourceFields.handler));
 
     return router;
+  },
+
+  /**
+   * Retrieve resource data of the given resource key/slug.
+   */
+  resourceData: {
+    validation: [
+      param('resource_slug').trim().escape().exists(),
+    ],
+    async handler(req, res) {
+      const { AccountType } = req.models;
+      const { resource_slug: resourceSlug } = req.params;
+
+      const data = await AccountType.query();
+
+      return res.status(200).send({
+        data,
+        resource_slug: resourceSlug,
+      });
+    },
   },
 
   /**

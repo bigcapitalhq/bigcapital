@@ -25,7 +25,7 @@ export default {
     'type': {
       column: 'account_type_id',
       relation: 'account_types.id',
-      relationColumn: 'account_types.name',
+      relationColumn: 'account_types.id',
     },
     'description': {
       column: 'description',
@@ -37,6 +37,9 @@ export default {
       column: 'account_type_id',
       relation: 'account_types.id',
       relationColumn: 'account_types.root_type',
+    },
+    'created_at': {
+      column: 'created_at',
     },
   },
 

@@ -97,6 +97,7 @@ export default (tenantDb) => {
     const costAccount = await factory.create('account');
     const sellAccount = await factory.create('account');
     const inventoryAccount = await factory.create('account');
+
     return {
       name: faker.lorem.word(),
       note: faker.lorem.paragraph(),
@@ -222,17 +223,30 @@ export default (tenantDb) => {
     };
   });
 
-  factory.define('expense', 'expenses', async () => {
+  factory.define('expense', 'expenses_transactions', async () => {
     const paymentAccount = await factory.create('account');
     const expenseAccount = await factory.create('account');
     const user = await factory.create('user');
 
     return {
-      payment_account_id: paymentAccount.id,
-      expense_account_id: expenseAccount.id,
-      user_id: user.id,
-      amount: faker.random.number(),
+      total_amount: faker.random.number(),
       currency_code: 'USD',
+      description: '',
+      reference_no: faker.random.number(),
+      payment_account_id: paymentAccount.id,
+      published: true,
+      user_id: user.id,
+    };
+  });
+
+  factory.define('expense_category', 'expense_transaction_categories', async () => {
+    const expense = await factory.create('expense');
+
+    return {
+      expense_account_id: expense.id,
+      description: '',
+      amount: faker.random.number(),
+      expense_id: expense.id,
     };
   });
 

@@ -49,6 +49,15 @@ exports.seed = (knex) => {
           predefined: 1,
           columnable: true,
         },
+        {
+          id: 16,
+          resource_id: 1,
+          label_name: 'Created at',
+          data_type: 'date',
+          key: 'created_at',
+          predefined: 1,
+          columnable: true,
+        },
 
         // Expenses
         {
