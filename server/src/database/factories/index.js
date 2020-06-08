@@ -294,5 +294,11 @@ export default (tenantDb) => {
     };
   });
 
+  factory.define('customer', 'customers', async () => {
+    return {
+      customer_type: 'business',
+    };
+  });
+
   return factory;
 }

@@ -277,7 +277,7 @@ describe('routes: /expenses/', () => {
     });
   });
 
-  describe.only('DELETE: `/expenses/:id`', () => {
+  describe('DELETE: `/expenses/:id`', () => {
     it('Should response unauthorized if the user was not logged in.', async () => {
       const res = await request()
         .delete('/api/expenses')
@@ -319,7 +319,7 @@ describe('routes: /expenses/', () => {
       expect(storedExpenseCategories.length).equals(0);
     });
 
-    it.only('Should delete all journal entries that associated to the given expense.', async () => {
+    it('Should delete all journal entries that associated to the given expense.', async () => {
       const expense = await tenantFactory.create('expense');
 
       const trans = { reference_id: expense.id, reference_type: 'Expense' };

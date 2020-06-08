@@ -10,6 +10,7 @@ exports.seed = (knex) => {
         { id: 3, name: 'expenses' },
         { id: 4, name: 'manual_journals' },
         { id: 5, name: 'items_categories' },
+        { id: 6, name: 'customers' },
       ]);
     });
 };

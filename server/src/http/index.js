@@ -56,7 +56,7 @@ export default (app) => {
   dashboard.use('/api/financial_statements', FinancialStatements.router());
   dashboard.use('/api/options', Options.router());
   // app.use('/api/budget_reports', BudgetReports.router());
-  // dashboard.use('/api/customers', Customers.router());
+  dashboard.use('/api/customers', Customers.router());
   // app.use('/api/suppliers', Suppliers.router());
   // app.use('/api/bills', Bills.router());
   // app.use('/api/budget', Budget.router());
