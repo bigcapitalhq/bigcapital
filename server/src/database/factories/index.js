@@ -300,5 +300,11 @@ export default (tenantDb) => {
     };
   });
 
+  factory.define('vendor', 'vendors', async () => {
+    return {
+      customer_type: 'business',
+    };
+  });
+
   return factory;
 }

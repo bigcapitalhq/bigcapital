@@ -19,6 +19,7 @@ import Options from '@/http/controllers/Options';
 // import BudgetReports from '@/http/controllers/BudgetReports';
 import Currencies from '@/http/controllers/Currencies';
 import Customers from '@/http/controllers/Customers';
+import Vendors from '@/http/controllers/Vendors';
 // import Suppliers from '@/http/controllers/Suppliers';
 // import Bills from '@/http/controllers/Bills';
 // import CurrencyAdjustment from './controllers/CurrencyAdjustment';
@@ -57,6 +58,7 @@ export default (app) => {
   dashboard.use('/api/options', Options.router());
   // app.use('/api/budget_reports', BudgetReports.router());
   dashboard.use('/api/customers', Customers.router());
+  dashboard.use('/api/vendors', Vendors.router());
   // app.use('/api/suppliers', Suppliers.router());
   // app.use('/api/bills', Bills.router());
   // app.use('/api/budget', Budget.router());
