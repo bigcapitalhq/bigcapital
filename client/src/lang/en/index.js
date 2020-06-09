@@ -357,6 +357,19 @@ export default {
     'There is exchange rate in this date with the same currency.',
   the_exchange_rates_has_been_successfully_deleted:
     'The exchange rates has been successfully deleted',
+  january: 'January',
+  february: 'February',
+  march: 'March',
+  april: 'April',
+  may: 'May',
+  june: 'June',
+  july: 'July',
+  august: 'August',
+  september: 'September',
+  october: 'October',
+  november: 'November',
+  december: 'December',
+
   // Name Labels
   expense_account_id: 'Expense account',
   payment_account_id: 'Payment account',
