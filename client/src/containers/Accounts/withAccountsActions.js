@@ -9,7 +9,8 @@ import {
   fetchAccount,
   deleteBulkAccounts,
   bulkActivateAccounts,
-  bulkInactiveAccounts
+  bulkInactiveAccounts,
+  editAccount
 } from 'store/accounts/accounts.actions';
 
 const mapActionsToProps = (dispatch) => ({
@@ -23,6 +24,7 @@ const mapActionsToProps = (dispatch) => ({
   requestDeleteBulkAccounts: (ids) => dispatch(deleteBulkAccounts({ ids })),
   requestBulkActivateAccounts:(ids)=>dispatch(bulkActivateAccounts({ids})),
   requestBulkInactiveAccounts:(ids)=>dispatch(bulkInactiveAccounts({ids})),
+  requestEditAccount:({id,form}) => dispatch(editAccount({id,form}))
 });
 
 export default connect(null, mapActionsToProps);

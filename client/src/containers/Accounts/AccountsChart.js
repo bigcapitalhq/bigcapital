@@ -327,7 +327,7 @@ const handleConfirmBulkActivate = useCallback(() => {
               onEditAccount={handleEditAccount}
               onFetchData={handleFetchData}
               onSelectedRowsChange={handleSelectedRowsChange}
-              loading={tableLoading}
+        
             />
           </Route>
         </Switch>

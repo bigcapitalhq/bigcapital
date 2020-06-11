@@ -203,7 +203,8 @@ export default {
     'The journal has been successfully deleted',
   the_manual_journal_id_has_been_published:
     'The manual journal id has been published',
-
+  the_journals_has_been_successfully_deleted:
+    'The journals has been successfully deleted ',
   credit: 'Credit',
   debit: 'Debit',
   once_delete_this_item_you_will_able_to_restore_it: `Once you delete this item, you won\'t be able to restore the item later. Are you sure you want to delete ?<br /><br />If you're not sure, you can inactivate it instead.`,
@@ -226,8 +227,6 @@ export default {
   table: 'Table',
   nucleus: 'Nucleus',
   logout: 'Logout',
-  the_expense_has_been_successfully_created:
-    'The expense has been successfully created.',
   select_payment_account: 'Select Payment Account',
   select_expense_account: 'Select Expense Account',
   and: 'And',
@@ -357,6 +356,10 @@ export default {
     'There is exchange rate in this date with the same currency.',
   the_exchange_rates_has_been_successfully_deleted:
     'The exchange rates has been successfully deleted',
+
+  once_delete_this_expense_you_will_able_to_restore_it: `Once you delete this expense, you won\'t be able to restore it later. Are you sure you want to delete this expense?`,
+
+
   january: 'January',
   february: 'February',
   march: 'March',
@@ -417,4 +420,31 @@ export default {
   quick_new: 'Quick new',
   help: 'Help',
   organization_id: 'Orgnization ID',
+  beneficiary: 'Beneficiary',
+  payment_account: 'Payment Account',
+  payment_date: 'Payment Date',
+  ref_no: 'Ref No.',
+  payment_account_: 'Payment account',
+  expense_category: 'Expense Category',
+  total_currency: 'Total ({currency})',
+  amount_currency: 'Amount({currency})',
+  publish_expense: 'Publish Expense',
+  edit_expense: 'Edit Expense',
+  delete_expense: 'Delete Expense',
+  new_expense: 'New Expense',
+  full_amount: 'Full Amount',
+  payment_date_: 'Payment date',
+
+  the_expense_has_been_successfully_created:
+    'The expense #{number} has been successfully created.',
+  the_expense_has_been_successfully_edited:
+    'The expense #{number} has been successfully edited.',
+  the_expense_has_been_successfully_deleted:
+    'The expense has been successfully deleted',
+  the_expenses_has_been_successfully_deleted:
+    'The expenses has been successfully deleted',
+  the_expense_id_has_been_published: 'The expense id has been published',
+
+  select_beneficiary_account: 'Select Beneficiary Account',
+  total_amount_equals_zero: 'Total amount equals zero',
 };

@@ -14,7 +14,7 @@ import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 
-import { omit } from 'lodash';
+import { omit, pick } from 'lodash';
 import { useQuery, queryCache } from 'react-query';
 
 import Dialog from 'components/Dialog';
@@ -26,7 +26,6 @@ import classNames from 'classnames';
 import Icon from 'components/Icon';
 import ErrorMessage from 'components/ErrorMessage';
 import { ListSelect } from 'components';
-
 
 function AccountFormDialog({
   name,
@@ -105,29 +104,39 @@ function AccountFormDialog({
       if (payload.action === 'edit') {
         requestEditAccount({
           payload: payload.id,
-          form: { ...omit(values, [...exclude, 'account_type_id']) },
-        }).then((response) => {
-          closeDialog(name);
-          queryCache.refetchQueries('accounts-table', { force: true });
+          // form: { ...omit(values, [...exclude, 'account_type_id']) },
+          form: {
+            ...pick(values, [
+              ...exclude,
+              'account_type_id',
+              'name',
+              'description',
+            ]),
+          },
+        })
+          .then((response) => {
+            closeDialog(name);
+            queryCache.refetchQueries('accounts-table', { force: true });
 
-          AppToaster.show({
-            message: formatMessage(
-              { id: 'service_has_been_successful_edited', },
-              {
-                name: toastAccountName,
-                service: formatMessage({ id: 'account' }),
-              },
-            ),
-            intent: Intent.SUCCESS,
+            AppToaster.show({
+              message: formatMessage(
+                { id: 'service_has_been_successful_edited' },
+                {
+                  name: toastAccountName,
+                  service: formatMessage({ id: 'account' }),
+                },
+              ),
+              intent: Intent.SUCCESS,
+            });
+          })
+          .catch((errors) => {
+            const errorsTransformed = transformApiErrors(errors);
+            setErrors({ ...errorsTransformed });
+            setSubmitting(false);
           });
-        }).catch((errors) => {
-          const errorsTransformed = transformApiErrors(errors);
-          setErrors({ ...errorsTransformed });
-          setSubmitting(false);
-        });
       } else {
-        requestSubmitAccount({ form: { ...omit(values, exclude) } }).then(
-          (response) => {
+        requestSubmitAccount({ form: { ...omit(values, exclude) } })
+          .then((response) => {
             closeDialog(name);
             queryCache.refetchQueries('accounts-table', { force: true });
 
@@ -142,20 +151,24 @@ function AccountFormDialog({
               intent: Intent.SUCCESS,
               position: Position.BOTTOM,
             });
-          },
-        ).catch((errors) => {
-          const errorsTransformed = transformApiErrors(errors);
-          setErrors({ ...errorsTransformed });
-          setSubmitting(false);
-        });
+          })
+          .catch((errors) => {
+            const errorsTransformed = transformApiErrors(errors);
+            setErrors({ ...errorsTransformed });
+            setSubmitting(false);
+          });
       }
     },
   });
-  
+
   // Filtered accounts based on the given account type.
-  const filteredAccounts = useMemo(() => accounts.filter((account) =>
-    account.account_type_id === values.account_type_id
-  ), [accounts, values.account_type_id]);
+  const filteredAccounts = useMemo(
+    () =>
+      accounts.filter(
+        (account) => account.account_type_id === values.account_type_id,
+      ),
+    [accounts, values.account_type_id],
+  );
 
   // Filters accounts types items.
   const filterAccountTypeItems = (query, accountType, _index, exactMatch) => {
@@ -307,7 +320,9 @@ function AccountFormDialog({
               Classes.FILL,
             )}
             inline={true}
-            helperText={<ErrorMessage name="account_type_id" {...{ errors, touched }} />}
+            helperText={
+              <ErrorMessage name="account_type_id" {...{ errors, touched }} />
+            }
             intent={
               errors.account_type_id && touched.account_type_id && Intent.DANGER
             }
