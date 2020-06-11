@@ -10,8 +10,18 @@ export default class Expense extends TenantModel {
     return 'expenses_transactions';
   }
 
+  /**
+   * Account transaction reference type.
+   */
   static get referenceType() {
     return 'Expense';
+  }
+
+  /**
+   * Model timestamps.
+   */
+  static get timestamps() {
+    return ['createdAt', 'updatedAt'];
   }
 
   /**

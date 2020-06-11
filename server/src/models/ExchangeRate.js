@@ -9,4 +9,11 @@ export default class ExchangeRate extends TenantModel {
   static get tableName() {
     return 'exchange_rates';
   }
+
+  /**
+   * Timestamps columns.
+   */
+  static get timestamps() {
+    return ['createdAt', 'updatedAt'];
+  }
 }

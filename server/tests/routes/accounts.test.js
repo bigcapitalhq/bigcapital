@@ -10,7 +10,7 @@ import {
 } from '~/dbInit';
 
 
-describe('routes: /accounts/', () => {
+describe.only('routes: /accounts/', () => {
   describe('POST `/accounts`', () => {
     it('Should `name` be required.', async () => {
       const res = await request()
@@ -190,7 +190,7 @@ describe('routes: /accounts/', () => {
       });
     });
 
-    it('Should response success with correct data form.', async () => {
+    it.only('Should response success with correct data form.', async () => {
       const account = await tenantFactory.create('account');
       const res = await request()
         .post('/api/accounts')
@@ -203,6 +203,8 @@ describe('routes: /accounts/', () => {
           parent_account_id: account.id,
           code: '123',
         });
+
+      console.log(res.body);
 
       expect(res.status).equals(200);
     });

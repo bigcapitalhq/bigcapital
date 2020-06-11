@@ -10,7 +10,7 @@ import {
 } from '~/dbInit';
 import Vendor from '@/models/Vendor';
 
-describe.only('route: `/vendors`', () => {
+describe('route: `/vendors`', () => {
   describe('POST: `/vendors`', () => {
     it('Should response unauthorized in case the user was not logged in.', async () => {
       const res = await request()

@@ -7,6 +7,7 @@ exports.up = function (knex) {
     table.integer('resource_id').unsigned().references('id').inTable('resources');
     table.boolean('favourite');
     table.string('roles_logic_expression');
+    table.timestamps();
   }).raw('ALTER TABLE `VIEWS` AUTO_INCREMENT = 1000').then(() => {
     return knex.seed.run({
       specific: 'seed_views.js',

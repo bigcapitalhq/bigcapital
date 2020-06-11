@@ -27,11 +27,13 @@ describe('routes: `/accounting`', () => {
           reference: 'ASC',
           entries: [
             {
+              index: 1,
               credit: 0,
               debit: 0,
               account_id: account.id,
             },
             {
+              index: 2,
               credit: 0,
               debit: 0,
               account_id: account.id,
@@ -56,11 +58,13 @@ describe('routes: `/accounting`', () => {
           journal_number: '123',
           entries: [
             {
+              index: 1,
               credit: 1000,
               debit: 0,
               account_id: account.id,
             },
             {
+              index: 2,
               credit: 0,
               debit: 500,
               account_id: account.id,
@@ -88,11 +92,13 @@ describe('routes: `/accounting`', () => {
           journal_number: manualJournal.journalNumber,
           entries: [
             {
+              index: 1,
               credit: 1000,
               debit: 0,
               account_id: account.id,
             },
             {
+              index: 2,
               credit: 0,
               debit: 1000,
               account_id: account.id,
@@ -117,11 +123,13 @@ describe('routes: `/accounting`', () => {
           journal_number: '123',
           entries: [
             {
+              index: 1,
               credit: 1000,
               debit: 0,
               account_id: 12,
             },
             {
+              index: 2,
               credit: 0,
               debit: 1000,
               account_id: 12,
@@ -149,11 +157,13 @@ describe('routes: `/accounting`', () => {
           journal_number: '1000',
           entries: [
             {
+              index: 1,
               credit: null,
               debit: 0,
               account_id: account1.id,
             },
             {
+              index: 2,
               credit: null,
               debit: 0,
               account_id: account2.id,
@@ -164,7 +174,85 @@ describe('routes: `/accounting`', () => {
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.that.deep.equal({
         type: 'CREDIT.DEBIT.SUMATION.SHOULD.NOT.EQUAL.ZERO',
+
         code: 400,
+      });
+    });
+
+    it('Should validate the customers and vendors contact if were not found on the storage.', async () => {
+      const account1 = await tenantFactory.create('account');
+      const account2 = await tenantFactory.create('account');
+
+      const res = await request()
+        .post('/api/accounting/make-journal-entries')
+        .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
+        .send({
+          date: new Date().toISOString(),
+          journal_number: '1000',
+          entries: [
+            {
+              index: 1,
+              credit: null,
+              debit: 1000,
+              account_id: account1.id,
+              contact_type: 'customer',
+              contact_id: 100,
+            },
+            {
+              index: 2,
+              credit: 1000,
+              debit: 0,
+              account_id: account1.id,
+              contact_type: 'vendor',
+              contact_id: 300,
+            },
+          ],
+        });
+
+      expect(res.body.errors).include.something.deep.equals({
+        type: 'CUSTOMERS.CONTACTS.NOT.FOUND', code: 500, ids: [100],
+      });
+      expect(res.body.errors).include.something.deep.equals({
+        type: 'VENDORS.CONTACTS.NOT.FOUND', code: 600, ids: [300],
+      })
+    });
+
+    it('Should customer contact_type with receivable accounts type.', async () => {
+      const account1 = await tenantFactory.create('account');
+      const account2 = await tenantFactory.create('account');
+      const customer = await tenantFactory.create('customer');
+
+      const res = await request()
+        .post('/api/accounting/make-journal-entries')
+        .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
+        .send({
+          date: new Date().toISOString(),
+          journal_number: '1000',
+          entries: [
+            {
+              index: 1,
+              credit: null,
+              debit: 1000,
+              account_id: account1.id,
+              contact_type: 'customer',
+              contact_id: 100,
+            },
+            {
+              index: 2,
+              credit: 1000,
+              debit: 0,
+              account_id: account1.id,
+            },
+          ],
+        });
+
+      expect(res.status).equals(400);
+      expect(res.body.errors).include.something.deep.equals({
+        type: 'CUSTOMERS.ACCOUNTS.NOT.RECEIVABLE.TYPE',
+        code: 700,
+        indexes: [1]
       });
     });
 
@@ -183,10 +271,12 @@ describe('routes: `/accounting`', () => {
           description: 'Description here.',
           entries: [
             {
+              index: 1,
               credit: 1000,
               account_id: account1.id,
             },
             {
+              index: 2,
               debit: 1000,
               account_id: account2.id,
             },
@@ -194,7 +284,6 @@ describe('routes: `/accounting`', () => {
         });
 
       const foundManualJournal = await ManualJournal.tenant().query();
-
       expect(foundManualJournal.length).equals(1);
       
       expect(foundManualJournal[0].reference).equals('2000');
@@ -221,11 +310,13 @@ describe('routes: `/accounting`', () => {
           memo: 'Description here.',
           entries: [
             {
+              index: 1,
               credit: 1000,
               account_id: account1.id,
               note: 'First note',
             },
             {
+              index: 2,
               debit: 1000,
               account_id: account2.id,
               note: 'Second note',

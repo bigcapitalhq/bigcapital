@@ -10,6 +10,13 @@ export default class ManualJournal extends TenantModel {
   }
 
   /**
+   * Model timestamps.
+   */
+  static get timestamps() {
+    return ['createdAt', 'updatedAt'];
+  }
+
+  /**
    * Relationship mapping.
    */
   static get relationMappings() {

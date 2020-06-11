@@ -103,7 +103,29 @@ exports.seed = (knex) => {
           active: 1,
           index: 1,
           predefined: 1,
-        }
+        },
+        {
+          id: 10,
+          name: 'Accounts Receivable',
+          account_type_id: 8,
+          parent_account_id: null,
+          code: '1000',
+          description: '',
+          active: 1,
+          index: 1,
+          predefined: 1,
+        },
+        {
+          id: 11,
+          name: 'Accounts Payable',
+          account_type_id: 9,
+          parent_account_id: null,
+          code: '1000',
+          description: '',
+          active: 1,
+          index: 1,
+          predefined: 1,
+        },
       ]);
     });
 };

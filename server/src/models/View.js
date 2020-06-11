@@ -12,6 +12,13 @@ export default class View extends mixin(TenantModel, [CachableModel]) {
   }
 
   /**
+   * Model timestamps.
+   */
+  static get timestamps() {
+    return ['createdAt', 'updatedAt'];
+  }
+
+  /**
    * Extend query builder model.
    */
   static get QueryBuilder() {

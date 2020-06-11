@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
-import {
-  Route,
-  Switch,
-} from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import { Alert, Intent } from '@blueprintjs/core';
-import { useQuery } from 'react-query'
-import { FormattedMessage as T, FormattedHTMLMessage, useIntl } from 'react-intl';
+import { useQuery } from 'react-query';
+import {
+  FormattedMessage as T,
+  FormattedHTMLMessage,
+  useIntl,
+} from 'react-intl';
 
 import AppToaster from 'components/AppToaster';
 
@@ -23,7 +24,6 @@ import withViewsActions from 'containers/Views/withViewsActions';
 import withAccounts from 'containers/Accounts/withAccounts';
 
 import { compose } from 'utils';
-
 
 function AccountsChart({
   // #withDashboardActions
@@ -57,8 +57,8 @@ function AccountsChart({
   const [activateAccount, setActivateAccount] = useState(false);
   const [bulkDelete, setBulkDelete] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
-  const [bulkActivate,setBulkActivate] =useState(false);
-  const [bulkInactiveAccounts,setBulkInactiveAccounts] =useState(false)
+  const [bulkActivate, setBulkActivate] = useState(false);
+  const [bulkInactiveAccounts, setBulkInactiveAccounts] = useState(false);
   const [tableLoading, setTableLoading] = useState(false);
 
   // Fetch accounts resource views and fields.
@@ -77,7 +77,7 @@ function AccountsChart({
 
   useEffect(() => {
     changePageTitle(formatMessage({ id: 'chart_of_accounts' }));
-  }, [changePageTitle,formatMessage]);
+  }, [changePageTitle, formatMessage]);
 
   // Handle click and cancel/confirm account delete
   const handleDeleteAccount = (account) => {
@@ -85,7 +85,9 @@ function AccountsChart({
   };
 
   // handle cancel delete account alert.
-  const handleCancelAccountDelete = useCallback(() => { setDeleteAccount(false); }, []);
+  const handleCancelAccountDelete = useCallback(() => {
+    setDeleteAccount(false);
+  }, []);
 
   const handleDeleteErrors = (errors) => {
     if (errors.find((e) => e.type === 'ACCOUNT.PREDEFINED')) {
@@ -98,24 +100,30 @@ function AccountsChart({
     }
     if (errors.find((e) => e.type === 'ACCOUNT.HAS.ASSOCIATED.TRANSACTIONS')) {
       AppToaster.show({
-        message: formatMessage({id:'cannot_delete_account_has_associated_transactions'})
+        message: formatMessage({
+          id: 'cannot_delete_account_has_associated_transactions',
+        }),
       });
     }
-  }
-  
+  };
+
   // Handle confirm account delete
   const handleConfirmAccountDelete = useCallback(() => {
-    requestDeleteAccount(deleteAccount.id).then(() => {
-      setDeleteAccount(false);
-      AppToaster.show({
-        message: formatMessage({ id: 'the_account_has_been_successfully_deleted' }),
-        intent: Intent.SUCCESS,
+    requestDeleteAccount(deleteAccount.id)
+      .then(() => {
+        setDeleteAccount(false);
+        AppToaster.show({
+          message: formatMessage({
+            id: 'the_account_has_been_successfully_deleted',
+          }),
+          intent: Intent.SUCCESS,
+        });
+      })
+      .catch((errors) => {
+        setDeleteAccount(false);
+        handleDeleteErrors(errors);
       });
-    }).catch(errors => {
-      setDeleteAccount(false);
-      handleDeleteErrors(errors);
-    });
-  }, [deleteAccount, requestDeleteAccount,formatMessage]);
+  }, [deleteAccount, requestDeleteAccount, formatMessage]);
 
   // Handle cancel/confirm account inactive.
   const handleInactiveAccount = useCallback((account) => {
@@ -138,7 +146,7 @@ function AccountsChart({
         intent: Intent.SUCCESS,
       });
     });
-  }, [inactiveAccount, requestInactiveAccount,formatMessage]);
+  }, [inactiveAccount, requestInactiveAccount, formatMessage]);
 
   // Handle activate account click.
   const handleActivateAccount = useCallback((account) => {
@@ -166,23 +174,30 @@ function AccountsChart({
   const handleRestoreAccount = (account) => {};
 
   // Handle accounts bulk delete button click.,
-  const handleBulkDelete = useCallback((accountsIds) => {
-    setBulkDelete(accountsIds);
-  }, [setBulkDelete]);
+  const handleBulkDelete = useCallback(
+    (accountsIds) => {
+      setBulkDelete(accountsIds);
+    },
+    [setBulkDelete],
+  );
 
   // Handle confirm accounts bulk delete.
   const handleConfirmBulkDelete = useCallback(() => {
-    requestDeleteBulkAccounts(bulkDelete).then(() => {
-      setBulkDelete(false);
-      AppToaster.show({
-        message: formatMessage({ id: 'the_accounts_has_been_successfully_deleted' }),
-        intent: Intent.SUCCESS,
+    requestDeleteBulkAccounts(bulkDelete)
+      .then(() => {
+        setBulkDelete(false);
+        AppToaster.show({
+          message: formatMessage({
+            id: 'the_accounts_has_been_successfully_deleted',
+          }),
+          intent: Intent.SUCCESS,
+        });
+      })
+      .catch((errors) => {
+        setBulkDelete(false);
+        handleDeleteErrors(errors);
       });
-    }).catch((errors) => {
-      setBulkDelete(false);
-      handleDeleteErrors(errors);
-    });
-  }, [requestDeleteBulkAccounts, bulkDelete,formatMessage]);
+  }, [requestDeleteBulkAccounts, bulkDelete, formatMessage]);
 
   // Handle cancel accounts bulk delete.
   const handleCancelBulkDelete = useCallback(() => {
@@ -191,16 +206,14 @@ function AccountsChart({
 
   const handleBulkArchive = useCallback((accounts) => {}, []);
 
-  const handleEditAccount = useCallback(() => {
-
-  }, []);
+  const handleEditAccount = useCallback(() => {}, []);
 
   // Handle selected rows change.
   const handleSelectedRowsChange = useCallback(
     (accounts) => {
       setSelectedRows(accounts);
     },
-    [setSelectedRows]
+    [setSelectedRows],
   );
 
   // Refetches accounts data table when current custom view changed.
@@ -232,70 +245,73 @@ function AccountsChart({
       });
       fetchAccountsHook.refetch();
     },
-    [fetchAccountsHook, addAccountsTableQueries]
+    [fetchAccountsHook, addAccountsTableQueries],
   );
 
   // Calculates the data table selected rows count.
-  const selectedRowsCount = useMemo(() => Object.values(selectedRows).length, [selectedRows]);
+  const selectedRowsCount = useMemo(() => Object.values(selectedRows).length, [
+    selectedRows,
+  ]);
 
- 
+  // Handle bulk Activate accounts button click.,
+  const handleBulkActivate = useCallback(
+    (bulkActivateIds) => {
+      setBulkActivate(bulkActivateIds);
+    },
+    [setBulkActivate],
+  );
 
- // Handle bulk Activate accounts button click.,
-  const handleBulkActivate = useCallback((bulkActivateIds) => {
-    setBulkActivate(bulkActivateIds);
-}, [setBulkActivate]);
-
-
- // Handle cancel Bulk Activate accounts bulk delete.
+  // Handle cancel Bulk Activate accounts bulk delete.
   const handleCancelBulkActivate = useCallback(() => {
-  setBulkActivate(false);
-}, []);
-
- // Handle Bulk activate account confirm.
-const handleConfirmBulkActivate = useCallback(() => {
-  requestBulkActivateAccounts(bulkActivate).then(() => {
     setBulkActivate(false);
-    AppToaster.show({
-      message: formatMessage({ id: 'the_accounts_has_been_successfully_activated' }),
-      intent: Intent.SUCCESS,
-    });
-  }).catch((errors) => {
-    setBulkActivate(false);
-   
-  });
-}, [requestBulkActivateAccounts, bulkActivate,formatMessage]);
+  }, []);
 
+  // Handle Bulk activate account confirm.
+  const handleConfirmBulkActivate = useCallback(() => {
+    requestBulkActivateAccounts(bulkActivate)
+      .then(() => {
+        setBulkActivate(false);
+        AppToaster.show({
+          message: formatMessage({
+            id: 'the_accounts_has_been_successfully_activated',
+          }),
+          intent: Intent.SUCCESS,
+        });
+      })
+      .catch((errors) => {
+        setBulkActivate(false);
+      });
+  }, [requestBulkActivateAccounts, bulkActivate, formatMessage]);
 
-
- // Handle bulk Inactive accounts button click.,
- const handleBulkInactive = useCallback((bulkInactiveIds) => {
-  setBulkInactiveAccounts(bulkInactiveIds);
-}, [setBulkInactiveAccounts]);
-
+  // Handle bulk Inactive accounts button click.,
+  const handleBulkInactive = useCallback(
+    (bulkInactiveIds) => {
+      setBulkInactiveAccounts(bulkInactiveIds);
+    },
+    [setBulkInactiveAccounts],
+  );
 
   // Handle cancel Bulk Inactive accounts bulk delete.
   const handleCancelBulkInactive = useCallback(() => {
     setBulkInactiveAccounts(false);
   }, []);
 
- // Handle Bulk Inactive accounts confirm.
- const handleConfirmBulkInactive = useCallback(() => {
-  requestBulkInactiveAccounts(bulkInactiveAccounts).then(() => {
-    setBulkInactiveAccounts(false);
-    AppToaster.show({
-      message: formatMessage({ id: 'the_accounts_has_been_successfully_inactivated' }),
-      intent: Intent.SUCCESS,
-    });
-  }).catch((errors) => {
-    setBulkInactiveAccounts(false);
-   
-  });
-}, [requestBulkInactiveAccounts, bulkInactiveAccounts]);
-
-
-
-
-
+  // Handle Bulk Inactive accounts confirm.
+  const handleConfirmBulkInactive = useCallback(() => {
+    requestBulkInactiveAccounts(bulkInactiveAccounts)
+      .then(() => {
+        setBulkInactiveAccounts(false);
+        AppToaster.show({
+          message: formatMessage({
+            id: 'the_accounts_has_been_successfully_inactivated',
+          }),
+          intent: Intent.SUCCESS,
+        });
+      })
+      .catch((errors) => {
+        setBulkInactiveAccounts(false);
+      });
+  }, [requestBulkInactiveAccounts, bulkInactiveAccounts]);
 
   return (
     <DashboardInsider loading={fetchHook.isFetching} name={'accounts-chart'}>
@@ -312,10 +328,7 @@ const handleConfirmBulkActivate = useCallback(() => {
         <Switch>
           <Route
             exact={true}
-            path={[
-              '/accounts/:custom_view_id/custom_view',
-              '/accounts',
-            ]}
+            path={['/accounts/:custom_view_id/custom_view', '/accounts']}
           >
             <AccountsViewsTabs onViewChanged={handleViewChanged} />
 
@@ -343,7 +356,8 @@ const handleConfirmBulkActivate = useCallback(() => {
         >
           <p>
             <FormattedHTMLMessage
-              id={'once_delete_this_account_you_will_able_to_restore_it'} />
+              id={'once_delete_this_account_you_will_able_to_restore_it'}
+            />
           </p>
         </Alert>
 
@@ -366,15 +380,18 @@ const handleConfirmBulkActivate = useCallback(() => {
           intent={Intent.WARNING}
           isOpen={activateAccount}
           onCancel={handleCancelActivateAccount}
-          onConfirm={handleConfirmAccountActivate}>
+          onConfirm={handleConfirmAccountActivate}
+        >
           <p>
             <T id={'are_sure_to_activate_this_account'} />
           </p>
         </Alert>
 
         <Alert
-          cancelButtonText={<T id={'cancel'}/>}
-          confirmButtonText={`${formatMessage({id:'delete'})} (${selectedRowsCount})`}
+          cancelButtonText={<T id={'cancel'} />}
+          confirmButtonText={`${formatMessage({
+            id: 'delete',
+          })} (${selectedRowsCount})`}
           icon="trash"
           intent={Intent.DANGER}
           isOpen={bulkDelete}
@@ -382,28 +399,36 @@ const handleConfirmBulkActivate = useCallback(() => {
           onConfirm={handleConfirmBulkDelete}
         >
           <p>
-            <T id={'once_delete_these_accounts_you_will_not_able_restore_them'} />
+            <T
+              id={'once_delete_these_accounts_you_will_not_able_restore_them'}
+            />
           </p>
         </Alert>
 
         <Alert
           cancelButtonText={<T id={'cancel'} />}
-          confirmButtonText={`${formatMessage({id:'activate'})} (${selectedRowsCount})`}
+          confirmButtonText={`${formatMessage({
+            id: 'activate',
+          })} (${selectedRowsCount})`}
           intent={Intent.WARNING}
           isOpen={bulkActivate}
           onCancel={handleCancelBulkActivate}
-          onConfirm={handleConfirmBulkActivate}>
+          onConfirm={handleConfirmBulkActivate}
+        >
           <p>
             <T id={'are_sure_to_activate_this_accounts'} />
           </p>
         </Alert>
         <Alert
           cancelButtonText={<T id={'cancel'} />}
-          confirmButtonText={`${formatMessage({id:'inactivate'})} (${selectedRowsCount})`}
+          confirmButtonText={`${formatMessage({
+            id: 'inactivate',
+          })} (${selectedRowsCount})`}
           intent={Intent.WARNING}
           isOpen={bulkInactiveAccounts}
           onCancel={handleCancelBulkInactive}
-          onConfirm={handleConfirmBulkInactive}>
+          onConfirm={handleConfirmBulkInactive}
+        >
           <p>
             <T id={'are_sure_to_inactive_this_accounts'} />
           </p>

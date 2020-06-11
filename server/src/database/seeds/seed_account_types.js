@@ -8,6 +8,7 @@ exports.seed = (knex) => {
         {
           id: 1,
           name: 'Fixed Asset',
+          key: 'fixed_asset',
           normal: 'debit',
           root_type: 'asset',
           balance_sheet: true,
@@ -16,6 +17,7 @@ exports.seed = (knex) => {
         {
           id: 2,
           name: 'Current Asset',
+          key: 'current_asset',
           normal: 'debit',
           root_type: 'asset',
           balance_sheet: true,
@@ -24,6 +26,7 @@ exports.seed = (knex) => {
         {
           id: 3,
           name: 'Long Term Liability',
+          key: 'long_term_liability',
           normal: 'credit',
           root_type: 'liability',
           balance_sheet: false,
@@ -32,6 +35,7 @@ exports.seed = (knex) => {
         {
           id: 4,
           name: 'Current Liability',
+          key: 'current_liability',
           normal: 'credit',
           root_type: 'liability',
           balance_sheet: false,
@@ -40,6 +44,7 @@ exports.seed = (knex) => {
         {
           id: 5,
           name: 'Equity',
+          key: 'equity',
           normal: 'credit',
           root_type: 'equity',
           balance_sheet: true,
@@ -48,6 +53,7 @@ exports.seed = (knex) => {
         {
           id: 6,
           name: 'Expense',
+          key: 'expense',
           normal: 'debit',
           root_type: 'expense',
           balance_sheet: false,
@@ -56,6 +62,7 @@ exports.seed = (knex) => {
         {
           id: 7,
           name: 'Income',
+          key: 'income',
           normal: 'credit',
           root_type: 'income',
           balance_sheet: false,
@@ -64,6 +71,7 @@ exports.seed = (knex) => {
         {
           id: 8,
           name: 'Accounts Receivable',
+          key: 'accounts_receivable',
           normal: 'debit',
           root_type: 'asset',
           balance_sheet: true,
@@ -72,6 +80,7 @@ exports.seed = (knex) => {
         {
           id: 9,
           name: 'Accounts Payable',
+          key: 'accounts_payable',
           normal: 'credit',
           root_type: 'liability',
           balance_sheet: true,

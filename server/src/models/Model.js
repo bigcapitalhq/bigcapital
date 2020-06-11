@@ -1,9 +1,14 @@
-import { Model } from 'objection';
+import { Model, mixin } from 'objection';
 import { snakeCase } from 'lodash';
 import { mapKeysDeep } from '@/utils';
 import PaginationQueryBuilder from '@/models/Pagination';
+import DateSession from '@/models/DateSession';
 
-export default class ModelBase extends Model {
+export default class ModelBase extends mixin(Model, [DateSession]) {
+
+  static get timestamps() {
+    return [];
+  }
 
   static get knexBinded() {
     return this.knexBindInstance;

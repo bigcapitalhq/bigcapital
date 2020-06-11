@@ -5,6 +5,8 @@ import TrialBalanceSheetController from './FinancialStatements/TrialBalanceSheet
 import GeneralLedgerController from './FinancialStatements/generalLedger';
 import JournalSheetController from './FinancialStatements/JournalSheet';
 import ProfitLossController from './FinancialStatements/ProfitLossSheet';
+import ReceivableAgingSummary from './FinancialStatements/ReceivableAgingSummary';
+import PayableAgingSummary from './FinancialStatements/PayableAgingSummary';
 
 export default {
   /**
@@ -18,6 +20,8 @@ export default {
     router.use('/general_ledger', GeneralLedgerController.router());
     router.use('/trial_balance_sheet', TrialBalanceSheetController.router());
     router.use('/journal', JournalSheetController.router());
+    router.use('/receivable_aging_summary', ReceivableAgingSummary.router());
+    router.use('/payable_aging_summary', PayableAgingSummary.router());
 
     return router;
   },

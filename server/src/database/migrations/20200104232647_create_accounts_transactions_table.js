@@ -8,6 +8,8 @@ exports.up = function(knex) {
     table.string('reference_type');
     table.integer('reference_id');
     table.integer('account_id').unsigned();
+    table.string('contact_type').nullable();
+    table.integer('contact_id').unsigned().nullable();
     table.string('note');
     table.boolean('draft').defaultTo(false);
     table.integer('user_id').unsigned();

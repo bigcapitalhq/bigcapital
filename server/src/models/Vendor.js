@@ -8,4 +8,11 @@ export default class Vendor extends TenantModel {
   static get tableName() {
     return 'vendors';
   }
+
+  /**
+   * Model timestamps.
+   */
+  static get timestamps() {
+    return ['createdAt', 'updatedAt'];
+  }
 }

@@ -3,10 +3,9 @@ import moment from 'moment';
 import JournalEntry from '@/services/Accounting/JournalEntry';
 import AccountTransaction from '@/models/AccountTransaction';
 import AccountBalance from '@/models/AccountBalance';
-import {promiseSerial} from '@/utils';
+import { promiseSerial } from '@/utils';
 import Account from '@/models/Account';
 import NestedSet from '../../collection/NestedSet';
-
 
 export default class JournalPoster {
   /**
@@ -34,7 +33,7 @@ export default class JournalPoster {
   }
 
   /**
-   * Writes the debit entr y for the given account.
+   * Writes the debit entry for the given account.
    * @param {JournalEntry} entry -
    */
   debit(entryModel) {
@@ -78,7 +77,11 @@ export default class JournalPoster {
    * @private
    */
   _setAccountBalanceChange({
-    accountId, accountNormal, debit, credit, entryType
+    accountId,
+    accountNormal,
+    debit,
+    credit,
+    entryType,
   }) {
     if (!this.balancesChange[accountId]) {
       this.balancesChange[accountId] = 0;
@@ -86,9 +89,9 @@ export default class JournalPoster {
     let change = 0;
 
     if (accountNormal === 'credit') {
-      change = (entryType === 'credit') ? credit : -1 * debit;
+      change = entryType === 'credit' ? credit : -1 * debit;
     } else if (accountNormal === 'debit') {
-      change = (entryType === 'debit') ? debit : -1 * credit;
+      change = entryType === 'debit' ? debit : -1 * credit;
     }
     this.balancesChange[accountId] += change;
   }
@@ -132,9 +135,9 @@ export default class JournalPoster {
       const method = balance.amount < 0 ? 'decrement' : 'increment';
 
       // Detarmine if the account balance is already exists or not.
-      const foundAccBalance = balanceAccounts.some((account) => (
-        account && account.account_id === balance.account_id
-      ));
+      const foundAccBalance = balanceAccounts.some(
+        (account) => account && account.account_id === balance.account_id
+      );
 
       if (foundAccBalance) {
         const query = AccountBalance.tenant()
@@ -152,9 +155,7 @@ export default class JournalPoster {
         balanceInsertOpers.push(query);
       }
     });
-    await Promise.all([
-      ...balanceUpdateOpers, ...balanceInsertOpers,
-    ]);
+    await Promise.all([...balanceUpdateOpers, ...balanceInsertOpers]);
   }
 
   /**
@@ -164,11 +165,23 @@ export default class JournalPoster {
     const saveOperations = [];
 
     this.entries.forEach((entry) => {
-      const oper = AccountTransaction.tenant().query().insert({
-        accountId: entry.account,
-        ...pick(entry, ['credit', 'debit', 'transactionType', 'date', 'userId',
-          'referenceType', 'referenceId', 'note']),
-      });
+      const oper = AccountTransaction.tenant()
+        .query()
+        .insert({
+          accountId: entry.account,
+          ...pick(entry, [
+            'credit',
+            'debit',
+            'transactionType',
+            'date',
+            'userId',
+            'referenceType',
+            'referenceId',
+            'note',
+            'contactId',
+            'contactType',
+          ]),
+        });
       saveOperations.push(() => oper);
     });
     await promiseSerial(saveOperations);
@@ -195,15 +208,16 @@ export default class JournalPoster {
   }
 
   /**
-   * 
+   *
    * @param {Array} ids -
    */
   removeEntries(ids = []) {
-    const targetIds = (ids.length <= 0) ? this.entries.map(e => e.id) : ids;
-    const removeEntries = this.entries.filter((e) => targetIds.indexOf(e.id) !== -1);
+    const targetIds = ids.length <= 0 ? this.entries.map((e) => e.id) : ids;
+    const removeEntries = this.entries.filter(
+      (e) => targetIds.indexOf(e.id) !== -1
+    );
 
-    this.entries = this.entries
-      .filter(e => targetIds.indexOf(e.id) === -1)
+    this.entries = this.entries.filter((e) => targetIds.indexOf(e.id) === -1);
 
     removeEntries.forEach((entry) => {
       entry.credit = -1 * entry.credit;
@@ -211,9 +225,7 @@ export default class JournalPoster {
 
       this.setAccountBalanceChange(entry, entry.accountNormal);
     });
-    this.deletedEntriesIds.push(
-      ...removeEntries.map(entry => entry.id),
-    );
+    this.deletedEntriesIds.push(...removeEntries.map((entry) => entry.id));
   }
 
   /**
@@ -221,7 +233,8 @@ export default class JournalPoster {
    */
   async deleteEntries() {
     if (this.deletedEntriesIds.length > 0) {
-      await AccountTransaction.tenant().query()
+      await AccountTransaction.tenant()
+        .query()
         .whereIn('id', this.deletedEntriesIds)
         .delete();
     }
@@ -238,15 +251,17 @@ export default class JournalPoster {
 
     this.entries.forEach((entry) => {
       // Can not continue if not before or event same closing date.
-      if ((!momentClosingDate.isAfter(entry.date, dateType)
-        && !momentClosingDate.isSame(entry.date, dateType))
-        || (entry.account !== accountId && accountId)) {
+      if (
+        (!momentClosingDate.isAfter(entry.date, dateType) &&
+          !momentClosingDate.isSame(entry.date, dateType)) ||
+        (entry.account !== accountId && accountId)
+      ) {
         return;
       }
       if (entry.accountNormal === 'credit') {
-        closingBalance += (entry.credit) ? entry.credit : -1 * entry.debit;
+        closingBalance += entry.credit ? entry.credit : -1 * entry.debit;
       } else if (entry.accountNormal === 'debit') {
-        closingBalance += (entry.debit) ? entry.debit : -1 * entry.credit;
+        closingBalance += entry.debit ? entry.debit : -1 * entry.credit;
       }
     });
     return closingBalance;
@@ -254,21 +269,27 @@ export default class JournalPoster {
 
   /**
    * Retrieve the given account balance with dependencies accounts.
-   * @param {Number} accountId 
-   * @param {Date} closingDate 
-   * @param {String} dateType 
+   * @param {Number} accountId
+   * @param {Date} closingDate
+   * @param {String} dateType
    * @return {Number}
    */
   getAccountBalance(accountId, closingDate, dateType) {
     const accountNode = this.accountsGraph.getNodeData(accountId);
     const depAccountsIds = this.accountsGraph.dependenciesOf(accountId);
-    const depAccounts = depAccountsIds.map((id) => this.accountsGraph.getNodeData(id));
+    const depAccounts = depAccountsIds.map((id) =>
+      this.accountsGraph.getNodeData(id)
+    );
     let balance = 0;
 
     [...depAccounts, accountNode].forEach((account) => {
       // if (!this.accountsBalanceTable[account.id]) {
-        const closingBalance = this.getClosingBalance(account.id, closingDate, dateType);
-        this.accountsBalanceTable[account.id] = closingBalance;
+      const closingBalance = this.getClosingBalance(
+        account.id,
+        closingDate,
+        dateType
+      );
+      this.accountsBalanceTable[account.id] = closingBalance;
       // }
       balance += this.accountsBalanceTable[account.id];
     });
@@ -288,9 +309,11 @@ export default class JournalPoster {
       balance: 0,
     };
     this.entries.forEach((entry) => {
-      if ((!momentClosingDate.isAfter(entry.date, dateType)
-        && !momentClosingDate.isSame(entry.date, dateType))
-        || (entry.account !== accountId && accountId)) {
+      if (
+        (!momentClosingDate.isAfter(entry.date, dateType) &&
+          !momentClosingDate.isSame(entry.date, dateType)) ||
+        (entry.account !== accountId && accountId)
+      ) {
         return;
       }
       result.credit += entry.credit;
@@ -307,26 +330,112 @@ export default class JournalPoster {
 
   /**
    * Retrieve trial balance of the given account with depends.
-   * @param {Number} accountId 
-   * @param {Date} closingDate 
-   * @param {String} dateType 
+   * @param {Number} accountId
+   * @param {Date} closingDate
+   * @param {String} dateType
    * @return {Number}
-   */ 
+   */
+
   getTrialBalanceWithDepands(accountId, closingDate, dateType) {
     const accountNode = this.accountsGraph.getNodeData(accountId);
     const depAccountsIds = this.accountsGraph.dependenciesOf(accountId);
-    const depAccounts = depAccountsIds.map((id) => this.accountsGraph.getNodeData(id));
+    const depAccounts = depAccountsIds.map((id) =>
+      this.accountsGraph.getNodeData(id)
+    );
 
     const trialBalance = { credit: 0, debit: 0, balance: 0 };
 
     [...depAccounts, accountNode].forEach((account) => {
-      const _trialBalance = this.getTrialBalance(account.id, closingDate, dateType);
+      const _trialBalance = this.getTrialBalance(
+        account.id,
+        closingDate,
+        dateType
+      );
 
       trialBalance.credit += _trialBalance.credit;
       trialBalance.debit += _trialBalance.debit;
       trialBalance.balance += _trialBalance.balance;
     });
     return trialBalance;
+  }
+
+  getContactTrialBalance(
+    accountId,
+    contactId,
+    contactType,
+    closingDate,
+    openingDate
+  ) {
+    const momentClosingDate = moment(closingDate);
+    const momentOpeningDate = moment(openingDate);
+    const trial = {
+      credit: 0,
+      debit: 0,
+      balance: 0,
+    };
+
+    this.entries.forEach((entry) => {
+      if (
+        (closingDate &&
+          !momentClosingDate.isAfter(entry.date, 'day') &&
+          !momentClosingDate.isSame(entry.date, 'day')) ||
+        (openingDate &&
+          !momentOpeningDate.isBefore(entry.date, 'day') &&
+          !momentOpeningDate.isSame(entry.date)) ||
+        (accountId && entry.account !== accountId) ||
+        (contactId && entry.contactId !== contactId) ||
+        entry.contactType !== contactType
+      ) {
+        return;
+      }
+      if (entry.credit) {
+        trial.balance -= entry.credit;
+        trial.credit += entry.credit;
+      }
+      if (entry.debit) {
+        trial.balance += entry.debit;
+        trial.debit += entry.debit;
+      }
+    });
+    return trial;
+  }
+
+  /**
+   * Retrieve total balnace of the given customer/vendor contact.
+   * @param {Number} accountId
+   * @param {Number} contactId
+   * @param {String} contactType
+   * @param {Date} closingDate
+   */
+  getContactBalance(
+    accountId,
+    contactId,
+    contactType,
+    closingDate,
+    openingDate
+  ) {
+    const momentClosingDate = moment(closingDate);
+    let balance = 0;
+
+    this.entries.forEach((entry) => {
+      if (
+        (closingDate &&
+          !momentClosingDate.isAfter(entry.date, 'day') &&
+          !momentClosingDate.isSame(entry.date, 'day')) ||
+        (entry.account !== accountId && accountId) ||
+        (contactId && entry.contactId !== contactId) ||
+        entry.contactType !== contactType
+      ) {
+        return;
+      }
+      if (entry.credit) {
+        balance -= entry.credit;
+      }
+      if (entry.debit) {
+        balance += entry.debit;
+      }
+    });
+    return balance;
   }
 
   /**
@@ -338,8 +447,10 @@ export default class JournalPoster {
       this.entries.push({
         ...entry,
         account: entry.account ? entry.account.id : entry.accountId,
-        accountNormal: (entry.account && entry.account.type)
-          ? entry.account.type.normal : entry.accountNormal,
+        accountNormal:
+          entry.account && entry.account.type
+            ? entry.account.type.normal
+            : entry.accountNormal,
       });
     });
   }

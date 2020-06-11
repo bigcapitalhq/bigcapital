@@ -13,6 +13,13 @@ export default class Item extends TenantModel {
   }
 
   /**
+   * Model timestamps.
+   */
+  static get timestamps() {
+    return ['createdAt', 'updatedAt'];
+  }
+
+  /**
    * Model modifiers.
    */
   static get modifiers() {

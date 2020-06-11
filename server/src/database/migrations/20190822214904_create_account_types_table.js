@@ -3,6 +3,7 @@ exports.up = (knex) => {
   return knex.schema.createTable('account_types', (table) => {
     table.increments();
     table.string('name');
+    table.string('key');
     table.string('normal');
     table.string('root_type');
     table.boolean('balance_sheet');

@@ -1,16 +1,22 @@
 import { Model, mixin } from 'objection';
 import bcrypt from 'bcryptjs';
 import SystemModel from '@/system/models/SystemModel';
-import DateSession from '@/models/DateSession';
 import UserSubscription from '@/services/Subscription/UserSubscription';
 
 
-export default class SystemUser extends mixin(SystemModel, [DateSession, UserSubscription]) {
+export default class SystemUser extends mixin(SystemModel, [UserSubscription]) {
   /**
    * Table name.
    */
   static get tableName() {
     return 'users';
+  }
+
+  /**
+   * Timestamps columns.
+   */
+  static get timestamps() {
+    return ['createdAt', 'updatedAt'];
   }
 
   /**

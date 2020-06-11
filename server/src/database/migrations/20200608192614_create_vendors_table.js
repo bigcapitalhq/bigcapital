@@ -34,6 +34,8 @@ exports.up = function(knex) {
 
     table.text('note');
     table.boolean('active').defaultTo(true);
+
+    table.timestamps();
   });
 };
 

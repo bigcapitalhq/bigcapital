@@ -3,15 +3,21 @@ import moment from 'moment';
 import TenantModel from '@/models/TenantModel';
 import CachableQueryBuilder from '@/lib/Cachable/CachableQueryBuilder';
 import CachableModel from '@/lib/Cachable/CachableModel';
-import DateSession from '@/models/DateSession';
 
 
-export default class AccountTransaction extends mixin(TenantModel, [CachableModel, DateSession]) {
+export default class AccountTransaction extends mixin(TenantModel, [CachableModel]) {
   /**
    * Table name
    */
   static get tableName() {
     return 'accounts_transactions';
+  }
+
+  /**
+   * Timestamps columns.
+   */
+  static get timestamps() {
+    return ['createdAt'];
   }
 
   /**
@@ -68,6 +74,12 @@ export default class AccountTransaction extends mixin(TenantModel, [CachableMode
         query.sum('credit as credit');
         query.sum('debit as debit');
         query.groupBy('account_id');
+      },
+      filterContactType(query, contactType) {
+        query.where('contact_type', contactType);
+      },
+      filterContactIds(query, contactIds) {
+        query.whereIn('contact_id', contactIds);
       },
     };
   }

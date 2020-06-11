@@ -8,16 +8,22 @@ import {
 } from '@/lib/ViewRolesBuilder';
 import CachableQueryBuilder from '@/lib/Cachable/CachableQueryBuilder';
 import CachableModel from '@/lib/Cachable/CachableModel';
-import DateSession from '@/models/DateSession';
 import { flatToNestedArray } from '@/utils';
 import DependencyGraph from '@/lib/DependencyGraph';
 
-export default class Account extends mixin(TenantModel, [CachableModel, DateSession]) {
+export default class Account extends mixin(TenantModel, [CachableModel]) {
   /**
    * Table name
    */
   static get tableName() {
     return 'accounts';
+  }
+
+  /**
+   * Timestamps columns.
+   */
+  static get timestamps() {
+    return ['createdAt', 'updatedAt'];
   }
 
   /**

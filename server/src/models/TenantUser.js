@@ -1,10 +1,9 @@
 import bcrypt from 'bcryptjs';
-import { Model, mixin } from 'objection';
+import { Model } from 'objection';
 import TenantModel from '@/models/TenantModel';
-import DateSession from '@/models/DateSession';
 // import PermissionsService from '@/services/PermissionsService';
 
-export default class TenantUser extends mixin(TenantModel, [DateSession]) {
+export default class TenantUser extends TenantModel {
   /**
    * Virtual attributes.
    */
@@ -17,6 +16,13 @@ export default class TenantUser extends mixin(TenantModel, [DateSession]) {
    */
   static get tableName() {
     return 'users';
+  }
+
+  /**
+   * Timestamps columns.
+   */
+  static get timestamps() {
+    return ['createdAt', 'updatedAt'];
   }
 
   /**
