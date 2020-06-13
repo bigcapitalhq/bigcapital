@@ -340,7 +340,7 @@ function AccountsChart({
               onEditAccount={handleEditAccount}
               onFetchData={handleFetchData}
               onSelectedRowsChange={handleSelectedRowsChange}
-              loading={tableLoading}
+        
             />
           </Route>
         </Switch>

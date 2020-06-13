@@ -141,4 +141,28 @@ export default [
     }),
     breadcrumb: 'Exchange Rates',
   },
+
+  // Expenses
+  {
+    path: `/expenses/new`, // expenses/
+    component: LazyLoader({
+      loader: () => import('containers/Expenses/Expenses'),
+    }),
+    breadcrumb: 'Expenses',
+
+  },
+  {
+    path: `/expenses/:id/edit`,
+    component: LazyLoader({
+      loader: () => import('containers/Expenses/Expenses'),
+    }),
+    breadcrumb: 'Edit',
+  },
+  {
+    path: `/expenses-list`,
+    component: LazyLoader({
+      loader: () => import('containers/Expenses/ExpensesList'),
+    }),
+    breadcrumb: 'Expenses List',
+  },
 ];

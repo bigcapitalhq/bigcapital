@@ -119,11 +119,11 @@ export default [
     children: [
       {
         text: <T id={'expenses'}/>,
-        href: '/expenses',
+        href: '/expenses/new',
       },
       {
-        text: <T id={'new_expenses'}/>,
-        href: '/expenses/new',
+        text: <T id={'expenses_list'}/>,
+        href: '/expenses-list',
       },
     ],
   },

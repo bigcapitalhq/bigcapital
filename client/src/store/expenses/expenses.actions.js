@@ -1,41 +1,144 @@
-import ApiService from "services/ApiService";
+import ApiService from 'services/ApiService';
 import t from 'store/types';
 
-export const fetchExpensesList = ({ query }) => {
-  return (dispatch) => new Promise((resolve, reject) => {
-    ApiService.get('expenses').then((response) => {
+export const fetchExpensesTable = ({ query } = {}) => {
+  return (dispatch, getState) =>
+    new Promise((resolve, reject) => {
+      const pageQuery = getState().expenses.tableQuery;
       dispatch({
-        type: t.EXPENSES_LIST_SET,
-        expenses: response.data.expenses,
+        type: t.SET_DASHBOARD_REQUEST_LOADING,
       });
-    }).catch(error => { reject(error); });
-  });
+      dispatch({
+        type: t.EXPENSES_TABLE_LOADING,
+        loading: true,
+      });
+      ApiService.get('expenses', {
+        params: { ...pageQuery, ...query },
+      })
+        .then((response) => {
+          dispatch({
+            type: t.EXPENSES_PAGE_SET,
+            expenses: response.data.expenses.results,
+            customViewId: response.data.customViewId || -1,
+          });
+          dispatch({
+            type: t.EXPENSES_ITEMS_SET,
+            expenses: response.data.expenses.results,
+          });
+          dispatch({
+            type: t.EXPENSES_TABLE_LOADING,
+            loading: false,
+          });
+          dispatch({
+            type: t.SET_DASHBOARD_REQUEST_COMPLETED,
+          });
+          resolve(response);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
 };
 
 export const fetchExpense = ({ id }) => {
-  return (dispatch) => new Promise((resolve, reject) => {
-    ApiService.get(`expenses/${id}`).then((response) => {
-      dispatch({
-        type: t.EXPENSE_SET,
-        expense: response.data.expense,
-      });
-    }).catch(error => { reject(error); });
-  });
-};
-
-export const submitExpense = ({ form }) => {
-  return (dispatch) => ApiService.post('expenses', { ...form });
+  return (dispatch) =>
+    new Promise((resolve, reject) => {
+      ApiService.get(`expenses/${id}`)
+      .then((response) => {
+          dispatch({
+            type: t.EXPENSE_SET,
+            payload: {
+              id,
+              expense: response.data.expense,
+            },
+          });
+          resolve(response);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
 };
 
 export const editExpense = ({ form, id }) => {
-  return (dispatch) => ApiService.post(`expensed/${id}`, form);
+  return (dispatch) =>
+    new Promise((resolve, reject) => {
+      ApiService.post(`expenses/${id}`, form)
+        .then((response) => {
+          resolve(response);
+        })
+        .catch((error) => {
+          const { response } = error;
+          const { data } = response;
+
+          reject(data?.errors);
+        });
+    });
+};
+
+export const submitExpense = ({ form }) => {
+  return (dispatch) =>
+    new Promise((resolve, reject) => {
+      ApiService.post('expenses', form)
+        .then((response) => {
+          resolve(response);
+        })
+        .catch((error) => {
+          const { response } = error;
+          const { data } = response;
+
+          reject(data?.errors);
+        });
+    });
 };
 
 export const deleteExpense = ({ id }) => {
-  return (dispatch) => ApiService.delete(`expenses/${id}`);
+  return (dispatch) =>
+    new Promise((resolve, reject) => {
+      ApiService.delete(`expenses/${id}`)
+        .then((response) => {
+          dispatch({
+            type: t.EXPENSE_DELETE,
+            payload: { id },
+          });
+          resolve(response);
+        })
+        .catch((error) => {
+          reject(error.response.data.errors || []);
+        });
+    });
+};
+
+export const deleteBulkExpenses = ({ ids }) => {
+  return (dispatch) =>
+    new Promise((resolve, reject) => {
+      ApiService.delete('expenses/bulk', { params: { ids } })
+        .then((response) => {
+          dispatch({
+            type: t.EXPENSES_BULK_DELETE,
+            payload: { ids },
+          });
+          resolve(response);
+        })
+        .catch((error) => {
+          reject(error.response.data.errors || []);
+        });
+    });
 };
 
 export const publishExpense = ({ id }) => {
-  return (dispatch) => ApiService.post(`expenses/${id}/publish`);
+  return (dispatch) =>
+    new Promise((resolve, reject) => {
+      ApiService.post(`expenses/${id}/publish`)
+        .then((response) => {
+          dispatch({
+            type: t.EXPENSE_PUBLISH,
+            payload: { id },
+          });
+          resolve(response);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
 };
-
