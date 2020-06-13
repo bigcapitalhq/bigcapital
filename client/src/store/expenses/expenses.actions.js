@@ -6,11 +6,10 @@ export const fetchExpensesTable = ({ query } = {}) => {
     new Promise((resolve, reject) => {
       const pageQuery = getState().expenses.tableQuery;
       dispatch({
-        type: t.SET_DASHBOARD_REQUEST_LOADING,
-      });
-      dispatch({
         type: t.EXPENSES_TABLE_LOADING,
-        loading: true,
+        payload: {
+          loading: true,
+        },
       });
       ApiService.get('expenses', {
         params: { ...pageQuery, ...query },
@@ -18,19 +17,22 @@ export const fetchExpensesTable = ({ query } = {}) => {
         .then((response) => {
           dispatch({
             type: t.EXPENSES_PAGE_SET,
-            expenses: response.data.expenses.results,
-            customViewId: response.data.customViewId || -1,
+            payload: {
+              expenses: response.data.expenses.results,
+              customViewId: response.data.customViewId || -1,
+            },            
           });
           dispatch({
             type: t.EXPENSES_ITEMS_SET,
-            expenses: response.data.expenses.results,
+            payload: {
+              expenses: response.data.expenses.results,
+            }
           });
           dispatch({
             type: t.EXPENSES_TABLE_LOADING,
-            loading: false,
-          });
-          dispatch({
-            type: t.SET_DASHBOARD_REQUEST_COMPLETED,
+            payload: {
+              loading: false,
+            },
           });
           resolve(response);
         })

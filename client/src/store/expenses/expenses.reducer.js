@@ -18,7 +18,9 @@ const defaultExpense = {
 const reducer = createReducer(initialState, {
   [t.EXPENSE_SET]: (state, action) => {
     const { id, expense } = action.payload;
-    state.items[id] = { ...defaultExpense, ...expense };
+    const oldExpense = state.items[id] || {};
+
+    state.items[id] = { ...defaultExpense, ...oldExpense, ...expense };
   },
 
   [t.EXPENSE_PUBLISH]: (state, action) => {
@@ -29,9 +31,10 @@ const reducer = createReducer(initialState, {
   },
 
   [t.EXPENSES_ITEMS_SET]: (state, action) => {
+    const { expenses } = action.payload;
     const _expenses = {};
 
-    action.expenses.forEach((expense) => {
+    expenses.forEach((expense) => {
       _expenses[expense.id] = {
         ...defaultExpense,
         ...expense,
@@ -44,17 +47,19 @@ const reducer = createReducer(initialState, {
   },
 
   [t.EXPENSES_PAGE_SET]: (state, action) => {
-    const viewId = action.customViewId || -1;
+    const { customViewId, expenses } = action.payload;
+    const viewId = customViewId || -1;
     const view = state.views[viewId] || {};
 
     state.views[viewId] = {
       ...view,
-      ids: action.expenses.map((i) => i.id),
+      ids: expenses.map((i) => i.id),
     };
   },
 
   [t.EXPENSES_TABLE_LOADING]: (state, action) => {
-    state.loading = action.loading;
+    const { loading } = action.payload;
+    state.loading = loading;
   },
 
   [t.EXPENSES_SET_CURRENT_VIEW]: (state, action) => {
@@ -63,7 +68,6 @@ const reducer = createReducer(initialState, {
 
   [t.EXPENSE_DELETE]: (state, action) => {
     const { id } = action.payload;
-    // state.items = omit(state.items, [id]);
 
     if (typeof state.items[id] !== 'undefined') {
       delete state.items[id];

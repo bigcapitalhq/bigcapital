@@ -14,7 +14,6 @@ export const mapDispatchToProps = (dispatch) => ({
   requestSubmitExpense: (form) => dispatch(submitExpense({ form })),
   requestFetchExpense: (id) => dispatch(fetchExpense({ id })),
   requestEditExpense: (id, form) => dispatch(editExpense({ id, form })),
- 
   requestDeleteExpense: (id) => dispatch(deleteExpense({ id })),
   requestFetchExpensesTable: (query = {}) =>
     dispatch(fetchExpensesTable({ query: { ...query } })),

@@ -30,19 +30,20 @@ import withExpenses from 'containers/Expenses/withExpenses';
 import withExpensesActions from 'containers/Expenses/withExpensesActions';
 
 function ExpenseDataTable({
-  loading,
-
   //#withExpenes
   expenses,
   expensesLoading,
-
+  
   // #withDashboardActions
   changeCurrentView,
   changePageSubtitle,
   setTopbarEditView,
-
+  
+  // #withView
   viewMeta,
-
+  
+  // #ownProps
+  loading,
   onFetchData,
   onEditExpense,
   onDeleteExpense,
@@ -119,8 +120,7 @@ function ExpenseDataTable({
     ),
     [handleEditExpense, handleDeleteExpense, handlePublishExpense],
   );
-  console.log(Object.values(expenses), 'ER');
-  
+
   const columns = useMemo(
     () => [
       {

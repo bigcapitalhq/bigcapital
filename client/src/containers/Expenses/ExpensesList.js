@@ -62,7 +62,6 @@ function ExpensesList({
   );
 
   // Handle cancel expense journal.
-
   const handleCancelExpenseDelete = useCallback(() => {
     setDeleteExpense(false);
   }, [setDeleteExpense]);
@@ -103,12 +102,8 @@ function ExpensesList({
       .then(() => {
         AppToaster.show({
           message: formatMessage(
-            {
-              id: 'the_expenses_has_been_successfully_deleted',
-            },
-            {
-              count: selectedRowsCount,
-            },
+            { id: 'the_expenses_has_been_successfully_deleted', },
+            { count: selectedRowsCount, },
           ),
           intent: Intent.SUCCESS,
         });
@@ -117,6 +112,8 @@ function ExpensesList({
       .catch((error) => {
         setBulkDelete(false);
       });
+  
+      // @todo 
   }, [requestDeleteBulkExpenses, bulkDelete, formatMessage, selectedRowsCount]);
 
   // Handle cancel bulk delete alert.

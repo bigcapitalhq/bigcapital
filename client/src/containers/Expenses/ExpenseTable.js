@@ -144,6 +144,7 @@ function ExpenseTable({
         disableSortBy: true,
       },
       {
+        // @todo Add hint component after the header label.
         Header: formatMessage({ id: 'expense_category' }),
         id: 'expense_account_id',
         accessor: 'expense_account_id',
@@ -161,7 +162,6 @@ function ExpenseTable({
         disableResizing: true,
         width: 150,
       },
-
       {
         Header: formatMessage({ id: 'description' }),
         accessor: 'description',

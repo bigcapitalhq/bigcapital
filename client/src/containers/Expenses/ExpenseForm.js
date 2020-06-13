@@ -43,6 +43,7 @@ function ExpenseForm({
   changePageSubtitle,
 
   //#withExpenseDetail
+  // @todo expenseDetail to expense
   expenseDetail,
 
   // #own Props
@@ -79,6 +80,7 @@ function ExpenseForm({
     } else {
       changePageTitle(formatMessage({ id: 'new_expense' }));
     }
+  // @todo not functions just states.
   }, [changePageTitle, changePageSubtitle, expenseDetail, formatMessage]);
 
   const validationSchema = Yup.object().shape({
@@ -98,11 +100,11 @@ function ExpenseForm({
       .label(formatMessage({ id: 'description' })),
 
     publish: Yup.boolean().label(formatMessage({ id: 'publish' })),
-
     categories: Yup.array().of(
       Yup.object().shape({
         index: Yup.number().nullable(),
         amount: Yup.number().nullable(),
+        // @todo expense_account_id is required.
         expense_account_id: Yup.number().nullable(),
         description: Yup.string().nullable(),
       }),
@@ -135,6 +137,7 @@ function ExpenseForm({
       reference_no: '',
       currency_code: '',
       categories: [
+        // @todo @mohamed index
         defaultCategory,
         defaultCategory,
         defaultCategory,
@@ -144,7 +147,6 @@ function ExpenseForm({
     [defaultCategory],
   );
 
-  
   const initialValues = useMemo(
     () => ({
       ...(expenseDetail
@@ -181,7 +183,6 @@ function ExpenseForm({
       const categories = values.categories.filter(
         (category) => category.amount || category.index,
       );
-
       const form = {
         ...values,
         published: payload.publish,
@@ -209,6 +210,7 @@ function ExpenseForm({
                 resolve(response);
               })
               .catch((errors) => {
+                // @todo handle errors.
                 if (errors.find((e) => e.type === 'TOTAL.AMOUNT.EQUALS.ZERO')) {
                 }
                 setErrors(
@@ -255,6 +257,8 @@ function ExpenseForm({
     },
   });
 
+  console.log(formik.errors);
+
   const handleSubmitClick = useCallback(
     (payload) => {
       setPayload(payload);
@@ -280,6 +284,7 @@ function ExpenseForm({
     },
     [setDeletedFiles, deletedFiles],
   );
+  // @todo @mohamed
   const fetchHook = useQuery('expense-form', () => requestFetchExpensesTable());
 
   return (

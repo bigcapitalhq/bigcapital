@@ -12,25 +12,29 @@ import withCurrenciesActions from 'containers/Currencies/withCurrenciesActions';
 import { compose } from 'utils';
 
 function Expenses({
-  //#withwithAccountsActions
+  // #withwithAccountsActions
   requestFetchAccounts,
 
-  //#withExpensesActions
+  // #withExpensesActions
   requestFetchExpense,
+
   // #wihtCurrenciesActions
   requestFetchCurrencies,
 }) {
   const history = useHistory();
   const { id } = useParams();
 
+  // @todo
   const fetchAccounts = useQuery('accounts-expense-list', (key) =>
     requestFetchAccounts(),
   );
 
+  // @todo
   const fetchExpense = useQuery(id && ['expense', id], (key, expense_Id) =>
     requestFetchExpense(expense_Id),
   );
 
+  // @todo
   const fetchCurrencies = useQuery('currencies-expense-list', () =>
     requestFetchCurrencies(),
   );

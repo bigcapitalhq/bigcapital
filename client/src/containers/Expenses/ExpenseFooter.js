@@ -2,7 +2,7 @@ import React from 'react';
 import { Intent, Button } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'react-intl';
 
-function ExpenseFooter({
+export default function ExpenseFooter({
   formik: { isSubmitting },
   onSubmitClick,
   onCancelClick,
@@ -40,6 +40,4 @@ function ExpenseFooter({
       </Button>
     </div>
   );
-}
-
-export default ExpenseFooter;
+};

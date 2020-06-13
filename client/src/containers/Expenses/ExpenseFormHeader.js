@@ -35,6 +35,7 @@ function ExpenseFormHeader({
     [setFieldValue],
   );
 
+  // @todo @mohamed reusable components.
   const infoIcon = useMemo(() => <Icon icon="info-circle" iconSize={12} />, []);
 
   const requiredSpan = useMemo(() => <span className="required">*</span>, []);
@@ -74,6 +75,7 @@ function ExpenseFormHeader({
   };
 
   // Filters accounts items.
+  // @filter accounts predicator resauble
   const filterAccountsPredicater = useCallback(
     (query, account, _index, exactMatch) => {
       const normalizedTitle = account.name.toLowerCase();
@@ -101,6 +103,7 @@ function ExpenseFormHeader({
   const onItemsSelect = useCallback(
     (filedName) => {
       return (filed) => {
+        // @todo @mohamed
         setSelectedItems({
           ...selectedItems,
           [filedName]: filed,
