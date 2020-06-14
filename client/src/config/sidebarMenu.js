@@ -1,5 +1,5 @@
-import React  from 'react'
-import { FormattedMessage as T} from 'react-intl';
+import React from 'react';
+import { FormattedMessage as T } from 'react-intl';
 
 export default [
   {
@@ -8,9 +8,9 @@ export default [
   {
     icon: 'homepage',
     iconSize: 20,
-    text: <T id={'homepage'}/>,
+    text: <T id={'homepage'} />,
     disabled: false,
-   href: '/homepage',
+    href: '/homepage',
   },
   {
     divider: true,
@@ -18,18 +18,18 @@ export default [
   {
     icon: 'homepage',
     iconSize: 20,
-    text: <T id={'items'}/>,
+    text: <T id={'items'} />,
     children: [
       {
-        text: <T id={'items_list'}/>,
+        text: <T id={'items_list'} />,
         href: '/items',
       },
       {
-        text: <T id={'new_item'}/>,
+        text: <T id={'new_item'} />,
         href: '/items/new',
       },
       {
-        text: <T id={'category_list'}/>,
+        text: <T id={'category_list'} />,
         href: '/items/categories',
       },
     ],
@@ -40,22 +40,22 @@ export default [
   {
     icon: 'balance-scale',
     iconSize: 20,
-    text: <T id={'financial'}/>,
+    text: <T id={'financial'} />,
     children: [
       {
-        text: <T id={'accounts_chart'}/>,
+        text: <T id={'accounts_chart'} />,
         href: '/accounts',
       },
       {
-        text: <T id={'manual_journal'}/>,
+        text: <T id={'manual_journal'} />,
         href: '/manual-journals',
       },
       {
-        text: <T id={'make_journal'}/>,
+        text: <T id={'make_journal'} />,
         href: '/make-journal-entry',
       },
       {
-        text: <T id={'exchange_rate'}/>,
+        text: <T id={'exchange_rate'} />,
         href: '/ExchangeRates',
       },
     ],
@@ -63,19 +63,19 @@ export default [
   {
     icon: 'university',
     iconSize: 20,
-    text: <T id={'banking'}/>,
+    text: <T id={'banking'} />,
     children: [],
   },
   {
     icon: 'shopping-cart',
     iconSize: 20,
-    text: <T id={'sales'}/>,
+    text: <T id={'sales'} />,
     children: [],
   },
   {
     icon: 'balance-scale',
     iconSize: 20,
-    text: <T id={'purchases'}/>,
+    text: <T id={'purchases'} />,
     children: [
       {
         icon: 'cut',
@@ -88,42 +88,57 @@ export default [
   {
     icon: 'analytics',
     iconSize: 18,
-    text: <T id={'financial_reports'}/>,
+    text: <T id={'financial_reports'} />,
     children: [
       {
-        text: <T id={'balance_sheet'}/>,
+        text: <T id={'balance_sheet'} />,
         href: '/balance-sheet',
       },
       {
-        text: <T id={'trial_balance_sheet'}/>,
+        text: <T id={'trial_balance_sheet'} />,
         href: '/trial-balance-sheet',
       },
       {
-        text: <T id={'journal'}/>,
+        text: <T id={'journal'} />,
         href: '/journal-sheet',
       },
       {
-        text: <T id={'general_ledger'}/>,
+        text: <T id={'general_ledger'} />,
         href: '/general-ledger',
       },
       {
-        text: <T id={'profit_loss_sheet'}/>,
+        text: <T id={'profit_loss_sheet'} />,
         href: '/profit-loss-sheet',
       },
     ],
   },
   {
-    text: <T id={'expenses'}/>,
+    text: <T id={'expenses'} />,
     icon: 'receipt',
     iconSize: 18,
     children: [
       {
-        text: <T id={'expenses'}/>,
+        text: <T id={'expenses'} />,
         href: '/expenses',
       },
       {
-        text: <T id={'new_expenses'}/>,
+        text: <T id={'new_expenses'} />,
         href: '/expenses/new',
+      },
+    ],
+  },
+  {
+    text: <T id={'customers'} />,
+    icon: 'receipt',
+    iconSize: 18,
+    children: [
+      {
+        text: <T id={'customers'} />,
+        // href: '/',
+      },
+      {
+        text: <T id={'new_customers'} />,
+        href: '/customers/new',
       },
     ],
   },
@@ -131,11 +146,11 @@ export default [
     divider: true,
   },
   {
-    text: <T id={'preferences'}/>,
+    text: <T id={'preferences'} />,
     href: '/preferences',
   },
   {
-    text: <T id={'auditing_system'}/>,
+    text: <T id={'auditing_system'} />,
     href: '/auditing/list',
   },
 ];

@@ -417,4 +417,17 @@ export default {
   quick_new: 'Quick new',
   help: 'Help',
   organization_id: 'Orgnization ID',
+
+  customers: 'Customers',
+  new_customers:'New Customers',
+  customer_type_: 'Customer type',
+  display_name_: 'Display name',
+  new_customer: 'New Customer',
+  customer_type: 'Customer Type',
+  business: 'business',
+  individual: 'Individual',
+  display_name:'Display Name',
+
+  the_customer_has_been_successfully_created:
+    'The customer has been successfully created.',
 };

@@ -141,4 +141,30 @@ export default [
     }),
     breadcrumb: 'Exchange Rates',
   },
+
+  {
+    path: `/customers/:id/edit`,
+    component: LazyLoader({
+      // loader: () => import(),
+    }),
+    breadcrumb: 'Edit Customer',
+  },
+  {
+    path: `/customers/new`,
+    component: LazyLoader({
+      loader: () => import('containers/Customers/Customer'),
+    }),
+    breadcrumb: 'New Customer',
+  },
+
+  // Customers
+  {
+    path: `/customers`,
+    component: LazyLoader({
+      // loader: () => import(''),
+    }),
+    breadcrumb: 'Customers',
+  },
+
+
 ];
