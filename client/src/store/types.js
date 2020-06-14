@@ -16,6 +16,7 @@ import settings from './settings/settings.type';
 import search from './search/search.type';
 import register from './registers/register.type';
 import exchangeRate from './ExchangeRate/exchange.type';
+import customer from './customers/customers.type';
 
 export default {
   ...authentication,
@@ -36,4 +37,5 @@ export default {
   ...search,
   ...register,
   ...exchangeRate,
+  ...customer,
 };

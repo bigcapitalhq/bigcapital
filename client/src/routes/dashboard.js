@@ -151,7 +151,6 @@ export default [
     }),
     breadcrumb: 'Exchange Rates',
   },
-
   // Expenses
   {
     path: `/expenses/new`, // expenses/
@@ -174,5 +173,28 @@ export default [
       loader: () => import('containers/Expenses/ExpensesList'),
     }),
     breadcrumb: 'Expenses List',
+  },
+  {
+    path: `/customers/:id/edit`,
+    component: LazyLoader({
+      // loader: () => import(),
+    }),
+    breadcrumb: 'Edit Customer',
+  },
+  {
+    path: `/customers/new`,
+    component: LazyLoader({
+      loader: () => import('containers/Customers/Customer'),
+    }),
+    breadcrumb: 'New Customer',
+  },
+
+  // Customers
+  {
+    path: `/customers`,
+    component: LazyLoader({
+      // loader: () => import(''),
+    }),
+    breadcrumb: 'Customers',
   },
 ];

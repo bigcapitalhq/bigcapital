@@ -282,7 +282,6 @@ export default {
     'The exchange rate has been successfully edited',
   the_exchange_rate_has_been_successfully_created:
     'The exchange rate has been successfully created',
-
   the_user_details_has_been_updated: 'The user details has been updated',
   the_category_has_been_successfully_created:
     'The category has been successfully created.',
@@ -356,9 +355,7 @@ export default {
     'There is exchange rate in this date with the same currency.',
   the_exchange_rates_has_been_successfully_deleted:
     'The exchange rates has been successfully deleted',
-
   once_delete_this_expense_you_will_able_to_restore_it: `Once you delete this expense, you won\'t be able to restore it later. Are you sure you want to delete this expense?`,
-
   january: 'January',
   february: 'February',
   march: 'March',
@@ -450,5 +447,16 @@ export default {
   aging_before_days: 'Aging before days',
   aging_periods: 'Aging periods',
   as: 'As',
-  receivable_aging_summary: 'Receivable Aging Summary'
+  receivable_aging_summary: 'Receivable Aging Summary',
+  customers: 'Customers',
+  new_customers:'New Customers',
+  customer_type_: 'Customer type',
+  display_name_: 'Display name',
+  new_customer: 'New Customer',
+  customer_type: 'Customer Type',
+  business: 'business',
+  individual: 'Individual',
+  display_name:'Display Name',
+  the_customer_has_been_successfully_created:
+    'The customer has been successfully created.',
 };

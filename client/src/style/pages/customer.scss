@@ -1,0 +1,24 @@
+.customer-form {
+  padding: 22px;
+  width: 100%;
+
+  // padding-bottom: 90px;
+
+  .bp3-form-group {
+    // margin: 25px 20px 20px;
+
+    .bp3-label {
+      min-width: 100px;
+    }
+    .bp3-form-content {
+      width: 45%;
+    }
+  }
+
+  &__primary-section {
+    background-color: #fafafa;
+    padding: 40px 22px 22px;
+    margin: -22px -22px 22px;
+    background-color: #fafafa;
+  }
+}
