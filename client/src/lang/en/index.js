@@ -231,7 +231,7 @@ export default {
   select_expense_account: 'Select Expense Account',
   and: 'And',
   or: 'OR',
-  select_a_comparator: 'Select a comparator',
+  comparator: 'Comparator',
   equals: 'Equals',
   not_equal: 'Not Equal',
   contain: 'Contain',
@@ -359,7 +359,6 @@ export default {
 
   once_delete_this_expense_you_will_able_to_restore_it: `Once you delete this expense, you won\'t be able to restore it later. Are you sure you want to delete this expense?`,
 
-
   january: 'January',
   february: 'February',
   march: 'March',
@@ -372,7 +371,6 @@ export default {
   october: 'October',
   november: 'November',
   december: 'December',
-
   // Name Labels
   expense_account_id: 'Expense account',
   payment_account_id: 'Payment account',
@@ -434,7 +432,6 @@ export default {
   new_expense: 'New Expense',
   full_amount: 'Full Amount',
   payment_date_: 'Payment date',
-
   the_expense_has_been_successfully_created:
     'The expense #{number} has been successfully created.',
   the_expense_has_been_successfully_edited:
@@ -444,7 +441,14 @@ export default {
   the_expenses_has_been_successfully_deleted:
     'The expenses has been successfully deleted',
   the_expense_id_has_been_published: 'The expense id has been published',
-
   select_beneficiary_account: 'Select Beneficiary Account',
   total_amount_equals_zero: 'Total amount equals zero',
+  value: 'Value',
+  you_reached_conditions_limit: 'You have reached to conditions limit.',
+  customer_name: 'Customer Name',
+  as_date: 'As Date',
+  aging_before_days: 'Aging before days',
+  aging_periods: 'Aging periods',
+  as: 'As',
+  receivable_aging_summary: 'Receivable Aging Summary'
 };

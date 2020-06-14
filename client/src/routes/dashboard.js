@@ -128,6 +128,16 @@ export default [
     }),
   },
   {
+    path: '/receivable-aging-summary',
+    component: LazyLoader({
+      loader: () =>
+        import(
+          'containers/FinancialStatements/ReceivableAgingSummary/ReceivableAgingSummary'
+        ),
+      breadcrumb: 'Receivable Aging Summary',
+    }),
+  },
+  {
     path: `/journal-sheet`,
     component: LazyLoader({
       loader: () => import('containers/FinancialStatements/Journal/Journal'),

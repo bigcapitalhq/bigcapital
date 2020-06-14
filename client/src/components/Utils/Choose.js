@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import If from './if';
+import If from './If';
 
 const Choose = props => {
 	let when = null;

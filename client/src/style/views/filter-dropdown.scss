@@ -1,6 +1,6 @@
 
 .filter-dropdown{
-  width: 500px;
+  width: 550px;
 
   &__body{
     padding: 12px;
@@ -17,18 +17,35 @@
   }
 
   .bp3-form-group{
-    padding-right: 16px;
+    padding-right: 4px;
     margin-bottom: 0;
 
     &:not(:last-of-type) {
-      padding-right: 12px;
+      padding-right: 8px;
     }
     .bp3-html-select select,
     .bp3-select select{
       padding: 0 20px 0 6px;
+
+      &:after{
+        margin-right: 10px;
+      }
     }
     .bp3-input{
       padding: 0 6px;
+    }
+    .bp3-html-select select,
+    .bp3-select select,
+    .bp3-input-group .bp3-input{
+      height: 32px;
+      border-radius: 3px;
+      border-color: #dbd8d8;
+    }
+
+    .bp3-html-select::after,
+    .form-group--select-list .bp3-button::after{
+      border-top-color: #aaa;
+      margin-right: 10px;
     }
   }
 
@@ -37,9 +54,62 @@
     padding: 5px 10px;
   }
   .form-group{
-    &--condition{ width: 25%; }
-    &--field{ width: 45%; }
-    &--compatator{ width: 30%; }
-    &--value{ width: 25%; }
+    &--condition{
+      width: 70px;
+      min-width: 70px;
+    }
+    &--field{
+      width: 45%;
+    }
+    &--compatator{
+      min-width: 120px;
+      width: 120px;
+      max-width: 120px;
+    }
+    &--value{
+      width: 55%;
+    }
+  }
+}
+
+.list-select--filter-dropdown{
+
+  .bp3-button:not([class*="bp3-intent-"]):not(.bp3-minimal),
+  .bp3-button:not([class*="bp3-intent-"]):not(.bp3-minimal){
+    &,
+    &:hover{
+      background-color: #E6EFFB;
+      border: 0;
+      border-radius: 3px;
+    }
+
+    &:after{
+      border-top-color: #afb9d0;
+    }
+  }
+}
+
+.popover--list-select-filter-dropdown{
+
+  .bp3-popover-content{
+    max-width: 200px;
+  }
+
+  .bp3-menu{
+    max-height: 250px;
+    overflow: auto;
+  }
+
+  .bp3-input-group{
+    padding: 8px;
+    padding-bottom: 4px;
+
+    .bp3-input:not(:first-child){
+      padding-left: 10px;
+    }
+
+    .bp3-icon-search{
+      display: none;
+    }
   }
 }

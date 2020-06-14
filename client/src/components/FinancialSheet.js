@@ -3,12 +3,14 @@ import moment from 'moment';
 import classnames from 'classnames';
 import LoadingIndicator from 'components/LoadingIndicator';
 import { FormattedMessage as T, useIntl } from 'react-intl';
+import { If } from 'components';
 
 export default function FinancialSheet({
   companyName,
   sheetType,
   fromDate,
   toDate,
+  asDate,
   children,
   accountingBasis,
   name,
@@ -16,16 +18,25 @@ export default function FinancialSheet({
   className,
   basis,
 }) {
-  const formattedFromDate = moment(fromDate).format('DD MMMM YYYY');
-  const formattedToDate = moment(toDate).format('DD MMMM YYYY');
-  const nameModifer = name ? `financial-sheet--${name}` : '';
   const { formatMessage } = useIntl();
+  const format = 'DD MMMM YYYY';
+  const formattedFromDate = useMemo(() => moment(fromDate).format(format), [
+    fromDate,
+  ]);
+  const formattedToDate = useMemo(() => moment(toDate).format(format), [
+    toDate,
+  ]);
+  const formattedAsDate = useMemo(() => moment(asDate).format(format), [
+    asDate,
+  ]);
+
+  const nameModifer = name ? `financial-sheet--${name}` : '';
   const methodsLabels = useMemo(
     () => ({
-      cash: formatMessage({id:'cash'}),
-      accrual: formatMessage({id:'accrual'}),
+      cash: formatMessage({ id: 'cash' }),
+      accrual: formatMessage({ id: 'accrual' }),
     }),
-    [formatMessage]
+    [formatMessage],
   );
   const getBasisLabel = useCallback((b) => methodsLabels[b], [methodsLabels]);
   const basisLabel = useMemo(() => getBasisLabel(basis), [
@@ -42,18 +53,25 @@ export default function FinancialSheet({
           'is-loading': loading,
         })}
       >
-        <h1 class='financial-sheet__title'>{companyName}</h1>
-        <h6 class='financial-sheet__sheet-type'>{sheetType}</h6>
-        <div class='financial-sheet__date'>
-      <T id={'from'}/> {formattedFromDate} | <T id={'to'}/> {formattedToDate}
+        <h1 class="financial-sheet__title">{companyName}</h1>
+        <h6 class="financial-sheet__sheet-type">{sheetType}</h6>
+        <div class="financial-sheet__date">
+          <If condition={asDate}>
+            <T id={'as'} /> {formattedAsDate}
+          </If>
+
+          <If condition={fromDate && toDate}>
+            <T id={'from'} /> {formattedFromDate} | <T id={'to'} />{' '}
+            {formattedToDate}
+          </If>
         </div>
 
-        <div class='financial-sheet__table'>{children}</div>
-        <div class='financial-sheet__accounting-basis'>{accountingBasis}</div>
+        <div class="financial-sheet__table">{children}</div>
+        <div class="financial-sheet__accounting-basis">{accountingBasis}</div>
 
         {basisLabel && (
-          <div class='financial-sheet__basis'>
-            <T id={'accounting_basis'}/> {basisLabel}
+          <div class="financial-sheet__basis">
+            <T id={'accounting_basis'} /> {basisLabel}
           </div>
         )}
       </div>

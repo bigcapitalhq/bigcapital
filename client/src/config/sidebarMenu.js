@@ -110,6 +110,14 @@ export default [
         text: <T id={'profit_loss_sheet'}/>,
         href: '/profit-loss-sheet',
       },
+      {
+        text: 'Receivable Aging Summary',
+        href: '/receivable-aging-summary'
+      },
+      {
+        text: 'Payable Aging Summary',
+        href: '/payable-aging-summary'
+      }
     ],
   },
   {

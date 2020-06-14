@@ -66,7 +66,7 @@
       .bp3-button:not([class*="bp3-intent-"]):not(.bp3-minimal){
         padding: 0;
         background-size: contain;
-        background-color: #F6DCFA;
+        background-color: #EED1F2;
         border-radius: 50%;
         height: 30px;
         width: 30px;
@@ -78,7 +78,7 @@
         &,
         &:hover,
         &:focus{
-          background-color: #F6DCFA;
+          background-color: #EED1F2;
           border: 0;
           box-shadow: none;
         }
@@ -131,11 +131,23 @@
           background: rgba(167, 182, 194, 0.12);
           color: #5C5C5C;
         }
+        &.bp3-minimal:active,
+        &.bp3-minimal.bp3-active{
+          background: rgba(167, 182, 194, 0.12);
+          color: #5C5C5C;
+        }
+
+        &.has-active-filters{
+          &,
+          &.bp3-active,
+          &:active{
+            background: #eafbe4;
+          }
+        }
         .#{$ns}-icon{
           color: #666;
           margin-right: 7px;
         }
-
         &.#{$ns}-minimal.#{$ns}-intent-danger{
           color: #c23030;
 

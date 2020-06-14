@@ -24,9 +24,6 @@ export const fetchGeneralLedger = ({ query }) => {
 export const fetchBalanceSheet = ({ query }) => {
   return (dispatch) => new Promise((resolve, reject) => {
     dispatch({
-      type: t.SET_DASHBOARD_REQUEST_LOADING,
-    });
-    dispatch({
       type: t.BALANCE_SHEET_LOADING,
       loading: true,
     });
@@ -110,3 +107,36 @@ export const fetchJournalSheet = ({ query }) => {
     }).catch(error => { reject(error); });
   });
 };
+
+export const fetchReceivableAgingSummary = ({ query }) => {
+  return (dispatch) => new Promise((resolve, reject) => {
+    dispatch({
+      type: t.RECEIVABLE_AGING_SUMMARY_LOADING,
+      payload: {
+        loading: true,
+      },
+    });
+    ApiService
+      .get('/financial_statements/receivable_aging_summary', { params: query })
+      .then((response) => {
+        dispatch({
+          type: t.RECEIVABLE_AGING_SUMMARY_SET,
+          payload: {
+            aging: response.data.aging,
+            columns: response.data.columns,
+            query,
+          },
+        });
+        dispatch({
+          type: t.RECEIVABLE_AGING_SUMMARY_LOADING,
+          payload: {
+            loading: false,
+          },
+        });
+        resolve(response);
+      })
+      .catch((error) => {
+        reject(error);
+      })
+  });
+}

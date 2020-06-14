@@ -1,5 +1,5 @@
 import { Model, mixin } from 'objection';
-import { snakeCase } from 'lodash';
+import { snakeCase, each } from 'lodash';
 import { mapKeysDeep } from '@/utils';
 import PaginationQueryBuilder from '@/models/Pagination';
 import DateSession from '@/models/DateSession';

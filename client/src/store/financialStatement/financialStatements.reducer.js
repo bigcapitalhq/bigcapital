@@ -1,11 +1,9 @@
 import { createReducer } from '@reduxjs/toolkit';
 import t from 'store/types';
 import {
-  // getBalanceSheetIndexByQuery,
   getFinancialSheetIndexByQuery,
-  // getFinancialSheetIndexByQuery,
 } from './financialStatements.selectors';
-import {omit} from 'lodash';
+import { omit } from 'lodash';
 
 const initialState = {
   balanceSheet: {
@@ -34,38 +32,48 @@ const initialState = {
     loading: false,
     tableRows: [],
     filter: true,
-  }
+  },
+  receivableAgingSummary: {
+    sheets: [],
+    loading: false,
+    tableRows: [],
+    filter: true,
+  },
 };
 
 const mapGeneralLedgerAccountsToRows = (accounts) => {
   return accounts.reduce((tableRows, account) => {
     const children = [];
     children.push({
-      ...account.opening, rowType: 'opening_balance',
+      ...account.opening,
+      rowType: 'opening_balance',
     });
     account.transactions.map((transaction) => {
       children.push({
-        ...transaction, ...omit(account, ['transactions']),
-        rowType: 'transaction'
+        ...transaction,
+        ...omit(account, ['transactions']),
+        rowType: 'transaction',
       });
     });
     children.push({
-      ...account.closing, rowType: 'closing_balance',
+      ...account.closing,
+      rowType: 'closing_balance',
     });
     tableRows.push({
-      ...omit(account, ['transactions']), children,
+      ...omit(account, ['transactions']),
+      children,
       rowType: 'account_name',
     });
     return tableRows;
   }, []);
-}
+};
 
 const mapJournalTableRows = (journal) => {
   return journal.reduce((rows, journal) => {
     journal.entries.forEach((entry, index) => {
       rows.push({
         ...entry,
-        rowType: (index === 0) ? 'first_entry' : 'entry'
+        rowType: index === 0 ? 'first_entry' : 'entry',
       });
     });
     rows.push({
@@ -78,8 +86,7 @@ const mapJournalTableRows = (journal) => {
     });
     return rows;
   }, []);
-}
-
+};
 
 const mapProfitLossToTableRows = (profitLoss) => {
   return [
@@ -92,7 +99,7 @@ const mapProfitLossToTableRows = (profitLoss) => {
           name: 'Total Income',
           total: profitLoss.income.total,
           rowType: 'income_total',
-        }
+        },
       ],
     },
     {
@@ -104,15 +111,15 @@ const mapProfitLossToTableRows = (profitLoss) => {
           name: 'Total Expenses',
           total: profitLoss.expenses.total,
           rowType: 'expense_total',
-        }
+        },
       ],
     },
     {
       name: 'Net Income',
-      total: profitLoss.net_income.total, 
+      total: profitLoss.net_income.total,
       rowType: 'net_income',
-    }
-  ]
+    },
+  ];
 };
 
 const financialStatementFilterToggle = (financialName, statePath) => {
@@ -120,13 +127,16 @@ const financialStatementFilterToggle = (financialName, statePath) => {
     [`${financialName}_FILTER_TOGGLE`]: (state, action) => {
       state[statePath].filter = !state[statePath].filter;
     },
-  }
+  };
 };
 
 export default createReducer(initialState, {
   [t.BALANCE_SHEET_STATEMENT_SET]: (state, action) => {
-    const index  = getFinancialSheetIndexByQuery(state.balanceSheet.sheets, action.query);
-  
+    const index = getFinancialSheetIndexByQuery(
+      state.balanceSheet.sheets,
+      action.query,
+    );
+
     const balanceSheet = {
       accounts: action.data.accounts,
       columns: Object.values(action.data.columns),
@@ -145,7 +155,10 @@ export default createReducer(initialState, {
   ...financialStatementFilterToggle('BALANCE_SHEET', 'balanceSheet'),
 
   [t.TRAIL_BALANCE_STATEMENT_SET]: (state, action) => {
-    const index = getFinancialSheetIndexByQuery(state.trialBalance.sheets, action.query);
+    const index = getFinancialSheetIndexByQuery(
+      state.trialBalance.sheets,
+      action.query,
+    );
     const trailBalanceSheet = {
       accounts: action.data.accounts,
       query: action.data.query,
@@ -163,7 +176,10 @@ export default createReducer(initialState, {
   ...financialStatementFilterToggle('TRIAL_BALANCE', 'trialBalance'),
 
   [t.JOURNAL_SHEET_SET]: (state, action) => {
-    const index = getFinancialSheetIndexByQuery(state.journal.sheets, action.query);
+    const index = getFinancialSheetIndexByQuery(
+      state.journal.sheets,
+      action.query,
+    );
 
     const journal = {
       query: action.data.query,
@@ -183,8 +199,11 @@ export default createReducer(initialState, {
   ...financialStatementFilterToggle('JOURNAL', 'journal'),
 
   [t.GENERAL_LEDGER_STATEMENT_SET]: (state, action) => {
-    const index = getFinancialSheetIndexByQuery(state.generalLedger.sheets, action.query);
-    
+    const index = getFinancialSheetIndexByQuery(
+      state.generalLedger.sheets,
+      action.query,
+    );
+
     const generalLedger = {
       query: action.data.query,
       accounts: action.data.accounts,
@@ -203,7 +222,10 @@ export default createReducer(initialState, {
   ...financialStatementFilterToggle('GENERAL_LEDGER', 'generalLedger'),
 
   [t.PROFIT_LOSS_SHEET_SET]: (state, action) => {
-    const index = getFinancialSheetIndexByQuery(state.profitLoss.sheets, action.query);
+    const index = getFinancialSheetIndexByQuery(
+      state.profitLoss.sheets,
+      action.query,
+    );
 
     const profitLossSheet = {
       query: action.query,
@@ -212,7 +234,7 @@ export default createReducer(initialState, {
       tableRows: mapProfitLossToTableRows(action.profitLoss),
     };
     if (index !== -1) {
-      state.profitLoss.sheets[index] = profitLossSheet;      
+      state.profitLoss.sheets[index] = profitLossSheet;
     } else {
       state.profitLoss.sheets.push(profitLossSheet);
     }
@@ -222,4 +244,27 @@ export default createReducer(initialState, {
     state.profitLoss.loading = !!action.loading;
   },
   ...financialStatementFilterToggle('PROFIT_LOSS', 'profitLoss'),
+
+  [t.RECEIVABLE_AGING_SUMMARY_LOADING]: (state, action) => {
+    const { loading } = action.payload;
+    state.receivableAgingSummary.loading = loading;
+  },
+
+  [t.RECEIVABLE_AGING_SUMMARY_SET]: (state, action) => {
+    const { aging, columns, query } = action.payload;
+    const index = getFinancialSheetIndexByQuery(state.receivableAgingSummary.sheets, query);
+
+    const receivableSheet = {
+      query,
+      columns,
+      aging,
+      tableRows: aging
+    };
+    if (index !== -1) {
+      state.receivableAgingSummary[index] = receivableSheet;
+    } else {
+      state.receivableAgingSummary.sheets.push(receivableSheet);
+    }
+  },
+  ...financialStatementFilterToggle('RECEIVABLE_AGING_SUMMARY', 'receivableAgingSummary'),
 });

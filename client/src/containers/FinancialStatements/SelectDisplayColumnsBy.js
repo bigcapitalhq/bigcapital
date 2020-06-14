@@ -7,6 +7,8 @@ import {
   MenuItem,
 } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'react-intl';
+import classNames from 'classnames';
+import { MODIFIER } from 'components';
 
 export default function SelectsListColumnsBy(props) {
   const { onItemSelect, formGroupProps, selectListProps } = props;
@@ -46,9 +48,10 @@ export default function SelectsListColumnsBy(props) {
         noResults={<MenuItem disabled={true} text="No results." />}
         filterable={false}
         itemRenderer={itemRenderer}
-        popoverProps={{ minimal: true }}
+        popoverProps={{ minimal: true, usePortal: false, inline: true }}
         buttonLabel={buttonLabel}
-        onItemSelect={handleItemSelect}        
+        onItemSelect={handleItemSelect}
+        className={classNames(MODIFIER.SELECT_LIST_FILL_POPOVER)}
         {...selectListProps} />
     </FormGroup>
   );

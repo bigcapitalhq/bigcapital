@@ -3,6 +3,7 @@ import t from 'store/types';
 import { pickItemsFromIds } from 'store/selectors'
 
 const initialState = {
+  data: {},
   fields: {},
   columns: {},
   resourceFields: {},
@@ -50,6 +51,14 @@ export default createReducer(initialState, {
     };
     state.resourceFields[action.resource_slug] = action.fields.map(f => f.id);
   },
+
+  [t.RESOURCE_DATA_SET]: (state, action) => {
+    const { data, resource_key: resourceKey } = action.payload;
+    const dataMapped = {};
+
+    data.forEach((item) => { dataMapped[item.id] = item; })
+    state.data[resourceKey] = dataMapped;
+  },
 });
 
 /**
@@ -96,4 +105,9 @@ export const getResourceColumn = (state, columnId) => {
 
 export const getResourceMetadata = (state, resourceSlug) => {
   return state.resources.metadata[resourceSlug];
+};
+
+
+export const getResourceData = (state, resourceSlug) => {
+  return state.resources.data[resourceSlug] || {};
 };

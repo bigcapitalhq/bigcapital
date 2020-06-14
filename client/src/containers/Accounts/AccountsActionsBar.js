@@ -58,9 +58,9 @@ function AccountsActionsBar({
   const viewsMenuItems = accountsViews.map((view) => {
     return <MenuItem onClick={() => onClickViewItem(view)} text={view.name} />;
   });
-  const hasSelectedRows = useMemo(() => selectedRows.length > 0, [
-    selectedRows,
-  ]);
+  const hasSelectedRows = useMemo(
+    () => selectedRows.length > 0,
+    [selectedRows]);
 
   const filterDropdown = FilterDropdown({
     fields: resourceFields,
@@ -72,10 +72,6 @@ function AccountsActionsBar({
       onFilterChanged && onFilterChanged(filterConditions);
     },
   });
-
-  // const handleBulkArchive = useCallback(() => {
-  //   onBulkArchive && onBulkArchive(selectedRows.map(r => r.id));
-  // }, [onBulkArchive, selectedRows]);
 
   const handleBulkDelete = useCallback(() => {
     onBulkDelete && onBulkDelete(selectedRows.map((r) => r.id));
@@ -100,8 +96,8 @@ function AccountsActionsBar({
         >
           <Button
             className={classNames(Classes.MINIMAL, 'button--table-views')}
-            icon={<Icon icon='table-16' iconSize={16} />}
-            text={<T id={'table_views'}/>}
+            icon={<Icon icon="table-16" iconSize={16} />}
+            text={<T id={'table_views'} />}
             rightIcon={'caret-down'}
           />
         </Popover>
@@ -119,30 +115,40 @@ function AccountsActionsBar({
           content={filterDropdown}
           interactionKind={PopoverInteractionKind.CLICK}
           position={Position.BOTTOM_LEFT}
+          canOutsideClickClose={true}
         >
           <Button
-            className={classNames(Classes.MINIMAL, 'button--filter')}
-            text={filterCount <= 0 ? <T id={'filter'}/> : `${filterCount} filters applied`}
-            icon={ <Icon icon="filter-16" iconSize={16} /> }/>
+            className={classNames(Classes.MINIMAL, 'button--filter', {
+              'has-active-filters': filterCount > 0,
+            })}
+            text={
+              filterCount <= 0 ? (
+                <T id={'filter'} />
+              ) : (
+                `${filterCount} filters applied`
+              )
+            }
+            icon={<Icon icon="filter-16" iconSize={16} />}
+          />
         </Popover>
 
         <If condition={hasSelectedRows}>
           <Button
             className={Classes.MINIMAL}
-            icon={<Icon icon='play-16' iconSize={16} />}
-            text={<T id={'activate'}/>}
+            icon={<Icon icon="play-16" iconSize={16} />}
+            text={<T id={'activate'} />}
             onClick={handelBulkActivate}
           />
           <Button
             className={Classes.MINIMAL}
-            icon={<Icon icon='pause-16' iconSize={16} />}
-            text={<T id={'inactivate'}/>}
+            icon={<Icon icon="pause-16" iconSize={16} />}
+            text={<T id={'inactivate'} />}
             onClick={handelBulkInactive}
           />
           <Button
             className={Classes.MINIMAL}
-            icon={<Icon icon='trash-16' iconSize={16} />}
-            text={<T id={'delete'}/>}
+            icon={<Icon icon="trash-16" iconSize={16} />}
+            text={<T id={'delete'} />}
             intent={Intent.DANGER}
             onClick={handleBulkDelete}
           />
@@ -150,18 +156,18 @@ function AccountsActionsBar({
 
         <Button
           className={Classes.MINIMAL}
-          icon={<Icon icon='print-16' iconSize={16} />}
-          text={<T id={'print'}/>}
+          icon={<Icon icon="print-16" iconSize={16} />}
+          text={<T id={'print'} />}
         />
         <Button
           className={Classes.MINIMAL}
-          icon={<Icon icon='file-export-16' iconSize={16} />}
-          text={<T id={'export'}/>}
+          icon={<Icon icon="file-export-16" iconSize={16} />}
+          text={<T id={'export'} />}
         />
         <Button
           className={Classes.MINIMAL}
-          icon={<Icon icon='file-import-16' iconSize={16} />}
-          text={<T id={'import'}/>}
+          icon={<Icon icon="file-import-16" iconSize={16} />}
+          text={<T id={'import'} />}
         />
       </NavbarGroup>
     </DashboardActionsBar>

@@ -76,6 +76,7 @@ function GeneralLedgerHeader({
             />
           </FormGroup>
         </Col>
+
         <Col sm={3}>
           <RadiosAccountingBasis
             onChange={handleAccountingBasisChange}

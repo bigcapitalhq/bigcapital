@@ -18,8 +18,6 @@ import withSettings from 'containers/Settings/withSettings';
 import withBalanceSheetActions from './withBalanceSheetActions';
 import withBalanceSheetDetail from './withBalanceSheetDetail';
 
-
-
 function BalanceSheet({
   // #withDashboardActions
   changePageTitle,

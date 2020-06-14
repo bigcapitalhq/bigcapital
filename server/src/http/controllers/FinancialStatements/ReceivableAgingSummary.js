@@ -29,8 +29,6 @@ export default class ReceivableAgingSummary extends AgingReport {
   static async validateCustomersIds(req, res, next) {
     const { Customer } = req.models;
 
-    console.log(req.query);
-
     const filter = {
       customer_ids: [],
       ...req.query,
@@ -100,6 +98,7 @@ export default class ReceivableAgingSummary extends AgingReport {
         divide_1000: false,
       },
       customer_ids: [],
+      none_zero: false,
       ...req.query,
     };
     if (!Array.isArray(filter.customer_ids)) {

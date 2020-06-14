@@ -190,12 +190,7 @@ function AccountFormDialog({
   // Account item of select accounts field.
   const accountItem = (item, { handleClick, modifiers, query }) => {
     return (
-      <MenuItem
-        text={item.name}
-        label={item.code}
-        key={item.id}
-        onClick={handleClick}
-      />
+      <MenuItem text={item.name} label={item.code} key={item.id} onClick={handleClick} />
     );
   };
 

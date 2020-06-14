@@ -2,7 +2,6 @@ import { createReducer } from '@reduxjs/toolkit';
 import { createTableQueryReducers } from 'store/queryReducers';
 
 import t from 'store/types';
-import { omit } from 'lodash';
 
 const initialState = {
   items: {},
@@ -90,7 +89,5 @@ const reducer = createReducer(initialState, {
 export default createTableQueryReducers('expenses', reducer);
 
 export const getExpenseById = (state, id) => {
-  // debugger;
-  // state.items = omit(state.items, [id]);
-  return state.expenses.items[id];
+  return state.expenses.items[id] || {};
 };

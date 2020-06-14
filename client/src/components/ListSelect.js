@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import {
   Button,
+  MenuItem,
 } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
+import { FormattedMessage as T } from 'react-intl';
 
 export default function ListSelect ({
   buttonProps,
   defaultText,
+  noResultsText = (<T id="no_results" />),
+  isLoading = false,
   labelProp,
 
   selectedItem,
@@ -22,12 +26,17 @@ export default function ListSelect ({
     }
   }, [selectedItem, selectedItemProp, selectProps.items]);
 
+  const noResults = isLoading ?
+    ('loading') : <MenuItem disabled={true} text={noResultsText} />;
+
   return (
     <Select
       {...selectProps}
+      noResults={noResults}
     >
       <Button
         text={currentItem ? currentItem[labelProp] : defaultText}
+        loading={isLoading}
         {...buttonProps}
       />
     </Select>

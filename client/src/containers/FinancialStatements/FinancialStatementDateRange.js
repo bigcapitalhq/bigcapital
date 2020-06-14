@@ -3,7 +3,6 @@ import {Row, Col} from 'react-grid-system';
 import {momentFormatter} from 'utils';
 import {DateInput} from '@blueprintjs/datetime';
 import { useIntl } from 'react-intl';
-
 import {
   HTMLSelect,
   FormGroup, 
@@ -11,6 +10,7 @@ import {
   Position,
 } from '@blueprintjs/core';
 import Icon from 'components/Icon';
+import { FieldHint } from 'components';
 import {
   parseDateRangeQuery
 } from 'utils';
@@ -87,7 +87,7 @@ export default function FinancialStatementDateRange({
       <Col sm={3}>
         <FormGroup
           label={intl.formatMessage({'id': 'to_date'})}
-          labelInfo={infoIcon}          
+          labelInfo={<FieldHint />}          
           fill={true}
           intent={formik.errors.to_date && Intent.DANGER}>
 

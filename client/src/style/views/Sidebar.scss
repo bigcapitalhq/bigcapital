@@ -22,7 +22,7 @@ $sidebar-popover-submenu-bg: rgb(1, 20, 62);
     &.ScrollbarsCustom-ThumbX,
     &.ScrollbarsCustom-ThumbY {
       background: rgba(0, 0, 0, 0);
-    }      
+    }
   }
 
   &:hover {
@@ -37,7 +37,7 @@ $sidebar-popover-submenu-bg: rgb(1, 20, 62);
     padding: 16px 12px;
    
     &-logo{
-      margin-top: 4px;
+      margin-top: 2px;
 
       svg{
         opacity: 0.5;

@@ -71,12 +71,8 @@ function ExpensesList({
     requestDeleteExpense(deleteExpense.id).then(() => {
       AppToaster.show({
         message: formatMessage(
-          {
-            id: 'the_expense_has_been_successfully_deleted',
-          },
-          {
-            number: deleteExpense.payment_account_id,
-          },
+          { id: 'the_expense_has_been_successfully_deleted' },
+          { number: deleteExpense.payment_account_id },
         ),
         intent: Intent.SUCCESS,
       });
@@ -102,8 +98,8 @@ function ExpensesList({
       .then(() => {
         AppToaster.show({
           message: formatMessage(
-            { id: 'the_expenses_has_been_successfully_deleted', },
-            { count: selectedRowsCount, },
+            { id: 'the_expenses_has_been_successfully_deleted' },
+            { count: selectedRowsCount },
           ),
           intent: Intent.SUCCESS,
         });
@@ -112,8 +108,8 @@ function ExpensesList({
       .catch((error) => {
         setBulkDelete(false);
       });
-  
-      // @todo 
+
+    // @todo
   }, [requestDeleteBulkExpenses, bulkDelete, formatMessage, selectedRowsCount]);
 
   // Handle cancel bulk delete alert.
@@ -179,11 +175,11 @@ function ExpensesList({
       <DashboardPageContent>
         <Switch>
           <Route
-            // exact={true}
-            // path={[
-            //   '/expenses/:custom_view_id/custom_view',
-            //   '/expenses/new',
-            // ]}
+          // exact={true}
+          // path={[
+          //   '/expenses/:custom_view_id/custom_view',
+          //   '/expenses/new',
+          // ]}
           >
             <ExpenseViewTabs />
 
