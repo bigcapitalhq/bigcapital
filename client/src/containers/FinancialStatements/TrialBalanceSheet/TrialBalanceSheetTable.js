@@ -14,13 +14,13 @@ import { compose } from 'utils';
 function TrialBalanceSheetTable({
   // #withTrialBalanceDetail
   trialBalanceAccounts,
+  trialBalanceSheetLoading,
 
   // #withTrialBalanceTable
   trialBalanceIndex,
   trialBalanceQuery,
 
   onFetchData,
-  loading,
   companyName,
 }) {
   const { formatMessage } = useIntl();
@@ -31,30 +31,41 @@ function TrialBalanceSheetTable({
         Header: formatMessage({ id: 'account_name' }),
         accessor: 'name',
         className: 'name',
+        minWidth: 150,
+        maxWidth: 150,
+        width: 150,
       },
       {
         Header: formatMessage({ id: 'code' }),
         accessor: 'code',
         className: 'code',
-        width: 120,
+        minWidth: 80,
+        maxWidth: 80,
+        width: 80,
       },
       {
         Header: formatMessage({ id: 'credit' }),
         accessor: (r) => <Money amount={r.credit} currency="USD" />,
         className: 'credit',
-        width: 120,
+        minWidth: 95,
+        maxWidth: 95,
+        width: 95,
       },
       {
         Header: formatMessage({ id: 'debit' }),
         accessor: (r) => <Money amount={r.debit} currency="USD" />,
         className: 'debit',
-        width: 120,
+        minWidth: 95,
+        maxWidth: 95,
+        width: 95,
       },
       {
         Header: formatMessage({ id: 'balance' }),
         accessor: (r) => <Money amount={r.balance} currency="USD" />,
         className: 'balance',
-        width: 120,
+        minWidth: 95,
+        maxWidth: 95,
+        width: 95,
       },
     ],
     [formatMessage],
@@ -71,7 +82,7 @@ function TrialBalanceSheetTable({
       fromDate={trialBalanceQuery.from_date}
       toDate={trialBalanceQuery.to_date}
       name="trial-balance"
-      loading={loading}
+      loading={trialBalanceSheetLoading}
     >
       <DataTable
         className="bigcapital-datatable--financial-report"
@@ -100,7 +111,11 @@ const withTrialBalanceTable = connect(mapStateToProps);
 
 export default compose(
   withTrialBalanceTable,
-  withTrialBalance(({ trialBalanceAccounts }) => ({
+  withTrialBalance(({
     trialBalanceAccounts,
+    trialBalanceSheetLoading,
+  }) => ({
+    trialBalanceAccounts,
+    trialBalanceSheetLoading
   })),
 )(TrialBalanceSheetTable);

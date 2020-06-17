@@ -24,9 +24,6 @@ function ProfitLossSheet({
   // #withProfitLossActions
   fetchProfitLossSheet,
 
-  // #withProfitLoss
-  profitLossSheetLoading,
-
   // #withPreferences
   organizationSettings,
 }) {
@@ -35,6 +32,7 @@ function ProfitLossSheet({
     from_date: moment().startOf('year').format('YYYY-MM-DD'),
     to_date: moment().endOf('year').format('YYYY-MM-DD'),
   });
+  const [refresh, setRefresh] = useState(true);
 
   // Change page title of the dashboard.
   useEffect(() => {
@@ -54,13 +52,20 @@ function ProfitLossSheet({
       to_date: moment(filter.to_date).format('YYYY-MM-DD'),
     };
     setFilter(_filter);
-    fetchHook.refetch({ force: true });
+    setRefresh(true);
   }, []);
 
   // Handle fetch data of profit/loss sheet table.
   const handleFetchData = useCallback(() => {
-    fetchHook.refetch({ force: true });
+    setRefresh(true);
   }, []);
+
+  useEffect(() => {
+    if (refresh) {
+      fetchHook.refetch({ force: true });
+      setRefresh(false);
+    }
+  }, [refresh, fetchHook]);
 
   return (
     <DashboardInsider>
@@ -76,8 +81,7 @@ function ProfitLossSheet({
             <ProfitLossSheetTable
               companyName={organizationSettings.name}
               profitLossQuery={filter}
-              onFetchData={handleFetchData}
-              loading={profitLossSheetLoading} />
+              onFetchData={handleFetchData} />
           </div> 
         </div>
       </DashboardPageContent>
@@ -88,8 +92,5 @@ function ProfitLossSheet({
 export default compose(
   withDashboardActions,
   withProfitLossActions,
-  withProfitLoss(({ profitLossSheetLoading }) => ({
-    profitLossSheetLoading,
-  })),
   withSettings,
 )(ProfitLossSheet);

@@ -68,8 +68,8 @@
         background-size: contain;
         background-color: #EED1F2;
         border-radius: 50%;
-        height: 30px;
-        width: 30px;
+        height: 35px;
+        width: 35px;
 
         .user-text {
           font-size: 12px;
@@ -155,6 +155,19 @@
           &:focus{
             background: rgba(219, 55, 55, 0.1);
           }
+        }
+
+        &.button--blue-highlight{
+          background-color: #ebfaff;
+
+          &:hover,
+          &:focus{
+            background-color: darken(#ebfaff, 2.5%);
+          }
+        }
+
+        &.button--gray-highlight{
+          background-color: rgba(127, 189, 255, 0.1);
         }
       }
 

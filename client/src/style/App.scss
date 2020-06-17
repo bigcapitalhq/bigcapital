@@ -6,6 +6,11 @@ $pt-popover-box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.02),
 @import '@blueprintjs/core/src/common/_variables.scss';
 // @import "@blueprintjs/core/src/common/colors.scss";
 
+$blue1: #0069ff;
+$blue2: #0052ff;
+$blue3: rgb(0, 82, 204);
+$pt-link-color: $blue3;
+$pt-intent-primary: $blue1;
 $menu-item-color-hover: $light-gray4;
 $menu-item-color-active: $light-gray3;
 
@@ -117,4 +122,14 @@ body.authentication {
 
 .bp3-datepicker-caption .bp3-html-select::after{
   margin-right: 6px;
+}
+
+
+.hint{
+  color: #a1b2c5;
+  margin-left: 6px;
+
+  .bp3-icon{
+    vertical-align: middle;
+  }
 }

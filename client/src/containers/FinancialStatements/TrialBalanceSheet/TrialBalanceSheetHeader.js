@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useEffect } from 'react';
 import * as Yup from 'yup';
 import moment from 'moment';
 import { Row, Col } from 'react-grid-system';
@@ -9,6 +9,7 @@ import { Button } from "@blueprintjs/core";
 import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
 import FinancialStatementDateRange from 'containers/FinancialStatements/FinancialStatementDateRange';
 import withTrialBalance from './withTrialBalance';
+import withTrialBalanceActions from './withTrialBalanceActions';
 
 import { compose } from 'utils';
 
@@ -19,6 +20,10 @@ function TrialBalanceSheetHeader({
 
   // #withTrialBalance
   trialBalanceSheetFilter,
+  trialBalanceSheetRefresh,
+
+  // #withTrialBalanceActions
+  refreshTrialBalance,
 }) {
   const { formatMessage } = useIntl();
   const formik = useFormik({
@@ -38,29 +43,29 @@ function TrialBalanceSheetHeader({
     }
   });
 
-  const handleSubmitClick = useCallback(() => {
-    formik.submitForm();
-  }, [formik]);
+  useEffect(() => {
+    if (trialBalanceSheetRefresh) {
+      formik.submitForm();
+      refreshTrialBalance(false);
+    }
+  }, [formik, trialBalanceSheetRefresh]);
 
   return (
     <FinancialStatementHeader show={trialBalanceSheetFilter}>
-      <FinancialStatementDateRange formik={formik} />
-
       <Row>
-        <Col sm={3}>
-          <Button
-            type="submit"
-            onClick={handleSubmitClick}
-            disabled={formik.isSubmitting}
-            className={'button--submit-filter'}>
-            <T id={'run_report'} />
-          </Button>
-        </Col>
+        <FinancialStatementDateRange formik={formik} />
       </Row>
     </FinancialStatementHeader>
   );
 }
 
 export default compose(
-  withTrialBalance(({ trialBalanceSheetFilter }) => ({ trialBalanceSheetFilter })),
+  withTrialBalance(({
+    trialBalanceSheetFilter,
+    trialBalanceSheetRefresh,
+  }) => ({
+    trialBalanceSheetFilter,
+    trialBalanceSheetRefresh
+  })),
+  withTrialBalanceActions,
 )(TrialBalanceSheetHeader);

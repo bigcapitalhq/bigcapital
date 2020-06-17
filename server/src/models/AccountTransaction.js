@@ -16,7 +16,7 @@ export default class AccountTransaction extends mixin(TenantModel, [CachableMode
   /**
    * Timestamps columns.
    */
-  static get timestamps() {
+  get timestamps() {
     return ['createdAt'];
   }
 

@@ -3,7 +3,7 @@ import moment from 'moment';
 export default (Model) => {
   return class DateSession extends Model {
 
-    static get timestamps() {
+    get timestamps() {
       return ['createdAt', 'updatedAt'];
     }
 
@@ -11,8 +11,8 @@ export default (Model) => {
       const maybePromise = super.$beforeUpdate(opt, context);
 
       return Promise.resolve(maybePromise).then(() => {
-        if (DateSession.timestamps[1]) {
-          this[DateSession.timestamps[1]] = moment().format('YYYY/MM/DD HH:mm:ss');
+        if (this.timestamps[1]) {
+          this[this.timestamps[1]] = moment().format('YYYY/MM/DD HH:mm:ss');
         }
       });
     }
@@ -21,8 +21,8 @@ export default (Model) => {
       const maybePromise = super.$beforeInsert(context);
 
       return Promise.resolve(maybePromise).then(() => {
-        if (DateSession.timestamps[0]) {
-          this[DateSession.timestamps[0]] = moment().format('YYYY/MM/DD HH:mm:ss');
+        if (this.timestamps[0]) {
+          this[this.timestamps[0]] = moment().format('YYYY/MM/DD HH:mm:ss');
         }
       });
     }

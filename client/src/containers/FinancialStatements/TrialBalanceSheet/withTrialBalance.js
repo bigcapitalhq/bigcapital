@@ -19,6 +19,7 @@ export default (mapState) => {
       ),
       trialBalanceSheetLoading: state.financialStatements.trialBalance.loading,
       trialBalanceSheetFilter: state.financialStatements.trialBalance.filter,
+      trialBalanceSheetRefresh: state.financialStatements.trialBalance.refresh,
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };

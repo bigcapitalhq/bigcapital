@@ -25,23 +25,25 @@ function ReceivableAgingSummarySheet({
 }) {
   const { formatMessage } = useIntl();
   const [query, setQuery] = useState({
-    as_date: moment().format('YYYY-MM-DD'),
+    as_date: moment().endOf('day').format('YYYY-MM-DD'),
     aging_before_days: 30,
     aging_periods: 3,
   });
+  const [refresh, setRefresh] = useState(true);
 
   useEffect(() => {
     changePageTitle(formatMessage({ id: 'receivable_aging_summary' }));
   }, []);
 
-  const fetchSheet = useQuery(['receivable-aging-summary', query], 
+  const fetchSheet = useQuery(
+    ['receivable-aging-summary', query], 
     (key, q) => requestReceivableAgingSummary(q),
     { manual: true });
 
   // Handle fetch the data of receivable aging summary sheet.
-  const handleFetchData = useCallback(() => {
-    fetchSheet.refetch({ force: true });
-  }, [fetchSheet]);
+  const handleFetchData = useCallback((...args) => {
+    setRefresh(true);
+  }, []);
 
   const handleFilterSubmit = useCallback((filter) => {
     const _filter = {
@@ -49,8 +51,15 @@ function ReceivableAgingSummarySheet({
       as_date: moment(filter.as_date).format('YYYY-MM-DD'),
     };
     setQuery(_filter);
-    fetchSheet.refetch({ force: true });
-  }, [fetchSheet]);
+    setRefresh(true);
+  }, []);
+
+  useEffect(() => {
+    if (refresh) {
+      fetchSheet.refetch({ force: true });
+      setRefresh(false);
+    }
+  }, [fetchSheet, refresh]);
 
   return (
     <DashboardInsider>
@@ -59,6 +68,7 @@ function ReceivableAgingSummarySheet({
       <DashboardPageContent>
         <FinancialStatement>
           <ReceivableAgingSummaryHeader
+            pageFilter={query}
             onSubmitFilter={handleFilterSubmit} />
 
           <div class="financial-statement__body">

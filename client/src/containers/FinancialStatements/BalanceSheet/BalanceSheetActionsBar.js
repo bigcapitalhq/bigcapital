@@ -22,8 +22,12 @@ import withBalanceSheetActions from './withBalanceSheetActions';
 
 
 function BalanceSheetActionsBar({
+  // #withBalanceSheetDetail
   balanceSheetFilter,
+
+  // #withBalanceSheetActions
   toggleBalanceSheetFilter,
+  refreshBalanceSheet
 }) {
   const filterDropdown = FilterDropdown({
     fields: [],
@@ -32,6 +36,10 @@ function BalanceSheetActionsBar({
 
   const handleFilterToggleClick = () => {
     toggleBalanceSheetFilter();
+  };
+
+  const handleRecalcReport = () => {
+    refreshBalanceSheet(true);
   };
 
   return (
@@ -43,6 +51,16 @@ function BalanceSheetActionsBar({
           text={<T id={'customize_report'} />}
         />
         <NavbarDivider />
+
+        <Button
+          className={classNames(
+            Classes.MINIMAL,
+            'button--gray-highlight',
+          )}
+          text={<T id={'recalc_report'} />}
+          onClick={handleRecalcReport}
+          icon={<Icon icon="refresh-16" iconSize={16} />}
+        />
 
         <If condition={balanceSheetFilter}>
           <Button
@@ -61,7 +79,6 @@ function BalanceSheetActionsBar({
             icon={<Icon icon="arrow-to-bottom" />}
           />
         </If>
-        <NavbarDivider />
 
         <Popover
           content={filterDropdown}
@@ -74,6 +91,8 @@ function BalanceSheetActionsBar({
             icon={<Icon icon="filter-16" iconSize={16} />}
           />
         </Popover>
+
+        <NavbarDivider />
 
         <Button
           className={Classes.MINIMAL}

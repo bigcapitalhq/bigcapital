@@ -17,6 +17,7 @@ export default (mapState) => {
       balanceSheetQuery: getFinancialSheetQuery(state.financialStatements.balanceSheet.sheets, balanceSheetIndex),
       balanceSheetLoading: state.financialStatements.balanceSheet.loading,
       balanceSheetFilter: state.financialStatements.balanceSheet.filter,
+      balanceSheetRefresh: state.financialStatements.balanceSheet.refresh,
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };

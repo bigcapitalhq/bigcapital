@@ -1,6 +1,6 @@
-import React, { useCallback } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { Button, FormGroup, Classes } from '@blueprintjs/core';
-import { Row, Col } from 'react-grid-system';
+import { Row, Col, Visible } from 'react-grid-system';
 import moment from 'moment';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
@@ -13,9 +13,12 @@ import withAccounts from 'containers/Accounts/withAccounts';
 import classNames from 'classnames';
 import FinancialStatementDateRange from 'containers/FinancialStatements/FinancialStatementDateRange';
 import RadiosAccountingBasis from '../RadiosAccountingBasis';
-import { compose } from 'utils';
 
 import withGeneralLedger from './withGeneralLedger';
+import withGeneralLedgerActions from './withGeneralLedgerActions';
+
+import { compose } from 'utils';
+
 
 function GeneralLedgerHeader({
   onSubmitFilter,
@@ -24,8 +27,12 @@ function GeneralLedgerHeader({
   // #withAccounts
   accounts,
 
+  // #withGeneralLedgerActions
+  refreshGeneralLedgerSheet,
+
   // #withGeneralLedger
   generalLedgerSheetFilter,
+  generalLedgerSheetRefresh
 }) {
   const formik = useFormik({
     enableReinitialize: true,
@@ -44,13 +51,8 @@ function GeneralLedgerHeader({
     },
   });
 
-  // handle submit filter submit button.
-  const handleSubmitClick = useCallback(() => {
-    formik.submitForm();
-  }, []);
-
   const onAccountSelected = useCallback((selectedAccounts) => {
-    console.log(selectedAccounts);
+    
   }, []);
 
   const handleAccountingBasisChange = useCallback(
@@ -59,13 +61,23 @@ function GeneralLedgerHeader({
     },
     [formik],
   );
+  
+  // handle submit filter submit button.
+  useEffect(() => {
+    if (generalLedgerSheetRefresh) {
+      formik.submitForm();
+      refreshGeneralLedgerSheet(false);
+    }
+  }, [formik, generalLedgerSheetRefresh])
 
   return (
     <FinancialStatementHeader show={generalLedgerSheetFilter}>
-      <FinancialStatementDateRange formik={formik} />
-
       <Row>
-        <Col sm={3}>
+        <FinancialStatementDateRange formik={formik} />
+
+        <Visible xl><Col width={'100%'} /></Visible>
+
+        <Col width={260}>
           <FormGroup
             label={<T id={'specific_accounts'} />}
             className={classNames('form-group--select-list', Classes.FILL)}
@@ -77,23 +89,13 @@ function GeneralLedgerHeader({
           </FormGroup>
         </Col>
 
-        <Col sm={3}>
+        <Col width={260}>
           <RadiosAccountingBasis
             onChange={handleAccountingBasisChange}
             selectedValue={formik.values.basis}
           />
         </Col>
 
-        <Col sm={3}>
-          <Button
-            type="submit"
-            onClick={handleSubmitClick}
-            disabled={formik.isSubmitting}
-            className={'button--submit-filter mt2'}
-          >
-            <T id={'calculate_report'} />
-          </Button>
-        </Col>
       </Row>
     </FinancialStatementHeader>
   );
@@ -103,7 +105,9 @@ export default compose(
   withAccounts(({ accounts }) => ({
     accounts,
   })),
-  withGeneralLedger(({ generalLedgerSheetFilter }) => ({
+  withGeneralLedger(({ generalLedgerSheetFilter, generalLedgerSheetRefresh }) => ({
     generalLedgerSheetFilter,
+    generalLedgerSheetRefresh,
   })),
+  withGeneralLedgerActions,
 )(GeneralLedgerHeader);

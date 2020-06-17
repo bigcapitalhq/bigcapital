@@ -13,9 +13,7 @@ import { compose } from 'utils';
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withTrialBalanceActions from './withTrialBalanceActions';
-import withTrialBalance from './withTrialBalance';
 import withSettings from 'containers/Settings/withSettings';
-
 
 function TrialBalanceSheet({
   // #withDashboardActions
@@ -23,9 +21,6 @@ function TrialBalanceSheet({
 
   // #withTrialBalanceActions
   fetchTrialBalanceSheet,
-
-  // #withTrialBalance
-  trialBalanceSheetLoading,
 
   // #withPreferences
   organizationSettings,
@@ -36,6 +31,7 @@ function TrialBalanceSheet({
     basis: 'accural',
     none_zero: false,
   });
+  const [refresh, setRefresh] = useState(true);
   const { formatMessage } = useIntl();
 
   const fetchHook = useQuery(
@@ -46,7 +42,7 @@ function TrialBalanceSheet({
 
   // handle fetch data of trial balance table.
   const handleFetchData = useCallback(() => {
-    fetchHook.refetch({ force: true });
+    setRefresh(true);
   }, []);
 
   // Change page title of the dashboard.
@@ -62,10 +58,17 @@ function TrialBalanceSheet({
         to_date: moment(filter.to_date).format('YYYY-MM-DD'),
       };
       setFilter(parsedFilter);
-      fetchHook.refetch({ force: true });
+      setRefresh(true);
     },
     [fetchHook],
   );
+
+  useEffect(() => {
+    if (refresh) {
+      fetchHook.refetch({ force: true });
+      setRefresh(false);
+    }
+  }, [refresh, fetchHook.refetch]);
 
   return (
     <DashboardInsider>
@@ -83,7 +86,6 @@ function TrialBalanceSheet({
               companyName={organizationSettings.name}
               trialBalanceQuery={filter}
               onFetchData={handleFetchData}
-              loading={trialBalanceSheetLoading}
             />
           </div>
         </div>
@@ -95,8 +97,5 @@ function TrialBalanceSheet({
 export default compose(
   withDashboardActions,
   withTrialBalanceActions,
-  withTrialBalance(({ trialBalanceSheetLoading }) => ({
-    trialBalanceSheetLoading,
-  })),
   withSettings,
 )(TrialBalanceSheet);

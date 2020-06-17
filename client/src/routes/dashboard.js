@@ -92,7 +92,7 @@ export default [
 
   // Financial Reports.
   {
-    path: `/general-ledger`,
+    path: `/financial-reports/general-ledger`,
     component: LazyLoader({
       loader: () =>
         import('containers/FinancialStatements/GeneralLedger/GeneralLedger'),
@@ -100,7 +100,7 @@ export default [
     breadcrumb: 'General Ledger',
   },
   {
-    path: `/balance-sheet`,
+    path: `/financial-reports/balance-sheet`,
     component: LazyLoader({
       loader: () =>
         import('containers/FinancialStatements/BalanceSheet/BalanceSheet'),
@@ -108,41 +108,48 @@ export default [
     breadcrumb: 'Balance Sheet',
   },
   {
-    path: `/trial-balance-sheet`,
+    path: `/financial-reports/trial-balance-sheet`,
     component: LazyLoader({
       loader: () =>
         import(
           'containers/FinancialStatements/TrialBalanceSheet/TrialBalanceSheet'
         ),
-      breadcrumb: 'Trial Balance Sheet',
     }),
+    breadcrumb: 'Trial Balance Sheet',
   },
   {
-    path: `/profit-loss-sheet`,
+    path: `/financial-reports/profit-loss-sheet`,
     component: LazyLoader({
       loader: () =>
         import(
           'containers/FinancialStatements/ProfitLossSheet/ProfitLossSheet'
         ),
-      breadcrumb: 'Profit Loss Sheet',
     }),
+    breadcrumb: 'Profit Loss Sheet',
   },
   {
-    path: '/receivable-aging-summary',
+    path: '/financial-reports/receivable-aging-summary',
     component: LazyLoader({
       loader: () =>
         import(
           'containers/FinancialStatements/ReceivableAgingSummary/ReceivableAgingSummary'
         ),
-      breadcrumb: 'Receivable Aging Summary',
     }),
+    breadcrumb: 'Receivable Aging Summary',
   },
   {
-    path: `/journal-sheet`,
+    path: `/financial-reports/journal-sheet`,
     component: LazyLoader({
       loader: () => import('containers/FinancialStatements/Journal/Journal'),
     }),
     breadcrumb: 'Journal Sheet',
+  },
+  {
+    path: '/financial-reports',
+    component: LazyLoader({
+      loader: () => import('containers/FinancialStatements/FinancialReports'),
+    }),
+    breadcrumb: 'Financial Reports',
   },
   {
     path: `/ExchangeRates`,
@@ -158,7 +165,6 @@ export default [
       loader: () => import('containers/Expenses/Expenses'),
     }),
     breadcrumb: 'Expenses',
-
   },
   {
     path: `/expenses/:id/edit`,

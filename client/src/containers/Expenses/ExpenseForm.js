@@ -12,10 +12,11 @@ import { Intent, FormGroup, TextArea } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { pick } from 'lodash';
 import { useQuery } from 'react-query';
+import { Col, Row } from 'react-grid-system';
 
 import ExpenseFormHeader from './ExpenseFormHeader';
 import ExpenseTable from './ExpenseTable';
-import ExpenseFooter from './ExpenseFooter';
+import ExpenseFloatingFooter from './ExpenseFooter';
 
 import withExpensesActions from 'containers/Expenses/withExpensesActions';
 import withExpneseDetail from 'containers/Expenses/withExpenseDetail';
@@ -76,11 +77,11 @@ function ExpenseForm({
   useEffect(() => {
     if (expenseDetail && expenseDetail.id) {
       changePageTitle(formatMessage({ id: 'edit_expense' }));
-      changePageSubtitle(`No. ${expenseDetail.payment_account_id}`);
+      // changePageSubtitle(`No. ${expenseDetail.payment_account_id}`);
     } else {
       changePageTitle(formatMessage({ id: 'new_expense' }));
     }
-  // @todo not functions just states.
+    // @todo not functions just states.
   }, [changePageTitle, changePageSubtitle, expenseDetail, formatMessage]);
 
   const validationSchema = Yup.object().shape({
@@ -137,7 +138,6 @@ function ExpenseForm({
       reference_no: '',
       currency_code: '',
       categories: [
-        // @todo @mohamed index
         defaultCategory,
         defaultCategory,
         defaultCategory,
@@ -154,7 +154,8 @@ function ExpenseForm({
             ...pick(expenseDetail, Object.keys(defaultInitialValues)),
             categories: expenseDetail.categories.map((category) => ({
               ...pick(category, Object.keys(defaultCategory)),
-            })),
+              }),
+            ),
           }
         : {
             ...defaultInitialValues,
@@ -257,7 +258,7 @@ function ExpenseForm({
     },
   });
 
-  console.log(formik.errors);
+  console.log(formik.values, 'VALUES');
 
   const handleSubmitClick = useCallback(
     (payload) => {
@@ -298,29 +299,32 @@ function ExpenseForm({
           defaultRow={defaultCategory}
         />
 
-        <FormGroup
-          label={<T id={'description'} />}
-          className={'form-group--description'}
-        >
-          <TextArea
-            growVertically={true}
-            large={true}
-            {...formik.getFieldProps('description')}
-          />
-        </FormGroup>
+        <div class="expense-form-footer">
+          <FormGroup
+            label={<T id={'description'} />}
+            className={'form-group--description'}
+          >
+            <TextArea
+              growVertically={true}
+              large={true}
+              {...formik.getFieldProps('description')}
+            />
+          </FormGroup>
 
-        <ExpenseFooter
+          <Dragzone
+            initialFiles={initialAttachmentFiles}
+            onDrop={handleDropFiles}
+            onDeleteFile={handleDeleteFile}
+            hint={'Attachments: Maxiumum size: 20MB'}
+          />
+        </div>
+
+        <ExpenseFloatingFooter
           formik={formik}
           onSubmitClick={handleSubmitClick}
           onCancelClick={handleCancelClick}
         />
       </form>
-      <Dragzone
-        initialFiles={initialAttachmentFiles}
-        onDrop={handleDropFiles}
-        onDeleteFile={handleDeleteFile}
-        hint={'Attachments: Maxiumum size: 20MB'}
-      />
     </div>
   );
 }

@@ -20,10 +20,15 @@ function TrialBalanceActionsBar({
 
   // #withTrialBalanceActions
   toggleTrialBalanceFilter,
+  refreshTrialBalance,
 }) {
 
   const handleFilterToggleClick = () => {
     toggleTrialBalanceFilter();
+  };
+
+  const handleRecalcReport = () => {
+    refreshTrialBalance(true);
   };
 
   return (
@@ -35,6 +40,16 @@ function TrialBalanceActionsBar({
           text={<T id={'customize_report'} />}
         />
         <NavbarDivider />
+
+        <Button
+          className={classNames(
+            Classes.MINIMAL,
+            'button--gray-highlight',
+          )}
+          text={'Re-calc Report'}
+          onClick={handleRecalcReport}
+          icon={<Icon icon="refresh-16" iconSize={16} />}
+        />
 
         <If condition={trialBalanceSheetFilter}>
           <Button

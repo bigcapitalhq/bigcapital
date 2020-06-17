@@ -1,9 +1,11 @@
 import React, { useCallback } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { useQuery } from 'react-query';
+
 import MakeJournalEntriesForm from './MakeJournalEntriesForm';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 
+import withCustomersActions from 'containers/Customers/withCustomersActions';
 import withAccountsActions from 'containers/Accounts/withAccountsActions';
 import withManualJournalsActions from 'containers/Accounting/withManualJournalsActions';
 
@@ -11,14 +13,23 @@ import {compose} from 'utils';
 
 
 function MakeJournalEntriesPage({
-  requestFetchManualJournal,
+  // #withCustomersActions
+  requestFetchCustomers,
+
+  // #withAccountsActions
   requestFetchAccounts,
+
+  // #withManualJournalActions
+  requestFetchManualJournal,
 }) {
   const history = useHistory();
   const { id } = useParams();
 
   const fetchAccounts = useQuery('accounts-list',
     (key) => requestFetchAccounts());
+
+  const fetchCustomers = useQuery('customers-list',
+    (key) => requestFetchCustomers());
 
   const fetchJournal = useQuery(
     id && ['manual-journal', id],
@@ -35,7 +46,11 @@ function MakeJournalEntriesPage({
 
   return (
     <DashboardInsider
-      loading={fetchJournal.isFetching || fetchAccounts.isFetching}
+      loading={
+        fetchJournal.isFetching ||
+        fetchAccounts.isFetching ||
+        fetchCustomers.isFetching
+      }
       name={'make-journal-page'}>
       <MakeJournalEntriesForm
         onFormSubmit={handleFormSubmit}
@@ -47,5 +62,6 @@ function MakeJournalEntriesPage({
 
 export default compose(
   withAccountsActions,
+  withCustomersActions,
   withManualJournalsActions,
 )(MakeJournalEntriesPage);

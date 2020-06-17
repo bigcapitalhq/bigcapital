@@ -254,8 +254,14 @@
           border-top: 1px solid #666;
           border-bottom: 1px solid #666;
   
-          padding: 10px 0.4rem;
+          padding: 8px 0.4rem;
           color: #222;
+        }
+      }
+
+      .tbody{
+        .tr .td{
+          border-bottom: 1px dotted #BBB;
         }
       }
     }  

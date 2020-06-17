@@ -89,5 +89,5 @@ const reducer = createReducer(initialState, {
 export default createTableQueryReducers('expenses', reducer);
 
 export const getExpenseById = (state, id) => {
-  return state.expenses.items[id] || {};
+  return state.expenses.items[id];
 };

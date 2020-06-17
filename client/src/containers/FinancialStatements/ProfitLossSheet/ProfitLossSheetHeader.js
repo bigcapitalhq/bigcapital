@@ -1,5 +1,5 @@
-import React, { useCallback } from 'react';
-import { Row, Col } from 'react-grid-system';
+import React, { useCallback, useEffect } from 'react';
+import { Row, Col, Visible } from 'react-grid-system';
 import { Button } from '@blueprintjs/core';
 import moment from 'moment';
 import { useFormik } from 'formik';
@@ -11,6 +11,7 @@ import SelectsListColumnsBy from '../SelectDisplayColumnsBy';
 import RadiosAccountingBasis from '../RadiosAccountingBasis';
 
 import withProfitLoss from './withProfitLoss';
+import withProfitLossActions from './withProfitLossActions';
 
 import { compose } from 'utils';
 
@@ -21,6 +22,10 @@ function ProfitLossHeader({
 
   // #withProfitLoss
   profitLossSheetFilter,
+  profitLossSheetRefresh,
+
+  // #withProfitLossActions
+  refreshProfitLossSheet,
 }) {
   const { formatMessage } = useIntl();
   const formik = useFormik({
@@ -54,10 +59,6 @@ function ProfitLossHeader({
     [formik],
   );
 
-  const handleSubmitClick = useCallback(() => {
-    formik.submitForm();
-  }, [formik]);
-
   const handleAccountingBasisChange = useCallback(
     (value) => {
       formik.setFieldValue('basis', value);
@@ -65,30 +66,28 @@ function ProfitLossHeader({
     [formik],
   );
 
+  useEffect(() => {
+    if (profitLossSheetRefresh) {
+      formik.submitForm();
+      refreshProfitLossSheet(false);
+    }
+  }, [profitLossSheetRefresh]);
+
   return (
     <FinancialStatementHeader show={profitLossSheetFilter}>
-      <FinancialStatementDateRange formik={formik} />
-
       <Row>
-        <Col sm={3}>
+        <FinancialStatementDateRange formik={formik} />
+        <Visible xl><Col width={'100%'} /></Visible>
+
+        <Col width={260}>
           <SelectsListColumnsBy onItemSelect={handleItemSelectDisplayColumns} />
         </Col>
 
-        <Col sm={3}>
+        <Col width={260}>
           <RadiosAccountingBasis
             selectedValue={formik.values.basis}
             onChange={handleAccountingBasisChange}
           />
-        </Col>
-
-        <Col sm={3}>
-          <Button
-            type="submit"
-            onClick={handleSubmitClick}
-            className={'button--submit-filter mt2'}
-          >
-            <T id={'run_report'} />
-          </Button>
         </Col>
       </Row>
     </FinancialStatementHeader>
@@ -96,5 +95,12 @@ function ProfitLossHeader({
 }
 
 export default compose(
-  withProfitLoss(({ profitLossSheetFilter }) => ({ profitLossSheetFilter })),
+  withProfitLoss(({
+    profitLossSheetFilter,
+    profitLossSheetRefresh,
+  }) => ({
+    profitLossSheetFilter,
+    profitLossSheetRefresh,
+  })),
+  withProfitLossActions,
 )(ProfitLossHeader);

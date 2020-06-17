@@ -336,7 +336,7 @@ export default {
       }
       const expenses = await Expense.query().onBuild((builder) => {
         builder.withGraphFetched('paymentAccount');
-        builder.withGraphFetched('categories');
+        builder.withGraphFetched('categories.expenseAccount');
         builder.withGraphFetched('user');
         dynamicFilter.buildQuery()(builder);
       }).pagination(filter.page - 1, filter.page_size);;

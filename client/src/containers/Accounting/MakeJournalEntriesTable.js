@@ -1,17 +1,20 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { Button, Intent } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
+import { omit } from 'lodash';
 
 import DataTable from 'components/DataTable';
 import Icon from 'components/Icon';
+import { Hint } from 'components';
 import { compose, formattedAmount } from 'utils';
 import {
   AccountsListFieldCell,
   MoneyFieldCell,
   InputGroupCell,
+  ContactsListFieldCell,
 } from 'components/DataTableCells';
-import { omit } from 'lodash';
 import withAccounts from 'containers/Accounts/withAccounts';
+import withCustomers from 'containers/Customers/withCustomers';
 
 // Actions cell renderer.
 const ActionsCellRenderer = ({
@@ -73,6 +76,9 @@ const NoteCellRenderer = (chainedComponent) => (props) => {
  * Make journal entries table component.
  */
 function MakeJournalEntriesTable({
+  // #withCustomers
+  customers,
+
   // #withAccounts
   accounts,
 
@@ -142,6 +148,7 @@ function MakeJournalEntriesTable({
         width: 40,
         disableResizing: true,
         disableSortBy: true,
+        sticky: 'left',
       },
       {
         Header: formatMessage({ id: 'account' }),
@@ -170,6 +177,16 @@ function MakeJournalEntriesTable({
         disableSortBy: true,
         disableResizing: true,
         width: 150,
+      },
+      {
+        Header: (<><T id={'contact'} /><Hint /></>),
+        id: 'contact_id',
+        accessor: 'contact_id',
+        Cell: NoteCellRenderer(ContactsListFieldCell),
+        className: 'contact',
+        disableResizing: true,
+        disableSortBy: true,
+        width: 180,
       },
       {
         Header: formatMessage({ id: 'note' }),
@@ -216,6 +233,11 @@ function MakeJournalEntriesTable({
           errors: errors.entries || [],
           updateData: handleUpdateData,
           removeRow: handleRemoveRow,
+          contacts: [
+            ...customers.map((customer) => ({
+              ...customer, contact_type: 'customer',
+            })),
+          ],
         }}
       />
 
@@ -243,5 +265,8 @@ function MakeJournalEntriesTable({
 export default compose(
   withAccounts(({ accounts }) => ({
     accounts,
+  })),
+  withCustomers(({ customersItems }) => ({
+    customers: customersItems,
   })),
 )(MakeJournalEntriesTable);

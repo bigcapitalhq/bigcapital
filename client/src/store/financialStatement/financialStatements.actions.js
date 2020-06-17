@@ -1,6 +1,13 @@
 import ApiService from "services/ApiService";
 import t from 'store/types';
 
+export const balanceSheetRefresh = (refresh) => {
+  return dispatch => dispatch({
+    type: 'BALANCE_SHEET_REFRESH',
+    payload: { refresh },
+  });
+};
+
 export const fetchGeneralLedger = ({ query }) => {
   return (dispatch) => new Promise((resolve, reject) => {
     dispatch({
@@ -18,6 +25,13 @@ export const fetchGeneralLedger = ({ query }) => {
       });
       resolve(response);
     }).catch((error) => { reject(error); });
+  });
+};
+
+export const refreshGeneralLedgerSheet = (refresh) => {
+  return (dispatch) => dispatch({
+    type: t.GENERAL_LEDGER_REFRESH,
+    payload: { refresh },
   });
 };
 
@@ -65,6 +79,13 @@ export const fetchTrialBalanceSheet = ({ query }) => {
   })
 };
 
+export const trialBalanceRefresh = (refresh) => {
+  return (dispatch) => dispatch({
+    type: t.TRIAL_BALANCE_REFRESH,
+    payload: { refresh },
+  });
+};
+
 export const fetchProfitLossSheet = ({ query }) => {
   return (dispatch) => new Promise((resolve, reject) => {
     dispatch({
@@ -87,6 +108,13 @@ export const fetchProfitLossSheet = ({ query }) => {
   })
 };
 
+export const profitLossRefresh = (refresh) => {
+  return dispatch => dispatch({
+    type: t.PROFIT_LOSS_REFRESH,
+    payload: { refresh },
+  });
+}
+
 export const fetchJournalSheet = ({ query }) => {
   return (dispatch) => new Promise((resolve, reject) => {
     dispatch({
@@ -107,6 +135,13 @@ export const fetchJournalSheet = ({ query }) => {
     }).catch(error => { reject(error); });
   });
 };
+
+export const refreshJournalSheet = (refresh) => {
+  return dispatch => dispatch({
+    type: t.JOURNAL_SHEET_REFRESH,
+    payload: { refresh },
+  });
+}
 
 export const fetchReceivableAgingSummary = ({ query }) => {
   return (dispatch) => new Promise((resolve, reject) => {
@@ -138,5 +173,12 @@ export const fetchReceivableAgingSummary = ({ query }) => {
       .catch((error) => {
         reject(error);
       })
+  });
+}
+
+export const receivableAgingSummaryRefresh = (refresh) => {
+  return (dispatch) => dispatch({
+    type: t.RECEIVABLE_AGING_SUMMARY_REFRESH,
+    payload: { refresh },
   });
 }

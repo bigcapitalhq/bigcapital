@@ -1,10 +1,9 @@
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import {
   getFinancialSheet,
   getFinancialSheetQuery,
   getFinancialSheetTableRows,
 } from 'store/financialStatement/financialStatements.selectors';
-
 
 export default (mapState) => {
   const mapStateToProps = (state, props) => {
@@ -23,8 +22,11 @@ export default (mapState) => {
         state.financialStatements.generalLedger.sheets,
         generalLedgerIndex,
       ),
-      generalLedgerSheetLoading: state.financialStatements.generalLedger.loading,
+      generalLedgerSheetLoading:
+        state.financialStatements.generalLedger.loading,
       generalLedgerSheetFilter: state.financialStatements.generalLedger.filter,
+      generalLedgerSheetRefresh:
+        state.financialStatements.generalLedger.refresh,
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };

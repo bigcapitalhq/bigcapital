@@ -117,7 +117,7 @@ function ExpenseFormHeader({
   return (
     <div className={'dashboard__insider--expense-form__header'}>
       <Row>
-        <Col sm={3.5}>
+        <Col width={300}>
           <FormGroup
             label={<T id={'beneficiary'} />}
             className={classNames('form-group--select-list', Classes.FILL)}
@@ -141,7 +141,8 @@ function ExpenseFormHeader({
             />
           </FormGroup>
         </Col>
-        <Col sm={3}>
+
+        <Col width={400}>
           <FormGroup
             label={<T id={'payment_account'} />}
             className={classNames(
@@ -177,8 +178,9 @@ function ExpenseFormHeader({
           </FormGroup>
         </Col>
       </Row>
+
       <Row>
-        <Col sm={3.5}>
+        <Col width={300}>
           <FormGroup
             label={<T id={'payment_date'} />}
             labelInfo={infoIcon}
@@ -189,17 +191,17 @@ function ExpenseFormHeader({
             helperText={
               <ErrorMessage name="payment_date" {...{ errors, touched }} />
             }
-            minimal={true}
           >
             <DateInput
               {...momentFormatter('YYYY/MM/DD')}
               defaultValue={new Date()}
               onChange={handleDateChange}
-              popoverProps={{ position: Position.BOTTOM }}
+              popoverProps={{ position: Position.BOTTOM, minimal: true }}
             />
           </FormGroup>
         </Col>
-        <Col sm={2}>
+
+        <Col width={200}>
           <FormGroup
             label={<T id={'currency'} />}
             className={classNames(
@@ -223,23 +225,25 @@ function ExpenseFormHeader({
               onItemSelect={onItemsSelect('currency_code')}
               selectedItem={values.currency_code}
               selectedItemProp={'currency_code'}
-              defaultText={<T id={'select_currency_code'} />}
+              defaultText={<T id={'select_currency'} />}
               labelProp={'currency_code'}
             />
           </FormGroup>
         </Col>
 
-        <Col sm={3}>
+        <Col width={200}>
           <FormGroup
             label={<T id={'ref_no'} />}
-            className={'form-group--ref_no'}
+            className={classNames(
+              'form-group--ref_no',
+              Classes.FILL,
+            )}
             intent={
               errors.reference_no && touched.reference_no && Intent.DANGER
             }
             helperText={
               <ErrorMessage name="reference_no" {...{ errors, touched }} />
             }
-            minimal={true}
           >
             <InputGroup
               intent={

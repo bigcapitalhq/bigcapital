@@ -12,6 +12,7 @@ import ExpenseDataTable from 'containers/Expenses/ExpenseDataTable';
 import ExpenseActionsBar from 'containers/Expenses/ExpenseActionsBar';
 
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
+import withExpenses from 'containers/Expenses/withExpenses';
 import withExpensesActions from 'containers/Expenses/withExpensesActions';
 import withViewsActions from 'containers/Views/withViewsActions';
 
@@ -23,6 +24,9 @@ function ExpensesList({
 
   // #withViewsActions
   requestFetchResourceViews,
+
+  // #withExpenses
+  expensesTableQuery,
 
   //#withExpensesActions
   requestFetchExpensesTable,
@@ -44,8 +48,9 @@ function ExpensesList({
     return requestFetchResourceViews('expenses');
   });
 
-  const fetchExpenses = useQuery('expenses-table', () =>
-    requestFetchExpensesTable(),
+  const fetchExpenses = useQuery(
+    ['expenses-table', expensesTableQuery],
+    () => requestFetchExpensesTable(),
   );
 
   useEffect(() => {
@@ -53,7 +58,6 @@ function ExpensesList({
   }, [changePageTitle, formatMessage]);
 
   // Handle delete expense click.
-
   const handleDeleteExpense = useCallback(
     (expnese) => {
       setDeleteExpense(expnese);
@@ -108,8 +112,6 @@ function ExpensesList({
       .catch((error) => {
         setBulkDelete(false);
       });
-
-    // @todo
   }, [requestDeleteBulkExpenses, bulkDelete, formatMessage, selectedRowsCount]);
 
   // Handle cancel bulk delete alert.
@@ -149,6 +151,7 @@ function ExpensesList({
           message: formatMessage({ id: 'the_expense_id_has_been_published' }),
         });
       });
+      fetchExpenses.refetch();
     },
     [requestPublishExpense, formatMessage],
   );
@@ -163,7 +166,7 @@ function ExpensesList({
 
   return (
     <DashboardInsider
-      loading={fetchViews.isFetching || fetchExpenses.isFetching}
+      loading={fetchViews.isFetching}
       name={'expenses'}
     >
       <ExpenseActionsBar
@@ -232,5 +235,6 @@ function ExpensesList({
 export default compose(
   withDashboardActions,
   withExpensesActions,
+  withExpenses(({ expensesTableQuery }) => ({ expensesTableQuery })),
   withViewsActions,
 )(ExpensesList);

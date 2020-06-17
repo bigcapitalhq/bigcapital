@@ -12,7 +12,7 @@ export default class Customer extends TenantModel {
   /**
    * Model timestamps.
    */
-  static get timestamps() {
+  get timestamps() {
     return ['createdAt', 'updatedAt'];
   }
 

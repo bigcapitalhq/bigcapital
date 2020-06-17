@@ -29,6 +29,7 @@ function GeneralLedgerActionsBar({
 
   // #withGeneralLedgerActions
   toggleGeneralLedgerSheetFilter,
+  refreshGeneralLedgerSheet
 }) {
   const filterDropdown = FilterDropdown({
     fields: [],
@@ -41,6 +42,10 @@ function GeneralLedgerActionsBar({
     toggleGeneralLedgerSheetFilter();
   };
 
+  const handleRecalcReport = () => {
+    refreshGeneralLedgerSheet(true);
+  };
+
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -51,6 +56,16 @@ function GeneralLedgerActionsBar({
         />
 
         <NavbarDivider />
+
+        <Button
+          className={classNames(
+            Classes.MINIMAL,
+            'button--gray-highlight',
+          )}
+          text={'Re-calc Report'}
+          onClick={handleRecalcReport}
+          icon={<Icon icon="refresh-16" iconSize={16} />}
+        />
 
         <If condition={generalLedgerSheetFilter}>
           <Button
@@ -69,7 +84,6 @@ function GeneralLedgerActionsBar({
             onClick={handleFilterClick}
           />
         </If>
-        <NavbarDivider />
 
         <Popover
           content={filterDropdown}
@@ -81,6 +95,8 @@ function GeneralLedgerActionsBar({
             text={<T id={'filter'}/>}
             icon={<Icon icon="filter-16" iconSize={16} /> } />
         </Popover>
+
+        <NavbarDivider />
 
         <Button
           className={Classes.MINIMAL}

@@ -3,6 +3,8 @@ import Icon from './Icon';
 
 export default function FieldHint({ hint }) {
   return (
-    <Icon icon="info-circle" iconSize={12} />
+    <span class="hint">
+      <Icon icon="info-circle" iconSize={12} />
+    </span>
   );
 }

@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from 'react';
+import React, { useMemo, useEffect, useState, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { useIntl } from 'react-intl';
 
@@ -20,23 +20,26 @@ function BalanceSheetTable({
   balanceSheetAccounts,
   balanceSheetColumns,
   balanceSheetQuery,
+  balanceSheetLoading,
 
   // #ownProps
   onFetchData,
-  loading,
 }) {
   const { formatMessage } = useIntl();
+
   const columns = useMemo(
     () => [
       {
         Header: formatMessage({ id: 'account_name' }),
         accessor: 'name',
         className: 'account_name',
+        width: 100,
       },
       {
-        Header: formatMessage({ id: 'code' }),
+        Header: formatMessage({ id: 'account_code' }),
         accessor: 'code',
         className: 'code',
+        width: 80,
       },
       ...(balanceSheetQuery.display_columns_type === 'total'
         ? [
@@ -55,7 +58,8 @@ function BalanceSheetTable({
                 }
                 return '';
               },
-              className: 'credit',
+              className: 'total',
+              width: 80,
             },
           ]
         : []),
@@ -70,7 +74,7 @@ function BalanceSheetTable({
               }
               return '';
             },
-            width: 100,
+            width: 80,
           }))
         : []),
     ],
@@ -89,18 +93,20 @@ function BalanceSheetTable({
 
   return (
     <FinancialSheet
+      name="balance-sheet"
       companyName={organizationSettings.name}
       sheetType={formatMessage({ id: 'balance_sheet' })}
       fromDate={balanceSheetQuery.from_date}
       toDate={balanceSheetQuery.to_date}
       basis={balanceSheetQuery.basis}
-      loading={loading}
+      loading={balanceSheetLoading}
     >
       <DataTable
         className="bigcapital-datatable--financial-report"
         columns={columns}
         data={balanceSheetAccounts}
         onFetchData={handleFetchData}
+        noInitialFetch={true}
         expanded={expandedRows}
         expandSubRows={true}
         sticky={true}
@@ -124,10 +130,16 @@ const withBalanceSheetTable = connect(mapStateToProps);
 export default compose(
   withBalanceSheetTable,
   withBalanceSheetDetail(
-    ({ balanceSheetAccounts, balanceSheetColumns, balanceSheetQuery }) => ({
+    ({
       balanceSheetAccounts,
       balanceSheetColumns,
       balanceSheetQuery,
+      balanceSheetLoading,
+    }) => ({
+      balanceSheetAccounts,
+      balanceSheetColumns,
+      balanceSheetQuery,
+      balanceSheetLoading,
     }),
   ),
   withSettings,

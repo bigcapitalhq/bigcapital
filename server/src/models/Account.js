@@ -22,7 +22,7 @@ export default class Account extends mixin(TenantModel, [CachableModel]) {
   /**
    * Timestamps columns.
    */
-  static get timestamps() {
+  get timestamps() {
     return ['createdAt', 'updatedAt'];
   }
 

@@ -20,6 +20,7 @@ export default (mapState) => {
 
       profitLossSheetLoading: state.financialStatements.profitLoss.loading,
       profitLossSheetFilter: state.financialStatements.profitLoss.filter,
+      profitLossSheetRefresh: state.financialStatements.profitLoss.refresh,
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };

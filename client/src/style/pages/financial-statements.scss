@@ -52,7 +52,8 @@
 }
 
 .financial-sheet{
-  border: 1px solid #EEE;
+  border: 2px solid #F1F1F1;
+  border-radius: 10px;
   min-width: 640px;
   width: auto;
   padding: 30px 20px;
@@ -64,22 +65,22 @@
 
   &__title{
     margin: 0;
-    font-weight: 300;
+    font-weight: 400;
     font-size: 22px;
-    color: #333;
+    color: #464646;
     text-align: center;
   }
   &__sheet-type{
     text-align: center;
     margin: 0;
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 400;
     color: #666;
     margin-top: 6px;
   }
   &__date{
     text-align: center;
-    color: #888;
+    color: #666;
     margin-top: 6px;
   }
   &__table{
@@ -91,11 +92,6 @@
         .tr .td,
         .tr .th{
           background: #fff;
-        }
-      }
-      .tbody{
-        .code.td{
-          color: #777;
         }
       }
       .tr.no-results{
@@ -130,23 +126,32 @@
   }
   &--trial-balance{
     min-width: 720px;
+
+    .financial-sheet__table{
+      .tbody{
+        .balance.td{
+          border-bottom-color: #000;
+        }
+      }
+    }
   }
   &--general-ledger{
-    .table .tbody{
-     
-      .tr.row-type{
+    .financial-sheet__table{
+      .tbody{     
+        .tr.row-type{
 
-        &--opening_balance,
-        &--closing_balance{
-          background-color: #fbfbfb;
-        }
+          &--opening_balance,
+          &--closing_balance{
+            background-color: #fbfbfb;
+          }
 
-        &--closing_balance .td{
-          border-bottom-color: #666;
-        }
+          &--closing_balance .td{
+            border-bottom-color: #666;
+          }
 
-        &--account_name .td.name{
-          font-weight: 500;
+          &--account_name .td.name{
+            font-weight: 500;
+          }
         }
       }
     }
@@ -188,6 +193,9 @@
         .account_code.td{
           color: #666;
         }
+        .total.td {
+          border-bottom-color: #000;
+        }
         
         .row--income_total,
         .row--expense_total,
@@ -200,5 +208,71 @@
         }
       }
     }
+  }
+
+  &--balance-sheet{
+    .financial-sheet__table{
+      .tbody{
+
+        .total.td{
+          border-bottom-color: #000;
+        }
+      }
+    }
+  }
+
+  &--receivable-aging-summary{
+
+    .financial-sheet__table{
+      .tbody{
+        .row-type--total{
+          font-weight: 600;
+
+          .td{
+            background-color: #fafbff;
+            border-bottom-color: #666;
+            border-bottom-style: dotted;
+          }          
+        }
+      }
+    }    
+  }
+}
+
+
+.financial-reports{
+  padding: 20px 25px;
+
+  .section-title{
+    font-weight: 500;
+    margin-bottom: 1.6rem;
+    font-size: 20px;
+    color: rgb(31, 50, 85);
+    margin-top: 10px;
+  }
+
+  &__list{
+    display: flex;
+    flex-flow: wrap;
+    margin-left: -28px;
+  }
+
+  &__item{
+    width: 270px;
+    margin-bottom: 40px;
+    margin-left: 28px;
+    border-top: 2px solid #DDD;
+    padding-top: 16px;
+
+    .title{
+      font-size: 16px;
+    }
+
+    .desc{
+      color: rgb(31, 50, 85);
+      line-height: 1.55;
+      margin-top: 12px;
+    }
+
   }
 }

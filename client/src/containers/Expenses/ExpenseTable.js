@@ -1,9 +1,10 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
-import { Button, Intent } from '@blueprintjs/core';
+import { Button, Intent, Position, Tooltip } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 
 import DataTable from 'components/DataTable';
 import Icon from 'components/Icon';
+import { Hint } from 'components';
 import { compose, formattedAmount } from 'utils';
 import {
   AccountsListFieldCell,
@@ -88,14 +89,16 @@ function ExpenseTable({
       payload.removeRow(index);
     };
     return (
-      <Button
-        icon={<Icon icon="times-circle" iconSize={14} />}
-        iconSize={14}
-        className="ml2"
-        minimal={true}
-        intent={Intent.DANGER}
-        onClick={onClickRemoveRole}
-      />
+      <Tooltip content={<T id={'remove_the_line'} />} position={Position.LEFT}>
+        <Button
+          icon={<Icon icon="times-circle" iconSize={14} />}
+          iconSize={14}
+          className="ml2"
+          minimal={true}
+          intent={Intent.DANGER}
+          onClick={onClickRemoveRole}
+        />
+      </Tooltip>
     );
   };
 
@@ -144,8 +147,7 @@ function ExpenseTable({
         disableSortBy: true,
       },
       {
-        // @todo Add hint component after the header label.
-        Header: formatMessage({ id: 'expense_category' }),
+        Header: (<>{ formatMessage({ id: 'expense_category' }) }<Hint /></>),
         id: 'expense_account_id',
         accessor: 'expense_account_id',
         Cell: TotalExpenseCellRenderer(AccountsListFieldCell),
@@ -161,6 +163,7 @@ function ExpenseTable({
         disableSortBy: true,
         disableResizing: true,
         width: 150,
+        className: 'amount',
       },
       {
         Header: formatMessage({ id: 'description' }),
@@ -194,7 +197,6 @@ function ExpenseTable({
     }),
     [rows],
   );
-
 
   return (
     <div className={'dashboard__insider--expense-form__table'}>
@@ -235,5 +237,4 @@ export default compose(
   withAccounts(({ accounts }) => ({
     accounts,
   })),
-  
 )(ExpenseTable);

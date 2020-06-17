@@ -1,6 +1,6 @@
-import React, { useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback, useEffect } from 'react';
 import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
-import { Row, Col } from 'react-grid-system';
+import { Row, Col, Visible } from 'react-grid-system';
 import {
   Button,
   FormGroup,
@@ -17,11 +17,19 @@ import FinancialStatementDateRange from 'containers/FinancialStatements/Financia
 import SelectDisplayColumnsBy from '../SelectDisplayColumnsBy';
 import RadiosAccountingBasis from '../RadiosAccountingBasis';
 
+import withBalanceSheet from './withBalanceSheetDetail';
+import withBalanceSheetActions from './withBalanceSheetActions';
 
-export default function BalanceSheetHeader({
+import { compose } from 'utils';
+
+function BalanceSheetHeader({
   onSubmitFilter,
   pageFilter,
-  show
+  show,
+  refresh,
+
+  // #withBalanceSheetActions
+  refreshBalanceSheet
 }) {
   const { formatMessage } = useIntl();
 
@@ -49,11 +57,6 @@ export default function BalanceSheetHeader({
     formik.setFieldValue('display_columns_by', item.by);
   }, [formik]);
 
-  // Handle submit filter submit button.
-  const handleSubmitClick = useCallback(() => {
-    formik.submitForm();
-  }, [formik]);
-
   const filterAccountsOptions = useMemo(() => [
     { key: '', name: formatMessage({ id: 'accounts_with_zero_balance' }) },
     { key: 'all-trans', name: formatMessage({ id: 'all_transactions' }) },
@@ -63,24 +66,31 @@ export default function BalanceSheetHeader({
     return (<MenuItem text={item.name} key={item.id} onClick={handleClick} />);
   }, []);
 
-  const infoIcon = useMemo(() =>
-    (<Icon icon="info-circle" iconSize={12} />), []);
-
   const handleAccountingBasisChange = useCallback((value) => {
     formik.setFieldValue('basis', value);
   }, [formik]);
 
+  // Handle submit filter submit button.
+  useEffect(() => {
+    if (refresh) {
+      formik.submitForm();  
+      refreshBalanceSheet(false);
+    }
+  }, [refresh]);
+
   return (
     <FinancialStatementHeader show={show}>
-      <FinancialStatementDateRange formik={formik} />
-
       <Row>
-        <Col sm={3}>
+        <FinancialStatementDateRange formik={formik} />
+
+        <Visible xl><Col width={'100%'} /></Visible>
+
+        <Col width={260} offset={10}>
           <SelectDisplayColumnsBy
             onItemSelect={onItemSelectDisplayColumns} />
         </Col>
 
-        <Col sm={3}>
+        <Col width={260}>
           <FormGroup
             label={<T id={'filter_accounts'} />}
             className="form-group--select-list bp3-fill"
@@ -95,22 +105,19 @@ export default function BalanceSheetHeader({
           </FormGroup>
         </Col>
 
-        <Col sm={3}>
+        <Col width={260}>
           <RadiosAccountingBasis
             selectedValue={formik.values.basis}
             onChange={handleAccountingBasisChange} />
-        </Col>
-
-        <Col sm={3}>
-          <Button
-            type="submit"
-            onClick={handleSubmitClick}
-            disabled={formik.isSubmitting}
-            className={'button--submit-filter mt2'}>
-            <T id={'calculate_report'} />
-          </Button>
         </Col>
       </Row>
     </FinancialStatementHeader>
   )
 }
+
+export default compose(
+  withBalanceSheet(({ balanceSheetRefresh }) => ({
+    refresh: balanceSheetRefresh,
+  })),
+  withBalanceSheetActions,
+)(BalanceSheetHeader);

@@ -106,11 +106,12 @@ export default class ReceivableAgingSummary extends AgingReport {
     }
 
     const storedCustomers = await Customer.query().onBuild((builder) => {
-      if (filter.customer_ids) {
+      if (filter.customer_ids.length > 0) {
         builder.modify('filterCustomerIds', filter.customer_ids);
       }
       return builder;
     });
+
     const accountsReceivableType = await AccountType.query()
       .where('key', 'accounts_receivable')
       .first();

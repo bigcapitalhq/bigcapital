@@ -15,9 +15,9 @@ function ProfitLossSheetTable({
   profitLossTableRows,
   profitLossQuery,
   profitLossColumns,
+  profitLossSheetLoading,
 
   // #ownProps
-  loading,
   onFetchData,
   companyName,
 }) {
@@ -31,7 +31,7 @@ function ProfitLossSheetTable({
         className: 'name',
       },
       {
-        Header: formatMessage({ id: 'acc_code' }),
+        Header: formatMessage({ id: 'account_code' }),
         accessor: 'code',
         className: 'account_code',
       },
@@ -102,7 +102,7 @@ function ProfitLossSheetTable({
       fromDate={profitLossQuery.from_date}
       toDate={profitLossQuery.to_date}
       name="profit-loss-sheet"
-      loading={loading}
+      loading={profitLossSheetLoading}
       basis={profitLossQuery.basis}
     >
       <DataTable
@@ -110,6 +110,7 @@ function ProfitLossSheetTable({
         columns={columns}
         data={profitLossTableRows}
         onFetchData={handleFetchData}
+        noInitialFetch={true}
         expanded={expandedRows}
         rowClassNames={rowClassNames}
         expandable={true}
@@ -132,10 +133,11 @@ const withProfitLossTable = connect(mapStateToProps);
 export default compose(
   withProfitLossTable,
   withProfitLossDetail(
-    ({ profitLossQuery, profitLossColumns, profitLossTableRows }) => ({
+    ({ profitLossQuery, profitLossColumns, profitLossTableRows, profitLossSheetLoading }) => ({
       profitLossColumns,
       profitLossQuery,
       profitLossTableRows,
+      profitLossSheetLoading,
     }),
   ),
 )(ProfitLossSheetTable);

@@ -15,19 +15,18 @@ function ReceivableAgingSummaryTable({
   organizationSettings,
 
   // #withReceivableAgingSummary
-  receviableAgingRows = [],
+  receivableAgingRows,
   receivableAgingLoading,
   receivableAgingColumns,
   
   // #ownProps
-  receivableAgingSummaryQuery,
   onFetchData,
 }) {
   const { formatMessage } = useIntl();
 
   const agingColumns = useMemo(() => {
     return receivableAgingColumns.map((agingColumn) => {
-      return `${agingColumn.before_days} - ${agingColumn.to_days || '<'}`;
+      return `${agingColumn.before_days} - ${agingColumn.to_days || 'And Over'}`;
     });
   }, [receivableAgingColumns]);
   
@@ -36,25 +35,38 @@ function ReceivableAgingSummaryTable({
       Header: (<T id={'customer_name'} />),
       accessor: 'customer_name',
       className: 'customer_name',
+      sticky: 'left',
     },
     ...agingColumns.map((agingColumn, index) => ({
       Header: agingColumn,
-      id: `asd-${index}`,
+      accessor: (row) => {
+        const amount = row[`aging-${index}`];
+        if (row.rowType === 'total') {
+          return <Money amount={amount} currency={'USD'} />
+        }
+        return amount > 0 ? amount : '';
+      },
     })),
     {
       Header: (<T id={'total'} />),
-      accessor: 'total',
+      id: 'total',
+      accessor: (row) => {
+        return <Money amount={row.total} currency={'USD'} />;
+      },
       className: 'total',
     },
   ]), [agingColumns]);
 
+  const rowClassNames = (row) => [`row-type--${row.original.rowType}`];
+
   const handleFetchData = useCallback((...args) => {
     onFetchData && onFetchData(...args);
-  }, [onFetchData]);
+  }, []);
 
   return (
     <FinancialSheet
       companyName={organizationSettings.name}
+      name={'receivable-aging-summary'}
       sheetType={formatMessage({ id: 'receivable_aging_summary' })}
       asDate={new Date()}
       loading={receivableAgingLoading}>
@@ -62,8 +74,10 @@ function ReceivableAgingSummaryTable({
       <DataTable
         className="bigcapital-datatable--financial-report"
         columns={columns}
-        data={receviableAgingRows}
+        data={receivableAgingRows}
+        rowClassNames={rowClassNames}
         onFetchData={handleFetchData}
+        noInitialFetch={true}
         sticky={true}
       />
     </FinancialSheet>
@@ -75,8 +89,11 @@ export default compose(
   withReceivableAgingSummaryTable,
   withReceivableAgingSummary(({
     receivableAgingSummaryLoading,
-    receivableAgingSummaryColumns }) => ({
+    receivableAgingSummaryColumns,
+    receivableAgingSummaryRows,
+  }) => ({
     receivableAgingLoading: receivableAgingSummaryLoading,
-    receivableAgingColumns: receivableAgingSummaryColumns 
+    receivableAgingColumns: receivableAgingSummaryColumns,
+    receivableAgingRows: receivableAgingSummaryRows, 
   })),
 )(ReceivableAgingSummaryTable);

@@ -260,6 +260,7 @@ export default {
   sales: 'Sales',
   purchases: 'Purchases',
   financial_reports: 'Financial Reports',
+  all_financial_reports: 'All Financial Reports',
   balance_sheet: 'Balance Sheet',
   trial_balance_sheet: 'Trial Balance Sheet',
   journal: 'Journal',
@@ -347,7 +348,7 @@ export default {
   select_language: 'Select Language',
   select_date_format: 'Select Date Format',
   select_time_zone: 'Select Time Zone',
-  select_currency_code: 'Select Currency Code',
+  select_currency: 'Select Currency',
   select_parent_category: 'Select Parent Category',
   the_options_has_been_successfully_created:
     'The options has been successfully created',
@@ -422,7 +423,7 @@ export default {
   payment_account_: 'Payment account',
   expense_category: 'Expense Category',
   total_currency: 'Total ({currency})',
-  amount_currency: 'Amount({currency})',
+  amount_currency: 'Amount ({currency})',
   publish_expense: 'Publish Expense',
   edit_expense: 'Edit Expense',
   delete_expense: 'Delete Expense',
@@ -459,4 +460,12 @@ export default {
   display_name:'Display Name',
   the_customer_has_been_successfully_created:
     'The customer has been successfully created.',
+  select_contact: 'Select contact',
+  contact: 'Contact',
+  contacts: 'Contacts',
+  close_sidebar: 'Close sidebar.',
+  recalc_report: 'Re-calc Report',
+  remove_the_line: 'Remove the line',
+  no_results: 'No results',
+  all_reports: 'All Reports',
 };

@@ -23,8 +23,12 @@ import { compose } from 'utils';
 
 
 function ReceivableAgingSummaryActionsBar({
-  toggleFilterReceivableAgingSummary,
+  // #withReceivableAging
   receivableAgingFilter,
+  
+  // #withReceivableAgingActions
+  toggleFilterReceivableAgingSummary,
+  refreshReceivableAgingSummary,
 }) {
   const filterDropdown = FilterDropdown({
     fields: [],
@@ -33,6 +37,10 @@ function ReceivableAgingSummaryActionsBar({
 
   const handleFilterToggleClick = () => {
     toggleFilterReceivableAgingSummary();
+  };
+
+  const handleRecalcReport = () => {
+    refreshReceivableAgingSummary(true);
   };
 
   return (
@@ -44,6 +52,16 @@ function ReceivableAgingSummaryActionsBar({
           text={<T id={'customize_report'} />}
         />
         <NavbarDivider />
+
+        <Button
+          className={classNames(
+            Classes.MINIMAL,
+            'button--gray-highlight',
+          )}
+          text={<T id={'recalc_report'} />}
+          icon={<Icon icon="refresh-16" iconSize={16} />}
+          onClick={handleRecalcReport}
+        />
 
         <If condition={receivableAgingFilter}>
           <Button
@@ -62,7 +80,6 @@ function ReceivableAgingSummaryActionsBar({
             icon={<Icon icon="arrow-to-bottom" />}
           />
         </If>
-        <NavbarDivider />
 
         <Popover
           content={filterDropdown}
@@ -75,6 +92,8 @@ function ReceivableAgingSummaryActionsBar({
             icon={<Icon icon="filter-16" iconSize={16} />}
           />
         </Popover>
+
+        <NavbarDivider />
 
         <Button
           className={Classes.MINIMAL}

@@ -9,70 +9,49 @@
     width: 100%;
     .bp3-form-group {
       .bp3-label {
-        margin-bottom: 15px;
-        margin-right: 15px;
         font-weight: 500;
         font-size: 13px;
         color: #444;
       }
       .bp3-form-content {
         .bp3-button:not([class*='bp3-intent-']):not(.bp3-minimal) {
-          min-width: 300px;
-          min-height: 32px;
-          background: #fff;
-          box-shadow: 0 0 0 transparent;
-          border: 1px solid #ced4da;
+          
         }
       }
       .bp3-input-group {
-        display: block;
-        position: relative;
-        width: 300px;
+      
       }
       &.form-group--ref_no {
         .bp3-input-group .bp3-input {
-          position: relative;
-          width: 180px;
+     
         }
       }
     }
 
     .form-group--payment_account {
       .bp3-form-group {
-        display: flex;
-        flex-direction: column;
-        margin: 0 0 15px;
+     
       }
       .bp3-form-content {
         .bp3-button:not([class*='bp3-intent-']):not(.bp3-minimal) {
-          min-width: 380px;
-          min-height: 32px;
-          background: #fff;
-          box-shadow: 0 0 0 transparent;
-          border: 1px solid #ced4da;
+ 
         }
       }
     }
     .form-group--currency {
       .bp3-form-group {
-        display: flex;
-        flex-direction: column;
-        margin: 0 0 15px;
+     
       }
       .bp3-form-content {
         .bp3-button:not([class*='bp3-intent-']):not(.bp3-minimal) {
-          min-width: 180px;
-          min-height: 32px;
-          background: #fff;
-          box-shadow: 0 0 0 transparent;
-          border: 1px solid #ced4da;
+        
         }
       }
     }
   }
 
   &__table {
-    padding: 15px 25px 0;
+    padding: 15px 15px 0;
 
     .bp3-form-group {
       margin-bottom: 0;
@@ -160,19 +139,9 @@
           }
 
           &.row--total {
-            .account.td,
-            .debit.td,
-            .credit.td {
-              > span {
-                padding-top: 6px;
-              }
-            }
-            .debit.td,
-            .credit.td {
-              > span {
-                font-weight: 600;
-                color: #444;
-              }
+            
+            .td.amount{
+              font-weight: bold;
             }
           }
         }
@@ -212,17 +181,17 @@
   .dropzone {
     width: 300px;
     height: 75px;
+  }
 
-    margin-right: 20px;
+  .expense-form-footer{
+    display: flex;
+    padding: 30px 25px 0;
+    justify-content: space-between;
   }
 
   .form-group--description {
-    padding: 25px 27px 20px;
-    width: 100%;
-
+ 
     .bp3-label {
-      margin-bottom: 15px;
-      margin-right: 15px;
       font-weight: 500;
       font-size: 13px;
       color: #444;
@@ -230,9 +199,31 @@
     .bp3-form-content {
       // width: 280px;
       textarea {
-        width: 300px;
-        height: 75px;
-        margin-right: 20px;
+        width: 450px;
+        min-height: 75px;
+      }
+    }
+  }
+}
+
+
+.dashboard__insider--expenses{
+
+  .bigcapital-datatable{
+
+    .tbody{
+      .total_amount{
+        font-weight: 600;
+      }
+
+      .description{
+        .bp3-icon{
+          color: #666;
+        }
+        .bp3-tooltip-indicator{
+          cursor: initial;
+          border-bottom: 0;
+        }
       }
     }
   }

@@ -19,9 +19,14 @@ function ProfitLossActionsBar({
 
   // #withProfitLossActions
   toggleProfitLossSheetFilter,
+  refreshProfitLossSheet,
 }) {
   const handleFilterClick = () => {
     toggleProfitLossSheetFilter();
+  };
+
+  const handleRecalcReport = () => {
+    refreshProfitLossSheet(true);
   };
 
   return (
@@ -33,6 +38,16 @@ function ProfitLossActionsBar({
           text={<T id={'customize_report'} />}
         />
         <NavbarDivider />
+
+        <Button
+          className={classNames(
+            Classes.MINIMAL,
+            'button--gray-highlight',
+          )}
+          text={'Re-calc Report'}
+          onClick={handleRecalcReport}
+          icon={<Icon icon="refresh-16" iconSize={16} />}
+        />
 
         <If condition={profitLossSheetFilter}>
           <Button

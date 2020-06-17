@@ -4,6 +4,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import sidebarMenuList from 'config/sidebarMenu';
 import Icon from 'components/Icon';
 import MenuItem from 'components/MenuItem';
+import { MenuItemLabel } from 'components';
 import classNames from 'classnames';
 
 export default function SidebarMenu() {
@@ -29,6 +30,8 @@ export default function SidebarMenu() {
         <div class="bp3-menu-spacer"></div>
       ) : item.divider ? (
         <MenuDivider key={index} title={item.title} />
+      ) : item.label ? (
+        <MenuItemLabel key={index} text={item.text} />
       ) : (
         <MenuItem
           key={index}

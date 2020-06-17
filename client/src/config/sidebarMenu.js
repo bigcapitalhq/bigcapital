@@ -6,8 +6,6 @@ export default [
     divider: true,
   },
   {
-    icon: 'homepage',
-    iconSize: 20,
     text: <T id={'homepage'} />,
     disabled: false,
     href: '/homepage',
@@ -15,9 +13,12 @@ export default [
   {
     divider: true,
   },
+
   {
-    icon: 'homepage',
-    iconSize: 20,
+    text: 'Sales & inventory',
+    label: true,
+  },
+  {
     text: <T id={'items'} />,
     children: [
       {
@@ -35,11 +36,41 @@ export default [
     ],
   },
   {
-    spacer: true,
+    text: <T id={'sales'} />,
+    children: [],
   },
   {
-    icon: 'balance-scale',
-    iconSize: 20,
+    text: <T id={'purchases'} />,
+    children: [
+      {
+        icon: 'cut',
+        text: 'cut',
+        label: '⌘C',
+        disabled: false,
+      },
+    ],
+  },
+  {
+    text: <T id={'contacts'} />,
+    children: [
+      {
+        text: <T id={'customers'} />,
+        // href: '/',
+      },
+      {
+        text: <T id={'new_customers'} />,
+        href: '/customers/new',
+      },
+    ],
+  },
+  {
+    divider: true,
+  },
+  {
+    text: 'Financial accounting',
+    label: true,
+  },
+  {
     text: <T id={'financial'} />,
     children: [
       {
@@ -61,92 +92,60 @@ export default [
     ],
   },
   {
-    icon: 'university',
-    iconSize: 20,
     text: <T id={'banking'} />,
     children: [],
   },
+  
   {
-    icon: 'shopping-cart',
-    iconSize: 20,
-    text: <T id={'sales'} />,
-    children: [],
-  },
-  {
-    icon: 'balance-scale',
-    iconSize: 20,
-    text: <T id={'purchases'} />,
-    children: [
-      {
-        icon: 'cut',
-        text: 'cut',
-        label: '⌘C',
-        disabled: false,
-      },
-    ],
-  },
-  {
-    icon: 'analytics',
-    iconSize: 18,
     text: <T id={'financial_reports'} />,
     children: [
       {
+        text: <T id={'all_reports'} />,
+        href: '/financial-reports',
+      },
+      {
+        divider: true,
+      },
+      {
         text: <T id={'balance_sheet'} />,
-        href: '/balance-sheet',
+        href: '/financial-reports/balance-sheet',
       },
       {
         text: <T id={'trial_balance_sheet'} />,
-        href: '/trial-balance-sheet',
+        href: '/financial-reports/trial-balance-sheet',
       },
       {
         text: <T id={'journal'} />,
-        href: '/journal-sheet',
+        href: '/financial-reports/journal-sheet',
       },
       {
         text: <T id={'general_ledger'} />,
-        href: '/general-ledger',
+        href: '/financial-reports/general-ledger',
       },
       {
         text: <T id={'profit_loss_sheet'} />,
-        href: '/profit-loss-sheet',
+        href: '/financial-reports/profit-loss-sheet',
       },
       {
         text: 'Receivable Aging Summary',
-        href: '/receivable-aging-summary'
+        href: '/financial-reports/receivable-aging-summary'
       },
       {
         text: 'Payable Aging Summary',
-        href: '/payable-aging-summary'
+        href: '/financial-reports/payable-aging-summary'
       }
     ],
   },
   {
     text: <T id={'expenses'} />,
-    icon: 'receipt',
-    iconSize: 18,
     children: [
-      {
-        text: <T id={'expenses'}/>,
-        href: '/expenses/new',
-      },
       {
         text: <T id={'expenses_list'}/>,
         href: '/expenses-list',
       },
-    ],
-  },
-  {
-    text: <T id={'customers'} />,
-    icon: 'receipt',
-    iconSize: 18,
-    children: [
       {
-        text: <T id={'customers'} />,
-        // href: '/',
-      },
-      {
-        text: <T id={'new_customers'} />,
-        href: '/customers/new',
+        text: <T id={'new_expense'}/>,
+        href: '/expenses/new',
       },
     ],
   },

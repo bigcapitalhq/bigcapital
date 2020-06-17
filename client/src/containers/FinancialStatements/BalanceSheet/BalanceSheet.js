@@ -26,7 +26,6 @@ function BalanceSheet({
   fetchBalanceSheet,
 
   // #withBalanceSheetDetail
-  balanceSheetLoading,
   balanceSheetFilter,
 
   // #withPreferences
@@ -41,6 +40,7 @@ function BalanceSheet({
     display_columns_by: '',
     none_zero: false,
   });
+  const [refresh, setRefresh] = useState(true);
 
   const fetchHook = useQuery(
     ['balance-sheet', filter],
@@ -50,7 +50,7 @@ function BalanceSheet({
 
   // Handle fetch the data of balance sheet.
   const handleFetchData = useCallback(() => {
-    fetchHook.refetch({ force: true });
+    setRefresh(true);
   }, []);
 
   useEffect(() => {
@@ -66,10 +66,17 @@ function BalanceSheet({
         to_date: moment(filter.to_date).format('YYYY-MM-DD'),
       };
       setFilter({ ..._filter });
-      fetchHook.refetch({ force: true });
+      setRefresh(true);
     },
     [setFilter],
   );
+
+  useEffect(() => {
+    if (refresh) {
+      fetchHook.refetch({ force: true });
+      setRefresh(false);
+    }
+  }, [refresh]);
 
   return (
     <DashboardInsider>
@@ -86,7 +93,6 @@ function BalanceSheet({
           <div class="financial-statement__body">
             <BalanceSheetTable
               companyName={organizationSettings.name}
-              loading={balanceSheetLoading}
               balanceSheetQuery={filter}
               onFetchData={handleFetchData}
             />
@@ -100,8 +106,7 @@ function BalanceSheet({
 export default compose(
   withDashboardActions,
   withBalanceSheetActions,
-  withBalanceSheetDetail(({ balanceSheetLoading, balanceSheetFilter }) => ({
-    balanceSheetLoading,
+  withBalanceSheetDetail(({ balanceSheetFilter }) => ({
     balanceSheetFilter,
   })),
   withSettings,

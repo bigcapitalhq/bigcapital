@@ -97,6 +97,7 @@ function MakeJournalEntriesForm({
             is: (credit, debit) => credit || debit,
             then: Yup.number().required(),
           }),
+        contact_id: Yup.number().nullable(),
         note: Yup.string().nullable(),
       }),
     ),
@@ -114,6 +115,7 @@ function MakeJournalEntriesForm({
   const defaultEntry = useMemo(
     () => ({
       account_id: null,
+      contact_id: null,
       credit: 0,
       debit: 0,
       note: '',

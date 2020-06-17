@@ -1,8 +1,6 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Row, Col } from 'react-grid-system';
-import {
-  Button,
-} from '@blueprintjs/core';
+import { Button } from '@blueprintjs/core';
 import moment from 'moment';
 import { useFormik } from 'formik';
 import { FormattedMessage as T } from 'react-intl';
@@ -12,24 +10,30 @@ import FinancialStatementDateRange from 'containers/FinancialStatements/Financia
 import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
 
 import withJournal from './withJournal';
+import withJournalActions from './withJournalActions';
+
 import { compose } from 'utils';
 
 /**
- * Journal sheet header. 
+ * Journal sheet header.
  */
 function JournalHeader({
   pageFilter,
   onSubmitFilter,
 
+  // #withJournalActions
+  refreshJournalSheet,
+
   // #withJournal
   journalSheetFilter,
+  journalSheetRefresh,
 }) {
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
       ...pageFilter,
       from_date: moment(pageFilter.from_date).toDate(),
-      to_date: moment(pageFilter.to_date).toDate()
+      to_date: moment(pageFilter.to_date).toDate(),
     },
     validationSchema: Yup.object().shape({
       from_date: Yup.date().required(),
@@ -41,29 +45,29 @@ function JournalHeader({
     },
   });
 
-  const handleSubmitClick = useCallback(() => {
-    formik.submitForm();
-  }, [formik]);
+  useEffect(() => {
+    if (journalSheetRefresh) {
+      formik.submitForm();
+      refreshJournalSheet(false);
+    }
+  }, [formik, journalSheetRefresh]);
 
   return (
     <FinancialStatementHeader show={journalSheetFilter}>
-      <FinancialStatementDateRange formik={formik} />
-
       <Row>
-        <Col sm={3}>
-          <Button
-            type="submit"
-            onClick={handleSubmitClick}
-            className={'button--submit-filter'}>
-            <T id={'run_report'} />
-          </Button>
-        </Col>
+        <FinancialStatementDateRange formik={formik} />
       </Row>
-
     </FinancialStatementHeader>
   );
 }
 
 export default compose(
-  withJournal(({ journalSheetFilter }) => ({ journalSheetFilter })),
+  withJournal(({
+    journalSheetFilter,
+    journalSheetRefresh
+  }) => ({
+    journalSheetFilter,
+    journalSheetRefresh,
+  })),
+  withJournalActions,
 )(JournalHeader);

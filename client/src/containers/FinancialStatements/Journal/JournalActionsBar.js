@@ -27,6 +27,7 @@ function JournalActionsBar({
 
   // #withJournalActions
   toggleJournalSheetFilter,
+  refreshJournalSheet,
 }) {
   const filterDropdown = FilterDropdown({
     fields: [],
@@ -35,6 +36,10 @@ function JournalActionsBar({
 
   const handleFilterToggleClick = () => {
     toggleJournalSheetFilter();
+  };
+
+  const handleRecalcReport = () => {
+    refreshJournalSheet(true);
   };
 
   return (
@@ -46,6 +51,13 @@ function JournalActionsBar({
           text={<T id={'customize_report'} />}
         />
         <NavbarDivider />
+
+        <Button
+          className={classNames(Classes.MINIMAL, 'button--gray-highlight')}
+          text={'Re-calc Report'}
+          onClick={handleRecalcReport}
+          icon={<Icon icon="refresh-16" iconSize={16} />}
+        />
 
         <If condition={journalSheetFilter}>
           <Button
@@ -64,7 +76,6 @@ function JournalActionsBar({
             onClick={handleFilterToggleClick}
           />
         </If>
-        <NavbarDivider />
 
         <Popover
           content={filterDropdown}
@@ -78,9 +89,11 @@ function JournalActionsBar({
           />
         </Popover>
 
+        <NavbarDivider />
+
         <Button
           className={Classes.MINIMAL}
-          icon={<Icon icon='print-16' iconSize={16} />}
+          icon={<Icon icon="print-16" iconSize={16} />}
           text={<T id={'print'} />}
         />
         <Button

@@ -7,6 +7,7 @@ export default (mapState) => {
  
     const mapped = {
       customersViews: getResourceViews(state, 'customers'),
+      customersItems: Object.values(state.customers.items),
       customers: getCustomersItems(state, state.customers.currentViewId),
       customersLoading: state.customers.loading,
       customerErrors: state.customers.errors,

@@ -30,7 +30,7 @@ export default function MakeJournalEntriesHeader({
   return (
     <div class="make-journal-entries__header">
       <Row>
-        <Col sm={3}>
+        <Col width={260}>
           <FormGroup
             label={<T id={'journal_number'}/>}
             labelInfo={infoIcon}
@@ -46,7 +46,7 @@ export default function MakeJournalEntriesHeader({
           </FormGroup>
         </Col>
 
-        <Col sm={2}>
+        <Col width={220}>
           <FormGroup
           label={<T id={'date'}/>}
             intent={(errors.date && touched.date) && Intent.DANGER}
@@ -61,7 +61,7 @@ export default function MakeJournalEntriesHeader({
           </FormGroup>
         </Col>
 
-        <Col sm={4}>
+        <Col width={400}>
           <FormGroup
             label={<T id={'description'}/>}
             className={'form-group--description'}
@@ -78,7 +78,7 @@ export default function MakeJournalEntriesHeader({
       </Row>
 
       <Row>
-        <Col sm={3}>
+        <Col width={260}>
           <FormGroup
             label={<T id={'reference'}/>}
             labelInfo={infoIcon}
@@ -94,7 +94,7 @@ export default function MakeJournalEntriesHeader({
           </FormGroup>
         </Col>
 
-        <Col sm={4}>
+        <Col width={220}>
           <CurrenciesSelectList />
         </Col>
       </Row>

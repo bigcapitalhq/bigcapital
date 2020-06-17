@@ -25,6 +25,7 @@ export default (mapState) => {
       ),
       journalSheetLoading: state.financialStatements.journal.loading,
       journalSheetFilter: state.financialStatements.journal.filter,
+      journalSheetRefresh: state.financialStatements.journal.refresh,
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };
