@@ -68,6 +68,7 @@ export const fetchCustomers = ({ query }) => {
             type: t.CUSTOMER_SET,
             customers: response.data.customers.results,
           });
+
           dispatch({
             type: t.CUSTOMERS_PAGE_SET,
             customers: response.data.customers.results,
@@ -91,3 +92,18 @@ export const fetchCustomers = ({ query }) => {
         });
     });
 };
+
+export const deleteCustomer = ({ id }) => {
+  return (dispatch) =>
+    new Promise((resolve, reject) => {
+      ApiService.delete(`customers/${id}`)
+        .then((response) => {
+          dispatch({ type: t.CUSTOMER_DELETE, id });
+          resolve(response);
+        })
+        .catch((error) => {
+          reject(error.response.data.errors || []);
+        });
+    });
+};
+

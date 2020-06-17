@@ -134,7 +134,7 @@ export default [
     children: [
       {
         text: <T id={'customers'} />,
-        // href: '/',
+        href: '/customers',
       },
       {
         text: <T id={'new_customers'} />,
