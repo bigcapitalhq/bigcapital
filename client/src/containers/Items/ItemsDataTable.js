@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback, useMemo} from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   Button,
   Popover,
@@ -6,7 +6,8 @@ import {
   MenuItem,
   MenuDivider,
   Position,
-} from '@blueprintjs/core'
+  Intent,
+} from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import DataTable from 'components/DataTable';
 import Icon from 'components/Icon';
@@ -14,7 +15,7 @@ import Money from 'components/Money';
 
 import LoadingIndicator from 'components/LoadingIndicator';
 import withItems from 'containers/Items/withItems';
-import {compose} from 'utils';
+import { compose } from 'utils';
 
 const ItemsDataTable = ({
   loading,
@@ -31,7 +32,7 @@ const ItemsDataTable = ({
 }) => {
   const { formatMessage } = useIntl();
   const [initialMount, setInitialMount] = useState(false);
-  
+
   useEffect(() => {
     if (!itemsTableLoading) {
       setInitialMount(true);
@@ -42,89 +43,118 @@ const ItemsDataTable = ({
     (item) => () => {
       onEditItem && onEditItem(item);
     },
-    [onEditItem]
+    [onEditItem],
   );
 
-
   // const handleDeleteItem = (item) => () => { onDeleteItem(item); };
-  const handleDeleteItem =useCallback((item)=>()=>{onDeleteItem(item)},[onDeleteItem])
-  const actionMenuList = useCallback((item) =>
-    (<Menu>
-      <MenuItem text={<T id={'view_details'}/>} />
-      <MenuDivider />
-      <MenuItem text={<T id={'edit_item'}/>} onClick={handleEditItem(item)} />
-      <MenuItem text={<T id={'delete_item'}/>} onClick={handleDeleteItem(item)} />
-    </Menu>), [handleEditItem, handleDeleteItem]);
- 
-  const columns = useMemo(() => [
-    
-    {
-      Header: formatMessage({ id:'item_name' }),
-      accessor: 'name',
-      className: "actions",
+  const handleDeleteItem = useCallback(
+    (item) => () => {
+      onDeleteItem(item);
     },
-    {
-      Header: formatMessage({ id:'sku' }),
-      accessor: 'sku',
-      className: "sku",
-    },
-    {
-      Header: formatMessage({ id:'category' }),
-      accessor: 'category.name',
-      className: 'category',
-    },
-    {
-      Header: formatMessage({ id: 'sell_price' }),
-      accessor: row => (<Money amount={row.sell_price} currency={'USD'} />),
-      className: 'sell-price',
-    },
-    {
-      Header: formatMessage({ id: 'cost_price' }),
-      accessor: row => (<Money amount={row.cost_price} currency={'USD'} />),
-      className: 'cost-price',
-    },
-    // {
-    //   Header: 'Cost Account',
-    //   accessor: 'cost_account.name',
-    //   className: "cost-account",
-    // },
-    // {
-    //   Header: 'Sell Account',
-    //   accessor: 'sell_account.name',
-    //   className: "sell-account",
-    // },
-    // {
-    //   Header: 'Inventory Account',
-    //   accessor: 'inventory_account.name',
-    //   className: "inventory-account",
-    // },
-    {
-      id: 'actions',
-      Cell: ({ cell }) => (
-        <Popover
-          content={actionMenuList(cell.row.original)}
-          position={Position.RIGHT_BOTTOM}>
-          <Button icon={<Icon icon='more-h-16' iconSize={16} />} />
-        </Popover>
-      ),
-      className: 'actions',
-      width: 50,
-    },
-  ], [actionMenuList,formatMessage]);
+    [onDeleteItem],
+  );
+  const actionMenuList = useCallback(
+    (item) => (
+      <Menu>
+        <MenuItem text={formatMessage({ id: 'view_details' })} />
+        <MenuDivider />
+        <MenuItem
+          text={formatMessage({ id: 'edit_item' })}
+          onClick={handleEditItem(item)}
+        />
+        <MenuItem
+          text={formatMessage({ id: 'delete_item' })}
+          onClick={handleDeleteItem(item)}
+          intent={Intent.DANGER}
+        />
+      </Menu>
+    ),
+    [handleEditItem, handleDeleteItem, formatMessage],
+  );
 
-  const selectionColumn = useMemo(() => ({
-    minWidth: 42,
-    width: 42,
-    maxWidth: 42,
-  }), []);
+  const handleRowContextMenu = useCallback((cell) => {
+    return actionMenuList(cell.row.original);
+  }, [actionMenuList]);
+
+  const columns = useMemo(
+    () => [
+      {
+        Header: formatMessage({ id: 'item_name' }),
+        accessor: 'name',
+        className: 'actions',
+      },
+      {
+        Header: formatMessage({ id: 'sku' }),
+        accessor: 'sku',
+        className: 'sku',
+      },
+      {
+        Header: formatMessage({ id: 'category' }),
+        accessor: 'category.name',
+        className: 'category',
+      },
+      {
+        Header: formatMessage({ id: 'sell_price' }),
+        accessor: (row) => <Money amount={row.sell_price} currency={'USD'} />,
+        className: 'sell-price',
+      },
+      {
+        Header: formatMessage({ id: 'cost_price' }),
+        accessor: (row) => <Money amount={row.cost_price} currency={'USD'} />,
+        className: 'cost-price',
+      },
+      // {
+      //   Header: 'Cost Account',
+      //   accessor: 'cost_account.name',
+      //   className: "cost-account",
+      // },
+      // {
+      //   Header: 'Sell Account',
+      //   accessor: 'sell_account.name',
+      //   className: "sell-account",
+      // },
+      // {
+      //   Header: 'Inventory Account',
+      //   accessor: 'inventory_account.name',
+      //   className: "inventory-account",
+      // },
+      {
+        id: 'actions',
+        Cell: ({ cell }) => (
+          <Popover
+            content={actionMenuList(cell.row.original)}
+            position={Position.RIGHT_BOTTOM}
+          >
+            <Button icon={<Icon icon="more-h-16" iconSize={16} />} />
+          </Popover>
+        ),
+        className: 'actions',
+        width: 50,
+      },
+    ],
+    [actionMenuList, formatMessage],
+  );
+
+  const selectionColumn = useMemo(
+    () => ({
+      minWidth: 42,
+      width: 42,
+      maxWidth: 42,
+    }),
+    [],
+  );
 
   const handleFetchData = useCallback((...args) => {
-    onFetchData && onFetchData(...args)
+    onFetchData && onFetchData(...args);
   }, []);
 
-  const handleSelectedRowsChange = useCallback((selectedRows) => {
-    onSelectedRowsChange && onSelectedRowsChange(selectedRows.map(s => s.original));
-  }, [onSelectedRowsChange]);
+  const handleSelectedRowsChange = useCallback(
+    (selectedRows) => {
+      onSelectedRowsChange &&
+        onSelectedRowsChange(selectedRows.map((s) => s.original));
+    },
+    [onSelectedRowsChange],
+  );
 
   return (
     <LoadingIndicator loading={loading} mount={false}>
@@ -135,22 +165,19 @@ const ItemsDataTable = ({
         onFetchData={handleFetchData}
         loading={itemsTableLoading && !initialMount}
         noInitialFetch={true}
-        expandable={true} 
+        expandable={true}
         treeGraph={true}
-        spinnerProps={{size: 30}}
-        onSelectedRowsChange={handleSelectedRowsChange} />
+        spinnerProps={{ size: 30 }}
+        onSelectedRowsChange={handleSelectedRowsChange}
+        rowContextMenu={handleRowContextMenu}
+      />
     </LoadingIndicator>
   );
 };
 
 export default compose(
-
   withItems(({ itemsCurrentPage, itemsTableLoading }) => ({
     itemsCurrentPage,
     itemsTableLoading,
   })),
 )(ItemsDataTable);
-
-
-
-

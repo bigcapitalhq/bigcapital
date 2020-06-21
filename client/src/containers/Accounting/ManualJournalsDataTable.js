@@ -102,27 +102,31 @@ function ManualJournalsDataTable({
   const actionMenuList = useCallback(
     (journal) => (
       <Menu>
-        <MenuItem text={<T id={'view_details'} />} />
+        <MenuItem text={formatMessage({ id: 'view_details' })} />
         <MenuDivider />
         {!journal.status && (
           <MenuItem
-            text={<T id={'publish_journal'} />}
+          text={formatMessage({ id: 'publish_journal' })}
             onClick={handlePublishJournal(journal)}
           />
         )}
         <MenuItem
-          text={<T id={'edit_journal'} />}
+          text={formatMessage({ id: 'edit_journal' })}
           onClick={handleEditJournal(journal)}
         />
         <MenuItem
-          text={<T id={'delete_journal'} />}
+          text={formatMessage({ id: 'delete_journal' })}
           intent={Intent.DANGER}
           onClick={handleDeleteJournal(journal)}
         />
       </Menu>
     ),
-    [handleEditJournal, handleDeleteJournal, handlePublishJournal],
+    [handleEditJournal, handleDeleteJournal, handlePublishJournal, formatMessage],
   );
+
+  const onRowContextMenu = useCallback((cell) => {
+    return actionMenuList(cell.row.original);
+  }, [actionMenuList]);
 
   const columns = useMemo(
     () => [
@@ -244,6 +248,8 @@ function ManualJournalsDataTable({
         loading={manualJournalsLoading && !manualJournalsCurrentPage.length > 0}
         onSelectedRowsChange={handleSelectedRowsChange}
         pagination={true}
+
+        rowContextMenu={onRowContextMenu}
 
         pagesCount={manualJournalsPagination.pagesCount}
         initialPageSize={manualJournalsTableQuery.page_size}

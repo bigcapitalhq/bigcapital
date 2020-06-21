@@ -1,4 +1,4 @@
-import React, {useCallback, useState, useMemo } from 'react';
+import React, { useCallback, useState, useMemo } from 'react';
 import {
   Button,
   Popover,
@@ -8,6 +8,7 @@ import {
   Position,
   Classes,
   Tooltip,
+  Intent,
 } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 
@@ -26,12 +27,11 @@ import withDialogActions from 'containers/Dialog/withDialogActions';
 
 import { If } from 'components';
 
-
 function AccountsDataTable({
-  // #withDashboardActions  
+  // #withDashboardActions
   accounts,
   accountsLoading,
-  
+
   // #withDialog.
   openDialog,
 
@@ -52,136 +52,179 @@ function AccountsDataTable({
     }
   }, [accountsLoading, setInitialMount]);
 
-  const handleEditAccount = useCallback((account) => () => {
-    openDialog('account-form', { action: 'edit', id: account.id });
-  }, [openDialog]);
+  const handleEditAccount = useCallback(
+    (account) => () => {
+      openDialog('account-form', { action: 'edit', id: account.id });
+    },
+    [openDialog],
+  );
 
-  const handleNewParentAccount = useCallback((account) => {
-    openDialog('account-form', { action: 'new_child', id: account.id });
-  }, [openDialog]);
+  const handleNewParentAccount = useCallback(
+    (account) => {
+      openDialog('account-form', { action: 'new_child', id: account.id });
+    },
+    [openDialog],
+  );
 
-  const actionMenuList = useCallback((account) => (
-    <Menu>
-      <MenuItem text={<T id={'view_details'}/>} />
-      <MenuDivider />
-      <MenuItem
-        text={<T id={'edit_account'}/>}
-        onClick={handleEditAccount(account)} />
-      <MenuItem
-        text={<T id={'new_account'}/>}
-        onClick={() => handleNewParentAccount(account)} />
-      <MenuDivider />
-      <If condition={account.active}>
+  const actionMenuList = useCallback(
+    (account) => (
+      <Menu>
+        <MenuItem text={formatMessage({ id: 'view_details' })} />
+        <MenuDivider />
         <MenuItem
-          text={<T id={'inactivate_account'}/>}
-          onClick={() => onInactiveAccount(account)} />
-      </If>
-      <If condition={!account.active}>
+          text={formatMessage({ id: 'edit_account' })}
+          onClick={handleEditAccount(account)}
+        />
         <MenuItem
-          text={<T id={'activate_account'}/>}
-          onClick={() => onActivateAccount(account)} />
-      </If>
-      <MenuItem
-        text={<T id={'delete_account'}/>}
-        onClick={() => onDeleteAccount(account)} />
-    </Menu>
-  ), [handleEditAccount, onDeleteAccount, onInactiveAccount,handleNewParentAccount]);
+          text={formatMessage({ id: 'new_child_account' })}
+          onClick={() => handleNewParentAccount(account)}
+        />
+        <MenuDivider />
+        <If condition={account.active}>
+          <MenuItem
+            text={formatMessage({ id: 'inactivate_account' })}
+            onClick={() => onInactiveAccount(account)}
+          />
+        </If>
+        <If condition={!account.active}>
+          <MenuItem
+            text={formatMessage({ id: 'activate_account' })}
+            onClick={() => onActivateAccount(account)}
+          />
+        </If>
+        <MenuItem
+          text={formatMessage({ id: 'delete_account' })}
+          intent={Intent.DANGER}
+          onClick={() => onDeleteAccount(account)}
+        />
+      </Menu>
+    ),
+    [
+      handleEditAccount,
+      onDeleteAccount,
+      onInactiveAccount,
+      handleNewParentAccount,
+      formatMessage,
+    ],
+  );
 
-  const columns = useMemo(() => [
-    {
-      id: 'name',
-      Header: formatMessage({id:'account_name'}),
-      accessor: row => {
-        return (row.description) ?
-          (<Tooltip
-            className={Classes.TOOLTIP_INDICATOR}
-            content={row.description}
+  const rowContextMenu = (cell) => {
+    return actionMenuList(cell.row.original);
+  };
+
+  const columns = useMemo(
+    () => [
+      {
+        id: 'name',
+        Header: formatMessage({ id: 'account_name' }),
+        accessor: (row) => {
+          return row.description ? (
+            <Tooltip
+              className={Classes.TOOLTIP_INDICATOR}
+              content={row.description}
+              position={Position.RIGHT_TOP}
+              hoverOpenDelay={500}
+            >
+              {row.name}
+            </Tooltip>
+          ) : (
+            row.name
+          );
+        },
+        className: 'account_name',
+        width: 300,
+      },
+      {
+        id: 'code',
+        Header: formatMessage({ id: 'code' }),
+        accessor: 'code',
+        className: 'code',
+        width: 100,
+      },
+      {
+        id: 'type',
+        Header: formatMessage({ id: 'type' }),
+        accessor: 'type.name',
+        className: 'type',
+        width: 120,
+      },
+      {
+        id: 'normal',
+        Header: formatMessage({ id: 'normal' }),
+        Cell: ({ cell }) => {
+          const account = cell.row.original;
+          const normal = account.type ? account.type.normal : '';
+          const arrowDirection = normal === 'credit' ? 'down' : 'up';
+
+          return (
+            <Tooltip
+              className={Classes.TOOLTIP_INDICATOR}
+              content={formatMessage({ id: normal })}
+              position={Position.RIGHT}
+              hoverOpenDelay={500}
+            >
+              <Icon icon={`arrow-${arrowDirection}`} />
+            </Tooltip>
+          );
+        },
+        className: 'normal',
+        width: 75,
+      },
+      {
+        id: 'balance',
+        Header: formatMessage({ id: 'balance' }),
+        Cell: ({ cell }) => {
+          const account = cell.row.original;
+          const { balance = null } = account;
+
+          return balance ? (
+            <span>
+              <Money amount={balance.amount} currency={balance.currency_code} />
+            </span>
+          ) : (
+            <span class="placeholder">--</span>
+          );
+        },
+        width: 150,
+      },
+      {
+        id: 'actions',
+        Header: '',
+        Cell: ({ cell }) => (
+          <Popover
+            content={actionMenuList(cell.row.original)}
             position={Position.RIGHT_TOP}
-            hoverOpenDelay={500}>
-              { row.name }
-          </Tooltip>) : row.name;
+          >
+            <Button icon={<Icon icon="more-h-16" iconSize={16} />} />
+          </Popover>
+        ),
+        className: 'actions',
+        width: 50,
       },
-      className: 'account_name',
-      width: 300,
-    },
-    {
-      id: 'code',
-      Header: formatMessage({id:'code'}),
-      accessor: 'code',
-      className: 'code',
-      width: 100,
-    },
-    {
-      id: 'type',
-      Header: formatMessage({id:'type'}),
-      accessor: 'type.name',
-      className: 'type',
-      width: 120,
-    },
-    {
-      id: 'normal',
-      Header: formatMessage({id:'normal'}),
-      Cell: ({ cell }) => {
-        const account = cell.row.original;
-        const normal = account.type ? account.type.normal : '';
-        const arrowDirection = normal === 'credit' ? 'down' : 'up';
+    ],
+    [actionMenuList, formatMessage],
+  );
 
-        return (
-          <Tooltip
-            className={Classes.TOOLTIP_INDICATOR}
-            content={formatMessage({ id: normal })}
-            position={Position.RIGHT}
-            hoverOpenDelay={500}>
-            <Icon icon={`arrow-${arrowDirection}`} />
-          </Tooltip>
-        );
-      },
-      className: 'normal',
-      width: 75,
-    },
-    {
-      id: 'balance',
-      Header: formatMessage({id:'balance'}),
-      Cell: ({ cell }) => {
-        const account = cell.row.original;
-        const {balance = null} = account;
-
-        return (balance) ?
-          (<span>
-            <Money amount={balance.amount} currency={balance.currency_code} />
-            </span>) :
-          (<span class="placeholder">--</span>);
-      },
-      width: 150,
-    },
-    {
-      id: 'actions',
-      Header: '',
-      Cell: ({ cell }) => (
-        <Popover
-          content={actionMenuList(cell.row.original)}
-          position={Position.RIGHT_TOP}>
-          <Button icon={<Icon icon='more-h-16' iconSize={16} />} />
-        </Popover>
-      ),
-      className: 'actions',
+  const selectionColumn = useMemo(
+    () => ({
+      minWidth: 50,
       width: 50,
-    }
-  ], [actionMenuList,formatMessage]);
-
-  const selectionColumn = useMemo(() => ({
-    minWidth: 50,
-    width: 50,
-    maxWidth: 50,
-  }), [])
+      maxWidth: 50,
+    }),
+    [],
+  );
 
   const handleDatatableFetchData = useCallback((...params) => {
     onFetchData && onFetchData(...params);
   }, []);
 
-  const handleSelectedRowsChange = useCallback((selectedRows) => {
-    onSelectedRowsChange && onSelectedRowsChange(selectedRows.map(s => s.original));
-  }, [onSelectedRowsChange]);
+  const handleSelectedRowsChange = useCallback(
+    (selectedRows) => {
+      onSelectedRowsChange &&
+        onSelectedRowsChange(selectedRows.map((s) => s.original));
+    },
+    [onSelectedRowsChange],
+  );
 
   return (
     <LoadingIndicator loading={loading} mount={false}>
@@ -192,12 +235,14 @@ function AccountsDataTable({
         onFetchData={handleDatatableFetchData}
         manualSortBy={true}
         selectionColumn={selectionColumn}
-        expandable={true} 
+        expandable={true}
         treeGraph={true}
         sticky={true}
         onSelectedRowsChange={handleSelectedRowsChange}
         loading={accountsLoading && !initialMount}
-        spinnerProps={{size: 30}} />
+        spinnerProps={{ size: 30 }}
+        rowContextMenu={rowContextMenu}
+      />
     </LoadingIndicator>
   );
 }

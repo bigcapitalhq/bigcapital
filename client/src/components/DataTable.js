@@ -8,7 +8,7 @@ import {
   useSortBy,
   useFlexLayout,
 } from 'react-table';
-import { Checkbox, Spinner } from '@blueprintjs/core';
+import { Checkbox, Spinner, ContextMenu, Menu, MenuItem } from '@blueprintjs/core';
 import classnames from 'classnames';
 import { FixedSizeList } from 'react-window';
 import { useSticky } from 'react-table-sticky';
@@ -51,6 +51,7 @@ export default function DataTable({
   pagesCount: controlledPageCount,
   initialPageIndex,
   initialPageSize,
+  rowContextMenu
 }) {
   const {
     getTableProps,
@@ -191,6 +192,20 @@ export default function DataTable({
     ),
     [expandable, expandToggleColumn],
   );
+
+  const handleRowContextMenu = (cell, row) => (e) => {
+    if (typeof rowContextMenu === 'function') {
+      e.preventDefault();
+      const tr = e.currentTarget.closest('.tr');
+      tr.classList.add('is-context-menu-active');
+  
+      const DropdownEl = rowContextMenu(cell, row);
+  
+      ContextMenu.show(DropdownEl, { left: e.clientX, top: e.clientY }, () => {
+        tr.classList.remove('is-context-menu-active');
+      });
+    }
+  };
 
   // Renders table row.
   const RenderRow = useCallback(

@@ -98,28 +98,33 @@ function ExpenseDataTable({
   const actionMenuList = useCallback(
     (expense) => (
       <Menu>
-        <MenuItem text={<T id={'view_details'} />} />
+        <MenuItem
+          text={formatMessage({ id: 'view_details' })} />
         <MenuDivider />
         <If condition={expenses.published}>
           <MenuItem
-            text={<T id={'publish_expense'} />}
+            text={formatMessage({ id: 'publish_expense' })}
             onClick={handlePublishExpense(expense)}
           />
         </If>
 
         <MenuItem
-          text={<T id={'edit_expense'} />}
+          text={formatMessage({ id: 'edit_expense' })}
           onClick={handleEditExpense(expense)}
         />
         <MenuItem
-          text={<T id={'delete_expense'} />}
+          text={formatMessage({ id: 'delete_expense' })}
           intent={Intent.DANGER}
           onClick={handleDeleteExpense(expense)}
         />
       </Menu>
     ),
-    [handleEditExpense, handleDeleteExpense, handlePublishExpense],
+    [handleEditExpense, handleDeleteExpense, handlePublishExpense, formatMessage],
   );
+
+  const onRowContextMenu = useCallback((cell) => {
+    return actionMenuList(cell.row.original);
+  }, [actionMenuList]);
 
   const expenseAccountAccessor = (expense) => {
     if (expense.categories.length === 1) {
@@ -253,6 +258,7 @@ function ExpenseDataTable({
           sticky={true}
           loading={expensesLoading && !initialMount}
           onSelectedRowsChange={handleSelectedRowsChange}
+          rowContextMenu={onRowContextMenu}
         />
       </LoadingIndicator>
     </div>

@@ -3,7 +3,9 @@ import {
   Button,
   Popover,
   Menu,
+  Intent,
   MenuItem,
+  MenuDivider,
   Position,
 } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
@@ -43,11 +45,13 @@ const ItemsCategoryList = ({
     (category) => (
       <Menu>
         <MenuItem
-          text={<T id={'edit_category'} />}
+          text={formatMessage({ id: 'edit_category' })}
           onClick={() => handelEditCategory(category)}
         />
+        <MenuDivider />
         <MenuItem
-          text={<T id={'delete_category'} />}
+          text={formatMessage({ id: 'delete_category' })}
+          intent={Intent.DANGER}
           onClick={() => handleDeleteCategory(category)}
         />
       </Menu>
@@ -120,6 +124,13 @@ const ItemsCategoryList = ({
     [],
   );
 
+  const handleRowContextMenu = useCallback(
+    (cell) => {
+      return actionMenuList(cell.row.original);
+    },
+    [actionMenuList],
+  );
+
   return (
     <LoadingIndicator mount={false}>
       <DataTable
@@ -133,6 +144,7 @@ const ItemsCategoryList = ({
         onSelectedRowsChange={handleSelectedRowsChange}
         treeGraph={true}
         spinnerProps={{ size: 30 }}
+        rowContextMenu={handleRowContextMenu}
       />
     </LoadingIndicator>
   );

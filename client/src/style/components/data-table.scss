@@ -123,6 +123,10 @@
       .tr:hover .td{
         background: #fafafa;
       }
+
+      .tr.is-context-menu-active .td{
+        background: #F3FAFC;
+      }
       .td.actions .#{$ns}-button{
         background: #E6EFFB;
         border: 0;
@@ -267,4 +271,3 @@
     }  
   }
 }
-
