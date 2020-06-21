@@ -209,4 +209,42 @@ describe('route: `/customers`', () => {
       expect(foundCustomer[0].displayName).equals('Ahmed Bouhuolia, Bigcapital');
     })
   });
+
+  describe('DELETE: `customers`', () => {
+    it('Should response customers ids not found.', async () => {
+      const res = await request()
+        .delete('/api/customers')
+        .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
+        .query({
+          ids: [100, 200],
+        })
+        .send();
+
+      expect(res.status).equals(404);
+      expect(res.body.errors).include.something.deep.equals({
+        type: 'CUSTOMERS.NOT.FOUND', code: 200,        
+      });
+    });
+
+    it('Should delete the given customers.', async () => {
+      const customer1 = await tenantFactory.create('customer');
+      const customer2 = await tenantFactory.create('customer');
+
+      const res = await request()
+        .delete('/api/customers')
+        .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
+        .query({
+          ids: [customer1.id, customer2.id],
+        })
+        .send();
+
+      const foundCustomers = await Customer.tenant().query()
+        .whereIn('id', [customer1.id, customer2.id]);
+
+      expect(res.status).equals(200);
+      expect(foundCustomers.length).equals(0);
+    });
+  })
 });

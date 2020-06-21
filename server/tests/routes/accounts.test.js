@@ -10,7 +10,7 @@ import {
 } from '~/dbInit';
 
 
-describe.only('routes: /accounts/', () => {
+describe('routes: /accounts/', () => {
   describe('POST `/accounts`', () => {
     it('Should `name` be required.', async () => {
       const res = await request()
@@ -190,7 +190,7 @@ describe.only('routes: /accounts/', () => {
       });
     });
 
-    it.only('Should response success with correct data form.', async () => {
+    it('Should response success with correct data form.', async () => {
       const account = await tenantFactory.create('account');
       const res = await request()
         .post('/api/accounts')

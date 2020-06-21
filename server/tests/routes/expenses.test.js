@@ -678,4 +678,42 @@ describe('routes: /expenses/', () => {
       expect(foundExpenseCategory[0].amount).equals(3000);
     });
   });
+
+  describe('DELETE: `/api/expenses`', () => {
+    it('Should response not found expenses ids.', async () => {
+      const res = await request()
+        .delete('/api/expenses')
+        .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
+        .query({
+          ids: [100, 200],
+        })
+        .send({});
+
+      expect(res.status).equals(404);
+      expect(res.body.errors).include.something.deep.equals({
+        type: 'EXPENSES.NOT.FOUND', code: 200,
+      });
+    });
+
+    it('Should delete the given expenses ids.', async () => {
+      const expense1 = await tenantFactory.create('expense');
+      const expense2 = await tenantFactory.create('expense');
+    
+      const res = await request()
+        .delete('/api/expenses')
+        .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
+        .query({
+          ids: [expense1.id, expense2.id],
+        })
+        .send({});
+        
+      const foundExpenses = await Expense.tenant().query()
+        .whereIn('id', [expense1.id, expense2.id]);
+        
+      expect(res.status).equals(200);
+      expect(foundExpenses.length).equals(0);
+    })
+  });
 });

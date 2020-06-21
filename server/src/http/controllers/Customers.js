@@ -5,7 +5,7 @@ import {
   query,
   validationResult,
 } from 'express-validator';
-import { pick } from 'lodash';
+import { pick, difference } from 'lodash';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
 import {
   mapViewRolesToConditionals,
@@ -76,6 +76,10 @@ export default {
     router.delete('/:id',
       this.deleteCustomer.validation,
       asyncMiddleware(this.deleteCustomer.handler));
+
+    router.delete('/',
+      this.deleteBulkCustomers.validation,
+      asyncMiddleware(this.deleteBulkCustomers.handler));
 
     router.get('/',
       this.listCustomers.validation,
@@ -380,5 +384,40 @@ export default {
 
       return res.status(200).send();
     },
+  },
+
+  /**
+   * Bulk delete customers.
+   */
+  deleteBulkCustomers: {
+    validation: [
+      query('ids').isArray({ min: 2 }),
+      query('ids.*').isNumeric().toInt(),
+    ],
+    async handler(req, res) {
+      const validationErrors = validationResult(req);
+
+      if (!validationErrors.isEmpty()) {
+        return res.boom.badData(null, {
+          code: 'validation_error', ...validationErrors,
+        });
+      }
+      const filter = { ...req.query };
+      const { Customer } = req.models;
+
+      const customers = await Customer.query().whereIn('id', filter.ids);
+      const storedCustomersIds = customers.map((customer) => customer.id);
+
+      const notFoundCustomers = difference(filter.ids, storedCustomersIds);
+
+      if (notFoundCustomers.length > 0) {
+        return res.status(404).send({
+          errors: [{ type: 'CUSTOMERS.NOT.FOUND', code: 200 }],
+        });
+      }
+      await Customer.query().whereIn('id', storedCustomersIds).delete();
+
+      return res.status(200).send({ ids: storedCustomersIds });
+    }
   }
 };

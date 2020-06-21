@@ -42,6 +42,10 @@ export default {
       this.deleteExpense.validation,
       asyncMiddleware(this.deleteExpense.handler));
 
+    router.delete('/',
+      this.deleteBulkExpenses.validation,
+      asyncMiddleware(this.deleteBulkExpenses.handler));
+
     router.post('/:id',
       this.updateExpense.validation,
       asyncMiddleware(this.updateExpense.handler));
@@ -195,7 +199,7 @@ export default {
         });
       }
       const { id } = req.params;
-      const { Expense, AccountTransaction } = req.models;
+      const { Expense, Account, AccountTransaction } = req.models;
       const expense = await Expense.query().findById(id);
       const errorReasons = [];
 
@@ -624,4 +628,62 @@ export default {
       });
     },
   },
+
+  /**
+   * Deletes bulk expenses.
+   */
+  deleteBulkExpenses: {
+    validation: [
+      query('ids').isArray({ min: 1 }),
+      query('ids.*').isNumeric().toInt(),
+    ],
+    async handler(req, res) {
+      const validationErrors = validationResult(req);
+
+      if (!validationErrors.isEmpty()) {
+        return res.boom.badData(null, {
+          code: 'validation_error', ...validationErrors,
+        });
+      }
+      const filter = { ...req.query };
+      const { Expense, AccountTransaction, Account, MediaLink } = req.models;
+
+      const expenses = await Expense.query()
+        .whereIn('id', filter.ids)
+
+      const storedExpensesIds = expenses.map(e => e.id);
+      const notFoundExpenses = difference(filter.ids, storedExpensesIds);
+
+      if (notFoundExpenses.length > 0) {
+        return res.status(404).send({
+          errors: [{ type: 'EXPENSES.NOT.FOUND', code: 200 }],
+        });
+      }
+
+      const deleteExpensesOper = Expense.query()
+        .whereIn('id', storedExpensesIds).delete();
+
+      const transactions = await AccountTransaction.query()
+        .whereIn('reference_type', ['Expense'])
+        .whereIn('reference_id', filter.ids)
+
+      const accountsDepGraph = await Account.depGraph().query().remember();
+      const journal = new JournalPoster(accountsDepGraph);
+
+      journal.loadEntries(transactions);
+      journal.removeEntries();
+
+      await MediaLink.query()
+        .where('model_name', 'Expense')
+        .whereIn('model_id', filter.ids)
+        .delete();
+
+      await Promise.all([
+        deleteExpensesOper,
+        journal.deleteEntries(),
+        journal.saveBalance(),
+      ]);
+      return res.status(200).send({ ids: filter.ids });
+    }
+  }
 };
