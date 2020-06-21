@@ -8,7 +8,13 @@ const initialState = {
   views: {},
   loading: false,
   currentViewId: -1,
-  tableQuery: {},
+  tableQuery: {
+    page_size: 6,
+    page: 1,
+  },
+  paginationMeta: {
+    total: 0,
+  }
 };
 
 const defaultJournal = {
@@ -45,12 +51,19 @@ const reducer = createReducer(initialState, {
   },
 
   [t.MANUAL_JOURNALS_PAGE_SET]: (state, action) => {
-    const viewId = action.customViewId || -1;
-    const view = state.views[viewId] || {};
+    const { customViewId, manualJournals, pagination } = action.payload;
 
+    const viewId = customViewId || -1;
+    const view = state.views[viewId] || {};
+ 
     state.views[viewId] = {
       ...view,
-      ids: action.manual_journals.map((i) => i.id),
+      pages: {
+        ...(state.views?.[viewId]?.pages || {}),
+        [pagination.page]: {
+          ids: (manualJournals.map((i) => i.id)),
+        },
+      }
     };
   },
 
@@ -78,6 +91,22 @@ const reducer = createReducer(initialState, {
     });
     state.items = items;
   },
+
+  [t.MANUAL_JOURNALS_PAGINATION_SET]: (state, action) => {
+    const { pagination } = action.payload;
+    const mapped = {
+      pageSize: parseInt(pagination.pageSize, 10),
+      page: parseInt(pagination.page, 10),
+      total: parseInt(pagination.total, 10),
+    };
+
+    state.paginationMeta = {
+      ...state.paginationMeta,
+      ...mapped,
+      pagesCount: Math.ceil(mapped.total / mapped.pageSize),
+      pageIndex: Math.max(mapped.page - 1, 0),
+    };
+  }
 });
 
 export default createTableQueryReducers('manual_journals', reducer);

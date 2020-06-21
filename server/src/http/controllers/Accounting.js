@@ -72,6 +72,8 @@ export default {
    */
   manualJournals: {
     validation: [
+      query('page').optional().isNumeric().toInt(),
+      query('page_size').optional().isNumeric().toInt(),
       query('custom_view_id').optional().isNumeric().toInt(),
       query('stringified_filter_roles').optional().isJSON(),
     ],

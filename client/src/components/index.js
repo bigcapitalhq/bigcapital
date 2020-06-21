@@ -10,6 +10,7 @@ import ErrorMessage from './ErrorMessage';
 import MODIFIER from './modifiers';
 import FieldHint from './FieldHint';
 import MenuItemLabel from './MenuItemLabel';
+import Pagination from './Pagination';
 
 const Hint = FieldHint;
 
@@ -27,5 +28,6 @@ export {
   FieldHint,
   Hint,
   MenuItemLabel,
+  Pagination,
   // For,
 };

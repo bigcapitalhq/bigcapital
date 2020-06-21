@@ -11,7 +11,7 @@ import {
   Position,
   Tag,
 } from '@blueprintjs/core';
-import { useParams } from 'react-router-dom';
+import { withRouter, useParams } from 'react-router-dom';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import moment from 'moment';
 
@@ -29,18 +29,21 @@ import withViewDetails from 'containers/Views/withViewDetails';
 import withManualJournals from 'containers/Accounting/withManualJournals';
 import withManualJournalsActions from 'containers/Accounting/withManualJournalsActions';
 
-
 function ManualJournalsDataTable({
   loading,
 
-  manualJournals,
+  // #withManualJournals
+  manualJournalsCurrentPage,
   manualJournalsLoading,
+  manualJournalsPagination,
+  manualJournalsTableQuery,
 
   // #withDashboardActions
   changeCurrentView,
   changePageSubtitle,
   setTopbarEditView,
 
+  // #withViewDetails
   viewId,
   viewMeta,
 
@@ -96,27 +99,6 @@ function ManualJournalsDataTable({
     [onDeleteJournal],
   );
 
-  // const actionMenuList = (journal) => (
-  //   <Menu>
-  //     <MenuItem text={<T id={'view_details'} />} />
-  //     <MenuDivider />
-  //     {!journal.status && (
-  //       <MenuItem
-  //         text={<T id={'publish_journal'} />}
-  //         onClick={handlePublishJournal(journal)}
-  //       />
-  //     )}
-  //     <MenuItem
-  //       text={<T id={'edit_journal'} />}
-  //       onClick={handleEditJournal(journal)}
-  //     />
-  //     <MenuItem
-  //       text={<T id={'delete_journal'} />}
-  //       intent={Intent.DANGER}
-  //       onClick={handleDeleteJournal(journal)}
-  //     />
-  //   </Menu>
-  // );
   const actionMenuList = useCallback(
     (journal) => (
       <Menu>
@@ -171,13 +153,9 @@ function ManualJournalsDataTable({
         Header: formatMessage({ id: 'status' }),
         accessor: (r) => {
           return r.status ? (
-            <Tag minimal={true}>
-              <T id={'published'} />
-            </Tag>
+            <Tag minimal={true}><T id={'published'} /></Tag>
           ) : (
-            <Tag minimal={true} intent={Intent.WARNING}>
-              <T id={'draft'} />
-            </Tag>
+            <Tag minimal={true} intent={Intent.WARNING}><T id={'draft'} /></Tag>
           );
         },
         disableResizing: true,
@@ -227,7 +205,7 @@ function ManualJournalsDataTable({
             content={actionMenuList(cell.row.original)}
             position={Position.RIGHT_BOTTOM}
           >
-            <Button icon={<Icon icon='more-h-16' iconSize={16} />} />
+            <Button icon={<Icon icon="more-h-16" iconSize={16} />} />
           </Popover>
         ),
         className: 'actions',
@@ -257,26 +235,41 @@ function ManualJournalsDataTable({
     <LoadingIndicator loading={loading} mount={false}>
       <DataTable
         columns={columns}
-        data={manualJournals}
+        data={manualJournalsCurrentPage}
         onFetchData={handleDataTableFetchData}
         manualSortBy={true}
         selectionColumn={true}
         noInitialFetch={true}
         sticky={true}
-        loading={manualJournalsLoading && !initialMount}
+        loading={manualJournalsLoading && !manualJournalsCurrentPage.length > 0}
         onSelectedRowsChange={handleSelectedRowsChange}
+        pagination={true}
+
+        pagesCount={manualJournalsPagination.pagesCount}
+        initialPageSize={manualJournalsTableQuery.page_size}
+        initialPageIndex={manualJournalsTableQuery.page - 1}
       />
     </LoadingIndicator>
   );
 }
 
 export default compose(
+  withRouter,
   withDialogActions,
   withDashboardActions,
   withManualJournalsActions,
-  withManualJournals(({ manualJournals, manualJournalsLoading }) => ({
-    manualJournals,
-    manualJournalsLoading,
-  })),
+  withManualJournals(
+    ({
+      manualJournalsCurrentPage,
+      manualJournalsLoading,
+      manualJournalsPagination,
+      manualJournalsTableQuery,
+    }) => ({
+      manualJournalsCurrentPage,
+      manualJournalsLoading,
+      manualJournalsPagination,
+      manualJournalsTableQuery,
+    }),
+  ),
   withViewDetails,
 )(ManualJournalsDataTable);

@@ -16,7 +16,7 @@ import { ScrollSync, ScrollSyncPane } from 'react-scroll-sync';
 
 import { ConditionalWrapper } from 'utils';
 import { useUpdateEffect } from 'hooks';
-import { If } from 'components';
+import { If, Pagination } from 'components';
 
 const IndeterminateCheckbox = React.forwardRef(
   ({ indeterminate, ...rest }, ref) => {
@@ -46,6 +46,11 @@ export default function DataTable({
   expandToggleColumn = 2,
   noInitialFetch = false,
   spinnerProps = { size: 40 },
+
+  pagination = false,
+  pagesCount: controlledPageCount,
+  initialPageIndex,
+  initialPageSize,
 }) {
   const {
     getTableProps,
@@ -59,18 +64,28 @@ export default function DataTable({
     isAllRowsExpanded,
     totalColumnsWidth,
 
+    // page,
+    pageCount,
+    canPreviousPage,
+    canNextPage,
+    gotoPage,
+    previousPage,
+    nextPage,
+    setPageSize,
+
     // Get the state from the instance
     state: { pageIndex, pageSize, sortBy, selectedRowIds },
   } = useTable(
     {
       columns,
       data: data,
-      initialState: { pageIndex: 0, expanded }, // Pass our hoisted table state
-      manualPagination: true, // Tell the usePagination
-      // hook that we'll handle our own data fetching
-      // This means we'll also have to provide our own
-      // pageCount.
-      // pageCount: controlledPageCount,
+      initialState: {
+        pageIndex: initialPageIndex,
+        pageSize: initialPageSize,
+        expanded,
+      }, // Pass our hoisted table state
+      manualPagination: true,
+      pageCount: controlledPageCount,
       getSubRows: (row) => row.children,
       manualSortBy,
       expandSubRows,
@@ -80,10 +95,10 @@ export default function DataTable({
     useSortBy,
     useExpanded,
     useRowSelect,
-    usePagination,
     useResizeColumns,
     useFlexLayout,
     useSticky,
+    usePagination,
     (hooks) => {
       hooks.visibleColumns.push((columns) => [
         // Let's make a column for selection
@@ -197,6 +212,7 @@ export default function DataTable({
                 {...cell.getCellProps({
                   className: classnames(cell.column.className || '', 'td'),
                 })}
+                onContextMenu={handleRowContextMenu(cell, row)}
               >
                 {RenderCell({ cell, row, index })}
               </div>
@@ -337,6 +353,21 @@ export default function DataTable({
           </ScrollSyncPane>
         </div>
       </ScrollSync>
+      
+      <If condition={pagination && pageCount}>
+        <Pagination
+          initialPage={pageIndex + 1}
+          total={pageSize * pageCount}
+          size={pageSize}
+          onPageChange={(currentPage) => {
+            gotoPage(currentPage - 1);
+          }}
+          onPageSizeChange={(pageSize, currentPage) => {
+            gotoPage(currentPage - 1);
+            setPageSize(pageSize);
+          }}
+        />
+      </If>
     </div>
   );
 }

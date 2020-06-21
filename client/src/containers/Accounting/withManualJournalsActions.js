@@ -10,11 +10,10 @@ import {
 
 const mapActionsToProps = (dispatch) => ({
   requestDeleteManualJournal: (id) => dispatch(deleteManualJournal({ id })),
-  requestFetchManualJournalsTable: (query = {}) => dispatch(fetchManualJournalsTable({ query: { ...query } })),
+  requestFetchManualJournalsTable: (query = {}) => dispatch(fetchManualJournalsTable({ query })),
   requestFetchManualJournal: (id) => dispatch(fetchManualJournal({ id })),
   requestPublishManualJournal: (id) => dispatch(publishManualJournal({ id })),
   requestDeleteBulkManualJournals: (ids) => dispatch(deleteBulkManualJournals({ ids })),
-
   changeCurrentView: (id) => dispatch({
     type: t.MANUAL_JOURNALS_SET_CURRENT_VIEW,
     currentViewId: parseInt(id, 10),

@@ -7,7 +7,10 @@ const initialState = {
   views: {},
   accountsTypes: [],
   accountsById: {},
-  tableQuery: {},
+  tableQuery: {
+    pageSize: 2,
+    page: 1,
+  },
   currentViewId: -1,
   selectedRows: [],
   loading: false,
@@ -91,8 +94,3 @@ export default createTableQueryReducers('accounts', accountsReducer);
 export const getAccountById = (state, id) => {
   return state.accounts.accountsById[id];
 };
- 
-// export default {
-//   // ...accountsReducer,
-//   // testReducer,
-// }

@@ -468,4 +468,7 @@ export default {
   remove_the_line: 'Remove the line',
   no_results: 'No results',
   all_reports: 'All Reports',
+  next: 'Next',
+  previous: 'Previous',
+  showing_current_page_to_total: 'Showing {currentPage} to {totalPages} of {total} entries',
 };
