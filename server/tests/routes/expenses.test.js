@@ -716,4 +716,24 @@ describe('routes: /expenses/', () => {
       expect(foundExpenses.length).equals(0);
     })
   });
+
+  describe('POST: `/api/expenses/:id/publish`', () => {
+    it('Should publish the given expense.', async () => {
+      const expense = await tenantFactory.create('expense', {
+        published: 0,
+      });
+
+      const res = await request()
+        .post(`/api/expenses/${expense.id}/publish`)
+        .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
+        .send();
+
+      const foundExpense = await Expense.tenant().query()
+        .where('id', expense.id).first();
+
+      expect(res.status).equals(200);
+      expect(foundExpense.published).equals(1);
+    });
+  });
 });
