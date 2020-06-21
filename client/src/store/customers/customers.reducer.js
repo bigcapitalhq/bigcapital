@@ -36,10 +36,14 @@ const customersReducer = createReducer(initialState, {
       delete state.items[action.id];
     }
   },
+  [t.CUSTOMERS_TABLE_LOADING]: (state, action) => {
+    const { loading } = action.payload;
+    state.loading = !!loading;
+  },
 });
 
 export default createTableQueryReducers('customers', customersReducer);
 
 export const getCustomerById = (state, id) => {
-  return state.customers[id];
+  return state.customers.items[id];
 };

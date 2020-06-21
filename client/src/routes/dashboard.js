@@ -183,10 +183,11 @@ export default [
   {
     path: `/customers/:id/edit`,
     component: LazyLoader({
-      // loader: () => import(),
+      loader: () => import('containers/Customers/Customer'),
     }),
     breadcrumb: 'Edit Customer',
   },
+
   {
     path: `/customers/new`,
     component: LazyLoader({
@@ -199,7 +200,7 @@ export default [
   {
     path: `/customers`,
     component: LazyLoader({
-      // loader: () => import(''),
+      loader: () => import('containers/Customers/CustomersList'),
     }),
     breadcrumb: 'Customers',
   },

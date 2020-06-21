@@ -450,7 +450,7 @@ export default {
   as: 'As',
   receivable_aging_summary: 'Receivable Aging Summary',
   customers: 'Customers',
-  new_customers:'New Customers',
+  new_customers: 'New Customers',
   customer_type_: 'Customer type',
   display_name_: 'Display name',
   new_customer: 'New Customer',
@@ -471,5 +471,35 @@ export default {
   next: 'Next',
   previous: 'Previous',
   showing_current_page_to_total: 'Showing {currentPage} to {totalPages} of {total} entries',
-  new_child_account: 'New Child Account'
+  new_child_account: 'New Child Account',
+  display_name: 'Display Name',
+  contact_name: 'Contact Name',
+  company_name: 'Company Name',
+  other: 'Other',
+  address: 'Address',
+  attachement: 'Attachement',
+  country: 'Country',
+  city_town: 'City/Town',
+  state: 'State',
+  zip_code: 'ZIP/Code',
+  streat: 'Streat',
+  edit_customer: 'Edit Customer',
+  delete_customer: 'Delete Customer',
+  billing_address: 'Billing Address',
+  shipping_address: 'Shipping Address',
+  customers_list: 'Customers List',
+  edit_customer_details: 'Edit Customer Details',
+  receivable_balance:'Receivable balance',
+  the_customer_has_been_successfully_created:
+    'The customer has been successfully created.',
+  the_customer_has_been_successfully_deleted:
+    'The customer has been successfully deleted.',
+  the_customers_has_been_successfully_deleted:
+    'The customers have been successfully deleted.',
+    the_item_customer_has_been_successfully_edited:
+    'The item customer has been successfully edited.',
+  once_delete_this_customer_you_will_able_to_restore_it: `Once you delete this customer, you won\'t be able to restore it later. Are you sure you want to delete this cusomter?`,
+  once_delete_these_customers_you_will_not_able_restore_them:
+    "Once you delete these customers, you won't be able to retrieve them later. Are you sure you want to delete them?",
+  financial_accounting: 'Financial accounting'
 };

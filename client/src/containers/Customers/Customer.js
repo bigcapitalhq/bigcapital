@@ -6,15 +6,36 @@ import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import CustomerForm from 'containers/Customers/CustomerForm';
 
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
+import withCustomersActions from './withCustomersActions';
 
 import { compose } from 'utils';
 
-function Customer({}) {
+function Customer({
+  // #withDashboardActions
+  changePageTitle,
+
+  formik,
+  //#withCustomersActions
+  requestFetchCustomers,
+}) {
+  const { id } = useParams();
+  const history = useHistory();
+
+  const fetchCustomers = useQuery('customers-list', () =>
+    requestFetchCustomers({}),
+  );
+
+  const fetchCustomerDatails =useQuery(id && ['customer-detail',id],()=>requestFetchCustomers())
+
   return (
-    <DashboardInsider name={'customer-form'}>
-      <CustomerForm />
+    <DashboardInsider
+      // formik={formik}
+      loading={ fetchCustomerDatails.isFetching || fetchCustomers.isFetching}
+      name={'customer-form'}
+    >
+      <CustomerForm customerId={id} />
     </DashboardInsider>
   );
 }
 
-export default Customer;
+export default compose(withDashboardActions, withCustomersActions)(Customer);

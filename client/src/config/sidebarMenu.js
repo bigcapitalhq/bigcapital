@@ -67,7 +67,7 @@ export default [
     divider: true,
   },
   {
-    text: 'Financial accounting',
+    text: <T id={'financial_accounting'} />,
     label: true,
   },
   {
