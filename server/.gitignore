@@ -4,3 +4,4 @@
 /storage
 package-lock.json
 stdout.log
+/dist
