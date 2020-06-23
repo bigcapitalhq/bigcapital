@@ -25,15 +25,31 @@ function Customer({
     requestFetchCustomers({}),
   );
 
-  const fetchCustomerDatails =useQuery(id && ['customer-detail',id],()=>requestFetchCustomers())
+  const fetchCustomerDatails = useQuery(id && ['customer-detail', id], () =>
+    requestFetchCustomers(),
+  );
+
+  const handleFormSubmit = useCallback(
+    (payload) => {
+      payload.redirect && history.push('/customers');
+    },
+    [history],
+  );
+
+  const handleCancel = useCallback(() => {
+    history.goBack();
+  }, [history]);
 
   return (
     <DashboardInsider
-      // formik={formik}
-      loading={ fetchCustomerDatails.isFetching || fetchCustomers.isFetching}
+      loading={fetchCustomerDatails.isFetching || fetchCustomers.isFetching}
       name={'customer-form'}
     >
-      <CustomerForm customerId={id} />
+      <CustomerForm
+        onFormSubmit={handleFormSubmit}
+        customerId={id}
+        onCancelForm={handleCancel}
+      />
     </DashboardInsider>
   );
 }

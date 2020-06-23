@@ -1,8 +1,6 @@
 import t from 'store/types';
 import { createReducer } from '@reduxjs/toolkit';
-import {
-  getItemsViewPages,
-} from 'store/items/items.selectors';
+import { getItemsViewPages } from 'store/items/items.selectors';
 import { createTableQueryReducers } from 'store/queryReducers';
 
 const initialState = {
@@ -20,7 +18,7 @@ const itemsReducer = createReducer(initialState, {
   [t.ITEMS_SET]: (state, action) => {
     const _items = {};
 
-    action.items.forEach(item => {
+    action.items.forEach((item) => {
       _items[item.id] = item;
     });
     state.items = {
@@ -43,11 +41,11 @@ const itemsReducer = createReducer(initialState, {
       if (typeof itemRelation === 'undefined') {
         state.itemsRelation[item.id] = [];
       }
-      const filteredRelation = state.itemsRelation[item.id]
-        .filter((relation) => (
+      const filteredRelation = state.itemsRelation[item.id].filter(
+        (relation) =>
           relation.viewId === viewId &&
-          relation.pageNumber === paginationMeta.page
-        ));
+          relation.pageNumber === paginationMeta.page,
+      );
 
       filteredRelation.push({
         viewId,
@@ -61,10 +59,10 @@ const itemsReducer = createReducer(initialState, {
       pages: {
         ...viewPages,
         [paginationMeta.page]: {
-          ids: items.map(i => i.id),
+          ids: items.map((i) => i.id),
           meta: paginationMeta,
         },
-      },      
+      },
     };
   },
 
@@ -93,8 +91,20 @@ const itemsReducer = createReducer(initialState, {
     state.loading = !!loading;
   },
 
-  [t.ITEMS_SET_CURRENT_VIEW]: (state, action) => {  
+  [t.ITEMS_SET_CURRENT_VIEW]: (state, action) => {
     state.currentViewId = action.currentViewId;
+  },
+
+  [t.ITEMS_BULK_DELETE]: (state, action) => {
+    const { ids } = action.payload;
+    const items = { ...state.items };
+
+    ids.forEach((id) => {
+      if (typeof items[id] !== 'undefined') {
+        delete items[id];
+      }
+    });
+    state.items = items;
   },
 });
 

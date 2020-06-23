@@ -438,6 +438,9 @@ export default {
     'The expense has been successfully deleted',
   the_expenses_has_been_successfully_deleted:
     'The expenses has been successfully deleted',
+    once_delete_these_expenses_you_will_not_able_restore_them:
+    "Once you delete these expenses, you won't be able to retrieve them later. Are you sure you want to delete them?",
+
   the_expense_id_has_been_published: 'The expense id has been published',
   select_beneficiary_account: 'Select Beneficiary Account',
   total_amount_equals_zero: 'Total amount equals zero',

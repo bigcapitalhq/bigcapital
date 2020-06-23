@@ -49,7 +49,7 @@ function ExpensesList({
   });
 
   const fetchExpenses = useQuery(
-    ['expenses-table', expensesTableQuery],
+    ['expense-form', expensesTableQuery],
     () => requestFetchExpensesTable(),
   );
 
@@ -210,7 +210,7 @@ function ExpensesList({
           </p>
         </Alert>
 
-        {/* <Alert
+        <Alert
           cancelButtonText={<T id={'cancel'} />}
           confirmButtonText={
             <T id={'delete_count'} values={{ count: selectedRowsCount }} />
@@ -223,10 +223,10 @@ function ExpensesList({
         >
           <p>
             <T
-              id={'once_delete_these_journalss_you_will_not_able_restore_them'}
+              id={'once_delete_these_expenses_you_will_not_able_restore_them'}
             />
           </p>
-        </Alert> */}
+        </Alert>
       </DashboardPageContent>
     </DashboardInsider>
   );

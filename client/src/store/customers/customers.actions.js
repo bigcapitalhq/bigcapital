@@ -107,3 +107,19 @@ export const deleteCustomer = ({ id }) => {
     });
 };
 
+export const deleteBulkCustomers = ({ ids }) => {
+  return (dispatch) =>
+    new Promise((resolve, reject) => {
+      ApiService.delete('customers', { params: { ids } })
+        .then((response) => {
+          dispatch({
+            type: t.CUSTOMERS_BULK_DELETE,
+            payload: { ids },
+          });
+          resolve(response);
+        })
+        .catch((error) => {
+          reject(error.response.data.errors || []);
+        });
+    });
+};

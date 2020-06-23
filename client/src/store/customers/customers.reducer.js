@@ -40,6 +40,17 @@ const customersReducer = createReducer(initialState, {
     const { loading } = action.payload;
     state.loading = !!loading;
   },
+  [t.CUSTOMERS_BULK_DELETE]: (state, action) => {
+    const { ids } = action.payload;
+    const items = { ...state.items };
+
+    ids.forEach((id) => {
+      if (typeof items[id] !== 'undefined') {
+        delete items[id];
+      }
+    });
+    state.items = items;
+  },
 });
 
 export default createTableQueryReducers('customers', customersReducer);

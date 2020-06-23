@@ -114,7 +114,7 @@ export const deleteExpense = ({ id }) => {
 export const deleteBulkExpenses = ({ ids }) => {
   return (dispatch) =>
     new Promise((resolve, reject) => {
-      ApiService.delete('expenses/bulk', { params: { ids } })
+      ApiService.delete('expenses', { params: { ids } })
         .then((response) => {
           dispatch({
             type: t.EXPENSES_BULK_DELETE,

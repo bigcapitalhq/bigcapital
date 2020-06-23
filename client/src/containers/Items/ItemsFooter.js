@@ -2,15 +2,14 @@ import React from 'react';
 import { Intent, Button } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'react-intl';
 
-export default function ExpenseFloatingFooter({
+export default function ItemFloatingFooter({
   formik: { isSubmitting },
   onSubmitClick,
   onCancelClick,
-
-  expense,
+  itemDetail,
 }) {
   return (
-    <div className={'form__floating-footer'}>
+    <div class="form__floating-footer">
       <Button
         intent={Intent.PRIMARY}
         disabled={isSubmitting}
@@ -19,7 +18,7 @@ export default function ExpenseFloatingFooter({
           onSubmitClick({ publish: true, redirect: true });
         }}
       >
-        {expense && expense.id ? <T id={'edit'} /> : <T id={'save'} />}
+        {itemDetail && itemDetail.id ? <T id={'edit'} /> : <T id={'save'} />}
       </Button>
 
       <Button

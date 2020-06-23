@@ -31,6 +31,7 @@ import withCustomers from 'containers/Customers//withCustomers';
 import useMedia from 'hooks/useMedia';
 
 import { compose } from 'utils';
+import CustomerFloatingFooter from './CustomerFooter';
 
 function CustomerForm({
   // #withDashboardActions
@@ -40,7 +41,7 @@ function CustomerForm({
   customers,
 
   //#withCustomerDetail
-  customerDetail,
+  customer,
 
   //#withCustomersActions
   requestSubmitCustomer,
@@ -50,9 +51,13 @@ function CustomerForm({
   // #withMediaActions
   requestSubmitMedia,
   requestDeleteMedia,
+  //#Props
+  onFormSubmit,
+  onCancelForm,
 }) {
   const { formatMessage } = useIntl();
   const history = useHistory();
+  const [payload, setPayload] = useState({});
 
   const {
     setFiles,
@@ -127,22 +132,30 @@ function CustomerForm({
 
   const initialValues = useMemo(
     () => ({
-      ...(customerDetail
+      ...(customer
         ? {
-            ...pick(customerDetail, Object.keys(defaultInitialValues)),
+            ...pick(customer, Object.keys(defaultInitialValues)),
           }
         : {
             ...defaultInitialValues,
           }),
     }),
-    [customerDetail, defaultInitialValues],
+    [customer, defaultInitialValues],
+  );
+
+  const saveInvokeSubmit = useCallback(
+    (payload) => {
+      onFormSubmit && onFormSubmit(payload);
+    },
+
+    [onFormSubmit],
   );
 
   useEffect(() => {
-    customerDetail && customerDetail.id
+    customer && customer.id
       ? changePageTitle(formatMessage({ id: 'edit_customer_details' }))
       : changePageTitle(formatMessage({ id: 'new_customer' }));
-  }, [changePageTitle, customerDetail, formatMessage]);
+  }, [changePageTitle, customer, formatMessage]);
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -152,9 +165,9 @@ function CustomerForm({
     },
 
     onSubmit: (values, { setSubmitting, resetForm, setErrors }) => {
-      const formValues = { ...values };
-      if (customerDetail && customerDetail.id) {
-        requestEditCustomer(customerDetail.id, formValues)
+      const formValues = { ...values, status: payload.publish };
+      if (customer && customer.id) {
+        requestEditCustomer(customer.id, formValues)
           .then((response) => {
             AppToaster.show({
               message: formatMessage({
@@ -163,8 +176,9 @@ function CustomerForm({
               intent: Intent.SUCCESS,
             });
             setSubmitting(false);
-            history.push('/customers');
+            // history.push('/customers');
             resetForm();
+            saveInvokeSubmit({ action: 'update', ...payload });
           })
           .catch((errors) => {
             setSubmitting(false);
@@ -178,7 +192,9 @@ function CustomerForm({
               }),
               intent: Intent.SUCCESS,
             });
-            history.push('/customers');
+            // history.push('/customers');
+            setSubmitting(false);
+            saveInvokeSubmit({ action: 'new', ...payload });
           })
           .catch((errors) => {
             setSubmitting(false);
@@ -202,8 +218,8 @@ function CustomerForm({
   );
 
   const initialAttachmentFiles = useMemo(() => {
-    return customerDetail && customerDetail.media
-      ? customerDetail.media.map((attach) => ({
+    return customer && customer.media
+      ? customer.media.map((attach) => ({
           preview: attach.attachment_file,
           upload: true,
           metadata: { ...attach },
@@ -224,11 +240,20 @@ function CustomerForm({
     },
     [setDeletedFiles, deletedFiles],
   );
+  const handleSubmitClick = useCallback(
+    (payload) => {
+      setPayload(payload);
+      formik.handleSubmit();
+    },
+    [setPayload, formik],
+  );
 
-  const handleCancelClickBtn = () => {
-    history.goBack();
-  };
-
+  const handleCancelClick = useCallback(
+    (payload) => {
+      onCancelForm && onCancelForm(payload);
+    },
+    [onCancelForm],
+  );
   return (
     <div className={'customer-form'}>
       <form onSubmit={formik.handleSubmit}>
@@ -396,34 +421,14 @@ function CustomerForm({
         </FormGroup>
 
         <CustomersTabs formik={formik} />
-
-        <div class="form__floating-footer">
-          <Button intent={Intent.PRIMARY} disabled={isSubmitting} type="submit">
-            {customerDetail && customerDetail.id ? (
-              <T id={'edit'} />
-            ) : (
-              <T id={'save'} />
-            )}
-          </Button>
-
-          <Button
-            disabled={isSubmitting}
-            intent={Intent.PRIMARY}
-            className={'ml1'}
-            name={'save_and_new'}
-          >
-            <T id={'save_new'} />
-          </Button>
-
-          <Button className={'ml1'} disabled={isSubmitting}>
-            <T id={'save_as_draft'} />
-          </Button>
-
-          <Button className={'ml1'} onClick={handleCancelClickBtn}>
-            <T id={'close'} />
-          </Button>
-        </div>
       </form>
+
+      <CustomerFloatingFooter
+        formik={formik}
+        onSubmitClick={handleSubmitClick}
+        customer={customer}
+        onCancelClick={handleCancelClick}
+      />
     </div>
   );
 }

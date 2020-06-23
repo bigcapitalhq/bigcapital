@@ -33,15 +33,15 @@ function ExpenseDataTable({
   //#withExpenes
   expenses,
   expensesLoading,
-  
+
   // #withDashboardActions
   changeCurrentView,
   changePageSubtitle,
   setTopbarEditView,
-  
+
   // #withView
   viewMeta,
-  
+
   // #ownProps
   loading,
   onFetchData,
@@ -98,10 +98,9 @@ function ExpenseDataTable({
   const actionMenuList = useCallback(
     (expense) => (
       <Menu>
-        <MenuItem
-          text={formatMessage({ id: 'view_details' })} />
+        <MenuItem text={formatMessage({ id: 'view_details' })} />
         <MenuDivider />
-        <If condition={expenses.published}>
+        <If condition={!expense.published}>
           <MenuItem
             text={formatMessage({ id: 'publish_expense' })}
             onClick={handlePublishExpense(expense)}
@@ -119,23 +118,35 @@ function ExpenseDataTable({
         />
       </Menu>
     ),
-    [handleEditExpense, handleDeleteExpense, handlePublishExpense, formatMessage],
+    [
+      handleEditExpense,
+      handleDeleteExpense,
+      handlePublishExpense,
+      formatMessage,
+    ],
   );
 
-  const onRowContextMenu = useCallback((cell) => {
-    return actionMenuList(cell.row.original);
-  }, [actionMenuList]);
+  const onRowContextMenu = useCallback(
+    (cell) => {
+      return actionMenuList(cell.row.original);
+    },
+    [actionMenuList],
+  );
 
-  const expenseAccountAccessor = (expense) => {
-    if (expense.categories.length === 1) {
-      return expense.categories[0].expense_account.name;
-    } else if (expense.categories.length > 1) {
-      const mutliCategories = expense.categories.map(category =>
-        (<div>- {category.expense_account.name}  ${ category.amount }</div>)
+  const expenseAccountAccessor = (_expense) => {
+    if (_expense.categories.length === 1) {
+      return _expense.categories[0].expense_account.name;
+    } else if (_expense.categories.length > 1) {
+      const mutliCategories = _expense.categories.map((category) => (
+        <div>
+          - {category.expense_account.name} ${category.amount}
+        </div>
+      ));
+      return (
+        <Tooltip content={mutliCategories}>{'- Multi Categories -'}</Tooltip>
       );
-      return <Tooltip content={mutliCategories}>{ '- Multi Categories -' }</Tooltip>;
     }
-  }
+  };
 
   const columns = useMemo(
     () => [
@@ -179,7 +190,7 @@ function ExpenseDataTable({
         id: 'publish',
         Header: formatMessage({ id: 'publish' }),
         accessor: (r) => {
-          return !r.published ? (
+          return r.published ? (
             <Tag minimal={true}>
               <T id={'published'} />
             </Tag>

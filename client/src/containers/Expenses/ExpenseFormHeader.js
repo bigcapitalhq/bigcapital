@@ -24,6 +24,7 @@ function ExpenseFormHeader({
   formik: { errors, touched, setFieldValue, getFieldProps, values },
   currenciesList,
   accounts,
+  accountsTypes,
 }) {
   const [selectedItems, setSelectedItems] = useState({});
 
@@ -103,7 +104,6 @@ function ExpenseFormHeader({
   const onItemsSelect = useCallback(
     (filedName) => {
       return (filed) => {
-        // @todo @mohamed
         setSelectedItems({
           ...selectedItems,
           [filedName]: filed,
@@ -234,10 +234,7 @@ function ExpenseFormHeader({
         <Col width={200}>
           <FormGroup
             label={<T id={'ref_no'} />}
-            className={classNames(
-              'form-group--ref_no',
-              Classes.FILL,
-            )}
+            className={classNames('form-group--ref_no', Classes.FILL)}
             intent={
               errors.reference_no && touched.reference_no && Intent.DANGER
             }
@@ -260,8 +257,9 @@ function ExpenseFormHeader({
 }
 
 export default compose(
-  withAccounts(({ accounts }) => ({
+  withAccounts(({ accounts, accountsTypes }) => ({
     accounts,
+    accountsTypes,
   })),
   withCurrencies(({ currenciesList }) => ({
     currenciesList,

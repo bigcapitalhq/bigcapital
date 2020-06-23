@@ -49,7 +49,7 @@ const ItemCategoryList = ({
   }, [id, changePageTitle, formatMessage]);
 
   const fetchCategories = useQuery(
-    ['items-categories-table', filter],
+    ['items-categories-list', filter],
     (key, query) => requestFetchItemCategories(query),
   );
 
@@ -183,7 +183,9 @@ const ItemCategoryList = ({
       >
         <p>
           <FormattedHTMLMessage
-            id={'once_delete_these_item_categories_you_will_not_able_restore_them'}
+            id={
+              'once_delete_these_item_categories_you_will_not_able_restore_them'
+            }
           />
         </p>
       </Alert>
