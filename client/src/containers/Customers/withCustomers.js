@@ -6,7 +6,7 @@ export default (mapState) => {
   const mapStateToProps = (state, props) => {
  
     const mapped = {
-      customersViews: getResourceViews(state, 'customers'),
+      customersViews: getResourceViews(state, props, 'customers'),
       customersItems: Object.values(state.customers.items),
       customers: getCustomersItems(state, state.customers.currentViewId),
       customersLoading: state.customers.loading,

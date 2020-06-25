@@ -10,11 +10,12 @@ import {
   Popover,
   PopoverInteractionKind,
   Position,
-  Intent
+  Intent,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { useRouteMatch, useHistory } from 'react-router-dom';
 import { FormattedMessage as T } from 'react-intl';
+import { connect } from 'react-redux';
 
 import FilterDropdown from 'components/FilterDropdown';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
@@ -28,11 +29,9 @@ import withManualJournalsActions from 'containers/Accounting/withManualJournalsA
 
 import { compose } from 'utils';
 
-
-
 function ManualJournalActionsBar({
   // #withResourceDetail
-  resourceName = 'manual_journal',
+  resourceName = 'manual_journals',
   resourceFields,
 
   // #withManualJournals
@@ -43,12 +42,12 @@ function ManualJournalActionsBar({
 
   onFilterChanged,
   selectedRows,
-  onBulkDelete
+  onBulkDelete,
 }) {
   const { path } = useRouteMatch();
   const history = useHistory();
 
-  const viewsMenuItems = manualJournalsViews.map(view => {
+  const viewsMenuItems = manualJournalsViews.map((view) => {
     return (
       <MenuItem href={`${path}/${view.id}/custom_view`} text={view.name} />
     );
@@ -60,18 +59,25 @@ function ManualJournalActionsBar({
 
   const filterDropdown = FilterDropdown({
     fields: resourceFields,
-    onFilterChange: filterConditions => {
+    initialCondition: {
+      fieldKey: 'journal_number',
+      compatator: 'contains',
+      value: '',
+    },
+    onFilterChange: (filterConditions) => {
       addManualJournalsTableQueries({
-        filter_roles: filterConditions || ''
+        filter_roles: filterConditions || '',
       });
       onFilterChanged && onFilterChanged(filterConditions);
-    }
+    },
   });
-  const hasSelectedRows = useMemo(() => selectedRows.length > 0, [selectedRows]);
+  const hasSelectedRows = useMemo(() => selectedRows.length > 0, [
+    selectedRows,
+  ]);
 
   // Handle delete button click.
   const handleBulkDelete = useCallback(() => {
-    onBulkDelete && onBulkDelete(selectedRows.map(r => r.id));
+    onBulkDelete && onBulkDelete(selectedRows.map((r) => r.id));
   }, [onBulkDelete, selectedRows]);
 
   return (
@@ -85,8 +91,8 @@ function ManualJournalActionsBar({
         >
           <Button
             className={classNames(Classes.MINIMAL, 'button--table-views')}
-            icon={<Icon icon='table-16' iconSize={16} />}
-            text={<T id={'table_views'}/>}
+            icon={<Icon icon="table-16" iconSize={16} />}
+            text={<T id={'table_views'} />}
             rightIcon={'caret-down'}
           />
         </Popover>
@@ -95,27 +101,28 @@ function ManualJournalActionsBar({
 
         <Button
           className={Classes.MINIMAL}
-          icon={<Icon icon='plus' />}
-          text={<T id={'new_journal'}/>}
+          icon={<Icon icon="plus" />}
+          text={<T id={'new_journal'} />}
           onClick={onClickNewManualJournal}
         />
         <Popover
+          minimal={true}
           content={filterDropdown}
           interactionKind={PopoverInteractionKind.CLICK}
           position={Position.BOTTOM_LEFT}
         >
           <Button
             className={classNames(Classes.MINIMAL, 'button--filter')}
-            text='Filter'
-            icon={<Icon icon='filter-16' iconSize={16} />}
+            text="Filter"
+            icon={<Icon icon="filter-16" iconSize={16} />}
           />
         </Popover>
 
         <If condition={hasSelectedRows}>
           <Button
             className={Classes.MINIMAL}
-            icon={<Icon icon='trash-16' iconSize={16} />}
-            text={<T id={'delete'}/>}
+            icon={<Icon icon="trash-16" iconSize={16} />}
+            text={<T id={'delete'} />}
             intent={Intent.DANGER}
             onClick={handleBulkDelete}
           />
@@ -123,20 +130,27 @@ function ManualJournalActionsBar({
 
         <Button
           className={Classes.MINIMAL}
-          icon={<Icon icon='file-import-16' iconSize={16} />}
-          text={<T id={'import'}/>}
+          icon={<Icon icon="file-import-16" iconSize={16} />}
+          text={<T id={'import'} />}
         />
         <Button
           className={Classes.MINIMAL}
-          icon={<Icon icon='file-export-16' iconSize={16} />}
-          text={<T id={'export'}/>}
+          icon={<Icon icon="file-export-16" iconSize={16} />}
+          text={<T id={'export'} />}
         />
       </NavbarGroup>
     </DashboardActionsBar>
   );
 }
 
+const mapStateToProps = (state, props) => ({
+  resourceName: 'manual_journals',
+});
+
+const withManualJournalsActionsBar = connect(mapStateToProps);
+
 export default compose(
+  withManualJournalsActionsBar,
   withDialogActions,
   withResourceDetail(({ resourceFields }) => ({
     resourceFields,

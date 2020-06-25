@@ -182,3 +182,10 @@ export const firstLettersArgs = (...args) => {
   });
   return letters.join('').toUpperCase();
 }
+
+
+export const uniqueMultiProps = (items, props) => {
+  return _.uniqBy(items, (item) => {
+    return JSON.stringify(_.pick(item, props));
+  });
+}

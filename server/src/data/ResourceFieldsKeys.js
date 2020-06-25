@@ -40,6 +40,11 @@ export default {
     },
     'created_at': {
       column: 'created_at',
+      columnType: 'date',
+    },
+    active: {
+      column: 'active',
+      
     },
   },
 

@@ -22,7 +22,7 @@
       overflow-x: hidden;
 
       .th{
-        padding: 0.8rem 0.5rem;
+        padding: 0.75rem 0.5rem;
         background: #F8FAFA;
         font-size: 14px;
         color: #444;
@@ -41,12 +41,12 @@
         &--desc{
           border-left: 4px solid transparent;
           border-right: 4px solid transparent;
-          border-bottom: 6px solid #888;
+          border-bottom: 6px solid #666;
         }
         &--asc{
           border-left: 4px solid transparent;
           border-right: 4px solid transparent;
-          border-top: 6px solid #888;
+          border-top: 6px solid #666;
         }
       }
     }
@@ -115,6 +115,7 @@
       .tr .td{
         border-bottom: 1px solid #E8E8E8;
         align-items: center;
+        color: #252833;
 
         .placeholder{
           color: #999;

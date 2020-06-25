@@ -11,7 +11,7 @@ export default (mapState) => {
   const mapStateToProps = (state, props) => {
     const viewPages = getViewPages(state.items.views, state.items.currentViewId);
     const mapped = {
-      itemsViews: getResourceViews(state, 'items'),
+      itemsViews: getResourceViews(state, props, 'items'),
       itemsCurrentPage: getCurrentPageResults(
         state.items.items,
         viewPages,

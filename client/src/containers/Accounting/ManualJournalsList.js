@@ -17,6 +17,7 @@ import withManualJournals from 'containers/Accounting/withManualJournals';
 import withManualJournalsActions from 'containers/Accounting/withManualJournalsActions';
 import withViewsActions from 'containers/Views/withViewsActions';
 import withRouteActions from 'containers/Router/withRouteActions';
+import withResourceActions from 'containers/Resources/withResourcesActions';
 
 import { compose } from 'utils';
 
@@ -29,6 +30,9 @@ function ManualJournalsTable({
 
   // #withViewsActions
   requestFetchResourceViews,
+
+  // #withResourceActions
+  requestFetchResourceFields,
 
   // #withManualJournals
   manualJournalsTableQuery,
@@ -50,9 +54,14 @@ function ManualJournalsTable({
 
   const { formatMessage } = useIntl();
 
-  const fetchViews = useQuery('journals-resource-views', () => {
+  const fetchViews = useQuery('manual-journals-resource-views', () => {
     return requestFetchResourceViews('manual_journals');
   });
+
+  const fetchResourceFields = useQuery(
+    'manual-journals-resource-fields',
+    () => requestFetchResourceFields('manual_journals'),
+  );
 
   const fetchManualJournals = useQuery(
     ['manual-journals-table', manualJournalsTableQuery],
@@ -108,8 +117,8 @@ function ManualJournalsTable({
       .then(() => {
         AppToaster.show({
           message: formatMessage(
-            { id: 'the_journals_has_been_successfully_deleted', },
-            { count: selectedRowsCount, },
+            { id: 'the_journals_has_been_successfully_deleted' },
+            { count: selectedRowsCount },
           ),
           intent: Intent.SUCCESS,
         });
@@ -189,7 +198,7 @@ function ManualJournalsTable({
 
   return (
     <DashboardInsider
-      loading={fetchViews.isFetching}
+      loading={fetchViews.isFetching || fetchResourceFields.isFetching}
       name={'manual-journals'}
     >
       <ManualJournalsActionsBar
@@ -265,6 +274,7 @@ export default compose(
   withDashboardActions,
   withManualJournalsActions,
   withViewsActions,
+  withResourceActions,
   withManualJournals(({ manualJournalsTableQuery }) => ({
     manualJournalsTableQuery,
   })),

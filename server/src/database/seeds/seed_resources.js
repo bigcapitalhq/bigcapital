@@ -6,6 +6,8 @@ exports.seed = (knex) => {
       // Inserts seed entries
       return knex('resources').insert([
         { id: 1, name: 'accounts' },
+        { id: 8, name: 'accounts_types' },
+
         { id: 2, name: 'items' },
         { id: 3, name: 'expenses' },
         { id: 4, name: 'manual_journals' },

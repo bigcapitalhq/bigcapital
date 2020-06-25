@@ -21,10 +21,10 @@
     &-sidebar-toggle{
       display: flex;
       align-items: center;
-      margin-left: 4px;
+      margin-left: 2px;
 
       .#{$ns}-button{
-        color: #8E8E8E;
+        color: #6B8193;
 
         &,
         &:hover,
@@ -116,7 +116,7 @@
 
       &,
       &-group{
-        height: 44px;
+        height: 42px;
       }
 
       .#{$ns}-navbar-divider{
@@ -124,17 +124,17 @@
         margin-right: 0;
       }
       .#{$ns}-button{
-        color: #5C5C5C;
+        color: #4d4d4d;
         padding: 8px 12px;
 
         &:hover{
           background: rgba(167, 182, 194, 0.12);
-          color: #5C5C5C;
+          color: #4d4d4d;
         }
         &.bp3-minimal:active,
         &.bp3-minimal.bp3-active{
           background: rgba(167, 182, 194, 0.12);
-          color: #5C5C5C;
+          color: #4d4d4d;
         }
 
         &.has-active-filters{
@@ -145,7 +145,7 @@
           }
         }
         .#{$ns}-icon{
-          color: #666;
+          color: #4d4d4d;
           margin-right: 7px;
         }
         &.#{$ns}-minimal.#{$ns}-intent-danger{
@@ -193,12 +193,12 @@
   &__title{
     align-items: center;;
     display: flex;
-    margin-left: 6px;
+    margin-left: 4px;
 
     h1{
       font-size: 26px;
       font-weight: 300;
-      color: #4d4c4c;
+      color: #393939;
       margin: 0;
     }
     h3{
@@ -262,7 +262,7 @@
         .tbody{
           .th.selection,
           .td.selection{
-            padding-left: 18px;
+            padding-left: 14px;
           }
         }
       }
@@ -294,16 +294,17 @@
 .tabs--dashboard-views{
 
   .#{$ns}-tab{
-    color: #5C5C5C;
+    color: #666;
     font-size: 14px;
     line-height: 50px;
     font-weight: 400;
     padding: 0;
     margin-right: 0;
+    padding-left: 14px;
+    padding-right: 14px;
 
-    > a{
-      padding-left: 14px;
-      padding-right: 14px;
+    &[aria-selected='true'] {
+      color: #0052cc;
     }
   }
 

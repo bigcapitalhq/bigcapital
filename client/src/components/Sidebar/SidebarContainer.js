@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import { Scrollbar } from 'react-scrollbars-custom';
 import classNames from 'classnames';
 
@@ -17,6 +17,10 @@ function SidebarContainer({
   // #withDashboard
   sidebarExpended,
 }) {
+  useEffect(() => {
+    document.body.classList.toggle('has-mini-sidebar', !sidebarExpended);
+  }, [sidebarExpended]);
+
   return (
     <div
       className={classNames('sidebar', {

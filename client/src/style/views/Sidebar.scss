@@ -60,7 +60,7 @@ $sidebar-popover-submenu-bg: rgb(1, 20, 62);
     .#{$ns}-menu-item {
       color: $sidebar-menu-item-color;
       border-radius: 0;
-      padding: 9px 16px;
+      padding: 8px 16px;
       font-size: 15px;
       font-weight: 400;
 
@@ -86,10 +86,10 @@ $sidebar-popover-submenu-bg: rgb(1, 20, 62);
       }
       &-label{
         display: block;
-        color: rgba(255, 255, 255, 0.45);
+        color: rgba(255, 255, 255, 0.5);
         font-size: 12px;
-        padding: 4px 16px;
-        margin-top: 6px;
+        padding: 6px 16px;
+        margin-top: 4px;
       }
     }
 
@@ -127,7 +127,7 @@ $sidebar-popover-submenu-bg: rgb(1, 20, 62);
       color: $sidebar-menu-item-color;
     }
     .#{$ns}-menu-divider {
-      border-top-color: rgba(255, 255, 255, 0.1);
+      border-top-color: rgba(255, 255, 255, 0.15);
       color: #6b708c;
       margin: 4px 0;
     }
@@ -135,7 +135,6 @@ $sidebar-popover-submenu-bg: rgb(1, 20, 62);
       margin: 4px 0;
       height: 1px;
     }
-
   }
 
   &--mini-sidebar{

@@ -6,11 +6,9 @@ import {
 
 
 export const mapStateToProps = (state, props) => {
-  const { viewId } = props;
-
   return {
-    viewMeta: getViewMeta(state, viewId),
-    viewItem: getViewItem(state, viewId),
+    viewMeta: getViewMeta(state, props),
+    viewItem: getViewItem(state, props),
   };
 };
 

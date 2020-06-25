@@ -30,6 +30,7 @@ exports.seed = (knex) => {
           data_type: 'options',
           predefined: 1,
           columnable: true,
+          data_resource: 'accounts_types',
         },
         {
           id: 5,
@@ -55,6 +56,15 @@ exports.seed = (knex) => {
           label_name: 'Created at',
           data_type: 'date',
           key: 'created_at',
+          predefined: 1,
+          columnable: true,
+        },
+        {
+          id: 17,
+          resource_id: 1,
+          data_type: 'boolean',
+          label_name: 'Active',
+          key: 'active',
           predefined: 1,
           columnable: true,
         },

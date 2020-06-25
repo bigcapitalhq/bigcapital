@@ -12,6 +12,7 @@ exports.up = function (knex) {
     table.boolean('builtin').defaultTo(false);
     table.boolean('columnable');
     table.integer('index');
+    table.string('data_resource');
     table.json('options');
     table.integer('resource_id').unsigned();
   }).raw('ALTER TABLE `RESOURCE_FIELDS` AUTO_INCREMENT = 1000').then(() => {

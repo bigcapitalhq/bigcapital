@@ -1,4 +1,5 @@
 import { createReducer } from "@reduxjs/toolkit";
+import { createSelector } from 'reselect';
 import t from 'store/types';
 import { pickItemsFromIds } from 'store/selectors'
 
@@ -61,17 +62,23 @@ export default createReducer(initialState, {
   },
 });
 
+
+const resourceFieldsIdsSelector = (state, props) => state.resources.resourceFields[props.resourceName];
+const resourceFieldsItemsSelector = (state) => state.resources.fields;
+
 /**
  * Retrieve resource fields of the given resource slug.
  * @param {Object} state 
  * @param {String} resourceSlug 
  * @return {Array}
  */
-export const getResourceFields = (state, resourceSlug) => {
-  const resourceIds = state.resources.resourceFields[resourceSlug];
-  const items = state.resources.fields;
-  return pickItemsFromIds(items, resourceIds);
-};
+export const getResourceFields = createSelector(
+  resourceFieldsIdsSelector,
+  resourceFieldsItemsSelector,
+  (fieldsIds, fieldsItems) => {
+    return pickItemsFromIds(fieldsItems, fieldsIds);
+  }
+);
 
 /**
  * Retrieve resource columns of the given resource slug.

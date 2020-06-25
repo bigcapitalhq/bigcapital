@@ -11,7 +11,7 @@ export default (mapState) => {
     const { resourceName } = props;
     const mapped =  {
       resourceData: getResourceData(state, resourceName),
-      resourceFields: getResourceFields(state, resourceName),
+      resourceFields: getResourceFields(state, props),
       resourceColumns: getResourceColumns(state, resourceName),
       resourceMetadata: getResourceMetadata(state, resourceName),
     };

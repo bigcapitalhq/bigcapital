@@ -8,15 +8,10 @@ import DialogsContainer from 'components/DialogsContainer';
 import PreferencesContent from 'components/Preferences/PreferencesContent';
 import PreferencesSidebar from 'components/Preferences/PreferencesSidebar';
 import Search from 'containers/GeneralSearch/Search';
-import withDashboard from 'containers/Dashboard/withDashboard';
 
-import { compose } from 'utils';
-
-function Dashboard({ sidebarExpended }) {
+export default function Dashboard() {
   return (
-    <div className={classNames('dashboard', {
-      'has-mini-sidebar': !sidebarExpended,
-    })}>
+    <div className={classNames('dashboard')}>
       <Switch>
         <Route path="/preferences">
           <Sidebar />
@@ -35,9 +30,3 @@ function Dashboard({ sidebarExpended }) {
     </div>
   );
 }
-
-export default compose(
-  withDashboard(({ sidebarExpended }) => ({
-    sidebarExpended,
-  })),
-)(Dashboard);

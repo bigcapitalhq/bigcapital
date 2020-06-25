@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useHistory } from 'react-router';
 import { connect } from 'react-redux';
 import {
@@ -7,14 +7,15 @@ import {
   NavbarGroup,
   Tabs,
   Tab,
-  Button
+  Button,
 } from '@blueprintjs/core';
 import { useParams, withRouter } from 'react-router-dom';
-import Icon from 'components/Icon';
 import { Link } from 'react-router-dom';
+import { pick, debounce } from 'lodash';
+import Icon from 'components/Icon';
 import { FormattedMessage as T } from 'react-intl';
-import {useUpdateEffect} from 'hooks';
-
+import { useUpdateEffect } from 'hooks';
+import { DashboardViewsTabs } from 'components';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withAccounts from 'containers/Accounts/withAccounts';
 import withAccountsTableActions from 'containers/Accounts/withAccountsTableActions';
@@ -48,7 +49,7 @@ function AccountsViewsTabs({
   useEffect(() => {
     changeAccountsCurrentView(customViewId || -1);
     setTopbarEditView(customViewId);
-    changePageSubtitle((customViewId && viewItem) ? viewItem.name : '');
+    changePageSubtitle(customViewId && viewItem ? viewItem.name : '');
 
     addAccountsTableQueries({
       custom_view_id: customViewId,
@@ -57,7 +58,7 @@ function AccountsViewsTabs({
     return () => {
       setTopbarEditView(null);
       changePageSubtitle('');
-      changeAccountsCurrentView(null)
+      changeAccountsCurrentView(null);
     };
   }, [customViewId]);
 
@@ -71,52 +72,37 @@ function AccountsViewsTabs({
     history.push('/custom_views/accounts/new');
   };
 
-  // Handle view tab link click.
-  const handleViewLinkClick = () => {
-    setTopbarEditView(customViewId);
+  const tabs = accountsViews.map((view) => ({
+    ...pick(view, ['name', 'id']),
+  }));
+
+  const debounceChangeHistory = useRef(
+    debounce((toUrl) => {
+      history.push(toUrl);
+    }, 250),
+  );
+
+  const handleTabsChange = (viewId) => {
+    const toPath = viewId ? `${viewId}/custom_view` : '';
+    debounceChangeHistory.current(`/accounts/${toPath}`);
+    setTopbarEditView(viewId);
   };
 
-  const tabs = accountsViews.map((view) => {
-    const baseUrl = '/accounts';
-
-    const link = (
-      <Link
-        to={`${baseUrl}/${view.id}/custom_view`}
-        onClick={handleViewLinkClick}
-      >{ view.name }</Link>
-    );
-    return <Tab id={`custom_view_${view.id}`} title={link} />;
-  });
-
   return (
-    <Navbar className='navbar--dashboard-views'>
+    <Navbar className="navbar--dashboard-views">
       <NavbarGroup align={Alignment.LEFT}>
-        <Tabs
-          id='navbar'
-          large={true}
-          selectedTabId={customViewId ? `custom_view_${customViewId}` : 'all'}
-          className='tabs--dashboard-views'
-        >
-          <Tab
-            id={'all'}
-            title={<Link to={`/accounts`}><T id={'all'}/></Link>}
-            onClick={handleViewLinkClick}
-          />
-          { tabs }
-          <Button
-            className='button--new-view'
-            icon={<Icon icon='plus' />}
-            onClick={handleClickNewView}
-            minimal={true}
-          />
-        </Tabs>
+        <DashboardViewsTabs
+          baseUrl={'/accounts'}
+          tabs={tabs}
+          onNewViewTabClick={handleClickNewView}
+          onChange={handleTabsChange}
+        />
       </NavbarGroup>
     </Navbar>
   );
 }
 
 const mapStateToProps = (state, ownProps) => ({
-  // Mapping view id from matched route params.
   viewId: ownProps.match.params.custom_view_id,
 });
 
@@ -130,5 +116,5 @@ export default compose(
     accountsViews,
   })),
   withAccountsTableActions,
-  withViewDetail
+  withViewDetail,
 )(AccountsViewsTabs);

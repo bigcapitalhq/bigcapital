@@ -64,6 +64,11 @@ function AccountsActionsBar({
 
   const filterDropdown = FilterDropdown({
     fields: resourceFields,
+    initialCondition: {
+      fieldKey: 'name',
+      compatator: 'contains',
+      value: '',
+    },
     onFilterChange: (filterConditions) => {
       setFilterCount(filterConditions.length || 0);
       addAccountsTableQueries({
@@ -125,7 +130,7 @@ function AccountsActionsBar({
               filterCount <= 0 ? (
                 <T id={'filter'} />
               ) : (
-                `${filterCount} filters applied`
+                <T id={'count_filters_applied'} values={{ count: filterCount }} />
               )
             }
             icon={<Icon icon="filter-16" iconSize={16} />}

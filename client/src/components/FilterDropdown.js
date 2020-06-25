@@ -1,3 +1,4 @@
+// @flow 
 import React, { useEffect, useMemo, useCallback, useRef } from 'react';
 import {
   FormGroup,
@@ -7,17 +8,30 @@ import {
   Intent,
 } from '@blueprintjs/core';
 import { useFormik } from 'formik';
-import { isEqual } from 'lodash';
+import { isEqual, last } from 'lodash';
 import { usePrevious } from 'react-use';
 import { debounce } from 'lodash';
 import Icon from 'components/Icon';
-import { checkRequiredProperties } from 'utils';
+import { checkRequiredProperties, uniqueMultiProps } from 'utils';
 import { FormattedMessage as T, useIntl } from 'react-intl';
-import { DynamicFilterValueField } from 'components';
+import {
+  DynamicFilterValueField,
+  DynamicFilterCompatatorField,
+} from 'components';
 import Toaster from 'components/AppToaster';
 import moment from 'moment';
+import {
+  getConditionTypeCompatators,
+  getConditionDefaultCompatator
+} from './DynamicFilter/DynamicFilterCompatators';
 
 let limitToast;
+
+type InitialCondition = {
+  fieldKey: string,
+  comparator: string,
+  value: string,
+};
 
 /**
  * Filter popover content.
@@ -25,7 +39,8 @@ let limitToast;
 export default function FilterDropdown({
   fields,
   onFilterChange,
-  refetchDebounceWait = 250,
+  refetchDebounceWait = 10,
+  initialCondition,
 }) {
   const { formatMessage } = useIntl();
   const fieldsKeyMapped = new Map(fields.map((field) => [field.key, field]));
@@ -37,6 +52,7 @@ export default function FilterDropdown({
     ],
     [formatMessage],
   );
+
   const resourceFields = useMemo(
     () => [
       ...fields.map((field) => ({
@@ -46,23 +62,13 @@ export default function FilterDropdown({
     ],
     [fields],
   );
-  const compatatorsItems = useMemo(
-    () => [
-      { value: '', label: formatMessage({ id: 'comparator' }) },
-      { value: 'equals', label: formatMessage({ id: 'equals' }) },
-      { value: 'not_equal', label: formatMessage({ id: 'not_equal' }) },
-      { value: 'contain', label: formatMessage({ id: 'contain' }) },
-      { value: 'not_contain', label: formatMessage({ id: 'not_contain' }) },
-    ],
-    [formatMessage],
-  );
 
   const defaultFilterCondition = useMemo(
     () => ({
       condition: 'and',
-      field_key: fields.length > 0 ? fields[0].key : '',
-      compatator: 'equals',
-      value: '',
+      field_key: initialCondition.fieldKey,
+      comparator: initialCondition.comparator,
+      value: initialCondition.value,
     }),
     [fields],
   );
@@ -86,17 +92,17 @@ export default function FilterDropdown({
     } else {
       setFieldValue('conditions', [
         ...values.conditions,
-        defaultFilterCondition,
+        last(values.conditions),
       ]);
     }
   }, [values, defaultFilterCondition, setFieldValue]);
 
   const filteredFilterConditions = useMemo(() => {
-    const requiredProps = ['field_key', 'condition', 'compatator', 'value'];
-
-    return values.conditions.filter(
+    const requiredProps = ['field_key', 'condition', 'comparator', 'value'];
+    const conditions = values.conditions.filter(
       (condition) => !checkRequiredProperties(condition, requiredProps),
     );
+    return uniqueMultiProps(conditions, requiredProps);
   }, [values.conditions]);
 
   const prevConditions = usePrevious(filteredFilterConditions);
@@ -109,7 +115,7 @@ export default function FilterDropdown({
 
   useEffect(() => {
     if (!isEqual(prevConditions, filteredFilterConditions) && prevConditions) {
-      onFilterChangeThrottled.current(filteredFilterConditions);
+      onFilterChange && onFilterChange(filteredFilterConditions);
     }
   }, [filteredFilterConditions, prevConditions]);
 
@@ -124,7 +130,7 @@ export default function FilterDropdown({
     setFieldValue('conditions', [...conditions]);
   };
 
-  // transform dynamic value field.
+  // Transform dynamic value field.
   const transformValueField = (value) => {
     if (value instanceof Date) {
       return moment(value).format('YYYY-MM-DD');
@@ -145,10 +151,17 @@ export default function FilterDropdown({
           const currentField = fieldsKeyMapped.get(
             values.conditions[index].field_key,
           );
-          const prevField = fieldsKeyMapped.get(e.currentTarget.value);
+          const nextField = fieldsKeyMapped.get(e.currentTarget.value);
 
-          if (currentField.data_type !== prevField.data_type) {
+          if (currentField.data_type !== nextField.data_type) {
             setFieldValue(`conditions[${index}].value`, '');
+          }
+          const comparatorsObs = getConditionTypeCompatators(nextField.data_type);
+          const currentCompatator = values.conditions[index].comparator;
+
+          if (!currentCompatator || comparatorsObs.map(c => c.value).indexOf(currentCompatator) === -1) {
+            const defaultCompatator = getConditionDefaultCompatator(nextField.data_type);
+            setFieldValue(`conditions[${index}].comparator`, defaultCompatator.value);
           }
         }
         override.onChange(e);
@@ -156,16 +169,34 @@ export default function FilterDropdown({
     };
   };
 
-  // Value field props.
-  const valueFieldProps = (name, index) => ({
-    ...fieldProps(name, index),
-    onChange: (value) => {
-      const transformedValue = transformValueField(value);
-      setFieldValue(`conditions[${index}].${name}`, transformedValue);
-    },
-  });
+  // Compatator field props.
+  const comparatorFieldProps = (name, index) => {
+    const condition = values.conditions[index];
+    const field = fieldsKeyMapped.get(condition.field_key);
 
-  console.log(values.conditions, 'XX');
+    return {
+      ...fieldProps(name, index),
+      dataType: field.data_type,
+    };
+  };
+
+  // Value field props.
+  const valueFieldProps = (name, index) => {
+    const condition = values.conditions[index];
+    const field = fieldsKeyMapped.get(condition.field_key);
+
+    return {
+      ...fieldProps(name, index),
+      dataType: field.data_type,
+      resourceKey: field.resource_key,
+      options: field.options,
+      dataResource: field.data_resource,
+      onChange: (value) => { 
+        const transformedValue = transformValueField(value);
+        setFieldValue(`conditions[${index}].${name}`, transformedValue);
+      },
+    };
+  };
 
   return (
     <div class="filter-dropdown">
@@ -190,18 +221,15 @@ export default function FilterDropdown({
               />
             </FormGroup>
 
-            <FormGroup className={'form-group--compatator'}>
-              <HTMLSelect
-                options={compatatorsItems}
+            <FormGroup className={'form-group--comparator'}>
+              <DynamicFilterCompatatorField
                 className={Classes.FILL}
-                {...fieldProps('compatator', index)}
+                {...comparatorFieldProps('comparator', index)}
               />
             </FormGroup>
 
-            <DynamicFilterValueField
-              fieldMeta={fieldsKeyMapped.get(condition.field_key)}
-              {...valueFieldProps('value', index)}
-            />
+            <DynamicFilterValueField {...valueFieldProps('value', index)} />
+
             <Button
               icon={<Icon icon="times" iconSize={14} />}
               minimal={true}

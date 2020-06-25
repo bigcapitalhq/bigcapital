@@ -28,7 +28,7 @@ export default (mapState) => {
         manualJournalsTableQuery.page,
       ),
       manualJournalsTableQuery,
-      manualJournalsViews: getResourceViews(state, 'manual_journals'),
+      manualJournalsViews: getResourceViews(state, props, 'manual_journals'),
       manualJournalsItems: state.manualJournals.items,
 
       manualJournalsPagination: state.manualJournals.paginationMeta,

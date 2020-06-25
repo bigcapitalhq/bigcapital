@@ -1,10 +1,19 @@
+import { createSelector } from '@reduxjs/toolkit';
 import { pickItemsFromIds } from 'store/selectors';
 
-export const getExpensesItems = (state, viewId) => {
-  const accountsView = state.expenses.views[viewId || -1];
-  const accountsItems = state.expenses.items;
+const expensesViewsSelector = state => state.expenses.views;
+const expensesItemsSelector = state => state.expenses.items;
+const expensesCurrentViewSelector = state => state.expenses.currentViewId;
 
-  return typeof accountsView === 'object'
-    ? pickItemsFromIds(accountsItems, accountsView.ids) || []
-    : [];
-};
+export const getExpensesItems = createSelector(
+  expensesViewsSelector,
+  expensesItemsSelector,
+  expensesCurrentViewSelector,
+  (expensesViews, expensesItems, currentViewId) => {
+    const expensesView = expensesViews[currentViewId || -1];
+
+    return (typeof expensesView === 'object')
+      ? (pickItemsFromIds(expensesItems, expensesView.ids) || [])
+      : [];
+  },
+);

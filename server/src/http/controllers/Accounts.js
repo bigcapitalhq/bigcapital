@@ -120,9 +120,9 @@ export default {
           errors: [{ type: 'NOT_EXIST_ACCOUNT_TYPE', code: 200 }],
         });
       }
-      await Account.query().insert({ ...form });
+      const insertedAccount = await Account.query().insertAndFetch({ ...form });
 
-      return res.status(200).send({ item: { } });
+      return res.status(200).send({ account: { ...insertedAccount } });
     },
   },
 
@@ -135,7 +135,7 @@ export default {
       check('name').exists().isLength({ min: 3 })
         .trim()
         .escape(),
-      check('code').exists().isLength({ max: 10 })
+      check('code').optional().isLength({ max: 10 })
         .trim()
         .escape(),
       check('account_type_id').exists().isNumeric().toInt(),
@@ -157,28 +157,30 @@ export default {
       if (!account) {
         return res.boom.notFound();
       }
-      const foundAccountCodePromise = (form.code && form.code !== account.code)
-        ? Account.query().where('code', form.code).whereNot('id', account.id) : null;
+      const errorReasons = [];
 
-      const foundAccountTypePromise = (form.account_type_id !== account.account_type_id)
-        ? AccountType.query().where('id', form.account_type_id) : null;
-
-      const [foundAccountCode, foundAccountType] = await Promise.all([
-        foundAccountCodePromise, foundAccountTypePromise,
-      ]);
-      if (foundAccountCode.length > 0 && foundAccountCodePromise) {
-        return res.boom.badRequest(null, {
-          errors: [{ type: 'NOT_UNIQUE_CODE', code: 100 }],
+      // Validate the account type is not changed.
+      if (account.account_type_id != form.accountTypeId) {
+        errorReasons.push({
+          type: 'NOT.ALLOWED.TO.CHANGE.ACCOUNT.TYPE', code: 100,
         });
       }
-      if (foundAccountType.length <= 0 && foundAccountTypePromise) {
-        return res.boom.badRequest(null, {
-          errors: [{ type: 'NOT_EXIST_ACCOUNT_TYPE', code: 110 }],
-        });
-      }
-      await account.patch({ ...form });
+      // Validate the account code not exists on the storage.
+      if (form.code && form.code !== account.code) {
+        const foundAccountCode = await Account.query().where('code', form.code).whereNot('id', account.id);
 
-      return res.status(200).send();
+        if (foundAccountCode.length > 0) {
+          errorReasons.push({ type: 'NOT_UNIQUE_CODE', code: 200 });
+        }
+      }
+
+      if (errorReasons.length > 0) {
+        return res.status(400).send({ error: errorReasons });
+      }
+      // Update the account on the storage.
+      const updatedAccount = await Account.query().patchAndFetchById(account.id, { ...form });
+
+      return res.status(200).send({ account: { ...updatedAccount } });
     },
   },
 
@@ -268,7 +270,6 @@ export default {
       if (filter.stringified_filter_roles) {
         filter.filter_roles = JSON.parse(filter.stringified_filter_roles);
       }
-
       const { Resource, Account, View } = req.models;
       const errorReasons = [];
 
@@ -338,14 +339,31 @@ export default {
       if (errorReasons.length > 0) {
         return res.status(400).send({ errors: errorReasons });
       }
+
+      const query = Account.query()
+      // .remember()
+      .onBuild((builder) => {
+        builder.modify('filterAccountTypes', filter.account_types);
+        builder.withGraphFetched('type');
+        builder.withGraphFetched('balance');
+
+        dynamicFilter.buildQuery()(builder);
+
+        // console.log(builder.toKnexQuery().toSQL());
+      }).toKnexQuery().toSQL();
+
+      console.log(query);
+
       const accounts = await Account.query()
-        .remember()
+        // .remember()
         .onBuild((builder) => {
           builder.modify('filterAccountTypes', filter.account_types);
           builder.withGraphFetched('type');
           builder.withGraphFetched('balance');
 
           dynamicFilter.buildQuery()(builder);
+
+          // console.log(builder.toKnexQuery().toSQL());
         });
 
       const nestedAccounts = Account.toNestedArray(accounts);

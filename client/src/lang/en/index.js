@@ -501,5 +501,13 @@ export default {
   once_delete_this_customer_you_will_able_to_restore_it: `Once you delete this customer, you won\'t be able to restore it later. Are you sure you want to delete this cusomter?`,
   once_delete_these_customers_you_will_not_able_restore_them:
     "Once you delete these customers, you won't be able to retrieve them later. Are you sure you want to delete them?",
-  financial_accounting: 'Financial accounting'
+  financial_accounting: 'Financial accounting',
+  after: 'After',
+  before: 'Before',
+  count_filters_applied: '{count} filters applied',
+  is: 'Is',
+  is_not: 'Is Not',
+  create_a_new_view: 'Create a new view',
+  in: 'In',
+  not_equals: 'Not Equals',
 };

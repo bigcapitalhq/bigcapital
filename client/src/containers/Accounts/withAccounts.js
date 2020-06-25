@@ -10,8 +10,8 @@ import {
 export default (mapState) => {
   const mapStateToProps = (state, props) => {
     const mapped = {
-      accountsViews: getResourceViews(state, 'accounts'),
-      accounts: getAccountsItems(state, state.accounts.currentViewId),
+      accountsViews: getResourceViews(state, props, 'accounts'),
+      accounts: getAccountsItems(state, props),
       accountsTypes: state.accounts.accountsTypes,
     
       accountsTableQuery: state.accounts.tableQuery,

@@ -333,6 +333,7 @@ function AccountsChart({
             <AccountsViewsTabs onViewChanged={handleViewChanged} />
 
             <AccountsDataTable
+              loading={fetchAccountsHook.isFetching}
               onDeleteAccount={handleDeleteAccount}
               onInactiveAccount={handleInactiveAccount}
               onActivateAccount={handleActivateAccount}

@@ -1,10 +1,19 @@
+import { createSelector } from 'reselect';
 import { pickItemsFromIds } from 'store/selectors';
-export const getCustomersItems = (state, viewId) => {
 
-  const customersView = state.customers.views[viewId || -1];
-  const customersItems = state.customers.items;
+const customersViewsSelector = state => state.customers.views;
+const customersItemsSelector = state => state.customers.items;
+const customersCurrentViewSelector = state => state.customers.currentViewId;
 
-  return typeof customersView === 'object'
-    ? pickItemsFromIds(customersItems, customersView.ids) || []
-    : [];
-};
+export const getCustomersItems = createSelector(
+  customersViewsSelector,
+  customersItemsSelector,
+  customersCurrentViewSelector,
+  (customersViews, customersItems, currentViewId) => {
+    const customersView = customersViews[currentViewId || -1];
+
+    return (typeof customersView === 'object') 
+      ? pickItemsFromIds(customersItems, customersView.ids) || []
+      : [];  
+  },
+);

@@ -6,7 +6,7 @@ export default (mapState) => {
   const mapStateToProps = (state, props) => {
     const mapped = {
       expenses: getExpensesItems(state, state.expenses.currentViewId),
-      expensesViews: getResourceViews(state, 'expenses'),
+      expensesViews: getResourceViews(state, props, 'expenses'),
       expensesItems: state.expenses.items,
       expensesTableQuery: state.expenses.tableQuery,
       expensesLoading: state.expenses.loading,

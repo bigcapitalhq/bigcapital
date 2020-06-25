@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useMemo } from 'react';
+import React, { useCallback, useState, useMemo, useEffect } from 'react';
 import {
   Button,
   Popover,
@@ -10,6 +10,7 @@ import {
   Tooltip,
   Intent,
 } from '@blueprintjs/core';
+import { withRouter } from 'react-router';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 
 import Icon from 'components/Icon';
@@ -24,6 +25,7 @@ import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withAccountsActions from 'containers/Accounts/withAccountsActions';
 import withAccounts from 'containers/Accounts/withAccounts';
 import withDialogActions from 'containers/Dialog/withDialogActions';
+import withCurrentView from 'containers/Views/withCurrentView';
 
 import { If } from 'components';
 
@@ -35,6 +37,8 @@ function AccountsDataTable({
   // #withDialog.
   openDialog,
 
+  currentViewId,
+
   // own properties
   loading,
   onFetchData,
@@ -43,14 +47,18 @@ function AccountsDataTable({
   onInactiveAccount,
   onActivateAccount,
 }) {
-  const [initialMount, setInitialMount] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const { formatMessage } = useIntl();
+
+  useEffect(() => {
+    setIsMounted(false);
+  }, [currentViewId]);
 
   useUpdateEffect(() => {
     if (!accountsLoading) {
-      setInitialMount(true);
+      setIsMounted(true);
     }
-  }, [accountsLoading, setInitialMount]);
+  }, [accountsLoading, setIsMounted]);
 
   const handleEditAccount = useCallback(
     (account) => () => {
@@ -132,21 +140,21 @@ function AccountsDataTable({
           );
         },
         className: 'account_name',
-        width: 300,
+        width: 220,
       },
       {
         id: 'code',
         Header: formatMessage({ id: 'code' }),
         accessor: 'code',
         className: 'code',
-        width: 100,
+        width: 125,
       },
       {
         id: 'type',
         Header: formatMessage({ id: 'type' }),
         accessor: 'type.name',
         className: 'type',
-        width: 120,
+        width: 140,
       },
       {
         id: 'normal',
@@ -168,7 +176,7 @@ function AccountsDataTable({
           );
         },
         className: 'normal',
-        width: 75,
+        width: 115,
       },
       {
         id: 'balance',
@@ -207,9 +215,9 @@ function AccountsDataTable({
 
   const selectionColumn = useMemo(
     () => ({
-      minWidth: 50,
-      width: 50,
-      maxWidth: 50,
+      minWidth: 40,
+      width: 40,
+      maxWidth: 40,
     }),
     [],
   );
@@ -227,7 +235,7 @@ function AccountsDataTable({
   );
 
   return (
-    <LoadingIndicator loading={loading} mount={false}>
+    <LoadingIndicator loading={loading && !isMounted} mount={false}>
       <DataTable
         noInitialFetch={true}
         columns={columns}
@@ -239,7 +247,7 @@ function AccountsDataTable({
         treeGraph={true}
         sticky={true}
         onSelectedRowsChange={handleSelectedRowsChange}
-        loading={accountsLoading && !initialMount}
+        loading={accountsLoading && !isMounted}
         spinnerProps={{ size: 30 }}
         rowContextMenu={rowContextMenu}
       />
@@ -248,6 +256,8 @@ function AccountsDataTable({
 }
 
 export default compose(
+  withRouter,
+  withCurrentView,
   withDialogActions,
   withDashboardActions,
   withAccountsActions,
