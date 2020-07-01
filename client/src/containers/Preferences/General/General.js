@@ -193,8 +193,6 @@ function GeneralPreferences({
       .label(formatMessage({ id: 'date_format_' })),
   });
 
-  const query = queryCache.refetchQueries('settings');
-
   const {
     values,
     errors,
@@ -224,7 +222,7 @@ function GeneralPreferences({
           });
           setSubmitting(false);
           resetForm();
-          queryCache.refetchQueries('settings', { force: true });
+          queryCache.invalidateQueries('settings');
         })
         .catch((error) => {
           setSubmitting(false);

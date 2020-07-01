@@ -114,7 +114,11 @@ function AccountsDataTable({
 
   const handleNewParentAccount = useCallback(
     (account) => {
-      openDialog('account-form', { action: 'new_child', id: account.id });
+      openDialog('account-form', {
+        action: 'new_child',
+        parentAccountId: account.id,
+        accountTypeId: account.account_type_id,
+      });
     },
     [openDialog],
   );

@@ -106,9 +106,7 @@ function ItemCategoryDialog({
               intent: Intent.SUCCESS,
             });
             setSubmitting(false);
-            queryCache.refetchQueries('items-categories-table', {
-              force: true,
-            });
+            queryCache.invalidateQueries('items-categories-table');
           })
           .catch((error) => {
             setSubmitting(false);
@@ -124,9 +122,7 @@ function ItemCategoryDialog({
               intent: Intent.SUCCESS,
             });
             setSubmitting(false);
-            queryCache.refetchQueries('items-categories-table', {
-              force: true,
-            });
+            queryCache.invalidateQueries('items-categories-table');
           })
           .catch((error) => {
             setSubmitting(false);

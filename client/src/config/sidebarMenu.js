@@ -95,7 +95,19 @@ export default [
     text: <T id={'banking'} />,
     children: [],
   },
-  
+  {
+    text: <T id={'expenses'} />,
+    children: [
+      {
+        text: <T id={'expenses'}/>,
+        href: '/expenses-list',
+      },
+      {
+        text: <T id={'new_expense'}/>,
+        href: '/expenses/new',
+      },
+    ],
+  },
   {
     text: <T id={'financial_reports'} />,
     children: [
@@ -134,19 +146,6 @@ export default [
         text: 'Payable Aging Summary',
         href: '/financial-reports/payable-aging-summary'
       }
-    ],
-  },
-  {
-    text: <T id={'expenses'} />,
-    children: [
-      {
-        text: <T id={'expenses'}/>,
-        href: '/expenses-list',
-      },
-      {
-        text: <T id={'new_expense'}/>,
-        href: '/expenses/new',
-      },
     ],
   },
   {

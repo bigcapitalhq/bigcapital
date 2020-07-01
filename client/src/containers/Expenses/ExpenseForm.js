@@ -48,8 +48,6 @@ function ExpenseForm({
   expenseId,
   onFormSubmit,
   onCancelForm,
-  onClickAddNewRow,
-  onClickRemoveRow,
 }) {
   const { formatMessage } = useIntl();
   const [payload, setPayload] = useState({});
@@ -76,16 +74,13 @@ function ExpenseForm({
   useEffect(() => {
     if (expense && expense.id) {
       changePageTitle(formatMessage({ id: 'edit_expense' }));
-      // changePageSubtitle(`No. ${expenseDetail.payment_account_id}`);
     } else {
       changePageTitle(formatMessage({ id: 'new_expense' }));
     }
-    // @todo not functions just states.
-  }, [changePageTitle, changePageSubtitle, expense, formatMessage]);
+  }, [changePageTitle, expense, formatMessage]);
 
   const validationSchema = Yup.object().shape({
-    beneficiary: Yup.string()
-      .label(formatMessage({ id: 'beneficiary' })),
+    beneficiary: Yup.string().label(formatMessage({ id: 'beneficiary' })),
     payment_account_id: Yup.string()
       .required()
       .label(formatMessage({ id: 'payment_account_' })),
@@ -272,7 +267,6 @@ function ExpenseForm({
   const handleSubmitClick = useCallback(
     (payload) => {
       setPayload(payload);
-      formik.resetForm();
       formik.handleSubmit();
     },
     [setPayload, formik],

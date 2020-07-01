@@ -78,8 +78,8 @@ function ViewForm({
 
   const validationSchema = Yup.object().shape({
     resource_name: Yup.string().required(),
-    name: Yup.string().required(),
-    logic_expression: Yup.string().required(),
+    name: Yup.string().required().label(intl.formatMessage({id:'name_'})),
+    logic_expression: Yup.string().required().label(intl.formatMessage({id:'logic_expression'})),
     roles: Yup.array().of(
       Yup.object().shape({
         comparator: Yup.string().required(),

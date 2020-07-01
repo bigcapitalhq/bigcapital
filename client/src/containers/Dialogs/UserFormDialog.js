@@ -80,7 +80,7 @@ function UserFormDialog({
             intent: Intent.SUCCESS,
           });
           setSubmitting(false);
-          queryCache.refetchQueries('users-table', { force: true });
+          queryCache.invalidateQueries('users-table');
         })
         .catch((errors) => {
           setSubmitting(false);

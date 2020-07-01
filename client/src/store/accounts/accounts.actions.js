@@ -6,44 +6,48 @@ export const fetchAccountTypes = () => {
   return (dispatch, getState) =>
     new Promise((resolve, reject) => {
       ApiService.get('account_types')
-        .then(response => {
+        .then((response) => {
           dispatch({
             type: t.ACCOUNT_TYPES_LIST_SET,
-            account_types: response.data.account_types
+            account_types: response.data.account_types,
           });
           resolve(response);
         })
-        .catch(error => { reject(error); });
+        .catch((error) => {
+          reject(error);
+        });
     });
 };
 
 export const fetchAccountsList = ({ query } = {}) => {
-  return dispatch => new Promise((resolve, reject) => {
-    dispatch({
-      type: t.SET_DASHBOARD_REQUEST_LOADING,
+  return (dispatch) =>
+    new Promise((resolve, reject) => {
+      dispatch({
+        type: t.SET_DASHBOARD_REQUEST_LOADING,
+      });
+      ApiService.get('accounts', { params: query })
+        .then((response) => {
+          dispatch({
+            type: t.ACCOUNTS_PAGE_SET,
+            accounts: response.data.accounts,
+            customViewId: response.data.customViewId,
+          });
+          dispatch({
+            type: t.ACCOUNTS_ITEMS_SET,
+            accounts: response.data.accounts,
+          });
+          dispatch({
+            type: t.SET_DASHBOARD_REQUEST_COMPLETED,
+          });
+          resolve(response);
+        })
+        .catch((error) => {
+          dispatch({
+            type: t.SET_DASHBOARD_REQUEST_COMPLETED,
+          });
+          reject(error);
+        });
     });
-    ApiService.get('accounts', { params: query }).then(response => {
-      dispatch({
-        type: t.ACCOUNTS_PAGE_SET,
-        accounts: response.data.accounts,
-        customViewId: response.data.customViewId
-      });
-      dispatch({
-        type: t.ACCOUNTS_ITEMS_SET,
-        accounts: response.data.accounts
-      });
-      dispatch({
-        type: t.SET_DASHBOARD_REQUEST_COMPLETED,
-      });
-      resolve(response);
-    })
-    .catch((error) => {
-      dispatch({
-        type: t.SET_DASHBOARD_REQUEST_COMPLETED,
-      });
-      reject(error);
-    });
-  });
 };
 
 export const fetchAccountsTable = ({ query } = {}) => {
@@ -54,7 +58,8 @@ export const fetchAccountsTable = ({ query } = {}) => {
       if (pageQuery.filter_roles) {
         pageQuery = {
           ...omit(pageQuery, ['filter_roles']),
-          stringified_filter_roles: JSON.stringify(pageQuery.filter_roles) || '',
+          stringified_filter_roles:
+            JSON.stringify(pageQuery.filter_roles) || '',
         };
       }
       dispatch({
@@ -69,11 +74,11 @@ export const fetchAccountsTable = ({ query } = {}) => {
           dispatch({
             type: t.ACCOUNTS_PAGE_SET,
             accounts: response.data.accounts,
-            customViewId: response.data.customViewId
+            customViewId: response.data.customViewId,
           });
           dispatch({
             type: t.ACCOUNTS_ITEMS_SET,
-            accounts: response.data.accounts
+            accounts: response.data.accounts,
           });
           dispatch({
             type: t.ACCOUNTS_TABLE_LOADING,
@@ -94,29 +99,29 @@ export const fetchAccountsTable = ({ query } = {}) => {
 };
 
 export const fetchAccountsDataTable = ({ query }) => {
-  return dispatch =>
+  return (dispatch) =>
     new Promise((resolve, reject) => {
       ApiService.get('accounts')
-        .then(response => {
+        .then((response) => {
           dispatch({
             type: t.ACCOUNTS_DATA_TABLE,
-            data: response.data
+            data: response.data,
           });
         })
-        .catch(error => {
+        .catch((error) => {
           reject(error);
         });
     });
 };
 
 export const submitAccount = ({ form }) => {
-  return dispatch =>
+  return (dispatch) =>
     new Promise((resolve, reject) => {
       dispatch({
         type: t.SET_DASHBOARD_REQUEST_LOADING,
       });
       ApiService.post('accounts', form)
-        .then(response => {
+        .then((response) => {
           dispatch({
             type: t.ACCOUNT_ERRORS_CLEAR,
           });
@@ -125,140 +130,147 @@ export const submitAccount = ({ form }) => {
           });
           resolve(response);
         })
-        .catch(error => {
+        .catch((error) => {
           const { response } = error;
           const { data } = response;
-          const { errors } = data;
 
           dispatch({
             type: t.ACCOUNT_ERRORS_CLEAR,
           });
-          if (errors) {
+          if (error) {
             dispatch({
               type: t.ACCOUNT_ERRORS_SET,
-              payload: { errors },
+              payload: { error },
             });
           }
           dispatch({
             type: t.SET_DASHBOARD_REQUEST_COMPLETED,
           });
-          reject(errors);
+          reject(data?.errors);
         });
     });
 };
 
-export const editAccount = ({ id, form }) => {
-  return dispatch => new Promise((resolve, reject) => {
-    dispatch({
-      type: t.SET_DASHBOARD_REQUEST_LOADING,
-    });
-    ApiService.post(`accounts/${id}`, form)
-      .then(response => {
-        dispatch({ type: t.CLEAR_ACCOUNT_FORM_ERRORS });
-        dispatch({
-          type: t.SET_DASHBOARD_REQUEST_COMPLETED,
-        });
-        resolve(response);
-      })
-      .catch(error => {
-        const { response } = error;
-        const { data } = response;
-        const { errors } = data;
-
-        dispatch({ type: t.CLEAR_ACCOUNT_FORM_ERRORS });
-        if (errors) {
-          dispatch({ type: t.ACCOUNT_FORM_ERRORS, errors });
-        }
-        dispatch({
-          type: t.SET_DASHBOARD_REQUEST_COMPLETED,
-        });
-        reject(errors);
-      });
-  });
-};
-
-export const activateAccount = ({ id }) => {
-  return dispatch => ApiService.post(`accounts/${id}/active`);
-};
-
-export const inactiveAccount = ({ id }) => {
-  return dispatch => ApiService.post(`accounts/${id}/inactive`);
-};
-
-export const bulkActivateAccounts =({ids})=>{
-  
-  return dispatch => new Promise((resolve, reject) => {
- 
-    ApiService.post(`accounts/bulk/activate`, null, { params: { ids }}).then((response) => {
-      dispatch({        
-        type: t.BULK_ACTIVATE_ACCOUNTS,
-        payload: { ids }
-      });
-      resolve(response);
-    }).catch((error) => {
-      reject(error);
-    });
-  });
-}
-
-export const bulkInactiveAccounts =({ids})=>{
-  
-  return dispatch => new Promise((resolve, reject) => {
- 
-    ApiService.post(`accounts/bulk/inactivate`, null, { params: { ids }}).then((response) => {
-      dispatch({        
-        type: t.BULK_INACTIVATE_ACCOUNTS,
-        payload: { ids }
-      });
-      resolve(response);
-    }).catch((error) => {
-      reject(error);
-    });
-  });
-}
-
-
-export const deleteAccount = ({ id }) => {
-  return dispatch => new Promise((resolve, reject) => {
-    ApiService.delete(`accounts/${id}`).then((response) => {
-      dispatch({ type: t.ACCOUNT_DELETE, id });
-      resolve(response);
-    }).catch((error) => {
-      reject(error.response.data.errors || []);
-    });
-  });
-};
-
-export const deleteBulkAccounts = ({ ids }) => {
-  return dispatch => new Promise((resolve, reject) => {
-    ApiService.delete(`accounts`, { params: { ids }}).then((response) => {
-      dispatch({
-        type: t.ACCOUNTS_BULK_DELETE,
-        payload: { ids }
-      });
-      resolve(response);
-    }).catch((error) => {
-      const { response } = error;
-      const { data } = response;
-      const { errors } = data;
-
-      reject(errors);
-    });
-  });
-};
-
-export const fetchAccount = ({ id }) => {
-  return dispatch =>
+export const editAccount = (id, form) => {
+  return (dispatch) =>
     new Promise((resolve, reject) => {
-      ApiService.get(`accounts/${id}`)
-        .then(response => {
+      dispatch({
+        type: t.SET_DASHBOARD_REQUEST_LOADING,
+      });
+      ApiService.post(`accounts/${id}`, form)
+        .then((response) => {
+          dispatch({ type: t.CLEAR_ACCOUNT_FORM_ERRORS });
           dispatch({
-            type: t.ACCOUNT_SET,
-            account: response.data.account
+            type: t.SET_DASHBOARD_REQUEST_COMPLETED,
           });
           resolve(response);
         })
-        .catch(error => {
+        .catch((error) => {
+          const { response } = error;
+          const { data } = response;
+          // const { errors } = data;
+
+          dispatch({ type: t.CLEAR_ACCOUNT_FORM_ERRORS });
+          if (error) {
+            dispatch({ type: t.ACCOUNT_FORM_ERRORS, error });
+          }
+          dispatch({
+            type: t.SET_DASHBOARD_REQUEST_COMPLETED,
+          });
+          reject(data?.errors);
+        });
+    });
+};
+
+export const activateAccount = ({ id }) => {
+  return (dispatch) => ApiService.post(`accounts/${id}/active`);
+};
+
+export const inactiveAccount = ({ id }) => {
+  return (dispatch) => ApiService.post(`accounts/${id}/inactive`);
+};
+
+export const bulkActivateAccounts = ({ ids }) => {
+  return (dispatch) =>
+    new Promise((resolve, reject) => {
+      ApiService.post(`accounts/bulk/activate`, null, { params: { ids } })
+        .then((response) => {
+          dispatch({
+            type: t.BULK_ACTIVATE_ACCOUNTS,
+            payload: { ids },
+          });
+          resolve(response);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+};
+
+export const bulkInactiveAccounts = ({ ids }) => {
+  return (dispatch) =>
+    new Promise((resolve, reject) => {
+      ApiService.post(`accounts/bulk/inactivate`, null, { params: { ids } })
+        .then((response) => {
+          dispatch({
+            type: t.BULK_INACTIVATE_ACCOUNTS,
+            payload: { ids },
+          });
+          resolve(response);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+};
+
+export const deleteAccount = ({ id }) => {
+  return (dispatch) =>
+    new Promise((resolve, reject) => {
+      ApiService.delete(`accounts/${id}`)
+        .then((response) => {
+          dispatch({ type: t.ACCOUNT_DELETE, id });
+          resolve(response);
+        })
+        .catch((error) => {
+          reject(error.response.data.errors || []);
+        });
+    });
+};
+
+export const deleteBulkAccounts = ({ ids }) => {
+  return (dispatch) =>
+    new Promise((resolve, reject) => {
+      ApiService.delete(`accounts`, { params: { ids } })
+        .then((response) => {
+          dispatch({
+            type: t.ACCOUNTS_BULK_DELETE,
+            payload: { ids },
+          });
+          resolve(response);
+        })
+        .catch((error) => {
+          const { response } = error;
+          const { data } = response;
+          // const { errors } = data;
+
+          reject(data?.errors);
+        });
+    });
+};
+
+export const fetchAccount = ({ id }) => {
+  return (dispatch) =>
+    new Promise((resolve, reject) => {
+      ApiService.get(`accounts/${id}`)
+        .then((response) => {
+          dispatch({
+            type: t.ACCOUNT_SET,
+            account: response.data.account,
+          });
+          resolve(response);
+        })
+        .catch((error) => {
           reject(error);
         });
     });

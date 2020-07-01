@@ -450,6 +450,7 @@ export default {
   as_date: 'As Date',
   aging_before_days: 'Aging before days',
   aging_periods: 'Aging periods',
+  name_:'name',
   as: 'As',
   receivable_aging_summary: 'Receivable Aging Summary',
   customers: 'Customers',
@@ -525,4 +526,5 @@ export default {
   journal_number_is_already_used: 'Journal number is already used.',
   account_code_hint:
     'A unique code/number for this account (limited to 10 characters)',
+  logic_expression: 'logic expression',
 };

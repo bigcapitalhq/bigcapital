@@ -79,7 +79,7 @@ function UsersListPreferences({
           }),
           intent: Intent.SUCCESS,
         });
-        queryCache.refetchQueries('users-table', { force: true });
+        queryCache.invalidateQueries('users-table');
       })
       .catch((error) => {
         setInactiveUserState(false);
@@ -108,7 +108,6 @@ function UsersListPreferences({
   );
 
   // Handle confirm User delete
-
   const handleConfirmUserDelete = useCallback(() => {
     if (!deleteUserState) {
       return;
@@ -122,7 +121,7 @@ function UsersListPreferences({
           }),
           intent: Intent.SUCCESS,
         });
-        queryCache.refetchQueries('users-table', { force: true });
+        queryCache.invalidateQueries('users-table');
       })
       .catch((errors) => {
         setDeleteUserState(false);

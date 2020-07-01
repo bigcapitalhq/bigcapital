@@ -51,7 +51,6 @@ function ExpenseTable({
       setRow(newRows);
       setFieldValue(
         'categories',
-
         newRows.map((row, index) => ({
           ...omit(row, ['rowType']),
           index: index + 1,

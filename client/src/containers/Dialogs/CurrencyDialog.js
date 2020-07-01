@@ -91,7 +91,7 @@ function CurrencyDialog({
               intent: Intent.SUCCESS,
             });
             setSubmitting(false);
-            queryCache.refetchQueries('currencies', { force: true });
+            queryCache.invalidateQueries('currencies');
           })
           .catch((error) => {
             setSubmitting(false);
@@ -107,7 +107,7 @@ function CurrencyDialog({
               intent: Intent.SUCCESS,
             });
             setSubmitting(false);
-            queryCache.refetchQueries('currencies', { force: true });
+            queryCache.invalidateQueries('currencies');
           })
           .catch((error) => {
             setSubmitting(false);

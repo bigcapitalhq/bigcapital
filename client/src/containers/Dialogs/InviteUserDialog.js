@@ -92,7 +92,7 @@ function InviteUserDialog({
               intent: Intent.SUCCESS,
             });
             setSubmitting(false);
-            queryCache.refetchQueries('users-table', { force: true });
+            queryCache.invalidateQueries('users-table');
           })
           .catch((error) => {
             setSubmitting(false);

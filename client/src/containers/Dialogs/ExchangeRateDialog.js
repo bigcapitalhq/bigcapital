@@ -70,8 +70,10 @@ function ExchangeRateDialog({
     [],
   );
 
-  const fetchExchangeRatesDialog = useQuery('exchange-rates-dialog', () =>
-    requestFetchExchangeRates(),
+  const fetchExchangeRatesDialog = useQuery(
+    'exchange-rates-dialog',
+    () => requestFetchExchangeRates(),
+    { manual: true },
   );
 
   const {
@@ -102,7 +104,7 @@ function ExchangeRateDialog({
               intent: Intent.SUCCESS,
             });
             setSubmitting(false);
-            queryCache.removeQueries('exchange-rates-dialog', { force: true });
+            queryCache.invalidateQueries('exchange-rates-dialog');
           })
           .catch((error) => {
             setSubmitting(false);
@@ -118,7 +120,7 @@ function ExchangeRateDialog({
               intent: Intent.SUCCESS,
             });
             setSubmitting(false);
-            queryCache.refetchQueries('exchange-rates-table', { force: true });
+            queryCache.invalidateQueries('exchange-rates-table');
           })
           .catch((errors) => {
             if (
