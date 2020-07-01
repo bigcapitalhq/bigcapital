@@ -12,7 +12,6 @@ import { FormattedMessage as T } from 'react-intl';
 import classNames from 'classnames';
 
 import DashboardActionsBar from "components/Dashboard/DashboardActionsBar";
-import FilterDropdown from 'components/FilterDropdown';
 import Icon from 'components/Icon';
 import { If } from 'components';
 
@@ -30,11 +29,6 @@ function ReceivableAgingSummaryActionsBar({
   toggleFilterReceivableAgingSummary,
   refreshReceivableAgingSummary,
 }) {
-  const filterDropdown = FilterDropdown({
-    fields: [],
-    onFilterChange: (filterConditions) => {},
-  });
-
   const handleFilterToggleClick = () => {
     toggleFilterReceivableAgingSummary();
   };
@@ -62,7 +56,6 @@ function ReceivableAgingSummaryActionsBar({
           icon={<Icon icon="refresh-16" iconSize={16} />}
           onClick={handleRecalcReport}
         />
-
         <If condition={receivableAgingFilter}>
           <Button
             className={Classes.MINIMAL}
@@ -82,7 +75,6 @@ function ReceivableAgingSummaryActionsBar({
         </If>
 
         <Popover
-          content={filterDropdown}
           interactionKind={PopoverInteractionKind.CLICK}
           position={Position.BOTTOM_LEFT}
         >

@@ -20,7 +20,7 @@ export const mapDispatchToProps = (dispatch) => ({
   requestPublishExpense: (id) => dispatch(publishExpense({ id })),
   requestDeleteBulkExpenses: (ids) => dispatch(deleteBulkExpenses({ ids })),
 
-  changeCurrentView: (id) =>
+  changeExpensesView: (id) =>
     dispatch({
       type: t.EXPENSES_SET_CURRENT_VIEW,
       currentViewId: parseInt(id, 10),

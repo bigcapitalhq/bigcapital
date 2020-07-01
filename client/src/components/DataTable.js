@@ -45,7 +45,7 @@ export default function DataTable({
   expandable = false,
   expandToggleColumn = 2,
   noInitialFetch = false,
-  spinnerProps = { size: 40 },
+  spinnerProps = { size: 30 },
 
   pagination = false,
   pagesCount: controlledPageCount,
@@ -282,6 +282,7 @@ export default function DataTable({
       className={classnames('bigcapital-datatable', className, {
         'has-sticky': sticky,
         'is-expandable': expandable,
+        'is-loading': loading,
         'has-virtualized-rows': virtualizedRows,
       })}
     >
@@ -357,19 +358,19 @@ export default function DataTable({
                     <div class="td">{noResults}</div>
                   </div>
                 </If>
-
-                <If condition={loading}>
-                  <div class="loading">
-                    <Spinner size={spinnerProps.size} />
-                  </div>
-                </If>
               </div>
+
+              <If condition={loading}>
+                <div class="loading">
+                  <Spinner size={spinnerProps.size} />
+                </div>
+              </If>
             </div>
           </ScrollSyncPane>
         </div>
       </ScrollSync>
       
-      <If condition={pagination && pageCount}>
+      <If condition={pagination && pageCount && !loading}>
         <Pagination
           initialPage={pageIndex + 1}
           total={pageSize * pageCount}

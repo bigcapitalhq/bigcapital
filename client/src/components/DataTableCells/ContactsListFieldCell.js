@@ -9,8 +9,11 @@ export default function ContactsListCellRenderer({
   cell: { value: initialValue },
   payload: { contacts, updateData, errors }
 }) {
-  const handleContactSelected = useCallback((contactId) => {
-    updateData(index, id, contactId)
+  const handleContactSelected = useCallback((contact) => {
+    updateData(index, {
+      contact_id: contact.id,
+      contact_type: contact.contact_type,
+    });
   }, [updateData, index, id]);
 
   const initialContact = useMemo(() => {

@@ -4,7 +4,7 @@ exports.up = function(knex) {
     table.increments();
     table.string('journal_number');
     table.string('reference');
-    table.string('transaction_type');
+    table.string('journal_type');
     table.decimal('amount');
     table.date('date');
     table.boolean('status').defaultTo(false);

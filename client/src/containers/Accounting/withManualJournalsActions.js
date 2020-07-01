@@ -14,9 +14,11 @@ const mapActionsToProps = (dispatch) => ({
   requestFetchManualJournal: (id) => dispatch(fetchManualJournal({ id })),
   requestPublishManualJournal: (id) => dispatch(publishManualJournal({ id })),
   requestDeleteBulkManualJournals: (ids) => dispatch(deleteBulkManualJournals({ ids })),
-  changeCurrentView: (id) => dispatch({
+  changeManualJournalCurrentView: (id) => dispatch({
     type: t.MANUAL_JOURNALS_SET_CURRENT_VIEW,
-    currentViewId: parseInt(id, 10),
+    payload: {
+      currentViewId: parseInt(id, 10),
+    }
   }),
   addManualJournalsTableQueries: (queries) => dispatch({
     type: t.MANUAL_JOURNALS_TABLE_QUERIES_ADD,

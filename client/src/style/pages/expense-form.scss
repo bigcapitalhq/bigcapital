@@ -66,7 +66,9 @@
         border-left: 1px dotted rgb(195, 195, 195);
 
         &.index {
-          span {
+          > span,
+          > div {
+            text-align: center;
             width: 100%;
             font-weight: 500;
           }
@@ -107,7 +109,6 @@
             padding-left: 8px;
             padding-right: 8px;
           }
-
           .form-group--select-list {
             &.bp3-intent-danger {
               .bp3-button:not(.bp3-minimal) {

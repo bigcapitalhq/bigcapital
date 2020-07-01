@@ -17,9 +17,9 @@ function App({ locale }) {
   const history = createBrowserHistory();
 
   const queryConfig = {
-    refetchAllOnWindowFocus: false,
-    cacheTime: 10000,
-    staleTime: 10000,
+    queries: {
+      refetchOnWindowFocus: true,
+    }
   };
   return (
     <IntlProvider locale={locale} messages={messages}>

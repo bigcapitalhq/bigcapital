@@ -497,7 +497,7 @@ export default {
 
   deleteBulkAccounts: {
     validation: [
-      query('ids').isArray(),
+      query('ids').isArray({ min: 1 }),
       query('ids.*').isNumeric().toInt(),
     ],
     async handler(req, res) {
@@ -573,7 +573,7 @@ export default {
    */
   bulkInactivateAccounts: {
     validation: [
-      query('ids').isArray({ min: 2 }),
+      query('ids').isArray({ min: 1 }),
       query('ids.*').isNumeric().toInt(),
       param('type').exists().isIn(['activate', 'inactivate']),
     ],

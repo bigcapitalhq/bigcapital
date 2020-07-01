@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
-import { Button, Intent } from '@blueprintjs/core';
+import { Button, Tooltip, Position, Intent } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { omit } from 'lodash';
 
@@ -31,14 +31,16 @@ const ActionsCellRenderer = ({
     payload.removeRow(index);
   };
   return (
-    <Button
-      icon={<Icon icon="times-circle" iconSize={14} />}
-      iconSize={14}
-      className="ml2"
-      minimal={true}
-      intent={Intent.DANGER}
-      onClick={onClickRemoveRole}
-    />
+    <Tooltip content={<T id={'remove_the_line'} />} position={Position.LEFT}>
+      <Button
+        icon={<Icon icon="times-circle" iconSize={14} />}
+        iconSize={14}
+        className="ml2"
+        minimal={true}
+        intent={Intent.DANGER}
+        onClick={onClickRemoveRole}
+      />
+    </Tooltip>
   );
 };
 
@@ -101,10 +103,18 @@ function MakeJournalEntriesTable({
 
   // Handles update datatable data.
   const handleUpdateData = useCallback(
-    (rowIndex, columnId, value) => {
+    (rowIndex, columnIdOrBulk, value) => {
+      const columnId = typeof columnIdOrBulk !== 'object' 
+        ? columnIdOrBulk : null;
+
+      const updateTable = typeof columnIdOrBulk === 'object'
+        ? columnIdOrBulk : null;
+
+      const newData = updateTable ? updateTable : { [columnId]: value };
+
       const newRows = rows.map((row, index) => {
         if (index === rowIndex) {
-          return { ...rows[rowIndex], [columnId]: value };
+          return { ...rows[rowIndex], ...newData };
         }
         return { ...row };
       });
@@ -179,14 +189,22 @@ function MakeJournalEntriesTable({
         width: 150,
       },
       {
-        Header: (<><T id={'contact'} /><Hint /></>),
+        Header: (
+          <>
+            <T id={'contact'} />
+            <Hint
+              content={<T id={'contact_column_hint'} />}
+              position={Position.LEFT_BOTTOM}
+            />
+          </>
+        ),
         id: 'contact_id',
         accessor: 'contact_id',
         Cell: NoteCellRenderer(ContactsListFieldCell),
         className: 'contact',
         disableResizing: true,
         disableSortBy: true,
-        width: 180,
+        width: 200,
       },
       {
         Header: formatMessage({ id: 'note' }),
@@ -235,7 +253,8 @@ function MakeJournalEntriesTable({
           removeRow: handleRemoveRow,
           contacts: [
             ...customers.map((customer) => ({
-              ...customer, contact_type: 'customer',
+              ...customer,
+              contact_type: 'customer',
             })),
           ],
         }}

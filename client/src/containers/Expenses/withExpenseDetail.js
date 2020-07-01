@@ -1,8 +1,11 @@
 import { connect } from 'react-redux';
-import { getExpenseById } from 'store/expenses/expenses.reducer';
+import { getExpenseByIdFactory } from 'store/expenses/expenses.selectors';
 
-const mapStateToProps = (state, props) => ({
-  expenseDetail: getExpenseById(state, props.expenseId),
-});
+export default () => {
+  const getExpenseById = getExpenseByIdFactory();
 
-export default connect(mapStateToProps);
+  const mapStateToProps = (state, props) => ({
+    expenseDetail: getExpenseById(state, props),
+  });
+  return connect(mapStateToProps);
+};

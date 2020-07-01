@@ -6,7 +6,7 @@ import DateSession from '@/models/DateSession';
 
 export default class ModelBase extends mixin(Model, [DateSession]) {
 
-  static get timestamps() {
+  get timestamps() {
     return [];
   }
 

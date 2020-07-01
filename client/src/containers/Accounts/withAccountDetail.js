@@ -1,10 +1,8 @@
 import { connect } from 'react-redux';
-import {
-  getItemById
-} from 'store/selectors';
+import { getAccountById } from 'store/accounts/accounts.selectors';
 
 const mapStateToProps = (state, props) => ({
-  account: getItemById(state.accounts.items, props.accountId),
+  account: getAccountById(state, props),
 });
 
 export default connect(mapStateToProps);

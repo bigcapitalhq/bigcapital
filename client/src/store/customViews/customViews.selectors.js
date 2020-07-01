@@ -6,7 +6,10 @@ const resourceViewsIdsSelector = (state, props, resourceName) =>
   state.views.resourceViews[resourceName] || [];
 
 const viewsSelector = (state) => state.views.views;
-const viewByIdSelector = (state, props) => state.views.viewsMeta[props.viewId] || {}; 
+const viewByIdSelector = (state, props) => state.views.views[props.viewId] || {}; 
+
+const viewColumnsSelector = (state, props) => {
+};
 
 export const getResourceViews = createSelector(
   resourceViewsIdsSelector,
@@ -16,22 +19,21 @@ export const getResourceViews = createSelector(
   },
 );
 
-export const getViewMeta = (state, viewId) => {
-  const view = { ...state.views.viewsMeta[viewId] } || {};
-
-  if (view.columns) {
-    view.columns = view.columns.map((column) => {
-      return {
-        ...getResourceColumn(state, column.field_id),
-      };
-    });
+export const getViewMetaFactory = () => createSelector(
+  viewByIdSelector, 
+  // viewColumnsSelector,
+  (view, viewColumns) => {
+    return view;
   }
-  return view;
-};
+);
 
-export const getViewItem = (state, viewId) => {
-  return state.views.views[viewId] || {};
-};
+export const getViewItemFactory = () => createSelector(
+  viewByIdSelector, 
+  // viewColumnsSelector,
+  (view, viewColumns) => {
+    return view;
+  }
+);
 
 export const getViewPages = (resourceViews, viewId) => {
   return typeof resourceViews[viewId] === 'undefined'

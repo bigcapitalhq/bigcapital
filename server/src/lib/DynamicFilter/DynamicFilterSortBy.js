@@ -1,10 +1,7 @@
 import DynamicFilterRoleAbstructor from '@/lib/DynamicFilter/DynamicFilterRoleAbstructor';
-import {
-  getRoleFieldColumn,
-} from '@/lib/ViewRolesBuilder';
+import { getRoleFieldColumn } from '@/lib/ViewRolesBuilder';
 
 export default class DynamicFilterSortBy extends DynamicFilterRoleAbstructor {
-
   constructor(sortByFieldKey, sortDirection) {
     super();
 
@@ -18,13 +15,17 @@ export default class DynamicFilterSortBy extends DynamicFilterRoleAbstructor {
   /**
    * Builds database query of sort by column on the given direction.
    */
-  buildQuery() { 
+  buildQuery() {
     const { columnKey = null, value = null } = this.filterRoles;
 
     return (builder) => {
       const fieldRelation = getRoleFieldColumn(this.tableName, columnKey);
+      const comparatorColumn =
+        fieldRelation.relationColumn ||
+        `${this.tableName}.${fieldRelation.column}`;
+
       if (columnKey) {
-        builder.orderBy(`${this.tableName}.${fieldRelation.column}`, value.toLowerCase());
+        builder.orderBy(`${comparatorColumn}`, value.toLowerCase());
       }
     };
   }

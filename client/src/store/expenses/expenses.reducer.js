@@ -7,6 +7,10 @@ const initialState = {
   items: {},
   views: {},
   loading: false,
+  tableQuery: {
+    page_size: 4,
+    page: 1,
+  },
   currentViewId: -1,
 };
 
@@ -46,13 +50,42 @@ const reducer = createReducer(initialState, {
   },
 
   [t.EXPENSES_PAGE_SET]: (state, action) => {
-    const { customViewId, expenses } = action.payload;
+    const { customViewId, expenses, pagination } = action.payload;
+
     const viewId = customViewId || -1;
     const view = state.views[viewId] || {};
 
     state.views[viewId] = {
       ...view,
-      ids: expenses.map((i) => i.id),
+      pages: {
+        ...(state.views?.[viewId]?.pages || {}),
+        [pagination.page]: {
+          ids: expenses.map((i) => i.id),
+        },
+      },
+    };
+  },
+
+  [t.EXPENSES_PAGINATION_SET]: (state, action) => {
+    const { pagination, customViewId } = action.payload;
+
+    const mapped = {
+      pageSize: parseInt(pagination.pageSize, 10),
+      page: parseInt(pagination.page, 10),
+      total: parseInt(pagination.total, 10),
+    };
+    const paginationMeta = {
+      ...mapped,
+      pagesCount: Math.ceil(mapped.total / mapped.pageSize),
+      pageIndex: Math.max(mapped.page - 1, 0),
+    };
+
+    state.views = {
+      ...state.views,
+      [customViewId]: {
+        ...(state.views?.[customViewId] || {}),
+        paginationMeta,
+      },
     };
   },
 

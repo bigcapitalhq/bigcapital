@@ -8,13 +8,13 @@ import ExchangeRateDialog from 'containers/Dialogs/ExchangeRateDialog';
 
 export default function DialogsContainer() {
   return (
-    <>
+    <div>
       <ExchangeRateDialog />
-      <InviteUserDialog />
+      {/* <InviteUserDialog /> */}
       <CurrencyDialog />
       <ItemCategoryDialog />
       <AccountFormDialog />
-      <UserFormDialog />
-    </>
+      {/* <UserFormDialog /> */}
+    </div>
   );
 }

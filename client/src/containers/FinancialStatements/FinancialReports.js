@@ -8,33 +8,27 @@ import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 
 import { compose } from 'utils';
 
-
-function FinancialReportsItem({
-  title,
-  desc,
-  link
-}) {
+function FinancialReportsItem({ title, desc, link }) {
   return (
     <div class="financial-reports__item">
-      <Link class="title" to={link}>{ title }</Link>
-      <p class="desc">{ desc }</p>
+      <Link class="title" to={link}>
+        {title}
+      </Link>
+      <p class="desc">{desc}</p>
     </div>
   );
 }
 
-function FinancialReportsSection({
-  sectionTitle,
-  reports 
-}) {
+function FinancialReportsSection({ sectionTitle, reports }) {
   return (
     <div class="financial-reports__section">
-      <div class="section-title">{ sectionTitle }</div>
+      <div class="section-title">{sectionTitle}</div>
 
       <div class="financial-reports__list">
         <For render={FinancialReportsItem} of={reports} />
       </div>
     </div>
-  )
+  );
 }
 
 function FinancialReports({
@@ -45,7 +39,7 @@ function FinancialReports({
 
   useEffect(() => {
     changePageTitle(formatMessage({ id: 'all_financial_reports' }));
-  }, [changePageTitle, formatMessage]);  
+  }, [changePageTitle, formatMessage]);
 
   return (
     <div class="financial-reports">
@@ -54,6 +48,4 @@ function FinancialReports({
   );
 }
 
-export default compose(
-  withDashboardActions
-)(FinancialReports);
+export default compose(withDashboardActions)(FinancialReports);

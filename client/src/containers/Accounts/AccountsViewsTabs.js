@@ -5,17 +5,12 @@ import {
   Alignment,
   Navbar,
   NavbarGroup,
-  Tabs,
-  Tab,
-  Button,
 } from '@blueprintjs/core';
 import { useParams, withRouter } from 'react-router-dom';
-import { Link } from 'react-router-dom';
 import { pick, debounce } from 'lodash';
-import Icon from 'components/Icon';
-import { FormattedMessage as T } from 'react-intl';
+
 import { useUpdateEffect } from 'hooks';
-import { DashboardViewsTabs } from 'components';
+import { DashboardViewsTabs, Icon } from 'components';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withAccounts from 'containers/Accounts/withAccounts';
 import withAccountsTableActions from 'containers/Accounts/withAccountsTableActions';
@@ -49,7 +44,7 @@ function AccountsViewsTabs({
   useEffect(() => {
     changeAccountsCurrentView(customViewId || -1);
     setTopbarEditView(customViewId);
-    changePageSubtitle(customViewId && viewItem ? viewItem.name : '');
+    changePageSubtitle((customViewId && viewItem) ? viewItem.name : '');
 
     addAccountsTableQueries({
       custom_view_id: customViewId,
@@ -92,6 +87,7 @@ function AccountsViewsTabs({
     <Navbar className="navbar--dashboard-views">
       <NavbarGroup align={Alignment.LEFT}>
         <DashboardViewsTabs
+          initialViewId={customViewId}
           baseUrl={'/accounts'}
           tabs={tabs}
           onNewViewTabClick={handleClickNewView}
@@ -116,5 +112,5 @@ export default compose(
     accountsViews,
   })),
   withAccountsTableActions,
-  withViewDetail,
+  withViewDetail(),
 )(AccountsViewsTabs);

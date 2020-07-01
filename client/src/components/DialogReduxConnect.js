@@ -1,20 +1,21 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { isDialogOpen, getDialogPayload } from 'store/dashboard/dashboard.selectors';
+import {
+  isDialogOpenFactory,
+  getDialogPayloadFactory,
+} from 'store/dashboard/dashboard.selectors';
 
-export default (Dialog) => {
-  function DialogReduxConnect(props) {
-    return (<Dialog {...props} />);
-  };
+export default (mapState, dialogName) => {
+  const isDialogOpen = isDialogOpenFactory(dialogName);
+  const getDialogPayload = getDialogPayloadFactory(dialogName);
 
   const mapStateToProps = (state, props) => {
-    return {
+    const mapped = {
+      dialogName,
       isOpen: isDialogOpen(state, props),
       payload: getDialogPayload(state, props),
     };
+    return mapState ? mapState(mapped) : mapped;
   };
-
-  return connect(
-    mapStateToProps,
-  )(DialogReduxConnect);
-}
+  return connect(mapStateToProps);
+};

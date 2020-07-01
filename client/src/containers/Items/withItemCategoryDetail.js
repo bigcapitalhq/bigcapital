@@ -1,12 +1,16 @@
 import { connect } from 'react-redux';
 import {
-  getCategoryId,
-} from 'store/itemCategories/itemsCategory.reducer';
+  getItemCategoryByIdFactory,
+} from 'store/itemCategories/ItemsCategories.selectors';
 
-export const mapStateToProps = (state, props) => {
-  return {
-    itemCategory: getCategoryId(state, props.itemCategoryId),
-  };
+export default () => {
+  const getCategoryId = getItemCategoryByIdFactory();
+
+  const mapStateToProps = (state, props) => {
+    return {
+      itemCategory: getCategoryId(state, props),
+    };
+  };  
+  return connect(mapStateToProps);
 };
 
-export default connect(mapStateToProps);

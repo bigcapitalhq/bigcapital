@@ -3,17 +3,29 @@
 export default {
   // Expenses.
   'expenses': {
-    'expense_account': {
-      column: ' ',
-      relation: 'accounts.name',
+    payment_date: {
+      column: 'payment_date',
     },
-    'payment_account': {
+    payment_account: {
       column: 'payment_account_id',
       relation: 'accounts.id',
     },
-    'account_type': {
-      column: 'account_type_id',
-      relation: 'account_types.id',
+    total_amount: {
+      column: 'total_amount',
+    },
+    reference_no: {
+      column: 'reference_no'
+    },
+    description: {
+      column: 'description',
+    },
+    published: {
+      column: 'published',
+    },
+    user: {
+      column: 'user_id',
+      relation: 'users.id',
+      relationColumn: 'users.id',
     },
   },
 
@@ -43,8 +55,18 @@ export default {
       columnType: 'date',
     },
     active: {
-      column: 'active',
-      
+      column: 'active', 
+    },
+    balance: {
+      column: 'balance',
+    },
+    currency: {
+      column: 'currency_code',
+    },
+    normal: {
+      column: 'account_type_id',
+      relation: 'account_types.id',
+      relationColumn: 'account_types.normal'
     },
   },
 
@@ -59,24 +81,35 @@ export default {
   },
 
   // Manual Journals
-  'manual_journals': {
-    'type': {
-      column: 'transaction_type',
-    },
-    'status': {
-      column: 'status',
-    },
-    'date': {
+  manual_journals: {
+    date: {
       column: 'date',
     },
-    'journal_number': {
+    created_at: {
+      column: 'created_at',
+    },
+    journal_number: {
       column: 'journal_number',
     },
-    'amount': {
+    reference: {
+      column: 'reference',
+    },
+    status: {
+      column: 'status',
+    },
+    amount: {
       column: 'amount',
     },
-    'created_at': {
-      column: 'created_at',
+    description: {
+      column: 'description',
+    },
+    user: {
+      column: 'user_id',
+      relation: 'users.id',
+      relationColumn: 'users.id',
+    },
+    journal_type: {
+      column: 'journal_type',
     },
   }
 };

@@ -1,4 +1,4 @@
-import {pick, at} from 'lodash';
+import { pick, at, mapValues } from 'lodash';
 
 export const getItemById = (items, id) => {
   return items[id] || null;
@@ -33,4 +33,18 @@ export const getAllResults = (items, pagination, name) => {
     }
   }
   return Object.values(pick(items || [], allPagesIds))
+}
+
+export const paginationLocationQuery = (state, props) => {
+  const queryParams = props.location
+    ? new URLSearchParams(props.location.search)
+    : null;
+
+  const queryParamsKeys = ['page_size', 'page'];
+
+  return queryParams
+    ? mapValues(pick(Object.fromEntries(queryParams), queryParamsKeys), (v) =>
+        parseInt(v, 10),
+      )
+    : null;
 }

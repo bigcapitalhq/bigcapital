@@ -125,12 +125,49 @@ body.authentication {
   margin-right: 6px;
 }
 
-
 .hint{
-  color: #a1b2c5;
   margin-left: 6px;
+  position: relative;
+  top: -1px;
+  
+  .bp3-icon{
+    color: #A1B2C5;
+  }
 
+  .bp3-popover-target:hover .bp3-icon{
+    color: #90a1b5;
+  }
   .bp3-icon{
     vertical-align: middle;
   }
+}
+
+.bp3-select-popover .bp3-menu {
+  max-height: 300px;
+  max-width: 400px;
+  overflow: auto;
+}
+
+.pt-tooltip {
+  .pt-popover-content {
+    max-width: 100px;
+  }
+}
+
+.bp3-form-group .bp3-label{
+
+  .hint{
+    .bp3-popover-wrapper{
+      display: inline;
+    }
+  }
+
+  &:not(.bp3-inline) .hint .bp3-popover-target{
+    display: inline;
+    margin-left: 0;
+  }
+}
+
+.bp3-popover.bp3-tooltip{
+  max-width: 300px;
 }

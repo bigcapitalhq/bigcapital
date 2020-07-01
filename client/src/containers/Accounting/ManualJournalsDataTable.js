@@ -15,37 +15,58 @@ import { withRouter, useParams } from 'react-router-dom';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import moment from 'moment';
 
-import Icon from 'components/Icon';
+import { DataTable, If, Money, Choose, Icon } from 'components';
 import { compose } from 'utils';
-import { useUpdateEffect } from 'hooks';
-
-import LoadingIndicator from 'components/LoadingIndicator';
-import { If, Money } from 'components';
-import DataTable from 'components/DataTable';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
-import withDashboardActions from 'containers/Dashboard/withDashboardActions';
-import withViewDetails from 'containers/Views/withViewDetails';
 import withManualJournals from 'containers/Accounting/withManualJournals';
 import withManualJournalsActions from 'containers/Accounting/withManualJournalsActions';
 
-function ManualJournalsDataTable({
-  loading,
+/**
+ * Status column accessor. 
+ */
+function StatusAccessor(row) {
+  return (
+    <Choose>
+      <Choose.When condition={row.status}>
+        <Tag minimal={true}>
+          <T id={'published'} />
+        </Tag>
+      </Choose.When>
 
+      <Choose.Otherwise>
+        <Tag minimal={true} intent={Intent.WARNING}>
+          <T id={'draft'} />
+        </Tag>
+      </Choose.Otherwise>
+    </Choose>
+  );
+}
+
+/**
+ * Note column accessor.
+ */
+function NoteAccessor(row) {
+  return (
+    <If condition={row.description}>
+      <Tooltip
+        className={Classes.TOOLTIP_INDICATOR}
+        content={row.description}
+        position={Position.LEFT_TOP}
+        hoverOpenDelay={50}
+      >
+        <Icon icon={'file-alt'} iconSize={16} />
+      </Tooltip>
+    </If>
+  );
+}
+
+function ManualJournalsDataTable({
   // #withManualJournals
   manualJournalsCurrentPage,
   manualJournalsLoading,
   manualJournalsPagination,
   manualJournalsTableQuery,
-
-  // #withDashboardActions
-  changeCurrentView,
-  changePageSubtitle,
-  setTopbarEditView,
-
-  // #withViewDetails
-  viewId,
-  viewMeta,
 
   onFetchData,
   onEditJournal,
@@ -53,30 +74,20 @@ function ManualJournalsDataTable({
   onPublishJournal,
   onSelectedRowsChange,
 }) {
+  const [isMounted, setIsMounted] = useState(false);
   const { custom_view_id: customViewId } = useParams();
-  const [initialMount, setInitialMount] = useState(false);
 
   const { formatMessage } = useIntl();
 
-  useUpdateEffect(() => {
-    if (!manualJournalsLoading) {
-      setInitialMount(true);
-    }
-  }, [manualJournalsLoading, setInitialMount]);
+  useEffect(() => {
+    setIsMounted(false);
+  }, [customViewId]);
 
   useEffect(() => {
-    if (customViewId) {
-      changeCurrentView(customViewId);
-      setTopbarEditView(customViewId);
+    if (!manualJournalsLoading) {
+      setIsMounted(true);
     }
-    changePageSubtitle(customViewId && viewMeta ? viewMeta.name : '');
-  }, [
-    customViewId,
-    changeCurrentView,
-    changePageSubtitle,
-    setTopbarEditView,
-    viewMeta,
-  ]);
+  }, [manualJournalsLoading, setIsMounted]);
 
   const handlePublishJournal = useCallback(
     (journal) => () => {
@@ -106,7 +117,7 @@ function ManualJournalsDataTable({
         <MenuDivider />
         {!journal.status && (
           <MenuItem
-          text={formatMessage({ id: 'publish_journal' })}
+            text={formatMessage({ id: 'publish_journal' })}
             onClick={handlePublishJournal(journal)}
           />
         )}
@@ -121,84 +132,69 @@ function ManualJournalsDataTable({
         />
       </Menu>
     ),
-    [handleEditJournal, handleDeleteJournal, handlePublishJournal, formatMessage],
+    [
+      handleEditJournal,
+      handleDeleteJournal,
+      handlePublishJournal,
+      formatMessage,
+    ],
   );
 
-  const onRowContextMenu = useCallback((cell) => {
-    return actionMenuList(cell.row.original);
-  }, [actionMenuList]);
+  const onRowContextMenu = useCallback(
+    (cell) => actionMenuList(cell.row.original),
+    [actionMenuList],
+  );
 
   const columns = useMemo(
     () => [
       {
         id: 'date',
         Header: formatMessage({ id: 'date' }),
-        accessor: (r) => moment().format('YYYY-MM-DD'),
-        disableResizing: true,
-        width: 150,
+        accessor: (r) => moment(r.date).format('YYYY MMM DD'),
+        width: 115,
         className: 'date',
       },
       {
         id: 'amount',
         Header: formatMessage({ id: 'amount' }),
         accessor: (r) => <Money amount={r.amount} currency={'USD'} />,
-        disableResizing: true,
         className: 'amount',
+        width: 115,
       },
       {
         id: 'journal_number',
         Header: formatMessage({ id: 'journal_no' }),
-        accessor: 'journal_number',
-        disableResizing: true,
+        accessor: (row) => `#${row.journal_number}`,
         className: 'journal_number',
+        width: 100,
+      },
+      {
+        id: 'journal_type',
+        Header: formatMessage({ id: 'journal_type' }),
+        accessor: 'journal_type',
+        width: 110,
+        className: 'journal_type',
       },
       {
         id: 'status',
         Header: formatMessage({ id: 'status' }),
-        accessor: (r) => {
-          return r.status ? (
-            <Tag minimal={true}><T id={'published'} /></Tag>
-          ) : (
-            <Tag minimal={true} intent={Intent.WARNING}><T id={'draft'} /></Tag>
-          );
-        },
-        disableResizing: true,
-        width: 100,
+        accessor: StatusAccessor,
+        width: 95,
         className: 'status',
       },
       {
         id: 'note',
         Header: formatMessage({ id: 'note' }),
-        accessor: (row) => (
-          <If condition={row.description}>
-            <Tooltip
-              className={Classes.TOOLTIP_INDICATOR}
-              content={row.description}
-              position={Position.TOP}
-              hoverOpenDelay={250}
-            >
-              <Icon icon={'file-alt'} iconSize={16} />
-            </Tooltip>
-          </If>
-        ),
-        disableResizing: true,
+        accessor: NoteAccessor,
         disableSorting: true,
-        width: 100,
+        width: 85,
         className: 'note',
-      },
-      {
-        id: 'transaction_type',
-        Header: formatMessage({ id: 'transaction_type' }),
-        accessor: 'transaction_type',
-        width: 100,
-        className: 'transaction_type',
       },
       {
         id: 'created_at',
         Header: formatMessage({ id: 'created_at' }),
-        accessor: (r) => moment().format('YYYY-MM-DD'),
-        disableResizing: true,
-        width: 150,
+        accessor: (r) => moment(r.created_at).format('YYYY MMM DD'),
+        width: 125,
         className: 'created_at',
       },
       {
@@ -236,33 +232,28 @@ function ManualJournalsDataTable({
   );
 
   return (
-    <LoadingIndicator loading={loading} mount={false}>
-      <DataTable
-        columns={columns}
-        data={manualJournalsCurrentPage}
-        onFetchData={handleDataTableFetchData}
-        manualSortBy={true}
-        selectionColumn={true}
-        noInitialFetch={true}
-        sticky={true}
-        loading={manualJournalsLoading && !manualJournalsCurrentPage.length > 0}
-        onSelectedRowsChange={handleSelectedRowsChange}
-        pagination={true}
-
-        rowContextMenu={onRowContextMenu}
-
-        pagesCount={manualJournalsPagination.pagesCount}
-        initialPageSize={manualJournalsTableQuery.page_size}
-        initialPageIndex={manualJournalsTableQuery.page - 1}
-      />
-    </LoadingIndicator>
+    <DataTable
+      columns={columns}
+      data={manualJournalsCurrentPage}
+      onFetchData={handleDataTableFetchData}
+      manualSortBy={true}
+      selectionColumn={true}
+      noInitialFetch={true}
+      sticky={true}
+      loading={manualJournalsLoading && !isMounted}
+      onSelectedRowsChange={handleSelectedRowsChange}
+      pagination={true}
+      rowContextMenu={onRowContextMenu}
+      pagesCount={manualJournalsPagination.pagesCount}
+      initialPageSize={manualJournalsTableQuery.page_size}
+      initialPageIndex={manualJournalsTableQuery.page - 1}
+    />
   );
 }
 
 export default compose(
   withRouter,
   withDialogActions,
-  withDashboardActions,
   withManualJournalsActions,
   withManualJournals(
     ({
@@ -277,5 +268,4 @@ export default compose(
       manualJournalsTableQuery,
     }),
   ),
-  withViewDetails,
 )(ManualJournalsDataTable);

@@ -99,7 +99,6 @@ function ExpenseForm({
     description: Yup.string()
       .trim()
       .label(formatMessage({ id: 'description' })),
-
     publish: Yup.boolean().label(formatMessage({ id: 'publish' })),
     categories: Yup.array().of(
       Yup.object().shape({
@@ -258,8 +257,6 @@ function ExpenseForm({
     },
   });
 
-  console.log(formik.values, 'VALUES');
-
   const handleSubmitClick = useCallback(
     (payload) => {
       setPayload(payload);
@@ -285,8 +282,6 @@ function ExpenseForm({
     },
     [setDeletedFiles, deletedFiles],
   );
-  // @todo @mohamed
-  const fetchHook = useQuery('expense-form', () => requestFetchExpensesTable());
 
   return (
     <div className={'dashboard__insider--expense-form'}>
@@ -334,5 +329,5 @@ export default compose(
   withAccountsActions,
   withDashboardActions,
   withMediaActions,
-  withExpneseDetail,
+  withExpneseDetail(),
 )(ExpenseForm);

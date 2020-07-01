@@ -3,10 +3,19 @@
 .dashboard{
   display: flex;
   height: 100vh;
+
+  &:before{
+    content: "";
+    height: 2px; 
+    background: #01194e;
+    position: fixed;
+    top: 0;
+    width: 100%;
+  }
  
   &__topbar{
     width: 100%;
-    min-height: 65px;
+    min-height: 66px;
     display: flex;
     justify-content: space-between;
     border-bottom: 1px solid #F2EFEF;
@@ -55,6 +64,10 @@
           color: #1552C8;
           margin-right: 5px;
         }
+      }
+
+      .bp3-navbar-divider{
+        margin: 0 8px;
       }
     }
 
@@ -198,7 +211,7 @@
     h1{
       font-size: 26px;
       font-weight: 300;
-      color: #393939;
+      color: #333;
       margin: 0;
     }
     h3{

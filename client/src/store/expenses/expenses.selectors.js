@@ -1,19 +1,53 @@
 import { createSelector } from '@reduxjs/toolkit';
-import { pickItemsFromIds } from 'store/selectors';
+import { pickItemsFromIds, paginationLocationQuery } from 'store/selectors';
 
-const expensesViewsSelector = state => state.expenses.views;
-const expensesItemsSelector = state => state.expenses.items;
-const expensesCurrentViewSelector = state => state.expenses.currentViewId;
+const expensesTableQuery = state => state.expenses.tableQuery;
 
-export const getExpensesItems = createSelector(
-  expensesViewsSelector,
+export const getExpensesTableQuery = createSelector(
+  paginationLocationQuery,
+  expensesTableQuery,
+  (locationQuery, tableQuery) => {
+    return {
+      ...locationQuery,
+      ...tableQuery,
+    };
+  },
+);
+
+const expensesPageSelector = (state, props, query) => {
+  const viewId = state.expenses.currentViewId;
+  return state.expenses.views?.[viewId]?.pages?.[query.page];
+};
+
+const expensesItemsSelector = (state) => state.expenses.items;
+
+export const getExpensesCurrentPageFactory = () => createSelector(
+  expensesPageSelector,
   expensesItemsSelector,
-  expensesCurrentViewSelector,
-  (expensesViews, expensesItems, currentViewId) => {
-    const expensesView = expensesViews[currentViewId || -1];
-
-    return (typeof expensesView === 'object')
-      ? (pickItemsFromIds(expensesItems, expensesView.ids) || [])
+  (expensesPage, expensesItems) => {
+    return typeof expensesPage === 'object'
+      ? pickItemsFromIds(expensesItems, expensesPage.ids) || []
       : [];
+  },
+);
+
+const expenseByIdSelector = (state, props) => state.expenses.items[props.expenseId];
+
+export const getExpenseByIdFactory = () => createSelector(
+  expenseByIdSelector,
+  (expense) => {
+    return expense;
+  }  
+);
+
+const manualJournalsPaginationSelector = (state, props) => {
+  const viewId = state.expenses.currentViewId;
+  return state.expenses.views?.[viewId];
+};
+
+export const getExpensesPaginationMetaFactory = () => createSelector(
+  manualJournalsPaginationSelector,
+  (expensesPage) => {
+    return expensesPage?.paginationMeta || {};
   },
 );

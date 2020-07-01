@@ -23,9 +23,9 @@
 
       .th{
         padding: 0.75rem 0.5rem;
-        background: #F8FAFA;
+        background: #fafafa;
         font-size: 14px;
-        color: #444;
+        color: rgb(59, 71, 91);
         font-weight: 500;
         border-bottom: 1px solid rgb(224, 224, 224);
       }
@@ -106,16 +106,39 @@
           background: #1183DA;
         }
       }
+
+      .bp3-control.bp3-checkbox .bp3-control-indicator{
+        border: 2px solid #d7d7d7;
+
+        &,
+        &:hover{
+          height: 16px;
+          width: 16px;
+        }
+      }
+
+      .bp3-control.bp3-checkbox{
+        input:checked ~ .bp3-control-indicator,
+        input:indeterminate ~ .bp3-control-indicator,{
+          border-color: #0052ff;
+        }
+      } 
     }
 
     .tbody{
       width: 100%;
       overflow: auto;
 
+      .tbody-inner{
+        > .loading{
+          padding-top: 40px;
+        }
+      }
+
       .tr .td{
         border-bottom: 1px solid #E8E8E8;
         align-items: center;
-        color: #252833;
+        color: #141720;
 
         .placeholder{
           color: #999;

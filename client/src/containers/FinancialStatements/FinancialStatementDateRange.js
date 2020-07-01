@@ -4,8 +4,7 @@ import { momentFormatter } from 'utils';
 import { DateInput } from '@blueprintjs/datetime';
 import { useIntl } from 'react-intl';
 import { HTMLSelect, FormGroup, Intent, Position } from '@blueprintjs/core';
-import Icon from 'components/Icon';
-import { FieldHint } from 'components';
+import { Hint } from 'components';
 import { parseDateRangeQuery } from 'utils';
 
 export default function FinancialStatementDateRange({ formik }) {
@@ -48,14 +47,12 @@ export default function FinancialStatementDateRange({ formik }) {
     [formik],
   );
 
-  const infoIcon = useMemo(() => <Icon icon="info-circle" iconSize={12} />, []);
-
   return (
     <>
       <Col width={260}>
         <FormGroup
           label={intl.formatMessage({ id: 'report_date_range' })}
-          labelInfo={infoIcon}
+          labelInfo={<Hint />}
           minimal={true}
           fill={true}
         >
@@ -71,7 +68,7 @@ export default function FinancialStatementDateRange({ formik }) {
       <Col width={260}>
         <FormGroup
           label={intl.formatMessage({ id: 'from_date' })}
-          labelInfo={infoIcon}
+          labelInfo={<Hint />}
           fill={true}
           intent={formik.errors.from_date && Intent.DANGER}
         >
@@ -89,7 +86,7 @@ export default function FinancialStatementDateRange({ formik }) {
       <Col width={260}>
         <FormGroup
           label={intl.formatMessage({ id: 'to_date' })}
-          labelInfo={<FieldHint />}
+          labelInfo={<Hint />}
           fill={true}
           intent={formik.errors.to_date && Intent.DANGER}
         >

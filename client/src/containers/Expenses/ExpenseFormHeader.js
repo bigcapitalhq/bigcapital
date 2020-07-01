@@ -14,9 +14,13 @@ import moment from 'moment';
 import { momentFormatter, compose } from 'utils';
 
 import classNames from 'classnames';
-import Icon from 'components/Icon';
-import ErrorMessage from 'components/ErrorMessage';
-import { ListSelect } from 'components';
+import {
+  ListSelect,
+  ErrorMessage,
+  Icon,
+  FieldRequiredHint,
+  Hint,
+} from 'components';
 import withCurrencies from 'containers/Currencies/withCurrencies';
 import withAccounts from 'containers/Accounts/withAccounts';
 
@@ -34,11 +38,6 @@ function ExpenseFormHeader({
     },
     [setFieldValue],
   );
-
-  // @todo @mohamed reusable components.
-  const infoIcon = useMemo(() => <Icon icon="info-circle" iconSize={12} />, []);
-
-  const requiredSpan = useMemo(() => <span className="required">*</span>, []);
 
   const currencyCodeRenderer = useCallback((item, { handleClick }) => {
     return (
@@ -121,7 +120,7 @@ function ExpenseFormHeader({
           <FormGroup
             label={<T id={'beneficiary'} />}
             className={classNames('form-group--select-list', Classes.FILL)}
-            labelInfo={infoIcon}
+            labelInfo={<Hint />}
             intent={errors.beneficiary && touched.beneficiary && Intent.DANGER}
             helperText={
               <ErrorMessage name={'beneficiary'} {...{ errors, touched }} />
@@ -150,7 +149,7 @@ function ExpenseFormHeader({
               'form-group--select-list',
               Classes.FILL,
             )}
-            labelInfo={requiredSpan}
+            labelInfo={<FieldRequiredHint />}
             intent={
               errors.payment_account_id &&
               touched.payment_account_id &&
@@ -183,7 +182,7 @@ function ExpenseFormHeader({
         <Col width={300}>
           <FormGroup
             label={<T id={'payment_date'} />}
-            labelInfo={infoIcon}
+            labelInfo={<Hint />}
             className={classNames('form-group--select-list', Classes.FILL)}
             intent={
               errors.payment_date && touched.payment_date && Intent.DANGER
@@ -234,10 +233,7 @@ function ExpenseFormHeader({
         <Col width={200}>
           <FormGroup
             label={<T id={'ref_no'} />}
-            className={classNames(
-              'form-group--ref_no',
-              Classes.FILL,
-            )}
+            className={classNames('form-group--ref_no', Classes.FILL)}
             intent={
               errors.reference_no && touched.reference_no && Intent.DANGER
             }

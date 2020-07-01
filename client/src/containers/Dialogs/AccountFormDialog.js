@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import {
   Button,
   Classes,
@@ -13,23 +13,25 @@ import {
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { FormattedMessage as T, useIntl } from 'react-intl';
-
 import { omit, pick } from 'lodash';
 import { useQuery, queryCache } from 'react-query';
-
-import Dialog from 'components/Dialog';
-import AppToaster from 'components/AppToaster';
-
+import classNames from 'classnames';
+import {
+  ListSelect,
+  ErrorMessage,
+  Dialog,
+  AppToaster,
+  FieldRequiredHint,
+  Hint,
+} from 'components';
 import AccountFormDialogContainer from 'containers/Dialogs/AccountFormDialog.container';
 
-import classNames from 'classnames';
-import Icon from 'components/Icon';
-import ErrorMessage from 'components/ErrorMessage';
-import { ListSelect } from 'components';
-
+/**
+ * Account form dialog.
+ */
 function AccountFormDialog({
-  name,
-  payload,
+  dialogName,
+  payload = { action: 'new', id: null },
   isOpen,
 
   // #withAccounts
@@ -115,7 +117,7 @@ function AccountFormDialog({
           },
         })
           .then((response) => {
-            closeDialog(name);
+            closeDialog(dialogName);
             queryCache.refetchQueries('accounts-table', { force: true });
 
             AppToaster.show({
@@ -137,7 +139,7 @@ function AccountFormDialog({
       } else {
         requestSubmitAccount({ form: { ...omit(values, exclude) } })
           .then((response) => {
-            closeDialog(name);
+            closeDialog(dialogName);
             queryCache.refetchQueries('accounts-table', { force: true });
 
             AppToaster.show({
@@ -190,7 +192,12 @@ function AccountFormDialog({
   // Account item of select accounts field.
   const accountItem = (item, { handleClick, modifiers, query }) => {
     return (
-      <MenuItem text={item.name} label={item.code} key={item.id} onClick={handleClick} />
+      <MenuItem
+        text={item.name}
+        label={item.code}
+        key={item.id}
+        onClick={handleClick}
+      />
     );
   };
 
@@ -213,14 +220,14 @@ function AccountFormDialog({
 
   // Handles dialog close.
   const handleClose = useCallback(() => {
-    closeDialog(name);
-  }, [closeDialog, name]);
+    closeDialog(dialogName);
+  }, [closeDialog, dialogName]);
 
   // Fetches accounts list.
   const fetchAccountsList = useQuery(
     'accounts-list',
     () => requestFetchAccounts(),
-    { manual: true },
+    { enabled: true },
   );
 
   // Fetches accounts types.
@@ -229,14 +236,14 @@ function AccountFormDialog({
     async () => {
       await requestFetchAccountTypes();
     },
-    { manual: true },
+    { enabled: true },
   );
 
   // Fetch the given account id on edit mode.
   const fetchAccount = useQuery(
-    payload.action === 'edit' && ['account', payload.id],
+    ['account', payload.id],
     (key, id) => requestFetchAccount(id),
-    { manual: true },
+    { enabled: false },
   );
 
   const isFetching =
@@ -248,8 +255,11 @@ function AccountFormDialog({
   const onDialogOpening = useCallback(() => {
     fetchAccountsList.refetch();
     fetchAccountsTypes.refetch();
-    fetchAccount.refetch();
-  }, [fetchAccount, fetchAccountsList, fetchAccountsTypes]);
+
+    if (payload.action === 'edit' && payload.id) {
+      fetchAccount.refetch();
+    }    
+  }, [payload, fetchAccount, fetchAccountsList, fetchAccountsTypes]);
 
   const onChangeAccountType = useCallback(
     (accountType) => {
@@ -270,12 +280,11 @@ function AccountFormDialog({
     resetForm();
   }, [resetForm]);
 
-  const infoIcon = useMemo(() => <Icon icon="info-circle" iconSize={12} />, []);
-
   const subAccountLabel = useMemo(() => {
     return (
       <span>
-        <T id={'sub_account'} /> <Icon icon="info-circle" iconSize={12} />
+        <T id={'sub_account'} />
+        <Hint />
       </span>
     );
   }, []);
@@ -284,7 +293,7 @@ function AccountFormDialog({
 
   return (
     <Dialog
-      name={name}
+      name={dialogName}
       title={
         payload.action === 'edit' ? (
           <T id={'edit_account'} />
@@ -308,7 +317,7 @@ function AccountFormDialog({
         <div className={Classes.DIALOG_BODY}>
           <FormGroup
             label={<T id={'account_type'} />}
-            labelInfo={requiredSpan}
+            labelInfo={<FieldRequiredHint />}
             className={classNames(
               'form-group--account-type',
               'form-group--select-list',
@@ -339,7 +348,7 @@ function AccountFormDialog({
 
           <FormGroup
             label={<T id={'account_name'} />}
-            labelInfo={requiredSpan}
+            labelInfo={<FieldRequiredHint />}
             className={'form-group--account-name'}
             intent={errors.name && touched.name && Intent.DANGER}
             helperText={<ErrorMessage name="name" {...{ errors, touched }} />}
@@ -358,7 +367,7 @@ function AccountFormDialog({
             intent={errors.code && touched.code && Intent.DANGER}
             helperText={<ErrorMessage name="code" {...{ errors, touched }} />}
             inline={true}
-            labelInfo={infoIcon}
+            labelInfo={<Hint content={<T id='account_code_hint' />} />}
           >
             <InputGroup
               medium={true}

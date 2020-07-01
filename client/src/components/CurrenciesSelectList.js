@@ -9,11 +9,15 @@ import {
 import {
   Select
 } from '@blueprintjs/select';
-
+import classNames from 'classnames';
 import { FormattedMessage as T } from 'react-intl';
 
-export default function CurrenciesSelectList(props) {
-  const {formGroupProps, selectProps, onItemSelect} = props;
+export default function CurrenciesSelectList({
+  formGroupProps,
+  selectProps,
+  onItemSelect,
+  className,
+}) {
   const currencies = [{
     name: 'USD US dollars', key: 'USD',
     name: 'CAD Canadian dollars', key: 'CAD',
@@ -41,7 +45,13 @@ export default function CurrenciesSelectList(props) {
   return (
     <FormGroup
       label={<T id={'currency'}/>}
-      className={'form-group--select-list form-group--currency'}
+      className={
+        classNames(
+          'form-group--select-list',
+          'form-group--currency',
+          className,
+        )
+      }
       {...formGroupProps}
     >
       <Select
@@ -54,7 +64,6 @@ export default function CurrenciesSelectList(props) {
         {...selectProps}
       >
         <Button
-          rightIcon='caret-down'
           text={'USD US dollars'}
         />
       </Select>

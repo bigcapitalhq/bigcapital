@@ -346,13 +346,15 @@ export default {
       }).pagination(filter.page - 1, filter.page_size);;
 
       return res.status(200).send({
-        expenses,
-        page_size: filter.page_size,
-        page: filter.page,
-        ...(view) ? {
-          viewColumns: view.columns,
-          customViewId: view.id,
-         } : {},
+        expenses: {
+          ...expenses,
+          ...(view) ? {
+            viewMeta: {
+              viewColumns: view.columns,
+              customViewId: view.id,
+            }
+           } : {},
+        },
       });
     },
   },

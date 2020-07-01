@@ -75,6 +75,10 @@ export default {
       query('page').optional().isNumeric().toInt(),
       query('page_size').optional().isNumeric().toInt(),
       query('custom_view_id').optional().isNumeric().toInt(),
+
+      query('column_sort_by').optional(),
+      query('sort_order').optional().isIn(['desc', 'asc']),
+
       query('stringified_filter_roles').optional().isJSON(),
     ],
     async handler(req, res) {
@@ -89,6 +93,7 @@ export default {
         filter_roles: [],
         page: 1,
         page_size: 999,
+        sort_order: 'asc',
         ...req.query,
       };
       if (filter.stringified_filter_roles) {
@@ -135,7 +140,6 @@ export default {
         }
         dynamicFilter.setFilter(viewFilter);
       }
-
       // Dynamic filter with filter roles.
       if (filter.filter_roles.length > 0) {
         // Validate the accounts resource fields.
@@ -150,12 +154,12 @@ export default {
         }
       }
       // Dynamic filter with column sort order.
-      if (filter.column_sort_order) {
-        if (resourceFieldsKeys.indexOf(filter.column_sort_order) === -1) {
+      if (filter.column_sort_by) {
+        if (resourceFieldsKeys.indexOf(filter.column_sort_by) === -1) {
           errorReasons.push({ type: 'COLUMN.SORT.ORDER.NOT.FOUND', code: 300 });
         }
         const sortByFilter = new DynamicFilterSortBy(
-          filter.column_sort_order,
+          filter.column_sort_by,
           filter.sort_order,
         );
         dynamicFilter.setFilter(sortByFilter);
@@ -169,7 +173,14 @@ export default {
       }).pagination(filter.page - 1, filter.page_size);
 
       return res.status(200).send({
-        manualJournals,
+        manualJournals: {
+          ...manualJournals,
+          ...(view) ? {
+            viewMeta: {
+              customViewId: view.id,
+            }
+          } : {},
+        },
       });
     },
   },
@@ -201,31 +212,71 @@ export default {
 
   /**
    * Validate form entries with contact customers and vendors. 
+   * 
+   * - Validate the entries that with receivable has no customer contact.
+   * - Validate the entries that with payable has no vendor contact.
+   * - Validate the entries with customers contacts that not found on the storage.
+   * - Validate the entries with vendors contacts that not found on the storage.
+   * 
    * @param {Request} req 
    * @param {Response} res 
    * @param {Function} next 
    */
   async validateContactEntries(req, res, next) {
     const form = { entries: [], ...req.body };
-    const { AccountType, Vendor, Customer } = req.models;
+    const { Account, AccountType, Vendor, Customer } = req.models;
     const errorReasons = [];
 
     // Validate the entries contact type and ids.
-    const customersContacts = form.entries.filter(e => e.contact_type === 'customer');
-    const vendorsContacts = form.entries.filter(e => e.contact_type === 'vendor');
+    const formEntriesCustomersIds = form.entries.filter(e => e.contact_type === 'customer');
+    const formEntriesVendorsIds = form.entries.filter(e => e.contact_type === 'vendor');
 
     const accountsTypes = await AccountType.query();
   
     const payableAccountsType = accountsTypes.find(t => t.key === 'accounts_payable');;
     const receivableAccountsType = accountsTypes.find(t => t.key === 'accounts_receivable');
 
+    const receivableAccountOper = Account.query().where('account_type_id', receivableAccountsType.id).first();
+    const payableAccountOper = Account.query().where('account_type_id', payableAccountsType.id).first();
+
+    const [receivableAccount, payableAccount] = await Promise.all([
+      receivableAccountOper, payableAccountOper,
+    ]);
+
+    const entriesHasNoReceivableAccount = form.entries
+      .filter(e =>
+        (e.account_id === receivableAccount.id) && 
+        (!e.contact_id || e.contact_type !== 'customer')
+      );
+
+    if (entriesHasNoReceivableAccount.length > 0) {
+      errorReasons.push({
+        type: 'RECEIVABLE.ENTRIES.HAS.NO.CUSTOMERS',
+        code: 900,
+        indexes: entriesHasNoReceivableAccount.map(e => e.index),
+      });
+    }
+
+    const entriesHasNoVendorContact = form.entries
+      .filter(e =>
+        (e.account_id === payableAccount.id) && 
+        (!e.contact_id || e.contact_type !== 'contact')
+      );
+
+    if (entriesHasNoVendorContact.length > 0) {
+      errorReasons.push({
+        type: 'PAYABLE.ENTRIES.HAS.NO.VENDORS',
+        code: 1000,
+        indexes: entriesHasNoVendorContact.map(e => e.index),
+      });
+    }
+
     // Validate customers contacts.
-    if (customersContacts.length > 0) {
-      const customersContactsIds = customersContacts.map(c => c.contact_id);
+    if (formEntriesCustomersIds.length > 0) {
+      const customersContactsIds = formEntriesCustomersIds.map(c => c.contact_id);
       const storedContacts = await Customer.query().whereIn('id', customersContactsIds);
 
       const storedContactsIds = storedContacts.map(c => c.id);
-      const formEntriesCustomersIds = form.entries.filter(e => e.contact_type === 'customer');
 
       const notFoundContactsIds = difference(
         formEntriesCustomersIds.map(c => c.contact_id),
@@ -236,24 +287,23 @@ export default {
       }
 
       const notReceivableAccounts = formEntriesCustomersIds.filter(
-        c => receivableAccountsType && c.contact_id !== receivableAccountsType.id);
-      
+        c => c.account_id !== receivableAccount.id
+      );
       if (notReceivableAccounts.length > 0) {
         errorReasons.push({
-          type: 'CUSTOMERS.ACCOUNTS.NOT.RECEIVABLE.TYPE',
+          type: 'CUSTOMERS.NOT.WITH.RECEIVABLE.ACCOUNT',
           code: 700,
           indexes: notReceivableAccounts.map(a => a.index),
         });
-      } 
+      }
     }
 
     // Validate vendors contacts.
-    if (vendorsContacts.length > 0) {
-      const vendorsContactsIds = vendorsContacts.map(c => c.contact_id);
+    if (formEntriesVendorsIds.length > 0) {
+      const vendorsContactsIds = formEntriesVendorsIds.map(c => c.contact_id);
       const storedContacts = await Vendor.query().where('id', vendorsContactsIds);
 
       const storedContactsIds = storedContacts.map(c => c.id);
-      const formEntriesVendorsIds = form.entries.filter(e => e.contact_type === 'vendor');
 
       const notFoundContactsIds = difference(
         formEntriesVendorsIds.map(v => v.contact_id),
@@ -261,21 +311,23 @@ export default {
       );
       if (notFoundContactsIds.length > 0) {
         errorReasons.push({
-          type: 'VENDORS.CONTACTS.NOT.FOUND', code: 600, ids: notFoundContactsIds,
+          type: 'VENDORS.CONTACTS.NOT.FOUND',
+          code: 600,
+          ids: notFoundContactsIds,
         });
       }
       const notPayableAccounts = formEntriesVendorsIds.filter(
-        v => payableAccountsType && v.contact_id === payableAccountsType.id
+        v => v.contact_id === payableAccount.id
       );
       if (notPayableAccounts.length > 0) {
         errorReasons.push({
-          type: 'VENDORS.ACCOUNTS.NOT.PAYABLE.TYPE',
+          type: 'VENDORS.NOT.WITH.PAYABLE.ACCOUNT',
           code: 800,
           indexes: notPayableAccounts.map(a => a.index),
         });
       }
     }
-    
+
     req.errorReasons = Array.isArray(req.errorReasons) && req.errorReasons.length
       ? req.errorReasons.push(...errorReasons) : errorReasons;
 
@@ -289,7 +341,7 @@ export default {
     validation: [
       check('date').exists().isISO8601(),
       check('journal_number').exists().trim().escape(),
-      check('transaction_type').optional({ nullable: true }).trim().escape(),
+      check('journal_type').optional({ nullable: true }).trim().escape(),
       check('reference').optional({ nullable: true }),
       check('description').optional().trim().escape(),
       check('status').optional().isBoolean().toBoolean(),
@@ -299,7 +351,7 @@ export default {
       check('entries.*.debit').optional({ nullable: true }).isNumeric().toInt(),
       check('entries.*.account_id').isNumeric().toInt(),
       check('entries.*.note').optional(),
-      check('entries.*.contact_id').optional().isNumeric().toInt(),
+      check('entries.*.contact_id').optional({ nullable: true }).isNumeric().toInt(),
       check('entries.*.contact_type').optional().isIn(['vendor', 'customer']),
       check('media_ids').optional().isArray(),
       check('media_ids.*').exists().isNumeric().toInt(),
@@ -314,7 +366,7 @@ export default {
       }
       const form = {
         date: new Date(),
-        transaction_type: 'journal',
+        journal_type: 'journal',
         reference: '',
         media_ids: [],
         ...req.body,
@@ -351,15 +403,12 @@ export default {
         errorReasons.push({ type: 'CREDIT.DEBIT.NOT.EQUALS', code: 100 });
       }
       const formEntriesAccountsIds = entries.map((entry) => entry.account_id);
-      const formEntriesContactsIds = entries.map((entry) => entry.contact_id);
 
       const accounts = await Account.query()
         .whereIn('id', formEntriesAccountsIds)
-        .withGraphFetched('type')
-        .remember();
+        .withGraphFetched('type');
 
       const storedAccountsIds = accounts.map((account) => account.id);
-
 
       if (difference(formEntriesAccountsIds, storedAccountsIds).length > 0) {
         errorReasons.push({ type: 'ACCOUNTS.IDS.NOT.FOUND', code: 200 });
@@ -378,7 +427,7 @@ export default {
       // Save manual journal tansaction.
       const manualJournal = await ManualJournal.query().insert({
         reference: form.reference,
-        transaction_type: 'Journal',
+        journal_type: form.journal_type,
         journal_number: form.journal_number,
         amount: totalCredit,
         date: formattedDate,

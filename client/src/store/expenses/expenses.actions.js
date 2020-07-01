@@ -19,6 +19,7 @@ export const fetchExpensesTable = ({ query } = {}) => {
             type: t.EXPENSES_PAGE_SET,
             payload: {
               expenses: response.data.expenses.results,
+              pagination: response.data.expenses.pagination,
               customViewId: response.data.customViewId || -1,
             },            
           });
@@ -26,6 +27,13 @@ export const fetchExpensesTable = ({ query } = {}) => {
             type: t.EXPENSES_ITEMS_SET,
             payload: {
               expenses: response.data.expenses.results,
+            }
+          });
+          dispatch({
+            type: t.EXPENSES_PAGINATION_SET,
+            payload: {
+              pagination: response.data.expenses.pagination,
+              customViewId: response.data.customViewId || -1,
             }
           });
           dispatch({

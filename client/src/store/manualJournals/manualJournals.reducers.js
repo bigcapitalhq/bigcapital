@@ -30,7 +30,7 @@ const reducer = createReducer(initialState, {
 
   [t.MANUAL_JOURNAL_PUBLISH]: (state, action) => {
     const { id } = action.payload;
-    const item = state.items[id] || {};
+    const item = state.items[id] || {}
 
     state.items[id] = { ...item, status: 1 };
   },
@@ -72,7 +72,8 @@ const reducer = createReducer(initialState, {
   },
 
   [t.MANUAL_JOURNALS_SET_CURRENT_VIEW]: (state, action) => {
-    state.currentViewId = action.currentViewId;
+    const { currentViewId } = action.payload;
+    state.currentViewId = currentViewId;
   },
 
   [t.MANUAL_JOURNAL_REMOVE]: (state, action) => {
@@ -93,19 +94,26 @@ const reducer = createReducer(initialState, {
   },
 
   [t.MANUAL_JOURNALS_PAGINATION_SET]: (state, action) => {
-    const { pagination } = action.payload;
+    const { pagination, customViewId } = action.payload;
     const mapped = {
       pageSize: parseInt(pagination.pageSize, 10),
       page: parseInt(pagination.page, 10),
       total: parseInt(pagination.total, 10),
     };
 
-    state.paginationMeta = {
-      ...state.paginationMeta,
+    const paginationMeta = {
       ...mapped,
       pagesCount: Math.ceil(mapped.total / mapped.pageSize),
       pageIndex: Math.max(mapped.page - 1, 0),
     };
+
+    state.views = {
+      ...state.views,
+      [customViewId]: {
+        ...(state.views?.[customViewId] || {}),
+        paginationMeta,
+      },
+    };    
   }
 });
 

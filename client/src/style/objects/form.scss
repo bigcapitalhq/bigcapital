@@ -68,13 +68,6 @@ $form-check-input-indeterminate-bg-image: url("data:image/svg+xml,<svg xmlns='ht
 
   .#{$ns}-label{
     margin-bottom: 6px;
-
-    .#{$ns}-icon-info-circle{
-      margin-left: 3px;
-      position: relative;
-      top: -1px;
-      color: #A1B2C5;
-    }
   }
 }
 

@@ -15,7 +15,7 @@ import { pick } from 'lodash';
 
 import AppToaster from 'components/AppToaster';
 import Dialog from 'components/Dialog';
-import DialogReduxConnect from 'components/DialogReduxConnect';
+import withDialogRedux from 'components/DialogReduxConnect';
 import ErrorMessage from 'components/ErrorMessage';
 import classNames from 'classnames';
 import withDialogActions from 'containers/Dialog/withDialogActions';
@@ -221,22 +221,16 @@ function CurrencyDialog({
   );
 }
 
-const mapStateToProps = (state, props) => {
-  const dialogPayload = getDialogPayload(state, 'currency-form');
-
-  return {
-    name: 'currency-form',
-    payload: { action: 'new', currencyCode: null, ...dialogPayload },
-    currencyCode: dialogPayload?.currencyCode || null,
-  };
-};
+const mapStateToProps = (state, props) => ({
+  dialogName: 'currency-form',
+});
 
 const withCurrencyFormDialog = connect(mapStateToProps);
 
 export default compose(
   withCurrencyFormDialog,
-  withDialogActions,
-  DialogReduxConnect,
-  withCurrenciesActions,
+  withDialogRedux(null, 'currency-form'),
   withCurrency,
+  withDialogActions,
+  withCurrenciesActions,
 )(CurrencyDialog);

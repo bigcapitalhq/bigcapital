@@ -22,6 +22,11 @@ exports.seed = (knex) => {
         { id: 9, name: 'Journal', roles_logic_expression: '1', resource_id: 4, predefined: true },
         { id: 10, name: 'Credit', roles_logic_expression: '1', resource_id: 4, predefined: true },
         { id: 11, name: 'Reconciliation', roles_logic_expression: '1', resource_id: 4, predefined: true },
+
+        // Expenses
+        { id: 12, name: 'Interest', roles_logic_expression: '1', resource_id: 3, predefined: false, },
+        { id: 13, name: 'Depreciation', roles_logic_expression: '1', resource_id: 3, predefined: false, },
+        { id: 14, name: 'Payroll', roles_logic_expression: '1', resource_id: '3', predefined: false },
       ]);
     });
 };

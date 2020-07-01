@@ -18,9 +18,12 @@ exports.seed = (knex) => {
         { id: 8, field_id: 12, index: 1, comparator: 'equals', value: 'non-inventory', view_id: 8 },
 
         // Manual Journals
-        { id: 9, field_id: 13, index: 1, comparator: 'equals', value: 'Journal', view_id: 9 },
-        { id: 10, field_id: 13, index: 1, comparator: 'equals', value: 'CreditNote', view_id: 10 },
-        { id: 11, field_id: 13, index: 1, comparator: 'equals', value: 'Reconciliation', view_id: 11 },
+        { id: 9, field_id: 26, index: 1, comparator: 'equals', value: 'Journal', view_id: 9 },
+        { id: 10, field_id: 26, index: 1, comparator: 'equals', value: 'CreditNote', view_id: 10 },
+        { id: 11, field_id: 26, index: 1, comparator: 'equals', value: 'Reconciliation', view_id: 11 },
+
+        // Expenses
+        // { id: 12, field_id: index:  }
       ]);
     });
 };

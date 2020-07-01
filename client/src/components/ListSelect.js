@@ -15,6 +15,9 @@ export default function ListSelect ({
 
   selectedItem,
   selectedItemProp = 'id',
+
+  // itemTextProp,
+  // itemLabelProp,
   ...selectProps
 }) {
   const [currentItem, setCurrentItem] = useState(null);
@@ -29,8 +32,13 @@ export default function ListSelect ({
   const noResults = isLoading ?
     ('loading') : <MenuItem disabled={true} text={noResultsText} />;
 
+  const itemRenderer =  (item, { handleClick, modifiers, query }) => {
+    return (<MenuItem text={item[labelProp]} key={item[selectedItemProp]} />);
+  };
+
   return (
     <Select
+      itemRenderer={itemRenderer}
       {...selectProps}
       noResults={noResults}
     >

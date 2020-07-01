@@ -27,11 +27,29 @@ export default function AccountsSelectList({
     onAccountSelected && onAccountSelected(account);
   }, [setSelectedAccount, onAccountSelected]);
 
+  // Filters accounts items.
+  const filterAccountsPredicater = useCallback(
+    (query, account, _index, exactMatch) => {
+      const normalizedTitle = account.name.toLowerCase();
+      const normalizedQuery = query.toLowerCase();
+
+      if (exactMatch) {
+        return normalizedTitle === normalizedQuery;
+      } else {
+        return (
+          `${account.code} ${normalizedTitle}`.indexOf(normalizedQuery) >= 0
+        );
+      }
+    },
+    [],
+  );
+
   return (
     <Select
       items={accounts}
       noResults={<MenuItem disabled={true} text='No results.' />}
       itemRenderer={accountItem}
+      itemPredicate={filterAccountsPredicater}
       popoverProps={{ minimal: true }}
       filterable={true}
       onItemSelect={onAccountSelect}>

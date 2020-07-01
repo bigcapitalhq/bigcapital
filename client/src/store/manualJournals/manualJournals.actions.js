@@ -1,3 +1,4 @@
+import { omit } from 'lodash';
 import ApiService from 'services/ApiService';
 import t from 'store/types';
 
@@ -107,19 +108,27 @@ export const publishManualJournal = ({ id }) => {
 export const fetchManualJournalsTable = ({ query } = {}) => {
   return (dispatch, getState) =>
     new Promise((resolve, reject) => {
+      let pageQuery = getState().manualJournals.tableQuery;
+
+      if (pageQuery.filter_roles) {
+        pageQuery = {
+          ...omit(pageQuery, ['filter_roles']),
+          stringified_filter_roles: JSON.stringify(pageQuery.filter_roles) || '',
+        };
+      }
       dispatch({
         type: t.MANUAL_JOURNALS_TABLE_LOADING,
         loading: true,
       });
       ApiService.get('accounting/manual-journals', {
-        params: { ...query },
+        params: { ...pageQuery, ...query },
       })
         .then((response) => {
           dispatch({
             type: t.MANUAL_JOURNALS_PAGE_SET,
             payload: {
               manualJournals: response.data.manualJournals.results,
-              customViewId: response.data.customViewId || -1,
+              customViewId: response.data.manualJournals?.viewMeta?.customViewId || -1,
               pagination: response.data.manualJournals.pagination,
             }
           });
@@ -131,6 +140,7 @@ export const fetchManualJournalsTable = ({ query } = {}) => {
             type: 'MANUAL_JOURNALS_PAGINATION_SET',
             payload: {
               pagination: response.data.manualJournals.pagination,
+              customViewId: response.data.manualJournals?.viewMeta?.customViewId || -1,
             },
           });
           dispatch({

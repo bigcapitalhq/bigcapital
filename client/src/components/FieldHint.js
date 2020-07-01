@@ -1,10 +1,13 @@
 import React from 'react';
+import { Tooltip, Position } from '@blueprintjs/core';
 import Icon from './Icon';
 
-export default function FieldHint({ hint }) {
+export default function FieldHint({ content, position }) {
   return (
     <span class="hint">
-      <Icon icon="info-circle" iconSize={12} />
+      <Tooltip content={content} position={position}>
+        <Icon icon="info-circle" iconSize={12} />
+      </Tooltip>
     </span>
   );
 }

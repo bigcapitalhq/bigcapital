@@ -9,8 +9,7 @@ import withCustomersActions from 'containers/Customers/withCustomersActions';
 import withAccountsActions from 'containers/Accounts/withAccountsActions';
 import withManualJournalsActions from 'containers/Accounting/withManualJournalsActions';
 
-import {compose} from 'utils';
-
+import { compose } from 'utils';
 
 function MakeJournalEntriesPage({
   // #withCustomersActions
@@ -25,20 +24,26 @@ function MakeJournalEntriesPage({
   const history = useHistory();
   const { id } = useParams();
 
-  const fetchAccounts = useQuery('accounts-list',
-    (key) => requestFetchAccounts());
+  const fetchAccounts = useQuery('accounts-list', (key) =>
+    requestFetchAccounts(),
+  );
 
-  const fetchCustomers = useQuery('customers-list',
-    (key) => requestFetchCustomers());
+  const fetchCustomers = useQuery('customers-list', (key) =>
+    requestFetchCustomers(),
+  );
 
   const fetchJournal = useQuery(
-    id && ['manual-journal', id],
-    (key, journalId) => requestFetchManualJournal(journalId));
+    ['manual-journal', id],
+    (key, journalId) => requestFetchManualJournal(journalId),
+    { enabled: id && id },
+  );
 
-  const handleFormSubmit = useCallback((payload) => {
-    payload.redirect && 
-      history.push('/manual-journals');
-  }, [history]);
+  const handleFormSubmit = useCallback(
+    (payload) => {
+      payload.redirect && history.push('/manual-journals');
+    },
+    [history],
+  );
 
   const handleCancel = useCallback(() => {
     history.push('/manual-journals');
@@ -51,11 +56,13 @@ function MakeJournalEntriesPage({
         fetchAccounts.isFetching ||
         fetchCustomers.isFetching
       }
-      name={'make-journal-page'}>
+      name={'make-journal-page'}
+    >
       <MakeJournalEntriesForm
         onFormSubmit={handleFormSubmit}
         manualJournalId={id}
-        onCancelForm={handleCancel} />
+        onCancelForm={handleCancel}
+      />
     </DashboardInsider>
   );
 }

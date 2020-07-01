@@ -12,11 +12,13 @@ import ExpenseDataTable from 'containers/Expenses/ExpenseDataTable';
 import ExpenseActionsBar from 'containers/Expenses/ExpenseActionsBar';
 
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
+import withResourceActions from 'containers/Resources/withResourcesActions';
 import withExpenses from 'containers/Expenses/withExpenses';
 import withExpensesActions from 'containers/Expenses/withExpensesActions';
 import withViewsActions from 'containers/Views/withViewsActions';
 
 import { compose } from 'utils';
+
 
 function ExpensesList({
   // #withDashboardActions
@@ -24,6 +26,7 @@ function ExpensesList({
 
   // #withViewsActions
   requestFetchResourceViews,
+  requestFetchResourceFields,
 
   // #withExpenses
   expensesTableQuery,
@@ -44,13 +47,18 @@ function ExpensesList({
   const [selectedRows, setSelectedRows] = useState([]);
   const [bulkDelete, setBulkDelete] = useState(false);
 
-  const fetchViews = useQuery('expenses-resource-views', () => {
-    return requestFetchResourceViews('expenses');
-  });
+  const fetchResourceViews = useQuery(
+    ['resource-views', 'expenses'],
+    (key, resourceName) => requestFetchResourceViews(resourceName),
+  );
 
-  const fetchExpenses = useQuery(
-    ['expenses-table', expensesTableQuery],
-    () => requestFetchExpensesTable(),
+  const fetchResourceFields = useQuery(
+    ['resource-fields', 'expenses'],
+    (key, resourceName) => requestFetchResourceFields(resourceName),
+  );
+
+  const fetchExpenses = useQuery(['expenses-table', expensesTableQuery], () =>
+    requestFetchExpensesTable(),
   );
 
   useEffect(() => {
@@ -132,6 +140,8 @@ function ExpensesList({
   // Handle fetch data of manual jouranls datatable.
   const handleFetchData = useCallback(
     ({ pageIndex, pageSize, sortBy }) => {
+      const page = pageIndex + 1;
+
       addExpensesTableQueries({
         ...(sortBy.length > 0
           ? {
@@ -139,6 +149,8 @@ function ExpensesList({
               sort_order: sortBy[0].desc ? 'desc' : 'asc',
             }
           : {}),
+        page_size: pageSize,
+        page,
       });
     },
     [addExpensesTableQueries],
@@ -166,7 +178,7 @@ function ExpensesList({
 
   return (
     <DashboardInsider
-      loading={fetchViews.isFetching}
+      loading={fetchResourceViews.isFetching || fetchResourceFields.isFetching}
       name={'expenses'}
     >
       <ExpenseActionsBar
@@ -187,6 +199,7 @@ function ExpensesList({
             <ExpenseViewTabs />
 
             <ExpenseDataTable
+              loading={fetchExpenses.isFetching}
               onDeleteExpense={handleDeleteExpense}
               onFetchData={handleFetchData}
               onEditExpense={handleEidtExpense}
@@ -237,4 +250,5 @@ export default compose(
   withExpensesActions,
   withExpenses(({ expensesTableQuery }) => ({ expensesTableQuery })),
   withViewsActions,
+  withResourceActions
 )(ExpensesList);

@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from 'react';
+import React, { useMemo, useState, useCallback } from 'react';
 import Icon from 'components/Icon';
 import {
   Button,
@@ -45,6 +45,7 @@ function ManualJournalActionsBar({
   onBulkDelete,
 }) {
   const { path } = useRouteMatch();
+  const [filterCount, setFilterCount] = useState(0);
   const history = useHistory();
 
   const viewsMenuItems = manualJournalsViews.map((view) => {
@@ -65,6 +66,7 @@ function ManualJournalActionsBar({
       value: '',
     },
     onFilterChange: (filterConditions) => {
+      setFilterCount(filterConditions.length || 0);
       addManualJournalsTableQueries({
         filter_roles: filterConditions || '',
       });
@@ -112,7 +114,9 @@ function ManualJournalActionsBar({
           position={Position.BOTTOM_LEFT}
         >
           <Button
-            className={classNames(Classes.MINIMAL, 'button--filter')}
+            className={classNames(Classes.MINIMAL, 'button--filter', {
+              'has-active-filters': filterCount > 0,
+            })}
             text="Filter"
             icon={<Icon icon="filter-16" iconSize={16} />}
           />
@@ -128,6 +132,11 @@ function ManualJournalActionsBar({
           />
         </If>
 
+        <Button
+          className={Classes.MINIMAL}
+          icon={<Icon icon="print-16" iconSize={16} />}
+          text={<T id={'print'} />}
+        />
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon="file-import-16" iconSize={16} />}

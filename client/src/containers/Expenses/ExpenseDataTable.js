@@ -29,10 +29,11 @@ import withViewDetails from 'containers/Views/withViewDetails';
 import withExpenses from 'containers/Expenses/withExpenses';
 import withExpensesActions from 'containers/Expenses/withExpensesActions';
 
-function ExpenseDataTable({
+function ExpensesDataTable({
   //#withExpenes
-  expenses,
+  expensesCurrentPage,
   expensesLoading,
+  expensesPagination,
   
   // #withDashboardActions
   changeCurrentView,
@@ -101,7 +102,7 @@ function ExpenseDataTable({
         <MenuItem
           text={formatMessage({ id: 'view_details' })} />
         <MenuDivider />
-        <If condition={expenses.published}>
+        <If condition={expense.published}>
           <MenuItem
             text={formatMessage({ id: 'publish_expense' })}
             onClick={handlePublishExpense(expense)}
@@ -142,7 +143,7 @@ function ExpenseDataTable({
       {
         id: 'payment_date',
         Header: formatMessage({ id: 'payment_date' }),
-        accessor: () => moment().format('YYYY-MM-DD'),
+        accessor: () => moment().format('YYYY MMM DD'),
         width: 150,
         className: 'payment_date',
       },
@@ -250,15 +251,19 @@ function ExpenseDataTable({
       <LoadingIndicator loading={loading} mount={false}>
         <DataTable
           columns={columns}
-          data={expenses}
+          data={expensesCurrentPage}
           onFetchData={handleDataTableFetchData}
           manualSortBy={true}
           selectionColumn={true}
           noInitialFetch={true}
           sticky={true}
-          loading={expensesLoading && !initialMount}
+          loading={expensesLoading}
           onSelectedRowsChange={handleSelectedRowsChange}
           rowContextMenu={onRowContextMenu}
+          pagination={true}
+          pagesCount={expensesPagination.pagesCount}
+          initialPageSize={expensesPagination.pageSize}
+          initialPageIndex={expensesPagination.page - 1}
         />
       </LoadingIndicator>
     </div>
@@ -269,9 +274,10 @@ export default compose(
   withDialogActions,
   withDashboardActions,
   withExpensesActions,
-  withExpenses(({ expenses, expensesLoading }) => ({
-    expenses,
+  withExpenses(({ expensesCurrentPage, expensesLoading, expensesPagination }) => ({
+    expensesCurrentPage,
     expensesLoading,
+    expensesPagination,
   })),
   withViewDetails,
-)(ExpenseDataTable);
+)(ExpensesDataTable);

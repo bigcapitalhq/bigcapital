@@ -15,6 +15,7 @@ import {
 import classNames from 'classnames';
 import { useRouteMatch, useHistory } from 'react-router-dom';
 import { FormattedMessage as T } from 'react-intl';
+import { connect } from 'react-redux';
 
 import FilterDropdown from 'components/FilterDropdown';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
@@ -28,12 +29,13 @@ import withExpensesActions from 'containers/Expenses/withExpensesActions';
 
 import { compose } from 'utils';
 
-function ExpenseActionsBar({
+function ExpensesActionsBar({
   // #withResourceDetail
   resourceFields,
 
   //#withExpenses
   expensesViews,
+
   //#withExpensesActions
   addExpensesTableQueries,
 
@@ -44,17 +46,20 @@ function ExpenseActionsBar({
   const { path } = useRouteMatch();
   const history = useHistory();
 
-  const viewsMenuItems = expensesViews.map((view) => {
-    return (
-      <MenuItem href={`${path}/${view.id}/custom_view`} text={view.name} />
-    );
-  });
+  const viewsMenuItems = expensesViews.map((view) => (
+    <MenuItem href={`${path}/${view.id}/custom_view`} text={view.name} />
+  ));
 
   const onClickNewExpense = useCallback(() => {
     history.push('/expenses/new');
   }, [history]);
 
   const filterDropdown = FilterDropdown({
+    initialCondition: {
+      fieldKey: 'reference_no',
+      compatator: 'contains',
+      value: '',
+    },
     fields: resourceFields,
     onFilterChange: (filterConditions) => {
       addExpensesTableQueries({
@@ -97,6 +102,7 @@ function ExpenseActionsBar({
           onClick={onClickNewExpense}
         />
         <Popover
+          minimal={true}
           content={filterDropdown}
           interactionKind={PopoverInteractionKind.CLICK}
           position={Position.BOTTOM_LEFT}
@@ -120,6 +126,11 @@ function ExpenseActionsBar({
 
         <Button
           className={Classes.MINIMAL}
+          icon={<Icon icon="print-16" iconSize={16} />}
+          text={<T id={'print'} />}
+        />
+        <Button
+          className={Classes.MINIMAL}
           icon={<Icon icon="file-import-16" iconSize={16} />}
           text={<T id={'import'} />}
         />
@@ -133,7 +144,14 @@ function ExpenseActionsBar({
   );
 }
 
+const mapStateToProps = (state, props) => ({
+  resourceName: 'expenses',
+});
+
+const withExpensesActionsBar = connect(mapStateToProps);
+
 export default compose(
+  withExpensesActionsBar,
   withDialogActions,
   withResourceDetail(({ resourceFields }) => ({
     resourceFields,
@@ -142,4 +160,4 @@ export default compose(
     expensesViews,
   })),
   withExpensesActions,
-)(ExpenseActionsBar);
+)(ExpensesActionsBar);

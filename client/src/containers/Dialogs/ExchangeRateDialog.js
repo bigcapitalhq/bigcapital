@@ -16,18 +16,21 @@ import { useQuery, queryCache } from 'react-query';
 import moment from 'moment';
 import { DateInput } from '@blueprintjs/datetime';
 import { momentFormatter } from 'utils';
-
-import AppToaster from 'components/AppToaster';
-
-import Dialog from 'components/Dialog';
-import ErrorMessage from 'components/ErrorMessage';
+import { 
+  AppToaster,
+  Dialog,
+  ErrorMessage,
+  ListSelect,
+} from 'components';
 import classNames from 'classnames';
-import { ListSelect } from 'components';
 import withExchangeRatesDialog from './ExchangeRateDialog.container';
 
+/**
+ * Exchange rate dialog.
+ */
 function ExchangeRateDialog({
-  name,
-  payload,
+  dialogName,
+  payload = {},
   isOpen,
 
   // #withDialog
@@ -91,7 +94,7 @@ function ExchangeRateDialog({
       if (payload.action === 'edit') {
         requestEditExchangeRate(payload.id, values)
           .then((response) => {
-            closeDialog(name);
+            closeDialog(dialogName);
             AppToaster.show({
               message: formatMessage({
                 id: 'the_exchange_rate_has_been_successfully_edited',
@@ -107,7 +110,7 @@ function ExchangeRateDialog({
       } else {
         requestSubmitExchangeRate(values)
           .then((response) => {
-            closeDialog(name);
+            closeDialog(dialogName);
             AppToaster.show({
               message: formatMessage({
                 id: 'the_exchange_rate_has_been_successfully_created',
@@ -136,13 +139,13 @@ function ExchangeRateDialog({
   const requiredSpan = useMemo(() => <span class="required">*</span>, []);
 
   const handleClose = useCallback(() => {
-    closeDialog(name);
-  }, [name, closeDialog]);
+    closeDialog(dialogName);
+  }, [dialogName, closeDialog]);
 
   const onDialogClosed = useCallback(() => {
     resetForm();
-    closeDialog(name);
-  }, [closeDialog, name, resetForm]);
+    closeDialog(dialogName);
+  }, [closeDialog, dialogName, resetForm]);
 
   const onDialogOpening = useCallback(() => {
     fetchExchangeRatesDialog.refetch();
@@ -197,7 +200,7 @@ function ExchangeRateDialog({
 
   return (
     <Dialog
-      name={name}
+      name={dialogName}
       title={
         payload.action === 'edit' ? (
           <T id={'edit_exchange_rate'} />

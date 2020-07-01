@@ -5,6 +5,7 @@ import { Button, Tabs, Tab, Tooltip, Position } from '@blueprintjs/core';
 import { If, Icon } from 'components';
 
 export default function DashboardViewsTabs({
+  initialViewId = 0,
   tabs,
   allTab = true,
   newViewTab = true,
@@ -12,7 +13,7 @@ export default function DashboardViewsTabs({
   onChange,
   onTabClick,
 }) {
-  const [currentView, setCurrentView] = useState(0);
+  const [currentView, setCurrentView] = useState(initialViewId || 0);
 
   const handleClickNewView = () => {
     onNewViewTabClick && onNewViewTabClick();

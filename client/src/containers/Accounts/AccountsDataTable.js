@@ -12,13 +12,13 @@ import {
 } from '@blueprintjs/core';
 import { withRouter } from 'react-router';
 import { FormattedMessage as T, useIntl } from 'react-intl';
-
-import Icon from 'components/Icon';
+import {
+  Icon,
+  DataTable,
+  Money,
+  If,
+} from 'components';
 import { compose } from 'utils';
-
-import LoadingIndicator from 'components/LoadingIndicator';
-import DataTable from 'components/DataTable';
-import Money from 'components/Money';
 import { useUpdateEffect } from 'hooks';
 
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
@@ -27,7 +27,53 @@ import withAccounts from 'containers/Accounts/withAccounts';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withCurrentView from 'containers/Views/withCurrentView';
 
-import { If } from 'components';
+
+function NormalCell({ cell }) {
+  const { formatMessage } = useIntl();
+
+  const account = cell.row.original;
+  const normal = account?.type?.normal || '';
+  const arrowDirection = normal === 'credit' ? 'down' : 'up';
+
+  return (
+    <Tooltip
+      className={Classes.TOOLTIP_INDICATOR}
+      content={formatMessage({ id: normal })}
+      position={Position.RIGHT}
+      hoverOpenDelay={100}
+    >
+      <Icon icon={`arrow-${arrowDirection}`} />
+    </Tooltip>
+  );
+}
+
+function BalanceCell({ cell }) {
+  const account = cell.row.original;
+  const { balance = null } = account;
+
+  return balance ? (
+    <span>
+      <Money amount={balance.amount} currency={balance.currency_code} />
+    </span>
+  ) : (
+    <span class="placeholder">--</span>
+  );
+}
+
+function AccountNameAccessor(row) {
+  return row.description ? (
+    <Tooltip
+      className={Classes.TOOLTIP_INDICATOR}
+      content={row.description}
+      position={Position.RIGHT_TOP}
+      hoverOpenDelay={500}
+    >
+      {row.name}
+    </Tooltip>
+  ) : (
+    row.name
+  );
+}
 
 function AccountsDataTable({
   // #withDashboardActions
@@ -40,7 +86,6 @@ function AccountsDataTable({
   currentViewId,
 
   // own properties
-  loading,
   onFetchData,
   onSelectedRowsChange,
   onDeleteAccount,
@@ -125,20 +170,7 @@ function AccountsDataTable({
       {
         id: 'name',
         Header: formatMessage({ id: 'account_name' }),
-        accessor: (row) => {
-          return row.description ? (
-            <Tooltip
-              className={Classes.TOOLTIP_INDICATOR}
-              content={row.description}
-              position={Position.RIGHT_TOP}
-              hoverOpenDelay={500}
-            >
-              {row.name}
-            </Tooltip>
-          ) : (
-            row.name
-          );
-        },
+        accessor: AccountNameAccessor,
         className: 'account_name',
         width: 220,
       },
@@ -159,40 +191,22 @@ function AccountsDataTable({
       {
         id: 'normal',
         Header: formatMessage({ id: 'normal' }),
-        Cell: ({ cell }) => {
-          const account = cell.row.original;
-          const normal = account.type ? account.type.normal : '';
-          const arrowDirection = normal === 'credit' ? 'down' : 'up';
-
-          return (
-            <Tooltip
-              className={Classes.TOOLTIP_INDICATOR}
-              content={formatMessage({ id: normal })}
-              position={Position.RIGHT}
-              hoverOpenDelay={500}
-            >
-              <Icon icon={`arrow-${arrowDirection}`} />
-            </Tooltip>
-          );
-        },
+        Cell: NormalCell,
+        accessor: 'type.normal',
         className: 'normal',
         width: 115,
       },
       {
+        id: 'currency',
+        Header: formatMessage({ id: 'currency' }),
+        accessor: (row) => 'USD',
+        width: 100,
+      },
+      {
         id: 'balance',
         Header: formatMessage({ id: 'balance' }),
-        Cell: ({ cell }) => {
-          const account = cell.row.original;
-          const { balance = null } = account;
-
-          return balance ? (
-            <span>
-              <Money amount={balance.amount} currency={balance.currency_code} />
-            </span>
-          ) : (
-            <span class="placeholder">--</span>
-          );
-        },
+        accessor: 'balance',
+        Cell: BalanceCell,
         width: 150,
       },
       {
@@ -235,23 +249,19 @@ function AccountsDataTable({
   );
 
   return (
-    <LoadingIndicator loading={loading && !isMounted} mount={false}>
-      <DataTable
-        noInitialFetch={true}
-        columns={columns}
-        data={accounts}
-        onFetchData={handleDatatableFetchData}
-        manualSortBy={true}
-        selectionColumn={selectionColumn}
-        expandable={true}
-        treeGraph={true}
-        sticky={true}
-        onSelectedRowsChange={handleSelectedRowsChange}
-        loading={accountsLoading && !isMounted}
-        spinnerProps={{ size: 30 }}
-        rowContextMenu={rowContextMenu}
-      />
-    </LoadingIndicator>
+    <DataTable
+      noInitialFetch={true}
+      columns={columns}
+      data={accounts}
+      onFetchData={handleDatatableFetchData}
+      manualSortBy={true}
+      selectionColumn={selectionColumn}
+      expandable={true}
+      sticky={true}
+      onSelectedRowsChange={handleSelectedRowsChange}
+      loading={accountsLoading && !isMounted}
+      rowContextMenu={rowContextMenu}
+    />
   );
 }
 

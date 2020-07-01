@@ -29,11 +29,6 @@ function BalanceSheetActionsBar({
   toggleBalanceSheetFilter,
   refreshBalanceSheet
 }) {
-  const filterDropdown = FilterDropdown({
-    fields: [],
-    onFilterChange: (filterConditions) => {},
-  });
-
   const handleFilterToggleClick = () => {
     toggleBalanceSheetFilter();
   };
@@ -81,7 +76,7 @@ function BalanceSheetActionsBar({
         </If>
 
         <Popover
-          content={filterDropdown}
+          // content={}
           interactionKind={PopoverInteractionKind.CLICK}
           position={Position.BOTTOM_LEFT}
         >

@@ -59,20 +59,22 @@ function AccountsChart({
   const [selectedRows, setSelectedRows] = useState([]);
   const [bulkActivate, setBulkActivate] = useState(false);
   const [bulkInactiveAccounts, setBulkInactiveAccounts] = useState(false);
-  const [tableLoading, setTableLoading] = useState(false);
 
   // Fetch accounts resource views and fields.
-  const fetchHook = useQuery('resource-accounts', () => {
-    return Promise.all([
-      requestFetchResourceViews('accounts'),
-      requestFetchResourceFields('accounts'),
-    ]);
-  });
+  const fetchResourceViews = useQuery(
+    ['resource-views', 'accounts'],
+    (key, resourceName) => requestFetchResourceViews(resourceName),
+  );
+
+  const fetchResourceFields = useQuery(
+    ['resource-fields', 'accounts'],
+    (key, resourceName) => requestFetchResourceFields(resourceName),
+  );
 
   // Fetch accounts list according to the given custom view id.
   const fetchAccountsHook = useQuery(
     ['accounts-table', accountsTableQuery],
-    () => requestFetchAccountsTable(),
+    (key, q) => requestFetchAccountsTable(),
   );
 
   useEffect(() => {
@@ -89,6 +91,7 @@ function AccountsChart({
     setDeleteAccount(false);
   }, []);
 
+  // Handle delete errors in bulk and singular.
   const handleDeleteErrors = (errors) => {
     if (errors.find((e) => e.type === 'ACCOUNT.PREDEFINED')) {
       AppToaster.show({
@@ -221,17 +224,6 @@ function AccountsChart({
     fetchAccountsHook.refetch();
   }, [fetchAccountsHook]);
 
-  // Refetch accounts data table when current custom view changed.
-  const handleViewChanged = useCallback(async () => {
-    setTableLoading(true);
-  }, [fetchAccountsHook]);
-
-  useEffect(() => {
-    if (tableLoading && !fetchAccountsHook.isFetching) {
-      setTableLoading(false);
-    }
-  }, [tableLoading, fetchAccountsHook.isFetching]);
-
   // Handle fetch data of accounts datatable.
   const handleFetchData = useCallback(
     ({ pageIndex, pageSize, sortBy }) => {
@@ -243,7 +235,6 @@ function AccountsChart({
             }
           : {}),
       });
-      fetchAccountsHook.refetch();
     },
     [fetchAccountsHook, addAccountsTableQueries],
   );
@@ -314,7 +305,10 @@ function AccountsChart({
   }, [requestBulkInactiveAccounts, bulkInactiveAccounts]);
 
   return (
-    <DashboardInsider loading={fetchHook.isFetching} name={'accounts-chart'}>
+    <DashboardInsider
+      loading={fetchResourceFields.isFetching || fetchResourceViews.isFetching}
+      name={'accounts-chart'}
+    >
       <DashboardActionsBar
         selectedRows={selectedRows}
         onFilterChanged={handleFilterChanged}
@@ -323,17 +317,15 @@ function AccountsChart({
         onBulkActivate={handleBulkActivate}
         onBulkInactive={handleBulkInactive}
       />
-
       <DashboardPageContent>
         <Switch>
           <Route
             exact={true}
             path={['/accounts/:custom_view_id/custom_view', '/accounts']}
           >
-            <AccountsViewsTabs onViewChanged={handleViewChanged} />
+            <AccountsViewsTabs />
 
             <AccountsDataTable
-              loading={fetchAccountsHook.isFetching}
               onDeleteAccount={handleDeleteAccount}
               onInactiveAccount={handleInactiveAccount}
               onActivateAccount={handleActivateAccount}
@@ -341,7 +333,6 @@ function AccountsChart({
               onEditAccount={handleEditAccount}
               onFetchData={handleFetchData}
               onSelectedRowsChange={handleSelectedRowsChange}
-        
             />
           </Route>
         </Switch>

@@ -82,7 +82,7 @@ export default [
         href: '/manual-journals',
       },
       {
-        text: <T id={'make_journal'} />,
+        text: <T id={'make_journal_entry'} />,
         href: '/make-journal-entry',
       },
       {
@@ -140,7 +140,7 @@ export default [
     text: <T id={'expenses'} />,
     children: [
       {
-        text: <T id={'expenses_list'}/>,
+        text: <T id={'expenses'}/>,
         href: '/expenses-list',
       },
       {

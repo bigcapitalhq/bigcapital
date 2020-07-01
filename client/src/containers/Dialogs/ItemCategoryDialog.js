@@ -24,9 +24,8 @@ import { ListSelect } from 'components';
 
 import Dialog from 'components/Dialog';
 import withDialogActions from 'containers/Dialog/withDialogActions';
-import DialogReduxConnect from 'components/DialogReduxConnect';
+import withDialogRedux from 'components/DialogReduxConnect';
 
-import { getDialogPayload } from 'store/dashboard/dashboard.reducer';
 import withItemCategoryDetail from 'containers/Items/withItemCategoryDetail';
 import withItemCategories from 'containers/Items/withItemCategories';
 import withItemCategoriesActions from 'containers/Items/withItemCategoriesActions';
@@ -34,7 +33,7 @@ import withItemCategoriesActions from 'containers/Items/withItemCategoriesAction
 import Icon from 'components/Icon';
 
 function ItemCategoryDialog({
-  name,
+  dialogName,
   payload,
   isOpen,
 
@@ -99,7 +98,7 @@ function ItemCategoryDialog({
       if (payload.action === 'edit') {
         requestEditItemCategory(payload.id, values)
           .then((response) => {
-            closeDialog(name);
+            closeDialog(dialogName);
             AppToaster.show({
               message: formatMessage({
                 id: 'the_item_category_has_been_successfully_edited',
@@ -117,7 +116,7 @@ function ItemCategoryDialog({
       } else {
         requestSubmitItemCategory(values)
           .then((response) => {
-            closeDialog(name);
+            closeDialog(dialogName);
             AppToaster.show({
               message: formatMessage({
                 id: 'the_item_category_has_been_successfully_created',
@@ -165,8 +164,8 @@ function ItemCategoryDialog({
 
   // Handle the dialog closing.
   const handleClose = useCallback(() => {
-    closeDialog(name);
-  }, [name, closeDialog]);
+    closeDialog(dialogName);
+  }, [dialogName, closeDialog]);
 
   // Handle the dialog opening.
   const onDialogOpening = useCallback(() => {
@@ -183,15 +182,15 @@ function ItemCategoryDialog({
 
   const onDialogClosed = useCallback(() => {
     resetForm();
-    closeDialog(name);
-  }, [resetForm, closeDialog, name]);
+    closeDialog(dialogName);
+  }, [resetForm, closeDialog, dialogName]);
 
   const requiredSpan = useMemo(() => <span class="required">*</span>, []);
   const infoIcon = useMemo(() => <Icon icon="info-circle" iconSize={12} />, []);
 
   return (
     <Dialog
-      name={name}
+      name={dialogName}
       title={
         payload.action === 'edit' ? (
           <T id={'edit_category'} />
@@ -303,23 +302,17 @@ function ItemCategoryDialog({
   );
 }
 
-const mapStateToProps = (state, props) => {
-  const dialogPayload = getDialogPayload(state, 'item-category-form');
-
-  return {
-    name: 'item-category-form',
-    payload: { action: 'new', id: null, ...dialogPayload },
-    itemCategoryId: dialogPayload?.id || null,
-  };
-};
+const mapStateToProps = (state, props) => ({
+  itemCategoryId: props?.dialogPayload?.id || null,
+});
 
 const withItemCategoryDialog = connect(mapStateToProps);
 
 export default compose(
+  withDialogRedux(null, 'item-category-form'),
   withItemCategoryDialog,
   withDialogActions,
-  DialogReduxConnect,
-  withItemCategoryDetail,
+  withItemCategoryDetail(),
   withItemCategories(({ categoriesList }) => ({
     categoriesList,
   })),

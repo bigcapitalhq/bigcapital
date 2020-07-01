@@ -31,13 +31,6 @@ function GeneralLedgerActionsBar({
   toggleGeneralLedgerSheetFilter,
   refreshGeneralLedgerSheet
 }) {
-  const filterDropdown = FilterDropdown({
-    fields: [],
-    onFilterChange: (filterConditions) => {
-      
-    },
-  });
-
   const handleFilterClick = () => {
     toggleGeneralLedgerSheetFilter();
   };
@@ -86,7 +79,6 @@ function GeneralLedgerActionsBar({
         </If>
 
         <Popover
-          content={filterDropdown}
           interactionKind={PopoverInteractionKind.CLICK}
           position={Position.BOTTOM_LEFT}>
 

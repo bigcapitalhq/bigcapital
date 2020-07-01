@@ -13,7 +13,7 @@ import {
 } from '~/dbInit';
 
 
-describe('routes: `/accounting`', () => {
+describe.only('routes: `/accounting`', () => {
   describe('route: `/accounting/make-journal-entries`', async () => {
     it('Should sumation of credit or debit does not equal zero.', async () => {
       const account = await tenantFactory.create('account');
@@ -250,9 +250,103 @@ describe('routes: `/accounting`', () => {
 
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'CUSTOMERS.ACCOUNTS.NOT.RECEIVABLE.TYPE',
+        type: 'CUSTOMERS.NOT.WITH.RECEIVABLE.ACCOUNT',
         code: 700,
         indexes: [1]
+      });
+    });
+
+    it('Should account receivable entries has contact_id and contact_type customer.', async () => {
+      const res = await request()
+        .post('/api/accounting/make-journal-entries')
+        .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
+        .send({
+          date: new Date().toISOString(),
+          journal_number: '1000',
+          entries: [
+            {
+              index: 1,
+              credit: null,
+              debit: 1000,
+              account_id: 10,
+            },
+            {
+              index: 2,
+              credit: 1000,
+              debit: 0,
+              account_id: 1,
+            },
+          ],
+        });
+
+      expect(res.status).equals(400);
+      expect(res.body.errors).include.something.deep.equals({
+        type: 'RECEIVABLE.ENTRIES.HAS.NO.CUSTOMERS', code: 900, indexes: [1],
+      });
+    });
+
+    it('Should account payable entries has contact_id and contact_type vendor.', async () => {
+      const res = await request()
+        .post('/api/accounting/make-journal-entries')
+        .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
+        .send({
+          date: new Date().toISOString(),
+          journal_number: '1000',
+          entries: [
+            {
+              index: 1,
+              credit: null,
+              debit: 1000,
+              account_id: 10,
+            },
+            {
+              index: 2,
+              credit: 1000,
+              debit: 0,
+              account_id: 11,
+            },
+          ],
+        });
+
+      expect(res.status).equals(400);
+      expect(res.body.errors).include.something.deep.equals({
+        type: 'PAYABLE.ENTRIES.HAS.NO.VENDORS', code: 1000, indexes: [2]
+      });
+    });
+
+    it('Should retrieve account_id is not receivable in case contact_type equals customer.', async () => {
+      const customer = await tenantFactory.create('customer');
+
+      const res = await request()
+        .post('/api/accounting/make-journal-entries')
+        .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
+        .send({
+          date: new Date().toISOString(),
+          journal_number: '1000',
+          entries: [
+            {
+              index: 1,
+              credit: null,
+              debit: 1000,
+              account_id: 2,
+              contact_id: customer.id,
+              contact_type: 'customer',
+            },
+            {
+              index: 2,
+              credit: 1000,
+              debit: 0,
+              account_id: 11,
+            },
+          ],
+        });
+
+      expect(res.status).equals(400);
+      expect(res.body.errors).include.something.deep.equals({
+        type: 'CUSTOMERS.NOT.WITH.RECEIVABLE.ACCOUNT', code: 700, indexes: [1],
       });
     });
 

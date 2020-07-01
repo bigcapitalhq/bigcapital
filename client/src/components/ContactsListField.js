@@ -32,7 +32,7 @@ export default function ContactsListField({
 
   const onContactSelect = useCallback((contact) => {
     setSelectedContact(contact.id);
-    onContactSelected && onContactSelected(contact.id);
+    onContactSelected && onContactSelected(contact);
   }, [setSelectedContact, onContactSelected]);
 
   return (

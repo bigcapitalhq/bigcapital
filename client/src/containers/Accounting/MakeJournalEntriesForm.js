@@ -82,6 +82,9 @@ function MakeJournalEntriesForm({
     journal_number: Yup.string()
       .required()
       .label(formatMessage({ id: 'journal_number_' })),
+    journal_type: Yup.string()
+      .required()
+      .label(formatMessage({ id: 'journal_type' })),
     date: Yup.date()
       .required()
       .label(formatMessage({ id: 'date' })),
@@ -112,6 +115,12 @@ function MakeJournalEntriesForm({
 
   const [payload, setPayload] = useState({});
 
+  const reorderingEntriesIndex = (entries) =>
+    entries.map((entry, index) => ({
+      ...entry,
+      index: index + 1,
+    }));
+
   const defaultEntry = useMemo(
     () => ({
       account_id: null,
@@ -126,6 +135,7 @@ function MakeJournalEntriesForm({
   const defaultInitialValues = useMemo(
     () => ({
       journal_number: '',
+      journal_type: 'Journal',
       date: moment(new Date()).format('YYYY-MM-DD'),
       description: '',
       reference: '',
@@ -145,6 +155,7 @@ function MakeJournalEntriesForm({
           }
         : {
             ...defaultInitialValues,
+            entries: reorderingEntriesIndex(defaultInitialValues.entries),
           }),
     }),
     [manualJournal, defaultInitialValues, defaultEntry],
@@ -159,6 +170,45 @@ function MakeJournalEntriesForm({
         }))
       : [];
   }, [manualJournal]);
+
+  const transformErrors = (errors, { setErrors }) => {
+    const hasError = (errorType) => errors.some((e) => e.type === errorType);
+
+    if (hasError('CUSTOMERS.NOT.WITH.RECEIVABLE.ACCOUNT')) {
+      AppToaster.show({
+        message:
+          'customers_should_assign_with_receivable_account_only',
+        intent: Intent.DANGER,
+      });
+    }
+    if (hasError('VENDORS.NOT.WITH.PAYABLE.ACCOUNT')) {
+      AppToaster.show({
+        message: 'vendors_should_assign_with_payable_account_only',
+        intent: Intent.DANGER,
+      });
+    }
+    if (hasError('RECEIVABLE.ENTRIES.HAS.NO.CUSTOMERS')) {
+      AppToaster.show({
+        message:
+          'entries_with_receivable_account_no_assigned_with_customers',
+        intent: Intent.DANGER,
+      });
+      }
+    if (hasError('PAYABLE.ENTRIES.HAS.NO.VENDORS')) {
+      AppToaster.show({
+        message:
+          'entries_with_payable_account_no_assigned_with_vendors',
+        intent: Intent.DANGER,
+      });
+    }
+    if (hasError('JOURNAL.NUMBER.ALREADY.EXISTS')) {
+      setErrors({
+        journal_number: formatMessage({
+          id: 'journal_number_is_already_used',
+        }),
+      });
+    }
+  }
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -181,7 +231,19 @@ function MakeJournalEntriesForm({
       // Validate the total credit should be eqials total debit.
       if (totalCredit !== totalDebit) {
         AppToaster.show({
-          message: formatMessage({ id: 'credit_and_debit_not_equal' }),
+          message: formatMessage({
+            id: 'should_total_of_credit_and_debit_be_equal',
+          }),
+          intent: Intent.DANGER,
+        });
+        setSubmitting(false);
+        return;
+      } else if (totalCredit === 0 || totalDebit === 0) {
+        AppToaster.show({
+          message: formatMessage({
+            id: 'should_total_of_credit_and_debit_be_bigger_then_zero',
+          }),
+          intent: Intent.DANGER,
         });
         setSubmitting(false);
         return;
@@ -209,15 +271,7 @@ function MakeJournalEntriesForm({
                 resolve(response);
               })
               .catch((errors) => {
-                if (
-                  errors.find((e) => e.type === 'JOURNAL.NUMBER.ALREADY.EXISTS')
-                ) {
-                  setErrors({
-                    journal_number: formatMessage({
-                      id: 'journal_number_is_already_used',
-                    }),
-                  });
-                }
+                transformErrors(errors, { setErrors });
                 setSubmitting(false);
               });
           } else {
@@ -237,15 +291,7 @@ function MakeJournalEntriesForm({
                 resolve(response);
               })
               .catch((errors) => {
-                if (
-                  errors.find((e) => e.type === 'JOURNAL.NUMBER.ALREADY.EXISTS')
-                ) {
-                  setErrors({
-                    journal_number: formatMessage({
-                      id: 'journal_number_is_already_used',
-                    }),
-                  });
-                }
+                transformErrors(errors, { setErrors });
                 setSubmitting(false);
               });
           }

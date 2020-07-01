@@ -88,8 +88,6 @@ export function getRoleFieldColumn(tableName, columnKey) {
   return (tableFields[columnKey]) ? tableFields[columnKey] : null;
 }
 
-
-
 /**
  * Builds roles queries.
  * @param {String} tableName -

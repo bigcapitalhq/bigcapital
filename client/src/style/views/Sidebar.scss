@@ -1,8 +1,13 @@
 $sidebar-background: #01194e;
 $sidebar-text-color: #fff;
 $sidebar-width: 220px;
-$sidebar-menu-item-color: #cbd1dd;
+$sidebar-menu-item-color: rgba(255, 255, 255, 0.85);
 $sidebar-popover-submenu-bg: rgb(1, 20, 62);
+$sidebar-menu-label-color: rgba(255, 255, 255, 0.5);
+$sidebar-submenu-item-color: rgba(255, 255, 255, 0.55);
+$sidebar-submenu-item-hover-color: rgba(255, 255, 255, 0.8);
+$sidebar-logo-opacity: 0.55;
+$sidebar-submenu-item-bg-color: #01287d;
 
 .sidebar {
   background: $sidebar-background;
@@ -41,7 +46,7 @@ $sidebar-popover-submenu-bg: rgb(1, 20, 62);
       top: 2px;
 
       svg{
-        opacity: 0.5;
+        opacity: $sidebar-logo-opacity;
       }
     }
   }
@@ -66,7 +71,7 @@ $sidebar-popover-submenu-bg: rgb(1, 20, 62);
 
       &:hover,
       &.bp3-active {
-        background: #012470;
+        background: $sidebar-submenu-item-bg-color;
         color: $sidebar-menu-item-color;
       }
       &:focus,
@@ -82,11 +87,11 @@ $sidebar-popover-submenu-bg: rgb(1, 20, 62);
       > .#{$ns}-icon-caret-right {
         margin-right: -4px;
         margin-top: 3px;
-        color: #354569;
+        color: rgba(255, 255, 255, 0.2);
       }
       &-label{
         display: block;
-        color: rgba(255, 255, 255, 0.5);
+        color: $sidebar-menu-label-color;
         font-size: 12px;
         padding: 6px 16px;
         margin-top: 4px;
@@ -95,7 +100,6 @@ $sidebar-popover-submenu-bg: rgb(1, 20, 62);
 
     .#{$ns}-submenu {
       .#{$ns}-collapse {
-        border-left: 2px solid rgba(255, 255, 255, 0.15);
 
         &-body {
           background-color: rgb(11, 34, 85);
@@ -106,12 +110,16 @@ $sidebar-popover-submenu-bg: rgb(1, 20, 62);
         .#{$ns}-menu-item {
           padding: 7px 16px 7px 18px;
           font-size: 15px;
-          color: #8a95b6;
+          color: $sidebar-submenu-item-color;
 
           &:hover,
           &.bp3-active {
             background: transparent;
-            color: #c5cbe3;
+            color: $sidebar-submenu-item-hover-color;
+          }
+
+          &.bp3-active{
+            font-weight: 500;
           }
         }
       }
@@ -127,7 +135,7 @@ $sidebar-popover-submenu-bg: rgb(1, 20, 62);
       color: $sidebar-menu-item-color;
     }
     .#{$ns}-menu-divider {
-      border-top-color: rgba(255, 255, 255, 0.15);
+      border-top-color: rgba(255, 255, 255, 0.125);
       color: #6b708c;
       margin: 4px 0;
     }

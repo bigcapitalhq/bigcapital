@@ -53,7 +53,7 @@ function DynamicFilterValueField({
   const [localValue, setLocalValue] = useState();
 
   const fetchResourceData = useQuery(
-    resourceName && ['resource-data', resourceName],
+    ['resource-data', resourceName && resourceName],
     (k, resName) => requestResourceData(resName),
     { manual: true },
   );

@@ -1,9 +1,10 @@
 import { createSelector } from 'reselect';
-import { pickItemsFromIds } from 'store/selectors';
+import { pickItemsFromIds, getItemById } from 'store/selectors';
 
 const accountsViewsSelector = (state) => state.accounts.views;
 const accountsDataSelector = (state) => state.accounts.items;
 const accountsCurrentViewSelector = (state) => state.accounts.currentViewId;
+const accountIdPropSelector = (state, props) => props.accountId;
 
 export const getAccountsItems = createSelector(
   accountsViewsSelector,
@@ -16,4 +17,12 @@ export const getAccountsItems = createSelector(
       ? pickItemsFromIds(accountsItems, accountsView.ids) || []
       : [];
   },
+);
+
+export const getAccountById = createSelector(
+  accountsDataSelector,
+  accountIdPropSelector,
+  (accountsItems, accountId) => {
+    return getItemById(accountsItems, accountId);
+  }
 );

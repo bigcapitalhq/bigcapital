@@ -43,8 +43,6 @@ function ManualJournalsTable({
   requestPublishManualJournal,
   requestDeleteBulkManualJournals,
   addManualJournalsTableQueries,
-
-  addQuery,
 }) {
   const history = useHistory();
 
@@ -54,18 +52,19 @@ function ManualJournalsTable({
 
   const { formatMessage } = useIntl();
 
-  const fetchViews = useQuery('manual-journals-resource-views', () => {
-    return requestFetchResourceViews('manual_journals');
-  });
+  const fetchResourceViews = useQuery(
+    ['resource-views', 'manual-journals'],
+    () => requestFetchResourceViews('manual_journals'),
+  );
 
   const fetchResourceFields = useQuery(
-    'manual-journals-resource-fields',
+    ['resource-fields', 'manual-journals'],
     () => requestFetchResourceFields('manual_journals'),
   );
 
   const fetchManualJournals = useQuery(
     ['manual-journals-table', manualJournalsTableQuery],
-    (key, q) => requestFetchManualJournalsTable(q),
+    (key, q) => requestFetchManualJournalsTable(),
   );
 
   useEffect(() => {
@@ -198,7 +197,7 @@ function ManualJournalsTable({
 
   return (
     <DashboardInsider
-      loading={fetchViews.isFetching || fetchResourceFields.isFetching}
+      loading={fetchResourceViews.isFetching || fetchResourceFields.isFetching}
       name={'manual-journals'}
     >
       <ManualJournalsActionsBar
