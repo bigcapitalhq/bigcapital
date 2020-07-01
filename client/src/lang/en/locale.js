@@ -8,7 +8,7 @@ export const locale = {
     notType: ({ path, type, value, originalValue }) => {
       let isCast = originalValue != null && originalValue !== value;
       let msg =
-        `${path} must beeeeee a \`${type}\` type, ` +
+        `${path} must be a \`${type}\` type, ` +
         `but the final value was: \`${printValue(value, true)}\`` +
         (isCast
           ? ` (cast from the value \`${printValue(originalValue, true)}\`).`

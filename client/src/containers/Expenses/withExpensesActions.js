@@ -10,7 +10,7 @@ import {
 } from 'store/expenses/expenses.actions';
 import t from 'store/types';
 
-export const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch) => ({
   requestSubmitExpense: (form) => dispatch(submitExpense({ form })),
   requestFetchExpense: (id) => dispatch(fetchExpense({ id })),
   requestEditExpense: (id, form) => dispatch(editExpense({ id, form })),

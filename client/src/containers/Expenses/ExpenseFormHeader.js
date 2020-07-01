@@ -28,6 +28,7 @@ function ExpenseFormHeader({
   formik: { errors, touched, setFieldValue, getFieldProps, values },
   currenciesList,
   accounts,
+  accountsTypes,
 }) {
   const [selectedItems, setSelectedItems] = useState({});
 
@@ -102,7 +103,6 @@ function ExpenseFormHeader({
   const onItemsSelect = useCallback(
     (filedName) => {
       return (filed) => {
-        // @todo @mohamed
         setSelectedItems({
           ...selectedItems,
           [filedName]: filed,
@@ -256,8 +256,9 @@ function ExpenseFormHeader({
 }
 
 export default compose(
-  withAccounts(({ accounts }) => ({
+  withAccounts(({ accounts, accountsTypes }) => ({
     accounts,
+    accountsTypes,
   })),
   withCurrencies(({ currenciesList }) => ({
     currenciesList,

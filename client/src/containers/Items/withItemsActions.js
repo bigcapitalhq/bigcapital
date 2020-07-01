@@ -1,6 +1,7 @@
 import {connect} from 'react-redux';
 import {
   fetchItems,
+  fetchItem,
   deleteItem,
   submitItem,
   editItem,
@@ -10,6 +11,7 @@ import t from 'store/types';
 
 export const mapDispatchToProps = (dispatch) => ({
   requestFetchItems: (query) => dispatch(fetchItems({ query })),
+  requestFetchItem: (id) => dispatch(fetchItem({ id })),
   requestDeleteItem: (id) => dispatch(deleteItem({ id })),
   requestDeleteBulkItems:(ids)=>dispatch(deleteBulkItems({ids})),
   requestSubmitItem: (form) => dispatch(submitItem({ form })),

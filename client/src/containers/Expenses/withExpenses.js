@@ -14,7 +14,6 @@ export default (mapState) => {
   const mapStateToProps = (state, props) => {
     const query = getExpensesTableQuery(state, props);
 
-
     const mapped = {
       expensesCurrentPage: getExpensesItems(state, props, query),
       expensesViews: getResourceViews(state, props, 'expenses'),

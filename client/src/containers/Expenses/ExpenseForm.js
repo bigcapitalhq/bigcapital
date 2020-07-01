@@ -11,15 +11,13 @@ import moment from 'moment';
 import { Intent, FormGroup, TextArea } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { pick } from 'lodash';
-import { useQuery } from 'react-query';
-import { Col, Row } from 'react-grid-system';
 
 import ExpenseFormHeader from './ExpenseFormHeader';
 import ExpenseTable from './ExpenseTable';
 import ExpenseFloatingFooter from './ExpenseFooter';
 
 import withExpensesActions from 'containers/Expenses/withExpensesActions';
-import withExpneseDetail from 'containers/Expenses/withExpenseDetail';
+import withExpenseDetail from 'containers/Expenses/withExpenseDetail';
 import withAccountsActions from 'containers/Accounts/withAccountsActions';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withMediaActions from 'containers/Media/withMediaActions';
@@ -44,13 +42,14 @@ function ExpenseForm({
   changePageSubtitle,
 
   //#withExpenseDetail
-  // @todo expenseDetail to expense
-  expenseDetail,
+  expense,
 
   // #own Props
   expenseId,
   onFormSubmit,
   onCancelForm,
+  onClickAddNewRow,
+  onClickRemoveRow,
 }) {
   const { formatMessage } = useIntl();
   const [payload, setPayload] = useState({});
@@ -75,18 +74,17 @@ function ExpenseForm({
   };
 
   useEffect(() => {
-    if (expenseDetail && expenseDetail.id) {
+    if (expense && expense.id) {
       changePageTitle(formatMessage({ id: 'edit_expense' }));
       // changePageSubtitle(`No. ${expenseDetail.payment_account_id}`);
     } else {
       changePageTitle(formatMessage({ id: 'new_expense' }));
     }
     // @todo not functions just states.
-  }, [changePageTitle, changePageSubtitle, expenseDetail, formatMessage]);
+  }, [changePageTitle, changePageSubtitle, expense, formatMessage]);
 
   const validationSchema = Yup.object().shape({
     beneficiary: Yup.string()
-      // .required()
       .label(formatMessage({ id: 'beneficiary' })),
     payment_account_id: Yup.string()
       .required()
@@ -104,8 +102,12 @@ function ExpenseForm({
       Yup.object().shape({
         index: Yup.number().nullable(),
         amount: Yup.number().nullable(),
-        // @todo expense_account_id is required.
-        expense_account_id: Yup.number().nullable(),
+        expense_account_id: Yup.number()
+          .nullable()
+          .when(['amount'], {
+            is: (amount) => amount,
+            then: Yup.number().required(),
+          }),
         description: Yup.string().nullable(),
       }),
     ),
@@ -115,6 +117,7 @@ function ExpenseForm({
     (payload) => {
       onFormSubmit && onFormSubmit(payload);
     },
+
     [onFormSubmit],
   );
 
@@ -146,32 +149,41 @@ function ExpenseForm({
     [defaultCategory],
   );
 
+  const orderingCategoriesIndex = (categories) => {
+    return categories.map((category, index) => ({
+      ...category,
+      index: index + 1,
+    }));
+  };
+
   const initialValues = useMemo(
     () => ({
-      ...(expenseDetail
+      ...(expense
         ? {
-            ...pick(expenseDetail, Object.keys(defaultInitialValues)),
-            categories: expenseDetail.categories.map((category) => ({
+            ...pick(expense, Object.keys(defaultInitialValues)),
+            categories: expense.categories.map((category) => ({
               ...pick(category, Object.keys(defaultCategory)),
-              }),
-            ),
+            })),
           }
         : {
             ...defaultInitialValues,
+            categories: orderingCategoriesIndex(
+              defaultInitialValues.categories,
+            ),
           }),
     }),
-    [expenseDetail, defaultInitialValues, defaultCategory],
+    [expense, defaultInitialValues, defaultCategory],
   );
 
   const initialAttachmentFiles = useMemo(() => {
-    return expenseDetail && expenseDetail.media
-      ? expenseDetail.media.map((attach) => ({
+    return expense && expense.media
+      ? expense.media.map((attach) => ({
           preview: attach.attachment_file,
           uploaded: true,
           metadata: { ...attach },
         }))
       : [];
-  }, [expenseDetail]);
+  }, [expense]);
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -181,11 +193,12 @@ function ExpenseForm({
     },
     onSubmit: async (values, { setSubmitting, setErrors, resetForm }) => {
       const categories = values.categories.filter(
-        (category) => category.amount || category.index,
+        (category) =>
+          category.amount && category.index && category.expense_account_id,
       );
       const form = {
         ...values,
-        published: payload.publish,
+        publish: payload.publish,
         categories,
       };
 
@@ -193,8 +206,8 @@ function ExpenseForm({
         new Promise((resolve, reject) => {
           const requestForm = { ...form, media_ids: mdeiaIds };
 
-          if (expenseDetail && expenseDetail.id) {
-            requestEditExpense(expenseDetail.id, requestForm)
+          if (expense && expense.id) {
+            requestEditExpense(expense.id, requestForm)
               .then((response) => {
                 AppToaster.show({
                   message: formatMessage(
@@ -207,10 +220,8 @@ function ExpenseForm({
                 saveInvokeSubmit({ action: 'update', ...payload });
                 clearSavedMediaIds([]);
                 resetForm();
-                resolve(response);
               })
               .catch((errors) => {
-                // @todo handle errors.
                 if (errors.find((e) => e.type === 'TOTAL.AMOUNT.EQUALS.ZERO')) {
                 }
                 setErrors(
@@ -234,10 +245,11 @@ function ExpenseForm({
                   intent: Intent.SUCCESS,
                 });
                 setSubmitting(false);
+                formik.resetForm();
                 saveInvokeSubmit({ action: 'new', ...payload });
                 clearSavedMediaIds();
-                resetForm();
-                resolve(response);
+
+                // resolve(response);
               })
               .catch((errors) => {
                 setSubmitting(false);
@@ -260,6 +272,7 @@ function ExpenseForm({
   const handleSubmitClick = useCallback(
     (payload) => {
       setPayload(payload);
+      formik.resetForm();
       formik.handleSubmit();
     },
     [setPayload, formik],
@@ -313,13 +326,13 @@ function ExpenseForm({
             hint={'Attachments: Maxiumum size: 20MB'}
           />
         </div>
-
-        <ExpenseFloatingFooter
-          formik={formik}
-          onSubmitClick={handleSubmitClick}
-          onCancelClick={handleCancelClick}
-        />
       </form>
+      <ExpenseFloatingFooter
+        formik={formik}
+        onSubmitClick={handleSubmitClick}
+        expense={expense}
+        onCancelClick={handleCancelClick}
+      />
     </div>
   );
 }
@@ -329,5 +342,5 @@ export default compose(
   withAccountsActions,
   withDashboardActions,
   withMediaActions,
-  withExpneseDetail(),
+  withExpenseDetail(),
 )(ExpenseForm);

@@ -1,5 +1,5 @@
-import React, {useCallback } from 'react';
-import { useParams,useHistory } from 'react-router-dom';
+import React, { useCallback } from 'react';
+import { useParams, useHistory } from 'react-router-dom';
 import { useQuery } from 'react-query';
 
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
@@ -12,7 +12,6 @@ import withItemsActions from './withItemsActions';
 
 import { compose } from 'utils';
 
-
 const ItemFormContainer = ({
   // #withDashboardActions
   changePageTitle,
@@ -22,6 +21,7 @@ const ItemFormContainer = ({
 
   // #withItemsActions
   requestFetchItems,
+  requestFetchItem,
 
   // #withItemCategoriesActions
   requestFetchItemCategories,
@@ -29,35 +29,47 @@ const ItemFormContainer = ({
   const { id } = useParams();
   const history = useHistory();
 
-  const fetchAccounts = useQuery('accounts-list',
-    (key) => requestFetchAccounts());
+  const fetchAccounts = useQuery('accounts-list', (key) =>
+    requestFetchAccounts(),
+  );
 
-  const fetchCategories = useQuery('item-categories-list',
-    (key) => requestFetchItemCategories());
+  const fetchCategories = useQuery('item-categories-list', (key) =>
+    requestFetchItemCategories(),
+  );
 
- const fetchItemDetail = useQuery(
-  id && ['item-detail-list', id],
-  (key) => requestFetchItems());
+  const fetchItemDetail = useQuery(
+    ['item', id],
+    (key, _id) => requestFetchItem(_id),
+    {
+      enabled: !!id,
+    },
+  );
 
-const handleFormSubmit =useCallback((payload)=>{
+  const handleFormSubmit = useCallback(
+    (payload) => {
+      payload.redirect && history.push('/items');
+    },
+    [history],
+  );
 
-  payload.redirect && history.push('/items/new');
-
-},[history]) 
-
-const handleCancel =useCallback(()=>{
-
-  history.push('/items/new');
-},[history])
+  const handleCancel = useCallback(() => {
+    // history.push('/items');
+    history.goBack();
+  }, [history]);
 
   return (
     <DashboardInsider
-      loading={fetchItemDetail.isFetching || fetchAccounts.isFetching || fetchCategories.isFetching }
-      name={'item-form'}>
-      <ItemForm 
-      itemId={id} 
-      onFormSubmit={handleFormSubmit}
-      onCancelForm={handleCancel}
+      loading={
+        fetchItemDetail.isFetching ||
+        fetchAccounts.isFetching ||
+        fetchCategories.isFetching
+      }
+      name={'item-form'}
+    >
+      <ItemForm
+        onFormSubmit={handleFormSubmit}
+        itemId={id}
+        onCancelForm={handleCancel}
       />
     </DashboardInsider>
   );
@@ -67,5 +79,5 @@ export default compose(
   withDashboardActions,
   withAccountsActions,
   withItemCategoriesActions,
-  withItemsActions
+  withItemsActions,
 )(ItemFormContainer);

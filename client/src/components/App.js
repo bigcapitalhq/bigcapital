@@ -18,7 +18,7 @@ function App({ locale }) {
 
   const queryConfig = {
     queries: {
-      refetchOnWindowFocus: true,
+      refetchOnWindowFocus: false,
     }
   };
   return (

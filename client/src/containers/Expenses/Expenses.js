@@ -14,6 +14,7 @@ import { compose } from 'utils';
 function Expenses({
   // #withwithAccountsActions
   requestFetchAccounts,
+  requestFetchAccountTypes,
 
   // #withExpensesActions
   requestFetchExpense,
@@ -24,18 +25,17 @@ function Expenses({
   const history = useHistory();
   const { id } = useParams();
 
-  // @todo
-  const fetchAccounts = useQuery('accounts-expense-list', (key) =>
+  const fetchAccounts = useQuery('accounts-list', (key) =>
     requestFetchAccounts(),
   );
 
-  // @todo
-  const fetchExpense = useQuery(id && ['expense', id], (key, expense_Id) =>
-    requestFetchExpense(expense_Id),
+  const fetchExpense = useQuery(
+    ['expense', id],
+    (key, _id) => requestFetchExpense(_id),
+    { enabled: !!id },
   );
 
-  // @todo
-  const fetchCurrencies = useQuery('currencies-expense-list', () =>
+  const fetchCurrencies = useQuery('currencies', () =>
     requestFetchCurrencies(),
   );
   const handleFormSubmit = useCallback(
@@ -46,7 +46,7 @@ function Expenses({
   );
 
   const handleCancel = useCallback(() => {
-    history.push('/expenses-list');
+    history.goBack();
   }, [history]);
 
   return (
@@ -56,6 +56,7 @@ function Expenses({
         fetchAccounts.isFetching ||
         fetchCurrencies.isFetching
       }
+      name={'expense-form'}
     >
       <ExpenseForm
         onFormSubmit={handleFormSubmit}

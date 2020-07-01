@@ -137,21 +137,21 @@ function CustomersList({
     [fetchCustomers],
   );
 
-  // Handle items bulk delete button click.,
+  // Handle Customers bulk delete button click.,
 
   const handleBulkDelete = useCallback(
-    (itemsIds) => {
-      setBulkDelete(itemsIds);
+    (customersIds) => {
+      setBulkDelete(customersIds);
     },
     [setBulkDelete],
   );
 
-  // Handle cancel accounts bulk delete.
+  // Handle cancel cusomters bulk delete.
   const handleCancelBulkDelete = useCallback(() => {
     setBulkDelete(false);
   }, []);
 
-  // Handle confirm items bulk delete.
+  // Handle confirm customers bulk delete.
   const handleConfirmBulkDelete = useCallback(() => {
     requestDeleteBulkCustomers(bulkDelete)
       .then(() => {
@@ -163,7 +163,7 @@ function CustomersList({
           intent: Intent.SUCCESS,
         });
       })
-      .catch((errors) => {
+      .catch((error) => {
         setBulkDelete(false);
       });
   }, [requestDeleteBulkCustomers, bulkDelete, formatMessage]);

@@ -96,11 +96,11 @@ const withExpensesViewTabs = connect(mapStateToProps);
 
 export default compose(
   withRouter,
-  withViewDetails(),
   withExpensesViewTabs,
+  withExpensesActions,
+  withDashboardActions,
+  withViewDetails(),
   withExpenses(({ expensesViews }) => ({
     expensesViews,
   })),
-  withExpensesActions,
-  withDashboardActions,
 )(ExpenseViewTabs);

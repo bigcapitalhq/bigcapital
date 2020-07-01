@@ -19,7 +19,6 @@ import withViewsActions from 'containers/Views/withViewsActions';
 
 import { compose } from 'utils';
 
-
 function ExpensesList({
   // #withDashboardActions
   changePageTitle,
@@ -223,7 +222,7 @@ function ExpensesList({
           </p>
         </Alert>
 
-        {/* <Alert
+        <Alert
           cancelButtonText={<T id={'cancel'} />}
           confirmButtonText={
             <T id={'delete_count'} values={{ count: selectedRowsCount }} />
@@ -236,10 +235,10 @@ function ExpensesList({
         >
           <p>
             <T
-              id={'once_delete_these_journalss_you_will_not_able_restore_them'}
+              id={'once_delete_these_expenses_you_will_not_able_restore_them'}
             />
           </p>
-        </Alert> */}
+        </Alert>
       </DashboardPageContent>
     </DashboardInsider>
   );
@@ -248,7 +247,7 @@ function ExpensesList({
 export default compose(
   withDashboardActions,
   withExpensesActions,
-  withExpenses(({ expensesTableQuery }) => ({ expensesTableQuery })),
   withViewsActions,
-  withResourceActions
+  withResourceActions,
+  withExpenses(({ expensesTableQuery }) => ({ expensesTableQuery })),
 )(ExpensesList);

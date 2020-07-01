@@ -41,15 +41,20 @@ function ExpenseTable({
     (rowIndex, columnId, value) => {
       const newRows = rows.map((row, index) => {
         if (index === rowIndex) {
-          return { ...rows[rowIndex], [columnId]: value };
+          return {
+            ...rows[rowIndex],
+            [columnId]: value,
+          };
         }
         return { ...row };
       });
       setRow(newRows);
       setFieldValue(
         'categories',
-        newRows.map((row) => ({
+
+        newRows.map((row, index) => ({
           ...omit(row, ['rowType']),
+          index: index + 1,
         })),
       );
     },
@@ -60,15 +65,28 @@ function ExpenseTable({
   const handleRemoveRow = useCallback(
     (rowIndex) => {
       const removeIndex = parseInt(rowIndex, 10);
-      const newRows = rows.filter((row, index) => index !== removeIndex);
 
+      const newRows = rows.filter((row, index) => index !== removeIndex);
       setRow([...newRows]);
+
       setFieldValue(
         'categories',
+
         newRows
           .filter((row) => row.rowType === 'editor')
-          .map((row) => ({ ...omit(row, ['rowType']) })),
+          .map((row, index) => ({
+            ...omit(row, ['rowType']),
+            index: index + 1,
+          })),
       );
+      // const newRows = rows.filter((row, index) => index !== removeIndex);
+      // setRow([...newRows]);
+      // setFieldValue(
+      //   'categories',
+      //   newRows
+      //     .filter((row) => row.rowType === 'editor')
+      //     .map((row) => ({ ...omit(row, ['rowType']) })),
+      // );
       onClickRemoveRow && onClickRemoveRow(removeIndex);
     },
     [rows, setFieldValue, onClickRemoveRow],
@@ -82,7 +100,7 @@ function ExpenseTable({
     data,
     payload,
   }) => {
-    if (data.length <= index + 2) {
+    if (data.length <= index + 1) {
       return '';
     }
     const onClickRemoveRole = () => {
@@ -104,7 +122,7 @@ function ExpenseTable({
 
   // Total text cell renderer.
   const TotalExpenseCellRenderer = (chainedComponent) => (props) => {
-    if (props.data.length === props.row.index + 2) {
+    if (props.data.length <= props.row.index + 1) {
       return (
         <span>
           {formatMessage({ id: 'total_currency' }, { currency: 'USD' })}
@@ -115,14 +133,14 @@ function ExpenseTable({
   };
 
   const NoteCellRenderer = (chainedComponent) => (props) => {
-    if (props.data.length === props.row.index + 2) {
+    if (props.data.length === props.row.index + 1) {
       return '';
     }
     return chainedComponent(props);
   };
 
   const TotalAmountCellRenderer = (chainedComponent, type) => (props) => {
-    if (props.data.length === props.row.index + 2) {
+    if (props.data.length === props.row.index + 1) {
       const total = props.data.reduce((total, entry) => {
         const amount = parseInt(entry[type], 10);
         const computed = amount ? total + amount : total;
@@ -147,7 +165,12 @@ function ExpenseTable({
         disableSortBy: true,
       },
       {
-        Header: (<>{ formatMessage({ id: 'expense_category' }) }<Hint /></>),
+        Header: (
+          <>
+            {formatMessage({ id: 'expense_category' })}
+            <Hint />
+          </>
+        ),
         id: 'expense_account_id',
         accessor: 'expense_account_id',
         Cell: TotalExpenseCellRenderer(AccountsListFieldCell),
@@ -193,7 +216,7 @@ function ExpenseTable({
 
   const rowClassNames = useCallback(
     (row) => ({
-      'row--total': rows.length === row.index + 2,
+      'row--total': rows.length === row.index + 1,
     }),
     [rows],
   );
