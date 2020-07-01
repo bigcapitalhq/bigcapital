@@ -447,6 +447,7 @@ export default {
   as_date: 'As Date',
   aging_before_days: 'Aging before days',
   aging_periods: 'Aging periods',
+  name_:'name',
   as: 'As',
   receivable_aging_summary: 'Receivable Aging Summary',
   customers: 'Customers',
@@ -457,7 +458,7 @@ export default {
   customer_type: 'Customer Type',
   business: 'business',
   individual: 'Individual',
-  display_name:'Display Name',
+  display_name: 'Display Name',
   the_customer_has_been_successfully_created:
     'The customer has been successfully created.',
   select_contact: 'Select contact',
@@ -470,7 +471,8 @@ export default {
   all_reports: 'All Reports',
   next: 'Next',
   previous: 'Previous',
-  showing_current_page_to_total: 'Showing {currentPage} to {totalPages} of {total} entries',
+  showing_current_page_to_total:
+    'Showing {currentPage} to {totalPages} of {total} entries',
   new_child_account: 'New Child Account',
   display_name: 'Display Name',
   contact_name: 'Contact Name',
@@ -489,14 +491,14 @@ export default {
   shipping_address: 'Shipping Address',
   customers_list: 'Customers List',
   edit_customer_details: 'Edit Customer Details',
-  receivable_balance:'Receivable balance',
+  receivable_balance: 'Receivable balance',
   the_customer_has_been_successfully_created:
     'The customer has been successfully created.',
   the_customer_has_been_successfully_deleted:
     'The customer has been successfully deleted.',
   the_customers_has_been_successfully_deleted:
     'The customers have been successfully deleted.',
-    the_item_customer_has_been_successfully_edited:
+  the_item_customer_has_been_successfully_edited:
     'The item customer has been successfully edited.',
   once_delete_this_customer_you_will_able_to_restore_it: `Once you delete this customer, you won\'t be able to restore it later. Are you sure you want to delete this cusomter?`,
   once_delete_these_customers_you_will_not_able_restore_them:
@@ -510,4 +512,5 @@ export default {
   create_a_new_view: 'Create a new view',
   in: 'In',
   not_equals: 'Not Equals',
+  logic_expression: 'logic expression ',
 };

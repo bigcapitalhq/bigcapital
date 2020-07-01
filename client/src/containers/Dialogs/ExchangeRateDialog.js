@@ -67,8 +67,10 @@ function ExchangeRateDialog({
     [],
   );
 
-  const fetchExchangeRatesDialog = useQuery('exchange-rates-dialog', () =>
-    requestFetchExchangeRates(),
+  const fetchExchangeRatesDialog = useQuery(
+    'exchange-rates-dialog',
+    () => requestFetchExchangeRates(),
+    { manual: true },
   );
 
   const {

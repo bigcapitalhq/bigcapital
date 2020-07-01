@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { Alert, Intent } from '@blueprintjs/core';
-import { useQuery } from 'react-query';
+import { useQuery, queryCache } from 'react-query';
 import {
   FormattedMessage as T,
   FormattedHTMLMessage,
@@ -136,16 +136,22 @@ function AccountsChart({
   }, []);
 
   // Handle confirm account activation.
+
   const handleConfirmAccountActive = useCallback(() => {
-    requestInactiveAccount(inactiveAccount.id).then(() => {
-      setInactiveAccount(false);
-      AppToaster.show({
-        message: formatMessage({
-          id: 'the_account_has_been_successfully_inactivated',
-        }),
-        intent: Intent.SUCCESS,
+    requestInactiveAccount(inactiveAccount.id)
+      .then(() => {
+        setInactiveAccount(false);
+        AppToaster.show({
+          message: formatMessage({
+            id: 'the_account_has_been_successfully_inactivated',
+          }),
+          intent: Intent.SUCCESS,
+        });
+        queryCache.refetchQueries('accounts-table', { force: true });
+      })
+      .catch((error) => {
+        setInactiveAccount(false);
       });
-    });
   }, [inactiveAccount, requestInactiveAccount, formatMessage]);
 
   // Handle activate account click.
@@ -160,16 +166,21 @@ function AccountsChart({
 
   // Handle activate account confirm.
   const handleConfirmAccountActivate = useCallback(() => {
-    requestActivateAccount(activateAccount.id).then(() => {
-      setActivateAccount(false);
-      AppToaster.show({
-        message: formatMessage({
-          id: 'the_account_has_been_successfully_activated',
-        }),
-        intent: Intent.SUCCESS,
+    requestActivateAccount(activateAccount.id)
+      .then(() => {
+        setActivateAccount(false);
+        AppToaster.show({
+          message: formatMessage({
+            id: 'the_account_has_been_successfully_activated',
+          }),
+          intent: Intent.SUCCESS,
+        });
+        queryCache.refetchQueries('accounts-table', { force: true });
+      })
+      .catch((error) => {
+        setActivateAccount(false);
       });
-    });
-  });
+  }, [activateAccount, requestActivateAccount, formatMessage]);
 
   const handleRestoreAccount = (account) => {};
 
@@ -341,7 +352,6 @@ function AccountsChart({
               onEditAccount={handleEditAccount}
               onFetchData={handleFetchData}
               onSelectedRowsChange={handleSelectedRowsChange}
-        
             />
           </Route>
         </Switch>

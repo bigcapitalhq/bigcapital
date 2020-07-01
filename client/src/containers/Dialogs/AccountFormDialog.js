@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Button,
   Classes,
@@ -13,7 +13,7 @@ import {
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { FormattedMessage as T, useIntl } from 'react-intl';
-
+import { If } from 'components';
 import { omit, pick } from 'lodash';
 import { useQuery, queryCache } from 'react-query';
 
@@ -59,14 +59,16 @@ function AccountFormDialog({
       .nullable()
       .required()
       .label(formatMessage({ id: 'account_type_id' })),
-    description: Yup.string().trim(),
+    description: Yup.string().nullable().trim(),
+    // parent_account_id: Yup.string().nullable(),
   });
-
   const initialValues = useMemo(
     () => ({
       account_type_id: null,
       name: '',
       description: '',
+      code: '',
+      type: '',
     }),
     [],
   );
@@ -92,7 +94,11 @@ function AccountFormDialog({
   } = useFormik({
     enableReinitialize: true,
     initialValues: {
-      ...(payload.action === 'edit' && account ? account : initialValues),
+      // ...initialValues,
+      // ...(payload.action === 'edit' && account ? account : initialValues),
+
+      ...(payload.action === 'edit' &&
+        pick(account, Object.keys(initialValues))),
     },
     validationSchema: accountFormValidationSchema,
     onSubmit: (values, { setSubmitting, setErrors }) => {
@@ -102,21 +108,11 @@ function AccountFormDialog({
         : values.name;
 
       if (payload.action === 'edit') {
-        requestEditAccount({
-          payload: payload.id,
-          // form: { ...omit(values, [...exclude, 'account_type_id']) },
-          form: {
-            ...pick(values, [
-              ...exclude,
-              'account_type_id',
-              'name',
-              'description',
-            ]),
-          },
-        })
+        requestEditAccount(payload.id, values)
           .then((response) => {
-            closeDialog(name);
             queryCache.refetchQueries('accounts-table', { force: true });
+
+            closeDialog(name);
 
             AppToaster.show({
               message: formatMessage(
@@ -135,7 +131,10 @@ function AccountFormDialog({
             setSubmitting(false);
           });
       } else {
-        requestSubmitAccount({ form: { ...omit(values, exclude) } })
+        requestSubmitAccount({
+          payload: payload.parent_account_id,
+          form: { ...omit(values, exclude) },
+        })
           .then((response) => {
             closeDialog(name);
             queryCache.refetchQueries('accounts-table', { force: true });
@@ -161,6 +160,9 @@ function AccountFormDialog({
     },
   });
 
+  const handlechange = useCallback((newChecked) => {
+    setChecked(newChecked);
+  }, []);
   // Filtered accounts based on the given account type.
   const filteredAccounts = useMemo(
     () =>
@@ -190,7 +192,12 @@ function AccountFormDialog({
   // Account item of select accounts field.
   const accountItem = (item, { handleClick, modifiers, query }) => {
     return (
-      <MenuItem text={item.name} label={item.code} key={item.id} onClick={handleClick} />
+      <MenuItem
+        text={item.name}
+        label={item.code}
+        key={item.id}
+        onClick={handleClick}
+      />
     );
   };
 
@@ -210,6 +217,8 @@ function AccountFormDialog({
     },
     [],
   );
+
+  console.log(values, 'Values');
 
   // Handles dialog close.
   const handleClose = useCallback(() => {
@@ -234,7 +243,15 @@ function AccountFormDialog({
 
   // Fetch the given account id on edit mode.
   const fetchAccount = useQuery(
-    payload.action === 'edit' && ['account', payload.id],
+    (payload.action === 'edit' && ['account', payload.id]) ||
+      (payload.action === 'new_child' && ['account', payload.parentAccountId]),
+    // payload.action === 'new_child' ||
+    //   (payload.action === 'edit' && [
+    //     'account',
+
+    //     payload.id,
+    //     payload.parentAccountId,
+    //   ]),
     (key, id) => requestFetchAccount(id),
     { manual: true },
   );
@@ -249,6 +266,13 @@ function AccountFormDialog({
     fetchAccountsList.refetch();
     fetchAccountsTypes.refetch();
     fetchAccount.refetch();
+
+    if (payload.action === 'new_child') {
+      // sub account checkbox should be equal true.
+      setFieldValue('subaccount', payload.subaccount);
+      setFieldValue('parent_account_id', payload.parentAccountId);
+      setFieldValue('account_type_id', payload.accountTypeId);
+    }
   }, [fetchAccount, fetchAccountsList, fetchAccountsTypes]);
 
   const onChangeAccountType = useCallback(
@@ -376,10 +400,11 @@ function AccountFormDialog({
               inline={true}
               label={subAccountLabel}
               {...getFieldProps('subaccount')}
+              checked={values.subaccount}
             />
           </FormGroup>
-
-          {values.subaccount && (
+          <If condition={values.subaccount}>
+            {/* {values.subaccount && ( */}
             <FormGroup
               label={<T id={'parent_account'} />}
               className={classNames(
@@ -402,8 +427,8 @@ function AccountFormDialog({
                 labelProp={'name'}
               />
             </FormGroup>
-          )}
-
+            {/* )} */}
+          </If>
           <FormGroup
             label={<T id={'description'} />}
             className={'form-group--description'}

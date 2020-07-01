@@ -9,7 +9,6 @@ import withAccounts from 'containers/Accounts/withAccounts';
 
 export const mapStateToProps = (state, props) => {
   const dialogPayload = getDialogPayload(state, 'account-form');
-
   return {
     name: 'account-form',
     payload: { action: 'new', id: null, ...dialogPayload },
