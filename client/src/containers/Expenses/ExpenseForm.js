@@ -26,7 +26,7 @@ import AppToaster from 'components/AppToaster';
 import Dragzone from 'components/Dragzone';
 
 import useMedia from 'hooks/useMedia';
-import { compose } from 'utils';
+import { compose, repeatValue } from 'utils';
 
 function ExpenseForm({
   // #withMedia
@@ -135,10 +135,7 @@ function ExpenseForm({
       reference_no: '',
       currency_code: '',
       categories: [
-        defaultCategory,
-        defaultCategory,
-        defaultCategory,
-        defaultCategory,
+        ...repeatValue(defaultCategory, 4),
       ],
     }),
     [defaultCategory],
@@ -267,7 +264,7 @@ function ExpenseForm({
   const handleSubmitClick = useCallback(
     (payload) => {
       setPayload(payload);
-      formik.resetForm();
+      formik.submitForm();
     },
     [setPayload, formik],
   );
@@ -301,7 +298,9 @@ function ExpenseForm({
   const handleClearAllLines = () => {
     formik.setFieldValue(
       'categories',
-      orderingCategoriesIndex([defaultCategory, defaultCategory, defaultCategory, defaultCategory]),
+      orderingCategoriesIndex([
+        ...repeatValue(defaultCategory, 4),
+      ]),
     );  
   }
 
