@@ -63,7 +63,7 @@ function AccountFormDialog({
       .required()
       .label(formatMessage({ id: 'account_type_id' })),
     description: Yup.string().nullable().trim(),
-    // parent_account_id: Yup.string().nullable(),
+    parent_account_id: Yup.string().nullable(),
   });
   const initialValues = useMemo(
     () => ({
@@ -97,11 +97,8 @@ function AccountFormDialog({
   } = useFormik({
     enableReinitialize: true,
     initialValues: {
-      // ...initialValues,
-      // ...(payload.action === 'edit' && account ? account : initialValues),
-
-      ...(payload.action === 'edit' &&
-        pick(account, Object.keys(initialValues))),
+      ...initialValues,
+      ...(payload.action === 'edit' && pick(account, Object.keys(initialValues))),
     },
     validationSchema: accountFormValidationSchema,
     onSubmit: (values, { setSubmitting, setErrors }) => {
@@ -114,7 +111,7 @@ function AccountFormDialog({
         requestEditAccount(payload.id, values)
           .then((response) => {
             closeDialog(dialogName);
-            queryCache.invalidateQueries('accounts-table', { force: true });
+            queryCache.invalidateQueries('accounts-table');
 
             AppToaster.show({
               message: formatMessage(
@@ -154,7 +151,6 @@ function AccountFormDialog({
             });
           })
           .catch((errors) => {
-            debugger;
             const errorsTransformed = transformApiErrors(errors);
             setErrors({ ...errorsTransformed });
             setSubmitting(false);

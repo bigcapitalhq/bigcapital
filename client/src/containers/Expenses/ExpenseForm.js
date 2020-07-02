@@ -267,7 +267,7 @@ function ExpenseForm({
   const handleSubmitClick = useCallback(
     (payload) => {
       setPayload(payload);
-      formik.handleSubmit();
+      formik.resetForm();
     },
     [setPayload, formik],
   );
@@ -290,13 +290,30 @@ function ExpenseForm({
     [setDeletedFiles, deletedFiles],
   );
 
+  // Handle click on add a new line/row.
+  const handleClickAddNewRow = () => {
+    formik.setFieldValue(
+      'categories',
+      orderingCategoriesIndex([...formik.values.categories, defaultCategory]),
+    );
+  };
+
+  const handleClearAllLines = () => {
+    formik.setFieldValue(
+      'categories',
+      orderingCategoriesIndex([defaultCategory, defaultCategory, defaultCategory, defaultCategory]),
+    );  
+  }
+
   return (
-    <div className={'dashboard__insider--expense-form'}>
+    <div className={'expense-form'}>
       <form onSubmit={formik.handleSubmit}>
         <ExpenseFormHeader formik={formik} />
 
         <ExpenseTable
-          initialValues={initialValues}
+          categories={formik.values.categories}
+          onClickAddNewRow={handleClickAddNewRow}
+          onClickClearAllLines={handleClearAllLines}
           formik={formik}
           defaultRow={defaultCategory}
         />

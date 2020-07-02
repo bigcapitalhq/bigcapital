@@ -181,7 +181,7 @@ export default {
   you_could_not_delete_predefined_accounts:
     "You could't delete predefined accounts.",
   cannot_delete_account_has_associated_transactions:
-    "you could't not delete account that has associated transactions.",
+    "You could't not delete account that has associated transactions.",
   the_account_has_been_successfully_inactivated:
     'The account has been successfully inactivated.',
   the_account_has_been_successfully_activated:
@@ -527,4 +527,5 @@ export default {
   account_code_hint:
     'A unique code/number for this account (limited to 10 characters)',
   logic_expression: 'logic expression',
+  assign_to_customer: 'Assign to Customer',
 };

@@ -106,6 +106,7 @@ function AccountsChart({
         message: formatMessage({
           id: 'cannot_delete_account_has_associated_transactions',
         }),
+        intent: Intent.DANGER,
       });
     }
   };

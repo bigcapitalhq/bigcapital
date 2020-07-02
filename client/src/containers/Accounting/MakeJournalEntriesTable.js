@@ -6,7 +6,7 @@ import { omit } from 'lodash';
 import DataTable from 'components/DataTable';
 import Icon from 'components/Icon';
 import { Hint } from 'components';
-import { compose, formattedAmount } from 'utils';
+import { compose, formattedAmount, transformUpdatedRows } from 'utils';
 import {
   AccountsListFieldCell,
   MoneyFieldCell,
@@ -15,6 +15,19 @@ import {
 } from 'components/DataTableCells';
 import withAccounts from 'containers/Accounts/withAccounts';
 import withCustomers from 'containers/Customers/withCustomers';
+
+// Contact header cell.
+function ContactHeaderCell() {
+  return (
+    <>
+      <T id={'contact'} />
+      <Hint
+        content={<T id={'contact_column_hint'} />}
+        position={Position.LEFT_BOTTOM}
+      />
+    </>
+  );
+}
 
 // Actions cell renderer.
 const ActionsCellRenderer = ({
@@ -87,64 +100,22 @@ function MakeJournalEntriesTable({
   // #ownPorps
   onClickRemoveRow,
   onClickAddNewRow,
+  onClickClearAllLines,
   defaultRow,
-  initialValues,
-  formik: { errors, values, setFieldValue },
+  values,
+  formik: { errors, setFieldValue },
 }) {
-  const [rows, setRow] = useState([]);
+  const [rows, setRows] = useState([]);
   const { formatMessage } = useIntl();
+
   useEffect(() => {
-    setRow([
-      ...initialValues.entries.map((e) => ({ ...e, rowType: 'editor' })),
-      defaultRow,
-      defaultRow,
-    ]);
-  }, [initialValues, defaultRow]);
+    setRows([...values.entries.map((e) => ({ ...e, rowType: 'editor' }))]);
+  }, [values, setRows]);
 
-  // Handles update datatable data.
-  const handleUpdateData = useCallback(
-    (rowIndex, columnIdOrBulk, value) => {
-      const columnId = typeof columnIdOrBulk !== 'object' 
-        ? columnIdOrBulk : null;
-
-      const updateTable = typeof columnIdOrBulk === 'object'
-        ? columnIdOrBulk : null;
-
-      const newData = updateTable ? updateTable : { [columnId]: value };
-
-      const newRows = rows.map((row, index) => {
-        if (index === rowIndex) {
-          return { ...rows[rowIndex], ...newData };
-        }
-        return { ...row };
-      });
-      setRow(newRows);
-      setFieldValue(
-        'entries',
-        newRows.map((row) => ({
-          ...omit(row, ['rowType']),
-        })),
-      );
-    },
-    [rows, setFieldValue],
-  );
-
-  // Handles click remove datatable row.
-  const handleRemoveRow = useCallback(
-    (rowIndex) => {
-      const removeIndex = parseInt(rowIndex, 10);
-      const newRows = rows.filter((row, index) => index !== removeIndex);
-
-      setRow([...newRows]);
-      setFieldValue(
-        'entries',
-        newRows
-          .filter((row) => row.rowType === 'editor')
-          .map((row) => ({ ...omit(row, ['rowType']) })),
-      );
-      onClickRemoveRow && onClickRemoveRow(removeIndex);
-    },
-    [rows, setFieldValue, onClickRemoveRow],
+  // Final table rows editor rows and total and final blank row.
+  const tableRows = useMemo(
+    () => [...rows, { rowType: 'total' }, { rowType: 'final_space' }],
+    [rows],
   );
 
   // Memorized data table columns.
@@ -189,15 +160,7 @@ function MakeJournalEntriesTable({
         width: 150,
       },
       {
-        Header: (
-          <>
-            <T id={'contact'} />
-            <Hint
-              content={<T id={'contact_column_hint'} />}
-              position={Position.LEFT_BOTTOM}
-            />
-          </>
-        ),
+        Header: ContactHeaderCell,
         id: 'contact_id',
         accessor: 'contact_id',
         Cell: NoteCellRenderer(ContactsListFieldCell),
@@ -228,10 +191,47 @@ function MakeJournalEntriesTable({
 
   // Handles click new line.
   const onClickNewRow = useCallback(() => {
-    setRow([...rows, { ...defaultRow, rowType: 'editor' }]);
     onClickAddNewRow && onClickAddNewRow();
   }, [defaultRow, rows, onClickAddNewRow]);
 
+  // Handles update datatable data.
+  const handleUpdateData = useCallback(
+    (rowIndex, columnIdOrObj, value) => {
+      const newRows = transformUpdatedRows(
+        rows,
+        rowIndex,
+        columnIdOrObj,
+        value,
+      );
+      setFieldValue(
+        'entries',
+        newRows
+          .filter((row) => row.rowType === 'editor')
+          .map((row) => ({
+            ...omit(row, ['rowType']),
+          })),
+      );
+    },
+    [rows, setFieldValue],
+  );
+
+  const handleRemoveRow = useCallback(
+    (rowIndex) => {
+      const removeIndex = parseInt(rowIndex, 10);
+      const newRows = rows.filter((row, index) => index !== removeIndex);
+
+      setFieldValue(
+        'entries',
+        newRows
+          .filter((row) => row.rowType === 'editor')
+          .map((row) => ({ ...omit(row, ['rowType']) })),
+      );
+      onClickRemoveRow && onClickRemoveRow(removeIndex);
+    },
+    [rows, setFieldValue, onClickRemoveRow],
+  );
+
+  // Rows class names callback.
   const rowClassNames = useCallback(
     (row) => ({
       'row--total': rows.length === row.index + 2,
@@ -239,11 +239,15 @@ function MakeJournalEntriesTable({
     [rows],
   );
 
+  const handleClickClearAllLines = () => {
+    onClickClearAllLines && onClickClearAllLines();
+  };
+
   return (
     <div class="make-journal-entries__table">
       <DataTable
         columns={columns}
-        data={rows}
+        data={tableRows}
         rowClassNames={rowClassNames}
         sticky={true}
         payload={{
@@ -272,7 +276,7 @@ function MakeJournalEntriesTable({
         <Button
           small={true}
           className={'button--secondary button--clear-lines ml1'}
-          onClick={onClickNewRow}
+          onClick={handleClickClearAllLines}
         >
           <T id={'clear_all_lines'} />
         </Button>

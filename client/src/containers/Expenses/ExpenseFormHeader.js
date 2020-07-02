@@ -11,13 +11,12 @@ import { DateInput } from '@blueprintjs/datetime';
 import { FormattedMessage as T } from 'react-intl';
 import { Row, Col } from 'react-grid-system';
 import moment from 'moment';
-import { momentFormatter, compose } from 'utils';
-
+import { momentFormatter, compose, tansformDateValue } from 'utils';
 import classNames from 'classnames';
 import {
   ListSelect,
   ErrorMessage,
-  Icon,
+  AccountsSelectList,
   FieldRequiredHint,
   Hint,
 } from 'components';
@@ -118,12 +117,15 @@ function ExpenseFormHeader({
       <Row>
         <Col width={300}>
           <FormGroup
-            label={<T id={'beneficiary'} />}
+            label={<T id={'assign_to_customer'} />}
             className={classNames('form-group--select-list', Classes.FILL)}
             labelInfo={<Hint />}
             intent={errors.beneficiary && touched.beneficiary && Intent.DANGER}
             helperText={
-              <ErrorMessage name={'beneficiary'} {...{ errors, touched }} />
+              <ErrorMessage
+                name={'assign_to_customer'}
+                {...{ errors, touched }}
+              />
             }
           >
             <ListSelect
@@ -162,17 +164,11 @@ function ExpenseFormHeader({
               />
             }
           >
-            <ListSelect
-              items={accounts}
-              noResults={<MenuItem disabled={true} text="No results." />}
-              itemRenderer={accountItem}
-              itemPredicate={filterAccountsPredicater}
-              popoverProps={{ minimal: true }}
-              onItemSelect={onChangeAccount}
-              selectedItem={values.payment_account_id}
-              selectedItemProp={'id'}
-              defaultText={<T id={'select_payment_account'} />}
-              labelProp={'name'}
+            <AccountsSelectList
+              accounts={accounts}
+              onAccountSelected={onChangeAccount}
+              defaultSelectText={<T id={'select_payment_account'} />}
+              selectedAccountId={values.payment_account_id}
             />
           </FormGroup>
         </Col>
@@ -193,7 +189,7 @@ function ExpenseFormHeader({
           >
             <DateInput
               {...momentFormatter('YYYY/MM/DD')}
-              defaultValue={new Date()}
+              value={tansformDateValue(values.payment_date)}
               onChange={handleDateChange}
               popoverProps={{ position: Position.BOTTOM, minimal: true }}
             />

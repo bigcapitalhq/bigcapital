@@ -26,7 +26,15 @@ import Dragzone from 'components/Dragzone';
 import withMediaActions from 'containers/Media/withMediaActions';
 
 import useMedia from 'hooks/useMedia';
-import { compose } from 'utils';
+import { compose, repeatValue } from 'utils';
+
+const ERROR = {
+  JOURNAL_NUMBER_ALREADY_EXISTS: 'JOURNAL.NUMBER.ALREADY.EXISTS',
+  CUSTOMERS_NOT_WITH_RECEVIABLE_ACC: 'CUSTOMERS.NOT.WITH.RECEIVABLE.ACCOUNT',
+  VENDORS_NOT_WITH_PAYABLE_ACCOUNT: 'VENDORS.NOT.WITH.PAYABLE.ACCOUNT',
+  PAYABLE_ENTRIES_HAS_NO_VENDORS: 'PAYABLE.ENTRIES.HAS.NO.VENDORS',
+  RECEIVABLE_ENTRIES_HAS_NO_CUSTOMERS: 'RECEIVABLE.ENTRIES.HAS.NO.CUSTOMERS',
+};
 
 /**
  * Journal entries form.
@@ -139,7 +147,7 @@ function MakeJournalEntriesForm({
       date: moment(new Date()).format('YYYY-MM-DD'),
       description: '',
       reference: '',
-      entries: [defaultEntry, defaultEntry, defaultEntry, defaultEntry],
+      entries: [...repeatValue(defaultEntry, 4)],
     }),
     [defaultEntry],
   );
@@ -171,44 +179,50 @@ function MakeJournalEntriesForm({
       : [];
   }, [manualJournal]);
 
+  // Transform API errors in toasts messages.
   const transformErrors = (errors, { setErrors }) => {
     const hasError = (errorType) => errors.some((e) => e.type === errorType);
 
-    if (hasError('CUSTOMERS.NOT.WITH.RECEIVABLE.ACCOUNT')) {
+    if (hasError(ERROR.CUSTOMERS_NOT_WITH_RECEVIABLE_ACC)) {
       AppToaster.show({
-        message:
-          'customers_should_assign_with_receivable_account_only',
+        message: formatMessage({
+          id: 'customers_should_assign_with_receivable_account_only',
+        }),
         intent: Intent.DANGER,
       });
     }
-    if (hasError('VENDORS.NOT.WITH.PAYABLE.ACCOUNT')) {
+    if (hasError(ERROR.PAYABLE_ENTRIES_HAS_NO_VENDORS)) {
       AppToaster.show({
-        message: 'vendors_should_assign_with_payable_account_only',
+        message: formatMessage({
+          id: 'vendors_should_assign_with_payable_account_only',
+        }),
         intent: Intent.DANGER,
       });
     }
-    if (hasError('RECEIVABLE.ENTRIES.HAS.NO.CUSTOMERS')) {
+    if (hasError(ERROR.RECEIVABLE_ENTRIES_HAS_NO_CUSTOMERS)) {
       AppToaster.show({
-        message:
-          'entries_with_receivable_account_no_assigned_with_customers',
-        intent: Intent.DANGER,
-      });
-      }
-    if (hasError('PAYABLE.ENTRIES.HAS.NO.VENDORS')) {
-      AppToaster.show({
-        message:
-          'entries_with_payable_account_no_assigned_with_vendors',
+        message: formatMessage({
+          id: 'entries_with_receivable_account_no_assigned_with_customers',
+        }),
         intent: Intent.DANGER,
       });
     }
-    if (hasError('JOURNAL.NUMBER.ALREADY.EXISTS')) {
+    if (hasError(ERROR.PAYABLE_ENTRIES_HAS_NO_VENDORS)) {
+      AppToaster.show({
+        message: formatMessage({
+          id: 'entries_with_payable_account_no_assigned_with_vendors',
+        }),
+        intent: Intent.DANGER,
+      });
+    }
+    if (hasError(ERROR.JOURNAL_NUMBER_ALREADY_EXISTS)) {
       setErrors({
         journal_number: formatMessage({
           id: 'journal_number_is_already_used',
         }),
       });
     }
-  }
+  };
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -313,6 +327,7 @@ function MakeJournalEntriesForm({
   const handleSubmitClick = useCallback(
     (payload) => {
       setPayload(payload);
+      // formik.resetForm();
       formik.handleSubmit();
     },
     [setPayload, formik],
@@ -336,15 +351,30 @@ function MakeJournalEntriesForm({
     [setDeletedFiles, deletedFiles],
   );
 
+  // Handle click on add a new line/row.
+  const handleClickAddNewRow = () => {
+    formik.setFieldValue('entries', [...formik.values.entries, defaultEntry]);
+  };
+
+  // Handle click `Clear all lines` button.
+  const handleClickClearLines = () => {
+    formik.setFieldValue(
+      'entries',
+      reorderingEntriesIndex([...repeatValue(defaultEntry, 4)]),
+    );
+  };
+
   return (
     <div class="make-journal-entries">
       <form onSubmit={formik.handleSubmit}>
         <MakeJournalEntriesHeader formik={formik} />
 
         <MakeJournalEntriesTable
-          initialValues={initialValues}
+          values={formik.values}
           formik={formik}
           defaultRow={defaultEntry}
+          onClickClearAllLines={handleClickClearLines}
+          onClickAddNewRow={handleClickAddNewRow}
         />
 
         <MakeJournalEntriesFooter

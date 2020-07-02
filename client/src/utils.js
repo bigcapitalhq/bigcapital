@@ -189,3 +189,33 @@ export const uniqueMultiProps = (items, props) => {
     return JSON.stringify(_.pick(item, props));
   });
 }
+
+
+export const transformUpdatedRows = (rows, rowIndex, columnIdOrObj, value) => {
+  const columnId =
+    typeof columnIdOrObj !== 'object' ? columnIdOrObj : null;
+
+  const updateTable =
+    typeof columnIdOrObj === 'object' ? columnIdOrObj : null;
+
+  const newData = updateTable ? updateTable : { [columnId]: value };
+
+  return rows.map((row, index) => {
+    if (index === rowIndex) {
+      return { ...rows[rowIndex], ...newData };
+    }
+    return { ...row };
+  });
+}
+
+export const tansformDateValue = (date) => {
+  return moment(date).toDate() || new Date();
+};
+
+export const repeatValue = (value, len) => {
+  var arr = [];
+  for (var i = 0; i < len; i++) {
+    arr.push(value);
+  }
+  return arr;
+};

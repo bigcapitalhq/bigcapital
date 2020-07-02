@@ -11,7 +11,7 @@ import { FormattedMessage as T } from 'react-intl';
 import { Row, Col } from 'react-grid-system';
 import moment from 'moment';
 import classNames from 'classnames';
-import { momentFormatter } from 'utils';
+import { momentFormatter, tansformDateValue } from 'utils';
 import {
   CurrenciesSelectList,
   ErrorMessage,
@@ -19,6 +19,7 @@ import {
   FieldHint,
   FieldRequiredHint,
 } from 'components';
+
 
 export default function MakeJournalEntriesHeader({
   formik: { errors, touched, values, setFieldValue, getFieldProps },
@@ -72,8 +73,8 @@ export default function MakeJournalEntriesHeader({
           >
             <DateInput
               {...momentFormatter('YYYY/MM/DD')}
-              defaultValue={new Date()}
               onChange={handleDateChange}
+              value={tansformDateValue(values.date)}
               popoverProps={{
                 position: Position.BOTTOM,
                 minimal: true,

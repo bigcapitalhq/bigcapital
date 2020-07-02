@@ -1,18 +1,89 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { Button, Intent, Position, Tooltip } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
+import { omit } from 'lodash';
 
 import DataTable from 'components/DataTable';
 import Icon from 'components/Icon';
 import { Hint } from 'components';
-import { compose, formattedAmount } from 'utils';
+import { compose, formattedAmount, transformUpdatedRows } from 'utils';
 import {
   AccountsListFieldCell,
   MoneyFieldCell,
   InputGroupCell,
 } from 'components/DataTableCells';
-import { omit } from 'lodash';
 import withAccounts from 'containers/Accounts/withAccounts';
+
+
+const ExpenseCategoryHeaderCell = () => {
+  return (
+    <>
+      <T id={'expense_category'} />
+      <Hint />
+    </>
+  );
+}
+
+ // Actions cell renderer.
+ const ActionsCellRenderer = ({
+  row: { index },
+  column: { id },
+  cell: { value: initialValue },
+  data,
+  payload,
+}) => {
+  if (data.length <= index + 1) {
+    return '';
+  }
+  const onClickRemoveRole = () => {
+    payload.removeRow(index);
+  };
+  return (
+    <Tooltip content={<T id={'remove_the_line'} />} position={Position.LEFT}>
+      <Button
+        icon={<Icon icon="times-circle" iconSize={14} />}
+        iconSize={14}
+        className="ml2"
+        minimal={true}
+        intent={Intent.DANGER}
+        onClick={onClickRemoveRole}
+      />
+    </Tooltip>
+  );
+};
+
+// Total text cell renderer.
+const TotalExpenseCellRenderer = (chainedComponent) => (props) => {
+  if (props.data.length <= props.row.index + 1) {
+    return (
+      <span>
+        <T id={'total_currency'} values={{ currency: 'USD' }} />
+      </span>
+    );
+  }
+  return chainedComponent(props);
+};
+
+const NoteCellRenderer = (chainedComponent) => (props) => {
+  if (props.data.length === props.row.index + 1) {
+    return '';
+  }
+  return chainedComponent(props);
+};
+
+const TotalAmountCellRenderer = (chainedComponent, type) => (props) => {
+  if (props.data.length === props.row.index + 1) {
+    const total = props.data.reduce((total, entry) => {
+      const amount = parseInt(entry[type], 10);
+      const computed = amount ? total + amount : total;
+
+      return computed;
+    }, 0);
+
+    return <span>{formattedAmount(total, 'USD')}</span>;
+  }
+  return chainedComponent(props);
+};
 
 function ExpenseTable({
   // #withAccounts
@@ -21,137 +92,27 @@ function ExpenseTable({
   // #ownPorps
   onClickRemoveRow,
   onClickAddNewRow,
+  onClickClearAllLines,
   defaultRow,
-  initialValues,
-  formik: { errors, values, setFieldValue },
+  categories,
+  formik: { errors, setFieldValue, resetForm },
 }) {
-  const [rows, setRow] = useState([]);
+  const [rows, setRows] = useState([]);
   const { formatMessage } = useIntl();
 
   useEffect(() => {
-    setRow([
-      ...initialValues.categories.map((e) => ({ ...e, rowType: 'editor' })),
-      defaultRow,
-      defaultRow,
+    setRows([
+      ...categories.map((e) => ({ ...e, rowType: 'editor' })),
     ]);
-  }, [initialValues, defaultRow]);
+  }, [categories]);
 
-  // Handles update datatable data.
-  const handleUpdateData = useCallback(
-    (rowIndex, columnId, value) => {
-      const newRows = rows.map((row, index) => {
-        if (index === rowIndex) {
-          return {
-            ...rows[rowIndex],
-            [columnId]: value,
-          };
-        }
-        return { ...row };
-      });
-      setRow(newRows);
-      setFieldValue(
-        'categories',
-        newRows.map((row, index) => ({
-          ...omit(row, ['rowType']),
-          index: index + 1,
-        })),
-      );
-    },
-    [rows, setFieldValue],
+  // Final table rows editor rows and total and final blank row.
+  const tableRows = useMemo(
+    () => [...rows, { rowType: 'total' }],
+    [rows],
   );
 
-  // Handles click remove datatable row.
-  const handleRemoveRow = useCallback(
-    (rowIndex) => {
-      const removeIndex = parseInt(rowIndex, 10);
-
-      const newRows = rows.filter((row, index) => index !== removeIndex);
-      setRow([...newRows]);
-
-      setFieldValue(
-        'categories',
-
-        newRows
-          .filter((row) => row.rowType === 'editor')
-          .map((row, index) => ({
-            ...omit(row, ['rowType']),
-            index: index + 1,
-          })),
-      );
-      // const newRows = rows.filter((row, index) => index !== removeIndex);
-      // setRow([...newRows]);
-      // setFieldValue(
-      //   'categories',
-      //   newRows
-      //     .filter((row) => row.rowType === 'editor')
-      //     .map((row) => ({ ...omit(row, ['rowType']) })),
-      // );
-      onClickRemoveRow && onClickRemoveRow(removeIndex);
-    },
-    [rows, setFieldValue, onClickRemoveRow],
-  );
-
-  // Actions cell renderer.
-  const ActionsCellRenderer = ({
-    row: { index },
-    column: { id },
-    cell: { value: initialValue },
-    data,
-    payload,
-  }) => {
-    if (data.length <= index + 1) {
-      return '';
-    }
-    const onClickRemoveRole = () => {
-      payload.removeRow(index);
-    };
-    return (
-      <Tooltip content={<T id={'remove_the_line'} />} position={Position.LEFT}>
-        <Button
-          icon={<Icon icon="times-circle" iconSize={14} />}
-          iconSize={14}
-          className="ml2"
-          minimal={true}
-          intent={Intent.DANGER}
-          onClick={onClickRemoveRole}
-        />
-      </Tooltip>
-    );
-  };
-
-  // Total text cell renderer.
-  const TotalExpenseCellRenderer = (chainedComponent) => (props) => {
-    if (props.data.length <= props.row.index + 1) {
-      return (
-        <span>
-          {formatMessage({ id: 'total_currency' }, { currency: 'USD' })}
-        </span>
-      );
-    }
-    return chainedComponent(props);
-  };
-
-  const NoteCellRenderer = (chainedComponent) => (props) => {
-    if (props.data.length === props.row.index + 1) {
-      return '';
-    }
-    return chainedComponent(props);
-  };
-
-  const TotalAmountCellRenderer = (chainedComponent, type) => (props) => {
-    if (props.data.length === props.row.index + 1) {
-      const total = props.data.reduce((total, entry) => {
-        const amount = parseInt(entry[type], 10);
-        const computed = amount ? total + amount : total;
-
-        return computed;
-      }, 0);
-
-      return <span>{formattedAmount(total, 'USD')}</span>;
-    }
-    return chainedComponent(props);
-  };
-
+  // Memorized data table columns.
   const columns = useMemo(
     () => [
       {
@@ -164,12 +125,7 @@ function ExpenseTable({
         disableSortBy: true,
       },
       {
-        Header: (
-          <>
-            {formatMessage({ id: 'expense_category' })}
-            <Hint />
-          </>
-        ),
+        Header: ExpenseCategoryHeaderCell,
         id: 'expense_account_id',
         accessor: 'expense_account_id',
         Cell: TotalExpenseCellRenderer(AccountsListFieldCell),
@@ -184,7 +140,7 @@ function ExpenseTable({
         Cell: TotalAmountCellRenderer(MoneyFieldCell, 'amount'),
         disableSortBy: true,
         disableResizing: true,
-        width: 150,
+        width: 180,
         className: 'amount',
       },
       {
@@ -207,12 +163,56 @@ function ExpenseTable({
     [formatMessage],
   );
 
-  // Handles click new line.
-  const onClickNewRow = useCallback(() => {
-    setRow([...rows, { ...defaultRow, rowType: 'editor' }]);
-    onClickAddNewRow && onClickAddNewRow();
-  }, [defaultRow, rows, onClickAddNewRow]);
+  // Handles update datatable data.
+  const handleUpdateData = useCallback(
+    (rowIndex, columnIdOrObj, value) => {
+      const newRows = transformUpdatedRows(
+        rows,
+        rowIndex,
+        columnIdOrObj,
+        value,
+      );
+      setFieldValue(
+        'categories',
+        newRows
+          .filter((row) => row.rowType === 'editor')
+          .map((row) => ({
+            ...omit(row, ['rowType']),
+          })),
+      );
+    },
+    [rows, setFieldValue],
+  );
 
+  // Handles click remove datatable row.
+  const handleRemoveRow = useCallback(
+    (rowIndex) => {
+      const removeIndex = parseInt(rowIndex, 10);
+      const newRows = rows.filter((row, index) => index !== removeIndex);
+
+      setFieldValue(
+        'categories',
+        newRows
+          .filter((row) => row.rowType === 'editor')
+          .map((row, index) => ({
+            ...omit(row, ['rowType']),
+            index: index + 1,
+          })),
+      );
+      onClickRemoveRow && onClickRemoveRow(removeIndex);
+    },
+    [rows, setFieldValue, onClickRemoveRow],
+  );
+
+  // Invoke when click on add new line button.
+  const onClickNewRow = () => {
+    onClickAddNewRow && onClickAddNewRow();
+  };
+  // Invoke when click on clear all lines button.
+  const handleClickClearAllLines = () => {
+    onClickClearAllLines && onClickClearAllLines();
+  };
+  // Rows classnames callback.
   const rowClassNames = useCallback(
     (row) => ({
       'row--total': rows.length === row.index + 1,
@@ -224,7 +224,7 @@ function ExpenseTable({
     <div className={'dashboard__insider--expense-form__table'}>
       <DataTable
         columns={columns}
-        data={rows}
+        data={tableRows}
         rowClassNames={rowClassNames}
         sticky={true}
         payload={{
@@ -246,7 +246,7 @@ function ExpenseTable({
         <Button
           small={true}
           className={'button--secondary button--clear-lines ml1'}
-          onClick={onClickNewRow}
+          onClick={handleClickClearAllLines}
         >
           <T id={'clear_all_lines'} />
         </Button>

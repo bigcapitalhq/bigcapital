@@ -168,7 +168,6 @@ export const editAccount = (id, form) => {
         .catch((error) => {
           const { response } = error;
           const { data } = response;
-          // const { errors } = data;
 
           dispatch({ type: t.CLEAR_ACCOUNT_FORM_ERRORS });
           if (error) {

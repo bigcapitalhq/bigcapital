@@ -9,7 +9,7 @@ import {
 
 // Account cell renderer.
 const AccountCellRenderer = ({
-  column: { id, value },
+  column: { id },
   row: { index, original },
   cell: { value: initialValue },
   payload: { accounts, updateData, errors },
@@ -20,9 +20,9 @@ const AccountCellRenderer = ({
 
   const { account_id = false } = (errors[index] || {});
 
-  const initialAccount = useMemo(() => 
-    accounts.find(a => a.id === initialValue),
-    [accounts, initialValue]);
+  // const initialAccount = useMemo(() => 
+  //   accounts.find(a => a.id === initialValue),
+  //   [accounts, initialValue]);
 
   return (
     <FormGroup
@@ -36,7 +36,7 @@ const AccountCellRenderer = ({
         accounts={accounts}
         onAccountSelected={handleAccountSelected}
         error={account_id}
-        initialAccount={initialAccount} />
+        selectedAccountId={initialValue} />
     </FormGroup>
   );
 };

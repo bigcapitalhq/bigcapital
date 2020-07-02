@@ -175,7 +175,7 @@ export default {
       }
 
       if (errorReasons.length > 0) {
-        return res.status(400).send({ error: errorReasons });
+        return res.status(400).send({ errors: errorReasons });
       }
       // Update the account on the storage.
       const updatedAccount = await Account.query().patchAndFetchById(account.id, { ...form });

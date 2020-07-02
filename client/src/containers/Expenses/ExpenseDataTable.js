@@ -155,21 +155,13 @@ function ExpensesDataTable({
         id: 'payment_date',
         Header: formatMessage({ id: 'payment_date' }),
         accessor: () => moment().format('YYYY MMM DD'),
-        width: 150,
+        width: 140,
         className: 'payment_date',
-      },
-      {
-        id: 'beneficiary',
-        Header: formatMessage({ id: 'beneficiary' }),
-        // accessor: 'beneficiary',
-        width: 150,
-        className: 'beneficiary',
       },
       {
         id: 'total_amount',
         Header: formatMessage({ id: 'full_amount' }),
         accessor: (r) => <Money amount={r.total_amount} currency={'USD'} />,
-        disableResizing: true,
         className: 'total_amount',
         width: 150,
       },
@@ -184,7 +176,7 @@ function ExpensesDataTable({
         id: 'expense_account_id',
         Header: formatMessage({ id: 'expense_account' }),
         accessor: expenseAccountAccessor,
-        width: 150,
+        width: 160,
         className: 'expense_account',
       },
       {
@@ -201,7 +193,6 @@ function ExpensesDataTable({
             </Tag>
           );
         },
-        disableResizing: true,
         width: 100,
         className: 'publish',
       },
@@ -237,6 +228,7 @@ function ExpensesDataTable({
         ),
         className: 'actions',
         width: 50,
+        disableResizing: true,
       },
     ],
     [actionMenuList, formatMessage],
