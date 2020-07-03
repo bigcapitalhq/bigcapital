@@ -245,10 +245,9 @@
   }
 
   &-content{
-    width: calc(100% - 220px);
     display: flex;
     flex-direction: column;
-    margin-left: 220px;
+    height: 100%;
 
     .sidebar--mini-sidebar + &{
       margin-left: 50px;
@@ -307,7 +306,7 @@
 .tabs--dashboard-views{
 
   .#{$ns}-tab{
-    color: #666;
+    color: #5b606d;
     font-size: 14px;
     line-height: 50px;
     font-weight: 400;

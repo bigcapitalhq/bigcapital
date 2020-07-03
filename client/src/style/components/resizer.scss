@@ -1,0 +1,50 @@
+
+.Pane.Pane2 {
+  overflow: auto;  
+}
+
+.Resizer {
+  background: #000;
+  z-index: 1;
+  box-sizing: border-box;
+  background-clip: padding-box;
+  position: relative;
+  z-index: 999;
+
+  &:hover {
+    transition: all 0.3s ease;
+  }
+
+  &.horizontal {
+    height: 4px;
+    margin: -2px 0;
+    opacity: 0;
+    border-top: 2px solid #1d9bd1;
+    border-bottom: 2px solid #1d9bd1;
+    cursor: row-resize;
+    width: 100%;
+
+    &:hover {
+      opacity: 1;      
+    }
+  }
+
+  &.vertical {
+    width: 4px;
+    margin: 0 -2px;
+    opacity: 0;
+    border-left: 2px solid #1d9bd1;
+    border-right: 2px solid #1d9bd1;
+    cursor: col-resize;
+
+    &:hover{
+      opacity: 1;      
+    }
+  }
+
+  &.disabled {    
+    &:hover{
+      border-color: transparent;
+    }
+  }
+}

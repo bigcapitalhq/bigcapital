@@ -1,6 +1,6 @@
 $sidebar-background: #01194e;
 $sidebar-text-color: #fff;
-$sidebar-width: 220px;
+$sidebar-width: 100%;
 $sidebar-menu-item-color: rgba(255, 255, 255, 0.85);
 $sidebar-popover-submenu-bg: rgb(1, 20, 62);
 $sidebar-menu-label-color: rgba(255, 255, 255, 0.5);
@@ -13,7 +13,6 @@ $sidebar-submenu-item-bg-color: #01287d;
   background: $sidebar-background;
   width: $sidebar-width;
   color: $sidebar-text-color;
-  position: fixed;
   height: 100%;
   z-index: $sidebar-zindex;
 
@@ -87,7 +86,7 @@ $sidebar-submenu-item-bg-color: #01287d;
       > .#{$ns}-icon-caret-right {
         margin-right: -4px;
         margin-top: 3px;
-        color: rgba(255, 255, 255, 0.2);
+        color: rgba(255, 255, 255, 0.25);
       }
       &-label{
         display: block;
@@ -146,6 +145,7 @@ $sidebar-submenu-item-bg-color: #01287d;
   }
 
   &--mini-sidebar{
+    position: fixed;
     white-space: nowrap;
     width: 50px;
 
@@ -173,7 +173,7 @@ $sidebar-submenu-item-bg-color: #01287d;
       min-width: 50px;
 
       &:hover{
-        min-width: $sidebar-width;
+        min-width: 220px;
 
         .sidebar__head-logo{
 

@@ -8,6 +8,7 @@ import DialogsContainer from 'components/DialogsContainer';
 import PreferencesContent from 'components/Preferences/PreferencesContent';
 import PreferencesSidebar from 'components/Preferences/PreferencesSidebar';
 import Search from 'containers/GeneralSearch/Search';
+import DashboardSplitPane from 'components/Dashboard/DashboardSplitePane';
 
 export default function Dashboard() {
   return (
@@ -20,8 +21,10 @@ export default function Dashboard() {
         </Route>
 
         <Route path="/">
-          <Sidebar />
-          <DashboardContent />
+          <DashboardSplitPane>
+            <Sidebar />
+            <DashboardContent />
+          </DashboardSplitPane>
         </Route>
       </Switch>
 

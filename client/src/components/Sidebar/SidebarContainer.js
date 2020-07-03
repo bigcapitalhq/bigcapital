@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { Scrollbar } from 'react-scrollbars-custom';
 import classNames from 'classnames';
-
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withDashboard from 'containers/Dashboard/withDashboard';
 
