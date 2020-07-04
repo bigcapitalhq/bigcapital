@@ -56,7 +56,7 @@ function BalanceCell({ cell }) {
       <Money amount={balance.amount} currency={balance.currency_code} />
     </span>
   ) : (
-    <span class="placeholder">--</span>
+    <span class="placeholder">—</span>
   );
 }
 

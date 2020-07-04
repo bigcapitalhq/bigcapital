@@ -9,8 +9,10 @@ function DashboardSplitPane({
   sidebarExpended,
   children
 }) {
+  const initialSize = 190;
+
   const [defaultSize, setDefaultSize] = useState(
-    parseInt(localStorage.getItem('dashboard-size'), 10) || 220,
+    parseInt(localStorage.getItem('dashboard-size'), 10) || initialSize,
   );
   const debounceSaveSize = useRef(
     debounce((size) => {
