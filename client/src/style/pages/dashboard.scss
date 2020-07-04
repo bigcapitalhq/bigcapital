@@ -301,6 +301,30 @@
       color: #555;
     }
   }
+
+  &__footer{
+    margin-top: auto;
+    padding: 8px 0;
+    border-top: 1px solid #ececec;
+    
+    .footer-links{
+      text-align: center;
+
+      > div{
+        font-size: 12px;
+        margin-right: 20px;
+        display: inline;
+
+        a{
+          color: #8c8c8c;
+
+          &:hover{
+            color: $blue2;
+          }
+        }
+      }      
+    }
+  }
 }
 
 .tabs--dashboard-views{

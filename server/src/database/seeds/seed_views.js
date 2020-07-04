@@ -5,8 +5,8 @@ exports.seed = (knex) => {
     .then(() => {
       // Inserts seed entries
       return knex('views').insert([
-
         // Accounts
+        { id: 15, name: 'Inactive', roles_logic_expression: '1', resource_id: 1, predefined: true },
         { id: 1, name: 'Assets', roles_logic_expression: '1', resource_id: 1, predefined: true },
         { id: 2, name: 'Liabilities', roles_logic_expression: '1', resource_id: 1, predefined: true },
         { id: 3, name: 'Equity', roles_logic_expression: '1', resource_id: 1, predefined: true },
