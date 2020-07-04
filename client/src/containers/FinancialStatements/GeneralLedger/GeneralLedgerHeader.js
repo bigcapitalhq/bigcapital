@@ -25,7 +25,7 @@ function GeneralLedgerHeader({
   pageFilter,
 
   // #withAccounts
-  accounts,
+  accountsList,
 
   // #withGeneralLedgerActions
   refreshGeneralLedgerSheet,
@@ -83,7 +83,7 @@ function GeneralLedgerHeader({
             className={classNames('form-group--select-list', Classes.FILL)}
           >
             <AccountsMultiSelect
-              accounts={accounts}
+              accounts={accountsList}
               onAccountSelected={onAccountSelected}
             />
           </FormGroup>
@@ -102,8 +102,8 @@ function GeneralLedgerHeader({
 }
 
 export default compose(
-  withAccounts(({ accounts }) => ({
-    accounts,
+  withAccounts(({ accountsList }) => ({
+    accountsList,
   })),
   withGeneralLedger(({ generalLedgerSheetFilter, generalLedgerSheetRefresh }) => ({
     generalLedgerSheetFilter,

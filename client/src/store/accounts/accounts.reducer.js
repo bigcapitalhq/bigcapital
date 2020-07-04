@@ -5,6 +5,7 @@ import { createTableQueryReducers } from 'store/queryReducers';
 const initialState = {
   items: {},
   views: {},
+  list: [],
   accountsTypes: [],
   accountsById: {},
   tableQuery: {
@@ -38,6 +39,11 @@ const accountsReducer = createReducer(initialState, {
       ...view,
       ids: action.accounts.map(i => i.id),
     };
+  },
+
+  [t.ACCOUNTS_LIST_SET]: (state, action) => {
+    const { accounts } = action.payload;
+    state.list = accounts.map(account => account.id);
   },
 
   [t.ACCOUNT_TYPES_LIST_SET]: (state, action) => {

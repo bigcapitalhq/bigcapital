@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import {
-  getAccountsItems,
+  getAccountsItems, getAccountsListFactory,
 } from 'store/accounts/accounts.selectors';
 import {
   getResourceViews,
@@ -8,10 +8,13 @@ import {
 
 
 export default (mapState) => {
+  const getAccountsList = getAccountsListFactory();
+
   const mapStateToProps = (state, props) => {
     const mapped = {
       accountsViews: getResourceViews(state, props, 'accounts'),
-      accounts: getAccountsItems(state, props),
+      accountsTable: getAccountsItems(state, props),
+      accountsList: getAccountsList(state, props),
       accountsTypes: state.accounts.accountsTypes,
     
       accountsTableQuery: state.accounts.tableQuery,

@@ -528,4 +528,5 @@ export default {
     'A unique code/number for this account (limited to 10 characters)',
   logic_expression: 'logic expression',
   assign_to_customer: 'Assign to Customer',
+  inactive: 'Inactive',
 };

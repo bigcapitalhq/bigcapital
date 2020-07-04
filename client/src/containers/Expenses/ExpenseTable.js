@@ -87,7 +87,7 @@ const TotalAmountCellRenderer = (chainedComponent, type) => (props) => {
 
 function ExpenseTable({
   // #withAccounts
-  accounts,
+  accountsList,
 
   // #ownPorps
   onClickRemoveRow,
@@ -228,7 +228,7 @@ function ExpenseTable({
         rowClassNames={rowClassNames}
         sticky={true}
         payload={{
-          accounts,
+          accounts: accountsList,
           errors: errors.categories || [],
           updateData: handleUpdateData,
           removeRow: handleRemoveRow,
@@ -256,7 +256,7 @@ function ExpenseTable({
 }
 
 export default compose(
-  withAccounts(({ accounts }) => ({
-    accounts,
+  withAccounts(({ accountsList }) => ({
+    accountsList,
   })),
 )(ExpenseTable);

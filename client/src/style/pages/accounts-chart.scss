@@ -16,10 +16,26 @@
           padding-bottom: 0.36rem;
         }
         .account_name{
+          > div{
+            width: 100%;
+          }
 
-          .bp3-tooltip-indicator{
-            cursor: default;
-            border-bottom-color: #c6c6c6;
+          .bp3-popover-wrapper--inactive-semafro{
+            margin-left: 8px;
+            margin-right: 6px;
+            float: right;
+            border: 0;
+          }
+          .bp3-popover-wrapper--account-desc{
+            border-bottom-color: #BBB;
+          }
+          .inactive-semafro{
+            height: 7px;
+            width: 7px;
+            background: #BBB;
+            display: inline-block;
+            border-radius: 8px;
+            
           }
         }
         .normal{

@@ -20,9 +20,9 @@ export default compose(
   AccountFormDialogConnect,
   withAccountsActions,
   withAccountDetail,
-  withAccounts(({ accountsTypes, accounts }) => ({
+  withAccounts(({ accountsTypes, accountsList }) => ({
     accountsTypes,
-    accounts,
+    accounts: accountsList,
   })),
   withDialogActions,
 );

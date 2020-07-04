@@ -6,6 +6,9 @@ const accountsDataSelector = (state) => state.accounts.items;
 const accountsCurrentViewSelector = (state) => state.accounts.currentViewId;
 const accountIdPropSelector = (state, props) => props.accountId;
 
+const accountsListSelector = state => state.accounts.list;
+
+
 export const getAccountsItems = createSelector(
   accountsViewsSelector,
   accountsDataSelector,
@@ -18,6 +21,14 @@ export const getAccountsItems = createSelector(
       : [];
   },
 );
+
+export const getAccountsListFactory = () => createSelector(
+  accountsListSelector,
+  accountsDataSelector,
+  (accounts, accountsItems) => {
+    return pickItemsFromIds(accountsItems, accounts);
+  },
+)
 
 export const getAccountById = createSelector(
   accountsDataSelector,

@@ -12,11 +12,13 @@ import {
 } from '@blueprintjs/core';
 import { withRouter } from 'react-router';
 import { FormattedMessage as T, useIntl } from 'react-intl';
+import classnames from 'classnames';
 import {
   Icon,
   DataTable,
   Money,
   If,
+  Choose,
 } from 'components';
 import { compose } from 'utils';
 import { useUpdateEffect } from 'hooks';
@@ -60,24 +62,54 @@ function BalanceCell({ cell }) {
   );
 }
 
-function AccountNameAccessor(row) {
-  return row.description ? (
+function InactiveSemafro() {
+  return (
     <Tooltip
-      className={Classes.TOOLTIP_INDICATOR}
-      content={row.description}
-      position={Position.RIGHT_TOP}
-      hoverOpenDelay={500}
-    >
-      {row.name}
+      content={<T id='inactive' />}
+      className={classnames(
+        Classes.TOOLTIP_INDICATOR,
+        'bp3-popover-wrapper--inactive-semafro'
+      )}
+      position={Position.TOP}
+      hoverOpenDelay={250}>
+      <div className="inactive-semafro"></div>
     </Tooltip>
-  ) : (
-    row.name
+  );
+}
+
+function AccountNameAccessor(row) {
+  return (
+    <>
+      <Choose>
+        <Choose.When condition={!!row.description}>
+          <Tooltip
+            className={classnames(
+              Classes.TOOLTIP_INDICATOR,
+              'bp3-popover-wrapper--account-desc',
+            )}
+            content={row.description}
+            position={Position.RIGHT_TOP}
+            hoverOpenDelay={500}
+          >
+            {row.name}
+          </Tooltip>
+        </Choose.When>
+
+        <Choose.Otherwise>
+          { row.name }
+        </Choose.Otherwise>
+      </Choose>
+
+      <If condition={!row.active}>
+        <InactiveSemafro />
+      </If>      
+    </>
   );
 }
 
 function AccountsDataTable({
   // #withDashboardActions
-  accounts,
+  accountsTable,
   accountsLoading,
 
   // #withDialog.
@@ -256,7 +288,7 @@ function AccountsDataTable({
     <DataTable
       noInitialFetch={true}
       columns={columns}
-      data={accounts}
+      data={accountsTable}
       onFetchData={handleDatatableFetchData}
       manualSortBy={true}
       selectionColumn={selectionColumn}
@@ -275,8 +307,8 @@ export default compose(
   withDialogActions,
   withDashboardActions,
   withAccountsActions,
-  withAccounts(({ accountsLoading, accounts }) => ({
+  withAccounts(({ accountsLoading, accountsTable }) => ({
     accountsLoading,
-    accounts,
+    accountsTable,
   })),
 )(AccountsDataTable);

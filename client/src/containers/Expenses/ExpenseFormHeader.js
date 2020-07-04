@@ -26,7 +26,7 @@ import withAccounts from 'containers/Accounts/withAccounts';
 function ExpenseFormHeader({
   formik: { errors, touched, setFieldValue, getFieldProps, values },
   currenciesList,
-  accounts,
+  accountsList,
   accountsTypes,
 }) {
   const [selectedItems, setSelectedItems] = useState({});
@@ -165,7 +165,7 @@ function ExpenseFormHeader({
             }
           >
             <AccountsSelectList
-              accounts={accounts}
+              accounts={accountsList}
               onAccountSelected={onChangeAccount}
               defaultSelectText={<T id={'select_payment_account'} />}
               selectedAccountId={values.payment_account_id}
@@ -252,8 +252,8 @@ function ExpenseFormHeader({
 }
 
 export default compose(
-  withAccounts(({ accounts, accountsTypes }) => ({
-    accounts,
+  withAccounts(({ accountsList, accountsTypes }) => ({
+    accountsList,
     accountsTypes,
   })),
   withCurrencies(({ currenciesList }) => ({

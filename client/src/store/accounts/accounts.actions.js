@@ -19,32 +19,29 @@ export const fetchAccountTypes = () => {
     });
 };
 
-export const fetchAccountsList = ({ query } = {}) => {
+export const fetchAccountsList = () => {
   return (dispatch) =>
     new Promise((resolve, reject) => {
-      dispatch({
-        type: t.SET_DASHBOARD_REQUEST_LOADING,
-      });
+      const query = { column_sort_by: 'name', sort_order: 'asc' };
+
       ApiService.get('accounts', { params: query })
         .then((response) => {
-          dispatch({
-            type: t.ACCOUNTS_PAGE_SET,
-            accounts: response.data.accounts,
-            customViewId: response.data.customViewId,
-          });
           dispatch({
             type: t.ACCOUNTS_ITEMS_SET,
             accounts: response.data.accounts,
           });
+          dispatch({
+            type: t.ACCOUNTS_LIST_SET,
+            payload: {
+              accounts: response.data.accounts,
+            }
+          })
           dispatch({
             type: t.SET_DASHBOARD_REQUEST_COMPLETED,
           });
           resolve(response);
         })
         .catch((error) => {
-          dispatch({
-            type: t.SET_DASHBOARD_REQUEST_COMPLETED,
-          });
           reject(error);
         });
     });

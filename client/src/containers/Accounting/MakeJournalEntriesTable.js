@@ -95,7 +95,7 @@ function MakeJournalEntriesTable({
   customers,
 
   // #withAccounts
-  accounts,
+  accountsList,
 
   // #ownPorps
   onClickRemoveRow,
@@ -251,7 +251,7 @@ function MakeJournalEntriesTable({
         rowClassNames={rowClassNames}
         sticky={true}
         payload={{
-          accounts,
+          accounts: accountsList,
           errors: errors.entries || [],
           updateData: handleUpdateData,
           removeRow: handleRemoveRow,
@@ -286,8 +286,8 @@ function MakeJournalEntriesTable({
 }
 
 export default compose(
-  withAccounts(({ accounts }) => ({
-    accounts,
+  withAccounts(({ accountsList }) => ({
+    accountsList,
   })),
   withCustomers(({ customersItems }) => ({
     customers: customersItems,
