@@ -28,6 +28,11 @@ import Dragzone from 'components/Dragzone';
 import useMedia from 'hooks/useMedia';
 import { compose, repeatValue } from 'utils';
 
+const ERROR = {
+  TOTAL_AMOUNT_EQUALS_ZERO: 'TOTAL.AMOUNT.EQUALS.ZERO',
+  EXPENSE_ALREADY_PUBLISHED: 'EXPENSE.ALREADY.PUBLISHED',
+};
+
 function ExpenseForm({
   // #withMedia
   requestSubmitMedia,
@@ -134,9 +139,7 @@ function ExpenseForm({
       description: '',
       reference_no: '',
       currency_code: '',
-      categories: [
-        ...repeatValue(defaultCategory, 4),
-      ],
+      categories: [...repeatValue(defaultCategory, 4)],
     }),
     [defaultCategory],
   );
@@ -177,6 +180,30 @@ function ExpenseForm({
       : [];
   }, [expense]);
 
+  // Transform API errors in toasts messages.
+  const transformErrors = (errors, { setErrors }) => {
+    const hasError = (errorType) => errors.some((e) => e.type === errorType);
+    if (hasError(ERROR.TOTAL_AMOUNT_EQUALS_ZERO)) {
+      setErrors(
+        AppToaster.show({
+          message: formatMessage({
+            id: 'total_amount_equals_zero',
+          }),
+          intent: Intent.DANGER,
+        }),
+      );
+    }
+    if (hasError(ERROR.EXPENSE_ALREADY_PUBLISHED)) {
+      setErrors(
+        AppToaster.show({
+          message: formatMessage({
+            id: 'expense_already_published',
+          }),
+        }),
+      );
+    }
+  };
+
   const formik = useFormik({
     enableReinitialize: true,
     validationSchema,
@@ -214,16 +241,7 @@ function ExpenseForm({
                 resetForm();
               })
               .catch((errors) => {
-                if (errors.find((e) => e.type === 'TOTAL.AMOUNT.EQUALS.ZERO')) {
-                }
-                setErrors(
-                  AppToaster.show({
-                    message: formatMessage({
-                      id: 'total_amount_equals_zero',
-                    }),
-                    intent: Intent.DANGER,
-                  }),
-                );
+                transformErrors(errors, { setErrors });
                 setSubmitting(false);
               });
           } else {
@@ -244,6 +262,7 @@ function ExpenseForm({
                 // resolve(response);
               })
               .catch((errors) => {
+                transformErrors(errors, { setErrors });
                 setSubmitting(false);
               });
           }
@@ -298,11 +317,9 @@ function ExpenseForm({
   const handleClearAllLines = () => {
     formik.setFieldValue(
       'categories',
-      orderingCategoriesIndex([
-        ...repeatValue(defaultCategory, 4),
-      ]),
-    );  
-  }
+      orderingCategoriesIndex([...repeatValue(defaultCategory, 4)]),
+    );
+  };
 
   return (
     <div className={'expense-form'}>
@@ -316,7 +333,6 @@ function ExpenseForm({
           formik={formik}
           defaultRow={defaultCategory}
         />
-
         <div class="expense-form-footer">
           <FormGroup
             label={<T id={'description'} />}

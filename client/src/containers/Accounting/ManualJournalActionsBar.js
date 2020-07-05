@@ -41,7 +41,7 @@ function ManualJournalActionsBar({
   addManualJournalsTableQueries,
 
   onFilterChanged,
-  selectedRows,
+  selectedRows = [],
   onBulkDelete,
 }) {
   const { path } = useRouteMatch();
@@ -73,9 +73,9 @@ function ManualJournalActionsBar({
       onFilterChanged && onFilterChanged(filterConditions);
     },
   });
-  const hasSelectedRows = useMemo(() => selectedRows.length > 0, [
-    selectedRows,
-  ]);
+  const hasSelectedRows = useMemo(
+    () => selectedRows.length > 0, 
+    [selectedRows]);
 
   // Handle delete button click.
   const handleBulkDelete = useCallback(() => {

@@ -12,6 +12,7 @@ import {
   Tag,
 } from '@blueprintjs/core';
 import { useParams } from 'react-router-dom';
+import { withRouter } from 'react-router';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import moment from 'moment';
 
@@ -28,6 +29,7 @@ import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withViewDetails from 'containers/Views/withViewDetails';
 import withExpenses from 'containers/Expenses/withExpenses';
 import withExpensesActions from 'containers/Expenses/withExpensesActions';
+import withCurrentView from 'containers/Views/withCurrentView';
 
 function ExpensesDataTable({
   //#withExpenes
@@ -54,6 +56,10 @@ function ExpensesDataTable({
   const { custom_view_id: customViewId } = useParams();
   const [initialMount, setInitialMount] = useState(false);
   const { formatMessage } = useIntl();
+
+  useEffect(()=>{
+    setInitialMount(false)
+  },[customViewId])
 
   useUpdateEffect(() => {
     if (!expensesLoading) {
@@ -260,7 +266,7 @@ function ExpensesDataTable({
           selectionColumn={true}
           noInitialFetch={true}
           sticky={true}
-          loading={expensesLoading}
+          loading={expensesLoading && !initialMount}
           onSelectedRowsChange={handleSelectedRowsChange}
           rowContextMenu={onRowContextMenu}
           pagination={true}
@@ -274,6 +280,8 @@ function ExpensesDataTable({
 }
 
 export default compose(
+  withRouter,
+  withCurrentView,
   withDialogActions,
   withDashboardActions,
   withExpensesActions,

@@ -441,7 +441,7 @@ export default {
   once_delete_these_expenses_you_will_not_able_restore_them:
     "Once you delete these expenses, you won't be able to retrieve them later. Are you sure you want to delete them?",
 
-  the_expense_id_has_been_published: 'The expense id has been published',
+  the_expense_has_been_published: 'The expense has been published',
   select_beneficiary_account: 'Select Beneficiary Account',
   total_amount_equals_zero: 'Total amount equals zero',
   value: 'Value',
@@ -450,7 +450,7 @@ export default {
   as_date: 'As Date',
   aging_before_days: 'Aging before days',
   aging_periods: 'Aging periods',
-  name_:'name',
+  name_: 'name',
   as: 'As',
   receivable_aging_summary: 'Receivable Aging Summary',
   customers: 'Customers',
@@ -528,4 +528,27 @@ export default {
     'A unique code/number for this account (limited to 10 characters)',
   logic_expression: 'logic expression',
   assign_to_customer: 'Assign to Customer',
+  are_sure_to_publish_this_account:
+    'Are you sure you want to publish this expense?',
+
+  once_delete_these_journalss_you_will_not_able_restore_them:
+    "Once you delete these journalss, you won't be able to retrieve them later. Are you sure you want to delete them?",
+  once_delete_this_journal_you_will_able_to_restore_it: `Once you delete this journal, you won\'t be able to restore it later. Are you sure you want to delete this account?<br /><br />If you're not sure, you can inactivate this account instead.`,
+
+  once_delete_this_journal_you_will_able_to_restore_it: `Once you delete this journal, you won\'t be able to restore the item later. Are you sure you want to delete ?`,
+  should_total_of_credit_and_debit_be_equal:
+    'should total of credit and debit be equal',
+  should_total_of_credit_and_debit_be_bigger_then_zero:
+    'should total of credit and debit be bigger then zero',
+  credit_debit_summation_should_not_equal_zero:
+    'credit debit summation should not equal zero',
+  entries_with_payable_account_no_assigned_with_vendors:
+    'entries with payable account no assigned with vendors',
+  entries_with_receivable_account_no_assigned_with_customers:
+    'entries with receivable account no assigned with customers',
+  vendors_should_assign_with_payable_account_only:
+    'vendors should assign with payable account only',
+  customers_should_assign_with_receivable_account_only:
+    'customers should assign with receivable account only',
+  expense_already_published: 'expense already published',
 };

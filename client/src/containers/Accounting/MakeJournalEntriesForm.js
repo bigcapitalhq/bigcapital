@@ -34,6 +34,7 @@ const ERROR = {
   VENDORS_NOT_WITH_PAYABLE_ACCOUNT: 'VENDORS.NOT.WITH.PAYABLE.ACCOUNT',
   PAYABLE_ENTRIES_HAS_NO_VENDORS: 'PAYABLE.ENTRIES.HAS.NO.VENDORS',
   RECEIVABLE_ENTRIES_HAS_NO_CUSTOMERS: 'RECEIVABLE.ENTRIES.HAS.NO.CUSTOMERS',
+  CREDIT_DEBIT_SUMATION_SHOULD_NOT_EQUAL_ZERO:'CREDIT.DEBIT.SUMATION.SHOULD.NOT.EQUAL.ZERO'
 };
 
 /**
@@ -57,6 +58,7 @@ function MakeJournalEntriesForm({
   onFormSubmit,
   onCancelForm,
 }) {
+ 
   const { formatMessage } = useIntl();
   const {
     setFiles,
@@ -68,9 +70,11 @@ function MakeJournalEntriesForm({
     saveCallback: requestSubmitMedia,
     deleteCallback: requestDeleteMedia,
   });
+
   const handleDropFiles = useCallback((_files) => {
     setFiles(_files.filter((file) => file.uploaded === false));
   }, []);
+
 
   const savedMediaIds = useRef([]);
   const clearSavedMediaIds = () => {
@@ -221,6 +225,15 @@ function MakeJournalEntriesForm({
           id: 'journal_number_is_already_used',
         }),
       });
+    }
+    if(hasError(ERROR.CREDIT_DEBIT_SUMATION_SHOULD_NOT_EQUAL_ZERO)){
+
+      AppToaster.show({
+        message:formatMessage({
+          id:'credit_debit_summation_should_not_equal_zero'
+        }),
+        intent:Intent.DANGER
+      })
     }
   };
 

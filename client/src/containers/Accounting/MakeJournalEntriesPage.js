@@ -46,7 +46,7 @@ function MakeJournalEntriesPage({
   );
 
   const handleCancel = useCallback(() => {
-    history.push('/manual-journals');
+    history.goBack();
   }, [history]);
 
   return (
