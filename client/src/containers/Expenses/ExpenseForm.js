@@ -29,6 +29,9 @@ import useMedia from 'hooks/useMedia';
 import { compose, repeatValue } from 'utils';
 
 const MIN_LINES_NUMBER = 4;
+const ERROR = {
+  EXPENSE_ALREADY_PUBLISHED: 'EXPENSE.ALREADY.PUBLISHED',
+};
 
 function ExpenseForm({
   // #withMedia
@@ -187,6 +190,21 @@ function ExpenseForm({
       : [];
   }, [expense]);
 
+  // Transform API errors in toasts messages.
+  const transformErrors = (errors, { setErrors }) => {
+    const hasError = (errorType) => errors.some((e) => e.type === errorType);
+
+    if (hasError(ERROR.EXPENSE_ALREADY_PUBLISHED)) {
+      setErrors(
+        AppToaster.show({
+          message: formatMessage({
+            id: 'the_expense_is_already_published',
+          }),
+        }),
+      );
+    }
+  };
+
   const formik = useFormik({
     enableReinitialize: true,
     validationSchema,
@@ -237,16 +255,7 @@ function ExpenseForm({
                 resetForm();
               })
               .catch((errors) => {
-                if (errors.find((e) => e.type === 'TOTAL.AMOUNT.EQUALS.ZERO')) {
-                }
-                setErrors(
-                  AppToaster.show({
-                    message: formatMessage({
-                      id: 'total_amount_equals_zero',
-                    }),
-                    intent: Intent.DANGER,
-                  }),
-                );
+                transformErrors(errors, { setErrors });
                 setSubmitting(false);
               });
           } else {
@@ -265,6 +274,7 @@ function ExpenseForm({
                 clearSavedMediaIds();
               })
               .catch((errors) => {
+                transformErrors(errors, { setErrors });
                 setSubmitting(false);
               });
           }
@@ -335,7 +345,6 @@ function ExpenseForm({
           formik={formik}
           defaultRow={defaultCategory}
         />
-
         <div class="expense-form-footer">
           <FormGroup
             label={<T id={'description'} />}

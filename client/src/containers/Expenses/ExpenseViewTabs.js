@@ -1,15 +1,12 @@
 import React, { useEffect, useRef } from 'react';
 import { useHistory } from 'react-router';
-import {
-  Alignment,
-  Navbar,
-  NavbarGroup,
-} from '@blueprintjs/core';
+import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
 import { useParams, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { pick, debounce } from 'lodash';
 
 import { DashboardViewsTabs } from 'components';
+import { useUpdateEffect } from 'hooks';
 
 import withExpenses from './withExpenses';
 import withExpensesActions from './withExpensesActions';
@@ -32,9 +29,13 @@ function ExpenseViewTabs({
   // #withDashboardActions
   setTopbarEditView,
   changePageSubtitle,
+
+  // props
+  customViewChanged,
+  onViewChanged,
 }) {
   const history = useHistory();
-  const { custom_view_id: customViewId } = useParams();
+  const { custom_view_id: customViewId = null } = useParams();
 
   useEffect(() => {
     changeExpensesView(customViewId || -1);
@@ -51,6 +52,10 @@ function ExpenseViewTabs({
     };
   }, [customViewId, addExpensesTableQueries, changeExpensesView]);
 
+  useUpdateEffect(() => {
+    onViewChanged && onViewChanged(customViewId);
+  }, [customViewId]);
+
   const debounceChangeHistory = useRef(
     debounce((toUrl) => {
       history.push(toUrl);
@@ -59,7 +64,7 @@ function ExpenseViewTabs({
 
   const handleTabsChange = (viewId) => {
     const toPath = viewId ? `${viewId}/custom_view` : '';
-    debounceChangeHistory.current(`/expenses/${toPath}`);
+    debounceChangeHistory.current(`/expenses-list/${toPath}`);
     setTopbarEditView(viewId);
   };
 
@@ -78,7 +83,7 @@ function ExpenseViewTabs({
       <NavbarGroup align={Alignment.LEFT}>
         <DashboardViewsTabs
           initialViewId={customViewId}
-          baseUrl={'/expenses'}
+          baseUrl={'/expenses-list'}
           tabs={tabs}
           onNewViewTabClick={handleClickNewView}
           onChange={handleTabsChange}

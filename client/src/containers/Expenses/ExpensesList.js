@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { Route, Switch, useHistory, useParams } from 'react-router-dom';
-import { useQuery } from 'react-query';
+import { useQuery, queryCache } from 'react-query';
 import { Alert, Intent } from '@blueprintjs/core';
 import AppToaster from 'components/AppToaster';
 import { FormattedMessage as T, useIntl } from 'react-intl';
@@ -45,6 +45,7 @@ function ExpensesList({
   const [deleteExpense, setDeleteExpense] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
   const [bulkDelete, setBulkDelete] = useState(false);
+  const [publishExpense, setPublishExpense] = useState(false);
 
   const fetchResourceViews = useQuery(
     ['resource-views', 'expenses'],
@@ -155,18 +156,35 @@ function ExpensesList({
     [addExpensesTableQueries],
   );
 
-  const handlePublishExpense = useCallback(
-    (expense) => {
-      requestPublishExpense(expense.id).then(() => {
+  //   const fetchExpenses = useQuery(['expenses-table', expensesTableQuery], () =>
+  //   requestFetchExpensesTable(),
+  // );
+
+  const handlePublishExpense = useCallback((expense) => {
+    setPublishExpense(expense);
+  }, []);
+
+  const handleCancelPublishExpense = useCallback(() => {
+    setPublishExpense(false);
+  });
+
+  // Handle publish expense confirm.
+  const handleConfirmPublishExpense = useCallback(() => {
+    requestPublishExpense(publishExpense.id)
+      .then(() => {
+        setPublishExpense(false);
         AppToaster.show({
-          message: formatMessage({ id: 'the_expense_id_has_been_published' }),
+          message: formatMessage({
+            id: 'the_expense_has_been_published',
+          }),
           intent: Intent.SUCCESS,
         });
+        queryCache.invalidateQueries('expenses-table');
+      })
+      .catch((error) => {
+        setPublishExpense(false);
       });
-      fetchExpenses.refetch();
-    },
-    [requestPublishExpense, formatMessage],
-  );
+  }, [publishExpense, requestPublishExpense, formatMessage]);
 
   // Handle selected rows change.
   const handleSelectedRowsChange = useCallback(
@@ -190,11 +208,11 @@ function ExpensesList({
       <DashboardPageContent>
         <Switch>
           <Route
-          // exact={true}
-          // path={[
-          //   '/expenses/:custom_view_id/custom_view',
-          //   '/expenses/new',
-          // ]}
+            exact={true}
+            // path={[
+            //   '/expenses/:custom_view_id/custom_view',
+            //   'expenses',
+            // ]}
           >
             <ExpenseViewTabs />
 
@@ -240,14 +258,26 @@ function ExpensesList({
             />
           </p>
         </Alert>
+        <Alert
+          cancelButtonText={<T id={'cancel'} />}
+          confirmButtonText={<T id={'publish'} />}
+          intent={Intent.WARNING}
+          isOpen={publishExpense}
+          onCancel={handleCancelPublishExpense}
+          onConfirm={handleConfirmPublishExpense}
+        >
+          <p>
+            <T id={'are_sure_to_publish_this_expense'} />
+          </p>
+        </Alert>
       </DashboardPageContent>
     </DashboardInsider>
   );
 }
 
 export default compose(
-  withDashboardActions,
   withExpensesActions,
+  withDashboardActions,
   withViewsActions,
   withResourceActions,
   withExpenses(({ expensesTableQuery }) => ({ expensesTableQuery })),

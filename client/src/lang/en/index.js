@@ -440,7 +440,7 @@ export default {
     'The expenses #{number} have been successfully deleted',
   once_delete_these_expenses_you_will_not_able_restore_them:
     "Once you delete these expenses, you won't be able to retrieve them later. Are you sure you want to delete them?",
-  the_expense_id_has_been_published: 'The expense id has been published',
+  the_expense_has_been_published: 'The expense has been published',
   select_beneficiary_account: 'Select Beneficiary Account',
   total_amount_equals_zero: 'Total amount equals zero',
   value: 'Value',
@@ -449,7 +449,7 @@ export default {
   as_date: 'As Date',
   aging_before_days: 'Aging before days',
   aging_periods: 'Aging periods',
-  name_:'name',
+  name_: 'name',
   as: 'As',
   receivable_aging_summary: 'Receivable Aging Summary',
   customers: 'Customers',
@@ -536,5 +536,11 @@ export default {
   should_total_of_credit_and_debit_be_equal: 'Should total of credit and debit be equal.',
   no_accounts: 'No Accounts',
   the_accounts_have_been_successfully_inactivated: 'The accounts have been successfully inactivated.',
-  account_code_is_not_unique: 'Account code is not unqiue.'
+  account_code_is_not_unique: 'Account code is not unqiue.',
+  are_sure_to_publish_this_expense:
+    'Are you sure you want to publish this expense?',
+  once_delete_these_journals_you_will_not_able_restore_them:
+    "Once you delete these journalss, you won't be able to retrieve them later. Are you sure you want to delete them?",
+  once_delete_this_journal_you_will_able_to_restore_it: `Once you delete this journal, you won\'t be able to restore it later. Are you sure you want to delete ?`,
+  the_expense_is_already_published: 'The expense is already published.',
 };

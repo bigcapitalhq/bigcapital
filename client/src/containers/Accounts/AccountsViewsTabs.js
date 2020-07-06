@@ -1,11 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { useHistory } from 'react-router';
 import { connect } from 'react-redux';
-import {
-  Alignment,
-  Navbar,
-  NavbarGroup,
-} from '@blueprintjs/core';
+import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
 import { useParams, withRouter } from 'react-router-dom';
 import { pick, debounce } from 'lodash';
 
@@ -38,13 +34,14 @@ function AccountsViewsTabs({
   customViewChanged,
   onViewChanged,
 }) {
+
   const history = useHistory();
   const { custom_view_id: customViewId = null } = useParams();
 
   useEffect(() => {
     changeAccountsCurrentView(customViewId || -1);
     setTopbarEditView(customViewId);
-    changePageSubtitle((customViewId && viewItem) ? viewItem.name : '');
+    changePageSubtitle(customViewId && viewItem ? viewItem.name : '');
 
     addAccountsTableQueries({
       custom_view_id: customViewId,

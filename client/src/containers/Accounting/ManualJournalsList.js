@@ -3,7 +3,11 @@ import { Route, Switch, useHistory, withRouter } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import { Alert, Intent } from '@blueprintjs/core';
 import AppToaster from 'components/AppToaster';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import {
+  FormattedMessage as T,
+  useIntl,
+  FormattedHTMLMessage,
+} from 'react-intl';
 
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
@@ -114,6 +118,7 @@ function ManualJournalsTable({
   const handleConfirmBulkDelete = useCallback(() => {
     requestDeleteBulkManualJournals(bulkDelete)
       .then(() => {
+        setBulkDelete(false);
         AppToaster.show({
           message: formatMessage(
             { id: 'the_journals_has_been_successfully_deleted' },
@@ -121,7 +126,6 @@ function ManualJournalsTable({
           ),
           intent: Intent.SUCCESS,
         });
-        setBulkDelete(false);
       })
       .catch((error) => {
         setBulkDelete(false);
@@ -181,6 +185,7 @@ function ManualJournalsTable({
           message: formatMessage({
             id: 'the_manual_journal_id_has_been_published',
           }),
+          intent: Intent.SUCCESS,
         });
       });
     },
@@ -237,11 +242,7 @@ function ManualJournalsTable({
           onConfirm={handleConfirmManualJournalDelete}
         >
           <p>
-            <T
-              id={
-                'once_delete_this_journal_category_you_will_able_to_restore_it'
-              }
-            />
+            <T id={'once_delete_this_journal_you_will_able_to_restore_it'} />
           </p>
         </Alert>
 
@@ -258,7 +259,7 @@ function ManualJournalsTable({
         >
           <p>
             <T
-              id={'once_delete_these_journalss_you_will_not_able_restore_them'}
+              id={'once_delete_these_journals_you_will_not_able_restore_them'}
             />
           </p>
         </Alert>

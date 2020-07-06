@@ -23,9 +23,9 @@ import withManualJournals from 'containers/Accounting/withManualJournals';
 import withManualJournalsActions from 'containers/Accounting/withManualJournalsActions';
 
 /**
- * Status column accessor. 
+ * Status column accessor.
  */
-function StatusAccessor(row) {
+const StatusAccessor = (row) => {
   return (
     <Choose>
       <Choose.When condition={!!row.status}>
@@ -41,7 +41,7 @@ function StatusAccessor(row) {
       </Choose.Otherwise>
     </Choose>
   );
-}
+};
 
 /**
  * Note column accessor.
@@ -115,12 +115,12 @@ function ManualJournalsDataTable({
       <Menu>
         <MenuItem text={formatMessage({ id: 'view_details' })} />
         <MenuDivider />
-        {!journal.status && (
+        <If condition={!journal.status}>
           <MenuItem
             text={formatMessage({ id: 'publish_journal' })}
             onClick={handlePublishJournal(journal)}
           />
-        )}
+        </If>
         <MenuItem
           text={formatMessage({ id: 'edit_journal' })}
           onClick={handleEditJournal(journal)}
@@ -230,20 +230,29 @@ function ManualJournalsDataTable({
     },
     [onSelectedRowsChange],
   );
+  const selectionColumn = useMemo(
+    () => ({
+      minWidth: 40,
+      width: 40,
+      maxWidth: 40,
+    }),
+    [],
+  );
 
   return (
     <DataTable
+      noInitialFetch={true}
       columns={columns}
       data={manualJournalsCurrentPage}
       onFetchData={handleDataTableFetchData}
       manualSortBy={true}
-      selectionColumn={true}
-      noInitialFetch={true}
+      selectionColumn={selectionColumn}
+      expandable={true}
       sticky={true}
-      loading={manualJournalsLoading && !isMounted}
       onSelectedRowsChange={handleSelectedRowsChange}
-      pagination={true}
+      loading={manualJournalsLoading && !isMounted}
       rowContextMenu={onRowContextMenu}
+      pagination={true}
       pagesCount={manualJournalsPagination.pagesCount}
       initialPageSize={manualJournalsTableQuery.page_size}
       initialPageIndex={manualJournalsTableQuery.page - 1}
