@@ -14,7 +14,6 @@ import {
 } from 'components/DataTableCells';
 import withAccounts from 'containers/Accounts/withAccounts';
 
-
 const ExpenseCategoryHeaderCell = () => {
   return (
     <>
@@ -22,10 +21,10 @@ const ExpenseCategoryHeaderCell = () => {
       <Hint />
     </>
   );
-}
+};
 
- // Actions cell renderer.
- const ActionsCellRenderer = ({
+// Actions cell renderer.
+const ActionsCellRenderer = ({
   row: { index },
   column: { id },
   cell: { value: initialValue },
@@ -101,16 +100,11 @@ function ExpenseTable({
   const { formatMessage } = useIntl();
 
   useEffect(() => {
-    setRows([
-      ...categories.map((e) => ({ ...e, rowType: 'editor' })),
-    ]);
+    setRows([...categories.map((e) => ({ ...e, rowType: 'editor' }))]);
   }, [categories]);
 
   // Final table rows editor rows and total and final blank row.
-  const tableRows = useMemo(
-    () => [...rows, { rowType: 'total' }],
-    [rows],
-  );
+  const tableRows = useMemo(() => [...rows, { rowType: 'total' }], [rows]);
 
   // Memorized data table columns.
   const columns = useMemo(
@@ -133,6 +127,7 @@ function ExpenseTable({
         disableSortBy: true,
         disableResizing: true,
         width: 250,
+        accountsDataProp: 'expenseAccounts',
       },
       {
         Header: formatMessage({ id: 'amount_currency' }, { currency: 'USD' }),
@@ -187,6 +182,11 @@ function ExpenseTable({
   // Handles click remove datatable row.
   const handleRemoveRow = useCallback(
     (rowIndex) => {
+      // Can't continue if there is just one row line or less.
+      if (rows.length <= 1) {
+        return;
+      }
+
       const removeIndex = parseInt(rowIndex, 10);
       const newRows = rows.filter((row, index) => index !== removeIndex);
 
@@ -220,6 +220,12 @@ function ExpenseTable({
     [rows],
   );
 
+  // Filter expense accounts.
+  const expenseAccounts = useMemo(
+    () => accountsList.filter((a) => a?.type?.root_type === 'expense'),
+    [accountsList],
+  );
+
   return (
     <div className={'dashboard__insider--expense-form__table'}>
       <DataTable
@@ -229,6 +235,7 @@ function ExpenseTable({
         sticky={true}
         payload={{
           accounts: accountsList,
+          expenseAccounts,
           errors: errors.categories || [],
           updateData: handleUpdateData,
           removeRow: handleRemoveRow,

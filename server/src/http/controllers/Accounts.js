@@ -1,10 +1,5 @@
 import express from 'express';
-import {
-  check,
-  validationResult,
-  param,
-  query,
-} from 'express-validator';
+import { check, validationResult, param, query } from 'express-validator';
 import { difference } from 'lodash';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
 import JournalPoster from '@/services/Accounting/JournalPoster';
@@ -20,7 +15,6 @@ import {
   DynamicFilterFilterRoles,
 } from '@/lib/DynamicFilter';
 
-
 export default {
   /**
    * Router constructor method.
@@ -28,49 +22,71 @@ export default {
   router() {
     const router = express.Router();
 
-    router.post('/',
+    router.post(
+      '/',
       this.newAccount.validation,
-      asyncMiddleware(this.newAccount.handler));
+      asyncMiddleware(this.newAccount.handler)
+    );
 
-    router.post('/:id',
+    router.post(
+      '/:id',
       this.editAccount.validation,
-      asyncMiddleware(this.editAccount.handler));
+      asyncMiddleware(this.editAccount.handler)
+    );
 
-    router.get('/:id',
+    router.get(
+      '/:id',
       this.getAccount.validation,
-      asyncMiddleware(this.getAccount.handler));
+      asyncMiddleware(this.getAccount.handler)
+    );
 
-    router.get('/',
+    router.get(
+      '/',
       this.getAccountsList.validation,
-      asyncMiddleware(this.getAccountsList.handler));
+      asyncMiddleware(this.getAccountsList.handler)
+    );
 
-    router.delete('/',
+    router.delete(
+      '/',
       this.deleteBulkAccounts.validation,
-      asyncMiddleware(this.deleteBulkAccounts.handler));
+      asyncMiddleware(this.deleteBulkAccounts.handler)
+    );
 
-    router.delete('/:id',
+    router.delete(
+      '/:id',
       this.deleteAccount.validation,
-      asyncMiddleware(this.deleteAccount.handler));
+      asyncMiddleware(this.deleteAccount.handler)
+    );
 
-    router.post('/:id/active',
+    router.post(
+      '/:id/active',
       this.activeAccount.validation,
-      asyncMiddleware(this.activeAccount.handler));
+      asyncMiddleware(this.activeAccount.handler)
+    );
 
-    router.post('/:id/inactive',
+    router.post(
+      '/:id/inactive',
       this.inactiveAccount.validation,
-      asyncMiddleware(this.inactiveAccount.handler));
+      asyncMiddleware(this.inactiveAccount.handler)
+    );
 
-    router.post('/:id/recalculate-balance',
+    router.post(
+      '/:id/recalculate-balance',
       this.recalcualteBalanace.validation,
-      asyncMiddleware(this.recalcualteBalanace.handler));
+      asyncMiddleware(this.recalcualteBalanace.handler)
+    );
 
-    router.post('/:id/transfer_account/:toAccount',
+    router.post(
+      '/:id/transfer_account/:toAccount',
       this.transferToAnotherAccount.validation,
-      asyncMiddleware(this.transferToAnotherAccount.handler));
+      asyncMiddleware(this.transferToAnotherAccount.handler)
+    );
 
-    router.post('/bulk/:type(activate|inactivate)',
+    router.post(
+      '/bulk/:type(activate|inactivate)',
       this.bulkInactivateAccounts.validation,
-      asyncMiddleware(this.bulkInactivateAccounts.handler));
+      asyncMiddleware(this.bulkInactivateAccounts.handler)
+    );
 
     return router;
   },
@@ -80,34 +96,34 @@ export default {
    */
   newAccount: {
     validation: [
-      check('name').exists().isLength({ min: 3 })
-        .trim()
-        .escape(),
-      check('code').optional().isLength({ max: 10 })
-        .trim()
-        .escape(),
+      check('name').exists().isLength({ min: 3, max: 255 }).trim().escape(),
+      check('code').optional().isLength({ min: 3, max: 6, }).trim().escape(),
       check('account_type_id').exists().isNumeric().toInt(),
-      check('description').optional().trim().escape(),
+      check('description').optional().isLength({ max: 512 }).trim().escape(),
     ],
     async handler(req, res) {
       const validationErrors = validationResult(req);
 
       if (!validationErrors.isEmpty()) {
         return res.boom.badData(null, {
-          code: 'validation_error', ...validationErrors,
+          code: 'validation_error',
+          ...validationErrors,
         });
       }
       const form = { ...req.body };
       const { AccountType, Account } = req.models;
 
       const foundAccountCodePromise = form.code
-        ? Account.query().where('code', form.code) : null;
+        ? Account.query().where('code', form.code)
+        : null;
 
-      const foundAccountTypePromise = AccountType.query()
-        .findById(form.account_type_id);
+      const foundAccountTypePromise = AccountType.query().findById(
+        form.account_type_id
+      );
 
       const [foundAccountCode, foundAccountType] = await Promise.all([
-        foundAccountCodePromise, foundAccountTypePromise,
+        foundAccountCodePromise,
+        foundAccountTypePromise,
       ]);
 
       if (foundAccountCodePromise && foundAccountCode.length > 0) {
@@ -132,14 +148,10 @@ export default {
   editAccount: {
     validation: [
       param('id').exists().toInt(),
-      check('name').exists().isLength({ min: 3 })
-        .trim()
-        .escape(),
-      check('code').optional().isLength({ max: 10 })
-        .trim()
-        .escape(),
+      check('name').exists().isLength({ min: 3, max: 255, }).trim().escape(),
+      check('code').optional().isLength({ min: 3, max: 6, }).trim().escape(),
       check('account_type_id').exists().isNumeric().toInt(),
-      check('description').optional().trim().escape(),
+      check('description').optional().isLength({ max: 512 }).trim().escape(),
     ],
     async handler(req, res) {
       const { id } = req.params;
@@ -147,7 +159,8 @@ export default {
 
       if (!validationErrors.isEmpty()) {
         return res.boom.badData(null, {
-          code: 'validation_error', ...validationErrors,
+          code: 'validation_error',
+          ...validationErrors,
         });
       }
       const { Account, AccountType } = req.models;
@@ -162,12 +175,15 @@ export default {
       // Validate the account type is not changed.
       if (account.account_type_id != form.accountTypeId) {
         errorReasons.push({
-          type: 'NOT.ALLOWED.TO.CHANGE.ACCOUNT.TYPE', code: 100,
+          type: 'NOT.ALLOWED.TO.CHANGE.ACCOUNT.TYPE',
+          code: 100,
         });
       }
       // Validate the account code not exists on the storage.
       if (form.code && form.code !== account.code) {
-        const foundAccountCode = await Account.query().where('code', form.code).whereNot('id', account.id);
+        const foundAccountCode = await Account.query()
+          .where('code', form.code)
+          .whereNot('id', account.id);
 
         if (foundAccountCode.length > 0) {
           errorReasons.push({ type: 'NOT_UNIQUE_CODE', code: 200 });
@@ -178,7 +194,10 @@ export default {
         return res.status(400).send({ errors: errorReasons });
       }
       // Update the account on the storage.
-      const updatedAccount = await Account.query().patchAndFetchById(account.id, { ...form });
+      const updatedAccount = await Account.query().patchAndFetchById(
+        account.id,
+        { ...form }
+      );
 
       return res.status(200).send({ account: { ...updatedAccount } });
     },
@@ -188,18 +207,16 @@ export default {
    * Get details of the given account.
    */
   getAccount: {
-    validation: [
-      param('id').toInt(),
-    ],
+    validation: [param('id').toInt()],
     async handler(req, res) {
       const { id } = req.params;
       const { Account } = req.models;
-      const account = await Account.query().remember().where('id', id).first();
+      const account = await Account.query().where('id', id).first();
 
       if (!account) {
         return res.boom.notFound();
       }
-      return res.status(200).send({ account: { ...account } });
+      return res.status(200).send({ account });
     },
   },
 
@@ -207,9 +224,7 @@ export default {
    * Delete the given account.
    */
   deleteAccount: {
-    validation: [
-      param('id').toInt(),
-    ],
+    validation: [param('id').toInt()],
     async handler(req, res) {
       const { id } = req.params;
       const { Account, AccountTransaction } = req.models;
@@ -220,11 +235,13 @@ export default {
       }
       if (account.predefined) {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'ACCOUNT.PREDEFINED' , code: 200 }],
+          errors: [{ type: 'ACCOUNT.PREDEFINED', code: 200 }],
         });
       }
-      const accountTransactions = await AccountTransaction.query()
-        .where('account_id', account.id);
+      const accountTransactions = await AccountTransaction.query().where(
+        'account_id',
+        account.id
+      );
 
       if (accountTransactions.length > 0) {
         return res.boom.badRequest(null, {
@@ -257,7 +274,8 @@ export default {
 
       if (!validationErrors.isEmpty()) {
         return res.boom.badData(null, {
-          code: 'validation_error', ...validationErrors,
+          code: 'validation_error',
+          ...validationErrors,
         });
       }
       const filter = {
@@ -307,7 +325,7 @@ export default {
         }
         const sortByFilter = new DynamicFilterSortBy(
           filter.column_sort_by,
-          filter.sort_order,
+          filter.sort_order
         );
         dynamicFilter.setFilter(sortByFilter);
       }
@@ -316,10 +334,13 @@ export default {
       if (view && view.roles.length > 0) {
         const viewFilter = new DynamicFilterViews(
           mapViewRolesToConditionals(view.roles),
-          view.rolesLogicExpression,
+          view.rolesLogicExpression
         );
         if (!viewFilter.validateFilterRoles()) {
-          errorReasons.push({ type: 'VIEW.LOGIC.EXPRESSION.INVALID', code: 400 });
+          errorReasons.push({
+            type: 'VIEW.LOGIC.EXPRESSION.INVALID',
+            code: 400,
+          });
         }
         dynamicFilter.setFilter(viewFilter);
       }
@@ -328,12 +349,15 @@ export default {
         // Validate the accounts resource fields.
         const filterRoles = new DynamicFilterFilterRoles(
           mapFilterRolesToDynamicFilter(filter.filter_roles),
-          accountsResource.fields,
+          accountsResource.fields
         );
         dynamicFilter.setFilter(filterRoles);
 
         if (filterRoles.validateFilterRoles().length > 0) {
-          errorReasons.push({ type: 'ACCOUNTS.RESOURCE.HAS.NO.GIVEN.FIELDS', code: 500 });
+          errorReasons.push({
+            type: 'ACCOUNTS.RESOURCE.HAS.NO.GIVEN.FIELDS',
+            code: 500,
+          });
         }
       }
       if (errorReasons.length > 0) {
@@ -341,16 +365,18 @@ export default {
       }
 
       const query = Account.query()
-      // .remember()
-      .onBuild((builder) => {
-        builder.modify('filterAccountTypes', filter.account_types);
-        builder.withGraphFetched('type');
-        builder.withGraphFetched('balance');
+        // .remember()
+        .onBuild((builder) => {
+          builder.modify('filterAccountTypes', filter.account_types);
+          builder.withGraphFetched('type');
+          builder.withGraphFetched('balance');
 
-        dynamicFilter.buildQuery()(builder);
+          dynamicFilter.buildQuery()(builder);
 
-        // console.log(builder.toKnexQuery().toSQL());
-      }).toKnexQuery().toSQL();
+          // console.log(builder.toKnexQuery().toSQL());
+        })
+        .toKnexQuery()
+        .toSQL();
 
       console.log(query);
 
@@ -370,9 +396,11 @@ export default {
 
       return res.status(200).send({
         accounts: nestedAccounts,
-        ...(view) ? {
-          customViewId: view.id,
-        } : {},
+        ...(view
+          ? {
+              customViewId: view.id,
+            }
+          : {}),
       });
     },
   },
@@ -381,16 +409,10 @@ export default {
    * Re-calculates balance of the given account.
    */
   recalcualteBalanace: {
-    validation: [
-      param('id').isNumeric().toInt(),
-    ],
+    validation: [param('id').isNumeric().toInt()],
     async handler(req, res) {
       const { id } = req.params;
-      const {
-        Account,
-        AccountTransaction,
-        AccountBalance,
-      } = req.models;
+      const { Account, AccountTransaction, AccountBalance } = req.models;
       const account = await Account.findById(id);
 
       if (!account) {
@@ -398,8 +420,10 @@ export default {
           errors: [{ type: 'ACCOUNT.NOT.FOUND', code: 100 }],
         });
       }
-      const accountTransactions = AccountTransaction.query()
-        .where('account_id', account.id);
+      const accountTransactions = AccountTransaction.query().where(
+        'account_id',
+        account.id
+      );
 
       const journalEntries = new JournalPoster();
       journalEntries.loadFromCollection(accountTransactions);
@@ -418,9 +442,7 @@ export default {
    * Active the given account.
    */
   activeAccount: {
-    validation: [
-      param('id').exists().isNumeric().toInt(),
-    ],
+    validation: [param('id').exists().isNumeric().toInt()],
     async handler(req, res) {
       const { id } = req.params;
       const { Account } = req.models;
@@ -431,9 +453,7 @@ export default {
           errors: [{ type: 'ACCOUNT.NOT.FOUND', code: 100 }],
         });
       }
-      await Account.query()
-        .where('id', id)
-        .patch({ active: true });
+      await Account.query().where('id', id).patch({ active: true });
 
       return res.status(200).send({ id: account.id });
     },
@@ -443,9 +463,7 @@ export default {
    * Inactive the given account.
    */
   inactiveAccount: {
-    validation: [
-      param('id').exists().isNumeric().toInt(),
-    ],
+    validation: [param('id').exists().isNumeric().toInt()],
     async handler(req, res) {
       const { id } = req.params;
       const { Account } = req.models;
@@ -456,9 +474,7 @@ export default {
           errors: [{ type: 'ACCOUNT.NOT.FOUND', code: 100 }],
         });
       }
-      await Account.query()
-        .where('id', id)
-        .patch({ active: false });
+      await Account.query().where('id', id).patch({ active: false });
 
       return res.status(200).send({ id: account.id });
     },
@@ -477,7 +493,8 @@ export default {
 
       if (!validationErrors.isEmpty()) {
         return res.boom.badData(null, {
-          code: 'validation_error', ...validationErrors,
+          code: 'validation_error',
+          ...validationErrors,
         });
       }
 
@@ -505,7 +522,8 @@ export default {
 
       if (!validationErrors.isEmpty()) {
         return res.boom.badData(null, {
-          code: 'validation_error', ...validationErrors,
+          code: 'validation_error',
+          ...validationErrors,
         });
       }
       const filter = { ids: [], ...req.query };
@@ -518,23 +536,27 @@ export default {
       });
       const accountsIds = accounts.map((a) => a.id);
       const notFoundAccounts = difference(filter.ids, accountsIds);
-      const predefinedAccounts = accounts.filter(account => account.predefined);
+      const predefinedAccounts = accounts.filter(
+        (account) => account.predefined
+      );
       const errorReasons = [];
 
       if (notFoundAccounts.length > 0) {
         return res.status(404).send({
-          errors: [{
-            type: 'ACCOUNTS.IDS.NOT.FOUND',
-            code: 200,
-            ids: notFoundAccounts,
-          }],
+          errors: [
+            {
+              type: 'ACCOUNTS.IDS.NOT.FOUND',
+              code: 200,
+              ids: notFoundAccounts,
+            },
+          ],
         });
       }
       if (predefinedAccounts.length > 0) {
         errorReasons.push({
           type: 'ACCOUNT.PREDEFINED',
           code: 200,
-          ids: predefinedAccounts.map(a => a.id),
+          ids: predefinedAccounts.map((a) => a.id),
         });
       }
       const accountsTransactions = await AccountTransaction.query()
@@ -554,14 +576,17 @@ export default {
         errorReasons.push({
           type: 'ACCOUNT.HAS.ASSOCIATED.TRANSACTIONS',
           code: 300,
-          ids: accountsHasTransactions
+          ids: accountsHasTransactions,
         });
       }
       if (errorReasons.length > 0) {
         return res.status(400).send({ errors: errorReasons });
       }
       await Account.query()
-        .whereIn('id', accounts.map((a) => a.id))
+        .whereIn(
+          'id',
+          accounts.map((a) => a.id)
+        )
         .delete();
 
       return res.status(200).send();
@@ -582,7 +607,8 @@ export default {
 
       if (!validationErrors.isEmpty()) {
         return res.boom.badData(null, {
-          code: 'validation_error', ...validationErrors,
+          code: 'validation_error',
+          ...validationErrors,
         });
       }
       const filter = {
@@ -608,6 +634,6 @@ export default {
         });
 
       return res.status(200).send({ ids: storedAccountsIds });
-    }
-  }
+    },
+  },
 };

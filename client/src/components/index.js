@@ -19,6 +19,7 @@ import Dialog from './Dialog';
 import AppToaster from './AppToaster';
 import DataTable from './DataTable';
 import AccountsSelectList from './AccountsSelectList';
+import AccountsTypesSelect from './AccountsTypesSelect';
 
 const Hint = FieldHint;
 
@@ -45,4 +46,5 @@ export {
   AppToaster,
   DataTable,
   AccountsSelectList,
+  AccountsTypesSelect,
 };

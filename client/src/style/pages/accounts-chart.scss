@@ -18,6 +18,7 @@
         .account_name{
           > div{
             width: 100%;
+            font-weight: 500;
           }
 
           .bp3-popover-wrapper--inactive-semafro{
@@ -78,14 +79,14 @@
       &.form-group--description{
 
         .bp3-form-content{
-          width: 280px;
+          width: 280px;  
+        }
 
-          textarea{
-            min-width: 100%;
-            max-width: 100%;
-            width: 100%;
-            max-height: 120px;
-          }
+        textarea{
+          min-width: 100%;
+          max-width: 100%;
+          width: 100%;
+          min-height: 60px;
         }
       }
     }
@@ -105,6 +106,11 @@
         top: -2px;
         margin-left: 2px;
       }
-    }    
+    }
+    .form-group--description{
+      textarea{
+        padding: 6px;
+      }
+    }
   }
 }

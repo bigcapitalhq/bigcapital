@@ -6,7 +6,7 @@
 
   &:before{
     content: "";
-    height: 2px; 
+    height: 1px; 
     background: #01194e;
     position: fixed;
     top: 0;
@@ -203,6 +203,7 @@
     align-items: center;
     margin-left: 1rem;
   }
+
   &__title{
     align-items: center;;
     display: flex;
@@ -242,6 +243,9 @@
 
   &__subtitle{
     
+  }
+  &__insider{
+    margin-bottom: 40px;
   }
 
   &-content{

@@ -5,7 +5,7 @@ exports.up = function(knex) {
     table.integer('expense_account_id').unsigned();
     table.integer('index').unsigned();
     table.text('description');
-    table.decimal('amount');
+    table.decimal('amount', 13, 3);
     table.integer('expense_id').unsigned();
     table.timestamps();
   }).raw('ALTER TABLE `EXPENSE_TRANSACTION_CATEGORIES` AUTO_INCREMENT = 1000');;

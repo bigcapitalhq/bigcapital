@@ -61,36 +61,6 @@ function ExpenseFormHeader({
     }
   };
 
-  // Account item of select accounts field.
-  const accountItem = (item, { handleClick }) => {
-    return (
-      <MenuItem
-        key={item.id}
-        text={item.name}
-        label={item.code}
-        onClick={handleClick}
-      />
-    );
-  };
-
-  // Filters accounts items.
-  // @filter accounts predicator resauble
-  const filterAccountsPredicater = useCallback(
-    (query, account, _index, exactMatch) => {
-      const normalizedTitle = account.name.toLowerCase();
-      const normalizedQuery = query.toLowerCase();
-
-      if (exactMatch) {
-        return normalizedTitle === normalizedQuery;
-      } else {
-        return (
-          `${account.code} ${normalizedTitle}`.indexOf(normalizedQuery) >= 0
-        );
-      }
-    },
-    [],
-  );
-
   // Handles change account.
   const onChangeAccount = useCallback(
     (account) => {
@@ -110,6 +80,12 @@ function ExpenseFormHeader({
       };
     },
     [setFieldValue, selectedItems],
+  );
+
+  // Filter payment accounts.
+  const paymentAccounts = useMemo(
+    () => accountsList.filter(a => a?.type?.key === 'current_asset'),
+    [accountsList],
   );
 
   return (
@@ -165,7 +141,7 @@ function ExpenseFormHeader({
             }
           >
             <AccountsSelectList
-              accounts={accountsList}
+              accounts={paymentAccounts}
               onAccountSelected={onChangeAccount}
               defaultSelectText={<T id={'select_payment_account'} />}
               selectedAccountId={values.payment_account_id}

@@ -33,7 +33,7 @@ export default function ListSelect ({
     ('loading') : <MenuItem disabled={true} text={noResultsText} />;
 
   const itemRenderer =  (item, { handleClick, modifiers, query }) => {
-    return (<MenuItem text={item[labelProp]} key={item[selectedItemProp]} />);
+    return (<MenuItem text={item[labelProp]} key={item[selectedItemProp]} onClick={handleClick} />);
   };
 
   return (

@@ -2,8 +2,8 @@
 exports.up = function(knex) {
   return knex.schema.createTable('expenses_transactions', (table) => {
     table.increments();
-    table.decimal('total_amount');
-    table.string('currency_code');
+    table.decimal('total_amount', 13, 3);
+    table.string('currency_code', 3);
     table.text('description');
     table.integer('payment_account_id').unsigned();
     table.integer('payee_id').unsigned();

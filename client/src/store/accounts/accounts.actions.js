@@ -262,7 +262,9 @@ export const fetchAccount = ({ id }) => {
         .then((response) => {
           dispatch({
             type: t.ACCOUNT_SET,
-            account: response.data.account,
+            payload: {
+              account: response.data.account,
+            }
           });
           resolve(response);
         })

@@ -1,6 +1,6 @@
 
 .make-journal-entries{
-  padding-bottom: 80px;
+  padding-bottom: 20px;
   display: flex;
   flex-direction: column;
 
@@ -73,7 +73,7 @@
           }
         }
         .tr{
-          .bp3-input,
+          .bp3-form-group:not(.bp3-intent-danger) .bp3-input,
           .form-group--select-list .bp3-button{
             border-color: #E5E5E5;
             border-radius: 3px;
@@ -84,13 +84,12 @@
           .form-group--select-list{
             &.bp3-intent-danger{
               .bp3-button:not(.bp3-minimal){
-                border-color: #efa8a8;
+                border-color: #db3737;
               }
             }  
           }
 
           &:last-of-type{
-
             .td{
               border-bottom: transparent;
 
@@ -126,6 +125,14 @@
               > span{
                 font-weight: 600;
                 color: #444;
+              }
+            }
+          }
+
+          .td{
+            &.note{
+              .bp3-form-group{
+                width: 100%;
               }
             }
           }

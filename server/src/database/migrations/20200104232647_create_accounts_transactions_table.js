@@ -2,8 +2,8 @@
 exports.up = function(knex) {
   return knex.schema.createTable('accounts_transactions', (table) => {
     table.increments();
-    table.decimal('credit');
-    table.decimal('debit');
+    table.decimal('credit', 13, 3);
+    table.decimal('debit', 13, 3);
     table.string('transaction_type');
     table.string('reference_type');
     table.integer('reference_id');

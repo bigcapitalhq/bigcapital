@@ -306,7 +306,7 @@ function AccountsChart({
         setBulkInactiveAccounts(false);
         AppToaster.show({
           message: formatMessage({
-            id: 'the_accounts_has_been_successfully_inactivated',
+            id: 'the_accounts_have_been_successfully_inactivated',
           }),
           intent: Intent.SUCCESS,
         });

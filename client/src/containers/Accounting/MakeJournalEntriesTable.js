@@ -109,7 +109,7 @@ function MakeJournalEntriesTable({
   const { formatMessage } = useIntl();
 
   useEffect(() => {
-    setRows([...values.entries.map((e) => ({ ...e, rowType: 'editor' }))]);
+    setRows([...values.map((e) => ({ ...e, rowType: 'editor' }))]);
   }, [values, setRows]);
 
   // Final table rows editor rows and total and final blank row.
@@ -217,6 +217,9 @@ function MakeJournalEntriesTable({
 
   const handleRemoveRow = useCallback(
     (rowIndex) => {
+      // Can't continue if there is just one row line or less.
+      if (rows.length <= 2) { return; }
+
       const removeIndex = parseInt(rowIndex, 10);
       const newRows = rows.filter((row, index) => index !== removeIndex);
 

@@ -10,7 +10,7 @@ import { useFormik } from 'formik';
 import moment from 'moment';
 import { Intent } from '@blueprintjs/core';
 import { useIntl } from 'react-intl';
-import { pick } from 'lodash';
+import { pick, setWith } from 'lodash';
 
 import MakeJournalEntriesHeader from './MakeJournalEntriesHeader';
 import MakeJournalEntriesFooter from './MakeJournalEntriesFooter';
@@ -89,19 +89,23 @@ function MakeJournalEntriesForm({
   const validationSchema = Yup.object().shape({
     journal_number: Yup.string()
       .required()
+      .min(1)
+      .max(255)
       .label(formatMessage({ id: 'journal_number_' })),
     journal_type: Yup.string()
       .required()
+      .min(1)
+      .max(255)
       .label(formatMessage({ id: 'journal_type' })),
     date: Yup.date()
       .required()
       .label(formatMessage({ id: 'date' })),
-    reference: Yup.string(),
-    description: Yup.string(),
+    reference: Yup.string().min(1).max(255),
+    description: Yup.string().min(1).max(1024),
     entries: Yup.array().of(
       Yup.object().shape({
-        credit: Yup.number().nullable(),
-        debit: Yup.number().nullable(),
+        credit: Yup.number().decimalScale(13).nullable(),
+        debit: Yup.number().decimalScale(13).nullable(),
         account_id: Yup.number()
           .nullable()
           .when(['credit', 'debit'], {
@@ -109,7 +113,7 @@ function MakeJournalEntriesForm({
             then: Yup.number().required(),
           }),
         contact_id: Yup.number().nullable(),
-        note: Yup.string().nullable(),
+        note: Yup.string().max(255).nullable(),
       }),
     ),
   });
@@ -180,48 +184,66 @@ function MakeJournalEntriesForm({
   }, [manualJournal]);
 
   // Transform API errors in toasts messages.
-  const transformErrors = (errors, { setErrors }) => {
-    const hasError = (errorType) => errors.some((e) => e.type === errorType);
+  const transformErrors = (resErrors, { setErrors, errors }) => {
+    const getError = (errorType) => resErrors.find((e) => e.type === errorType);
+    const toastMessages = [];
+    let error;
+    let newErrors = { ...errors, entries: [] };
 
-    if (hasError(ERROR.CUSTOMERS_NOT_WITH_RECEVIABLE_ACC)) {
-      AppToaster.show({
-        message: formatMessage({
-          id: 'customers_should_assign_with_receivable_account_only',
-        }),
-        intent: Intent.DANGER,
+    const setEntriesErrors = (indexes, prop, message) =>
+      indexes.forEach((i) => {
+        const index = Math.max(i - 1, 0);
+        newErrors = setWith(newErrors, `entries.[${index}].${prop}`, message);
       });
-    }
-    if (hasError(ERROR.PAYABLE_ENTRIES_HAS_NO_VENDORS)) {
-      AppToaster.show({
-        message: formatMessage({
-          id: 'vendors_should_assign_with_payable_account_only',
+
+    if ((error = getError(ERROR.PAYABLE_ENTRIES_HAS_NO_VENDORS))) {
+      toastMessages.push(
+        formatMessage({
+          id: 'vendors_should_selected_with_payable_account_only',
         }),
-        intent: Intent.DANGER,
-      });
+      );
+      setEntriesErrors(error.indexes, 'contact_id', 'error');
     }
-    if (hasError(ERROR.RECEIVABLE_ENTRIES_HAS_NO_CUSTOMERS)) {
-      AppToaster.show({
-        message: formatMessage({
-          id: 'entries_with_receivable_account_no_assigned_with_customers',
+    if ((error = getError(ERROR.RECEIVABLE_ENTRIES_HAS_NO_CUSTOMERS))) {
+      toastMessages.push(
+        formatMessage({
+          id: 'should_select_customers_with_entries_have_receivable_account',
         }),
-        intent: Intent.DANGER,
-      });
+      );
+      setEntriesErrors(error.indexes, 'contact_id', 'error');
     }
-    if (hasError(ERROR.PAYABLE_ENTRIES_HAS_NO_VENDORS)) {
-      AppToaster.show({
-        message: formatMessage({
-          id: 'entries_with_payable_account_no_assigned_with_vendors',
+    if ((error = getError(ERROR.CUSTOMERS_NOT_WITH_RECEVIABLE_ACC))) {
+      toastMessages.push(
+        formatMessage({
+          id: 'customers_should_selected_with_receivable_account_only',
         }),
-        intent: Intent.DANGER,
-      });
+      );
+      setEntriesErrors(error.indexes, 'account_id', 'error');
     }
-    if (hasError(ERROR.JOURNAL_NUMBER_ALREADY_EXISTS)) {
-      setErrors({
-        journal_number: formatMessage({
+    if ((error = getError(ERROR.VENDORS_NOT_WITH_PAYABLE_ACCOUNT))) {
+      toastMessages.push(
+        formatMessage({
+          id: 'vendors_should_selected_with_payable_account_only',
+        }),
+      );
+      setEntriesErrors(error.indexes, 'account_id', 'error');
+    }
+    if ((error = getError(ERROR.JOURNAL_NUMBER_ALREADY_EXISTS))) {
+      newErrors = setWith(
+        newErrors,
+        'journal_number',
+        formatMessage({
           id: 'journal_number_is_already_used',
         }),
-      });
+      );
     }
+    setErrors({ ...newErrors });
+    AppToaster.show({
+      message: toastMessages.map((message) => {
+        return <div>- {message}</div>;
+      }),
+      intent: Intent.DANGER,
+    });
   };
 
   const formik = useFormik({
@@ -255,7 +277,7 @@ function MakeJournalEntriesForm({
       } else if (totalCredit === 0 || totalDebit === 0) {
         AppToaster.show({
           message: formatMessage({
-            id: 'should_total_of_credit_and_debit_be_bigger_then_zero',
+            id: 'amount_cannot_be_zero_or_empty',
           }),
           intent: Intent.DANGER,
         });
@@ -353,7 +375,10 @@ function MakeJournalEntriesForm({
 
   // Handle click on add a new line/row.
   const handleClickAddNewRow = () => {
-    formik.setFieldValue('entries', [...formik.values.entries, defaultEntry]);
+    formik.setFieldValue(
+      'entries',
+      reorderingEntriesIndex([...formik.values.entries, defaultEntry]),
+    );
   };
 
   // Handle click `Clear all lines` button.
@@ -370,13 +395,12 @@ function MakeJournalEntriesForm({
         <MakeJournalEntriesHeader formik={formik} />
 
         <MakeJournalEntriesTable
-          values={formik.values}
+          values={formik.values.entries}
           formik={formik}
           defaultRow={defaultEntry}
           onClickClearAllLines={handleClickClearLines}
           onClickAddNewRow={handleClickAddNewRow}
         />
-
         <MakeJournalEntriesFooter
           formik={formik}
           onSubmitClick={handleSubmitClick}

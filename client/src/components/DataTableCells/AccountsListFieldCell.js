@@ -1,42 +1,41 @@
-import React, {useCallback, useMemo} from 'react';
+import React, { useCallback, useMemo } from 'react';
 import AccountsSelectList from 'components/AccountsSelectList';
 import classNames from 'classnames';
-import {
-  FormGroup,
-  Classes,
-  Intent,
-} from '@blueprintjs/core';
+import { FormGroup, Classes, Intent } from '@blueprintjs/core';
 
 // Account cell renderer.
 const AccountCellRenderer = ({
-  column: { id },
+  column: { id, accountsDataProp },
   row: { index, original },
   cell: { value: initialValue },
-  payload: { accounts, updateData, errors },
+  payload: { accounts: defaultAccounts, updateData, errors, ...restProps },
 }) => {
-  const handleAccountSelected = useCallback((account) => {
-    updateData(index, id, account.id);
-  }, [updateData, index, id]);
+  const handleAccountSelected = useCallback(
+    (account) => {
+      updateData(index, id, account.id);
+    },
+    [updateData, index, id],
+  );
+  const error = errors?.[index]?.[id];
 
-  const { account_id = false } = (errors[index] || {});
-
-  // const initialAccount = useMemo(() => 
-  //   accounts.find(a => a.id === initialValue),
-  //   [accounts, initialValue]);
-
+  const accounts = useMemo(
+    () => restProps[accountsDataProp] || defaultAccounts,
+    [restProps, defaultAccounts, accountsDataProp],
+  );
   return (
     <FormGroup
-      intent={account_id ? Intent.DANGER : ''}
+      intent={error ? Intent.DANGER : null}
       className={classNames(
         'form-group--select-list',
         'form-group--account',
-        Classes.FILL)}
-      >
+        Classes.FILL,
+      )}
+    >
       <AccountsSelectList
         accounts={accounts}
         onAccountSelected={handleAccountSelected}
-        error={account_id}
-        selectedAccountId={initialValue} />
+        selectedAccountId={initialValue}
+      />
     </FormGroup>
   );
 };

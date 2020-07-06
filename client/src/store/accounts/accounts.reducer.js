@@ -51,7 +51,11 @@ const accountsReducer = createReducer(initialState, {
   },
 
   [t.ACCOUNT_SET]: (state, action) => {
-    state.accountsById[action.account.id] = action.account;
+    const { account } = action.payload;
+    state.items[account.id] = {
+      ...(state.items[account.id] || {}),
+      ...account,
+    };
   },
 
   [t.ACCOUNT_DELETE]: (state, action) => {

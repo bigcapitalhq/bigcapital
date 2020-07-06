@@ -5,11 +5,10 @@ import { FormattedMessage as T } from 'react-intl';
 
 export default function AccountsSelectList({
   accounts,
-  onAccountSelected,
-  error = [],
   initialAccountId,
   selectedAccountId,
   defaultSelectText = 'Select account',
+  onAccountSelected,
 }) {
   // Find initial account object to set it as default account in initial render.
   const initialAccount = useMemo(

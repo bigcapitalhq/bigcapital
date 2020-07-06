@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useEffect } from 'react';
 import {
   Button,
   Classes,
@@ -6,24 +6,24 @@ import {
   InputGroup,
   Intent,
   TextArea,
-  MenuItem,
   Checkbox,
   Position,
 } from '@blueprintjs/core';
-import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { FormattedMessage as T, useIntl } from 'react-intl';
-import { If } from 'components';
-import { omit, pick } from 'lodash';
+import { pick } from 'lodash';
 import { useQuery, queryCache } from 'react-query';
 import classNames from 'classnames';
+import Yup from 'services/yup';
 import {
-  ListSelect,
+  If,
   ErrorMessage,
   Dialog,
   AppToaster,
   FieldRequiredHint,
   Hint,
+  AccountsSelectList,
+  AccountsTypesSelect,
 } from 'components';
 import AccountFormDialogContainer from 'containers/Dialogs/AccountFormDialog.container';
 
@@ -53,33 +53,33 @@ function AccountFormDialog({
   closeDialog,
 }) {
   const { formatMessage } = useIntl();
-  const accountFormValidationSchema = Yup.object().shape({
+  const validationSchema = Yup.object().shape({
     name: Yup.string()
       .required()
+      .min(3)
+      .max(255)
       .label(formatMessage({ id: 'account_name_' })),
-    code: Yup.number(),
-    account_type_id: Yup.string()
-      .nullable()
+    code: Yup.string().digits().min(3).max(6),
+    account_type_id: Yup.number()
       .required()
       .label(formatMessage({ id: 'account_type_id' })),
-    description: Yup.string().nullable().trim(),
-    parent_account_id: Yup.string().nullable(),
+    description: Yup.string().min(3).max(512).nullable().trim(),
+    parent_account_id: Yup.number().nullable(),
   });
   const initialValues = useMemo(
     () => ({
       account_type_id: null,
       name: '',
-      description: '',
       code: '',
-      type: '',
+      description: '',
+      parent_account_id: null,
     }),
     [],
   );
-
   const transformApiErrors = (errors) => {
     const fields = {};
     if (errors.find((e) => e.type === 'NOT_UNIQUE_CODE')) {
-      fields.code = 'Account code is not unqiue.';
+      fields.code = formatMessage({ id: 'account_code_is_not_unique' });
     }
     return fields;
   };
@@ -98,20 +98,33 @@ function AccountFormDialog({
     enableReinitialize: true,
     initialValues: {
       ...initialValues,
-      ...(payload.action === 'edit' && pick(account, Object.keys(initialValues))),
+      ...(payload.action === 'edit' &&
+        pick(account, Object.keys(initialValues))),
     },
-    validationSchema: accountFormValidationSchema,
+    validationSchema,
     onSubmit: (values, { setSubmitting, setErrors }) => {
-      const exclude = ['subaccount'];
+      const form = pick(values, Object.keys(initialValues));
+
       const toastAccountName = values.code
         ? `${values.code} - ${values.name}`
         : values.name;
 
+      const afterSubmit = () => {
+        closeDialog(dialogName);
+        queryCache.invalidateQueries('accounts-table');
+        queryCache.invalidateQueries('accounts-list');
+      };
+
+      const afterErrors = (errors) => {
+        const errorsTransformed = transformApiErrors(errors);
+        setErrors({ ...errorsTransformed });
+        setSubmitting(false);
+      };
+
       if (payload.action === 'edit') {
-        requestEditAccount(payload.id, values)
+        requestEditAccount(payload.id, form)
           .then((response) => {
-            closeDialog(dialogName);
-            queryCache.invalidateQueries('accounts-table');
+            afterSubmit(response);
 
             AppToaster.show({
               message: formatMessage(
@@ -124,19 +137,11 @@ function AccountFormDialog({
               intent: Intent.SUCCESS,
             });
           })
-          .catch((errors) => {
-            const errorsTransformed = transformApiErrors(errors);
-            setErrors({ ...errorsTransformed });
-            setSubmitting(false);
-          });
+          .catch(afterErrors);
       } else {
-        requestSubmitAccount({
-          payload: payload.parent_account_id,
-          form: { ...omit(values, exclude) },
-        })
+        requestSubmitAccount({ form })
           .then((response) => {
-            closeDialog(dialogName);
-            queryCache.invalidateQueries('accounts-table', { force: true });
+            afterSubmit(response);
 
             AppToaster.show({
               message: formatMessage(
@@ -150,68 +155,26 @@ function AccountFormDialog({
               position: Position.BOTTOM,
             });
           })
-          .catch((errors) => {
-            const errorsTransformed = transformApiErrors(errors);
-            setErrors({ ...errorsTransformed });
-            setSubmitting(false);
-          });
+          .catch(afterErrors);
       }
     },
   });
+
+  useEffect(() => {
+    if (values.parent_account_id) {
+      setFieldValue('subaccount', true);
+    }
+  }, [values.parent_account_id]);
 
   // Filtered accounts based on the given account type.
   const filteredAccounts = useMemo(
     () =>
       accounts.filter(
-        (account) => account.account_type_id === values.account_type_id,
+        (account) =>
+          account.account_type_id === values.account_type_id ||
+          !values.account_type_id,
       ),
     [accounts, values.account_type_id],
-  );
-
-  // Filters accounts types items.
-  const filterAccountTypeItems = (query, accountType, _index, exactMatch) => {
-    const normalizedTitle = accountType.name.toLowerCase();
-    const normalizedQuery = query.toLowerCase();
-
-    if (exactMatch) {
-      return normalizedTitle === normalizedQuery;
-    } else {
-      return normalizedTitle.indexOf(normalizedQuery) >= 0;
-    }
-  };
-
-  // Account type item of select filed.
-  const accountTypeItem = (item, { handleClick, modifiers, query }) => {
-    return <MenuItem text={item.name} key={item.id} onClick={handleClick} />;
-  };
-
-  // Account item of select accounts field.
-  const accountItem = (item, { handleClick, modifiers, query }) => {
-    return (
-      <MenuItem
-        text={item.name}
-        label={item.code}
-        key={item.id}
-        onClick={handleClick}
-      />
-    );
-  };
-
-  // Filters accounts items.
-  const filterAccountsPredicater = useCallback(
-    (query, account, _index, exactMatch) => {
-      const normalizedTitle = account.name.toLowerCase();
-      const normalizedQuery = query.toLowerCase();
-
-      if (exactMatch) {
-        return normalizedTitle === normalizedQuery;
-      } else {
-        return (
-          `${account.code} ${normalizedTitle}`.indexOf(normalizedQuery) >= 0
-        );
-      }
-    },
-    [],
   );
 
   // Handles dialog close.
@@ -256,12 +219,12 @@ function AccountFormDialog({
       fetchAccount.refetch();
     }
     if (payload.action === 'new_child') {
-      setFieldValue('subaccount', true);
       setFieldValue('parent_account_id', payload.parentAccountId);
       setFieldValue('account_type_id', payload.accountTypeId);
     }
-  }, [fetchAccount, fetchAccountsList, fetchAccountsTypes]);
+  }, [payload, fetchAccount, fetchAccountsList, fetchAccountsTypes]);
 
+  // Handle account type change.
   const onChangeAccountType = useCallback(
     (accountType) => {
       setFieldValue('account_type_id', accountType.id);
@@ -277,20 +240,10 @@ function AccountFormDialog({
     [setFieldValue],
   );
 
+  // Handle dialog on closed.
   const onDialogClosed = useCallback(() => {
     resetForm();
   }, [resetForm]);
-
-  const subAccountLabel = useMemo(() => {
-    return (
-      <span>
-        <T id={'sub_account'} />
-        <Hint />
-      </span>
-    );
-  }, []);
-
-  const requiredSpan = useMemo(() => <span class="required">*</span>, []);
 
   return (
     <Dialog
@@ -332,18 +285,13 @@ function AccountFormDialog({
               errors.account_type_id && touched.account_type_id && Intent.DANGER
             }
           >
-            <ListSelect
-              items={accountsTypes}
-              noResults={<MenuItem disabled={true} text="No results." />}
-              itemRenderer={accountTypeItem}
-              itemPredicate={filterAccountTypeItems}
-              popoverProps={{ minimal: true }}
-              onItemSelect={onChangeAccountType}
-              selectedItem={values.account_type_id}
-              selectedItemProp={'id'}
-              defaultText={<T id={'select_account_type'} />}
-              labelProp={'name'}
+            <AccountsTypesSelect
+              accountsTypes={accountsTypes}
+              selectedTypeId={values.account_type_id}
+              defaultSelectText={<T id={'select_account_type'} />}
+              onTypeSelected={onChangeAccountType}
               buttonProps={{ disabled: payload.action === 'edit' }}
+              popoverProps={{ minimal: true }}
             />
           </FormGroup>
 
@@ -384,7 +332,12 @@ function AccountFormDialog({
           >
             <Checkbox
               inline={true}
-              label={subAccountLabel}
+              label={
+                <>
+                  <T id={'sub_account'} />
+                  <Hint />
+                </>
+              }
               {...getFieldProps('subaccount')}
               checked={values.subaccount}
             />
@@ -400,17 +353,11 @@ function AccountFormDialog({
               )}
               inline={true}
             >
-              <ListSelect
-                items={filteredAccounts}
-                noResults={<MenuItem disabled={true} text="No results." />}
-                itemRenderer={accountItem}
-                itemPredicate={filterAccountsPredicater}
-                popoverProps={{ minimal: true }}
-                onItemSelect={onChangeSubaccount}
-                selectedItem={values.parent_account_id}
-                selectedItemProp={'id'}
-                defaultText={<T id={'select_parent_account'} />}
-                labelProp={'name'}
+              <AccountsSelectList
+                accounts={filteredAccounts}
+                onAccountSelected={onChangeSubaccount}
+                defaultSelectText={<T id={'select_parent_account'} />}
+                selectedAccountId={values.parent_account_id}
               />
             </FormGroup>
           </If>
@@ -424,7 +371,7 @@ function AccountFormDialog({
           >
             <TextArea
               growVertically={true}
-              large={true}
+              height={280}
               {...getFieldProps('description')}
             />
           </FormGroup>

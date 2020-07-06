@@ -436,11 +436,10 @@ export default {
     'The expense #{number} has been successfully edited.',
   the_expense_has_been_successfully_deleted:
     'The expense has been successfully deleted',
-  the_expenses_has_been_successfully_deleted:
-    'The expenses has been successfully deleted',
+  the_expenses_have_been_successfully_deleted:
+    'The expenses #{number} have been successfully deleted',
   once_delete_these_expenses_you_will_not_able_restore_them:
     "Once you delete these expenses, you won't be able to retrieve them later. Are you sure you want to delete them?",
-
   the_expense_id_has_been_published: 'The expense id has been published',
   select_beneficiary_account: 'Select Beneficiary Account',
   total_amount_equals_zero: 'Total amount equals zero',
@@ -529,4 +528,13 @@ export default {
   logic_expression: 'logic expression',
   assign_to_customer: 'Assign to Customer',
   inactive: 'Inactive',
+  should_select_customers_with_entries_have_receivable_account: 'Should select customers with entries that have receivable account.',
+  should_select_vendors_with_entries_have_payable_account: 'Should select vendors with entries that have payable account.',
+  vendors_should_selected_with_payable_account_only: 'Vendors contacts should selected with payable account only.',
+  customers_should_selected_with_receivable_account_only: 'Customers contacts should selected with receivable account only.',
+  amount_cannot_be_zero_or_empty: 'Amount cannot be zero or empty.',
+  should_total_of_credit_and_debit_be_equal: 'Should total of credit and debit be equal.',
+  no_accounts: 'No Accounts',
+  the_accounts_have_been_successfully_inactivated: 'The accounts have been successfully inactivated.',
+  account_code_is_not_unique: 'Account code is not unqiue.'
 };

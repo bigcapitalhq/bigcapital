@@ -4,7 +4,7 @@ exports.up = function(knex) {
     table.increments();
     table.date('date');
     table.string('currency_code');
-    table.decimal('exchange_rate');
+    table.decimal('exchange_rate', 8, 5);
     table.string('note');
   });
 };

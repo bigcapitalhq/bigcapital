@@ -28,6 +28,8 @@ import Dragzone from 'components/Dragzone';
 import useMedia from 'hooks/useMedia';
 import { compose, repeatValue } from 'utils';
 
+const MIN_LINES_NUMBER = 4;
+
 function ExpenseForm({
   // #withMedia
   requestSubmitMedia,
@@ -81,22 +83,26 @@ function ExpenseForm({
 
   const validationSchema = Yup.object().shape({
     beneficiary: Yup.string().label(formatMessage({ id: 'beneficiary' })),
-    payment_account_id: Yup.string()
+    payment_account_id: Yup.number()
       .required()
       .label(formatMessage({ id: 'payment_account_' })),
     payment_date: Yup.date()
       .required()
       .label(formatMessage({ id: 'payment_date_' })),
-    reference_no: Yup.string(),
-    currency_code: Yup.string().label(formatMessage({ id: 'currency_code' })),
+    reference_no: Yup.string().min(1).max(255),
+    currency_code: Yup.string()
+      .nullable()
+      .label(formatMessage({ id: 'currency_code' })),
     description: Yup.string()
       .trim()
+      .min(1)
+      .max(1024)
       .label(formatMessage({ id: 'description' })),
     publish: Yup.boolean().label(formatMessage({ id: 'publish' })),
     categories: Yup.array().of(
       Yup.object().shape({
-        index: Yup.number().nullable(),
-        amount: Yup.number().nullable(),
+        index: Yup.number().min(1).max(1000).nullable(),
+        amount: Yup.number().decimalScale(13).nullable(),
         expense_account_id: Yup.number()
           .nullable()
           .when(['amount'], {
@@ -134,9 +140,7 @@ function ExpenseForm({
       description: '',
       reference_no: '',
       currency_code: '',
-      categories: [
-        ...repeatValue(defaultCategory, 4),
-      ],
+      categories: [...repeatValue(defaultCategory, MIN_LINES_NUMBER)],
     }),
     [defaultCategory],
   );
@@ -153,9 +157,15 @@ function ExpenseForm({
       ...(expense
         ? {
             ...pick(expense, Object.keys(defaultInitialValues)),
-            categories: expense.categories.map((category) => ({
-              ...pick(category, Object.keys(defaultCategory)),
-            })),
+            categories: [
+              ...expense.categories.map((category) => ({
+                ...pick(category, Object.keys(defaultCategory)),
+              })),
+              ...repeatValue(
+                defaultCategory,
+                Math.max(MIN_LINES_NUMBER - expense.categories.length, 0),
+              ),
+            ],
           }
         : {
             ...defaultInitialValues,
@@ -184,6 +194,20 @@ function ExpenseForm({
       ...initialValues,
     },
     onSubmit: async (values, { setSubmitting, setErrors, resetForm }) => {
+      setSubmitting(true);
+      const totalAmount = values.categories.reduce((total, item) => {
+        return total + item.amount;
+      }, 0);
+
+      if (totalAmount <= 0) {
+        AppToaster.show({
+          message: formatMessage({
+            id: 'amount_cannot_be_zero_or_empty',
+          }),
+          intent: Intent.DANGER,
+        });
+        return;
+      }
       const categories = values.categories.filter(
         (category) =>
           category.amount && category.index && category.expense_account_id,
@@ -193,7 +217,6 @@ function ExpenseForm({
         publish: payload.publish,
         categories,
       };
-
       const saveExpense = (mdeiaIds) =>
         new Promise((resolve, reject) => {
           const requestForm = { ...form, media_ids: mdeiaIds };
@@ -237,11 +260,9 @@ function ExpenseForm({
                   intent: Intent.SUCCESS,
                 });
                 setSubmitting(false);
-                formik.resetForm();
+                resetForm();
                 saveInvokeSubmit({ action: 'new', ...payload });
                 clearSavedMediaIds();
-
-                // resolve(response);
               })
               .catch((errors) => {
                 setSubmitting(false);
@@ -298,11 +319,9 @@ function ExpenseForm({
   const handleClearAllLines = () => {
     formik.setFieldValue(
       'categories',
-      orderingCategoriesIndex([
-        ...repeatValue(defaultCategory, 4),
-      ]),
-    );  
-  }
+      orderingCategoriesIndex([...repeatValue(defaultCategory, MIN_LINES_NUMBER)]),
+    );
+  };
 
   return (
     <div className={'expense-form'}>
@@ -324,7 +343,6 @@ function ExpenseForm({
           >
             <TextArea
               growVertically={true}
-              large={true}
               {...formik.getFieldProps('description')}
             />
           </FormGroup>

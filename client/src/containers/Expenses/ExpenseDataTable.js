@@ -154,7 +154,7 @@ function ExpensesDataTable({
       {
         id: 'payment_date',
         Header: formatMessage({ id: 'payment_date' }),
-        accessor: () => moment().format('YYYY MMM DD'),
+        accessor: (r) => moment(r.payment_date).format('YYYY MMM DD'),
         width: 140,
         className: 'payment_date',
       },

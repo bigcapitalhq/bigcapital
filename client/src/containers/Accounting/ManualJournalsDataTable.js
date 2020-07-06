@@ -28,7 +28,7 @@ import withManualJournalsActions from 'containers/Accounting/withManualJournalsA
 function StatusAccessor(row) {
   return (
     <Choose>
-      <Choose.When condition={row.status}>
+      <Choose.When condition={!!row.status}>
         <Tag minimal={true}>
           <T id={'published'} />
         </Tag>
@@ -178,7 +178,7 @@ function ManualJournalsDataTable({
       {
         id: 'status',
         Header: formatMessage({ id: 'status' }),
-        accessor: StatusAccessor,
+        accessor: row => StatusAccessor(row),
         width: 95,
         className: 'status',
       },

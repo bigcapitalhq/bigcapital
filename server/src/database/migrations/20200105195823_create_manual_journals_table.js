@@ -5,7 +5,7 @@ exports.up = function(knex) {
     table.string('journal_number');
     table.string('reference');
     table.string('journal_type');
-    table.decimal('amount');
+    table.decimal('amount', 13, 3);
     table.date('date');
     table.boolean('status').defaultTo(false);
     table.string('description');

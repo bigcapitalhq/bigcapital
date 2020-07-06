@@ -17,17 +17,9 @@ export default function ContactsListField({
     initialContact || null
   );
 
-  const contactTypeLabel = (contactType) => {
-    switch(contactType) {
-      case 'customer':
-        return 'Customer';
-      case 'vendor':
-        return 'Vendor';
-    }
-  };
   // Contact item of select accounts field.
   const contactItem = useCallback((item, { handleClick, modifiers, query }) => (
-    <MenuItem text={item.display_name} label={contactTypeLabel(item.contact_type)} key={item.id} onClick={handleClick} />
+    <MenuItem text={item.display_name} key={item.id} onClick={handleClick} />
   ), []);
 
   const onContactSelect = useCallback((contact) => {

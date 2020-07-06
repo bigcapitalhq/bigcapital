@@ -109,7 +109,7 @@ function ExpensesList({
       .then(() => {
         AppToaster.show({
           message: formatMessage(
-            { id: 'the_expenses_has_been_successfully_deleted' },
+            { id: 'the_expenses_have_been_successfully_deleted' },
             { count: selectedRowsCount },
           ),
           intent: Intent.SUCCESS,
@@ -160,6 +160,7 @@ function ExpensesList({
       requestPublishExpense(expense.id).then(() => {
         AppToaster.show({
           message: formatMessage({ id: 'the_expense_id_has_been_published' }),
+          intent: Intent.SUCCESS,
         });
       });
       fetchExpenses.refetch();

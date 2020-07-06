@@ -8,7 +8,7 @@ const initialState = {
   views: {},
   loading: false,
   tableQuery: {
-    page_size: 4,
+    page_size: 12,
     page: 1,
   },
   currentViewId: -1,

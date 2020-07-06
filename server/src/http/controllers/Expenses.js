@@ -1,26 +1,18 @@
 import express from 'express';
-import {
-  check,
-  param,
-  query,
-  validationResult,
-} from 'express-validator';
+import { check, param, query, validationResult } from 'express-validator';
 import moment from 'moment';
 import { difference, sumBy, omit } from 'lodash';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
 import JournalPoster from '@/services/Accounting/JournalPoster';
 import JournalEntry from '@/services/Accounting/JournalEntry';
 import JWTAuth from '@/http/middleware/jwtAuth';
-import {
-  mapViewRolesToConditionals,
-} from '@/lib/ViewRolesBuilder';
+import { mapViewRolesToConditionals } from '@/lib/ViewRolesBuilder';
 import {
   DynamicFilter,
   DynamicFilterSortBy,
   DynamicFilterViews,
   DynamicFilterFilterRoles,
 } from '@/lib/DynamicFilter';
-
 
 export default {
   /**
@@ -30,33 +22,47 @@ export default {
     const router = express.Router();
     router.use(JWTAuth);
 
-    router.post('/',
+    router.post(
+      '/',
       this.newExpense.validation,
-      asyncMiddleware(this.newExpense.handler));
+      asyncMiddleware(this.newExpense.handler)
+    );
 
-    router.post('/:id/publish',
+    router.post(
+      '/:id/publish',
       this.publishExpense.validation,
-      asyncMiddleware(this.publishExpense.handler));
+      asyncMiddleware(this.publishExpense.handler)
+    );
 
-    router.delete('/:id',
+    router.delete(
+      '/:id',
       this.deleteExpense.validation,
-      asyncMiddleware(this.deleteExpense.handler));
+      asyncMiddleware(this.deleteExpense.handler)
+    );
 
-    router.delete('/',
+    router.delete(
+      '/',
       this.deleteBulkExpenses.validation,
-      asyncMiddleware(this.deleteBulkExpenses.handler));
+      asyncMiddleware(this.deleteBulkExpenses.handler)
+    );
 
-    router.post('/:id',
+    router.post(
+      '/:id',
       this.updateExpense.validation,
-      asyncMiddleware(this.updateExpense.handler));
+      asyncMiddleware(this.updateExpense.handler)
+    );
 
-    router.get('/',
+    router.get(
+      '/',
       this.listExpenses.validation,
-      asyncMiddleware(this.listExpenses.handler));
+      asyncMiddleware(this.listExpenses.handler)
+    );
 
-    router.get('/:id',
+    router.get(
+      '/:id',
       this.getExpense.validation,
-      asyncMiddleware(this.getExpense.handler));
+      asyncMiddleware(this.getExpense.handler)
+    );
 
     return router;
   },
@@ -66,20 +72,27 @@ export default {
    */
   newExpense: {
     validation: [
-      check('reference_no').optional().trim().escape(),
+      check('reference_no').optional().trim().escape().isLength({
+        max: 255,
+      }),
       check('payment_date').isISO8601().optional(),
       check('payment_account_id').exists().isNumeric().toInt(),
       check('description').optional(),
       check('currency_code').optional(),
       check('exchange_rate').optional().isNumeric().toFloat(),
       check('publish').optional().isBoolean().toBoolean(),
-
       check('categories').exists().isArray({ min: 1 }),
       check('categories.*.index').exists().isNumeric().toInt(),
       check('categories.*.expense_account_id').exists().isNumeric().toInt(),
-      check('categories.*.amount').optional().isNumeric().toFloat(),
-      check('categories.*.description').optional().trim().escape(),
-
+      check('categories.*.amount')
+        .optional({ nullable: true })
+        .isNumeric()
+        .isDecimal()
+        .isFloat({ max: 9999999999.999 }) // 13, 3
+        .toFloat(),
+      check('categories.*.description').optional().trim().escape().isLength({
+        max: 255,
+      }),
       check('custom_fields').optional().isArray({ min: 0 }),
       check('custom_fields.*.key').exists().trim().escape(),
       check('custom_fields.*.value').exists(),
@@ -89,7 +102,8 @@ export default {
 
       if (!validationErrors.isEmpty()) {
         return res.boom.badData(null, {
-          code: 'validation_error', ...validationErrors,
+          code: 'validation_error',
+          ...validationErrors,
         });
       }
       const { user } = req;
@@ -103,24 +117,37 @@ export default {
         ...req.body,
       };
       const totalAmount = sumBy(form.categories, 'amount');
-      const expenseAccountsIds = form.categories.map((account) => account.expense_account_id)
+      const expenseAccountsIds = form.categories.map(
+        (account) => account.expense_account_id
+      );
 
-      const storedExpenseAccounts = await Account.query().whereIn('id', expenseAccountsIds);
-      const storedExpenseAccountsIds = storedExpenseAccounts.map(a => a.id);
-      
-      const notStoredExpensesAccountsIds = difference(expenseAccountsIds, storedExpenseAccountsIds);
+      const storedExpenseAccounts = await Account.query().whereIn(
+        'id',
+        expenseAccountsIds
+      );
+      const storedExpenseAccountsIds = storedExpenseAccounts.map((a) => a.id);
+
+      const notStoredExpensesAccountsIds = difference(
+        expenseAccountsIds,
+        storedExpenseAccountsIds
+      );
       const errorReasons = [];
 
-      const paymentAccount = await Account.query().where('id', form.payment_account_id).first();
+      const paymentAccount = await Account.query()
+        .where('id', form.payment_account_id)
+        .first();
 
       if (!paymentAccount) {
         errorReasons.push({
-          type: 'PAYMENT.ACCOUNT.NOT.FOUND', code: 500, 
+          type: 'PAYMENT.ACCOUNT.NOT.FOUND',
+          code: 500,
         });
       }
       if (notStoredExpensesAccountsIds.length > 0) {
         errorReasons.push({
-          type: 'EXPENSE.ACCOUNTS.IDS.NOT.STORED', code: 400, ids: notStoredExpensesAccountsIds,
+          type: 'EXPENSE.ACCOUNTS.IDS.NOT.STORED',
+          code: 400,
+          ids: notStoredExpensesAccountsIds,
         });
       }
       if (totalAmount <= 0) {
@@ -129,7 +156,7 @@ export default {
       if (errorReasons.length > 0) {
         return res.status(400).send({ errors: errorReasons });
       }
-  
+
       const expenseTransaction = await Expense.query().insert({
         total_amount: totalAmount,
         payment_account_id: form.payment_account_id,
@@ -146,7 +173,7 @@ export default {
           ...category,
         });
         storeExpenseCategoriesOper.push(oper);
-      }); 
+      });
 
       const accountsDepGraph = await Account.depGraph().query();
       const journalPoster = new JournalPoster(accountsDepGraph);
@@ -155,14 +182,14 @@ export default {
         referenceType: 'Expense',
         referenceId: expenseTransaction.id,
         userId: user.id,
-        draft: !form.publish,  
+        draft: !form.publish,
       };
       const paymentJournalEntry = new JournalEntry({
         credit: totalAmount,
         account: paymentAccount.id,
         ...mixinEntry,
       });
-      journalPoster.credit(paymentJournalEntry)
+      journalPoster.credit(paymentJournalEntry);
 
       form.categories.forEach((category) => {
         const expenseJournalEntry = new JournalEntry({
@@ -176,9 +203,9 @@ export default {
       await Promise.all([
         ...storeExpenseCategoriesOper,
         journalPoster.saveEntries(),
-        (form.status) && journalPoster.saveBalance(),
+        form.status && journalPoster.saveBalance(),
       ]);
-      
+
       return res.status(200).send({ id: expenseTransaction.id });
     },
   },
@@ -187,15 +214,14 @@ export default {
    * Publish the given expense id.
    */
   publishExpense: {
-    validation: [
-      param('id').exists().isNumeric().toInt(),
-    ],
+    validation: [param('id').exists().isNumeric().toInt()],
     async handler(req, res) {
       const validationErrors = validationResult(req);
 
       if (!validationErrors.isEmpty()) {
         return res.boom.badData(null, {
-          code: 'validation_error', ...validationErrors,
+          code: 'validation_error',
+          ...validationErrors,
         });
       }
       const { id } = req.params;
@@ -248,7 +274,7 @@ export default {
    * Retrieve paginated expenses list.
    */
   listExpenses: {
-    validation: [      
+    validation: [
       query('page').optional().isNumeric().toInt(),
       query('page_size').optional().isNumeric().toInt(),
 
@@ -263,7 +289,8 @@ export default {
 
       if (!validationErrors.isEmpty()) {
         return res.boom.badData(null, {
-          code: 'validation_error', ...validationErrors,
+          code: 'validation_error',
+          ...validationErrors,
         });
       }
 
@@ -282,8 +309,8 @@ export default {
         .where('name', 'expenses')
         .withGraphFetched('fields')
         .first();
-    
-      const expensesResourceFields = expensesResource.fields.map(f => f.key);
+
+      const expensesResourceFields = expensesResource.fields.map((f) => f.key);
 
       if (!expensesResource) {
         return res.status(400).send({
@@ -309,18 +336,21 @@ export default {
         }
         const sortByFilter = new DynamicFilterSortBy(
           filter.column_sort_by,
-          filter.sort_order,
+          filter.sort_order
         );
-        dynamicFilter.setFilter(sortByFilter);      
+        dynamicFilter.setFilter(sortByFilter);
       }
       // Custom view roles.
       if (view && view.roles.length > 0) {
         const viewFilter = new DynamicFilterViews(
           mapViewRolesToConditionals(view.roles),
-          view.rolesLogicExpression,
+          view.rolesLogicExpression
         );
         if (viewFilter.validateFilterRoles()) {
-          errorReasons.push({ type: 'VIEW.LOGIC.EXPRESSION.INVALID', code: 400 });
+          errorReasons.push({
+            type: 'VIEW.LOGIC.EXPRESSION.INVALID',
+            code: 400,
+          });
         }
         dynamicFilter.setFilter(viewFilter);
       }
@@ -328,32 +358,39 @@ export default {
       if (filter.filter_roles.length > 0) {
         const filterRoles = new DynamicFilterFilterRoles(
           mapFilterRolesToDynamicFilter(filter.filter_roles),
-          expensesResource.fields,
+          expensesResource.fields
         );
         if (filterRoles.validateFilterRoles().length > 0) {
-          errorReasons.push({ type: 'ACCOUNTS.RESOURCE.HAS.NO.GIVEN.FIELDS', code: 500 });
+          errorReasons.push({
+            type: 'ACCOUNTS.RESOURCE.HAS.NO.GIVEN.FIELDS',
+            code: 500,
+          });
         }
         dynamicFilter.setFilter(filterRoles);
       }
       if (errorReasons.length > 0) {
         return res.status(400).send({ errors: errorReasons });
       }
-      const expenses = await Expense.query().onBuild((builder) => {
-        builder.withGraphFetched('paymentAccount');
-        builder.withGraphFetched('categories.expenseAccount');
-        builder.withGraphFetched('user');
-        dynamicFilter.buildQuery()(builder);
-      }).pagination(filter.page - 1, filter.page_size);;
+      const expenses = await Expense.query()
+        .onBuild((builder) => {
+          builder.withGraphFetched('paymentAccount');
+          builder.withGraphFetched('categories.expenseAccount');
+          builder.withGraphFetched('user');
+          dynamicFilter.buildQuery()(builder);
+        })
+        .pagination(filter.page - 1, filter.page_size);
 
       return res.status(200).send({
         expenses: {
           ...expenses,
-          ...(view) ? {
-            viewMeta: {
-              viewColumns: view.columns,
-              customViewId: view.id,
-            }
-           } : {},
+          ...(view
+            ? {
+                viewMeta: {
+                  viewColumns: view.columns,
+                  customViewId: view.id,
+                },
+              }
+            : {}),
         },
       });
     },
@@ -363,15 +400,14 @@ export default {
    * Delete the given expense transaction.
    */
   deleteExpense: {
-    validation: [
-      param('id').isNumeric().toInt(),
-    ],
+    validation: [param('id').isNumeric().toInt()],
     async handler(req, res) {
       const validationErrors = validationResult(req);
 
       if (!validationErrors.isEmpty()) {
         return res.boom.badData(null, {
-          code: 'validation_error', ...validationErrors,
+          code: 'validation_error',
+          ...validationErrors,
         });
       }
       const { id } = req.params;
@@ -385,12 +421,17 @@ export default {
       const expense = await Expense.query().where('id', id).first();
 
       if (!expense) {
-        return res.status(404).send({ errors: [{
-          type: 'EXPENSE.NOT.FOUND', code: 200,
-        }] });
+        return res.status(404).send({
+          errors: [
+            {
+              type: 'EXPENSE.NOT.FOUND',
+              code: 200,
+            },
+          ],
+        });
       }
       await ExpenseCategory.query().where('expense_id', id).delete();
-      
+
       const deleteExpenseOper = Expense.query().where('id', id).delete();
       const expenseTransactions = await AccountTransaction.query()
         .where('reference_type', 'Expense')
@@ -437,12 +478,18 @@ export default {
 
       if (!validationErrors.isEmpty()) {
         return res.boom.badData(null, {
-          code: 'validation_error', ...validationErrors,
+          code: 'validation_error',
+          ...validationErrors,
         });
       }
       const { id } = req.params;
       const { user } = req;
-      const { Account, Expense, ExpenseCategory, AccountTransaction } = req.models;
+      const {
+        Account,
+        Expense,
+        ExpenseCategory,
+        AccountTransaction,
+      } = req.models;
 
       const form = {
         categories: [],
@@ -463,39 +510,55 @@ export default {
       }
       const errorReasons = [];
       const paymentAccount = await Account.query()
-        .where('id', form.payment_account_id).first();
+        .where('id', form.payment_account_id)
+        .first();
 
       if (!paymentAccount) {
         errorReasons.push({ type: 'PAYMENT.ACCOUNT.NOT.FOUND', code: 400 });
       }
-      const categoriesHasNoId = form.categories.filter(c => !c.id);
-      const categoriesHasId = form.categories.filter(c => c.id);
+      const categoriesHasNoId = form.categories.filter((c) => !c.id);
+      const categoriesHasId = form.categories.filter((c) => c.id);
 
       const expenseCategoriesIds = expense.categories.map((c) => c.id);
-      const formExpenseCategoriesIds = categoriesHasId.map(c => c.id);
+      const formExpenseCategoriesIds = categoriesHasId.map((c) => c.id);
 
       const categoriesIdsDeleted = difference(
-        formExpenseCategoriesIds, expenseCategoriesIds,
+        formExpenseCategoriesIds,
+        expenseCategoriesIds
       );
       const categoriesShouldDelete = difference(
-        expenseCategoriesIds, formExpenseCategoriesIds,
+        expenseCategoriesIds,
+        formExpenseCategoriesIds
       );
 
-      const formExpensesAccountsIds = form.categories.map(c => c.expense_account_id);
-      const storedExpenseAccounts = await Account.query().whereIn('id', formExpensesAccountsIds);
-      const storedExpenseAccountsIds = storedExpenseAccounts.map(a => a.id);
+      const formExpensesAccountsIds = form.categories.map(
+        (c) => c.expense_account_id
+      );
+      const storedExpenseAccounts = await Account.query().whereIn(
+        'id',
+        formExpensesAccountsIds
+      );
+      const storedExpenseAccountsIds = storedExpenseAccounts.map((a) => a.id);
 
       const expenseAccountsIdsNotFound = difference(
-        formExpensesAccountsIds, storedExpenseAccountsIds,
-      ); 
+        formExpensesAccountsIds,
+        storedExpenseAccountsIds
+      );
       const totalAmount = sumBy(form.categories, 'amount');
 
       if (expenseAccountsIdsNotFound.length > 0) {
-        errorReasons.push({ type: 'EXPENSE.ACCOUNTS.IDS.NOT.FOUND', code: 600, ids: expenseAccountsIdsNotFound })
+        errorReasons.push({
+          type: 'EXPENSE.ACCOUNTS.IDS.NOT.FOUND',
+          code: 600,
+          ids: expenseAccountsIdsNotFound,
+        });
       }
 
       if (categoriesIdsDeleted.length > 0) {
-        errorReasons.push({ type: 'EXPENSE.CATEGORIES.IDS.NOT.FOUND', code: 300 });
+        errorReasons.push({
+          type: 'EXPENSE.CATEGORIES.IDS.NOT.FOUND',
+          code: 300,
+        });
       }
       if (totalAmount <= 0) {
         errorReasons.push({ type: 'TOTAL.AMOUNT.EQUALS.ZERO', code: 500 });
@@ -504,12 +567,13 @@ export default {
       if (errorReasons.length > 0) {
         return res.status(400).send({ errors: errorReasons });
       }
-      const expenseCategoriesMap = new Map(expense.categories
-          .map(category => [category.id, category]));
+      const expenseCategoriesMap = new Map(
+        expense.categories.map((category) => [category.id, category])
+      );
 
       const categoriesInsertOpers = [];
       const categoriesUpdateOpers = [];
-      
+
       categoriesHasNoId.forEach((category) => {
         const oper = ExpenseCategory.query().insert({
           ...category,
@@ -518,26 +582,31 @@ export default {
         categoriesInsertOpers.push(oper);
       });
 
-      categoriesHasId.forEach((category) => { 
-        const oper = ExpenseCategory.query().where('id', category.id)
+      categoriesHasId.forEach((category) => {
+        const oper = ExpenseCategory.query()
+          .where('id', category.id)
           .patch({
             ...omit(category, ['id']),
           });
         categoriesUpdateOpers.push(oper);
       });
 
-      const updateExpenseOper = Expense.query().where('id', id)
+      const updateExpenseOper = Expense.query()
+        .where('id', id)
         .update({
           payment_date: moment(form.payment_date).format('YYYY-MM-DD'),
           total_amount: totalAmount,
           description: form.description,
           payment_account_id: form.payment_account_id,
           reference_no: form.reference_no,
-        })
+        });
 
-      const deleteCategoriesOper = (categoriesShouldDelete.length > 0) ?
-        ExpenseCategory.query().whereIn('id', categoriesShouldDelete).delete() : 
-        Promise.resolve();
+      const deleteCategoriesOper =
+        categoriesShouldDelete.length > 0
+          ? ExpenseCategory.query()
+              .whereIn('id', categoriesShouldDelete)
+              .delete()
+          : Promise.resolve();
 
       // Update the journal entries.
       const transactions = await AccountTransaction.query()
@@ -555,7 +624,7 @@ export default {
         referenceType: 'Expense',
         referenceId: expense.id,
         userId: user.id,
-        draft: !form.publish,  
+        draft: !form.publish,
       };
       const paymentJournalEntry = new JournalEntry({
         credit: totalAmount,
@@ -573,7 +642,7 @@ export default {
         });
         journal.debit(entry);
       });
-      
+
       await Promise.all([
         ...categoriesInsertOpers,
         ...categoriesUpdateOpers,
@@ -581,7 +650,7 @@ export default {
         deleteCategoriesOper,
 
         journal.saveEntries(),
-        (form.status) && journal.saveBalance(),
+        form.status && journal.saveBalance(),
       ]);
       return res.status(200).send({ id });
     },
@@ -591,15 +660,14 @@ export default {
    * Retrieve details of the given expense id.
    */
   getExpense: {
-    validation: [
-      param('id').exists().isNumeric().toInt(),
-    ],
+    validation: [param('id').exists().isNumeric().toInt()],
     async handler(req, res) {
       const validationErrors = validationResult(req);
 
       if (!validationErrors.isEmpty()) {
         return res.boom.badData(null, {
-          code: 'validation_error', ...validationErrors,
+          code: 'validation_error',
+          ...validationErrors,
         });
       }
       const { id } = req.params;
@@ -624,9 +692,9 @@ export default {
 
       return res.status(200).send({
         expense: {
-          ...expense,
+          ...expense.toJSON(),
           journalEntries,
-        }
+        },
       });
     },
   },
@@ -644,16 +712,16 @@ export default {
 
       if (!validationErrors.isEmpty()) {
         return res.boom.badData(null, {
-          code: 'validation_error', ...validationErrors,
+          code: 'validation_error',
+          ...validationErrors,
         });
       }
       const filter = { ...req.query };
       const { Expense, AccountTransaction, Account, MediaLink } = req.models;
 
-      const expenses = await Expense.query()
-        .whereIn('id', filter.ids)
+      const expenses = await Expense.query().whereIn('id', filter.ids);
 
-      const storedExpensesIds = expenses.map(e => e.id);
+      const storedExpensesIds = expenses.map((e) => e.id);
       const notFoundExpenses = difference(filter.ids, storedExpensesIds);
 
       if (notFoundExpenses.length > 0) {
@@ -663,11 +731,12 @@ export default {
       }
 
       const deleteExpensesOper = Expense.query()
-        .whereIn('id', storedExpensesIds).delete();
+        .whereIn('id', storedExpensesIds)
+        .delete();
 
       const transactions = await AccountTransaction.query()
         .whereIn('reference_type', ['Expense'])
-        .whereIn('reference_id', filter.ids)
+        .whereIn('reference_id', filter.ids);
 
       const accountsDepGraph = await Account.depGraph().query().remember();
       const journal = new JournalPoster(accountsDepGraph);
@@ -686,6 +755,6 @@ export default {
         journal.saveBalance(),
       ]);
       return res.status(200).send({ ids: filter.ids });
-    }
-  }
+    },
+  },
 };

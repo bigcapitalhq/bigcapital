@@ -5,8 +5,8 @@ exports.up = function (knex) {
     table.string('name');
     table.string('type');
     table.string('sku');
-    table.decimal('cost_price').unsigned();
-    table.decimal('sell_price').unsigned();
+    table.decimal('cost_price', 13, 3).unsigned();
+    table.decimal('sell_price', 13, 3).unsigned();
     table.string('currency_code', 3);
     table.string('picture_uri');
     table.integer('cost_account_id').unsigned();

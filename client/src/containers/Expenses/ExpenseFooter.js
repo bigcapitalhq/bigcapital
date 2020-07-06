@@ -12,8 +12,8 @@ export default function ExpenseFloatingFooter({
   return (
     <div className={'form__floating-footer'}>
       <Button
-        intent={Intent.PRIMARY}
         disabled={isSubmitting}
+        intent={Intent.PRIMARY}
         type="submit"
         onClick={() => {
           onSubmitClick({ publish: true, redirect: true });

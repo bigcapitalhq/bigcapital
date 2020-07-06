@@ -5,7 +5,7 @@ export default () => {
   const getExpenseById = getExpenseByIdFactory();
 
   const mapStateToProps = (state, props) => ({
-    expenseDetail: getExpenseById(state, props),
+    expense: getExpenseById(state, props),
   });
   return connect(mapStateToProps);
 };
