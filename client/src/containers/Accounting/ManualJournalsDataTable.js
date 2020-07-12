@@ -127,6 +127,7 @@ function ManualJournalsDataTable({
         />
         <MenuItem
           text={formatMessage({ id: 'delete_journal' })}
+          icon={<Icon icon="trash-16" iconSize={16} />}
           intent={Intent.DANGER}
           onClick={handleDeleteJournal(journal)}
         />

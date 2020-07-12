@@ -110,10 +110,15 @@ function DashboardTopbar({
               icon={<Icon icon={'plus-24'} iconSize={20} />}
               text={<T id={'quick_new'} />}
             />
-            <Button
-              className={Classes.MINIMAL}
-              icon={<Icon icon={'notification-24'} iconSize={20} />}
-            />
+            <Tooltip
+              content={<T id={'notifications'} />}
+              position={Position.BOTTOM}
+            >
+              <Button
+                className={Classes.MINIMAL}
+                icon={<Icon icon={'notification-24'} iconSize={20} />}
+              />
+            </Tooltip>
             <Button
               className={Classes.MINIMAL}
               icon={<Icon icon={'help-24'} iconSize={20} />}

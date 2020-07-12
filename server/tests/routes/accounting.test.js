@@ -13,7 +13,7 @@ import {
 } from '~/dbInit';
 
 
-describe.only('routes: `/accounting`', () => {
+describe('routes: `/accounting`', () => {
   describe('route: `/accounting/make-journal-entries`', async () => {
     it('Should sumation of credit or debit does not equal zero.', async () => {
       const account = await tenantFactory.create('account');

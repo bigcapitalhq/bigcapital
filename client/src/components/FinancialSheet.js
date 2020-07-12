@@ -1,7 +1,7 @@
 import React, { useMemo, useCallback } from 'react';
 import moment from 'moment';
 import classnames from 'classnames';
-import LoadingIndicator from 'components/LoadingIndicator';
+import { LoadingIndicator, MODIFIER } from 'components';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { If } from 'components';
 
@@ -17,6 +17,8 @@ export default function FinancialSheet({
   loading,
   className,
   basis,
+  minimal = false,
+  fullWidth = false
 }) {
   const { formatMessage } = useIntl();
   const format = 'DD MMMM YYYY';
@@ -45,7 +47,12 @@ export default function FinancialSheet({
   ]);
 
   return (
-    <div className={classnames('financial-sheet', nameModifer, className)}>
+    <div
+      className={classnames('financial-sheet', nameModifer, className, {
+        [MODIFIER.FINANCIAL_SHEET_MINIMAL]: minimal,
+        'is-full-width': fullWidth,
+      })}
+    >
       <LoadingIndicator loading={loading} spinnerSize={34} />
 
       <div
@@ -53,8 +60,14 @@ export default function FinancialSheet({
           'is-loading': loading,
         })}
       >
-        <h1 class="financial-sheet__title">{companyName}</h1>
-        <h6 class="financial-sheet__sheet-type">{sheetType}</h6>
+        <If condition={!!companyName}>
+          <h1 class="financial-sheet__title">{companyName}</h1>
+        </If>
+
+        <If condition={!!sheetType}>
+          <h6 class="financial-sheet__sheet-type">{sheetType}</h6>
+        </If>
+
         <div class="financial-sheet__date">
           <If condition={asDate}>
             <T id={'as'} /> {formattedAsDate}

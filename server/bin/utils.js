@@ -57,6 +57,19 @@ function log(text) {
   console.log(text);
 }
 
+function getDeepValue(prop, obj) {
+  if (!Object.keys(obj).length) { return []; }
+
+  return Object.entries(obj).reduce((acc, [key, val]) => {
+    if (key === prop) {
+      acc.push(val);
+    } else {
+      acc.push(Array.isArray(val) ? val.map(getIds).flat() : getIds(val));
+    }
+    return acc.flat();
+  }, []);
+}
+
 module.exports = {
   initTenantKnex,
   initSystemKnex,
@@ -64,4 +77,5 @@ module.exports = {
   exit,
   success,
   log,
+  getDeepValue,
 }

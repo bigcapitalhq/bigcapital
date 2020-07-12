@@ -52,8 +52,8 @@ function GeneralLedgerHeader({
   });
 
   const onAccountSelected = useCallback((selectedAccounts) => {
-    
-  }, []);
+    formik.setFieldValue('accounts_ids', Object.keys(selectedAccounts));
+  }, [formik.setFieldValue]);
 
   const handleAccountingBasisChange = useCallback(
     (value) => {

@@ -3,25 +3,20 @@ import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import {
   FormGroup,
-  MenuItem,
   Intent,
   InputGroup,
-  Button,
-  Classes,
   Checkbox,
 } from '@blueprintjs/core';
 import { Row, Col } from 'react-grid-system';
 import { FormattedMessage as T, useIntl } from 'react-intl';
-import { queryCache, useQuery } from 'react-query';
 import { useHistory } from 'react-router-dom';
 import { pick } from 'lodash';
-import classNames from 'classnames';
 
 import AppToaster from 'components/AppToaster';
 import ErrorMessage from 'components/ErrorMessage';
 
 import CustomersTabs from 'containers/Customers/CustomersTabs';
-import RadioCustomer from 'containers/Customers/RadioCustomer';
+import CustomerTypeRadioField from 'containers/Customers/CustomerTypeRadioField';
 
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withCustomerDetail from 'containers/Customers/withCustomerDetail';
@@ -51,6 +46,7 @@ function CustomerForm({
   // #withMediaActions
   requestSubmitMedia,
   requestDeleteMedia,
+
   //#Props
   onFormSubmit,
   onCancelForm,
@@ -258,7 +254,7 @@ function CustomerForm({
     <div className={'customer-form'}>
       <form onSubmit={formik.handleSubmit}>
         <div className={'customer-form__primary-section'}>
-          <RadioCustomer
+          <CustomerTypeRadioField
             selectedValue={formik.values.customer_type}
             onChange={handleCustomerTypeCahange}
             className={'form-group--customer-type'}
@@ -440,4 +436,5 @@ export default compose(
   })),
   withDashboardActions,
   withCustomersActions,
+  withMediaActions,
 )(CustomerForm);

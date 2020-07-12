@@ -22,10 +22,10 @@
       overflow-x: hidden;
 
       .th{
-        padding: 0.75rem 0.5rem;
+        padding: 0.6rem 0.5rem;
         background: #fafafa;
         font-size: 14px;
-        color: rgb(59, 71, 91);
+        color: #445165;
         font-weight: 500;
         border-bottom: 1px solid rgb(224, 224, 224);
       }
@@ -156,11 +156,15 @@
         border: 0;
         box-shadow: none;
         padding: 5px 15px;
-        border-radius: 5px;
+        border-radius: 8px;
 
         &:hover,
         &:focus{
           background-color: #CFDCEE;
+        }
+
+        svg{
+          color: #425361
         }
 
         .bp3-icon-more-h-16{
@@ -289,7 +293,7 @@
 
       .tbody{
         .tr .td{
-          border-bottom: 1px dotted #BBB;
+          border-bottom: 1px dotted #CCC;
         }
       }
     }  

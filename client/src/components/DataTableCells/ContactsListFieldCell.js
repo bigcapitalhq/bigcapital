@@ -1,12 +1,12 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { FormGroup, Intent, Classes } from "@blueprintjs/core";
 import classNames from 'classnames';
 import ContactsListField from 'components/ContactsListField';
 
 export default function ContactsListCellRenderer({
-  column: { id, value },
+  column: { id },
   row: { index, original },
-  cell: { value: initialValue },
+  cell: { value },
   payload: { contacts, updateData, errors }
 }) {
   const handleContactSelected = useCallback((contact) => {
@@ -15,10 +15,6 @@ export default function ContactsListCellRenderer({
       contact_type: contact.contact_type,
     });
   }, [updateData, index, id]);
-
-  const initialContact = useMemo(() => {
-    return contacts.find(c => c.id === initialValue);
-  }, [contacts, initialValue]);
 
   const error = errors?.[index]?.[id];
 
@@ -33,10 +29,10 @@ export default function ContactsListCellRenderer({
     >
       <ContactsListField
         contacts={contacts}
-        onContactSelected={handleContactSelected}
-        initialContact={initialContact}
-        
+        onContactSelected={handleContactSelected} 
+        selectedContactId={original?.contact_id}
+        selectedContactType={original?.contact_type}
       />
     </FormGroup>
-  )
+  );
 }

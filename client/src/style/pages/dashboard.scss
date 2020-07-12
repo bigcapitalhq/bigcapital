@@ -15,7 +15,7 @@
  
   &__topbar{
     width: 100%;
-    min-height: 66px;
+    min-height: 62px;
     display: flex;
     justify-content: space-between;
     border-bottom: 1px solid #F2EFEF;
@@ -137,17 +137,17 @@
         margin-right: 0;
       }
       .#{$ns}-button{
-        color: #4d4d4d;
+        color: #32304a;
         padding: 8px 12px;
 
         &:hover{
           background: rgba(167, 182, 194, 0.12);
-          color: #4d4d4d;
+          color: #32304a;
         }
         &.bp3-minimal:active,
         &.bp3-minimal.bp3-active{
           background: rgba(167, 182, 194, 0.12);
-          color: #4d4d4d;
+          color: #32304a;
         }
 
         &.has-active-filters{
@@ -158,7 +158,7 @@
           }
         }
         .#{$ns}-icon{
-          color: #4d4d4d;
+          color: #2A293D;
           margin-right: 7px;
         }
         &.#{$ns}-minimal.#{$ns}-intent-danger{
@@ -207,12 +207,12 @@
   &__title{
     align-items: center;;
     display: flex;
-    margin-left: 4px;
+    margin-left: 2px;
 
     h1{
       font-size: 26px;
       font-weight: 300;
-      color: #050035;
+      color: #2c2c39;
       margin: 0;
     }
     h3{
@@ -278,7 +278,7 @@
         .tbody{
           .th.selection,
           .td.selection{
-            padding-left: 14px;
+            padding-left: 16px;
           }
         }
       }
@@ -350,7 +350,7 @@
 
   .#{$ns}-tab-indicator-wrapper{
     .#{$ns}-tab-indicator{
-      height: 2px;
+      height: 3px;
     }
   }
 

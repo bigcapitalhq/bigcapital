@@ -181,6 +181,7 @@ export default {
       const mixinEntry = {
         referenceType: 'Expense',
         referenceId: expenseTransaction.id,
+        date: moment(form.payment_date).format('YYYY-MM-DD'),
         userId: user.id,
         draft: !form.publish,
       };

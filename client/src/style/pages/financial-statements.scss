@@ -35,15 +35,14 @@
   }
 
   &__body{
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-left: 15px;
+    padding-right: 15px;
     display: flex;
     justify-content: center;
     align-items: center;
   }
 
   &__header.is-hidden + .financial-statement__body{
-
     .financial-sheet{
       margin-top: 40px;
     }
@@ -55,7 +54,7 @@
   border-radius: 10px;
   min-width: 640px;
   width: auto;
-  padding: 30px 20px;
+  padding: 30px 18px;
   max-width: 100%;
   margin: 15px auto 35px;
   min-height: 400px;
@@ -65,7 +64,7 @@
   &__title{
     margin: 0;
     font-weight: 400;
-    font-size: 22px;
+    font-size: 20px;
     color: #464646;
     text-align: center;
   }
@@ -93,6 +92,7 @@
           background: #fff;
         }
       }
+
       .tr.no-results{
         .td{
           flex-direction: column;
@@ -117,7 +117,8 @@
     font-size: 12px;
   }
   .dashboard__loading-indicator{
-    margin: 60px auto 0;
+    margin: auto;
+    padding: 0;
   }
 
   &--expended{
@@ -141,7 +142,9 @@
 
           &--opening_balance,
           &--closing_balance{
-            background-color: #fbfbfb;
+            .td{
+              background-color: #fbfbfb;
+            }
           }
 
           &--closing_balance .td{
@@ -158,27 +161,21 @@
 
   &--general-ledger,
   &--journal{
-    width: auto;
-    margin-left: 10px;
-    margin-right: 10px;
-    margin-top: 10px;
-    border-color: #EEEDED;
+  
   }
   &--journal{
     .financial-sheet__table{
+
       .tbody{
         .tr:not(.no-results) .td{
           padding: 0.4rem;
-          color: #444;
-          border-bottom-color: #F0F0F0;
+          color: #000;
+          border-bottom-color: #DDD;
           min-height: 32px;
-          border-left: 1px solid #F0F0F0;
+          border-left: 1px dotted #DDD;
 
           &:first-of-type{
             border-left: 0;
-          }
-          &.account_code{
-            color: #666;
           }
         }
       }
@@ -189,9 +186,6 @@
 
     .financial-sheet__table{
       .tbody{
-        .account_code.td{
-          color: #666;
-        }
         .total.td {
           border-bottom-color: #000;
         }
@@ -212,9 +206,24 @@
   &--balance-sheet{
     .financial-sheet__table{
       .tbody{
-
         .total.td{
           border-bottom-color: #000;
+        }
+        .tr.row_type--total_row{
+          .total.td,
+          .account_name.td{
+            font-weight: 600;
+            color: #333;
+          }
+        }
+
+        .tr.is-expanded{
+          .td.total,
+          .td.total-period{
+            > span{
+              display: none;
+            }
+          }
         }
       }
     }
@@ -235,6 +244,29 @@
         }
       }
     }    
+  }
+
+  &--minimal{
+    border: 0;
+    padding: 0;
+    margin-top: 20px;
+
+    .financial-sheet{
+      &__title{
+        font-size: 18px;
+        color: #333;
+      }
+      &__title + .financial-sheet__date{
+        margin-top: 8px;
+      }
+      &__table{
+        margin-top: 20px;
+      }
+    }
+  }
+
+  &.is-full-width{
+    width: 100%;
   }
 }
 
@@ -272,6 +304,5 @@
       line-height: 1.55;
       margin-top: 12px;
     }
-
   }
 }

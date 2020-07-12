@@ -72,7 +72,7 @@ const resourceFieldsItemsSelector = (state) => state.resources.fields;
  * @param {String} resourceSlug 
  * @return {Array}
  */
-export const getResourceFields = createSelector(
+export const getResourceFieldsFactory = () => createSelector(
   resourceFieldsIdsSelector,
   resourceFieldsItemsSelector,
   (fieldsIds, fieldsItems) => {

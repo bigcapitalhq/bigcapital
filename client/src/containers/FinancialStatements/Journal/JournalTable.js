@@ -37,7 +37,7 @@ function JournalSheetTable({
       {
         Header: formatMessage({ id: 'date' }),
         accessor: (r) =>
-          rowTypeFilter(r.rowType, moment(r.date).format('YYYY/MM/DD'), [
+          rowTypeFilter(r.rowType, moment(r.date).format('YYYY MMM DD'), [
             'first_entry',
           ]),
         className: 'date',
@@ -64,7 +64,7 @@ function JournalSheetTable({
       {
         Header: formatMessage({ id: 'acc_code' }),
         accessor: 'account.code',
-        width: 120,
+        width: 95,
         className: 'account_code',
       },
       {
@@ -106,11 +106,13 @@ function JournalSheetTable({
   return (
     <FinancialSheet
       companyName={companyName}
-      sheetType={formatMessage({ id: 'journal_sheet' })}
+      // sheetType={formatMessage({ id: 'journal_sheet' })}
       fromDate={journalSheetQuery.from_date}
       toDate={journalSheetQuery.to_date}
       name="journal"
       loading={journalSheetLoading}
+      minimal={true}
+      fullWidth={true}
     >
       <DataTable
         className="bigcapital-datatable--financial-report"

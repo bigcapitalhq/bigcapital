@@ -64,7 +64,6 @@ function GeneralLedger({
       to_date: moment(filter.to_date).format('YYYY-MM-DD'),
     };
     setFilter(parsedFilter);
-    fetchSheet.refetch({ force: true });
   }, [setFilter]);
 
   const handleFilterChanged = () => { };

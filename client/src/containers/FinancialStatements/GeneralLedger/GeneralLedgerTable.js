@@ -53,7 +53,7 @@ function GeneralLedgerTable({
       ];
 
       return TYPES.indexOf(row.rowType) !== -1
-        ? moment(row.date).format('DD-MM-YYYY')
+        ? moment(row.date).format('DD MMM YYYY')
         : '';
     },
     [moment, ROW_TYPE],
@@ -83,36 +83,43 @@ function GeneralLedgerTable({
         Header: formatMessage({ id: 'account_name' }),
         accessor: accountNameAccessor,
         className: 'name',
+        width: 225,
       },
       {
         Header: formatMessage({ id: 'date' }),
         accessor: dateAccessor,
         className: 'date',
+        width: 115,
       },
       {
         Header: formatMessage({ id: 'transaction_type' }),
         accessor: 'referenceType',
         className: 'transaction_type',
+        width: 145,
       },
       {
         Header: formatMessage({ id: 'trans_num' }),
         accessor: referenceLink,
         className: 'transaction_number',
+        width: 110,
       },
       {
         Header: formatMessage({ id: 'description' }),
         accessor: 'note',
         className: 'description',
+        width: 145,
       },
       {
         Header: formatMessage({ id: 'amount' }),
         Cell: amountCell,
         className: 'amount',
+        width: 150,
       },
       {
         Header: formatMessage({ id: 'balance' }),
         Cell: amountCell,
         className: 'balance',
+        width: 150,
       },
     ],
     [],
@@ -133,11 +140,13 @@ function GeneralLedgerTable({
   return (
     <FinancialSheet
       companyName={companyName}
-      sheetType={formatMessage({ id: 'general_ledger_sheet' })}
+      // sheetType={formatMessage({ id: 'general_ledger_sheet' })}
       fromDate={generalLedgerQuery.from_date}
       toDate={generalLedgerQuery.to_date}
       name="general-ledger"
       loading={generalLedgerSheetLoading}
+      minimal={true}
+      fullWidth={true}
     >
       <DataTable
         className="bigcapital-datatable--financial-report"

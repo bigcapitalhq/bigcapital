@@ -62,7 +62,7 @@
 .dialog--account-form{
 
   &:not(.dialog--loading) .bp3-dialog-body{
-    margin-bottom: 25px;
+    margin-bottom: 30px;
   }
 
   .bp3-dialog-body{
@@ -91,9 +91,6 @@
       }
     }
 
-    .form-group--parent-account{
-      margin-bottom: 35px;
-    }
     .form-group--account-code{
       margin-bottom: 16px;
     }

@@ -20,6 +20,7 @@ import AppToaster from './AppToaster';
 import DataTable from './DataTable';
 import AccountsSelectList from './AccountsSelectList';
 import AccountsTypesSelect from './AccountsTypesSelect';
+import LoadingIndicator from './LoadingIndicator';
 
 const Hint = FieldHint;
 
@@ -47,4 +48,5 @@ export {
   DataTable,
   AccountsSelectList,
   AccountsTypesSelect,
+  LoadingIndicator,
 };

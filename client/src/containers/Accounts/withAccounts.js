@@ -6,7 +6,6 @@ import {
   getResourceViews,
 } from 'store/customViews/customViews.selectors';
 
-
 export default (mapState) => {
   const getAccountsList = getAccountsListFactory();
 

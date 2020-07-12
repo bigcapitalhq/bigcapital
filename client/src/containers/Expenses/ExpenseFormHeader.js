@@ -113,7 +113,7 @@ function ExpenseFormHeader({
               // onItemSelect={}
               selectedItem={values.beneficiary}
               // selectedItemProp={'id'}
-              defaultText={<T id={'select_beneficiary_account'} />}
+              defaultText={<T id={'select_customer'} />}
               labelProp={'beneficiary'}
             />
           </FormGroup>

@@ -1,13 +1,12 @@
 import express from 'express';
-import { query, oneOf, validationResult } from 'express-validator';
+import { query, validationResult } from 'express-validator';
 import moment from 'moment';
-import { pick, difference, groupBy } from 'lodash';
+import { pick, omit, sumBy } from 'lodash';
 import JournalPoster from '@/services/Accounting/JournalPoster';
-import { dateRangeCollection } from '@/utils';
-import DependencyGraph from '@/lib/DependencyGraph';
-import asyncMiddleware from '@/http/middleware/asyncMiddleware'
+import { dateRangeCollection, itemsStartWith, getTotalDeep } from '@/utils';
+import asyncMiddleware from '@/http/middleware/asyncMiddleware';
 import { formatNumberClosure } from './FinancialStatementMixin';
-
+import BalanceSheetStructure from '@/data/BalanceSheetStructure'; 
 
 export default {
   /**
@@ -16,13 +15,15 @@ export default {
   router() {
     const router = express.Router();
 
-    router.get('/', 
+    router.get(
+      '/',
       this.balanceSheet.validation,
-      asyncMiddleware(this.balanceSheet.handler));
+      asyncMiddleware(this.balanceSheet.handler)
+    );
 
     return router;
   },
-  
+
   /**
    * Retrieve the balance sheet.
    */
@@ -32,7 +33,8 @@ export default {
       query('from_date').optional(),
       query('to_date').optional(),
       query('display_columns_type').optional().isIn(['date_periods', 'total']),
-      query('display_columns_by').optional({ nullable: true, checkFalsy: true })
+      query('display_columns_by')
+        .optional({ nullable: true, checkFalsy: true })
         .isIn(['year', 'month', 'week', 'day', 'quarter']),
       query('number_format.no_cents').optional().isBoolean().toBoolean(),
       query('number_format.divide_1000').optional().isBoolean().toBoolean(),
@@ -45,7 +47,8 @@ export default {
 
       if (!validationErrors.isEmpty()) {
         return res.boom.badData(null, {
-          code: 'validation_error', ...validationErrors,
+          code: 'validation_error',
+          ...validationErrors,
         });
       }
       const { Account, AccountType } = req.models;
@@ -67,106 +70,168 @@ export default {
       if (!Array.isArray(filter.account_ids)) {
         filter.account_ids = [filter.account_ids];
       }
-      
       // Account balance formmatter based on the given query.
-      const balanceFormatter = formatNumberClosure(filter.number_format);
-      const comparatorDateType = filter.display_columns_type === 'total' ? 'day' : filter.display_columns_by;
+      const amountFormatter = formatNumberClosure(filter.number_format);
+      const comparatorDateType =
+        filter.display_columns_type === 'total'
+          ? 'day'
+          : filter.display_columns_by;
 
-      const balanceSheetTypes = await AccountType.query().where('balance_sheet', true);
-
+      const balanceSheetTypes = await AccountType.query().where(
+        'balance_sheet',
+        true
+      );
       // Fetch all balance sheet accounts from the storage.
       const accounts = await Account.query()
-        // .remember('balance_sheet_accounts')
-        .whereIn('account_type_id', balanceSheetTypes.map((a) => a.id))
+        .whereIn(
+          'account_type_id',
+          balanceSheetTypes.map((a) => a.id)
+        )
         .modify('filterAccounts', filter.account_ids)
         .withGraphFetched('type')
         .withGraphFetched('transactions')
         .modifyGraph('transactions', (builder) => {
           builder.modify('filterDateRange', null, filter.to_date);
         });
-
       // Accounts dependency graph.
-      const accountsGraph = DependencyGraph.fromArray(
-        accounts, { itemId: 'id', parentItemId: 'parentAccountId' }
-      );
+      const accountsGraph = Account.toDependencyGraph(accounts);
       // Load all entries that associated to the given accounts.
       const journalEntriesCollected = Account.collectJournalEntries(accounts);
       const journalEntries = new JournalPoster(accountsGraph);
-
       journalEntries.loadEntries(journalEntriesCollected);
 
-      // Date range collection. 
-      const dateRangeSet = (filter.display_columns_type === 'date_periods')
-        ? dateRangeCollection(
-          filter.from_date, filter.to_date, comparatorDateType,
-        ) : [];
-
+      // Date range collection.
+      const dateRangeSet =
+        filter.display_columns_type === 'date_periods'
+          ? dateRangeCollection(
+              filter.from_date,
+              filter.to_date,
+              comparatorDateType
+            )
+          : [];
       // Gets the date range set from start to end date.
-      const totalPeriods = (account) => ({
+      const getAccountTotalPeriods = (account) => ({
         total_periods: dateRangeSet.map((date) => {
-          const amount = journalEntries.getAccountBalance(account.id, date, comparatorDateType);
-
+          const amount = journalEntries.getAccountBalance(
+            account.id,
+            date,
+            comparatorDateType
+          );
           return {
             amount,
-            formatted_amount: balanceFormatter(amount),
             date,
+            formatted_amount: amountFormatter(amount),
           };
         }),
       });
-
-      const accountsMapperToResponse = (account) => {
-        // Calculates the closing balance to the given date.
-        const closingBalance = journalEntries.getAccountBalance(account.id, filter.to_date);
+      // Retrieve accounts total periods.
+      const getAccountsTotalPeriods = (_accounts) =>
+        Object.values(
+          dateRangeSet.reduce((acc, date, index) => {
+            const amount = sumBy(_accounts, `total_periods[${index}].amount`);
+            acc[date] = {
+              date,
+              amount,
+              formatted_amount: amountFormatter(amount),
+            };
+            return acc;
+          }, {})
+        );
+      // Retrieve account total and total periods with account meta.
+      const getAccountTotal = (account) => {
+        const closingBalance = journalEntries.getAccountBalance(
+          account.id,
+          filter.to_date
+        );
+        const totalPeriods =
+          (filter.display_columns_type === 'date_periods' &&
+            getAccountTotalPeriods(account)) ||
+          null;
 
         return {
           ...pick(account, ['id', 'index', 'name', 'code', 'parentAccountId']),
-
-          // Date periods when display columns.
-          ...(filter.display_columns_type === 'date_periods') && totalPeriods(account),
-
+          ...(totalPeriods && { totalPeriods }),
           total: {
             amount: closingBalance,
-            formatted_amount: balanceFormatter(closingBalance),
+            formatted_amount: amountFormatter(closingBalance),
             date: filter.to_date,
           },
         };
       };
+      // Get accounts total of the given structure section
+      const getAccountsSectionTotal = (_accounts) => {
+        const total = getTotalDeep(_accounts, 'children', 'total.amount');
+        return {
+          total: {
+            total,
+            formatted_amount: amountFormatter(total),
+          },
+        };
+      };
+      // Strcuture accounts related mapper.
+      const structureAccountsRelatedMapper = (accountsTypes) => {
+        const filteredAccounts = accounts
+          // Filter accounts that have no transaction when `none_zero` is on.
+          .filter(
+            (account) => account.transactions.length > 0 || !filter.none_zero
+          )
+          // Filter accounts that associated to the section accounts types.
+          .filter(
+            (account) => accountsTypes.indexOf(account.type.childType) !== -1
+          )
+          .map(getAccountTotal);
+        // Gets total amount of the given accounts.
+        const totalAmount = sumBy(filteredAccounts, 'total.amount');
 
-      // Retrieve all assets accounts.
-      const assetsAccounts = accounts.filter((account) => (
-        account.type.normal === 'debit'
-          && (account.transactions.length > 0 || !filter.none_zero)))
-          .map(accountsMapperToResponse);
-
-      // Retrieve all liability accounts.
-      const liabilitiesAccounts = accounts.filter((account) => (
-        account.type.normal === 'credit'
-          && (account.transactions.length > 0 || !filter.none_zero)))
-          .map(accountsMapperToResponse);
-
-      // Retrieve the asset balance sheet.
-      const assetsAccountsResponse = Account.toNestedArray(assetsAccounts);
-
-      // Retrieve liabilities and equity balance sheet.
-      const liabilitiesEquityResponse = Account.toNestedArray(liabilitiesAccounts);
+        return {
+          children: Account.toNestedArray(filteredAccounts),
+          total: {
+            amount: totalAmount,
+            formatted_amount: amountFormatter(totalAmount),
+          },
+          ...(filter.display_columns_type === 'date_periods'
+            ? {
+                total_periods: getAccountsTotalPeriods(filteredAccounts),
+              }
+            : {}),
+        };
+      };
+      // Structure section mapper.
+      const structureSectionMapper = (structure) => {
+        const result = {
+          ...omit(structure, itemsStartWith(Object.keys(structure), '_')),
+          ...(structure.children
+            ? {
+                children: balanceSheetWalker(structure.children),
+              }
+            : {}),
+          ...(structure._accounts_types_related
+            ? {
+                ...structureAccountsRelatedMapper(
+                  structure._accounts_types_related
+                ),
+              }
+            : {}),
+        };
+        return {
+          ...result,
+          ...(!structure._accounts_types_related
+            ? getAccountsSectionTotal(result.children)
+            : {}),
+        };
+      };
+      const balanceSheetWalker = (reportStructure) =>
+        reportStructure.map(structureSectionMapper).filter(
+          // Filter the structure sections that have no children.
+          (structure) => structure.children.length > 0 || structure._forceShow
+        );
 
       // Response.
       return res.status(200).send({
         query: { ...filter },
         columns: { ...dateRangeSet },
-        accounts: [
-          {
-            name: 'Assets',
-            type: 'assets',
-            children: [...assetsAccountsResponse],
-          },
-          {
-            name: 'Liabilities & Equity',
-            type: 'liabilities_equity',
-            children: [...liabilitiesEquityResponse],
-          },
-        ],
+        balance_sheet: [...balanceSheetWalker(BalanceSheetStructure)],
       });
     },
   },
-}
+};

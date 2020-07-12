@@ -441,7 +441,7 @@ export default {
   once_delete_these_expenses_you_will_not_able_restore_them:
     "Once you delete these expenses, you won't be able to retrieve them later. Are you sure you want to delete them?",
   the_expense_has_been_published: 'The expense has been published',
-  select_beneficiary_account: 'Select Beneficiary Account',
+  select_customer: 'Select customer',
   total_amount_equals_zero: 'Total amount equals zero',
   value: 'Value',
   you_reached_conditions_limit: 'You have reached to conditions limit.',
@@ -458,7 +458,7 @@ export default {
   display_name_: 'Display name',
   new_customer: 'New Customer',
   customer_type: 'Customer Type',
-  business: 'business',
+  business: 'Business',
   individual: 'Individual',
   display_name: 'Display Name',
   the_customer_has_been_successfully_created:
@@ -543,4 +543,13 @@ export default {
     "Once you delete these journalss, you won't be able to retrieve them later. Are you sure you want to delete them?",
   once_delete_this_journal_you_will_able_to_restore_it: `Once you delete this journal, you won\'t be able to restore it later. Are you sure you want to delete ?`,
   the_expense_is_already_published: 'The expense is already published.',
+
+  accounts_without_zero_balance: 'Accounts without zero-balance',
+  accounts_with_transactions: 'Accounts with transactions',
+  include_accounts_once_has_transactions_on_given_date_period: 'Include accounts that onces have transactions on the given date period only.',
+  include_accounts_and_exclude_zero_balance: 'Include accounts and exclude that ones have zero-balance.',
+  all_accounts_including_with_zero_balance: 'All accounts, including that ones have zero-balance.',
+  notifications: 'Notifications',
+  you_could_not_delete_account_has_child_accounts: 'You could not delete account has child accounts.',
+  journal_entry: 'Journal Entry'
 };

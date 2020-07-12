@@ -109,6 +109,14 @@ function AccountsChart({
         intent: Intent.DANGER,
       });
     }
+    if (errors.find(e => e.type === 'ACCOUNT.HAS.CHILD.ACCOUNTS')) {
+      AppToaster.show({
+        message: formatMessage({
+          id: 'you_could_not_delete_account_has_child_accounts',
+        }),
+        intent: Intent.DANGER,
+      })
+    }
   };
 
   // Handle confirm account delete

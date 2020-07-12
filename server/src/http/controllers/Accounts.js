@@ -3,7 +3,6 @@ import { check, validationResult, param, query } from 'express-validator';
 import { difference } from 'lodash';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
 import JournalPoster from '@/services/Accounting/JournalPoster';
-import NestedSet from '@/collection/NestedSet';
 import {
   mapViewRolesToConditionals,
   mapFilterRolesToDynamicFilter,
@@ -97,9 +96,13 @@ export default {
   newAccount: {
     validation: [
       check('name').exists().isLength({ min: 3, max: 255 }).trim().escape(),
-      check('code').optional().isLength({ min: 3, max: 6, }).trim().escape(),
+      check('code').optional().isLength({ min: 3, max: 6 }).trim().escape(),
       check('account_type_id').exists().isNumeric().toInt(),
       check('description').optional().isLength({ max: 512 }).trim().escape(),
+      check('parent_account_id')
+        .optional({ nullable: true })
+        .isNumeric()
+        .toInt(),
     ],
     async handler(req, res) {
       const validationErrors = validationResult(req);
@@ -125,7 +128,6 @@ export default {
         foundAccountCodePromise,
         foundAccountTypePromise,
       ]);
-
       if (foundAccountCodePromise && foundAccountCode.length > 0) {
         return res.boom.badRequest(null, {
           errors: [{ type: 'NOT_UNIQUE_CODE', code: 100 }],
@@ -135,6 +137,24 @@ export default {
         return res.boom.badRequest(null, {
           errors: [{ type: 'NOT_EXIST_ACCOUNT_TYPE', code: 200 }],
         });
+      }
+      if (form.parent_account_id) {
+        const parentAccount = await Account.query()
+          .where('id', form.parent_account_id)
+          .first();
+
+        if (!parentAccount) {
+          return res.boom.badRequest(null, {
+            errors: [{ type: 'PARENT_ACCOUNT_NOT_FOUND', code: 300 }],
+          });
+        }
+        if (parentAccount.accountTypeId !== form.parent_account_id) {
+          return res.boom.badRequest(null, {
+            errors: [
+              { type: 'PARENT.ACCOUNT.HAS.DIFFERENT.ACCOUNT.TYPE', code: 400 },
+            ],
+          });
+        }
       }
       const insertedAccount = await Account.query().insertAndFetch({ ...form });
 
@@ -148,8 +168,8 @@ export default {
   editAccount: {
     validation: [
       param('id').exists().toInt(),
-      check('name').exists().isLength({ min: 3, max: 255, }).trim().escape(),
-      check('code').optional().isLength({ min: 3, max: 6, }).trim().escape(),
+      check('name').exists().isLength({ min: 3, max: 255 }).trim().escape(),
+      check('code').optional().isLength({ min: 3, max: 6 }).trim().escape(),
       check('account_type_id').exists().isNumeric().toInt(),
       check('description').optional().isLength({ max: 512 }).trim().escape(),
     ],
@@ -189,7 +209,26 @@ export default {
           errorReasons.push({ type: 'NOT_UNIQUE_CODE', code: 200 });
         }
       }
+      if (form.parent_account_id) {
+        const parentAccount = await Account.query()
+          .where('id', form.parent_account_id)
+          .whereNot('id', account.id)
+          .first();
 
+        if (!parentAccount) {
+          errorReasons.push({
+            type: 'PARENT_ACCOUNT_NOT_FOUND',
+            code: 300,
+          });
+        }
+        if (parentAccount.accountTypeId !== account.parentAccountId) {
+          return res.boom.badRequest(null, {
+            errors: [
+              { type: 'PARENT.ACCOUNT.HAS.DIFFERENT.ACCOUNT.TYPE', code: 400 },
+            ],
+          });
+        }
+      }
       if (errorReasons.length > 0) {
         return res.status(400).send({ errors: errorReasons });
       }
@@ -238,11 +277,22 @@ export default {
           errors: [{ type: 'ACCOUNT.PREDEFINED', code: 200 }],
         });
       }
+
+      // Validate the account has no child accounts.
+      const childAccounts = await Account.query().where(
+        'parent_account_id',
+        account.id
+      );
+
+      if (childAccounts.length > 0) {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'ACCOUNT.HAS.CHILD.ACCOUNTS', code: 300 }],
+        });
+      }
       const accountTransactions = await AccountTransaction.query().where(
         'account_id',
         account.id
       );
-
       if (accountTransactions.length > 0) {
         return res.boom.badRequest(null, {
           errors: [{ type: 'ACCOUNT.HAS.ASSOCIATED.TRANSACTIONS', code: 100 }],
@@ -279,8 +329,8 @@ export default {
         });
       }
       const filter = {
+        display_type: 'flat',
         account_types: [],
-        display_type: 'tree',
         filter_roles: [],
         sort_order: 'asc',
         ...req.query,
@@ -364,38 +414,18 @@ export default {
         return res.status(400).send({ errors: errorReasons });
       }
 
-      const query = Account.query()
-        // .remember()
-        .onBuild((builder) => {
-          builder.modify('filterAccountTypes', filter.account_types);
-          builder.withGraphFetched('type');
-          builder.withGraphFetched('balance');
+      const accounts = await Account.query().onBuild((builder) => {
+        builder.modify('filterAccountTypes', filter.account_types);
+        builder.withGraphFetched('type');
+        builder.withGraphFetched('balance');
 
-          dynamicFilter.buildQuery()(builder);
-
-          // console.log(builder.toKnexQuery().toSQL());
-        })
-        .toKnexQuery()
-        .toSQL();
-
-      console.log(query);
-
-      const accounts = await Account.query()
-        // .remember()
-        .onBuild((builder) => {
-          builder.modify('filterAccountTypes', filter.account_types);
-          builder.withGraphFetched('type');
-          builder.withGraphFetched('balance');
-
-          dynamicFilter.buildQuery()(builder);
-
-          // console.log(builder.toKnexQuery().toSQL());
-        });
-
-      const nestedAccounts = Account.toNestedArray(accounts);
-
+        dynamicFilter.buildQuery()(builder);
+      });
       return res.status(200).send({
-        accounts: nestedAccounts,
+        accounts:
+          filter.display_type === 'tree'
+            ? Account.toNestedArray(accounts)
+            : accounts,
         ...(view
           ? {
               customViewId: view.id,

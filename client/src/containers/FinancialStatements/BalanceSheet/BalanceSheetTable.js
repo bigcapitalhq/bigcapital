@@ -1,6 +1,7 @@
-import React, { useMemo, useEffect, useState, useCallback } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { useIntl } from 'react-intl';
+import classNames from 'classnames';
 
 import Money from 'components/Money';
 import FinancialSheet from 'components/FinancialSheet';
@@ -18,6 +19,7 @@ function BalanceSheetTable({
 
   // #withBalanceSheetDetail
   balanceSheetAccounts,
+  balanceSheetTableRows,
   balanceSheetColumns,
   balanceSheetQuery,
   balanceSheetLoading,
@@ -33,13 +35,13 @@ function BalanceSheetTable({
         Header: formatMessage({ id: 'account_name' }),
         accessor: 'name',
         className: 'account_name',
-        width: 100,
+        width: 120,
       },
       {
-        Header: formatMessage({ id: 'account_code' }),
+        Header: formatMessage({ id: 'code' }),
         accessor: 'code',
         className: 'code',
-        width: 80,
+        width: 60,
       },
       ...(balanceSheetQuery.display_columns_type === 'total'
         ? [
@@ -67,18 +69,21 @@ function BalanceSheetTable({
         ? balanceSheetColumns.map((column, index) => ({
             id: `date_period_${index}`,
             Header: column,
-            accessor: (row) => {
-              if (row.total_periods && row.total_periods[index]) {
-                const amount = row.total_periods[index].formatted_amount;
+            accessor: `total_periods[${index}]`,
+            Cell: ({ cell }) => {
+              const { original } = cell.row;
+              if (original.total_periods && original.total_periods[index]) {
+                const amount = original.total_periods[index].formatted_amount;
                 return <Money amount={amount} currency={'USD'} />;
               }
               return '';
             },
+            className: classNames('total-period', `total-periods-${index}`),
             width: 80,
           }))
         : []),
     ],
-    [balanceSheetQuery, balanceSheetColumns, formatMessage],
+  [balanceSheetQuery, balanceSheetColumns, formatMessage],
   );
 
   const handleFetchData = useCallback(() => {
@@ -87,9 +92,17 @@ function BalanceSheetTable({
 
   // Calculates the default expanded rows of balance sheet table.
   const expandedRows = useMemo(
-    () => defaultExpanderReducer(balanceSheetAccounts, 1),
-    [balanceSheetAccounts],
+    () => defaultExpanderReducer(balanceSheetTableRows, 3),
+    [balanceSheetTableRows],
   );
+
+  const rowClassNames = (row) => {
+    const { original } = row;
+    console.log(row);
+    return {
+      [`row_type--${original.row_type}`]: original.row_type,
+    };
+  };
 
   return (
     <FinancialSheet
@@ -104,12 +117,15 @@ function BalanceSheetTable({
       <DataTable
         className="bigcapital-datatable--financial-report"
         columns={columns}
-        data={balanceSheetAccounts}
+        data={balanceSheetTableRows}
+        rowClassNames={rowClassNames}
         onFetchData={handleFetchData}
         noInitialFetch={true}
         expanded={expandedRows}
-        expandSubRows={true}
+        expandable={true}
+        expandToggleColumn={1}
         sticky={true}
+        expandColumnSpace={0.8}
       />
     </FinancialSheet>
   );
@@ -132,11 +148,13 @@ export default compose(
   withBalanceSheetDetail(
     ({
       balanceSheetAccounts,
+      balanceSheetTableRows,
       balanceSheetColumns,
       balanceSheetQuery,
       balanceSheetLoading,
     }) => ({
       balanceSheetAccounts,
+      balanceSheetTableRows,
       balanceSheetColumns,
       balanceSheetQuery,
       balanceSheetLoading,

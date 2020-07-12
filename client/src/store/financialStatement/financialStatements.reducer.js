@@ -1,8 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
 import t from 'store/types';
-import {
-  getFinancialSheetIndexByQuery,
-} from './financialStatements.selectors';
+import { getFinancialSheetIndexByQuery } from './financialStatements.selectors';
 import { omit } from 'lodash';
 
 const initialState = {
@@ -93,8 +91,7 @@ const mapJournalTableRows = (journal) => {
   }, []);
 };
 
-
-const mapContactAgingSummary = sheet => {
+const mapContactAgingSummary = (sheet) => {
   const rows = [];
 
   const mapAging = (agingPeriods) => {
@@ -102,10 +99,10 @@ const mapContactAgingSummary = sheet => {
       acc[`aging-${index}`] = aging.formatted_total;
       return acc;
     }, {});
-  }
+  };
   sheet.customers.forEach((customer) => {
     const agingRow = mapAging(customer.aging);
-  
+
     rows.push({
       rowType: 'customer',
       customer_name: customer.customer_name,
@@ -113,7 +110,7 @@ const mapContactAgingSummary = sheet => {
       total: customer.total,
     });
   });
- 
+
   rows.push({
     rowType: 'total',
     customer_name: 'Total',
@@ -157,6 +154,36 @@ const mapProfitLossToTableRows = (profitLoss) => {
   ];
 };
 
+const mapTotalToChildrenRows = (accounts) => {
+  return accounts.map((account) => {
+    return {
+      ...account,
+      children: mapTotalToChildrenRows([
+        ...(account.children ? account.children : []),
+        ...(account.total &&
+        account.children &&
+        account.children.length > 0 &&
+        account.row_type !== 'total_row'
+          ? [
+              {
+                name: `Total ${account.name}`,
+                row_type: 'total_row',
+                total: { ...account.total },
+                ...(account.total_periods && {
+                  total_periods: account.total_periods,
+                }),
+              },
+            ]
+          : []),
+      ]),
+    };
+  });
+};
+
+const mapBalanceSheetRows = (balanceSheet) => {
+  return balanceSheet.map((section) => {});
+};
+
 const financialStatementFilterToggle = (financialName, statePath) => {
   return {
     [`${financialName}_FILTER_TOGGLE`]: (state, action) => {
@@ -173,9 +200,10 @@ export default createReducer(initialState, {
     );
 
     const balanceSheet = {
-      accounts: action.data.accounts,
+      sheet: action.data.balanceSheet,
       columns: Object.values(action.data.columns),
       query: action.data.query,
+      tableRows: mapTotalToChildrenRows(action.data.balance_sheet),
     };
     if (index !== -1) {
       state.balanceSheet.sheets[index] = balanceSheet;
@@ -313,13 +341,16 @@ export default createReducer(initialState, {
 
   [t.RECEIVABLE_AGING_SUMMARY_SET]: (state, action) => {
     const { aging, columns, query } = action.payload;
-    const index = getFinancialSheetIndexByQuery(state.receivableAgingSummary.sheets, query);
+    const index = getFinancialSheetIndexByQuery(
+      state.receivableAgingSummary.sheets,
+      query,
+    );
 
     const receivableSheet = {
       query,
       columns,
       aging,
-      tableRows: mapContactAgingSummary(aging)
+      tableRows: mapContactAgingSummary(aging),
     };
     if (index !== -1) {
       state.receivableAgingSummary[index] = receivableSheet;
@@ -331,5 +362,8 @@ export default createReducer(initialState, {
     const { refresh } = action.payload;
     state.receivableAgingSummary.refresh = !!refresh;
   },
-  ...financialStatementFilterToggle('RECEIVABLE_AGING_SUMMARY', 'receivableAgingSummary'),
+  ...financialStatementFilterToggle(
+    'RECEIVABLE_AGING_SUMMARY',
+    'receivableAgingSummary',
+  ),
 });

@@ -45,16 +45,16 @@ const CustomerActionsBar = ({
     history.push('/customers/new');
   }, [history]);
 
-  const filterDropdown = FilterDropdown({
-    fields: resourceFields,
-    onFilterChange: (filterConditions) => {
-      setFilterCount(filterConditions.length || 0);
-      addCustomersTableQueries({
-        filter_roles: filterConditions || '',
-      });
-      onFilterChanged && onFilterChanged(filterConditions);
-    },
-  });
+  // const filterDropdown = FilterDropdown({
+  //   fields: resourceFields,
+  //   onFilterChange: (filterConditions) => {
+  //     setFilterCount(filterConditions.length || 0);
+  //     addCustomersTableQueries({
+  //       filter_roles: filterConditions || '',
+  //     });
+  //     onFilterChanged && onFilterChanged(filterConditions);
+  //   },
+  // });
 
   const hasSelectedRows = useMemo(() => selectedRows.length > 0, [
     selectedRows,
@@ -75,7 +75,7 @@ const CustomerActionsBar = ({
         />
         <NavbarDivider />
         <Popover
-          content={filterDropdown}
+          // content={filterDropdown}
           interactionKind={PopoverInteractionKind.CLICK}
           position={Position.BOTTOM_LEFT}
         >
@@ -101,7 +101,6 @@ const CustomerActionsBar = ({
             onClick={handleBulkDelete}
           />
         </If>
-
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon="file-import-16" iconSize={16} />}
@@ -120,13 +119,12 @@ const CustomerActionsBar = ({
 const mapStateToProps = (state, props) => ({
   resourceName: 'customers',
 });
-
 const withCustomersActionsBar = connect(mapStateToProps);
 
 export default compose(
   withCustomersActionsBar,
+  withCustomersActions,
   withResourceDetail(({ resourceFields }) => ({
     resourceFields,
   })),
-  withCustomersActions,
 )(CustomerActionsBar);

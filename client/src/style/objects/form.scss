@@ -138,7 +138,11 @@ $form-check-input-indeterminate-bg-image: url("data:image/svg+xml,<svg xmlns='ht
     .bp3-button:not(.bp3-minimal){
       border-color: #db3737;
     }
-  }  
+  }
+}
+
+.select-list--tooltip-items .bp3-popover-target {
+  display: block;
 }
 
 
@@ -332,4 +336,9 @@ $form-check-input-indeterminate-bg-image: url("data:image/svg+xml,<svg xmlns='ht
       -moz-outline-radius: $control-indicator-size;
     }
   }
+}
+
+
+.bp3-menu-item::before, .bp3-menu-item > .bp3-icon{
+  color: #4b5d6b;
 }

@@ -11,7 +11,7 @@ import {
 } from '@blueprintjs/core';
 import { useFormik } from 'formik';
 import { FormattedMessage as T, useIntl } from 'react-intl';
-import { pick } from 'lodash';
+import { pick, omit } from 'lodash';
 import { useQuery, queryCache } from 'react-query';
 import classNames from 'classnames';
 import Yup from 'services/yup';
@@ -72,7 +72,6 @@ function AccountFormDialog({
       name: '',
       code: '',
       description: '',
-      parent_account_id: null,
     }),
     [],
   );
@@ -103,8 +102,7 @@ function AccountFormDialog({
     },
     validationSchema,
     onSubmit: (values, { setSubmitting, setErrors }) => {
-      const form = pick(values, Object.keys(initialValues));
-
+      const form = omit(values, ['subaccount']);
       const toastAccountName = values.code
         ? `${values.code} - ${values.name}`
         : values.name;
@@ -114,13 +112,11 @@ function AccountFormDialog({
         queryCache.invalidateQueries('accounts-table');
         queryCache.invalidateQueries('accounts-list');
       };
-
       const afterErrors = (errors) => {
         const errorsTransformed = transformApiErrors(errors);
         setErrors({ ...errorsTransformed });
         setSubmitting(false);
       };
-
       if (payload.action === 'edit') {
         requestEditAccount(payload.id, form)
           .then((response) => {
@@ -165,6 +161,11 @@ function AccountFormDialog({
       setFieldValue('subaccount', true);
     }
   }, [values.parent_account_id]);
+  
+  // Reset `parent account id` after change `account type`.
+  useEffect(() => {
+    setFieldValue('parent_account_id', null);
+  }, [values.account_type_id]);
 
   // Filtered accounts based on the given account type.
   const filteredAccounts = useMemo(
@@ -379,12 +380,13 @@ function AccountFormDialog({
 
         <div className={Classes.DIALOG_FOOTER}>
           <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-            <Button onClick={handleClose}>
+            <Button onClick={handleClose} style={{ minWidth: '75px' }}>
               <T id={'close'} />
             </Button>
             <Button
               intent={Intent.PRIMARY}
               disabled={isSubmitting}
+              style={{ minWidth: '75px' }}
               type="submit"
             >
               {payload.action === 'edit' ? (

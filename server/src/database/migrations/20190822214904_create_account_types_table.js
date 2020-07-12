@@ -6,6 +6,7 @@ exports.up = (knex) => {
     table.string('key');
     table.string('normal');
     table.string('root_type');
+    table.string('child_type');
     table.boolean('balance_sheet');
     table.boolean('income_sheet');
   }).raw('ALTER TABLE `ACCOUNT_TYPES` AUTO_INCREMENT = 1000').then(() => {

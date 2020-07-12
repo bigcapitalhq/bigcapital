@@ -8,7 +8,13 @@ import {
   useSortBy,
   useFlexLayout,
 } from 'react-table';
-import { Checkbox, Spinner, ContextMenu, Menu, MenuItem } from '@blueprintjs/core';
+import {
+  Checkbox,
+  Spinner,
+  ContextMenu,
+  Menu,
+  MenuItem,
+} from '@blueprintjs/core';
 import classnames from 'classnames';
 import { FixedSizeList } from 'react-window';
 import { useSticky } from 'react-table-sticky';
@@ -30,7 +36,7 @@ export default function DataTable({
   loading,
   onFetchData,
   onSelectedRowsChange,
-  manualSortBy = 'false',
+  manualSortBy = false,
   selectionColumn = false,
   expandSubRows = true,
   className,
@@ -51,7 +57,9 @@ export default function DataTable({
   pagesCount: controlledPageCount,
   initialPageIndex,
   initialPageSize,
-  rowContextMenu
+  rowContextMenu,
+
+  expandColumnSpace = 1.5,
 }) {
   const {
     getTableProps,
@@ -91,7 +99,6 @@ export default function DataTable({
       manualSortBy,
       expandSubRows,
       payload,
-      autoResetSelectedRows: false,
     },
     useSortBy,
     useExpanded,
@@ -148,7 +155,7 @@ export default function DataTable({
     } else {
       onFetchData && onFetchData({ pageIndex, pageSize, sortBy });
     }
-  }, [pageIndex, pageSize, sortBy, onFetchData]);
+  }, [pageIndex, pageSize, manualSortBy ? sortBy : null, onFetchData]);
 
   useUpdateEffect(() => {
     onSelectedRowsChange && onSelectedRowsChange(selectedFlatRows);
@@ -162,7 +169,7 @@ export default function DataTable({
         wrapper={(children) => (
           <div
             style={{
-              'padding-left': `${row.depth * 1.5}rem`,
+              'padding-left': `${row.depth * expandColumnSpace}rem`,
             }}
           >
             {children}
@@ -198,9 +205,9 @@ export default function DataTable({
       e.preventDefault();
       const tr = e.currentTarget.closest('.tr');
       tr.classList.add('is-context-menu-active');
-  
+
       const DropdownEl = rowContextMenu(cell, row);
-  
+
       ContextMenu.show(DropdownEl, { left: e.clientX, top: e.clientY }, () => {
         tr.classList.remove('is-context-menu-active');
       });
@@ -216,7 +223,9 @@ export default function DataTable({
       return (
         <div
           {...row.getRowProps({
-            className: classnames('tr', rowClasses),
+            className: classnames('tr', {
+              'is-expanded': row.isExpanded && row.canExpand,
+            }, rowClasses),
             style,
           })}
         >
@@ -369,7 +378,7 @@ export default function DataTable({
           </ScrollSyncPane>
         </div>
       </ScrollSync>
-      
+
       <If condition={pagination && pageCount && !loading}>
         <Pagination
           initialPage={pageIndex + 1}

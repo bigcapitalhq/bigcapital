@@ -1,12 +1,14 @@
 import {connect} from 'react-redux';
 import {
   getResourceColumns,
-  getResourceFields,
+  getResourceFieldsFactory,
   getResourceMetadata,
   getResourceData,
 } from 'store/resources/resources.reducer';
 
 export default (mapState) => {
+  const getResourceFields = getResourceFieldsFactory();
+
   const mapStateToProps = (state, props) => {
     const { resourceName } = props;
     const mapped =  {

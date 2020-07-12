@@ -1,14 +1,16 @@
 import React, { useCallback, useEffect } from 'react';
 import { Row, Col, Visible } from 'react-grid-system';
-import { Button } from '@blueprintjs/core';
 import moment from 'moment';
 import { useFormik } from 'formik';
 import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormGroup } from '@blueprintjs/core';
 import * as Yup from 'yup';
+
 import FinancialStatementDateRange from 'containers/FinancialStatements/FinancialStatementDateRange';
 import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
 import SelectsListColumnsBy from '../SelectDisplayColumnsBy';
 import RadiosAccountingBasis from '../RadiosAccountingBasis';
+import FinancialAccountsFilter from '../FinancialAccountsFilter';
 
 import withProfitLoss from './withProfitLoss';
 import withProfitLossActions from './withProfitLossActions';
@@ -73,6 +75,11 @@ function ProfitLossHeader({
     }
   }, [profitLossSheetRefresh]);
 
+  const handleAccountsFilterSelect = (filterType) => {
+    const noneZero = filterType.key === 'without-zero-balance' ? true : false;
+    formik.setFieldValue('none_zero', noneZero);
+  };
+
   return (
     <FinancialStatementHeader show={profitLossSheetFilter}>
       <Row>
@@ -81,6 +88,19 @@ function ProfitLossHeader({
 
         <Col width={260}>
           <SelectsListColumnsBy onItemSelect={handleItemSelectDisplayColumns} />
+        </Col>
+
+        <Col width={260}>
+          <FormGroup
+            label={<T id={'filter_accounts'} />}
+            className="form-group--select-list bp3-fill"
+            inline={false}
+          >
+            <FinancialAccountsFilter
+              initialSelectedItem={'all-accounts'}
+              onItemSelect={handleAccountsFilterSelect}
+            />
+          </FormGroup>
         </Col>
 
         <Col width={260}>

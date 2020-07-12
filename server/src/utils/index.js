@@ -1,7 +1,6 @@
 import bcrypt from 'bcryptjs';
 import moment from 'moment';
 import _ from 'lodash';
-const { map, isArray, isPlainObject, mapKeys, mapValues } = require('lodash');
 
 const hashPassword = (password) =>
   new Promise((resolve) => {
@@ -118,9 +117,20 @@ const flatToNestedArray = (
       map[parentItemId].children.push(item);
     }
   });
-
   return nestedArray;
 };
+
+const itemsStartWith = (items, char) => {
+  return items.filter((item) => item.indexOf(char) === 0);
+};
+
+const getTotalDeep = (items, deepProp, totalProp) =>
+  items.reduce((acc, item) => {
+    const total = Array.isArray(item[deepProp])
+      ? getTotalDeep(item[deepProp], deepProp, totalProp)
+      : 0;
+    return _.sumBy(item, totalProp) + total + acc;
+  }, 0);
 
 export {
   hashPassword,
@@ -131,4 +141,6 @@ export {
   mapKeysDeep,
   promiseSerial,
   flatToNestedArray,
+  itemsStartWith,
+  getTotalDeep,
 };

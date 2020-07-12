@@ -21,12 +21,14 @@ function Customer({
   const { id } = useParams();
   const history = useHistory();
 
-  const fetchCustomers = useQuery('customers-list', () =>
+  // Handle fetch customers data table
+  const fetchCustomers = useQuery('customers-table', () =>
     requestFetchCustomers({}),
   );
-
-  const fetchCustomerDatails = useQuery(id && ['customer-detail', id], () =>
+  // Handle fetch customer details.
+  const fetchCustomer= useQuery(['customer', id], () =>
     requestFetchCustomers(),
+    { enabled: !!id },
   );
 
   const handleFormSubmit = useCallback(
@@ -42,7 +44,7 @@ function Customer({
 
   return (
     <DashboardInsider
-      loading={fetchCustomerDatails.isFetching || fetchCustomers.isFetching}
+      loading={fetchCustomer.isFetching || fetchCustomers.isFetching}
       name={'customer-form'}
     >
       <CustomerForm

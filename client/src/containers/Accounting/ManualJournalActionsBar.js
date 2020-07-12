@@ -104,7 +104,7 @@ function ManualJournalActionsBar({
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon="plus" />}
-          text={<T id={'new_journal'} />}
+          text={<T id={'journal_entry'} />}
           onClick={onClickNewManualJournal}
         />
         <Popover

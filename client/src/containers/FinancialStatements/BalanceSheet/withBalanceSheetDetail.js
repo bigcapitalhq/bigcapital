@@ -4,6 +4,7 @@ import {
   getFinancialSheetAccounts,
   getFinancialSheetColumns,
   getFinancialSheetQuery,
+  getFinancialSheetTableRows,
 } from 'store/financialStatement/financialStatements.selectors';
 
 
@@ -13,6 +14,7 @@ export default (mapState) => {
     const mapped = {
       balanceSheet: getFinancialSheet(state.financialStatements.balanceSheet.sheets, balanceSheetIndex),
       balanceSheetAccounts: getFinancialSheetAccounts(state.financialStatements.balanceSheet.sheets, balanceSheetIndex),
+      balanceSheetTableRows: getFinancialSheetTableRows(state.financialStatements.balanceSheet.sheets, balanceSheetIndex),
       balanceSheetColumns: getFinancialSheetColumns(state.financialStatements.balanceSheet.sheets, balanceSheetIndex),
       balanceSheetQuery: getFinancialSheetQuery(state.financialStatements.balanceSheet.sheets, balanceSheetIndex),
       balanceSheetLoading: state.financialStatements.balanceSheet.loading,

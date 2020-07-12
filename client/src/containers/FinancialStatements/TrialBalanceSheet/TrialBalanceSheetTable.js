@@ -45,7 +45,8 @@ function TrialBalanceSheetTable({
       },
       {
         Header: formatMessage({ id: 'credit' }),
-        accessor: (r) => <Money amount={r.credit} currency="USD" />,
+        accessor: 'credit',
+        Cell: ({ cell }) => <Money amount={cell.row.original.credit} currency="USD" />,
         className: 'credit',
         minWidth: 95,
         maxWidth: 95,
@@ -53,7 +54,8 @@ function TrialBalanceSheetTable({
       },
       {
         Header: formatMessage({ id: 'debit' }),
-        accessor: (r) => <Money amount={r.debit} currency="USD" />,
+        accessor: 'debit',
+        Cell: ({ cell }) => <Money amount={cell.row.original.debit} currency="USD" />,
         className: 'debit',
         minWidth: 95,
         maxWidth: 95,
@@ -61,7 +63,8 @@ function TrialBalanceSheetTable({
       },
       {
         Header: formatMessage({ id: 'balance' }),
-        accessor: (r) => <Money amount={r.balance} currency="USD" />,
+        accessor: 'balance',
+        Cell: ({ cell }) => <Money amount={cell.row.original.balance} currency="USD" />,
         className: 'balance',
         minWidth: 95,
         maxWidth: 95,
@@ -91,6 +94,7 @@ function TrialBalanceSheetTable({
         onFetchData={handleFetchData}
         expandable={true}
         expandToggleColumn={1}
+        expandColumnSpace={1}
         sticky={true}
       />
     </FinancialSheet>

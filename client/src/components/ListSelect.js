@@ -1,44 +1,68 @@
-import React, { useState, useEffect } from 'react';
-import {
-  Button,
-  MenuItem,
-} from '@blueprintjs/core';
+import React, { useState, useMemo, useEffect } from 'react';
+import { Button, MenuItem } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
 import { FormattedMessage as T } from 'react-intl';
 
-export default function ListSelect ({
+export default function ListSelect({
   buttonProps,
   defaultText,
-  noResultsText = (<T id="no_results" />),
+  noResultsText = <T id="no_results" />,
   isLoading = false,
   labelProp,
 
   selectedItem,
   selectedItemProp = 'id',
 
-  // itemTextProp,
-  // itemLabelProp,
+  initialSelectedItem,
+  onItemSelect,
+
   ...selectProps
 }) {
-  const [currentItem, setCurrentItem] = useState(null);
+  const selectedItemObj = useMemo(
+    () => selectProps.items.find((i) => i[selectedItemProp] === selectedItem),
+    [selectProps.items, selectedItemProp, selectedItem],
+  );
+
+  const selectedInitialItem = useMemo(
+    () => selectProps.items.find((i) => i[selectedItemProp] === initialSelectedItem),
+    [initialSelectedItem],
+  );
+
+  const [currentItem, setCurrentItem] = useState(
+    (initialSelectedItem && selectedInitialItem) || null,
+  );
 
   useEffect(() => {
-    if (selectedItem && selectedItemProp) {
-      const item = selectProps.items.find(i => i[selectedItemProp] === selectedItem);
-      setCurrentItem(item);
+    if (selectedItemObj) {
+      setCurrentItem(selectedItemObj);
     }
-  }, [selectedItem, selectedItemProp, selectProps.items]);
+  }, [selectedItemObj, setCurrentItem]);
 
-  const noResults = isLoading ?
-    ('loading') : <MenuItem disabled={true} text={noResultsText} />;
+  const noResults = isLoading ? (
+    'loading'
+  ) : (
+    <MenuItem disabled={true} text={noResultsText} />
+  );
 
-  const itemRenderer =  (item, { handleClick, modifiers, query }) => {
-    return (<MenuItem text={item[labelProp]} key={item[selectedItemProp]} onClick={handleClick} />);
+  const itemRenderer = (item, { handleClick, modifiers, query }) => {
+    return (
+      <MenuItem
+        text={item[labelProp]}
+        key={item[selectedItemProp]}
+        onClick={handleClick}
+      />
+    );
+  };
+
+  const handleItemSelect = (_item) => {
+    setCurrentItem(_item);
+    onItemSelect && onItemSelect(_item);
   };
 
   return (
     <Select
       itemRenderer={itemRenderer}
+      onItemSelect={handleItemSelect}
       {...selectProps}
       noResults={noResults}
     >
@@ -48,5 +72,5 @@ export default function ListSelect ({
         {...buttonProps}
       />
     </Select>
-  )
+  );
 }

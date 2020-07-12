@@ -165,6 +165,7 @@ function AccountsDataTable({
           onClick={handleEditAccount(account)}
         />
         <MenuItem
+          icon={<Icon icon="plus" />}
           text={formatMessage({ id: 'new_child_account' })}
           onClick={() => handleNewParentAccount(account)}
         />
@@ -172,17 +173,20 @@ function AccountsDataTable({
         <If condition={account.active}>
           <MenuItem
             text={formatMessage({ id: 'inactivate_account' })}
+            icon={<Icon icon="pause-16" iconSize={16} />}
             onClick={() => onInactiveAccount(account)}
           />
         </If>
         <If condition={!account.active}>
           <MenuItem
             text={formatMessage({ id: 'activate_account' })}
+            icon={<Icon icon="play-16" iconSize={16} />}
             onClick={() => onActivateAccount(account)}
           />
         </If>
         <MenuItem
           text={formatMessage({ id: 'delete_account' })}
+          icon={<Icon icon="trash-16" iconSize={16} />}
           intent={Intent.DANGER}
           onClick={() => onDeleteAccount(account)}
         />
@@ -297,6 +301,7 @@ function AccountsDataTable({
       onSelectedRowsChange={handleSelectedRowsChange}
       loading={accountsLoading && !isMounted}
       rowContextMenu={rowContextMenu}
+      expandColumnSpace={1}
     />
   );
 }

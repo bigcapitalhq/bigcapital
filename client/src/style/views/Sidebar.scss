@@ -2,10 +2,11 @@ $sidebar-background: #01194e;
 $sidebar-text-color: #fff;
 $sidebar-width: 100%;
 $sidebar-menu-item-color: rgba(255, 255, 255, 0.9);
+$sidebar-menu-item-color-active: rgb(255, 255, 255);
 $sidebar-popover-submenu-bg: rgb(1, 20, 62);
 $sidebar-menu-label-color: rgba(255, 255, 255, 0.5);
-$sidebar-submenu-item-color: rgba(255, 255, 255, 0.55);
-$sidebar-submenu-item-hover-color: rgba(255, 255, 255, 0.8);
+$sidebar-submenu-item-color: rgba(255, 255, 255, 0.6);
+$sidebar-submenu-item-hover-color: rgba(255, 255, 255, 0.85);
 $sidebar-logo-opacity: 0.55;
 $sidebar-submenu-item-bg-color: #01287d;
 
@@ -71,7 +72,7 @@ $sidebar-submenu-item-bg-color: #01287d;
       &:hover,
       &.bp3-active {
         background: $sidebar-submenu-item-bg-color;
-        color: $sidebar-menu-item-color;
+        color: $sidebar-menu-item-color-active;
       }
       &:focus,
       &:active {
@@ -105,9 +106,8 @@ $sidebar-submenu-item-bg-color: #01287d;
           padding-bottom: 6px;
           padding-top: 6px;
         }
-
         .#{$ns}-menu-item {
-          padding: 7px 16px 7px 18px;
+          padding: 7px 16px;
           font-size: 15px;
           color: $sidebar-submenu-item-color;
 
@@ -116,7 +116,6 @@ $sidebar-submenu-item-bg-color: #01287d;
             background: transparent;
             color: $sidebar-submenu-item-hover-color;
           }
-
           &.bp3-active{
             font-weight: 500;
           }
@@ -173,7 +172,7 @@ $sidebar-submenu-item-bg-color: #01287d;
       min-width: 50px;
 
       &:hover{
-        min-width: 220px;
+        min-width: 190px;
 
         .sidebar__head-logo{
 
