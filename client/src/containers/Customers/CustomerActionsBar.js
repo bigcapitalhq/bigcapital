@@ -17,7 +17,7 @@ import { useHistory } from 'react-router-dom';
 import Icon from 'components/Icon';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import FilterDropdown from 'components/FilterDropdown';
-import { If } from 'components';
+import { If, DashboardActionViewsList } from 'components';
 
 import withResourceDetail from 'containers/Resources/withResourceDetails';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
@@ -67,6 +67,12 @@ const CustomerActionsBar = ({
   return (
     <DashboardActionsBar>
       <NavbarGroup>
+        <DashboardActionViewsList
+          resourceName={'customers'}
+          views={[]}
+        />
+        <NavbarDivider />
+
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon={'plus'} />}

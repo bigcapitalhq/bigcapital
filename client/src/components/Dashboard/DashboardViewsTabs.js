@@ -1,7 +1,9 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import { FormattedMessage as T } from 'react-intl';
 import PropTypes from 'prop-types';
 import { Button, Tabs, Tab, Tooltip, Position } from '@blueprintjs/core';
+import { debounce } from 'lodash';
+import { useHistory } from 'react-router';
 import { If, Icon } from 'components';
 
 export default function DashboardViewsTabs({
@@ -9,13 +11,16 @@ export default function DashboardViewsTabs({
   tabs,
   allTab = true,
   newViewTab = true,
+  resourceName,
   onNewViewTabClick,
   onChange,
   onTabClick,
 }) {
+  const history = useHistory();
   const [currentView, setCurrentView] = useState(initialViewId || 0);
 
   const handleClickNewView = () => {
+    history.push(`/custom_views/${resourceName}/new`);
     onNewViewTabClick && onNewViewTabClick();
   };
 
@@ -32,7 +37,16 @@ export default function DashboardViewsTabs({
     onNewViewTabClick && onNewViewTabClick();
   };
 
+  const debounceChangeHistory = useRef(
+    debounce((toUrl) => {
+      history.push(toUrl);
+    }, 250),
+  );
+
   const handleTabsChange = (viewId) => {
+    const toPath = viewId ? `${viewId}/custom_view` : '';
+    debounceChangeHistory.current(`/${resourceName}/${toPath}`);
+
     setCurrentView(viewId);
     onChange && onChange(viewId);
   };

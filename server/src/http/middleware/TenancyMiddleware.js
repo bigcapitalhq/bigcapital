@@ -46,7 +46,8 @@ export default async (req, res, next) => {
   req.organizationId = organizationId;
   req.models = {
     ...Object.values(models).reduce((acc, model) => {      
-      if (typeof model.resource.default.requestModel === 'function' && 
+      if (typeof model.resource.default !== 'undefined' &&
+        typeof model.resource.default.requestModel === 'function' && 
         model.resource.default.requestModel() &&
         model.name !== 'TenantModel') {
         acc[model.name] = model.resource.default.bindKnex(knex);

@@ -63,6 +63,10 @@ export default class JournalPoster {
       accountId: entry.account,
     });
 
+    if (entry.contactType && entry.contactId) {
+      
+    }
+
     // Effect parent accounts of the given account id.
     depAccountsIds.forEach((accountId) => {
       this._setAccountBalanceChange({
@@ -94,6 +98,22 @@ export default class JournalPoster {
       change = entryType === 'debit' ? debit : -1 * credit;
     }
     this.balancesChange[accountId] += change;
+  }
+
+  /**
+   * Set contact balance change.
+   * @param {Object} param -  
+   */
+  _setContactBalanceChange({
+    contactType,
+    contactId,
+
+    accountNormal,
+    debit,
+    credit,
+    entryType,
+  }) {
+
   }
 
   /**
@@ -455,6 +475,9 @@ export default class JournalPoster {
     });
   }
 
+  /**
+   * Calculates the entries balance change.
+   */
   calculateEntriesBalanceChange() {
     this.entries.forEach((entry) => {
       if (entry.credit) {

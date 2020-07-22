@@ -67,28 +67,13 @@ function AccountsViewsTabs({
   const tabs = accountsViews.map((view) => ({
     ...pick(view, ['name', 'id']),
   }));
-
-  const debounceChangeHistory = useRef(
-    debounce((toUrl) => {
-      history.push(toUrl);
-    }, 250),
-  );
-
-  const handleTabsChange = (viewId) => {
-    const toPath = viewId ? `${viewId}/custom_view` : '';
-    debounceChangeHistory.current(`/accounts/${toPath}`);
-    setTopbarEditView(viewId);
-  };
-
   return (
     <Navbar className="navbar--dashboard-views">
       <NavbarGroup align={Alignment.LEFT}>
         <DashboardViewsTabs
           initialViewId={customViewId}
-          baseUrl={'/accounts'}
+          resourceName={'accounts'}
           tabs={tabs}
-          onNewViewTabClick={handleClickNewView}
-          onChange={handleTabsChange}
         />
       </NavbarGroup>
     </Navbar>

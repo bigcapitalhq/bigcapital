@@ -14,6 +14,7 @@ import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 
 import CustomersTable from 'containers/Customers/CustomerTable';
 import CustomerActionsBar from 'containers/Customers/CustomerActionsBar';
+import CustomersViewsTabs from 'containers/Customers/CustomersViewsTabs';
 
 import withCustomersActions from 'containers/Customers/withCustomersActions';
 import withResourceActions from 'containers/Resources/withResourcesActions';
@@ -178,6 +179,9 @@ function CustomersList({
         onFilterChanged={handleFilterChanged}
         onBulkDelete={handleBulkDelete}
       />
+
+      <CustomersViewsTabs />
+
       <DashboardPageContent>
         <CustomersTable
           loadong={tableLoading}

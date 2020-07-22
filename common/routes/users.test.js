@@ -12,7 +12,7 @@ import {
 let tenantDb;
 let tenantFactory;
 
-describe.only('routes: `/routes`', () => {
+describe('routes: `/routes`', () => {
   beforeEach(async () => {
     tenantDb = await createTenant();
     tenantFactory = createTenantFactory(tenantDb);

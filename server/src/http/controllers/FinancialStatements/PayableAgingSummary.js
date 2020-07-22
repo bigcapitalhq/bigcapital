@@ -47,7 +47,6 @@ export default class PayableAgingSummary extends AgingReport {
         filter,
         vendors_ids
       );
-
       if (notStoredCustomersIds.length) {
         return res.status(400).send({
           errors: [{ type: 'VENDORS.IDS.NOT.FOUND', code: 300 }],

@@ -20,8 +20,9 @@ import Options from '@/http/controllers/Options';
 import Currencies from '@/http/controllers/Currencies';
 import Customers from '@/http/controllers/Customers';
 import Vendors from '@/http/controllers/Vendors';
+import Sales from '@/http/controllers/Sales'
 // import Suppliers from '@/http/controllers/Suppliers';
-// import Bills from '@/http/controllers/Bills';
+import Purchases from '@/http/controllers/Purchases';
 // import CurrencyAdjustment from './controllers/CurrencyAdjustment';
 import Resources from './controllers/Resources';
 import ExchangeRates from '@/http/controllers/ExchangeRates';
@@ -56,11 +57,12 @@ export default (app) => {
   dashboard.use('/api/expenses', Expenses.router());
   dashboard.use('/api/financial_statements', FinancialStatements.router());
   dashboard.use('/api/options', Options.router());
+  dashboard.use('/api/sales', Sales.router());
   // app.use('/api/budget_reports', BudgetReports.router());
   dashboard.use('/api/customers', Customers.router());
   dashboard.use('/api/vendors', Vendors.router());
+  dashboard.use('/api/purchases', Purchases.router());
   // app.use('/api/suppliers', Suppliers.router());
-  // app.use('/api/bills', Bills.router());
   // app.use('/api/budget', Budget.router());
   dashboard.use('/api/resources', Resources.router());
   dashboard.use('/api/exchange_rates', ExchangeRates.router());

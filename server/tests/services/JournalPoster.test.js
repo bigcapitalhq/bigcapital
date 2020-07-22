@@ -76,6 +76,16 @@ describe('JournalPoster', () => {
     });
   });
 
+  describe('setContactAccountBalance', () => {
+    it('Should increment balance amount after credit/debit entry.', () => {
+
+    });
+
+    it('Should decrement balance amount after credit/debit customer/vendor entry.', () => {
+      
+    });
+  });
+
   describe('saveEntries()', () => {
     it('Should save all stacked entries to the storage.', async () => {
       const journalEntries = new JournalPoster(accountsDepGraph);

@@ -306,5 +306,85 @@ export default (tenantDb) => {
     };
   });
 
+  factory.define('sale_estimate', 'sales_estimates', async () => {
+    const customer = await factory.create('customer');
+
+    return {
+      customer_id: customer.id,
+      estimate_date: faker.date.past,
+      expiration_date: faker.date.future,
+      reference: '',
+      estimate_number: faker.random.number,
+      note: '',
+      terms_conditions: '',
+    };
+  });
+
+  factory.define('sale_estimate_entry', 'sales_estimate_entries', async () => {
+    const estimate = await factory.create('sale_estimate');
+    const item = await factory.create('item');
+
+    return {
+      estimate_id: estimate.id,
+      item_id: item.id,
+      description: '',
+      discount: faker.random.number,
+      quantity: faker.random.number,
+      rate: faker.random.number,
+    };
+  });
+
+  factory.define('sale_receipt', 'sales_receipts', async () => {
+    const depositAccount = await factory.create('account');
+    const customer = await factory.create('customer');
+
+    return {
+      deposit_account_id: depositAccount.id,
+      customer_id: customer.id,
+      reference_no: faker.random.number,
+      receipt_date: faker.date.past,
+    };
+  });
+
+  factory.define('sale_receipt_entry', 'sales_receipt_entries', async () => {
+    const saleReceipt = await factory.create('sale_receipt');
+    const item = await factory.create('item');
+
+    return {
+      sale_receipt_id: saleReceipt.id,
+      item_id: item.id,
+      rate: faker.random.number,
+      quantity: faker.random.number,
+    };
+  });
+
+  factory.define('sale_invoice', 'sales_invoices', async () => {
+
+    return {
+
+    };
+  });
+
+  factory.define('sale_invoice_entry', 'sales_invoices_entries', async () => {
+    return {
+
+    };
+  });
+
+  factory.define('payment_receive', 'payment_receives', async () => {
+
+  });
+
+  factory.define('payment_receive_entry', 'payment_receives_entries', async () => {
+
+  });
+
+
+  factory.define('bill', 'bills', async () => {
+    return {
+      
+    }
+  });
+
   return factory;
 }

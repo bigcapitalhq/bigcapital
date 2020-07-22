@@ -5,18 +5,15 @@ import {
   NavbarGroup,
   Classes,
   NavbarDivider,
-  MenuItem,
-  Menu,
   Popover,
   PopoverInteractionKind,
   Position,
   Intent,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { FormattedMessage as T } from 'react-intl';
-import { If } from 'components';
+import { If, DashboardActionViewsList } from 'components';
 
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import FilterDropdown from 'components/FilterDropdown';
@@ -45,22 +42,15 @@ function AccountsActionsBar({
   onBulkActivate,
   onBulkInactive,
 }) {
-  const history = useHistory();
   const [filterCount, setFilterCount] = useState(0);
 
   const onClickNewAccount = () => {
     openDialog('account-form', {});
   };
-  const onClickViewItem = (view) => {
-    history.push(view ? `/accounts/${view.id}/custom_view` : '/accounts');
-  };
 
-  const viewsMenuItems = accountsViews.map((view) => {
-    return <MenuItem onClick={() => onClickViewItem(view)} text={view.name} />;
-  });
-  const hasSelectedRows = useMemo(
-    () => selectedRows.length > 0,
-    [selectedRows]);
+  const hasSelectedRows = useMemo(() => selectedRows.length > 0, [
+    selectedRows,
+  ]);
 
   const filterDropdown = FilterDropdown({
     fields: resourceFields,
@@ -93,20 +83,10 @@ function AccountsActionsBar({
   return (
     <DashboardActionsBar>
       <NavbarGroup>
-        <Popover
-          content={<Menu>{viewsMenuItems}</Menu>}
-          minimal={true}
-          interactionKind={PopoverInteractionKind.HOVER}
-          position={Position.BOTTOM_LEFT}
-        >
-          <Button
-            className={classNames(Classes.MINIMAL, 'button--table-views')}
-            icon={<Icon icon="table-16" iconSize={16} />}
-            text={<T id={'table_views'} />}
-            rightIcon={'caret-down'}
-          />
-        </Popover>
-
+        <DashboardActionViewsList
+          resourceName={'accounts'}
+          views={accountsViews}
+        />
         <NavbarDivider />
 
         <Button
@@ -130,7 +110,10 @@ function AccountsActionsBar({
               filterCount <= 0 ? (
                 <T id={'filter'} />
               ) : (
-                <T id={'count_filters_applied'} values={{ count: filterCount }} />
+                <T
+                  id={'count_filters_applied'}
+                  values={{ count: filterCount }}
+                />
               )
             }
             icon={<Icon icon="filter-16" iconSize={16} />}

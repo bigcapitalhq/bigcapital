@@ -21,7 +21,7 @@ import DataTable from './DataTable';
 import AccountsSelectList from './AccountsSelectList';
 import AccountsTypesSelect from './AccountsTypesSelect';
 import LoadingIndicator from './LoadingIndicator';
-
+import DashboardActionViewsList from './Dashboard/DashboardActionViewsList';
 const Hint = FieldHint;
 
 export {
@@ -49,4 +49,5 @@ export {
   AccountsSelectList,
   AccountsTypesSelect,
   LoadingIndicator,
+  DashboardActionViewsList,
 };

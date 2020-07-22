@@ -60,7 +60,7 @@ describe('routes: `/financial_statements`', () => {
     // Expense account balance = 1000  |  Income account balance   = 2000
   });
  
-  describe.only('routes: `financial_statements/balance_sheet`', () => {
+  describe('routes: `financial_statements/balance_sheet`', () => {
     it('Should response unauthorzied in case the user was not authorized.', async () => {
       const res = await request()
         .get('/api/financial_statements/balance_sheet')
@@ -111,7 +111,7 @@ describe('routes: `/financial_statements`', () => {
       expect(res.body.balance_sheet[1].type).equals('section');
     });
 
-    it.only('Should retrieve assets and liabilities/equity total of each section.', async () => {
+    it('Should retrieve assets and liabilities/equity total of each section.', async () => {
       const res = await request()
         .get('/api/financial_statements/balance_sheet')
         .set('x-access-token', loginRes.body.token)

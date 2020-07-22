@@ -25,6 +25,24 @@ export default class View extends mixin(TenantModel, [CachableModel]) {
     return CachableQueryBuilder;
   }
 
+  static get modifiers() {
+    const TABLE_NAME = View.tableName;
+
+    return {
+      allMetadata(query) {
+        query.withGraphFetched('roles.field');
+        query.withGraphFetched('columns');
+      },
+
+      specificOrFavourite(query, viewId) {
+        if (viewId) {
+          query.where('id', viewId)
+        }
+        return query;
+      }
+    }
+  }
+
   /**
    * Relationship mapping.
    */

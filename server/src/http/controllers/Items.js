@@ -27,24 +27,28 @@ export default {
 
     router.post('/:id',
       this.editItem.validation,
-      asyncMiddleware(this.editItem.handler));
+      asyncMiddleware(this.editItem.handler)
+    );
 
     router.post('/',
       this.newItem.validation,
-      asyncMiddleware(this.newItem.handler));
+      asyncMiddleware(this.newItem.handler)
+    );
 
     router.delete('/:id',
       this.deleteItem.validation,
-      asyncMiddleware(this.deleteItem.handler));
+      asyncMiddleware(this.deleteItem.handler)
+    );
 
     router.delete('/',
       this.bulkDeleteItems.validation,
-      asyncMiddleware(this.bulkDeleteItems.handler));
+      asyncMiddleware(this.bulkDeleteItems.handler)
+    );
 
     router.get('/',
       this.listItems.validation,
-      asyncMiddleware(this.listItems.handler));
-
+      asyncMiddleware(this.listItems.handler)
+    );
     return router;
   },
 
@@ -57,6 +61,10 @@ export default {
       check('type').exists().trim().escape()
         .isIn(['service', 'non-inventory', 'inventory']),
       check('sku').optional({ nullable: true }).trim().escape(),
+
+      check('purchasable').exists().isBoolean().toBoolean(),
+      check('sellable').exists().isBoolean().toBoolean(),
+
       check('cost_price').exists().isNumeric().toFloat(),
       check('sell_price').exists().isNumeric().toFloat(),
       check('cost_account_id').exists().isInt().toInt(),
@@ -66,6 +74,10 @@ export default {
         .exists()
         .isInt()
         .toInt(),
+
+      check('sell_description').optional().trim().escape(),
+      check('cost_description').optional().trim().escape(),
+
       check('category_id').optional({ nullable: true }).isInt().toInt(),
 
       check('custom_fields').optional().isArray({ min: 1 }),
@@ -204,9 +216,12 @@ export default {
       check('cost_account_id').exists().isInt(),
       check('sell_account_id').exists().isInt(),
       check('category_id').optional({ nullable: true }).isInt().toInt(),
-      check('note').optional(),
+      check('note').optional().trim().escape(),
       check('attachment').optional(),
-      check('')
+      check('sell_description').optional().trim().escape(),
+      check('cost_description').optional().trim().escape(),
+      check('purchasable').exists().isBoolean().toBoolean(),
+      check('sellable').exists().isBoolean().toBoolean(),
     ],
     async handler(req, res) {
       const validationErrors = validationResult(req);

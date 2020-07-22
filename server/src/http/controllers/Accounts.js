@@ -123,7 +123,6 @@ export default {
       const foundAccountTypePromise = AccountType.query().findById(
         form.account_type_id
       );
-
       const [foundAccountCode, foundAccountType] = await Promise.all([
         foundAccountCodePromise,
         foundAccountTypePromise,
@@ -379,7 +378,6 @@ export default {
         );
         dynamicFilter.setFilter(sortByFilter);
       }
-
       // View roles.
       if (view && view.roles.length > 0) {
         const viewFilter = new DynamicFilterViews(
