@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import classNames from 'classnames';
-import { Classes, InputGroup, FormGroup } from '@blueprintjs/core';
+import { Classes, InputGroup, FormGroup, Intent } from '@blueprintjs/core';
 
 const InputEditableCell = ({
   row: { index },
@@ -20,8 +20,17 @@ const InputEditableCell = ({
     setValue(initialValue);
   }, [initialValue]);
 
+  const error = payload.errors?.[index]?.[id];
+
   return (
-    <FormGroup>
+    <FormGroup
+      intent={error ? Intent.DANGER : null}
+      className={classNames(
+        'form-group--select-list',
+        'form-group--account',
+        Classes.FILL,
+      )}
+    >
       <InputGroup
         value={value}
         onChange={onChange}

@@ -37,7 +37,20 @@ export default [
   },
   {
     text: <T id={'sales'} />,
-    children: [],
+    children: [
+      {
+        text: <T id={'estimates'} />,
+        href: '/estimates/new',
+      },
+      {
+        text: <T id={'invocies'} />,
+        href: '/invoices/new',
+      },
+      {
+        text: <T id={'receipts'} />,
+        href: '/receipts/new',
+      },
+    ],
   },
   {
     text: <T id={'purchases'} />,
@@ -99,11 +112,11 @@ export default [
     text: <T id={'expenses'} />,
     children: [
       {
-        text: <T id={'expenses'}/>,
+        text: <T id={'expenses'} />,
         href: '/expenses-list',
       },
       {
-        text: <T id={'new_expense'}/>,
+        text: <T id={'new_expense'} />,
         href: '/expenses/new',
       },
     ],
@@ -140,12 +153,12 @@ export default [
       },
       {
         text: 'Receivable Aging Summary',
-        href: '/financial-reports/receivable-aging-summary'
+        href: '/financial-reports/receivable-aging-summary',
       },
       {
         text: 'Payable Aging Summary',
-        href: '/financial-reports/payable-aging-summary'
-      }
+        href: '/financial-reports/payable-aging-summary',
+      },
     ],
   },
   {

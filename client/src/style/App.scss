@@ -59,9 +59,10 @@ $pt-font-family: Noto Sans, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
 @import 'pages/invite-user.scss';
 @import 'pages/exchange-rate.scss';
 @import 'pages/customer.scss';
+@import 'pages/estimate.scss';
 
-// Views
-@import 'views/filter-dropdown';
+ // Views
+  @import 'views/filter-dropdown';
 @import 'views/sidebar';
 
 .App {
@@ -100,45 +101,42 @@ body.authentication {
   box-shadow: none;
 }
 
-.select-list--fill-popover{
-
+.select-list--fill-popover {
   .bp3-transition-container,
-  .bp3-popover{
+  .bp3-popover {
     min-width: 100%;
   }
 }
 
-.select-list--fill-button{
-
+.select-list--fill-button {
   .bp3-popover-wrapper,
-  .bp3-popover-target{
+  .bp3-popover-target {
     display: block;
     width: 100%;
   }
-  .bp3-button{
+  .bp3-button {
     width: 100%;
     justify-content: start;
   }
 }
 
-
-.bp3-datepicker-caption .bp3-html-select::after{
+.bp3-datepicker-caption .bp3-html-select::after {
   margin-right: 6px;
 }
 
-.hint{
+.hint {
   margin-left: 6px;
   position: relative;
   top: -1px;
-  
-  .bp3-icon{
-    color: #A1B2C5;
+
+  .bp3-icon {
+    color: #a1b2c5;
   }
 
-  .bp3-popover-target:hover .bp3-icon{
+  .bp3-popover-target:hover .bp3-icon {
     color: #90a1b5;
   }
-  .bp3-icon{
+  .bp3-icon {
     vertical-align: middle;
   }
 }
@@ -155,20 +153,19 @@ body.authentication {
   }
 }
 
-.bp3-form-group .bp3-label{
-
-  .hint{
-    .bp3-popover-wrapper{
+.bp3-form-group .bp3-label {
+  .hint {
+    .bp3-popover-wrapper {
       display: inline;
     }
   }
 
-  &:not(.bp3-inline) .hint .bp3-popover-target{
+  &:not(.bp3-inline) .hint .bp3-popover-target {
     display: inline;
     margin-left: 0;
   }
 }
 
-.bp3-popover.bp3-tooltip{
+.bp3-popover.bp3-tooltip {
   max-width: 300px;
 }

@@ -528,14 +528,20 @@ export default {
   logic_expression: 'logic expression',
   assign_to_customer: 'Assign to Customer',
   inactive: 'Inactive',
-  should_select_customers_with_entries_have_receivable_account: 'Should select customers with entries that have receivable account.',
-  should_select_vendors_with_entries_have_payable_account: 'Should select vendors with entries that have payable account.',
-  vendors_should_selected_with_payable_account_only: 'Vendors contacts should selected with payable account only.',
-  customers_should_selected_with_receivable_account_only: 'Customers contacts should selected with receivable account only.',
+  should_select_customers_with_entries_have_receivable_account:
+    'Should select customers with entries that have receivable account.',
+  should_select_vendors_with_entries_have_payable_account:
+    'Should select vendors with entries that have payable account.',
+  vendors_should_selected_with_payable_account_only:
+    'Vendors contacts should selected with payable account only.',
+  customers_should_selected_with_receivable_account_only:
+    'Customers contacts should selected with receivable account only.',
   amount_cannot_be_zero_or_empty: 'Amount cannot be zero or empty.',
-  should_total_of_credit_and_debit_be_equal: 'Should total of credit and debit be equal.',
+  should_total_of_credit_and_debit_be_equal:
+    'Should total of credit and debit be equal.',
   no_accounts: 'No Accounts',
-  the_accounts_have_been_successfully_inactivated: 'The accounts have been successfully inactivated.',
+  the_accounts_have_been_successfully_inactivated:
+    'The accounts have been successfully inactivated.',
   account_code_is_not_unique: 'Account code is not unqiue.',
   are_sure_to_publish_this_expense:
     'Are you sure you want to publish this expense?',
@@ -546,10 +552,85 @@ export default {
 
   accounts_without_zero_balance: 'Accounts without zero-balance',
   accounts_with_transactions: 'Accounts with transactions',
-  include_accounts_once_has_transactions_on_given_date_period: 'Include accounts that onces have transactions on the given date period only.',
-  include_accounts_and_exclude_zero_balance: 'Include accounts and exclude that ones have zero-balance.',
-  all_accounts_including_with_zero_balance: 'All accounts, including that ones have zero-balance.',
+  include_accounts_once_has_transactions_on_given_date_period:
+    'Include accounts that onces have transactions on the given date period only.',
+  include_accounts_and_exclude_zero_balance:
+    'Include accounts and exclude that ones have zero-balance.',
+  all_accounts_including_with_zero_balance:
+    'All accounts, including that ones have zero-balance.',
   notifications: 'Notifications',
-  you_could_not_delete_account_has_child_accounts: 'You could not delete account has child accounts.',
-  journal_entry: 'Journal Entry'
+  you_could_not_delete_account_has_child_accounts:
+    'You could not delete account has child accounts.',
+  journal_entry: 'Journal Entry',
+
+  estimate: 'Estimate #',
+  estimate_date: 'Estimate Date',
+  expiration_date: 'Expiration Date',
+  customer_note: 'Customer Note',
+  select_customer_account: 'Select Customer Account',
+  select_product: 'Select Product',
+  reference: 'Reference #',
+  clear: 'Clear',
+  save_send: 'Save & Send',
+  estimates: 'Estimates',
+  edit_estimate: 'Edit Estimate',
+  delete_estimate: 'Delete Estimate',
+  new_estimate: 'New Estimate',
+  customer_name_: 'Customer name',
+  estimate_date_: 'Estismate date',
+  expiration_date_: 'Expiration date',
+  estimate_number_: 'Estimate number',
+  discount: 'Discount %',
+  quantity: 'Quantity',
+  rate: 'Rate',
+  estimate_list: 'Estimate List',
+
+  product_and_service: 'Product/Service',
+  the_estimate_has_been_successfully_edited:
+    'The estimate #{number} has been successfully edited.',
+  the_estimate_has_been_successfully_created:
+    'The estimate #{number} has been successfully created.',
+  the_estimate_has_been_successfully_deleted:
+    'The estimate has been successfully deleted.',
+  cannot_be_zero_or_empty: 'cannot be zero or empty.',
+  invocies: 'Invoices',
+  invoice_date: 'Invoice Date',
+  due_date: 'Due Date',
+  invoice_date_: 'Invoice date',
+  invoice_no: 'Invoice #',
+  invoice_no_: 'Invoice number',
+  due_date_: 'Due date',
+  invoice_message: 'Invoice Message',
+
+  edit_invoice: 'Edit Invoice',
+  delete_invoice: 'Delete Invoice',
+  new_invoice: 'New Invoice',
+  invoice_list: 'Invoice List',
+
+  the_invoice_has_been_successfully_edited:
+    'The invoice #{number} has been successfully edited.',
+  the_invocie_has_been_successfully_created:
+    'The invoice #{number} has been successfully created.',
+  the_invocie_has_been_successfully_deleted:
+    'The invoice has been successfully deleted.',
+  receipts: 'Receipts',
+  receipt: 'Receipt #',
+  receipt_date_: 'Receipt date',
+  receipt_date: 'Receipt Date',
+  deposit_account_: 'Deposit account',
+  receipt_message_: 'Receipt message',
+  receipt_no_: 'receipt number',
+  edit_receipt: 'Edit Receipt',
+  new_receipt: 'New Receipt',
+  receipt_message: 'Receipt Message',
+  statement: 'Statement',
+  deposit_account: 'Deposit Account',
+  send_to_email: 'Send to email',
+  select_deposit_account: 'Select Deposit Account',
+  the_receipt_has_been_successfully_created:
+    'The recepit has been successfully created.',
+  the_receipt_has_been_successfully_edited:
+    'The receipt  has been successfully edited.',
+  the_receipt_has_been_successfully_deleted:
+    'The receipt has been successfully deleted.',
 };
