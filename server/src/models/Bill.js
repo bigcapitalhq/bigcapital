@@ -7,6 +7,13 @@ import CachableModel from '@/lib/Cachable/CachableModel';
 
 export default class Bill extends mixin(TenantModel, [CachableModel]) {
   /**
+   * Virtual attributes.
+   */
+  static get virtualAttributes() {
+    return ['dueAmount'];
+  }
+
+  /**
    * Table name
    */
   static get tableName() {
@@ -21,9 +28,9 @@ export default class Bill extends mixin(TenantModel, [CachableModel]) {
   }
 
   /**
-   * Extend query builder model.
+   * Due amount of the given.
    */
-  static get QueryBuilder() {
-    return CachableQueryBuilder;
+  get dueAmount() {
+    return Math.max(this.balance - this.paymentAmount, 0);
   }
 }

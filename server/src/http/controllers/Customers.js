@@ -225,6 +225,7 @@ export default {
       const form = { ...req.body };
 
       const customer = await Customer.query().insertAndFetch({
+        balance: 0,
         ...pick(form, [
           'customer_type',
           'first_name',

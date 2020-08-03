@@ -6,6 +6,7 @@ exports.up = function(knex) {
     table.string('payment_number');
     table.date('payment_date');
     table.string('payment_method');
+    table.string('reference');
     table.integer('user_id').unsigned();
     table.text('description');
     table.timestamps();

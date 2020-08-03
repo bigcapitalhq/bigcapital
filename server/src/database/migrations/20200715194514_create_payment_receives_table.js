@@ -5,6 +5,7 @@ exports.up = function(knex) {
     table.increments();
     table.integer('customer_id').unsigned();
     table.date('payment_date');
+    table.decimal('amount', 13, 3).defaultTo(0);
     table.string('reference_no');
     table.integer('deposit_account_id').unsigned();
     table.string('payment_receive_no');

@@ -13,8 +13,12 @@ import PaymentReceive from './PaymentReceive';
 import PaymentReceiveEntry from './PaymentReceiveEntry';
 import Bill from './Bill';
 import BillPayment from './BillPayment';
+import BillPaymentEntry from './BillPaymentEntry';
 import Resource from './Resource';
 import View from './View';
+import ItemEntry from './ItemEntry';
+import InventoryTransaction from './InventoryTransaction';
+import AccountType from './AccountType';
 
 export {
   Customer,
@@ -32,6 +36,10 @@ export {
   PaymentReceiveEntry,
   Bill,
   BillPayment,
+  BillPaymentEntry,
   Resource,
   View,
+  ItemEntry,
+  InventoryTransaction,
+  AccountType,
 };

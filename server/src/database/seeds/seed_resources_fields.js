@@ -271,6 +271,154 @@ exports.seed = (knex) => {
           predefined: 1,
           columnable: true,
         },
+
+
+        // Sales Estimates
+        {
+          label_name: 'Customer name',
+          key: 'customer_name',
+        },
+        {
+          label_name: 'Amount',
+          key: 'amount',
+        },
+        {
+          label_name: 'Estimate number',
+          key: 'estimate_number',
+        },
+        {
+          label_name: 'Estimate date',
+          key: 'estimate_date',
+        },
+        {
+          label_name: 'Expiration date',
+          key: 'expiration_date',
+        },
+        {
+          label_name: 'Reference',
+          key: 'reference',
+        },
+        {
+          label_name: 'Terms and conditions',
+          key: 'terms_conditions',
+        },
+        {
+          label_name: 'Note',
+          key: 'note',
+        },
+
+        // Sales invoices
+        // {
+        //   label_name: 'Customer name',
+        //   ley: 'customer_name',
+        // },
+        // {
+        //   label_name: 'Amount',
+        //   ley: 'amount',
+        // },
+        // {
+        //   label_name: 'Invoice number',
+        //   ley: 'invoice_no',
+        // },
+        // {
+        //   label_name: 'Invoice date',
+        //   ley: 'invoice_date',
+        // },
+        // {
+        //   label_name: 'Reference',
+        //   ley: 'reference',
+        // },
+        // {
+        //   label_name: 'Payment amount',
+        //   ley: 'payment_amount',
+        // },
+        // {
+        //   label_name: 'Invoice message',
+        //   ley: 'invoice_no',
+        // },
+        // {
+        //   label_name: 'Terms and conditions',
+        //   key: 'terms_conditions',
+        // },
+
+        // // Sales receipts
+        // {
+        //   label_name: 'Deposit account',
+        //   key: 'deposit_account',
+        // },
+        // {
+        //   label_name: 'Customer name',
+        //   key: 'customer_name',
+        // },
+        // {
+        //   label_name: 'Receipt date',
+        //   key: 'receipt_date',
+        // },
+        // {
+        //   label_name: 'Reference No',
+        //   key: 'reference',
+        // },
+        // {
+        //   label_name: 'Receipt message',
+        //   key: 'receipt_message',
+        // },
+        // {
+        //   label_name: 'Sent to email',
+        //   key: 'email_send_to',
+        // },
+
+        // // Payment Receives
+        // {
+        //   label_name: 'Customer name',
+        //   key: 'customer_name',
+        // },
+        // {
+        //   label_name: 'Payment date',
+        //   key: 'payment_date',
+        // },
+        // {
+        //   label_name: 'Amount',
+        //   key: 'amount',
+        // },
+        // {
+        //   label_name: 'Reference No',
+        //   key: 'reference',
+        // },
+        // {
+        //   label_name: 'Deposit account',
+        //   key: 'deposit_account',
+        // },
+        // {
+        //   label_name: 'Payment receive no.',
+        //   key: 'payment_receive_no',
+        // },
+
+        // // Purchases bills.
+        // {
+        //   label_name: 'Bill number',
+        //   key: 'bill_number'
+        // },
+
+        // {
+        //   label_name: 'Bill date',
+        //   key: 'bill_date'
+        // },
+        // {
+        //   label_name: 'Amount',
+        //   key: 'amount'
+        // },
+        // {
+        //   label_name: 'Vendor name',
+        //   key: 'vendor_name'
+        // },
+        // {
+        //   label_name: 'Due date',
+        //   key: 'due_date'
+        // },
+        // {
+        //   label_name: 'Note',
+        //   key: 'note'
+        // },
       ]);
     });
 };

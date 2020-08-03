@@ -13,6 +13,8 @@ exports.up = function(knex) {
     table.text('terms_conditions');
 
     table.decimal('balance', 13, 3);
+    table.decimal('payment_amount', 13, 3);
+
     table.timestamps();
   });  
 };

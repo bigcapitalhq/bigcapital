@@ -1,9 +1,8 @@
-import { omit, difference } from 'lodash';
-import { SaleEstimate, SaleEstimateEntry } from '@/models';
+import { omit, difference, sumBy } from 'lodash';
+import { SaleEstimate, ItemEntry } from '@/models';
+import ServiceItemsEntries from '@/services/Sales/ServiceItemsEntries';
 
-export default class SaleEstimateService {
-  constructor() {}
-
+export default class SaleEstimateService extends ServiceItemsEntries {
   /**
    * Creates a new estimate with associated entries.
    * @async
@@ -11,23 +10,27 @@ export default class SaleEstimateService {
    * @return {void}
    */
   static async createEstimate(estimate) {
+    const amount = sumBy(estimate.entries, 'amount');
     const storedEstimate = await SaleEstimate.tenant()
       .query()
       .insert({
+        amount,
         ...omit(estimate, ['entries']),
       });
     const storeEstimateEntriesOpers = [];
 
     estimate.entries.forEach((entry) => {
-      const oper = SaleEstimateEntry.tenant()
+      const oper = ItemEntry.tenant()
         .query()
         .insert({
-          estimate_id: storedEstimate.id,
-          ...entry,
+          reference_type: 'SaleEstimate',
+          reference_id: storedEstimate.id,
+          ...omit(entry, ['total', 'amount']),
         });
       storeEstimateEntriesOpers.push(oper);
     });
     await Promise.all([...storeEstimateEntriesOpers]);
+
     return storedEstimate;
   }
 
@@ -38,9 +41,10 @@ export default class SaleEstimateService {
    * @return {void}
    */
   static async deleteEstimate(estimateId) {
-    await SaleEstimateEntry.tenant()
+    await ItemEntry.tenant()
       .query()
-      .where('estimate_id', estimateId)
+      .where('reference_id', estimateId)
+      .where('reference_type', 'SaleEstimate')
       .delete();
     await SaleEstimate.tenant().query().where('id', estimateId).delete();
   }
@@ -53,43 +57,57 @@ export default class SaleEstimateService {
    * @return {void}
    */
   static async editEstimate(estimateId, estimate) {
+    const amount = sumBy(estimate.entries, 'amount');
     const updatedEstimate = await SaleEstimate.tenant()
       .query()
       .update({
+        amount,
         ...omit(estimate, ['entries']),
       });
-    const storedEstimateEntries = await SaleEstimateEntry.tenant()
+    const storedEstimateEntries = await ItemEntry.tenant()
       .query()
-      .where('estimate_id', estimateId);
+      .where('reference_id', estimateId)
+      .where('reference_type', 'SaleEstimate');
 
     const opers = [];
-    const storedEstimateEntriesIds = storedEstimateEntries.map((e) => e.id);
-    const estimateEntriesHasID = estimate.entries.filter((entry) => entry.id);
-    const formEstimateEntriesIds = estimateEntriesHasID.map(
-      (entry) => entry.id
-    );
+    const entriesHasID = estimate.entries.filter((entry) => entry.id);
+    const entriesHasNoIDs = estimate.entries.filter((entry) => !entry.id);
+
+    const storedEntriesIds = storedEstimateEntries.map((e) => e.id);
+    const formEstimateEntriesIds = entriesHasID.map((entry) => entry.id);
+
     const entriesIdsShouldBeDeleted = difference(
-      storedEstimateEntriesIds,
+      storedEntriesIds,
       formEstimateEntriesIds,
     );
-
-    console.log(entriesIdsShouldBeDeleted);
+    // Deletes the given sale estimate entries ids.
     if (entriesIdsShouldBeDeleted.length > 0) {
-      const oper = SaleEstimateEntry.tenant()
+      const oper = ItemEntry.tenant()
         .query()
-        .where('id', entriesIdsShouldBeDeleted)
+        .whereIn('id', entriesIdsShouldBeDeleted)
         .delete();
       opers.push(oper);
     }
-    estimateEntriesHasID.forEach((entry) => {
-      const oper = SaleEstimateEntry.tenant()
+    // Insert the new sale estimate entries.
+    entriesHasNoIDs.forEach((entry) => {
+      const oper = ItemEntry.tenant()
+        .query()
+        .insert({
+          reference_type: 'SaleEstimate',
+          reference_id: estimateId,
+          ...entry,
+        });
+      opers.push(oper);
+    });
+    entriesHasID.forEach((entry) => {
+      const oper = ItemEntry.tenant()
         .query()
         .patchAndFetchById(entry.id, {
           ...omit(entry, ['id']),
         });
       opers.push(oper);
     });
-    await Promise.all([...opers]);
+    return Promise.all([...opers]);
   }
 
   /**
@@ -116,10 +134,11 @@ export default class SaleEstimateService {
       .filter((e) => e.id)
       .map((e) => e.id);
 
-    const estimateEntries = await SaleEstimateEntry.tenant()
+    const estimateEntries = await ItemEntry.tenant()
       .query()
       .whereIn('id', estimateEntriesIds)
-      .where('estimate_id', estimateId);
+      .where('reference_id', estimateId)
+      .where('reference_type', 'SaleEstimate');
 
     const storedEstimateEntriesIds = estimateEntries.map((e) => e.id);
     const notFoundEntriesIDs = difference(

@@ -126,6 +126,16 @@ exports.seed = (knex) => {
           index: 1,
           predefined: 1,
         },
+        {
+          id: 12, 
+          name: 'Cost of Goods Sold (COGS)',
+          account_type_id: 12,
+          predefined: 1,
+          parent_account_id: null,
+          index: 1,
+          active: 1,
+          description: 1,
+        }
       ]);
     });
 };

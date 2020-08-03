@@ -28,6 +28,7 @@ module.exports = {
       '@': path.resolve(__dirname, 'src'),
       '~': path.resolve(__dirname, 'tests'),
     },
+    extensions: [ '.tsx', '.ts', '.js' ],
   },
   module: {
     rules: [
@@ -46,6 +47,11 @@ module.exports = {
         use: 'babel-loader',
         exclude: /(node_modules)/,
         test: /\.js$/,
+      },
+      {
+        test: /\.tsx?$/,
+        use: 'ts-loader',
+        exclude: /node_modules/,
       },
     ],
   },

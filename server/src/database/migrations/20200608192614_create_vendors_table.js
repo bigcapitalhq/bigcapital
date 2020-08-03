@@ -4,7 +4,7 @@ exports.up = function(knex) {
     table.increments();
 
     table.string('customer_type');
-    table.decimal('balance', 13, 3);
+    table.decimal('balance', 13, 3).defaultTo(0);
 
     table.string('first_name').nullable();
     table.string('last_name').nullable();

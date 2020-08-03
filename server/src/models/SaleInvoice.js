@@ -6,6 +6,13 @@ import CachableModel from '@/lib/Cachable/CachableModel';
 
 export default class SaleInvoice extends mixin(TenantModel, [CachableModel]) {
   /**
+   * Virtual attributes.
+   */
+  static get virtualAttributes() {
+    return ['dueAmount'];
+  }
+
+  /**
    * Table name
    */
   static get tableName() {
@@ -20,27 +27,41 @@ export default class SaleInvoice extends mixin(TenantModel, [CachableModel]) {
   }
 
   /**
-   * Extend query builder model.
+   * Due amount of the given.
    */
-  static get QueryBuilder() {
-    return CachableQueryBuilder;
+  get dueAmount() {
+    return Math.max(this.balance - this.paymentAmount, 0);
   }
 
   /**
    * Relationship mapping.
    */
   static get relationMappings() {
-    const SaleInvoiceEntry = require('@/models/SaleInvoiceEntry');
+    const ItemEntry = require('@/models/ItemEntry');
 
     return {
       entries: {
         relation: Model.HasManyRelation,
-        modelClass: this.relationBindKnex(SaleInvoiceEntry.default),
+        modelClass: this.relationBindKnex(ItemEntry.default),
         join: {
           from: 'sales_invoices.id',
-          to: 'sales_invoices_entries.sale_invoice_id',
+          to: 'items_entries.referenceId',
         },
       },
     };
+  }
+
+  /**
+   * Change payment amount.
+   * @param {Integer} invoiceId 
+   * @param {Numeric} amount 
+   */
+  static async changePaymentAmount(invoiceId, amount) {
+    const changeMethod = amount > 0 ? 'increment' : 'decrement';
+
+    await this.tenant()
+      .query()
+      .where('id', invoiceId)
+      [changeMethod]('payment_amount', Math.abs(amount));      
   }
 }

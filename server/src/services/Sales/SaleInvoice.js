@@ -1,10 +1,11 @@
-import { omit, update, difference } from 'lodash';
+import { omit, sumBy, difference } from 'lodash';
 import {
   SaleInvoice,
-  SaleInvoiceEntry,
   AccountTransaction,
   Account,
   Item,
+  ItemEntry,
+  Customer,
 } from '@/models';
 import JournalPoster from '@/services/Accounting/JournalPoster';
 import ServiceItemsEntries from '@/services/Sales/ServiceItemsEntries';
@@ -17,47 +18,37 @@ export default class SaleInvoicesService extends ServiceItemsEntries {
    * @return {ISaleInvoice}
    */
   static async createSaleInvoice(saleInvoice) {
+    const balance = sumBy(saleInvoice.entries, 'amount');
     const storedInvoice = await SaleInvoice.tenant()
       .query()
       .insert({
         ...omit(saleInvoice, ['entries']),
+        balance,
+        payment_amount: 0,
       });
     const opers = [];
 
     saleInvoice.entries.forEach((entry) => {
-      const oper = SaleInvoiceEntry.tenant()
+      const oper = ItemEntry.tenant()
         .query()
         .insert({
-          sale_invoice_id: storedInvoice.id,
-          ...entry,
+          reference_type: 'SaleInvoice',
+          reference_id: storedInvoice.id,
+          ...omit(entry, ['amount', 'id']),
         });
       opers.push(oper);
     });
-    await Promise.all([
-      ...opers,
-      this.recordCreateJournalEntries(saleInvoice),
-    ]);
+    const incrementOper = Customer.incrementBalance(
+      saleInvoice.customer_id,
+      balance,
+    );
+    await Promise.all([...opers, incrementOper]);
     return storedInvoice;
   }
 
   /**
-   * Calculates total of the sale invoice entries.
-   * @param {ISaleInvoice} saleInvoice 
-   * @return {ISaleInvoice}
-   */
-  calcSaleInvoiceEntriesTotal(saleInvoice) {
-    return {
-      ...saleInvoice,
-      entries: saleInvoice.entries.map((entry) => ({
-        ...entry,
-        total: 0,
-      })),
-    };
-  }
-
-  /**
    * Records the journal entries of sale invoice.
-   * @param {ISaleInvoice} saleInvoice 
+   * @param {ISaleInvoice} saleInvoice
    * @return {void}
    */
   async recordJournalEntries(saleInvoice) {
@@ -69,8 +60,10 @@ export default class SaleInvoicesService extends ServiceItemsEntries {
     const formattedDate = moment(saleInvoice.invoice_date).format('YYYY-MM-DD');
 
     const saleItemsIds = saleInvoice.entries.map((e) => e.item_id);
-    const storedInvoiceItems = await Item.tenant().query().whereIn('id', saleItemsIds)
-  
+    const storedInvoiceItems = await Item.tenant()
+      .query()
+      .whereIn('id', saleItemsIds);
+
     const commonJournalMeta = {
       debit: 0,
       credit: 0,
@@ -111,7 +104,6 @@ export default class SaleInvoicesService extends ServiceItemsEntries {
           accountNormal: 'debit',
           note: '',
         });
-
         journal.debit(costEntry);
       }
       journal.credit(incomeEntry);
@@ -129,9 +121,10 @@ export default class SaleInvoicesService extends ServiceItemsEntries {
    */
   static async deleteSaleInvoice(saleInvoiceId) {
     await SaleInvoice.tenant().query().where('id', saleInvoiceId).delete();
-    await SaleInvoiceEntry.tenant()
+    await ItemEntry.tenant()
       .query()
-      .where('sale_invoice_id', saleInvoiceId)
+      .where('reference_id', saleInvoiceId)
+      .where('reference_type', 'SaleInvoice')
       .delete();
 
     const invoiceTransactions = await AccountTransaction.tenant()
@@ -151,37 +144,67 @@ export default class SaleInvoicesService extends ServiceItemsEntries {
 
   /**
    * Edit the given sale invoice.
-   * @param {Integer} saleInvoiceId - 
-   * @param {ISaleInvoice} saleInvoice - 
+   * @param {Integer} saleInvoiceId -
+   * @param {ISaleInvoice} saleInvoice -
    */
   static async editSaleInvoice(saleInvoiceId, saleInvoice) {
-    const updatedSaleInvoices = await SaleInvoice.tenant().query()
+    const updatedSaleInvoices = await SaleInvoice.tenant()
+      .query()
       .where('id', saleInvoiceId)
       .update({
         ...omit(saleInvoice, ['entries']),
       });
     const opers = [];
     const entriesIds = saleInvoice.entries.filter((entry) => entry.id);
-    const storedEntries = await SaleInvoiceEntry.tenant().query()
-      .where('sale_invoice_id', saleInvoiceId);
+    const entriesNoIds = saleInvoice.entries.filter((entry) => !entry.id);
+
+    const storedEntries = await ItemEntry.tenant()
+      .query()
+      .where('reference_id', saleInvoiceId)
+      .where('reference_type', 'SaleInvoice');
 
     const entriesIdsShouldDelete = this.entriesShouldDeleted(
       storedEntries,
-      entriesIds,
+      entriesIds
     );
     if (entriesIdsShouldDelete.length > 0) {
-      const updateOper = SaleInvoiceEntry.tenant().query().where('id', entriesIdsShouldDelete);
+      const updateOper = ItemEntry.tenant()
+        .query()
+        .whereIn('id', entriesIdsShouldDelete)
+        .delete();
       opers.push(updateOper);
     }
     entriesIds.forEach((entry) => {
-      const updateOper = SaleInvoiceEntry.tenant()
+      const updateOper = ItemEntry.tenant()
         .query()
-        .patchAndFetchById(entry.id, {
+        .where('id', entry.id)
+        .update({
           ...omit(entry, ['id']),
         });
       opers.push(updateOper);
     });
+    entriesNoIds.forEach((entry) => {
+      const insertOper = ItemEntry.tenant()
+        .query()
+        .insert({
+          reference_type: 'SaleInvoice',
+          reference_id: saleInvoiceId,
+          ...omit(entry, ['id']),
+        });
+      opers.push(insertOper);
+    })
     await Promise.all([...opers]);
+  }
+
+  /**
+   * Retrieve sale invoice with associated entries.
+   * @param {Integer} saleInvoiceId 
+   */
+  static async getSaleInvoiceWithEntries(saleInvoiceId) {
+    return SaleInvoice.tenant().query()
+      .where('id', saleInvoiceId)
+      .withGraphFetched('entries')
+      .first();
   }
 
   /**
@@ -208,7 +231,7 @@ export default class SaleInvoicesService extends ServiceItemsEntries {
         query.where('invoice_no', saleInvoiceNumber);
 
         if (saleInvoiceId) {
-          query.whereNot('id', saleInvoiceId)
+          query.whereNot('id', saleInvoiceId);
         }
         return query;
       });
@@ -217,7 +240,7 @@ export default class SaleInvoicesService extends ServiceItemsEntries {
 
   /**
    * Detarmine the invoices IDs in bulk and returns the not found ones.
-   * @param {Array} invoicesIds 
+   * @param {Array} invoicesIds
    * @return {Array}
    */
   static async isInvoicesExist(invoicesIds) {
@@ -227,11 +250,8 @@ export default class SaleInvoicesService extends ServiceItemsEntries {
         builder.whereIn('id', invoicesIds);
         return builder;
       });
-    const storedInvoicesIds = storedInvoices.map(i => i.id);
-    const notStoredInvoices = difference(
-      invoicesIds,
-      storedInvoicesIds,
-    );
+    const storedInvoicesIds = storedInvoices.map((i) => i.id);
+    const notStoredInvoices = difference(invoicesIds, storedInvoicesIds);
     return notStoredInvoices;
   }
 }

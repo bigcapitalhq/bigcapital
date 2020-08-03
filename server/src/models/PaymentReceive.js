@@ -20,13 +20,6 @@ export default class PaymentReceive extends mixin(TenantModel, [CachableModel]) 
   }
 
   /**
-   * Extend query builder model.
-   */
-  static get QueryBuilder() {
-    return CachableQueryBuilder;
-  }
-
-  /**
    * Relationship mapping.
    */
   static get relationMappings() {
@@ -38,7 +31,7 @@ export default class PaymentReceive extends mixin(TenantModel, [CachableModel]) 
         modelClass: this.relationBindKnex(PaymentReceiveEntry.default),
         join: {
           from: 'payment_receives.id',
-          to: 'payment_receives_entries.payment_receive_id',
+          to: 'payment_receives_entries.paymentReceiveId',
         },
       },
     };

@@ -20,25 +20,18 @@ export default class SaleReceipt extends mixin(TenantModel, [CachableModel]) {
   }
 
   /**
-   * Extend query builder model.
-   */
-  static get QueryBuilder() {
-    return CachableQueryBuilder;
-  }
-
-  /**
    * Relationship mapping.
    */
   static get relationMappings() {
-    const SaleReceiptEntry = require('@/models/SaleReceiptEntry');
+    const ItemEntry = require('@/models/ItemEntry');
 
     return {
       entries: {
         relation: Model.BelongsToOneRelation,
-        modelClass: this.relationBindKnex(SaleReceiptEntry.default),
+        modelClass: this.relationBindKnex(ItemEntry.default),
         join: {
           from: 'sales_receipts.id',
-          to: 'sales_receipt_entries.sale_receipt_id',
+          to: 'items_entries.referenceId',
         },
       },
     };

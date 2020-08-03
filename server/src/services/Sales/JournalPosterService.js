@@ -6,10 +6,10 @@ export default class JournalPosterService {
   /**
    * Deletes the journal transactions that associated to the given reference id.
    */
-  static async deleteJournalTransactions(referenceId) {
+  static async deleteJournalTransactions(referenceId, referenceType) {
     const transactions = await AccountTransaction.tenant()
       .query()
-      .whereIn('reference_type', ['SaleInvoice'])
+      .whereIn('reference_type', [referenceType])
       .where('reference_id', referenceId)
       .withGraphFetched('account.type');
 
@@ -22,4 +22,3 @@ export default class JournalPosterService {
     await Promise.all([journal.deleteEntries(), journal.saveBalance()]);
   }
 }
-

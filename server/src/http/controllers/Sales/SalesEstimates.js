@@ -1,5 +1,7 @@
 import express from 'express';
 import { check, param, query } from 'express-validator';
+import { ItemEntry } from '@/models';
+import BaseController from '@/http/controllers/BaseController'
 import validateMiddleware from '@/http/middleware/validateMiddleware';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
 import CustomersService from '@/services/Customers/CustomersService';
@@ -8,278 +10,334 @@ import ItemsService from '@/services/Items/ItemsService';
 import DynamicListingBuilder from '@/services/DynamicListing/DynamicListingBuilder';
 import DynamicListing from '@/services/DynamicListing/DynamicListing';
 
-export default {
-  router() {
+export default class SalesEstimatesController extends BaseController {
+  /**
+   * Router constructor.
+   */
+  static router() {
     const router = express.Router();
 
     router.post(
       '/',
-      this.newEstimate.validation,
+      this.estimateValidationSchema,
       validateMiddleware,
-      asyncMiddleware(this.newEstimate.handler)
+      asyncMiddleware(this.validateEstimateCustomerExistance),
+      asyncMiddleware(this.validateEstimateNumberExistance),
+      asyncMiddleware(this.validateEstimateEntriesItemsExistance),
+      asyncMiddleware(this.newEstimate)
     );
     router.post(
-      '/:id',
-      this.editEstimate.validation,
+      '/:id', [
+        ...this.validateSpecificEstimateSchema,
+        ...this.estimateValidationSchema,
+      ],
       validateMiddleware,
-      asyncMiddleware(this.editEstimate.handler)
+      asyncMiddleware(this.validateEstimateIdExistance),
+      asyncMiddleware(this.validateEstimateCustomerExistance),
+      asyncMiddleware(this.validateEstimateNumberExistance),
+      asyncMiddleware(this.validateEstimateEntriesItemsExistance),
+      asyncMiddleware(this.valdiateInvoiceEntriesIdsExistance),
+      asyncMiddleware(this.editEstimate)
     );
     router.delete(
-      '/:id',
-      this.deleteEstimate.validation,
+      '/:id', [
+        this.validateSpecificEstimateSchema,
+      ],
       validateMiddleware,
-      asyncMiddleware(this.deleteEstimate.handler)
+      asyncMiddleware(this.validateEstimateIdExistance),
+      asyncMiddleware(this.deleteEstimate)
     );
     router.get(
       '/:id',
-      this.getEstimate.validation,
+      this.validateSpecificEstimateSchema,
       validateMiddleware,
-      asyncMiddleware(this.getEstimate.handler)
+      asyncMiddleware(this.validateEstimateIdExistance),
+      asyncMiddleware(this.getEstimate)
     );
     router.get(
       '/',
-      this.getEstimates.validation,
+      this.validateEstimateListSchema,
       validateMiddleware,
-      asyncMiddleware(this.getEstimates.handler)
+      asyncMiddleware(this.getEstimates)
     );
-
     return router;
-  },
+  }
 
   /**
-   * Handle create a new estimate with associated entries.
+   * Estimate validation schema.
    */
-  newEstimate: {
-    validation: [
+  static get estimateValidationSchema() {
+    return [
       check('customer_id').exists().isNumeric().toInt(),
       check('estimate_date').exists().isISO8601(),
       check('expiration_date').optional().isISO8601(),
       check('reference').optional(),
       check('estimate_number').exists().trim().escape(),
+
       check('entries').exists().isArray({ min: 1 }),
+      check('entries.*.index').exists().isNumeric().toInt(),
       check('entries.*.item_id').exists().isNumeric().toInt(),
       check('entries.*.description').optional().trim().escape(),
       check('entries.*.quantity').exists().isNumeric().toInt(),
       check('entries.*.rate').exists().isNumeric().toFloat(),
       check('entries.*.discount').optional().isNumeric().toFloat(),
+
       check('note').optional().trim().escape(),
       check('terms_conditions').optional().trim().escape(),
-    ],
-    async handler(req, res) {
-      const estimate = { ...req.body };
-      const isCustomerExists = await CustomersService.isCustomerExists(
-        estimate.customer_id
-      );
-
-      if (!isCustomerExists) {
-        return res.status(404).send({
-          errors: [{ type: 'CUSTOMER.ID.NOT.FOUND', code: 200 }],
-        });
-      }
-      const isEstNumberUnqiue = await SaleEstimateService.isEstimateNumberUnique(
-        estimate.estimate_number
-      );
-      if (isEstNumberUnqiue) {
-        return res.boom.badRequest(null, {
-          errors: [{ type: 'ESTIMATE.NUMBER.IS.NOT.UNQIUE', code: 300 }],
-        });
-      }
-      // Validate items ids in estimate entries exists.
-      const estimateItemsIds = estimate.entries.map(e => e.item_id);
-      const notFoundItemsIds = await ItemsService.isItemsIdsExists(estimateItemsIds);
-
-      if (notFoundItemsIds.length > 0) {
-        return res.boom.badRequest(null, {
-          errors: [{ type: 'ITEMS.IDS.NOT.EXISTS', code: 400 }],
-        });
-      }
-      const storedEstimate = await SaleEstimateService.createEstimate(estimate);
-
-      return res.status(200).send({ id: storedEstimate.id });
-    },
-  },
+    ];
+  }
 
   /**
-   * Handle update estimate details with associated entries.
+   * Specific sale estimate validation schema.
    */
-  editEstimate: {
-    validation: [
+  static get validateSpecificEstimateSchema() {
+    return [
       param('id').exists().isNumeric().toInt(),
-
-      check('customer_id').exists().isNumeric().toInt(),
-      check('estimate_date').exists().isISO8601(),
-      check('expiration_date').optional().isISO8601(),
-      check('reference').optional(),
-      check('estimate_number').exists().trim().escape(),
-      check('entries').exists().isArray({ min: 1 }),
-      check('entries.*.id').optional().isNumeric().toInt(),
-      check('entries.*.item_id').exists().isNumeric().toInt(),
-      check('entries.*.description').optional().trim().escape(),
-      check('entries.*.quantity').exists().isNumeric().toInt(),
-      check('entries.*.rate').exists().isNumeric().toFloat(),
-      check('entries.*.discount').optional().isNumeric().toFloat(),
-      check('note').optional().trim().escape(),
-      check('terms_conditions').optional().trim().escape(),
-    ],
-    async handler(req, res) {
-      const { id: estimateId } = req.params;
-      const estimate = { ...req.body };
-      const storedEstimate = await SaleEstimateService.getEstimate(estimateId);
-
-      if (!storedEstimate) {
-        return res.status(404).send({
-          errors: [{ type: 'SALE.ESTIMATE.ID.NOT.FOUND', code: 200 }],
-        });
-      }
-      const isCustomerExists = await CustomersService.isCustomerExists(
-        estimate.customer_id
-      );
-      if (!isCustomerExists) {
-        return res.status(404).send({
-          errors: [{ type: 'CUSTOMER.ID.NOT.FOUND', code: 200 }],
-        });
-      }
-      // Validate the estimate number is unique except on the current estimate id.
-      const foundEstimateNumbers = await SaleEstimateService.isEstimateNumberUnique(
-        estimate.estimate_number,
-        storedEstimate.id, // Exclude the given estimate id.
-      );
-      if (foundEstimateNumbers) {
-        return res.boom.badRequest(null, {
-          errors: [{ type: 'ESTIMATE.NUMBER.IS.NOT.UNQIUE', code: 300 }],
-        });
-      }
-      // Validate items ids in estimate entries exists.
-      const estimateItemsIds = estimate.entries.map(e => e.item_id);
-      const notFoundItemsIds = await ItemsService.isItemsIdsExists(estimateItemsIds);
-
-      if (notFoundItemsIds.length > 0) {
-        return res.boom.badRequest(null, {
-          errors: [{ type: 'ITEMS.IDS.NOT.EXISTS', code: 400 }],
-        });
-      }
-      // Validate the sale estimate entries IDs that not found.
-      const notFoundEntriesIds = await SaleEstimateService.isEstimateEntriesIDsExists(
-        storedEstimate.id,
-        estimate
-      );
-      if (notFoundEntriesIds.length > 0) {
-        return res.boom.badRequest(null, {
-          errors: [{ type: 'ESTIMATE.NOT.FOUND.ENTRIES.IDS', code: 500 }],
-        });
-      }
-      // Update estimate with associated estimate entries.
-      await SaleEstimateService.editEstimate(estimateId, estimate);
-
-      return res.status(200).send({ id: estimateId });
-    },
-  },
+    ];
+  }
 
   /**
-   * Deletes the given estimate with associated entries.
+   * Sales estimates list validation schema.
    */
-  deleteEstimate: {
-    validation: [param('id').exists().isNumeric().toInt()],
-    async handler(req, res) {
-      const { id: estimateId } = req.params;
-      const isEstimateExists = await SaleEstimateService.isEstimateExists(estimateId);
-
-      if (!isEstimateExists) {
-        return res.status(404).send({
-          errors: [{ type: 'SALE.ESTIMATE.ID.NOT.FOUND', code: 200 }],
-        });
-      }
-      await SaleEstimateService.deleteEstimate(estimateId);
-
-      return res.status(200).send({ id: estimateId });
-    },
-  },
-
-  /**
-   * Retrieve the given estimate with associated entries.
-   */
-  getEstimate: {
-    validation: [param('id').exists().isNumeric().toInt()],
-    async handler(req, res) {
-      const { id: estimateId } = req.params;
-      const estimate = await SaleEstimateService.getEstimateWithEntries(estimateId);
-
-      if (!estimate) {
-        return res.status(404).send({
-          errors: [{ type: 'SALE.ESTIMATE.ID.NOT.FOUND', code: 200 }],
-        });
-      }
-      return res.status(200).send({ estimate });
-    },
-  },
-
-  /**
-   * Retrieve estimates with pagination metadata.
-   */
-  getEstimates: {
-    validation: [
+  static get validateEstimateListSchema() {
+    return [
       query('custom_view_id').optional().isNumeric().toInt(),
       query('stringified_filter_roles').optional().isJSON(),
 
       query('column_sort_by').optional(),
       query('sort_order').optional().isIn(['desc', 'asc']),
-    ],
-    async handler(req, res) {
-      const filter = {
-        filter_roles: [],
-        sort_order: 'asc',
-        ...req.query,
-      };
-      if (filter.stringified_filter_roles) {
-        filter.filter_roles = JSON.parse(filter.stringified_filter_roles);
-      }
-      const { SaleEstimate, Resource, View } = req.models;
-      const resource = await Resource.tenant().query()
-        .remember()
-        .where('name', 'sales_estimates')
-        .withGraphFetched('fields')
-        .first();
+    ]
+  }
 
-      if (!resource) {
-        return res.status(400).send({
-          errors: [{ type: 'RESOURCE.NOT.FOUND', code: 200, }],
-        });
-      }
-      const viewMeta = await View.query()
-        .modify('allMetadata')
-        .modify('specificOrFavourite', filter.custom_view_id)
-        .where('resource_id', resource.id)
-        .first();
-
-      const listingBuilder = new DynamicListingBuilder();      
-      const errorReasons = [];
-
-      listingBuilder.addView(viewMeta);
-      listingBuilder.addModelClass(SaleEstimate);
-      listingBuilder.addCustomViewId(filter.custom_view_id);
-      listingBuilder.addFilterRoles(filter.filter_roles);
-      listingBuilder.addSortBy(filter.sort_by, filter.sort_order);
-
-      const dynamicListing = new DynamicListing(listingBuilder);
-
-      if (dynamicListing instanceof Error) {
-        const errors = dynamicListingErrorsToResponse(dynamicListing);
-        errorReasons.push(...errors);
-      }
-      if (errorReasons.length > 0) {
-        return res.status(400).send({ errors: errorReasons });
-      }
-      const salesEstimates = await SaleEstimate.query().onBuild((builder) => {
-        dynamicListing.buildQuery()(builder);
-        return builder;
+  /**
+   * Validate whether the estimate customer exists on the storage. 
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {Function} next 
+   */
+  static async validateEstimateCustomerExistance(req, res, next) {
+    const estimate = { ...req.body };
+    const isCustomerExists = await CustomersService.isCustomerExists(
+      estimate.customer_id
+    );
+    if (!isCustomerExists) {
+      return res.status(404).send({
+        errors: [{ type: 'CUSTOMER.ID.NOT.FOUND', code: 200 }],
       });
+    }
+    next();
+  }
 
-      return res.status(200).send({
-        sales_estimates: salesEstimates,
+  /**
+   * Validate the estimate number unique on the storage.
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {Function} next 
+   */
+  static async validateEstimateNumberExistance(req, res, next) {
+    const estimate = { ...req.body };
+
+    const isEstNumberUnqiue = await SaleEstimateService.isEstimateNumberUnique(
+      estimate.estimate_number,
+      req.params.id,
+    );
+    if (isEstNumberUnqiue) {
+      return res.boom.badRequest(null, {
+        errors: [{ type: 'ESTIMATE.NUMBER.IS.NOT.UNQIUE', code: 300 }],
+      });
+    }
+    next();    
+  }
+
+  /**
+   * Validate the estimate entries items ids existance on the storage. 
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {Function} next 
+   */
+  static async validateEstimateEntriesItemsExistance(req, res, next) {
+    const estimate = { ...req.body };
+    const estimateItemsIds = estimate.entries.map(e => e.item_id);
+
+    // Validate items ids in estimate entries exists.
+    const notFoundItemsIds = await ItemsService.isItemsIdsExists(estimateItemsIds);
+
+    if (notFoundItemsIds.length > 0) {
+      return res.boom.badRequest(null, {
+        errors: [{ type: 'ITEMS.IDS.NOT.EXISTS', code: 400 }],
+      });
+    }
+    next();
+  }
+
+  /**
+   * Validate whether the sale estimate id exists on the storage. 
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {Function} next 
+   */
+  static async validateEstimateIdExistance(req, res, next) {
+    const { id: estimateId } = req.params;
+    const storedEstimate = await SaleEstimateService.getEstimate(estimateId);
+
+    if (!storedEstimate) {
+      return res.status(404).send({
+        errors: [{ type: 'SALE.ESTIMATE.ID.NOT.FOUND', code: 200 }],
+      });
+    }
+    next();
+  }
+
+  /**
+   * Validate sale invoice entries ids existance on the storage.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {Function} next
+   */
+  static async valdiateInvoiceEntriesIdsExistance(req, res, next) {
+    const { id: saleInvoiceId } = req.params;
+    const saleInvoice = { ...req.body };
+    const entriesIds = saleInvoice.entries
+      .filter(e => e.id)
+      .map((e) => e.id);
+
+    const foundEntries = await ItemEntry.query()
+      .whereIn('id', entriesIds)
+      .where('reference_type', 'SaleInvoice')
+      .where('reference_id', saleInvoiceId);
+
+    if (foundEntries.length > 0) {
+      return res.status(400).send({
+        errors: [{ type: 'ENTRIES.IDS.NOT.EXISTS', code: 300 }],
+      });
+    }
+    next();
+  }
+
+  /**
+   * Handle create a new estimate with associated entries.
+   * @param {Request} req -
+   * @param {Response} res -
+   * @return {Response} res -
+   */
+  static async newEstimate(req, res) {
+    const estimate = {
+      ...req.body,
+      entries: req.body.entries.map((entry) => ({
+        ...entry,
+        amount: ItemEntry.calcAmount(entry),
+      })),
+    };
+    const storedEstimate = await SaleEstimateService.createEstimate(estimate);
+
+    return res.status(200).send({ id: storedEstimate.id });
+  }
+
+  /**
+   * Handle update estimate details with associated entries.
+   * @param {Request} req 
+   * @param {Response} res 
+   */
+  static async editEstimate(req, res) {
+    const { id: estimateId } = req.params;
+    const estimate = { ...req.body };
+
+    // Update estimate with associated estimate entries.
+    await SaleEstimateService.editEstimate(estimateId, estimate);
+
+    return res.status(200).send({ id: estimateId });
+  }
+
+  /**
+   * Deletes the given estimate with associated entries.
+   * @param {Request} req 
+   * @param {Response} res 
+   */
+  static async deleteEstimate(req, res) {
+    const { id: estimateId } = req.params;
+    await SaleEstimateService.deleteEstimate(estimateId);
+
+    return res.status(200).send({ id: estimateId });  
+  }
+
+  /**
+   * Retrieve the given estimate with associated entries.
+   */
+  static async getEstimate(req, res) {
+    const { id: estimateId } = req.params;
+    const estimate = await SaleEstimateService.getEstimateWithEntries(estimateId);
+
+    return res.status(200).send({ estimate });
+  }
+
+  /**
+   * Retrieve estimates with pagination metadata.
+   * @param {Request} req 
+   * @param {Response} res 
+   */
+  static async getEstimates(req, res) {
+    const filter = {
+      filter_roles: [],
+      sort_order: 'asc',
+      page: 1,
+      page_size: 10,
+      ...req.query,
+    };
+    if (filter.stringified_filter_roles) {
+      filter.filter_roles = JSON.parse(filter.stringified_filter_roles);
+    }
+    const { SaleEstimate, Resource, View } = req.models;
+    const resource = await Resource.tenant().query()
+      .remember()
+      .where('name', 'sales_estimates')
+      .withGraphFetched('fields')
+      .first();
+
+    if (!resource) {
+      return res.status(400).send({
+        errors: [{ type: 'RESOURCE.NOT.FOUND', code: 200, }],
+      });
+    }
+    const viewMeta = await View.query()
+      .modify('allMetadata')
+      .modify('specificOrFavourite', filter.custom_view_id)
+      .where('resource_id', resource.id)
+      .first();
+
+    const listingBuilder = new DynamicListingBuilder();      
+    const errorReasons = [];
+
+    listingBuilder.addView(viewMeta);
+    listingBuilder.addModelClass(SaleEstimate);
+    listingBuilder.addCustomViewId(filter.custom_view_id);
+    listingBuilder.addFilterRoles(filter.filter_roles);
+    listingBuilder.addSortBy(filter.sort_by, filter.sort_order);
+
+    const dynamicListing = new DynamicListing(listingBuilder);
+
+    if (dynamicListing instanceof Error) {
+      const errors = dynamicListingErrorsToResponse(dynamicListing);
+      errorReasons.push(...errors);
+    }
+    if (errorReasons.length > 0) {
+      return res.status(400).send({ errors: errorReasons });
+    }
+
+    const salesEstimates = await SaleEstimate.query().onBuild((query) => {
+      dynamicListing.buildQuery()(builder);
+      return builder;
+    }).pagination(filter.page - 1, filter.page_size);
+
+    return res.status(200).send({
+      sales_estimates: {
+        ...salesEstimates,
         ...(viewMeta ? {
-          custom_view_id: viewMeta.id,
+          viewMeta: {
+            custom_view_id: viewMeta.id,
+          },          
         } : {}),
-      });
-    },
-  },
+      },
+      
+    });
+  }
 };
