@@ -20,6 +20,8 @@ import customer from './customers/customers.type';
 import estimates from './Estimate/estimates.types';
 import invoices from './Invoice/invoices.types';
 import receipts from './receipt/receipt.type';
+import bills from './Bills/bills.type';
+import paymentReceives from './PaymentReceive/paymentReceive.type';
 
 export default {
   ...authentication,
@@ -43,5 +45,7 @@ export default {
   ...customer,
   ...estimates,
   ...invoices,
-  ...receipts
+  ...receipts,
+  ...bills,
+  ...paymentReceives,
 };

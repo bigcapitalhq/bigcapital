@@ -633,4 +633,33 @@ export default {
     'The receipt  has been successfully edited.',
   the_receipt_has_been_successfully_deleted:
     'The receipt has been successfully deleted.',
+
+  bills: 'Bills',
+  accept: 'Accept',
+  vendor_name: 'Vendor Name',
+  select_vendor_account: 'Select Vendor Account',
+  select_accept_account: 'Select Accept Account',
+  bill_date: 'Bill Date',
+  due_date: 'Due Date',
+  bill_number: 'Bill Number',
+  edit_bill: 'Edit Bill',
+  new_bill: 'New Bill',
+  bill_date_: 'Bill date',
+  bill_number_: 'Bill number',
+  vendor_name_: 'Vendor name',
+
+  the_bill_has_been_successfully_created:
+    'The bill has been successfully created.',
+
+  edit_payment_receive: 'Edit Payment Receive',
+  new_payment_receive: 'New Payment Receive',
+  payment_receives: 'Payment Receives',
+  payment_receive_no: 'Payment Receive #',
+  payment_receive_no_: 'Payment receive no',
+  the_payment_receive_has_been_successfully_created:
+    'The payment receive has been successfully created.',
+
+  select_invoice:'Select Invoice',
+
+  payment_mades: 'Payment Mades',
 };
