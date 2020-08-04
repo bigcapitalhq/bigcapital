@@ -18,6 +18,7 @@ import globalSearch from './search/search.reducer';
 import exchangeRates from './ExchangeRate/exchange.reducer';
 import globalErrors from './globalErrors/globalErrors.reducer';
 import customers from './customers/customers.reducer';
+import estimates from './Estimate/estimates.reducer';
 
 export default combineReducers({
   authentication,
@@ -38,4 +39,5 @@ export default combineReducers({
   exchangeRates,
   globalErrors,
   customers,
+  estimates
 });
