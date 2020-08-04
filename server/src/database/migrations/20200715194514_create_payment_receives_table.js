@@ -9,6 +9,8 @@ exports.up = function(knex) {
     table.string('reference_no');
     table.integer('deposit_account_id').unsigned();
     table.string('payment_receive_no');
+    table.text('description');
+    table.integer('user_id').unsigned();
     table.timestamps();
   });
 };

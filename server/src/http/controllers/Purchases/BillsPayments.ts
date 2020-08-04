@@ -2,15 +2,18 @@
 import { Router } from 'express';
 import { check, param, query, ValidationChain } from 'express-validator';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
+import validateMiddleware from '@/http/middleware/validateMiddleware';
 import BaseController from '@/http/controllers/BaseController';
 import BillPaymentsService from '@/services/Purchases/BillPayments';
 import AccountsService from '@/services/Accounts/AccountsService';
-import ItemsService from '@/services/Items/ItemsService';
-import { IBillPaymentEntry, IBillPayment } from '@/interfaces/BillPayment';
 import DynamicListingBuilder from '@/services/DynamicListing/DynamicListingBuilder';
 import DynamicListing from '@/services/DynamicListing/DynamicListing';
 import { dynamicListingErrorsToResponse } from '@/services/DynamicListing/hasDynamicListing';
 
+/**
+ * Bills payments controller.
+ * @controller
+ */
 export default class BillsPayments extends BaseController {
   /**
    * Router constructor.
@@ -21,38 +24,43 @@ export default class BillsPayments extends BaseController {
     router.post('/', [
         ...this.billPaymentSchemaValidation,
       ],
+      validateMiddleware,
       asyncMiddleware(this.validateBillPaymentVendorExistance),
       asyncMiddleware(this.validatePaymentAccount),
       asyncMiddleware(this.validatePaymentNumber),
-      asyncMiddleware(this.validateItemsIds),
+      asyncMiddleware(this.validateEntriesBillsExistance),
+      asyncMiddleware(this.validateVendorsDueAmount),
       asyncMiddleware(this.createBillPayment),
     );
     router.post('/:id', [
        ...this.billPaymentSchemaValidation,
        ...this.specificBillPaymentValidateSchema,
       ],
+      validateMiddleware,
       asyncMiddleware(this.validateBillPaymentVendorExistance),
       asyncMiddleware(this.validatePaymentAccount),
       asyncMiddleware(this.validatePaymentNumber),
-      asyncMiddleware(this.validateItemsIds),
-      asyncMiddleware(this.validateEntriesIds),
+      asyncMiddleware(this.validateEntriesBillsExistance),
+      asyncMiddleware(this.validateVendorsDueAmount),
       asyncMiddleware(this.editBillPayment),
     )
     router.delete('/:id',
       this.specificBillPaymentValidateSchema,
+      validateMiddleware,
       asyncMiddleware(this.validateBillPaymentExistance),
       asyncMiddleware(this.deleteBillPayment),
     );
     router.get('/:id',
       this.specificBillPaymentValidateSchema,
+      validateMiddleware,
       asyncMiddleware(this.validateBillPaymentExistance),
       asyncMiddleware(this.getBillPayment),
     );
     router.get('/', 
       this.listingValidationSchema,
+      validateMiddleware,
       asyncMiddleware(this.getBillsPayments)
     );
-
     return router;
   }
 
@@ -69,13 +77,8 @@ export default class BillsPayments extends BaseController {
       check('reference').optional().trim().escape(),
 
       check('entries').exists().isArray({ min: 1 }),
-      check('entries.*.id').optional().isNumeric().toInt(),
-      check('entries.*.index').exists().isNumeric().toInt(),
-      check('entries.*.item_id').exists().isNumeric().toInt(),
-      check('entries.*.rate').exists().isNumeric().toFloat(),
-      check('entries.*.quantity').exists().isNumeric().toFloat(),
-      check('entries.*.discount').optional().isNumeric().toFloat(),
-      check('entries.*.description').optional().trim().escape(),
+      check('entries.*.bill_id').exists().isNumeric().toInt(),
+      check('entries.*.payment_amount').exists().isNumeric().toInt(),
     ];
   }
 
@@ -97,7 +100,7 @@ export default class BillsPayments extends BaseController {
   static async validateBillPaymentVendorExistance(req: Request, res: Response, next: any ) {
     const billPayment = req.body;
     const { Vendor } = req.models;
-    const isVendorExists = await Vendor.query('id', billPayment.vendor_id).first();
+    const isVendorExists = await Vendor.query().findById(billPayment.vendor_id);
 
     if (!isVendorExists) {
       return res.status(400).send({
@@ -121,7 +124,7 @@ export default class BillsPayments extends BaseController {
         errors: [{ type: 'BILL.PAYMENT.NOT.FOUND', code: 100 }],
       });
     }
-    next(req, res, next);
+    next();
   }
 
   /**
@@ -132,14 +135,15 @@ export default class BillsPayments extends BaseController {
    */
   static async validatePaymentAccount(req: Request, res: Response, next: any) {
     const billPayment = { ...req.body };
-    const isAccountExists = AccountsService.isAccountExists(billPayment);
-
+    const isAccountExists = await AccountsService.isAccountExists(
+      billPayment.payment_account_id
+    );
     if (!isAccountExists) {
       return res.status(400).send({
         errors: [{ type: 'PAYMENT.ACCOUNT.NOT.FOUND', code: 200 }],
       });
     }
-    next(req, res, next);
+    next();
   }
 
   /**
@@ -149,61 +153,75 @@ export default class BillsPayments extends BaseController {
    * @param {Function} res 
    */
   static async validatePaymentNumber(req: Request, res: Response, next: any) {
+    const { BillPayment } = req.models;
     const billPayment = { ...req.body };
-    const isNumberExists = await BillPaymentsService.isBillNoExists(billPayment);
-
-    if (!isNumberExists) {
+    const foundBillPayment = await BillPayment.query()
+      .where('payment_number', billPayment.payment_number)
+      .first();
+ 
+    if (foundBillPayment) {
       return res.status(400).send({
         errors: [{ type: 'PAYMENT.NUMBER.NOT.UNIQUE', code: 300 }],
-      });
-    }
-    next(req, res, next);
-  }
-
-  /**
-   * validate entries items ids existance on the storage.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {Function} next 
-   */
-  static async validateItemsIds(req: Request, res: Response, next: Function) {
-    const billPayment: any = { ...req.body };
-    const itemsIds = billPayment.entries.map((e) => e.item_id);
-    const notFoundItemsIds = await ItemsService.isItemsIdsExists(
-      itemsIds
-    );
-    if (notFoundItemsIds.length > 0) {
-      return res.status(400).send({
-        errors: [{ type: 'ITEMS.IDS.NOT.FOUND', code: 400 }],
       });
     }
     next();
   }
 
   /**
-   * Validates the entries ids in edit bill payment.
+   * Validate whether the entries bills ids exist on the storage.
    * @param {Request} req 
    * @param {Response} res 
    * @param {NextFunction} next 
    */
-  static async validateEntriesIds(req: Request, res: Response, next: Function) {
-    const { BillPaymentEntry } = req.models;
-    const { id: billPaymentId } = req.params;
-    const billPayment = { id: billPaymentId, ...req.body };
+  static async validateEntriesBillsExistance(req: Request, res: Response, next: any) {
+    const { Bill } = req.models;
+    const billPayment = { ...req.body };
+    const entriesBillsIds = billPayment.entries.map((e: any) => e.bill_id);
 
-    const entriesIds = billPayment.entries
-      .filter((entry: IBillPaymentEntry) => entry.id)
-      .map((entry: IBillPaymentEntry) => entry.id);
+    const notFoundBillsIds = await Bill.getNotFoundBills(entriesBillsIds);
 
-    const storedEntries = await BillPaymentEntry.tenant().query()
-      .where('bill_payment_id', billPaymentId);
-
-    const storedEntriesIds = storedEntries.map((entry: IBillPaymentEntry) => entry.id);
-    const notFoundEntriesIds = difference(entriesIds, storedEntriesIds);
-
-    if (notFoundEntriesIds.length > 0) {
+    if (notFoundBillsIds.length > 0) {
       return res.status(400).send({
-        errors: [{ type: 'ENTEIES.IDS.NOT.FOUND', code: 800 }],
+        errors: [{ type: 'BILLS.IDS.NOT.EXISTS', code: 600 }],
+      });
+    }
+    next();
+  }
+
+  /**
+   * Validate wether the payment amount bigger than the payable amount.
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {NextFunction} next 
+   * @return {void}
+   */
+  static async validateVendorsDueAmount(req: Request, res: Response, next: Function) {
+    const { Bill } = req.models;
+    const billsIds = req.body.entries.map((entry: any) => entry.bill_id);
+    const storedBills = await Bill.query()
+      .whereIn('id', billsIds);
+
+    const storedBillsMap = new Map(
+      storedBills.map((bill: any) => [bill.id, bill]),
+    );
+    interface invalidPaymentAmountError{
+      index: number,
+      due_amount: number
+    };
+    const hasWrongPaymentAmount: invalidPaymentAmountError[] = [];
+    const { entries } = req.body;
+
+    entries.forEach((entry: any, index: number) => {
+      const entryBill = storedBillsMap.get(entry.bill_id);
+      const { dueAmount } = entryBill;
+
+      if (dueAmount < entry.payment_amount) {
+        hasWrongPaymentAmount.push({ index, due_amount: dueAmount });
+      }      
+    });
+    if (hasWrongPaymentAmount.length > 0) {
+      return res.status(400).send({
+        errors: [{ type: 'INVALID.BILL.PAYMENT.AMOUNT', code: 400, indexes: hasWrongPaymentAmount }]
       });
     }
     next();
@@ -297,7 +315,6 @@ export default class BillsPayments extends BaseController {
         errors: [{ type: 'BILL.PAYMENTS.RESOURCE.NOT_FOUND', code: 200 }],
       });
     }
-
     const viewMeta = await View.query()
       .modify('allMetadata')
       .modify('specificOrFavourite', filter.custom_view_id)

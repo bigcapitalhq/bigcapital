@@ -1,5 +1,5 @@
-import { omit, sumBy, mapValues, groupBy, chain } from 'lodash';
-import moment, { updateLocale } from 'moment';
+import { omit, sumBy, chain } from 'lodash';
+import moment from 'moment';
 import {
   AccountTransaction,
   PaymentReceive,
@@ -16,14 +16,18 @@ import ServiceItemsEntries from '@/services/Sales/ServiceItemsEntries';
 import PaymentReceiveEntryRepository from '@/repositories/PaymentReceiveEntryRepository';
 import CustomerRepository from '@/repositories/CustomerRepository';
 
-export default class PaymentReceiveService extends JournalPosterService {
+/**
+ * Payment receive service.
+ * @service
+ */
+export default class PaymentReceiveService {
   /**
    * Creates a new payment receive and store it to the storage
    * with associated invoices payment and journal transactions.
    * @async
    * @param {IPaymentReceive} paymentReceive
    */
-  static async createPaymentReceive(paymentReceive) {
+  static async createPaymentReceive(paymentReceive: any) {
     const paymentAmount = sumBy(paymentReceive.entries, 'payment_amount');
     const storedPaymentReceive = await PaymentReceive.tenant()
       .query()
@@ -31,9 +35,9 @@ export default class PaymentReceiveService extends JournalPosterService {
         amount: paymentAmount,
         ...omit(paymentReceive, ['entries']),
       });
-    const storeOpers = [];
+    const storeOpers: Array<any> = [];
 
-    paymentReceive.entries.forEach((entry) => {
+    paymentReceive.entries.forEach((entry: any) => {
       const oper = PaymentReceiveEntry.tenant()
         .query()
         .insert({
@@ -51,12 +55,13 @@ export default class PaymentReceiveService extends JournalPosterService {
     });
     const customerIncrementOper = Customer.decrementBalance(
       paymentReceive.customer_id,
-      paymentAmount
+      paymentAmount,
     );
+    // Records the sale invoice journal transactions.
     const recordJournalTransactions = this.recordPaymentReceiveJournalEntries({
-      id: storedPaymentReceive.id,
-      ...paymentReceive,
-    });
+        id: storedPaymentReceive.id,
+        ...paymentReceive,
+      });
     await Promise.all([
       ...storeOpers,
       customerIncrementOper,
@@ -81,9 +86,9 @@ export default class PaymentReceiveService extends JournalPosterService {
    * @param {IPaymentReceive} oldPaymentReceive
    */
   static async editPaymentReceive(
-    paymentReceiveId,
-    paymentReceive,
-    oldPaymentReceive
+    paymentReceiveId: number,
+    paymentReceive: any,
+    oldPaymentReceive: any
   ) {
     const paymentAmount = sumBy(paymentReceive.entries, 'payment_amount');
     // Update the payment receive transaction.
@@ -129,14 +134,14 @@ export default class PaymentReceiveService extends JournalPosterService {
         id: oldPaymentReceive.id,
         ...paymentReceive,
       },
-      paymentReceiveId
+      paymentReceiveId,
     );
     // Increment/decrement the customer balance after calc the diff
     // between old and new value.
     const changeCustomerBalance = CustomerRepository.changeDiffBalance(
       paymentReceive.customer_id,
       oldPaymentReceive.customerId,
-      paymentAmount,
+      paymentAmount * -1,
       oldPaymentReceive.amount,
     );
     // Change the difference between the old and new invoice payment amount.
@@ -164,8 +169,9 @@ export default class PaymentReceiveService extends JournalPosterService {
    * - Revert the payment amount of the associated invoices.
    * @async
    * @param {Integer} paymentReceiveId
+   * @param {IPaymentReceive} paymentReceive
    */
-  static async deletePaymentReceive(paymentReceiveId, paymentReceive) {
+  static async deletePaymentReceive(paymentReceiveId: number, paymentReceive: any) {
     // Deletes the payment receive transaction.
     await PaymentReceive.tenant()
       .query()
@@ -179,7 +185,7 @@ export default class PaymentReceiveService extends JournalPosterService {
       .delete();
 
     // Delete all associated journal transactions to payment receive transaction.
-    const deleteTransactionsOper = this.deleteJournalTransactions(
+    const deleteTransactionsOper = JournalPosterService.deleteJournalTransactions(
       paymentReceiveId,
       'PaymentReceive'
     );
@@ -190,7 +196,7 @@ export default class PaymentReceiveService extends JournalPosterService {
     );
     // Revert the invoices payments amount.
     const revertInvoicesPaymentAmount = this.revertInvoicePaymentAmount(
-      paymentReceive.entries.map((entry) => ({
+      paymentReceive.entries.map((entry: any) => ({
         invoiceId: entry.invoiceId,
         revertAmount: entry.paymentAmount,
       }))
@@ -206,7 +212,7 @@ export default class PaymentReceiveService extends JournalPosterService {
    * Retrieve the payment receive details of the given id.
    * @param {Integer} paymentReceiveId
    */
-  static async getPaymentReceive(paymentReceiveId) {
+  static async getPaymentReceive(paymentReceiveId: number) {
     const paymentReceive = await PaymentReceive.tenant()
       .query()
       .where('id', paymentReceiveId)
@@ -219,7 +225,7 @@ export default class PaymentReceiveService extends JournalPosterService {
    * Retrieve the payment receive details with associated invoices.
    * @param {Integer} paymentReceiveId
    */
-  static async getPaymentReceiveWithInvoices(paymentReceiveId) {
+  static async getPaymentReceiveWithInvoices(paymentReceiveId: number) {
     return PaymentReceive.tenant()
       .query()
       .where('id', paymentReceiveId)
@@ -231,7 +237,7 @@ export default class PaymentReceiveService extends JournalPosterService {
    * Detarmines whether the payment receive exists on the storage.
    * @param {Integer} paymentReceiveId
    */
-  static async isPaymentReceiveExists(paymentReceiveId) {
+  static async isPaymentReceiveExists(paymentReceiveId: number) {
     const paymentReceives = await PaymentReceive.tenant()
       .query()
       .where('id', paymentReceiveId);
@@ -245,8 +251,8 @@ export default class PaymentReceiveService extends JournalPosterService {
    * @param {Integer} paymentReceiveId - Payment receive id.
    */
   static async isPaymentReceiveNoExists(
-    paymentReceiveNumber,
-    paymentReceiveId
+    paymentReceiveNumber: string|number,
+    paymentReceiveId: number
   ) {
     const paymentReceives = await PaymentReceive.tenant()
       .query()
@@ -261,17 +267,22 @@ export default class PaymentReceiveService extends JournalPosterService {
 
   /**
    * Records payment receive journal transactions.
+   * 
+   * Invoice payment journals.
+   * --------
+   * - Account receivable -> Debit
+   * - Payment account [current asset] -> Credit
+   * 
    * @async
    * @param {IPaymentReceive} paymentReceive
+   * @param {Number} paymentReceiveId
    */
   static async recordPaymentReceiveJournalEntries(
-    paymentReceive,
-    paymentReceiveId
+    paymentReceive: any,
+    paymentReceiveId?: number
   ) {
     const paymentAmount = sumBy(paymentReceive.entries, 'payment_amount');
-    const formattedDate = moment(paymentReceive.payment_date).format(
-      'YYYY-MM-DD'
-    );
+    const formattedDate = moment(paymentReceive.payment_date).format('YYYY-MM-DD');
     const receivableAccount = await AccountsService.getAccountByType(
       'accounts_receivable'
     );
@@ -320,8 +331,8 @@ export default class PaymentReceiveService extends JournalPosterService {
    * Revert the payment amount of the given invoices ids.
    * @param {Array} revertInvoices
    */
-  static async revertInvoicePaymentAmount(revertInvoices) {
-    const opers = [];
+  static async revertInvoicePaymentAmount(revertInvoices: any[]) {
+    const opers: Promise<T>[] = [];
 
     revertInvoices.forEach((revertInvoice) => {
       const { revertAmount, invoiceId } = revertInvoice;
@@ -338,13 +349,13 @@ export default class PaymentReceiveService extends JournalPosterService {
    * Saves difference changing between old and new invoice payment amount.
    * @param {Array} paymentReceiveEntries
    * @param {Array} newPaymentReceiveEntries
-   * @return
+   * @return 
    */
   static async saveChangeInvoicePaymentAmount(
-    paymentReceiveEntries,
-    newPaymentReceiveEntries
+    paymentReceiveEntries: [],
+    newPaymentReceiveEntries: [],
   ) {
-    const opers = [];
+    const opers: Promise<T>[] = [];
     const newEntriesTable = chain(newPaymentReceiveEntries)
       .groupBy('invoice_id')
       .mapValues((group) => (sumBy(group, 'payment_amount') || 0) * -1)
@@ -359,7 +370,7 @@ export default class PaymentReceiveService extends JournalPosterService {
       .values()
       .value();
 
-    diffEntries.forEach((diffEntry) => {
+    diffEntries.forEach((diffEntry: any) => {
       const oper = SaleInvoice.changePaymentAmount(
         diffEntry.invoice_id,
         diffEntry.payment_amount

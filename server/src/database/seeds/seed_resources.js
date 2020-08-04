@@ -20,6 +20,7 @@ exports.seed = (knex) => {
         { id: 12, name: 'sales_payment_receives' },
         { id: 13, name: 'bills' },
         { id: 14, name: 'bill_payments' },
+        { id: 16, name: 'payment_receives' },
       ]);
     });
 };

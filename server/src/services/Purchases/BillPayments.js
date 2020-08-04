@@ -1,8 +1,6 @@
 import express from 'express';
-import { omit } from 'lodash';
-import { check, query, validationResult, param } from 'express-validator';
+import { omit, sumBy } from 'lodash';
 import { BillPayment, BillPaymentEntry, Vendor } from '@/models';
-import asyncMiddleware from '@/http/middleware/asyncMiddleware';
 import ServiceItemsEntries from '../Sales/ServiceItemsEntries';
 import AccountsService from '../Accounts/AccountsService';
 import JournalPoster from '../Accounting/JournalPoster';

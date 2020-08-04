@@ -39,10 +39,11 @@ export default class BillPayment extends mixin(TenantModel, [CachableModel]) {
    */
   static get relationMappings() {
     const BillPaymentEntry = require('@/models/BillPaymentEntry');
+    const Vendor = require('@/models/Vendor');
 
     return {
       /**
-       * Account model may belongs to account type.
+       * 
        */
       entries: {
         relation: Model.BelongsToOneRelation,
@@ -52,6 +53,17 @@ export default class BillPayment extends mixin(TenantModel, [CachableModel]) {
           to: 'bills_payments_entries.billPaymentId',
         },
       },
+      /**
+       * 
+       */
+      vendor: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: this.relationBindKnex(Vendor.default),
+        join: {
+          from: 'bills_payments.vendorId',
+          to: 'vendors.id',
+        },
+      }
     };
   }
 }

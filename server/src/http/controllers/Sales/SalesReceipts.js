@@ -6,7 +6,7 @@ import asyncMiddleware from '@/http/middleware/asyncMiddleware';
 import CustomersService from '@/services/Customers/CustomersService';
 import AccountsService from '@/services/Accounts/AccountsService';
 import ItemsService from '@/services/Items/ItemsService';
-import SaleReceiptService from '@/services/Sales/SalesReceipt';
+import SaleReceiptService from '@/services/Sales/SalesReceipts';
 import DynamicListingBuilder from '@/services/DynamicListing/DynamicListingBuilder';
 import DynamicListing from '@/services/DynamicListing/DynamicListing';
 import {
@@ -51,7 +51,7 @@ export default class SalesReceiptsController {
     );
     router.get(
       '/',
-      this.listingSalesReceipts,
+      this.listSalesReceiptsValidationSchema,
       validateMiddleware,
       asyncMiddleware(this.listingSalesReceipts)
     );
@@ -103,6 +103,8 @@ export default class SalesReceiptsController {
       query('stringified_filter_roles').optional().isJSON(),
       query('column_sort_by').optional(),
       query('sort_order').optional().isIn(['desc', 'asc']),
+      query('page').optional().isNumeric().toInt(),
+      query('page_size').optional().isNumeric().toInt(), 
     ];
   }
 
@@ -272,6 +274,7 @@ export default class SalesReceiptsController {
       sort_order: 'asc',
       page: 1,
       page_size: 10,
+      ...req.query,
     };
     if (filter.stringified_filter_roles) {
       filter.filter_roles = JSON.parse(filter.stringified_filter_roles);
@@ -312,14 +315,17 @@ export default class SalesReceiptsController {
     const salesReceipts = await SaleReceipt.query().onBuild((builder) => {
       builder.withGraphFetched('entries');
       dynamicListing.buildQuery()(builder);
-      return builder;
     }).pagination(filter.page - 1, filter.page_size);
 
     return res.status(200).send({
-      sales_receipts: salesReceipts,
-      ...(viewMeta ? {
-        customViewId: viewMeta.id,
-      } : {}),
+      sales_receipts: {
+        ...salesReceipts,
+        ...(viewMeta ? {
+          view_meta: {
+            customViewId: viewMeta.id,
+          }        
+        } : {}),
+      },
     });
   }
 };

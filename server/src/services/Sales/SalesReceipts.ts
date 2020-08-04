@@ -2,19 +2,20 @@ import { omit, difference, sumBy } from 'lodash';
 import {
   SaleReceipt,
   Account,
+  ItemEntry,
 } from '@/models';
 import JournalPoster from '@/services/Accounting/JournalPoster';
-import ItemEntry from '../../models/ItemEntry';
 import JournalPosterService from '@/services/Sales/JournalPosterService';
+import HasItemEntries from '@/services/Sales/HasItemsEntries';
 
-export default class SalesReceipt extends JournalPosterService {
+export default class SalesReceipt {
   /**
    * Creates a new sale receipt with associated entries.
    * @async
    * @param {ISaleReceipt} saleReceipt
    * @return {Object}
    */
-  static async createSaleReceipt(saleReceipt) {
+  static async createSaleReceipt(saleReceipt: any) {
     const amount = sumBy(saleReceipt.entries, 'amount');
     const storedSaleReceipt = await SaleReceipt.tenant()
       .query()
@@ -22,9 +23,9 @@ export default class SalesReceipt extends JournalPosterService {
         amount,
         ...omit(saleReceipt, ['entries']),
       });
-    const storeSaleReceiptEntriesOpers = [];
+    const storeSaleReceiptEntriesOpers: Array<any> = [];
 
-    saleReceipt.entries.forEach((entry) => {
+    saleReceipt.entries.forEach((entry: any) => {
       const oper = ItemEntry.tenant()
         .query()
         .insert({
@@ -43,7 +44,7 @@ export default class SalesReceipt extends JournalPosterService {
    * @param {ISaleReceipt} saleReceipt
    * @return {Promise}
    */
-  static async _recordJournalTransactions(saleReceipt) {
+  static async _recordJournalTransactions(saleReceipt: any) {
     const accountsDepGraph = await Account.tenant().depGraph().query();
     const journalPoster = new JournalPoster(accountsDepGraph);
   }
@@ -54,7 +55,7 @@ export default class SalesReceipt extends JournalPosterService {
    * @param {ISaleReceipt} saleReceipt
    * @return {void}
    */
-  static async editSaleReceipt(saleReceiptId, saleReceipt) {
+  static async editSaleReceipt(saleReceiptId: number, saleReceipt: any) {
     const amount = sumBy(saleReceipt.entries, 'amount');
     const updatedSaleReceipt = await SaleReceipt.tenant()
       .query()
@@ -68,32 +69,11 @@ export default class SalesReceipt extends JournalPosterService {
       .where('reference_id', saleReceiptId)
       .where('reference_type', 'SaleReceipt');
 
-    const storedSaleReceiptsIds = storedSaleReceiptEntries.map((e) => e.id);
-    const entriesHasID = saleReceipt.entries.filter((entry) => entry.id);
-    const entriesIds = entriesHasID.map((e) => e.id);
-
-    const opers = [];
-    const entriesIdsShouldBeDeleted = difference(
-      storedSaleReceiptsIds,
-      entriesIds
+    // Patch sale receipt items entries.
+    const patchItemsEntries = HasItemEntries.patchItemsEntries(
+      saleReceipt.entries, storedSaleReceiptEntries, 'SaleReceipt', saleReceiptId,
     );
-    if (entriesIdsShouldBeDeleted.length > 0) {
-      const deleteOper = ItemEntry.tenant()
-        .query()
-        .whereIn('id', entriesIdsShouldBeDeleted)
-        .where('reference_type', 'SaleReceipt')
-        .delete();
-      opers.push(deleteOper);
-    }
-    entriesHasID.forEach((entry) => {
-      const updateOper = ItemEntry.tenant()
-        .query()
-        .patchAndFetchById(entry.id, {
-          ...omit(entry, ['id']),
-        });
-      opers.push(updateOper);
-    });
-    return Promise.all([...opers]);
+    return Promise.all([patchItemsEntries]);
   }
 
   /**
@@ -101,20 +81,22 @@ export default class SalesReceipt extends JournalPosterService {
    * @param {Integer} saleReceiptId
    * @return {void}
    */
-  static async deleteSaleReceipt(saleReceiptId) {
-    await SaleReceipt.tenant().query().where('id', saleReceiptId).delete();
-    await ItemEntry.tenant()
+  static async deleteSaleReceipt(saleReceiptId: number) {
+    const deleteSaleReceiptOper = SaleReceipt.tenant().query().where('id', saleReceiptId).delete();
+    const deleteItemsEntriesOper = ItemEntry.tenant()
       .query()
       .where('reference_id', saleReceiptId)
       .where('reference_type', 'SaleReceipt')
       .delete();
 
     // Delete all associated journal transactions to payment receive transaction.
-    const deleteTransactionsOper = this.deleteJournalTransactions(
+    const deleteTransactionsOper = JournalPosterService.deleteJournalTransactions(
       saleReceiptId,
       'SaleReceipt'
     );
     return Promise.all([
+      deleteItemsEntriesOper,
+      deleteSaleReceiptOper,
       deleteTransactionsOper,
     ]);
   }
@@ -124,7 +106,7 @@ export default class SalesReceipt extends JournalPosterService {
    * @param {Integer} saleReceiptId
    * @returns {Boolean}
    */
-  static async isSaleReceiptExists(saleReceiptId) {
+  static async isSaleReceiptExists(saleReceiptId: number) {
     const foundSaleReceipt = await SaleReceipt.tenant()
       .query()
       .where('id', saleReceiptId);
@@ -136,7 +118,7 @@ export default class SalesReceipt extends JournalPosterService {
    * @param {Integer} saleReceiptId
    * @param {ISaleReceipt} saleReceipt
    */
-  static async isSaleReceiptEntriesIDsExists(saleReceiptId, saleReceipt) {
+  static async isSaleReceiptEntriesIDsExists(saleReceiptId: number, saleReceipt: any) {
     const entriesIDs = saleReceipt.entries
       .filter((e) => e.id)
       .map((e) => e.id);
@@ -147,7 +129,7 @@ export default class SalesReceipt extends JournalPosterService {
       .where('reference_id', saleReceiptId)
       .where('reference_type', 'SaleReceipt');
 
-    const storedEntriesIDs = storedEntries.map((e) => e.id);
+    const storedEntriesIDs = storedEntries.map((e: any) => e.id);
     const notFoundEntriesIDs = difference(
       entriesIDs,
       storedEntriesIDs
@@ -159,7 +141,7 @@ export default class SalesReceipt extends JournalPosterService {
    * Retrieve sale receipt with associated entries.
    * @param {Integer} saleReceiptId 
    */
-  static async getSaleReceiptWithEntries(saleReceiptId) {
+  static async getSaleReceiptWithEntries(saleReceiptId: number) {
     const saleReceipt = await SaleReceipt.tenant().query()
       .where('id', saleReceiptId)
       .withGraphFetched('entries');

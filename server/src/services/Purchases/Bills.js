@@ -1,19 +1,20 @@
-import { omit, sumBy, difference } from 'lodash';
+import { omit, sumBy } from 'lodash';
 import moment from 'moment';
 import {
+  Account,
   Bill,
   Vendor,
-  InventoryTransaction,
   ItemEntry,
   Item,
-  Account,
+  InventoryTransaction,
+  AccountTransaction,
 } from '@/models';
 import JournalPoster from '@/services/Accounting/JournalPoster';
 import JournalEntry from '@/services/Accounting/JournalEntry';
 import AccountsService from '@/services/Accounts/AccountsService';
 import JournalPosterService from '@/services/Sales/JournalPosterService';
-import InventoryService from '../Inventory/Inventory';
-import { AccountTransaction } from '../../models';
+import InventoryService from '@/services/Inventory/Inventory';
+import HasItemsEntries from '@/services/Sales/HasItemsEntries';
 
 /**
  * Vendor bills services.
@@ -65,57 +66,7 @@ export default class BillsService {
     return storedBill;
   }
 
-  /**
-   * Patch items entries to the storage.
-   *
-   * @param {Array} newEntries 
-   * @param {Array} oldEntries 
-   * @param {String} referenceType 
-   *
-   * @return {Promise}
-   */
-  static async patchItemsEntries(newEntries, oldEntries, referenceType, billId) {
-    const entriesHasIds = newEntries.filter((entry) => entry.id);
-    const entriesHasNoIds = newEntries.filter((entry) => !entry.id);
-
-    const entriesIds = entriesHasIds.map(entry => entry.id);
-
-    const oldEntriesIds = oldEntries.map((e) => e.id);
-    const opers = [];
-
-    const entriesIdsShouldDelete = difference(
-      oldEntriesIds,
-      entriesIds,
-    );
-    if (entriesIdsShouldDelete.length > 0) {
-      const deleteOper = ItemEntry.tenant()
-        .query()
-        .whereIn('id', entriesIdsShouldDelete)
-        .delete();
-      opers.push(deleteOper);
-    }
-    entriesHasIds.forEach((entry) => {
-      const updateOper = ItemEntry.tenant()
-        .query()
-        .where('id', entry.id)
-        .update({
-          ...omit(entry, ['id']),
-        });
-      opers.push(updateOper);
-    });
-    entriesHasNoIds.forEach((entry) => {
-      const insertOper = ItemEntry.tenant()
-        .query()
-        .insert({
-          reference_id: billId,
-          reference_type: referenceType,
-          ...omit(entry, ['id', 'amount']),
-        });
-      opers.push(insertOper);
-    });
-    return Promise.all([...opers]);
-  };
-
+  
   /**
    * Edits details of the given bill id with associated entries.
    *
@@ -150,8 +101,9 @@ export default class BillsService {
       .where('reference_type', 'Bill');
 
     // Patch the bill entries.
-    const patchEntriesOper = this.patchItemsEntries(bill.entries, storedEntries, 'Bill', billId);
-
+    const patchEntriesOper = HasItemsEntries.patchItemsEntries(
+      bill.entries, storedEntries, 'Bill', billId,
+    );
     // Record bill journal transactions.
     const recordTransactionsOper = this.recordJournalTransactions(bill, billId);
 
