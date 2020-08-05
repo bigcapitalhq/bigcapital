@@ -1,6 +1,7 @@
 
 import { Router } from 'express';
 import { check, param, query, ValidationChain } from 'express-validator';
+import { difference } from 'lodash';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
 import validateMiddleware from '@/http/middleware/validateMiddleware';
 import BaseController from '@/http/controllers/BaseController';
@@ -40,6 +41,7 @@ export default class BillsPayments extends BaseController {
       asyncMiddleware(this.validateBillPaymentVendorExistance),
       asyncMiddleware(this.validatePaymentAccount),
       asyncMiddleware(this.validatePaymentNumber),
+      asyncMiddleware(this.validateEntriesIdsExistance),
       asyncMiddleware(this.validateEntriesBillsExistance),
       asyncMiddleware(this.validateVendorsDueAmount),
       asyncMiddleware(this.editBillPayment),
@@ -117,10 +119,12 @@ export default class BillsPayments extends BaseController {
    * @param {Function} next 
    */
   static async validateBillPaymentExistance(req: Request, res: Response, next: any ) {
-    const foundBillPayment = await BillPaymentsService.isBillPaymentExists(req.params.id);
+    const { id: billPaymentId } = req.params;
+    const { BillPayment } = req.models;
+    const foundBillPayment = await BillPayment.query().findById(billPaymentId);
 
     if (!foundBillPayment) {
-      return res.status(404).sned({
+      return res.status(404).send({
         errors: [{ type: 'BILL.PAYMENT.NOT.FOUND', code: 100 }],
       });
     }
@@ -178,8 +182,11 @@ export default class BillsPayments extends BaseController {
     const billPayment = { ...req.body };
     const entriesBillsIds = billPayment.entries.map((e: any) => e.bill_id);
 
-    const notFoundBillsIds = await Bill.getNotFoundBills(entriesBillsIds);
-
+    // Retrieve not found bills that associated to the given vendor id.
+    const notFoundBillsIds = await Bill.getNotFoundBills(
+      entriesBillsIds,
+      billPayment.vendor_id,
+    );
     if (notFoundBillsIds.length > 0) {
       return res.status(400).send({
         errors: [{ type: 'BILLS.IDS.NOT.EXISTS', code: 600 }],
@@ -228,6 +235,34 @@ export default class BillsPayments extends BaseController {
   }
 
   /**
+   * Validate the payment receive entries IDs existance. 
+   * @param {Request} req 
+   * @param {Response} res 
+   * @return {Response}
+   */
+  static async validateEntriesIdsExistance(req: Request, res: Response, next: Function) {
+    const { BillPaymentEntry } = req.models;
+
+    const billPayment = { id: req.params.id, ...req.body };
+    const entriesIds = billPayment.entries
+      .filter((entry: any) => entry.id)
+      .map((entry: any) => entry.id);
+
+    const storedEntries = await BillPaymentEntry.tenant().query()
+      .where('bill_payment_id', billPayment.id);
+
+    const storedEntriesIds = storedEntries.map((entry: any) => entry.id);    
+    const notFoundEntriesIds = difference(entriesIds, storedEntriesIds);
+
+    if (notFoundEntriesIds.length > 0) {
+      return res.status(400).send({
+        errors: [{ type: 'ENTEIES.IDS.NOT.FOUND', code: 800 }],
+      });
+    }
+    next();
+  }
+
+  /**
    * Creates a bill payment.
    * @async
    * @param {Request} req 
@@ -268,8 +303,16 @@ export default class BillsPayments extends BaseController {
     return res.status(200).send({ id: billPaymentId });
   }
 
+  /**
+   * Retrieve the bill payment.
+   * @param {Request} req 
+   * @param {Response} res 
+   */
   static async getBillPayment(req: Request, res: Response) {
+    const { id: billPaymentId } = req.params;
+    const billPayment = await BillPaymentsService.getBillPaymentWithMetadata(billPaymentId);
 
+    return res.status(200).send({ bill_payment: { ...billPayment } });
   }
 
   /**
@@ -341,15 +384,22 @@ export default class BillsPayments extends BaseController {
     }
     const billPayments = await BillPayment.query().onBuild((builder) => {
       dynamicListing.buildQuery()(builder);
+      builder.withGraphFetched('vendor');
+      builder.withGraphFetched('paymentAccount');
       return builder;
-    });
+    }).pagination(filter.page - 1, filter.page_size);
+
     return res.status(200).send({
-      billPayments,
-      ...(viewMeta
-        ? {
-            customViewId: viewMeta.id,
+      bill_payments: {
+        ...billPayments,
+        ...(viewMeta
+          ? {
+            view_meta: {
+              customViewId: viewMeta.id,
+            },
           }
-        : {}),
+          : {}),
+      },
     });
   }
 }

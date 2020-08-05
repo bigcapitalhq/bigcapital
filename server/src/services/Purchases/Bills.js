@@ -299,4 +299,19 @@ export default class BillsService {
   static getBill(billId) {
     return Bill.tenant().query().where('id', billId).first();
   }
+
+
+  /**
+   * Retrieve the given bill details with associated items entries.
+   * @param {Integer} billId -
+   * @returns {Promise}
+   */
+  static getBillWithMetadata(billId) {
+    return Bill.tenant()
+      .query()
+      .where('id', billId)
+      .withGraphFetched('vendor')
+      .withGraphFetched('entries')
+      .first();
+  }
 }

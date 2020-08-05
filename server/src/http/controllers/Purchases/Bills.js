@@ -250,7 +250,7 @@ export default class BillsController extends BaseController {
    */
   static async getBill(req, res) {
     const { id: billId } = req.params;
-    const bill = await BillsService.getBill(billId);
+    const bill = await BillsService.getBillWithMetadata(billId);
 
     return res.status(200).send({ bill });
   }
@@ -324,6 +324,7 @@ export default class BillsController extends BaseController {
     const bills = await Bill.query()
       .onBuild((builder) => {
         dynamicListing.buildQuery()(builder);
+        builder.withGraphFetched('vendor');
         return builder;
       })
       .pagination(filter.page - 1, filter.page_size);

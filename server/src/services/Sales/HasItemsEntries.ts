@@ -12,7 +12,12 @@ export default class HasItemEntries {
    *
    * @return {Promise}
    */
-  static async patchItemsEntries(newEntries: Array<any>, oldEntries: Array<any>, referenceType: string, referenceId: string|number) {
+  static async patchItemsEntries(
+    newEntries: Array<any>,
+    oldEntries: Array<any>,
+    referenceType: string,
+    referenceId: string|number
+  ) {
     const entriesHasIds = newEntries.filter((entry) => entry.id);
     const entriesHasNoIds = newEntries.filter((entry) => !entry.id);
     const entriesIds = entriesHasIds.map(entry => entry.id);

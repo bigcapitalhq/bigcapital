@@ -38,14 +38,30 @@ export default class SaleInvoice extends mixin(TenantModel, [CachableModel]) {
    */
   static get relationMappings() {
     const ItemEntry = require('@/models/ItemEntry');
+    const Customer = require('@/models/Customer');
 
     return {
+      /**
+       * 
+       */
       entries: {
         relation: Model.HasManyRelation,
         modelClass: this.relationBindKnex(ItemEntry.default),
         join: {
           from: 'sales_invoices.id',
           to: 'items_entries.referenceId',
+        },
+      },
+
+      /**
+       * 
+       */
+      customer: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: this.relationBindKnex(Customer.default),
+        join: {
+          from: 'sales_invoices.customerId',
+          to: 'customers.id',
         },
       },
     };
@@ -64,4 +80,6 @@ export default class SaleInvoice extends mixin(TenantModel, [CachableModel]) {
       .where('id', invoiceId)
       [changeMethod]('payment_amount', Math.abs(amount));      
   }
+
+
 }

@@ -1,17 +1,30 @@
 import express from 'express';
 import { omit, sumBy } from 'lodash';
-import { BillPayment, BillPaymentEntry, Vendor } from '@/models';
-import ServiceItemsEntries from '../Sales/ServiceItemsEntries';
-import AccountsService from '../Accounts/AccountsService';
-import JournalPoster from '../Accounting/JournalPoster';
-import JournalEntry from '../Accounting/JournalEntry';
+import moment from 'moment';
+import {
+  BillPayment,
+  BillPaymentEntry,
+  Vendor,
+  Bill,
+  Account,
+  AccountTransaction,
+} from '@/models';
+import ServiceItemsEntries from '@/services/Sales/ServiceItemsEntries';
+import AccountsService from '@/services/Accounts/AccountsService';
+import JournalPoster from '@/services/Accounting/JournalPoster';
+import JournalEntry from '@/services/Accounting/JournalEntry';
+import JournalPosterService from '@/services/Sales/JournalPosterService';
 
+/**
+ * Bill payments service.
+ * @service
+ */
 export default class BillPaymentsService {
   /**
    * Creates a new bill payment transcations and store it to the storage
    * with associated bills entries and journal transactions.
    *
-   * Precedures
+   * Precedures:-
    * ------
    * - Records the bill payment transaction.
    * - Records the bill payment associated entries.
@@ -22,7 +35,7 @@ export default class BillPaymentsService {
    * @param {IBillPayment} billPayment
    */
   static async createBillPayment(billPayment) {
-    const amount = sumBy(billPayment.entries, 'paymentAmount');
+    const amount = sumBy(billPayment.entries, 'payment_amount');
     const storedBillPayment = await BillPayment.tenant()
       .query()
       .insert({
@@ -39,17 +52,17 @@ export default class BillPaymentsService {
           ...entry,
         });
       // Increment the bill payment amount.
-      const billOper = BillPayment.changePaymentAmount(
-        entry.billId,
-        entry.paymentAmount
+      const billOper = Bill.changePaymentAmount(
+        entry.bill_id,
+        entry.payment_amount,
       );
       storeOpers.push(billOper);
       storeOpers.push(oper);
     });
     // Decrement the vendor balance after bills payments.
-    const vendorDecrementOper = Vendor.changeBalanace(
+    const vendorDecrementOper = Vendor.changeBalance(
       billPayment.vendor_id,
-      amount * -1
+      amount * -1,
     );
     // Records the journal transactions after bills payment
     // and change diff acoount balance.
@@ -68,8 +81,8 @@ export default class BillPaymentsService {
   /**
    * Edits the details of the given bill payment.
    *
-   * Preceducres.
-   * -------
+   * Preceducres:
+   * ------
    * - Update the bill payment transaction.
    * - Insert the new bill payment entries that have no ids.
    * - Update the bill paymeny entries that have ids.
@@ -145,29 +158,32 @@ export default class BillPaymentsService {
 
   /**
    * Deletes the bill payment and associated transactions.
-   * @param {Integer} billPaymentId - 
+   * @param {Integer} billPaymentId - The given bill payment id.
    * @return {Promise}
    */
   static async deleteBillPayment(billPaymentId) {
     const billPayment = await BillPayment.tenant().query().where('id', billPaymentId).first();
 
-    await BillPayment.tenant().query().where('id', billPaymentId).delete();
+    await BillPayment.tenant().query()
+      .where('id', billPaymentId)
+      .delete();
+
     await BillPaymentEntry.tenant()
       .query()
       .where('bill_payment_id', billPaymentId)
       .delete();
 
-    const deleteTransactionsOper = this.deleteJournalTransactions(
+    const deleteTransactionsOper = JournalPosterService.deleteJournalTransactions(
       billPaymentId,
-      'BillPayment'
+      'BillPayment',
     );
-    const revertVendorBalance = Vendor.changeBalanace(
-      billpayment.vendor_id,
-      billPayment.amount * -1,
+    const revertVendorBalanceOper = Vendor.changeBalance(
+      billPayment.vendorId,
+      billPayment.amount,
     );
     return Promise.all([
       deleteTransactionsOper,
-      revertVendorBalance,
+      revertVendorBalanceOper,
     ]);
   }
 
@@ -207,7 +223,7 @@ export default class BillPaymentsService {
       ...commonJournal,
       debit: paymentAmount,
       contactType: 'Vendor',
-      contactId: billpayment.vendor_id,
+      contactId: billPayment.vendor_id,
       account: payableAccount.id,
     });
     const creditPaymentAccount = new JournalEntry({
@@ -225,18 +241,32 @@ export default class BillPaymentsService {
     ]);
   }
 
-  static async getBillPayment(billPaymentId) {
-    
+  /**
+   * Retrieve bill payment with associated metadata.
+   * @param {number} billPaymentId 
+   * @return {object}
+   */
+  static async getBillPaymentWithMetadata(billPaymentId) {
+    const billPayment = await BillPayment.tenant().query()
+      .where('id', billPaymentId)
+      .withGraphFetched('entries')
+      .withGraphFetched('vendor')
+      .withGraphFetched('paymentAccount')
+      .first();
+
+    return billPayment;
   }
 
   /**
    * Detarmines whether the bill payment exists on the storage.
    * @param {Integer} billPaymentId 
+   * @return {boolean}
    */
   static async isBillPaymentExists(billPaymentId) {
     const billPayment = await BillPayment.tenant().query()
       .where('id', billPaymentId)
       .first();
-    return billPayment.length > 0;
+
+    return (billPayment.length > 0);
   }
 }
