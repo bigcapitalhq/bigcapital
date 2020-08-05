@@ -157,10 +157,18 @@ export default class BillsPayments extends BaseController {
    * @param {Function} res 
    */
   static async validatePaymentNumber(req: Request, res: Response, next: any) {
-    const { BillPayment } = req.models;
     const billPayment = { ...req.body };
+    const { id: billPaymentId } = req.params;
+    const { BillPayment } = req.models;
+  
     const foundBillPayment = await BillPayment.query()
-      .where('payment_number', billPayment.payment_number)
+      .onBuild((builder: any) => {
+        builder.where('payment_number', billPayment.payment_number)
+
+        if (billPaymentId) {
+          builder.whereNot('id', billPaymentId);
+        }
+      })
       .first();
  
     if (foundBillPayment) {
@@ -283,7 +291,20 @@ export default class BillsPayments extends BaseController {
    */
   static async editBillPayment(req: Request, res: Response) {
     const billPayment = { ...req.body };
+    const { id: billPaymentId } = req.params;
 
+    const { BillPayment } = req.models;
+
+    const oldBillPayment = await BillPayment.query()
+      .where('id', billPaymentId)
+      .withGraphFetched('entries')
+      .first();
+
+    await BillPaymentsService.editBillPayment(
+      billPaymentId,
+      billPayment,
+      oldBillPayment,
+    );
     return res.status(200).send({ id: 1 });
   }
 

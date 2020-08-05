@@ -79,10 +79,11 @@ export default class BillsService {
    * - Re-write the inventory transactions.
    * - Re-write the bill journal transactions.
    *
-   * @param {Integer} billId
-   * @param {IBill} bill
+   * @param {Integer} billId - The given bill id.
+   * @param {IBill} bill - The given new bill details.
    */
   static async editBill(billId, bill) {
+    const oldBill = await Bill.tenant().query().findById(billId);
     const amount = sumBy(bill.entries, 'amount');
 
     // Update the bill transaction.
@@ -104,12 +105,20 @@ export default class BillsService {
     const patchEntriesOper = HasItemsEntries.patchItemsEntries(
       bill.entries, storedEntries, 'Bill', billId,
     );
+    // Changes the diff vendor balance between old and new amount.
+    const changeVendorBalanceOper = Vendor.changeDiffBalance(
+      bill.vendor_id,
+      oldBill.vendorId,
+      amount,
+      oldBill.amount,
+    );
     // Record bill journal transactions.
     const recordTransactionsOper = this.recordJournalTransactions(bill, billId);
 
     await Promise.all([
       patchEntriesOper,
       recordTransactionsOper,
+      changeVendorBalanceOper,
     ]);
   }
 
@@ -249,7 +258,7 @@ export default class BillsService {
       'Bill'
     );
     // Revert vendor balance.
-    const revertVendorBalance = Vendor.changeBalance(billId, bill.amount * -1);
+    const revertVendorBalance = Vendor.changeBalance(bill.vendorId, bill.amount * -1);
   
     await Promise.all([
       deleteBillOper,

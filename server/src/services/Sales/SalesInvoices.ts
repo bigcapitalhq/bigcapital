@@ -43,6 +43,7 @@ export default class SaleInvoicesService {
         });
       opers.push(oper);
     });
+    // Increment the customer balance after deliver the sale invoice.
     const incrementOper = Customer.incrementBalance(
       saleInvoice.customer_id,
       balance,

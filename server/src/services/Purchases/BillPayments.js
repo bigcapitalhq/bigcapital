@@ -145,9 +145,9 @@ export default class BillPaymentsService {
     // Change the different vendor balance between the new and old one.
     const changeDiffBalance = Vendor.changeDiffBalance(
       billPayment.vendor_id,
-      oldBillPayment.vendor_id,
-      billPayment.amount,
-      oldBillPayment.amount
+      oldBillPayment.vendorId,
+      billPayment.amount * -1,
+      oldBillPayment.amount * -1,
     );
     await Promise.all([
       ...opers,
