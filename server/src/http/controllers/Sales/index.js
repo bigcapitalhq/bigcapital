@@ -1,6 +1,6 @@
 import express from 'express';
 import SalesEstimates from './SalesEstimates';
-import SalesReceipts from './SalesReceipt';
+import SalesReceipts from './SalesReceipts';
 import SalesInvoices from './SalesInvoices'
 import PaymentReceives from './PaymentReceives';
 

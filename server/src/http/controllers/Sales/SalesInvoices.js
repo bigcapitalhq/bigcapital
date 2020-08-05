@@ -1,16 +1,15 @@
 import express from 'express';
 import { check, param, query } from 'express-validator';
+import { difference } from 'lodash';
 import { ItemEntry } from '@/models';
 import validateMiddleware from '@/http/middleware/validateMiddleware';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
-import SaleInvoiceService from '@/services/Sales/SaleInvoice';
+import SaleInvoiceService from '@/services/Sales/SalesInvoices';
 import ItemsService from '@/services/Items/ItemsService';
 import CustomersService from '@/services/Customers/CustomersService';
 import DynamicListing from '@/services/DynamicListing/DynamicListing';
 import DynamicListingBuilder from '@/services/DynamicListing/DynamicListingBuilder';
 import { dynamicListingErrorsToResponse } from '@/services/DynamicListing/hasDynamicListing';
-import { SaleInvoice } from '../../../models';
-import { difference } from 'lodash';
 
 export default class SaleInvoicesController {
   /**
@@ -23,6 +22,7 @@ export default class SaleInvoicesController {
       '/',
       this.saleInvoiceValidationSchema,
       validateMiddleware,
+      asyncMiddleware(this.validateInvoiceCustomerExistance),
       asyncMiddleware(this.validateInvoiceNumberUnique),
       asyncMiddleware(this.validateInvoiceItemsIdsExistance),
       asyncMiddleware(this.newSaleInvoice)
@@ -35,6 +35,7 @@ export default class SaleInvoicesController {
       ],
       validateMiddleware,
       asyncMiddleware(this.validateInvoiceExistance),
+      asyncMiddleware(this.validateInvoiceCustomerExistance),
       asyncMiddleware(this.validateInvoiceNumberUnique),
       asyncMiddleware(this.validateInvoiceItemsIdsExistance),
       asyncMiddleware(this.valdiateInvoiceEntriesIdsExistance),
@@ -96,12 +97,17 @@ export default class SaleInvoicesController {
     return [param('id').exists().isNumeric().toInt()];
   }
 
+  /**
+   * Sales invoices list validation schema.
+   */
   static get saleInvoiceListValidationSchema() {
     return [
       query('custom_view_id').optional().isNumeric().toInt(),
       query('stringified_filter_roles').optional().isJSON(),
       query('column_sort_by').optional(),
       query('sort_order').optional().isIn(['desc', 'asc']),
+      query('page').optional().isNumeric().toInt(),
+      query('page_size').optional().isNumeric().toInt(), 
     ];
   }
 
@@ -145,6 +151,7 @@ export default class SaleInvoicesController {
   }
 
   /**
+   * 
    * Validate whether sale invoice number unqiue on the storage.
    * @param {Request} req
    * @param {Response} res
@@ -266,8 +273,13 @@ export default class SaleInvoicesController {
    */
   static async editSaleInvoice(req, res) {
     const { id: saleInvoiceId } = req.params;
-    const saleInvoice = { ...req.body };
-
+    const saleInvoice = {
+      ...req.body,
+      entries: req.body.entries.map((entry) => ({
+        ...entry,
+        amount: ItemEntry.calcAmount(entry),
+      })),
+    };
     // Update the given sale invoice details.
     await SaleInvoiceService.editSaleInvoice(saleInvoiceId, saleInvoice);
 
@@ -311,6 +323,8 @@ export default class SaleInvoicesController {
     const filter = {
       filter_roles: [],
       sort_order: 'asc',
+      page: 1,
+      page_size: 10,
       ...req.query,
     };
     if (filter.stringified_filter_roles) {

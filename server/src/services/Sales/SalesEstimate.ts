@@ -1,15 +1,15 @@
-import { omit, difference, sumBy } from 'lodash';
+import { omit, difference, sumBy, mixin } from 'lodash';
 import { SaleEstimate, ItemEntry } from '@/models';
-import ServiceItemsEntries from '@/services/Sales/ServiceItemsEntries';
+import HasItemsEntries from '@/services/Sales/HasItemsEntries';
 
-export default class SaleEstimateService extends ServiceItemsEntries {
+export default class SaleEstimateService {
   /**
    * Creates a new estimate with associated entries.
    * @async
    * @param {IEstimate} estimate
    * @return {void}
    */
-  static async createEstimate(estimate) {
+  static async createEstimate(estimate: any) {
     const amount = sumBy(estimate.entries, 'amount');
     const storedEstimate = await SaleEstimate.tenant()
       .query()
@@ -17,15 +17,15 @@ export default class SaleEstimateService extends ServiceItemsEntries {
         amount,
         ...omit(estimate, ['entries']),
       });
-    const storeEstimateEntriesOpers = [];
+    const storeEstimateEntriesOpers: any[] = [];
 
-    estimate.entries.forEach((entry) => {
+    estimate.entries.forEach((entry: any) => {
       const oper = ItemEntry.tenant()
         .query()
         .insert({
           reference_type: 'SaleEstimate',
           reference_id: storedEstimate.id,
-          ...omit(entry, ['total', 'amount']),
+          ...omit(entry, ['total', 'amount', 'id']),
         });
       storeEstimateEntriesOpers.push(oper);
     });
@@ -40,7 +40,7 @@ export default class SaleEstimateService extends ServiceItemsEntries {
    * @param {IEstimate} estimateId
    * @return {void}
    */
-  static async deleteEstimate(estimateId) {
+  static async deleteEstimate(estimateId: number) {
     await ItemEntry.tenant()
       .query()
       .where('reference_id', estimateId)
@@ -56,7 +56,7 @@ export default class SaleEstimateService extends ServiceItemsEntries {
    * @param {IEstimate} estimate
    * @return {void}
    */
-  static async editEstimate(estimateId, estimate) {
+  static async editEstimate(estimateId: number, estimate: any) {
     const amount = sumBy(estimate.entries, 'amount');
     const updatedEstimate = await SaleEstimate.tenant()
       .query()
@@ -69,45 +69,12 @@ export default class SaleEstimateService extends ServiceItemsEntries {
       .where('reference_id', estimateId)
       .where('reference_type', 'SaleEstimate');
 
-    const opers = [];
-    const entriesHasID = estimate.entries.filter((entry) => entry.id);
-    const entriesHasNoIDs = estimate.entries.filter((entry) => !entry.id);
-
-    const storedEntriesIds = storedEstimateEntries.map((e) => e.id);
-    const formEstimateEntriesIds = entriesHasID.map((entry) => entry.id);
-
-    const entriesIdsShouldBeDeleted = difference(
-      storedEntriesIds,
-      formEstimateEntriesIds,
+    const patchItemsEntries = HasItemsEntries.patchItemsEntries(
+      estimate.entries, storedEstimateEntries, 'SaleEstimate', estimateId
     );
-    // Deletes the given sale estimate entries ids.
-    if (entriesIdsShouldBeDeleted.length > 0) {
-      const oper = ItemEntry.tenant()
-        .query()
-        .whereIn('id', entriesIdsShouldBeDeleted)
-        .delete();
-      opers.push(oper);
-    }
-    // Insert the new sale estimate entries.
-    entriesHasNoIDs.forEach((entry) => {
-      const oper = ItemEntry.tenant()
-        .query()
-        .insert({
-          reference_type: 'SaleEstimate',
-          reference_id: estimateId,
-          ...entry,
-        });
-      opers.push(oper);
-    });
-    entriesHasID.forEach((entry) => {
-      const oper = ItemEntry.tenant()
-        .query()
-        .patchAndFetchById(entry.id, {
-          ...omit(entry, ['id']),
-        });
-      opers.push(oper);
-    });
-    return Promise.all([...opers]);
+    return Promise.all([
+      patchItemsEntries,
+    ]);
   }
 
   /**
@@ -116,7 +83,7 @@ export default class SaleEstimateService extends ServiceItemsEntries {
    * @param {Numeric} estimateId
    * @return {Boolean}
    */
-  static async isEstimateExists(estimateId) {
+  static async isEstimateExists(estimateId: number) {
     const foundEstimate = await SaleEstimate.tenant()
       .query()
       .where('id', estimateId);
@@ -129,7 +96,7 @@ export default class SaleEstimateService extends ServiceItemsEntries {
    * @param {Numeric} estimateId
    * @param {IEstimate} estimate
    */
-  static async isEstimateEntriesIDsExists(estimateId, estimate) {
+  static async isEstimateEntriesIDsExists(estimateId: number, estimate: any) {
     const estimateEntriesIds = estimate.entries
       .filter((e) => e.id)
       .map((e) => e.id);
@@ -140,7 +107,7 @@ export default class SaleEstimateService extends ServiceItemsEntries {
       .where('reference_id', estimateId)
       .where('reference_type', 'SaleEstimate');
 
-    const storedEstimateEntriesIds = estimateEntries.map((e) => e.id);
+    const storedEstimateEntriesIds = estimateEntries.map((e: any) => e.id);
     const notFoundEntriesIDs = difference(
       estimateEntriesIds,
       storedEstimateEntriesIds
@@ -153,7 +120,7 @@ export default class SaleEstimateService extends ServiceItemsEntries {
    * @param {Integer} estimateId
    * @return {IEstimate}
    */
-  static async getEstimate(estimateId) {
+  static async getEstimate(estimateId: number) {
     const estimate = await SaleEstimate.tenant()
       .query()
       .where('id', estimateId)
@@ -166,7 +133,7 @@ export default class SaleEstimateService extends ServiceItemsEntries {
    * Retrieve the estimate details with associated entries.
    * @param {Integer} estimateId
    */
-  static async getEstimateWithEntries(estimateId) {
+  static async getEstimateWithEntries(estimateId: number) {
     const estimate = await SaleEstimate.tenant()
       .query()
       .where('id', estimateId)
@@ -178,14 +145,14 @@ export default class SaleEstimateService extends ServiceItemsEntries {
 
   /**
    * Detarmines the estimate number uniqness.
-   * @param {Integer} estimateNumber
+   * @param {String} estimateNumber
    * @param {Integer} excludeEstimateId
    * @return {Boolean}
    */
-  static async isEstimateNumberUnique(estimateNumber, excludeEstimateId) {
+  static async isEstimateNumberUnique(estimateNumber: string, excludeEstimateId: number) {
     const foundEstimates = await SaleEstimate.tenant()
       .query()
-      .onBuild((query) => {
+      .onBuild((query: any) => {
         query.where('estimate_number', estimateNumber);
 
         if (excludeEstimateId) {

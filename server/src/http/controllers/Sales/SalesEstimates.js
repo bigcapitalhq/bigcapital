@@ -103,9 +103,10 @@ export default class SalesEstimatesController extends BaseController {
     return [
       query('custom_view_id').optional().isNumeric().toInt(),
       query('stringified_filter_roles').optional().isJSON(),
-
       query('column_sort_by').optional(),
       query('sort_order').optional().isIn(['desc', 'asc']),
+      query('page').optional().isNumeric().toInt(),
+      query('page_size').optional().isNumeric().toInt(), 
     ]
   }
 
@@ -201,7 +202,7 @@ export default class SalesEstimatesController extends BaseController {
       .filter(e => e.id)
       .map((e) => e.id);
 
-    const foundEntries = await ItemEntry.query()
+    const foundEntries = await ItemEntry.tenant().query()
       .whereIn('id', entriesIds)
       .where('reference_type', 'SaleInvoice')
       .where('reference_id', saleInvoiceId);
@@ -323,7 +324,7 @@ export default class SalesEstimatesController extends BaseController {
       return res.status(400).send({ errors: errorReasons });
     }
 
-    const salesEstimates = await SaleEstimate.query().onBuild((query) => {
+    const salesEstimates = await SaleEstimate.query().onBuild((builder) => {
       dynamicListing.buildQuery()(builder);
       return builder;
     }).pagination(filter.page - 1, filter.page_size);

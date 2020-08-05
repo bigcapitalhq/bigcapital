@@ -3,17 +3,17 @@ import { Customer } from '@/models';
 export default class CustomerRepository {
 
   static changeDiffBalance(customerId, oldCustomerId, amount, oldAmount) {
-    const diffAmount = (amount - oldAmount) * -1;
+    const diffAmount = amount - oldAmount;
     const asyncOpers = [];
 
     if (customerId != oldCustomerId) {
       const oldCustomerOper = Customer.changeBalance(
         oldCustomerId,
-        oldAmount
+        (oldAmount * -1)
       );
       const customerOper = Customer.changeBalance(
         customerId,
-        (amount + diffAmount) * -1
+        amount, 
       );
       asyncOpers.push(customerOper);
       asyncOpers.push(oldCustomerOper);

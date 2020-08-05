@@ -1,15 +1,22 @@
 import express from 'express';
 import { check, param, query } from 'express-validator';
 import { difference } from 'lodash';
+import { PaymentReceiveEntry } from '@/models';
 import BaseController from '@/http/controllers/BaseController';
 import validateMiddleware from '@/http/middleware/validateMiddleware';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
-import PaymentReceiveService from '@/services/Sales/PaymentReceive';
+import PaymentReceiveService from '@/services/Sales/PaymentsReceives';
 import CustomersService from '@/services/Customers/CustomersService';
-import SaleInvoicesService from '@/services/Sales/SaleInvoice';
+import SaleInvoicesService from '@/services/Sales/SalesInvoices';
 import AccountsService from '@/services/Accounts/AccountsService';
-import { PaymentReceiveEntry } from '@/models';
+import DynamicListing from '@/services/DynamicListing/DynamicListing';
+import DynamicListingBuilder from '@/services/DynamicListing/DynamicListingBuilder';
+import { dynamicListingErrorsToResponse } from '@/services/DynamicListing/hasDynamicListing';
 
+/**
+ * Payments receives controller.
+ * @controller
+ */
 export default class PaymentReceivesController extends BaseController {
   /**
    * Router constructor.
@@ -27,10 +34,11 @@ export default class PaymentReceivesController extends BaseController {
       asyncMiddleware(this.validateDepositAccount),
       asyncMiddleware(this.validateInvoicesIDs),
       asyncMiddleware(this.validateEntriesIdsExistance),
-      asyncMiddleware(this.editPaymentReceive)
+      asyncMiddleware(this.validateInvoicesPaymentsAmount),
+      asyncMiddleware(this.editPaymentReceive),
     );
     router.post(
-      '/',  
+      '/',
       this.newPaymentReceiveValidation,
       validateMiddleware,
       asyncMiddleware(this.validatePaymentReceiveNoExistance),
@@ -38,7 +46,7 @@ export default class PaymentReceivesController extends BaseController {
       asyncMiddleware(this.validateDepositAccount),
       asyncMiddleware(this.validateInvoicesIDs),
       asyncMiddleware(this.validateInvoicesPaymentsAmount),
-      asyncMiddleware(this.newPaymentReceive)
+      asyncMiddleware(this.newPaymentReceive),
     );
     router.get(
       '/:id',
@@ -58,7 +66,7 @@ export default class PaymentReceivesController extends BaseController {
       this.paymentReceiveValidation,
       validateMiddleware,
       asyncMiddleware(this.validatePaymentReceiveExistance),
-      asyncMiddleware(this.deletePaymentReceive)
+      asyncMiddleware(this.deletePaymentReceive),
     );
     return router;
   }
@@ -340,7 +348,7 @@ export default class PaymentReceivesController extends BaseController {
   /**
    * Payment receive list validation schema.
    */
-  static async validatePaymentReceiveList() {
+  static get validatePaymentReceiveList() {
     return [
       query('custom_view_id').optional().isNumeric().toInt(),
       query('stringified_filter_roles').optional().isJSON(),
@@ -407,7 +415,8 @@ export default class PaymentReceivesController extends BaseController {
     const paymentReceives = await PaymentReceive.query().onBuild((builder) => {
       dynamicListing.buildQuery()(builder);
       return builder;
-    });
+    }).pagination(filter.page - 1, filter.page_size);
+
     return res.status(200).send({
       payment_receives: {
         ...paymentReceives,
