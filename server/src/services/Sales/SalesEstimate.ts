@@ -98,8 +98,8 @@ export default class SaleEstimateService {
    */
   static async isEstimateEntriesIDsExists(estimateId: number, estimate: any) {
     const estimateEntriesIds = estimate.entries
-      .filter((e) => e.id)
-      .map((e) => e.id);
+      .filter((e: any) => e.id)
+      .map((e: any) => e.id);
 
     const estimateEntries = await ItemEntry.tenant()
       .query()
@@ -138,6 +138,7 @@ export default class SaleEstimateService {
       .query()
       .where('id', estimateId)
       .withGraphFetched('entries')
+      .withGraphFetched('customer')
       .first();
 
     return estimate;

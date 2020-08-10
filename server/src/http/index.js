@@ -22,11 +22,13 @@ import ExchangeRates from '@/http/controllers/ExchangeRates';
 import Media from '@/http/controllers/Media';
 import JWTAuth from '@/http/middleware/jwtAuth';
 import TenancyMiddleware from '@/http/middleware/TenancyMiddleware';
+import Ping from '@/http/controllers/Ping';
 
 export default (app) => {
   // app.use('/api/oauth2', OAuth2.router());
   app.use('/api/auth', Authentication.router());
   app.use('/api/invite', InviteUsers.router());
+  app.use('/api/ping', Ping.router());
 
   const dashboard = express.Router();
 

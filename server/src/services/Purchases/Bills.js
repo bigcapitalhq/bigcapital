@@ -54,19 +54,23 @@ export default class BillsService {
         });
       saveEntriesOpers.push(oper);
     });
-    // Increment vendor balance.
+    // Increments vendor balance.
     const incrementOper = Vendor.changeBalance(bill.vendor_id, amount);
-  
+
+    // // Rewrite the inventory transactions for inventory items.
+    // const writeInvTransactionsOper = InventoryService.recordInventoryTransactions(
+    //   bill.entries, 'Bill', billId,
+    // );
     await Promise.all([
       ...saveEntriesOpers,
       incrementOper,
-      this.recordInventoryTransactions(bill, storedBill.id),
+      // this.recordInventoryTransactions(bill, storedBill.id),
       this.recordJournalTransactions({ ...bill, id: storedBill.id }),
+      // writeInvTransactionsOper,
     ]);
     return storedBill;
   }
 
-  
   /**
    * Edits details of the given bill id with associated entries.
    *
@@ -112,49 +116,21 @@ export default class BillsService {
       amount,
       oldBill.amount,
     );
-    // Record bill journal transactions.
-    const recordTransactionsOper = this.recordJournalTransactions(bill, billId);
-
+    // // Deletes the old inventory transactions.
+    // const deleteInvTransactionsOper = InventorySevice.deleteInventoryTransactions(
+    //   billId, 'Bill',
+    // );
+    // // Re-write the inventory transactions for inventory items.
+    // const writeInvTransactionsOper = InventoryService.recordInventoryTransactions(
+    //   bill.entries, 'Bill', billId,
+    // );
     await Promise.all([
       patchEntriesOper,
       recordTransactionsOper,
       changeVendorBalanceOper,
+      // deleteInvTransactionsOper,
+      // writeInvTransactionsOper,
     ]);
-  }
-
-  /**
-   * Records inventory transactions.
-   * @param  {IBill} bill -
-   * @return {void}
-   */
-  static async recordInventoryTransactions(bill, billId) {
-    const storeInventoryTransactions = [];
-    const entriesItemsIds = bill.entries.map((e) => e.item_id);
-    const inventoryItems = await Item.tenant()
-      .query()
-      .whereIn('id', entriesItemsIds)
-      .where('type', 'inventory');
-
-    const inventoryItemsIds = inventoryItems.map((i) => i.id);
-    const inventoryEntries = bill.entries.filter(
-      (entry) => inventoryItemsIds.indexOf(entry.item_id) !== -1
-    );
-    inventoryEntries.forEach((entry) => {
-      const oper = InventoryTransaction.tenant().query().insert({
-        direction: 'IN',
-        date: bill.bill_date,
-
-        item_id: entry.item_id,
-        quantity: entry.quantity,
-        rate: entry.rate,
-        remaining: entry.quantity,
-
-        transaction_type: 'Bill',
-        transaction_id: billId,
-      });
-      storeInventoryTransactions.push(oper);
-    });
-    return Promise.all([...storeInventoryTransactions]);
   }
 
   /**
@@ -253,9 +229,8 @@ export default class BillsService {
       'Bill'
     );
     // Delete bill associated inventory transactions.
-    const deleteInventoryTransOper = InventoryService.deleteTransactions(
-      billId,
-      'Bill'
+    const deleteInventoryTransOper = InventoryService.deleteInventoryTransactions(
+      billId, 'Bill'
     );
     // Revert vendor balance.
     const revertVendorBalance = Vendor.changeBalance(bill.vendorId, bill.amount * -1);

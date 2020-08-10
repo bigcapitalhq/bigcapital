@@ -8,7 +8,7 @@ import {
   loginRes
 } from '~/dbInit';
 
-describe('route: `/api/purchases/bills`', () => {
+describe.only('route: `/api/purchases/bills`', () => {
   describe('POST: `/api/purchases/bills`', () => {
     it('Should `bill_number` be required.', async () => {
       const res = await request()
@@ -207,6 +207,8 @@ describe('route: `/api/purchases/bills`', () => {
 
       expect(res.status).equals(200);
     });
+
+    
   });
 
   describe('DELETE: `/api/purchases/bills/:id`', () => {

@@ -1,7 +1,8 @@
-import { omit, sumBy, difference } from 'lodash';
+import { omit, sumBy, difference, chain, sum } from 'lodash';
 import {
   SaleInvoice,
   AccountTransaction,
+  InventoryTransaction,
   Account,
   ItemEntry,
   Customer,
@@ -9,6 +10,7 @@ import {
 import JournalPoster from '@/services/Accounting/JournalPoster';
 import HasItemsEntries from '@/services/Sales/HasItemsEntries';
 import CustomerRepository from '@/repositories/CustomerRepository';
+import moment from 'moment';
 
 /**
  * Sales invoices service
@@ -48,8 +50,38 @@ export default class SaleInvoicesService {
       saleInvoice.customer_id,
       balance,
     );
-    await Promise.all([...opers, incrementOper]);
+    // Records the inventory transactions for inventory items.
+    const recordInventoryTransOpers = this.recordInventoryTransactions(
+      saleInvoice, storedInvoice.id
+    );
+    // Await all async operations.
+    await Promise.all([
+      ...opers,
+      incrementOper,
+      recordInventoryTransOpers,
+    ]);
     return storedInvoice;
+  }
+
+  /**
+   * Records the inventory items transactions.
+   * @param {SaleInvoice} saleInvoice - 
+   * @param {number} saleInvoiceId -
+   * @return {Promise}
+   */
+  static async recordInventoryTransactions(saleInvoice, saleInvoiceId) {
+    
+  }
+  
+  /** 
+   * Records the sale invoice journal entries and calculate the items cost 
+   * based on the given cost method in the options FIFO, LIFO or average cost rate.
+   * 
+   * @param {SaleInvoice} saleInvoice - 
+   * @param {Array} inventoryTransactions -
+   */
+  static async recordJournalEntries(saleInvoice: any, inventoryTransactions: array[]) {
+    
   }
 
   /**
@@ -94,6 +126,48 @@ export default class SaleInvoicesService {
     ]);
   }
 
+  async recalcInventoryTransactionsCost(inventoryTransactions: array) {
+    const inventoryTransactionsMap = this.mapInventoryTransByItem(inventoryTransactions);
+
+
+  }
+
+  /**
+   * Deletes the inventory transactions.
+   * @param {string} transactionType 
+   * @param {number} transactionId 
+   */
+  static async revertInventoryTransactions(inventoryTransactions: array) {
+    const opers = [];
+
+    inventoryTransactions.forEach((trans: any) => {
+      switch(trans.direction) {
+        case 'OUT':
+          if (trans.inventoryTransactionId) {
+            const revertRemaining = InventoryTransaction.tenant()
+              .query()
+              .where('id', trans.inventoryTransactionId)
+              .where('direction', 'OUT')
+              .increment('remaining', trans.quanitity);
+  
+            opers.push(revertRemaining);
+          }
+          break;
+        case 'IN':
+          const removeRelationOper = InventoryTransaction.tenant()
+            .query()
+            .where('inventory_transaction_id', trans.id)
+            .where('direction', 'IN')
+            .update({
+              inventory_transaction_id: null,
+            });
+          opers.push(removeRelationOper);
+          break;
+      }
+    });
+    return Promise.all(opers);
+  }
+
   /**
    * Deletes the given sale invoice with associated entries
    * and journal transactions.
@@ -126,10 +200,19 @@ export default class SaleInvoicesService {
     journal.loadEntries(invoiceTransactions);
     journal.removeEntries();
 
+    const inventoryTransactions = await InventoryTransaction.tenant()
+      .query()
+      .where('transaction_type', 'SaleInvoice')
+      .where('transaction_id', saleInvoiceId);
+
+    // Revert inventory transactions.
+    const revertInventoryTransactionsOper = this.revertInventoryTransactions(inventoryTransactions);
+
     await Promise.all([
       journal.deleteEntries(),
       journal.saveBalance(),
       revertCustomerBalanceOper,
+      revertInventoryTransactionsOper,
     ]);
   }
 
@@ -152,6 +235,7 @@ export default class SaleInvoicesService {
     return SaleInvoice.tenant().query()
       .where('id', saleInvoiceId)
       .withGraphFetched('entries')
+      .withGraphFetched('customer')
       .first();
   }
 

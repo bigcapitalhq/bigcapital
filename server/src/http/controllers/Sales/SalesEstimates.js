@@ -326,6 +326,7 @@ export default class SalesEstimatesController extends BaseController {
 
     const salesEstimates = await SaleEstimate.query().onBuild((builder) => {
       dynamicListing.buildQuery()(builder);
+      builder.withGraphFetched('customer');
       return builder;
     }).pagination(filter.page - 1, filter.page_size);
 

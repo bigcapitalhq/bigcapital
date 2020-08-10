@@ -415,6 +415,9 @@ export default class PaymentReceivesController extends BaseController {
       return res.status(400).send({ errors: errorReasons });
     }
     const paymentReceives = await PaymentReceive.query().onBuild((builder) => {
+      builder.withGraphFetched('customer');
+      builder.withGraphFetched('depositAccount');
+
       dynamicListing.buildQuery()(builder);
       return builder;
     }).pagination(filter.page - 1, filter.page_size);

@@ -24,13 +24,11 @@ export default class BillPayment extends mixin(TenantModel, [CachableModel]) {
    */
   static get relationMappings() {
     const BillPaymentEntry = require('@/models/BillPaymentEntry');
+    const AccountTransaction = require('@/models/AccountTransaction');
     const Vendor = require('@/models/Vendor');
     const Account = require('@/models/Account');
 
     return {
-      /**
-       * 
-       */
       entries: {
         relation: Model.HasManyRelation,
         modelClass: this.relationBindKnex(BillPaymentEntry.default),
@@ -40,9 +38,6 @@ export default class BillPayment extends mixin(TenantModel, [CachableModel]) {
         },
       },
 
-      /**
-       * 
-       */
       vendor: {
         relation: Model.BelongsToOneRelation,
         modelClass: this.relationBindKnex(Vendor.default),
@@ -52,9 +47,6 @@ export default class BillPayment extends mixin(TenantModel, [CachableModel]) {
         },
       },
 
-      /**
-       * 
-       */
       paymentAccount: {
         relation: Model.BelongsToOneRelation,
         modelClass: this.relationBindKnex(Account.default),
@@ -63,6 +55,18 @@ export default class BillPayment extends mixin(TenantModel, [CachableModel]) {
           to: 'accounts.id',
         },
       },
+
+      transactions: {
+        relation: Model.HasManyRelation,
+        modelClass: this.relationBindKnex(AccountTransaction.default),
+        join: {
+          from: 'bills_payments.id',
+          to: 'accounts_transactions.referenceId'
+        },
+        filter(builder) {
+          builder.where('reference_type', 'BillPayment');
+        },
+      }
     };
   }
 }
