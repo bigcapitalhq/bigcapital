@@ -275,4 +275,42 @@ export default [
   //   }),
   //   breadcrumb: 'New Receipt',
   // }
+
+
+  // Payment Receives 
+
+  {
+    path: `/payment-receive/:id/edit`,
+    component: LazyLoader({
+      loader: () => import('containers/Sales/PaymentReceive/PaymentReceives'),
+    }),
+    breadcrumb: 'Edit',
+
+  },
+  {
+    path: `/payment-receive/new`,
+    component: LazyLoader({
+      loader: () => import('containers/Sales/PaymentReceive/PaymentReceives'),
+    }),
+    breadcrumb: 'New Payment Receive',
+
+  },
+
+
+
+  //Bills
+  {
+    path: `/bill/:id/edit`,
+    component: LazyLoader({
+      loader: () => import('containers/Purchases/Bills'),
+    }),
+    breadcrumb: 'Edit',
+  },
+  {
+    path: `/bill/new`,
+    component: LazyLoader({
+      loader: () => import('containers/Purchases/Bills'),
+    }),
+    breadcrumb: 'New Bill',
+  },
 ];

@@ -47,6 +47,13 @@ export default [
         href: '/invoices/new',
       },
       {
+        text: <T id={'payment_receives'} />,
+        href: '/payment-receive/new',
+      },
+      {
+        divider: true,
+      },
+      {
         text: <T id={'receipts'} />,
         href: '/receipts/new',
       },
@@ -56,10 +63,11 @@ export default [
     text: <T id={'purchases'} />,
     children: [
       {
-        icon: 'cut',
-        text: 'cut',
-        label: '⌘C',
-        disabled: false,
+        text: <T id={'bills'} />,
+        href: '/bill/new',
+      },
+      {
+        text: <T id={'payment_mades'} />,
       },
     ],
   },
