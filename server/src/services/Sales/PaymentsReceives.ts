@@ -100,8 +100,8 @@ export default class PaymentReceiveService {
         ...omit(paymentReceive, ['entries']),
       });
     const opers = [];
-    const entriesIds = paymentReceive.entries.filter((i) => i.id);
-    const entriesShouldInsert = paymentReceive.entries.filter((i) => !i.id);
+    const entriesIds = paymentReceive.entries.filter((i: any) => i.id);
+    const entriesShouldInsert = paymentReceive.entries.filter((i: any) => !i.id);
 
     // Detarmines which entries ids should be deleted.
     const entriesIdsShouldDelete = ServiceItemsEntries.entriesShouldDeleted(
@@ -142,7 +142,7 @@ export default class PaymentReceiveService {
       paymentReceive.customer_id,
       oldPaymentReceive.customerId,
       paymentAmount * -1,
-      oldPaymentReceive.amount,
+      oldPaymentReceive.amount * -1,
     );
     // Change the difference between the old and new invoice payment amount.
     const diffInvoicePaymentAmount = this.saveChangeInvoicePaymentAmount(

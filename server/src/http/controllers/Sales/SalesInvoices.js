@@ -368,6 +368,7 @@ export default class SaleInvoicesController {
     }
     const salesInvoices = await SaleInvoice.query().onBuild((builder) => {
       builder.withGraphFetched('entries');
+      builder.withGraphFetched('customer');
       dynamicListing.buildQuery()(builder);
     }).pagination(filter.page - 1, filter.page_size);
 

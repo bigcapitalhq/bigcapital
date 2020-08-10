@@ -20,39 +20,26 @@ export default class BillPayment extends mixin(TenantModel, [CachableModel]) {
   }
 
   /**
-   * Extend query builder model.
-   */
-  static get QueryBuilder() {
-    return CachableQueryBuilder;
-  }
-
-  static changePaymentAmount(billId, amount) {
-    const changeMethod = amount > 0 ? 'increment' : 'decrement';
-    return this.tenant()
-      .query()
-      .where('id', billId)
-      [changeMethod]('payment_amount', Math.abs(amount));
-  }
-
-  /**
    * Relationship mapping.
    */
   static get relationMappings() {
     const BillPaymentEntry = require('@/models/BillPaymentEntry');
     const Vendor = require('@/models/Vendor');
+    const Account = require('@/models/Account');
 
     return {
       /**
        * 
        */
       entries: {
-        relation: Model.BelongsToOneRelation,
+        relation: Model.HasManyRelation,
         modelClass: this.relationBindKnex(BillPaymentEntry.default),
         join: {
           from: 'bills_payments.id',
           to: 'bills_payments_entries.billPaymentId',
         },
       },
+
       /**
        * 
        */
@@ -63,7 +50,19 @@ export default class BillPayment extends mixin(TenantModel, [CachableModel]) {
           from: 'bills_payments.vendorId',
           to: 'vendors.id',
         },
-      }
+      },
+
+      /**
+       * 
+       */
+      paymentAccount: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: this.relationBindKnex(Account.default),
+        join: {
+          from: 'bills_payments.paymentAccountId',
+          to: 'accounts.id',
+        },
+      },
     };
   }
 }

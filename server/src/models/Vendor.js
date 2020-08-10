@@ -31,18 +31,25 @@ export default class Vendor extends TenantModel {
       [changeMethod]('balance', Math.abs(amount));
   }  
 
+  /**
+   * 
+   * @param {number} vendorId - Specific vendor id.
+   * @param {number} oldVendorId - The given old vendor id.
+   * @param {number} amount - The new change amount.
+   * @param {number} oldAmount - The old stored amount.
+   */
   static changeDiffBalance(vendorId, oldVendorId, amount, oldAmount) {
-    const diffAmount = (amount - oldAmount) * -1;
+    const diffAmount = (amount - oldAmount);
     const asyncOpers = [];
 
     if (vendorId != oldVendorId) {
       const oldVendorOper = Vendor.changeBalance(
         oldVendorId,
-        oldAmount
+        (oldAmount * -1)
       );
       const vendorOper = Vendor.changeBalance(
         vendorId,
-        (amount + diffAmount) * -1
+        amount,
       );
       asyncOpers.push(vendorOper);
       asyncOpers.push(oldVendorOper);

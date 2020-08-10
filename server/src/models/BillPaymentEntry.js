@@ -13,6 +13,6 @@ export default class BillPaymentEntry extends TenantModel {
    * Timestamps columns.
    */
   get timestamps() {
-    return ['createdAt', 'updatedAt'];
+    return [];
   }
 }

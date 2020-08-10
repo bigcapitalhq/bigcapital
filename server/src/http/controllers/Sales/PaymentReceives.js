@@ -151,9 +151,11 @@ export default class PaymentReceivesController extends BaseController {
    * @param {Function} next -
    */
   static async validateInvoicesIDs(req, res, next) {
-    const invoicesIds = req.body.entries.map((e) => e.invoice_id);
+    const paymentReceive = { ...req.body };
+    const invoicesIds = paymentReceive.entries.map((e) => e.invoice_id);
     const notFoundInvoicesIDs = await SaleInvoicesService.isInvoicesExist(
-      invoicesIds
+      invoicesIds,
+      paymentReceive.customer_id,
     );
     if (notFoundInvoicesIDs.length > 0) {
       return res.status(400).send({
@@ -376,7 +378,7 @@ export default class PaymentReceivesController extends BaseController {
     if (filter.stringified_filter_roles) {
       filter.filter_roles = JSON.parse(filter.stringified_filter_roles);
     }
-    const { Resource, PaymentReceive, View } = req.models;
+    const { Resource, PaymentReceive, View, Bill } = req.models;
     const resource = await Resource.query()
         .remember()
         .where('name', 'payment_receives')
