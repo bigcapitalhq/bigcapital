@@ -37,13 +37,11 @@ export default class SaleInvoice extends mixin(TenantModel, [CachableModel]) {
    * Relationship mapping.
    */
   static get relationMappings() {
+    const AccountTransaction = require('@/models/AccountTransaction');
     const ItemEntry = require('@/models/ItemEntry');
     const Customer = require('@/models/Customer');
 
     return {
-      /**
-       * 
-       */
       entries: {
         relation: Model.HasManyRelation,
         modelClass: this.relationBindKnex(ItemEntry.default),
@@ -51,11 +49,11 @@ export default class SaleInvoice extends mixin(TenantModel, [CachableModel]) {
           from: 'sales_invoices.id',
           to: 'items_entries.referenceId',
         },
+        filter(builder) {
+          builder.where('reference_type', 'SaleInvoice');
+        },
       },
 
-      /**
-       * 
-       */
       customer: {
         relation: Model.BelongsToOneRelation,
         modelClass: this.relationBindKnex(Customer.default),
@@ -64,6 +62,18 @@ export default class SaleInvoice extends mixin(TenantModel, [CachableModel]) {
           to: 'customers.id',
         },
       },
+
+      transactions: {
+        relation: Model.HasManyRelation,
+        modelClass: this.relationBindKnex(AccountTransaction.default),
+        join: {
+          from: 'sales_invoices.id',
+          to: 'accounts_transactions.referenceId'
+        },
+        filter(builder) {
+          builder.where('reference_type', 'SaleInvoice');
+        },
+      }
     };
   }
 

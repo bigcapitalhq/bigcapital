@@ -426,7 +426,7 @@ describe('route: `/sales/estimates`', () => {
 
 
   describe('GET: `/sales/estimates`', () => {
-    it.only('Should retrieve sales estimates.', async () => {
+    it('Should retrieve sales estimates.', async () => {
       const res = await request()
         .get('/api/sales/estimates')
         .set('x-access-token', loginRes.body.token)

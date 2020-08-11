@@ -262,6 +262,9 @@ export default class SaleInvoicesController {
     const storedSaleInvoice = await SaleInvoiceService.createSaleInvoice(
       saleInvoice
     );
+
+    // InventoryService.trackingInventoryLotsCost();
+
     return res.status(200).send({ id: storedSaleInvoice.id });
   }
 

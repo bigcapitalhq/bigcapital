@@ -313,6 +313,8 @@ export default class SalesReceiptsController {
       errorReasons.push(...errors);
     }
     const salesReceipts = await SaleReceipt.query().onBuild((builder) => {
+      builder.withGraphFetched('customer');
+      builder.withGraphFetched('depositAccount');
       builder.withGraphFetched('entries');
       dynamicListing.buildQuery()(builder);
     }).pagination(filter.page - 1, filter.page_size);

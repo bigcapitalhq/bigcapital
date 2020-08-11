@@ -96,7 +96,7 @@ export default class BillPaymentsService {
    * @param {IBillPayment} oldBillPayment
    */
   static async editBillPayment(billPaymentId, billPayment, oldBillPayment) {
-    const amount = sumBy(bilPayment.entries, 'payment_amount');
+    const amount = sumBy(billPayment.entries, 'payment_amount');
     const updateBillPayment = await BillPayment.tenant()
       .query()
       .where('id', billPaymentId)

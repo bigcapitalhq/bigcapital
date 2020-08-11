@@ -44,9 +44,6 @@ export default class Bill extends mixin(TenantModel, [CachableModel]) {
     const ItemEntry = require('@/models/ItemEntry');
 
     return {
-      /**
-       *
-       */
       vendor: {
         relation: Model.BelongsToOneRelation,
         modelClass: this.relationBindKnex(Vendor.default),
@@ -56,15 +53,15 @@ export default class Bill extends mixin(TenantModel, [CachableModel]) {
         },
       },
 
-      /**
-       * 
-       */
       entries: {
         relation: Model.HasManyRelation,
         modelClass: this.relationBindKnex(ItemEntry.default),
         join: {
           from: 'bills.id',
           to: 'items_entries.referenceId',
+        },
+        filter(builder) {
+          builder.where('reference_type', 'SaleReceipt');
         },
       },
     };
