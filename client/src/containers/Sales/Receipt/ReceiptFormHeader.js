@@ -157,7 +157,7 @@ function ReceiptFormHeader({
         </FormGroup>
       </div>
       {/* receipt_no */}
-      <FormGroup
+      {/* <FormGroup
         label={<T id={'receipt'} />}
         inline={true}
         className={('form-group--receipt_no', Classes.FILL)}
@@ -170,7 +170,7 @@ function ReceiptFormHeader({
           minimal={true}
           {...getFieldProps('receipt_no')}
         />
-      </FormGroup>
+      </FormGroup> */}
 
       <FormGroup
         label={<T id={'reference'} />}
@@ -189,12 +189,12 @@ function ReceiptFormHeader({
         label={<T id={'send_to_email'} />}
         inline={true}
         className={classNames('form-group--send_to_email', Classes.FILL)}
-        intent={errors.send_to_email && touched.send_to_email && Intent.DANGER}
+        intent={errors.email_send_to && touched.email_send_to && Intent.DANGER}
         helperText={<ErrorMessage name="reference" {...{ errors, touched }} />}
       >
         <InputGroup
           intent={
-            errors.send_to_email && touched.send_to_email && Intent.DANGER
+            errors.email_send_to && touched.email_send_to && Intent.DANGER
           }
           minimal={true}
           {...getFieldProps('send_to_email')}

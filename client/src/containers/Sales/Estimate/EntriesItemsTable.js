@@ -4,7 +4,7 @@ import { FormattedMessage as T, useIntl } from 'react-intl';
 import DataTable from 'components/DataTable';
 import Icon from 'components/Icon';
 
-import { compose, formattedAmount, transformUpdatedRows } from 'utils';
+import { compose, formattedAmount } from 'utils';
 import {
   InputGroupCell,
   MoneyFieldCell,
@@ -176,7 +176,7 @@ function EstimateTable({
       setFieldValue(
         'entries',
         newRow.map((row) => ({
-          ...omit(row),
+          ...omit(row, ['total']),
         })),
       );
     },

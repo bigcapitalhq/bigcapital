@@ -22,6 +22,7 @@ import invoices from './Invoice/invoices.types';
 import receipts from './receipt/receipt.type';
 import bills from './Bills/bills.type';
 import paymentReceives from './PaymentReceive/paymentReceive.type';
+import vendors from './vendors/vendors.types';
 
 export default {
   ...authentication,
@@ -48,4 +49,5 @@ export default {
   ...receipts,
   ...bills,
   ...paymentReceives,
+  ...vendors,
 };

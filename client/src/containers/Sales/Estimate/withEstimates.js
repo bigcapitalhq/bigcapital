@@ -1,24 +1,25 @@
 import { connect } from 'react-redux';
 import { getResourceViews } from 'store/customViews/customViews.selectors';
 import {
-  getEstimateCurrentPage,
+  getEstimateCurrentPageFactory,
   getEstimatesTableQuery,
   getEstimatesPaginationMetaFactory,
 } from 'store/Estimate/estimates.selectors';
 
-function withEstimates(mapSate) {
+export default (mapState) => {
+  const getEstimatesItems = getEstimateCurrentPageFactory();
+  const getEstimatesPaginationMeta = getEstimatesPaginationMetaFactory();
   const mapStateToProps = (state, props) => {
     const query = getEstimatesTableQuery(state, props);
     const mapped = {
-      estimateViews: getResourceViews(state, props, 'estimates'),
-      estimateItems: state.estiamte.items,
+      estimatesCurrentPage: getEstimatesItems(state, props, query),
+      estimateViews: getResourceViews(state, props, 'sales_estimates'),
+      estimateItems: state.sales_estimates.items,
       estimateTableQuery: query,
-      estimatesLoading: state.estiamte.loading,
+      estimatesPageination: getEstimatesPaginationMeta(state, props, query),
+      estimatesLoading: state.sales_estimates.loading,
     };
-    return mapSate ? mapSate(mapped, state, props) : mapped;
+    return mapState ? mapState(mapped, state, props) : mapped;
   };
-
   return connect(mapStateToProps);
-}
-
-export default withEstimates;
+};

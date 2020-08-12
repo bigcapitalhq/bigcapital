@@ -458,6 +458,7 @@ export default {
   display_name_: 'Display name',
   new_customer: 'New Customer',
   customer_type: 'Customer Type',
+  customer_account: 'Customer Account',
   business: 'Business',
   individual: 'Individual',
   display_name: 'Display Name',
@@ -584,6 +585,7 @@ export default {
   quantity: 'Quantity',
   rate: 'Rate',
   estimate_list: 'Estimate List',
+  estimate_number: 'Estimate Number',
 
   product_and_service: 'Product/Service',
   the_estimate_has_been_successfully_edited:
@@ -592,15 +594,21 @@ export default {
     'The estimate #{number} has been successfully created.',
   the_estimate_has_been_successfully_deleted:
     'The estimate has been successfully deleted.',
+
+  once_delete_this_estimate_you_will_able_to_restore_it: `Once you delete this estimate, you won\'t be able to restore it later. Are you sure you want to delete this estimate?`,
+
   cannot_be_zero_or_empty: 'cannot be zero or empty.',
   invocies: 'Invoices',
+  invoices_list: 'Invoices List',
   invoice_date: 'Invoice Date',
   due_date: 'Due Date',
   invoice_date_: 'Invoice date',
   invoice_no: 'Invoice #',
+  invoice_no__: 'Invoice No',
   invoice_no_: 'Invoice number',
   due_date_: 'Due date',
   invoice_message: 'Invoice Message',
+  reference_no: 'Reference No',
 
   edit_invoice: 'Edit Invoice',
   delete_invoice: 'Delete Invoice',
@@ -613,6 +621,10 @@ export default {
     'The invoice #{number} has been successfully created.',
   the_invocie_has_been_successfully_deleted:
     'The invoice has been successfully deleted.',
+
+  once_delete_this_invoice_you_will_able_to_restore_it: `Once you delete this invoice, you won\'t be able to restore it later. Are you sure you want to delete this invoice?`,
+
+  receipt_list: 'Receipt List',
   receipts: 'Receipts',
   receipt: 'Receipt #',
   receipt_date_: 'Receipt date',
@@ -621,12 +633,16 @@ export default {
   receipt_message_: 'Receipt message',
   receipt_no_: 'receipt number',
   edit_receipt: 'Edit Receipt',
+  delete_receipt: 'Delete Receipt',
   new_receipt: 'New Receipt',
   receipt_message: 'Receipt Message',
   statement: 'Statement',
   deposit_account: 'Deposit Account',
   send_to_email: 'Send to email',
   select_deposit_account: 'Select Deposit Account',
+
+  once_delete_this_receipt_you_will_able_to_restore_it: `Once you delete this receipt, you won\'t be able to restore it later. Are you sure you want to delete this receipt?`,
+
   the_receipt_has_been_successfully_created:
     'The recepit has been successfully created.',
   the_receipt_has_been_successfully_edited:
@@ -634,6 +650,7 @@ export default {
   the_receipt_has_been_successfully_deleted:
     'The receipt has been successfully deleted.',
 
+  bill_list: 'Bill List',
   bills: 'Bills',
   accept: 'Accept',
   vendor_name: 'Vendor Name',
@@ -647,9 +664,18 @@ export default {
   bill_date_: 'Bill date',
   bill_number_: 'Bill number',
   vendor_name_: 'Vendor name',
+  delete_bill: 'Delete Bill',
+
+  the_bill_has_been_successfully_edited:
+    'The bill #{number} has been successfully edited.',
 
   the_bill_has_been_successfully_created:
     'The bill has been successfully created.',
+
+  the_bill_has_been_successfully_deleted:
+    'The bill has been successfully deleted.',
+
+  once_delete_this_bill_you_will_able_to_restore_it: `Once you delete this bill, you won\'t be able to restore it later. Are you sure you want to delete this bill?`,
 
   edit_payment_receive: 'Edit Payment Receive',
   new_payment_receive: 'New Payment Receive',
@@ -659,7 +685,7 @@ export default {
   the_payment_receive_has_been_successfully_created:
     'The payment receive has been successfully created.',
 
-  select_invoice:'Select Invoice',
+  select_invoice: 'Select Invoice',
 
   payment_mades: 'Payment Mades',
 };

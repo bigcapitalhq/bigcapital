@@ -2,36 +2,37 @@ import React, { useEffect, useCallback, useState, useMemo } from 'react';
 import {
   Intent,
   Button,
-  Classes,
   Popover,
-  Tooltip,
   Menu,
   MenuItem,
   MenuDivider,
   Position,
-  Tag,
 } from '@blueprintjs/core';
 import { useParams } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import moment from 'moment';
 
-import Icon from 'components/Icon';
 import { compose } from 'utils';
 import { useUpdateEffect } from 'hooks';
 
 import LoadingIndicator from 'components/LoadingIndicator';
-import { If } from 'components';
-import DataTable from 'components/DataTable';
+import { DataTable, Money, Icon } from 'components';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withViewDetails from 'containers/Views/withViewDetails';
+
 import withEstimates from './withEstimates';
 import withEstimateActions from './withEstimateActions';
+import withCurrentView from 'containers/Views/withCurrentView';
 
 function EstimatesDataTable({
   //#withEitimates
+  estimatesCurrentPage,
+  estimatesLoading,
+  estimatesPageination,
+  estimateItems,
 
   // #withDashboardActions
   changeCurrentView,
@@ -56,11 +57,11 @@ function EstimatesDataTable({
     setInitialMount(false);
   }, []);
 
-  // useUpdateEffect(() => {
-  //   if (!estimateLoading) {
-  //     setInitialMount(true);
-  //   }
-  // }, []);
+  useUpdateEffect(() => {
+    if (!estimatesLoading) {
+      setInitialMount(true);
+    }
+  }, [estimatesLoading, setInitialMount]);
 
   useEffect(() => {
     if (customViewId) {
@@ -77,66 +78,90 @@ function EstimatesDataTable({
   ]);
 
   const handleEditEstimate = useCallback(
-    (estimate) => {
+    (estimate) => () => {
       onEditEstimate && onEditEstimate(estimate);
     },
     [onEditEstimate],
   );
 
-  const handleDeleteEstimate = useCallback(() => {
-    onDeleteEstimate && onDeleteEstimate();
-  }, [onDeleteEstimate]);
+  const handleDeleteEstimate = useCallback(
+    (estimate) => () => {
+      onDeleteEstimate && onDeleteEstimate(estimate);
+    },
+    [onDeleteEstimate],
+  );
 
   const actionMenuList = useCallback(
-    () => (
+    (estimate) => (
       <Menu>
         <MenuItem text={formatMessage({ id: 'view_details' })} />
         <MenuDivider />
         <MenuItem
           text={formatMessage({ id: 'edit_estimate' })}
-          // onClick={handleEditEstimate(estimate)}
+          onClick={handleEditEstimate(estimate)}
         />
         <MenuItem
           text={formatMessage({ id: 'delete_estimate' })}
           intent={Intent.DANGER}
-          // onClick={handleDeleteEstimate(estimate)}
+          onClick={handleDeleteEstimate(estimate)}
+          icon={<Icon icon="trash-16" iconSize={16} />}
         />
       </Menu>
     ),
     [handleDeleteEstimate, handleEditEstimate, formatMessage],
   );
 
+  const onRowContextMenu = useCallback(
+    (cell) => {
+      return actionMenuList(cell.row.original);
+    },
+    [actionMenuList],
+  );
+
   const columns = useMemo(
     () => [
       {
-        id: '',
-        Header: formatMessage({ id: '' }),
-        accessor: '',
-        className: '',
+        id: 'estimate_date',
+        Header: formatMessage({ id: 'estimate_date' }),
+        accessor: (r) => moment(r.estimate_date).format('YYYY MMM DD'),
+        width: 140,
+        className: 'estimate_date',
       },
       {
-        id: '',
-        Header: formatMessage({ id: '' }),
-        accessor: '',
-        className: '',
+        id: 'customer_id',
+        Header: formatMessage({ id: 'customer_name' }),
+        accessor: (row) => row.customer_id,
+        width: 140,
+        className: 'customer_id',
       },
       {
-        id: '',
-        Header: formatMessage({ id: '' }),
-        accessor: '',
-        className: '',
+        id: 'expiration_date',
+        Header: formatMessage({ id: 'expiration_date' }),
+        accessor: (r) => moment(r.expiration_date).format('YYYY MMM DD'),
+        width: 140,
+        className: 'expiration_date',
       },
       {
-        id: '',
-        Header: formatMessage({ id: '' }),
-        accessor: '',
-        className: '',
+        id: 'estimate_number',
+        Header: formatMessage({ id: 'estimate_number' }),
+        accessor: (row) => `#${row.estimate_number}`,
+        width: 140,
+        className: 'estimate_number',
       },
       {
-        id: '',
-        Header: formatMessage({ id: '' }),
-        accessor: '',
-        className: '',
+        id: 'amount',
+        Header: formatMessage({ id: 'amount' }),
+        accessor: (r) => <Money amount={r.amount} currency={'USD'} />,
+
+        width: 140,
+        className: 'amount',
+      },
+      {
+        id: 'reference',
+        Header: formatMessage({ id: 'reference_no' }),
+        accessor: 'reference',
+        width: 140,
+        className: 'reference',
       },
       {
         id: 'actions',
@@ -156,10 +181,18 @@ function EstimatesDataTable({
     ],
     [actionMenuList, formatMessage],
   );
+  const selectionColumn = useMemo(
+    () => ({
+      minWidth: 40,
+      width: 40,
+      maxWidth: 40,
+    }),
+    [],
+  );
 
   const handleDataTableFetchData = useCallback(
-    (...arguments) => {
-      onFetchData && onFetchData(...arguments);
+    (...args) => {
+      onFetchData && onFetchData(...args);
     },
     [onFetchData],
   );
@@ -171,15 +204,27 @@ function EstimatesDataTable({
     },
     [onSelectedRowsChange],
   );
+  console.log(estimatesCurrentPage, 'estimatesCurrentPage');
+  console.log(estimateItems, 'estimateItems');
 
   return (
     <div>
       <LoadingIndicator loading={loading} mount={false}>
         <DataTable
           columns={columns}
-          data={[]}
+          data={estimatesCurrentPage}
           onFetchData={handleDataTableFetchData}
           manualSortBy={true}
+          selectionColumn={true}
+          noInitialFetch={true}
+          sticky={true}
+          loading={estimatesLoading && !initialMount}
+          onSelectedRowsChange={handleSelectedRowsChange}
+          rowContextMenu={onRowContextMenu}
+          pagination={true}
+          pagesCount={estimatesPageination.pagesCount}
+          initialPageSize={estimatesPageination.pageSize}
+          initialPageIndex={estimatesPageination.page - 1}
         />
       </LoadingIndicator>
     </div>
@@ -188,9 +233,22 @@ function EstimatesDataTable({
 
 export default compose(
   withRouter,
+  withCurrentView,
   withDialogActions,
   withDashboardActions,
   withEstimateActions,
-  // withEstimates(({}) => ({})),
+  withEstimates(
+    ({
+      estimatesCurrentPage,
+      estimatesLoading,
+      estimatesPageination,
+      estimateItems,
+    }) => ({
+      estimatesCurrentPage,
+      estimatesLoading,
+      estimatesPageination,
+      estimateItems,
+    }),
+  ),
   withViewDetails(),
 )(EstimatesDataTable);

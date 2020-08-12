@@ -11,7 +11,7 @@ import t from 'store/types';
 const mapDipatchToProps = (dispatch) => ({
   requestSubmitEstimate: (form) => dispatch(submitEstimate({ form })),
   requsetFetchEstimate: (id) => dispatch(fetchEstimate({ id })),
-  requestEditEstimate: (id, form) => dispatch(editEstimate({ id, form })),
+  requestEditEstimate: (id, form) => dispatch(editEstimate(id, form)),
   requestFetchEstimatesTable: (query = {}) =>
     dispatch(fetchEstimatesTable({ query: { ...query } })),
   requestDeleteEstimate: (id) => dispatch(deleteEstimate({ id })),

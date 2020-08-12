@@ -11,20 +11,22 @@ import { useFormik } from 'formik';
 import moment from 'moment';
 import { Intent, FormGroup, TextArea, Button } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
-import { pick, omitBy, omit } from 'lodash';
+import { pick, omit } from 'lodash';
+import { queryCache } from 'react-query';
 
 import EstimateFormHeader from './EstimateFormHeader';
 import EstimatesItemsTable from './EntriesItemsTable';
 import EstimateFormFooter from './EstimateFormFooter';
 
 import withEstimateActions from './withEstimateActions';
+import withEstimateDetail from './withEstimateDetail';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withMediaActions from 'containers/Media/withMediaActions';
 
 import AppToaster from 'components/AppToaster';
 import Dragzone from 'components/Dragzone';
-
 import useMedia from 'hooks/useMedia';
+
 import { compose, repeatValue } from 'utils';
 
 const MIN_LINES_NUMBER = 4;
@@ -51,7 +53,7 @@ const EstimateForm = ({
   onCancelForm,
 }) => {
   const { formatMessage } = useIntl();
-  const [payload, setPaload] = useState({});
+  const [payload, setPayload] = useState({});
 
   const {
     setFiles,
@@ -93,6 +95,7 @@ const EstimateForm = ({
       .label(formatMessage({ id: 'expiration_date_' })),
     estimate_number: Yup.number()
       .required()
+      .nullable()
       .label(formatMessage({ id: 'estimate_number_' })),
     reference: Yup.string().min(1).max(255),
     note: Yup.string()
@@ -134,7 +137,7 @@ const EstimateForm = ({
     ),
   });
 
-  const saveInvokeSubmit = useCallback(
+  const saveEstimateSubmit = useCallback(
     (payload) => {
       onFormSubmit && onFormSubmit(payload);
     },
@@ -146,7 +149,7 @@ const EstimateForm = ({
       index: 0,
       item_id: null,
       rate: null,
-      discount: null,
+      discount: 0,
       quantity: null,
       description: '',
     }),
@@ -155,10 +158,10 @@ const EstimateForm = ({
 
   const defaultInitialValues = useMemo(
     () => ({
-      customer_id: null,
+      customer_id: '',
       estimate_date: moment(new Date()).format('YYYY-MM-DD'),
       expiration_date: moment(new Date()).format('YYYY-MM-DD'),
-      estimate_number: null,
+      estimate_number: '',
       reference: '',
       note: '',
       terms_conditions: '',
@@ -173,14 +176,37 @@ const EstimateForm = ({
       index: index + 1,
     }));
   };
-
+  // debugger;
   const initialValues = useMemo(
     () => ({
-      ...defaultInitialValues,
-      entries: orderingProductsIndex(defaultInitialValues.entries),
+      ...(estimate
+        ? {
+            ...pick(estimate, Object.keys(defaultInitialValues)),
+            entries: [
+              ...estimate.entries.map((estimate) => ({
+                ...pick(estimate, Object.keys(defaultEstimate)),
+              })),
+              ...repeatValue(
+                defaultEstimate,
+                Math.max(MIN_LINES_NUMBER - estimate.entries.length, 0),
+              ),
+            ],
+          }
+        : {
+            ...defaultInitialValues,
+            entries: orderingProductsIndex(defaultInitialValues.entries),
+          }),
     }),
-    [defaultEstimate, defaultInitialValues, estimate],
+    [estimate, defaultInitialValues, defaultEstimate],
   );
+
+  // const initialValues = useMemo(
+  //   () => ({
+  //     ...defaultInitialValues,
+  //     entries: orderingProductsIndex(defaultInitialValues.entries),
+  //   }),
+  //   [defaultEstimate, defaultInitialValues, estimate],
+  // );
 
   const initialAttachmentFiles = useMemo(() => {
     return estimate && estimate.media
@@ -199,56 +225,58 @@ const EstimateForm = ({
       ...initialValues,
     },
     onSubmit: async (values, { setSubmitting, setErrors, resetForm }) => {
-      const entries = values.entries.map((item) => omit(item, ['total']));
-
+      const entries = values.entries.filter(
+        (item) => item.item_id && item.quantity,
+      );
       const form = {
         ...values,
         entries,
       };
-      const saveEstimate = (mediaIds) =>
-        new Promise((resolve, reject) => {
-          const requestForm = { ...form, media_ids: mediaIds };
+      const requestForm = { ...form };
 
-          requestSubmitEstimate(requestForm)
-            .then((response) => {
-              AppToaster.show({
-                message: formatMessage(
-                  {
-                    id: 'the_estimate_has_been_successfully_created',
-                  },
-                  {
-                    number: values.estimate_number,
-                  },
-                ),
-                intent: Intent.SUCCESS,
-              });
-              setSubmitting(false);
-              resetForm();
-              saveInvokeSubmit({ action: 'new', ...payload });
-              clearSavedMediaIds();
-            })
-            .catch((errors) => {
-              setSubmitting(false);
+      if (estimate && estimate.id) {
+        requestEditEstimate(estimate.id, requestForm).then((response) => {
+          AppToaster.show({
+            message: formatMessage({
+              id: 'the_estimate_has_been_successfully_edited',
+            }),
+            intent: Intent.SUCCESS,
+          });
+          setSubmitting(false);
+          saveEstimateSubmit({ action: 'update', ...payload });
+          resetForm();
+        });
+      } else {
+        requestSubmitEstimate(requestForm)
+          .then((response) => {
+            AppToaster.show({
+              message: formatMessage(
+                {
+                  id: 'the_estimate_has_been_successfully_created',
+                },
+                {
+                  number: values.estimate_number,
+                },
+              ),
+              intent: Intent.SUCCESS,
             });
-        });
-      Promise.all([saveMedia(), deleteMedia()])
-        .then(([savedMediaResponses]) => {
-          const mediaIds = savedMediaResponses.map((res) => res.data.media.id);
-          savedMediaIds.current = mediaIds;
-          return savedMediaResponses;
-        })
-        .then(() => {
-          return saveEstimate(saveEstimate.current);
-        });
+            setSubmitting(false);
+            resetForm();
+            saveEstimateSubmit({ action: 'new', ...payload });
+          })
+          .catch((errors) => {
+            setSubmitting(false);
+          });
+      }
     },
   });
 
   const handleSubmitClick = useCallback(
     (payload) => {
-      setPaload(payload);
+      setPayload(payload);
       formik.submitForm();
     },
-    [setPaload, formik],
+    [setPayload, formik],
   );
 
   const handleCancelClick = useCallback(
@@ -285,6 +313,9 @@ const EstimateForm = ({
     );
   };
 
+
+
+
   return (
     <div>
       <form onSubmit={formik.handleSubmit}>
@@ -294,6 +325,7 @@ const EstimateForm = ({
           onClickAddNewRow={handleClickAddNewRow}
           onClickClearAllLines={handleClearAllLines}
           formik={formik}
+          // defaultRow={defaultEstimate}
         />
         <FormGroup
           label={<T id={'customer_note'} />}
@@ -316,13 +348,14 @@ const EstimateForm = ({
           onDeleteFile={handleDeleteFile}
           hint={'Attachments: Maxiumum size: 20MB'}
         />
-
-        <EstimateFormFooter
-          formik={formik}
-          onSubmitClick={handleSubmitClick}
-          onCancelClick={handleCancelClick}
-        />
       </form>
+      <EstimateFormFooter
+        formik={formik}
+        onSubmitClick={handleSubmitClick}
+        estimate={estimate}
+        onCancelClick={handleCancelClick}
+    
+      />
     </div>
   );
 };
@@ -331,4 +364,5 @@ export default compose(
   withEstimateActions,
   withDashboardActions,
   withMediaActions,
+  withEstimateDetail(),
 )(EstimateForm);

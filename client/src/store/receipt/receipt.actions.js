@@ -28,9 +28,12 @@ export const submitReceipt = ({ form }) => {
 export const deleteReceipt = ({ id }) => {
   return (dispatch) =>
     new Promise((resovle, reject) => {
-      ApiService.delete(`receipts/${id}`)
+      ApiService.delete(`sales/receipts/${id}`)
         .then((response) => {
-          dispatch({ type: t.RECEIPT_DELETE });
+          dispatch({
+            type: t.RECEIPT_DELETE,
+            payload: { id },
+          });
           resovle(response);
         })
         .catch((error) => {
@@ -45,7 +48,7 @@ export const editReceipt = (id, form) => {
       dispatch({
         type: t.SET_DASHBOARD_REQUEST_LOADING,
       });
-      ApiService.delete(`receipt/${id}`, form)
+      ApiService.post(`sales/receipts/${id}`, form)
         .then((response) => {
           dispatch({
             type: t.SET_DASHBOARD_REQUEST_COMPLETED,
@@ -66,7 +69,7 @@ export const editReceipt = (id, form) => {
 export const fetchReceipt = ({ id }) => {
   return (dispatch) =>
     new Promise((resovle, reject) => {
-      ApiService.get(`receipt/${id}`)
+      ApiService.get(`sales/receipts/${id}`)
         .then((response) => {
           dispatch({
             type: t.RECEIPT_SET,
@@ -88,36 +91,35 @@ export const fetchReceipt = ({ id }) => {
 export const fetchReceiptsTable = ({ query = {} }) => {
   return (dispatch, getState) =>
     new Promise((resolve, rejcet) => {
-      const pageQuery = getState().receipt.tableQuery;
-
+      const pageQuery = getState().sales_receipts.tableQuery;
       dispatch({
         type: t.RECEIPTS_TABLE_LOADING,
         payload: {
           loading: true,
         },
       });
-      ApiService.get('receipts', {
+      ApiService.get('sales/receipts', {
         params: { ...pageQuery, ...query },
       })
         .then((response) => {
           dispatch({
             type: t.RECEIPTS_PAGE_SET,
             payload: {
-              receipts: response.data.receipts.results,
-              pagination: response.data.receipts.pagination,
+              sales_receipts: response.data.sales_receipts.results,
+              pagination: response.data.sales_receipts.pagination,
               customViewId: response.data.customViewId || -1,
             },
           });
           dispatch({
             type: t.RECEIPTS_ITEMS_SET,
             payload: {
-              receipts: response.data.receipts.results,
+              sales_receipts: response.data.sales_receipts.results,
             },
           });
           dispatch({
             type: t.RECEIPTS_PAGINATION_SET,
             payload: {
-              pagination: response.data.receipts.pagination,
+              pagination: response.data.sales_receipts.pagination,
               customViewId: response.data.customViewId || -1,
             },
           });

@@ -11,18 +11,32 @@ import withInvoiceActions from './withInvoiceActions';
 
 import { compose } from 'utils';
 
-function Invoices({ requestFetchCustomers, requestFetchItems }) {
+function Invoices({
+  requestFetchCustomers,
+  requestFetchItems,
+  requsetFetchInvoice,
+}) {
   const history = useHistory();
   const { id } = useParams();
 
   // Handle fetch Items data table or list
   const fetchItems = useQuery('items-table', () => requestFetchItems({}));
 
-  const handleFormSubmit = useCallback((payload) => {}, [history]);
-
+  const handleFormSubmit = useCallback(
+    (payload) => {
+      payload.redirect && history.push('/invoices');
+    },
+    [history],
+  );
   // Handle fetch customers data table or list
   const fetchCustomers = useQuery('customers-table', () =>
     requestFetchCustomers({}),
+  );
+
+  const fetchInvoice = useQuery(
+    ['invoice', id],
+    (key, _id) => requsetFetchInvoice(_id),
+    { enabled: !!id },
   );
 
   const handleCancel = useCallback(() => {
@@ -31,11 +45,16 @@ function Invoices({ requestFetchCustomers, requestFetchItems }) {
 
   return (
     <DashboardInsider
-      loading={fetchCustomers.isFetching || fetchItems.isFetching}
+      loading={
+        fetchCustomers.isFetching ||
+        fetchItems.isFetching ||
+        fetchInvoice.isFetching
+      }
+      name={'invoice-form'}
     >
       <InvoiceForm
         onFormSubmit={handleFormSubmit}
-        // InvoiceId={id}
+        invoiceId={id}
         onCancelForm={handleCancel}
       />
     </DashboardInsider>

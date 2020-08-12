@@ -11,7 +11,7 @@ import t from 'store/types';
 const mapDispatchToProps = (dispatch) => ({
   requestSubmitReceipt: (form) => dispatch(submitReceipt({ form })),
   requestFetchReceipt: (id) => dispatch(fetchReceipt({ id })),
-  requestEditTeceipt: (id, form) => dispatch(editReceipt({ id, form })),
+  requestEditReceipt: (id, form) => dispatch(editReceipt( id, form )),
   requestDeleteReceipt: (id) => dispatch(deleteReceipt({ id })),
   requestFetchReceiptsTable: (query = {}) =>
     dispatch(fetchReceiptsTable({ query: { ...query } })),
@@ -19,7 +19,7 @@ const mapDispatchToProps = (dispatch) => ({
 
   changeReceiptView: (id) =>
     dispatch({
-      type: t.RECEIPT_SET_CURRENT_VIEW,
+      type: t.RECEIPTS_SET_CURRENT_VIEW,
       currentViewId: parseInt(id, 10),
     }),
 

@@ -10,15 +10,16 @@ import { useFormik } from 'formik';
 import moment from 'moment';
 import { Intent, FormGroup, TextArea, Button } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
-import { pick, omit } from 'lodash';
+import { pick } from 'lodash';
 
 import InvoiceFormHeader from './InvoiceFormHeader';
 import EstimatesItemsTable from 'containers/Sales/Estimate/EntriesItemsTable';
 import InvoiceFormFooter from './InvoiceFormFooter';
 
+import withInvoiceActions from './withInvoiceActions';
+import withInvoiceDetail from './withInvoiceDetail';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withMediaActions from 'containers/Media/withMediaActions';
-import withInvoiceActions from './withInvoiceActions';
 
 import { AppToaster } from 'components';
 import Dragzone from 'components/Dragzone';
@@ -35,7 +36,8 @@ function InvoiceForm({
 
   //#WithInvoiceActions
   requestSubmitInvoice,
-  
+  requestEditInvoice,
+
   //#withDashboard
   changePageTitle,
   changePageSubtitle,
@@ -44,12 +46,12 @@ function InvoiceForm({
   invoice,
 
   //#own Props
-  InvoiceId,
+  invoiceId,
   onFormSubmit,
   onCancelForm,
 }) {
   const { formatMessage } = useIntl();
-  const [payload, setPaload] = useState({});
+  const [payload, setPayload] = useState({});
 
   const {
     setFiles,
@@ -70,7 +72,6 @@ function InvoiceForm({
   const clearSavedMediaIds = () => {
     savedMediaIds.current = [];
   };
-
   useEffect(() => {
     if (invoice && invoice.id) {
       changePageTitle(formatMessage({ id: 'edit_invoice' }));
@@ -115,7 +116,6 @@ function InvoiceForm({
             is: (quantity, rate) => quantity || rate,
             then: Yup.number().required(),
           }),
-        total: Yup.number().nullable(),
         discount: Yup.number().nullable(),
         description: Yup.string().nullable(),
       }),
@@ -134,18 +134,19 @@ function InvoiceForm({
       index: 0,
       item_id: null,
       rate: null,
-      discount: null,
+      discount: 0,
       quantity: null,
       description: '',
     }),
     [],
   );
+
   const defaultInitialValues = useMemo(
     () => ({
       customer_id: '',
       invoice_date: moment(new Date()).format('YYYY-MM-DD'),
       due_date: moment(new Date()).format('YYYY-MM-DD'),
-      status: 'status',
+      status: 'SEND',
       invoice_no: '',
       reference_no: '',
       invoice_message: '',
@@ -161,14 +162,37 @@ function InvoiceForm({
       index: index + 1,
     }));
   };
-
+  // debugger;
   const initialValues = useMemo(
     () => ({
-      ...defaultInitialValues,
-      entries: orderingIndex(defaultInitialValues.entries),
+      ...(invoice
+        ? {
+            ...pick(invoice, Object.keys(defaultInitialValues)),
+            entries: [
+              ...invoice.entries.map((invoice) => ({
+                ...pick(invoice, Object.keys(defaultInvoice)),
+              })),
+              ...repeatValue(
+                defaultInvoice,
+                Math.max(MIN_LINES_NUMBER - invoice.entries.length, 0),
+              ),
+            ],
+          }
+        : {
+            ...defaultInitialValues,
+            entries: orderingIndex(defaultInitialValues.entries),
+          }),
     }),
-    [defaultInvoice, defaultInitialValues, invoice],
+    [invoice, defaultInitialValues, defaultInvoice],
   );
+
+  // const initialValues = useMemo(
+  //   () => ({
+  //     ...defaultInitialValues,
+  //     entries: orderingIndex(defaultInitialValues.entries),
+  //   }),
+  //   [defaultInvoice, defaultInitialValues, invoice],
+  // );
 
   const initialAttachmentFiles = useMemo(() => {
     return invoice && invoice.media
@@ -188,52 +212,58 @@ function InvoiceForm({
     },
     onSubmit: async (values, { setSubmitting, setErrors, resetForm }) => {
       setSubmitting(true);
-      const entries = values.entries.map((item) => omit(item, ['total']));
 
+      const entries = values.entries.filter(
+        (item) => item.item_id && item.quantity,
+      );
       const form = {
         ...values,
         entries,
       };
-      const saveInvoice = (mediaIds) =>
-        new Promise((resolve, reject) => {
-          const requestForm = { ...form, media_ids: mediaIds };
 
-          requestSubmitInvoice(requestForm)
-            .then((response) => {
-              AppToaster.show({
-                message: formatMessage(
-                  { id: 'the_invocie_has_been_successfully_created' },
-                  { number: values.invoice_no },
-                ),
-                intent: Intent.SUCCESS,
-              });
-              setSubmitting(false);
-              resetForm();
-              saveInvokeSubmit({ action: 'new', ...payload });
-              clearSavedMediaIds();
-            })
-            .catch((errors) => {
-              setSubmitting(false);
+      const requestForm = { ...form };
+      if (invoice && invoice.id) {
+        requestEditInvoice(invoice.id, requestForm)
+          .then((response) => {
+            AppToaster.show({
+              message: formatMessage({
+                id: 'the_invoice_has_been_successfully_edited',
+              }),
+              intent: Intent.SUCCESS,
             });
-        });
-
-      Promise.all([saveMedia(), deleteMedia()])
-        .then(([savedMediaResponses]) => {
-          const mediaIds = savedMediaResponses.map((res) => res.data.media.id);
-          savedMediaIds.current = mediaIds;
-          return savedMediaResponses;
-        })
-        .then(() => {
-          return saveInvoice(savedMediaIds.current);
-        });
+            setSubmitting(false);
+            saveInvokeSubmit({ action: 'update', ...payload });
+            resetForm();
+          })
+          .catch((error) => {
+            setSubmitting(false);
+          });
+      } else {
+        requestSubmitInvoice(requestForm)
+          .then((response) => {
+            AppToaster.show({
+              message: formatMessage(
+                { id: 'the_invocie_has_been_successfully_created' },
+                { number: values.invoice_no },
+              ),
+              intent: Intent.SUCCESS,
+            });
+            setSubmitting(false);
+            saveInvokeSubmit({ action: 'new', ...payload });
+            resetForm();
+          })
+          .catch((errors) => {
+            setSubmitting(false);
+          });
+      }
     },
   });
   const handleSubmitClick = useCallback(
     (payload) => {
-      setPaload(payload);
+      setPayload(payload);
       formik.submitForm();
     },
-    [setPaload, formik],
+    [setPayload, formik],
   );
 
   const handleCancelClick = useCallback(
@@ -243,7 +273,6 @@ function InvoiceForm({
     [onCancelForm],
   );
 
-  console.log(formik.errors, 'Errors');
   const handleDeleteFile = useCallback(
     (_deletedFiles) => {
       _deletedFiles.forEach((deletedFile) => {
@@ -303,13 +332,13 @@ function InvoiceForm({
           onDeleteFile={handleDeleteFile}
           hint={'Attachments: Maxiumum size: 20MB'}
         />
-
-        <InvoiceFormFooter
-          formik={formik}
-          onSubmitClick={handleSubmitClick}
-          onCancelClick={handleCancelClick}
-        />
       </form>
+      <InvoiceFormFooter
+        formik={formik}
+        onSubmitClick={handleSubmitClick}
+        invoice={invoice}
+        onCancelClick={handleCancelClick}
+      />
     </div>
   );
 }
@@ -318,4 +347,5 @@ export default compose(
   withInvoiceActions,
   withDashboardActions,
   withMediaActions,
+  withInvoiceDetail(),
 )(InvoiceForm);

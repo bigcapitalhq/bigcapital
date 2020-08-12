@@ -8,6 +8,7 @@ import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import withCustomersActions from 'containers/Customers/withCustomersActions';
 import withAccountsActions from 'containers/Accounts/withAccountsActions';
 import withItemsActions from 'containers/Items/withItemsActions';
+import withReceipActions from './withReceipActions';
 
 import { compose } from 'utils';
 
@@ -20,10 +21,18 @@ function Receipts({
 
   //#withItemsActions
   requestFetchItems,
+
+  //#withReceiptsActions
+  requsetFetchInvoice,
 }) {
   const history = useHistory();
   const { id } = useParams();
 
+  const fetchReceipt = useQuery(
+    ['receipt', id],
+    (key, _id) => requsetFetchInvoice(_id),
+    { enabled: !!id },
+  );
   const fetchAccounts = useQuery('accounts-list', (key) =>
     requestFetchAccounts(),
   );
@@ -35,7 +44,12 @@ function Receipts({
   // Handle fetch Items data table or list
   const fetchItems = useQuery('items-table', () => requestFetchItems({}));
 
-  const handleFormSubmit = useCallback((payload) => {}, [history]);
+  const handleFormSubmit = useCallback(
+    (payload) => {
+      payload.redirect && history.push('/receipts');
+    },
+    [history],
+  );
 
   const handleCancel = useCallback(() => {
     history.goBack();
@@ -46,12 +60,14 @@ function Receipts({
       loading={
         fetchCustomers.isFetching ||
         fetchItems.isFetching ||
-        fetchAccounts.isFetching
+        fetchAccounts.isFetching||
+        fetchReceipt.isFetching
       }
+      name={'receipt-form'}
     >
       <ReceiptFrom
         onFormSubmit={handleFormSubmit}
-        // ReceiptId={id}
+        receiptId={id}
         onCancelForm={handleCancel}
       />
     </DashboardInsider>
@@ -59,6 +75,7 @@ function Receipts({
 }
 
 export default compose(
+  withReceipActions,
   withCustomersActions,
   withItemsActions,
   withAccountsActions,

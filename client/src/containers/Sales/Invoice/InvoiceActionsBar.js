@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from 'react';
+import React, { useCallback, useState, useMemo } from 'react';
 import Icon from 'components/Icon';
 import {
   Button,
@@ -15,49 +15,59 @@ import {
 
 import classNames from 'classnames';
 import { useRouteMatch, useHistory } from 'react-router-dom';
-import { FormattedMessage as T } from 'react-intl';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 
-import { If } from 'components';
+import { connect } from 'react-redux';
 import FilterDropdown from 'components/FilterDropdown';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 
+import { If, DashboardActionViewsList } from 'components';
+
 import withResourceDetail from 'containers/Resources/withResourceDetails';
 import withDialogActions from 'containers/Dialog/withDialogActions';
-import withInvoiceActions from './withInvoices';
+
+import withInvoiceActions from './withInvoiceActions';
+import withInvoices from './withInvoices';
 
 import { compose } from 'utils';
-import { connect } from 'react-redux';
 
 function InvoiceActionsBar({
   // #withResourceDetail
   resourceFields,
 
   //#withInvoice
-  InvoiceViews,
+  invoicesViews,
 
   // #withInvoiceActions
   addInvoiceTableQueries,
 
   // #own Porps
   onFilterChanged,
-  selectedRows,
+  selectedRows = [],
 }) {
   const history = useHistory();
+  const { path } = useRouteMatch();
+  const [filterCount, setFilterCount] = useState(0);
+  const { formatMessage } = useIntl();
 
-  const FilterDropdown = FilterDropdown({
-    initialCondition: {
-      fieldKey: '',
-      compatator: '',
-      value: '',
-    },
-    fields: resourceFields,
-    onFilterChange: (filterConditions) => {
-      addInvoiceTableQueries({
-        filter_roles: filterConditions || '',
-      });
-      onFilterChanged && onFilterChanged(filterConditions);
-    },
-  });
+  const handleClickNewInvoice = useCallback(() => {
+    history.push('/invoices/new');
+  }, [history]);
+
+  // const filterDropdown = FilterDropdown({
+  //   initialCondition: {
+  //     fieldKey: 'reference_no',
+  //     compatator: 'contains',
+  //     value: '',
+  //   },
+  //   fields: resourceFields,
+  //   onFilterChange: (filterConditions) => {
+  //     addInvoiceTableQueries({
+  //       filter_roles: filterConditions || '',
+  //     });
+  //     onFilterChanged && onFilterChanged(filterConditions);
+  //   },
+  // });
 
   const hasSelectedRows = useMemo(() => selectedRows.length > 0, [
     selectedRows,
@@ -66,22 +76,32 @@ function InvoiceActionsBar({
   return (
     <DashboardActionsBar>
       <NavbarGroup>
+        <DashboardActionViewsList
+          resourceName={'sales_invoices'}
+          views={invoicesViews}
+        />
         <NavbarDivider />
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon={'plus'} />}
           text={<T id={'new_invoice'} />}
-          onClick={onClickNewInvoice}
+          onClick={handleClickNewInvoice}
         />
         <Popover
           minimal={true}
-          content={FilterDropdown}
+          // content={filterDropdown}
           interactionKind={PopoverInteractionKind.CLICK}
           position={Position.BOTTOM_LEFT}
         >
           <Button
             className={classNames(Classes.MINIMAL)}
-            text={'Filter'}
+            text={
+              filterCount <= 0 ? (
+                <T id={'filter'} />
+              ) : (
+                `${filterCount} ${formatMessage({ id: 'filters_applied' })}`
+              )
+            }
             icon={<Icon icon={'filter-16'} iconSize={16} />}
           />
         </Popover>
@@ -115,19 +135,17 @@ function InvoiceActionsBar({
 }
 
 const mapStateToProps = (state, props) => ({
-  resourceName: 'invoice',
+  resourceName: 'sales_invoices',
 });
-
 const withInvoiceActionsBar = connect(mapStateToProps);
 
 export default compose(
   withInvoiceActionsBar,
-  withDialogActions,
   withResourceDetail(({ resourceFields }) => ({
     resourceFields,
   })),
-  // withInvoices(({ invoiceViews }) => ({
-  //   invoiceViews,
-  // })),
+  withInvoices(({ invoicesViews }) => ({
+    invoicesViews,
+  })),
   withInvoiceActions,
 )(InvoiceActionsBar);

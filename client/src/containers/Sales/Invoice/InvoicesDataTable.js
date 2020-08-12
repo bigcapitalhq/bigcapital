@@ -4,35 +4,36 @@ import {
   Button,
   Classes,
   Popover,
-  Tooltip,
   Menu,
   MenuItem,
   MenuDivider,
   Position,
-  Tag,
 } from '@blueprintjs/core';
 import { useParams } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import moment from 'moment';
 
-import Icon from 'components/Icon';
 import { compose } from 'utils';
 import { useUpdateEffect } from 'hooks';
 
 import LoadingIndicator from 'components/LoadingIndicator';
-import { If } from 'components';
-import DataTable from 'components/DataTable';
+import { DataTable, Money, Icon } from 'components';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withViewDetails from 'containers/Views/withViewDetails';
 
-import witInvoice from './withInvoice';
+import withInvoices from './withInvoices';
 import withInvoiceActions from './withInvoiceActions';
+import withCurrentView from 'containers/Views/withCurrentView';
 
 function InvoicesDataTable({
   //#withInvoices
+  invoicesCurrentPage,
+  invoicesLoading,
+  invoicesPageination,
+  invoicesItems,
 
   // #withDashboardActions
   changeCurrentView,
@@ -45,8 +46,8 @@ function InvoicesDataTable({
   //#OwnProps
   loading,
   onFetchData,
-  onEditEstimate,
-  onDeleteEstimate,
+  onEditInvoice,
+  onDeleteInvoice,
   onSelectedRowsChange,
 }) {
   const [initialMount, setInitialMount] = useState(false);
@@ -55,79 +56,120 @@ function InvoicesDataTable({
 
   useEffect(() => {
     setInitialMount(false);
-  }, []);
+  }, [customViewId]);
 
-  useEffect(() => {
-    if (customViewId) {
-      changeCurrentView(customViewId);
-      setTopbarEditView(customViewId);
+  useUpdateEffect(() => {
+    if (!invoicesLoading) {
+      setInitialMount(true);
     }
-    changePageSubtitle(customViewId && viewMeta ? viewMeta.name : '');
-  }, [
-    customViewId,
-    changeCurrentView,
-    changePageSubtitle,
-    setTopbarEditView,
-    viewMeta,
-  ]);
+  }, [invoicesLoading, setInitialMount]);
+
+  // useEffect(() => {
+  //   if (customViewId) {
+  //     changeCurrentView(customViewId);
+  //     setTopbarEditView(customViewId);
+  //   }
+  //   changePageSubtitle(customViewId && viewMeta ? viewMeta.name : '');
+  // }, [
+  //   customViewId,
+  //   changeCurrentView,
+  //   changePageSubtitle,
+  //   setTopbarEditView,
+  //   viewMeta,
+  // ]);
 
   const handleEditInvoice = useCallback(
-    (_invoice) => {
+    (_invoice) => () => {
       onEditInvoice && onEditInvoice(_invoice);
     },
     [onEditInvoice],
   );
 
-  const handleDeleteInvoice = useCallback(() => {
-    onDeleteInvoice && onDeleteInvoice();
-  }, [onDeleteInvoice]);
+  const handleDeleteInvoice = useCallback(
+    (_invoice) => () => {
+      onDeleteInvoice && onDeleteInvoice(_invoice);
+    },
+    [onDeleteInvoice],
+  );
 
-  const actionsMenuList = useCallback(
-    (invoice) => {
+  const actionMenuList = useCallback(
+    (invoice) => (
       <Menu>
         <MenuItem text={formatMessage({ id: 'view_details' })} />
         <MenuDivider />
-
         <MenuItem
           text={formatMessage({ id: 'edit_invoice' })}
-          // onClick={handleEditInvoice(invoice)}
+          onClick={handleEditInvoice(invoice)}
         />
-      </Menu>;
-    },
+        <MenuItem
+          text={formatMessage({ id: 'delete_invoice' })}
+          intent={Intent.DANGER}
+          onClick={handleDeleteInvoice(invoice)}
+          icon={<Icon icon="trash-16" iconSize={16} />}
+        />
+      </Menu>
+    ),
     [handleDeleteInvoice, handleEditInvoice, formatMessage],
+  );
+
+  const onRowContextMenu = useCallback(
+    (cell) => {
+      return actionMenuList(cell.row.original);
+    },
+    [actionMenuList],
   );
 
   const columns = useMemo(
     () => [
       {
-        id: '',
-        Header: formatMessage({ id: '' }),
-        accessor: '',
-        className: '',
+        id: 'invoice_date',
+        Header: formatMessage({ id: 'invoice_date' }),
+        accessor: (r) => moment(r.invoice_date).format('YYYY MMM DD'),
+        width: 140,
+        className: 'invoice_date',
       },
       {
-        id: '',
-        Header: formatMessage({ id: '' }),
-        accessor: '',
-        className: '',
+        id: 'customer_id',
+        Header: formatMessage({ id: 'customer_name' }),
+        accessor: (row) => row.customer_id,
+        width: 140,
+        className: 'customer_id',
       },
       {
-        id: '',
-        Header: formatMessage({ id: '' }),
-        accessor: '',
-        className: '',
+        id: 'invoice_no',
+        Header: formatMessage({ id: 'invoice_no__' }),
+        accessor: (row) => `#${row.invoice_no}`,
+        width: 140,
+        className: 'invoice_no',
+      },
+
+      {
+        id: 'due_date',
+        Header: formatMessage({ id: 'due_date' }),
+        accessor: (r) => moment(r.due_date).format('YYYY MMM DD'),
+        width: 140,
+        className: 'due_date',
       },
       {
-        id: '',
-        Header: formatMessage({ id: '' }),
-        accessor: '',
-        className: '',
+        id: 'balance',
+        Header: formatMessage({ id: 'balance' }),
+        accessor: (r) => <Money amount={r.balance} currency={'USD'} />,
+        width: 140,
+        className: 'balance',
       },
       {
-        id: '',
-        Header: formatMessage({ id: '' }),
-        accessor: '',
-        className: '',
+        id: 'reference_no',
+        Header: formatMessage({ id: 'reference_no' }),
+        accessor: 'reference_no',
+        width: 140,
+        className: 'reference_no',
+      },
+      {
+        id: 'status',
+        Header: formatMessage({ id: 'status' }),
+        accessor: 'status',
+        width: 140,
+        className: 'status',
       },
       {
         id: 'actions',
@@ -149,12 +191,11 @@ function InvoicesDataTable({
   );
 
   const handleDataTableFetchData = useCallback(
-    (...arguments) => {
-      onFetchData && onFetchData(...arguments);
+    (...args) => {
+      onFetchData && onFetchData(...args);
     },
     [onFetchData],
   );
-
   const handleSelectedRowsChange = useCallback(
     (selectedRows) => {
       onSelectedRowsChange &&
@@ -163,14 +204,33 @@ function InvoicesDataTable({
     [onSelectedRowsChange],
   );
 
+  const selectionColumn = useMemo(
+    () => ({
+      minWidth: 40,
+      width: 40,
+      maxWidth: 40,
+    }),
+    [],
+  );
+
   return (
     <div>
-      <LoadingIndicator>
+      <LoadingIndicator loading={loading} mount={false}>
         <DataTable
           columns={columns}
-          data={[]}
+          data={invoicesCurrentPage}
           onFetchData={handleDataTableFetchData}
           manualSortBy={true}
+          selectionColumn={true}
+          noInitialFetch={true}
+          sticky={true}
+          loading={invoicesLoading && !initialMount}
+          onSelectedRowsChange={handleSelectedRowsChange}
+          rowContextMenu={onRowContextMenu}
+          pagination={true}
+          pagesCount={invoicesPageination.pagesCount}
+          initialPageSize={invoicesPageination.pageSize}
+          initialPageIndex={invoicesPageination.page - 1}
         />
       </LoadingIndicator>
     </div>
@@ -179,11 +239,16 @@ function InvoicesDataTable({
 
 export default compose(
   withRouter,
+  withCurrentView,
   withDialogActions,
   withDashboardActions,
   withInvoiceActions,
-  // withInvoices(({})=>({
-
-  // }))
+  withInvoices(
+    ({ invoicesCurrentPage, invoicesLoading, invoicesPageination }) => ({
+      invoicesCurrentPage,
+      invoicesLoading,
+      invoicesPageination,
+    }),
+  ),
   withViewDetails(),
 )(InvoicesDataTable);

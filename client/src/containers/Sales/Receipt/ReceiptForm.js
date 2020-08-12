@@ -5,11 +5,11 @@ import React, {
   useRef,
   useState,
 } from 'react';
+
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import moment from 'moment';
 import { Intent, FormGroup, TextArea } from '@blueprintjs/core';
-
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { pick } from 'lodash';
 
@@ -17,9 +17,10 @@ import ReceiptFromHeader from './ReceiptFormHeader';
 import EstimatesItemsTable from 'containers/Sales/Estimate/EntriesItemsTable';
 import ReceiptFormFooter from './ReceiptFormFooter';
 
+import withReceipActions from './withReceipActions';
+import withReceiptDetail from './withReceiptDetail';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withMediaActions from 'containers/Media/withMediaActions';
-import withReceipActions from './withReceipActions';
 
 import { AppToaster } from 'components';
 import Dragzone from 'components/Dragzone';
@@ -36,13 +37,14 @@ function ReceiptForm({
 
   //#withReceiptActions
   requestSubmitReceipt,
+  requestEditReceipt,
+
+  //#withReceiptDetail
+  receipt,
 
   //#withDashboard
   changePageTitle,
   changePageSubtitle,
-
-  //#withReceiptDetail
-  receipt,
 
   //#own Props
   receiptId,
@@ -50,7 +52,7 @@ function ReceiptForm({
   onCancelForm,
 }) {
   const { formatMessage } = useIntl();
-  const [payload, setPaload] = useState({});
+  const [payload, setPayload] = useState({});
 
   const {
     setFiles,
@@ -87,9 +89,9 @@ function ReceiptForm({
     receipt_date: Yup.date()
       .required()
       .label(formatMessage({ id: 'receipt_date_' })),
-    receipt_no: Yup.number()
-      .required()
-      .label(formatMessage({ id: 'receipt_no_' })),
+    // receipt_no: Yup.number()
+    //   .required()
+    //   .label(formatMessage({ id: 'receipt_no_' })),
     deposit_account_id: Yup.number()
       .required()
       .label(formatMessage({ id: 'deposit_account_' })),
@@ -99,7 +101,7 @@ function ReceiptForm({
       .min(1)
       .max(1024)
       .label(formatMessage({ id: 'receipt_message_' })),
-    send_to_email: Yup.string().email(),
+    email_send_to: Yup.string().email().nullable(),
     statement: Yup.string()
       .trim()
       .min(1)
@@ -121,7 +123,7 @@ function ReceiptForm({
       }),
     ),
   });
-  const saveReceiptSubmit = useCallback(
+  const saveInvokeSubmit = useCallback(
     (payload) => {
       onFormSubmit && onFormSubmit(payload);
     },
@@ -133,7 +135,7 @@ function ReceiptForm({
       index: 0,
       item_id: null,
       rate: null,
-      discount: null,
+      discount: 0,
       quantity: null,
       description: '',
     }),
@@ -145,7 +147,7 @@ function ReceiptForm({
       customer_id: '',
       deposit_account_id: '',
       receipt_date: moment(new Date()).format('YYYY-MM-DD'),
-      send_to_email: '',
+      email_send_to: '',
       reference_no: '',
       receipt_message: '',
       statement: '',
@@ -163,10 +165,25 @@ function ReceiptForm({
 
   const initialValues = useMemo(
     () => ({
-      ...defaultInitialValues,
-      entries: orderingIndex(defaultInitialValues.entries),
+      ...(receipt
+        ? {
+            ...pick(receipt, Object.keys(defaultInitialValues)),
+            entries: [
+              ...receipt.entries.map((receipt) => ({
+                ...pick(receipt, Object.keys(defaultReceipt)),
+              })),
+              ...repeatValue(
+                defaultReceipt,
+                Math.max(MIN_LINES_NUMBER - receipt.entries.length, 0),
+              ),
+            ],
+          }
+        : {
+            ...defaultInitialValues,
+            entries: orderingIndex(defaultInitialValues.entries),
+          }),
     }),
-    [defaultReceipt, defaultInitialValues, receipt],
+    [receipt, defaultInitialValues, defaultReceipt],
   );
 
   const initialAttachmentFiles = useMemo(() => {
@@ -186,49 +203,45 @@ function ReceiptForm({
       ...initialValues,
     },
     onSubmit: async (values, { setErrors, setSubmitting, resetForm }) => {
-      const entries = values.entries.map(
-        ({ item_id, quantity, rate, description }) => ({
-          item_id,
-          quantity,
-          rate,
-          description,
-        }),
+      const entries = values.entries.filter(
+        (item) => item.item_id && item.quantity,
       );
       const form = {
         ...values,
         entries,
       };
 
-      const saveReceipt = (mediaIds) =>
-        new Promise((resolve, reject) => {
-          const requestForm = { ...form, media_ids: mediaIds };
+      const requestForm = { ...form };
 
-          requestSubmitReceipt(requestForm)
-            .then((resposne) => {
-              AppToaster.show({
-                message: formatMessage({
-                  id: 'the_receipt_has_been_successfully_created',
-                }),
-                intent: Intent.SUCCESS,
-              });
-              setSubmitting(false);
-              resetForm();
-              saveReceiptSubmit({ action: 'new', ...payload });
-              clearSavedMediaIds();
-            })
-            .catch((errors) => {
-              setSubmitting(false);
+      if (receipt && receipt.id) {
+        requestEditReceipt(receipt.id && requestForm).then(() => {
+          AppToaster.show({
+            message: formatMessage({
+              id: 'the_receipt_has_been_successfully_edited',
+            }),
+            intent: Intent.SUCCESS,
+          });
+          setSubmitting(false);
+          saveInvokeSubmit({ action: 'update', ...payload });
+          resetForm();
+        });
+      } else {
+        requestSubmitReceipt(requestForm)
+          .then((response) => {
+            AppToaster.show({
+              message: formatMessage({
+                id: 'the_receipt_has_been_successfully_created',
+              }),
+              intent: Intent.SUCCESS,
             });
-        });
-      Promise.all([saveMedia(), deleteMedia()])
-        .then(([savedMediaResponses]) => {
-          const mediaIds = savedMediaResponses.map((res) => res.data.media.id);
-          savedMediaIds.current = mediaIds;
-          return savedMediaResponses;
-        })
-        .then(() => {
-          return saveReceipt(saveReceipt.current);
-        });
+            setSubmitting(false);
+            saveInvokeSubmit({ action: 'new', ...payload });
+            resetForm();
+          })
+          .catch((errors) => {
+            setSubmitting(false);
+          });
+      }
     },
   });
 
@@ -245,10 +258,10 @@ function ReceiptForm({
 
   const handleSubmitClick = useCallback(
     (payload) => {
-      setPaload(payload);
+      setPayload(payload);
       formik.submitForm();
     },
-    [setPaload, formik],
+    [setPayload, formik],
   );
 
   const handleCancelClick = useCallback(
@@ -308,12 +321,13 @@ function ReceiptForm({
           onDeleteFile={handleDeleteFile}
           hint={'Attachments: Maxiumum size: 20MB'}
         />
-        <ReceiptFormFooter
-          formik={formik}
-          onSubmit={handleSubmitClick}
-          onCancelForm={handleCancelClick}
-        />
       </form>
+      <ReceiptFormFooter
+        formik={formik}
+        onSubmitClick={handleSubmitClick}
+        receipt={receipt}
+        onCancelForm={handleCancelClick}
+      />
     </div>
   );
 }
@@ -322,4 +336,5 @@ export default compose(
   withReceipActions,
   withDashboardActions,
   withMediaActions,
+  withReceiptDetail(),
 )(ReceiptForm);

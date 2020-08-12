@@ -8,27 +8,28 @@ const initialState = {
   views: {},
   loading: false,
   tableQuery: {
-    page_size: 12,
+    page_size: 5,
     page: 1,
   },
   currentViewId: -1,
 };
 
 const defaultEstimate = {
-  products: [],
+  entries: [],
 };
 
 const reducer = createReducer(initialState, {
   [t.ESTIMATE_SET]: (state, action) => {
-    const { id, estiamate } = action.payload;
+    const { id, estimate } = action.payload;
     const _estimate = state.items[id] || {};
 
-    state.items[id] = { ...defaultEstimate, ..._estimate, ...estiamate };
+    state.items[id] = { ...defaultEstimate, ..._estimate, ...estimate };
   },
+
   [t.ESTIMATES_ITEMS_SET]: (state, action) => {
-    const { estiamates } = action.payload;
+    const { sales_estimates } = action.payload;
     const _estimates = {};
-    estiamates.forEach((estimate) => {
+    sales_estimates.forEach((estimate) => {
       _estimates[estimate.id] = {
         ...defaultEstimate,
         ...estimate,
@@ -58,7 +59,7 @@ const reducer = createReducer(initialState, {
   },
 
   [t.ESTIMATES_PAGE_SET]: (state, action) => {
-    const { customViewId, estimates, pagination } = action.payload;
+    const { customViewId, sales_estimates, pagination } = action.payload;
 
     const viewId = customViewId || -1;
     const view = state.views[viewId] || {};
@@ -68,7 +69,7 @@ const reducer = createReducer(initialState, {
       pages: {
         ...(state.views?.[viewId]?.pages || {}),
         [pagination.page]: {
-          ids: estimates.map((i) => i.id),
+          ids: sales_estimates.map((i) => i.id),
         },
       },
     };
@@ -98,8 +99,8 @@ const reducer = createReducer(initialState, {
   },
 });
 
-export default createTableQueryReducers('estimates', reducer);
+export default createTableQueryReducers('sales_estimates', reducer);
 
 export const getEstimateById = (state, id) => {
-  return state.estiamates.items[id];
+  return state.sales_estimates.items[id];
 };

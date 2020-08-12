@@ -8,6 +8,7 @@ export const submitEstimate = ({ form }) => {
         type: t.SET_DASHBOARD_REQUEST_LOADING,
       });
       ApiService.post('sales/estimates', form)
+
         .then((response) => {
           dispatch({
             type: t.SET_DASHBOARD_REQUEST_COMPLETED,
@@ -32,7 +33,7 @@ export const editEstimate = (id, form) => {
       dispatch({
         type: t.SET_DASHBOARD_REQUEST_LOADING,
       });
-      ApiService.post(`estimates/${id}`, form)
+      ApiService.post(`sales/estimates/${id}`, form)
         .then((response) => {
           dispatch({
             type: t.SET_DASHBOARD_REQUEST_COMPLETED,
@@ -54,9 +55,12 @@ export const editEstimate = (id, form) => {
 export const deleteEstimate = ({ id }) => {
   return (dispatch) =>
     new Promise((resovle, reject) => {
-      ApiService.delete(`estimates/${id}`)
+      ApiService.delete(`sales/estimates/${id}`)
         .then((response) => {
-          dispatch({ type: t.ESTIMATE_DELETE });
+          dispatch({
+            type: t.ESTIMATE_DELETE,
+            payload: { id },
+          });
           resovle(response);
         })
         .catch((error) => {
@@ -68,8 +72,9 @@ export const deleteEstimate = ({ id }) => {
 export const fetchEstimate = ({ id }) => {
   return (dispatch) =>
     new Promise((resovle, reject) => {
-      ApiService.get(`estimate/${id}`)
+      ApiService.get(`sales/estimates/${id}`)
         .then((response) => {
+
           dispatch({
             type: t.ESTIMATE_SET,
             payload: {
@@ -90,36 +95,36 @@ export const fetchEstimate = ({ id }) => {
 export const fetchEstimatesTable = ({ query = {} }) => {
   return (dispatch, getState) =>
     new Promise((resolve, rejcet) => {
-      const pageQuery = getState().estimates.tableQuery;
-
+      const pageQuery = getState().sales_estimates.tableQuery;
       dispatch({
         type: t.ESTIMATES_TABLE_LOADING,
         payload: {
           loading: true,
         },
       });
-      ApiService.get('estimates', {
+      ApiService.get('sales/estimates', {
         params: { ...pageQuery, ...query },
       })
         .then((response) => {
+          // debugger;
           dispatch({
             type: t.ESTIMATES_PAGE_SET,
             payload: {
-              estimates: response.data.estimates.results,
-              pagination: response.data.estimates.pagination,
+              sales_estimates: response.data.sales_estimates.results,
+              pagination: response.data.sales_estimates.pagination,
               customViewId: response.data.customViewId || -1,
             },
           });
           dispatch({
             type: t.ESTIMATES_ITEMS_SET,
             payload: {
-              estimates: response.data.estimates.results,
+              sales_estimates: response.data.sales_estimates.results,
             },
           });
           dispatch({
             type: t.ESTIMATES_PAGINATION_SET,
             payload: {
-              pagination: response.data.estimates.pagination,
+              pagination: response.data.sales_estimates.pagination,
               customViewId: response.data.customViewId || -1,
             },
           });

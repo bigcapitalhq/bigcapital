@@ -11,31 +11,50 @@ import withEstimateActions from './withEstimateActions';
 
 import { compose } from 'utils';
 
-function Estimates({ requestFetchCustomers, requestFetchItems }) {
+function Estimates({
+  requestFetchCustomers,
+  requestFetchItems,
+  requsetFetchEstimate,
+}) {
   const history = useHistory();
   const { id } = useParams();
+
+  const fetchEstimate = useQuery(
+    ['estimate', id],
+    (key, _id) => requsetFetchEstimate(_id),
+    { enabled: !!id },
+  );
+
+  // Handle fetch Items data table or list
+  const fetchItems = useQuery('items-list', () => requestFetchItems({}));
 
   // Handle fetch customers data table or list
   const fetchCustomers = useQuery('customers-table', () =>
     requestFetchCustomers({}),
   );
 
-  // Handle fetch Items data table or list
-  const fetchItems = useQuery('items-table', () => requestFetchItems({}));
-
-  const handleFormSubmit = useCallback((payload) => {}, [history]);
-
+  const handleFormSubmit = useCallback(
+    (payload) => {
+      payload.redirect && history.push('/estimates');
+    },
+    [history],
+  );
   const handleCancel = useCallback(() => {
     history.goBack();
   }, [history]);
 
   return (
     <DashboardInsider
-      loading={fetchCustomers.isFetching || fetchItems.isFetching}
+      loading={
+        fetchCustomers.isFetching ||
+        fetchItems.isFetching ||
+        fetchEstimate.isFetching
+      }
+      name={'estimate-form'}
     >
       <EstimateForm
         onFormSubmit={handleFormSubmit}
-        // estimateId={id}
+        estimateId={id}
         onCancelForm={handleCancel}
       />
     </DashboardInsider>

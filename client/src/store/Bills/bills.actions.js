@@ -4,7 +4,7 @@ import t from 'store/types';
 export const fetchBillsTable = ({ query = {} }) => {
   return (dispatch, getState) =>
     new Promise((resolve, rejcet) => {
-      const pageQuery = getState().bill.tableQuery;
+      const pageQuery = getState().bills.tableQuery;
 
       dispatch({
         type: t.BILLS_TABLE_LOADING,
@@ -12,7 +12,7 @@ export const fetchBillsTable = ({ query = {} }) => {
           loading: true,
         },
       });
-      ApiService.get('bills', {
+      ApiService.get('purchases/bills', {
         params: { ...pageQuery, ...query },
       })
         .then((response) => {
@@ -54,9 +54,9 @@ export const fetchBillsTable = ({ query = {} }) => {
 export const deleteBill = ({ id }) => {
   return (dispatch) =>
     new Promise((resovle, reject) => {
-      ApiService.delete(`bills/${id}`)
+      ApiService.delete(`purchases/bills/${id}`)
         .then((response) => {
-          dispatch({ type: t.BILL_DELETE });
+          dispatch({ type: t.BILL_DELETE, payload: { id } });
           resovle(response);
         })
         .catch((error) => {
@@ -71,7 +71,7 @@ export const submitBill = ({ form }) => {
       dispatch({
         type: t.SET_DASHBOARD_REQUEST_LOADING,
       });
-      ApiService.post('bills', form)
+      ApiService.post('purchases/bills', form)
         .then((response) => {
           dispatch({
             type: t.SET_DASHBOARD_REQUEST_COMPLETED,
@@ -92,7 +92,7 @@ export const submitBill = ({ form }) => {
 export const fetchBill = ({ id }) => {
   return (dispatch) =>
     new Promise((resovle, reject) => {
-      ApiService.get(`bills/${id}`)
+      ApiService.get(`purchases/bills/${id}`)
         .then((response) => {
           dispatch({
             type: t.BILL_SET,
@@ -117,7 +117,7 @@ export const editBill = (id, form) => {
       dispatch({
         type: t.SET_DASHBOARD_REQUEST_LOADING,
       });
-      ApiService.post(`bills/${id}`, form)
+      ApiService.post(`purchases/bills/${id}`, form)
         .then((response) => {
           dispatch({
             type: t.SET_DASHBOARD_REQUEST_COMPLETED,

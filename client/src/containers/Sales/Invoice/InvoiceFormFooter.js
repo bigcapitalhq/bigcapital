@@ -6,11 +6,19 @@ export default function EstimateFormFooter({
   formik: { isSubmitting },
   onSubmitClick,
   onCancelClick,
+  invoice,
 }) {
   return (
     <div className={'estimate-form__floating-footer'}>
-      <Button disabled={isSubmitting} intent={Intent.PRIMARY} type="submit">
-        <T id={'save_send'} />
+      <Button
+        disabled={isSubmitting}
+        intent={Intent.PRIMARY}
+        type="submit"
+        onClick={() => {
+          onSubmitClick({ redirect: true });
+        }}
+      >
+        {invoice && invoice.id ? <T id={'edit'} /> : <T id={'save_send'} />}
       </Button>
 
       <Button
@@ -19,6 +27,9 @@ export default function EstimateFormFooter({
         className={'ml1'}
         name={'save'}
         type="submit"
+        onClick={() => {
+          onSubmitClick({ redirect: false });
+        }}
       >
         <T id={'save'} />
       </Button>

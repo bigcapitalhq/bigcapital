@@ -1,6 +1,6 @@
-import React, { useEffect, useCallback, useMemo } from 'react';
+import React, { useEffect, useCallback, useMemo, useState } from 'react';
 import { Route, Switch, useHistory } from 'react-router-dom';
-import { useQuery, queryCache } from 'react-query';
+import { useQuery } from 'react-query';
 import { Alert, Intent } from '@blueprintjs/core';
 
 import AppToaster from 'components/AppToaster';
@@ -8,10 +8,15 @@ import { FormattedMessage as T, useIntl } from 'react-intl';
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 
-import withDashboardActions from 'containers/Dashboard/withDashboardActions';
-import withEstimateActions from './withEstimateActions';
-
+import EstimatesDataTable from './EstimatesDataTable';
 import EstimateActionsBar from './EstimateActionsBar';
+import EstimateViewTabs from './EstimateViewTabs';
+
+import withDashboardActions from 'containers/Dashboard/withDashboardActions';
+import withResourceActions from 'containers/Resources/withResourcesActions';
+import withEstimates from './withEstimates';
+import withEstimateActions from './withEstimateActions';
+import withViewsActions from 'containers/Views/withViewsActions';
 
 import { compose } from 'utils';
 
@@ -20,8 +25,12 @@ function EstimateList({
   changePageTitle,
 
   // #withViewsActions
+  requestFetchResourceViews,
+  requestFetchResourceFields,
 
   // #withEstimate
+  estimateTableQuery,
+  estimateViews,
 
   //#withEistimateActions
   requestFetchEstimatesTable,
@@ -33,7 +42,17 @@ function EstimateList({
   const [deleteEstimate, setDeleteEstimate] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
 
-  const fetchEstimate = useQuery(['estimate-table'], () =>
+  const fetchResourceViews = useQuery(
+    ['resource-views', 'sales_estimates'],
+    (key, resourceName) => requestFetchResourceViews(resourceName),
+  );
+
+  const fetchResourceFields = useQuery(
+    ['resource-fields', 'sales_estimates'],
+    (key, resourceName) => requestFetchResourceFields(resourceName),
+  );
+
+  const fetchEstimate = useQuery(['estimates-table', estimateTableQuery], () =>
     requestFetchEstimatesTable(),
   );
 
@@ -42,7 +61,6 @@ function EstimateList({
   }, [changePageTitle, formatMessage]);
 
   // handle delete estimate click
-
   const handleDeleteEstimate = useCallback(
     (estimate) => {
       setDeleteEstimate(estimate);
@@ -57,7 +75,7 @@ function EstimateList({
 
   // handle confirm delete estimate
   const handleConfirmEstimateDelete = useCallback(() => {
-    requestDeleteEstimate(deleteEstimate.id).then((response) => {
+    requestDeleteEstimate(deleteEstimate.id).then(() => {
       AppToaster.show({
         message: formatMessage({
           id: 'the_estimate_has_been_successfully_deleted',
@@ -68,12 +86,25 @@ function EstimateList({
     });
   }, [deleteEstimate, requestDeleteEstimate, formatMessage]);
 
+  // // Handle filter change to re-fetch data-table.
+  // const handleFilterChanged = useCallback(
+  //   (filterConditions) => {
+  //     addEstimatesTableQueries({
+  //       filter_roles: filterConditions || '',
+  //     });
+  //   },
+  //   [fetchEstimate],
+  // );
+
+  // Handle filter change to re-fetch data-table.
+  const handleFilterChanged = useCallback(() => {}, [fetchEstimate]);
+
   // Calculates the selected rows
   const selectedRowsCount = useMemo(() => Object.values(selectedRows).length, [
     selectedRows,
   ]);
 
-  const handleEidtEstimate = useCallback(
+  const handleEditEstimate = useCallback(
     (estimate) => {
       history.push(`/estimates/${estimate.id}/edit`);
     },
@@ -97,24 +128,63 @@ function EstimateList({
     [addEstimatesTableQueries],
   );
 
-  const handleSelectedRowsChange = useCallback((estimate) => {
-    selectedRows(estimate);
-  });
-
+  const handleSelectedRowsChange = useCallback(
+    (estimate) => {
+      setSelectedRows(estimate);
+    },
+    [setSelectedRows],
+  );
   return (
-    <DashboardInsider name={'estimates'}>
+    <DashboardInsider
+      loading={fetchResourceViews.isFetching || fetchResourceFields.isFetching}
+      name={'sales_estimates'}
+    >
       <EstimateActionsBar
         // onBulkDelete={}
         selectedRows={selectedRows}
-        // onFilterChanged={}
+        onFilterChanged={handleFilterChanged}
       />
       <DashboardPageContent>
         <Switch>
-          <Route></Route>
+          <Route
+            exact={true}
+            path={['/estimates/:custom_view_id/custom_view', '/estimates']}
+          >
+            <EstimateViewTabs />
+            <EstimatesDataTable
+              loading={fetchEstimate.isFetching}
+              onDeleteEstimate={handleDeleteEstimate}
+              onFetchData={handleFetchData}
+              onEditEstimate={handleEditEstimate}
+              onSelectedRowsChange={handleSelectedRowsChange}
+            />
+          </Route>
         </Switch>
+        <Alert
+          cancelButtonText={<T id={'cancel'} />}
+          confirmButtonText={<T id={'delete'} />}
+          icon={'trash'}
+          intent={Intent.DANGER}
+          isOpen={deleteEstimate}
+          onCancel={handleCancelEstimateDelete}
+          onConfirm={handleConfirmEstimateDelete}
+        >
+          <p>
+            <T id={'once_delete_this_estimate_you_will_able_to_restore_it'} />
+          </p>
+        </Alert>
       </DashboardPageContent>
     </DashboardInsider>
   );
 }
 
-export default EstimateList;
+export default compose(
+  withResourceActions,
+  withEstimateActions,
+  withDashboardActions,
+  withViewsActions,
+  withEstimates(({ estimateTableQuery, estimateViews }) => ({
+    estimateTableQuery,
+    estimateViews,
+  })),
+)(EstimateList);
