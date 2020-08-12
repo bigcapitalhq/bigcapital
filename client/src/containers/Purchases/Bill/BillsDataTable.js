@@ -131,7 +131,7 @@ function BillsDataTable({
       {
         id: 'vendor_id',
         Header: formatMessage({ id: 'vendor_name' }),
-        accessor: (row) => row.vendor_id,
+        accessor: 'vendor.display_name',
         width: 140,
         className: 'vendor_id',
       },
