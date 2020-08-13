@@ -130,7 +130,7 @@ function ReceiptsDataTable({
       {
         id: 'customer_id',
         Header: formatMessage({ id: 'customer_name' }),
-        accessor: (row) => row.customer_id,
+        accessor: 'customer.display_name',
         width: 140,
         className: 'customer_id',
       },
