@@ -1,6 +1,7 @@
 import express from 'express';
 import { check, param, query } from 'express-validator';
 import { difference } from 'lodash';
+import { raw } from 'objection';
 import { ItemEntry } from '@/models';
 import validateMiddleware from '@/http/middleware/validateMiddleware';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
@@ -10,6 +11,7 @@ import CustomersService from '@/services/Customers/CustomersService';
 import DynamicListing from '@/services/DynamicListing/DynamicListing';
 import DynamicListingBuilder from '@/services/DynamicListing/DynamicListingBuilder';
 import { dynamicListingErrorsToResponse } from '@/services/DynamicListing/hasDynamicListing';
+import { Customer } from '../../../models';
 
 export default class SaleInvoicesController {
   /**
@@ -50,6 +52,11 @@ export default class SaleInvoicesController {
       asyncMiddleware(this.deleteSaleInvoice)
     );
     router.get(
+      '/due_invoices',
+      this.dueSalesInvoicesListValidationSchema,
+      asyncMiddleware(this.getDueSalesInvoice),
+    );
+    router.get(
       '/:id',
       this.specificSaleInvoiceValidation,
       validateMiddleware,
@@ -60,7 +67,7 @@ export default class SaleInvoicesController {
       '/',
       this.saleInvoiceListValidationSchema,
       asyncMiddleware(this.getSalesInvoices)
-    );    
+    )
     return router;
   }
 
@@ -109,6 +116,13 @@ export default class SaleInvoicesController {
       query('page').optional().isNumeric().toInt(),
       query('page_size').optional().isNumeric().toInt(), 
     ];
+  }
+
+
+  static get dueSalesInvoicesListValidationSchema() {
+    return [
+      query('customer_id').optional().isNumeric().toInt(), 
+    ]
   }
 
   /**
@@ -314,6 +328,39 @@ export default class SaleInvoicesController {
       saleInvoiceId
     );
     return res.status(200).send({ sale_invoice: saleInvoice });
+  }
+
+  /**
+   * Retrieve the due sales invoices for the given customer.
+   * @param {Request} req 
+   * @param {Response} res 
+   */
+  static async getDueSalesInvoice(req, res) {
+    const filter = {
+      customer_id: null,
+      ...req.query,
+    };
+    const { Customer, SaleInvoice } = req.models;
+
+    if (filter.customer_id) {
+      const foundCustomer = await Customer.query().findById(filter.customer_id);
+
+      if (!foundCustomer) {
+        return res.status(200).send({
+          errors: [{ type: 'CUSTOMER.NOT.FOUND', code: 200 }],
+        });
+      }
+    }    
+    const dueSalesInvoices = await SaleInvoice.query().onBuild((query) => {
+      query.where(raw('BALANCE - PAYMENT_AMOUNT > 0'));
+
+      if (filter.customer_id) {
+        query.where('customer_id', filter.customer_id);
+      }
+    });
+    return res.status(200).send({
+      due_sales_invoices: dueSalesInvoices, 
+    });
   }
 
   /**
