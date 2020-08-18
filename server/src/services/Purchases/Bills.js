@@ -1,5 +1,6 @@
 import { omit, sumBy } from 'lodash';
 import moment from 'moment';
+import { Container } from 'typedi';
 import {
   Account,
   Bill,
@@ -22,7 +23,7 @@ import HasItemsEntries from '@/services/Sales/HasItemsEntries';
 export default class BillsService {
   /**
    * Creates a new bill and stored it to the storage.
-   *
+   *|
    * Precedures.
    * ----
    * - Insert bill transactions to the storage.
@@ -30,11 +31,13 @@ export default class BillsService {
    * - Increment the given vendor id.
    * - Record bill journal transactions on the given accounts.
    * - Record bill items inventory transactions.
-   *
+   * ----
    * @param {IBill} bill -
    * @return {void}
    */
   static async createBill(bill) {
+    const agenda = Container.get('agenda');
+
     const amount = sumBy(bill.entries, 'amount');
     const saveEntriesOpers = [];
 
@@ -57,18 +60,35 @@ export default class BillsService {
     // Increments vendor balance.
     const incrementOper = Vendor.changeBalance(bill.vendor_id, amount);
 
-    // // Rewrite the inventory transactions for inventory items.
-    // const writeInvTransactionsOper = InventoryService.recordInventoryTransactions(
-    //   bill.entries, 'Bill', billId,
-    // );
+    // Rewrite the inventory transactions for inventory items.
+    const writeInvTransactionsOper = InventoryService.recordInventoryTransactions(
+      bill.entries, bill.bill_date, 'Bill', storedBill.id, 'IN',
+    );
+    // Writes the journal entries for the given bill transaction.
+    const writeJEntriesOper = this.recordJournalTransactions({
+      id: storedBill.id,
+      ...bill
+    });
     await Promise.all([
       ...saveEntriesOpers,
-      incrementOper,
-      // this.recordInventoryTransactions(bill, storedBill.id),
-      this.recordJournalTransactions({ ...bill, id: storedBill.id }),
-      // writeInvTransactionsOper,
-    ]);
+      incrementOper,      
+      writeInvTransactionsOper,
+      writeJEntriesOper,
+    ]); 
+
+    // Schedule bill re-compute based on the item cost
+    // method and starting date.
+    await this.scheduleComputeItemsCost(bill); 
+
     return storedBill;
+  }
+
+  scheduleComputeItemCost(bill) {
+    return agenda.schedule('in 1 second', 'compute-item-cost', {
+      startingDate: bill.bill_date || bill.billDate,
+      itemId: bill.entries[0].item_id || bill.entries[0].itemId,
+      costMethod: 'FIFO',
+    });
   }
 
   /**
@@ -116,21 +136,31 @@ export default class BillsService {
       amount,
       oldBill.amount,
     );
-    // // Deletes the old inventory transactions.
-    // const deleteInvTransactionsOper = InventorySevice.deleteInventoryTransactions(
-    //   billId, 'Bill',
-    // );
-    // // Re-write the inventory transactions for inventory items.
-    // const writeInvTransactionsOper = InventoryService.recordInventoryTransactions(
-    //   bill.entries, 'Bill', billId,
-    // );
+    // Re-write the inventory transactions for inventory items.
+    const writeInvTransactionsOper = InventoryService.recordInventoryTransactions(
+      bill.entries, bill.bill_date, 'Bill', billId, 'IN'
+    );
+    // Delete bill associated inventory transactions.
+    const deleteInventoryTransOper = InventoryService.deleteInventoryTransactions(
+      billId, 'Bill'
+    );
+    // Writes the journal entries for the given bill transaction.
+    const writeJEntriesOper = this.recordJournalTransactions({
+      id: billId,
+      ...bill,
+    }, billId);
+
     await Promise.all([
       patchEntriesOper,
-      recordTransactionsOper,
       changeVendorBalanceOper,
-      // deleteInvTransactionsOper,
-      // writeInvTransactionsOper,
+      writeInvTransactionsOper,
+      deleteInventoryTransOper,
+      writeJEntriesOper,
     ]);
+
+    // Schedule sale invoice re-compute based on the item cost
+    // method and starting date.
+    await this.scheduleComputeItemsCost(bill); 
   }
 
   /**
@@ -149,19 +179,15 @@ export default class BillsService {
       .whereIn('id', entriesItemsIds);
 
     const storedItemsMap = new Map(storedItems.map((item) => [item.id, item]));
-    const payableAccount = await AccountsService.getAccountByType(
-      'accounts_payable'
-    );
-    if (!payableAccount) {
-      throw new Error('New payable account on the storage.');
-    }
+    const payableAccount = await AccountsService.getAccountByType('accounts_payable');
+
     const accountsDepGraph = await Account.tenant().depGraph().query();
     const journal = new JournalPoster(accountsDepGraph);
 
     const commonJournalMeta = {
       debit: 0,
       credit: 0,
-      referenceId: billId,
+      referenceId: bill.id,
       referenceType: 'Bill',
       date: formattedDate,
       accural: true,
@@ -198,7 +224,7 @@ export default class BillsService {
       });
       journal.debit(debitEntry);
     });
-    await Promise.all([
+    return Promise.all([
       journal.deleteEntries(),
       journal.saveEntries(),
       journal.saveBalance(),
@@ -211,7 +237,10 @@ export default class BillsService {
    * @return {void}
    */
   static async deleteBill(billId) {
-    const bill = await Bill.tenant().query().where('id', billId).first();
+    const bill = await Bill.tenant().query()
+      .where('id', billId)
+      .withGraphFetched('entries')
+      .first();
 
     // Delete all associated bill entries.
     const deleteBillEntriesOper = ItemEntry.tenant()
@@ -242,6 +271,9 @@ export default class BillsService {
       deleteInventoryTransOper,
       revertVendorBalance,
     ]);
+    // Schedule sale invoice re-compute based on the item cost
+    // method and starting date.
+    await this.scheduleComputeItemsCost(bill); 
   }
 
   /**
@@ -283,7 +315,6 @@ export default class BillsService {
   static getBill(billId) {
     return Bill.tenant().query().where('id', billId).first();
   }
-
 
   /**
    * Retrieve the given bill details with associated items entries.

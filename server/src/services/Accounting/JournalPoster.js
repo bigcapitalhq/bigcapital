@@ -249,6 +249,17 @@ export default class JournalPoster {
   }
 
   /**
+   * Revert the given transactions.
+   * @param {*} entries 
+   */
+  removeTransactions(entries) {
+    this.loadEntries(entries);
+
+
+    this.deletedEntriesIds.push(...entriesIDsShouldDel);
+  }
+
+  /**
    * Delete all the stacked entries.
    */
   async deleteEntries() {

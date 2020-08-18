@@ -6,9 +6,11 @@ exports.up = function(knex) {
 
     table.string('direction');
 
-    table.integer('item_id');
+    table.integer('item_id').unsigned();
+    table.integer('quantity').unsigned();
     table.decimal('rate', 13, 3);
     table.integer('remaining');
+    table.string('lot_number');
 
     table.string('transaction_type');
     table.integer('transaction_id');

@@ -37,6 +37,8 @@ export default class View extends mixin(TenantModel, [CachableModel]) {
       specificOrFavourite(query, viewId) {
         if (viewId) {
           query.where('id', viewId)
+        } else {
+          query.where('favourite', true);
         }
         return query;
       }

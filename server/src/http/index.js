@@ -23,14 +23,14 @@ import Media from '@/http/controllers/Media';
 import JWTAuth from '@/http/middleware/jwtAuth';
 import TenancyMiddleware from '@/http/middleware/TenancyMiddleware';
 import Ping from '@/http/controllers/Ping';
+import Agendash from '@/http/controllers/Agendash';
 
 export default (app) => {
   // app.use('/api/oauth2', OAuth2.router());
   app.use('/api/auth', Authentication.router());
   app.use('/api/invite', InviteUsers.router());
-  app.use('/api/ping', Ping.router());
-
-  const dashboard = express.Router();
+  
+  const dashboard = express.Router(); 
 
   dashboard.use(JWTAuth);
   dashboard.use(TenancyMiddleware);
@@ -53,6 +53,8 @@ export default (app) => {
   dashboard.use('/api/resources', Resources.router());
   dashboard.use('/api/exchange_rates', ExchangeRates.router());
   dashboard.use('/api/media', Media.router());
+  dashboard.use('/api/ping', Ping.router());
 
-  app.use('/', dashboard); 
+  app.use('/agendash', Agendash.router());
+  app.use('/', dashboard);
 };

@@ -1,19 +1,19 @@
 import { Model } from 'objection';
 import TenantModel from '@/models/TenantModel';
 
-export default class InventoryTransaction extends TenantModel {
+export default class InventoryCostLotTracker extends TenantModel {
   /**
    * Table name
    */
   static get tableName() {
-    return 'inventory_transactions';
+    return 'inventory_cost_lot_tracker';
   }
 
   /**
    * Model timestamps.
    */
   static get timestamps() {
-    return ['createdAt', 'updatedAt'];
+    return [];
   }
 
   /**
@@ -27,7 +27,7 @@ export default class InventoryTransaction extends TenantModel {
         relation: Model.BelongsToOneRelation,
         modelClass: this.relationBindKnex(Item.default),
         join: {
-          from: 'inventory_transactions.itemId',
+          from: 'inventory_cost_lot_tracker.itemId',
           to: 'items.id',
         },
       },

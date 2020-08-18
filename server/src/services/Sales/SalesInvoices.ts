@@ -1,4 +1,5 @@
-import { omit, sumBy, difference, chain, sum } from 'lodash';
+import { omit, sumBy, difference } from 'lodash';
+import { Container } from 'typedi';
 import {
   SaleInvoice,
   AccountTransaction,
@@ -10,7 +11,7 @@ import {
 import JournalPoster from '@/services/Accounting/JournalPoster';
 import HasItemsEntries from '@/services/Sales/HasItemsEntries';
 import CustomerRepository from '@/repositories/CustomerRepository';
-import moment from 'moment';
+import InventoryService from '@/services/Inventory/Inventory';
 
 /**
  * Sales invoices service
@@ -51,8 +52,8 @@ export default class SaleInvoicesService {
       balance,
     );
     // Records the inventory transactions for inventory items.
-    const recordInventoryTransOpers = this.recordInventoryTransactions(
-      saleInvoice, storedInvoice.id
+    const recordInventoryTransOpers = InventoryService.recordInventoryTransactions(
+      saleInvoice.entries, saleInvoice.invoice_date, 'SaleInvoice', storedInvoice.id, 'OUT',
     );
     // Await all async operations.
     await Promise.all([
@@ -60,19 +61,13 @@ export default class SaleInvoicesService {
       incrementOper,
       recordInventoryTransOpers,
     ]);
+    // Schedule sale invoice re-compute based on the item cost
+    // method and starting date.
+    await this.scheduleComputeItemsCost(saleInvoice); 
+
     return storedInvoice;
   }
 
-  /**
-   * Records the inventory items transactions.
-   * @param {SaleInvoice} saleInvoice - 
-   * @param {number} saleInvoiceId -
-   * @return {Promise}
-   */
-  static async recordInventoryTransactions(saleInvoice, saleInvoiceId) {
-    
-  }
-  
   /** 
    * Records the sale invoice journal entries and calculate the items cost 
    * based on the given cost method in the options FIFO, LIFO or average cost rate.
@@ -82,6 +77,23 @@ export default class SaleInvoicesService {
    */
   static async recordJournalEntries(saleInvoice: any, inventoryTransactions: array[]) {
     
+  }
+
+  /**
+   * Schedule sale invoice re-compute based on the item
+   * cost method and starting date
+   * 
+   * @param saleInvoice 
+   * @return {Promise<Agenda>}
+   */
+  static scheduleComputeItemsCost(saleInvoice) {
+    const agenda = Container.get('agenda');
+
+    return agenda.schedule('in 1 second', 'compute-item-cost', {
+      startingDate: saleInvoice.invoice_date || saleInvoice.invoiceDate,
+      itemId: saleInvoice.entries[0].item_id || saleInvoice.entries[0].itemId,
+      costMethod: 'FIFO',
+    });
   }
 
   /**
@@ -124,12 +136,10 @@ export default class SaleInvoicesService {
       patchItemsEntriesOper,
       changeCustomerBalanceOper,
     ]);
-  }
 
-  async recalcInventoryTransactionsCost(inventoryTransactions: array) {
-    const inventoryTransactionsMap = this.mapInventoryTransByItem(inventoryTransactions);
-
-
+    // Schedule sale invoice re-compute based on the item cost
+    // method and starting date.
+    await this.scheduleComputeItemsCost(saleInvoice); 
   }
 
   /**
@@ -138,7 +148,7 @@ export default class SaleInvoicesService {
    * @param {number} transactionId 
    */
   static async revertInventoryTransactions(inventoryTransactions: array) {
-    const opers = [];
+    const opers: Promise<[]>[] = [];
 
     inventoryTransactions.forEach((trans: any) => {
       switch(trans.direction) {
@@ -175,7 +185,9 @@ export default class SaleInvoicesService {
    * @param {Number} saleInvoiceId
    */
   static async deleteSaleInvoice(saleInvoiceId: number) {
-    const oldSaleInvoice = await SaleInvoice.tenant().query().findById(saleInvoiceId);
+    const oldSaleInvoice = await SaleInvoice.tenant().query()
+      .findById(saleInvoiceId)
+      .withGraphFetched('entries');
 
     await SaleInvoice.tenant().query().where('id', saleInvoiceId).delete();
     await ItemEntry.tenant()
@@ -206,14 +218,20 @@ export default class SaleInvoicesService {
       .where('transaction_id', saleInvoiceId);
 
     // Revert inventory transactions.
-    const revertInventoryTransactionsOper = this.revertInventoryTransactions(inventoryTransactions);
-
+    const revertInventoryTransactionsOper = this.revertInventoryTransactions(
+      inventoryTransactions
+    );
+    
+    // Await all async operations.
     await Promise.all([
       journal.deleteEntries(),
       journal.saveBalance(),
       revertCustomerBalanceOper,
       revertInventoryTransactionsOper,
     ]);
+    // Schedule sale invoice re-compute based on the item cost
+    // method and starting date.
+    await this.scheduleComputeItemsCost(oldSaleInvoice)
   }
 
   /**
@@ -261,7 +279,7 @@ export default class SaleInvoicesService {
   static async isSaleInvoiceNumberExists(saleInvoiceNumber: string|number, saleInvoiceId: number) {
     const foundSaleInvoice = await SaleInvoice.tenant()
       .query()
-      .onBuild((query) => {
+      .onBuild((query: any) => {
         query.where('invoice_no', saleInvoiceNumber);
 
         if (saleInvoiceId) {
@@ -269,7 +287,7 @@ export default class SaleInvoicesService {
         }
         return query;
       });
-    return foundSaleInvoice.length !== 0;
+    return (foundSaleInvoice.length !== 0);
   }
 
   /**
@@ -280,7 +298,7 @@ export default class SaleInvoicesService {
   static async isInvoicesExist(invoicesIds: Array<number>) {
     const storedInvoices = await SaleInvoice.tenant()
       .query()
-      .onBuild((builder) => {
+      .onBuild((builder: any) => {
         builder.whereIn('id', invoicesIds);
         return builder;
       });

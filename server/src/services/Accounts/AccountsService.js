@@ -17,8 +17,6 @@ export default class AccountsService {
       .where('account_type_id', accountType.id)
       .first();
 
-    console.log(account);
-
     return account;
   }
 }

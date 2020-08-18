@@ -18,6 +18,7 @@ export interface IInventoryLotCost {
   itemId: number,
   rate: number,
   remaining: number,
+  lotNumber: string|number,
   transactionType: string,
   transactionId: string,
 }

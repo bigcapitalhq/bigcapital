@@ -1,4 +1,5 @@
 import { omit, difference, sumBy, mixin } from 'lodash';
+import moment from 'moment';
 import { SaleEstimate, ItemEntry } from '@/models';
 import HasItemsEntries from '@/services/Sales/HasItemsEntries';
 
@@ -11,6 +12,7 @@ export default class SaleEstimateService {
    */
   static async createEstimate(estimate: any) {
     const amount = sumBy(estimate.entries, 'amount');
+
     const storedEstimate = await SaleEstimate.tenant()
       .query()
       .insert({

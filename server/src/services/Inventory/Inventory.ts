@@ -1,10 +1,36 @@
-import { InventoryTransaction, Item } from '@/models';
-import InventoryCostLotTracker from './InventoryCostLotTracker';
-import { IInventoryTransaction, IInventoryLotCost } from '@/interfaces/InventoryTransaction';
-import { IInventoryLotCost, IInventoryLotCost } from '../../interfaces/InventoryTransaction';
-import { pick } from 'lodash';
+import {
+  InventoryTransaction,
+  Item
+} from '@/models';
+import InventoryAverageCost from '@/services/Inventory/InventoryAverageCost';
+import InventoryCostLotTracker from '@/services/Inventory/InventoryCostLotTracker';
+
+type TCostMethod = 'FIFO' | 'LIFO' | 'AVG';
 
 export default class InventoryService {
+  /**
+   * Computes the given item cost and records the inventory lots transactions
+   * and journal entries based on the cost method FIFO, LIFO or average cost rate.
+   * @param {Date} fromDate 
+   * @param {number} itemId 
+   */
+  static async computeItemCost(fromDate: Date, itemId: number) {
+    const costMethod: TCostMethod = 'FIFO';
+    let costMethodComputer: IInventoryCostMethod;
+
+    switch(costMethod) {
+      case 'FIFO':
+      case 'LIFO':
+        costMethodComputer = new InventoryCostLotTracker(fromDate, itemId);
+        break;
+      case 'AVG':
+        costMethodComputer = new InventoryAverageCost(fromDate, itemId);
+        break
+    }
+    await costMethodComputer.initialize();
+    await costMethodComputer.computeItemCost()
+  }
+
   /**
    * Records the inventory transactions. 
    * @param {Bill} bill 
@@ -15,6 +41,7 @@ export default class InventoryService {
     date: Date,
     transactionType: string,
     transactionId: number,
+    direction: string,
   ) {
     const storedOpers: any = [];
     const entriesItemsIds = entries.map((e: any) => e.item_id);
@@ -23,20 +50,19 @@ export default class InventoryService {
       .whereIn('id', entriesItemsIds)
       .where('type', 'inventory');
 
-    const inventoryItemsIds = inventoryItems.map((i) => i.id);
+    const inventoryItemsIds = inventoryItems.map((i: any) => i.id);
 
     // Filter the bill entries that have inventory items.
     const inventoryEntries = entries.filter(
-      (entry) => inventoryItemsIds.indexOf(entry.item_id) !== -1
+      (entry: any) => inventoryItemsIds.indexOf(entry.item_id) !== -1
     );
     inventoryEntries.forEach((entry: any) => {
       const oper = InventoryTransaction.tenant().query().insert({
         date,
-
+        direction,
         item_id: entry.item_id,
         quantity: entry.quantity,
         rate: entry.rate,
-
         transaction_type: transactionType,
         transaction_id: transactionId,
       });
@@ -64,86 +90,4 @@ export default class InventoryService {
   revertInventoryLotsCost(fromDate?: Date) {
 
   }
-
-  /**
-   * Records the journal entries transactions.
-   * @param {IInventoryLotCost[]} inventoryTransactions -
-   * 
-   */
-  static async recordJournalEntries(inventoryLots: IInventoryLotCost[]) {
-    
-  }
-
-  /**
-   * Tracking the given inventory transactions to lots costs transactions.
-   * @param {IInventoryTransaction[]} inventoryTransactions - Inventory transactions. 
-   * @return {IInventoryLotCost[]}
-   */
-  static async trackingInventoryLotsCost(inventoryTransactions: IInventoryTransaction[]) {
-    // Collect cost lots transactions to insert them to the storage in bulk.
-    const costLotsTransactions: IInventoryLotCost[] = [];
-
-    // Collect inventory transactions by item id.
-    const inventoryByItem: any = {};
-    // Collection `IN` inventory tranaction by transaction id.
-    const inventoryINTrans: any = {};
-
-    inventoryTransactions.forEach((transaction: IInventoryTransaction) => {
-      const { itemId, id } = transaction;
-      (inventoryByItem[itemId] || (inventoryByItem[itemId] = []));
-
-      const commonLotTransaction: IInventoryLotCost = {
-        ...pick(transaction, [
-          'date', 'rate', 'itemId', 'quantity',
-          'direction', 'transactionType', 'transactionId',
-        ]),
-      };
-      // Record inventory `IN` cost lot transaction.
-      if (transaction.direction === 'IN') { 
-        inventoryByItem[itemId].push(id);
-        inventoryINTrans[id] = {
-          ...commonLotTransaction,
-          remaining: commonLotTransaction.quantity,
-        };
-        costLotsTransactions.push(inventoryINTrans[id]);
-
-      // Record inventory 'OUT' cost lots from 'IN' transactions.
-      } else if (transaction.direction === 'OUT') {
-        let invRemaining = transaction.quantity;
-
-        inventoryByItem?.[itemId]?.forEach((
-          _invTransactionId: number,
-          index: number,
-        ) => {
-          const _invINTransaction = inventoryINTrans[_invTransactionId];
-
-          // Detarmines the 'OUT' lot tranasctions whether bigger than 'IN' remaining transaction.
-          const biggerThanRemaining = (_invINTransaction.remaining - transaction.quantity) > 0;
-          const decrement = (biggerThanRemaining) ? transaction.quantity : _invINTransaction.remaining;
-
-          _invINTransaction.remaining = Math.max(
-            _invINTransaction.remaining - decrement, 0,
-          );
-          invRemaining = Math.max(invRemaining - decrement, 0);
-
-          costLotsTransactions.push({
-            ...commonLotTransaction,
-            quantity: decrement,
-          });
-          // Pop the 'IN' lots that has zero remaining. 
-          if (_invINTransaction.remaining === 0) {
-            inventoryByItem?.[itemId].splice(index, 1);
-          }
-        });
-        if (invRemaining > 0) { 
-          costLotsTransactions.push({ 
-            ...commonLotTransaction,
-            quantity: invRemaining,
-          });
-        }
-      }
-    });
-    return costLotsTransactions;
-  }
-
 }

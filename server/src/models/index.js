@@ -19,6 +19,7 @@ import View from './View';
 import ItemEntry from './ItemEntry';
 import InventoryTransaction from './InventoryTransaction';
 import AccountType from './AccountType';
+import InventoryLotCostTracker from './InventoryCostLotTracker';
 
 export {
   Customer,
@@ -41,5 +42,6 @@ export {
   View,
   ItemEntry,
   InventoryTransaction,
+  InventoryLotCostTracker,
   AccountType,
 };
