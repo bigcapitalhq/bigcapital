@@ -1,6 +1,5 @@
 import { omit, sumBy, pick } from 'lodash';
 import moment from 'moment';
-import { Container } from 'typedi';
 import {
   Account,
   Bill,
@@ -36,7 +35,7 @@ export default class BillsService {
    * @param {IBill} bill -
    * @return {void}
    */
-  static async createBill(billDTO) { 
+  static async createBill(billDTO) {
     const invLotNumber = await InventoryService.nextLotNumber();
     const bill = {
       ...formatDateFields(billDTO, ['bill_date', 'due_date']),
@@ -83,40 +82,6 @@ export default class BillsService {
     await this.scheduleComputeItemsCost(bill); 
 
     return storedBill;
-  }
-
-  /**
-   * Schedule a job to re-compute the bill's items based on cost method
-   * of the each one.
-   * @param {Bill} bill 
-   */
-  static scheduleComputeItemsCost(bill) {
-    const agenda = Container.get('agenda');
-
-    return agenda.schedule('in 1 second', 'compute-item-cost', {
-      startingDate: bill.bill_date || bill.billDate,
-      itemId: bill.entries[0].item_id || bill.entries[0].itemId,
-      costMethod: 'FIFO',
-    });
-  }
-
-  /**
-   * Records the inventory transactions from the given bill input.
-   * @param {Bill} bill 
-   * @param {number} billId 
-   */
-  static recordInventoryTransactions(bill, billId, override) {
-    const inventoryTransactions = bill.entries
-      .map((entry) => ({
-        ...pick(entry, ['item_id', 'quantity', 'rate']),
-        lotNumber: bill.invLotNumber,
-        transactionType: 'Bill',
-        transactionId: billId,
-        direction: 'IN',
-        date: bill.bill_date,
-      }));
-
-    return InventoryService.recordInventoryTransactions(inventoryTransactions, override);
   }
 
   /**
@@ -183,6 +148,72 @@ export default class BillsService {
     // Schedule sale invoice re-compute based on the item cost
     // method and starting date.
     await this.scheduleComputeItemsCost(bill); 
+  }
+
+  /**
+   * Deletes the bill with associated entries.
+   * @param {Integer} billId
+   * @return {void}
+   */
+  static async deleteBill(billId) {
+    const bill = await Bill.tenant().query()
+      .where('id', billId)
+      .withGraphFetched('entries')
+      .first();
+
+    // Delete all associated bill entries.
+    const deleteBillEntriesOper = ItemEntry.tenant()
+      .query()
+      .where('reference_type', 'Bill')
+      .where('reference_id', billId)
+      .delete();
+
+    // Delete the bill transaction.
+    const deleteBillOper = Bill.tenant().query().where('id', billId).delete();
+
+    // Delete associated bill journal transactions.
+    const deleteTransactionsOper = JournalPosterService.deleteJournalTransactions(
+      billId,
+      'Bill'
+    );
+    // Delete bill associated inventory transactions.
+    const deleteInventoryTransOper = InventoryService.deleteInventoryTransactions(
+      billId, 'Bill'
+    );
+    // Revert vendor balance.
+    const revertVendorBalance = Vendor.changeBalance(bill.vendorId, bill.amount * -1);
+  
+    await Promise.all([
+      deleteBillOper,
+      deleteBillEntriesOper,
+      deleteTransactionsOper,
+      deleteInventoryTransOper,
+      revertVendorBalance,
+    ]);
+    // Schedule sale invoice re-compute based on the item cost
+    // method and starting date.
+    await this.scheduleComputeItemsCost(bill); 
+  }
+
+    /**
+   * Records the inventory transactions from the given bill input.
+   * @param {Bill} bill 
+   * @param {number} billId 
+   */
+  static recordInventoryTransactions(bill, billId, override) {
+    const inventoryTransactions = bill.entries
+      .map((entry) => ({
+        ...pick(entry, ['item_id', 'quantity', 'rate']),
+        lotNumber: bill.invLotNumber,
+        transactionType: 'Bill',
+        transactionId: billId,
+        direction: 'IN',
+        date: bill.bill_date,
+      }));
+
+    return InventoryService.recordInventoryTransactions(
+      inventoryTransactions, override
+    );
   }
 
   /**
@@ -254,48 +285,21 @@ export default class BillsService {
   }
 
   /**
-   * Deletes the bill with associated entries.
-   * @param {Integer} billId
-   * @return {void}
+   * Schedule a job to re-compute the bill's items based on cost method
+   * of the each one.
+   * @param {Bill} bill 
    */
-  static async deleteBill(billId) {
-    const bill = await Bill.tenant().query()
-      .where('id', billId)
-      .withGraphFetched('entries')
-      .first();
+  static scheduleComputeItemsCost(bill) {
+    const asyncOpers = [];
 
-    // Delete all associated bill entries.
-    const deleteBillEntriesOper = ItemEntry.tenant()
-      .query()
-      .where('reference_type', 'Bill')
-      .where('reference_id', billId)
-      .delete();
-
-    // Delete the bill transaction.
-    const deleteBillOper = Bill.tenant().query().where('id', billId).delete();
-
-    // Delete associated bill journal transactions.
-    const deleteTransactionsOper = JournalPosterService.deleteJournalTransactions(
-      billId,
-      'Bill'
-    );
-    // Delete bill associated inventory transactions.
-    const deleteInventoryTransOper = InventoryService.deleteInventoryTransactions(
-      billId, 'Bill'
-    );
-    // Revert vendor balance.
-    const revertVendorBalance = Vendor.changeBalance(bill.vendorId, bill.amount * -1);
-  
-    await Promise.all([
-      deleteBillOper,
-      deleteBillEntriesOper,
-      deleteTransactionsOper,
-      deleteInventoryTransOper,
-      revertVendorBalance,
-    ]);
-    // Schedule sale invoice re-compute based on the item cost
-    // method and starting date.
-    await this.scheduleComputeItemsCost(bill); 
+    bill.entries.forEach((entry) => {
+      const oper = InventoryService.scheduleComputeItemCost(
+        entry.item_id || entry.itemId,
+        bill.bill_date || bill.billDate,
+      );
+      asyncOpers.push(oper);
+    });
+    return Promise.all(asyncOpers);
   }
 
   /**

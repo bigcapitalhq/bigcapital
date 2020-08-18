@@ -1,3 +1,4 @@
+import { Container } from 'typedi';
 import {
   InventoryTransaction,
   Item,
@@ -5,7 +6,6 @@ import {
 } from '@/models';
 import InventoryAverageCost from '@/services/Inventory/InventoryAverageCost';
 import InventoryCostLotTracker from '@/services/Inventory/InventoryCostLotTracker';
-import { option } from 'commander';
 
 type TCostMethod = 'FIFO' | 'LIFO' | 'AVG';
 
@@ -31,6 +31,23 @@ export default class InventoryService {
     }
     await costMethodComputer.initialize();
     await costMethodComputer.computeItemCost()
+  }
+
+  /**
+   * SChedule item cost compute job.
+   * @param {number} itemId 
+   * @param {Date} startingDate 
+   */
+  static async scheduleComputeItemCost(itemId: number, startingDate: Date|string) {
+    const agenda = Container.get('agenda');
+
+    // Delete the scheduled job in case has the same given data.
+    await agenda.cancel({
+      name: 'compute-item-cost',
+    });
+    return agenda.schedule('in 3 seconds', 'compute-item-cost', {
+      startingDate, itemId,
+    });
   }
 
   /**
@@ -89,10 +106,6 @@ export default class InventoryService {
       .delete();
   }
 
-  revertInventoryLotsCost(fromDate?: Date) {
-
-  }
-
   /**
    * Retrieve the lot number after the increment.
    */
@@ -102,7 +115,7 @@ export default class InventoryService {
       .where('key', LOT_NUMBER_KEY)
       .increment('value', 1);
 
-    if (effectRows) {
+    if (effectRows === 0) {
       await Option.tenant().query()
         .insert({
           key: LOT_NUMBER_KEY,

@@ -1,5 +1,4 @@
 import { omit, sumBy, difference, pick } from 'lodash';
-import { Container } from 'typedi';
 import {
   SaleInvoice,
   AccountTransaction,
@@ -74,56 +73,6 @@ export default class SaleInvoicesService {
     return storedInvoice;
   }
 
-  /** 
-   * Records the sale invoice journal entries and calculate the items cost 
-   * based on the given cost method in the options FIFO, LIFO or average cost rate.
-   * 
-   * @param {SaleInvoice} saleInvoice - 
-   * @param {Array} inventoryTransactions -
-   */
-  static async recordJournalEntries(saleInvoice: any, inventoryTransactions: array[]) {
-    
-  }
-
-  /**
-   * Records the inventory transactions from the givne sale invoice input.
-   * @param {SaleInvoice} saleInvoice -
-   * @param {number} saleInvoiceId -
-   * @param {boolean} override -
-   */
-  static recordInventoryTranscactions(saleInvoice, saleInvoiceId: number, override?: boolean){
-    const inventortyTransactions = saleInvoice.entries
-      .map((entry) => ({
-        ...pick(entry, ['item_id', 'quantity', 'rate']),
-        lotNumber: saleInvoice.invLotNumber,
-        transactionType: 'SaleInvoice',
-        transactionId: saleInvoiceId,
-        direction: 'OUT',
-        date: saleInvoice.invoice_date,
-      }));
-
-    return InventoryService.recordInventoryTransactions(
-      inventortyTransactions, override,
-    );
-  }
-
-  /**
-   * Schedule sale invoice re-compute based on the item
-   * cost method and starting date
-   * 
-   * @param {SaleInvoice} saleInvoice - 
-   * @return {Promise<Agenda>}
-   */
-  static scheduleComputeItemsCost(saleInvoice) {
-    const agenda = Container.get('agenda');
-
-    return agenda.schedule('in 1 second', 'compute-item-cost', {
-      startingDate: saleInvoice.invoice_date || saleInvoice.invoiceDate,
-      itemId: saleInvoice.entries[0].item_id || saleInvoice.entries[0].itemId,
-      costMethod: 'FIFO',
-    });
-  }
-
   /**
    * Edit the given sale invoice.
    * @async
@@ -177,42 +126,6 @@ export default class SaleInvoicesService {
     // Schedule sale invoice re-compute based on the item cost
     // method and starting date.
     await this.scheduleComputeItemsCost(saleInvoice); 
-  }
-
-  /**
-   * Deletes the inventory transactions.
-   * @param {string} transactionType 
-   * @param {number} transactionId 
-   */
-  static async revertInventoryTransactions(inventoryTransactions: array) {
-    const opers: Promise<[]>[] = [];
-
-    inventoryTransactions.forEach((trans: any) => {
-      switch(trans.direction) {
-        case 'OUT':
-          if (trans.inventoryTransactionId) {
-            const revertRemaining = InventoryTransaction.tenant()
-              .query()
-              .where('id', trans.inventoryTransactionId)
-              .where('direction', 'OUT')
-              .increment('remaining', trans.quanitity);
-  
-            opers.push(revertRemaining);
-          }
-          break;
-        case 'IN':
-          const removeRelationOper = InventoryTransaction.tenant()
-            .query()
-            .where('inventory_transaction_id', trans.id)
-            .where('direction', 'IN')
-            .update({
-              inventory_transaction_id: null,
-            });
-          opers.push(removeRelationOper);
-          break;
-      }
-    });
-    return Promise.all(opers);
   }
 
   /**
@@ -271,13 +184,82 @@ export default class SaleInvoicesService {
   }
 
   /**
-   * Records the journal entries of sale invoice.
-   * @async
-   * @param {ISaleInvoice} saleInvoice
-   * @return {void}
+   * Records the inventory transactions from the givne sale invoice input.
+   * @param {SaleInvoice} saleInvoice -
+   * @param {number} saleInvoiceId -
+   * @param {boolean} override -
    */
-  async recordJournalEntries(saleInvoice: any) {
+  static recordInventoryTranscactions(saleInvoice, saleInvoiceId: number, override?: boolean){
+    const inventortyTransactions = saleInvoice.entries
+      .map((entry) => ({
+        ...pick(entry, ['item_id', 'quantity', 'rate']),
+        lotNumber: saleInvoice.invLotNumber,
+        transactionType: 'SaleInvoice',
+        transactionId: saleInvoiceId,
+        direction: 'OUT',
+        date: saleInvoice.invoice_date,
+      }));
 
+    return InventoryService.recordInventoryTransactions(
+      inventortyTransactions, override,
+    );
+  }
+
+  /**
+   * Schedule sale invoice re-compute based on the item
+   * cost method and starting date
+   * 
+   * @private
+   * @param {SaleInvoice} saleInvoice - 
+   * @return {Promise<Agenda>}
+   */
+  private static scheduleComputeItemsCost(saleInvoice: any) {
+    const asyncOpers: Promise<[]>[] = [];
+
+    saleInvoice.entries.forEach((entry: any) => {
+      const oper: Promise<[]> = InventoryService.scheduleComputeItemCost(
+        entry.item_id || entry.itemId,
+        saleInvoice.bill_date || saleInvoice.billDate,
+      );
+      asyncOpers.push(oper);
+    });
+    return Promise.all(asyncOpers);
+  }
+
+  /**
+   * Deletes the inventory transactions.
+   * @param {string} transactionType 
+   * @param {number} transactionId 
+   */
+  static async revertInventoryTransactions(inventoryTransactions: array) {
+    const opers: Promise<[]>[] = [];
+
+    inventoryTransactions.forEach((trans: any) => {
+      switch(trans.direction) {
+        case 'OUT':
+          if (trans.inventoryTransactionId) {
+            const revertRemaining = InventoryTransaction.tenant()
+              .query()
+              .where('id', trans.inventoryTransactionId)
+              .where('direction', 'OUT')
+              .increment('remaining', trans.quanitity);
+  
+            opers.push(revertRemaining);
+          }
+          break;
+        case 'IN':
+          const removeRelationOper = InventoryTransaction.tenant()
+            .query()
+            .where('inventory_transaction_id', trans.id)
+            .where('direction', 'IN')
+            .update({
+              inventory_transaction_id: null,
+            });
+          opers.push(removeRelationOper);
+          break;
+      }
+    });
+    return Promise.all(opers);
   }
 
   /**
