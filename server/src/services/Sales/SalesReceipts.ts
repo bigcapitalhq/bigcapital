@@ -7,6 +7,7 @@ import {
 import JournalPoster from '@/services/Accounting/JournalPoster';
 import JournalPosterService from '@/services/Sales/JournalPosterService';
 import HasItemEntries from '@/services/Sales/HasItemsEntries';
+import { formatDateFields } from '@/utils';
 
 export default class SalesReceipt {
   /**
@@ -15,12 +16,14 @@ export default class SalesReceipt {
    * @param {ISaleReceipt} saleReceipt
    * @return {Object}
    */
-  static async createSaleReceipt(saleReceipt: any) {
-    const amount = sumBy(saleReceipt.entries, 'amount');
+  static async createSaleReceipt(saleReceiptDTO: any) {
+    const saleReceipt = {
+      amount: sumBy(saleReceiptDTO.entries, 'amount');
+      ...formatDateFields(saleReceiptDTO, ['receipt_date'])
+    };
     const storedSaleReceipt = await SaleReceipt.tenant()
       .query()
       .insert({
-        amount,
         ...omit(saleReceipt, ['entries']),
       });
     const storeSaleReceiptEntriesOpers: Array<any> = [];
@@ -40,28 +43,20 @@ export default class SalesReceipt {
   }
 
   /**
-   * Records journal transactions for sale receipt.
-   * @param {ISaleReceipt} saleReceipt
-   * @return {Promise}
-   */
-  static async _recordJournalTransactions(saleReceipt: any) {
-    const accountsDepGraph = await Account.tenant().depGraph().query();
-    const journalPoster = new JournalPoster(accountsDepGraph);
-  }
-
-  /**
    * Edit details sale receipt with associated entries.
    * @param {Integer} saleReceiptId
    * @param {ISaleReceipt} saleReceipt
    * @return {void}
    */
-  static async editSaleReceipt(saleReceiptId: number, saleReceipt: any) {
-    const amount = sumBy(saleReceipt.entries, 'amount');
+  static async editSaleReceipt(saleReceiptId: number, saleReceiptDTO: any) {
+    const saleReceipt = {
+      amount: sumBy(saleReceiptDTO.entries, 'amount'),
+      ...formatDateFields(saleReceiptDTO, ['receipt_date'])
+    };
     const updatedSaleReceipt = await SaleReceipt.tenant()
       .query()
       .where('id', saleReceiptId)
       .update({
-        amount,
         ...omit(saleReceipt, ['entries']),
       });
     const storedSaleReceiptEntries = await ItemEntry.tenant()
@@ -82,7 +77,11 @@ export default class SalesReceipt {
    * @return {void}
    */
   static async deleteSaleReceipt(saleReceiptId: number) {
-    const deleteSaleReceiptOper = SaleReceipt.tenant().query().where('id', saleReceiptId).delete();
+    const deleteSaleReceiptOper = SaleReceipt.tenant()
+      .query()
+      .where('id', saleReceiptId)
+      .delete();
+
     const deleteItemsEntriesOper = ItemEntry.tenant()
       .query()
       .where('reference_id', saleReceiptId)
@@ -147,5 +146,15 @@ export default class SalesReceipt {
       .withGraphFetched('entries');
 
     return saleReceipt;
+  }
+
+  /**
+   * Records journal transactions for sale receipt.
+   * @param {ISaleReceipt} saleReceipt
+   * @return {Promise}
+   */
+  static async _recordJournalTransactions(saleReceipt: any) {
+    const accountsDepGraph = await Account.tenant().depGraph().query();
+    const journalPoster = new JournalPoster(accountsDepGraph);
   }
 }

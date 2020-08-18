@@ -1,4 +1,4 @@
-import { omit, sumBy } from 'lodash';
+import { omit, sumBy, pick } from 'lodash';
 import moment from 'moment';
 import { Container } from 'typedi';
 import {
@@ -7,7 +7,6 @@ import {
   Vendor,
   ItemEntry,
   Item,
-  InventoryTransaction,
   AccountTransaction,
 } from '@/models';
 import JournalPoster from '@/services/Accounting/JournalPoster';
@@ -16,14 +15,16 @@ import AccountsService from '@/services/Accounts/AccountsService';
 import JournalPosterService from '@/services/Sales/JournalPosterService';
 import InventoryService from '@/services/Inventory/Inventory';
 import HasItemsEntries from '@/services/Sales/HasItemsEntries';
+import { formatDateFields } from '@/utils';
 
 /**
  * Vendor bills services.
+ * @service
  */
 export default class BillsService {
   /**
    * Creates a new bill and stored it to the storage.
-   *|
+   *
    * Precedures.
    * ----
    * - Insert bill transactions to the storage.
@@ -35,16 +36,18 @@ export default class BillsService {
    * @param {IBill} bill -
    * @return {void}
    */
-  static async createBill(bill) {
-    const agenda = Container.get('agenda');
-
-    const amount = sumBy(bill.entries, 'amount');
+  static async createBill(billDTO) { 
+    const invLotNumber = await InventoryService.nextLotNumber();
+    const bill = {
+      ...formatDateFields(billDTO, ['bill_date', 'due_date']),
+      amount: sumBy(billDTO.entries, 'amount'),
+      invLotNumber: billDTO.invLotNumber || invLotNumber
+    };
     const saveEntriesOpers = [];
 
     const storedBill = await Bill.tenant()
       .query()
       .insert({
-        amount,
         ...omit(bill, ['entries']),
       });
     bill.entries.forEach((entry) => {
@@ -58,11 +61,11 @@ export default class BillsService {
       saveEntriesOpers.push(oper);
     });
     // Increments vendor balance.
-    const incrementOper = Vendor.changeBalance(bill.vendor_id, amount);
+    const incrementOper = Vendor.changeBalance(bill.vendor_id, bill.amount);
 
     // Rewrite the inventory transactions for inventory items.
-    const writeInvTransactionsOper = InventoryService.recordInventoryTransactions(
-      bill.entries, bill.bill_date, 'Bill', storedBill.id, 'IN',
+    const writeInvTransactionsOper = this.recordInventoryTransactions(
+      bill, storedBill.id
     );
     // Writes the journal entries for the given bill transaction.
     const writeJEntriesOper = this.recordJournalTransactions({
@@ -75,7 +78,6 @@ export default class BillsService {
       writeInvTransactionsOper,
       writeJEntriesOper,
     ]); 
-
     // Schedule bill re-compute based on the item cost
     // method and starting date.
     await this.scheduleComputeItemsCost(bill); 
@@ -83,12 +85,38 @@ export default class BillsService {
     return storedBill;
   }
 
-  scheduleComputeItemCost(bill) {
+  /**
+   * Schedule a job to re-compute the bill's items based on cost method
+   * of the each one.
+   * @param {Bill} bill 
+   */
+  static scheduleComputeItemsCost(bill) {
+    const agenda = Container.get('agenda');
+
     return agenda.schedule('in 1 second', 'compute-item-cost', {
       startingDate: bill.bill_date || bill.billDate,
       itemId: bill.entries[0].item_id || bill.entries[0].itemId,
       costMethod: 'FIFO',
     });
+  }
+
+  /**
+   * Records the inventory transactions from the given bill input.
+   * @param {Bill} bill 
+   * @param {number} billId 
+   */
+  static recordInventoryTransactions(bill, billId, override) {
+    const inventoryTransactions = bill.entries
+      .map((entry) => ({
+        ...pick(entry, ['item_id', 'quantity', 'rate']),
+        lotNumber: bill.invLotNumber,
+        transactionType: 'Bill',
+        transactionId: billId,
+        direction: 'IN',
+        date: bill.bill_date,
+      }));
+
+    return InventoryService.recordInventoryTransactions(inventoryTransactions, override);
   }
 
   /**
@@ -106,19 +134,20 @@ export default class BillsService {
    * @param {Integer} billId - The given bill id.
    * @param {IBill} bill - The given new bill details.
    */
-  static async editBill(billId, bill) {
+  static async editBill(billId, billDTO) {
     const oldBill = await Bill.tenant().query().findById(billId);
-    const amount = sumBy(bill.entries, 'amount');
-
+    const bill = {
+      ...formatDateFields(billDTO, ['bill_date', 'due_date']),
+      amount: sumBy(billDTO.entries, 'amount'),
+      invLotNumber: oldBill.invLotNumber,
+    };
     // Update the bill transaction.
     const updatedBill = await Bill.tenant()
       .query()
       .where('id', billId)
       .update({
-        amount,
-        ...omit(bill, ['entries'])
+        ...omit(bill, ['entries', 'invLotNumber'])
       });
-
     // Old stored entries.
     const storedEntries = await ItemEntry.tenant()
       .query()
@@ -133,17 +162,12 @@ export default class BillsService {
     const changeVendorBalanceOper = Vendor.changeDiffBalance(
       bill.vendor_id,
       oldBill.vendorId,
-      amount,
+      bill.amount,
       oldBill.amount,
     );
     // Re-write the inventory transactions for inventory items.
-    const writeInvTransactionsOper = InventoryService.recordInventoryTransactions(
-      bill.entries, bill.bill_date, 'Bill', billId, 'IN'
-    );
-    // Delete bill associated inventory transactions.
-    const deleteInventoryTransOper = InventoryService.deleteInventoryTransactions(
-      billId, 'Bill'
-    );
+    const writeInvTransactionsOper = this.recordInventoryTransactions(bill, billId, true);
+
     // Writes the journal entries for the given bill transaction.
     const writeJEntriesOper = this.recordJournalTransactions({
       id: billId,
@@ -154,10 +178,8 @@ export default class BillsService {
       patchEntriesOper,
       changeVendorBalanceOper,
       writeInvTransactionsOper,
-      deleteInventoryTransOper,
       writeJEntriesOper,
     ]);
-
     // Schedule sale invoice re-compute based on the item cost
     // method and starting date.
     await this.scheduleComputeItemsCost(bill); 

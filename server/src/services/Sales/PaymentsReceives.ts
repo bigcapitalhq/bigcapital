@@ -15,6 +15,7 @@ import JournalPosterService from '@/services/Sales/JournalPosterService';
 import ServiceItemsEntries from '@/services/Sales/ServiceItemsEntries';
 import PaymentReceiveEntryRepository from '@/repositories/PaymentReceiveEntryRepository';
 import CustomerRepository from '@/repositories/CustomerRepository';
+import { formatDateFields } from '@/utils';
 
 /**
  * Payment receive service.
@@ -33,7 +34,7 @@ export default class PaymentReceiveService {
       .query()
       .insert({
         amount: paymentAmount,
-        ...omit(paymentReceive, ['entries']),
+        ...formatDateFields(omit(paymentReceive, ['entries']), ['payment_date']),
       });
     const storeOpers: Array<any> = [];
 
@@ -97,7 +98,7 @@ export default class PaymentReceiveService {
       .where('id', paymentReceiveId)
       .update({
         amount: paymentAmount,
-        ...omit(paymentReceive, ['entries']),
+        ...formatDateFields(omit(paymentReceive, ['entries']), ['payment_date']),
       });
     const opers = [];
     const entriesIds = paymentReceive.entries.filter((i: any) => i.id);

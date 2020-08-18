@@ -1,4 +1,4 @@
-import { omit, sumBy, difference } from 'lodash';
+import { omit, sumBy, difference, pick } from 'lodash';
 import { Container } from 'typedi';
 import {
   SaleInvoice,
@@ -12,6 +12,7 @@ import JournalPoster from '@/services/Accounting/JournalPoster';
 import HasItemsEntries from '@/services/Sales/HasItemsEntries';
 import CustomerRepository from '@/repositories/CustomerRepository';
 import InventoryService from '@/services/Inventory/Inventory';
+import { formatDateFields } from '@/utils';
 
 /**
  * Sales invoices service
@@ -25,14 +26,19 @@ export default class SaleInvoicesService {
    * @param {ISaleInvoice}
    * @return {ISaleInvoice}
    */
-  static async createSaleInvoice(saleInvoice: any) {
-    const balance = sumBy(saleInvoice.entries, 'amount');
+  static async createSaleInvoice(saleInvoiceDTO: any) {
+    const balance = sumBy(saleInvoiceDTO.entries, 'amount');
+    const invLotNumber = await InventoryService.nextLotNumber();
+    const saleInvoice = {
+      ...formatDateFields(saleInvoiceDTO, ['invoide_date', 'due_date']),
+      balance,
+      paymentAmount: 0,
+      invLotNumber,
+    };
     const storedInvoice = await SaleInvoice.tenant()
       .query()
       .insert({
         ...omit(saleInvoice, ['entries']),
-        balance,
-        payment_amount: 0,
       });
     const opers: Array<any> = [];
 
@@ -52,8 +58,8 @@ export default class SaleInvoicesService {
       balance,
     );
     // Records the inventory transactions for inventory items.
-    const recordInventoryTransOpers = InventoryService.recordInventoryTransactions(
-      saleInvoice.entries, saleInvoice.invoice_date, 'SaleInvoice', storedInvoice.id, 'OUT',
+    const recordInventoryTransOpers = this.recordInventoryTranscactions(
+      saleInvoice, storedInvoice.id
     );
     // Await all async operations.
     await Promise.all([
@@ -80,10 +86,32 @@ export default class SaleInvoicesService {
   }
 
   /**
+   * Records the inventory transactions from the givne sale invoice input.
+   * @param {SaleInvoice} saleInvoice -
+   * @param {number} saleInvoiceId -
+   * @param {boolean} override -
+   */
+  static recordInventoryTranscactions(saleInvoice, saleInvoiceId: number, override?: boolean){
+    const inventortyTransactions = saleInvoice.entries
+      .map((entry) => ({
+        ...pick(entry, ['item_id', 'quantity', 'rate']),
+        lotNumber: saleInvoice.invLotNumber,
+        transactionType: 'SaleInvoice',
+        transactionId: saleInvoiceId,
+        direction: 'OUT',
+        date: saleInvoice.invoice_date,
+      }));
+
+    return InventoryService.recordInventoryTransactions(
+      inventortyTransactions, override,
+    );
+  }
+
+  /**
    * Schedule sale invoice re-compute based on the item
    * cost method and starting date
    * 
-   * @param saleInvoice 
+   * @param {SaleInvoice} saleInvoice - 
    * @return {Promise<Agenda>}
    */
   static scheduleComputeItemsCost(saleInvoice) {
@@ -102,18 +130,22 @@ export default class SaleInvoicesService {
    * @param {Number} saleInvoiceId -
    * @param {ISaleInvoice} saleInvoice -
    */
-  static async editSaleInvoice(saleInvoiceId: number, saleInvoice: any) {
-    const balance = sumBy(saleInvoice.entries, 'amount');
+  static async editSaleInvoice(saleInvoiceId: number, saleInvoiceDTO: any) {
+    const balance = sumBy(saleInvoiceDTO.entries, 'amount');
     const oldSaleInvoice = await SaleInvoice.tenant().query()
       .where('id', saleInvoiceId)
       .first();
 
+    const saleInvoice = {
+      ...formatDateFields(saleInvoiceDTO, ['invoice_date', 'due_date']),
+      balance,
+      invLotNumber: oldSaleInvoice.invLotNumber,
+    };
     const updatedSaleInvoices = await SaleInvoice.tenant()
       .query()
       .where('id', saleInvoiceId)
       .update({
-        balance,
-        ...omit(saleInvoice, ['entries']),
+        ...omit(saleInvoice, ['entries', 'invLotNumber']),
       });
     // Fetches the sale invoice items entries.
     const storedEntries = await ItemEntry.tenant()
@@ -132,9 +164,14 @@ export default class SaleInvoicesService {
       balance,
       oldSaleInvoice.balance,
     );
+    // Records the inventory transactions for inventory items.
+    const recordInventoryTransOper = this.recordInventoryTranscactions(
+      saleInvoice, saleInvoiceId, true,
+    );
     await Promise.all([
       patchItemsEntriesOper,
       changeCustomerBalanceOper,
+      recordInventoryTransOper,
     ]);
 
     // Schedule sale invoice re-compute based on the item cost
@@ -221,7 +258,6 @@ export default class SaleInvoicesService {
     const revertInventoryTransactionsOper = this.revertInventoryTransactions(
       inventoryTransactions
     );
-    
     // Await all async operations.
     await Promise.all([
       journal.deleteEntries(),

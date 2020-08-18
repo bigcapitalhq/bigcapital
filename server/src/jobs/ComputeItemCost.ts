@@ -6,7 +6,14 @@ export default class ComputeItemCostJob {
     const Logger = Container.get('logger');
     const { startingDate, itemId, costMethod } = job.attrs.data;
 
-    await InventoryService.computeItemCost(startingDate, itemId, costMethod);  
-    done();
+    try {
+      await InventoryService.computeItemCost(startingDate, itemId, costMethod);  
+      Logger.log(`Compute item cost: ${job.attrs.data}`);
+      done();
+    } catch(e) {
+      Logger.error(`Compute item cost: ${job.attrs.data}, error: ${e}`);
+      done(e);  
+    }
+    
   }
 }

@@ -1,5 +1,6 @@
 import Customer from './Customer';
 import Vendor from './Vendor';
+import Option from './Option';
 import SaleEstimate from './SaleEstimate';
 import SaleEstimateEntry from './SaleEstimateEntry';
 import SaleReceipt from './SaleReceipt';
@@ -44,4 +45,5 @@ export {
   InventoryTransaction,
   InventoryLotCostTracker,
   AccountType,
+  Option,
 };

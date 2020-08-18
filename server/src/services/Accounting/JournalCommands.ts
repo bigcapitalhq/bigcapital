@@ -45,8 +45,6 @@ export default class JournalCommands{
       .map((groupedTrans: IInventoryTransaction[], transType: string) => [groupedTrans, transType])
       .value();
 
-    console.log(groupedInvTransactions);
-
     return Promise.all(
       groupedInvTransactions.map(async (grouped: [IInventoryTransaction[], string]) => {
         const [invTransGroup, referenceType] = grouped;
@@ -57,8 +55,6 @@ export default class JournalCommands{
           .where('reference_type', referenceType)
           .whereIn('reference_id', referencesIds)
           .withGraphFetched('account.type');
-
-        console.log(_transactions, referencesIds);
 
         if (_transactions.length > 0) {
           this.journal.loadEntries(_transactions);

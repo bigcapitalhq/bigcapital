@@ -1,5 +1,4 @@
 import { omit, pick, chain } from 'lodash';
-import uniqid from 'uniqid';
 import {
   InventoryTransaction,
   InventoryLotCostTracker,
@@ -62,6 +61,7 @@ export default class InventoryCostLotTracker implements IInventoryCostMethod {
         .query()
         .where('date', '>=', this.startingDate)
         .orderBy('date', 'ASC')
+        .orderBy('lot_number', 'ASC')
         .where('item_id', this.itemId)
         .withGraphFetched('item');
 
@@ -70,6 +70,7 @@ export default class InventoryCostLotTracker implements IInventoryCostMethod {
         .query()
         .where('date', '<', this.startingDate)
         .orderBy('date', 'ASC')
+        .orderBy('lot_number', 'ASC')
         .where('item_id', this.itemId)
         .where('direction', 'IN')
         .whereNot('remaining', 0);
@@ -267,17 +268,16 @@ export default class InventoryCostLotTracker implements IInventoryCostMethod {
           ...commonLotTransaction,
           decrement: 0,
           remaining: commonLotTransaction.remaining || commonLotTransaction.quantity,
-          lotNumber: commonLotTransaction.lotNumber || uniqid.time(),
         };
         costLotsTransactions.push(inventoryINTrans[id]);
 
       // Record inventory 'OUT' cost lots from 'IN' transactions.
       } else if (transaction.direction === 'OUT') {
         let invRemaining = transaction.quantity;
+        const idsShouldDel: number[] = [];
 
         inventoryByItem?.[itemId]?.some((
           _invTransactionId: number,
-          index: number,
         ) => {
           const _invINTransaction = inventoryINTrans[_invTransactionId];
           if (invRemaining <= 0) { return true; }
@@ -285,22 +285,23 @@ export default class InventoryCostLotTracker implements IInventoryCostMethod {
           // Detarmines the 'OUT' lot tranasctions whether bigger than 'IN' remaining transaction.
           const biggerThanRemaining = (_invINTransaction.remaining - transaction.quantity) > 0;
           const decrement = (biggerThanRemaining) ? transaction.quantity : _invINTransaction.remaining;
+          const maxDecrement = Math.min(decrement, invRemaining);
 
-          _invINTransaction.decrement += decrement;
+          _invINTransaction.decrement += maxDecrement;
           _invINTransaction.remaining = Math.max(
-            _invINTransaction.remaining - decrement,
+            _invINTransaction.remaining - maxDecrement,
             0,
           );
-          invRemaining = Math.max(invRemaining - decrement, 0);
+          invRemaining = Math.max(invRemaining - maxDecrement, 0);
 
           costLotsTransactions.push({
             ...commonLotTransaction,
-            quantity: decrement,
+            quantity: maxDecrement,
             lotNumber: _invINTransaction.lotNumber,
           });
           // Pop the 'IN' lots that has zero remaining. 
           if (_invINTransaction.remaining === 0) {
-            inventoryByItem?.[itemId].splice(index, 1);
+            idsShouldDel.push(_invTransactionId);
           }
           return false;
         });
@@ -310,6 +311,9 @@ export default class InventoryCostLotTracker implements IInventoryCostMethod {
             quantity: invRemaining,
           });
         }
+        // Remove the IN transactions that has zero remaining amount.
+        inventoryByItem[itemId] = inventoryByItem?.[itemId]
+          ?.filter((transId: number) => idsShouldDel.indexOf(transId) === -1);
       }
     });
     return costLotsTransactions;

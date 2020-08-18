@@ -2,21 +2,23 @@ import { omit, difference, sumBy, mixin } from 'lodash';
 import moment from 'moment';
 import { SaleEstimate, ItemEntry } from '@/models';
 import HasItemsEntries from '@/services/Sales/HasItemsEntries';
+import { formatDateFields } from '@/utils';
 
 export default class SaleEstimateService {
   /**
    * Creates a new estimate with associated entries.
    * @async
-   * @param {IEstimate} estimate
+   * @param {EstimateDTO} estimate
    * @return {void}
    */
-  static async createEstimate(estimate: any) {
-    const amount = sumBy(estimate.entries, 'amount');
-
+  static async createEstimate(estimateDTO: any) {
+    const estimate = {
+      amount: sumBy(estimateDTO.entries, 'amount'),
+      ...formatDateFields(estimateDTO, ['estimate_date', 'expiration_date']),
+    };
     const storedEstimate = await SaleEstimate.tenant()
       .query()
       .insert({
-        amount,
         ...omit(estimate, ['entries']),
       });
     const storeEstimateEntriesOpers: any[] = [];
@@ -37,33 +39,20 @@ export default class SaleEstimateService {
   }
 
   /**
-   * Deletes the given estimate id with associated entries.
-   * @async
-   * @param {IEstimate} estimateId
-   * @return {void}
-   */
-  static async deleteEstimate(estimateId: number) {
-    await ItemEntry.tenant()
-      .query()
-      .where('reference_id', estimateId)
-      .where('reference_type', 'SaleEstimate')
-      .delete();
-    await SaleEstimate.tenant().query().where('id', estimateId).delete();
-  }
-
-  /**
    * Edit details of the given estimate with associated entries.
    * @async
    * @param {Integer} estimateId
-   * @param {IEstimate} estimate
+   * @param {EstimateDTO} estimate
    * @return {void}
    */
-  static async editEstimate(estimateId: number, estimate: any) {
-    const amount = sumBy(estimate.entries, 'amount');
+  static async editEstimate(estimateId: number, estimateDTO: any) {
+    const estimate = {
+      amount: sumBy(estimateDTO.entries, 'amount'),
+      ...formatDateFields(estimateDTO, ['estimate_date', 'expiration_date']),
+    };
     const updatedEstimate = await SaleEstimate.tenant()
       .query()
       .update({
-        amount,
         ...omit(estimate, ['entries']),
       });
     const storedEstimateEntries = await ItemEntry.tenant()
@@ -78,6 +67,26 @@ export default class SaleEstimateService {
       patchItemsEntries,
     ]);
   }
+
+  /**
+   * Deletes the given estimate id with associated entries.
+   * @async
+   * @param {IEstimate} estimateId
+   * @return {void}
+   */
+  static async deleteEstimate(estimateId: number) {
+    await ItemEntry.tenant()
+      .query()
+      .where('reference_id', estimateId)
+      .where('reference_type', 'SaleEstimate')
+      .delete();
+
+    await SaleEstimate.tenant()
+      .query()
+      .where('id', estimateId)
+      .delete();
+  }
+
 
   /**
    * Validates the given estimate ID exists.

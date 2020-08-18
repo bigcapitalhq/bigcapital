@@ -802,8 +802,6 @@ describe('routes: `/views`', () => {
             value: '100',
           }],
         });
-
-      // console.log(res.status, res.body);
       const foundViewColumns = await ViewColumn.tenant().query().where('id', viewColumn.id);
       expect(foundViewColumns.length).equals(0);
     });

@@ -14,6 +14,7 @@ import AccountsService from '@/services/Accounts/AccountsService';
 import JournalPoster from '@/services/Accounting/JournalPoster';
 import JournalEntry from '@/services/Accounting/JournalEntry';
 import JournalPosterService from '@/services/Sales/JournalPosterService';
+import { formatDateFields } from '@/utils';
 
 /**
  * Bill payments service.
@@ -32,14 +33,16 @@ export default class BillPaymentsService {
    * - Decrement the vendor balance.
    * - Records payment journal entries.
    *
-   * @param {IBillPayment} billPayment
+   * @param {BillPaymentDTO} billPayment
    */
-  static async createBillPayment(billPayment) {
-    const amount = sumBy(billPayment.entries, 'payment_amount');
+  static async createBillPayment(billPaymentDTO) {
+    const billPayment = {
+      amount: sumBy(billPaymentDTO.entries, 'payment_amount'),
+      ...formatDateFields(billPaymentDTO, ['payment_date']),
+    }
     const storedBillPayment = await BillPayment.tenant()
       .query()
       .insert({
-        amount,
         ...omit(billPayment, ['entries']),
       });
     const storeOpers = [];
@@ -62,7 +65,7 @@ export default class BillPaymentsService {
     // Decrement the vendor balance after bills payments.
     const vendorDecrementOper = Vendor.changeBalance(
       billPayment.vendor_id,
-      amount * -1,
+      billPayment.amount * -1,
     );
     // Records the journal transactions after bills payment
     // and change diff acoount balance.
@@ -92,23 +95,23 @@ export default class BillPaymentsService {
    * - Update the diff bill payment amount.
    *
    * @param {Integer} billPaymentId
-   * @param {IBillPayment} billPayment
+   * @param {BillPaymentDTO} billPayment
    * @param {IBillPayment} oldBillPayment
    */
-  static async editBillPayment(billPaymentId, billPayment, oldBillPayment) {
-    const amount = sumBy(billPayment.entries, 'payment_amount');
+  static async editBillPayment(billPaymentId, billPaymentDTO, oldBillPayment) {
+    const billPayment = {
+      amount: sumBy(billPaymentDTO.entries, 'payment_amount'),
+      ...formatDateFields(billPaymentDTO, ['payment_date']),
+    };
     const updateBillPayment = await BillPayment.tenant()
       .query()
       .where('id', billPaymentId)
       .update({
-        amount,
         ...omit(billPayment, ['entries']),
       });
     const opers = [];
-    const entriesHasIds = billpayment.entries.filter((i) => i.id);
+    const entriesHasIds = billPayment.entries.filter((i) => i.id);
     const entriesHasNoIds = billPayment.entries.filter((e) => !e.id);
-
-    const entriesIds = entriesHasIds.map((e) => e.id);
 
     const entriesIdsShouldDelete = ServiceItemsEntries.entriesShouldDeleted(
       oldBillPayment.entries,

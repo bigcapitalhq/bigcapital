@@ -204,8 +204,6 @@ describe('routes: /accounts/', () => {
           code: '123',
         });
 
-      console.log(res.body);
-
       expect(res.status).equals(200);
     });
   });

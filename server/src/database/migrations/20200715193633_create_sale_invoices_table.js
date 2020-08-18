@@ -15,6 +15,7 @@ exports.up = function(knex) {
     table.decimal('balance', 13, 3);
     table.decimal('payment_amount', 13, 3);
 
+    table.string('inv_lot_number');
     table.timestamps();
   });  
 };

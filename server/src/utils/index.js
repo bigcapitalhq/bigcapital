@@ -144,6 +144,17 @@ function applyMixins(derivedCtor, baseCtors) {
   });
 }
 
+const formatDateFields = (inputDTO, fields, format = 'YYYY-DD-MM') => {
+  const _inputDTO = { ...inputDTO };
+
+  fields.forEach((field) => {
+    if (_inputDTO[field]) {
+      _inputDTO[field] = moment(_inputDTO[field]).format(format);
+    }
+  });
+  return _inputDTO;
+};
+
 export {
   hashPassword,
   origin,
@@ -156,4 +167,5 @@ export {
   itemsStartWith,
   getTotalDeep,
   applyMixins,
+  formatDateFields,
 };

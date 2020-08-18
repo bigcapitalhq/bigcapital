@@ -1,9 +1,11 @@
 import {
   InventoryTransaction,
-  Item
+  Item,
+  Option,
 } from '@/models';
 import InventoryAverageCost from '@/services/Inventory/InventoryAverageCost';
 import InventoryCostLotTracker from '@/services/Inventory/InventoryCostLotTracker';
+import { option } from 'commander';
 
 type TCostMethod = 'FIFO' | 'LIFO' | 'AVG';
 
@@ -38,10 +40,7 @@ export default class InventoryService {
    */
   static async recordInventoryTransactions(
     entries: [],
-    date: Date,
-    transactionType: string,
-    transactionId: number,
-    direction: string,
+    deleteOld: boolean,
   ) {
     const storedOpers: any = [];
     const entriesItemsIds = entries.map((e: any) => e.item_id);
@@ -56,19 +55,22 @@ export default class InventoryService {
     const inventoryEntries = entries.filter(
       (entry: any) => inventoryItemsIds.indexOf(entry.item_id) !== -1
     );
-    inventoryEntries.forEach((entry: any) => {
+    inventoryEntries.forEach(async (entry: any) => {
+      if (deleteOld) {
+        await this.deleteInventoryTransactions(
+          entry.transactionId,
+          entry.transactionType,
+        );
+      }
       const oper = InventoryTransaction.tenant().query().insert({
-        date,
-        direction,
-        item_id: entry.item_id,
-        quantity: entry.quantity,
-        rate: entry.rate,
-        transaction_type: transactionType,
-        transaction_id: transactionId,
+        ...entry,
+        lotNumber: entry.lotNumber,
       });
       storedOpers.push(oper);
-    });
-    return Promise.all(storedOpers);
+    });    
+    return Promise.all([
+      ...storedOpers,
+    ]);
   }
 
   /**
@@ -89,5 +91,25 @@ export default class InventoryService {
 
   revertInventoryLotsCost(fromDate?: Date) {
 
+  }
+
+  /**
+   * Retrieve the lot number after the increment.
+   */
+  static async nextLotNumber() {
+    const LOT_NUMBER_KEY = 'lot_number_increment';
+    const effectRows = await Option.tenant().query()
+      .where('key', LOT_NUMBER_KEY)
+      .increment('value', 1);
+
+    if (effectRows) {
+      await Option.tenant().query()
+        .insert({
+          key: LOT_NUMBER_KEY,
+          value: 1,
+        });
+    }
+    const options = await Option.tenant().query();
+    return options.getMeta(LOT_NUMBER_KEY, 1);
   }
 }
