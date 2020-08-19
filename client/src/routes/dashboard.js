@@ -204,4 +204,122 @@ export default [
     }),
     breadcrumb: 'Customers',
   },
+
+  //Estimates
+  {
+    path: `/estimates/:id/edit`,
+    component: LazyLoader({
+      loader: () => import('containers/Sales/Estimate/Estimates'),
+    }),
+    breadcrumb: 'Edit',
+  },
+  {
+    path: `/estimates/new`,
+    component: LazyLoader({
+      loader: () => import('containers/Sales/Estimate/Estimates'),
+    }),
+    breadcrumb: 'New Estimates',
+  },
+  {
+    path: `/estimates`,
+    component: LazyLoader({
+      loader: () => import('containers/Sales/Estimate/EstimateList'),
+    }),
+    breadcrumb: 'Estimates List',
+  },
+
+  //Invoices
+
+  {
+    path: `/invoices/:id/edit`,
+    component: LazyLoader({
+      loader: () => import('containers/Sales/Invoice/Invoices'),
+    }),
+    breadcrumb: 'Edit',
+  },
+
+  {
+    path: `/invoices/new`,
+    component: LazyLoader({
+      loader: () => import('containers/Sales/Invoice/Invoices'),
+    }),
+    breadcrumb: 'New Invoice',
+  },
+  {
+    path: `/invoices`,
+    component: LazyLoader({
+      loader: () => import('containers/Sales/Invoice/InvoiceList'),
+    }),
+    breadcrumb: 'Invoices List',
+  },
+
+  //Receipts
+  {
+    path: `/receipts/:id/edit`,
+    component: LazyLoader({
+      loader: () => import('containers/Sales/Receipt/Receipts'),
+    }),
+    breadcrumb: 'Edit',
+  },
+  {
+    path: `/receipts/new`,
+    component: LazyLoader({
+      loader: () => import('containers/Sales/Receipt/Receipts'),
+    }),
+    breadcrumb: 'New Receipt',
+  },
+  {
+    path: `/receipts`,
+    component: LazyLoader({
+      loader: () => import('containers/Sales/Receipt/ReceiptList'),
+    }),
+    breadcrumb: 'Receipt List',
+  },
+
+  // Payment Receives
+
+  {
+    path: `/payment-receive/:id/edit`,
+    component: LazyLoader({
+      loader: () => import('containers/Sales/PaymentReceive/PaymentReceives'),
+    }),
+    breadcrumb: 'Edit',
+  },
+  {
+    path: `/payment-receive/new`,
+    component: LazyLoader({
+      loader: () => import('containers/Sales/PaymentReceive/PaymentReceives'),
+    }),
+    breadcrumb: 'New Payment Receive',
+  },
+
+  //Bills
+  {
+    path: `/bills/:id/edit`,
+    component: LazyLoader({
+      loader: () => import('containers/Purchases/Bill/Bills'),
+    }),
+    breadcrumb: 'Edit',
+  },
+  {
+    path: `/bills/new`,
+    component: LazyLoader({
+      loader: () => import('containers/Purchases/Bill/Bills'),
+    }),
+    breadcrumb: 'New Bill',
+  },
+  {
+    path: `/bills`,
+    component: LazyLoader({
+      loader: () => import('containers/Purchases/Bill/BillList'),
+    }),
+    breadcrumb: 'Bill List',
+  },
+  {
+    path: `/receipts`,
+    component: LazyLoader({
+      loader: () => import('containers/Sales/Receipt/ReceiptList'),
+    }),
+    breadcrumb: 'Receipt List',
+  },
 ];

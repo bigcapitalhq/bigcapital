@@ -17,6 +17,12 @@ import search from './search/search.type';
 import register from './registers/register.type';
 import exchangeRate from './ExchangeRate/exchange.type';
 import customer from './customers/customers.type';
+import estimates from './Estimate/estimates.types';
+import invoices from './Invoice/invoices.types';
+import receipts from './receipt/receipt.type';
+import bills from './Bills/bills.type';
+import paymentReceives from './PaymentReceive/paymentReceive.type';
+import vendors from './vendors/vendors.types';
 
 export default {
   ...authentication,
@@ -38,4 +44,10 @@ export default {
   ...register,
   ...exchangeRate,
   ...customer,
+  ...estimates,
+  ...invoices,
+  ...receipts,
+  ...bills,
+  ...paymentReceives,
+  ...vendors,
 };

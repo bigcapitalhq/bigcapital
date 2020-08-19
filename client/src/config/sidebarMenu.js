@@ -37,16 +37,55 @@ export default [
   },
   {
     text: <T id={'sales'} />,
-    children: [],
+    children: [
+      {
+        text: <T id={'estimates'} />,
+        href: '/estimates/new',
+      },
+      // {
+      //   text: <T id={'estimate_list'} />,
+      //   href: '/estimates',
+      // },
+      {
+        text: <T id={'invocies'} />,
+        href: '/invoices/new',
+      },
+      // {
+      //   text: <T id={'invoices_list'} />,
+      //   href: '/invoices',
+      // },
+      {
+        text: <T id={'payment_receives'} />,
+        href: '/payment-receive/new',
+      },
+      {
+        divider: true,
+        text: <T id={'invoices_list'} />,
+        href: '/invoices',
+      },
+      {
+        text: <T id={'receipts'} />,
+        href: '/receipts/new',
+      },
+      // {
+      //   text: <T id={'receipt_list'} />,
+      //   href: '/receipts',
+      // },
+    ],
   },
   {
     text: <T id={'purchases'} />,
     children: [
       {
-        icon: 'cut',
-        text: 'cut',
-        label: '⌘C',
-        disabled: false,
+        text: <T id={'bills'} />,
+        href: '/bills/new',
+      },
+      // {
+      //   text: <T id={'bill_list'} />,
+      //   href: '/bills',
+      // },
+      {
+        text: <T id={'payment_mades'} />,
       },
     ],
   },
@@ -99,11 +138,11 @@ export default [
     text: <T id={'expenses'} />,
     children: [
       {
-        text: <T id={'expenses'}/>,
+        text: <T id={'expenses'} />,
         href: '/expenses-list',
       },
       {
-        text: <T id={'new_expense'}/>,
+        text: <T id={'new_expense'} />,
         href: '/expenses/new',
       },
     ],
@@ -140,12 +179,12 @@ export default [
       },
       {
         text: 'Receivable Aging Summary',
-        href: '/financial-reports/receivable-aging-summary'
+        href: '/financial-reports/receivable-aging-summary',
       },
       {
         text: 'Payable Aging Summary',
-        href: '/financial-reports/payable-aging-summary'
-      }
+        href: '/financial-reports/payable-aging-summary',
+      },
     ],
   },
   {
