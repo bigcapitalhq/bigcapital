@@ -8,7 +8,7 @@ export default class ComputeItemCostJob {
 
     try {
       await InventoryService.computeItemCost(startingDate, itemId, costMethod);  
-      Logger.log(`Compute item cost: ${job.attrs.data}`);
+      Logger.debug(`Compute item cost: ${job.attrs.data}`);
       done();
     } catch(e) {
       console.log(e);

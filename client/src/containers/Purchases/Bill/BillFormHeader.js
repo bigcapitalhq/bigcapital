@@ -76,12 +76,10 @@ function BillFormHeader({
     }
   };
 
-  console.log(vendorsCurrentPage, 'vendorsCurrentPage');
-  console.log(vendorItems, 'vendorItems');
   return (
-    <div>
-      <div>
-        {/* vendor  account name */}
+    <div className="page-form page-form--bill">
+      <div className={'page-form__primary-section'}>
+        {/* Vendor  account name */}
         <FormGroup
           label={<T id={'vendor_name'} />}
           inline={true}

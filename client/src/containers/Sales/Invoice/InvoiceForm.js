@@ -11,6 +11,7 @@ import moment from 'moment';
 import { Intent, FormGroup, TextArea, Button } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { pick } from 'lodash';
+import { Row, Col } from 'react-grid-system';
 
 import InvoiceFormHeader from './InvoiceFormHeader';
 import EstimatesItemsTable from 'containers/Sales/Estimate/EntriesItemsTable';
@@ -308,31 +309,38 @@ function InvoiceForm({
           onClickClearAllLines={handleClearAllLines}
           formik={formik}
         />
-        <FormGroup
-          label={<T id={'invoice_message'} />}
-          className={'form-group--customer_note'}
-        >
-          <TextArea
-            growVertically={true}
-            {...formik.getFieldProps('invoice_message')}
-          />
-        </FormGroup>
-        <FormGroup
-          label={<T id={'terms_conditions'} />}
-          className={'form-group--terms_conditions'}
-        >
-          <TextArea
-            growVertically={true}
-            {...formik.getFieldProps('terms_conditions')}
-          />
-        </FormGroup>
-        <Dragzone
-          initialFiles={initialAttachmentFiles}
-          onDrop={handleDropFiles}
-          onDeleteFile={handleDeleteFile}
-          hint={'Attachments: Maxiumum size: 20MB'}
-        />
+        <Row>
+          <Col>
+            <FormGroup
+              label={<T id={'invoice_message'} />}
+              className={'form-group--customer_note'}
+            >
+              <TextArea
+                growVertically={true}
+                {...formik.getFieldProps('invoice_message')}
+              />
+            </FormGroup>
+            <FormGroup
+              label={<T id={'terms_conditions'} />}
+              className={'form-group--terms_conditions'}
+            >
+              <TextArea
+                growVertically={true}
+                {...formik.getFieldProps('terms_conditions')}
+              />
+            </FormGroup>
+          </Col>
+
+          <Col>
+            <Dragzone
+              initialFiles={initialAttachmentFiles}
+              onDrop={handleDropFiles}
+              onDeleteFile={handleDeleteFile}
+              hint={'Attachments: Maxiumum size: 20MB'}
+            /></Col>
+        </Row>
       </form>
+
       <InvoiceFormFooter
         formik={formik}
         onSubmitClick={handleSubmitClick}

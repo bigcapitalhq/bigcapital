@@ -21,6 +21,22 @@ interface IInventoryCostEntity {
   income: number,
 };
 
+interface NonInventoryJEntries {
+  date: Date,
+
+  referenceType: string,
+  referenceId: number,
+
+  receivable: number,
+  payable: number,
+
+  incomeAccountId: number,
+  income: number,
+
+  costAccountId: number,
+  cost: number,
+};
+
 export default class JournalCommands{
   journal: JournalPoster;
 
@@ -62,6 +78,50 @@ export default class JournalCommands{
         }
       })
     );
+  }
+
+  public async nonInventoryEntries(
+    transactions: NonInventoryJEntries[]
+  ) {
+    const receivableAccount = { id: 10 };
+    const payableAccount = {id: 11};
+
+    transactions.forEach((trans: NonInventoryJEntries) => {
+      const commonEntry = {
+        date: trans.date,
+        referenceId: trans.referenceId,
+        referenceType: trans.referenceType,
+      };
+
+      switch(trans.referenceType) {  
+        case 'Bill':
+          const payableEntry: JournalEntry = new JournalEntry({
+            ...commonEntry,
+            credit: trans.payable,
+            account: payableAccount.id,            
+          });
+          const costEntry: JournalEntry = new JournalEntry({
+            ...commonEntry,
+          });
+          this.journal.credit(payableEntry);
+          this.journal.debit(costEntry);
+          break;
+        case 'SaleInvoice':
+          const receivableEntry: JournalEntry = new JournalEntry({
+            ...commonEntry,
+            debit: trans.receivable,
+            account: receivableAccount.id,
+          });
+          const saleIncomeEntry: JournalEntry = new JournalEntry({
+            ...commonEntry,
+            credit: trans.income,
+            account: trans.incomeAccountId,
+          });
+          this.journal.debit(receivableEntry);
+          this.journal.credit(saleIncomeEntry);
+          break;
+      }
+    });
   }
 
   /**

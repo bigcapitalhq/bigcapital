@@ -59,10 +59,13 @@ $pt-font-family: Noto Sans, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
 @import 'pages/invite-user.scss';
 @import 'pages/exchange-rate.scss';
 @import 'pages/customer.scss';
-@import 'pages/estimate.scss';
+@import 'pages/estimates';
+@import 'pages/receipts';
+@import 'pages/invoices';
 
- // Views
-  @import 'views/filter-dropdown';
+
+// Views
+@import 'views/filter-dropdown';
 @import 'views/sidebar';
 
 .App {

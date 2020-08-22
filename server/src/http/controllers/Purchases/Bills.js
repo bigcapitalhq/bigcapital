@@ -25,6 +25,7 @@ export default class BillsController extends BaseController {
       asyncMiddleware(this.validateVendorExistance),
       asyncMiddleware(this.validateItemsIds),
       asyncMiddleware(this.validateBillNumberExists),
+      asyncMiddleware(this.validateNonPurchasableEntriesItems),
       asyncMiddleware(this.newBill)
     );
     router.post(
@@ -35,6 +36,7 @@ export default class BillsController extends BaseController {
       asyncMiddleware(this.validateVendorExistance),
       asyncMiddleware(this.validateItemsIds),
       asyncMiddleware(this.validateEntriesIdsExistance),
+      asyncMiddleware(this.validateNonPurchasableEntriesItems),
       asyncMiddleware(this.editBill)
     );
     router.get(
@@ -196,6 +198,32 @@ export default class BillsController extends BaseController {
     if (notFoundEntriesIds.length > 0) {
       return res.status(400).send({
         errors: [{ type: 'BILL.ENTRIES.IDS.NOT.FOUND', code: 600 }],
+      });
+    }
+    next();
+  }
+
+  /**
+   * Validate the entries items that not purchase-able. 
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {Function} next 
+   */
+  static async validateNonPurchasableEntriesItems(req, res, next) {
+    const { Item } = req.models;
+    const bill = { ...req.body };
+    const itemsIds = bill.entries.map(e => e.item_id);
+    
+    const purchasbleItems = await Item.query()
+      .where('purchasable', true)
+      .whereIn('id', itemsIds);
+
+    const purchasbleItemsIds = purchasbleItems.map((item) => item.id);
+    const notPurchasableItems = difference(itemsIds, purchasbleItemsIds);
+
+    if (notPurchasableItems.length > 0) {
+      return res.status(400).send({
+        errors: [{ type: 'NOT.PURCHASE.ABLE.ITEMS', code: 600 }],
       });
     }
     next();

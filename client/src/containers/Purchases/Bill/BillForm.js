@@ -9,6 +9,7 @@ import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import moment from 'moment';
 import { Intent, FormGroup, TextArea } from '@blueprintjs/core';
+import { Row, Col } from 'react-grid-system';
 
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { pick } from 'lodash';
@@ -291,15 +292,22 @@ function BillForm({
           onClickAddNewRow={onClickAddNewRow}
           onClickClearAllLines={onClickCleanAllLines}
         />
-        <FormGroup label={<T id={'note'} />} className={'form-group--'}>
-          <TextArea growVertically={true} {...formik.getFieldProps('note')} />
-        </FormGroup>
-        <Dragzone
-          initialFiles={initialAttachmentFiles}
-          onDrop={handleDropFiles}
-          onDeleteFile={handleDeleteFile}
-          hint={'Attachments: Maxiumum size: 20MB'}
-        />
+        <Row>
+          <Col>
+            <FormGroup label={<T id={'note'} />} className={'form-group--'}>
+              <TextArea growVertically={true} {...formik.getFieldProps('note')} />
+            </FormGroup>
+          </Col>
+
+          <Col>
+            <Dragzone
+              initialFiles={initialAttachmentFiles}
+              onDrop={handleDropFiles}
+              onDeleteFile={handleDeleteFile}
+              hint={'Attachments: Maxiumum size: 20MB'}
+            />
+          </Col>
+        </Row>
       </form>
       <BillFormFooter
         formik={formik}

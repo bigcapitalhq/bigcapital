@@ -12,12 +12,34 @@ import HasItemsEntries from '@/services/Sales/HasItemsEntries';
 import CustomerRepository from '@/repositories/CustomerRepository';
 import InventoryService from '@/services/Inventory/Inventory';
 import { formatDateFields } from '@/utils';
+import { Item } from '../../models';
+import JournalCommands from '../Accounting/JournalCommands';
 
 /**
  * Sales invoices service
  * @service
  */
 export default class SaleInvoicesService {
+
+  static filterNonInventoryEntries(entries: [], items: []) {
+    const nonInventoryItems = items.filter((item: any) => item.type !== 'inventory');
+    const nonInventoryItemsIds = nonInventoryItems.map((i: any) => i.id);
+
+    return entries
+      .filter((entry: any) => (
+        (nonInventoryItemsIds.indexOf(entry.item_id)) !== -1
+      ));
+  }
+
+  static filterInventoryEntries(entries: [], items: []) {
+    const inventoryItems = items.filter((item: any) => item.type === 'inventory');
+    const inventoryItemsIds = inventoryItems.map((i: any) => i.id);
+
+    return entries
+      .filter((entry: any) => (
+        (inventoryItemsIds.indexOf(entry.item_id)) !== -1
+      ));
+  }
   /**
    * Creates a new sale invoices and store it to the storage
    * with associated to entries and journal transactions.
@@ -60,17 +82,63 @@ export default class SaleInvoicesService {
     const recordInventoryTransOpers = this.recordInventoryTranscactions(
       saleInvoice, storedInvoice.id
     );
+    // Records the non-inventory transactions of the entries items.
+    const recordNonInventoryJEntries = this.recordNonInventoryEntries(
+      saleInvoice, storedInvoice.id,
+    );
     // Await all async operations.
     await Promise.all([
       ...opers,
       incrementOper,
+      recordNonInventoryJEntries,
       recordInventoryTransOpers,
     ]);
     // Schedule sale invoice re-compute based on the item cost
     // method and starting date.
-    await this.scheduleComputeItemsCost(saleInvoice); 
-
+    // await this.scheduleComputeItemsCost(saleInvoice);
     return storedInvoice;
+  }
+
+  /**
+   * Records the journal entries for non-inventory entries.
+   * @param {SaleInvoice} saleInvoice 
+   */
+  static async recordNonInventoryEntries(saleInvoice: any, saleInvoiceId: number) {
+    const saleInvoiceItems = saleInvoice.entries.map((entry: any) => entry.item_id);
+
+    // Retrieves items data to detarmines whether the item type.
+    const itemsMeta = await Item.tenant().query().whereIn('id', saleInvoiceItems);
+    const storedItemsMap = new Map(itemsMeta.map((item) => [item.id, item]));
+
+    // Filters the non-inventory and inventory entries based on the item type.
+    const nonInventoryEntries: any[] = this.filterNonInventoryEntries(saleInvoice.entries, itemsMeta);
+
+    const transactions: any = [];
+    const common = {
+      referenceType: 'SaleInvoice',
+      referenceId: saleInvoiceId,
+      date: saleInvoice.invoice_date,
+    };
+    nonInventoryEntries.forEach((entry) => {
+      const item = storedItemsMap.get(entry.item_id);
+
+      transactions.push({
+        ...common,
+        income: entry.amount,
+        incomeAccountId: item.incomeAccountId,
+      })
+    });
+    const accountsDepGraph = await Account.tenant().depGraph().query();
+    const journal = new JournalPoster(accountsDepGraph);
+    const journalCommands = new JournalCommands(journal);
+
+    journalCommands.nonInventoryEntries(transactions);
+
+    return Promise.all([
+      journal.deleteEntries(),
+      journal.saveEntries(),
+      journal.saveBalance(),
+    ]);
   }
 
   /**

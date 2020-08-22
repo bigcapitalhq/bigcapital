@@ -9,7 +9,7 @@ export default function BillFormFooter({
   bill,
 }) {
   return (
-    <div>
+    <div className={'form__floating-footer'}>
       <Button
         disabled={isSubmitting}
         intent={Intent.PRIMARY}

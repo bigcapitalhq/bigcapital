@@ -83,13 +83,17 @@ function ReceiptFormHeader({
   );
 
   return (
-    <div>
-      <div>
-        {/* customer name */}
+    <div class="page-form receipt-form">
+      <div class="page-form__primary-section">
+        {/*- Customer name -*/}
         <FormGroup
           label={<T id={'customer_name'} />}
           inline={true}
-          className={classNames('form-group--select-list', Classes.FILL)}
+          className={classNames(
+            'form-group--select-list',
+            Classes.FILL,
+            'form-group--customer',
+          )}
           labelInfo={<FieldRequiredHint />}
           intent={errors.customer_id && touched.customer_id && Intent.DANGER}
           helperText={
@@ -110,10 +114,11 @@ function ReceiptFormHeader({
           />
         </FormGroup>
 
+        {/*- Deposit account -*/}
         <FormGroup
           label={<T id={'deposit_account'} />}
           className={classNames(
-            'form-group--deposit_account_id',
+            'form-group--deposit-account',
             'form-group--select-list',
             Classes.FILL,
           )}
@@ -172,6 +177,7 @@ function ReceiptFormHeader({
         />
       </FormGroup> */}
 
+      {/*- Reference -*/}
       <FormGroup
         label={<T id={'reference'} />}
         inline={true}
@@ -185,6 +191,8 @@ function ReceiptFormHeader({
           {...getFieldProps('reference_no')}
         />
       </FormGroup>
+
+      {/*- Send to email -*/}
       <FormGroup
         label={<T id={'send_to_email'} />}
         inline={true}

@@ -13,6 +13,7 @@ export default (mapState) => {
 
   const mapStateToProps = (state, props) => {
     const query = getEstimatesTableQuery(state, props);
+  
     const mapped = {
       estimatesCurrentPage: getEstimatesItems(state, props, query),
       estimateViews: getResourceViews(state, props, 'sales_estimates'),

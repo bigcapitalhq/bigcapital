@@ -11,7 +11,7 @@ import CustomersService from '@/services/Customers/CustomersService';
 import DynamicListing from '@/services/DynamicListing/DynamicListing';
 import DynamicListingBuilder from '@/services/DynamicListing/DynamicListingBuilder';
 import { dynamicListingErrorsToResponse } from '@/services/DynamicListing/hasDynamicListing';
-import { Customer } from '../../../models';
+import { Customer, Item } from '../../../models';
 
 export default class SaleInvoicesController {
   /**
@@ -27,6 +27,7 @@ export default class SaleInvoicesController {
       asyncMiddleware(this.validateInvoiceCustomerExistance),
       asyncMiddleware(this.validateInvoiceNumberUnique),
       asyncMiddleware(this.validateInvoiceItemsIdsExistance),
+      asyncMiddleware(this.validateNonSellableEntriesItems),
       asyncMiddleware(this.newSaleInvoice)
     );
     router.post(
@@ -42,6 +43,7 @@ export default class SaleInvoicesController {
       asyncMiddleware(this.validateInvoiceItemsIdsExistance),
       asyncMiddleware(this.valdiateInvoiceEntriesIdsExistance),
       asyncMiddleware(this.validateEntriesIdsExistance),
+      asyncMiddleware(this.validateNonSellableEntriesItems),
       asyncMiddleware(this.editSaleInvoice)
     );
     router.delete(
@@ -252,6 +254,32 @@ export default class SaleInvoicesController {
     if (notFoundEntriesIds.length > 0) {
       return res.boom.badRequest(null, {
         errors: [{ type: 'SALE.INVOICE.ENTRIES.IDS.NOT.FOUND', code: 500 }],
+      });
+    }
+    next();
+  }
+
+  /**
+   * Validate the entries items that not sellable. 
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {Function} next 
+   */
+  static async validateNonSellableEntriesItems(req, res, next) {
+    const { Item } = req.models;
+    const saleInvoice = { ...req.body };
+    const itemsIds = saleInvoice.entries.map(e => e.item_id);
+
+    const sellableItems = await Item.query()
+      .where('sellable', true)
+      .whereIn('id', itemsIds);
+
+    const sellableItemsIds = sellableItems.map((item) => item.id);
+    const notSellableItems = difference(itemsIds, sellableItemsIds);
+
+    if (notSellableItems.length > 0) {
+      return res.status(400).send({
+        errors: [{ type: 'NOT.SELLABLE.ITEMS', code: 600 }],
       });
     }
     next();

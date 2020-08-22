@@ -135,6 +135,26 @@ exports.seed = (knex) => {
           index: 1,
           active: 1,
           description: 1,
+        },
+        {
+          id: 13, 
+          name: 'Inventory Asset',
+          account_type_id: 14,
+          predefined: 1,
+          parent_account_id: null,
+          index: 1,
+          active: 1,
+          description: '',
+        },
+        {
+          id: 14,
+          name: 'Sales of Product Income',
+          account_type_id: 7,
+          predefined: 1,
+          parent_account_id: null,
+          index: 1,
+          active: 1,
+          description: '',
         }
       ]);
     });

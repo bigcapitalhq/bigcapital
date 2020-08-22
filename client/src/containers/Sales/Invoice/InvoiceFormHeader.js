@@ -68,8 +68,8 @@ function InvoiceFormHeader({
   );
 
   return (
-    <div className={'invoice-form'}>
-      <div className={'invoice__primary-section'}>
+    <div class="page-form page-form--invoice">
+      <div className={'page-form__primary-section'}>
         {/* customer name */}
         <FormGroup
           label={<T id={'customer_name'} />}

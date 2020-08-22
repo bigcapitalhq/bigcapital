@@ -59,7 +59,6 @@ export default class InventoryService {
     entries: [],
     deleteOld: boolean,
   ) {
-    const storedOpers: any = [];
     const entriesItemsIds = entries.map((e: any) => e.item_id);
     const inventoryItems = await Item.tenant()
       .query()
@@ -79,15 +78,11 @@ export default class InventoryService {
           entry.transactionType,
         );
       }
-      const oper = InventoryTransaction.tenant().query().insert({
+      await InventoryTransaction.tenant().query().insert({
         ...entry,
         lotNumber: entry.lotNumber,
       });
-      storedOpers.push(oper);
-    });    
-    return Promise.all([
-      ...storedOpers,
-    ]);
+    });
   }
 
   /**

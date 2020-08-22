@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { check, param, query, oneOf, ValidationChain } from 'express-validator';
+import { check, param, query, ValidationChain } from 'express-validator';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
 import validateMiddleware from '@/http/middleware/validateMiddleware';
 import ItemsService from '@/services/Items/ItemsService';
@@ -124,9 +124,6 @@ export default class ItemsController {
 
   /**
    * Validate specific item params schema.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
    */
   static get validateSpecificItemSchema(): ValidationChain[] {
     return [
@@ -135,6 +132,9 @@ export default class ItemsController {
   }
 
 
+  /**
+   * Validate list query schema
+   */
   static get validateListQuerySchema() {
     return [
       query('column_sort_order').optional().isIn(['created_at', 'name', 'amount', 'sku']),
@@ -221,15 +221,20 @@ export default class ItemsController {
    * @param {Function} next 
    */
   static async validateCostAccountExistance(req: Request, res: Response, next: Function) {
-    const { Account } = req.models;
+    const { Account, AccountType } = req.models;
     const item = req.body;
 
     if (item.cost_account_id) {
-      const foundAccount = await Account.query().findById(item.cost_account_id);
+      const COGSType = await AccountType.query().findOne('key', 'cost_of_goods_sold');
+      const foundAccount = await Account.query().findById(item.cost_account_id)
 
       if (!foundAccount) {
         return res.status(400).send({
           errors: [{ type: 'COST.ACCOUNT.NOT.FOUND', code: 120 }],
+        });
+      } else if (foundAccount.accountTypeId !== COGSType.id) {
+        return res.status(400).send({
+          errors: [{ type: 'COST.ACCOUNT.NOT.COGS.TYPE', code: 220 }],
         });
       }
     }
@@ -243,16 +248,21 @@ export default class ItemsController {
    * @param {NextFunction} next 
    */
   static async validateSellAccountExistance(req: Request, res: Response, next: Function) {
-    const { Account } = req.models;
+    const { Account, AccountType } = req.models;
     const item = req.body;
 
     if (item.sell_account_id) {
+      const incomeType = await AccountType.query().findOne('key', 'income');
       const foundAccount = await Account.query().findById(item.sell_account_id);
 
       if (!foundAccount) {
         return res.status(400).send({
           errors: [{ type: 'SELL.ACCOUNT.NOT.FOUND', code: 130 }],
         });
+      } else if (foundAccount.accountTypeId !== incomeType.id) {
+        return res.status(400).send({
+          errors: [{ type: 'SELL.ACCOUNT.NOT.INCOME.TYPE', code: 230 }],
+        })
       }
     }
     next();
@@ -265,15 +275,20 @@ export default class ItemsController {
    * @param {NextFunction} next 
    */
   static async validateInventoryAccountExistance(req: Request, res: Response, next: Function) {
-    const { Account } = req.models;
+    const { Account, AccountType } = req.models;
     const item = req.body;
 
     if (item.inventory_account_id) {
+      const otherAsset = await AccountType.query().findOne('key', 'other_asset');
       const foundAccount = await Account.query().findById(item.inventory_account_id);
 
       if (!foundAccount) {
         return res.status(400).send({ 
           errors: [{ type: 'INVENTORY.ACCOUNT.NOT.FOUND', code: 200}],
+        });
+      } else if (otherAsset.id !== foundAccount.accountTypeId) {
+        return res.status(400).send({
+          errors: [{ type: 'INVENTORY.ACCOUNT.NOT.CURRENT.ASSET', code: 300 }],
         });
       }
     }

@@ -1,0 +1,159 @@
+.page-form{
+  padding: 15px;
+
+  .bp3-form-group{
+
+    .bp3-label{
+      width: 100%;
+      max-width: 170px;
+      min-width: 140px;
+    }
+    .bp3-form-content{
+      width: 100%;
+      max-width: 300px;
+    }
+  }
+
+  &__primary-section {
+    background: #fbfbfb;
+    margin: -15px -15px 25px;
+    padding: 30px 15px 10px;
+  }
+
+  .form-group{
+
+    &--customer{
+
+      .bp3-form-content{
+        max-width: 420px;
+      }
+    }
+  }
+}
+
+.datatable-editor {
+  padding: 15px 15px 0;
+
+  &-actions{
+    padding: 0 15px;
+
+    .bp3-button.button--clear-lines {
+      background-color: #fcefef;
+    }
+  }
+
+  .bp3-form-group {
+    margin-bottom: 0;
+  }
+  .table {
+    border: 1px dotted rgb(195, 195, 195);
+    border-bottom: transparent;
+    border-left: transparent;
+
+    .th,
+    .td {
+      border-left: 1px dotted rgb(195, 195, 195);
+
+      &.index {
+        > span,
+        > div {
+          text-align: center;
+          width: 100%;
+          font-weight: 500;
+        }
+      }
+    }
+
+    .thead {
+      .tr .th {
+        padding: 10px 10px;
+        background-color: #f2f5fa;
+        font-size: 14px;
+        font-weight: 500;
+        color: #333;
+      }
+    }
+
+    .tbody {
+      .tr .td {
+        padding: 7px;
+        border-bottom: 1px dotted rgb(195, 195, 195);
+        min-height: 46px;
+
+        &.index {
+          background-color: #f2f5fa;
+          text-align: center;
+
+          > span {
+            margin-top: auto;
+            margin-bottom: auto;
+          }
+        }
+      }
+      .tr {
+        .bp3-form-group .bp3-input,
+        .form-group--select-list .bp3-button {
+          border-radius: 3px;
+          padding-left: 8px;
+          padding-right: 8px;
+        }
+
+        .bp3-form-group:not(.bp3-intent-danger) .bp3-input,
+        .form-group--select-list:not(.bp3-intent-danger) .bp3-button {
+          border-color: #E5E5E5;
+        }
+
+        &:last-of-type {
+          .td {
+            border-bottom: transparent;
+
+            .bp3-button,
+            .bp3-input-group {
+              display: none;
+            }
+          }
+        }
+
+        .td.actions {
+          .bp3-button {
+            background-color: transparent;
+
+            svg{
+              color: #e68f8e;
+            }
+            &:hover svg{
+              color: #c23030;
+            }
+          }
+        }
+
+        &.row--total {
+          
+          .td.amount{
+            font-weight: bold;
+          }
+        }
+      }
+    }
+    .th {
+      color: #444;
+      font-weight: 600;
+      border-bottom: 1px dotted #666;
+    }
+    .td {
+      border-bottom: 1px dotted #999;
+
+      &.description{
+        .bp3-form-group{
+          width: 100%;
+        }
+      }
+    }
+    .actions.td {
+      .bp3-button {
+        background: transparent;
+        margin: 0;
+      }
+    }
+  }
+}

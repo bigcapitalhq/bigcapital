@@ -11,7 +11,8 @@ import moment from 'moment';
 import { Intent, FormGroup, TextArea } from '@blueprintjs/core';
 
 import { FormattedMessage as T, useIntl } from 'react-intl';
-import { pick, omit } from 'lodash';
+import { omit } from 'lodash';
+import { Row, Col } from 'react-grid-system';
 
 import BillFormHeader from './BillFormHeader';
 import EstimatesItemsTable from 'containers/Sales/Estimate/EntriesItemsTable';
@@ -273,15 +274,24 @@ function BillForm({
           onClickAddNewRow={onClickAddNewRow}
           onClickClearAllLines={onClickCleanAllLines}
         />
-        <FormGroup label={<T id={'note'} />} className={'form-group--'}>
-          <TextArea growVertically={true} {...formik.getFieldProps('note')} />
-        </FormGroup>
-        <Dragzone
-          initialFiles={initialAttachmentFiles}
-          onDrop={handleDropFiles}
-          onDeleteFile={handleDeleteFile}
-          hint={'Attachments: Maxiumum size: 20MB'}
-        />
+
+        <Row>
+          <Col>
+            <FormGroup label={<T id={'note'} />} className={'form-group--'}>
+              <TextArea growVertically={true} {...formik.getFieldProps('note')} />
+            </FormGroup>
+          </Col>
+
+          <Col>
+            <Dragzone
+              initialFiles={initialAttachmentFiles}
+              onDrop={handleDropFiles}
+              onDeleteFile={handleDeleteFile}
+              hint={'Attachments: Maxiumum size: 20MB'}
+            />
+          </Col>
+        </Row>
+      
         <BillFormFooter
           formik={formik}
           onSubmit={handleSubmitClick}

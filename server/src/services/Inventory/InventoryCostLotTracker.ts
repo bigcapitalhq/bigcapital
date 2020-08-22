@@ -1,4 +1,5 @@
 import { omit, pick, chain } from 'lodash';
+import moment from 'moment';
 import {
   InventoryTransaction,
   InventoryLotCostTracker,
@@ -19,6 +20,13 @@ export default class InventoryCostLotTracker implements IInventoryCostMethod {
   itemId: number;
   costMethod: TCostMethod;
   itemsById: Map<number, any>;
+  inventoryINTrans: any;
+  inventoryByItem: any;
+  costLotsTransactions: IInventoryLotCost[];
+  inTransactions: any[];
+  outTransactions: IInventoryTransaction[];
+  revertInvoiceTrans: any[];
+  revertJEntriesTransactions: IInventoryTransaction[];
 
   /**
    * Constructor method.
@@ -30,6 +38,19 @@ export default class InventoryCostLotTracker implements IInventoryCostMethod {
     this.startingDate = startingDate;
     this.itemId = itemId;
     this.costMethod = costMethod;
+
+    // Collect cost lots transactions to insert them to the storage in bulk.
+    this.costLotsTransactions= [];
+    // Collect inventory transactions by item id.
+    this.inventoryByItem = {};
+    // Collection `IN` inventory tranaction by transaction id.
+    this.inventoryINTrans = {};
+    // Collects `IN` transactions.
+    this.inTransactions = [];
+    // Collects `OUT` transactions.
+    this.outTransactions = [];
+    // Collects journal entries reference id and type that should be reverted.
+    this.revertInvoiceTrans = [];
   }
 
   /**
@@ -55,48 +76,24 @@ export default class InventoryCostLotTracker implements IInventoryCostMethod {
    */
   public async computeItemCost(): Promise<any> {
     await this.revertInventoryLots(this.startingDate);
-
-    const afterInvTransactions: IInventoryTransaction[] =
-      await InventoryTransaction.tenant()
-        .query()
-        .where('date', '>=', this.startingDate)
-        .orderBy('date', 'ASC')
-        .orderBy('lot_number', 'ASC')
-        .where('item_id', this.itemId)
-        .withGraphFetched('item');
-
-    const availiableINLots: IInventoryLotCost[] = 
-      await InventoryLotCostTracker.tenant()
-        .query()
-        .where('date', '<', this.startingDate)
-        .orderBy('date', 'ASC')
-        .orderBy('lot_number', 'ASC')
-        .where('item_id', this.itemId)
-        .where('direction', 'IN')
-        .whereNot('remaining', 0);
-
-    const merged = [
-      ...availiableINLots.map((trans) => ({ lotTransId: trans.id, ...trans })),
-      ...afterInvTransactions.map((trans) => ({ invTransId: trans.id, ...trans })),
-    ];
-    const itemsIds = chain(merged).map(e => e.itemId).uniq().value();
-
-    const storedItems = await Item.tenant()
-      .query()
-      .where('type', 'inventory')
-      .whereIn('id', itemsIds);
-
-    this.itemsById = new Map(storedItems.map((item: any) => [item.id, item]));
+    await this.fetchInvINTransactions();
+    await this.fetchInvOUTTransactions(); 
+    await this.fetchRevertInvJReferenceIds();
+    await this.fetchItemsMapped();
+    
+    this.trackingInventoryINLots(this.inTransactions);
+    this.trackingInventoryOUTLots(this.outTransactions);
 
     // Re-tracking the inventory `IN` and `OUT` lots costs.
-    const trackedInvLotsCosts = this.trackingInventoryLotsCost(merged);
-    const storedTrackedInvLotsOper = this.storeInventoryLotsCost(trackedInvLotsCosts);
+    const storedTrackedInvLotsOper = this.storeInventoryLotsCost(
+      this.costLotsTransactions,
+    );    
 
     // Remove and revert accounts balance journal entries from inventory transactions.
-    const revertJEntriesOper = this.revertJournalEntries(afterInvTransactions);
+    const revertJEntriesOper = this.revertJournalEntries(this.revertJEntriesTransactions);
 
     // Records the journal entries operation.
-    this.recordJournalEntries(trackedInvLotsCosts);
+    this.recordJournalEntries(this.costLotsTransactions);
 
     return Promise.all([
       storedTrackedInvLotsOper,
@@ -111,6 +108,84 @@ export default class InventoryCostLotTracker implements IInventoryCostMethod {
   }
 
   /**
+   * Fetched inventory transactions that has date from the starting date and
+   * fetches availiable IN LOTs transactions that has remaining bigger than zero.
+   * @private
+   */
+  private async fetchInvINTransactions() {
+    const commonBuilder = (builder: any) => {
+      builder.where('direction', 'IN');
+      builder.orderBy('date', 'ASC');
+      builder.where('item_id', this.itemId);
+    };
+    const afterInvTransactions: IInventoryTransaction[] =
+      await InventoryTransaction.tenant()
+        .query()
+        .modify('filterDateRange', this.startingDate)  
+        .orderBy('lot_number', (this.costMethod === 'LIFO') ? 'DESC' : 'ASC')
+        .onBuild(commonBuilder)
+        .withGraphFetched('item');
+
+    const availiableINLots: IInventoryLotCost[] = 
+      await InventoryLotCostTracker.tenant()
+        .query()
+        .modify('filterDateRange', null, this.startingDate)
+        .orderBy('date', 'ASC')
+        .orderBy('lot_number', 'ASC')        
+        .onBuild(commonBuilder)
+        .whereNot('remaining', 0);
+
+    this.inTransactions = [
+      ...availiableINLots.map((trans) => ({ lotTransId: trans.id, ...trans })),
+      ...afterInvTransactions.map((trans) => ({ invTransId: trans.id, ...trans })),
+    ];
+  }
+
+  /**
+   * Fetches inventory OUT transactions that has date from the starting date.
+   * @private
+   */
+  private async fetchInvOUTTransactions() {
+    const afterOUTTransactions: IInventoryTransaction[] = 
+      await InventoryTransaction.tenant()
+        .query()
+        .modify('filterDateRange', this.startingDate)
+        .orderBy('date', 'ASC')
+        .orderBy('lot_number', 'ASC')
+        .where('item_id', this.itemId)
+        .where('direction', 'OUT')
+        .withGraphFetched('item');
+
+    this.outTransactions = [ ...afterOUTTransactions ];
+  }
+
+  private async fetchItemsMapped() {
+    const itemsIds = chain(this.inTransactions).map((e) => e.itemId).uniq().value();
+    const storedItems = await Item.tenant()
+      .query()
+      .where('type', 'inventory')
+      .whereIn('id', itemsIds);
+
+    this.itemsById = new Map(storedItems.map((item: any) => [item.id, item]));
+  }
+
+  /**
+   * Fetch the inventory transactions that should revert its journal entries.
+   * @private
+   */
+  private async fetchRevertInvJReferenceIds() {
+    const revertJEntriesTransactions: IInventoryTransaction[] = 
+      await InventoryTransaction.tenant()
+        .query()
+        .select(['transactionId', 'transactionType'])
+        .modify('filterDateRange', this.startingDate)
+        .where('direction', 'OUT')
+        .where('item_id', this.itemId);
+
+    this.revertJEntriesTransactions = revertJEntriesTransactions; 
+  }
+
+  /**
    * Revert the inventory lots to the given date by removing the inventory lots
    * transactions after the given date and increment the remaining that
    * associate to lot number.
@@ -121,14 +196,14 @@ export default class InventoryCostLotTracker implements IInventoryCostMethod {
     const asyncOpers: any[] = [];
     const inventoryLotsTrans = await InventoryLotCostTracker.tenant()
       .query()
+      .modify('filterDateRange', this.startingDate)
       .orderBy('date', 'DESC')
       .where('item_id', this.itemId)
-      .where('date', '>=', startingDate)
       .where('direction', 'OUT');
 
     const deleteInvLotsTrans = InventoryLotCostTracker.tenant()
       .query()
-      .where('date', '>=', startingDate)
+      .modify('filterDateRange', this.startingDate)
       .where('item_id', this.itemId)      
       .delete();
 
@@ -151,13 +226,10 @@ export default class InventoryCostLotTracker implements IInventoryCostMethod {
    * @param {} inventoryLots 
    */
   async revertJournalEntries(
-    inventoryLots: IInventoryLotCost[],
+    transactions: IInventoryLotCost[],
   ) {
-    const invoiceTransactions = inventoryLots
-      .filter(e => e.transactionType === 'SaleInvoice'); 
-
     return this.journalCommands
-      .revertEntriesFromInventoryTransactions(invoiceTransactions);
+      .revertEntriesFromInventoryTransactions(transactions);
   }
   
   /**
@@ -237,23 +309,17 @@ export default class InventoryCostLotTracker implements IInventoryCostMethod {
   }
 
   /**
-   * Tracking the given inventory transactions to lots costs transactions.
-   * @param {IInventoryTransaction[]} inventoryTransactions - Inventory transactions. 
-   * @return {IInventoryLotCost[]}
+   * Tracking inventory `IN` lots transactions.
+   * @public
+   * @param {IInventoryTransaction[]} inventoryTransactions -
+   * @return {void}
    */
-  public trackingInventoryLotsCost(
+  public trackingInventoryINLots(
     inventoryTransactions: IInventoryTransaction[],
-  ) : IInventoryLotCost {
-    // Collect cost lots transactions to insert them to the storage in bulk.
-    const costLotsTransactions: IInventoryLotCost[] = [];
-    // Collect inventory transactions by item id.
-    const inventoryByItem: any = {};
-    // Collection `IN` inventory tranaction by transaction id.
-    const inventoryINTrans: any = {};
-
+  ) {
     inventoryTransactions.forEach((transaction: IInventoryTransaction) => {
       const { itemId, id } = transaction;
-      (inventoryByItem[itemId] || (inventoryByItem[itemId] = []));
+      (this.inventoryByItem[itemId] || (this.inventoryByItem[itemId] = []));
 
       const commonLotTransaction: IInventoryLotCost = {
         ...pick(transaction, [
@@ -261,62 +327,91 @@ export default class InventoryCostLotTracker implements IInventoryCostMethod {
           'direction', 'transactionType', 'transactionId', 'lotNumber', 'remaining'
         ]),
       };
-      // Record inventory `IN` cost lot transaction.
-      if (transaction.direction === 'IN') {
-        inventoryByItem[itemId].push(id);
-        inventoryINTrans[id] = {
-          ...commonLotTransaction,
-          decrement: 0,
-          remaining: commonLotTransaction.remaining || commonLotTransaction.quantity,
-        };
-        costLotsTransactions.push(inventoryINTrans[id]);
-
-      // Record inventory 'OUT' cost lots from 'IN' transactions.
-      } else if (transaction.direction === 'OUT') {
-        let invRemaining = transaction.quantity;
-        const idsShouldDel: number[] = [];
-
-        inventoryByItem?.[itemId]?.some((
-          _invTransactionId: number,
-        ) => {
-          const _invINTransaction = inventoryINTrans[_invTransactionId];
-          if (invRemaining <= 0) { return true; }
-
-          // Detarmines the 'OUT' lot tranasctions whether bigger than 'IN' remaining transaction.
-          const biggerThanRemaining = (_invINTransaction.remaining - transaction.quantity) > 0;
-          const decrement = (biggerThanRemaining) ? transaction.quantity : _invINTransaction.remaining;
-          const maxDecrement = Math.min(decrement, invRemaining);
-
-          _invINTransaction.decrement += maxDecrement;
-          _invINTransaction.remaining = Math.max(
-            _invINTransaction.remaining - maxDecrement,
-            0,
-          );
-          invRemaining = Math.max(invRemaining - maxDecrement, 0);
-
-          costLotsTransactions.push({
-            ...commonLotTransaction,
-            quantity: maxDecrement,
-            lotNumber: _invINTransaction.lotNumber,
-          });
-          // Pop the 'IN' lots that has zero remaining. 
-          if (_invINTransaction.remaining === 0) {
-            idsShouldDel.push(_invTransactionId);
-          }
-          return false;
-        });
-        if (invRemaining > 0) { 
-          costLotsTransactions.push({ 
-            ...commonLotTransaction,
-            quantity: invRemaining,
-          });
-        }
-        // Remove the IN transactions that has zero remaining amount.
-        inventoryByItem[itemId] = inventoryByItem?.[itemId]
-          ?.filter((transId: number) => idsShouldDel.indexOf(transId) === -1);
-      }
+      this.inventoryByItem[itemId].push(id);
+      this.inventoryINTrans[id] = {
+        ...commonLotTransaction,
+        decrement: 0,
+        remaining: commonLotTransaction.remaining || commonLotTransaction.quantity,
+      };
+      this.costLotsTransactions.push(this.inventoryINTrans[id]);
     });
-    return costLotsTransactions;
   }
 
+  /**
+   * Tracking inventory `OUT` lots transactions.
+   * @public
+   * @param {IInventoryTransaction[]} inventoryTransactions -
+   * @return {void}
+   */
+  public trackingInventoryOUTLots(
+    inventoryTransactions: IInventoryTransaction[],
+  ) {
+    inventoryTransactions.forEach((transaction: IInventoryTransaction) => {
+      const { itemId, id } = transaction;
+      (this.inventoryByItem[itemId] || (this.inventoryByItem[itemId] = []));
+
+      const commonLotTransaction: IInventoryLotCost = {
+        ...pick(transaction, [
+          'date', 'rate', 'itemId', 'quantity', 'invTransId', 'lotTransId',
+          'direction', 'transactionType', 'transactionId', 'lotNumber', 'remaining'
+        ]),
+      };
+      let invRemaining = transaction.quantity;
+      const idsShouldDel: number[] = [];
+
+      this.inventoryByItem?.[itemId]?.some((_invTransactionId: number) => {
+        const _invINTransaction = this.inventoryINTrans[_invTransactionId];
+
+        // Can't continue if the IN transaction remaining equals zero.
+        if (invRemaining <= 0) { return true; }
+
+        // Can't continue if the IN transaction date is after the current transaction date.
+        if (moment(_invINTransaction.date).isAfter(transaction.date)) {
+          return true;
+        }
+        // Detarmines the 'OUT' lot tranasctions whether bigger than 'IN' remaining transaction.
+        const biggerThanRemaining = (_invINTransaction.remaining - transaction.quantity) > 0;
+        const decrement = (biggerThanRemaining) ? transaction.quantity : _invINTransaction.remaining;
+        const maxDecrement = Math.min(decrement, invRemaining);
+
+        _invINTransaction.decrement += maxDecrement;
+        _invINTransaction.remaining = Math.max(
+          _invINTransaction.remaining - maxDecrement,
+          0,
+        );
+        invRemaining = Math.max(invRemaining - maxDecrement, 0);
+
+        this.costLotsTransactions.push({
+          ...commonLotTransaction,
+          quantity: maxDecrement,
+          lotNumber: _invINTransaction.lotNumber,
+        });
+        // Pop the 'IN' lots that has zero remaining. 
+        if (_invINTransaction.remaining === 0) {
+          idsShouldDel.push(_invTransactionId);
+        }
+        return false;
+      });
+      if (invRemaining > 0) { 
+        this.costLotsTransactions.push({ 
+          ...commonLotTransaction,
+          quantity: invRemaining,
+        });
+      }
+      this.removeInventoryItems(itemId, idsShouldDel);
+    });
+  }
+
+  /**
+   * Remove inventory transactions for specific item id.
+   * @private
+   * @param {number} itemId 
+   * @param {number[]} idsShouldDel 
+   * @return {void}
+   */
+  private removeInventoryItems(itemId: number, idsShouldDel: number[]) {
+    // Remove the IN transactions that has zero remaining amount.
+    this.inventoryByItem[itemId] = this.inventoryByItem?.[itemId]
+      ?.filter((transId: number) => idsShouldDel.indexOf(transId) === -1);
+  }
 }

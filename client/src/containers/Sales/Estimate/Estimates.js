@@ -33,6 +33,7 @@ function Estimates({
     requestFetchCustomers({}),
   );
 
+  // 
   const handleFormSubmit = useCallback(
     (payload) => {
       payload.redirect && history.push('/estimates');

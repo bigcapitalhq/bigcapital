@@ -5,14 +5,13 @@ import React, {
   useRef,
   useState,
 } from 'react';
-
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import moment from 'moment';
-import { Intent, FormGroup, TextArea, Button } from '@blueprintjs/core';
+import { Intent, FormGroup, TextArea } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
-import { pick, omit } from 'lodash';
-import { queryCache } from 'react-query';
+import { pick } from 'lodash';
+import { Row, Col } from 'react-grid-system';
 
 import EstimateFormHeader from './EstimateFormHeader';
 import EstimatesItemsTable from './EntriesItemsTable';
@@ -103,13 +102,11 @@ const EstimateForm = ({
       .min(1)
       .max(1024)
       .label(formatMessage({ id: 'note' })),
-
     terms_conditions: Yup.string()
       .trim()
       .min(1)
       .max(1024)
       .label(formatMessage({ id: 'note' })),
-
     entries: Yup.array().of(
       Yup.object().shape({
         quantity: Yup.number().nullable(),
@@ -320,27 +317,35 @@ const EstimateForm = ({
           formik={formik}
           // defaultRow={defaultEstimate}
         />
-        <FormGroup
-          label={<T id={'customer_note'} />}
-          className={'form-group--customer_note'}
-        >
-          <TextArea growVertically={true} {...formik.getFieldProps('note')} />
-        </FormGroup>
-        <FormGroup
-          label={<T id={'terms_conditions'} />}
-          className={'form-group--terms_conditions'}
-        >
-          <TextArea
-            growVertically={true}
-            {...formik.getFieldProps('terms_conditions')}
-          />
-        </FormGroup>
-        <Dragzone
-          initialFiles={initialAttachmentFiles}
-          onDrop={handleDropFiles}
-          onDeleteFile={handleDeleteFile}
-          hint={'Attachments: Maxiumum size: 20MB'}
-        />
+
+        <Row>
+          <Col>
+            <FormGroup
+              label={<T id={'customer_note'} />}
+              className={'form-group--customer_note'}
+            >
+              <TextArea growVertically={true} {...formik.getFieldProps('note')} />
+            </FormGroup>
+            <FormGroup
+              label={<T id={'terms_conditions'} />}
+              className={'form-group--terms_conditions'}
+            >
+              <TextArea
+                growVertically={true}
+                {...formik.getFieldProps('terms_conditions')}
+              />
+            </FormGroup>
+          </Col>
+
+          <Col>
+            <Dragzone
+              initialFiles={initialAttachmentFiles}
+              onDrop={handleDropFiles}
+              onDeleteFile={handleDeleteFile}
+              hint={'Attachments: Maxiumum size: 20MB'}
+            />
+          </Col>
+        </Row>
       </form>
       <EstimateFormFooter
         formik={formik}
