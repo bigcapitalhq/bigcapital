@@ -26,7 +26,6 @@ import Ping from '@/http/controllers/Ping';
 import Agendash from '@/http/controllers/Agendash';
 
 export default (app) => {
-  // app.use('/api/oauth2', OAuth2.router());
   app.use('/api/auth', Authentication.router());
   app.use('/api/invite', InviteUsers.router());
   

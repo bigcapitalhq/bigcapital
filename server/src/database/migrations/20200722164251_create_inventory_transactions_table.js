@@ -13,8 +13,9 @@ exports.up = function(knex) {
     table.integer('lot_number');
  
     table.string('transaction_type');
-    table.integer('transaction_id');
+    table.integer('transaction_id').unsigned();
 
+    table.integer('entry_id').unsigned();
     table.timestamps();
   });
 };

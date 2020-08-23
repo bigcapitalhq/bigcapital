@@ -3,20 +3,15 @@ import moment from 'moment';
 import {
   InventoryTransaction,
   InventoryLotCostTracker,
-  Account,
   Item,
 } from "@/models";
 import { IInventoryLotCost, IInventoryTransaction } from "@/interfaces";
-import JournalPoster from '@/services/Accounting/JournalPoster';
-import JournalCommands from '@/services/Accounting/JournalCommands';
+import InventoryCostMethod from '@/services/Inventory/InventoryCostMethod';
 
 type TCostMethod = 'FIFO' | 'LIFO';
 
-export default class InventoryCostLotTracker implements IInventoryCostMethod {
-  journal: JournalPoster;
-  journalCommands: JournalCommands;
+export default class InventoryCostLotTracker extends InventoryCostMethod implements IInventoryCostMethod {
   startingDate: Date;
-  headDate: Date;
   itemId: number;
   costMethod: TCostMethod;
   itemsById: Map<number, any>;
@@ -25,7 +20,6 @@ export default class InventoryCostLotTracker implements IInventoryCostMethod {
   costLotsTransactions: IInventoryLotCost[];
   inTransactions: any[];
   outTransactions: IInventoryTransaction[];
-  revertInvoiceTrans: any[];
   revertJEntriesTransactions: IInventoryTransaction[];
 
   /**
@@ -35,6 +29,8 @@ export default class InventoryCostLotTracker implements IInventoryCostMethod {
    * @param {string} costMethod - 
    */
   constructor(startingDate: Date, itemId: number, costMethod: TCostMethod = 'FIFO') {
+    super();
+
     this.startingDate = startingDate;
     this.itemId = itemId;
     this.costMethod = costMethod;
@@ -49,18 +45,6 @@ export default class InventoryCostLotTracker implements IInventoryCostMethod {
     this.inTransactions = [];
     // Collects `OUT` transactions.
     this.outTransactions = [];
-    // Collects journal entries reference id and type that should be reverted.
-    this.revertInvoiceTrans = [];
-  }
-
-  /**
-   * Initialize the inventory average cost method.
-   * @async
-   */
-  public async initialize() {
-    const accountsDepGraph = await Account.tenant().depGraph().query();
-    this.journal = new JournalPoster(accountsDepGraph);
-    this.journalCommands = new JournalCommands(this.journal);
   }
 
   /**
@@ -80,30 +64,16 @@ export default class InventoryCostLotTracker implements IInventoryCostMethod {
     await this.fetchInvOUTTransactions(); 
     await this.fetchRevertInvJReferenceIds();
     await this.fetchItemsMapped();
-    
+
     this.trackingInventoryINLots(this.inTransactions);
     this.trackingInventoryOUTLots(this.outTransactions);
 
     // Re-tracking the inventory `IN` and `OUT` lots costs.
     const storedTrackedInvLotsOper = this.storeInventoryLotsCost(
       this.costLotsTransactions,
-    );    
-
-    // Remove and revert accounts balance journal entries from inventory transactions.
-    const revertJEntriesOper = this.revertJournalEntries(this.revertJEntriesTransactions);
-
-    // Records the journal entries operation.
-    this.recordJournalEntries(this.costLotsTransactions);
-
+    );
     return Promise.all([
       storedTrackedInvLotsOper,
-      revertJEntriesOper.then(() =>
-        Promise.all([
-          // Saves the new recorded journal entries to the storage.
-          this.journal.deleteEntries(),
-          this.journal.saveEntries(),
-          this.journal.saveBalance(),   
-        ])),
     ]);
   }
 
@@ -121,7 +91,8 @@ export default class InventoryCostLotTracker implements IInventoryCostMethod {
     const afterInvTransactions: IInventoryTransaction[] =
       await InventoryTransaction.tenant()
         .query()
-        .modify('filterDateRange', this.startingDate)  
+        .modify('filterDateRange', this.startingDate)
+        .orderByRaw("FIELD(direction, 'IN', 'OUT')")
         .orderBy('lot_number', (this.costMethod === 'LIFO') ? 'DESC' : 'ASC')
         .onBuild(commonBuilder)
         .withGraphFetched('item');
@@ -222,93 +193,6 @@ export default class InventoryCostLotTracker implements IInventoryCostMethod {
   }
 
   /**
-   * Reverts the journal entries from inventory lots costs transaction.
-   * @param {} inventoryLots 
-   */
-  async revertJournalEntries(
-    transactions: IInventoryLotCost[],
-  ) {
-    return this.journalCommands
-      .revertEntriesFromInventoryTransactions(transactions);
-  }
-  
-  /**
-   * Records the journal entries transactions.
-   * @async
-   * @param {IInventoryLotCost[]} inventoryTransactions -
-   * @param {string} referenceType -
-   * @param {number} referenceId - 
-   * @param {Date} date - 
-   * @return {Promise}
-   */
-  public recordJournalEntries(
-    inventoryLots: IInventoryLotCost[],
-  ): void { 
-    const outTransactions: any[] = [];
-    const inTransByLotNumber: any = {};
-    const transactions: any = [];
-
-    inventoryLots.forEach((invTransaction: IInventoryLotCost) => {
-      switch(invTransaction.direction) {
-        case 'IN':
-          inTransByLotNumber[invTransaction.lotNumber] = invTransaction;
-          break;
-        case 'OUT':
-          outTransactions.push(invTransaction);
-          break;
-      }
-    });
-    outTransactions.forEach((outTransaction: IInventoryLotCost) => {
-      const { lotNumber, quantity, rate, itemId } = outTransaction;
-      const income = quantity * rate;
-      const item = this.itemsById.get(itemId);
-
-      const transaction = {
-        date: outTransaction.date,
-        referenceType: outTransaction.transactionType,
-        referenceId: outTransaction.transactionId,
-        cost: 0,
-        income,
-        incomeAccount: item.sellAccountId,
-        costAccount: item.costAccountId,
-        inventoryAccount: item.inventoryAccountId,
-      };
-      if (lotNumber && inTransByLotNumber[lotNumber]) {
-        const inInvTrans = inTransByLotNumber[lotNumber];
-        transaction.cost = (outTransaction.quantity * inInvTrans.rate);        
-      }
-      transactions.push(transaction);
-    });
-    this.journalCommands.inventoryEntries(transactions);
-  }
-
-  /**
-   * Stores the inventory lots costs transactions in bulk.
-   * @param {IInventoryLotCost[]} costLotsTransactions 
-   * @return {Promise[]}
-   */
-  storeInventoryLotsCost(costLotsTransactions: IInventoryLotCost[]): Promise<object> {
-    const opers: any = [];
-
-    costLotsTransactions.forEach((transaction: IInventoryLotCost) => {
-      if (transaction.lotTransId && transaction.decrement) {
-        const decrementOper = InventoryLotCostTracker.tenant()
-          .query()
-          .where('id', transaction.lotTransId)
-          .decrement('remaining', transaction.decrement);
-        opers.push(decrementOper);
-      } else if(!transaction.lotTransId) {
-        const operation = InventoryLotCostTracker.tenant().query()
-        .insert({
-          ...omit(transaction, ['decrement', 'invTransId', 'lotTransId']),
-        });
-        opers.push(operation);
-      }
-    });
-    return Promise.all(opers);
-  }
-
-  /**
    * Tracking inventory `IN` lots transactions.
    * @public
    * @param {IInventoryTransaction[]} inventoryTransactions -
@@ -352,7 +236,7 @@ export default class InventoryCostLotTracker implements IInventoryCostMethod {
 
       const commonLotTransaction: IInventoryLotCost = {
         ...pick(transaction, [
-          'date', 'rate', 'itemId', 'quantity', 'invTransId', 'lotTransId',
+          'date', 'rate', 'itemId', 'quantity', 'invTransId', 'lotTransId', 'entryId',
           'direction', 'transactionType', 'transactionId', 'lotNumber', 'remaining'
         ]),
       };
@@ -373,6 +257,7 @@ export default class InventoryCostLotTracker implements IInventoryCostMethod {
         const biggerThanRemaining = (_invINTransaction.remaining - transaction.quantity) > 0;
         const decrement = (biggerThanRemaining) ? transaction.quantity : _invINTransaction.remaining;
         const maxDecrement = Math.min(decrement, invRemaining);
+        const cost = maxDecrement * _invINTransaction.rate;
 
         _invINTransaction.decrement += maxDecrement;
         _invINTransaction.remaining = Math.max(
@@ -383,6 +268,7 @@ export default class InventoryCostLotTracker implements IInventoryCostMethod {
 
         this.costLotsTransactions.push({
           ...commonLotTransaction,
+          cost,
           quantity: maxDecrement,
           lotNumber: _invINTransaction.lotNumber,
         });
@@ -392,7 +278,7 @@ export default class InventoryCostLotTracker implements IInventoryCostMethod {
         }
         return false;
       });
-      if (invRemaining > 0) { 
+      if (invRemaining > 0) {
         this.costLotsTransactions.push({ 
           ...commonLotTransaction,
           quantity: invRemaining,

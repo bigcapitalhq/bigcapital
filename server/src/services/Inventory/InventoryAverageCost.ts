@@ -1,36 +1,27 @@
-import { Account, InventoryTransaction } from '@/models';
+import { pick } from 'lodash';
+import { InventoryTransaction } from '@/models';
 import { IInventoryTransaction } from '@/interfaces';
-import JournalPoster from '@/services/Accounting/JournalPoster';
-import JournalCommands from '@/services/Accounting/JournalCommands';
+import InventoryCostMethod from '@/services/Inventory/InventoryCostMethod';
 
-export default class InventoryAverageCostMethod implements IInventoryCostMethod {
-  journal: JournalPoster;
-  journalCommands: JournalCommands;
-  fromDate: Date;
+export default class InventoryAverageCostMethod extends InventoryCostMethod implements IInventoryCostMethod {
+  startingDate: Date;
   itemId: number;
+  costTransactions: any[];
 
   /**
    * Constructor method.
-   * @param {Date} fromDate -
+   * @param {Date} startingDate -
    * @param {number} itemId -
    */
   constructor(
-    fromDate: Date,
+    startingDate: Date,
     itemId: number,
   ) {
-    this.fromDate = fromDate;
+    super();
+  
+    this.startingDate = startingDate;
     this.itemId = itemId;
-  }
-
-  /**
-   * Initialize the inventory average cost method.
-   * @async
-   */
-  async initialize() {
-    const accountsDepGraph = await Account.tenant().depGraph().query();
-
-    this.journal = new JournalPoster(accountsDepGraph);
-    this.journalCommands = new JournalCommands(this.journal);
+    this.costTransactions = [];
   }
 
   /**
@@ -43,50 +34,41 @@ export default class InventoryAverageCostMethod implements IInventoryCostMethod 
    *   after the given date.
    * ----------
    * @asycn
-   * @param {Date} fromDate 
+   * @param {Date} startingDate 
    * @param {number} referenceId 
    * @param {string} referenceType 
    */
   public async computeItemCost() {
-    const openingAvgCost = await this.getOpeningAvaregeCost(this.fromDate, this.itemId);
+    const openingAvgCost = await this.getOpeningAvaregeCost(this.startingDate, this.itemId);
 
-    // @todo from `invTransactions`.
     const afterInvTransactions: IInventoryTransaction[] = await InventoryTransaction
       .tenant()
       .query()
-      .where('date', '>=', this.fromDate)
-      // .where('direction', 'OUT')
-      .orderBy('date', 'asc')
+      .modify('filterDateRange', this.startingDate)  
+      .orderBy('date', 'ASC')
+      .orderByRaw("FIELD(direction, 'IN', 'OUT')")
+      .where('item_id', this.itemId)
       .withGraphFetched('item');
 
-    // Remove and revert accounts balance journal entries from 
-    // inventory transactions.
-    await this.journalCommands
-      .revertEntriesFromInventoryTransactions(afterInvTransactions);
-
-    // Re-write the journal entries from the new recorded inventory transactions.
-    await this.jEntriesFromItemInvTransactions(
+    // Tracking inventroy transactions and retrieve cost transactions
+    // based on average rate cost method. 
+    const costTransactions = this.trackingCostTransactions(
       afterInvTransactions,
       openingAvgCost,
     );
-    // Saves the new recorded journal entries to the storage.
-    await Promise.all([
-      this.journal.deleteEntries(),
-      this.journal.saveEntries(),
-      this.journal.saveBalance(),
-    ]);
+    await this.storeInventoryLotsCost(costTransactions);
   }
 
   /**
    * Get items Avarege cost from specific date from inventory transactions.
    * @static
-   * @param {Date} fromDate 
+   * @param {Date} startingDate 
    * @return {number}
    */
-  public async getOpeningAvaregeCost(fromDate: Date, itemId: number) {
+  public async getOpeningAvaregeCost(startingDate: Date, itemId: number) {
     const commonBuilder = (builder: any) => {
-      if (fromDate) {
-        builder.where('date', '<', fromDate);
+      if (startingDate) {
+        builder.where('date', '<', startingDate);
       }
       builder.where('item_id', itemId);
       builder.groupBy('rate');
@@ -155,53 +137,45 @@ export default class InventoryAverageCostMethod implements IInventoryCostMethod 
    * @param {number} referenceId 
    * @param {JournalCommand} journalCommands 
    */
-  async jEntriesFromItemInvTransactions(
+  public trackingCostTransactions(
     invTransactions: IInventoryTransaction[],
     openingAverageCost: number,
   ) {
-    const transactions: any[] = [];
+    const costTransactions: any[] = [];
     let accQuantity: number = 0;
     let accCost: number = 0;
 
     invTransactions.forEach((invTransaction: IInventoryTransaction) => {
       const commonEntry = {
-        date: invTransaction.date,
-        referenceType: invTransaction.transactionType,
-        referenceId: invTransaction.transactionId,
+        invTransId: invTransaction.id,
+        ...pick(invTransaction, ['date', 'direction', 'itemId', 'quantity', 'rate', 'entryId',
+          'transactionId', 'transactionType']),
       };
       switch(invTransaction.direction) {
         case 'IN':
           accQuantity += invTransaction.quantity;
           accCost += invTransaction.rate * invTransaction.quantity;
 
-          const inventory = invTransaction.quantity * invTransaction.rate;
-
-          transactions.push({
+          costTransactions.push({
             ...commonEntry,
-            inventory,
-            inventoryAccount: invTransaction.item.inventoryAccountId,
           });
           break;
-        case 'OUT': 
-          const income = invTransaction.quantity * invTransaction.rate;
+        case 'OUT':
           const transactionAvgCost = accCost ? (accCost / accQuantity) : 0;
           const averageCost = transactionAvgCost;
-          const cost = (invTransaction.quantity * averageCost);          
+          const cost = (invTransaction.quantity * averageCost);
+          const income = (invTransaction.quantity * invTransaction.rate);
 
           accQuantity -= invTransaction.quantity;
-          accCost -= accCost;
+          accCost -= income;
 
-          transactions.push({
+          costTransactions.push({
             ...commonEntry,
-            income,
             cost,
-            incomeAccount: invTransaction.item.sellAccountId,
-            costAccount: invTransaction.item.costAccountId,
-            inventoryAccount: invTransaction.item.inventoryAccountId,
           });
           break;
       }
     });
-    this.journalCommands.inventoryEntries(transactions);
+    return costTransactions;
   }
 }

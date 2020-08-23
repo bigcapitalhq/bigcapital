@@ -14,13 +14,14 @@ import AccountsService from '@/services/Accounts/AccountsService';
 import JournalPosterService from '@/services/Sales/JournalPosterService';
 import InventoryService from '@/services/Inventory/Inventory';
 import HasItemsEntries from '@/services/Sales/HasItemsEntries';
+import SalesInvoicesCost from '@/services/Sales/SalesInvoicesCost';
 import { formatDateFields } from '@/utils';
 
 /**
  * Vendor bills services.
  * @service
  */
-export default class BillsService {
+export default class BillsService extends SalesInvoicesCost {
   /**
    * Creates a new bill and stored it to the storage.
    *
@@ -52,13 +53,18 @@ export default class BillsService {
     bill.entries.forEach((entry) => {
       const oper = ItemEntry.tenant()
         .query()
-        .insert({
+        .insertAndFetch({
           reference_type: 'Bill',
           reference_id: storedBill.id,
           ...omit(entry, ['amount']),
+        }).then((itemEntry) => {
+          entry.id = itemEntry.id;
         });
       saveEntriesOpers.push(oper);
     });
+    // Await save all bill entries operations.
+    await Promise.all([...saveEntriesOpers]); 
+
     // Increments vendor balance.
     const incrementOper = Vendor.changeBalance(bill.vendor_id, bill.amount);
 
@@ -68,18 +74,16 @@ export default class BillsService {
     );
     // Writes the journal entries for the given bill transaction.
     const writeJEntriesOper = this.recordJournalTransactions({
-      id: storedBill.id,
-      ...bill
+      id: storedBill.id, ...bill,
     });
     await Promise.all([
-      ...saveEntriesOpers,
-      incrementOper,      
+      incrementOper,
       writeInvTransactionsOper,
       writeJEntriesOper,
-    ]); 
+    ]);
     // Schedule bill re-compute based on the item cost
     // method and starting date.
-    await this.scheduleComputeItemsCost(bill); 
+    await this.scheduleComputeBillItemsCost(bill); 
 
     return storedBill;
   }
@@ -147,7 +151,7 @@ export default class BillsService {
     ]);
     // Schedule sale invoice re-compute based on the item cost
     // method and starting date.
-    await this.scheduleComputeItemsCost(bill); 
+    await this.scheduleComputeBillItemsCost(bill); 
   }
 
   /**
@@ -192,10 +196,10 @@ export default class BillsService {
     ]);
     // Schedule sale invoice re-compute based on the item cost
     // method and starting date.
-    await this.scheduleComputeItemsCost(bill); 
+    await this.scheduleComputeBillItemsCost(bill); 
   }
 
-    /**
+  /**
    * Records the inventory transactions from the given bill input.
    * @param {Bill} bill 
    * @param {number} billId 
@@ -209,6 +213,7 @@ export default class BillsService {
         transactionId: billId,
         direction: 'IN',
         date: bill.bill_date,
+        entryId: entry.id,
       }));
 
     return InventoryService.recordInventoryTransactions(
@@ -285,24 +290,6 @@ export default class BillsService {
   }
 
   /**
-   * Schedule a job to re-compute the bill's items based on cost method
-   * of the each one.
-   * @param {Bill} bill 
-   */
-  static scheduleComputeItemsCost(bill) {
-    const asyncOpers = [];
-
-    bill.entries.forEach((entry) => {
-      const oper = InventoryService.scheduleComputeItemCost(
-        entry.item_id || entry.itemId,
-        bill.bill_date || bill.billDate,
-      );
-      asyncOpers.push(oper);
-    });
-    return Promise.all(asyncOpers);
-  }
-
-  /**
    * Detarmines whether the bill exists on the storage.
    * @param {Integer} billId
    * @return {Boolean}
@@ -354,5 +341,17 @@ export default class BillsService {
       .withGraphFetched('vendor')
       .withGraphFetched('entries')
       .first();
+  }
+
+  /**
+   * Schedules compute bill items cost based on each item cost method.
+   * @param {IBill} bill 
+   * @return {Promise}
+   */
+  static scheduleComputeBillItemsCost(bill) {
+    return this.scheduleComputeItemsCost(
+      bill.entries.map((e) => e.item_id),
+      bill.bill_date,
+    );
   }
 }

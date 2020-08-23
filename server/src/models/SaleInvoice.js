@@ -3,6 +3,7 @@ import moment from 'moment';
 import TenantModel from '@/models/TenantModel';
 import CachableQueryBuilder from '@/lib/Cachable/CachableQueryBuilder';
 import CachableModel from '@/lib/Cachable/CachableModel';
+import InventoryCostLotTracker from './InventoryCostLotTracker';
 
 export default class SaleInvoice extends mixin(TenantModel, [CachableModel]) {
   /**
@@ -27,6 +28,26 @@ export default class SaleInvoice extends mixin(TenantModel, [CachableModel]) {
   }
 
   /**
+   * Model modifiers.
+   */
+  static get modifiers() {
+    return {
+      filterDateRange(query, startDate, endDate, type = 'day') {
+        const dateFormat = 'YYYY-MM-DD HH:mm:ss';
+        const fromDate = moment(startDate).startOf(type).format(dateFormat);
+        const toDate = moment(endDate).endOf(type).format(dateFormat);
+
+        if (startDate) {
+          query.where('invoice_date', '>=', fromDate);
+        }
+        if (endDate) {
+          query.where('invoice_date', '<=', toDate);
+        }
+      },
+    };
+  }
+
+  /**
    * Due amount of the given.
    */
   get dueAmount() {
@@ -40,6 +61,7 @@ export default class SaleInvoice extends mixin(TenantModel, [CachableModel]) {
     const AccountTransaction = require('@/models/AccountTransaction');
     const ItemEntry = require('@/models/ItemEntry');
     const Customer = require('@/models/Customer');
+    const InventoryCostLotTracker = require('@/models/InventoryCostLotTracker');
 
     return {
       entries: {
@@ -72,6 +94,18 @@ export default class SaleInvoice extends mixin(TenantModel, [CachableModel]) {
         },
         filter(builder) {
           builder.where('reference_type', 'SaleInvoice');
+        },
+      },
+
+      costTransactions: {
+        relation: Model.HasManyRelation,
+        modelClass: this.relationBindKnex(InventoryCostLotTracker.default),
+        join: {
+          from: 'sales_invoices.id',
+          to: 'inventory_cost_lot_tracker.transactionId'
+        },
+        filter(builder) {
+          builder.where('transaction_type', 'SaleInvoice');
         },
       }
     };

@@ -90,6 +90,9 @@ export default {
       }
       const lastLoginAt = moment().format('YYYY/MM/DD HH:mm:ss');
 
+      const tenantDb = TenantsManager.knexInstance(user.tenant.organizationId);
+      TenantModel.knexBinded = tenantDb;
+
       const updateTenantUser = TenantUser.tenant().query()
         .where('id', user.id)
         .update({ last_login_at: lastLoginAt });

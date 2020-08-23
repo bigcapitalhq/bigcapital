@@ -11,35 +11,14 @@ import JournalPoster from '@/services/Accounting/JournalPoster';
 import HasItemsEntries from '@/services/Sales/HasItemsEntries';
 import CustomerRepository from '@/repositories/CustomerRepository';
 import InventoryService from '@/services/Inventory/Inventory';
+import SalesInvoicesCost from '@/services/Sales/SalesInvoicesCost';
 import { formatDateFields } from '@/utils';
-import { Item } from '../../models';
-import JournalCommands from '../Accounting/JournalCommands';
 
 /**
  * Sales invoices service
  * @service
  */
-export default class SaleInvoicesService {
-
-  static filterNonInventoryEntries(entries: [], items: []) {
-    const nonInventoryItems = items.filter((item: any) => item.type !== 'inventory');
-    const nonInventoryItemsIds = nonInventoryItems.map((i: any) => i.id);
-
-    return entries
-      .filter((entry: any) => (
-        (nonInventoryItemsIds.indexOf(entry.item_id)) !== -1
-      ));
-  }
-
-  static filterInventoryEntries(entries: [], items: []) {
-    const inventoryItems = items.filter((item: any) => item.type === 'inventory');
-    const inventoryItemsIds = inventoryItems.map((i: any) => i.id);
-
-    return entries
-      .filter((entry: any) => (
-        (inventoryItemsIds.indexOf(entry.item_id)) !== -1
-      ));
-  }
+export default class SaleInvoicesService extends SalesInvoicesCost {
   /**
    * Creates a new sale invoices and store it to the storage
    * with associated to entries and journal transactions.
@@ -66,79 +45,34 @@ export default class SaleInvoicesService {
     saleInvoice.entries.forEach((entry: any) => {
       const oper = ItemEntry.tenant()
         .query()
-        .insert({
+        .insertAndFetch({
           reference_type: 'SaleInvoice',
           reference_id: storedInvoice.id,
           ...omit(entry, ['amount', 'id']),
+        }).then((itemEntry) => {
+          entry.id = itemEntry.id;
         });
       opers.push(oper);
     });
+
     // Increment the customer balance after deliver the sale invoice.
     const incrementOper = Customer.incrementBalance(
       saleInvoice.customer_id,
       balance,
     );
-    // Records the inventory transactions for inventory items.
-    const recordInventoryTransOpers = this.recordInventoryTranscactions(
-      saleInvoice, storedInvoice.id
-    );
-    // Records the non-inventory transactions of the entries items.
-    const recordNonInventoryJEntries = this.recordNonInventoryEntries(
-      saleInvoice, storedInvoice.id,
-    );
     // Await all async operations.
     await Promise.all([
-      ...opers,
-      incrementOper,
-      recordNonInventoryJEntries,
-      recordInventoryTransOpers,
+      ...opers, incrementOper,
     ]);
+    // Records the inventory transactions for inventory items.
+    await this.recordInventoryTranscactions(
+      saleInvoice, storedInvoice.id
+    );
     // Schedule sale invoice re-compute based on the item cost
     // method and starting date.
-    // await this.scheduleComputeItemsCost(saleInvoice);
+    await this.scheduleComputeInvoiceItemsCost(saleInvoice);
+
     return storedInvoice;
-  }
-
-  /**
-   * Records the journal entries for non-inventory entries.
-   * @param {SaleInvoice} saleInvoice 
-   */
-  static async recordNonInventoryEntries(saleInvoice: any, saleInvoiceId: number) {
-    const saleInvoiceItems = saleInvoice.entries.map((entry: any) => entry.item_id);
-
-    // Retrieves items data to detarmines whether the item type.
-    const itemsMeta = await Item.tenant().query().whereIn('id', saleInvoiceItems);
-    const storedItemsMap = new Map(itemsMeta.map((item) => [item.id, item]));
-
-    // Filters the non-inventory and inventory entries based on the item type.
-    const nonInventoryEntries: any[] = this.filterNonInventoryEntries(saleInvoice.entries, itemsMeta);
-
-    const transactions: any = [];
-    const common = {
-      referenceType: 'SaleInvoice',
-      referenceId: saleInvoiceId,
-      date: saleInvoice.invoice_date,
-    };
-    nonInventoryEntries.forEach((entry) => {
-      const item = storedItemsMap.get(entry.item_id);
-
-      transactions.push({
-        ...common,
-        income: entry.amount,
-        incomeAccountId: item.incomeAccountId,
-      })
-    });
-    const accountsDepGraph = await Account.tenant().depGraph().query();
-    const journal = new JournalPoster(accountsDepGraph);
-    const journalCommands = new JournalCommands(journal);
-
-    journalCommands.nonInventoryEntries(transactions);
-
-    return Promise.all([
-      journal.deleteEntries(),
-      journal.saveEntries(),
-      journal.saveBalance(),
-    ]);
   }
 
   /**
@@ -193,7 +127,7 @@ export default class SaleInvoicesService {
 
     // Schedule sale invoice re-compute based on the item cost
     // method and starting date.
-    await this.scheduleComputeItemsCost(saleInvoice); 
+    await this.scheduleComputeInvoiceItemsCost(saleInvoice);
   }
 
   /**
@@ -260,38 +194,18 @@ export default class SaleInvoicesService {
   static recordInventoryTranscactions(saleInvoice, saleInvoiceId: number, override?: boolean){
     const inventortyTransactions = saleInvoice.entries
       .map((entry) => ({
-        ...pick(entry, ['item_id', 'quantity', 'rate']),
+        ...pick(entry, ['item_id', 'quantity', 'rate',]),
         lotNumber: saleInvoice.invLotNumber,
         transactionType: 'SaleInvoice',
         transactionId: saleInvoiceId,
         direction: 'OUT',
         date: saleInvoice.invoice_date,
+        entryId: entry.id,
       }));
 
     return InventoryService.recordInventoryTransactions(
       inventortyTransactions, override,
     );
-  }
-
-  /**
-   * Schedule sale invoice re-compute based on the item
-   * cost method and starting date
-   * 
-   * @private
-   * @param {SaleInvoice} saleInvoice - 
-   * @return {Promise<Agenda>}
-   */
-  private static scheduleComputeItemsCost(saleInvoice: any) {
-    const asyncOpers: Promise<[]>[] = [];
-
-    saleInvoice.entries.forEach((entry: any) => {
-      const oper: Promise<[]> = InventoryService.scheduleComputeItemCost(
-        entry.item_id || entry.itemId,
-        saleInvoice.bill_date || saleInvoice.billDate,
-      );
-      asyncOpers.push(oper);
-    });
-    return Promise.all(asyncOpers);
   }
 
   /**
@@ -391,5 +305,18 @@ export default class SaleInvoicesService {
     const storedInvoicesIds = storedInvoices.map((i) => i.id);
     const notStoredInvoices = difference(invoicesIds, storedInvoicesIds);
     return notStoredInvoices;
+  }
+
+  /**
+   * Schedules compute sale invoice items cost based on each item 
+   * cost method.
+   * @param {ISaleInvoice} saleInvoice 
+   * @return {Promise}
+   */
+  static scheduleComputeInvoiceItemsCost(saleInvoice) {
+    return this.scheduleComputeItemsCost(
+      saleInvoice.entries.map((e) => e.item_id),
+      saleInvoice.invoice_date,
+    ); 
   }
 }

@@ -1,4 +1,5 @@
 import { Router, Request, Response } from 'express';
+import { Container } from 'typedi';
 
 export default class Ping {
   /**

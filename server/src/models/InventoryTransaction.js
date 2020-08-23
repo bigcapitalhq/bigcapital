@@ -17,7 +17,6 @@ export default class InventoryTransaction extends TenantModel {
     return ['createdAt', 'updatedAt'];
   }
 
-
   /**
    * Model modifiers.
    */
@@ -37,7 +36,6 @@ export default class InventoryTransaction extends TenantModel {
       },
     };
   }
-
 
   /**
    * Relationship mapping.

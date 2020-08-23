@@ -1,5 +1,5 @@
 import { difference } from "lodash";
-import { Item } from '@/models';
+import { Item, ItemTransaction } from '@/models';
 
 export default class ItemsService {
 

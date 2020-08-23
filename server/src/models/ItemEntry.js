@@ -32,4 +32,19 @@ export default class ItemEntry extends TenantModel {
 
     return discount ? total - (total * discount * 0.01) : total;
   }
+
+  static get relationMappings() {
+    const Item = require('@/models/Item');
+
+    return {
+      item: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: this.relationBindKnex(Item.default),
+        join: {
+          from: 'items_entries.itemId',
+          to: 'items.id',
+        },
+      },
+    };
+  }
 }

@@ -13,13 +13,22 @@ export default class InventoryService {
   /**
    * Computes the given item cost and records the inventory lots transactions
    * and journal entries based on the cost method FIFO, LIFO or average cost rate.
-   * @param {Date} fromDate 
-   * @param {number} itemId 
+   * @param {Date} fromDate -
+   * @param {number} itemId -
    */
   static async computeItemCost(fromDate: Date, itemId: number) {
-    const costMethod: TCostMethod = 'FIFO';
+    const item = await Item.tenant().query()
+      .findById(itemId)
+      .withGraphFetched('category');
+
+    // Cannot continue if the given item was not inventory item.
+    if (item.type !== 'inventory') {
+      throw new Error('You could not compute item cost has no inventory type.');
+    }
+    const costMethod: TCostMethod = item.category.costMethod;
     let costMethodComputer: IInventoryCostMethod;
 
+    // Switch between methods based on the item cost method.
     switch(costMethod) {
       case 'FIFO':
       case 'LIFO':
@@ -27,10 +36,9 @@ export default class InventoryService {
         break;
       case 'AVG':
         costMethodComputer = new InventoryAverageCost(fromDate, itemId);
-        break
+        break;
     }
-    await costMethodComputer.initialize();
-    await costMethodComputer.computeItemCost()
+    return costMethodComputer.computeItemCost();
   }
 
   /**
@@ -41,10 +49,6 @@ export default class InventoryService {
   static async scheduleComputeItemCost(itemId: number, startingDate: Date|string) {
     const agenda = Container.get('agenda');
 
-    // Delete the scheduled job in case has the same given data.
-    await agenda.cancel({
-      name: 'compute-item-cost',
-    });
     return agenda.schedule('in 3 seconds', 'compute-item-cost', {
       startingDate, itemId,
     });

@@ -58,4 +58,24 @@ export default class HasItemEntries {
     });
     return Promise.all([...opers]);
   }
+
+  static filterNonInventoryEntries(entries: [], items: []) {
+    const nonInventoryItems = items.filter((item: any) => item.type !== 'inventory');
+    const nonInventoryItemsIds = nonInventoryItems.map((i: any) => i.id);
+
+    return entries
+      .filter((entry: any) => (
+        (nonInventoryItemsIds.indexOf(entry.item_id)) !== -1
+      ));
+  }
+  
+  static filterInventoryEntries(entries: [], items: []) {
+    const inventoryItems = items.filter((item: any) => item.type === 'inventory');
+    const inventoryItemsIds = inventoryItems.map((i: any) => i.id);
+
+    return entries
+      .filter((entry: any) => (
+        (inventoryItemsIds.indexOf(entry.item_id)) !== -1
+      ));
+  }
 }
