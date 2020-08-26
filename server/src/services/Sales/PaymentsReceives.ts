@@ -217,7 +217,7 @@ export default class PaymentReceiveService {
     const paymentReceive = await PaymentReceive.tenant()
       .query()
       .where('id', paymentReceiveId)
-      .withGraphFetched('entries')
+      .withGraphFetched('entries.invoice')
       .first();
     return paymentReceive;
   }

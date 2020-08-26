@@ -30,6 +30,7 @@ export default class PaymentReceiveEntry extends mixin(TenantModel, [CachableMod
    */
   static get relationMappings() {
     const PaymentReceive = require('@/models/PaymentReceive');
+    const SaleInvoice = require('@/models/SaleInvoice');
 
     return {
       entries: {
@@ -40,6 +41,15 @@ export default class PaymentReceiveEntry extends mixin(TenantModel, [CachableMod
           to: 'payment_receives.id',
         },
       },
+
+      invoice: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: this.relationBindKnex(SaleInvoice.default),
+        join: {
+          from: 'payment_receives_entries.invoiceId',
+          to: 'sales_invoices.id',
+        }
+      }
     };
   }
 }
