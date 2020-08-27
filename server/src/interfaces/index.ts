@@ -1,8 +1,17 @@
 import { IInventoryTransaction, IInventoryLotCost } from './InventoryTransaction';
 import { IBillPaymentEntry, IBillPayment } from './BillPayment';
-import { IInventoryCostMethod } from './IInventoryCostMethod';
+import { IInventoryCostMethod } from './InventoryCostMethod';
 import { IItemEntry } from './ItemEntry';
 import { IItem } from './Item';
+import { IVoucher, IVouchersFilter } from './Voucher';
+import { IItemCategory, IItemCategoryOTD } from './ItemCategory';
+import {
+  IPaymentModel,
+  IVoucherPaymentModel,
+  IPaymentMethod,
+  IVoucherPaymentMethod,
+  IPaymentContext,
+} from './Payment';
 
 export {
   IBillPaymentEntry,
@@ -10,6 +19,16 @@ export {
   IInventoryTransaction,
   IInventoryLotCost,
   IInventoryCostMethod,
-  IItemEntry
+  IItemEntry,
   IItem,
+  IVoucher,
+  IVouchersFilter,
+  IItemCategory,
+  IItemCategoryOTD,
+
+  IPaymentModel,
+  IPaymentMethod,
+  IPaymentContext,
+  IVoucherPaymentModel,
+  IVoucherPaymentMethod,
 };

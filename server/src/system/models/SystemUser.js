@@ -1,10 +1,9 @@
 import { Model, mixin } from 'objection';
 import bcrypt from 'bcryptjs';
 import SystemModel from '@/system/models/SystemModel';
-import UserSubscription from '@/services/Subscription/UserSubscription';
 
 
-export default class SystemUser extends mixin(SystemModel, [UserSubscription]) {
+export default class SystemUser extends mixin(SystemModel) {
   /**
    * Table name.
    */
@@ -24,7 +23,6 @@ export default class SystemUser extends mixin(SystemModel, [UserSubscription]) {
    */
   static get relationMappings() {
     const Tenant = require('@/system/models/Tenant');
-    const SubscriptionUsage = require('@/system/models/SubscriptionUsage');
 
     return {
       tenant: {
@@ -34,15 +32,6 @@ export default class SystemUser extends mixin(SystemModel, [UserSubscription]) {
           from: 'users.tenantId',
           to: 'tenants.id',
         },
-      },
-
-      subscriptionUsage: {
-        relation: Model.BelongsToOneRelation,
-        modelClass: SubscriptionUsage.default,
-        join: {
-          from: 'users.id',
-          to: 'subscriptions_usage.user_id',
-        }
       },
     };
   }

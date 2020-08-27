@@ -30,7 +30,7 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
     const balance = sumBy(saleInvoiceDTO.entries, 'amount');
     const invLotNumber = await InventoryService.nextLotNumber();
     const saleInvoice = {
-      ...formatDateFields(saleInvoiceDTO, ['invoide_date', 'due_date']),
+      ...formatDateFields(saleInvoiceDTO, ['invoice_date', 'due_date']),
       balance,
       paymentAmount: 0,
       invLotNumber,

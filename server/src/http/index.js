@@ -1,5 +1,5 @@
-// import OAuth2 from '@/http/controllers/OAuth2';
 import express from 'express';
+import { Container } from 'typedi';
 import Authentication from '@/http/controllers/Authentication';
 import InviteUsers from '@/http/controllers/InviteUsers';
 import Users from '@/http/controllers/Users';
@@ -24,15 +24,24 @@ import JWTAuth from '@/http/middleware/jwtAuth';
 import TenancyMiddleware from '@/http/middleware/TenancyMiddleware';
 import Ping from '@/http/controllers/Ping';
 import Agendash from '@/http/controllers/Agendash';
+import Subscription from '@/http/controllers/Subscription';
+import VouchersController from '@/http/controllers/Subscription/Vouchers';
+
+import TenantDependencyInjection from '@/http/middleware/TenantDependencyInjection';
+import SubscriptionMiddleware from '@/http/middleware/SubscriptionMiddleware';
 
 export default (app) => {
   app.use('/api/auth', Authentication.router());
   app.use('/api/invite', InviteUsers.router());
-  
+  app.use('/api/vouchers', Container.get(VouchersController).router());
+  app.use('/api/subscription', Container.get(Subscription).router());
+  app.use('/api/ping', Container.get(Ping).router());
+
   const dashboard = express.Router(); 
 
   dashboard.use(JWTAuth);
   dashboard.use(TenancyMiddleware);
+  dashboard.use(SubscriptionMiddleware('main'));
 
   dashboard.use('/api/currencies', Currencies.router());
   dashboard.use('/api/users', Users.router());
@@ -41,7 +50,7 @@ export default (app) => {
   dashboard.use('/api/accounting', Accounting.router());
   dashboard.use('/api/views', Views.router());
   dashboard.use('/api/items', Items.router());
-  dashboard.use('/api/item_categories', ItemCategories.router());
+  dashboard.use('/api/item_categories', Container.get(ItemCategories));
   dashboard.use('/api/expenses', Expenses.router());
   dashboard.use('/api/financial_statements', FinancialStatements.router());
   dashboard.use('/api/options', Options.router());
@@ -52,8 +61,7 @@ export default (app) => {
   dashboard.use('/api/resources', Resources.router());
   dashboard.use('/api/exchange_rates', ExchangeRates.router());
   dashboard.use('/api/media', Media.router());
-  dashboard.use('/api/ping', Ping.router());
-
+    
   app.use('/agendash', Agendash.router());
   app.use('/', dashboard);
 };

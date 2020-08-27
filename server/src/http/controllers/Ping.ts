@@ -1,11 +1,11 @@
+import 'reflect-metadata';
 import { Router, Request, Response } from 'express';
-import { Container } from 'typedi';
 
 export default class Ping {
   /**
    * Router constur
    */
-  static router() {
+  router() {
     const router = Router();
 
     router.get(
@@ -20,7 +20,7 @@ export default class Ping {
    * @param {Request} req 
    * @param {Response} res 
    */
-  static async ping(req: Request, res: Response)
+  async ping(req: Request, res: Response)
   {
     return res.status(200).send({
       server: true,

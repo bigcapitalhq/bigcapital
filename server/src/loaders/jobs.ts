@@ -2,6 +2,8 @@ import Agenda from 'agenda';
 import WelcomeEmailJob from '@/Jobs/welcomeEmail';
 import ComputeItemCost from '@/Jobs/ComputeItemCost';
 import RewriteInvoicesJournalEntries from '@/jobs/writeInvoicesJEntries';
+import SendVoucherViaPhoneJob from '@/jobs/SendVoucherPhone';
+import SendVoucherViaEmailJob from '@/jobs/SendVoucherEmail';
 
 export default ({ agenda }: { agenda: Agenda }) => {
   agenda.define(
@@ -19,5 +21,15 @@ export default ({ agenda }: { agenda: Agenda }) => {
     { priority: 'normal', concurrency: 1, },
     new RewriteInvoicesJournalEntries().handler,
   );
+  agenda.define(
+    'send-voucher-via-phone',
+    { priority: 'high', concurrency: 1, },
+    new SendVoucherViaPhoneJob().handler,
+  );
+  agenda.define(
+    'send-voucher-via-email',
+    { priority: 'high', concurrency: 1, },
+    new SendVoucherViaEmailJob().handler,
+  )
   agenda.start();
 };

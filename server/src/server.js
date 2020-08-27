@@ -1,7 +1,14 @@
+import 'reflect-metadata'; // We need this in order to use @Decorators
+
 import express from 'express';
 import rootPath from 'app-root-path';
 import loadersFactory from '@/loaders';
 import '../config';
+import moment from 'moment';
+
+moment.prototype.toMySqlDateTime = function () {
+  return this.format('YYYY-MM-DD HH:mm:ss');
+};
 
 global.rootPath = rootPath.path;
 

@@ -12,6 +12,9 @@ const configEnv = {
   migrations: {
     directory: config.system.migrations_dir,
   },
+  seeds: {
+    directory: config.system.seeds_dir,
+  },
   pool: { min: 0, max: 7 },
 };
 

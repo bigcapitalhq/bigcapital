@@ -44,6 +44,7 @@ export default async (req, res, next) => {
 
   req.knex = knex;
   req.organizationId = organizationId;
+  req.tenant = tenant;
   req.models = {
     ...Object.values(models).reduce((acc, model) => {      
       if (typeof model.resource.default !== 'undefined' &&

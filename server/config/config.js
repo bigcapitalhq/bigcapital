@@ -7,6 +7,7 @@ module.exports = {
     db_password: 'root',
     db_name: 'bigcapital_system',
     migrations_dir: './src/system/migrations',
+    seeds_dir: './src/system/seeds',
   },
   tenant: {
     db_client: 'mysql',
@@ -51,4 +52,20 @@ module.exports = {
     user: 'agendash',
     password: '123456'
   },
+
+  /**
+   * Subscription config.
+   */
+  subscription: {
+    user: 'root',
+    password: 'root',
+  },
+
+  SMSGateway: {
+    type: '',
+    endpoint: '',
+  },
+  easySMSGateway: {
+    api_key: 'b0JDZW56RnV6aEthb0RGPXVEcUI'
+  }
 };

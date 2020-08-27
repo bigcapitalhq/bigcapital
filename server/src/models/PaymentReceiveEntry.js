@@ -33,6 +33,9 @@ export default class PaymentReceiveEntry extends mixin(TenantModel, [CachableMod
     const SaleInvoice = require('@/models/SaleInvoice');
 
     return {
+      /**
+       * 
+       */
       entries: {
         relation: Model.HasManyRelation,
         modelClass: this.relationBindKnex(PaymentReceive.default),
@@ -42,6 +45,9 @@ export default class PaymentReceiveEntry extends mixin(TenantModel, [CachableMod
         },
       },
 
+      /**
+       * The payment receive entry have have sale invoice.
+       */
       invoice: {
         relation: Model.BelongsToOneRelation,
         modelClass: this.relationBindKnex(SaleInvoice.default),
