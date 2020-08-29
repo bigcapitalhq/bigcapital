@@ -8,7 +8,6 @@ function resolve(dir) {
 module.exports = {
   mode: 'development',
   entry: [
-    '@babel/plugin-transform-runtime',
     '@/server.js',
   ],
   target: 'node',
@@ -43,11 +42,6 @@ module.exports = {
       //     // emitWarning: !config.dev.showEslintErrorsInOverlay
       //   },
       // },
-      {
-        use: 'babel-loader',
-        exclude: /(node_modules)/,
-        test: /\.js$/,
-      },
       {
         test: /\.tsx?$/,
         use: 'ts-loader',

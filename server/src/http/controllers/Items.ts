@@ -79,7 +79,6 @@ export default class ItemsController {
       check('type').exists().trim().escape()
         .isIn(['service', 'non-inventory', 'inventory']),
       check('sku').optional({ nullable: true }).trim().escape(),
-
       // Purchase attributes.
       check('purchasable').optional().isBoolean().toBoolean(),
       check('cost_price')
@@ -92,7 +91,6 @@ export default class ItemsController {
         .exists()  
         .isInt()
         .toInt(),
-
       // Sell attributes.
       check('sellable').optional().isBoolean().toBoolean(),
       check('sell_price')
@@ -105,7 +103,6 @@ export default class ItemsController {
         .exists()
         .isInt()
         .toInt(),
-
       check('inventory_account_id')
         .if(check('type').equals('inventory'))
         .exists()

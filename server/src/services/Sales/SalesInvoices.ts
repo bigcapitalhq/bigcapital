@@ -1,4 +1,4 @@
-import { omit, sumBy, difference, pick } from 'lodash';
+import { omit, sumBy, difference, pick, chain } from 'lodash';
 import {
   SaleInvoice,
   AccountTransaction,
@@ -6,12 +6,14 @@ import {
   Account,
   ItemEntry,
   Customer,
+  Item,
 } from '@/models';
 import JournalPoster from '@/services/Accounting/JournalPoster';
 import HasItemsEntries from '@/services/Sales/HasItemsEntries';
 import CustomerRepository from '@/repositories/CustomerRepository';
 import InventoryService from '@/services/Inventory/Inventory';
 import SalesInvoicesCost from '@/services/Sales/SalesInvoicesCost';
+import { ISaleInvoice, ISaleInvoiceOTD, IItemEntry } from '@/interfaces';
 import { formatDateFields } from '@/utils';
 
 /**
@@ -26,11 +28,11 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
    * @param {ISaleInvoice}
    * @return {ISaleInvoice}
    */
-  static async createSaleInvoice(saleInvoiceDTO: any) {
+  static async createSaleInvoice(saleInvoiceDTO: ISaleInvoiceOTD) {
     const balance = sumBy(saleInvoiceDTO.entries, 'amount');
     const invLotNumber = await InventoryService.nextLotNumber();
-    const saleInvoice = {
-      ...formatDateFields(saleInvoiceDTO, ['invoice_date', 'due_date']),
+    const saleInvoice: ISaleInvoice = {
+      ...formatDateFields(saleInvoiceDTO, ['invoiceDate', 'dueDate']),
       balance,
       paymentAmount: 0,
       invLotNumber,
@@ -70,7 +72,7 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
     );
     // Schedule sale invoice re-compute based on the item cost
     // method and starting date.
-    await this.scheduleComputeInvoiceItemsCost(saleInvoice);
+    await this.scheduleComputeInvoiceItemsCost(storedInvoice.id);
 
     return storedInvoice;
   }
@@ -92,7 +94,7 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
       balance,
       invLotNumber: oldSaleInvoice.invLotNumber,
     };
-    const updatedSaleInvoices = await SaleInvoice.tenant()
+    const updatedSaleInvoices: ISaleInvoice = await SaleInvoice.tenant()
       .query()
       .where('id', saleInvoiceId)
       .update({
@@ -124,10 +126,9 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
       changeCustomerBalanceOper,
       recordInventoryTransOper,
     ]);
-
     // Schedule sale invoice re-compute based on the item cost
     // method and starting date.
-    await this.scheduleComputeInvoiceItemsCost(saleInvoice);
+    await this.scheduleComputeInvoiceItemsCost(saleInvoiceId, true);
   }
 
   /**
@@ -313,10 +314,51 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
    * @param {ISaleInvoice} saleInvoice 
    * @return {Promise}
    */
-  static scheduleComputeInvoiceItemsCost(saleInvoice) {
-    return this.scheduleComputeItemsCost(
-      saleInvoice.entries.map((e) => e.item_id),
-      saleInvoice.invoice_date,
-    ); 
+  static async scheduleComputeInvoiceItemsCost(saleInvoiceId: number, override?: boolean) {
+    const saleInvoice: ISaleInvoice = await SaleInvoice.tenant()
+      .query()
+      .findById(saleInvoiceId)
+      .withGraphFetched('entries.item');
+
+    const inventoryItemsIds = chain(saleInvoice.entries)
+      .filter((entry: IItemEntry) => entry.item.type === 'inventory')
+      .map((entry: IItemEntry) => entry.itemId)
+      .uniq().value();
+    
+    if (inventoryItemsIds.length === 0) {
+      await this.writeNonInventoryInvoiceJournals(saleInvoice, override);
+    } else {
+      await this.scheduleComputeItemsCost(
+        inventoryItemsIds,
+        saleInvoice.invoice_date,
+      );
+    }
+  }
+
+  /**
+   * Writes the sale invoice journal entries.
+   * @param {SaleInvoice} saleInvoice -
+   */
+  static async writeNonInventoryInvoiceJournals(saleInvoice: ISaleInvoice, override: boolean) {
+    const accountsDepGraph = await Account.tenant().depGraph().query();
+    const journal = new JournalPoster(accountsDepGraph);
+
+    if (override) {
+      const oldTransactions = await AccountTransaction.tenant()
+        .query()
+        .where('reference_type', 'SaleInvoice')
+        .where('reference_id', saleInvoice.id)
+        .withGraphFetched('account.type');
+
+      journal.loadEntries(oldTransactions);
+      journal.removeEntries();
+    }
+    this.saleInvoiceJournal(saleInvoice, journal);
+
+    await Promise.all([
+      journal.deleteEntries(),
+      journal.saveEntries(),
+      journal.saveBalance(),      
+    ]);
   }
 }

@@ -27,7 +27,6 @@ export default class Voucher extends mixin(SystemModel) {
       filterActiveVoucher(query) {
         query.where('disabled', false);
         query.where('used', false);
-        query.where('sent', false);
       },
 
       // Find voucher by its code or id.

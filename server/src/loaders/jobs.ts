@@ -14,12 +14,12 @@ export default ({ agenda }: { agenda: Agenda }) => {
   agenda.define(
     'compute-item-cost',
     { priority: 'high', concurrency: 20 },
-    new ComputeItemCost().handler,
+    new ComputeItemCost(agenda).handler,
   );
   agenda.define(
     'rewrite-invoices-journal-entries',
     { priority: 'normal', concurrency: 1, },
-    new RewriteInvoicesJournalEntries().handler,
+    new RewriteInvoicesJournalEntries(agenda).handler,
   );
   agenda.define(
     'send-voucher-via-phone',

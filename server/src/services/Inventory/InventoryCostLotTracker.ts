@@ -84,8 +84,7 @@ export default class InventoryCostLotTracker extends InventoryCostMethod impleme
    */
   private async fetchInvINTransactions() {
     const commonBuilder = (builder: any) => {
-      builder.where('direction', 'IN');
-      builder.orderBy('date', 'ASC');
+      builder.orderBy('date', (this.costMethod === 'LIFO') ? 'DESC': 'ASC');
       builder.where('item_id', this.itemId);
     };
     const afterInvTransactions: IInventoryTransaction[] =
@@ -93,8 +92,8 @@ export default class InventoryCostLotTracker extends InventoryCostMethod impleme
         .query()
         .modify('filterDateRange', this.startingDate)
         .orderByRaw("FIELD(direction, 'IN', 'OUT')")
-        .orderBy('lot_number', (this.costMethod === 'LIFO') ? 'DESC' : 'ASC')
         .onBuild(commonBuilder)
+        .orderBy('lot_number', (this.costMethod === 'LIFO') ? 'DESC' : 'ASC')
         .withGraphFetched('item');
 
     const availiableINLots: IInventoryLotCost[] = 
@@ -102,7 +101,8 @@ export default class InventoryCostLotTracker extends InventoryCostMethod impleme
         .query()
         .modify('filterDateRange', null, this.startingDate)
         .orderBy('date', 'ASC')
-        .orderBy('lot_number', 'ASC')        
+        .where('direction', 'IN')
+        .orderBy('lot_number', 'ASC')
         .onBuild(commonBuilder)
         .whereNot('remaining', 0);
 

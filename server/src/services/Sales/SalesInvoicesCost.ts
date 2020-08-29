@@ -9,31 +9,27 @@ import JournalPoster from '@/services/Accounting/JournalPoster';
 import JournalEntry from '@/services/Accounting/JournalEntry';
 import InventoryService from '@/services/Inventory/Inventory';
 import { ISaleInvoice, IItemEntry, IItem } from '@/interfaces';
+import { ISaleInvoice } from '../../interfaces';
 
 export default class SaleInvoicesCost {
   /**
    * Schedule sale invoice re-compute based on the item
    * cost method and starting date.
-   * @param {number[]} itemIds - 
-   * @param {Date} startingDate - 
+   * @param {number[]} itemIds - Inventory items ids.
+   * @param {Date} startingDate - Starting compute cost date.
    * @return {Promise<Agenda>}
    */
-  static async scheduleComputeItemsCost(itemIds: number[], startingDate: Date) {
-    const items: IItem[] = await Item.tenant().query().whereIn('id', itemIds);
-
-    const inventoryItems: IItem[] = items.filter((item: IItem) => item.type === 'inventory');
+  static async scheduleComputeItemsCost(inventoryItemsIds: number[], startingDate: Date) {
     const asyncOpers: Promise<[]>[] = [];
 
-    inventoryItems.forEach((item: IItem) => {
+    inventoryItemsIds.forEach((inventoryItemId: number) => {
       const oper: Promise<[]> = InventoryService.scheduleComputeItemCost(
-        item.id,
+        inventoryItemId,
         startingDate,
       );
       asyncOpers.push(oper);
     });
-    const writeJEntriesOper: Promise<any> = this.scheduleWriteJournalEntries(startingDate);
-
-    return Promise.all([...asyncOpers, writeJEntriesOper]);
+    return Promise.all([...asyncOpers]);
   }
 
   /**
@@ -63,7 +59,6 @@ export default class SaleInvoicesCost {
         builder.withGraphFetched('entries.item')
         builder.withGraphFetched('costTransactions(groupedEntriesCost)');
       });
-
     const accountsDepGraph = await Account.tenant().depGraph().query();
     const journal = new JournalPoster(accountsDepGraph);
 
@@ -79,67 +74,76 @@ export default class SaleInvoicesCost {
       journal.loadEntries(oldTransactions);
       journal.removeEntries();
     }
-    const receivableAccount = { id: 10 };
-
-    salesInvoices.forEach((saleInvoice: ISaleInvoice) => {
-      let inventoryTotal: number = 0;
-      const commonEntry = {
-        referenceType: 'SaleInvoice',
-        referenceId: saleInvoice.id,
-        date: saleInvoice.invoiceDate,
-      };
-      const costTransactions: Map<number, number> = new Map(
-        saleInvoice.costTransactions.map((trans: IItemEntry) => [
-          trans.entryId, trans.cost,
-        ]),
-      );
-      // XXX Debit - Receivable account.
-      const receivableEntry = new JournalEntry({
-        ...commonEntry,
-        debit: saleInvoice.balance,
-        account: receivableAccount.id,
-      });
-      journal.debit(receivableEntry);
-
-      saleInvoice.entries.forEach((entry: IItemEntry) => {
-        const cost: number = costTransactions.get(entry.id);
-        const income: number = entry.quantity * entry.rate;
     
-        if (entry.item.type === 'inventory' && cost) {
-          // XXX Debit - Cost account.
-          const costEntry = new JournalEntry({
-            ...commonEntry,
-            debit: cost,
-            account: entry.item.costAccountId,
-            note: entry.description,
-          });
-          journal.debit(costEntry);
-          inventoryTotal += cost;
-        }
-        // XXX Credit - Income account.
-        const incomeEntry = new JournalEntry({
-          ...commonEntry,
-          credit: income,
-          account: entry.item.sellAccountId,
-          note: entry.description,
-        });
-        journal.credit(incomeEntry);
-
-        if (inventoryTotal > 0) {
-          // XXX Credit - Inventory account.
-          const inventoryEntry = new JournalEntry({
-            ...commonEntry,
-            credit: inventoryTotal,
-            account: entry.item.inventoryAccountId,
-          });
-          journal.credit(inventoryEntry);
-        }
-      });
+    salesInvoices.forEach((saleInvoice: ISaleInvoice) => {
+      this.saleInvoiceJournal(saleInvoice, journal);
     });
     return Promise.all([
       journal.deleteEntries(),
       journal.saveEntries(),
       journal.saveBalance(),
     ]);
+  }
+
+  /**
+   * Writes journal entries for given sale invoice.
+   * @param {ISaleInvoice} saleInvoice 
+   * @param {JournalPoster} journal 
+   */
+  static saleInvoiceJournal(saleInvoice: ISaleInvoice, journal: JournalPoster) {
+    let inventoryTotal: number = 0;
+    const receivableAccount = { id: 10 };
+    const commonEntry = {
+      referenceType: 'SaleInvoice',
+      referenceId: saleInvoice.id,
+      date: saleInvoice.invoiceDate,
+    };
+    const costTransactions: Map<number, number> = new Map(
+      saleInvoice?.costTransactions?.map((trans: IItemEntry) => [
+        trans.entryId, trans.cost,
+      ]),
+    );
+    // XXX Debit - Receivable account.
+    const receivableEntry = new JournalEntry({
+      ...commonEntry,
+      debit: saleInvoice.balance,
+      account: receivableAccount.id,
+    });
+    journal.debit(receivableEntry);
+
+    saleInvoice.entries.forEach((entry: IItemEntry) => {
+      const cost: number = costTransactions.get(entry.id);
+      const income: number = entry.quantity * entry.rate;
+  
+      if (entry.item.type === 'inventory' && cost) {
+        // XXX Debit - Cost account.
+        const costEntry = new JournalEntry({
+          ...commonEntry,
+          debit: cost,
+          account: entry.item.costAccountId,
+          note: entry.description,
+        });
+        journal.debit(costEntry);
+        inventoryTotal += cost;
+      }
+      // XXX Credit - Income account.
+      const incomeEntry = new JournalEntry({
+        ...commonEntry,
+        credit: income,
+        account: entry.item.sellAccountId,
+        note: entry.description,
+      });
+      journal.credit(incomeEntry);
+
+      if (inventoryTotal > 0) {
+        // XXX Credit - Inventory account.
+        const inventoryEntry = new JournalEntry({
+          ...commonEntry,
+          credit: inventoryTotal,
+          account: entry.item.inventoryAccountId,
+        });
+        journal.credit(inventoryEntry);
+      }
+    });
   }
 }

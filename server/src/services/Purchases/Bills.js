@@ -348,10 +348,18 @@ export default class BillsService extends SalesInvoicesCost {
    * @param {IBill} bill 
    * @return {Promise}
    */
-  static scheduleComputeBillItemsCost(bill) {
-    return this.scheduleComputeItemsCost(
-      bill.entries.map((e) => e.item_id),
-      bill.bill_date,
-    );
+  static async scheduleComputeBillItemsCost(bill) {
+    const billItemsIds = bill.entries.map((entry) => entry.item_id);
+
+    // Retrieves inventory items only.
+    const inventoryItems = await Item.tenant().query()
+      .whereIn('id', billItemsIds)
+      .where('type', 'inventory');
+
+    const inventoryItemsIds = inventoryItems.map(i => i.id);
+
+    if (inventoryItemsIds.length > 0) {      
+      await this.scheduleComputeItemsCost(inventoryItemsIds, bill.bill_date);
+    }
   }
 }

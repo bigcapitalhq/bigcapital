@@ -12,6 +12,10 @@ import {
   IVoucherPaymentMethod,
   IPaymentContext,
 } from './Payment';
+import {
+  ISaleInvoice,
+  ISaleInvoiceOTD,
+} from './SaleInvoice';
 
 export {
   IBillPaymentEntry,
@@ -31,4 +35,7 @@ export {
   IPaymentContext,
   IVoucherPaymentModel,
   IVoucherPaymentMethod,
+
+  ISaleInvoice,
+  ISaleInvoiceOTD,
 };
