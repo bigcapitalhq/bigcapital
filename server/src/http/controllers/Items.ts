@@ -1,5 +1,6 @@
+import { Inject, Service } from 'typedi';
 import { Router, Request, Response } from 'express';
-import { check, param, query, ValidationChain } from 'express-validator';
+import { check, param, query, ValidationChain, matchedData } from 'express-validator';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
 import validateMiddleware from '@/http/middleware/validateMiddleware';
 import ItemsService from '@/services/Items/ItemsService';
@@ -7,23 +8,27 @@ import DynamicListing from '@/services/DynamicListing/DynamicListing';
 import DynamicListingBuilder from '@/services/DynamicListing/DynamicListingBuilder';
 import { dynamicListingErrorsToResponse } from '@/services/DynamicListing/hasDynamicListing';
 
+@Service()
 export default class ItemsController { 
+  @Inject()
+  itemsService: ItemsService;
+
   /**
    * Router constructor.
    */
-  static router() {
+  router() {
     const router = Router();
 
     router.post(
       '/',
       this.validateItemSchema,
       validateMiddleware,
-      asyncMiddleware(this.validateCategoryExistance),
-      asyncMiddleware(this.validateCostAccountExistance),
-      asyncMiddleware(this.validateSellAccountExistance),
-      asyncMiddleware(this.validateInventoryAccountExistance),
-      asyncMiddleware(this.validateItemNameExistance),
-      asyncMiddleware(this.newItem),
+      asyncMiddleware(this.validateCategoryExistance.bind(this)),
+      asyncMiddleware(this.validateCostAccountExistance.bind(this)),
+      asyncMiddleware(this.validateSellAccountExistance.bind(this)),
+      asyncMiddleware(this.validateInventoryAccountExistance.bind(this)),
+      asyncMiddleware(this.validateItemNameExistance.bind(this)),
+      asyncMiddleware(this.newItem.bind(this)),
     );
     router.post(
       '/:id', [
@@ -31,49 +36,41 @@ export default class ItemsController {
         ...this.validateSpecificItemSchema,
       ],
       validateMiddleware,
-      asyncMiddleware(this.validateItemExistance),
-      asyncMiddleware(this.validateCategoryExistance),
-      asyncMiddleware(this.validateCostAccountExistance),
-      asyncMiddleware(this.validateSellAccountExistance),
-      asyncMiddleware(this.validateInventoryAccountExistance),
-      asyncMiddleware(this.validateItemNameExistance),
-      asyncMiddleware(this.editItem),
+      asyncMiddleware(this.validateItemExistance.bind(this)),
+      asyncMiddleware(this.validateCategoryExistance.bind(this)),
+      asyncMiddleware(this.validateCostAccountExistance.bind(this)),
+      asyncMiddleware(this.validateSellAccountExistance.bind(this)),
+      asyncMiddleware(this.validateInventoryAccountExistance.bind(this)),
+      asyncMiddleware(this.validateItemNameExistance.bind(this)),
+      asyncMiddleware(this.editItem.bind(this)),
     );
     router.delete(
       '/:id',
       this.validateSpecificItemSchema,
       validateMiddleware,
-      asyncMiddleware(this.validateItemExistance),
-      asyncMiddleware(this.deleteItem),
+      asyncMiddleware(this.validateItemExistance.bind(this)),
+      asyncMiddleware(this.deleteItem.bind(this)),
     );
     router.get(
       '/:id', 
       this.validateSpecificItemSchema,
       validateMiddleware,
-      asyncMiddleware(this.validateItemExistance),
-      asyncMiddleware(this.getItem),
+      asyncMiddleware(this.validateItemExistance.bind(this)),
+      asyncMiddleware(this.getItem.bind(this)),
     );
     router.get(
       '/',
       this.validateListQuerySchema,
       validateMiddleware,
-      asyncMiddleware(this.listItems),
+      asyncMiddleware(this.listItems.bind(this)),
     );
     return router;
   }
 
   /**
    * Validate item schema.
-   * 
-   * @param {Request} req - 
-   * @param {Response} res - 
-   * @return {ValidationChain[]} - validation chain.
    */
-  static get validateItemSchema(
-    req: Request,
-    res: Response,
-    next: Function,
-  ): ValidationChain[] {
+  get validateItemSchema(): ValidationChain[] {
     return [
       check('name').exists(),
       check('type').exists().trim().escape()
@@ -122,7 +119,7 @@ export default class ItemsController {
   /**
    * Validate specific item params schema.
    */
-  static get validateSpecificItemSchema(): ValidationChain[] {
+  get validateSpecificItemSchema(): ValidationChain[] {
     return [
       param('id').exists().isNumeric().toInt(),
     ];
@@ -132,7 +129,7 @@ export default class ItemsController {
   /**
    * Validate list query schema
    */
-  static get validateListQuerySchema() {
+  get validateListQuerySchema() {
     return [
       query('column_sort_order').optional().isIn(['created_at', 'name', 'amount', 'sku']),
       query('sort_order').optional().isIn(['desc', 'asc']),
@@ -149,7 +146,7 @@ export default class ItemsController {
    * @param {Response} res -
    * @param {NextFunction} next -
    */
-  static async validateItemExistance(req: Request, res: Response, next: Function) {
+  async validateItemExistance(req: Request, res: Response, next: Function) {
     const { Item } = req.models;
     const itemId: number = req.params.id;
 
@@ -169,7 +166,7 @@ export default class ItemsController {
    * @param {Response} res 
    * @param {NextFunction} next 
    */
-  static async validateItemNameExistance(req: Request, res: Response, next: Function) {
+  async validateItemNameExistance(req: Request, res: Response, next: Function) {
     const { Item } = req.models;
     const item = req.body;
     const itemId: number = req.params.id;
@@ -195,7 +192,7 @@ export default class ItemsController {
    * @param {Response} res 
    * @param {Function} next 
    */
-  static async validateCategoryExistance(req: Request, res: Response, next: Function) {
+  async validateCategoryExistance(req: Request, res: Response, next: Function) {
     const { ItemCategory } = req.models;
     const item = req.body;
 
@@ -217,7 +214,7 @@ export default class ItemsController {
    * @param {Response} res 
    * @param {Function} next 
    */
-  static async validateCostAccountExistance(req: Request, res: Response, next: Function) {
+  async validateCostAccountExistance(req: Request, res: Response, next: Function) {
     const { Account, AccountType } = req.models;
     const item = req.body;
 
@@ -244,7 +241,7 @@ export default class ItemsController {
    * @param {Response} res 
    * @param {NextFunction} next 
    */
-  static async validateSellAccountExistance(req: Request, res: Response, next: Function) {
+  async validateSellAccountExistance(req: Request, res: Response, next: Function) {
     const { Account, AccountType } = req.models;
     const item = req.body;
 
@@ -271,7 +268,7 @@ export default class ItemsController {
    * @param {Response} res 
    * @param {NextFunction} next 
    */
-  static async validateInventoryAccountExistance(req: Request, res: Response, next: Function) {
+  async validateInventoryAccountExistance(req: Request, res: Response, next: Function) {
     const { Account, AccountType } = req.models;
     const item = req.body;
 
@@ -297,9 +294,14 @@ export default class ItemsController {
    * @param {Request} req 
    * @param {Response} res 
    */
-  static async newItem(req: Request, res: Response,) {
-    const item = req.body;
-    const storedItem = await ItemsService.newItem(item);
+  async newItem(req: Request, res: Response,) {
+    const { tenantId } = req;
+
+    const item = matchedData(req, {
+      locations: ['body'],
+      includeOptionals: true
+    });
+    const storedItem = await this.itemsService.newItem(tenantId, item);
 
     return res.status(200).send({ id: storedItem.id });
   }
@@ -309,10 +311,15 @@ export default class ItemsController {
    * @param {Request} req 
    * @param {Response} res 
    */
-  static async editItem(req: Request, res: Response) {
-    const item = req.body;
+  async editItem(req: Request, res: Response) {
+    const { tenantId } = req;
+
     const itemId: number = req.params.id;
-    const updatedItem = await ItemsService.editItem(item, itemId);
+    const item = matchedData(req, {
+      locations: ['body'],
+      includeOptionals: true
+    });
+    const updatedItem = await this.itemsService.editItem(tenantId, item, itemId);
 
     return res.status(200).send({ id: itemId });
   }
@@ -322,9 +329,11 @@ export default class ItemsController {
    * @param {Request} req 
    * @param {Response} res 
    */
-  static async deleteItem(req: Request, res: Response) {
+  async deleteItem(req: Request, res: Response) {
     const itemId: number = req.params.id;
-    await ItemsService.deleteItem(itemId);
+    const { tenantId } = req;
+
+    await this.itemsService.deleteItem(tenantId, itemId);
 
     return res.status(200).send({ id: itemId });
   }
@@ -335,9 +344,11 @@ export default class ItemsController {
    * @param {Response} res 
    * @return {Response} 
    */
-  static async getItem(req: Request, res: Response) {
+  async getItem(req: Request, res: Response) {
     const itemId: number = req.params.id;
-    const storedItem = await ItemsService.getItemWithMetadata(itemId);
+    const { tenantId } = req;
+
+    const storedItem = await this.itemsService.getItemWithMetadata(tenantId, itemId);
 
     return res.status(200).send({ item: storedItem });
   }
@@ -347,7 +358,7 @@ export default class ItemsController {
    * @param {Request} req 
    * @param {Response} res 
    */
-  static async listItems(req: Request, res: Response) {
+  async listItems(req: Request, res: Response) {
     const filter = {
       filter_roles: [],
       sort_order: 'asc',

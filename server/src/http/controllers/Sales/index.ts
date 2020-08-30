@@ -1,4 +1,5 @@
 import express from 'express';
+import { Container } from 'typedi';
 import SalesEstimates from './SalesEstimates';
 import SalesReceipts from './SalesReceipts';
 import SalesInvoices from './SalesInvoices'
@@ -11,10 +12,10 @@ export default {
   router() {
     const router = express.Router();
 
-    router.use('/invoices', SalesInvoices.router());
-    router.use('/estimates', SalesEstimates.router());
-    router.use('/receipts', SalesReceipts.router());
-    router.use('/payment_receives', PaymentReceives.router());
+    router.use('/invoices', Container.get(SalesInvoices).router());
+    router.use('/estimates', Container.get(SalesEstimates).router());
+    router.use('/receipts', Container.get(SalesReceipts).router());
+    router.use('/payment_receives', Container.get(PaymentReceives).router());
 
     return router;
   }

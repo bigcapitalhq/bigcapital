@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import TenantsManager from '@/system/TenantsManager';
 import TenantModel from '@/models/TenantModel';
+import { Container } from 'typedi';
 
 function loadModelsFromDirectory() {
   const models = {};
@@ -45,6 +46,7 @@ export default async (req, res, next) => {
   req.knex = knex;
   req.organizationId = organizationId;
   req.tenant = tenant;
+  req.tenantId = tenant.id;
   req.models = {
     ...Object.values(models).reduce((acc, model) => {      
       if (typeof model.resource.default !== 'undefined' &&
@@ -56,5 +58,8 @@ export default async (req, res, next) => {
       return acc;
     }, {}),
   };
+  Container.of(`tenant-${tenant.id}`).set('models', {
+    ...req.models,
+  });
   next();
 };

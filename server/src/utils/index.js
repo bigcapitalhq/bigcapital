@@ -144,7 +144,7 @@ function applyMixins(derivedCtor, baseCtors) {
   });
 }
 
-const formatDateFields = (inputDTO, fields, format = 'YYYY-DD-MM') => {
+const formatDateFields = (inputDTO, fields, format = 'YYYY-MM-DD') => {
   const _inputDTO = { ...inputDTO };
 
   fields.forEach((field) => {

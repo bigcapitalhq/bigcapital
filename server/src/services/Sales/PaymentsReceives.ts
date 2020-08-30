@@ -1,13 +1,7 @@
 import { omit, sumBy, chain } from 'lodash';
 import moment from 'moment';
-import {
-  AccountTransaction,
-  PaymentReceive,
-  PaymentReceiveEntry,
-  SaleInvoice,
-  Customer,
-  Account,
-} from '@/models';
+import { Service, Inject } from 'typedi';
+import { IPaymentReceiveOTD } from '@/interfaces';
 import AccountsService from '@/services/Accounts/AccountsService';
 import JournalPoster from '@/services/Accounting/JournalPoster';
 import JournalEntry from '@/services/Accounting/JournalEntry';
@@ -15,23 +9,41 @@ import JournalPosterService from '@/services/Sales/JournalPosterService';
 import ServiceItemsEntries from '@/services/Sales/ServiceItemsEntries';
 import PaymentReceiveEntryRepository from '@/repositories/PaymentReceiveEntryRepository';
 import CustomerRepository from '@/repositories/CustomerRepository';
+import TenancyService from '@/services/Tenancy/TenancyService';
 import { formatDateFields } from '@/utils';
 
 /**
  * Payment receive service.
  * @service
  */
+@Service()
 export default class PaymentReceiveService {
+  @Inject()
+  accountsService: AccountsService;
+
+  @Inject()
+  tenancy: TenancyService;
+
+  @Inject()
+  journalService: JournalPosterService;
+
   /**
    * Creates a new payment receive and store it to the storage
    * with associated invoices payment and journal transactions.
    * @async
+   * @param {number} tenantId - Tenant id.
    * @param {IPaymentReceive} paymentReceive
    */
-  static async createPaymentReceive(paymentReceive: any) {
+  async createPaymentReceive(tenantId: number, paymentReceive: IPaymentReceiveOTD) {
+    const {
+      PaymentReceive,
+      PaymentReceiveEntry,
+      SaleInvoice,
+      Customer,
+    } = this.tenancy.models(tenantId);
+
     const paymentAmount = sumBy(paymentReceive.entries, 'payment_amount');
-    const storedPaymentReceive = await PaymentReceive.tenant()
-      .query()
+    const storedPaymentReceive = await PaymentReceive.query()
       .insert({
         amount: paymentAmount,
         ...formatDateFields(omit(paymentReceive, ['entries']), ['payment_date']),
@@ -39,15 +51,13 @@ export default class PaymentReceiveService {
     const storeOpers: Array<any> = [];
 
     paymentReceive.entries.forEach((entry: any) => {
-      const oper = PaymentReceiveEntry.tenant()
-        .query()
+      const oper = PaymentReceiveEntry.query()
         .insert({
           payment_receive_id: storedPaymentReceive.id,
           ...entry,
         });
       // Increment the invoice payment amount.
-      const invoice = SaleInvoice.tenant()
-        .query()
+      const invoice = SaleInvoice.query()
         .where('id', entry.invoice_id)
         .increment('payment_amount', entry.payment_amount);
 
@@ -59,10 +69,10 @@ export default class PaymentReceiveService {
       paymentAmount,
     );
     // Records the sale invoice journal transactions.
-    const recordJournalTransactions = this.recordPaymentReceiveJournalEntries({
-        id: storedPaymentReceive.id,
-        ...paymentReceive,
-      });
+    const recordJournalTransactions = this.recordPaymentReceiveJournalEntries(tenantId,{
+      id: storedPaymentReceive.id,
+      ...paymentReceive,
+    });
     await Promise.all([
       ...storeOpers,
       customerIncrementOper,
@@ -82,19 +92,22 @@ export default class PaymentReceiveService {
    * - Update the different customer balances.
    * - Update the different invoice payment amount.
    * @async
-   * @param {Integer} paymentReceiveId
-   * @param {IPaymentReceive} paymentReceive
-   * @param {IPaymentReceive} oldPaymentReceive
+   * @param {number} tenantId - 
+   * @param {Integer} paymentReceiveId -
+   * @param {IPaymentReceive} paymentReceive -
+   * @param {IPaymentReceive} oldPaymentReceive -
    */
-  static async editPaymentReceive(
+  async editPaymentReceive(
+    tenantId: number,
     paymentReceiveId: number,
     paymentReceive: any,
     oldPaymentReceive: any
   ) {
+    const { PaymentReceive } = this.tenancy.models(tenantId);
+
     const paymentAmount = sumBy(paymentReceive.entries, 'payment_amount');
     // Update the payment receive transaction.
-    const updatePaymentReceive = await PaymentReceive.tenant()
-      .query()
+    const updatePaymentReceive = await PaymentReceive.query()
       .where('id', paymentReceiveId)
       .update({
         amount: paymentAmount,
@@ -131,6 +144,7 @@ export default class PaymentReceiveService {
     }
     // Re-write the journal transactions of the given payment receive.
     const recordJournalTransactions = this.recordPaymentReceiveJournalEntries(
+      tenantId,
       {
         id: oldPaymentReceive.id,
         ...paymentReceive,
@@ -147,6 +161,7 @@ export default class PaymentReceiveService {
     );
     // Change the difference between the old and new invoice payment amount.
     const diffInvoicePaymentAmount = this.saveChangeInvoicePaymentAmount(
+      tenantId,
       oldPaymentReceive.entries,
       paymentReceive.entries
     );
@@ -169,24 +184,26 @@ export default class PaymentReceiveService {
    * - Revert the customer balance.
    * - Revert the payment amount of the associated invoices.
    * @async
-   * @param {Integer} paymentReceiveId
-   * @param {IPaymentReceive} paymentReceive
+   * @param {number} tenantId - Tenant id.
+   * @param {Integer} paymentReceiveId - Payment receive id.
+   * @param {IPaymentReceive} paymentReceive - Payment receive object.
    */
-  static async deletePaymentReceive(paymentReceiveId: number, paymentReceive: any) {
+  async deletePaymentReceive(tenantId: number, paymentReceiveId: number, paymentReceive: any) {
+    const { PaymentReceive, PaymentReceiveEntry, Customer } = this.tenancy.models(tenantId);
+
     // Deletes the payment receive transaction.
-    await PaymentReceive.tenant()
-      .query()
+    await PaymentReceive.query()
       .where('id', paymentReceiveId)
       .delete();
 
     // Deletes the payment receive associated entries.
-    await PaymentReceiveEntry.tenant()
-      .query()
+    await PaymentReceiveEntry.query()
       .where('payment_receive_id', paymentReceiveId)
       .delete();
 
     // Delete all associated journal transactions to payment receive transaction.
-    const deleteTransactionsOper = JournalPosterService.deleteJournalTransactions(
+    const deleteTransactionsOper = this.journalService.deleteJournalTransactions(
+      tenantId,
       paymentReceiveId,
       'PaymentReceive'
     );
@@ -197,6 +214,7 @@ export default class PaymentReceiveService {
     );
     // Revert the invoices payments amount.
     const revertInvoicesPaymentAmount = this.revertInvoicePaymentAmount(
+      tenantId,
       paymentReceive.entries.map((entry: any) => ({
         invoiceId: entry.invoiceId,
         revertAmount: entry.paymentAmount,
@@ -211,11 +229,12 @@ export default class PaymentReceiveService {
 
   /**
    * Retrieve the payment receive details of the given id.
-   * @param {Integer} paymentReceiveId
+   * @param {number} tenantId - Tenant id.
+   * @param {Integer} paymentReceiveId - Payment receive id.
    */
-  static async getPaymentReceive(paymentReceiveId: number) {
-    const paymentReceive = await PaymentReceive.tenant()
-      .query()
+  async getPaymentReceive(tenantId: number, paymentReceiveId: number) {
+    const { PaymentReceive } = this.tenancy.models(tenantId);
+    const paymentReceive = await PaymentReceive.query()
       .where('id', paymentReceiveId)
       .withGraphFetched('entries.invoice')
       .first();
@@ -226,9 +245,9 @@ export default class PaymentReceiveService {
    * Retrieve the payment receive details with associated invoices.
    * @param {Integer} paymentReceiveId
    */
-  static async getPaymentReceiveWithInvoices(paymentReceiveId: number) {
-    return PaymentReceive.tenant()
-      .query()
+  async getPaymentReceiveWithInvoices(tenantId: number, paymentReceiveId: number) {
+    const { PaymentReceive } = this.tenancy.models(tenantId);
+    return PaymentReceive.query()
       .where('id', paymentReceiveId)
       .withGraphFetched('invoices')
       .first();
@@ -236,11 +255,12 @@ export default class PaymentReceiveService {
 
   /**
    * Detarmines whether the payment receive exists on the storage.
+   * @param {number} tenantId - Tenant id.
    * @param {Integer} paymentReceiveId
    */
-  static async isPaymentReceiveExists(paymentReceiveId: number) {
-    const paymentReceives = await PaymentReceive.tenant()
-      .query()
+  async isPaymentReceiveExists(tenantId: number, paymentReceiveId: number) {
+    const { PaymentReceive } = this.tenancy.models(tenantId);
+    const paymentReceives = await PaymentReceive.query()
       .where('id', paymentReceiveId);
     return paymentReceives.length > 0;
   }
@@ -248,15 +268,17 @@ export default class PaymentReceiveService {
   /**
    * Detarmines the payment receive number existance.
    * @async
+   * @param {number} tenantId - Tenant id.
    * @param {Integer} paymentReceiveNumber - Payment receive number.
    * @param {Integer} paymentReceiveId - Payment receive id.
    */
-  static async isPaymentReceiveNoExists(
+  async isPaymentReceiveNoExists(
+    tenantId: number,
     paymentReceiveNumber: string|number,
     paymentReceiveId: number
   ) {
-    const paymentReceives = await PaymentReceive.tenant()
-      .query()
+    const { PaymentReceive } = this.tenancy.models(tenantId);
+    const paymentReceives = await PaymentReceive.query()
       .where('payment_receive_no', paymentReceiveNumber)
       .onBuild((query) => {
         if (paymentReceiveId) {
@@ -273,21 +295,25 @@ export default class PaymentReceiveService {
    * --------
    * - Account receivable -> Debit
    * - Payment account [current asset] -> Credit
-   * 
    * @async
+   * @param {number} tenantId - Tenant id.
    * @param {IPaymentReceive} paymentReceive
    * @param {Number} paymentReceiveId
    */
-  static async recordPaymentReceiveJournalEntries(
+  async recordPaymentReceiveJournalEntries(
+    tenantId: number,
     paymentReceive: any,
     paymentReceiveId?: number
   ) {
+    const { Account, AccountTransaction } = this.tenancy.models(tenantId);
+
     const paymentAmount = sumBy(paymentReceive.entries, 'payment_amount');
     const formattedDate = moment(paymentReceive.payment_date).format('YYYY-MM-DD');
-    const receivableAccount = await AccountsService.getAccountByType(
+    const receivableAccount = await this.accountsService.getAccountByType(
+      tenantId,
       'accounts_receivable'
     );
-    const accountsDepGraph = await Account.tenant().depGraph().query();
+    const accountsDepGraph = await Account.depGraph().query();
     const journal = new JournalPoster(accountsDepGraph);
     const commonJournal = {
       debit: 0,
@@ -297,8 +323,7 @@ export default class PaymentReceiveService {
       date: formattedDate,
     };
     if (paymentReceiveId) {
-      const transactions = await AccountTransaction.tenant()
-        .query()
+      const transactions = await AccountTransaction.query()
         .whereIn('reference_type', ['PaymentReceive'])
         .where('reference_id', paymentReceiveId)
         .withGraphFetched('account.type');
@@ -330,15 +355,18 @@ export default class PaymentReceiveService {
 
   /**
    * Revert the payment amount of the given invoices ids.
+   * @async
+   * @param {number} tenantId - Tenant id.
    * @param {Array} revertInvoices
+   * @return {Promise}
    */
-  static async revertInvoicePaymentAmount(revertInvoices: any[]) {
+  async revertInvoicePaymentAmount(tenantId: number, revertInvoices: any[]) {
+    const { SaleInvoice } = this.tenancy.models(tenantId);
     const opers: Promise<T>[] = [];
 
     revertInvoices.forEach((revertInvoice) => {
       const { revertAmount, invoiceId } = revertInvoice;
-      const oper = SaleInvoice.tenant()
-        .query()
+      const oper = SaleInvoice.query()
         .where('id', invoiceId)
         .decrement('payment_amount', revertAmount);
       opers.push(oper);
@@ -348,14 +376,18 @@ export default class PaymentReceiveService {
 
   /**
    * Saves difference changing between old and new invoice payment amount.
+   * @async
+   * @param {number} tenantId - Tenant id.
    * @param {Array} paymentReceiveEntries
    * @param {Array} newPaymentReceiveEntries
    * @return 
    */
-  static async saveChangeInvoicePaymentAmount(
+  async saveChangeInvoicePaymentAmount(
+    tenantId: number,
     paymentReceiveEntries: [],
     newPaymentReceiveEntries: [],
   ) {
+    const { SaleInvoice } = this.tenancy.models(tenantId);
     const opers: Promise<T>[] = [];
     const newEntriesTable = chain(newPaymentReceiveEntries)
       .groupBy('invoice_id')

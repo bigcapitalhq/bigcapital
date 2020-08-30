@@ -30,6 +30,22 @@ export default ({ agenda }: { agenda: Agenda }) => {
     'send-voucher-via-email',
     { priority: 'high', concurrency: 1, },
     new SendVoucherViaEmailJob().handler,
-  )
+  );
+  // agenda.define(
+  //   'send-sms-notification-subscribe-end',
+  //   { priority: 'high', concurrency: 1, },
+  // );
+  // agenda.define(
+  //   'send-mail-notification-subscribe-end',
+  //   { priority: 'high', concurrency: 1, },
+  // );
+  // agenda.define(
+  //   'send-sms-notification-trial-end',
+  //   { priority: 'high', concurrency: 1, },
+  // );
+  // agenda.define(
+  //   'send-mail-notification-trial-end',
+  //   { priority: 'high', concurrency: 1, },
+  // );
   agenda.start();
 };

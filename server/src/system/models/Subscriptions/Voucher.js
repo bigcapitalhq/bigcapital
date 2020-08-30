@@ -3,7 +3,7 @@ import moment from 'moment';
 import SystemModel from '@/system/models/SystemModel';
 import { IVouchersFilter } from '@/interfaces';
 
-export default class Voucher extends mixin(SystemModel) {
+export default class Voucher extends SystemModel {
   /**
    * Table name.
    */
@@ -40,7 +40,7 @@ export default class Voucher extends mixin(SystemModel) {
       },
 
       // Filters vouchers list.
-      filter(builder, vouchersFilter: IVouchersFilter) {
+      filter(builder, vouchersFilter) {
         if (vouchersFilter.active) {
           builder.modify('filterActiveVoucher')
         }
@@ -80,7 +80,7 @@ export default class Voucher extends mixin(SystemModel) {
    * @param {string} voucherCode 
    * @return {Promise}
    */
-  static deleteVoucher(voucherCode: string, viaAttribute: string = 'voucher_code') {
+  static deleteVoucher(voucherCode, viaAttribute = 'voucher_code') {
     return this.query()
       .where(viaAttribute, voucherCode)
       .delete();
@@ -91,7 +91,7 @@ export default class Voucher extends mixin(SystemModel) {
    * @param {string} voucherCode 
    * @return {Promise}
    */
-  static markVoucherAsDisabled(voucherCode: string, viaAttribute: string = 'voucher_code') {
+  static markVoucherAsDisabled(voucherCode, viaAttribute = 'voucher_code') {
     return this.query()
       .where(viaAttribute, voucherCode)
       .patch({
@@ -104,7 +104,7 @@ export default class Voucher extends mixin(SystemModel) {
    * Marks the given voucher code as sent on the storage.
    * @param {string} voucherCode 
    */
-  static markVoucherAsSent(voucherCode: string, viaAttribute: string = 'voucher_code') {
+  static markVoucherAsSent(voucherCode, viaAttribute = 'voucher_code') {
     return this.query()
       .where(viaAttribute, voucherCode)
       .patch({
@@ -118,7 +118,7 @@ export default class Voucher extends mixin(SystemModel) {
    * @param {string} voucherCode
    * @return {Promise}
    */
-  static markVoucherAsUsed(voucherCode: string, viaAttribute: string = 'voucher_code') {
+  static markVoucherAsUsed(voucherCode, viaAttribute = 'voucher_code') {
     return this.query()
       .where(viaAttribute, voucherCode)
       .patch({

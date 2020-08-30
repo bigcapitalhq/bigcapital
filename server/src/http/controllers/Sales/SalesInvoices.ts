@@ -1,34 +1,40 @@
 import express from 'express';
-import { check, param, query } from 'express-validator';
+import { check, param, query, matchedData } from 'express-validator';
 import { difference } from 'lodash';
 import { raw } from 'objection';
-import { ItemEntry } from '@/models';
+import { Service, Inject } from 'typedi';
 import validateMiddleware from '@/http/middleware/validateMiddleware';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
 import SaleInvoiceService from '@/services/Sales/SalesInvoices';
 import ItemsService from '@/services/Items/ItemsService';
-import CustomersService from '@/services/Customers/CustomersService';
 import DynamicListing from '@/services/DynamicListing/DynamicListing';
 import DynamicListingBuilder from '@/services/DynamicListing/DynamicListingBuilder';
 import { dynamicListingErrorsToResponse } from '@/services/DynamicListing/hasDynamicListing';
-import { Customer, Item } from '../../../models';
+import { ISaleInvoiceOTD } from '@/interfaces';
 
+@Service()
 export default class SaleInvoicesController {
+  @Inject()
+  itemsService: ItemsService;
+
+  @Inject()
+  saleInvoiceService: SaleInvoiceService;
+
   /**
    * Router constructor.
    */
-  static router() {
+  router() {
     const router = express.Router();
 
     router.post(
       '/',
       this.saleInvoiceValidationSchema,
       validateMiddleware,
-      asyncMiddleware(this.validateInvoiceCustomerExistance),
-      asyncMiddleware(this.validateInvoiceNumberUnique),
-      asyncMiddleware(this.validateInvoiceItemsIdsExistance),
-      asyncMiddleware(this.validateNonSellableEntriesItems),
-      asyncMiddleware(this.newSaleInvoice)
+      asyncMiddleware(this.validateInvoiceCustomerExistance.bind(this)),
+      asyncMiddleware(this.validateInvoiceNumberUnique.bind(this)),
+      asyncMiddleware(this.validateInvoiceItemsIdsExistance.bind(this)),
+      asyncMiddleware(this.validateNonSellableEntriesItems.bind(this)),
+      asyncMiddleware(this.newSaleInvoice.bind(this))
     );
     router.post(
       '/:id',
@@ -37,38 +43,38 @@ export default class SaleInvoicesController {
         ...this.specificSaleInvoiceValidation,
       ],
       validateMiddleware,
-      asyncMiddleware(this.validateInvoiceExistance),
-      asyncMiddleware(this.validateInvoiceCustomerExistance),
-      asyncMiddleware(this.validateInvoiceNumberUnique),
-      asyncMiddleware(this.validateInvoiceItemsIdsExistance),
-      asyncMiddleware(this.valdiateInvoiceEntriesIdsExistance),
-      asyncMiddleware(this.validateEntriesIdsExistance),
-      asyncMiddleware(this.validateNonSellableEntriesItems),
-      asyncMiddleware(this.editSaleInvoice)
+      asyncMiddleware(this.validateInvoiceExistance.bind(this)),
+      asyncMiddleware(this.validateInvoiceCustomerExistance.bind(this)),
+      asyncMiddleware(this.validateInvoiceNumberUnique.bind(this)),
+      asyncMiddleware(this.validateInvoiceItemsIdsExistance.bind(this)),
+      asyncMiddleware(this.valdiateInvoiceEntriesIdsExistance.bind(this)),
+      asyncMiddleware(this.validateEntriesIdsExistance.bind(this)),
+      asyncMiddleware(this.validateNonSellableEntriesItems.bind(this)),
+      asyncMiddleware(this.editSaleInvoice.bind(this))
     );
     router.delete(
       '/:id',
       this.specificSaleInvoiceValidation,
       validateMiddleware,
-      asyncMiddleware(this.validateInvoiceExistance),
-      asyncMiddleware(this.deleteSaleInvoice)
+      asyncMiddleware(this.validateInvoiceExistance.bind(this)),
+      asyncMiddleware(this.deleteSaleInvoice.bind(this))
     );
     router.get(
       '/due_invoices',
       this.dueSalesInvoicesListValidationSchema,
-      asyncMiddleware(this.getDueSalesInvoice),
+      asyncMiddleware(this.getDueSalesInvoice.bind(this)),
     );
     router.get(
       '/:id',
       this.specificSaleInvoiceValidation,
       validateMiddleware,
-      asyncMiddleware(this.validateInvoiceExistance),
-      asyncMiddleware(this.getSaleInvoice)
+      asyncMiddleware(this.validateInvoiceExistance.bind(this)),
+      asyncMiddleware(this.getSaleInvoice.bind(this))
     );
     router.get(
       '/',
       this.saleInvoiceListValidationSchema,
-      asyncMiddleware(this.getSalesInvoices)
+      asyncMiddleware(this.getSalesInvoices.bind(this))
     )
     return router;
   }
@@ -76,7 +82,7 @@ export default class SaleInvoicesController {
   /**
    * Sale invoice validation schema.
    */
-  static get saleInvoiceValidationSchema() {
+  get saleInvoiceValidationSchema() {
     return [
       check('customer_id').exists().isNumeric().toInt(),
       check('invoice_date').exists().isISO8601(),
@@ -102,14 +108,14 @@ export default class SaleInvoicesController {
   /**
    * Specific sale invoice validation schema.
    */
-  static get specificSaleInvoiceValidation() {
+  get specificSaleInvoiceValidation() {
     return [param('id').exists().isNumeric().toInt()];
   }
 
   /**
    * Sales invoices list validation schema.
    */
-  static get saleInvoiceListValidationSchema() {
+  get saleInvoiceListValidationSchema() {
     return [
       query('custom_view_id').optional().isNumeric().toInt(),
       query('stringified_filter_roles').optional().isJSON(),
@@ -120,8 +126,10 @@ export default class SaleInvoicesController {
     ];
   }
 
-
-  static get dueSalesInvoicesListValidationSchema() {
+  /**
+   * Due sale invoice list validation schema.
+   */
+  get dueSalesInvoicesListValidationSchema() {
     return [
       query('customer_id').optional().isNumeric().toInt(), 
     ]
@@ -133,11 +141,12 @@ export default class SaleInvoicesController {
    * @param {Response} res
    * @param {Function} next
    */
-  static async validateInvoiceCustomerExistance(req, res, next) {
+  async validateInvoiceCustomerExistance(req: Request, res: Response, next: Function) {
     const saleInvoice = { ...req.body };
-    const isCustomerIDExists = await CustomersService.isCustomerExists(
-      saleInvoice.customer_id
-    );
+    const { Customer } = req.models;
+
+    const isCustomerIDExists = await Customer.query().findById(saleInvoice.customer_id);
+
     if (!isCustomerIDExists) {
       return res.status(400).send({
         errors: [{ type: 'CUSTOMER.ID.NOT.EXISTS', code: 200 }],
@@ -148,15 +157,17 @@ export default class SaleInvoicesController {
 
   /**
    * Validate whether sale invoice items ids esits on the storage.
-   * @param {Request} req
-   * @param {Response} res
-   * @param {Function} next
+   * @param {Request} req - 
+   * @param {Response} res - 
+   * @param {Function} next - 
    */
-  static async validateInvoiceItemsIdsExistance(req, res, next) {
+  async validateInvoiceItemsIdsExistance(req: Request, res: Response, next: Function) {
+    const { tenantId } = req;
     const saleInvoice = { ...req.body };
     const entriesItemsIds = saleInvoice.entries.map((e) => e.item_id);
-    const isItemsIdsExists = await ItemsService.isItemsIdsExists(
-      entriesItemsIds
+    
+    const isItemsIdsExists = await this.itemsService.isItemsIdsExists(
+      tenantId, entriesItemsIds,
     );
     if (isItemsIdsExists.length > 0) {
       return res.status(400).send({
@@ -173,9 +184,12 @@ export default class SaleInvoicesController {
    * @param {Response} res
    * @param {Function} next
    */
-  static async validateInvoiceNumberUnique(req, res, next) {
+  async validateInvoiceNumberUnique(req: Request, res: Response, next: Function) {
+    const { tenantId } = req;
     const saleInvoice = { ...req.body };
-    const isInvoiceNoExists = await SaleInvoiceService.isSaleInvoiceNumberExists(
+
+    const isInvoiceNoExists = await this.saleInvoiceService.isSaleInvoiceNumberExists(
+      tenantId,
       saleInvoice.invoice_no,
       req.params.id
     );
@@ -195,10 +209,12 @@ export default class SaleInvoicesController {
    * @param {Response} res
    * @param {Function} next
    */
-  static async validateInvoiceExistance(req, res, next) {
+  async validateInvoiceExistance(req: Request, res: Response, next: Function) {
     const { id: saleInvoiceId } = req.params;
-    const isSaleInvoiceExists = await SaleInvoiceService.isSaleInvoiceExists(
-      saleInvoiceId
+    const { tenantId } = req;
+
+    const isSaleInvoiceExists = await this.saleInvoiceService.isSaleInvoiceExists(
+      tenantId, saleInvoiceId,
     );
     if (!isSaleInvoiceExists) {
       return res
@@ -214,12 +230,13 @@ export default class SaleInvoicesController {
    * @param {Response} res
    * @param {Function} next
    */
-  static async valdiateInvoiceEntriesIdsExistance(req, res, next) {
+  async valdiateInvoiceEntriesIdsExistance(req: Request, res: Response, next: Function) {
+    const { tenantId } = req;
     const saleInvoice = { ...req.body };
     const entriesItemsIds = saleInvoice.entries.map((e) => e.item_id);
 
-    const isItemsIdsExists = await ItemsService.isItemsIdsExists(
-      entriesItemsIds
+    const isItemsIdsExists = await this.itemsService.isItemsIdsExists(
+      tenantId, entriesItemsIds,
     );
     if (isItemsIdsExists.length > 0) {
       return res.status(400).send({
@@ -235,14 +252,16 @@ export default class SaleInvoicesController {
    * @param {Response} res
    * @param {Function} next
    */
-  static async validateEntriesIdsExistance(req, res, next) {
+  async validateEntriesIdsExistance(req: Request, res: Response, next: Function) {
+    const { ItemEntry } = req.models;
     const { id: saleInvoiceId } = req.params;
     const saleInvoice = { ...req.body };
+
     const entriesIds = saleInvoice.entries
       .filter(e => e.id)
       .map(e => e.id);
-
-    const storedEntries = await ItemEntry.tenant().query()
+    
+    const storedEntries = await ItemEntry.query()
       .whereIn('reference_id', [saleInvoiceId])
       .whereIn('reference_type', ['SaleInvoice']);
 
@@ -265,7 +284,7 @@ export default class SaleInvoicesController {
    * @param {Response} res 
    * @param {Function} next 
    */
-  static async validateNonSellableEntriesItems(req, res, next) {
+  async validateNonSellableEntriesItems(req: Request, res: Response, next: Function) {
     const { Item } = req.models;
     const saleInvoice = { ...req.body };
     const itemsIds = saleInvoice.entries.map(e => e.item_id);
@@ -291,22 +310,17 @@ export default class SaleInvoicesController {
    * @param {Response} res
    * @param {Function} next
    */
-  static async newSaleInvoice(req, res) {
-    const errorReasons = [];
-    const saleInvoice = {
-      ...req.body,
-      entries: req.body.entries.map((entry) => ({
-        ...entry,
-        amount: ItemEntry.calcAmount(entry),
-      })),
-    };
+  async newSaleInvoice(req: Request, res: Response) {
+    const { tenantId } = req;
+    const saleInvoiceOTD: ISaleInvoiceOTD = matchedData(req, {
+      locations: ['body'],
+      includeOptionals: true
+    });
+
     // Creates a new sale invoice with associated entries.
-    const storedSaleInvoice = await SaleInvoiceService.createSaleInvoice(
-      saleInvoice
+    const storedSaleInvoice = await this.saleInvoiceService.createSaleInvoice(
+      tenantId, saleInvoiceOTD,
     );
-
-    // InventoryService.trackingInventoryLotsCost();
-
     return res.status(200).send({ id: storedSaleInvoice.id });
   }
 
@@ -316,19 +330,18 @@ export default class SaleInvoicesController {
    * @param {Response} res
    * @param {Function} next
    */
-  static async editSaleInvoice(req, res) {
+  async editSaleInvoice(req: Request, res: Response) {
+    const { tenantId } = req;
     const { id: saleInvoiceId } = req.params;
-    const saleInvoice = {
-      ...req.body,
-      entries: req.body.entries.map((entry) => ({
-        ...entry,
-        amount: ItemEntry.calcAmount(entry),
-      })),
-    };
-    // Update the given sale invoice details.
-    await SaleInvoiceService.editSaleInvoice(saleInvoiceId, saleInvoice);
 
-    return res.status(200).send({ id: saleInvoice.id });
+    const saleInvoiceOTD: ISaleInvoiceOTD = matchedData(req, {
+      locations: ['body'],
+      includeOptionals: true
+    });
+    // Update the given sale invoice details.
+    await this.saleInvoiceService.editSaleInvoice(tenantId, saleInvoiceId, saleInvoiceOTD);
+
+    return res.status(200).send({ id: saleInvoiceId });
   }
 
   /**
@@ -337,10 +350,12 @@ export default class SaleInvoicesController {
    * @param {Response} res
    * @param {Function} next
    */
-  static async deleteSaleInvoice(req, res) {
+  async deleteSaleInvoice(req: Request, res: Response) {
     const { id: saleInvoiceId } = req.params;
+    const { tenantId } = req;
+
     // Deletes the sale invoice with associated entries and journal transaction.
-    await SaleInvoiceService.deleteSaleInvoice(saleInvoiceId);
+    await this.saleInvoiceService.deleteSaleInvoice(tenantId, saleInvoiceId);
 
     return res.status(200).send({ id: saleInvoiceId });
   }
@@ -350,10 +365,12 @@ export default class SaleInvoicesController {
    * @param {Request} req
    * @param {Response} res
    */
-  static async getSaleInvoice(req, res) {
+  async getSaleInvoice(req: Request, res: Response) {
     const { id: saleInvoiceId } = req.params;
-    const saleInvoice = await SaleInvoiceService.getSaleInvoiceWithEntries(
-      saleInvoiceId
+    const { tenantId } = req;
+
+    const saleInvoice = await this.saleInvoiceService.getSaleInvoiceWithEntries(
+      tenantId, saleInvoiceId,
     );
     return res.status(200).send({ sale_invoice: saleInvoice });
   }
@@ -363,13 +380,14 @@ export default class SaleInvoicesController {
    * @param {Request} req 
    * @param {Response} res 
    */
-  static async getDueSalesInvoice(req, res) {
+  async getDueSalesInvoice(req: Request, res: Response) {
+    const { Customer, SaleInvoice } = req.models;
+    const { tenantId } = req;
+
     const filter = {
       customer_id: null,
       ...req.query,
     };
-    const { Customer, SaleInvoice } = req.models;
-
     if (filter.customer_id) {
       const foundCustomer = await Customer.query().findById(filter.customer_id);
 
@@ -381,7 +399,6 @@ export default class SaleInvoicesController {
     }    
     const dueSalesInvoices = await SaleInvoice.query().onBuild((query) => {
       query.where(raw('BALANCE - PAYMENT_AMOUNT > 0'));
-
       if (filter.customer_id) {
         query.where('customer_id', filter.customer_id);
       }
@@ -397,7 +414,7 @@ export default class SaleInvoicesController {
    * @param {Response} res
    * @param {Function} next
    */
-  static async getSalesInvoices(req, res) {
+  async getSalesInvoices(req, res) {
     const filter = {
       filter_roles: [],
       sort_order: 'asc',

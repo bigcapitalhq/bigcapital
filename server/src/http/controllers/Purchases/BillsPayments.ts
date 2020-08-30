@@ -1,6 +1,7 @@
 
 import { Router } from 'express';
-import { check, param, query, ValidationChain } from 'express-validator';
+import { Service, Inject } from 'typedi';
+import { check, param, query, ValidationChain, matchedData } from 'express-validator';
 import { difference } from 'lodash';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
 import validateMiddleware from '@/http/middleware/validateMiddleware';
@@ -13,55 +14,62 @@ import { dynamicListingErrorsToResponse } from '@/services/DynamicListing/hasDyn
 
 /**
  * Bills payments controller.
- * @controller
+ * @service
  */
+@Service()
 export default class BillsPayments extends BaseController {
+  @Inject()
+  billPaymentService: BillPaymentsService;
+
+  @Inject()
+  accountsService: AccountsService;
+
   /**
    * Router constructor.
    */
-  static router() {
+  router() {
     const router = Router();
 
     router.post('/', [
         ...this.billPaymentSchemaValidation,
       ],
       validateMiddleware,
-      asyncMiddleware(this.validateBillPaymentVendorExistance),
-      asyncMiddleware(this.validatePaymentAccount),
-      asyncMiddleware(this.validatePaymentNumber),
-      asyncMiddleware(this.validateEntriesBillsExistance),
-      asyncMiddleware(this.validateVendorsDueAmount),
-      asyncMiddleware(this.createBillPayment),
+      asyncMiddleware(this.validateBillPaymentVendorExistance.bind(this)),
+      asyncMiddleware(this.validatePaymentAccount.bind(this)),
+      asyncMiddleware(this.validatePaymentNumber.bind(this)),
+      asyncMiddleware(this.validateEntriesBillsExistance.bind(this)),
+      asyncMiddleware(this.validateVendorsDueAmount.bind(this)),
+      asyncMiddleware(this.createBillPayment.bind(this)),
     );
     router.post('/:id', [
        ...this.billPaymentSchemaValidation,
        ...this.specificBillPaymentValidateSchema,
       ],
       validateMiddleware,
-      asyncMiddleware(this.validateBillPaymentVendorExistance),
-      asyncMiddleware(this.validatePaymentAccount),
-      asyncMiddleware(this.validatePaymentNumber),
-      asyncMiddleware(this.validateEntriesIdsExistance),
-      asyncMiddleware(this.validateEntriesBillsExistance),
-      asyncMiddleware(this.validateVendorsDueAmount),
-      asyncMiddleware(this.editBillPayment),
+      asyncMiddleware(this.validateBillPaymentVendorExistance.bind(this)),
+      asyncMiddleware(this.validatePaymentAccount.bind(this)),
+      asyncMiddleware(this.validatePaymentNumber.bind(this)),
+      asyncMiddleware(this.validateEntriesIdsExistance.bind(this)),
+      asyncMiddleware(this.validateEntriesBillsExistance.bind(this)),
+      asyncMiddleware(this.validateVendorsDueAmount.bind(this)),
+      asyncMiddleware(this.editBillPayment.bind(this)),
     )
     router.delete('/:id',
       this.specificBillPaymentValidateSchema,
       validateMiddleware,
-      asyncMiddleware(this.validateBillPaymentExistance),
-      asyncMiddleware(this.deleteBillPayment),
+      asyncMiddleware(this.validateBillPaymentExistance.bind(this)),
+      asyncMiddleware(this.deleteBillPayment.bind(this)),
     );
     router.get('/:id',
       this.specificBillPaymentValidateSchema,
       validateMiddleware,
-      asyncMiddleware(this.validateBillPaymentExistance),
-      asyncMiddleware(this.getBillPayment),
+      asyncMiddleware(this.validateBillPaymentExistance.bind(this)),
+      asyncMiddleware(this.getBillPayment.bind(this)),
     );
     router.get('/', 
       this.listingValidationSchema,
       validateMiddleware,
-      asyncMiddleware(this.getBillsPayments)
+      asyncMiddleware(this.getBillsPayments.bind(this))
     );
     return router;
   }
@@ -69,7 +77,7 @@ export default class BillsPayments extends BaseController {
   /**
    * Bill payments schema validation.
    */
-  static get billPaymentSchemaValidation(): ValidationChain[] {
+  get billPaymentSchemaValidation(): ValidationChain[] {
     return [
       check('vendor_id').exists().isNumeric().toInt(),
       check('payment_account_id').exists().isNumeric().toInt(),
@@ -87,9 +95,23 @@ export default class BillsPayments extends BaseController {
   /**
    * Specific bill payment schema validation.
    */
-  static get specificBillPaymentValidateSchema(): ValidationChain[] {
+  get specificBillPaymentValidateSchema(): ValidationChain[] {
     return [
       param('id').exists().isNumeric().toInt(),
+    ];
+  }
+
+  /**
+   * Bills payment list validation schema.
+   */
+  get listingValidationSchema(): ValidationChain[] {
+    return [
+      query('custom_view_id').optional().isNumeric().toInt(),
+      query('stringified_filter_roles').optional().isJSON(),
+      query('column_sort_by').optional(),
+      query('sort_order').optional().isIn(['desc', 'asc']),
+      query('page').optional().isNumeric().toInt(),
+      query('page_size').optional().isNumeric().toInt(),
     ];
   }
 
@@ -99,7 +121,7 @@ export default class BillsPayments extends BaseController {
    * @param {Response} res 
    * @param {Function} next 
    */
-  static async validateBillPaymentVendorExistance(req: Request, res: Response, next: any ) {
+  async validateBillPaymentVendorExistance(req: Request, res: Response, next: any ) {
     const billPayment = req.body;
     const { Vendor } = req.models;
     const isVendorExists = await Vendor.query().findById(billPayment.vendor_id);
@@ -118,7 +140,7 @@ export default class BillsPayments extends BaseController {
    * @param {Response} res 
    * @param {Function} next 
    */
-  static async validateBillPaymentExistance(req: Request, res: Response, next: any ) {
+  async validateBillPaymentExistance(req: Request, res: Response, next: any ) {
     const { id: billPaymentId } = req.params;
     const { BillPayment } = req.models;
     const foundBillPayment = await BillPayment.query().findById(billPaymentId);
@@ -137,11 +159,15 @@ export default class BillsPayments extends BaseController {
    * @param {Response} res 
    * @param {Function} next 
    */
-  static async validatePaymentAccount(req: Request, res: Response, next: any) {
+  async validatePaymentAccount(req: Request, res: Response, next: any) {
+    const { tenantId } = req;
     const billPayment = { ...req.body };
-    const isAccountExists = await AccountsService.isAccountExists(
+
+    const isAccountExists = await this.accountsService.isAccountExists(
+      tenantId,
       billPayment.payment_account_id
     );
+
     if (!isAccountExists) {
       return res.status(400).send({
         errors: [{ type: 'PAYMENT.ACCOUNT.NOT.FOUND', code: 200 }],
@@ -156,7 +182,7 @@ export default class BillsPayments extends BaseController {
    * @param {Response} res 
    * @param {Function} res 
    */
-  static async validatePaymentNumber(req: Request, res: Response, next: any) {
+  async validatePaymentNumber(req: Request, res: Response, next: any) {
     const billPayment = { ...req.body };
     const { id: billPaymentId } = req.params;
     const { BillPayment } = req.models;
@@ -164,7 +190,6 @@ export default class BillsPayments extends BaseController {
     const foundBillPayment = await BillPayment.query()
       .onBuild((builder: any) => {
         builder.where('payment_number', billPayment.payment_number)
-
         if (billPaymentId) {
           builder.whereNot('id', billPaymentId);
         }
@@ -185,7 +210,7 @@ export default class BillsPayments extends BaseController {
    * @param {Response} res 
    * @param {NextFunction} next 
    */
-  static async validateEntriesBillsExistance(req: Request, res: Response, next: any) {
+  async validateEntriesBillsExistance(req: Request, res: Response, next: any) {
     const { Bill } = req.models;
     const billPayment = { ...req.body };
     const entriesBillsIds = billPayment.entries.map((e: any) => e.bill_id);
@@ -210,7 +235,7 @@ export default class BillsPayments extends BaseController {
    * @param {NextFunction} next 
    * @return {void}
    */
-  static async validateVendorsDueAmount(req: Request, res: Response, next: Function) {
+  async validateVendorsDueAmount(req: Request, res: Response, next: Function) {
     const { Bill } = req.models;
     const billsIds = req.body.entries.map((entry: any) => entry.bill_id);
     const storedBills = await Bill.query()
@@ -248,7 +273,7 @@ export default class BillsPayments extends BaseController {
    * @param {Response} res 
    * @return {Response}
    */
-  static async validateEntriesIdsExistance(req: Request, res: Response, next: Function) {
+  async validateEntriesIdsExistance(req: Request, res: Response, next: Function) {
     const { BillPaymentEntry } = req.models;
 
     const billPayment = { id: req.params.id, ...req.body };
@@ -256,7 +281,7 @@ export default class BillsPayments extends BaseController {
       .filter((entry: any) => entry.id)
       .map((entry: any) => entry.id);
 
-    const storedEntries = await BillPaymentEntry.tenant().query()
+    const storedEntries = await BillPaymentEntry.query()
       .where('bill_payment_id', billPayment.id);
 
     const storedEntriesIds = storedEntries.map((entry: any) => entry.id);    
@@ -277,9 +302,15 @@ export default class BillsPayments extends BaseController {
    * @param {Response} res 
    * @param {Response} res 
    */
-  static async createBillPayment(req: Request, res: Response) {
-    const billPayment = { ...req.body };
-    const storedPayment = await BillPaymentsService.createBillPayment(billPayment);
+  async createBillPayment(req: Request, res: Response) {
+    const { tenantId } = req;
+
+    const billPayment = matchedData(req, {
+      locations: ['body'],
+      includeOptionals: true,
+    });
+    const storedPayment = await this.billPaymentService
+      .createBillPayment(tenantId, billPayment);
 
     return res.status(200).send({ id: storedPayment.id });
   }
@@ -289,10 +320,14 @@ export default class BillsPayments extends BaseController {
    * @param {Request} req 
    * @param {Response} res 
    */
-  static async editBillPayment(req: Request, res: Response) {
-    const billPayment = { ...req.body };
-    const { id: billPaymentId } = req.params;
+  async editBillPayment(req: Request, res: Response) {
+    const { tenantId } = req;
 
+    const billPayment = matchedData(req, {
+      locations: ['body'],
+      includeOptionals: true,
+    });
+    const { id: billPaymentId } = req.params;
     const { BillPayment } = req.models;
 
     const oldBillPayment = await BillPayment.query()
@@ -300,7 +335,8 @@ export default class BillsPayments extends BaseController {
       .withGraphFetched('entries')
       .first();
 
-    await BillPaymentsService.editBillPayment(
+    await this.billPaymentService.editBillPayment(
+      tenantId,
       billPaymentId,
       billPayment,
       oldBillPayment,
@@ -315,11 +351,13 @@ export default class BillsPayments extends BaseController {
    * @param {Response} res -
    * @return {Response} res -
    */
-  static async deleteBillPayment(req: Request, res: Response) {
+  async deleteBillPayment(req: Request, res: Response) {
+    const { tenantId } = req;
+
     const { id: billPaymentId } = req.params;
     const billPayment = req.body;
 
-    await BillPaymentsService.deleteBillPayment(billPaymentId);
+    await this.billPaymentService.deleteBillPayment(tenantId, billPaymentId);
 
     return res.status(200).send({ id: billPaymentId });
   }
@@ -329,25 +367,14 @@ export default class BillsPayments extends BaseController {
    * @param {Request} req 
    * @param {Response} res 
    */
-  static async getBillPayment(req: Request, res: Response) {
+  async getBillPayment(req: Request, res: Response) {
+    const { tenantId } = req;
     const { id: billPaymentId } = req.params;
-    const billPayment = await BillPaymentsService.getBillPaymentWithMetadata(billPaymentId);
+
+    const billPayment = await this.billPaymentService
+      .getBillPaymentWithMetadata(tenantId, billPaymentId);
 
     return res.status(200).send({ bill_payment: { ...billPayment } });
-  }
-
-  /**
-   * Bills payment list validation schema.
-   */
-  static get listingValidationSchema(): ValidationChain[] {
-    return [
-      query('custom_view_id').optional().isNumeric().toInt(),
-      query('stringified_filter_roles').optional().isJSON(),
-      query('column_sort_by').optional(),
-      query('sort_order').optional().isIn(['desc', 'asc']),
-      query('page').optional().isNumeric().toInt(),
-      query('page_size').optional().isNumeric().toInt(),
-    ];
   }
 
   /**
@@ -356,7 +383,7 @@ export default class BillsPayments extends BaseController {
    * @param {Response} res -
    * @return {Response}
    */
-  static async getBillsPayments(req: Request, res: Response) {
+  async getBillsPayments(req: Request, res: Response) {
     const filter = {
       filter_roles: [],
       sort_order: 'asc',

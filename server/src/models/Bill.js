@@ -74,7 +74,7 @@ export default class Bill extends mixin(TenantModel, [CachableModel]) {
    * @return {Array}
    */
   static async getNotFoundBills(billsIds, vendorId) {
-    const storedBills = await this.tenant().query()
+    const storedBills = await this.query()
       .onBuild((builder) => {
         builder.whereIn('id', billsIds);
 
@@ -94,8 +94,7 @@ export default class Bill extends mixin(TenantModel, [CachableModel]) {
 
   static changePaymentAmount(billId, amount) {
     const changeMethod = amount > 0 ? 'increment' : 'decrement';
-    return this.tenant()
-      .query()
+    return this.query()
       .where('id', billId)
       [changeMethod]('payment_amount', Math.abs(amount));
   }

@@ -1,5 +1,6 @@
 import { Service, Container, Inject } from 'typedi';
 import cryptoRandomString from 'crypto-random-string';
+import { times } from 'lodash';
 import { Voucher } from "@/system/models";
 import { IVoucher } from '@/interfaces';
 import VoucherMailMessages from '@/services/Payment/VoucherMailMessages';
@@ -26,6 +27,8 @@ export default class VoucherService {
     let voucherCode: string;
     let repeat: boolean = true;
 
+    console.log(Voucher);
+
     while(repeat) {
       voucherCode = cryptoRandomString({ length: 10, type: 'numeric' });
       const foundVouchers = await Voucher.query().where('voucher_code', voucherCode);
@@ -37,6 +40,29 @@ export default class VoucherService {
     return Voucher.query().insert({
       voucherCode, voucherPeriod, periodInterval, planId,
     });
+  }
+
+
+  /**
+   * 
+   * @param {number} loop 
+   * @param {number} voucherPeriod 
+   * @param {string} periodInterval 
+   * @param {number} planId 
+   */
+  async generateVouchers(
+    loop = 1,
+    voucherPeriod: numner,
+    periodInterval: string = 'days',
+    planId: number,
+  ) {
+    const asyncOpers: Promise<any>[] = [];
+
+    times(loop, () => {
+      const generateOper = this.generateVoucher(voucherPeriod, periodInterval, planId);
+      asyncOpers.push(generateOper);
+    });
+    return Promise.all(asyncOpers);
   }
 
   /**

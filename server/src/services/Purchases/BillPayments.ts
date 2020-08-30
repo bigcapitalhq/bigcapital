@@ -1,26 +1,30 @@
-import express from 'express';
+import { Inject, Service } from 'typedi';
 import { omit, sumBy } from 'lodash';
 import moment from 'moment';
-import {
-  BillPayment,
-  BillPaymentEntry,
-  Vendor,
-  Bill,
-  Account,
-  AccountTransaction,
-} from '@/models';
+import { IBillPaymentOTD, IBillPayment } from '@/interfaces';
 import ServiceItemsEntries from '@/services/Sales/ServiceItemsEntries';
 import AccountsService from '@/services/Accounts/AccountsService';
 import JournalPoster from '@/services/Accounting/JournalPoster';
 import JournalEntry from '@/services/Accounting/JournalEntry';
 import JournalPosterService from '@/services/Sales/JournalPosterService';
+import TenancyService from '@/services/Tenancy/TenancyService';
 import { formatDateFields } from '@/utils';
 
 /**
  * Bill payments service.
  * @service
  */
+@Service()
 export default class BillPaymentsService {
+  @Inject()
+  accountsService: AccountsService;
+
+  @Inject()
+  tenancy: TenancyService;
+
+  @Inject()
+  journalService: JournalPosterService;
+
   /**
    * Creates a new bill payment transcations and store it to the storage
    * with associated bills entries and journal transactions.
@@ -32,24 +36,24 @@ export default class BillPaymentsService {
    * - Increment the payment amount of the given vendor bills.
    * - Decrement the vendor balance.
    * - Records payment journal entries.
-   *
-   * @param {BillPaymentDTO} billPayment
+   * @param {number} tenantId - Tenant id.
+   * @param {BillPaymentDTO} billPayment - Bill payment object.
    */
-  static async createBillPayment(billPaymentDTO) {
+  async createBillPayment(tenantId: number, billPaymentDTO: IBillPaymentOTD) {
+    const { Bill, BillPayment, BillPaymentEntry, Vendor } = this.tenancy.models(tenantId);
+
     const billPayment = {
       amount: sumBy(billPaymentDTO.entries, 'payment_amount'),
       ...formatDateFields(billPaymentDTO, ['payment_date']),
     }
-    const storedBillPayment = await BillPayment.tenant()
-      .query()
+    const storedBillPayment = await BillPayment.query()
       .insert({
         ...omit(billPayment, ['entries']),
       });
-    const storeOpers = [];
+    const storeOpers: Promise<any>[] = [];
 
     billPayment.entries.forEach((entry) => {
-      const oper = BillPaymentEntry.tenant()
-        .query()
+      const oper = BillPaymentEntry.query()
         .insert({
           bill_payment_id: storedBillPayment.id,
           ...entry,
@@ -69,7 +73,7 @@ export default class BillPaymentsService {
     );
     // Records the journal transactions after bills payment
     // and change diff acoount balance.
-    const recordJournalTransaction = this.recordPaymentReceiveJournalEntries({
+    const recordJournalTransaction = this.recordPaymentReceiveJournalEntries(tenantId, {
       id: storedBillPayment.id,
       ...billPayment,
     });
@@ -93,18 +97,23 @@ export default class BillPaymentsService {
    * - Re-insert the journal transactions and update the diff accounts balance.
    * - Update the diff vendor balance.
    * - Update the diff bill payment amount.
-   *
+   * @param {number} tenantId - Tenant id
    * @param {Integer} billPaymentId
    * @param {BillPaymentDTO} billPayment
    * @param {IBillPayment} oldBillPayment
    */
-  static async editBillPayment(billPaymentId, billPaymentDTO, oldBillPayment) {
+  async editBillPayment(
+    tenantId: number,
+    billPaymentId: number,
+    billPaymentDTO,
+    oldBillPayment,
+  ) {
+    const { BillPayment, BillPaymentEntry, Vendor } = this.tenancy.models(tenantId);
     const billPayment = {
       amount: sumBy(billPaymentDTO.entries, 'payment_amount'),
       ...formatDateFields(billPaymentDTO, ['payment_date']),
     };
-    const updateBillPayment = await BillPayment.tenant()
-      .query()
+    const updateBillPayment = await BillPayment.query()
       .where('id', billPaymentId)
       .update({
         ...omit(billPayment, ['entries']),
@@ -118,22 +127,19 @@ export default class BillPaymentsService {
       entriesHasIds
     );
     if (entriesIdsShouldDelete.length > 0) {
-      const deleteOper = BillPaymentEntry.tenant()
-        .query()
+      const deleteOper = BillPaymentEntry.query()
         .bulkDelete(entriesIdsShouldDelete);
       opers.push(deleteOper);
     }
     // Entries that should be update to the storage.
     if (entriesHasIds.length > 0) {
-      const updateOper = BillPaymentEntry.tenant()
-        .query()
+      const updateOper = BillPaymentEntry.query()
         .bulkUpdate(entriesHasIds, { where: 'id' });
       opers.push(updateOper);
     }
     // Entries that should be inserted to the storage.
     if (entriesHasNoIds.length > 0) {
-      const insertOper = BillPaymentEntry.tenant()
-        .query()
+      const insertOper = BillPaymentEntry.query()
         .bulkInsert(
           entriesHasNoIds.map((e) => ({ ...e, bill_payment_id: billPaymentId }))
         );
@@ -141,7 +147,7 @@ export default class BillPaymentsService {
     }
     // Records the journal transactions after bills payment and change
     // different acoount balance.
-    const recordJournalTransaction = this.recordPaymentReceiveJournalEntries({
+    const recordJournalTransaction = this.recordPaymentReceiveJournalEntries(tenantId, {
       id: storedBillPayment.id,
       ...billPayment,
     });
@@ -161,18 +167,19 @@ export default class BillPaymentsService {
 
   /**
    * Deletes the bill payment and associated transactions.
+   * @param {number} tenantId - Tenant id.
    * @param {Integer} billPaymentId - The given bill payment id.
    * @return {Promise}
    */
-  static async deleteBillPayment(billPaymentId) {
-    const billPayment = await BillPayment.tenant().query().where('id', billPaymentId).first();
+  async deleteBillPayment(tenantId: number, billPaymentId: number) {
+    const { BillPayment, BillPaymentEntry, Vendor } = this.tenancy.models(tenantId);
+    const billPayment = await BillPayment.query().where('id', billPaymentId).first();
 
-    await BillPayment.tenant().query()
+    await BillPayment.query()
       .where('id', billPaymentId)
       .delete();
 
-    await BillPaymentEntry.tenant()
-      .query()
+    await BillPaymentEntry.query()
       .where('bill_payment_id', billPaymentId)
       .delete();
 
@@ -192,17 +199,21 @@ export default class BillPaymentsService {
 
   /**
    * Records bill payment receive journal transactions.
+   * @param {number} tenantId - 
    * @param {BillPayment} billPayment
    * @param {Integer} billPaymentId
    */
-  static async recordPaymentReceiveJournalEntries(billPayment) {
+  async recordPaymentReceiveJournalEntries(tenantId: number, billPayment) {
+    const { AccountTransaction, Account } = this.tenancy.models(tenantId);
+
     const paymentAmount = sumBy(billPayment.entries, 'payment_amount');
     const formattedDate = moment(billPayment.payment_date).format('YYYY-MM-DD');
-    const payableAccount = await AccountsService.getAccountByType(
+    const payableAccount = await this.accountsService.getAccountByType(
+      tenantId,
       'accounts_payable'
     );
 
-    const accountsDepGraph = await Account.tenant().depGraph().query();
+    const accountsDepGraph = await Account.depGraph().query();
     const journal = new JournalPoster(accountsDepGraph);
 
     const commonJournal = {
@@ -213,8 +224,7 @@ export default class BillPaymentsService {
       date: formattedDate,
     };
     if (billPayment.id) {
-      const transactions = await AccountTransaction.tenant()
-        .query()
+      const transactions = await AccountTransaction.query()
         .whereIn('reference_type', ['BillPayment'])
         .where('reference_id', billPayment.id)
         .withGraphFetched('account.type');
@@ -246,11 +256,12 @@ export default class BillPaymentsService {
 
   /**
    * Retrieve bill payment with associated metadata.
-   * @param {number} billPaymentId 
+   * @param {number} billPaymentId - The bill payment id.
    * @return {object}
    */
-  static async getBillPaymentWithMetadata(billPaymentId) {
-    const billPayment = await BillPayment.tenant().query()
+  async getBillPaymentWithMetadata(tenantId: number, billPaymentId: number) {
+    const { BillPayment } = this.tenancy.models(tenantId);
+    const billPayment = await BillPayment.query()
       .where('id', billPaymentId)
       .withGraphFetched('entries')
       .withGraphFetched('vendor')
@@ -265,8 +276,9 @@ export default class BillPaymentsService {
    * @param {Integer} billPaymentId 
    * @return {boolean}
    */
-  static async isBillPaymentExists(billPaymentId) {
-    const billPayment = await BillPayment.tenant().query()
+  async isBillPaymentExists(tenantId: number, billPaymentId: number) {
+    const { BillPayment } = this.tenancy.models(tenantId);
+    const billPayment = await BillPayment.query()
       .where('id', billPaymentId)
       .first();
 

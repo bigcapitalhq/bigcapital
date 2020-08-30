@@ -33,10 +33,9 @@ export default class Customer extends TenantModel {
    * @param {Numeric} amount 
    */
   static async changeBalance(customerId, amount) {
-    const changeMethod = amount > 0 ? 'increment' : 'decrement';
+    const changeMethod = (amount > 0) ? 'increment' : 'decrement';
 
-    await this.tenant()
-      .query()
+    return this.query()
       .where('id', customerId)
       [changeMethod]('balance', Math.abs(amount));
   }
@@ -47,8 +46,7 @@ export default class Customer extends TenantModel {
    * @param {Integer} amount
    */
   static async incrementBalance(customerId, amount) {
-    await this.tenant()
-      .query()
+    return this.query()
       .where('id', customerId)
       .increment('balance', amount);
   }
@@ -59,9 +57,25 @@ export default class Customer extends TenantModel {
    * @param {integer} amount -
    */
   static async decrementBalance(customerId, amount) {
-    await this.tenant()
-      .query()
+    await this.query()
       .where('id', customerId)
       .decrement('balance', amount);
+  }
+
+  static changeDiffBalance(customerId, oldCustomerId, amount, oldAmount) {
+    const diffAmount = amount - oldAmount;
+    const asyncOpers = [];
+
+    if (customerId != oldCustomerId) {
+      const oldCustomerOper = this.changeBalance(oldCustomerId, (oldAmount * -1));
+      const customerOper = this.changeBalance(customerId, amount);
+
+      asyncOpers.push(customerOper);
+      asyncOpers.push(oldCustomerOper);
+    } else {
+      const balanceChangeOper = this.changeBalance(customerId, diffAmount);
+      asyncOpers.push(balanceChangeOper);
+    }
+    return Promise.all(asyncOpers);
   }
 }

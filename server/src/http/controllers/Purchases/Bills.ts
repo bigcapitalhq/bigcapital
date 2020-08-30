@@ -1,63 +1,75 @@
-import express from 'express';
-import { check, param, query } from 'express-validator';
+import { Router, Request, Response } from 'express';
+import { check, param, query, matchedData } from 'express-validator';
+import { Service, Inject } from 'typedi';
+import { difference } from 'lodash';
+import { BillOTD } from '@/interfaces';
 import validateMiddleware from '@/http/middleware/validateMiddleware';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
 import BillsService from '@/services/Purchases/Bills';
 import BaseController from '@/http/controllers/BaseController';
-import VendorsServices from '@/services/Vendors/VendorsService';
 import ItemsService from '@/services/Items/ItemsService';
+import TenancyService from '@/services/Tenancy/TenancyService';
 import DynamicListingBuilder from '@/services/DynamicListing/DynamicListingBuilder';
 import DynamicListing from '@/services/DynamicListing/DynamicListing';
 import { dynamicListingErrorsToResponse } from '@/services/DynamicListing/HasDynamicListing';
-import { difference } from 'lodash';
 
+@Service()
 export default class BillsController extends BaseController {
+  @Inject()
+  itemsService: ItemsService;
+
+  @Inject()
+  billsService: BillsService;
+
+  @Inject()
+  tenancy: TenancyService;
+
   /**
    * Router constructor.
    */
-  static router() {
-    const router = express.Router();
+  router() {
+    const router = Router();
 
     router.post(
       '/',
       [...this.billValidationSchema],
       validateMiddleware,
-      asyncMiddleware(this.validateVendorExistance),
-      asyncMiddleware(this.validateItemsIds),
-      asyncMiddleware(this.validateBillNumberExists),
-      asyncMiddleware(this.validateNonPurchasableEntriesItems),
-      asyncMiddleware(this.newBill)
+      asyncMiddleware(this.validateVendorExistance.bind(this)),
+      asyncMiddleware(this.validateItemsIds.bind(this)),
+      asyncMiddleware(this.validateBillNumberExists.bind(this)),
+      asyncMiddleware(this.validateNonPurchasableEntriesItems.bind(this)),
+      asyncMiddleware(this.newBill.bind(this))
     );
     router.post(
       '/:id',
       [...this.billValidationSchema, ...this.specificBillValidationSchema],
       validateMiddleware,
-      asyncMiddleware(this.validateBillExistance),
-      asyncMiddleware(this.validateVendorExistance),
-      asyncMiddleware(this.validateItemsIds),
-      asyncMiddleware(this.validateEntriesIdsExistance),
-      asyncMiddleware(this.validateNonPurchasableEntriesItems),
-      asyncMiddleware(this.editBill)
+      asyncMiddleware(this.validateBillExistance.bind(this)),
+      asyncMiddleware(this.validateVendorExistance.bind(this)),
+      asyncMiddleware(this.validateItemsIds.bind(this)),
+      asyncMiddleware(this.validateEntriesIdsExistance.bind(this)),
+      asyncMiddleware(this.validateNonPurchasableEntriesItems.bind(this)),
+      asyncMiddleware(this.editBill.bind(this))
     );
     router.get(
       '/:id',
       [...this.specificBillValidationSchema],
       validateMiddleware,
-      asyncMiddleware(this.validateBillExistance),
-      asyncMiddleware(this.getBill)
+      asyncMiddleware(this.validateBillExistance.bind(this)),
+      asyncMiddleware(this.getBill.bind(this))
     );
     router.get(
       '/',
       [...this.billsListingValidationSchema],
       validateMiddleware,
-      asyncMiddleware(this.listingBills)
+      asyncMiddleware(this.listingBills.bind(this))
     );
     router.delete(
       '/:id',
       [...this.specificBillValidationSchema],
       validateMiddleware,
-      asyncMiddleware(this.validateBillExistance),
-      asyncMiddleware(this.deleteBill)
+      asyncMiddleware(this.validateBillExistance.bind(this)),
+      asyncMiddleware(this.deleteBill.bind(this))
     );
     return router;
   }
@@ -65,7 +77,7 @@ export default class BillsController extends BaseController {
   /**
    * Common validation schema.
    */
-  static get billValidationSchema() {
+  get billValidationSchema() {
     return [
       check('bill_number').exists().trim().escape(),
       check('bill_date').exists().isISO8601(),
@@ -87,14 +99,14 @@ export default class BillsController extends BaseController {
   /**
    * Bill validation schema.
    */
-  static get specificBillValidationSchema() {
+  get specificBillValidationSchema() {
     return [param('id').exists().isNumeric().toInt()];
   }
 
   /**
    * Bills list validation schema.
    */
-  static get billsListingValidationSchema() {
+  get billsListingValidationSchema() {
     return [
       query('custom_view_id').optional().isNumeric().toInt(),
       query('stringified_filter_roles').optional().isJSON(),
@@ -107,14 +119,17 @@ export default class BillsController extends BaseController {
 
   /**
    * Validates whether the vendor is exist.
+   * @async
    * @param {Request} req
    * @param {Response} res
    * @param {Function} next
    */
-  static async validateVendorExistance(req, res, next) {
-    const isVendorExists = await VendorsServices.isVendorExists(
-      req.body.vendor_id
-    );
+  async validateVendorExistance(req: Request, res: Response, next: Function) {
+    const { tenantId } = req;
+    const { Vendor } = req.models;
+
+    const isVendorExists = await Vendor.query().findById(req.body.vendor_id);
+
     if (!isVendorExists) {
       return res.status(400).send({
         errors: [{ type: 'VENDOR.ID.NOT.FOUND', code: 300 }],
@@ -125,12 +140,17 @@ export default class BillsController extends BaseController {
 
   /**
    * Validates the given bill existance.
+   * @async
    * @param {Request} req
    * @param {Response} res
    * @param {Function} next
    */
-  static async validateBillExistance(req, res, next) {
-    const isBillExists = await BillsService.isBillExists(req.params.id);
+  async validateBillExistance(req: Request, res: Response, next: Function) {
+    const billId: number = req.params.id;
+    const { tenantId } = req;
+
+    const isBillExists = await this.billsService.isBillExists(tenantId, billId);
+
     if (!isBillExists) {
       return res.status(400).send({
         errors: [{ type: 'BILL.NOT.FOUND', code: 200 }],
@@ -141,13 +161,17 @@ export default class BillsController extends BaseController {
 
   /**
    * Validates the entries items ids.
+   * @async
    * @param {Request} req
    * @param {Response} res
    * @param {Function} next
    */
-  static async validateItemsIds(req, res, next) {
+  async validateItemsIds(req: Request, res: Response, next: Function) {
+    const { tenantId } = req;
     const itemsIds = req.body.entries.map((e) => e.item_id);
-    const notFoundItemsIds = await ItemsService.isItemsIdsExists(itemsIds);
+
+    const notFoundItemsIds = await this.itemsService.isItemsIdsExists(tenantId, itemsIds);
+
     if (notFoundItemsIds.length > 0) {
       return res.status(400).send({
         errors: [{ type: 'ITEMS.IDS.NOT.FOUND', code: 400 }],
@@ -158,15 +182,17 @@ export default class BillsController extends BaseController {
 
   /**
    * Validates the bill number existance.
+   * @async
    * @param {Request} req
    * @param {Response} res
    * @param {Function} next
    */
-  static async validateBillNumberExists(req, res, next) {
-    const isBillNoExists = await BillsService.isBillNoExists(
-      req.body.bill_number
-    );
+  async validateBillNumberExists(req: Request, res: Response, next: Function) {
+    const { tenantId } = req;
 
+    const isBillNoExists = await this.billsService.isBillNoExists(
+      tenantId, req.body.bill_number,
+    );
     if (isBillNoExists) {
       return res.status(400).send({
         errors: [{ type: 'BILL.NUMBER.EXISTS', code: 500 }],
@@ -181,20 +207,20 @@ export default class BillsController extends BaseController {
    * @param {Response} res
    * @param {Function} next
    */
-  static async validateEntriesIdsExistance(req, res, next) {
+  async validateEntriesIdsExistance(req: Request, res: Response, next: Function) {
     const { id: billId } = req.params;
     const bill = { ...req.body };
     const { ItemEntry } = req.models;
 
     const entriesIds = bill.entries.filter((e) => e.id).map((e) => e.id);
 
-    const storedEntries = await ItemEntry.tenant()
-      .query()
+    const storedEntries = await ItemEntry.query()
       .whereIn('reference_id', [billId])
       .whereIn('reference_type', ['Bill']);
 
     const storedEntriesIds = storedEntries.map((entry) => entry.id);
     const notFoundEntriesIds = difference(entriesIds, storedEntriesIds);
+
     if (notFoundEntriesIds.length > 0) {
       return res.status(400).send({
         errors: [{ type: 'BILL.ENTRIES.IDS.NOT.FOUND', code: 600 }],
@@ -209,7 +235,7 @@ export default class BillsController extends BaseController {
    * @param {Response} res 
    * @param {Function} next 
    */
-  static async validateNonPurchasableEntriesItems(req, res, next) {
+  async validateNonPurchasableEntriesItems(req: Request, res: Response, next: Function) {
     const { Item } = req.models;
     const bill = { ...req.body };
     const itemsIds = bill.entries.map(e => e.item_id);
@@ -235,17 +261,15 @@ export default class BillsController extends BaseController {
    * @param {Response} res
    * @param {Function} next
    */
-  static async newBill(req, res, next) {
+  async newBill(req: Request, res: Response, next: Function) {
+    const { tenantId } = req;
     const { ItemEntry } = req.models;
 
-    const bill = {
-      ...req.body,
-      entries: req.body.entries.map((entry) => ({
-        ...entry,
-        amount: ItemEntry.calcAmount(entry),
-      })),
-    };
-    const storedBill = await BillsService.createBill(bill);
+    const billOTD: BillOTD = matchedData(req, {
+      locations: ['body'],
+      includeOptionals: true
+    });
+    const storedBill = await this.billsService.createBill(tenantId, billOTD);
 
     return res.status(200).send({ id: storedBill.id });
   }
@@ -255,17 +279,16 @@ export default class BillsController extends BaseController {
    * @param {Request} req
    * @param {Response} res
    */
-  static async editBill(req, res) {
-    const { ItemEntry } = req.models;
+  async editBill(req: Request, res: Response) {
     const { id: billId } = req.params;
-    const bill = {
-      ...req.body,
-      entries: req.body.entries.map((entry) => ({
-        ...entry,
-        amount: ItemEntry.calcAmount(entry),
-      })),
-    };
-    const editedBill = await BillsService.editBill(billId, bill);
+    const { ItemEntry } = req.models;
+    const { tenantId } = req;
+
+    const billOTD: BillOTD = matchedData(req, {
+      locations: ['body'],
+      includeOptionals: true
+    });
+    const editedBill = await this.billsService.editBill(tenantId, billId, billOTD);
 
     return res.status(200).send({ id: billId });
   }
@@ -276,9 +299,11 @@ export default class BillsController extends BaseController {
    * @param {Response} res
    * @return {Response}
    */
-  static async getBill(req, res) {
+  async getBill(req: Request, res: Response) {
+    const { tenantId } = req;
     const { id: billId } = req.params;
-    const bill = await BillsService.getBillWithMetadata(billId);
+
+    const bill = await this.billsService.getBillWithMetadata(tenantId, billId);
 
     return res.status(200).send({ bill });
   }
@@ -289,9 +314,11 @@ export default class BillsController extends BaseController {
    * @param {Response} res -
    * @return {Response}
    */
-  static async deleteBill(req, res) {
+  async deleteBill(req: Request, res: Response) {
     const billId = req.params.id;
-    await BillsService.deleteBill(billId);
+    const { tenantId } = req;
+
+    await this.billsService.deleteBill(tenantId, billId);
 
     return res.status(200).send({ id: billId });
   }
@@ -302,7 +329,7 @@ export default class BillsController extends BaseController {
    * @param {Response} res -
    * @return {Response}
    */
-  static async listingBills(req, res) {
+  async listingBills(req: Request, res: Response) {
     const filter = {
       filter_roles: [],
       sort_order: 'asc',

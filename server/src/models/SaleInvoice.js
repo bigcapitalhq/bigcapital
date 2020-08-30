@@ -119,8 +119,7 @@ export default class SaleInvoice extends mixin(TenantModel, [CachableModel]) {
   static async changePaymentAmount(invoiceId, amount) {
     const changeMethod = amount > 0 ? 'increment' : 'decrement';
 
-    await this.tenant()
-      .query()
+    await this.query()
       .where('id', invoiceId)
       [changeMethod]('payment_amount', Math.abs(amount));      
   }

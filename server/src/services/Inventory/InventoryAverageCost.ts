@@ -1,5 +1,4 @@
 import { pick } from 'lodash';
-import { InventoryTransaction } from '@/models';
 import { IInventoryTransaction } from '@/interfaces';
 import InventoryCostMethod from '@/services/Inventory/InventoryCostMethod';
 
@@ -10,10 +9,12 @@ export default class InventoryAverageCostMethod extends InventoryCostMethod impl
 
   /**
    * Constructor method.
+   * @param {number} tenantId - The given tenant id.
    * @param {Date} startingDate -
-   * @param {number} itemId -
+   * @param {number} itemId - The given inventory item id.
    */
   constructor(
+    tenantId: number,
     startingDate: Date,
     itemId: number,
   ) {
@@ -39,11 +40,10 @@ export default class InventoryAverageCostMethod extends InventoryCostMethod impl
    * @param {string} referenceType 
    */
   public async computeItemCost() {
+    const { InventoryTransaction } = this.tenantModels;
     const openingAvgCost = await this.getOpeningAvaregeCost(this.startingDate, this.itemId);
 
-    const afterInvTransactions: IInventoryTransaction[] = await InventoryTransaction
-      .tenant()
-      .query()
+    const afterInvTransactions: IInventoryTransaction[] = await InventoryTransaction.query()
       .modify('filterDateRange', this.startingDate)  
       .orderBy('date', 'ASC')
       .orderByRaw("FIELD(direction, 'IN', 'OUT')")
@@ -66,6 +66,7 @@ export default class InventoryAverageCostMethod extends InventoryCostMethod impl
    * @return {number}
    */
   public async getOpeningAvaregeCost(startingDate: Date, itemId: number) {
+    const { InventoryTransaction } = this.tenantModels;
     const commonBuilder = (builder: any) => {
       if (startingDate) {
         builder.where('date', '<', startingDate);
@@ -81,16 +82,14 @@ export default class InventoryAverageCostMethod extends InventoryCostMethod impl
     // Calculates the total inventory total quantity and rate `IN` transactions.
 
     // @todo total `IN` transactions.
-    const inInvSumationOper: Promise<any> = InventoryTransaction.tenant()
-      .query()
+    const inInvSumationOper: Promise<any> = InventoryTransaction.query()
       .onBuild(commonBuilder)
       .where('direction', 'IN')
       .first();
 
     // Calculates the total inventory total quantity and rate `OUT` transactions.
     // @todo total `OUT` transactions.
-    const outInvSumationOper: Promise<any> = InventoryTransaction.tenant()
-      .query()
+    const outInvSumationOper: Promise<any> = InventoryTransaction.query()
       .onBuild(commonBuilder)
       .where('direction', 'OUT')
       .first();

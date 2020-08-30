@@ -1,13 +1,14 @@
-import express from 'express';
-import { check, param, query } from 'express-validator';
+import { Router, Request, Response } from 'express';
+import { check, param, query, ValidationChain, matchedData } from 'express-validator';
 import { difference } from 'lodash';
-import { PaymentReceiveEntry } from '@/models';
+import { Inject, Service } from 'typedi';
+import { IPaymentReceive, IPaymentReceiveOTD } from '@/interfaces';
 import BaseController from '@/http/controllers/BaseController';
 import validateMiddleware from '@/http/middleware/validateMiddleware';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
 import PaymentReceiveService from '@/services/Sales/PaymentsReceives';
 import CustomersService from '@/services/Customers/CustomersService';
-import SaleInvoicesService from '@/services/Sales/SalesInvoices';
+import SaleInvoiceService from '@/services/Sales/SalesInvoices';
 import AccountsService from '@/services/Accounts/AccountsService';
 import DynamicListing from '@/services/DynamicListing/DynamicListing';
 import DynamicListingBuilder from '@/services/DynamicListing/DynamicListingBuilder';
@@ -15,60 +16,122 @@ import { dynamicListingErrorsToResponse } from '@/services/DynamicListing/hasDyn
 
 /**
  * Payments receives controller.
- * @controller
+ * @service
  */
+@Service()
 export default class PaymentReceivesController extends BaseController {
+  @Inject()
+  paymentReceiveService: PaymentReceiveService;
+
+  @Inject()
+  customersService: CustomersService;
+
+  @Inject()
+  accountsService: AccountsService;
+
+  @Inject()
+  saleInvoiceService: SaleInvoiceService;
+
   /**
    * Router constructor.
    */
-  static router() {
-    const router = express.Router();
+  router() {
+    const router = Router();
 
     router.post(
       '/:id',
       this.editPaymentReceiveValidation,
       validateMiddleware,
-      asyncMiddleware(this.validatePaymentReceiveExistance),
-      asyncMiddleware(this.validatePaymentReceiveNoExistance),
-      asyncMiddleware(this.validateCustomerExistance),
-      asyncMiddleware(this.validateDepositAccount),
-      asyncMiddleware(this.validateInvoicesIDs),
-      asyncMiddleware(this.validateEntriesIdsExistance),
-      asyncMiddleware(this.validateInvoicesPaymentsAmount),
-      asyncMiddleware(this.editPaymentReceive),
+      asyncMiddleware(this.validatePaymentReceiveExistance.bind(this)),
+      asyncMiddleware(this.validatePaymentReceiveNoExistance.bind(this)),
+      asyncMiddleware(this.validateCustomerExistance.bind(this)),
+      asyncMiddleware(this.validateDepositAccount.bind(this)),
+      asyncMiddleware(this.validateInvoicesIDs.bind(this)),
+      asyncMiddleware(this.validateEntriesIdsExistance.bind(this)),
+      asyncMiddleware(this.validateInvoicesPaymentsAmount.bind(this)),
+      asyncMiddleware(this.editPaymentReceive.bind(this)),
     );
     router.post(
       '/',
       this.newPaymentReceiveValidation,
       validateMiddleware,
-      asyncMiddleware(this.validatePaymentReceiveNoExistance),
-      asyncMiddleware(this.validateCustomerExistance),
-      asyncMiddleware(this.validateDepositAccount),
-      asyncMiddleware(this.validateInvoicesIDs),
-      asyncMiddleware(this.validateInvoicesPaymentsAmount),
-      asyncMiddleware(this.newPaymentReceive),
+      asyncMiddleware(this.validatePaymentReceiveNoExistance.bind(this)),
+      asyncMiddleware(this.validateCustomerExistance.bind(this)),
+      asyncMiddleware(this.validateDepositAccount.bind(this)),
+      asyncMiddleware(this.validateInvoicesIDs.bind(this)),
+      asyncMiddleware(this.validateInvoicesPaymentsAmount.bind(this)),
+      asyncMiddleware(this.newPaymentReceive.bind(this)),
     );
     router.get(
       '/:id',
       this.paymentReceiveValidation,
       validateMiddleware,
-      asyncMiddleware(this.validatePaymentReceiveExistance),
-      asyncMiddleware(this.getPaymentReceive)
+      asyncMiddleware(this.validatePaymentReceiveExistance.bind(this)),
+      asyncMiddleware(this.getPaymentReceive.bind(this))
     );
     router.get(
       '/',
       this.validatePaymentReceiveList,
       validateMiddleware,
-      asyncMiddleware(this.getPaymentReceiveList),
+      asyncMiddleware(this.getPaymentReceiveList.bind(this)),
     );
     router.delete(
       '/:id',
       this.paymentReceiveValidation,
       validateMiddleware,
-      asyncMiddleware(this.validatePaymentReceiveExistance),
-      asyncMiddleware(this.deletePaymentReceive),
+      asyncMiddleware(this.validatePaymentReceiveExistance.bind(this)),
+      asyncMiddleware(this.deletePaymentReceive.bind(this)),
     );
     return router;
+  }
+
+  /**
+   * Payment receive schema.
+   * @return {Array}
+   */
+  get paymentReceiveSchema(): ValidationChain[] {
+    return [
+      check('customer_id').exists().isNumeric().toInt(),
+      check('payment_date').exists(),
+      check('reference_no').optional(),
+      check('deposit_account_id').exists().isNumeric().toInt(),
+      check('payment_receive_no').exists().trim().escape(),
+      check('statement').optional().trim().escape(),
+
+      check('entries').isArray({ min: 1 }),
+
+      check('entries.*.invoice_id').exists().isNumeric().toInt(),
+      check('entries.*.payment_amount').exists().isNumeric().toInt(),
+    ];
+  }
+
+  /**
+   * Payment receive list validation schema.
+   */
+  get validatePaymentReceiveList(): ValidationChain[] {
+    return [
+      query('custom_view_id').optional().isNumeric().toInt(),
+      query('stringified_filter_roles').optional().isJSON(),
+      query('column_sort_by').optional(),
+      query('sort_order').optional().isIn(['desc', 'asc']),
+      query('page').optional().isNumeric().toInt(),
+      query('page_size').optional().isNumeric().toInt(),
+    ]
+  }
+
+  /**
+   * Validate payment receive parameters.
+   */
+  get paymentReceiveValidation() {
+    return [param('id').exists().isNumeric().toInt()];
+  }
+
+  /**
+   * New payment receive validation schema.
+   * @return {Array}
+   */
+  get newPaymentReceiveValidation() {
+    return [...this.paymentReceiveSchema];
   }
 
   /**
@@ -77,8 +140,10 @@ export default class PaymentReceivesController extends BaseController {
    * @param {Response} res
    * @param {Function} next
    */
-  static async validatePaymentReceiveNoExistance(req, res, next) {
-    const isPaymentNoExists = await PaymentReceiveService.isPaymentReceiveNoExists(
+  async validatePaymentReceiveNoExistance(req: Request, res: Response, next: Function) {
+    const tenantId = req.tenantId;
+    const isPaymentNoExists = await this.paymentReceiveService.isPaymentReceiveNoExists(
+      tenantId,
       req.body.payment_receive_no,
       req.params.id,
     );
@@ -96,13 +161,16 @@ export default class PaymentReceivesController extends BaseController {
    * @param {Response} res
    * @param {Function} next
    */
-  static async validatePaymentReceiveExistance(req, res, next) {
-    const isPaymentNoExists = await PaymentReceiveService.isPaymentReceiveExists(
-      req.params.id
-    );
+  async validatePaymentReceiveExistance(req: Request, res: Response, next: Function) {
+    const tenantId = req.tenantId;
+    const isPaymentNoExists = await this.paymentReceiveService
+      .isPaymentReceiveExists(
+        tenantId,
+        req.params.id
+      );
     if (!isPaymentNoExists) {
       return res.status(400).send({
-        errors: [{ type: 'PAYMENT.RECEIVE.NO.EXISTS', code: 600 }],
+        errors: [{ type: 'PAYMENT.RECEIVE.NOT.EXISTS', code: 600 }],
       });
     }
     next();
@@ -114,8 +182,10 @@ export default class PaymentReceivesController extends BaseController {
    * @param {Response} res
    * @param {Function} next
    */
-  static async validateDepositAccount(req, res, next) {
-    const isDepositAccExists = await AccountsService.isAccountExists(
+  async validateDepositAccount(req: Request, res: Response, next: Function) {
+    const tenantId = req.tenantId;
+    const isDepositAccExists = await this.accountsService.isAccountExists(
+      tenantId,
       req.body.deposit_account_id
     );
     if (!isDepositAccExists) {
@@ -132,10 +202,11 @@ export default class PaymentReceivesController extends BaseController {
    * @param {Response} res
    * @param {Function} next
    */
-  static async validateCustomerExistance(req, res, next) {
-    const isCustomerExists = await CustomersService.isCustomerExists(
-      req.body.customer_id
-    );
+  async validateCustomerExistance(req: Request, res: Response, next: Function) {
+    const  { Customer } = req.models;
+
+    const isCustomerExists = await Customer.query().findById(req.body.customer_id);
+
     if (!isCustomerExists) {
       return res.status(400).send({
         errors: [{ type: 'CUSTOMER.ID.NOT.EXISTS', code: 200 }],
@@ -150,10 +221,14 @@ export default class PaymentReceivesController extends BaseController {
    * @param {Response} res -
    * @param {Function} next -
    */
-  static async validateInvoicesIDs(req, res, next) {
+  async validateInvoicesIDs(req: Request, res: Response, next: Function) {
     const paymentReceive = { ...req.body };
-    const invoicesIds = paymentReceive.entries.map((e) => e.invoice_id);
-    const notFoundInvoicesIDs = await SaleInvoicesService.isInvoicesExist(
+    const { tenantId } = req;
+    const invoicesIds = paymentReceive.entries
+      .map((e) => e.invoice_id);
+
+    const notFoundInvoicesIDs = await this.saleInvoiceService.isInvoicesExist(
+      tenantId,
       invoicesIds,
       paymentReceive.customer_id,
     );
@@ -171,19 +246,19 @@ export default class PaymentReceivesController extends BaseController {
    * @param {Response} res -
    * @param {Function} next -
    */
-  static async validateInvoicesPaymentsAmount(req, res, next) {
+  async validateInvoicesPaymentsAmount(req: Request, res: Response, next: Function) {
     const { SaleInvoice } = req.models;
     const invoicesIds = req.body.entries.map((e) => e.invoice_id);
-    const storedInvoices = await SaleInvoice.tenant()
-      .query()
+
+    const storedInvoices = await SaleInvoice.query()
       .whereIn('id', invoicesIds);
 
     const storedInvoicesMap = new Map(
       storedInvoices.map((invoice) => [invoice.id, invoice])
     );
-    const hasWrongPaymentAmount = [];
+    const hasWrongPaymentAmount: any[] = [];
 
-    req.body.entries.forEach((entry, index) => {
+    req.body.entries.forEach((entry, index: number) => {
       const entryInvoice = storedInvoicesMap.get(entry.invoice_id);
       const { dueAmount } = entryInvoice;
 
@@ -211,13 +286,15 @@ export default class PaymentReceivesController extends BaseController {
    * @param {Response} res 
    * @return {Response}
    */
-  static async validateEntriesIdsExistance(req, res, next) {
+  async validateEntriesIdsExistance(req: Request, res: Response, next: Function) {
     const paymentReceive = { id: req.params.id, ...req.body };
     const entriesIds = paymentReceive.entries
       .filter(entry => entry.id)
       .map(entry => entry.id);
 
-    const storedEntries = await PaymentReceiveEntry.tenant().query()
+    const { PaymentReceiveEntry } = req.models;
+
+    const storedEntries = await PaymentReceiveEntry.query()
       .where('payment_receive_id', paymentReceive.id);
 
     const storedEntriesIds = storedEntries.map((entry) => entry.id);    
@@ -232,48 +309,27 @@ export default class PaymentReceivesController extends BaseController {
   }
 
   /**
-   * Payment receive schema.
-   * @return {Array}
-   */
-  static get paymentReceiveSchema() {
-    return [
-      check('customer_id').exists().isNumeric().toInt(),
-      check('payment_date').exists(),
-      check('reference_no').optional(),
-      check('deposit_account_id').exists().isNumeric().toInt(),
-      check('payment_receive_no').exists().trim().escape(),
-      check('statement').optional().trim().escape(),
-
-      check('entries').isArray({ min: 1 }),
-
-      check('entries.*.invoice_id').exists().isNumeric().toInt(),
-      check('entries.*.payment_amount').exists().isNumeric().toInt(),
-    ];
-  }
-
-  /**
-   * New payment receive validation schema.
-   * @return {Array}
-   */
-  static get newPaymentReceiveValidation() {
-    return [...this.paymentReceiveSchema];
-  }
-
-  /**
    * Records payment receive to the given customer with associated invoices.
    */
-  static async newPaymentReceive(req, res) {
-    const paymentReceive = { ...req.body };
-    const storedPaymentReceive = await PaymentReceiveService.createPaymentReceive(
-      paymentReceive
-    );
+  async newPaymentReceive(req: Request, res: Response) {
+    const { tenantId } = req;
+    const paymentReceive: IPaymentReceiveOTD = matchedData(req, {
+      locations: ['body'],
+      includeOptionals: true,
+    });
+
+    const storedPaymentReceive = await this.paymentReceiveService
+      .createPaymentReceive(
+        tenantId,
+        paymentReceive,
+      );
     return res.status(200).send({ id: storedPaymentReceive.id });
   }
 
   /**
    * Edit payment receive validation.
    */
-  static get editPaymentReceiveValidation() {
+  get editPaymentReceiveValidation() {
     return [
       param('id').exists().isNumeric().toInt(),
       ...this.paymentReceiveSchema,
@@ -286,18 +342,23 @@ export default class PaymentReceivesController extends BaseController {
    * @param {Response} res
    * @return {Response}
    */
-  static async editPaymentReceive(req, res) {
-    const paymentReceive = { ...req.body };
+  async editPaymentReceive(req: Request, res: Response) {
+    const { tenantId } = req;
     const { id: paymentReceiveId } = req.params;
     const { PaymentReceive } = req.models;
 
+    const paymentReceive: IPaymentReceiveOTD = matchedData(req, {
+      locations: ['body'],
+    });
+
     // Retrieve the payment receive before updating.
-    const oldPaymentReceive = await PaymentReceive.query()
+    const oldPaymentReceive: IPaymentReceive = await PaymentReceive.query()
       .where('id', paymentReceiveId)
       .withGraphFetched('entries')
       .first();
 
-    await PaymentReceiveService.editPaymentReceive(
+    await this.paymentReceiveService.editPaymentReceive(
+      tenantId,
       paymentReceiveId,
       paymentReceive,
       oldPaymentReceive,
@@ -306,27 +367,22 @@ export default class PaymentReceivesController extends BaseController {
   }
 
   /**
-   * Validate payment receive parameters.
-   */
-  static get paymentReceiveValidation() {
-    return [param('id').exists().isNumeric().toInt()];
-  }
-
-  /**
    * Delets the given payment receive id.
    * @param {Request} req
    * @param {Response} res
    */
-  static async deletePaymentReceive(req, res) {
+  async deletePaymentReceive(req: Request, res: Response) {
+    const { tenantId } = req;
     const { id: paymentReceiveId } = req.params;
-
     const { PaymentReceive } = req.models;
+
     const storedPaymentReceive = await PaymentReceive.query()
       .where('id', paymentReceiveId)
       .withGraphFetched('entries')
       .first();
 
-    await PaymentReceiveService.deletePaymentReceive(
+    await this.paymentReceiveService.deletePaymentReceive(
+      tenantId,
       paymentReceiveId,
       storedPaymentReceive
     );
@@ -339,7 +395,7 @@ export default class PaymentReceivesController extends BaseController {
    * @param {Request} req -
    * @param {Response} res -
    */
-  static async getPaymentReceive(req, res) {
+  async getPaymentReceive(req: Request, res: Response) {
     const { id: paymentReceiveId } = req.params;
     const paymentReceive = await PaymentReceiveService.getPaymentReceive(
       paymentReceiveId
@@ -348,26 +404,12 @@ export default class PaymentReceivesController extends BaseController {
   }
 
   /**
-   * Payment receive list validation schema.
-   */
-  static get validatePaymentReceiveList() {
-    return [
-      query('custom_view_id').optional().isNumeric().toInt(),
-      query('stringified_filter_roles').optional().isJSON(),
-      query('column_sort_by').optional(),
-      query('sort_order').optional().isIn(['desc', 'asc']),
-      query('page').optional().isNumeric().toInt(),
-      query('page_size').optional().isNumeric().toInt(),
-    ]
-  }
-
-  /**
    * Retrieve payment receive list with pagination metadata.
    * @param {Request} req 
    * @param {Response} res 
    * @return {Response} 
    */
-  static async getPaymentReceiveList(req, res) {
+  async getPaymentReceiveList(req: Request, res: Response) {
     const filter = {
       filter_roles: [],
       sort_order: 'asc',

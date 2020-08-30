@@ -11,3 +11,5 @@ export interface IBillPayment {
   billNo: string,
   entries: IBillPaymentEntry[],
 }
+
+export interface IBillPaymentOTD {};

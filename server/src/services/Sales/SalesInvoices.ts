@@ -1,52 +1,56 @@
+import { Service, Inject } from 'typedi';
 import { omit, sumBy, difference, pick, chain } from 'lodash';
-import {
-  SaleInvoice,
-  AccountTransaction,
-  InventoryTransaction,
-  Account,
-  ItemEntry,
-  Customer,
-  Item,
-} from '@/models';
+import { ISaleInvoice, ISaleInvoiceOTD, IItemEntry } from '@/interfaces';
 import JournalPoster from '@/services/Accounting/JournalPoster';
 import HasItemsEntries from '@/services/Sales/HasItemsEntries';
-import CustomerRepository from '@/repositories/CustomerRepository';
 import InventoryService from '@/services/Inventory/Inventory';
 import SalesInvoicesCost from '@/services/Sales/SalesInvoicesCost';
-import { ISaleInvoice, ISaleInvoiceOTD, IItemEntry } from '@/interfaces';
+import TenancyService from '@/services/Tenancy/TenancyService';
 import { formatDateFields } from '@/utils';
 
 /**
  * Sales invoices service
  * @service
  */
+@Service()
 export default class SaleInvoicesService extends SalesInvoicesCost {
+  @Inject()
+  tenancy: TenancyService;
+
+  @Inject()
+  inventoryService: InventoryService;
+
+  @Inject()
+  itemsEntriesService: HasItemsEntries;
+
   /**
    * Creates a new sale invoices and store it to the storage
    * with associated to entries and journal transactions.
    * @async
-   * @param {ISaleInvoice}
+   * @param {number} tenantId = 
+   * @param {ISaleInvoice} saleInvoiceDTO - 
    * @return {ISaleInvoice}
    */
-  static async createSaleInvoice(saleInvoiceDTO: ISaleInvoiceOTD) {
-    const balance = sumBy(saleInvoiceDTO.entries, 'amount');
-    const invLotNumber = await InventoryService.nextLotNumber();
+  async createSaleInvoice(tenantId: number, saleInvoiceDTO: ISaleInvoiceOTD) {
+    const { SaleInvoice, Customer, ItemEntry } = this.tenancy.models(tenantId);
+
+    const balance = sumBy(saleInvoiceDTO.entries, e => ItemEntry.calcAmount(e));
+    const invLotNumber = await this.inventoryService.nextLotNumber(tenantId);
+    
     const saleInvoice: ISaleInvoice = {
-      ...formatDateFields(saleInvoiceDTO, ['invoiceDate', 'dueDate']),
+      ...formatDateFields(saleInvoiceDTO, ['invoice_date', 'due_date']),
       balance,
       paymentAmount: 0,
       invLotNumber,
     };
-    const storedInvoice = await SaleInvoice.tenant()
-      .query()
+    const storedInvoice = await SaleInvoice.query()
       .insert({
         ...omit(saleInvoice, ['entries']),
       });
     const opers: Array<any> = [];
 
     saleInvoice.entries.forEach((entry: any) => {
-      const oper = ItemEntry.tenant()
-        .query()
+      const oper = ItemEntry.query()
         .insertAndFetch({
           reference_type: 'SaleInvoice',
           reference_id: storedInvoice.id,
@@ -67,12 +71,11 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
       ...opers, incrementOper,
     ]);
     // Records the inventory transactions for inventory items.
-    await this.recordInventoryTranscactions(
-      saleInvoice, storedInvoice.id
-    );
+    await this.recordInventoryTranscactions(tenantId, saleInvoice, storedInvoice.id);
+
     // Schedule sale invoice re-compute based on the item cost
     // method and starting date.
-    await this.scheduleComputeInvoiceItemsCost(storedInvoice.id);
+    await this.scheduleComputeInvoiceItemsCost(tenantId, storedInvoice.id);
 
     return storedInvoice;
   }
@@ -80,12 +83,15 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
   /**
    * Edit the given sale invoice.
    * @async
+   * @param {number} tenantId -
    * @param {Number} saleInvoiceId -
    * @param {ISaleInvoice} saleInvoice -
    */
-  static async editSaleInvoice(saleInvoiceId: number, saleInvoiceDTO: any) {
-    const balance = sumBy(saleInvoiceDTO.entries, 'amount');
-    const oldSaleInvoice = await SaleInvoice.tenant().query()
+  async editSaleInvoice(tenantId: number, saleInvoiceId: number, saleInvoiceDTO: any) {
+    const { SaleInvoice, ItemEntry, Customer } = this.tenancy.models(tenantId);
+
+    const balance = sumBy(saleInvoiceDTO.entries, e => ItemEntry.calcAmount(e));
+    const oldSaleInvoice = await SaleInvoice.query()
       .where('id', saleInvoiceId)
       .first();
 
@@ -94,24 +100,22 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
       balance,
       invLotNumber: oldSaleInvoice.invLotNumber,
     };
-    const updatedSaleInvoices: ISaleInvoice = await SaleInvoice.tenant()
-      .query()
+    const updatedSaleInvoices: ISaleInvoice = await SaleInvoice.query()
       .where('id', saleInvoiceId)
       .update({
         ...omit(saleInvoice, ['entries', 'invLotNumber']),
       });
     // Fetches the sale invoice items entries.
-    const storedEntries = await ItemEntry.tenant()
-      .query()
+    const storedEntries = await ItemEntry.query()
       .where('reference_id', saleInvoiceId)
       .where('reference_type', 'SaleInvoice');
 
     // Patch update the sale invoice items entries.
-    const patchItemsEntriesOper = HasItemsEntries.patchItemsEntries(
-      saleInvoice.entries, storedEntries, 'SaleInvoice', saleInvoiceId,
+    const patchItemsEntriesOper = this.itemsEntriesService.patchItemsEntries(
+      tenantId, saleInvoice.entries, storedEntries, 'SaleInvoice', saleInvoiceId,
     );
     // Changes the diff customer balance between old and new amount.
-    const changeCustomerBalanceOper = CustomerRepository.changeDiffBalance(
+    const changeCustomerBalanceOper = Customer.changeDiffBalance(
       saleInvoice.customer_id,
       oldSaleInvoice.customerId,
       balance,
@@ -119,7 +123,7 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
     );
     // Records the inventory transactions for inventory items.
     const recordInventoryTransOper = this.recordInventoryTranscactions(
-      saleInvoice, saleInvoiceId, true,
+      tenantId, saleInvoice, saleInvoiceId, true,
     );
     await Promise.all([
       patchItemsEntriesOper,
@@ -128,23 +132,31 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
     ]);
     // Schedule sale invoice re-compute based on the item cost
     // method and starting date.
-    await this.scheduleComputeInvoiceItemsCost(saleInvoiceId, true);
+    await this.scheduleComputeInvoiceItemsCost(tenantId, saleInvoiceId, true);
   }
 
   /**
    * Deletes the given sale invoice with associated entries
    * and journal transactions.
    * @async
-   * @param {Number} saleInvoiceId
+   * @param {Number} saleInvoiceId - The given sale invoice id.
    */
-  static async deleteSaleInvoice(saleInvoiceId: number) {
-    const oldSaleInvoice = await SaleInvoice.tenant().query()
+  async deleteSaleInvoice(tenantId: number, saleInvoiceId: number) {
+    const {
+      SaleInvoice,
+      ItemEntry,
+      Customer,
+      Account,
+      InventoryTransaction,
+      AccountTransaction,
+    } = this.tenancy.models(tenantId);
+
+    const oldSaleInvoice = await SaleInvoice.query()
       .findById(saleInvoiceId)
       .withGraphFetched('entries');
 
-    await SaleInvoice.tenant().query().where('id', saleInvoiceId).delete();
-    await ItemEntry.tenant()
-      .query()
+    await SaleInvoice.query().where('id', saleInvoiceId).delete();
+    await ItemEntry.query()
       .where('reference_id', saleInvoiceId)
       .where('reference_type', 'SaleInvoice')
       .delete();
@@ -153,26 +165,25 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
       oldSaleInvoice.customerId,
       oldSaleInvoice.balance * -1,
     );
-    const invoiceTransactions = await AccountTransaction.tenant()
-      .query()
+    const invoiceTransactions = await AccountTransaction.query()
       .whereIn('reference_type', ['SaleInvoice'])
       .where('reference_id', saleInvoiceId)
       .withGraphFetched('account.type');
 
-    const accountsDepGraph = await Account.tenant().depGraph().query();
+    const accountsDepGraph = await Account.depGraph().query();
     const journal = new JournalPoster(accountsDepGraph);
 
     journal.loadEntries(invoiceTransactions);
     journal.removeEntries();
 
-    const inventoryTransactions = await InventoryTransaction.tenant()
-      .query()
+    const inventoryTransactions = await InventoryTransaction.query()
       .where('transaction_type', 'SaleInvoice')
       .where('transaction_id', saleInvoiceId);
 
     // Revert inventory transactions.
     const revertInventoryTransactionsOper = this.revertInventoryTransactions(
-      inventoryTransactions
+      tenantId,
+      inventoryTransactions,
     );
     // Await all async operations.
     await Promise.all([
@@ -183,7 +194,7 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
     ]);
     // Schedule sale invoice re-compute based on the item cost
     // method and starting date.
-    await this.scheduleComputeItemsCost(oldSaleInvoice)
+    await this.scheduleComputeItemsCost(tenantId, oldSaleInvoice)
   }
 
   /**
@@ -192,7 +203,7 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
    * @param {number} saleInvoiceId -
    * @param {boolean} override -
    */
-  static recordInventoryTranscactions(saleInvoice, saleInvoiceId: number, override?: boolean){
+  recordInventoryTranscactions(tenantId: number, saleInvoice, saleInvoiceId: number, override?: boolean){
     const inventortyTransactions = saleInvoice.entries
       .map((entry) => ({
         ...pick(entry, ['item_id', 'quantity', 'rate',]),
@@ -204,8 +215,8 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
         entryId: entry.id,
       }));
 
-    return InventoryService.recordInventoryTransactions(
-      inventortyTransactions, override,
+    return this.inventoryService.recordInventoryTransactions(
+      tenantId, inventortyTransactions, override,
     );
   }
 
@@ -214,15 +225,15 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
    * @param {string} transactionType 
    * @param {number} transactionId 
    */
-  static async revertInventoryTransactions(inventoryTransactions: array) {
+  async revertInventoryTransactions(tenantId: number, inventoryTransactions: array) {
+    const { InventoryTransaction } = this.tenancy.models(tenantId);
     const opers: Promise<[]>[] = [];
 
     inventoryTransactions.forEach((trans: any) => {
       switch(trans.direction) {
         case 'OUT':
           if (trans.inventoryTransactionId) {
-            const revertRemaining = InventoryTransaction.tenant()
-              .query()
+            const revertRemaining = InventoryTransaction.query()
               .where('id', trans.inventoryTransactionId)
               .where('direction', 'OUT')
               .increment('remaining', trans.quanitity);
@@ -231,8 +242,7 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
           }
           break;
         case 'IN':
-          const removeRelationOper = InventoryTransaction.tenant()
-            .query()
+          const removeRelationOper = InventoryTransaction.query()
             .where('inventory_transaction_id', trans.id)
             .where('direction', 'IN')
             .update({
@@ -250,8 +260,9 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
    * @async
    * @param {Number} saleInvoiceId 
    */
-  static async getSaleInvoiceWithEntries(saleInvoiceId: number) {
-    return SaleInvoice.tenant().query()
+  async getSaleInvoiceWithEntries(tenantId: number, saleInvoiceId: number) {
+    const { SaleInvoice } = this.tenancy.models(tenantId);
+    return SaleInvoice.query()
       .where('id', saleInvoiceId)
       .withGraphFetched('entries')
       .withGraphFetched('customer')
@@ -263,10 +274,11 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
    * @param {Integer} saleInvoiceId
    * @return {Boolean}
    */
-  static async isSaleInvoiceExists(saleInvoiceId: number) {
-    const foundSaleInvoice = await SaleInvoice.tenant()
-      .query()
+  async isSaleInvoiceExists(tenantId: number, saleInvoiceId: number) {
+    const { SaleInvoice } = this.tenancy.models(tenantId);
+    const foundSaleInvoice = await SaleInvoice.query()
       .where('id', saleInvoiceId);
+
     return foundSaleInvoice.length !== 0;
   }
 
@@ -277,12 +289,15 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
    * @param {Number} saleInvoiceId
    * @return {Boolean}
    */
-  static async isSaleInvoiceNumberExists(saleInvoiceNumber: string|number, saleInvoiceId: number) {
-    const foundSaleInvoice = await SaleInvoice.tenant()
-      .query()
+  async isSaleInvoiceNumberExists(
+    tenantId: number,
+    saleInvoiceNumber: string|number,
+    saleInvoiceId: number
+  ) {
+    const { SaleInvoice } = this.tenancy.models(tenantId);
+    const foundSaleInvoice = await SaleInvoice.query()
       .onBuild((query: any) => {
         query.where('invoice_no', saleInvoiceNumber);
-
         if (saleInvoiceId) {
           query.whereNot('id', saleInvoiceId);
         }
@@ -296,9 +311,9 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
    * @param {Array} invoicesIds
    * @return {Array}
    */
-  static async isInvoicesExist(invoicesIds: Array<number>) {
-    const storedInvoices = await SaleInvoice.tenant()
-      .query()
+  async isInvoicesExist(tenantId: number, invoicesIds: Array<number>) {
+    const { SaleInvoice } = this.tenancy.models(tenantId);
+    const storedInvoices = await SaleInvoice.query()
       .onBuild((builder: any) => {
         builder.whereIn('id', invoicesIds);
         return builder;
@@ -314,9 +329,13 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
    * @param {ISaleInvoice} saleInvoice 
    * @return {Promise}
    */
-  static async scheduleComputeInvoiceItemsCost(saleInvoiceId: number, override?: boolean) {
-    const saleInvoice: ISaleInvoice = await SaleInvoice.tenant()
-      .query()
+  async scheduleComputeInvoiceItemsCost(
+    tenantId: number,
+    saleInvoiceId: number,
+    override?: boolean
+  ) {
+    const { SaleInvoice } = this.tenancy.models(tenantId);
+    const saleInvoice: ISaleInvoice = await SaleInvoice.query()
       .findById(saleInvoiceId)
       .withGraphFetched('entries.item');
 
@@ -326,9 +345,10 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
       .uniq().value();
     
     if (inventoryItemsIds.length === 0) {
-      await this.writeNonInventoryInvoiceJournals(saleInvoice, override);
+      await this.writeNonInventoryInvoiceJournals(tenantId, saleInvoice, override);
     } else {
       await this.scheduleComputeItemsCost(
+        tenantId,
         inventoryItemsIds,
         saleInvoice.invoice_date,
       );
@@ -339,13 +359,14 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
    * Writes the sale invoice journal entries.
    * @param {SaleInvoice} saleInvoice -
    */
-  static async writeNonInventoryInvoiceJournals(saleInvoice: ISaleInvoice, override: boolean) {
-    const accountsDepGraph = await Account.tenant().depGraph().query();
+  async writeNonInventoryInvoiceJournals(tenantId: number, saleInvoice: ISaleInvoice, override: boolean) {
+    const { Account, AccountTransaction } = this.tenancy.models(tenantId);
+
+    const accountsDepGraph = await Account.depGraph().query();
     const journal = new JournalPoster(accountsDepGraph);
 
     if (override) {
-      const oldTransactions = await AccountTransaction.tenant()
-        .query()
+      const oldTransactions = await AccountTransaction.query()
         .where('reference_type', 'SaleInvoice')
         .where('reference_id', saleInvoice.id)
         .withGraphFetched('account.type');

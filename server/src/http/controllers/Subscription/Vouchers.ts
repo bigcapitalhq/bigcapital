@@ -25,14 +25,15 @@ export default class VouchersController {
       this.generateVoucherSchema,
       validateMiddleware,
       PrettierMiddleware,
-      asyncMiddleware(this.validatePlanExistance),
+      asyncMiddleware(this.validatePlanExistance.bind(this)),
       asyncMiddleware(this.generateVoucher.bind(this)),
     );
     router.post(
       '/disable/:voucherId',
+      validateMiddleware,
       PrettierMiddleware,
-      asyncMiddleware(this.validateVoucherExistance),
-      asyncMiddleware(this.validateNotDisabledVoucher),
+      asyncMiddleware(this.validateVoucherExistance.bind(this)),
+      asyncMiddleware(this.validateNotDisabledVoucher.bind(this)),
       asyncMiddleware(this.disableVoucher.bind(this)),
     );
     router.post(
@@ -45,7 +46,7 @@ export default class VouchersController {
     router.delete(
       '/:voucherId',
       PrettierMiddleware,
-      asyncMiddleware(this.validateVoucherExistance),
+      asyncMiddleware(this.validateVoucherExistance.bind(this)),
       asyncMiddleware(this.deleteVoucher.bind(this)),
     );
     router.get(
@@ -158,23 +159,21 @@ export default class VouchersController {
    * @param {Response} res 
    * @return {Response}
    */
-  async generateVoucher(req: Request, res: Response) {
+  async generateVoucher(req: Request, res: Response, next: Function) {
     const { loop = 10, period, periodInterval, planId } = req.body;
-    const generatedVouchers: string[] = [];
-    const asyncOpers = [];
 
-    times(loop, () => {
-      const generateOper = this.voucherService
-        .generateVoucher(period, periodInterval, planId)
-        .then((generatedVoucher: any) => {
-          generatedVouchers.push(generatedVoucher)
-        });
-      asyncOpers.push(generateOper);
-    });
-
-    return res.status(200).send({
-      vouchers: generatedVouchers,
-    });
+    try {
+      await this.voucherService.generateVouchers(
+        loop, period, periodInterval, planId,
+      );
+      return res.status(200).send({
+        code: 100,
+        message: 'The vouchers have been generated successfully.'
+      });
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }    
   }
 
   /**

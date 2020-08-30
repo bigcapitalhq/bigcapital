@@ -1,7 +1,13 @@
 import { difference, omit } from 'lodash';
+import { Service, Inject } from 'typedi';
+import TenancyService from '@/services/Tenancy/TenancyService';
 import { ItemEntry } from '@/models';
 
+@Service()
 export default class HasItemEntries {
+  @Inject()
+  tenancy: TenancyService;
+
   /**
    * Patch items entries to the storage.
    *
@@ -9,15 +15,17 @@ export default class HasItemEntries {
    * @param {Array} oldEntries -
    * @param {String} referenceType -
    * @param {String|Number} referenceId -
-   *
    * @return {Promise}
    */
-  static async patchItemsEntries(
+  async patchItemsEntries(
+    tenantId: number,
     newEntries: Array<any>,
     oldEntries: Array<any>,
     referenceType: string,
     referenceId: string|number
   ) {
+    const { ItemEntry } = this.tenancy.models(tenantId);
+
     const entriesHasIds = newEntries.filter((entry) => entry.id);
     const entriesHasNoIds = newEntries.filter((entry) => !entry.id);
     const entriesIds = entriesHasIds.map(entry => entry.id);
@@ -31,15 +39,13 @@ export default class HasItemEntries {
       entriesIds,
     );
     if (entriesIdsShouldDelete.length > 0) {
-      const deleteOper = ItemEntry.tenant()
-        .query()
+      const deleteOper = ItemEntry.query()
         .whereIn('id', entriesIdsShouldDelete)
         .delete();
       opers.push(deleteOper);
     }
     entriesHasIds.forEach((entry) => {
-      const updateOper = ItemEntry.tenant()
-        .query()
+      const updateOper = ItemEntry.query()
         .where('id', entry.id)
         .update({
           ...omit(entry, excludeAttrs),
@@ -47,8 +53,7 @@ export default class HasItemEntries {
       opers.push(updateOper);
     });
     entriesHasNoIds.forEach((entry) => {
-      const insertOper = ItemEntry.tenant()
-        .query()
+      const insertOper = ItemEntry.query()
         .insert({
           reference_id: referenceId,
           reference_type: referenceType,
@@ -59,7 +64,7 @@ export default class HasItemEntries {
     return Promise.all([...opers]);
   }
 
-  static filterNonInventoryEntries(entries: [], items: []) {
+  filterNonInventoryEntries(entries: [], items: []) {
     const nonInventoryItems = items.filter((item: any) => item.type !== 'inventory');
     const nonInventoryItemsIds = nonInventoryItems.map((i: any) => i.id);
 
@@ -69,7 +74,7 @@ export default class HasItemEntries {
       ));
   }
   
-  static filterInventoryEntries(entries: [], items: []) {
+  filterInventoryEntries(entries: [], items: []) {
     const inventoryItems = items.filter((item: any) => item.type === 'inventory');
     const inventoryItemsIds = inventoryItems.map((i: any) => i.id);
 

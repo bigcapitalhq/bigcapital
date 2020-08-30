@@ -1,17 +1,18 @@
-import { Container } from 'typedi';
-import {
-  SaleInvoice,
-  Account,
-  AccountTransaction,
-  Item,
-} from '@/models';
+import { Container, Service, Inject } from 'typedi';
 import JournalPoster from '@/services/Accounting/JournalPoster';
 import JournalEntry from '@/services/Accounting/JournalEntry';
 import InventoryService from '@/services/Inventory/Inventory';
-import { ISaleInvoice, IItemEntry, IItem } from '@/interfaces';
-import { ISaleInvoice } from '../../interfaces';
+import TenancyService from '@/services/Tenancy/TenancyService';
+import { ISaleInvoice, IItemEntry } from '@/interfaces';
 
+@Service()
 export default class SaleInvoicesCost {
+  @Inject()
+  inventoryService: InventoryService;
+
+  @Inject()
+  tenancy: TenancyService;
+
   /**
    * Schedule sale invoice re-compute based on the item
    * cost method and starting date.
@@ -19,11 +20,16 @@ export default class SaleInvoicesCost {
    * @param {Date} startingDate - Starting compute cost date.
    * @return {Promise<Agenda>}
    */
-  static async scheduleComputeItemsCost(inventoryItemsIds: number[], startingDate: Date) {
+  async scheduleComputeItemsCost(
+    tenantId: number,
+    inventoryItemsIds: number[],
+    startingDate: Date
+  ) {
     const asyncOpers: Promise<[]>[] = [];
 
     inventoryItemsIds.forEach((inventoryItemId: number) => {
-      const oper: Promise<[]> = InventoryService.scheduleComputeItemCost(
+      const oper: Promise<[]> = this.inventoryService.scheduleComputeItemCost(
+        tenantId,
         inventoryItemId,
         startingDate,
       );
@@ -37,21 +43,22 @@ export default class SaleInvoicesCost {
    * @param {Date} startingDate 
    * @return {Promise<agenda>}
    */
-  static scheduleWriteJournalEntries(startingDate?: Date) {
+  scheduleWriteJournalEntries(tenantId: number, startingDate?: Date) {
     const agenda = Container.get('agenda');
     return agenda.schedule('in 3 seconds', 'rewrite-invoices-journal-entries', {
-      startingDate,
+      startingDate, tenantId,
     });
   }
 
   /**
    * Writes journal entries from sales invoices.
+   * @param {number} tenantId - The tenant id.
    * @param {Date} startingDate 
    * @param {boolean} override 
    */
-  static async writeJournalEntries(startingDate: Date, override: boolean) {
-    const salesInvoices = await SaleInvoice.tenant()
-      .query()
+  async writeJournalEntries(tenantId: number, startingDate: Date, override: boolean) {
+    const { AccountTransaction, SaleInvoice, Account } = this.tenancy.models(tenantId);
+    const salesInvoices = await SaleInvoice.query()
       .onBuild((builder: any) => {
         builder.modify('filterDateRange', startingDate);
         builder.orderBy('invoice_date', 'ASC');
@@ -59,12 +66,11 @@ export default class SaleInvoicesCost {
         builder.withGraphFetched('entries.item')
         builder.withGraphFetched('costTransactions(groupedEntriesCost)');
       });
-    const accountsDepGraph = await Account.tenant().depGraph().query();
+    const accountsDepGraph = await Account.depGraph().query();
     const journal = new JournalPoster(accountsDepGraph);
 
     if (override) {
-      const oldTransactions = await AccountTransaction.tenant()
-        .query()
+      const oldTransactions = await AccountTransaction.query()
         .whereIn('reference_type', ['SaleInvoice'])
         .onBuild((builder: any) => {
           builder.modify('filterDateRange', startingDate);
@@ -90,7 +96,7 @@ export default class SaleInvoicesCost {
    * @param {ISaleInvoice} saleInvoice 
    * @param {JournalPoster} journal 
    */
-  static saleInvoiceJournal(saleInvoice: ISaleInvoice, journal: JournalPoster) {
+  saleInvoiceJournal(saleInvoice: ISaleInvoice, journal: JournalPoster) {
     let inventoryTotal: number = 0;
     const receivableAccount = { id: 10 };
     const commonEntry = {

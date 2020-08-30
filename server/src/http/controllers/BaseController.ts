@@ -1,6 +1,3 @@
 
-
-
 export default class BaseController {
-
 }

@@ -17,13 +17,12 @@ export default class ItemEntry extends TenantModel {
     return ['created_at', 'updated_at'];
   }
 
-  /**
-   * Relationship mapping.
-   */
-  static get relationMappings() {
-    return {
+  static get virtualAttributes() {
+    return ['amount'];
+  }
 
-    };
+  static amount() {
+    return this.calcAmount(this);
   }
 
   static calcAmount(itemEntry) {

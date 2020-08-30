@@ -1,10 +1,5 @@
-import { omit, pick, chain } from 'lodash';
+import { pick, chain } from 'lodash';
 import moment from 'moment';
-import {
-  InventoryTransaction,
-  InventoryLotCostTracker,
-  Item,
-} from "@/models";
 import { IInventoryLotCost, IInventoryTransaction } from "@/interfaces";
 import InventoryCostMethod from '@/services/Inventory/InventoryCostMethod';
 
@@ -28,7 +23,12 @@ export default class InventoryCostLotTracker extends InventoryCostMethod impleme
    * @param {number} itemId -
    * @param {string} costMethod - 
    */
-  constructor(startingDate: Date, itemId: number, costMethod: TCostMethod = 'FIFO') {
+  constructor(
+    tenantId: number,
+    startingDate: Date,
+    itemId: number,
+    costMethod: TCostMethod = 'FIFO'
+  ) {
     super();
 
     this.startingDate = startingDate;
@@ -83,13 +83,14 @@ export default class InventoryCostLotTracker extends InventoryCostMethod impleme
    * @private
    */
   private async fetchInvINTransactions() {
+    const { InventoryTransaction, InventoryLotCostTracker } = this.tenantModels;
+
     const commonBuilder = (builder: any) => {
       builder.orderBy('date', (this.costMethod === 'LIFO') ? 'DESC': 'ASC');
       builder.where('item_id', this.itemId);
     };
     const afterInvTransactions: IInventoryTransaction[] =
-      await InventoryTransaction.tenant()
-        .query()
+      await InventoryTransaction.query()
         .modify('filterDateRange', this.startingDate)
         .orderByRaw("FIELD(direction, 'IN', 'OUT')")
         .onBuild(commonBuilder)
@@ -97,8 +98,7 @@ export default class InventoryCostLotTracker extends InventoryCostMethod impleme
         .withGraphFetched('item');
 
     const availiableINLots: IInventoryLotCost[] = 
-      await InventoryLotCostTracker.tenant()
-        .query()
+      await InventoryLotCostTracker.query()
         .modify('filterDateRange', null, this.startingDate)
         .orderBy('date', 'ASC')
         .where('direction', 'IN')
@@ -117,9 +117,10 @@ export default class InventoryCostLotTracker extends InventoryCostMethod impleme
    * @private
    */
   private async fetchInvOUTTransactions() {
+    const { InventoryTransaction } = this.tenantModels;
+
     const afterOUTTransactions: IInventoryTransaction[] = 
-      await InventoryTransaction.tenant()
-        .query()
+      await InventoryTransaction.query()
         .modify('filterDateRange', this.startingDate)
         .orderBy('date', 'ASC')
         .orderBy('lot_number', 'ASC')
@@ -132,8 +133,8 @@ export default class InventoryCostLotTracker extends InventoryCostMethod impleme
 
   private async fetchItemsMapped() {
     const itemsIds = chain(this.inTransactions).map((e) => e.itemId).uniq().value();
-    const storedItems = await Item.tenant()
-      .query()
+    const { Item } = this.tenantModels;
+    const storedItems = await Item.query()
       .where('type', 'inventory')
       .whereIn('id', itemsIds);
 
@@ -145,9 +146,9 @@ export default class InventoryCostLotTracker extends InventoryCostMethod impleme
    * @private
    */
   private async fetchRevertInvJReferenceIds() {
+    const { InventoryTransaction } = this.tenantModels;
     const revertJEntriesTransactions: IInventoryTransaction[] = 
-      await InventoryTransaction.tenant()
-        .query()
+      await InventoryTransaction.query()
         .select(['transactionId', 'transactionType'])
         .modify('filterDateRange', this.startingDate)
         .where('direction', 'OUT')
@@ -164,16 +165,15 @@ export default class InventoryCostLotTracker extends InventoryCostMethod impleme
    * @return {Promise}
    */
   public async revertInventoryLots(startingDate: Date) {
+    const { InventoryLotCostTracker } = this.tenantModels;
     const asyncOpers: any[] = [];
-    const inventoryLotsTrans = await InventoryLotCostTracker.tenant()
-      .query()
+    const inventoryLotsTrans = await InventoryLotCostTracker.query()
       .modify('filterDateRange', this.startingDate)
       .orderBy('date', 'DESC')
       .where('item_id', this.itemId)
       .where('direction', 'OUT');
 
-    const deleteInvLotsTrans = InventoryLotCostTracker.tenant()
-      .query()
+    const deleteInvLotsTrans = InventoryLotCostTracker.query()
       .modify('filterDateRange', this.startingDate)
       .where('item_id', this.itemId)      
       .delete();
@@ -181,8 +181,7 @@ export default class InventoryCostLotTracker extends InventoryCostMethod impleme
     inventoryLotsTrans.forEach((inventoryLot: IInventoryLotCost) => {
       if (!inventoryLot.lotNumber) { return; }
 
-      const incrementOper = InventoryLotCostTracker.tenant()
-        .query()
+      const incrementOper = InventoryLotCostTracker.query()
         .where('lot_number', inventoryLot.lotNumber)
         .where('direction', 'IN')
         .increment('remaining', inventoryLot.quantity);

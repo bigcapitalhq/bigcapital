@@ -1,36 +1,43 @@
 import { omit, difference, sumBy } from 'lodash';
-import {
-  SaleReceipt,
-  Account,
-  ItemEntry,
-} from '@/models';
-import JournalPoster from '@/services/Accounting/JournalPoster';
+import { Service, Inject } from 'typedi';
 import JournalPosterService from '@/services/Sales/JournalPosterService';
 import HasItemEntries from '@/services/Sales/HasItemsEntries';
+import TenancyService from '@/services/Tenancy/TenancyService';
 import { formatDateFields } from '@/utils';
 
-export default class SalesReceipt {
+@Service()
+export default class SalesReceiptService {
+  @Inject()
+  tenancy: TenancyService;
+
+  @Inject()
+  journalService: JournalPosterService;
+
+  @Inject()
+  itemsEntriesService: HasItemEntries;
+
   /**
    * Creates a new sale receipt with associated entries.
    * @async
    * @param {ISaleReceipt} saleReceipt
    * @return {Object}
    */
-  static async createSaleReceipt(saleReceiptDTO: any) {
+  async createSaleReceipt(tenantId: number, saleReceiptDTO: any) {
+    const { SaleReceipt, ItemEntry } = this.tenancy.models(tenantId);
+
+    const amount = sumBy(saleReceiptDTO.entries, e => ItemEntry.calcAmount(e));
     const saleReceipt = {
-      amount: sumBy(saleReceiptDTO.entries, 'amount');
+      amount,
       ...formatDateFields(saleReceiptDTO, ['receipt_date'])
     };
-    const storedSaleReceipt = await SaleReceipt.tenant()
-      .query()
+    const storedSaleReceipt = await SaleReceipt.query()
       .insert({
         ...omit(saleReceipt, ['entries']),
       });
     const storeSaleReceiptEntriesOpers: Array<any> = [];
 
     saleReceipt.entries.forEach((entry: any) => {
-      const oper = ItemEntry.tenant()
-        .query()
+      const oper = ItemEntry.query()
         .insert({
           reference_type: 'SaleReceipt',
           reference_id: storedSaleReceipt.id,
@@ -48,25 +55,30 @@ export default class SalesReceipt {
    * @param {ISaleReceipt} saleReceipt
    * @return {void}
    */
-  static async editSaleReceipt(saleReceiptId: number, saleReceiptDTO: any) {
+  async editSaleReceipt(tenantId: number, saleReceiptId: number, saleReceiptDTO: any) {
+    const { SaleReceipt, ItemEntry } = this.tenancy.models(tenantId);
+
+    const amount = sumBy(saleReceiptDTO.entries, e => ItemEntry.calcAmount(e));
     const saleReceipt = {
-      amount: sumBy(saleReceiptDTO.entries, 'amount'),
+      amount,
       ...formatDateFields(saleReceiptDTO, ['receipt_date'])
     };
-    const updatedSaleReceipt = await SaleReceipt.tenant()
-      .query()
+    const updatedSaleReceipt = await SaleReceipt.query()
       .where('id', saleReceiptId)
       .update({
         ...omit(saleReceipt, ['entries']),
       });
-    const storedSaleReceiptEntries = await ItemEntry.tenant()
-      .query()
+    const storedSaleReceiptEntries = await ItemEntry.query()
       .where('reference_id', saleReceiptId)
       .where('reference_type', 'SaleReceipt');
 
     // Patch sale receipt items entries.
-    const patchItemsEntries = HasItemEntries.patchItemsEntries(
-      saleReceipt.entries, storedSaleReceiptEntries, 'SaleReceipt', saleReceiptId,
+    const patchItemsEntries = this.itemsEntriesService.patchItemsEntries(
+      tenantId,
+      saleReceipt.entries,
+      storedSaleReceiptEntries,
+      'SaleReceipt',
+      saleReceiptId,
     );
     return Promise.all([patchItemsEntries]);
   }
@@ -76,20 +88,20 @@ export default class SalesReceipt {
    * @param {Integer} saleReceiptId
    * @return {void}
    */
-  static async deleteSaleReceipt(saleReceiptId: number) {
-    const deleteSaleReceiptOper = SaleReceipt.tenant()
-      .query()
+  async deleteSaleReceipt(tenantId: number, saleReceiptId: number) {
+    const { SaleReceipt, ItemEntry } = this.tenancy.models(tenantId);
+    const deleteSaleReceiptOper = SaleReceipt.query()
       .where('id', saleReceiptId)
       .delete();
 
-    const deleteItemsEntriesOper = ItemEntry.tenant()
-      .query()
+    const deleteItemsEntriesOper = ItemEntry.query()
       .where('reference_id', saleReceiptId)
       .where('reference_type', 'SaleReceipt')
       .delete();
 
     // Delete all associated journal transactions to payment receive transaction.
-    const deleteTransactionsOper = JournalPosterService.deleteJournalTransactions(
+    const deleteTransactionsOper = this.journalService.deleteJournalTransactions(
+      tenantId,
       saleReceiptId,
       'SaleReceipt'
     );
@@ -105,9 +117,9 @@ export default class SalesReceipt {
    * @param {Integer} saleReceiptId
    * @returns {Boolean}
    */
-  static async isSaleReceiptExists(saleReceiptId: number) {
-    const foundSaleReceipt = await SaleReceipt.tenant()
-      .query()
+  async isSaleReceiptExists(tenantId: number, saleReceiptId: number) {
+    const { SaleReceipt } = this.tenancy.models(tenantId);
+    const foundSaleReceipt = await SaleReceipt.query()
       .where('id', saleReceiptId);
     return foundSaleReceipt.length !== 0;
   }
@@ -117,13 +129,13 @@ export default class SalesReceipt {
    * @param {Integer} saleReceiptId
    * @param {ISaleReceipt} saleReceipt
    */
-  static async isSaleReceiptEntriesIDsExists(saleReceiptId: number, saleReceipt: any) {
+  async isSaleReceiptEntriesIDsExists(tenantId: number, saleReceiptId: number, saleReceipt: any) {
+    const { ItemEntry } = this.tenancy.models(tenantId);
     const entriesIDs = saleReceipt.entries
       .filter((e) => e.id)
       .map((e) => e.id);
 
-    const storedEntries = await ItemEntry.tenant()
-      .query()
+    const storedEntries = await ItemEntry.query()
       .whereIn('id', entriesIDs)
       .where('reference_id', saleReceiptId)
       .where('reference_type', 'SaleReceipt');
@@ -140,21 +152,12 @@ export default class SalesReceipt {
    * Retrieve sale receipt with associated entries.
    * @param {Integer} saleReceiptId 
    */
-  static async getSaleReceiptWithEntries(saleReceiptId: number) {
-    const saleReceipt = await SaleReceipt.tenant().query()
+  async getSaleReceiptWithEntries(tenantId: number, saleReceiptId: number) {
+    const { SaleReceipt } = this.tenancy.models(tenantId);
+    const saleReceipt = await SaleReceipt.query()
       .where('id', saleReceiptId)
       .withGraphFetched('entries');
 
     return saleReceipt;
-  }
-
-  /**
-   * Records journal transactions for sale receipt.
-   * @param {ISaleReceipt} saleReceipt
-   * @return {Promise}
-   */
-  static async _recordJournalTransactions(saleReceipt: any) {
-    const accountsDepGraph = await Account.tenant().depGraph().query();
-    const journalPoster = new JournalPoster(accountsDepGraph);
   }
 }

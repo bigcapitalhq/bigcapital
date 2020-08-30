@@ -1,6 +1,7 @@
-import express from 'express';
-import { check, param, query } from 'express-validator';
-import { ItemEntry } from '@/models';
+import { Router, Request, Response } from 'express';
+import { check, param, query, matchedData } from 'express-validator';
+import { Inject, Service } from 'typedi';
+import { ISaleEstimate, ISaleEstimateOTD } from '@/interfaces';
 import BaseController from '@/http/controllers/BaseController'
 import validateMiddleware from '@/http/middleware/validateMiddleware';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
@@ -10,21 +11,31 @@ import ItemsService from '@/services/Items/ItemsService';
 import DynamicListingBuilder from '@/services/DynamicListing/DynamicListingBuilder';
 import DynamicListing from '@/services/DynamicListing/DynamicListing';
 
+@Service()
 export default class SalesEstimatesController extends BaseController {
+  @Inject()
+  saleEstimateService: SaleEstimateService;
+
+  @Inject()
+  itemsService: ItemsService;
+
+  @Inject()
+  customersService: CustomersService;
+
   /**
    * Router constructor.
    */
-  static router() {
-    const router = express.Router();
+  router() {
+    const router = Router();
 
     router.post(
       '/',
       this.estimateValidationSchema,
       validateMiddleware,
-      asyncMiddleware(this.validateEstimateCustomerExistance),
-      asyncMiddleware(this.validateEstimateNumberExistance),
-      asyncMiddleware(this.validateEstimateEntriesItemsExistance),
-      asyncMiddleware(this.newEstimate)
+      asyncMiddleware(this.validateEstimateCustomerExistance.bind(this)),
+      asyncMiddleware(this.validateEstimateNumberExistance.bind(this)),
+      asyncMiddleware(this.validateEstimateEntriesItemsExistance.bind(this)),
+      asyncMiddleware(this.newEstimate.bind(this))
     );
     router.post(
       '/:id', [
@@ -32,33 +43,33 @@ export default class SalesEstimatesController extends BaseController {
         ...this.estimateValidationSchema,
       ],
       validateMiddleware,
-      asyncMiddleware(this.validateEstimateIdExistance),
-      asyncMiddleware(this.validateEstimateCustomerExistance),
-      asyncMiddleware(this.validateEstimateNumberExistance),
-      asyncMiddleware(this.validateEstimateEntriesItemsExistance),
-      asyncMiddleware(this.valdiateInvoiceEntriesIdsExistance),
-      asyncMiddleware(this.editEstimate)
+      asyncMiddleware(this.validateEstimateIdExistance.bind(this)),
+      asyncMiddleware(this.validateEstimateCustomerExistance.bind(this)),
+      asyncMiddleware(this.validateEstimateNumberExistance.bind(this)),
+      asyncMiddleware(this.validateEstimateEntriesItemsExistance.bind(this)),
+      asyncMiddleware(this.valdiateInvoiceEntriesIdsExistance.bind(this)),
+      asyncMiddleware(this.editEstimate.bind(this))
     );
     router.delete(
       '/:id', [
         this.validateSpecificEstimateSchema,
       ],
       validateMiddleware,
-      asyncMiddleware(this.validateEstimateIdExistance),
-      asyncMiddleware(this.deleteEstimate)
+      asyncMiddleware(this.validateEstimateIdExistance.bind(this)),
+      asyncMiddleware(this.deleteEstimate.bind(this))
     );
     router.get(
       '/:id',
       this.validateSpecificEstimateSchema,
       validateMiddleware,
-      asyncMiddleware(this.validateEstimateIdExistance),
-      asyncMiddleware(this.getEstimate)
+      asyncMiddleware(this.validateEstimateIdExistance.bind(this)),
+      asyncMiddleware(this.getEstimate.bind(this))
     );
     router.get(
       '/',
       this.validateEstimateListSchema,
       validateMiddleware,
-      asyncMiddleware(this.getEstimates)
+      asyncMiddleware(this.getEstimates.bind(this))
     );
     return router;
   }
@@ -66,7 +77,7 @@ export default class SalesEstimatesController extends BaseController {
   /**
    * Estimate validation schema.
    */
-  static get estimateValidationSchema() {
+  get estimateValidationSchema() {
     return [
       check('customer_id').exists().isNumeric().toInt(),
       check('estimate_date').exists().isISO8601(),
@@ -90,7 +101,7 @@ export default class SalesEstimatesController extends BaseController {
   /**
    * Specific sale estimate validation schema.
    */
-  static get validateSpecificEstimateSchema() {
+  get validateSpecificEstimateSchema() {
     return [
       param('id').exists().isNumeric().toInt(),
     ];
@@ -99,7 +110,7 @@ export default class SalesEstimatesController extends BaseController {
   /**
    * Sales estimates list validation schema.
    */
-  static get validateEstimateListSchema() {
+  get validateEstimateListSchema() {
     return [
       query('custom_view_id').optional().isNumeric().toInt(),
       query('stringified_filter_roles').optional().isJSON(),
@@ -116,12 +127,13 @@ export default class SalesEstimatesController extends BaseController {
    * @param {Response} res 
    * @param {Function} next 
    */
-  static async validateEstimateCustomerExistance(req, res, next) {
+  async validateEstimateCustomerExistance(req: Request, res: Response, next: Function) {
     const estimate = { ...req.body };
-    const isCustomerExists = await CustomersService.isCustomerExists(
-      estimate.customer_id
-    );
-    if (!isCustomerExists) {
+    const { Customer } = req.models
+
+    const foundCustomer = await Customer.query().findById(estimate.customer_id);
+
+    if (!foundCustomer) {
       return res.status(404).send({
         errors: [{ type: 'CUSTOMER.ID.NOT.FOUND', code: 200 }],
       });
@@ -135,10 +147,12 @@ export default class SalesEstimatesController extends BaseController {
    * @param {Response} res 
    * @param {Function} next 
    */
-  static async validateEstimateNumberExistance(req, res, next) {
+  async validateEstimateNumberExistance(req: Request, res: Response, next: Function) {
     const estimate = { ...req.body };
+    const { tenantId } = req;
 
-    const isEstNumberUnqiue = await SaleEstimateService.isEstimateNumberUnique(
+    const isEstNumberUnqiue = await this.saleEstimateService.isEstimateNumberUnique(
+      tenantId,
       estimate.estimate_number,
       req.params.id,
     );
@@ -147,7 +161,7 @@ export default class SalesEstimatesController extends BaseController {
         errors: [{ type: 'ESTIMATE.NUMBER.IS.NOT.UNQIUE', code: 300 }],
       });
     }
-    next();    
+    next();
   }
 
   /**
@@ -156,12 +170,13 @@ export default class SalesEstimatesController extends BaseController {
    * @param {Response} res 
    * @param {Function} next 
    */
-  static async validateEstimateEntriesItemsExistance(req, res, next) {
+  async validateEstimateEntriesItemsExistance(req: Request, res: Response, next: Function) {
+    const tenantId = req.tenantId;
     const estimate = { ...req.body };
     const estimateItemsIds = estimate.entries.map(e => e.item_id);
 
     // Validate items ids in estimate entries exists.
-    const notFoundItemsIds = await ItemsService.isItemsIdsExists(estimateItemsIds);
+    const notFoundItemsIds = await this.itemsService.isItemsIdsExists(tenantId, estimateItemsIds);
 
     if (notFoundItemsIds.length > 0) {
       return res.boom.badRequest(null, {
@@ -177,9 +192,12 @@ export default class SalesEstimatesController extends BaseController {
    * @param {Response} res 
    * @param {Function} next 
    */
-  static async validateEstimateIdExistance(req, res, next) {
+  async validateEstimateIdExistance(req: Request, res: Response, next: Function) {
     const { id: estimateId } = req.params;
-    const storedEstimate = await SaleEstimateService.getEstimate(estimateId);
+    const { tenantId } = req;
+
+    const storedEstimate = await this.saleEstimateService
+      .getEstimate(tenantId, estimateId);
 
     if (!storedEstimate) {
       return res.status(404).send({
@@ -195,14 +213,16 @@ export default class SalesEstimatesController extends BaseController {
    * @param {Response} res
    * @param {Function} next
    */
-  static async valdiateInvoiceEntriesIdsExistance(req, res, next) {
+  async valdiateInvoiceEntriesIdsExistance(req: Request, res: Response, next: Function) {
+    const { ItemEntry } = req.models;
+
     const { id: saleInvoiceId } = req.params;
     const saleInvoice = { ...req.body };
     const entriesIds = saleInvoice.entries
       .filter(e => e.id)
       .map((e) => e.id);
 
-    const foundEntries = await ItemEntry.tenant().query()
+    const foundEntries = await ItemEntry.query()
       .whereIn('id', entriesIds)
       .where('reference_type', 'SaleInvoice')
       .where('reference_id', saleInvoiceId);
@@ -221,15 +241,14 @@ export default class SalesEstimatesController extends BaseController {
    * @param {Response} res -
    * @return {Response} res -
    */
-  static async newEstimate(req, res) {
-    const estimate = {
-      ...req.body,
-      entries: req.body.entries.map((entry) => ({
-        ...entry,
-        amount: ItemEntry.calcAmount(entry),
-      })),
-    };
-    const storedEstimate = await SaleEstimateService.createEstimate(estimate);
+  async newEstimate(req: Request, res: Response) {
+    const { tenantId } = req;
+    const estimateOTD: ISaleEstimateOTD = matchedData(req, {
+      locations: ['body'],
+      includeOptionals: true,
+    });
+    const storedEstimate = await this.saleEstimateService
+      .createEstimate(tenantId, estimateOTD);
 
     return res.status(200).send({ id: storedEstimate.id });
   }
@@ -239,12 +258,16 @@ export default class SalesEstimatesController extends BaseController {
    * @param {Request} req 
    * @param {Response} res 
    */
-  static async editEstimate(req, res) {
+  async editEstimate(req: Request, res: Response) {
     const { id: estimateId } = req.params;
-    const estimate = { ...req.body };
+    const { tenantId } = req;
 
+    const estimateOTD: ISaleEstimateOTD = matchedData(req, {
+      locations: ['body'],
+      includeOptionals: true,
+    });
     // Update estimate with associated estimate entries.
-    await SaleEstimateService.editEstimate(estimateId, estimate);
+    await this.saleEstimateService.editEstimate(tenantId, estimateId, estimateOTD);
 
     return res.status(200).send({ id: estimateId });
   }
@@ -254,9 +277,11 @@ export default class SalesEstimatesController extends BaseController {
    * @param {Request} req 
    * @param {Response} res 
    */
-  static async deleteEstimate(req, res) {
+  async deleteEstimate(req: Request, res: Response) {
     const { id: estimateId } = req.params;
-    await SaleEstimateService.deleteEstimate(estimateId);
+    const { tenantId } = req;
+
+    await this.saleEstimateService.deleteEstimate(tenantId, estimateId);
 
     return res.status(200).send({ id: estimateId });  
   }
@@ -264,9 +289,12 @@ export default class SalesEstimatesController extends BaseController {
   /**
    * Retrieve the given estimate with associated entries.
    */
-  static async getEstimate(req, res) {
+  async getEstimate(req: Request, res: Response) {
     const { id: estimateId } = req.params;
-    const estimate = await SaleEstimateService.getEstimateWithEntries(estimateId);
+    const { tenantId } = req;
+
+    const estimate = await this.saleEstimateService
+      .getEstimateWithEntries(tenantId, estimateId);
 
     return res.status(200).send({ estimate });
   }
@@ -276,7 +304,7 @@ export default class SalesEstimatesController extends BaseController {
    * @param {Request} req 
    * @param {Response} res 
    */
-  static async getEstimates(req, res) {
+  async getEstimates(req: Request, res: Response) {
     const filter = {
       filter_roles: [],
       sort_order: 'asc',
@@ -288,7 +316,7 @@ export default class SalesEstimatesController extends BaseController {
       filter.filter_roles = JSON.parse(filter.stringified_filter_roles);
     }
     const { SaleEstimate, Resource, View } = req.models;
-    const resource = await Resource.tenant().query()
+    const resource = await Resource.query()
       .remember()
       .where('name', 'sales_estimates')
       .withGraphFetched('fields')

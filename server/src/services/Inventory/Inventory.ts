@@ -1,23 +1,26 @@
-import { Container } from 'typedi';
-import {
-  InventoryTransaction,
-  Item,
-  Option,
-} from '@/models';
+import { Container, Service, Inject } from 'typedi';
 import InventoryAverageCost from '@/services/Inventory/InventoryAverageCost';
 import InventoryCostLotTracker from '@/services/Inventory/InventoryCostLotTracker';
+import TenancyService from '@/services/Tenancy/TenancyService';
 
 type TCostMethod = 'FIFO' | 'LIFO' | 'AVG';
 
+@Service()
 export default class InventoryService {
+  @Inject()
+  tenancy: TenancyService;
+
   /**
    * Computes the given item cost and records the inventory lots transactions
    * and journal entries based on the cost method FIFO, LIFO or average cost rate.
+   * @param {number} tenantId -
    * @param {Date} fromDate -
    * @param {number} itemId -
    */
-  static async computeItemCost(fromDate: Date, itemId: number) {
-    const item = await Item.tenant().query()
+  async computeItemCost(tenantId: number, fromDate: Date, itemId: number) {
+    const { Item } = this.tenancy.models(tenantId);
+
+    const item = await Item.query()
       .findById(itemId)
       .withGraphFetched('category');
 
@@ -42,30 +45,34 @@ export default class InventoryService {
   }
 
   /**
-   * SChedule item cost compute job.
+   * Schedule item cost compute job.
+   * @param {number} tenantId
    * @param {number} itemId 
    * @param {Date} startingDate 
    */
-  static async scheduleComputeItemCost(itemId: number, startingDate: Date|string) {
+  async scheduleComputeItemCost(tenantId: number, itemId: number, startingDate: Date|string) {
     const agenda = Container.get('agenda');
 
     return agenda.schedule('in 3 seconds', 'compute-item-cost', {
-      startingDate, itemId,
+      startingDate, itemId, tenantId,
     });
   }
 
   /**
    * Records the inventory transactions. 
+   * @param {number} tenantId - Tenant id.
    * @param {Bill} bill 
    * @param {number} billId 
    */
-  static async recordInventoryTransactions(
+  async recordInventoryTransactions(
+    tenantId: number,
     entries: [],
     deleteOld: boolean,
   ) {
+    const { InventoryTransaction, Item } = this.tenancy.models(tenantId);
+
     const entriesItemsIds = entries.map((e: any) => e.item_id);
-    const inventoryItems = await Item.tenant()
-      .query()
+    const inventoryItems = await Item.query()
       .whereIn('id', entriesItemsIds)
       .where('type', 'inventory');
 
@@ -78,11 +85,12 @@ export default class InventoryService {
     inventoryEntries.forEach(async (entry: any) => {
       if (deleteOld) {
         await this.deleteInventoryTransactions(
+          tenantId,
           entry.transactionId,
           entry.transactionType,
         );
       }
-      await InventoryTransaction.tenant().query().insert({
+      await InventoryTransaction.query().insert({
         ...entry,
         lotNumber: entry.lotNumber,
       });
@@ -91,15 +99,19 @@ export default class InventoryService {
 
   /**
    * Deletes the given inventory transactions.
+   * @param {number} tenantId - Tenant id.
    * @param {string} transactionType 
    * @param {number} transactionId 
    * @return {Promise}
    */
-  static deleteInventoryTransactions(
+  deleteInventoryTransactions(
+    tenantId: number,
     transactionId: number,
     transactionType: string,
   ) {
-    return InventoryTransaction.tenant().query()
+    const { InventoryTransaction } = this.tenancy.models(tenantId);
+
+    return InventoryTransaction.query()
       .where('transaction_type', transactionType)
       .where('transaction_id', transactionId)
       .delete();
@@ -107,21 +119,24 @@ export default class InventoryService {
 
   /**
    * Retrieve the lot number after the increment.
+   * @param {number} tenantId - Tenant id.
    */
-  static async nextLotNumber() {
+  async nextLotNumber(tenantId: number) {
+    const { Option } = this.tenancy.models(tenantId);
+
     const LOT_NUMBER_KEY = 'lot_number_increment';
-    const effectRows = await Option.tenant().query()
+    const effectRows = await Option.query()
       .where('key', LOT_NUMBER_KEY)
       .increment('value', 1);
 
     if (effectRows === 0) {
-      await Option.tenant().query()
+      await Option.query()
         .insert({
           key: LOT_NUMBER_KEY,
           value: 1,
         });
     }
-    const options = await Option.tenant().query();
+    const options = await Option.query();
     return options.getMeta(LOT_NUMBER_KEY, 1);
   }
 }

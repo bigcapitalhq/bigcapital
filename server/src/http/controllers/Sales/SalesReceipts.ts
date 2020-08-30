@@ -1,9 +1,8 @@
-import express from 'express';
-import { check, param, query } from 'express-validator';
-import { ItemEntry } from '@/models';
+import { Router, Request, Response } from 'express';
+import { check, param, query, matchedData } from 'express-validator';
+import { Inject, Service } from 'typedi';
 import validateMiddleware from '@/http/middleware/validateMiddleware';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
-import CustomersService from '@/services/Customers/CustomersService';
 import AccountsService from '@/services/Accounts/AccountsService';
 import ItemsService from '@/services/Items/ItemsService';
 import SaleReceiptService from '@/services/Sales/SalesReceipts';
@@ -13,12 +12,22 @@ import {
   dynamicListingErrorsToResponse
 } from '@/services/DynamicListing/HasDynamicListing';
 
+@Service()
 export default class SalesReceiptsController {
+  @Inject()
+  saleReceiptService: SaleReceiptService;
+
+  @Inject()
+  accountsService: AccountsService;
+
+  @Inject()
+  itemsService: ItemsService;
+
   /**
    * Router constructor.
    */
-  static router() {
-    const router = express.Router();
+  router() {
+    const router = Router();
 
     router.post(
       '/:id', [
@@ -26,34 +35,34 @@ export default class SalesReceiptsController {
         ...this.salesReceiptsValidationSchema,
       ],
       validateMiddleware,
-      asyncMiddleware(this.validateSaleReceiptExistance),
-      asyncMiddleware(this.validateReceiptCustomerExistance),
-      asyncMiddleware(this.validateReceiptDepositAccountExistance),
-      asyncMiddleware(this.validateReceiptItemsIdsExistance),
-      asyncMiddleware(this.validateReceiptEntriesIds),
-      asyncMiddleware(this.editSaleReceipt)
+      asyncMiddleware(this.validateSaleReceiptExistance.bind(this)),
+      asyncMiddleware(this.validateReceiptCustomerExistance.bind(this)),
+      asyncMiddleware(this.validateReceiptDepositAccountExistance.bind(this)),
+      asyncMiddleware(this.validateReceiptItemsIdsExistance.bind(this)),
+      asyncMiddleware(this.validateReceiptEntriesIds.bind(this)),
+      asyncMiddleware(this.editSaleReceipt.bind(this))
     );
     router.post(
       '/',
       this.salesReceiptsValidationSchema,
       validateMiddleware,
-      asyncMiddleware(this.validateReceiptCustomerExistance),
-      asyncMiddleware(this.validateReceiptDepositAccountExistance),
-      asyncMiddleware(this.validateReceiptItemsIdsExistance),
-      asyncMiddleware(this.newSaleReceipt)
+      asyncMiddleware(this.validateReceiptCustomerExistance.bind(this)),
+      asyncMiddleware(this.validateReceiptDepositAccountExistance.bind(this)),
+      asyncMiddleware(this.validateReceiptItemsIdsExistance.bind(this)),
+      asyncMiddleware(this.newSaleReceipt.bind(this))
     );
     router.delete(
       '/:id',
       this.specificReceiptValidationSchema,
       validateMiddleware,
-      asyncMiddleware(this.validateSaleReceiptExistance),
-      asyncMiddleware(this.deleteSaleReceipt)
+      asyncMiddleware(this.validateSaleReceiptExistance.bind(this)),
+      asyncMiddleware(this.deleteSaleReceipt.bind(this))
     );
     router.get(
       '/',
       this.listSalesReceiptsValidationSchema,
       validateMiddleware,
-      asyncMiddleware(this.listingSalesReceipts)
+      asyncMiddleware(this.listingSalesReceipts.bind(this))
     );
     return router;
   }
@@ -62,7 +71,7 @@ export default class SalesReceiptsController {
    * Sales receipt validation schema.
    * @return {Array}
    */
-  static get salesReceiptsValidationSchema() {
+  get salesReceiptsValidationSchema() {
     return [
       check('customer_id').exists().isNumeric().toInt(),
       check('deposit_account_id').exists().isNumeric().toInt(),
@@ -88,7 +97,7 @@ export default class SalesReceiptsController {
   /**
    * Specific sale receipt validation schema.
    */
-  static get specificReceiptValidationSchema() {
+  get specificReceiptValidationSchema() {
     return [
       param('id').exists().isNumeric().toInt()
     ];
@@ -97,7 +106,7 @@ export default class SalesReceiptsController {
   /**
    * List sales receipts validation schema.
    */
-  static get listSalesReceiptsValidationSchema() {
+  get listSalesReceiptsValidationSchema() {
     return [
       query('custom_view_id').optional().isNumeric().toInt(),
       query('stringified_filter_roles').optional().isJSON(),
@@ -113,11 +122,15 @@ export default class SalesReceiptsController {
    * @param {Request} req 
    * @param {Response} res 
    */
-  static async validateSaleReceiptExistance(req, res, next) {
+  async validateSaleReceiptExistance(req: Request, res: Response, next: Function) {
+    const { tenantId } = req;
     const { id: saleReceiptId } = req.params;
-    const isSaleReceiptExists = await SaleReceiptService.isSaleReceiptExists(
-      saleReceiptId
-    );
+
+    const isSaleReceiptExists = await this.saleReceiptService
+      .isSaleReceiptExists(
+        tenantId,
+        saleReceiptId,
+      );
     if (!isSaleReceiptExists) {
       return res.status(404).send({
         errors: [{ type: 'SALE.RECEIPT.NOT.FOUND', code: 200 }],
@@ -132,12 +145,13 @@ export default class SalesReceiptsController {
    * @param {Response} res 
    * @param {Function} next 
    */
-  static async validateReceiptCustomerExistance(req, res, next) {
+  async validateReceiptCustomerExistance(req: Request, res: Response, next: Function) {
     const saleReceipt = { ...req.body };
-    const isCustomerExists = await CustomersService.isCustomerExists(
-      saleReceipt.customer_id
-    );
-    if (!isCustomerExists) {
+    const { Customer } = req.models;
+
+    const foundCustomer = await Customer.query().findById(saleReceipt.customer_id);
+
+    if (!foundCustomer) {
       return res.status(400).send({ 
         errors: [{ type: 'CUSTOMER.ID.NOT.EXISTS', code: 200 }],
       });
@@ -151,9 +165,12 @@ export default class SalesReceiptsController {
    * @param {Response} res 
    * @param {Function} next 
    */
-  static async validateReceiptDepositAccountExistance(req, res, next) {
+  async validateReceiptDepositAccountExistance(req: Request, res: Response, next: Function) {
+    const { tenantId } = req;
+
     const saleReceipt = { ...req.body };
-    const isDepositAccountExists = await AccountsService.isAccountExists(
+    const isDepositAccountExists = await this.accountsService.isAccountExists(
+      tenantId,
       saleReceipt.deposit_account_id
     );
     if (!isDepositAccountExists) {
@@ -170,10 +187,14 @@ export default class SalesReceiptsController {
    * @param {Response} res 
    * @param {Function} next 
    */
-  static async validateReceiptItemsIdsExistance(req, res, next) {
+  async validateReceiptItemsIdsExistance(req: Request, res: Response, next: Function) {
+    const { tenantId } = req;
+
     const saleReceipt = { ...req.body };    
     const estimateItemsIds = saleReceipt.entries.map((e) => e.item_id);
-    const notFoundItemsIds = await ItemsService.isItemsIdsExists(
+
+    const notFoundItemsIds = await this.itemsService.isItemsIdsExists(
+      tenantId,
       estimateItemsIds
     );
     if (notFoundItemsIds.length > 0) {
@@ -188,15 +209,19 @@ export default class SalesReceiptsController {
    * @param {Response} res 
    * @param {Function} next 
    */
-  static async validateReceiptEntriesIds(req, res, next) {
+  async validateReceiptEntriesIds(req: Request, res: Response, next: Function) {
+    const { tenantId } = req;
+
     const saleReceipt = { ...req.body };
     const { id: saleReceiptId } = req.params;
 
     // Validate the entries IDs that not stored or associated to the sale receipt.
-    const notExistsEntriesIds = await SaleReceiptService.isSaleReceiptEntriesIDsExists(
-      saleReceiptId,
-      saleReceipt
-    );
+    const notExistsEntriesIds = await this.saleReceiptService
+      .isSaleReceiptEntriesIDsExists(
+        tenantId,
+        saleReceiptId,
+        saleReceipt,
+      );
     if (notExistsEntriesIds.length > 0) {
       return res.status(400).send({ errors: [{
           type: 'ENTRIES.IDS.NOT.FOUND',
@@ -212,19 +237,19 @@ export default class SalesReceiptsController {
    * @param {Request} req 
    * @param {Response} res 
    */
-  static async newSaleReceipt(req, res) {
-    const saleReceipt = {
-      ...req.body,
-      entries: req.body.entries.map((entry) => ({
-        ...entry,
-        amount: ItemEntry.calcAmount(entry),
-      })),
-    };
+  async newSaleReceipt(req: Request, res: Response) {
+    const { tenantId } = req;
 
+    const saleReceipt = matchedData(req, {
+      locations: ['body'],
+      includeOptionals: true,
+    });
     // Store the given sale receipt details with associated entries.
-    const storedSaleReceipt = await SaleReceiptService.createSaleReceipt(
-      saleReceipt
-    );
+    const storedSaleReceipt = await this.saleReceiptService
+      .createSaleReceipt(
+        tenantId,
+        saleReceipt,
+      );
     return res.status(200).send({ id: storedSaleReceipt.id });
   }
 
@@ -233,11 +258,12 @@ export default class SalesReceiptsController {
    * @param {Request} req 
    * @param {Response} res 
    */
-  static async deleteSaleReceipt(req, res) {
+  async deleteSaleReceipt(req: Request, res: Response) {
+    const { tenantId } = req;
     const { id: saleReceiptId } = req.params;
 
     // Deletes the sale receipt.
-    await SaleReceiptService.deleteSaleReceipt(saleReceiptId);
+    await this.saleReceiptService.deleteSaleReceipt(tenantId, saleReceiptId);
 
     return res.status(200).send({ id: saleReceiptId });  
   }
@@ -248,9 +274,12 @@ export default class SalesReceiptsController {
    * @param {Request} req 
    * @param {Response} res 
    */
-  static async editSaleReceipt(req, res) {
+  async editSaleReceipt(req: Request, res: Response) {
+    const { tenantId } = req;
+
     const { id: saleReceiptId } = req.params;
     const saleReceipt = { ...req.body };
+
     const errorReasons = [];
     
     // Handle all errors with reasons messages.
@@ -258,7 +287,11 @@ export default class SalesReceiptsController {
       return res.boom.badRequest(null, { errors: errorReasons });
     }
     // Update the given sale receipt details.
-    await SaleReceiptService.editSaleReceipt(saleReceiptId, saleReceipt);
+    await this.saleReceiptService.editSaleReceipt(
+      tenantId,
+      saleReceiptId,
+      saleReceipt,
+    );
 
     return res.status(200).send();
   }
@@ -268,7 +301,7 @@ export default class SalesReceiptsController {
    * @param {Request} req 
    * @param {Response} res
    */
-  static async listingSalesReceipts(req, res) {
+  async listingSalesReceipts(req: Request, res: Response) {
     const filter = {
       filter_roles: [],
       sort_order: 'asc',
@@ -280,7 +313,7 @@ export default class SalesReceiptsController {
       filter.filter_roles = JSON.parse(filter.stringified_filter_roles);
     }
     const { SaleReceipt, Resource, View } = req.models;
-    const resource = await Resource.tenant().query()
+    const resource = await Resource.query()
       .remember()
       .where('name', 'sales_receipts')
       .withGraphFetched('fields')

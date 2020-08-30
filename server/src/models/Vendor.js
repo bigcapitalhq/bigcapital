@@ -25,8 +25,7 @@ export default class Vendor extends TenantModel {
   static async changeBalance(vendorId, amount) {
     const changeMethod = amount > 0 ? 'increment' : 'decrement';
 
-    return this.tenant()
-      .query()
+    return this.query()
       .where('id', vendorId)
       [changeMethod]('balance', Math.abs(amount));
   }  

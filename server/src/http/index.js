@@ -49,7 +49,7 @@ export default (app) => {
   dashboard.use('/api/account_types', AccountTypes.router());
   dashboard.use('/api/accounting', Accounting.router());
   dashboard.use('/api/views', Views.router());
-  dashboard.use('/api/items', Items.router());
+  dashboard.use('/api/items', Container.get(Items).router());
   dashboard.use('/api/item_categories', Container.get(ItemCategories));
   dashboard.use('/api/expenses', Expenses.router());
   dashboard.use('/api/financial_statements', FinancialStatements.router());
@@ -61,7 +61,7 @@ export default (app) => {
   dashboard.use('/api/resources', Resources.router());
   dashboard.use('/api/exchange_rates', ExchangeRates.router());
   dashboard.use('/api/media', Media.router());
-    
+
   app.use('/agendash', Agendash.router());
   app.use('/', dashboard);
 };

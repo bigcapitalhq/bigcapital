@@ -1,5 +1,9 @@
 import { IInventoryTransaction, IInventoryLotCost } from './InventoryTransaction';
-import { IBillPaymentEntry, IBillPayment } from './BillPayment';
+import {
+  IBillPaymentEntry,
+  IBillPayment,
+  IBillPaymentOTD,
+} from './BillPayment';
 import { IInventoryCostMethod } from './InventoryCostMethod';
 import { IItemEntry } from './ItemEntry';
 import { IItem } from './Item';
@@ -16,10 +20,20 @@ import {
   ISaleInvoice,
   ISaleInvoiceOTD,
 } from './SaleInvoice';
+import {
+  IPaymentReceive,
+  IPaymentReceiveOTD,
+} from './PaymentReceive';
+import {
+  ISaleEstimate,
+  ISaleEstimateOTD,
+} from './SaleEstimate';
 
 export {
   IBillPaymentEntry,
   IBillPayment,
+  IBillPaymentOTD,
+
   IInventoryTransaction,
   IInventoryLotCost,
   IInventoryCostMethod,
@@ -38,4 +52,10 @@ export {
 
   ISaleInvoice,
   ISaleInvoiceOTD,
+
+  ISaleEstimate,
+  ISaleEstimateOTD,
+
+  IPaymentReceive,
+  IPaymentReceiveOTD,
 };
