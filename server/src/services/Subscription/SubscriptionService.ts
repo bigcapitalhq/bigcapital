@@ -1,11 +1,19 @@
-import { Service } from 'typedi';
+import { Service, Inject } from 'typedi';
 import { Plan, Tenant, Voucher } from '@/system/models';
 import Subscription from '@/services/Subscription/Subscription';
 import VocuherPaymentMethod from '@/services/Payment/VoucherPaymentMethod';
 import PaymentContext from '@/services/Payment';
+import SubscriptionSMSMessages from '@/services/Subscription/SMSMessages';
+import SubscriptionMailMessages from '@/services/Subscription/MailMessages';
 
 @Service()
 export default class SubscriptionService {
+  @Inject()
+  smsMessages: SubscriptionSMSMessages;
+
+  @Inject()
+  mailMessages: SubscriptionMailMessages;
+
   /**
    * Handles the payment process via voucher code and than subscribe to 
    * the given tenant.

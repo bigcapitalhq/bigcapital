@@ -12,14 +12,4 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-console.log({
-  host: config.mail.host,
-  port: config.mail.port,
-  secure: config.mail.secure, // true for 465, false for other ports
-  auth: {
-    user: config.mail.username,
-    pass: config.mail.password,
-  },
-});
-
 export default transporter;

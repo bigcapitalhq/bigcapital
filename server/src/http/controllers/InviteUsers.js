@@ -10,7 +10,6 @@ import path from 'path';
 import fs from 'fs';
 import Mustache from 'mustache';
 import moment from 'moment';
-import mail from '@/services/mail';
 import { hashPassword } from '@/utils';
 import SystemUser from '@/system/models/SystemUser';
 import Invite from '@/system/models/Invite';

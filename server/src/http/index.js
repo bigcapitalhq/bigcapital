@@ -31,7 +31,7 @@ import TenantDependencyInjection from '@/http/middleware/TenantDependencyInjecti
 import SubscriptionMiddleware from '@/http/middleware/SubscriptionMiddleware';
 
 export default (app) => {
-  app.use('/api/auth', Authentication.router());
+  app.use('/api/auth', Container.get(Authentication).router());
   app.use('/api/invite', InviteUsers.router());
   app.use('/api/vouchers', Container.get(VouchersController).router());
   app.use('/api/subscription', Container.get(Subscription).router());

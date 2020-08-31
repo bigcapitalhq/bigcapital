@@ -28,6 +28,13 @@ import {
   ISaleEstimate,
   ISaleEstimateOTD,
 } from './SaleEstimate';
+import {
+  IRegisterDTO,
+} from './Register';
+import {
+  ISystemUser,
+  ISystemUserDTO,
+} from './User';
 
 export {
   IBillPaymentEntry,
@@ -58,4 +65,8 @@ export {
 
   IPaymentReceive,
   IPaymentReceiveOTD,
+
+  IRegisterDTO,
+  ISystemUser,
+  ISystemUserDTO,
 };

@@ -1,7 +1,7 @@
 import Container from 'typedi';
 import SubscriptionService from '@/services/Subscription/Subscription';
 
-export default class MailNotificationSubscribeEnd {
+export default class MailNotificationTrialEnd {
   /**
    * 
    * @param {Job} job -

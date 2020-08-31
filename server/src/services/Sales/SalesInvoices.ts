@@ -326,7 +326,7 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
   /**
    * Schedules compute sale invoice items cost based on each item 
    * cost method.
-   * @param {ISaleInvoice} saleInvoice 
+   * @param  {ISaleInvoice} saleInvoice 
    * @return {Promise}
    */
   async scheduleComputeInvoiceItemsCost(
@@ -343,7 +343,7 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
       .filter((entry: IItemEntry) => entry.item.type === 'inventory')
       .map((entry: IItemEntry) => entry.itemId)
       .uniq().value();
-    
+
     if (inventoryItemsIds.length === 0) {
       await this.writeNonInventoryInvoiceJournals(tenantId, saleInvoice, override);
     } else {

@@ -1,5 +1,6 @@
 import Knex from 'knex';
 import { knexSnakeCaseMappers } from 'objection';
+import { Service } from 'typedi';
 import Tenant from '@/system/models/Tenant';
 import config from '@/../config/config';
 import TenantModel from '@/models/TenantModel';
@@ -17,13 +18,14 @@ import TenantUser from '@/models/TenantUser';
 //   tenantOrganizationId: String,
 // }
 
+@Service()
 export default class TenantsManager {
 
   constructor() {
     this.knexCache = new Map();
   }
 
-  static async getTenant(organizationId) {
+  async getTenant(organizationId) {
     const tenant = await Tenant.query()
       .where('organization_id', organizationId).first();
 
@@ -35,7 +37,7 @@ export default class TenantsManager {
    * @param {Integer} uniqId 
    * @return {TenantWebsite}
    */
-  static async createTenant(uniqId) {
+  async createTenant(uniqId) {
     const organizationId = uniqId || uniqid();
     const tenantOrganization = await Tenant.query().insert({
       organization_id: organizationId,
@@ -58,7 +60,7 @@ export default class TenantsManager {
    * Drop tenant database of the given tenant website.
    * @param {TenantWebsite} tenantWebsite 
    */
-  static async dropTenant(tenantWebsite) {
+  async dropTenant(tenantWebsite) {
     const tenantDbName = `bigcapital_tenant_${tenantWebsite.organizationId}`;
     await dbManager.dropDb(tenantDbName);
 
@@ -69,7 +71,7 @@ export default class TenantsManager {
   /**
    * Creates a user that associate to the given tenant.
    */
-  static async createTenantUser(tenantWebsite, user) {
+  async createTenantUser(tenantWebsite, user) {
     const userInsert = { ...user };
 
     const systemUser = await SystemUser.query().insert({
@@ -92,7 +94,7 @@ export default class TenantsManager {
   /**
    * Retrieve all tenants metadata from system storage.
    */
-  static getAllTenants() {
+  getAllTenants() {
     return Tenant.query();
   }
 
@@ -100,7 +102,7 @@ export default class TenantsManager {
    * Retrieve the given organization id knex configuration.
    * @param {String} organizationId -
    */
-  static getTenantKnexConfig(organizationId) {
+  getTenantKnexConfig(organizationId) {
     return {
       client: config.tenant.db_client,
       connection: {
@@ -120,7 +122,7 @@ export default class TenantsManager {
     };
   }
 
-  static knexInstance(organizationId) {
+  knexInstance(organizationId) {
     const knexCache = new Map();
     let knex = knexCache.get(organizationId);
 

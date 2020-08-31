@@ -67,5 +67,6 @@ module.exports = {
   },
   easySMSGateway: {
     api_key: 'b0JDZW56RnV6aEthb0RGPXVEcUI'
-  }
+  },
+  jwtSecret: 'b0JDZW56RnV6aEthb0RGPXVEcUI',
 };

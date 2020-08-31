@@ -2,6 +2,7 @@ import { Container } from 'typedi';
 import LoggerInstance from '@/services/Logger';
 import agendaFactory from '@/loaders/agenda';
 import SmsClientLoader from '@/loaders/smsClient';
+import mailInstance from '@/loaders/mail';
 
 export default ({ mongoConnection, knex }) => {
   try {
@@ -19,6 +20,9 @@ export default ({ mongoConnection, knex }) => {
 
     Container.set('SMSClient', smsClientInstance);
     LoggerInstance.info('SMS client has been injected into container');
+
+    Container.set('mail', mailInstance);
+    LoggerInstance.info('Mail instance has been injected into container');
 
     return { agenda: agendaInstance };
   } catch (e) {
