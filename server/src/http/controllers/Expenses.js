@@ -20,7 +20,6 @@ export default {
    */
   router() {
     const router = express.Router();
-    router.use(JWTAuth);
 
     router.post(
       '/',

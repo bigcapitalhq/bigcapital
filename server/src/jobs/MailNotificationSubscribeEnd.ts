@@ -3,7 +3,7 @@ import SubscriptionService from '@/services/Subscription/Subscription';
 
 export default class MailNotificationSubscribeEnd {
   /**
-   * 
+   * Job handler.
    * @param {Job} job -
    */
   handler(job) {
@@ -12,15 +12,15 @@ export default class MailNotificationSubscribeEnd {
     const subscriptionService = Container.get(SubscriptionService);
     const Logger = Container.get('logger');
 
-    Logger.debug(`Send mail notification subscription end soon - started: ${job.attrs.data}`);
+    Logger.info(`Send mail notification subscription end soon - started: ${job.attrs.data}`);
 
     try {
       subscriptionService.mailMessages.sendRemainingTrialPeriod(
         phoneNumber, remainingDays,
       );
-      Logger.debug(`Send mail notification subscription end soon - finished: ${job.attrs.data}`);
+      Logger.info(`Send mail notification subscription end soon - finished: ${job.attrs.data}`);
     } catch(error) {
-      Logger.error(`Send mail notification subscription end soon - failed: ${job.attrs.data}, error: ${e}`);
+      Logger.info(`Send mail notification subscription end soon - failed: ${job.attrs.data}, error: ${e}`);
       done(e);
     }
   }

@@ -7,15 +7,15 @@ export default class WriteInvoicesJournalEntries {
     const Logger = Container.get('logger');
     const { startingDate } = job.attrs.data;
 
-    Logger.debug(`Write sales invoices journal entries - started: ${job.attrs.data}`);
+    Logger.info(`Write sales invoices journal entries - started: ${job.attrs.data}`);
   
     try {
       await SalesInvoicesCost.writeJournalEntries(startingDate, true);
-      Logger.debug(`Write sales invoices journal entries - completed: ${job.attrs.data}`);
+      Logger.info(`Write sales invoices journal entries - completed: ${job.attrs.data}`);
       done();
     } catch(e) {
       console.log(e);
-      Logger.error(`Write sales invoices journal entries: ${job.attrs.data}, error: ${e}`);
+      Logger.info(`Write sales invoices journal entries: ${job.attrs.data}, error: ${e}`);
       done(e); 
     }
   }

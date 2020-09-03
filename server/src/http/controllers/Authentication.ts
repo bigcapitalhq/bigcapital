@@ -1,17 +1,15 @@
 import { Request, Response, Router } from 'express';
-import { check, validationResult, matchedData, ValidationChain } from 'express-validator';
+import { check, ValidationChain } from 'express-validator';
 import { Service, Inject } from 'typedi';
-import { camelCase, mapKeys } from 'lodash';
+import BaseController from '@/http/controllers/BaseController';
 import validateMiddleware from '@/http/middleware/validateMiddleware';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
-import prettierMiddleware from '@/http/middleware/prettierMiddleware';
 import AuthenticationService from '@/services/Authentication';
 import { IUserOTD, ISystemUser, IRegisterOTD } from '@/interfaces';
 import { ServiceError, ServiceErrors } from "@/exceptions";
-import { IRegisterDTO } from 'src/interfaces';
 
 @Service()
-export default class AuthenticationController {
+export default class AuthenticationController extends BaseController{
   @Inject()
   authService: AuthenticationService;
 
@@ -88,6 +86,9 @@ export default class AuthenticationController {
     ]
   }
 
+  /**
+   * Send reset password validation schema.
+   */
   get sendResetPasswordSchema(): ValidationChain[] {
     return [
       check('email').exists().isEmail().trim().escape(),
@@ -100,10 +101,7 @@ export default class AuthenticationController {
    * @param {Response} res 
    */
   async login(req: Request, res: Response, next: Function): Response {
-    const userDTO: IUserOTD = mapKeys(matchedData(req, {
-      locations: ['body'],
-      includeOptionals: true,
-    }), (v, k) => camelCase(k));
+    const userDTO: IUserOTD = this.matchedBodyData(req);
 
     try {
       const { token, user } = await this.authService.signIn(
@@ -134,13 +132,10 @@ export default class AuthenticationController {
    * @param {Response} res 
    */
   async register(req: Request, res: Response, next: Function) {
-    const registerDTO: IRegisterDTO = mapKeys(matchedData(req, {
-      locations: ['body'],
-      includeOptionals: true,
-    }), (v, k) => camelCase(k));
+    const registerDTO: IRegisterOTD = this.matchedBodyData(req);
 
     try {
-      const registeredUser = await this.authService.register(registerDTO);
+      const registeredUser: ISystemUser = await this.authService.register(registerDTO);
 
       return res.status(200).send({
         code: 'REGISTER.SUCCESS',
@@ -170,7 +165,7 @@ export default class AuthenticationController {
    * @param {Response} res 
    */
   async sendResetPassword(req: Request, res: Response, next: Function) {
-    const { email } = req.body;
+    const { email } = this.matchedBodyData(req);
 
     try {
       await this.authService.sendResetPassword(email);

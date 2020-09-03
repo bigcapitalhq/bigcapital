@@ -1,34 +1,29 @@
-import fs from 'fs';
-import path from 'path';
-import TenantsManager from '@/system/TenantsManager';
-import TenantModel from '@/models/TenantModel';
 import { Container } from 'typedi';
-
-function loadModelsFromDirectory() {
-  const models = {};
-  fs.readdirSync('src/models/').forEach((filename) => {
-    const model = {
-      path: path.join(__dirname, 'src/models/', filename),
-      name: filename.replace(/\.[^/.]+$/, ''),
-    };
-    // eslint-disable-next-line global-require
-    model.resource = require(`@/models/${model.name}`);
-    models[model.name] = model;
-  });
-  return models;
-}
+import TenantsManager from '@/system/TenantsManager';
+import tenantModelsLoader from '@/loaders/tenantModels';
 
 export default async (req, res, next) => {
+  const Logger = Container.get('logger');
   const organizationId = req.headers['organization-id'] || req.query.organization;
-  const notFoundOrganization = () => res.boom.unauthorized(
-    'Organization identication not found.',
-    { errors: [{ type: 'ORGANIZATION.ID.NOT.FOUND', code: 100 }] },
-  );
 
+  const notFoundOrganization = () => {
+    Logger.info('[tenancy_middleware] organization id not found.');
+    return res.boom.unauthorized(
+      'Organization identication not found.',
+      { errors: [{ type: 'ORGANIZATION.ID.NOT.FOUND', code: 100 }] },
+    );
+  }
+  // In case the given organization not found.
   if (!organizationId) {
     return notFoundOrganization();
   }
-  const tenant = await TenantsManager.getTenant(organizationId);
+  const tenantsManager = Container.get(TenantsManager);
+
+  Logger.info('[tenancy_middleware] trying get tenant by org. id from storage.');
+  const tenant = await tenantsManager.getTenant(organizationId);
+
+  Logger.info('[tenancy_middleware] initializing tenant knex instance.');
+  const tenantKnex = tenantsManager.knexInstance(organizationId);
 
   // When the given organization id not found on the system storage.
   if (!tenant) {
@@ -36,30 +31,22 @@ export default async (req, res, next) => {
   }
   // When user tenant not match the given organization id.
   if (tenant.id !== req.user.tenantId) {
+    Logger.info('[tenancy_middleware] authorized user not match org. tenant.');
     return res.boom.unauthorized();
   }
-  const knex = TenantsManager.knexInstance(organizationId);
-  const models = loadModelsFromDirectory();
-
-  TenantModel.knexBinded = knex;
-
-  req.knex = knex;
+  const models = tenantModelsLoader(tenantKnex);
+  
+  req.knex = tenantKnex;
   req.organizationId = organizationId;
   req.tenant = tenant;
-  req.tenantId = tenant.id;
-  req.models = {
-    ...Object.values(models).reduce((acc, model) => {      
-      if (typeof model.resource.default !== 'undefined' &&
-        typeof model.resource.default.requestModel === 'function' && 
-        model.resource.default.requestModel() &&
-        model.name !== 'TenantModel') {
-        acc[model.name] = model.resource.default.bindKnex(knex);
-      }
-      return acc;
-    }, {}),
-  };
-  Container.of(`tenant-${tenant.id}`).set('models', {
-    ...req.models,
-  });
+  req.models = models;
+
+  const tenantContainer = Container.of(`tenant-${tenant.id}`);
+
+  tenantContainer.set('models', models);
+  tenantContainer.set('knex', tenantKnex);
+  tenantContainer.set('tenant', tenant);
+  Logger.info('[tenancy_middleware] tenant dependencies injected to container.');
+
   next();
-};
+}

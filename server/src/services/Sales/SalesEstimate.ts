@@ -16,6 +16,9 @@ export default class SaleEstimateService {
   @Inject()
   itemsEntriesService: HasItemsEntries;
 
+  @Inject('logger')
+  logger: any;
+
   /**
    * Creates a new estimate with associated entries.
    * @async
@@ -31,12 +34,15 @@ export default class SaleEstimateService {
       amount,
       ...formatDateFields(estimateDTO, ['estimate_date', 'expiration_date']),
     };
+
+    this.logger.info('[sale_estimate] inserting sale estimate to the storage.');
     const storedEstimate = await SaleEstimate.query()
       .insert({
         ...omit(estimate, ['entries']),
       });
     const storeEstimateEntriesOpers: any[] = [];
 
+    this.logger.info('[sale_estimate] inserting sale estimate entries to the storage.');
     estimate.entries.forEach((entry: any) => {
       const oper = ItemEntry.query()
         .insert({
@@ -47,6 +53,8 @@ export default class SaleEstimateService {
       storeEstimateEntriesOpers.push(oper);
     });
     await Promise.all([...storeEstimateEntriesOpers]);
+
+    this.logger.info('[sale_estimate] insert sale estimated success.');
 
     return storedEstimate;
   }
@@ -67,6 +75,7 @@ export default class SaleEstimateService {
       amount,
       ...formatDateFields(estimateDTO, ['estimate_date', 'expiration_date']),
     };
+    this.logger.info('[sale_estimate] editing sale estimate on the storage.');
     const updatedEstimate = await SaleEstimate.query()
       .update({
         ...omit(estimate, ['entries']),
@@ -96,14 +105,14 @@ export default class SaleEstimateService {
    */
   async deleteEstimate(tenantId: number, estimateId: number) {
     const { SaleEstimate, ItemEntry } = this.tenancy.models(tenantId);
+
+    this.logger.info('[sale_estimate] delete sale estimate and associated entries from the storage.');
     await ItemEntry.query()
       .where('reference_id', estimateId)
       .where('reference_type', 'SaleEstimate')
       .delete();
 
-    await SaleEstimate.query()
-      .where('id', estimateId)
-      .delete();
+    await SaleEstimate.query().where('id', estimateId).delete();
   }
 
   /**
@@ -113,10 +122,10 @@ export default class SaleEstimateService {
    * @param {Numeric} estimateId
    * @return {Boolean}
    */
-  async isEstimateExists(estimateId: number) {
+  async isEstimateExists(tenantId: number, estimateId: number) {
     const { SaleEstimate } = this.tenancy.models(tenantId);
-    const foundEstimate = await SaleEstimate.query()
-      .where('id', estimateId);
+    const foundEstimate = await SaleEstimate.query().where('id', estimateId);
+
     return foundEstimate.length !== 0;
   }
 
@@ -192,7 +201,6 @@ export default class SaleEstimateService {
     const foundEstimates = await SaleEstimate.query()
       .onBuild((query: any) => {
         query.where('estimate_number', estimateNumber);
-
         if (excludeEstimateId) {
           query.whereNot('id', excludeEstimateId);
         }

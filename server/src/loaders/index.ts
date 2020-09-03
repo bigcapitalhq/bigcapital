@@ -1,4 +1,4 @@
-import Logger from '@/services/Logger';
+import Logger from '@/loaders/Logger';
 import mongooseLoader from '@/loaders/mongoose';
 import jobsLoader from '@/loaders/jobs';
 import expressLoader from '@/loaders/express';

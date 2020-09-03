@@ -34,7 +34,18 @@ import {
 import {
   ISystemUser,
   ISystemUserDTO,
+  IInviteUserInput,
 } from './User';
+import {
+  IMetadata,
+  IMetaQuery,
+  IMetableStore,
+  IMetableStoreStorage,
+} from './Metable';
+import {
+  IOptionDTO,
+  IOptionsDTO,
+} from './Options';
 
 export {
   IBillPaymentEntry,
@@ -69,4 +80,13 @@ export {
   IRegisterDTO,
   ISystemUser,
   ISystemUserDTO,
+  IInviteUserInput,
+
+  IMetadata,
+  IMetaQuery,
+  IMetableStore,
+  IMetableStoreStorage,
+
+  IOptionDTO,
+  IOptionsDTO,
 };

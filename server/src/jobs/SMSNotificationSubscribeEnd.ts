@@ -13,15 +13,15 @@ export default class SMSNotificationSubscribeEnd {
     const subscriptionService = Container.get(SubscriptionService);
     const Logger = Container.get('logger');
 
-    Logger.debug(`Send SMS notification subscription end soon - started: ${job.attrs.data}`);
+    Logger.info(`Send SMS notification subscription end soon - started: ${job.attrs.data}`);
 
     try {
       subscriptionService.smsMessages.sendRemainingSubscriptionPeriod(
         phoneNumber, remainingDays,
       );
-      Logger.debug(`Send SMS notification subscription end soon - finished: ${job.attrs.data}`);
+      Logger.info(`Send SMS notification subscription end soon - finished: ${job.attrs.data}`);
     } catch(error) {
-      Logger.error(`Send SMS notification subscription end soon - failed: ${job.attrs.data}, error: ${e}`);
+      Logger.info(`Send SMS notification subscription end soon - failed: ${job.attrs.data}, error: ${e}`);
       done(e);
     }
   }

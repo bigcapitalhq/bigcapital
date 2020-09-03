@@ -25,15 +25,15 @@ export default class ComputeItemCostJob {
     const Logger = Container.get('logger');
     const { startingDate, itemId, costMethod = 'FIFO' } = job.attrs.data;
 
-    Logger.debug(`Compute item cost - started: ${job.attrs.data}`);
+    Logger.info(`Compute item cost - started: ${job.attrs.data}`);
 
     try {
       await InventoryService.computeItemCost(startingDate, itemId, costMethod);  
-      Logger.debug(`Compute item cost - completed: ${job.attrs.data}`);
+      Logger.info(`Compute item cost - completed: ${job.attrs.data}`);
       done();
     } catch(e) {
       console.log(e);
-      Logger.error(`Compute item cost: ${job.attrs.data}, error: ${e}`);
+      Logger.info(`Compute item cost: ${job.attrs.data}, error: ${e}`);
       done(e);  
     }
   }
@@ -58,9 +58,8 @@ export default class ComputeItemCostJob {
   async onJobFinished() {
     const agenda = Container.get('agenda');
     const startingDate = this.startingDate;
-    this.depends = Math.max(this.depends - 1, 0);
 
-    console.log(startingDate);
+    this.depends = Math.max(this.depends - 1, 0);
 
     if (this.depends === 0) {
       this.startingDate = null;

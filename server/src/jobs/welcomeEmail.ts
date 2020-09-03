@@ -1,38 +1,28 @@
-import fs from 'fs';
-import Mustache from 'mustache';
-import path from 'path';
-import { Container } from 'typedi';
+import { Container, Inject } from 'typedi';
+import AuthenticationService from '@/services/Authentication';
 
 export default class WelcomeEmailJob {
+  @Inject()
+  authService: AuthenticationService;
+
   /**
-   * 
+   * Handle send welcome mail job.
    * @param {Job} job 
    * @param {Function} done 
    */
   public async handler(job, done: Function): Promise<void> {
     const { email, organizationName, firstName } = job.attrs.data;
     const Logger = Container.get('logger');
-    const Mail = Container.get('mail');
 
-    const filePath = path.join(global.rootPath, 'views/mail/Welcome.html');
-    const template = fs.readFileSync(filePath, 'utf8');
-    const rendered = Mustache.render(template, {
-      email, organizationName, firstName,
-    });
-    const mailOptions = {
-      to: email,
-      from: `${process.env.MAIL_FROM_NAME} ${process.env.MAIL_FROM_ADDRESS}`,
-      subject: 'Welcome to Bigcapital',
-      html: rendered,
-    };
-    Mail.sendMail(mailOptions, (error) => {
-      if (error) {
-        Logger.error('Failed send welcome mail', { error, form });
-        done(error);
-        return;
-      }
-      Logger.info('User has been sent welcome email successfuly.', { form });
-      done();
-    });
+    Logger.info(`Send welcome mail message - started: ${job.attrs.data}`);
+  
+    try {
+      await this.authService.mailMessages.sendWelcomeMessage();
+      Logger.info(`Send welcome mail message - finished: ${job.attrs.data}`);
+      done()
+    } catch (error) {
+      Logger.info(`Send welcome mail message - error: ${job.attrs.data}, error: ${error}`);
+      done(error);
+    }
   }
 }

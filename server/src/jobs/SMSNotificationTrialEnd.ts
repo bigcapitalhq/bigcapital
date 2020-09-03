@@ -13,15 +13,15 @@ export default class SMSNotificationTrialEnd {
     const subscriptionService = Container.get(SubscriptionService);
     const Logger = Container.get('logger');
 
-    Logger.debug(`Send notification subscription end soon - started: ${job.attrs.data}`);
+    Logger.info(`Send notification subscription end soon - started: ${job.attrs.data}`);
 
     try {
       subscriptionService.smsMessages.sendRemainingTrialPeriod(
         phoneNumber, remainingDays,
       );
-      Logger.debug(`Send notification subscription end soon - finished: ${job.attrs.data}`);
+      Logger.info(`Send notification subscription end soon - finished: ${job.attrs.data}`);
     } catch(error) {
-      Logger.error(`Send notification subscription end soon - failed: ${job.attrs.data}, error: ${e}`);
+      Logger.info(`Send notification subscription end soon - failed: ${job.attrs.data}, error: ${e}`);
       done(e);
     }
   }

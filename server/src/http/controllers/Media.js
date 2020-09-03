@@ -5,10 +5,10 @@ import {
   query,
   validationResult,
 } from 'express-validator';
+import Container from 'typedi';
 import fs from 'fs';
 import { difference } from 'lodash';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
-import Logger from '@/services/Logger';
 
 const fsPromises = fs.promises;
 
@@ -70,6 +70,8 @@ export default {
       // check('attachment').exists(),
     ],
     async handler(req, res) {
+      const Logger = Container.get('logger');
+
       if (!req.files.attachment) {
         return res.status(400).send({
           errors: [{ type: 'ATTACHMENT.NOT.FOUND', code: 200 }],
@@ -93,9 +95,9 @@ export default {
 
       try {
         await attachment.mv(`${publicPath}${req.organizationId}/${attachment.md5}.png`);
-        Logger.log('info', 'Attachment uploaded successfully');
+        Logger.info('[attachment] uploaded successfully');
       } catch (error) {
-        Logger.log('info', 'Attachment uploading failed.', { error });
+        Logger.info('[attachment] uploading failed.', { error });
       }
 
       const media = await Media.query().insert({
@@ -114,6 +116,7 @@ export default {
       query('ids.*').exists().isNumeric().toInt(),
     ],
     async handler(req, res) {
+      const Logger = Container.get('logger');
       const validationErrors = validationResult(req);
 
       if (!validationErrors.isEmpty()) {
@@ -142,12 +145,12 @@ export default {
       });
       await Promise.all(unlinkOpers).then((resolved) => {
         resolved.forEach(() => {
-          Logger.log('error', 'Attachment file has been deleted.');
+          Logger.info('[attachment] file has been deleted.');
         }); 
       })
       .catch((errors) => {
         errors.forEach((error) => {
-          Logger.log('error', 'Delete item attachment file delete failed.', { error });
+          Logger.info('[attachment] Delete item attachment file delete failed.', { error });
         })
       });
 

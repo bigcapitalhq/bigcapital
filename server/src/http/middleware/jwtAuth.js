@@ -1,31 +1,31 @@
-/* eslint-disable consistent-return */
+import { Container } from 'typedi';
 import jwt from 'jsonwebtoken';
-import SystemUser from '@/system/models/SystemUser';
+import config from '@/../config/config';
 
 const authMiddleware = (req, res, next) => {
-  const { JWT_SECRET_KEY } = process.env;
+  const Logger = Container.get('logger');
   const token = req.headers['x-access-token'] || req.query.token;
 
-  const onError = () => { res.boom.unauthorized(); };
-
+  const onError = () => {
+    Logger.info('[auth_middleware] jwt verify error.');
+    res.boom.unauthorized();
+  };
+  const onSuccess = (decoded) => {
+    req.token = decoded;
+    Logger.info('[auth_middleware] jwt verify success.');
+    next();
+  };
   if (!token) { return onError(); }
 
   const verify = new Promise((resolve, reject) => {
-    jwt.verify(token, JWT_SECRET_KEY, async (error, decoded) => {
+    jwt.verify(token, config.jwtSecret, async (error, decoded) => {
       if (error) {
         reject(error);
       } else {
-        // eslint-disable-next-line no-underscore-dangle
-        req.user = await SystemUser.query().findById(decoded._id);
-
-        if (!req.user) {
-          return onError();
-        }
         resolve(decoded);
       }
     });
   });
-
-  verify.then(() => { next(); }).catch(onError);
+  verify.then(onSuccess).catch(onError);
 };
 export default authMiddleware;

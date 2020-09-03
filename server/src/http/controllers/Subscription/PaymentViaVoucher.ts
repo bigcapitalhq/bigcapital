@@ -1,17 +1,19 @@
-import { Container, Service } from 'typedi';
+import { Inject, Service } from 'typedi';
 import { Router, Request, Response } from 'express';
 import { check, param, query, ValidationSchema } from 'express-validator';
 import { Voucher, Plan } from '@/system/models';
 import validateMiddleware from '@/http/middleware/validateMiddleware';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
 import PaymentMethodController from '@/http/controllers/Subscription/PaymentMethod';
-import PrettierMiddleware from '@/http/middleware/PrettierMiddleware';
 import {
   NotAllowedChangeSubscriptionPlan
 } from '@/exceptions';
 
 @Service()
 export default class PaymentViaVoucherController extends PaymentMethodController { 
+  @Inject('logger')
+  logger: any;
+
   /**
    * Router constructor.
    */
@@ -22,7 +24,6 @@ export default class PaymentViaVoucherController extends PaymentMethodController
       '/payment',
       this.paymentViaVoucherSchema,
       validateMiddleware,
-      PrettierMiddleware,
       asyncMiddleware(this.validateVoucherCodeExistance.bind(this)),
       asyncMiddleware(this.validatePlanSlugExistance.bind(this)),
       asyncMiddleware(this.validateVoucherAndPlan.bind(this)),
@@ -48,7 +49,8 @@ export default class PaymentViaVoucherController extends PaymentMethodController
    * @param {Response} res 
    */
   async validateVoucherCodeExistance(req: Request, res: Response, next: Function) {
-    const { voucherCode } = req.body;
+    const { voucherCode } = this.matchedBodyData(req);
+    this.logger.info('[voucher_payment] trying to validate voucher code.', { voucherCode });
 
     const foundVoucher = await Voucher.query()
       .modify('filterActiveVoucher')
@@ -70,7 +72,8 @@ export default class PaymentViaVoucherController extends PaymentMethodController
    * @param {Function} next 
    */
   async validateVoucherAndPlan(req: Request, res: Response, next: Function) {
-    const { planSlug, voucherCode } = req.body;
+    const { planSlug, voucherCode } = this.matchedBodyData(req);
+    this.logger.info('[voucher_payment] trying to validate voucher with the plan.', { voucherCode });
 
     const voucher = await Voucher.query().findOne('voucher_code', voucherCode);
     const plan = await Plan.query().findOne('slug', planSlug);
@@ -90,11 +93,12 @@ export default class PaymentViaVoucherController extends PaymentMethodController
    * @return {Response}
    */
   async paymentViaVoucher(req: Request, res: Response, next: Function) {
-    const { planSlug, voucherCode } = req.body;
+    const { planSlug, voucherCode } = this.matchedBodyData(req);
     const { tenant } = req;
 
     try {
-      await this.subscriptionService.subscriptionViaVoucher(tenant.id, planSlug, voucherCode);
+      await this.subscriptionService
+        .subscriptionViaVoucher(tenant.id, planSlug, voucherCode);
 
       return res.status(200).send({
         type: 'PAYMENT.SUCCESSFULLY.MADE',

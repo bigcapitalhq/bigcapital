@@ -15,7 +15,6 @@ export default class HasTenancyService {
    * @param {number} tenantId - The tenant id.
    */
   models(tenantId: number) {
-    console.log(tenantId);
     return this.tenantContainer(tenantId).get('models');
   }
 }

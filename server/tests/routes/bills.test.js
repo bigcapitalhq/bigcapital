@@ -8,7 +8,7 @@ import {
   loginRes
 } from '~/dbInit';
 
-describe.only('route: `/api/purchases/bills`', () => {
+describe('route: `/api/purchases/bills`', () => {
   describe('POST: `/api/purchases/bills`', () => {
     it('Should `bill_number` be required.', async () => {
       const res = await request()

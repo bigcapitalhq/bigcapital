@@ -3,6 +3,7 @@ exports.up = function(knex) {
   return knex.schema.createTable('tenants', (table) => {
     table.bigIncrements();
     table.string('organization_id');
+    table.boolean('initialized').defaultTo(false);
     table.timestamps();
   });
 };

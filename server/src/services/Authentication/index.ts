@@ -3,8 +3,8 @@ import JWT from 'jsonwebtoken';
 import uniqid from 'uniqid';
 import { omit } from 'lodash';
 import {
-  EventDispatcher
-  EventDispatcherInterface
+  EventDispatcher,
+  EventDispatcherInterface,
 } from '@/decorators/eventDispatcher';
 import {
   SystemUser,
@@ -22,6 +22,8 @@ import { hashPassword } from '@/utils';
 import { ServiceError, ServiceErrors } from "@/exceptions";
 import config from '@/../config/config';
 import events from '@/subscribers/events';
+import AuthenticationMailMessages from '@/services/Authentication/AuthenticationMailMessages';
+import AuthenticationSMSMessages from '@/services/Authentication/AuthenticationSMSMessages';
 
 @Service()
 export default class AuthenticationService {
@@ -33,6 +35,12 @@ export default class AuthenticationService {
 
   @EventDispatcher()
   eventDispatcher: EventDispatcherInterface;
+
+  @Inject()
+  smsMessages: AuthenticationSMSMessages;
+
+  @Inject()
+  mailMessages: AuthenticationMailMessages;
 
   /**
    * Signin and generates JWT token.
@@ -70,6 +78,7 @@ export default class AuthenticationService {
 
     this.logger.info('[login] Logging success.', { user, token });
 
+    // Triggers `onLogin` event.
     this.eventDispatcher.dispatch(events.auth.login, {
       emailOrPhone, password,
     });
@@ -191,6 +200,7 @@ export default class AuthenticationService {
     const passwordReset = await PasswordReset.query().insert({ email, token });
     const user = await SystemUser.query().findOne('email', email);
 
+    // Triggers `onSendResetPassword` event.
     this.eventDispatcher.dispatch(events.auth.sendResetPassword, { user, token });
 
     return passwordReset;
@@ -225,25 +235,26 @@ export default class AuthenticationService {
     // Delete the reset password token.
     await PasswordReset.query().where('email', user.email).delete();
 
-    this.eventDispatcher.dispatch(events.auth.sendResetPassword, { user, token, password });
+    // Triggers `onResetPassword` event.
+    this.eventDispatcher.dispatch(events.auth.resetPassword, { user, token, password });
 
     this.logger.info('[reset_password] reset password success.');
   }
 
   /**
    * Generates JWT token for the given user.
-   * @param {IUser} user 
+   * @param {ISystemUser} user 
    * @return {string} token
    */
-  generateToken(user: IUser): string {
+  generateToken(user: ISystemUser): string {
     const today = new Date();
     const exp = new Date(today);
     exp.setDate(today.getDate() + 60);
 
-    this.logger.silly(`Sign JWT for userId: ${user._id}`);
+    this.logger.silly(`Sign JWT for userId: ${user.id}`);
     return JWT.sign(
       {
-        _id: user._id, // We are gonna use this in the middleware 'isAuth'
+        id: user.id, // We are gonna use this in the middleware 'isAuth'
         exp: exp.getTime() / 1000,
       },
       config.jwtSecret,

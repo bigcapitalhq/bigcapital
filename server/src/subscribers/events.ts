@@ -7,4 +7,10 @@ export default {
     sendResetPassword: 'onSendResetPassword',
     resetPassword: 'onResetPassword',
   },
+
+  inviteUser: {
+    acceptInvite: 'onUserAcceptInvite',
+    sendInvite: 'onUserSendInvite',
+    checkInvite: 'onUserCheckInvite'
+  }
 }

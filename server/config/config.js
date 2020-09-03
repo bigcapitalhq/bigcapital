@@ -1,5 +1,10 @@
 
 module.exports = {
+  /**
+   * Your favorite port
+   */
+  port: parseInt(process.env.PORT, 10),
+
   system: {
     db_client: 'mysql',
     db_host: '127.0.0.1',

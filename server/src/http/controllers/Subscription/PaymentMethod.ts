@@ -1,8 +1,9 @@
 import { Inject } from 'typedi';
 import { Plan } from '@/system/models';
+import BaseController from '@/http/controllers/BaseController';
 import SubscriptionService from '@/services/Subscription/SubscriptionService';
 
-export default class PaymentMethodController {
+export default class PaymentMethodController extends BaseController {
   @Inject()
   subscriptionService: SubscriptionService;
 
@@ -16,7 +17,7 @@ export default class PaymentMethodController {
    * @return {Response|void}
    */
   async validatePlanSlugExistance(req: Request, res: Response, next: Function) {
-    const { planSlug } = req.body;
+    const { planSlug } = this.matchedBodyData(req);
     const foundPlan = await Plan.query().where('slug', planSlug).first();
 
     if (!foundPlan) {

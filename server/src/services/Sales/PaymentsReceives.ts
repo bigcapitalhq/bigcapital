@@ -27,6 +27,9 @@ export default class PaymentReceiveService {
   @Inject()
   journalService: JournalPosterService;
 
+  @Inject('logger')
+  logger: any;
+
   /**
    * Creates a new payment receive and store it to the storage
    * with associated invoices payment and journal transactions.
@@ -43,6 +46,8 @@ export default class PaymentReceiveService {
     } = this.tenancy.models(tenantId);
 
     const paymentAmount = sumBy(paymentReceive.entries, 'payment_amount');
+
+    this.logger.info('[payment_receive] inserting to the storage.');
     const storedPaymentReceive = await PaymentReceive.query()
       .insert({
         amount: paymentAmount,
@@ -50,12 +55,15 @@ export default class PaymentReceiveService {
       });
     const storeOpers: Array<any> = [];
 
+    this.logger.info('[payment_receive] inserting associated entries to the storage.');
     paymentReceive.entries.forEach((entry: any) => {
       const oper = PaymentReceiveEntry.query()
         .insert({
           payment_receive_id: storedPaymentReceive.id,
           ...entry,
         });
+
+      this.logger.info('[payment_receive] increment the sale invoice payment amount.');
       // Increment the invoice payment amount.
       const invoice = SaleInvoice.query()
         .where('id', entry.invoice_id)
@@ -64,6 +72,8 @@ export default class PaymentReceiveService {
       storeOpers.push(oper);
       storeOpers.push(invoice);
     });
+
+    this.logger.info('[payment_receive] decrementing customer balance.');
     const customerIncrementOper = Customer.decrementBalance(
       paymentReceive.customer_id,
       paymentAmount,

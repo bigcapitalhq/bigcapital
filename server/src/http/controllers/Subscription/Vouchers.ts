@@ -1,16 +1,15 @@
 import { Router, Request, Response } from 'express'
-import { repeat, times, orderBy } from 'lodash';
-import { check, oneOf, param, query, ValidationChain } from 'express-validator';
-import { Container, Service, Inject } from 'typedi';
+import { check, oneOf, ValidationChain } from 'express-validator';
+import { Service, Inject } from 'typedi';
 import { Voucher, Plan } from '@/system/models';
+import BaseController from '@/http/controllers/BaseController';
 import VoucherService from '@/services/Payment/Voucher';
 import validateMiddleware from '@/http/middleware/validateMiddleware';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
-import PrettierMiddleware from '@/http/middleware/prettierMiddleware';
 import { IVouchersFilter } from '@/interfaces';
 
 @Service()
-export default class VouchersController {
+export default class VouchersController extends BaseController {
   @Inject()
   voucherService: VoucherService;
 
@@ -24,14 +23,12 @@ export default class VouchersController {
       '/generate',
       this.generateVoucherSchema,
       validateMiddleware,
-      PrettierMiddleware,
       asyncMiddleware(this.validatePlanExistance.bind(this)),
       asyncMiddleware(this.generateVoucher.bind(this)),
     );
     router.post(
       '/disable/:voucherId',
       validateMiddleware,
-      PrettierMiddleware,
       asyncMiddleware(this.validateVoucherExistance.bind(this)),
       asyncMiddleware(this.validateNotDisabledVoucher.bind(this)),
       asyncMiddleware(this.disableVoucher.bind(this)),
@@ -40,18 +37,15 @@ export default class VouchersController {
       '/send',
       this.sendVoucherSchemaValidation,
       validateMiddleware,
-      PrettierMiddleware,
       asyncMiddleware(this.sendVoucher.bind(this)),
     );
     router.delete(
       '/:voucherId',
-      PrettierMiddleware,
       asyncMiddleware(this.validateVoucherExistance.bind(this)),
       asyncMiddleware(this.deleteVoucher.bind(this)),
     );
     router.get(
       '/',
-      PrettierMiddleware,
       asyncMiddleware(this.listVouchers.bind(this)),
     );
     return router;
@@ -106,7 +100,8 @@ export default class VouchersController {
    * @param {Function} next 
    */
   async validatePlanExistance(req: Request, res: Response, next: Function) {
-    const planId: number = req.body.planId || req.params.planId;
+    const body = this.matchedBodyData(req);
+    const planId: number = body.planId || req.params.planId;
     const foundPlan = await Plan.query().findById(planId);
 
     if (!foundPlan) {
@@ -124,7 +119,9 @@ export default class VouchersController {
    * @param {Function}
    */
   async validateVoucherExistance(req: Request, res: Response, next: Function) {
-    const voucherId = req.body.voucherId || req.params.voucherId;
+    const body = this.matchedBodyData(req);
+
+    const voucherId = body.voucherId || req.params.voucherId;
     const foundVoucher = await Voucher.query().findById(voucherId);
 
     if (!foundVoucher) {
@@ -160,7 +157,7 @@ export default class VouchersController {
    * @return {Response}
    */
   async generateVoucher(req: Request, res: Response, next: Function) {
-    const { loop = 10, period, periodInterval, planId } = req.body;
+    const { loop = 10, period, periodInterval, planId } = this.matchedBodyData(req);
 
     try {
       await this.voucherService.generateVouchers(
@@ -211,7 +208,7 @@ export default class VouchersController {
    * @return {Response}
    */
   async sendVoucher(req: Request, res: Response) {
-    const { phoneNumber, email, period, periodInterval, planId } = req.body;
+    const { phoneNumber, email, period, periodInterval, planId } = this.matchedBodyData(req);
  
     const voucher = await Voucher.query()
       .modify('filterActiveVoucher')

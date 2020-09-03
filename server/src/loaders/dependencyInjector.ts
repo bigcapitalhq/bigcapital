@@ -1,13 +1,15 @@
 import { Container } from 'typedi';
-import LoggerInstance from '@/services/Logger';
+import LoggerInstance from '@/loaders/Logger';
 import agendaFactory from '@/loaders/agenda';
 import SmsClientLoader from '@/loaders/smsClient';
 import mailInstance from '@/loaders/mail';
+import dbManagerFactory from '@/loaders/dbManager';
 
 export default ({ mongoConnection, knex }) => {
   try {
     const agendaInstance = agendaFactory({ mongoConnection });
     const smsClientInstance = SmsClientLoader();
+    const dbManager = dbManagerFactory();
 
     Container.set('agenda', agendaInstance);
     LoggerInstance.info('Agenda has been injected into container');
@@ -23,6 +25,9 @@ export default ({ mongoConnection, knex }) => {
 
     Container.set('mail', mailInstance);
     LoggerInstance.info('Mail instance has been injected into container');
+
+    Container.set('dbManager', dbManager);
+    LoggerInstance.info('Database manager has been injected into container.');
 
     return { agenda: agendaInstance };
   } catch (e) {

@@ -1,4 +1,4 @@
-import express from 'express';
+import { Router, Request, Response } from 'express';
 import {
   check,
   param,
@@ -17,22 +17,21 @@ import {
   mapFilterRolesToDynamicFilter,
 } from '@/lib/ViewRolesBuilder';
 import { IItemCategory, IItemCategoryOTD } from '@/interfaces';
-import PrettierMiddleware from '@/http/middleware/PrettierMiddleware';
+import BaseController from '@/http/controllers/BaseController';
 
 @Service()
-export default class ItemsCategoriesController {
+export default class ItemsCategoriesController extends BaseController {
   /**
    * Router constructor method.
    */
-  constructor() {
-    const router = express.Router();
+  router() {
+    const router = Router();
 
     router.post('/:id', [
         ...this.categoryValidationSchema,
         ...this.specificCategoryValidationSchema,
       ], 
       validateMiddleware,
-      PrettierMiddleware,
       asyncMiddleware(this.validateParentCategoryExistance),
       asyncMiddleware(this.validateSellAccountExistance),
       asyncMiddleware(this.validateCostAccountExistance),
@@ -42,7 +41,6 @@ export default class ItemsCategoriesController {
     router.post('/',
       this.categoryValidationSchema,
       validateMiddleware,
-      PrettierMiddleware,
       asyncMiddleware(this.validateParentCategoryExistance),
       asyncMiddleware(this.validateSellAccountExistance),
       asyncMiddleware(this.validateCostAccountExistance),
@@ -52,28 +50,24 @@ export default class ItemsCategoriesController {
     router.delete('/bulk',
       this.categoriesBulkValidationSchema,
       validateMiddleware,
-      PrettierMiddleware,
       asyncMiddleware(this.validateCategoriesIdsExistance),
       asyncMiddleware(this.bulkDeleteCategories),
     );
     router.delete('/:id',
       this.specificCategoryValidationSchema,
       validateMiddleware,
-      PrettierMiddleware,
       asyncMiddleware(this.validateItemCategoryExistance),
       asyncMiddleware(this.deleteItem),
     );
     router.get('/:id',
       this.specificCategoryValidationSchema,
       validateMiddleware,
-      PrettierMiddleware,
       asyncMiddleware(this.validateItemCategoryExistance),
       asyncMiddleware(this.getCategory)
     );
     router.get('/',
       this.categoriesListValidationSchema,
       validateMiddleware,
-      PrettierMiddleware,
       asyncMiddleware(this.getList)
     );
     return router;
@@ -164,7 +158,7 @@ export default class ItemsCategoriesController {
    */
   async validateCostAccountExistance(req: Request, res: Response, next: Function) {
     const { Account, AccountType } = req.models;
-    const category: IItemCategoryOTD = { ...req.body };
+    const category: IItemCategoryOTD = this.matchedBodyData(req);
 
     if (category.costAccountId) {
       const COGSType = await AccountType.query().findOne('key', 'cost_of_goods_sold');
@@ -191,7 +185,7 @@ export default class ItemsCategoriesController {
    */
   async validateSellAccountExistance(req: Request, res: Response, next: Function) {
     const { Account, AccountType } = req.models;
-    const category: IItemCategoryOTD = { ...req.body };
+    const category: IItemCategoryOTD = this.matchedBodyData(req);
 
     if (category.sellAccountId) {
       const incomeType = await AccountType.query().findOne('key', 'income');
@@ -218,7 +212,7 @@ export default class ItemsCategoriesController {
    */
   async validateInventoryAccountExistance(req: Request, res: Response, next: Function) {
     const { Account, AccountType } = req.models;
-    const category: IItemCategoryOTD = { ...req.body };
+    const category: IItemCategoryOTD = this.matchedBodyData(req);
 
     if (category.inventoryAccountId) {
       const otherAsset = await AccountType.query().findOne('key', 'other_asset');
@@ -244,7 +238,7 @@ export default class ItemsCategoriesController {
    * @param {Function} next 
    */
   async validateParentCategoryExistance(req: Request, res: Response, next: Function) {
-    const category: IItemCategory = { ...req.body };
+    const category: IItemCategory = this.matchedBodyData(req);
     const { ItemCategory } = req.models;
 
     if (category.parentCategoryId) {
@@ -290,7 +284,7 @@ export default class ItemsCategoriesController {
    */
   async newCategory(req: Request, res: Response) {
     const { user } = req;
-    const category: IItemCategory = { ...req.body };
+    const category: IItemCategory = this.matchedBodyData(req);
     const { ItemCategory } = req.models;
 
     const storedCategory = await ItemCategory.query().insert({
@@ -308,7 +302,7 @@ export default class ItemsCategoriesController {
    */
   async editCategory(req: Request, res: Response) {
     const { id } = req.params;
-    const category: IItemCategory = { ...req.body };
+    const category: IItemCategory = this.matchedBodyData(req);
     const { ItemCategory } = req.models;
 
     const updateItemCategory = await ItemCategory.query()

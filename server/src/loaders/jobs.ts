@@ -1,7 +1,8 @@
 import Agenda from 'agenda';
-import WelcomeEmailJob from '@/Jobs/welcomeEmail';
-import ResetPasswordMailJob from '@/Jobs/ResetPasswordMail';
-import ComputeItemCost from '@/Jobs/ComputeItemCost';
+import WelcomeEmailJob from '@/jobs/WelcomeEmail';
+import WelcomeSMSJob from '@/jobs/WelcomeSMS';
+import ResetPasswordMailJob from '@/jobs/ResetPasswordMail';
+import ComputeItemCost from '@/jobs/ComputeItemCost';
 import RewriteInvoicesJournalEntries from '@/jobs/writeInvoicesJEntries';
 import SendVoucherViaPhoneJob from '@/jobs/SendVoucherPhone';
 import SendVoucherViaEmailJob from '@/jobs/SendVoucherEmail';
@@ -12,16 +13,24 @@ import SendMailNotificationTrialEnd from '@/jobs/MailNotificationTrialEnd';
 import UserInviteMailJob from '@/jobs/UserInviteMail';
 
 export default ({ agenda }: { agenda: Agenda }) => {
+  // Welcome mail and SMS message.
   agenda.define(
     'welcome-email',
     { priority: 'high' },
     new WelcomeEmailJob().handler,
   );
   agenda.define(
+    'welcome-sms',
+    { priority: 'high' },
+    new WelcomeSMSJob().handler
+  );
+  // Reset password mail.
+  agenda.define(
     'reset-password-mail',
     { priority: 'high' },
     new ResetPasswordMailJob().handler,
   );
+  // User invite mail.
   agenda.define(
     'user-invite-mail',
     { priority: 'high' },

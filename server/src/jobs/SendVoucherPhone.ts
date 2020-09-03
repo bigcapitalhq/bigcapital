@@ -3,9 +3,10 @@ import VoucherService from '@/services/Payment/Voucher';
 
 export default class SendVoucherViaPhoneJob {
   public async handler(job, done: Function): Promise<void> {
+    const { phoneNumber, voucherCode } = job.attrs.data;
+
     const Logger = Container.get('logger');
     const voucherService = Container.get(VoucherService);
-    const { phoneNumber, voucherCode } = job.attrs.data;
 
     Logger.debug(`Send voucher via phone number - started: ${job.attrs.data}`);
 
