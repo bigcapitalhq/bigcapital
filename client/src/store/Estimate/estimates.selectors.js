@@ -1,27 +1,33 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { pickItemsFromIds, paginationLocationQuery } from 'store/selectors';
 
-const estimateTableQuery = (state) => {
-  return state.sales_estimates.tableQuery;
-};
+const estimateTableQuery = (state) => state.salesEstimates.tableQuery;
 
-export const getEstimatesTableQuery = createSelector(
-  paginationLocationQuery,
-  estimateTableQuery,
-  (locationQuery, tableQuery) => {
-    return {
-      ...locationQuery,
-      ...tableQuery,
-    };
-  },
-);
+const estimateByIdSelector = (state, props) => 
+  state.salesEstimates.items[props.estimateId];
+
+const estimatesCurrentViewSelector = (state, props) => {
+  const viewId = state.salesEstimates.currentViewId;
+  return state.salesEstimates.views?.[viewId];
+};
+const estimateItemsSelector = (state) => state.salesEstimates.items;
 
 const estimatesPageSelector = (state, props, query) => {
-  const viewId = state.sales_estimates.currentViewId;
-  return state.sales_estimates.views?.[viewId]?.pages?.[query.page];
+  const viewId = state.salesEstimates.currentViewId;
+  return state.salesEstimates.views?.[viewId]?.pages?.[query.page];
 };
 
-const estimateItemsSelector = (state) => state.sales_estimates.items;
+export const getEstimatesTableQueryFactory = () =>
+  createSelector(
+    paginationLocationQuery,
+    estimateTableQuery,
+    (locationQuery, tableQuery) => {
+      return {
+        ...locationQuery,
+        ...tableQuery,
+      };
+    },
+  );
 
 export const getEstimateCurrentPageFactory = () =>
   createSelector(
@@ -34,21 +40,12 @@ export const getEstimateCurrentPageFactory = () =>
     },
   );
 
-const estimateByIdSelector = (state, props) => {
-  return state.sales_estimates.items[props.estimateId];
-};
-
 export const getEstimateByIdFactory = () =>
   createSelector(estimateByIdSelector, (estimate) => {
     return estimate;
   });
 
-const estimatesPaginationSelector = (state, props) => {
-  const viewId = state.sales_estimates.currentViewId;
-  return state.sales_estimates.views?.[viewId];
-};
-
 export const getEstimatesPaginationMetaFactory = () =>
-  createSelector(estimatesPaginationSelector, (estimatePage) => {
-    return estimatePage?.paginationMeta || {};
+  createSelector(estimatesCurrentViewSelector, (estimateView) => {
+    return estimateView?.paginationMeta || {};
   });

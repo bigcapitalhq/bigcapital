@@ -1,6 +1,6 @@
-import React, { useState, useMemo, useCallback,useEffect } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import * as Yup from 'yup';
-import { useFormik } from 'formik';
+import { useFormik, Formik } from 'formik';
 import {
   FormGroup,
   MenuItem,
@@ -23,29 +23,28 @@ import ErrorMessage from 'components/ErrorMessage';
 import Icon from 'components/Icon';
 import MoneyInputGroup from 'components/MoneyInputGroup';
 import Dragzone from 'components/Dragzone';
-import { ListSelect } from 'components';
+import { ListSelect, AccountsSelectList, If } from 'components';
 
 import withItemsActions from 'containers/Items/withItemsActions';
-import withItemCategories from 'containers/Items/withItemCategories'
+import withItemCategories from 'containers/Items/withItemCategories';
 import withAccounts from 'containers/Accounts/withAccounts';
 import withMediaActions from 'containers/Media/withMediaActions';
 import useMedia from 'hooks/useMedia';
-import withItemDetail from 'containers/Items/withItemDetail'
+import withItemDetail from 'containers/Items/withItemDetail';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withAccountDetail from 'containers/Accounts/withAccountDetail';
 
 import { compose } from 'utils';
-
 
 const ItemForm = ({
   // #withItemActions
   requestSubmitItem,
   requestEditItem,
 
-  accounts,
+  accountsList,
   itemDetail,
   onFormSubmit,
-  onCancelForm, 
+  onCancelForm,
 
   // #withDashboardActions
   changePageTitle,
@@ -55,10 +54,10 @@ const ItemForm = ({
 
   // #withMediaActions
   requestSubmitMedia,
-  requestDeleteMedia,  
+  requestDeleteMedia,
 }) => {
   const [payload, setPayload] = useState({});
-  
+
   const history = useHistory();
   const { formatMessage } = useIntl();
   const {
@@ -72,22 +71,34 @@ const ItemForm = ({
     deleteCallback: requestDeleteMedia,
   });
 
-  const ItemTypeDisplay = useMemo(() => [
-    { value: null, label: formatMessage({id:'select_item_type'}) },
-    { value: 'service', label: formatMessage({id:'service'}) },
-    { value: 'inventory', label: formatMessage({id:'inventory'}) },
-    { value: 'non-inventory', label: formatMessage({id:'non_inventory'}) },
-  ], [formatMessage]);
+  const ItemTypeDisplay = useMemo(
+    () => [
+      { value: null, label: formatMessage({ id: 'select_item_type' }) },
+      { value: 'service', label: formatMessage({ id: 'service' }) },
+      { value: 'inventory', label: formatMessage({ id: 'inventory' }) },
+      { value: 'non-inventory', label: formatMessage({ id: 'non_inventory' }) },
+    ],
+    [formatMessage],
+  );
 
   const validationSchema = Yup.object().shape({
     active: Yup.boolean(),
-    name: Yup.string().required().label(formatMessage({id:'item_name_'})),
-    type: Yup.string().trim().required().label(formatMessage({id:'item_type_'})),
+    name: Yup.string()
+      .required()
+      .label(formatMessage({ id: 'item_name_' })),
+    type: Yup.string()
+      .trim()
+      .required()
+      .label(formatMessage({ id: 'item_type_' })),
     sku: Yup.string().trim(),
     cost_price: Yup.number(),
     sell_price: Yup.number(),
-    cost_account_id: Yup.number().required().label(formatMessage({id:'cost_account_id'})),
-    sell_account_id: Yup.number().required().label(formatMessage({id:'sell_account_id'})),
+    cost_account_id: Yup.number()
+      .required()
+      .label(formatMessage({ id: 'cost_account_id' })),
+    sell_account_id: Yup.number()
+      .required()
+      .label(formatMessage({ id: 'sell_account_id' })),
     inventory_account_id: Yup.number().when('type', {
       is: (value) => value === 'inventory',
       then: Yup.number().required(),
@@ -95,6 +106,8 @@ const ItemForm = ({
     }),
     category_id: Yup.number().nullable(),
     stock: Yup.string() || Yup.boolean(),
+    sellable: Yup.boolean().required(),
+    purchasable: Yup.boolean().required(),
   });
 
   const defaultInitialValues = useMemo(
@@ -110,27 +123,36 @@ const ItemForm = ({
       inventory_account_id: null,
       category_id: null,
       note: '',
+      sellable: null,
+      purchasable: null,
     }),
-    []
+    [],
   );
-  const initialValues = useMemo(() => ({
-    ...(itemDetail) ? {
-      ...pick(itemDetail, Object.keys(defaultInitialValues)),
- 
-    } : {
-      ...defaultInitialValues,
-    }
-  }), [itemDetail, defaultInitialValues]);
+  const initialValues = useMemo(
+    () => ({
+      ...(itemDetail
+        ? {
+            ...pick(itemDetail, Object.keys(defaultInitialValues)),
+          }
+        : {
+            ...defaultInitialValues,
+          }),
+    }),
+    [itemDetail, defaultInitialValues],
+  );
 
-  const saveInvokeSubmit = useCallback((payload) => {
-    onFormSubmit && onFormSubmit(payload)
-  }, [onFormSubmit]);
+  const saveInvokeSubmit = useCallback(
+    (payload) => {
+      onFormSubmit && onFormSubmit(payload);
+    },
+    [onFormSubmit],
+  );
 
   useEffect(() => {
-    itemDetail && itemDetail.id ?
-      changePageTitle(formatMessage({id:'edit_item_details'})) :
-      changePageTitle(formatMessage({id:'new_item'}));
-  }, [changePageTitle,itemDetail,formatMessage]);
+    itemDetail && itemDetail.id
+      ? changePageTitle(formatMessage({ id: 'edit_item_details' }))
+      : changePageTitle(formatMessage({ id: 'new_item' }));
+  }, [changePageTitle, itemDetail, formatMessage]);
 
   const {
     getFieldProps,
@@ -146,55 +168,56 @@ const ItemForm = ({
     initialValues: {
       ...initialValues,
     },
-    onSubmit: (values, { setSubmitting,resetForm,setErrors }) => {
-
+    onSubmit: (values, { setSubmitting, resetForm, setErrors }) => {
       const saveItem = (mediaIds) => {
         const formValues = { ...values, media_ids: mediaIds };
-        if(itemDetail && itemDetail.id ){
-
-          requestEditItem(itemDetail.id,formValues)
-          .then((response)=>{
-            AppToaster.show({
-              message:formatMessage({
-                id:'the_item_has_been_successfully_edited',
-              },{
-                number:itemDetail.id
-              }),
-              intent:Intent.SUCCESS
+        if (itemDetail && itemDetail.id) {
+          requestEditItem(itemDetail.id, formValues)
+            .then((response) => {
+              AppToaster.show({
+                message: formatMessage(
+                  {
+                    id: 'the_item_has_been_successfully_edited',
+                  },
+                  {
+                    number: itemDetail.id,
+                  },
+                ),
+                intent: Intent.SUCCESS,
+              });
+              setSubmitting(false);
+              saveInvokeSubmit({ action: 'update', ...payload });
+              history.push('/items');
+              resetForm();
+            })
+            .catch((errors) => {
+              setSubmitting(false);
             });
-            setSubmitting(false);
-            saveInvokeSubmit({action:'update',...payload})
-            history.push('/items');
-            resetForm();
-          }).catch((errors)=>{
-            setSubmitting(false)
-          });
-
-        }else{
-         
+        } else {
           requestSubmitItem(formValues).then((response) => {
             AppToaster.show({
-              message: formatMessage({
-                id: 'service_has_been_successful_created',
-              }, {
-                name: values.name,
-                service: formatMessage({ id: 'item' }),
-              }),
+              message: formatMessage(
+                {
+                  id: 'service_has_been_successful_created',
+                },
+                {
+                  name: values.name,
+                  service: formatMessage({ id: 'item' }),
+                },
+              ),
               intent: Intent.SUCCESS,
             });
             queryCache.removeQueries(['items-table']);
             history.push('/items');
           });
-        };
         }
-
-         
+      };
 
       Promise.all([saveMedia(), deleteMedia()]).then(
         ([savedMediaResponses]) => {
           const mediaIds = savedMediaResponses.map((res) => res.data.media.id);
           return saveItem(mediaIds);
-        }
+        },
       );
     },
   });
@@ -208,53 +231,52 @@ const ItemForm = ({
         onClick={handleClick}
       />
     ),
-    []
+    [],
   );
 
-
   // Filter Account Items
-  const filterAccounts = (query, account, _index, exactMatch) => {
-    const normalizedTitle = account.name.toLowerCase();
+  const filterAccounts = (query, item, _index, exactMatch) => {
+    const normalizedTitle = item.name.toLowerCase();
     const normalizedQuery = query.toLowerCase();
     if (exactMatch) {
       return normalizedTitle === normalizedQuery;
     } else {
-      return `${account.code} ${normalizedTitle}`.indexOf(normalizedQuery) >= 0;
+      return `${item.code} ${normalizedTitle}`.indexOf(normalizedQuery) >= 0;
     }
   };
 
-  const onItemAccountSelect = useCallback((filedName) => {
-    return (account) => {
-      setFieldValue(filedName, account.id);
-    };
-  }, [setFieldValue]);
+  const onItemAccountSelect = useCallback(
+    (filedName) => {
+      return (account) => {
+        setFieldValue(filedName, account.id);
+      };
+    },
+    [setFieldValue],
+  );
 
   const categoryItem = useCallback(
     (item, { handleClick }) => (
-      <MenuItem text={item.name} onClick={handleClick} />
+      <MenuItem key={item.id} text={item.name} onClick={handleClick} />
     ),
-    []
+    [],
   );
 
-  const requiredSpan = useMemo(() => <span class='required'>*</span>, []);
-  const infoIcon = useMemo(() => <Icon icon='info-circle' iconSize={12} />, []);
+  const requiredSpan = useMemo(() => <span class="required">*</span>, []);
+  const infoIcon = useMemo(() => <Icon icon="info-circle" iconSize={12} />, []);
 
   const handleMoneyInputChange = (fieldKey) => (e, value) => {
     setFieldValue(fieldKey, value);
   };
 
- 
-  const initialAttachmentFiles =useMemo(()=>{
+  const initialAttachmentFiles = useMemo(() => {
     return itemDetail && itemDetail.media
-    ? itemDetail.media.map((attach)=>({
-    
-      preview:attach.attachment_file,
-      upload:true,
-      metadata:{...attach}
-    
-    })):[];
-    
-      },[itemDetail])
+      ? itemDetail.media.map((attach) => ({
+          preview: attach.attachment_file,
+          upload: true,
+          metadata: { ...attach },
+        }))
+      : [];
+  }, [itemDetail]);
   const handleDropFiles = useCallback((_files) => {
     setFiles(_files.filter((file) => file.uploaded === false));
   }, []);
@@ -267,7 +289,7 @@ const ItemForm = ({
         }
       });
     },
-    [setDeletedFiles, deletedFiles,]
+    [setDeletedFiles, deletedFiles],
   );
 
   const handleCancelClickBtn = () => {
@@ -275,12 +297,11 @@ const ItemForm = ({
   };
 
   return (
-    <div class='item-form'>
+    <div class="item-form">
       <form onSubmit={handleSubmit}>
-        <div class='item-form__primary-section'>
+        <div class="item-form__primary-section">
           <Row>
             <Col xs={7}>
-
               {/* Item type */}
               <FormGroup
                 medium={true}
@@ -289,7 +310,7 @@ const ItemForm = ({
                 className={'form-group--item-type'}
                 intent={errors.type && touched.type && Intent.DANGER}
                 helperText={
-                  <ErrorMessage {...{ errors, touched }} name='type' />
+                  <ErrorMessage {...{ errors, touched }} name="type" />
                 }
                 inline={true}
               >
@@ -299,7 +320,7 @@ const ItemForm = ({
                   {...getFieldProps('type')}
                 />
               </FormGroup>
-              
+
               {/* Item name */}
               <FormGroup
                 label={<T id={'item_name'} />}
@@ -307,7 +328,7 @@ const ItemForm = ({
                 className={'form-group--item-name'}
                 intent={errors.name && touched.name && Intent.DANGER}
                 helperText={
-                  <ErrorMessage {...{ errors, touched }} name='name' />
+                  <ErrorMessage {...{ errors, touched }} name="name" />
                 }
                 inline={true}
               >
@@ -324,7 +345,9 @@ const ItemForm = ({
                 labelInfo={infoIcon}
                 className={'form-group--item-sku'}
                 intent={errors.sku && touched.sku && Intent.DANGER}
-                helperText={<ErrorMessage {...{ errors, touched }} name='sku' />}
+                helperText={
+                  <ErrorMessage {...{ errors, touched }} name="sku" />
+                }
                 inline={true}
               >
                 <InputGroup
@@ -343,29 +366,28 @@ const ItemForm = ({
                   errors.category_id && touched.category_id && Intent.DANGER
                 }
                 helperText={
-                  <ErrorMessage {...{ errors, touched }} name='category' />
+                  <ErrorMessage {...{ errors, touched }} name="category" />
                 }
                 className={classNames(
                   'form-group--select-list',
                   'form-group--category',
-                  Classes.FILL
+                  Classes.FILL,
                 )}
               >
                 <ListSelect
                   items={categoriesList}
+                  noResults={<MenuItem disabled={true} text="No results." />}
                   itemRenderer={categoryItem}
                   itemPredicate={filterAccounts}
                   popoverProps={{ minimal: true }}
                   onItemSelect={onItemAccountSelect('category_id')}
-
-                  selectedItem={values.category_id}
+                  selectedItem={values.customer_id}
                   selectedItemProp={'id'}
-                  
                   defaultText={<T id={'select_category'} />}
                   labelProp={'name'}
                 />
               </FormGroup>
-                
+
               {/* Active checkbox */}
               <FormGroup
                 label={' '}
@@ -374,7 +396,7 @@ const ItemForm = ({
               >
                 <Checkbox
                   inline={true}
-                  label={<T id={'active'}/>}
+                  label={<T id={'active'} />}
                   defaultChecked={values.active}
                   {...getFieldProps('active')}
                 />
@@ -395,14 +417,18 @@ const ItemForm = ({
 
         <Row gutterWidth={16} className={'item-form__accounts-section'}>
           <Col width={404}>
-            <h4><T id={'purchase_information'}/></h4>
+            <h4>
+              <T id={'sales_information'} />
+            </h4>
 
             <FormGroup
-              label={<T id={'selling_price'}/>}
+              label={<T id={'selling_price'} />}
               className={'form-group--item-selling-price'}
-              intent={errors.selling_price && touched.selling_price && Intent.DANGER}
+              intent={
+                errors.selling_price && touched.selling_price && Intent.DANGER
+              }
               helperText={
-                <ErrorMessage {...{ errors, touched }} name='selling_price' />
+                <ErrorMessage {...{ errors, touched }} name="selling_price" />
               }
               inline={true}
             >
@@ -417,9 +443,10 @@ const ItemForm = ({
                     touched.selling_price &&
                     Intent.DANGER,
                 }}
+                disabled={!values.sellable}
               />
             </FormGroup>
-              
+
             {/* Selling account */}
             <FormGroup
               label={<T id={'account'} />}
@@ -431,32 +458,42 @@ const ItemForm = ({
                 Intent.DANGER
               }
               helperText={
-                <ErrorMessage {...{ errors, touched }} name='sell_account_id' />
+                <ErrorMessage {...{ errors, touched }} name="sell_account_id" />
               }
               className={classNames(
                 'form-group--sell-account',
                 'form-group--select-list',
-                Classes.FILL
+                Classes.FILL,
               )}
             >
-              <ListSelect
-                items={accounts}
-                itemRenderer={accountItem}
-                itemPredicate={filterAccounts}
-                popoverProps={{ minimal: true }}
-                onItemSelect={onItemAccountSelect('sell_account_id')}
+              <AccountsSelectList
+                accounts={accountsList}
+                onAccountSelected={onItemAccountSelect('sell_account_id')}
+                defaultSelectText={<T id={'select_account'} />}
+                selectedAccountId={values.sell_account_id}
+                disabled={!values.sellable}
+              />
+            </FormGroup>
 
-                selectedItem={values.sell_account_id}
-                selectedItemProp={'id'}
-
-                defaultText={<T id={'select_account'} />}
-                labelProp={'name'}
+            {/* sellable checkbox */}
+            <FormGroup
+              label={' '}
+              inline={true}
+              className={'form-group--sellable'}
+            >
+              <Checkbox
+                inline={true}
+                label={<T id={'sellable'} />}
+                checked={values.sellable}
+                {...getFieldProps('sellable')}
               />
             </FormGroup>
           </Col>
 
           <Col width={404}>
-            <h4><T id={'sales_information'} /></h4>
+            <h4>
+              <T id={'purchase_information'} />
+            </h4>
 
             {/* Cost price */}
             <FormGroup
@@ -464,7 +501,7 @@ const ItemForm = ({
               className={'form-group--item-cost-price'}
               intent={errors.cost_price && touched.cost_price && Intent.DANGER}
               helperText={
-                <ErrorMessage {...{ errors, touched }} name='cost_price' />
+                <ErrorMessage {...{ errors, touched }} name="cost_price" />
               }
               inline={true}
             >
@@ -477,6 +514,7 @@ const ItemForm = ({
                   intent:
                     errors.cost_price && touched.cost_price && Intent.DANGER,
                 }}
+                disabled={!values.purchasable}
               />
             </FormGroup>
 
@@ -490,25 +528,34 @@ const ItemForm = ({
                 Intent.DANGER
               }
               helperText={
-                <ErrorMessage {...{ errors, touched }} name='cost_account_id' />
+                <ErrorMessage {...{ errors, touched }} name="cost_account_id" />
               }
               className={classNames(
                 'form-group--cost-account',
                 'form-group--select-list',
-                Classes.FILL
+                Classes.FILL,
               )}
             >
-              <ListSelect
-                items={accounts}
-                itemRenderer={accountItem}
-                itemPredicate={filterAccounts}
-                popoverProps={{ minimal: true }}
-                onItemSelect={onItemAccountSelect('cost_account_id')}
+              <AccountsSelectList
+                accounts={accountsList}
+                onAccountSelected={onItemAccountSelect('cost_account_id')}
+                defaultSelectText={<T id={'select_account'} />}
+                selectedAccountId={values.cost_account_id}
+                disabled={!values.purchasable}
+              />
+            </FormGroup>
 
-                defaultText={<T id={'select_account'} />} 
-                labelProp={'name'}
-                selectedItem={values.cost_account_id}
-                selectedItemProp={'id'}
+            {/* purchasable checkbox */}
+            <FormGroup
+              label={' '}
+              inline={true}
+              className={'form-group--purchasable'}
+            >
+              <Checkbox
+                inline={true}
+                label={<T id={'purchasable'} />}
+                defaultChecked={values.purchasable}
+                {...getFieldProps('purchasable')}
               />
             </FormGroup>
           </Col>
@@ -521,35 +568,35 @@ const ItemForm = ({
             </h4>
 
             <FormGroup
-              label={<T id={'inventory_account'}/>}
+              label={<T id={'inventory_account'} />}
               inline={true}
               intent={
                 errors.inventory_account_id &&
                 touched.inventory_account_id &&
                 Intent.DANGER
               }
-              helperText={<ErrorMessage {...{ errors, touched }} name='inventory_account_id' />}
+              helperText={
+                <ErrorMessage
+                  {...{ errors, touched }}
+                  name="inventory_account_id"
+                />
+              }
               className={classNames(
                 'form-group--item-inventory_account',
                 'form-group--select-list',
-                Classes.FILL
+                Classes.FILL,
               )}
             >
-              <ListSelect
-                items={accounts}
-                itemRenderer={accountItem}
-                itemPredicate={filterAccounts}
-                popoverProps={{ minimal: true }}
-                onItemSelect={onItemAccountSelect('inventory_account_id')}
-                
-                defaultText={<T id={'select_account'} />}
-                labelProp={'name'}
-                selectedItem={values.inventory_account_id}
-                selectedItemProp={'id'} />
+              <AccountsSelectList
+                accounts={accountsList}
+                onAccountSelected={onItemAccountSelect('inventory_account_id')}
+                defaultSelectText={<T id={'select_account'} />}
+                selectedAccountId={values.inventory_account_id}
+              />
             </FormGroup>
 
             <FormGroup
-              label={<T id={'opening_stock'}/>}
+              label={<T id={'opening_stock'} />}
               className={'form-group--item-stock'}
               inline={true}
             >
@@ -562,14 +609,17 @@ const ItemForm = ({
           </Col>
         </Row>
 
-        <div class='form__floating-footer'>
-          <Button intent={Intent.PRIMARY} disabled={isSubmitting} type='submit'>
-          
-           { itemDetail && itemDetail.id ? <T id={'edit'}/> : <T id={'save'}/> }
+        <div class="form__floating-footer">
+          <Button intent={Intent.PRIMARY} disabled={isSubmitting} type="submit">
+            {itemDetail && itemDetail.id ? (
+              <T id={'edit'} />
+            ) : (
+              <T id={'save'} />
+            )}
           </Button>
 
           <Button className={'ml1'} disabled={isSubmitting}>
-            <T id={'save_as_draft'}/>
+            <T id={'save_as_draft'} />
           </Button>
 
           <Button className={'ml1'} onClick={handleCancelClickBtn}>
@@ -582,8 +632,8 @@ const ItemForm = ({
 };
 
 export default compose(
-  withAccounts(({accounts})=>({
-    accounts,
+  withAccounts(({ accountsList }) => ({
+    accountsList,
   })),
   withAccountDetail,
   withItemsActions,

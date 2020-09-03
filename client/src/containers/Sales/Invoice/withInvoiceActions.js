@@ -5,17 +5,18 @@ import {
   deleteInvoice,
   fetchInvoice,
   fetchInvoicesTable,
+  dueInvoices,
 } from 'store/Invoice/invoices.actions';
 import t from 'store/types';
 
 const mapDipatchToProps = (dispatch) => ({
   requestSubmitInvoice: (form) => dispatch(submitInvoice({ form })),
   requsetFetchInvoice: (id) => dispatch(fetchInvoice({ id })),
-  requestEditInvoice: (id, form) => dispatch(editInvoice( id, form )),
+  requestEditInvoice: (id, form) => dispatch(editInvoice(id, form)),
   requestFetchInvoiceTable: (query = {}) =>
     dispatch(fetchInvoicesTable({ query: { ...query } })),
   requestDeleteInvoice: (id) => dispatch(deleteInvoice({ id })),
-
+  requestFetchDueInvoices: (id) => dispatch(dueInvoices({ id })),
   changeInvoiceView: (id) =>
     dispatch({
       type: t.INVOICES_SET_CURRENT_VIEW,

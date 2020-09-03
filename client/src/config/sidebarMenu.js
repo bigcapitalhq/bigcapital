@@ -40,37 +40,25 @@ export default [
     children: [
       {
         text: <T id={'estimates'} />,
-        href: '/estimates/new',
+        href: '/estimates',
       },
-      // {
-      //   text: <T id={'estimate_list'} />,
-      //   href: '/estimates',
-      // },
+
       {
         text: <T id={'invocies'} />,
-        href: '/invoices/new',
+        href: '/invoices',
       },
-      // {
-      //   text: <T id={'invoices_list'} />,
-      //   href: '/invoices',
-      // },
+
       {
         text: <T id={'payment_receives'} />,
-        href: '/payment-receive/new',
+        href: '/payment-receives',
       },
       {
         divider: true,
-        text: <T id={'invoices_list'} />,
-        href: '/invoices',
       },
       {
         text: <T id={'receipts'} />,
-        href: '/receipts/new',
+        href: '/receipts',
       },
-      // {
-      //   text: <T id={'receipt_list'} />,
-      //   href: '/receipts',
-      // },
     ],
   },
   {
@@ -78,14 +66,12 @@ export default [
     children: [
       {
         text: <T id={'bills'} />,
-        href: '/bills/new',
+        href: '/bills',
       },
-      // {
-      //   text: <T id={'bill_list'} />,
-      //   href: '/bills',
-      // },
+
       {
-        text: <T id={'payment_mades'} />,
+        text: <T id={'payment_made'} />,
+        href: '/payment-mades',
       },
     ],
   },

@@ -37,9 +37,13 @@ const reducer = createReducer(initialState, {
   [t.BILLS_ITEMS_SET]: (state, action) => {
     const { bills } = action.payload;
     const _bills = {};
+
     bills.forEach((bill) => {
+      const oldBill = state.items[bill.id] || {};
+
       _bills[bill.id] = {
         ...defaultBill,
+        ...oldBill,
         ...bill,
       };
     });
@@ -59,7 +63,6 @@ const reducer = createReducer(initialState, {
 
   [t.BILLS_PAGE_SET]: (state, action) => {
     const { customViewId, bills, pagination } = action.payload;
-
     const viewId = customViewId || -1;
     const view = state.views[viewId] || {};
 
@@ -95,8 +98,6 @@ const reducer = createReducer(initialState, {
       },
     };
   },
-
 });
 
 export default createTableQueryReducers('bills', reducer);
-

@@ -59,6 +59,7 @@ const reducer = createReducer(initialState, {
   },
 
   [t.ESTIMATES_PAGE_SET]: (state, action) => {
+    // @todo camelCase keys.
     const { customViewId, sales_estimates, pagination } = action.payload;
 
     const viewId = customViewId || -1;

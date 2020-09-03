@@ -5,14 +5,13 @@ import React, {
   useRef,
   useState,
 } from 'react';
-
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import moment from 'moment';
-import { Intent, FormGroup, TextArea, Button } from '@blueprintjs/core';
+import { Intent, FormGroup, TextArea } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
-import { pick, omit } from 'lodash';
-import { queryCache } from 'react-query';
+import { pick } from 'lodash';
+import { Row, Col } from 'react-grid-system';
 
 import EstimateFormHeader from './EstimateFormHeader';
 import EstimatesItemsTable from './EntriesItemsTable';
@@ -103,13 +102,11 @@ const EstimateForm = ({
       .min(1)
       .max(1024)
       .label(formatMessage({ id: 'note' })),
-
     terms_conditions: Yup.string()
       .trim()
       .min(1)
       .max(1024)
       .label(formatMessage({ id: 'note' })),
-
     entries: Yup.array().of(
       Yup.object().shape({
         quantity: Yup.number().nullable(),
@@ -176,7 +173,7 @@ const EstimateForm = ({
       index: index + 1,
     }));
   };
-  // debugger;
+
   const initialValues = useMemo(
     () => ({
       ...(estimate
@@ -199,14 +196,6 @@ const EstimateForm = ({
     }),
     [estimate, defaultInitialValues, defaultEstimate],
   );
-
-  // const initialValues = useMemo(
-  //   () => ({
-  //     ...defaultInitialValues,
-  //     entries: orderingProductsIndex(defaultInitialValues.entries),
-  //   }),
-  //   [defaultEstimate, defaultInitialValues, estimate],
-  // );
 
   const initialAttachmentFiles = useMemo(() => {
     return estimate && estimate.media
@@ -251,12 +240,8 @@ const EstimateForm = ({
           .then((response) => {
             AppToaster.show({
               message: formatMessage(
-                {
-                  id: 'the_estimate_has_been_successfully_created',
-                },
-                {
-                  number: values.estimate_number,
-                },
+                { id: 'the_estimate_has_been_successfully_created' },
+                { number: values.estimate_number },
               ),
               intent: Intent.SUCCESS,
             });
@@ -270,7 +255,7 @@ const EstimateForm = ({
       }
     },
   });
-
+  console.log(formik.errors ,'ERROR');
   const handleSubmitClick = useCallback(
     (payload) => {
       setPayload(payload);
@@ -313,9 +298,6 @@ const EstimateForm = ({
     );
   };
 
-
-
-
   return (
     <div>
       <form onSubmit={formik.handleSubmit}>
@@ -325,36 +307,45 @@ const EstimateForm = ({
           onClickAddNewRow={handleClickAddNewRow}
           onClickClearAllLines={handleClearAllLines}
           formik={formik}
-          // defaultRow={defaultEstimate}
         />
-        <FormGroup
-          label={<T id={'customer_note'} />}
-          className={'form-group--customer_note'}
-        >
-          <TextArea growVertically={true} {...formik.getFieldProps('note')} />
-        </FormGroup>
-        <FormGroup
-          label={<T id={'terms_conditions'} />}
-          className={'form-group--terms_conditions'}
-        >
-          <TextArea
-            growVertically={true}
-            {...formik.getFieldProps('terms_conditions')}
-          />
-        </FormGroup>
-        <Dragzone
-          initialFiles={initialAttachmentFiles}
-          onDrop={handleDropFiles}
-          onDeleteFile={handleDeleteFile}
-          hint={'Attachments: Maxiumum size: 20MB'}
-        />
+
+        <Row>
+          <Col>
+            <FormGroup
+              label={<T id={'customer_note'} />}
+              className={'form-group--customer_note'}
+            >
+              <TextArea
+                growVertically={true}
+                {...formik.getFieldProps('note')}
+              />
+            </FormGroup>
+            <FormGroup
+              label={<T id={'terms_conditions'} />}
+              className={'form-group--terms_conditions'}
+            >
+              <TextArea
+                growVertically={true}
+                {...formik.getFieldProps('terms_conditions')}
+              />
+            </FormGroup>
+          </Col>
+
+          <Col>
+            <Dragzone
+              initialFiles={initialAttachmentFiles}
+              onDrop={handleDropFiles}
+              onDeleteFile={handleDeleteFile}
+              hint={'Attachments: Maxiumum size: 20MB'}
+            />
+          </Col>
+        </Row>
       </form>
       <EstimateFormFooter
         formik={formik}
         onSubmitClick={handleSubmitClick}
         estimate={estimate}
         onCancelClick={handleCancelClick}
-    
       />
     </div>
   );

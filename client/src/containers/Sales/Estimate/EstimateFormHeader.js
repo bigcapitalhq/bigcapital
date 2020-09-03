@@ -68,13 +68,16 @@ function EstimateFormHeader({
   );
 
   return (
-    <div className={'estimate-form'}>
-      <div className={'estimate-form__primary-section'}>
-        {/* customer name */}
+    <div className={'page-form page-form--estimate'}>
+      <div className={'page-form__primary-section'}>
         <FormGroup
           label={<T id={'customer_name'} />}
           inline={true}
-          className={classNames('form-group--select-list', Classes.FILL)}
+          className={classNames(
+            'form-group--select-list',
+            'form-group--customer',
+            Classes.FILL,
+          )}
           labelInfo={<FieldRequiredHint />}
           intent={errors.customer_id && touched.customer_id && Intent.DANGER}
           helperText={
@@ -94,17 +97,18 @@ function EstimateFormHeader({
             labelProp={'display_name'}
           />
         </FormGroup>
-        {/* estimate_date */}
-        <Row>
-          <Col
 
-          // md={9} push={{ md: 3 }}
-          >
+        <Row>
+          <Col>
             <FormGroup
               label={<T id={'estimate_date'} />}
               inline={true}
               labelInfo={<FieldRequiredHint />}
-              className={classNames('form-group--select-list', Classes.FILL)}
+              className={classNames(
+                'form-group--select-list',
+                Classes.FILL,
+                'form-group--estimate-date',
+              )}
               intent={
                 errors.estimate_date && touched.estimate_date && Intent.DANGER
               }
@@ -120,14 +124,15 @@ function EstimateFormHeader({
               />
             </FormGroup>
           </Col>
-          <Col
-
-          // md={3} pull={{ md: 9 }}
-          >
+          <Col>
             <FormGroup
               label={<T id={'expiration_date'} />}
               inline={true}
-              className={classNames('form-group--select-list', Classes.FILL)}
+              className={classNames(
+                'form-group--select-list',
+                'form-group--expiration-date',
+                Classes.FILL,
+              )}
               intent={
                 errors.expiration_date &&
                 touched.expiration_date &&
@@ -147,11 +152,12 @@ function EstimateFormHeader({
           </Col>
         </Row>
       </div>
-      {/* Estimate */}
+
+      {/*- Estimate -*/}
       <FormGroup
         label={<T id={'estimate'} />}
         inline={true}
-        className={('form-group--estimate', Classes.FILL)}
+        className={('form-group--estimate-number', Classes.FILL)}
         labelInfo={<FieldRequiredHint />}
         intent={
           errors.estimate_number && touched.estimate_number && Intent.DANGER
@@ -168,6 +174,7 @@ function EstimateFormHeader({
           {...getFieldProps('estimate_number')}
         />
       </FormGroup>
+
       <FormGroup
         label={<T id={'reference'} />}
         inline={true}

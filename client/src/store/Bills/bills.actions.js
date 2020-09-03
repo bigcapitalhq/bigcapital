@@ -66,27 +66,7 @@ export const deleteBill = ({ id }) => {
 };
 
 export const submitBill = ({ form }) => {
-  return (dispatch) =>
-    new Promise((resolve, reject) => {
-      dispatch({
-        type: t.SET_DASHBOARD_REQUEST_LOADING,
-      });
-      ApiService.post('purchases/bills', form)
-        .then((response) => {
-          dispatch({
-            type: t.SET_DASHBOARD_REQUEST_COMPLETED,
-          });
-          resolve(response);
-        })
-        .catch((error) => {
-          const { response } = error;
-          const { data } = response;
-          dispatch({
-            type: t.SET_DASHBOARD_REQUEST_COMPLETED,
-          });
-          reject(data?.errors);
-        });
-    });
+  return (dispatch) => ApiService.post('purchases/bills', form);
 };
 
 export const fetchBill = ({ id }) => {
@@ -94,12 +74,11 @@ export const fetchBill = ({ id }) => {
     new Promise((resovle, reject) => {
       ApiService.get(`purchases/bills/${id}`)
         .then((response) => {
+          const { bill } = response.data;
+
           dispatch({
             type: t.BILL_SET,
-            payload: {
-              id,
-              bill: response.data.bill,
-            },
+            payload: { id, bill },
           });
           resovle(response);
         })
@@ -112,25 +91,5 @@ export const fetchBill = ({ id }) => {
 };
 
 export const editBill = (id, form) => {
-  return (dispatch) =>
-    new Promise((resolve, rejcet) => {
-      dispatch({
-        type: t.SET_DASHBOARD_REQUEST_LOADING,
-      });
-      ApiService.post(`purchases/bills/${id}`, form)
-        .then((response) => {
-          dispatch({
-            type: t.SET_DASHBOARD_REQUEST_COMPLETED,
-          });
-          resolve(response);
-        })
-        .catch((error) => {
-          const { response } = error;
-          const { data } = response;
-          dispatch({
-            type: t.SET_DASHBOARD_REQUEST_COMPLETED,
-          });
-          rejcet(data?.errors);
-        });
-    });
+  return (dispatch) => ApiService.post(`purchases/bills/${id}`, form);
 };

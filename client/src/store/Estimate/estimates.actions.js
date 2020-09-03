@@ -8,7 +8,6 @@ export const submitEstimate = ({ form }) => {
         type: t.SET_DASHBOARD_REQUEST_LOADING,
       });
       ApiService.post('sales/estimates', form)
-
         .then((response) => {
           dispatch({
             type: t.SET_DASHBOARD_REQUEST_COMPLETED,
@@ -21,7 +20,6 @@ export const submitEstimate = ({ form }) => {
           dispatch({
             type: t.SET_DASHBOARD_REQUEST_COMPLETED,
           });
-
           reject(data?.errors);
         });
     });
@@ -30,23 +28,14 @@ export const submitEstimate = ({ form }) => {
 export const editEstimate = (id, form) => {
   return (dispatch) =>
     new Promise((resolve, reject) => {
-      dispatch({
-        type: t.SET_DASHBOARD_REQUEST_LOADING,
-      });
       ApiService.post(`sales/estimates/${id}`, form)
         .then((response) => {
-          dispatch({
-            type: t.SET_DASHBOARD_REQUEST_COMPLETED,
-          });
           resolve(response);
         })
         .catch((error) => {
           const { response } = error;
           const { data } = response;
 
-          dispatch({
-            type: t.SET_DASHBOARD_REQUEST_COMPLETED,
-          });
           reject(data?.errors);
         });
     });
@@ -74,12 +63,12 @@ export const fetchEstimate = ({ id }) => {
     new Promise((resovle, reject) => {
       ApiService.get(`sales/estimates/${id}`)
         .then((response) => {
-
+          const { estimate } = response.data;
           dispatch({
             type: t.ESTIMATE_SET,
             payload: {
               id,
-              estimate: response.data.estimate,
+              estimate,
             },
           });
           resovle(response);
@@ -95,7 +84,7 @@ export const fetchEstimate = ({ id }) => {
 export const fetchEstimatesTable = ({ query = {} }) => {
   return (dispatch, getState) =>
     new Promise((resolve, rejcet) => {
-      const pageQuery = getState().sales_estimates.tableQuery;
+      const pageQuery = getState().salesEstimates.tableQuery;
       dispatch({
         type: t.ESTIMATES_TABLE_LOADING,
         payload: {
@@ -106,7 +95,6 @@ export const fetchEstimatesTable = ({ query = {} }) => {
         params: { ...pageQuery, ...query },
       })
         .then((response) => {
-          // debugger;
           dispatch({
             type: t.ESTIMATES_PAGE_SET,
             payload: {

@@ -1,51 +1,65 @@
-import React, { useMemo, useCallback, useEffect, useState,useRef } from 'react';
+import React, {
+  useMemo,
+  useCallback,
+  useEffect,
+  useState,
+  useRef,
+} from 'react';
 
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import moment from 'moment';
 import { Intent, FormGroup, TextArea } from '@blueprintjs/core';
-
+import { useParams, useHistory } from 'react-router-dom';
 import { FormattedMessage as T, useIntl } from 'react-intl';
+import { pick, values } from 'lodash';
 
 import PaymentReceiveHeader from './PaymentReceiveFormHeader';
-// PaymentReceiptItemsTable
+import PaymentReceiveItemsTable from './PaymentReceiveItemsTable';
 import PaymentReceiveFooter from './PaymentReceiveFormFooter';
 
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withMediaActions from 'containers/Media/withMediaActions';
-import withPaymentReceivesActions from './withPaymentReceivesActions'
-
+import withPaymentReceivesActions from './withPaymentReceivesActions';
+import withInvoices from '../Invoice/withInvoices';
+import withPaymentReceiveDetail from './withPaymentReceiveDetail';
+import withPaymentReceives from './withPaymentReceives';
 import { AppToaster } from 'components';
 import Dragzone from 'components/Dragzone';
 import useMedia from 'hooks/useMedia';
 
 import { compose, repeatValue } from 'utils';
 
-const MIN_LINES_NUMBER = 4;
+const MIN_LINES_NUMBER = 5;
 
 function PaymentReceiveForm({
   //#withMedia
   requestSubmitMedia,
   requestDeleteMedia,
-  
+
   //#WithPaymentReceiveActions
   requestSubmitPaymentReceive,
-
+  requestEditPaymentReceive,
 
   //#withDashboard
   changePageTitle,
   changePageSubtitle,
 
   //#withPaymentReceiveDetail
+  paymentReceive,
+  paymentReceiveInvoices,
+  paymentReceivesItems,
 
   //#OWn Props
-  payment_receive,
+  // payment_receive,
   onFormSubmit,
   onCancelForm,
+  dueInvoiceLength,
+  onCustomerChange,
 }) {
   const { formatMessage } = useIntl();
   const [payload, setPayload] = useState({});
-
+  const { id } = useParams();
   const {
     setFiles,
     saveMedia,
@@ -63,43 +77,48 @@ function PaymentReceiveForm({
   };
 
   useEffect(() => {
-    if (payment_receive && payment_receive.id) {
+    onCustomerChange && onCustomerChange(formik.values.customer_id);
+  });
+
+  useEffect(() => {
+    if (paymentReceive && paymentReceive.id) {
       changePageTitle(formatMessage({ id: 'edit_payment_receive' }));
     } else {
-      changePageTitle(formatMessage({ id: 'new_payment_receive' }));
+      changePageTitle(formatMessage({ id: 'payment_receive' }));
     }
-  }, [changePageTitle, payment_receive, formatMessage]);
+  }, [changePageTitle, paymentReceive, formatMessage]);
 
   const validationSchema = Yup.object().shape({
     customer_id: Yup.string()
       .label(formatMessage({ id: 'customer_name_' }))
       .required(),
-    deposit_account_id: Yup.number()
-      .required()
-      .label(formatMessage({ id: 'deposit_account_' })),
     payment_date: Yup.date()
       .required()
       .label(formatMessage({ id: 'payment_date_' })),
+    deposit_account_id: Yup.number()
+      .required()
+      .label(formatMessage({ id: 'deposit_account_' })),
+    // receive_amount: Yup.number()
+    //   .required()
+    //   .label(formatMessage({ id: 'receive_amount_' })),
     payment_receive_no: Yup.number()
       .required()
       .label(formatMessage({ id: 'payment_receive_no_' })),
-    reference_no: Yup.string().min(1).max(255),
-    statement: Yup.string()
-      .trim()
-      .min(1)
-      .max(1024)
-      .label(formatMessage({ id: 'statement' })),
-
+    reference_no: Yup.string().min(1).max(255).nullable(),
+    description: Yup.string().nullable(),
     entries: Yup.array().of(
       Yup.object().shape({
         payment_amount: Yup.number().nullable(),
-        item_id: Yup.number()
+        invoice_no: Yup.number().nullable(),
+        balance: Yup.number().nullable(),
+        due_amount: Yup.number().nullable(),
+        invoice_date: Yup.date(),
+        invoice_id: Yup.number()
           .nullable()
           .when(['payment_amount'], {
             is: (payment_amount) => payment_amount,
             then: Yup.number().required(),
           }),
-        description: Yup.string().nullable(),
       }),
     ),
   });
@@ -114,9 +133,12 @@ function PaymentReceiveForm({
 
   const defaultPaymentReceive = useMemo(
     () => ({
-      item_id: null,
-      payment_amount: null,
-      description: null,
+      invoice_id: '',
+      invoice_date: moment(new Date()).format('YYYY-MM-DD'),
+      invoice_no: '',
+      balance: '',
+      due_amount: '',
+      payment_amount: '',
     }),
     [],
   );
@@ -126,29 +148,53 @@ function PaymentReceiveForm({
       deposit_account_id: '',
       payment_date: moment(new Date()).format('YYYY-MM-DD'),
       reference_no: '',
-      statement: '',
+      payment_receive_no: '',
+      // receive_amount: '',
+      description: '',
       entries: [...repeatValue(defaultPaymentReceive, MIN_LINES_NUMBER)],
     }),
     [defaultPaymentReceive],
   );
 
+  const orderingIndex = (_entries) => {
+    return _entries.map((item, index) => ({
+      ...item,
+      index: index + 1,
+    }));
+  };
+
   const initialValues = useMemo(
     () => ({
-      ...defaultInitialValues,
-      entries: defaultInitialValues.entries,
+      ...(paymentReceive
+        ? {
+            ...pick(paymentReceive, Object.keys(defaultInitialValues)),
+            entries: [
+              ...paymentReceive.entries.map((paymentReceive) => ({
+                ...pick(paymentReceive, Object.keys(defaultPaymentReceive)),
+              })),
+              ...repeatValue(
+                defaultPaymentReceive,
+                Math.max(MIN_LINES_NUMBER - paymentReceive.entries.length, 0),
+              ),
+            ],
+          }
+        : {
+            ...defaultInitialValues,
+            entries: orderingIndex(defaultInitialValues.entries),
+          }),
     }),
-    [defaultPaymentReceive, defaultInitialValues, payment_receive],
+    [paymentReceive, defaultInitialValues, defaultPaymentReceive],
   );
 
   const initialAttachmentFiles = useMemo(() => {
-    return payment_receive && payment_receive.media
-      ? payment_receive.media.map((attach) => ({
+    return paymentReceive && paymentReceive.media
+      ? paymentReceive.media.map((attach) => ({
           preview: attach.attachment_file,
           uploaded: true,
           metadata: { ...attach },
         }))
       : [];
-  }, [payment_receive]);
+  }, [paymentReceive]);
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -157,38 +203,52 @@ function PaymentReceiveForm({
       ...initialValues,
     },
     onSubmit: async (values, { setSubmitting, setErrors, resetForm }) => {
+      setSubmitting(true);
+      const entries = formik.values.entries.filter((item) => {
+        if (item.invoice_id !== undefined) {
+          return { ...item };
+        }
+      });
       const form = {
         ...values,
+        entries,
       };
-      const savePaymentReceive = (mediaIds) =>
-        new Promise((resolve, reject) => {
-          const requestForm = { ...form, media_ids: mediaIds };
 
-          requestSubmitPaymentReceive(requestForm)
-            .the((response) => {
-              AppToaster.show({
-                message: formatMessage({
-                  id: 'the_payment_receive_has_been_successfully_created',
-                }),
-                intent: Intent.SUCCESS,
-              });
-              setSubmitting(false);
-              clearSavedMediaIds();
-              savePaymentReceiveSubmit({ action: 'new', ...payload });
-            })
-            .catch((errors) => {
-              setSubmitting(false);
+      const requestForm = { ...form };
+
+      if (paymentReceive && paymentReceive.id) {
+        requestEditPaymentReceive(paymentReceive.id, requestForm)
+          .then((response) => {
+            AppToaster.show({
+              message: formatMessage({
+                id: 'the_payment_receive_has_been_successfully_edited',
+              }),
+              intent: Intent.SUCCESS,
             });
-        });
-      Promise.all([saveMedia(), deleteMedia()])
-        .then(([savedMediaResponses]) => {
-          const mediaIds = savedMediaResponses.map((res) => res.data.media.id);
-          savedMediaIds.current = mediaIds;
-          return savedMediaResponses;
-        })
-        .then(() => {
-          return savePaymentReceive(savedMediaIds.current);
-        });
+            setSubmitting(false);
+            savePaymentReceiveSubmit({ action: 'update', ...payload });
+            resetForm();
+          })
+          .catch((error) => {
+            setSubmitting(false);
+          });
+      } else {
+        requestSubmitPaymentReceive(requestForm)
+          .then((response) => {
+            AppToaster.show({
+              message: formatMessage({
+                id: 'the_payment_receive_has_been_successfully_created',
+              }),
+              intent: Intent.SUCCESS,
+            });
+            setSubmitting(false);
+            resetForm();
+            savePaymentReceiveSubmit({ action: 'new', ...payload });
+          })
+          .catch((errors) => {
+            setSubmitting(false);
+          });
+      }
     },
   });
 
@@ -222,33 +282,47 @@ function PaymentReceiveForm({
     formik.resetForm();
   };
 
+  const handleClickAddNewRow = () => {
+    formik.setFieldValue(
+      'entries',
+      orderingIndex([...formik.values.entries, defaultPaymentReceive]),
+    );
+  };
+
+  const handleClearAllLines = () => {
+    formik.setFieldValue(
+      'entries',
+      orderingIndex([...repeatValue(defaultPaymentReceive, MIN_LINES_NUMBER)]),
+    );
+  };
+  console.log(formik.errors, 'ERROR');
   return (
     <div className={'payment_receive_form'}>
       <form onSubmit={formik.handleSubmit}>
         <PaymentReceiveHeader formik={formik} />
-        <FormGroup
-          label={<T id={'statement'} />}
-          className={'form-group--statement'}
-        >
-          <TextArea
-            growVertically={true}
-            {...formik.getFieldProps('statement')}
-          />
-        </FormGroup>
-
-        <Dragzone
+        <PaymentReceiveItemsTable
+          entries={formik.values.entries}
+          customer_id={formik.values.customer_id}
+          onClickAddNewRow={handleClickAddNewRow}
+          onClickClearAllLines={handleClearAllLines}
+          formik={formik}
+          invoices={paymentReceiveInvoices}
+        />
+        {/* <Dragzone
           initialFiles={initialAttachmentFiles}
           onDrop={handleDropFiles}
           onDeleteFile={handleDeleteFile}
           hint={'Attachments: Maxiumum size: 20MB'}
-        />
-        <PaymentReceiveFooter
-          formik={formik}
-          onSubmit={handleSubmitClick}
-          onCancel={handleCancelClick}
-          onClearClick={handleClearClick}
-        />
+        /> */}
       </form>
+
+      <PaymentReceiveFooter
+        formik={formik}
+        onSubmitClick={handleSubmitClick}
+        paymentReceive={paymentReceive}
+        onCancel={handleCancelClick}
+        onClearClick={handleClearClick}
+      />
     </div>
   );
 }
@@ -257,4 +331,8 @@ export default compose(
   withPaymentReceivesActions,
   withDashboardActions,
   withMediaActions,
+  withPaymentReceives(({ paymentReceivesItems }) => ({
+    paymentReceivesItems,
+  })),
+  withPaymentReceiveDetail(),
 )(PaymentReceiveForm);

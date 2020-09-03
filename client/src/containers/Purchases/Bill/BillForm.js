@@ -9,9 +9,10 @@ import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import moment from 'moment';
 import { Intent, FormGroup, TextArea } from '@blueprintjs/core';
+import { Row, Col } from 'react-grid-system';
 
 import { FormattedMessage as T, useIntl } from 'react-intl';
-import { pick, omit } from 'lodash';
+import { pick } from 'lodash';
 
 import BillFormHeader from './BillFormHeader';
 import EstimatesItemsTable from 'containers/Sales/Estimate/EntriesItemsTable';
@@ -82,6 +83,7 @@ function BillForm({
     }
   }, [changePageTitle, bill, formatMessage]);
 
+  // @todo abstruct validation schema to sperated file.
   const validationSchema = Yup.object().shape({
     vendor_id: Yup.number()
       .required()
@@ -102,7 +104,6 @@ function BillForm({
       .min(1)
       .max(1024)
       .label(formatMessage({ id: 'note' })),
-
     entries: Yup.array().of(
       Yup.object().shape({
         quantity: Yup.number().nullable(),
@@ -180,14 +181,6 @@ function BillForm({
     [bill, defaultInitialValues, defaultBill],
   );
 
-  // const initialValues = useMemo(
-  //   () => ({
-  //     ...defaultInitialValues,
-  //     entries: orderingIndex(defaultInitialValues.entries),
-  //   }),
-  //   [defaultInitialValues],
-  // );
-
   const initialAttachmentFiles = useMemo(() => {
     return bill && bill.media
       ? bill.media.map((attach) => ({
@@ -207,14 +200,10 @@ function BillForm({
     onSubmit: async (values, { setSubmitting, setErrors, resetForm }) => {
       setSubmitting(true);
 
-      const entries = values.entries.filter(
-        (item) => item.item_id && item.quantity,
-      );
       const form = {
         ...values,
-        entries,
+        entries: values.entries.filter((item) => item.item_id && item.quantity),
       };
-
       const requestForm = { ...form };
       if (bill && bill.id) {
         requestEditBill(bill.id, requestForm)
@@ -243,8 +232,8 @@ function BillForm({
               intent: Intent.SUCCESS,
             });
             setSubmitting(false);
-            resetForm();
             saveBillSubmit({ action: 'new', ...payload });
+            resetForm();
           })
           .catch((errors) => {
             setSubmitting(false);
@@ -292,10 +281,6 @@ function BillForm({
       orderingIndex([...formik.values.entries, defaultBill]),
     );
   };
-
-  console.log(formik.errors, 'Errors');
-  console.log(formik.values, 'values');
-
   return (
     <div className={'bill-form'}>
       <form onSubmit={formik.handleSubmit}>
@@ -306,15 +291,25 @@ function BillForm({
           onClickAddNewRow={onClickAddNewRow}
           onClickClearAllLines={onClickCleanAllLines}
         />
-        <FormGroup label={<T id={'note'} />} className={'form-group--'}>
-          <TextArea growVertically={true} {...formik.getFieldProps('note')} />
-        </FormGroup>
-        <Dragzone
-          initialFiles={initialAttachmentFiles}
-          onDrop={handleDropFiles}
-          onDeleteFile={handleDeleteFile}
-          hint={'Attachments: Maxiumum size: 20MB'}
-        />
+        <Row>
+          <Col>
+            <FormGroup label={<T id={'note'} />} className={'form-group--'}>
+              <TextArea
+                growVertically={true}
+                {...formik.getFieldProps('note')}
+              />
+            </FormGroup>
+          </Col>
+
+          <Col>
+            <Dragzone
+              initialFiles={initialAttachmentFiles}
+              onDrop={handleDropFiles}
+              onDeleteFile={handleDeleteFile}
+              hint={'Attachments: Maxiumum size: 20MB'}
+            />
+          </Col>
+        </Row>
       </form>
       <BillFormFooter
         formik={formik}

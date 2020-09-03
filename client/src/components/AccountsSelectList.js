@@ -9,6 +9,7 @@ export default function AccountsSelectList({
   selectedAccountId,
   defaultSelectText = 'Select account',
   onAccountSelected,
+  disabled = false,
 }) {
   // Find initial account object to set it as default account in initial render.
   const initialAccount = useMemo(
@@ -77,6 +78,7 @@ export default function AccountsSelectList({
       onItemSelect={onAccountSelect}
     >
       <Button
+        disabled={disabled}
         text={selectedAccount ? selectedAccount.name : defaultSelectText}
       />
     </Select>

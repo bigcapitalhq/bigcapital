@@ -21,8 +21,9 @@ import estimates from './Estimate/estimates.types';
 import invoices from './Invoice/invoices.types';
 import receipts from './receipt/receipt.type';
 import bills from './Bills/bills.type';
-import paymentReceives from './PaymentReceive/paymentReceive.type';
 import vendors from './vendors/vendors.types';
+import paymentReceives from './PaymentReceive/paymentReceive.type';
+import paymentMades from './PaymentMades/paymentMade.type';
 
 export default {
   ...authentication,
@@ -50,4 +51,5 @@ export default {
   ...bills,
   ...paymentReceives,
   ...vendors,
+  ...paymentMades,
 };

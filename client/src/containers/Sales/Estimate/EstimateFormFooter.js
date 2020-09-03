@@ -11,7 +11,7 @@ export default function EstimateFormFooter({
   estimate,
 }) {
   return (
-    <div className={'estimate-form__floating-footer'}>
+    <div className={'form__floating-footer'}>
       <Button
         disabled={isSubmitting}
         intent={Intent.PRIMARY}

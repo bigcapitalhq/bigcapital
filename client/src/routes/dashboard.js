@@ -292,6 +292,14 @@ export default [
     }),
     breadcrumb: 'New Payment Receive',
   },
+  {
+    path: `/payment-receives`,
+    component: LazyLoader({
+      loader: () =>
+        import('containers/Sales/PaymentReceive/PaymentReceiveList'),
+    }),
+    breadcrumb: 'Payment Receive List',
+  },
 
   //Bills
   {
@@ -322,4 +330,36 @@ export default [
     }),
     breadcrumb: 'Receipt List',
   },
+
+  // Payment Mades
+
+  {
+    path: `/payment-made/:id/edit`,
+    component: LazyLoader({
+      loader: () => import('containers/Purchases/PaymentMades/PaymentMade'),
+    }),
+    breadcrumb: 'Edit',
+  },
+  {
+    path: `/payment-made/new`,
+    component: LazyLoader({
+      loader: () => import('containers/Purchases/PaymentMades/PaymentMade'),
+    }),
+    breadcrumb: 'New Payment Made',
+  },
+  {
+    path: `/payment-mades`,
+    component: LazyLoader({
+      loader: () =>
+        import('containers/Purchases/PaymentMades/PaymentMadeList'),
+    }),
+    breadcrumb: 'Payment Made List',
+  },
+
+
+
+
+
+
+
 ];

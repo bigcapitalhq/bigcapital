@@ -1,24 +1,21 @@
-import React, { useEffect, useCallback, useState,useMemo } from 'react';
-import {
-  Route,
-  Switch,
-  useHistory
-} from 'react-router-dom';
-import {
-  Intent,
-  Alert,
-} from '@blueprintjs/core';
+import React, { useEffect, useCallback, useState, useMemo } from 'react';
+import { Route, Switch, useHistory } from 'react-router-dom';
+import { Intent, Alert } from '@blueprintjs/core';
 import { useQuery } from 'react-query';
-import { FormattedMessage as T, FormattedHTMLMessage, useIntl } from 'react-intl';
+import {
+  FormattedMessage as T,
+  FormattedHTMLMessage,
+  useIntl,
+} from 'react-intl';
 
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
-import ItemsActionsBar from 'containers/Items/ItemsActionsBar';
 import { compose } from 'utils';
 
-import ItemsDataTable from './ItemsDataTable';
-import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
-
 import ItemsViewsTabs from 'containers/Items/ItemsViewsTabs';
+import ItemsDataTable from './ItemsDataTable';
+import ItemsActionsBar from 'containers/Items/ItemsActionsBar';
+
+import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import AppToaster from 'components/AppToaster';
 
 import withItems from 'containers/Items/withItems';
@@ -26,7 +23,6 @@ import withResourceActions from 'containers/Resources/withResourcesActions';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withItemsActions from 'containers/Items/withItemsActions';
 import withViewsActions from 'containers/Views/withViewsActions';
-
 
 function ItemsList({
   // #withDashboardActions
@@ -51,36 +47,40 @@ function ItemsList({
   const [bulkDelete, setBulkDelete] = useState(false);
 
   const { formatMessage } = useIntl();
-
   const history = useHistory();
 
   useEffect(() => {
-    changePageTitle(formatMessage({id:'items_list'}));
+    changePageTitle(formatMessage({ id: 'items_list' }));
   }, [changePageTitle]);
 
-  const fetchHook = useQuery('items-resource', () => {
-    return Promise.all([
-      requestFetchResourceViews('items'),
-      requestFetchResourceFields('items'),
-    ]);
-  });
+  const fetchResourceViews = useQuery(
+    ['resource-views', 'items'],
+    (key, resourceName) => requestFetchResourceViews(resourceName),
+  );
 
-  const fetchItems = useQuery(['items-table', itemsTableQuery],
-    () => requestFetchItems({}));
+  const fetchResourceFields = useQuery(
+    ['resource-fields', 'items'],
+    (key, resourceName) => requestFetchResourceFields(resourceName),
+  );
+
+  const fetchItems = useQuery(['items-table', itemsTableQuery], () =>
+    requestFetchItems({}),
+  );
 
   // Handle click delete item.
-  const handleDeleteItem = useCallback((item) => {
-    setDeleteItem(item);
-  }, [setDeleteItem]);
+  const handleDeleteItem = useCallback(
+    (item) => {
+      setDeleteItem(item);
+    },
+    [setDeleteItem],
+  );
 
   const handleEditItem = useCallback(
     (item) => {
       history.push(`/items/${item.id}/edit`);
     },
-    [history]
+    [history],
   );
-
- 
 
   // Handle cancel delete the item.
   const handleCancelDeleteItem = useCallback(() => {
@@ -98,29 +98,43 @@ function ItemsList({
       });
       setDeleteItem(false);
     });
-  }, [requestDeleteItem, deleteItem,formatMessage]);
+  }, [requestDeleteItem, deleteItem, formatMessage]);
 
-  // Handle fetch data table.
-  const handleFetchData = useCallback(({ pageIndex, pageSize, sortBy  }) => {
-    addItemsTableQueries({
-      ...(sortBy.length > 0) ? {
-        column_sort_order: sortBy[0].id,
-        sort_order: sortBy[0].desc ? 'desc' : 'asc',
-      } : {},
-    });
-  }, [fetchItems, addItemsTableQueries]);
+  const handleFetchData = useCallback(
+    ({ pageIndex, pageSize, sortBy }) => {
+      const page = pageIndex + 1;
+
+      addItemsTableQueries({
+        ...(sortBy.length > 0
+          ? {
+              column_sort_by: sortBy[0].id,
+              sort_order: sortBy[0].desc ? 'desc' : 'asc',
+            }
+          : {}),
+        page_size: pageSize,
+        page,
+      });
+    },
+    [addItemsTableQueries],
+  );
 
   // Handle filter change to re-fetch the items.
-  const handleFilterChanged = useCallback((filterConditions) => {
-    addItemsTableQueries({
-      filter_roles: filterConditions || '',  
-    });
-  }, [fetchItems]);
+  const handleFilterChanged = useCallback(
+    (filterConditions) => {
+      addItemsTableQueries({
+        filter_roles: filterConditions || '',
+      });
+    },
+    [fetchItems],
+  );
 
   // Handle custom view change to re-fetch the items.
-  const handleCustomViewChanged = useCallback((customViewId) => {    
-    setTableLoading(true);
-  }, [fetchItems]);
+  const handleCustomViewChanged = useCallback(
+    (customViewId) => {
+      setTableLoading(true);
+    },
+    [fetchItems],
+  );
 
   useEffect(() => {
     if (tableLoading && !fetchItems.isFetching) {
@@ -129,108 +143,124 @@ function ItemsList({
   }, [tableLoading, fetchItems.isFetching]);
 
   // Handle selected rows change.
-  const handleSelectedRowsChange = useCallback((accounts) => {
-    setSelectedRows(accounts);
-  }, [setSelectedRows]);
- 
-   // Calculates the data table selected rows count.
-   const selectedRowsCount = useMemo(() => Object.values(selectedRows).length, [selectedRows]);
+  const handleSelectedRowsChange = useCallback(
+    (accounts) => {
+      setSelectedRows(accounts);
+    },
+    [setSelectedRows],
+  );
 
- 
+  // Calculates the data table selected rows count.
+  const selectedRowsCount = useMemo(() => Object.values(selectedRows).length, [
+    selectedRows,
+  ]);
 
   // Handle items bulk delete button click.,
 
-  const handleBulkDelete = useCallback((itemsIds) => {
-    setBulkDelete(itemsIds);
-  }, [setBulkDelete]);
+  const handleBulkDelete = useCallback(
+    (itemsIds) => {
+      setBulkDelete(itemsIds);
+    },
+    [setBulkDelete],
+  );
 
-   // Handle confirm items bulk delete.
-   const handleConfirmBulkDelete = useCallback(() => {
-    requestDeleteBulkItems(bulkDelete).then(() => {
-      setBulkDelete(false);
-      AppToaster.show({
-        message: formatMessage({ id: 'the_items_has_been_successfully_deleted' }),
-        intent: Intent.SUCCESS,
+  // Handle confirm items bulk delete.
+  const handleConfirmBulkDelete = useCallback(() => {
+    requestDeleteBulkItems(bulkDelete)
+      .then(() => {
+        setBulkDelete(false);
+        AppToaster.show({
+          message: formatMessage({
+            id: 'the_items_has_been_successfully_deleted',
+          }),
+          intent: Intent.SUCCESS,
+        });
+      })
+      .catch((errors) => {
+        setBulkDelete(false);
       });
-    }).catch((errors) => {
-      setBulkDelete(false);
-    });
-  }, [requestDeleteBulkItems, bulkDelete,formatMessage]);
+  }, [requestDeleteBulkItems, bulkDelete, formatMessage]);
 
-    // Handle cancel accounts bulk delete.
-    const handleCancelBulkDelete = useCallback(() => {
-      setBulkDelete(false);
-    }, []);
-
+  // Handle cancel accounts bulk delete.
+  const handleCancelBulkDelete = useCallback(() => {
+    setBulkDelete(false);
+  }, []);
 
   return (
     <DashboardInsider
-      isLoading={fetchHook.isFetching}
-      name={'items-list'}>
+      loading={fetchResourceViews.isFetching || fetchResourceFields.isFetching}
+      // isLoading={fetchHook.isFetching}
 
+      name={'items-list'}
+    >
       <ItemsActionsBar
-        selectedRows={selectedRows} 
+        selectedRows={selectedRows}
         onFilterChanged={handleFilterChanged}
-        onBulkDelete={handleBulkDelete}/>
+        onBulkDelete={handleBulkDelete}
+      />
 
       <DashboardPageContent>
         <Switch>
           <Route
             exact={true}
-            path={[
-              '/items/:custom_view_id/custom_view',
-              '/items'
-            ]}>
-            <ItemsViewsTabs
-              onViewChanged={handleCustomViewChanged} /> 
- 
+            path={['/items/:custom_view_id/custom_view', '/items']}
+          >
+            <ItemsViewsTabs onViewChanged={handleCustomViewChanged} />
+
             <ItemsDataTable
-              loading={tableLoading}
+              loading={fetchItems.isFetching}
               onDeleteItem={handleDeleteItem}
               onEditItem={handleEditItem}
               onFetchData={handleFetchData}
-              onSelectedRowsChange={handleSelectedRowsChange} />
+              onSelectedRowsChange={handleSelectedRowsChange}
+            />
 
             <Alert
-              cancelButtonText={<T id={'cancel'}/>}
-              confirmButtonText={<T id={'delete'}/>}
+              cancelButtonText={<T id={'cancel'} />}
+              confirmButtonText={<T id={'delete'} />}
               icon="trash"
               intent={Intent.DANGER}
               isOpen={deleteItem}
               onCancel={handleCancelDeleteItem}
-              onConfirm={handleConfirmDeleteItem}>
+              onConfirm={handleConfirmDeleteItem}
+            >
               <p>
                 <FormattedHTMLMessage
-                  id={'once_delete_this_item_you_will_able_to_restore_it'} />
+                  id={'once_delete_this_item_you_will_able_to_restore_it'}
+                />
               </p>
             </Alert>
 
             <Alert
-          cancelButtonText={<T id={'cancel'}/>}
-          confirmButtonText={`${formatMessage({id:'delete'})} (${selectedRowsCount})`}
-          icon="trash"
-          intent={Intent.DANGER}
-          isOpen={bulkDelete}
-          onCancel={handleCancelBulkDelete}
-          onConfirm={handleConfirmBulkDelete}
-        >
-          <p>
-            <T id={'once_delete_these_items_you_will_not_able_restore_them'} />
-          </p>
-        </Alert>
+              cancelButtonText={<T id={'cancel'} />}
+              confirmButtonText={`${formatMessage({
+                id: 'delete',
+              })} (${selectedRowsCount})`}
+              icon="trash"
+              intent={Intent.DANGER}
+              isOpen={bulkDelete}
+              onCancel={handleCancelBulkDelete}
+              onConfirm={handleConfirmBulkDelete}
+            >
+              <p>
+                <T
+                  id={'once_delete_these_items_you_will_not_able_restore_them'}
+                />
+              </p>
+            </Alert>
           </Route>
         </Switch>
       </DashboardPageContent>
     </DashboardInsider>
-  )
+  );
 }
 
 export default compose(
-  withItems(({ itemsTableQuery }) => ({
-    itemsTableQuery,
-  })),
   withResourceActions,
   withDashboardActions,
   withItemsActions,
   withViewsActions,
+  withItems(({ itemsTableQuery }) => ({
+    itemsTableQuery,
+  })),
 )(ItemsList);

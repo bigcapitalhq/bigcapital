@@ -1,10 +1,11 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import { omit } from 'lodash';
 import { Button, Intent, Position, Tooltip } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
+
+import CLASSES from 'components/classes';
 import DataTable from 'components/DataTable';
 import Icon from 'components/Icon';
-
-import { compose, formattedAmount } from 'utils';
 import {
   InputGroupCell,
   MoneyFieldCell,
@@ -14,7 +15,7 @@ import {
 } from 'components/DataTableCells';
 
 import withItems from 'containers/Items/withItems';
-import { omit } from 'lodash';
+import { compose, formattedAmount } from 'utils';
 
 const ActionsCellRenderer = ({
   row: { index },
@@ -92,6 +93,7 @@ function EstimateTable({
         width: 40,
         disableResizing: true,
         disableSortBy: true,
+        className: 'index',
       },
       {
         Header: formatMessage({ id: 'product_and_service' }),
@@ -108,6 +110,7 @@ function EstimateTable({
         Cell: InputGroupCell,
         disableSortBy: true,
         className: 'description',
+        width: 120,
       },
 
       {
@@ -123,7 +126,7 @@ function EstimateTable({
         accessor: 'rate',
         Cell: TotalEstimateCellRederer(MoneyFieldCell, 'rate'),
         disableSortBy: true,
-        width: 150,
+        width: 100,
         className: 'rate',
       },
       {
@@ -230,8 +233,9 @@ function EstimateTable({
           updateData: handleUpdateData,
           removeRow: handleRemoveRow,
         }}
+        className={CLASSES.DATATABLE_EDITOR}
       />
-      <div className={'mt1'}>
+      <div className={'datatable-editor-actions mt1'}>
         <Button
           small={true}
           className={'button--secondary button--new-line'}

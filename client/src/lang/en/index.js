@@ -393,6 +393,9 @@ export default {
   base_currency_: 'Base currency',
   date_format_: 'Date format',
   category_name_: 'Category name',
+  sell_account_: 'Sell account',
+  cost_account_: 'Cost account',
+  inventory_account_: 'Inventory account',
   view_name_: 'View name',
   time_zone: 'Time zone',
   location: 'Location',
@@ -563,7 +566,6 @@ export default {
   you_could_not_delete_account_has_child_accounts:
     'You could not delete account has child accounts.',
   journal_entry: 'Journal Entry',
-
   estimate: 'Estimate #',
   estimate_date: 'Estimate Date',
   expiration_date: 'Expiration Date',
@@ -586,7 +588,6 @@ export default {
   rate: 'Rate',
   estimate_list: 'Estimate List',
   estimate_number: 'Estimate Number',
-
   product_and_service: 'Product/Service',
   the_estimate_has_been_successfully_edited:
     'The estimate #{number} has been successfully edited.',
@@ -594,9 +595,7 @@ export default {
     'The estimate #{number} has been successfully created.',
   the_estimate_has_been_successfully_deleted:
     'The estimate has been successfully deleted.',
-
   once_delete_this_estimate_you_will_able_to_restore_it: `Once you delete this estimate, you won\'t be able to restore it later. Are you sure you want to delete this estimate?`,
-
   cannot_be_zero_or_empty: 'cannot be zero or empty.',
   invocies: 'Invoices',
   invoices_list: 'Invoices List',
@@ -609,21 +608,21 @@ export default {
   due_date_: 'Due date',
   invoice_message: 'Invoice Message',
   reference_no: 'Reference No',
-
+  invocie_number: 'Invoice Number',
+  invoice_amount: 'Invoice Amount',
+  amount_due: 'Amount Due',
+  payment_amount: 'Payment Amount',
   edit_invoice: 'Edit Invoice',
   delete_invoice: 'Delete Invoice',
   new_invoice: 'New Invoice',
   invoice_list: 'Invoice List',
-
   the_invoice_has_been_successfully_edited:
     'The invoice #{number} has been successfully edited.',
   the_invocie_has_been_successfully_created:
     'The invoice #{number} has been successfully created.',
   the_invocie_has_been_successfully_deleted:
     'The invoice has been successfully deleted.',
-
   once_delete_this_invoice_you_will_able_to_restore_it: `Once you delete this invoice, you won\'t be able to restore it later. Are you sure you want to delete this invoice?`,
-
   receipt_list: 'Receipt List',
   receipts: 'Receipts',
   receipt: 'Receipt #',
@@ -640,16 +639,13 @@ export default {
   deposit_account: 'Deposit Account',
   send_to_email: 'Send to email',
   select_deposit_account: 'Select Deposit Account',
-
   once_delete_this_receipt_you_will_able_to_restore_it: `Once you delete this receipt, you won\'t be able to restore it later. Are you sure you want to delete this receipt?`,
-
   the_receipt_has_been_successfully_created:
     'The recepit has been successfully created.',
   the_receipt_has_been_successfully_edited:
     'The receipt  has been successfully edited.',
   the_receipt_has_been_successfully_deleted:
     'The receipt has been successfully deleted.',
-
   bill_list: 'Bill List',
   bills: 'Bills',
   accept: 'Accept',
@@ -665,27 +661,57 @@ export default {
   bill_number_: 'Bill number',
   vendor_name_: 'Vendor name',
   delete_bill: 'Delete Bill',
-
   the_bill_has_been_successfully_edited:
     'The bill #{number} has been successfully edited.',
-
   the_bill_has_been_successfully_created:
     'The bill has been successfully created.',
-
   the_bill_has_been_successfully_deleted:
     'The bill has been successfully deleted.',
-
   once_delete_this_bill_you_will_able_to_restore_it: `Once you delete this bill, you won\'t be able to restore it later. Are you sure you want to delete this bill?`,
-
+  deposit_to: 'Deposit to',
   edit_payment_receive: 'Edit Payment Receive',
+  delete_payment_receive: 'Delete Payment Receive',
+  payment_Receive_list: 'Payment Receive List',
+  payment_receive: 'Payment Receive',
   new_payment_receive: 'New Payment Receive',
   payment_receives: 'Payment Receives',
   payment_receive_no: 'Payment Receive #',
   payment_receive_no_: 'Payment receive no',
+  receive_amount: 'Receive Amount',
+  receive_amount_: 'Receive amount',
   the_payment_receive_has_been_successfully_created:
     'The payment receive has been successfully created.',
-
+  the_payment_receive_has_been_successfully_deleted:
+    'The payment receive has been successfully deleted.',
+  the_payment_receive_has_been_successfully_edited:
+    'The payment receive #{number} has been successfully edited.',
+  once_delete_this_payment_receive_you_will_able_to_restore_it: `Once you delete this payment receive, you won\'t be able to restore it later. Are you sure you want to delete this payment receive?`,
   select_invoice: 'Select Invoice',
-
-  payment_mades: 'Payment Mades',
+  payment_made: 'Payment Made',
+  edit_payment_made: 'Edit Payment Made',
+  delete_payment_made: 'Delete Payment Made',
+  vendor_name: 'Vendor Name',
+  payment_number: 'Payment Number',
+  payment_no: 'Payment Number #',
+  vendor_name_: 'Vendor name',
+  bill_amount: 'Bill Amount',
+  payment_account_: 'Payment account',
+  payment_no_: 'Payment number',
+  new_payment_made: 'New Payment Made',
+  payment_made_list: 'Payment Made List',
+  payment_account: 'Payment Account',
+  select_vender_account: 'Select Vender Account',
+  select_payment_account: 'Select Payment Account',
+  the_payment_made_has_been_successfully_edited:
+    'The payment made has been successfully edited.',
+  the_payment_made_has_been_successfully_created:
+    'The payment made has been successfully created.',
+  the_payment_made_has_been_successfully_deleted:
+    'The payment made has been successfully deleted.',
+  once_delete_this_payment_made_you_will_able_to_restore_it: `Once you delete this payment made, you won\'t be able to restore it later. Are you sure you want to delete this payment made?`,
+  sellable: 'Sellable',
+  purchasable: 'Purchasable',
+  sell_account: 'Sell Account',
+  cost_account: 'Cost Account',
+  inventory_account: 'Inventory Account',
 };

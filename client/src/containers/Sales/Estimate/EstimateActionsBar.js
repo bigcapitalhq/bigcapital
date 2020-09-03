@@ -153,7 +153,6 @@ function EstimateActionsBar({
 const mapStateToProps = (state, props) => ({
   resourceName: 'sales_estimates',
 });
-
 const withEstimateActionsBar = connect(mapStateToProps);
 
 export default compose(

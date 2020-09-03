@@ -12,6 +12,7 @@ import moment from 'moment';
 import { Intent, FormGroup, TextArea } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { pick } from 'lodash';
+import { Row, Col } from 'react-grid-system';
 
 import ReceiptFromHeader from './ReceiptFormHeader';
 import EstimatesItemsTable from 'containers/Sales/Estimate/EntriesItemsTable';
@@ -214,7 +215,7 @@ function ReceiptForm({
       const requestForm = { ...form };
 
       if (receipt && receipt.id) {
-        requestEditReceipt(receipt.id && requestForm).then(() => {
+        requestEditReceipt(receipt.id, requestForm).then(() => {
           AppToaster.show({
             message: formatMessage({
               id: 'the_receipt_has_been_successfully_edited',
@@ -244,6 +245,7 @@ function ReceiptForm({
       }
     },
   });
+  console.log(formik.errors, 'ERROR');
 
   const handleDeleteFile = useCallback(
     (_deletedFiles) => {
@@ -296,31 +298,38 @@ function ReceiptForm({
           onClickClearAllLines={handleClearAllLines}
           formik={formik}
         />
-        <FormGroup
-          label={<T id={'receipt_message'} />}
-          className={'form-group--'}
-        >
-          <TextArea
-            growVertically={true}
-            {...formik.getFieldProps('receipt_message')}
-          />
-        </FormGroup>
-        <FormGroup
-          label={<T id={'statement'} />}
-          className={'form-group--statement'}
-        >
-          <TextArea
-            growVertically={true}
-            {...formik.getFieldProps('statement')}
-          />
-        </FormGroup>
 
-        <Dragzone
-          initialFiles={initialAttachmentFiles}
-          onDrop={handleDropFiles}
-          onDeleteFile={handleDeleteFile}
-          hint={'Attachments: Maxiumum size: 20MB'}
-        />
+        <Row>
+          <Col>
+            <FormGroup
+              label={<T id={'receipt_message'} />}
+              className={'form-group--'}
+            >
+              <TextArea
+                growVertically={true}
+                {...formik.getFieldProps('receipt_message')}
+              />
+            </FormGroup>
+            <FormGroup
+              label={<T id={'statement'} />}
+              className={'form-group--statement'}
+            >
+              <TextArea
+                growVertically={true}
+                {...formik.getFieldProps('statement')}
+              />
+            </FormGroup>
+          </Col>
+
+          <Col>
+            <Dragzone
+              initialFiles={initialAttachmentFiles}
+              onDrop={handleDropFiles}
+              onDeleteFile={handleDeleteFile}
+              hint={'Attachments: Maxiumum size: 20MB'}
+            />
+          </Col>
+        </Row>
       </form>
       <ReceiptFormFooter
         formik={formik}

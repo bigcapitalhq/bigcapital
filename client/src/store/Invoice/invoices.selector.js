@@ -1,27 +1,38 @@
 import { createSelector } from '@reduxjs/toolkit';
-import { pickItemsFromIds, paginationLocationQuery } from 'store/selectors';
-
-const invoiceTableQuery = (state) => state.sales_invoices.tableQuery;
-
-export const getInvoiceTableQuery = createSelector(
+import {
+  pickItemsFromIds,
   paginationLocationQuery,
-  invoiceTableQuery,
-  (locationQuery, tableQuery) => {
-    return {
-      ...locationQuery,
-      ...tableQuery,
-    };
-  },
-);
+  getItemById,
+} from 'store/selectors';
+
+const invoiceTableQuery = (state) => state.salesInvoices.tableQuery;
+
+const invoicesByIdSelector = (state, props) =>
+  state.salesInvoices.items[props.invoiceId];
+
+const invoicesPaginationSelector = (state, props) => {
+  const viewId = state.salesInvoices.currentViewId;
+  return state.salesInvoices.views?.[viewId];
+};
 
 const invoicesPageSelector = (state, props, query) => {
-  const viewId = state.sales_invoices.currentViewId;
-  return state.sales_invoices.views?.[viewId]?.pages?.[query.page];
+  const viewId = state.salesInvoices.currentViewId;
+  return state.salesInvoices.views?.[viewId]?.pages?.[query.page];
 };
 
-const invoicesItemsSelector = (state) => {
-  return state.sales_invoices.items;
-};
+const invoicesItemsSelector = (state) => state.salesInvoices.items;
+
+export const getInvoiceTableQueryFactory = () =>
+  createSelector(
+    paginationLocationQuery,
+    invoiceTableQuery,
+    (locationQuery, tableQuery) => {
+      return {
+        ...locationQuery,
+        ...tableQuery,
+      };
+    },
+  );
 
 export const getInvoiceCurrentPageFactory = () =>
   createSelector(
@@ -34,21 +45,27 @@ export const getInvoiceCurrentPageFactory = () =>
     },
   );
 
-const invoicesByIdSelector = (state, props) => {
-  return state.sales_invoices.items[props.invoiceId];
-};
-
 export const getInvoiecsByIdFactory = () =>
   createSelector(invoicesByIdSelector, (invoice) => {
     return invoice;
   });
 
-const invoicesPaginationSelector = (state, props) => {
-  const viewId = state.sales_invoices.currentViewId;
-  return state.sales_invoices.views?.[viewId];
-};
-
 export const getInvoicePaginationMetaFactory = () =>
   createSelector(invoicesPaginationSelector, (invoicePage) => {
     return invoicePage?.paginationMeta || {};
   });
+
+const dueInvoicesSelector = (state, props) => {
+  return state.salesInvoices.dueInvoices[props.customer_id] || [];
+};
+
+export const getdueInvoices = createSelector(
+  dueInvoicesSelector,
+  invoicesItemsSelector,
+  (customerIds, items) => {
+    
+    return typeof customerIds === 'object'
+      ? pickItemsFromIds(items, customerIds) || []
+      : [];
+  },
+);

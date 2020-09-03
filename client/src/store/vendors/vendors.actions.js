@@ -9,9 +9,7 @@ export const fetchVendorsTable = ({ query }) => {
         type: t.VENDORS_TABLE_LOADING,
         payload: { loading: true },
       });
-      dispatch({
-        type: t.SET_DASHBOARD_REQUEST_LOADING,
-      });
+
       ApiService.get(`vendors`, { params: { ...pageQuery, ...query } })
         .then((response) => {
           dispatch({
@@ -22,14 +20,12 @@ export const fetchVendorsTable = ({ query }) => {
               customViewId: response.data.customViewId,
             },
           });
-
           dispatch({
             type: t.VENDORS_ITEMS_SET,
             payload: {
               vendors: response.data.vendors.results,
             },
           });
-
           dispatch({
             type: t.VENDORS_PAGINATION_SET,
             payload: {
@@ -37,14 +33,11 @@ export const fetchVendorsTable = ({ query }) => {
               customViewId: response.data.customViewId || -1,
             },
           });
-
           dispatch({
             type: t.VENDORS_TABLE_LOADING,
             payload: { loading: false },
           });
-          dispatch({
-            type: t.SET_DASHBOARD_REQUEST_COMPLETED,
-          });
+
           resolve(response);
         })
         .catch((error) => {
@@ -56,23 +49,16 @@ export const fetchVendorsTable = ({ query }) => {
 export const editVendor = ({ form, id }) => {
   return (dispatch) =>
     new Promise((resolve, reject) => {
-      dispatch({
-        type: t.SET_DASHBOARD_REQUEST_LOADING,
-      });
 
       ApiService.post(`vendors/${id}`, form)
         .then((response) => {
-          dispatch({
-            type: t.SET_DASHBOARD_REQUEST_COMPLETED,
-          });
+ 
           resolve(response);
         })
         .catch((error) => {
           const { response } = error;
           const { data } = response;
-          dispatch({
-            type: t.SET_DASHBOARD_REQUEST_COMPLETED,
-          });
+
           reject(data?.errors);
         });
     });
