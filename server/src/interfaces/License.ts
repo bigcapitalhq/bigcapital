@@ -1,15 +1,15 @@
 
 
-export interface IVoucher {
+export interface ILicense {
   id?: number,
-  voucherCode: string,
-  voucherPeriod: number,
+  licenseCode: string,
+  licensePeriod: number,
   sent: boolean,
   disabled: boolean,
   used: boolean,
 };
 
-export interface IVouchersFilter {
+export interface ILicensesFilter {
   active: boolean,
   disabld: boolean,
   used: boolean,

@@ -1,12 +1,12 @@
 
 exports.up = function(knex) {
-  return knex.schema.createTable('subscription_vouchers', table => {
+  return knex.schema.createTable('subscription_licenses', table => {
     table.increments();
 
-    table.string('voucher_code').unique();
+    table.string('license_code').unique();
     table.integer('plan_id').unsigned();
 
-    table.integer('voucher_period').unsigned();
+    table.integer('license_period').unsigned();
     table.string('period_interval');
 
     table.boolean('sent').defaultTo(false);
@@ -22,5 +22,5 @@ exports.up = function(knex) {
 };
 
 exports.down = function(knex) {
-  return knex.schema.dropTableIfExists('subscription_vouchers');
+  return knex.schema.dropTableIfExists('subscription_licenses');
 };

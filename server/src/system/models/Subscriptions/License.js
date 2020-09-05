@@ -1,14 +1,14 @@
 import { Model, mixin } from 'objection';
 import moment from 'moment';
 import SystemModel from '@/system/models/SystemModel';
-import { IVouchersFilter } from '@/interfaces';
+import { ILicensesFilter } from '@/interfaces';
 
-export default class Voucher extends SystemModel {
+export default class License extends SystemModel {
   /**
    * Table name.
    */
   static get tableName() {
-    return 'subscription_vouchers';
+    return 'subscription_licenses';
   }
 
   /**
@@ -23,34 +23,34 @@ export default class Voucher extends SystemModel {
    */
   static get modifiers() {
     return {
-      // Filters active vouchers.
-      filterActiveVoucher(query) {
+      // Filters active licenses.
+      filterActiveLicense(query) {
         query.where('disabled', false);
         query.where('used', false);
       },
 
-      // Find voucher by its code or id.
+      // Find license by its code or id.
       findByCodeOrId(query, id, code) {
         if (id) {
           query.where('id', id);
         }
         if (code) {
-          query.where('voucher_code', code);
+          query.where('license_code', code);
         }
       },
 
-      // Filters vouchers list.
-      filter(builder, vouchersFilter) {
-        if (vouchersFilter.active) {
-          builder.modify('filterActiveVoucher')
+      // Filters licenses list.
+      filter(builder, licensesFilter) {
+        if (licensesFilter.active) {
+          builder.modify('filterActiveLicense')
         }
-        if (vouchersFilter.disabled) {
+        if (licensesFilter.disabled) {
           builder.where('disabled', true);
         }
-        if (vouchersFilter.used) {
+        if (licensesFilter.used) {
           builder.where('used', true);
         } 
-        if (vouchersFilter.sent) {
+        if (licensesFilter.sent) {
           builder.where('sent', true);
         }
       }
@@ -68,7 +68,7 @@ export default class Voucher extends SystemModel {
         relation: Model.BelongsToOneRelation,
         modelClass: Plan.default,
         join: {
-          from: 'subscription_vouchers.planId',
+          from: 'subscription_licenses.planId',
           to: 'subscriptions_plans.id',
         },
       },
@@ -76,24 +76,24 @@ export default class Voucher extends SystemModel {
   }
 
   /**
-   * Deletes the given voucher code from the storage.
-   * @param {string} voucherCode 
+   * Deletes the given license code from the storage.
+   * @param {string} licenseCode 
    * @return {Promise}
    */
-  static deleteVoucher(voucherCode, viaAttribute = 'voucher_code') {
+  static deleteLicense(licenseCode, viaAttribute = 'license_code') {
     return this.query()
-      .where(viaAttribute, voucherCode)
+      .where(viaAttribute, licenseCode)
       .delete();
   }
 
   /**
-   * Marks the given voucher code as disabled on the storage.
-   * @param {string} voucherCode 
+   * Marks the given license code as disabled on the storage.
+   * @param {string} licenseCode 
    * @return {Promise}
    */
-  static markVoucherAsDisabled(voucherCode, viaAttribute = 'voucher_code') {
+  static markLicenseAsDisabled(licenseCode, viaAttribute = 'license_code') {
     return this.query()
-      .where(viaAttribute, voucherCode)
+      .where(viaAttribute, licenseCode)
       .patch({
         disabled: true,
         disabled_at: moment().toMySqlDateTime(),
@@ -101,12 +101,12 @@ export default class Voucher extends SystemModel {
   }
 
   /**
-   * Marks the given voucher code as sent on the storage.
-   * @param {string} voucherCode 
+   * Marks the given license code as sent on the storage.
+   * @param {string} licenseCode 
    */
-  static markVoucherAsSent(voucherCode, viaAttribute = 'voucher_code') {
+  static markLicenseAsSent(licenseCode, viaAttribute = 'license_code') {
     return this.query()
-      .where(viaAttribute, voucherCode)
+      .where(viaAttribute, licenseCode)
       .patch({
         sent: true,
         sent_at: moment().toMySqlDateTime(),
@@ -114,13 +114,13 @@ export default class Voucher extends SystemModel {
   }
 
   /**
-   * Marks the given voucher code as used on the storage.
-   * @param {string} voucherCode
+   * Marks the given license code as used on the storage.
+   * @param {string} licenseCode
    * @return {Promise}
    */
-  static markVoucherAsUsed(voucherCode, viaAttribute = 'voucher_code') {
+  static markLicenseAsUsed(licenseCode, viaAttribute = 'license_code') {
     return this.query()
-      .where(viaAttribute, voucherCode)
+      .where(viaAttribute, licenseCode)
       .patch({
         used: true,
         used_at: moment().toMySqlDateTime()
@@ -134,7 +134,7 @@ export default class Voucher extends SystemModel {
    */
   isEqualPlanPeriod(plan) {
     return (this.invoicePeriod === plan.invoiceInterval &&
-      voucher.voucherPeriod === voucher.periodInterval);
+      license.licensePeriod === license.periodInterval);
   }
 
 }

@@ -1,7 +1,7 @@
 import { Service, Inject } from 'typedi';
-import { Plan, Tenant, Voucher } from '@/system/models';
+import { Plan, Tenant, License } from '@/system/models';
 import Subscription from '@/services/Subscription/Subscription';
-import VocuherPaymentMethod from '@/services/Payment/VoucherPaymentMethod';
+import VocuherPaymentMethod from '@/services/Payment/LicensePaymentMethod';
 import PaymentContext from '@/services/Payment';
 import SubscriptionSMSMessages from '@/services/Subscription/SMSMessages';
 import SubscriptionMailMessages from '@/services/Subscription/MailMessages';
@@ -15,30 +15,30 @@ export default class SubscriptionService {
   mailMessages: SubscriptionMailMessages;
 
   /**
-   * Handles the payment process via voucher code and than subscribe to 
+   * Handles the payment process via license code and than subscribe to 
    * the given tenant.
    * 
    * @param {number} tenantId 
    * @param {String} planSlug 
-   * @param {string} voucherCode 
+   * @param {string} licenseCode 
    * 
    * @return {Promise}
    */
-  async subscriptionViaVoucher(
+  async subscriptionViaLicense(
     tenantId: number,
     planSlug: string,
-    voucherCode: string,
+    licenseCode: string,
     subscriptionSlug: string = 'main',
   ) {
     const plan = await Plan.query().findOne('slug', planSlug);
     const tenant = await Tenant.query().findById(tenantId);
-    const voucherModel = await Voucher.query().findOne('voucher_code', voucherCode);
+    const licenseModel = await License.query().findOne('license_code', licenseCode);
 
-    const paymentViaVoucher = new VocuherPaymentMethod();
-    const paymentContext = new PaymentContext(paymentViaVoucher);
+    const paymentViaLicense = new VocuherPaymentMethod();
+    const paymentContext = new PaymentContext(paymentViaLicense);
 
     const subscription = new Subscription(paymentContext);
 
-    return subscription.subscribe(tenant, plan, voucherModel, subscriptionSlug);
+    return subscription.subscribe(tenant, plan, licenseModel, subscriptionSlug);
   }
 }

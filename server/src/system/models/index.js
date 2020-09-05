@@ -2,7 +2,7 @@
 import Plan from './Subscriptions/Plan';
 import PlanFeature from './Subscriptions/PlanFeature';
 import PlanSubscription from './Subscriptions/PlanSubscription';
-import Voucher from './Subscriptions/Voucher';
+import License from './Subscriptions/License';
 import Tenant from './Tenant';
 import SystemUser from './SystemUser';
 import PasswordReset from './PasswordReset';
@@ -12,7 +12,7 @@ export {
   Plan,
   PlanFeature,
   PlanSubscription,
-  Voucher,
+  License,
   Tenant,
   SystemUser,
   PasswordReset,

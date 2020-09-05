@@ -3,7 +3,7 @@ import { Container, Service } from 'typedi';
 import JWTAuth from '@/http/middleware/jwtAuth';
 import TenancyMiddleware from '@/http/middleware/TenancyMiddleware';
 import AttachCurrentTenantUser from '@/http/middleware/AttachCurrentTenantUser';
-import PaymentViaVoucherController from '@/http/controllers/Subscription/PaymentViaVoucher';
+import PaymentViaLicenseController from '@/http/controllers/Subscription/PaymentViaLicense';
 
 @Service()
 export default class SubscriptionController { 
@@ -17,7 +17,7 @@ export default class SubscriptionController {
 		router.use(AttachCurrentTenantUser);
 		router.use(TenancyMiddleware);
 
-		router.use('/voucher', Container.get(PaymentViaVoucherController).router());
+		router.use('/license', Container.get(PaymentViaLicenseController).router());
 
 		return router;
 	}

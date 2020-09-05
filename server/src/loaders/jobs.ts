@@ -4,8 +4,8 @@ import WelcomeSMSJob from '@/jobs/WelcomeSMS';
 import ResetPasswordMailJob from '@/jobs/ResetPasswordMail';
 import ComputeItemCost from '@/jobs/ComputeItemCost';
 import RewriteInvoicesJournalEntries from '@/jobs/writeInvoicesJEntries';
-import SendVoucherViaPhoneJob from '@/jobs/SendVoucherPhone';
-import SendVoucherViaEmailJob from '@/jobs/SendVoucherEmail';
+import SendLicenseViaPhoneJob from '@/jobs/SendLicensePhone';
+import SendLicenseViaEmailJob from '@/jobs/SendLicenseEmail';
 import SendSMSNotificationSubscribeEnd from '@/jobs/SMSNotificationSubscribeEnd';
 import SendSMSNotificationTrialEnd from '@/jobs/SMSNotificationTrialEnd';
 import SendMailNotificationSubscribeEnd from '@/jobs/MailNotificationSubscribeEnd';
@@ -34,14 +34,14 @@ export default ({ agenda }: { agenda: Agenda }) => {
     new RewriteInvoicesJournalEntries(agenda).handler,
   );
   agenda.define(
-    'send-voucher-via-phone',
+    'send-license-via-phone',
     { priority: 'high', concurrency: 1, },
-    new SendVoucherViaPhoneJob().handler,
+    new SendLicenseViaPhoneJob().handler,
   );
   agenda.define(
-    'send-voucher-via-email',
+    'send-license-via-email',
     { priority: 'high', concurrency: 1, },
-    new SendVoucherViaEmailJob().handler,
+    new SendLicenseViaEmailJob().handler,
   );
   agenda.define(
     'send-sms-notification-subscribe-end',

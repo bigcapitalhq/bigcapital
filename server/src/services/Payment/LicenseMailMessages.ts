@@ -5,22 +5,22 @@ import { Container } from 'typedi';
 
 export default class SubscriptionMailMessages {
   /**
-   * Send voucher code to the given mail address.
-   * @param {string} voucherCode 
+   * Send license code to the given mail address.
+   * @param {string} licenseCode 
    * @param {email} email 
    */
-  public async sendMailVoucher(voucherCode: string, email: string) {
+  public async sendMailLicense(licenseCode: string, email: string) {
     const Logger = Container.get('logger');
     const Mail = Container.get('mail');
 
-    const filePath = path.join(global.rootPath, 'views/mail/VoucherReceive.html');
+    const filePath = path.join(global.rootPath, 'views/mail/LicenseReceive.html');
     const template = fs.readFileSync(filePath, 'utf8');
-    const rendered = Mustache.render(template, { voucherCode });
+    const rendered = Mustache.render(template, { licenseCode });
 
     const mailOptions = {
       to: email,
       from: `${process.env.MAIL_FROM_NAME} ${process.env.MAIL_FROM_ADDRESS}`,
-      subject: 'Bigcapital Voucher',
+      subject: 'Bigcapital License',
       html: rendered,
     };
     return new Promise((resolve, reject) => {

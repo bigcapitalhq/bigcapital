@@ -1,17 +1,17 @@
 import { Router, Request, Response } from 'express'
 import { check, oneOf, ValidationChain } from 'express-validator';
 import { Service, Inject } from 'typedi';
-import { Voucher, Plan } from '@/system/models';
+import { License, Plan } from '@/system/models';
 import BaseController from '@/http/controllers/BaseController';
-import VoucherService from '@/services/Payment/Voucher';
+import LicenseService from '@/services/Payment/License';
 import validateMiddleware from '@/http/middleware/validateMiddleware';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
-import { IVouchersFilter } from '@/interfaces';
+import { ILicensesFilter } from '@/interfaces';
 
 @Service()
-export default class VouchersController extends BaseController {
+export default class LicensesController extends BaseController {
   @Inject()
-  voucherService: VoucherService;
+  licenseService: LicenseService;
 
   /**
    * Router constructor.
@@ -21,40 +21,40 @@ export default class VouchersController extends BaseController {
 
     router.post(
       '/generate',
-      this.generateVoucherSchema,
+      this.generateLicenseSchema,
       validateMiddleware,
       asyncMiddleware(this.validatePlanExistance.bind(this)),
-      asyncMiddleware(this.generateVoucher.bind(this)),
+      asyncMiddleware(this.generateLicense.bind(this)),
     );
     router.post(
-      '/disable/:voucherId',
+      '/disable/:licenseId',
       validateMiddleware,
-      asyncMiddleware(this.validateVoucherExistance.bind(this)),
-      asyncMiddleware(this.validateNotDisabledVoucher.bind(this)),
-      asyncMiddleware(this.disableVoucher.bind(this)),
+      asyncMiddleware(this.validateLicenseExistance.bind(this)),
+      asyncMiddleware(this.validateNotDisabledLicense.bind(this)),
+      asyncMiddleware(this.disableLicense.bind(this)),
     );
     router.post(
       '/send',
-      this.sendVoucherSchemaValidation,
+      this.sendLicenseSchemaValidation,
       validateMiddleware,
-      asyncMiddleware(this.sendVoucher.bind(this)),
+      asyncMiddleware(this.sendLicense.bind(this)),
     );
     router.delete(
-      '/:voucherId',
-      asyncMiddleware(this.validateVoucherExistance.bind(this)),
-      asyncMiddleware(this.deleteVoucher.bind(this)),
+      '/:licenseId',
+      asyncMiddleware(this.validateLicenseExistance.bind(this)),
+      asyncMiddleware(this.deleteLicense.bind(this)),
     );
     router.get(
       '/',
-      asyncMiddleware(this.listVouchers.bind(this)),
+      asyncMiddleware(this.listLicenses.bind(this)),
     );
     return router;
   }
 
   /**
-   * Generate voucher validation schema.
+   * Generate license validation schema.
    */
-  get generateVoucherSchema(): ValidationChain[] {
+  get generateLicenseSchema(): ValidationChain[] {
     return [
       check('loop').exists().isNumeric().toInt(),
       check('period').exists().isNumeric().toInt(),
@@ -66,22 +66,22 @@ export default class VouchersController extends BaseController {
   }
 
   /**
-   * Specific voucher validation schema.
+   * Specific license validation schema.
    */
-  get specificVoucherSchema(): ValidationChain[] {
+  get specificLicenseSchema(): ValidationChain[] {
     return [
       oneOf([
-        check('voucher_id').exists().isNumeric().toInt(),
+        check('license_id').exists().isNumeric().toInt(),
       ], [
-        check('voucher_code').exists().isNumeric().toInt(),
+        check('license_code').exists().isNumeric().toInt(),
       ])
     ]
   }
 
   /**
-   * Send voucher validation schema.
+   * Send license validation schema.
    */
-  get sendVoucherSchemaValidation(): ValidationChain[] {
+  get sendLicenseSchemaValidation(): ValidationChain[] {
     return [
       check('period').exists().isNumeric(),
       check('period_interval').exists().trim().escape(),
@@ -113,60 +113,60 @@ export default class VouchersController extends BaseController {
   }
 
   /**
-   * Valdiate the voucher existance on the storage.
+   * Valdiate the license existance on the storage.
    * @param {Request} req 
    * @param {Response} res 
    * @param {Function}
    */
-  async validateVoucherExistance(req: Request, res: Response, next: Function) {
+  async validateLicenseExistance(req: Request, res: Response, next: Function) {
     const body = this.matchedBodyData(req);
 
-    const voucherId = body.voucherId || req.params.voucherId;
-    const foundVoucher = await Voucher.query().findById(voucherId);
+    const licenseId = body.licenseId || req.params.licenseId;
+    const foundLicense = await License.query().findById(licenseId);
 
-    if (!foundVoucher) {
+    if (!foundLicense) {
       return res.status(400).send({
-        errors: [{ type: 'VOUCHER.NOT.FOUND', code: 200 }],
+        errors: [{ type: 'LICENSE.NOT.FOUND', code: 200 }],
       });
     }
     next();
   }
 
   /**
-   * Validates whether the voucher id is disabled.
+   * Validates whether the license id is disabled.
    * @param {Request} req 
    * @param {Response} res 
    * @param {Function} next 
    */
-  async validateNotDisabledVoucher(req: Request, res: Response, next: Function) {
-    const voucherId = req.params.voucherId || req.query.voucherId;
-    const foundVoucher = await Voucher.query().findById(voucherId);
+  async validateNotDisabledLicense(req: Request, res: Response, next: Function) {
+    const licenseId = req.params.licenseId || req.query.licenseId;
+    const foundLicense = await License.query().findById(licenseId);
 
-    if (foundVoucher.disabled) {
+    if (foundLicense.disabled) {
       return res.status(400).send({
-        errors: [{ type: 'VOUCHER.ALREADY.DISABLED', code: 200 }],
+        errors: [{ type: 'LICENSE.ALREADY.DISABLED', code: 200 }],
       });
     }
     next();
   }
 
   /**
-   * Generate vouchers codes with given period in bulk.
+   * Generate licenses codes with given period in bulk.
    * @param {Request} req 
    * @param {Response} res 
    * @return {Response}
    */
-  async generateVoucher(req: Request, res: Response, next: Function) {
+  async generateLicense(req: Request, res: Response, next: Function) {
     const { loop = 10, period, periodInterval, planId } = this.matchedBodyData(req);
 
     try {
-      await this.voucherService.generateVouchers(
+      await this.licenseService.generateLicenses(
         loop, period, periodInterval, planId,
       );
       return res.status(200).send({
         code: 100,
-        type: 'VOUCHERES.GENERATED.SUCCESSFULLY',
-        message: 'The vouchers have been generated successfully.'
+        type: 'LICENSEES.GENERATED.SUCCESSFULLY',
+        message: 'The licenses have been generated successfully.'
       });
     } catch (error) {
       console.log(error);
@@ -175,84 +175,84 @@ export default class VouchersController extends BaseController {
   }
 
   /**
-   * Disable the given voucher on the storage.
+   * Disable the given license on the storage.
    * @param {Request} req 
    * @param {Response} res 
    * @return {Response}
    */
-  async disableVoucher(req: Request, res: Response) {
-    const { voucherId } = req.params;
+  async disableLicense(req: Request, res: Response) {
+    const { licenseId } = req.params;
 
-    await this.voucherService.disableVoucher(voucherId);
+    await this.licenseService.disableLicense(licenseId);
 
-    return res.status(200).send({ voucher_id: voucherId });
+    return res.status(200).send({ license_id: licenseId });
   }
 
   /**
-   * Deletes the given voucher code on the storage.
+   * Deletes the given license code on the storage.
    * @param {Request} req 
    * @param {Response} res 
    * @return {Response}
    */
-  async deleteVoucher(req: Request, res: Response) {
-    const { voucherId } = req.params;
+  async deleteLicense(req: Request, res: Response) {
+    const { licenseId } = req.params;
 
-    await this.voucherService.deleteVoucher(voucherId);
+    await this.licenseService.deleteLicense(licenseId);
 
-    return res.status(200).send({ voucher_id: voucherId });
+    return res.status(200).send({ license_id: licenseId });
   }
 
   /**
-   * Send voucher code in the given period to the customer via email or phone number
+   * Send license code in the given period to the customer via email or phone number
    * @param {Request} req 
    * @param {Response} res 
    * @return {Response}
    */
-  async sendVoucher(req: Request, res: Response) {
+  async sendLicense(req: Request, res: Response) {
     const { phoneNumber, email, period, periodInterval, planId } = this.matchedBodyData(req);
  
-    const voucher = await Voucher.query()
-      .modify('filterActiveVoucher')
-      .where('voucher_period', period)
+    const license = await License.query()
+      .modify('filterActiveLicense')
+      .where('license_period', period)
       .where('period_interval', periodInterval)
       .where('plan_id', planId)
       .first();
 
-    if (!voucher) {
+    if (!license) {
       return res.status(400).send({
         status: 110,
-        message: 'There is no vouchers availiable right now with the given period and plan.',
-        code: 'NO.AVALIABLE.VOUCHER.CODE',
+        message: 'There is no licenses availiable right now with the given period and plan.',
+        code: 'NO.AVALIABLE.LICENSE.CODE',
       });
     }
-    await this.voucherService.sendVoucherToCustomer(
-      voucher.voucherCode, phoneNumber, email,
+    await this.licenseService.sendLicenseToCustomer(
+      license.licenseCode, phoneNumber, email,
     );
     return res.status(200).send({
       status: 100,
-      code: 'VOUCHER.CODE.SENT',
-      message: 'The voucher has been sent to the given customer.',
+      code: 'LICENSE.CODE.SENT',
+      message: 'The license has been sent to the given customer.',
     });
   }
 
   /**
-   * Listing vouchers.
+   * Listing licenses.
    * @param {Request} req 
    * @param {Response} res 
    */
-  async listVouchers(req: Request, res: Response) {
-    const filter: IVouchersFilter = {
+  async listLicenses(req: Request, res: Response) {
+    const filter: ILicensesFilter = {
       disabled: false,
       used: false,
       sent: false,
       active: false,
       ...req.query,
     };
-    const vouchers = await Voucher.query()
+    const licenses = await License.query()
       .onBuild((builder) => {
         builder.modify('filter', filter);
         builder.orderBy('createdAt', 'ASC');
       });
-    return res.status(200).send({ vouchers });
+    return res.status(200).send({ licenses });
   }
 }

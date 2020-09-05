@@ -7,13 +7,13 @@ import {
 import { IInventoryCostMethod } from './InventoryCostMethod';
 import { IItemEntry } from './ItemEntry';
 import { IItem } from './Item';
-import { IVoucher, IVouchersFilter } from './Voucher';
+import { ILicense, ILicensesFilter } from './License';
 import { IItemCategory, IItemCategoryOTD } from './ItemCategory';
 import {
   IPaymentModel,
-  IVoucherPaymentModel,
+  ILicensePaymentModel,
   IPaymentMethod,
-  IVoucherPaymentMethod,
+  ILicensePaymentMethod,
   IPaymentContext,
 } from './Payment';
 import {
@@ -57,16 +57,16 @@ export {
   IInventoryCostMethod,
   IItemEntry,
   IItem,
-  IVoucher,
-  IVouchersFilter,
+  ILicense,
+  ILicensesFilter,
   IItemCategory,
   IItemCategoryOTD,
 
   IPaymentModel,
   IPaymentMethod,
   IPaymentContext,
-  IVoucherPaymentModel,
-  IVoucherPaymentMethod,
+  ILicensePaymentModel,
+  ILicensePaymentMethod,
 
   ISaleInvoice,
   ISaleInvoiceOTD,

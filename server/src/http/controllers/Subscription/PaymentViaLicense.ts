@@ -1,7 +1,7 @@
 import { Inject, Service } from 'typedi';
 import { Router, Request, Response } from 'express';
 import { check, param, query, ValidationSchema } from 'express-validator';
-import { Voucher, Plan } from '@/system/models';
+import { License, Plan } from '@/system/models';
 import validateMiddleware from '@/http/middleware/validateMiddleware';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
 import PaymentMethodController from '@/http/controllers/Subscription/PaymentMethod';
@@ -10,7 +10,7 @@ import {
 } from '@/exceptions';
 
 @Service()
-export default class PaymentViaVoucherController extends PaymentMethodController { 
+export default class PaymentViaLicenseController extends PaymentMethodController { 
   @Inject('logger')
   logger: any;
 
@@ -22,88 +22,88 @@ export default class PaymentViaVoucherController extends PaymentMethodController
 
     router.post(
       '/payment',
-      this.paymentViaVoucherSchema,
+      this.paymentViaLicenseSchema,
       validateMiddleware,
-      asyncMiddleware(this.validateVoucherCodeExistance.bind(this)),
+      asyncMiddleware(this.validateLicenseCodeExistance.bind(this)),
       asyncMiddleware(this.validatePlanSlugExistance.bind(this)),
-      asyncMiddleware(this.validateVoucherAndPlan.bind(this)),
-      asyncMiddleware(this.paymentViaVoucher.bind(this)),
+      asyncMiddleware(this.validateLicenseAndPlan.bind(this)),
+      asyncMiddleware(this.paymentViaLicense.bind(this)),
     );
     return router;
   }
 
   /**
-   * Payment via voucher validation schema.
+   * Payment via license validation schema.
    */
-  get paymentViaVoucherSchema() {
+  get paymentViaLicenseSchema() {
     return [
       check('plan_slug').exists().trim().escape(),
-      check('voucher_code').exists().trim().escape(),
+      check('license_code').exists().trim().escape(),
     ];
   }
 
   /**
-   * Validate the given voucher code exists on the storage.
+   * Validate the given license code exists on the storage.
    * @async
    * @param {Request} req 
    * @param {Response} res 
    */
-  async validateVoucherCodeExistance(req: Request, res: Response, next: Function) {
-    const { voucherCode } = this.matchedBodyData(req);
-    this.logger.info('[voucher_payment] trying to validate voucher code.', { voucherCode });
+  async validateLicenseCodeExistance(req: Request, res: Response, next: Function) {
+    const { licenseCode } = this.matchedBodyData(req);
+    this.logger.info('[license_payment] trying to validate license code.', { licenseCode });
 
-    const foundVoucher = await Voucher.query()
-      .modify('filterActiveVoucher')
-      .where('voucher_code', voucherCode)
+    const foundLicense = await License.query()
+      .modify('filterActiveLicense')
+      .where('license_code', licenseCode)
       .first();
 
-    if (!foundVoucher) {
+    if (!foundLicense) {
       return res.status(400).send({
-        errors: [{ type: 'VOUCHER.CODE.IS.INVALID', code: 120 }],
+        errors: [{ type: 'LICENSE.CODE.IS.INVALID', code: 120 }],
       });
     }
     next();
   }
 
   /**
-   * Validate the voucher period and plan period.
+   * Validate the license period and plan period.
    * @param {Request} req 
    * @param {Response} res 
    * @param {Function} next 
    */
-  async validateVoucherAndPlan(req: Request, res: Response, next: Function) {
-    const { planSlug, voucherCode } = this.matchedBodyData(req);
-    this.logger.info('[voucher_payment] trying to validate voucher with the plan.', { voucherCode });
+  async validateLicenseAndPlan(req: Request, res: Response, next: Function) {
+    const { planSlug, licenseCode } = this.matchedBodyData(req);
+    this.logger.info('[license_payment] trying to validate license with the plan.', { licenseCode });
 
-    const voucher = await Voucher.query().findOne('voucher_code', voucherCode);
+    const license = await License.query().findOne('license_code', licenseCode);
     const plan = await Plan.query().findOne('slug', planSlug);
 
-    if (voucher.planId !== plan.id) {
+    if (license.planId !== plan.id) {
       return res.status(400).send({
-        errors: [{ type: 'VOUCHER.NOT.FOR.GIVEN.PLAN' }],
+        errors: [{ type: 'LICENSE.NOT.FOR.GIVEN.PLAN' }],
       });
     }
     next();
   }
 
   /**
-   * Handle the subscription payment via voucher code.
+   * Handle the subscription payment via license code.
    * @param {Request} req 
    * @param {Response} res 
    * @return {Response}
    */
-  async paymentViaVoucher(req: Request, res: Response, next: Function) {
-    const { planSlug, voucherCode } = this.matchedBodyData(req);
+  async paymentViaLicense(req: Request, res: Response, next: Function) {
+    const { planSlug, licenseCode } = this.matchedBodyData(req);
     const { tenant } = req;
 
     try {
       await this.subscriptionService
-        .subscriptionViaVoucher(tenant.id, planSlug, voucherCode);
+        .subscriptionViaLicense(tenant.id, planSlug, licenseCode);
 
       return res.status(200).send({
         type: 'success',
         code: 'PAYMENT.SUCCESSFULLY.MADE',
-        message: 'Payment via voucher has been made successfully.',
+        message: 'Payment via license has been made successfully.',
       });
     } catch (exception) {
       const errorReasons = [];

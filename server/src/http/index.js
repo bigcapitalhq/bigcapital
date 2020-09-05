@@ -35,7 +35,7 @@ import Media from '@/http/controllers/Media';
 import Ping from '@/http/controllers/Ping';
 import Agendash from '@/http/controllers/Agendash';
 import Subscription from '@/http/controllers/Subscription';
-import VouchersController from '@/http/controllers/Subscription/Vouchers';
+import LicensesController from '@/http/controllers/Subscription/Licenses';
 
 export default () => {
   const app = Router();
@@ -45,7 +45,7 @@ export default () => {
   app.use('/auth', Container.get(Authentication).router());
   app.use('/invite', Container.get(InviteUsers).nonAuthRouter());
   app.use('/organization', Container.get(Organization).router());
-  app.use('/vouchers', Container.get(VouchersController).router());
+  app.use('/licenses', Container.get(LicensesController).router());
   app.use('/subscription', Container.get(Subscription).router());
   app.use('/ping', Container.get(Ping).router());
 

@@ -6,12 +6,12 @@ export default class SubscriptionSMSMessages {
   smsClient: SMSClient;
 
   /**
-   * Sends voucher code to the given phone number via SMS message.
+   * Sends license code to the given phone number via SMS message.
    * @param {string} phoneNumber 
-   * @param {string} voucherCode 
+   * @param {string} licenseCode 
    */
-  public async sendVoucherSMSMessage(phoneNumber: string, voucherCode: string) {
-    const message: string = `Your voucher card number: ${voucherCode}.`;
+  public async sendLicenseSMSMessage(phoneNumber: string, licenseCode: string) {
+    const message: string = `Your license card number: ${licenseCode}.`;
     return this.smsClient.sendMessage(phoneNumber, message);
   }
 }
