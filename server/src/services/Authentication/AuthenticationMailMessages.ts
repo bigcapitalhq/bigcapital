@@ -4,7 +4,6 @@ import Mustache from 'mustache';
 import path from 'path';
 import { ISystemUser } from '@/interfaces';
 import config from '@/../config/config';
-import { ISystemUser } from 'src/interfaces';
 
 @Service()
 export default class AuthenticationMailMesssages {

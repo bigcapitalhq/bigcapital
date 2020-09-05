@@ -1,11 +1,19 @@
 import { Service, Inject, Container } from 'typedi';
-import { Tenant } from '@/system/models';
+import { Tenant, SystemUser } from '@/system/models';
 import TenantsManager from '@/system/TenantsManager';
 import { ServiceError } from '@/exceptions';
 import { ITenant } from '@/interfaces';
+import {
+  EventDispatcher,
+  EventDispatcherInterface,
+} from '@/decorators/eventDispatcher';
+import events from '@/subscribers/events';
 
 @Service()
 export default class OrganizationService {
+  @EventDispatcher()
+  eventDispatcher: EventDispatcherInterface;
+
   @Inject()
   tenantsManager: TenantsManager;
 
@@ -35,8 +43,18 @@ export default class OrganizationService {
 
     this.logger.info('[tenant_db_build] mark tenant as initialized.', { tenant });
     await tenant.$query().update({ initialized: true });
+
+    // Retrieve the tenant system user.
+    const user = await SystemUser.query().findOne('tenant_id', tenant.id);
+
+    // Throws `onOrganizationBuild` event.
+    this.eventDispatcher.dispatch(events.organization.build, { tenant, user });
   }
 
+  /**
+   * Throws error in case the given tenant is undefined.
+   * @param {ITenant} tenant 
+   */
   private throwIfTenantNotExists(tenant: ITenant) {
     if (!tenant) {
       this.logger.info('[tenant_db_build] organization id not found.');
@@ -44,13 +62,13 @@ export default class OrganizationService {
     }
   }
 
+  /**
+   * Throws error in case the given tenant is already initialized.
+   * @param {ITenant} tenant 
+   */
   private throwIfTenantInitizalized(tenant: ITenant) {
     if (tenant.initialized) {
       throw new ServiceError('tenant_initialized');
     }
-  }
-
-  destroy() {
-
   }
 }

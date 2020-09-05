@@ -11,15 +11,14 @@ export default class EasySMSClient implements SMSClientInterface {
    * @param {string} message 
    */
   send(to: string, message: string) {
-    console.log(config);
     const API_KEY = config.easySMSGateway.api_key;
     const params = `action=send-sms&api_key=${API_KEY}=&to=${to}&sms=${message}&unicode=1`;
 
     return new Promise((resolve, reject) => {
       axios.get(`https://easysms.devs.ly/sms/api?${params}`)
         .then((response) => {
-          if (response.code === 'ok') { resolve(); }
-          else { reject(); }
+          if (response.data.code === 'ok') { resolve(); }
+          else { reject(response.data); }
         })
         .catch((error) => { reject(error) });
     });

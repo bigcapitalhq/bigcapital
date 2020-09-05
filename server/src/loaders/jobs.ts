@@ -15,12 +15,7 @@ import UserInviteMailJob from '@/jobs/UserInviteMail';
 export default ({ agenda }: { agenda: Agenda }) => {
   new WelcomeEmailJob(agenda);
   new ResetPasswordMailJob(agenda);
-
-  agenda.define(
-    'welcome-sms',
-    { priority: 'high' },
-    new WelcomeSMSJob().handler
-  );
+  new WelcomeSMSJob(agenda);
   
   // User invite mail.
   agenda.define(

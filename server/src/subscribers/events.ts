@@ -12,5 +12,9 @@ export default {
     acceptInvite: 'onUserAcceptInvite',
     sendInvite: 'onUserSendInvite',
     checkInvite: 'onUserCheckInvite'
+  },
+
+  organization: {
+    build: 'onOrganizationBuild',
   }
 }

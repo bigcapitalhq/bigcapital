@@ -11,9 +11,6 @@ export default ({ mongoConnection, knex }) => {
     const smsClientInstance = SmsClientLoader();
     const dbManager = dbManagerFactory();
 
-    Container.set('agenda', agendaInstance);
-    LoggerInstance.info('Agenda has been injected into container');
-
     Container.set('logger', LoggerInstance)
     LoggerInstance.info('Logger instance has been injected into container');
 
@@ -28,6 +25,9 @@ export default ({ mongoConnection, knex }) => {
 
     Container.set('dbManager', dbManager);
     LoggerInstance.info('Database manager has been injected into container.');
+
+    Container.set('agenda', agendaInstance);
+    LoggerInstance.info('Agenda has been injected into container');
 
     return { agenda: agendaInstance };
   } catch (e) {

@@ -2,8 +2,13 @@ import { Container, Inject } from 'typedi';
 import AuthenticationService from '@/services/Authentication';
 
 export default class WelcomeSMSJob {
-  @Inject()
-  authService: AuthenticationService;
+  /**
+   * Constructor method.
+   * @param {Agenda} agenda 
+   */
+  constructor(agenda) {
+    agenda.define('welcome-sms', { priority: 'high' }, this.handler);
+  }
 
   /**
    * Handle send welcome mail job.
@@ -11,17 +16,19 @@ export default class WelcomeSMSJob {
    * @param {Function} done 
    */
   public async handler(job, done: Function): Promise<void> {
-    const { email, organizationName, firstName } = job.attrs.data;
-    const Logger = Container.get('logger');
+    const { tenant, user } = job.attrs.data;
 
-    Logger.info(`Send welcome SMS message - started: ${job.attrs.data}`);
-  
+    const Logger = Container.get('logger');
+    const authService = Container.get(AuthenticationService);
+
+    Logger.info(`[welcome_sms] started: ${job.attrs.data}`);
+
     try {
-      await this.authService.smsMessages.sendWelcomeMessage();
-      Logger.info(`Send welcome SMS message - finished: ${job.attrs.data}`);
-      done()
+      await authService.smsMessages.sendWelcomeMessage(tenant, user);
+      Logger.info(`[welcome_sms] finished`, { tenant, user });
+      done();
     } catch (error) {
-      Logger.info(`Send welcome SMS message - error: ${job.attrs.data}, error: ${error}`);
+      Logger.info(`[welcome_sms] error`, { error, tenant, user });
       done(error);
     }
   }

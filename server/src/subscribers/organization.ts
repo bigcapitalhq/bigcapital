@@ -6,11 +6,10 @@ import events from '@/subscribers/events';
 export class OrganizationSubscriber {
 
   @On(events.organization.build)
-  public onBuild(payload) {
+  public async onBuild(payload) {
+    const { tenant, user } = payload;
     const agenda = Container.get('agenda');
 
-    agenda.now('welcome-sms', {
-      email, organizationName, firstName,
-    });
+    await agenda.now('welcome-sms', { tenant, user });
   }
 }
