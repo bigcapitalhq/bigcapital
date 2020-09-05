@@ -76,14 +76,15 @@ export default class AuthenticationController extends BaseController{
    */
   get resetPasswordSchema(): ValidationChain[] {
     return [
-      check('password').exists().isLength({ min: 5 }).custom((value, { req }) => {
-        if (value !== req.body.confirm_password) {
-          throw new Error("Passwords don't match");
-        } else {
-          return value;
-        }
-      }),
-    ]
+      check('password').exists().isLength({ min: 5 })
+        .custom((value, { req }) => {
+          if (value !== req.body.confirm_password) {
+            throw new Error("Passwords don't match");
+          } else {
+            return value;
+          }
+        }),
+    ];
   }
 
   /**
@@ -111,7 +112,7 @@ export default class AuthenticationController extends BaseController{
       return res.status(200).send({ token, user });
     } catch (error) {
       if (error instanceof ServiceError) {
-        if (error.errorType === 'invalid_details') {
+        if (['invalid_details', 'invalid_password'].indexOf(error.errorType) !== -1) {
           return res.boom.badRequest(null, {
             errors: [{ type: 'INVALID_DETAILS', code: 100 }],
           });
@@ -201,8 +202,6 @@ export default class AuthenticationController extends BaseController{
         type: 'RESET_PASSWORD_SUCCESS',
       })
     } catch(error) {
-      console.log(error);
-
       if (error instanceof ServiceError) {
         if (error.errorType === 'token_invalid') {
           return res.boom.badRequest(null, {

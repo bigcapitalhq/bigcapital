@@ -65,7 +65,7 @@ export default class AuthenticationService {
 
     this.logger.info('[login] check password validation.');
     if (!user.verifyPassword(password)) {
-      throw new ServiceError('password_invalid');
+      throw new ServiceError('invalid_password');
     }
 
     if (!user.active) {
@@ -133,8 +133,10 @@ export default class AuthenticationService {
       tenant_id: tenant.id,
     });
 
-    this.eventDispatcher.dispatch(events.auth.register, { registerDTO });
-
+    // Triggers `onRegister` event.
+    this.eventDispatcher.dispatch(events.auth.register, {
+      registerDTO, user: registeredUser
+    });
     return registeredUser;
   }
 
@@ -194,9 +196,12 @@ export default class AuthenticationService {
     await this.validateEmailExistance(email);
 
     // Delete all stored tokens of reset password that associate to the give email.
+    this.logger.info('[send_reset_password] trying to delete all tokens by email.');
     await PasswordReset.query().where('email', email).delete();
 
     const token = uniqid();
+
+    this.logger.info('[send_reset_password] insert the generated token.');
     const passwordReset = await PasswordReset.query().insert({ email, token });
     const user = await SystemUser.query().findOne('email', email);
 

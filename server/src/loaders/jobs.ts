@@ -13,23 +13,15 @@ import SendMailNotificationTrialEnd from '@/jobs/MailNotificationTrialEnd';
 import UserInviteMailJob from '@/jobs/UserInviteMail';
 
 export default ({ agenda }: { agenda: Agenda }) => {
-  // Welcome mail and SMS message.
-  agenda.define(
-    'welcome-email',
-    { priority: 'high' },
-    new WelcomeEmailJob().handler,
-  );
+  new WelcomeEmailJob(agenda);
+  new ResetPasswordMailJob(agenda);
+
   agenda.define(
     'welcome-sms',
     { priority: 'high' },
     new WelcomeSMSJob().handler
   );
-  // Reset password mail.
-  agenda.define(
-    'reset-password-mail',
-    { priority: 'high' },
-    new ResetPasswordMailJob().handler,
-  );
+  
   // User invite mail.
   agenda.define(
     'user-invite-mail',

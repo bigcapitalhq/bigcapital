@@ -2,7 +2,11 @@ import { Service } from "typedi";
 
 @Service()
 export default class SubscriptionMailMessages {
-
+  /**
+   * 
+   * @param phoneNumber 
+   * @param remainingDays 
+   */
   public async sendRemainingSubscriptionPeriod(phoneNumber: string, remainingDays: number) {
     const message: string = `
       Your remaining subscription is ${remainingDays} days,
@@ -11,6 +15,11 @@ export default class SubscriptionMailMessages {
     this.smsClient.sendMessage(phoneNumber, message);
   }
 
+  /**
+   * 
+   * @param phoneNumber 
+   * @param remainingDays 
+   */
   public async sendRemainingTrialPeriod(phoneNumber: string, remainingDays: number) {
     const message: string = `
       Your remaining free trial is ${remainingDays} days,

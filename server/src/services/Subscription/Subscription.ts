@@ -1,9 +1,13 @@
+import { Inject } from 'typedi';
 import { Tenant, Plan } from '@/system/models';
 import { IPaymentContext } from '@/interfaces';
 import { NotAllowedChangeSubscriptionPlan } from '@/exceptions';
 
 export default class Subscription<PaymentModel> {
   paymentContext: IPaymentContext|null;
+
+  @Inject('logger')
+  logger: any;
 
   /**
    * Constructor method.
