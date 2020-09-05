@@ -17,4 +17,12 @@ export default class HasTenancyService {
   models(tenantId: number) {
     return this.tenantContainer(tenantId).get('models');
   }
+
+  /**
+   * Retrieve i18n locales methods.
+   * @param {number} tenantId 
+   */
+  i18n(tenantId: number) {
+    this.tenantContainer(tenantId).get('i18n');
+  }
 }

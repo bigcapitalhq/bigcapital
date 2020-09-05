@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@hapi/boom": "^7.4.3",
+    "@types/i18n": "^0.8.7",
     "agenda": "^3.1.0",
     "agendash": "^1.0.0",
     "app-root-path": "^3.0.0",

@@ -76,4 +76,8 @@ module.exports = {
   jwtSecret: 'b0JDZW56RnV6aEthb0RGPXVEcUI',
   contactUsMail: 'support@bigcapital.ly',
   baseURL: 'https://bigcapital.ly',
+
+  api: {
+    prefix: '/api'
+  }
 };

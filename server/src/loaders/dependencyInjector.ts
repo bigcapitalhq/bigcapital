@@ -4,6 +4,7 @@ import agendaFactory from '@/loaders/agenda';
 import SmsClientLoader from '@/loaders/smsClient';
 import mailInstance from '@/loaders/mail';
 import dbManagerFactory from '@/loaders/dbManager';
+import i18n from '@/loaders/i18n';
 
 export default ({ mongoConnection, knex }) => {
   try {
@@ -28,6 +29,9 @@ export default ({ mongoConnection, knex }) => {
 
     Container.set('agenda', agendaInstance);
     LoggerInstance.info('Agenda has been injected into container');
+
+    Container.set('i18n', i18n);
+    LoggerInstance.info('i18n has been injected into container');
 
     return { agenda: agendaInstance };
   } catch (e) {

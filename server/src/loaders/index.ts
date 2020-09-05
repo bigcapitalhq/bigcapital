@@ -5,6 +5,7 @@ import expressLoader from '@/loaders/express';
 import databaseLoader from '@/database/knex';
 import dependencyInjectorLoader from '@/loaders/dependencyInjector';
 import objectionLoader from '@/database/objection';
+import i18nConfig from '@/loaders/i18n';
 
 // We have to import at least all the events once so they can be triggered
 import '@/loaders/events';
@@ -29,4 +30,7 @@ export default async ({ expressApp }) => {
 
   expressLoader({ app: expressApp });
   Logger.info('Express loaded');
+
+  i18nConfig();
+  Logger.info('I18n node configured.');
 };

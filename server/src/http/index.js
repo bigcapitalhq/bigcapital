@@ -1,4 +1,4 @@
-import express from 'express';
+import { Router } from 'express';
 import { Container } from 'typedi';
 
 // Middlewares
@@ -8,6 +8,7 @@ import SubscriptionMiddleware from '@/http/middleware/SubscriptionMiddleware';
 import TenancyMiddleware from '@/http/middleware/TenancyMiddleware';
 import EnsureTenantIsInitialized from '@/http/middleware/EnsureTenantIsInitialized';
 import SettingsMiddleware from '@/http/middleware/SettingsMiddleware';
+import I18nMiddleware from '@/http/middleware/I18nMiddleware';
 
 // Routes
 import Authentication from '@/http/controllers/Authentication';
@@ -36,43 +37,49 @@ import Agendash from '@/http/controllers/Agendash';
 import Subscription from '@/http/controllers/Subscription';
 import VouchersController from '@/http/controllers/Subscription/Vouchers';
 
+export default () => {
+  const app = Router();
 
-export default (app) => {
-  app.use('/api/auth', Container.get(Authentication).router());
-  app.use('/api/invite', Container.get(InviteUsers).router());
-  app.use('/api/organization', Container.get(Organization).router());
-  app.use('/api/vouchers', Container.get(VouchersController).router());
-  app.use('/api/subscription', Container.get(Subscription).router());
-  app.use('/api/ping', Container.get(Ping).router());
+  app.use(I18nMiddleware);
 
-  const dashboard = express.Router(); 
+  app.use('/auth', Container.get(Authentication).router());
+  app.use('/invite', Container.get(InviteUsers).router());
+  app.use('/organization', Container.get(Organization).router());
+  app.use('/vouchers', Container.get(VouchersController).router());
+  app.use('/subscription', Container.get(Subscription).router());
+  app.use('/ping', Container.get(Ping).router());
+
+  const dashboard = Router(); 
 
   dashboard.use(JWTAuth);
   dashboard.use(AttachCurrentTenantUser)
   dashboard.use(TenancyMiddleware);
+  dashboard.use(I18nMiddleware);
   dashboard.use(SubscriptionMiddleware('main'));
   dashboard.use(EnsureTenantIsInitialized);
   dashboard.use(SettingsMiddleware);
-  
-  dashboard.use('/api/users', Users.router());
-  dashboard.use('/api/currencies', Currencies.router());
-  dashboard.use('/api/accounts', Accounts.router());
-  dashboard.use('/api/account_types', AccountTypes.router());
-  dashboard.use('/api/accounting', Accounting.router());
-  dashboard.use('/api/views', Views.router());
-  dashboard.use('/api/items', Container.get(Items).router());
-  dashboard.use('/api/item_categories', Container.get(ItemCategories).router());
-  dashboard.use('/api/expenses', Expenses.router());
-  dashboard.use('/api/financial_statements', FinancialStatements.router());
-  dashboard.use('/api/settings', Container.get(Settings).router());
-  dashboard.use('/api/sales', Sales.router());
-  dashboard.use('/api/customers', Customers.router());
-  dashboard.use('/api/vendors', Vendors.router());
-  dashboard.use('/api/purchases', Purchases.router());
-  dashboard.use('/api/resources', Resources.router());
-  dashboard.use('/api/exchange_rates', ExchangeRates.router());
-  dashboard.use('/api/media', Media.router());
+
+  dashboard.use('/users', Users.router());
+  dashboard.use('/currencies', Currencies.router());
+  dashboard.use('/accounts', Accounts.router());
+  dashboard.use('/account_types', AccountTypes.router());
+  dashboard.use('/accounting', Accounting.router());
+  dashboard.use('/views', Views.router());
+  dashboard.use('/items', Container.get(Items).router());
+  dashboard.use('/item_categories', Container.get(ItemCategories).router());
+  dashboard.use('/expenses', Expenses.router());
+  dashboard.use('/financial_statements', FinancialStatements.router());
+  dashboard.use('/settings', Container.get(Settings).router());
+  dashboard.use('/sales', Sales.router());
+  dashboard.use('/customers', Customers.router());
+  dashboard.use('/vendors', Vendors.router());
+  dashboard.use('/purchases', Purchases.router());
+  dashboard.use('/resources', Resources.router());
+  dashboard.use('/exchange_rates', ExchangeRates.router());
+  dashboard.use('/media', Media.router());
 
   app.use('/agendash', Agendash.router());
   app.use('/', dashboard);
+
+  return app;
 };

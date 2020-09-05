@@ -20,18 +20,19 @@ export default class WelcomeEmailJob {
    * @param {Function} done 
    */
   public async handler(job, done: Function): Promise<void> {
-    const { user, token } = job.attrs.data;
+    const { data } = job.attrs;
+    const { user, token } = data;
     const Logger = Container.get('logger');
     const authService = Container.get(AuthenticationService);
 
-    Logger.info(`[send_reset_password] started: ${job.attrs.data}`);
+    Logger.info(`[send_reset_password] started.`, { data });
   
     try {
       await authService.mailMessages.sendResetPasswordMessage(user, token);
-      Logger.info(`[send_reset_password] finished: ${job.attrs.data}`);
+      Logger.info(`[send_reset_password] finished.`, { data });
       done()
     } catch (error) {
-      Logger.info(`[send_reset_password] error: ${job.attrs.data}, error: ${error}`);
+      Logger.error(`[send_reset_password] error.`, { data, error });
       done(error);
     }
   }

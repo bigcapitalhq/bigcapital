@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import { Router, Request, Response } from 'express';
+import i18n from 'i18n';
 
 export default class Ping {
   /**

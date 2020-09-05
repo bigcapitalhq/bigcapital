@@ -48,5 +48,9 @@ export default async (req, res, next) => {
   tenantContainer.set('tenant', tenant);
   Logger.info('[tenancy_middleware] tenant dependencies injected to container.');
 
+  if (res.locals) {
+    tenantContainer.set('i18n', res.locals);
+    Logger.info('[tenancy_middleware] i18n locals injected.');
+  }
   next();
 }
