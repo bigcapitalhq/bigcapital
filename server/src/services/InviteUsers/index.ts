@@ -1,11 +1,13 @@
 import { Service, Inject } from "typedi";
 import uniqid from 'uniqid';
+import moment from 'moment';
 import {
   EventDispatcher,
   EventDispatcherInterface,
 } from '@/decorators/eventDispatcher';
 import { ServiceError, ServiceErrors } from "@/exceptions";
-import { SystemUser, Invite } from "@/system/models";
+import { SystemUser, Invite, Tenant } from "@/system/models";
+import { Option } from '@/models';
 import { hashPassword } from '@/utils';
 import TenancyService from '@/services/Tenancy/TenancyService';
 import TenantsManager from "@/system/TenantsManager";
@@ -42,28 +44,28 @@ export default class InviteUserService {
    */
   async acceptInvite(token: string, inviteUserInput: IInviteUserInput): Promise<void> {
     const inviteToken = await this.getInviteOrThrowError(token);
-    await this.validateUserEmailAndPhone(inviteUserInput);
+    await this.validateUserPhoneNumber(inviteUserInput);
 
     this.logger.info('[aceept_invite] trying to hash the user password.');
     const hashedPassword = await hashPassword(inviteUserInput.password);
 
-    const user = SystemUser.query()
-      .where('email', inviteUserInput.email)
+    console.log(inviteToken);
+
+    this.logger.info('[accept_invite] trying to update user details.');
+    const updateUserOper = SystemUser.query()
+      .where('email', inviteToken.email)
       .patch({
         ...inviteUserInput,
         active: 1,
-        email: inviteToken.email,
-        invite_accepted_at: moment().format('YYYY/MM/DD'),
+        invite_accepted_at: moment().format('YYYY-MM-DD'),
         password: hashedPassword,
-        tenant_id: inviteToken.tenantId,
       });
-
+     
+    this.logger.info('[accept_invite] trying to delete the given token.');
     const deleteInviteTokenOper = Invite.query().where('token', inviteToken.token).delete();
 
-    await Promise.all([
-      insertUserOper,
-      deleteInviteTokenOper,
-    ]);
+    // Await all async operations.
+    const [user] = await Promise.all([updateUserOper, deleteInviteTokenOper]);
 
     // Triggers `onUserAcceptInvite` event.
     this.eventDispatcher.dispatch(events.inviteUser.acceptInvite, {
@@ -80,20 +82,27 @@ export default class InviteUserService {
    * @return {Promise<IInvite>}
    */
   public async sendInvite(tenantId: number, email: string, authorizedUser: ISystemUser): Promise<IInvite> {
-    const { Option } = this.tenancy.models(tenantId);
     await this.throwErrorIfUserEmailExists(email);
-  
+
+    this.logger.info('[send_invite] trying to store invite token.');
     const invite = await Invite.query().insert({
       email,
       tenant_id: authorizedUser.tenantId,
       token: uniqid(),
     });
 
+    this.logger.info('[send_invite] trying to store user with email and tenant.');
+    const user = await SystemUser.query().insert({
+      email,
+      tenant_id: authorizedUser.tenantId,
+      active: 1,
+    })
+
     // Triggers `onUserSendInvite` event.
     this.eventDispatcher.dispatch(events.inviteUser.sendInvite, {
       invite,      
     });
-    return { invite };
+    return { invite, user };
   }
 
   /**
@@ -101,7 +110,7 @@ export default class InviteUserService {
    * @param {string} token - the given token string. 
    * @throws {ServiceError}
    */
-  public async checkInvite(token: string) {
+  public async checkInvite(token: string): Promise<{ inviteToken: string, orgName: object}> {
     const inviteToken = await this.getInviteOrThrowError(token)
 
     // Find the tenant that associated to the given token.
@@ -109,16 +118,20 @@ export default class InviteUserService {
 
     const tenantDb = this.tenantsManager.knexInstance(tenant.organizationId);
 
-    const organizationOptions = await Option.bindKnex(tenantDb).query()
-      .where('key', 'organization_name');
+    const orgName = await Option.bindKnex(tenantDb).query()
+      .findOne('key', 'organization_name')
 
     // Triggers `onUserCheckInvite` event.
     this.eventDispatcher.dispatch(events.inviteUser.checkInvite, {
-      inviteToken, organizationOptions,
+      inviteToken, orgName,
     });
-    return { inviteToken, organizationOptions };
+    return { inviteToken, orgName };
   }
 
+  /**
+   * Throws error in case the given user email not exists on the storage.
+   * @param {string} email 
+   */
   private async throwErrorIfUserEmailExists(email: string) {
     const foundUser = await SystemUser.query().findOne('email', email);
 
@@ -131,6 +144,7 @@ export default class InviteUserService {
    * Retrieve invite model from the given token or throw error.
    * @param {string} token - Then given token string.
    * @throws {ServiceError}
+   * @returns {Invite}
    */
   private async getInviteOrThrowError(token: string) {
     const inviteToken = await Invite.query().findOne('token', token);
@@ -139,34 +153,22 @@ export default class InviteUserService {
       this.logger.info('[aceept_invite] the invite token is invalid.');
       throw new ServiceError('invite_token_invalid');
     }
+    return inviteToken;
   }
 
   /**
    * Validate the given user email and phone number uniquine.
    * @param {IInviteUserInput} inviteUserInput 
    */
-  private async validateUserEmailAndPhone(inviteUserInput: IInviteUserInput) {
+  private async validateUserPhoneNumber(inviteUserInput: IInviteUserInput) {
     const foundUser = await SystemUser.query()
       .onBuild(query => {
-        query.where('email', inviteUserInput.email);
-
-        if (inviteUserInput.phoneNumber) {
-          query.where('phone_number', inviteUserInput.phoneNumber);
-        }
-      });    
-    const serviceErrors: ServiceError[] = [];
-
-    if (foundUser && foundUser.email === inviteUserInput.email) {
-      this.logger.info('[send_user_invite] the given email exists.');
-      serviceErrors.push(new ServiceError('email_exists'));
-    }
-    if (foundUser && foundUser.phoneNumber === inviteUserInput.phoneNumber) {
-      this.logger.info('[send_user_invite] the given phone number exists.');
-      serviceErrors.push(new ServiceError('phone_number_exists'));
-    }
-    if (serviceErrors.length > 0) {
-      throw new ServiceErrors(serviceErrors);
+        query.where('phone_number', inviteUserInput.phoneNumber);
+        query.first();
+      });
+   
+    if (foundUser) {
+      throw new ServiceError('phone_number_exists');
     }
   }
-
 }

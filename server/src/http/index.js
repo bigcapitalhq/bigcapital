@@ -43,7 +43,7 @@ export default () => {
   app.use(I18nMiddleware);
 
   app.use('/auth', Container.get(Authentication).router());
-  app.use('/invite', Container.get(InviteUsers).router());
+  app.use('/invite', Container.get(InviteUsers).nonAuthRouter());
   app.use('/organization', Container.get(Organization).router());
   app.use('/vouchers', Container.get(VouchersController).router());
   app.use('/subscription', Container.get(Subscription).router());
@@ -59,7 +59,8 @@ export default () => {
   dashboard.use(EnsureTenantIsInitialized);
   dashboard.use(SettingsMiddleware);
 
-  dashboard.use('/users', Users.router());
+  dashboard.use('/users', Container.get(Users).router());
+  dashboard.use('/invite', Container.get(InviteUsers).authRouter());
   dashboard.use('/currencies', Currencies.router());
   dashboard.use('/accounts', Accounts.router());
   dashboard.use('/account_types', AccountTypes.router());

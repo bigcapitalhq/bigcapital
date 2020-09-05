@@ -4,50 +4,61 @@ import {
   check,
   body,
   param,
-  matchedData,
 } from 'express-validator';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
-import jwtAuth from '@/http/middleware/jwtAuth';
-import TenancyMiddleware from '@/http/middleware/TenancyMiddleware';
 import InviteUserService from '@/services/InviteUsers';
 import { ServiceErrors, ServiceError } from '@/exceptions';
+import BaseController from './BaseController';
 
 @Service()
-export default class InviteUsersController {
+export default class InviteUsersController extends BaseController {
   @Inject()
   inviteUsersService: InviteUserService;
 
   /**
-   * Router constructor.
+   * Routes that require authentication.
    */
-  router() {
+  authRouter() {
     const router = Router();
 
-    router.use('/send', jwtAuth);
-    router.use('/send', TenancyMiddleware);
-
     router.post('/send', [
-      body('email').exists().trim().escape(),        
-    ],
-      asyncMiddleware(this.sendInvite),
+        body('email').exists().trim().escape(),        
+      ],
+      asyncMiddleware(this.sendInvite.bind(this)),
     );
-  
+    return router;
+  }
+
+  /**
+   * Routes that non-required authentication.
+   */
+  nonAuthRouter() {
+    const router = Router();
+
     router.post('/accept/:token', [
+        ...this.inviteUserDTO,
+      ],
+      asyncMiddleware(this.accept.bind(this)));
+
+    router.get('/invited/:token', [
+        param('token').exists().trim().escape(),
+      ],
+      asyncMiddleware(this.invited.bind(this)));
+
+    return router;
+  }
+
+  /**
+   * Invite DTO schema validation.
+   */
+  get inviteUserDTO() {
+    return [
       check('first_name').exists().trim().escape(),
       check('last_name').exists().trim().escape(),
       check('phone_number').exists().trim().escape(),
       check('password').exists().trim().escape(),
       param('token').exists().trim().escape(),
-    ],
-      asyncMiddleware(this.accept)
-    );
-  
-    router.get('/invited/:token', [
-      param('token').exists().trim().escape(),
-    ],
-      asyncMiddleware(this.invited)
-    );
-    return router;
+    ];
   }
 
   /**
@@ -63,6 +74,11 @@ export default class InviteUsersController {
 
     try {
       await this.inviteUsersService.sendInvite(tenantId, email, user);
+      return res.status(200).send({
+        type: 'success',
+        code: 'INVITE.SENT.SUCCESSFULLY',
+        message: 'The invite has been sent to the given email.',
+      })
     } catch (error) {
       console.log(error);
       if (error instanceof ServiceError) {
@@ -84,7 +100,7 @@ export default class InviteUsersController {
    * @param {NextFunction} next - 
    */
   async accept(req: Request, res: Response, next: Function) {
-    const inviteUserInput: IInviteUserInput = matchedData(req, {
+    const inviteUserInput: IInviteUserInput = this.matchedBodyData(req, {
       locations: ['body'],
       includeOptionals: true,
     });
@@ -92,20 +108,24 @@ export default class InviteUsersController {
 
     try {
       await this.inviteUsersService.acceptInvite(token, inviteUserInput);
-      return res.status(200).send();
+      return res.status(200).send({
+        type: 'success',
+        code: 'USER.INVITE.ACCEPTED',
+        message: 'User invite has been accepted successfully.',
+      });
     } catch (error) {
       
-      if (error instanceof ServiceErrors) {
-        const errorReasons = [];
+      if (error instanceof ServiceError) {
 
-        if (error.hasType('email_exists')) {
-          errorReasons.push({ type: 'EMAIL.EXISTS' });
+        if (error.errorType === 'phone_number_exists') {
+          return res.status(400).send({
+            errors: [{ type: 'PHONE_NUMBER.EXISTS' }],
+          });
         }
-        if (error.hasType('phone_number_exists')) {
-          errorReasons.push({ type: 'PHONE_NUMBER.EXISTS' });
-        }
-        if (errorReasons.length > 0) {
-          return res.status(400).send({ errors: errorReasons });
+        if (error.errorType === 'invite_token_invalid') {
+          return res.status(400).send({
+            errors: [{ type: 'INVITE.TOKEN.INVALID' }],
+          });
         }
       }
       next(error);
@@ -122,9 +142,13 @@ export default class InviteUsersController {
     const { token } = req.params;
 
     try {
-      await this.inviteUsersService.checkInvite(token);
+      const { inviteToken, orgName } = await this.inviteUsersService.checkInvite(token);
 
-      return res.status(200).send();
+      return res.status(200).send({
+        inviteToken: inviteToken.token,
+        email: inviteToken.email,
+        organizationName: orgName?.value,
+      });
     } catch (error) {
 
       if (error instanceof ServiceError) {

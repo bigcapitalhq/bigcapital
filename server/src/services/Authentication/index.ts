@@ -2,6 +2,7 @@ import { Service, Inject, Container } from "typedi";
 import JWT from 'jsonwebtoken';
 import uniqid from 'uniqid';
 import { omit } from 'lodash';
+import moment from "moment";
 import {
   EventDispatcher,
   EventDispatcherInterface,
@@ -75,6 +76,11 @@ export default class AuthenticationService {
 
     this.logger.info('[login] generating JWT token.');
     const token = this.generateToken(user);
+
+    this.logger.info('[login] updating user last login at.');
+    await SystemUser.query()
+      .where('id', user.id)
+      .patch({ last_login_at: moment().toMySqlDateTime() });
 
     this.logger.info('[login] Logging success.', { user, token });
 

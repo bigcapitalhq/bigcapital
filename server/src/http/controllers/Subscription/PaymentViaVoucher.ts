@@ -101,8 +101,9 @@ export default class PaymentViaVoucherController extends PaymentMethodController
         .subscriptionViaVoucher(tenant.id, planSlug, voucherCode);
 
       return res.status(200).send({
-        type: 'PAYMENT.SUCCESSFULLY.MADE',
-        code: 100,
+        type: 'success',
+        code: 'PAYMENT.SUCCESSFULLY.MADE',
+        message: 'Payment via voucher has been made successfully.',
       });
     } catch (exception) {
       const errorReasons = [];

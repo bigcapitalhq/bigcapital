@@ -13,6 +13,7 @@ exports.up = function (knex) {
     
     table.integer('tenant_id').unsigned();
 
+    table.date('invite_accepted_at');
     table.date('last_login_at');
     table.timestamps();
   }).then(() => {

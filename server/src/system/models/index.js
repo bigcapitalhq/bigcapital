@@ -6,6 +6,7 @@ import Voucher from './Subscriptions/Voucher';
 import Tenant from './Tenant';
 import SystemUser from './SystemUser';
 import PasswordReset from './PasswordReset';
+import Invite from './Invite';
 
 export {
   Plan,
@@ -15,4 +16,5 @@ export {
   Tenant,
   SystemUser,
   PasswordReset,
+  Invite,
 }

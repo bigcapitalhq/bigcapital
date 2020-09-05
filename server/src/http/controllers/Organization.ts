@@ -44,7 +44,9 @@ export default class OrganizationController {
       await this.organizationService.build(buildOTD.organizationId);
 
       return res.status(200).send({
-        type: 'ORGANIZATION.DATABASE.INITIALIZED',
+        type: 'success',
+        code: 'ORGANIZATION.DATABASE.INITIALIZED',
+        message: 'The organization database has been initialized.'
       });
     } catch (error) {
       if (error instanceof ServiceError) {

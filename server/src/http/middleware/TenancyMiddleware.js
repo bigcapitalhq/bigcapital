@@ -39,6 +39,7 @@ export default async (req, res, next) => {
   req.knex = tenantKnex;
   req.organizationId = organizationId;
   req.tenant = tenant;
+  req.tenantId = tenant.id;
   req.models = models;
 
   const tenantContainer = Container.of(`tenant-${tenant.id}`);

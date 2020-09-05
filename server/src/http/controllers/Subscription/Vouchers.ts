@@ -165,6 +165,7 @@ export default class VouchersController extends BaseController {
       );
       return res.status(200).send({
         code: 100,
+        type: 'VOUCHERES.GENERATED.SUCCESSFULLY',
         message: 'The vouchers have been generated successfully.'
       });
     } catch (error) {
