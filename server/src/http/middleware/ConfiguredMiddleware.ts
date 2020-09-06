@@ -1,6 +1,7 @@
+import { Container } from 'typedi';
+import { Request, Response, NextFunction } from 'express';
 
-// eslint-disable-next-line consistent-return
-export default async (req, res, next) => {
+export default async (req: Request, res: Response, next: NextFunction) => {
   const { Option } = req.models;
   const option = await Option.query().where('key', 'app_configured');
 

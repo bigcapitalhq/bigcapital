@@ -3,7 +3,6 @@ import TenancyService from '@/services/Tenancy/TenancyService';
 import { SystemUser } from "@/system/models";
 import { ServiceError, ServiceErrors } from "@/exceptions";
 import { ISystemUser, ISystemUserDTO } from "@/interfaces";
-import { ISystemUser } from "src/interfaces";
 
 @Service()
 export default class UsersService {
@@ -20,9 +19,9 @@ export default class UsersService {
   async editUser(tenantId: number, userId: number, userDTO: ISystemUserDTO): Promise<ISystemUser> {
     const foundUsers = await SystemUser.query()
       .whereNot('id', userId)
-      .andWhere((q) => {
-        q.where('email', userDTO.email);
-        q.orWhere('phone_number', userDTO.phoneNumber);
+      .andWhere((query) => {
+        query.where('email', userDTO.email);
+        query.orWhere('phone_number', userDTO.phoneNumber);
       })
       .where('tenant_id', tenantId);
 

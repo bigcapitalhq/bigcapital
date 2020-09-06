@@ -1,8 +1,9 @@
+import { Request, Response, NextFunction } from 'express';
 import { Container } from 'typedi';
 import jwt from 'jsonwebtoken';
 import config from '@/../config/config';
 
-const authMiddleware = (req, res, next) => {
+const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const Logger = Container.get('logger');
   const token = req.headers['x-access-token'] || req.query.token;
 

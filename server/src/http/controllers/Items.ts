@@ -173,7 +173,6 @@ export default class ItemsController {
 
     const foundItems: [] = await Item.query().onBuild((builder: any) => {
       builder.where('name', item.name);
-
       if (itemId) {
         builder.whereNot('id', itemId);
       }

@@ -126,7 +126,7 @@ export default class AuthenticationService {
     this.logger.info('[register] Someone trying to register.');
     await this.validateEmailAndPhoneUniqiness(registerDTO);
 
-    this.logger.info('[register] Creating a new tenant org.')
+    this.logger.info('[register] Creating a new tenant organization.')
     const tenant = await this.newTenantOrganization();
 
     this.logger.info('[register] Trying hashing the password.')

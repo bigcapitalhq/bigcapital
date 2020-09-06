@@ -33,9 +33,8 @@ import Resources from './controllers/Resources';
 import ExchangeRates from '@/http/controllers/ExchangeRates';
 import Media from '@/http/controllers/Media';
 import Ping from '@/http/controllers/Ping';
-import Agendash from '@/http/controllers/Agendash';
 import Subscription from '@/http/controllers/Subscription';
-import LicensesController from '@/http/controllers/Subscription/Licenses';
+import Licenses from '@/http/controllers/Subscription/Licenses';
 
 export default () => {
   const app = Router();
@@ -45,11 +44,11 @@ export default () => {
   app.use('/auth', Container.get(Authentication).router());
   app.use('/invite', Container.get(InviteUsers).nonAuthRouter());
   app.use('/organization', Container.get(Organization).router());
-  app.use('/licenses', Container.get(LicensesController).router());
+  app.use('/licenses', Container.get(Licenses).router());
   app.use('/subscription', Container.get(Subscription).router());
   app.use('/ping', Container.get(Ping).router());
 
-  const dashboard = Router(); 
+  const dashboard = Router();
 
   dashboard.use(JWTAuth);
   dashboard.use(AttachCurrentTenantUser)
@@ -77,9 +76,8 @@ export default () => {
   dashboard.use('/purchases', Purchases.router());
   dashboard.use('/resources', Resources.router());
   dashboard.use('/exchange_rates', ExchangeRates.router());
-  dashboard.use('/media', Media.router());
+  dashboard.use('/media', Media.router())
 
-  app.use('/agendash', Agendash.router());
   app.use('/', dashboard);
 
   return app;

@@ -3,7 +3,6 @@ import TenancyService from '@/services/Tenancy/TenancyService';
 import { ServiceError } from '@/exceptions';
 import { IAccountDTO, IAccount } from '@/interfaces';
 import { difference } from 'lodash';
-import { tenant } from 'config/config';
 
 @Service()
 export default class AccountsService {
@@ -137,6 +136,7 @@ export default class AccountsService {
   public async newAccount(tenantId: number, accountDTO: IAccountDTO) {
     const { Account } = this.tenancy.models(tenantId);
 
+    // Validate the account code uniquiness.
     if (accountDTO.code) {
       await this.isAccountCodeUniqueOrThrowError(tenantId, accountDTO.code);
     }

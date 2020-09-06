@@ -1,8 +1,9 @@
 import { Container } from 'typedi';
+import { Request, Response, NextFunction } from 'express';
 import TenantsManager from '@/system/TenantsManager';
 import tenantModelsLoader from '@/loaders/tenantModels';
 
-export default async (req, res, next) => {
+export default async (req: Request, res: Response, next: NextFunction) => {
   const Logger = Container.get('logger');
   const organizationId = req.headers['organization-id'] || req.query.organization;
 

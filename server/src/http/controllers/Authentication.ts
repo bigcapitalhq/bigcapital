@@ -139,6 +139,7 @@ export default class AuthenticationController extends BaseController{
       const registeredUser: ISystemUser = await this.authService.register(registerDTO);
 
       return res.status(200).send({
+        type: 'success',
         code: 'REGISTER.SUCCESS',
         message: 'Register organization has been success.',
       });
@@ -153,7 +154,7 @@ export default class AuthenticationController extends BaseController{
           errorReasons.push({ type: 'EMAIL.EXISTS', code: 200 });
         }
         if (errorReasons.length > 0) {
-          return res.status(200).send({ errors: errorReasons });
+          return res.boom.badRequest(null, { errors: errorReasons });
         }
       }
       next();

@@ -46,8 +46,15 @@ import {
   IOptionDTO,
   IOptionsDTO,
 } from './Options';
+import {
+  IAccount,
+  IAccountDTO,
+} from './Account';
 
 export {
+  IAccount,
+  IAccountDTO,
+
   IBillPaymentEntry,
   IBillPayment,
   IBillPaymentOTD,

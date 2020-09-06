@@ -1,4 +1,4 @@
-import express from 'express';
+import { json, Request, Response, NextFunction } from 'express';
 import helmet from 'helmet';
 import boom from 'express-boom';
 import errorHandler from 'errorhandler';
@@ -6,6 +6,7 @@ import fileUpload from 'express-fileupload';
 import i18n from 'i18n';
 import routes from '@/http';
 import LoggerMiddleware from '@/http/middleware/LoggerMiddleware';
+import AgendashController from '@/http/controllers/Agendash';
 import config from '@/../config/config';
 
 export default ({ app }) => {
@@ -22,7 +23,7 @@ export default ({ app }) => {
   app.use(boom());
 
   // Parses both json and urlencoded.
-  app.use(express.json());
+  app.use(json());
 
   // Handle multi-media requests.
   app.use(fileUpload({
@@ -38,8 +39,11 @@ export default ({ app }) => {
   // Prefix all application routes.
   app.use(config.api.prefix, routes());
 
+  // Agendash application load.
+  app.use('/agendash', AgendashController.router());
+
   // catch 404 and forward to error handler
-  app.use((req, res, next) => {
+  app.use((req: Request, res: Response, next: NextFunction) => {
     return res.boom.notFound();
   })
 };
