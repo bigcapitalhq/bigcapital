@@ -9,7 +9,6 @@ import { setGlobalErrors } from 'store/globalErrors/globalErrors.actions';
 const http = axios.create();
 
 
-
 http.interceptors.request.use((request) => {
   const state = store.getState();
   const { token, organization } = state.authentication;

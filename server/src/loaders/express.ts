@@ -5,6 +5,7 @@ import errorHandler from 'errorhandler';
 import fileUpload from 'express-fileupload';
 import i18n from 'i18n';
 import routes from '@/http';
+import LoggerMiddleware from '@/http/middleware/LoggerMiddleware';
 import config from '@/../config/config';
 
 export default ({ app }) => {
@@ -29,7 +30,10 @@ export default ({ app }) => {
   }));
 
   // Initialize i18n node.
-  app.use(i18n.init)
+  app.use(i18n.init);
+
+  // Logger middleware.
+  app.use(LoggerMiddleware);
 
   // Prefix all application routes.
   app.use(config.api.prefix, routes());

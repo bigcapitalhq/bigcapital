@@ -62,8 +62,8 @@ export default () => {
   dashboard.use('/users', Container.get(Users).router());
   dashboard.use('/invite', Container.get(InviteUsers).authRouter());
   dashboard.use('/currencies', Currencies.router());
-  dashboard.use('/accounts', Accounts.router());
-  dashboard.use('/account_types', AccountTypes.router());
+  dashboard.use('/accounts', Container.get(Accounts).router());
+  dashboard.use('/account_types', Container.get(AccountTypes).router());
   dashboard.use('/accounting', Accounting.router());
   dashboard.use('/views', Views.router());
   dashboard.use('/items', Container.get(Items).router());

@@ -47,6 +47,8 @@ export default  class SettingsController extends BaseController{
 
   /**
    * Saves the given options to the storage.
+   * @param {Request} req - 
+   * @param {Response} res - 
    */
   saveSettings(req: Request, res: Response) {
     const { Option } = req.models;
@@ -72,7 +74,11 @@ export default  class SettingsController extends BaseController{
       settings.set({ ...option });
     });
  
-    return res.status(200).send({  });
+    return res.status(200).send({ 
+      type: 'success',
+      code: 'OPTIONS.SAVED.SUCCESSFULLY',
+      message: 'Options have been saved successfully.',
+    });
   }
   
   /**
