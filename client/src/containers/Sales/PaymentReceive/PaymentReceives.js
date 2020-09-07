@@ -71,11 +71,7 @@ function PaymentReceives({
   }, [history]);
 
   const handleCustomerChange = (customerId) => {
-    if (id) {
-      setCustomerId(!customerId);
-    } else {
-      setCustomerId(customerId);
-    }
+    setCustomerId(customerId);
   };
 
   return (
@@ -91,7 +87,6 @@ function PaymentReceives({
       <PaymentReceiveForm
         onFormSubmit={handleFormSubmit}
         paymentReceiveId={id}
-        paymentReceiveInvoices={id}
         onCancelForm={handleCancel}
         onCustomerChange={handleCustomerChange}
       />

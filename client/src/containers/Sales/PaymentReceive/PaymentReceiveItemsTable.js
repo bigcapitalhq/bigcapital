@@ -81,21 +81,12 @@ function PaymentReceiveItemsTable({
   invoices,
 }) {
   const [rows, setRows] = useState([]);
-  const [entrie, setEntrie] = useState([]);
   const { formatMessage } = useIntl();
 
   useEffect(() => {
     setRows([...dueInvoices.map((e) => ({ ...e })), ...invoices, {}]);
-    setEntrie([
-      ...dueInvoices.map((e) => {
-        return { id: e.id, payment_amount: e.payment_amount };
-      }),
-    ]);
-  }, [dueInvoices]);
+  }, [invoices]);
 
-  console.log(rows, 'rows');
-  console.log(entrie, 'entrie');
-  console.log(values, 'values');
   // useEffect(() => {
   //   setRows([...dueInvoices.map((e) => ({ ...e })), {}]);
 
@@ -188,7 +179,7 @@ function PaymentReceiveItemsTable({
       );
       onClickRemoveRow && onClickRemoveRow(removeIndex);
     },
-    [entrie, setFieldValue, onClickRemoveRow],
+    [rows, setFieldValue, onClickRemoveRow],
   );
 
   const onClickNewRow = () => {
@@ -215,7 +206,6 @@ function PaymentReceiveItemsTable({
         return row;
       });
       setRows(newRows);
-      // setEntrie(newRows);
       setFieldValue(
         'entries',
         newRows.map((row) => ({
@@ -224,7 +214,7 @@ function PaymentReceiveItemsTable({
         })),
       );
     },
-    [rows, setFieldValue, setEntrie,setRows],
+    [rows, setFieldValue, setRows],
   );
 
   return (

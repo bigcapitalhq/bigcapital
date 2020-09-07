@@ -36,7 +36,7 @@ import Icon from 'components/Icon';
 
 function ItemCategoryDialog({
   dialogName,
-  payload,
+  payload = {},
   isOpen,
 
   // #withDialog
@@ -67,9 +67,12 @@ function ItemCategoryDialog({
   const fetchList = useQuery(['items-categories-list'], () =>
     requestFetchItemCategories(),
   );
-  const fetchAccounts = useQuery('accounts-list', (key) =>
-    requestFetchAccounts(),
+  const fetchAccounts = useQuery(
+    'accounts-list',
+    () => requestFetchAccounts(),
+    { enabled: false },
   );
+
   const validationSchema = Yup.object().shape({
     name: Yup.string()
       .required()
@@ -84,7 +87,7 @@ function ItemCategoryDialog({
     inventory_account_id: Yup.number()
       .required()
       .label(formatMessage({ id: 'inventory_account_' })),
-    description: Yup.string().trim(),
+    description: Yup.string().trim().nullable(),
   });
 
   const initialValues = useMemo(
@@ -228,14 +231,14 @@ function ItemCategoryDialog({
       }
       className={classNames(
         {
-          'dialog--loading': fetchList.isFetching,
+          'dialog--loading': fetchList.isFetching || fetchAccounts.isFetching,
         },
         'dialog--category-form',
       )}
       isOpen={isOpen}
       onClosed={onDialogClosed}
       onOpening={onDialogOpening}
-      isLoading={fetchList.isFetching}
+      isLoading={fetchList.isFetching || fetchAccounts.isFetching}
       onClose={handleClose}
     >
       <form onSubmit={handleSubmit}>
@@ -358,12 +361,15 @@ function ItemCategoryDialog({
             label={<T id={'inventory_account'} />}
             inline={true}
             intent={
-              errors.inventory_account &&
-              touched.inventory_account &&
+              errors.inventory_account_id &&
+              touched.inventory_account_id &&
               Intent.DANGER
             }
             helperText={
-              <ErrorMessage {...{ errors, touched }} name="inventory_account" />
+              <ErrorMessage
+                {...{ errors, touched }}
+                name="inventory_account_id"
+              />
             }
             className={classNames(
               'form-group--sell-account',
@@ -373,9 +379,9 @@ function ItemCategoryDialog({
           >
             <AccountsSelectList
               accounts={accountsList}
-              onAccountSelected={onItemAccountSelect('inventory_account')}
+              onAccountSelected={onItemAccountSelect('inventory_account_id')}
               defaultSelectText={<T id={'select_account'} />}
-              selectedAccountId={values.inventory_account}
+              selectedAccountId={values.inventory_account_id}
             />
           </FormGroup>
         </div>
@@ -404,7 +410,8 @@ function ItemCategoryDialog({
 }
 
 const mapStateToProps = (state, props) => ({
-  itemCategoryId: props?.dialogPayload?.id || null,
+  dialogName: 'item-category-form',
+  itemCategoryId: props?.payload?.id || null,
 });
 
 const withItemCategoryDialog = connect(mapStateToProps);

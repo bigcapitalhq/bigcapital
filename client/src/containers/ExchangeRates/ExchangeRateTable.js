@@ -1,9 +1,16 @@
 import React, { useCallback, useMemo, useState, useEffect } from 'react';
-import { Button, Popover, Menu, MenuItem, Position,Intent } from '@blueprintjs/core';
+import {
+  Button,
+  Popover,
+  Menu,
+  MenuItem,
+  Position,
+  Intent,
+} from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
+import moment from 'moment';
 
-import Icon from 'components/Icon';
-import DataTable from 'components/DataTable';
+import { DataTable, Money, Icon } from 'components';
 import LoadingIndicator from 'components/LoadingIndicator';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
@@ -30,10 +37,12 @@ function ExchangeRateTable({
   const [initialMount, setInitialMount] = useState(false);
   const { formatMessage } = useIntl();
 
-  const handelEditExchangeRate = (exchange_rate) => () => {
-    openDialog('exchangeRate-form', { action: 'edit', id: exchange_rate.id });
-    onEditExchangeRate(exchange_rate.id);
-  };
+  const handelEditExchangeRate = useCallback(
+    (exchange_rate) => () => {
+      openDialog('exchangeRate-form', { action: 'edit', id: exchange_rate.id });
+    },
+    [openDialog],
+  );
 
   const handleDeleteExchangeRate = (exchange_rate) => () => {
     onDeleteExchangeRate(exchange_rate);
@@ -50,49 +59,53 @@ function ExchangeRateTable({
           text={<T id={'delete_exchange_rate'} />}
           intent={Intent.DANGER}
           onClick={handleDeleteExchangeRate(ExchangeRate)}
+          icon={<Icon icon="trash-16" iconSize={16} />}
         />
       </Menu>
     ),
     [handelEditExchangeRate, handleDeleteExchangeRate],
   );
 
-  const columns = useMemo(() => [
-    {
-      id: 'date',
-      Header: formatMessage({ id: 'date' }),
-      // accessor: 'date',
-      width: 150,
-    },
-    {
-      id: 'currency_code',
-      Header: formatMessage({ id: 'currency_code' }),
-      accessor: 'currency_code',
-      className: 'currency_code',
-      width: 150,
-    },
-    {
-      id: 'exchange_rate',
-      Header: formatMessage({ id: 'exchange_rate' }),
-      accessor: 'exchange_rate',
-      className: 'exchange_rate',
-      width: 150,
-    },
-    {
-      id: 'actions',
-      Header: '',
-      Cell: ({ cell }) => (
-        <Popover
-          content={actionMenuList(cell.row.original)}
-          position={Position.RIGHT_BOTTOM}
-        >
-          <Button icon={<Icon icon='more-h-16' iconSize={16} />} />
-        </Popover>
-      ),
-      className: 'actions',
-      width: 50,
-      disableResizing: false,
-    },
-  ], [actionMenuList,formatMessage]);
+  const columns = useMemo(
+    () => [
+      {
+        id: 'date',
+        Header: formatMessage({ id: 'date' }),
+        accessor: (r) => moment(r.date).format('YYYY MMM DD'),
+        width: 150,
+      },
+      {
+        id: 'currency_code',
+        Header: formatMessage({ id: 'currency_code' }),
+        accessor: 'currency_code',
+        className: 'currency_code',
+        width: 150,
+      },
+      {
+        id: 'exchange_rate',
+        Header: formatMessage({ id: 'exchange_rate' }),
+        accessor: (r) => <Money amount={r.exchange_rate} currency={'USD'} />,
+        className: 'exchange_rate',
+        width: 150,
+      },
+      {
+        id: 'actions',
+        Header: '',
+        Cell: ({ cell }) => (
+          <Popover
+            content={actionMenuList(cell.row.original)}
+            position={Position.RIGHT_BOTTOM}
+          >
+            <Button icon={<Icon icon="more-h-16" iconSize={16} />} />
+          </Popover>
+        ),
+        className: 'actions',
+        width: 50,
+        disableResizing: false,
+      },
+    ],
+    [actionMenuList, formatMessage],
+  );
 
   const selectionColumn = useMemo(
     () => ({
@@ -120,18 +133,18 @@ function ExchangeRateTable({
 
   return (
     <LoadingIndicator loading={loading} mount={false}>
-    <DataTable
-      columns={columns}
-      data={exchangeRatesList}
-      onFetchData={handelFetchData}
-      loading={exchangeRatesLoading && !initialMount}
-      manualSortBy={true}
-      selectionColumn={selectionColumn}
-      expandable={true}
-      treeGraph={true}
-      onSelectedRowsChange={handelSelectedRowsChange}
-      spinnerProps={{ size: 30 }}
-    />
+      <DataTable
+        columns={columns}
+        data={exchangeRatesList}
+        onFetchData={handelFetchData}
+        loading={exchangeRatesLoading && !initialMount}
+        manualSortBy={true}
+        selectionColumn={selectionColumn}
+        expandable={true}
+        treeGraph={true}
+        onSelectedRowsChange={handelSelectedRowsChange}
+        spinnerProps={{ size: 30 }}
+      />
     </LoadingIndicator>
   );
 }

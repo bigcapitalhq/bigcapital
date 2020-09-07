@@ -77,7 +77,11 @@ function PaymentReceiveForm({
   };
 
   useEffect(() => {
-    onCustomerChange && onCustomerChange(formik.values.customer_id);
+    if (paymentReceive && paymentReceive.id) {
+      return;
+    } else {
+      onCustomerChange && onCustomerChange(formik.values.customer_id);
+    }
   });
 
   useEffect(() => {
@@ -295,7 +299,7 @@ function PaymentReceiveForm({
       orderingIndex([...repeatValue(defaultPaymentReceive, MIN_LINES_NUMBER)]),
     );
   };
-  console.log(formik.errors, 'ERROR');
+ 
   return (
     <div className={'payment_receive_form'}>
       <form onSubmit={formik.handleSubmit}>

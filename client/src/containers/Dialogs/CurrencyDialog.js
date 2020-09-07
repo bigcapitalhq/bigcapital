@@ -19,7 +19,6 @@ import withDialogRedux from 'components/DialogReduxConnect';
 import ErrorMessage from 'components/ErrorMessage';
 import classNames from 'classnames';
 import withDialogActions from 'containers/Dialog/withDialogActions';
-import { getDialogPayload } from 'store/dashboard/dashboard.reducer';
 
 import withCurrency from 'containers/Currencies/withCurrency';
 import withCurrenciesActions from 'containers/Currencies/withCurrenciesActions';
@@ -27,7 +26,7 @@ import withCurrenciesActions from 'containers/Currencies/withCurrenciesActions';
 import { compose } from 'utils';
 
 function CurrencyDialog({
-  name,
+  dialogName,
   payload,
   isOpen,
 
@@ -66,6 +65,7 @@ function CurrencyDialog({
   );
 
   const {
+    values,
     errors,
     touched,
     isSubmitting,
@@ -83,7 +83,7 @@ function CurrencyDialog({
       if (payload.action === 'edit') {
         requestEditCurrency(currency.id, values)
           .then((response) => {
-            closeDialog(name);
+            closeDialog(dialogName);
             AppToaster.show({
               message: formatMessage({
                 id: 'the_currency_has_been_successfully_edited',
@@ -99,7 +99,7 @@ function CurrencyDialog({
       } else {
         requestSubmitCurrencies(values)
           .then((response) => {
-            closeDialog(name);
+            closeDialog(dialogName);
             AppToaster.show({
               message: formatMessage({
                 id: 'the_currency_has_been_successfully_created',
@@ -117,8 +117,8 @@ function CurrencyDialog({
   });
 
   const handleClose = useCallback(() => {
-    closeDialog(name);
-  }, [name, closeDialog]);
+    closeDialog(dialogName);
+  }, [dialogName, closeDialog]);
 
   const onDialogOpening = useCallback(() => {
     fetchCurrencies.refetch();
@@ -126,14 +126,14 @@ function CurrencyDialog({
 
   const onDialogClosed = useCallback(() => {
     resetForm();
-    closeDialog(name);
-  }, [closeDialog, name, resetForm]);
+    closeDialog(dialogName);
+  }, [closeDialog, dialogName, resetForm]);
 
   const requiredSpan = useMemo(() => <span className={'required'}>*</span>, []);
 
   return (
     <Dialog
-      name={name}
+      name={dialogName}
       title={
         payload.action === 'edit' ? (
           <T id={'edit_currency'} />
@@ -222,7 +222,7 @@ function CurrencyDialog({
 }
 
 const mapStateToProps = (state, props) => ({
-  dialogName: 'currency-form',
+  currency: 'currency-form',
 });
 
 const withCurrencyFormDialog = connect(mapStateToProps);
