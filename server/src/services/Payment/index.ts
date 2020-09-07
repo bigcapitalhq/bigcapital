@@ -1,4 +1,5 @@
 import { IPaymentMethod, IPaymentContext } from "@/interfaces";
+import { Plan } from '@/system/models';
 
 export default class PaymentContext<PaymentModel> implements IPaymentContext{
   paymentMethod: IPaymentMethod;
@@ -15,7 +16,7 @@ export default class PaymentContext<PaymentModel> implements IPaymentContext{
    * 
    * @param {<PaymentModel>} paymentModel 
    */
-  makePayment(paymentModel: PaymentModel) {
-    this.paymentMethod.makePayment(paymentModel);
+  makePayment(paymentModel: PaymentModel, plan: Plan) {
+    return this.paymentMethod.payment(paymentModel, plan);
   }
 }

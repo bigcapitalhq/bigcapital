@@ -5,7 +5,7 @@ exports.up = function(knex) {
     table.string('email');
     table.string('token').unique();
     table.integer('tenant_id').unsigned();
-    table.timestamps();
+    table.datetime('created_at');
   });
 };
 

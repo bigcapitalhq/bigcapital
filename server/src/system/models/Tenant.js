@@ -11,6 +11,13 @@ export default class Tenant extends BaseModel {
   }
 
   /**
+   * Timestamps columns.
+   */
+  get timestamps() {
+    return ['createdAt', 'updatedAt'];
+  }
+
+  /**
    * Query modifiers.
    */
   static modifiers() {

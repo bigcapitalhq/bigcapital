@@ -1,13 +1,16 @@
 import { Inject, Service } from 'typedi';
 import { Router, Request, Response } from 'express';
-import { check, param, query, ValidationSchema } from 'express-validator';
-import { License, Plan } from '@/system/models';
+import { check } from 'express-validator';
 import validateMiddleware from '@/http/middleware/validateMiddleware';
 import asyncMiddleware from '@/http/middleware/asyncMiddleware';
 import PaymentMethodController from '@/http/controllers/Subscription/PaymentMethod';
 import {
-  NotAllowedChangeSubscriptionPlan
+  NotAllowedChangeSubscriptionPlan,
+  NoPaymentModelWithPricedPlan,
+  PaymentAmountInvalidWithPlan,
+  PaymentInputInvalid,
 } from '@/exceptions';
+import { ILicensePaymentModel } from '@/interfaces';
 
 @Service()
 export default class PaymentViaLicenseController extends PaymentMethodController { 
@@ -24,9 +27,7 @@ export default class PaymentViaLicenseController extends PaymentMethodController
       '/payment',
       this.paymentViaLicenseSchema,
       validateMiddleware,
-      asyncMiddleware(this.validateLicenseCodeExistance.bind(this)),
       asyncMiddleware(this.validatePlanSlugExistance.bind(this)),
-      asyncMiddleware(this.validateLicenseAndPlan.bind(this)),
       asyncMiddleware(this.paymentViaLicense.bind(this)),
     );
     return router;
@@ -38,52 +39,8 @@ export default class PaymentViaLicenseController extends PaymentMethodController
   get paymentViaLicenseSchema() {
     return [
       check('plan_slug').exists().trim().escape(),
-      check('license_code').exists().trim().escape(),
+      check('license_code').optional().trim().escape(),
     ];
-  }
-
-  /**
-   * Validate the given license code exists on the storage.
-   * @async
-   * @param {Request} req 
-   * @param {Response} res 
-   */
-  async validateLicenseCodeExistance(req: Request, res: Response, next: Function) {
-    const { licenseCode } = this.matchedBodyData(req);
-    this.logger.info('[license_payment] trying to validate license code.', { licenseCode });
-
-    const foundLicense = await License.query()
-      .modify('filterActiveLicense')
-      .where('license_code', licenseCode)
-      .first();
-
-    if (!foundLicense) {
-      return res.status(400).send({
-        errors: [{ type: 'LICENSE.CODE.IS.INVALID', code: 120 }],
-      });
-    }
-    next();
-  }
-
-  /**
-   * Validate the license period and plan period.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {Function} next 
-   */
-  async validateLicenseAndPlan(req: Request, res: Response, next: Function) {
-    const { planSlug, licenseCode } = this.matchedBodyData(req);
-    this.logger.info('[license_payment] trying to validate license with the plan.', { licenseCode });
-
-    const license = await License.query().findOne('license_code', licenseCode);
-    const plan = await Plan.query().findOne('slug', planSlug);
-
-    if (license.planId !== plan.id) {
-      return res.status(400).send({
-        errors: [{ type: 'LICENSE.NOT.FOR.GIVEN.PLAN' }],
-      });
-    }
-    next();
   }
 
   /**
@@ -97,8 +54,11 @@ export default class PaymentViaLicenseController extends PaymentMethodController
     const { tenant } = req;
 
     try {
+      const licenseModel: ILicensePaymentModel|null = licenseCode
+        ? { licenseCode } : null;
+
       await this.subscriptionService
-        .subscriptionViaLicense(tenant.id, planSlug, licenseCode);
+        .subscriptionViaLicense(tenant.id, planSlug, licenseModel);
 
       return res.status(200).send({
         type: 'success',
@@ -108,7 +68,13 @@ export default class PaymentViaLicenseController extends PaymentMethodController
     } catch (exception) {
       const errorReasons = [];
 
-      if (exception.name === 'NotAllowedChangeSubscriptionPlan') {
+      if (exception instanceof NoPaymentModelWithPricedPlan) {
+        errorReasons.push({
+          type: 'NO_PAYMENT_WITH_PRICED_PLAN',
+          code: 140,
+        });
+      }
+      if (exception instanceof NotAllowedChangeSubscriptionPlan) {
         errorReasons.push({
           type: 'NOT.ALLOWED.RENEW.SUBSCRIPTION.WHILE.ACTIVE',
           code: 120,
@@ -116,6 +82,16 @@ export default class PaymentViaLicenseController extends PaymentMethodController
       }
       if (errorReasons.length > 0) {
         return res.status(400).send({ errors: errorReasons });
+      }
+      if (exception instanceof PaymentInputInvalid) {
+        return res.status(400).send({
+          errors: [{ type: 'LICENSE.CODE.IS.INVALID', code: 120 }],
+        });
+      }
+      if (exception instanceof PaymentAmountInvalidWithPlan) {
+        return res.status(400).send({
+          errors: [{ type: 'LICENSE.NOT.FOR.GIVEN.PLAN' }],
+        });
       }
       next(exception);
     }

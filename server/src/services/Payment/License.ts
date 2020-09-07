@@ -42,7 +42,6 @@ export default class LicenseService {
     });
   }
 
-
   /**
    * 
    * @param {number} loop 
@@ -52,7 +51,7 @@ export default class LicenseService {
    */
   async generateLicenses(
     loop = 1,
-    licensePeriod: numner,
+    licensePeriod: number,
     periodInterval: string = 'days',
     planId: number,
   ) {
@@ -67,7 +66,7 @@ export default class LicenseService {
 
   /**
    * Disables the given license id on the storage.
-   * @param {number} licenseId 
+   * @param  {number} licenseId 
    * @return {Promise}
    */
   async disableLicense(licenseId: number) {

@@ -7,4 +7,11 @@ export default class PasswordResets extends SystemModel {
   static get tableName() {
     return 'password_resets';
   }
+
+  /**
+   * Timestamps columns.
+   */
+  get timestamps() {
+    return ['createdAt'];
+  }
 }

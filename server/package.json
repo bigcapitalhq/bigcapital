@@ -58,6 +58,7 @@
     "nodemailer": "^6.3.0",
     "nodemon": "^1.19.1",
     "objection": "^2.0.10",
+    "objection-soft-delete": "^1.0.7",
     "reflect-metadata": "^0.1.13",
     "ts-transformer-keys": "^0.4.2",
     "tsyringe": "^4.3.0",

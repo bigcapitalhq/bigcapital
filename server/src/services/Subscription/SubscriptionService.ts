@@ -1,10 +1,11 @@
 import { Service, Inject } from 'typedi';
-import { Plan, Tenant, License } from '@/system/models';
+import { Plan, Tenant } from '@/system/models';
 import Subscription from '@/services/Subscription/Subscription';
-import VocuherPaymentMethod from '@/services/Payment/LicensePaymentMethod';
+import LicensePaymentMethod from '@/services/Payment/LicensePaymentMethod';
 import PaymentContext from '@/services/Payment';
 import SubscriptionSMSMessages from '@/services/Subscription/SMSMessages';
 import SubscriptionMailMessages from '@/services/Subscription/MailMessages';
+import { ILicensePaymentModel } from '@/interfaces';
 
 @Service()
 export default class SubscriptionService {
@@ -14,31 +15,37 @@ export default class SubscriptionService {
   @Inject()
   mailMessages: SubscriptionMailMessages;
 
+  @Inject('logger')
+  logger: any;
+
   /**
    * Handles the payment process via license code and than subscribe to 
    * the given tenant.
-   * 
    * @param {number} tenantId 
    * @param {String} planSlug 
    * @param {string} licenseCode 
-   * 
    * @return {Promise}
    */
   async subscriptionViaLicense(
     tenantId: number,
     planSlug: string,
-    licenseCode: string,
+    paymentModel?: ILicensePaymentModel,
     subscriptionSlug: string = 'main',
   ) {
+    this.logger.info('[subscription_via_license] try to subscribe via given license.', {
+      tenantId, paymentModel
+    });
     const plan = await Plan.query().findOne('slug', planSlug);
     const tenant = await Tenant.query().findById(tenantId);
-    const licenseModel = await License.query().findOne('license_code', licenseCode);
 
-    const paymentViaLicense = new VocuherPaymentMethod();
+    const paymentViaLicense = new LicensePaymentMethod();
     const paymentContext = new PaymentContext(paymentViaLicense);
 
     const subscription = new Subscription(paymentContext);
 
-    return subscription.subscribe(tenant, plan, licenseModel, subscriptionSlug);
+    await subscription.subscribe(tenant, plan, paymentModel, subscriptionSlug);
+    this.logger.info('[subscription_via_license] payment via license done successfully.', {
+      tenantId, paymentModel
+    }); 
   }
 }

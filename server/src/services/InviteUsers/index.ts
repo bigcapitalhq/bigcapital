@@ -5,7 +5,7 @@ import {
   EventDispatcher,
   EventDispatcherInterface,
 } from '@/decorators/eventDispatcher';
-import { ServiceError, ServiceErrors } from "@/exceptions";
+import { ServiceError } from "@/exceptions";
 import { SystemUser, Invite, Tenant } from "@/system/models";
 import { Option } from '@/models';
 import { hashPassword } from '@/utils';
@@ -49,8 +49,6 @@ export default class InviteUserService {
     this.logger.info('[aceept_invite] trying to hash the user password.');
     const hashedPassword = await hashPassword(inviteUserInput.password);
 
-    console.log(inviteToken);
-
     this.logger.info('[accept_invite] trying to update user details.');
     const updateUserOper = SystemUser.query()
       .where('email', inviteToken.email)
@@ -60,7 +58,7 @@ export default class InviteUserService {
         invite_accepted_at: moment().format('YYYY-MM-DD'),
         password: hashedPassword,
       });
-     
+
     this.logger.info('[accept_invite] trying to delete the given token.');
     const deleteInviteTokenOper = Invite.query().where('token', inviteToken.token).delete();
 

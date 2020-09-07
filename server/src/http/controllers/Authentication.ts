@@ -204,7 +204,7 @@ export default class AuthenticationController extends BaseController{
       })
     } catch(error) {
       if (error instanceof ServiceError) {
-        if (error.errorType === 'token_invalid') {
+        if (error.errorType === 'token_invalid' || error.errorType === 'token_expired') {
           return res.boom.badRequest(null, {
             errors: [{ type: 'TOKEN_INVALID', code: 100 }],
           });

@@ -1,7 +1,8 @@
-import { Inject } from 'typedi';
+import { Inject, Service } from 'typedi';
 import { Tenant, Plan } from '@/system/models';
 import { IPaymentContext } from '@/interfaces';
 import { NotAllowedChangeSubscriptionPlan } from '@/exceptions';
+import { NoPaymentModelWithPricedPlan } from '@/exceptions';
 
 export default class Subscription<PaymentModel> {
   paymentContext: IPaymentContext|null;
@@ -19,7 +20,7 @@ export default class Subscription<PaymentModel> {
 
   /**
    * Subscripe to the given plan.
-   * @param {Plan} plan 
+   * @param  {Plan} plan 
    * @throws {NotAllowedChangeSubscriptionPlan}
    */
   async subscribe(
@@ -28,8 +29,11 @@ export default class Subscription<PaymentModel> {
     paymentModel?: PaymentModel,
     subscriptionSlug: string = 'main',
   ) {
-    if (plan.price < 0) {
-      await this.paymentContext.makePayment(paymentModel);
+    this.validateIfPlanHasPriceNoPayment(plan, paymentModel);
+
+    // @todo
+    if (plan.price > 0) {
+      await this.paymentContext.makePayment(paymentModel, plan);
     }
     const subscription = await tenant.$relatedQuery('subscriptions')
       .modify('subscriptionBySlug', subscriptionSlug)
@@ -39,8 +43,7 @@ export default class Subscription<PaymentModel> {
     if (subscription && subscription.active()) {
       throw new NotAllowedChangeSubscriptionPlan;
 
-    // In case there is already subscription associated to the given tenant.
-    // renew it.
+    // In case there is already subscription associated to the given tenant renew it.
     } else if(subscription && subscription.inactive()) {
       await subscription.renew(plan);
 
@@ -48,5 +51,16 @@ export default class Subscription<PaymentModel> {
     } else {
       await tenant.newSubscription(subscriptionSlug, plan);
     }        
+  }
+
+  /**
+   * Throw error in plan has price and no payment model.
+   * @param {Plan} plan -
+   * @param {PaymentModel} paymentModel - payment input.
+   */
+  validateIfPlanHasPriceNoPayment(plan: Plan, paymentModel: PaymentMode) {
+    if (plan.price > 0 && !paymentModel) {
+      throw new NoPaymentModelWithPricedPlan();
+    }
   }
 }

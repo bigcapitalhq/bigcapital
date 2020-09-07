@@ -32,6 +32,11 @@ export default class AccountTransaction extends mixin(TenantModel, [CachableMode
    */
   static get modifiers() {
     return {
+      /**
+       * Filters accounts by the given ids.
+       * @param {Query} query 
+       * @param {number[]} accountsIds 
+       */
       filterAccounts(query, accountsIds) {
         if (accountsIds.length > 0) {
           query.whereIn('account_id', accountsIds);

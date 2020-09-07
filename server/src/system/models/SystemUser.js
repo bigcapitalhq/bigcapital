@@ -14,7 +14,7 @@ export default class SystemUser extends mixin(SystemModel) {
   /**
    * Timestamps columns.
    */
-  static get timestamps() {
+  get timestamps() {
     return ['createdAt', 'updatedAt'];
   }
 

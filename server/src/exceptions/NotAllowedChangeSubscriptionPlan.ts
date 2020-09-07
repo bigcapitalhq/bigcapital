@@ -1,9 +1,8 @@
 
 
-export default class NotAllowedChangeSubscriptionPlan extends Error{
+export default class NotAllowedChangeSubscriptionPlan {
 
   constructor(message: string) {
-    super(message);
     this.name = "NotAllowedChangeSubscriptionPlan";
   }
 }

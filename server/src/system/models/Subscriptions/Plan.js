@@ -13,7 +13,7 @@ export default class Plan extends mixin(SystemModel) {
   /**
    * Timestamps columns.
    */
-  static get timestamps() {
+  get timestamps() {
     return ['createdAt', 'updatedAt'];
   }
 

@@ -203,7 +203,7 @@ export default class AuthenticationService {
 
     // Delete all stored tokens of reset password that associate to the give email.
     this.logger.info('[send_reset_password] trying to delete all tokens by email.');
-    await PasswordReset.query().where('email', email).delete();
+    this.deletePasswordResetToken(email);
 
     const token = uniqid();
 
@@ -230,26 +230,42 @@ export default class AuthenticationService {
       this.logger.info('[reset_password] token invalid.');
       throw new ServiceError('token_invalid');
     }
+    // Different between tokne creation datetime and current time.
+    if (moment().diff(tokenModel.createdAt, 'seconds') > config.resetPasswordSeconds) {
+      this.logger.info('[reset_password] token expired.');
+
+      // Deletes the expired token by expired token email.
+      await this.deletePasswordResetToken(tokenModel.email);
+      throw new ServiceError('token_expired');
+    }
     const user = await SystemUser.query().findOne('email', tokenModel.email)
 
     if (!user) {
       throw new ServiceError('user_not_found');
     }
     const hashedPassword = await hashPassword(password);
-
+    
     this.logger.info('[reset_password] saving a new hashed password.');
     await SystemUser.query()
       .where('email', tokenModel.email)
-      .update({
-        password: hashedPassword,
-      });
-    // Delete the reset password token.
-    await PasswordReset.query().where('email', user.email).delete();
+      .update({ password: hashedPassword });
+    
+    // Deletes the used token.
+    await this.deletePasswordResetToken(tokenModel.email);
 
     // Triggers `onResetPassword` event.
     this.eventDispatcher.dispatch(events.auth.resetPassword, { user, token, password });
-
     this.logger.info('[reset_password] reset password success.');
+  }
+
+  /**
+   * Deletes the password reset token by the given email.
+   * @param  {string} email  
+   * @returns {Promise}
+   */
+  private async deletePasswordResetToken(email: string) {
+    this.logger.info('[reset_password] trying to delete all tokens by email.');
+    return PasswordReset.query().where('email', email).delete();
   }
 
   /**

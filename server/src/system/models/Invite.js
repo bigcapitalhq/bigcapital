@@ -7,4 +7,11 @@ export default class UserInvite extends SystemModel {
   static get tableName() {
     return 'user_invites';
   }
+
+  /**
+   * Timestamps columns.
+   */
+  get timestamps() {
+    return ['createdAt'];
+  }
 }

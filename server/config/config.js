@@ -79,5 +79,6 @@ module.exports = {
 
   api: {
     prefix: '/api'
-  }
+  },
+  resetPasswordSeconds: 600,
 };
