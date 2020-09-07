@@ -204,9 +204,7 @@ export default class AccountsController extends BaseController{
     try {
       const account = await this.accountsService.editAccount(tenantId, accountId, accountDTO);
       return res.status(200).send({ id: account.id });
-
     } catch (error) {
-      console.log(error);
       if (error instanceof ServiceError) {
         this.transformServiceErrorToResponse(res, error);
       }
@@ -251,7 +249,6 @@ export default class AccountsController extends BaseController{
       return res.status(200).send({ id: accountId });
 
     } catch (error) {
-      console.log(error);
       if (error instanceof ServiceError) {
         this.transformServiceErrorToResponse(res, error);
         
@@ -364,6 +361,12 @@ export default class AccountsController extends BaseController{
       return res.boom.notFound(
         'The given account not found.', {
         errors: [{ type: 'ACCOUNT.NOT.FOUND', code: 100 }] }
+      );
+    }
+    if (error.errorType === 'account_name_not_unqiue') {
+      return res.boom.badRequest(
+        'The given account not unique.',
+        { errors: [{ type: 'ACCOUNT.NAME.NOT.UNIQUE', code: 150 }], }
       );
     }
     if (error.errorType === 'account_type_not_found') {

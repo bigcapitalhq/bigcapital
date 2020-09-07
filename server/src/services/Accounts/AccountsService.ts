@@ -3,6 +3,7 @@ import TenancyService from '@/services/Tenancy/TenancyService';
 import { ServiceError } from '@/exceptions';
 import { IAccountDTO, IAccount } from '@/interfaces';
 import { difference } from 'lodash';
+import { Account } from 'src/models';
 
 @Service()
 export default class AccountsService {
@@ -128,13 +129,36 @@ export default class AccountsService {
   }
 
   /**
+   * Validates the account name uniquiness.
+   * @param {number} tenantId 
+   * @param {string} accountName 
+   * @param {number} notAccountId - Ignore the account id.
+   */
+  private async validateAccountNameUniquiness(tenantId: number, accountName: string, notAccountId?: number) {
+    const { Account } = this.tenancy.models(tenantId);
+
+    this.logger.info('[accounts] validating account name uniquiness.', { tenantId, accountName, notAccountId });
+    const foundAccount = await Account.query().findOne('name', accountName).onBuild((query) => {
+      if (notAccountId) {
+        query.whereNot('id', notAccountId);
+      }
+    });
+    if (foundAccount) {
+      throw new ServiceError('account_name_not_unqiue');
+    }
+  }
+
+  /**
    * Creates a new account on the storage.
    * @param {number} tenantId 
    * @param {IAccount} accountDTO 
-   * @returns {IAccount}  
+   * @returns {IAccount} 
    */
   public async newAccount(tenantId: number, accountDTO: IAccountDTO) {
     const { Account } = this.tenancy.models(tenantId);
+  
+    // Validate account name uniquiness.
+    await this.validateAccountNameUniquiness(tenantId, accountDTO.name);
 
     // Validate the account code uniquiness.
     if (accountDTO.code) {
@@ -164,6 +188,9 @@ export default class AccountsService {
   public async editAccount(tenantId: number, accountId: number, accountDTO: IAccountDTO) {
     const { Account } = this.tenancy.models(tenantId);
     const oldAccount = await this.getAccountOrThrowError(tenantId, accountId);
+
+    // Validate account name uniquiness.
+    await this.validateAccountNameUniquiness(tenantId, accountDTO.name, accountId);
 
     await this.isAccountTypeChangedOrThrowError(oldAccount, accountDTO);
      
