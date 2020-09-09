@@ -81,4 +81,9 @@ module.exports = {
     prefix: '/api'
   },
   resetPasswordSeconds: 600,
+
+  licensesAuth: {
+    user: 'admin',
+    password: 'admin',
+  }
 };

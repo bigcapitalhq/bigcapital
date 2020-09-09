@@ -213,9 +213,7 @@ export default class BillPaymentsService {
       'accounts_payable'
     );
 
-    const accountsDepGraph = await Account.depGraph().query();
-    const journal = new JournalPoster(accountsDepGraph);
-
+    const journal = new JournalPoster(tenantId);
     const commonJournal = {
       debit: 0,
       credit: 0,

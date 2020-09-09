@@ -1,28 +1,13 @@
-import { Model, mixin } from 'objection';
+import { Model } from 'objection';
 import TenantModel from '@/models/TenantModel';
-import CachableQueryBuilder from '@/lib/Cachable/CachableQueryBuilder';
-import CachableModel from '@/lib/Cachable/CachableModel';
 
-export default class SaleEstimateEntry extends mixin(TenantModel, [CachableModel]) {
+
+export default class SaleEstimateEntry extends TenantModel {
   /**
    * Table name
    */
   static get tableName() {
     return 'sales_estimate_entries';
-  }
-
-  /**
-   * Timestamps columns.
-   */
-  get timestamps() {
-    return [];
-  }
-
-  /**
-   * Extend query builder model.
-   */
-  static get QueryBuilder() {
-    return CachableQueryBuilder;
   }
 
   /**

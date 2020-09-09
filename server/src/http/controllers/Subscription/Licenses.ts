@@ -1,6 +1,8 @@
+import { Service, Inject } from 'typedi';
 import { Router, Request, Response } from 'express'
 import { check, oneOf, ValidationChain } from 'express-validator';
-import { Service, Inject } from 'typedi';
+import basicAuth from 'express-basic-auth';
+import config from '@/../config/config';
 import { License, Plan } from '@/system/models';
 import BaseController from '@/http/controllers/BaseController';
 import LicenseService from '@/services/Payment/License';
@@ -18,6 +20,13 @@ export default class LicensesController extends BaseController {
    */
   router() {
     const router = Router();
+
+    router.use(basicAuth({
+      users: {
+        [config.licensesAuth.user]: config.licensesAuth.password,
+      },
+      challenge: true,
+    }));
 
     router.post(
       '/generate',

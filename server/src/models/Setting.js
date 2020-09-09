@@ -10,13 +10,6 @@ export default class Setting extends TenantModel {
   }
 
   /**
-   * Timestamp columns.
-   */
-  static get hasTimestamps() {
-    return false;
-  }
-
-  /**
    * Extra metadata query to query with the current authenticate user.
    * @param {Object} query
    */

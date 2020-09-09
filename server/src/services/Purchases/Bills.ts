@@ -10,7 +10,7 @@ import HasItemsEntries from '@/services/Sales/HasItemsEntries';
 import SalesInvoicesCost from '@/services/Sales/SalesInvoicesCost';
 import TenancyService from '@/services/Tenancy/TenancyService';
 import { formatDateFields } from '@/utils';
-import{ IBillOTD } from '@/interfaces';
+import{ IBillOTD, IBill, IItem } from '@/interfaces';
 
 /**
  * Vendor bills services.
@@ -26,6 +26,35 @@ export default class BillsService extends SalesInvoicesCost {
 
   @Inject()
   tenancy: TenancyService;
+
+  /**
+   * Converts bill DTO to model.
+   * @param {number} tenantId 
+   * @param {IBillDTO} billDTO 
+   * @param {IBill} oldBill 
+   * 
+   * @returns {IBill}
+   */
+  async billDTOToModel(tenantId: number, billDTO: IBillOTD, oldBill?: IBill) {
+    const { ItemEntry } = this.tenancy.models(tenantId);
+    let invLotNumber = oldBill?.invLotNumber;
+
+    if (!invLotNumber) {
+      invLotNumber = await this.inventoryService.nextLotNumber(tenantId);
+    }
+    const entries = billDTO.entries.map((entry) => ({
+      ...entry,
+      amount: ItemEntry.calcAmount(entry),
+    }));
+    const amount = sumBy(entries, 'amount');
+
+    return {
+      ...formatDateFields(billDTO, ['bill_date', 'due_date']),
+      amount,
+      invLotNumber,
+      entries,
+    };
+  }
 
   /**
    * Creates a new bill and stored it to the storage.
@@ -45,14 +74,7 @@ export default class BillsService extends SalesInvoicesCost {
   async createBill(tenantId: number, billDTO: IBillOTD) {
     const { Vendor, Bill, ItemEntry } = this.tenancy.models(tenantId);
 
-    const invLotNumber = await this.inventoryService.nextLotNumber(tenantId);
-    const amount = sumBy(billDTO.entries, e => ItemEntry.calcAmount(e));
-
-    const bill = {
-      ...formatDateFields(billDTO, ['bill_date', 'due_date']),
-      amount,
-      invLotNumber: billDTO.invLotNumber || invLotNumber
-    };
+    const bill = await this.billDTOToModel(tenantId, billDTO);
     const saveEntriesOpers = [];
 
     const storedBill = await Bill.query()
@@ -116,13 +138,8 @@ export default class BillsService extends SalesInvoicesCost {
     const { Bill, ItemEntry, Vendor } = this.tenancy.models(tenantId);
  
     const oldBill = await Bill.query().findById(billId);
-    const amount = sumBy(billDTO.entries, e => ItemEntry.calcAmount(e));
+    const bill = this.billDTOToModel(tenantId, billDTO, oldBill);
 
-    const bill = {
-      ...formatDateFields(billDTO, ['bill_date', 'due_date']),
-      amount,
-      invLotNumber: oldBill.invLotNumber,
-    };
     // Update the bill transaction.
     const updatedBill = await Bill.query()
       .where('id', billId)
@@ -246,7 +263,7 @@ export default class BillsService extends SalesInvoicesCost {
    * @param {Integer} billId
    */
   async recordJournalTransactions(tenantId: number, bill: any, billId?: number) {
-    const { AccountTransaction, Item, Account } = this.tenancy.models(tenantId);
+    const { AccountTransaction, Item } = this.tenancy.models(tenantId);
 
     const entriesItemsIds = bill.entries.map((entry) => entry.item_id);
     const payableTotal = sumBy(bill.entries, 'amount');
@@ -259,8 +276,7 @@ export default class BillsService extends SalesInvoicesCost {
     const payableAccount = await this.accountsService.getAccountByType(
       tenantId, 'accounts_payable'
     );
-    const accountsDepGraph = await Account.depGraph().query();
-    const journal = new JournalPoster(accountsDepGraph);
+    const journal = new JournalPoster(tenantId);
 
     const commonJournalMeta = {
       debit: 0,
@@ -289,7 +305,7 @@ export default class BillsService extends SalesInvoicesCost {
     journal.credit(payableEntry);
 
     bill.entries.forEach((entry) => {
-      const item = storedItemsMap.get(entry.item_id);
+      const item: IItem = storedItemsMap.get(entry.item_id);
 
       const debitEntry = new JournalEntry({
         ...commonJournalMeta,

@@ -24,13 +24,6 @@ export default class ViewRole extends TenantModel {
   }
 
   /**
-   * Timestamp columns.
-   */
-  static get hasTimestamps() {
-    return false;
-  }
-
-  /**
    * Relationship mapping.
    */
   static get relationMappings() {

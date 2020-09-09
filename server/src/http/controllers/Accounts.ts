@@ -88,19 +88,12 @@ export default class AccountsController extends BaseController{
       this.bulkDeleteSchema,
       asyncMiddleware(this.deleteBulkAccounts.bind(this))
     );
-    
-    // router.post(
-    //   '/:id/recalculate-balance',
-    //   this.recalcualteBalanace.validation,
-    //   asyncMiddleware(this.recalcualteBalanace.handler)
-    // );
     // router.post(
     //   '/:id/transfer_account/:toAccount',
     //   this.transferToAnotherAccount.validation,
     //   asyncMiddleware(this.transferToAnotherAccount.handler)
     // );
-    
-
+ 
     return router;
   }
 
@@ -548,73 +541,4 @@ export default class AccountsController extends BaseController{
   //       : {}),
   //   });
   // }
-
-  // /**
-  //  * Re-calculates balance of the given account.
-  //  */
-  // recalcualteBalanace: {
-  //   validation: [param('id').isNumeric().toInt()],
-  //   async handler(req, res) {
-  //     const { id } = req.params;
-  //     const { Account, AccountTransaction, AccountBalance } = req.models;
-  //     const account = await Account.findById(id);
-
-  //     if (!account) {
-  //       return res.status(400).send({
-  //         errors: [{ type: 'ACCOUNT.NOT.FOUND', code: 100 }],
-  //       });
-  //     }
-  //     const accountTransactions = AccountTransaction.query().where(
-  //       'account_id',
-  //       account.id
-  //     );
-
-  //     const journalEntries = new JournalPoster();
-  //     journalEntries.loadFromCollection(accountTransactions);
-
-  //     // Delete the balance of the given account id.
-  //     await AccountBalance.query().where('account_id', account.id).delete();
-
-  //     // Save calcualted account balance.
-  //     await journalEntries.saveBalance();
-
-  //     return res.status(200).send();
-  //   },
-  // },
-
- 
-
-  // /**
-  //  * Transfer all journal entries of the given account to another account.
-  //  */
-  // transferToAnotherAccount: {
-  //   validation: [
-  //     param('id').exists().isNumeric().toInt(),
-  //     param('toAccount').exists().isNumeric().toInt(),
-  //   ],
-  //   async handler(req, res) {
-  //     const validationErrors = validationResult(req);
-
-  //     if (!validationErrors.isEmpty()) {
-  //       return res.boom.badData(null, {
-  //         code: 'validation_error',
-  //         ...validationErrors,
-  //       });
-  //     }
-
-  //     // const { id, toAccount: toAccountId } = req.params;
-
-  //     // const [fromAccount, toAccount] = await Promise.all([
-  //     //   Account.query().findById(id),
-  //     //   Account.query().findById(toAccountId),
-  //     // ]);
-
-  //     // const fromAccountTransactions = await AccountTransaction.query()
-  //     //   .where('account_id', fromAccount);
-
-  //     // return res.status(200).send();
-  //   },
-  // },
-
-  
 };

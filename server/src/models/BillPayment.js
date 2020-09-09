@@ -1,10 +1,7 @@
-import { Model, mixin } from 'objection';
+import { Model } from 'objection';
 import TenantModel from '@/models/TenantModel';
-import CachableQueryBuilder from '@/lib/Cachable/CachableQueryBuilder';
-import CachableModel from '@/lib/Cachable/CachableModel';
 
-
-export default class BillPayment extends mixin(TenantModel, [CachableModel]) {
+export default class BillPayment extends TenantModel {
   /**
    * Table name
    */

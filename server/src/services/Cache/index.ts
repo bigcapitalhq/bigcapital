@@ -1,18 +1,18 @@
 import NodeCache from 'node-cache';
 
-class Cache {
+export default class Cache {
+  cache: NodeCache;
 
-  constructor() {
+  constructor(config?: object) {
     this.cache = new NodeCache({
-      // stdTTL: 9999999,
-      // checkperiod: 9999999 * 0.2,
       useClones: false,
+      ...config,
     });
   }
 
-  get(key, storeFunction) {
+  get(key: string, storeFunction: () => Promise<any>) {
     const value = this.cache.get(key);
-    
+
     if (value) {
       return Promise.resolve(value);
     }
@@ -22,11 +22,11 @@ class Cache {
     });
   }
 
-  set(key, results) {
+  set(key: string, results: any) {
     this.cache.set(key, results);
   }
 
-  del(keys) {
+  del(keys: string) {
     this.cache.del(keys);
   }
 
@@ -47,6 +47,3 @@ class Cache {
     this.cache.flushAll();
   }
 }
-
-
-export default new Cache();

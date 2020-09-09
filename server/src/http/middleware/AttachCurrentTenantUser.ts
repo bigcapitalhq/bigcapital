@@ -18,6 +18,8 @@ const attachCurrentUser = async (req: Request, res: Response, next: Function) =>
       Logger.info('[attach_user_middleware] the system user not found.');
       return res.boom.unauthorized();
     }
+    // Delete password property from user object.
+    Reflect.deleteProperty(user, 'password');
     req.user = user;
     return next();
   } catch (e) {

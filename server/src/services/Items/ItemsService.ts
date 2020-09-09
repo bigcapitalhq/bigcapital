@@ -67,4 +67,8 @@ export default class ItemsService {
     );
     return notFoundItemsIds;
   }
+
+  writeItemInventoryOpeningQuantity(tenantId: number, itemId: number, openingQuantity: number, averageCost: number) {
+    
+  }
 }

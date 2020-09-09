@@ -129,6 +129,8 @@ export default class UsersController extends BaseController{
     const { id } = req.params;
     const { tenantId } = req;
 
+    debugger;
+
     try {
       await this.usersService.deleteUser(tenantId, id);
       return res.status(200).send({ id });
@@ -141,8 +143,8 @@ export default class UsersController extends BaseController{
           });  
         }
       }
+      next();
     }
-    next();
   }
 
   /**
@@ -159,6 +161,7 @@ export default class UsersController extends BaseController{
       const user = await this.usersService.getUser(tenantId, userId);
       return res.status(200).send({ user });
     } catch (error) {
+      console.log(error);
 
       if (error instanceof ServiceError) {
         if (error.errorType === 'user_not_found') {
@@ -246,6 +249,7 @@ export default class UsersController extends BaseController{
           });
         }
       }
+      next();
     }
   }
 };

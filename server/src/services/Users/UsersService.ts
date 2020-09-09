@@ -9,6 +9,9 @@ export default class UsersService {
   @Inject()
   tenancy: TenancyService;
 
+  @Inject('logger')
+  logger: any;
+
   /**
    * Creates a new user.
    * @param  {number} tenantId 
@@ -61,6 +64,7 @@ export default class UsersService {
       id: userId, tenant_id: tenantId,
     });
     if (!user) {
+      this.logger.info('[users] the given user not found.', { tenantId, userId });
       throw new ServiceError('user_not_found');
     }
     return user;
@@ -73,7 +77,12 @@ export default class UsersService {
    */
   async deleteUser(tenantId: number, userId: number): Promise<void> {
     await this.getUserOrThrowError(tenantId, userId);
-    await SystemUser.query().where('id', userId).delete();
+    
+    this.logger.info('[users] trying to delete the given user.', { tenantId, userId });
+    await SystemUser.query().where('tenant_id', tenantId)
+      .where('id', userId).delete();
+     
+    this.logger.info('[users] the given user deleted successfully.', { tenantId, userId });
   }
 
   /**

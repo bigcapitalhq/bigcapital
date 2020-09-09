@@ -50,6 +50,22 @@ import {
   IAccount,
   IAccountDTO,
 } from './Account';
+import {
+  IJournalEntry,
+  IJournalPoster,
+  TEntryType,
+  IAccountChange,
+  IAccountsChange,
+} from './Journal';
+import {
+  IContactAddress,
+  IContact,
+  IContactNewDTO,
+  IContactEditDTO,
+  ICustomer,
+  ICustomerNewDTO,
+  ICustomerEditDTO,
+} from './Contact';
 
 export {
   IAccount,
@@ -96,4 +112,18 @@ export {
 
   IOptionDTO,
   IOptionsDTO,
+
+  IJournalEntry,
+  IJournalPoster,
+  TEntryType,
+  IAccountChange,
+  IAccountsChange,
+
+  IContactAddress,
+  IContact,
+  IContactNewDTO,
+  IContactEditDTO,
+  ICustomer,
+  ICustomerNewDTO,
+  ICustomerEditDTO,
 };

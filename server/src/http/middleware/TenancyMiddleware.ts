@@ -2,6 +2,8 @@ import { Container } from 'typedi';
 import { Request, Response, NextFunction } from 'express';
 import TenantsManager from '@/system/TenantsManager';
 import tenantModelsLoader from '@/loaders/tenantModels';
+import tenantRepositoriesLoader from '@/loaders/tenantRepositories';
+import Cache from '@/services/Cache';
 
 export default async (req: Request, res: Response, next: NextFunction) => {
   const Logger = Container.get('logger');
@@ -36,7 +38,7 @@ export default async (req: Request, res: Response, next: NextFunction) => {
     return res.boom.unauthorized();
   }
   const models = tenantModelsLoader(tenantKnex);
-  
+
   req.knex = tenantKnex;
   req.organizationId = organizationId;
   req.tenant = tenant;
@@ -44,10 +46,18 @@ export default async (req: Request, res: Response, next: NextFunction) => {
   req.models = models;
 
   const tenantContainer = Container.of(`tenant-${tenant.id}`);
+  const cacheInstance = new Cache();
 
   tenantContainer.set('models', models);
   tenantContainer.set('knex', tenantKnex);
   tenantContainer.set('tenant', tenant);
+  tenantContainer.set('cache', cacheInstance);
+
+  const repositories = tenantRepositoriesLoader(tenant.id)
+  tenantContainer.set('repositories', repositories);
+
+  req.repositories = repositories;
+
   Logger.info('[tenancy_middleware] tenant dependencies injected to container.');
 
   if (res.locals) {

@@ -1,14 +1,17 @@
 import { Inject, Service } from 'typedi';
 import { Router, Request, Response } from 'express';
-import { check, matchedData } from 'express-validator';
-import { mapKeys, camelCase } from 'lodash';
+import { check } from 'express-validator';
 import asyncMiddleware from "@/http/middleware/asyncMiddleware";
-import validateMiddleware from '@/http/middleware/validateMiddleware';
+import JWTAuth from '@/http/middleware/jwtAuth';
+import TenancyMiddleware from '@/http/middleware/TenancyMiddleware';
+import SubscriptionMiddleware from '@/http/middleware/SubscriptionMiddleware';
+import AttachCurrentTenantUser from '@/http/middleware/AttachCurrentTenantUser';
 import OrganizationService from '@/services/Organization';
 import { ServiceError } from '@/exceptions';
+import BaseController from '@/http/controllers/BaseController';
 
 @Service()
-export default class OrganizationController {
+export default class OrganizationController extends BaseController{
   @Inject()
   organizationService: OrganizationService;
 
@@ -18,11 +21,18 @@ export default class OrganizationController {
   router() {
     const router = Router();
 
+    // Should before build tenant database the user be authorized and 
+    // most important than that, should be subscribed to any plan.
+    router.use(JWTAuth);
+    router.use(AttachCurrentTenantUser);
+    router.use(TenancyMiddleware);
+    router.use(SubscriptionMiddleware('main'));
+
     router.post(
       '/build', [
         check('organization_id').exists().trim().escape(),
       ],
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.build.bind(this))
     );
     return router;
@@ -35,10 +45,7 @@ export default class OrganizationController {
    * @param {NextFunction} next 
    */
   async build(req: Request, res: Response, next: Function) {
-    const buildOTD = mapKeys(matchedData(req, {
-      locations: ['body'],
-      includeOptionals: true,
-    }), (v, k) => camelCase(k)); 
+    const buildOTD = this.matchedBodyData(req);
   
     try {
       await this.organizationService.build(buildOTD.organizationId);

@@ -1,9 +1,8 @@
 // import path from 'path';
 import { Model, mixin } from 'objection';
 import TenantModel from '@/models/TenantModel';
-import CachableModel from '@/lib/Cachable/CachableModel';
 
-export default class AccountType extends mixin(TenantModel, [CachableModel]) {
+export default class AccountType extends TenantModel {
   /**
    * Table name
    */

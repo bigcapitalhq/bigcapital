@@ -25,8 +25,8 @@ import FinancialStatements from '@/http/controllers/FinancialStatements';
 import Expenses from '@/http/controllers/Expenses';
 import Settings from '@/http/controllers/Settings';
 import Currencies from '@/http/controllers/Currencies';
-import Customers from '@/http/controllers/Customers';
-import Vendors from '@/http/controllers/Vendors';
+import Customers from '@/http/controllers/Contacts/Customers';
+import Vendors from '@/http/controllers/Contacts/Vendors';
 import Sales from '@/http/controllers/Sales'
 import Purchases from '@/http/controllers/Purchases';
 import Resources from './controllers/Resources';
@@ -43,15 +43,15 @@ export default () => {
 
   app.use('/auth', Container.get(Authentication).router());
   app.use('/invite', Container.get(InviteUsers).nonAuthRouter());
-  app.use('/organization', Container.get(Organization).router());
   app.use('/licenses', Container.get(Licenses).router());
   app.use('/subscription', Container.get(Subscription).router());
   app.use('/ping', Container.get(Ping).router());
+  app.use('/organization', Container.get(Organization).router());
 
   const dashboard = Router();
 
   dashboard.use(JWTAuth);
-  dashboard.use(AttachCurrentTenantUser)
+  dashboard.use(AttachCurrentTenantUser);
   dashboard.use(TenancyMiddleware);
   dashboard.use(I18nMiddleware);
   dashboard.use(SubscriptionMiddleware('main'));
@@ -71,8 +71,8 @@ export default () => {
   dashboard.use('/financial_statements', FinancialStatements.router());
   dashboard.use('/settings', Container.get(Settings).router());
   dashboard.use('/sales', Sales.router());
-  dashboard.use('/customers', Customers.router());
-  dashboard.use('/vendors', Vendors.router());
+  dashboard.use('/customers', Container.get(Customers).router());
+  dashboard.use('/vendors', Container.get(Vendors).router());
   dashboard.use('/purchases', Purchases.router());
   dashboard.use('/resources', Resources.router());
   dashboard.use('/exchange_rates', ExchangeRates.router());

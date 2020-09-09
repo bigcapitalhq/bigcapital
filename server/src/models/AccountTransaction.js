@@ -1,11 +1,8 @@
-import { Model, mixin } from 'objection';
+import { Model } from 'objection';
 import moment from 'moment';
 import TenantModel from '@/models/TenantModel';
-import CachableQueryBuilder from '@/lib/Cachable/CachableQueryBuilder';
-import CachableModel from '@/lib/Cachable/CachableModel';
 
-
-export default class AccountTransaction extends mixin(TenantModel, [CachableModel]) {
+export default class AccountTransaction extends TenantModel {
   /**
    * Table name
    */
@@ -18,13 +15,6 @@ export default class AccountTransaction extends mixin(TenantModel, [CachableMode
    */
   get timestamps() {
     return ['createdAt'];
-  }
-
-  /**
-   * Extend query builder model.
-   */
-  static get QueryBuilder() {
-    return CachableQueryBuilder;
   }
 
   /**

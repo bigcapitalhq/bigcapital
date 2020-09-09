@@ -183,8 +183,7 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
       .where('reference_id', saleInvoiceId)
       .withGraphFetched('account.type');
 
-    const accountsDepGraph = await Account.depGraph().query();
-    const journal = new JournalPoster(accountsDepGraph);
+    const journal = new JournalPoster(tenantId);
 
     journal.loadEntries(invoiceTransactions);
     journal.removeEntries();
@@ -385,10 +384,9 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
     saleInvoice: ISaleInvoice,
     override: boolean
   ) {
-    const { Account, AccountTransaction } = this.tenancy.models(tenantId);
+    const { AccountTransaction } = this.tenancy.models(tenantId);
 
-    const accountsDepGraph = await Account.depGraph().query();
-    const journal = new JournalPoster(accountsDepGraph);
+    const journal = new JournalPoster(tenantId);
 
     if (override) {
       const oldTransactions = await AccountTransaction.query()

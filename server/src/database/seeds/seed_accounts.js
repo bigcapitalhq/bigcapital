@@ -8,6 +8,7 @@ exports.seed = (knex) => {
         {
           id: 1,
           name: 'Petty Cash',
+          slug: 'petty-cash',
           account_type_id: 2,
           parent_account_id: null,
           code: '1000',
@@ -19,6 +20,7 @@ exports.seed = (knex) => {
         {
           id: 2,
           name: 'Bank',
+          slug: 'bank',
           account_type_id: 2,
           parent_account_id: null,
           code: '2000',
@@ -30,6 +32,7 @@ exports.seed = (knex) => {
         {
           id: 3,
           name: 'Other Income',
+          slug: 'other-income',
           account_type_id: 7,
           parent_account_id: null,
           code: '1000',
@@ -41,6 +44,7 @@ exports.seed = (knex) => {
         {
           id: 4,
           name: 'Interest Income',
+          slug: 'interest-income',
           account_type_id: 7,
           parent_account_id: null,
           code: '1000',
@@ -52,6 +56,7 @@ exports.seed = (knex) => {
         {
           id: 5,
           name: 'Opening Balance',
+          slug: 'opening-balance',
           account_type_id: 5,
           parent_account_id: null,
           code: '1000',
@@ -63,6 +68,7 @@ exports.seed = (knex) => {
         {
           id: 6,
           name: 'Depreciation Expense',
+          slug: 'depreciation-expense',
           account_type_id: 6,
           parent_account_id: null,
           code: '1000',
@@ -74,6 +80,7 @@ exports.seed = (knex) => {
         {
           id: 7,
           name: 'Interest Expense',
+          slug: 'interest-expense',
           account_type_id: 6,
           parent_account_id: null,
           code: '1000',
@@ -85,6 +92,7 @@ exports.seed = (knex) => {
         {
           id: 8,
           name: 'Payroll Expenses',
+          slug: 'payroll-expenses',
           account_type_id: 6,
           parent_account_id: null,
           code: '1000',
@@ -96,6 +104,7 @@ exports.seed = (knex) => {
         {
           id: 9,
           name: 'Other Expenses',
+          slug: 'other-expenses',
           account_type_id: 6,
           parent_account_id: null,
           code: '1000',
@@ -107,6 +116,7 @@ exports.seed = (knex) => {
         {
           id: 10,
           name: 'Accounts Receivable',
+          slug: 'accounts-receivable',
           account_type_id: 8,
           parent_account_id: null,
           code: '1000',
@@ -118,6 +128,7 @@ exports.seed = (knex) => {
         {
           id: 11,
           name: 'Accounts Payable',
+          slug: 'accounts-payable',
           account_type_id: 9,
           parent_account_id: null,
           code: '1000',
@@ -129,6 +140,7 @@ exports.seed = (knex) => {
         {
           id: 12, 
           name: 'Cost of Goods Sold (COGS)',
+          slug: 'cost-of-goods-sold',
           account_type_id: 12,
           predefined: 1,
           parent_account_id: null,
@@ -139,6 +151,7 @@ exports.seed = (knex) => {
         {
           id: 13, 
           name: 'Inventory Asset',
+          slug: 'inventory-asset',
           account_type_id: 14,
           predefined: 1,
           parent_account_id: null,
@@ -149,6 +162,7 @@ exports.seed = (knex) => {
         {
           id: 14,
           name: 'Sales of Product Income',
+          slug: 'sales-of-product-income',
           account_type_id: 7,
           predefined: 1,
           parent_account_id: null,

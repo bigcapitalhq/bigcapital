@@ -1,9 +1,7 @@
 import { Model, mixin } from 'objection';
 import TenantModel from '@/models/TenantModel';
-import CachableQueryBuilder from '@/lib/Cachable/CachableQueryBuilder';
-import CachableModel from '@/lib/Cachable/CachableModel';
 
-export default class PaymentReceiveEntry extends mixin(TenantModel, [CachableModel]) {
+export default class PaymentReceiveEntry extends TenantModel {
   /**
    * Table name
    */
@@ -19,13 +17,6 @@ export default class PaymentReceiveEntry extends mixin(TenantModel, [CachableMod
   }
 
   /**
-   * Extend query builder model.
-   */
-  static get QueryBuilder() {
-    return CachableQueryBuilder;
-  }
-
-  /**
    * Relationship mapping.
    */
   static get relationMappings() {
@@ -34,7 +25,6 @@ export default class PaymentReceiveEntry extends mixin(TenantModel, [CachableMod
 
     return {
       /**
-       * 
        */
       entries: {
         relation: Model.HasManyRelation,

@@ -88,6 +88,10 @@ export default class AuthenticationService {
     this.eventDispatcher.dispatch(events.auth.login, {
       emailOrPhone, password,
     });
+
+    // Remove password property from user object.
+    Reflect.deleteProperty(user, 'password');
+
     return { user, token };
   }
 

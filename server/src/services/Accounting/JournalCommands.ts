@@ -40,13 +40,84 @@ interface NonInventoryJEntries {
 export default class JournalCommands{
   journal: JournalPoster;
 
+  models: any;
+  repositories: any;
+
   /**
    * Constructor method.
    * @param {JournalPoster} journal - 
    */
   constructor(journal: JournalPoster) {
     this.journal = journal;
-    Object.assign(this, arguments[1]);
+    
+    this.repositories = this.journal.repositories;
+    this.models = this.journal.models;
+  }
+
+  /**
+   * Customer opening balance journals.
+   * @param {number} customerId 
+   * @param {number} openingBalance 
+   */
+  async customerOpeningBalance(customerId: number, openingBalance: number) {
+    const { accountRepository } = this.repositories;
+
+    const openingBalanceAccount = await accountRepository.getBySlug('opening-balance');
+    const receivableAccount = await accountRepository.getBySlug('accounts-receivable');
+
+    const commonEntry = {
+      referenceType: 'CustomerOpeningBalance',
+      referenceId: customerId,
+      contactType: 'Customer',
+      contactId: customerId,
+    };
+    const creditEntry = new JournalEntry({
+      ...commonEntry,
+      credit: openingBalance,
+      debit: 0,
+      account: openingBalanceAccount.id,
+    });
+    const debitEntry = new JournalEntry({
+      ...commonEntry,
+      credit: 0,
+      debit: openingBalance,
+      account: receivableAccount.id,
+    });
+    this.journal.debit(debitEntry);
+    this.journal.credit(creditEntry);
+  }
+
+  /**
+   * Vendor opening balance journals
+   * @param {number} vendorId 
+   * @param {number} openingBalance 
+   */
+  async vendorOpeningBalance(vendorId: number, openingBalance: number) {
+    const { accountRepository } = this.repositories;
+
+    const payableAccount = await accountRepository.getBySlug('accounts-payable');
+    const otherCost = await accountRepository.getBySlug('other-expenses');
+
+    const commonEntry = {
+      referenceType: 'VendorOpeningBalance',
+      referenceId: vendorId,
+      contactType: 'Vendor',
+      contactId: vendorId,
+    };
+    const creditEntry = new JournalEntry({
+      ...commonEntry,
+      account: payableAccount.id,
+      credit: openingBalance,
+      debit: 0,
+    });
+    const debitEntry = new JournalEntry({
+      ...commonEntry,
+      account: otherCost.id,
+      debit: openingBalance,
+      credit: 0,
+    });
+    this.journal.debit(debitEntry);
+    this.journal.credit(creditEntry);
   }
 
   /**

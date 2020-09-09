@@ -1,11 +1,8 @@
 import { Model, mixin } from 'objection';
 import moment from 'moment';
 import TenantModel from '@/models/TenantModel';
-import CachableQueryBuilder from '@/lib/Cachable/CachableQueryBuilder';
-import CachableModel from '@/lib/Cachable/CachableModel';
-import InventoryCostLotTracker from './InventoryCostLotTracker';
 
-export default class SaleInvoice extends mixin(TenantModel, [CachableModel]) {
+export default class SaleInvoice extends TenantModel {
   /**
    * Virtual attributes.
    */

@@ -1,12 +1,8 @@
-import { Model, mixin } from 'objection';
-import moment from 'moment';
+import { Model } from 'objection';
 import { difference } from 'lodash';
 import TenantModel from '@/models/TenantModel';
-import CachableQueryBuilder from '@/lib/Cachable/CachableQueryBuilder';
-import CachableModel from '@/lib/Cachable/CachableModel';
 
-
-export default class Bill extends mixin(TenantModel, [CachableModel]) {
+export default class Bill extends TenantModel {
   /**
    * Virtual attributes.
    */

@@ -1,17 +1,15 @@
 /* eslint-disable global-require */
-import { Model, mixin } from 'objection';
+import { Model } from 'objection';
 import { flatten } from 'lodash';
 import TenantModel from '@/models/TenantModel';
 import {
   buildFilterQuery,
   buildSortColumnQuery,
 } from '@/lib/ViewRolesBuilder';
-import CachableQueryBuilder from '@/lib/Cachable/CachableQueryBuilder';
-import CachableModel from '@/lib/Cachable/CachableModel';
 import { flatToNestedArray } from '@/utils';
 import DependencyGraph from '@/lib/DependencyGraph';
 
-export default class Account extends mixin(TenantModel, [CachableModel]) {
+export default class Account extends TenantModel {
   /**
    * Table name
    */
@@ -24,36 +22,6 @@ export default class Account extends mixin(TenantModel, [CachableModel]) {
    */
   get timestamps() {
     return ['createdAt', 'updatedAt'];
-  }
-
-  /**
-   * Extend query builder model.
-   */
-  static get QueryBuilder() {
-    return CachableQueryBuilder;
-  }
-
-  /**
-   * Query return override.
-   * @param  {...any} args 
-   */
-  static query(...args) {
-    return super.query(...args).runAfter((result) => {
-      if (Array.isArray(result)) {
-        return this.isDepGraph ?
-          Account.toDependencyGraph(result) :
-          this.collection.from(result);
-      }
-      return result;
-    });
-  }
-
-  /**
-   * Convert the array result to dependency graph.
-   */
-  static depGraph() {
-    this.isDepGraph = true;
-    return this;
   }
 
   /**
@@ -87,7 +55,6 @@ export default class Account extends mixin(TenantModel, [CachableModel]) {
    */
   static get relationMappings() {
     const AccountType = require('@/models/AccountType');
-    const AccountBalance = require('@/models/AccountBalance');
     const AccountTransaction = require('@/models/AccountTransaction');
 
     return {
@@ -100,18 +67,6 @@ export default class Account extends mixin(TenantModel, [CachableModel]) {
         join: {
           from: 'accounts.accountTypeId',
           to: 'account_types.id',
-        },
-      },
-
-      /**
-       * Account model may has many balances accounts.
-       */
-      balance: {
-        relation: Model.HasOneRelation,
-        modelClass: this.relationBindKnex(AccountBalance.default),
-        join: {
-          from: 'accounts.id',
-          to: 'account_balances.accountId',
         },
       },
 

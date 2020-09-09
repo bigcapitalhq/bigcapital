@@ -1,14 +1,16 @@
 import { mapValues } from 'lodash';
 
 import Account from '@/models/Account';
-import AccountBalance from '@/models/AccountBalance';
 import AccountTransaction from '@/models/AccountTransaction';
 import AccountType from '@/models/AccountType';
+import Item from '@/models/Item';
+import ItemEntry from '@/models/ItemEntry';
 import Bill from '@/models/Bill';
 import BillPayment from '@/models/BillPayment';
 import BillPaymentEntry from '@/models/BillPaymentEntry';
 import Currency from '@/models/Currency';
 import Customer from '@/models/Customer';
+import Contact from '@/models/Contact';
 import Vendor from '@/models/Vendor';
 import ExchangeRate from '@/models/ExchangeRate';
 import Expense from '@/models/Expense';
@@ -31,14 +33,19 @@ import InventoryCostLotTracker from '@/models/InventoryCostLotTracker';
 import InventoryTransaction from '@/models/InventoryTransaction';
 import ResourceField from '@/models/ResourceField';
 import ResourceFieldMetadata from '@/models/ResourceFieldMetadata';
+import ManualJournal from '@/models/ManualJournal';
+import Media from '@/models/Media';
+import MediaLink from '@/models/MediaLink';
 
 export default (knex) => {
   const models = {
     Option,
     Account,
-    AccountBalance,
     AccountTransaction,
     AccountType,
+    Item,
+    ItemEntry,
+    ManualJournal,
     Bill,
     BillPayment,
     BillPaymentEntry,
@@ -65,6 +72,9 @@ export default (knex) => {
     InventoryCostLotTracker,
     ResourceField,
     ResourceFieldMetadata,
+    Media,
+    MediaLink,
+    Contact,
   };
   return mapValues(models, (model) => model.bindKnex(knex));
 }

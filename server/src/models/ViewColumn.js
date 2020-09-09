@@ -10,14 +10,6 @@ export default class ViewColumn extends TenantModel {
   }
 
   /**
-   * Timestamp columns.
-   */
-  static get hasTimestamps() {
-    return false;
-  }
-
-
-  /**
    * Relationship mapping.
    */
   static get relationMappings() {

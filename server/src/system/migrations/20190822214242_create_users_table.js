@@ -15,6 +15,8 @@ exports.up = function (knex) {
 
     table.date('invite_accepted_at');
     table.date('last_login_at');
+
+    table.dateTime('deleted_at');
     table.timestamps();
   }).then(() => {
     // knex.seed.run({

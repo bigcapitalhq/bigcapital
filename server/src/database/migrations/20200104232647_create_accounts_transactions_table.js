@@ -13,6 +13,7 @@ exports.up = function(knex) {
     table.string('note');
     table.boolean('draft').defaultTo(false);
     table.integer('user_id').unsigned();
+    table.integer('index').unsigned();
     table.date('date');
     table.timestamps();
   }).raw('ALTER TABLE `ACCOUNTS_TRANSACTIONS` AUTO_INCREMENT = 1000');

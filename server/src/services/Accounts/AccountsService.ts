@@ -1,4 +1,5 @@
 import { Inject, Service } from 'typedi';
+import { kebabCase } from 'lodash'
 import TenancyService from '@/services/Tenancy/TenancyService';
 import { ServiceError } from '@/exceptions';
 import { IAccountDTO, IAccount } from '@/interfaces';
@@ -174,6 +175,7 @@ export default class AccountsService {
     }
     const account = await Account.query().insertAndFetch({
       ...accountDTO,
+      slug: kebabCase(accountDTO.name),
     });
     this.logger.info('[account] account created successfully.', { account, accountDTO });
     return account;
