@@ -1,5 +1,7 @@
 
 exports.seed = (knex) => {
+  console.log(knex.tenantId);
+
   // Deletes ALL existing entries
   return knex('accounts').del()
     .then(() => {

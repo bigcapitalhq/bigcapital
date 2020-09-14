@@ -4,6 +4,6 @@ import path from 'path';
 export default () => i18n.configure({
   locales: ['en', 'ar'],
   register: global,
-  directory: path.join(global.rootPath, 'src/locales'),
+  directory: path.join(global.__root, 'src/locales'),
   updateFiles: false
 })

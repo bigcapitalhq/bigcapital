@@ -1,12 +1,12 @@
 import { Service, Inject } from 'typedi';
 import { omit, sumBy, difference, pick, chain } from 'lodash';
-import { ISaleInvoice, ISaleInvoiceOTD, IItemEntry } from '@/interfaces';
-import JournalPoster from '@/services/Accounting/JournalPoster';
-import HasItemsEntries from '@/services/Sales/HasItemsEntries';
-import InventoryService from '@/services/Inventory/Inventory';
-import SalesInvoicesCost from '@/services/Sales/SalesInvoicesCost';
-import TenancyService from '@/services/Tenancy/TenancyService';
-import { formatDateFields } from '@/utils';
+import { ISaleInvoice, ISaleInvoiceOTD, IItemEntry } from 'interfaces';
+import JournalPoster from 'services/Accounting/JournalPoster';
+import HasItemsEntries from 'services/Sales/HasItemsEntries';
+import InventoryService from 'services/Inventory/Inventory';
+import SalesInvoicesCost from 'services/Sales/SalesInvoicesCost';
+import TenancyService from 'services/Tenancy/TenancyService';
+import { formatDateFields } from 'utils';
 
 /**
  * Sales invoices service

@@ -1,7 +1,7 @@
 import { snakeCase } from 'lodash';
 import { Model } from 'objection';
 import path from 'path';
-import TenantModel from '@/models/TenantModel';
+import TenantModel from 'models/TenantModel';
 
 export default class ResourceField extends TenantModel {
   /**
@@ -51,7 +51,7 @@ export default class ResourceField extends TenantModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const Resource = require('@/models/Resource');
+    const Resource = require('models/Resource');
 
     return {
       /**

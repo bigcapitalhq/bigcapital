@@ -1,10 +1,10 @@
 import { Service, Container, Inject } from 'typedi';
 import cryptoRandomString from 'crypto-random-string';
 import { times } from 'lodash';
-import { License } from "@/system/models";
-import { ILicense } from '@/interfaces';
-import LicenseMailMessages from '@/services/Payment/LicenseMailMessages';
-import LicenseSMSMessages from '@/services/Payment/LicenseSMSMessages';
+import { License } from "system/models";
+import { ILicense } from 'interfaces';
+import LicenseMailMessages from 'services/Payment/LicenseMailMessages';
+import LicenseSMSMessages from 'services/Payment/LicenseSMSMessages';
 
 @Service()
 export default class LicenseService {
@@ -26,8 +26,6 @@ export default class LicenseService {
   ): ILicense {
     let licenseCode: string;
     let repeat: boolean = true;
-
-    console.log(License);
 
     while(repeat) {
       licenseCode = cryptoRandomString({ length: 10, type: 'numeric' });

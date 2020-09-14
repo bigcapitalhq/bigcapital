@@ -2,7 +2,7 @@ import {
   request,
   expect,
 } from '~/testInit';
-import Currency from '@/models/Currency';
+import Currency from 'models/Currency';
 import {
   tenantWebsite,
   tenantFactory,

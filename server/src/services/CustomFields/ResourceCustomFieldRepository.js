@@ -1,7 +1,7 @@
-import Resource from '@/models/Resource';
-import ResourceField from '@/models/ResourceField';
-import ResourceFieldMetadata from '@/models/ResourceFieldMetadata';
-import ResourceFieldMetadataCollection from '@/collection/ResourceFieldMetadataCollection';
+import Resource from 'models/Resource';
+import ResourceField from 'models/ResourceField';
+import ResourceFieldMetadata from 'models/ResourceFieldMetadata';
+import ResourceFieldMetadataCollection from 'collection/ResourceFieldMetadataCollection';
 
 export default class ResourceCustomFieldRepository {
   /**

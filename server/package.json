@@ -1,15 +1,12 @@
 {
   "name": "bigcapital-server",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "",
-  "main": "index.js",
+  "main": "src/server.ts",
   "scripts": {
     "build": "webpack",
-    "start": "npm-run-all --parallel watch:server watch:build",
-    "watch:build": "webpack --watch",
-    "watch:server": "nodemon  --inspect=\"9229\" \"./dist/bundle.js\" --watch \"./dist\" ",
-    "test": "cross-env NODE_ENV=test mocha-webpack --webpack-config webpack.config.js \"tests/**/*.test.js\"",
-    "test:watch": "cross-env NODE_ENV=test mocha-webpack --watch --webpack-config webpack.config.js --timeout=30000 tests/**/*.test.js"
+    "start": "cross-env NODE_PATH=./src nodemon",
+    "inspect": "cross-env NODE_PATH=./src nodemon --inspect src/server.ts"
   },
   "author": "Ahmed Bouhuolia, <a.bouhuolia@gmail.com>",
   "license": "ISC",
@@ -29,10 +26,12 @@
     "bookshelf-json-columns": "^2.1.1",
     "bookshelf-modelbase": "^2.10.4",
     "bookshelf-paranoia": "^0.13.1",
+    "compression": "^1.7.4",
     "crypto-random-string": "^3.2.0",
     "csurf": "^1.10.0",
     "dotenv": "^8.1.0",
     "errorhandler": "^1.5.1",
+    "esm": "^3.2.25",
     "event-dispatch": "^0.4.1",
     "express": "^4.17.1",
     "express-basic-auth": "^1.2.0",
@@ -66,14 +65,7 @@
     "winston": "^3.2.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.5.5",
-    "@babel/plugin-syntax-dynamic-import": "^7.7.4",
-    "@babel/plugin-transform-runtime": "^7.5.5",
-    "@babel/polyfill": "^7.4.4",
-    "@babel/preset-env": "^7.5.5",
-    "@babel/runtime": "^7.5.5",
     "@types/lodash": "^4.14.158",
-    "babel-loader": "^8.0.6",
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
     "chai-things": "^0.2.0",
@@ -90,15 +82,11 @@
     "getopts": "^2.2.5",
     "knex-factory": "0.0.6",
     "mocha": "^5.2.0",
-    "mocha-webpack": "^2.0.0-beta.0",
-    "npm-run-all": "^4.1.5",
+    "module-alias": "^2.2.2",
     "nyc": "^14.1.1",
     "sinon": "^7.4.2",
-    "ts-loader": "^8.0.1",
+    "ts-node": "^9.0.0",
     "typedi": "^0.8.0",
-    "typescript": "^3.9.7",
-    "webpack": "^4.0.0",
-    "webpack-cli": "^3.3.7",
-    "webpack-node-externals": "^1.7.2"
+    "typescript": "^3.9.7"
   }
 }

@@ -1,14 +1,14 @@
 import { Inject, Service } from 'typedi';
 import { omit, sumBy } from 'lodash';
 import moment from 'moment';
-import { IBillPaymentOTD, IBillPayment } from '@/interfaces';
-import ServiceItemsEntries from '@/services/Sales/ServiceItemsEntries';
-import AccountsService from '@/services/Accounts/AccountsService';
-import JournalPoster from '@/services/Accounting/JournalPoster';
-import JournalEntry from '@/services/Accounting/JournalEntry';
-import JournalPosterService from '@/services/Sales/JournalPosterService';
-import TenancyService from '@/services/Tenancy/TenancyService';
-import { formatDateFields } from '@/utils';
+import { IBillPaymentOTD, IBillPayment } from 'interfaces';
+import ServiceItemsEntries from 'services/Sales/ServiceItemsEntries';
+import AccountsService from 'services/Accounts/AccountsService';
+import JournalPoster from 'services/Accounting/JournalPoster';
+import JournalEntry from 'services/Accounting/JournalEntry';
+import JournalPosterService from 'services/Sales/JournalPosterService';
+import TenancyService from 'services/Tenancy/TenancyService';
+import { formatDateFields } from 'utils';
 
 /**
  * Bill payments service.

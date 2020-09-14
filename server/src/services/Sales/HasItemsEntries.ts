@@ -1,7 +1,7 @@
 import { difference, omit } from 'lodash';
 import { Service, Inject } from 'typedi';
-import TenancyService from '@/services/Tenancy/TenancyService';
-import { ItemEntry } from '@/models';
+import TenancyService from 'services/Tenancy/TenancyService';
+import { ItemEntry } from 'models';
 
 @Service()
 export default class HasItemEntries {

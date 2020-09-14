@@ -1,5 +1,5 @@
-import DynamicFilterRoleAbstructor from '@/lib/DynamicFilter/DynamicFilterRoleAbstructor';
-import { getRoleFieldColumn } from '@/lib/ViewRolesBuilder';
+import DynamicFilterRoleAbstructor from 'lib/DynamicFilter/DynamicFilterRoleAbstructor';
+import { getRoleFieldColumn } from 'lib/ViewRolesBuilder';
 
 export default class DynamicFilterSortBy extends DynamicFilterRoleAbstructor {
   constructor(sortByFieldKey, sortDirection) {

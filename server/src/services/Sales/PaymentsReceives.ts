@@ -1,16 +1,16 @@
 import { omit, sumBy, chain } from 'lodash';
 import moment from 'moment';
 import { Service, Inject } from 'typedi';
-import { IPaymentReceiveOTD } from '@/interfaces';
-import AccountsService from '@/services/Accounts/AccountsService';
-import JournalPoster from '@/services/Accounting/JournalPoster';
-import JournalEntry from '@/services/Accounting/JournalEntry';
-import JournalPosterService from '@/services/Sales/JournalPosterService';
-import ServiceItemsEntries from '@/services/Sales/ServiceItemsEntries';
-import PaymentReceiveEntryRepository from '@/repositories/PaymentReceiveEntryRepository';
-import CustomerRepository from '@/repositories/CustomerRepository';
-import TenancyService from '@/services/Tenancy/TenancyService';
-import { formatDateFields } from '@/utils';
+import { IPaymentReceiveOTD } from 'interfaces';
+import AccountsService from 'services/Accounts/AccountsService';
+import JournalPoster from 'services/Accounting/JournalPoster';
+import JournalEntry from 'services/Accounting/JournalEntry';
+import JournalPosterService from 'services/Sales/JournalPosterService';
+import ServiceItemsEntries from 'services/Sales/ServiceItemsEntries';
+import PaymentReceiveEntryRepository from 'repositories/PaymentReceiveEntryRepository';
+import CustomerRepository from 'repositories/CustomerRepository';
+import TenancyService from 'services/Tenancy/TenancyService';
+import { formatDateFields } from 'utils';
 
 /**
  * Payment receive service.

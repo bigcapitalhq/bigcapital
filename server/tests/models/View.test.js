@@ -1,8 +1,8 @@
 import { create, expect } from '~/testInit';
-import View from '@/models/View';
-import Resource from '@/models/Resource';
-import ResourceField from '@/models/ResourceField';
-import ViewRole from '@/models/ViewRole';
+import View from 'models/View';
+import Resource from 'models/Resource';
+import ResourceField from 'models/ResourceField';
+import ViewRole from 'models/ViewRole';
 import {
   tenantWebsite,
   tenantFactory,

@@ -1,5 +1,5 @@
-import SMSClient from '@/services/SMSClient';
-import EasySMSGateway from '@/services/SMSClient/EasySMSClient';
+import SMSClient from 'services/SMSClient';
+import EasySMSGateway from 'services/SMSClient/EasySMSClient';
 
 export default () => {
   const easySmsGateway = new EasySMSGateway();

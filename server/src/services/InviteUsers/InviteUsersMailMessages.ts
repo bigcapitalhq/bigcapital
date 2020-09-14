@@ -4,7 +4,7 @@ import { Service } from "typedi";
 export default class InviteUsersMailMessages {
 
   sendInviteMail() {
-    const filePath = path.join(global.rootPath, 'views/mail/UserInvite.html');
+    const filePath = path.join(global.__root, 'views/mail/UserInvite.html');
     const template = fs.readFileSync(filePath, 'utf8');
 
     const rendered = Mustache.render(template, {

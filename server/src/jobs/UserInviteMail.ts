@@ -1,5 +1,5 @@
 import { Container, Inject } from 'typedi';
-import InviteUserService from '@/services/InviteUsers';
+import InviteUserService from 'services/InviteUsers';
 
 export default class UserInviteMailJob {
   @Inject()

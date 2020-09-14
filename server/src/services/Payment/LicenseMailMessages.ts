@@ -13,7 +13,7 @@ export default class SubscriptionMailMessages {
     const Logger = Container.get('logger');
     const Mail = Container.get('mail');
 
-    const filePath = path.join(global.rootPath, 'views/mail/LicenseReceive.html');
+    const filePath = path.join(global.__root, 'views/mail/LicenseReceive.html');
     const template = fs.readFileSync(filePath, 'utf8');
     const rendered = Mustache.render(template, { licenseCode });
 

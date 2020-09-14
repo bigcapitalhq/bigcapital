@@ -1,8 +1,9 @@
 import { Inject, Service } from "typedi";
-import TenancyService from '@/services/Tenancy/TenancyService';
-import { SystemUser } from "@/system/models";
-import { ServiceError, ServiceErrors } from "@/exceptions";
-import { ISystemUser, ISystemUserDTO } from "@/interfaces";
+import TenancyService from 'services/Tenancy/TenancyService';
+import { SystemUser } from "system/models";
+import { ServiceError, ServiceErrors } from "exceptions";
+import { ISystemUser, ISystemUserDTO } from "interfaces";
+import systemRepositories from "loaders/systemRepositories";
 
 @Service()
 export default class UsersService {
@@ -12,6 +13,9 @@ export default class UsersService {
   @Inject('logger')
   logger: any;
 
+  @Inject('repositories')
+  repositories: any;
+
   /**
    * Creates a new user.
    * @param  {number} tenantId 
@@ -20,26 +24,17 @@ export default class UsersService {
    * @return {Promise<ISystemUser>}
    */
   async editUser(tenantId: number, userId: number, userDTO: ISystemUserDTO): Promise<ISystemUser> {
-    const foundUsers = await SystemUser.query()
-      .whereNot('id', userId)
-      .andWhere((query) => {
-        query.where('email', userDTO.email);
-        query.orWhere('phone_number', userDTO.phoneNumber);
-      })
-      .where('tenant_id', tenantId);
+    const { systemUserRepository } = this.repositories;
 
-    const sameUserEmail = foundUsers
-      .some((u: ISystemUser) => u.email === userDTO.email);
-
-    const samePhoneNumber = foundUsers
-      .some((u: ISystemUser) => u.phoneNumber === userDTO.phone_number);
+    const isEmailExists = await systemUserRepository.isEmailExists(userDTO.email, userId);
+    const isPhoneNumberExists = await systemUserRepository.isPhoneNumberExists(userDTO.phoneNumber, userId);
 
     const serviceErrors: ServiceError[] = [];
 
-    if (sameUserEmail) {
+    if (isEmailExists) {
       serviceErrors.push(new ServiceError('email_already_exists'));
     }
-    if (samePhoneNumber) {
+    if (isPhoneNumberExists) {
       serviceErrors.push(new ServiceError('phone_number_already_exist'));
     }
     if (serviceErrors.length > 0) {
@@ -47,9 +42,8 @@ export default class UsersService {
     }
     const updateSystemUser = await SystemUser.query()
       .where('id', userId)
-      .update({
-        ...userDTO,
-      });
+      .update({ ...userDTO });
+
     return updateSystemUser;
   }
 
@@ -60,9 +54,9 @@ export default class UsersService {
    * @returns {ISystemUser}
    */
   async getUserOrThrowError(tenantId: number, userId: number): void {
-    const user = await SystemUser.query().findOne({
-      id: userId, tenant_id: tenantId,
-    });
+    const { systemUserRepository } = this.repositories;
+    const user = await systemUserRepository.getByIdAndTenant(userId, tenantId);
+
     if (!user) {
       this.logger.info('[users] the given user not found.', { tenantId, userId });
       throw new ServiceError('user_not_found');
@@ -76,11 +70,11 @@ export default class UsersService {
    * @param {number} userId 
    */
   async deleteUser(tenantId: number, userId: number): Promise<void> {
+    const { systemUserRepository } = this.repositories;
     await this.getUserOrThrowError(tenantId, userId);
     
     this.logger.info('[users] trying to delete the given user.', { tenantId, userId });
-    await SystemUser.query().where('tenant_id', tenantId)
-      .where('id', userId).delete();
+    await systemUserRepository.deleteById(userId);
      
     this.logger.info('[users] the given user deleted successfully.', { tenantId, userId });
   }
@@ -91,12 +85,14 @@ export default class UsersService {
    * @param {number} userId 
    */
   async activateUser(tenantId: number, userId: number): Promise<void> {
+    const { systemUserRepository } = this.repositories;
+
     const user = await this.getUserOrThrowError(tenantId, userId);
     this.throwErrorIfUserActive(user);
 
-    await SystemUser.query().findById(userId).update({ active: true });
+    await systemUserRepository.activateUser(userId);
   }
-  
+
   /**
    * Inactivate the given user id.
    * @param {number} tenantId 
@@ -104,10 +100,11 @@ export default class UsersService {
    * @return {Promise<void>}
    */
   async inactivateUser(tenantId: number, userId: number): Promise<void> {
+    const { systemUserRepository } = this.repositories;
     const user = await this.getUserOrThrowError(tenantId, userId);
     this.throwErrorIfUserInactive(user);
 
-    await SystemUser.query().findById(userId).update({ active: false });
+    await systemUserRepository.inactivateById(userId);
   }
 
   /**

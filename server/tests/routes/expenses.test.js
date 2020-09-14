@@ -4,9 +4,9 @@ import {
   request,
   expect,
 } from '~/testInit';
-import Expense from '@/models/Expense';
-import ExpenseCategory from '@/models/ExpenseCategory';
-import AccountTransaction from '@/models/AccountTransaction';
+import Expense from 'models/Expense';
+import ExpenseCategory from 'models/ExpenseCategory';
+import AccountTransaction from 'models/AccountTransaction';
 import {
   tenantWebsite,
   tenantFactory,

@@ -1,7 +1,7 @@
 import { Model, mixin } from 'objection';
-import SystemModel from '@/system/models/SystemModel';
+import SystemModel from 'system/models/SystemModel';
 import moment from 'moment';
-import SubscriptionPeriod from '@/services/Subscription/SubscriptionPeriod';
+import SubscriptionPeriod from 'services/Subscription/SubscriptionPeriod';
 
 export default class PlanSubscription extends mixin(SystemModel) {
   /**
@@ -67,8 +67,8 @@ export default class PlanSubscription extends mixin(SystemModel) {
    * Relations mappings.
    */
   static get relationMappings() {
-    const Tenant = require('@/system/Models/Tenant');
-    const Plan = require('@/system/Models/Subscriptions/Plan');
+    const Tenant = require('system/Models/Tenant');
+    const Plan = require('system/Models/Subscriptions/Plan');
 
     return {
       /**

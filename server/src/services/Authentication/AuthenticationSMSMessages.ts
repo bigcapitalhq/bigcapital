@@ -1,5 +1,5 @@
 import { Service, Inject } from "typedi";
-import { ISystemUser, ITenant } from "@/interfaces";
+import { ISystemUser, ITenant } from "interfaces";
 
 @Service()
 export default class AuthenticationSMSMessages {

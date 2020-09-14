@@ -1,16 +1,16 @@
 import { omit, sumBy, pick } from 'lodash';
 import moment from 'moment';
 import { Inject, Service } from 'typedi';
-import JournalPoster from '@/services/Accounting/JournalPoster';
-import JournalEntry from '@/services/Accounting/JournalEntry';
-import AccountsService from '@/services/Accounts/AccountsService';
-import JournalPosterService from '@/services/Sales/JournalPosterService';
-import InventoryService from '@/services/Inventory/Inventory';
-import HasItemsEntries from '@/services/Sales/HasItemsEntries';
-import SalesInvoicesCost from '@/services/Sales/SalesInvoicesCost';
-import TenancyService from '@/services/Tenancy/TenancyService';
-import { formatDateFields } from '@/utils';
-import{ IBillOTD, IBill, IItem } from '@/interfaces';
+import JournalPoster from 'services/Accounting/JournalPoster';
+import JournalEntry from 'services/Accounting/JournalEntry';
+import AccountsService from 'services/Accounts/AccountsService';
+import JournalPosterService from 'services/Sales/JournalPosterService';
+import InventoryService from 'services/Inventory/Inventory';
+import HasItemsEntries from 'services/Sales/HasItemsEntries';
+import SalesInvoicesCost from 'services/Sales/SalesInvoicesCost';
+import TenancyService from 'services/Tenancy/TenancyService';
+import { formatDateFields } from 'utils';
+import{ IBillOTD, IBill, IItem } from 'interfaces';
 
 /**
  * Vendor bills services.

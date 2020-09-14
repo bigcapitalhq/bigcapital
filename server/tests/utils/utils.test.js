@@ -1,4 +1,4 @@
-import { dateRangeCollection } from '@/utils';
+import { dateRangeCollection } from 'utils';
 import { expect } from '../testInit';
 
 describe('utils', () => {

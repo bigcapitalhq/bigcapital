@@ -1,7 +1,7 @@
 import { Container, Service, Inject } from 'typedi';
-import InventoryAverageCost from '@/services/Inventory/InventoryAverageCost';
-import InventoryCostLotTracker from '@/services/Inventory/InventoryCostLotTracker';
-import TenancyService from '@/services/Tenancy/TenancyService';
+import InventoryAverageCost from 'services/Inventory/InventoryAverageCost';
+import InventoryCostLotTracker from 'services/Inventory/InventoryCostLotTracker';
+import TenancyService from 'services/Tenancy/TenancyService';
 
 type TCostMethod = 'FIFO' | 'LIFO' | 'AVG';
 

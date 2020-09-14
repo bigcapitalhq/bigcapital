@@ -3,9 +3,9 @@ import {
   expect,
 } from '~/testInit';
 import moment from 'moment';
-import ManualJournal from '@/models/ManualJournal';
-import AccountTransaction from '@/models/AccountTransaction';
-import AccountBalance from '@/models/AccountBalance';
+import ManualJournal from 'models/ManualJournal';
+import AccountTransaction from 'models/AccountTransaction';
+import AccountBalance from 'models/AccountBalance';
 import {
   tenantWebsite,
   tenantFactory,

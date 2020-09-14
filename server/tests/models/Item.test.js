@@ -1,7 +1,7 @@
 import { create, expect } from '~/testInit';
-import Item from '@/models/Item';
+import Item from 'models/Item';
 // eslint-disable-next-line no-unused-vars
-import itemCategory from '@/models/ItemCategory';
+import itemCategory from 'models/ItemCategory';
 import {
   tenantWebsite,
   tenantFactory,

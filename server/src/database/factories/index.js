@@ -1,6 +1,6 @@
-import KnexFactory from '@/lib/KnexFactory';
+import KnexFactory from 'lib/KnexFactory';
 import faker from 'faker';
-import { hashPassword } from '@/utils';
+import { hashPassword } from 'utils';
 
 
 export default (tenantDb) => {

@@ -1,13 +1,26 @@
-const Knex = require('knex');
-const { knexSnakeCaseMappers } = require('objection');
-const color = require('colorette');
-const config = require('../config/config');
-const systemConfig = require('../config/systemKnexfile');
-
+import Knex from 'knex';
+import { knexSnakeCaseMappers } from 'objection';
+import color from 'colorette';
+import config from '../src/config';
+// import { systemKnexConfig } from '../src/config/knexConfig';
 
 function initSystemKnex() {
   return Knex({
-    ...systemConfig['production'],
+    client: config.system.db_client,
+    connection: {
+      host: config.system.db_host,
+      user: config.system.db_user,
+      password: config.system.db_password,
+      database: config.system.db_name,
+      charset: 'utf8',
+    },
+    migrations: {
+      directory: config.system.migrations_dir,
+    },
+    seeds: {
+      directory: config.system.seeds_dir,
+    },
+    pool: { min: 0, max: 7 },
     ...knexSnakeCaseMappers({ upperCase: true }),
   });
 }
@@ -70,7 +83,7 @@ function getDeepValue(prop, obj) {
   }, []);
 }
 
-module.exports = {
+export {
   initTenantKnex,
   initSystemKnex,
   getAllSystemTenants,

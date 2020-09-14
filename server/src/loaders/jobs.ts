@@ -1,16 +1,16 @@
 import Agenda from 'agenda';
-import WelcomeEmailJob from '@/jobs/WelcomeEmail';
-import WelcomeSMSJob from '@/jobs/WelcomeSMS';
-import ResetPasswordMailJob from '@/jobs/ResetPasswordMail';
-import ComputeItemCost from '@/jobs/ComputeItemCost';
-import RewriteInvoicesJournalEntries from '@/jobs/writeInvoicesJEntries';
-import SendLicenseViaPhoneJob from '@/jobs/SendLicensePhone';
-import SendLicenseViaEmailJob from '@/jobs/SendLicenseEmail';
-import SendSMSNotificationSubscribeEnd from '@/jobs/SMSNotificationSubscribeEnd';
-import SendSMSNotificationTrialEnd from '@/jobs/SMSNotificationTrialEnd';
-import SendMailNotificationSubscribeEnd from '@/jobs/MailNotificationSubscribeEnd';
-import SendMailNotificationTrialEnd from '@/jobs/MailNotificationTrialEnd';
-import UserInviteMailJob from '@/jobs/UserInviteMail';
+import WelcomeEmailJob from 'jobs/WelcomeEmail';
+import WelcomeSMSJob from 'jobs/WelcomeSMS';
+import ResetPasswordMailJob from 'jobs/ResetPasswordMail';
+import ComputeItemCost from 'jobs/ComputeItemCost';
+import RewriteInvoicesJournalEntries from 'jobs/writeInvoicesJEntries';
+import SendLicenseViaPhoneJob from 'jobs/SendLicensePhone';
+import SendLicenseViaEmailJob from 'jobs/SendLicenseEmail';
+import SendSMSNotificationSubscribeEnd from 'jobs/SMSNotificationSubscribeEnd';
+import SendSMSNotificationTrialEnd from 'jobs/SMSNotificationTrialEnd';
+import SendMailNotificationSubscribeEnd from 'jobs/MailNotificationSubscribeEnd';
+import SendMailNotificationTrialEnd from 'jobs/MailNotificationTrialEnd';
+import UserInviteMailJob from 'jobs/UserInviteMail';
 
 export default ({ agenda }: { agenda: Agenda }) => {
   new WelcomeEmailJob(agenda);
@@ -31,7 +31,7 @@ export default ({ agenda }: { agenda: Agenda }) => {
   agenda.define(
     'rewrite-invoices-journal-entries',
     { priority: 'normal', concurrency: 1, },
-    new RewriteInvoicesJournalEntries(agenda).handler,
+    new RewriteInvoicesJournalEntries().handler,
   );
   agenda.define(
     'send-license-via-phone',

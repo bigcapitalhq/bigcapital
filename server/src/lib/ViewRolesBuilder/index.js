@@ -1,9 +1,9 @@
 import { difference } from 'lodash';
 import moment from 'moment';
-import { Lexer } from '@/lib/LogicEvaluation/Lexer';
-import Parser from '@/lib/LogicEvaluation/Parser';
-import QueryParser from '@/lib/LogicEvaluation/QueryParser';
-import resourceFieldsKeys from '@/data/ResourceFieldsKeys';
+import { Lexer } from 'lib/LogicEvaluation/Lexer';
+import Parser from 'lib/LogicEvaluation/Parser';
+import QueryParser from 'lib/LogicEvaluation/QueryParser';
+import resourceFieldsKeys from 'data/ResourceFieldsKeys';
 
 //  const role = {
 //   compatotor: String,

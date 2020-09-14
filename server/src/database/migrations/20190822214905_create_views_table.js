@@ -8,11 +8,7 @@ exports.up = function (knex) {
     table.boolean('favourite');
     table.string('roles_logic_expression');
     table.timestamps();
-  }).raw('ALTER TABLE `VIEWS` AUTO_INCREMENT = 1000').then(() => {
-    return knex.seed.run({
-      specific: 'seed_views.js',
-    });
-  });
+  }).raw('ALTER TABLE `VIEWS` AUTO_INCREMENT = 1000');
 };
 
 exports.down = (knex) => knex.schema.dropTableIfExists('views');

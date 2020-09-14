@@ -1,5 +1,5 @@
-import { IPaymentMethod, IPaymentContext } from "@/interfaces";
-import { Plan } from '@/system/models';
+import { IPaymentMethod, IPaymentContext } from "interfaces";
+import { Plan } from 'system/models';
 
 export default class PaymentContext<PaymentModel> implements IPaymentContext{
   paymentMethod: IPaymentMethod;

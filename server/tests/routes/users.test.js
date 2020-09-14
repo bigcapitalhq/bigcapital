@@ -1,4 +1,4 @@
-import knex from '@/database/knex';
+import knex from 'database/knex';
 import {
   request,
   expect,

@@ -1,14 +1,14 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import chaiThings from 'chai-things';
-import systemDb from '@/database/knex';
-import app from '@/app';
-import createTenantFactory from '@/database/factories';
-import TenantsManager from '@/system/TenantsManager';
+import systemDb from 'database/knex';
+import app from 'app';
+import createTenantFactory from 'database/factories';
+import TenantsManager from 'system/TenantsManager';
 import faker from 'faker';
-import { hashPassword } from '@/utils';
-import TenantModel from '@/models/TenantModel';
-import createSystemFactory from '@/database/factories/system';
+import { hashPassword } from 'utils';
+import TenantModel from 'models/TenantModel';
+import createSystemFactory from 'database/factories/system';
 
 
 const { expect } = chai;

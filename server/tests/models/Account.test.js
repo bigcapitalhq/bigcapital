@@ -1,13 +1,13 @@
 import { 
   expect,
 } from '~/testInit';
-import Account from '@/models/Account';
-import AccountType from '@/models/AccountType';
+import Account from 'models/Account';
+import AccountType from 'models/AccountType';
 import {
   tenantFactory,
   tenantWebsite
 } from '~/dbInit';
-import DependencyGraph from '@/lib/DependencyGraph';
+import DependencyGraph from 'lib/DependencyGraph';
 
 describe('Model: Account', () => {
   it('Should account model belongs to the associated account type model.', async () => {

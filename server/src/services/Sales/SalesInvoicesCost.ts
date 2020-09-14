@@ -1,9 +1,9 @@
 import { Container, Service, Inject } from 'typedi';
-import JournalPoster from '@/services/Accounting/JournalPoster';
-import JournalEntry from '@/services/Accounting/JournalEntry';
-import InventoryService from '@/services/Inventory/Inventory';
-import TenancyService from '@/services/Tenancy/TenancyService';
-import { ISaleInvoice, IItemEntry } from '@/interfaces';
+import JournalPoster from 'services/Accounting/JournalPoster';
+import JournalEntry from 'services/Accounting/JournalEntry';
+import InventoryService from 'services/Inventory/Inventory';
+import TenancyService from 'services/Tenancy/TenancyService';
+import { ISaleInvoice, IItemEntry } from 'interfaces';
 
 @Service()
 export default class SaleInvoicesCost {

@@ -1,8 +1,8 @@
-import DynamicFilterRoleAbstructor from '@/lib/DynamicFilter/DynamicFilterRoleAbstructor';
+import DynamicFilterRoleAbstructor from 'lib/DynamicFilter/DynamicFilterRoleAbstructor';
 import {
   validateViewRoles,
   buildFilterQuery,
-} from '@/lib/ViewRolesBuilder';
+} from 'lib/ViewRolesBuilder';
 
 export default class ViewRolesDynamicFilter extends DynamicFilterRoleAbstructor {
   /**

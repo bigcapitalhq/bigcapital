@@ -1,7 +1,7 @@
 import { uniqBy } from 'lodash';
 import {
   buildFilterRolesJoins,
-} from '@/lib/ViewRolesBuilder';
+} from 'lib/ViewRolesBuilder';
 
 export default class DynamicFilter {
   /**

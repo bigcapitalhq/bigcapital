@@ -1,6 +1,6 @@
 import { tenantWebsite, tenantFactory, loginRes } from '~/dbInit';
 import { request, expect } from '~/testInit';
-import { SaleInvoice } from '@/models';
+import { SaleInvoice } from 'models';
 import { SaleInvoiceEntry } from '../../src/models';
 
 describe('route: `/sales/invoices`', () => {

@@ -1,5 +1,5 @@
 import { Model } from 'objection';
-import TenantModel from '@/models/TenantModel';
+import TenantModel from 'models/TenantModel';
 
 export default class Resource extends TenantModel {
   /**
@@ -20,8 +20,8 @@ export default class Resource extends TenantModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const View = require('@/models/View');
-    const ResourceField = require('@/models/ResourceField');
+    const View = require('models/View');
+    const ResourceField = require('models/ResourceField');
 
     return {
       /**

@@ -1,8 +1,8 @@
 import { difference } from 'lodash';
-import DynamicFilterRoleAbstructor from '@/lib/DynamicFilter/DynamicFilterRoleAbstructor';
+import DynamicFilterRoleAbstructor from 'lib/DynamicFilter/DynamicFilterRoleAbstructor';
 import {
   buildFilterQuery,
-} from '@/lib/ViewRolesBuilder';
+} from 'lib/ViewRolesBuilder';
 
 export default class FilterRoles extends DynamicFilterRoleAbstructor {
   /**

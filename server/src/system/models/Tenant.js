@@ -1,6 +1,6 @@
-import BaseModel from '@/models/Model';
+import BaseModel from 'models/Model';
 import { Model } from 'objection';
-import SubscriptionPeriod from '@/services/Subscription/SubscriptionPeriod';
+import SubscriptionPeriod from 'services/Subscription/SubscriptionPeriod';
 
 export default class Tenant extends BaseModel {
   /**

@@ -1,4 +1,4 @@
-import { DYNAMIC_LISTING_ERRORS } from '@/services/DynamicListing/DynamicListing';
+import { DYNAMIC_LISTING_ERRORS } from 'services/DynamicListing/DynamicListing';
 
 export const dynamicListingErrorsToResponse = (error) => {
   let _errors;

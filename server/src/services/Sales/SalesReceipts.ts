@@ -1,9 +1,9 @@
 import { omit, difference, sumBy } from 'lodash';
 import { Service, Inject } from 'typedi';
-import JournalPosterService from '@/services/Sales/JournalPosterService';
-import HasItemEntries from '@/services/Sales/HasItemsEntries';
-import TenancyService from '@/services/Tenancy/TenancyService';
-import { formatDateFields } from '@/utils';
+import JournalPosterService from 'services/Sales/JournalPosterService';
+import HasItemEntries from 'services/Sales/HasItemsEntries';
+import TenancyService from 'services/Tenancy/TenancyService';
+import { formatDateFields } from 'utils';
 
 @Service()
 export default class SalesReceiptService {

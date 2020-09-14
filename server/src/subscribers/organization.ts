@@ -1,6 +1,6 @@
 import { Container } from 'typedi';
 import { On, EventSubscriber } from "event-dispatch";
-import events from '@/subscribers/events';
+import events from 'subscribers/events';
 
 @EventSubscriber()
 export class OrganizationSubscriber {

@@ -1,5 +1,5 @@
 import { Model, mixin } from 'objection';
-import TenantModel from '@/models/TenantModel';
+import TenantModel from 'models/TenantModel';
 
 export default class View extends TenantModel {
   /**
@@ -40,9 +40,9 @@ export default class View extends TenantModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const Resource = require('@/models/Resource');
-    const ViewColumn = require('@/models/ViewColumn');
-    const ViewRole = require('@/models/ViewRole');
+    const Resource = require('models/Resource');
+    const ViewColumn = require('models/ViewColumn');
+    const ViewRole = require('models/ViewRole');
 
     return {
       /**

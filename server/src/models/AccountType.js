@@ -1,6 +1,6 @@
 // import path from 'path';
 import { Model, mixin } from 'objection';
-import TenantModel from '@/models/TenantModel';
+import TenantModel from 'models/TenantModel';
 
 export default class AccountType extends TenantModel {
   /**
@@ -14,7 +14,7 @@ export default class AccountType extends TenantModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const Account = require('@/models/Account');
+    const Account = require('models/Account');
 
     return {
       /**

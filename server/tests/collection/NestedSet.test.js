@@ -1,5 +1,5 @@
 import { expect } from '~/testInit';
-import NestedSet from '@/collection/NestedSet';
+import NestedSet from 'collection/NestedSet';
 
 describe('NestedSet', () => {
   describe('linkChildren()', () => {  

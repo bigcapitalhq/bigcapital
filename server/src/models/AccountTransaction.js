@@ -1,6 +1,6 @@
 import { Model } from 'objection';
 import moment from 'moment';
-import TenantModel from '@/models/TenantModel';
+import TenantModel from 'models/TenantModel';
 
 export default class AccountTransaction extends TenantModel {
   /**
@@ -83,7 +83,7 @@ export default class AccountTransaction extends TenantModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const Account = require('@/models/Account');
+    const Account = require('models/Account');
 
     return {
       account: {

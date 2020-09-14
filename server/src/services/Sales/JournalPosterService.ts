@@ -1,6 +1,6 @@
 import { Service, Inject } from 'typedi';
-import JournalPoster from '@/services/Accounting/JournalPoster';
-import TenancyService from '@/services/Tenancy/TenancyService';
+import JournalPoster from 'services/Accounting/JournalPoster';
+import TenancyService from 'services/Tenancy/TenancyService';
 
 @Service()
 export default class JournalPosterService {

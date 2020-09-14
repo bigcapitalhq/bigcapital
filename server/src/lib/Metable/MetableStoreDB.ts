@@ -2,7 +2,7 @@ import { Model } from 'objection';
 import {
   IMetadata,
   IMetableStoreStorage,
-} from '@/interfaces';
+} from 'interfaces';
 import MetableStore from './MetableStore';
 
 export default class MetableDBStore extends MetableStore implements IMetableStoreStorage{

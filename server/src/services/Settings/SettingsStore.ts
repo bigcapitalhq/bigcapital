@@ -1,6 +1,6 @@
 import Knex from 'knex';
-import MetableStoreDB from '@/lib/Metable/MetableStoreDB';
-import Setting from '@/models/Setting';
+import MetableStoreDB from 'lib/Metable/MetableStoreDB';
+import Setting from 'models/Setting';
 
 export default class SettingsStore extends MetableStoreDB {
   /**

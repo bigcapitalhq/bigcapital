@@ -4,8 +4,8 @@ import {
   IMetadata,
   IMetaQuery,
   IMetableStore,
-} from '@/interfaces';
-import { itemsStartWith } from '@/utils';
+} from 'interfaces';
+import { itemsStartWith } from 'utils';
 
 export default class MetableStore implements IMetableStore{
   metadata: IMetadata[];

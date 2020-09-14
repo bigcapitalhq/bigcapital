@@ -1,4 +1,4 @@
-import SessionModel from '@/services/SessionModel';
+import SessionModel from 'services/SessionModel';
 
 export default class SessionQueryBuilder extends SessionModel.QueryBuilder {
   /**

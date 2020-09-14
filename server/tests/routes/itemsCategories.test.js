@@ -2,7 +2,7 @@ import {
   request,
   expect,
 } from '~/testInit';
-import ItemCategory from '@/models/ItemCategory';
+import ItemCategory from 'models/ItemCategory';
 import {
   tenantWebsite,
   tenantFactory,

@@ -1,9 +1,9 @@
-import { License } from "@/system/models";
-import PaymentMethod from '@/services/Payment/PaymentMethod';
-import { Plan } from '@/system/models';
-import { IPaymentMethod, ILicensePaymentModel } from '@/interfaces';
-import { ILicensePaymentModel } from "@/interfaces";
-import { PaymentInputInvalid, PaymentAmountInvalidWithPlan } from '@/exceptions';
+import { License } from "system/models";
+import PaymentMethod from 'services/Payment/PaymentMethod';
+import { Plan } from 'system/models';
+import { IPaymentMethod, ILicensePaymentModel } from 'interfaces';
+import { ILicensePaymentModel } from "interfaces";
+import { PaymentInputInvalid, PaymentAmountInvalidWithPlan } from 'exceptions';
 
 export default class LicensePaymentMethod extends PaymentMethod implements IPaymentMethod {
   /**

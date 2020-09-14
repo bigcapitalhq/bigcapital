@@ -1,6 +1,6 @@
 import { omit } from 'lodash';
-import BaseModelRepository from '@/repositories/BaseModelRepository';
-import { PaymentReceiveEntry } from '@/models';
+import BaseModelRepository from 'repositories/BaseModelRepository';
+import { PaymentReceiveEntry } from 'models';
 
 export default class PaymentReceiveEntryRepository extends BaseModelRepository {
   /**

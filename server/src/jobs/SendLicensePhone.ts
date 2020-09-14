@@ -1,5 +1,5 @@
 import { Container } from 'typedi';
-import LicenseService from '@/services/Payment/License';
+import LicenseService from 'services/Payment/License';
 
 export default class SendLicenseViaPhoneJob {
   public async handler(job, done: Function): Promise<void> {

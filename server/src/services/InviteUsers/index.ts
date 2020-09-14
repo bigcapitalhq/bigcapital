@@ -4,19 +4,18 @@ import moment from 'moment';
 import {
   EventDispatcher,
   EventDispatcherInterface,
-} from '@/decorators/eventDispatcher';
-import { ServiceError } from "@/exceptions";
-import { SystemUser, Invite, Tenant } from "@/system/models";
-import { Option } from '@/models';
-import { hashPassword } from '@/utils';
-import TenancyService from '@/services/Tenancy/TenancyService';
-import TenantsManager from "@/system/TenantsManager";
-import InviteUsersMailMessages from "@/services/InviteUsers/InviteUsersMailMessages";
-import events from '@/subscribers/events';
+} from 'decorators/eventDispatcher';
+import { ServiceError } from "exceptions";
+import { Invite, Tenant } from "system/models";
+import { Option } from 'models';
+import { hashPassword } from 'utils';
+import TenancyService from 'services/Tenancy/TenancyService';
+import InviteUsersMailMessages from "services/InviteUsers/InviteUsersMailMessages";
+import events from 'subscribers/events';
 import {
   ISystemUser,
   IInviteUserInput,
-} from '@/interfaces';
+} from 'interfaces';
 
 @Service()
 export default class InviteUserService {
@@ -26,14 +25,14 @@ export default class InviteUserService {
   @Inject()
   tenancy: TenancyService;
 
-  @Inject()
-  tenantsManager: TenantsManager;
-
   @Inject('logger')
   logger: any;
 
   @Inject()
   mailMessages: InviteUsersMailMessages;
+
+  @Inject('repositories')
+  sysRepositories: any;
 
   /**
    * Accept the received invite.
@@ -50,24 +49,26 @@ export default class InviteUserService {
     const hashedPassword = await hashPassword(inviteUserInput.password);
 
     this.logger.info('[accept_invite] trying to update user details.');
-    const updateUserOper = SystemUser.query()
-      .where('email', inviteToken.email)
-      .patch({
-        ...inviteUserInput,
-        active: 1,
-        invite_accepted_at: moment().format('YYYY-MM-DD'),
-        password: hashedPassword,
-      });
+    const { systemUserRepository } = this.sysRepositories;
+
+    const user = await systemUserRepository.getByEmail(inviteToken.email);
+
+    const updateUserOper = systemUserRepository.edit(user.id, {
+      ...inviteUserInput,
+      active: 1,
+      invite_accepted_at: moment().format('YYYY-MM-DD'),
+      password: hashedPassword,
+    });
 
     this.logger.info('[accept_invite] trying to delete the given token.');
     const deleteInviteTokenOper = Invite.query().where('token', inviteToken.token).delete();
 
     // Await all async operations.
-    const [user] = await Promise.all([updateUserOper, deleteInviteTokenOper]);
+    const [updatedUser] = await Promise.all([updateUserOper, deleteInviteTokenOper]);
 
     // Triggers `onUserAcceptInvite` event.
     this.eventDispatcher.dispatch(events.inviteUser.acceptInvite, {
-      inviteToken, user,
+      inviteToken, user: updatedUser,
     });
   }
 
@@ -79,7 +80,7 @@ export default class InviteUserService {
    * 
    * @return {Promise<IInvite>}
    */
-  public async sendInvite(tenantId: number, email: string, authorizedUser: ISystemUser): Promise<IInvite> {
+  public async sendInvite(tenantId: number, email: string, authorizedUser: ISystemUser): Promise<{ invite: IInvite, user: ISystemUser }> {
     await this.throwErrorIfUserEmailExists(email);
 
     this.logger.info('[send_invite] trying to store invite token.');
@@ -90,11 +91,12 @@ export default class InviteUserService {
     });
 
     this.logger.info('[send_invite] trying to store user with email and tenant.');
-    const user = await SystemUser.query().insert({
+    const { systemUserRepository } = this.sysRepositories;
+    const user = await systemUserRepository.create({
       email,
       tenant_id: authorizedUser.tenantId,
       active: 1,
-    })
+    });
 
     // Triggers `onUserSendInvite` event.
     this.eventDispatcher.dispatch(events.inviteUser.sendInvite, {
@@ -130,12 +132,14 @@ export default class InviteUserService {
    * Throws error in case the given user email not exists on the storage.
    * @param {string} email 
    */
-  private async throwErrorIfUserEmailExists(email: string) {
-    const foundUser = await SystemUser.query().findOne('email', email);
+  private async throwErrorIfUserEmailExists(email: string): Promise<ISystemUser> {
+    const { systemUserRepository } = this.sysRepositories;
+    const foundUser = await systemUserRepository.getByEmail(email);
 
     if (foundUser) {
       throw new ServiceError('email_already_invited');
     }
+    return foundUser;
   }
 
   /**
@@ -158,12 +162,9 @@ export default class InviteUserService {
    * Validate the given user email and phone number uniquine.
    * @param {IInviteUserInput} inviteUserInput 
    */
-  private async validateUserPhoneNumber(inviteUserInput: IInviteUserInput) {
-    const foundUser = await SystemUser.query()
-      .onBuild(query => {
-        query.where('phone_number', inviteUserInput.phoneNumber);
-        query.first();
-      });
+  private async validateUserPhoneNumber(inviteUserInput: IInviteUserInput): Promise<ISystemUser> {
+    const { systemUserRepository } = this.sysRepositories;
+    const foundUser = await systemUserRepository.getByPhoneNumber(inviteUserInput.phoneNumber)
    
     if (foundUser) {
       throw new ServiceError('phone_number_exists');

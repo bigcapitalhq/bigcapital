@@ -1,15 +1,15 @@
-const commander = require('commander');
-const color = require('colorette');
-const argv = require('getopts')(process.argv.slice(2));
-const config = require('../config/config');
-const { 
+import commander from 'commander';
+import color from 'colorette';
+import argv from 'getopts'
+import config from '../src/config';
+import { 
   initSystemKnex,
   getAllSystemTenants,
   initTenantKnex,
   exit,
   success,
   log,
-} = require('./utils');
+} from './utils';
 
 // - bigcapital system:migrate:latest
 // - bigcapital system:migrate:rollback

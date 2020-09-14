@@ -1,6 +1,6 @@
 import { create, expect } from '~/testInit';
-import '@/models/Item';
-import ItemCategory from '@/models/ItemCategory';
+import 'models/Item';
+import ItemCategory from 'models/ItemCategory';
 import {
   tenantWebsite,
   tenantFactory,

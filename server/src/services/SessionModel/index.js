@@ -1,4 +1,4 @@
-import SessionQueryBuilder from '@/services/SessionModel/SessionQueryBuilder';
+import SessionQueryBuilder from 'services/SessionModel/SessionQueryBuilder';
 
 export default class SessionModel {
   /**

@@ -1,15 +1,15 @@
 import { Inject, Service } from 'typedi';
 import { difference } from 'lodash';
-import JournalPoster from "@/services/Accounting/JournalPoster";
-import JournalCommands from "@/services/Accounting/JournalCommands";
-import ContactsService from '@/services/Contacts/ContactsService';
+import JournalPoster from "services/Accounting/JournalPoster";
+import JournalCommands from "services/Accounting/JournalCommands";
+import ContactsService from 'services/Contacts/ContactsService';
 import { 
   IVendorNewDTO,
   IVendorEditDTO,
   IVendor
- } from '@/interfaces';
-import { ServiceError } from '@/exceptions';
-import TenancyService from '@/services/Tenancy/TenancyService';
+ } from 'interfaces';
+import { ServiceError } from 'exceptions';
+import TenancyService from 'services/Tenancy/TenancyService';
 
 @Service()
 export default class VendorsService {
@@ -39,7 +39,8 @@ export default class VendorsService {
    * @return {Promise<void>}
    */
   async newVendor(tenantId: number, vendorDTO: IVendorNewDTO) {
-    const contactDTO = this.vendorToContactDTO(vendorDTO)
+    const contactDTO = this.vendorToContactDTO(vendorDTO);
+
     const vendor = await this.contactService.newContact(tenantId, contactDTO, 'vendor');
 
     // Writes the vendor opening balance journal entries.
@@ -64,14 +65,31 @@ export default class VendorsService {
   }
 
   /**
+   * Retrieve the given vendor details by id or throw not found.
+   * @param {number} tenantId 
+   * @param {number} customerId 
+   */
+  getVendorByIdOrThrowError(tenantId: number, customerId: number) {
+    return this.contactService.getContactByIdOrThrowError(tenantId, customerId, 'vendor');
+  }
+
+  /**
    * Deletes the given vendor from the storage.
    * @param {number} tenantId 
    * @param {number} vendorId 
    * @return {Promise<void>}
    */
   async deleteVendor(tenantId: number, vendorId: number) {
+    const { Contact } = this.tenancy.models(tenantId);
+    
+    await this.getVendorByIdOrThrowError(tenantId, vendorId);
     await this.vendorHasNoBillsOrThrowError(tenantId, vendorId);
-    return this.contactService.deleteContact(tenantId, vendorId, 'vendor');
+
+    await Contact.query().findById(vendorId).delete();
+
+    await this.contactService.revertJEntriesContactsOpeningBalance(
+      tenantId, [vendorId], 'vendor',
+    );
   }
 
   /**
@@ -128,6 +146,10 @@ export default class VendorsService {
     await this.vendorsHaveNoBillsOrThrowError(tenantId, vendorsIds);
 
     await Contact.query().whereIn('id', vendorsIds).delete();
+
+    await this.contactService.revertJEntriesContactsOpeningBalance(
+      tenantId, vendorsIds, 'vendor',
+    );
   }
 
   /**
@@ -139,7 +161,7 @@ export default class VendorsService {
     const { vendorRepository } = this.tenancy.repositories(tenantId);
     const bills = await vendorRepository.getBills(vendorId);
 
-    if (bills) {
+    if (bills.length > 0) {
       throw new ServiceError('vendor_has_bills')
     }
   }

@@ -1,12 +1,13 @@
 import { Inject, Service } from 'typedi';
-import { difference } from 'lodash';
-import { ServiceError } from "@/exceptions";
-import TenancyService from '@/services/Tenancy/TenancyService';
+import { difference, upperFirst } from 'lodash';
+import { ServiceError } from "exceptions";
+import TenancyService from 'services/Tenancy/TenancyService';
 import { 
   IContact,
   IContactNewDTO,
   IContactEditDTO,
- } from "@/interfaces";
+ } from "interfaces";
+import JournalPoster from '../Accounting/JournalPoster';
 
 type TContactService = 'customer' | 'vendor';
 
@@ -127,5 +128,32 @@ export default class ContactsService {
     this.getContactsOrThrowErrorNotFound(tenantId, contactsIds, contactService);
 
     await Contact.query().whereIn('id', contactsIds).delete();
+  }
+
+  /**
+   * Reverts journal entries of the given contacts.
+   * @param {number} tenantId 
+   * @param {number[]} contactsIds 
+   * @param {TContactService} contactService 
+   */
+  async revertJEntriesContactsOpeningBalance(
+    tenantId: number,
+    contactsIds: number[],
+    contactService: TContactService
+  ) {
+    const { AccountTransaction } = this.tenancy.models(tenantId);
+    const journal = new JournalPoster(tenantId);
+
+    const contactsTransactions = await AccountTransaction.query()
+      .whereIn('reference_id', contactsIds)
+      .where('reference_type', `${upperFirst(contactService)}OpeningBalance`);
+
+    journal.loadEntries(contactsTransactions);
+    journal.removeEntries();
+
+    await Promise.all([
+      journal.saveBalance(),
+      journal.deleteEntries(),
+    ]);
   }
 }

@@ -1,5 +1,5 @@
 import { Container, Inject } from 'typedi';
-import AuthenticationService from '@/services/Authentication';
+import AuthenticationService from 'services/Authentication';
 
 export default class WelcomeSMSJob {
   /**

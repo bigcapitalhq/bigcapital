@@ -1,8 +1,8 @@
 import { Model } from 'objection';
-import TenantModel from '@/models/TenantModel';
+import TenantModel from 'models/TenantModel';
 import {
   buildFilterQuery,
-} from '@/lib/ViewRolesBuilder';
+} from 'lib/ViewRolesBuilder';
 
 export default class Item extends TenantModel {
   /**
@@ -39,9 +39,9 @@ export default class Item extends TenantModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const Media = require('@/models/Media');
-    const Account = require('@/models/Account');
-    const ItemCategory = require('@/models/ItemCategory');
+    const Media = require('models/Media');
+    const Account = require('models/Account');
+    const ItemCategory = require('models/ItemCategory');
 
     return {
       /**

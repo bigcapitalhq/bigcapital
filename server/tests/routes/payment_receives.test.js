@@ -10,7 +10,7 @@ import {
 import {
   PaymentReceive,
   PaymentReceiveEntry,
-} from '@/models';
+} from 'models';
 
 describe('route: `/sales/payment_receives`', () => {
   describe('POST: `/sales/payment_receives`', () => {

@@ -1,6 +1,6 @@
 import { pick } from 'lodash';
-import { IInventoryTransaction } from '@/interfaces';
-import InventoryCostMethod from '@/services/Inventory/InventoryCostMethod';
+import { IInventoryTransaction } from 'interfaces';
+import InventoryCostMethod from 'services/Inventory/InventoryCostMethod';
 
 export default class InventoryAverageCostMethod extends InventoryCostMethod implements IInventoryCostMethod {
   startingDate: Date;

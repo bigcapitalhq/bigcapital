@@ -2,13 +2,13 @@ import {
   request,
   expect,
 } from '~/testInit';
-import Currency from '@/models/Currency';
+import Currency from 'models/Currency';
 import {
   tenantWebsite,
   tenantFactory,
   loginRes
 } from '~/dbInit';
-import Vendor from '@/models/Vendor';
+import Vendor from 'models/Vendor';
 
 describe('route: `/vendors`', () => {
   describe('POST: `/vendors`', () => {

@@ -16,5 +16,12 @@ export default {
 
   organization: {
     build: 'onOrganizationBuild',
+    seeded: 'onOrganizationSeeded',
+  },
+
+  tenantManager: {
+    databaseCreated: 'onDatabaseCreated',
+    tenantMigrated: 'onTenantMigrated',
+    tenantSeeded: 'onTenantSeeded',
   }
 }

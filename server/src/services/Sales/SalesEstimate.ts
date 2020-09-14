@@ -1,8 +1,8 @@
 import { omit, difference, sumBy, mixin } from 'lodash';
 import { Service, Inject } from 'typedi';
-import HasItemsEntries from '@/services/Sales/HasItemsEntries';
-import { formatDateFields } from '@/utils';
-import TenancyService from '@/services/Tenancy/TenancyService';
+import HasItemsEntries from 'services/Sales/HasItemsEntries';
+import { formatDateFields } from 'utils';
+import TenancyService from 'services/Tenancy/TenancyService';
 
 /**
  * Sale estimate service.

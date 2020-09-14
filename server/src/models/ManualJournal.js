@@ -1,5 +1,5 @@
 import { Model } from 'objection';
-import TenantModel from '@/models/TenantModel';
+import TenantModel from 'models/TenantModel';
 
 export default class ManualJournal extends TenantModel {
   /**
@@ -20,7 +20,7 @@ export default class ManualJournal extends TenantModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const Media = require('@/models/Media');
+    const Media = require('models/Media');
 
     return {
       media: {

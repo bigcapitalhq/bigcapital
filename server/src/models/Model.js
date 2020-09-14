@@ -1,8 +1,8 @@
 import { Model, mixin } from 'objection';
 import { snakeCase, each } from 'lodash';
-import { mapKeysDeep } from '@/utils';
-import PaginationQueryBuilder from '@/models/Pagination';
-import DateSession from '@/models/DateSession';
+import { mapKeysDeep } from 'utils';
+import PaginationQueryBuilder from 'models/Pagination';
+import DateSession from 'models/DateSession';
 
 export default class ModelBase extends mixin(Model, [DateSession]) {
 

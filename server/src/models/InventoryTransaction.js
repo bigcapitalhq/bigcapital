@@ -1,6 +1,6 @@
 import { Model } from 'objection';
 import moment from 'moment';
-import TenantModel from '@/models/TenantModel';
+import TenantModel from 'models/TenantModel';
 
 export default class InventoryTransaction extends TenantModel {
   /**
@@ -41,7 +41,7 @@ export default class InventoryTransaction extends TenantModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const Item = require('@/models/Item');
+    const Item = require('models/Item');
 
     return {
       item: {

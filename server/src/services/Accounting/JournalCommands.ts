@@ -1,8 +1,8 @@
 import { sumBy, chain } from 'lodash';
 import JournalPoster from "./JournalPoster";
 import JournalEntry from "./JournalEntry";
-import { AccountTransaction } from '@/models';
-import { IInventoryTransaction } from '@/interfaces';
+import { AccountTransaction } from 'models';
+import { IInventoryTransaction } from 'interfaces';
 import AccountsService from '../Accounts/AccountsService';
 import { IInventoryTransaction, IInventoryTransaction } from '../../interfaces';
 
@@ -118,6 +118,21 @@ export default class JournalCommands{
     });
     this.journal.debit(debitEntry);
     this.journal.credit(creditEntry);
+  }
+
+  async revertJournalEntries(
+    referenceId: number|number[],
+    referenceType: string
+  ) {
+    const { AccountTransaction } = this.models;
+
+    const transactions = await AccountTransaction.query()
+      .where('reference_type', referenceType)
+      .whereIn('reference_id', Array.isArray(referenceId) ? referenceId : [referenceId])
+      .withGraphFetched('account.type');
+
+    this.journal.loadEntries(transactions);
+    this.journal.removeEntries();
   }
 
   /**

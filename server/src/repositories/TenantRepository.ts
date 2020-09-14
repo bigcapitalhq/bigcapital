@@ -1,5 +1,5 @@
 import { Container } from 'typedi';
-import TenancyService from '@/services/Tenancy/TenancyService';
+import TenancyService from 'services/Tenancy/TenancyService';
 
 export default class TenantRepository {
   tenantId: number;

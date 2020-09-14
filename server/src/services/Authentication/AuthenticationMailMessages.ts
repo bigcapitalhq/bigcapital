@@ -2,8 +2,8 @@ import fs from 'fs';
 import { Service, Container } from "typedi";
 import Mustache from 'mustache';
 import path from 'path';
-import { ISystemUser } from '@/interfaces';
-import config from '@/../config/config';
+import { ISystemUser } from 'interfaces';
+import config from 'config';
 
 @Service()
 export default class AuthenticationMailMesssages {
@@ -16,7 +16,7 @@ export default class AuthenticationMailMesssages {
   sendWelcomeMessage(user: ISystemUser, organizationName: string): Promise<void> {
     const Mail = Container.get('mail');
     
-    const filePath = path.join(global.rootPath, 'views/mail/Welcome.html');
+    const filePath = path.join(global.__root, 'views/mail/Welcome.html');
     const template = fs.readFileSync(filePath, 'utf8');
     const rendered = Mustache.render(template, {
       email: user.email,
@@ -50,7 +50,7 @@ export default class AuthenticationMailMesssages {
   sendResetPasswordMessage(user: ISystemUser, token: string): Promise<void> {
     const Mail = Container.get('mail');
 
-    const filePath = path.join(global.rootPath, 'views/mail/ResetPassword.html');
+    const filePath = path.join(global.__root, 'views/mail/ResetPassword.html');
     const template = fs.readFileSync(filePath, 'utf8');
     const rendered = Mustache.render(template, {
       resetPasswordUrl: `${config.baseURL}/reset/${token}`,

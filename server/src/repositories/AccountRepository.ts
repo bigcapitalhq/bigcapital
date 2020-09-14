@@ -1,4 +1,4 @@
-import TenantRepository from '@/repositories/TenantRepository';
+import TenantRepository from 'repositories/TenantRepository';
 
 export default class AccountRepository extends TenantRepository {
   models: any;
@@ -35,7 +35,7 @@ export default class AccountRepository extends TenantRepository {
    * Retrieve all accounts on the storage.
    * @return {}
    */
-  async allAccounts() {
+  allAccounts() {
     const { Account } = this.models;
     return this.cache.get('accounts', async () => {
       return Account.query();
@@ -46,10 +46,22 @@ export default class AccountRepository extends TenantRepository {
    * Retrieve account of the given account slug.
    * @param {string} slug 
    */
-  async getBySlug(slug: string) {
+  getBySlug(slug: string) {
     const { Account } = this.models;
     return this.cache.get(`accounts.slug.${slug}`, () => {
       return Account.query().findOne('slug', slug);
     });
   }
+
+  /**
+   * Retrieve the account by the given id.
+   * @param {number} id - Account id.
+   */
+  getById(id: number) {
+    const { Account } = this.models;
+    return this.cache.get(`accounts.id.${id}`, () => {
+      return Account.query().findById(id);
+    });
+  }
+
 }

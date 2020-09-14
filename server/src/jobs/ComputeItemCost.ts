@@ -1,7 +1,7 @@
 import { Container } from 'typedi';
 import moment from 'moment';
-import InventoryService from '@/services/Inventory/Inventory';
-import SalesInvoicesCost from '@/services/Sales/SalesInvoicesCost';
+import InventoryService from 'services/Inventory/Inventory';
+import SalesInvoicesCost from 'services/Sales/SalesInvoicesCost';
 
 export default class ComputeItemCostJob {
   depends: number;

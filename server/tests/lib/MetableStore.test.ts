@@ -1,5 +1,5 @@
 import { expect } from '~/testInit';
-import MetableStore from '@/lib/MetableStore';
+import MetableStore from 'lib/MetableStore';
 
 describe('MetableStore()', () => { 
 

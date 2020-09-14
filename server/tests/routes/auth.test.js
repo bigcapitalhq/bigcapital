@@ -1,15 +1,15 @@
 import { request, expect, createUser } from '~/testInit';
-import { hashPassword } from '@/utils';
-import knex from '@/database/knex';
+import { hashPassword } from 'utils';
+import knex from 'database/knex';
 import {
   tenantWebsite,
   tenantFactory,
   systemFactory,
   loginRes
 } from '~/dbInit';
-import TenantUser from '@/models/TenantUser';
-import PasswordReset from '@/system/models/PasswordReset';
-import SystemUser from '@/system/models/SystemUser';
+import TenantUser from 'models/TenantUser';
+import PasswordReset from 'system/models/PasswordReset';
+import SystemUser from 'system/models/SystemUser';
 
 
 describe('routes: /auth/', () => {

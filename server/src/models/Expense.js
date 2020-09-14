@@ -1,6 +1,6 @@
 import { Model } from 'objection';
-import TenantModel from '@/models/TenantModel';
-import { viewRolesBuilder } from '@/lib/ViewRolesBuilder';
+import TenantModel from 'models/TenantModel';
+import { viewRolesBuilder } from 'lib/ViewRolesBuilder';
 
 export default class Expense extends TenantModel {
   /**
@@ -70,9 +70,9 @@ export default class Expense extends TenantModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const Account = require('@/models/Account');
-    const User = require('@/models/TenantUser');
-    const ExpenseCategory = require('@/models/ExpenseCategory');
+    const Account = require('models/Account');
+    const User = require('models/TenantUser');
+    const ExpenseCategory = require('models/ExpenseCategory');
     
     return {
       paymentAccount: {

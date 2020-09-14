@@ -1,7 +1,7 @@
 import { pick, chain } from 'lodash';
 import moment from 'moment';
-import { IInventoryLotCost, IInventoryTransaction } from "@/interfaces";
-import InventoryCostMethod from '@/services/Inventory/InventoryCostMethod';
+import { IInventoryLotCost, IInventoryTransaction } from "interfaces";
+import InventoryCostMethod from 'services/Inventory/InventoryCostMethod';
 
 type TCostMethod = 'FIFO' | 'LIFO';
 

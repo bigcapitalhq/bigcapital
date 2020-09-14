@@ -1,14 +1,14 @@
 import { Inject, Service } from 'typedi';
 import { omit, difference } from 'lodash';
-import JournalPoster from "@/services/Accounting/JournalPoster";
-import JournalCommands from "@/services/Accounting/JournalCommands";
-import ContactsService from '@/services/Contacts/ContactsService';
+import JournalPoster from "services/Accounting/JournalPoster";
+import JournalCommands from "services/Accounting/JournalCommands";
+import ContactsService from 'services/Contacts/ContactsService';
 import { 
   ICustomerNewDTO,
   ICustomerEditDTO,
- } from '@/interfaces';
-import { ServiceError } from '@/exceptions';
-import TenancyService from '@/services/Tenancy/TenancyService';
+ } from 'interfaces';
+import { ServiceError } from 'exceptions';
+import TenancyService from 'services/Tenancy/TenancyService';
 import { ICustomer } from 'src/interfaces';
 
 @Service()
@@ -44,7 +44,7 @@ export default class CustomersService {
     const customer = await this.contactService.newContact(tenantId, contactDTO, 'customer');
 
     // Writes the customer opening balance journal entries.
-    if (customer.openingBalance) { 
+    if (customer.openingBalance) {
       await this.writeCustomerOpeningBalanceJournal(
         tenantId,
         customer.id,
@@ -71,8 +71,16 @@ export default class CustomersService {
    * @return {Promise<void>}
    */
   async deleteCustomer(tenantId: number, customerId: number) {
+    const { Contact } = this.tenancy.models(tenantId);
+
+    await this.getCustomerByIdOrThrowError(tenantId, customerId);
     await this.customerHasNoInvoicesOrThrowError(tenantId, customerId);
-    return this.contactService.deleteContact(tenantId, customerId, 'customer');
+
+    await Contact.query().findById(customerId).delete();
+
+    await this.contactService.revertJEntriesContactsOpeningBalance(
+      tenantId, [customerId], 'customer',
+    );
   }
 
   /**
@@ -108,6 +116,15 @@ export default class CustomersService {
   }
 
   /**
+   * Retrieve the given customer by id or throw not found.
+   * @param {number} tenantId 
+   * @param {number} customerId 
+   */
+  getCustomerByIdOrThrowError(tenantId: number, customerId: number) {
+    return this.contactService.getContactByIdOrThrowError(tenantId, customerId, 'customer');
+  }
+
+  /**
    * Retrieve the given customers or throw error if one of them not found.
    * @param {numebr} tenantId 
    * @param {number[]} customersIds
@@ -129,6 +146,12 @@ export default class CustomersService {
     await this.customersHaveNoInvoicesOrThrowError(tenantId, customersIds);
 
     await Contact.query().whereIn('id', customersIds).delete();
+
+    await this.contactService.revertJEntriesContactsOpeningBalance(
+      tenantId,
+      customersIds,
+      'Customer'
+    );
   }
 
   /**

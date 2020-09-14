@@ -4,10 +4,10 @@ import boom from 'express-boom';
 import errorHandler from 'errorhandler';
 import fileUpload from 'express-fileupload';
 import i18n from 'i18n';
-import routes from '@/http';
-import LoggerMiddleware from '@/http/middleware/LoggerMiddleware';
-import AgendashController from '@/http/controllers/Agendash';
-import config from '@/../config/config';
+import routes from 'api';
+import LoggerMiddleware from 'api/middleware/LoggerMiddleware';
+import AgendashController from 'api/controllers/Agendash';
+import config from 'config';
 
 export default ({ app }) => {
   // Express configuration.

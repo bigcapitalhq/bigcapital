@@ -1,4 +1,4 @@
-import SMSClientInterface from '@/services/SMSClient/SMSClientInterface';
+import SMSClientInterface from 'services/SMSClient/SMSClientInterface';
 
 export default class SMSAPI {
   smsClient: SMSClientInterface;

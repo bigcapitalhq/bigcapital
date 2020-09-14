@@ -2,9 +2,9 @@ import {
   request,
   expect,
 } from '~/testInit';
-import View from '@/models/View';
-import ViewRole from '@/models/ViewRole';
-import '@/models/ResourceField';
+import View from 'models/View';
+import ViewRole from 'models/ViewRole';
+import 'models/ResourceField';
 import ViewColumn from '../../src/models/ViewColumn';
 import {
   tenantWebsite,

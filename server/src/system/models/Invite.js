@@ -1,4 +1,4 @@
-import SystemModel from '@/system/models/SystemModel';
+import SystemModel from 'system/models/SystemModel';
 
 export default class UserInvite extends SystemModel {
   /**

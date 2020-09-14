@@ -1,13 +1,13 @@
 /* eslint-disable global-require */
 import { Model } from 'objection';
 import { flatten } from 'lodash';
-import TenantModel from '@/models/TenantModel';
+import TenantModel from 'models/TenantModel';
 import {
   buildFilterQuery,
   buildSortColumnQuery,
-} from '@/lib/ViewRolesBuilder';
-import { flatToNestedArray } from '@/utils';
-import DependencyGraph from '@/lib/DependencyGraph';
+} from 'lib/ViewRolesBuilder';
+import { flatToNestedArray } from 'utils';
+import DependencyGraph from 'lib/DependencyGraph';
 
 export default class Account extends TenantModel {
   /**
@@ -54,8 +54,8 @@ export default class Account extends TenantModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const AccountType = require('@/models/AccountType');
-    const AccountTransaction = require('@/models/AccountTransaction');
+    const AccountType = require('models/AccountType');
+    const AccountTransaction = require('models/AccountTransaction');
 
     return {
       /**

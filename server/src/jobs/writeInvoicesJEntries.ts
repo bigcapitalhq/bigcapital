@@ -1,5 +1,5 @@
 import { Container } from 'typedi';
-import SalesInvoicesCost from '@/services/Sales/SalesInvoicesCost';
+import SalesInvoicesCost from 'services/Sales/SalesInvoicesCost';
 
 export default class WriteInvoicesJournalEntries {
 

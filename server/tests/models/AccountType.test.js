@@ -1,6 +1,6 @@
 import { create, expect } from '~/testInit';
-import '@/models/Account';
-import AccountType from '@/models/AccountType';
+import 'models/Account';
+import AccountType from 'models/AccountType';
 import {
   tenantWebsite,
   tenantFactory,

@@ -1,7 +1,7 @@
 import { Model, mixin } from 'objection';
 import bcrypt from 'bcryptjs';
 import SoftDelete from 'objection-soft-delete';
-import SystemModel from '@/system/models/SystemModel';
+import SystemModel from 'system/models/SystemModel';
 import moment from 'moment';
 
 export default class SystemUser extends mixin(SystemModel, [SoftDelete({
@@ -27,7 +27,7 @@ export default class SystemUser extends mixin(SystemModel, [SoftDelete({
    * Relationship mapping.
    */
   static get relationMappings() {
-    const Tenant = require('@/system/models/Tenant');
+    const Tenant = require('system/models/Tenant');
 
     return {
       /**

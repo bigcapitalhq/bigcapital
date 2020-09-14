@@ -1,6 +1,6 @@
 import { Model, mixin } from 'objection';
 import moment from 'moment';
-import TenantModel from '@/models/TenantModel';
+import TenantModel from 'models/TenantModel';
 
 export default class SaleInvoice extends TenantModel {
   /**
@@ -55,10 +55,10 @@ export default class SaleInvoice extends TenantModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const AccountTransaction = require('@/models/AccountTransaction');
-    const ItemEntry = require('@/models/ItemEntry');
-    const Customer = require('@/models/Customer');
-    const InventoryCostLotTracker = require('@/models/InventoryCostLotTracker');
+    const AccountTransaction = require('models/AccountTransaction');
+    const ItemEntry = require('models/ItemEntry');
+    const Customer = require('models/Customer');
+    const InventoryCostLotTracker = require('models/InventoryCostLotTracker');
 
     return {
       entries: {

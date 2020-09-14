@@ -1,5 +1,5 @@
 import { Model } from 'objection';
-import TenantModel from '@/models/TenantModel';
+import TenantModel from 'models/TenantModel';
 
 export default class BillPayment extends TenantModel {
   /**
@@ -20,10 +20,10 @@ export default class BillPayment extends TenantModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const BillPaymentEntry = require('@/models/BillPaymentEntry');
-    const AccountTransaction = require('@/models/AccountTransaction');
-    const Vendor = require('@/models/Vendor');
-    const Account = require('@/models/Account');
+    const BillPaymentEntry = require('models/BillPaymentEntry');
+    const AccountTransaction = require('models/AccountTransaction');
+    const Vendor = require('models/Vendor');
+    const Account = require('models/Account');
 
     return {
       entries: {

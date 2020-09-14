@@ -14,11 +14,7 @@ exports.up = function (knex) {
     table.decimal('amount', 15, 5);
     table.string('currency_code', 3);
     table.timestamps();
-  }).raw('ALTER TABLE `ACCOUNTS` AUTO_INCREMENT = 1000').then(() => {
-    return knex.seed.run({
-      specific: 'seed_accounts.js',
-    });
-  });
+  }).raw('ALTER TABLE `ACCOUNTS` AUTO_INCREMENT = 1000');
 };
 
 exports.down = (knex) => knex.schema.dropTableIfExists('accounts');

@@ -1,5 +1,5 @@
-import { Resource } from '@/models';
-import BaseModelRepository from '@/repositories/BaseModelRepository';
+import { Resource } from 'models';
+import BaseModelRepository from 'repositories/BaseModelRepository';
 
 export default class ResourceRepository extends BaseModelRepository{
 

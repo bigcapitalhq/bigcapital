@@ -1,8 +1,8 @@
 import { Inject, Service } from 'typedi';
 import { kebabCase } from 'lodash'
-import TenancyService from '@/services/Tenancy/TenancyService';
-import { ServiceError } from '@/exceptions';
-import { IAccountDTO, IAccount } from '@/interfaces';
+import TenancyService from 'services/Tenancy/TenancyService';
+import { ServiceError } from 'exceptions';
+import { IAccountDTO, IAccount } from 'interfaces';
 import { difference } from 'lodash';
 import { Account } from 'src/models';
 

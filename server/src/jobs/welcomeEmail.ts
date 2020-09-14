@@ -1,5 +1,5 @@
 import { Container, Inject } from 'typedi';
-import AuthenticationService from '@/services/Authentication';
+import AuthenticationService from 'services/Authentication';
 
 export default class WelcomeEmailJob {
   /**
@@ -22,7 +22,7 @@ export default class WelcomeEmailJob {
    */
   public async handler(job, done: Function): Promise<void> {
     const { organizationName, user } = job.attrs.data;
-    const Logger = Container.get('logger');
+    const Logger: any = Container.get('logger');
     const authService = Container.get(AuthenticationService);
 
     Logger.info(`[welcome_mail] send welcome mail message - started: ${job.attrs.data}`);

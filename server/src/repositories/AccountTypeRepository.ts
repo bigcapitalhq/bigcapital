@@ -1,4 +1,4 @@
-import TenantRepository from '@/repositories/TenantRepository';
+import TenantRepository from 'repositories/TenantRepository';
 
 export default class AccountTypeRepository extends TenantRepository {
   cache: any;
@@ -26,5 +26,20 @@ export default class AccountTypeRepository extends TenantRepository {
     return this.cache.get(`accountType.${accountTypeId}`, () => {
       return AccountType.query().findById(accountTypeId);
     });
+  }
+
+  getByKeys(keys: string[]) {
+    const { AccountType } = this.models;
+    return AccountType.query().whereIn('key', keys);
+  }
+
+  getByKey(key: string) {
+    const { AccountType } = this.models;
+    return AccountType.query().findOne('key', key);
+  }
+
+  getByRootType(rootType: string) {
+    const { AccountType } = this.models;
+    return AccountType.query().where('root_type', rootType);
   }
 }

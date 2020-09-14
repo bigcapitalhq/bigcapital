@@ -1,7 +1,7 @@
 import { Container } from 'typedi';
 import { pick } from 'lodash';
 import { EventSubscriber, On } from 'event-dispatch';
-import events from '@/subscribers/events';
+import events from 'subscribers/events';
 
 @EventSubscriber()
 export class AuthenticationSubscriber {

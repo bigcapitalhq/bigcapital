@@ -1,5 +1,5 @@
 import { Service, Inject } from 'typedi';
-import SMSClient from '@/services/SMSClient';
+import SMSClient from 'services/SMSClient';
 
 @Service()
 export default class SubscriptionSMSMessages {

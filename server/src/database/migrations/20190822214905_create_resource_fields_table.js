@@ -15,11 +15,7 @@ exports.up = function (knex) {
     table.string('data_resource');
     table.json('options');
     table.integer('resource_id').unsigned();
-  }).raw('ALTER TABLE `RESOURCE_FIELDS` AUTO_INCREMENT = 1000').then(() => {
-    return knex.seed.run({
-      specific: 'seed_resources_fields.js',
-    });
-  });
+  }).raw('ALTER TABLE `RESOURCE_FIELDS` AUTO_INCREMENT = 1000');
 };
 
 exports.down = (knex) => knex.schema.dropTableIfExists('resource_fields');

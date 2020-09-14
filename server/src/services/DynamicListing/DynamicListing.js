@@ -4,11 +4,11 @@ import {
   DynamicFilterSortBy,
   DynamicFilterViews,
   DynamicFilterFilterRoles,
-} from '@/lib/DynamicFilter';
+} from 'lib/DynamicFilter';
 import {
   mapViewRolesToConditionals,
   mapFilterRolesToDynamicFilter,
-} from '@/lib/ViewRolesBuilder';
+} from 'lib/ViewRolesBuilder';
 
 export const DYNAMIC_LISTING_ERRORS = {
   LOGIC_INVALID: 'VIEW.LOGIC.EXPRESSION.INVALID',

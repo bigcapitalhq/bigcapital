@@ -1,5 +1,5 @@
 import { Model, mixin } from 'objection';
-import TenantModel from '@/models/TenantModel';
+import TenantModel from 'models/TenantModel';
 
 export default class SaleEstimate extends TenantModel {
   /**
@@ -20,8 +20,8 @@ export default class SaleEstimate extends TenantModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const ItemEntry = require('@/models/ItemEntry');
-    const Customer = require('@/models/Customer');
+    const ItemEntry = require('models/ItemEntry');
+    const Customer = require('models/Customer');
 
     return {
       customer: {

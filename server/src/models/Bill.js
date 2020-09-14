@@ -1,6 +1,6 @@
 import { Model } from 'objection';
 import { difference } from 'lodash';
-import TenantModel from '@/models/TenantModel';
+import TenantModel from 'models/TenantModel';
 
 export default class Bill extends TenantModel {
   /**
@@ -36,8 +36,8 @@ export default class Bill extends TenantModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const Vendor = require('@/models/Vendor');
-    const ItemEntry = require('@/models/ItemEntry');
+    const Vendor = require('models/Vendor');
+    const ItemEntry = require('models/ItemEntry');
 
     return {
       vendor: {

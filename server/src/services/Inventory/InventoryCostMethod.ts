@@ -1,7 +1,7 @@
 import { omit } from 'lodash';
 import { Inject } from 'typedi';
-import TenancyService from '@/services/Tenancy/TenancyService';
-import { IInventoryLotCost } from '@/interfaces';
+import TenancyService from 'services/Tenancy/TenancyService';
+import { IInventoryLotCost } from 'interfaces';
 
 export default class InventoryCostMethod {
   @Inject()

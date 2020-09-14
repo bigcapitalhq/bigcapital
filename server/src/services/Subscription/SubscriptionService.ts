@@ -1,11 +1,11 @@
 import { Service, Inject } from 'typedi';
-import { Plan, Tenant } from '@/system/models';
-import Subscription from '@/services/Subscription/Subscription';
-import LicensePaymentMethod from '@/services/Payment/LicensePaymentMethod';
-import PaymentContext from '@/services/Payment';
-import SubscriptionSMSMessages from '@/services/Subscription/SMSMessages';
-import SubscriptionMailMessages from '@/services/Subscription/MailMessages';
-import { ILicensePaymentModel } from '@/interfaces';
+import { Plan, Tenant } from 'system/models';
+import Subscription from 'services/Subscription/Subscription';
+import LicensePaymentMethod from 'services/Payment/LicensePaymentMethod';
+import PaymentContext from 'services/Payment';
+import SubscriptionSMSMessages from 'services/Subscription/SMSMessages';
+import SubscriptionMailMessages from 'services/Subscription/MailMessages';
+import { ILicensePaymentModel } from 'interfaces';
 
 @Service()
 export default class SubscriptionService {
@@ -17,6 +17,9 @@ export default class SubscriptionService {
 
   @Inject('logger')
   logger: any;
+
+  @Inject('repositories')
+  sysRepositories: any;
 
   /**
    * Handles the payment process via license code and than subscribe to 
@@ -35,8 +38,10 @@ export default class SubscriptionService {
     this.logger.info('[subscription_via_license] try to subscribe via given license.', {
       tenantId, paymentModel
     });
+    const { tenantRepository } = this.sysRepositories;
+
     const plan = await Plan.query().findOne('slug', planSlug);
-    const tenant = await Tenant.query().findById(tenantId);
+    const tenant = await tenantRepository.getById(tenantId);
 
     const paymentViaLicense = new LicensePaymentMethod();
     const paymentContext = new PaymentContext(paymentViaLicense);

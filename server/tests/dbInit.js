@@ -8,7 +8,7 @@ import {
   systemFactory,
   dropTenant,
 } from '~/testInit';
-import CacheService from '@/services/Cache';
+import CacheService from 'services/Cache';
 
 let tenantWebsite;
 let tenantFactory;

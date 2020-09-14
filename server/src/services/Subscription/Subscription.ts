@@ -1,8 +1,8 @@
 import { Inject, Service } from 'typedi';
-import { Tenant, Plan } from '@/system/models';
-import { IPaymentContext } from '@/interfaces';
-import { NotAllowedChangeSubscriptionPlan } from '@/exceptions';
-import { NoPaymentModelWithPricedPlan } from '@/exceptions';
+import { Tenant, Plan } from 'system/models';
+import { IPaymentContext } from 'interfaces';
+import { NotAllowedChangeSubscriptionPlan } from 'exceptions';
+import { NoPaymentModelWithPricedPlan } from 'exceptions';
 
 export default class Subscription<PaymentModel> {
   paymentContext: IPaymentContext|null;

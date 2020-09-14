@@ -1,4 +1,4 @@
-import { Customer } from '@/models';
+import { Customer } from 'models';
 
 export default class CustomerRepository {
 

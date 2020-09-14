@@ -1,7 +1,7 @@
 import { Model, mixin } from 'objection';
 import moment from 'moment';
-import SystemModel from '@/system/models/SystemModel';
-import { ILicensesFilter } from '@/interfaces';
+import SystemModel from 'system/models/SystemModel';
+import { ILicensesFilter } from 'interfaces';
 
 export default class License extends SystemModel {
   /**
@@ -61,7 +61,7 @@ export default class License extends SystemModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const Plan = require('@/system/models/Subscriptions/Plan');
+    const Plan = require('system/models/Subscriptions/Plan');
 
     return {
       plan: {

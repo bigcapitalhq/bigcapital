@@ -1,6 +1,6 @@
 import path from 'path';
 import { Model } from 'objection';
-import TenantModel from '@/models/TenantModel';
+import TenantModel from 'models/TenantModel';
 
 export default class ItemCategory extends TenantModel {
   /**
@@ -14,7 +14,7 @@ export default class ItemCategory extends TenantModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const Item = require('@/models/Item');
+    const Item = require('models/Item');
 
     return {
       /**

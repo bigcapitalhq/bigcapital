@@ -66,6 +66,19 @@ import {
   ICustomerNewDTO,
   ICustomerEditDTO,
 } from './Contact';
+import {
+  IExpense,
+  IExpenseCategory,
+  IExpenseDTO,
+  IExpenseCategoryDTO,
+  IExpensesService,
+} from './Expenses';
+import {
+  ITenant,
+  ITenantDBManager,
+  ITenantManager,
+  ISystemService,
+} from './Tenancy';
 
 export {
   IAccount,
@@ -126,4 +139,15 @@ export {
   ICustomer,
   ICustomerNewDTO,
   ICustomerEditDTO,
+
+  IExpense,
+  IExpenseCategory,
+  IExpenseDTO,
+  IExpenseCategoryDTO,
+  IExpensesService,
+
+  ITenant,
+  ITenantDBManager,
+  ITenantManager,
+  ISystemService,
 };

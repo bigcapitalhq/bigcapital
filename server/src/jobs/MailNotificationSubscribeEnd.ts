@@ -1,5 +1,5 @@
 import Container from 'typedi';
-import SubscriptionService from '@/services/Subscription/Subscription';
+import SubscriptionService from 'services/Subscription/Subscription';
 
 export default class MailNotificationSubscribeEnd {
   /**

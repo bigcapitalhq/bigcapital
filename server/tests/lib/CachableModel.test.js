@@ -2,7 +2,7 @@ import {
   request,
   expect,
 } from '~/testInit';
-import Account from '@/models/Account';
+import Account from 'models/Account';
 import {
   tenantWebsite,
   tenantFactory,

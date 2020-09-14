@@ -1,5 +1,5 @@
-import BaseModel from '@/models/Model';
-import CacheService from '@/services/Cache';
+import BaseModel from 'models/Model';
+import CacheService from 'services/Cache';
 
 export default (Model) => {
   return class CachableModel extends Model{

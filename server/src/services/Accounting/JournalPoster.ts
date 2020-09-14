@@ -1,14 +1,14 @@
 import { omit } from 'lodash';
 import { Container } from 'typedi';
-import JournalEntry from '@/services/Accounting/JournalEntry';
-import TenancyService from '@/services/Tenancy/TenancyService';
+import JournalEntry from 'services/Accounting/JournalEntry';
+import TenancyService from 'services/Tenancy/TenancyService';
 import {
   IJournalEntry,
   IJournalPoster,
   IAccountChange,
   IAccountsChange,
   TEntryType,
-} from '@/interfaces';
+} from 'interfaces';
 
 export default class JournalPoster implements IJournalPoster {
   tenantId: number;

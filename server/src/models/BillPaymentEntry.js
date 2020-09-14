@@ -1,5 +1,5 @@
 import { mixin } from 'objection';
-import TenantModel from '@/models/TenantModel';
+import TenantModel from 'models/TenantModel';
 
 export default class BillPaymentEntry extends TenantModel {
   /**
