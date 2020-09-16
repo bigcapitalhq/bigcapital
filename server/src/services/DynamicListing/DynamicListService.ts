@@ -14,7 +14,7 @@ import {
 } from 'lib/ViewRolesBuilder';
 
 import TenancyService from 'services/Tenancy/TenancyService';
-import { IDynamicListFilterDTO, IFilterRole } from 'interfaces';
+import { IDynamicListFilterDTO, IFilterRole, IDynamicListService } from 'interfaces';
 
 const ERRORS = {
   VIEW_NOT_FOUND: 'view_not_found',
@@ -23,42 +23,9 @@ const ERRORS = {
 };
 
 @Service()
-export default class DynamicListService {
+export default class DynamicListService implements IDynamicListService {
   @Inject()
   tenancy: TenancyService;
-
-  /**
-   * Middleware to catch services errors
-   * @param {Error} error 
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
-   */
-  handlerErrorsToResponse(error, req: Request, res: Response, next: NextFunction) {
-    if (error instanceof ServiceError) {
-      if (error.errorType === 'sort_column_not_found') {
-        return res.boom.badRequest(null, {
-          errors: [{ type: 'SORT.COLUMN.NOT.FOUND', code: 200 }],
-        });
-      }
-      if (error.errorType === 'view_not_found') {
-        return res.boom.badRequest(null, {
-          errors: [{ type: 'CUSTOM.VIEW.NOT.FOUND', code: 100 }]
-        })
-      }
-      if (error.errorType === 'filter_roles_fields_not_found') {
-        return res.boom.badRequest(null, {
-          errors: [{ type: 'FILTER.ROLES.FIELDS.NOT.FOUND', code: 300 }],
-        });
-      }
-      if (error.errorType === 'stringified_filter_roles_invalid') {
-        return res.boom.badRequest(null, {
-          errors: [{ type: 'STRINGIFIED_FILTER_ROLES_INVALID', code: 400 }],
-        });
-      }
-    }
-    next(error);
-  }
 
   /**
    * Retreive custom view or throws error not found.
@@ -66,7 +33,7 @@ export default class DynamicListService {
    * @param  {number} viewId 
    * @return {Promise<IView>}
    */
-  async getCustomViewOrThrowError(tenantId: number, viewId: number) {
+  private async getCustomViewOrThrowError(tenantId: number, viewId: number) {
     const { viewRepository } = this.tenancy.repositories(tenantId);
     const view = await viewRepository.getById(viewId);
 
@@ -82,7 +49,7 @@ export default class DynamicListService {
    * @param  {string} columnSortBy - Sort column
    * @throws {ServiceError}
    */
-  validateSortColumnExistance(model: any, columnSortBy: string) {
+  private validateSortColumnExistance(model: any, columnSortBy: string) {
     const notExistsField = validateFieldKeyExistance(model.tableName, columnSortBy);
 
     if (notExistsField) {
@@ -96,7 +63,7 @@ export default class DynamicListService {
    * @param  {IFilterRole[]} filterRoles 
    * @throws {ServiceError}
    */
-  validateRolesFieldsExistance(model: any, filterRoles: IFilterRole[]) {
+  private validateRolesFieldsExistance(model: any, filterRoles: IFilterRole[]) {
     const invalidFieldsKeys = validateFilterRolesFieldsExistance(model.tableName, filterRoles);
 
     if (invalidFieldsKeys.length > 0) {
@@ -108,7 +75,7 @@ export default class DynamicListService {
    * Validates filter roles schema.
    * @param {IFilterRole[]} filterRoles 
    */
-  validateFilterRolesSchema(filterRoles: IFilterRole[]) {
+  private validateFilterRolesSchema(filterRoles: IFilterRole[]) {
     const validate = validator({
       required: true,
       type: 'object',
@@ -163,5 +130,38 @@ export default class DynamicListService {
       dynamicFilter.setFilter(filterRoles);
     }
     return dynamicFilter;
+  }
+
+  /**
+   * Middleware to catch services errors
+   * @param {Error} error 
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {NextFunction} next 
+   */
+  handlerErrorsToResponse(error, req: Request, res: Response, next: NextFunction) {
+    if (error instanceof ServiceError) {
+      if (error.errorType === 'sort_column_not_found') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'SORT.COLUMN.NOT.FOUND', code: 200 }],
+        });
+      }
+      if (error.errorType === 'view_not_found') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'CUSTOM.VIEW.NOT.FOUND', code: 100 }]
+        })
+      }
+      if (error.errorType === 'filter_roles_fields_not_found') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'FILTER.ROLES.FIELDS.NOT.FOUND', code: 300 }],
+        });
+      }
+      if (error.errorType === 'stringified_filter_roles_invalid') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'STRINGIFIED_FILTER_ROLES_INVALID', code: 400 }],
+        });
+      }
+    }
+    next(error);
   }
 }

@@ -18,3 +18,8 @@ export interface IDynamicListFilterDTO {
   columnSortBy: string,
   sortOrder: string,
 }
+
+export interface IDynamicListService {
+  dynamicList(tenantId: number, model: any, filter: IDynamicListFilterDTO): Promise<any>;
+  handlerErrorsToResponse(error, req, res, next): void;
+}
