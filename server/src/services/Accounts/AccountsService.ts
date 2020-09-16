@@ -2,14 +2,17 @@ import { Inject, Service } from 'typedi';
 import { kebabCase } from 'lodash'
 import TenancyService from 'services/Tenancy/TenancyService';
 import { ServiceError } from 'exceptions';
-import { IAccountDTO, IAccount } from 'interfaces';
+import { IAccountDTO, IAccount, IAccountsFilter } from 'interfaces';
 import { difference } from 'lodash';
-import { Account } from 'src/models';
+import DynamicListingService from 'services/DynamicListing/DynamicListService';
 
 @Service()
 export default class AccountsService {
   @Inject()
   tenancy: TenancyService;
+
+  @Inject()
+  dynamicListService: DynamicListingService;
 
   @Inject('logger')
   logger: any;
@@ -428,5 +431,23 @@ export default class AccountsService {
         active: activate ? 1 : 0,
       })
     this.logger.info('[account] account have been activated successfully.', { tenantId, accountId });
+  }
+
+  /** 
+   * Retrieve accounts datatable list.
+   * @param {number} tenantId 
+   * @param {IAccountsFilter} accountsFilter 
+   */
+  async getAccountsList(tenantId: number, filter: IAccountsFilter) {
+    const { Account } = this.tenancy.models(tenantId);
+
+    const dynamicList = await this.dynamicListService.dynamicList(tenantId, Account, filter);
+
+    this.logger.info('[accounts] trying to get accounts datatable list.', { tenantId, filter });
+    const accounts = await Account.query().onBuild((builder) => {
+      builder.withGraphFetched('type');
+      dynamicList.buildQuery()(builder);
+    });
+    return accounts;
   }
 }

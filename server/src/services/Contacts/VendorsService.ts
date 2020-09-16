@@ -1,14 +1,16 @@
 import { Inject, Service } from 'typedi';
-import { difference } from 'lodash';
+import { difference, rest } from 'lodash';
 import JournalPoster from "services/Accounting/JournalPoster";
 import JournalCommands from "services/Accounting/JournalCommands";
 import ContactsService from 'services/Contacts/ContactsService';
 import { 
   IVendorNewDTO,
   IVendorEditDTO,
-  IVendor
+  IVendor,
+  IVendorsFilter
  } from 'interfaces';
 import { ServiceError } from 'exceptions';
+import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import TenancyService from 'services/Tenancy/TenancyService';
 
 @Service()
@@ -18,6 +20,9 @@ export default class VendorsService {
 
   @Inject()
   tenancy: TenancyService;
+
+  @Inject()
+  dynamicListService: DynamicListingService;
 
   /**
    * Converts vendor to contact DTO.
@@ -185,5 +190,21 @@ export default class VendorsService {
     if (vendorsHaveInvoices.length > 0) {
       throw new ServiceError('some_vendors_have_bills');
     }
+  }
+
+  /**
+   * Retrieve vendors datatable list.
+   * @param {number} tenantId - Tenant id.
+   * @param {IVendorsFilter} vendorsFilter - Vendors filter.
+   */
+  async getVendorsList(tenantId: number, vendorsFilter: IVendorsFilter) {
+    const { Vendor } = this.tenancy.models(tenantId);
+
+    const dynamicFilter = await this.dynamicListService.dynamicList(tenantId, Vendor, vendorsFilter);
+
+    const vendors = await Vendor.query().onBuild((builder) => {
+      dynamicFilter.buildQuery()(builder);
+    });
+    return vendors;
   }
 }

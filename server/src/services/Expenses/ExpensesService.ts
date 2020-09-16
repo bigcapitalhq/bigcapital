@@ -7,6 +7,7 @@ import JournalPoster from 'services/Accounting/JournalPoster';
 import JournalEntry from 'services/Accounting/JournalEntry';
 import JournalCommands from 'services/Accounting/JournalCommands';
 import { IExpense, IAccount, IExpenseDTO, IExpenseCategory, IExpensesService, ISystemUser } from 'interfaces';
+import DynamicListingService from 'services/DynamicListing/DynamicListService';
 
 const ERRORS = {
   EXPENSE_NOT_FOUND: 'expense_not_found',
@@ -22,6 +23,9 @@ const ERRORS = {
 export default class ExpensesService implements IExpensesService {
   @Inject()
   tenancy: TenancyService;
+
+  @Inject()
+  dynamicListService: DynamicListingService;
 
   @Inject('logger')
   logger: any;
@@ -428,5 +432,25 @@ export default class ExpensesService implements IExpensesService {
     await expenseRepository.publishBulk(expensesIds);
 
     this.logger.info('[expense] the given expenses ids published successfully.', { tenantId, expensesIds });
+  }
+
+  /**
+   * Retrieve expenses datatable lsit.
+   * @param  {number} tenantId 
+   * @param  {IExpensesFilter} expensesFilter 
+   * @return {IExpense[]}
+   */
+  async getExpensesList(tenantId: number, expensesFilter: IExpensesFilter) {
+    const { Expense } = this.tenancy.models(tenantId);
+    const dynamicFilter = await this.dynamicListService.dynamicList(tenantId, Expense, expensesFilter);
+
+    this.logger.info('[expense] trying to get expenses datatable list.', { tenantId, expensesFilter });
+    const expenses = await Expense.query().onBuild((builder) => {
+      builder.withGraphFetched('paymentAccount');
+      builder.withGraphFetched('user');
+
+      dynamicFilter.buildQuery()(builder);
+    });
+    return expenses;
   }
 }

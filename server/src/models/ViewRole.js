@@ -27,7 +27,6 @@ export default class ViewRole extends TenantModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const ResourceField = require('models/ResourceField');
     const View = require('models/View');
 
     return {
@@ -40,18 +39,6 @@ export default class ViewRole extends TenantModel {
         join: {
           from: 'view_roles.viewId',
           to: 'views.id',
-        },
-      },
-
-      /**
-       * View role model may belongs to resource field model.
-       */
-      field: {
-        relation: Model.BelongsToOneRelation,
-        modelClass: this.relationBindKnex(ResourceField.default),
-        join: {
-          from: 'view_roles.fieldId',
-          to: 'resource_fields.id',
         },
       },
     };

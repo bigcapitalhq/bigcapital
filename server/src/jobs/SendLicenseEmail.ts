@@ -14,7 +14,6 @@ export default class SendLicenseViaEmailJob {
       Logger.debug(`Send license via email - completed: ${job.attrs.data}`);
       done();
     } catch(e) {
-      console.log(e);
       Logger.error(`Send license via email: ${job.attrs.data}, error: ${e}`);
       done(e);  
     } 

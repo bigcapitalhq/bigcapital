@@ -32,7 +32,6 @@ export default class ComputeItemCostJob {
       Logger.info(`Compute item cost - completed: ${job.attrs.data}`);
       done();
     } catch(e) {
-      console.log(e);
       Logger.info(`Compute item cost: ${job.attrs.data}, error: ${e}`);
       done(e);  
     }

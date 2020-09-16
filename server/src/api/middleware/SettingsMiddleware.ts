@@ -6,8 +6,6 @@ export default async (req: Request, res: Response, next: NextFunction) => {
   const { tenantId } = req.user;
   const { knex } = req;
 
-  console.log(knex);
-
   const Logger = Container.get('logger');
   const tenantContainer = Container.of(`tenant-${tenantId}`);
 

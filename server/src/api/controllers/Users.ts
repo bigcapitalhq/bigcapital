@@ -134,7 +134,6 @@ export default class UsersController extends BaseController{
       await this.usersService.deleteUser(tenantId, id);
       return res.status(200).send({ id });
     } catch (error) {
-
       if (error instanceof ServiceError) {
         if (error.errorType === 'user_not_found') {
           return res.boom.notFound(null, {
@@ -142,7 +141,7 @@ export default class UsersController extends BaseController{
           });  
         }
       }
-      next();
+      next(error);
     }
   }
 
@@ -160,8 +159,6 @@ export default class UsersController extends BaseController{
       const user = await this.usersService.getUser(tenantId, userId);
       return res.status(200).send({ user });
     } catch (error) {
-      console.log(error);
-
       if (error instanceof ServiceError) {
         if (error.errorType === 'user_not_found') {
           return res.boom.notFound(null, {
@@ -169,7 +166,7 @@ export default class UsersController extends BaseController{
           });
         }
       }
-      next();
+      next(error);
     } 
   }
 
@@ -186,7 +183,7 @@ export default class UsersController extends BaseController{
 
       return res.status(200).send({ users });
     } catch (error) {
-      next();
+      next(error);
     }
   }
 
@@ -204,8 +201,6 @@ export default class UsersController extends BaseController{
       await this.usersService.activateUser(tenantId, userId);
       return res.status(200).send({ id: userId });
     } catch(error) {
-      console.log(error);
-
       if (error instanceof ServiceError) {
         if (error.errorType === 'user_not_found') {
           return res.status(404).send({
@@ -218,7 +213,7 @@ export default class UsersController extends BaseController{
           });
         }
       }
-      next();
+      next(error);
     }
   }
 
@@ -248,7 +243,7 @@ export default class UsersController extends BaseController{
           });
         }
       }
-      next();
+      next(error);
     }
   }
 };

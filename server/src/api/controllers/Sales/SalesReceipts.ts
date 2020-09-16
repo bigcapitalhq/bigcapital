@@ -6,11 +6,6 @@ import asyncMiddleware from 'api/middleware/asyncMiddleware';
 import AccountsService from 'services/Accounts/AccountsService';
 import ItemsService from 'services/Items/ItemsService';
 import SaleReceiptService from 'services/Sales/SalesReceipts';
-import DynamicListingBuilder from 'services/DynamicListing/DynamicListingBuilder';
-import DynamicListing from 'services/DynamicListing/DynamicListing';
-import {
-  dynamicListingErrorsToResponse
-} from 'services/DynamicListing/HasDynamicListing';
 
 @Service()
 export default class SalesReceiptsController {
@@ -302,65 +297,6 @@ export default class SalesReceiptsController {
    * @param {Response} res
    */
   async listingSalesReceipts(req: Request, res: Response) {
-    const filter = {
-      filter_roles: [],
-      sort_order: 'asc',
-      page: 1,
-      page_size: 10,
-      ...req.query,
-    };
-    if (filter.stringified_filter_roles) {
-      filter.filter_roles = JSON.parse(filter.stringified_filter_roles);
-    }
-    const { SaleReceipt, Resource, View } = req.models;
-    const resource = await Resource.query()
-      .remember()
-      .where('name', 'sales_receipts')
-      .withGraphFetched('fields')
-      .first();
 
-    if (!resource) {
-      return res.status(400).send({
-        errors: [{ type: 'RESOURCE.NOT.FOUND', code: 200, }],
-      });
-    }
-    const viewMeta = await View.query()
-      .modify('allMetadata')
-      .modify('specificOrFavourite', filter.custom_view_id)
-      .where('resource_id', resource.id)
-      .first();
-
-    const listingBuilder = new DynamicListingBuilder();
-    const errorReasons = [];
-
-    listingBuilder.addView(viewMeta);
-    listingBuilder.addModelClass(SaleReceipt);
-    listingBuilder.addCustomViewId(filter.custom_view_id);
-    listingBuilder.addFilterRoles(filter.filter_roles);
-    listingBuilder.addSortBy(filter.sort_by, filter.sort_order);
-
-    const dynamicListing = new DynamicListing(listingBuilder);
-
-    if (dynamicListing instanceof Error) {
-      const errors = dynamicListingErrorsToResponse(dynamicListing);
-      errorReasons.push(...errors);
-    }
-    const salesReceipts = await SaleReceipt.query().onBuild((builder) => {
-      builder.withGraphFetched('customer');
-      builder.withGraphFetched('depositAccount');
-      builder.withGraphFetched('entries');
-      dynamicListing.buildQuery()(builder);
-    }).pagination(filter.page - 1, filter.page_size);
-
-    return res.status(200).send({
-      sales_receipts: {
-        ...salesReceipts,
-        ...(viewMeta ? {
-          view_meta: {
-            customViewId: viewMeta.id,
-          }        
-        } : {}),
-      },
-    });
   }
 };

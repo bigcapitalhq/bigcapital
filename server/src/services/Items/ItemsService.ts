@@ -1,11 +1,16 @@
 import { difference } from "lodash";
 import { Service, Inject } from "typedi";
+import { IItemsFilter } from 'interfaces';
+import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import TenancyService from 'services/Tenancy/TenancyService';
 
 @Service()
 export default class ItemsService {
   @Inject()
   tenancy: TenancyService;
+
+  @Inject()
+  dynamicListService: DynamicListingService;
 
   async newItem(tenantId: number, item: any) {
     const { Item } = this.tenancy.models(tenantId);
@@ -70,5 +75,25 @@ export default class ItemsService {
 
   writeItemInventoryOpeningQuantity(tenantId: number, itemId: number, openingQuantity: number, averageCost: number) {
     
+  }
+
+  /**
+   * Retrieve items datatable list.
+   * @param {number} tenantId 
+   * @param {IItemsFilter} itemsFilter 
+   */
+  async getItemsList(tenantId: number, itemsFilter: IItemsFilter) {
+    const { Item } = this.tenancy.models(tenantId);
+    const dynamicFilter = await this.dynamicListService.dynamicList(tenantId, Item, itemsFilter);
+
+    const items = await Item.query().onBuild((builder) => {
+      builder.withGraphFetched('inventoryAccount');
+      builder.withGraphFetched('sellAccount');
+      builder.withGraphFetched('costAccount');
+      builder.withGraphFetched('category');
+
+      dynamicFilter.buildQuery()(builder);
+    });
+    return items;
   }
 }

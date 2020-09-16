@@ -37,7 +37,7 @@ export default {
     'type': {
       column: 'account_type_id',
       relation: 'account_types.id',
-      relationColumn: 'account_types.id',
+      relationColumn: 'account_types.key',
     },
     'description': {
       column: 'description',
@@ -58,7 +58,8 @@ export default {
       column: 'active', 
     },
     balance: {
-      column: 'balance',
+      column: 'amount',
+      columnType: 'number'
     },
     currency: {
       column: 'currency_code',

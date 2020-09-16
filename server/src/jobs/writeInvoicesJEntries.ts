@@ -14,7 +14,6 @@ export default class WriteInvoicesJournalEntries {
       Logger.info(`Write sales invoices journal entries - completed: ${job.attrs.data}`);
       done();
     } catch(e) {
-      console.log(e);
       Logger.info(`Write sales invoices journal entries: ${job.attrs.data}, error: ${e}`);
       done(e); 
     }

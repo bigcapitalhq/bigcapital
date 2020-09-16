@@ -28,11 +28,8 @@ import SaleEstimateEntry from 'models/SaleEstimateEntry';
 import PaymentReceive from 'models/PaymentReceive';
 import PaymentReceiveEntry from 'models/PaymentReceiveEntry';
 import Option from 'models/Option';
-import Resource from 'models/Resource';
 import InventoryCostLotTracker from 'models/InventoryCostLotTracker';
 import InventoryTransaction from 'models/InventoryTransaction';
-import ResourceField from 'models/ResourceField';
-import ResourceFieldMetadata from 'models/ResourceFieldMetadata';
 import ManualJournal from 'models/ManualJournal';
 import Media from 'models/Media';
 import MediaLink from 'models/MediaLink';
@@ -67,11 +64,8 @@ export default (knex) => {
     SaleEstimateEntry,
     PaymentReceive,
     PaymentReceiveEntry,
-    Resource,
     InventoryTransaction,
     InventoryCostLotTracker,
-    ResourceField,
-    ResourceFieldMetadata,
     Media,
     MediaLink,
     Contact,

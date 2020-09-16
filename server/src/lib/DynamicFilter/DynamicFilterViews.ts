@@ -1,3 +1,4 @@
+import { IFilterRole } from 'interfaces';
 import DynamicFilterRoleAbstructor from 'lib/DynamicFilter/DynamicFilterRoleAbstructor';
 import {
   validateViewRoles,
@@ -5,20 +6,20 @@ import {
 } from 'lib/ViewRolesBuilder';
 
 export default class DynamicFilterViews extends DynamicFilterRoleAbstructor {
+  logicExpression: string;
+
   /**
    * Constructor method.
-   * @param {*} filterRoles -
-   * @param {*} logicExpression -
+   * @param {*} filterRoles - Filter roles.
+   * @param {*} logicExpression - Logic expression.
    */
-  constructor(filterRoles, logicExpression) {
+  constructor(filterRoles: IFilterRole[], logicExpression: string) {
     super();
 
     this.filterRoles = filterRoles;
     this.logicExpression = logicExpression
       .replace('AND', '&&')
       .replace('OR', '||');
-
-    this.tableName = '';
   }
 
   /**
@@ -31,7 +32,7 @@ export default class DynamicFilterViews extends DynamicFilterRoleAbstructor {
   /**
    * Validates filter roles.
    */
-  validateFilterRoles() {
+  validate() {
     return validateViewRoles(this.filterRoles, this.logicExpression);
   }
 

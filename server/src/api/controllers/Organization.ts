@@ -68,16 +68,15 @@ export default class OrganizationController extends BaseController{
           });
         }
       }
-      console.log(error);
       next(error);
     }
   }
 
   /**
    * Seeds initial data to tenant database.
-   * @param req 
-   * @param res 
-   * @param next 
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {NextFunction} next 
    */
   async seed(req: Request, res: Response, next: Function) {
     const { organizationId } = req.tenant;

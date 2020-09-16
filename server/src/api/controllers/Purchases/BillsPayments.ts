@@ -1,5 +1,5 @@
 
-import { Router } from 'express';
+import { Router, Request, Response } from 'express';
 import { Service, Inject } from 'typedi';
 import { check, param, query, ValidationChain, matchedData } from 'express-validator';
 import { difference } from 'lodash';
@@ -8,9 +8,6 @@ import validateMiddleware from 'api/middleware/validateMiddleware';
 import BaseController from 'api/controllers/BaseController';
 import BillPaymentsService from 'services/Purchases/BillPayments';
 import AccountsService from 'services/Accounts/AccountsService';
-import DynamicListingBuilder from 'services/DynamicListing/DynamicListingBuilder';
-import DynamicListing from 'services/DynamicListing/DynamicListing';
-import { dynamicListingErrorsToResponse } from 'services/DynamicListing/hasDynamicListing';
 
 /**
  * Bills payments controller.
@@ -384,70 +381,6 @@ export default class BillsPayments extends BaseController {
    * @return {Response}
    */
   async getBillsPayments(req: Request, res: Response) {
-    const filter = {
-      filter_roles: [],
-      sort_order: 'asc',
-      page: 1,
-      page_size: 10,
-      ...req.query,
-    };
-    if (filter.stringified_filter_roles) {
-      filter.filter_roles = JSON.parse(filter.stringified_filter_roles);
-    }
-    const { BillPayment, View, Resource } = req.models; 
 
-    const resource = await Resource.query()
-      .where('name', 'bill_payments')
-      .withGraphFetched('fields')
-      .first();
-
-    if (!resource) {
-      return res.status(400).send({
-        errors: [{ type: 'BILL.PAYMENTS.RESOURCE.NOT_FOUND', code: 200 }],
-      });
-    }
-    const viewMeta = await View.query()
-      .modify('allMetadata')
-      .modify('specificOrFavourite', filter.custom_view_id)
-      .where('resource_id', resource.id)
-      .first();
-
-    const listingBuilder = new DynamicListingBuilder();
-    const errorReasons = [];
-
-    listingBuilder.addModelClass(BillPayment);
-    listingBuilder.addCustomViewId(filter.custom_view_id);
-    listingBuilder.addFilterRoles(filter.filter_roles);
-    listingBuilder.addSortBy(filter.sort_by, filter.sort_order);
-    listingBuilder.addView(viewMeta);
-
-    const dynamicListing = new DynamicListing(listingBuilder);
-
-    if (dynamicListing instanceof Error) {
-      const errors = dynamicListingErrorsToResponse(dynamicListing);
-      errorReasons.push(...errors);
-    }
-    if (errorReasons.length > 0) {
-      return res.status(400).send({ errors: errorReasons });
-    }
-    const billPayments = await BillPayment.query().onBuild((builder) => {
-      dynamicListing.buildQuery()(builder);
-      builder.withGraphFetched('vendor');
-      builder.withGraphFetched('paymentAccount');
-      return builder;
-    }).pagination(filter.page - 1, filter.page_size);
-
-    return res.status(200).send({
-      bill_payments: {
-        ...billPayments,
-        ...(viewMeta
-          ? {
-            view_meta: {
-              customViewId: viewMeta.id,
-            },
-          }
-          : {}),
-      },
-    });
   }
 }

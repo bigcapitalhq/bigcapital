@@ -1,4 +1,4 @@
-
+import { IDynamicListFilterDTO } from 'interfaces/DynamicFilter';
 
 export interface IAccountDTO {
   name: string,
@@ -12,4 +12,8 @@ export interface IAccount {
   code: string,
   description: string,
   accountTypeNumber: number,
+};
+
+export interface IAccountsFilter extends IDynamicListFilterDTO {
+  stringifiedFilterRoles?: string,
 };

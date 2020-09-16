@@ -15,7 +15,6 @@ export default class SendLicenseViaPhoneJob {
       Logger.debug(`Send license via phone number - completed: ${job.attrs.data}`);
       done();
     } catch(e) {
-      console.log(e);
       Logger.error(`Send license via phone number: ${job.attrs.data}, error: ${e}`);
       done(e);  
     }

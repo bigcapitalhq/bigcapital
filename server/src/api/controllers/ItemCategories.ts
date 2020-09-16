@@ -8,14 +8,6 @@ import { difference } from 'lodash';
 import { Service } from 'typedi';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
 import validateMiddleware from 'api/middleware/validateMiddleware';
-import {
-  DynamicFilter,
-  DynamicFilterSortBy,
-  DynamicFilterFilterRoles,
-} from 'lib/DynamicFilter';
-import {
-  mapFilterRolesToDynamicFilter,
-} from 'lib/ViewRolesBuilder';
 import { IItemCategory, IItemCategoryOTD } from 'interfaces';
 import BaseController from 'api/controllers/BaseController';
 
@@ -336,67 +328,7 @@ export default class ItemsCategoriesController extends BaseController {
    * @return {Response}
    */
   async getList(req: Request, res: Response) {
-    const { Resource, ItemCategory } = req.models;
-    const categoriesResource = await Resource.query()
-      .where('name', 'items_categories')
-      .withGraphFetched('fields')
-      .first();
-
-    if (!categoriesResource) {
-      return res.status(400).send({
-        errors: [{ type: 'ITEMS.CATEGORIES.RESOURCE.NOT.FOUND', code: 200 }],
-      });
-    }
-    const filter = {
-      column_sort_order: '',
-      sort_order: '',
-      filter_roles: [],
-      ...req.query,
-    };
-    if (filter.stringified_filter_roles) {
-      filter.filter_roles = JSON.parse(filter.stringified_filter_roles);
-    }
-    const errorReasons = [];
-    const resourceFieldsKeys = categoriesResource.fields.map((c) => c.key);
-    const dynamicFilter = new DynamicFilter(ItemCategory.tableName);
-
-    // Dynamic filter with filter roles.
-    if (filter.filter_roles.length > 0) {
-      // Validate the accounts resource fields.
-      const filterRoles = new DynamicFilterFilterRoles(
-        mapFilterRolesToDynamicFilter(filter.filter_roles),
-        categoriesResource.fields,
-      );
-      categoriesResource.setFilter(filterRoles);
-
-      if (filterRoles.validateFilterRoles().length > 0) {
-        errorReasons.push({ type: 'ITEMS.RESOURCE.HAS.NO.FIELDS', code: 500 });
-      }
-    }
-    // Dynamic filter with column sort order.
-    if (filter.column_sort_order) {
-      if (resourceFieldsKeys.indexOf(filter.column_sort_order) === -1) {
-        errorReasons.push({ type: 'COLUMN.SORT.ORDER.NOT.FOUND', code: 300 });
-      }
-      const sortByFilter = new DynamicFilterSortBy(
-        filter.column_sort_order,
-        filter.sort_order,
-      );
-      dynamicFilter.setFilter(sortByFilter);
-    }
-    if (errorReasons.length > 0) {
-      return res.status(400).send({ errors: errorReasons });
-    }
-    const categories = await ItemCategory.query().onBuild((builder) => {
-      dynamicFilter.buildQuery()(builder);
-
-      builder.select([
-        '*',
-        ItemCategory.relatedQuery('items').count().as('count'),
-      ]);
-    });
-
-    return res.status(200).send({ categories });
+    
   }
 
   /**

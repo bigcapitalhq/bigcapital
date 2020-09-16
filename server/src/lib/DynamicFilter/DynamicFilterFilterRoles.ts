@@ -3,6 +3,7 @@ import DynamicFilterRoleAbstructor from 'lib/DynamicFilter/DynamicFilterRoleAbst
 import {
   buildFilterQuery,
 } from 'lib/ViewRolesBuilder';
+import { IFilterRole } from 'interfaces';
 
 export default class FilterRoles extends DynamicFilterRoleAbstructor {
   /**
@@ -10,31 +11,17 @@ export default class FilterRoles extends DynamicFilterRoleAbstructor {
    * @param {Array} filterRoles -
    * @param {Array} resourceFields -
    */
-  constructor(filterRoles, resourceFields) {
+  constructor(filterRoles: IFilterRole[]) {
     super();
-
-    this.filterRoles = filterRoles.map((role, index) => ({
-      ...role,
-      index: index + 1,
-      columnKey: role.field_key,
-      condition: role.comparator === 'AND' ? '&&' : '||',
-    }));
-    this.resourceFields = resourceFields;
+    this.filterRoles = filterRoles;
   }
 
-  validateFilterRoles() {
-    const filterFieldsKeys = this.filterRoles.map((r) => r.field_key);
-    const resourceFieldsKeys = this.resourceFields.map((r) => r.key);
-
-    return difference(filterFieldsKeys, resourceFieldsKeys);
-  }
-
-  // @private
-  buildLogicExpression() {
+  private buildLogicExpression(): string {
     let expression = '';
     this.filterRoles.forEach((role, index) => {
-      expression += (index === 0)
-        ? `${role.index} ` : `${role.condition} ${role.index} `;
+      expression += (index === 0) ?
+        `${role.index} ` :
+        `${role.condition} ${role.index} `;
     });
     return expression.trim();
   }

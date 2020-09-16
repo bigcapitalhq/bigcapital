@@ -9,9 +9,6 @@ import BillsService from 'services/Purchases/Bills';
 import BaseController from 'api/controllers/BaseController';
 import ItemsService from 'services/Items/ItemsService';
 import TenancyService from 'services/Tenancy/TenancyService';
-import DynamicListingBuilder from 'services/DynamicListing/DynamicListingBuilder';
-import DynamicListing from 'services/DynamicListing/DynamicListing';
-import { dynamicListingErrorsToResponse } from 'services/DynamicListing/HasDynamicListing';
 
 @Service()
 export default class BillsController extends BaseController {
@@ -330,71 +327,6 @@ export default class BillsController extends BaseController {
    * @return {Response}
    */
   async listingBills(req: Request, res: Response) {
-    const filter = {
-      filter_roles: [],
-      sort_order: 'asc',
-      page: 1,
-      page_size: 10,
-      ...req.query,
-    };
-    if (filter.stringified_filter_roles) {
-      filter.filter_roles = JSON.parse(filter.stringified_filter_roles);
-    }
-    const { Bill, View, Resource } = req.models;
-    const resource = await Resource.query()
-      .remember()
-      .where('name', 'bills')
-      .withGraphFetched('fields')
-      .first();
 
-    if (!resource) {
-      return res.status(400).send({
-        errors: [{ type: 'BILLS_RESOURCE_NOT_FOUND', code: 200 }],
-      });
-    }
-    const viewMeta = await View.query()
-      .modify('allMetadata')
-      .modify('specificOrFavourite', filter.custom_view_id)
-      .where('resource_id', resource.id)
-      .first();
-
-    const listingBuilder = new DynamicListingBuilder();
-    const errorReasons = [];
-
-    listingBuilder.addModelClass(Bill);
-    listingBuilder.addCustomViewId(filter.custom_view_id);
-    listingBuilder.addFilterRoles(filter.filter_roles);
-    listingBuilder.addSortBy(filter.sort_by, filter.sort_order);
-    listingBuilder.addView(viewMeta);
-
-    const dynamicListing = new DynamicListing(listingBuilder);
-
-    if (dynamicListing instanceof Error) {
-      const errors = dynamicListingErrorsToResponse(dynamicListing);
-      errorReasons.push(...errors);
-    }
-    if (errorReasons.length > 0) {
-      return res.status(400).send({ errors: errorReasons });
-    }
-    const bills = await Bill.query()
-      .onBuild((builder) => {
-        dynamicListing.buildQuery()(builder);
-        builder.withGraphFetched('vendor');
-        return builder;
-      })
-      .pagination(filter.page - 1, filter.page_size);
-
-    return res.status(200).send({
-      bills: {
-        ...bills,
-        ...(viewMeta
-          ? {
-              view_meta: {
-                customViewId: viewMeta.id,
-              },
-            }
-          : {}),
-      },
-    });
   }
 }

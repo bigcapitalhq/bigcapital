@@ -1,17 +1,19 @@
 import { Inject, Service } from 'typedi';
-import { Router, Request, Response } from 'express';
+import { Router, Request, Response, NextFunction } from 'express';
 import { check, param, query, ValidationChain, matchedData } from 'express-validator';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
 import validateMiddleware from 'api/middleware/validateMiddleware';
 import ItemsService from 'services/Items/ItemsService';
-import DynamicListing from 'services/DynamicListing/DynamicListing';
-import DynamicListingBuilder from 'services/DynamicListing/DynamicListingBuilder';
-import { dynamicListingErrorsToResponse } from 'services/DynamicListing/hasDynamicListing';
+import BaseController from 'api/controllers/BaseController';
+import DynamicListingService from 'services/DynamicListing/DynamicListService';
 
 @Service()
-export default class ItemsController { 
+export default class ItemsController extends BaseController { 
   @Inject()
   itemsService: ItemsService;
+
+  @Inject()
+  dynamicListService: DynamicListingService;
 
   /**
    * Router constructor.
@@ -62,7 +64,8 @@ export default class ItemsController {
       '/',
       this.validateListQuerySchema,
       validateMiddleware,
-      asyncMiddleware(this.listItems.bind(this)),
+      asyncMiddleware(this.getItemsList.bind(this)),
+      this.dynamicListService.handlerErrorsToResponse,
     );
     return router;
   }
@@ -131,7 +134,7 @@ export default class ItemsController {
    */
   get validateListQuerySchema() {
     return [
-      query('column_sort_order').optional().isIn(['created_at', 'name', 'amount', 'sku']),
+      query('column_sort_order').optional().trim().escape(),
       query('sort_order').optional().isIn(['desc', 'asc']),
       query('page').optional().isNumeric().toInt(),
       query('page_size').optional().isNumeric().toInt(),
@@ -353,79 +356,25 @@ export default class ItemsController {
   }
 
   /**
-   * Listing items with pagination metadata.
+   * Retrieve items datatable list.
    * @param {Request} req 
    * @param {Response} res 
    */
-  async listItems(req: Request, res: Response) {
+  async getItemsList(req: Request, res: Response, next: NextFunction) {
+    const { tenantId } = req;
     const filter = {
-      filter_roles: [],
-      sort_order: 'asc',
-      page: 1,
-      page_size: 10,
-      ...req.query,
+      filterRoles: [],
+      sortOrder: 'asc',
+      ...this.matchedQueryData(req),
     };
-    if (filter.stringified_filter_roles) {
-      filter.filter_roles = JSON.parse(filter.stringified_filter_roles);
+    if (filter.stringifiedFilterRoles) {
+      filter.filterRoles = JSON.parse(filter.stringifiedFilterRoles);
     }
-    const { Resource, Item, View } = req.models;
-    const resource = await Resource.query()
-        .remember()
-        .where('name', 'items')
-        .withGraphFetched('fields')
-        .first();
-
-    if (!resource) {
-      return res.status(400).send({
-        errors: [{ type: 'ITEMS.RESOURCE.NOT_FOUND', code: 200 }],
-      });
+    try {
+      const items = await this.itemsService.getItemsList(tenantId, filter);
+      return res.status(200).send({ items });
+    } catch (error) {
+      next(error);
     }
-    const viewMeta = await View.query()
-      .modify('allMetadata')
-      .modify('specificOrFavourite', filter.custom_view_id)
-      .where('resource_id', resource.id)
-      .first();
-
-    const listingBuilder = new DynamicListingBuilder();
-    const errorReasons = [];
-
-    listingBuilder.addModelClass(Item);
-    listingBuilder.addCustomViewId(filter.custom_view_id);
-    listingBuilder.addFilterRoles(filter.filter_roles);
-    listingBuilder.addSortBy(filter.sort_by, filter.sort_order);
-    listingBuilder.addView(viewMeta);
-
-    const dynamicListing = new DynamicListing(listingBuilder);
-
-    if (dynamicListing instanceof Error) {
-      const errors = dynamicListingErrorsToResponse(dynamicListing);
-      errorReasons.push(...errors);
-    }
-    if (errorReasons.length > 0) {
-      return res.status(400).send({ errors: errorReasons });
-    }
-    const items = await Item.query().onBuild((builder: any) => {
-      builder.withGraphFetched('costAccount');
-      builder.withGraphFetched('sellAccount');
-      builder.withGraphFetched('inventoryAccount');
-      builder.withGraphFetched('category');
-
-      dynamicListing.buildQuery()(builder);
-      return builder;
-    }).pagination(filter.page - 1, filter.page_size);
-
-    return res.status(200).send({
-      items: {
-        ...items,
-        ...(viewMeta
-          ? {
-            viewMeta: {
-              custom_view_id: viewMeta.id, 
-              view_columns: viewMeta.columns,
-            }
-          }
-          : {}),
-      },
-    });
-  }
+ }
 }

@@ -1,5 +1,8 @@
 
 // Contact Interfaces.
+
+import { IDynamicListFilter } from "./DynamicFilter";
+
 // ----------------------------------
 export interface IContactAddress {
   billingAddress1: string,
@@ -167,4 +170,16 @@ export interface IVendorEditDTO extends IContactAddressDTO {
 
   note?: string,
   active?: boolean, 
+};
+
+export interface IVendorsFilter extends IDynamicListFilter {
+  stringifiedFilterRoles?: string,
+  page?: number,
+  pageSize?: number,
+};
+
+export interface ICustomerFilter extends IDynamicListFilter {
+  stringifiedFilterRoles?: string,
+  page?: number,
+  pageSize?: number,
 };

@@ -1,20 +1,46 @@
-import { difference } from 'lodash';
+import { difference, filter } from 'lodash';
 import moment from 'moment';
 import { Lexer } from 'lib/LogicEvaluation/Lexer';
 import Parser from 'lib/LogicEvaluation/Parser';
 import QueryParser from 'lib/LogicEvaluation/QueryParser';
 import resourceFieldsKeys from 'data/ResourceFieldsKeys';
+import { IFilterRole } from 'interfaces';
 
-//  const role = {
-//   compatotor: String,
-//   value: String,
-//   columnKey: String,
-//   columnSlug: String,
-//   index: Number,
-// }
+const numberRoleQueryBuilder = (role: IFilterRole, comparatorColumn: string) => {
+  switch (role.comparator) {
+    case 'equals':
+    case 'equal':
+    default:
+      return (builder) => {
+        builder.where(comparatorColumn, '=', role.value);
+      };
+    case 'not_equals':
+    case 'not_equal':
+      return (builder) => {
+        builder.whereNot(comparatorColumn, role.value);
+      };
+    case 'bigger_than':
+    case 'bigger':
+      return (builder) => {
+        builder.where(comparatorColumn, '>', role.value);
+      };
+    case 'bigger_or_equals':
+      return (builder) => {
+        builder.where(comparatorColumn, '>=', role.value);
+      };
+    case 'smaller_than':
+    case 'smaller':
+      return (builder) => {
+        builder.where(comparatorColumn, '<', role.value);
+      };
+    case 'smaller_or_equals':
+      return (builder) => {
+        builder.where(comparatorColumn, '<=', role.value);
+      };
+  }
+};
 
-
-const textRoleQueryBuilder = (role, comparatorColumn) => {
+const textRoleQueryBuilder = (role: IFilterRole, comparatorColumn: string) => {
   switch (role.comparator) {
     case 'equals':
     default:
@@ -39,7 +65,7 @@ const textRoleQueryBuilder = (role, comparatorColumn) => {
   }
 };
 
-const dateQueryBuilder = (role, comparatorColumn) => {
+const dateQueryBuilder = (role: IFilterRole, comparatorColumn: string) => {
   switch(role.comparator) {
     case 'after':
     case 'before':
@@ -81,11 +107,11 @@ const dateQueryBuilder = (role, comparatorColumn) => {
 /**
  * Get field column metadata and its relation with other tables.
  * @param {String} tableName - Table name of target column.
- * @param {String} columnKey - Target column key that stored in resource field.
+ * @param {String} fieldKey - Target column key that stored in resource field.
  */
-export function getRoleFieldColumn(tableName, columnKey) {
+export function getRoleFieldColumn(tableName: string, fieldKey: string) {
   const tableFields = resourceFieldsKeys[tableName];
-  return (tableFields[columnKey]) ? tableFields[columnKey] : null;
+  return (tableFields[fieldKey]) ? tableFields[fieldKey] : null;
 }
 
 /**
@@ -93,13 +119,15 @@ export function getRoleFieldColumn(tableName, columnKey) {
  * @param {String} tableName -
  * @param {Object} role -
  */
-export function buildRoleQuery(tableName, role) {
-  const fieldRelation = getRoleFieldColumn(tableName, role.columnKey);
+export function buildRoleQuery(tableName: string, role: IFilterRole) {
+  const fieldRelation = getRoleFieldColumn(tableName, role.fieldKey);
   const comparatorColumn = fieldRelation.relationColumn || `${tableName}.${fieldRelation.column}`;
 
   switch (fieldRelation.columnType) {
+    case 'number':
+      return numberRoleQueryBuilder(role, comparatorColumn);
     case 'date':
-      return dateQueryBuilder(role, comparatorColumn);    
+      return dateQueryBuilder(role, comparatorColumn);
     case 'text':
     case 'varchar':
     default:
@@ -112,7 +140,7 @@ export function buildRoleQuery(tableName, role) {
  * @param {String} column -
  * @return {String} - join relation table.
  */
-export const getTableFromRelationColumn = (column) => {
+export const getTableFromRelationColumn = (column: string) => {
   const splitedColumn = column.split('.');
   return (splitedColumn.length > 0) ? splitedColumn[0] : '';
 };
@@ -122,10 +150,10 @@ export const getTableFromRelationColumn = (column) => {
  * @param {String} tableName -
  * @param {Array} roles -
  */
-export function buildFilterRolesJoins(tableName, roles) {
+export function buildFilterRolesJoins(tableName: string, roles: IFilterRole[]) {
   return (builder) => {
     roles.forEach((role) => {
-      const fieldColumn = getRoleFieldColumn(tableName, role.columnKey);
+      const fieldColumn = getRoleFieldColumn(tableName, role.fieldKey);
 
       if (fieldColumn.relation) {
         const joinTable = getTableFromRelationColumn(fieldColumn.relation);
@@ -135,7 +163,7 @@ export function buildFilterRolesJoins(tableName, roles) {
   };
 }
 
-export function buildSortColumnJoin(tableName, sortColumnKey) {
+export function buildSortColumnJoin(tableName: string, sortColumnKey: string) {
   return (builder) => {
     const fieldColumn = getRoleFieldColumn(tableName, sortColumnKey);
 
@@ -152,7 +180,7 @@ export function buildSortColumnJoin(tableName, sortColumnKey) {
  * @param {Array} roles -
  * @return {Function}
  */
-export function buildFilterRolesQuery(tableName, roles, logicExpression = '') {
+export function buildFilterRolesQuery(tableName: string, roles: IFilterRole[], logicExpression: string = '') {
   const rolesIndexSet = {};
 
   roles.forEach((role) => {
@@ -176,31 +204,11 @@ export function buildFilterRolesQuery(tableName, roles, logicExpression = '') {
  * @param {Array} roles -
  * @param {String} logicExpression -
  */
-export const buildFilterQuery = (tableName, roles, logicExpression) => {
+export const buildFilterQuery = (tableName: string, roles, logicExpression: string) => {
   return (builder) => {
     buildFilterRolesQuery(tableName, roles, logicExpression)(builder);
   };
 };
-
-/**
- * Validates the view logic expression.
- * @param {String} logicExpression -
- * @param {Array} indexes -
- */
-export function validateFilterLogicExpression(logicExpression, indexes) {
-  const logicExpIndexes = logicExpression.match(/\d+/g) || [];
-  return !difference(logicExpIndexes.map(Number), indexes).length;
-}
-
-/**
- * Validates view roles.
- * @param {Array} roles -
- * @param {String} logicExpression -
- * @return {Boolean}
- */
-export function validateViewRoles(roles, logicExpression) {
-  return validateFilterLogicExpression(logicExpression, roles.map((r) => r.index));
-}
 
 /**
  * Mapes the view roles to view conditionals.
@@ -211,9 +219,10 @@ export function mapViewRolesToConditionals(viewRoles) {
   return viewRoles.map((viewRole) => ({
     comparator: viewRole.comparator,
     value: viewRole.value,
+    index: viewRole.index,
+
     columnKey: viewRole.field.key,
     slug: viewRole.field.slug,
-    index: viewRole.index,
   }));
 }
 
@@ -231,7 +240,7 @@ export function mapFilterRolesToDynamicFilter(roles) {
  * @param {String} columnKey -
  * @param {String} sortDirection -
  */
-export function buildSortColumnQuery(tableName, columnKey, sortDirection) {
+export function buildSortColumnQuery(tableName: string, columnKey: string, sortDirection: string) {
   const fieldRelation = getRoleFieldColumn(tableName, columnKey);
   const sortColumn = fieldRelation.relation || `${tableName}.${fieldRelation.column}`;
 
@@ -239,4 +248,27 @@ export function buildSortColumnQuery(tableName, columnKey, sortDirection) {
     builder.orderBy(sortColumn, sortDirection);
     buildSortColumnJoin(tableName, columnKey)(builder);
   };
+}
+ 
+export function validateFilterLogicExpression(logicExpression: string, indexes) {
+  const logicExpIndexes = logicExpression.match(/\d+/g) || [];
+  const diff = !difference(logicExpIndexes.map(Number), indexes).length;
+
+}
+
+export function validateRolesLogicExpression(logicExpression: string, roles: IFilterRole[]) {
+  return validateFilterLogicExpression(logicExpression, roles.map((r) => r.index));
+}
+
+export function validateFieldKeyExistance(tableName: string, fieldKey: string) {
+  if (!resourceFieldsKeys?.[tableName]?.[fieldKey])
+    return fieldKey;
+  else
+    return false;
+}
+
+export function validateFilterRolesFieldsExistance(tableName, filterRoles: IFilterRole[]) {
+  return filterRoles.filter((filterRole: IFilterRole) => {
+    return validateFieldKeyExistance(tableName, filterRole.fieldKey);
+  });
 }

@@ -178,7 +178,6 @@ export default class LicensesController extends BaseController {
         message: 'The licenses have been generated successfully.'
       });
     } catch (error) {
-      console.log(error);
       next(error);
     }    
   }

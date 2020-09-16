@@ -4,7 +4,7 @@ exports.up = function (knex) {
     table.increments();
     table.string('name');
     table.boolean('predefined');
-    table.integer('resource_id').unsigned().references('id').inTable('resources');
+    table.string('resource_model');
     table.boolean('favourite');
     table.string('roles_logic_expression');
     table.timestamps();

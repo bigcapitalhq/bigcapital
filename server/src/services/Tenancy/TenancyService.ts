@@ -71,7 +71,7 @@ export default class HasTenancyService {
   repositories(tenantId: number) {
     return this.singletonService(tenantId, 'repositories', () => {
       return tenantRepositoriesLoader(tenantId);
-    })
+    });
   }
 
   /**

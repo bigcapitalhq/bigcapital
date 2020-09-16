@@ -15,7 +15,6 @@ import PaymentReceiveEntry from './PaymentReceiveEntry';
 import Bill from './Bill';
 import BillPayment from './BillPayment';
 import BillPaymentEntry from './BillPaymentEntry';
-import Resource from './Resource';
 import View from './View';
 import ItemEntry from './ItemEntry';
 import InventoryTransaction from './InventoryTransaction';
@@ -39,7 +38,6 @@ export {
   Bill,
   BillPayment,
   BillPaymentEntry,
-  Resource,
   View,
   ItemEntry,
   InventoryTransaction,

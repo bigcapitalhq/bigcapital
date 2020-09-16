@@ -6,11 +6,15 @@ import BaseController from "api/controllers/BaseController";
 import ExpensesService from "services/Expenses/ExpensesService";
 import { IExpenseDTO } from 'interfaces';
 import { ServiceError } from "exceptions";
+import DynamicListingService from 'services/DynamicListing/DynamicListService';
 
 @Service()
 export default class ExpensesController extends BaseController {
   @Inject()
   expensesService: ExpensesService;
+
+  @Inject()
+  dynamicListService: DynamicListingService;
 
   /**
    * Express router.
@@ -23,19 +27,22 @@ export default class ExpensesController extends BaseController {
         ...this.expenseDTOSchema,
       ],
       this.validationResult,
-      asyncMiddleware(this.newExpense.bind(this))
+      asyncMiddleware(this.newExpense.bind(this)),
+      this.catchServiceErrors,
     );
     router.post('/publish', [
         ...this.bulkSelectSchema,
       ],
-      this.bulkPublishExpenses.bind(this)
+      this.bulkPublishExpenses.bind(this),
+      this.catchServiceErrors,
     );
     router.post(
       '/:id/publish', [
         ...this.expenseParamSchema,
       ],
       this.validationResult,
-      asyncMiddleware(this.publishExpense.bind(this))
+      asyncMiddleware(this.publishExpense.bind(this)),
+      this.catchServiceErrors,
     );
     router.post(
       '/:id', [
@@ -44,19 +51,28 @@ export default class ExpensesController extends BaseController {
     ],
       this.validationResult,
       asyncMiddleware(this.editExpense.bind(this)),
+      this.catchServiceErrors,
     );
     router.delete(
       '/:id', [
         ...this.expenseParamSchema,
       ],
       this.validationResult,
-      asyncMiddleware(this.deleteExpense.bind(this))
+      asyncMiddleware(this.deleteExpense.bind(this)),
+      this.catchServiceErrors,
     );
     router.delete('/', [
         ...this.bulkSelectSchema,
       ],
       this.validationResult,
-      asyncMiddleware(this.bulkDeleteExpenses.bind(this))
+      asyncMiddleware(this.bulkDeleteExpenses.bind(this)),
+      this.catchServiceErrors,
+    );
+    router.get(
+      '/',
+      asyncMiddleware(this.getExpensesList.bind(this)),
+      this.dynamicListService.handlerErrorsToResponse,
+      this.catchServiceErrors,
     );
     return router;
   }
@@ -118,9 +134,6 @@ export default class ExpensesController extends BaseController {
       const expense = await this.expensesService.newExpense(tenantId, expenseDTO, user);
       return res.status(200).send({ id: expense.id });
     } catch (error) {
-      if (error instanceof ServiceError) {
-        this.serviceErrorsTransformer(res, error);
-      }
       next(error);
     }
   }
@@ -140,9 +153,6 @@ export default class ExpensesController extends BaseController {
       await this.expensesService.editExpense(tenantId, expenseId, expenseDTO, user);
       return res.status(200).send({ id: expenseId });
     } catch (error) {
-      if (error instanceof ServiceError) {
-        this.serviceErrorsTransformer(res, error);
-      }
       next(error)
     }
   }
@@ -161,9 +171,6 @@ export default class ExpensesController extends BaseController {
       await this.expensesService.deleteExpense(tenantId, expenseId)
       return res.status(200).send({ id: expenseId });
     } catch (error) {
-      if (error instanceof ServiceError) {
-        this.serviceErrorsTransformer(res, error);
-      }
       next(error)
     }
   }
@@ -182,9 +189,6 @@ export default class ExpensesController extends BaseController {
       await this.expensesService.publishExpense(tenantId, expenseId)
       return res.status(200).send({  });
     } catch (error) {
-      if (error instanceof ServiceError) {
-        this.serviceErrorsTransformer(req, error);
-      }
       next(error);
     }
   }
@@ -203,9 +207,6 @@ export default class ExpensesController extends BaseController {
       await this.expensesService.deleteBulkExpenses(tenantId, expensesIds);
       return res.status(200).send({ ids: expensesIds });
     } catch (error) {
-      if (error instanceof ServiceError) {
-        this.serviceErrorsTransformer(req, error);
-      }
       next(error);
     }
   }
@@ -218,9 +219,23 @@ export default class ExpensesController extends BaseController {
       await this.expensesService.publishBulkExpenses(tenantId,);
       return res.status(200).send({});
     } catch (error) {
-      if (error instanceof ServiceError) {
-        this.serviceErrorsTransformer(req, error);
-      }
+      next(error);
+    }
+  }
+
+
+  async getExpensesList(req: Request, res: Response, next: NextFunction) {
+    const { tenantId } = req;
+    const filter = {
+      filterRoles: [],
+      sortOrder: 'asc',
+      ...this.matchedQueryData(req),
+    };
+
+    try {
+      const expenses = await this.expensesService.getExpensesList(tenantId, filter);
+      return res.status(200).send({ expenses });
+    } catch (error) {
       next(error);
     }
   }
@@ -230,36 +245,39 @@ export default class ExpensesController extends BaseController {
    * @param {Response} res 
    * @param {ServiceError} error 
    */
-  serviceErrorsTransformer(res, error: ServiceError) {
-    if (error.errorType === 'expense_not_found') {
-      return res.boom.badRequest(null, {
-        errors: [{ type: 'EXPENSE_NOT_FOUND' }],
-      });
+  catchServiceErrors(error: Error, req: Request, res: Response, next: NextFunction) {
+    if (error instanceof ServiceError) {
+      if (error.errorType === 'expense_not_found') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'EXPENSE_NOT_FOUND' }],
+        });
+      }
+      if (error.errorType === 'total_amount_equals_zero') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'TOTAL.AMOUNT.EQUALS.ZERO' }],
+        });
+      }
+      if (error.errorType === 'payment_account_not_found') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'PAYMENT.ACCOUNT.NOT.FOUND', }],
+        });
+      }
+      if (error.errorType === 'some_expenses_not_found') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'SOME.EXPENSE.ACCOUNTS.NOT.FOUND', code: 200 }]
+        })
+      }
+      if (error.errorType === 'payment_account_has_invalid_type') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'PAYMENT.ACCOUNT.HAS.INVALID.TYPE' }],
+        });
+      }
+      if (error.errorType === 'expenses_account_has_invalid_type') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'EXPENSES.ACCOUNT.HAS.INVALID.TYPE' }]
+        });
+      }
     }
-    if (error.errorType === 'total_amount_equals_zero') {
-      return res.boom.badRequest(null, {
-        errors: [{ type: 'TOTAL.AMOUNT.EQUALS.ZERO' }],
-      });
-    }
-    if (error.errorType === 'payment_account_not_found') {
-      return res.boom.badRequest(null, {
-        errors: [{ type: 'PAYMENT.ACCOUNT.NOT.FOUND', }],
-      });
-    }
-    if (error.errorType === 'some_expenses_not_found') {
-      return res.boom.badRequest(null, {
-        errors: [{ type: 'SOME.EXPENSE.ACCOUNTS.NOT.FOUND', code: 200 }]
-      })
-    }
-    if (error.errorType === 'payment_account_has_invalid_type') {
-      return res.boom.badRequest(null, {
-        errors: [{ type: 'PAYMENT.ACCOUNT.HAS.INVALID.TYPE' }],
-      });
-    }
-    if (error.errorType === 'expenses_account_has_invalid_type') {
-      return res.boom.badRequest(null, {
-        errors: [{ type: 'EXPENSES.ACCOUNT.HAS.INVALID.TYPE' }]
-      });
-    }
+    next(error);
   }
 }

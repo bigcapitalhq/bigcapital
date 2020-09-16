@@ -1,10 +1,10 @@
 import { Request, Response, Router, NextFunction } from 'express';
 import { Service, Inject } from 'typedi';
-import { check } from 'express-validator';
+import { check, query } from 'express-validator';
 import ContactsController from 'api/controllers/Contacts/Contacts';
 import VendorsService from 'services/Contacts/VendorsService';
 import { ServiceError } from 'exceptions';
-import { IVendorNewDTO, IVendorEditDTO } from 'interfaces';
+import { IVendorNewDTO, IVendorEditDTO, IVendorsFilter } from 'interfaces';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
 
 @Service()
@@ -52,6 +52,12 @@ export default class VendorsController extends ContactsController {
       this.validationResult,
       asyncMiddleware(this.getVendor.bind(this))
     );
+    router.get('/', [
+        ...this.vendorsListSchema,
+      ],
+      this.validationResult,
+      asyncMiddleware(this.getVendorsList.bind(this)),
+    );
     return router;
   }
 
@@ -61,6 +67,22 @@ export default class VendorsController extends ContactsController {
   get vendorDTOSchema() {
     return [
       check('opening_balance').optional().isNumeric().toInt(),
+    ];
+  }
+
+  /**
+   * Vendors datatable list validation schema.
+   */
+  get vendorsListSchema() {
+    return [
+      query('custom_view_id').optional().isNumeric().toInt(),
+      query('stringified_filter_roles').optional().isJSON(),
+
+      query('column_sort_by').optional(),
+      query('sort_order').optional().isIn(['desc', 'asc']),
+
+      query('page').optional().isNumeric().toInt(),
+      query('page_size').optional().isNumeric().toInt(),
     ];
   }
 
@@ -190,6 +212,26 @@ export default class VendorsController extends ContactsController {
         }
       }
       next(error);
+    }
+  }
+
+  /**
+   * Retrieve vendors datatable list.
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {NextFunction} next 
+   */
+  async getVendorsList(req: Request, res: Response, next: NextFunction) {
+    const { tenantId } = req;
+    const vendorsFilter: IVendorsFilter = {
+      filterRoles: [],
+      ...this.matchedBodyData(req),
+    };
+    try {
+      const vendors = await this.vendorsService.getVendorsList(tenantId, vendorsFilter);
+      return res.status(200).send({ vendors });
+    } catch (error) {
+
     }
   }
 }

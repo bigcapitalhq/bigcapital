@@ -7,9 +7,6 @@ import validateMiddleware from 'api/middleware/validateMiddleware';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
 import SaleInvoiceService from 'services/Sales/SalesInvoices';
 import ItemsService from 'services/Items/ItemsService';
-import DynamicListing from 'services/DynamicListing/DynamicListing';
-import DynamicListingBuilder from 'services/DynamicListing/DynamicListingBuilder';
-import { dynamicListingErrorsToResponse } from 'services/DynamicListing/hasDynamicListing';
 import { ISaleInvoiceOTD } from 'interfaces';
 
 @Service()
@@ -415,69 +412,6 @@ export default class SaleInvoicesController {
    * @param {Function} next
    */
   async getSalesInvoices(req, res) {
-    const filter = {
-      filter_roles: [],
-      sort_order: 'asc',
-      page: 1,
-      page_size: 10,
-      ...req.query,
-    };
-    if (filter.stringified_filter_roles) {
-      filter.filter_roles = JSON.parse(filter.stringified_filter_roles);
-    }
-    const { SaleInvoice, View, Resource } = req.models;
-    const resource = await Resource.query()
-      .remember()
-      .where('name', 'sales_invoices')
-      .withGraphFetched('fields')
-      .first();
-
-    if (!resource) {
-      return res.status(400).send({
-        errors: [{ type: 'SALES_INVOICES_RESOURCE_NOT_FOUND', code: 200 }],
-      });
-    }
-    const viewMeta = await View.query()
-      .modify('allMetadata')
-      .modify('specificOrFavourite', filter.custom_view_id)
-      .where('resource_id', resource.id)
-      .first();
-
-    const listingBuilder = new DynamicListingBuilder();
-    const errorReasons = [];
-
-    listingBuilder.addModelClass(SaleInvoice);
-    listingBuilder.addCustomViewId(filter.custom_view_id);
-    listingBuilder.addFilterRoles(filter.filter_roles);
-    listingBuilder.addSortBy(filter.sort_by, filter.sort_order);
-    listingBuilder.addView(viewMeta);
-
-    const dynamicListing = new DynamicListing(listingBuilder);
-
-    if (dynamicListing instanceof Error) {
-      const errors = dynamicListingErrorsToResponse(dynamicListing);
-      errorReasons.push(...errors);
-    }
-    if (errorReasons.length > 0) {
-      return res.status(400).send({ errors: errorReasons });
-    }
-    const salesInvoices = await SaleInvoice.query().onBuild((builder) => {
-      builder.withGraphFetched('entries');
-      builder.withGraphFetched('customer');
-      dynamicListing.buildQuery()(builder);
-    }).pagination(filter.page - 1, filter.page_size);
-
-    return res.status(200).send({
-      sales_invoices: { 
-        ...salesInvoices,
-        ...(viewMeta
-          ? {
-            view_meta: {
-              customViewId: viewMeta.id,
-            }
-          }
-          : {}),
-      },
-    });
+     
   }
 }
