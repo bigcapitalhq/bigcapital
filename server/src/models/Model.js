@@ -6,6 +6,15 @@ import DateSession from 'models/DateSession';
 
 export default class ModelBase extends mixin(Model, [DateSession]) {
 
+
+  static query(...args) {
+    return super.query(...args).onBuildKnex(knexQueryBuilder => {
+      knexQueryBuilder.on('query', queryData => {
+        console.log(queryData);
+      });
+    });
+  }
+
   get timestamps() {
     return [];
   }

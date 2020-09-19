@@ -23,5 +23,14 @@ export default {
     databaseCreated: 'onDatabaseCreated',
     tenantMigrated: 'onTenantMigrated',
     tenantSeeded: 'onTenantSeeded',
+  },
+
+  manualJournals: {
+    onCreated: 'onManualJournalCreated',
+    onEdited: 'onManualJournalEdited',
+    onDeleted: 'onManualJournalDeleted',
+    onDeletedBulk: 'onManualJournalCreatedBulk',
+    onPublished: 'onManualJournalPublished',
+    onPublishedBulk: 'onManualJournalPublishedBulk',
   }
 }

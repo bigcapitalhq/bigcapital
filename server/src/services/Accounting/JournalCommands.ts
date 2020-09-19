@@ -2,7 +2,7 @@ import { sumBy, chain } from 'lodash';
 import JournalPoster from "./JournalPoster";
 import JournalEntry from "./JournalEntry";
 import { AccountTransaction } from 'models';
-import { IInventoryTransaction } from 'interfaces';
+import { IInventoryTransaction, IManualJournal } from 'interfaces';
 import AccountsService from '../Accounts/AccountsService';
 import { IInventoryTransaction, IInventoryTransaction } from '../../interfaces';
 
@@ -120,6 +120,11 @@ export default class JournalCommands{
     this.journal.credit(creditEntry);
   }
 
+  /**
+   * 
+   * @param {number|number[]} referenceId 
+   * @param {string} referenceType 
+   */
   async revertJournalEntries(
     referenceId: number|number[],
     referenceType: string
@@ -133,6 +138,36 @@ export default class JournalCommands{
 
     this.journal.loadEntries(transactions);
     this.journal.removeEntries();
+  }
+
+
+  /**
+   * Writes journal entries from manual journal model object.
+   * @param {IManualJournal} manualJournalObj 
+   * @param {number} manualJournalId 
+   */
+  async manualJournal(manualJournalObj: IManualJournal, manualJournalId: number) {
+    manualJournalObj.entries.forEach((entry) => {
+      const jouranlEntry = new JournalEntry({
+        debit: entry.debit,
+        credit: entry.credit,
+        account: entry.account,
+        referenceType: 'Journal',
+        referenceId: manualJournalId,
+        contactType: entry.contactType,
+        contactId: entry.contactId,
+        note: entry.note,
+        date: manualJournalObj.date,
+        userId: manualJournalObj.userId,
+        draft: !manualJournalObj.status,
+        index: entry.index,
+      });
+      if (entry.debit) {
+        this.journal.debit(jouranlEntry);
+      } else {
+        this.journal.credit(jouranlEntry);
+      }
+    });
   }
 
   /**

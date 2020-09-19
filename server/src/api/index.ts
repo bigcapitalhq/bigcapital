@@ -20,7 +20,7 @@ import ItemCategories from 'api/controllers/ItemCategories';
 import Accounts from 'api/controllers/Accounts';
 import AccountTypes from 'api/controllers/AccountTypes';
 import Views from 'api/controllers/Views';
-import Accounting from 'api/controllers/Accounting';
+import ManualJournals from 'api/controllers/ManualJournals';
 import FinancialStatements from 'api/controllers/FinancialStatements';
 import Expenses from 'api/controllers/Expenses';
 import Settings from 'api/controllers/Settings';
@@ -63,7 +63,8 @@ export default () => {
   dashboard.use('/currencies', Currencies.router());
   dashboard.use('/accounts', Container.get(Accounts).router());
   dashboard.use('/account_types', Container.get(AccountTypes).router());
-  dashboard.use('/accounting', Accounting.router());
+  // dashboard.use('/accounting', Accounting.router());
+  dashboard.use('/manual-journals', Container.get(ManualJournals).router());
   dashboard.use('/views', Views.router());
   dashboard.use('/items', Container.get(Items).router());
   dashboard.use('/item_categories', Container.get(ItemCategories).router());

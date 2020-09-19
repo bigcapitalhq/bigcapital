@@ -71,7 +71,6 @@ export default class Expense extends TenantModel {
    */
   static get relationMappings() {
     const Account = require('models/Account');
-    const User = require('models/TenantUser');
     const ExpenseCategory = require('models/ExpenseCategory');
     
     return {
@@ -89,14 +88,6 @@ export default class Expense extends TenantModel {
         join: {
           from: 'expenses_transactions.id',
           to: 'expense_transaction_categories.expenseId',
-        },
-      },
-      user: {
-        relation: Model.BelongsToOneRelation,
-        modelClass: this.relationBindKnex(User.default),
-        join: {
-          from: 'expenses_transactions.userId',
-          to: 'users.id',
         },
       },
     };

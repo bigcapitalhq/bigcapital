@@ -20,3 +20,4 @@ export * from './Contact';
 export * from './Expenses';
 export * from './Tenancy';
 export * from './View';
+export * from './ManualJournal';
