@@ -53,7 +53,7 @@ export default class UsersService {
    * @param {number} userId -
    * @returns {ISystemUser}
    */
-  async getUserOrThrowError(tenantId: number, userId: number): void {
+  async getUserOrThrowError(tenantId: number, userId: number): Promise<ISystemUser> {
     const { systemUserRepository } = this.repositories;
     const user = await systemUserRepository.getByIdAndTenant(userId, tenantId);
 
@@ -72,7 +72,7 @@ export default class UsersService {
   async deleteUser(tenantId: number, userId: number): Promise<void> {
     const { systemUserRepository } = this.repositories;
     await this.getUserOrThrowError(tenantId, userId);
-    
+
     this.logger.info('[users] trying to delete the given user.', { tenantId, userId });
     await systemUserRepository.deleteById(userId);
      
@@ -84,7 +84,8 @@ export default class UsersService {
    * @param {number} tenantId 
    * @param {number} userId 
    */
-  async activateUser(tenantId: number, userId: number): Promise<void> {
+  async activateUser(tenantId: number, userId: number, authorizedUser: ISystemUser): Promise<void> {
+    this.throwErrorIfUserIdSameAuthorizedUser(userId, authorizedUser);
     const { systemUserRepository } = this.repositories;
 
     const user = await this.getUserOrThrowError(tenantId, userId);
@@ -99,8 +100,10 @@ export default class UsersService {
    * @param {number} userId 
    * @return {Promise<void>}
    */
-  async inactivateUser(tenantId: number, userId: number): Promise<void> {
+  async inactivateUser(tenantId: number, userId: number, authorizedUser: ISystemUser): Promise<void> {
+    this.throwErrorIfUserIdSameAuthorizedUser(userId, authorizedUser);
     const { systemUserRepository } = this.repositories;
+
     const user = await this.getUserOrThrowError(tenantId, userId);
     this.throwErrorIfUserInactive(user);
 
@@ -114,6 +117,7 @@ export default class UsersService {
    */
   async getList(tenantId: number) {
     const users = await SystemUser.query()
+      .whereNotDeleted()
       .where('tenant_id', tenantId);
 
     return users;
@@ -147,6 +151,17 @@ export default class UsersService {
   throwErrorIfUserInactive(user: ISystemUser) {
     if (!user.active) {
       throw new ServiceError('user_already_inactive');
+    }
+  }
+
+  /**
+   * Throw service error in case the given user same the authorized user. 
+   * @param {number} userId 
+   * @param {ISystemUser} authorizedUser 
+   */
+  throwErrorIfUserIdSameAuthorizedUser(userId: number, authorizedUser: ISystemUser) {
+    if (userId === authorizedUser.id) {
+      throw new ServiceError('user_same_the_authorized_user');
     }
   }
 }

@@ -119,7 +119,7 @@ export default class AuthenticationController extends BaseController{
         }
         if (error.errorType === 'user_inactive') {
           return res.boom.badRequest(null, {
-            errors: [{ type: 'INVALID_DETAILS', code: 200 }],
+            errors: [{ type: 'USER_INACTIVE', code: 200 }],
           });
         }
       }

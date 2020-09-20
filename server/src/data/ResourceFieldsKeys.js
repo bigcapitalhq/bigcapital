@@ -31,26 +31,26 @@ export default {
 
   // Accounts
   'accounts': {
-    'name': {
+    name: {
       column: 'name',
     },
-    'type': {
+    type: {
       column: 'account_type_id',
       relation: 'account_types.id',
       relationColumn: 'account_types.key',
     },
-    'description': {
+    description: {
       column: 'description',
     },
-    'code': {
+    code: {
       column: 'code',
     },
-    'root_type': {
+    root_type: {
       column: 'account_type_id',
       relation: 'account_types.id',
       relationColumn: 'account_types.root_type',
     },
-    'created_at': {
+    created_at: {
       column: 'created_at',
       columnType: 'date',
     },

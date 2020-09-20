@@ -8,9 +8,8 @@ exports.up = function (knex) {
     table.string('phone_number').unique();
     table.string('password');
     table.boolean('active');
-    table.integer('role_id').unique();
     table.string('language');
-    
+
     table.integer('tenant_id').unsigned();
 
     table.date('invite_accepted_at');
@@ -18,10 +17,6 @@ exports.up = function (knex) {
 
     table.dateTime('deleted_at');
     table.timestamps();
-  }).then(() => {
-    // knex.seed.run({
-    //   specific: 'seed_users.js',
-    // })
   });
 };
 

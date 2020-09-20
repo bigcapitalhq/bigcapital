@@ -26,37 +26,42 @@ export default class UsersController extends BaseController{
         ...this.specificUserSchema,
       ],
       this.validationResult,
-      asyncMiddleware(this.inactivateUser.bind(this))
+      asyncMiddleware(this.inactivateUser.bind(this)),
+      this.catchServiceErrors,
     );
     router.put('/:id/activate', [
         ...this.specificUserSchema
       ],
       this.validationResult,
-      asyncMiddleware(this.activateUser.bind(this))
+      asyncMiddleware(this.activateUser.bind(this)),
+      this.catchServiceErrors,
     );
     router.post('/:id', [
         ...this.userDTOSchema,
         ...this.specificUserSchema,
       ],
       this.validationResult,
-      asyncMiddleware(this.editUser.bind(this))
+      asyncMiddleware(this.editUser.bind(this)),
+      this.catchServiceErrors,
     );
     router.get('/',
       this.listUsersSchema,
       this.validationResult,
-      asyncMiddleware(this.listUsers.bind(this))
+      asyncMiddleware(this.listUsers.bind(this)),
     );
     router.get('/:id', [
         ...this.specificUserSchema,
       ],
       this.validationResult,
-      asyncMiddleware(this.getUser.bind(this))
+      asyncMiddleware(this.getUser.bind(this)),
+      this.catchServiceErrors,
     );
     router.delete('/:id', [
         ...this.specificUserSchema
       ],
       this.validationResult,
-      asyncMiddleware(this.deleteUser.bind(this))
+      asyncMiddleware(this.deleteUser.bind(this)),
+      this.catchServiceErrors,
     );
     return router;
   }
@@ -101,19 +106,6 @@ export default class UsersController extends BaseController{
       await this.usersService.editUser(tenantId, userId, userDTO);
       return res.status(200).send({ id: userId });
     } catch (error) {
-      if (error instanceof ServiceErrors) {
-        const errorReasons = [];
-        
-        if (error.errorType === 'email_already_exists') {
-          errorReasons.push({ type: 'EMAIL_ALREADY_EXIST', code: 100 });
-        }
-        if (error.errorType === 'phone_number_already_exist') {
-          errorReasons.push({ type: 'PHONE_NUMBER_ALREADY_EXIST', code: 200 });
-        }
-        if (errorReasons.length > 0) {
-          return res.status(400).send({ errors: errorReasons });
-        }
-      }
       next(error);
     }
   }
@@ -128,19 +120,10 @@ export default class UsersController extends BaseController{
     const { id } = req.params;
     const { tenantId } = req;
 
-    debugger;
-
     try {
       await this.usersService.deleteUser(tenantId, id);
       return res.status(200).send({ id });
     } catch (error) {
-      if (error instanceof ServiceError) {
-        if (error.errorType === 'user_not_found') {
-          return res.boom.notFound(null, {
-            errors: [{ type: 'USER_NOT_FOUND', code: 100 }],
-          });  
-        }
-      }
       next(error);
     }
   }
@@ -159,15 +142,8 @@ export default class UsersController extends BaseController{
       const user = await this.usersService.getUser(tenantId, userId);
       return res.status(200).send({ user });
     } catch (error) {
-      if (error instanceof ServiceError) {
-        if (error.errorType === 'user_not_found') {
-          return res.boom.notFound(null, {
-            errors: [{ type: 'USER_NOT_FOUND', code: 100 }],
-          });
-        }
-      }
       next(error);
-    } 
+    }
   }
 
   /**
@@ -194,25 +170,13 @@ export default class UsersController extends BaseController{
    * @param {NextFunction} next 
    */
   async activateUser(req: Request, res: Response, next: NextFunction) {
-    const { tenantId } = req;
+    const { tenantId, user } = req;
     const { id: userId } = req.params;
 
     try {
-      await this.usersService.activateUser(tenantId, userId);
+      await this.usersService.activateUser(tenantId, userId, user);
       return res.status(200).send({ id: userId });
     } catch(error) {
-      if (error instanceof ServiceError) {
-        if (error.errorType === 'user_not_found') {
-          return res.status(404).send({
-            errors: [{ type: 'USER.NOT.FOUND', code: 100 }],
-          });
-        }
-        if (error.errorType === 'user_already_active') {
-          return res.status(404).send({
-            errors: [{ type: 'USER.ALREADY.ACTIVE', code: 200 }],
-          });
-        }
-      }
       next(error);
     }
   }
@@ -228,22 +192,57 @@ export default class UsersController extends BaseController{
     const { id: userId } = req.params;
 
     try {
-      await this.usersService.inactivateUser(tenantId, userId);
+      await this.usersService.inactivateUser(tenantId, userId, user);
       return res.status(200).send({ id: userId });
     } catch(error) {
-      if (error instanceof ServiceError) {
-        if (error.errorType === 'user_not_found') {
-          return res.status(404).send({
-            errors: [{ type: 'USER.NOT.FOUND', code: 100 }],
-          });
-        }
-        if (error.errorType === 'user_already_inactive') {
-          return res.status(404).send({
-            errors: [{ type: 'USER.ALREADY.INACTIVE', code: 200 }],
-          });
-        }
-      }
       next(error);
     }
+  }
+
+  /**
+   * Catches all users service errors.
+   * @param {Error} error 
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {NextFunction} next 
+   */
+  catchServiceErrors(error: Error, req: Request, res: Response, next: NextFunction) {
+    if (error instanceof ServiceErrors) {
+      const errorReasons = [];
+      
+      if (error.errorType === 'email_already_exists') {
+        errorReasons.push({ type: 'EMAIL_ALREADY_EXIST', code: 100 });
+      }
+      if (error.errorType === 'phone_number_already_exist') {
+        errorReasons.push({ type: 'PHONE_NUMBER_ALREADY_EXIST', code: 200 });
+      }
+      if (errorReasons.length > 0) {
+        return res.status(400).send({ errors: errorReasons });
+      }
+    }
+    if (error instanceof ServiceError) {
+      if (error.errorType === 'user_not_found') {
+        return res.status(404).send({
+          errors: [{ type: 'USER.NOT.FOUND', code: 100 }],
+        });
+      }
+      if (error.errorType === 'user_already_active') {
+        return res.status(404).send({
+          errors: [{ type: 'USER.ALREADY.ACTIVE', code: 200 }],
+        });
+      }
+      if (error.errorType === 'user_already_inactive') {
+        return res.status(404).send({
+          errors: [{ type: 'USER.ALREADY.INACTIVE', code: 200 }],
+        });
+      }
+      if (error.errorType === 'user_same_the_authorized_user') {
+        return res.boom.badRequest(
+          'You could not activate/inactivate the same authorized user.',
+          { errors: [{ type: 'CANNOT.TOGGLE.ACTIVATE.AUTHORIZED.USER', code: 300 }] },
+        )
+      }
+    }
+    next(error);
   }
 };

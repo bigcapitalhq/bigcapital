@@ -98,7 +98,7 @@ export default class SystemUserRepository extends SystemRepository {
    * @param {number} userId 
    */
   async deleteById(userId: number) {
-    const user = this.getById(userId);
+    const user = await this.getById(userId);
     await SystemUser.query().where('id', userId).delete();
     this.flushUserCache(user);
   }

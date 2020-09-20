@@ -249,32 +249,32 @@ export default class ExpensesController extends BaseController {
     if (error instanceof ServiceError) {
       if (error.errorType === 'expense_not_found') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'EXPENSE_NOT_FOUND' }],
+          errors: [{ type: 'EXPENSE_NOT_FOUND', code: 100 }],
         });
       }
       if (error.errorType === 'total_amount_equals_zero') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'TOTAL.AMOUNT.EQUALS.ZERO' }],
+          errors: [{ type: 'TOTAL.AMOUNT.EQUALS.ZERO', code: 200 }],
         });
       }
       if (error.errorType === 'payment_account_not_found') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'PAYMENT.ACCOUNT.NOT.FOUND', }],
+          errors: [{ type: 'PAYMENT.ACCOUNT.NOT.FOUND', code: 300 }],
         });
       }
       if (error.errorType === 'some_expenses_not_found') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'SOME.EXPENSE.ACCOUNTS.NOT.FOUND', code: 200 }]
+          errors: [{ type: 'SOME.EXPENSE.ACCOUNTS.NOT.FOUND', code: 400 }]
         })
       }
       if (error.errorType === 'payment_account_has_invalid_type') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'PAYMENT.ACCOUNT.HAS.INVALID.TYPE' }],
+          errors: [{ type: 'PAYMENT.ACCOUNT.HAS.INVALID.TYPE', code: 500 }],
         });
       }
       if (error.errorType === 'expenses_account_has_invalid_type') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'EXPENSES.ACCOUNT.HAS.INVALID.TYPE' }]
+          errors: [{ type: 'EXPENSES.ACCOUNT.HAS.INVALID.TYPE', code: 600 }]
         });
       }
     }

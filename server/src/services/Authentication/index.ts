@@ -59,20 +59,20 @@ export default class AuthenticationService {
       this.logger.info('[login] invalid data');
       throw new ServiceError('invalid_details');
     }
-    this.logger.info('[login] check password validation.');
+    this.logger.info('[login] check password validation.', { emailOrPhone, password });
     if (!user.verifyPassword(password)) {
       throw new ServiceError('invalid_password');
     }
 
     if (!user.active) {
-      this.logger.info('[login] user inactive.');
+      this.logger.info('[login] user inactive.', { userId: user.id });
       throw new ServiceError('user_inactive');
     }
 
-    this.logger.info('[login] generating JWT token.');
+    this.logger.info('[login] generating JWT token.', { userId: user.id });
     const token = this.generateToken(user);
 
-    this.logger.info('[login] updating user last login at.');
+    this.logger.info('[login] updating user last login at.', { userId: user.id });
     await systemUserRepository.patchLastLoginAt(user.id);
 
     this.logger.info('[login] Logging success.', { user, token });

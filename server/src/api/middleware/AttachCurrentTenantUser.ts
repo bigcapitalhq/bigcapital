@@ -14,10 +14,18 @@ const attachCurrentUser = async (req: Request, res: Response, next: Function) =>
   try {
     Logger.info('[attach_user_middleware] finding system user by id.');
     const user = await systemUserRepository.getById(req.token.id);
+    console.log(user);
 
     if (!user) {
       Logger.info('[attach_user_middleware] the system user not found.');
       return res.boom.unauthorized();
+    }
+    if (!user.active) {
+      Logger.info('[attach_user_middleware] the system user not found.');
+      return res.boom.badRequest(
+        'The authorized user is inactivated.',
+        { errors: [{ type: 'USER_INACTIVE', code: 100, }] },
+      );
     }
     // Delete password property from user object.
     Reflect.deleteProperty(user, 'password');
