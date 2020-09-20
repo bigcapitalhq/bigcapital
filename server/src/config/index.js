@@ -15,45 +15,64 @@ export default {
    */
   port: parseInt(process.env.PORT, 10),
 
+  /**
+   * System database configuration.
+   */
   system: {
-    db_client: 'mysql',
-    db_host: '127.0.0.1',
-    db_user: 'root',
-    db_password: 'root',
-    db_name: 'bigcapital_system',
-    migrations_dir: './src/system/migrations',
-    seeds_dir: './src/system/seeds',
+    db_client: process.env.SYSTEM_DB_CLIENT,
+    db_host: process.env.SYSTEM_DB_HOST,
+    db_user: process.env.SYSTEM_DB_USER,
+    db_password: process.env.SYSTEM_DB_PASSWORD,
+    db_name: process.env.SYSTEM_DB_NAME,
+    migrations_dir: process.env.SYSTEM_MIGRATIONS_DIR,
+    seeds_dir: process.env.SYSTEM_SEEDS_DIR,
   },
+
+  /**
+   * Tenant database configuration.
+   */
   tenant: {
-    db_client: 'mysql',
-    db_name_prefix: 'bigcapital_tenant_',
-    db_host: '127.0.0.1',
-    db_user: 'root',
-    db_password: 'root',
-    charset: 'utf8',
-    migrations_dir: 'src/database/migrations',
-    seeds_dir: 'src/database/seeds/core',
-    seeds_table_name: 'seeds_versioning',
+    db_client: process.env.TENANT_DB_CLIENT,
+    db_name_prefix: process.env.TENANT_DB_NAME_PERFIX,
+    db_host: process.env.TENANT_DB_HOST,
+    db_user: process.env.TENANT_DB_PASSWORD,
+    db_password: process.env.TEANNT_DB_USER,
+    charset: process.env.TENANT_DB_CHARSET,
+    migrations_dir: process.env.TENANT_MIGRATIONS_DIR,
+    seeds_dir: process.env.TENANT_SEEDS_DIR,
   },
+
+  /**
+   * Databases manager config.
+   */
   manager: {
-    superUser: 'root',
-    superPassword: 'root',
+    superUser: process.env.DB_MANAGER_SUPER_USER,
+    superPassword: process.env.DB_MANAGER_SUPER_PASSWORD,
   },
+
+  /**
+   * Mail.
+   */
   mail: {
-    host: 'smtp.mailtrap.io',
-    port: 587,
-    secure: false,
-    username: '842f331d3dc005',
-    password: '172f97b34f1a17',
+    host: process.env.MAIL_HOST,
+    port: process.env.MAIL_PORT,
+    secure: process.env.MAIL_SECURE,
+    username: process.env.MAIL_USERNAME,
+    password: process.env.MAIL_PASSWORD,
   },
+
+  /**
+   * Mongo DB.
+   */
   mongoDb: {
     /**
      * That long string from mlab
      */
-    databaseURL: 'mongodb://localhost/bigcapital',
+    databaseURL: process.env.MONGODB_DATABASE_URL,
   },
+
   /**
-   * Agenda.js stuff
+   * Agenda
    */
   agenda: {
     dbCollection: process.env.AGENDA_DB_COLLECTION,
@@ -62,39 +81,44 @@ export default {
   },
 
   /**
-   * Agendash config
+   * Agendash.
    */
   agendash: {
-    user: 'agendash',
-    password: '123456'
+    user: process.env.AGENDASH_AUTH_USER,
+    password: process.env.AGENDASH_AUTH_PASSWORD
   },
 
   /**
-   * Subscription config.
+   * Easy SMS gateway.
    */
-  subscription: {
-    user: 'root',
-    password: 'root',
-  },
-
-  SMSGateway: {
-    type: '',
-    endpoint: '',
-  },
   easySMSGateway: {
-    api_key: 'b0JDZW56RnV6aEthb0RGPXVEcUI'
+    api_key: process.env.EASY_SMS_TOKEN
   },
-  jwtSecret: 'b0JDZW56RnV6aEthb0RGPXVEcUI',
-  contactUsMail: 'support@bigcapital.ly',
-  baseURL: 'https://bigcapital.ly',
 
+  /**
+   * JWT secret.
+   */
+  jwtSecret: process.env.JWT_SECRET,
+  resetPasswordSeconds: 600,
+
+  /**
+   * 
+   */
+  contactUsMail: process.env.CONTACT_US_MAIL,
+  baseURL: process.env.BASE_URL,
+
+  /**
+   * General API prefix.
+   */
   api: {
     prefix: '/api'
   },
-  resetPasswordSeconds: 600,
 
+  /**
+   * Licenses api basic authentication.
+   */
   licensesAuth: {
-    user: 'admin',
-    password: 'admin',
+    user: process.env.LICENSES_AUTH_USER,
+    password: process.env.LICENSES_AUTH_PASSWORD,
   },
 };
