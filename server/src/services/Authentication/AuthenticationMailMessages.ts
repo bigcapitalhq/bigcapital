@@ -42,7 +42,6 @@ export default class AuthenticationMailMesssages {
 
   /**
    * Sends reset password message.
-   * 
    * @param {ISystemUser} user - The system user.
    * @param {string} token - Reset password token.
    * @return {Promise<void>}

@@ -10,6 +10,6 @@ export default class ServiceErrors {
 
   hasType(errorType: string) {
     return this.errors
-      .filter((error: ServiceError) => error.errorType === errorType);
+      .some((error: ServiceError) => error.errorType === errorType);
   }
 }

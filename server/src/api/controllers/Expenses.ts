@@ -228,7 +228,12 @@ export default class ExpensesController extends BaseController {
     }
   }
 
-
+  /**
+   * Retrieve expneses list.
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {NextFunction} next
+   */
   async getExpensesList(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const filter = {
