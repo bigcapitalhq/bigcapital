@@ -1,6 +1,6 @@
 import { Request, Response, Router, NextFunction } from 'express';
 import { Service, Inject } from 'typedi';
-import { check, query } from 'express-validator';
+import { check, query, ValidationChain } from 'express-validator';
 import ContactsController from 'api/controllers/Contacts/Contacts';
 import VendorsService from 'services/Contacts/VendorsService';
 import { ServiceError } from 'exceptions';
@@ -19,42 +19,42 @@ export default class VendorsController extends ContactsController {
     const router = Router();
 
     router.post('/', [
-        ...this.contactDTOSchema,
-        ...this.contactNewDTOSchema,
-        ...this.vendorDTOSchema,
-      ],
+      ...this.contactDTOSchema,
+      ...this.contactNewDTOSchema,
+      ...this.vendorDTOSchema,
+    ],
       this.validationResult,
       asyncMiddleware(this.newVendor.bind(this))
     );
     router.post('/:id', [
-        ...this.contactDTOSchema,
-        ...this.contactEditDTOSchema,
-        ...this.vendorDTOSchema,
-      ],
+      ...this.contactDTOSchema,
+      ...this.contactEditDTOSchema,
+      ...this.vendorDTOSchema,
+    ],
       this.validationResult,
       asyncMiddleware(this.editVendor.bind(this))
     );
     router.delete('/:id', [
-        ...this.specificContactSchema,
-      ],
+      ...this.specificContactSchema,
+    ],
       this.validationResult,
       asyncMiddleware(this.deleteVendor.bind(this))
     );
     router.delete('/', [
-        ...this.bulkContactsSchema,
-      ],
+      ...this.bulkContactsSchema,
+    ],
       this.validationResult,
       asyncMiddleware(this.deleteBulkVendors.bind(this))
     );
     router.get('/:id', [
-        ...this.specificContactSchema,
-      ],
+      ...this.specificContactSchema,
+    ],
       this.validationResult,
       asyncMiddleware(this.getVendor.bind(this))
     );
     router.get('/', [
-        ...this.vendorsListSchema,
-      ],
+      ...this.vendorsListSchema,
+    ],
       this.validationResult,
       asyncMiddleware(this.getVendorsList.bind(this)),
     );
@@ -63,8 +63,9 @@ export default class VendorsController extends ContactsController {
 
   /**
    * Vendor DTO schema.
+   * @returns {ValidationChain[]}
    */
-  get vendorDTOSchema() {
+  get vendorDTOSchema(): ValidationChain[] {
     return [
       check('opening_balance').optional().isNumeric().toInt(),
     ];
@@ -72,6 +73,7 @@ export default class VendorsController extends ContactsController {
 
   /**
    * Vendors datatable list validation schema.
+   * @returns {ValidationChain[]}
    */
   get vendorsListSchema() {
     return [
@@ -231,7 +233,7 @@ export default class VendorsController extends ContactsController {
       const vendors = await this.vendorsService.getVendorsList(tenantId, vendorsFilter);
       return res.status(200).send({ vendors });
     } catch (error) {
-
+      next(error);
     }
   }
 }

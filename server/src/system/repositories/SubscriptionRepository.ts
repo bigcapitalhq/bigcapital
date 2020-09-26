@@ -10,7 +10,7 @@ export default class SubscriptionRepository extends SystemRepository{
 	/**
 	 * Retrieve subscription from a given slug in specific tenant.
 	 * @param {string} slug 
-	 * @param {number] tenantId 
+	 * @param {number} tenantId 
 	 */
 	getBySlugInTenant(slug: string, tenantId: number) {
 		const key = `subscription.slug.${slug}.tenant.${tenantId}`;

@@ -22,8 +22,8 @@ export default class InviteUsersController extends BaseController {
     const router = Router();
 
     router.post('/send', [
-        body('email').exists().trim().escape(),        
-      ],
+      body('email').exists().trim().escape(),
+    ],
       this.validationResult,
       asyncMiddleware(this.sendInvite.bind(this)),
     );
@@ -117,9 +117,7 @@ export default class InviteUsersController extends BaseController {
         message: 'User invite has been accepted successfully.',
       });
     } catch (error) {
-      
       if (error instanceof ServiceError) {
-
         if (error.errorType === 'phone_number_exists') {
           return res.status(400).send({
             errors: [{ type: 'PHONE_NUMBER.EXISTS' }],

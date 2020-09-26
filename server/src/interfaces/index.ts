@@ -21,3 +21,5 @@ export * from './Expenses';
 export * from './Tenancy';
 export * from './View';
 export * from './ManualJournal';
+export * from './Currency';
+export * from './ExchangeRate';

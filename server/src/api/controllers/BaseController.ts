@@ -5,10 +5,19 @@ import { mapKeysDeep } from 'utils'
 
 export default class BaseController {
 
+  /**
+   * Converts plain object keys to cameCase style.
+   * @param {Object} data 
+   */
   private dataToCamelCase(data) {
     return mapKeysDeep(data, (v, k) => camelCase(k));
   }
 
+  /**
+   * Matches the body data from validation schema.
+   * @param {Request} req 
+   * @param options 
+   */
   matchedBodyData(req: Request, options: any = {}) {
     const data = matchedData(req, {
       locations: ['body'],
@@ -18,6 +27,10 @@ export default class BaseController {
     return this.dataToCamelCase(data);
   }
 
+  /**
+   * Matches the query data from validation schema.
+   * @param {Request} req 
+   */
   matchedQueryData(req: Request) {
     const data = matchedData(req, {
       locations: ['query'],
@@ -25,6 +38,12 @@ export default class BaseController {
     return this.dataToCamelCase(data);
   }
 
+  /**
+   * Validate validation schema middleware.
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {NextFunction} next 
+   */
   validationResult(req: Request, res: Response, next: NextFunction) {
     const validationErrors = validationResult(req);
     

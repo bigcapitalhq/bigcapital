@@ -13,7 +13,7 @@ export default class ExchangeRate extends TenantModel {
   /**
    * Timestamps columns.
    */
-  static get timestamps() {
+  get timestamps() {
     return ['createdAt', 'updatedAt'];
   }
 }

@@ -85,6 +85,7 @@ export default class AccountsController extends BaseController{
     router.delete(
       '/',
       this.bulkDeleteSchema,
+      this.validationResult,
       asyncMiddleware(this.deleteBulkAccounts.bind(this)),
       this.catchServiceErrors,
     );
@@ -144,6 +145,9 @@ export default class AccountsController extends BaseController{
     ];
   }
 
+  /**
+   * 
+   */
   get bulkDeleteSchema() {
     return [
       query('ids').isArray({ min: 2 }),

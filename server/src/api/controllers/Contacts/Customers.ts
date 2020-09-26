@@ -19,36 +19,36 @@ export default class CustomersController extends ContactsController {
     const router = Router();
 
     router.post('/', [
-        ...this.contactDTOSchema,
-        ...this.contactNewDTOSchema,
-        ...this.customerDTOSchema,
-      ],
+      ...this.contactDTOSchema,
+      ...this.contactNewDTOSchema,
+      ...this.customerDTOSchema,
+    ],
       this.validationResult,
       asyncMiddleware(this.newCustomer.bind(this))
     );
     router.post('/:id', [
-        ...this.contactDTOSchema,
-        ...this.contactEditDTOSchema,
-        ...this.customerDTOSchema,
-      ],
+      ...this.contactDTOSchema,
+      ...this.contactEditDTOSchema,
+      ...this.customerDTOSchema,
+    ],
       this.validationResult,
       asyncMiddleware(this.editCustomer.bind(this))
     );
     router.delete('/:id', [
-        ...this.specificContactSchema,
-      ],
+      ...this.specificContactSchema,
+    ],
       this.validationResult,
       asyncMiddleware(this.deleteCustomer.bind(this))
     );
     router.delete('/', [
-        ...this.bulkContactsSchema,
-      ],
+      ...this.bulkContactsSchema,
+    ],
       this.validationResult,
       asyncMiddleware(this.deleteBulkCustomers.bind(this))
     );
     router.get('/:id', [
-        ...this.specificContactSchema,
-      ],
+      ...this.specificContactSchema,
+    ],
       this.validationResult,
       asyncMiddleware(this.getCustomer.bind(this))
     );

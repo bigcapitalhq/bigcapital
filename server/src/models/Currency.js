@@ -11,7 +11,7 @@ export default class Currency extends TenantModel {
   /**
    * Timestamps columns.
    */
-  static get timestamps() {
+  get timestamps() {
     return ['createdAt', 'updatedAt'];
   }
 }

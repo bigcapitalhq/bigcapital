@@ -60,10 +60,9 @@ export default () => {
 
   dashboard.use('/users', Container.get(Users).router());
   dashboard.use('/invite', Container.get(InviteUsers).authRouter());
-  dashboard.use('/currencies', Currencies.router());
+  dashboard.use('/currencies', Container.get(Currencies).router());
   dashboard.use('/accounts', Container.get(Accounts).router());
   dashboard.use('/account_types', Container.get(AccountTypes).router());
-  // dashboard.use('/accounting', Accounting.router());
   dashboard.use('/manual-journals', Container.get(ManualJournals).router());
   dashboard.use('/views', Views.router());
   dashboard.use('/items', Container.get(Items).router());
@@ -76,7 +75,7 @@ export default () => {
   dashboard.use('/vendors', Container.get(Vendors).router());
   dashboard.use('/purchases', Purchases.router());
   dashboard.use('/resources', Resources.router());
-  dashboard.use('/exchange_rates', ExchangeRates.router());
+  dashboard.use('/exchange_rates', Container.get(ExchangeRates).router());
   dashboard.use('/media', Media.router())
 
   app.use('/', dashboard);

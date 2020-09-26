@@ -211,7 +211,12 @@ export default class ExpensesController extends BaseController {
     }
   }
 
-
+  /**
+   * Publishes the given expenses in bulk.
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {NextFunction} next 
+   */
   async bulkPublishExpenses(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
 

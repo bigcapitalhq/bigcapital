@@ -1,12 +1,11 @@
-import { check, param, query } from 'express-validator';
+import { check, param, query, ValidationChain } from 'express-validator';
 import BaseController from "api/controllers/BaseController";
 
 export default class ContactsController extends BaseController {
-
   /**
-   * Contact DTO schema.
+   * @returns {ValidationChain[]}
    */
-  get contactDTOSchema() {
+  get contactDTOSchema(): ValidationChain[] {
     return [
       check('first_name').optional().trim().escape(),
       check('last_name').optional().trim().escape(),
@@ -39,8 +38,9 @@ export default class ContactsController extends BaseController {
 
   /**
    * Contact new DTO schema.
+   * @returns {ValidationChain[]}
    */
-  get contactNewDTOSchema() {
+  get contactNewDTOSchema(): ValidationChain[] {
     return [
       check('balance').optional().isNumeric().toInt(),
     ];
@@ -48,20 +48,27 @@ export default class ContactsController extends BaseController {
 
   /**
    * Contact edit DTO schema.
+   * @returns {ValidationChain[]}
    */
-  get contactEditDTOSchema() {
+  get contactEditDTOSchema(): ValidationChain[] {
     return [
 
     ]
   }
 
-  get specificContactSchema() {
+  /**
+   * @returns {ValidationChain[]}
+   */
+  get specificContactSchema(): ValidationChain[] {
     return [
       param('id').exists().isNumeric().toInt(),
     ];
   }
 
-  get bulkContactsSchema() {
+  /**
+   * @returns {ValidationChain[]}
+   */
+  get bulkContactsSchema(): ValidationChain[] {
     return [
       query('ids').isArray({ min: 2 }),
       query('ids.*').isNumeric().toInt(),

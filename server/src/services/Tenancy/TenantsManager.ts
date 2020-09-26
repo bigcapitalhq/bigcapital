@@ -138,7 +138,7 @@ export default class TenantsManagerService implements ITenantManager{
 
   /**
    * Throws error if the tenant database is not built yut.
-   * @param tenant 
+   * @param {ITenant} tenant 
    */
   private throwErrorIfTenantNotBuilt(tenant: ITenant) {
     if (!tenant.initializedAt) {

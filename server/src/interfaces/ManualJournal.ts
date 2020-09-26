@@ -2,7 +2,6 @@ import { IDynamicListFilterDTO } from "./DynamicFilter";
 import { IJournalEntry } from "./Journal";
 import { ISystemUser } from "./User";
 
-
 export interface IManualJournal {
   id: number,
   date: Date|string,

@@ -2,7 +2,7 @@ import { Inject, Service } from 'typedi';
 import { difference, upperFirst } from 'lodash';
 import { ServiceError } from "exceptions";
 import TenancyService from 'services/Tenancy/TenancyService';
-import { 
+import {
   IContact,
   IContactNewDTO,
   IContactEditDTO,

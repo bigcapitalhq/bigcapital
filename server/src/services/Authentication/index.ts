@@ -49,7 +49,7 @@ export default class AuthenticationService {
    * @param  {string} password - Password.
    * @return {Promise<{user: IUser, token: string}>}
    */
-  async signIn(emailOrPhone: string, password: string): Promise<{user: IUser, token: string, tenant: ITenant }> {
+  async signIn(emailOrPhone: string, password: string): Promise<{user: ISystemUser, token: string, tenant: ITenant }> {
     this.logger.info('[login] Someone trying to login.', { emailOrPhone, password });
 
     const { systemUserRepository } = this.sysRepositories;
