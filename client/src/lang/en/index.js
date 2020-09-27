@@ -670,4 +670,30 @@ export default {
     'The payment receive has been successfully created.',
   select_invoice: 'Select Invoice',
   payment_mades: 'Payment Mades',
+
+  subscription: 'Subscription',
+  plan_slug: 'Plan slug',
+  billing: 'Billing',
+  the_billing_has_been_successfully_created:
+    'The billing has been successfully created.',
+  a_select_a_plan: 'A. Select a plan',
+  b_choose_your_billing: 'B. Choose your billing',
+  c_payment_methods: 'C. Payment methods',
+  usage: 'Usage',
+  basic: 'Basic',
+  license: 'License',
+  credit_card: 'Credit Card',
+  paypal: 'Paypal',
+  pro: 'PRO',
+  monthly: 'Monthly',
+  yearly: 'Yearly',
+  license_code: 'License code',
+  year: 'Year',
+  please_enter_your_preferred_payment_method:
+    'Please enter your preferred payment method below. You can use a credit / debit card or prepay through PayPal. ',
+  cards_will_be_charged:
+    'Cards will be charged either at the end of the month or whenever your balance exceeds the usage threshold.All major credit / debit cards accepted.',
+  license_number: 'License number',
+  subscribe: 'Subscribe',
+  year_per: 'year',
 };
