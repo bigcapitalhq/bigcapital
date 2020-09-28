@@ -263,7 +263,7 @@ export default class AccountsService {
    * @param {IAccount} account 
    */
   private throwErrorIfAccountPredefined(account: IAccount) {
-    if (account.prefined) {
+    if (account.predefined) {
       throw new ServiceError('account_predefined');
     }
   }
@@ -344,6 +344,11 @@ export default class AccountsService {
     return storedAccounts;
   }
 
+  /**
+   * Validate whether one of the given accounts is predefined.
+   * @param  {IAccount[]} accounts -
+   * @return {IAccount[]} - Predefined accounts
+   */
   private validatePrefinedAccounts(accounts: IAccount[]) {
     const predefined = accounts.filter((account: IAccount) => account.predefined);
 
@@ -405,7 +410,7 @@ export default class AccountsService {
    */
   public async activateAccounts(tenantId: number, accountsIds: number[], activate: boolean = true) {
     const { Account } = this.tenancy.models(tenantId);
-    const accounts = await this.getAccountsOrThrowError(tenantId, accountsIds);
+    await this.getAccountsOrThrowError(tenantId, accountsIds);
 
     this.logger.info('[account] trying activate/inactive the given accounts ids.', { accountsIds });
     await Account.query().whereIn('id', accountsIds)
@@ -438,7 +443,7 @@ export default class AccountsService {
    * @param {number} tenantId 
    * @param {IAccountsFilter} accountsFilter 
    */
-  async getAccountsList(tenantId: number, filter: IAccountsFilter) {
+  public async getAccountsList(tenantId: number, filter: IAccountsFilter) {
     const { Account } = this.tenancy.models(tenantId);
 
     const dynamicList = await this.dynamicListService.dynamicList(tenantId, Account, filter);

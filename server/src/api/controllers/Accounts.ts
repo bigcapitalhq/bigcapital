@@ -83,8 +83,9 @@ export default class AccountsController extends BaseController{
       this.catchServiceErrors,
     );
     router.delete(
-      '/',
-      this.bulkDeleteSchema,
+      '/', [
+        ...this.bulkDeleteSchema,
+      ],
       this.validationResult,
       asyncMiddleware(this.deleteBulkAccounts.bind(this)),
       this.catchServiceErrors,
@@ -279,8 +280,9 @@ export default class AccountsController extends BaseController{
     const { ids: accountsIds } = req.query;
     
     try {
-      const isActive = (type === 'activate' ? 1 : 0);
-      await this.accountsService.activateAccounts(tenantId, accountsIds, isActive)
+      const isActive = (type === 'activate' ? true : false);
+      await this.accountsService.activateAccounts(tenantId, accountsIds, isActive);
+
       return res.status(200).send({ ids: accountsIds });
     } catch (error) {
       next(error);
