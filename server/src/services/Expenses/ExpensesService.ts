@@ -37,7 +37,7 @@ export default class ExpensesService implements IExpensesService {
    * @param   {number} paymentAccountId 
    * @returns {Promise<IAccount>}
    */
-  async getPaymentAccountOrThrowError(tenantId: number, paymentAccountId: number) {
+  private async getPaymentAccountOrThrowError(tenantId: number, paymentAccountId: number) {
     this.logger.info('[expenses] trying to get the given payment account.', { tenantId, paymentAccountId });
 
     const { accountRepository } = this.tenancy.repositories(tenantId);
@@ -58,7 +58,7 @@ export default class ExpensesService implements IExpensesService {
    * @throws  {ServiceError}
    * @returns {Promise<IAccount[]>}
    */
-  async getExpensesAccountsOrThrowError(tenantId: number, expenseAccountsIds: number[]) {
+  private async getExpensesAccountsOrThrowError(tenantId: number, expenseAccountsIds: number[]) {
     this.logger.info('[expenses] trying to get expenses accounts.', { tenantId, expenseAccountsIds });
 
     const { Account } = this.tenancy.models(tenantId);
@@ -82,7 +82,7 @@ export default class ExpensesService implements IExpensesService {
    * @param  {IExpenseDTO|ServiceError} expenseDTO 
    * @throws {ServiceError}
    */
-  validateCategoriesNotEqualZero(expenseDTO: IExpenseDTO) {
+  private validateCategoriesNotEqualZero(expenseDTO: IExpenseDTO) {
     this.logger.info('[expenses] validate the expenses categoires not equal zero.', { expenseDTO });
     const totalAmount = sumBy(expenseDTO.categories, 'amount') || 0;
 
@@ -97,7 +97,7 @@ export default class ExpensesService implements IExpensesService {
    * @param {number} tenantId 
    * @param {number[]} expensesAccountsIds 
    */
-  async validateExpensesAccountsType(tenantId: number, expensesAccounts: number[]) {
+  private async validateExpensesAccountsType(tenantId: number, expensesAccounts: number[]) {
     this.logger.info('[expenses] trying to validate expenses accounts type.', { tenantId, expensesAccounts });
 
     const { accountTypeRepository } = this.tenancy.repositories(tenantId);
@@ -121,7 +121,7 @@ export default class ExpensesService implements IExpensesService {
    * @param  {number} paymentAccountId 
    * @throws {ServiceError}
    */
-  async validatePaymentAccountType(tenantId: number, paymentAccount: number[]) {
+  private async validatePaymentAccountType(tenantId: number, paymentAccount: number[]) {
     this.logger.info('[expenses] trying to validate payment account type.', { tenantId, paymentAccount });
 
     const { accountTypeRepository } = this.tenancy.repositories(tenantId);
@@ -136,8 +136,7 @@ export default class ExpensesService implements IExpensesService {
     }
   }
 
-
-  async revertJournalEntries(
+  private async revertJournalEntries(
     tenantId: number,
     expenseId: number|number[],
   ) {
@@ -159,7 +158,7 @@ export default class ExpensesService implements IExpensesService {
    * @param {IExpense} expense 
    * @param {IUser} authorizedUser 
    */
-  async writeJournalEntries(
+  private async writeJournalEntries(
     tenantId: number,
     expense: IExpense,
     revertOld: boolean,
@@ -208,7 +207,7 @@ export default class ExpensesService implements IExpensesService {
    * @param   {number} expenseId 
    * @returns {IExpense|ServiceError}
    */
-  async getExpenseOrThrowError(tenantId: number, expenseId: number) {
+  private async getExpenseOrThrowError(tenantId: number, expenseId: number) {
     const { expenseRepository } = this.tenancy.repositories(tenantId);
 
     this.logger.info('[expense] trying to get the given expense.', { tenantId, expenseId });
@@ -229,7 +228,7 @@ export default class ExpensesService implements IExpensesService {
    * Validates expenses is not already published before.
    * @param {IExpense} expense 
    */
-  validateExpenseIsNotPublished(expense: IExpense) {
+  private validateExpenseIsNotPublished(expense: IExpense) {
     if (expense.published) {
       throw new ServiceError(ERRORS.EXPENSE_ACCOUNT_ALREADY_PUBLISED);
     }
@@ -238,9 +237,10 @@ export default class ExpensesService implements IExpensesService {
   /**
    * Mapping expense DTO to model.
    * @param  {IExpenseDTO} expenseDTO 
+   * @param  {ISystemUser} authorizedUser
    * @return {IExpense}
    */
-  expenseDTOToModel(expenseDTO: IExpenseDTO) {
+  private expenseDTOToModel(expenseDTO: IExpenseDTO, user?: ISystemUser) {
     const totalAmount = sumBy(expenseDTO.categories, 'amount');
 
     return {
@@ -249,6 +249,9 @@ export default class ExpensesService implements IExpensesService {
       ...expenseDTO,
       totalAmount,
       paymentDate: moment(expenseDTO.paymentDate).toMySqlDateTime(),
+      ...(user) ? {
+        userId: user.id,
+      } : {},
     }
   }
 
@@ -275,8 +278,9 @@ export default class ExpensesService implements IExpensesService {
    * @param {number} tenantId 
    * @param {number} expenseId 
    * @param {IExpenseDTO} expenseDTO 
+   * @param {ISystemUser} authorizedUser
    */
-  async editExpense(
+  public async editExpense(
     tenantId: number,
     expenseId: number,
     expenseDTO: IExpenseDTO,
@@ -329,7 +333,11 @@ export default class ExpensesService implements IExpensesService {
    * @param {number} tenantId 
    * @param {IExpenseDTO} expenseDTO 
    */
-  async newExpense(tenantId: number, expenseDTO: IExpenseDTO, authorizedUser: ISystemUser): Promise<IExpense> {
+  public async newExpense(
+    tenantId: number,
+    expenseDTO: IExpenseDTO,
+    authorizedUser: ISystemUser,
+  ): Promise<IExpense> {
     const { expenseRepository } = this.tenancy.repositories(tenantId);
 
     // 1. Validate payment account existance on the storage.
@@ -352,7 +360,7 @@ export default class ExpensesService implements IExpensesService {
     this.validateCategoriesNotEqualZero(expenseDTO);
 
     // 6. Save the expense to the storage.
-    const expenseObj = this.expenseDTOToModel(expenseDTO);
+    const expenseObj = this.expenseDTOToModel(expenseDTO, authorizedUser);
     const expenseModel = await expenseRepository.create(expenseObj);
     
     // 7. In case expense published, write journal entries.
@@ -368,9 +376,10 @@ export default class ExpensesService implements IExpensesService {
    * Publish the given expense.
    * @param {number} tenantId 
    * @param {number} expenseId 
+   * @param {ISystemUser} authorizedUser
    * @return {Promise<void>}
    */
-  async publishExpense(tenantId: number, expenseId: number) {
+  public async publishExpense(tenantId: number, expenseId: number, authorizedUser: ISystemUser) {
     const { expenseRepository } = this.tenancy.repositories(tenantId);
     const expense = await this.getExpenseOrThrowError(tenantId, expenseId);
 
@@ -389,8 +398,9 @@ export default class ExpensesService implements IExpensesService {
    * Deletes the given expense.
    * @param {number} tenantId 
    * @param {number} expenseId 
+   * @param {ISystemUser} authorizedUser
    */
-  async deleteExpense(tenantId: number, expenseId: number) {
+  public async deleteExpense(tenantId: number, expenseId: number, authorizedUser: ISystemUser) {
     const expense = await this.getExpenseOrThrowError(tenantId, expenseId);
     const { expenseRepository } = this.tenancy.repositories(tenantId);
 
@@ -407,8 +417,9 @@ export default class ExpensesService implements IExpensesService {
    * Deletes the given expenses in bulk.
    * @param {number} tenantId 
    * @param {number[]} expensesIds 
+   * @param {ISystemUser} authorizedUser
    */
-  async deleteBulkExpenses(tenantId: number, expensesIds: number[]) {
+  public async deleteBulkExpenses(tenantId: number, expensesIds: number[], authorizedUser: ISystemUser) {
     const expenses = await this.getExpensesOrThrowError(tenantId, expensesIds);
     const { expenseRepository } = this.tenancy.repositories(tenantId);
 
@@ -423,8 +434,9 @@ export default class ExpensesService implements IExpensesService {
    * Deletes the given expenses in bulk.
    * @param {number} tenantId 
    * @param {number[]} expensesIds 
+   * @param {ISystemUser} authorizedUser
    */
-  async publishBulkExpenses(tenantId: number, expensesIds: number[]) {
+  public async publishBulkExpenses(tenantId: number, expensesIds: number[], authorizedUser: ISystemUser) {
     const expenses = await this.getExpensesOrThrowError(tenantId, expensesIds);
     const { expenseRepository } = this.tenancy.repositories(tenantId);
 
@@ -440,7 +452,7 @@ export default class ExpensesService implements IExpensesService {
    * @param  {IExpensesFilter} expensesFilter 
    * @return {IExpense[]}
    */
-  async getExpensesList(tenantId: number, expensesFilter: IExpensesFilter) {
+  public async getExpensesList(tenantId: number, expensesFilter: IExpensesFilter) {
     const { Expense } = this.tenancy.models(tenantId);
     const dynamicFilter = await this.dynamicListService.dynamicList(tenantId, Expense, expensesFilter);
 

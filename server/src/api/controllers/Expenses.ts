@@ -164,11 +164,11 @@ export default class ExpensesController extends BaseController {
    * @param {NextFunction} next 
    */
   async deleteExpense(req: Request, res: Response, next: NextFunction) {
-    const { tenantId } = req;
+    const { tenantId, user } = req;
     const { id: expenseId } = req.params;
 
     try {
-      await this.expensesService.deleteExpense(tenantId, expenseId)
+      await this.expensesService.deleteExpense(tenantId, expenseId, user);
       return res.status(200).send({ id: expenseId });
     } catch (error) {
       next(error)
@@ -182,11 +182,11 @@ export default class ExpensesController extends BaseController {
    * @param {NextFunction} next 
    */
   async publishExpense(req: Request, res: Response, next: NextFunction) {
-    const { tenantId } = req;
+    const { tenantId, user } = req;
     const { id: expenseId } = req.params;
 
     try {
-      await this.expensesService.publishExpense(tenantId, expenseId)
+      await this.expensesService.publishExpense(tenantId, expenseId, user)
       return res.status(200).send({  });
     } catch (error) {
       next(error);
@@ -200,11 +200,11 @@ export default class ExpensesController extends BaseController {
    * @param {NextFunction} next 
    */
   async bulkDeleteExpenses(req: Request, res: Response, next: NextFunction) {
-    const { tenantId } = req;
+    const { tenantId, user } = req;
     const { ids: expensesIds } = req.params;
 
     try {
-      await this.expensesService.deleteBulkExpenses(tenantId, expensesIds);
+      await this.expensesService.deleteBulkExpenses(tenantId, expensesIds, user);
       return res.status(200).send({ ids: expensesIds });
     } catch (error) {
       next(error);
@@ -218,10 +218,11 @@ export default class ExpensesController extends BaseController {
    * @param {NextFunction} next 
    */
   async bulkPublishExpenses(req: Request, res: Response, next: NextFunction) {
-    const { tenantId } = req;
+    const { tenantId, user } = req;
+    const { ids: expensesIds } = req.query;
 
     try {
-      await this.expensesService.publishBulkExpenses(tenantId,);
+      await this.expensesService.publishBulkExpenses(tenantId, expensesIds, user);
       return res.status(200).send({});
     } catch (error) {
       next(error);

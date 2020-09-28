@@ -1,3 +1,4 @@
+import { ISystemUser } from "./User";
 
 export interface IExpense {
   id: number,
@@ -43,13 +44,13 @@ export interface IExpenseCategoryDTO {
 };
 
 export interface IExpensesService {
-  newExpense(tenantid: number, expenseDTO: IExpenseDTO): Promise<IExpense>;
-  editExpense(tenantid: number, expenseId: number, expenseDTO: IExpenseDTO): void;
+  newExpense(tenantid: number, expenseDTO: IExpenseDTO, authorizedUser: ISystemUser): Promise<IExpense>;
+  editExpense(tenantid: number, expenseId: number, expenseDTO: IExpenseDTO, authorizedUser: ISystemUser): void;
 
-  publishExpense(tenantId: number, expenseId: number): Promise<void>;
+  publishExpense(tenantId: number, expenseId: number, authorizedUser: ISystemUser): Promise<void>;
 
-  deleteExpense(tenantId: number, expenseId: number): Promise<void>;
-  deleteBulkExpenses(tenantId: number, expensesIds: number[]): Promise<void>;
+  deleteExpense(tenantId: number, expenseId: number, authorizedUser: ISystemUser): Promise<void>;
+  deleteBulkExpenses(tenantId: number, expensesIds: number[], authorizedUser: ISystemUser): Promise<void>;
 
-  publishBulkExpenses(tenantId: number, expensesIds: number[]): Promise<void>;
+  publishBulkExpenses(tenantId: number, expensesIds: number[], authorizedUser: ISystemUser): Promise<void>;
 }
