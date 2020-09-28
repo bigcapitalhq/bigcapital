@@ -23,7 +23,10 @@ export default class AccountsController extends BaseController{
     const router = Router();
 
     router.post(
-      '/bulk/:type(activate|inactivate)',
+      '/bulk/:type(activate|inactivate)', [
+        ...this.bulkSelectIdsQuerySchema
+      ],
+      this.validationResult,
       asyncMiddleware(this.bulkToggleActivateAccounts.bind(this))
     );
     router.post(
@@ -75,19 +78,19 @@ export default class AccountsController extends BaseController{
       this.catchServiceErrors,
     );
     router.delete(
+      '/', [
+        ...this.bulkSelectIdsQuerySchema,
+      ],
+      this.validationResult,
+      asyncMiddleware(this.deleteBulkAccounts.bind(this)),
+      this.catchServiceErrors,
+    );
+    router.delete(
       '/:id', [
         ...this.accountParamSchema
       ],
       this.validationResult,
       asyncMiddleware(this.deleteAccount.bind(this)),
-      this.catchServiceErrors,
-    );
-    router.delete(
-      '/', [
-        ...this.bulkDeleteSchema,
-      ],
-      this.validationResult,
-      asyncMiddleware(this.deleteBulkAccounts.bind(this)),
       this.catchServiceErrors,
     );
     return router;
@@ -149,7 +152,7 @@ export default class AccountsController extends BaseController{
   /**
    * 
    */
-  get bulkDeleteSchema() {
+  get bulkSelectIdsQuerySchema() {
     return [
       query('ids').isArray({ min: 2 }),
       query('ids.*').isNumeric().toInt(),

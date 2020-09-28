@@ -11,6 +11,13 @@ export default class ItemCategory extends TenantModel {
   }
 
   /**
+   * Timestamps columns.
+   */
+  get timestamps() {
+    return ['createdAt', 'updatedAt'];
+  }
+
+  /**
    * Relationship mapping.
    */
   static get relationMappings() {

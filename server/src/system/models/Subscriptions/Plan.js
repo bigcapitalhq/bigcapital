@@ -39,21 +39,9 @@ export default class Plan extends mixin(SystemModel) {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const PlanFeature = require('system/models/Subscriptions/PlanFeature');
+    const PlanSubscription = require('system/models/Subscriptions/PlanSubscription');
 
     return {
-      /**
-       * The plan may have many features.
-       */
-      features: {
-        relation: Model.BelongsToOneRelation,
-        modelClass: PlanFeature.default,
-        join: {
-          from: 'subscriptions_plans.id',
-          to: 'subscriptions_plan_features.planId',
-        },
-      },
-
       /**
        * The plan may have many subscriptions.
        */
@@ -62,7 +50,7 @@ export default class Plan extends mixin(SystemModel) {
         modelClass: PlanSubscription.default,
         join: {
           from: 'subscription_plans.id',
-          to: 'subscription_plans.planId',
+          to: 'subscription_plan_subscriptions.planId',
         },
       }
     };

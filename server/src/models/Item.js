@@ -15,7 +15,7 @@ export default class Item extends TenantModel {
   /**
    * Model timestamps.
    */
-  static get timestamps() {
+  get timestamps() {
     return ['createdAt', 'updatedAt'];
   }
 
@@ -23,8 +23,6 @@ export default class Item extends TenantModel {
    * Model modifiers.
    */
   static get modifiers() {
-    const TABLE_NAME = Item.tableName;
-
     return {
       sortBy(query, columnSort, sortDirection) {
         query.orderBy(columnSort, sortDirection);
