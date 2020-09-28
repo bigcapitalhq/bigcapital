@@ -14,6 +14,10 @@ export interface ISystemUser {
 
   inviteAcceptAt: Date,
   lastLoginAt: Date,
+  deletedAt: Date,
+
+  createdAt: Date,
+  updatedAt: Date,
 }
 
 export interface ISystemUserDTO {

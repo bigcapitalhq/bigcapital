@@ -62,9 +62,7 @@ export default  class SettingsController extends BaseController{
       errorReasons.push({
         type: 'OPTIONS.KEY.NOT.DEFINED',
         code: 200,
-        keys: notDefinedOptions.map((o) => ({
-          ...pick(o, ['key', 'group'])
-        })),
+        keys: notDefinedOptions.map((o) => ({ ...pick(o, ['key', 'group']) })),
       });
     }
     if (errorReasons.length) {
@@ -80,7 +78,7 @@ export default  class SettingsController extends BaseController{
       message: 'Options have been saved successfully.',
     });
   }
-  
+
   /**
    * Retrieve settings.
    * @param {Request} req 

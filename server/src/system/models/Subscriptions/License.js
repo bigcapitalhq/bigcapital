@@ -1,7 +1,6 @@
 import { Model, mixin } from 'objection';
 import moment from 'moment';
 import SystemModel from 'system/models/SystemModel';
-import { ILicensesFilter } from 'interfaces';
 
 export default class License extends SystemModel {
   /**
@@ -25,8 +24,8 @@ export default class License extends SystemModel {
     return {
       // Filters active licenses.
       filterActiveLicense(query) {
-        query.where('disabled', false);
-        query.where('used', false);
+        query.where('disabled_at', null);
+        query.where('used_at', null);
       },
 
       // Find license by its code or id.
@@ -45,13 +44,13 @@ export default class License extends SystemModel {
           builder.modify('filterActiveLicense')
         }
         if (licensesFilter.disabled) {
-          builder.where('disabled', true);
+          builder.whereNot('disabled_at', null);
         }
         if (licensesFilter.used) {
-          builder.where('used', true);
+          builder.whereNot('used_at', null);
         } 
         if (licensesFilter.sent) {
-          builder.where('sent', true);
+          builder.whereNot('sent_at', null);
         }
       }
     };
@@ -95,7 +94,6 @@ export default class License extends SystemModel {
     return this.query()
       .where(viaAttribute, licenseCode)
       .patch({
-        disabled: true,
         disabled_at: moment().toMySqlDateTime(),
       });
   }
@@ -108,7 +106,6 @@ export default class License extends SystemModel {
     return this.query()
       .where(viaAttribute, licenseCode)
       .patch({
-        sent: true,
         sent_at: moment().toMySqlDateTime(),
       });
   }
@@ -122,7 +119,6 @@ export default class License extends SystemModel {
     return this.query()
       .where(viaAttribute, licenseCode)
       .patch({
-        used: true,
         used_at: moment().toMySqlDateTime()
       });
   }
@@ -136,5 +132,4 @@ export default class License extends SystemModel {
     return (this.invoicePeriod === plan.invoiceInterval &&
       license.licensePeriod === license.periodInterval);
   }
-
 }

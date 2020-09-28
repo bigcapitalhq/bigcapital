@@ -1,4 +1,4 @@
-import express from 'express';
+import { Router, Request, Response } from 'express';
 import { check, param, query, matchedData } from 'express-validator';
 import { difference } from 'lodash';
 import { raw } from 'objection';
@@ -21,7 +21,7 @@ export default class SaleInvoicesController {
    * Router constructor.
    */
   router() {
-    const router = express.Router();
+    const router = Router();
 
     router.post(
       '/',

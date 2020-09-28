@@ -7,7 +7,14 @@ export default class SMSAPI {
     this.smsClient = smsClient;
   }
 
-  sendMessage(to: string, message: string, extraParams: [], extraHeaders: []) {
+  /**
+   * 
+   * @param {string} to 
+   * @param {string} message 
+   * @param {array} extraParams 
+   * @param {array} extraHeaders 
+   */
+  sendMessage(to: string, message: string, extraParams?: [], extraHeaders?: []) {
     return this.smsClient.send(to, message);
   }
 }

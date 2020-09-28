@@ -23,7 +23,7 @@ import AuthenticationSMSMessages from 'services/Authentication/AuthenticationSMS
 import TenantsManager from 'services/Tenancy/TenantsManager';
 
 @Service()
-export default class AuthenticationService {
+export default class AuthenticationService implements IAuthenticationService {
   @Inject('logger')
   logger: any;
 
@@ -49,7 +49,7 @@ export default class AuthenticationService {
    * @param  {string} password - Password.
    * @return {Promise<{user: IUser, token: string}>}
    */
-  async signIn(emailOrPhone: string, password: string): Promise<{user: ISystemUser, token: string, tenant: ITenant }> {
+  public async signIn(emailOrPhone: string, password: string): Promise<{user: ISystemUser, token: string, tenant: ITenant }> {
     this.logger.info('[login] Someone trying to login.', { emailOrPhone, password });
 
     const { systemUserRepository } = this.sysRepositories;
@@ -122,7 +122,7 @@ export default class AuthenticationService {
    * @throws {ServiceErrors}
    * @param {IUserDTO} user 
    */
-  async register(registerDTO: IRegisterDTO): Promise<ISystemUser> {
+  public async register(registerDTO: IRegisterDTO): Promise<ISystemUser> {
     this.logger.info('[register] Someone trying to register.');
     await this.validateEmailAndPhoneUniqiness(registerDTO);
 
@@ -160,7 +160,7 @@ export default class AuthenticationService {
    * @throws {ServiceError}
    * @param  {string} email - email address. 
    */
-  private async validateEmailExistance(email: string) {
+  private async validateEmailExistance(email: string): Promise<ISystemUser> {
     const { systemUserRepository } = this.sysRepositories;
     const userByEmail = await systemUserRepository.getByEmail(email);
 
@@ -176,7 +176,7 @@ export default class AuthenticationService {
    * @param {string} email 
    * @return {<Promise<IPasswordReset>}
    */
-  async sendResetPassword(email: string): Promise<IPasswordReset> {
+  public async sendResetPassword(email: string): Promise<IPasswordReset> {
     this.logger.info('[send_reset_password] Trying to send reset password.');
     const user = await this.validateEmailExistance(email);
 
@@ -184,7 +184,7 @@ export default class AuthenticationService {
     this.logger.info('[send_reset_password] trying to delete all tokens by email.');
     this.deletePasswordResetToken(email);
 
-    const token = uniqid();
+    const token: string = uniqid();
 
     this.logger.info('[send_reset_password] insert the generated token.');
     const passwordReset = await PasswordReset.query().insert({ email, token });
@@ -201,9 +201,9 @@ export default class AuthenticationService {
    * @param {string} password - New Password.
    * @return {Promise<void>}
    */
-  async resetPassword(token: string, password: string): Promise<void> {
+  public async resetPassword(token: string, password: string): Promise<void> {
     const { systemUserRepository } = this.sysRepositories;
-    const tokenModel = await PasswordReset.query().findOne('token', token);
+    const tokenModel: IPasswordReset = await PasswordReset.query().findOne('token', token);
 
     if (!tokenModel) {
       this.logger.info('[reset_password] token invalid.');

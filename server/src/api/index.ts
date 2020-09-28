@@ -9,6 +9,8 @@ import TenancyMiddleware from 'api/middleware/TenancyMiddleware';
 import EnsureTenantIsInitialized from 'api/middleware/EnsureTenantIsInitialized';
 import SettingsMiddleware from 'api/middleware/SettingsMiddleware';
 import I18nMiddleware from 'api/middleware/I18nMiddleware';
+import EnsureConfiguredMiddleware from 'api/middleware/EnsureConfiguredMiddleware';
+import EnsureTenantIsSeeded from 'api/middleware/EnsureTenantIsSeeded';
 
 // Routes
 import Authentication from 'api/controllers/Authentication';
@@ -57,6 +59,8 @@ export default () => {
   dashboard.use(SubscriptionMiddleware('main'));
   dashboard.use(EnsureTenantIsInitialized);
   dashboard.use(SettingsMiddleware);
+  dashboard.use(EnsureConfiguredMiddleware);
+  dashboard.use(EnsureTenantIsSeeded);
 
   dashboard.use('/users', Container.get(Users).router());
   dashboard.use('/invite', Container.get(InviteUsers).authRouter());
@@ -76,7 +80,7 @@ export default () => {
   dashboard.use('/purchases', Purchases.router());
   dashboard.use('/resources', Resources.router());
   dashboard.use('/exchange_rates', Container.get(ExchangeRates).router());
-  dashboard.use('/media', Media.router())
+  dashboard.use('/media', Media.router());
 
   app.use('/', dashboard);
 

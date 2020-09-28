@@ -31,6 +31,9 @@ export default class ViewRepository extends TenantRepository {
     });
   }
 
+  /**
+   * Retrieve all views of the given resource id.
+   */
   allByResource() {
     const resourceId = 1;
     return this.cache.get(`customView.resource.id.${resourceId}`, () => {

@@ -8,6 +8,8 @@ import AttachCurrentTenantUser from 'api/middleware/AttachCurrentTenantUser';
 import OrganizationService from 'services/Organization';
 import { ServiceError } from 'exceptions';
 import BaseController from 'api/controllers/BaseController';
+import EnsureConfiguredMiddleware from 'api/middleware/EnsureConfiguredMiddleware';
+import SettingsMiddleware from 'api/middleware/SettingsMiddleware';
 
 @Service()
 export default class OrganizationController extends BaseController{
@@ -26,6 +28,10 @@ export default class OrganizationController extends BaseController{
     router.use(AttachCurrentTenantUser);
     router.use(TenancyMiddleware);
     router.use(SubscriptionMiddleware('main'));
+
+    // Should to seed organization tenant be configured.
+    router.use('/seed', SettingsMiddleware);
+    router.use('/seed', EnsureConfiguredMiddleware);
 
     router.post(
       '/build',

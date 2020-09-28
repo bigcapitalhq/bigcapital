@@ -9,10 +9,6 @@ exports.up = function(knex) {
     table.integer('license_period').unsigned();
     table.string('period_interval');
 
-    table.boolean('sent').defaultTo(false);
-    table.boolean('disabled').defaultTo(false);
-    table.boolean('used').defaultTo(false);
-
     table.dateTime('sent_at');
     table.dateTime('disabled_at');
     table.dateTime('used_at');
