@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import moment from 'moment';
 import _ from 'lodash';
+import definedOptions from 'data/options';
 
 const hashPassword = (password) =>
   new Promise((resolve) => {
@@ -155,6 +156,29 @@ const formatDateFields = (inputDTO, fields, format = 'YYYY-MM-DD') => {
   return _inputDTO;
 };
 
+const getDefinedOptions = () => {
+  const options = [];
+
+  Object.keys(definedOptions).forEach((groupKey) => {
+    const groupOptions = definedOptions[groupKey];
+    groupOptions.forEach((option) => {
+      options.push({ ...option, group: groupKey });
+    });
+  });
+  return options;
+};
+
+const getDefinedOption = (key, group) => {
+  return definedOptions?.[group]?.find(option => option.key == key);
+};
+
+const isDefinedOptionConfigurable = (key, group) => {
+  const definedOption = getDefinedOption(key, group);
+  console.log(definedOption, 'definedOption');
+
+  return definedOption?.config || false;
+};
+
 export {
   hashPassword,
   origin,
@@ -168,4 +192,8 @@ export {
   getTotalDeep,
   applyMixins,
   formatDateFields,
+
+  isDefinedOptionConfigurable,
+  getDefinedOption,
+  getDefinedOptions,
 };

@@ -5,12 +5,12 @@ export default {
     {
       key: 'name',
       type: 'string',
-      configure: true,
+      config: true,
     },
     {
       key: 'base_currency',
       type: 'string',
-      configure: true,
+      config: true,
     },
     {
       key: 'industry',
@@ -23,22 +23,22 @@ export default {
     {
       key: 'fiscal_year',
       type: 'string',
-      configure: true,
+      // config: true,
     },
     {
       key: 'language',
       type: 'string',
-      configure: true,
+      config: true,
     },
     { 
       key: 'time_zone',
       type: 'string',
-      configure: true,
+      // config: true,
     },
     {
       key: 'date_format',
       type: 'string',
-      configure: true,
+      // config: true,
     },
   ],
 };

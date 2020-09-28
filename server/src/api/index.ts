@@ -41,6 +41,8 @@ import Licenses from 'api/controllers/Subscription/Licenses';
 export default () => {
   const app = Router();
 
+  // - Global routes.
+  // ---------------------------
   app.use(I18nMiddleware);
 
   app.use('/auth', Container.get(Authentication).router());
@@ -49,7 +51,24 @@ export default () => {
   app.use('/subscription', Container.get(Subscription).router());
   app.use('/ping', Container.get(Ping).router());
   app.use('/organization', Container.get(Organization).router());
+  
+  // - Settings routes.
+  // ---------------------------
+  const settings = Router();
 
+  settings.use(JWTAuth);
+  settings.use(AttachCurrentTenantUser);
+  settings.use(TenancyMiddleware);
+  settings.use(SubscriptionMiddleware('main'));
+  settings.use(EnsureTenantIsInitialized);
+  settings.use(SettingsMiddleware);
+
+  settings.use('/settings', Container.get(Settings).router());
+
+  app.use('/', settings);
+
+  // - Dashboard routes.
+  // ---------------------------
   const dashboard = Router();
 
   dashboard.use(JWTAuth);
@@ -73,7 +92,6 @@ export default () => {
   dashboard.use('/item_categories', Container.get(ItemCategories).router());
   dashboard.use('/expenses', Container.get(Expenses).router());
   dashboard.use('/financial_statements', FinancialStatements.router());
-  dashboard.use('/settings', Container.get(Settings).router());
   dashboard.use('/sales', Sales.router());
   dashboard.use('/customers', Container.get(Customers).router());
   dashboard.use('/vendors', Container.get(Vendors).router());

@@ -1,9 +1,13 @@
 import { Router, Request, Response } from 'express';
-import { body, query, validationResult } from 'express-validator';
+import { body, query } from 'express-validator';
 import { pick } from 'lodash';
 import { IOptionDTO, IOptionsDTO } from 'interfaces';
 import BaseController from 'api/controllers/BaseController';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
+import {
+  getDefinedOptions,
+  isDefinedOptionConfigurable,
+} from 'utils';
 
 export default  class SettingsController extends BaseController{
   /**
@@ -14,12 +18,14 @@ export default  class SettingsController extends BaseController{
 
     router.post('/',
       this.saveSettingsValidationSchema,
-      asyncMiddleware(this.saveSettings.bind(this)));
-
+      this.validationResult,
+      asyncMiddleware(this.saveSettings.bind(this)),
+    );
     router.get('/',
       this.getSettingsSchema,
-      asyncMiddleware(this.getSettings.bind(this)));
-
+      this.validationResult,
+      asyncMiddleware(this.getSettings.bind(this)),
+    );
     return router;
   }
 
@@ -29,9 +35,9 @@ export default  class SettingsController extends BaseController{
   get saveSettingsValidationSchema() {
     return [
       body('options').isArray({ min: 1 }),
-      body('options.*.key').exists(),
-      body('options.*.value').exists(),
-      body('options.*.group').exists(),
+      body('options.*.key').exists().trim().escape().isLength({ min: 1 }),
+      body('options.*.value').exists().trim().escape().isLength({ min: 1 }),
+      body('options.*.group').exists().trim().escape().isLength({ min: 1 }),
     ];
   }
 
@@ -40,9 +46,30 @@ export default  class SettingsController extends BaseController{
    */
   get getSettingsSchema() {
     return [
-      query('key').optional(),
-      query('group').optional(),
+      query('key').optional().trim().escape(),
+      query('group').optional().trim().escape(),
     ];
+  }
+
+  /**
+   * Observes application configuration option, whether all options configured
+   * sets `app_configured` option.
+   * @param {Setting} settings 
+   */
+  observeAppConfigsComplete(settings) {
+    if (!settings.get('app_configured', false)) {
+      const definedOptions = getDefinedOptions();
+
+      const isNotConfigured = definedOptions.some((option) => {
+        const isDefined = isDefinedOptionConfigurable(option.key, option.group);
+        const hasStoredOption = settings.get({ key: option.key, group: option.group });
+
+        return (isDefined && !hasStoredOption);
+      });
+      if (!isNotConfigured) {
+        settings.set('app_configured', true);
+      }
+    }
   }
 
   /**
@@ -71,7 +98,8 @@ export default  class SettingsController extends BaseController{
     optionsDTO.options.forEach((option: IOptionDTO) => {
       settings.set({ ...option });
     });
- 
+    this.observeAppConfigsComplete(settings);
+
     return res.status(200).send({ 
       type: 'success',
       code: 'OPTIONS.SAVED.SUCCESSFULLY',
