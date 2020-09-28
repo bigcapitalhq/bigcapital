@@ -22,7 +22,7 @@ export default class ItemCategory extends TenantModel {
        */
       items: {
         relation: Model.HasManyRelation,
-        modelClass: this.relationBindKnex(Item.default),
+        modelClass: Item.default,
         join: {
           from: 'items_categories.id',
           to: 'items.categoryId',

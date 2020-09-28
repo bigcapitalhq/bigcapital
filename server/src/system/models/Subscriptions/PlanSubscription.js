@@ -76,7 +76,7 @@ export default class PlanSubscription extends mixin(SystemModel) {
        */
       tenant: {
         relation: Model.BelongsToOneRelation,
-        modelClass: this.relationBindKnex(Tenant.default),
+        modelClass: Tenant.default,
         join: {
           from: 'subscription_plan_subscriptions.tenantId',
           to: 'tenants.id'
@@ -88,7 +88,7 @@ export default class PlanSubscription extends mixin(SystemModel) {
        */
       plan: {
         relation: Model.BelongsToOneRelation,
-        modelClass: this.relationBindKnex(Plan.default),
+        modelClass: Plan.default,
         join: {
           from: 'subscription_plan_subscriptions.planId',
           to: 'subscription_plans.id',

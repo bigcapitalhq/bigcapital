@@ -63,7 +63,7 @@ export default class SaleInvoice extends TenantModel {
     return {
       entries: {
         relation: Model.HasManyRelation,
-        modelClass: this.relationBindKnex(ItemEntry.default),
+        modelClass: ItemEntry.default,
         join: {
           from: 'sales_invoices.id',
           to: 'items_entries.referenceId',
@@ -75,7 +75,7 @@ export default class SaleInvoice extends TenantModel {
 
       customer: {
         relation: Model.BelongsToOneRelation,
-        modelClass: this.relationBindKnex(Customer.default),
+        modelClass: Customer.default,
         join: {
           from: 'sales_invoices.customerId',
           to: 'customers.id',
@@ -84,7 +84,7 @@ export default class SaleInvoice extends TenantModel {
 
       transactions: {
         relation: Model.HasManyRelation,
-        modelClass: this.relationBindKnex(AccountTransaction.default),
+        modelClass: AccountTransaction.default,
         join: {
           from: 'sales_invoices.id',
           to: 'accounts_transactions.referenceId'
@@ -96,7 +96,7 @@ export default class SaleInvoice extends TenantModel {
 
       costTransactions: {
         relation: Model.HasManyRelation,
-        modelClass: this.relationBindKnex(InventoryCostLotTracker.default),
+        modelClass: InventoryCostLotTracker.default,
         join: {
           from: 'sales_invoices.id',
           to: 'inventory_cost_lot_tracker.transactionId'

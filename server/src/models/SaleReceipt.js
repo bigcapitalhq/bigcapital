@@ -28,7 +28,7 @@ export default class SaleReceipt extends TenantModel {
     return {
       customer: {
         relation: Model.BelongsToOneRelation,
-        modelClass: this.relationBindKnex(Customer.default),
+        modelClass: Customer.default,
         join: {
           from: 'sales_receipts.customerId',
           to: 'customers.id',
@@ -37,7 +37,7 @@ export default class SaleReceipt extends TenantModel {
 
       depositAccount: {
         relation: Model.BelongsToOneRelation,
-        modelClass: this.relationBindKnex(Account.default),
+        modelClass: Account.default,
         join: {
           from: 'sales_receipts.depositAccountId',
           to: 'accounts.id',
@@ -46,7 +46,7 @@ export default class SaleReceipt extends TenantModel {
 
       entries: {
         relation: Model.HasManyRelation,
-        modelClass: this.relationBindKnex(ItemEntry.default),
+        modelClass: ItemEntry.default,
         join: {
           from: 'sales_receipts.id',
           to: 'items_entries.referenceId',
@@ -58,7 +58,7 @@ export default class SaleReceipt extends TenantModel {
 
       transactions: {
         relation: Model.HasManyRelation,
-        modelClass: this.relationBindKnex(AccountTransaction.default),
+        modelClass: AccountTransaction.default,
         join: {
           from: 'sales_receipts.id',
           to: 'accounts_transactions.referenceId'

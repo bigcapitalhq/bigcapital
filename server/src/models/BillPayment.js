@@ -28,7 +28,7 @@ export default class BillPayment extends TenantModel {
     return {
       entries: {
         relation: Model.HasManyRelation,
-        modelClass: this.relationBindKnex(BillPaymentEntry.default),
+        modelClass: BillPaymentEntry.default,
         join: {
           from: 'bills_payments.id',
           to: 'bills_payments_entries.billPaymentId',
@@ -37,7 +37,7 @@ export default class BillPayment extends TenantModel {
 
       vendor: {
         relation: Model.BelongsToOneRelation,
-        modelClass: this.relationBindKnex(Vendor.default),
+        modelClass: Vendor.default,
         join: {
           from: 'bills_payments.vendorId',
           to: 'vendors.id',
@@ -46,7 +46,7 @@ export default class BillPayment extends TenantModel {
 
       paymentAccount: {
         relation: Model.BelongsToOneRelation,
-        modelClass: this.relationBindKnex(Account.default),
+        modelClass: Account.default,
         join: {
           from: 'bills_payments.paymentAccountId',
           to: 'accounts.id',
@@ -55,7 +55,7 @@ export default class BillPayment extends TenantModel {
 
       transactions: {
         relation: Model.HasManyRelation,
-        modelClass: this.relationBindKnex(AccountTransaction.default),
+        modelClass: AccountTransaction.default,
         join: {
           from: 'bills_payments.id',
           to: 'accounts_transactions.referenceId'

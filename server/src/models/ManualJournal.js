@@ -27,7 +27,7 @@ export default class ManualJournal extends TenantModel {
     return {
       entries: {
         relation: Model.HasManyRelation,
-        modelClass: this.relationBindKnex(AccountTransaction.default),
+        modelClass: AccountTransaction.default,
         join: {
           from: 'manual_journals.id',
           to: 'accounts_transactions.referenceId',
@@ -38,7 +38,7 @@ export default class ManualJournal extends TenantModel {
       },
       media: {
         relation: Model.ManyToManyRelation,
-        modelClass: this.relationBindKnex(Media.default),
+        modelClass: Media.default,
         join: {
           from: 'manual_journals.id',
           through: {

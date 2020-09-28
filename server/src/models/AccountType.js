@@ -22,7 +22,7 @@ export default class AccountType extends TenantModel {
        */
       accounts: {
         relation: Model.HasManyRelation,
-        modelClass: this.relationBindKnex(Account.default),
+        modelClass: Account.default,
         join: {
           from: 'account_types.id',
           to: 'accounts.accountTypeId',

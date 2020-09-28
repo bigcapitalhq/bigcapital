@@ -42,7 +42,7 @@ export default class Bill extends TenantModel {
     return {
       vendor: {
         relation: Model.BelongsToOneRelation,
-        modelClass: this.relationBindKnex(Vendor.default),
+        modelClass: Vendor.default,
         join: {
           from: 'bills.vendorId',
           to: 'vendors.id',
@@ -51,7 +51,7 @@ export default class Bill extends TenantModel {
 
       entries: {
         relation: Model.HasManyRelation,
-        modelClass: this.relationBindKnex(ItemEntry.default),
+        modelClass: ItemEntry.default,
         join: {
           from: 'bills.id',
           to: 'items_entries.referenceId',

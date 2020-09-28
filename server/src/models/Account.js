@@ -63,7 +63,7 @@ export default class Account extends TenantModel {
        */
       type: {
         relation: Model.BelongsToOneRelation,
-        modelClass: this.relationBindKnex(AccountType.default),
+        modelClass: AccountType.default,
         join: {
           from: 'accounts.accountTypeId',
           to: 'account_types.id',
@@ -75,7 +75,7 @@ export default class Account extends TenantModel {
        */
       transactions: {
         relation: Model.HasManyRelation,
-        modelClass: this.relationBindKnex(AccountTransaction.default),
+        modelClass: AccountTransaction.default,
         join: {
           from: 'accounts.id',
           to: 'accounts_transactions.accountId',

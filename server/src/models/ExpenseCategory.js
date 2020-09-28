@@ -18,7 +18,7 @@ export default class ExpenseCategory extends TenantModel {
     return {
       expenseAccount: {
         relation: Model.BelongsToOneRelation,
-        modelClass: this.relationBindKnex(Account.default),
+        modelClass: Account.default,
         join: {
           from: 'expense_transaction_categories.expenseAccountId',
           to: 'accounts.id',

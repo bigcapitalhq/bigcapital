@@ -88,7 +88,7 @@ export default class AccountTransaction extends TenantModel {
     return {
       account: {
         relation: Model.BelongsToOneRelation,
-        modelClass: this.relationBindKnex(Account.default),
+        modelClass: Account.default,
         join: {
           from: 'accounts_transactions.accountId',
           to: 'accounts.id',

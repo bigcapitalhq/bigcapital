@@ -28,7 +28,7 @@ export default class PaymentReceiveEntry extends TenantModel {
        */
       entries: {
         relation: Model.HasManyRelation,
-        modelClass: this.relationBindKnex(PaymentReceive.default),
+        modelClass: PaymentReceive.default,
         join: {
           from: 'payment_receives_entries.payment_receive_id',
           to: 'payment_receives.id',
@@ -40,7 +40,7 @@ export default class PaymentReceiveEntry extends TenantModel {
        */
       invoice: {
         relation: Model.BelongsToOneRelation,
-        modelClass: this.relationBindKnex(SaleInvoice.default),
+        modelClass: SaleInvoice.default,
         join: {
           from: 'payment_receives_entries.invoiceId',
           to: 'sales_invoices.id',

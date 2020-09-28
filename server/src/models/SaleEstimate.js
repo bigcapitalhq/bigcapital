@@ -26,7 +26,7 @@ export default class SaleEstimate extends TenantModel {
     return {
       customer: {
         relation: Model.BelongsToOneRelation,
-        modelClass: this.relationBindKnex(Customer.default),
+        modelClass: Customer.default,
         join: {
           from: 'sales_estimates.customerId',
           to: 'customers.id',
@@ -35,7 +35,7 @@ export default class SaleEstimate extends TenantModel {
 
       entries: {
         relation: Model.HasManyRelation,
-        modelClass: this.relationBindKnex(ItemEntry.default),
+        modelClass: ItemEntry.default,
         join: {
           from: 'sales_estimates.id',
           to: 'items_entries.referenceId',

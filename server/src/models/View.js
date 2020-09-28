@@ -49,7 +49,7 @@ export default class View extends TenantModel {
        */
       columns: {
         relation: Model.HasManyRelation,
-        modelClass: this.relationBindKnex(ViewColumn.default),
+        modelClass: ViewColumn.default,
         join: {
           from: 'views.id',
           to: 'view_has_columns.viewId',
@@ -61,7 +61,7 @@ export default class View extends TenantModel {
        */
       roles: {
         relation: Model.HasManyRelation,
-        modelClass: this.relationBindKnex(ViewRole.default),
+        modelClass: ViewRole.default,
         join: {
           from: 'views.id',
           to: 'view_roles.viewId',

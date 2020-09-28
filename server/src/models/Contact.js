@@ -45,7 +45,7 @@ export default class Contact extends TenantModel {
     return {
       salesInvoices: {
         relation: Model.HasManyRelation,
-        modelClass: this.relationBindKnex(SaleInvoice.default),
+        modelClass: SaleInvoice.default,
         join: {
           from: 'contacts.id',
           to: 'sales_invoices.customerId',
@@ -54,7 +54,7 @@ export default class Contact extends TenantModel {
 
       bills: {
         relation: Model.HasManyRelation,
-        modelClass: this.relationBindKnex(Bill.default),
+        modelClass: Bill.default,
         join: {
           from: 'contacts.id',
           to: 'bills.vendorId',

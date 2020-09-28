@@ -35,7 +35,7 @@ export default class ViewRole extends TenantModel {
        */
       view: {
         relation: Model.BelongsToOneRelation,
-        modelClass: this.relationBindKnex(View.default),
+        modelClass: View.default,
         join: {
           from: 'view_roles.viewId',
           to: 'views.id',

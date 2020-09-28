@@ -49,7 +49,7 @@ export default class Item extends TenantModel {
        */
       category: {
         relation: Model.BelongsToOneRelation,
-        modelClass: this.relationBindKnex(ItemCategory.default),
+        modelClass: ItemCategory.default,
         join: {
           from: 'items.categoryId',
           to: 'items_categories.id',
@@ -58,7 +58,7 @@ export default class Item extends TenantModel {
 
       costAccount: {
         relation: Model.BelongsToOneRelation,
-        modelClass: this.relationBindKnex(Account.default),
+        modelClass: Account.default,
         join: {
           from: 'items.costAccountId',
           to: 'accounts.id',
@@ -67,7 +67,7 @@ export default class Item extends TenantModel {
 
       sellAccount: {
         relation: Model.BelongsToOneRelation,
-        modelClass: this.relationBindKnex(Account.default),
+        modelClass: Account.default,
         join: {
           from: 'items.sellAccountId',
           to: 'accounts.id',
@@ -76,7 +76,7 @@ export default class Item extends TenantModel {
 
       inventoryAccount: {
         relation: Model.BelongsToOneRelation,
-        modelClass: this.relationBindKnex(Account.default),
+        modelClass: Account.default,
         join: {
           from: 'items.inventoryAccountId',
           to: 'accounts.id',
@@ -85,7 +85,7 @@ export default class Item extends TenantModel {
 
       media: {
         relation: Model.ManyToManyRelation,
-        modelClass: this.relationBindKnex(Media.default),
+        modelClass: Media.default,
         join: {
           from: 'items.id',
           through: {

@@ -28,7 +28,7 @@ export default class PaymentReceive extends TenantModel {
     return {
       customer: {
         relation: Model.BelongsToOneRelation,
-        modelClass: this.relationBindKnex(Customer.default),
+        modelClass: Customer.default,
         join: {
           from: 'payment_receives.customerId',
           to: 'customers.id',
@@ -37,7 +37,7 @@ export default class PaymentReceive extends TenantModel {
 
       depositAccount: {
         relation: Model.BelongsToOneRelation,
-        modelClass: this.relationBindKnex(Account.default),
+        modelClass: Account.default,
         join: {
           from: 'payment_receives.depositAccountId',
           to: 'accounts.id',
@@ -46,7 +46,7 @@ export default class PaymentReceive extends TenantModel {
 
       entries: {
         relation: Model.HasManyRelation,
-        modelClass: this.relationBindKnex(PaymentReceiveEntry.default),
+        modelClass: PaymentReceiveEntry.default,
         join: {
           from: 'payment_receives.id',
           to: 'payment_receives_entries.paymentReceiveId',
@@ -55,7 +55,7 @@ export default class PaymentReceive extends TenantModel {
 
       transactions: {
         relation: Model.HasManyRelation,
-        modelClass: this.relationBindKnex(AccountTransaction.default),
+        modelClass: AccountTransaction.default,
         join: {
           from: 'payment_receives.id',
           to: 'accounts_transactions.referenceId'

@@ -46,7 +46,7 @@ export default class InventoryTransaction extends TenantModel {
     return {
       item: {
         relation: Model.BelongsToOneRelation,
-        modelClass: this.relationBindKnex(Item.default),
+        modelClass: Item.default,
         join: {
           from: 'inventory_transactions.itemId',
           to: 'items.id',

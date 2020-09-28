@@ -18,7 +18,7 @@ export default class SaleReceiptEntry extends TenantModel {
     return {
       saleReceipt: {
         relation: Model.BelongsToOneRelation,
-        modelClass: this.relationBindKnex(SaleReceipt.default),
+        modelClass: SaleReceipt.default,
         join: {
           from: 'sales_receipt_entries.sale_receipt_id',
           to: 'sales_receipts.id',

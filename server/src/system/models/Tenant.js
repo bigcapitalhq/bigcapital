@@ -37,7 +37,7 @@ export default class Tenant extends BaseModel {
     return {
       subscriptions: {
         relation: Model.HasManyRelation,
-        modelClass: this.relationBindKnex(PlanSubscription.default),
+        modelClass: PlanSubscription.default,
         join: {
           from: 'tenants.id',
           to: 'subscription_plan_subscriptions.tenantId',

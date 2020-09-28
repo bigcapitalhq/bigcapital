@@ -57,7 +57,7 @@ export default class InventoryCostLotTracker extends TenantModel {
     return {
       item: {
         relation: Model.BelongsToOneRelation,
-        modelClass: this.relationBindKnex(Item.default),
+        modelClass: Item.default,
         join: {
           from: 'inventory_cost_lot_tracker.itemId',
           to: 'items.id',
