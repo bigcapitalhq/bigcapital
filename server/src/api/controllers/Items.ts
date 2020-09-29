@@ -2,13 +2,15 @@ import { Inject, Service } from 'typedi';
 import { Router, Request, Response, NextFunction } from 'express';
 import { check, param, query, ValidationChain, matchedData } from 'express-validator';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
-import validateMiddleware from 'api/middleware/validateMiddleware';
 import ItemsService from 'services/Items/ItemsService';
 import BaseController from 'api/controllers/BaseController';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
+import { ServiceError } from 'exceptions';
+import { IItemDTO } from 'interfaces';
+import { Request } from 'express-validator/src/base';
 
 @Service()
-export default class ItemsController extends BaseController { 
+export default class ItemsController extends BaseController {
   @Inject()
   itemsService: ItemsService;
 
@@ -22,50 +24,53 @@ export default class ItemsController extends BaseController {
     const router = Router();
 
     router.post(
-      '/',
-      this.validateItemSchema,
-      validateMiddleware,
-      asyncMiddleware(this.validateCategoryExistance.bind(this)),
-      asyncMiddleware(this.validateCostAccountExistance.bind(this)),
-      asyncMiddleware(this.validateSellAccountExistance.bind(this)),
-      asyncMiddleware(this.validateInventoryAccountExistance.bind(this)),
-      asyncMiddleware(this.validateItemNameExistance.bind(this)),
+      '/', [
+      ...this.validateItemSchema,
+    ],
+      this.validationResult,
       asyncMiddleware(this.newItem.bind(this)),
+      this.handlerServiceErrors,
     );
     router.post(
       '/:id', [
-        ...this.validateItemSchema,
-        ...this.validateSpecificItemSchema,
-      ],
-      validateMiddleware,
-      asyncMiddleware(this.validateItemExistance.bind(this)),
-      asyncMiddleware(this.validateCategoryExistance.bind(this)),
-      asyncMiddleware(this.validateCostAccountExistance.bind(this)),
-      asyncMiddleware(this.validateSellAccountExistance.bind(this)),
-      asyncMiddleware(this.validateInventoryAccountExistance.bind(this)),
-      asyncMiddleware(this.validateItemNameExistance.bind(this)),
+      ...this.validateItemSchema,
+      ...this.validateSpecificItemSchema,
+    ],
+      this.validationResult,
       asyncMiddleware(this.editItem.bind(this)),
+      this.handlerServiceErrors,
+    );
+    router.delete('/', [
+      ...this.validateBulkSelectSchema,
+    ],
+      this.validationResult,
+      asyncMiddleware(this.bulkDeleteItems.bind(this)),
+      this.handlerServiceErrors
     );
     router.delete(
-      '/:id',
-      this.validateSpecificItemSchema,
-      validateMiddleware,
-      asyncMiddleware(this.validateItemExistance.bind(this)),
+      '/:id', [
+      ...this.validateSpecificItemSchema,
+    ],
+      this.validationResult,
       asyncMiddleware(this.deleteItem.bind(this)),
+      this.handlerServiceErrors,
     );
     router.get(
-      '/:id', 
-      this.validateSpecificItemSchema,
-      validateMiddleware,
-      asyncMiddleware(this.validateItemExistance.bind(this)),
+      '/:id', [
+      ...this.validateSpecificItemSchema,
+    ],
+      this.validationResult,
       asyncMiddleware(this.getItem.bind(this)),
+      this.handlerServiceErrors,
     );
     router.get(
-      '/',
-      this.validateListQuerySchema,
-      validateMiddleware,
+      '/', [
+      ...this.validateListQuerySchema,
+    ],
+      this.validationResult,
       asyncMiddleware(this.getItemsList.bind(this)),
       this.dynamicListService.handlerErrorsToResponse,
+      this.handlerServiceErrors,
     );
     return router;
   }
@@ -88,7 +93,7 @@ export default class ItemsController extends BaseController {
         .toFloat(),
       check('cost_account_id')
         .if(check('purchasable').equals('true'))
-        .exists()  
+        .exists()
         .isInt()
         .toInt(),
       // Sell attributes.
@@ -121,6 +126,7 @@ export default class ItemsController extends BaseController {
 
   /**
    * Validate specific item params schema.
+   * @return {ValidationChain[]}
    */
   get validateSpecificItemSchema(): ValidationChain[] {
     return [
@@ -128,6 +134,16 @@ export default class ItemsController extends BaseController {
     ];
   }
 
+  /**
+   * Bulk select validation schema.
+   * @return {ValidationChain[]}
+   */
+  get validateBulkSelectSchema(): ValidationChain[] {
+    return [
+      query('ids').isArray({ min: 2 }),
+      query('ids.*').isNumeric().toInt(),
+    ];
+  }
 
   /**
    * Validate list query schema
@@ -144,168 +160,20 @@ export default class ItemsController extends BaseController {
   }
 
   /**
-   * Validates the given item existance on the storage.
-   * @param {Request} req -
-   * @param {Response} res -
-   * @param {NextFunction} next -
-   */
-  async validateItemExistance(req: Request, res: Response, next: Function) {
-    const { Item } = req.models;
-    const itemId: number = req.params.id;
-
-    const foundItem = await Item.query().findById(itemId);
-
-    if (!foundItem) {
-      return res.status(400).send({
-        errors: [{ type: 'ITEM.NOT.FOUND', code: 100 }],
-      });
-    }
-    next();
-  }
-
-  /**
-   * Validate wether the given item name already exists on the storage.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
-   */
-  async validateItemNameExistance(req: Request, res: Response, next: Function) {
-    const { Item } = req.models;
-    const item = req.body;
-    const itemId: number = req.params.id;
-
-    const foundItems: [] = await Item.query().onBuild((builder: any) => {
-      builder.where('name', item.name);
-      if (itemId) {
-        builder.whereNot('id', itemId);
-      }
-    });
-    if (foundItems.length > 0) {
-      return res.status(400).send({
-        errors: [{ type: 'ITEM.NAME.ALREADY.EXISTS', code: 210 }],
-      });
-    }
-    next();
-  }
-
-  /**
-   * Validate wether the given category existance on the storage.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {Function} next 
-   */
-  async validateCategoryExistance(req: Request, res: Response, next: Function) {
-    const { ItemCategory } = req.models;
-    const item = req.body;
-
-    if (item.category_id) {
-      const foundCategory = await ItemCategory.query().findById(item.category_id);
-
-      if (!foundCategory) {
-        return res.status(400).send({
-          errors: [{ type: 'ITEM_CATEGORY.NOT.FOUND', code: 140 }],
-        });
-      }
-    }
-    next();
-  }
-
-  /**
-   * Validate wether the given cost account exists on the storage.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {Function} next 
-   */
-  async validateCostAccountExistance(req: Request, res: Response, next: Function) {
-    const { Account, AccountType } = req.models;
-    const item = req.body;
-
-    if (item.cost_account_id) {
-      const COGSType = await AccountType.query().findOne('key', 'cost_of_goods_sold');
-      const foundAccount = await Account.query().findById(item.cost_account_id)
-
-      if (!foundAccount) {
-        return res.status(400).send({
-          errors: [{ type: 'COST.ACCOUNT.NOT.FOUND', code: 120 }],
-        });
-      } else if (foundAccount.accountTypeId !== COGSType.id) {
-        return res.status(400).send({
-          errors: [{ type: 'COST.ACCOUNT.NOT.COGS.TYPE', code: 220 }],
-        });
-      }
-    }
-    next();
-  }
-
-  /**
-   * Validate wether the given sell account exists on the storage.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
-   */
-  async validateSellAccountExistance(req: Request, res: Response, next: Function) {
-    const { Account, AccountType } = req.models;
-    const item = req.body;
-
-    if (item.sell_account_id) {
-      const incomeType = await AccountType.query().findOne('key', 'income');
-      const foundAccount = await Account.query().findById(item.sell_account_id);
-
-      if (!foundAccount) {
-        return res.status(400).send({
-          errors: [{ type: 'SELL.ACCOUNT.NOT.FOUND', code: 130 }],
-        });
-      } else if (foundAccount.accountTypeId !== incomeType.id) {
-        return res.status(400).send({
-          errors: [{ type: 'SELL.ACCOUNT.NOT.INCOME.TYPE', code: 230 }],
-        })
-      }
-    }
-    next();
-  }
-
-  /**
-   * Validates wether the given inventory account exists on the storage.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
-   */
-  async validateInventoryAccountExistance(req: Request, res: Response, next: Function) {
-    const { Account, AccountType } = req.models;
-    const item = req.body;
-
-    if (item.inventory_account_id) {
-      const otherAsset = await AccountType.query().findOne('key', 'other_asset');
-      const foundAccount = await Account.query().findById(item.inventory_account_id);
-
-      if (!foundAccount) {
-        return res.status(400).send({ 
-          errors: [{ type: 'INVENTORY.ACCOUNT.NOT.FOUND', code: 200}],
-        });
-      } else if (otherAsset.id !== foundAccount.accountTypeId) {
-        return res.status(400).send({
-          errors: [{ type: 'INVENTORY.ACCOUNT.NOT.CURRENT.ASSET', code: 300 }],
-        });
-      }
-    }
-    next();
-  }
-
-  /**
    * Stores the given item details to the storage.
    * @param {Request} req 
    * @param {Response} res 
    */
-  async newItem(req: Request, res: Response,) {
+  async newItem(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
+    const itemDTO: IItemDTO = this.matchedBodyData(req);
 
-    const item = matchedData(req, {
-      locations: ['body'],
-      includeOptionals: true
-    });
-    const storedItem = await this.itemsService.newItem(tenantId, item);
-
-    return res.status(200).send({ id: storedItem.id });
+    try {
+      const storedItem = await this.itemsService.newItem(tenantId, itemDTO);
+      return res.status(200).send({ id: storedItem.id });
+    } catch (error) {
+      next(error);
+    }
   }
 
   /**
@@ -313,17 +181,17 @@ export default class ItemsController extends BaseController {
    * @param {Request} req 
    * @param {Response} res 
    */
-  async editItem(req: Request, res: Response) {
+  async editItem(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
-
     const itemId: number = req.params.id;
-    const item = matchedData(req, {
-      locations: ['body'],
-      includeOptionals: true
-    });
-    const updatedItem = await this.itemsService.editItem(tenantId, item, itemId);
-
-    return res.status(200).send({ id: itemId });
+    const item: IItemDTO = this.matchedBodyData(req);
+    
+    try {
+      await this.itemsService.editItem(tenantId, itemId, item);
+      return res.status(200).send({ id: itemId });
+    } catch (error) {
+      next(error);
+    }
   }
 
   /**
@@ -331,13 +199,16 @@ export default class ItemsController extends BaseController {
    * @param {Request} req 
    * @param {Response} res 
    */
-  async deleteItem(req: Request, res: Response) {
+  async deleteItem(req: Request, res: Response, next: NextFunction) {
     const itemId: number = req.params.id;
     const { tenantId } = req;
 
-    await this.itemsService.deleteItem(tenantId, itemId);
-
-    return res.status(200).send({ id: itemId });
+    try {
+      await this.itemsService.deleteItem(tenantId, itemId);
+      return res.status(200).send({ id: itemId });
+    } catch (error) {
+      next(error);
+    }
   }
 
   /**
@@ -346,13 +217,17 @@ export default class ItemsController extends BaseController {
    * @param {Response} res 
    * @return {Response} 
    */
-  async getItem(req: Request, res: Response) {
+  async getItem(req: Request, res: Response, next: NextFunction) {
     const itemId: number = req.params.id;
     const { tenantId } = req;
 
-    const storedItem = await this.itemsService.getItemWithMetadata(tenantId, itemId);
+    try {
+      const storedItem = await this.itemsService.getItem(tenantId, itemId);
 
-    return res.status(200).send({ item: storedItem });
+      return res.status(200).send({ item: storedItem });
+    } catch (error) {
+      next(error)
+    }
   }
 
   /**
@@ -371,10 +246,105 @@ export default class ItemsController extends BaseController {
       filter.filterRoles = JSON.parse(filter.stringifiedFilterRoles);
     }
     try {
-      const items = await this.itemsService.getItemsList(tenantId, filter);
+      const items = await this.itemsService.itemsList(tenantId, filter);
       return res.status(200).send({ items });
     } catch (error) {
       next(error);
     }
- }
+  }
+
+  /**
+   * Deletes items in bulk.
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {NextFunction} next 
+   */
+  async bulkDeleteItems(req: Request, res: Response, next: NextFunction) {
+    const { tenantId } = req;
+    const { ids: itemsIds } = req.query;
+  
+    try {
+      await this.itemsService.bulkDeleteItems(tenantId, itemsIds);
+      return res.status(200).send({ ids: itemsIds });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Handles service errors.
+   * @param {Error} error 
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {NextFunction} next 
+   */
+  handlerServiceErrors(error: Error, req: Request, res: Response, next: NextFunction) {
+    if (error instanceof ServiceError) {
+      if (error.errorType === 'NOT_FOUND') {
+        return res.status(400).send({
+          errors: [{ type: 'ITEM.NOT.FOUND', code: 140 }],
+        });
+      }
+      if (error.errorType === 'ITEM_CATEOGRY_NOT_FOUND') {
+        return res.status(400).send({
+          errors: [{ type: 'ITEM_CATEGORY.NOT.FOUND', code: 140 }],
+        });
+      }
+      if (error.errorType === 'ITEM_NAME_EXISTS') {
+        return res.status(400).send({
+          errors: [{ type: 'ITEM.NAME.ALREADY.EXISTS', code: 210 }],
+        });
+      }
+      if (error.errorType === 'COST_ACCOUNT_NOT_FOUMD') {
+        return res.status(400).send({
+          errors: [{ type: 'COST.ACCOUNT.NOT.FOUND', code: 120 }],
+        });
+      }
+      if (error.errorType === 'COST_ACCOUNT_NOT_COGS') {
+        return res.status(400).send({
+          errors: [{ type: 'COST.ACCOUNT.NOT.COGS.TYPE', code: 220 }],
+        });
+      }
+      if (error.errorType === 'SELL_ACCOUNT_NOT_FOUND') {
+        return res.status(400).send({
+          errors: [{ type: 'SELL.ACCOUNT.NOT.FOUND', code: 130 }],
+        });
+      }
+      if (error.errorType === 'SELL_ACCOUNT_NOT_INCOME') {
+        return res.status(400).send({
+          errors: [{ type: 'SELL.ACCOUNT.NOT.INCOME.TYPE', code: 230 }],
+        });
+      }
+      if (error.errorType === 'COST_ACCOUNT_NOT_FOUMD') {
+        return res.status(400).send({
+          errors: [{ type: 'COST.ACCOUNT.NOT.FOUND', code: 120 }],
+        });
+      }
+      if (error.errorType === 'COST_ACCOUNT_NOT_COGS') {
+        return res.status(400).send({
+          errors: [{ type: 'COST.ACCOUNT.NOT.COGS.TYPE', code: 220 }],
+        });
+      }
+      if (error.errorType === 'SELL_ACCOUNT_NOT_FOUND') {
+        return res.status(400).send({
+          errors: [{ type: 'SELL.ACCOUNT.NOT.FOUND', code: 130 }],
+        });
+      }
+      if (error.errorType === 'INVENTORY_ACCOUNT_NOT_FOUND') {
+        return res.status(400).send({
+          errors: [{ type: 'INVENTORY.ACCOUNT.NOT.FOUND', code: 200 }],
+        });
+      }
+      if (error.errorType === 'SELL_ACCOUNT_NOT_INCOME') {
+        return res.status(400).send({
+          errors: [{ type: 'SELL.ACCOUNT.NOT.INCOME.TYPE', code: 230 }],
+        });
+      }
+      if (error.errorType === 'INVENTORY_ACCOUNT_NOT_INVENTORY') {
+        return res.status(400).send({
+          errors: [{ type: 'INVENTORY.ACCOUNT.NOT.CURRENT.ASSET', code: 300 }],
+        });
+      }
+    }
+  }
 }

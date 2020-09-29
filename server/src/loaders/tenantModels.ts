@@ -5,6 +5,7 @@ import AccountTransaction from 'models/AccountTransaction';
 import AccountType from 'models/AccountType';
 import Item from 'models/Item';
 import ItemEntry from 'models/ItemEntry';
+import ItemCategory from 'models/ItemCategory';
 import Bill from 'models/Bill';
 import BillPayment from 'models/BillPayment';
 import BillPaymentEntry from 'models/BillPaymentEntry';
@@ -41,6 +42,7 @@ export default (knex) => {
     AccountTransaction,
     AccountType,
     Item,
+    ItemCategory,
     ItemEntry,
     ManualJournal,
     Bill,
