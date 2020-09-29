@@ -8,7 +8,7 @@ exports.up = function(knex) {
     table.integer('payment_account_id').unsigned();
     table.integer('payee_id').unsigned();
     table.string('reference_no');
-    table.boolean('published').defaultTo(false);
+    table.date('published_at');
     table.integer('user_id').unsigned();
     table.date('payment_date');
     table.timestamps();

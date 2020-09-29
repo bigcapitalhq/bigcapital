@@ -8,7 +8,7 @@ export interface IExpense {
   paymentAccountId: number,
   peyeeId?: number,
   referenceNo?: string,
-  published: boolean,
+  publishedAt: Date|null,
   userId: number,
   paymentDate: Date,
 
@@ -29,7 +29,7 @@ export interface IExpenseDTO {
   paymentAccountId: number,
   peyeeId?: number,
   referenceNo?: string,
-  published: boolean,
+  publish: boolean,
   userId: number,
   paymentDate: Date,
 

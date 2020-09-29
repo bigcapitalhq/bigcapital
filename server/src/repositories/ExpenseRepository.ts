@@ -1,5 +1,6 @@
 import TenantRepository from "./TenantRepository";
 import { IExpense } from 'interfaces';
+import moment from "moment";
 
 export default class ExpenseRepository extends TenantRepository {
   models: any;
@@ -31,7 +32,11 @@ export default class ExpenseRepository extends TenantRepository {
   }
 
   publish(expenseId: number) {
+    const { Expense } = this.models;
 
+    return Expense.query().findById(expenseId).patch({
+      publishedAt: moment().toMySqlDateTime(),
+    });
   }
 
   delete(expenseId: number) {

@@ -1,5 +1,5 @@
 import { Service, Inject } from "typedi";
-import { difference, sumBy } from 'lodash';
+import { difference, sumBy, omit } from 'lodash';
 import moment from "moment";
 import { ServiceError } from "exceptions";
 import TenancyService from 'services/Tenancy/TenancyService';
@@ -244,13 +244,15 @@ export default class ExpensesService implements IExpensesService {
     const totalAmount = sumBy(expenseDTO.categories, 'amount');
 
     return {
-      published: false,
       categories: [],
-      ...expenseDTO,
+      ...omit(expenseDTO, ['publish']),
       totalAmount,
       paymentDate: moment(expenseDTO.paymentDate).toMySqlDateTime(),
       ...(user) ? {
         userId: user.id,
+      } : {},
+      ...(expenseDTO.publish) ? {
+        publishedAt: moment().toMySqlDateTime(),
       } : {},
     }
   }
