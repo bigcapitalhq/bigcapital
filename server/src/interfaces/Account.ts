@@ -25,3 +25,17 @@ export interface IAccount {
 export interface IAccountsFilter extends IDynamicListFilterDTO {
   stringifiedFilterRoles?: string,
 };
+
+export interface IAccountType {
+  id: number,
+  key: string,
+  normal: string,
+  rootType: string,
+  childType: string,
+  balanceSheet: boolean,
+  incomeSheet: boolean,
+}
+
+export interface IAccountsTypesService {
+  getAccountsTypes(tenantId: number): Promise<IAccountType>;
+}

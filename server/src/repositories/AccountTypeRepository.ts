@@ -1,4 +1,5 @@
 import TenantRepository from 'repositories/TenantRepository';
+import { IAccountType } from 'interfaces';
 
 export default class AccountTypeRepository extends TenantRepository {
   cache: any;
@@ -18,28 +19,61 @@ export default class AccountTypeRepository extends TenantRepository {
   }
 
   /**
+   * Retrieve all accounts types.
+   * @return {IAccountType[]}
+   */
+  all() {
+    const { AccountType } = this.models;
+    return this.cache.get('accountType.all', () => {
+      return AccountType.query();
+    });
+  }
+
+  /**
    * Retrieve account type meta.
    * @param {number} accountTypeId 
+   * @return {IAccountType}
    */
-  getTypeMeta(accountTypeId: number) {
+  getTypeMeta(accountTypeId: number): IAccountType {
     const { AccountType } = this.models;
-    return this.cache.get(`accountType.${accountTypeId}`, () => {
+    return this.cache.get(`accountType.id.${accountTypeId}`, () => {
       return AccountType.query().findById(accountTypeId);
     });
   }
 
-  getByKeys(keys: string[]) {
+  /**
+   * Retrieve accounts types of the given keys.
+   * @param {string[]} keys 
+   * @return {IAccountType[]}
+   */
+  getByKeys(keys: string[]): IAccountType[] {
     const { AccountType } = this.models;
-    return AccountType.query().whereIn('key', keys);
+    return this.cache.get(`accountType.keys.${keys.join(',')}`, () => {
+      return AccountType.query().whereIn('key', keys);
+    });
   }
 
-  getByKey(key: string) {
+  /**
+   * Retrieve account tpy eof the given key.
+   * @param {string} key 
+   * @return {IAccountType}
+   */
+  getByKey(key: string): IAccountType {
     const { AccountType } = this.models;
-    return AccountType.query().findOne('key', key);
+    return this.cache.get(`accountType.key.${key}`, () => {
+      return AccountType.query().findOne('key', key);
+    });
   }
 
-  getByRootType(rootType: string) {
+  /**
+   * Retrieve accounts types of the given root type.
+   * @param {string} rootType 
+   * @return {IAccountType[]}
+   */
+  getByRootType(rootType: string): IAccountType[] {
     const { AccountType } = this.models;
-    return AccountType.query().where('root_type', rootType);
+    return this.cache.get(`accountType.rootType.${rootType}`, () => {
+      return AccountType.query().where('root_type', rootType);
+    });
   }
 }

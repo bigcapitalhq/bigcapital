@@ -45,5 +45,5 @@ export default ({ app }) => {
   // catch 404 and forward to error handler
   app.use((req: Request, res: Response, next: NextFunction) => {
     return res.boom.notFound();
-  })
+  });
 };

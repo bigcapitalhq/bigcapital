@@ -1,4 +1,5 @@
 import TenantRepository from 'repositories/TenantRepository';
+import { IAccount } from 'interfaces';
 
 export default class AccountRepository extends TenantRepository {
   models: any;
@@ -33,9 +34,9 @@ export default class AccountRepository extends TenantRepository {
 
   /**
    * Retrieve all accounts on the storage.
-   * @return {}
+   * @return {IAccount[]}
    */
-  allAccounts() {
+  allAccounts(): IAccount[] {
     const { Account } = this.models;
     return this.cache.get('accounts', async () => {
       return Account.query();
@@ -45,8 +46,9 @@ export default class AccountRepository extends TenantRepository {
   /**
    * Retrieve account of the given account slug.
    * @param {string} slug 
+   * @return {IAccount}
    */
-  getBySlug(slug: string) {
+  getBySlug(slug: string): IAccount {
     const { Account } = this.models;
     return this.cache.get(`accounts.slug.${slug}`, () => {
       return Account.query().findOne('slug', slug);
@@ -56,8 +58,9 @@ export default class AccountRepository extends TenantRepository {
   /**
    * Retrieve the account by the given id.
    * @param {number} id - Account id.
+   * @return {IAccount}
    */
-  getById(id: number) {
+  getById(id: number): IAccount {
     const { Account } = this.models;
     return this.cache.get(`accounts.id.${id}`, () => {
       return Account.query().findById(id);
