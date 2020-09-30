@@ -15,8 +15,10 @@ export default function Dashboard() {
     <div className={classNames('dashboard')}>
       <Switch>
         <Route path="/preferences">
-          <Sidebar />
-          <PreferencesSidebar />
+          <DashboardSplitPane>
+            <Sidebar />
+            <PreferencesSidebar />
+          </DashboardSplitPane>
           <PreferencesContent />
         </Route>
 

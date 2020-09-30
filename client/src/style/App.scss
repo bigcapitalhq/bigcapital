@@ -24,6 +24,9 @@ $pt-font-family: Noto Sans, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
 @import '@blueprintjs/core/src/blueprint.scss';
 @import '@blueprintjs/datetime/src/blueprint-datetime.scss';
 
+// Bootstrap
+// @import '~bootstrap/scss/bootstrap';
+
 @import 'basscss';
 
 @import 'functions';
@@ -62,7 +65,7 @@ $pt-font-family: Noto Sans, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
 @import 'pages/estimates';
 @import 'pages/receipts';
 @import 'pages/invoices';
-
+@import 'pages/billing.scss';
 
 // Views
 @import 'views/filter-dropdown';
