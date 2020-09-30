@@ -195,6 +195,10 @@ export default [
     href: '/preferences',
   },
   {
+    text: <T id={'billing'} />,
+    href: '/billing',
+  },
+  {
     text: <T id={'auditing_system'} />,
     href: '/auditing/list',
   },

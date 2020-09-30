@@ -322,4 +322,16 @@ export default [
     }),
     breadcrumb: 'Receipt List',
   },
+
+//Subscriptions
+
+  {
+    path: `/billing`,
+    component: LazyLoader({
+      loader: () => import('containers/Subscriptions/BillingForm'),
+    }),
+    breadcrumb: 'New Billing',
+  },
+
+
 ];
