@@ -13,7 +13,7 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(submitPaymentReceive({ form })),
   requestFetchPaymentReceive: (id) => dispatch(fetchPaymentReceive({ id })),
   requestEditPaymentReceive: (id, form) =>
-    dispatch(editPaymentReceive({ id, form })),
+    dispatch(editPaymentReceive( id, form )),
   requestDeletePaymentReceive: (id) => dispatch(deletePaymentReceive({ id })),
   requestFetchPaymentReceiveTable: (query = {}) =>
     dispatch(fetchPaymentReceivesTable({ query: { ...query } })),

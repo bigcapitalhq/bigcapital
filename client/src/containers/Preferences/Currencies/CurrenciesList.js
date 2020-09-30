@@ -50,8 +50,10 @@ function CurrenciesList({
 
   const fetchCurrencies = useQuery('currencies-table',
     () => requestFetchCurrencies(),
-    { manual: true },
+    { enabled: true },
   );
+
+
 
   useEffect(() => {
     changePreferencesPageTitle(formatMessage({ id: 'currencies' }));
@@ -147,7 +149,7 @@ function CurrenciesList({
   );
 
   const handleDataTableFetchData = useCallback(() => {
-    fetchCurrencies.refetch();
+    // fetchCurrencies.refetch();
   }, [fetchCurrencies]);
 
   return (

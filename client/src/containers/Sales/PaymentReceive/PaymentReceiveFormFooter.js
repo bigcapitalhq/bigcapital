@@ -7,11 +7,23 @@ export default function PaymentReceiveFormFooter({
   onSubmitClick,
   onCancelClick,
   onClearClick,
+  paymentReceive,
 }) {
   return (
     <div className={'estimate-form__floating-footer'}>
-      <Button disabled={isSubmitting} intent={Intent.PRIMARY} type="submit">
-        <T id={'save_send'} />
+      <Button
+        disabled={isSubmitting}
+        intent={Intent.PRIMARY}
+        type="submit"
+        onClick={() => {
+          onSubmitClick({ redirect: true });
+        }}
+    >
+        {paymentReceive && paymentReceive.id ? (
+          <T id={'edit'} />
+        ) : (
+          <T id={'save_send'} />
+        )}
       </Button>
 
       <Button
@@ -20,6 +32,9 @@ export default function PaymentReceiveFormFooter({
         className={'ml1'}
         name={'save'}
         type="submit"
+        onClick={() => {
+          onSubmitClick({ redirect: false });
+        }}
       >
         <T id={'save'} />
       </Button>

@@ -25,7 +25,6 @@ const reducer = createReducer(initialState, {
 
     state.items[id] = { ...defaultBill, ..._bill, ...bill };
   },
-
   [t.BILLS_TABLE_LOADING]: (state, action) => {
     const { loading } = action.payload;
     state.loading = loading;

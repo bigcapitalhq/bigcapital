@@ -97,12 +97,9 @@ function EstimateFormHeader({
             labelProp={'display_name'}
           />
         </FormGroup>
-        
-        <Row>
-          <Col
 
-          // md={9} push={{ md: 3 }}
-          >
+        <Row>
+          <Col>
             <FormGroup
               label={<T id={'estimate_date'} />}
               inline={true}
@@ -110,7 +107,7 @@ function EstimateFormHeader({
               className={classNames(
                 'form-group--select-list',
                 Classes.FILL,
-                'form-group--estimate-date'
+                'form-group--estimate-date',
               )}
               intent={
                 errors.estimate_date && touched.estimate_date && Intent.DANGER
@@ -127,17 +124,14 @@ function EstimateFormHeader({
               />
             </FormGroup>
           </Col>
-          <Col
-
-          // md={3} pull={{ md: 9 }}
-          >
+          <Col>
             <FormGroup
               label={<T id={'expiration_date'} />}
               inline={true}
               className={classNames(
                 'form-group--select-list',
                 'form-group--expiration-date',
-                Classes.FILL
+                Classes.FILL,
               )}
               intent={
                 errors.expiration_date &&
@@ -180,7 +174,7 @@ function EstimateFormHeader({
           {...getFieldProps('estimate_number')}
         />
       </FormGroup>
-    
+
       <FormGroup
         label={<T id={'reference'} />}
         inline={true}

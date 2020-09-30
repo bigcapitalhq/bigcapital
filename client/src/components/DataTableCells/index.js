@@ -4,7 +4,7 @@ import InputGroupCell from './InputGroupCell';
 import ContactsListFieldCell from './ContactsListFieldCell';
 import EstimatesListFieldCell from './EstimatesListFieldCell';
 import PercentFieldCell from './PercentFieldCell';
-import DivFieldCell from './DivFieldCell';
+import { DivFieldCell,EmptyDiv } from './DivFieldCell';
 export {
   AccountsListFieldCell,
   MoneyFieldCell,
@@ -13,4 +13,5 @@ export {
   EstimatesListFieldCell,
   PercentFieldCell,
   DivFieldCell,
+  EmptyDiv,
 };

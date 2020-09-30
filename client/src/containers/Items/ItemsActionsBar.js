@@ -23,9 +23,10 @@ import { If } from 'components';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withResourceDetail from 'containers/Resources/withResourceDetails';
 import withItems from 'containers/Items/withItems';
+import withItemsActions from './withItemsActions';
 
 import { compose } from 'utils';
-
+import { connect } from 'react-redux';
 
 const ItemsActionsBar = ({
   openDialog,
@@ -35,6 +36,9 @@ const ItemsActionsBar = ({
 
   // #withItems
   itemsViews,
+
+  //#withItemActions
+  addItemsTableQueries,
 
   onFilterChanged,
   selectedRows = [],
@@ -56,10 +60,26 @@ const ItemsActionsBar = ({
     selectedRows,
   ]);
 
+  // name
+  // const filterDropdown = FilterDropdown({
+  //   fields: resourceFields,
+  //   onFilterChange: (filterConditions) => {
+  //     setFilterCount(filterConditions.length);
+  //     onFilterChanged && onFilterChanged(filterConditions);
+  //   },
+  // });
+
   const filterDropdown = FilterDropdown({
+    initialCondition: {
+      fieldKey: 'name',
+      compatator: 'contains',
+      value: '',
+    },
     fields: resourceFields,
     onFilterChange: (filterConditions) => {
-      setFilterCount(filterConditions.length);
+      addItemsTableQueries({
+        filter_roles: filterConditions || '',
+      });
       onFilterChanged && onFilterChanged(filterConditions);
     },
   });
@@ -107,9 +127,11 @@ const ItemsActionsBar = ({
           <Button
             className={classNames(Classes.MINIMAL, 'button--filter')}
             text={
-              filterCount <= 0 ?
-                (<T id={'filter'} />) :
-                (`${filterCount} ${formatMessage({ id: 'filters_applied' })}`)
+              filterCount <= 0 ? (
+                <T id={'filter'} />
+              ) : (
+                `${filterCount} ${formatMessage({ id: 'filters_applied' })}`
+              )
             }
             icon={<Icon icon="filter-16" iconSize={16} />}
           />
@@ -140,7 +162,14 @@ const ItemsActionsBar = ({
   );
 };
 
+const mapStateToProps = (state, props) => ({
+  resourceName: 'items',
+});
+
+const withItemsActionsBar = connect(mapStateToProps);
+
 export default compose(
+  withItemsActionsBar,
   withDialogActions,
   withItems(({ itemsViews }) => ({
     itemsViews,
@@ -148,4 +177,5 @@ export default compose(
   withResourceDetail(({ resourceFields }) => ({
     resourceFields,
   })),
+  withItemsActions,
 )(ItemsActionsBar);

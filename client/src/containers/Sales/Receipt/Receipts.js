@@ -23,14 +23,14 @@ function Receipts({
   requestFetchItems,
 
   //#withReceiptsActions
-  requsetFetchInvoice,
+  requestFetchReceipt,
 }) {
   const history = useHistory();
   const { id } = useParams();
 
   const fetchReceipt = useQuery(
     ['receipt', id],
-    (key, _id) => requsetFetchInvoice(_id),
+    (key, _id) => requestFetchReceipt(_id),
     { enabled: !!id },
   );
   const fetchAccounts = useQuery('accounts-list', (key) =>
@@ -60,7 +60,7 @@ function Receipts({
       loading={
         fetchCustomers.isFetching ||
         fetchItems.isFetching ||
-        fetchAccounts.isFetching||
+        fetchAccounts.isFetching ||
         fetchReceipt.isFetching
       }
       name={'receipt-form'}

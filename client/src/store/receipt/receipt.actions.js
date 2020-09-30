@@ -45,22 +45,14 @@ export const deleteReceipt = ({ id }) => {
 export const editReceipt = (id, form) => {
   return (dispatch) =>
     new Promise((resolve, rejcet) => {
-      dispatch({
-        type: t.SET_DASHBOARD_REQUEST_LOADING,
-      });
       ApiService.post(`sales/receipts/${id}`, form)
         .then((response) => {
-          dispatch({
-            type: t.SET_DASHBOARD_REQUEST_COMPLETED,
-          });
           resolve(response);
         })
         .catch((error) => {
           const { response } = error;
           const { data } = response;
-          dispatch({
-            type: t.SET_DASHBOARD_REQUEST_COMPLETED,
-          });
+
           rejcet(data?.errors);
         });
     });
@@ -91,7 +83,7 @@ export const fetchReceipt = ({ id }) => {
 export const fetchReceiptsTable = ({ query = {} }) => {
   return (dispatch, getState) =>
     new Promise((resolve, rejcet) => {
-      const pageQuery = getState().sales_receipts.tableQuery;
+      const pageQuery = getState().salesReceipts.tableQuery;
       dispatch({
         type: t.RECEIPTS_TABLE_LOADING,
         payload: {

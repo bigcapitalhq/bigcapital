@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useHistory } from 'react-router';
 import { connect } from 'react-redux';
 import {
@@ -7,20 +7,22 @@ import {
   NavbarGroup,
   Tabs,
   Tab,
-  Button
+  Button,
 } from '@blueprintjs/core';
 import { useParams } from 'react-router-dom';
 import Icon from 'components/Icon';
 import { Link, withRouter } from 'react-router-dom';
 import { compose } from 'utils';
-import {useUpdateEffect} from 'hooks';
+import { useUpdateEffect } from 'hooks';
+import { DashboardViewsTabs } from 'components';
+import { pick, debounce } from 'lodash';
 
 import withItemsActions from 'containers/Items/withItemsActions';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withViewDetail from 'containers/Views/withViewDetails';
 import withItems from 'containers/Items/withItems';
 
-import { FormattedMessage as T} from 'react-intl';
+import { FormattedMessage as T } from 'react-intl';
 
 function ItemsViewsTabs({
   // #withViewDetail
@@ -42,7 +44,7 @@ function ItemsViewsTabs({
   onViewChanged,
 }) {
   const history = useHistory();
-  const { custom_view_id: customViewId } = useParams();
+  const { custom_view_id: customViewId = null } = useParams();
 
   const handleClickNewView = () => {
     setTopbarEditView(null);
@@ -51,12 +53,12 @@ function ItemsViewsTabs({
 
   const handleViewLinkClick = () => {
     setTopbarEditView(customViewId);
-  }
+  };
 
   useEffect(() => {
     changeItemsCurrentView(customViewId || -1);
     setTopbarEditView(customViewId);
-    changePageSubtitle((customViewId && viewItem) ? viewItem.name : '');
+    changePageSubtitle(customViewId && viewItem ? viewItem.name : '');
 
     addItemsTableQueries({
       custom_view_id: customViewId || null,
@@ -67,45 +69,37 @@ function ItemsViewsTabs({
       changeItemsCurrentView(-1);
       changePageSubtitle('');
     };
-  }, [customViewId]);
+  }, [customViewId, addItemsTableQueries, changeItemsCurrentView]);
 
   useUpdateEffect(() => {
     onViewChanged && onViewChanged(customViewId);
   }, [customViewId]);
 
-  const tabs = itemsViews.map(view => {
-    const baseUrl = '/items';
-    const link = (
-      <Link to={`${baseUrl}/${view.id}/custom_view`} onClick={handleViewLinkClick}>
-        {view.name}
-      </Link>
-    );
-    return (<Tab id={`custom_view_${view.id}`} title={link} />);
-  });
+  const debounceChangeHistory = useRef(
+    debounce((toUrl) => {
+      history.push(toUrl);
+    }, 250),
+  );
 
+  const handleTabsChange = (viewId) => {
+    const toPath = viewId ? `${viewId}/custom_view` : '';
+    debounceChangeHistory.current(`/items/${toPath}`);
+    setTopbarEditView(viewId);
+  };
+
+  const tabs = itemsViews.map((view) => ({
+    ...pick(view, ['name', 'id']),
+  }));
   return (
-    <Navbar className='navbar--dashboard-views'>
+    <Navbar className="navbar--dashboard-views">
       <NavbarGroup align={Alignment.LEFT}>
-        <Tabs
-          id='navbar'
-          large={true}
-          selectedTabId={customViewId ? `custom_view_${customViewId}` : 'all'}
-          className='tabs--dashboard-views'
-        >
-          <Tab
-            id='all'
-            title={<Link to={`/items`}><T id={'all'}/></Link>}
-            onClick={handleViewLinkClick} />
-
-          {tabs}
-
-          <Button
-            className='button--new-view'
-            icon={<Icon icon='plus' />}
-            onClick={handleClickNewView}
-            minimal={true}
-          />
-        </Tabs>
+        <DashboardViewsTabs
+          initialViewId={customViewId}
+          baseUrl={'/items'}
+          tabs={tabs}
+          onNewViewTabClick={handleClickNewView}
+          onChange={handleTabsChange}
+        />
       </NavbarGroup>
     </Navbar>
   );
@@ -123,8 +117,8 @@ export default compose(
   withItemsViewsTabs,
   withDashboardActions,
   withItemsActions,
-  withViewDetail,
-  withItems( ({ itemsViews }) => ({
+  withViewDetail(),
+  withItems(({ itemsViews }) => ({
     itemsViews,
-  }))
+  })),
 )(ItemsViewsTabs);

@@ -20,7 +20,7 @@ import FilterDropdown from 'components/FilterDropdown';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withResourceDetail from 'containers/Resources/withResourceDetails';
-
+import withExchangeRatesActions from './withExchangeRatesActions';
 import { compose } from 'utils';
 
 /**
@@ -32,6 +32,9 @@ function ExchangeRateActionsBar({
 
   // #withResourceDetail
   resourceFields,
+
+  //#withExchangeRatesActions
+  addExchangeRatesTableQueries,
 
   // #ownProps
   selectedRows = [],
@@ -46,14 +49,20 @@ function ExchangeRateActionsBar({
     openDialog('exchangeRate-form', {});
   };
 
-  const filterDropdown = FilterDropdown({
-    fields: resourceFields,
-    onFilterChange: (filterConditions) => {
-      setFilterCount(filterConditions.length || 0);
-
-      onFilterChanged && onFilterChanged(filterConditions);
-    },
-  });
+  // const filterDropdown = FilterDropdown({
+  //   initialCondition: {
+  //   fieldKey: '',
+  //     compatator: 'contains',
+  //     value: '',
+  //   },
+  //   fields: resourceFields,
+  //   onFilterChange: (filterConditions) => {
+  //     addExchangeRatesTableQueries({
+  //       filter_roles: filterConditions || '',
+  //     });
+  //     onFilterChanged && onFilterChanged(filterConditions);
+  //   },
+  // });
 
   const hasSelectedRows = useMemo(() => selectedRows.length > 0, [
     selectedRows,
@@ -76,16 +85,18 @@ function ExchangeRateActionsBar({
 
         <Popover
           minimal={true}
-          content={filterDropdown}
+          // content={filterDropdown}
           interactionKind={PopoverInteractionKind.CLICK}
           position={Position.BOTTOM_LEFT}
         >
           <Button
             className={classNames(Classes.MINIMAL, 'button--filter')}
             text={
-              filterCount <= 0 ?
-                (<T id={'filter'} />) :
-                (`${filterCount} ${formatMessage({ id: 'filters_applied' })}`)
+              filterCount <= 0 ? (
+                <T id={'filter'} />
+              ) : (
+                `${filterCount} ${formatMessage({ id: 'filters_applied' })}`
+              )
             }
             icon={<Icon icon="filter-16" iconSize={16} />}
           />
@@ -117,7 +128,7 @@ function ExchangeRateActionsBar({
 }
 
 const mapStateToProps = (state, props) => ({
-  resourceName: 'exchange_rates',
+  resourceName: '',
 });
 
 const withExchangeRateActionBar = connect(mapStateToProps);
@@ -128,4 +139,5 @@ export default compose(
   withResourceDetail(({ resourceFields }) => ({
     resourceFields,
   })),
+  withExchangeRatesActions,
 )(ExchangeRateActionsBar);

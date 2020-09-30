@@ -173,7 +173,7 @@ const EstimateForm = ({
       index: index + 1,
     }));
   };
-  // debugger;
+
   const initialValues = useMemo(
     () => ({
       ...(estimate
@@ -196,14 +196,6 @@ const EstimateForm = ({
     }),
     [estimate, defaultInitialValues, defaultEstimate],
   );
-
-  // const initialValues = useMemo(
-  //   () => ({
-  //     ...defaultInitialValues,
-  //     entries: orderingProductsIndex(defaultInitialValues.entries),
-  //   }),
-  //   [defaultEstimate, defaultInitialValues, estimate],
-  // );
 
   const initialAttachmentFiles = useMemo(() => {
     return estimate && estimate.media
@@ -263,7 +255,7 @@ const EstimateForm = ({
       }
     },
   });
-
+  console.log(formik.errors ,'ERROR');
   const handleSubmitClick = useCallback(
     (payload) => {
       setPayload(payload);
@@ -315,7 +307,6 @@ const EstimateForm = ({
           onClickAddNewRow={handleClickAddNewRow}
           onClickClearAllLines={handleClearAllLines}
           formik={formik}
-          // defaultRow={defaultEstimate}
         />
 
         <Row>
@@ -324,7 +315,10 @@ const EstimateForm = ({
               label={<T id={'customer_note'} />}
               className={'form-group--customer_note'}
             >
-              <TextArea growVertically={true} {...formik.getFieldProps('note')} />
+              <TextArea
+                growVertically={true}
+                {...formik.getFieldProps('note')}
+              />
             </FormGroup>
             <FormGroup
               label={<T id={'terms_conditions'} />}

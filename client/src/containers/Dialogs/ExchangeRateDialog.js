@@ -15,13 +15,8 @@ import { useFormik } from 'formik';
 import { useQuery, queryCache } from 'react-query';
 import moment from 'moment';
 import { DateInput } from '@blueprintjs/datetime';
-import { momentFormatter } from 'utils';
-import { 
-  AppToaster,
-  Dialog,
-  ErrorMessage,
-  ListSelect,
-} from 'components';
+import { momentFormatter, tansformDateValue } from 'utils';
+import { AppToaster, Dialog, ErrorMessage, ListSelect } from 'components';
 import classNames from 'classnames';
 import withExchangeRatesDialog from './ExchangeRateDialog.container';
 
@@ -39,12 +34,13 @@ function ExchangeRateDialog({
   // #withCurrencies
   currenciesList,
 
+  //#WithExchangeRateDetail
+  exchangeRate,
+
   // #withExchangeRatesActions
   requestSubmitExchangeRate,
   requestFetchExchangeRates,
   requestEditExchangeRate,
-  requestFetchCurrencies,
-  editExchangeRate,
 }) {
   const { formatMessage } = useIntl();
   const [selectedItems, setSelectedItems] = useState({});
@@ -90,7 +86,7 @@ function ExchangeRateDialog({
     validationSchema,
     initialValues: {
       ...(payload.action === 'edit' &&
-        pick(editExchangeRate, Object.keys(initialValues))),
+        pick(exchangeRate, Object.keys(initialValues))),
     },
     onSubmit: (values, { setSubmitting, setErrors }) => {
       if (payload.action === 'edit') {
@@ -154,9 +150,9 @@ function ExchangeRateDialog({
   }, [fetchExchangeRatesDialog]);
 
   const handleDateChange = useCallback(
-    (date) => {
+    (date_filed) => (date) => {
       const formatted = moment(date).format('YYYY-MM-DD');
-      setFieldValue('date', formatted);
+      setFieldValue(date_filed, formatted);
     },
     [setFieldValue],
   );
@@ -231,10 +227,10 @@ function ExchangeRateDialog({
           >
             <DateInput
               fill={true}
-              {...momentFormatter('YYYY-MM-DD')}
-              defaultValue={new Date()}
-              onChange={handleDateChange}
-              popoverProps={{ position: Position.BOTTOM }}
+              {...momentFormatter('YYYY/MM/DD')}
+              value={tansformDateValue(values.date)}
+              onChange={handleDateChange('date')}
+              popoverProps={{ position: Position.BOTTOM, minimal: true }}
               disabled={payload.action === 'edit'}
             />
           </FormGroup>

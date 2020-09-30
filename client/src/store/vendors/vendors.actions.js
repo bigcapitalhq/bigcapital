@@ -9,10 +9,7 @@ export const fetchVendorsTable = ({ query }) => {
         type: t.VENDORS_TABLE_LOADING,
         payload: { loading: true },
       });
-      // @todo remove dead-code.
-      dispatch({
-        type: t.SET_DASHBOARD_REQUEST_LOADING,
-      });
+
       ApiService.get(`vendors`, { params: { ...pageQuery, ...query } })
         .then((response) => {
           dispatch({
@@ -40,10 +37,7 @@ export const fetchVendorsTable = ({ query }) => {
             type: t.VENDORS_TABLE_LOADING,
             payload: { loading: false },
           });
-          // @todo remove dead-lock.
-          dispatch({
-            type: t.SET_DASHBOARD_REQUEST_COMPLETED,
-          });
+
           resolve(response);
         })
         .catch((error) => {
@@ -55,26 +49,16 @@ export const fetchVendorsTable = ({ query }) => {
 export const editVendor = ({ form, id }) => {
   return (dispatch) =>
     new Promise((resolve, reject) => {
-      // @todo remove dread-code.
-      dispatch({
-        type: t.SET_DASHBOARD_REQUEST_LOADING,
-      });
 
       ApiService.post(`vendors/${id}`, form)
         .then((response) => {
-          // @todo remove dread-code.
-          dispatch({
-            type: t.SET_DASHBOARD_REQUEST_COMPLETED,
-          });
+ 
           resolve(response);
         })
         .catch((error) => {
           const { response } = error;
           const { data } = response;
-          // @todo remove dread-code.
-          dispatch({
-            type: t.SET_DASHBOARD_REQUEST_COMPLETED,
-          });
+
           reject(data?.errors);
         });
     });
