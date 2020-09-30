@@ -17,10 +17,10 @@ export default (mapState) => {
     const mapped = {
       receiptsCurrentPage: getReceiptsItems(state, props, tableQuery),
       receiptview:getResourceViews(state, props, 'sales_receipts'),
-      receiptItems: state.sales_receipts.items,
+      receiptItems: state.salesReceipts.items,
       receiptTableQuery: tableQuery,
       receiptsPagination: getReceiptPaginationMeta(state, props, tableQuery),
-      receiptsLoading: state.sales_receipts.loading,
+      receiptsLoading: state.salesReceipts.loading,
     };
 
     return mapState ? mapState(mapped, state, props) : mapped;

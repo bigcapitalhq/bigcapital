@@ -13,6 +13,7 @@ export const fetchExchangeRates = () => {
       });
       ApiService.get('exchange_rates')
         .then((response) => {
+         
           dispatch({
             type: t.EXCHANGE_RATE_LIST_SET,
             exchange_rates: response.data.exchange_rates.results,
@@ -35,19 +36,17 @@ export const fetchExchangeRates = () => {
 export const submitExchangeRate = ({ form }) => {
   return (dispatch) =>
     new Promise((resolve, reject) => {
-      ApiService.post('exchange_rates', form).then((response) => {
-        resolve(response);
-      }).catch((error)=>{
-        const {response} = error
-        const {data} = response;
-        reject(data?.errors)
-      })
+      ApiService.post('exchange_rates', form)
+        .then((response) => {
+          resolve(response);
+        })
+        .catch((error) => {
+          const { response } = error;
+          const { data } = response;
+          reject(data?.errors);
+        });
     });
 };
-
-// export const deleteExchangeRate = (id) => {
-//   return (dispatch) => ApiService.delete(`exchange_rates/${id}`);
-// }
 
 export const deleteExchangeRate = (id) => {
   return (dispatch) =>

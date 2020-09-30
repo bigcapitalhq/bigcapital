@@ -28,23 +28,14 @@ export const submitEstimate = ({ form }) => {
 export const editEstimate = (id, form) => {
   return (dispatch) =>
     new Promise((resolve, reject) => {
-      dispatch({
-        type: t.SET_DASHBOARD_REQUEST_LOADING,
-      });
       ApiService.post(`sales/estimates/${id}`, form)
         .then((response) => {
-          dispatch({
-            type: t.SET_DASHBOARD_REQUEST_COMPLETED,
-          });
           resolve(response);
         })
         .catch((error) => {
           const { response } = error;
           const { data } = response;
 
-          dispatch({
-            type: t.SET_DASHBOARD_REQUEST_COMPLETED,
-          });
           reject(data?.errors);
         });
     });
@@ -93,7 +84,7 @@ export const fetchEstimate = ({ id }) => {
 export const fetchEstimatesTable = ({ query = {} }) => {
   return (dispatch, getState) =>
     new Promise((resolve, rejcet) => {
-      const pageQuery = getState().sales_estimates.tableQuery;
+      const pageQuery = getState().salesEstimates.tableQuery;
       dispatch({
         type: t.ESTIMATES_TABLE_LOADING,
         payload: {

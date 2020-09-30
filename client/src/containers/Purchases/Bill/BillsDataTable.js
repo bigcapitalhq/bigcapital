@@ -106,6 +106,7 @@ function BillsDataTable({
           text={formatMessage({ id: 'delete_bill' })}
           intent={Intent.DANGER}
           onClick={handleDeleteBill(bill)}
+          icon={<Icon icon="trash-16" iconSize={16} />}
         />
       </Menu>
     ),

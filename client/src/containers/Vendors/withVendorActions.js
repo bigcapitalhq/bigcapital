@@ -13,7 +13,7 @@ const mapDipatchToProps = (dispatch) => ({
   requestEditVendor: (id, form) => dispatch(editVendor(id, form)),
   requestFetchVendorsTable: (query = {}) =>
     dispatch(fetchVendorsTable({ query: { ...query } })),
-  requestDeleteEstimate: (id) => dispatch(deleteVendor({ id })),
+  requestDeleteVender: (id) => dispatch(deleteVendor({ id })),
 
   changeVendorView: (id) =>
     dispatch({

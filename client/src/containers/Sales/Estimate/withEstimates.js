@@ -17,10 +17,10 @@ export default (mapState) => {
     const mapped = {
       estimatesCurrentPage: getEstimatesItems(state, props, query),
       estimateViews: getResourceViews(state, props, 'sales_estimates'),
-      estimateItems: state.sales_estimates.items,
+      estimateItems: state.salesEstimates.items,
       estimateTableQuery: query,
       estimatesPageination: getEstimatesPaginationMeta(state, props, query),
-      estimatesLoading: state.sales_estimates.loading,
+      estimatesLoading: state.salesEstimates.loading,
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };

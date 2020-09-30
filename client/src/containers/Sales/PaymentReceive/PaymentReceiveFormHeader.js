@@ -10,6 +10,9 @@ import {
 
 import { DateInput } from '@blueprintjs/datetime';
 import { FormattedMessage as T } from 'react-intl';
+import { useParams, useHistory } from 'react-router-dom';
+import { useQuery } from 'react-query';
+
 import moment from 'moment';
 import { momentFormatter, compose, tansformDateValue } from 'utils';
 import classNames from 'classnames';
@@ -106,8 +109,55 @@ function PaymentReceiveFormHeader({
             labelProp={'display_name'}
           />
         </FormGroup>
+
+        {/* Payment date */}
         <FormGroup
-          label={<T id={'deposit_account'} />}
+          label={<T id={'payment_date'} />}
+          inline={true}
+          labelInfo={<FieldRequiredHint />}
+          className={classNames('form-group--select-list', Classes.FILL)}
+          intent={errors.payment_date && touched.payment_date && Intent.DANGER}
+          helperText={
+            <ErrorMessage name="payment_date" {...{ errors, touched }} />
+          }
+        >
+          <DateInput
+            {...momentFormatter('YYYY/MM/DD')}
+            value={tansformDateValue(values.payment_date)}
+            onChange={handleDateChange('payment_date')}
+            popoverProps={{ position: Position.BOTTOM, minimal: true }}
+          />
+        </FormGroup>
+
+        {/* payment receive no */}
+        <FormGroup
+          label={<T id={'payment_receive_no'} />}
+          inline={true}
+          className={('form-group--payment_receive_no', Classes.FILL)}
+          labelInfo={<FieldRequiredHint />}
+          intent={
+            errors.payment_receive_no &&
+            touched.payment_receive_no &&
+            Intent.DANGER
+          }
+          helperText={
+            <ErrorMessage name="payment_receive_no" {...{ errors, touched }} />
+          }
+        >
+          <InputGroup
+            intent={
+              errors.payment_receive_no &&
+              touched.payment_receive_no &&
+              Intent.DANGER
+            }
+            minimal={true}
+            {...getFieldProps('payment_receive_no')}
+          />
+        </FormGroup>
+
+        {/* deposit account */}
+        <FormGroup
+          label={<T id={'deposit_to'} />}
           className={classNames(
             'form-group--deposit_account_id',
             'form-group--select-list',
@@ -129,53 +179,37 @@ function PaymentReceiveFormHeader({
         >
           <AccountsSelectList
             accounts={depositAccounts}
+            labelInfo={<FieldRequiredHint />}
             onAccountSelected={onChangeSelect('deposit_account_id')}
             defaultSelectText={<T id={'select_deposit_account'} />}
             selectedAccountId={values.deposit_account_id}
           />
         </FormGroup>
-        <FormGroup
-          label={<T id={'payment_date'} />}
-          inline={true}
-          className={classNames('form-group--select-list', Classes.FILL)}
-          intent={errors.payment_date && touched.payment_date && Intent.DANGER}
-          helperText={
-            <ErrorMessage name="payment_date" {...{ errors, touched }} />
-          }
-        >
-          <DateInput
-            {...momentFormatter('YYYY/MM/DD')}
-            value={tansformDateValue(values.payment_date)}
-            onChange={handleDateChange}
-            popoverProps={{ position: Position.BOTTOM, minimal: true }}
-          />
-        </FormGroup>
       </div>
-      {/* payment receive no */}
-      <FormGroup
-        label={<T id={'payment_receive_no'} />}
+
+      {/* Receive amount */}
+
+      {/* <FormGroup
+        label={<T id={'receive_amount'} />}
         inline={true}
-        className={('form-group--payment_receive_no', Classes.FILL)}
         labelInfo={<FieldRequiredHint />}
+        className={classNames('form-group--', Classes.FILL)}
         intent={
-          errors.payment_receive_no &&
-          touched.payment_receive_no &&
-          Intent.DANGER
+          errors.receive_amount && touched.receive_amount && Intent.DANGER
         }
         helperText={
-          <ErrorMessage name="payment_receive_no" {...{ errors, touched }} />
+          <ErrorMessage name="receive_amount" {...{ errors, touched }} />
         }
       >
         <InputGroup
           intent={
-            errors.payment_receive_no &&
-            touched.payment_receive_no &&
-            Intent.DANGER
+            errors.receive_amount && touched.receive_amount && Intent.DANGER
           }
           minimal={true}
-          {...getFieldProps('payment_receive_no')}
+          {...getFieldProps('receive_amount')}
         />
-      </FormGroup>
+      </FormGroup> */}
+
       {/* reference_no */}
       <FormGroup
         label={<T id={'reference'} />}

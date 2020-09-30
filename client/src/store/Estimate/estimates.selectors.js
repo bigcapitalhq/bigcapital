@@ -1,20 +1,20 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { pickItemsFromIds, paginationLocationQuery } from 'store/selectors';
 
-const estimateTableQuery = (state) => state.sales_estimates.tableQuery;
+const estimateTableQuery = (state) => state.salesEstimates.tableQuery;
 
 const estimateByIdSelector = (state, props) => 
-  state.sales_estimates.items[props.estimateId];
+  state.salesEstimates.items[props.estimateId];
 
 const estimatesCurrentViewSelector = (state, props) => {
-  const viewId = state.sales_estimates.currentViewId;
-  return state.sales_estimates.views?.[viewId];
+  const viewId = state.salesEstimates.currentViewId;
+  return state.salesEstimates.views?.[viewId];
 };
-const estimateItemsSelector = (state) => state.sales_estimates.items;
+const estimateItemsSelector = (state) => state.salesEstimates.items;
 
 const estimatesPageSelector = (state, props, query) => {
-  const viewId = state.sales_estimates.currentViewId;
-  return state.sales_estimates.views?.[viewId]?.pages?.[query.page];
+  const viewId = state.salesEstimates.currentViewId;
+  return state.salesEstimates.views?.[viewId]?.pages?.[query.page];
 };
 
 export const getEstimatesTableQueryFactory = () =>

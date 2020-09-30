@@ -57,20 +57,18 @@ $pt-font-family: Noto Sans, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
 @import 'pages/item-category';
 @import 'pages/items';
 @import 'pages/items-categories';
-@import 'pages/invite-form.scss';
+@import 'pages/invite-form';
 @import 'pages/currency';
-@import 'pages/invite-user.scss';
-@import 'pages/exchange-rate.scss';
-@import 'pages/customer.scss';
-@import 'pages/estimates';
-@import 'pages/receipts';
-@import 'pages/invoices';
-@import 'pages/billing.scss';
+@import 'pages/invite-user';
+@import 'pages/exchange-rate';
+@import 'pages/customer';
+@import 'pages/billing';
 
 // Views
 @import 'views/filter-dropdown';
 @import 'views/sidebar';
-
+@import 'pages/estimate';
+ 
 .App {
   min-width: 960px;
 }

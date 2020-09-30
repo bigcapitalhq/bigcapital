@@ -2,20 +2,20 @@ import { createSelector } from '@reduxjs/toolkit';
 import { pickItemsFromIds, paginationLocationQuery } from 'store/selectors';
 
 const receiptsPageSelector = (state, props, query) => {
-  const viewId = state.sales_receipts.currentViewId;
-  return state.sales_receipts.views?.[viewId]?.pages?.[query.page];
+  const viewId = state.salesReceipts.currentViewId;
+  return state.salesReceipts.views?.[viewId]?.pages?.[query.page];
 };
 
 const receiptsPaginationSelector = (state, props) => {
-  const viewId = state.sales_receipts.currentViewId;
-  return state.sales_receipts.views?.[viewId];
+  const viewId = state.salesReceipts.currentViewId;
+  return state.salesReceipts.views?.[viewId];
 };
 
-const receiptItemsSelector = (state) => state.sales_receipts.items;
+const receiptItemsSelector = (state) => state.salesReceipts.items;
 
-const receiptTableQuery = (state) => state.sales_receipts.tableQuery;
+const receiptTableQuery = (state) => state.salesReceipts.tableQuery;
 
-const receiptByIdSelector = (state, props) => state.sales_receipts.items[props.receiptId];
+const receiptByIdSelector = (state, props) => state.salesReceipts.items[props.receiptId];
 
 
 export const getReceiptCurrentPageFactory = () =>

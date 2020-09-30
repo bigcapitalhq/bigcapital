@@ -2,14 +2,22 @@ import React from 'react';
 import { Intent, Button } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'react-intl';
 
-export default function BillFormFooter({
-  formik: { isSubmitting },
+export default function PaymentMadeFormFooter({
+  formik: { isSubmitting, resetForm },
   onSubmitClick,
   onCancelClick,
+  paymentMade,
 }) {
   return (
-    <div>
-      <Button disabled={isSubmitting} intent={Intent.PRIMARY} type="submit">
+    <div className={'estimate-form__floating-footer'}>
+      <Button
+        disabled={isSubmitting}
+        intent={Intent.PRIMARY}
+        type="submit"
+        onClick={() => {
+          onSubmitClick({ redirect: true });
+        }}
+      >
         <T id={'save_send'} />
       </Button>
 
@@ -19,11 +27,14 @@ export default function BillFormFooter({
         className={'ml1'}
         name={'save'}
         type="submit"
+        onClick={() => {
+          onSubmitClick({ redirect: false });
+        }}
       >
         <T id={'save'} />
       </Button>
 
-      <Button className={'ml1'} disabled={isSubmitting}>
+      <Button className={'ml1'} disabled={isSubmitting} s>
         <T id={'clear'} />
       </Button>
 

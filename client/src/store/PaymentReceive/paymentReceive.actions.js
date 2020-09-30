@@ -4,22 +4,14 @@ import t from 'store/types';
 export const submitPaymentReceive = ({ form }) => {
   return (dispatch) =>
     new Promise((resolve, reject) => {
-      dispatch({
-        type: t.SET_DASHBOARD_REQUEST_LOADING,
-      });
       ApiService.post('sales/payment_receives', form)
         .then((response) => {
-          dispatch({
-            type: t.SET_DASHBOARD_REQUEST_COMPLETED,
-          });
           resolve(response);
         })
         .catch((error) => {
           const { response } = error;
           const { data } = response;
-          dispatch({
-            type: t.SET_DASHBOARD_REQUEST_COMPLETED,
-          });
+
           reject(data?.errors);
         });
     });
@@ -28,22 +20,14 @@ export const submitPaymentReceive = ({ form }) => {
 export const editPaymentReceive = (id, form) => {
   return (dispatch) =>
     new Promise((resolve, rejcet) => {
-      dispatch({
-        type: t.SET_DASHBOARD_REQUEST_LOADING,
-      });
       ApiService.post(`sales/payment_receives/${id}`, form)
         .then((response) => {
-          dispatch({
-            type: t.SET_DASHBOARD_REQUEST_COMPLETED,
-          });
           resolve(response);
         })
         .catch((error) => {
           const { response } = error;
           const { data } = response;
-          dispatch({
-            type: t.SET_DASHBOARD_REQUEST_COMPLETED,
-          });
+
           rejcet(data?.errors);
         });
     });
@@ -52,9 +36,9 @@ export const editPaymentReceive = (id, form) => {
 export const deletePaymentReceive = ({ id }) => {
   return (dispatch) =>
     new Promise((resovle, reject) => {
-      ApiService.delete(`payment_receives/${id}`)
+      ApiService.delete(`sales/payment_receives/${id}`)
         .then((response) => {
-          dispatch({ type: t.PAYMENT_RECEIVE_DELETE });
+          dispatch({ type: t.PAYMENT_RECEIVE_DELETE, payload: { id } });
           resovle(response);
         })
         .catch((error) => {
@@ -66,21 +50,31 @@ export const deletePaymentReceive = ({ id }) => {
 export const fetchPaymentReceive = ({ id }) => {
   return (dispatch) =>
     new Promise((resovle, reject) => {
-      ApiService.get(`payment_receives/${id}`)
+      ApiService.get(`sales/payment_receives/${id}`, {})
         .then((response) => {
+          dispatch({
+            type: t.RELOAD_INVOICES,
+            payload: {
+              sales_invoices: response.data.paymentReceive.entries.map(
+                (e) => e.invoice,
+              ),
+            },
+          });
           dispatch({
             type: t.PAYMENT_RECEIVE_SET,
             payload: {
               id,
-              payment_receive: response.data.payment_receive,
+              paymentReceive: response.data.paymentReceive,
+    
             },
           });
           resovle(response);
         })
         .catch((error) => {
-          const { response } = error;
-          const { data } = response;
-          reject(data?.errors);
+          // const { response } = error;
+          // const { data } = response;
+          // reject(data?.errors);
+          reject(error);
         });
     });
 };
@@ -88,7 +82,7 @@ export const fetchPaymentReceive = ({ id }) => {
 export const fetchPaymentReceivesTable = ({ query = {} }) => {
   return (dispatch, getState) =>
     new Promise((resolve, rejcet) => {
-      const pageQuery = getState().payment_receive.tableQuery;
+      const pageQuery = getState().paymentReceives.tableQuery;
 
       dispatch({
         type: t.PAYMENT_RECEIVES_TABLE_LOADING,
@@ -96,12 +90,12 @@ export const fetchPaymentReceivesTable = ({ query = {} }) => {
           loading: true,
         },
       });
-      ApiService.get('payment_receives', {
+      ApiService.get('sales/payment_receives', {
         params: { ...pageQuery, ...query },
       })
         .then((response) => {
           dispatch({
-            type: t.RECEIPTS_PAGE_SET,
+            type: t.PAYMENT_RECEIVES_PAGE_SET,
             payload: {
               payment_receives: response.data.payment_receives.results,
               pagination: response.data.payment_receives.pagination,

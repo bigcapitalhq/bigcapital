@@ -16,10 +16,14 @@ import { compose } from 'utils';
 import DataTable from 'components/DataTable';
 
 import withItemCategories from './withItemCategories';
+import withDialogActions from 'containers/Dialog/withDialogActions';
 
 const ItemsCategoryList = ({
   // #withItemCategories
   categoriesList,
+
+  // #withDialogActions.
+  openDialog,
 
   // #ownProps
   onFetchData,
@@ -30,11 +34,12 @@ const ItemsCategoryList = ({
   const { formatMessage } = useIntl();
 
   const handelEditCategory = useCallback(
-    (category) => {
-      onEditCategory(category);
+    (category) => () => {
+      openDialog('item-category-form', { action: 'edit', id: category.id });
     },
-    [onEditCategory],
+    [],
   );
+
   const handleDeleteCategory = useCallback(
     (category) => {
       onDeleteCategory(category);
@@ -46,13 +51,14 @@ const ItemsCategoryList = ({
       <Menu>
         <MenuItem
           text={formatMessage({ id: 'edit_category' })}
-          onClick={() => handelEditCategory(category)}
+          onClick={handelEditCategory(category)}
         />
         <MenuDivider />
         <MenuItem
           text={formatMessage({ id: 'delete_category' })}
           intent={Intent.DANGER}
           onClick={() => handleDeleteCategory(category)}
+          icon={<Icon icon="trash-16" iconSize={16} />}
         />
       </Menu>
     ),
@@ -77,7 +83,7 @@ const ItemsCategoryList = ({
       {
         id: 'count',
         Header: formatMessage({ id: 'count' }),
-        accessor: (r) => r.count || '',
+        accessor: 'count',
         className: 'count',
         width: 50,
       },
@@ -154,4 +160,5 @@ export default compose(
   withItemCategories(({ categoriesList }) => ({
     categoriesList,
   })),
+  withDialogActions,
 )(ItemsCategoryList);

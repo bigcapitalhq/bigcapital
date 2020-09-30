@@ -160,7 +160,7 @@ export default [
   },
   // Expenses
   {
-    path: `/expenses/new`, // expenses/
+    path: `/expenses/new`,
     component: LazyLoader({
       loader: () => import('containers/Expenses/Expenses'),
     }),
@@ -228,8 +228,7 @@ export default [
     breadcrumb: 'Estimates List',
   },
 
-  //Invoices
-
+  // Invoices.
   {
     path: `/invoices/:id/edit`,
     component: LazyLoader({
@@ -253,7 +252,7 @@ export default [
     breadcrumb: 'Invoices List',
   },
 
-  //Receipts
+  // Sales Receipts.
   {
     path: `/receipts/:id/edit`,
     component: LazyLoader({
@@ -292,8 +291,16 @@ export default [
     }),
     breadcrumb: 'New Payment Receive',
   },
+  {
+    path: `/payment-receives`,
+    component: LazyLoader({
+      loader: () =>
+        import('containers/Sales/PaymentReceive/PaymentReceiveList'),
+    }),
+    breadcrumb: 'Payment Receive List',
+  },
 
-  //Bills
+  // Bills
   {
     path: `/bills/:id/edit`,
     component: LazyLoader({
@@ -322,9 +329,7 @@ export default [
     }),
     breadcrumb: 'Receipt List',
   },
-
-//Subscriptions
-
+  // Subscription billing.
   {
     path: `/billing`,
     component: LazyLoader({
@@ -332,6 +337,27 @@ export default [
     }),
     breadcrumb: 'New Billing',
   },
-
-
+  // Payment mades.
+  {
+    path: `/payment-made/:id/edit`,
+    component: LazyLoader({
+      loader: () => import('containers/Purchases/PaymentMades/PaymentMade'),
+    }),
+    breadcrumb: 'Edit',
+  },
+  {
+    path: `/payment-made/new`,
+    component: LazyLoader({
+      loader: () => import('containers/Purchases/PaymentMades/PaymentMade'),
+    }),
+    breadcrumb: 'New Payment Made',
+  },
+  {
+    path: `/payment-mades`,
+    component: LazyLoader({
+      loader: () =>
+        import('containers/Purchases/PaymentMades/PaymentMadeList'),
+    }),
+    breadcrumb: 'Payment Made List',
+  },
 ];

@@ -19,6 +19,12 @@ function Invoices({
   const history = useHistory();
   const { id } = useParams();
 
+  const fetchInvoice = useQuery(
+    ['invoice', id],
+    (key, _id) => requsetFetchInvoice(_id),
+    { enabled: !!id },
+  );
+
   // Handle fetch Items data table or list
   const fetchItems = useQuery('items-table', () => requestFetchItems({}));
 
@@ -31,12 +37,6 @@ function Invoices({
   // Handle fetch customers data table or list
   const fetchCustomers = useQuery('customers-table', () =>
     requestFetchCustomers({}),
-  );
-
-  const fetchInvoice = useQuery(
-    ['invoice', id],
-    (key, _id) => requsetFetchInvoice(_id),
-    { enabled: !!id },
   );
 
   const handleCancel = useCallback(() => {

@@ -12,15 +12,17 @@ import {
 import { FormattedMessage as T } from 'react-intl';
 import classNames from 'classnames';
 import { connect } from 'react-redux';
+import { If, Icon } from 'components';
 
-import Icon from 'components/Icon';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import FilterDropdown from 'components/FilterDropdown';
-import { If } from 'components';
 
 import withResourceDetail from 'containers/Resources/withResourceDetails';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
+
+import withItemCategories from './withItemCategories';
+import withItemCategoriesActions from './withItemCategoriesActions';
 
 import { compose } from 'utils';
 
@@ -30,6 +32,12 @@ const ItemsCategoryActionsBar = ({
 
   // #withDialog
   openDialog,
+
+  // #withItemCategories
+  categoriesViews,
+
+  // #withItemCategoriesActions
+  addItemCategoriesTableQueries,
 
   // #ownProps
   selectedRows = [],
@@ -46,17 +54,21 @@ const ItemsCategoryActionsBar = ({
     selectedRows,
   ]);
 
-  // const handleDeleteCategory = useCallback((category) => {
-  //   onDeleteCategory(selectedRows);
-  // }, [selectedRows, onDeleteCategory]);
-
-  const filterDropdown = FilterDropdown({
-    fields: resourceFields,
-    onFilterChange: (filterConditions) => {
-      setFilterCount(filterConditions.length || 0);
-      onFilterChanged && onFilterChanged(filterConditions);
-    },
-  });
+  // const filterDropdown = FilterDropdown({
+  //   fields: resourceFields,
+  //   initialCondition: {
+  //     fieldKey: 'name',
+  //     compatator: 'contains',
+  //     value: '',
+  //   },
+  //   onFilterChange: (filterConditions) => {
+  //     setFilterCount(filterConditions.length || 0);
+  //     addItemCategoriesTableQueries({
+  //       filter_roles: filterConditions || '',
+  //     });
+  //     onFilterChanged && onFilterChanged(filterConditions);
+  //   },
+  // });
 
   const handelBulkDelete = useCallback(() => {
     onBulkDelete && onBulkDelete(selectedRows.map((r) => r.id));
@@ -75,22 +87,29 @@ const ItemsCategoryActionsBar = ({
 
         <Popover
           minimal={true}
-          content={filterDropdown}
+          // content={filterDropdown}
           interactionKind={PopoverInteractionKind.CLICK}
           position={Position.BOTTOM_LEFT}
+          canOutsideClickClose={true}
         >
           <Button
             className={classNames(Classes.MINIMAL, 'button--filter')}
-            text={ filterCount <= 0 ? <T id={'filter'}/> : `${filterCount} filters applied`}
-            icon={<Icon icon='filter-16' iconSize={16} />}
+            text={
+              filterCount <= 0 ? (
+                <T id={'filter'} />
+              ) : (
+                `${filterCount} filters applied`
+              )
+            }
+            icon={<Icon icon="filter-16" iconSize={16} />}
           />
         </Popover>
 
         <If condition={hasSelectedRows}>
           <Button
             className={Classes.MINIMAL}
-            icon={<Icon icon='trash-16' iconSize={16} />}
-            text={<T id={'delete'}/>}
+            icon={<Icon icon="trash-16" iconSize={16} />}
+            text={<T id={'delete'} />}
             intent={Intent.DANGER}
             onClick={handelBulkDelete}
           />
@@ -98,13 +117,13 @@ const ItemsCategoryActionsBar = ({
 
         <Button
           className={Classes.MINIMAL}
-          icon={<Icon icon='file-import-16' iconSize={16} />}
-          text={<T id={'import'}/>}
+          icon={<Icon icon="file-import-16" iconSize={16} />}
+          text={<T id={'import'} />}
         />
         <Button
           className={Classes.MINIMAL}
-          icon={<Icon icon='file-export-16' iconSize={16} />}
-          text={<T id={'export'}/>}
+          icon={<Icon icon="file-export-16" iconSize={16} />}
+          text={<T id={'export'} />}
         />
       </NavbarGroup>
     </DashboardActionsBar>
@@ -114,7 +133,6 @@ const ItemsCategoryActionsBar = ({
 const mapStateToProps = (state, props) => ({
   resourceName: 'items_categories',
 });
-
 const withItemsCategoriesActionsBar = connect(mapStateToProps);
 
 export default compose(
@@ -124,4 +142,8 @@ export default compose(
   withResourceDetail(({ resourceFields }) => ({
     resourceFields,
   })),
+  // withItemCategories(({ categoriesViews }) => ({
+  //   categoriesViews,
+  // })),
+  withItemCategoriesActions,
 )(ItemsCategoryActionsBar);

@@ -163,7 +163,7 @@ function InvoiceForm({
       index: index + 1,
     }));
   };
-  // debugger;
+
   const initialValues = useMemo(
     () => ({
       ...(invoice
@@ -186,14 +186,6 @@ function InvoiceForm({
     }),
     [invoice, defaultInitialValues, defaultInvoice],
   );
-
-  // const initialValues = useMemo(
-  //   () => ({
-  //     ...defaultInitialValues,
-  //     entries: orderingIndex(defaultInitialValues.entries),
-  //   }),
-  //   [defaultInvoice, defaultInitialValues, invoice],
-  // );
 
   const initialAttachmentFiles = useMemo(() => {
     return invoice && invoice.media
@@ -337,7 +329,8 @@ function InvoiceForm({
               onDrop={handleDropFiles}
               onDeleteFile={handleDeleteFile}
               hint={'Attachments: Maxiumum size: 20MB'}
-            /></Col>
+            />
+          </Col>
         </Row>
       </form>
 

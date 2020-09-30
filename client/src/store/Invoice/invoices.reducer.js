@@ -12,6 +12,7 @@ const initialState = {
     page_size: 5,
     page: 1,
   },
+  dueInvoices: {},
 };
 
 const defaultInvoice = {
@@ -22,13 +23,13 @@ const reducer = createReducer(initialState, {
   [t.INVOICE_SET]: (state, action) => {
     const { id, sale_invoice } = action.payload;
     const _invoice = state.items[id] || {};
-
     state.items[id] = { ...defaultInvoice, ..._invoice, ...sale_invoice };
   },
 
   [t.INVOICES_ITEMS_SET]: (state, action) => {
     const { sales_invoices } = action.payload;
     const _invoices = {};
+
     sales_invoices.forEach((invoice) => {
       _invoices[invoice.id] = {
         ...defaultInvoice,
@@ -94,6 +95,40 @@ const reducer = createReducer(initialState, {
         ...(state.views?.[customViewId] || {}),
         paginationMeta,
       },
+    };
+  },
+  [t.DUE_INVOICES_SET]: (state, action) => {
+    const { customer_id, due_sales_invoices } = action.payload;
+
+    const _dueInvoices = [];
+
+    state.dueInvoices[customer_id] = due_sales_invoices.map((due) => due.id);
+    const _invoices = {};
+    due_sales_invoices.forEach((invoice) => {
+      _invoices[invoice.id] = {
+        ...invoice,
+      };
+    });
+
+    state.items = {
+      ...state.dueInvoices,
+      ...state.items.dueInvoices,
+      ..._invoices,
+    };
+  },
+  [t.RELOAD_INVOICES]: (state, action) => {
+    const { sales_invoices } = action.payload;
+
+    const _sales_invoices = {};
+    sales_invoices.forEach((invoice) => {
+      _sales_invoices[invoice.id] = {
+        ...invoice,
+      };
+    });
+
+    state.items = {
+      ...state.items,
+      ..._sales_invoices,
     };
   },
 });

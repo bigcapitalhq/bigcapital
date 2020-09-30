@@ -202,12 +202,11 @@ function BillForm({
 
       const form = {
         ...values,
-        entries: values.entries.filter(
-          (item) => item.item_id && item.quantity,
-        ),
+        entries: values.entries.filter((item) => item.item_id && item.quantity),
       };
+      const requestForm = { ...form };
       if (bill && bill.id) {
-        requestEditBill(bill.id, form)
+        requestEditBill(bill.id, requestForm)
           .then((response) => {
             AppToaster.show({
               message: formatMessage({
@@ -223,7 +222,7 @@ function BillForm({
             setSubmitting(false);
           });
       } else {
-        requestSubmitBill(form)
+        requestSubmitBill(requestForm)
           .then((response) => {
             AppToaster.show({
               message: formatMessage(
@@ -295,7 +294,10 @@ function BillForm({
         <Row>
           <Col>
             <FormGroup label={<T id={'note'} />} className={'form-group--'}>
-              <TextArea growVertically={true} {...formik.getFieldProps('note')} />
+              <TextArea
+                growVertically={true}
+                {...formik.getFieldProps('note')}
+              />
             </FormGroup>
           </Col>
 

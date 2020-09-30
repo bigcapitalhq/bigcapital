@@ -14,6 +14,7 @@ import ItemCategoriesDataTable from 'containers/Items/ItemCategoriesTable';
 import ItemsCategoryActionsBar from 'containers/Items/ItemsCategoryActionsBar';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
+import withResourceActions from 'containers/Resources/withResourcesActions';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withItemCategoriesActions from 'containers/Items/withItemCategoriesActions';
 import { compose } from 'utils';
@@ -25,10 +26,15 @@ const ItemCategoryList = ({
   // #withDashboardActions
   changePageTitle,
 
+  // #withViewsActions
+  requestFetchResourceViews,
+  requestFetchResourceFields,
+
   // #withItemCategoriesActions
   requestFetchItemCategories,
   requestDeleteItemCategory,
   requestDeleteBulkItemCategories,
+  addItemCategoriesTableQueries,
 
   // #withDialog
   openDialog,
@@ -48,9 +54,13 @@ const ItemCategoryList = ({
       : changePageTitle(formatMessage({ id: 'category_list' }));
   }, [id, changePageTitle, formatMessage]);
 
-  const fetchCategories = useQuery(
-    ['items-categories-list', filter],
-    (key, query) => requestFetchItemCategories(query),
+  const fetchCategories = useQuery(['items-categories-list'], () =>
+    requestFetchItemCategories(),
+  );
+
+  const fetchResourceFields = useQuery(
+    ['resource-fields', 'items_categories'],
+    (key, resourceName) => requestFetchResourceFields(resourceName),
   );
 
   const handleFilterChanged = useCallback(() => {}, []);
@@ -63,17 +73,23 @@ const ItemCategoryList = ({
     [setSelectedRows],
   );
 
-  // Handle fetch data of accounts datatable.
-  const handleFetchData = useCallback(({ pageIndex, pageSize, sortBy }) => {
-    setFilter({
-      ...(sortBy.length > 0
-        ? {
-            column_sort_by: sortBy[0].id,
-            sort_order: sortBy[0].desc ? 'desc' : 'asc',
-          }
-        : {}),
-    });
-  }, []);
+  const handleFetchData = useCallback(
+    ({ pageIndex, pageSize, sortBy }) => {
+      const page = pageIndex + 1;
+
+      addItemCategoriesTableQueries({
+        ...(sortBy.length > 0
+          ? {
+              column_sort_by: sortBy[0].id,
+              sort_order: sortBy[0].desc ? 'desc' : 'asc',
+            }
+          : {}),
+        page_size: pageSize,
+        page,
+      });
+    },
+    [addItemCategoriesTableQueries],
+  );
 
   const handleDeleteCategory = (itemCategory) => {
     setDeleteCategory(itemCategory);
@@ -139,7 +155,10 @@ const ItemCategoryList = ({
   ]);
 
   return (
-    <DashboardInsider name={'item-category-list'}>
+    <DashboardInsider
+      loading={fetchResourceFields.isFetching}
+      name={'item-category-list'}
+    >
       <ItemsCategoryActionsBar
         selectedRows={selectedRows}
         onFilterChanged={handleFilterChanged}
@@ -151,7 +170,7 @@ const ItemCategoryList = ({
         onFetchData={handleFetchData}
         onSelectedRowsChange={handleSelectedRowsChange}
         onDeleteCategory={handleDeleteCategory}
-        loading={tableLoading}
+        loading={fetchCategories.isFetching}
       />
 
       <Alert
@@ -197,4 +216,5 @@ export default compose(
   withItemCategoriesActions,
   withDashboardActions,
   withDialogActions,
+  withResourceActions,
 )(ItemCategoryList);

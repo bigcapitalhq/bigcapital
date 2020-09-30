@@ -215,7 +215,7 @@ function ReceiptForm({
       const requestForm = { ...form };
 
       if (receipt && receipt.id) {
-        requestEditReceipt(receipt.id && requestForm).then(() => {
+        requestEditReceipt(receipt.id, requestForm).then(() => {
           AppToaster.show({
             message: formatMessage({
               id: 'the_receipt_has_been_successfully_edited',
@@ -245,6 +245,7 @@ function ReceiptForm({
       }
     },
   });
+  console.log(formik.errors, 'ERROR');
 
   const handleDeleteFile = useCallback(
     (_deletedFiles) => {
@@ -317,7 +318,7 @@ function ReceiptForm({
                 growVertically={true}
                 {...formik.getFieldProps('statement')}
               />
-            </FormGroup>          
+            </FormGroup>
           </Col>
 
           <Col>
@@ -328,7 +329,7 @@ function ReceiptForm({
               hint={'Attachments: Maxiumum size: 20MB'}
             />
           </Col>
-        </Row>        
+        </Row>
       </form>
       <ReceiptFormFooter
         formik={formik}
