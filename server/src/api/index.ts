@@ -92,10 +92,10 @@ export default () => {
   dashboard.use('/item_categories', Container.get(ItemCategories).router());
   dashboard.use('/expenses', Container.get(Expenses).router());
   dashboard.use('/financial_statements', FinancialStatements.router());
-  dashboard.use('/sales', Sales.router());
+  dashboard.use('/sales', Container.get(Sales).router());
   dashboard.use('/customers', Container.get(Customers).router());
   dashboard.use('/vendors', Container.get(Vendors).router());
-  dashboard.use('/purchases', Purchases.router());
+  dashboard.use('/purchases', Container.get(Purchases).router());
   dashboard.use('/resources', Resources.router());
   dashboard.use('/exchange_rates', Container.get(ExchangeRates).router());
   dashboard.use('/media', Media.router());

@@ -1,9 +1,10 @@
 import express from 'express';
-import { Container } from 'typedi';
+import { Container, Service } from 'typedi';
 import Bills from 'api/controllers/Purchases/Bills'
 import BillPayments from 'api/controllers/Purchases/BillsPayments';
 
-export default {
+@Service()
+export default class PurchasesController {
 
   router() {
     const router = express.Router();

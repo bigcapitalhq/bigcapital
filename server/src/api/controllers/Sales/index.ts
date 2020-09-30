@@ -1,11 +1,12 @@
 import express from 'express';
-import { Container } from 'typedi';
+import { Container, Service } from 'typedi';
 import SalesEstimates from './SalesEstimates';
 import SalesReceipts from './SalesReceipts';
 import SalesInvoices from './SalesInvoices'
 import PaymentReceives from './PaymentReceives';
 
-export default {
+@Service()
+export default class SalesController {
   /**
    * Router constructor.
    */

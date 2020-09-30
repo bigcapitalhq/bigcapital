@@ -12,7 +12,6 @@ import {
   validateFieldKeyExistance,
   validateFilterRolesFieldsExistance,
 } from 'lib/ViewRolesBuilder';
-
 import TenancyService from 'services/Tenancy/TenancyService';
 import { IDynamicListFilterDTO, IFilterRole, IDynamicListService } from 'interfaces';
 
