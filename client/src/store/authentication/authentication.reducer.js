@@ -1,4 +1,4 @@
-import {createReducer} from '@reduxjs/toolkit';
+import { createReducer } from '@reduxjs/toolkit';
 import t from 'store/types';
 
 const initialState = {
@@ -11,10 +11,10 @@ const initialState = {
 
 export default createReducer(initialState, {
   [t.LOGIN_SUCCESS]: (state, action) => {
-    const { token, user } = action.payload;
+    const { token, user, tenant } = action.payload;
     state.token = token;
     state.user = user;
-    state.organization = user.tenant.organization_id;
+    state.organization = tenant.organization_id;
   },
 
   [t.LOGIN_FAILURE]: (state, action) => {
@@ -34,5 +34,5 @@ export default createReducer(initialState, {
 
 export const isAuthenticated = (state) => !!state.authentication.token;
 export const hasErrorType = (state, errorType) => {
-  return state.authentication.errors.find(e => e.type === errorType);
+  return state.authentication.errors.find((e) => e.type === errorType);
 };
