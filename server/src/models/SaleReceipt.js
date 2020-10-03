@@ -20,7 +20,7 @@ export default class SaleReceipt extends TenantModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const Customer = require('models/Customer');
+    const Contact = require('models/Contact');
     const Account = require('models/Account');
     const AccountTransaction = require('models/AccountTransaction');
     const ItemEntry = require('models/ItemEntry');
@@ -28,11 +28,14 @@ export default class SaleReceipt extends TenantModel {
     return {
       customer: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Customer.default,
+        modelClass: Contact.default,
         join: {
           from: 'sales_receipts.customerId',
-          to: 'customers.id',
+          to: 'contacts.id',
         },
+        filter(query) {
+          query.where('contact_type', 'Customer');
+        }
       },
 
       depositAccount: {

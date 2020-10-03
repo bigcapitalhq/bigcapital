@@ -124,7 +124,7 @@ export default class DynamicListService implements IDynamicListService {
       this.validateFilterRolesSchema(filter.filterRoles);
       this.validateRolesFieldsExistance(model, filter.filterRoles);
 
-      // Validate the accounts resource fields.
+      // Validate the model resource fields.
       const filterRoles = new DynamicFilterFilterRoles(filter.filterRoles);
       dynamicFilter.setFilter(filterRoles);
     }

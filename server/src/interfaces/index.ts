@@ -9,7 +9,7 @@ export * from './Payment';
 export * from './SaleInvoice';
 export * from './PaymentReceive';
 export * from './SaleEstimate';
-export * from './Register';
+export * from './Authentication';
 export * from './User';
 export * from './Metable';
 export * from './Options';

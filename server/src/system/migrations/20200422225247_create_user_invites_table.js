@@ -2,9 +2,9 @@
 exports.up = function(knex) {
   return knex.schema.createTable('user_invites', (table) => {
     table.increments();
-    table.string('email');
-    table.string('token').unique();
-    table.integer('tenant_id').unsigned();
+    table.string('email').index();
+    table.string('token').unique().index();
+    table.bigInteger('tenant_id').unsigned().index().references('id').inTable('tenants');
     table.datetime('created_at');
   });
 };

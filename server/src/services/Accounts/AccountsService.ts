@@ -1,10 +1,15 @@
 import { Inject, Service } from 'typedi';
+import { difference } from 'lodash';
 import { kebabCase } from 'lodash'
 import TenancyService from 'services/Tenancy/TenancyService';
 import { ServiceError } from 'exceptions';
 import { IAccountDTO, IAccount, IAccountsFilter } from 'interfaces';
-import { difference } from 'lodash';
+import {
+  EventDispatcher,
+  EventDispatcherInterface,
+} from 'decorators/eventDispatcher';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
+import events from 'subscribers/events';
 
 @Service()
 export default class AccountsService {
@@ -16,6 +21,9 @@ export default class AccountsService {
 
   @Inject('logger')
   logger: any;
+
+  @EventDispatcher()
+  eventDispatcher: EventDispatcherInterface;
 
   /**
    * Retrieve account type or throws service error.
@@ -104,10 +112,10 @@ export default class AccountsService {
    * @return {IAccount}
    */
   private async getAccountOrThrowError(tenantId: number, accountId: number) {
-    const { Account } = this.tenancy.models(tenantId);
+    const { accountRepository } = this.tenancy.repositories(tenantId);
 
     this.logger.info('[accounts] validating the account existance.', { tenantId, accountId });
-    const account = await Account.query().findById(accountId);
+    const account = await accountRepository.findById(accountId);
 
     if (!account) {
       this.logger.info('[accounts] the given account not found.', { accountId });
@@ -159,8 +167,8 @@ export default class AccountsService {
    * @returns {IAccount} 
    */
   public async newAccount(tenantId: number, accountDTO: IAccountDTO) {
-    const { Account } = this.tenancy.models(tenantId);
-  
+    const { accountRepository } = this.tenancy.repositories(tenantId);
+
     // Validate account name uniquiness.
     await this.validateAccountNameUniquiness(tenantId, accountDTO.name);
 
@@ -176,11 +184,15 @@ export default class AccountsService {
       );
       this.throwErrorIfParentHasDiffType(accountDTO, parentAccount);
     }
-    const account = await Account.query().insertAndFetch({
+    const account = await accountRepository.insert({
       ...accountDTO,
       slug: kebabCase(accountDTO.name),
     });
     this.logger.info('[account] account created successfully.', { account, accountDTO });
+
+    // Triggers `onAccountCreated` event.
+    this.eventDispatcher.dispatch(events.accounts.onCreated);
+
     return account;
   }
 
@@ -191,7 +203,7 @@ export default class AccountsService {
    * @param {IAccountDTO} accountDTO 
    */
   public async editAccount(tenantId: number, accountId: number, accountDTO: IAccountDTO) {
-    const { Account } = this.tenancy.models(tenantId);
+    const { accountRepository } = this.tenancy.repositories(tenantId);
     const oldAccount = await this.getAccountOrThrowError(tenantId, accountId);
 
     // Validate account name uniquiness.
@@ -214,12 +226,13 @@ export default class AccountsService {
       this.throwErrorIfParentHasDiffType(accountDTO, parentAccount);
     }
     // Update the account on the storage.
-    const account = await Account.query().patchAndFetchById(
-      oldAccount.id, { ...accountDTO }
-    );
+    const account = await accountRepository.edit(oldAccount.id, accountDTO);
     this.logger.info('[account] account edited successfully.', {
       account, accountDTO, tenantId
     });
+    // Triggers `onAccountEdited` event.
+    this.eventDispatcher.dispatch(events.accounts.onEdited);
+
     return account;
   }
 
@@ -309,7 +322,7 @@ export default class AccountsService {
    * @param {number} accountId 
    */
   public async deleteAccount(tenantId: number, accountId: number) {
-    const { Account } = this.tenancy.models(tenantId);
+    const { accountRepository } = this.tenancy.repositories(tenantId);
     const account = await this.getAccountOrThrowError(tenantId, accountId);
 
     this.throwErrorIfAccountPredefined(account);
@@ -317,10 +330,13 @@ export default class AccountsService {
     await this.throwErrorIfAccountHasChildren(tenantId, accountId);
     await this.throwErrorIfAccountHasTransactions(tenantId, accountId);
 
-    await Account.query().deleteById(account.id);
+    await accountRepository.deleteById(account.id);
     this.logger.info('[account] account has been deleted successfully.', {
       tenantId, accountId,
-    })
+    });
+
+    // Triggers `onAccountDeleted` event.
+    this.eventDispatcher.dispatch(events.accounts.onDeleted);
   }
 
   /**
@@ -400,6 +416,9 @@ export default class AccountsService {
     this.logger.info('[account] given accounts deleted in bulk successfully.', {
       tenantId, accountsIds
     });
+
+    // Triggers `onBulkDeleted` event.
+    this.eventDispatcher.dispatch(events.accounts.onBulkDeleted);
   }
 
   /**
@@ -418,6 +437,9 @@ export default class AccountsService {
         active: activate ? 1 : 0,
       });
     this.logger.info('[account] accounts have been activated successfully.', { tenantId, accountsIds });
+
+    // Triggers `onAccountBulkActivated` event.
+    this.eventDispatcher.dispatch(events.accounts.onActivated);
   }
 
   /**
@@ -436,6 +458,9 @@ export default class AccountsService {
         active: activate ? 1 : 0,
       })
     this.logger.info('[account] account have been activated successfully.', { tenantId, accountId });
+
+    // Triggers `onAccountActivated` event.
+    this.eventDispatcher.dispatch(events.accounts.onActivated);
   }
 
   /** 

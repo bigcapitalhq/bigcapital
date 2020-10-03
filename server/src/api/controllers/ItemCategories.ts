@@ -7,7 +7,6 @@ import {
 import ItemCategoriesService from 'services/ItemCategories/ItemCategoriesService';
 import { Inject, Service } from 'typedi';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
-import validateMiddleware from 'api/middleware/validateMiddleware';
 import { IItemCategoryOTD } from 'interfaces';
 import { ServiceError } from 'exceptions';
 import BaseController from 'api/controllers/BaseController';
@@ -27,42 +26,42 @@ export default class ItemsCategoriesController extends BaseController {
         ...this.categoryValidationSchema,
         ...this.specificCategoryValidationSchema,
       ], 
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.editCategory.bind(this)),
       this.handlerServiceError,
     );
     router.post('/', [
         ...this.categoryValidationSchema,
       ],
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.newCategory.bind(this)),
       this.handlerServiceError,
     );
     router.delete('/', [
         ...this.categoriesBulkValidationSchema,
       ],
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.bulkDeleteCategories.bind(this)),
       this.handlerServiceError,
     );
     router.delete('/:id', [
         ...this.specificCategoryValidationSchema
       ],
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.deleteItem.bind(this)),
       this.handlerServiceError,
     );
     router.get('/:id', [
         ...this.specificCategoryValidationSchema,
       ],
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.getCategory.bind(this)),
       this.handlerServiceError,
     );
     router.get('/', [
         ...this.categoriesListValidationSchema
       ],
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.getList.bind(this)),
       this.handlerServiceError,
     );

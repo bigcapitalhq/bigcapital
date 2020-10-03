@@ -3,14 +3,14 @@ import { check, param, query, matchedData } from 'express-validator';
 import { difference } from 'lodash';
 import { raw } from 'objection';
 import { Service, Inject } from 'typedi';
-import validateMiddleware from 'api/middleware/validateMiddleware';
+import BaseController from '../BaseController';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
 import SaleInvoiceService from 'services/Sales/SalesInvoices';
 import ItemsService from 'services/Items/ItemsService';
 import { ISaleInvoiceOTD } from 'interfaces';
 
 @Service()
-export default class SaleInvoicesController {
+export default class SaleInvoicesController extends BaseController{
   @Inject()
   itemsService: ItemsService;
 
@@ -26,7 +26,7 @@ export default class SaleInvoicesController {
     router.post(
       '/',
       this.saleInvoiceValidationSchema,
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.validateInvoiceCustomerExistance.bind(this)),
       asyncMiddleware(this.validateInvoiceNumberUnique.bind(this)),
       asyncMiddleware(this.validateInvoiceItemsIdsExistance.bind(this)),
@@ -39,7 +39,7 @@ export default class SaleInvoicesController {
         ...this.saleInvoiceValidationSchema,
         ...this.specificSaleInvoiceValidation,
       ],
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.validateInvoiceExistance.bind(this)),
       asyncMiddleware(this.validateInvoiceCustomerExistance.bind(this)),
       asyncMiddleware(this.validateInvoiceNumberUnique.bind(this)),
@@ -52,7 +52,7 @@ export default class SaleInvoicesController {
     router.delete(
       '/:id',
       this.specificSaleInvoiceValidation,
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.validateInvoiceExistance.bind(this)),
       asyncMiddleware(this.deleteSaleInvoice.bind(this))
     );
@@ -64,13 +64,14 @@ export default class SaleInvoicesController {
     router.get(
       '/:id',
       this.specificSaleInvoiceValidation,
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.validateInvoiceExistance.bind(this)),
       asyncMiddleware(this.getSaleInvoice.bind(this))
     );
     router.get(
       '/',
       this.saleInvoiceListValidationSchema,
+      this.validationResult,
       asyncMiddleware(this.getSalesInvoices.bind(this))
     )
     return router;

@@ -4,7 +4,6 @@ import { difference } from 'lodash';
 import { Inject, Service } from 'typedi';
 import { IPaymentReceive, IPaymentReceiveOTD } from 'interfaces';
 import BaseController from 'api/controllers/BaseController';
-import validateMiddleware from 'api/middleware/validateMiddleware';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
 import PaymentReceiveService from 'services/Sales/PaymentsReceives';
 import SaleInvoiceService from 'services/Sales/SalesInvoices';
@@ -34,7 +33,7 @@ export default class PaymentReceivesController extends BaseController {
     router.post(
       '/:id',
       this.editPaymentReceiveValidation,
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.validatePaymentReceiveExistance.bind(this)),
       asyncMiddleware(this.validatePaymentReceiveNoExistance.bind(this)),
       asyncMiddleware(this.validateCustomerExistance.bind(this)),
@@ -47,7 +46,7 @@ export default class PaymentReceivesController extends BaseController {
     router.post(
       '/',
       this.newPaymentReceiveValidation,
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.validatePaymentReceiveNoExistance.bind(this)),
       asyncMiddleware(this.validateCustomerExistance.bind(this)),
       asyncMiddleware(this.validateDepositAccount.bind(this)),
@@ -58,20 +57,20 @@ export default class PaymentReceivesController extends BaseController {
     router.get(
       '/:id',
       this.paymentReceiveValidation,
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.validatePaymentReceiveExistance.bind(this)),
       asyncMiddleware(this.getPaymentReceive.bind(this))
     );
     router.get(
       '/',
       this.validatePaymentReceiveList,
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.getPaymentReceiveList.bind(this)),
     );
     router.delete(
       '/:id',
       this.paymentReceiveValidation,
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.validatePaymentReceiveExistance.bind(this)),
       asyncMiddleware(this.deletePaymentReceive.bind(this)),
     );

@@ -6,10 +6,10 @@ import ContactsService from 'services/Contacts/ContactsService';
 import { 
   ICustomerNewDTO,
   ICustomerEditDTO,
+  ICustomer,
  } from 'interfaces';
 import { ServiceError } from 'exceptions';
 import TenancyService from 'services/Tenancy/TenancyService';
-import { ICustomer } from 'src/interfaces';
 
 @Service()
 export default class CustomersService {

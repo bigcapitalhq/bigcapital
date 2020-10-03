@@ -17,7 +17,6 @@ exports.up = function(knex) {
     table.string('invoice_interval').nullable();
 
     table.integer('index').unsigned();
-
     table.timestamps();
   }).then(() => {
     return knex.seed.run({

@@ -4,8 +4,8 @@ exports.up = function(knex) {
     table.increments('id');
     table.string('slug');
 
-    table.integer('plan_id').unsigned();
-    table.integer('tenant_id').unsigned();
+    table.integer('plan_id').unsigned().index().references('id').inTable('subscription_plans');
+    table.bigInteger('tenant_id').unsigned().index().references('id').inTable('tenants');
 
     table.dateTime('trial_started_at').nullable();
     table.dateTime('trial_ends_at').nullable();

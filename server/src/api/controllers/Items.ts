@@ -23,8 +23,7 @@ export default class ItemsController extends BaseController {
   router() {
     const router = Router();
 
-    router.post(
-      '/', [
+    router.post('/', [
       ...this.validateItemSchema,
     ],
       this.validationResult,

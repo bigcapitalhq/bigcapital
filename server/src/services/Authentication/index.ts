@@ -7,12 +7,13 @@ import {
   EventDispatcher,
   EventDispatcherInterface,
 } from 'decorators/eventDispatcher';
-import { SystemUser, PasswordReset } from 'system/models';
+import { PasswordReset } from 'system/models';
 import {
   IRegisterDTO,
   ITenant,
   ISystemUser,
   IPasswordReset,
+  IAuthenticationService,
 } from 'interfaces';
 import { hashPassword } from 'utils';
 import { ServiceError, ServiceErrors } from 'exceptions';

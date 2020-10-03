@@ -162,7 +162,7 @@ export default class CurrenciesController extends BaseController {
    * @param {Response} res 
    * @param {NextFunction} next 
    */
-  handlerServiceError(error, req, res, next) {
+  handlerServiceError(error: Error, req: Request, res: Response, next: NextFunction) {
     if (error instanceof ServiceError) {
       if (error.errorType === 'currency_not_found') {
         return res.boom.badRequest(null, {

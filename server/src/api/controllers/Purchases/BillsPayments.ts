@@ -30,7 +30,7 @@ export default class BillsPayments extends BaseController {
     router.post('/', [
         ...this.billPaymentSchemaValidation,
       ],
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.validateBillPaymentVendorExistance.bind(this)),
       asyncMiddleware(this.validatePaymentAccount.bind(this)),
       asyncMiddleware(this.validatePaymentNumber.bind(this)),
@@ -42,7 +42,7 @@ export default class BillsPayments extends BaseController {
        ...this.billPaymentSchemaValidation,
        ...this.specificBillPaymentValidateSchema,
       ],
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.validateBillPaymentVendorExistance.bind(this)),
       asyncMiddleware(this.validatePaymentAccount.bind(this)),
       asyncMiddleware(this.validatePaymentNumber.bind(this)),
@@ -53,19 +53,19 @@ export default class BillsPayments extends BaseController {
     )
     router.delete('/:id',
       this.specificBillPaymentValidateSchema,
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.validateBillPaymentExistance.bind(this)),
       asyncMiddleware(this.deleteBillPayment.bind(this)),
     );
     router.get('/:id',
       this.specificBillPaymentValidateSchema,
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.validateBillPaymentExistance.bind(this)),
       asyncMiddleware(this.getBillPayment.bind(this)),
     );
     router.get('/', 
       this.listingValidationSchema,
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.getBillsPayments.bind(this))
     );
     return router;

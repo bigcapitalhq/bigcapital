@@ -3,7 +3,6 @@ import { check, param, query, matchedData } from 'express-validator';
 import { Inject, Service } from 'typedi';
 import { ISaleEstimate, ISaleEstimateOTD } from 'interfaces';
 import BaseController from 'api/controllers/BaseController'
-import validateMiddleware from 'api/middleware/validateMiddleware';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
 import SaleEstimateService from 'services/Sales/SalesEstimate';
 import ItemsService from 'services/Items/ItemsService';
@@ -25,7 +24,7 @@ export default class SalesEstimatesController extends BaseController {
     router.post(
       '/',
       this.estimateValidationSchema,
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.validateEstimateCustomerExistance.bind(this)),
       asyncMiddleware(this.validateEstimateNumberExistance.bind(this)),
       asyncMiddleware(this.validateEstimateEntriesItemsExistance.bind(this)),
@@ -36,7 +35,7 @@ export default class SalesEstimatesController extends BaseController {
         ...this.validateSpecificEstimateSchema,
         ...this.estimateValidationSchema,
       ],
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.validateEstimateIdExistance.bind(this)),
       asyncMiddleware(this.validateEstimateCustomerExistance.bind(this)),
       asyncMiddleware(this.validateEstimateNumberExistance.bind(this)),
@@ -48,21 +47,21 @@ export default class SalesEstimatesController extends BaseController {
       '/:id', [
         this.validateSpecificEstimateSchema,
       ],
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.validateEstimateIdExistance.bind(this)),
       asyncMiddleware(this.deleteEstimate.bind(this))
     );
     router.get(
       '/:id',
       this.validateSpecificEstimateSchema,
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.validateEstimateIdExistance.bind(this)),
       asyncMiddleware(this.getEstimate.bind(this))
     );
     router.get(
       '/',
       this.validateEstimateListSchema,
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.getEstimates.bind(this))
     );
     return router;

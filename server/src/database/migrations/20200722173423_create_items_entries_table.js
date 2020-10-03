@@ -2,11 +2,11 @@
 exports.up = function(knex) {
   return knex.schema.createTable('items_entries', (table) => {
     table.increments();
-    table.string('reference_type');
-    table.string('reference_id');
+    table.string('reference_type').index();
+    table.string('reference_id').index();
 
     table.integer('index').unsigned();
-    table.integer('item_id');
+    table.integer('item_id').unsigned().index().references('id').inTable('items');
     table.text('description');
     table.integer('discount').unsigned();
     table.integer('quantity').unsigned();
