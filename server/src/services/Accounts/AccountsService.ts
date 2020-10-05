@@ -10,6 +10,9 @@ import {
 } from 'decorators/eventDispatcher';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import events from 'subscribers/events';
+import JournalPoster from 'services/Accounting/JournalPoster';
+import { Account } from 'models';
+import AccountRepository from 'repositories/AccountRepository';
 
 @Service()
 export default class AccountsService {
@@ -474,5 +477,55 @@ export default class AccountsService {
       accounts,
       filterMeta: dynamicList.getResponseMeta(),
     };
+  }
+
+  /**
+   * Closes the given account.
+   * -----------
+   * Precedures.
+   * -----------
+   * - Transfer the given account transactions to another account 
+   *  with the same root type.
+   * - Delete the given account.
+   * -------
+   * @param {number} tenantId - 
+   * @param {number} accountId -
+   * @param {number} toAccountId -
+   * @param {boolean} deleteAfterClosing -
+   */
+  public async closeAccount(
+    tenantId: number,
+    accountId: number,
+    toAccountId: number,
+    deleteAfterClosing: boolean,
+  ) {
+    this.logger.info('[account] trying to close account.', { tenantId, accountId, toAccountId, deleteAfterClosing });
+
+    const { AccountTransaction } = this.tenancy.models(tenantId);
+    const { accountTypeRepository, accountRepository } = this.tenancy.repositories(tenantId);
+
+    const account = await this.getAccountOrThrowError(tenantId, accountId);
+    const toAccount = await this.getAccountOrThrowError(tenantId, toAccountId);
+
+    this.throwErrorIfAccountPredefined(account);
+
+    const accountType = await accountTypeRepository.getTypeMeta(account.accountTypeId);
+    const toAccountType = await accountTypeRepository.getTypeMeta(toAccount.accountTypeId);
+
+    if (accountType.rootType !== toAccountType.rootType) {
+      throw new ServiceError('close_account_and_to_account_not_same_type');
+    }
+    const updateAccountBalanceOper = await accountRepository.balanceChange(accountId, account.balance || 0);
+
+    // Move transactiosn operation.
+    const moveTransactionsOper = await AccountTransaction.query()
+      .where('account_id', accountId)
+      .patch({ accountId: toAccountId });
+
+    await Promise.all([ moveTransactionsOper, updateAccountBalanceOper ]);
+
+    if (deleteAfterClosing) {
+      await accountRepository.deleteById(accountId);
+    }
   }
 }

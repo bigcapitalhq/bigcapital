@@ -44,6 +44,15 @@ export default class AccountsController extends BaseController{
       this.catchServiceErrors,
     );
     router.post(
+      '/:id/close', [
+        ...this.accountParamSchema,
+        ...this.closingAccountSchema,
+      ],
+      this.validationResult,
+      asyncMiddleware(this.closeAccount.bind(this)),
+      this.catchServiceErrors,
+    )
+    router.post(
       '/:id', [
         ...this.accountDTOSchema,
         ...this.accountParamSchema,
@@ -148,6 +157,13 @@ export default class AccountsController extends BaseController{
       query('ids').isArray({ min: 2 }),
       query('ids.*').isNumeric().toInt(),
     ];
+  }
+
+  get closingAccountSchema() {
+    return [
+      check('to_account_id').exists().isNumeric().toInt(),
+      check('delete_after_closing').exists().isBoolean(),
+    ]
   }
 
   /**
@@ -331,6 +347,30 @@ export default class AccountsController extends BaseController{
   }
 
   /**
+   * Closes the given account.
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param next 
+   */
+  async closeAccount(req: Request, res: Response, next: NextFunction) {
+    const { tenantId } = req;
+    const { id: accountId } = req.params;
+    const closeAccountQuery = this.matchedBodyData(req);
+
+    try {
+      await this.accountsService.closeAccount(
+        tenantId,
+        accountId,
+        closeAccountQuery.toAccountId,
+        closeAccountQuery.deleteAfterClosing
+      );
+      return res.status(200).send({ id: accountId });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
    * Transforms service errors to response.
    * @param {Error} 
    * @param {Request} req 
@@ -409,6 +449,12 @@ export default class AccountsController extends BaseController{
         return res.boom.badRequest(
           'Some of the given accounts are predefined.',
           { errors: [{ type: 'ACCOUNTS_PREDEFINED', code: 1100 }] }
+        );
+      }
+      if (error.errorType === 'close_account_and_to_account_not_same_type') {
+        return res.boom.badRequest(
+          'The close account has different root type with to account.',
+          { errors: [{ type: 'CLOSE_ACCOUNT_AND_TO_ACCOUNT_NOT_SAME_TYPE', code: 1200 }] },
         );
       }
     }

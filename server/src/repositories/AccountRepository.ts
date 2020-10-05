@@ -61,7 +61,7 @@ export default class AccountRepository extends TenantRepository {
    * @param  {number} id - Account id.
    * @return {IAccount}
    */
-  getById(id: number): IAccount {
+  findById(id: number): IAccount {
     const { Account } = this.models;
     return this.cache.get(`accounts.id.${id}`, () => {
       return Account.query().findById(id);
@@ -93,10 +93,12 @@ export default class AccountRepository extends TenantRepository {
    * Inserts a new accounts to the storage.
    * @param {IAccount} account 
    */
-  async insert(account: IAccount): Promise<void> {
+  async insert(accountInput: IAccount): Promise<void> {
     const { Account } = this.models;
-    await Account.query().insertAndFetch({ ...account });
+    const account = await Account.query().insertAndFetch({ ...accountInput });
     this.flushCache();
+
+    return account;
   }
 
   /**
@@ -118,6 +120,20 @@ export default class AccountRepository extends TenantRepository {
   async deleteById(accountId: number): Promise<void> {
     const { Account } = this.models;
     await Account.query().deleteById(accountId);
+    this.flushCache();
+  }
+
+  /**
+   * Changes account balance.
+   * @param {number} accountId 
+   * @param {number} amount 
+   * @return {Promise<void>}
+   */
+  async balanceChange(accountId: number, amount: number): Promise<void> {
+    const { Account } = this.models;
+    const method: string = (amount < 0) ? 'decrement' : 'increment';
+
+    await Account.query().where('id', accountId)[method]('amount', amount);
     this.flushCache();
   }
 
