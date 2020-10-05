@@ -1,3 +1,5 @@
+
+export * from './Model';
 export * from './InventoryTransaction';
 export * from './BillPayment';
 export * from './InventoryCostMethod';

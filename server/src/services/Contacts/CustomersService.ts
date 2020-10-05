@@ -7,9 +7,12 @@ import {
   ICustomerNewDTO,
   ICustomerEditDTO,
   ICustomer,
+  IPaginationMeta,
+  ICustomersFilter
  } from 'interfaces';
 import { ServiceError } from 'exceptions';
 import TenancyService from 'services/Tenancy/TenancyService';
+import DynamicListingService from 'services/DynamicListing/DynamicListService';
 
 @Service()
 export default class CustomersService {
@@ -19,12 +22,15 @@ export default class CustomersService {
   @Inject()
   tenancy: TenancyService;
 
+  @Inject()
+  dynamicListService: DynamicListingService;
+
   /**
    * Converts customer to contact DTO.
    * @param {ICustomerNewDTO|ICustomerEditDTO} customerDTO 
    * @returns {IContactDTO}
    */
-  customerToContactDTO(customerDTO: ICustomerNewDTO|ICustomerEditDTO) {
+  private customerToContactDTO(customerDTO: ICustomerNewDTO | ICustomerEditDTO) {
     return {
       ...omit(customerDTO, ['customerType']),
       contactType: customerDTO.customerType,
@@ -39,7 +45,7 @@ export default class CustomersService {
    * @param {ICustomerNewDTO} customerDTO 
    * @return {Promise<void>}
    */
-  async newCustomer(tenantId: number, customerDTO: ICustomerNewDTO) {
+  public async newCustomer(tenantId: number, customerDTO: ICustomerNewDTO) {
     const contactDTO = this.customerToContactDTO(customerDTO)
     const customer = await this.contactService.newContact(tenantId, contactDTO, 'customer');
 
@@ -59,7 +65,7 @@ export default class CustomersService {
    * @param {number} tenantId 
    * @param {ICustomerEditDTO} customerDTO 
    */
-  async editCustomer(tenantId: number, customerId: number, customerDTO: ICustomerEditDTO) {
+  public async editCustomer(tenantId: number, customerId: number, customerDTO: ICustomerEditDTO) {
     const contactDTO = this.customerToContactDTO(customerDTO);
     return this.contactService.editContact(tenantId, customerId, contactDTO, 'customer');
   }
@@ -70,7 +76,7 @@ export default class CustomersService {
    * @param {number} customerId 
    * @return {Promise<void>}
    */
-  async deleteCustomer(tenantId: number, customerId: number) {
+  public async deleteCustomer(tenantId: number, customerId: number) {
     const { Contact } = this.tenancy.models(tenantId);
 
     await this.getCustomerByIdOrThrowError(tenantId, customerId);
@@ -88,8 +94,32 @@ export default class CustomersService {
    * @param {number} tenantId 
    * @param {number} customerId 
    */
-  async getCustomer(tenantId: number, customerId: number) {
+  public async getCustomer(tenantId: number, customerId: number) {
     return this.contactService.getContact(tenantId, customerId, 'customer');
+  }
+
+  /**
+   * Retrieve customers paginated list.
+   * @param {number} tenantId - Tenant id.
+   * @param {ICustomersFilter} filter - Cusotmers filter.
+   */
+  public async getCustomersList(
+    tenantId: number,
+    filter: ICustomersFilter
+  ): Promise<{ customers: ICustomer[], pagination: IPaginationMeta, filterMeta: IFilterMeta }> {
+    const { Contact } = this.tenancy.models(tenantId);
+    const dynamicList = await this.dynamicListService.dynamicList(tenantId, Contact, filter);
+
+    const { results, pagination } = await Contact.query().onBuild((query) => {
+      query.modify('customer');
+      dynamicList.buildQuery()(query);
+    });
+
+    return {
+      customers: results,
+      pagination,
+      filterMeta: dynamicList.getResponseMeta(),
+    };
   }
 
   /**

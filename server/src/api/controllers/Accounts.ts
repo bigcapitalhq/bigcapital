@@ -127,18 +127,12 @@ export default class AccountsController extends BaseController{
     ];
   }
 
-  /**
-   * Account param schema validation.
-   */
   get accountParamSchema() {
     return [
       param('id').exists().isNumeric().toInt()
     ];
   }
 
-  /**
-   * Accounts list schema validation.
-   */
   get accountsListSchema() {
     return [
       query('custom_view_id').optional().isNumeric().toInt(),
@@ -149,9 +143,6 @@ export default class AccountsController extends BaseController{
     ];
   }
 
-  /**
-   * 
-   */
   get bulkSelectIdsQuerySchema() {
     return [
       query('ids').isArray({ min: 2 }),
@@ -328,8 +319,12 @@ export default class AccountsController extends BaseController{
       filter.filterRoles = JSON.parse(filter.stringifiedFilterRoles);
     }
     try {
-      const accounts = await this.accountsService.getAccountsList(tenantId, filter);
-      return res.status(200).send({ accounts });
+      const { accounts, filterMeta } = await this.accountsService.getAccountsList(tenantId, filter);
+
+      return res.status(200).send({
+        accounts,
+        filter_meta: this.transfromToResponse(filterMeta)
+      });
     } catch (error) {
       next(error);
     }
@@ -358,9 +353,8 @@ export default class AccountsController extends BaseController{
       }
       if (error.errorType === 'account_type_not_found') {
         return res.boom.badRequest(
-          'The given account type not found.', {
-          errors: [{ type: 'ACCOUNT_TYPE_NOT_FOUND', code: 200 }]
-        }
+          'The given account type not found.',
+          { errors: [{ type: 'ACCOUNT_TYPE_NOT_FOUND', code: 200 }] }
         );
       }
       if (error.errorType === 'account_type_not_allowed_to_changed') {

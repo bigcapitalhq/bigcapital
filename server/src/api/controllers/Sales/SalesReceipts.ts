@@ -274,7 +274,6 @@ export default class SalesReceiptsController extends BaseController{
 
     const { id: saleReceiptId } = req.params;
     const saleReceipt = { ...req.body };
-
     const errorReasons = [];
     
     // Handle all errors with reasons messages.
@@ -296,7 +295,19 @@ export default class SalesReceiptsController extends BaseController{
    * @param {Request} req 
    * @param {Response} res
    */
-  async listingSalesReceipts(req: Request, res: Response) {
+  async getSalesReceipts(req: Request, res: Response) {
+    const { tenantId } = req;
+    const filter = {
+      sortOrder: 'asc',
+      page: 1,
+      pageSize: 12,
+      ...this.matchedBodyData(req),
+    };
 
+    try {
+      
+    } catch (error) {
+      next(error);
+    }
   }
 };

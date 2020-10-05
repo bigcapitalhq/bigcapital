@@ -1,3 +1,4 @@
+import { IView } from 'interfaces';
 import { View } from 'models';
 import TenantRepository from 'repositories/TenantRepository';
 
@@ -17,7 +18,6 @@ export default class ViewRepository extends TenantRepository {
 
     this.models = this.tenancy.models(tenantId);
     this.cache = this.tenancy.cache(tenantId);
-    this.repositories = this.tenancy.cache(tenantId);
   }
 
   /**
@@ -27,17 +27,41 @@ export default class ViewRepository extends TenantRepository {
   getById(id: number) {
     const { View } = this.models;
     return this.cache.get(`customView.id.${id}`, () => {
-      return View.query().findById(id);
+      return View.query().findById(id)
+        .withGraphFetched('columns')
+        .withGraphFetched('roles');
     });
   }
 
   /**
    * Retrieve all views of the given resource id.
    */
-  allByResource() {
-    const resourceId = 1;
-    return this.cache.get(`customView.resource.id.${resourceId}`, () => {
-      return View.query().where('resource_id', resourceId);
+  allByResource(resourceModel: string) {
+    const { View } = this.models;
+    return this.cache.get(`customView.resourceModel.${resourceModel}`, () => {
+      return View.query().where('resource_model', resourceModel)
+        .withGraphFetched('columns')
+        .withGraphFetched('roles');
     });
+  }
+
+  /**
+   * Inserts a new view to the storage.
+   * @param {IView} view 
+   */
+  async insert(view: IView): Promise<IView> {
+    const insertedView = await View.query().insertGraph({ ...view });
+    this.flushCache();
+
+    return insertedView;
+  }
+
+
+
+  /**
+   * Flushes repository cache.
+   */
+  flushCache() {
+    this.cache.delStartWith('customView');
   }
 }

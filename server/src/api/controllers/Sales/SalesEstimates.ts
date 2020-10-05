@@ -297,7 +297,21 @@ export default class SalesEstimatesController extends BaseController {
    * @param {Request} req 
    * @param {Response} res 
    */
-  async getEstimates(req: Request, res: Response) {
-    
+  async getEstimates(req: Request, res: Response, next: NextFunction) {
+    const { tenantId } = req;
+    const estimatesFilter: ISalesEstimatesFilter = this.matchedQueryData(req);
+
+    try {
+      const { salesEstimates, pagination, filterMeta } = await this.saleEstimateService
+        .estimatesList(tenantId, estimatesFilter);
+      
+      return res.status(200).send({
+        sales_estimates: this.transfromToResponse(salesEstimates),
+        pagination,
+        filter_meta: this.transfromToResponse(filterMeta),
+      })
+    } catch (error) {
+      next(error);
+    }
   }
 };

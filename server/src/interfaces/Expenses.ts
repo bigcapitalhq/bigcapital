@@ -1,5 +1,16 @@
 import { ISystemUser } from "./User";
 
+export interface IPaginationMeta {
+  total: number,
+  page: number,
+  pageSize: number,
+};
+
+export interface IExpensesFilter{
+  page: number,
+  pageSize: number,
+};
+
 export interface IExpense {
   id: number,
   totalAmount: number,
@@ -53,4 +64,6 @@ export interface IExpensesService {
   deleteBulkExpenses(tenantId: number, expensesIds: number[], authorizedUser: ISystemUser): Promise<void>;
 
   publishBulkExpenses(tenantId: number, expensesIds: number[], authorizedUser: ISystemUser): Promise<void>;
+
+  getExpensesList(tenantId: number, expensesFilter: IExpensesFilter): Promise<{ expenses: IExpense[], pagination: IPaginationMeta, filterMeta: IFilterMeta }>;
 }

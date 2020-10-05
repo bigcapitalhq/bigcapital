@@ -1,11 +1,16 @@
 import { Service, Inject } from 'typedi';
 import { omit, sumBy, difference, pick, chain } from 'lodash';
-import { ISaleInvoice, ISaleInvoiceOTD, IItemEntry } from 'interfaces';
+import {
+  EventDispatcher,
+  EventDispatcherInterface,
+} from 'decorators/eventDispatcher';
+import { ISaleInvoice, ISaleInvoiceOTD, IItemEntry, ISalesInvoicesFilter, IPaginationMeta, IFilterMeta } from 'interfaces';
 import JournalPoster from 'services/Accounting/JournalPoster';
 import HasItemsEntries from 'services/Sales/HasItemsEntries';
 import InventoryService from 'services/Inventory/Inventory';
 import SalesInvoicesCost from 'services/Sales/SalesInvoicesCost';
 import TenancyService from 'services/Tenancy/TenancyService';
+import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import { formatDateFields } from 'utils';
 
 /**
@@ -26,6 +31,12 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
   @Inject('logger')
   logger: any;
 
+  @Inject()
+  dynamicListService: DynamicListingService;
+
+  @EventDispatcher()
+  eventDispatcher: EventDispatcherInterface;
+
   /**
    * Creates a new sale invoices and store it to the storage
    * with associated to entries and journal transactions.
@@ -34,7 +45,7 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
    * @param {ISaleInvoice} saleInvoiceDTO - 
    * @return {ISaleInvoice}
    */
-  async createSaleInvoice(tenantId: number, saleInvoiceDTO: ISaleInvoiceOTD) {
+  public async createSaleInvoice(tenantId: number, saleInvoiceDTO: ISaleInvoiceOTD) {
     const { SaleInvoice, Customer, ItemEntry } = this.tenancy.models(tenantId);
 
     const balance = sumBy(saleInvoiceDTO.entries, e => ItemEntry.calcAmount(e));
@@ -94,7 +105,7 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
    * @param {Number} saleInvoiceId -
    * @param {ISaleInvoice} saleInvoice -
    */
-  async editSaleInvoice(tenantId: number, saleInvoiceId: number, saleInvoiceDTO: any) {
+  public async editSaleInvoice(tenantId: number, saleInvoiceId: number, saleInvoiceDTO: any) {
     const { SaleInvoice, ItemEntry, Customer } = this.tenancy.models(tenantId);
 
     const balance = sumBy(saleInvoiceDTO.entries, e => ItemEntry.calcAmount(e));
@@ -152,7 +163,7 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
    * @async
    * @param {Number} saleInvoiceId - The given sale invoice id.
    */
-  async deleteSaleInvoice(tenantId: number, saleInvoiceId: number) {
+  public async deleteSaleInvoice(tenantId: number, saleInvoiceId: number) {
     const {
       SaleInvoice,
       ItemEntry,
@@ -215,7 +226,7 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
    * @param {number} saleInvoiceId -
    * @param {boolean} override -
    */
-  recordInventoryTranscactions(
+  private recordInventoryTranscactions(
     tenantId: number,
     saleInvoice,
     saleInvoiceId: number,
@@ -243,7 +254,7 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
    * @param {string} transactionType 
    * @param {number} transactionId 
    */
-  async revertInventoryTransactions(tenantId: number, inventoryTransactions: array) {
+  private async revertInventoryTransactions(tenantId: number, inventoryTransactions: array) {
     const { InventoryTransaction } = this.tenancy.models(tenantId);
     const opers: Promise<[]>[] = [];
     
@@ -280,7 +291,7 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
    * @async
    * @param {Number} saleInvoiceId 
    */
-  async getSaleInvoiceWithEntries(tenantId: number, saleInvoiceId: number) {
+  public async getSaleInvoiceWithEntries(tenantId: number, saleInvoiceId: number) {
     const { SaleInvoice } = this.tenancy.models(tenantId);
     return SaleInvoice.query()
       .where('id', saleInvoiceId)
@@ -404,5 +415,28 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
       journal.saveEntries(),
       journal.saveBalance(),      
     ]);
+  }
+
+  /**
+   * Retrieve sales invoices filterable and paginated list.
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {NextFunction} next 
+   */
+  public async salesInvoicesList(tenantId: number, salesInvoicesFilter: ISalesInvoicesFilter):
+    Promise<{ salesInvoices: ISaleInvoice[], pagination: IPaginationMeta, filterMeta: IFilterMeta }> {
+    const { SaleInvoice } = this.tenancy.models(tenantId);
+    const dynamicFilter = await this.dynamicListService.dynamicList(tenantId, SaleInvoice, salesInvoicesFilter);
+    
+    this.logger.info('[sale_invoice] try to get sales invoices list.', { tenantId, salesInvoicesFilter });
+    const { results, pagination } = await SaleInvoice.query().onBuild((builder) => {
+      builder.withGraphFetched('entries');
+      builder.withGraphFetched('customer');
+      dynamicFilter.buildQuery()(builder);
+    }).pagination(
+      salesInvoicesFilter.page - 1,
+      salesInvoicesFilter.pageSize,
+    );
+    return { salesInvoices: results, pagination, filterMeta: dynamicFilter.getResponseMeta() };
   }
 }

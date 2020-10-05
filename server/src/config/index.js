@@ -24,6 +24,7 @@ export default {
     db_user: process.env.SYSTEM_DB_USER,
     db_password: process.env.SYSTEM_DB_PASSWORD,
     db_name: process.env.SYSTEM_DB_NAME,
+    charset: process.env.SYSTEM_DB_CHARSET,
     migrations_dir: process.env.SYSTEM_MIGRATIONS_DIR,
     seeds_dir: process.env.SYSTEM_SEEDS_DIR,
   },

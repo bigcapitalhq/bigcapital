@@ -381,6 +381,20 @@ export default class BillsPayments extends BaseController {
    * @return {Response}
    */
   async getBillsPayments(req: Request, res: Response) {
+    const { tenantId } = req.params;
+    const billPaymentsFilter = this.matchedQueryData(req);
 
+    try {
+      const { billPayments, pagination, filterMeta } = await this.billPaymentService
+        .listBillPayments(tenantId, billPaymentsFilter);
+      
+      return res.status(200).send({
+        bill_payments: billPayments,
+        pagination: this.transfromToResponse(pagination),
+        filter_meta: this.transfromToResponse(filterMeta)
+      });
+    } catch (error) {
+      next(error);
+    }
   }
 }

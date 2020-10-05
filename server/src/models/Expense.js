@@ -59,10 +59,6 @@ export default class Expense extends TenantModel {
       viewRolesBuilder(query, conditionals, expression) {
         viewRolesBuilder(conditionals, expression)(query);
       },
-
-      orderBy(query) {
-        
-      }
     };
   }
 
@@ -72,7 +68,6 @@ export default class Expense extends TenantModel {
   static get relationMappings() {
     const Account = require('models/Account');
     const ExpenseCategory = require('models/ExpenseCategory');
-    const SystemUser = require('system/models/SystemUser');
 
     return {
       paymentAccount: {
@@ -91,14 +86,44 @@ export default class Expense extends TenantModel {
           to: 'expense_transaction_categories.expenseId',
         },
       },
+    };
+  }
+
+  /**
+   * Model defined fields.
+   */
+  static get fields() {
+    return {
+      payment_date: {
+        column: 'payment_date',
+      },
+      payment_account: {
+        column: 'payment_account_id',
+        relation: 'accounts.id',
+      },
+      amount: {
+        column: 'total_amount',
+      },
+      currency_code: {
+        column: 'currency_code',
+      },
+      reference_no: {
+        column: 'reference_no'
+      },
+      description: {
+        column: 'description',
+      },
+      published: {
+        column: 'published',
+      },
       user: {
-        relation: Model.BelongsToOneRelation,
-        modelClass: SystemUser.default,
-        join: {
-          from: 'expenses_transactions.userId',
-          to: 'users.id',
-        }
-      }
+        column: 'user_id',
+        relation: 'users.id',
+        relationColumn: 'users.id',
+      },
+      created_at: {
+        column: 'created_at',
+      },
     };
   }
 }

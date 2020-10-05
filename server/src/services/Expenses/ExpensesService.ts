@@ -9,7 +9,7 @@ import { ServiceError } from "exceptions";
 import TenancyService from 'services/Tenancy/TenancyService';
 import JournalPoster from 'services/Accounting/JournalPoster';
 import JournalCommands from 'services/Accounting/JournalCommands';
-import { IExpense, IAccount, IExpenseDTO, IExpensesService, ISystemUser } from 'interfaces';
+import { IExpense, IExpensesFilter, IAccount, IExpenseDTO, IExpensesService, ISystemUser, IPaginationMeta } from 'interfaces';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import events from 'subscribers/events';
 
@@ -442,17 +442,23 @@ export default class ExpensesService implements IExpensesService {
    * @param  {IExpensesFilter} expensesFilter 
    * @return {IExpense[]}
    */
-  public async getExpensesList(tenantId: number, expensesFilter: IExpensesFilter) {
+  public async getExpensesList(
+    tenantId: number,
+    expensesFilter: IExpensesFilter
+  ): Promise<{ expenses: IExpense[], pagination: IPaginationMeta, filterMeta: IFilterMeta }> {
     const { Expense } = this.tenancy.models(tenantId);
     const dynamicFilter = await this.dynamicListService.dynamicList(tenantId, Expense, expensesFilter);
 
     this.logger.info('[expense] trying to get expenses datatable list.', { tenantId, expensesFilter });
-    const expenses = await Expense.query().onBuild((builder) => {
+    const { results, pagination } = await Expense.query().onBuild((builder) => {
       builder.withGraphFetched('paymentAccount');
-      builder.withGraphFetched('user');
-
       dynamicFilter.buildQuery()(builder);
-    });
-    return expenses;
+    }).pagination(expensesFilter.page - 1, expensesFilter.pageSize);
+
+    return {
+      expenses: results,
+      pagination, filterMeta:
+      dynamicFilter.getResponseMeta(),
+    };
   }
 }

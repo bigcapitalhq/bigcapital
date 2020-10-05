@@ -4,7 +4,6 @@ import { IItemsFilter, IItemsService, IItemDTO, IItem } from 'interfaces';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import TenancyService from 'services/Tenancy/TenancyService';
 import { ServiceError } from "exceptions";
-import { Item } from "models";
 
 const ERRORS = {
   NOT_FOUND: 'NOT_FOUND',
@@ -17,6 +16,9 @@ const ERRORS = {
 
   INVENTORY_ACCOUNT_NOT_FOUND: 'INVENTORY_ACCOUNT_NOT_FOUND',
   INVENTORY_ACCOUNT_NOT_INVENTORY: 'INVENTORY_ACCOUNT_NOT_INVENTORY',
+
+  ITEMS_HAVE_ASSOCIATED_TRANSACTIONS: 'ITEMS_HAVE_ASSOCIATED_TRANSACTIONS',
+  ITEM_HAS_ASSOCIATED_TRANSACTINS: 'ITEM_HAS_ASSOCIATED_TRANSACTINS'
 }
 
 @Service()
@@ -222,6 +224,7 @@ export default class ItemsService implements IItemsService {
 
     this.logger.info('[items] trying to delete item.', { tenantId, itemId });
     await this.getItemOrThrowError(tenantId, itemId);
+    await this.validateHasNoInvoicesOrBills(tenantId, itemId);
     
     await Item.query().findById(itemId).delete();
     this.logger.info('[items] deleted successfully.', { tenantId, itemId });
@@ -269,6 +272,7 @@ export default class ItemsService implements IItemsService {
 
     this.logger.info('[items] trying to delete items in bulk.', { tenantId, itemsIds });
     await this.validateItemsIdsExists(tenantId, itemsIds);
+    await this.validateHasNoInvoicesOrBills(tenantId, itemsIds);
 
     await Item.query().whereIn('id', itemsIds).delete();
     this.logger.info('[items] deleted successfully in bulk.', { tenantId, itemsIds });
@@ -283,14 +287,39 @@ export default class ItemsService implements IItemsService {
     const { Item } = this.tenancy.models(tenantId);
     const dynamicFilter = await this.dynamicListService.dynamicList(tenantId, Item, itemsFilter);
 
-    const items = await Item.query().onBuild((builder) => {
+    const { results, pagination } = await Item.query().onBuild((builder) => {
       builder.withGraphFetched('inventoryAccount');
       builder.withGraphFetched('sellAccount');
       builder.withGraphFetched('costAccount');
       builder.withGraphFetched('category');
 
       dynamicFilter.buildQuery()(builder);
-    });
-    return items;
+    }).pagination(
+      itemsFilter.page - 1,
+      itemsFilter.pageSize,
+    );
+    return { items: results, pagination, filterMeta: dynamicFilter.getResponseMeta() };
+  }
+
+  /**
+   * Validates the given item or items have no associated invoices or bills.
+   * @param  {number} tenantId - Tenant id.
+   * @param  {number|number[]} itemId - Item id.
+   * @throws {ServiceError}
+   */
+  private async validateHasNoInvoicesOrBills(tenantId: number, itemId: number[]|number) {
+    const { ItemEntry } = this.tenancy.models(tenantId);
+
+    const ids = Array.isArray(itemId) ? itemId : [itemId];
+    const foundItemEntries = await ItemEntry.query()
+      .whereIn('item_id', ids)
+      .whereIn('reference_type', ['SaleInvoice', 'Bill']);
+
+    if (foundItemEntries.length > 0) {
+      throw new ServiceError(ids.length > 1 ?
+        ERRORS.ITEMS_HAVE_ASSOCIATED_TRANSACTIONS :
+        ERRORS.ITEM_HAS_ASSOCIATED_TRANSACTINS
+      );
+    }
   }
 }

@@ -178,8 +178,9 @@ export interface IVendorsFilter extends IDynamicListFilter {
   pageSize?: number,
 };
 
-export interface ICustomerFilter extends IDynamicListFilter {
+export interface ICustomersFilter extends IDynamicListFilter {
   stringifiedFilterRoles?: string,
   page?: number,
   pageSize?: number,
 };
+

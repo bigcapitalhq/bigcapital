@@ -1,6 +1,6 @@
 import { Service, Inject } from "typedi";
 import validator from 'is-my-json-valid';
-import { Router, Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { ServiceError } from 'exceptions';
 import {
   DynamicFilter,
@@ -12,8 +12,13 @@ import {
   validateFieldKeyExistance,
   validateFilterRolesFieldsExistance,
 } from 'lib/ViewRolesBuilder';
+import {
+  IDynamicListFilterDTO,
+  IFilterRole,
+  IDynamicListService,
+  IModel,
+} from 'interfaces';
 import TenancyService from 'services/Tenancy/TenancyService';
-import { IDynamicListFilterDTO, IFilterRole, IDynamicListService } from 'interfaces';
 
 const ERRORS = {
   VIEW_NOT_FOUND: 'view_not_found',
@@ -32,11 +37,11 @@ export default class DynamicListService implements IDynamicListService {
    * @param  {number} viewId 
    * @return {Promise<IView>}
    */
-  private async getCustomViewOrThrowError(tenantId: number, viewId: number) {
+  private async getCustomViewOrThrowError(tenantId: number, viewId: number, model: IModel) {
     const { viewRepository } = this.tenancy.repositories(tenantId);
     const view = await viewRepository.getById(viewId);
 
-    if (!view || view.resourceModel !== 'Account') {
+    if (!view || view.resourceModel !== model.name) {
       throw new ServiceError(ERRORS.VIEW_NOT_FOUND);
     }
     return view;
@@ -49,9 +54,9 @@ export default class DynamicListService implements IDynamicListService {
    * @throws {ServiceError}
    */
   private validateSortColumnExistance(model: any, columnSortBy: string) {
-    const notExistsField = validateFieldKeyExistance(model.tableName, columnSortBy);
+    const notExistsField = validateFieldKeyExistance(model, columnSortBy);
 
-    if (notExistsField) {
+    if (!notExistsField) {
       throw new ServiceError(ERRORS.SORT_COLUMN_NOT_FOUND);
     }
   }
@@ -62,8 +67,10 @@ export default class DynamicListService implements IDynamicListService {
    * @param  {IFilterRole[]} filterRoles 
    * @throws {ServiceError}
    */
-  private validateRolesFieldsExistance(model: any, filterRoles: IFilterRole[]) {
-    const invalidFieldsKeys = validateFilterRolesFieldsExistance(model.tableName, filterRoles);
+  private validateRolesFieldsExistance(model: IModel, filterRoles: IFilterRole[]) {
+    const invalidFieldsKeys = validateFilterRolesFieldsExistance(model, filterRoles);
+
+    console.log(invalidFieldsKeys);
 
     if (invalidFieldsKeys.length > 0) {
       throw new ServiceError(ERRORS.FILTER_ROLES_FIELDS_NOT_FOUND);
@@ -96,23 +103,21 @@ export default class DynamicListService implements IDynamicListService {
    * Dynamic listing.
    * @param {number} tenantId 
    * @param {IModel} model 
-   * @param {IAccountsFilter} filter 
+   * @param {IDynamicListFilterDTO} filter 
    */
-  async dynamicList(tenantId: number, model: any, filter: IDynamicListFilterDTO) {
-    const { viewRoleRepository } = this.tenancy.repositories(tenantId);
-    const dynamicFilter = new DynamicFilter(model.tableName);
+  public async dynamicList(tenantId: number, model: IModel, filter: IDynamicListFilterDTO) {
+    const dynamicFilter = new DynamicFilter(model);
 
     // Custom view filter roles.
     if (filter.customViewId) {
-      const view = await this.getCustomViewOrThrowError(tenantId, filter.customViewId);
-      const viewRoles = await viewRoleRepository.allByView(view.id);
+      const view = await this.getCustomViewOrThrowError(tenantId, filter.customViewId, model);
 
-      const viewFilter = new DynamicFilterViews(viewRoles, view.rolesLogicExpression);
+      const viewFilter = new DynamicFilterViews(view);
       dynamicFilter.setFilter(viewFilter);
     }
     // Sort by the given column.
     if (filter.columnSortBy) {
-      this.validateSortColumnExistance(model, filter.columnSortBy);;
+      this.validateSortColumnExistance(model, filter.columnSortBy);
 
       const sortByFilter = new DynamicFilterSortBy(
         filter.columnSortBy, filter.sortOrder
@@ -138,7 +143,7 @@ export default class DynamicListService implements IDynamicListService {
    * @param {Response} res 
    * @param {NextFunction} next 
    */
-  handlerErrorsToResponse(error, req: Request, res: Response, next: NextFunction) {
+  public handlerErrorsToResponse(error: Error, req: Request, res: Response, next: NextFunction) {
     if (error instanceof ServiceError) {
       if (error.errorType === 'sort_column_not_found') {
         return res.boom.badRequest(null, {
@@ -147,8 +152,8 @@ export default class DynamicListService implements IDynamicListService {
       }
       if (error.errorType === 'view_not_found') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'CUSTOM.VIEW.NOT.FOUND', code: 100 }]
-        })
+          errors: [{ type: 'CUSTOM.VIEW.NOT.FOUND', code: 100 }],
+        });
       }
       if (error.errorType === 'filter_roles_fields_not_found') {
         return res.boom.badRequest(null, {

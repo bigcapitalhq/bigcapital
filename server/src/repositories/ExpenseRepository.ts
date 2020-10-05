@@ -34,11 +34,12 @@ export default class ExpenseRepository extends TenantRepository {
    * Inserts a new expense object.
    * @param {IExpense} expense - 
    */
-  async create(expense: IExpense): Promise<void> {
+  async create(expenseInput: IExpense): Promise<void> {
     const { Expense } = this.models;
-    await Expense.query().insert({ ...expense });
-
+    const expense = await Expense.query().insert({ ...expenseInput });
     this.flushCache();
+
+    return expense;
   }
 
   /**

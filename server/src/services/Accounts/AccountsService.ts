@@ -3,7 +3,7 @@ import { difference } from 'lodash';
 import { kebabCase } from 'lodash'
 import TenancyService from 'services/Tenancy/TenancyService';
 import { ServiceError } from 'exceptions';
-import { IAccountDTO, IAccount, IAccountsFilter } from 'interfaces';
+import { IAccountDTO, IAccount, IAccountsFilter, IFilterMeta } from 'interfaces';
 import {
   EventDispatcher,
   EventDispatcherInterface,
@@ -260,17 +260,6 @@ export default class AccountsService {
     return foundAccounts.length > 0;
   }
 
-  public async getAccountByType(tenantId: number, accountTypeKey: string) {
-    const { AccountType, Account } = this.tenancy.models(tenantId);
-    const accountType = await AccountType.query()
-      .findOne('key', accountTypeKey);
-
-    const account = await Account.query()
-      .findOne('account_type_id', accountType.id);
-
-    return account;
-  }
-
   /**
    * Throws error if the account was prefined.
    * @param {IAccount} account 
@@ -468,9 +457,11 @@ export default class AccountsService {
    * @param {number} tenantId 
    * @param {IAccountsFilter} accountsFilter 
    */
-  public async getAccountsList(tenantId: number, filter: IAccountsFilter) {
+  public async getAccountsList(
+    tenantId: number,
+    filter: IAccountsFilter,
+  ): Promise<{ accounts: IAccount[], filterMeta: IFilterMeta }> {
     const { Account } = this.tenancy.models(tenantId);
-
     const dynamicList = await this.dynamicListService.dynamicList(tenantId, Account, filter);
 
     this.logger.info('[accounts] trying to get accounts datatable list.', { tenantId, filter });
@@ -478,6 +469,10 @@ export default class AccountsService {
       builder.withGraphFetched('type');
       dynamicList.buildQuery()(builder);
     });
-    return accounts;
+
+    return {
+      accounts,
+      filterMeta: dynamicList.getResponseMeta(),
+    };
   }
 }

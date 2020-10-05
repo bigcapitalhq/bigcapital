@@ -50,4 +50,41 @@ export default class ManualJournal extends TenantModel {
       }
     };
   }
+
+  /**
+   * Model defined fields.
+   */
+  static get fields() {
+    return {
+      date: {
+        column: 'date',
+      },
+      journal_number: {
+        column: 'journal_number',
+      },
+      reference: {
+        column: 'reference',
+      },
+      status: {
+        column: 'status',
+      },
+      amount: {
+        column: 'amount',
+      },
+      description: {
+        column: 'description',
+      },
+      user: {
+        column: 'user_id',
+        relation: 'users.id',
+        relationColumn: 'users.id',
+      },
+      journal_type: {
+        column: 'journal_type',
+      },
+      created_at: {
+        column: 'created_at',
+      },
+    };
+  }
 }

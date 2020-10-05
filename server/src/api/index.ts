@@ -87,16 +87,16 @@ export default () => {
   dashboard.use('/accounts', Container.get(Accounts).router());
   dashboard.use('/account_types', Container.get(AccountTypes).router());
   dashboard.use('/manual-journals', Container.get(ManualJournals).router());
-  dashboard.use('/views', Views.router());
+  dashboard.use('/views', Container.get(Views).router());
   dashboard.use('/items', Container.get(Items).router());
   dashboard.use('/item_categories', Container.get(ItemCategories).router());
   dashboard.use('/expenses', Container.get(Expenses).router());
   dashboard.use('/financial_statements', FinancialStatements.router());
-  dashboard.use('/sales', Container.get(Sales).router());
   dashboard.use('/customers', Container.get(Customers).router());
   dashboard.use('/vendors', Container.get(Vendors).router());
-  dashboard.use('/purchases', Container.get(Purchases).router());
-  dashboard.use('/resources', Resources.router());
+  // dashboard.use('/sales', Container.get(Sales).router());
+  // dashboard.use('/purchases', Container.get(Purchases).router());
+  dashboard.use('/resources', Container.get(Resources).router());
   dashboard.use('/exchange_rates', Container.get(ExchangeRates).router());
   dashboard.use('/media', Media.router());
 
