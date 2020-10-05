@@ -36,7 +36,7 @@ export default class ExpenseRepository extends TenantRepository {
    */
   async create(expenseInput: IExpense): Promise<void> {
     const { Expense } = this.models;
-    const expense = await Expense.query().insert({ ...expenseInput });
+    const expense = await Expense.query().insertGraph({ ...expenseInput });
     this.flushCache();
 
     return expense;
@@ -72,10 +72,10 @@ export default class ExpenseRepository extends TenantRepository {
    * @param {number} expenseId 
    */
   async delete(expenseId: number): Promise<void> {
-    const { Expense } = this.models;
+    const { Expense, ExpenseCategory } = this.models;
     
+    await ExpenseCategory.query().where('expense_id', expenseId).delete();
     await Expense.query().where('id', expenseId).delete();
-    await Expense.query().where('expense_id', expenseId).delete();
 
     this.flushCache();
   }

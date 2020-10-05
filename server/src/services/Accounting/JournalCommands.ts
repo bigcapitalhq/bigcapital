@@ -138,16 +138,18 @@ export default class JournalCommands{
     const paymentJournalEntry = new JournalEntry({
       credit: expense.totalAmount,
       account: expense.paymentAccountId,
+      index: 1,
       ...mixinEntry,
     });
     this.journal.credit(paymentJournalEntry);
 
-    expense.categories.forEach((category: IExpenseCategory) => {
+    expense.categories.forEach((category: IExpenseCategory, index) => {
       const expenseJournalEntry = new JournalEntry({
         account: category.expenseAccountId,
         debit: category.amount,
         note: category.description,
         ...mixinEntry,
+        index: index + 2,
       });
       this.journal.debit(expenseJournalEntry);
     });

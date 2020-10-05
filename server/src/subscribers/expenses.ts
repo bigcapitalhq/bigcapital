@@ -3,61 +3,84 @@ import { EventSubscriber, On } from 'event-dispatch';
 import events from 'subscribers/events';
 import ExpensesService from 'services/Expenses/ExpensesService';
 import TenancyService from 'services/Tenancy/TenancyService';
-import {
-  EventDispatcher,
-  EventDispatcherInterface,
-} from 'decorators/eventDispatcher';
+import ExpenseRepository from 'repositories/ExpenseRepository';
 
-@Service()
+@EventSubscriber()
 export default class ExpensesSubscriber {
-  
-  constructor(
-    @Inject()
-    tenancy: TenancyService,
+  tenancy: TenancyService;
+  expensesService: ExpensesService;
 
-    @EventDispatcher()
-    eventDispatcher: EventDispatcherInterface,
-  ) {
-    console.log(this, 'XXXX');
-    // this.eventDispatcher.on(events.expenses.onCreated, this.onExpenseCreated);
+  constructor() {
+    this.tenancy = Container.get(TenancyService);
+    this.expensesService = Container.get(ExpensesService);
   }
 
-  public onExpenseCreated({ expenseId, tenantId }) {
-    console.log(this)
+  /**
+   * On expense created.
+   */
+  @On(events.expenses.onCreated)
+  public async onExpenseCreated({ expenseId, tenantId }) {
+    const { expenseRepository } = this.tenancy.repositories(tenantId);
+    const expense = await expenseRepository.getById(expenseId);
  
-    // // 7. In case expense published, write journal entries.
-    // if (expenseObj.publishedAt) {
-    //   await this.writeJournalEntries(tenantId, expenseModel, false);
-    // }
-    
+    // In case expense published, write journal entries.
+    if (expense.publishedAt) {
+      await this.expensesService.writeJournalEntries(tenantId, expense, false);
+    }
+  }
+  
+  /**
+   * On expense edited.
+   */
+  @On(events.expenses.onEdited)
+  public async onExpenseEdited({ expenseId, tenantId }) {
+    const { expenseRepository } = this.tenancy.repositories(tenantId);
+    const expense = await expenseRepository.getById(expenseId);
+
+    // In case expense published, write journal entries.
+    if (expense.publishedAt) {
+      await this.expensesService.writeJournalEntries(tenantId, expense, true);
+    }
   }
 
-  // @On(events.expenses.onEdited)
-  public onExpenseEdited({ expenseId, tenantId }) {
-    // - In case expense published, write journal entries.
-    // if (expenseObj.publishedAt) {
-    //   await this.writeJournalEntries(tenantId, expenseModel, true, authorizedUser);
-    // }
+  /**
+   * 
+   * @param param0 
+   */
+  @On(events.expenses.onDeleted)
+  public async onExpenseDeleted({ expenseId, tenantId }) {
+    await this.expensesService.revertJournalEntries(tenantId, expenseId);
   }
 
-  // @On(events.expenses.onDeleted)
-  public onExpenseDeleted({ expenseId, tenantId }) {
-    // if (expense.published) {
-    //   await this.revertJournalEntries(tenantId, expenseId);
-    // }
+  /**
+   * 
+   * @param param0 
+   */
+  @On(events.expenses.onPublished)
+  public async onExpensePublished({ expenseId, tenantId }) {
+    const { expenseRepository } = this.tenancy.repositories(tenantId);
+    const expense = await expenseRepository.getById(expenseId);
+ 
+    // In case expense published, write journal entries.
+    if (expense.publishedAt) {
+      await this.expensesService.writeJournalEntries(tenantId, expense, false);
+    }
   }
 
-  // @On(events.expenses.onPublished)
-  public onExpensePublished({ expenseId, tenantId }) {
-
-  }
-
-  // @On(events.expenses.onBulkDeleted)
+  /**
+   * 
+   * @param param0 
+   */
+  @On(events.expenses.onBulkDeleted)
   public onExpenseBulkDeleted({ expensesIds, tenantId }) {
 
   }
 
-  // @On(events.expenses.onBulkPublished)
+  /**
+   * 
+   * @param param0 
+   */
+  @On(events.expenses.onBulkPublished)
   public onExpenseBulkPublished({ expensesIds, tenantId }) {
 
   }
