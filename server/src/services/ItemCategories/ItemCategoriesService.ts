@@ -108,7 +108,7 @@ export default class ItemCategoriesService implements IItemCategoriesService {
 
     this.logger.info('[items] validate sell account existance.', { tenantId, sellAccountId });
     const incomeType = await accountTypeRepository.getByKey('income');
-    const foundAccount = await accountRepository.getById(sellAccountId);
+    const foundAccount = await accountRepository.findById(sellAccountId);
 
     if (!foundAccount) {
       this.logger.info('[items] sell account not found.', { tenantId, sellAccountId });
@@ -130,7 +130,7 @@ export default class ItemCategoriesService implements IItemCategoriesService {
 
     this.logger.info('[items] validate cost account existance.', { tenantId, costAccountId });
     const COGSType = await accountTypeRepository.getByKey('cost_of_goods_sold');
-    const foundAccount = await accountRepository.getById(costAccountId)
+    const foundAccount = await accountRepository.findById(costAccountId)
 
     if (!foundAccount) {
       this.logger.info('[items] cost account not found.', { tenantId, costAccountId });
@@ -152,7 +152,7 @@ export default class ItemCategoriesService implements IItemCategoriesService {
 
     this.logger.info('[items] validate inventory account existance.', { tenantId, inventoryAccountId });
     const otherAsset = await accountTypeRepository.getByKey('other_asset');
-    const foundAccount = await accountRepository.getById(inventoryAccountId);
+    const foundAccount = await accountRepository.findById(inventoryAccountId);
 
     if (!foundAccount) {
       this.logger.info('[items] inventory account not found.', { tenantId, inventoryAccountId });

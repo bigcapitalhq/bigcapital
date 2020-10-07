@@ -98,7 +98,7 @@ export default () => {
   // dashboard.use('/purchases', Container.get(Purchases).router());
   dashboard.use('/resources', Container.get(Resources).router());
   dashboard.use('/exchange_rates', Container.get(ExchangeRates).router());
-  dashboard.use('/media', Media.router());
+  dashboard.use('/media', Container.get(Media).router());
 
   app.use('/', dashboard);
 

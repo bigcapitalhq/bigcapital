@@ -66,4 +66,5 @@ export interface IExpensesService {
   publishBulkExpenses(tenantId: number, expensesIds: number[], authorizedUser: ISystemUser): Promise<void>;
 
   getExpensesList(tenantId: number, expensesFilter: IExpensesFilter): Promise<{ expenses: IExpense[], pagination: IPaginationMeta, filterMeta: IFilterMeta }>;
+  getExpense(tenantId: number, expenseId: number): Promise<IExpense>;
 }
