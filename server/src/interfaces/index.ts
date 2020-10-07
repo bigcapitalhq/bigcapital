@@ -25,3 +25,4 @@ export * from './View';
 export * from './ManualJournal';
 export * from './Currency';
 export * from './ExchangeRate';
+export * from './Media';

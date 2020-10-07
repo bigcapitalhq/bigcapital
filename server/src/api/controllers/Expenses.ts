@@ -7,6 +7,7 @@ import ExpensesService from "services/Expenses/ExpensesService";
 import { IExpenseDTO } from 'interfaces';
 import { ServiceError } from "exceptions";
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
+import { takeWhile } from "lodash";
 
 @Service()
 export default class ExpensesController extends BaseController {
@@ -73,8 +74,17 @@ export default class ExpensesController extends BaseController {
       '/', [
         ...this.expensesListSchema,
       ],
+      this.validationResult,
       asyncMiddleware(this.getExpensesList.bind(this)),
       this.dynamicListService.handlerErrorsToResponse,
+      this.catchServiceErrors,
+    );
+    router.get(
+      '/:id', [
+      this.expenseParamSchema,
+    ],
+      this.validationResult,
+      asyncMiddleware(this.getExpense.bind(this)),
       this.catchServiceErrors,
     );
     return router;
@@ -275,6 +285,24 @@ export default class ExpensesController extends BaseController {
         pagination: this.transfromToResponse(pagination),
         filter_meta: this.transfromToResponse(filterMeta),
       });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Retrieve expense details.
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {NextFunction} next 
+   */
+  async getExpense(req: Request, res: Response, next: NextFunction) {
+    const { tenantId } = req;
+    const { id: expenseId } = req.params;
+
+    try {
+      const expense = await this.expensesService.getExpense(tenantId, expenseId);
+      return res.status(200).send({ expense });
     } catch (error) {
       next(error);
     }

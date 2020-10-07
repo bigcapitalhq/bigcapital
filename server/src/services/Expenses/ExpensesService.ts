@@ -48,7 +48,7 @@ export default class ExpensesService implements IExpensesService {
     this.logger.info('[expenses] trying to get the given payment account.', { tenantId, paymentAccountId });
 
     const { accountRepository } = this.tenancy.repositories(tenantId);
-    const paymentAccount = await accountRepository.getById(paymentAccountId)
+    const paymentAccount = await accountRepository.findById(paymentAccountId)
 
     if (!paymentAccount) {
       this.logger.info('[expenses] the given payment account not found.', { tenantId, paymentAccountId });
@@ -459,5 +459,25 @@ export default class ExpensesService implements IExpensesService {
       pagination, filterMeta:
       dynamicFilter.getResponseMeta(),
     };
+  }
+
+  /**
+   * Retrieve expense details.
+   * @param {number} tenantId 
+   * @param {number} expenseId 
+   * @return {Promise<IExpense>}
+   */
+  public async getExpense(tenantId: number, expenseId: number): Promise<IExpense> {
+    const { Expense } = this.tenancy.models(tenantId);
+
+    const expense = await Expense.query().findById(expenseId)
+      .withGraphFetched('paymentAccount')
+      .withGraphFetched('media')
+      .withGraphFetched('categories');
+
+    if (!expense) {
+      throw new ServiceError(ERRORS.EXPENSE_NOT_FOUND);
+    }
+    return expense;
   }
 }
