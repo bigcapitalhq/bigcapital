@@ -34,20 +34,20 @@
       .plan-header {
         display: flex;
         justify-content: flex-start;
-        margin-bottom: 10px;
       }
       .plan-name {
         background: #3657ff;
         border-radius: 3px;
-        padding: 1px 8px 1px 8px;
+        padding: 2px 8px 2px 8px;
         font-size: 13px;
         color: #fff;
-        margin-bottom: 15px;
+        margin-bottom: 16px;
+        height: 21px;
       }
       .plan-description {
         font-size: 14px;
         font-weight: 400;
-        line-height: 2em;
+        line-height: 1.8rem;
 
         &.plan-description ul {
           list-style: none;
@@ -113,10 +113,10 @@
   .bg-title {
     font-size: 22px;
     font-weight: 400;
-    line-height: normal;
+    color: #666666;
   }
   .bg-message {
-    margin-bottom: 15px;
+    margin-bottom: 23px;
     font-size: 14px;
   }
   .license-container {
@@ -139,9 +139,11 @@
     }
     h4 {
       font-size: 18px;
+      font-weight: 400;
       color: #444444;
     }
     p {
+      margin-top: 15px;
       font-size: 14px;
     }
   }

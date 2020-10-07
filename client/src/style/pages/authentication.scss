@@ -1,30 +1,28 @@
-
-
-.authentication-insider{
+.authentication-insider {
   margin-top: 80px;
   margin-bottom: 40px;
 
-  &__logo-section{
+  &__logo-section {
     text-align: center;
     margin-bottom: 60px;
   }
 
-  &__content{
+  &__content {
     position: relative;
   }
 
-  &__footer{
-    .auth-copyright{
+  &__footer {
+    .auth-copyright {
       text-align: center;
       font-size: 12px;
       color: #666;
 
-      .bp3-icon-bigcapital{
+      .bp3-icon-bigcapital {
         margin-top: 9px;
 
-        svg{
-          path{
-            fill: #A3A3A3;
+        svg {
+          path {
+            fill: #a3a3a3;
           }
         }
       }
@@ -33,54 +31,55 @@
 }
 
 .authentication-page {
-
-  &__goto-bigcapital{
+  &__goto-bigcapital {
     position: fixed;
     margin-top: 30px;
     margin-left: 30px;
     color: #777;
   }
-  
+
   .bp3-input {
-    min-height: 40px;
-    border: 2px solid #E3E3E3;
+    min-height: 38px;
+    // border: 2px solid #E3E3E3;
   }
-  .bp3-form-group{
-    margin-bottom: 25px;
+  // .bp3-form-group{
+  //   margin-bottom: 25px;
 
-    &.bp3-intent-danger{
-      .bp3-input{
-        border-color: #eea9a9;
-      }
-    }
-  }
+  //   &.bp3-intent-danger{
+  //     .bp3-input{
+  //       border-color: #eea9a9;
+  //     }
+  //   }
+  // }
 
-  .bp3-form-group.has-password-revealer{
-
-    .bp3-label{
+  .bp3-form-group.has-password-revealer {
+    .bp3-label {
       display: flex;
       justify-content: space-between;
     }
 
-    .password-revealer{
-      .text{
+    .password-revealer {
+      .text {
         font-size: 12px;
       }
     }
   }
 
-  .bp3-button.bp3-fill.bp3-intent-primary{
+  .bp3-button.bp3-fill.bp3-intent-primary {
     font-size: 16px;
   }
 
-  &__label-section{
+  &__label-section {
     margin-bottom: 34px;
     color: #555;
-    
-    h3{
-      font-weight: 500;
-      font-size: 28px;
-      color: #444;
+
+    h3 {
+      // font-weight: 500;
+      font-weight: 400;
+      // font-size: 28px;
+      font-size: 22px;
+      // color: #444;
+      color: #555555;
       margin: 0 0 12px;
     }
 
@@ -92,24 +91,24 @@
 
   &__form-wrapper {
     width: 100%;
-    max-width: 415px;
-    padding: 15px;
+    // max-width: 415px;
+    // padding: 15px;
     margin: 0 auto;
   }
 
-  &__footer-links{
+  &__footer-links {
     padding: 9px;
     border-top: 1px solid #ddd;
     border-bottom: 1px solid #ddd;
     text-align: center;
     margin-bottom: 1.2rem;
 
-    a{
+    a {
       color: #0052cc;
     }
   }
 
-  &__loading-overlay{
+  &__loading-overlay {
     position: absolute;
     top: 0;
     left: 0;
@@ -132,9 +131,11 @@
   // Login Form
   // ------------------------------
   .login-form {
-
-    .checkbox{
-      &--remember-me{
+    width: 690px;
+    margin: 0px auto;
+    padding: 85px 50px;
+    .checkbox {
+      &--remember-me {
         margin: -4px 0 28px 0px;
         font-size: 14px;
       }
@@ -143,10 +144,13 @@
 
   // Register Form
   .register-form {
+    width: 690px;
+    margin: 0px auto;
+    padding: 85px 50px;
 
     &__agreement-section {
       margin-top: -10px;
-      
+
       p {
         font-size: 13px;
         margin-top: -10px;
@@ -166,7 +170,6 @@
   }
 
   .invite-form {
-
     &__statement-section {
       margin-top: -10px;
       p {
@@ -176,7 +179,7 @@
       }
     }
 
-    .authentication-page__loading-overlay{
+    .authentication-page__loading-overlay {
       background: rgba(252, 253, 255, 0.9);
     }
   }

@@ -63,12 +63,14 @@ $pt-font-family: Noto Sans, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
 @import 'pages/exchange-rate';
 @import 'pages/customer';
 @import 'pages/billing';
+@import 'pages/register-wizard-page.scss';
+@import 'pages/register-organizaton.scss';
 
 // Views
-@import 'views/filter-dropdown';
+  @import 'views/filter-dropdown';
 @import 'views/sidebar';
 @import 'pages/estimate';
- 
+
 .App {
   min-width: 960px;
 }

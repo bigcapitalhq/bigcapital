@@ -740,4 +740,25 @@ export default {
   sell_account: 'Sell Account',
   cost_account: 'Cost Account',
   inventory_account: 'Inventory Account',
+
+  register_a_new_organization_now: 'Register a New Organization now!.',
+  you_have_a_bigcapital_account: 'You have a Bigcapital account ',
+  contact_us_technical_support: 'Contact us - Technical Support',
+  let_s_get_started: 'Let’s Get Started',
+  tell_the_system_a_little_bit_about_your_organization:
+    'Tell the system a little bit about your organization.',
+  organization_details: 'Organization details',
+  financial_starting_date: 'Financial starting date ',
+  base_currency: 'Base Currency',
+  note_you_can_change_your_preferences_later_in_dashboard_if_needed:
+    'Note: You can change your preferences later in dashboard, if needed.',
+  save_continue: 'Save & Continue',
+  organization_register: 'Organization Register',
+  getting_started: 'Getting started',
+  payment_or_trial: 'Payment or trial',
+  initializing: 'Initializing',
+  fiscal_year_: 'Fiscal year',
+  welcome: 'Welcome ',
+  sign_out: 'Sign out',
+  we_re_here_to_help: 'We’re Here to Help!',
 };

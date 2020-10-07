@@ -121,7 +121,8 @@ function BillingTab({ formik }) {
         </p>
         <div className={'payment-method-continer'} ref={billingRef}>
           <a
-            href={'#'}
+            href={'#!'}
+            formik={formik}
             id={'monthly'}
             className={'period-container billing-selected'}
           >
@@ -135,7 +136,7 @@ function BillingTab({ formik }) {
               </span>
             </div>
           </a>
-          <a href={'#'} id={'yearly'} className={'period-container'}>
+          <a href={'#!'} id={'yearly'} className={'period-container'}>
             <span className={'bg-period'}>
               <T id={'yearly'} />
             </span>
