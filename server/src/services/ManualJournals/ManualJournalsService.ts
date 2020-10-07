@@ -429,7 +429,8 @@ export default class ManualJournalsService implements IManuaLJournalsService {
     this.logger.info('[manual_journals] trying to get specific manual journal.', { tenantId, manualJournalId });
     const manualJournal = await ManualJournal.query()
       .findById(manualJournalId)
-      .withGraphFetched('entries');
+      .withGraphFetched('entries')
+      .withGraphFetched('media');
 
     return manualJournal;
   }

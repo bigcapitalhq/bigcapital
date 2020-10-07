@@ -215,7 +215,9 @@ export default class ItemCategoriesService implements IItemCategoriesService {
    * @param {number[]} itemCategoriesIds 
    */
   private async getItemCategoriesOrThrowError(tenantId: number, itemCategoriesIds: number[]) {
-    const itemCategories = await ItemCategory.query().whereIn('id', ids);
+    const { ItemCategory } = this.tenancy.models(tenantId);
+    const itemCategories = await ItemCategory.query().whereIn('id', itemCategoriesIds);
+
     const storedItemCategoriesIds = itemCategories.map((category: IItemCategory) => category.id);
     const notFoundCategories = difference(itemCategoriesIds, storedItemCategoriesIds);
 
@@ -239,7 +241,13 @@ export default class ItemCategoriesService implements IItemCategoriesService {
     return { itemCategories, filterMeta: dynamicList.getResponseMeta() };
   }
 
-  private async unassociateItemsWithCategories(tenantId: number, itemCategoryId: number|number[]) {
+  /**
+   * Unlink items relations with item categories.
+   * @param {number} tenantId 
+   * @param {number|number[]} itemCategoryId - 
+   * @return {Promise<void>}
+   */
+  private async unassociateItemsWithCategories(tenantId: number, itemCategoryId: number|number[]): Promise<void> {
     const { Item } = this.tenancy.models(tenantId);
     const ids = Array.isArray(itemCategoryId) ? itemCategoryId : [itemCategoryId];
 
@@ -253,6 +261,8 @@ export default class ItemCategoriesService implements IItemCategoriesService {
    */
   public async deleteItemCategories(tenantId: number, itemCategoriesIds: number[], authorizedUser: ISystemUser) {
     this.logger.info('[item_category] trying to delete item categories.', { tenantId, itemCategoriesIds });
+    const { ItemCategory } = this.tenancy.models(tenantId);
+
     await this.getItemCategoriesOrThrowError(tenantId, itemCategoriesIds);
     await this.unassociateItemsWithCategories(tenantId, itemCategoriesIds);
  
