@@ -103,6 +103,9 @@ export default class Expense extends TenantModel {
           },
           to: 'media.id',
         },
+        filter(query) {
+          query.where('model_name', 'Expense');
+        }
       },
     };
   }

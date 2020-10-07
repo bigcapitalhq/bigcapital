@@ -46,6 +46,9 @@ export default class ManualJournal extends TenantModel {
             to: 'media_links.media_id',
           },
           to: 'media.id',
+        },
+        filter(query) {
+          query.where('model_name', 'ManualJournal');
         }
       }
     };
