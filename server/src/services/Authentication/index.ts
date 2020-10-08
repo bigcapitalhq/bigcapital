@@ -135,7 +135,7 @@ export default class AuthenticationService implements IAuthenticationService {
 
     const { systemUserRepository } = this.sysRepositories;
     const registeredUser = await systemUserRepository.create({
-      ...omit(registerDTO, 'country', 'organizationName'),
+      ...omit(registerDTO, 'country'),
       active: true,
       password: hashedPassword,
       tenant_id: tenant.id,
