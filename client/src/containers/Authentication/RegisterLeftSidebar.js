@@ -61,11 +61,11 @@ function RegisterLeftSidebar() {
       </section>
       <section>
         <div className={'wizard-right-side'}>
-          <RegisterWizardSteps />
-          {/* <RegisterOrganizationForm /> */}
+          {/* <RegisterWizardSteps /> */}
           {/* <Register /> */}
           {/* <Login/> */}
-          <RegisterSubscriptionForm />
+          <RegisterOrganizationForm />
+          {/* <RegisterSubscriptionForm /> */}
         </div>
       </section>
     </div>

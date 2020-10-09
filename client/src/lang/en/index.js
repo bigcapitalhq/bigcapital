@@ -761,4 +761,6 @@ export default {
   welcome: 'Welcome ',
   sign_out: 'Sign out',
   we_re_here_to_help: 'We’re Here to Help!',
+  date_start_:'Date start',
+  something_wentwrong:'Something went wrong.'
 };

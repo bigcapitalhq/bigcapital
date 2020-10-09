@@ -22,7 +22,7 @@ import withAuthenticationActions from './withAuthenticationActions';
 
 import { compose } from 'utils';
 
-function Register({ requestRegister }) {
+function Register({ requestRegister, requestLogin }) {
   const { formatMessage } = useIntl();
   const history = useHistory();
   const [shown, setShown] = useState(false);
@@ -31,9 +31,6 @@ function Register({ requestRegister }) {
   }, [shown]);
 
   const ValidationSchema = Yup.object().shape({
-    organization_name: Yup.string()
-      .required()
-      .label(formatMessage({ id: 'organization_name_' })),
     first_name: Yup.string()
       .required()
       .label(formatMessage({ id: 'first_name_' })),
@@ -56,7 +53,6 @@ function Register({ requestRegister }) {
 
   const initialValues = useMemo(
     () => ({
-      organization_name: '',
       first_name: '',
       last_name: '',
       email: '',
@@ -82,14 +78,28 @@ function Register({ requestRegister }) {
     onSubmit: (values, { setSubmitting, setErrors }) => {
       requestRegister(values)
         .then((response) => {
-          AppToaster.show({
-            message: formatMessage({
-              id: 'welcome_organization_account_has_been_created',
-            }),
-            intent: Intent.SUCCESS,
-          });
-          setSubmitting(false);
-          history.push('/auth/login');
+          // AppToaster.show({
+          //   message: formatMessage({
+          //     id: 'welcome_organization_account_has_been_created',
+          //   }),
+          //   intent: Intent.SUCCESS,
+          // });
+          requestLogin({
+            crediential: values.email,
+            password: values.password,
+          })
+            .then(() => {
+              setSubmitting(false);
+            })
+            .catch((errors) => {
+              AppToaster.show({
+                message: formatMessage({
+                  id: 'something_wentwrong',
+                }),
+                intent: Intent.SUCCESS,
+              });
+            });
+          // history.push('/auth/login');
         })
         .catch((errors) => {
           if (errors.some((e) => e.type === 'PHONE_NUMBER_EXISTS')) {
@@ -150,31 +160,7 @@ function Register({ requestRegister }) {
         </div>
 
         <form onSubmit={handleSubmit} className={'authentication-page__form'}>
-          <FormGroup
-            label={<T id={'organization_name'} />}
-            className={'form-group--name'}
-            intent={
-              errors.organization_name &&
-              touched.organization_name &&
-              Intent.DANGER
-            }
-            helperText={
-              <ErrorMessage
-                {...{ errors, touched }}
-                name={'organization_name'}
-              />
-            }
-          >
-            <InputGroup
-              intent={
-                errors.organization_name &&
-                touched.organization_name &&
-                Intent.DANGER
-              }
-              {...getFieldProps('organization_name')}
-            />
-          </FormGroup>
-
+          
           <Row className={'name-section'}>
             <Col md={6}>
               <FormGroup

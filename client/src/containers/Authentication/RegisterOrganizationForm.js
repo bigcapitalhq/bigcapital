@@ -6,6 +6,7 @@ import {
   Button,
   Intent,
   FormGroup,
+  InputGroup,
   MenuItem,
   Classes,
   Position,
@@ -17,12 +18,16 @@ import { FormattedMessage as T, useIntl } from 'react-intl';
 import { DateInput } from '@blueprintjs/datetime';
 import { momentFormatter, tansformDateValue } from 'utils';
 import AppToaster from 'components/AppToaster';
-
 import { ListSelect, ErrorMessage, FieldRequiredHint } from 'components';
+import { useHistory } from 'react-router-dom';
+import withSettingsActions from 'containers/Settings/withSettingsActions';
+import withRegisterOrganizationActions from './withRegisterOrganizationActions';
+import { compose, optionsMapToArray } from 'utils';
 
-function RegisterOrganizationForm() {
+function RegisterOrganizationForm({ requestSubmitOptions, requestSeedTenant }) {
   const { formatMessage } = useIntl();
   const [selected, setSelected] = useState();
+  const history = useHistory();
 
   const baseCurrency = [
     { id: 0, name: 'LYD - Libyan Dinar', value: 'LYD' },
@@ -122,11 +127,15 @@ function RegisterOrganizationForm() {
   ];
 
   const ValidationSchema = Yup.object().shape({
-    date_start: Yup.date().required(),
-    // .label(formatMessage({id:''}))
-    base_currency: Yup.string().required(
-      formatMessage({ id: 'base_currency_' }),
-    ),
+    name: Yup.string()
+      .required()
+      .label(formatMessage({ id: 'organization_name_' })),
+    date_start: Yup.date()
+      .required()
+      .label(formatMessage({ id: 'date_start_' })),
+    base_currency: Yup.string()
+      .required()
+      .label(formatMessage({ id: 'base_currency_' })),
     language: Yup.string()
       .required()
       .label(formatMessage({ id: 'language' })),
@@ -136,7 +145,17 @@ function RegisterOrganizationForm() {
     time_zone: Yup.string(),
   });
 
-  const initialValues = useMemo(() => ({}), []);
+  const initialValues = useMemo(
+    () => ({
+      name: '',
+      date_start: moment(new Date()).format('YYYY-MM-DD'),
+      base_currency: '',
+      language: '',
+      fiscal_year: '',
+      time_zone: '',
+    }),
+    [],
+  );
 
   const {
     values,
@@ -152,7 +171,20 @@ function RegisterOrganizationForm() {
     initialValues: {
       ...initialValues,
     },
-    onSubmit: (values, { setSubmitting, setErrors }) => {},
+    onSubmit: (values, { setSubmitting, setErrors }) => {
+      const options = optionsMapToArray(values).map((option) => {
+        return { key: option.key, ...option, group: 'organization' };
+      });
+      requestSubmitOptions({ options })
+        .then((response) => {
+          requestSeedTenant().then(() => {
+            setSubmitting(false);
+          });
+        })
+        .catch((erros) => {
+          setSubmitting(false);
+        });
+    },
   });
 
   const onItemsSelect = (filedName) => {
@@ -188,9 +220,9 @@ function RegisterOrganizationForm() {
   );
 
   const handleDateChange = useCallback(
-    (date_filed) => (date) => {
+    (date) => {
       const formatted = moment(date).format('YYYY-MM-DD');
-      setFieldValue(date_filed, formatted);
+      setFieldValue('date_start', formatted);
     },
     [setFieldValue],
   );
@@ -211,20 +243,33 @@ function RegisterOrganizationForm() {
           <T id={'organization_details'} />
         </h3>
 
+        <FormGroup
+          label={<T id={'name'} />}
+          labelInfo={<FieldRequiredHint />}
+          className={'form-group--name'}
+          intent={errors.name && touched.name && Intent.DANGER}
+          helperText={<ErrorMessage {...{ errors, touched }} name={'name'} />}
+        >
+          <InputGroup
+            intent={errors.name && touched.name && Intent.DANGER}
+            {...getFieldProps('name')}
+          />
+        </FormGroup>
+
         {/* financial starting date */}
         <FormGroup
           label={<T id={'financial_starting_date'} />}
           labelInfo={<FieldRequiredHint />}
           intent={errors.date_start && touched.date_start && Intent.DANGER}
           helperText={
-            <ErrorMessage {...{ errors, touched }} name={'date_start'} />
+            <ErrorMessage name="date_start" {...{ errors, touched }} />
           }
+          className={classNames('form-group--select-list', Classes.FILL)}
         >
           <DateInput
-            fill={true}
             {...momentFormatter('MMMM Do YYYY')}
             value={tansformDateValue(values.date_start)}
-            onChange={handleDateChange('date_start')}
+            onChange={handleDateChange}
             popoverProps={{ position: Position.BOTTOM, minimal: true }}
           />
         </FormGroup>
@@ -237,6 +282,7 @@ function RegisterOrganizationForm() {
               className={classNames(
                 'form-group--base-currency',
                 'form-group--select-list',
+                Classes.LOADING,
                 Classes.FILL,
               )}
               intent={
@@ -304,7 +350,7 @@ function RegisterOrganizationForm() {
           )}
           intent={errors.fiscal_year && touched.fiscal_year && Intent.DANGER}
           helperText={
-            <ErrorMessage {...{ errors, touched }} name={'fiscal_year'} />
+            <ErrorMessage name={'fiscal_year'} {...{ errors, touched }} />
           }
         >
           <ListSelect
@@ -354,6 +400,7 @@ function RegisterOrganizationForm() {
         <div className={'register-org-button'}>
           <Button
             intent={Intent.PRIMARY}
+            loading={isSubmitting}
             type="submit"
             //  loading={isSubmitting}
           >
@@ -365,4 +412,7 @@ function RegisterOrganizationForm() {
   );
 }
 
-export default RegisterOrganizationForm;
+export default compose(
+  withSettingsActions,
+  withRegisterOrganizationActions,
+)(RegisterOrganizationForm);
