@@ -24,6 +24,7 @@ import bills from './Bills/bills.type';
 import vendors from './vendors/vendors.types';
 import paymentReceives from './PaymentReceive/paymentReceive.type';
 import paymentMades from './PaymentMades/paymentMade.type';
+import organizations from './organizations/organizations.types';
 
 export default {
   ...authentication,
@@ -52,4 +53,5 @@ export default {
   ...bills,
   ...paymentReceives,
   ...paymentMades,
+  ...organizations,
 };

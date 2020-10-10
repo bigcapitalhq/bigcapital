@@ -19,6 +19,7 @@ import Icon from 'components/Icon';
 import { If } from 'components';
 
 import withAuthenticationActions from './withAuthenticationActions';
+import withOrganizationsActions from 'containers/Organization/withOrganizationActions';
 
 import { compose } from 'utils';
 
@@ -29,6 +30,7 @@ const ERRORS_TYPES = {
 };
 function Login({
   requestLogin,
+  requestOrganizationsList,
 }) {
   const { formatMessage } = useIntl();
   const history = useHistory();
@@ -168,4 +170,5 @@ function Login({
 
 export default compose(
   withAuthenticationActions,
+  withOrganizationsActions,
 )(Login);

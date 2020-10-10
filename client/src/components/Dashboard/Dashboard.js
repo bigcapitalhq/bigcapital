@@ -1,6 +1,8 @@
 import React from 'react';
 import { Switch, Route } from 'react-router';
-import classNames from 'classnames';
+import { useQuery } from 'react-query';
+
+import DashboardLoadingIndicator from './DashboardLoadingIndicator';
 
 import Sidebar from 'components/Sidebar/Sidebar';
 import DashboardContent from 'components/Dashboard/DashboardContent';
@@ -9,29 +11,56 @@ import PreferencesContent from 'components/Preferences/PreferencesContent';
 import PreferencesSidebar from 'components/Preferences/PreferencesSidebar';
 import Search from 'containers/GeneralSearch/Search';
 import DashboardSplitPane from 'components/Dashboard/DashboardSplitePane';
+import EnsureOrganizationIsReady from './EnsureOrganizationIsReady';
 
-export default function Dashboard() {
+import withSettingsActions from 'containers/Settings/withSettingsActions';
+import withOrganizationsActions from 'containers/Organization/withOrganizationActions';
+
+import { compose } from 'utils';
+
+
+function Dashboard({
+  // #withSettings
+  requestFetchOptions,
+
+  // #withOrganizations
+  requestOrganizationsList,
+}) {
+  const fetchOrganizations = useQuery(
+    ['organizations'],
+    (key) => requestOrganizationsList(),
+  );
   return (
-    <div className={classNames('dashboard')}>
-      <Switch>
-        <Route path="/preferences">
-          <DashboardSplitPane>
-            <Sidebar />
-            <PreferencesSidebar />
-          </DashboardSplitPane>
-          <PreferencesContent />
-        </Route>
+    <EnsureOrganizationIsReady>
+      <DashboardLoadingIndicator
+        isLoading={
+          fetchOrganizations.isLoading
+        }>
+        <Switch>
+          <Route path="/preferences">
+            <DashboardSplitPane>
+              <Sidebar />
+              <PreferencesSidebar />
+            </DashboardSplitPane>
+            <PreferencesContent />
+          </Route>
 
-        <Route path="/">
-          <DashboardSplitPane>
-            <Sidebar />
-            <DashboardContent />
-          </DashboardSplitPane>
-        </Route>
-      </Switch>
+          <Route path="/">
+            <DashboardSplitPane>
+              <Sidebar />
+              <DashboardContent />
+            </DashboardSplitPane>
+          </Route>
+        </Switch>
 
-      <Search />
-      <DialogsContainer />
-    </div>
+        <Search />
+        <DialogsContainer />
+      </DashboardLoadingIndicator>
+    </EnsureOrganizationIsReady>
   );
 }
+
+export default compose(
+  withSettingsActions,
+  withOrganizationsActions,
+)(Dashboard);

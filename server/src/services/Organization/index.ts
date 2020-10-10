@@ -1,6 +1,6 @@
 import { Service, Inject } from 'typedi';
 import { ServiceError } from 'exceptions';
-import { ITenant } from 'interfaces';
+import { ISystemService, ISystemUser, ITenant } from 'interfaces';
 import {
   EventDispatcher,
   EventDispatcherInterface,
@@ -38,7 +38,7 @@ export default class OrganizationService {
    * @param  {srting} organizationId 
    * @return {Promise<void>}
    */
-  async build(organizationId: string): Promise<void> {
+  public async build(organizationId: string): Promise<void> {
     const tenant = await this.getTenantByOrgIdOrThrowError(organizationId);
     this.throwIfTenantInitizalized(tenant);
 
@@ -69,7 +69,7 @@ export default class OrganizationService {
    * @param  {number} organizationId 
    * @return {Promise<void>}
    */
-  async seed(organizationId: string): Promise<void> {
+  public async seed(organizationId: string): Promise<void> {
     const tenant = await this.getTenantByOrgIdOrThrowError(organizationId);
     this.throwIfTenantSeeded(tenant);
 
@@ -89,6 +89,20 @@ export default class OrganizationService {
         throw error;
       }
     }
+  }
+
+  /**
+   * Listing all associated organizations to the given user.
+   * @param {ISystemUser} user - 
+   * @return {Promise<void>}
+   */
+  public async listOrganizations(user: ISystemUser): Promise<ITenant[]> {
+    this.logger.info('[organization] trying to list all organizations.', { user });
+
+    const { tenantRepository } = this.sysRepositories;
+    const tenant = await tenantRepository.getByIdWithSubscriptions(user.tenantId);
+
+    return [tenant];
   }
 
   /**

@@ -1,11 +1,22 @@
-import React, { useState } from 'react';
-import { Icon } from 'components';
+import React, { useState, useCallback } from 'react';
+import { Icon, If } from 'components';
 import { FormattedMessage as T } from 'react-intl';
 
-export default function RegisterLeftSection({
+import withAuthentication from 'containers/Authentication/withAuthentication';
+import withAuthenticationActions from 'containers/Authentication/withAuthenticationActions';
 
+import { compose } from 'utils';
+
+
+function RegisterLeftSection({
+  requestLogout,
+  isAuthorized
 }) {
   const [org] = useState('LibyanSpider');
+
+  const onClickLogout = useCallback(() => {
+    requestLogout();
+  }, [requestLogout]);
 
   return (
     <section className={'register-page__left-section'}>
@@ -27,17 +38,18 @@ export default function RegisterLeftSection({
           <T id={'you_have_a_bigcapital_account'} />
         </p>
 
-        <div className={'content-org'}>
-          <span>
-            <T id={'welcome'} />
-            {org},
-          </span>
-          <span>
-            <a href={'#!'}>
-              <T id={'sign_out'} />
-            </a>
-          </span>
-        </div>
+
+        <If condition={!!isAuthorized}>
+          <div className={'content-org'}>
+            <span>
+              <T id={'welcome'} />
+              {org},
+            </span>
+            <span>
+              <a onClick={onClickLogout} href="#"><T id={'sign_out'} /></a>
+            </span>
+          </div>
+        </If>
 
         <div className={'content-contact'}>
           <a href={'#!'}>
@@ -55,3 +67,8 @@ export default function RegisterLeftSection({
     </section>
   )
 }
+
+export default compose(
+  withAuthentication(({ isAuthorized }) => ({ isAuthorized })),
+  withAuthenticationActions,
+)(RegisterLeftSection);

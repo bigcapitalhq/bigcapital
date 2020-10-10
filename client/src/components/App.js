@@ -20,7 +20,7 @@ function App({ locale }) {
   const queryConfig = {
     queries: {
       refetchOnWindowFocus: false,
-    }
+    },
   };
   return (
     <IntlProvider locale={locale} messages={messages}>

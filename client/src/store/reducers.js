@@ -25,9 +25,11 @@ import bills from './Bills/bills.reducer';
 import vendors from './vendors/vendors.reducer';
 import paymentReceives from './PaymentReceive/paymentReceive.reducer';
 import paymentMades from './PaymentMades/paymentMade.reducer';
+import organizations from './organizations/organizations.reducers';
 
 export default combineReducers({
   authentication,
+  organizations,
   dashboard,
   users,
   accounts,

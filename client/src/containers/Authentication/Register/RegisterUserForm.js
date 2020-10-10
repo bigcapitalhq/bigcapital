@@ -77,17 +77,12 @@ function RegisterUserForm({ requestRegister, requestLogin }) {
     onSubmit: (values, { setSubmitting, setErrors }) => {
       requestRegister(values)
         .then((response) => {
-          // AppToaster.show({
-          //   message: formatMessage({
-          //     id: 'welcome_organization_account_has_been_created',
-          //   }),
-          //   intent: Intent.SUCCESS,
-          // });
           requestLogin({
             crediential: values.email,
             password: values.password,
           })
             .then(() => {
+              history.push('/register/subscription');
               setSubmitting(false);
             })
             .catch((errors) => {
@@ -98,7 +93,6 @@ function RegisterUserForm({ requestRegister, requestLogin }) {
                 intent: Intent.SUCCESS,
               });
             });
-          // history.push('/auth/login');
         })
         .catch((errors) => {
           if (errors.some((e) => e.type === 'PHONE_NUMBER_EXISTS')) {

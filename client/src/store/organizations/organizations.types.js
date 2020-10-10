@@ -1,0 +1,5 @@
+
+
+export default {
+  ORGANIZATIONS_LIST_SET: 'ORGANIZATIONS_LIST_SET',
+};
