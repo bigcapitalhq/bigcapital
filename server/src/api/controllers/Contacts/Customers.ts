@@ -46,6 +46,12 @@ export default class CustomersController extends ContactsController {
       this.validationResult,
       asyncMiddleware(this.deleteBulkCustomers.bind(this))
     );
+    router.get('/', [
+      
+    ],
+      this.validationResult,
+      asyncMiddleware(this.getCustomersList.bind(this))
+    );
     router.get('/:id', [
       ...this.specificContactSchema,
     ],
@@ -190,6 +196,17 @@ export default class CustomersController extends ContactsController {
           });
         }
       }
+      next(error);
+    }
+  }
+
+
+  async getCustomersList(req: Request, res: Response, next: NextFunction) {
+    const { tenantId } = req;
+
+    try {
+      await this.customersService.getCustomersList(tenantId)
+    } catch (error) {
       next(error);
     }
   }

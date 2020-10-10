@@ -5,7 +5,10 @@ export interface IView {
   predefined: boolean,
   resourceModel: string,
   favourite: boolean,
-  rolesLogicRxpression: string,
+  rolesLogicExpression: string,
+
+  roles: IViewRole[],
+  columns: IViewHasColumn[],
 };
 
 export interface IViewRole {
@@ -42,6 +45,8 @@ export interface IViewColumnDTO {
 export interface IViewDTO {
   name: string,
   logicExpression: string,
+  resourceModel: string,
+
   roles: IViewRoleDTO[],
   columns: IViewColumnDTO[],
 };
@@ -49,12 +54,13 @@ export interface IViewDTO {
 export interface IViewEditDTO {
   name: string,
   logicExpression: string,
+
   roles: IViewRoleDTO[],
   columns: IViewColumnDTO[],
 };
 
 export interface IViewsService {
-  listViews(tenantId: number, resourceModel: string): Promise<void>;
+  listResourceViews(tenantId: number, resourceModel: string): Promise<IView[]>;
   newView(tenantId: number, viewDTO: IViewDTO): Promise<void>;
   editView(tenantId: number, viewId: number, viewEditDTO: IViewEditDTO): Promise<void>;
   deleteView(tenantId: number, viewId: number): Promise<void>;

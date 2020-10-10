@@ -14,14 +14,14 @@ export default class FilterRoles extends DynamicFilterRoleAbstructor {
   constructor(filterRoles: IFilterRole[]) {
     super();
     this.filterRoles = filterRoles;
+    this.setResponseMeta();  
   }
 
   private buildLogicExpression(): string {
     let expression = '';
     this.filterRoles.forEach((role, index) => {
       expression += (index === 0) ?
-        `${role.index} ` :
-        `${role.condition} ${role.index} `;
+        `${role.index} ` : `${role.condition} ${role.index} `;
     });
     return expression.trim();
   }
@@ -32,7 +32,16 @@ export default class FilterRoles extends DynamicFilterRoleAbstructor {
   buildQuery() {
     return (builder) => {
       const logicExpression = this.buildLogicExpression();
-      buildFilterQuery(this.tableName, this.filterRoles, logicExpression)(builder);
+      buildFilterQuery(this.model, this.filterRoles, logicExpression)(builder);
+    };
+  }
+
+  /**
+   * Sets response meta.
+   */
+  setResponseMeta() {
+    this.responseMeta = {
+      filterRoles: this.filterRoles
     };
   }
 }

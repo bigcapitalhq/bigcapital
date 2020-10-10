@@ -1,3 +1,5 @@
+
+export * from './Model';
 export * from './InventoryTransaction';
 export * from './BillPayment';
 export * from './InventoryCostMethod';
@@ -9,7 +11,7 @@ export * from './Payment';
 export * from './SaleInvoice';
 export * from './PaymentReceive';
 export * from './SaleEstimate';
-export * from './Register';
+export * from './Authentication';
 export * from './User';
 export * from './Metable';
 export * from './Options';
@@ -23,3 +25,4 @@ export * from './View';
 export * from './ManualJournal';
 export * from './Currency';
 export * from './ExchangeRate';
+export * from './Media';

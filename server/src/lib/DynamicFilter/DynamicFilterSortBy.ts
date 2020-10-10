@@ -16,10 +16,11 @@ export default class DynamicFilterSortBy extends DynamicFilterRoleAbstructor {
       fieldKey: sortByFieldKey,
       order: sortDirection,
     };
+    this.setResponseMeta();
   }
 
   validate() {
-    validateFieldKeyExistance(this.tableName, this.sortRole.fieldKey);
+    validateFieldKeyExistance(this.model, this.sortRole.fieldKey);
   }
 
   /**
@@ -27,7 +28,7 @@ export default class DynamicFilterSortBy extends DynamicFilterRoleAbstructor {
    */
   buildQuery() {
     return (builder) => {
-      const fieldRelation = getRoleFieldColumn(this.tableName, this.sortRole.fieldKey);
+      const fieldRelation = getRoleFieldColumn(this.model, this.sortRole.fieldKey);
       const comparatorColumn =
         fieldRelation.relationColumn ||
         `${this.tableName}.${fieldRelation.column}`;
@@ -35,6 +36,16 @@ export default class DynamicFilterSortBy extends DynamicFilterRoleAbstructor {
       if (this.sortRole.fieldKey) {
         builder.orderBy(`${comparatorColumn}`, this.sortRole.order);
       }
+    };
+  }
+
+  /**
+   * Sets response meta.
+   */
+  setResponseMeta() {
+    this.responseMeta = {
+      sortOrder: this.sortRole.fieldKey,
+      sortBy: this.sortRole.order,
     };
   }
 }

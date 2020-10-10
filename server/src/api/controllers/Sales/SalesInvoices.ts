@@ -1,21 +1,25 @@
-import { Router, Request, Response } from 'express';
+import { Router, Request, Response, NextFunction } from 'express';
 import { check, param, query, matchedData } from 'express-validator';
 import { difference } from 'lodash';
 import { raw } from 'objection';
 import { Service, Inject } from 'typedi';
-import validateMiddleware from 'api/middleware/validateMiddleware';
+import BaseController from '../BaseController';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
 import SaleInvoiceService from 'services/Sales/SalesInvoices';
 import ItemsService from 'services/Items/ItemsService';
-import { ISaleInvoiceOTD } from 'interfaces';
+import DynamicListingService from 'services/DynamicListing/DynamicListService';
+import { ISaleInvoiceOTD, ISalesInvoicesFilter } from 'interfaces';
 
 @Service()
-export default class SaleInvoicesController {
+export default class SaleInvoicesController extends BaseController{
   @Inject()
   itemsService: ItemsService;
 
   @Inject()
   saleInvoiceService: SaleInvoiceService;
+
+  @Inject()
+  dynamicListService: DynamicListingService;
 
   /**
    * Router constructor.
@@ -26,7 +30,7 @@ export default class SaleInvoicesController {
     router.post(
       '/',
       this.saleInvoiceValidationSchema,
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.validateInvoiceCustomerExistance.bind(this)),
       asyncMiddleware(this.validateInvoiceNumberUnique.bind(this)),
       asyncMiddleware(this.validateInvoiceItemsIdsExistance.bind(this)),
@@ -39,7 +43,7 @@ export default class SaleInvoicesController {
         ...this.saleInvoiceValidationSchema,
         ...this.specificSaleInvoiceValidation,
       ],
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.validateInvoiceExistance.bind(this)),
       asyncMiddleware(this.validateInvoiceCustomerExistance.bind(this)),
       asyncMiddleware(this.validateInvoiceNumberUnique.bind(this)),
@@ -52,7 +56,7 @@ export default class SaleInvoicesController {
     router.delete(
       '/:id',
       this.specificSaleInvoiceValidation,
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.validateInvoiceExistance.bind(this)),
       asyncMiddleware(this.deleteSaleInvoice.bind(this))
     );
@@ -64,13 +68,14 @@ export default class SaleInvoicesController {
     router.get(
       '/:id',
       this.specificSaleInvoiceValidation,
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.validateInvoiceExistance.bind(this)),
       asyncMiddleware(this.getSaleInvoice.bind(this))
     );
     router.get(
       '/',
       this.saleInvoiceListValidationSchema,
+      this.validationResult,
       asyncMiddleware(this.getSalesInvoices.bind(this))
     )
     return router;
@@ -411,7 +416,21 @@ export default class SaleInvoicesController {
    * @param {Response} res
    * @param {Function} next
    */
-  async getSalesInvoices(req, res) {
-     
+  public async getSalesInvoices(req: Request, res: Response, next: NextFunction) {
+    const { tenantId } = req.params;
+    const salesInvoicesFilter: ISalesInvoicesFilter = req.query;
+
+    try {
+      const { salesInvoices, filterMeta, pagination } = await this.saleInvoiceService.salesInvoicesList(
+        tenantId, salesInvoicesFilter,
+      );
+      return res.status(200).send({
+        sales_invoices: salesInvoices,
+        pagination: this.transfromToResponse(pagination),
+        filter_meta: this.transfromToResponse(filterMeta),
+      });
+    } catch (error) {
+      next(error);
+    }
   }
 }

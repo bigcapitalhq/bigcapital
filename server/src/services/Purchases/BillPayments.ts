@@ -1,13 +1,14 @@
 import { Inject, Service } from 'typedi';
 import { omit, sumBy } from 'lodash';
 import moment from 'moment';
-import { IBillPaymentOTD, IBillPayment } from 'interfaces';
+import { IBillPaymentOTD, IBillPayment, IBillPaymentsFilter, IPaginationMeta, IFilterMeta } from 'interfaces';
 import ServiceItemsEntries from 'services/Sales/ServiceItemsEntries';
 import AccountsService from 'services/Accounts/AccountsService';
 import JournalPoster from 'services/Accounting/JournalPoster';
 import JournalEntry from 'services/Accounting/JournalEntry';
 import JournalPosterService from 'services/Sales/JournalPosterService';
 import TenancyService from 'services/Tenancy/TenancyService';
+import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import { formatDateFields } from 'utils';
 
 /**
@@ -25,6 +26,9 @@ export default class BillPaymentsService {
   @Inject()
   journalService: JournalPosterService;
 
+  @Inject()
+  dynamicListService: DynamicListingService;
+
   /**
    * Creates a new bill payment transcations and store it to the storage
    * with associated bills entries and journal transactions.
@@ -39,7 +43,7 @@ export default class BillPaymentsService {
    * @param {number} tenantId - Tenant id.
    * @param {BillPaymentDTO} billPayment - Bill payment object.
    */
-  async createBillPayment(tenantId: number, billPaymentDTO: IBillPaymentOTD) {
+  public async createBillPayment(tenantId: number, billPaymentDTO: IBillPaymentOTD) {
     const { Bill, BillPayment, BillPaymentEntry, Vendor } = this.tenancy.models(tenantId);
 
     const billPayment = {
@@ -102,7 +106,7 @@ export default class BillPaymentsService {
    * @param {BillPaymentDTO} billPayment
    * @param {IBillPayment} oldBillPayment
    */
-  async editBillPayment(
+  public async editBillPayment(
     tenantId: number,
     billPaymentId: number,
     billPaymentDTO,
@@ -171,7 +175,7 @@ export default class BillPaymentsService {
    * @param {Integer} billPaymentId - The given bill payment id.
    * @return {Promise}
    */
-  async deleteBillPayment(tenantId: number, billPaymentId: number) {
+  public async deleteBillPayment(tenantId: number, billPaymentId: number) {
     const { BillPayment, BillPaymentEntry, Vendor } = this.tenancy.models(tenantId);
     const billPayment = await BillPayment.query().where('id', billPaymentId).first();
 
@@ -203,7 +207,7 @@ export default class BillPaymentsService {
    * @param {BillPayment} billPayment
    * @param {Integer} billPaymentId
    */
-  async recordPaymentReceiveJournalEntries(tenantId: number, billPayment) {
+  private async recordPaymentReceiveJournalEntries(tenantId: number, billPayment) {
     const { AccountTransaction, Account } = this.tenancy.models(tenantId);
 
     const paymentAmount = sumBy(billPayment.entries, 'payment_amount');
@@ -250,6 +254,35 @@ export default class BillPaymentsService {
       journal.saveEntries(),
       journal.saveBalance(),
     ]);
+  }
+
+  /**
+   * Retrieve bill payment paginted and filterable list.
+   * @param {number} tenantId 
+   * @param {IBillPaymentsFilter} billPaymentsFilter 
+   */
+  public async listBillPayments(
+    tenantId: number,
+    billPaymentsFilter: IBillPaymentsFilter,
+  ): Promise<{ billPayments: IBillPayment, pagination: IPaginationMeta, filterMeta: IFilterMeta }> {
+    const { BillPayment } = this.tenancy.models(tenantId);
+    const dynamicFilter = await this.dynamicListService.dynamicList(tenantId, BillPayment, billPaymentsFilter);
+
+    this.logger.info('[bill_payment] try to get bill payments list.', { tenantId });
+    const { results, pagination } = await BillPayment.query().onBuild(builder => {
+      builder.withGraphFetched('vendor');
+      builder.withGraphFetched('paymentAccount');
+      dynamicFilter.buildQuery()(builder);
+    }).pagination(
+      billPaymentsFilter.page - 1,
+      billPaymentsFilter.pageSize,
+    );
+
+    return {
+      billPayments: results,
+      pagination,
+      filterMeta: dynamicFilter.getResponseMeta(),
+    };
   }
 
   /**

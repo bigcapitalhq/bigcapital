@@ -222,19 +222,22 @@ export default class UsersController extends BaseController{
     }
     if (error instanceof ServiceError) {
       if (error.errorType === 'user_not_found') {
-        return res.status(404).send({
-          errors: [{ type: 'USER.NOT.FOUND', code: 100 }],
-        });
+        return res.boom.badRequest(
+          'User not found.',
+          { errors: [{ type: 'USER.NOT.FOUND', code: 100 }] }
+        );
       }
       if (error.errorType === 'user_already_active') {
-        return res.status(404).send({
-          errors: [{ type: 'USER.ALREADY.ACTIVE', code: 200 }],
-        });
+        return res.boom.badRequest(
+          'User is already active.',
+          { errors: [{ type: 'USER.ALREADY.ACTIVE', code: 200 }] },
+        );
       }
       if (error.errorType === 'user_already_inactive') {
-        return res.status(404).send({
-          errors: [{ type: 'USER.ALREADY.INACTIVE', code: 200 }],
-        });
+        return res.boom.badRequest(
+          'User is already inactive.',
+          { errors: [{ type: 'USER.ALREADY.INACTIVE', code: 200 }] },
+        );
       }
       if (error.errorType === 'user_same_the_authorized_user') {
         return res.boom.badRequest(

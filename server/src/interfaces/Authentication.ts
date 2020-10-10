@@ -9,6 +9,11 @@ export interface IRegisterDTO {
   organizationName: string,
 };
 
+export interface ILoginDTO {
+  crediential: string,
+  password: string,
+};
+
 export interface IPasswordReset {
   id: number,
   email: string,

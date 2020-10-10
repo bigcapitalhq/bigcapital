@@ -1,16 +1,18 @@
-import TenancyService from 'services/Tenancy/TenancyService'
 import Container from 'typedi';
+import TenancyService from 'services/Tenancy/TenancyService'
 
 exports.up = function (knex) {
   const tenancyService = Container.get(TenancyService);
   const i18n = tenancyService.i18n(knex.userParams.tenantId);
+
+  console.log(i18n);
 
   return knex('accounts').then(() => {
     // Inserts seed entries
     return knex('accounts').insert([
       {
         id: 1,
-        name: 'Petty Cash',
+        name: i18n.__('Petty Cash'),
         slug: 'petty-cash',
         account_type_id: 2,
         parent_account_id: null,
@@ -22,7 +24,7 @@ exports.up = function (knex) {
       },
       {
         id: 2,
-        name: 'Bank',
+        name: i18n.__('Bank'),
         slug: 'bank',
         account_type_id: 2,
         parent_account_id: null,
@@ -34,7 +36,7 @@ exports.up = function (knex) {
       },
       {
         id: 3,
-        name: 'Other Income',
+        name: i18n.__('Other Income'),
         slug: 'other-income',
         account_type_id: 7,
         parent_account_id: null,
@@ -46,7 +48,7 @@ exports.up = function (knex) {
       },
       {
         id: 4,
-        name: 'Interest Income',
+        name: i18n.__('Interest Income'),
         slug: 'interest-income',
         account_type_id: 7,
         parent_account_id: null,
@@ -58,7 +60,7 @@ exports.up = function (knex) {
       },
       {
         id: 5,
-        name: 'Opening Balance',
+        name: i18n.__('Opening Balance'),
         slug: 'opening-balance',
         account_type_id: 5,
         parent_account_id: null,
@@ -70,7 +72,7 @@ exports.up = function (knex) {
       },
       {
         id: 6,
-        name: 'Depreciation Expense',
+        name: i18n.__('Depreciation Expense'),
         slug: 'depreciation-expense',
         account_type_id: 6,
         parent_account_id: null,
@@ -82,7 +84,7 @@ exports.up = function (knex) {
       },
       {
         id: 7,
-        name: 'Interest Expense',
+        name: i18n.__('Interest Expense'),
         slug: 'interest-expense',
         account_type_id: 6,
         parent_account_id: null,
@@ -94,7 +96,7 @@ exports.up = function (knex) {
       },
       {
         id: 8,
-        name: 'Payroll Expenses',
+        name: i18n.__('Payroll Expenses'),
         slug: 'payroll-expenses',
         account_type_id: 6,
         parent_account_id: null,
@@ -106,7 +108,7 @@ exports.up = function (knex) {
       },
       {
         id: 9,
-        name: 'Other Expenses',
+        name: i18n.__('Other Expenses'),
         slug: 'other-expenses',
         account_type_id: 6,
         parent_account_id: null,
@@ -118,7 +120,7 @@ exports.up = function (knex) {
       },
       {
         id: 10,
-        name: 'Accounts Receivable',
+        name: i18n.__('Accounts Receivable'),
         slug: 'accounts-receivable',
         account_type_id: 8,
         parent_account_id: null,
@@ -130,7 +132,7 @@ exports.up = function (knex) {
       },
       {
         id: 11,
-        name: 'Accounts Payable',
+        name: i18n.__('Accounts Payable'),
         slug: 'accounts-payable',
         account_type_id: 9,
         parent_account_id: null,
@@ -142,7 +144,7 @@ exports.up = function (knex) {
       },
       {
         id: 12, 
-        name: 'Cost of Goods Sold (COGS)',
+        name: i18n.__('Cost of Goods Sold (COGS)'),
         slug: 'cost-of-goods-sold',
         account_type_id: 12,
         predefined: 1,
@@ -153,7 +155,7 @@ exports.up = function (knex) {
       },
       {
         id: 13, 
-        name: 'Inventory Asset',
+        name: i18n.__('Inventory Asset'),
         slug: 'inventory-asset',
         account_type_id: 14,
         predefined: 1,
@@ -164,7 +166,7 @@ exports.up = function (knex) {
       },
       {
         id: 14,
-        name: 'Sales of Product Income',
+        name: i18n.__('Sales of Product Income'),
         slug: 'sales-of-product-income',
         account_type_id: 7,
         predefined: 1,

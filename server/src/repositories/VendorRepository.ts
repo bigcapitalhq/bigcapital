@@ -1,3 +1,4 @@
+import { IVendor } from "interfaces";
 import TenantRepository from "./TenantRepository";
 
 
@@ -18,7 +19,7 @@ export default class VendorRepository extends TenantRepository {
 
   /**
    * Retrieve the bill that associated to the given vendor id.
-   * @param {number} vendorId 
+   * @param {number} vendorId - Vendor id.
    */
   getBills(vendorId: number) {
     const { Bill } = this.models;
@@ -29,16 +30,17 @@ export default class VendorRepository extends TenantRepository {
   }
 
   /**
-   * 
+   * Retrieve all the given vendors.
    * @param {numner[]} vendorsIds 
+   * @return {IVendor}
    */
-  vendors(vendorsIds: number[]) {
+  vendors(vendorsIds: number[]): IVendor[] {
     const { Contact } = this.models;
     return Contact.query().modifier('vendor').whereIn('id', vendorsIds);
   }
 
   /**
-   * 
+   * Retrieve vendors with associated bills.
    * @param {number[]} vendorIds 
    */
   vendorsWithBills(vendorIds: number[]) {

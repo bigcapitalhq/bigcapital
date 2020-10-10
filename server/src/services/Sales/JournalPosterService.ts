@@ -14,7 +14,7 @@ export default class JournalPosterService {
    * @param {string} referenceType - The transaction reference type.
    * @return {Promise}
    */
-  async deleteJournalTransactions(
+  async revertJournalTransactions(
     tenantId: number,
     referenceId: number,
     referenceType: string

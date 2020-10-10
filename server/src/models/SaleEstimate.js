@@ -21,16 +21,19 @@ export default class SaleEstimate extends TenantModel {
    */
   static get relationMappings() {
     const ItemEntry = require('models/ItemEntry');
-    const Customer = require('models/Customer');
+    const Contact = require('models/Contact');
 
     return {
       customer: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Customer.default,
+        modelClass: Contact.default,
         join: {
           from: 'sales_estimates.customerId',
-          to: 'customers.id',
+          to: 'contacts.id',
         },
+        filter(query) {
+          query.where('contact_type', 'Customer');
+        }
       },
 
       entries: {

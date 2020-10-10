@@ -70,6 +70,6 @@ export interface IItemsService {
 
 export interface IItemsFilter extends IDynamicListFilter {
   stringifiedFilterRoles?: string,
-  page?: number,
-  pageSize?: number,
+  page: number,
+  pageSize: number,
 };

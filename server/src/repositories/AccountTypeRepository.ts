@@ -76,4 +76,11 @@ export default class AccountTypeRepository extends TenantRepository {
       return AccountType.query().where('root_type', rootType);
     });
   }
+
+  /**
+   * Flush repository cache.
+   */
+  flushCache() {
+    this.cache.delStartWith('accountType');
+  }
 }

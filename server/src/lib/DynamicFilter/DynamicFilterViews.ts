@@ -1,25 +1,29 @@
-import { IFilterRole } from 'interfaces';
+import { omit } from 'lodash';
+import { IView, IViewRole } from 'interfaces';
 import DynamicFilterRoleAbstructor from 'lib/DynamicFilter/DynamicFilterRoleAbstructor';
 import {
-  validateViewRoles,
   buildFilterQuery,
 } from 'lib/ViewRolesBuilder';
 
 export default class DynamicFilterViews extends DynamicFilterRoleAbstructor {
+  viewId: number;
   logicExpression: string;
+  filterRoles: IViewRole[];
 
   /**
    * Constructor method.
-   * @param {*} filterRoles - Filter roles.
-   * @param {*} logicExpression - Logic expression.
+   * @param {IView} view - 
    */
-  constructor(filterRoles: IFilterRole[], logicExpression: string) {
+  constructor(view: IView) {
     super();
 
-    this.filterRoles = filterRoles;
-    this.logicExpression = logicExpression
+    this.viewId = view.id;
+    this.filterRoles = view.roles;
+    this.logicExpression = view.rolesLogicExpression
       .replace('AND', '&&')
       .replace('OR', '||');
+
+    this.setResponseMeta();  
   }
 
   /**
@@ -28,20 +32,27 @@ export default class DynamicFilterViews extends DynamicFilterRoleAbstructor {
   buildLogicExpression() {
     return this.logicExpression;
   }
-
-  /**
-   * Validates filter roles.
-   */
-  validate() {
-    return validateViewRoles(this.filterRoles, this.logicExpression);
-  }
-
+ 
   /**
    * Builds database query of view roles.
    */
   buildQuery() {
     return (builder) => {
-      buildFilterQuery(this.tableName, this.filterRoles, this.logicExpression)(builder);
+      buildFilterQuery(this.model, this.filterRoles, this.logicExpression)(builder);
+    };
+  }
+
+  /**
+   * Sets response meta.
+   */
+  setResponseMeta() {
+    this.responseMeta = {
+      view: {
+        logicExpression: this.logicExpression,
+        filterRoles: this.filterRoles
+          .map((filterRole) => ({ ...omit(filterRole, ['id', 'viewId']) })),
+        customViewId: this.viewId,
+      }
     };
   }
 }

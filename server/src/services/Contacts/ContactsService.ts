@@ -45,10 +45,10 @@ export default class ContactsService {
    * @param {IContactDTO} contactDTO 
    */
   async newContact(tenantId: number, contactDTO: IContactNewDTO, contactService: TContactService) {
-    const { Contact } = this.tenancy.models(tenantId);
+    const { contactRepository } = this.tenancy.repositories(tenantId);
 
     this.logger.info('[contacts] trying to insert contact to the storage.', { tenantId, contactDTO });
-    const contact = await Contact.query().insert({ contactService, ...contactDTO });
+    const contact = await contactRepository.insert({ contactService, ...contactDTO });
 
     this.logger.info('[contacts] contact inserted successfully.', { tenantId, contact });
     return contact;
@@ -77,11 +77,11 @@ export default class ContactsService {
    * @return {Promise<void>}
    */
   async deleteContact(tenantId: number, contactId: number, contactService: TContactService) {
-    const { Contact } = this.tenancy.models(tenantId);
+    const { contactRepository } = this.tenancy.repositories(tenantId);
     const contact = await this.getContactByIdOrThrowError(tenantId, contactId, contactService);
 
     this.logger.info('[contacts] trying to delete the given contact.', { tenantId, contactId });
-    await Contact.query().findById(contactId).delete();
+    await contactRepository.deleteById(contactId);
   }
 
   /**
@@ -124,10 +124,10 @@ export default class ContactsService {
    * @return {Promise<void>}
    */
   async deleteBulkContacts(tenantId: number, contactsIds: number[], contactService: TContactService) {
-    const { Contact } = this.tenancy.models(tenantId);
+    const { contactRepository } = this.tenancy.repositories(tenantId);
     this.getContactsOrThrowErrorNotFound(tenantId, contactsIds, contactService);
 
-    await Contact.query().whereIn('id', contactsIds).delete();
+    await contactRepository.bulkDelete(contactsIds);
   }
 
   /**

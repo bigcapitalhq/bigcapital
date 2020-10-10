@@ -1,19 +1,10 @@
 import { Inject, Service } from 'typedi';
 import { Router, Request, NextFunction, Response } from 'express';
-import {
-  check,
-  query,
-  param,
-  oneOf,
-  validationResult,
-} from 'express-validator';
+import { check, param } from 'express-validator';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
-import {
-  validateViewRoles,
-} from 'lib/ViewRolesBuilder';
 import ViewsService from 'services/Views/ViewsService';
-import BaseController from './BaseController';
-import { IViewDTO } from 'interfaces';
+import BaseController from 'api/controllers/BaseController';
+import { IViewDTO, IViewEditDTO } from 'interfaces';
 import { ServiceError } from 'exceptions';
 
 @Service()
@@ -27,66 +18,96 @@ export default class ViewsController extends BaseController{
   router() {
     const router = Router();
 
-    router.get('/', [
-      ...this.viewDTOSchemaValidation,
+    router.get('/resource/:resource_model', [
+      ...this.viewsListSchemaValidation,
     ],
-      asyncMiddleware(this.listViews)
+      this.validationResult,
+      asyncMiddleware(this.listResourceViews.bind(this)),
+      this.handlerServiceErrors,
     );
     router.post('/', [
       ...this.viewDTOSchemaValidation,
     ],
-      asyncMiddleware(this.createView)
+      this.validationResult,
+      asyncMiddleware(this.createView.bind(this)),
+      this.handlerServiceErrors
     );
-
-    router.post('/:view_id', [
-      ...this.viewDTOSchemaValidation,
+    router.post('/:id', [
+      ...this.viewParamSchemaValidation,
+      ...this.viewEditDTOSchemaValidation,
     ],
-      asyncMiddleware(this.editView)
+      this.validationResult,
+      asyncMiddleware(this.editView.bind(this)),
+      this.handlerServiceErrors,
     );
-
-    router.delete('/:view_id', [
+    router.delete('/:id', [
       ...this.viewParamSchemaValidation
     ],
-      asyncMiddleware(this.deleteView));
-
-    router.get('/:view_id', [
-      ...this.viewParamSchemaValidation
-    ]
-      asyncMiddleware(this.getView)
+      this.validationResult,
+      asyncMiddleware(this.deleteView.bind(this)),
+      this.handlerServiceErrors,
     );
-
-    router.get('/:view_id/resource', [
+    router.get('/:id', [
       ...this.viewParamSchemaValidation
     ],
-      asyncMiddleware(this.getViewResource)
+      this.validationResult,
+      asyncMiddleware(this.getView.bind(this)),
     );
-
     return router;
   }
 
+  /**
+   * New view DTO schema validation.
+   */
   get viewDTOSchemaValidation() {
     return [
-      check('resource_name').exists().escape().trim(),
+      check('resource_model').exists().escape().trim(),
       check('name').exists().escape().trim(),
       check('logic_expression').exists().trim().escape(),
+
       check('roles').isArray({ min: 1 }),
       check('roles.*.field_key').exists().escape().trim(),
       check('roles.*.comparator').exists(),
       check('roles.*.value').exists(),
       check('roles.*.index').exists().isNumeric().toInt(),
+
       check('columns').exists().isArray({ min: 1 }),
-      check('columns.*.key').exists().escape().trim(),
+      check('columns.*.field_key').exists().escape().trim(),
+      check('columns.*.index').exists().isNumeric().toInt(),
+    ];
+  }
+
+  /**
+   * Edit view DTO schema validation.
+   */
+  get viewEditDTOSchemaValidation() {
+    return [
+      check('name').exists().escape().trim(),
+      check('logic_expression').exists().trim().escape(),
+
+      check('roles').isArray({ min: 1 }),
+      check('roles.*.field_key').exists().escape().trim(),
+      check('roles.*.comparator').exists(),
+      check('roles.*.value').exists(),
+      check('roles.*.index').exists().isNumeric().toInt(),
+
+      check('columns').exists().isArray({ min: 1 }),
+      check('columns.*.field_key').exists().escape().trim(),
       check('columns.*.index').exists().isNumeric().toInt(),
     ];
   }
 
   get viewParamSchemaValidation() {
     return [
-      
-    ]
+      param('id').exists().isNumeric().toInt(),
+    ];
   }
 
-  
+  get viewsListSchemaValidation() {
+    return [
+      param('resource_model').exists().trim().escape(),
+    ]
+  }
 
   /**
    * List all views that associated with the given resource.
@@ -94,12 +115,12 @@ export default class ViewsController extends BaseController{
    * @param {Response} res - 
    * @param {NextFunction} next  - 
    */
-  listViews(req: Request, res: Response, next: NextFunction) {
+  async listResourceViews(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
-    const filter = req.query;
+    const { resource_model: resourceModel } = req.params;
 
     try {
-      const views = this.viewsService.listViews(tenantId, filter);
+      const views = await this.viewsService.listResourceViews(tenantId, resourceModel);
       return res.status(200).send({ views });
     } catch (error) {
       next(error);
@@ -107,16 +128,17 @@ export default class ViewsController extends BaseController{
   }
 
   /**
-   * 
+   * Retrieve view details with assocaited roles and columns.
    * @param {Request} req 
    * @param {Response} res 
    * @param {NextFunction} next 
    */
-  getView(req: Request, res: Response, next: NextFunction) {
+  async getView(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
+    const { id: viewId } = req.params;
 
     try {
-      const view = this.viewsService.getView(tenantId, viewId);
+      const view = await this.viewsService.getView(tenantId, viewId);
       return res.status(200).send({ view });
     } catch (error) {
       next(error);
@@ -129,13 +151,13 @@ export default class ViewsController extends BaseController{
    * @param {Response} res - 
    * @param {NextFunction} next  - 
    */
-  createView(req: Request, res: Response, next: NextFunction) {
+  async createView(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const viewDTO: IViewDTO = this.matchedBodyData(req);
 
     try {
-      await this.viewsService.newView(tenantId, viewDTO);
-      return res.status(200).send({ id: 1 });
+      const view = await this.viewsService.newView(tenantId, viewDTO);
+      return res.status(200).send({ id: view.id });
     } catch (error) {
       next(error);
     }
@@ -147,10 +169,10 @@ export default class ViewsController extends BaseController{
    * @param {Response} res - 
    * @param {NextFunction} next  - 
    */
-  editView(req: Request, res: Response, next: NextFunction) {
+  async editView(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const { id: viewId } = req.params;
-    const { body: viewEditDTO } = req;
+    const viewEditDTO: IViewEditDTO = this.matchedBodyData(req);
 
     try {
       await this.viewsService.editView(tenantId, viewId, viewEditDTO);
@@ -166,7 +188,7 @@ export default class ViewsController extends BaseController{
    * @param {Response} res - 
    * @param {NextFunction} next  - 
    */
-  deleteView(req: Request, res: Response, next: NextFunction) {
+  async deleteView(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const { id: viewId } = req.params;
 
@@ -187,6 +209,16 @@ export default class ViewsController extends BaseController{
    */
   handlerServiceErrors(error: Error, req: Request, res: Response, next: NextFunction) {
     if (error instanceof ServiceError) {
+      if (error.errorType === 'VIEW_NAME_NOT_UNIQUE') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'VIEW_NAME_NOT_UNIQUE', code: 110 }],
+        });
+      }
+      if (error.errorType === 'RESOURCE_MODEL_NOT_FOUND') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'RESOURCE_MODEL_NOT_FOUND', code: 150, }],
+        });
+      }
       if (error.errorType === 'INVALID_LOGIC_EXPRESSION') {
         return res.boom.badRequest(null, {
           errors: [{ type: 'VIEW.ROLES.LOGIC.EXPRESSION.INVALID', code: 400 }],
@@ -212,6 +244,17 @@ export default class ViewsController extends BaseController{
           errors: [{ type: 'PREDEFINED_VIEW', code: 200 }],
         });
       }    
+      if (error.errorType === 'RESOURCE_FIELDS_KEYS_NOT_FOUND') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'RESOURCE_FIELDS_KEYS_NOT_FOUND', code: 300 }],
+        })
+      }
+      if (error.errorType === 'RESOURCE_COLUMNS_KEYS_NOT_FOUND') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'RESOURCE_COLUMNS_KEYS_NOT_FOUND', code: 310 }],
+        })
+      }
     }
+    next(error);
   }
 };

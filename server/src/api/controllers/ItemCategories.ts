@@ -7,15 +7,18 @@ import {
 import ItemCategoriesService from 'services/ItemCategories/ItemCategoriesService';
 import { Inject, Service } from 'typedi';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
-import validateMiddleware from 'api/middleware/validateMiddleware';
 import { IItemCategoryOTD } from 'interfaces';
 import { ServiceError } from 'exceptions';
 import BaseController from 'api/controllers/BaseController';
+import DynamicListingService from 'services/DynamicListing/DynamicListService';
 
 @Service()
 export default class ItemsCategoriesController extends BaseController {
   @Inject()
   itemCategoriesService: ItemCategoriesService;
+
+  @Inject()
+  dynamicListService: DynamicListingService;
 
   /**
    * Router constructor method.
@@ -27,44 +30,45 @@ export default class ItemsCategoriesController extends BaseController {
         ...this.categoryValidationSchema,
         ...this.specificCategoryValidationSchema,
       ], 
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.editCategory.bind(this)),
       this.handlerServiceError,
     );
     router.post('/', [
         ...this.categoryValidationSchema,
       ],
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.newCategory.bind(this)),
       this.handlerServiceError,
     );
     router.delete('/', [
         ...this.categoriesBulkValidationSchema,
       ],
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.bulkDeleteCategories.bind(this)),
       this.handlerServiceError,
     );
     router.delete('/:id', [
         ...this.specificCategoryValidationSchema
       ],
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.deleteItem.bind(this)),
       this.handlerServiceError,
     );
     router.get('/:id', [
         ...this.specificCategoryValidationSchema,
       ],
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.getCategory.bind(this)),
       this.handlerServiceError,
     );
     router.get('/', [
         ...this.categoriesListValidationSchema
       ],
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.getList.bind(this)),
       this.handlerServiceError,
+      this.dynamicListService.handlerErrorsToResponse,
     );
     return router;
   }
@@ -113,8 +117,9 @@ export default class ItemsCategoriesController extends BaseController {
    */
   get categoriesListValidationSchema() {
     return [
-      query('column_sort_order').optional().trim().escape(),
+      query('column_sort_by').optional().trim().escape(),
       query('sort_order').optional().trim().escape().isIn(['desc', 'asc']),
+
       query('stringified_filter_roles').optional().isJSON(),
     ];
   }
@@ -190,13 +195,21 @@ export default class ItemsCategoriesController extends BaseController {
    */
   async getList(req: Request, res: Response, next: NextFunction) {
     const { tenantId, user } = req;
-    const itemCategoriesFilter = this.matchedQueryData(req);
+    const itemCategoriesFilter = {
+      filterRoles: [],
+      sortOrder: 'asc',
+      columnSortBy: 'created_at',
+      ...this.matchedQueryData(req),
+    };
 
     try {
-      const itemCategories = await this.itemCategoriesService.getItemCategoriesList(
+      const { itemCategories, filterMeta }  = await this.itemCategoriesService.getItemCategoriesList(
         tenantId, itemCategoriesFilter, user,
       );
-      return res.status(200).send({ item_categories: itemCategories });
+      return res.status(200).send({
+        item_categories: itemCategories,
+        filter_meta: this.transfromToResponse(filterMeta),
+      });
     } catch (error) {
       next(error);
     }

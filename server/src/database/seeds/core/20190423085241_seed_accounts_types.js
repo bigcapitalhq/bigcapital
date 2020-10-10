@@ -1,8 +1,14 @@
+import Container from 'typedi';
+import TenancyService from 'services/Tenancy/TenancyService'
+import I18nMiddleware from 'api/middleware/I18nMiddleware';
+
 exports.up = function (knex) {
+  const tenancyService = Container.get(TenancyService);
+  const i18n = tenancyService.i18n(knex.userParams.tenantId);
+
   return knex('account_types').insert([
     {
       id: 1,
-      name: 'Fixed Asset',
       key: 'fixed_asset',
       normal: 'debit',
       root_type: 'asset',
@@ -12,7 +18,6 @@ exports.up = function (knex) {
     },
     {
       id: 2,
-      name: 'Current Asset',
       key: 'current_asset',
       normal: 'debit',
       root_type: 'asset',
@@ -22,7 +27,6 @@ exports.up = function (knex) {
     },
     {
       id: 14,
-      name: 'Other Asset',
       key: 'other_asset',
       normal: 'debit',
       root_type: 'asset',
@@ -32,7 +36,6 @@ exports.up = function (knex) {
     },
     {
       id: 3,
-      name: 'Long Term Liability',
       key: 'long_term_liability',
       normal: 'credit',
       root_type: 'liability',
@@ -42,7 +45,6 @@ exports.up = function (knex) {
     },
     {
       id: 4,
-      name: 'Current Liability',
       key: 'current_liability',
       normal: 'credit',
       root_type: 'liability',
@@ -52,7 +54,6 @@ exports.up = function (knex) {
     },
     {
       id: 13,
-      name: 'Other Liability',
       key: 'other_liability',
       normal: 'credit',
       root_type: 'liability',
@@ -62,7 +63,6 @@ exports.up = function (knex) {
     },
     {
       id: 5,
-      name: 'Equity',
       key: 'equity',
       normal: 'credit',
       root_type: 'equity',
@@ -72,7 +72,6 @@ exports.up = function (knex) {
     },
     {
       id: 6,
-      name: 'Expense',
       key: 'expense',
       normal: 'debit',
       root_type: 'expense',
@@ -82,7 +81,6 @@ exports.up = function (knex) {
     },
     {
       id: 10,
-      name: 'Other Expense',
       key: 'other_expense',
       normal: 'debit',
       root_type: 'expense',
@@ -91,7 +89,6 @@ exports.up = function (knex) {
     },
     {
       id: 7,
-      name: 'Income',
       key: 'income',
       normal: 'credit',
       root_type: 'income',
@@ -101,7 +98,6 @@ exports.up = function (knex) {
     },
     {
       id: 11,
-      name: 'Other Income',
       key: 'other_income',
       normal: 'credit',
       root_type: 'income',
@@ -111,7 +107,6 @@ exports.up = function (knex) {
     },
     {
       id: 12,
-      name: 'Cost of Goods Sold (COGS)',
       key: 'cost_of_goods_sold',
       normal: 'debit',
       root_type: 'expenses',
@@ -121,7 +116,6 @@ exports.up = function (knex) {
     },
     {
       id: 8,
-      name: 'Accounts Receivable (A/R)',
       key: 'accounts_receivable',
       normal: 'debit',
       root_type: 'asset',
@@ -131,7 +125,6 @@ exports.up = function (knex) {
     },
     {
       id: 9,
-      name: 'Accounts Payable (A/P)',
       key: 'accounts_payable',
       normal: 'credit',
       root_type: 'liability',

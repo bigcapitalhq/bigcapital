@@ -44,6 +44,15 @@ export default class AccountsController extends BaseController{
       this.catchServiceErrors,
     );
     router.post(
+      '/:id/close', [
+        ...this.accountParamSchema,
+        ...this.closingAccountSchema,
+      ],
+      this.validationResult,
+      asyncMiddleware(this.closeAccount.bind(this)),
+      this.catchServiceErrors,
+    )
+    router.post(
       '/:id', [
         ...this.accountDTOSchema,
         ...this.accountParamSchema,
@@ -127,18 +136,12 @@ export default class AccountsController extends BaseController{
     ];
   }
 
-  /**
-   * Account param schema validation.
-   */
   get accountParamSchema() {
     return [
       param('id').exists().isNumeric().toInt()
     ];
   }
 
-  /**
-   * Accounts list schema validation.
-   */
   get accountsListSchema() {
     return [
       query('custom_view_id').optional().isNumeric().toInt(),
@@ -149,14 +152,18 @@ export default class AccountsController extends BaseController{
     ];
   }
 
-  /**
-   * 
-   */
   get bulkSelectIdsQuerySchema() {
     return [
       query('ids').isArray({ min: 2 }),
       query('ids.*').isNumeric().toInt(),
     ];
+  }
+
+  get closingAccountSchema() {
+    return [
+      check('to_account_id').exists().isNumeric().toInt(),
+      check('delete_after_closing').exists().isBoolean(),
+    ]
   }
 
   /**
@@ -328,8 +335,36 @@ export default class AccountsController extends BaseController{
       filter.filterRoles = JSON.parse(filter.stringifiedFilterRoles);
     }
     try {
-      const accounts = await this.accountsService.getAccountsList(tenantId, filter);
-      return res.status(200).send({ accounts });
+      const { accounts, filterMeta } = await this.accountsService.getAccountsList(tenantId, filter);
+
+      return res.status(200).send({
+        accounts,
+        filter_meta: this.transfromToResponse(filterMeta)
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Closes the given account.
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param next 
+   */
+  async closeAccount(req: Request, res: Response, next: NextFunction) {
+    const { tenantId } = req;
+    const { id: accountId } = req.params;
+    const closeAccountQuery = this.matchedBodyData(req);
+
+    try {
+      await this.accountsService.closeAccount(
+        tenantId,
+        accountId,
+        closeAccountQuery.toAccountId,
+        closeAccountQuery.deleteAfterClosing
+      );
+      return res.status(200).send({ id: accountId });
     } catch (error) {
       next(error);
     }
@@ -358,9 +393,8 @@ export default class AccountsController extends BaseController{
       }
       if (error.errorType === 'account_type_not_found') {
         return res.boom.badRequest(
-          'The given account type not found.', {
-          errors: [{ type: 'ACCOUNT_TYPE_NOT_FOUND', code: 200 }]
-        }
+          'The given account type not found.',
+          { errors: [{ type: 'ACCOUNT_TYPE_NOT_FOUND', code: 200 }] }
         );
       }
       if (error.errorType === 'account_type_not_allowed_to_changed') {
@@ -415,6 +449,12 @@ export default class AccountsController extends BaseController{
         return res.boom.badRequest(
           'Some of the given accounts are predefined.',
           { errors: [{ type: 'ACCOUNTS_PREDEFINED', code: 1100 }] }
+        );
+      }
+      if (error.errorType === 'close_account_and_to_account_not_same_type') {
+        return res.boom.badRequest(
+          'The close account has different root type with to account.',
+          { errors: [{ type: 'CLOSE_ACCOUNT_AND_TO_ACCOUNT_NOT_SAME_TYPE', code: 1200 }] },
         );
       }
     }
