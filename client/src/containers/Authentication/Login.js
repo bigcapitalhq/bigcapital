@@ -103,7 +103,7 @@ function Login({
         <div className={'authentication-page__label-section'}>
           <h3><T id={'log_in'} /></h3>
           <T id={'need_bigcapital_account'} />
-          <Link to='/auth/register'> <T id={'create_an_account'} /></Link>
+          <Link to='/register'> <T id={'create_an_account'} /></Link>
         </div>
 
         <form onSubmit={handleSubmit} className={'authentication-page__form'}>

@@ -3,7 +3,7 @@ import { FormattedMessage as T, useIntl } from 'react-intl';
 
 function RegisterWizardSteps() {
   return (
-    <div>
+    <div className={'register-wizard-steps'}>
       <div className={'wizard-container'}>
         <ul className={'wizard-wrapper'}>
           <li>

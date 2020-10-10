@@ -9,6 +9,7 @@ import PrivateRoute from 'components/PrivateRoute';
 import Authentication from 'components/Authentication';
 import Dashboard from 'components/Dashboard/Dashboard';
 import GlobalErrors from 'containers/GlobalErrors/GlobalErrors';
+import RegisterWizardPage from 'containers/Authentication/Register/RegisterPage';
 
 import messages from 'lang/en';
 import 'style/App.scss';
@@ -29,6 +30,10 @@ function App({ locale }) {
             <Switch>
               <Route path={'/auth'}>
                 <Authentication />
+              </Route>
+
+              <Route path={'/register'}>
+                <RegisterWizardPage />
               </Route>
 
               <Route path={'/'}>

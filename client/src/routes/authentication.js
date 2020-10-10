@@ -10,12 +10,6 @@ export default [
     }),
   },
   {
-    path: `${BASE_URL}/register`,
-    component: LazyLoader({
-      loader: () => import('containers/Authentication/Register'),
-    }),
-  },
-  {
     path: `${BASE_URL}/send_reset_password`,
     component: LazyLoader({
       loader: () => import('containers/Authentication/SendResetPassword'),
@@ -32,11 +26,5 @@ export default [
     component: LazyLoader({
       loader: () => import('containers/Authentication/InviteAccept'),
     }),
-  },
-  {
-    path: `${BASE_URL}/wizard`,
-    component: LazyLoader({
-      loader: () => import('containers/Authentication/RegisterWizardPage'),
-    }),
-  },
+  }
 ];

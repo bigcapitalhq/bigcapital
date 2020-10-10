@@ -1,0 +1,8 @@
+
+const CLASSES = {
+  DATATABLE_EDITOR: 'DATATABLE_EDITOR'
+};
+
+export {
+  CLASSES,
+}

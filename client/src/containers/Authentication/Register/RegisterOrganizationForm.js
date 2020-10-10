@@ -21,7 +21,7 @@ import AppToaster from 'components/AppToaster';
 import { ListSelect, ErrorMessage, FieldRequiredHint } from 'components';
 import { useHistory } from 'react-router-dom';
 import withSettingsActions from 'containers/Settings/withSettingsActions';
-import withRegisterOrganizationActions from './withRegisterOrganizationActions';
+import withRegisterOrganizationActions from 'containers/Authentication/withRegisterOrganizationActions';
 import { compose, optionsMapToArray } from 'utils';
 
 function RegisterOrganizationForm({ requestSubmitOptions, requestSeedTenant }) {

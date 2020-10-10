@@ -1,67 +1,66 @@
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
 
-// Register Left Sidebar
-.wizard-left-side {
-  position: fixed;
-  background: #778cab;
-  overflow: auto;
-  z-index: 1;
-  height: 100%;
-  max-width: 25%;
-  left: 0;
-  top: 0;
+.register-page {
+  
+  &__right-section {
+    padding-left: 25%;
+  }
 
-  .content {
-    display: flex;
-    flex-direction: column;
-    color: #ffffff;
-    padding: 25px;
-    margin: 0px auto;
-    border: none;
-    cursor: pointer;
-    .content-logo {
-      margin-bottom: 45px;
-    }
-    .content-title {
-      font-size: 25px;
-      font-weight: 700;
-      line-height: normal;
-      margin-bottom: 25px;
-    }
-    .content-text {
-      font-size: 14px;
-    }
-    .content-org {
-      font-size: 14px;
+  &__left-section{
+    position: fixed;
+    background: #778cab;
+    overflow: auto;
+    z-index: 1;
+    height: 100%;
+    max-width: 25%;
+    left: 0;
+    top: 0;
 
-      span > a {
-        text-decoration: underline;
-        color: #ffffff;
-        margin-left: 5px;
+    .content {
+      display: flex;
+      flex-direction: column;
+      color: #ffffff;
+      padding: 25px;
+      margin: 0px auto;
+      border: none;
+      cursor: pointer;
+      .content-logo {
+        margin-bottom: 45px;
       }
-      span ::after {
-        border-top: 2px solid #707070;
+      .content-title {
+        font-size: 25px;
+        font-weight: 700;
+        line-height: normal;
+        margin-bottom: 25px;
       }
-    }
-    .content-contact {
-      position: absolute;
-      bottom: 15px;
-      a {
-        text-decoration: none;
-        color: #ffffff;
+      .content-text {
         font-size: 14px;
+      }
+      .content-org {
+        font-size: 14px;
+
+        span > a {
+          text-decoration: underline;
+          color: #ffffff;
+          margin-left: 5px;
+        }
+        span ::after {
+          border-top: 2px solid #707070;
+        }
+      }
+      .content-contact {
+        position: absolute;
+        bottom: 15px;
+        a {
+          text-decoration: none;
+          color: #ffffff;
+          font-size: 14px;
+        }
       }
     }
   }
 }
-.wizard-right-side {
-  padding-left: 25%;
-}
 
+ 
 // Register Wizard Steps
 .wizard-container {
   width: 80%;
