@@ -69,13 +69,13 @@ function SendResetPassword({ requestSendResetPassword }) {
 
   return (
     <AuthInsider>
-      <div class='reset-form'>
+      <div className='reset-form'>
         <div className={'authentication-page__label-section'}>
           <h3>
-            <T id={'reset_your_password'} />
+            <T id={'you_can_t_login'} />
           </h3>
           <p>
-            <T id={'we_ll_send_you_a_link_to_reset_your_password'} />
+            <T id={'we_ll_send_a_recovery_link_to_your_email'} />
           </p>
         </div>
 
@@ -104,7 +104,7 @@ function SendResetPassword({ requestSendResetPassword }) {
               fill={true}
               loading={isSubmitting}
             >
-              <T id={'send_password_reset_link'} />
+              <T id={'send_reset_password_mail'} />
             </Button>
           </div>
         </form>

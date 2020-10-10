@@ -1,10 +1,12 @@
 .authentication-insider {
-  margin-top: 80px;
+  width: 384px;
+  margin: 0 auto;
   margin-bottom: 40px;
+  margin-top: 40px;
 
   &__logo-section {
     text-align: center;
-    margin-bottom: 60px;
+    margin-bottom: 61px;
   }
 
   &__content {
@@ -33,24 +35,24 @@
 .authentication-page {
   &__goto-bigcapital {
     position: fixed;
-    margin-top: 30px;
-    margin-left: 30px;
+    margin-top: 40px;
+    margin-left: 40px;
     color: #777;
   }
 
   .bp3-input {
-    min-height: 38px;
-    // border: 2px solid #E3E3E3;
+    min-height: 40px;
+    border: 1px solid #ced4da;
   }
-  // .bp3-form-group{
-  //   margin-bottom: 25px;
+  .bp3-form-group {
+    margin-bottom: 25px;
 
-  //   &.bp3-intent-danger{
-  //     .bp3-input{
-  //       border-color: #eea9a9;
-  //     }
-  //   }
-  // }
+    &.bp3-intent-danger {
+      .bp3-input {
+        border-color: #eea9a9;
+      }
+    }
+  }
 
   .bp3-form-group.has-password-revealer {
     .bp3-label {
@@ -70,7 +72,7 @@
   }
 
   &__label-section {
-    margin-bottom: 34px;
+    margin-bottom: 29px;
     color: #555;
 
     h3 {
@@ -131,9 +133,10 @@
   // Login Form
   // ------------------------------
   .login-form {
-    width: 690px;
-    margin: 0px auto;
-    padding: 85px 50px;
+    // width: 690px;
+    // margin: 0px auto;
+    // padding: 85px 50px;
+
     .checkbox {
       &--remember-me {
         margin: -4px 0 28px 0px;
@@ -169,6 +172,11 @@
     }
   }
 
+  .send-reset-password {
+    .form-group--crediential {
+      margin-bottom: 36px;
+    }
+  }
   .invite-form {
     &__statement-section {
       margin-top: -10px;
