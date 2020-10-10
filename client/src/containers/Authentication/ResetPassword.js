@@ -19,21 +19,20 @@ import withAuthenticationActions from './withAuthenticationActions';
 
 import { compose } from 'utils';
 
-
-
 function ResetPassword({ requestResetPassword }) {
   const { formatMessage } = useIntl();
   const { token } = useParams();
   const history = useHistory();
 
-  
   const ValidationSchema = Yup.object().shape({
     password: Yup.string()
       .min(4)
-      .required().label(formatMessage({id:'password'})),
+      .required()
+      .label(formatMessage({ id: 'password' })),
     confirm_password: Yup.string()
       .oneOf([Yup.ref('password'), null])
-      .required().label(formatMessage({id:'confirm_password'})),
+      .required()
+      .label(formatMessage({ id: 'confirm_password' })),
   });
 
   const initialValues = useMemo(
@@ -41,7 +40,7 @@ function ResetPassword({ requestResetPassword }) {
       password: '',
       confirm_password: '',
     }),
-    []
+    [],
   );
 
   const {
@@ -89,14 +88,14 @@ function ResetPassword({ requestResetPassword }) {
             <T id={'choose_a_new_password'} />
           </h3>
           <T id={'you_remembered_your_password'} />{' '}
-          <Link to='/auth/login'>
+          <Link to="/auth/login">
             <T id={'login'} />
           </Link>
         </div>
 
         <form onSubmit={handleSubmit}>
           <FormGroup
-            label={<T id={'password'} />}
+            label={<T id={'new_password'} />}
             intent={errors.password && touched.password && Intent.DANGER}
             helperText={
               <ErrorMessage name={'password'} {...{ errors, touched }} />
@@ -144,10 +143,10 @@ function ResetPassword({ requestResetPassword }) {
               fill={true}
               className={'btn-new'}
               intent={Intent.PRIMARY}
-              type='submit'
+              type="submit"
               loading={isSubmitting}
             >
-              <T id={'submit_new_password'} />
+              <T id={'submit'} />
             </Button>
           </div>
         </form>

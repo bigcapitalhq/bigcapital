@@ -53,10 +53,10 @@ export default {
   you_remembered_your_password: 'You remembered your password ?',
   new_password: 'New Password',
   submit_new_password: 'Submit new password',
-  reset_your_password: 'Reset Your Password',
-  we_ll_send_you_a_link_to_reset_your_password:
-    'Enter your email address and we’ll send you a link to reset your password.',
-  send_password_reset_link: 'Send password reset link',
+  you_can_t_login: 'You can’t login?',
+  we_ll_send_a_recovery_link_to_your_email:
+    'We’ll send a recovery link to your email.',
+  send_reset_password_mail: 'Send Reset Password Mail',
   return_to_log_in: 'Return to log in',
   sub_account: 'Sub account?',
   account_type: 'Account Type',
@@ -761,6 +761,7 @@ export default {
   welcome: 'Welcome ',
   sign_out: 'Sign out',
   we_re_here_to_help: 'We’re Here to Help!',
-  date_start_:'Date start',
-  something_wentwrong:'Something went wrong.'
+  date_start_: 'Date start',
+  something_wentwrong: 'Something went wrong.',
+  new_password: 'New password',
 };
