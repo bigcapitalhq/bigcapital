@@ -95,4 +95,67 @@ export default class Item extends TenantModel {
       },
     };
   }
+
+
+  static get fields() {
+    return {
+      type: {
+        column: 'type',
+      },
+      name: {
+        column: 'name',
+      },
+      sellable: {
+        column: 'sellable',
+      },
+      purchasable: {
+        column: 'purchasable',
+      },
+      sell_price: {
+        column: 'sell_price'
+      },
+      cost_price: {
+        column: 'cost_price',
+      },
+      currency_code: {
+        column: 'currency_code',
+      },
+      cost_account: {
+        column: 'cost_account_id',
+        relation: 'accounts.id',
+      },
+      sell_account: {
+        column: 'sell_account_id',
+        relation: 'accounts.id',
+      },
+      inventory_account: {
+        column: 'inventory_account_id',
+        relation: 'accounts.id',
+      },
+      sell_description: {
+        column: 'sell_description',
+      },
+      purchase_description: {
+        column: 'purchase_description',
+      },
+      quantity_on_hand: {
+        column: 'quantity_on_hand',
+      },
+      note: {
+        column: 'note',
+      },
+      category: {
+        column: 'category_id',
+        relation: 'categories.id',
+      },
+      user: {
+        column: 'user_id',
+        relation: 'users.id',
+        relationColumn: 'users.id',
+      },
+      created_at: {
+        column: 'created_at',
+      }
+    };
+  }
 }

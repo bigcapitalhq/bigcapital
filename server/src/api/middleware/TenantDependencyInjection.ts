@@ -17,6 +17,8 @@ export default (req: Request, tenant: ITenant) => {
   const repositories = tenantServices.repositories(tenantId)
   const cacheInstance = tenantServices.cache(tenantId);
 
+  tenantServices.setI18nLocals(tenantId, { __: req.__ });
+
   req.knex = knexInstance;
   req.organizationId = organizationId;
   req.tenant = tenant;

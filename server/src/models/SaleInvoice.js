@@ -57,7 +57,7 @@ export default class SaleInvoice extends TenantModel {
   static get relationMappings() {
     const AccountTransaction = require('models/AccountTransaction');
     const ItemEntry = require('models/ItemEntry');
-    const Customer = require('models/Customer');
+    const Contact = require('models/Contact');
     const InventoryCostLotTracker = require('models/InventoryCostLotTracker');
 
     return {
@@ -75,11 +75,14 @@ export default class SaleInvoice extends TenantModel {
 
       customer: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Customer.default,
+        modelClass: Contact.default,
         join: {
           from: 'sales_invoices.customerId',
-          to: 'customers.id',
+          to: 'contacts.id',
         },
+        filter(query) {
+          query.where('contact_type', 'Customer');
+        }
       },
 
       transactions: {

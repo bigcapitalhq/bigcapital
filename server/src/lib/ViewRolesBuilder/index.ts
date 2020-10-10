@@ -1,10 +1,9 @@
-import { difference, filter } from 'lodash';
+import { difference } from 'lodash';
 import moment from 'moment';
 import { Lexer } from 'lib/LogicEvaluation/Lexer';
 import Parser from 'lib/LogicEvaluation/Parser';
 import QueryParser from 'lib/LogicEvaluation/QueryParser';
-import resourceFieldsKeys from 'data/ResourceFieldsKeys';
-import { IFilterRole } from 'interfaces';
+import { IFilterRole, IModel } from 'interfaces';
 
 const numberRoleQueryBuilder = (role: IFilterRole, comparatorColumn: string) => {
   switch (role.comparator) {
@@ -93,7 +92,7 @@ const dateQueryBuilder = (role: IFilterRole, comparatorColumn: string) => {
         if (hasTimeFormat) {
           const targetDateTime = moment(role.value).format(dateFormat);
           builder.where(comparatorColumn, '=', targetDateTime);
-        } else { 
+        } else {
           const startDate = moment(role.value).startOf('day');
           const endDate = moment(role.value).endOf('day');
 
@@ -109,19 +108,19 @@ const dateQueryBuilder = (role: IFilterRole, comparatorColumn: string) => {
  * @param {String} tableName - Table name of target column.
  * @param {String} fieldKey - Target column key that stored in resource field.
  */
-export function getRoleFieldColumn(tableName: string, fieldKey: string) {
-  const tableFields = resourceFieldsKeys[tableName];
+export function getRoleFieldColumn(model: IModel, fieldKey: string) {
+  const tableFields = model.fields;
   return (tableFields[fieldKey]) ? tableFields[fieldKey] : null;
 }
 
 /**
  * Builds roles queries.
- * @param {String} tableName -
+ * @param {IModel} model -
  * @param {Object} role -
  */
-export function buildRoleQuery(tableName: string, role: IFilterRole) {
-  const fieldRelation = getRoleFieldColumn(tableName, role.fieldKey);
-  const comparatorColumn = fieldRelation.relationColumn || `${tableName}.${fieldRelation.column}`;
+export function buildRoleQuery(model: IModel, role: IFilterRole) {
+  const fieldRelation = getRoleFieldColumn(model, role.fieldKey);
+  const comparatorColumn = fieldRelation.relationColumn || `${model.tableName}.${fieldRelation.column}`;
 
   switch (fieldRelation.columnType) {
     case 'number':
@@ -150,26 +149,26 @@ export const getTableFromRelationColumn = (column: string) => {
  * @param {String} tableName -
  * @param {Array} roles -
  */
-export function buildFilterRolesJoins(tableName: string, roles: IFilterRole[]) {
+export function buildFilterRolesJoins(model: IModel, roles: IFilterRole[]) {
   return (builder) => {
     roles.forEach((role) => {
-      const fieldColumn = getRoleFieldColumn(tableName, role.fieldKey);
+      const fieldColumn = getRoleFieldColumn(model, role.fieldKey);
 
       if (fieldColumn.relation) {
         const joinTable = getTableFromRelationColumn(fieldColumn.relation);
-        builder.join(joinTable, `${tableName}.${fieldColumn.column}`, '=', fieldColumn.relation);
+        builder.join(joinTable, `${model.tableName}.${fieldColumn.column}`, '=', fieldColumn.relation);
       }
     });
   };
 }
 
-export function buildSortColumnJoin(tableName: string, sortColumnKey: string) {
+export function buildSortColumnJoin(model: IModel, sortColumnKey: string) {
   return (builder) => {
-    const fieldColumn = getRoleFieldColumn(tableName, sortColumnKey);
+    const fieldColumn = getRoleFieldColumn(model, sortColumnKey);
 
     if (fieldColumn.relation) {
       const joinTable = getTableFromRelationColumn(fieldColumn.relation);
-      builder.join(joinTable, `${tableName}.${fieldColumn.column}`, '=', fieldColumn.relation);
+      builder.join(joinTable, `${model.tableName}.${fieldColumn.column}`, '=', fieldColumn.relation);
     }
   };
 }
@@ -180,11 +179,11 @@ export function buildSortColumnJoin(tableName: string, sortColumnKey: string) {
  * @param {Array} roles -
  * @return {Function}
  */
-export function buildFilterRolesQuery(tableName: string, roles: IFilterRole[], logicExpression: string = '') {
+export function buildFilterRolesQuery(model: IModel, roles: IFilterRole[], logicExpression: string = '') {
   const rolesIndexSet = {};
 
   roles.forEach((role) => {
-    rolesIndexSet[role.index] = buildRoleQuery(tableName, role);
+    rolesIndexSet[role.index] = buildRoleQuery(model, role);
   });
   // Lexer for logic expression.
   const lexer = new Lexer(logicExpression);
@@ -204,9 +203,9 @@ export function buildFilterRolesQuery(tableName: string, roles: IFilterRole[], l
  * @param {Array} roles -
  * @param {String} logicExpression -
  */
-export const buildFilterQuery = (tableName: string, roles, logicExpression: string) => {
+export const buildFilterQuery = (model: IModel, roles: IFilterRole[], logicExpression: string) => {
   return (builder) => {
-    buildFilterRolesQuery(tableName, roles, logicExpression)(builder);
+    buildFilterRolesQuery(model, roles, logicExpression)(builder);
   };
 };
 
@@ -240,35 +239,33 @@ export function mapFilterRolesToDynamicFilter(roles) {
  * @param {String} columnKey -
  * @param {String} sortDirection -
  */
-export function buildSortColumnQuery(tableName: string, columnKey: string, sortDirection: string) {
-  const fieldRelation = getRoleFieldColumn(tableName, columnKey);
-  const sortColumn = fieldRelation.relation || `${tableName}.${fieldRelation.column}`;
+export function buildSortColumnQuery(model: IModel, columnKey: string, sortDirection: string) {
+  const fieldRelation = getRoleFieldColumn(model, columnKey);
+  const sortColumn = fieldRelation.relation || `${model.tableName}.${fieldRelation.column}`;
 
   return (builder) => {
     builder.orderBy(sortColumn, sortDirection);
-    buildSortColumnJoin(tableName, columnKey)(builder);
+    buildSortColumnJoin(model, columnKey)(builder);
   };
 }
  
 export function validateFilterLogicExpression(logicExpression: string, indexes) {
   const logicExpIndexes = logicExpression.match(/\d+/g) || [];
-  const diff = !difference(logicExpIndexes.map(Number), indexes).length;
+  const diff = difference(logicExpIndexes.map(Number), indexes);
 
+  return (diff.length > 0) ? false : true;
 }
 
 export function validateRolesLogicExpression(logicExpression: string, roles: IFilterRole[]) {
   return validateFilterLogicExpression(logicExpression, roles.map((r) => r.index));
 }
 
-export function validateFieldKeyExistance(tableName: string, fieldKey: string) {
-  if (!resourceFieldsKeys?.[tableName]?.[fieldKey])
-    return fieldKey;
-  else
-    return false;
+export function validateFieldKeyExistance(model: any, fieldKey: string) {
+  return model?.fields?.[fieldKey] || false;
 }
 
-export function validateFilterRolesFieldsExistance(tableName, filterRoles: IFilterRole[]) {
+export function validateFilterRolesFieldsExistance(model, filterRoles: IFilterRole[]) {
   return filterRoles.filter((filterRole: IFilterRole) => {
-    return validateFieldKeyExistance(tableName, filterRole.fieldKey);
+    return !validateFieldKeyExistance(model, filterRole.fieldKey);
   });
 }

@@ -22,7 +22,7 @@ export default class BillPayment extends TenantModel {
   static get relationMappings() {
     const BillPaymentEntry = require('models/BillPaymentEntry');
     const AccountTransaction = require('models/AccountTransaction');
-    const Vendor = require('models/Vendor');
+    const Contact = require('models/Contact');
     const Account = require('models/Account');
 
     return {
@@ -37,11 +37,14 @@ export default class BillPayment extends TenantModel {
 
       vendor: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Vendor.default,
+        modelClass: Contact.default,
         join: {
           from: 'bills_payments.vendorId',
-          to: 'vendors.id',
+          to: 'contacts.id',
         },
+        filter(query) {
+          query.where('contact_type', 'Vendor');
+        }
       },
 
       paymentAccount: {

@@ -7,12 +7,13 @@ import {
   EventDispatcher,
   EventDispatcherInterface,
 } from 'decorators/eventDispatcher';
-import { SystemUser, PasswordReset } from 'system/models';
+import { PasswordReset } from 'system/models';
 import {
   IRegisterDTO,
   ITenant,
   ISystemUser,
   IPasswordReset,
+  IAuthenticationService,
 } from 'interfaces';
 import { hashPassword } from 'utils';
 import { ServiceError, ServiceErrors } from 'exceptions';
@@ -134,7 +135,7 @@ export default class AuthenticationService implements IAuthenticationService {
 
     const { systemUserRepository } = this.sysRepositories;
     const registeredUser = await systemUserRepository.create({
-      ...omit(registerDTO, 'country', 'organizationName'),
+      ...omit(registerDTO, 'country'),
       active: true,
       password: hashedPassword,
       tenant_id: tenant.id,

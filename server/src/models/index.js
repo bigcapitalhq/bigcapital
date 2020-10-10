@@ -1,5 +1,3 @@
-import Customer from './Customer';
-import Vendor from './Vendor';
 import Option from './Option';
 import SaleEstimate from './SaleEstimate';
 import SaleEstimateEntry from './SaleEstimateEntry';
@@ -22,8 +20,6 @@ import AccountType from './AccountType';
 import InventoryLotCostTracker from './InventoryCostLotTracker';
 
 export {
-  Customer,
-  Vendor,
   SaleEstimate,
   SaleEstimateEntry,
   SaleReceipt,

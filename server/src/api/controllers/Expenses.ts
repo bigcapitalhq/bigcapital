@@ -7,6 +7,7 @@ import ExpensesService from "services/Expenses/ExpensesService";
 import { IExpenseDTO } from 'interfaces';
 import { ServiceError } from "exceptions";
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
+import { takeWhile } from "lodash";
 
 @Service()
 export default class ExpensesController extends BaseController {
@@ -30,7 +31,8 @@ export default class ExpensesController extends BaseController {
       asyncMiddleware(this.newExpense.bind(this)),
       this.catchServiceErrors,
     );
-    router.post('/publish', [
+    router.post(
+      '/publish', [
         ...this.bulkSelectSchema,
       ],
       this.bulkPublishExpenses.bind(this),
@@ -69,9 +71,20 @@ export default class ExpensesController extends BaseController {
       this.catchServiceErrors,
     );
     router.get(
-      '/',
+      '/', [
+        ...this.expensesListSchema,
+      ],
+      this.validationResult,
       asyncMiddleware(this.getExpensesList.bind(this)),
       this.dynamicListService.handlerErrorsToResponse,
+      this.catchServiceErrors,
+    );
+    router.get(
+      '/:id', [
+      this.expenseParamSchema,
+    ],
+      this.validationResult,
+      asyncMiddleware(this.getExpense.bind(this)),
       this.catchServiceErrors,
     );
     return router;
@@ -89,6 +102,7 @@ export default class ExpensesController extends BaseController {
       check('currency_code').optional(),
       check('exchange_rate').optional().isNumeric().toFloat(),
       check('publish').optional().isBoolean().toBoolean(),
+
       check('categories').exists().isArray({ min: 1 }),
       check('categories.*.index').exists().isNumeric().toInt(),
       check('categories.*.expense_account_id').exists().isNumeric().toInt(),
@@ -117,6 +131,20 @@ export default class ExpensesController extends BaseController {
     return [
       query('ids').isArray({ min: 1 }),
       query('ids.*').isNumeric().toInt(),
+    ];
+  }
+
+  
+  get expensesListSchema() {
+    return [
+      query('custom_view_id').optional().isNumeric().toInt(),
+      query('stringified_filter_roles').optional().isJSON(),
+
+      query('column_sort_by').optional(),
+      query('sort_order').optional().isIn(['desc', 'asc']),
+
+      query('page').optional().isNumeric().toInt(),
+      query('page_size').optional().isNumeric().toInt(),
     ];
   }
 
@@ -240,12 +268,41 @@ export default class ExpensesController extends BaseController {
     const filter = {
       filterRoles: [],
       sortOrder: 'asc',
+      columnSortBy: 'created_at',
+      page: 1,
+      pageSize: 12,
       ...this.matchedQueryData(req),
     };
+    if (filter.stringifiedFilterRoles) {
+      filter.filterRoles = JSON.parse(filter.stringifiedFilterRoles);
+    }
 
     try {
-      const expenses = await this.expensesService.getExpensesList(tenantId, filter);
-      return res.status(200).send({ expenses });
+      const { expenses, pagination, filterMeta } = await this.expensesService.getExpensesList(tenantId, filter);
+
+      return res.status(200).send({
+        expenses,
+        pagination: this.transfromToResponse(pagination),
+        filter_meta: this.transfromToResponse(filterMeta),
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Retrieve expense details.
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {NextFunction} next 
+   */
+  async getExpense(req: Request, res: Response, next: NextFunction) {
+    const { tenantId } = req;
+    const { id: expenseId } = req.params;
+
+    try {
+      const expense = await this.expensesService.getExpense(tenantId, expenseId);
+      return res.status(200).send({ expense });
     } catch (error) {
       next(error);
     }
@@ -259,29 +316,34 @@ export default class ExpensesController extends BaseController {
   catchServiceErrors(error: Error, req: Request, res: Response, next: NextFunction) {
     if (error instanceof ServiceError) {
       if (error.errorType === 'expense_not_found') {
-        return res.boom.badRequest(null, {
-          errors: [{ type: 'EXPENSE_NOT_FOUND', code: 100 }],
-        });
+        return res.boom.badRequest(
+          'Expense not found.',
+          { errors: [{ type: 'EXPENSE_NOT_FOUND', code: 100 }] }
+        );
       }
       if (error.errorType === 'total_amount_equals_zero') {
-        return res.boom.badRequest(null, {
-          errors: [{ type: 'TOTAL.AMOUNT.EQUALS.ZERO', code: 200 }],
-        });
+        return res.boom.badRequest(
+          'Expense total should not equal zero.',
+          { errors: [{ type: 'TOTAL.AMOUNT.EQUALS.ZERO', code: 200 }] },
+        );
       }
       if (error.errorType === 'payment_account_not_found') {
-        return res.boom.badRequest(null, {
-          errors: [{ type: 'PAYMENT.ACCOUNT.NOT.FOUND', code: 300 }],
-        });
+        return res.boom.badRequest(
+          'Payment account not found.',
+          { errors: [{ type: 'PAYMENT.ACCOUNT.NOT.FOUND', code: 300 }] },
+        );
       }
       if (error.errorType === 'some_expenses_not_found') {
-        return res.boom.badRequest(null, {
-          errors: [{ type: 'SOME.EXPENSE.ACCOUNTS.NOT.FOUND', code: 400 }]
-        })
+        return res.boom.badRequest(
+          'Some expense accounts not found.',
+          { errors: [{ type: 'SOME.EXPENSE.ACCOUNTS.NOT.FOUND', code: 400 }] },
+        );
       }
       if (error.errorType === 'payment_account_has_invalid_type') {
-        return res.boom.badRequest(null, {
-          errors: [{ type: 'PAYMENT.ACCOUNT.HAS.INVALID.TYPE', code: 500 }],
-        });
+        return res.boom.badRequest(
+          'Payment account has invalid type.',
+          { errors: [{ type: 'PAYMENT.ACCOUNT.HAS.INVALID.TYPE', code: 500 }], },
+        );
       }
       if (error.errorType === 'expenses_account_has_invalid_type') {
         return res.boom.badRequest(null, {

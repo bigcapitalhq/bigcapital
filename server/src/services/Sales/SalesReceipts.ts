@@ -4,11 +4,16 @@ import JournalPosterService from 'services/Sales/JournalPosterService';
 import HasItemEntries from 'services/Sales/HasItemsEntries';
 import TenancyService from 'services/Tenancy/TenancyService';
 import { formatDateFields } from 'utils';
+import { IFilterMeta, IPaginationMeta } from 'interfaces';
+import DynamicListingService from 'services/DynamicListing/DynamicListService';
 
 @Service()
 export default class SalesReceiptService {
   @Inject()
   tenancy: TenancyService;
+
+  @Inject()
+  dynamicListService: DynamicListingService;
 
   @Inject()
   journalService: JournalPosterService;
@@ -22,7 +27,7 @@ export default class SalesReceiptService {
    * @param {ISaleReceipt} saleReceipt
    * @return {Object}
    */
-  async createSaleReceipt(tenantId: number, saleReceiptDTO: any) {
+  public async createSaleReceipt(tenantId: number, saleReceiptDTO: any) {
     const { SaleReceipt, ItemEntry } = this.tenancy.models(tenantId);
 
     const amount = sumBy(saleReceiptDTO.entries, e => ItemEntry.calcAmount(e));
@@ -55,7 +60,7 @@ export default class SalesReceiptService {
    * @param {ISaleReceipt} saleReceipt
    * @return {void}
    */
-  async editSaleReceipt(tenantId: number, saleReceiptId: number, saleReceiptDTO: any) {
+  public async editSaleReceipt(tenantId: number, saleReceiptId: number, saleReceiptDTO: any) {
     const { SaleReceipt, ItemEntry } = this.tenancy.models(tenantId);
 
     const amount = sumBy(saleReceiptDTO.entries, e => ItemEntry.calcAmount(e));
@@ -88,7 +93,7 @@ export default class SalesReceiptService {
    * @param {Integer} saleReceiptId
    * @return {void}
    */
-  async deleteSaleReceipt(tenantId: number, saleReceiptId: number) {
+  public async deleteSaleReceipt(tenantId: number, saleReceiptId: number) {
     const { SaleReceipt, ItemEntry } = this.tenancy.models(tenantId);
     const deleteSaleReceiptOper = SaleReceipt.query()
       .where('id', saleReceiptId)
@@ -159,5 +164,36 @@ export default class SalesReceiptService {
       .withGraphFetched('entries');
 
     return saleReceipt;
+  }
+
+  /**
+   * Retrieve sales receipts paginated and filterable list.
+   * @param {number} tenantId 
+   * @param {ISaleReceiptFilter} salesReceiptsFilter 
+   */
+  public async salesReceiptsList(
+    tenantId: number,
+    salesReceiptsFilter: ISaleReceiptFilter,
+  ): Promise<{ salesReceipts: ISaleReceipt[], pagination: IPaginationMeta, filterMeta: IFilterMeta }> {
+    const { SaleReceipt } = this.tenancy.models(tenantId);
+    const dynamicFilter = await this.dynamicListService.dynamicList(tenantId, SaleReceipt, salesReceiptsFilter);
+
+    this.logger.info('[sale_receipt] try to get sales receipts list.', { tenantId });
+    const { results, pagination } = await SaleReceipt.query().onBuild((builder) => {
+      builder.withGraphFetched('depositAccount');
+      builder.withGraphFetched('customer');
+      builder.withGraphFetched('entries');
+
+      dynamicFilter.buildQuery()(builder);
+    }).pagination(
+      salesReceiptsFilter.page - 1,
+      salesReceiptsFilter.pageSize,
+    );
+
+    return {
+      salesReceipts: results,
+      pagination,
+      filterMeta: dynamicFilter.getResponseMeta(),
+    };
   }
 }

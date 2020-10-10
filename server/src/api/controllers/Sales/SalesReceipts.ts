@@ -1,14 +1,14 @@
 import { Router, Request, Response } from 'express';
 import { check, param, query, matchedData } from 'express-validator';
 import { Inject, Service } from 'typedi';
-import validateMiddleware from 'api/middleware/validateMiddleware';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
 import AccountsService from 'services/Accounts/AccountsService';
 import ItemsService from 'services/Items/ItemsService';
 import SaleReceiptService from 'services/Sales/SalesReceipts';
+import BaseController from '../BaseController';
 
 @Service()
-export default class SalesReceiptsController {
+export default class SalesReceiptsController extends BaseController{
   @Inject()
   saleReceiptService: SaleReceiptService;
 
@@ -29,7 +29,7 @@ export default class SalesReceiptsController {
         ...this.specificReceiptValidationSchema,
         ...this.salesReceiptsValidationSchema,
       ],
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.validateSaleReceiptExistance.bind(this)),
       asyncMiddleware(this.validateReceiptCustomerExistance.bind(this)),
       asyncMiddleware(this.validateReceiptDepositAccountExistance.bind(this)),
@@ -40,7 +40,7 @@ export default class SalesReceiptsController {
     router.post(
       '/',
       this.salesReceiptsValidationSchema,
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.validateReceiptCustomerExistance.bind(this)),
       asyncMiddleware(this.validateReceiptDepositAccountExistance.bind(this)),
       asyncMiddleware(this.validateReceiptItemsIdsExistance.bind(this)),
@@ -49,14 +49,14 @@ export default class SalesReceiptsController {
     router.delete(
       '/:id',
       this.specificReceiptValidationSchema,
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.validateSaleReceiptExistance.bind(this)),
       asyncMiddleware(this.deleteSaleReceipt.bind(this))
     );
     router.get(
       '/',
       this.listSalesReceiptsValidationSchema,
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.listingSalesReceipts.bind(this))
     );
     return router;
@@ -274,7 +274,6 @@ export default class SalesReceiptsController {
 
     const { id: saleReceiptId } = req.params;
     const saleReceipt = { ...req.body };
-
     const errorReasons = [];
     
     // Handle all errors with reasons messages.
@@ -296,7 +295,19 @@ export default class SalesReceiptsController {
    * @param {Request} req 
    * @param {Response} res
    */
-  async listingSalesReceipts(req: Request, res: Response) {
+  async getSalesReceipts(req: Request, res: Response) {
+    const { tenantId } = req;
+    const filter = {
+      sortOrder: 'asc',
+      page: 1,
+      pageSize: 12,
+      ...this.matchedBodyData(req),
+    };
 
+    try {
+      
+    } catch (error) {
+      next(error);
+    }
   }
 };

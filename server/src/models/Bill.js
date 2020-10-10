@@ -36,17 +36,20 @@ export default class Bill extends TenantModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const Vendor = require('models/Vendor');
+    const Contact = require('models/Contact');
     const ItemEntry = require('models/ItemEntry');
 
     return {
       vendor: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Vendor.default,
+        modelClass: Contact.default,
         join: {
           from: 'bills.vendorId',
-          to: 'vendors.id',
+          to: 'contacts.id',
         },
+        filter(query) {
+          query.where('contact_type', 'Vendor');
+        }
       },
 
       entries: {

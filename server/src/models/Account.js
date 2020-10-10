@@ -8,6 +8,7 @@ import {
 } from 'lib/ViewRolesBuilder';
 import { flatToNestedArray } from 'utils';
 import DependencyGraph from 'lib/DependencyGraph';
+import TenantManagerSubscriber from 'subscribers/tenantManager';
 
 export default class Account extends TenantModel {
   /**
@@ -22,6 +23,13 @@ export default class Account extends TenantModel {
    */
   get timestamps() {
     return ['createdAt', 'updatedAt'];
+  }
+
+  /**
+   * 
+   */
+  static get resourceable() {
+    return true;
   }
 
   /**
@@ -105,5 +113,56 @@ export default class Account extends TenantModel {
     return DependencyGraph.fromArray(
       accounts, { itemId: 'id', parentItemId: 'parentAccountId' }
     );
+  }
+
+  /**
+   * Model defined fields.
+   */
+  static get fields() {
+    return {
+      name: {
+        label: 'Name',
+        column: 'name',
+      },
+      type: {
+        label: 'Account type',
+        column: 'account_type_id',
+        relation: 'account_types.id',
+        relationColumn: 'account_types.key',
+      },
+      description: {
+        label: 'Description',
+        column: 'description',
+      },
+      code: {
+        label: 'Account code',
+        column: 'code',
+      },
+      root_type: {
+        label: 'Type',
+        column: 'account_type_id',
+        relation: 'account_types.id',
+        relationColumn: 'account_types.root_type',
+      },
+      created_at: {
+        column: 'created_at',
+        columnType: 'date',
+      },
+      active: {
+        column: 'active', 
+      },
+      balance: {
+        column: 'amount',
+        columnType: 'number'
+      },
+      currency: {
+        column: 'currency_code',
+      },
+      normal: {
+        column: 'account_type_id',
+        relation: 'account_types.id',
+        relationColumn: 'account_types.normal'
+      },
+    };
   }
 }

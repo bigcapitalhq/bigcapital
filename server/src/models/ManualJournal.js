@@ -46,8 +46,48 @@ export default class ManualJournal extends TenantModel {
             to: 'media_links.media_id',
           },
           to: 'media.id',
+        },
+        filter(query) {
+          query.where('model_name', 'ManualJournal');
         }
       }
+    };
+  }
+
+  /**
+   * Model defined fields.
+   */
+  static get fields() {
+    return {
+      date: {
+        column: 'date',
+      },
+      journal_number: {
+        column: 'journal_number',
+      },
+      reference: {
+        column: 'reference',
+      },
+      status: {
+        column: 'status',
+      },
+      amount: {
+        column: 'amount',
+      },
+      description: {
+        column: 'description',
+      },
+      user: {
+        column: 'user_id',
+        relation: 'users.id',
+        relationColumn: 'users.id',
+      },
+      journal_type: {
+        column: 'journal_type',
+      },
+      created_at: {
+        column: 'created_at',
+      },
     };
   }
 }

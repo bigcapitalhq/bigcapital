@@ -30,7 +30,7 @@ export default class BillsPayments extends BaseController {
     router.post('/', [
         ...this.billPaymentSchemaValidation,
       ],
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.validateBillPaymentVendorExistance.bind(this)),
       asyncMiddleware(this.validatePaymentAccount.bind(this)),
       asyncMiddleware(this.validatePaymentNumber.bind(this)),
@@ -42,7 +42,7 @@ export default class BillsPayments extends BaseController {
        ...this.billPaymentSchemaValidation,
        ...this.specificBillPaymentValidateSchema,
       ],
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.validateBillPaymentVendorExistance.bind(this)),
       asyncMiddleware(this.validatePaymentAccount.bind(this)),
       asyncMiddleware(this.validatePaymentNumber.bind(this)),
@@ -53,19 +53,19 @@ export default class BillsPayments extends BaseController {
     )
     router.delete('/:id',
       this.specificBillPaymentValidateSchema,
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.validateBillPaymentExistance.bind(this)),
       asyncMiddleware(this.deleteBillPayment.bind(this)),
     );
     router.get('/:id',
       this.specificBillPaymentValidateSchema,
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.validateBillPaymentExistance.bind(this)),
       asyncMiddleware(this.getBillPayment.bind(this)),
     );
     router.get('/', 
       this.listingValidationSchema,
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.getBillsPayments.bind(this))
     );
     return router;
@@ -381,6 +381,20 @@ export default class BillsPayments extends BaseController {
    * @return {Response}
    */
   async getBillsPayments(req: Request, res: Response) {
+    const { tenantId } = req.params;
+    const billPaymentsFilter = this.matchedQueryData(req);
 
+    try {
+      const { billPayments, pagination, filterMeta } = await this.billPaymentService
+        .listBillPayments(tenantId, billPaymentsFilter);
+      
+      return res.status(200).send({
+        bill_payments: billPayments,
+        pagination: this.transfromToResponse(pagination),
+        filter_meta: this.transfromToResponse(filterMeta)
+      });
+    } catch (error) {
+      next(error);
+    }
   }
 }

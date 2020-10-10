@@ -2,7 +2,7 @@
 
 export default {
   // Expenses.
-  'expenses': {
+  expense: {
     payment_date: {
       column: 'payment_date',
     },
@@ -10,8 +10,11 @@ export default {
       column: 'payment_account_id',
       relation: 'accounts.id',
     },
-    total_amount: {
+    amount: {
       column: 'total_amount',
+    },
+    currency_code: {
+      column: 'currency_code',
     },
     reference_no: {
       column: 'reference_no'
@@ -30,7 +33,7 @@ export default {
   },
 
   // Accounts
-  'accounts': {
+  Account: {
     name: {
       column: 'name',
     },
@@ -72,22 +75,105 @@ export default {
   },
 
   // Items
-  'items': {
-    'type': {
+  item: {
+    type: {
       column: 'type',
     },
-    'name': {
+    name: {
       column: 'name',
+    },
+    sellable: {
+      column: 'sellable',
+    },
+    purchasable: {
+      column: 'purchasable',
+    },
+    sell_price: {
+      column: 'sell_price'
+    },
+    cost_price: {
+      column: 'cost_price',
+    },
+    currency_code: {
+      column: 'currency_code',
+    },
+    cost_account: {
+      column: 'cost_account_id',
+      relation: 'accounts.id',
+    },
+    sell_account: {
+      column: 'sell_account_id',
+      relation: 'accounts.id',
+    },
+    inventory_account: {
+      column: 'inventory_account_id',
+      relation: 'accounts.id',
+    },
+    sell_description: {
+      column: 'sell_description',
+    },
+    purchase_description: {
+      column: 'purchase_description',
+    },
+    quantity_on_hand: {
+      column: 'quantity_on_hand',
+    },
+    note: {
+      column: 'note',
+    },
+    category: {
+      column: 'category_id',
+      relation: 'categories.id',
+    },
+    user: {
+      column: 'user_id',
+      relation: 'users.id',
+      relationColumn: 'users.id',
+    },
+    created_at: {
+      column: 'created_at',
+    }
+  },
+
+  // Item category.
+  item_category: {
+    name: {
+      column: 'name',
+    },
+    description: {
+      column: 'description',
+    },
+    parent_category_id: {
+      column: 'parent_category_id',
+      relation: 'items_categories.id',
+      relationColumn: 'items_categories.id',
+    },
+    user: {
+      column: 'user_id',
+      relation: 'users.id',
+      relationColumn: 'users.id',
+    },
+    cost_account: {
+      column: 'cost_account_id',
+      relation: 'accounts.id',
+    },
+    sell_account: {
+      column: 'sell_account_id',
+      relation: 'accounts.id',
+    },
+    inventory_account: {
+      column: 'inventory_account_id',
+      relation: 'accounts.id',
+    },
+    cost_method: {
+      column: 'cost_method',
     },
   },
 
   // Manual Journals
-  manual_journals: {
+  manual_journal: {
     date: {
       column: 'date',
-    },
-    created_at: {
-      column: 'created_at',
     },
     journal_number: {
       column: 'journal_number',
@@ -111,6 +197,9 @@ export default {
     },
     journal_type: {
       column: 'journal_type',
+    },
+    created_at: {
+      column: 'created_at',
     },
   }
 };

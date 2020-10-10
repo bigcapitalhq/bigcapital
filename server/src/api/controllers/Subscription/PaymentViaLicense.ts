@@ -1,7 +1,6 @@
 import { Inject, Service } from 'typedi';
 import { Router, Request, Response } from 'express';
 import { check } from 'express-validator';
-import validateMiddleware from 'api/middleware/validateMiddleware';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
 import PaymentMethodController from 'api/controllers/Subscription/PaymentMethod';
 import {
@@ -26,7 +25,7 @@ export default class PaymentViaLicenseController extends PaymentMethodController
     router.post(
       '/payment',
       this.paymentViaLicenseSchema,
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.validatePlanSlugExistance.bind(this)),
       asyncMiddleware(this.paymentViaLicense.bind(this)),
     );

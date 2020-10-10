@@ -1,3 +1,4 @@
+import { Service } from 'typedi';
 import { Router, Request, Response } from 'express';
 import { body, query } from 'express-validator';
 import { pick } from 'lodash';
@@ -9,6 +10,7 @@ import {
   isDefinedOptionConfigurable,
 } from 'utils';
 
+@Service()
 export default  class SettingsController extends BaseController{
   /**
    * Router constructor.

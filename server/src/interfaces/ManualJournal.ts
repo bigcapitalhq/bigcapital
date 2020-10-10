@@ -37,8 +37,8 @@ export interface IManualJournalDTO {
 
 export interface IManualJournalsFilter extends IDynamicListFilterDTO {
   stringifiedFilterRoles?: string,
-  page?: number,
-  pageSize?: number,
+  page: number,
+  pageSize: number,
 }
 
 export interface IManuaLJournalsService {
@@ -48,5 +48,6 @@ export interface IManuaLJournalsService {
   deleteManualJournals(tenantId: number, manualJournalsIds: number[]): Promise<void>;
   publishManualJournals(tenantId: number, manualJournalsIds: number[]): Promise<void>;
   publishManualJournal(tenantId: number, manualJournalId: number): Promise<void>;
-  getManualJournals(tenantId: number, filter: IManualJournalsFilter): Promise<void>;
+
+  getManualJournals(tenantId: number, filter: IManualJournalsFilter): Promise<{ manualJournals: IManualJournal, pagination: IPaginationMeta, filterMeta: IFilterMeta }>;
 }

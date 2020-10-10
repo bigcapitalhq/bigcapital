@@ -23,8 +23,7 @@ export default class ItemsController extends BaseController {
   router() {
     const router = Router();
 
-    router.post(
-      '/', [
+    router.post('/', [
       ...this.validateItemSchema,
     ],
       this.validationResult,
@@ -150,10 +149,12 @@ export default class ItemsController extends BaseController {
    */
   get validateListQuerySchema() {
     return [
-      query('column_sort_order').optional().trim().escape(),
+      query('column_sort_by').optional().trim().escape(),
       query('sort_order').optional().isIn(['desc', 'asc']),
+
       query('page').optional().isNumeric().toInt(),
       query('page_size').optional().isNumeric().toInt(),
+
       query('custom_view_id').optional().isNumeric().toInt(),
       query('stringified_filter_roles').optional().isJSON(),
     ]
@@ -240,14 +241,22 @@ export default class ItemsController extends BaseController {
     const filter = {
       filterRoles: [],
       sortOrder: 'asc',
+      columnSortBy: 'created_at',
+      page: 1,
+      pageSize: 12,
       ...this.matchedQueryData(req),
     };
     if (filter.stringifiedFilterRoles) {
       filter.filterRoles = JSON.parse(filter.stringifiedFilterRoles);
     }
     try {
-      const items = await this.itemsService.itemsList(tenantId, filter);
-      return res.status(200).send({ items });
+      const { items, pagination, filterMeta } = await this.itemsService.itemsList(tenantId, filter);
+
+      return res.status(200).send({
+        items,
+        pagination: this.transfromToResponse(pagination),
+        filter_meta: this.transfromToResponse(filterMeta),
+      });
     } catch (error) {
       next(error);
     }
@@ -344,6 +353,16 @@ export default class ItemsController extends BaseController {
         return res.status(400).send({
           errors: [{ type: 'INVENTORY.ACCOUNT.NOT.CURRENT.ASSET', code: 300 }],
         });
+      }
+      if (error.errorType === 'ITEMS_HAVE_ASSOCIATED_TRANSACTIONS') {
+        return res.status(400).send({
+          errors: [{ type: 'ITEMS_HAVE_ASSOCIATED_TRANSACTIONS', code: 310 }],
+        });
+      }
+      if (error.errorType === 'ITEM_HAS_ASSOCIATED_TRANSACTINS') {
+        return res.status(400).send({
+          errors: [{ type: 'ITEM_HAS_ASSOCIATED_TRANSACTINS', code: 320 }],
+        })
       }
     }
   }

@@ -4,18 +4,15 @@ exports.up = function (knex) {
     table.increments();
     table.string('first_name');
     table.string('last_name');
-    table.string('email').unique();
-    table.string('phone_number').unique();
+    table.string('email').unique().index();
+    table.string('phone_number').unique().index();
     table.string('password');
-    table.boolean('active');
+    table.boolean('active').index();
     table.string('language');
-
-    table.integer('tenant_id').unsigned();
-
-    table.date('invite_accepted_at');
-    table.date('last_login_at');
-
-    table.dateTime('deleted_at');
+    table.bigInteger('tenant_id').unsigned().index().references('id').inTable('tenants');
+    table.date('invite_accepted_at').index();
+    table.date('last_login_at').index();
+    table.dateTime('deleted_at').index();
     table.timestamps();
   });
 };

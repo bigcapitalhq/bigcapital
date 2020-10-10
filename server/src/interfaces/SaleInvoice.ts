@@ -16,3 +16,8 @@ export interface ISaleInvoiceOTD {
   termsConditions: string,
   entries: any[],
 }
+
+export interface ISalesInvoicesFilter{
+  page: number,
+  pageSize: number,
+};

@@ -2,18 +2,18 @@
 exports.up = function(knex) {
   return knex.schema.createTable('bills', (table) => {
     table.increments();
-    table.integer('vendor_id').unsigned();
+    table.integer('vendor_id').unsigned().index().references('id').inTable('contacts');
     table.string('bill_number');
-    table.date('bill_date');
-    table.date('due_date');
+    table.date('bill_date').index();
+    table.date('due_date').index();
     table.string('reference_no');
-    table.string('status');
+    table.string('status').index();
     table.text('note');
 
     table.decimal('amount', 13, 3).defaultTo(0);
     table.decimal('payment_amount', 13, 3).defaultTo(0);
 
-    table.string('inv_lot_number');
+    table.string('inv_lot_number').index();
     table.timestamps();
   });
 };

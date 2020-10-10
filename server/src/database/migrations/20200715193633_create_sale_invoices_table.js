@@ -2,12 +2,12 @@
 exports.up = function(knex) {
   return knex.schema.createTable('sales_invoices', table => {
     table.increments();
-    table.integer('customer_id');
-    table.date('invoice_date');
+    table.integer('customer_id').unsigned().index().references('id').inTable('contacts')
+    table.date('invoice_date').index();
     table.date('due_date');
-    table.string('invoice_no');
+    table.string('invoice_no').index();
     table.string('reference_no');
-    table.string('status');
+    table.string('status').index();
 
     table.text('invoice_message');
     table.text('terms_conditions');
@@ -15,7 +15,7 @@ exports.up = function(knex) {
     table.decimal('balance', 13, 3);
     table.decimal('payment_amount', 13, 3);
 
-    table.string('inv_lot_number');
+    table.string('inv_lot_number').index();
     table.timestamps();
   });  
 };

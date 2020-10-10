@@ -1,6 +1,6 @@
 import { Response, Request, NextFunction } from 'express';
 import { matchedData, validationResult } from "express-validator";
-import { camelCase, omit } from "lodash";
+import { camelCase, snakeCase, omit } from "lodash";
 import { mapKeysDeep } from 'utils'
 
 export default class BaseController {
@@ -54,5 +54,13 @@ export default class BaseController {
       });
     }
     next();
+  }
+
+  /**
+   * Transform the given data to response.
+   * @param {any} data 
+   */
+  transfromToResponse(data: any) {
+    return mapKeysDeep(data, (v, k) => snakeCase(k));
   }
 }

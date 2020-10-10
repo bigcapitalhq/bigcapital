@@ -10,6 +10,10 @@ export default class ItemCategory extends TenantModel {
     return 'items_categories';
   }
 
+  static get resourceable() {
+    return true;
+  }
+
   /**
    * Timestamps columns.
    */
@@ -34,6 +38,45 @@ export default class ItemCategory extends TenantModel {
           from: 'items_categories.id',
           to: 'items.categoryId',
         },
+      },
+    };
+  }
+
+  static get fields() {
+    return {
+      name: {
+        column: 'name',
+      },
+      description: {
+        column: 'description',
+      },
+      parent_category_id: {
+        column: 'parent_category_id',
+        relation: 'items_categories.id',
+        relationColumn: 'items_categories.id',
+      },
+      user: {
+        column: 'user_id',
+        relation: 'users.id',
+        relationColumn: 'users.id',
+      },
+      cost_account: {
+        column: 'cost_account_id',
+        relation: 'accounts.id',
+      },
+      sell_account: {
+        column: 'sell_account_id',
+        relation: 'accounts.id',
+      },
+      inventory_account: {
+        column: 'inventory_account_id',
+        relation: 'accounts.id',
+      },
+      cost_method: {
+        column: 'cost_method',
+      },
+      created_at: {
+        column: 'created_at',
       },
     };
   }

@@ -10,9 +10,7 @@ import Bill from 'models/Bill';
 import BillPayment from 'models/BillPayment';
 import BillPaymentEntry from 'models/BillPaymentEntry';
 import Currency from 'models/Currency';
-import Customer from 'models/Customer';
 import Contact from 'models/Contact';
-import Vendor from 'models/Vendor';
 import ExchangeRate from 'models/ExchangeRate';
 import Expense from 'models/Expense';
 import ExpenseCategory from 'models/ExpenseCategory';
@@ -49,8 +47,6 @@ export default (knex) => {
     BillPayment,
     BillPaymentEntry,
     Currency,
-    Customer,
-    Vendor,
     ExchangeRate,
     Expense,
     ExpenseCategory,
