@@ -55,7 +55,6 @@ function BillingForm({
     initialValues: {
       ...initialValues,
     },
-
     onSubmit: (values, { setSubmitting, resetForm, setErrors }) => {
       requestSubmitBilling(values)
         .then((response) => {
@@ -72,7 +71,7 @@ function BillingForm({
         });
     },
   });
-  console.log(formik.values, 'formik');
+
   return (
     <div className={'billing-form'}>
       <form onSubmit={formik.handleSubmit}>

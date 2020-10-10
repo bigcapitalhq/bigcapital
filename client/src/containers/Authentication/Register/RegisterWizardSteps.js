@@ -1,32 +1,32 @@
 import React from 'react';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import classNames from 'classnames';
+import { FormattedMessage as T } from 'react-intl';
+import { registerWizardSteps } from 'common/registerWizard'
 
-function RegisterWizardSteps() {
+function RegisterWizardStep({
+  label,
+  isActive = false
+}) {
+  return (
+    <li className={classNames({ 'is-active': isActive })}>
+      <p className={'wizard-info'}><T id={label} /></p>
+    </li>
+  );
+}
+
+function RegisterWizardSteps({
+  currentStep = 1,
+}) {
   return (
     <div className={'register-wizard-steps'}>
       <div className={'wizard-container'}>
         <ul className={'wizard-wrapper'}>
-          <li>
-            <p className={'wizard-info'}>
-              <T id={'organization_register'} />
-            </p>
-          </li>
-          <li>
-            <p className={'wizard-info'}>
-              <T id={'payment_or_trial'} />
-            </p>
-          </li>
-          <li className="complete">
-            <p className={'wizard-info'}>
-              <T id={'getting_started'} />
-            </p>
-          </li>
-
-          <li>
-            <p className={'wizard-info'}>
-              <T id={'initializing'} />
-            </p>
-          </li>
+          {registerWizardSteps.map((step, index) => (
+            <RegisterWizardStep
+              label={step.label}
+              isActive={(index + 1) <= currentStep}
+            />
+          ))}
         </ul>
       </div>
     </div>
