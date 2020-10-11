@@ -10,6 +10,7 @@ import ServiceItemsEntries from 'services/Sales/ServiceItemsEntries';
 import PaymentReceiveEntryRepository from 'repositories/PaymentReceiveEntryRepository';
 import CustomerRepository from 'repositories/CustomerRepository';
 import TenancyService from 'services/Tenancy/TenancyService';
+import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import { formatDateFields } from 'utils';
 
 /**
@@ -27,6 +28,9 @@ export default class PaymentReceiveService {
   @Inject()
   journalService: JournalPosterService;
 
+  @Inject()
+  dynamicListService: DynamicListingService;
+
   @Inject('logger')
   logger: any;
 
@@ -37,7 +41,7 @@ export default class PaymentReceiveService {
    * @param {number} tenantId - Tenant id.
    * @param {IPaymentReceive} paymentReceive
    */
-  async createPaymentReceive(tenantId: number, paymentReceive: IPaymentReceiveOTD) {
+  public async createPaymentReceive(tenantId: number, paymentReceive: IPaymentReceiveOTD) {
     const {
       PaymentReceive,
       PaymentReceiveEntry,
@@ -107,7 +111,7 @@ export default class PaymentReceiveService {
    * @param {IPaymentReceive} paymentReceive -
    * @param {IPaymentReceive} oldPaymentReceive -
    */
-  async editPaymentReceive(
+  public async editPaymentReceive(
     tenantId: number,
     paymentReceiveId: number,
     paymentReceive: any,
@@ -242,13 +246,37 @@ export default class PaymentReceiveService {
    * @param {number} tenantId - Tenant id.
    * @param {Integer} paymentReceiveId - Payment receive id.
    */
-  async getPaymentReceive(tenantId: number, paymentReceiveId: number) {
+  public async getPaymentReceive(tenantId: number, paymentReceiveId: number) {
     const { PaymentReceive } = this.tenancy.models(tenantId);
     const paymentReceive = await PaymentReceive.query()
       .where('id', paymentReceiveId)
       .withGraphFetched('entries.invoice')
       .first();
     return paymentReceive;
+  }
+  
+  /**
+   * Retrieve payment receives paginated and filterable list.
+   * @param {number} tenantId 
+   * @param {IPaymentReceivesFilter} paymentReceivesFilter 
+   */
+  public async listPaymentReceives(tenantId: number, paymentReceivesFilter: IPaymentReceivesFilter) {
+    const { PaymentReceive } = this.tenancy.models(tenantId);
+    const dynamicFilter = await this.dynamicListService.dynamicList(tenantId, PaymentReceive, paymentReceivesFilter);
+
+    const { results, pagination } = await PaymentReceive.query().onBuild((builder) => {
+      builder.withGraphFetched('customer');
+      builder.withGraphFetched('depositAccount');
+      dynamicFilter.buildQuery()(builder);
+    }).pagination(
+      paymentReceivesFilter.page - 1,
+      paymentReceivesFilter.pageSize,
+    );
+    return {
+      paymentReceives: results,
+      pagination,
+      filterMeta: dynamicFilter.getResponseMeta(),
+    };
   }
 
   /**
@@ -310,7 +338,7 @@ export default class PaymentReceiveService {
    * @param {IPaymentReceive} paymentReceive
    * @param {Number} paymentReceiveId
    */
-  async recordPaymentReceiveJournalEntries(
+  private async recordPaymentReceiveJournalEntries(
     tenantId: number,
     paymentReceive: any,
     paymentReceiveId?: number
@@ -370,7 +398,7 @@ export default class PaymentReceiveService {
    * @param {Array} revertInvoices
    * @return {Promise}
    */
-  async revertInvoicePaymentAmount(tenantId: number, revertInvoices: any[]) {
+  private async revertInvoicePaymentAmount(tenantId: number, revertInvoices: any[]) {
     const { SaleInvoice } = this.tenancy.models(tenantId);
     const opers: Promise<T>[] = [];
 
@@ -392,7 +420,7 @@ export default class PaymentReceiveService {
    * @param {Array} newPaymentReceiveEntries
    * @return 
    */
-  async saveChangeInvoicePaymentAmount(
+  private async saveChangeInvoicePaymentAmount(
     tenantId: number,
     paymentReceiveEntries: [],
     newPaymentReceiveEntries: [],

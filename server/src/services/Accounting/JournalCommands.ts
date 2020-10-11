@@ -2,9 +2,12 @@ import { sumBy, chain } from 'lodash';
 import JournalPoster from "./JournalPoster";
 import JournalEntry from "./JournalEntry";
 import { AccountTransaction } from 'models';
-import { IInventoryTransaction, IManualJournal } from 'interfaces';
-import AccountsService from '../Accounts/AccountsService';
-import { IInventoryTransaction, IInventoryTransaction } from '../../interfaces';
+import {
+  IInventoryTransaction,
+  IManualJournal,
+  IExpense,
+  IExpenseCategory,
+} from 'interfaces';
 
 interface IInventoryCostEntity {
   date: Date,
@@ -118,6 +121,38 @@ export default class JournalCommands{
     });
     this.journal.debit(debitEntry);
     this.journal.credit(creditEntry);
+  }
+
+  /**
+   * Writes journal entries of expense model object.
+   * @param {IExpense} expense 
+   */
+  expense(expense: IExpense) {
+    const mixinEntry = {
+      referenceType: 'Expense',
+      referenceId: expense.id,
+      date: expense.paymentDate,
+      userId: expense.userId,
+      draft: !expense.publishedAt,
+    };
+    const paymentJournalEntry = new JournalEntry({
+      credit: expense.totalAmount,
+      account: expense.paymentAccountId,
+      index: 1,
+      ...mixinEntry,
+    });
+    this.journal.credit(paymentJournalEntry);
+
+    expense.categories.forEach((category: IExpenseCategory, index) => {
+      const expenseJournalEntry = new JournalEntry({
+        account: category.expenseAccountId,
+        debit: category.amount,
+        note: category.description,
+        ...mixinEntry,
+        index: index + 2,
+      });
+      this.journal.debit(expenseJournalEntry);
+    });
   }
 
   /**

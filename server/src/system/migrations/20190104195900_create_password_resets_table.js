@@ -1,8 +1,8 @@
 
 exports.up = (knex) => knex.schema.createTable('password_resets', (table) => {
   table.increments();
-  table.string('email');
-  table.string('token');
+  table.string('email').index();
+  table.string('token').index();
   table.timestamp('created_at');
 });
 

@@ -1,15 +1,20 @@
-import { uniqBy } from 'lodash';
+import { forEach, uniqBy } from 'lodash';
 import {
   buildFilterRolesJoins,
 } from 'lib/ViewRolesBuilder';
+import { IModel } from 'interfaces';
 
 export default class DynamicFilter {
+  model: IModel;
+  tableName: string;
+
   /**
    * Constructor.
    * @param {String} tableName -
    */
-  constructor(tableName) {
-    this.tableName = tableName;
+  constructor(model) {
+    this.model = model;
+    this.tableName = model.tableName;
     this.filters = [];
   }
 
@@ -18,7 +23,7 @@ export default class DynamicFilter {
    * @param {*} filterRole -
    */
   setFilter(filterRole) {
-    filterRole.setTableName(this.tableName);
+    filterRole.setModel(this.model);
     this.filters.push(filterRole);
   }
 
@@ -38,7 +43,23 @@ export default class DynamicFilter {
       buildersCallbacks.forEach((builderCallback) => {
         builderCallback(builder);
       });
-      buildFilterRolesJoins(this.tableName, uniqBy(tableColumns, 'columnKey'))(builder);
+      buildFilterRolesJoins(this.model, uniqBy(tableColumns, 'columnKey'))(builder);
     };
+  }
+
+  /**
+   * Retrieve response metadata from all filters adapters.
+   */
+  getResponseMeta() {
+    const responseMeta = {};
+
+    this.filters.forEach((filter) => {
+      const { responseMeta: filterMeta } = filter;
+
+      forEach(filterMeta, (value, key) => {
+        responseMeta[key] = value;
+      });
+    });
+    return responseMeta;
   }
 }

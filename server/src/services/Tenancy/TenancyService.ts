@@ -27,7 +27,6 @@ export default class HasTenancyService {
   singletonService(tenantId: number, key: string, callback: Function) {
     const container = this.tenantContainer(tenantId);
     const Logger = Container.get('logger');
-
     const hasServiceInstnace = container.has(key);
 
     if (!hasServiceInstnace) {
@@ -75,11 +74,23 @@ export default class HasTenancyService {
   }
 
   /**
+   * Sets i18n locals function.
+   * @param {number} tenantId 
+   * @param locals 
+   */
+  setI18nLocals(tenantId: number, locals: any) {
+    return this.singletonService(tenantId, 'i18n', () => {
+      return locals;
+    })
+  }
+
+  /**
    * Retrieve i18n locales methods.
    * @param {number} tenantId - Tenant id.
    */
   i18n(tenantId: number) {
     return this.singletonService(tenantId, 'i18n', () => {
+      throw new Error('I18n locals is not set yet.');
     });
   }
 

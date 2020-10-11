@@ -2,20 +2,20 @@
 exports.up = function(knex) {
   return knex.schema.createTable('inventory_transactions', table => {
     table.increments('id');
-    table.date('date');
+    table.date('date').index();
 
-    table.string('direction');
+    table.string('direction').index();
 
-    table.integer('item_id').unsigned();
+    table.integer('item_id').unsigned().index().references('id').inTable('items');
     table.integer('quantity').unsigned();
     table.decimal('rate', 13, 3).unsigned();
 
-    table.integer('lot_number');
+    table.integer('lot_number').index();
  
-    table.string('transaction_type');
-    table.integer('transaction_id').unsigned();
+    table.string('transaction_type').index();
+    table.integer('transaction_id').unsigned().index();
 
-    table.integer('entry_id').unsigned();
+    table.integer('entry_id').unsigned().index();
     table.timestamps();
   });
 };

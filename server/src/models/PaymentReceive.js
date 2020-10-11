@@ -22,17 +22,20 @@ export default class PaymentReceive extends TenantModel {
   static get relationMappings() {
     const PaymentReceiveEntry = require('models/PaymentReceiveEntry');
     const AccountTransaction = require('models/AccountTransaction');
-    const Customer = require('models/Customer');
+    const Contact = require('models/Contact');
     const Account = require('models/Account');
 
     return {
       customer: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Customer.default,
+        modelClass: Contact.default,
         join: {
           from: 'payment_receives.customerId',
-          to: 'customers.id',
+          to: 'contacts.id',
         },
+        filter(query) {
+          query.where('contact_type', 'Customer');
+        }
       },
 
       depositAccount: {

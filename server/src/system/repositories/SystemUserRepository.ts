@@ -12,21 +12,22 @@ export default class SystemUserRepository extends SystemRepository {
   /**
    * Patches the last login date to the given system user.
    * @param {number} userId 
+   * @return {Promise<void>}
    */
-  async patchLastLoginAt(userId: number) {
-    const user = await SystemUser.query().patchAndFetchById(userId, {
+  async patchLastLoginAt(userId: number): Promise<void> {
+    await SystemUser.query().patchAndFetchById(userId, {
       last_login_at: moment().toMySqlDateTime()
     });
-    this.flushUserCache(user);
-    return user;
+    this.flushCache();
   }
 
   /**
    * Finds system user by crediential.
    * @param  {string} crediential - Phone number or email.
    * @return {ISystemUser}
+   * @return {Promise<ISystemUser>}
    */
-  findByCrediential(crediential: string) {
+  findByCrediential(crediential: string): Promise<ISystemUser> {
     return SystemUser.query().whereNotDeleted()
       .findOne('email', crediential)
       .orWhere('phone_number', crediential);
@@ -34,9 +35,10 @@ export default class SystemUserRepository extends SystemRepository {
  
   /**
    * Retrieve system user details of the given id.
-   * @param {number} userId 
+   * @param {number} userId - User id.
+   * @return {Promise<ISystemUser>}
    */
-  getById(userId: number) {
+  getById(userId: number): Promise<ISystemUser> {
     return this.cache.get(`systemUser.id.${userId}`, () => {
       return SystemUser.query().whereNotDeleted().findById(userId);
     });
@@ -44,10 +46,11 @@ export default class SystemUserRepository extends SystemRepository {
 
   /**
    * Retrieve user by id and tenant id.
-   * @param {number} userId 
-   * @param {number} tenantId 
+   * @param {number} userId - User id.
+   * @param {number} tenantId - Tenant id.
+   * @return {Promise<ISystemUser>}
    */
-  getByIdAndTenant(userId: number, tenantId: number) {
+  getByIdAndTenant(userId: number, tenantId: number): Promise<ISystemUser> {
     return this.cache.get(`systemUser.id.${userId}.tenant.${tenantId}`, () => {
       return SystemUser.query().whereNotDeleted()
         .findOne({ id: userId, tenant_id: tenantId });
@@ -56,9 +59,10 @@ export default class SystemUserRepository extends SystemRepository {
 
   /**
    * Retrieve system user details by the given email.
-   * @param {string} email 
+   * @param {string} email - Email
+   * @return {Promise<ISystemUser>}
    */
-  getByEmail(email: string) {
+  getByEmail(email: string): Promise<ISystemUser> {
     return this.cache.get(`systemUser.email.${email}`, () => {
       return SystemUser.query().whereNotDeleted().findOne('email', email);
     });
@@ -66,9 +70,10 @@ export default class SystemUserRepository extends SystemRepository {
 
   /**
    * Retrieve user by phone number.
-   * @param {string} phoneNumber 
+   * @param {string} phoneNumber - Phone number
+   * @return {Promise<ISystemUser>}
    */
-  getByPhoneNumber(phoneNumber: string) {
+  getByPhoneNumber(phoneNumber: string): Promise<ISystemUser> {
     return this.cache.get(`systemUser.phoneNumber.${phoneNumber}`, () => {
       return SystemUser.query().whereNotDeleted().findOne('phoneNumber', phoneNumber);
     });
@@ -76,62 +81,61 @@ export default class SystemUserRepository extends SystemRepository {
 
   /**
    * Edits details.
-   * @param {number} userId 
-   * @param {number} user 
+   * @param {number} userId - User id.
+   * @param {number} user - User input.
+   * @return {Promise<void>}
    */ 
-  edit(userId: number, userInput: ISystemUser) {
-    const user = SystemUser.query().patchAndFetchById(userId, { ...userInput });
-    this.flushUserCache(user);
-    return user;
+  async edit(userId: number, userInput: ISystemUser): Promise<void> {
+    await SystemUser.query().patchAndFetchById(userId, { ...userInput });
+    this.flushCache();
   }
 
   /**
    * Creates a new user.
-   * @param {IUser} userInput 
+   * @param  {IUser} userInput - User input.
+   * @return {Promise<ISystemUser>}
    */
-  create(userInput: ISystemUser) {
-    return SystemUser.query().insert({ ...userInput });
+  async create(userInput: ISystemUser): Promise<ISystemUser> {
+    const systemUser = await SystemUser.query().insert({ ...userInput });
+    this.flushCache();
+
+    return systemUser;
   }
 
   /**
    * Deletes user by the given id.
-   * @param {number} userId 
+   * @param  {number} userId - User id.
+   * @return {Promise<void>}
    */
-  async deleteById(userId: number) {
-    const user = await this.getById(userId);
+  async deleteById(userId: number): Promise<void> {
     await SystemUser.query().where('id', userId).delete();
-    this.flushUserCache(user);
+    this.flushCache();
   }
 
   /**
    * Activate user by the given id.
-   * @param {number} userId 
+   * @param {number} userId - User id.
+   * @return {Promise<void>}
    */
-  async activateById(userId: number) {
-    const user = await SystemUser.query().patchAndFetchById(userId, { active: 1 });
-    this.flushUserCache(user);
-    return user;
+  async activateById(userId: number): Promise<void> {
+    await SystemUser.query().patchAndFetchById(userId, { active: 1 });
+    this.flushCache();
   }
 
   /**
    * Inactivate user by the given id.
-   * @param {number} userId 
+   * @param {number} userId - User id.
+   * @return {Promise<void>}
    */
-  async inactivateById(userId: number) {
-    const user = await SystemUser.query().patchAndFetchById(userId, { active: 0 });
-    this.flushUserCache(user);
-    return user;
+  async inactivateById(userId: number): Promise<void> {
+    await SystemUser.query().patchAndFetchById(userId, { active: 0 });
+    this.flushCache();
   }
 
   /**
-   * Flush user cache.
-   * @param {IUser} user 
+   * Flushes user repository cache.
    */
-  flushUserCache(user: ISystemUser) {
-    this.cache.del(`systemUser.phoneNumber.${user.phoneNumber}`);
-    this.cache.del(`systemUser.email.${user.email}`);
-
-    this.cache.del(`systemUser.id.${user.id}`);
-    this.cache.del(`systemUser.id.${user.id}.tenant.${user.tenantId}`);
+  flushCache() {
+    this.cache.delStartWith('systemUser');
   }
 }

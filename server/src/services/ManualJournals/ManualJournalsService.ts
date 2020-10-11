@@ -9,6 +9,7 @@ import {
   ISystemUser,
   IManualJournal,
   IManualJournalEntryDTO,
+  IPaginationMeta,
 } from 'interfaces';
 import TenancyService from 'services/Tenancy/TenancyService';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
@@ -227,7 +228,7 @@ export default class ManualJournalsService implements IManuaLJournalsService {
   }
 
   /**
-   * 
+   * Transform DTO to model.
    * @param {IManualJournalEntryDTO[]} entries 
    */
   private transformDTOToEntriesModel(entries: IManualJournalEntryDTO[]) {
@@ -396,16 +397,23 @@ export default class ManualJournalsService implements IManuaLJournalsService {
    * @param {number} tenantId 
    * @param {IManualJournalsFilter} filter 
    */
-  public async getManualJournals(tenantId: number, filter: IManualJournalsFilter) {
+  public async getManualJournals(
+    tenantId: number,
+    filter: IManualJournalsFilter
+  ): Promise<{ manualJournals: IManualJournal, pagination: IPaginationMeta, filterMeta: IFilterMeta }> {
     const { ManualJournal } = this.tenancy.models(tenantId);
-
     const dynamicList = await this.dynamicListService.dynamicList(tenantId, ManualJournal, filter);
 
     this.logger.info('[manual_journals] trying to get manual journals list.', { tenantId, filter });
-    const manualJournal = await ManualJournal.query().onBuild((builder) => {
+    const { results, pagination } = await ManualJournal.query().onBuild((builder) => {
       dynamicList.buildQuery()(builder);
-    });
-    return manualJournal;
+    }).pagination(filter.page - 1, filter.pageSize);
+
+    return {
+      manualJournals: results,
+      pagination,
+      filterMeta: dynamicList.getResponseMeta(),
+    };
   }
  
   /**
@@ -421,7 +429,8 @@ export default class ManualJournalsService implements IManuaLJournalsService {
     this.logger.info('[manual_journals] trying to get specific manual journal.', { tenantId, manualJournalId });
     const manualJournal = await ManualJournal.query()
       .findById(manualJournalId)
-      .withGraphFetched('entries');
+      .withGraphFetched('entries')
+      .withGraphFetched('media');
 
     return manualJournal;
   }

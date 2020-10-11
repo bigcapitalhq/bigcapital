@@ -17,7 +17,7 @@ export default class CustomerRepository extends TenantRepository {
 
   /**
    * Retrieve customer details of the given id.
-   * @param {number} customerId -
+   * @param {number} customerId - Customer id.
    */
   getById(customerId: number) {
     const { Contact } = this.models;

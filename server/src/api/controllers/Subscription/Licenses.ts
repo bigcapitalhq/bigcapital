@@ -6,7 +6,6 @@ import config from 'config';
 import { License, Plan } from 'system/models';
 import BaseController from 'api/controllers/BaseController';
 import LicenseService from 'services/Payment/License';
-import validateMiddleware from 'api/middleware/validateMiddleware';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
 import { ILicensesFilter } from 'interfaces';
 
@@ -31,13 +30,13 @@ export default class LicensesController extends BaseController {
     router.post(
       '/generate',
       this.generateLicenseSchema,
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.validatePlanExistance.bind(this)),
       asyncMiddleware(this.generateLicense.bind(this)),
     );
     router.post(
       '/disable/:licenseId',
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.validateLicenseExistance.bind(this)),
       asyncMiddleware(this.validateNotDisabledLicense.bind(this)),
       asyncMiddleware(this.disableLicense.bind(this)),
@@ -45,7 +44,7 @@ export default class LicensesController extends BaseController {
     router.post(
       '/send',
       this.sendLicenseSchemaValidation,
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.sendLicense.bind(this)),
     );
     router.delete(

@@ -299,17 +299,22 @@ export default class ManualJournalsController extends BaseController {
       sortOrder: 'asc',
       columnSortBy: 'created_at',
       filterRoles: [],
+      page: 1,
+      pageSize: 12,
       ...this.matchedQueryData(req),
     }
     if (filter.stringifiedFilterRoles) {
       filter.filterRoles = JSON.parse(filter.stringifiedFilterRoles);
     }
     try {
-      const manualJournals = await this.manualJournalsService.getManualJournals(tenantId, filter);
-      return res.status(200).send({ manualJournals });
-    } catch (error) {
-      console.log(error);
+      const { manualJournals, pagination, filterMeta } = await this.manualJournalsService.getManualJournals(tenantId, filter);
 
+      return res.status(200).send({
+        manual_journals: manualJournals,
+        pagination: this.transfromToResponse(pagination),
+        filter_meta: this.transfromToResponse(filterMeta), 
+      });
+    } catch (error) {
       next(error);
     }
   }

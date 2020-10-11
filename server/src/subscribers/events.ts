@@ -38,6 +38,18 @@ export default {
   },
 
   /**
+   * Accounts service.
+   */
+  accounts: {
+    onCreated: 'onAccountCreated',
+    onEdited: 'onAccountEdited',
+    onDeleted: 'onAccountDeleted',
+    onBulkDeleted: 'onBulkDeleted',
+    onBulkActivated: 'onAccountBulkActivated',
+    onActivated: 'onAccountActivated'
+  },
+
+  /**
    * Manual journals service.
    */
   manualJournals: {
@@ -47,5 +59,18 @@ export default {
     onDeletedBulk: 'onManualJournalCreatedBulk',
     onPublished: 'onManualJournalPublished',
     onPublishedBulk: 'onManualJournalPublishedBulk',
+  },
+
+  /**
+   * Expenses service.
+   */
+  expenses: {
+    onCreated: 'onExpenseCreated',
+    onEdited: 'onExpenseEdited',
+    onDeleted: 'onExpenseDelted',
+    onPublished: 'onExpensePublished',
+
+    onBulkDeleted: 'onExpenseBulkDeleted',
+    onBulkPublished: 'onBulkPublished',
   }
 }

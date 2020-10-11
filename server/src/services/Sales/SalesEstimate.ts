@@ -1,8 +1,10 @@
 import { omit, difference, sumBy, mixin } from 'lodash';
 import { Service, Inject } from 'typedi';
+import { IEstimatesFilter, IFilterMeta, IPaginationMeta } from 'interfaces';
 import HasItemsEntries from 'services/Sales/HasItemsEntries';
 import { formatDateFields } from 'utils';
 import TenancyService from 'services/Tenancy/TenancyService';
+import DynamicListingService from 'services/DynamicListing/DynamicListService';
 
 /**
  * Sale estimate service.
@@ -18,6 +20,9 @@ export default class SaleEstimateService {
 
   @Inject('logger')
   logger: any;
+
+  @Inject()
+  dynamicListService: DynamicListingService;
 
   /**
    * Creates a new estimate with associated entries.
@@ -207,5 +212,33 @@ export default class SaleEstimateService {
         return query;
       });
     return foundEstimates.length > 0;
+  }
+
+  /**
+   * Retrieves estimates filterable and paginated list.
+   * @param {number} tenantId 
+   * @param {IEstimatesFilter} estimatesFilter 
+   */
+  public async estimatesList(
+    tenantId: number,
+    estimatesFilter: IEstimatesFilter
+  ): Promise<{ salesEstimates: ISaleEstimate[], pagination: IPaginationMeta, filterMeta: IFilterMeta }> {
+    const { SaleEstimate } = this.tenancy.models(tenantId);
+    const dynamicFilter = await this.dynamicListService.dynamicList(tenantId, SaleEstimate, estimatesFilter);
+
+    const { results, pagination } = await SaleEstimate.query().onBuild(builder => {
+      builder.withGraphFetched('customer');
+      builder.withGraphFetched('entries');
+      dynamicFilter.buildQuery()(builder);
+    }).pagination(
+      estimatesFilter.page - 1,
+      estimatesFilter.pageSize,
+    );
+
+    return {
+      salesEstimates: results,
+      pagination,
+      filterMeta: dynamicFilter.getResponseMeta(),
+    };
   }
 }

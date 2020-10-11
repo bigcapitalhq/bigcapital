@@ -8,7 +8,6 @@ import {
   IItemCategoriesFilter,
   ISystemUser,
 } from "interfaces";
-import ItemCategory from "models/ItemCategory";
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import TenancyService from 'services/Tenancy/TenancyService';
 
@@ -21,6 +20,7 @@ const ERRORS = {
   SELL_ACCOUNT_NOT_FOUND: 'SELL_ACCOUNT_NOT_FOUND',
   INVENTORY_ACCOUNT_NOT_FOUND: 'INVENTORY_ACCOUNT_NOT_FOUND',
   INVENTORY_ACCOUNT_NOT_INVENTORY: 'INVENTORY_ACCOUNT_NOT_INVENTORY',
+  CATEGORY_HAVE_ITEMS: 'CATEGORY_HAVE_ITEMS'
 };
 
 export default class ItemCategoriesService implements IItemCategoriesService {
@@ -108,7 +108,7 @@ export default class ItemCategoriesService implements IItemCategoriesService {
 
     this.logger.info('[items] validate sell account existance.', { tenantId, sellAccountId });
     const incomeType = await accountTypeRepository.getByKey('income');
-    const foundAccount = await accountRepository.getById(sellAccountId);
+    const foundAccount = await accountRepository.findById(sellAccountId);
 
     if (!foundAccount) {
       this.logger.info('[items] sell account not found.', { tenantId, sellAccountId });
@@ -130,7 +130,7 @@ export default class ItemCategoriesService implements IItemCategoriesService {
 
     this.logger.info('[items] validate cost account existance.', { tenantId, costAccountId });
     const COGSType = await accountTypeRepository.getByKey('cost_of_goods_sold');
-    const foundAccount = await accountRepository.getById(costAccountId)
+    const foundAccount = await accountRepository.findById(costAccountId)
 
     if (!foundAccount) {
       this.logger.info('[items] cost account not found.', { tenantId, costAccountId });
@@ -152,7 +152,7 @@ export default class ItemCategoriesService implements IItemCategoriesService {
 
     this.logger.info('[items] validate inventory account existance.', { tenantId, inventoryAccountId });
     const otherAsset = await accountTypeRepository.getByKey('other_asset');
-    const foundAccount = await accountRepository.getById(inventoryAccountId);
+    const foundAccount = await accountRepository.findById(inventoryAccountId);
 
     if (!foundAccount) {
       this.logger.info('[items] inventory account not found.', { tenantId, inventoryAccountId });
@@ -202,6 +202,7 @@ export default class ItemCategoriesService implements IItemCategoriesService {
   public async deleteItemCategory(tenantId: number, itemCategoryId: number, authorizedUser: ISystemUser) {
     this.logger.info('[item_category] trying to delete item category.', { tenantId, itemCategoryId });
     await this.getItemCategoryOrThrowError(tenantId, itemCategoryId);
+    await this.unassociateItemsWithCategories(tenantId, itemCategoryId);
 
     const { ItemCategory } = this.tenancy.models(tenantId);
     await ItemCategory.query().findById(itemCategoryId).delete();
@@ -214,7 +215,9 @@ export default class ItemCategoriesService implements IItemCategoriesService {
    * @param {number[]} itemCategoriesIds 
    */
   private async getItemCategoriesOrThrowError(tenantId: number, itemCategoriesIds: number[]) {
-    const itemCategories = await ItemCategory.query().whereIn('id', ids);
+    const { ItemCategory } = this.tenancy.models(tenantId);
+    const itemCategories = await ItemCategory.query().whereIn('id', itemCategoriesIds);
+
     const storedItemCategoriesIds = itemCategories.map((category: IItemCategory) => category.id);
     const notFoundCategories = difference(itemCategoriesIds, storedItemCategoriesIds);
 
@@ -233,10 +236,22 @@ export default class ItemCategoriesService implements IItemCategoriesService {
     const dynamicList = await this.dynamicListService.dynamicList(tenantId, ItemCategory, filter);
 
     const itemCategories = await ItemCategory.query().onBuild((query) => {
-      query.orderBy('createdAt', 'ASC');
       dynamicList.buildQuery()(query);
     });
-    return itemCategories;
+    return { itemCategories, filterMeta: dynamicList.getResponseMeta() };
+  }
+
+  /**
+   * Unlink items relations with item categories.
+   * @param {number} tenantId 
+   * @param {number|number[]} itemCategoryId - 
+   * @return {Promise<void>}
+   */
+  private async unassociateItemsWithCategories(tenantId: number, itemCategoryId: number|number[]): Promise<void> {
+    const { Item } = this.tenancy.models(tenantId);
+    const ids = Array.isArray(itemCategoryId) ? itemCategoryId : [itemCategoryId];
+
+    await Item.query().whereIn('id', ids).patch({ category_id: null });
   }
 
   /**
@@ -246,8 +261,11 @@ export default class ItemCategoriesService implements IItemCategoriesService {
    */
   public async deleteItemCategories(tenantId: number, itemCategoriesIds: number[], authorizedUser: ISystemUser) {
     this.logger.info('[item_category] trying to delete item categories.', { tenantId, itemCategoriesIds });
-    await this.getItemCategoriesOrThrowError(tenantId, itemCategoriesIds);
+    const { ItemCategory } = this.tenancy.models(tenantId);
 
+    await this.getItemCategoriesOrThrowError(tenantId, itemCategoriesIds);
+    await this.unassociateItemsWithCategories(tenantId, itemCategoriesIds);
+ 
     await ItemCategory.query().whereIn('id', itemCategoriesIds).delete();
     this.logger.info('[item_category] item categories deleted successfully.', { tenantId, itemCategoriesIds });
   }

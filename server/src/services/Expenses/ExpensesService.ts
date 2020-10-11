@@ -1,13 +1,17 @@
 import { Service, Inject } from "typedi";
 import { difference, sumBy, omit } from 'lodash';
 import moment from "moment";
+import {
+  EventDispatcher,
+  EventDispatcherInterface,
+} from 'decorators/eventDispatcher';
 import { ServiceError } from "exceptions";
 import TenancyService from 'services/Tenancy/TenancyService';
 import JournalPoster from 'services/Accounting/JournalPoster';
-import JournalEntry from 'services/Accounting/JournalEntry';
 import JournalCommands from 'services/Accounting/JournalCommands';
-import { IExpense, IAccount, IExpenseDTO, IExpenseCategory, IExpensesService, ISystemUser } from 'interfaces';
+import { IExpense, IExpensesFilter, IAccount, IExpenseDTO, IExpensesService, ISystemUser, IPaginationMeta } from 'interfaces';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
+import events from 'subscribers/events';
 
 const ERRORS = {
   EXPENSE_NOT_FOUND: 'expense_not_found',
@@ -30,6 +34,9 @@ export default class ExpensesService implements IExpensesService {
   @Inject('logger')
   logger: any;
 
+  @EventDispatcher()
+  eventDispatcher: EventDispatcherInterface;
+
   /**
    * Retrieve the payment account details or returns not found server error in case the 
    * given account not found on the storage.
@@ -41,7 +48,7 @@ export default class ExpensesService implements IExpensesService {
     this.logger.info('[expenses] trying to get the given payment account.', { tenantId, paymentAccountId });
 
     const { accountRepository } = this.tenancy.repositories(tenantId);
-    const paymentAccount = await accountRepository.getById(paymentAccountId)
+    const paymentAccount = await accountRepository.findById(paymentAccountId)
 
     if (!paymentAccount) {
       this.logger.info('[expenses] the given payment account not found.', { tenantId, paymentAccountId });
@@ -136,16 +143,15 @@ export default class ExpensesService implements IExpensesService {
     }
   }
 
-  private async revertJournalEntries(
+  public async revertJournalEntries(
     tenantId: number,
     expenseId: number|number[],
   ) {
     const journal = new JournalPoster(tenantId);
     const journalCommands = new JournalCommands(journal);
-
-    if (revertOld) {
-      await journalCommands.revertJournalEntries(expenseId, 'Expense');
-    }
+  
+    await journalCommands.revertJournalEntries(expenseId, 'Expense');
+  
     return Promise.all([
       journal.saveBalance(),
       journal.deleteEntries(),
@@ -158,11 +164,10 @@ export default class ExpensesService implements IExpensesService {
    * @param {IExpense} expense 
    * @param {IUser} authorizedUser 
    */
-  private async writeJournalEntries(
+  public async writeJournalEntries(
     tenantId: number,
     expense: IExpense,
     revertOld: boolean,
-    authorizedUser: ISystemUser
   ) {
     this.logger.info('[expense[ trying to write expense journal entries.', { tenantId, expense });
     const journal = new JournalPoster(tenantId);
@@ -171,29 +176,8 @@ export default class ExpensesService implements IExpensesService {
     if (revertOld) {
       await journalCommands.revertJournalEntries(expense.id, 'Expense');
     }
-    const mixinEntry = {
-      referenceType: 'Expense',
-      referenceId: expense.id,
-      date: expense.paymentDate,
-      userId: authorizedUser.id,
-      draft: !expense.publish,
-    };
-    const paymentJournalEntry = new JournalEntry({
-      credit: expense.totalAmount,
-      account: expense.paymentAccountId,
-      ...mixinEntry,
-    });
-    journal.credit(paymentJournalEntry);
-
-    expense.categories.forEach((category: IExpenseCategory) => {
-      const expenseJournalEntry = new JournalEntry({
-        account: category.expenseAccountId,
-        debit: category.amount,
-        note: category.description,
-        ...mixinEntry,
-      });
-      journal.debit(expenseJournalEntry);
-    });
+    journalCommands.expense(expense);
+    
     return Promise.all([
       journal.saveBalance(),
       journal.saveEntries(),
@@ -229,7 +213,7 @@ export default class ExpensesService implements IExpensesService {
    * @param {IExpense} expense 
    */
   private validateExpenseIsNotPublished(expense: IExpense) {
-    if (expense.published) {
+    if (expense.publishedAt) {
       throw new ServiceError(ERRORS.EXPENSE_ACCOUNT_ALREADY_PUBLISED);
     }
   }
@@ -291,33 +275,29 @@ export default class ExpensesService implements IExpensesService {
     const { expenseRepository } = this.tenancy.repositories(tenantId);
     const expense = await this.getExpenseOrThrowError(tenantId, expenseId);
 
-     // 1. Validate payment account existance on the storage.
+     // - Validate payment account existance on the storage.
      const paymentAccount = await this.getPaymentAccountOrThrowError(
       tenantId,
       expenseDTO.paymentAccountId,
     );
-    // 2. Validate expense accounts exist on the storage.
+    // - Validate expense accounts exist on the storage.
     const expensesAccounts = await this.getExpensesAccountsOrThrowError(
       tenantId,
       this.mapExpensesAccountsIdsFromDTO(expenseDTO),
     );
-    // 3. Validate payment account type.
+    // - Validate payment account type.
     await this.validatePaymentAccountType(tenantId, paymentAccount);
 
-    // 4. Validate expenses accounts type.
+    // - Validate expenses accounts type.
     await this.validateExpensesAccountsType(tenantId, expensesAccounts);
 
-    // 5. Validate the given expense categories not equal zero.
+    // - Validate the given expense categories not equal zero.
     this.validateCategoriesNotEqualZero(expenseDTO);
 
-    // 6. Update the expense on the storage.
+    // - Update the expense on the storage.
     const expenseObj = this.expenseDTOToModel(expenseDTO);
     const expenseModel = await expenseRepository.update(expenseId, expenseObj, null);
 
-    // 7. In case expense published, write journal entries.
-    if (expenseObj.published) {
-      await this.writeJournalEntries(tenantId, expenseModel, true, authorizedUser);
-    }
     this.logger.info('[expense] the expense updated on the storage successfully.', { tenantId, expenseDTO });
     return expenseModel;
   }
@@ -364,12 +344,11 @@ export default class ExpensesService implements IExpensesService {
     // 6. Save the expense to the storage.
     const expenseObj = this.expenseDTOToModel(expenseDTO, authorizedUser);
     const expenseModel = await expenseRepository.create(expenseObj);
-    
-    // 7. In case expense published, write journal entries.
-    if (expenseObj.published) {
-      await this.writeJournalEntries(tenantId, expenseModel, false, authorizedUser);    
-    }
+
     this.logger.info('[expense] the expense stored to the storage successfully.', { tenantId, expenseDTO });
+
+    // Triggers `onExpenseCreated` event.
+    this.eventDispatcher.dispatch(events.expenses.onCreated, { tenantId, expenseId: expenseModel.id });
 
     return expenseModel;
   }
@@ -394,6 +373,9 @@ export default class ExpensesService implements IExpensesService {
     await expenseRepository.publish(expenseId);
 
     this.logger.info('[expense] the expense published successfully.', { tenantId, expenseId });
+
+    // Triggers `onExpensePublished` event.
+    this.eventDispatcher.dispatch(events.expenses.onPublished, { tenantId, expenseId });
   }
 
   /**
@@ -409,10 +391,10 @@ export default class ExpensesService implements IExpensesService {
     this.logger.info('[expense] trying to delete the expense.', { tenantId, expenseId });
     await expenseRepository.delete(expenseId);
 
-    if (expense.published) {
-      await this.revertJournalEntries(tenantId, expenseId);
-    }
     this.logger.info('[expense] the expense deleted successfully.', { tenantId, expenseId });
+
+    // Triggers `onExpenseDeleted` event.
+    this.eventDispatcher.dispatch(events.expenses.onDeleted, { tenantId, expenseId });
   }
 
   /**
@@ -427,9 +409,11 @@ export default class ExpensesService implements IExpensesService {
 
     this.logger.info('[expense] trying to delete the given expenses.', { tenantId, expensesIds });
     await expenseRepository.bulkDelete(expensesIds);
-    await this.revertJournalEntries(tenantId, expensesIds);
 
     this.logger.info('[expense] the given expenses deleted successfully.', { tenantId, expensesIds });
+
+    // Triggers `onExpenseBulkDeleted` event.
+    this.eventDispatcher.dispatch(events.expenses.onBulkDeleted, { tenantId, expensesIds });
   }
 
   /**
@@ -443,9 +427,12 @@ export default class ExpensesService implements IExpensesService {
     const { expenseRepository } = this.tenancy.repositories(tenantId);
 
     this.logger.info('[expense] trying to publish the given expenses.', { tenantId, expensesIds });
-    await expenseRepository.publishBulk(expensesIds);
+    await expenseRepository.bulkPublish(expensesIds);
 
     this.logger.info('[expense] the given expenses ids published successfully.', { tenantId, expensesIds });
+
+    // Triggers `onExpenseBulkDeleted` event.
+    this.eventDispatcher.dispatch(events.expenses.onBulkPublished, { tenantId, expensesIds });
   }
 
   /**
@@ -454,17 +441,43 @@ export default class ExpensesService implements IExpensesService {
    * @param  {IExpensesFilter} expensesFilter 
    * @return {IExpense[]}
    */
-  public async getExpensesList(tenantId: number, expensesFilter: IExpensesFilter) {
+  public async getExpensesList(
+    tenantId: number,
+    expensesFilter: IExpensesFilter
+  ): Promise<{ expenses: IExpense[], pagination: IPaginationMeta, filterMeta: IFilterMeta }> {
     const { Expense } = this.tenancy.models(tenantId);
     const dynamicFilter = await this.dynamicListService.dynamicList(tenantId, Expense, expensesFilter);
 
     this.logger.info('[expense] trying to get expenses datatable list.', { tenantId, expensesFilter });
-    const expenses = await Expense.query().onBuild((builder) => {
+    const { results, pagination } = await Expense.query().onBuild((builder) => {
       builder.withGraphFetched('paymentAccount');
-      builder.withGraphFetched('user');
-
       dynamicFilter.buildQuery()(builder);
-    });
-    return expenses;
+    }).pagination(expensesFilter.page - 1, expensesFilter.pageSize);
+
+    return {
+      expenses: results,
+      pagination, filterMeta:
+      dynamicFilter.getResponseMeta(),
+    };
+  }
+
+  /**
+   * Retrieve expense details.
+   * @param {number} tenantId 
+   * @param {number} expenseId 
+   * @return {Promise<IExpense>}
+   */
+  public async getExpense(tenantId: number, expenseId: number): Promise<IExpense> {
+    const { Expense } = this.tenancy.models(tenantId);
+
+    const expense = await Expense.query().findById(expenseId)
+      .withGraphFetched('paymentAccount')
+      .withGraphFetched('media')
+      .withGraphFetched('categories');
+
+    if (!expense) {
+      throw new ServiceError(ERRORS.EXPENSE_NOT_FOUND);
+    }
+    return expense;
   }
 }

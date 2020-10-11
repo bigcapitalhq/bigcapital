@@ -1,6 +1,7 @@
 import { Model } from 'objection';
 import TenantModel from 'models/TenantModel';
 import { viewRolesBuilder } from 'lib/ViewRolesBuilder';
+import Media from './Media';
 
 export default class Expense extends TenantModel {
   /**
@@ -22,6 +23,11 @@ export default class Expense extends TenantModel {
    */
   get timestamps() {
     return ['createdAt', 'updatedAt'];
+  }
+
+
+  static get media () {
+    return true;
   }
 
   /**
@@ -55,14 +61,9 @@ export default class Expense extends TenantModel {
           query.where('payment_account_id', accountId);
         }
       },
-
       viewRolesBuilder(query, conditionals, expression) {
         viewRolesBuilder(conditionals, expression)(query);
       },
-
-      orderBy(query) {
-        
-      }
     };
   }
 
@@ -72,7 +73,7 @@ export default class Expense extends TenantModel {
   static get relationMappings() {
     const Account = require('models/Account');
     const ExpenseCategory = require('models/ExpenseCategory');
-    const SystemUser = require('system/models/SystemUser');
+    const Media = require('models/Media');
 
     return {
       paymentAccount: {
@@ -91,14 +92,59 @@ export default class Expense extends TenantModel {
           to: 'expense_transaction_categories.expenseId',
         },
       },
-      user: {
-        relation: Model.BelongsToOneRelation,
-        modelClass: SystemUser.default,
+      media: {
+        relation: Model.ManyToManyRelation,
+        modelClass: Media.default,
         join: {
-          from: 'expenses_transactions.userId',
-          to: 'users.id',
+          from: 'expenses_transactions.id',
+          through: {
+            from: 'media_links.model_id',
+            to: 'media_links.media_id',
+          },
+          to: 'media.id',
+        },
+        filter(query) {
+          query.where('model_name', 'Expense');
         }
-      }
+      },
+    };
+  }
+
+  /**
+   * Model defined fields.
+   */
+  static get fields() {
+    return {
+      payment_date: {
+        column: 'payment_date',
+      },
+      payment_account: {
+        column: 'payment_account_id',
+        relation: 'accounts.id',
+      },
+      amount: {
+        column: 'total_amount',
+      },
+      currency_code: {
+        column: 'currency_code',
+      },
+      reference_no: {
+        column: 'reference_no'
+      },
+      description: {
+        column: 'description',
+      },
+      published: {
+        column: 'published',
+      },
+      user: {
+        column: 'user_id',
+        relation: 'users.id',
+        relationColumn: 'users.id',
+      },
+      created_at: {
+        column: 'created_at',
+      },
     };
   }
 }

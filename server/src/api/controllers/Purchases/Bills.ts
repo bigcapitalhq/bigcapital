@@ -3,7 +3,6 @@ import { check, param, query, matchedData } from 'express-validator';
 import { Service, Inject } from 'typedi';
 import { difference } from 'lodash';
 import { BillOTD } from 'interfaces';
-import validateMiddleware from 'api/middleware/validateMiddleware';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
 import BillsService from 'services/Purchases/Bills';
 import BaseController from 'api/controllers/BaseController';
@@ -30,7 +29,7 @@ export default class BillsController extends BaseController {
     router.post(
       '/',
       [...this.billValidationSchema],
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.validateVendorExistance.bind(this)),
       asyncMiddleware(this.validateItemsIds.bind(this)),
       asyncMiddleware(this.validateBillNumberExists.bind(this)),
@@ -40,7 +39,7 @@ export default class BillsController extends BaseController {
     router.post(
       '/:id',
       [...this.billValidationSchema, ...this.specificBillValidationSchema],
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.validateBillExistance.bind(this)),
       asyncMiddleware(this.validateVendorExistance.bind(this)),
       asyncMiddleware(this.validateItemsIds.bind(this)),
@@ -51,20 +50,20 @@ export default class BillsController extends BaseController {
     router.get(
       '/:id',
       [...this.specificBillValidationSchema],
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.validateBillExistance.bind(this)),
       asyncMiddleware(this.getBill.bind(this))
     );
     router.get(
       '/',
       [...this.billsListingValidationSchema],
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.listingBills.bind(this))
     );
     router.delete(
       '/:id',
       [...this.specificBillValidationSchema],
-      validateMiddleware,
+      this.validationResult,
       asyncMiddleware(this.validateBillExistance.bind(this)),
       asyncMiddleware(this.deleteBill.bind(this))
     );

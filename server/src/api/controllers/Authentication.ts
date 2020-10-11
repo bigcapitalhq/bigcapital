@@ -2,10 +2,9 @@ import { Request, Response, Router } from 'express';
 import { check, ValidationChain } from 'express-validator';
 import { Service, Inject } from 'typedi';
 import BaseController from 'api/controllers/BaseController';
-import validateMiddleware from 'api/middleware/validateMiddleware';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
 import AuthenticationService from 'services/Authentication';
-import { IUserOTD, ISystemUser, IRegisterOTD } from 'interfaces';
+import { ILoginDTO, ISystemUser, IRegisterOTD } from 'interfaces';
 import { ServiceError, ServiceErrors } from "exceptions";
 
 @Service()
@@ -61,7 +60,6 @@ export default class AuthenticationController extends BaseController{
    */
   get registerSchema(): ValidationChain[] {
     return [
-      check('organization_name').exists().trim().escape(),
       check('first_name').exists().trim().escape(),
       check('last_name').exists().trim().escape(),
       check('email').exists().isEmail().trim().escape(),
@@ -102,7 +100,7 @@ export default class AuthenticationController extends BaseController{
    * @param {Response} res 
    */
   async login(req: Request, res: Response, next: Function): Response {
-    const userDTO: IUserOTD = this.matchedBodyData(req);
+    const userDTO: ILoginDTO = this.matchedBodyData(req);
 
     try {
       const { token, user, tenant } = await this.authService.signIn(
