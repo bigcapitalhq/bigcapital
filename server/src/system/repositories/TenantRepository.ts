@@ -77,9 +77,7 @@ export default class TenantRepository extends SystemRepository {
    * @param {number} tenantId - Tenant id.
    */
   getByIdWithSubscriptions(tenantId: number) {
-    return this.cache.get(`tenant.id.${tenantId}.subscriptions`, () => {
-      return Tenant.query().findById(tenantId)
-        .withGraphFetched('subscriptions.plan');
-    });
+    return Tenant.query().findById(tenantId)
+      .withGraphFetched('subscriptions.plan');
   }
 }

@@ -5,19 +5,15 @@ import { compose } from 'utils';
 import withAuthentication from 'containers/Authentication/withAuthentication';
 import withOrganizationByOrgId from 'containers/Organization/withOrganizationByOrgId';
 
-function EnsureOrganizationIsReady({
-  // #ownProps
+function EnsureOrganizationIsNotReady({
   children,
-  redirectTo = '/setup',
 
   // #withOrganizationByOrgId
   organization,
 }) {
-  return (organization.is_ready) ? children : (
-    <Redirect
-      to={{ pathname: redirectTo }}
-    />
-  );
+  return (organization.is_ready) ? (
+    <Redirect to={{ pathname: '/' }} />
+  ) : children;
 }
 
 export default compose(
@@ -26,4 +22,4 @@ export default compose(
     organizationId: props.currentOrganizationId,
   })),
   withOrganizationByOrgId(),
-)(EnsureOrganizationIsReady);
+)(EnsureOrganizationIsNotReady);

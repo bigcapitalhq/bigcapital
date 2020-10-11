@@ -7,8 +7,10 @@ import withAuthenticationActions from 'containers/Authentication/withAuthenticat
 
 import { compose } from 'utils';
 
-
-function RegisterLeftSection({
+/**
+ * Wizard setup left section.
+ */
+function SetupLeftSection({
   requestLogout,
   isAuthorized
 }) {
@@ -19,7 +21,7 @@ function RegisterLeftSection({
   }, [requestLogout]);
 
   return (
-    <section className={'register-page__left-section'}>
+    <section className={'setup-page__left-section'}>
       <div className={'content'}>
         <div className={'content-logo'}>
           <Icon
@@ -37,7 +39,6 @@ function RegisterLeftSection({
         <p className={'content-text'}>
           <T id={'you_have_a_bigcapital_account'} />
         </p>
-
 
         <If condition={!!isAuthorized}>
           <div className={'content-org'}>
@@ -71,4 +72,4 @@ function RegisterLeftSection({
 export default compose(
   withAuthentication(({ isAuthorized }) => ({ isAuthorized })),
   withAuthenticationActions,
-)(RegisterLeftSection);
+)(SetupLeftSection);

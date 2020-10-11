@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { FormattedMessage as T } from 'react-intl';
 import { registerWizardSteps } from 'common/registerWizard'
 
-function RegisterWizardStep({
+function WizardSetupStep({
   label,
   isActive = false
 }) {
@@ -14,15 +14,15 @@ function RegisterWizardStep({
   );
 }
 
-function RegisterWizardSteps({
+function WizardSetupSteps({
   currentStep = 1,
 }) {
   return (
-    <div className={'register-wizard-steps'}>
-      <div className={'wizard-container'}>
-        <ul className={'wizard-wrapper'}>
+    <div className={'setup-page-steps-container'}>
+      <div className={'setup-page-steps'}>
+        <ul>
           {registerWizardSteps.map((step, index) => (
-            <RegisterWizardStep
+            <WizardSetupStep
               label={step.label}
               isActive={(index + 1) <= currentStep}
             />
@@ -33,4 +33,4 @@ function RegisterWizardSteps({
   );
 }
 
-export default RegisterWizardSteps;
+export default WizardSetupSteps;

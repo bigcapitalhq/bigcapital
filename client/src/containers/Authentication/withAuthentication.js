@@ -6,6 +6,7 @@ export default (mapState) => {
     const mapped = {
       isAuthorized: isAuthenticated(state),
       user: state.authentication.user,
+      currentOrganizationId: state.authentication?.tenant?.organization_id,
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };

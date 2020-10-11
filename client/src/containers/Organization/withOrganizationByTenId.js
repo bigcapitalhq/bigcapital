@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import {
   getOrganizationByTenantIdFactory,
-} from 'store/organizations/organizations.selector';
+} from 'store/organizations/organizations.selectors';
 
 export default (mapState) => {
   const getOrgByTenId = getOrganizationByTenantIdFactory();
