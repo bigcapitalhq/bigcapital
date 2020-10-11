@@ -22,7 +22,7 @@ function DashboardPrivatePages({
   );
 
   return (
-    <DashboardLoadingIndicator isLoading={fetchOrganizations.isLoading}>
+    <DashboardLoadingIndicator isLoading={fetchOrganizations.isFetching}>
       <Switch>
         <Route path={'/setup'}>
           <SetupWizardPage />
