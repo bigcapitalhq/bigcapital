@@ -145,32 +145,33 @@
     }
   }
 
-  // Register Form
-  .register-form {
-    width: 690px;
-    margin: 0px auto;
-    padding: 85px 50px;
+  // // Register Form
+  // .register-form {
+  //   // width: 690px;
+  //   // margin: 0px auto;
+  //   // padding: 85px 50px;
+ 
 
-    &__agreement-section {
-      margin-top: -10px;
+  //   &__agreement-section {
+  //     margin-top: -10px;
 
-      p {
-        font-size: 13px;
-        margin-top: -10px;
-        margin-bottom: 24px;
-        line-height: 1.65;
-      }
-    }
+  //     p {
+  //       font-size: 13px;
+  //       margin-top: -10px;
+  //       margin-bottom: 24px;
+  //       line-height: 1.65;
+  //     }
+  //   }
 
-    &__submit-button-wrap {
-      margin: 25px 0px 25px 0px;
+  //   &__submit-button-wrap {
+  //     margin: 25px 0px 25px 0px;
 
-      .bp3-button {
-        min-height: 45px;
-        background-color: #0052cc;
-      }
-    }
-  }
+  //     .bp3-button {
+  //       min-height: 45px;
+  //       background-color: #0052cc;
+  //     }
+  //   }
+  // }
 
   .send-reset-password {
     .form-group--crediential {

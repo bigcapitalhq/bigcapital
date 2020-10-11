@@ -24,7 +24,7 @@ function RegisterWizardSteps({
           {registerWizardSteps.map((step, index) => (
             <RegisterWizardStep
               label={step.label}
-              isActive={(index + 1) <= currentStep}
+              isActive={(index + 1) == currentStep}
             />
           ))}
         </ul>
