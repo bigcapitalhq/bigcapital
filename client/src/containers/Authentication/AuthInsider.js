@@ -8,12 +8,11 @@ export default function AuthInsider({
   children,
 }) {
   return (
-    <div class="authentication-insider">
-      <div className={'authentication-insider__logo-section'}>
-        <Icon icon="bigcapital" height={37} width={214} />
+    <div class="authentication-insider__content">
+      
+      <div class="authentication-insider__form">
+        { children }
       </div>
-
-      <div class="authentication-insider__content">{ children }</div>
 
       <div class="authentication-insider__footer">
         <AuthCopyright />
