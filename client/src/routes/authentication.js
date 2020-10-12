@@ -26,5 +26,11 @@ export default [
     component: LazyLoader({
       loader: () => import('containers/Authentication/InviteAccept'),
     }),
+  },
+  {
+    path: `${BASE_URL}/register`,
+    component: LazyLoader({
+      loader: () => import('containers/Authentication/Register'),
+    }),
   }
 ];

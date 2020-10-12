@@ -2,12 +2,13 @@ import React from 'react';
 import classNames from 'classnames';
 import { Choose, Icon } from 'components';
 
-export default function Dashboard({
+export default function DashboardLoadingIndicator({
   isLoading = false,
+  className,
   children,
 }) {
   return (
-    <div className={classNames('dashboard')}>
+    <div className={classNames(className)}>
       <Choose>
         <Choose.When condition={isLoading}>
           <div class="center">

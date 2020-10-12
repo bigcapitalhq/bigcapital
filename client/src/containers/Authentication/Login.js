@@ -19,10 +19,8 @@ import Icon from 'components/Icon';
 import { If } from 'components';
 
 import withAuthenticationActions from './withAuthenticationActions';
-import withOrganizationsActions from 'containers/Organization/withOrganizationActions';
 
 import { compose } from 'utils';
-
 
 const ERRORS_TYPES = {
   INVALID_DETAILS: 'INVALID_DETAILS',
@@ -30,7 +28,6 @@ const ERRORS_TYPES = {
 };
 function Login({
   requestLogin,
-  requestOrganizationsList,
 }) {
   const { formatMessage } = useIntl();
   const history = useHistory();
@@ -105,7 +102,7 @@ function Login({
         <div className={'authentication-page__label-section'}>
           <h3><T id={'log_in'} /></h3>
           <T id={'need_bigcapital_account'} />
-          <Link to='/register'> <T id={'create_an_account'} /></Link>
+          <Link to='/auth/register'> <T id={'create_an_account'} /></Link>
         </div>
 
         <form onSubmit={handleSubmit} className={'authentication-page__form'}>
@@ -170,5 +167,4 @@ function Login({
 
 export default compose(
   withAuthenticationActions,
-  withOrganizationsActions,
 )(Login);

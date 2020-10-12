@@ -14,7 +14,6 @@ import DashboardSplitPane from 'components/Dashboard/DashboardSplitePane';
 import EnsureOrganizationIsReady from './EnsureOrganizationIsReady';
 
 import withSettingsActions from 'containers/Settings/withSettingsActions';
-import withOrganizationsActions from 'containers/Organization/withOrganizationActions';
 
 import { compose } from 'utils';
 
@@ -22,20 +21,14 @@ import { compose } from 'utils';
 function Dashboard({
   // #withSettings
   requestFetchOptions,
-
-  // #withOrganizations
-  requestOrganizationsList,
 }) {
-  const fetchOrganizations = useQuery(
-    ['organizations'],
-    (key) => requestOrganizationsList(),
-  );
+  // const fetchOptions = useQuery(
+  //   ['options'], () => requestFetchOptions(),
+  // );
+
   return (
     <EnsureOrganizationIsReady>
-      <DashboardLoadingIndicator
-        isLoading={
-          fetchOrganizations.isLoading
-        }>
+      <DashboardLoadingIndicator isLoading={false}>
         <Switch>
           <Route path="/preferences">
             <DashboardSplitPane>
@@ -62,5 +55,4 @@ function Dashboard({
 
 export default compose(
   withSettingsActions,
-  withOrganizationsActions,
 )(Dashboard);

@@ -20,11 +20,16 @@ import { momentFormatter, tansformDateValue } from 'utils';
 import AppToaster from 'components/AppToaster';
 import { ListSelect, ErrorMessage, FieldRequiredHint } from 'components';
 import { useHistory } from 'react-router-dom';
+
 import withSettingsActions from 'containers/Settings/withSettingsActions';
-import withRegisterOrganizationActions from 'containers/Authentication/withRegisterOrganizationActions';
+import withOrganizationActions from 'containers/Organization/withOrganizationActions';
+
 import { compose, optionsMapToArray } from 'utils';
 
-function RegisterOrganizationForm({ requestSubmitOptions, requestSeedTenant }) {
+function SetupOrganizationForm({
+  requestSubmitOptions,
+  requestSeedTenant
+}) {
   const { formatMessage } = useIntl();
   const [selected, setSelected] = useState();
   const history = useHistory();
@@ -414,5 +419,5 @@ function RegisterOrganizationForm({ requestSubmitOptions, requestSeedTenant }) {
 
 export default compose(
   withSettingsActions,
-  withRegisterOrganizationActions,
-)(RegisterOrganizationForm);
+  withOrganizationActions,
+)(SetupOrganizationForm);

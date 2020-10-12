@@ -7,9 +7,8 @@ import { ReactQueryDevtools } from 'react-query-devtools';
 
 import PrivateRoute from 'components/PrivateRoute';
 import Authentication from 'components/Authentication';
-import Dashboard from 'components/Dashboard/Dashboard';
+import DashboardPrivatePages from 'components/Dashboard/PrivatePages';
 import GlobalErrors from 'containers/GlobalErrors/GlobalErrors';
-import RegisterWizardPage from 'containers/Authentication/Register/RegisterPage';
 
 import messages from 'lang/en';
 import 'style/App.scss';
@@ -32,12 +31,8 @@ function App({ locale }) {
                 <Authentication />
               </Route>
 
-              <Route path={'/register'}>
-                <RegisterWizardPage />
-              </Route>
-
               <Route path={'/'}>
-                <PrivateRoute component={Dashboard} />
+                <PrivateRoute component={DashboardPrivatePages} />
               </Route>
             </Switch>
           </Router>

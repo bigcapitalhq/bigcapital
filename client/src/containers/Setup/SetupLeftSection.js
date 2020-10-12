@@ -1,16 +1,17 @@
 import React, { useState, useCallback } from 'react';
-import { Icon, If } from 'components';
+import { Icon } from 'components';
 import { FormattedMessage as T } from 'react-intl';
 
-import withAuthentication from 'containers/Authentication/withAuthentication';
 import withAuthenticationActions from 'containers/Authentication/withAuthenticationActions';
 
 import { compose } from 'utils';
 
-
-function RegisterLeftSection({
+/**
+ * Wizard setup left section.
+ */
+function SetupLeftSection({
+  // #withAuthenticationActions
   requestLogout,
-  isAuthorized
 }) {
   const [org] = useState('LibyanSpider');
 
@@ -19,7 +20,7 @@ function RegisterLeftSection({
   }, [requestLogout]);
 
   return (
-    <section className={'register-page__left-section'}>
+    <section className={'setup-page__left-section'}>
       <div className={'content'}>
         <div className={'content-logo'}>
           <Icon
@@ -38,18 +39,15 @@ function RegisterLeftSection({
           <T id={'you_have_a_bigcapital_account'} />
         </p>
 
-
-        <If condition={!!isAuthorized}>
-          <div className={'content-org'}>
-            <span>
-              <T id={'welcome'} />
-              {org},
-            </span>
-            <span>
-              <a onClick={onClickLogout} href="#"><T id={'sign_out'} /></a>
-            </span>
-          </div>
-        </If>
+        <div className={'content-org'}>
+          <span>
+            <T id={'welcome'} />
+            {org},
+          </span>
+          <span>
+            <a onClick={onClickLogout} href="#"><T id={'sign_out'} /></a>
+          </span>
+        </div>
 
         <div className={'content-contact'}>
           <a href={'#!'}>
@@ -69,6 +67,5 @@ function RegisterLeftSection({
 }
 
 export default compose(
-  withAuthentication(({ isAuthorized }) => ({ isAuthorized })),
   withAuthenticationActions,
-)(RegisterLeftSection);
+)(SetupLeftSection);

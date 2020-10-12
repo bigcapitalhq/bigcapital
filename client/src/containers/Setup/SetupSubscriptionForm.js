@@ -1,11 +1,16 @@
 import React, { useMemo } from 'react';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'react-intl';
 import { Button, Intent } from '@blueprintjs/core';
 import BillingTab from 'containers/Subscriptions/BillingTab';
 
-function RegisterSubscriptionForm({}) {
+/**
+ * Subscription step of wizard setup.
+ */
+export default function SetupSubscriptionForm({
+
+}) {
   const ValidationSchema = Yup.object().shape({});
 
   const initialValues = useMemo(() => ({}), []);
@@ -36,5 +41,3 @@ function RegisterSubscriptionForm({}) {
     </div>
   );
 }
-
-export default RegisterSubscriptionForm;
