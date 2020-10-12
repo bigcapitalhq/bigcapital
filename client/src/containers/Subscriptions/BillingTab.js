@@ -4,7 +4,6 @@ import BillingPeriods from 'containers/Subscriptions/billingPeriods';
 import { BillingPaymentmethod } from 'containers/Subscriptions/billingPaymentmethod';
 
 function BillingTab({ formik }) {
-  console.log(formik.values, 'val');
   return (
     <div>
       <BillingPlans title={'a_select_a_plan'} formik={formik} />

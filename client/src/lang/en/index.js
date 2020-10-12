@@ -398,7 +398,7 @@ export default {
   cost_account_: 'Cost account',
   inventory_account_: 'Inventory account',
   view_name_: 'View name',
-  time_zone: 'Time zone',
+  time_zone_: 'Time zone',
   location: 'Location',
   the_items_has_been_successfully_deleted:
     'The items have been successfully deleted.',

@@ -76,7 +76,7 @@ function BillingPlans({ formik, title, selected = 1 }) {
             slug={plan.slug}
             price={plan.price}
             currency={plan.currency}
-            onSelected={() => formik.setFieldValue('plan_slug', plan.name)}
+            onSelected={() => formik.setFieldValue('plan_slug', plan.slug)}
             selected={selected == index + 1}
           />
         ))}

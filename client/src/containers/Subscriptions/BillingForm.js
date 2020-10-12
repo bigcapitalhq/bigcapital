@@ -3,16 +3,9 @@ import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { Button, Intent } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
-import { useHistory } from 'react-router-dom';
-import { pick } from 'lodash';
-
-import AppToaster from 'components/AppToaster';
-import ErrorMessage from 'components/ErrorMessage';
-
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import { MeteredBillingTabs, PaymentMethodTabs } from './SubscriptionTabs';
 import withBillingActions from './withBillingActions';
-import withRegisterOrganizationActions from 'containers/Authentication/withRegisterOrganizationActions';
 import { compose } from 'utils';
 
 function BillingForm({
@@ -21,17 +14,7 @@ function BillingForm({
 
   //#withBillingActions
   requestSubmitBilling,
-
-  //#withRegisterOrganizationActions
-  requestBuildTenant,
 }) {
-  // const defaultPlan = useMemo(() => ({
-  //   plan_slug: [
-  //     {  name: 'Basic', value: 'basic'   },
-  //     {  name: 'Pro', value: 'pro' },
-  //   ],
-  // }));
-
   const { formatMessage } = useIntl();
 
   useEffect(() => {
@@ -43,14 +26,12 @@ function BillingForm({
       .required()
       .label(formatMessage({ id: 'plan_slug' })),
     license_code: Yup.string().trim(),
-    period: Yup.string(),
   });
 
   const initialValues = useMemo(
     () => ({
-      plan_slug: 'basic',
+      plan_slug: 'free',
       license_code: '',
-      period: '',
     }),
     [],
   );
@@ -64,15 +45,7 @@ function BillingForm({
     onSubmit: (values, { setSubmitting, resetForm, setErrors }) => {
       requestSubmitBilling(values)
         .then((response) => {
-          requestBuildTenant().then(() => {
-            setSubmitting(false);
-          });
-          // AppToaster.show({
-          //   message: formatMessage({
-          //     id: 'the_biling_has_been_successfully_created',
-          //   }),
-          //   intent: Intent.SUCCESS,
-          // });
+          setSubmitting(false);
         })
         .catch((errors) => {
           setSubmitting(false);
@@ -98,8 +71,4 @@ function BillingForm({
   );
 }
 
-export default compose(
-  withDashboardActions,
-  withRegisterOrganizationActions,
-  withBillingActions,
-)(BillingForm);
+export default compose(withDashboardActions, withBillingActions)(BillingForm);

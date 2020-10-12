@@ -26,10 +26,7 @@ import withOrganizationActions from 'containers/Organization/withOrganizationAct
 
 import { compose, optionsMapToArray } from 'utils';
 
-function SetupOrganizationForm({
-  requestSubmitOptions,
-  requestSeedTenant
-}) {
+function SetupOrganizationForm({ requestSubmitOptions, requestSeedTenant }) {
   const { formatMessage } = useIntl();
   const [selected, setSelected] = useState();
   const history = useHistory();
@@ -180,11 +177,10 @@ function SetupOrganizationForm({
       const options = optionsMapToArray(values).map((option) => {
         return { key: option.key, ...option, group: 'organization' };
       });
+      console.log(options, 'Op');
       requestSubmitOptions({ options })
         .then((response) => {
-          requestSeedTenant().then(() => {
-            setSubmitting(false);
-          });
+          setSubmitting(false);
         })
         .catch((erros) => {
           setSubmitting(false);
@@ -306,8 +302,7 @@ function SetupOrganizationForm({
                 itemPredicate={filterItems}
                 selectedItem={values.base_currency}
                 selectedItemProp={'value'}
-                // defaultText={<T id={'select_base_currency'} />}
-                defaultText={'LYD - Libyan Dinar'}
+                defaultText={<T id={'select_base_currency'} />}
                 labelProp={'name'}
               />
             </FormGroup>
@@ -337,8 +332,7 @@ function SetupOrganizationForm({
                 itemPredicate={filterItems}
                 selectedItem={values.language}
                 selectedItemProp={'value'}
-                defaultText={'English'}
-                // defaultText={<T id={'select_language'} />}
+                defaultText={<T id={'select_language'} />}
                 labelProp={'name'}
               />
             </FormGroup>
@@ -367,8 +361,7 @@ function SetupOrganizationForm({
             itemPredicate={filterItems}
             selectedItem={values.fiscal_year}
             selectedItemProp={'value'}
-            defaultText={'January - December'}
-            // defaultText={<T id={'select_fiscal_year'} />}
+            defaultText={<T id={'select_fiscal_year'} />}
             labelProp={'name'}
           />
         </FormGroup>
@@ -407,7 +400,7 @@ function SetupOrganizationForm({
             intent={Intent.PRIMARY}
             loading={isSubmitting}
             type="submit"
-            //  loading={isSubmitting}
+            loading={isSubmitting}
           >
             <T id={'save_continue'} />
           </Button>
