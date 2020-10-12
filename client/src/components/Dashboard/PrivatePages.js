@@ -14,11 +14,12 @@ import { compose } from 'utils';
  * Dashboard inner private pages.
  */
 function DashboardPrivatePages({
-  requestOrganizationsList,
+
+  // #withOrganizationActions
+  requestAllOrganizations,
 }) {
   const fetchOrganizations = useQuery(
-    ['organizations'],
-    () => requestOrganizationsList(),
+    ['organizations'], () => requestAllOrganizations(),
   );
 
   return (

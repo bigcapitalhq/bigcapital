@@ -5,6 +5,9 @@ import { FormattedMessage as T } from 'react-intl';
 import { Button, Intent } from '@blueprintjs/core';
 import BillingTab from 'containers/Subscriptions/BillingTab';
 
+/**
+ * Subscription step of wizard setup.
+ */
 export default function SetupSubscriptionForm({
 
 }) {

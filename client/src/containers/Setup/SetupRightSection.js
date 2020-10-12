@@ -2,33 +2,48 @@ import React, { useCallback } from 'react';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { Wizard, Steps, Step } from 'react-albus';
 import { useHistory } from "react-router-dom";
+import { connect } from 'react-redux';
+
 import WizardSetupSteps from './WizardSetupSteps';
 
 import SetupSubscriptionForm from './SetupSubscriptionForm';
 import SetupOrganizationForm from './SetupOrganizationForm';
+import SetupInitializingForm from './SetupInitializingForm';
 
 import withAuthentication from 'containers/Authentication/withAuthentication';
-
+import withOrganization from 'containers/Organization/withOrganization'
 import { compose } from 'utils';
 
 /**
  * Wizard setup right section.
  */
 function SetupRightSection ({
-  isTenantHasSubscriptions: hasSubscriptions = false,
+  // #withAuthentication
+  currentOrganizationId,
+
+  // #withOrganization
+  isOrganizationInitialized,
+  isOrganizationSubscribed: hasSubscriptions,
+  isOrganizationSeeded
 }) {
   const history = useHistory();
+
   const handleSkip = useCallback(({ step, push }) => {
     const scenarios = [
-      { condition: hasSubscriptions, redirectTo: 'organization' },
       { condition: !hasSubscriptions, redirectTo: 'subscription' },
+      // { condition: , redirectTo: 'initializing' }
+      { condition: !hasSubscriptions, redirectTo: 'organization' },
     ];
     const scenario = scenarios.find((scenario) => scenario.condition);
 
     if (scenario) {
       push(scenario.redirectTo);
     }
-  }, [hasSubscriptions]);
+  }, [
+    hasSubscriptions,
+    isOrganizationInitialized,
+    isOrganizationSeeded,
+  ]);
 
   return (
     <section className={'setup-page__right-section'}>
@@ -46,6 +61,10 @@ function SetupRightSection ({
                   <Steps key={step.id} step={step}>
                     <Step id="subscription">
                       <SetupSubscriptionForm />
+                    </Step>
+
+                    <Step id={'initializing'}>
+                      <SetupInitializingForm />
                     </Step>
 
                     <Step id="organization">
@@ -66,5 +85,19 @@ function SetupRightSection ({
 }
 
 export default compose(
-  withAuthentication(({ isAuthorized }) => ({ isAuthorized })),
+  withAuthentication(({ currentOrganizationId }) => ({ currentOrganizationId })),
+  connect((state, props) => ({
+    organizationId: props.currentOrganizationId,
+  })),
+  withOrganization(({
+    organization,
+    isOrganizationInitialized,
+    isOrganizationSubscribed,
+    isOrganizationSeeded,
+  }) => ({
+    organization,
+    isOrganizationInitialized,
+    isOrganizationSubscribed,
+    isOrganizationSeeded,
+  })),
 )(SetupRightSection);

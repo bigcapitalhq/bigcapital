@@ -1,18 +1,50 @@
 import { createSelector } from '@reduxjs/toolkit';
 
-const oragnizationByTenantIdSelector = (state, props) => state.organizations[props.tenantId];
-const organizationByIdSelector = (state, props) => state.organizations.byOrganizationId[props.organizationId];
-const organizationsDataSelector = (state, props) => state.organizations.data;
+const organizationSelector = (state, props) => state.organizations.data[props.organizationId];
 
-export const getOrganizationByOrgIdFactory = () => createSelector(
-  organizationByIdSelector,
-  organizationsDataSelector,
-  (organizationId, organizationsData) => {
-    return organizationsData[organizationId];
+export const getOrganizationByIdFactory = () => createSelector(
+  organizationSelector,
+  (organization) => organization
+);
+
+export const isOrganizationSeededFactory = () => createSelector(
+  organizationSelector,
+  (organization) => {
+    return !!organization?.seeded_at;
+  },
+);
+
+export const isOrganizationBuiltFactory = () => createSelector(
+  organizationSelector,
+  (organization) => {
+    return !!organization?.initialized_at;
+  },
+);
+
+export const isOrganizationInitializingFactory = () => createSelector(
+  organizationSelector,
+  (organization) => {
+    return organization?.is_initializing;
+  },
+);
+
+export const isOrganizationSeedingFactory = () => createSelector(
+  organizationSelector,
+  (organization) => {
+    return organization?.is_seeding;
+  },
+);
+
+export const isOrganizationReadyFactory = () => createSelector(
+  organizationSelector,
+  (organization) => {
+    return organization?.is_ready;
+  },
+);
+
+export const isOrganizationSubscribedFactory = () => createSelector(
+  organizationSelector,
+  (organization) => {
+    return organization?.subscriptions?.length > 0;
   }
-);
-
-export const getOrganizationByTenantIdFactory = () => createSelector(
-  oragnizationByTenantIdSelector,
-  (organization) => organization,
-);
+)

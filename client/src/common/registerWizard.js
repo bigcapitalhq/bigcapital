@@ -2,15 +2,15 @@
 
 export const registerWizardSteps = [
   {
-    label: 'organization_register',
+    label: 'payment_or_trial',
   },
   {
-    label: 'payment_or_trial',
+    label: 'initializing',
   },
   {
     label: 'getting_started',
   },
   {
-    label: 'initializing',
+    label: 'Congratulations',
   },
 ];

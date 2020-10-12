@@ -5,9 +5,7 @@ import SetupRightSection from './SetupRightSection';
 import SetupLeftSection from './SetupLeftSection';
 
 
-export default function WizardSetupPage({
-  organizationId,
-}) {
+export default function WizardSetupPage() {
   return (
     <EnsureOrganizationIsNotReady>
       <div class="setup-page">

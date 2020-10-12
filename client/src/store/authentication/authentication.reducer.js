@@ -4,6 +4,7 @@ import t from 'store/types';
 const initialState = {
   token: '',
   organization: '',
+  organizationId: null,
   user: '',
   tenant: {},
   locale: '',
@@ -16,6 +17,7 @@ export default createReducer(initialState, {
     state.token = token;
     state.user = user;
     state.organization = tenant.organization_id;
+    state.organizationId = tenant.id;
     state.tenant = tenant;
   },
 

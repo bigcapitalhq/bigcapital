@@ -26,7 +26,10 @@ import withOrganizationActions from 'containers/Organization/withOrganizationAct
 
 import { compose, optionsMapToArray } from 'utils';
 
-function SetupOrganizationForm({ requestSubmitOptions, requestSeedTenant }) {
+function SetupOrganizationForm({
+  requestSubmitOptions,
+  requestSeedTenant
+}) {
   const { formatMessage } = useIntl();
   const [selected, setSelected] = useState();
   const history = useHistory();

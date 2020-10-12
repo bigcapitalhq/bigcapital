@@ -3,23 +3,25 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { compose } from 'utils';
 import withAuthentication from 'containers/Authentication/withAuthentication';
-import withOrganizationByOrgId from 'containers/Organization/withOrganizationByOrgId';
+import withOrganization from 'containers/Organization/withOrganization';
 
 function EnsureOrganizationIsNotReady({
   children,
 
-  // #withOrganizationByOrgId
-  organization,
+  // #withOrganization
+  isOrganizationReady,
 }) {
-  return (organization.is_ready) ? (
+  return (isOrganizationReady) ? (
     <Redirect to={{ pathname: '/' }} />
   ) : children;
 }
 
 export default compose(
-  withAuthentication(),
+  withAuthentication(({ currentOrganizationId }) => ({
+    currentOrganizationId,
+  })),
   connect((state, props) => ({
     organizationId: props.currentOrganizationId,
   })),
-  withOrganizationByOrgId(),
+  withOrganization(({ isOrganizationReady }) => ({ isOrganizationReady })),
 )(EnsureOrganizationIsNotReady);

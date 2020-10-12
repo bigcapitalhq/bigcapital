@@ -5,10 +5,10 @@ import {
   seedTenant,
 } from 'store/organizations/organizations.actions';
 
-export const mapDispatchToProps = (dispatch) => ({
-  requestOrganizationsList: () => dispatch(fetchOrganizations()),
-  requestBuildTenant: () => dispatch(buildTenant()),
-  requestSeedTenant: () => dispatch(seedTenant()),
+const mapDispatchToProps = (dispatch) => ({
+  requestOrganizationBuild: () => dispatch(buildTenant()),
+  requestOrganizationSeed: () => dispatch(seedTenant()),
+  requestAllOrganizations: () => dispatch(fetchOrganizations()),
 });
 
 export default connect(null, mapDispatchToProps);
