@@ -12,6 +12,7 @@ import ErrorMessage from 'components/ErrorMessage';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import { MeteredBillingTabs, PaymentMethodTabs } from './SubscriptionTabs';
 import withBillingActions from './withBillingActions';
+import withRegisterOrganizationActions from 'containers/Authentication/withRegisterOrganizationActions';
 import { compose } from 'utils';
 
 function BillingForm({
@@ -20,11 +21,14 @@ function BillingForm({
 
   //#withBillingActions
   requestSubmitBilling,
+
+  //#withRegisterOrganizationActions
+  requestBuildTenant,
 }) {
   // const defaultPlan = useMemo(() => ({
   //   plan_slug: [
-  //     { id: 0, name: 'Basic', value: 'basic' },
-  //     { id: 0, name: 'Pro', value: 'pro' },
+  //     {  name: 'Basic', value: 'basic'   },
+  //     {  name: 'Pro', value: 'pro' },
   //   ],
   // }));
 
@@ -39,12 +43,14 @@ function BillingForm({
       .required()
       .label(formatMessage({ id: 'plan_slug' })),
     license_code: Yup.string().trim(),
+    period: Yup.string(),
   });
 
   const initialValues = useMemo(
     () => ({
       plan_slug: 'basic',
       license_code: '',
+      period: '',
     }),
     [],
   );
@@ -58,13 +64,15 @@ function BillingForm({
     onSubmit: (values, { setSubmitting, resetForm, setErrors }) => {
       requestSubmitBilling(values)
         .then((response) => {
-          AppToaster.show({
-            message: formatMessage({
-              id: 'the_biling_has_been_successfully_created',
-            }),
-            intent: Intent.SUCCESS,
+          requestBuildTenant().then(() => {
+            setSubmitting(false);
           });
-          setSubmitting(false);
+          // AppToaster.show({
+          //   message: formatMessage({
+          //     id: 'the_biling_has_been_successfully_created',
+          //   }),
+          //   intent: Intent.SUCCESS,
+          // });
         })
         .catch((errors) => {
           setSubmitting(false);
@@ -90,4 +98,8 @@ function BillingForm({
   );
 }
 
-export default compose(withDashboardActions, withBillingActions)(BillingForm);
+export default compose(
+  withDashboardActions,
+  withRegisterOrganizationActions,
+  withBillingActions,
+)(BillingForm);
