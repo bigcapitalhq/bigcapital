@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useQuery } from 'react-query';
+import { withWizard } from 'react-albus'
 
 import withOrganizationActions from 'containers/Organization/withOrganizationActions';
 import withOrganization from 'containers/Organization/withOrganization'
@@ -13,10 +14,18 @@ function SetupInitializingForm({
 
   // #withOrganizationActions
   requestOrganizationBuild,
+
+  wizard: { next },
 }) {
-  const requestBuildOrgnization = useQuery(
+  const { isSuccess } = useQuery(
     ['build-tenant'], () => requestOrganizationBuild(),
   );
+
+  useEffect(() => {
+    if (isSuccess) {
+      next();
+    }
+  }, [isSuccess, next]);
 
   return (
     <div class="setup-initializing-form">
@@ -26,5 +35,6 @@ function SetupInitializingForm({
 }
 
 export default compose(
-  withOrganizationActions
+  withOrganizationActions,
+  withWizard,
 )(SetupInitializingForm);

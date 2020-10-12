@@ -31,8 +31,8 @@ function SetupRightSection ({
   const handleSkip = useCallback(({ step, push }) => {
     const scenarios = [
       { condition: !hasSubscriptions, redirectTo: 'subscription' },
-      // { condition: , redirectTo: 'initializing' }
-      { condition: !hasSubscriptions, redirectTo: 'organization' },
+      { condition: hasSubscriptions && !isOrganizationInitialized, redirectTo: 'initializing' },
+      { condition: hasSubscriptions && !isOrganizationSeeded, redirectTo: 'organization' },
     ];
     const scenario = scenarios.find((scenario) => scenario.condition);
 

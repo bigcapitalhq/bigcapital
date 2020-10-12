@@ -1,12 +1,14 @@
+
+
 .authentication-insider {
   width: 384px;
   margin: 0 auto;
   margin-bottom: 40px;
-  margin-top: 40px;
+  padding-top: 80px;
 
   &__logo-section {
     text-align: center;
-    margin-bottom: 61px;
+    margin-bottom: 60px;
   }
 
   &__content {
@@ -32,11 +34,43 @@
   }
 }
 
+
+.authTransition{
+
+  &-enter {
+    opacity: 0;
+  }
+  
+  &-enter-active {
+    opacity: 1;
+    transition: opacity 250ms ease-in-out;
+  }
+  
+  &-enter-done {
+    opacity: 1;
+  }
+  
+  &-exit {
+    opacity: 1;
+  }
+  
+  &-exit-active {
+    opacity: 0.5;
+    transition: opacity 250ms ease-in-out;
+  }
+  &-exit-active {
+    opacity: 0;
+    display: none;
+  }
+ 
+}
+ 
+
 .authentication-page {
   &__goto-bigcapital {
     position: fixed;
-    margin-top: 40px;
-    margin-left: 40px;
+    margin-top: 30px;
+    margin-left: 30px;
     color: #777;
   }
 
@@ -46,12 +80,6 @@
   }
   .bp3-form-group {
     margin-bottom: 25px;
-
-    &.bp3-intent-danger {
-      .bp3-input {
-        border-color: #eea9a9;
-      }
-    }
   }
 
   .bp3-form-group.has-password-revealer {
@@ -72,16 +100,13 @@
   }
 
   &__label-section {
-    margin-bottom: 29px;
+    margin-bottom: 30px;
     color: #555;
 
     h3 {
-      // font-weight: 500;
-      font-weight: 400;
-      // font-size: 28px;
+      font-weight: 500;
       font-size: 22px;
-      // color: #444;
-      color: #555555;
+      color: #444;
       margin: 0 0 12px;
     }
 
@@ -93,8 +118,6 @@
 
   &__form-wrapper {
     width: 100%;
-    // max-width: 415px;
-    // padding: 15px;
     margin: 0 auto;
   }
 
@@ -139,48 +162,52 @@
 
     .checkbox {
       &--remember-me {
-        margin: -4px 0 28px 0px;
+        margin: -6px 0 26px 0px;
         font-size: 14px;
       }
     }
   }
 
-  // // Register Form
-  // .register-form {
-  //   // width: 690px;
-  //   // margin: 0px auto;
-  //   // padding: 85px 50px;
- 
+  // Register form
+  // ----------------------------
+  .register-form {
 
-  //   &__agreement-section {
-  //     margin-top: -10px;
+    &__agreement-section {
+      margin-top: -10px;
 
-  //     p {
-  //       font-size: 13px;
-  //       margin-top: -10px;
-  //       margin-bottom: 24px;
-  //       line-height: 1.65;
-  //     }
-  //   }
+      p {
+        font-size: 13px;
+        margin-top: -10px;
+        margin-bottom: 24px;
+        line-height: 1.65;
+      }
+    }
 
-  //   &__submit-button-wrap {
-  //     margin: 25px 0px 25px 0px;
+    &__submit-button-wrap {
+      margin: 25px 0px 25px 0px;
 
-  //     .bp3-button {
-  //       min-height: 45px;
-  //       background-color: #0052cc;
-  //     }
-  //   }
-  // }
+      .bp3-button {
+        min-height: 45px;
+        background-color: #0052cc;
+      }
+    }
+  }
 
+  // Send reset password
+  // ----------------------------
   .send-reset-password {
     .form-group--crediential {
       margin-bottom: 36px;
     }
   }
+
+  // Invite form.
+  // ----------------
   .invite-form {
+
     &__statement-section {
       margin-top: -10px;
+
       p {
         font-size: 13px;
         margin-bottom: 20px;
