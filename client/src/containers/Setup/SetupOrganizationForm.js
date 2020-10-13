@@ -17,7 +17,6 @@ import { TimezonePicker } from '@blueprintjs/timezone';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { DateInput } from '@blueprintjs/datetime';
 import { momentFormatter, tansformDateValue } from 'utils';
-import AppToaster from 'components/AppToaster';
 import { ListSelect, ErrorMessage, FieldRequiredHint } from 'components';
 import { useHistory } from 'react-router-dom';
 
@@ -29,7 +28,6 @@ import { compose, optionsMapToArray } from 'utils';
 function SetupOrganizationForm({ requestSubmitOptions, requestSeedTenant }) {
   const { formatMessage } = useIntl();
   const [selected, setSelected] = useState();
-  const history = useHistory();
 
   const baseCurrency = [
     { id: 0, name: 'LYD - Libyan Dinar', value: 'LYD' },
@@ -177,7 +175,6 @@ function SetupOrganizationForm({ requestSubmitOptions, requestSeedTenant }) {
       const options = optionsMapToArray(values).map((option) => {
         return { key: option.key, ...option, group: 'organization' };
       });
-      console.log(options, 'Op');
       requestSubmitOptions({ options })
         .then((response) => {
           setSubmitting(false);
