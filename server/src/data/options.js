@@ -26,6 +26,10 @@ export default {
       // config: true,
     },
     {
+      key: 'financial_date_start',
+      type: 'string',
+    },
+    {
       key: 'language',
       type: 'string',
       config: true,

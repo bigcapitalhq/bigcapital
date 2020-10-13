@@ -13,7 +13,6 @@ export default function DashboardLoadingIndicator({
         <div className={classNames('bigcapital-loading', className)}>
           <div class="center">
             <Icon icon="bigcapital" height={37} width={214} />
-            <span class="text">Please wait while resources loading...</span> 
           </div>
         </div>
       </Choose.When>

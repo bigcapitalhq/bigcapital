@@ -100,7 +100,7 @@ export default class OrganizationService {
     this.logger.info('[organization] trying to list all organizations.', { user });
 
     const { tenantRepository } = this.sysRepositories;
-    const tenant = await tenantRepository.getByIdWithSubscriptions(user.tenantId);
+    const tenant = await tenantRepository.getById(user.tenantId);
 
     return [tenant];
   }

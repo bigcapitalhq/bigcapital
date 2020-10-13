@@ -5,6 +5,7 @@ import { useHistory } from "react-router-dom";
 import { connect } from 'react-redux';
 
 import WizardSetupSteps from './WizardSetupSteps';
+import withSubscriptions from 'containers/Subscriptions/withSubscriptions';
 
 import SetupSubscriptionForm from './SetupSubscriptionForm';
 import SetupOrganizationForm from './SetupOrganizationForm';
@@ -23,16 +24,18 @@ function SetupRightSection ({
 
   // #withOrganization
   isOrganizationInitialized,
-  isOrganizationSubscribed: hasSubscriptions,
-  isOrganizationSeeded
+  isOrganizationSeeded,
+
+  // #withSubscriptions
+  isSubscriptionActive
 }) {
   const history = useHistory();
 
   const handleSkip = useCallback(({ step, push }) => {
     const scenarios = [
-      { condition: !hasSubscriptions, redirectTo: 'subscription' },
-      { condition: hasSubscriptions && !isOrganizationInitialized, redirectTo: 'initializing' },
-      { condition: hasSubscriptions && !isOrganizationSeeded, redirectTo: 'organization' },
+      { condition: !isSubscriptionActive, redirectTo: 'subscription' },
+      { condition: isSubscriptionActive && !isOrganizationInitialized, redirectTo: 'initializing' },
+      { condition: isSubscriptionActive && !isOrganizationSeeded, redirectTo: 'organization' },
     ];
     const scenario = scenarios.find((scenario) => scenario.condition);
 
@@ -40,7 +43,7 @@ function SetupRightSection ({
       push(scenario.redirectTo);
     }
   }, [
-    hasSubscriptions,
+    isSubscriptionActive,
     isOrganizationInitialized,
     isOrganizationSeeded,
   ]);
@@ -92,12 +95,15 @@ export default compose(
   withOrganization(({
     organization,
     isOrganizationInitialized,
-    isOrganizationSubscribed,
     isOrganizationSeeded,
   }) => ({
     organization,
     isOrganizationInitialized,
-    isOrganizationSubscribed,
     isOrganizationSeeded,
   })),
+  withSubscriptions(({
+    isSubscriptionActive,
+  }) => ({
+    isSubscriptionActive
+  }), 'main'),
 )(SetupRightSection);

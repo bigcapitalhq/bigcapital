@@ -16,16 +16,20 @@ import classNames from 'classnames';
 import { TimezonePicker } from '@blueprintjs/timezone';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { DateInput } from '@blueprintjs/datetime';
+import { withWizard } from 'react-albus';
 import { momentFormatter, tansformDateValue } from 'utils';
 import { ListSelect, ErrorMessage, FieldRequiredHint } from 'components';
-import { useHistory } from 'react-router-dom';
 
 import withSettingsActions from 'containers/Settings/withSettingsActions';
 import withOrganizationActions from 'containers/Organization/withOrganizationActions';
 
 import { compose, optionsMapToArray } from 'utils';
 
-function SetupOrganizationForm({ requestSubmitOptions, requestSeedTenant }) {
+function SetupOrganizationForm({
+  requestSubmitOptions,
+  requestOrganizationSeed,
+  wizard,
+}) {
   const { formatMessage } = useIntl();
   const [selected, setSelected] = useState();
 
@@ -130,7 +134,7 @@ function SetupOrganizationForm({ requestSubmitOptions, requestSeedTenant }) {
     name: Yup.string()
       .required()
       .label(formatMessage({ id: 'organization_name_' })),
-    date_start: Yup.date()
+    financial_date_start: Yup.date()
       .required()
       .label(formatMessage({ id: 'date_start_' })),
     base_currency: Yup.string()
@@ -148,7 +152,7 @@ function SetupOrganizationForm({ requestSubmitOptions, requestSeedTenant }) {
   const initialValues = useMemo(
     () => ({
       name: '',
-      date_start: moment(new Date()).format('YYYY-MM-DD'),
+      financial_date_start: moment(new Date()).format('YYYY-MM-DD'),
       base_currency: '',
       language: '',
       fiscal_year: '',
@@ -176,7 +180,11 @@ function SetupOrganizationForm({ requestSubmitOptions, requestSeedTenant }) {
         return { key: option.key, ...option, group: 'organization' };
       });
       requestSubmitOptions({ options })
+        .then(() => {
+          return requestOrganizationSeed();
+        })
         .then((response) => {
+          wizard.next();
           setSubmitting(false);
         })
         .catch((erros) => {
@@ -220,29 +228,29 @@ function SetupOrganizationForm({ requestSubmitOptions, requestSeedTenant }) {
   const handleDateChange = useCallback(
     (date) => {
       const formatted = moment(date).format('YYYY-MM-DD');
-      setFieldValue('date_start', formatted);
+      setFieldValue('financial_date_start', formatted);
     },
     [setFieldValue],
   );
 
   return (
-    <div className={'register-organizaton-form'}>
-      <div className={'register-org-title'}>
-        <h2>
+    <div className={'setup-organization'}>
+      <div className={'setup-organization__title-wrap'}>
+        <h1>
           <T id={'let_s_get_started'} />
-        </h2>
-        <p>
+        </h1>
+        <p class="paragraph">
           <T id={'tell_the_system_a_little_bit_about_your_organization'} />
         </p>
       </div>
 
-      <form onClick={handleSubmit}>
+      <form class="setup-organization__form" onClick={handleSubmit}>
         <h3>
           <T id={'organization_details'} />
         </h3>
 
         <FormGroup
-          label={<T id={'name'} />}
+          label={<T id={'legal_organization_name'} />}
           labelInfo={<FieldRequiredHint />}
           className={'form-group--name'}
           intent={errors.name && touched.name && Intent.DANGER}
@@ -258,15 +266,15 @@ function SetupOrganizationForm({ requestSubmitOptions, requestSeedTenant }) {
         <FormGroup
           label={<T id={'financial_starting_date'} />}
           labelInfo={<FieldRequiredHint />}
-          intent={errors.date_start && touched.date_start && Intent.DANGER}
+          intent={errors.financial_date_start && touched.financial_date_start && Intent.DANGER}
           helperText={
-            <ErrorMessage name="date_start" {...{ errors, touched }} />
+            <ErrorMessage name="financial_date_start" {...{ errors, touched }} />
           }
           className={classNames('form-group--select-list', Classes.FILL)}
         >
           <DateInput
             {...momentFormatter('MMMM Do YYYY')}
-            value={tansformDateValue(values.date_start)}
+            value={tansformDateValue(values.financial_date_start)}
             onChange={handleDateChange}
             popoverProps={{ position: Position.BOTTOM, minimal: true }}
           />
@@ -410,4 +418,5 @@ function SetupOrganizationForm({ requestSubmitOptions, requestSeedTenant }) {
 export default compose(
   withSettingsActions,
   withOrganizationActions,
+  withWizard,
 )(SetupOrganizationForm);

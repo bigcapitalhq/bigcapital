@@ -765,4 +765,5 @@ export default {
   something_wentwrong: 'Something went wrong.',
   new_password: 'New password',
   license_code_: 'License code',
+  legal_organization_name: 'Legal Organization Name'
 };

@@ -62,7 +62,7 @@ function BillingPlans({ formik, title, selected = 1 }) {
 
   return (
     <section class="billing-section">
-      <h1 className={'bg-title'}>
+      <h1>
         <T id={title} />
       </h1>
       <p className='paragraph'>

@@ -43,13 +43,17 @@ function SetupLeftSection({
         <p className={'content__text'}>
           <T id={'you_have_a_bigcapital_account'} />
         </p>
+        <span class="content__divider"></span>
 
         <div className={'content__organization'}>
-          <span class="organization-id">Your oragnization ID: <span class="id">{ currentOrganizationId }</span>,</span><br />
-          <span class="signout"><a onClick={onClickLogout} href="#"><T id={'sign_out'} /></a></span>
+          <span class="organization-id">
+            Your oragnization ID: <span class="id">{ currentOrganizationId }</span>,
+          </span>
+          <br />
+          <span class="signout">
+            <a onClick={onClickLogout} href="#"><T id={'sign_out'} /></a>
+          </span>
         </div>
-
-        <span class="content__divider"></span>
 
         <div className={'content__footer'}>
           <div className={'content__contact-info'}> 

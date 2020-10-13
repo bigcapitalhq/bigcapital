@@ -7,6 +7,7 @@ import SetupWizardPage from 'containers/Setup/WizardSetupPage';
 import DashboardLoadingIndicator from 'components/Dashboard/DashboardLoadingIndicator';
 
 import withOrganizationActions from 'containers/Organization/withOrganizationActions';
+import withSubscriptionsActions from 'containers/Subscriptions/withSubscriptionsActions';
 
 import { compose } from 'utils';
 
@@ -17,13 +18,26 @@ function DashboardPrivatePages({
 
   // #withOrganizationActions
   requestAllOrganizations,
+
+  // #withSubscriptionsActions
+  requestFetchSubscriptions,
 }) {
+  // Fetch all user's organizatins.
   const fetchOrganizations = useQuery(
     ['organizations'], () => requestAllOrganizations(),
   );
 
+  // Fetchs organization subscriptions.
+  const fetchSuscriptions = useQuery(
+    ['susbcriptions'], () => requestFetchSubscriptions(),
+    { enabled: fetchOrganizations.data },
+  )
+
   return (
-    <DashboardLoadingIndicator isLoading={fetchOrganizations.isFetching}>
+    <DashboardLoadingIndicator isLoading={
+      fetchOrganizations.isFetching ||
+      fetchSuscriptions.isFetching
+    }>
       <Switch>
         <Route path={'/setup'}>
           <SetupWizardPage />
@@ -39,4 +53,5 @@ function DashboardPrivatePages({
 
 export default compose(
   withOrganizationActions,
+  withSubscriptionsActions,
 )(DashboardPrivatePages);
