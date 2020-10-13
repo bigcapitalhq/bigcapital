@@ -52,7 +52,7 @@ function SetupRightSection ({
         basename={'/setup'}
         history={history}
         render={({ step, steps }) => (
-          <div>
+          <div class="setup-page__content">
             <WizardSetupSteps currentStep={steps.indexOf(step) + 1} />
 
             <TransitionGroup>
