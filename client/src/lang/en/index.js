@@ -704,7 +704,7 @@ export default {
   pro: 'PRO',
   monthly: 'Monthly',
   yearly: 'Yearly',
-  license_code: 'License code',
+  license_code: 'License Code',
   year: 'Year',
   please_enter_your_preferred_payment_method:
     'Please enter your preferred payment method below. You can use a credit / debit card or prepay through PayPal. ',
@@ -764,4 +764,5 @@ export default {
   date_start_: 'Date start',
   something_wentwrong: 'Something went wrong.',
   new_password: 'New password',
+  license_code_: 'License code',
 };

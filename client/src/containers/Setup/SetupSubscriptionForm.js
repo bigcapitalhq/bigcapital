@@ -23,7 +23,12 @@ function SetupSubscriptionForm({
     plan_slug: Yup.string()
       .required()
       .label(formatMessage({ id: 'plan_slug' })),
-    license_code: Yup.string().trim(),
+    license_code: Yup.string()
+      .min(7)
+      .max(7)
+      .required()
+      .label(formatMessage({ id: 'license_code_' }))
+      .trim(),
   });
 
   const initialValues = useMemo(
@@ -71,6 +76,4 @@ function SetupSubscriptionForm({
   );
 }
 
-export default compose(
-  withBillingActions,
-)(SetupSubscriptionForm);
+export default compose(withBillingActions)(SetupSubscriptionForm);
