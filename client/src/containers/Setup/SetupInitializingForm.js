@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useQuery } from 'react-query';
 import { withWizard } from 'react-albus'
+import { ProgressBar, Intent } from '@blueprintjs/core';
 
 import withOrganizationActions from 'containers/Organization/withOrganizationActions';
 import withOrganization from 'containers/Organization/withOrganization'
@@ -29,7 +30,17 @@ function SetupInitializingForm({
 
   return (
     <div class="setup-initializing-form">
-      <h1>You organization is initializin...</h1>
+      <ProgressBar intent={Intent.PRIMARY} value={null} />
+      <div className={'setup-initializing-form__title'}>
+        <h1>
+          {/* You organization is initializin... */}
+          It's time to make your accounting really simple!
+        </h1>
+        <p className={'paragraph'}>
+          while we set up your account,please remember to verify your account by
+          clicking on the link we sent to yout registered email address
+        </p>
+      </div>
     </div>
   );
 }
