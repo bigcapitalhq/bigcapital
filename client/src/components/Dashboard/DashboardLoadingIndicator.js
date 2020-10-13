@@ -7,20 +7,20 @@ export default function DashboardLoadingIndicator({
   className,
   children,
 }) {
-  return (
-    <div className={classNames(className)}>
-      <Choose>
-        <Choose.When condition={isLoading}>
+  return (  
+    <Choose>
+      <Choose.When condition={isLoading}>
+        <div className={classNames('bigcapital-loading', className)}>
           <div class="center">
             <Icon icon="bigcapital" height={37} width={214} />
-            <span>Please wait while resources loading...</span> 
+            <span class="text">Please wait while resources loading...</span> 
           </div>
-        </Choose.When>
+        </div>
+      </Choose.When>
 
-        <Choose.Otherwise>
-          { children }
-        </Choose.Otherwise>
-      </Choose>
-    </div>
+      <Choose.Otherwise>
+        { children }
+      </Choose.Otherwise>
+    </Choose>
   );
 }

@@ -67,7 +67,7 @@ $pt-font-family: Noto Sans, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
 @import 'pages/register-organizaton';
 
 // Views
-  @import 'views/filter-dropdown';
+@import 'views/filter-dropdown';
 @import 'views/sidebar';
 @import 'pages/estimate';
 
@@ -174,4 +174,25 @@ body.authentication {
 
 .bp3-popover.bp3-tooltip {
   max-width: 300px;
+}
+
+
+.bigcapital-loading{
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  display: flex;
+
+  .center{
+    width: auto;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .text{
+    margin-top: 12px;
+    opacity: 0.85;
+    display: none;
+  }
 }

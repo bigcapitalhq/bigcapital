@@ -70,4 +70,6 @@ function SetupSubscriptionForm({
   );
 }
 
-export default compose(withBillingActions)(SetupSubscriptionForm);
+export default compose(
+  withBillingActions,
+)(SetupSubscriptionForm);

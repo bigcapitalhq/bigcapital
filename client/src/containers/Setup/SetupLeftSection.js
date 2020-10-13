@@ -31,7 +31,7 @@ function SetupLeftSection({
     <section className={'setup-page__left-section'}>
       <div className={'content'}>
         <div className={'content__logo'}>
-          <Icon icon="bigcapital" className={'bigcapital--alt'} height={37} width={214} />
+          <Icon icon="bigcapital" className={'bigcapital--alt'} height={37} width={190} />
         </div>
 
         <h1 className={'content__title'}>

@@ -15,7 +15,7 @@
       width: 30%;
       height: 1px;
       min-width: 300px;
-      max-width: 400px;
+      max-width: 350px;
     }
 
     h1{
@@ -38,7 +38,7 @@
     width: 30%;
     left: 0;
     top: 0;
-    max-width: 400px;
+    max-width: 350px;
     min-width: 300px;
 
     .content {
@@ -51,26 +51,29 @@
       height: 100%;
 
       &__logo {
-        opacity: 0.75;
+        opacity: 0.65;
         margin-bottom: 60px;
         padding-left: 10px;
       }
+
       &__title {
-        font-size: 28px;
+        font-size: 26px;
         font-weight: 600;
         line-height: normal;
         margin-bottom: 20px;
         margin-top: 14px;
-        color: rgba(255, 255, 255, 0.85);
+        color: rgba(255, 255, 255, 0.75);
       }
+
       &__text {
         font-size: 16px;
-        opacity: 0.85;
+        opacity: 0.75;
         margin-bottom: 18px;
       }
+
       &__organization {
         font-size: 16px;
-        opacity: 0.85;
+        opacity: 0.75;
 
         span > a {
           text-decoration: underline;
@@ -78,33 +81,30 @@
           margin-top: 6px;
           display: inline-block;
         }
-
-        .organization-id{
-          .id{
-            font-weight: bold;
-            border-bottom: 2px solid rgba(255, 255, 255, 0.4);
-          }
-        }
       }
+
       &__divider{
         height: 3px;
         width: 100px;
-        background: rgba(255, 255, 255, 0.25);
-        margin: 22px 0;
+        background: rgba(255, 255, 255, 0.15);
+        margin: 20px 0;
       }
+
       &__footer{
         margin-top: auto;
       }
+
       &__contact-info {
         font-size: 16px;
         margin-bottom: 20px;
-        opacity: 0.85;
+        opacity: 0.75;
         padding-bottom: 5px;
         border-bottom: 1px solid rgba(255, 255, 255, 0.15);
       }
+
       &__links{
         text-align: left;
-        opacity: 0.75;
+        opacity: 0.55;
   
         > div{
           font-size: 13px;
