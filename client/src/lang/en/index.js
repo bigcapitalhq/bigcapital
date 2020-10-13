@@ -709,7 +709,7 @@ export default {
   please_enter_your_preferred_payment_method:
     'Please enter your preferred payment method below. You can use a credit / debit card or prepay through PayPal. ',
   cards_will_be_charged:
-    'Cards will be charged either at the end of the month or whenever your balance exceeds the usage threshold.All major credit / debit cards accepted.',
+    'Cards will be charged either at the end of the month or whenever your balance exceeds the usage threshold. All major credit / debit cards accepted.',
   license_number: 'License number',
   subscribe: 'Subscribe',
   year_per: 'year',

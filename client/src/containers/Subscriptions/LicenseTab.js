@@ -11,7 +11,7 @@ function LicenseTab({
       <h4>
         <T id={'license_code'} />
       </h4>
-      <p className={'bg-message'}>
+      <p className="paragraph">
         <T id={'cards_will_be_charged'} />
       </p>
 

@@ -56,6 +56,7 @@ function SetupSubscriptionForm({
         <BillingPlans title={'a_select_a_plan'} formik={formik} />
         <BillingPeriods title={'b_choose_your_billing'} formik={formik} />
         <BillingPaymentmethod title={'c_payment_methods'} formik={formik} />
+
         <div className={'subscribe-button'}>
           <Button
             intent={Intent.PRIMARY}

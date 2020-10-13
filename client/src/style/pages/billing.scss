@@ -1,18 +1,19 @@
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
 .billing-form {
   padding: 25px 45px;
   width: 800px;
   margin: 0 auto;
 
+  .billing-section{
+    margin-bottom: 30px;
+  }
+
+  .paragraph + .billing-form__plan-container{
+    margin-top: 20px;
+  }
+
   &__plan-container {
     display: flex;
     flex-flow: row wrap;
-    margin-bottom: 30px;
 
     .plan-wrapper {
       display: flex;
@@ -76,8 +77,14 @@
       background-color: #fcfdff;
     }
   }
+
+  .paragraph + .payment-method-continer{
+    margin-top: 20px;
+  }
+
   .payment-method-continer {
     margin-bottom: 30px;
+
     .period-container {
       display: inline-flex;
       background-color: #fcfdff;
@@ -110,22 +117,12 @@
     }
   }
 
-  // .bg-title {
-  //   font-size: 22px;
-  //   font-weight: 400;
-  //   color: #666666;
-  // }
-  // .bg-message {
-  //   margin-bottom: 23px;
-  //   font-size: 14px;
-  // }
   .license-container {
-    .bp3-form-group {
-      margin-bottom: 20px;
-      .bp3-label {
-        margin-bottom: 15px;
-      }
+
+    .form-group-license_code{
+      margin-top: 20px;
     }
+
     .bp3-form-content {
       .bp3-input-group {
         display: block;

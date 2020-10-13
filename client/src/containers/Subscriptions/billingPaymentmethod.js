@@ -4,11 +4,11 @@ import { PaymentMethodTabs } from './SubscriptionTabs';
 
 export const BillingPaymentmethod = ({ formik, title }) => {
   return (
-    <section>
+    <section class="billing-section">
       <h1 className={'bg-title'}>
         <T id={title} />
       </h1>
-      <p className={'bg-message'}>
+      <p className='paragraph'>
         <T id={'please_enter_your_preferred_payment_method'} />
       </p>
       <PaymentMethodTabs formik={formik} />

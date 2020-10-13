@@ -1,9 +1,8 @@
-import React, { useState, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { Icon, For } from 'components';
 import { FormattedMessage as T } from 'react-intl';
-
 import withAuthenticationActions from 'containers/Authentication/withAuthenticationActions';
-
+import withAuthentication from 'containers/Authentication/withAuthentication';
 import footerLinks from 'config/footerLinks';
 import { compose } from 'utils';
 
@@ -22,6 +21,9 @@ function FooterLinkItem({ title, link }) {
 function SetupLeftSection({
   // #withAuthenticationActions
   requestLogout,
+
+  // #withAuthentication
+  currentOrganizationId
 }) {
   const onClickLogout = useCallback(() => {
     requestLogout();
@@ -43,7 +45,7 @@ function SetupLeftSection({
         </p>
 
         <div className={'content__organization'}>
-          <span class="organization-id">Your oragnization ID: <span class="id">12342313</span>,</span><br />
+          <span class="organization-id">Your oragnization ID: <span class="id">{ currentOrganizationId }</span>,</span><br />
           <span class="signout"><a onClick={onClickLogout} href="#"><T id={'sign_out'} /></a></span>
         </div>
 
@@ -65,4 +67,5 @@ function SetupLeftSection({
 
 export default compose(
   withAuthenticationActions,
+  withAuthentication(({ currentOrganizationId }) => ({ currentOrganizationId })),
 )(SetupLeftSection);
