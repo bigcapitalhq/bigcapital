@@ -11,7 +11,7 @@ import PreferencesContent from 'components/Preferences/PreferencesContent';
 import PreferencesSidebar from 'components/Preferences/PreferencesSidebar';
 import Search from 'containers/GeneralSearch/Search';
 import DashboardSplitPane from 'components/Dashboard/DashboardSplitePane';
-import EnsureOrganizationIsReady from './EnsureOrganizationIsReady';
+
 
 import withSettingsActions from 'containers/Settings/withSettingsActions';
 
@@ -27,7 +27,7 @@ function Dashboard({
   );
 
   return (
-    <EnsureOrganizationIsReady>
+    
       <DashboardLoadingIndicator isLoading={fetchOptions.isFetching}>
         <Switch>
           <Route path="/preferences">
@@ -49,7 +49,7 @@ function Dashboard({
         <Search />
         <DialogsContainer />
       </DashboardLoadingIndicator>
-    </EnsureOrganizationIsReady>
+    
   );
 }
 

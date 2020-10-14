@@ -9,6 +9,8 @@ import DashboardLoadingIndicator from 'components/Dashboard/DashboardLoadingIndi
 import withOrganizationActions from 'containers/Organization/withOrganizationActions';
 import withSubscriptionsActions from 'containers/Subscriptions/withSubscriptionsActions';
 
+import EnsureOrganizationIsReady from 'components/Guards/EnsureOrganizationIsReady';
+import EnsureOrganizationIsNotReady from 'components/Guards/EnsureOrganizationIsNotReady';
 import { compose } from 'utils';
 
 /**
@@ -40,11 +42,15 @@ function DashboardPrivatePages({
     }>
       <Switch>
         <Route path={'/setup'}>
-          <SetupWizardPage />
+          <EnsureOrganizationIsNotReady>
+            <SetupWizardPage />
+          </EnsureOrganizationIsNotReady>
         </Route>
 
         <Route path='/'>
-          <Dashboard />
+          <EnsureOrganizationIsReady>
+            <Dashboard />
+          </EnsureOrganizationIsReady>
         </Route>
       </Switch>
     </DashboardLoadingIndicator>

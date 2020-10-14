@@ -7,15 +7,10 @@ import { FormattedMessage as T } from 'react-intl';
 import withAuthentication from 'containers/Authentication/withAuthentication';
 import { compose } from 'utils';
 import Icon from 'components/Icon';
-import AuthCopyright from 'containers/Authentication/AuthCopyright';
 
 function PageFade(props) {
   return (
-    <CSSTransition
-      {...props}
-      classNames="authTransition"
-      timeout={500}
-    />
+    <CSSTransition {...props} classNames="authTransition" timeout={500} />
   );
 }
 
