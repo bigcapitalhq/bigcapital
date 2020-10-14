@@ -47,7 +47,7 @@ function SetupLeftSection({
 
         <div className={'content__organization'}>
           <span class="organization-id">
-            Your oragnization ID: <span class="id">{ currentOrganizationId }</span>,
+            Oragnization ID: <span class="id">{ currentOrganizationId }</span>,
           </span>
           <br />
           <span class="signout">
