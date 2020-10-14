@@ -147,7 +147,9 @@ function SetupOrganizationForm({
     fiscal_year: Yup.string()
       .required()
       .label(formatMessage({ id: 'fiscal_year_' })),
-    time_zone: Yup.string(),
+    time_zone: Yup.string()
+      .required()
+      .label(formatMessage({ id: 'time_zone_' })),
   });
 
   const initialValues = useMemo(
@@ -188,8 +190,8 @@ function SetupOrganizationForm({
           return setOrganizationSetupCompleted(true);
         })
         .then((response) => {
-          wizard.next();
           setSubmitting(false);
+          wizard.next();
         })
         .catch((erros) => {
           setSubmitting(false);
@@ -248,7 +250,7 @@ function SetupOrganizationForm({
         </p>
       </div>
 
-      <form class="setup-organization__form" onClick={handleSubmit}>
+      <form class="setup-organization__form" onSubmit={handleSubmit}>
         <h3>
           <T id={'organization_details'} />
         </h3>
@@ -270,9 +272,16 @@ function SetupOrganizationForm({
         <FormGroup
           label={<T id={'financial_starting_date'} />}
           labelInfo={<FieldRequiredHint />}
-          intent={errors.financial_date_start && touched.financial_date_start && Intent.DANGER}
+          intent={
+            errors.financial_date_start &&
+            touched.financial_date_start &&
+            Intent.DANGER
+          }
           helperText={
-            <ErrorMessage name="financial_date_start" {...{ errors, touched }} />
+            <ErrorMessage
+              name="financial_date_start"
+              {...{ errors, touched }}
+            />
           }
           className={classNames('form-group--select-list', Classes.FILL)}
         >
@@ -378,6 +387,7 @@ function SetupOrganizationForm({
         {/* Time zone */}
         <FormGroup
           label={<T id={'time_zone'} />}
+          labelInfo={<FieldRequiredHint />}
           className={classNames(
             'form-group--time-zone',
             'form-group--select-list',
@@ -407,9 +417,9 @@ function SetupOrganizationForm({
         <div className={'register-org-button'}>
           <Button
             intent={Intent.PRIMARY}
+            disabled={isSubmitting}
             loading={isSubmitting}
             type="submit"
-            loading={isSubmitting}
           >
             <T id={'save_continue'} />
           </Button>
