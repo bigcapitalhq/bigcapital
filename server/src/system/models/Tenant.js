@@ -18,6 +18,20 @@ export default class Tenant extends BaseModel {
   }
 
   /**
+   * Virtual attributes.
+   */
+  static get virtualAttributes() {
+    return ['isReady'];
+  }
+
+  /**
+   * Tenant is ready.
+   */
+  get isReady() {
+    return !!(this.initializedAt && this.seededAt);
+  }
+
+  /**
    * Query modifiers.
    */
   static modifiers() {

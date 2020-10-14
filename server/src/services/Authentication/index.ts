@@ -87,9 +87,6 @@ export default class AuthenticationService implements IAuthenticationService {
     // Remove password property from user object.
     Reflect.deleteProperty(user, 'password');
 
-    // Remove id property from tenant object.
-    Reflect.deleteProperty(tenant, 'id');
-
     return { user, token, tenant };
   }
 

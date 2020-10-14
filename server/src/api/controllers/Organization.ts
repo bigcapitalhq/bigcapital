@@ -1,5 +1,5 @@
 import { Inject, Service } from 'typedi';
-import { Router, Request, Response } from 'express';
+import { Router, Request, Response, NextFunction } from 'express';
 import asyncMiddleware from "api/middleware/asyncMiddleware";
 import JWTAuth from 'api/middleware/jwtAuth';
 import TenancyMiddleware from 'api/middleware/TenancyMiddleware';
@@ -27,11 +27,13 @@ export default class OrganizationController extends BaseController{
     router.use(JWTAuth);
     router.use(AttachCurrentTenantUser);
     router.use(TenancyMiddleware);
-    router.use(SubscriptionMiddleware('main'));
-
+    
     // Should to seed organization tenant be configured.
+    router.use('/seed', SubscriptionMiddleware('main'));
     router.use('/seed', SettingsMiddleware);
     router.use('/seed', EnsureConfiguredMiddleware);
+
+    router.use('/build', SubscriptionMiddleware('main'));
 
     router.post(
       '/build',
@@ -40,6 +42,10 @@ export default class OrganizationController extends BaseController{
     router.post(
       '/seed',
       asyncMiddleware(this.seed.bind(this)),
+    );
+    router.get(
+      '/all',
+      asyncMiddleware(this.allOrganizations.bind(this)),
     );
     return router;
   }
@@ -113,6 +119,23 @@ export default class OrganizationController extends BaseController{
           });
         }
       }
+      next(error);
+    }
+  }
+
+  /**
+   * Listing all organizations that assocaited to the authorized user.
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {NextFunction} next 
+   */
+  async allOrganizations(req: Request, res: Response, next: NextFunction) {
+    const { user } = req;
+
+    try {
+      const organizations = await this.organizationService.listOrganizations(user);
+      return res.status(200).send({ organizations });
+    } catch (error) {
       next(error);
     }
   }

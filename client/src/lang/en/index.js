@@ -53,10 +53,10 @@ export default {
   you_remembered_your_password: 'You remembered your password ?',
   new_password: 'New Password',
   submit_new_password: 'Submit new password',
-  reset_your_password: 'Reset Your Password',
-  we_ll_send_you_a_link_to_reset_your_password:
-    'Enter your email address and we’ll send you a link to reset your password.',
-  send_password_reset_link: 'Send password reset link',
+  you_can_t_login: 'You can’t login?',
+  we_ll_send_a_recovery_link_to_your_email:
+    'We’ll send a recovery link to your email.',
+  send_reset_password_mail: 'Send Reset Password Mail',
   return_to_log_in: 'Return to log in',
   sub_account: 'Sub account?',
   account_type: 'Account Type',
@@ -398,7 +398,7 @@ export default {
   cost_account_: 'Cost account',
   inventory_account_: 'Inventory account',
   view_name_: 'View name',
-  time_zone: 'Time zone',
+  time_zone_: 'Time zone',
   location: 'Location',
   the_items_has_been_successfully_deleted:
     'The items have been successfully deleted.',
@@ -704,12 +704,12 @@ export default {
   pro: 'PRO',
   monthly: 'Monthly',
   yearly: 'Yearly',
-  license_code: 'License code',
+  license_code: 'License Code',
   year: 'Year',
   please_enter_your_preferred_payment_method:
     'Please enter your preferred payment method below. You can use a credit / debit card or prepay through PayPal. ',
   cards_will_be_charged:
-    'Cards will be charged either at the end of the month or whenever your balance exceeds the usage threshold.All major credit / debit cards accepted.',
+    'Cards will be charged either at the end of the month or whenever your balance exceeds the usage threshold. All major credit / debit cards accepted.',
   license_number: 'License number',
   subscribe: 'Subscribe',
   year_per: 'year',
@@ -740,4 +740,30 @@ export default {
   sell_account: 'Sell Account',
   cost_account: 'Cost Account',
   inventory_account: 'Inventory Account',
+
+  register_a_new_organization_now: 'Register a New Organization now!.',
+  you_have_a_bigcapital_account: 'You have a Bigcapital account ',
+  contact_us_technical_support: 'Contact us - Technical Support',
+  let_s_get_started: 'Let’s Get Started',
+  tell_the_system_a_little_bit_about_your_organization:
+    'Tell the system a little bit about your organization.',
+  organization_details: 'Organization details',
+  financial_starting_date: 'Financial starting date ',
+  base_currency: 'Base Currency',
+  note_you_can_change_your_preferences_later_in_dashboard_if_needed:
+    'Note: You can change your preferences later in dashboard, if needed.',
+  save_continue: 'Save & Continue',
+  organization_register: 'Organization Register',
+  getting_started: 'Getting started',
+  payment_or_trial: 'Payment or trial',
+  initializing: 'Initializing',
+  fiscal_year_: 'Fiscal year',
+  welcome: 'Welcome ',
+  sign_out: 'Sign out',
+  we_re_here_to_help: 'We’re Here to Help!',
+  date_start_: 'Date start',
+  something_wentwrong: 'Something went wrong.',
+  new_password: 'New password',
+  license_code_: 'License code',
+  legal_organization_name: 'Legal Organization Name'
 };

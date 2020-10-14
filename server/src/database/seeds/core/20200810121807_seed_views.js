@@ -1,3 +1,5 @@
+import Container from 'typedi';
+import TenancyService from 'services/Tenancy/TenancyService'
 
 exports.up = (knex) => {
   const tenancyService = Container.get(TenancyService);

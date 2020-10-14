@@ -3,12 +3,6 @@ import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { Button, Intent } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
-import { useHistory } from 'react-router-dom';
-import { pick } from 'lodash';
-
-import AppToaster from 'components/AppToaster';
-import ErrorMessage from 'components/ErrorMessage';
-
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import { MeteredBillingTabs, PaymentMethodTabs } from './SubscriptionTabs';
 import withBillingActions from './withBillingActions';
@@ -21,13 +15,6 @@ function BillingForm({
   //#withBillingActions
   requestSubmitBilling,
 }) {
-  // const defaultPlan = useMemo(() => ({
-  //   plan_slug: [
-  //     { id: 0, name: 'Basic', value: 'basic' },
-  //     { id: 0, name: 'Pro', value: 'pro' },
-  //   ],
-  // }));
-
   const { formatMessage } = useIntl();
 
   useEffect(() => {
@@ -43,7 +30,7 @@ function BillingForm({
 
   const initialValues = useMemo(
     () => ({
-      plan_slug: 'basic',
+      plan_slug: 'free',
       license_code: '',
     }),
     [],
@@ -55,16 +42,9 @@ function BillingForm({
     initialValues: {
       ...initialValues,
     },
-
     onSubmit: (values, { setSubmitting, resetForm, setErrors }) => {
       requestSubmitBilling(values)
         .then((response) => {
-          AppToaster.show({
-            message: formatMessage({
-              id: 'the_biling_has_been_successfully_created',
-            }),
-            intent: Intent.SUCCESS,
-          });
           setSubmitting(false);
         })
         .catch((errors) => {
@@ -72,7 +52,7 @@ function BillingForm({
         });
     },
   });
-  console.log(formik.values, 'formik');
+
   return (
     <div className={'billing-form'}>
       <form onSubmit={formik.handleSubmit}>

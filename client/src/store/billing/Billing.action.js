@@ -4,7 +4,7 @@ import t from 'store/types';
 export const submitBilling = ({ form }) => {
   return (dispatch) =>
     new Promise((resolve, reject) => {
-      ApiService.post('payment', form)
+      ApiService.post('subscription/license/payment', form)
         .then((response) => {
           resolve(response);
         })

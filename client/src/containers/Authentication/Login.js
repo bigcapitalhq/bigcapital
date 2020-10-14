@@ -22,7 +22,6 @@ import withAuthenticationActions from './withAuthenticationActions';
 
 import { compose } from 'utils';
 
-
 const ERRORS_TYPES = {
   INVALID_DETAILS: 'INVALID_DETAILS',
   USER_INACTIVE: 'USER_INACTIVE',

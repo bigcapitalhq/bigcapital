@@ -3,7 +3,7 @@ import { omit } from 'lodash';
 import { Button, Intent, Position, Tooltip } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 
-import CLASSES from 'components/classes';
+import { CLASSES } from 'common/classes';
 import DataTable from 'components/DataTable';
 import Icon from 'components/Icon';
 import {

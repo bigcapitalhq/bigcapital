@@ -25,9 +25,13 @@ import bills from './Bills/bills.reducer';
 import vendors from './vendors/vendors.reducer';
 import paymentReceives from './PaymentReceive/paymentReceive.reducer';
 import paymentMades from './PaymentMades/paymentMade.reducer';
+import organizations from './organizations/organizations.reducers';
+import subscriptions from './subscription/subscription.reducer';
 
 export default combineReducers({
   authentication,
+  organizations,
+  subscriptions,
   dashboard,
   users,
   accounts,
@@ -45,12 +49,11 @@ export default combineReducers({
   exchangeRates,
   globalErrors,
   customers,
-
   salesEstimates,
   salesInvoices,
   salesReceipts,
   bills,
   vendors,
   paymentReceives,
-  paymentMades
+  paymentMades,
 });

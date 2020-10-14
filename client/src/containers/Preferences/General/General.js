@@ -40,7 +40,6 @@ function GeneralPreferences({
 }) {
   const { formatMessage } = useIntl();
   const [selectedItems, setSelectedItems] = useState({});
-  const [timeZone, setTimeZone] = useState('');
 
   const fetchHook = useQuery(
     ['settings'],
@@ -65,67 +64,89 @@ function GeneralPreferences({
     { id: 1, name: 'Libyan Dinar	', value: 'LYD' },
   ];
 
-  // @todo @mohamed - Translate the months.
-  // eg. > `${formatMessage({ id: 'january' })} - ${formatMessage({ id: 'december' })}`
   const fiscalYear = [
     {
       id: 0,
-      name: `${formatMessage({ id: 'january' })} - ${formatMessage({ id: 'december' })}`,
+      name: `${formatMessage({ id: 'january' })} - ${formatMessage({
+        id: 'december',
+      })}`,
       value: 'january',
     },
     {
       id: 1,
-      name: `${formatMessage({ id: 'february' })} - ${formatMessage({ id: 'january' })}`,
+      name: `${formatMessage({ id: 'february' })} - ${formatMessage({
+        id: 'january',
+      })}`,
       value: 'february',
     },
     {
       id: 2,
-      name: `${formatMessage({ id: 'march' })} - ${formatMessage({ id: 'february' })}`,
+      name: `${formatMessage({ id: 'march' })} - ${formatMessage({
+        id: 'february',
+      })}`,
       value: 'March',
     },
     {
       id: 3,
-      name: `${formatMessage({ id: 'april' })} - ${formatMessage({ id: 'march' })}`,
+      name: `${formatMessage({ id: 'april' })} - ${formatMessage({
+        id: 'march',
+      })}`,
       value: 'april',
     },
     {
       id: 4,
-      name: `${formatMessage({ id: 'may' })} - ${formatMessage({ id: 'april' })}`,
+      name: `${formatMessage({ id: 'may' })} - ${formatMessage({
+        id: 'april',
+      })}`,
       value: 'may',
     },
     {
       id: 5,
-      name: `${formatMessage({ id: 'june' })} - ${formatMessage({ id: 'may' })}`,
+      name: `${formatMessage({ id: 'june' })} - ${formatMessage({
+        id: 'may',
+      })}`,
       value: 'june',
     },
     {
       id: 6,
-      name: `${formatMessage({ id: 'july' })} - ${formatMessage({ id: 'june' })}`,
+      name: `${formatMessage({ id: 'july' })} - ${formatMessage({
+        id: 'june',
+      })}`,
       value: 'july',
     },
     {
       id: 7,
-      name: `${formatMessage({ id: 'august' })} - ${formatMessage({ id: 'july' })}`,
+      name: `${formatMessage({ id: 'august' })} - ${formatMessage({
+        id: 'july',
+      })}`,
       value: 'August',
     },
     {
       id: 8,
-      name: `${formatMessage({ id: 'september' })} - ${formatMessage({ id: 'august' })}`,
+      name: `${formatMessage({ id: 'september' })} - ${formatMessage({
+        id: 'august',
+      })}`,
       value: 'september',
     },
     {
       id: 9,
-      name: `${formatMessage({ id: 'october' })} - ${formatMessage({ id: 'november' })}`,
+      name: `${formatMessage({ id: 'october' })} - ${formatMessage({
+        id: 'november',
+      })}`,
       value: 'october',
     },
     {
       id: 10,
-      name: `${formatMessage({ id: 'november' })} - ${formatMessage({ id: 'october' })}`,
+      name: `${formatMessage({ id: 'november' })} - ${formatMessage({
+        id: 'october',
+      })}`,
       value: 'november',
     },
     {
       id: 11,
-      name: `${formatMessage({ id: 'december' })} - ${formatMessage({ id: 'november' })}`,
+      name: `${formatMessage({ id: 'december' })} - ${formatMessage({
+        id: 'november',
+      })}`,
       value: 'december',
     },
   ];
@@ -185,9 +206,9 @@ function GeneralPreferences({
     language: Yup.string()
       .required()
       .label(formatMessage({ id: 'language' })),
-    // time_zone: Yup.string()
-    //   .required()
-    //   .label(formatMessage({ id: 'time_zone' })),
+    time_zone: Yup.string()
+      .required()
+      .label(formatMessage({ id: 'time_zone_' })),
     date_format: Yup.string()
       .required()
       .label(formatMessage({ id: 'date_format_' })),
@@ -230,15 +251,8 @@ function GeneralPreferences({
     },
   });
 
-  // @todo @mohamed remove duplicate functions.
-
-  
   const onItemRenderer = (item, { handleClick }) => (
-    <MenuItem
-      key={item.id}
-      text={item.name}
-      onClick={handleClick}
-    />
+    <MenuItem key={item.id} text={item.name} onClick={handleClick} />
   );
 
   const currencyItem = (item, { handleClick }) => (
@@ -280,8 +294,12 @@ function GeneralPreferences({
     }
   };
 
-  const handleTimezoneChange = (timezone) => setTimeZone(timezone);
-
+  const handleTimezoneChange = useCallback(
+    (timezone) => {
+      setFieldValue('time_zone', timezone);
+    },
+    [setFieldValue],
+  );
   return (
     <div
       className={classNames({
@@ -437,7 +455,7 @@ function GeneralPreferences({
           }
         >
           <TimezonePicker
-            value={timeZone}
+            value={values.time_zone}
             onChange={handleTimezoneChange}
             valueDisplayFormat="composite"
             placeholder={<T id={'select_time_zone'} />}

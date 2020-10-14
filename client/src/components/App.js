@@ -5,9 +5,9 @@ import { createBrowserHistory } from 'history';
 import { ReactQueryConfigProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query-devtools';
 
-import PrivateRoute from 'components/PrivateRoute';
+import PrivateRoute from 'components/Guards/PrivateRoute';
 import Authentication from 'components/Authentication';
-import Dashboard from 'components/Dashboard/Dashboard';
+import DashboardPrivatePages from 'components/Dashboard/PrivatePages';
 import GlobalErrors from 'containers/GlobalErrors/GlobalErrors';
 
 import messages from 'lang/en';
@@ -19,7 +19,7 @@ function App({ locale }) {
   const queryConfig = {
     queries: {
       refetchOnWindowFocus: false,
-    }
+    },
   };
   return (
     <IntlProvider locale={locale} messages={messages}>
@@ -32,7 +32,7 @@ function App({ locale }) {
               </Route>
 
               <Route path={'/'}>
-                <PrivateRoute component={Dashboard} />
+                <PrivateRoute component={DashboardPrivatePages} />
               </Route>
             </Switch>
           </Router>

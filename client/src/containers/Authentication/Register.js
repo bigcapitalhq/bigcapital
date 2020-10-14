@@ -13,16 +13,16 @@ import {
 import { FormattedMessage as T, useIntl } from 'react-intl';
 
 import AppToaster from 'components/AppToaster';
+import AuthInsider from 'containers/Authentication/AuthInsider';
 
 import ErrorMessage from 'components/ErrorMessage';
 import Icon from 'components/Icon';
 import { If } from 'components';
-import AuthInsider from 'containers/Authentication/AuthInsider';
-import withAuthenticationActions from './withAuthenticationActions';
+import withAuthenticationActions from 'containers/Authentication/withAuthenticationActions';
 
 import { compose } from 'utils';
 
-function Register({ requestRegister }) {
+function RegisterUserForm({ requestRegister, requestLogin }) {
   const { formatMessage } = useIntl();
   const history = useHistory();
   const [shown, setShown] = useState(false);
@@ -31,9 +31,6 @@ function Register({ requestRegister }) {
   }, [shown]);
 
   const ValidationSchema = Yup.object().shape({
-    organization_name: Yup.string()
-      .required()
-      .label(formatMessage({ id: 'organization_name_' })),
     first_name: Yup.string()
       .required()
       .label(formatMessage({ id: 'first_name_' })),
@@ -56,7 +53,6 @@ function Register({ requestRegister }) {
 
   const initialValues = useMemo(
     () => ({
-      organization_name: '',
       first_name: '',
       last_name: '',
       email: '',
@@ -82,14 +78,20 @@ function Register({ requestRegister }) {
     onSubmit: (values, { setSubmitting, setErrors }) => {
       requestRegister(values)
         .then((response) => {
-          AppToaster.show({
-            message: formatMessage({
-              id: 'welcome_organization_account_has_been_created',
-            }),
-            intent: Intent.SUCCESS,
-          });
-          setSubmitting(false);
-          history.push('/auth/login');
+          requestLogin({
+            crediential: values.email,
+            password: values.password,
+          })
+            .then(() => {
+              history.push('/register/subscription');
+              setSubmitting(false);
+            })
+            .catch((errors) => {
+              AppToaster.show({
+                message: formatMessage({ id: 'something_wentwrong' }),
+                intent: Intent.SUCCESS,
+              });
+            });
         })
         .catch((errors) => {
           if (errors.some((e) => e.type === 'PHONE_NUMBER_EXISTS')) {
@@ -150,31 +152,7 @@ function Register({ requestRegister }) {
         </div>
 
         <form onSubmit={handleSubmit} className={'authentication-page__form'}>
-          <FormGroup
-            label={<T id={'organization_name'} />}
-            className={'form-group--name'}
-            intent={
-              errors.organization_name &&
-              touched.organization_name &&
-              Intent.DANGER
-            }
-            helperText={
-              <ErrorMessage
-                {...{ errors, touched }}
-                name={'organization_name'}
-              />
-            }
-          >
-            <InputGroup
-              intent={
-                errors.organization_name &&
-                touched.organization_name &&
-                Intent.DANGER
-              }
-              {...getFieldProps('organization_name')}
-            />
-          </FormGroup>
-
+          
           <Row className={'name-section'}>
             <Col md={6}>
               <FormGroup
@@ -301,4 +279,6 @@ function Register({ requestRegister }) {
   );
 }
 
-export default compose(withAuthenticationActions)(Register);
+export default compose(
+  withAuthenticationActions,
+)(RegisterUserForm);

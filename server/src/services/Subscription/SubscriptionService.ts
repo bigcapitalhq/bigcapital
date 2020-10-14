@@ -1,5 +1,5 @@
 import { Service, Inject } from 'typedi';
-import { Plan, Tenant } from 'system/models';
+import { Plan, PlanSubscription } from 'system/models';
 import Subscription from 'services/Subscription/Subscription';
 import LicensePaymentMethod from 'services/Payment/LicensePaymentMethod';
 import PaymentContext from 'services/Payment';
@@ -29,7 +29,7 @@ export default class SubscriptionService {
    * @param {string} licenseCode 
    * @return {Promise}
    */
-  async subscriptionViaLicense(
+  public async subscriptionViaLicense(
     tenantId: number,
     planSlug: string,
     paymentModel?: ILicensePaymentModel,
@@ -52,5 +52,16 @@ export default class SubscriptionService {
     this.logger.info('[subscription_via_license] payment via license done successfully.', {
       tenantId, paymentModel
     }); 
+  }
+
+  /**
+   * Retrieve all subscription of the given tenant.
+   * @param {number} tenantId 
+   */
+  public async getSubscriptions(tenantId: number) {
+    this.logger.info('[subscription] trying to get tenant subscriptions.', { tenantId });
+    const subscriptions = await PlanSubscription.query().where('tenant_id', tenantId);
+
+    return subscriptions;
   }
 }
