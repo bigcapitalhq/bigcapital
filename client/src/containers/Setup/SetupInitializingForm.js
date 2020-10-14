@@ -37,7 +37,7 @@ function SetupInitializingForm({
           It's time to make your accounting really simple!
         </h1>
         <p className={'paragraph'}>
-          while we set up your account,please remember to verify your account by
+          while we set up your account, please remember to verify your account by
           clicking on the link we sent to yout registered email address
         </p>
       </div>

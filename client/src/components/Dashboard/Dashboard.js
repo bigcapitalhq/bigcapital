@@ -22,13 +22,13 @@ function Dashboard({
   // #withSettings
   requestFetchOptions,
 }) {
-  // const fetchOptions = useQuery(
-  //   ['options'], () => requestFetchOptions(),
-  // );
+  const fetchOptions = useQuery(
+    ['options'], () => requestFetchOptions(),
+  );
 
   return (
     <EnsureOrganizationIsReady>
-      <DashboardLoadingIndicator isLoading={false}>
+      <DashboardLoadingIndicator isLoading={fetchOptions.isFetching}>
         <Switch>
           <Route path="/preferences">
             <DashboardSplitPane>
