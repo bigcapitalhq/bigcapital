@@ -7,6 +7,7 @@ import {
   isOrganizationSeedingFactory,
   isOrganizationInitializingFactory,
   isOrganizationSubscribedFactory,
+  isOrganizationCongratsFactory,
 } from 'store/organizations/organizations.selectors';
 
 export default (mapState) => {
@@ -20,6 +21,7 @@ export default (mapState) => {
   const isOrganizationSeeding = isOrganizationSeedingFactory();
 
   const isOrganizationSubscribed = isOrganizationSubscribedFactory();
+  const isOrganizationCongrats = isOrganizationCongratsFactory();
 
   const mapStateToProps = (state, props) => {
     const mapped = {
@@ -30,6 +32,7 @@ export default (mapState) => {
       isOrganizationSeeding: isOrganizationInitializing(state, props),
       isOrganizationInitializing: isOrganizationSeeding(state, props),
       isOrganizationSubscribed: isOrganizationSubscribed(state, props),
+      isOrganizationSetupCompleted: isOrganizationCongrats(state, props),
     };
     return (mapState) ? mapState(mapped, state, props) : mapped;
   };

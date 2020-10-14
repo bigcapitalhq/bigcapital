@@ -47,4 +47,11 @@ export const isOrganizationSubscribedFactory = () => createSelector(
   (organization) => {
     return organization?.subscriptions?.length > 0;
   }
+);
+
+export const isOrganizationCongratsFactory = () => createSelector(
+  organizationSelector,
+  (organization) => {
+    return !!organization?.is_congrats;
+  }
 )

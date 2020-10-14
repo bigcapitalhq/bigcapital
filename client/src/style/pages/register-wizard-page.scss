@@ -59,7 +59,7 @@
 
       &__title {
         font-size: 26px;
-        font-weight: 600;
+        font-weight: 700;
         line-height: normal;
         margin-bottom: 20px;
         margin-top: 14px;
@@ -145,8 +145,8 @@
     font-size: 16px;
 
     &::before {
-      width: 13px;
-      height: 13px;
+      width: 11px;
+      height: 11px;
       content: '';
       line-height: 30px;
       display: block;
@@ -162,7 +162,7 @@
       content: '';
       position: absolute;
       background-color: #75859c;
-      top: 6px;
+      top: 5px;
       left: -50%;
       z-index: -1;
     }
@@ -245,7 +245,7 @@
   }
 }
 
-// setup initializing form
+// Setup initializing form
 .setup-initializing-form {
   width: 95%;
   margin: 0 auto;
@@ -283,5 +283,37 @@
       margin: 0 auto;
       color: #2e4266;
     }   
+  }
+}
+
+.setup-congrats{
+  width: 600px;
+  margin: 0 auto;
+  text-align: center;
+  padding-top: 80px;
+
+  &__page{
+
+  }
+
+  &__text{
+    margin-top: 30px;
+
+    h1{
+      color: #2D2B43;
+      margin-bottom: 12px;
+    }
+    .paragraph{
+      font-size: 15px;
+      opacity: 0.85;
+      margin-bottom: 14px;
+    }
+    .bp3-button{
+      height: 38px;
+      padding-left: 25px;
+      padding-right: 25px;
+      font-size: 15px;
+      margin-top: 12px;
+    }
   }
 }

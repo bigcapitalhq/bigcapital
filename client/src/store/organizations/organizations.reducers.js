@@ -37,6 +37,7 @@ const reducer = createReducer(initialState, {
       ...(state.data[organizationId] || {}),
       is_seeding: false,
       seeded_at: new Date().toISOString(),
+      is_ready: true,
     };
   },
 
@@ -58,6 +59,15 @@ const reducer = createReducer(initialState, {
       initialized_at: new Date().toISOString(),
     };
   },
+
+  [t.SET_ORGANIZATION_CONGRATS]: (state, action) => {
+    const { organizationId, congrats } = action.payload;
+
+    state.data[organizationId] = {
+      ...(state.data[organizationId] || {}),
+      is_congrats: !!congrats,
+    };
+  }
 })
 
 export default reducer;

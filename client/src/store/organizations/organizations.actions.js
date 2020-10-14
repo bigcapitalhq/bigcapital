@@ -36,13 +36,13 @@ export const seedTenant = () => (dispatch, getState) => new Promise((resolve, re
   const organizationId = getState().authentication.organizationId;
 
   dispatch({
-    type: t.SET_ORGANIZATION_INITIALIZING,
+    type: t.SET_ORGANIZATION_SEEDING,
     payload: { organizationId }
   });
   ApiService.post(`organization/seed/`).then((response) => {
     resolve(response);
     dispatch({
-      type: t.SET_ORGANIZATION_INITIALIZED,
+      type: t.SET_ORGANIZATION_SEEDED,
       payload: { organizationId }
     });
   })
@@ -50,3 +50,15 @@ export const seedTenant = () => (dispatch, getState) => new Promise((resolve, re
     reject(error.response.data.errors || []);
   });
 });
+
+export const setOrganizationSetupCompleted = (congrats) => (dispatch, getState) => {
+  const organizationId = getState().authentication.organizationId;
+
+  dispatch({
+    type: t.SET_ORGANIZATION_CONGRATS,
+    payload: {
+      organizationId,
+      congrats
+    },
+  });
+};

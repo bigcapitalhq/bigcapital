@@ -10,6 +10,7 @@ import withSubscriptions from 'containers/Subscriptions/withSubscriptions';
 import SetupSubscriptionForm from './SetupSubscriptionForm';
 import SetupOrganizationForm from './SetupOrganizationForm';
 import SetupInitializingForm from './SetupInitializingForm';
+import SetupCongratsPage from './SetupCongratsPage';
 
 import withAuthentication from 'containers/Authentication/withAuthentication';
 import withOrganization from 'containers/Organization/withOrganization'
@@ -25,6 +26,7 @@ function SetupRightSection ({
   // #withOrganization
   isOrganizationInitialized,
   isOrganizationSeeded,
+  isOrganizationSetupCompleted,
 
   // #withSubscriptions
   isSubscriptionActive
@@ -33,6 +35,7 @@ function SetupRightSection ({
 
   const handleSkip = useCallback(({ step, push }) => {
     const scenarios = [
+      { condition: isOrganizationSetupCompleted, redirectTo: 'congrats' },
       { condition: !isSubscriptionActive, redirectTo: 'subscription' },
       { condition: isSubscriptionActive && !isOrganizationInitialized, redirectTo: 'initializing' },
       { condition: isSubscriptionActive && !isOrganizationSeeded, redirectTo: 'organization' },
@@ -46,6 +49,7 @@ function SetupRightSection ({
     isSubscriptionActive,
     isOrganizationInitialized,
     isOrganizationSeeded,
+    isOrganizationSetupCompleted
   ]);
 
   return (
@@ -74,8 +78,8 @@ function SetupRightSection ({
                       <SetupOrganizationForm />
                     </Step>
 
-                    <Step id="congratulations">
-                      <h1 className="text-align-center">Ice King</h1>
+                    <Step id="congrats">
+                      <SetupCongratsPage />
                     </Step>
                   </Steps>
                 </div>
@@ -96,10 +100,12 @@ export default compose(
     organization,
     isOrganizationInitialized,
     isOrganizationSeeded,
+    isOrganizationSetupCompleted
   }) => ({
     organization,
     isOrganizationInitialized,
     isOrganizationSeeded,
+    isOrganizationSetupCompleted
   })),
   withSubscriptions(({
     isSubscriptionActive,

@@ -29,6 +29,7 @@ function SetupOrganizationForm({
   requestSubmitOptions,
   requestOrganizationSeed,
   wizard,
+  setOrganizationSetupCompleted
 }) {
   const { formatMessage } = useIntl();
   const [selected, setSelected] = useState();
@@ -182,6 +183,9 @@ function SetupOrganizationForm({
       requestSubmitOptions({ options })
         .then(() => {
           return requestOrganizationSeed();
+        })
+        .then(() => {
+          return setOrganizationSetupCompleted(true);
         })
         .then((response) => {
           wizard.next();
