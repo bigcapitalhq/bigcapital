@@ -196,9 +196,15 @@ export default class VendorsController extends ContactsController {
       filterRoles: [],
       ...this.matchedBodyData(req),
     };
+
     try {
-      const vendors = await this.vendorsService.getVendorsList(tenantId, vendorsFilter);
-      return res.status(200).send({ vendors });
+      const { vendors, pagination, filterMeta } = await this.vendorsService.getVendorsList(tenantId, vendorsFilter);
+
+      return res.status(200).send({
+        vendors,
+        pagination: this.transfromToResponse(pagination),
+        filter_meta: this.transfromToResponse(filterMeta),
+      });
     } catch (error) {
       next(error);
     }

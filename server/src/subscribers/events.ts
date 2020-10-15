@@ -157,4 +157,11 @@ export default {
     onDeleted: 'onVendorDeleted',
     onBulkDeleted: 'onVendorBulkDeleted',
   },
+
+  items: {
+    onCreated: 'onItemCreated',
+    onEdited: 'onItemEdited',
+    onDeleted: 'onItemDeleted',
+    onBulkDeleted: 'onItemBulkDeleted',
+  }
 }

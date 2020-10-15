@@ -144,15 +144,18 @@ export default class CustomersService {
    */
   public async getCustomersList(
     tenantId: number,
-    filter: ICustomersFilter
+    customersFilter: ICustomersFilter
   ): Promise<{ customers: ICustomer[], pagination: IPaginationMeta, filterMeta: IFilterMeta }> {
     const { Contact } = this.tenancy.models(tenantId);
-    const dynamicList = await this.dynamicListService.dynamicList(tenantId, Contact, filter);
+    const dynamicList = await this.dynamicListService.dynamicList(tenantId, Contact, customersFilter);
 
     const { results, pagination } = await Contact.query().onBuild((query) => {
       query.modify('customer');
       dynamicList.buildQuery()(query);
-    });
+    }).pagination(
+      customersFilter.page - 1,
+      customersFilter.pageSize,
+    );
 
     return {
       customers: results,

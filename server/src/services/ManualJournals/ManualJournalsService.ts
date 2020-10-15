@@ -4,7 +4,7 @@ import moment from 'moment';
 import { ServiceError } from "exceptions";
 import {
   IManualJournalDTO,
-  IManuaLJournalsService,
+  IManualJournalsService,
   IManualJournalsFilter,
   ISystemUser,
   IManualJournal,
@@ -33,7 +33,7 @@ const ERRORS = {
 };
 
 @Service()
-export default class ManualJournalsService implements IManuaLJournalsService {
+export default class ManualJournalsService implements IManualJournalsService {
   @Inject()
   tenancy: TenancyService;
 

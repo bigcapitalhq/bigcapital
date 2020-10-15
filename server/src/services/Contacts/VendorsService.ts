@@ -11,7 +11,9 @@ import {
   IVendorNewDTO,
   IVendorEditDTO,
   IVendor,
-  IVendorsFilter
+  IVendorsFilter,
+  IPaginationMeta,
+  IFilterMeta
  } from 'interfaces';
 import { ServiceError } from 'exceptions';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
@@ -226,14 +228,25 @@ export default class VendorsService {
    * @param {number} tenantId - Tenant id.
    * @param {IVendorsFilter} vendorsFilter - Vendors filter.
    */
-  public async getVendorsList(tenantId: number, vendorsFilter: IVendorsFilter) {
-    const { Vendor } = this.tenancy.models(tenantId);
+  public async getVendorsList(
+    tenantId: number,
+    vendorsFilter: IVendorsFilter
+  ): Promise<{ vendors: IVendor[], pagination: IPaginationMeta, filterMeta: IFilterMeta }> {
+    const { Contact } = this.tenancy.models(tenantId);
+    const dynamicFilter = await this.dynamicListService.dynamicList(tenantId, Contact, vendorsFilter);
 
-    const dynamicFilter = await this.dynamicListService.dynamicList(tenantId, Vendor, vendorsFilter);
-
-    const vendors = await Vendor.query().onBuild((builder) => {
+    const { results, pagination } = await Contact.query().onBuild((builder) => {
+      builder.modify('vendor');
       dynamicFilter.buildQuery()(builder);
-    });
-    return vendors;
+    }).pagination(
+      vendorsFilter.page - 1,
+      vendorsFilter.pageSize,
+    );
+
+    return {
+      vendors: results,
+      pagination,
+      filterMeta: dynamicFilter.getResponseMeta(),
+    };
   }
 }

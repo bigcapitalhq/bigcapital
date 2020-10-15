@@ -22,8 +22,10 @@ export default class SubscriptionController {
 		router.use(AttachCurrentTenantUser);
 		router.use(TenancyMiddleware);
 
-		router.use('/license', Container.get(PaymentViaLicenseController).router());
-
+		router.use(
+			'/license',
+			Container.get(PaymentViaLicenseController).router()
+		);
 		router.get('/',
 			asyncMiddleware(this.getSubscriptions.bind(this))
 		);

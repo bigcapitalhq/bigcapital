@@ -1,5 +1,9 @@
 import { Inject } from 'typedi';
 import { difference } from 'lodash';
+import {
+  EventDispatcher,
+  EventDispatcherInterface,
+} from 'decorators/eventDispatcher';
 import { ServiceError } from 'exceptions';
 import {
   IItemCategory,
@@ -10,6 +14,7 @@ import {
 } from "interfaces";
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import TenancyService from 'services/Tenancy/TenancyService';
+import events from 'subscribers/events';
 
 const ERRORS = {
   ITEM_CATEGORIES_NOT_FOUND: 'ITEM_CATEGORIES_NOT_FOUND',
@@ -32,6 +37,9 @@ export default class ItemCategoriesService implements IItemCategoriesService {
 
   @Inject('logger')
   logger: any;
+
+  @EventDispatcher()
+  eventDispatcher: EventDispatcherInterface;
 
   /**
    * Retrieve item category or throw not found error.
@@ -92,6 +100,8 @@ export default class ItemCategoriesService implements IItemCategoriesService {
 
     const itemCategoryObj = this.transformOTDToObject(itemCategoryOTD, authorizedUser);
     const itemCategory = await ItemCategory.query().insert({ ...itemCategoryObj });
+
+    await this.eventDispatcher.dispatch(events.items.onCreated);
     this.logger.info('[item_category] item category inserted successfully.', { tenantId, itemCategoryOTD });
 
     return itemCategory;
@@ -188,6 +198,8 @@ export default class ItemCategoriesService implements IItemCategoriesService {
 
     const itemCategoryObj = this.transformOTDToObject(itemCategoryOTD, authorizedUser);
     const itemCategory = await ItemCategory.query().patchAndFetchById(itemCategoryId, { ...itemCategoryObj });
+
+    await this.eventDispatcher.dispatch(events.items.onEdited);
     this.logger.info('[item_category] edited successfully.', { tenantId, itemCategoryId, itemCategoryOTD });
 
     return itemCategory;
@@ -207,6 +219,8 @@ export default class ItemCategoriesService implements IItemCategoriesService {
     const { ItemCategory } = this.tenancy.models(tenantId);
     await ItemCategory.query().findById(itemCategoryId).delete();
     this.logger.info('[item_category] deleted successfully.', { tenantId, itemCategoryId });
+
+    await this.eventDispatcher.dispatch(events.items.onDeleted);
   }
  
   /**
@@ -267,6 +281,8 @@ export default class ItemCategoriesService implements IItemCategoriesService {
     await this.unassociateItemsWithCategories(tenantId, itemCategoriesIds);
  
     await ItemCategory.query().whereIn('id', itemCategoriesIds).delete();
+
+    await this.eventDispatcher.dispatch(events.items.onBulkDeleted);
     this.logger.info('[item_category] item categories deleted successfully.', { tenantId, itemCategoriesIds });
   }
 }

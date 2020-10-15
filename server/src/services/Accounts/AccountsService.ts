@@ -10,9 +10,6 @@ import {
 } from 'decorators/eventDispatcher';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import events from 'subscribers/events';
-import JournalPoster from 'services/Accounting/JournalPoster';
-import { Account } from 'models';
-import AccountRepository from 'repositories/AccountRepository';
 
 @Service()
 export default class AccountsService {
