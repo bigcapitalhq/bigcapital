@@ -1,5 +1,9 @@
 import { Inject, Service } from 'typedi';
 import { difference, rest } from 'lodash';
+import {
+  EventDispatcher,
+  EventDispatcherInterface,
+} from 'decorators/eventDispatcher';
 import JournalPoster from "services/Accounting/JournalPoster";
 import JournalCommands from "services/Accounting/JournalCommands";
 import ContactsService from 'services/Contacts/ContactsService';
@@ -12,6 +16,7 @@ import {
 import { ServiceError } from 'exceptions';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import TenancyService from 'services/Tenancy/TenancyService';
+import events from 'subscribers/events';
 
 @Service()
 export default class VendorsService {
@@ -24,12 +29,18 @@ export default class VendorsService {
   @Inject()
   dynamicListService: DynamicListingService;
 
+  @EventDispatcher()
+  eventDispatcher: EventDispatcherInterface;
+
+  @Inject('logger')
+  logger: any;
+
   /**
    * Converts vendor to contact DTO.
    * @param {IVendorNewDTO|IVendorEditDTO} vendorDTO 
    * @returns {IContactDTO}
    */
-  vendorToContactDTO(vendorDTO: IVendorNewDTO|IVendorEditDTO) {
+  private vendorToContactDTO(vendorDTO: IVendorNewDTO|IVendorEditDTO) {
     return {
       ...vendorDTO,
       active: (typeof vendorDTO.active === 'undefined') ?
@@ -43,19 +54,15 @@ export default class VendorsService {
    * @param {IVendorNewDTO} vendorDTO 
    * @return {Promise<void>}
    */
-  async newVendor(tenantId: number, vendorDTO: IVendorNewDTO) {
-    const contactDTO = this.vendorToContactDTO(vendorDTO);
+  public async newVendor(tenantId: number, vendorDTO: IVendorNewDTO) {
+    this.logger.info('[vendor] trying create a new vendor.', { tenantId, vendorDTO });
 
+    const contactDTO = this.vendorToContactDTO(vendorDTO);
     const vendor = await this.contactService.newContact(tenantId, contactDTO, 'vendor');
 
-    // Writes the vendor opening balance journal entries.
-    if (vendor.openingBalance) { 
-      await this.writeVendorOpeningBalanceJournal(
-        tenantId,
-        vendor.id,
-        vendor.openingBalance,
-      );
-    }
+    await this.eventDispatcher.dispatch(events.vendors.onCreated, {
+      tenantId, vendorId: vendor.id, vendor,
+    });
     return vendor;
   }
 
@@ -64,9 +71,13 @@ export default class VendorsService {
    * @param {number} tenantId 
    * @param {IVendorEditDTO} vendorDTO 
    */
-  async editVendor(tenantId: number, vendorId: number, vendorDTO: IVendorEditDTO) {
+  public async editVendor(tenantId: number, vendorId: number, vendorDTO: IVendorEditDTO) {
     const contactDTO = this.vendorToContactDTO(vendorDTO);
-    return this.contactService.editContact(tenantId, vendorId, contactDTO, 'vendor');
+    const vendor = await this.contactService.editContact(tenantId, vendorId, contactDTO, 'vendor');
+
+    await this.eventDispatcher.dispatch(events.vendors.onEdited);
+
+    return vendor;
   }
 
   /**
@@ -74,7 +85,7 @@ export default class VendorsService {
    * @param {number} tenantId 
    * @param {number} customerId 
    */
-  getVendorByIdOrThrowError(tenantId: number, customerId: number) {
+  private getVendorByIdOrThrowError(tenantId: number, customerId: number) {
     return this.contactService.getContactByIdOrThrowError(tenantId, customerId, 'vendor');
   }
 
@@ -84,17 +95,17 @@ export default class VendorsService {
    * @param {number} vendorId 
    * @return {Promise<void>}
    */
-  async deleteVendor(tenantId: number, vendorId: number) {
+  public async deleteVendor(tenantId: number, vendorId: number) {
     const { Contact } = this.tenancy.models(tenantId);
-    
+
     await this.getVendorByIdOrThrowError(tenantId, vendorId);
     await this.vendorHasNoBillsOrThrowError(tenantId, vendorId);
 
+    this.logger.info('[vendor] trying to delete vendor.', { tenantId, vendorId });
     await Contact.query().findById(vendorId).delete();
 
-    await this.contactService.revertJEntriesContactsOpeningBalance(
-      tenantId, [vendorId], 'vendor',
-    );
+    await this.eventDispatcher.dispatch(events.vendors.onDeleted, { tenantId, vendorId });
+    this.logger.info('[vendor] deleted successfully.', { tenantId, vendorId });
   }
 
   /**
@@ -102,7 +113,7 @@ export default class VendorsService {
    * @param {number} tenantId 
    * @param {number} vendorId 
    */
-  async getVendor(tenantId: number, vendorId: number) {
+  public async getVendor(tenantId: number, vendorId: number) {
     return this.contactService.getContact(tenantId, vendorId, 'vendor');
   }
 
@@ -113,7 +124,7 @@ export default class VendorsService {
    * @param {number} openingBalance 
    * @return {Promise<void>}
    */
-  async writeVendorOpeningBalanceJournal(
+  public async writeVendorOpeningBalanceJournal(
     tenantId: number,
     vendorId: number,
     openingBalance: number,
@@ -121,8 +132,9 @@ export default class VendorsService {
     const journal = new JournalPoster(tenantId);
     const journalCommands = new JournalCommands(journal);
 
+    this.logger.info('[vendor] writing opening balance journal entries.', { tenantId, vendorId });
     await journalCommands.vendorOpeningBalance(vendorId, openingBalance)
-
+    
     await Promise.all([
       journal.saveBalance(),
       journal.saveEntries(),
@@ -130,11 +142,26 @@ export default class VendorsService {
   }
 
   /**
+   * Reverts vendor opening balance journal entries.
+   * @param {number} tenantId -
+   * @param {number} vendorId -
+   * @return {Promise<void>}
+   */
+  public async revertOpeningBalanceEntries(tenantId: number, vendorId: number|number[]) {
+    const id = Array.isArray(vendorId) ? vendorId : [vendorId];
+
+    this.logger.info('[customer] trying to revert opening balance journal entries.', { tenantId, customerId });
+    await this.contactService.revertJEntriesContactsOpeningBalance(
+      tenantId, id, 'vendor',
+    );
+  }
+
+  /**
    * Retrieve the given vendors or throw error if one of them not found.
    * @param {numebr} tenantId 
    * @param {number[]} vendorsIds
    */
-  getVendorsOrThrowErrorNotFound(tenantId: number, vendorsIds: number[]) {
+  private getVendorsOrThrowErrorNotFound(tenantId: number, vendorsIds: number[]) {
     return this.contactService.getContactsOrThrowErrorNotFound(tenantId, vendorsIds, 'vendor');
   }
 
@@ -144,17 +171,19 @@ export default class VendorsService {
    * @param {number[]} vendorsIds 
    * @return {Promise<void>}
    */
-  async deleteBulkVendors(tenantId: number, vendorsIds: number[]) {
+  public async deleteBulkVendors(
+    tenantId: number,
+    vendorsIds: number[]
+  ): Promise<void> {
     const { Contact } = this.tenancy.models(tenantId);
-    
+
     await this.getVendorsOrThrowErrorNotFound(tenantId, vendorsIds);
     await this.vendorsHaveNoBillsOrThrowError(tenantId, vendorsIds);
 
     await Contact.query().whereIn('id', vendorsIds).delete();
+    await this.eventDispatcher.dispatch(events.vendors.onBulkDeleted, { tenantId, vendorsIds });
 
-    await this.contactService.revertJEntriesContactsOpeningBalance(
-      tenantId, vendorsIds, 'vendor',
-    );
+    this.logger.info('[vendor] bulk deleted successfully.', { tenantId, vendorsIds });
   }
 
   /**
@@ -162,7 +191,7 @@ export default class VendorsService {
    * @param {number} tenantId 
    * @param {number} vendorId 
    */
-  async vendorHasNoBillsOrThrowError(tenantId: number, vendorId: number) {
+  private async vendorHasNoBillsOrThrowError(tenantId: number, vendorId: number) {
     const { vendorRepository } = this.tenancy.repositories(tenantId);
     const bills = await vendorRepository.getBills(vendorId);
 
@@ -177,7 +206,7 @@ export default class VendorsService {
    * @param  {number[]} customersIds 
    * @throws {ServiceError}
    */
-  async vendorsHaveNoBillsOrThrowError(tenantId: number, vendorsIds: number[]) {
+  private async vendorsHaveNoBillsOrThrowError(tenantId: number, vendorsIds: number[]) {
     const { vendorRepository } = this.tenancy.repositories(tenantId);
 
     const vendorsWithBills = await vendorRepository.vendorsWithBills(vendorsIds);
@@ -197,7 +226,7 @@ export default class VendorsService {
    * @param {number} tenantId - Tenant id.
    * @param {IVendorsFilter} vendorsFilter - Vendors filter.
    */
-  async getVendorsList(tenantId: number, vendorsFilter: IVendorsFilter) {
+  public async getVendorsList(tenantId: number, vendorsFilter: IVendorsFilter) {
     const { Vendor } = this.tenancy.models(tenantId);
 
     const dynamicFilter = await this.dynamicListService.dynamicList(tenantId, Vendor, vendorsFilter);

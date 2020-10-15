@@ -24,7 +24,8 @@ export default class VendorsController extends ContactsController {
       ...this.vendorDTOSchema,
     ],
       this.validationResult,
-      asyncMiddleware(this.newVendor.bind(this))
+      asyncMiddleware(this.newVendor.bind(this)),
+      this.handlerServiceErrors,
     );
     router.post('/:id', [
       ...this.contactDTOSchema,
@@ -32,25 +33,29 @@ export default class VendorsController extends ContactsController {
       ...this.vendorDTOSchema,
     ],
       this.validationResult,
-      asyncMiddleware(this.editVendor.bind(this))
+      asyncMiddleware(this.editVendor.bind(this)),
+      this.handlerServiceErrors,
     );
     router.delete('/:id', [
       ...this.specificContactSchema,
     ],
       this.validationResult,
-      asyncMiddleware(this.deleteVendor.bind(this))
+      asyncMiddleware(this.deleteVendor.bind(this)),
+      this.handlerServiceErrors,
     );
     router.delete('/', [
       ...this.bulkContactsSchema,
     ],
       this.validationResult,
-      asyncMiddleware(this.deleteBulkVendors.bind(this))
+      asyncMiddleware(this.deleteBulkVendors.bind(this)),
+      this.handlerServiceErrors,
     );
     router.get('/:id', [
       ...this.specificContactSchema,
     ],
       this.validationResult,
-      asyncMiddleware(this.getVendor.bind(this))
+      asyncMiddleware(this.getVendor.bind(this)),
+      this.handlerServiceErrors,
     );
     router.get('/', [
       ...this.vendorsListSchema,
@@ -99,8 +104,8 @@ export default class VendorsController extends ContactsController {
     const { tenantId } = req;
 
     try {
-      const contact = await this.vendorsService.newVendor(tenantId, contactDTO);
-      return res.status(200).send({ id: contact.id });
+      const vendor = await this.vendorsService.newVendor(tenantId, contactDTO);
+      return res.status(200).send({ id: vendor.id });
     } catch (error) {
       next(error);
     }
@@ -121,13 +126,6 @@ export default class VendorsController extends ContactsController {
       await this.vendorsService.editVendor(tenantId, contactId, contactDTO);
       return res.status(200).send({ id: contactId });
     } catch (error) {
-      if (error instanceof ServiceError) {
-        if (error.errorType === 'contact_not_found') {
-          return res.status(400).send({
-            errors: [{ type: 'VENDOR.NOT.FOUND', code: 100 }],
-          });
-        }
-      }
       next(error);
     }
   }
@@ -146,18 +144,6 @@ export default class VendorsController extends ContactsController {
       await this.vendorsService.deleteVendor(tenantId, contactId)
       return res.status(200).send({ id: contactId });
     } catch (error) {
-      if (error instanceof ServiceError) {
-        if (error.errorType === 'contact_not_found') {
-          return res.status(400).send({
-            errors: [{ type: 'VENDOR.NOT.FOUND', code: 100 }],
-          });
-        }
-        if (error.errorType === 'vendor_has_bills') {
-          return res.status(400).send({
-            errors: [{ type: 'VENDOR.HAS.BILLS', code: 200 }],
-          });
-        }
-      }
       next(error);
     }
   }
@@ -176,13 +162,6 @@ export default class VendorsController extends ContactsController {
       const vendor = await this.vendorsService.getVendor(tenantId, vendorId)
       return res.status(200).send({ vendor });
     } catch (error) {
-      if (error instanceof ServiceError) {
-        if (error.errorType === 'contact_not_found') {
-          return res.status(400).send({
-            errors: [{ type: 'VENDOR.NOT.FOUND', code: 100 }],
-          });
-        }
-      }
       next(error);
     }
   }
@@ -201,18 +180,6 @@ export default class VendorsController extends ContactsController {
       await this.vendorsService.deleteBulkVendors(tenantId, contactsIds)
       return res.status(200).send({ ids: contactsIds });
     } catch (error) {
-      if (error instanceof ServiceError) {
-        if (error.errorType === 'contacts_not_found') {
-          return res.boom.badRequest(null, {
-            errors: [{ type: 'VENDORS.NOT.FOUND', code: 100 }],
-          });
-        }
-        if (error.errorType === 'some_vendors_have_bills') {
-          return res.boom.badRequest(null, {
-            errors: [{ type: 'SOME.VENDORS.HAVE.BILLS', code: 200 }],
-          });
-        }
-      }
       next(error);
     }
   }
@@ -234,6 +201,33 @@ export default class VendorsController extends ContactsController {
       return res.status(200).send({ vendors });
     } catch (error) {
       next(error);
+    }
+  }
+
+  /**
+   * Handle service errors.
+   * @param {Error} error - 
+   * @param {Request} req -
+   * @param {Response} res -
+   * @param {NextFunction} next -
+   */
+  handlerServiceErrors(error, req: Request, res: Response, next: NextFunction) {
+    if (error instanceof ServiceError) {
+      if (error.errorType === 'contacts_not_found') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'VENDORS.NOT.FOUND', code: 100 }],
+        });
+      }
+      if (error.errorType === 'some_vendors_have_bills') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'SOME.VENDORS.HAVE.BILLS', code: 200 }],
+        });
+      }
+      if (error.errorType === 'vendor_has_bills') {
+        return res.status(400).send({
+          errors: [{ type: 'VENDOR.HAS.BILLS', code: 200 }],
+        });
+      }
     }
   }
 }

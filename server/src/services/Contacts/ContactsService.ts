@@ -26,7 +26,7 @@ export default class ContactsService {
    * @param {TContactService} contactService
    * @return {Promise<IContact>}
    */
-  private async getContactByIdOrThrowError(tenantId: number, contactId: number, contactService: TContactService) {
+  public async getContactByIdOrThrowError(tenantId: number, contactId: number, contactService: TContactService) {
     const { Contact } = this.tenancy.models(tenantId);
 
     this.logger.info('[contact] trying to validate contact existance.', { tenantId, contactId });

@@ -32,7 +32,7 @@ export default class SaleInvoicesController extends BaseController{
       this.saleInvoiceValidationSchema,
       this.validationResult,
       asyncMiddleware(this.validateInvoiceCustomerExistance.bind(this)),
-      asyncMiddleware(this.validateInvoiceNumberUnique.bind(this)),
+      // asyncMiddleware(this.validateInvoiceNumberUnique.bind(this)),
       asyncMiddleware(this.validateInvoiceItemsIdsExistance.bind(this)),
       asyncMiddleware(this.validateNonSellableEntriesItems.bind(this)),
       asyncMiddleware(this.newSaleInvoice.bind(this))
@@ -46,7 +46,7 @@ export default class SaleInvoicesController extends BaseController{
       this.validationResult,
       asyncMiddleware(this.validateInvoiceExistance.bind(this)),
       asyncMiddleware(this.validateInvoiceCustomerExistance.bind(this)),
-      asyncMiddleware(this.validateInvoiceNumberUnique.bind(this)),
+      // asyncMiddleware(this.validateInvoiceNumberUnique.bind(this)),
       asyncMiddleware(this.validateInvoiceItemsIdsExistance.bind(this)),
       asyncMiddleware(this.valdiateInvoiceEntriesIdsExistance.bind(this)),
       asyncMiddleware(this.validateEntriesIdsExistance.bind(this)),
@@ -312,18 +312,19 @@ export default class SaleInvoicesController extends BaseController{
    * @param {Response} res
    * @param {Function} next
    */
-  async newSaleInvoice(req: Request, res: Response) {
+  async newSaleInvoice(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
-    const saleInvoiceOTD: ISaleInvoiceOTD = matchedData(req, {
-      locations: ['body'],
-      includeOptionals: true
-    });
+    const saleInvoiceOTD: ISaleInvoiceOTD = this.matchedBodyData(req);
 
-    // Creates a new sale invoice with associated entries.
-    const storedSaleInvoice = await this.saleInvoiceService.createSaleInvoice(
-      tenantId, saleInvoiceOTD,
-    );
-    return res.status(200).send({ id: storedSaleInvoice.id });
+    try {
+      // Creates a new sale invoice with associated entries.
+      const storedSaleInvoice = await this.saleInvoiceService.createSaleInvoice(
+        tenantId, saleInvoiceOTD,
+      );
+      return res.status(200).send({ id: storedSaleInvoice.id });
+    } catch (error) {
+      next(error)
+    }
   }
 
   /**
@@ -332,18 +333,18 @@ export default class SaleInvoicesController extends BaseController{
    * @param {Response} res
    * @param {Function} next
    */
-  async editSaleInvoice(req: Request, res: Response) {
+  async editSaleInvoice(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const { id: saleInvoiceId } = req.params;
+    const saleInvoiceOTD: ISaleInvoiceOTD = this.matchedBodyData(req);
 
-    const saleInvoiceOTD: ISaleInvoiceOTD = matchedData(req, {
-      locations: ['body'],
-      includeOptionals: true
-    });
-    // Update the given sale invoice details.
-    await this.saleInvoiceService.editSaleInvoice(tenantId, saleInvoiceId, saleInvoiceOTD);
-
-    return res.status(200).send({ id: saleInvoiceId });
+    try {
+      // Update the given sale invoice details.
+      await this.saleInvoiceService.editSaleInvoice(tenantId, saleInvoiceId, saleInvoiceOTD);
+      return res.status(200).send({ id: saleInvoiceId });
+    } catch (error) {
+      next(error);
+    }
   }
 
   /**
@@ -352,14 +353,18 @@ export default class SaleInvoicesController extends BaseController{
    * @param {Response} res
    * @param {Function} next
    */
-  async deleteSaleInvoice(req: Request, res: Response) {
+  async deleteSaleInvoice(req: Request, res: Response, next: NextFunction) {
     const { id: saleInvoiceId } = req.params;
     const { tenantId } = req;
 
-    // Deletes the sale invoice with associated entries and journal transaction.
-    await this.saleInvoiceService.deleteSaleInvoice(tenantId, saleInvoiceId);
-
-    return res.status(200).send({ id: saleInvoiceId });
+    try {
+      // Deletes the sale invoice with associated entries and journal transaction.
+      await this.saleInvoiceService.deleteSaleInvoice(tenantId, saleInvoiceId);
+  
+      return res.status(200).send({ id: saleInvoiceId });
+    } catch (error) {
+      next(error);
+    }
   }
 
   /**

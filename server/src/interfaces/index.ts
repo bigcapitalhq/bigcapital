@@ -2,6 +2,7 @@
 export * from './Model';
 export * from './InventoryTransaction';
 export * from './BillPayment';
+export * from './Bill';
 export * from './InventoryCostMethod';
 export * from './ItemEntry';
 export * from './Item';
@@ -26,3 +27,4 @@ export * from './ManualJournal';
 export * from './Currency';
 export * from './ExchangeRate';
 export * from './Media';
+export * from './SaleEstimate';

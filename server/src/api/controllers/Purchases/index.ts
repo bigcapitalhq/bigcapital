@@ -1,4 +1,4 @@
-import express from 'express';
+import { Router } from 'express';
 import { Container, Service } from 'typedi';
 import Bills from 'api/controllers/Purchases/Bills'
 import BillPayments from 'api/controllers/Purchases/BillsPayments';
@@ -7,7 +7,7 @@ import BillPayments from 'api/controllers/Purchases/BillsPayments';
 export default class PurchasesController {
 
   router() {
-    const router = express.Router();
+    const router = Router();
 
     router.use('/bills', Container.get(Bills).router());
     router.use('/bill_payments', Container.get(BillPayments).router());

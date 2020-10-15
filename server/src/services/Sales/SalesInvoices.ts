@@ -4,7 +4,15 @@ import {
   EventDispatcher,
   EventDispatcherInterface,
 } from 'decorators/eventDispatcher';
-import { ISaleInvoice, ISaleInvoiceOTD, IItemEntry, ISalesInvoicesFilter, IPaginationMeta, IFilterMeta } from 'interfaces';
+import {
+  ISaleInvoice,
+  ISaleInvoiceOTD,
+  IItemEntry,
+  ISalesInvoicesFilter,
+  IPaginationMeta,
+  IFilterMeta
+} from 'interfaces';
+import events from 'subscribers/events';
 import JournalPoster from 'services/Accounting/JournalPoster';
 import HasItemsEntries from 'services/Sales/HasItemsEntries';
 import InventoryService from 'services/Inventory/Inventory';
@@ -12,6 +20,16 @@ import SalesInvoicesCost from 'services/Sales/SalesInvoicesCost';
 import TenancyService from 'services/Tenancy/TenancyService';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import { formatDateFields } from 'utils';
+import { ServiceError } from 'exceptions';
+import ItemsService from 'services/Items/ItemsService';
+
+
+const ERRORS = {
+  SALE_INVOICE_NOT_FOUND: 'SALE_INVOICE_NOT_FOUND',
+  ENTRIES_ITEMS_IDS_NOT_EXISTS: 'ENTRIES_ITEMS_IDS_NOT_EXISTS',
+  NOT_SELLABLE_ITEMS: 'NOT_SELLABLE_ITEMS',
+  SALE_INVOICE_NO_NOT_UNIQUE: 'SALE_INVOICE_NO_NOT_UNIQUE'
+}
 
 /**
  * Sales invoices service
@@ -37,6 +55,81 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
   @EventDispatcher()
   eventDispatcher: EventDispatcherInterface;
 
+  @Inject()
+  itemsService: ItemsService;
+
+  /**
+   * Retrieve sale invoice or throw not found error.
+   * @param {number} tenantId 
+   * @param {number} saleInvoiceId 
+   */
+  private async getSaleInvoiceOrThrowError(tenantId: number, saleInvoiceId: number): Promise<ISaleInvoice> {
+    const { SaleInvoice } = this.tenancy.models(tenantId);
+    const saleInvoice = await SaleInvoice.query().where('id', saleInvoiceId);
+    
+    if (!saleInvoice) {
+      throw new ServiceError(ERRORS.SALE_INVOICE_NOT_FOUND);
+    }
+    return saleInvoice;
+  }
+
+  /**
+   * Validate whether sale invoice number unqiue on the storage.
+   * @param {number} tenantId 
+   * @param {number} saleInvoiceNo 
+   * @param {number} notSaleInvoiceId 
+   */
+  private async validateSaleInvoiceNoUniquiness(tenantId: number, saleInvoiceNo: string, notSaleInvoiceId: number) {
+    const { SaleInvoice } = this.tenancy.models(tenantId);
+
+    const foundSaleInvoice = await SaleInvoice.query()
+      .onBuild((query: any) => {
+        query.where('invoice_no', saleInvoiceNo);
+
+        if (notSaleInvoiceId) {
+          query.whereNot('id', notSaleInvoiceId);
+        }
+        return query;
+      });
+    
+    if (foundSaleInvoice.length > 0) {
+      throw new ServiceError(ERRORS.SALE_INVOICE_NO_NOT_UNIQUE);
+    }
+  }
+
+  /**
+   * Validates sale invoice items that not sellable.
+   */
+  private async validateNonSellableEntriesItems(tenantId: number, saleInvoiceEntries: any) {
+    const { Item } = this.tenancy.models(tenantId);
+    const itemsIds = saleInvoiceEntries.map(e => e.itemId);
+
+    const sellableItems = await Item.query().where('sellable', true).whereIn('id', itemsIds);
+
+    const sellableItemsIds = sellableItems.map((item) => item.id);
+    const notSellableItems = difference(itemsIds, sellableItemsIds);
+
+    if (notSellableItems.length > 0) {
+      throw new ServiceError(ERRORS.SALE_INVOICE_NOT_FOUND);
+    }
+  }
+
+  /**
+   * 
+   * @param {number} tenantId 
+   * @param {} saleInvoiceEntries 
+   */
+  validateEntriesIdsExistance(tenantId: number, saleInvoiceEntries: any) {
+    const entriesItemsIds = saleInvoiceEntries.map((e) => e.item_id);
+
+    const isItemsIdsExists = await this.itemsService.isItemsIdsExists(
+      tenantId, entriesItemsIds,
+    );
+    if (isItemsIdsExists.length > 0) {
+      throw new ServiceError(ERRORS.ENTRIES_ITEMS_IDS_NOT_EXISTS);
+    }
+  }
+
   /**
    * Creates a new sale invoices and store it to the storage
    * with associated to entries and journal transactions.
@@ -57,6 +150,9 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
       paymentAmount: 0,
       invLotNumber,
     };
+
+    await this.validateSaleInvoiceNoUniquiness(tenantId, saleInvoiceDTO.invoiceNo);
+    await this.validateNonSellableEntriesItems(tenantId, saleInvoiceDTO.entries);
 
     this.logger.info('[sale_invoice] inserting sale invoice to the storage.');
     const storedInvoice = await SaleInvoice.query()
@@ -95,6 +191,8 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
     // method and starting date.
     await this.scheduleComputeInvoiceItemsCost(tenantId, storedInvoice.id);
 
+    await this.eventDispatcher.dispatch(events.saleInvoice.onCreated);
+
     return storedInvoice;
   }
 
@@ -131,30 +229,11 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
       .where('reference_type', 'SaleInvoice');
 
     // Patch update the sale invoice items entries.
-    const patchItemsEntriesOper = this.itemsEntriesService.patchItemsEntries(
+    await this.itemsEntriesService.patchItemsEntries(
       tenantId, saleInvoice.entries, storedEntries, 'SaleInvoice', saleInvoiceId,
     );
-
-    this.logger.info('[sale_invoice] change customer different balance.');
-    // Changes the diff customer balance between old and new amount.
-    const changeCustomerBalanceOper = Customer.changeDiffBalance(
-      saleInvoice.customer_id,
-      oldSaleInvoice.customerId,
-      balance,
-      oldSaleInvoice.balance,
-    );
-    // Records the inventory transactions for inventory items.
-    const recordInventoryTransOper = this.recordInventoryTranscactions(
-      tenantId, saleInvoice, saleInvoiceId, true,
-    );
-    await Promise.all([
-      patchItemsEntriesOper,
-      changeCustomerBalanceOper,
-      recordInventoryTransOper,
-    ]);
-    // Schedule sale invoice re-compute based on the item cost
-    // method and starting date.
-    await this.scheduleComputeInvoiceItemsCost(tenantId, saleInvoiceId, true);
+    // Triggers `onSaleInvoiceEdited` event.
+    await this.eventDispatcher.dispatch(events.saleInvoice.onEdited);
   }
 
   /**
@@ -168,14 +247,11 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
       SaleInvoice,
       ItemEntry,
       Customer,
-      Account,
       InventoryTransaction,
       AccountTransaction,
     } = this.tenancy.models(tenantId);
 
-    const oldSaleInvoice = await SaleInvoice.query()
-      .findById(saleInvoiceId)
-      .withGraphFetched('entries');
+    const oldSaleInvoice = await this.getSaleInvoiceOrThrowError(tenantId, saleInvoiceId);
 
     this.logger.info('[sale_invoice] delete sale invoice with entries.');
     await SaleInvoice.query().where('id', saleInvoiceId).delete();
@@ -218,6 +294,8 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
     // Schedule sale invoice re-compute based on the item cost
     // method and starting date.
     await this.scheduleComputeItemsCost(tenantId, oldSaleInvoice)
+
+    await this.eventDispatcher.dispatch(events.saleInvoice.onDeleted);
   }
 
   /**

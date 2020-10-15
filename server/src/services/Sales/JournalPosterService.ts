@@ -1,6 +1,7 @@
 import { Service, Inject } from 'typedi';
 import JournalPoster from 'services/Accounting/JournalPoster';
 import TenancyService from 'services/Tenancy/TenancyService';
+import JournalCommands from 'services/Accounting/JournalCommands';
 
 @Service()
 export default class JournalPosterService {
@@ -19,20 +20,14 @@ export default class JournalPosterService {
     referenceId: number,
     referenceType: string
   ) {
-    const { Account, AccountTransaction } = this.tenancy.models(tenantId);
+    const journal = new JournalPoster(tenantId);
+    const journalCommand = new JournalCommands(journal);
 
-    const transactions = await AccountTransaction.tenant()
-      .query()
-      .whereIn('reference_type', [referenceType])
-      .where('reference_id', referenceId)
-      .withGraphFetched('account.type');
+    await journalCommand.revertJournalEntries(referenceId, referenceType);
 
-    const accountsDepGraph = await Account.tenant().depGraph().query();
-    const journal = new JournalPoster(accountsDepGraph);
-
-    journal.loadEntries(transactions);
-    journal.removeEntries();
-
-    await Promise.all([journal.deleteEntries(), journal.saveBalance()]);
+    await Promise.all([
+      journal.deleteEntries(),
+      journal.saveBalance()
+    ]);
   }
 }

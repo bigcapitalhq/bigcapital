@@ -18,6 +18,15 @@ export default class VendorRepository extends TenantRepository {
   }
 
   /**
+   * Retrieve vendor details of the given id.
+   * @param {number} vendorId - Vendor id.
+   */
+  findById(vendorId: number) {
+    const { Contact } = this.models;
+    return Contact.query().findById(vendorId);
+  }
+
+  /**
    * Retrieve the bill that associated to the given vendor id.
    * @param {number} vendorId - Vendor id.
    */
@@ -48,5 +57,24 @@ export default class VendorRepository extends TenantRepository {
     return Contact.query().modify('vendor')
       .whereIn('id', vendorIds)
       .withGraphFetched('bills');
+  }
+
+  changeBalance(vendorId: number, amount: number) {
+    const { Contact } = this.models;
+    const changeMethod = (amount > 0) ? 'increment' : 'decrement';
+
+    return Contact.query()
+      .where('id', vendorId)
+      [changeMethod]('balance', Math.abs(amount));
+  }
+
+
+  changeDiffBalance(
+    vendorId: number,
+    amount: number,
+    oldAmount: number,
+    oldVendorId?: number,
+  ) {
+
   }
 }

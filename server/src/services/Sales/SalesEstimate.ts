@@ -1,10 +1,15 @@
 import { omit, difference, sumBy, mixin } from 'lodash';
 import { Service, Inject } from 'typedi';
-import { IEstimatesFilter, IFilterMeta, IPaginationMeta } from 'interfaces';
+import { IEstimatesFilter, IFilterMeta, IPaginationMeta, ISaleEstimate, ISaleEstimateDTO } from 'interfaces';
+import {
+  EventDispatcher,
+  EventDispatcherInterface,
+} from 'decorators/eventDispatcher';
 import HasItemsEntries from 'services/Sales/HasItemsEntries';
 import { formatDateFields } from 'utils';
 import TenancyService from 'services/Tenancy/TenancyService';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
+import events from 'subscribers/events';
 
 /**
  * Sale estimate service.
@@ -24,14 +29,132 @@ export default class SaleEstimateService {
   @Inject()
   dynamicListService: DynamicListingService;
 
+  @EventDispatcher()
+  eventDispatcher: EventDispatcherInterface;
+  
+
+  /**
+   * Validate whether the estimate customer exists on the storage. 
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {Function} next 
+   */
+  async validateEstimateCustomerExistance(req: Request, res: Response, next: Function) {
+    const estimate = { ...req.body };
+    const { Customer } = req.models
+
+    const foundCustomer = await Customer.query().findById(estimate.customer_id);
+
+    if (!foundCustomer) {
+      return res.status(404).send({
+        errors: [{ type: 'CUSTOMER.ID.NOT.FOUND', code: 200 }],
+      });
+    }
+    next();
+  }
+
+  /**
+   * Validate the estimate number unique on the storage.
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {Function} next 
+   */
+  async validateEstimateNumberExistance(req: Request, res: Response, next: Function) {
+    const estimate = { ...req.body };
+    const { tenantId } = req;
+
+    const isEstNumberUnqiue = await this.saleEstimateService.isEstimateNumberUnique(
+      tenantId,
+      estimate.estimate_number,
+      req.params.id,
+    );
+    if (isEstNumberUnqiue) {
+      return res.boom.badRequest(null, {
+        errors: [{ type: 'ESTIMATE.NUMBER.IS.NOT.UNQIUE', code: 300 }],
+      });
+    }
+    next();
+  }
+
+  /**
+   * Validate the estimate entries items ids existance on the storage. 
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {Function} next 
+   */
+  async validateEstimateEntriesItemsExistance(req: Request, res: Response, next: Function) {
+    const tenantId = req.tenantId;
+    const estimate = { ...req.body };
+    const estimateItemsIds = estimate.entries.map(e => e.item_id);
+
+    // Validate items ids in estimate entries exists.
+    const notFoundItemsIds = await this.itemsService.isItemsIdsExists(tenantId, estimateItemsIds);
+
+    if (notFoundItemsIds.length > 0) {
+      return res.boom.badRequest(null, {
+        errors: [{ type: 'ITEMS.IDS.NOT.EXISTS', code: 400 }],
+      });
+    }
+    next();
+  }
+
+  /**
+   * Validate whether the sale estimate id exists on the storage. 
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {Function} next 
+   */
+  async validateEstimateIdExistance(req: Request, res: Response, next: Function) {
+    const { id: estimateId } = req.params;
+    const { tenantId } = req;
+
+    const storedEstimate = await this.saleEstimateService
+      .getEstimate(tenantId, estimateId);
+
+    if (!storedEstimate) {
+      return res.status(404).send({
+        errors: [{ type: 'SALE.ESTIMATE.ID.NOT.FOUND', code: 200 }],
+      });
+    }
+    next();
+  }
+
+  /**
+   * Validate sale invoice entries ids existance on the storage.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {Function} next
+   */
+  async valdiateInvoiceEntriesIdsExistance(req: Request, res: Response, next: Function) {
+    const { ItemEntry } = req.models;
+
+    const { id: saleInvoiceId } = req.params;
+    const saleInvoice = { ...req.body };
+    const entriesIds = saleInvoice.entries
+      .filter(e => e.id)
+      .map((e) => e.id);
+
+    const foundEntries = await ItemEntry.query()
+      .whereIn('id', entriesIds)
+      .where('reference_type', 'SaleInvoice')
+      .where('reference_id', saleInvoiceId);
+
+    if (foundEntries.length > 0) {
+      return res.status(400).send({
+        errors: [{ type: 'ENTRIES.IDS.NOT.EXISTS', code: 300 }],
+      });
+    }
+    next();
+  }
+
   /**
    * Creates a new estimate with associated entries.
    * @async
    * @param {number} tenantId - The tenant id.
    * @param {EstimateDTO} estimate
-   * @return {void}
+   * @return {Promise<ISaleEstimate>}
    */
-  async createEstimate(tenantId: number, estimateDTO: any) {
+  async createEstimate(tenantId: number, estimateDTO: ISaleEstimateDTO): Promise<ISaleEstimate> {
     const { SaleEstimate, ItemEntry } = this.tenancy.models(tenantId);
 
     const amount = sumBy(estimateDTO.entries, e => ItemEntry.calcAmount(e));
@@ -44,22 +167,15 @@ export default class SaleEstimateService {
     const storedEstimate = await SaleEstimate.query()
       .insert({
         ...omit(estimate, ['entries']),
-      });
-    const storeEstimateEntriesOpers: any[] = [];
-
-    this.logger.info('[sale_estimate] inserting sale estimate entries to the storage.');
-    estimate.entries.forEach((entry: any) => {
-      const oper = ItemEntry.query()
-        .insert({
+        entries: estimate.entries.map((entry) => ({ 
           reference_type: 'SaleEstimate',
           reference_id: storedEstimate.id,
           ...omit(entry, ['total', 'amount', 'id']),
-        });
-      storeEstimateEntriesOpers.push(oper);
-    });
-    await Promise.all([...storeEstimateEntriesOpers]);
+        }))
+      });
 
     this.logger.info('[sale_estimate] insert sale estimated success.');
+    await this.eventDispatcher.dispatch(events.saleEstimates.onCreated);
 
     return storedEstimate;
   }
@@ -72,7 +188,7 @@ export default class SaleEstimateService {
    * @param {EstimateDTO} estimate
    * @return {void}
    */
-  async editEstimate(tenantId: number, estimateId: number, estimateDTO: any) {
+  async editEstimate(tenantId: number, estimateId: number, estimateDTO: ISaleEstimateDTO): Promise<void> {
     const { SaleEstimate, ItemEntry } = this.tenancy.models(tenantId);
     const amount = sumBy(estimateDTO.entries, e => ItemEntry.calcAmount(e));
 
@@ -89,16 +205,14 @@ export default class SaleEstimateService {
       .where('reference_id', estimateId)
       .where('reference_type', 'SaleEstimate');
 
-    const patchItemsEntries = this.itemsEntriesService.patchItemsEntries(
+    await this.itemsEntriesService.patchItemsEntries(
       tenantId,
       estimate.entries,
       storedEstimateEntries,
       'SaleEstimate',
       estimateId,
     );
-    return Promise.all([
-      patchItemsEntries,
-    ]);
+    await this.eventDispatcher.dispatch(events.saleEstimates.onEdited);
   }
 
   /**
@@ -118,6 +232,9 @@ export default class SaleEstimateService {
       .delete();
 
     await SaleEstimate.query().where('id', estimateId).delete();
+    this.logger.info('[sale_estimate] deleted successfully.', { tenantId, estimateId });
+
+    await this.eventDispatcher.dispatch(events.saleEstimates.onDeleted);
   }
 
   /**

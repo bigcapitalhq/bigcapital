@@ -1,13 +1,13 @@
-import { Router, Request, Response } from 'express';
-import { check, param, query, matchedData } from 'express-validator';
+import { Router, Request, Response, NextFunction } from 'express';
+import { check, param, query } from 'express-validator';
 import { Service, Inject } from 'typedi';
-import { difference } from 'lodash';
-import { BillOTD } from 'interfaces';
+import { IBillDTO, IBillEditDTO } from 'interfaces';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
 import BillsService from 'services/Purchases/Bills';
 import BaseController from 'api/controllers/BaseController';
 import ItemsService from 'services/Items/ItemsService';
 import TenancyService from 'services/Tenancy/TenancyService';
+import { ServiceError } from 'exceptions';
 
 @Service()
 export default class BillsController extends BaseController {
@@ -27,45 +27,49 @@ export default class BillsController extends BaseController {
     const router = Router();
 
     router.post(
-      '/',
-      [...this.billValidationSchema],
+      '/', [
+        ...this.billValidationSchema
+      ],
       this.validationResult,
-      asyncMiddleware(this.validateVendorExistance.bind(this)),
-      asyncMiddleware(this.validateItemsIds.bind(this)),
-      asyncMiddleware(this.validateBillNumberExists.bind(this)),
-      asyncMiddleware(this.validateNonPurchasableEntriesItems.bind(this)),
-      asyncMiddleware(this.newBill.bind(this))
+      asyncMiddleware(this.newBill.bind(this)),
+      this.handleServiceError,
     );
     router.post(
-      '/:id',
-      [...this.billValidationSchema, ...this.specificBillValidationSchema],
+      '/:id', [
+        ...this.billValidationSchema,
+        ...this.specificBillValidationSchema,
+      ],
       this.validationResult,
-      asyncMiddleware(this.validateBillExistance.bind(this)),
-      asyncMiddleware(this.validateVendorExistance.bind(this)),
-      asyncMiddleware(this.validateItemsIds.bind(this)),
-      asyncMiddleware(this.validateEntriesIdsExistance.bind(this)),
-      asyncMiddleware(this.validateNonPurchasableEntriesItems.bind(this)),
       asyncMiddleware(this.editBill.bind(this))
     );
     router.get(
-      '/:id',
-      [...this.specificBillValidationSchema],
+      '/:id', [
+        ...this.specificBillValidationSchema
+      ],
       this.validationResult,
-      asyncMiddleware(this.validateBillExistance.bind(this)),
-      asyncMiddleware(this.getBill.bind(this))
+      asyncMiddleware(this.getBill.bind(this)),
     );
-    router.get(
-      '/',
-      [...this.billsListingValidationSchema],
-      this.validationResult,
-      asyncMiddleware(this.listingBills.bind(this))
-    );
+ 
+    // router.get(
+    //   '/:id',
+    //   [...this.specificBillValidationSchema],
+    //   this.validationResult,
+    //   asyncMiddleware(this.getBill.bind(this)),
+    //   this.handleServiceError,
+    // );
+    // router.get(
+    //   '/',
+    //   [...this.billsListingValidationSchema],
+    //   this.validationResult,
+    //   asyncMiddleware(this.listingBills.bind(this)),
+    //   this.handleServiceError,
+    // );
     router.delete(
       '/:id',
       [...this.specificBillValidationSchema],
       this.validationResult,
-      asyncMiddleware(this.validateBillExistance.bind(this)),
-      asyncMiddleware(this.deleteBill.bind(this))
+      asyncMiddleware(this.deleteBill.bind(this)),
+      this.handleServiceError,
     );
     return router;
   }
@@ -79,6 +83,28 @@ export default class BillsController extends BaseController {
       check('bill_date').exists().isISO8601(),
       check('due_date').optional().isISO8601(),
       check('vendor_id').exists().isNumeric().toInt(),
+      check('note').optional().trim().escape(),
+      check('entries').isArray({ min: 1 }),
+
+      check('entries.*.id').optional().isNumeric().toInt(),
+      check('entries.*.index').exists().isNumeric().toInt(),
+      check('entries.*.item_id').exists().isNumeric().toInt(),
+      check('entries.*.rate').exists().isNumeric().toFloat(),
+      check('entries.*.quantity').exists().isNumeric().toFloat(),
+      check('entries.*.discount').optional().isNumeric().toFloat(),
+      check('entries.*.description').optional().trim().escape(),
+    ];
+  }
+
+  /**
+   * Common validation schema.
+   */
+  get billEditValidationSchema() {
+    return [
+      // check('bill_number').exists().trim().escape(),
+      check('bill_date').exists().isISO8601(),
+      check('due_date').optional().isISO8601(),
+      // check('vendor_id').exists().isNumeric().toInt(),
       check('note').optional().trim().escape(),
       check('entries').isArray({ min: 1 }),
 
@@ -112,162 +138,23 @@ export default class BillsController extends BaseController {
       query('sort_order').optional().isIn(['desc', 'asc']),
     ];
   }
-
-  /**
-   * Validates whether the vendor is exist.
-   * @async
-   * @param {Request} req
-   * @param {Response} res
-   * @param {Function} next
-   */
-  async validateVendorExistance(req: Request, res: Response, next: Function) {
-    const { tenantId } = req;
-    const { Vendor } = req.models;
-
-    const isVendorExists = await Vendor.query().findById(req.body.vendor_id);
-
-    if (!isVendorExists) {
-      return res.status(400).send({
-        errors: [{ type: 'VENDOR.ID.NOT.FOUND', code: 300 }],
-      });
-    }
-    next();
-  }
-
-  /**
-   * Validates the given bill existance.
-   * @async
-   * @param {Request} req
-   * @param {Response} res
-   * @param {Function} next
-   */
-  async validateBillExistance(req: Request, res: Response, next: Function) {
-    const billId: number = req.params.id;
-    const { tenantId } = req;
-
-    const isBillExists = await this.billsService.isBillExists(tenantId, billId);
-
-    if (!isBillExists) {
-      return res.status(400).send({
-        errors: [{ type: 'BILL.NOT.FOUND', code: 200 }],
-      });
-    }
-    next();
-  }
-
-  /**
-   * Validates the entries items ids.
-   * @async
-   * @param {Request} req
-   * @param {Response} res
-   * @param {Function} next
-   */
-  async validateItemsIds(req: Request, res: Response, next: Function) {
-    const { tenantId } = req;
-    const itemsIds = req.body.entries.map((e) => e.item_id);
-
-    const notFoundItemsIds = await this.itemsService.isItemsIdsExists(tenantId, itemsIds);
-
-    if (notFoundItemsIds.length > 0) {
-      return res.status(400).send({
-        errors: [{ type: 'ITEMS.IDS.NOT.FOUND', code: 400 }],
-      });
-    }
-    next();
-  }
-
-  /**
-   * Validates the bill number existance.
-   * @async
-   * @param {Request} req
-   * @param {Response} res
-   * @param {Function} next
-   */
-  async validateBillNumberExists(req: Request, res: Response, next: Function) {
-    const { tenantId } = req;
-
-    const isBillNoExists = await this.billsService.isBillNoExists(
-      tenantId, req.body.bill_number,
-    );
-    if (isBillNoExists) {
-      return res.status(400).send({
-        errors: [{ type: 'BILL.NUMBER.EXISTS', code: 500 }],
-      });
-    }
-    next();
-  }
-
-  /**
-   * Validates the entries ids existance on the storage.
-   * @param {Request} req
-   * @param {Response} res
-   * @param {Function} next
-   */
-  async validateEntriesIdsExistance(req: Request, res: Response, next: Function) {
-    const { id: billId } = req.params;
-    const bill = { ...req.body };
-    const { ItemEntry } = req.models;
-
-    const entriesIds = bill.entries.filter((e) => e.id).map((e) => e.id);
-
-    const storedEntries = await ItemEntry.query()
-      .whereIn('reference_id', [billId])
-      .whereIn('reference_type', ['Bill']);
-
-    const storedEntriesIds = storedEntries.map((entry) => entry.id);
-    const notFoundEntriesIds = difference(entriesIds, storedEntriesIds);
-
-    if (notFoundEntriesIds.length > 0) {
-      return res.status(400).send({
-        errors: [{ type: 'BILL.ENTRIES.IDS.NOT.FOUND', code: 600 }],
-      });
-    }
-    next();
-  }
-
-  /**
-   * Validate the entries items that not purchase-able. 
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {Function} next 
-   */
-  async validateNonPurchasableEntriesItems(req: Request, res: Response, next: Function) {
-    const { Item } = req.models;
-    const bill = { ...req.body };
-    const itemsIds = bill.entries.map(e => e.item_id);
-    
-    const purchasbleItems = await Item.query()
-      .where('purchasable', true)
-      .whereIn('id', itemsIds);
-
-    const purchasbleItemsIds = purchasbleItems.map((item) => item.id);
-    const notPurchasableItems = difference(itemsIds, purchasbleItemsIds);
-
-    if (notPurchasableItems.length > 0) {
-      return res.status(400).send({
-        errors: [{ type: 'NOT.PURCHASE.ABLE.ITEMS', code: 600 }],
-      });
-    }
-    next();
-  }
-
+ 
   /**
    * Creates a new bill and records journal transactions.
    * @param {Request} req
    * @param {Response} res
    * @param {Function} next
    */
-  async newBill(req: Request, res: Response, next: Function) {
-    const { tenantId } = req;
-    const { ItemEntry } = req.models;
+  async newBill(req: Request, res: Response, next: NextFunction) {
+    const { tenantId, user } = req;
+    const billDTO: IBillDTO = this.matchedBodyData(req);
 
-    const billOTD: BillOTD = matchedData(req, {
-      locations: ['body'],
-      includeOptionals: true
-    });
-    const storedBill = await this.billsService.createBill(tenantId, billOTD);
-
-    return res.status(200).send({ id: storedBill.id });
+    try {
+      const storedBill = await this.billsService.createBill(tenantId, billDTO, user);
+      return res.status(200).send({ id: storedBill.id });
+    } catch (error) {
+      next(error);
+    }
   }
 
   /**
@@ -275,18 +162,17 @@ export default class BillsController extends BaseController {
    * @param {Request} req
    * @param {Response} res
    */
-  async editBill(req: Request, res: Response) {
+  async editBill(req: Request, res: Response, next: NextFunction) {
     const { id: billId } = req.params;
-    const { ItemEntry } = req.models;
     const { tenantId } = req;
+    const billDTO: IBillEditDTO = this.matchedBodyData(req);
 
-    const billOTD: BillOTD = matchedData(req, {
-      locations: ['body'],
-      includeOptionals: true
-    });
-    const editedBill = await this.billsService.editBill(tenantId, billId, billOTD);
-
-    return res.status(200).send({ id: billId });
+    try {
+      const editedBill = await this.billsService.editBill(tenantId, billId, billDTO);
+      return res.status(200).send({ id: billId });
+    } catch (error) {
+      next(error);
+    }
   }
 
   /**
@@ -295,13 +181,17 @@ export default class BillsController extends BaseController {
    * @param {Response} res
    * @return {Response}
    */
-  async getBill(req: Request, res: Response) {
+  async getBill(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const { id: billId } = req.params;
 
-    const bill = await this.billsService.getBillWithMetadata(tenantId, billId);
+    try {
+      const bill = await this.billsService.getBillWithMetadata(tenantId, billId);
 
-    return res.status(200).send({ bill });
+      return res.status(200).send({ bill });
+    } catch (error) {
+      next(error);
+    }
   }
 
   /**
@@ -310,13 +200,19 @@ export default class BillsController extends BaseController {
    * @param {Response} res -
    * @return {Response}
    */
-  async deleteBill(req: Request, res: Response) {
+  async deleteBill(req: Request, res: Response, next: NextFunction) {
     const billId = req.params.id;
     const { tenantId } = req;
 
-    await this.billsService.deleteBill(tenantId, billId);
-
-    return res.status(200).send({ id: billId });
+    try {
+      await this.billsService.deleteBill(tenantId, billId);
+      return res.status(200).send({
+        id: billId,
+        message: 'The given bill deleted successfully.',
+      });
+    } catch (error) {
+      next(error);
+    }
   }
 
   /**
@@ -325,7 +221,50 @@ export default class BillsController extends BaseController {
    * @param {Response} res -
    * @return {Response}
    */
-  async listingBills(req: Request, res: Response) {
+  async billsList(req: Request, res: Response) {
+    
+  }
 
+  /**
+   * Handles service errors.
+   * @param {Error} error 
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {NextFunction} next 
+   */
+  handleServiceError(error: Error, req: Request, res: Response, next: NextFunction) {
+    if (error instanceof ServiceError) {
+      if (error.errorType === 'BILL_NOT_FOUND') {
+        return res.status(400).send({
+          errors: [{ type: 'BILL_NOT_FOUND', code: 100 }],
+        });
+      }
+      if (error.errorType === 'BILL_NUMBER_EXISTS') {
+        return res.status(400).send({
+          errors: [{ type: 'BILL.NUMBER.EXISTS', code: 500 }],
+        });
+      }
+      if (error.errorType === 'BILL_VENDOR_NOT_FOUND') {
+        return res.status(400).send({
+          errors: [{ type: 'BILL_VENDOR_NOT_FOUND', code: 600 }],
+        });
+      }
+      if (error.errorType === 'BILL_ITEMS_NOT_PURCHASABLE') {
+        return res.status(400).send({
+          errors: [{ type: 'BILL_ITEMS_NOT_PURCHASABLE', code: 700 }]
+        })
+      }
+      if (error.errorType === 'NOT_PURCHASE_ABLE_ITEMS') {
+        return res.status(400).send({
+          errors: [{ type: 'NOT_PURCHASE_ABLE_ITEMS', code: 800 }],
+        });
+      }
+      if (error.errorType === 'BILL_ITEMS_NOT_FOUND') {
+        return res.status(400).send({
+          errors: [{ type: 'ITEMS.IDS.NOT.FOUND', code: 400 }],
+        });
+      }
+    }
+    next(error);    
   }
 }

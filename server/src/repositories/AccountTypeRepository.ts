@@ -70,10 +70,21 @@ export default class AccountTypeRepository extends TenantRepository {
    * @param {string} rootType 
    * @return {IAccountType[]}
    */
-  getByRootType(rootType: string): IAccountType[] {
+  getByRootType(rootType: string): Promise<IAccountType[]> {
     const { AccountType } = this.models;
     return this.cache.get(`accountType.rootType.${rootType}`, () => {
       return AccountType.query().where('root_type', rootType);
+    });
+  }
+
+  /**
+   * Retrieve accounts types of the given child type.
+   * @param {string} childType 
+   */
+  getByChildType(childType: string): Promise<IAccountType[]> {
+    const { AccountType } = this.models;
+    return this.cache.get(`accountType.childType.${childType}`, () => {
+      return AccountType.query().where('child_type', childType);
     });
   }
 

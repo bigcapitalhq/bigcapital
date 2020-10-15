@@ -24,7 +24,8 @@ export default class CustomersController extends ContactsController {
       ...this.customerDTOSchema,
     ],
       this.validationResult,
-      asyncMiddleware(this.newCustomer.bind(this))
+      asyncMiddleware(this.newCustomer.bind(this)),
+      this.handlerServiceErrors
     );
     router.post('/:id', [
       ...this.contactDTOSchema,
@@ -32,19 +33,22 @@ export default class CustomersController extends ContactsController {
       ...this.customerDTOSchema,
     ],
       this.validationResult,
-      asyncMiddleware(this.editCustomer.bind(this))
+      asyncMiddleware(this.editCustomer.bind(this)),
+      this.handlerServiceErrors,
     );
     router.delete('/:id', [
       ...this.specificContactSchema,
     ],
       this.validationResult,
-      asyncMiddleware(this.deleteCustomer.bind(this))
+      asyncMiddleware(this.deleteCustomer.bind(this)),
+      this.handlerServiceErrors,
     );
     router.delete('/', [
       ...this.bulkContactsSchema,
     ],
       this.validationResult,
-      asyncMiddleware(this.deleteBulkCustomers.bind(this))
+      asyncMiddleware(this.deleteBulkCustomers.bind(this)),
+      this.handlerServiceErrors,
     );
     router.get('/', [
       
@@ -56,7 +60,8 @@ export default class CustomersController extends ContactsController {
       ...this.specificContactSchema,
     ],
       this.validationResult,
-      asyncMiddleware(this.getCustomer.bind(this))
+      asyncMiddleware(this.getCustomer.bind(this)),
+      this.handlerServiceErrors
     );
     return router;
   }
@@ -104,13 +109,6 @@ export default class CustomersController extends ContactsController {
       await this.customersService.editCustomer(tenantId, contactId, contactDTO);
       return res.status(200).send({ id: contactId });
     } catch (error) {
-      if (error instanceof ServiceError) {
-        if (error.errorType === 'contact_not_found') {
-          return res.boom.badRequest(null, {
-            errors: [{ type: 'CUSTOMER.NOT.FOUND', code: 100 }],
-          });
-        }
-      }
       next(error);
     }
   }
@@ -129,18 +127,6 @@ export default class CustomersController extends ContactsController {
       await this.customersService.deleteCustomer(tenantId, contactId)
       return res.status(200).send({ id: contactId });
     } catch (error) {
-      if (error instanceof ServiceError) {
-        if (error.errorType === 'contact_not_found') {
-          return res.boom.badRequest(null, {
-            errors: [{ type: 'CUSTOMER.NOT.FOUND', code: 100 }],
-          });
-        }
-        if (error.errorType === 'customer_has_invoices') {
-          return res.boom.badRequest(null, {
-            errors: [{ type: 'CUSTOMER.HAS.SALES_INVOICES', code: 200 }],
-          });
-        }
-      }
       next(error);
     }
   }
@@ -159,13 +145,6 @@ export default class CustomersController extends ContactsController {
       const contact = await this.customersService.getCustomer(tenantId, contactId)
       return res.status(200).send({ contact });
     } catch (error) {
-      if (error instanceof ServiceError) {
-        if (error.errorType === 'contact_not_found') {
-          return res.boom.badRequest(null, {
-            errors: [{ type: 'CONTACT.NOT.FOUND', code: 100 }],
-          });
-        }
-      }
       next(error);
     }
   }
@@ -184,18 +163,6 @@ export default class CustomersController extends ContactsController {
       await this.customersService.deleteBulkCustomers(tenantId, contactsIds)
       return res.status(200).send({ ids: contactsIds });
     } catch (error) {
-      if (error instanceof ServiceError) {
-        if (error.errorType === 'contacts_not_found') {
-          return res.boom.badRequest(null, {
-            errors: [{ type: 'CUSTOMERS.NOT.FOUND', code: 100 }],
-          });
-        }
-        if (error.errorType === 'some_customers_have_invoices') {
-          return res.boom.badRequest(null, {
-            errors: [{ type: 'SOME.CUSTOMERS.HAVE.SALES_INVOICES', code: 200 }],
-          });
-        }
-      }
       next(error);
     }
   }
@@ -208,6 +175,33 @@ export default class CustomersController extends ContactsController {
       await this.customersService.getCustomersList(tenantId)
     } catch (error) {
       next(error);
+    }
+  }
+
+  /**
+   * Handles service errors.
+   * @param {Error} error 
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {NextFunction} next 
+   */
+  handlerServiceErrors(error: Error, req: Request, res: Response, next: NextFunction) {
+    if (error instanceof ServiceError) {
+      if (error.errorType === 'contacts_not_found') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'CUSTOMERS.NOT.FOUND', code: 100 }],
+        });
+      }
+      if (error.errorType === 'some_customers_have_invoices') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'SOME.CUSTOMERS.HAVE.SALES_INVOICES', code: 200 }],
+        });
+      }
+      if (error.errorType === 'customer_has_invoices') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'CUSTOMER.HAS.SALES_INVOICES', code: 200 }],
+        });
+      }
     }
   }
 }

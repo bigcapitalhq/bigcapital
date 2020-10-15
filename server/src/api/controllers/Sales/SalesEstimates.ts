@@ -1,4 +1,4 @@
-import { Router, Request, Response } from 'express';
+import { Router, Request, Response, NextFunction } from 'express';
 import { check, param, query, matchedData } from 'express-validator';
 import { Inject, Service } from 'typedi';
 import { ISaleEstimate, ISaleEstimateOTD } from 'interfaces';
@@ -25,9 +25,9 @@ export default class SalesEstimatesController extends BaseController {
       '/',
       this.estimateValidationSchema,
       this.validationResult,
-      asyncMiddleware(this.validateEstimateCustomerExistance.bind(this)),
-      asyncMiddleware(this.validateEstimateNumberExistance.bind(this)),
-      asyncMiddleware(this.validateEstimateEntriesItemsExistance.bind(this)),
+      // asyncMiddleware(this.validateEstimateCustomerExistance.bind(this)),
+      // asyncMiddleware(this.validateEstimateNumberExistance.bind(this)),
+      // asyncMiddleware(this.validateEstimateEntriesItemsExistance.bind(this)),
       asyncMiddleware(this.newEstimate.bind(this))
     );
     router.post(
@@ -36,11 +36,11 @@ export default class SalesEstimatesController extends BaseController {
         ...this.estimateValidationSchema,
       ],
       this.validationResult,
-      asyncMiddleware(this.validateEstimateIdExistance.bind(this)),
-      asyncMiddleware(this.validateEstimateCustomerExistance.bind(this)),
-      asyncMiddleware(this.validateEstimateNumberExistance.bind(this)),
-      asyncMiddleware(this.validateEstimateEntriesItemsExistance.bind(this)),
-      asyncMiddleware(this.valdiateInvoiceEntriesIdsExistance.bind(this)),
+      // asyncMiddleware(this.validateEstimateIdExistance.bind(this)),
+      // asyncMiddleware(this.validateEstimateCustomerExistance.bind(this)),
+      // asyncMiddleware(this.validateEstimateNumberExistance.bind(this)),
+      // asyncMiddleware(this.validateEstimateEntriesItemsExistance.bind(this)),
+      // asyncMiddleware(this.valdiateInvoiceEntriesIdsExistance.bind(this)),
       asyncMiddleware(this.editEstimate.bind(this))
     );
     router.delete(
@@ -48,14 +48,14 @@ export default class SalesEstimatesController extends BaseController {
         this.validateSpecificEstimateSchema,
       ],
       this.validationResult,
-      asyncMiddleware(this.validateEstimateIdExistance.bind(this)),
+      // asyncMiddleware(this.validateEstimateIdExistance.bind(this)),
       asyncMiddleware(this.deleteEstimate.bind(this))
     );
     router.get(
       '/:id',
       this.validateSpecificEstimateSchema,
       this.validationResult,
-      asyncMiddleware(this.validateEstimateIdExistance.bind(this)),
+      // asyncMiddleware(this.validateEstimateIdExistance.bind(this)),
       asyncMiddleware(this.getEstimate.bind(this))
     );
     router.get(
@@ -112,120 +112,6 @@ export default class SalesEstimatesController extends BaseController {
       query('page').optional().isNumeric().toInt(),
       query('page_size').optional().isNumeric().toInt(), 
     ]
-  }
-
-  /**
-   * Validate whether the estimate customer exists on the storage. 
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {Function} next 
-   */
-  async validateEstimateCustomerExistance(req: Request, res: Response, next: Function) {
-    const estimate = { ...req.body };
-    const { Customer } = req.models
-
-    const foundCustomer = await Customer.query().findById(estimate.customer_id);
-
-    if (!foundCustomer) {
-      return res.status(404).send({
-        errors: [{ type: 'CUSTOMER.ID.NOT.FOUND', code: 200 }],
-      });
-    }
-    next();
-  }
-
-  /**
-   * Validate the estimate number unique on the storage.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {Function} next 
-   */
-  async validateEstimateNumberExistance(req: Request, res: Response, next: Function) {
-    const estimate = { ...req.body };
-    const { tenantId } = req;
-
-    const isEstNumberUnqiue = await this.saleEstimateService.isEstimateNumberUnique(
-      tenantId,
-      estimate.estimate_number,
-      req.params.id,
-    );
-    if (isEstNumberUnqiue) {
-      return res.boom.badRequest(null, {
-        errors: [{ type: 'ESTIMATE.NUMBER.IS.NOT.UNQIUE', code: 300 }],
-      });
-    }
-    next();
-  }
-
-  /**
-   * Validate the estimate entries items ids existance on the storage. 
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {Function} next 
-   */
-  async validateEstimateEntriesItemsExistance(req: Request, res: Response, next: Function) {
-    const tenantId = req.tenantId;
-    const estimate = { ...req.body };
-    const estimateItemsIds = estimate.entries.map(e => e.item_id);
-
-    // Validate items ids in estimate entries exists.
-    const notFoundItemsIds = await this.itemsService.isItemsIdsExists(tenantId, estimateItemsIds);
-
-    if (notFoundItemsIds.length > 0) {
-      return res.boom.badRequest(null, {
-        errors: [{ type: 'ITEMS.IDS.NOT.EXISTS', code: 400 }],
-      });
-    }
-    next();
-  }
-
-  /**
-   * Validate whether the sale estimate id exists on the storage. 
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {Function} next 
-   */
-  async validateEstimateIdExistance(req: Request, res: Response, next: Function) {
-    const { id: estimateId } = req.params;
-    const { tenantId } = req;
-
-    const storedEstimate = await this.saleEstimateService
-      .getEstimate(tenantId, estimateId);
-
-    if (!storedEstimate) {
-      return res.status(404).send({
-        errors: [{ type: 'SALE.ESTIMATE.ID.NOT.FOUND', code: 200 }],
-      });
-    }
-    next();
-  }
-
-  /**
-   * Validate sale invoice entries ids existance on the storage.
-   * @param {Request} req
-   * @param {Response} res
-   * @param {Function} next
-   */
-  async valdiateInvoiceEntriesIdsExistance(req: Request, res: Response, next: Function) {
-    const { ItemEntry } = req.models;
-
-    const { id: saleInvoiceId } = req.params;
-    const saleInvoice = { ...req.body };
-    const entriesIds = saleInvoice.entries
-      .filter(e => e.id)
-      .map((e) => e.id);
-
-    const foundEntries = await ItemEntry.query()
-      .whereIn('id', entriesIds)
-      .where('reference_type', 'SaleInvoice')
-      .where('reference_id', saleInvoiceId);
-
-    if (foundEntries.length > 0) {
-      return res.status(400).send({
-        errors: [{ type: 'ENTRIES.IDS.NOT.EXISTS', code: 300 }],
-      });
-    }
-    next();
   }
 
   /**

@@ -1,15 +1,41 @@
 import { Inject, Service } from 'typedi';
-import { omit, sumBy } from 'lodash';
+import { entries, omit, sumBy, difference } from 'lodash';
+import {
+  EventDispatcher,
+  EventDispatcherInterface,
+} from 'decorators/eventDispatcher';
 import moment from 'moment';
-import { IBillPaymentOTD, IBillPayment, IBillPaymentsFilter, IPaginationMeta, IFilterMeta } from 'interfaces';
-import ServiceItemsEntries from 'services/Sales/ServiceItemsEntries';
+import events from 'subscribers/events';
+import {
+  IBill,
+  IBillPaymentDTO,
+  IBillPaymentEntryDTO,
+  IBillPayment,
+  IBillPaymentsFilter,
+  IPaginationMeta,
+  IFilterMeta,
+  IBillPaymentEntry,
+} from 'interfaces';
 import AccountsService from 'services/Accounts/AccountsService';
 import JournalPoster from 'services/Accounting/JournalPoster';
 import JournalEntry from 'services/Accounting/JournalEntry';
+import JournalCommands from 'services/Accounting/JournalCommands';
 import JournalPosterService from 'services/Sales/JournalPosterService';
 import TenancyService from 'services/Tenancy/TenancyService';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import { formatDateFields } from 'utils';
+import { ServiceError } from 'exceptions';
+
+const ERRORS = {
+  BILL_VENDOR_NOT_FOUND: 'VENDOR_NOT_FOUND',
+  PAYMENT_MADE_NOT_FOUND: 'PAYMENT_MADE_NOT_FOUND',
+  BILL_PAYMENT_NUMBER_NOT_UNQIUE: 'BILL_PAYMENT_NUMBER_NOT_UNQIUE',
+  PAYMENT_ACCOUNT_NOT_FOUND: 'PAYMENT_ACCOUNT_NOT_FOUND',
+  PAYMENT_ACCOUNT_NOT_CURRENT_ASSET_TYPE: 'PAYMENT_ACCOUNT_NOT_CURRENT_ASSET_TYPE',
+  BILL_ENTRIES_IDS_NOT_FOUND: 'BILL_ENTRIES_IDS_NOT_FOUND',
+  BILL_PAYMENT_ENTRIES_NOT_FOUND: 'BILL_PAYMENT_ENTRIES_NOT_FOUND',
+  INVALID_BILL_PAYMENT_AMOUNT: 'INVALID_BILL_PAYMENT_AMOUNT',
+};
 
 /**
  * Bill payments service.
@@ -29,6 +55,177 @@ export default class BillPaymentsService {
   @Inject()
   dynamicListService: DynamicListingService;
 
+  @EventDispatcher()
+  eventDispatcher: EventDispatcherInterface;
+
+  @Inject('logger')
+  logger: any;
+
+  /**
+   * Validate whether the bill payment vendor exists on the storage.
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {Function} next 
+   */
+  private async getVendorOrThrowError(tenantId: number, vendorId: number) {
+    const { vendorRepository } = this.tenancy.repositories(tenantId);
+    const vendor = await vendorRepository.findById(vendorId);
+
+    if (!vendor) {
+      throw new ServiceError(ERRORS.BILL_VENDOR_NOT_FOUND)
+    }
+    return vendor;
+  }
+
+  /**
+   * Validates the bill payment existance. 
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {Function} next 
+   */
+  private async getPaymentMadeOrThrowError(tenantid: number, paymentMadeId: number) {
+    const { BillPayment } = this.tenancy.models(tenantid);
+    const billPayment = await BillPayment.query().findById(paymentMadeId);
+
+    if (!billPayment) {
+      throw new ServiceError(ERRORS.PAYMENT_MADE_NOT_FOUND);
+    }
+    return billPayment;
+  }
+
+  /**
+   * Validates the payment account. 
+   * @param {number} tenantId - 
+   * @param {number} paymentAccountId
+   * @return {Promise<IAccountType>}
+   */
+  private async getPaymentAccountOrThrowError(tenantId: number, paymentAccountId: number) {
+    const { accountTypeRepository, accountRepository } = this.tenancy.repositories(tenantId);
+
+    const currentAssetTypes = await accountTypeRepository.getByChildType('current_asset');
+    const paymentAccount = await accountRepository.findById(paymentAccountId);
+
+    const currentAssetTypesIds = currentAssetTypes.map(type => type.id);
+
+    if (!paymentAccount) {
+      throw new ServiceError(ERRORS.PAYMENT_ACCOUNT_NOT_FOUND);
+    }
+    if (currentAssetTypesIds.indexOf(paymentAccount.accountTypeId) === -1) {
+      throw new ServiceError(ERRORS.PAYMENT_ACCOUNT_NOT_CURRENT_ASSET_TYPE);
+    }
+    return paymentAccount;
+  }
+
+  /**
+   * Validates the payment number uniqness.
+   * @param {number} tenantId - 
+   * @param {string} paymentMadeNumber - 
+   * @return {Promise<IBillPayment>}
+   */
+  private async validatePaymentNumber(tenantId: number, paymentMadeNumber: string, notPaymentMadeId?: string) {
+    const { BillPayment } = this.tenancy.models(tenantId);
+  
+    const foundBillPayment = await BillPayment.query()
+      .onBuild((builder: any) => {
+        builder.findOne('payment_number', paymentMadeNumber);
+
+        if (notPaymentMadeId) {
+          builder.whereNot('id', notPaymentMadeId);
+        }
+      });
+ 
+    if (foundBillPayment) {
+      throw new ServiceError(ERRORS.BILL_PAYMENT_NUMBER_NOT_UNQIUE)
+    }
+    return foundBillPayment;
+  }
+
+  /**
+   * Validate whether the entries bills ids exist on the storage.
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {NextFunction} next 
+   */
+  private async validateBillsExistance(tenantId: number, billPaymentEntries: IBillPaymentEntry[], notVendorId?: number) {
+    const { Bill } = this.tenancy.models(tenantId);
+    const entriesBillsIds = billPaymentEntries.map((e: any) => e.billId);
+
+    const storedBills = await Bill.query().onBuild((builder) => {
+      builder.whereIn('id', entriesBillsIds);
+
+      if (notVendorId) {
+        builder.where('vendor_id', notVendorId);
+      }
+    });
+    const storedBillsIds = storedBills.map((t: IBill) => t.id);
+    const notFoundBillsIds = difference(entriesBillsIds, storedBillsIds);
+
+    if (notFoundBillsIds.length > 0) {
+      throw new ServiceError(ERRORS.BILL_ENTRIES_IDS_NOT_FOUND)
+    }
+  }
+
+  /**
+   * Validate wether the payment amount bigger than the payable amount.
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {NextFunction} next 
+   * @return {void}
+   */
+  private async validateBillsDueAmount(tenantId: number, billPaymentEntries: IBillPaymentEntryDTO[]) {
+    const { Bill } = this.tenancy.models(tenantId);
+    const billsIds = billPaymentEntries.map((entry: IBillPaymentEntryDTO) => entry.billId);
+
+    const storedBills = await Bill.query().whereIn('id', billsIds);
+    const storedBillsMap = new Map(
+      storedBills.map((bill: any) => [bill.id, bill]),
+    );
+    interface invalidPaymentAmountError{
+      index: number,
+      due_amount: number
+    };
+    const hasWrongPaymentAmount: invalidPaymentAmountError[] = [];
+
+    billPaymentEntries.forEach((entry: IBillPaymentEntryDTO, index: number) => {
+      const entryBill = storedBillsMap.get(entry.billId);
+      const { dueAmount } = entryBill;
+
+      if (dueAmount < entry.paymentAmount) {
+        hasWrongPaymentAmount.push({ index, due_amount: dueAmount });
+      }      
+    });
+    if (hasWrongPaymentAmount.length > 0) {
+      throw new ServiceError(ERRORS.INVALID_BILL_PAYMENT_AMOUNT);
+    }
+  }
+
+  /**
+   * Validate the payment receive entries IDs existance. 
+   * @param {Request} req 
+   * @param {Response} res 
+   * @return {Response}
+   */
+  private async validateEntriesIdsExistance(
+    tenantId: number,
+    billPaymentId: number,
+    billPaymentEntries: IBillPaymentEntry[]
+  ) {
+    const { BillPaymentEntry } = this.tenancy.models(tenantId);
+
+    const entriesIds = billPaymentEntries
+      .filter((entry: any) => entry.id)
+      .map((entry: any) => entry.id);
+
+    const storedEntries = await BillPaymentEntry.query().where('bill_payment_id', billPaymentId);
+
+    const storedEntriesIds = storedEntries.map((entry: any) => entry.id);    
+    const notFoundEntriesIds = difference(entriesIds, storedEntriesIds);
+
+    if (notFoundEntriesIds.length > 0) {
+      throw new ServiceError(ERRORS.BILL_PAYMENT_ENTRIES_NOT_FOUND);
+    }
+  }
+
   /**
    * Creates a new bill payment transcations and store it to the storage
    * with associated bills entries and journal transactions.
@@ -40,53 +237,39 @@ export default class BillPaymentsService {
    * - Increment the payment amount of the given vendor bills.
    * - Decrement the vendor balance.
    * - Records payment journal entries.
+   * ------
    * @param {number} tenantId - Tenant id.
    * @param {BillPaymentDTO} billPayment - Bill payment object.
    */
-  public async createBillPayment(tenantId: number, billPaymentDTO: IBillPaymentOTD) {
-    const { Bill, BillPayment, BillPaymentEntry, Vendor } = this.tenancy.models(tenantId);
+  public async createBillPayment(
+    tenantId: number,
+    billPaymentDTO: IBillPaymentDTO
+  ): Promise<IBillPayment> {
+    this.logger.info('[paymentDate] trying to save payment made.', { tenantId, billPaymentDTO });
+    const { BillPayment } = this.tenancy.models(tenantId);
 
-    const billPayment = {
-      amount: sumBy(billPaymentDTO.entries, 'payment_amount'),
-      ...formatDateFields(billPaymentDTO, ['payment_date']),
-    }
-    const storedBillPayment = await BillPayment.query()
-      .insert({
-        ...omit(billPayment, ['entries']),
+    const billPaymentObj = {
+      amount: sumBy(billPaymentDTO.entries, 'paymentAmount'),
+      ...formatDateFields(billPaymentDTO, ['paymentDate']),
+    };
+    await this.getVendorOrThrowError(tenantId, billPaymentObj.vendorId);
+    await this.getPaymentAccountOrThrowError(tenantId, billPaymentObj.paymentAccountId);
+    await this.validatePaymentNumber(tenantId, billPaymentObj.paymentNumber);
+    await this.validateBillsExistance(tenantId, billPaymentObj.entries);
+    await this.validateBillsDueAmount(tenantId, billPaymentObj.entries);
+
+    const billPayment = await BillPayment.query()
+      .insertGraph({
+        ...omit(billPaymentObj, ['entries']),
+        entries: billPaymentDTO.entries,
       });
-    const storeOpers: Promise<any>[] = [];
 
-    billPayment.entries.forEach((entry) => {
-      const oper = BillPaymentEntry.query()
-        .insert({
-          bill_payment_id: storedBillPayment.id,
-          ...entry,
-        });
-      // Increment the bill payment amount.
-      const billOper = Bill.changePaymentAmount(
-        entry.bill_id,
-        entry.payment_amount,
-      );
-      storeOpers.push(billOper);
-      storeOpers.push(oper);
+    await this.eventDispatcher.dispatch(events.billPayments.onCreated, {
+      tenantId, billPayment, billPaymentId: billPayment.id,
     });
-    // Decrement the vendor balance after bills payments.
-    const vendorDecrementOper = Vendor.changeBalance(
-      billPayment.vendor_id,
-      billPayment.amount * -1,
-    );
-    // Records the journal transactions after bills payment
-    // and change diff acoount balance.
-    const recordJournalTransaction = this.recordPaymentReceiveJournalEntries(tenantId, {
-      id: storedBillPayment.id,
-      ...billPayment,
-    });
-    await Promise.all([
-      ...storeOpers,
-      recordJournalTransaction,
-      vendorDecrementOper,
-    ]);
-    return storedBillPayment;
+    this.logger.info('[payment_made] inserted successfully.', { tenantId, billPaymentId: billPayment.id, });
+
+    return billPayment;
   }
 
   /**
@@ -110,63 +293,31 @@ export default class BillPaymentsService {
     tenantId: number,
     billPaymentId: number,
     billPaymentDTO,
-    oldBillPayment,
-  ) {
-    const { BillPayment, BillPaymentEntry, Vendor } = this.tenancy.models(tenantId);
-    const billPayment = {
-      amount: sumBy(billPaymentDTO.entries, 'payment_amount'),
-      ...formatDateFields(billPaymentDTO, ['payment_date']),
-    };
-    const updateBillPayment = await BillPayment.query()
-      .where('id', billPaymentId)
-      .update({
-        ...omit(billPayment, ['entries']),
-      });
-    const opers = [];
-    const entriesHasIds = billPayment.entries.filter((i) => i.id);
-    const entriesHasNoIds = billPayment.entries.filter((e) => !e.id);
+  ): Promise<IBillPayment> {
+    const { BillPayment } = this.tenancy.models(tenantId);
 
-    const entriesIdsShouldDelete = ServiceItemsEntries.entriesShouldDeleted(
-      oldBillPayment.entries,
-      entriesHasIds
-    );
-    if (entriesIdsShouldDelete.length > 0) {
-      const deleteOper = BillPaymentEntry.query()
-        .bulkDelete(entriesIdsShouldDelete);
-      opers.push(deleteOper);
-    }
-    // Entries that should be update to the storage.
-    if (entriesHasIds.length > 0) {
-      const updateOper = BillPaymentEntry.query()
-        .bulkUpdate(entriesHasIds, { where: 'id' });
-      opers.push(updateOper);
-    }
-    // Entries that should be inserted to the storage.
-    if (entriesHasNoIds.length > 0) {
-      const insertOper = BillPaymentEntry.query()
-        .bulkInsert(
-          entriesHasNoIds.map((e) => ({ ...e, bill_payment_id: billPaymentId }))
-        );
-      opers.push(insertOper);
-    }
-    // Records the journal transactions after bills payment and change
-    // different acoount balance.
-    const recordJournalTransaction = this.recordPaymentReceiveJournalEntries(tenantId, {
-      id: storedBillPayment.id,
-      ...billPayment,
-    });
-    // Change the different vendor balance between the new and old one.
-    const changeDiffBalance = Vendor.changeDiffBalance(
-      billPayment.vendor_id,
-      oldBillPayment.vendorId,
-      billPayment.amount * -1,
-      oldBillPayment.amount * -1,
-    );
-    await Promise.all([
-      ...opers,
-      recordJournalTransaction,
-      changeDiffBalance,
-    ]);
+    const oldPaymentMade = await this.getPaymentMadeOrThrowError(tenantId, billPaymentId);
+
+    const billPaymentObj = {
+      amount: sumBy(billPaymentDTO.entries, 'paymentAmount'),
+      ...formatDateFields(billPaymentDTO, ['paymentDate']),
+    };
+
+    await this.getVendorOrThrowError(tenantId, billPaymentObj.vendorId);
+    await this.getPaymentAccountOrThrowError(tenantId, billPaymentObj.paymentAccountId);
+    await this.validateEntriesIdsExistance(tenantId, billPaymentId, billPaymentObj.entries);
+    await this.validateBillsExistance(tenantId, billPaymentObj.entries);
+    await this.validateBillsDueAmount(tenantId, billPaymentObj.entries);
+
+    const billPayment = await BillPayment.query()
+      .upsertGraph({
+        id: billPaymentId,
+        ...omit(billPaymentObj, ['entries']),
+      });
+    await this.eventDispatcher.dispatch(events.billPayments.onEdited);
+    this.logger.info('[bill_payment] edited successfully.', { tenantId, billPaymentId, billPayment, oldPaymentMade });
+
+    return billPayment;
   }
 
   /**
@@ -176,29 +327,16 @@ export default class BillPaymentsService {
    * @return {Promise}
    */
   public async deleteBillPayment(tenantId: number, billPaymentId: number) {
-    const { BillPayment, BillPaymentEntry, Vendor } = this.tenancy.models(tenantId);
-    const billPayment = await BillPayment.query().where('id', billPaymentId).first();
+    const { BillPayment, BillPaymentEntry } = this.tenancy.models(tenantId);
+    
+    this.logger.info('[bill_payment] trying to delete.', { tenantId, billPaymentId });
+    const oldPaymentMade = await this.getPaymentMadeOrThrowError(tenantId, billPaymentId);
 
-    await BillPayment.query()
-      .where('id', billPaymentId)
-      .delete();
+    await BillPaymentEntry.query().where('bill_payment_id', billPaymentId).delete();
+    await BillPayment.query().where('id', billPaymentId).delete();
 
-    await BillPaymentEntry.query()
-      .where('bill_payment_id', billPaymentId)
-      .delete();
-
-    const deleteTransactionsOper = JournalPosterService.deleteJournalTransactions(
-      billPaymentId,
-      'BillPayment',
-    );
-    const revertVendorBalanceOper = Vendor.changeBalance(
-      billPayment.vendorId,
-      billPayment.amount,
-    );
-    return Promise.all([
-      deleteTransactionsOper,
-      revertVendorBalanceOper,
-    ]);
+    await this.eventDispatcher.dispatch(events.billPayments.onDeleted, { tenantId, billPaymentId, oldPaymentMade });
+    this.logger.info('[bill_payment] deleted successfully.', { tenantId, billPaymentId });
   }
 
   /**
@@ -207,15 +345,13 @@ export default class BillPaymentsService {
    * @param {BillPayment} billPayment
    * @param {Integer} billPaymentId
    */
-  private async recordPaymentReceiveJournalEntries(tenantId: number, billPayment) {
-    const { AccountTransaction, Account } = this.tenancy.models(tenantId);
+  public async recordJournalEntries(tenantId: number, billPayment: IBillPayment) {
+    const { AccountTransaction } = this.tenancy.models(tenantId);
+    const { accountRepository } = this.tenancy.repositories(tenantId);
 
-    const paymentAmount = sumBy(billPayment.entries, 'payment_amount');
-    const formattedDate = moment(billPayment.payment_date).format('YYYY-MM-DD');
-    const payableAccount = await this.accountsService.getAccountByType(
-      tenantId,
-      'accounts_payable'
-    );
+    const paymentAmount = sumBy(billPayment.entries, 'paymentAmount');
+    const formattedDate = moment(billPayment.paymentDate).format('YYYY-MM-DD');
+    const payableAccount = await accountRepository.getBySlug('accounts-payable');
 
     const journal = new JournalPoster(tenantId);
     const commonJournal = {
@@ -238,13 +374,13 @@ export default class BillPaymentsService {
       ...commonJournal,
       debit: paymentAmount,
       contactType: 'Vendor',
-      contactId: billPayment.vendor_id,
+      contactId: billPayment.vendorId,
       account: payableAccount.id,
     });
     const creditPaymentAccount = new JournalEntry({
       ...commonJournal,
       credit: paymentAmount,
-      account: billPayment.payment_account_id,
+      account: billPayment.paymentAccountId,
     });
     journal.debit(debitReceivable);
     journal.credit(creditPaymentAccount);
@@ -253,6 +389,24 @@ export default class BillPaymentsService {
       journal.deleteEntries(),
       journal.saveEntries(),
       journal.saveBalance(),
+    ]);
+  }
+
+  /**
+   * Reverts bill payment journal entries.
+   * @param {number} tenantId 
+   * @param {number} billPaymentId 
+   * @return {Promise<void>}
+   */
+  public async revertJournalEntries(tenantId: number, billPaymentId: number) {
+    const journal = new JournalPoster(tenantId);
+    const journalCommands = new JournalCommands(journal);
+  
+    await journalCommands.revertJournalEntries(billPaymentId, 'BillPayment');
+  
+    return Promise.all([
+      journal.saveBalance(),
+      journal.deleteEntries(),
     ]);
   }
 
@@ -300,19 +454,5 @@ export default class BillPaymentsService {
       .first();
 
     return billPayment;
-  }
-
-  /**
-   * Detarmines whether the bill payment exists on the storage.
-   * @param {Integer} billPaymentId 
-   * @return {boolean}
-   */
-  async isBillPaymentExists(tenantId: number, billPaymentId: number) {
-    const { BillPayment } = this.tenancy.models(tenantId);
-    const billPayment = await BillPayment.query()
-      .where('id', billPaymentId)
-      .first();
-
-    return (billPayment.length > 0);
   }
 }
