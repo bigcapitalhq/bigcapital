@@ -19,7 +19,7 @@
       font-size: 22px;
     }
     h1,
-    h3{
+    h3 {
       font-weight: 500;
       color: #6b7382;
     }
@@ -195,7 +195,7 @@
   margin: 0 auto;
   padding: 45px 0 20px;
 
-  &__title-wrap{
+  &__title-wrap {
     margin-bottom: 32px;
 
     h1 {
@@ -203,12 +203,12 @@
       margin-bottom: 10px;
       color: #565e6c;
     }
-    .paragraph{
+    .paragraph {
       opacity: 0.75;
     }
   }
 
-  &__form{
+  &__form {
     h3 {
       margin-bottom: 1rem;
     }
@@ -222,12 +222,21 @@
     }
   }
 
+  .form-group--language {
+    margin-left: 10px;
+  }
+
   .bp3-button:not([class*='bp3-intent-']):not(.bp3-minimal) {
     width: 100%;
     height: 38px;
+    padding: 8px;
   }
 
-  .register-org-note{
+  .bp3-text-muted {
+    color: #000000;
+  }
+
+  .register-org-note {
     font-size: 13px;
     padding-bottom: 10px;
     border-bottom: 1px solid #e1e1e1;
@@ -282,33 +291,32 @@
       width: 70%;
       margin: 0 auto;
       color: #2e4266;
-    }   
+    }
   }
 }
 
-.setup-congrats{
+.setup-congrats {
   width: 600px;
   margin: 0 auto;
   text-align: center;
   padding-top: 80px;
 
-  &__page{
-
+  &__page {
   }
 
-  &__text{
+  &__text {
     margin-top: 30px;
 
-    h1{
-      color: #2D2B43;
+    h1 {
+      color: #2d2b43;
       margin-bottom: 12px;
     }
-    .paragraph{
+    .paragraph {
       font-size: 15px;
       opacity: 0.85;
       margin-bottom: 14px;
     }
-    .bp3-button{
+    .bp3-button {
       height: 38px;
       padding-left: 25px;
       padding-right: 25px;
