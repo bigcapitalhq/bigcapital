@@ -5,8 +5,6 @@ exports.up = function (knex) {
   const tenancyService = Container.get(TenancyService);
   const i18n = tenancyService.i18n(knex.userParams.tenantId);
 
-  console.log(i18n);
-
   return knex('accounts').then(() => {
     // Inserts seed entries
     return knex('accounts').insert([

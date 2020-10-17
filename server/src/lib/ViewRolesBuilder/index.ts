@@ -269,3 +269,30 @@ export function validateFilterRolesFieldsExistance(model, filterRoles: IFilterRo
     return !validateFieldKeyExistance(model, filterRole.fieldKey);
   });
 }
+
+/**
+ * Retrieve model fields keys.
+ * @param {IModel} Model 
+ * @return {string[]}
+ */
+export function getModelFieldsKeys(Model: IModel) {
+  const fields = Object.keys(Model.fields);
+
+  return fields.sort((a, b) => {
+    if (a < b) { return -1; }
+    if (a > b) { return 1; }
+    return 0;
+  });
+}
+
+export function getModelFields(Model: IModel) {
+  const fieldsKey = this.getModelFieldsKeys(Model);
+
+  return fieldsKey.map((fieldKey) => {
+    const field = Model.fields[fieldKey];
+    return {
+      ...field,
+      key: fieldKey,
+    };
+  })
+}

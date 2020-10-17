@@ -6,7 +6,11 @@ import {
   IViewDTO,
   IView,
   IViewEditDTO,
+  IModel,
+  IViewColumnDTO,
+  IViewRoleDTO,
 } from 'interfaces';
+import { getModelFieldsKeys } from 'lib/ViewRolesBuilder';
 import TenancyService from 'services/Tenancy/TenancyService';
 import ResourceService from "services/Resource/ResourceService";
 import { validateRolesLogicExpression } from 'lib/ViewRolesBuilder';
@@ -37,14 +41,14 @@ export default class ViewsService implements IViewsService {
    * @param {number} tenantId - 
    * @param {string} resourceModel - 
    */
-  public async listResourceViews(tenantId: number, resourceModel: string): Promise<IView[]> {
-    this.logger.info('[views] trying to retrieve resource views.', { tenantId, resourceModel });
+  public async listResourceViews(tenantId: number, resourceModelName: string): Promise<IView[]> {
+    this.logger.info('[views] trying to retrieve resource views.', { tenantId, resourceModelName });
 
     // Validate the resource model name is valid.
-    this.getResourceModelOrThrowError(tenantId, resourceModel);
+    const resourceModel = this.getResourceModelOrThrowError(tenantId, resourceModelName);
 
     const { viewRepository } = this.tenancy.repositories(tenantId);
-    return viewRepository.allByResource(resourceModel);
+    return viewRepository.allByResource(resourceModel.name);
   }
 
   /**
@@ -53,7 +57,7 @@ export default class ViewsService implements IViewsService {
    * @param {IViewRoleDTO[]} viewRoles 
    */
   private validateResourceRolesFieldsExistance(ResourceModel: IModel, viewRoles: IViewRoleDTO[]) {
-    const resourceFieldsKeys = this.resourceService.getResourceFields(ResourceModel);
+    const resourceFieldsKeys = getModelFieldsKeys(ResourceModel);
 
     const fieldsKeys = viewRoles.map(viewRole => viewRole.fieldKey);
     const notFoundFieldsKeys = difference(fieldsKeys, resourceFieldsKeys);
@@ -70,7 +74,7 @@ export default class ViewsService implements IViewsService {
    * @param {IViewColumnDTO[]} viewColumns 
    */
   private validateResourceColumnsExistance(ResourceModel: IModel, viewColumns: IViewColumnDTO[]) {
-    const resourceFieldsKeys = this.resourceService.getResourceColumns(ResourceModel);
+    const resourceFieldsKeys = getModelFieldsKeys(ResourceModel);
 
     const fieldsKeys = viewColumns.map((viewColumn: IViewColumnDTO) => viewColumn.fieldKey);
     const notFoundFieldsKeys = difference(fieldsKeys, resourceFieldsKeys);
@@ -115,12 +119,7 @@ export default class ViewsService implements IViewsService {
    * @param {number} resourceModel 
    */
   private getResourceModelOrThrowError(tenantId: number, resourceModel: string): IModel {
-    const ResourceModel = this.resourceService.getModel(tenantId, resourceModel);
-
-    if (!ResourceModel || !ResourceModel.resourceable) {
-      throw new ServiceError(ERRORS.RESOURCE_MODEL_NOT_FOUND);
-    }
-    return ResourceModel;
+    return this.resourceService.getResourceModel(tenantId, resourceModel);
   }
 
   /**
@@ -137,6 +136,8 @@ export default class ViewsService implements IViewsService {
     notViewId?: number
   ): void {
     const { View } = this.tenancy.models(tenantId);
+
+    this.logger.info('[views] trying to validate view name uniqiness.', { tenantId, resourceModel, viewName });
     const foundViews = await View.query()
       .where('resource_model', resourceModel)
       .where('name', viewName)
@@ -165,6 +166,8 @@ export default class ViewsService implements IViewsService {
    * ---------
    * @param {number} tenantId - Tenant id.
    * @param {IViewDTO} viewDTO - View DTO.
+   * 
+   * @return {Promise<IView>}
    */
   public async newView(tenantId: number, viewDTO: IViewDTO): Promise<IView> {
     const { viewRepository } = this.tenancy.repositories(tenantId);
@@ -187,6 +190,7 @@ export default class ViewsService implements IViewsService {
       throw new ServiceError(ERRORS.LOGIC_EXPRESSION_INVALID);
     }
     // Save view details.
+    this.logger.info('[views] trying to insert to storage.', { tenantId, viewDTO })
     const view = await viewRepository.insert({
       predefined: false,
       name: viewDTO.name,
@@ -216,7 +220,7 @@ export default class ViewsService implements IViewsService {
    * @param {IViewEditDTO}  
    */
   public async editView(tenantId: number, viewId: number, viewEditDTO: IViewEditDTO): Promise<void> {
-    const { View } = this.tenancy.models(tenantId);
+    const { viewRepository } = this.tenancy.repositories(tenantId);
     this.logger.info('[view] trying to edit custom view.', { tenantId, viewId });
 
     // Retrieve view details or throw not found error.
@@ -229,22 +233,23 @@ export default class ViewsService implements IViewsService {
     await this.validateViewNameUniquiness(tenantId, view.resourceModel, viewEditDTO.name, viewId);
 
     // Validate the given fields keys exist on the storage.
-    this.validateResourceRolesFieldsExistance(ResourceModel, view.roles);
+    this.validateResourceRolesFieldsExistance(ResourceModel, viewEditDTO.roles);
 
     // Validate the given columnable fields keys exists on the storage.
-    this.validateResourceColumnsExistance(ResourceModel, view.columns);
+    this.validateResourceColumnsExistance(ResourceModel, viewEditDTO.columns);
 
     // Validates the view conditional logic expression.
     if (!validateRolesLogicExpression(viewEditDTO.logicExpression, viewEditDTO.roles)) {
       throw new ServiceError(ERRORS.LOGIC_EXPRESSION_INVALID);
     }
-    // Save view details.
-    await View.query()
-      .where('id', view.id)
-      .patch({
-        name: viewEditDTO.name,
-        roles_logic_expression: viewEditDTO.logicExpression,
-      });
+    // Update view details.
+    await viewRepository.update(tenantId, viewId, {
+      predefined: false,
+      name: viewEditDTO.name,
+      rolesLogicExpression: viewEditDTO.logicExpression,
+      roles: viewEditDTO.roles,
+      columns: viewEditDTO.columns,
+    })
     this.logger.info('[view] edited successfully.', { tenantId, viewId });
   }
 

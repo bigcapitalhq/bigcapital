@@ -1,7 +1,5 @@
 {
-  "Empty": "",
-  "Hello": "Hello",
-  "Petty Cash": "Petty Cash 2",
+  "Petty Cash": "Petty Cash",
   "Bank": "Bank",
   "Other Income": "Other Income",
   "Interest Income": "Interest Income",
@@ -30,4 +28,14 @@
   "Assets": "Assets",
   "Liabilities": "Liabilities",
   "Expenses": "Expenses",
+  "Account name": "Account name",
+  "Account type": "Account type",
+  "Account normal": "Account normal",
+  "Description": "Description",
+  "Account code": "Account code",
+  "Currency": "Currency",
+  "Balance": "Balance",
+  "Active": "Active",
+  "Created at": "Created at",
+  "fixed_asset": "Fixed asset"
 }

@@ -29,6 +29,7 @@ export interface IAccountsFilter extends IDynamicListFilterDTO {
 export interface IAccountType {
   id: number,
   key: string,
+  label: string,
   normal: string,
   rootType: string,
   childType: string,
