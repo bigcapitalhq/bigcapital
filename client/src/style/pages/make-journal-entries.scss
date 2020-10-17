@@ -103,10 +103,14 @@
           .td.actions{
             .bp3-button{
               background-color: transparent;
-              color: #E68F8E;
+              color: #e66d6d;
 
               &:hover{
                 color: #c23030;
+              }
+
+              svg{
+                color: inherit;
               }
             }
           }

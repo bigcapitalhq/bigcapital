@@ -224,7 +224,7 @@ function AccountsDataTable({
       {
         id: 'type',
         Header: formatMessage({ id: 'type' }),
-        accessor: 'type.name',
+        accessor: 'type.label',
         className: 'type',
         width: 140,
       },

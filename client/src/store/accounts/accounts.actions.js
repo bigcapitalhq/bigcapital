@@ -35,9 +35,6 @@ export const fetchAccountsList = () => {
             payload: {
               accounts: response.data.accounts,
             }
-          })
-          dispatch({
-            type: t.SET_DASHBOARD_REQUEST_COMPLETED,
           });
           resolve(response);
         })
@@ -71,7 +68,7 @@ export const fetchAccountsTable = ({ query } = {}) => {
           dispatch({
             type: t.ACCOUNTS_PAGE_SET,
             accounts: response.data.accounts,
-            customViewId: response.data.customViewId,
+            customViewId: response.data?.filter_meta?.view?.custom_view_id,
           });
           dispatch({
             type: t.ACCOUNTS_ITEMS_SET,
@@ -81,15 +78,9 @@ export const fetchAccountsTable = ({ query } = {}) => {
             type: t.ACCOUNTS_TABLE_LOADING,
             loading: false,
           });
-          dispatch({
-            type: t.SET_DASHBOARD_REQUEST_COMPLETED,
-          });
           resolve(response);
         })
         .catch((error) => {
-          dispatch({
-            type: t.SET_DASHBOARD_REQUEST_COMPLETED,
-          });
           reject(error);
         });
     });
@@ -122,9 +113,6 @@ export const submitAccount = ({ form }) => {
           dispatch({
             type: t.ACCOUNT_ERRORS_CLEAR,
           });
-          dispatch({
-            type: t.SET_DASHBOARD_REQUEST_COMPLETED,
-          });
           resolve(response);
         })
         .catch((error) => {
@@ -140,9 +128,6 @@ export const submitAccount = ({ form }) => {
               payload: { error },
             });
           }
-          dispatch({
-            type: t.SET_DASHBOARD_REQUEST_COMPLETED,
-          });
           reject(data?.errors);
         });
     });
@@ -157,9 +142,6 @@ export const editAccount = (id, form) => {
       ApiService.post(`accounts/${id}`, form)
         .then((response) => {
           dispatch({ type: t.CLEAR_ACCOUNT_FORM_ERRORS });
-          dispatch({
-            type: t.SET_DASHBOARD_REQUEST_COMPLETED,
-          });
           resolve(response);
         })
         .catch((error) => {
@@ -170,9 +152,6 @@ export const editAccount = (id, form) => {
           if (error) {
             dispatch({ type: t.ACCOUNT_FORM_ERRORS, error });
           }
-          dispatch({
-            type: t.SET_DASHBOARD_REQUEST_COMPLETED,
-          });
           reject(data?.errors);
         });
     });
