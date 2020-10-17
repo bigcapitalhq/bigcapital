@@ -20,6 +20,13 @@ export default class Item extends TenantModel {
   }
 
   /**
+   * Allows to mark model as resourceable to viewable and filterable.
+   */
+  static get resourceable() {
+    return true;
+  }
+
+  /**
    * Model modifiers.
    */
   static get modifiers() {

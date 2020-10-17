@@ -17,6 +17,13 @@ export default class ManualJournal extends TenantModel {
     return ['createdAt', 'updatedAt'];
   }
 
+   /**
+   * 
+   */
+  static get resourceable() {
+    return true;
+  }
+
   /**
    * Relationship mapping.
    */

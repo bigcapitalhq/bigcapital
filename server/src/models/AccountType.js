@@ -11,6 +11,20 @@ export default class AccountType extends TenantModel {
   }
 
   /**
+   * Virtaul attributes.
+   */
+  static get virtualAttributes() {
+    return ['label'];
+  }
+
+  /**
+   * Translatable lable.
+   */
+  label() {
+    return AccountType.labels[this.key] || '';
+  }
+
+  /**
    * Relationship mapping.
    */
   static get relationMappings() {

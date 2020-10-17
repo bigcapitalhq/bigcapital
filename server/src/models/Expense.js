@@ -25,7 +25,16 @@ export default class Expense extends TenantModel {
     return ['createdAt', 'updatedAt'];
   }
 
+  /**
+   * Allows to mark model as resourceable to viewable and filterable.
+   */
+  static get resourceable() {
+    return true;
+  }
 
+  /**
+   * 
+   */
   static get media () {
     return true;
   }

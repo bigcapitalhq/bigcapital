@@ -52,6 +52,7 @@ export default class ViewsController extends BaseController{
     ],
       this.validationResult,
       asyncMiddleware(this.getView.bind(this)),
+      this.handlerServiceErrors,
     );
     return router;
   }
@@ -157,7 +158,10 @@ export default class ViewsController extends BaseController{
 
     try {
       const view = await this.viewsService.newView(tenantId, viewDTO);
-      return res.status(200).send({ id: view.id });
+      return res.status(200).send({
+        id: view.id,
+        message: 'The view has been created successfully.',
+      });
     } catch (error) {
       next(error);
     }
@@ -176,7 +180,10 @@ export default class ViewsController extends BaseController{
 
     try {
       await this.viewsService.editView(tenantId, viewId, viewEditDTO);
-      return res.status(200).send({ id: viewId });
+      return res.status(200).send({
+        id: viewId,
+        message: 'The given view has been edited succcessfully.',
+      });
     } catch (error) {
       next(error);
     }
@@ -194,7 +201,10 @@ export default class ViewsController extends BaseController{
 
     try {
       await this.viewsService.deleteView(tenantId, viewId);
-      return res.status(200).send();
+      return res.status(200).send({
+        id: viewId,
+        message: 'The view has been deleted successfully.',
+      });
     } catch (error) {
       next(error);
     }

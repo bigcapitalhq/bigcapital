@@ -19,19 +19,19 @@ exports.up = (knex) => {
         { id: 5, name: i18n.__('Expenses'), roles_logic_expression: '1', resource_model: 'Account', predefined: true },
 
         // Items
-        // { id: 6, name: 'Services', roles_logic_expression: '1', resource_id: 2, predefined: true },
-        // { id: 7, name: 'Inventory', roles_logic_expression: '1', resource_id: 2, predefined: true },
-        // { id: 8, name: 'Non-Inventory', roles_logic_expression: '1', resource_id: 2, predefined: true },
+        { id: 6, name: i18n.__('Services'), roles_logic_expression: '1', resource_model: 'Item', predefined: true },
+        { id: 7, name: i18n.__('Inventory'), roles_logic_expression: '1', resource_model: 'Item', predefined: true },
+        { id: 8, name: i18n.__('Non-Inventory'), roles_logic_expression: '1', resource_model: 'Item', predefined: true },
 
-        // // Manual Journals
-        // { id: 9, name: 'Journal', roles_logic_expression: '1', resource_id: 4, predefined: true },
-        // { id: 10, name: 'Credit', roles_logic_expression: '1', resource_id: 4, predefined: true },
-        // { id: 11, name: 'Reconciliation', roles_logic_expression: '1', resource_id: 4, predefined: true },
+        // Manual Journals
+        { id: 9, name: i18n.__('Journal'), roles_logic_expression: '1', resource_model: 'ManualJournal', predefined: true },
+        { id: 10, name: i18n.__('Credit'), roles_logic_expression: '1', resource_model: 'ManualJournal', predefined: true },
+        { id: 11, name: i18n.__('Reconciliation'), roles_logic_expression: '1', resource_model: 'ManualJournal', predefined: true },
 
-        // // Expenses
-        // { id: 12, name: 'Interest', roles_logic_expression: '1', resource_id: 3, predefined: false, },
-        // { id: 13, name: 'Depreciation', roles_logic_expression: '1', resource_id: 3, predefined: false, },
-        // { id: 14, name: 'Payroll', roles_logic_expression: '1', resource_id: '3', predefined: false },
+        // Expenses
+        { id: 12, name: i18n.__('Interest'), roles_logic_expression: '1', resource_model: 'Expense', predefined: false, },
+        { id: 13, name: i18n.__('Depreciation'), roles_logic_expression: '1', resource_model: 'Expense', predefined: false, },
+        { id: 14, name: i18n.__('Payroll'), roles_logic_expression: '1', resource_model: 'Expense', predefined: false },
       ]);
     });
 };

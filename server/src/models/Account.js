@@ -26,7 +26,7 @@ export default class Account extends TenantModel {
   }
 
   /**
-   * 
+   * Allows to mark model as resourceable to viewable and filterable.
    */
   static get resourceable() {
     return true;
