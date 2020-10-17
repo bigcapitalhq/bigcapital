@@ -1,5 +1,9 @@
 import { Inject, Service } from 'typedi';
 import { omit, difference } from 'lodash';
+import {
+  EventDispatcher,
+  EventDispatcherInterface,
+} from 'decorators/eventDispatcher';
 import JournalPoster from "services/Accounting/JournalPoster";
 import JournalCommands from "services/Accounting/JournalCommands";
 import ContactsService from 'services/Contacts/ContactsService';
@@ -13,6 +17,7 @@ import {
 import { ServiceError } from 'exceptions';
 import TenancyService from 'services/Tenancy/TenancyService';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
+import events from 'subscribers/events';
 
 @Service()
 export default class CustomersService {
@@ -24,6 +29,12 @@ export default class CustomersService {
 
   @Inject()
   dynamicListService: DynamicListingService;
+
+  @Inject('logger')
+  logger: any;
+
+  @EventDispatcher()
+  eventDispatcher: EventDispatcherInterface;
 
   /**
    * Converts customer to contact DTO.
@@ -43,31 +54,44 @@ export default class CustomersService {
    * Creates a new customer.
    * @param {number} tenantId 
    * @param {ICustomerNewDTO} customerDTO 
-   * @return {Promise<void>}
+   * @return {Promise<ICustomer>}
    */
-  public async newCustomer(tenantId: number, customerDTO: ICustomerNewDTO) {
+  public async newCustomer(
+    tenantId: number,
+    customerDTO: ICustomerNewDTO
+  ): Promise<ICustomer> {
+    this.logger.info('[customer] trying to create a new customer.', { tenantId, customerDTO });
+
     const contactDTO = this.customerToContactDTO(customerDTO)
     const customer = await this.contactService.newContact(tenantId, contactDTO, 'customer');
 
-    // Writes the customer opening balance journal entries.
-    if (customer.openingBalance) {
-      await this.writeCustomerOpeningBalanceJournal(
-        tenantId,
-        customer.id,
-        customer.openingBalance,
-      );
-    }
+    this.logger.info('[customer] created successfully.', { tenantId, customerDTO });
+    await this.eventDispatcher.dispatch(events.customers.onCreated);
+
     return customer;
   }
 
   /**
    * Edits details of the given customer.
    * @param {number} tenantId 
+   * @param {number} customerId
    * @param {ICustomerEditDTO} customerDTO 
+   * @return {Promise<ICustomer>}
    */
-  public async editCustomer(tenantId: number, customerId: number, customerDTO: ICustomerEditDTO) {
+  public async editCustomer(
+    tenantId: number,
+    customerId: number,
+    customerDTO: ICustomerEditDTO,
+  ): Promise<ICustomer> {
     const contactDTO = this.customerToContactDTO(customerDTO);
-    return this.contactService.editContact(tenantId, customerId, contactDTO, 'customer');
+
+    this.logger.info('[customer] trying to edit customer.', { tenantId, customerId, customerDTO });
+    const customer = this.contactService.editContact(tenantId, customerId, contactDTO, 'customer');
+
+    this.eventDispatcher.dispatch(events.customers.onEdited);
+    this.logger.info('[customer] edited successfully.', { tenantId, customerId });
+
+    return customer;
   }
 
   /**
@@ -76,16 +100,31 @@ export default class CustomersService {
    * @param {number} customerId 
    * @return {Promise<void>}
    */
-  public async deleteCustomer(tenantId: number, customerId: number) {
+  public async deleteCustomer(tenantId: number, customerId: number): Promise<void> {
     const { Contact } = this.tenancy.models(tenantId);
+    this.logger.info('[customer] trying to delete customer.', { tenantId, customerId });
 
     await this.getCustomerByIdOrThrowError(tenantId, customerId);
     await this.customerHasNoInvoicesOrThrowError(tenantId, customerId);
 
     await Contact.query().findById(customerId).delete();
 
+    await this.eventDispatcher.dispatch(events.customers.onDeleted);
+    this.logger.info('[customer] deleted successfully.', { tenantId, customerId });
+  }
+
+  /**
+   * Reverts customer opening balance journal entries.
+   * @param {number} tenantId -
+   * @param {number} customerId -
+   * @return {Promise<void>}
+   */
+  public async revertOpeningBalanceEntries(tenantId: number, customerId: number|number[]) {
+    const id = Array.isArray(customerId) ? customerId : [customerId];
+
+    this.logger.info('[customer] trying to revert opening balance journal entries.', { tenantId, customerId });
     await this.contactService.revertJEntriesContactsOpeningBalance(
-      tenantId, [customerId], 'customer',
+      tenantId, id, 'customer',
     );
   }
 
@@ -105,15 +144,18 @@ export default class CustomersService {
    */
   public async getCustomersList(
     tenantId: number,
-    filter: ICustomersFilter
+    customersFilter: ICustomersFilter
   ): Promise<{ customers: ICustomer[], pagination: IPaginationMeta, filterMeta: IFilterMeta }> {
     const { Contact } = this.tenancy.models(tenantId);
-    const dynamicList = await this.dynamicListService.dynamicList(tenantId, Contact, filter);
+    const dynamicList = await this.dynamicListService.dynamicList(tenantId, Contact, customersFilter);
 
     const { results, pagination } = await Contact.query().onBuild((query) => {
       query.modify('customer');
       dynamicList.buildQuery()(query);
-    });
+    }).pagination(
+      customersFilter.page - 1,
+      customersFilter.pageSize,
+    );
 
     return {
       customers: results,
@@ -129,7 +171,7 @@ export default class CustomersService {
    * @param {number} openingBalance 
    * @return {Promise<void>}
    */
-  async writeCustomerOpeningBalanceJournal(
+  public async writeCustomerOpeningBalanceJournal(
     tenantId: number,
     customerId: number,
     openingBalance: number,
@@ -150,7 +192,7 @@ export default class CustomersService {
    * @param {number} tenantId 
    * @param {number} customerId 
    */
-  getCustomerByIdOrThrowError(tenantId: number, customerId: number) {
+  private getCustomerByIdOrThrowError(tenantId: number, customerId: number) {
     return this.contactService.getContactByIdOrThrowError(tenantId, customerId, 'customer');
   }
 
@@ -159,7 +201,7 @@ export default class CustomersService {
    * @param {numebr} tenantId 
    * @param {number[]} customersIds
    */
-  getCustomersOrThrowErrorNotFound(tenantId: number, customersIds: number[]) {
+  private getCustomersOrThrowErrorNotFound(tenantId: number, customersIds: number[]) {
     return this.contactService.getContactsOrThrowErrorNotFound(tenantId, customersIds, 'customer');
   }
 
@@ -169,19 +211,14 @@ export default class CustomersService {
    * @param {number[]} customersIds 
    * @return {Promise<void>}
    */
-  async deleteBulkCustomers(tenantId: number, customersIds: number[]) {
+  public async deleteBulkCustomers(tenantId: number, customersIds: number[]) {
     const { Contact } = this.tenancy.models(tenantId);
 
     await this.getCustomersOrThrowErrorNotFound(tenantId, customersIds);
     await this.customersHaveNoInvoicesOrThrowError(tenantId, customersIds);
 
     await Contact.query().whereIn('id', customersIds).delete();
-
-    await this.contactService.revertJEntriesContactsOpeningBalance(
-      tenantId,
-      customersIds,
-      'Customer'
-    );
+    await this.eventDispatcher.dispatch(events.customers.onBulkDeleted);
   }
 
   /**
@@ -189,8 +226,10 @@ export default class CustomersService {
    * or throw service error.
    * @param {number} tenantId 
    * @param {number} customerId 
+   * @throws {ServiceError}
+   * @return {Promise<void>}
    */
-  async customerHasNoInvoicesOrThrowError(tenantId: number, customerId: number) {
+  private async customerHasNoInvoicesOrThrowError(tenantId: number, customerId: number) {
     const { customerRepository } = this.tenancy.repositories(tenantId);
     const salesInvoice = await customerRepository.getSalesInvoices(customerId);
 
@@ -204,8 +243,9 @@ export default class CustomersService {
    * @param  {number} tenantId 
    * @param  {number[]} customersIds 
    * @throws {ServiceError}
+   * @return {Promise<void>}
    */
-  async customersHaveNoInvoicesOrThrowError(tenantId: number, customersIds: number[]) {
+  private async customersHaveNoInvoicesOrThrowError(tenantId: number, customersIds: number[]) {
     const { customerRepository } = this.tenancy.repositories(tenantId);
 
     const customersWithInvoices = await customerRepository.customersWithSalesInvoices(

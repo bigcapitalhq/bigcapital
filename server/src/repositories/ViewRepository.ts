@@ -1,5 +1,4 @@
 import { IView } from 'interfaces';
-import { View } from 'models';
 import TenantRepository from 'repositories/TenantRepository';
 
 export default class ViewRepository extends TenantRepository {
@@ -50,13 +49,23 @@ export default class ViewRepository extends TenantRepository {
    * @param {IView} view 
    */
   async insert(view: IView): Promise<IView> {
+    const { View } = this.models;
     const insertedView = await View.query().insertGraph({ ...view });
     this.flushCache();
 
     return insertedView;
   }
 
+  async update(viewId: number, view: IView): Promise<IView> {
+    const { View } = this.models;
+    const updatedView = await View.query().upsertGraph({
+      id: viewId,
+      ...view
+    });
+    this.flushCache();
 
+    return updatedView;
+  }
 
   /**
    * Flushes repository cache.

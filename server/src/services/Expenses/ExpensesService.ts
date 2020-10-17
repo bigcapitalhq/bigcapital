@@ -143,16 +143,21 @@ export default class ExpensesService implements IExpensesService {
     }
   }
 
+  /**
+   * Reverts expense journal entries.
+   * @param {number} tenantId 
+   * @param {number} expenseId 
+   */
   public async revertJournalEntries(
     tenantId: number,
     expenseId: number|number[],
-  ) {
+  ): Promise<void> {
     const journal = new JournalPoster(tenantId);
     const journalCommands = new JournalCommands(journal);
   
     await journalCommands.revertJournalEntries(expenseId, 'Expense');
   
-    return Promise.all([
+    await Promise.all([
       journal.saveBalance(),
       journal.deleteEntries(),
     ]);

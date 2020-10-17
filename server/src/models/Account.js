@@ -121,7 +121,7 @@ export default class Account extends TenantModel {
   static get fields() {
     return {
       name: {
-        label: 'Name',
+        label: 'Account name',
         column: 'name',
       },
       type: {
@@ -145,20 +145,25 @@ export default class Account extends TenantModel {
         relationColumn: 'account_types.root_type',
       },
       created_at: {
+        label: 'Created at',
         column: 'created_at',
         columnType: 'date',
       },
       active: {
+        label: 'Active',
         column: 'active', 
       },
       balance: {
+        label: 'Balance',
         column: 'amount',
         columnType: 'number'
       },
       currency: {
+        label: 'Currency',
         column: 'currency_code',
       },
       normal: {
+        label: 'Account normal',
         column: 'account_type_id',
         relation: 'account_types.id',
         relationColumn: 'account_types.normal'

@@ -121,4 +121,13 @@ export default class Contact extends TenantModel {
     }
     return Promise.all(asyncOpers);
   }
+
+
+  static get fields() {
+    return {
+      created_at: {
+        column: 'created_at',
+      }
+    };
+  }
 }

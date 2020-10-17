@@ -12,3 +12,7 @@ export interface IItemEntry {
   quantity: number,
   rate: number,
 }
+
+export interface IItemEntryDTO {
+  
+}

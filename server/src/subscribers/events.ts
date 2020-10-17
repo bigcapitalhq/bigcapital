@@ -1,5 +1,4 @@
 
-
 export default {
   /**
    * Authentication service.
@@ -72,5 +71,97 @@ export default {
 
     onBulkDeleted: 'onExpenseBulkDeleted',
     onBulkPublished: 'onBulkPublished',
+  },
+
+  /**
+   * Sales invoices service.
+   */
+  saleInvoice: {
+    onCreated: 'onSaleInvoiceCreated',
+    onEdited: 'onSaleInvoiceEdited',
+    onDeleted: 'onSaleInvoiceDeleted',
+    onBulkDelete: 'onSaleInvoiceBulkDeleted',
+    onPublished: 'onSaleInvoicePublished',
+  },
+
+  /**
+   * Sales estimates service.
+   */
+  saleEstimates: {
+    onCreated: 'onSaleEstimateCreated',
+    onEdited: 'onSaleEstimateEdited',
+    onDeleted: 'onSaleEstimatedDeleted',
+    onBulkDelete: 'onSaleEstimatedBulkDeleted',
+    onPublished: 'onSaleEstimatedPublished',
+  },
+
+  /**
+   * Sales receipts service.
+   */
+  saleReceipts: {
+    onCreated: 'onSaleReceiptsCreated',
+    onEdited: 'onSaleReceiptsEdited',
+    onDeleted: 'onSaleReceiptsDeleted',
+    onBulkDeleted: 'onSaleReceiptsBulkDeleted',
+    onPublished: 'onSaleReceiptPublished',
+  },
+
+  /**
+   * Payment receipts service.
+   */
+  paymentReceipts: {
+    onCreated: 'onPaymentReceiveCreated',
+    onEdited: 'onPaymentReceiveEdited',
+    onDeleted: 'onPaymentReceiveDeleted',
+    onPublished: 'onPaymentReceiptPublished',
+  },
+
+  /**
+   * Bills service.
+   */
+  bills: {
+    onCreated: 'onBillCreated',
+    onEdited: 'onBillEdited',
+    onDeleted: 'onBillDeleted',
+    onBulkDeleted: 'onBillBulkDeleted',
+    onPublished: 'onBillPublished',
+  },
+
+  /**
+   * Bill payments service.
+   */
+  billPayments: {
+    onCreated: 'onBillPaymentCreated',
+    onEdited: 'onBillPaymentEdited',
+    onDeleted: 'onBillPaymentDeleted',
+    onBulkDeleted: 'onBillPaymentsBulkDeleted',
+    onPublished: 'onBillPaymentPublished',
+  },
+
+  /**
+   * Customers services.
+   */
+  customers: {
+    onCreated: 'onCustomerCreated',
+    onEdited: 'onCustomerEdited',
+    onDeleted: 'onCustomerDeleted',
+    onBulkDeleted: 'onBulkDeleted',
+  },
+
+  /**
+   * Vendors services.
+   */
+  vendors: {
+    onCreated: 'onVendorCreated',
+    onEdited: 'onVendorEdited',
+    onDeleted: 'onVendorDeleted',
+    onBulkDeleted: 'onVendorBulkDeleted',
+  },
+
+  items: {
+    onCreated: 'onItemCreated',
+    onEdited: 'onItemEdited',
+    onDeleted: 'onItemDeleted',
+    onBulkDeleted: 'onItemBulkDeleted',
   }
 }

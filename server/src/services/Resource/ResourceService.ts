@@ -1,8 +1,16 @@
 import { Service, Inject } from 'typedi';
-import { camelCase, upperFirst } from 'lodash'
+import { camelCase, upperFirst } from 'lodash';
+import pluralize from 'pluralize';
 import { IModel } from 'interfaces';
-import resourceFieldsKeys from 'data/ResourceFieldsKeys';
+import {
+  getModelFields,
+} from 'lib/ViewRolesBuilder'
 import TenancyService from 'services/Tenancy/TenancyService';
+import { ServiceError } from 'exceptions';
+
+const ERRORS = {
+  RESOURCE_MODEL_NOT_FOUND: 'RESOURCE_MODEL_NOT_FOUND',
+};
 
 @Service()
 export default class ResourceService {
@@ -10,69 +18,54 @@ export default class ResourceService {
   tenancy: TenancyService;
 
   /**
-   * 
-   * @param {string} resourceName 
-   */
-  getResourceFieldsRelations(modelName: string) {
-    const fieldsRelations = resourceFieldsKeys[modelName];
-
-    if (!fieldsRelations) {
-      throw new Error('Fields relation not found in thte given resource model.');
-    }
-    return fieldsRelations;
-  }
-
-  /**
    * Transform resource to model name.
    * @param {string} resourceName 
    */
   private resourceToModelName(resourceName: string): string {
-    return upperFirst(camelCase(resourceName));
+    return upperFirst(camelCase(pluralize.singular(resourceName)));
   }
 
   /**
-   * Retrieve model from resource name in specific tenant.
+   * Retrieve model fields.
    * @param {number} tenantId 
-   * @param {string} resourceName 
+   * @param {IModel} Model 
    */
-  public getModel(tenantId: number, resourceName: string) {
-    const models = this.tenancy.models(tenantId);
-    const modelName = this.resourceToModelName(resourceName);
+  private getModelFields(tenantId: number, Model: IModel) {
+    const { __ } = this.tenancy.i18n(tenantId);
+    const fields = getModelFields(Model);
 
-    return models[modelName];
-  }
- 
-  getModelFields(Model: IModel) {
-    const fields = Object.keys(Model.fields);
-
-    return fields.sort((a, b) => {
-      if (a < b) { return -1; }
-      if (a > b) { return 1; }
-      return 0;
-    });
+    return fields.map((field) => ({
+      label: __(field.label, field.label),
+      key: field.key,
+      dataType: field.columnType,
+    }));
   }
 
   /**
-   * 
+   * Retrieve resource fields from resource model name.
    * @param {string} resourceName 
    */
-  getResourceFields(Model: IModel) {
-    console.log(Model);
+  public getResourceFields(tenantId: number, modelName: string) {
+    const resourceModel = this.getResourceModel(tenantId, modelName);
 
-    if (Model.resourceable) {
-      return this.getModelFields(Model);
-    }
-    return [];
+    return this.getModelFields(tenantId, resourceModel);
   }
 
   /**
-   * 
-   * @param {string} resourceName 
+   * Retrieve resource model object.
+   * @param {number} tenantId -
+   * @param {string} inputModelName -
    */
-  getResourceColumns(Model: IModel) {
-    if (Model.resourceable) {
-      return this.getModelFields(Model);
+  public getResourceModel(tenantId: number, inputModelName: string) {
+    const modelName = this.resourceToModelName(inputModelName);
+    const Models = this.tenancy.models(tenantId);
+
+    if (!Models[modelName]) {
+      throw new ServiceError(ERRORS.RESOURCE_MODEL_NOT_FOUND);
     }
-    return [];
+    if (!Models[modelName].resourceable) {
+      throw new ServiceError(ERRORS.RESOURCE_MODEL_NOT_FOUND);
+    }
+    return Models[modelName];
   }
 }

@@ -9,7 +9,7 @@ exports.up = function(knex) {
     table.integer('reference_id').index();
     table.integer('account_id').unsigned().index().references('id').inTable('accounts');
     table.string('contact_type').nullable().index();
-    table.integer('contact_id').unsigned().nullable().index().references('id').inTable('contacts');
+    table.integer('contact_id').unsigned().nullable().index();
     table.string('note');
     table.boolean('draft').defaultTo(false);
     table.integer('user_id').unsigned().index();

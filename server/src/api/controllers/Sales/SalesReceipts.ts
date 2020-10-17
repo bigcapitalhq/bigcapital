@@ -1,11 +1,12 @@
-import { Router, Request, Response } from 'express';
-import { check, param, query, matchedData } from 'express-validator';
+import { Router, Request, Response, NextFunction } from 'express';
+import { check, param, query } from 'express-validator';
 import { Inject, Service } from 'typedi';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
 import AccountsService from 'services/Accounts/AccountsService';
 import ItemsService from 'services/Items/ItemsService';
 import SaleReceiptService from 'services/Sales/SalesReceipts';
 import BaseController from '../BaseController';
+import { ISaleReceiptDTO } from 'interfaces/SaleReceipt';
 
 @Service()
 export default class SalesReceiptsController extends BaseController{
@@ -232,20 +233,21 @@ export default class SalesReceiptsController extends BaseController{
    * @param {Request} req 
    * @param {Response} res 
    */
-  async newSaleReceipt(req: Request, res: Response) {
+  async newSaleReceipt(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
+    const saleReceiptDTO: ISaleReceiptDTO = this.matchedBodyData(req);
 
-    const saleReceipt = matchedData(req, {
-      locations: ['body'],
-      includeOptionals: true,
-    });
-    // Store the given sale receipt details with associated entries.
-    const storedSaleReceipt = await this.saleReceiptService
-      .createSaleReceipt(
-        tenantId,
-        saleReceipt,
-      );
-    return res.status(200).send({ id: storedSaleReceipt.id });
+    try {
+      // Store the given sale receipt details with associated entries.
+      const storedSaleReceipt = await this.saleReceiptService
+        .createSaleReceipt(
+          tenantId,
+          saleReceiptDTO,
+        );
+      return res.status(200).send({ id: storedSaleReceipt.id });
+    } catch (error) {
+      next(error);
+    }
   }
 
   /**
@@ -253,14 +255,18 @@ export default class SalesReceiptsController extends BaseController{
    * @param {Request} req 
    * @param {Response} res 
    */
-  async deleteSaleReceipt(req: Request, res: Response) {
+  async deleteSaleReceipt(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const { id: saleReceiptId } = req.params;
 
-    // Deletes the sale receipt.
-    await this.saleReceiptService.deleteSaleReceipt(tenantId, saleReceiptId);
-
-    return res.status(200).send({ id: saleReceiptId });  
+    try {
+      // Deletes the sale receipt.
+      await this.saleReceiptService.deleteSaleReceipt(tenantId, saleReceiptId);
+  
+      return res.status(200).send({ id: saleReceiptId });  
+    } catch (error) {
+      next(error);
+    }
   }
 
   /**
@@ -269,25 +275,22 @@ export default class SalesReceiptsController extends BaseController{
    * @param {Request} req 
    * @param {Response} res 
    */
-  async editSaleReceipt(req: Request, res: Response) {
+  async editSaleReceipt(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
-
     const { id: saleReceiptId } = req.params;
     const saleReceipt = { ...req.body };
-    const errorReasons = [];
-    
-    // Handle all errors with reasons messages.
-    if (errorReasons.length > 0) {
-      return res.boom.badRequest(null, { errors: errorReasons });
-    }
-    // Update the given sale receipt details.
-    await this.saleReceiptService.editSaleReceipt(
-      tenantId,
-      saleReceiptId,
-      saleReceipt,
-    );
 
-    return res.status(200).send();
+    try {
+      // Update the given sale receipt details.
+      await this.saleReceiptService.editSaleReceipt(
+        tenantId,
+        saleReceiptId,
+        saleReceipt,
+      );
+      return res.status(200).send();
+    } catch (error) {
+      next(error);
+    }
   }
 
   /**

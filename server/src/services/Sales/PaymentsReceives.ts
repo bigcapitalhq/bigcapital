@@ -1,6 +1,11 @@
 import { omit, sumBy, chain } from 'lodash';
 import moment from 'moment';
 import { Service, Inject } from 'typedi';
+import {
+  EventDispatcher,
+  EventDispatcherInterface,
+} from 'decorators/eventDispatcher';
+import events from 'subscribers/events';
 import { IPaymentReceiveOTD } from 'interfaces';
 import AccountsService from 'services/Accounts/AccountsService';
 import JournalPoster from 'services/Accounting/JournalPoster';
@@ -34,6 +39,186 @@ export default class PaymentReceiveService {
   @Inject('logger')
   logger: any;
 
+  @EventDispatcher()
+  eventDispatcher: EventDispatcherInterface;
+
+
+
+  /**
+   * Validates the payment receive number existance.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {Function} next
+   */
+  async validatePaymentReceiveNoExistance(req: Request, res: Response, next: Function) {
+    const tenantId = req.tenantId;
+    const isPaymentNoExists = await this.paymentReceiveService.isPaymentReceiveNoExists(
+      tenantId,
+      req.body.payment_receive_no,
+      req.params.id,
+    );
+    if (isPaymentNoExists) {
+      return res.status(400).send({
+        errors: [{ type: 'PAYMENT.RECEIVE.NUMBER.EXISTS', code: 400 }],
+      });
+    }
+    next();
+  }
+
+  /**
+   * Validates the payment receive existance.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {Function} next
+   */
+  async validatePaymentReceiveExistance(req: Request, res: Response, next: Function) {
+    const tenantId = req.tenantId;
+    const isPaymentNoExists = await this.paymentReceiveService
+      .isPaymentReceiveExists(
+        tenantId,
+        req.params.id
+      );
+    if (!isPaymentNoExists) {
+      return res.status(400).send({
+        errors: [{ type: 'PAYMENT.RECEIVE.NOT.EXISTS', code: 600 }],
+      });
+    }
+    next();
+  }
+
+  /**
+   * Validate the deposit account id existance.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {Function} next
+   */
+  async validateDepositAccount(req: Request, res: Response, next: Function) {
+    const tenantId = req.tenantId;
+    const isDepositAccExists = await this.accountsService.isAccountExists(
+      tenantId,
+      req.body.deposit_account_id
+    );
+    if (!isDepositAccExists) {
+      return res.status(400).send({
+        errors: [{ type: 'DEPOSIT.ACCOUNT.NOT.EXISTS', code: 300 }],
+      });
+    }
+    next();
+  }
+
+  /**
+   * Validates the `customer_id` existance.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {Function} next
+   */
+  async validateCustomerExistance(req: Request, res: Response, next: Function) {
+    const  { Customer } = req.models;
+
+    const isCustomerExists = await Customer.query().findById(req.body.customer_id);
+
+    if (!isCustomerExists) {
+      return res.status(400).send({
+        errors: [{ type: 'CUSTOMER.ID.NOT.EXISTS', code: 200 }],
+      });
+    }
+    next();
+  }
+
+  /**
+   * Validates the invoices IDs existance.
+   * @param {Request} req -
+   * @param {Response} res -
+   * @param {Function} next -
+   */
+  async validateInvoicesIDs(req: Request, res: Response, next: Function) {
+    const paymentReceive = { ...req.body };
+    const { tenantId } = req;
+    const invoicesIds = paymentReceive.entries
+      .map((e) => e.invoice_id);
+
+    const notFoundInvoicesIDs = await this.saleInvoiceService.isInvoicesExist(
+      tenantId,
+      invoicesIds,
+      paymentReceive.customer_id,
+    );
+    if (notFoundInvoicesIDs.length > 0) {
+      return res.status(400).send({
+        errors: [{ type: 'INVOICES.IDS.NOT.FOUND', code: 500 }],
+      });
+    }
+    next();
+  }
+
+  /**
+   * Validates entries invoice payment amount.
+   * @param {Request} req -
+   * @param {Response} res -
+   * @param {Function} next -
+   */
+  async validateInvoicesPaymentsAmount(req: Request, res: Response, next: Function) {
+    const { SaleInvoice } = req.models;
+    const invoicesIds = req.body.entries.map((e) => e.invoice_id);
+
+    const storedInvoices = await SaleInvoice.query()
+      .whereIn('id', invoicesIds);
+
+    const storedInvoicesMap = new Map(
+      storedInvoices.map((invoice) => [invoice.id, invoice])
+    );
+    const hasWrongPaymentAmount: any[] = [];
+
+    req.body.entries.forEach((entry, index: number) => {
+      const entryInvoice = storedInvoicesMap.get(entry.invoice_id);
+      const { dueAmount } = entryInvoice;
+
+      if (dueAmount < entry.payment_amount) {
+        hasWrongPaymentAmount.push({ index, due_amount: dueAmount });
+      }
+    });
+    if (hasWrongPaymentAmount.length > 0) {
+      return res.status(400).send({
+        errors: [
+          {
+            type: 'INVOICE.PAYMENT.AMOUNT',
+            code: 200,
+            indexes: hasWrongPaymentAmount,
+          },
+        ],
+      });
+    }
+    next();
+  }
+
+  /**
+   * Validate the payment receive entries IDs existance. 
+   * @param {Request} req 
+   * @param {Response} res 
+   * @return {Response}
+   */
+  async validateEntriesIdsExistance(req: Request, res: Response, next: Function) {
+    const paymentReceive = { id: req.params.id, ...req.body };
+    const entriesIds = paymentReceive.entries
+      .filter(entry => entry.id)
+      .map(entry => entry.id);
+
+    const { PaymentReceiveEntry } = req.models;
+
+    const storedEntries = await PaymentReceiveEntry.query()
+      .where('payment_receive_id', paymentReceive.id);
+
+    const storedEntriesIds = storedEntries.map((entry) => entry.id);    
+    const notFoundEntriesIds = difference(entriesIds, storedEntriesIds);
+
+    if (notFoundEntriesIds.length > 0) {
+      return res.status(400).send({
+        errors: [{ type: 'ENTEIES.IDS.NOT.FOUND', code: 800 }],
+      });
+    }
+    next();
+  }
+
+
   /**
    * Creates a new payment receive and store it to the storage
    * with associated invoices payment and journal transactions.
@@ -53,9 +238,10 @@ export default class PaymentReceiveService {
 
     this.logger.info('[payment_receive] inserting to the storage.');
     const storedPaymentReceive = await PaymentReceive.query()
-      .insert({
+      .insertGraph({
         amount: paymentAmount,
         ...formatDateFields(omit(paymentReceive, ['entries']), ['payment_date']),
+        entries: paymentReceive.entries.map((entry) => ({ ...entry })),
       });
     const storeOpers: Array<any> = [];
 
@@ -92,6 +278,8 @@ export default class PaymentReceiveService {
       customerIncrementOper,
       recordJournalTransactions,
     ]);
+    await this.eventDispatcher.dispatch(events.paymentReceipts.onCreated);
+
     return storedPaymentReceive;
   }
 
@@ -186,6 +374,7 @@ export default class PaymentReceiveService {
       changeCustomerBalance,
       diffInvoicePaymentAmount,
     ]);
+    await this.eventDispatcher.dispatch(events.paymentReceipts.onEdited);
   }
 
   /**
@@ -239,6 +428,7 @@ export default class PaymentReceiveService {
       revertCustomerBalance,
       revertInvoicesPaymentAmount,
     ]);
+    await this.eventDispatcher.dispatch(events.paymentReceipts.onDeleted);
   }
 
   /**

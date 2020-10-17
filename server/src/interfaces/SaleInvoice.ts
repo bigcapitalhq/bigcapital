@@ -1,3 +1,4 @@
+import { IItemEntry, IItemEntryDTO } from "./ItemEntry";
 
 export interface ISaleInvoice {
   id: number,
@@ -5,7 +6,7 @@ export interface ISaleInvoice {
   paymentAmount: number,
   invoiceDate: Date,
   dueDate: Date,
-  entries: any[],
+  entries: IItemEntry[],
 }
 
 export interface ISaleInvoiceOTD {
@@ -14,7 +15,7 @@ export interface ISaleInvoiceOTD {
   referenceNo: string,
   invoiceMessage: string,
   termsConditions: string,
-  entries: any[],
+  entries: IItemEntryDTO[],
 }
 
 export interface ISalesInvoicesFilter{

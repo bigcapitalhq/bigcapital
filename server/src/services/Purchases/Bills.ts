@@ -1,16 +1,39 @@
-import { omit, sumBy, pick } from 'lodash';
+import { omit, sumBy, pick, difference } from 'lodash';
 import moment from 'moment';
 import { Inject, Service } from 'typedi';
+import {
+  EventDispatcher,
+  EventDispatcherInterface,
+} from 'decorators/eventDispatcher';
+import events from 'subscribers/events';
 import JournalPoster from 'services/Accounting/JournalPoster';
 import JournalEntry from 'services/Accounting/JournalEntry';
 import AccountsService from 'services/Accounts/AccountsService';
-import JournalPosterService from 'services/Sales/JournalPosterService';
 import InventoryService from 'services/Inventory/Inventory';
-import HasItemsEntries from 'services/Sales/HasItemsEntries';
 import SalesInvoicesCost from 'services/Sales/SalesInvoicesCost';
 import TenancyService from 'services/Tenancy/TenancyService';
 import { formatDateFields } from 'utils';
-import{ IBillOTD, IBill, IItem } from 'interfaces';
+import {
+  IBillDTO,
+  IBill,
+  IItem,
+  ISystemUser,
+  IItemEntry,
+  IItemEntryDTO,
+  IBillEditDTO,
+} from 'interfaces';
+import { ServiceError } from 'exceptions';
+import ItemsService from 'services/Items/ItemsService';
+
+const ERRORS = {
+  BILL_NOT_FOUND: 'BILL_NOT_FOUND',
+  BILL_VENDOR_NOT_FOUND: 'BILL_VENDOR_NOT_FOUND',
+  BILL_ITEMS_NOT_PURCHASABLE: 'BILL_ITEMS_NOT_PURCHASABLE',
+  BILL_NUMBER_EXISTS: 'BILL_NUMBER_EXISTS',
+  BILL_ITEMS_NOT_FOUND: 'BILL_ITEMS_NOT_FOUND',
+  BILL_ENTRIES_IDS_NOT_FOUND: 'BILL_ENTRIES_IDS_NOT_FOUND',
+  NOT_PURCHASE_ABLE_ITEMS: 'NOT_PURCHASE_ABLE_ITEMS',
+};
 
 /**
  * Vendor bills services.
@@ -25,7 +48,136 @@ export default class BillsService extends SalesInvoicesCost {
   accountsService: AccountsService;
 
   @Inject()
+  itemsService: ItemsService;
+
+  @Inject()
   tenancy: TenancyService;
+
+  @EventDispatcher()
+  eventDispatcher: EventDispatcherInterface;
+
+  @Inject('logger')
+  logger: any;
+
+  /**
+   * Validates whether the vendor is exist.
+   * @async
+   * @param {Request} req
+   * @param {Response} res
+   * @param {Function} next
+   */
+  private async getVendorOrThrowError(tenantId: number, vendorId: number) {
+    const { vendorRepository } = this.tenancy.repositories(tenantId);
+
+    this.logger.info('[bill] trying to get vendor.', { tenantId, vendorId });
+    const foundVendor = await vendorRepository.findById(vendorId);
+
+    if (!foundVendor) {
+      this.logger.info('[bill] the given vendor not found.', { tenantId, vendorId });
+      throw new ServiceError(ERRORS.BILL_VENDOR_NOT_FOUND);
+    }
+    return foundVendor;
+  }
+
+  /**
+   * Validates the given bill existance.
+   * @async
+   * @param {number} tenantId -
+   * @param {number} billId - 
+   */
+  private async getBillOrThrowError(tenantId: number, billId: number) {
+    const { Bill } = this.tenancy.models(tenantId);
+
+    this.logger.info('[bill] trying to get bill.', { tenantId, billId });
+    const foundBill = await Bill.query().findById(billId).withGraphFetched('entries');
+
+    if (!foundBill) {
+      this.logger.info('[bill] the given bill not found.', { tenantId, billId });
+      throw new ServiceError(ERRORS.BILL_NOT_FOUND);
+    }
+    return foundBill;
+  }
+
+  /**
+   * Validates the entries items ids.
+   * @async
+   * @param {Request} req
+   * @param {Response} res
+   * @param {Function} next
+   */
+  private async validateItemsIdsExistance(tenantId: number, billEntries: IItemEntryDTO[]) {
+    const { Item } = this.tenancy.models(tenantId);
+    const itemsIds = billEntries.map((e) => e.itemId);
+    
+    const foundItems = await Item.query().whereIn('id', itemsIds);
+
+    const foundItemsIds = foundItems.map((item: IItem) => item.id);
+    const notFoundItemsIds = difference(itemsIds, foundItemsIds);
+
+    if (notFoundItemsIds.length > 0) {
+      throw new ServiceError(ERRORS.BILL_ITEMS_NOT_FOUND);
+    }
+  }
+
+  /**
+   * Validates the bill number existance.
+   * @async
+   * @param {Request} req
+   * @param {Response} res
+   * @param {Function} next
+   */
+  private async validateBillNumberExists(tenantId: number, billNumber: string) {
+    const { Bill } = this.tenancy.models(tenantId);
+    const foundBills = await Bill.query().where('bill_number', billNumber);
+
+    if (foundBills.length > 0) {
+      throw new ServiceError(ERRORS.BILL_NUMBER_EXISTS);
+    }
+  }
+
+  /**
+   * Validates the entries ids existance on the storage.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {Function} next
+   */
+  async validateEntriesIdsExistance(tenantId: number, billId: number, billEntries: any) {
+    const { ItemEntry } = this.tenancy.models(tenantId);
+    const entriesIds = billEntries.filter((e) => e.id).map((e) => e.id);
+
+    const storedEntries = await ItemEntry.query()
+      .whereIn('reference_id', [billId])
+      .whereIn('reference_type', ['Bill']);
+
+    const storedEntriesIds = storedEntries.map((entry) => entry.id);
+    const notFoundEntriesIds = difference(entriesIds, storedEntriesIds);
+
+    if (notFoundEntriesIds.length > 0) {
+      throw new ServiceError(ERRORS.BILL_ENTRIES_IDS_NOT_FOUND)
+    }
+  }
+
+  /**
+   * Validate the entries items that not purchase-able. 
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {Function} next 
+   */
+  private async validateNonPurchasableEntriesItems(tenantId: number, billEntries: any) {
+    const { Item } = this.tenancy.models(tenantId);
+    const itemsIds = billEntries.map((e: IItemEntry) => e.itemId);
+    
+    const purchasbleItems = await Item.query()
+      .where('purchasable', true)
+      .whereIn('id', itemsIds);
+
+    const purchasbleItemsIds = purchasbleItems.map((item: IItem) => item.id);
+    const notPurchasableItems = difference(itemsIds, purchasbleItemsIds);
+
+    if (notPurchasableItems.length > 0) {
+      throw new ServiceError(ERRORS.NOT_PURCHASE_ABLE_ITEMS);
+    }
+  }
 
   /**
    * Converts bill DTO to model.
@@ -35,13 +187,13 @@ export default class BillsService extends SalesInvoicesCost {
    * 
    * @returns {IBill}
    */
-  async billDTOToModel(tenantId: number, billDTO: IBillOTD, oldBill?: IBill) {
+  private async billDTOToModel(tenantId: number, billDTO: IBillDTO, oldBill?: IBill) {
     const { ItemEntry } = this.tenancy.models(tenantId);
     let invLotNumber = oldBill?.invLotNumber;
 
-    if (!invLotNumber) {
-      invLotNumber = await this.inventoryService.nextLotNumber(tenantId);
-    }
+    // if (!invLotNumber) {
+    //   invLotNumber = await this.inventoryService.nextLotNumber(tenantId);
+    // }
     const entries = billDTO.entries.map((entry) => ({
       ...entry,
       amount: ItemEntry.calcAmount(entry),
@@ -58,7 +210,7 @@ export default class BillsService extends SalesInvoicesCost {
 
   /**
    * Creates a new bill and stored it to the storage.
-   *
+   * ----
    * Precedures.
    * ----
    * - Insert bill transactions to the storage.
@@ -67,55 +219,43 @@ export default class BillsService extends SalesInvoicesCost {
    * - Record bill journal transactions on the given accounts.
    * - Record bill items inventory transactions.
    * ----
-   * @param {number} tenantId - The given tenant id.
-   * @param {IBillOTD} billDTO -
-   * @return {void}
+   * @param  {number} tenantId - The given tenant id.
+   * @param  {IBillDTO} billDTO -
+   * @return {Promise<IBill>}
    */
-  async createBill(tenantId: number, billDTO: IBillOTD) {
-    const { Vendor, Bill, ItemEntry } = this.tenancy.models(tenantId);
+  public async createBill(
+    tenantId: number,
+    billDTO: IBillDTO,
+    authorizedUser: ISystemUser
+  ): Promise<IBill> {
+    const { Bill } = this.tenancy.models(tenantId);
 
-    const bill = await this.billDTOToModel(tenantId, billDTO);
-    const saveEntriesOpers = [];
+    this.logger.info('[bill] trying to create a new bill', { tenantId, billDTO });
+    const billObj = await this.billDTOToModel(tenantId, billDTO);
 
-    const storedBill = await Bill.query()
-      .insert({
-        ...omit(bill, ['entries']),
-      });
-    bill.entries.forEach((entry) => {
-      const oper = ItemEntry.query()
-        .insertAndFetch({
+    await this.getVendorOrThrowError(tenantId, billDTO.vendorId);
+    await this.validateBillNumberExists(tenantId, billDTO.billNumber);
+
+    await this.validateItemsIdsExistance(tenantId, billDTO.entries);
+    await this.validateNonPurchasableEntriesItems(tenantId, billDTO.entries);
+
+    const bill = await Bill.query()
+      .insertGraph({
+        ...omit(billObj, ['entries']),
+        userId: authorizedUser.id,
+        entries: billDTO.entries.map((entry) => ({
           reference_type: 'Bill',
-          reference_id: storedBill.id,
-          ...omit(entry, ['amount']),
-        }).then((itemEntry) => {
-          entry.id = itemEntry.id;
-        });
-      saveEntriesOpers.push(oper);
+          ...omit(entry, ['amount', 'id']),
+        })),
+      });
+
+    // Triggers `onBillCreated` event. 
+    await this.eventDispatcher.dispatch(events.bills.onCreated, {
+      tenantId, bill, billId: bill.id,
     });
-    // Await save all bill entries operations.
-    await Promise.all([...saveEntriesOpers]); 
+    this.logger.info('[bill] bill inserted successfully.', { tenantId, billId: bill.id });
 
-    // Increments vendor balance.
-    const incrementOper = Vendor.changeBalance(bill.vendor_id, bill.amount);
-
-    // Rewrite the inventory transactions for inventory items.
-    const writeInvTransactionsOper = this.recordInventoryTransactions(
-      tenantId, bill, storedBill.id
-    );
-    // Writes the journal entries for the given bill transaction.
-    const writeJEntriesOper = this.recordJournalTransactions(tenantId, {
-      id: storedBill.id, ...bill,
-    });
-    await Promise.all([
-      incrementOper,
-      writeInvTransactionsOper,
-      writeJEntriesOper,
-    ]);
-    // Schedule bill re-compute based on the item cost
-    // method and starting date.
-    await this.scheduleComputeBillItemsCost(tenantId, bill); 
-
-    return storedBill;
+    return bill;
   }
 
   /**
@@ -132,55 +272,34 @@ export default class BillsService extends SalesInvoicesCost {
    *
    * @param {number} tenantId - The given tenant id.
    * @param {Integer} billId - The given bill id.
-   * @param {billDTO} billDTO - The given new bill details.
+   * @param {IBillEditDTO} billDTO - The given new bill details.
+   * @return {Promise<IBill>}
    */
-  async editBill(tenantId: number, billId: number, billDTO: billDTO) {
-    const { Bill, ItemEntry, Vendor } = this.tenancy.models(tenantId);
- 
-    const oldBill = await Bill.query().findById(billId);
-    const bill = this.billDTOToModel(tenantId, billDTO, oldBill);
+  public async editBill(
+    tenantId: number,
+    billId: number,
+    billDTO: IBillEditDTO,
+  ): Promise<IBill> {
+    const { Bill } = this.tenancy.models(tenantId);
+
+    this.logger.info('[bill] trying to edit bill.', { tenantId, billId });
+    const oldBill = await this.getBillOrThrowError(tenantId, billId);
+    const billObj = this.billDTOToModel(tenantId, billDTO, oldBill);
 
     // Update the bill transaction.
-    const updatedBill = await Bill.query()
-      .where('id', billId)
-      .update({
-        ...omit(bill, ['entries', 'invLotNumber'])
+    const bill = await Bill.query()
+      .upsertGraph({
+        id: billId,
+        ...omit(billObj, ['entries', 'invLotNumber']),
+        entries: billDTO.entries.map((entry) => ({
+          reference_type: 'Bill',
+          ...omit(entry, ['amount']),
+        }))
       });
-    // Old stored entries.
-    const storedEntries = await ItemEntry.query()
-      .where('reference_id', billId)
-      .where('reference_type', 'Bill');
+    // Triggers event `onBillEdited`.
+    await this.eventDispatcher.dispatch(events.bills.onEdited, { tenantId, billId, oldBill, bill });
 
-    // Patch the bill entries.
-    const patchEntriesOper = HasItemsEntries.patchItemsEntries(
-      bill.entries, storedEntries, 'Bill', billId,
-    );
-    // Changes the diff vendor balance between old and new amount.
-    const changeVendorBalanceOper = Vendor.changeDiffBalance(
-      bill.vendor_id,
-      oldBill.vendorId,
-      bill.amount,
-      oldBill.amount,
-    );
-    // Re-write the inventory transactions for inventory items.
-    const writeInvTransactionsOper = this.recordInventoryTransactions(
-      tenantId, bill, billId, true
-    );
-    // Writes the journal entries for the given bill transaction.
-    const writeJEntriesOper = this.recordJournalTransactions(tenantId, {
-      id: billId,
-      ...bill,
-    }, billId);
-
-    await Promise.all([
-      patchEntriesOper,
-      changeVendorBalanceOper,
-      writeInvTransactionsOper,
-      writeJEntriesOper,
-    ]);
-    // Schedule sale invoice re-compute based on the item cost
-    // method and starting date.
-    await this.scheduleComputeBillItemsCost(tenantId, bill); 
+    return bill;
   }
 
   /**
@@ -188,13 +307,10 @@ export default class BillsService extends SalesInvoicesCost {
    * @param {Integer} billId
    * @return {void}
    */
-  async deleteBill(tenantId: number, billId: number) {
-    const { Bill, ItemEntry, Vendor } = this.tenancy.models(tenantId);
+  public async deleteBill(tenantId: number, billId: number) {
+    const { Bill, ItemEntry } = this.tenancy.models(tenantId);
 
-    const bill = await Bill.query()
-      .where('id', billId)
-      .withGraphFetched('entries')
-      .first();
+    const oldBill = await this.getBillOrThrowError(tenantId, billId);
 
     // Delete all associated bill entries.
     const deleteBillEntriesOper = ItemEntry.query()
@@ -205,28 +321,10 @@ export default class BillsService extends SalesInvoicesCost {
     // Delete the bill transaction.
     const deleteBillOper = Bill.query().where('id', billId).delete();
 
-    // Delete associated bill journal transactions.
-    const deleteTransactionsOper = JournalPosterService.deleteJournalTransactions(
-      billId,
-      'Bill'
-    );
-    // Delete bill associated inventory transactions.
-    const deleteInventoryTransOper = this.inventoryService.deleteInventoryTransactions(
-      tenantId, billId, 'Bill'
-    );
-    // Revert vendor balance.
-    const revertVendorBalance = Vendor.changeBalance(bill.vendorId, bill.amount * -1);
-  
-    await Promise.all([
-      deleteBillOper,
-      deleteBillEntriesOper,
-      deleteTransactionsOper,
-      deleteInventoryTransOper,
-      revertVendorBalance,
-    ]);
-    // Schedule sale invoice re-compute based on the item cost
-    // method and starting date.
-    await this.scheduleComputeBillItemsCost(tenantId, bill); 
+    await Promise.all([deleteBillEntriesOper, deleteBillOper]);
+
+    // Triggers `onBillDeleted` event.
+    await this.eventDispatcher.dispatch(events.bills.onDeleted, { tenantId, billId, oldBill });
   }
 
   /**
@@ -262,20 +360,18 @@ export default class BillsService extends SalesInvoicesCost {
    * @param {IBill} bill
    * @param {Integer} billId
    */
-  async recordJournalTransactions(tenantId: number, bill: any, billId?: number) {
-    const { AccountTransaction, Item } = this.tenancy.models(tenantId);
+  async recordJournalTransactions(tenantId: number, bill: IBill, billId?: number) {
+    const { AccountTransaction, Item, ItemEntry } = this.tenancy.models(tenantId);
+    const { accountRepository } = this.tenancy.repositories(tenantId);
 
-    const entriesItemsIds = bill.entries.map((entry) => entry.item_id);
-    const payableTotal = sumBy(bill.entries, 'amount');
-    const formattedDate = moment(bill.bill_date).format('YYYY-MM-DD');
+    const entriesItemsIds = bill.entries.map((entry) => entry.itemId);
+    const formattedDate = moment(bill.billDate).format('YYYY-MM-DD');
 
-    const storedItems = await Item.query()
-      .whereIn('id', entriesItemsIds);
+    const storedItems = await Item.query().whereIn('id', entriesItemsIds);
 
     const storedItemsMap = new Map(storedItems.map((item) => [item.id, item]));
-    const payableAccount = await this.accountsService.getAccountByType(
-      tenantId, 'accounts_payable'
-    );
+    const payableAccount = await accountRepository.getBySlug('accounts-payable');
+
     const journal = new JournalPoster(tenantId);
 
     const commonJournalMeta = {
@@ -284,7 +380,7 @@ export default class BillsService extends SalesInvoicesCost {
       referenceId: bill.id,
       referenceType: 'Bill',
       date: formattedDate,
-      accural: true,
+      userId: bill.userId,
     };
     if (billId) {
       const transactions = await AccountTransaction.query()
@@ -297,23 +393,26 @@ export default class BillsService extends SalesInvoicesCost {
     }
     const payableEntry = new JournalEntry({
       ...commonJournalMeta,
-      credit: payableTotal,
+      credit: bill.amount,
       account: payableAccount.id,
-      contactId: bill.vendor_id,
+      contactId: bill.vendorId,
       contactType: 'Vendor',
+      index: 1,
     });
     journal.credit(payableEntry);
 
-    bill.entries.forEach((entry) => {
-      const item: IItem = storedItemsMap.get(entry.item_id);
+    bill.entries.forEach((entry, index) => {
+      const item: IItem = storedItemsMap.get(entry.itemId);
+      const amount = ItemEntry.calcAmount(entry);
 
       const debitEntry = new JournalEntry({
         ...commonJournalMeta,
-        debit: entry.amount,
+        debit: amount,
         account:
           ['inventory'].indexOf(item.type) !== -1
             ? item.inventoryAccountId
             : item.costAccountId,
+        index: index + 2,
       });
       journal.debit(debitEntry);
     });
@@ -324,44 +423,6 @@ export default class BillsService extends SalesInvoicesCost {
     ]);
   }
 
-  /**
-   * Detarmines whether the bill exists on the storage.
-   * @param {number} tenantId - The given tenant id.
-   * @param {Integer} billId - The given bill id.
-   * @return {Boolean}
-   */
-  async isBillExists(tenantId: number, billId: number) {
-    const { Bill } = this.tenancy.models(tenantId);
-
-    const foundBills = await Bill.query().where('id', billId);
-    return foundBills.length > 0;
-  }
-
-  /**
-   * Detarmines whether the given bills exist on the storage in bulk.
-   * @param {Array} billsIds
-   * @return {Boolean}
-   */
-  async isBillsExist(tenantId: number, billsIds: number[]) {
-    const { Bill } = this.tenancy.models(tenantId);
-
-    const bills = await Bill.query().whereIn('id', billsIds);
-    return bills.length > 0;
-  }
-
-  /**
-   * Detarmines whether the given bill id exists on the storage.
-   * @param {number} tenantId 
-   * @param {Integer} billNumber 
-   * @return {boolean}
-   */
-  async isBillNoExists(tenantId: number, billNumber : string) {
-    const { Bill } = this.tenancy.models(tenantId);
-
-    const foundBills = await Bill.query()
-      .where('bill_number', billNumber);
-    return foundBills.length > 0;
-  }
 
   /**
    * Retrieve the given bill details with associated items entries.
@@ -370,8 +431,7 @@ export default class BillsService extends SalesInvoicesCost {
    */
   getBill(tenantId: number, billId: number) {
     const { Bill } = this.tenancy.models(tenantId);
-
-    return Bill.query().where('id', billId).first();
+    return Bill.query().findById(billId).withGraphFetched('entries');
   }
 
   /**

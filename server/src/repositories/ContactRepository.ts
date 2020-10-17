@@ -1,6 +1,5 @@
 import TenantRepository from 'repositories/TenantRepository';
 import { IContact } from 'interfaces';
-import Contact from 'models/Contact';
 
 export default class ContactRepository extends TenantRepository {
   cache: any;
@@ -45,9 +44,11 @@ export default class ContactRepository extends TenantRepository {
    * Inserts a new contact model.
    * @param contact 
    */
-  async insert(contact) {
-    await Contact.query().insert({ ...contact })
+  async insert(contactInput: IContact) {
+    const { Contact } = this.models;
+    const contact = await Contact.query().insert({ ...contactInput })
     this.flushCache();
+    return contact;
   }
 
   /**
@@ -56,6 +57,7 @@ export default class ContactRepository extends TenantRepository {
    * @param {IContact} contact - Contact input.
    */
   async update(contactId: number, contact: IContact) {
+    const { Contact } = this.models;
     await Contact.query().findById(contactId).patch({ ...contact });
     this.flushCache();
   }
@@ -66,6 +68,7 @@ export default class ContactRepository extends TenantRepository {
    * @return {Promise<void>}
    */
   async deleteById(contactId: number): Promise<void> {
+    const { Contact } = this.models;
     await Contact.query().where('id', contactId).delete();
     this.flushCache();
   }
@@ -75,6 +78,7 @@ export default class ContactRepository extends TenantRepository {
    * @param {number[]} contactsIds 
    */
   async bulkDelete(contactsIds: number[]) {
+    const { Contact } = this.models;
     await Contact.query().whereIn('id', contactsIds);
     this.flushCache();
   }

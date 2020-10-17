@@ -41,7 +41,7 @@ export interface IManualJournalsFilter extends IDynamicListFilterDTO {
   pageSize: number,
 }
 
-export interface IManuaLJournalsService {
+export interface IManualJournalsService {
   makeJournalEntries(tenantId: number, manualJournalDTO: IManualJournalDTO, authorizedUser: ISystemUser): Promise<{ manualJournal: IManualJournal }>;
   editJournalEntries(tenantId: number, manualJournalId: number, manualJournalDTO: IManualJournalDTO, authorizedUser): Promise<{ manualJournal: IManualJournal }>;
   deleteManualJournal(tenantId: number, manualJournalId: number): Promise<void>;

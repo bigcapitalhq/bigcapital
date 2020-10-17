@@ -1,16 +1,20 @@
 import { Request, Response, Router, NextFunction } from 'express';
 import { Service, Inject } from 'typedi';
-import { check } from 'express-validator';
+import { check, query } from 'express-validator';
 import ContactsController from 'api/controllers/Contacts/Contacts';
 import CustomersService from 'services/Contacts/CustomersService';
 import { ServiceError } from 'exceptions';
 import { ICustomerNewDTO, ICustomerEditDTO } from 'interfaces';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
+import DynamicListingService from 'services/DynamicListing/DynamicListService';
 
 @Service()
 export default class CustomersController extends ContactsController {
   @Inject()
   customersService: CustomersService;
+
+  @Inject()
+  dynamicListService: DynamicListingService;
 
   /**
    * Express router.
@@ -24,7 +28,8 @@ export default class CustomersController extends ContactsController {
       ...this.customerDTOSchema,
     ],
       this.validationResult,
-      asyncMiddleware(this.newCustomer.bind(this))
+      asyncMiddleware(this.newCustomer.bind(this)),
+      this.handlerServiceErrors
     );
     router.post('/:id', [
       ...this.contactDTOSchema,
@@ -32,31 +37,36 @@ export default class CustomersController extends ContactsController {
       ...this.customerDTOSchema,
     ],
       this.validationResult,
-      asyncMiddleware(this.editCustomer.bind(this))
+      asyncMiddleware(this.editCustomer.bind(this)),
+      this.handlerServiceErrors,
     );
     router.delete('/:id', [
       ...this.specificContactSchema,
     ],
       this.validationResult,
-      asyncMiddleware(this.deleteCustomer.bind(this))
+      asyncMiddleware(this.deleteCustomer.bind(this)),
+      this.handlerServiceErrors,
     );
     router.delete('/', [
       ...this.bulkContactsSchema,
     ],
       this.validationResult,
-      asyncMiddleware(this.deleteBulkCustomers.bind(this))
+      asyncMiddleware(this.deleteBulkCustomers.bind(this)),
+      this.handlerServiceErrors,
     );
     router.get('/', [
-      
+      ...this.validateListQuerySchema,
     ],
       this.validationResult,
-      asyncMiddleware(this.getCustomersList.bind(this))
+      asyncMiddleware(this.getCustomersList.bind(this)),
+      this.dynamicListService.handlerErrorsToResponse,
     );
     router.get('/:id', [
       ...this.specificContactSchema,
     ],
       this.validationResult,
-      asyncMiddleware(this.getCustomer.bind(this))
+      asyncMiddleware(this.getCustomer.bind(this)),
+      this.handlerServiceErrors
     );
     return router;
   }
@@ -68,6 +78,19 @@ export default class CustomersController extends ContactsController {
     return [
       check('customer_type').exists().trim().escape(),
       check('opening_balance').optional().isNumeric().toInt(),
+    ];
+  }
+
+  get validateListQuerySchema() {
+    return [
+      query('column_sort_by').optional().trim().escape(),
+      query('sort_order').optional().isIn(['desc', 'asc']),
+
+      query('page').optional().isNumeric().toInt(),
+      query('page_size').optional().isNumeric().toInt(),
+
+      query('custom_view_id').optional().isNumeric().toInt(),
+      query('stringified_filter_roles').optional().isJSON(),
     ];
   }
 
@@ -104,13 +127,6 @@ export default class CustomersController extends ContactsController {
       await this.customersService.editCustomer(tenantId, contactId, contactDTO);
       return res.status(200).send({ id: contactId });
     } catch (error) {
-      if (error instanceof ServiceError) {
-        if (error.errorType === 'contact_not_found') {
-          return res.boom.badRequest(null, {
-            errors: [{ type: 'CUSTOMER.NOT.FOUND', code: 100 }],
-          });
-        }
-      }
       next(error);
     }
   }
@@ -129,18 +145,6 @@ export default class CustomersController extends ContactsController {
       await this.customersService.deleteCustomer(tenantId, contactId)
       return res.status(200).send({ id: contactId });
     } catch (error) {
-      if (error instanceof ServiceError) {
-        if (error.errorType === 'contact_not_found') {
-          return res.boom.badRequest(null, {
-            errors: [{ type: 'CUSTOMER.NOT.FOUND', code: 100 }],
-          });
-        }
-        if (error.errorType === 'customer_has_invoices') {
-          return res.boom.badRequest(null, {
-            errors: [{ type: 'CUSTOMER.HAS.SALES_INVOICES', code: 200 }],
-          });
-        }
-      }
       next(error);
     }
   }
@@ -159,13 +163,6 @@ export default class CustomersController extends ContactsController {
       const contact = await this.customersService.getCustomer(tenantId, contactId)
       return res.status(200).send({ contact });
     } catch (error) {
-      if (error instanceof ServiceError) {
-        if (error.errorType === 'contact_not_found') {
-          return res.boom.badRequest(null, {
-            errors: [{ type: 'CONTACT.NOT.FOUND', code: 100 }],
-          });
-        }
-      }
       next(error);
     }
   }
@@ -184,30 +181,67 @@ export default class CustomersController extends ContactsController {
       await this.customersService.deleteBulkCustomers(tenantId, contactsIds)
       return res.status(200).send({ ids: contactsIds });
     } catch (error) {
-      if (error instanceof ServiceError) {
-        if (error.errorType === 'contacts_not_found') {
-          return res.boom.badRequest(null, {
-            errors: [{ type: 'CUSTOMERS.NOT.FOUND', code: 100 }],
-          });
-        }
-        if (error.errorType === 'some_customers_have_invoices') {
-          return res.boom.badRequest(null, {
-            errors: [{ type: 'SOME.CUSTOMERS.HAVE.SALES_INVOICES', code: 200 }],
-          });
-        }
-      }
       next(error);
     }
   }
 
-
+  /**
+   * Retrieve customers paginated and filterable list.
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {NextFunction} next 
+   */
   async getCustomersList(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
+    const filter = {
+      filterRoles: [],
+      sortOrder: 'asc',
+      columnSortBy: 'created_at',
+      page: 1,
+      pageSize: 12,
+      ...this.matchedQueryData(req),
+    };
+    if (filter.stringifiedFilterRoles) {
+      filter.filterRoles = JSON.parse(filter.stringifiedFilterRoles);
+    }
 
     try {
-      await this.customersService.getCustomersList(tenantId)
+      const { customers, pagination, filterMeta } = await this.customersService.getCustomersList(tenantId, filter);
+
+      return res.status(200).send({
+        customers,
+        pagination: this.transfromToResponse(pagination),
+        filter_meta: this.transfromToResponse(filterMeta),
+      });
     } catch (error) {
       next(error);
+    }
+  }
+
+  /**
+   * Handles service errors.
+   * @param {Error} error 
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {NextFunction} next 
+   */
+  handlerServiceErrors(error: Error, req: Request, res: Response, next: NextFunction) {
+    if (error instanceof ServiceError) {
+      if (error.errorType === 'contacts_not_found') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'CUSTOMERS.NOT.FOUND', code: 100 }],
+        });
+      }
+      if (error.errorType === 'some_customers_have_invoices') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'SOME.CUSTOMERS.HAVE.SALES_INVOICES', code: 200 }],
+        });
+      }
+      if (error.errorType === 'customer_has_invoices') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'CUSTOMER.HAS.SALES_INVOICES', code: 200 }],
+        });
+      }
     }
   }
 }
