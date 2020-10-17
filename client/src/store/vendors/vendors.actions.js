@@ -15,21 +15,21 @@ export const fetchVendorsTable = ({ query }) => {
           dispatch({
             type: t.VENDORS_PAGE_SET,
             payload: {
-              vendors: response.data.vendors.results,
-              pagination: response.data.vendors.pagination,
+              vendors: response.data.vendors,
+              pagination: response.data.pagination,
               customViewId: response.data.customViewId,
             },
           });
           dispatch({
             type: t.VENDORS_ITEMS_SET,
             payload: {
-              vendors: response.data.vendors.results,
+              vendors: response.data.vendors,
             },
           });
           dispatch({
             type: t.VENDORS_PAGINATION_SET,
             payload: {
-              pagination: response.data.vendors.pagination,
+              pagination: response.data.pagination,
               customViewId: response.data.customViewId || -1,
             },
           });
@@ -49,10 +49,8 @@ export const fetchVendorsTable = ({ query }) => {
 export const editVendor = ({ form, id }) => {
   return (dispatch) =>
     new Promise((resolve, reject) => {
-
       ApiService.post(`vendors/${id}`, form)
         .then((response) => {
- 
           resolve(response);
         })
         .catch((error) => {

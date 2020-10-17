@@ -12,7 +12,7 @@ export default function AccountsTypesSelect({
 }) {
   // Filters accounts types items.
   const filterAccountTypeItems = (query, accountType, _index, exactMatch) => {
-    const normalizedTitle = accountType.name.toLowerCase();
+    const normalizedTitle = accountType.label.toLowerCase();
     const normalizedQuery = query.toLowerCase();
 
     if (exactMatch) {
@@ -28,7 +28,7 @@ export default function AccountsTypesSelect({
   };
 
   const items = accountsTypes.map((type) => ({
-    id: type.id, name: type.name,
+    id: type.id, label: type.label,
   }));
 
   return (
@@ -36,7 +36,7 @@ export default function AccountsTypesSelect({
       items={items}
       selectedItemProp={'id'}
       selectedItem={selectedTypeId}
-      labelProp={'name'}
+      labelProp={'label'}
       defaultText={defaultSelectText}
       onItemSelect={handleItemSelected}
       itemPredicate={filterAccountTypeItems}

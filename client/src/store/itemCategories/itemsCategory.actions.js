@@ -23,7 +23,7 @@ export const fetchItemCategories = ({ query }) => {
         .then((response) => {
           dispatch({
             type: t.ITEMS_CATEGORY_LIST_SET,
-            categories: response.data.categories,
+            categories: response.data.item_categories,
           });
           dispatch({
             type: t.SET_DASHBOARD_REQUEST_COMPLETED,
