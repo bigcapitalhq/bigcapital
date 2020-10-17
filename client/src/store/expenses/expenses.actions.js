@@ -18,21 +18,21 @@ export const fetchExpensesTable = ({ query } = {}) => {
           dispatch({
             type: t.EXPENSES_PAGE_SET,
             payload: {
-              expenses: response.data.expenses.results,
-              pagination: response.data.expenses.pagination,
+              expenses: response.data.expenses,
+              pagination: response.data.pagination,
               customViewId: response.data.customViewId || -1,
             },            
           });
           dispatch({
             type: t.EXPENSES_ITEMS_SET,
             payload: {
-              expenses: response.data.expenses.results,
+              expenses: response.data.expenses,
             }
           });
           dispatch({
             type: t.EXPENSES_PAGINATION_SET,
             payload: {
-              pagination: response.data.expenses.pagination,
+              pagination: response.data.pagination,
               customViewId: response.data.customViewId || -1,
             }
           });

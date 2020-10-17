@@ -66,14 +66,14 @@ export const fetchCustomers = ({ query }) => {
         .then((response) => {
           dispatch({
             type: t.CUSTOMER_SET,
-            customers: response.data.customers.results,
+            customers: response.data.customers,
           });
 
           dispatch({
             type: t.CUSTOMERS_PAGE_SET,
-            customers: response.data.customers.results,
+            customers: response.data.customers,
             customViewId: response.data.customers.customViewId,
-            paginationMeta: response.data.customers.pagination,
+            paginationMeta: response.data.pagination,
           });
           dispatch({
             type: t.CUSTOMERS_TABLE_LOADING,

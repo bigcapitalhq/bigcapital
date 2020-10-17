@@ -5,7 +5,7 @@ import t from 'store/types';
 export const makeJournalEntries = ({ form }) => {
   return (dispatch) =>
     new Promise((resolve, reject) => {
-      ApiService.post('accounting/make-journal-entries', form)
+      ApiService.post('manual-journals', form)
         .then((response) => {
           resolve(response);
         })
@@ -21,13 +21,13 @@ export const makeJournalEntries = ({ form }) => {
 export const fetchManualJournal = ({ id }) => {
   return (dispatch) =>
     new Promise((resolve, reject) => {
-      ApiService.get(`accounting/manual-journals/${id}`)
+      ApiService.get(`manual-journals/${id}`)
         .then((response) => {
           dispatch({
             type: t.MANUAL_JOURNAL_SET,
             payload: {
               id,
-              manualJournal: response.data.manual_journal,
+              manualJournal: response.data.manualJournal,
             },
           });
           resolve(response);
@@ -41,7 +41,7 @@ export const fetchManualJournal = ({ id }) => {
 export const editManualJournal = ({ form, id }) => {
   return (dispatch) =>
     new Promise((resolve, reject) => {
-      ApiService.post(`accounting/manual-journals/${id}`, form)
+      ApiService.post(`manual-journals/${id}`, form)
         .then((response) => {
           resolve(response);
         })
@@ -53,11 +53,10 @@ export const editManualJournal = ({ form, id }) => {
         });
     });
 };
-
 export const deleteManualJournal = ({ id }) => {
   return (dispatch) =>
     new Promise((resolve, reject) => {
-      ApiService.delete(`accounting/manual-journals/${id}`)
+      ApiService.delete(`manual-journals/${id}`)
         .then((response) => {
           dispatch({
             type: t.MANUAL_JOURNAL_REMOVE,
@@ -74,7 +73,7 @@ export const deleteManualJournal = ({ id }) => {
 export const deleteBulkManualJournals = ({ ids }) => {
   return (dispatch) =>
     new Promise((resolve, reject) => {
-      ApiService.delete('accounting/manual-journals', { params: { ids } })
+      ApiService.delete('manual-journals', { params: { ids } })
         .then((response) => {
           dispatch({
             type: t.MANUAL_JOURNALS_BULK_DELETE,
@@ -91,7 +90,7 @@ export const deleteBulkManualJournals = ({ ids }) => {
 export const publishManualJournal = ({ id }) => {
   return (dispatch) =>
     new Promise((resolve, reject) => {
-      ApiService.post(`accounting/manual-journals/${id}/publish`)
+      ApiService.post(`manual-journals/${id}/publish`)
         .then((response) => {
           dispatch({
             type: t.MANUAL_JOURNAL_PUBLISH,
@@ -113,34 +112,37 @@ export const fetchManualJournalsTable = ({ query } = {}) => {
       if (pageQuery.filter_roles) {
         pageQuery = {
           ...omit(pageQuery, ['filter_roles']),
-          stringified_filter_roles: JSON.stringify(pageQuery.filter_roles) || '',
+          stringified_filter_roles:
+            JSON.stringify(pageQuery.filter_roles) || '',
         };
       }
       dispatch({
         type: t.MANUAL_JOURNALS_TABLE_LOADING,
         loading: true,
       });
-      ApiService.get('accounting/manual-journals', {
+      ApiService.get('manual-journals', {
         params: { ...pageQuery, ...query },
       })
         .then((response) => {
           dispatch({
             type: t.MANUAL_JOURNALS_PAGE_SET,
             payload: {
-              manualJournals: response.data.manualJournals.results,
-              customViewId: response.data.manualJournals?.viewMeta?.customViewId || -1,
-              pagination: response.data.manualJournals.pagination,
-            }
+              manualJournals: response.data.manual_journals,
+              customViewId:
+                response.data.manual_journals?.viewMeta?.customViewId || -1,
+              pagination: response.data.pagination,
+            },
           });
           dispatch({
             type: t.MANUAL_JOURNALS_ITEMS_SET,
-            manual_journals: response.data.manualJournals.results,
+            manual_journals: response.data.manual_journals,
           });
           dispatch({
             type: 'MANUAL_JOURNALS_PAGINATION_SET',
             payload: {
-              pagination: response.data.manualJournals.pagination,
-              customViewId: response.data.manualJournals?.viewMeta?.customViewId || -1,
+              pagination: response.data.pagination,
+              customViewId:
+                response.data.manual_journals?.viewMeta?.customViewId || -1,
             },
           });
           dispatch({

@@ -25,13 +25,13 @@ export const fetchItems = ({ query }) => {
         .then((response) => {
           dispatch({
             type: t.ITEMS_SET,
-            items: response.data.items.results,
+            items: response.data.items,
           });
           dispatch({
             type: t.ITEMS_PAGE_SET,
-            items: response.data.items.results,
+            items: response.data.items,
             customViewId: response.data.customViewId,
-            paginationMeta: response.data.items.pagination,
+            paginationMeta: response.data.pagination,
           });
           dispatch({
             type: t.ITEMS_TABLE_LOADING,
