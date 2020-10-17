@@ -45,4 +45,14 @@ export default {
       // config: true,
     },
   ],
+  manual_journals: [
+    {
+      key: 'journal_number_next',
+      type: 'number',
+    },
+    {
+      key: 'journal_number_prefix',
+      type: 'string',
+    },
+  ]
 };

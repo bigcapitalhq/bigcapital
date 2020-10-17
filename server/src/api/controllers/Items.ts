@@ -1,13 +1,12 @@
 import { Inject, Service } from 'typedi';
 import { Router, Request, Response, NextFunction } from 'express';
-import { check, param, query, ValidationChain, matchedData } from 'express-validator';
+import { check, param, query, ValidationChain } from 'express-validator';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
 import ItemsService from 'services/Items/ItemsService';
 import BaseController from 'api/controllers/BaseController';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import { ServiceError } from 'exceptions';
 import { IItemDTO } from 'interfaces';
-import { Request } from 'express-validator/src/base';
 
 @Service()
 export default class ItemsController extends BaseController {

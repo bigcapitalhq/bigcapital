@@ -103,64 +103,83 @@ export default class Item extends TenantModel {
     };
   }
 
-
+  /**
+   * Item fields.
+   */
   static get fields() {
     return {
       type: {
+        label: 'Type',
         column: 'type',
       },
       name: {
+        label: 'Name',
         column: 'name',
       },
       sellable: {
+        label: 'Sellable',
         column: 'sellable',
       },
       purchasable: {
+        label: 'Purchasable',
         column: 'purchasable',
       },
       sell_price: {
+        label: 'Sell price',
         column: 'sell_price'
       },
       cost_price: {
+        label: 'Cost price',
         column: 'cost_price',
       },
       currency_code: {
+        label: 'Currency',
         column: 'currency_code',
       },
       cost_account: {
+        label: 'Cost account',
         column: 'cost_account_id',
         relation: 'accounts.id',
       },
       sell_account: {
+        label: 'Sell account',
         column: 'sell_account_id',
         relation: 'accounts.id',
       },
       inventory_account: {
+        label: "Inventory account",
         column: 'inventory_account_id',
         relation: 'accounts.id',
       },
       sell_description: {
+        label: "Sell description",
         column: 'sell_description',
       },
       purchase_description: {
+        label: "Purchase description",
         column: 'purchase_description',
       },
       quantity_on_hand: {
+        label: "Quantity on hand",
         column: 'quantity_on_hand',
       },
       note: {
+        label: 'Note',
         column: 'note',
       },
       category: {
+        label: "Category",
         column: 'category_id',
         relation: 'categories.id',
       },
       user: {
+        label: 'User',
         column: 'user_id',
         relation: 'users.id',
         relationColumn: 'users.id',
       },
       created_at: {
+        label: 'Created at',
         column: 'created_at',
       }
     };

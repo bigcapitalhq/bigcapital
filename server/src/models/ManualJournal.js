@@ -17,9 +17,6 @@ export default class ManualJournal extends TenantModel {
     return ['createdAt', 'updatedAt'];
   }
 
-   /**
-   * 
-   */
   static get resourceable() {
     return true;
   }
@@ -67,32 +64,41 @@ export default class ManualJournal extends TenantModel {
   static get fields() {
     return {
       date: {
+        label: 'Date',
         column: 'date',
       },
       journal_number: {
+        label: 'Journal number',
         column: 'journal_number',
       },
       reference: {
+        label: 'Reference No.',
         column: 'reference',
       },
       status: {
+        label: 'Status',
         column: 'status',
       },
       amount: {
+        label: 'Amount',
         column: 'amount',
       },
       description: {
+        label: 'Description',
         column: 'description',
       },
       user: {
+        label: 'User',
         column: 'user_id',
         relation: 'users.id',
         relationColumn: 'users.id',
       },
       journal_type: {
+        label: 'Journal type',
         column: 'journal_type',
       },
       created_at: {
+        label: 'Created at',
         column: 'created_at',
       },
     };

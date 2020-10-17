@@ -125,33 +125,42 @@ export default class Expense extends TenantModel {
   static get fields() {
     return {
       payment_date: {
+        label: 'Payment date',
         column: 'payment_date',
       },
       payment_account: {
+        label: 'Payment account',
         column: 'payment_account_id',
         relation: 'accounts.id',
       },
       amount: {
+        label: 'Amount',
         column: 'total_amount',
       },
       currency_code: {
+        label: 'Currency',
         column: 'currency_code',
       },
       reference_no: {
+        label: 'Reference No.',
         column: 'reference_no'
       },
       description: {
+        label: 'Description',
         column: 'description',
       },
       published: {
+        label: 'Published',
         column: 'published',
       },
       user: {
+        label: 'User',
         column: 'user_id',
         relation: 'users.id',
         relationColumn: 'users.id',
       },
       created_at: {
+        label: 'Created at',
         column: 'created_at',
       },
     };
