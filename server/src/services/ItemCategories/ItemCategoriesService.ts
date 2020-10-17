@@ -11,6 +11,7 @@ import {
   IItemCategoriesService,
   IItemCategoriesFilter,
   ISystemUser,
+  IFilterMeta,
 } from "interfaces";
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import TenancyService from 'services/Tenancy/TenancyService';
@@ -245,7 +246,11 @@ export default class ItemCategoriesService implements IItemCategoriesService {
    * @param {number} tenantId 
    * @param filter 
    */
-  public async getItemCategoriesList(tenantId: number, filter: IItemCategoriesFilter, authorizedUser: ISystemUser) {
+  public async getItemCategoriesList(
+    tenantId: number,
+    filter: IItemCategoriesFilter,
+    authorizedUser: ISystemUser
+  ): Promise<{ itemCategories: IItemCategory[], filterMeta: IFilterMeta }> {
     const { ItemCategory } = this.tenancy.models(tenantId);
     const dynamicList = await this.dynamicListService.dynamicList(tenantId, ItemCategory, filter);
 

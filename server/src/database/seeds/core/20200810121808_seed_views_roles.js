@@ -14,17 +14,14 @@ exports.up = (knex) => {
         { id: 12, field_key: 'active', index: 1, comparator: 'is', value: 1, view_id: 15 },
 
         // Items.
-        // { id: 6, field_id: 12, index: 1, comparator: 'equals', value: 'service', view_id: 6 },
-        // { id: 7, field_id: 12, index: 1, comparator: 'equals', value: 'inventory', view_id: 7 },
-        // { id: 8, field_id: 12, index: 1, comparator: 'equals', value: 'non-inventory', view_id: 8 },
+        { id: 6, field_id: 12, index: 1, comparator: 'equals', value: 'service', view_id: 6 },
+        { id: 7, field_id: 12, index: 1, comparator: 'equals', value: 'inventory', view_id: 7 },
+        { id: 8, field_id: 12, index: 1, comparator: 'equals', value: 'non-inventory', view_id: 8 },
 
-        // // Manual Journals.
-        // { id: 9, field_id: 26, index: 1, comparator: 'equals', value: 'Journal', view_id: 9 },
-        // { id: 10, field_id: 26, index: 1, comparator: 'equals', value: 'CreditNote', view_id: 10 },
-        // { id: 11, field_id: 26, index: 1, comparator: 'equals', value: 'Reconciliation', view_id: 11 },
-
-        // Expenses
-        // { id: 12, field_id: index:  }
+        // Manual Journals.
+        { id: 9, field_id: 26, index: 1, comparator: 'equals', value: 'Journal', view_id: 9 },
+        { id: 10, field_id: 26, index: 1, comparator: 'equals', value: 'CreditNote', view_id: 10 },
+        { id: 11, field_id: 26, index: 1, comparator: 'equals', value: 'Reconciliation', view_id: 11 },
       ]);
     });
 };

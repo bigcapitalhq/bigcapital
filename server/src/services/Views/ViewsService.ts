@@ -165,7 +165,7 @@ export default class ViewsService implements IViewsService {
    * - Store view roles/conditions to the storage.
    * ---------
    * @param {number} tenantId - Tenant id.
-   * @param {IViewDTO} viewDTO - View DTO.
+   * @param {IViewDTO} viewDTO - New view DTO.
    * 
    * @return {Promise<IView>}
    */
@@ -195,7 +195,7 @@ export default class ViewsService implements IViewsService {
       predefined: false,
       name: viewDTO.name,
       rolesLogicExpression: viewDTO.logicExpression,
-      resourceModel: viewDTO.resourceModel,
+      resourceModel: ResourceModel.name,
       roles: viewDTO.roles,
       columns: viewDTO.columns,
     });
@@ -215,22 +215,23 @@ export default class ViewsService implements IViewsService {
    * - Delete old view columns and roles.
    * - Re-save view columns and roles.
    * 
-   * @param {number} tenantId 
-   * @param {number} viewId 
-   * @param {IViewEditDTO}  
+   * @param {number} tenantId -
+   * @param {number} viewId -
+   * @param {IViewEditDTO} viewEditDTO - 
+   * @return {Promise<IView>}
    */
-  public async editView(tenantId: number, viewId: number, viewEditDTO: IViewEditDTO): Promise<void> {
+  public async editView(tenantId: number, viewId: number, viewEditDTO: IViewEditDTO): Promise<IView> {
     const { viewRepository } = this.tenancy.repositories(tenantId);
     this.logger.info('[view] trying to edit custom view.', { tenantId, viewId });
 
     // Retrieve view details or throw not found error.
-    const view = await this.getViewOrThrowError(tenantId, viewId);
+    const oldView = await this.getViewOrThrowError(tenantId, viewId);
 
     // Validate the resource name is exists and resourcable.
-    const ResourceModel = this.getResourceModelOrThrowError(tenantId, view.resourceModel);
+    const ResourceModel = this.getResourceModelOrThrowError(tenantId, oldView.resourceModel);
 
     // Validate view name uniquiness.
-    await this.validateViewNameUniquiness(tenantId, view.resourceModel, viewEditDTO.name, viewId);
+    await this.validateViewNameUniquiness(tenantId, oldView.resourceModel, viewEditDTO.name, viewId);
 
     // Validate the given fields keys exist on the storage.
     this.validateResourceRolesFieldsExistance(ResourceModel, viewEditDTO.roles);
@@ -243,7 +244,8 @@ export default class ViewsService implements IViewsService {
       throw new ServiceError(ERRORS.LOGIC_EXPRESSION_INVALID);
     }
     // Update view details.
-    await viewRepository.update(tenantId, viewId, {
+    this.logger.info('[views] trying to update view details.', { tenantId, viewId });
+    const view = await viewRepository.update(viewId, {
       predefined: false,
       name: viewEditDTO.name,
       rolesLogicExpression: viewEditDTO.logicExpression,
@@ -251,6 +253,8 @@ export default class ViewsService implements IViewsService {
       columns: viewEditDTO.columns,
     })
     this.logger.info('[view] edited successfully.', { tenantId, viewId });
+
+    return view;
   }
 
   /**

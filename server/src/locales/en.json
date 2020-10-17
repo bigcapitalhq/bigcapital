@@ -37,5 +37,11 @@
   "Balance": "Balance",
   "Active": "Active",
   "Created at": "Created at",
-  "fixed_asset": "Fixed asset"
+  "fixed_asset": "Fixed asset",
+  "Journal": "Journal",
+  "Reconciliation": "Reconciliation",
+  "Credit": "Credit",
+  "Interest": "Interest",
+  "Depreciation": "Depreciation",
+  "Payroll": "Payroll"
 }
