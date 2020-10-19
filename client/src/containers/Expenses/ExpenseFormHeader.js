@@ -22,12 +22,14 @@ import {
 } from 'components';
 import withCurrencies from 'containers/Currencies/withCurrencies';
 import withAccounts from 'containers/Accounts/withAccounts';
+import withCustomers from 'containers/Customers/withCustomers';
 
 function ExpenseFormHeader({
   formik: { errors, touched, setFieldValue, getFieldProps, values },
   currenciesList,
   accountsList,
   accountsTypes,
+  customersItems,
 }) {
   const [selectedItems, setSelectedItems] = useState({});
 
@@ -84,8 +86,44 @@ function ExpenseFormHeader({
 
   // Filter payment accounts.
   const paymentAccounts = useMemo(
-    () => accountsList.filter(a => a?.type?.key === 'current_asset'),
+    () => accountsList.filter((a) => a?.type?.key === 'current_asset'),
     [accountsList],
+  );
+
+  const CustomerRenderer = useCallback(
+    (cutomer, { handleClick }) => (
+      <MenuItem
+        key={cutomer.id}
+        text={cutomer.display_name}
+        onClick={handleClick}
+      />
+    ),
+    [],
+  );
+
+  // Filter Customer
+  const filterCustomer = (query, customer, _index, exactMatch) => {
+    const normalizedTitle = customer.display_name.toLowerCase();
+    const normalizedQuery = query.toLowerCase();
+    if (exactMatch) {
+      return normalizedTitle === normalizedQuery;
+    } else {
+      return (
+        `${customer.display_name} ${normalizedTitle}`.indexOf(
+          normalizedQuery,
+        ) >= 0
+      );
+    }
+  };
+
+  // handle change customer
+  const onChangeCustomer = useCallback(
+    (filedName) => {
+      return (customer) => {
+        setFieldValue(filedName, customer.id);
+      };
+    },
+    [setFieldValue],
   );
 
   return (
@@ -105,16 +143,16 @@ function ExpenseFormHeader({
             }
           >
             <ListSelect
-              items={[]}
+              items={customersItems}
               noResults={<MenuItem disabled={true} text="No results." />}
-              // itemRenderer={}
-              // itemPredicate={}
+              itemRenderer={CustomerRenderer}
+              itemPredicate={filterCustomer}
               popoverProps={{ minimal: true }}
-              // onItemSelect={}
-              selectedItem={values.beneficiary}
-              // selectedItemProp={'id'}
-              defaultText={<T id={'select_customer'} />}
-              labelProp={'beneficiary'}
+              onItemSelect={onChangeCustomer('customer_id')}
+              selectedItem={values.customer_id}
+              selectedItemProp={'id'}
+              defaultText={<T id={'select_customer_account'} />}
+              labelProp={'display_name'}
             />
           </FormGroup>
         </Col>
@@ -234,5 +272,8 @@ export default compose(
   })),
   withCurrencies(({ currenciesList }) => ({
     currenciesList,
+  })),
+  withCustomers(({ customersItems }) => ({
+    customersItems,
   })),
 )(ExpenseFormHeader);

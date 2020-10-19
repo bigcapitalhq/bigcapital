@@ -34,7 +34,8 @@ const ERROR = {
   VENDORS_NOT_WITH_PAYABLE_ACCOUNT: 'VENDORS.NOT.WITH.PAYABLE.ACCOUNT',
   PAYABLE_ENTRIES_HAS_NO_VENDORS: 'PAYABLE.ENTRIES.HAS.NO.VENDORS',
   RECEIVABLE_ENTRIES_HAS_NO_CUSTOMERS: 'RECEIVABLE.ENTRIES.HAS.NO.CUSTOMERS',
-  CREDIT_DEBIT_SUMATION_SHOULD_NOT_EQUAL_ZERO:'CREDIT.DEBIT.SUMATION.SHOULD.NOT.EQUAL.ZERO'
+  CREDIT_DEBIT_SUMATION_SHOULD_NOT_EQUAL_ZERO:
+    'CREDIT.DEBIT.SUMATION.SHOULD.NOT.EQUAL.ZERO',
 };
 
 /**
@@ -58,7 +59,6 @@ function MakeJournalEntriesForm({
   onFormSubmit,
   onCancelForm,
 }) {
- 
   const { formatMessage } = useIntl();
   const {
     setFiles,
@@ -74,7 +74,6 @@ function MakeJournalEntriesForm({
   const handleDropFiles = useCallback((_files) => {
     setFiles(_files.filter((file) => file.uploaded === false));
   }, []);
-
 
   const savedMediaIds = useRef([]);
   const clearSavedMediaIds = () => {
@@ -140,6 +139,7 @@ function MakeJournalEntriesForm({
 
   const defaultEntry = useMemo(
     () => ({
+      index: 0,
       account_id: null,
       credit: 0,
       debit: 0,
@@ -251,7 +251,7 @@ function MakeJournalEntriesForm({
         }),
         intent: Intent.DANGER,
       });
-    }    
+    }
   };
 
   const formik = useFormik({
@@ -262,7 +262,7 @@ function MakeJournalEntriesForm({
     },
     onSubmit: async (values, { setErrors, setSubmitting, resetForm }) => {
       const entries = values.entries.filter(
-        (entry) => entry.credit || entry.debit,
+        (entry) => entry.debit || entry.credit,
       );
       const getTotal = (type = 'credit') => {
         return entries.reduce((total, item) => {
@@ -413,6 +413,7 @@ function MakeJournalEntriesForm({
           formik={formik}
           onSubmitClick={handleSubmitClick}
           onCancelClick={handleCancelClick}
+          manualJournal={manualJournal}
         />
       </form>
 

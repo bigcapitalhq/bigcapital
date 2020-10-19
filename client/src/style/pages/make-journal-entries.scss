@@ -1,159 +1,162 @@
-
-.make-journal-entries{
+.make-journal-entries {
   padding-bottom: 20px;
   display: flex;
   flex-direction: column;
 
-  &__header{
+  &__header {
     padding: 25px 27px 20px;
     background: #fbfbfb;
 
-    .bp3-form-group{
-
-      .bp3-label{
+    .bp3-form-group {
+      .bp3-label {
         font-weight: 500;
         font-size: 13px;
         color: #444;
       }
     }
+    .bp3-button:not([class*='bp3-intent-']):not(.bp3-minimal).bp3-small {
+      font-size: 13px;
+      min-height: 33px;
+      margin-top: 21px;
+      margin-left: -30px;
+    }
   }
 
-  &__table{
+  &__table {
     padding: 15px 15px 0;
 
-    .bp3-form-group{
+    .bp3-form-group {
       margin-bottom: 0;
     }
-    .table{
+    .table {
       border: 1px dotted rgb(195, 195, 195);
       border-bottom: transparent;
       border-left: transparent;
 
       .th,
-      .td{
-        border-left: 1px dotted rgb(195, 195, 195); 
+      .td {
+        border-left: 1px dotted rgb(195, 195, 195);
 
-        &.index{
+        &.index {
           text-align: center;
 
-          span{
+          span {
             width: 100%;
             font-weight: 500;
-          }            
+          }
         }
       }
 
-      .thead{
-        .tr .th{
+      .thead {
+        .tr .th {
           padding: 10px 10px;
-          background-color: #F2F5FA;
+          background-color: #f2f5fa;
           font-size: 14px;
           font-weight: 500;
           color: #1e1c3e;
 
-          &.index > div{
+          &.index > div {
             width: 100%;
           }
         }
       }
 
-      .tbody{
-        .tr .td{
+      .tbody {
+        .tr .td {
           padding: 7px;
           border-bottom: 1px dotted rgb(195, 195, 195);
           min-height: 46px;
 
-          &.index{
-            background-color: #F2F5FA;
+          &.index {
+            background-color: #f2f5fa;
 
-            > span{
+            > span {
               margin-top: auto;
-              margin-bottom: auto; 
+              margin-bottom: auto;
             }
           }
         }
-        .tr{
+        .tr {
           .bp3-form-group:not(.bp3-intent-danger) .bp3-input,
-          .form-group--select-list .bp3-button{
-            border-color: #E5E5E5;
+          .form-group--select-list .bp3-button {
+            border-color: #e5e5e5;
             border-radius: 3px;
             padding-left: 8px;
             padding-right: 8px;
           }
 
-          .form-group--select-list{
-            &.bp3-intent-danger{
-              .bp3-button:not(.bp3-minimal){
+          .form-group--select-list {
+            &.bp3-intent-danger {
+              .bp3-button:not(.bp3-minimal) {
                 border-color: #db3737;
               }
-            }  
+            }
           }
 
-          &:last-of-type{
-            .td{
+          &:last-of-type {
+            .td {
               border-bottom: transparent;
 
               .bp3-button,
-              .bp3-input-group{
+              .bp3-input-group {
                 display: none;
               }
             }
           }
 
-          .td.actions{
-            .bp3-button{
+          .td.actions {
+            .bp3-button {
               background-color: transparent;
               color: #e66d6d;
 
-              &:hover{
+              &:hover {
                 color: #c23030;
               }
 
-              svg{
+              svg {
                 color: inherit;
               }
             }
           }
 
-          &.row--total{
-
+          &.row--total {
             .account.td,
             .debit.td,
-            .credit.td{
-              > span{
+            .credit.td {
+              > span {
                 padding-top: 2px;
               }
             }
             .debit.td,
-            .credit.td{
-              > span{
+            .credit.td {
+              > span {
                 font-weight: 600;
                 color: #444;
               }
             }
           }
 
-          .td{
-            &.note{
-              .bp3-form-group{
+          .td {
+            &.note {
+              .bp3-form-group {
                 width: 100%;
               }
             }
           }
         }
       }
-      .th{
+      .th {
         color: #444;
         font-weight: 600;
         border-bottom: 1px dotted #666;
       }
 
-      .td{
+      .td {
         border-bottom: 1px dotted #999;
       }
 
-      .actions.td{
-        .bp3-button{
+      .actions.td {
+        .bp3-button {
           background: transparent;
           margin: 0;
         }
@@ -161,23 +164,22 @@
     }
   }
 
-  .bp3-button{
-    &.button--clear-lines{
-      background-color: #FCEFEF;
+  .bp3-button {
+    &.button--clear-lines {
+      background-color: #fcefef;
     }
   }
   .button--clear-lines,
-  .button--new-line{
+  .button--new-line {
     padding-left: 14px;
     padding-right: 14px;
   }
 
-  .dropzone-container{
+  .dropzone-container {
     margin-left: auto;
   }
 
-  .dropzone{
-    
+  .dropzone {
     width: 300px;
     height: 75px;
 

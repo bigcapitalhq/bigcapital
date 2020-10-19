@@ -215,6 +215,8 @@ export default {
     'The item category has been successfully created.',
   the_item_category_has_been_successfully_edited:
     'The item category has been successfully edited.',
+  the_item_category_has_been_successfully_deleted:
+    'The item category has been successfully deleted',
   once_delete_these_views_you_will_not_able_restore_them:
     "Once you delete the custom view, you won't be able to restore it later. Are you sure you want to delete this view?",
   the_custom_view_has_been_successfully_deleted:
@@ -765,5 +767,8 @@ export default {
   something_wentwrong: 'Something went wrong.',
   new_password: 'New password',
   license_code_: 'License code',
-  legal_organization_name: 'Legal Organization Name'
+  legal_organization_name: 'Legal Organization Name',
+  prefix: 'Prefix',
+  next_number: 'Next Number',
+  journal_number_settings: 'Journal Number Settings',
 };
