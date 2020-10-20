@@ -6,6 +6,7 @@ import { RadioGroup, Radio } from '@blueprintjs/core';
 export default function RadioCustomer(props) {
   const { onChange, ...rest } = props;
   const { formatMessage } = useIntl();
+
   return (
     <RadioGroup
       inline={true}

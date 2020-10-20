@@ -70,8 +70,6 @@ export default class DynamicListService implements IDynamicListService {
   private validateRolesFieldsExistance(model: IModel, filterRoles: IFilterRole[]) {
     const invalidFieldsKeys = validateFilterRolesFieldsExistance(model, filterRoles);
 
-    console.log(invalidFieldsKeys);
-
     if (invalidFieldsKeys.length > 0) {
       throw new ServiceError(ERRORS.FILTER_ROLES_FIELDS_NOT_FOUND);
     }
@@ -86,8 +84,9 @@ export default class DynamicListService implements IDynamicListService {
       required: true,
       type: 'object',
       properties: {
+        condition: { type: 'string' },
         fieldKey: { required: true, type: 'string' },
-        value: { required: true, type: 'string' },
+        value: { required: true },
       },
     });
     const invalidFields = filterRoles.filter((filterRole) => {
@@ -126,12 +125,16 @@ export default class DynamicListService implements IDynamicListService {
     }
     // Filter roles.
     if (filter.filterRoles.length > 0) {
-      this.validateFilterRolesSchema(filter.filterRoles);
-      this.validateRolesFieldsExistance(model, filter.filterRoles);
+      const filterRoles = filter.filterRoles.map((filterRole, index) => ({
+        ...filterRole,
+        index: index + 1,
+      }));
+      this.validateFilterRolesSchema(filterRoles);
+      this.validateRolesFieldsExistance(model, filterRoles);
 
       // Validate the model resource fields.
-      const filterRoles = new DynamicFilterFilterRoles(filter.filterRoles);
-      dynamicFilter.setFilter(filterRoles);
+      const dynamicFilterRoles = new DynamicFilterFilterRoles(filterRoles);
+      dynamicFilter.setFilter(dynamicFilterRoles);
     }
     return dynamicFilter;
   }

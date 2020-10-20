@@ -3,7 +3,7 @@ import { createReducer } from '@reduxjs/toolkit';
 
 const initialState = {
   pageTitle: '',
-  pageSubtitle: 'Hello World',
+  pageSubtitle: '',
   preferencesPageTitle: '',
   sidebarExpended: true,
   dialogs: {},

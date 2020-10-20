@@ -17,6 +17,10 @@ export default class FilterRoles extends DynamicFilterRoleAbstructor {
     this.setResponseMeta();  
   }
 
+  /**
+   * Builds filter roles logic expression.
+   * @return {string}
+   */
   private buildLogicExpression(): string {
     let expression = '';
     this.filterRoles.forEach((role, index) => {

@@ -1,0 +1,22 @@
+import React from 'react';
+import { Dialog } from '@blueprintjs/core';
+import withDialogActions from 'containers/Dialog/withDialogActions';
+import { compose } from 'utils';
+
+function DialogComponent(props) {
+  const { name, children, closeDialog, onClose } = props;
+
+  const handleClose = (event) => {
+    closeDialog(name)
+    onClose && onClose(event);
+  };
+  return (
+    <Dialog {...props} onClose={handleClose}>
+      { children }
+    </Dialog>
+  );
+}
+
+export default compose(
+  withDialogActions,
+)(DialogComponent);

@@ -58,6 +58,7 @@
     "nodemailer": "^6.3.0",
     "nodemon": "^1.19.1",
     "objection": "^2.0.10",
+    "objection-filter": "^4.0.1",
     "objection-soft-delete": "^1.0.7",
     "pluralize": "^8.0.0",
     "reflect-metadata": "^0.1.13",

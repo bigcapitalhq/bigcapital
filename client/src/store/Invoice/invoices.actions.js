@@ -37,9 +37,6 @@ export const deleteInvoice = ({ id }) => {
 export const editInvoice = (id, form) => {
   return (dispatch) =>
     new Promise((resolve, reject) => {
-      dispatch({
-        type: t.SET_DASHBOARD_REQUEST_LOADING,
-      });
       ApiService.post(`sales/invoices/${id}`, form)
         .then((response) => {
           resolve(response);

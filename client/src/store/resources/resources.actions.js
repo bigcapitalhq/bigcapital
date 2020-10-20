@@ -20,14 +20,11 @@ export const fetchResourceColumns = ({ resourceSlug }) => {
 export const fetchResourceFields = ({ resourceSlug }) => {
   return (dispatch) => new Promise((resolve, reject) => {
     ApiService.get(`resources/${resourceSlug}/fields`).then((response) => {
-      // dispatch({
-      //   type: t.RESOURCE_FIELDS_SET,
-      //   fields: response.data.resource_fields,
-      //   resource_slug: resourceSlug,
-      // });
-      // dispatch({
-      //   type: t.SET_DASHBOARD_REQUEST_COMPLETED,
-      // });
+      dispatch({
+        type: t.RESOURCE_FIELDS_SET,
+        fields: response.data.resource_fields,
+        resource_slug: resourceSlug,
+      });
       resolve(response);
     }).catch((error) => { reject(error); });
   });
@@ -36,13 +33,13 @@ export const fetchResourceFields = ({ resourceSlug }) => {
 export const fetchResourceData = ({ resourceSlug }) => {
   return (dispatch) => new Promise((resolve, reject) => {
     ApiService.get(`/resources/${resourceSlug}/data`).then((response) => {
-      // dispatch({
-      //   type: t.RESOURCE_DATA_SET,
-      //   payload: {
-      //     data: response.data.data,
-      //     resource_key: resourceSlug,
-      //   },
-      // });
+      dispatch({
+        type: t.RESOURCE_DATA_SET,
+        payload: {
+          data: response.data.resource_data,
+          resourceKey: resourceSlug,
+        },
+      });
       resolve(response);    
     }).catch(error => { reject(error); });
   });

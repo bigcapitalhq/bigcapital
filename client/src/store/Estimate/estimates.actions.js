@@ -4,9 +4,6 @@ import t from 'store/types';
 export const submitEstimate = ({ form }) => {
   return (dispatch) =>
     new Promise((resolve, reject) => {
-      dispatch({
-        type: t.SET_DASHBOARD_REQUEST_LOADING,
-      });
       ApiService.post('sales/estimates', form)
         .then((response) => {
           dispatch({

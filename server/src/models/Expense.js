@@ -127,31 +127,38 @@ export default class Expense extends TenantModel {
       payment_date: {
         label: 'Payment date',
         column: 'payment_date',
+        columnType: 'date',
       },
       payment_account: {
         label: 'Payment account',
         column: 'payment_account_id',
         relation: 'accounts.id',
+        optionsResource: 'account',
       },
       amount: {
         label: 'Amount',
         column: 'total_amount',
+        columnType: 'number'
       },
       currency_code: {
         label: 'Currency',
         column: 'currency_code',
+        optionsResource: 'currency',
       },
       reference_no: {
         label: 'Reference No.',
-        column: 'reference_no'
+        column: 'reference_no',
+        columnType: 'string',
       },
       description: {
         label: 'Description',
         column: 'description',
+        columnType: 'string',
       },
       published: {
         label: 'Published',
         column: 'published',
+
       },
       user: {
         label: 'User',
@@ -162,6 +169,7 @@ export default class Expense extends TenantModel {
       created_at: {
         label: 'Created at',
         column: 'created_at',
+        columnType: 'date',
       },
     };
   }

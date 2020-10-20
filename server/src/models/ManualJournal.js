@@ -66,14 +66,17 @@ export default class ManualJournal extends TenantModel {
       date: {
         label: 'Date',
         column: 'date',
+        columnType: 'date',
       },
       journal_number: {
         label: 'Journal number',
         column: 'journal_number',
+        columnType: 'string',
       },
       reference: {
         label: 'Reference No.',
         column: 'reference',
+        columnType: 'string',
       },
       status: {
         label: 'Status',
@@ -82,10 +85,12 @@ export default class ManualJournal extends TenantModel {
       amount: {
         label: 'Amount',
         column: 'amount',
+        columnType: 'number',
       },
       description: {
         label: 'Description',
         column: 'description',
+        columnType: 'string',
       },
       user: {
         label: 'User',

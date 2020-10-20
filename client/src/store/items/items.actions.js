@@ -18,9 +18,6 @@ export const fetchItems = ({ query }) => {
         type: t.ITEMS_TABLE_LOADING,
         payload: { loading: true },
       });
-      dispatch({
-        type: t.SET_DASHBOARD_REQUEST_LOADING,
-      });
       ApiService.get(`items`, { params: { ...pageQuery, ...query } })
         .then((response) => {
           dispatch({

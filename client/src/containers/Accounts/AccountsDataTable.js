@@ -51,11 +51,10 @@ function NormalCell({ cell }) {
 
 function BalanceCell({ cell }) {
   const account = cell.row.original;
-  const { balance = null } = account;
 
-  return balance ? (
+  return (account.amount) ? (
     <span>
-      <Money amount={balance.amount} currency={balance.currency_code} />
+      <Money amount={account.amount} currency={'USD'} />
     </span>
   ) : (
     <span class="placeholder">—</span>
@@ -245,7 +244,7 @@ function AccountsDataTable({
       {
         id: 'balance',
         Header: formatMessage({ id: 'balance' }),
-        accessor: 'balance',
+        accessor: 'amount',
         Cell: BalanceCell,
         width: 150,
       },
@@ -268,11 +267,7 @@ function AccountsDataTable({
   );
 
   const selectionColumn = useMemo(
-    () => ({
-      minWidth: 40,
-      width: 40,
-      maxWidth: 40,
-    }),
+    () => ({ minWidth: 45, width: 45, maxWidth: 45 }),
     [],
   );
 

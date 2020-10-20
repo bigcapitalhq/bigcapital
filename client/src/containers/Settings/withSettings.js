@@ -1,8 +1,13 @@
 import { connect } from 'react-redux';
 
-export const mapStateToProps = (state, props) => ({
-  organizationSettings: state.settings.data.organization,
-  manualJournalsSettings: state.settings.data.manual_journals,
-});
+export default (mapState) => {
+  const mapStateToProps = (state, props) => {
+    const mapped = {
+      organizationSettings: state.settings.data.organization,
+      manualJournalsSettings: state.settings.data.manual_journals,
+    };
+    return mapState ? mapState(mapped, state, props) : mapped;
+  };
 
-export default connect(mapStateToProps);
+  return connect(mapStateToProps);
+}

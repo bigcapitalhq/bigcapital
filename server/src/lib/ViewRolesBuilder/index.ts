@@ -42,12 +42,14 @@ const numberRoleQueryBuilder = (role: IFilterRole, comparatorColumn: string) => 
 const textRoleQueryBuilder = (role: IFilterRole, comparatorColumn: string) => {
   switch (role.comparator) {
     case 'equals':
+    case 'is':
     default:
       return (builder) => {
         builder.where(comparatorColumn, role.value);
       };
     case 'not_equal':
     case 'not_equals':
+    case 'is_not':
       return (builder) => {
         builder.whereNot(comparatorColumn, role.value);
       };

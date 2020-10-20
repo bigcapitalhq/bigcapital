@@ -15,13 +15,15 @@ import Pagination from './Pagination';
 import DashboardViewsTabs from './Dashboard/DashboardViewsTabs';
 import CurrenciesSelectList from './CurrenciesSelectList';
 import FieldRequiredHint from './FieldRequiredHint';
-import Dialog from './Dialog';
 import AppToaster from './AppToaster';
 import DataTable from './DataTable';
 import AccountsSelectList from './AccountsSelectList';
 import AccountsTypesSelect from './AccountsTypesSelect';
 import LoadingIndicator from './LoadingIndicator';
 import DashboardActionViewsList from './Dashboard/DashboardActionViewsList';
+import Dialog from './Dialog/Dialog';
+import DialogContent from './Dialog/DialogContent';
+import DialogSuspense from './Dialog/DialogSuspense';
 const Hint = FieldHint;
 
 export {
@@ -43,11 +45,13 @@ export {
   DashboardViewsTabs,
   CurrenciesSelectList,
   FieldRequiredHint,
-  Dialog,
-  AppToaster,
   DataTable,
   AccountsSelectList,
   AccountsTypesSelect,
   LoadingIndicator,
   DashboardActionViewsList,
+  AppToaster,
+  Dialog,
+  DialogContent,
+  DialogSuspense
 };

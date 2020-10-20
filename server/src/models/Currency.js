@@ -14,4 +14,8 @@ export default class Currency extends TenantModel {
   get timestamps() {
     return ['createdAt', 'updatedAt'];
   }
+
+  static get resourceable() {
+    return true;
+  }
 }

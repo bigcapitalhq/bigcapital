@@ -24,9 +24,18 @@ export default class ResourceController extends BaseController{
       '/:resource_model/fields', [
         ...this.resourceModelParamSchema,
       ],
+      this.validationResult,
       asyncMiddleware(this.resourceFields.bind(this)),
       this.handleServiceErrors
     );
+    router.get(
+      '/:resource_model/data', [
+        ...this.resourceModelParamSchema,
+      ],
+      this.validationResult,
+      asyncMiddleware(this.resourceData.bind(this)),
+      this.handleServiceErrors,
+    )
     return router;
   }
 
@@ -58,6 +67,28 @@ export default class ResourceController extends BaseController{
   }
 
   /**
+   * Retrieve resource data of the give resource based on the given query.
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {NextFunction} next 
+   */
+  async resourceData(req: Request, res: Response, next: NextFunction) {
+    const { tenantId } = req;
+    const { resource_model: resourceModel } = req.params;
+    const filter = req.query;
+
+    try {
+      const resourceData = await this.resourcesService.getResourceData(tenantId, resourceModel, filter);
+
+      return res.status(200).send({
+        resource_data: this.transfromToResponse(resourceData),
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
    * Handles service errors.
    * @param {Error} error 
    * @param {Request} req 
@@ -72,5 +103,6 @@ export default class ResourceController extends BaseController{
         });
       }
     }
+    next(error);
   }
 };

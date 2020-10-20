@@ -32,13 +32,13 @@ function CustomerForm({
   // #withDashboardActions
   changePageTitle,
 
-  //#withCustomers
+  // #withCustomers
   customers,
 
-  //#withCustomerDetail
+  // #withCustomerDetail
   customer,
 
-  //#withCustomersActions
+  // #withCustomersActions
   requestSubmitCustomer,
   requestFetchCustomers,
   requestEditCustomer,
@@ -47,7 +47,7 @@ function CustomerForm({
   requestSubmitMedia,
   requestDeleteMedia,
 
-  //#Props
+  // #Props
   onFormSubmit,
   onCancelForm,
 }) {

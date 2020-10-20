@@ -765,5 +765,9 @@ export default {
   something_wentwrong: 'Something went wrong.',
   new_password: 'New password',
   license_code_: 'License code',
-  legal_organization_name: 'Legal Organization Name'
+  legal_organization_name: 'Legal Organization Name',
+  smaller_than: 'Smaller than',
+  smaller_or_equals: 'Smaller or equals',
+  bigger_than: 'Bigger than',
+  bigger_or_equals: 'Bigger or equals',
 };

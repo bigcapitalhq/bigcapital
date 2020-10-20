@@ -1,10 +1,10 @@
 import { createReducer } from "@reduxjs/toolkit";
-import { createSelector } from 'reselect';
 import t from 'store/types';
-import { pickItemsFromIds } from 'store/selectors'
 
 const initialState = {
-  data: {},
+  data: {
+    resources: {},
+  },
   fields: {},
   columns: {},
   resourceFields: {},
@@ -42,79 +42,30 @@ export default createReducer(initialState, {
 
   [t.RESOURCE_FIELDS_SET]: (state, action) => {
     const _fields = {};
-    
+
     action.fields.forEach((field) => {
-      _fields[field.id] = field;
+      _fields[field.key] = field;
     });
     state.fields = {
       ...state.fields,
       ..._fields,
     };
-    state.resourceFields[action.resource_slug] = action.fields.map(f => f.id);
+    state.resourceFields[action.resource_slug] = action.fields.map(f => f.key);
   },
 
   [t.RESOURCE_DATA_SET]: (state, action) => {
-    const { data, resource_key: resourceKey } = action.payload;
-    const dataMapped = {};
+    const { data, resourceKey } = action.payload;
+    const _data = {};
 
-    data.forEach((item) => { dataMapped[item.id] = item; })
-    state.data[resourceKey] = dataMapped;
+    data.forEach((item) => {
+      _data[item.id] = item;
+    });
+    const order = data.map((item) => item.id);
+
+    state.data.resources[resourceKey] = {
+      ...(state.data.resources[resourceKey] || {}),
+      data: _data,
+      order,
+    };
   },
 });
-
-
-const resourceFieldsIdsSelector = (state, props) => state.resources.resourceFields[props.resourceName];
-const resourceFieldsItemsSelector = (state) => state.resources.fields;
-
-/**
- * Retrieve resource fields of the given resource slug.
- * @param {Object} state 
- * @param {String} resourceSlug 
- * @return {Array}
- */
-export const getResourceFieldsFactory = () => createSelector(
-  resourceFieldsIdsSelector,
-  resourceFieldsItemsSelector,
-  (fieldsIds, fieldsItems) => {
-    return pickItemsFromIds(fieldsItems, fieldsIds);
-  }
-);
-
-/**
- * Retrieve resource columns of the given resource slug.
- * @param {State} state 
- * @param {String} resourceSlug -
- * @return {Array}
- */
-export const getResourceColumns = (state, resourceSlug) => {
-  const resourceIds = state.resources.resourceColumns[resourceSlug];
-  const items = state.resources.columns;
-  return pickItemsFromIds(items, resourceIds);
-};
-
-/**
- * 
- * @param {State} state 
- * @param {Number} fieldId 
- */
-export const getResourceField = (state, fieldId) => {
-  return state.resources.fields[fieldId];
-};
-
-/**
- * 
- * @param {State} state 
- * @param {Number} columnId 
- */
-export const getResourceColumn = (state, columnId) => {
-  return state.resources.columns[columnId];
-};
-
-export const getResourceMetadata = (state, resourceSlug) => {
-  return state.resources.metadata[resourceSlug];
-};
-
-
-export const getResourceData = (state, resourceSlug) => {
-  return state.resources.data[resourceSlug] || {};
-};

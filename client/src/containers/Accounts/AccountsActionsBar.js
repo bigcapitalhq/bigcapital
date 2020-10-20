@@ -35,6 +35,9 @@ function AccountsActionsBar({
   // #withAccountsActions
   addAccountsTableQueries,
 
+  // #withAccounts
+  accountsTableQuery,
+
   selectedRows = [],
   onFilterChanged,
   onBulkDelete,
@@ -42,7 +45,9 @@ function AccountsActionsBar({
   onBulkActivate,
   onBulkInactive,
 }) {
-  const [filterCount, setFilterCount] = useState(0);
+  const [filterCount, setFilterCount] = useState(
+    accountsTableQuery?.filter_roles?.length || 0,
+  );
 
   const onClickNewAccount = () => {
     openDialog('account-form', {});
@@ -54,9 +59,10 @@ function AccountsActionsBar({
 
   const filterDropdown = FilterDropdown({
     fields: resourceFields,
+    initialConditions: accountsTableQuery.filter_roles,
     initialCondition: {
       fieldKey: 'name',
-      compatator: 'contains',
+      comparator: 'contains',
       value: '',
     },
     onFilterChange: (filterConditions) => {
@@ -171,8 +177,9 @@ const withAccountsActionsBar = connect(mapStateToProps);
 export default compose(
   withAccountsActionsBar,
   withDialogActions,
-  withAccounts(({ accountsViews }) => ({
+  withAccounts(({ accountsViews, accountsTableQuery }) => ({
     accountsViews,
+    accountsTableQuery,
   })),
   withResourceDetail(({ resourceFields }) => ({
     resourceFields,

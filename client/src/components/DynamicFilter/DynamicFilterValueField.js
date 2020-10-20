@@ -14,15 +14,10 @@ import { FormattedMessage as T, useIntl } from 'react-intl';
 import { debounce } from 'lodash';
 import moment from 'moment';
 
-import { If, Choose, ListSelect, MODIFIER } from 'components';
+import { Choose, ListSelect, MODIFIER } from 'components';
 
 import withResourceDetail from 'containers/Resources/withResourceDetails';
 import withResourceActions from 'containers/Resources/withResourcesActions';
-
-import {
-  getConditionTypeCompatators,
-  getConditionDefaultCompatator,
-} from './DynamicFilterCompatators';
 
 import { compose, momentFormatter } from 'utils';
 
@@ -30,56 +25,69 @@ import { compose, momentFormatter } from 'utils';
  * Dynamic filter fields.
  */
 function DynamicFilterValueField({
-  dataType,
-  value,
-
-  initialValue,
-  error,
-  // fieldkey,
-  // resourceKey,
 
   // #withResourceDetail
   resourceName,
-  resourceData,
+  resourceData = [],
 
   requestResourceData,
 
+  // #ownProps
+  fieldType,
+  fieldName,
+  value,
+  initialValue,
+  error,
+  optionsResource,
+  optionsKey = 'key',
+  optionsLabel = 'label',
+  options,
   onChange,
-  rosourceKey,
-
-  inputDebounceWait = 500,
+  inputDebounceWait = 250,
 }) {
   const { formatMessage } = useIntl();
   const [localValue, setLocalValue] = useState();
 
-  const fetchResourceData = useQuery(
-    ['resource-data', resourceName && resourceName],
-    (k, resName) => requestResourceData(resName),
-    { manual: true },
-  );
-
+  // Makes `localValue` controlled mode from `value`.
   useEffect(() => {
     if (value !== localValue) {
       setLocalValue(value);
     }
   }, [value]);
 
+  // Fetches resource data.
+  const fetchResourceData = useQuery(
+    ['resource-data', resourceName],
+    (key, _resourceName) => requestResourceData(_resourceName),
+    {
+      enabled: resourceName,
+    },
+  );
+ 
   // Account type item of select filed.
   const menuItem = (item, { handleClick, modifiers, query }) => {
-    return <MenuItem text={item.name} key={item.id} onClick={handleClick} />;
+    return (<MenuItem
+      text={item[optionsLabel]}
+      key={item[optionsKey]}
+      onClick={handleClick}
+    />);
   };
 
+  // Handle list button click.
   const handleBtnClick = () => {
-    fetchResourceData.refetch({});
+    
   };
 
-  const listOptions = useMemo(() => Object.values(resourceData), [
-    resourceData,
+  const listOptions = useMemo(() => [
+    ...(resourceData || []),
+    ...(options || []),
+  ], [
+    resourceData, options,
   ]);
 
   // Filters accounts types items.
   const filterItems = (query, item, _index, exactMatch) => {
-    const normalizedTitle = item.name.toLowerCase();
+    const normalizedTitle = item.label.toLowerCase();
     const normalizedQuery = query.toLowerCase();
 
     if (exactMatch) {
@@ -89,16 +97,16 @@ function DynamicFilterValueField({
     }
   };
 
+  // Handle list item selected.
   const onItemSelect = (item) => {
-    onChange && onChange(item);
+    onChange && onChange(item[optionsKey]);
   };
 
   const handleInputChangeThrottled = useRef(
-    debounce((value) => {
-      onChange && onChange(value);
-    }, inputDebounceWait),
+    debounce((value) => { onChange && onChange(value); }, inputDebounceWait),
   );
 
+  // Handle input change.
   const handleInputChange = (e) => {
     if (e.currentTarget.type === 'checkbox') {
       setLocalValue(e.currentTarget.checked);
@@ -108,12 +116,14 @@ function DynamicFilterValueField({
     handleInputChangeThrottled.current(e.currentTarget.value);
   };
 
+  // Handle checkbox field change.
   const handleCheckboxChange = (e) => {
     const value = !!e.currentTarget.checked;
     setLocalValue(value);
     onChange && onChange(value);
   }
 
+  // Handle date field change.
   const handleDateChange = (date) => {
     setLocalValue(date);
     onChange && onChange(date);
@@ -126,7 +136,7 @@ function DynamicFilterValueField({
   return (
     <FormGroup className={'form-group--value'}>
       <Choose>
-        <Choose.When condition={dataType === 'options'}>
+        <Choose.When condition={fieldType === 'options'}>
           <ListSelect
             className={classNames(
               'list-select--filter-dropdown',
@@ -146,14 +156,16 @@ function DynamicFilterValueField({
             }}
             onItemSelect={onItemSelect}
             selectedItem={value}
-            selectedItemProp={'id'}
-            defaultText={<T id={'select_account_type'} />}
-            labelProp={'name'}
-            buttonProps={{ onClick: handleBtnClick }}
+            selectedItemProp={optionsKey}
+            defaultText={`Select an option`}
+            labelProp={optionsLabel}
+            buttonProps={{
+              onClick: handleBtnClick
+            }}
           />
         </Choose.When>
 
-        <Choose.When condition={dataType === 'date'}>
+        <Choose.When condition={fieldType === 'date'}>
           <DateInput
             {...momentFormatter('YYYY/MM/DD')}
             value={transformDateValue(localValue)}
@@ -167,7 +179,7 @@ function DynamicFilterValueField({
           />
         </Choose.When>
 
-        <Choose.When condition={dataType === 'boolean'}>
+        <Choose.When condition={fieldType === 'checkbox'}>
           <Checkbox value={localValue} onChange={handleCheckboxChange} />
         </Choose.When>
 
@@ -184,7 +196,7 @@ function DynamicFilterValueField({
 }
 
 const mapStateToProps = (state, props) => ({
-  resourceName: props.dataResource,
+  resourceName: props.optionsResource,
 });
 
 const withResourceFilterValueField = connect(mapStateToProps);

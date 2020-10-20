@@ -50,16 +50,19 @@ export default class ItemCategory extends TenantModel {
       name: {
         label: 'Name',
         column: 'name',
+        columnType: 'string'
       },
       description: {
         label: 'Description',
         column: 'description',
+        columnType: 'string'
       },
       parent_category_id: {
         label: 'Parent category',
         column: 'parent_category_id',
         relation: 'items_categories.id',
         relationColumn: 'items_categories.id',
+        optionsResource: 'item_category',
       },
       user: {
         label: 'User',
@@ -71,24 +74,34 @@ export default class ItemCategory extends TenantModel {
         label: 'Cost account',
         column: 'cost_account_id',
         relation: 'accounts.id',
+        optionsResource: 'account'
       },
       sell_account: {
         label: 'Sell account',
         column: 'sell_account_id',
         relation: 'accounts.id',
+        optionsResource: 'account'
       },
       inventory_account: {
         label: 'Inventory account',
         column: 'inventory_account_id',
         relation: 'accounts.id',
+        optionsResource: 'account'
       },
       cost_method: {
         label: 'Cost method',
         column: 'cost_method',
+        options: [{
+          key: 'FIFO', label: 'First-in first-out (FIFO)',
+          key: 'LIFO', label: 'Last-in first-out (LIFO)',
+          key: 'average', label: 'Average rate',
+        }],
+        columnType: 'string',
       },
       created_at: {
         label: 'Created at',
         column: 'created_at',
+        columnType: 'date',
       },
     };
   }

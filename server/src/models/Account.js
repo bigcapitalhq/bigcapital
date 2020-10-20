@@ -123,50 +123,84 @@ export default class Account extends TenantModel {
       name: {
         label: 'Account name',
         column: 'name',
+        columnType: 'string',
+        
+        fieldType: 'text',
       },
       type: {
         label: 'Account type',
         column: 'account_type_id',
         relation: 'account_types.id',
         relationColumn: 'account_types.key',
+
+        fieldType: 'options',
+        optionsResource: 'AccountType',
+        optionsKey: 'key',
+        optionsLabel: 'label',
       },
       description: {
         label: 'Description',
         column: 'description',
+        columnType: 'string',
+
+        fieldType: 'text',
       },
       code: {
         label: 'Account code',
         column: 'code',
+        columnType: 'string',
+        fieldType: 'text',
       },
       root_type: {
-        label: 'Type',
+        label: 'Root type',
         column: 'account_type_id',
         relation: 'account_types.id',
         relationColumn: 'account_types.root_type',
+        options: [
+          { key: 'asset', label: 'Asset', },
+          { key: 'liability', label: 'Liability' },
+          { key: 'equity', label: 'Equity' },
+          { key: 'Income', label: 'Income' },
+          { key: 'expense', label: 'Expense' },
+        ],
+        fieldType: 'options',
       },
       created_at: {
         label: 'Created at',
         column: 'created_at',
         columnType: 'date',
+        fieldType: 'date',
       },
       active: {
         label: 'Active',
         column: 'active', 
+        columnType: 'boolean',
+        fieldType: 'checkbox',
       },
       balance: {
         label: 'Balance',
         column: 'amount',
-        columnType: 'number'
+        columnType: 'number',
+        fieldType: 'number',
       },
       currency: {
         label: 'Currency',
         column: 'currency_code',
+        fieldType: 'options',
+        optionsResource: 'currency',
+        optionsKey: 'currency_code',
+        optionsLabel: 'currency_name',
       },
       normal: {
         label: 'Account normal',
         column: 'account_type_id',
+        fieldType: 'options',
         relation: 'account_types.id',
-        relationColumn: 'account_types.normal'
+        relationColumn: 'account_types.normal',
+        options: [
+          { key: 'credit', label: 'Credit' },
+          { key: 'debit', label: 'Debit' },
+        ],
       },
     };
   }

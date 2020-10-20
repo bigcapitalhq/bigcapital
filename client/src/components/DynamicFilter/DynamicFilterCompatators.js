@@ -1,5 +1,6 @@
 export const BooleanCompatators = [
   { value: 'is', label_id: 'is' },
+  { value: 'is_not', label_id: 'is_not' },
 ];
 
 export const TextCompatators = [
@@ -20,6 +21,15 @@ export const OptionsCompatators = [
   { value: 'is_not', label_id: 'is_not' },
 ];
 
+export const NumberCampatators = [
+  { value: 'equals', label_id: 'equals' },
+  { value: 'not_equal', label_id: 'not_equal' },
+  { value: 'bigger_than', label_id: 'bigger_than' },
+  { value: 'bigger_or_equals', label_id: 'bigger_or_equals' },
+  { value: 'smaller_than', label_id: 'smaller_than' },
+  { value: 'smaller_or_equals', label_id: 'smaller_or_equals' },
+]
+
 export const getConditionTypeCompatators = (dataType) => {
   return [
     ...(dataType === 'options'
@@ -27,7 +37,9 @@ export const getConditionTypeCompatators = (dataType) => {
       : dataType === 'date'
       ? [...DateCompatators]
       : dataType === 'boolean'
-      ? [...BooleanCompatators]
+      ? [...BooleanCompatators] 
+      : dataType === 'number' 
+      ? [...NumberCampatators]
       : [...TextCompatators]),
   ];
 };

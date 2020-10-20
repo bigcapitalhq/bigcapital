@@ -1,20 +1,26 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
-import t from 'store/types';
+import DashboardInsider from 'components/Dashboard/DashboardInsider';
 
-const DashboardHomepage = ({ changePageTitle }) => {
+import withDashboardActions from 'containers/Dashboard/withDashboardActions';
+import withSettings from 'containers/Settings/withSettings';
+import { compose } from 'utils';
+
+function DashboardHomepage({ changePageTitle, name }) {
+
   useEffect(() => {
-    changePageTitle('Craig’s Design and Landscaping Services')
-  });
+    changePageTitle(name)
+  }, [name, changePageTitle]);
+
   return (
-    <div>asdasd</div>
+    <DashboardInsider name="homepage">
+      
+    </DashboardInsider>
   );
 }
 
-const mapActionsToProps = (dispatch) => ({
-  changePageTitle: pageTitle => dispatch({
-    type: t.CHANGE_DASHBOARD_PAGE_TITLE, pageTitle
-  }),
-});
-
-export default connect(null, mapActionsToProps)(DashboardHomepage);
+export default compose(
+  withDashboardActions,
+  withSettings(({ organizationSettings }) => ({
+    name: organizationSettings.name,
+  })),
+)(DashboardHomepage);

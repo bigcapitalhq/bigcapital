@@ -114,121 +114,6 @@ export default class SalesReceiptsController extends BaseController{
   }
 
   /**
-   * Validate whether sale receipt exists on the storage.
-   * @param {Request} req 
-   * @param {Response} res 
-   */
-  async validateSaleReceiptExistance(req: Request, res: Response, next: Function) {
-    const { tenantId } = req;
-    const { id: saleReceiptId } = req.params;
-
-    const isSaleReceiptExists = await this.saleReceiptService
-      .isSaleReceiptExists(
-        tenantId,
-        saleReceiptId,
-      );
-    if (!isSaleReceiptExists) {
-      return res.status(404).send({
-        errors: [{ type: 'SALE.RECEIPT.NOT.FOUND', code: 200 }],
-      });
-    }
-    next();
-  }
-
-  /**
-   * Validate whether sale receipt customer exists on the storage.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {Function} next 
-   */
-  async validateReceiptCustomerExistance(req: Request, res: Response, next: Function) {
-    const saleReceipt = { ...req.body };
-    const { Customer } = req.models;
-
-    const foundCustomer = await Customer.query().findById(saleReceipt.customer_id);
-
-    if (!foundCustomer) {
-      return res.status(400).send({ 
-        errors: [{ type: 'CUSTOMER.ID.NOT.EXISTS', code: 200 }],
-      });
-    }
-    next();
-  }
-
-  /**
-   * Validate whether sale receipt deposit account exists on the storage.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {Function} next 
-   */
-  async validateReceiptDepositAccountExistance(req: Request, res: Response, next: Function) {
-    const { tenantId } = req;
-
-    const saleReceipt = { ...req.body };
-    const isDepositAccountExists = await this.accountsService.isAccountExists(
-      tenantId,
-      saleReceipt.deposit_account_id
-    );
-    if (!isDepositAccountExists) {
-      return res.status(400).send({
-        errors: [{ type: 'DEPOSIT.ACCOUNT.NOT.EXISTS', code: 300 }],
-      });
-    }
-    next();
-  }
-
-  /**
-   * Validate whether receipt items ids exist on the storage.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {Function} next 
-   */
-  async validateReceiptItemsIdsExistance(req: Request, res: Response, next: Function) {
-    const { tenantId } = req;
-
-    const saleReceipt = { ...req.body };    
-    const estimateItemsIds = saleReceipt.entries.map((e) => e.item_id);
-
-    const notFoundItemsIds = await this.itemsService.isItemsIdsExists(
-      tenantId,
-      estimateItemsIds
-    );
-    if (notFoundItemsIds.length > 0) {
-      return res.status(400).send({ errors: [{ type: 'ITEMS.IDS.NOT.EXISTS', code: 400 }] });
-    }
-    next();
-  }
-
-  /**
-   * Validate receipt entries ids existance on the storage.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {Function} next 
-   */
-  async validateReceiptEntriesIds(req: Request, res: Response, next: Function) {
-    const { tenantId } = req;
-
-    const saleReceipt = { ...req.body };
-    const { id: saleReceiptId } = req.params;
-
-    // Validate the entries IDs that not stored or associated to the sale receipt.
-    const notExistsEntriesIds = await this.saleReceiptService
-      .isSaleReceiptEntriesIDsExists(
-        tenantId,
-        saleReceiptId,
-        saleReceipt,
-      );
-    if (notExistsEntriesIds.length > 0) {
-      return res.status(400).send({ errors: [{
-          type: 'ENTRIES.IDS.NOT.FOUND',
-          code: 500,
-        }]
-      });
-    }
-    next();
-  }
-
-  /**
    * Creates a new receipt.
    * @param {Request} req 
    * @param {Response} res 
@@ -244,7 +129,10 @@ export default class SalesReceiptsController extends BaseController{
           tenantId,
           saleReceiptDTO,
         );
-      return res.status(200).send({ id: storedSaleReceipt.id });
+      return res.status(200).send({
+        id: storedSaleReceipt.id,
+        message: 'Sale receipt has been created successfully.',
+      });
     } catch (error) {
       next(error);
     }
@@ -263,7 +151,10 @@ export default class SalesReceiptsController extends BaseController{
       // Deletes the sale receipt.
       await this.saleReceiptService.deleteSaleReceipt(tenantId, saleReceiptId);
   
-      return res.status(200).send({ id: saleReceiptId });  
+      return res.status(200).send({
+        id: saleReceiptId,
+        message: 'Sale receipt has been deleted successfully.',
+      });
     } catch (error) {
       next(error);
     }
@@ -287,7 +178,9 @@ export default class SalesReceiptsController extends BaseController{
         saleReceiptId,
         saleReceipt,
       );
-      return res.status(200).send();
+      return res.status(200).send({
+        message: 'Sale receipt has been edited successfully.',
+      });
     } catch (error) {
       next(error);
     }

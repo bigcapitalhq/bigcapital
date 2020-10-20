@@ -1,16 +1,16 @@
 import { createSelector } from "@reduxjs/toolkit";
 
-const dialogByNameSelector = (dialogName) => (state) => state.dashboard.dialogs?.[dialogName];
+const dialogByNameSelector = (state, props) => state.dashboard.dialogs?.[props.dialogName];
 
-export const isDialogOpenFactory = (dialogName) => createSelector(
-  dialogByNameSelector(dialogName),
+export const isDialogOpenFactory = () => createSelector(
+  dialogByNameSelector,
   (dialog) => {
     return dialog && dialog.isOpen;
   },
 );
 
-export const getDialogPayloadFactory = (dialogName) => createSelector(
-  dialogByNameSelector(dialogName),
+export const getDialogPayloadFactory = () => createSelector(
+  dialogByNameSelector,
   (dialog) => {
     return { ...dialog?.payload };
   },

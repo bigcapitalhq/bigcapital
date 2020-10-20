@@ -79,10 +79,6 @@ export const deleteVendor = ({ id }) => {
 export const submitVendor = ({ form }) => {
   return (dispatch) =>
     new Promise((resolve, reject) => {
-      dispatch({
-        type: t.SET_DASHBOARD_REQUEST_LOADING,
-      });
-
       ApiService.post('vendors', form)
         .then((response) => {
           dispatch({

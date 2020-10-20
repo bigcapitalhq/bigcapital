@@ -41,6 +41,7 @@
   "Journal": "Journal",
   "Reconciliation": "Reconciliation",
   "Credit": "Credit",
+  "Debit": "Debit",
   "Interest": "Interest",
   "Depreciation": "Depreciation",
   "Payroll": "Payroll",
@@ -67,5 +68,10 @@
   "Journal number": "Journal number",
   "Status": "Status",
   "Journal type": "Journal type",
-  "Date": "Date"
+  "Date": "Date",
+  "Asset": "Asset",
+  "Liability": "Liability",
+  "First-in first-out (FIFO)": "First-in first-out (FIFO)",
+  "Last-in first-out (LIFO)": "Last-in first-out (LIFO)",
+  "Average rate": "Average rate"
 }

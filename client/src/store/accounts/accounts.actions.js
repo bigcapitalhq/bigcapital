@@ -60,9 +60,6 @@ export const fetchAccountsTable = ({ query } = {}) => {
         type: t.ACCOUNTS_TABLE_LOADING,
         loading: true,
       });
-      dispatch({
-        type: t.SET_DASHBOARD_REQUEST_LOADING,
-      });
       ApiService.get('accounts', { params: { ...pageQuery, ...query } })
         .then((response) => {
           dispatch({
@@ -105,9 +102,6 @@ export const fetchAccountsDataTable = ({ query }) => {
 export const submitAccount = ({ form }) => {
   return (dispatch) =>
     new Promise((resolve, reject) => {
-      dispatch({
-        type: t.SET_DASHBOARD_REQUEST_LOADING,
-      });
       ApiService.post('accounts', form)
         .then((response) => {
           dispatch({
@@ -136,9 +130,6 @@ export const submitAccount = ({ form }) => {
 export const editAccount = (id, form) => {
   return (dispatch) =>
     new Promise((resolve, reject) => {
-      dispatch({
-        type: t.SET_DASHBOARD_REQUEST_LOADING,
-      });
       ApiService.post(`accounts/${id}`, form)
         .then((response) => {
           dispatch({ type: t.CLEAR_ACCOUNT_FORM_ERRORS });

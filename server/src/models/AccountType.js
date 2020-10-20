@@ -18,6 +18,13 @@ export default class AccountType extends TenantModel {
   }
 
   /**
+   * Allows to mark model as resourceable to viewable and filterable.
+   */
+  static get resourceable() {
+    return true;
+  }
+
+  /**
    * Translatable lable.
    */
   label() {
