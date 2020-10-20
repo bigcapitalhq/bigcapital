@@ -1,51 +1,43 @@
-import React, { useMemo, useCallback } from 'react';
+import React, { useMemo  } from 'react';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { Row, Col } from 'react-grid-system';
-import { FormattedMessage as T, useIntl } from 'react-intl';
-import { ErrorMessage, AppToaster } from 'components';
-
+import { FormattedMessage as T } from 'react-intl';
+import { ErrorMessage } from 'components';
 import {
   Button,
   Classes,
   FormGroup,
   InputGroup,
   Intent,
-  Position,
 } from '@blueprintjs/core';
-import { compose, optionsMapToArray } from 'utils';
 import withSettingsActions from 'containers/Settings/withSettingsActions';
-import withSettings from 'containers/Settings/withSettings';
 
-function ReferenceNumberForm({
+import { compose } from 'utils';
+
+
+export default function ReferenceNumberForm({
   onSubmit,
   onClose,
   initialPrefix,
   initialNumber,
-  groupName,
-  requestSubmitOptions,
 }) {
-  const { formatMessage } = useIntl();
-
   const validationSchema = Yup.object().shape({
-    prefix: Yup.string(),
+    number_prefix: Yup.string(),
     next_number: Yup.number(),
   });
 
   const initialValues = useMemo(
     () => ({
-      prefix: initialPrefix || '',
+      number_prefix: initialPrefix || '',
       next_number: initialNumber || '',
     }),
-    [],
+    [initialPrefix, initialNumber],
   );
 
   const {
     errors,
-    values,
     touched,
-    setFieldValue,
-    resetForm,
     handleSubmit,
     isSubmitting,
     getFieldProps,
@@ -56,33 +48,9 @@ function ReferenceNumberForm({
     },
     validationSchema,
     onSubmit: (values, { setSubmitting, setErrors }) => {
-      const options = optionsMapToArray(values).map((option) => {
-        return { key: option.key, ...option, group: groupName };
-      });
-
-      onSubmit(
-        requestSubmitOptions({ options })
-          .then(() => {
-            setSubmitting(false);
-          })
-
-          .catch((erros) => {
-            setSubmitting(false);
-          }),
-      );
+      onSubmit(values, { setSubmitting, setErrors });
     },
   });
-
-  // Handles dialog close.
-  // const handleClose = useCallback(() => {
-  //   closeDialog(dialogName);
-  // }, [closeDialog, dialogName]);
-
-  // Handle dialog on closed.
-  const onClosed = useCallback(() => {
-    resetForm();
-  }, [resetForm]);
-
   return (
     <div>
       <form onSubmit={handleSubmit}>
@@ -97,14 +65,14 @@ function ReferenceNumberForm({
               <FormGroup
                 label={<T id={'prefix'} />}
                 className={'form-group--'}
-                intent={errors.prefix && touched.prefix && Intent.DANGER}
+                intent={errors.number_prefix && touched.number_prefix && Intent.DANGER}
                 helperText={
                   <ErrorMessage name={'prefix'} {...{ errors, touched }} />
                 }
               >
                 <InputGroup
-                  intent={errors.prefix && touched.prefix && Intent.DANGER}
-                  {...getFieldProps('prefix')}
+                  intent={errors.number_prefix && touched.number_prefix && Intent.DANGER}
+                  {...getFieldProps('number_prefix')}
                 />
               </FormGroup>
             </Col>
@@ -148,5 +116,3 @@ function ReferenceNumberForm({
     </div>
   );
 }
-
-export default compose(withSettingsActions)(ReferenceNumberForm);

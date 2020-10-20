@@ -774,5 +774,5 @@ export default {
   bigger_or_equals: 'Bigger or equals',
   prefix: 'Prefix',
   next_number: 'Next Number',
-  journal_number_settings: 'Journal Number Settings',
+  journal_number_settings: 'Journal number settings',
 };

@@ -14,7 +14,8 @@ const initialState = {
   },
   paginationMeta: {
     total: 0,
-  }
+  },
+  nextJournalNumberChanged: false,
 };
 
 const defaultJournal = {
@@ -114,6 +115,11 @@ const reducer = createReducer(initialState, {
         paginationMeta,
       },
     };    
+  },
+
+  [t.MANUAL_JOURNAL_NUMBER_CHANGED]: (state, action) => {
+    const { isChanged } = action.payload;
+    state.nextJournalNumberChanged = isChanged;
   }
 });
 

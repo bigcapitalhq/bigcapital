@@ -14,12 +14,6 @@
         color: #444;
       }
     }
-    .bp3-button:not([class*='bp3-intent-']):not(.bp3-minimal).bp3-small {
-      font-size: 13px;
-      min-height: 33px;
-      margin-top: 21px;
-      margin-left: -30px;
-    }
   }
 
   &__table {
@@ -184,5 +178,22 @@
     height: 75px;
 
     margin-right: 20px;
+  }
+}
+
+
+.dialog--journal-number-settings{
+
+  .paragraph {
+    margin-bottom: 20px;
+  }
+  .bp3-form-group{
+    margin-bottom: 10px;
+  }
+
+  .bp3-dialog-footer-actions{
+    .bp3-button{
+      min-width: 75px;
+    }
   }
 }

@@ -342,3 +342,41 @@ $form-check-input-indeterminate-bg-image: url("data:image/svg+xml,<svg xmlns='ht
 .bp3-menu-item::before, .bp3-menu-item > .bp3-icon{
   color: #4b5d6b;
 }
+
+.bp3-input-group{
+  display: flex;
+
+  .bp3-input:not(:last-child) {
+    border-radius: 3px 0 0 3px;
+    border-right-width: 0;
+  }
+
+  .bp3-input-action{
+    position: relative;
+  }
+
+  .input-prepend{
+
+    &__text,
+    &__button{
+      display: flex;
+      align-items: center;
+      padding: .375rem .75rem;
+      margin: 0;
+      height: 32px;
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: 1.5;
+      color: #495057;
+      text-align: center;
+      white-space: nowrap;
+      background-color: #e9ecef;
+      border: 1px solid #ced4da;
+      border-radius: 0 3px 3px 0;
+
+      .bp3-icon{
+        color: #848da0;
+      }
+    }
+  }
+}

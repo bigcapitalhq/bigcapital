@@ -20,6 +20,8 @@ import withJournalsActions from 'containers/Accounting/withJournalsActions';
 import withManualJournalDetail from 'containers/Accounting/withManualJournalDetail';
 import withAccountsActions from 'containers/Accounts/withAccountsActions';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
+import withSettings from 'containers/Settings/withSettings';
+import withManualJournals from './withManualJournals';
 
 import AppToaster from 'components/AppToaster';
 import Dragzone from 'components/Dragzone';
@@ -27,6 +29,7 @@ import withMediaActions from 'containers/Media/withMediaActions';
 
 import useMedia from 'hooks/useMedia';
 import { compose, repeatValue } from 'utils';
+import withManualJournalsActions from './withManualJournalsActions';
 
 const ERROR = {
   JOURNAL_NUMBER_ALREADY_EXISTS: 'JOURNAL.NUMBER.ALREADY.EXISTS',
@@ -53,6 +56,15 @@ function MakeJournalEntriesForm({
   // #withDashboard
   changePageTitle,
   changePageSubtitle,
+
+  // #withSettings
+  journalNextNumber,
+  journalNumberPrefix,
+  
+  // #withManualJournals
+  nextJournalNumberChanged,
+
+  setJournalNumberChanged,
 
   manualJournalId,
   manualJournal,
@@ -149,16 +161,19 @@ function MakeJournalEntriesForm({
     [],
   );
 
+  const journalNumber = (journalNumberPrefix) ?
+    `${journalNumberPrefix}-${journalNextNumber}` : journalNextNumber;
+
   const defaultInitialValues = useMemo(
     () => ({
-      journal_number: '',
+      journal_number: journalNumber,
       journal_type: 'Journal',
       date: moment(new Date()).format('YYYY-MM-DD'),
       description: '',
       reference: '',
       entries: [...repeatValue(defaultEntry, 4)],
     }),
-    [defaultEntry],
+    [defaultEntry, journalNumber],
   );
 
   const initialValues = useMemo(
@@ -255,7 +270,6 @@ function MakeJournalEntriesForm({
   };
 
   const formik = useFormik({
-    enableReinitialize: true,
     validationSchema,
     initialValues: {
       ...initialValues,
@@ -354,6 +368,11 @@ function MakeJournalEntriesForm({
     },
   });
 
+  useEffect(() => {
+    formik.setFieldValue('journal_number', journalNumber);
+    setJournalNumberChanged(false);
+  }, [nextJournalNumberChanged, journalNumber]);
+
   const handleSubmitClick = useCallback(
     (payload) => {
       setPayload(payload);
@@ -430,7 +449,15 @@ function MakeJournalEntriesForm({
 export default compose(
   withJournalsActions,
   withManualJournalDetail,
+  withManualJournals(({ nextJournalNumberChanged }) => ({
+    nextJournalNumberChanged,
+  })),
   withAccountsActions,
   withDashboardActions,
   withMediaActions,
+  withSettings(({ manualJournalsSettings }) => ({
+    journalNextNumber: manualJournalsSettings.next_number,
+    journalNumberPrefix: manualJournalsSettings.number_prefix
+  })),
+  withManualJournalsActions,
 )(MakeJournalEntriesForm);

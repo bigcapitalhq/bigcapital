@@ -24,6 +24,7 @@ import DashboardActionViewsList from './Dashboard/DashboardActionViewsList';
 import Dialog from './Dialog/Dialog';
 import DialogContent from './Dialog/DialogContent';
 import DialogSuspense from './Dialog/DialogSuspense';
+import InputPrependButton from './Forms/InputPrependButton';
 const Hint = FieldHint;
 
 export {
@@ -53,5 +54,6 @@ export {
   AppToaster,
   Dialog,
   DialogContent,
-  DialogSuspense
+  DialogSuspense,
+  InputPrependButton
 };

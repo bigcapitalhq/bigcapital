@@ -1,6 +1,5 @@
 import * as Yup from 'yup';
 
-
 Yup.addMethod(Yup.string, 'digits', function () {
   return this.test(
     'is-digits',

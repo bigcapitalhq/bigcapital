@@ -12,7 +12,16 @@ const initialState = {
 export default createReducer(initialState, {
   [t.SETTING_SET]: (state, action) => {
     const { options } = action;
-
-    state.data.organization = optionsArrayToMap(options);
+    const _data = {
+      ...state.data,
+    };
+    options.forEach((option) => {
+      const { key, group, value } = option;
+      if (!_data[group]) {
+        _data[group] = {};
+      }
+      _data[group][key] = value;
+    });
+    state.data = _data;
   },
 });

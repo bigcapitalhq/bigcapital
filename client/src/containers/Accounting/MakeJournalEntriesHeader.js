@@ -5,7 +5,6 @@ import {
   Intent,
   Position,
   Classes,
-  Button,
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { FormattedMessage as T } from 'react-intl';
@@ -20,6 +19,7 @@ import {
   FieldHint,
   FieldRequiredHint,
   Icon,
+  InputPrependButton
 } from 'components';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
@@ -40,7 +40,7 @@ function MakeJournalEntriesHeader({
     [setFieldValue],
   );
   const handleJournalNumberChange = useCallback(() => {
-    openDialog('journalNumber-form', {});
+    openDialog('journal-number-form', {});
   }, [openDialog]);
 
   return (
@@ -63,25 +63,29 @@ function MakeJournalEntriesHeader({
               <ErrorMessage name="journal_number" {...{ errors, touched }} />
             }
             fill={true}
+            
           >
             <InputGroup
               intent={
                 errors.journal_number && touched.journal_number && Intent.DANGER
               }
               fill={true}
+              rightElement={<InputPrependButton
+                buttonProps={{
+                  onClick: handleJournalNumberChange,
+                  icon: (<Icon icon={'settings-18'} />)
+                }}
+                tooltip={true}
+                tooltipProps={{
+                  content: 'Setting your auto-generated journal number',
+                  position: Position.BOTTOM_LEFT,
+                }}
+              />}
               {...getFieldProps('journal_number')}
             />
           </FormGroup>
         </Col>
-        <Col width={50}>
-          {/* <FormGroup> */}
-          <Button
-            className={classNames('btn', Classes.SMALL)}
-            icon={<Icon icon="setting" />}
-            onClick={handleJournalNumberChange}
-          />
-          {/* </FormGroup> */}
-        </Col>
+
         <Col width={220}>
           <FormGroup
             label={<T id={'date'} />}
@@ -173,4 +177,6 @@ function MakeJournalEntriesHeader({
   );
 }
 
-export default compose(withDialogActions)(MakeJournalEntriesHeader);
+export default compose(
+  withDialogActions,
+)(MakeJournalEntriesHeader);

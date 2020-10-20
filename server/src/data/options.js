@@ -47,11 +47,11 @@ export default {
   ],
   manual_journals: [
     {
-      key: 'journal_number_next',
+      key: 'next_number',
       type: 'number',
     },
     {
-      key: 'journal_number_prefix',
+      key: 'number_prefix',
       type: 'string',
     },
   ]

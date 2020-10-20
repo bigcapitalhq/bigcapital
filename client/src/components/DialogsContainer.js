@@ -7,13 +7,14 @@ import AccountFormDialog from 'containers/Dialogs/AccountFormDialog';
 // import CurrencyDialog from 'containers/Dialogs/CurrencyDialog';
 // import InviteUserDialog from 'containers/Dialogs/InviteUserDialog';
 // import ExchangeRateDialog from 'containers/Dialogs/ExchangeRateDialog';
-// import JournalNumberDailog from 'containers/Dialogs/JournalNumberDailog';
+import JournalNumberDialog from 'containers/Dialogs/JournalNumberDialog';
 
 
 export default function DialogsContainer() {
   return (
     <div>
       <AccountFormDialog dialogName={'account-form'} />
+      <JournalNumberDialog dialogName={'journal-number-form'} />
     </div>
   );
 }

@@ -8,6 +8,7 @@ import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import withCustomersActions from 'containers/Customers/withCustomersActions';
 import withAccountsActions from 'containers/Accounts/withAccountsActions';
 import withManualJournalsActions from 'containers/Accounting/withManualJournalsActions';
+import withSettingsActions from 'containers/Settings/withSettingsActions';
 
 import { compose } from 'utils';
 
@@ -20,6 +21,9 @@ function MakeJournalEntriesPage({
 
   // #withManualJournalActions
   requestFetchManualJournal,
+
+  // #withSettingsActions
+  requestFetchOptions,
 }) {
   const history = useHistory();
   const { id } = useParams();
@@ -31,6 +35,8 @@ function MakeJournalEntriesPage({
   const fetchCustomers = useQuery('customers-list', (key) =>
     requestFetchCustomers(),
   );
+
+  const fetchSettings = useQuery(['settings'], () => requestFetchOptions({}));
 
   const fetchJournal = useQuery(
     ['manual-journal', id],
@@ -71,4 +77,5 @@ export default compose(
   withAccountsActions,
   withCustomersActions,
   withManualJournalsActions,
+  withSettingsActions
 )(MakeJournalEntriesPage);
