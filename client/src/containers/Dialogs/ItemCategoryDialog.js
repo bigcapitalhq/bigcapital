@@ -78,15 +78,9 @@ function ItemCategoryDialog({
       .required()
       .label(formatMessage({ id: 'category_name_' })),
     parent_category_id: Yup.string().nullable(),
-    cost_account_id: Yup.number()
-      .required()
-      .label(formatMessage({ id: 'cost_account_' })),
-    sell_account_id: Yup.number()
-      .required()
-      .label(formatMessage({ id: 'sell_account_' })),
-    inventory_account_id: Yup.number()
-      .required()
-      .label(formatMessage({ id: 'inventory_account_' })),
+    cost_account_id: Yup.number().nullable(),
+    sell_account_id: Yup.number().nullable(),
+    inventory_account_id: Yup.number(),
     description: Yup.string().trim().nullable(),
   });
 
@@ -122,7 +116,7 @@ function ItemCategoryDialog({
     onSubmit: (values, { setSubmitting }) => {
       const afterSubmit = () => {
         closeDialog(dialogName);
-        queryCache.invalidateQueries('items-categories-table');
+        queryCache.invalidateQueries('items-categories-list');
         queryCache.invalidateQueries('accounts-list');
       };
       if (payload.action === 'edit') {

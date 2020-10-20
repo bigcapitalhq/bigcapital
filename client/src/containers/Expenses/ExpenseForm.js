@@ -164,10 +164,10 @@ function ExpenseForm({
               ...expense.categories.map((category) => ({
                 ...pick(category, Object.keys(defaultCategory)),
               })),
-              ...repeatValue(
-                defaultCategory,
-                Math.max(MIN_LINES_NUMBER - expense.categories.length, 0),
-              ),
+              // ...repeatValue(
+              //   defaultCategory,
+              //   Math.max(MIN_LINES_NUMBER - expense.categories.length, 0),
+              // ),
             ],
           }
         : {
@@ -226,10 +226,12 @@ function ExpenseForm({
         });
         return;
       }
+
       const categories = values.categories.filter(
         (category) =>
           category.amount && category.index && category.expense_account_id,
       );
+
       const form = {
         ...values,
         publish: payload.publish,
@@ -329,9 +331,20 @@ function ExpenseForm({
   const handleClearAllLines = () => {
     formik.setFieldValue(
       'categories',
-      orderingCategoriesIndex([...repeatValue(defaultCategory, MIN_LINES_NUMBER)]),
+      orderingCategoriesIndex([
+        ...repeatValue(defaultCategory, MIN_LINES_NUMBER),
+      ]),
     );
   };
+
+  const categories = formik.values.categories.filter(
+    (category) =>
+      category.amount && category.index && category.expense_account_id,
+  );
+
+  console.log(categories, 'V');
+
+  console.log(formik.errors, 'Error');
 
   return (
     <div className={'expense-form'}>

@@ -8,6 +8,7 @@ import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import withAccountsActions from 'containers/Accounts/withAccountsActions';
 import withExpensesActions from 'containers/Expenses/withExpensesActions';
 import withCurrenciesActions from 'containers/Currencies/withCurrenciesActions';
+import withCustomersActions from 'containers/Customers/withCustomersActions';
 
 import { compose } from 'utils';
 
@@ -21,6 +22,9 @@ function Expenses({
 
   // #wihtCurrenciesActions
   requestFetchCurrencies,
+
+  // #withCustomersActions
+  requestFetchCustomers,
 }) {
   const history = useHistory();
   const { id } = useParams();
@@ -38,6 +42,12 @@ function Expenses({
   const fetchCurrencies = useQuery('currencies', () =>
     requestFetchCurrencies(),
   );
+
+  // Handle fetch customers data table or list
+  const fetchCustomers = useQuery('customers-table', () =>
+    requestFetchCustomers({}),
+  );
+
   const handleFormSubmit = useCallback(
     (payload) => {
       payload.redirect && history.push('/expenses-list');
@@ -54,7 +64,8 @@ function Expenses({
       loading={
         fetchExpense.isFetching ||
         fetchAccounts.isFetching ||
-        fetchCurrencies.isFetching
+        fetchCurrencies.isFetching ||
+        fetchCustomers.isFetching
       }
       name={'expense-form'}
     >
@@ -71,4 +82,5 @@ export default compose(
   withAccountsActions,
   withCurrenciesActions,
   withExpensesActions,
+  withCustomersActions,
 )(Expenses);

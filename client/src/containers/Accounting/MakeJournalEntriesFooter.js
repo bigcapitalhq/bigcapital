@@ -6,10 +6,11 @@ export default function MakeJournalEntriesFooter({
   formik: { isSubmitting },
   onSubmitClick,
   onCancelClick,
+  manualJournal,
 }) {
   return (
     <div>
-      <div class='form__floating-footer'>
+      <div class="form__floating-footer">
         <Button
           disabled={isSubmitting}
           intent={Intent.PRIMARY}
@@ -18,7 +19,11 @@ export default function MakeJournalEntriesFooter({
             onSubmitClick({ publish: true, redirect: true });
           }}
         >
-          <T id={'save'} />
+          {manualJournal && manualJournal.id ? (
+            <T id={'edit'} />
+          ) : (
+            <T id={'save'} />
+          )}
         </Button>
 
         <Button
@@ -49,7 +54,7 @@ export default function MakeJournalEntriesFooter({
             onCancelClick && onCancelClick();
           }}
         >
-          <T id={'cancel'}/>
+          <T id={'cancel'} />
         </Button>
       </div>
     </div>

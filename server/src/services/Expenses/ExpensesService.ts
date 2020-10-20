@@ -456,6 +456,7 @@ export default class ExpensesService implements IExpensesService {
     this.logger.info('[expense] trying to get expenses datatable list.', { tenantId, expensesFilter });
     const { results, pagination } = await Expense.query().onBuild((builder) => {
       builder.withGraphFetched('paymentAccount');
+      builder.withGraphFetched('categories.expenseAccount');
       dynamicFilter.buildQuery()(builder);
     }).pagination(expensesFilter.page - 1, expensesFilter.pageSize);
 
@@ -478,7 +479,7 @@ export default class ExpensesService implements IExpensesService {
     const expense = await Expense.query().findById(expenseId)
       .withGraphFetched('paymentAccount')
       .withGraphFetched('media')
-      .withGraphFetched('categories');
+      .withGraphFetched('categories.expenseAccount');
 
     if (!expense) {
       throw new ServiceError(ERRORS.EXPENSE_NOT_FOUND);

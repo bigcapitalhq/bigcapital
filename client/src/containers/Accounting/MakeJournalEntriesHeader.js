@@ -5,6 +5,7 @@ import {
   Intent,
   Position,
   Classes,
+  Button,
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { FormattedMessage as T } from 'react-intl';
@@ -18,11 +19,18 @@ import {
   Hint,
   FieldHint,
   FieldRequiredHint,
+  Icon,
 } from 'components';
 
+import withDialogActions from 'containers/Dialog/withDialogActions';
 
-export default function MakeJournalEntriesHeader({
+import { compose } from 'utils';
+
+function MakeJournalEntriesHeader({
   formik: { errors, touched, values, setFieldValue, getFieldProps },
+
+  // #withDialog
+  openDialog,
 }) {
   const handleDateChange = useCallback(
     (date) => {
@@ -31,6 +39,9 @@ export default function MakeJournalEntriesHeader({
     },
     [setFieldValue],
   );
+  const handleJournalNumberChange = useCallback(() => {
+    openDialog('journalNumber-form', {});
+  }, [openDialog]);
 
   return (
     <div class="make-journal-entries__header">
@@ -62,7 +73,15 @@ export default function MakeJournalEntriesHeader({
             />
           </FormGroup>
         </Col>
-
+        <Col width={50}>
+          {/* <FormGroup> */}
+          <Button
+            className={classNames('btn', Classes.SMALL)}
+            icon={<Icon icon="setting" />}
+            onClick={handleJournalNumberChange}
+          />
+          {/* </FormGroup> */}
+        </Col>
         <Col width={220}>
           <FormGroup
             label={<T id={'date'} />}
@@ -153,3 +172,5 @@ export default function MakeJournalEntriesHeader({
     </div>
   );
 }
+
+export default compose(withDialogActions)(MakeJournalEntriesHeader);
