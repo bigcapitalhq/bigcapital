@@ -113,7 +113,9 @@ function ManualJournalsDataTable({
   const actionMenuList = useCallback(
     (journal) => (
       <Menu>
-        <MenuItem text={formatMessage({ id: 'view_details' })} />
+        <MenuItem
+          icon={<Icon icon="reader-18" />}
+          text={formatMessage({ id: 'view_details' })} />
         <MenuDivider />
         <If condition={!journal.status}>
           <MenuItem
@@ -122,6 +124,7 @@ function ManualJournalsDataTable({
           />
         </If>
         <MenuItem
+          icon={<Icon icon="pen-18" />}
           text={formatMessage({ id: 'edit_journal' })}
           onClick={handleEditJournal(journal)}
         />

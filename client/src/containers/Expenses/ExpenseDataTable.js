@@ -105,7 +105,9 @@ function ExpensesDataTable({
   const actionMenuList = useCallback(
     (expense) => (
       <Menu>
-        <MenuItem text={formatMessage({ id: 'view_details' })} />
+        <MenuItem
+          icon={<Icon icon="reader-18" />}
+          text={formatMessage({ id: 'view_details' })} />
         <MenuDivider />
         <If condition={!expense.published}>
           <MenuItem
@@ -115,10 +117,12 @@ function ExpensesDataTable({
         </If>
 
         <MenuItem
+          icon={<Icon icon="pen-18" />}
           text={formatMessage({ id: 'edit_expense' })}
           onClick={handleEditExpense(expense)}
         />
         <MenuItem
+          icon={<Icon icon="trash-16" iconSize={16} />}
           text={formatMessage({ id: 'delete_expense' })}
           intent={Intent.DANGER}
           onClick={handleDeleteExpense(expense)}
