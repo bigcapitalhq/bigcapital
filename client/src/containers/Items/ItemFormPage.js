@@ -40,11 +40,8 @@ const ItemFormContainer = ({
   const fetchItemDetail = useQuery(
     ['item', id],
     (key, _id) => requestFetchItem(_id),
-    {
-      enabled: !!id,
-    },
+    { enabled: id && id },
   );
-
   const handleFormSubmit = useCallback(
     (payload) => {
       payload.redirect && history.push('/items');

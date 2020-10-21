@@ -9,9 +9,7 @@ import {
   Intent,
 } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
-import DataTable from 'components/DataTable';
-import Icon from 'components/Icon';
-import Money from 'components/Money';
+import { Icon, DataTable, Money, If, Choose } from 'components';
 
 import LoadingIndicator from 'components/LoadingIndicator';
 import withItems from 'containers/Items/withItems';
@@ -56,14 +54,19 @@ const ItemsDataTable = ({
   const actionMenuList = useCallback(
     (item) => (
       <Menu>
-        <MenuItem text={formatMessage({ id: 'view_details' })} />
+        <MenuItem
+          icon={<Icon icon="reader-18" />}
+          text={formatMessage({ id: 'view_details' })}
+        />
         <MenuDivider />
         <MenuItem
+          icon={<Icon icon="pen-18" />}
           text={formatMessage({ id: 'edit_item' })}
           onClick={handleEditItem(item)}
         />
         <MenuItem
           text={formatMessage({ id: 'delete_item' })}
+          icon={<Icon icon="trash-16" iconSize={16} />}
           onClick={handleDeleteItem(item)}
           intent={Intent.DANGER}
         />
@@ -72,9 +75,12 @@ const ItemsDataTable = ({
     [handleEditItem, handleDeleteItem, formatMessage],
   );
 
-  const handleRowContextMenu = useCallback((cell) => {
-    return actionMenuList(cell.row.original);
-  }, [actionMenuList]);
+  const handleRowContextMenu = useCallback(
+    (cell) => {
+      return actionMenuList(cell.row.original);
+    },
+    [actionMenuList],
+  );
 
   const columns = useMemo(
     () => [
@@ -155,7 +161,6 @@ const ItemsDataTable = ({
     },
     [onSelectedRowsChange],
   );
-
   return (
     <LoadingIndicator loading={loading} mount={false}>
       <DataTable
