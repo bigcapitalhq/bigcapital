@@ -213,5 +213,6 @@ export default class ExchangeRatesController extends BaseController {
         });
       }
     }
+    next(error);
   }
 }

@@ -364,5 +364,6 @@ export default class ItemsController extends BaseController {
         })
       }
     }
+    next(error);
   }
 }

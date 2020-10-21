@@ -243,5 +243,6 @@ export default class CustomersController extends ContactsController {
         });
       }
     }
+    next(error);
   }
 }
