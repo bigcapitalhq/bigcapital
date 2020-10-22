@@ -59,7 +59,7 @@ export const fetchCustomers = ({ query }) => {
           dispatch({
             type: t.CUSTOMERS_PAGE_SET,
             customers: response.data.customers,
-            customViewId: response.data.customers.customViewId,
+            customViewId: response.data.customers?.viewMeta?.customViewId || -1,
             paginationMeta: response.data.pagination,
           });
           dispatch({

@@ -27,7 +27,7 @@ export const fetchItems = ({ query }) => {
           dispatch({
             type: t.ITEMS_PAGE_SET,
             items: response.data.items,
-            customViewId: response.data.customViewId,
+            customViewId: response.data?.filter_meta?.view?.custom_view_id,
             paginationMeta: response.data.pagination,
           });
           dispatch({

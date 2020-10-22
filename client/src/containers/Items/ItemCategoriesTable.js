@@ -50,6 +50,7 @@ const ItemsCategoryList = ({
     (category) => (
       <Menu>
         <MenuItem
+          icon={<Icon icon="pen-18" />}
           text={formatMessage({ id: 'edit_category' })}
           onClick={handelEditCategory(category)}
         />
