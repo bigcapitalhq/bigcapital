@@ -1,3 +1,4 @@
+import { resolve } from 'p-progress';
 import ApiService from 'services/ApiService';
 import t from 'store/types';
 
@@ -52,10 +53,9 @@ export const fetchCustomers = ({ query }) => {
       ApiService.get(`customers`, { params: { ...pageQuery, ...query } })
         .then((response) => {
           dispatch({
-            type: t.CUSTOMER_SET,
+            type: t.CUSTOMERS_ITEMS_SET,
             customers: response.data.customers,
           });
-
           dispatch({
             type: t.CUSTOMERS_PAGE_SET,
             customers: response.data.customers,
@@ -65,6 +65,26 @@ export const fetchCustomers = ({ query }) => {
           dispatch({
             type: t.CUSTOMERS_TABLE_LOADING,
             payload: { loading: false },
+          });
+          resolve(response);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+};
+
+export const fetchCustomer = ({ id }) => {
+  return (dispatch) =>
+    new Promise((resolve, reject) => {
+      ApiService.get(`customers/${id}`)
+        .then((response) => {
+          dispatch({
+            type: t.CUSTOMER_SET,
+            payload: {
+              id,
+              customer: response.data.contact,
+            },
           });
           resolve(response);
         })

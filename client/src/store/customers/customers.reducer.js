@@ -11,7 +11,7 @@ const initialState = {
 };
 
 const customersReducer = createReducer(initialState, {
-  [t.CUSTOMER_SET]: (state, action) => {
+  [t.CUSTOMERS_ITEMS_SET]: (state, action) => {
     const _customers = {};
 
     action.customers.forEach((customer) => {
@@ -50,6 +50,10 @@ const customersReducer = createReducer(initialState, {
       }
     });
     state.items = items;
+  },
+  [t.CUSTOMER_SET]: (state, action) => {
+    const { id, customer } = action.payload;
+    state.items[id] = { ...customer };
   },
 });
 

@@ -55,8 +55,12 @@ export const fetchItem = ({ id }) => {
         .then((response) => {
           dispatch({
             type: t.ITEM_SET,
-            item: response.data.item,
+            payload: {
+              id,
+              item: response.data.item,
+            },
           });
+          resolve(response);
         })
         .catch((error) => {
           reject(error);
