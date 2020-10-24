@@ -10,6 +10,7 @@ export * from './License';
 export * from './ItemCategory';
 export * from './Payment';
 export * from './SaleInvoice';
+export * from './SaleReceipt';
 export * from './PaymentReceive';
 export * from './SaleEstimate';
 export * from './Authentication';

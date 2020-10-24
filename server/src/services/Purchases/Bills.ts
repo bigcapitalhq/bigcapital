@@ -19,8 +19,6 @@ import {
   IBill,
   IItem,
   ISystemUser,
-  IItemEntry,
-  IItemEntryDTO,
   IBillEditDTO,
   IPaginationMeta,
   IFilterMeta,
@@ -28,6 +26,7 @@ import {
 } from 'interfaces';
 import { ServiceError } from 'exceptions';
 import ItemsService from 'services/Items/ItemsService';
+import ItemsEntriesService from 'services/Items/ItemsEntriesService';
 
 const ERRORS = {
   BILL_NOT_FOUND: 'BILL_NOT_FOUND',
@@ -65,6 +64,9 @@ export default class BillsService extends SalesInvoicesCost {
 
   @Inject()
   dynamicListService: DynamicListingService;
+
+  @Inject()
+  itemsEntriesService: ItemsEntriesService;
 
   /**
    * Validates whether the vendor is exist.
@@ -106,27 +108,6 @@ export default class BillsService extends SalesInvoicesCost {
   }
 
   /**
-   * Validates the entries items ids.
-   * @async
-   * @param {Request} req
-   * @param {Response} res
-   * @param {Function} next
-   */
-  private async validateItemsIdsExistance(tenantId: number, billEntries: IItemEntryDTO[]) {
-    const { Item } = this.tenancy.models(tenantId);
-    const itemsIds = billEntries.map((e) => e.itemId);
-    
-    const foundItems = await Item.query().whereIn('id', itemsIds);
-
-    const foundItemsIds = foundItems.map((item: IItem) => item.id);
-    const notFoundItemsIds = difference(itemsIds, foundItemsIds);
-
-    if (notFoundItemsIds.length > 0) {
-      throw new ServiceError(ERRORS.BILL_ITEMS_NOT_FOUND);
-    }
-  }
-
-  /**
    * Validates the bill number existance.
    * @async
    * @param {Request} req
@@ -143,52 +124,6 @@ export default class BillsService extends SalesInvoicesCost {
 
     if (foundBills.length > 0) {
       throw new ServiceError(ERRORS.BILL_NUMBER_EXISTS);
-    }
-  }
-
-  /**
-   * Validates the entries ids existance on the storage.
-   * @param {number} tenantId - 
-   * @param {number} billId - 
-   * @param {IItemEntry[]} billEntries -
-   */
-  private async validateEntriesIdsExistance(tenantId: number, billId: number, billEntries: IItemEntryDTO[]) {
-    const { ItemEntry } = this.tenancy.models(tenantId);
-    const entriesIds = billEntries
-      .filter((e: IItemEntry) => e.id)
-      .map((e: IItemEntry) => e.id);
-
-    const storedEntries = await ItemEntry.query()
-      .whereIn('reference_id', [billId])
-      .whereIn('reference_type', ['Bill']);
-
-    const storedEntriesIds = storedEntries.map((entry) => entry.id);
-    const notFoundEntriesIds = difference(entriesIds, storedEntriesIds);
-
-    if (notFoundEntriesIds.length > 0) {
-      throw new ServiceError(ERRORS.BILL_ENTRIES_IDS_NOT_FOUND)
-    }
-  }
-
-  /**
-   * Validate the entries items that not purchase-able. 
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {Function} next 
-   */
-  private async validateNonPurchasableEntriesItems(tenantId: number, billEntries: IItemEntryDTO[]) {
-    const { Item } = this.tenancy.models(tenantId);
-    const itemsIds = billEntries.map((e: IItemEntryDTO) => e.itemId);
-    
-    const purchasbleItems = await Item.query()
-      .where('purchasable', true)
-      .whereIn('id', itemsIds);
-
-    const purchasbleItemsIds = purchasbleItems.map((item: IItem) => item.id);
-    const notPurchasableItems = difference(itemsIds, purchasbleItemsIds);
-
-    if (notPurchasableItems.length > 0) {
-      throw new ServiceError(ERRORS.NOT_PURCHASE_ABLE_ITEMS);
     }
   }
 
@@ -249,8 +184,8 @@ export default class BillsService extends SalesInvoicesCost {
     await this.getVendorOrThrowError(tenantId, billDTO.vendorId);
     await this.validateBillNumberExists(tenantId, billDTO.billNumber);
 
-    await this.validateItemsIdsExistance(tenantId, billDTO.entries);
-    await this.validateNonPurchasableEntriesItems(tenantId, billDTO.entries);
+    await this.itemsEntriesService.validateItemsIdsExistance(tenantId, billDTO.entries);
+    await this.itemsEntriesService.validateNonPurchasableEntriesItems(tenantId, billDTO.entries);
 
     const bill = await Bill.query()
       .insertGraph({
@@ -302,9 +237,9 @@ export default class BillsService extends SalesInvoicesCost {
     await this.getVendorOrThrowError(tenantId, billDTO.vendorId);
     await this.validateBillNumberExists(tenantId, billDTO.billNumber, billId);
 
-    await this.validateEntriesIdsExistance(tenantId, billId, billDTO.entries);
-    await this.validateItemsIdsExistance(tenantId, billDTO.entries);
-    await this.validateNonPurchasableEntriesItems(tenantId, billDTO.entries);
+    await this.itemsEntriesService.validateEntriesIdsExistance(tenantId, billId, 'Bill', billDTO.entries);
+    await this.itemsEntriesService.validateItemsIdsExistance(tenantId, billDTO.entries);
+    await this.itemsEntriesService.validateNonPurchasableEntriesItems(tenantId, billDTO.entries);
 
     // Update the bill transaction.
     const bill = await Bill.query().upsertGraph({

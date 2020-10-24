@@ -192,7 +192,7 @@ export default class CustomersService {
    * @param {number} tenantId 
    * @param {number} customerId 
    */
-  private getCustomerByIdOrThrowError(tenantId: number, customerId: number) {
+  public getCustomerByIdOrThrowError(tenantId: number, customerId: number) {
     return this.contactService.getContactByIdOrThrowError(tenantId, customerId, 'customer');
   }
 
