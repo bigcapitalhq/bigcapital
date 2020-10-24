@@ -19,21 +19,21 @@ export const fetchBillsTable = ({ query = {} }) => {
           dispatch({
             type: t.BILLS_PAGE_SET,
             payload: {
-              bills: response.data.bills.results,
-              pagination: response.data.bills.pagination,
+              bills: response.data.bills,
+              pagination: response.data.pagination,
               customViewId: response.data.customViewId || -1,
             },
           });
           dispatch({
             type: t.BILLS_ITEMS_SET,
             payload: {
-              bills: response.data.bills.results,
+              bills: response.data.bills,
             },
           });
           dispatch({
             type: t.BILLS_PAGINATION_SET,
             payload: {
-              pagination: response.data.bills.pagination,
+              pagination: response.data.pagination,
               customViewId: response.data.customViewId || -1,
             },
           });
@@ -66,7 +66,19 @@ export const deleteBill = ({ id }) => {
 };
 
 export const submitBill = ({ form }) => {
-  return (dispatch) => ApiService.post('purchases/bills', form);
+  return (dispatch) =>
+    new Promise((resolve, reject) => {
+      ApiService.post('purchases/bills', form)
+        .then((response) => {
+          resolve(response);
+        })
+        .catch((error) => {
+          const { response } = error;
+          const { data } = response;
+
+          reject(data?.errors);
+        });
+    });
 };
 
 export const fetchBill = ({ id }) => {
@@ -91,5 +103,17 @@ export const fetchBill = ({ id }) => {
 };
 
 export const editBill = (id, form) => {
-  return (dispatch) => ApiService.post(`purchases/bills/${id}`, form);
+  return (dispatch) =>
+    new Promise((resolve, reject) => {
+      ApiService.post(`purchases/bills/${id}`, form)
+        .then((response) => {
+          resolve(response);
+        })
+        .catch((error) => {
+          const { response } = error;
+          const { data } = response;
+
+          reject(data?.errors);
+        });
+    });
 };

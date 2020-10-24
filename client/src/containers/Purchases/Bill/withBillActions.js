@@ -11,7 +11,7 @@ import t from 'store/types';
 const mapDispatchToProps = (dispatch) => ({
   requestSubmitBill: (form) => dispatch(submitBill({ form })),
   requestFetchBill: (id) => dispatch(fetchBill({ id })),
-  requestEditBill: (id, form) => dispatch(editBill( id, form )),
+  requestEditBill: (id, form) => dispatch(editBill(id, form)),
   requestDeleteBill: (id) => dispatch(deleteBill({ id })),
   requestFetchBillsTable: (query = {}) =>
     dispatch(fetchBillsTable({ query: { ...query } })),
@@ -26,6 +26,11 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch({
       type: t.BILLS_TABLE_QUERIES_ADD,
       queries,
+    }),
+  setBillNumberChanged: (isChanged) =>
+    dispatch({
+      type: t.BILL_NUMBER_CHANGED,
+      payload: { isChanged },
     }),
 });
 

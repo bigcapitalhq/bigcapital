@@ -12,6 +12,7 @@ export default function BillFormFooter({
     <div className={'form__floating-footer'}>
       <Button
         disabled={isSubmitting}
+        loading={isSubmitting}
         intent={Intent.PRIMARY}
         type="submit"
         onClick={() => {
@@ -23,6 +24,7 @@ export default function BillFormFooter({
 
       <Button
         disabled={isSubmitting}
+        loading={isSubmitting}
         intent={Intent.PRIMARY}
         className={'ml1'}
         name={'save'}

@@ -20,9 +20,9 @@ export default (mapState) => {
       billsItems: state.bills.items,
       billsTableQuery: tableQuery,
 
-      // @todo un-unncessery shit.
       billsPageination: getBillsPaginationMeta(state, props, tableQuery),
       billsLoading: state.bills.loading,
+      nextBillNumberChanged: state.bills.nextBillNumberChanged,
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };
