@@ -2,11 +2,11 @@ import { Router, Request, Response, NextFunction } from 'express';
 import { check, param, query } from 'express-validator';
 import { Inject, Service } from 'typedi';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
-import AccountsService from 'services/Accounts/AccountsService';
-import ItemsService from 'services/Items/ItemsService';
 import SaleReceiptService from 'services/Sales/SalesReceipts';
 import BaseController from '../BaseController';
 import { ISaleReceiptDTO } from 'interfaces/SaleReceipt';
+import { ServiceError } from 'exceptions';
+import DynamicListingService from 'services/DynamicListing/DynamicListService';
 
 @Service()
 export default class SalesReceiptsController extends BaseController{
@@ -14,10 +14,7 @@ export default class SalesReceiptsController extends BaseController{
   saleReceiptService: SaleReceiptService;
 
   @Inject()
-  accountsService: AccountsService;
-
-  @Inject()
-  itemsService: ItemsService;
+  dynamicListService: DynamicListingService;
 
   /**
    * Router constructor.
@@ -31,34 +28,30 @@ export default class SalesReceiptsController extends BaseController{
         ...this.salesReceiptsValidationSchema,
       ],
       this.validationResult,
-      asyncMiddleware(this.validateSaleReceiptExistance.bind(this)),
-      asyncMiddleware(this.validateReceiptCustomerExistance.bind(this)),
-      asyncMiddleware(this.validateReceiptDepositAccountExistance.bind(this)),
-      asyncMiddleware(this.validateReceiptItemsIdsExistance.bind(this)),
-      asyncMiddleware(this.validateReceiptEntriesIds.bind(this)),
-      asyncMiddleware(this.editSaleReceipt.bind(this))
+      asyncMiddleware(this.editSaleReceipt.bind(this)),
+      this.handleServiceErrors,
     );
     router.post(
       '/',
       this.salesReceiptsValidationSchema,
       this.validationResult,
-      asyncMiddleware(this.validateReceiptCustomerExistance.bind(this)),
-      asyncMiddleware(this.validateReceiptDepositAccountExistance.bind(this)),
-      asyncMiddleware(this.validateReceiptItemsIdsExistance.bind(this)),
-      asyncMiddleware(this.newSaleReceipt.bind(this))
+      asyncMiddleware(this.newSaleReceipt.bind(this)),
+      this.handleServiceErrors,
     );
     router.delete(
       '/:id',
       this.specificReceiptValidationSchema,
       this.validationResult,
-      asyncMiddleware(this.validateSaleReceiptExistance.bind(this)),
-      asyncMiddleware(this.deleteSaleReceipt.bind(this))
+      asyncMiddleware(this.deleteSaleReceipt.bind(this)),
+      this.handleServiceErrors,
     );
     router.get(
       '/',
       this.listSalesReceiptsValidationSchema,
       this.validationResult,
-      asyncMiddleware(this.listingSalesReceipts.bind(this))
+      asyncMiddleware(this.getSalesReceipts.bind(this)),
+      this.handleServiceErrors,
+      this.dynamicListService.handlerErrorsToResponse,
     );
     return router;
   }
@@ -163,13 +156,13 @@ export default class SalesReceiptsController extends BaseController{
   /**
    * Edit the sale receipt details with associated entries and re-write
    * journal transaction on the same date.
-   * @param {Request} req 
-   * @param {Response} res 
+   * @param {Request} req - 
+   * @param {Response} res - 
    */
   async editSaleReceipt(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const { id: saleReceiptId } = req.params;
-    const saleReceipt = { ...req.body };
+    const saleReceipt = this.matchedBodyData(req);
 
     try {
       // Update the given sale receipt details.
@@ -179,6 +172,7 @@ export default class SalesReceiptsController extends BaseController{
         saleReceipt,
       );
       return res.status(200).send({
+        id: saleReceiptId,
         message: 'Sale receipt has been edited successfully.',
       });
     } catch (error) {
@@ -191,19 +185,79 @@ export default class SalesReceiptsController extends BaseController{
    * @param {Request} req 
    * @param {Response} res
    */
-  async getSalesReceipts(req: Request, res: Response) {
+  async getSalesReceipts(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const filter = {
+      filterRoles: [],
       sortOrder: 'asc',
+      columnSortBy: 'created_at',
       page: 1,
       pageSize: 12,
-      ...this.matchedBodyData(req),
+      ...this.matchedQueryData(req),
     };
+    if (filter.stringifiedFilterRoles) {
+      filter.filterRoles = JSON.parse(filter.stringifiedFilterRoles);
+    }
 
     try {
-      
+      const { salesReceipts, pagination, filterMeta } = await this.saleReceiptService
+        .salesReceiptsList(tenantId, filter);
+
+      return res.status(200).send({
+        sale_receipts: salesReceipts,
+        pagination: this.transfromToResponse(pagination),
+        filter_meta: this.transfromToResponse(filterMeta),
+      });
     } catch (error) {
       next(error);
     }
+  }
+
+
+  handleServiceErrors(error: Error, req: Request, res: Response, next: Next) {
+    if (error instanceof ServiceError) {
+      if (error.errorType === 'SALE_RECEIPT_NOT_FOUND') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'SALE_RECEIPT_NOT_FOUND', code: 100 }],
+        })
+      }
+      if (error.errorType === 'DEPOSIT_ACCOUNT_NOT_FOUND') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'DEPOSIT_ACCOUNT_NOT_FOUND', code: 200 }],
+        })
+      }
+      if (error.errorType === 'DEPOSIT_ACCOUNT_NOT_CURRENT_ASSET') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'DEPOSIT_ACCOUNT_NOT_CURRENT_ASSET', code: 300 }],
+        })
+      }
+      if (error.errorType === 'ITEMS_NOT_FOUND') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'ITEMS_NOT_FOUND', code: 400, }],
+        });
+      }
+      if (error.errorType === 'ENTRIES_IDS_NOT_FOUND') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'ENTRIES_IDS_NOT_FOUND', code: 500, }],
+        });
+      }
+      if (error.errorType === 'NOT_SELL_ABLE_ITEMS') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'NOT_SELL_ABLE_ITEMS', code: 600, }],
+        });
+      }
+      if (error.errorType === 'SALE.RECEIPT.NOT.FOUND') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'SALE.RECEIPT.NOT.FOUND', code: 700 }],
+        });
+      }
+      if (error.errorType === 'DEPOSIT.ACCOUNT.NOT.EXISTS') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'DEPOSIT.ACCOUNT.NOT.EXISTS', code: 800 }],
+        });
+      }
+    }
+    console.log(error);
+    next(error);
   }
 };

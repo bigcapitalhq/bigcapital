@@ -72,4 +72,17 @@ export default class SaleReceipt extends TenantModel {
       }
     };
   }
+
+  /**
+   * Model defined fields.
+   */
+  static get fields() {
+    return {
+      created_at: {
+        label: 'Created at',
+        column: 'created_at',
+        columnType: 'date',
+      },
+    };
+  }
 }

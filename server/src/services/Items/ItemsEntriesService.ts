@@ -12,6 +12,7 @@ const ERRORS = {
   ITEMS_NOT_FOUND: 'ITEMS_NOT_FOUND',
   ENTRIES_IDS_NOT_FOUND: 'ENTRIES_IDS_NOT_FOUND',
   NOT_PURCHASE_ABLE_ITEMS: 'NOT_PURCHASE_ABLE_ITEMS',
+  NOT_SELL_ABLE_ITEMS: 'NOT_SELL_ABLE_ITEMS'
 };
 
 @Service()
@@ -98,7 +99,7 @@ export default class ItemsEntriesService {
     const nonSellableItems = difference(itemsIds, sellableItemsIds);
 
     if (nonSellableItems.length > 0) {
-      throw new ServiceError(ERRORS.NOT_PURCHASE_ABLE_ITEMS);
+      throw new ServiceError(ERRORS.NOT_SELL_ABLE_ITEMS);
     }
   }
 }
