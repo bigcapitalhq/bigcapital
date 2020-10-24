@@ -133,9 +133,13 @@ export default class BillsService extends SalesInvoicesCost {
    * @param {Response} res
    * @param {Function} next
    */
-  private async validateBillNumberExists(tenantId: number, billNumber: string) {
+  private async validateBillNumberExists(tenantId: number, billNumber: string, notBillId?: number) {
     const { Bill } = this.tenancy.models(tenantId);
-    const foundBills = await Bill.query().where('bill_number', billNumber);
+    const foundBills = await Bill.query().where('bill_number', billNumber).onBuild((builder) => {
+      if (notBillId) {
+        builder.whereNot('id', notBillId);
+      }
+    });
 
     if (foundBills.length > 0) {
       throw new ServiceError(ERRORS.BILL_NUMBER_EXISTS);
@@ -144,13 +148,15 @@ export default class BillsService extends SalesInvoicesCost {
 
   /**
    * Validates the entries ids existance on the storage.
-   * @param {Request} req
-   * @param {Response} res
-   * @param {Function} next
+   * @param {number} tenantId - 
+   * @param {number} billId - 
+   * @param {IItemEntry[]} billEntries -
    */
-  async validateEntriesIdsExistance(tenantId: number, billId: number, billEntries: any) {
+  private async validateEntriesIdsExistance(tenantId: number, billId: number, billEntries: IItemEntryDTO[]) {
     const { ItemEntry } = this.tenancy.models(tenantId);
-    const entriesIds = billEntries.filter((e) => e.id).map((e) => e.id);
+    const entriesIds = billEntries
+      .filter((e: IItemEntry) => e.id)
+      .map((e: IItemEntry) => e.id);
 
     const storedEntries = await ItemEntry.query()
       .whereIn('reference_id', [billId])
@@ -170,9 +176,9 @@ export default class BillsService extends SalesInvoicesCost {
    * @param {Response} res 
    * @param {Function} next 
    */
-  private async validateNonPurchasableEntriesItems(tenantId: number, billEntries: any) {
+  private async validateNonPurchasableEntriesItems(tenantId: number, billEntries: IItemEntryDTO[]) {
     const { Item } = this.tenancy.models(tenantId);
-    const itemsIds = billEntries.map((e: IItemEntry) => e.itemId);
+    const itemsIds = billEntries.map((e: IItemEntryDTO) => e.itemId);
     
     const purchasbleItems = await Item.query()
       .where('purchasable', true)
@@ -194,7 +200,7 @@ export default class BillsService extends SalesInvoicesCost {
    * 
    * @returns {IBill}
    */
-  private async billDTOToModel(tenantId: number, billDTO: IBillDTO, oldBill?: IBill) {
+  private async billDTOToModel(tenantId: number, billDTO: IBillDTO|IBillEditDTO, oldBill?: IBill) {
     const { ItemEntry } = this.tenancy.models(tenantId);
     let invLotNumber = oldBill?.invLotNumber;
 
@@ -293,18 +299,26 @@ export default class BillsService extends SalesInvoicesCost {
     const oldBill = await this.getBillOrThrowError(tenantId, billId);
     const billObj = this.billDTOToModel(tenantId, billDTO, oldBill);
 
+    await this.getVendorOrThrowError(tenantId, billDTO.vendorId);
+    await this.validateBillNumberExists(tenantId, billDTO.billNumber, billId);
+
+    await this.validateEntriesIdsExistance(tenantId, billId, billDTO.entries);
+    await this.validateItemsIdsExistance(tenantId, billDTO.entries);
+    await this.validateNonPurchasableEntriesItems(tenantId, billDTO.entries);
+
     // Update the bill transaction.
-    const bill = await Bill.query()
-      .upsertGraph({
-        id: billId,
-        ...omit(billObj, ['entries', 'invLotNumber']),
-        entries: billDTO.entries.map((entry) => ({
-          reference_type: 'Bill',
-          ...omit(entry, ['amount']),
-        }))
-      });
+    const bill = await Bill.query().upsertGraph({
+      id: billId,
+      ...omit(billObj, ['entries', 'invLotNumber']),
+
+      entries: billDTO.entries.map((entry) => ({
+        reference_type: 'Bill',
+        ...omit(entry, ['amount']),
+      }))
+    });
     // Triggers event `onBillEdited`.
     await this.eventDispatcher.dispatch(events.bills.onEdited, { tenantId, billId, oldBill, bill });
+    this.logger.info('[bill] bill upserted successfully.', { tenantId, billId });
 
     return bill;
   }
@@ -339,7 +353,7 @@ export default class BillsService extends SalesInvoicesCost {
    * @param {Bill} bill 
    * @param {number} billId 
    */
-  recordInventoryTransactions(
+  public recordInventoryTransactions(
     tenantId: number,
     bill: any,
     billId: number,
@@ -367,7 +381,7 @@ export default class BillsService extends SalesInvoicesCost {
    * @param {IBill} bill
    * @param {Integer} billId
    */
-  async recordJournalTransactions(tenantId: number, bill: IBill, billId?: number) {
+  public async recordJournalTransactions(tenantId: number, bill: IBill, billId?: number) {
     const { AccountTransaction, Item, ItemEntry } = this.tenancy.models(tenantId);
     const { accountRepository } = this.tenancy.repositories(tenantId);
 
@@ -457,27 +471,21 @@ export default class BillsService extends SalesInvoicesCost {
 
   /**
    * Retrieve the given bill details with associated items entries.
-   * @param {Integer} billId -
-   * @returns {Promise}
+   * @param {Integer} billId - Specific bill.
+   * @returns {Promise<IBill>}
    */
-  getBill(tenantId: number, billId: number) {
-    const { Bill } = this.tenancy.models(tenantId);
-    return Bill.query().findById(billId).withGraphFetched('entries');
-  }
-
-  /**
-   * Retrieve the given bill details with associated items entries.
-   * @param {Integer} billId -
-   * @returns {Promise}
-   */
-  getBillWithMetadata(tenantId: number, billId: number) {
+  public async getBill(tenantId: number, billId: number): Promise<IBill> {
     const { Bill } = this.tenancy.models(tenantId);
 
-    return Bill.query()
-      .where('id', billId)
+    this.logger.info('[bills] trying to fetch specific bill with metadata.', { tenantId, billId });
+    const bill = await Bill.query().findById(billId)
       .withGraphFetched('vendor')
-      .withGraphFetched('entries')
-      .first();
+      .withGraphFetched('entries');
+
+    if (!bill) {
+      throw new ServiceError(ERRORS.BILL_NOT_FOUND);
+    }
+    return bill;
   }
 
   /**
@@ -486,7 +494,7 @@ export default class BillsService extends SalesInvoicesCost {
    * @param {IBill} bill -
    * @return {Promise}
    */
-  async scheduleComputeBillItemsCost(tenantId: number, bill) {
+  public async scheduleComputeBillItemsCost(tenantId: number, bill) {
     const { Item } = this.tenancy.models(tenantId);
     const billItemsIds = bill.entries.map((entry) => entry.item_id);
 

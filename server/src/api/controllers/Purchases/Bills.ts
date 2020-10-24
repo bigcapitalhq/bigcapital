@@ -44,7 +44,8 @@ export default class BillsController extends BaseController {
         ...this.specificBillValidationSchema,
       ],
       this.validationResult,
-      asyncMiddleware(this.editBill.bind(this))
+      asyncMiddleware(this.editBill.bind(this)),
+      this.handleServiceError,
     );
     router.get(
       '/:id', [
@@ -101,10 +102,10 @@ export default class BillsController extends BaseController {
    */
   get billEditValidationSchema() {
     return [
-      // check('bill_number').exists().trim().escape(),
+      check('bill_number').exists().trim().escape(),
       check('bill_date').exists().isISO8601(),
       check('due_date').optional().isISO8601(),
-      // check('vendor_id').exists().isNumeric().toInt(),
+      check('vendor_id').exists().isNumeric().toInt(),
       check('note').optional().trim().escape(),
       check('entries').isArray({ min: 1 }),
 
@@ -186,7 +187,7 @@ export default class BillsController extends BaseController {
     const { id: billId } = req.params;
 
     try {
-      const bill = await this.billsService.getBillWithMetadata(tenantId, billId);
+      const bill = await this.billsService.getBill(tenantId, billId);
 
       return res.status(200).send({ bill });
     } catch (error) {
@@ -284,6 +285,11 @@ export default class BillsController extends BaseController {
       if (error.errorType === 'BILL_ITEMS_NOT_FOUND') {
         return res.status(400).send({
           errors: [{ type: 'ITEMS.IDS.NOT.FOUND', code: 400 }],
+        });
+      }
+      if (error.errorType === 'BILL_ENTRIES_IDS_NOT_FOUND') {
+        return res.status(400).send({
+          errors: [{ type: 'BILL_ENTRIES_IDS_NOT_FOUND', code: 900 }],
         });
       }
     }

@@ -1,6 +1,8 @@
 
 
 export interface IItemEntry {
+  id?: number,
+
   referenceType: string,
   referenceId: number,
 

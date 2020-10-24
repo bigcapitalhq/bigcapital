@@ -1,3 +1,4 @@
+import { IDynamicListFilterDTO } from "./DynamicFilter";
 import { IItemEntry, IItemEntryDTO } from "./ItemEntry";
 
 export interface IBillDTO {
@@ -14,6 +15,8 @@ export interface IBillDTO {
 };
 
 export interface IBillEditDTO {
+  vendorId: number,
+  billNumber: string,
   billDate: Date,
   dueDate: Date,
   referenceNo: string,
@@ -42,7 +45,6 @@ export interface IBill {
   entries: IItemEntry[],
 };
 
-export interface IBillsFilter { 
-  page: number,
-  pageSize: number,
+export interface IBillsFilter extends IDynamicListFilterDTO { 
+  stringifiedFilterRoles?: string,
 }

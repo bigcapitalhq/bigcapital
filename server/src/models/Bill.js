@@ -64,7 +64,7 @@ export default class Bill extends TenantModel {
           to: 'items_entries.referenceId',
         },
         filter(builder) {
-          builder.where('reference_type', 'SaleReceipt');
+          builder.where('reference_type', 'Bill');
         },
       },
     };

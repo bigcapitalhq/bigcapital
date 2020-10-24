@@ -284,6 +284,7 @@ export default class BillPaymentsService {
    * - Re-insert the journal transactions and update the diff accounts balance.
    * - Update the diff vendor balance.
    * - Update the diff bill payment amount.
+   * ------
    * @param {number} tenantId - Tenant id
    * @param {Integer} billPaymentId
    * @param {BillPaymentDTO} billPayment
@@ -313,6 +314,7 @@ export default class BillPaymentsService {
       .upsertGraph({
         id: billPaymentId,
         ...omit(billPaymentObj, ['entries']),
+        entries: billPaymentDTO.entries,
       });
     await this.eventDispatcher.dispatch(events.billPayments.onEdited);
     this.logger.info('[bill_payment] edited successfully.', { tenantId, billPaymentId, billPayment, oldPaymentMade });
