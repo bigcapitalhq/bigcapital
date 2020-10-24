@@ -1,5 +1,5 @@
 import { IItemEntry } from "./ItemEntry";
-
+import { IDynamicListFilterDTO } from 'interfaces/DynamicFilter';
 
 export interface ISaleEstimate {
   id?: number,
@@ -23,3 +23,7 @@ export interface ISaleEstimateDTO {
   note: string,
   termsConditions: string,
 };
+
+export interface ISalesEstimatesFilter extends IDynamicListFilterDTO { 
+  stringifiedFilterRoles?: string,
+}

@@ -32,7 +32,7 @@ export default class SaleEstimate extends TenantModel {
           to: 'contacts.id',
         },
         filter(query) {
-          query.where('contact_type', 'Customer');
+          query.where('contact_service', 'customer');
         }
       },
 
@@ -46,6 +46,19 @@ export default class SaleEstimate extends TenantModel {
         filter(builder) {
           builder.where('reference_type', 'SaleEstimate');
         },
+      },
+    };
+  }
+
+  /**
+   * Model defined fields.
+   */
+  static get fields() {
+    return {
+      created_at: {
+        label: 'Created at',
+        column: 'created_at',
+        columnType: 'date',
       },
     };
   }

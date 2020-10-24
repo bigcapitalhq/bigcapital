@@ -29,7 +29,7 @@ import Settings from 'api/controllers/Settings';
 import Currencies from 'api/controllers/Currencies';
 import Customers from 'api/controllers/Contacts/Customers';
 import Vendors from 'api/controllers/Contacts/Vendors';
-// import Sales from 'api/controllers/Sales'
+import Sales from 'api/controllers/Sales'
 import Purchases from 'api/controllers/Purchases';
 import Resources from './controllers/Resources';
 import ExchangeRates from 'api/controllers/ExchangeRates';
@@ -94,7 +94,7 @@ export default () => {
   dashboard.use('/financial_statements', FinancialStatements.router());
   dashboard.use('/customers', Container.get(Customers).router());
   dashboard.use('/vendors', Container.get(Vendors).router());
-  // dashboard.use('/sales', Container.get(Sales).router());
+  dashboard.use('/sales', Container.get(Sales).router());
   dashboard.use('/purchases', Container.get(Purchases).router());
   dashboard.use('/resources', Container.get(Resources).router());
   dashboard.use('/exchange_rates', Container.get(ExchangeRates).router());

@@ -1,11 +1,12 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { check, param, query, matchedData } from 'express-validator';
 import { Inject, Service } from 'typedi';
-import { ISaleEstimate, ISaleEstimateOTD } from 'interfaces';
+import { ISaleEstimateDTO } from 'interfaces';
 import BaseController from 'api/controllers/BaseController'
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
 import SaleEstimateService from 'services/Sales/SalesEstimate';
-import ItemsService from 'services/Items/ItemsService';
+import DynamicListingService from 'services/DynamicListing/DynamicListService';
+import { ServiceError } from "exceptions";
 
 @Service()
 export default class SalesEstimatesController extends BaseController {
@@ -13,7 +14,7 @@ export default class SalesEstimatesController extends BaseController {
   saleEstimateService: SaleEstimateService;
 
   @Inject()
-  itemsService: ItemsService;
+  dynamicListService: DynamicListingService;
 
   /**
    * Router constructor.
@@ -25,10 +26,8 @@ export default class SalesEstimatesController extends BaseController {
       '/',
       this.estimateValidationSchema,
       this.validationResult,
-      // asyncMiddleware(this.validateEstimateCustomerExistance.bind(this)),
-      // asyncMiddleware(this.validateEstimateNumberExistance.bind(this)),
-      // asyncMiddleware(this.validateEstimateEntriesItemsExistance.bind(this)),
-      asyncMiddleware(this.newEstimate.bind(this))
+      asyncMiddleware(this.newEstimate.bind(this)),
+      this.handleServiceErrors,
     );
     router.post(
       '/:id', [
@@ -36,33 +35,31 @@ export default class SalesEstimatesController extends BaseController {
         ...this.estimateValidationSchema,
       ],
       this.validationResult,
-      // asyncMiddleware(this.validateEstimateIdExistance.bind(this)),
-      // asyncMiddleware(this.validateEstimateCustomerExistance.bind(this)),
-      // asyncMiddleware(this.validateEstimateNumberExistance.bind(this)),
-      // asyncMiddleware(this.validateEstimateEntriesItemsExistance.bind(this)),
-      // asyncMiddleware(this.valdiateInvoiceEntriesIdsExistance.bind(this)),
-      asyncMiddleware(this.editEstimate.bind(this))
+      asyncMiddleware(this.editEstimate.bind(this)),
+      this.handleServiceErrors,
     );
     router.delete(
       '/:id', [
         this.validateSpecificEstimateSchema,
       ],
       this.validationResult,
-      // asyncMiddleware(this.validateEstimateIdExistance.bind(this)),
-      asyncMiddleware(this.deleteEstimate.bind(this))
+      asyncMiddleware(this.deleteEstimate.bind(this)),
+      this.handleServiceErrors,
     );
     router.get(
       '/:id',
       this.validateSpecificEstimateSchema,
       this.validationResult,
-      // asyncMiddleware(this.validateEstimateIdExistance.bind(this)),
-      asyncMiddleware(this.getEstimate.bind(this))
+      asyncMiddleware(this.getEstimate.bind(this)),
+      this.handleServiceErrors,
     );
     router.get(
       '/',
       this.validateEstimateListSchema,
       this.validationResult,
-      asyncMiddleware(this.getEstimates.bind(this))
+      asyncMiddleware(this.getEstimates.bind(this)),
+      this.handleServiceErrors,
+      this.dynamicListService.handlerErrorsToResponse,
     );
     return router;
   }
@@ -120,16 +117,17 @@ export default class SalesEstimatesController extends BaseController {
    * @param {Response} res -
    * @return {Response} res -
    */
-  async newEstimate(req: Request, res: Response) {
+  async newEstimate(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
-    const estimateOTD: ISaleEstimateOTD = matchedData(req, {
-      locations: ['body'],
-      includeOptionals: true,
-    });
-    const storedEstimate = await this.saleEstimateService
-      .createEstimate(tenantId, estimateOTD);
+    const estimateDTO: ISaleEstimateDTO = this.matchedBodyData(req);
 
-    return res.status(200).send({ id: storedEstimate.id });
+    try {
+      const storedEstimate = await this.saleEstimateService.createEstimate(tenantId, estimateDTO);
+
+      return res.status(200).send({ id: storedEstimate.id });
+    } catch (error) {
+      next(error);
+    }
   }
 
   /**
@@ -137,18 +135,19 @@ export default class SalesEstimatesController extends BaseController {
    * @param {Request} req 
    * @param {Response} res 
    */
-  async editEstimate(req: Request, res: Response) {
+  async editEstimate(req: Request, res: Response, next: NextFunction) {
     const { id: estimateId } = req.params;
     const { tenantId } = req;
+    const estimateDTO: ISaleEstimateDTO = this.matchedBodyData(req);
 
-    const estimateOTD: ISaleEstimateOTD = matchedData(req, {
-      locations: ['body'],
-      includeOptionals: true,
-    });
-    // Update estimate with associated estimate entries.
-    await this.saleEstimateService.editEstimate(tenantId, estimateId, estimateOTD);
+    try {
+      // Update estimate with associated estimate entries.
+      await this.saleEstimateService.editEstimate(tenantId, estimateId, estimateDTO);
 
-    return res.status(200).send({ id: estimateId });
+      return res.status(200).send({ id: estimateId });  
+    } catch (error) {
+      next(error);
+    }
   }
 
   /**
@@ -156,26 +155,32 @@ export default class SalesEstimatesController extends BaseController {
    * @param {Request} req 
    * @param {Response} res 
    */
-  async deleteEstimate(req: Request, res: Response) {
+  async deleteEstimate(req: Request, res: Response, next: NextFunction) {
     const { id: estimateId } = req.params;
     const { tenantId } = req;
 
-    await this.saleEstimateService.deleteEstimate(tenantId, estimateId);
+    try {
+      await this.saleEstimateService.deleteEstimate(tenantId, estimateId);
 
-    return res.status(200).send({ id: estimateId });  
+      return res.status(200).send({ id: estimateId });
+    } catch (error) {
+      next(error);
+    }
   }
 
   /**
    * Retrieve the given estimate with associated entries.
    */
-  async getEstimate(req: Request, res: Response) {
+  async getEstimate(req: Request, res: Response, next: NextFunction) {
     const { id: estimateId } = req.params;
     const { tenantId } = req;
 
-    const estimate = await this.saleEstimateService
-      .getEstimateWithEntries(tenantId, estimateId);
-
-    return res.status(200).send({ estimate });
+    try {
+      const estimate = await this.saleEstimateService.getEstimate(tenantId, estimateId);
+      return res.status(200).send({ estimate });
+    } catch (error) {
+      next(error);
+    }
   }
 
   /**
@@ -185,12 +190,25 @@ export default class SalesEstimatesController extends BaseController {
    */
   async getEstimates(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
-    const estimatesFilter: ISalesEstimatesFilter = this.matchedQueryData(req);
+    const filter = {
+      filterRoles: [],
+      sortOrder: 'asc',
+      columnSortBy: 'created_at',
+      page: 1,
+      pageSize: 12,
+      ...this.matchedQueryData(req),
+    };
+    if (filter.stringifiedFilterRoles) {
+      filter.filterRoles = JSON.parse(filter.stringifiedFilterRoles);
+    }
 
     try {
-      const { salesEstimates, pagination, filterMeta } = await this.saleEstimateService
-        .estimatesList(tenantId, estimatesFilter);
-      
+      const {
+        salesEstimates,
+        pagination,
+        filterMeta
+      } = await this.saleEstimateService.estimatesList(tenantId, filter);
+
       return res.status(200).send({
         sales_estimates: this.transfromToResponse(salesEstimates),
         pagination,
@@ -199,5 +217,53 @@ export default class SalesEstimatesController extends BaseController {
     } catch (error) {
       next(error);
     }
+  }
+
+  /**
+   * Handles service errors.
+   * @param {Error} error 
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {NextFunction} next 
+   */
+  handleServiceErrors(error: Error, req: Request, res: Response, next: NextFunction) {
+    if (error instanceof ServiceError) {
+      if (error.errorType === 'ITEMS_NOT_FOUND') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'ITEMS.IDS.NOT.EXISTS', code: 400 }],
+        });
+      }
+      if (error.errorType === 'ENTRIES_IDS_NOT_FOUND') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'ENTRIES.IDS.NOT.EXISTS', code: 300 }],
+        });
+      }
+      if (error.errorType === 'ITEMS_IDS_NOT_EXISTS') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'ITEMS.IDS.NOT.EXISTS', code: 200 }],
+        });
+      }
+      if (error.errorType === 'NOT_PURCHASE_ABLE_ITEMS') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'NOT_PURCHASABLE_ITEMS', code: 200 }],
+        });
+      }
+      if (error.errorType === 'SALE_ESTIMATE_NOT_FOUND') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'SALE_ESTIMATE_NOT_FOUND', code: 200 }],
+        });
+      }
+      if (error.errorType === 'CUSTOMER_NOT_FOUND') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'CUSTOMER_NOT_FOUND', code: 200 }],
+        });
+      }
+      if (error.errorType === 'SALE_ESTIMATE_NUMBER_EXISTANCE') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'ESTIMATE.NUMBER.IS.NOT.UNQIUE', code: 300 }],
+        });
+      }
+    }
+    next(error);
   }
 };
