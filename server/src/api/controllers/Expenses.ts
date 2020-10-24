@@ -7,7 +7,6 @@ import ExpensesService from "services/Expenses/ExpensesService";
 import { IExpenseDTO } from 'interfaces';
 import { ServiceError } from "exceptions";
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
-import { takeWhile } from "lodash";
 
 @Service()
 export default class ExpensesController extends BaseController {
@@ -134,7 +133,6 @@ export default class ExpensesController extends BaseController {
     ];
   }
 
-  
   get expensesListSchema() {
     return [
       query('custom_view_id').optional().isNumeric().toInt(),

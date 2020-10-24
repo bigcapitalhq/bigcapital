@@ -214,7 +214,7 @@ export default class SalesReceiptsController extends BaseController{
   }
 
 
-  handleServiceErrors(error: Error, req: Request, res: Response, next: Next) {
+  handleServiceErrors(error: Error, req: Request, res: Response, next: NextFunction) {
     if (error instanceof ServiceError) {
       if (error.errorType === 'SALE_RECEIPT_NOT_FOUND') {
         return res.boom.badRequest(null, {
