@@ -109,6 +109,54 @@ export default class Bill extends TenantModel {
         column: 'created_at',
         columnType: 'date',
       },
+      vendor: {
+        label: 'Vendor',
+        column: 'vendor_id',
+        relation: 'contacts.id',
+        relationColumn: 'contacts.display_name',
+      },
+      bill_number: {
+        label: 'Bill number',
+        column: 'bill_number',
+        columnType: 'string',
+        fieldType: 'text',
+      },
+      bill_date: {
+        label: 'Bill date',
+        column: 'bill_date',
+        columnType: 'date',
+        fieldType: 'date',
+      },
+      due_date: {
+        label: 'Due date',
+        column: 'due_date',
+      },
+      reference_no: {
+        label: 'Reference No.',
+        column: 'reference_no',
+        columnType: 'string',
+        fieldType: 'text',
+      },
+      status: {
+        label: 'Status',
+        column: 'status',
+      },
+      amount: {
+        label: 'Amount',
+        column: 'amount',
+        columnType: 'number',
+        fieldType: 'number',
+      },
+      payment_amount: {
+        label: 'Payment amount',
+        column: 'payment_amount',
+        columnType: 'number',
+        fieldType: 'number',
+      },
+      note: {
+        label: 'Note',
+        column: 'note',
+      },
     }
   }
 }

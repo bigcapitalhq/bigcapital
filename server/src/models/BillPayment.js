@@ -74,7 +74,6 @@ export default class BillPayment extends TenantModel {
     };
   }
 
-
   static get fields() {
     return {
       created_at: {
@@ -82,6 +81,53 @@ export default class BillPayment extends TenantModel {
         column: 'created_at',
         columnType: 'date',
       },
+      vendor: {
+        lable: "Vendor name",
+        column: 'vendor_id',
+        relation: 'contacts.id',
+        relationColumn: 'contacts.display_name',
+      },
+      amount: {
+        label: "Amount",
+        column: "amount",
+        columnType: 'number',
+        fieldType: 'number',
+      },
+      payment_account: {
+        label: "Payment account",
+        column: "payment_account_id",
+        relation: "accounts",
+        relationColumn: "accounts.name",
+
+        fieldType: 'options',
+        optionsResource: 'Account',
+        optionsKey: 'id',
+        optionsLabel: 'name',
+      },
+      payment_number: {
+        label: "Payment number",
+        column: "payment_number",
+        columnType: 'string',
+        fieldType: 'text',
+      },
+      payment_date: {
+        label: "Payment date",
+        column: "payment_date",
+        columnType: 'date',
+        fieldType: 'date',
+      },
+      reference: {
+        label: "Reference No.",
+        column: "reference",
+        columnType: 'string',
+        fieldType: 'text',
+      },
+      description: {
+        label: "Description",
+        column: "description",
+        columnType: 'string',
+        fieldType: 'text',
+      }
     }
   }
 }
