@@ -16,6 +16,10 @@ export default class BillPayment extends TenantModel {
     return ['createdAt', 'updatedAt'];
   }
 
+  static get resourceable() {
+    return true;
+  }
+
   /**
    * Relationship mapping.
    */
@@ -43,7 +47,7 @@ export default class BillPayment extends TenantModel {
           to: 'contacts.id',
         },
         filter(query) {
-          query.where('contact_type', 'Vendor');
+          query.where('contact_service', 'vendor');
         }
       },
 
@@ -68,5 +72,16 @@ export default class BillPayment extends TenantModel {
         },
       }
     };
+  }
+
+
+  static get fields() {
+    return {
+      created_at: {
+        label: 'Created at',
+        column: 'created_at',
+        columnType: 'date',
+      },
+    }
   }
 }

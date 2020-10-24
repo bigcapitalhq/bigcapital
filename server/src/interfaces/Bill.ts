@@ -41,4 +41,8 @@ export interface IBill {
 
   entries: IItemEntry[],
 };
-  
+
+export interface IBillsFilter { 
+  page: number,
+  pageSize: number,
+}

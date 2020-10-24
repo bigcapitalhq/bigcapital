@@ -6,6 +6,7 @@ import asyncMiddleware from 'api/middleware/asyncMiddleware';
 import { ServiceError } from 'exceptions';
 import BaseController from 'api/controllers/BaseController';
 import BillPaymentsService from 'services/Purchases/BillPayments';
+import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import AccountsService from 'services/Accounts/AccountsService';
 
 /**
@@ -19,6 +20,9 @@ export default class BillsPayments extends BaseController {
 
   @Inject()
   accountsService: AccountsService;
+
+  @Inject()
+  dynamicListService: DynamicListingService;
 
   /**
    * Router constructor.
@@ -48,16 +52,19 @@ export default class BillsPayments extends BaseController {
       asyncMiddleware(this.deleteBillPayment.bind(this)),
       this.handleServiceError,
     );
-    // router.get('/:id',
-    //   this.specificBillPaymentValidateSchema,
-    //   this.validationResult,
-    //   asyncMiddleware(this.getBillPayment.bind(this)),
-    // );
-    // router.get('/', 
-    //   this.listingValidationSchema,
-    //   this.validationResult,
-    //   asyncMiddleware(this.getBillsPayments.bind(this))
-    // );
+    router.get('/:id',
+      this.specificBillPaymentValidateSchema,
+      this.validationResult,
+      asyncMiddleware(this.getBillPayment.bind(this)),
+      this.handleServiceError,
+    );
+    router.get('/', 
+      this.listingValidationSchema,
+      this.validationResult,
+      asyncMiddleware(this.getBillsPayments.bind(this)),
+      this.handleServiceError,
+      this.dynamicListService.handlerErrorsToResponse,
+    );
     return router;
   }
 
@@ -183,10 +190,9 @@ export default class BillsPayments extends BaseController {
     const { tenantId } = req;
     const { id: billPaymentId } = req.params;
 
-    const billPayment = await this.billPaymentService
-      .getBillPaymentWithMetadata(tenantId, billPaymentId);
+    const billPayment = await this.billPaymentService.getBillPayment(tenantId, billPaymentId);
 
-    return res.status(200).send({ bill_payment: { ...billPayment } });
+    return res.status(200).send({ bill_payment: billPayment });
   }
 
   /**
@@ -196,13 +202,19 @@ export default class BillsPayments extends BaseController {
    * @return {Response}
    */
   async getBillsPayments(req: Request, res: Response, next: NextFunction) {
-    const { tenantId } = req.params;
-    const billPaymentsFilter = this.matchedQueryData(req);
+    const { tenantId } = req;
+    const billPaymentsFilter = {
+      page: 1,
+      pageSize: 12,
+      filterRoles: [],
+      sortOrder: 'asc',
+      columnSortBy: 'created_at',
+      ...this.matchedQueryData(req),
+    };
 
     try {
-      const { billPayments, pagination, filterMeta } = await this.billPaymentService
-        .listBillPayments(tenantId, billPaymentsFilter);
-      
+      const { billPayments, pagination, filterMeta } = await this.billPaymentService.listBillPayments(tenantId, billPaymentsFilter);
+
       return res.status(200).send({
         bill_payments: billPayments,
         pagination: this.transfromToResponse(pagination),
@@ -273,7 +285,6 @@ export default class BillsPayments extends BaseController {
         })
       }
     }
-    console.log(error);
     next(error);
   }
 }

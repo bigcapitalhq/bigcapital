@@ -17,6 +17,10 @@ export default class Bill extends TenantModel {
     return 'bills';
   }
 
+  static get resourceable() {
+    return true;
+  }
+
   /**
    * Timestamps columns.
    */
@@ -48,7 +52,7 @@ export default class Bill extends TenantModel {
           to: 'contacts.id',
         },
         filter(query) {
-          query.where('contact_type', 'Vendor');
+          query.where('contact_service', 'vendor');
         }
       },
 
@@ -96,5 +100,15 @@ export default class Bill extends TenantModel {
     return this.query()
       .where('id', billId)
       [changeMethod]('payment_amount', Math.abs(amount));
+  }
+
+  static get fields() {
+    return {
+      created_at: {
+        label: 'Created at',
+        column: 'created_at',
+        columnType: 'date',
+      },
+    }
   }
 }

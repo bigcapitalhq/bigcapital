@@ -423,7 +423,7 @@ export default class BillPaymentsService {
     const dynamicFilter = await this.dynamicListService.dynamicList(tenantId, BillPayment, billPaymentsFilter);
 
     this.logger.info('[bill_payment] try to get bill payments list.', { tenantId });
-    const { results, pagination } = await BillPayment.query().onBuild(builder => {
+    const { results, pagination } = await BillPayment.query().onBuild((builder) => {
       builder.withGraphFetched('vendor');
       builder.withGraphFetched('paymentAccount');
       dynamicFilter.buildQuery()(builder);
@@ -444,15 +444,17 @@ export default class BillPaymentsService {
    * @param {number} billPaymentId - The bill payment id.
    * @return {object}
    */
-  async getBillPaymentWithMetadata(tenantId: number, billPaymentId: number) {
+  public async getBillPayment(tenantId: number, billPaymentId: number) {
     const { BillPayment } = this.tenancy.models(tenantId);
     const billPayment = await BillPayment.query()
-      .where('id', billPaymentId)
+      .findById(billPaymentId)
       .withGraphFetched('entries')
       .withGraphFetched('vendor')
-      .withGraphFetched('paymentAccount')
-      .first();
-
+      .withGraphFetched('paymentAccount');
+    
+    if (!billPayment) {
+      throw new ServiceError(ERRORS.PAYMENT_MADE_NOT_FOUND);
+    }
     return billPayment;
   }
 }

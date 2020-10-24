@@ -7,6 +7,7 @@ import BillsService from 'services/Purchases/Bills';
 import BaseController from 'api/controllers/BaseController';
 import ItemsService from 'services/Items/ItemsService';
 import TenancyService from 'services/Tenancy/TenancyService';
+import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import { ServiceError } from 'exceptions';
 
 @Service()
@@ -20,6 +21,9 @@ export default class BillsController extends BaseController {
   @Inject()
   tenancy: TenancyService;
 
+  @Inject()
+  dynamicListService: DynamicListingService;
+
   /**
    * Router constructor.
    */
@@ -28,7 +32,7 @@ export default class BillsController extends BaseController {
 
     router.post(
       '/', [
-        ...this.billValidationSchema
+        ...this.billValidationSchema,
       ],
       this.validationResult,
       asyncMiddleware(this.newBill.bind(this)),
@@ -44,29 +48,25 @@ export default class BillsController extends BaseController {
     );
     router.get(
       '/:id', [
-        ...this.specificBillValidationSchema
+        ...this.specificBillValidationSchema,
       ],
       this.validationResult,
       asyncMiddleware(this.getBill.bind(this)),
+      this.handleServiceError,
     );
- 
-    // router.get(
-    //   '/:id',
-    //   [...this.specificBillValidationSchema],
-    //   this.validationResult,
-    //   asyncMiddleware(this.getBill.bind(this)),
-    //   this.handleServiceError,
-    // );
-    // router.get(
-    //   '/',
-    //   [...this.billsListingValidationSchema],
-    //   this.validationResult,
-    //   asyncMiddleware(this.listingBills.bind(this)),
-    //   this.handleServiceError,
-    // );
+    router.get(
+      '/', [
+        ...this.billsListingValidationSchema,
+      ],
+      this.validationResult,
+      asyncMiddleware(this.billsList.bind(this)),
+      this.handleServiceError,
+      this.dynamicListService.handlerErrorsToResponse,
+    );
     router.delete(
-      '/:id',
-      [...this.specificBillValidationSchema],
+      '/:id', [
+        ...this.specificBillValidationSchema
+      ],
       this.validationResult,
       asyncMiddleware(this.deleteBill.bind(this)),
       this.handleServiceError,
@@ -221,8 +221,30 @@ export default class BillsController extends BaseController {
    * @param {Response} res -
    * @return {Response}
    */
-  async billsList(req: Request, res: Response) {
-    
+  public async billsList(req: Request, res: Response, next: NextFunction) {
+    const { tenantId } = req;
+    const filter = {
+      page: 1,
+      pageSize: 12,
+      filterRoles: [],
+      sortOrder: 'asc',
+      columnSortBy: 'created_at',
+      ...this.matchedQueryData(req),
+    };
+    if (filter.stringifiedFilterRoles) {
+      filter.filterRoles = JSON.parse(filter.stringifiedFilterRoles);
+    }
+    try {
+      const { bills, pagination, filterMeta } = await this.billsService.getBills(tenantId, filter);
+
+      return res.status(200).send({
+        bills,
+        pagination: this.transfromToResponse(pagination),
+        filter_meta: this.transfromToResponse(filterMeta),
+      });
+    } catch (error) {
+      next(error);
+    }
   }
 
   /**

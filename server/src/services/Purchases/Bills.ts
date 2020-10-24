@@ -12,6 +12,7 @@ import AccountsService from 'services/Accounts/AccountsService';
 import InventoryService from 'services/Inventory/Inventory';
 import SalesInvoicesCost from 'services/Sales/SalesInvoicesCost';
 import TenancyService from 'services/Tenancy/TenancyService';
+import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import { formatDateFields } from 'utils';
 import {
   IBillDTO,
@@ -21,6 +22,9 @@ import {
   IItemEntry,
   IItemEntryDTO,
   IBillEditDTO,
+  IPaginationMeta,
+  IFilterMeta,
+  IBillsFilter,
 } from 'interfaces';
 import { ServiceError } from 'exceptions';
 import ItemsService from 'services/Items/ItemsService';
@@ -58,6 +62,9 @@ export default class BillsService extends SalesInvoicesCost {
 
   @Inject('logger')
   logger: any;
+
+  @Inject()
+  dynamicListService: DynamicListingService;
 
   /**
    * Validates whether the vendor is exist.
@@ -423,6 +430,30 @@ export default class BillsService extends SalesInvoicesCost {
     ]);
   }
 
+  /**
+   * Retrieve bills data table list.
+   * @param {number} tenantId -
+   * @param {IBillsFilter} billsFilter -
+   */
+  public async getBills(
+    tenantId: number,
+    billsFilter: IBillsFilter,
+  ): Promise<{ bills: IBill, pagination: IPaginationMeta, filterMeta: IFilterMeta }> {
+    const { Bill } = this.tenancy.models(tenantId);
+    const dynamicFilter = await this.dynamicListService.dynamicList(tenantId, Bill, billsFilter);
+
+    this.logger.info('[bills] trying to get bills data table.', { tenantId, billsFilter });
+    const { results, pagination } = await Bill.query().onBuild((builder) => {
+      builder.withGraphFetched('vendor');
+      dynamicFilter.buildQuery()(builder);
+    }).pagination(billsFilter.page - 1, billsFilter.pageSize);
+
+    return {
+      bills: results,
+      pagination,
+      filterMeta: dynamicFilter.getResponseMeta(),
+    };
+  }
 
   /**
    * Retrieve the given bill details with associated items entries.
