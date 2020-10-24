@@ -23,7 +23,11 @@ import ErrorMessage from 'components/ErrorMessage';
 import Icon from 'components/Icon';
 import MoneyInputGroup from 'components/MoneyInputGroup';
 import Dragzone from 'components/Dragzone';
-import { ListSelect, AccountsSelectList, If } from 'components';
+import {
+  ListSelect,
+  AccountsSelectList,
+  CategoriesSelectList,
+} from 'components';
 
 import withItemsActions from 'containers/Items/withItemsActions';
 import withItemCategories from 'containers/Items/withItemCategories';
@@ -170,7 +174,7 @@ const ItemForm = ({
     },
     onSubmit: (values, { setSubmitting, resetForm, setErrors }) => {
       const saveItem = (mediaIds) => {
-        const formValues = { ...values, media_ids: mediaIds };
+        const formValues = { ...values };
         if (itemDetail && itemDetail.id) {
           requestEditItem(itemDetail.id, formValues)
             .then((response) => {
@@ -222,29 +226,6 @@ const ItemForm = ({
     },
   });
 
-  const accountItem = useCallback(
-    (item, { handleClick }) => (
-      <MenuItem
-        key={item.id}
-        text={item.name}
-        label={item.code}
-        onClick={handleClick}
-      />
-    ),
-    [],
-  );
-
-  // Filter Account Items
-  const filterAccounts = (query, item, _index, exactMatch) => {
-    const normalizedTitle = item.name.toLowerCase();
-    const normalizedQuery = query.toLowerCase();
-    if (exactMatch) {
-      return normalizedTitle === normalizedQuery;
-    } else {
-      return `${item.code} ${normalizedTitle}`.indexOf(normalizedQuery) >= 0;
-    }
-  };
-
   const onItemAccountSelect = useCallback(
     (filedName) => {
       return (account) => {
@@ -252,13 +233,6 @@ const ItemForm = ({
       };
     },
     [setFieldValue],
-  );
-
-  const categoryItem = useCallback(
-    (item, { handleClick }) => (
-      <MenuItem key={item.id} text={item.name} onClick={handleClick} />
-    ),
-    [],
   );
 
   const requiredSpan = useMemo(() => <span class="required">*</span>, []);
@@ -374,17 +348,11 @@ const ItemForm = ({
                   Classes.FILL,
                 )}
               >
-                <ListSelect
-                  items={categoriesList}
-                  noResults={<MenuItem disabled={true} text="No results." />}
-                  itemRenderer={categoryItem}
-                  itemPredicate={filterAccounts}
+                <CategoriesSelectList
+                  categoriesList={categoriesList}
+                  selecetedCategoryId={values.category_id}
+                  onCategorySelected={onItemAccountSelect('category_id')}
                   popoverProps={{ minimal: true }}
-                  onItemSelect={onItemAccountSelect('category_id')}
-                  selectedItem={values.customer_id}
-                  selectedItemProp={'id'}
-                  defaultText={<T id={'select_category'} />}
-                  labelProp={'name'}
                 />
               </FormGroup>
 

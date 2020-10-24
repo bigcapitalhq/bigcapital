@@ -27,6 +27,11 @@ const itemsReducer = createReducer(initialState, {
     };
   },
 
+  [t.ITEM_SET]: (state, action) => {
+    const { id, item } = action.payload;
+    state.items[id] = { ...item };
+  },
+
   [t.ITEMS_PAGE_SET]: (state, action) => {
     const { items, customViewId, paginationMeta } = action;
 
@@ -42,10 +47,10 @@ const itemsReducer = createReducer(initialState, {
         state.itemsRelation[item.id] = [];
       }
       const filteredRelation = state.itemsRelation[item.id].filter(
-        (relation) => (
+        (relation) =>
           relation.viewId === viewId &&
-          relation.pageNumber === paginationMeta.page
-      ));
+          relation.pageNumber === paginationMeta.page,
+      );
 
       filteredRelation.push({
         viewId,

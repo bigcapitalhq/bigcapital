@@ -17,6 +17,7 @@ function Customer({
   formik,
   //#withCustomersActions
   requestFetchCustomers,
+  requestFetchCustomer,
 }) {
   const { id } = useParams();
   const history = useHistory();
@@ -26,11 +27,12 @@ function Customer({
     requestFetchCustomers({}),
   );
   // Handle fetch customer details.
-  const fetchCustomer= useQuery(['customer', id], () =>
-    requestFetchCustomers(),
-    { enabled: !!id },
+  const fetchCustomer = useQuery(
+    ['customer', id],
+    (key, customerId) => requestFetchCustomer(customerId),
+    { enabled: id && id },
   );
-
+  
   const handleFormSubmit = useCallback(
     (payload) => {
       payload.redirect && history.push('/customers');

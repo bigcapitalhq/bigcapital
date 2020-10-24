@@ -25,6 +25,8 @@ import Dialog from './Dialog/Dialog';
 import DialogContent from './Dialog/DialogContent';
 import DialogSuspense from './Dialog/DialogSuspense';
 import InputPrependButton from './Forms/InputPrependButton';
+import CategoriesSelectList from './CategoriesSelectList';
+
 const Hint = FieldHint;
 
 export {
@@ -55,5 +57,6 @@ export {
   Dialog,
   DialogContent,
   DialogSuspense,
-  InputPrependButton
+  InputPrependButton,
+  CategoriesSelectList
 };
