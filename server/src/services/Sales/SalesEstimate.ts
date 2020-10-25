@@ -19,7 +19,7 @@ const ERRORS = {
   CUSTOMER_NOT_FOUND: 'CUSTOMER_NOT_FOUND',
   SALE_ESTIMATE_NUMBER_EXISTANCE: 'SALE_ESTIMATE_NUMBER_EXISTANCE',
   ITEMS_IDS_NOT_EXISTS: 'ITEMS_IDS_NOT_EXISTS',
-}
+};
 /**
  * Sale estimate service.
  * @Service
@@ -97,14 +97,21 @@ export default class SaleEstimateService {
       amount,
       ...formatDateFields(estimateDTO, ['estimate_date', 'expiration_date']),
     };
+
+    // Validate estimate number uniquiness on the storage.
     await this.validateEstimateNumberExistance(tenantId, estimateDTO.estimateNumber);
+    
+    // Retrieve the given customer or throw not found service error.
     await this.customersService.getCustomer(tenantId, estimateDTO.customerId);
 
+    // Validate items IDs existance on the storage.
     await this.itemsEntriesService.validateItemsIdsExistance(tenantId, estimateDTO.entries);
+
+    // Validate non-sellable items.
     await this.itemsEntriesService.validateNonSellableEntriesItems(tenantId, estimateDTO.entries);
 
     const saleEstimate = await SaleEstimate.query()
-      .upsertGraph({
+      .upsertGraphAndFetch({
         ...omit(estimateObj, ['entries']),
         entries: estimateObj.entries.map((entry) => ({ 
           reference_type: 'SaleEstimate',
@@ -135,19 +142,29 @@ export default class SaleEstimateService {
       amount,
       ...formatDateFields(estimateDTO, ['estimate_date', 'expiration_date']),
     };
+
+    // Validate estimate number uniquiness on the storage.
     await this.validateEstimateNumberExistance(tenantId, estimateDTO.estimateNumber, estimateId);
+
+    // Retrieve the given customer or throw not found service error.
     await this.customersService.getCustomer(tenantId, estimateDTO.customerId);
 
+    // Validate sale estimate entries existance.
     await this.itemsEntriesService.validateEntriesIdsExistance(tenantId, estimateId, 'SaleEstiamte', estimateDTO.entries);
+
+    // Validate items IDs existance on the storage.
     await this.itemsEntriesService.validateItemsIdsExistance(tenantId, estimateDTO.entries);
+
+    // Validate non-sellable items.
     await this.itemsEntriesService.validateNonSellableEntriesItems(tenantId, estimateDTO.entries);
 
     this.logger.info('[sale_estimate] editing sale estimate on the storage.');
     const saleEstimate = await SaleEstimate.query()
-      .upsertGraph({
+      .upsertGraphAndFetch({
         id: estimateId,
         ...omit(estimateObj, ['entries']),
         entries: estimateObj.entries.map((entry) => ({
+          reference_type: 'SaleEstimate',
           ...omit(entry, ['total', 'amount']),
         })),
       });
@@ -155,6 +172,8 @@ export default class SaleEstimateService {
     await this.eventDispatcher.dispatch(events.saleEstimates.onEdited, {
       tenantId, estimateId, saleEstimate, oldSaleEstimate,
     });
+    this.logger.info('[sale_estiamte] edited successfully', { tenantId, estimateId });
+
     return saleEstimate;
   }
 
@@ -168,6 +187,7 @@ export default class SaleEstimateService {
   public async deleteEstimate(tenantId: number, estimateId: number): Promise<void> {
     const { SaleEstimate, ItemEntry } = this.tenancy.models(tenantId);
 
+    // Retrieve sale estimate or throw not found service error.
     const oldSaleEstimate = await this.getSaleEstimateOrThrowError(tenantId, estimateId);
 
     this.logger.info('[sale_estimate] delete sale estimate and associated entries from the storage.');

@@ -230,37 +230,47 @@ export default class SalesEstimatesController extends BaseController {
     if (error instanceof ServiceError) {
       if (error.errorType === 'ITEMS_NOT_FOUND') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'ITEMS.IDS.NOT.EXISTS', code: 400 }],
+          errors: [{ type: 'ITEMS.IDS.NOT.EXISTS', code: 100 }],
         });
       }
       if (error.errorType === 'ENTRIES_IDS_NOT_FOUND') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'ENTRIES.IDS.NOT.EXISTS', code: 300 }],
+          errors: [{ type: 'ENTRIES.IDS.NOT.EXISTS', code: 200 }],
         });
       }
       if (error.errorType === 'ITEMS_IDS_NOT_EXISTS') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'ITEMS.IDS.NOT.EXISTS', code: 200 }],
+          errors: [{ type: 'ITEMS.IDS.NOT.EXISTS', code: 300 }],
         });
       }
       if (error.errorType === 'NOT_PURCHASE_ABLE_ITEMS') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'NOT_PURCHASABLE_ITEMS', code: 200 }],
+          errors: [{ type: 'NOT_PURCHASABLE_ITEMS', code: 400 }],
         });
       }
       if (error.errorType === 'SALE_ESTIMATE_NOT_FOUND') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'SALE_ESTIMATE_NOT_FOUND', code: 200 }],
+          errors: [{ type: 'SALE_ESTIMATE_NOT_FOUND', code: 500 }],
         });
       }
       if (error.errorType === 'CUSTOMER_NOT_FOUND') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'CUSTOMER_NOT_FOUND', code: 200 }],
+          errors: [{ type: 'CUSTOMER_NOT_FOUND', code: 600 }],
         });
       }
       if (error.errorType === 'SALE_ESTIMATE_NUMBER_EXISTANCE') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'ESTIMATE.NUMBER.IS.NOT.UNQIUE', code: 300 }],
+          errors: [{ type: 'ESTIMATE.NUMBER.IS.NOT.UNQIUE', code: 700 }],
+        });
+      }
+      if (error.errorType === 'NOT_SELL_ABLE_ITEMS') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'NOT_SELL_ABLE_ITEMS', code: 800 }],
+        });
+      }
+      if (error.errorType === 'contact_not_found') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'CUSTOMER_NOT_FOUND', code: 900 }],
         });
       }
     }
