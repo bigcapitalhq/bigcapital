@@ -135,13 +135,15 @@ export default class PaymentReceiveService {
    * @param {number} tenantId - 
    * @param {} paymentReceiveEntries -
    */
-  async validateInvoicesIDsExistance(tenantId: number, paymentReceiveEntries: any): Promise<void> {
+  async validateInvoicesIDsExistance(tenantId: number, customerId: number, paymentReceiveEntries: IPaymentReceiveEntryDTO[]): Promise<void> {
     const { SaleInvoice } = this.tenancy.models(tenantId);
 
-    const invoicesIds = paymentReceiveEntries.map((e) => e.invoiceId);
-    const storedInvoices = await SaleInvoice.query().whereIn('id', invoicesIds);
-    const storedInvoicesIds = storedInvoices.map((invoice) => invoice.id);
+    const invoicesIds = paymentReceiveEntries.map((e: IPaymentReceiveEntryDTO) => e.invoiceId);
+    const storedInvoices = await SaleInvoice.query()
+      .whereIn('id', invoicesIds)
+      .where('customer_id', customerId);
 
+    const storedInvoicesIds = storedInvoices.map((invoice) => invoice.id);
     const notFoundInvoicesIDs = difference(invoicesIds, storedInvoicesIds);
 
     if (notFoundInvoicesIDs.length > 0) {
@@ -200,7 +202,7 @@ export default class PaymentReceiveService {
     await this.getDepositAccountOrThrowError(tenantId, paymentReceiveDTO.depositAccountId);
 
     // Validate payment receive invoices IDs existance.
-    await this.validateInvoicesIDsExistance(tenantId, paymentReceiveDTO.entries);
+    await this.validateInvoicesIDsExistance(tenantId, paymentReceiveDTO.customerId, paymentReceiveDTO.entries);
 
     // Validate invoice payment amount.
     await this.validateInvoicesPaymentsAmount(tenantId, paymentReceiveDTO.entries);
@@ -265,8 +267,8 @@ export default class PaymentReceiveService {
     await this.itemsEntries.validateEntriesIdsExistance(
       tenantId, paymentReceiveId, 'PaymentReceive', paymentReceiveDTO.entries
     );
-    // Validate payment receive invoices IDs existance.
-    await this.validateInvoicesIDsExistance(tenantId, paymentReceiveDTO.entries);
+    // Validate payment receive invoices IDs existance and associated to the given customer id.
+    await this.validateInvoicesIDsExistance(tenantId, paymentReceiveDTO.customerId, paymentReceiveDTO.entries);
 
     // Validate invoice payment amount.
     await this.validateInvoicesPaymentsAmount(tenantId, paymentReceiveDTO.entries);
@@ -300,16 +302,16 @@ export default class PaymentReceiveService {
    * @param {Integer} paymentReceiveId - Payment receive id.
    * @param {IPaymentReceive} paymentReceive - Payment receive object.
    */
-  async deletePaymentReceive(tenantId: number, paymentReceiveId: number, paymentReceive: any) {
+  async deletePaymentReceive(tenantId: number, paymentReceiveId: number) {
     const { PaymentReceive, PaymentReceiveEntry } = this.tenancy.models(tenantId);
 
-    const oldPaymentReceive = this.getPaymentReceiveOrThrowError(tenantId, paymentReceiveId);
+    const oldPaymentReceive = await this.getPaymentReceiveOrThrowError(tenantId, paymentReceiveId);
 
     // Deletes the payment receive associated entries.
     await PaymentReceiveEntry.query().where('payment_receive_id', paymentReceiveId).delete();
 
     // Deletes the payment receive transaction.
-    await PaymentReceive.query().where('id', paymentReceiveId).delete();
+    await PaymentReceive.query().findById(paymentReceiveId).delete();
 
     await this.eventDispatcher.dispatch(events.paymentReceipts.onDeleted, {
       tenantId, paymentReceiveId, oldPaymentReceive,

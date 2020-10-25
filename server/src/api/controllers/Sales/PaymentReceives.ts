@@ -178,13 +178,11 @@ export default class PaymentReceivesController extends BaseController {
     const { id: paymentReceiveId } = req.params;
 
     try {
-      await this.paymentReceiveService.deletePaymentReceive(
-        tenantId,
-        paymentReceiveId,
-      );
+      await this.paymentReceiveService.deletePaymentReceive(tenantId, paymentReceiveId);
+
       return res.status(200).send({
         id: paymentReceiveId,
-        message: 'The payment receive has been edited successfully',
+        message: 'The payment receive has been deleted successfully',
       });
     } catch (error) {
       next(error);

@@ -146,17 +146,14 @@ export default class BillPaymentsService {
    * @param {Response} res 
    * @param {NextFunction} next 
    */
-  private async validateBillsExistance(tenantId: number, billPaymentEntries: IBillPaymentEntry[], notVendorId?: number) {
+  private async validateBillsExistance(tenantId: number, billPaymentEntries: IBillPaymentEntry[], vendorId: number) {
     const { Bill } = this.tenancy.models(tenantId);
     const entriesBillsIds = billPaymentEntries.map((e: any) => e.billId);
 
-    const storedBills = await Bill.query().onBuild((builder) => {
-      builder.whereIn('id', entriesBillsIds);
+    const storedBills = await Bill.query()
+      .whereIn('id', entriesBillsIds)
+      .where('vendor_id', vendorId);
 
-      if (notVendorId) {
-        builder.where('vendor_id', notVendorId);
-      }
-    });
     const storedBillsIds = storedBills.map((t: IBill) => t.id);
     const notFoundBillsIds = difference(entriesBillsIds, storedBillsIds);
 
@@ -252,14 +249,24 @@ export default class BillPaymentsService {
       amount: sumBy(billPaymentDTO.entries, 'paymentAmount'),
       ...formatDateFields(billPaymentDTO, ['paymentDate']),
     };
+
+    // Validate vendor existance on the storage.
     await this.getVendorOrThrowError(tenantId, billPaymentObj.vendorId);
+
+    // Validate the payment account existance and type.
     await this.getPaymentAccountOrThrowError(tenantId, billPaymentObj.paymentAccountId);
+
+    // Validate the payment number uniquiness.
     await this.validatePaymentNumber(tenantId, billPaymentObj.paymentNumber);
-    await this.validateBillsExistance(tenantId, billPaymentObj.entries);
+
+    // Validates the bills existance and associated to the given vendor.
+    await this.validateBillsExistance(tenantId, billPaymentObj.entries, billPaymentDTO.vendorId);
+
+    // Validates the bills due payment amount.
     await this.validateBillsDueAmount(tenantId, billPaymentObj.entries);
 
     const billPayment = await BillPayment.query()
-      .insertGraph({
+      .insertGraphAndFetch({
         ...omit(billPaymentObj, ['entries']),
         entries: billPaymentDTO.entries,
       });
@@ -304,14 +311,23 @@ export default class BillPaymentsService {
       ...formatDateFields(billPaymentDTO, ['paymentDate']),
     };
 
+    // Validate vendor existance on the storage.
     await this.getVendorOrThrowError(tenantId, billPaymentObj.vendorId);
+
+    // Validate the payment account existance and type.
     await this.getPaymentAccountOrThrowError(tenantId, billPaymentObj.paymentAccountId);
+
+    // Validate the items entries IDs existance on the storage.
     await this.validateEntriesIdsExistance(tenantId, billPaymentId, billPaymentObj.entries);
-    await this.validateBillsExistance(tenantId, billPaymentObj.entries);
+    
+    // Validate the bills existance and associated to the given vendor.
+    await this.validateBillsExistance(tenantId, billPaymentObj.entries, billPaymentDTO.vendorId);
+
+    // Validates the bills due payment amount.
     await this.validateBillsDueAmount(tenantId, billPaymentObj.entries);
 
     const billPayment = await BillPayment.query()
-      .upsertGraph({
+      .upsertGraphAndFetch({
         id: billPaymentId,
         ...omit(billPaymentObj, ['entries']),
         entries: billPaymentDTO.entries,

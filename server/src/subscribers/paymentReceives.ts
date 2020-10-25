@@ -66,7 +66,10 @@ export default class PaymentReceivesSubscriber {
     const { customerRepository } = this.tenancy.repositories(tenantId);
 
     this.logger.info('[payment_receive] trying to increment customer balance.');
-    await customerRepository.changeBalance(oldPaymentReceive.customerId, oldPaymentReceive.amount);
+    await customerRepository.changeBalance(
+      oldPaymentReceive.customerId,
+      oldPaymentReceive.amount,
+    );
   }
 
   /**
@@ -75,8 +78,6 @@ export default class PaymentReceivesSubscriber {
   @On(events.paymentReceipts.onEdited)
   async handleCustomerBalanceDiffChange({ tenantId, paymentReceiveId, paymentReceive, oldPaymentReceive }) {
     const { customerRepository } = this.tenancy.repositories(tenantId);
-
-    console.log(paymentReceive, oldPaymentReceive, 'XX');
 
     await customerRepository.changeDiffBalance(
       paymentReceive.customerId,

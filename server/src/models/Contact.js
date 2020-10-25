@@ -17,6 +17,20 @@ export default class Contact extends TenantModel {
   }
 
   /**
+   * Defined virtual attributes.
+   */
+  static get virtualAttributes() {
+    return ['closingBalance'];
+  }
+
+  /**
+   * Closing balance attribute.
+   */
+  closingBalance() {
+    return this.openingBalance + this.balance;
+  }
+
+  /**
    * Model modifiers.
    */
   static get modifiers() {

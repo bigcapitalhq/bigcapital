@@ -51,7 +51,7 @@ export default class PaymentMadesSubscriber {
     this.logger.info('[bill_payment] trying to increment vendor balance.', { tenantId });
     await vendorRepository.changeBalance(
       billPayment.vendorId,
-      billPayment.amount,
+      billPayment.amount * -1,
     );
   }
 
@@ -75,7 +75,7 @@ export default class PaymentMadesSubscriber {
 
     await vendorRepository.changeBalance(
       oldPaymentMade.vendorId,
-      oldPaymentMade.amount * -1,
+      oldPaymentMade.amount,
     );
   }
 

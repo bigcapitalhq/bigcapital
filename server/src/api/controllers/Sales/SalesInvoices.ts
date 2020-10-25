@@ -331,7 +331,6 @@ export default class SaleInvoicesController extends BaseController{
         });
       }
     }
-    console.log(error.errorType);
     next(error); 
   }
 }

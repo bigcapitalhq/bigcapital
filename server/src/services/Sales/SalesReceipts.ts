@@ -97,7 +97,7 @@ export default class SalesReceiptService {
 
     this.logger.info('[sale_receipt] trying to insert sale receipt graph.', { tenantId, saleReceiptDTO });
     const saleReceipt = await SaleReceipt.query()
-      .insertGraph({
+      .insertGraphAndFetch({
         ...omit(saleReceiptObj, ['entries']),
 
         entries: saleReceiptObj.entries.map((entry) => ({
@@ -133,7 +133,7 @@ export default class SalesReceiptService {
     await this.itemsEntriesService.validateNonSellableEntriesItems(tenantId, saleReceiptDTO.entries);
 
     const saleReceipt = await SaleReceipt.query()
-      .upsertGraph({
+      .upsertGraphAndFetch({
         id: saleReceiptId,
         ...omit(saleReceiptObj, ['entries']),
 
