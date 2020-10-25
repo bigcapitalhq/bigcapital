@@ -14,16 +14,17 @@ import moment from 'moment';
 import { momentFormatter, compose, tansformDateValue } from 'utils';
 import classNames from 'classnames';
 import {
-  AccountsSelectList,
   ListSelect,
   ErrorMessage,
   FieldRequiredHint,
-  Hint,
+  Icon,
+  InputPrependButton,
 } from 'components';
 
 // import withCustomers from 'containers/Customers/withCustomers';
 import withVendors from 'containers/Vendors/withVendors';
 import withAccounts from 'containers/Accounts/withAccounts';
+import withDialogActions from 'containers/Dialog/withDialogActions';
 
 function BillFormHeader({
   formik: { errors, touched, setFieldValue, getFieldProps, values },
@@ -33,6 +34,9 @@ function BillFormHeader({
   vendorItems,
   //#withAccouts
   accountsList,
+
+  // #withDialog
+  openDialog,
 }) {
   const handleDateChange = useCallback(
     (date_filed) => (date) => {
@@ -76,6 +80,10 @@ function BillFormHeader({
     }
   };
 
+  const handleBillNumberChange = useCallback(() => {
+    openDialog('bill-number-form', {});
+  }, [openDialog]);
+
   return (
     <div className="page-form page-form--bill">
       <div className={'page-form__primary-section'}>
@@ -91,7 +99,7 @@ function BillFormHeader({
           }
         >
           <ListSelect
-            items={vendorsCurrentPage}
+            items={vendorItems}
             noResults={<MenuItem disabled={true} text="No results." />}
             itemRenderer={vendorNameRenderer}
             itemPredicate={filterVendorAccount}
@@ -146,7 +154,7 @@ function BillFormHeader({
         <FormGroup
           label={<T id={'bill_number'} />}
           inline={true}
-          className={('form-group--estimate', Classes.FILL)}
+          className={('form-group--bill_number', Classes.FILL)}
           labelInfo={<FieldRequiredHint />}
           intent={errors.bill_number && touched.bill_number && Intent.DANGER}
           helperText={
@@ -156,6 +164,19 @@ function BillFormHeader({
           <InputGroup
             intent={errors.bill_number && touched.bill_number && Intent.DANGER}
             minimal={true}
+            rightElement={
+              <InputPrependButton
+                buttonProps={{
+                  onClick: handleBillNumberChange,
+                  icon: <Icon icon={'settings-18'} />,
+                }}
+                tooltip={true}
+                tooltipProps={{
+                  content: 'Setting your auto-generated bill number',
+                  position: Position.BOTTOM_LEFT,
+                }}
+              />
+            }
             {...getFieldProps('bill_number')}
           />
         </FormGroup>
@@ -185,4 +206,5 @@ export default compose(
   withAccounts(({ accountsList }) => ({
     accountsList,
   })),
+  withDialogActions,
 )(BillFormHeader);

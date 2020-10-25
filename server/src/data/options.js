@@ -1,58 +1,66 @@
-
-
 export default {
   organization: [
     {
-      key: 'name',
-      type: 'string',
+      key: "name",
+      type: "string",
       config: true,
     },
     {
-      key: 'base_currency',
-      type: 'string',
+      key: "base_currency",
+      type: "string",
       config: true,
     },
     {
-      key: 'industry',
-      type: 'string',
+      key: "industry",
+      type: "string",
     },
     {
-      key: 'location',
-      type: 'string',
+      key: "location",
+      type: "string",
     },
     {
-      key: 'fiscal_year',
-      type: 'string',
+      key: "fiscal_year",
+      type: "string",
       // config: true,
     },
     {
-      key: 'financial_date_start',
-      type: 'string',
+      key: "financial_date_start",
+      type: "string",
     },
     {
-      key: 'language',
-      type: 'string',
+      key: "language",
+      type: "string",
       config: true,
     },
-    { 
-      key: 'time_zone',
-      type: 'string',
+    {
+      key: "time_zone",
+      type: "string",
       // config: true,
     },
     {
-      key: 'date_format',
-      type: 'string',
+      key: "date_format",
+      type: "string",
       // config: true,
     },
   ],
   manual_journals: [
     {
-      key: 'next_number',
-      type: 'number',
+      key: "next_number",
+      type: "number",
     },
     {
-      key: 'number_prefix',
-      type: 'string',
+      key: "number_prefix",
+      type: "string",
     },
-  ]
+  ],
+  bills: [
+    {
+      key: "next_number",
+      type: "number",
+    },
+    {
+      key: "number_prefix",
+      type: "string",
+    },
+  ],
 };

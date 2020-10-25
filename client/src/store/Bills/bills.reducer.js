@@ -12,6 +12,7 @@ const initialState = {
     page_size: 5,
     page: 1,
   },
+  nextBillNumberChanged: false,
 };
 
 const defaultBill = {
@@ -97,6 +98,11 @@ const reducer = createReducer(initialState, {
         paginationMeta,
       },
     };
+  },
+  
+  [t.BILL_NUMBER_CHANGED]: (state, action) => {
+    const { isChanged } = action.payload;
+    state.nextBillNumberChanged = isChanged;
   },
 });
 

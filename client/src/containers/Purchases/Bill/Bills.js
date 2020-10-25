@@ -9,6 +9,7 @@ import withVendorActions from 'containers/Vendors/withVendorActions';
 import withAccountsActions from 'containers/Accounts/withAccountsActions';
 import withItemsActions from 'containers/Items/withItemsActions';
 import withBillActions from './withBillActions';
+import withSettingsActions from 'containers/Settings/withSettingsActions';
 
 import { compose } from 'utils';
 
@@ -24,6 +25,9 @@ function Bills({
 
   //# withBilleActions
   requestFetchBill,
+
+  // #withSettingsActions
+  requestFetchOptions,
 }) {
   const history = useHistory();
   const { id } = useParams();
@@ -40,6 +44,8 @@ function Bills({
 
   // Handle fetch Items data table or list
   const fetchItems = useQuery('items-list', () => requestFetchItems({}));
+
+  const fetchSettings = useQuery(['settings'], () => requestFetchOptions({}));
 
   const handleFormSubmit = useCallback(
     (payload) => {
@@ -82,4 +88,5 @@ export default compose(
   withVendorActions,
   withItemsActions,
   withAccountsActions,
+  withSettingsActions,
 )(Bills);

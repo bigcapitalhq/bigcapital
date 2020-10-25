@@ -211,7 +211,7 @@ export default {
   once_delete_this_item_you_will_able_to_restore_it: `Once you delete this item, you won\'t be able to restore the item later. Are you sure you want to delete ?<br /><br />If you're not sure, you can inactivate it instead.`,
   the_item_has_been_successfully_deleted:
     'The item has been successfully deleted.',
-    the_item_has_been_successfully_edited:
+  the_item_has_been_successfully_edited:
     'The item #{number} has been successfully edited.',
   the_item_category_has_been_successfully_created:
     'The item category has been successfully created.',
@@ -777,4 +777,5 @@ export default {
   prefix: 'Prefix',
   next_number: 'Next Number',
   journal_number_settings: 'Journal number settings',
+  bill_number_settings: 'Bill number settings',
 };

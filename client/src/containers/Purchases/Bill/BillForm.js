@@ -20,8 +20,10 @@ import BillFormFooter from './BillFormFooter';
 
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withMediaActions from 'containers/Media/withMediaActions';
+import withBills from './withBills';
 import withBillActions from './withBillActions';
 import withBillDetail from './withBillDetail';
+import withSettings from 'containers/Settings/withSettings';
 
 import { AppToaster } from 'components';
 import Dragzone from 'components/Dragzone';
@@ -29,7 +31,7 @@ import useMedia from 'hooks/useMedia';
 
 import { compose, repeatValue } from 'utils';
 
-const MIN_LINES_NUMBER = 4;
+const MIN_LINES_NUMBER = 5;
 
 function BillForm({
   //#WithMedia
@@ -39,10 +41,17 @@ function BillForm({
   //#withBillActions
   requestSubmitBill,
   requestEditBill,
+  setBillNumberChanged,
 
   //#withDashboard
   changePageTitle,
-  changePageSubtitle,
+
+  // #withBills
+  nextBillNumberChanged,
+
+  // #withSettings
+  billNextNumber,
+  billNumberPrefix,
 
   //#withBillDetail
   bill,
@@ -83,7 +92,6 @@ function BillForm({
     }
   }, [changePageTitle, bill, formatMessage]);
 
-  // @todo abstruct validation schema to sperated file.
   const validationSchema = Yup.object().shape({
     vendor_id: Yup.number()
       .required()
@@ -94,11 +102,11 @@ function BillForm({
     due_date: Yup.date()
       .required()
       .label(formatMessage({ id: 'due_date_' })),
-    bill_number: Yup.number()
+    bill_number: Yup.string()
       .required()
       .label(formatMessage({ id: 'bill_number_' })),
-    reference_no: Yup.string().min(1).max(255),
-    status: Yup.string().required().nullable(),
+    reference_no: Yup.string().nullable().min(1).max(255),
+    // status: Yup.string().required().nullable(),
     note: Yup.string()
       .trim()
       .min(1)
@@ -128,27 +136,34 @@ function BillForm({
     [onFormSubmit],
   );
 
-  const defaultBill = useMemo(() => ({
-    index: 0,
-    item_id: null,
-    rate: null,
-    discount: 0,
-    quantity: null,
-    description: '',
-  }));
+  const defaultBill = useMemo(
+    () => ({
+      index: 0,
+      item_id: null,
+      rate: null,
+      discount: 0,
+      quantity: null,
+      description: '',
+    }),
+    [],
+  );
+
+  const billNumber = billNumberPrefix
+    ? `${billNumberPrefix}-${billNextNumber}`
+    : billNextNumber;
 
   const defaultInitialValues = useMemo(
     () => ({
       vendor_id: '',
-      bill_number: '',
+      bill_number: billNumber,
       bill_date: moment(new Date()).format('YYYY-MM-DD'),
       due_date: moment(new Date()).format('YYYY-MM-DD'),
-      status: 'Bill',
+      // status: 'Bill',
       reference_no: '',
       note: '',
       entries: [...repeatValue(defaultBill, MIN_LINES_NUMBER)],
     }),
-    [defaultBill],
+    [defaultBill, billNumber],
   );
 
   const orderingIndex = (_bill) => {
@@ -209,9 +224,12 @@ function BillForm({
         requestEditBill(bill.id, requestForm)
           .then((response) => {
             AppToaster.show({
-              message: formatMessage({
-                id: 'the_bill_has_been_successfully_edited',
-              }),
+              message: formatMessage(
+                {
+                  id: 'the_bill_has_been_successfully_edited',
+                },
+                { number: values.bill_number },
+              ),
               intent: Intent.SUCCESS,
             });
             setSubmitting(false);
@@ -242,10 +260,16 @@ function BillForm({
     },
   });
 
+  useEffect(() => {
+    formik.setFieldValue('bill_number', billNumber);
+    setBillNumberChanged(false);
+  }, [nextBillNumberChanged, billNumber]);
+
   const handleSubmitClick = useCallback(
     (payload) => {
       setPayload(payload);
       formik.submitForm();
+      formik.setSubmitting(false);
     },
     [setPayload, formik],
   );
@@ -315,6 +339,7 @@ function BillForm({
         formik={formik}
         onSubmitClick={handleSubmitClick}
         bill={bill}
+        disabled={formik.isSubmitting}
         onCancelClick={handleCancelClick}
       />
     </div>
@@ -323,7 +348,12 @@ function BillForm({
 
 export default compose(
   withBillActions,
+  withBillDetail(),
+  withBills(({ nextBillNumberChanged }) => ({ nextBillNumberChanged })),
   withDashboardActions,
   withMediaActions,
-  withBillDetail(),
+  withSettings(({ billsettings }) => ({
+    billNextNumber: billsettings?.next_number,
+    billNumberPrefix: billsettings?.number_prefix,
+  })),
 )(BillForm);

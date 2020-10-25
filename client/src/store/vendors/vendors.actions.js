@@ -17,7 +17,7 @@ export const fetchVendorsTable = ({ query }) => {
             payload: {
               vendors: response.data.vendors,
               pagination: response.data.pagination,
-              customViewId: response.data.customViewId,
+              customViewId: response.data.customViewId || -1,
             },
           });
           dispatch({

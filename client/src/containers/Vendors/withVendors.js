@@ -16,7 +16,7 @@ export default (mapState) => {
     const mapped = {
       vendorsCurrentPage: getVendorsItems(state, props, query),
       vendorViews: getResourceViews(state, props, 'vendors'),
-      vendorItems: state.vendors.items,
+      vendorItems: Object.values(state.vendors.items),
       vendorTableQuery: query,
       vendorsPageination: getVendorsPaginationMeta(state, props, query),
       vendorsLoading: state.vendors.loading,
