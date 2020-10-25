@@ -123,6 +123,4 @@ export default class SaleInvoice extends TenantModel {
       .where('id', invoiceId)
       [changeMethod]('payment_amount', Math.abs(amount));      
   }
-
-
 }

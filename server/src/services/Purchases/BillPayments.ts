@@ -316,7 +316,9 @@ export default class BillPaymentsService {
         ...omit(billPaymentObj, ['entries']),
         entries: billPaymentDTO.entries,
       });
-    await this.eventDispatcher.dispatch(events.billPayments.onEdited);
+    await this.eventDispatcher.dispatch(events.billPayments.onEdited, {
+      tenantId, billPaymentId, billPayment, oldPaymentMade,
+    });
     this.logger.info('[bill_payment] edited successfully.', { tenantId, billPaymentId, billPayment, oldPaymentMade });
 
     return billPayment;

@@ -20,7 +20,7 @@ export default class PaymentMadesSubscriber {
    * Handles bills payment amount increment once payment made created.
    */
   @On(events.billPayments.onCreated)
-  async handleBillsIncrement({ tenantId, billPayment, billPaymentId }) {
+  async handleBillsIncrementPaymentAmount({ tenantId, billPayment, billPaymentId }) {
     const { Bill } = this.tenancy.models(tenantId);
     const storeOpers = [];
 

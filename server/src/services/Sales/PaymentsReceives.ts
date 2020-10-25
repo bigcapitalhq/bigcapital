@@ -1,4 +1,4 @@
-import { omit, sumBy, chain } from 'lodash';
+import { omit, sumBy, chain, difference } from 'lodash';
 import moment from 'moment';
 import { Service, Inject } from 'typedi';
 import {
@@ -6,18 +6,35 @@ import {
   EventDispatcherInterface,
 } from 'decorators/eventDispatcher';
 import events from 'subscribers/events';
-import { IPaymentReceiveOTD } from 'interfaces';
+import {
+  IAccount,
+  IFilterMeta,
+  IPaginationMeta,
+  IPaymentReceive,
+  IPaymentReceiveDTO,
+  IPaymentReceiveEntryDTO,
+  IPaymentReceivesFilter,
+  ISaleInvoice
+} from 'interfaces';
 import AccountsService from 'services/Accounts/AccountsService';
 import JournalPoster from 'services/Accounting/JournalPoster';
 import JournalEntry from 'services/Accounting/JournalEntry';
 import JournalPosterService from 'services/Sales/JournalPosterService';
-import ServiceItemsEntries from 'services/Sales/ServiceItemsEntries';
-import PaymentReceiveEntryRepository from 'repositories/PaymentReceiveEntryRepository';
-import CustomerRepository from 'repositories/CustomerRepository';
 import TenancyService from 'services/Tenancy/TenancyService';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import { formatDateFields } from 'utils';
+import { ServiceError } from 'exceptions';
+import CustomersService from 'services/Contacts/CustomersService';
+import ItemsEntriesService from 'services/Items/ItemsEntriesService';
 
+const ERRORS = {
+  PAYMENT_RECEIVE_NO_EXISTS: 'PAYMENT_RECEIVE_NO_EXISTS',
+  PAYMENT_RECEIVE_NOT_EXISTS: 'PAYMENT_RECEIVE_NOT_EXISTS',
+  DEPOSIT_ACCOUNT_NOT_FOUND: 'DEPOSIT_ACCOUNT_NOT_FOUND',
+  DEPOSIT_ACCOUNT_NOT_CURRENT_ASSET_TYPE: 'DEPOSIT_ACCOUNT_NOT_CURRENT_ASSET_TYPE',
+  INVALID_PAYMENT_AMOUNT: 'INVALID_PAYMENT_AMOUNT',
+  INVOICES_IDS_NOT_FOUND: 'INVOICES_IDS_NOT_FOUND'
+};
 /**
  * Payment receive service.
  * @service
@@ -26,6 +43,12 @@ import { formatDateFields } from 'utils';
 export default class PaymentReceiveService {
   @Inject()
   accountsService: AccountsService;
+
+  @Inject()
+  customersService: CustomersService;
+
+  @Inject()
+  itemsEntries: ItemsEntriesService;
 
   @Inject()
   tenancy: TenancyService;
@@ -42,112 +65,88 @@ export default class PaymentReceiveService {
   @EventDispatcher()
   eventDispatcher: EventDispatcherInterface;
 
-
-
   /**
    * Validates the payment receive number existance.
-   * @param {Request} req
-   * @param {Response} res
-   * @param {Function} next
+   * @param {number} tenantId - 
+   * @param {string} paymentReceiveNo - 
    */
-  async validatePaymentReceiveNoExistance(req: Request, res: Response, next: Function) {
-    const tenantId = req.tenantId;
-    const isPaymentNoExists = await this.paymentReceiveService.isPaymentReceiveNoExists(
-      tenantId,
-      req.body.payment_receive_no,
-      req.params.id,
-    );
-    if (isPaymentNoExists) {
-      return res.status(400).send({
-        errors: [{ type: 'PAYMENT.RECEIVE.NUMBER.EXISTS', code: 400 }],
+  async validatePaymentReceiveNoExistance(
+    tenantId: number,
+    paymentReceiveNo: string,
+    notPaymentReceiveId?: number
+  ): Promise<void> {
+    const { PaymentReceive } = this.tenancy.models(tenantId);
+    const paymentReceive = await PaymentReceive.query().findOne('payment_receive_no', paymentReceiveNo)
+      .onBuild((builder) => {
+        if (notPaymentReceiveId) {
+          builder.whereNot('id', notPaymentReceiveId);
+        }
       });
+
+    if (paymentReceive) {
+      throw new ServiceError(ERRORS.PAYMENT_RECEIVE_NO_EXISTS);
     }
-    next();
   }
 
   /**
    * Validates the payment receive existance.
-   * @param {Request} req
-   * @param {Response} res
-   * @param {Function} next
+   * @param {number} tenantId - 
+   * @param {number} paymentReceiveId - 
    */
-  async validatePaymentReceiveExistance(req: Request, res: Response, next: Function) {
-    const tenantId = req.tenantId;
-    const isPaymentNoExists = await this.paymentReceiveService
-      .isPaymentReceiveExists(
-        tenantId,
-        req.params.id
-      );
-    if (!isPaymentNoExists) {
-      return res.status(400).send({
-        errors: [{ type: 'PAYMENT.RECEIVE.NOT.EXISTS', code: 600 }],
-      });
+  async getPaymentReceiveOrThrowError(
+    tenantId: number,
+    paymentReceiveId: number
+  ): Promise<IPaymentReceive> {
+    const { PaymentReceive } = this.tenancy.models(tenantId);
+    const paymentReceive = await PaymentReceive.query()
+      .withGraphFetched('entries')
+      .findById(paymentReceiveId);
+
+    if (!paymentReceive) {
+      throw new ServiceError(ERRORS.PAYMENT_RECEIVE_NOT_EXISTS);
     }
-    next();
+    return paymentReceive;
   }
 
   /**
    * Validate the deposit account id existance.
-   * @param {Request} req
-   * @param {Response} res
-   * @param {Function} next
+   * @param {number} tenantId - 
+   * @param {number} depositAccountId - 
    */
-  async validateDepositAccount(req: Request, res: Response, next: Function) {
-    const tenantId = req.tenantId;
-    const isDepositAccExists = await this.accountsService.isAccountExists(
-      tenantId,
-      req.body.deposit_account_id
-    );
-    if (!isDepositAccExists) {
-      return res.status(400).send({
-        errors: [{ type: 'DEPOSIT.ACCOUNT.NOT.EXISTS', code: 300 }],
-      });
+  async getDepositAccountOrThrowError(tenantId: number, depositAccountId: number): Promise<IAccount> {
+    const { accountTypeRepository, accountRepository } = this.tenancy.repositories(tenantId);
+
+    const currentAssetTypes = await accountTypeRepository.getByChildType('current_asset');
+    const depositAccount = await accountRepository.findById(depositAccountId);
+
+    const currentAssetTypesIds = currentAssetTypes.map(type => type.id);
+
+    if (!depositAccount) {
+      throw new ServiceError(ERRORS.DEPOSIT_ACCOUNT_NOT_FOUND);
     }
-    next();
-  }
-
-  /**
-   * Validates the `customer_id` existance.
-   * @param {Request} req
-   * @param {Response} res
-   * @param {Function} next
-   */
-  async validateCustomerExistance(req: Request, res: Response, next: Function) {
-    const  { Customer } = req.models;
-
-    const isCustomerExists = await Customer.query().findById(req.body.customer_id);
-
-    if (!isCustomerExists) {
-      return res.status(400).send({
-        errors: [{ type: 'CUSTOMER.ID.NOT.EXISTS', code: 200 }],
-      });
+    if (currentAssetTypesIds.indexOf(depositAccount.accountTypeId) === -1) {
+      throw new ServiceError(ERRORS.DEPOSIT_ACCOUNT_NOT_CURRENT_ASSET_TYPE);
     }
-    next();
+    return depositAccount;
   }
-
+ 
   /**
    * Validates the invoices IDs existance.
-   * @param {Request} req -
-   * @param {Response} res -
-   * @param {Function} next -
+   * @param {number} tenantId - 
+   * @param {} paymentReceiveEntries -
    */
-  async validateInvoicesIDs(req: Request, res: Response, next: Function) {
-    const paymentReceive = { ...req.body };
-    const { tenantId } = req;
-    const invoicesIds = paymentReceive.entries
-      .map((e) => e.invoice_id);
+  async validateInvoicesIDsExistance(tenantId: number, paymentReceiveEntries: any): Promise<void> {
+    const { SaleInvoice } = this.tenancy.models(tenantId);
 
-    const notFoundInvoicesIDs = await this.saleInvoiceService.isInvoicesExist(
-      tenantId,
-      invoicesIds,
-      paymentReceive.customer_id,
-    );
+    const invoicesIds = paymentReceiveEntries.map((e) => e.invoiceId);
+    const storedInvoices = await SaleInvoice.query().whereIn('id', invoicesIds);
+    const storedInvoicesIds = storedInvoices.map((invoice) => invoice.id);
+
+    const notFoundInvoicesIDs = difference(invoicesIds, storedInvoicesIds);
+
     if (notFoundInvoicesIDs.length > 0) {
-      return res.status(400).send({
-        errors: [{ type: 'INVOICES.IDS.NOT.FOUND', code: 500 }],
-      });
+      throw new ServiceError(ERRORS.INVOICES_IDS_NOT_FOUND);
     }
-    next();
   }
 
   /**
@@ -156,69 +155,30 @@ export default class PaymentReceiveService {
    * @param {Response} res -
    * @param {Function} next -
    */
-  async validateInvoicesPaymentsAmount(req: Request, res: Response, next: Function) {
-    const { SaleInvoice } = req.models;
-    const invoicesIds = req.body.entries.map((e) => e.invoice_id);
+  async validateInvoicesPaymentsAmount(tenantId: number, paymentReceiveEntries: IPaymentReceiveEntryDTO[]) {
+    const { SaleInvoice } = this.tenancy.models(tenantId);
+    const invoicesIds = paymentReceiveEntries.map((e: IPaymentReceiveEntryDTO) => e.invoiceId);
 
-    const storedInvoices = await SaleInvoice.query()
-      .whereIn('id', invoicesIds);
+    const storedInvoices = await SaleInvoice.query().whereIn('id', invoicesIds);
 
     const storedInvoicesMap = new Map(
-      storedInvoices.map((invoice) => [invoice.id, invoice])
+      storedInvoices.map((invoice: ISaleInvoice) => [invoice.id, invoice])
     );
     const hasWrongPaymentAmount: any[] = [];
 
-    req.body.entries.forEach((entry, index: number) => {
-      const entryInvoice = storedInvoicesMap.get(entry.invoice_id);
+    paymentReceiveEntries.forEach((entry: IPaymentReceiveEntryDTO, index: number) => {
+      const entryInvoice = storedInvoicesMap.get(entry.invoiceId);
       const { dueAmount } = entryInvoice;
 
-      if (dueAmount < entry.payment_amount) {
+      if (dueAmount < entry.paymentAmount) {
         hasWrongPaymentAmount.push({ index, due_amount: dueAmount });
       }
     });
     if (hasWrongPaymentAmount.length > 0) {
-      return res.status(400).send({
-        errors: [
-          {
-            type: 'INVOICE.PAYMENT.AMOUNT',
-            code: 200,
-            indexes: hasWrongPaymentAmount,
-          },
-        ],
-      });
+      throw new ServiceError(ERRORS.INVALID_PAYMENT_AMOUNT);
     }
-    next();
   }
-
-  /**
-   * Validate the payment receive entries IDs existance. 
-   * @param {Request} req 
-   * @param {Response} res 
-   * @return {Response}
-   */
-  async validateEntriesIdsExistance(req: Request, res: Response, next: Function) {
-    const paymentReceive = { id: req.params.id, ...req.body };
-    const entriesIds = paymentReceive.entries
-      .filter(entry => entry.id)
-      .map(entry => entry.id);
-
-    const { PaymentReceiveEntry } = req.models;
-
-    const storedEntries = await PaymentReceiveEntry.query()
-      .where('payment_receive_id', paymentReceive.id);
-
-    const storedEntriesIds = storedEntries.map((entry) => entry.id);    
-    const notFoundEntriesIds = difference(entriesIds, storedEntriesIds);
-
-    if (notFoundEntriesIds.length > 0) {
-      return res.status(400).send({
-        errors: [{ type: 'ENTEIES.IDS.NOT.FOUND', code: 800 }],
-      });
-    }
-    next();
-  }
-
-
+ 
   /**
    * Creates a new payment receive and store it to the storage
    * with associated invoices payment and journal transactions.
@@ -226,61 +186,42 @@ export default class PaymentReceiveService {
    * @param {number} tenantId - Tenant id.
    * @param {IPaymentReceive} paymentReceive
    */
-  public async createPaymentReceive(tenantId: number, paymentReceive: IPaymentReceiveOTD) {
-    const {
-      PaymentReceive,
-      PaymentReceiveEntry,
-      SaleInvoice,
-      Customer,
-    } = this.tenancy.models(tenantId);
+  public async createPaymentReceive(tenantId: number, paymentReceiveDTO: IPaymentReceiveDTO) {
+    const { PaymentReceive } = this.tenancy.models(tenantId);
+    const paymentAmount = sumBy(paymentReceiveDTO.entries, 'paymentAmount');
 
-    const paymentAmount = sumBy(paymentReceive.entries, 'payment_amount');
+    // Validate payment receive number uniquiness.
+    await this.validatePaymentReceiveNoExistance(tenantId, paymentReceiveDTO.paymentReceiveNo);
+
+    // Validate customer existance.
+    await this.customersService.getCustomerByIdOrThrowError(tenantId, paymentReceiveDTO.customerId);
+
+    // Validate the deposit account existance and type.
+    await this.getDepositAccountOrThrowError(tenantId, paymentReceiveDTO.depositAccountId);
+
+    // Validate payment receive invoices IDs existance.
+    await this.validateInvoicesIDsExistance(tenantId, paymentReceiveDTO.entries);
+
+    // Validate invoice payment amount.
+    await this.validateInvoicesPaymentsAmount(tenantId, paymentReceiveDTO.entries);
 
     this.logger.info('[payment_receive] inserting to the storage.');
-    const storedPaymentReceive = await PaymentReceive.query()
-      .insertGraph({
+    const paymentReceive = await PaymentReceive.query()
+      .insertGraphAndFetch({
         amount: paymentAmount,
-        ...formatDateFields(omit(paymentReceive, ['entries']), ['payment_date']),
-        entries: paymentReceive.entries.map((entry) => ({ ...entry })),
+        ...formatDateFields(omit(paymentReceiveDTO, ['entries']), ['paymentDate']),
+
+        entries: paymentReceiveDTO.entries.map((entry) => ({
+          ...omit(entry, ['id']),
+        })),
       });
-    const storeOpers: Array<any> = [];
 
-    this.logger.info('[payment_receive] inserting associated entries to the storage.');
-    paymentReceive.entries.forEach((entry: any) => {
-      const oper = PaymentReceiveEntry.query()
-        .insert({
-          payment_receive_id: storedPaymentReceive.id,
-          ...entry,
-        });
-
-      this.logger.info('[payment_receive] increment the sale invoice payment amount.');
-      // Increment the invoice payment amount.
-      const invoice = SaleInvoice.query()
-        .where('id', entry.invoice_id)
-        .increment('payment_amount', entry.payment_amount);
-
-      storeOpers.push(oper);
-      storeOpers.push(invoice);
+    await this.eventDispatcher.dispatch(events.paymentReceipts.onCreated, {
+      tenantId, paymentReceive, paymentReceiveId: paymentReceive.id,
     });
+    this.logger.info('[payment_receive] updated successfully.', { tenantId, paymentReceive });
 
-    this.logger.info('[payment_receive] decrementing customer balance.');
-    const customerIncrementOper = Customer.decrementBalance(
-      paymentReceive.customer_id,
-      paymentAmount,
-    );
-    // Records the sale invoice journal transactions.
-    const recordJournalTransactions = this.recordPaymentReceiveJournalEntries(tenantId,{
-      id: storedPaymentReceive.id,
-      ...paymentReceive,
-    });
-    await Promise.all([
-      ...storeOpers,
-      customerIncrementOper,
-      recordJournalTransactions,
-    ]);
-    await this.eventDispatcher.dispatch(events.paymentReceipts.onCreated);
-
-    return storedPaymentReceive;
+    return paymentReceive;
   }
 
   /**
@@ -297,84 +238,52 @@ export default class PaymentReceiveService {
    * @param {number} tenantId - 
    * @param {Integer} paymentReceiveId -
    * @param {IPaymentReceive} paymentReceive -
-   * @param {IPaymentReceive} oldPaymentReceive -
    */
   public async editPaymentReceive(
     tenantId: number,
     paymentReceiveId: number,
-    paymentReceive: any,
-    oldPaymentReceive: any
+    paymentReceiveDTO: any,
   ) {
     const { PaymentReceive } = this.tenancy.models(tenantId);
+    const paymentAmount = sumBy(paymentReceiveDTO.entries, 'paymentAmount');
 
-    const paymentAmount = sumBy(paymentReceive.entries, 'payment_amount');
+    this.logger.info('[payment_receive] trying to edit payment receive.', { tenantId, paymentReceiveId, paymentReceiveDTO });
+
+    // Validate the payment receive existance.
+    const oldPaymentReceive = await this.getPaymentReceiveOrThrowError(tenantId, paymentReceiveId);
+
+    // Validate payment receive number uniquiness.
+    await this.validatePaymentReceiveNoExistance(tenantId, paymentReceiveDTO.paymentReceiveNo, paymentReceiveId);
+
+    // Validate the deposit account existance and type.
+    this.getDepositAccountOrThrowError(tenantId, paymentReceiveDTO.depositAccountId);
+
+    // Validate customer existance.
+    await this.customersService.getCustomerByIdOrThrowError(tenantId, paymentReceiveDTO.customerId);
+
+    // Validate the entries ids existance on payment receive type.
+    await this.itemsEntries.validateEntriesIdsExistance(
+      tenantId, paymentReceiveId, 'PaymentReceive', paymentReceiveDTO.entries
+    );
+    // Validate payment receive invoices IDs existance.
+    await this.validateInvoicesIDsExistance(tenantId, paymentReceiveDTO.entries);
+
+    // Validate invoice payment amount.
+    await this.validateInvoicesPaymentsAmount(tenantId, paymentReceiveDTO.entries);
+
     // Update the payment receive transaction.
-    const updatePaymentReceive = await PaymentReceive.query()
-      .where('id', paymentReceiveId)
-      .update({
+    const paymentReceive = await PaymentReceive.query()
+      .upsertGraphAndFetch({
+        id: paymentReceiveId,
         amount: paymentAmount,
-        ...formatDateFields(omit(paymentReceive, ['entries']), ['payment_date']),
+        ...formatDateFields(omit(paymentReceiveDTO, ['entries']), ['paymentDate']),
+        entries: paymentReceiveDTO.entries,
       });
-    const opers = [];
-    const entriesIds = paymentReceive.entries.filter((i: any) => i.id);
-    const entriesShouldInsert = paymentReceive.entries.filter((i: any) => !i.id);
 
-    // Detarmines which entries ids should be deleted.
-    const entriesIdsShouldDelete = ServiceItemsEntries.entriesShouldDeleted(
-      oldPaymentReceive.entries,
-      entriesIds
-    );
-    if (entriesIdsShouldDelete.length > 0) {
-      // Deletes the given payment receive entries.
-      const deleteOper = PaymentReceiveEntryRepository.deleteBulk(
-        entriesIdsShouldDelete
-      );
-      opers.push(deleteOper);
-    }
-    // Entries that should be updated to the storage.
-    if (entriesIds.length > 0) {
-      const updateOper = PaymentReceiveEntryRepository.updateBulk(entriesIds);
-      opers.push(updateOper);
-    }
-    // Entries should insert to the storage.
-    if (entriesShouldInsert.length > 0) {
-      const insertOper = PaymentReceiveEntryRepository.insertBulk(
-        entriesShouldInsert,
-        paymentReceiveId
-      );
-      opers.push(insertOper);
-    }
-    // Re-write the journal transactions of the given payment receive.
-    const recordJournalTransactions = this.recordPaymentReceiveJournalEntries(
-      tenantId,
-      {
-        id: oldPaymentReceive.id,
-        ...paymentReceive,
-      },
-      paymentReceiveId,
-    );
-    // Increment/decrement the customer balance after calc the diff
-    // between old and new value.
-    const changeCustomerBalance = CustomerRepository.changeDiffBalance(
-      paymentReceive.customer_id,
-      oldPaymentReceive.customerId,
-      paymentAmount * -1,
-      oldPaymentReceive.amount * -1,
-    );
-    // Change the difference between the old and new invoice payment amount.
-    const diffInvoicePaymentAmount = this.saveChangeInvoicePaymentAmount(
-      tenantId,
-      oldPaymentReceive.entries,
-      paymentReceive.entries
-    );
-    // Await the async operations.
-    await Promise.all([
-      ...opers,
-      recordJournalTransactions,
-      changeCustomerBalance,
-      diffInvoicePaymentAmount,
-    ]);
-    await this.eventDispatcher.dispatch(events.paymentReceipts.onEdited);
+    await this.eventDispatcher.dispatch(events.paymentReceipts.onEdited, {
+      tenantId, paymentReceiveId, paymentReceive, oldPaymentReceive
+    });
+    this.logger.info('[payment_receive] upserted successfully.', { tenantId, paymentReceiveId });
   }
 
   /**
@@ -392,43 +301,20 @@ export default class PaymentReceiveService {
    * @param {IPaymentReceive} paymentReceive - Payment receive object.
    */
   async deletePaymentReceive(tenantId: number, paymentReceiveId: number, paymentReceive: any) {
-    const { PaymentReceive, PaymentReceiveEntry, Customer } = this.tenancy.models(tenantId);
+    const { PaymentReceive, PaymentReceiveEntry } = this.tenancy.models(tenantId);
 
-    // Deletes the payment receive transaction.
-    await PaymentReceive.query()
-      .where('id', paymentReceiveId)
-      .delete();
+    const oldPaymentReceive = this.getPaymentReceiveOrThrowError(tenantId, paymentReceiveId);
 
     // Deletes the payment receive associated entries.
-    await PaymentReceiveEntry.query()
-      .where('payment_receive_id', paymentReceiveId)
-      .delete();
+    await PaymentReceiveEntry.query().where('payment_receive_id', paymentReceiveId).delete();
 
-    // Delete all associated journal transactions to payment receive transaction.
-    const deleteTransactionsOper = this.journalService.deleteJournalTransactions(
-      tenantId,
-      paymentReceiveId,
-      'PaymentReceive'
-    );
-    // Revert the customer balance.
-    const revertCustomerBalance = Customer.incrementBalance(
-      paymentReceive.customerId,
-      paymentReceive.amount
-    );
-    // Revert the invoices payments amount.
-    const revertInvoicesPaymentAmount = this.revertInvoicePaymentAmount(
-      tenantId,
-      paymentReceive.entries.map((entry: any) => ({
-        invoiceId: entry.invoiceId,
-        revertAmount: entry.paymentAmount,
-      }))
-    );
-    await Promise.all([
-      deleteTransactionsOper,
-      revertCustomerBalance,
-      revertInvoicesPaymentAmount,
-    ]);
-    await this.eventDispatcher.dispatch(events.paymentReceipts.onDeleted);
+    // Deletes the payment receive transaction.
+    await PaymentReceive.query().where('id', paymentReceiveId).delete();
+
+    await this.eventDispatcher.dispatch(events.paymentReceipts.onDeleted, {
+      tenantId, paymentReceiveId, oldPaymentReceive,
+    });
+    this.logger.info('[payment_receive] deleted successfully.', { tenantId, paymentReceiveId });
   }
 
   /**
@@ -439,9 +325,12 @@ export default class PaymentReceiveService {
   public async getPaymentReceive(tenantId: number, paymentReceiveId: number) {
     const { PaymentReceive } = this.tenancy.models(tenantId);
     const paymentReceive = await PaymentReceive.query()
-      .where('id', paymentReceiveId)
-      .withGraphFetched('entries.invoice')
-      .first();
+      .findById(paymentReceiveId)
+      .withGraphFetched('entries.invoice');
+    
+    if (!paymentReceive) {
+      throw new ServiceError(ERRORS.PAYMENT_RECEIVE_NOT_EXISTS);
+    }
     return paymentReceive;
   }
   
@@ -450,7 +339,10 @@ export default class PaymentReceiveService {
    * @param {number} tenantId 
    * @param {IPaymentReceivesFilter} paymentReceivesFilter 
    */
-  public async listPaymentReceives(tenantId: number, paymentReceivesFilter: IPaymentReceivesFilter) {
+  public async listPaymentReceives(
+    tenantId: number,
+    paymentReceivesFilter: IPaymentReceivesFilter,
+  ): Promise<{ paymentReceives: IPaymentReceive[], pagination: IPaginationMeta, filterMeta: IFilterMeta }> {
     const { PaymentReceive } = this.tenancy.models(tenantId);
     const dynamicFilter = await this.dynamicListService.dynamicList(tenantId, PaymentReceive, paymentReceivesFilter);
 
@@ -479,41 +371,6 @@ export default class PaymentReceiveService {
       .where('id', paymentReceiveId)
       .withGraphFetched('invoices')
       .first();
-  }
-
-  /**
-   * Detarmines whether the payment receive exists on the storage.
-   * @param {number} tenantId - Tenant id.
-   * @param {Integer} paymentReceiveId
-   */
-  async isPaymentReceiveExists(tenantId: number, paymentReceiveId: number) {
-    const { PaymentReceive } = this.tenancy.models(tenantId);
-    const paymentReceives = await PaymentReceive.query()
-      .where('id', paymentReceiveId);
-    return paymentReceives.length > 0;
-  }
-
-  /**
-   * Detarmines the payment receive number existance.
-   * @async
-   * @param {number} tenantId - Tenant id.
-   * @param {Integer} paymentReceiveNumber - Payment receive number.
-   * @param {Integer} paymentReceiveId - Payment receive id.
-   */
-  async isPaymentReceiveNoExists(
-    tenantId: number,
-    paymentReceiveNumber: string|number,
-    paymentReceiveId: number
-  ) {
-    const { PaymentReceive } = this.tenancy.models(tenantId);
-    const paymentReceives = await PaymentReceive.query()
-      .where('payment_receive_no', paymentReceiveNumber)
-      .onBuild((query) => {
-        if (paymentReceiveId) {
-          query.whereNot('id', paymentReceiveId);
-        }
-      });
-    return paymentReceives.length > 0;
   }
 
   /**
@@ -581,26 +438,6 @@ export default class PaymentReceiveService {
     ]);
   }
 
-  /**
-   * Revert the payment amount of the given invoices ids.
-   * @async
-   * @param {number} tenantId - Tenant id.
-   * @param {Array} revertInvoices
-   * @return {Promise}
-   */
-  private async revertInvoicePaymentAmount(tenantId: number, revertInvoices: any[]) {
-    const { SaleInvoice } = this.tenancy.models(tenantId);
-    const opers: Promise<T>[] = [];
-
-    revertInvoices.forEach((revertInvoice) => {
-      const { revertAmount, invoiceId } = revertInvoice;
-      const oper = SaleInvoice.query()
-        .where('id', invoiceId)
-        .decrement('payment_amount', revertAmount);
-      opers.push(oper);
-    });
-    await Promise.all(opers);
-  }
 
   /**
    * Saves difference changing between old and new invoice payment amount.
@@ -610,34 +447,35 @@ export default class PaymentReceiveService {
    * @param {Array} newPaymentReceiveEntries
    * @return 
    */
-  private async saveChangeInvoicePaymentAmount(
+  public async saveChangeInvoicePaymentAmount(
     tenantId: number,
-    paymentReceiveEntries: [],
-    newPaymentReceiveEntries: [],
-  ) {
+    newPaymentReceiveEntries: IPaymentReceiveEntryDTO[],
+    oldPaymentReceiveEntries?: IPaymentReceiveEntryDTO[],
+  ): Promise<void> {
     const { SaleInvoice } = this.tenancy.models(tenantId);
     const opers: Promise<T>[] = [];
-    const newEntriesTable = chain(newPaymentReceiveEntries)
-      .groupBy('invoice_id')
-      .mapValues((group) => (sumBy(group, 'payment_amount') || 0) * -1)
-      .value();
 
-    const diffEntries = chain(paymentReceiveEntries)
+    const oldEntriesTable = chain(oldPaymentReceiveEntries)
       .groupBy('invoiceId')
       .mapValues((group) => (sumBy(group, 'paymentAmount') || 0) * -1)
-      .mapValues((value, key) => value - (newEntriesTable[key] || 0))
-      .mapValues((value, key) => ({ invoice_id: key, payment_amount: value }))
-      .filter((entry) => entry.payment_amount != 0)
+      .value();
+
+    const diffEntries = chain(newPaymentReceiveEntries)
+      .groupBy('invoiceId')
+      .mapValues((group) => (sumBy(group, 'paymentAmount') || 0))
+      .mapValues((value, key) => value - (oldEntriesTable[key] || 0))
+      .mapValues((value, key) => ({ invoiceId: key, paymentAmount: value }))
+      .filter((entry) => entry.paymentAmount != 0)
       .values()
       .value();
 
     diffEntries.forEach((diffEntry: any) => {
       const oper = SaleInvoice.changePaymentAmount(
-        diffEntry.invoice_id,
-        diffEntry.payment_amount
+        diffEntry.invoiceId,
+        diffEntry.paymentAmount
       );
       opers.push(oper);
     });
-    return Promise.all([ ...opers ]);
+    await Promise.all([ ...opers ]);
   }
 }

@@ -41,7 +41,7 @@ export default class BillSubscriber {
   async handlerWriteJournalEntries({ tenantId, billId, bill }) {
     // Writes the journal entries for the given bill transaction.
     this.logger.info('[bill] writing bill journal entries.', { tenantId });
-    await this.billsService.recordJournalTransactions(tenantId, bill);
+    await this.billsService.recordJournalTransactions(tenantId, bill, billId);
   }
 
   /**
@@ -66,18 +66,20 @@ export default class BillSubscriber {
     await this.journalPosterService.revertJournalTransactions(tenantId, billId, 'Bill');
   }
 
-
+  /**
+   * Handles vendor balance difference change.
+   */
   @On(events.bills.onEdited)
-  async handleCustomerBalanceDiffChange({ tenantId, billId, oldBill, bill }) {
+  async handleVendorBalanceDiffChange({ tenantId, billId, oldBill, bill }) {
     const { vendorRepository } = this.tenancy.repositories(tenantId);
 
     // Changes the diff vendor balance between old and new amount.
     this.logger.info('[bill[ change vendor the different balance.', { tenantId, billId });
     await vendorRepository.changeDiffBalance(
       bill.vendorId,
-      oldBill.vendorId,
       bill.amount,
       oldBill.amount,
+      oldBill.vendorId,
     );
   }
 }

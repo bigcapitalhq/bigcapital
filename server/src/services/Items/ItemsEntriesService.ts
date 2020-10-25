@@ -46,15 +46,15 @@ export default class ItemsEntriesService {
    * @param {number} billId - 
    * @param {IItemEntry[]} billEntries -
    */
-  public async validateEntriesIdsExistance(tenantId: number, billId: number, modelName: string, billEntries: IItemEntryDTO[]) {
+  public async validateEntriesIdsExistance(tenantId: number, referenceId: number, referenceType: string, billEntries: IItemEntryDTO[]) {
     const { ItemEntry } = this.tenancy.models(tenantId);
     const entriesIds = billEntries
       .filter((e: IItemEntry) => e.id)
       .map((e: IItemEntry) => e.id);
 
     const storedEntries = await ItemEntry.query()
-      .whereIn('reference_id', [billId])
-      .whereIn('reference_type', [modelName]);
+      .whereIn('reference_id', [referenceId])
+      .whereIn('reference_type', [referenceType]);
 
     const storedEntriesIds = storedEntries.map((entry) => entry.id);
     const notFoundEntriesIds = difference(entriesIds, storedEntriesIds);

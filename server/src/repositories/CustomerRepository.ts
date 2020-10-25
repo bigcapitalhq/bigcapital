@@ -68,4 +68,36 @@ export default class CustomerRepository extends TenantRepository {
       .whereIn('id', customersIds)
       .withGraphFetched('salesInvoices');
   }
+
+  changeBalance(vendorId: number, amount: number) {
+    const { Contact } = this.models;
+    const changeMethod = (amount > 0) ? 'increment' : 'decrement';
+
+    return Contact.query()
+      .where('id', vendorId)
+      [changeMethod]('balance', Math.abs(amount));
+  }
+
+  async changeDiffBalance(
+    vendorId: number,
+    amount: number,
+    oldAmount: number,
+    oldVendorId?: number,
+  ) {
+    const diffAmount = amount - oldAmount;
+    const asyncOpers = [];
+    const _oldVendorId = oldVendorId || vendorId;
+
+    if (vendorId != _oldVendorId) {
+      const oldCustomerOper = this.changeBalance(_oldVendorId, (oldAmount * -1));
+      const customerOper = this.changeBalance(vendorId, amount);
+
+      asyncOpers.push(customerOper);
+      asyncOpers.push(oldCustomerOper);
+    } else {
+      const balanceChangeOper = this.changeBalance(vendorId, diffAmount);
+      asyncOpers.push(balanceChangeOper);
+    }
+    await Promise.all(asyncOpers);
+  }
 }

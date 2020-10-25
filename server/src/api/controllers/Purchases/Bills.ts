@@ -152,7 +152,11 @@ export default class BillsController extends BaseController {
 
     try {
       const storedBill = await this.billsService.createBill(tenantId, billDTO, user);
-      return res.status(200).send({ id: storedBill.id });
+
+      return res.status(200).send({
+        id: storedBill.id,
+        message: 'The bill has been created successfully.',
+      });
     } catch (error) {
       next(error);
     }
@@ -170,7 +174,10 @@ export default class BillsController extends BaseController {
 
     try {
       const editedBill = await this.billsService.editBill(tenantId, billId, billDTO);
-      return res.status(200).send({ id: billId });
+      return res.status(200).send({
+        id: billId,
+        message: 'The bill has been edited successfully.',
+      });
     } catch (error) {
       next(error);
     }

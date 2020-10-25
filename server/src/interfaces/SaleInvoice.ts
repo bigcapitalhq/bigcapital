@@ -13,6 +13,8 @@ export interface ISaleInvoiceOTD {
   invoiceDate: Date,
   dueDate: Date,
   referenceNo: string,
+  invoiceNo: string,
+  customerId: number,
   invoiceMessage: string,
   termsConditions: string,
   entries: IItemEntryDTO[],

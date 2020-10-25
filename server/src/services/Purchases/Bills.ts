@@ -184,7 +184,10 @@ export default class BillsService extends SalesInvoicesCost {
     await this.getVendorOrThrowError(tenantId, billDTO.vendorId);
     await this.validateBillNumberExists(tenantId, billDTO.billNumber);
 
+    // Validate items IDs existance.
     await this.itemsEntriesService.validateItemsIdsExistance(tenantId, billDTO.entries);
+
+    // Validate non-purchasable items.
     await this.itemsEntriesService.validateNonPurchasableEntriesItems(tenantId, billDTO.entries);
 
     const bill = await Bill.query()
@@ -232,7 +235,7 @@ export default class BillsService extends SalesInvoicesCost {
 
     this.logger.info('[bill] trying to edit bill.', { tenantId, billId });
     const oldBill = await this.getBillOrThrowError(tenantId, billId);
-    const billObj = this.billDTOToModel(tenantId, billDTO, oldBill);
+    const billObj = await this.billDTOToModel(tenantId, billDTO, oldBill);
 
     await this.getVendorOrThrowError(tenantId, billDTO.vendorId);
     await this.validateBillNumberExists(tenantId, billDTO.billNumber, billId);
@@ -242,7 +245,7 @@ export default class BillsService extends SalesInvoicesCost {
     await this.itemsEntriesService.validateNonPurchasableEntriesItems(tenantId, billDTO.entries);
 
     // Update the bill transaction.
-    const bill = await Bill.query().upsertGraph({
+    const bill = await Bill.query().upsertGraphAndFetch({
       id: billId,
       ...omit(billObj, ['entries', 'invLotNumber']),
 

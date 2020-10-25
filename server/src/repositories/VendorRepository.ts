@@ -68,13 +68,27 @@ export default class VendorRepository extends TenantRepository {
       [changeMethod]('balance', Math.abs(amount));
   }
 
-
-  changeDiffBalance(
+  
+  async changeDiffBalance(
     vendorId: number,
     amount: number,
     oldAmount: number,
     oldVendorId?: number,
   ) {
+    const diffAmount = amount - oldAmount;
+    const asyncOpers = [];
+    const _oldVendorId = oldVendorId || vendorId;
 
+    if (vendorId != _oldVendorId) {
+      const oldCustomerOper = this.changeBalance(_oldVendorId, (oldAmount * -1));
+      const customerOper = this.changeBalance(vendorId, amount);
+
+      asyncOpers.push(customerOper);
+      asyncOpers.push(oldCustomerOper);
+    } else {
+      const balanceChangeOper = this.changeBalance(vendorId, diffAmount);
+      asyncOpers.push(balanceChangeOper);
+    }
+    await Promise.all(asyncOpers);
   }
 }

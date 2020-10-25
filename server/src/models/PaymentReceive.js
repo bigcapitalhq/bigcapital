@@ -69,4 +69,17 @@ export default class PaymentReceive extends TenantModel {
       }
     };
   }
+
+  /**
+   * Model defined fields.
+   */
+  static get fields() {
+    return {
+      created_at: {
+        label: 'Created at',
+        column: 'created_at',
+        columnType: 'date',
+      },
+    };
+  }
 }

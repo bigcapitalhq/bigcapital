@@ -1,6 +1,5 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { check, param, query, matchedData } from 'express-validator';
-import { difference } from 'lodash';
+import { check, param, query } from 'express-validator';
 import { raw } from 'objection';
 import { Service, Inject } from 'typedi';
 import BaseController from '../BaseController';
@@ -8,6 +7,7 @@ import asyncMiddleware from 'api/middleware/asyncMiddleware';
 import SaleInvoiceService from 'services/Sales/SalesInvoices';
 import ItemsService from 'services/Items/ItemsService';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
+import { ServiceError } from 'exceptions';
 import { ISaleInvoiceOTD, ISalesInvoicesFilter } from 'interfaces';
 
 @Service()
@@ -31,11 +31,8 @@ export default class SaleInvoicesController extends BaseController{
       '/',
       this.saleInvoiceValidationSchema,
       this.validationResult,
-      asyncMiddleware(this.validateInvoiceCustomerExistance.bind(this)),
-      // asyncMiddleware(this.validateInvoiceNumberUnique.bind(this)),
-      asyncMiddleware(this.validateInvoiceItemsIdsExistance.bind(this)),
-      asyncMiddleware(this.validateNonSellableEntriesItems.bind(this)),
-      asyncMiddleware(this.newSaleInvoice.bind(this))
+      asyncMiddleware(this.newSaleInvoice.bind(this)),
+      this.handleServiceErrors,
     );
     router.post(
       '/:id',
@@ -44,39 +41,36 @@ export default class SaleInvoicesController extends BaseController{
         ...this.specificSaleInvoiceValidation,
       ],
       this.validationResult,
-      asyncMiddleware(this.validateInvoiceExistance.bind(this)),
-      asyncMiddleware(this.validateInvoiceCustomerExistance.bind(this)),
-      // asyncMiddleware(this.validateInvoiceNumberUnique.bind(this)),
-      asyncMiddleware(this.validateInvoiceItemsIdsExistance.bind(this)),
-      asyncMiddleware(this.valdiateInvoiceEntriesIdsExistance.bind(this)),
-      asyncMiddleware(this.validateEntriesIdsExistance.bind(this)),
-      asyncMiddleware(this.validateNonSellableEntriesItems.bind(this)),
-      asyncMiddleware(this.editSaleInvoice.bind(this))
+      asyncMiddleware(this.editSaleInvoice.bind(this)),
+      this.handleServiceErrors,
     );
     router.delete(
       '/:id',
       this.specificSaleInvoiceValidation,
       this.validationResult,
-      asyncMiddleware(this.validateInvoiceExistance.bind(this)),
-      asyncMiddleware(this.deleteSaleInvoice.bind(this))
+      asyncMiddleware(this.deleteSaleInvoice.bind(this)),
+      this.handleServiceErrors,
     );
     router.get(
       '/due_invoices',
       this.dueSalesInvoicesListValidationSchema,
       asyncMiddleware(this.getDueSalesInvoice.bind(this)),
+      this.handleServiceErrors,
     );
     router.get(
       '/:id',
       this.specificSaleInvoiceValidation,
       this.validationResult,
-      asyncMiddleware(this.validateInvoiceExistance.bind(this)),
-      asyncMiddleware(this.getSaleInvoice.bind(this))
+      asyncMiddleware(this.getSaleInvoice.bind(this)),
+      this.handleServiceErrors,
     );
     router.get(
       '/',
       this.saleInvoiceListValidationSchema,
       this.validationResult,
-      asyncMiddleware(this.getSalesInvoices.bind(this))
+      asyncMiddleware(this.getSalesInvoices.bind(this)),
+      this.handleServiceErrors,
+      this.dynamicListService.handlerErrorsToResponse,
     )
     return router;
   }
@@ -133,177 +127,8 @@ export default class SaleInvoicesController extends BaseController{
    */
   get dueSalesInvoicesListValidationSchema() {
     return [
-      query('customer_id').optional().isNumeric().toInt(), 
-    ]
-  }
-
-  /**
-   * Validate whether sale invoice customer exists on the storage.
-   * @param {Request} req
-   * @param {Response} res
-   * @param {Function} next
-   */
-  async validateInvoiceCustomerExistance(req: Request, res: Response, next: Function) {
-    const saleInvoice = { ...req.body };
-    const { Customer } = req.models;
-
-    const isCustomerIDExists = await Customer.query().findById(saleInvoice.customer_id);
-
-    if (!isCustomerIDExists) {
-      return res.status(400).send({
-        errors: [{ type: 'CUSTOMER.ID.NOT.EXISTS', code: 200 }],
-      });
-    }
-    next();
-  }
-
-  /**
-   * Validate whether sale invoice items ids esits on the storage.
-   * @param {Request} req - 
-   * @param {Response} res - 
-   * @param {Function} next - 
-   */
-  async validateInvoiceItemsIdsExistance(req: Request, res: Response, next: Function) {
-    const { tenantId } = req;
-    const saleInvoice = { ...req.body };
-    const entriesItemsIds = saleInvoice.entries.map((e) => e.item_id);
-    
-    const isItemsIdsExists = await this.itemsService.isItemsIdsExists(
-      tenantId, entriesItemsIds,
-    );
-    if (isItemsIdsExists.length > 0) {
-      return res.status(400).send({
-        errors: [{ type: 'ITEMS.IDS.NOT.EXISTS', code: 300 }],
-      });
-    }
-    next();
-  }
-
-  /**
-   * 
-   * Validate whether sale invoice number unqiue on the storage.
-   * @param {Request} req
-   * @param {Response} res
-   * @param {Function} next
-   */
-  async validateInvoiceNumberUnique(req: Request, res: Response, next: Function) {
-    const { tenantId } = req;
-    const saleInvoice = { ...req.body };
-
-    const isInvoiceNoExists = await this.saleInvoiceService.isSaleInvoiceNumberExists(
-      tenantId,
-      saleInvoice.invoice_no,
-      req.params.id
-    );
-    if (isInvoiceNoExists) {
-      return res
-        .status(400)
-        .send({
-          errors: [{ type: 'SALE.INVOICE.NUMBER.IS.EXISTS', code: 200 }],
-        });
-    }
-    next();
-  }
-
-  /**
-   * Validate whether sale invoice exists on the storage.
-   * @param {Request} req
-   * @param {Response} res
-   * @param {Function} next
-   */
-  async validateInvoiceExistance(req: Request, res: Response, next: Function) {
-    const { id: saleInvoiceId } = req.params;
-    const { tenantId } = req;
-
-    const isSaleInvoiceExists = await this.saleInvoiceService.isSaleInvoiceExists(
-      tenantId, saleInvoiceId,
-    );
-    if (!isSaleInvoiceExists) {
-      return res
-        .status(404)
-        .send({ errors: [{ type: 'SALE.INVOICE.NOT.FOUND', code: 200 }] });
-    }
-    next();
-  }
-
-  /**
-   * Validate sale invoice entries ids existance on the storage.
-   * @param {Request} req
-   * @param {Response} res
-   * @param {Function} next
-   */
-  async valdiateInvoiceEntriesIdsExistance(req: Request, res: Response, next: Function) {
-    const { tenantId } = req;
-    const saleInvoice = { ...req.body };
-    const entriesItemsIds = saleInvoice.entries.map((e) => e.item_id);
-
-    const isItemsIdsExists = await this.itemsService.isItemsIdsExists(
-      tenantId, entriesItemsIds,
-    );
-    if (isItemsIdsExists.length > 0) {
-      return res.status(400).send({
-        errors: [{ type: 'ITEMS.IDS.NOT.EXISTS', code: 300 }],
-      });
-    }
-    next();
-  }
-
-  /**
-   * Validate whether the sale estimate entries IDs exist on the storage.
-   * @param {Request} req
-   * @param {Response} res
-   * @param {Function} next
-   */
-  async validateEntriesIdsExistance(req: Request, res: Response, next: Function) {
-    const { ItemEntry } = req.models;
-    const { id: saleInvoiceId } = req.params;
-    const saleInvoice = { ...req.body };
-
-    const entriesIds = saleInvoice.entries
-      .filter(e => e.id)
-      .map(e => e.id);
-    
-    const storedEntries = await ItemEntry.query()
-      .whereIn('reference_id', [saleInvoiceId])
-      .whereIn('reference_type', ['SaleInvoice']);
-
-    const storedEntriesIds = storedEntries.map((entry) => entry.id);
-    const notFoundEntriesIds = difference(
-      entriesIds,
-      storedEntriesIds,
-    );
-    if (notFoundEntriesIds.length > 0) {
-      return res.boom.badRequest(null, {
-        errors: [{ type: 'SALE.INVOICE.ENTRIES.IDS.NOT.FOUND', code: 500 }],
-      });
-    }
-    next();
-  }
-
-  /**
-   * Validate the entries items that not sellable. 
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {Function} next 
-   */
-  async validateNonSellableEntriesItems(req: Request, res: Response, next: Function) {
-    const { Item } = req.models;
-    const saleInvoice = { ...req.body };
-    const itemsIds = saleInvoice.entries.map(e => e.item_id);
-
-    const sellableItems = await Item.query()
-      .where('sellable', true)
-      .whereIn('id', itemsIds);
-
-    const sellableItemsIds = sellableItems.map((item) => item.id);
-    const notSellableItems = difference(itemsIds, sellableItemsIds);
-
-    if (notSellableItems.length > 0) {
-      return res.status(400).send({
-        errors: [{ type: 'NOT.SELLABLE.ITEMS', code: 600 }],
-      });
-    }
-    next();
+      query('customer_id').optional().isNumeric().toInt(),
+    ];
   }
 
   /**
@@ -372,14 +197,18 @@ export default class SaleInvoicesController extends BaseController{
    * @param {Request} req
    * @param {Response} res
    */
-  async getSaleInvoice(req: Request, res: Response) {
+  async getSaleInvoice(req: Request, res: Response, next: NextFunction) {
     const { id: saleInvoiceId } = req.params;
     const { tenantId } = req;
 
-    const saleInvoice = await this.saleInvoiceService.getSaleInvoiceWithEntries(
-      tenantId, saleInvoiceId,
-    );
-    return res.status(200).send({ sale_invoice: saleInvoice });
+    try {
+      const saleInvoice = await this.saleInvoiceService.getSaleInvoiceWithEntries(
+        tenantId, saleInvoiceId,
+      );
+      return res.status(200).send({ sale_invoice: saleInvoice });
+    } catch (error) {
+      next(error);
+    }
   }
 
   /**
@@ -422,12 +251,20 @@ export default class SaleInvoicesController extends BaseController{
    * @param {Function} next
    */
   public async getSalesInvoices(req: Request, res: Response, next: NextFunction) {
-    const { tenantId } = req.params;
-    const salesInvoicesFilter: ISalesInvoicesFilter = req.query;
+    const { tenantId } = req;
+    const filter: ISalesInvoicesFilter = {
+      filterRoles: [],
+      sortOrder: 'asc',
+      columnSortBy: 'name',
+      ...this.matchedQueryData(req),
+    };
+    if (filter.stringifiedFilterRoles) {
+      filter.filterRoles = JSON.parse(filter.stringifiedFilterRoles);
+    }
 
     try {
       const { salesInvoices, filterMeta, pagination } = await this.saleInvoiceService.salesInvoicesList(
-        tenantId, salesInvoicesFilter,
+        tenantId, filter,
       );
       return res.status(200).send({
         sales_invoices: salesInvoices,
@@ -437,5 +274,64 @@ export default class SaleInvoicesController extends BaseController{
     } catch (error) {
       next(error);
     }
+  }
+
+  /**
+   * Handles service errors.
+   * @param {Error} error 
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {NextFunction} next 
+   */
+  handleServiceErrors(error: Error, req: Request, res: Response, next: NextFunction) {
+    if (error instanceof ServiceError) {
+      if (error.errorType === 'INVOICE_NUMBER_NOT_UNIQUE') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'SALE.INVOICE.NUMBER.IS.EXISTS', code: 200 }],
+        });
+      }
+      if (error.errorType === 'SALE_INVOICE_NOT_FOUND') {
+        return res.status(404).send({
+          errors: [{ type: 'SALE.INVOICE.NOT.FOUND', code: 200 }]
+        });
+      }
+      if (error.errorType === 'ENTRIES_ITEMS_IDS_NOT_EXISTS') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'ENTRIES_ITEMS_IDS_NOT_EXISTS', code: 200 }],
+        });
+      }
+      if (error.errorType === 'NOT_SELLABLE_ITEMS') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'NOT_SELLABLE_ITEMS', code: 200 }],
+        });
+      }
+      if (error.errorType === 'SALE_INVOICE_NO_NOT_UNIQUE') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'SALE_INVOICE_NO_NOT_UNIQUE', code: 200 }],
+        });
+      }
+      if (error.errorType === 'ITEMS_NOT_FOUND') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'ITEMS_NOT_FOUND', code: 200 }],
+        });
+      }
+      if (error.errorType === 'ENTRIES_IDS_NOT_FOUND') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'ENTRIES_IDS_NOT_FOUND', code: 200 }],
+        });
+      }
+      if (error.errorType === 'NOT_SELL_ABLE_ITEMS') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'NOT_SELL_ABLE_ITEMS', code: 200 }],
+        });
+      }
+      if (error.errorType === 'contact_not_found') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'CUSTOMER_NOT_FOUND', code: 200 }],
+        });
+      }
+    }
+    console.log(error.errorType);
+    next(error); 
   }
 }
