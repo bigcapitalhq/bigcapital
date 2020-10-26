@@ -6,17 +6,12 @@ export const submitEstimate = ({ form }) => {
     new Promise((resolve, reject) => {
       ApiService.post('sales/estimates', form)
         .then((response) => {
-          dispatch({
-            type: t.SET_DASHBOARD_REQUEST_COMPLETED,
-          });
           resolve(response);
         })
         .catch((error) => {
           const { response } = error;
           const { data } = response;
-          dispatch({
-            type: t.SET_DASHBOARD_REQUEST_COMPLETED,
-          });
+
           reject(data?.errors);
         });
     });
@@ -95,21 +90,21 @@ export const fetchEstimatesTable = ({ query = {} }) => {
           dispatch({
             type: t.ESTIMATES_PAGE_SET,
             payload: {
-              sales_estimates: response.data.sales_estimates.results,
-              pagination: response.data.sales_estimates.pagination,
+              sales_estimates: response.data.sales_estimates,
+              pagination: response.data.pagination,
               customViewId: response.data.customViewId || -1,
             },
           });
           dispatch({
             type: t.ESTIMATES_ITEMS_SET,
             payload: {
-              sales_estimates: response.data.sales_estimates.results,
+              sales_estimates: response.data.sales_estimates,
             },
           });
           dispatch({
             type: t.ESTIMATES_PAGINATION_SET,
             payload: {
-              pagination: response.data.sales_estimates.pagination,
+              pagination: response.data.pagination,
               customViewId: response.data.customViewId || -1,
             },
           });

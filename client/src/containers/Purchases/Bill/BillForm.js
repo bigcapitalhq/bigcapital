@@ -207,7 +207,7 @@ function BillForm({
   }, [bill]);
 
   const formik = useFormik({
-    enableReinitialize: true,
+    // enableReinitialize: true,
     validationSchema,
     initialValues: {
       ...initialValues,
@@ -291,7 +291,7 @@ function BillForm({
     },
     [setDeletedFiles, deletedFiles],
   );
-
+  
   const onClickCleanAllLines = () => {
     formik.setFieldValue(
       'entries',

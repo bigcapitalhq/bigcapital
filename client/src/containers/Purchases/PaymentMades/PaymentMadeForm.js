@@ -28,6 +28,7 @@ import Dragzone from 'components/Dragzone';
 import useMedia from 'hooks/useMedia';
 
 import { compose, repeatValue } from 'utils';
+import withSettings from 'containers/Settings/withSettings';
 
 const MIN_LINES_NUMBER = 5;
 
@@ -35,10 +36,18 @@ function PaymentMadeForm({
   //#withMedia
   requestSubmitMedia,
   requestDeleteMedia,
-  //#withPaymentMadesActions
 
+  //#withPaymentMadesActions
   requestSubmitPaymentMade,
   requestEditPaymentMade,
+  setPaymentNumberChange,
+
+  // #withPaymentMade
+  nextPaymentNumberChanged,
+
+  // #withSettings
+  paymentNextNumber,
+  paymentNumberPrefix,
 
   //#withDashboard
   changePageTitle,
@@ -92,7 +101,7 @@ function PaymentMadeForm({
     payment_account_id: Yup.number()
       .required()
       .label(formatMessage({ id: 'payment_account_' })),
-    payment_number: Yup.number()
+    payment_number: Yup.string()
       .required()
       .label(formatMessage({ id: 'payment_no_' })),
     reference: Yup.string().min(1).max(255).nullable(),
@@ -133,13 +142,17 @@ function PaymentMadeForm({
     [],
   );
 
+  const paymentNumber = paymentNumberPrefix
+    ? `${paymentNumberPrefix}-${paymentNextNumber}`
+    : paymentNextNumber;
+
   const defaultInitialValues = useMemo(
     () => ({
       vendor_id: '',
       payment_account_id: '',
       payment_date: moment(new Date()).format('YYYY-MM-DD'),
       reference: '',
-      payment_number: '',
+      payment_number: paymentNumber,
       // receive_amount: '',
       description: '',
       entries: [...repeatValue(defaultPaymentMade, MIN_LINES_NUMBER)],
@@ -188,7 +201,6 @@ function PaymentMadeForm({
   }, [paymentMade]);
 
   const formik = useFormik({
-    enableReinitialize: true,
     validationSchema,
     initialValues: {
       ...initialValues,
@@ -282,7 +294,11 @@ function PaymentMadeForm({
       orderingIndex([...repeatValue(defaultPaymentMade, MIN_LINES_NUMBER)]),
     );
   };
-  console.log(formik.errors, 'ERROR');
+
+  useEffect(() => {
+    formik.setFieldValue('payment_number', paymentNumber);
+    setPaymentNumberChange(false);
+  }, [nextPaymentNumberChanged, paymentNumber]);
 
   return (
     <div className={'payment_made_form'}>
@@ -291,7 +307,7 @@ function PaymentMadeForm({
         <PaymentMadeItemsTable
           formik={formik}
           entries={formik.values.entries}
-          // vendor_id={formik.values.vendor_id}
+          vendor_id={formik.values.vendor_id}
           onClickAddNewRow={handleClickAddNewRow}
           onClickClearAllLines={handleClearAllLines}
         />
@@ -317,4 +333,11 @@ export default compose(
   withDashboardActions,
   withMediaActions,
   withPaymentMadeDetail(),
+  withPaymentMade(({ nextPaymentNumberChanged }) => ({
+    nextPaymentNumberChanged,
+  })),
+  withSettings(({ billPaymentSettings }) => ({
+    paymentNextNumber: billPaymentSettings?.next_number,
+    paymentNumberPrefix: billPaymentSettings?.number_prefix,
+  })),
 )(PaymentMadeForm);

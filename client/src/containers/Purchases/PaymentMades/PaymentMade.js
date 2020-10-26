@@ -10,6 +10,7 @@ import withAccountsActions from 'containers/Accounts/withAccountsActions';
 import withItemsActions from 'containers/Items/withItemsActions';
 import withPaymentMadeActions from './withPaymentMadeActions';
 import withBillActions from '../Bill/withBillActions';
+import withSettingsActions from 'containers/Settings/withSettingsActions';
 
 import { compose } from 'utils';
 
@@ -27,6 +28,9 @@ function PaymentMade({
   requestFetchPaymentMade,
 
   //#withBillActions
+
+  // #withSettingsActions
+  requestFetchOptions,
 }) {
   const history = useHistory();
   const { id } = useParams();
@@ -50,6 +54,8 @@ function PaymentMade({
     (key, _id) => requestFetchPaymentMade(_id),
     { enabled: !!id },
   );
+
+  const fetchSettings = useQuery(['settings'], () => requestFetchOptions({}));
 
   const handleFormSubmit = useCallback(
     (payload) => {
@@ -90,4 +96,5 @@ export default compose(
   withAccountsActions,
   withBillActions,
   withPaymentMadeActions,
+  withSettingsActions
 )(PaymentMade);

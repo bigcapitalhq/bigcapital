@@ -13,15 +13,24 @@ import { Row, Col } from 'react-grid-system';
 import moment from 'moment';
 import { momentFormatter, compose, tansformDateValue } from 'utils';
 import classNames from 'classnames';
-import { ListSelect, ErrorMessage, FieldRequiredHint, Hint } from 'components';
+import {
+  ListSelect,
+  ErrorMessage,
+  FieldRequiredHint,
+  Icon,
+  InputPrependButton,
+} from 'components';
 
 import withCustomers from 'containers/Customers/withCustomers';
+import withDialogActions from 'containers/Dialog/withDialogActions';
 
 function EstimateFormHeader({
   formik: { errors, touched, setFieldValue, getFieldProps, values },
 
   //#withCustomers
   customers,
+  // #withDialogActions
+  openDialog,
 }) {
   const handleDateChange = useCallback(
     (date_filed) => (date) => {
@@ -66,6 +75,10 @@ function EstimateFormHeader({
     },
     [setFieldValue],
   );
+
+  const handleEstimateNumberChange = useCallback(() => {
+    openDialog('estimate-number-form', {});
+  }, [openDialog]);
 
   return (
     <div className={'page-form page-form--estimate'}>
@@ -171,6 +184,19 @@ function EstimateFormHeader({
             errors.estimate_number && touched.estimate_number && Intent.DANGER
           }
           minimal={true}
+          rightElement={
+            <InputPrependButton
+              buttonProps={{
+                onClick: handleEstimateNumberChange,
+                icon: <Icon icon={'settings-18'} />,
+              }}
+              tooltip={true}
+              tooltipProps={{
+                content: 'Setting your auto-generated estimate number',
+                position: Position.BOTTOM_LEFT,
+              }}
+            />
+          }
           {...getFieldProps('estimate_number')}
         />
       </FormGroup>
@@ -196,4 +222,5 @@ export default compose(
   withCustomers(({ customers }) => ({
     customers,
   })),
+  withDialogActions,
 )(EstimateFormHeader);

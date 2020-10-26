@@ -65,21 +65,21 @@ export const fetchPaymentMadesTable = ({ query = {} }) => {
           dispatch({
             type: t.PAYMENT_MADES_PAGE_SET,
             payload: {
-              bill_payments: response.data.bill_payments.results,
-              pagination: response.data.bill_payments.pagination,
+              bill_payments: response.data.bill_payments,
+              pagination: response.data.pagination,
               customViewId: response.data.customViewId || -1,
             },
           });
           dispatch({
             type: t.PAYMENT_MADES_ITEMS_SET,
             payload: {
-              bill_payments: response.data.bill_payments.results,
+              bill_payments: response.data.bill_payments,
             },
           });
           dispatch({
             type: t.PAYMENT_MADES_PAGINATION_SET,
             payload: {
-              pagination: response.data.bill_payments.pagination,
+              pagination: response.data.pagination,
               customViewId: response.data.customViewId || -1,
             },
           });
@@ -102,14 +102,6 @@ export const fetchPaymentMade = ({ id }) => {
     new Promise((resovle, reject) => {
       ApiService.get(`purchases/bill_payments/${id}`, {})
         .then((response) => {
-          // dispatch({
-          //   type: t.RELOAD_INVOICES,
-          //   payload: {
-          //     sales_invoices: response.data.paymentReceive.entries.map(
-          //       (e) => e.invoice,
-          //     ),
-          //   },
-          // });
           dispatch({
             type: t.PAYMENT_MADE_SET,
             payload: {

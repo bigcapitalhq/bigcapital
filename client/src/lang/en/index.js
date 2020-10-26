@@ -776,6 +776,8 @@ export default {
   bigger_or_equals: 'Bigger or equals',
   prefix: 'Prefix',
   next_number: 'Next Number',
-  journal_number_settings: 'Journal number settings',
-  bill_number_settings: 'Bill number settings',
+  journal_number_settings: 'Journal number Settings',
+  bill_number_settings: 'Bill number Settings',
+  payment_number_settings: 'Payment number Settings',
+  Estimate_number_settings: 'Estimate Number Settings',
 };

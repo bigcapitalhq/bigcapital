@@ -20,18 +20,24 @@ import {
   ListSelect,
   ErrorMessage,
   FieldRequiredHint,
+  Icon,
+  InputPrependButton,
 } from 'components';
 
 import withVender from 'containers/Vendors/withVendors';
 import withAccounts from 'containers/Accounts/withAccounts';
+import withDialogActions from 'containers/Dialog/withDialogActions';
 
 function PaymentMadeFormHeader({
   formik: { errors, touched, setFieldValue, getFieldProps, values },
 
   //#withVender
   vendorsCurrentPage,
+  vendorItems,
   //#withAccouts
   accountsList,
+  // #withDialogActions
+  openDialog,
 }) {
   const handleDateChange = useCallback(
     (date_filed) => (date) => {
@@ -79,10 +85,14 @@ function PaymentMadeFormHeader({
     [accountsList],
   );
 
+  const handlePaymentNumberChange = useCallback(() => {
+    openDialog('payment-number-form', {});
+  }, [openDialog]);
+
   return (
     <div>
       <div>
-        {/* Vend name */}
+        {/* Vendor name */}
         <FormGroup
           label={<T id={'vendor_name'} />}
           inline={true}
@@ -94,7 +104,7 @@ function PaymentMadeFormHeader({
           }
         >
           <ListSelect
-            items={vendorsCurrentPage}
+            items={vendorItems}
             noResults={<MenuItem disabled={true} text="No results." />}
             itemRenderer={handleVenderRenderer}
             itemPredicate={handleFilterVender}
@@ -142,6 +152,20 @@ function PaymentMadeFormHeader({
           <InputGroup
             intent={
               errors.payment_number && touched.payment_number && Intent.DANGER
+            }
+            minimal={true}
+            rightElement={
+              <InputPrependButton
+                buttonProps={{
+                  onClick: handlePaymentNumberChange,
+                  icon: <Icon icon={'settings-18'} />,
+                }}
+                tooltip={true}
+                tooltipProps={{
+                  content: 'Setting your auto-generated payment number',
+                  position: Position.BOTTOM_LEFT,
+                }}
+              />
             }
             minimal={true}
             {...getFieldProps('payment_number')}
@@ -199,10 +223,12 @@ function PaymentMadeFormHeader({
 }
 
 export default compose(
-  withVender(({ vendorsCurrentPage }) => ({
+  withVender(({ vendorsCurrentPage, vendorItems }) => ({
     vendorsCurrentPage,
+    vendorItems,
   })),
   withAccounts(({ accountsList }) => ({
     accountsList,
   })),
+  withDialogActions,
 )(PaymentMadeFormHeader);

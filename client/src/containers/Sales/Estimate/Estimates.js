@@ -8,13 +8,22 @@ import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import withCustomersActions from 'containers/Customers/withCustomersActions';
 import withItemsActions from 'containers/Items/withItemsActions';
 import withEstimateActions from './withEstimateActions';
+import withSettingsActions from 'containers/Settings/withSettingsActions';
 
 import { compose } from 'utils';
 
 function Estimates({
+  // #withCustomersActions
   requestFetchCustomers,
+
+  // #withItemsActions
   requestFetchItems,
+
+  // #withEstimateActions
   requsetFetchEstimate,
+
+  // #withSettingsActions
+  requestFetchOptions,
 }) {
   const history = useHistory();
   const { id } = useParams();
@@ -33,7 +42,7 @@ function Estimates({
     requestFetchCustomers({}),
   );
 
-  // 
+  //
   const handleFormSubmit = useCallback(
     (payload) => {
       payload.redirect && history.push('/estimates');
@@ -43,6 +52,8 @@ function Estimates({
   const handleCancel = useCallback(() => {
     history.goBack();
   }, [history]);
+
+  const fetchSettings = useQuery(['settings'], () => requestFetchOptions({}));
 
   return (
     <DashboardInsider
@@ -66,4 +77,5 @@ export default compose(
   withEstimateActions,
   withCustomersActions,
   withItemsActions,
+  withSettingsActions,
 )(Estimates);

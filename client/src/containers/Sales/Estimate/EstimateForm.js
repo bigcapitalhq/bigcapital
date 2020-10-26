@@ -21,6 +21,7 @@ import withEstimateActions from './withEstimateActions';
 import withEstimateDetail from './withEstimateDetail';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withMediaActions from 'containers/Media/withMediaActions';
+import withSettings from 'containers/Settings/withSettings';
 
 import AppToaster from 'components/AppToaster';
 import Dragzone from 'components/Dragzone';
@@ -42,6 +43,10 @@ const EstimateForm = ({
   //#withDashboard
   changePageTitle,
   changePageSubtitle,
+
+  // #withSettings
+  estimateNextNumber,
+  estimateNumberPrefix,
 
   //#withEstimateDetail
   estimate,
@@ -92,7 +97,7 @@ const EstimateForm = ({
     expiration_date: Yup.date()
       .required()
       .label(formatMessage({ id: 'expiration_date_' })),
-    estimate_number: Yup.number()
+    estimate_number: Yup.string()
       .required()
       .nullable()
       .label(formatMessage({ id: 'estimate_number_' })),
@@ -110,18 +115,6 @@ const EstimateForm = ({
     entries: Yup.array().of(
       Yup.object().shape({
         quantity: Yup.number().nullable(),
-        //Cyclic dependency
-        rate: Yup.number().nullable(),
-        //   .when(['item_id'], {
-        //     is: (item_id) => item_id,
-        //     then: Yup.number().required(),
-        //   }),
-
-        // rate: Yup.number().test((value) => {
-        //   const { item_id } = this.parent;
-        //   if (!item_id) return value != null;
-        //   return false;
-        // }),
         item_id: Yup.number()
           .nullable()
           .when(['quantity', 'rate'], {
@@ -152,13 +145,16 @@ const EstimateForm = ({
     }),
     [],
   );
+  const estimateNumber = estimateNumberPrefix
+    ? `${estimateNumberPrefix}-${estimateNextNumber}`
+    : estimateNextNumber;
 
   const defaultInitialValues = useMemo(
     () => ({
       customer_id: '',
       estimate_date: moment(new Date()).format('YYYY-MM-DD'),
       expiration_date: moment(new Date()).format('YYYY-MM-DD'),
-      estimate_number: '',
+      estimate_number: estimateNumber,
       reference: '',
       note: '',
       terms_conditions: '',
@@ -208,7 +204,6 @@ const EstimateForm = ({
   }, [estimate]);
 
   const formik = useFormik({
-    enableReinitialize: true,
     validationSchema,
     initialValues: {
       ...initialValues,
@@ -226,9 +221,12 @@ const EstimateForm = ({
       if (estimate && estimate.id) {
         requestEditEstimate(estimate.id, requestForm).then((response) => {
           AppToaster.show({
-            message: formatMessage({
-              id: 'the_estimate_has_been_successfully_edited',
-            }),
+            message: formatMessage(
+              {
+                id: 'the_estimate_has_been_successfully_edited',
+              },
+              { number: values.estimate_number },
+            ),
             intent: Intent.SUCCESS,
           });
           setSubmitting(false);
@@ -255,7 +253,11 @@ const EstimateForm = ({
       }
     },
   });
-  console.log(formik.errors ,'ERROR');
+  
+  useEffect(() => {
+    formik.setFieldValue('estimate_number', estimateNumber);
+  }, [estimateNumber]);
+
   const handleSubmitClick = useCallback(
     (payload) => {
       setPayload(payload);
@@ -353,7 +355,11 @@ const EstimateForm = ({
 
 export default compose(
   withEstimateActions,
+  withEstimateDetail(),
   withDashboardActions,
   withMediaActions,
-  withEstimateDetail(),
+  withSettings(({ estimatesSettings }) => ({
+    estimateNextNumber: estimatesSettings?.next_number,
+    estimateNumberPrefix: estimatesSettings?.number_prefix,
+  })),
 )(EstimateForm);

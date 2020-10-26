@@ -63,4 +63,24 @@ export default {
       type: "string",
     },
   ],
+  bill_payments: [
+    {
+      key: "next_number",
+      type: "number",
+    },
+    {
+      key: "number_prefix",
+      type: "string",
+    },
+  ],
+  sales_estimates: [
+    {
+      key: "next_number",
+      type: "number",
+    },
+    {
+      key: "number_prefix",
+      type: "string",
+    },
+  ],
 };

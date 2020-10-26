@@ -80,9 +80,8 @@ const reducer = createReducer(initialState, {
 
   [t.BILLS_PAGINATION_SET]: (state, action) => {
     const { pagination, customViewId } = action.payload;
-
     const mapped = {
-      pageSize: parseInt(pagination.pageSize, 10),
+      pageSize: parseInt(pagination.page_size, 10),
       page: parseInt(pagination.page, 10),
       total: parseInt(pagination.total, 10),
     };
@@ -99,7 +98,7 @@ const reducer = createReducer(initialState, {
       },
     };
   },
-  
+
   [t.BILL_NUMBER_CHANGED]: (state, action) => {
     const { isChanged } = action.payload;
     state.nextBillNumberChanged = isChanged;

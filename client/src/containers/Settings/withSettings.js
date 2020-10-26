@@ -6,6 +6,8 @@ export default (mapState) => {
       organizationSettings: state.settings.data.organization,
       manualJournalsSettings: state.settings.data.manual_journals,
       billsettings: state.settings.data.bills,
+      billPaymentSettings: state.settings.data.bill_payments,
+      estimatesSettings: state.settings.data.sales_estimates,
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };

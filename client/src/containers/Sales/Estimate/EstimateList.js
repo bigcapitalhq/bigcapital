@@ -42,15 +42,15 @@ function EstimateList({
   const [deleteEstimate, setDeleteEstimate] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
 
-  const fetchResourceViews = useQuery(
-    ['resource-views', 'sales_estimates'],
-    (key, resourceName) => requestFetchResourceViews(resourceName),
-  );
+  // const fetchResourceViews = useQuery(
+  //   ['resource-views', 'sales_estimates'],
+  //   (key, resourceName) => requestFetchResourceViews(resourceName),
+  // );
 
-  const fetchResourceFields = useQuery(
-    ['resource-fields', 'sales_estimates'],
-    (key, resourceName) => requestFetchResourceFields(resourceName),
-  );
+  // const fetchResourceFields = useQuery(
+  //   ['resource-fields', 'sales_estimates'],
+  //   (key, resourceName) => requestFetchResourceFields(resourceName),
+  // );
 
   const fetchEstimate = useQuery(['estimates-table', estimateTableQuery], () =>
     requestFetchEstimatesTable(),
@@ -85,16 +85,6 @@ function EstimateList({
       setDeleteEstimate(false);
     });
   }, [deleteEstimate, requestDeleteEstimate, formatMessage]);
-
-  // // Handle filter change to re-fetch data-table.
-  // const handleFilterChanged = useCallback(
-  //   (filterConditions) => {
-  //     addEstimatesTableQueries({
-  //       filter_roles: filterConditions || '',
-  //     });
-  //   },
-  //   [fetchEstimate],
-  // );
 
   // Handle filter change to re-fetch data-table.
   const handleFilterChanged = useCallback(() => {}, [fetchEstimate]);
@@ -136,7 +126,7 @@ function EstimateList({
   );
   return (
     <DashboardInsider
-      loading={fetchResourceViews.isFetching || fetchResourceFields.isFetching}
+      // loading={fetchResourceViews.isFetching || fetchResourceFields.isFetching}
       name={'sales_estimates'}
     >
       <EstimateActionsBar

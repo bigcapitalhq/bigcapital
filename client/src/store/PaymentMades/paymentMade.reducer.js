@@ -12,6 +12,7 @@ const initialState = {
     page_size: 5,
     page: 1,
   },
+  nextPaymentNumberChanged: false,
 };
 
 const defaultPaymentMade = {
@@ -84,5 +85,11 @@ const reducer = createReducer(initialState, {
       },
     };
   },
+
+  [t.PAYMENT_MADES_NUMBER_CHANGED]:(state,action)=>{
+    const { isChanged } = action.payload;
+    state.nextPaymentNumberChanged = isChanged
+
+  }
 });
 export default createTableQueryReducers('bill_payments', reducer);

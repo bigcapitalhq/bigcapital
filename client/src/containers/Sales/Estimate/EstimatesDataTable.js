@@ -94,9 +94,13 @@ function EstimatesDataTable({
   const actionMenuList = useCallback(
     (estimate) => (
       <Menu>
-        <MenuItem text={formatMessage({ id: 'view_details' })} />
+        <MenuItem
+          icon={<Icon icon="reader-18" />}
+          text={formatMessage({ id: 'view_details' })}
+        />
         <MenuDivider />
         <MenuItem
+          icon={<Icon icon="pen-18" />}
           text={formatMessage({ id: 'edit_estimate' })}
           onClick={handleEditEstimate(estimate)}
         />

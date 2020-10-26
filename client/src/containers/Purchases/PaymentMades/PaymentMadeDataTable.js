@@ -64,19 +64,7 @@ function PaymentMadeDataTable({
     }
   }, [paymentMadeLoading, setInitialMount]);
 
-  // useEffect(() => {
-  //   if (customViewId) {
-  //     changeCurrentView(customViewId);
-  //     setTopbarEditView(customViewId);
-  //   }
-  //   changePageSubtitle(customViewId && viewMeta ? viewMeta.name : '');
-  // }, [
-  //   customViewId,
-  //   changeCurrentView,
-  //   changePageSubtitle,
-  //   setTopbarEditView,
-  //   viewMeta,
-  // ]);
+
 
   const handleEditPaymentMade = useCallback(
     (paymentMade) => () => {
@@ -95,9 +83,13 @@ function PaymentMadeDataTable({
   const actionMenuList = useCallback(
     (paymentMade) => (
       <Menu>
-        <MenuItem text={formatMessage({ id: 'view_details' })} />
+        <MenuItem
+          icon={<Icon icon="reader-18" />}
+          text={formatMessage({ id: 'view_details' })}
+        />
         <MenuDivider />
         <MenuItem
+             icon={<Icon icon="pen-18" />}
           text={formatMessage({ id: 'edit_payment_made' })}
           onClick={handleEditPaymentMade(paymentMade)}
         />
