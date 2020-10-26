@@ -66,6 +66,7 @@ export default class SalesReceiptsController extends BaseController{
       check('deposit_account_id').exists().isNumeric().toInt(),
       check('receipt_date').exists().isISO8601(),
       check('send_to_email').optional().isEmail(),
+      check('receipt_number').optional().trim().escape(),
       check('reference_no').optional().trim().escape(),
 
       check('entries').exists().isArray({ min: 1 }),
@@ -262,8 +263,12 @@ export default class SalesReceiptsController extends BaseController{
           errors: [{ type: 'DEPOSIT.ACCOUNT.NOT.EXISTS', code: 800 }],
         });
       }
+      if (error.errorType === 'SALE_RECEIPT_NUMBER_NOT_UNIQUE') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'SALE_RECEIPT_NUMBER_NOT_UNIQUE', code: 900 }],
+        });
+      }
     }
-    console.log(error);
     next(error);
   }
 };

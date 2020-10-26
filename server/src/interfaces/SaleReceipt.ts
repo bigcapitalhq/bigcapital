@@ -9,6 +9,7 @@ export interface ISaleReceipt {
   sendToEmail: string,
   referenceNo: string,
   receiptMessage: string,
+  receiptNumber: string,
   statement: string,
   entries: any[],
 };

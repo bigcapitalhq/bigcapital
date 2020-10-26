@@ -19,6 +19,7 @@ const ERRORS = {
   SALE_RECEIPT_NOT_FOUND: 'SALE_RECEIPT_NOT_FOUND',
   DEPOSIT_ACCOUNT_NOT_FOUND: 'DEPOSIT_ACCOUNT_NOT_FOUND',
   DEPOSIT_ACCOUNT_NOT_CURRENT_ASSET: 'DEPOSIT_ACCOUNT_NOT_CURRENT_ASSET',
+  SALE_RECEIPT_NUMBER_NOT_UNIQUE: 'SALE_RECEIPT_NUMBER_NOT_UNIQUE'
 };
 @Service()
 export default class SalesReceiptService {
@@ -78,6 +79,30 @@ export default class SalesReceiptService {
   }
 
   /**
+   * Validate sale receipt number uniquiness on the storage.
+   * @param {number} tenantId -
+   * @param {string} receiptNumber -
+   * @param {number} notReceiptId -
+   */
+  async validateReceiptNumberUnique(tenantId: number, receiptNumber: string, notReceiptId?: number) {
+    const { SaleReceipt } = this.tenancy.models(tenantId);
+
+    this.logger.info('[sale_receipt] validate receipt number uniquiness.', { tenantId, receiptNumber });
+    const saleReceipt = await SaleReceipt.query()
+      .findOne('receipt_number', receiptNumber)
+      .onBuild((builder) => {
+        if (notReceiptId) {
+          builder.whereNot('id', notReceiptId);
+        }
+      });
+    
+    if (saleReceipt) {
+      this.logger.info('[sale_receipt] sale receipt number not unique.', { tenantId });
+      throw new ServiceError(ERRORS.SALE_RECEIPT_NUMBER_NOT_UNIQUE);
+    }
+  }
+
+  /**
    * Creates a new sale receipt with associated entries.
    * @async
    * @param {ISaleReceipt} saleReceipt
@@ -91,9 +116,18 @@ export default class SalesReceiptService {
       amount,
       ...formatDateFields(saleReceiptDTO, ['receipt_date'])
     };
+
+    // Validate receipt deposit account existance and type.
     await this.validateReceiptDepositAccountExistance(tenantId, saleReceiptDTO.depositAccountId);
+
+    // Validate items IDs existance on the storage.
     await this.itemsEntriesService.validateItemsIdsExistance(tenantId, saleReceiptDTO.entries);
+
+    // Validate the sellable items.
     await this.itemsEntriesService.validateNonSellableEntriesItems(tenantId, saleReceiptDTO.entries);
+
+    // Validate sale receipt number uniuqiness.
+    await this.validateReceiptNumberUnique(tenantId, saleReceiptDTO.receiptNumber);
 
     this.logger.info('[sale_receipt] trying to insert sale receipt graph.', { tenantId, saleReceiptDTO });
     const saleReceipt = await SaleReceipt.query()
@@ -126,11 +160,20 @@ export default class SalesReceiptService {
       amount,
       ...formatDateFields(saleReceiptDTO, ['receipt_date'])
     };
+    // Retrieve sale receipt or throw not found service error.
     const oldSaleReceipt = await this.getSaleReceiptOrThrowError(tenantId, saleReceiptId);
 
+    // Validate receipt deposit account existance and type.
     await this.validateReceiptDepositAccountExistance(tenantId, saleReceiptDTO.depositAccountId);
+
+    // Validate items IDs existance on the storage.
     await this.itemsEntriesService.validateItemsIdsExistance(tenantId, saleReceiptDTO.entries);
+
+    // Validate the sellable items.
     await this.itemsEntriesService.validateNonSellableEntriesItems(tenantId, saleReceiptDTO.entries);
+
+    // Validate sale receipt number uniuqiness.
+    await this.validateReceiptNumberUnique(tenantId, saleReceiptDTO.receiptNumber, saleReceiptId);
 
     const saleReceipt = await SaleReceipt.query()
       .upsertGraphAndFetch({

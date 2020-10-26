@@ -66,9 +66,6 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
   /**
    * 
    * Validate whether sale invoice number unqiue on the storage.
-   * @param {Request} req
-   * @param {Response} res
-   * @param {Function} next
    */
   async validateInvoiceNumberUnique(tenantId: number, invoiceNumber: string, notInvoiceId?: number) {
     const { SaleInvoice } = this.tenancy.models(tenantId);

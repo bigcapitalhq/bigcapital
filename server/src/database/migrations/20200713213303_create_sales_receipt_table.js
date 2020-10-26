@@ -6,6 +6,7 @@ exports.up = function(knex) {
     table.integer('deposit_account_id').unsigned().index().references('id').inTable('accounts');
     table.integer('customer_id').unsigned().index().references('id').inTable('contacts');
     table.date('receipt_date').index();
+    table.string('receipt_number');
     table.string('reference_no');
     table.string('email_send_to');
     table.text('receipt_message');
