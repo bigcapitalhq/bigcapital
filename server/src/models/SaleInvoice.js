@@ -24,6 +24,10 @@ export default class SaleInvoice extends TenantModel {
     return ['created_at', 'updated_at'];
   }
 
+  static get resourceable() {
+    return true;
+  }
+
   /**
    * Model modifiers.
    */
@@ -122,5 +126,18 @@ export default class SaleInvoice extends TenantModel {
     await this.query()
       .where('id', invoiceId)
       [changeMethod]('payment_amount', Math.abs(amount));      
+  }
+
+  /**
+   * Model defined fields.
+   */
+  static get fields() {
+    return {
+      created_at: {
+        label: 'Created at',
+        column: 'created_at',
+        columnType: 'date',
+      },
+    };
   }
 }

@@ -8,7 +8,6 @@ import {
 } from 'lib/ViewRolesBuilder';
 import { flatToNestedArray } from 'utils';
 import DependencyGraph from 'lib/DependencyGraph';
-import TenantManagerSubscriber from 'subscribers/tenantManager';
 
 export default class Account extends TenantModel {
   /**
