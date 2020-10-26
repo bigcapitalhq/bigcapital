@@ -43,7 +43,7 @@ export default class PaymentReceivesSubscriber {
   }
 
   /**
-   * Handle 
+   * Handle revert invoices payment amount once payment receive deleted.
    */
   @On(events.paymentReceive.onDeleted)
   async handleInvoiceDecrementPaymentAmount({ tenantId, paymentReceiveId, oldPaymentReceive }) {

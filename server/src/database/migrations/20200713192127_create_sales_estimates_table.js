@@ -10,7 +10,7 @@ exports.up = function(knex) {
     table.string('estimate_number').index();
     table.text('note');
     table.text('terms_conditions');
-
+    table.text('send_to_email');
     table.integer('user_id').unsigned().index();
     table.timestamps();
   });  

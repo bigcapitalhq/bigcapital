@@ -120,7 +120,9 @@ export default class SaleEstimateService {
       });
 
     this.logger.info('[sale_estimate] insert sale estimated success.');
-    await this.eventDispatcher.dispatch(events.saleEstimate.onCreated);
+    await this.eventDispatcher.dispatch(events.saleEstimate.onCreated, {
+      tenantId, saleEstimate, saleEstimateId: saleEstimate.id,
+    });
 
     return saleEstimate;
   }

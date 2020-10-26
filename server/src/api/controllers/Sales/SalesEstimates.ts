@@ -23,8 +23,9 @@ export default class SalesEstimatesController extends BaseController {
     const router = Router();
 
     router.post(
-      '/',
-      this.estimateValidationSchema,
+      '/', [
+        ...this.estimateValidationSchema,
+      ],
       this.validationResult,
       asyncMiddleware(this.newEstimate.bind(this)),
       this.handleServiceErrors,
@@ -85,6 +86,7 @@ export default class SalesEstimatesController extends BaseController {
 
       check('note').optional().trim().escape(),
       check('terms_conditions').optional().trim().escape(),
+      check('send_to_email').optional().trim().escape(),
     ];
   }
 

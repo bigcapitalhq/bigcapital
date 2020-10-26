@@ -11,7 +11,7 @@ export interface ISaleEstimate {
   termsConditions: string,
   userId: number,
   entries: IItemEntry[],
-
+  sendToEmail: string,
   createdAt?: Date,
 };
 export interface ISaleEstimateDTO {
@@ -22,6 +22,7 @@ export interface ISaleEstimateDTO {
   entries: IItemEntry[],
   note: string,
   termsConditions: string,
+  sendToEmail: string,
 };
 
 export interface ISalesEstimatesFilter extends IDynamicListFilterDTO { 
