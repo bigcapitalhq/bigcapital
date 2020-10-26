@@ -18,11 +18,13 @@ import {
   ListSelect,
   ErrorMessage,
   FieldRequiredHint,
-  Hint,
+  Icon,
+  InputPrependButton,
 } from 'components';
 
 import withCustomers from 'containers/Customers/withCustomers';
 import withAccounts from 'containers/Accounts/withAccounts';
+import withDialogActions from 'containers/Dialog/withDialogActions';
 
 function ReceiptFormHeader({
   formik: { errors, touched, setFieldValue, getFieldProps, values },
@@ -31,6 +33,8 @@ function ReceiptFormHeader({
   customers,
   //#withAccouts
   accountsList,
+  //#withDialogActions
+  openDialog,
 }) {
   const handleDateChange = useCallback(
     (date) => {
@@ -81,6 +85,10 @@ function ReceiptFormHeader({
     () => accountsList.filter((a) => a?.type?.key === 'current_asset'),
     [accountsList],
   );
+
+  const handleReceiptNumberChange = useCallback(() => {
+    openDialog('receipt-number-form', {});
+  }, [openDialog]);
 
   return (
     <div class="page-form receipt-form">
@@ -162,20 +170,39 @@ function ReceiptFormHeader({
         </FormGroup>
       </div>
       {/* receipt_no */}
-      {/* <FormGroup
+      <FormGroup
         label={<T id={'receipt'} />}
         inline={true}
-        className={('form-group--receipt_no', Classes.FILL)}
+        className={('form-group--receipt_number', Classes.FILL)}
         labelInfo={<FieldRequiredHint />}
-        intent={errors.receipt_no && touched.receipt_no && Intent.DANGER}
-        helperText={<ErrorMessage name="receipt_no" {...{ errors, touched }} />}
+        intent={
+          errors.receipt_number && touched.receipt_number && Intent.DANGER
+        }
+        helperText={
+          <ErrorMessage name="receipt_number" {...{ errors, touched }} />
+        }
       >
         <InputGroup
-          intent={errors.receipt_no && touched.receipt_no && Intent.DANGER}
+          intent={
+            errors.receipt_number && touched.receipt_number && Intent.DANGER
+          }
           minimal={true}
-          {...getFieldProps('receipt_no')}
+          rightElement={
+            <InputPrependButton
+              buttonProps={{
+                onClick: handleReceiptNumberChange,
+                icon: <Icon icon={'settings-18'} />,
+              }}
+              tooltip={true}
+              tooltipProps={{
+                content: 'Setting your auto-generated receipt number',
+                position: Position.BOTTOM_LEFT,
+              }}
+            />
+          }
+          {...getFieldProps('receipt_number')}
         />
-      </FormGroup> */}
+      </FormGroup>
 
       {/*- Reference -*/}
       <FormGroup
@@ -197,12 +224,12 @@ function ReceiptFormHeader({
         label={<T id={'send_to_email'} />}
         inline={true}
         className={classNames('form-group--send_to_email', Classes.FILL)}
-        intent={errors.email_send_to && touched.email_send_to && Intent.DANGER}
+        intent={errors.send_to_email && touched.send_to_email && Intent.DANGER}
         helperText={<ErrorMessage name="reference" {...{ errors, touched }} />}
       >
         <InputGroup
           intent={
-            errors.email_send_to && touched.email_send_to && Intent.DANGER
+            errors.send_to_email && touched.send_to_email && Intent.DANGER
           }
           minimal={true}
           {...getFieldProps('send_to_email')}
@@ -219,4 +246,5 @@ export default compose(
   withAccounts(({ accountsList }) => ({
     accountsList,
   })),
+  withDialogActions,
 )(ReceiptFormHeader);

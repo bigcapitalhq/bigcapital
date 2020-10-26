@@ -21,6 +21,7 @@ import withInvoiceActions from './withInvoiceActions';
 import withInvoiceDetail from './withInvoiceDetail';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withMediaActions from 'containers/Media/withMediaActions';
+import withSettings from 'containers/Settings/withSettings';
 
 import { AppToaster } from 'components';
 import Dragzone from 'components/Dragzone';
@@ -41,7 +42,10 @@ function InvoiceForm({
 
   //#withDashboard
   changePageTitle,
-  changePageSubtitle,
+
+  // #withSettings
+  invoiceNextNumber,
+  invoiceNumberPrefix,
 
   //#withInvoiceDetail
   invoice,
@@ -91,7 +95,7 @@ function InvoiceForm({
     due_date: Yup.date()
       .required()
       .label(formatMessage({ id: 'due_date_' })),
-    invoice_no: Yup.number()
+    invoice_no: Yup.string()
       .required()
       .label(formatMessage({ id: 'invoice_no_' })),
     reference_no: Yup.string().min(1).max(255),
@@ -142,13 +146,17 @@ function InvoiceForm({
     [],
   );
 
+  const invoiceNumber = invoiceNumberPrefix
+    ? `${invoiceNumberPrefix}-${invoiceNextNumber}`
+    : invoiceNextNumber;
+
   const defaultInitialValues = useMemo(
     () => ({
       customer_id: '',
       invoice_date: moment(new Date()).format('YYYY-MM-DD'),
       due_date: moment(new Date()).format('YYYY-MM-DD'),
       status: 'SEND',
-      invoice_no: '',
+      invoice_no: invoiceNumber,
       reference_no: '',
       invoice_message: '',
       terms_conditions: '',
@@ -198,7 +206,6 @@ function InvoiceForm({
   }, [invoice]);
 
   const formik = useFormik({
-    enableReinitialize: true,
     validationSchema,
     initialValues: {
       ...initialValues,
@@ -219,9 +226,12 @@ function InvoiceForm({
         requestEditInvoice(invoice.id, requestForm)
           .then((response) => {
             AppToaster.show({
-              message: formatMessage({
-                id: 'the_invoice_has_been_successfully_edited',
-              }),
+              message: formatMessage(
+                {
+                  id: 'the_invoice_has_been_successfully_edited',
+                },
+                { number: values.invoice_no },
+              ),
               intent: Intent.SUCCESS,
             });
             setSubmitting(false);
@@ -251,6 +261,11 @@ function InvoiceForm({
       }
     },
   });
+
+  useEffect(() => {
+    formik.setFieldValue('invoice_no', invoiceNumber);
+  }, [invoiceNumber]);
+
   const handleSubmitClick = useCallback(
     (payload) => {
       setPayload(payload);
@@ -349,4 +364,9 @@ export default compose(
   withDashboardActions,
   withMediaActions,
   withInvoiceDetail(),
+
+  withSettings(({ invoiceSettings }) => ({
+    invoiceNextNumber: invoiceSettings?.next_number,
+    invoiceNumberPrefix: invoiceSettings?.number_prefix,
+  })),
 )(InvoiceForm);

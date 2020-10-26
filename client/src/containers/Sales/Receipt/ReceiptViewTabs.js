@@ -9,7 +9,7 @@ import { DashboardViewsTabs } from 'components';
 import { useUpdateEffect } from 'hooks';
 
 import withReceipts from './withReceipts';
-import withReceiptActions from './withReceipActions';
+import withReceiptActions from './withReceiptActions';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withViewDetails from 'containers/Views/withViewDetails';
 

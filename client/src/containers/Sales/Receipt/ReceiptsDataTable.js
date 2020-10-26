@@ -24,7 +24,7 @@ import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withViewDetails from 'containers/Views/withViewDetails';
 
 import withReceipts from './withReceipts';
-import withReceipActions from './withReceipActions';
+import withReceiptActions from './withReceiptActions';
 import withCurrentView from 'containers/Views/withCurrentView';
 
 function ReceiptsDataTable({
@@ -94,9 +94,13 @@ function ReceiptsDataTable({
   const actionMenuList = useCallback(
     (estimate) => (
       <Menu>
-        <MenuItem text={formatMessage({ id: 'view_details' })} />
+        <MenuItem
+          icon={<Icon icon="reader-18" />}
+          text={formatMessage({ id: 'view_details' })}
+        />
         <MenuDivider />
         <MenuItem
+          icon={<Icon icon="pen-18" />}
           text={formatMessage({ id: 'edit_receipt' })}
           onClick={handleEditReceipt(estimate)}
         />
@@ -135,6 +139,13 @@ function ReceiptsDataTable({
         className: 'customer_id',
       },
       {
+        id: 'receipt_number',
+        Header: formatMessage({ id: 'receipt_number' }),
+        accessor: (row) => `#${row.receipt_number}`,
+        width: 140,
+        className: 'receipt_number',
+      },
+      {
         id: 'deposit_account_id',
         Header: formatMessage({ id: 'deposit_account' }),
         accessor: 'deposit_account.name',
@@ -142,11 +153,11 @@ function ReceiptsDataTable({
         className: 'deposit_account',
       },
       {
-        id: 'email_send_to',
+        id: 'send_to_email',
         Header: formatMessage({ id: 'email' }),
-        accessor: 'email_send_to',
+        accessor: 'send_to_email',
         width: 140,
-        className: 'email_send_to',
+        className: 'send_to_email',
       },
       {
         id: 'amount',
@@ -229,7 +240,7 @@ export default compose(
   withCurrentView,
   withDialogActions,
   withDashboardActions,
-  withReceipActions,
+  withReceiptActions,
   withReceipts(
     ({
       receiptsCurrentPage,

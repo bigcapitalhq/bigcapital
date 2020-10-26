@@ -80,7 +80,7 @@ const reducer = createReducer(initialState, {
     const { pagination, customViewId } = action.payload;
 
     const mapped = {
-      pageSize: parseInt(pagination.pageSize, 10),
+      pageSize: parseInt(pagination.page_size, 10),
       page: parseInt(pagination.page, 10),
       total: parseInt(pagination.total, 10),
     };

@@ -13,15 +13,24 @@ import { Row, Col } from 'react-grid-system';
 import moment from 'moment';
 import { momentFormatter, compose, tansformDateValue } from 'utils';
 import classNames from 'classnames';
-import { ListSelect, ErrorMessage, FieldRequiredHint, Hint } from 'components';
+import {
+  ListSelect,
+  ErrorMessage,
+  FieldRequiredHint,
+  Icon,
+  InputPrependButton,
+} from 'components';
 
 import withCustomers from 'containers/Customers/withCustomers';
+import withDialogActions from 'containers/Dialog/withDialogActions';
 
 function InvoiceFormHeader({
   formik: { errors, touched, setFieldValue, getFieldProps, values },
 
   //#withCustomers
   customers,
+  //#withDialogActions
+  openDialog,
 }) {
   const handleDateChange = useCallback(
     (date_filed) => (date) => {
@@ -66,6 +75,10 @@ function InvoiceFormHeader({
     },
     [setFieldValue],
   );
+
+  const handleInvoiceNumberChange = useCallback(() => {
+    openDialog('invoice-number-form', {});
+  }, [openDialog]);
 
   return (
     <div class="page-form page-form--invoice">
@@ -149,6 +162,19 @@ function InvoiceFormHeader({
           <InputGroup
             intent={errors.invoice_no && touched.invoice_no && Intent.DANGER}
             minimal={true}
+            rightElement={
+              <InputPrependButton
+                buttonProps={{
+                  onClick: handleInvoiceNumberChange,
+                  icon: <Icon icon={'settings-18'} />,
+                }}
+                tooltip={true}
+                tooltipProps={{
+                  content: 'Setting your auto-generated invoice number',
+                  position: Position.BOTTOM_LEFT,
+                }}
+              />
+            }
             {...getFieldProps('invoice_no')}
           />
         </FormGroup>
@@ -174,4 +200,5 @@ export default compose(
   withCustomers(({ customers }) => ({
     customers,
   })),
+  withDialogActions,
 )(InvoiceFormHeader);

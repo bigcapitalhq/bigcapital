@@ -46,15 +46,15 @@ function InvoiceList({
     changePageTitle(formatMessage({ id: 'invoice_list' }));
   }, [changePageTitle, formatMessage]);
 
-  const fetchResourceViews = useQuery(
-    ['resource-views', 'sales_invoices'],
-    (key, resourceName) => requestFetchResourceViews(resourceName),
-  );
+  // const fetchResourceViews = useQuery(
+  //   ['resource-views', 'sales_invoices'],
+  //   (key, resourceName) => requestFetchResourceViews(resourceName),
+  // );
 
-  const fetchResourceFields = useQuery(
-    ['resource-fields', 'sales_invoices'],
-    (key, resourceName) => requestFetchResourceFields(resourceName),
-  );
+  // const fetchResourceFields = useQuery(
+  //   ['resource-fields', 'sales_invoices'],
+  //   (key, resourceName) => requestFetchResourceFields(resourceName),
+  // );
 
   const fetchInvoices = useQuery(['invoices-table', invoicesTableQuery], () =>
     requestFetchInvoiceTable(),
@@ -124,7 +124,7 @@ function InvoiceList({
   );
   return (
     <DashboardInsider
-      loading={fetchResourceViews.isFetching || fetchResourceFields.isFetching}
+      // loading={fetchResourceViews.isFetching || fetchResourceFields.isFetching}
       name={'sales_invoices'}
     >
       <InvoiceActionsBar

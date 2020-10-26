@@ -67,8 +67,8 @@ export const fetchInvoicesTable = ({ query } = {}) => {
           dispatch({
             type: t.INVOICES_PAGE_SET,
             payload: {
-              sales_invoices: response.data.sales_invoices.results,
-              pagination: response.data.sales_invoices.pagination,
+              sales_invoices: response.data.sales_invoices,
+              pagination: response.data.pagination,
               customViewId: response.data.customViewId || -1,
             },
           });
@@ -76,13 +76,13 @@ export const fetchInvoicesTable = ({ query } = {}) => {
           dispatch({
             type: t.INVOICES_ITEMS_SET,
             payload: {
-              sales_invoices: response.data.sales_invoices.results,
+              sales_invoices: response.data.sales_invoices,
             },
           });
           dispatch({
             type: t.INVOICES_PAGINATION_SET,
             payload: {
-              pagination: response.data.sales_invoices.pagination,
+              pagination: response.data.pagination,
               customViewId: response.data.customViewId || -1,
             },
           });

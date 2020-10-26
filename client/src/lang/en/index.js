@@ -645,9 +645,9 @@ export default {
   select_deposit_account: 'Select Deposit Account',
   once_delete_this_receipt_you_will_able_to_restore_it: `Once you delete this receipt, you won\'t be able to restore it later. Are you sure you want to delete this receipt?`,
   the_receipt_has_been_successfully_created:
-    'The recepit has been successfully created.',
+    'The recepit #{number} has been successfully created.',
   the_receipt_has_been_successfully_edited:
-    'The receipt  has been successfully edited.',
+    'The receipt #{number}  has been successfully edited.',
   the_receipt_has_been_successfully_deleted:
     'The receipt has been successfully deleted.',
   bill_list: 'Bill List',
@@ -776,8 +776,11 @@ export default {
   bigger_or_equals: 'Bigger or equals',
   prefix: 'Prefix',
   next_number: 'Next Number',
-  journal_number_settings: 'Journal number Settings',
-  bill_number_settings: 'Bill number Settings',
-  payment_number_settings: 'Payment number Settings',
+  journal_number_settings: 'Journal Number Settings',
+  bill_number_settings: 'Bill Number Settings',
+  payment_number_settings: 'Payment Number Settings',
   Estimate_number_settings: 'Estimate Number Settings',
+  receipt_number_settings: 'Receipt Number Settings',
+  invoice_number_settings: 'Invoice Number Settings',
+  receipt_number: 'Receipt Number',
 };
