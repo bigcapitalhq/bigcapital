@@ -24,7 +24,7 @@ export default class BillSubscriber {
   /**
    * Handles vendor balance increment once bill created.
    */
-  @On(events.bills.onCreated)
+  @On(events.bill.onCreated)
   async handleVendorBalanceIncrement({ tenantId, billId, bill }) {
     const { vendorRepository } = this.tenancy.repositories(tenantId);
 
@@ -36,8 +36,8 @@ export default class BillSubscriber {
   /**
    * Handles writing journal entries once bill created.
    */
-  @On(events.bills.onCreated)
-  @On(events.bills.onEdited)
+  @On(events.bill.onCreated)
+  @On(events.bill.onEdited)
   async handlerWriteJournalEntries({ tenantId, billId, bill }) {
     // Writes the journal entries for the given bill transaction.
     this.logger.info('[bill] writing bill journal entries.', { tenantId });
@@ -47,7 +47,7 @@ export default class BillSubscriber {
   /**
    * Handles vendor balance decrement once bill deleted.
    */
-  @On(events.bills.onDeleted)
+  @On(events.bill.onDeleted)
   async handleVendorBalanceDecrement({ tenantId, billId, oldBill }) {
     const { vendorRepository } = this.tenancy.repositories(tenantId);
 
@@ -59,7 +59,7 @@ export default class BillSubscriber {
   /**
    * Handles revert journal entries on bill deleted.
    */
-  @On(events.bills.onDeleted)
+  @On(events.bill.onDeleted)
   async handlerDeleteJournalEntries({ tenantId, billId }) {
     // Delete associated bill journal transactions.
     this.logger.info('[bill] trying to delete journal entries.', { tenantId, billId });
@@ -69,7 +69,7 @@ export default class BillSubscriber {
   /**
    * Handles vendor balance difference change.
    */
-  @On(events.bills.onEdited)
+  @On(events.bill.onEdited)
   async handleVendorBalanceDiffChange({ tenantId, billId, oldBill, bill }) {
     const { vendorRepository } = this.tenancy.repositories(tenantId);
 

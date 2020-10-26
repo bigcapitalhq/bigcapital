@@ -22,7 +22,7 @@ import JournalEntry from 'services/Accounting/JournalEntry';
 import JournalPosterService from 'services/Sales/JournalPosterService';
 import TenancyService from 'services/Tenancy/TenancyService';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
-import { formatDateFields } from 'utils';
+import { formatDateFields, entriesAmountDiff } from 'utils';
 import { ServiceError } from 'exceptions';
 import CustomersService from 'services/Contacts/CustomersService';
 import ItemsEntriesService from 'services/Items/ItemsEntriesService';
@@ -218,7 +218,7 @@ export default class PaymentReceiveService {
         })),
       });
 
-    await this.eventDispatcher.dispatch(events.paymentReceipts.onCreated, {
+    await this.eventDispatcher.dispatch(events.paymentReceive.onCreated, {
       tenantId, paymentReceive, paymentReceiveId: paymentReceive.id,
     });
     this.logger.info('[payment_receive] updated successfully.', { tenantId, paymentReceive });
@@ -282,7 +282,7 @@ export default class PaymentReceiveService {
         entries: paymentReceiveDTO.entries,
       });
 
-    await this.eventDispatcher.dispatch(events.paymentReceipts.onEdited, {
+    await this.eventDispatcher.dispatch(events.paymentReceive.onEdited, {
       tenantId, paymentReceiveId, paymentReceive, oldPaymentReceive
     });
     this.logger.info('[payment_receive] upserted successfully.', { tenantId, paymentReceiveId });
@@ -313,7 +313,7 @@ export default class PaymentReceiveService {
     // Deletes the payment receive transaction.
     await PaymentReceive.query().findById(paymentReceiveId).delete();
 
-    await this.eventDispatcher.dispatch(events.paymentReceipts.onDeleted, {
+    await this.eventDispatcher.dispatch(events.paymentReceive.onDeleted, {
       tenantId, paymentReceiveId, oldPaymentReceive,
     });
     this.logger.info('[payment_receive] deleted successfully.', { tenantId, paymentReceiveId });
@@ -457,21 +457,15 @@ export default class PaymentReceiveService {
     const { SaleInvoice } = this.tenancy.models(tenantId);
     const opers: Promise<T>[] = [];
 
-    const oldEntriesTable = chain(oldPaymentReceiveEntries)
-      .groupBy('invoiceId')
-      .mapValues((group) => (sumBy(group, 'paymentAmount') || 0) * -1)
-      .value();
-
-    const diffEntries = chain(newPaymentReceiveEntries)
-      .groupBy('invoiceId')
-      .mapValues((group) => (sumBy(group, 'paymentAmount') || 0))
-      .mapValues((value, key) => value - (oldEntriesTable[key] || 0))
-      .mapValues((value, key) => ({ invoiceId: key, paymentAmount: value }))
-      .filter((entry) => entry.paymentAmount != 0)
-      .values()
-      .value();
-
+    const diffEntries = entriesAmountDiff(
+      newPaymentReceiveEntries,
+      oldPaymentReceiveEntries,
+      'paymentAmount',
+      'invoiceId',
+    );
     diffEntries.forEach((diffEntry: any) => {
+      if (diffEntry.paymentAmount === 0) { return; }
+
       const oper = SaleInvoice.changePaymentAmount(
         diffEntry.invoiceId,
         diffEntry.paymentAmount

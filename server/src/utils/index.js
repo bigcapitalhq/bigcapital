@@ -179,6 +179,22 @@ const isDefinedOptionConfigurable = (key, group) => {
   return definedOption?.config || false;
 };
 
+const entriesAmountDiff = (newEntries, oldEntries, amountAttribute, idAttribute) => {
+  const oldEntriesTable = _.chain(oldEntries)
+    .groupBy(idAttribute)
+    .mapValues((group) => (_.sumBy(group, amountAttribute) || 0))
+    .value();
+
+  return _.chain(newEntries)
+    .groupBy(idAttribute)
+    .mapValues((group) => (_.sumBy(group, amountAttribute) || 0))
+    .mapValues((value, key) => value - (oldEntriesTable[key] || 0))
+    .mapValues((value, key) => ({ [idAttribute]: key, [amountAttribute]: value }))
+    .filter((entry) => entry[amountAttribute] != 0)
+    .values()
+    .value();
+};
+
 export {
   hashPassword,
   origin,
@@ -196,4 +212,6 @@ export {
   isDefinedOptionConfigurable,
   getDefinedOption,
   getDefinedOptions,
+
+  entriesAmountDiff,
 };

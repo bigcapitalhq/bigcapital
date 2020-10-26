@@ -105,7 +105,7 @@ export default class SalesReceiptService {
           ...omit(entry, ['id', 'amount']),
         }))
       });
-    await this.eventDispatcher.dispatch(events.saleReceipts.onCreated, { tenantId, saleReceipt });
+    await this.eventDispatcher.dispatch(events.saleReceipt.onCreated, { tenantId, saleReceipt });
 
     this.logger.info('[sale_receipt] sale receipt inserted successfully.', { tenantId });
 
@@ -144,7 +144,7 @@ export default class SalesReceiptService {
       });
 
     this.logger.info('[sale_receipt] edited successfully.', { tenantId, saleReceiptId });
-    await this.eventDispatcher.dispatch(events.saleReceipts.onEdited, {
+    await this.eventDispatcher.dispatch(events.saleReceipt.onEdited, {
       oldSaleReceipt, tenantId, saleReceiptId, saleReceipt,
     });
     return saleReceipt;
@@ -166,7 +166,7 @@ export default class SalesReceiptService {
     await SaleReceipt.query().where('id', saleReceiptId).delete();
 
     this.logger.info('[sale_receipt] deleted successfully.', { tenantId, saleReceiptId });
-    await this.eventDispatcher.dispatch(events.saleReceipts.onDeleted);
+    await this.eventDispatcher.dispatch(events.saleReceipt.onDeleted);
   }
 
   /**

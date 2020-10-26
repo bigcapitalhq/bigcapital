@@ -66,7 +66,9 @@ export default class CustomersService {
     const customer = await this.contactService.newContact(tenantId, contactDTO, 'customer');
 
     this.logger.info('[customer] created successfully.', { tenantId, customerDTO });
-    await this.eventDispatcher.dispatch(events.customers.onCreated);
+    await this.eventDispatcher.dispatch(events.customers.onCreated, {
+      customer, tenantId, customerId: customer.id,
+    });
 
     return customer;
   }
@@ -89,7 +91,9 @@ export default class CustomersService {
     const customer = this.contactService.editContact(tenantId, customerId, contactDTO, 'customer');
 
     this.eventDispatcher.dispatch(events.customers.onEdited);
-    this.logger.info('[customer] edited successfully.', { tenantId, customerId });
+    this.logger.info('[customer] edited successfully.', {
+      tenantId, customerId, customer,
+    });
 
     return customer;
   }
@@ -109,7 +113,7 @@ export default class CustomersService {
 
     await Contact.query().findById(customerId).delete();
 
-    await this.eventDispatcher.dispatch(events.customers.onDeleted);
+    await this.eventDispatcher.dispatch(events.customers.onDeleted, { tenantId, customerId });
     this.logger.info('[customer] deleted successfully.', { tenantId, customerId });
   }
 

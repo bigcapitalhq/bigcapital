@@ -23,7 +23,7 @@ import JournalCommands from 'services/Accounting/JournalCommands';
 import JournalPosterService from 'services/Sales/JournalPosterService';
 import TenancyService from 'services/Tenancy/TenancyService';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
-import { formatDateFields } from 'utils';
+import { entriesAmountDiff, formatDateFields } from 'utils';
 import { ServiceError } from 'exceptions';
 
 const ERRORS = {
@@ -271,7 +271,7 @@ export default class BillPaymentsService {
         entries: billPaymentDTO.entries,
       });
 
-    await this.eventDispatcher.dispatch(events.billPayments.onCreated, {
+    await this.eventDispatcher.dispatch(events.billPayment.onCreated, {
       tenantId, billPayment, billPaymentId: billPayment.id,
     });
     this.logger.info('[payment_made] inserted successfully.', { tenantId, billPaymentId: billPayment.id, });
@@ -332,7 +332,7 @@ export default class BillPaymentsService {
         ...omit(billPaymentObj, ['entries']),
         entries: billPaymentDTO.entries,
       });
-    await this.eventDispatcher.dispatch(events.billPayments.onEdited, {
+    await this.eventDispatcher.dispatch(events.billPayment.onEdited, {
       tenantId, billPaymentId, billPayment, oldPaymentMade,
     });
     this.logger.info('[bill_payment] edited successfully.', { tenantId, billPaymentId, billPayment, oldPaymentMade });
@@ -355,7 +355,7 @@ export default class BillPaymentsService {
     await BillPaymentEntry.query().where('bill_payment_id', billPaymentId).delete();
     await BillPayment.query().where('id', billPaymentId).delete();
 
-    await this.eventDispatcher.dispatch(events.billPayments.onDeleted, { tenantId, billPaymentId, oldPaymentMade });
+    await this.eventDispatcher.dispatch(events.billPayment.onDeleted, { tenantId, billPaymentId, oldPaymentMade });
     this.logger.info('[bill_payment] deleted successfully.', { tenantId, billPaymentId });
   }
 
@@ -476,5 +476,35 @@ export default class BillPaymentsService {
       throw new ServiceError(ERRORS.PAYMENT_MADE_NOT_FOUND);
     }
     return billPayment;
+  }
+
+  /**
+   * Saves bills payment amount changes different.
+   * @param {number} tenantId -
+   * @param {IBillPaymentEntryDTO[]} paymentMadeEntries -
+   * @param {IBillPaymentEntryDTO[]} oldPaymentMadeEntries -
+   */
+  public async saveChangeBillsPaymentAmount(
+    tenantId: number,
+    paymentMadeEntries: IBillPaymentEntryDTO[],
+    oldPaymentMadeEntries: IBillPaymentEntryDTO[],
+  ): Promise<void> {
+    const { Bill } = this.tenancy.models(tenantId);
+    const opers: Promise<void>[] = [];
+
+    const diffEntries = entriesAmountDiff(
+      paymentMadeEntries,
+      oldPaymentMadeEntries,
+      'paymentAmount',
+      'billId',
+    );
+    diffEntries.forEach((diffEntry: { paymentAmount: number, billId: number }) => {
+      const oper = Bill.changePaymentAmount(
+        diffEntry.billId,
+        diffEntry.paymentAmount,
+      );
+      opers.push(oper);
+    });
+    await Promise.all(opers);
   }
 }

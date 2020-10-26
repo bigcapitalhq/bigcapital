@@ -34,7 +34,7 @@ export default class SaleReceipt extends TenantModel {
           to: 'contacts.id',
         },
         filter(query) {
-          query.where('contact_type', 'Customer');
+          query.where('contact_service', 'customer');
         }
       },
 

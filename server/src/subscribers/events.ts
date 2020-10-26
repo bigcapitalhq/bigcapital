@@ -87,7 +87,7 @@ export default {
   /**
    * Sales estimates service.
    */
-  saleEstimates: {
+  saleEstimate: {
     onCreated: 'onSaleEstimateCreated',
     onEdited: 'onSaleEstimateEdited',
     onDeleted: 'onSaleEstimatedDeleted',
@@ -98,7 +98,7 @@ export default {
   /**
    * Sales receipts service.
    */
-  saleReceipts: {
+  saleReceipt: {
     onCreated: 'onSaleReceiptsCreated',
     onEdited: 'onSaleReceiptsEdited',
     onDeleted: 'onSaleReceiptsDeleted',
@@ -109,17 +109,17 @@ export default {
   /**
    * Payment receipts service.
    */
-  paymentReceipts: {
+  paymentReceive: {
     onCreated: 'onPaymentReceiveCreated',
     onEdited: 'onPaymentReceiveEdited',
     onDeleted: 'onPaymentReceiveDeleted',
-    onPublished: 'onPaymentReceiptPublished',
+    onPublished: 'onPaymentReceivePublished',
   },
 
   /**
    * Bills service.
    */
-  bills: {
+  bill: {
     onCreated: 'onBillCreated',
     onEdited: 'onBillEdited',
     onDeleted: 'onBillDeleted',
@@ -130,7 +130,7 @@ export default {
   /**
    * Bill payments service.
    */
-  billPayments: {
+  billPayment: {
     onCreated: 'onBillPaymentCreated',
     onEdited: 'onBillPaymentEdited',
     onDeleted: 'onBillPaymentDeleted',

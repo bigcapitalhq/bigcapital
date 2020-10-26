@@ -120,7 +120,7 @@ export default class SaleEstimateService {
       });
 
     this.logger.info('[sale_estimate] insert sale estimated success.');
-    await this.eventDispatcher.dispatch(events.saleEstimates.onCreated);
+    await this.eventDispatcher.dispatch(events.saleEstimate.onCreated);
 
     return saleEstimate;
   }
@@ -169,7 +169,7 @@ export default class SaleEstimateService {
         })),
       });
 
-    await this.eventDispatcher.dispatch(events.saleEstimates.onEdited, {
+    await this.eventDispatcher.dispatch(events.saleEstimate.onEdited, {
       tenantId, estimateId, saleEstimate, oldSaleEstimate,
     });
     this.logger.info('[sale_estiamte] edited successfully', { tenantId, estimateId });
@@ -199,7 +199,7 @@ export default class SaleEstimateService {
     await SaleEstimate.query().where('id', estimateId).delete();
     this.logger.info('[sale_estimate] deleted successfully.', { tenantId, estimateId });
 
-    await this.eventDispatcher.dispatch(events.saleEstimates.onDeleted, {
+    await this.eventDispatcher.dispatch(events.saleEstimate.onDeleted, {
       tenantId, saleEstimateId: estimateId, oldSaleEstimate,
     });
   }

@@ -137,7 +137,7 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
 
     this.logger.info('[sale_invoice] inserting sale invoice to the storage.');
     const saleInvoice = await SaleInvoice.query()
-      .insertGraph({
+      .insertGraphAndFetch({
         ...omit(saleInvoiceObj, ['entries']),
 
         entries: saleInvoiceObj.entries.map((entry) => ({
@@ -190,7 +190,7 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
 
     this.logger.info('[sale_invoice] trying to update sale invoice.');
     const saleInvoice: ISaleInvoice = await SaleInvoice.query()
-      .upsertGraph({
+      .upsertGraphAndFetch({
         id: saleInvoiceId,
         ...omit(saleInvoiceObj, ['entries', 'invLotNumber']),
 

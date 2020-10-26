@@ -201,7 +201,7 @@ export default class BillsService extends SalesInvoicesCost {
       });
 
     // Triggers `onBillCreated` event. 
-    await this.eventDispatcher.dispatch(events.bills.onCreated, {
+    await this.eventDispatcher.dispatch(events.bill.onCreated, {
       tenantId, bill, billId: bill.id,
     });
     this.logger.info('[bill] bill inserted successfully.', { tenantId, billId: bill.id });
@@ -255,7 +255,7 @@ export default class BillsService extends SalesInvoicesCost {
       }))
     });
     // Triggers event `onBillEdited`.
-    await this.eventDispatcher.dispatch(events.bills.onEdited, { tenantId, billId, oldBill, bill });
+    await this.eventDispatcher.dispatch(events.bill.onEdited, { tenantId, billId, oldBill, bill });
     this.logger.info('[bill] bill upserted successfully.', { tenantId, billId });
 
     return bill;
@@ -283,7 +283,7 @@ export default class BillsService extends SalesInvoicesCost {
     await Promise.all([deleteBillEntriesOper, deleteBillOper]);
 
     // Triggers `onBillDeleted` event.
-    await this.eventDispatcher.dispatch(events.bills.onDeleted, { tenantId, billId, oldBill });
+    await this.eventDispatcher.dispatch(events.bill.onDeleted, { tenantId, billId, oldBill });
   }
 
   /**

@@ -19,7 +19,7 @@ export default class PaymentReceivesSubscriber {
   /**
    * Handle customer balance decrement once payment receive created.
    */
-  @On(events.paymentReceipts.onCreated)
+  @On(events.paymentReceive.onCreated)
   async handleCustomerBalanceDecrement({ tenantId, paymentReceiveId, paymentReceive }) {
     const { customerRepository } = this.tenancy.repositories(tenantId);
 
@@ -30,8 +30,8 @@ export default class PaymentReceivesSubscriber {
   /**
    * Handle sale invoice increment/decrement payment amount once created, edited or deleted.
    */
-  @On(events.paymentReceipts.onCreated)
-  @On(events.paymentReceipts.onEdited)
+  @On(events.paymentReceive.onCreated)
+  @On(events.paymentReceive.onEdited)
   async handleInvoiceIncrementPaymentAmount({ tenantId, paymentReceiveId, paymentReceive, oldPaymentReceive }) {
 
     this.logger.info('[payment_receive] trying to change sale invoice payment amount.', { tenantId });
@@ -43,25 +43,23 @@ export default class PaymentReceivesSubscriber {
   }
 
   /**
-   * Handle sale invoice diff payment amount change on payment receive edited.
+   * Handle 
    */
-  @On(events.paymentReceipts.onEdited)
-  async handleInvoiceDecrementPaymentAmount({ tenantId, paymentReceiveId, paymentReceive, oldPaymentReceive }) {
+  @On(events.paymentReceive.onDeleted)
+  async handleInvoiceDecrementPaymentAmount({ tenantId, paymentReceiveId, oldPaymentReceive }) {
     this.logger.info('[payment_receive] trying to decrement sale invoice payment amount.');
 
     await this.paymentReceivesService.saveChangeInvoicePaymentAmount(
       tenantId,
-      paymentReceive.entries.map((entry) => ({
-        ...entry,
-        paymentAmount: entry.paymentAmount * -1,
-      })),
+      oldPaymentReceive.entries.map((entry) => ({ ...entry, paymentAmount: 0 })),
+      oldPaymentReceive.entries,
     );
   }
 
   /**
    * Handle customer balance increment once payment receive deleted.
    */
-  @On(events.paymentReceipts.onDeleted)
+  @On(events.paymentReceive.onDeleted)
   async handleCustomerBalanceIncrement({ tenantId, paymentReceiveId, oldPaymentReceive }) { 
     const { customerRepository } = this.tenancy.repositories(tenantId);
 
@@ -75,7 +73,7 @@ export default class PaymentReceivesSubscriber {
   /**
    * Handles customer balance diff balance change once payment receive edited.
    */
-  @On(events.paymentReceipts.onEdited)
+  @On(events.paymentReceive.onEdited)
   async handleCustomerBalanceDiffChange({ tenantId, paymentReceiveId, paymentReceive, oldPaymentReceive }) {
     const { customerRepository } = this.tenancy.repositories(tenantId);
 
