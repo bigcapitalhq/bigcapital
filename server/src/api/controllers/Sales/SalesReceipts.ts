@@ -53,6 +53,14 @@ export default class SalesReceiptsController extends BaseController{
       this.handleServiceErrors,
       this.dynamicListService.handlerErrorsToResponse,
     );
+    router.get(
+      '/:id', [
+        ...this.specificReceiptValidationSchema,
+      ],
+      this.validationResult,
+      asyncMiddleware(this.getSaleReceipt.bind(this)),
+      this.handleServiceErrors,
+    );
     return router;
   }
 
@@ -209,6 +217,27 @@ export default class SalesReceiptsController extends BaseController{
         pagination: this.transfromToResponse(pagination),
         filter_meta: this.transfromToResponse(filterMeta),
       });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Retrieve the sale receipt with associated entries.
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {NextFunction} next 
+   */
+  async getSaleReceipt(req: Request, res: Response, next: NextFunction) { 
+    const { id: saleReceiptId } = req.params;
+    const { tenantId } = req;
+
+    try {
+      const saleReceipt = await this.saleReceiptService.getSaleReceipt(tenantId, saleReceiptId);
+
+      return res.status(200).send({
+        sale_receipt: saleReceipt,
+      })
     } catch (error) {
       next(error);
     }

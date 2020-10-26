@@ -215,13 +215,20 @@ export default class SalesReceiptService {
   /**
    * Retrieve sale receipt with associated entries.
    * @param {Integer} saleReceiptId 
+   * @return {ISaleReceipt}
    */
-  async getSaleReceiptWithEntries(tenantId: number, saleReceiptId: number) {
+  async getSaleReceipt(tenantId: number, saleReceiptId: number) {
     const { SaleReceipt } = this.tenancy.models(tenantId);
-    const saleReceipt = await SaleReceipt.query()
-      .where('id', saleReceiptId)
-      .withGraphFetched('entries');
 
+    const saleReceipt = await SaleReceipt.query()
+      .findById(saleReceiptId)
+      .withGraphFetched('entries')
+      .withGraphFetched('customer')
+      .withGraphFetched('depositAccount');
+    
+    if (!saleReceipt) {
+      throw new ServiceError(ERRORS.SALE_RECEIPT_NOT_FOUND);
+    }
     return saleReceipt;
   }
 
