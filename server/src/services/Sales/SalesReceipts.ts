@@ -114,7 +114,7 @@ export default class SalesReceiptService {
     const amount = sumBy(saleReceiptDTO.entries, e => ItemEntry.calcAmount(e));
     const saleReceiptObj = {
       amount,
-      ...formatDateFields(saleReceiptDTO, ['receipt_date'])
+      ...formatDateFields(saleReceiptDTO, ['receiptDate'])
     };
 
     // Validate receipt deposit account existance and type.
@@ -159,7 +159,7 @@ export default class SalesReceiptService {
     const amount = sumBy(saleReceiptDTO.entries, e => ItemEntry.calcAmount(e));
     const saleReceiptObj = {
       amount,
-      ...formatDateFields(saleReceiptDTO, ['receipt_date'])
+      ...formatDateFields(saleReceiptDTO, ['receiptDate'])
     };
     // Retrieve sale receipt or throw not found service error.
     const oldSaleReceipt = await this.getSaleReceiptOrThrowError(tenantId, saleReceiptId);

@@ -8,7 +8,7 @@ exports.up = function(knex) {
     table.date('receipt_date').index();
     table.string('receipt_number');
     table.string('reference_no');
-    table.string('email_send_to');
+    table.string('send_to_email');
     table.text('receipt_message');
     table.text('statement');
     table.timestamps();
