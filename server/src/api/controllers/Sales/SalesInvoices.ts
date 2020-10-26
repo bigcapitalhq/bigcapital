@@ -202,7 +202,7 @@ export default class SaleInvoicesController extends BaseController{
     const { tenantId } = req;
 
     try {
-      const saleInvoice = await this.saleInvoiceService.getSaleInvoiceWithEntries(
+      const saleInvoice = await this.saleInvoiceService.getSaleInvoice(
         tenantId, saleInvoiceId,
       );
       return res.status(200).send({ sale_invoice: saleInvoice });
@@ -255,7 +255,7 @@ export default class SaleInvoicesController extends BaseController{
     const filter: ISalesInvoicesFilter = {
       filterRoles: [],
       sortOrder: 'asc',
-      columnSortBy: 'name',
+      columnSortBy: 'created_at',
       ...this.matchedQueryData(req),
     };
     if (filter.stringifiedFilterRoles) {

@@ -301,13 +301,18 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
    * @async
    * @param {Number} saleInvoiceId 
    */
-  public async getSaleInvoiceWithEntries(tenantId: number, saleInvoiceId: number) {
+  public async getSaleInvoice(tenantId: number, saleInvoiceId: number): Promise<ISaleInvoice> {
     const { SaleInvoice } = this.tenancy.models(tenantId);
-    return SaleInvoice.query()
-      .where('id', saleInvoiceId)
+
+    const saleInvoice = await SaleInvoice.query()
+      .findById(saleInvoiceId)
       .withGraphFetched('entries')
-      .withGraphFetched('customer')
-      .first();
+      .withGraphFetched('customer');
+    
+    if (!saleInvoice) {
+      throw new ServiceError(ERRORS.SALE_INVOICE_NOT_FOUND);
+    }
+    return saleInvoice;
   }
 
   /**
