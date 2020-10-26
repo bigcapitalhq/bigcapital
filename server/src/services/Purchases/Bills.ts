@@ -149,7 +149,7 @@ export default class BillsService extends SalesInvoicesCost {
     const amount = sumBy(entries, 'amount');
 
     return {
-      ...formatDateFields(billDTO, ['bill_date', 'due_date']),
+      ...formatDateFields(billDTO, ['billDate', 'dueDate']),
       amount,
       invLotNumber,
       entries,

@@ -116,7 +116,7 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
     const invLotNumber = 1;
 
     const saleInvoiceObj: ISaleInvoice = {
-      ...formatDateFields(saleInvoiceDTO, ['invoice_date', 'due_date']),
+      ...formatDateFields(saleInvoiceDTO, ['invoiceDate', 'dueDate']),
       balance,
       paymentAmount: 0,
       // invLotNumber,
@@ -166,7 +166,7 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
     const oldSaleInvoice = await this.getInvoiceOrThrowError(tenantId, saleInvoiceId);
 
     const saleInvoiceObj = {
-      ...formatDateFields(saleInvoiceDTO, ['invoice_date', 'due_date']),
+      ...formatDateFields(saleInvoiceDTO, ['invoiceDate', 'dueDate']),
       balance,
       // invLotNumber: oldSaleInvoice.invLotNumber,
     };
