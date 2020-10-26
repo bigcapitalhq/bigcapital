@@ -17,6 +17,13 @@ export default class SaleEstimate extends TenantModel {
   }
 
   /**
+   * Allows to mark model as resourceable to viewable and filterable.
+   */
+  static get resourceable() {
+    return true;
+  }
+
+  /**
    * Relationship mapping.
    */
   static get relationMappings() {

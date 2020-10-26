@@ -95,7 +95,7 @@ export default class SaleEstimateService {
     const amount = sumBy(estimateDTO.entries, e => ItemEntry.calcAmount(e));
     const estimateObj = {
       amount,
-      ...formatDateFields(estimateDTO, ['estimate_date', 'expiration_date']),
+      ...formatDateFields(estimateDTO, ['estimateDate', 'expirationDate']),
     };
 
     // Validate estimate number uniquiness on the storage.
@@ -140,7 +140,7 @@ export default class SaleEstimateService {
     const amount = sumBy(estimateDTO.entries, (e) => ItemEntry.calcAmount(e));
     const estimateObj = {
       amount,
-      ...formatDateFields(estimateDTO, ['estimate_date', 'expiration_date']),
+      ...formatDateFields(estimateDTO, ['estimateDate', 'expirationDate']),
     };
 
     // Validate estimate number uniquiness on the storage.
