@@ -85,7 +85,9 @@ export default class BillPaymentsService {
    */
   private async getPaymentMadeOrThrowError(tenantid: number, paymentMadeId: number) {
     const { BillPayment } = this.tenancy.models(tenantid);
-    const billPayment = await BillPayment.query().findById(paymentMadeId);
+    const billPayment = await BillPayment.query()
+      .withGraphFetched('entries')
+      .findById(paymentMadeId);
 
     if (!billPayment) {
       throw new ServiceError(ERRORS.PAYMENT_MADE_NOT_FOUND);
@@ -304,7 +306,7 @@ export default class BillPaymentsService {
   ): Promise<IBillPayment> {
     const { BillPayment } = this.tenancy.models(tenantId);
 
-    const oldPaymentMade = await this.getPaymentMadeOrThrowError(tenantId, billPaymentId);
+    const oldBillPayment = await this.getPaymentMadeOrThrowError(tenantId, billPaymentId);
 
     const billPaymentObj = {
       amount: sumBy(billPaymentDTO.entries, 'paymentAmount'),
@@ -333,9 +335,9 @@ export default class BillPaymentsService {
         entries: billPaymentDTO.entries,
       });
     await this.eventDispatcher.dispatch(events.billPayment.onEdited, {
-      tenantId, billPaymentId, billPayment, oldPaymentMade,
+      tenantId, billPaymentId, billPayment, oldBillPayment,
     });
-    this.logger.info('[bill_payment] edited successfully.', { tenantId, billPaymentId, billPayment, oldPaymentMade });
+    this.logger.info('[bill_payment] edited successfully.', { tenantId, billPaymentId, billPayment, oldBillPayment });
 
     return billPayment;
   }
@@ -350,12 +352,12 @@ export default class BillPaymentsService {
     const { BillPayment, BillPaymentEntry } = this.tenancy.models(tenantId);
     
     this.logger.info('[bill_payment] trying to delete.', { tenantId, billPaymentId });
-    const oldPaymentMade = await this.getPaymentMadeOrThrowError(tenantId, billPaymentId);
+    const oldBillPayment = await this.getPaymentMadeOrThrowError(tenantId, billPaymentId);
 
     await BillPaymentEntry.query().where('bill_payment_id', billPaymentId).delete();
     await BillPayment.query().where('id', billPaymentId).delete();
 
-    await this.eventDispatcher.dispatch(events.billPayment.onDeleted, { tenantId, billPaymentId, oldPaymentMade });
+    await this.eventDispatcher.dispatch(events.billPayment.onDeleted, { tenantId, billPaymentId, oldBillPayment });
     this.logger.info('[bill_payment] deleted successfully.', { tenantId, billPaymentId });
   }
 
@@ -487,7 +489,7 @@ export default class BillPaymentsService {
   public async saveChangeBillsPaymentAmount(
     tenantId: number,
     paymentMadeEntries: IBillPaymentEntryDTO[],
-    oldPaymentMadeEntries: IBillPaymentEntryDTO[],
+    oldPaymentMadeEntries?: IBillPaymentEntryDTO[],
   ): Promise<void> {
     const { Bill } = this.tenancy.models(tenantId);
     const opers: Promise<void>[] = [];
@@ -499,6 +501,8 @@ export default class BillPaymentsService {
       'billId',
     );
     diffEntries.forEach((diffEntry: { paymentAmount: number, billId: number }) => {
+      if (diffEntry.paymentAmount === 0) { return; }
+
       const oper = Bill.changePaymentAmount(
         diffEntry.billId,
         diffEntry.paymentAmount,

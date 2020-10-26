@@ -295,7 +295,6 @@ export default class PaymentReceivesController extends BaseController {
           errors: [{ type: 'CUSTOMER_NOT_FOUND', code: 300 }],
         });
       }
-      console.log(error.errorType);
     }
     next(error);
   }

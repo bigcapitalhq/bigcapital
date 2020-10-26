@@ -455,7 +455,7 @@ export default class PaymentReceiveService {
     oldPaymentReceiveEntries?: IPaymentReceiveEntryDTO[],
   ): Promise<void> {
     const { SaleInvoice } = this.tenancy.models(tenantId);
-    const opers: Promise<T>[] = [];
+    const opers: Promise<void>[] = [];
 
     const diffEntries = entriesAmountDiff(
       newPaymentReceiveEntries,

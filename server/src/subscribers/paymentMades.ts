@@ -17,27 +17,30 @@ export default class PaymentMadesSubscriber {
   }
 
   /**
-   * Handles bills payment amount increment once payment made created.
+   * Handle bill payment amount increment/decrement once bill payment created or edited.
    */
   @On(events.billPayment.onCreated)
-  async handleBillsIncrementPaymentAmount({ tenantId, billPayment, billPaymentId }) {
-    const { Bill } = this.tenancy.models(tenantId);
-    const storeOpers = [];
+  @On(events.billPayment.onEdited)
+  async handleBillsIncrementPaymentAmount({ tenantId, billPayment, oldBillPayment, billPaymentId }) {
+    this.logger.info('[payment_made] trying to change bills payment amount.', { tenantId, billPaymentId });
+    this.billPaymentsService.saveChangeBillsPaymentAmount(
+      tenantId,
+      billPayment.entries,
+      oldBillPayment?.entries || null,
+    );
+  }
 
-    billPayment.entries.forEach((entry) => {
-      this.logger.info('[bill_payment] increment bill payment amount.', {
-        tenantId, billPaymentId,
-        billId: entry.billId, 
-        amount: entry.paymentAmount,
-      })
-      // Increment the bill payment amount.
-      const billOper = Bill.changePaymentAmount(
-        entry.billId,
-        entry.paymentAmount,
-      );
-      storeOpers.push(billOper);
-    });
-    await Promise.all(storeOpers);
+  /**
+   * Handle revert bill payment amount once bill payment deleted.
+   */
+  @On(events.billPayment.onDeleted)
+  handleBillDecrementPaymentAmount({ tenantId, billPaymentId, oldBillPayment }) {
+    this.logger.info('[payment_made] tring to revert bill payment amount.', { tenantId, billPaymentId });
+    this.billPaymentsService.saveChangeBillsPaymentAmount(
+      tenantId,
+      oldBillPayment.entries.map((entry) => ({ ...entry, paymentAmount: 0 })),
+      oldBillPayment.entries,
+    );
   }
 
   /**
@@ -99,7 +102,7 @@ export default class PaymentMadesSubscriber {
 
     // Change the different vendor balance between the new and old one.
     await vendorRepository.changeDiffBalance(
-      billPayment.vendor_id,
+      billPayment.vendorId,
       oldBillPayment.vendorId,
       billPayment.amount * -1,
       oldBillPayment.amount * -1,
