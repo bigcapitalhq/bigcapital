@@ -127,8 +127,9 @@ export default class SalesReceiptService {
     await this.itemsEntriesService.validateNonSellableEntriesItems(tenantId, saleReceiptDTO.entries);
 
     // Validate sale receipt number uniuqiness.
-    await this.validateReceiptNumberUnique(tenantId, saleReceiptDTO.receiptNumber);
-
+    if (saleReceiptDTO.receiptNumber) {
+      await this.validateReceiptNumberUnique(tenantId, saleReceiptDTO.receiptNumber);
+    }
     this.logger.info('[sale_receipt] trying to insert sale receipt graph.', { tenantId, saleReceiptDTO });
     const saleReceipt = await SaleReceipt.query()
       .insertGraphAndFetch({
@@ -173,7 +174,9 @@ export default class SalesReceiptService {
     await this.itemsEntriesService.validateNonSellableEntriesItems(tenantId, saleReceiptDTO.entries);
 
     // Validate sale receipt number uniuqiness.
-    await this.validateReceiptNumberUnique(tenantId, saleReceiptDTO.receiptNumber, saleReceiptId);
+    if (saleReceiptDTO.receiptNumber) {
+      await this.validateReceiptNumberUnique(tenantId, saleReceiptDTO.receiptNumber, saleReceiptId);
+    }
 
     const saleReceipt = await SaleReceipt.query()
       .upsertGraphAndFetch({

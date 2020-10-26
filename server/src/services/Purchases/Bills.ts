@@ -181,9 +181,13 @@ export default class BillsService extends SalesInvoicesCost {
     this.logger.info('[bill] trying to create a new bill', { tenantId, billDTO });
     const billObj = await this.billDTOToModel(tenantId, billDTO);
 
+    // Retrieve vendor or throw not found service error.
     await this.getVendorOrThrowError(tenantId, billDTO.vendorId);
-    await this.validateBillNumberExists(tenantId, billDTO.billNumber);
 
+    // Validate the bill number uniqiness on the storage.
+    if (billDTO.billNumber) {
+      await this.validateBillNumberExists(tenantId, billDTO.billNumber);
+    }
     // Validate items IDs existance.
     await this.itemsEntriesService.validateItemsIdsExistance(tenantId, billDTO.entries);
 
@@ -237,9 +241,13 @@ export default class BillsService extends SalesInvoicesCost {
     const oldBill = await this.getBillOrThrowError(tenantId, billId);
     const billObj = await this.billDTOToModel(tenantId, billDTO, oldBill);
 
+    // Retrieve vendor details or throw not found service error.
     await this.getVendorOrThrowError(tenantId, billDTO.vendorId);
-    await this.validateBillNumberExists(tenantId, billDTO.billNumber, billId);
 
+    // Validate bill number uniqiness on the storage.
+    if (billDTO.billNumber) {
+      await this.validateBillNumberExists(tenantId, billDTO.billNumber, billId);
+    }
     await this.itemsEntriesService.validateEntriesIdsExistance(tenantId, billId, 'Bill', billDTO.entries);
     await this.itemsEntriesService.validateItemsIdsExistance(tenantId, billDTO.entries);
     await this.itemsEntriesService.validateNonPurchasableEntriesItems(tenantId, billDTO.entries);

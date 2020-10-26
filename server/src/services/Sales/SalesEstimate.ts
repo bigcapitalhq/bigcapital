@@ -99,8 +99,9 @@ export default class SaleEstimateService {
     };
 
     // Validate estimate number uniquiness on the storage.
-    await this.validateEstimateNumberExistance(tenantId, estimateDTO.estimateNumber);
-    
+    if (estimateDTO.estimateNumber) {
+      await this.validateEstimateNumberExistance(tenantId, estimateDTO.estimateNumber);
+    }
     // Retrieve the given customer or throw not found service error.
     await this.customersService.getCustomer(tenantId, estimateDTO.customerId);
 
@@ -146,8 +147,9 @@ export default class SaleEstimateService {
     };
 
     // Validate estimate number uniquiness on the storage.
-    await this.validateEstimateNumberExistance(tenantId, estimateDTO.estimateNumber, estimateId);
-
+    if (estimateDTO.estimateNumber) {
+      await this.validateEstimateNumberExistance(tenantId, estimateDTO.estimateNumber, estimateId);
+    }
     // Retrieve the given customer or throw not found service error.
     await this.customersService.getCustomer(tenantId, estimateDTO.customerId);
 

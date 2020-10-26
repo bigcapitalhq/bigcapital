@@ -193,8 +193,9 @@ export default class PaymentReceiveService {
     const paymentAmount = sumBy(paymentReceiveDTO.entries, 'paymentAmount');
 
     // Validate payment receive number uniquiness.
-    await this.validatePaymentReceiveNoExistance(tenantId, paymentReceiveDTO.paymentReceiveNo);
-
+    if (paymentReceiveDTO.paymentReceiveNo) {
+      await this.validatePaymentReceiveNoExistance(tenantId, paymentReceiveDTO.paymentReceiveNo);
+    }
     // Validate customer existance.
     await this.customersService.getCustomerByIdOrThrowError(tenantId, paymentReceiveDTO.customerId);
 
@@ -255,8 +256,9 @@ export default class PaymentReceiveService {
     const oldPaymentReceive = await this.getPaymentReceiveOrThrowError(tenantId, paymentReceiveId);
 
     // Validate payment receive number uniquiness.
-    await this.validatePaymentReceiveNoExistance(tenantId, paymentReceiveDTO.paymentReceiveNo, paymentReceiveId);
-
+    if (paymentReceiveDTO.paymentReceiveNo) {
+      await this.validatePaymentReceiveNoExistance(tenantId, paymentReceiveDTO.paymentReceiveNo, paymentReceiveId);
+    }
     // Validate the deposit account existance and type.
     this.getDepositAccountOrThrowError(tenantId, paymentReceiveDTO.depositAccountId);
 

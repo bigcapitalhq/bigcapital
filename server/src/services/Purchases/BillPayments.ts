@@ -124,7 +124,7 @@ export default class BillPaymentsService {
    * @param {string} paymentMadeNumber - 
    * @return {Promise<IBillPayment>}
    */
-  private async validatePaymentNumber(tenantId: number, paymentMadeNumber: string, notPaymentMadeId?: string) {
+  private async validatePaymentNumber(tenantId: number, paymentMadeNumber: string, notPaymentMadeId?: number) {
     const { BillPayment } = this.tenancy.models(tenantId);
   
     const foundBillPayment = await BillPayment.query()
@@ -259,8 +259,9 @@ export default class BillPaymentsService {
     await this.getPaymentAccountOrThrowError(tenantId, billPaymentObj.paymentAccountId);
 
     // Validate the payment number uniquiness.
-    await this.validatePaymentNumber(tenantId, billPaymentObj.paymentNumber);
-
+    if (billPaymentObj.paymentNumber) {
+      await this.validatePaymentNumber(tenantId, billPaymentObj.paymentNumber);
+    }
     // Validates the bills existance and associated to the given vendor.
     await this.validateBillsExistance(tenantId, billPaymentObj.entries, billPaymentDTO.vendorId);
 
@@ -328,6 +329,10 @@ export default class BillPaymentsService {
     // Validates the bills due payment amount.
     await this.validateBillsDueAmount(tenantId, billPaymentObj.entries);
 
+    // Validate the payment number uniquiness.
+    if (billPaymentObj.paymentNumber) {
+      await this.validatePaymentNumber(tenantId, billPaymentObj.paymentNumber, billPaymentId);
+    }
     const billPayment = await BillPayment.query()
       .upsertGraphAndFetch({
         id: billPaymentId,

@@ -126,8 +126,9 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
     await this.customersService.getCustomerByIdOrThrowError(tenantId, saleInvoiceDTO.customerId);
 
     // Validate sale invoice number uniquiness.
-    await this.validateInvoiceNumberUnique(tenantId, saleInvoiceDTO.invoiceNo);
-
+    if (saleInvoiceDTO.invoiceNo) {
+      await this.validateInvoiceNumberUnique(tenantId, saleInvoiceDTO.invoiceNo);
+    }
     // Validate items ids existance.
     await this.itemsEntriesService.validateItemsIdsExistance(tenantId, saleInvoiceDTO.entries);
     await this.itemsEntriesService.validateNonSellableEntriesItems(tenantId, saleInvoiceDTO.entries);
@@ -174,8 +175,9 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
     await this.customersService.getCustomerByIdOrThrowError(tenantId, saleInvoiceDTO.customerId);
 
     // Validate sale invoice number uniquiness.
-    await this.validateInvoiceNumberUnique(tenantId, saleInvoiceDTO.invoiceNo, saleInvoiceId);
-
+    if (saleInvoiceDTO.invoiceNo) {
+      await this.validateInvoiceNumberUnique(tenantId, saleInvoiceDTO.invoiceNo, saleInvoiceId);
+    }
     // Validate items ids existance.
     await this.itemsEntriesService.validateItemsIdsExistance(tenantId, saleInvoiceDTO.entries);
 
