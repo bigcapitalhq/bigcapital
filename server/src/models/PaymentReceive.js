@@ -16,6 +16,10 @@ export default class PaymentReceive extends TenantModel {
     return ['created_at', 'updated_at'];
   }
 
+  static get resourceable() {
+    return true;
+  }
+
   /**
    * Relationship mapping.
    */
