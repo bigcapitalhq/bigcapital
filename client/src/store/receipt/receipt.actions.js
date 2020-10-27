@@ -6,17 +6,11 @@ export const submitReceipt = ({ form }) => {
     new Promise((resolve, reject) => {
       ApiService.post('sales/receipts', form)
         .then((response) => {
-          dispatch({
-            type: t.SET_DASHBOARD_REQUEST_COMPLETED,
-          });
           resolve(response);
         })
         .catch((error) => {
           const { response } = error;
           const { data } = response;
-          dispatch({
-            type: t.SET_DASHBOARD_REQUEST_COMPLETED,
-          });
           reject(data?.errors);
         });
     });
@@ -60,12 +54,10 @@ export const fetchReceipt = ({ id }) => {
     new Promise((resovle, reject) => {
       ApiService.get(`sales/receipts/${id}`)
         .then((response) => {
+          const { receipt } = response.data;
           dispatch({
             type: t.RECEIPT_SET,
-            payload: {
-              id,
-              receipt: response.data.receipt,
-            },
+            payload: { id, receipt },
           });
           resovle(response);
         })
@@ -94,21 +86,21 @@ export const fetchReceiptsTable = ({ query = {} }) => {
           dispatch({
             type: t.RECEIPTS_PAGE_SET,
             payload: {
-              sales_receipts: response.data.sales_receipts.results,
-              pagination: response.data.sales_receipts.pagination,
+              sales_receipts: response.data.sale_receipts,
+              pagination: response.data.pagination,
               customViewId: response.data.customViewId || -1,
             },
           });
           dispatch({
             type: t.RECEIPTS_ITEMS_SET,
             payload: {
-              sales_receipts: response.data.sales_receipts.results,
+              sales_receipts: response.data.sale_receipts,
             },
           });
           dispatch({
             type: t.RECEIPTS_PAGINATION_SET,
             payload: {
-              pagination: response.data.sales_receipts.pagination,
+              pagination: response.data.pagination,
               customViewId: response.data.customViewId || -1,
             },
           });

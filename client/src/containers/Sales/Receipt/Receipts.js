@@ -8,7 +8,8 @@ import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import withCustomersActions from 'containers/Customers/withCustomersActions';
 import withAccountsActions from 'containers/Accounts/withAccountsActions';
 import withItemsActions from 'containers/Items/withItemsActions';
-import withReceipActions from './withReceipActions';
+import withReceiptActions from './withReceiptActions';
+import withSettingsActions from 'containers/Settings/withSettingsActions';
 
 import { compose } from 'utils';
 
@@ -24,6 +25,9 @@ function Receipts({
 
   //#withReceiptsActions
   requestFetchReceipt,
+
+  // #withSettingsActions
+  requestFetchOptions,
 }) {
   const history = useHistory();
   const { id } = useParams();
@@ -43,6 +47,8 @@ function Receipts({
 
   // Handle fetch Items data table or list
   const fetchItems = useQuery('items-table', () => requestFetchItems({}));
+
+  const fetchSettings = useQuery(['settings'], () => requestFetchOptions({}));
 
   const handleFormSubmit = useCallback(
     (payload) => {
@@ -75,8 +81,9 @@ function Receipts({
 }
 
 export default compose(
-  withReceipActions,
+  withReceiptActions,
   withCustomersActions,
   withItemsActions,
   withAccountsActions,
+  withSettingsActions,
 )(Receipts);

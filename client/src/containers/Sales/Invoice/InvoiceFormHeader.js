@@ -13,15 +13,24 @@ import { Row, Col } from 'react-grid-system';
 import moment from 'moment';
 import { momentFormatter, compose, tansformDateValue } from 'utils';
 import classNames from 'classnames';
-import { ListSelect, ErrorMessage, FieldRequiredHint, Hint } from 'components';
+import {
+  ListSelect,
+  ErrorMessage,
+  FieldRequiredHint,
+  Icon,
+  InputPrependButton,
+} from 'components';
 
 import withCustomers from 'containers/Customers/withCustomers';
+import withDialogActions from 'containers/Dialog/withDialogActions';
 
 function InvoiceFormHeader({
   formik: { errors, touched, setFieldValue, getFieldProps, values },
 
   //#withCustomers
   customers,
+  //#withDialogActions
+  openDialog,
 }) {
   const handleDateChange = useCallback(
     (date_filed) => (date) => {
@@ -66,6 +75,10 @@ function InvoiceFormHeader({
     },
     [setFieldValue],
   );
+
+  const handleInvoiceNumberChange = useCallback(() => {
+    openDialog('invoice-number-form', {});
+  }, [openDialog]);
 
   return (
     <div class="page-form page-form--invoice">
@@ -175,4 +188,5 @@ export default compose(
   withCustomers(({ customers }) => ({
     customers,
   })),
+  withDialogActions,
 )(InvoiceFormHeader);

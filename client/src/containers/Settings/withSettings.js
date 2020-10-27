@@ -8,6 +8,8 @@ export default (mapState) => {
       billsettings: state.settings.data.bills,
       billPaymentSettings: state.settings.data.billPayments,
       estimatesSettings: state.settings.data.salesEstimates,
+      receiptSettings: state.settings.data.salesReceipts,
+      invoiceSettings: state.settings.data.salesInvoices,
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };

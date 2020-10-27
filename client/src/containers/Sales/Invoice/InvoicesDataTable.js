@@ -2,7 +2,6 @@ import React, { useEffect, useCallback, useState, useMemo } from 'react';
 import {
   Intent,
   Button,
-  Classes,
   Popover,
   Menu,
   MenuItem,
@@ -95,9 +94,13 @@ function InvoicesDataTable({
   const actionMenuList = useCallback(
     (invoice) => (
       <Menu>
-        <MenuItem text={formatMessage({ id: 'view_details' })} />
+        <MenuItem
+          icon={<Icon icon="reader-18" />}
+          text={formatMessage({ id: 'view_details' })}
+        />
         <MenuDivider />
         <MenuItem
+          icon={<Icon icon="pen-18" />}
           text={formatMessage({ id: 'edit_invoice' })}
           onClick={handleEditInvoice(invoice)}
         />

@@ -15,7 +15,7 @@ import ReceiptViewTabs from './ReceiptViewTabs';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withResourceActions from 'containers/Resources/withResourcesActions';
 import withReceipts from './withReceipts';
-import withReceipActions from './withReceipActions';
+import withReceiptActions from './withReceiptActions';
 import withViewsActions from 'containers/Views/withViewsActions';
 
 import { compose } from 'utils';
@@ -46,15 +46,15 @@ function ReceiptList({
     requestFetchReceiptsTable(),
   );
 
-  const fetchResourceViews = useQuery(
-    ['resource-views', 'sales_receipts'],
-    (key, resourceName) => requestFetchResourceViews(resourceName),
-  );
+  // const fetchResourceViews = useQuery(
+  //   ['resource-views', 'sales_receipts'],
+  //   (key, resourceName) => requestFetchResourceViews(resourceName),
+  // );
 
-  const fetchResourceFields = useQuery(
-    ['resource-fields', 'sales_receipts'],
-    (key, resourceName) => requestFetchResourceFields(resourceName),
-  );
+  // const fetchResourceFields = useQuery(
+  //   ['resource-fields', 'sales_receipts'],
+  //   (key, resourceName) => requestFetchResourceFields(resourceName),
+  // );
 
   useEffect(() => {
     changePageTitle(formatMessage({ id: 'receipt_list' }));
@@ -140,7 +140,7 @@ function ReceiptList({
   return (
     <DashboardInsider
       name={'sales_receipts'}
-      loading={fetchResourceViews.isFetching || fetchResourceFields.isFetching}
+      // loading={fetchResourceViews.isFetching || fetchResourceFields.isFetching}
     >
       <DashboardPageContent>
         <ReceiptActionsBar
@@ -182,7 +182,7 @@ function ReceiptList({
 
 export default compose(
   withResourceActions,
-  withReceipActions,
+  withReceiptActions,
   withDashboardActions,
   withViewsActions,
   withReceipts(({ receiptTableQuery }) => ({

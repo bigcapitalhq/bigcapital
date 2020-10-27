@@ -18,10 +18,11 @@ import ReceiptFromHeader from './ReceiptFormHeader';
 import EstimatesItemsTable from 'containers/Sales/Estimate/EntriesItemsTable';
 import ReceiptFormFooter from './ReceiptFormFooter';
 
-import withReceipActions from './withReceipActions';
+import withReceiptActions from './withReceiptActions';
 import withReceiptDetail from './withReceiptDetail';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withMediaActions from 'containers/Media/withMediaActions';
+import withSettings from 'containers/Settings/withSettings';
 
 import { AppToaster } from 'components';
 import Dragzone from 'components/Dragzone';
@@ -45,7 +46,10 @@ function ReceiptForm({
 
   //#withDashboard
   changePageTitle,
-  changePageSubtitle,
+
+  // #withSettings
+  receiptNextNumber,
+  receiptNumberPrefix,
 
   //#own Props
   receiptId,
@@ -90,9 +94,9 @@ function ReceiptForm({
     receipt_date: Yup.date()
       .required()
       .label(formatMessage({ id: 'receipt_date_' })),
-    // receipt_no: Yup.number()
-    //   .required()
-    //   .label(formatMessage({ id: 'receipt_no_' })),
+    receipt_number: Yup.string()
+      .required()
+      .label(formatMessage({ id: 'receipt_no_' })),
     deposit_account_id: Yup.number()
       .required()
       .label(formatMessage({ id: 'deposit_account_' })),
@@ -102,7 +106,7 @@ function ReceiptForm({
       .min(1)
       .max(1024)
       .label(formatMessage({ id: 'receipt_message_' })),
-    email_send_to: Yup.string().email().nullable(),
+    send_to_email: Yup.string().email().nullable(),
     statement: Yup.string()
       .trim()
       .min(1)
@@ -143,12 +147,17 @@ function ReceiptForm({
     [],
   );
 
+  const receiptNumber = receiptNumberPrefix
+    ? `${receiptNumberPrefix}-${receiptNextNumber}`
+    : receiptNextNumber;
+
   const defaultInitialValues = useMemo(
     () => ({
       customer_id: '',
       deposit_account_id: '',
+      receipt_number: receiptNumber,
       receipt_date: moment(new Date()).format('YYYY-MM-DD'),
-      email_send_to: '',
+      send_to_email: '',
       reference_no: '',
       receipt_message: '',
       statement: '',
@@ -198,7 +207,6 @@ function ReceiptForm({
   }, [receipt]);
 
   const formik = useFormik({
-    enableReinitialize: true,
     validationSchema,
     initialValues: {
       ...initialValues,
@@ -217,9 +225,12 @@ function ReceiptForm({
       if (receipt && receipt.id) {
         requestEditReceipt(receipt.id, requestForm).then(() => {
           AppToaster.show({
-            message: formatMessage({
-              id: 'the_receipt_has_been_successfully_edited',
-            }),
+            message: formatMessage(
+              {
+                id: 'the_receipt_has_been_successfully_edited',
+              },
+              { number: values.receipt_number },
+            ),
             intent: Intent.SUCCESS,
           });
           setSubmitting(false);
@@ -230,9 +241,12 @@ function ReceiptForm({
         requestSubmitReceipt(requestForm)
           .then((response) => {
             AppToaster.show({
-              message: formatMessage({
-                id: 'the_receipt_has_been_successfully_created',
-              }),
+              message: formatMessage(
+                {
+                  id: 'the_receipt_has_been_successfully_created',
+                },
+                { number: values.receipt_number },
+              ),
               intent: Intent.SUCCESS,
             });
             setSubmitting(false);
@@ -245,7 +259,6 @@ function ReceiptForm({
       }
     },
   });
-  console.log(formik.errors, 'ERROR');
 
   const handleDeleteFile = useCallback(
     (_deletedFiles) => {
@@ -286,6 +299,10 @@ function ReceiptForm({
       orderingIndex([...repeatValue(defaultReceipt, MIN_LINES_NUMBER)]),
     );
   };
+
+  useEffect(() => {
+    formik.setFieldValue('receipt_number', receiptNumber);
+  }, [receiptNumber]);
 
   return (
     <div className={'receipt-form'}>
@@ -342,8 +359,12 @@ function ReceiptForm({
 }
 
 export default compose(
-  withReceipActions,
+  withReceiptActions,
   withDashboardActions,
   withMediaActions,
   withReceiptDetail(),
+  withSettings(({ receiptSettings }) => ({
+    receiptNextNumber: receiptSettings?.nextNumber,
+    receiptNumberPrefix: receiptSettings?.numberPrefix,
+  })),
 )(ReceiptForm);

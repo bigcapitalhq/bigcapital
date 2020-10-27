@@ -11,7 +11,8 @@ import JournalNumberDialog from 'containers/Dialogs/JournalNumberDialog';
 import BillNumberDialog from 'containers/Dialogs/BillNumberDialog';
 import PaymentNumberDialog from 'containers/Dialogs/PaymentNumberDialog';
 import EstimateNumberDialog from 'containers/Dialogs/EstimateNumberDialog';
-
+import ReceiptNumberDialog from 'containers/Dialogs/ReceiptNumberDialog';
+import InvoiceNumberDialog from 'containers/Dialogs/InvoiceNumberDialog';
 export default function DialogsContainer() {
   return (
     <div>
@@ -20,6 +21,8 @@ export default function DialogsContainer() {
       <BillNumberDialog dialogName={'bill-number-form'} />
       <PaymentNumberDialog dialogName={'payment-number-form'} />
       <EstimateNumberDialog dialogName={'estimate-number-form'} />
+      <ReceiptNumberDialog dialogName={'receipt-number-form'} />
+      <InvoiceNumberDialog dialogName={'invoice-number-form'} />
     </div>
   );
 }

@@ -83,4 +83,24 @@ export default {
       type: "string",
     },
   ],
+  sales_receipts: [
+    {
+      key: "next_number",
+      type: "number",
+    },
+    {
+      key: "number_prefix",
+      type: "string",
+    },
+  ],
+  sales_invoices: [
+    {
+      key: "next_number",
+      type: "number",
+    },
+    {
+      key: "number_prefix",
+      type: "string",
+    },
+  ],
 };

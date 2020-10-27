@@ -24,7 +24,7 @@ import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 
 import withResourceDetail from 'containers/Resources/withResourceDetails';
 import withDialogActions from 'containers/Dialog/withDialogActions';
-import withReceiptActions from './withReceipActions';
+import withReceiptActions from './withReceiptActions';
 import withReceipts from './withReceipts';
 
 import { compose } from 'utils';
