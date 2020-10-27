@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useEffect, useState } from 'react';
 import { MenuItem } from '@blueprintjs/core';
 import ListSelect from 'components/ListSelect';
 
-function ItemListField({
+function ItemsListField({
   items,
   initialItemId,
   selectedItemId,
@@ -66,4 +66,4 @@ function ItemListField({
   );
 }
 
-export default ItemListField;
+export default ItemsListField;
