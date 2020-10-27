@@ -247,7 +247,7 @@ function MakeJournalEntriesTable({
   };
 
   return (
-    <div class="make-journal-entries__table">
+    <div class="make-journal-entries__table datatable-editor">
       <DataTable
         columns={columns}
         data={tableRows}

@@ -139,7 +139,7 @@ function EstimateFormHeader({
               />
             </FormGroup>
           </Col>
-          <Col md={4}>
+          <Col md={4} className={'col--expiration-date'}>
             <FormGroup
               label={<T id={'expiration_date'} />}
               inline={true}

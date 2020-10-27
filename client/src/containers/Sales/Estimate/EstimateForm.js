@@ -317,7 +317,7 @@ const EstimateForm = ({
 
         <div class={classNames(CLASSES.PAGE_FORM_FOOTER)}>
           <Row>
-            <Col md={7}>
+            <Col md={8}>
               <FormGroup
                 label={<T id={'customer_note'} />}
                 className={'form-group--customer_note'}
@@ -327,6 +327,7 @@ const EstimateForm = ({
                   {...formik.getFieldProps('note')}
                 />
               </FormGroup>
+
               <FormGroup
                 label={<T id={'terms_conditions'} />}
                 className={'form-group--terms_conditions'}
@@ -338,7 +339,7 @@ const EstimateForm = ({
               </FormGroup>
             </Col>
           
-            <Col md={5}>
+            <Col md={4}>
               <Dragzone
                 initialFiles={initialAttachmentFiles}
                 onDrop={handleDropFiles}

@@ -5,20 +5,21 @@ import {
   Intent,
   Position,
   MenuItem,
-  Classes,
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { FormattedMessage as T } from 'react-intl';
-import { Row, Col } from 'react-grid-system';
 import moment from 'moment';
 import { momentFormatter, compose, tansformDateValue } from 'utils';
 import classNames from 'classnames';
+import { CLASSES } from 'common/classes';
 import {
   ListSelect,
   ErrorMessage,
   FieldRequiredHint,
   Icon,
   InputPrependButton,
+  Row,
+  Col,
 } from 'components';
 
 import withCustomers from 'containers/Customers/withCustomers';
@@ -81,13 +82,17 @@ function InvoiceFormHeader({
   }, [openDialog]);
 
   return (
-    <div class="page-form page-form--invoice">
-      <div className={'page-form__primary-section'}>
-        {/* customer name */}
+    <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
+      <div className={classNames(CLASSES.PAGE_FORM_HEADER_PRIMARY)}>
+        {/* ----------- Customer name ----------- */}
         <FormGroup
           label={<T id={'customer_name'} />}
           inline={true}
-          className={classNames('form-group--select-list', Classes.FILL)}
+          className={classNames(
+            'form-group--select-list',
+            'form-group--customer-name',
+            CLASSES.FILL,
+          )}
           labelInfo={<FieldRequiredHint />}
           intent={errors.customer_id && touched.customer_id && Intent.DANGER}
           helperText={
@@ -107,79 +112,109 @@ function InvoiceFormHeader({
             labelProp={'display_name'}
           />
         </FormGroup>
-      </div>
 
-      <Row>
-        <Col>
-          <FormGroup
-            label={<T id={'invoice_date'} />}
-            inline={true}
-            labelInfo={<FieldRequiredHint />}
-            className={classNames('form-group--select-list', Classes.FILL)}
-            intent={
-              errors.invoice_date && touched.invoice_date && Intent.DANGER
-            }
-            helperText={
-              <ErrorMessage name="invoice_date" {...{ errors, touched }} />
-            }
-          >
-            <DateInput
-              {...momentFormatter('YYYY/MM/DD')}
-              value={tansformDateValue(values.invoice_date)}
-              onChange={handleDateChange('invoice_date')}
-              popoverProps={{ position: Position.BOTTOM, minimal: true }}
-            />
-          </FormGroup>
-        </Col>
+        <Row>
+          <Col md={7} className={'col--invoice-date'}>
+            {/* ----------- Invoice date ----------- */}
+            <FormGroup
+              label={<T id={'invoice_date'} />}
+              inline={true}
+              labelInfo={<FieldRequiredHint />}
+              className={classNames(
+                'form-group--select-list',
+                'form-group--invoice-date',
+                CLASSES.FILL
+              )}
+              intent={
+                errors.invoice_date && touched.invoice_date && Intent.DANGER
+              }
+              helperText={
+                <ErrorMessage name="invoice_date" {...{ errors, touched }} />
+              }
+            >
+              <DateInput
+                {...momentFormatter('YYYY/MM/DD')}
+                value={tansformDateValue(values.invoice_date)}
+                onChange={handleDateChange('invoice_date')}
+                popoverProps={{ position: Position.BOTTOM, minimal: true }}
+              />
+            </FormGroup>
+          </Col>
 
-        <Col>
-          <FormGroup
-            label={<T id={'due_date'} />}
-            inline={true}
-            className={classNames('form-group--select-list', Classes.FILL)}
-            intent={errors.due_date && touched.due_date && Intent.DANGER}
-            helperText={
-              <ErrorMessage name="due_date" {...{ errors, touched }} />
-            }
-          >
-            <DateInput
-              {...momentFormatter('YYYY/MM/DD')}
-              value={tansformDateValue(values.due_date)}
-              onChange={handleDateChange('due_date')}
-              popoverProps={{ position: Position.BOTTOM, minimal: true }}
-            />
-          </FormGroup>
-        </Col>
-      </Row>
-      {/* invoice */}
-      <FormGroup
-        label={<T id={'invoice_no'} />}
-        inline={true}
-        className={('form-group--estimate', Classes.FILL)}
-        labelInfo={<FieldRequiredHint />}
-        intent={errors.invoice_no && touched.invoice_no && Intent.DANGER}
-        helperText={<ErrorMessage name="invoice_no" {...{ errors, touched }} />}
-      >
-        <InputGroup
+          <Col md={5} className={'col--due-date'}>
+            {/* ----------- Due date ----------- */}
+            <FormGroup
+              label={<T id={'due_date'} />}
+              inline={true}
+              className={classNames(
+                'form-group--select-list',
+                'form-group--due-date',
+                CLASSES.FILL
+              )}
+              intent={errors.due_date && touched.due_date && Intent.DANGER}
+              helperText={
+                <ErrorMessage name="due_date" {...{ errors, touched }} />
+              }
+            >
+              <DateInput
+                {...momentFormatter('YYYY/MM/DD')}
+                value={tansformDateValue(values.due_date)}
+                onChange={handleDateChange('due_date')}
+                popoverProps={{ position: Position.BOTTOM, minimal: true }}
+              />
+            </FormGroup>
+          </Col>
+        </Row>
+        {/* ----------- Invoice number ----------- */}
+        <FormGroup
+          label={<T id={'invoice_no'} />}
+          inline={true}
+          className={classNames('form-group--invoice-no', CLASSES.FILL)}
+          labelInfo={<FieldRequiredHint />}
           intent={errors.invoice_no && touched.invoice_no && Intent.DANGER}
-          minimal={true}
-          {...getFieldProps('invoice_no')}
-        />
-      </FormGroup>
+          helperText={
+            <ErrorMessage name="invoice_no" {...{ errors, touched }} />
+          }
+          rightElement={
+            <InputPrependButton
+              buttonProps={{
+                onClick: handleInvoiceNumberChange,
+                icon: <Icon icon={'settings-18'} />,
+              }}
+              tooltip={true}
+              tooltipProps={{
+                content: 'Setting your auto-generated invoice number',
+                position: Position.BOTTOM_LEFT,
+              }}
+            />
+          }
+        >
+          <InputGroup
+            intent={errors.invoice_no && touched.invoice_no && Intent.DANGER}
+            minimal={true}
+            {...getFieldProps('invoice_no')}
+          />
+        </FormGroup>
 
-      <FormGroup
-        label={<T id={'reference'} />}
-        inline={true}
-        className={classNames('form-group--reference', Classes.FILL)}
-        intent={errors.reference_no && touched.reference_no && Intent.DANGER}
-        helperText={<ErrorMessage name="reference" {...{ errors, touched }} />}
-      >
-        <InputGroup
+        {/* ----------- Reference ----------- */}
+        <FormGroup
+          label={<T id={'reference'} />}
+          inline={true}
+          className={classNames('form-group--reference', CLASSES.FILL)}
           intent={errors.reference_no && touched.reference_no && Intent.DANGER}
-          minimal={true}
-          {...getFieldProps('reference_no')}
-        />
-      </FormGroup>
+          helperText={
+            <ErrorMessage name="reference" {...{ errors, touched }} />
+          }
+        >
+          <InputGroup
+            intent={
+              errors.reference_no && touched.reference_no && Intent.DANGER
+            }
+            minimal={true}
+            {...getFieldProps('reference_no')}
+          />
+        </FormGroup>
+      </div>
     </div>
   );
 }

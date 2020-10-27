@@ -103,4 +103,10 @@ export default class HasTenancyService {
       return tenantCacheLoader(tenantId);
     });
   }
+
+  settings(tenantId: number) {
+    return this.singletonService(tenantId, 'settings', () => {
+      throw new Error('Settings is not injected yet.');
+    });
+  }
 }

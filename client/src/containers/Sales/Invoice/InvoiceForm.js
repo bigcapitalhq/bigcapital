@@ -8,10 +8,11 @@ import React, {
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import moment from 'moment';
-import { Intent, FormGroup, TextArea, Button } from '@blueprintjs/core';
+import { Intent, FormGroup, TextArea } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { pick } from 'lodash';
-import { Row, Col } from 'react-grid-system';
+import classNames from 'classnames';
+import { CLASSES } from 'common/classes';
 
 import InvoiceFormHeader from './InvoiceFormHeader';
 import EstimatesItemsTable from 'containers/Sales/Estimate/EntriesItemsTable';
@@ -23,7 +24,7 @@ import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withMediaActions from 'containers/Media/withMediaActions';
 import withSettings from 'containers/Settings/withSettings';
 
-import { AppToaster } from 'components';
+import { AppToaster, Col, Row } from 'components';
 import Dragzone from 'components/Dragzone';
 import useMedia from 'hooks/useMedia';
 
@@ -307,7 +308,7 @@ function InvoiceForm({
   };
 
   return (
-    <div className={'invoice-form'}>
+    <div className={classNames(CLASSES.PAGE_FORM, CLASSES.PAGE_FORM_INVOICE)}>
       <form onSubmit={formik.handleSubmit}>
         <InvoiceFormHeader formik={formik} />
         <EstimatesItemsTable
@@ -316,37 +317,43 @@ function InvoiceForm({
           onClickClearAllLines={handleClearAllLines}
           formik={formik}
         />
-        <Row>
-          <Col>
-            <FormGroup
-              label={<T id={'invoice_message'} />}
-              className={'form-group--customer_note'}
-            >
-              <TextArea
-                growVertically={true}
-                {...formik.getFieldProps('invoice_message')}
-              />
-            </FormGroup>
-            <FormGroup
-              label={<T id={'terms_conditions'} />}
-              className={'form-group--terms_conditions'}
-            >
-              <TextArea
-                growVertically={true}
-                {...formik.getFieldProps('terms_conditions')}
-              />
-            </FormGroup>
-          </Col>
 
-          <Col>
-            <Dragzone
-              initialFiles={initialAttachmentFiles}
-              onDrop={handleDropFiles}
-              onDeleteFile={handleDeleteFile}
-              hint={'Attachments: Maxiumum size: 20MB'}
-            />
-          </Col>
-        </Row>
+        <div className={classNames(CLASSES.PAGE_FORM_FOOTER)}>
+          <Row>
+            <Col md={8}>
+              {/* --------- Invoice message --------- */}
+              <FormGroup
+                label={<T id={'invoice_message'} />}
+                className={'form-group--invoice_message'}
+              >
+                <TextArea
+                  growVertically={true}
+                  {...formik.getFieldProps('invoice_message')}
+                />
+              </FormGroup>
+
+              {/* --------- Terms and conditions --------- */}
+              <FormGroup
+                label={<T id={'terms_conditions'} />}
+                className={'form-group--terms_conditions'}
+              >
+                <TextArea
+                  growVertically={true}
+                  {...formik.getFieldProps('terms_conditions')}
+                />
+              </FormGroup>
+            </Col>
+
+            <Col md={4}>
+              <Dragzone
+                initialFiles={initialAttachmentFiles}
+                onDrop={handleDropFiles}
+                onDeleteFile={handleDeleteFile}
+                hint={'Attachments: Maxiumum size: 20MB'}
+              />
+            </Col>
+          </Row>
+        </div>
       </form>
 
       <InvoiceFormFooter

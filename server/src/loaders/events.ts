@@ -10,3 +10,5 @@ import 'subscribers/customers';
 import 'subscribers/vendors';
 import 'subscribers/paymentMades';
 import 'subscribers/paymentReceives';
+import 'subscribers/saleEstimates';
+import 'subscribers/saleReceipts';

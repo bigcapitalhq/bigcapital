@@ -12,7 +12,9 @@ import moment from 'moment';
 import { Intent, FormGroup, TextArea } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { pick } from 'lodash';
-import { Row, Col } from 'react-grid-system';
+import classNames from 'classnames';
+
+import { CLASSES } from 'common/classes';
 
 import ReceiptFromHeader from './ReceiptFormHeader';
 import EstimatesItemsTable from 'containers/Sales/Estimate/EntriesItemsTable';
@@ -24,7 +26,7 @@ import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withMediaActions from 'containers/Media/withMediaActions';
 import withSettings from 'containers/Settings/withSettings';
 
-import { AppToaster } from 'components';
+import { AppToaster, Row, Col } from 'components';
 import Dragzone from 'components/Dragzone';
 import useMedia from 'hooks/useMedia';
 
@@ -305,7 +307,7 @@ function ReceiptForm({
   }, [receiptNumber]);
 
   return (
-    <div className={'receipt-form'}>
+    <div className={classNames(CLASSES.PAGE_FORM_RECEIPT, CLASSES.PAGE_FORM)}>
       <form onSubmit={formik.handleSubmit}>
         <ReceiptFromHeader formik={formik} />
 
@@ -316,37 +318,40 @@ function ReceiptForm({
           formik={formik}
         />
 
-        <Row>
-          <Col>
-            <FormGroup
-              label={<T id={'receipt_message'} />}
-              className={'form-group--'}
-            >
-              <TextArea
-                growVertically={true}
-                {...formik.getFieldProps('receipt_message')}
-              />
-            </FormGroup>
-            <FormGroup
-              label={<T id={'statement'} />}
-              className={'form-group--statement'}
-            >
-              <TextArea
-                growVertically={true}
-                {...formik.getFieldProps('statement')}
-              />
-            </FormGroup>
-          </Col>
+        <div className={classNames(CLASSES.PAGE_FORM_FOOTER)}>
+          <Row>
+            <Col md={8}>
+              <FormGroup
+                label={<T id={'receipt_message'} />}
+                className={'form-group--receipt_message'}
+              >
+                <TextArea
+                  growVertically={true}
+                  {...formik.getFieldProps('receipt_message')}
+                />
+              </FormGroup>
 
-          <Col>
-            <Dragzone
-              initialFiles={initialAttachmentFiles}
-              onDrop={handleDropFiles}
-              onDeleteFile={handleDeleteFile}
-              hint={'Attachments: Maxiumum size: 20MB'}
-            />
-          </Col>
-        </Row>
+              <FormGroup
+                label={<T id={'statement'} />}
+                className={'form-group--statement'}
+              >
+                <TextArea
+                  growVertically={true}
+                  {...formik.getFieldProps('statement')}
+                />
+              </FormGroup>
+            </Col>
+
+            <Col md={4}>
+              <Dragzone
+                initialFiles={initialAttachmentFiles}
+                onDrop={handleDropFiles}
+                onDeleteFile={handleDeleteFile}
+                hint={'Attachments: Maxiumum size: 20MB'}
+              />
+            </Col>
+          </Row>
+        </div>
       </form>
       <ReceiptFormFooter
         formik={formik}

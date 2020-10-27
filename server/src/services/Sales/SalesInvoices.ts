@@ -400,6 +400,7 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
       salesInvoicesFilter.page - 1,
       salesInvoicesFilter.pageSize,
     );
+
     return {
       salesInvoices: results,
       pagination,

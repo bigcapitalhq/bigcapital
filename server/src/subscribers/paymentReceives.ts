@@ -3,6 +3,7 @@ import { EventSubscriber, On } from 'event-dispatch';
 import events from 'subscribers/events';
 import TenancyService from 'services/Tenancy/TenancyService';
 import PaymentReceiveService from 'services/Sales/PaymentsReceives';
+import SettingsService from 'services/Settings/SettingsService';
 
 @EventSubscriber()
 export default class PaymentReceivesSubscriber {
@@ -10,10 +11,14 @@ export default class PaymentReceivesSubscriber {
   logger: any;
   paymentReceivesService: PaymentReceiveService;
 
+  settingsService: SettingsService;
+
   constructor() {
     this.tenancy = Container.get(TenancyService);
     this.logger = Container.get('logger');
     this.paymentReceivesService = Container.get(PaymentReceiveService);
+
+    this.settingsService = Container.get(SettingsService);
   }
 
   /**
@@ -83,5 +88,16 @@ export default class PaymentReceivesSubscriber {
       oldPaymentReceive.amount * -1,
       oldPaymentReceive.customerId,
     );
+  }
+
+  /**
+   * Handles increment next number of payment receive once be created.
+   */
+  @On(events.paymentReceive.onCreated)
+  public async handlePaymentNextNumberIncrement({ tenantId, paymentReceiveId }) {
+    await this.settingsService.incrementNextNumber(tenantId, {
+      key: 'next_number',
+      group: 'payment_receives',
+    });
   }
 }

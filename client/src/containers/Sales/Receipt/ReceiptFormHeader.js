@@ -5,7 +5,6 @@ import {
   Intent,
   Position,
   MenuItem,
-  Classes,
 } from '@blueprintjs/core';
 
 import { DateInput } from '@blueprintjs/datetime';
@@ -13,6 +12,7 @@ import { FormattedMessage as T } from 'react-intl';
 import moment from 'moment';
 import { momentFormatter, compose, tansformDateValue } from 'utils';
 import classNames from 'classnames';
+import { CLASSES } from 'common/classes';
 import {
   AccountsSelectList,
   ListSelect,
@@ -91,15 +91,15 @@ function ReceiptFormHeader({
   }, [openDialog]);
 
   return (
-    <div class="page-form receipt-form">
-      <div class="page-form__primary-section">
+    <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
+      <div className={classNames(CLASSES.PAGE_FORM_HEADER_PRIMARY)}>
         {/*- Customer name -*/}
         <FormGroup
           label={<T id={'customer_name'} />}
           inline={true}
           className={classNames(
             'form-group--select-list',
-            Classes.FILL,
+            CLASSES.FILL,
             'form-group--customer',
           )}
           labelInfo={<FieldRequiredHint />}
@@ -128,7 +128,7 @@ function ReceiptFormHeader({
           className={classNames(
             'form-group--deposit-account',
             'form-group--select-list',
-            Classes.FILL,
+            CLASSES.FILL,
           )}
           inline={true}
           labelInfo={<FieldRequiredHint />}
@@ -155,7 +155,7 @@ function ReceiptFormHeader({
         <FormGroup
           label={<T id={'receipt_date'} />}
           inline={true}
-          className={classNames('form-group--select-list', Classes.FILL)}
+          className={classNames('form-group--select-list', CLASSES.FILL)}
           intent={errors.receipt_date && touched.receipt_date && Intent.DANGER}
           helperText={
             <ErrorMessage name="receipt_date" {...{ errors, touched }} />
@@ -168,73 +168,61 @@ function ReceiptFormHeader({
             popoverProps={{ position: Position.BOTTOM, minimal: true }}
           />
         </FormGroup>
-      </div>
-      {/* receipt_no */}
-      <FormGroup
-        label={<T id={'receipt'} />}
-        inline={true}
-        className={('form-group--receipt_number', Classes.FILL)}
-        labelInfo={<FieldRequiredHint />}
-        intent={
-          errors.receipt_number && touched.receipt_number && Intent.DANGER
-        }
-        helperText={
-          <ErrorMessage name="receipt_number" {...{ errors, touched }} />
-        }
-      >
-        <InputGroup
+
+        {/* receipt_no */}
+        <FormGroup
+          label={<T id={'receipt'} />}
+          inline={true}
+          className={('form-group--receipt_number', CLASSES.FILL)}
+          labelInfo={<FieldRequiredHint />}
           intent={
             errors.receipt_number && touched.receipt_number && Intent.DANGER
           }
-          minimal={true}
-          rightElement={
-            <InputPrependButton
-              buttonProps={{
-                onClick: handleReceiptNumberChange,
-                icon: <Icon icon={'settings-18'} />,
-              }}
-              tooltip={true}
-              tooltipProps={{
-                content: 'Setting your auto-generated receipt number',
-                position: Position.BOTTOM_LEFT,
-              }}
-            />
+          helperText={
+            <ErrorMessage name="receipt_number" {...{ errors, touched }} />
           }
-          {...getFieldProps('receipt_number')}
-        />
-      </FormGroup>
+        >
+          <InputGroup
+            intent={
+              errors.receipt_number && touched.receipt_number && Intent.DANGER
+            }
+            minimal={true}
+            rightElement={
+              <InputPrependButton
+                buttonProps={{
+                  onClick: handleReceiptNumberChange,
+                  icon: <Icon icon={'settings-18'} />,
+                }}
+                tooltip={true}
+                tooltipProps={{
+                  content: 'Setting your auto-generated receipt number',
+                  position: Position.BOTTOM_LEFT,
+                }}
+              />
+            }
+            {...getFieldProps('receipt_number')}
+          />
+        </FormGroup>
 
-      {/*- Reference -*/}
-      <FormGroup
-        label={<T id={'reference'} />}
-        inline={true}
-        className={classNames('form-group--reference', Classes.FILL)}
-        intent={errors.reference_no && touched.reference_no && Intent.DANGER}
-        helperText={<ErrorMessage name="reference" {...{ errors, touched }} />}
-      >
-        <InputGroup
+        {/*- Reference -*/}
+        <FormGroup
+          label={<T id={'reference'} />}
+          inline={true}
+          className={classNames('form-group--reference', CLASSES.FILL)}
           intent={errors.reference_no && touched.reference_no && Intent.DANGER}
-          minimal={true}
-          {...getFieldProps('reference_no')}
-        />
-      </FormGroup>
-
-      {/*- Send to email -*/}
-      <FormGroup
-        label={<T id={'send_to_email'} />}
-        inline={true}
-        className={classNames('form-group--send_to_email', Classes.FILL)}
-        intent={errors.send_to_email && touched.send_to_email && Intent.DANGER}
-        helperText={<ErrorMessage name="reference" {...{ errors, touched }} />}
-      >
-        <InputGroup
-          intent={
-            errors.send_to_email && touched.send_to_email && Intent.DANGER
+          helperText={
+            <ErrorMessage name="reference" {...{ errors, touched }} />
           }
-          minimal={true}
-          {...getFieldProps('send_to_email')}
-        />
-      </FormGroup>
+        >
+          <InputGroup
+            intent={
+              errors.reference_no && touched.reference_no && Intent.DANGER
+            }
+            minimal={true}
+            {...getFieldProps('reference_no')}
+          />
+        </FormGroup>
+      </div>
     </div>
   );
 }

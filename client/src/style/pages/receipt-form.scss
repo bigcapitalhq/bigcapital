@@ -1,0 +1,41 @@
+
+
+.page-form--receipt{
+  $self: '.page-form';
+
+  #{$self}__header{
+    .bp3-label{
+      min-width: 140px;
+    }
+    .bp3-form-content{
+      width: 100%;
+    }
+
+    .bp3-form-group{
+      margin-bottom: 18px;
+
+      &.bp3-inline{
+        max-width: 450px; 
+      }
+
+      &.form-group{
+        &--customer{
+          max-width: 600px
+        }
+      }
+    }
+  }
+
+  #{$self}__footer{
+    .form-group--receipt_message,
+    .form-group--statement{
+      max-width: 450px;
+      width: 100%;
+
+      textarea{
+        width: 100%;
+        min-height: 50px;
+      }
+    }
+  }
+}

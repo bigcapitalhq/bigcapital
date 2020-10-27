@@ -103,4 +103,14 @@ export default {
       type: "string",
     },
   ],
+  payment_receives: [
+    {
+      key: 'next_number',
+      type: 'number',
+    },
+    {
+      key: 'number_prefix',
+      type: 'string',
+    },
+  ]
 };

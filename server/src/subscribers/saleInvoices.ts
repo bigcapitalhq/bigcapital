@@ -2,15 +2,18 @@ import { Container } from 'typedi';
 import { On, EventSubscriber } from "event-dispatch";
 import events from 'subscribers/events';
 import TenancyService from 'services/Tenancy/TenancyService';
+import SettingsService from 'services/Settings/SettingsService';
 
 @EventSubscriber()
 export default class SaleInvoiceSubscriber {
   logger: any;
   tenancy: TenancyService;
+  settingsService: SettingsService;
 
   constructor() {
     this.logger = Container.get('logger');
     this.tenancy = Container.get(TenancyService);
+    this.settingsService = Container.get(SettingsService);
   }
 
   /**
@@ -48,9 +51,20 @@ export default class SaleInvoiceSubscriber {
     const { customerRepository } = this.tenancy.repositories(tenantId);
 
     this.logger.info('[sale_invoice] trying to decrement customer balance.', { tenantId });
-    await customerRepository.changeBalance(
+    await customerRepository.changeBalance( 
       oldSaleInvoice.customerId,
       oldSaleInvoice.balance * -1,
     );
+  }
+
+  /**
+   * Handles sale invoice next number increment once invoice created.
+   */
+  @On(events.saleInvoice.onCreated)
+  public async handleInvoiceNextNumberIncrement({ tenantId, saleInvoiceId, saleInvoice }) {
+    await this.settingsService.incrementNextNumber(tenantId, {
+      key: 'next_number',
+      group: 'sales_invoices'
+    });
   }
 }

@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { omit } from 'lodash';
 import { Button, Intent, Position, Tooltip } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
+import classNames from 'classnames';
 
 import { CLASSES } from 'common/classes';
 import { Hint, Icon } from 'components';
@@ -229,7 +230,10 @@ function EstimateTable({
   );
 
   return (
-    <div className={'estimate-form__table datatable-editor'}>
+    <div className={classNames(
+      CLASSES.DATATABLE_EDITOR,
+      CLASSES.DATATABLE_EDITOR_ITEMS_ENTRIES,
+    )}>
       <DataTable
         columns={columns}
         data={rows}
@@ -240,9 +244,8 @@ function EstimateTable({
           updateData: handleUpdateData,
           removeRow: handleRemoveRow,
         }}
-        className={CLASSES.DATATABLE_EDITOR}
       />
-      <div className={'datatable-editor__actions mt1'}>
+      <div className={classNames(CLASSES.DATATABLE_EDITOR_ACTIONS, 'mt1')}>
         <Button
           small={true}
           className={'button--secondary button--new-line'}
