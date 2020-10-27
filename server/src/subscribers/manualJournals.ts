@@ -1,10 +1,19 @@
 import { Inject, Container } from 'typedi';
 import { On, EventSubscriber } from "event-dispatch";
 import events from 'subscribers/events';
+import SettingsService from 'services/Settings/SettingsService';
 import ManualJournalsService from 'services/ManualJournals/ManualJournalsService';
 
 @EventSubscriber()
 export class ManualJournalSubscriber {
+  logger: any;
+  settingsService: SettingsService;
+
+  constructor() {
+    this.logger = Container.get('logger');
+    this.settingsService = Container.get(SettingsService);
+  }
+
   /**
    * Handle manual journal created event.
    * @param {{ tenantId: number, manualJournal: IManualJournal }} 
@@ -39,5 +48,16 @@ export class ManualJournalSubscriber {
 
     await manualJournalsService
       .writeJournalEntries(tenantId, manualJournalId, null, true);
+  }
+
+  /**
+   * Handle increment next number of manual journal once be created.
+   */
+  @On(events.manualJournals.onCreated)
+  public async handleJournalNextNumberIncrement({ tenantId }) {
+    await this.settingsService.incrementNextNumber(tenantId, {
+      group: 'manual_journals',
+      key: 'next_number',
+    });
   }
 }
