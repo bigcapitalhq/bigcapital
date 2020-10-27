@@ -9,11 +9,10 @@ import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import moment from 'moment';
 import { Intent, FormGroup, TextArea } from '@blueprintjs/core';
-import { Row, Col } from 'react-grid-system';
-
+import classNames from 'classnames';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { pick } from 'lodash';
-
+import { CLASSES } from 'common/classes';
 import BillFormHeader from './BillFormHeader';
 import EstimatesItemsTable from 'containers/Sales/Estimate/EntriesItemsTable';
 import BillFormFooter from './BillFormFooter';
@@ -25,7 +24,7 @@ import withBillActions from './withBillActions';
 import withBillDetail from './withBillDetail';
 import withSettings from 'containers/Settings/withSettings';
 
-import { AppToaster } from 'components';
+import { AppToaster, Row, Col  } from 'components';
 import Dragzone from 'components/Dragzone';
 import useMedia from 'hooks/useMedia';
 
@@ -306,34 +305,40 @@ function BillForm({
     );
   };
   return (
-    <div className={'bill-form'}>
+    <div className={classNames(
+      CLASSES.PAGE_FORM,
+      CLASSES.PAGE_FORM_BILL,
+    )}>
       <form onSubmit={formik.handleSubmit}>
         <BillFormHeader formik={formik} />
+
         <EstimatesItemsTable
           formik={formik}
           entries={formik.values.entries}
           onClickAddNewRow={onClickAddNewRow}
           onClickClearAllLines={onClickCleanAllLines}
         />
-        <Row>
-          <Col>
-            <FormGroup label={<T id={'note'} />} className={'form-group--'}>
-              <TextArea
-                growVertically={true}
-                {...formik.getFieldProps('note')}
-              />
-            </FormGroup>
-          </Col>
+        <div class="page-form__footer">
+          <Row>
+            <Col md={8}>
+              <FormGroup label={<T id={'note'} />} className={'form-group--note'}>
+                <TextArea
+                  growVertically={true}
+                  {...formik.getFieldProps('note')}
+                />
+              </FormGroup>
+            </Col>
 
-          <Col>
-            <Dragzone
-              initialFiles={initialAttachmentFiles}
-              onDrop={handleDropFiles}
-              onDeleteFile={handleDeleteFile}
-              hint={'Attachments: Maxiumum size: 20MB'}
-            />
-          </Col>
-        </Row>
+            <Col md={4}>
+              <Dragzone
+                initialFiles={initialAttachmentFiles}
+                onDrop={handleDropFiles}
+                onDeleteFile={handleDeleteFile}
+                hint={'Attachments: Maxiumum size: 20MB'}
+              />
+            </Col>
+          </Row>
+        </div>
       </form>
       <BillFormFooter
         formik={formik}

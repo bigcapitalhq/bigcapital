@@ -4,8 +4,8 @@ import { Button, Intent, Position, Tooltip } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 
 import { CLASSES } from 'common/classes';
+import { Hint, Icon } from 'components';
 import DataTable from 'components/DataTable';
-import Icon from 'components/Icon';
 import {
   InputGroupCell,
   MoneyFieldCell,
@@ -66,6 +66,15 @@ const CellRenderer = (content, type) => (props) => {
   return content(props);
 };
 
+const ItemHeaderCell = () => {
+  return (
+    <>
+      <T id={'product_and_service'} />
+      <Hint />
+    </>
+  );
+};
+
 function EstimateTable({
   //#withitems
   itemsCurrentPage,
@@ -96,13 +105,12 @@ function EstimateTable({
         className: 'index',
       },
       {
-        Header: formatMessage({ id: 'product_and_service' }),
+        Header: ItemHeaderCell,
         id: 'item_id',
         accessor: 'item_id',
         Cell: EstimatesListFieldCell,
         disableSortBy: true,
-        disableResizing: true,
-        width: 250,
+        width: 180,
       },
       {
         Header: formatMessage({ id: 'description' }),
@@ -110,7 +118,7 @@ function EstimateTable({
         Cell: InputGroupCell,
         disableSortBy: true,
         className: 'description',
-        width: 120,
+        width: 100,
       },
 
       {
@@ -118,7 +126,7 @@ function EstimateTable({
         accessor: 'quantity',
         Cell: CellRenderer(InputGroupCell, 'quantity'),
         disableSortBy: true,
-        width: 100,
+        width: 80,
         className: 'quantity',
       },
       {
@@ -126,7 +134,7 @@ function EstimateTable({
         accessor: 'rate',
         Cell: TotalEstimateCellRederer(MoneyFieldCell, 'rate'),
         disableSortBy: true,
-        width: 100,
+        width: 80,
         className: 'rate',
       },
       {
@@ -134,8 +142,7 @@ function EstimateTable({
         accessor: 'discount',
         Cell: CellRenderer(PercentFieldCell, InputGroupCell),
         disableSortBy: true,
-        disableResizing: true,
-        width: 100,
+        width: 80,
         className: 'discount',
       },
       {
@@ -144,7 +151,7 @@ function EstimateTable({
           calculateDiscount(row.discount, row.quantity, row.rate),
         Cell: TotalEstimateCellRederer(DivFieldCell, 'total'),
         disableSortBy: true,
-        width: 150,
+        width: 120,
         className: 'total',
       },
       {
@@ -222,7 +229,7 @@ function EstimateTable({
   );
 
   return (
-    <div className={'estimate-form__table'}>
+    <div className={'estimate-form__table datatable-editor'}>
       <DataTable
         columns={columns}
         data={rows}
@@ -235,7 +242,7 @@ function EstimateTable({
         }}
         className={CLASSES.DATATABLE_EDITOR}
       />
-      <div className={'datatable-editor-actions mt1'}>
+      <div className={'datatable-editor__actions mt1'}>
         <Button
           small={true}
           className={'button--secondary button--new-line'}

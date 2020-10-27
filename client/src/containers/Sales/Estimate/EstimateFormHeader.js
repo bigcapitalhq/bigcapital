@@ -9,16 +9,18 @@ import {
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { FormattedMessage as T } from 'react-intl';
-import { Row, Col } from 'react-grid-system';
 import moment from 'moment';
 import { momentFormatter, compose, tansformDateValue } from 'utils';
 import classNames from 'classnames';
+import { CLASSES } from 'common/classes';
 import {
   ListSelect,
   ErrorMessage,
   FieldRequiredHint,
   Icon,
   InputPrependButton,
+  Row,
+  Col,
 } from 'components';
 
 import withCustomers from 'containers/Customers/withCustomers';
@@ -81,7 +83,7 @@ function EstimateFormHeader({
   }, [openDialog]);
 
   return (
-    <div className={'page-form page-form--estimate'}>
+    <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
       <div className={'page-form__primary-section'}>
         <FormGroup
           label={<T id={'customer_name'} />}
@@ -112,15 +114,15 @@ function EstimateFormHeader({
         </FormGroup>
 
         <Row>
-          <Col>
+          <Col md={8} className={'col--estimate-date'}>
             <FormGroup
               label={<T id={'estimate_date'} />}
               inline={true}
               labelInfo={<FieldRequiredHint />}
               className={classNames(
                 'form-group--select-list',
-                Classes.FILL,
                 'form-group--estimate-date',
+                Classes.FILL,
               )}
               intent={
                 errors.estimate_date && touched.estimate_date && Intent.DANGER
@@ -137,7 +139,7 @@ function EstimateFormHeader({
               />
             </FormGroup>
           </Col>
-          <Col>
+          <Col md={4}>
             <FormGroup
               label={<T id={'expiration_date'} />}
               inline={true}
@@ -164,56 +166,58 @@ function EstimateFormHeader({
             </FormGroup>
           </Col>
         </Row>
-      </div>
 
-      {/*- Estimate -*/}
-      <FormGroup
-        label={<T id={'estimate'} />}
-        inline={true}
-        className={('form-group--estimate-number', Classes.FILL)}
-        labelInfo={<FieldRequiredHint />}
-        intent={
-          errors.estimate_number && touched.estimate_number && Intent.DANGER
-        }
-        helperText={
-          <ErrorMessage name="estimate_number" {...{ errors, touched }} />
-        }
-      >
-        <InputGroup
+        {/*- Estimate -*/}
+        <FormGroup
+          label={<T id={'estimate'} />}
+          inline={true}
+          className={('form-group--estimate-number', Classes.FILL)}
+          labelInfo={<FieldRequiredHint />}
           intent={
             errors.estimate_number && touched.estimate_number && Intent.DANGER
           }
-          minimal={true}
-          rightElement={
-            <InputPrependButton
-              buttonProps={{
-                onClick: handleEstimateNumberChange,
-                icon: <Icon icon={'settings-18'} />,
-              }}
-              tooltip={true}
-              tooltipProps={{
-                content: 'Setting your auto-generated estimate number',
-                position: Position.BOTTOM_LEFT,
-              }}
-            />
+          helperText={
+            <ErrorMessage name="estimate_number" {...{ errors, touched }} />
           }
-          {...getFieldProps('estimate_number')}
-        />
-      </FormGroup>
+        >
+          <InputGroup
+            intent={
+              errors.estimate_number && touched.estimate_number && Intent.DANGER
+            }
+            minimal={true}
+            rightElement={
+              <InputPrependButton
+                buttonProps={{
+                  onClick: handleEstimateNumberChange,
+                  icon: <Icon icon={'settings-18'} />,
+                }}
+                tooltip={true}
+                tooltipProps={{
+                  content: 'Setting your auto-generated estimate number',
+                  position: Position.BOTTOM_LEFT,
+                }}
+              />
+            }
+            {...getFieldProps('estimate_number')}
+          />
+        </FormGroup>
 
-      <FormGroup
-        label={<T id={'reference'} />}
-        inline={true}
-        className={classNames('form-group--reference', Classes.FILL)}
-        intent={errors.reference && touched.reference && Intent.DANGER}
-        helperText={<ErrorMessage name="reference" {...{ errors, touched }} />}
-      >
-        <InputGroup
+        <FormGroup
+          label={<T id={'reference'} />}
+          inline={true}
+          className={classNames('form-group--reference', Classes.FILL)}
           intent={errors.reference && touched.reference && Intent.DANGER}
-          minimal={true}
-          {...getFieldProps('reference')}
-        />
-      </FormGroup>
+          helperText={
+            <ErrorMessage name="reference" {...{ errors, touched }} />
+          }
+        >
+          <InputGroup
+            intent={errors.reference && touched.reference && Intent.DANGER}
+            minimal={true}
+            {...getFieldProps('reference')}
+          />
+        </FormGroup>
+      </div>
     </div>
   );
 }

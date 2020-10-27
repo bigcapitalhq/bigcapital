@@ -1,13 +1,12 @@
 import React, { useCallback, useMemo, useEffect, useState } from 'react';
 import { MenuItem } from '@blueprintjs/core';
 import ListSelect from 'components/ListSelect';
-import { FormattedMessage as T } from 'react-intl';
 
 function EstimateListField({
   products,
   initialProductId,
   selectedProductId,
-  defautlSelectText = <T id={'select_product'} />,
+  defautlSelectText = 'Click to select an item.',
   onProductSelected,
 }) {
   const initialProduct = useMemo(

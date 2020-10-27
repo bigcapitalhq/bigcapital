@@ -456,8 +456,8 @@ export default compose(
   withDashboardActions,
   withMediaActions,
   withSettings(({ manualJournalsSettings }) => ({
-    journalNextNumber: manualJournalsSettings.next_number,
-    journalNumberPrefix: manualJournalsSettings.number_prefix
+    journalNextNumber: manualJournalsSettings.nextNumber,
+    journalNumberPrefix: manualJournalsSettings.numberPrefix
   })),
   withManualJournalsActions,
 )(MakeJournalEntriesForm);

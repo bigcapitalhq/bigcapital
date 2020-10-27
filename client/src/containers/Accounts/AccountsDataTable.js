@@ -101,7 +101,7 @@ function AccountNameAccessor(row) {
 
       <If condition={!row.active}>
         <InactiveSemafro />
-      </If>      
+      </If>
     </>
   );
 }
@@ -270,7 +270,7 @@ function AccountsDataTable({
   );
 
   const selectionColumn = useMemo(
-    () => ({ minWidth: 45, width: 45, maxWidth: 45 }),
+    () => ({ minWidth: 40, width: 40, maxWidth: 40 }),
     [],
   );
 

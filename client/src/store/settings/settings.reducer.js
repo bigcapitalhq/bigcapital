@@ -1,3 +1,4 @@
+import { camelCase } from 'lodash';
 import { createReducer } from '@reduxjs/toolkit';
 import t from 'store/types';
 import { optionsArrayToMap } from 'utils';
@@ -6,6 +7,10 @@ const initialState = {
     organization: {
       name: 'Bigcapital, Limited Liabilities',
     },
+    manualJournals: {},
+    bills: {},
+    billPayments: {},
+    salesEstimates: {},
   },
 };
 
@@ -17,10 +22,13 @@ export default createReducer(initialState, {
     };
     options.forEach((option) => {
       const { key, group, value } = option;
-      if (!_data[group]) {
-        _data[group] = {};
+      const _group = camelCase(group);
+      const _key = camelCase(key);
+
+      if (!_data[_group]) {
+        _data[_group] = {};
       }
-      _data[group][key] = value;
+      _data[_group][_key] = value;
     });
     state.data = _data;
   },

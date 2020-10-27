@@ -342,10 +342,6 @@ function ExpenseForm({
       category.amount && category.index && category.expense_account_id,
   );
 
-  console.log(categories, 'V');
-
-  console.log(formik.errors, 'Error');
-
   return (
     <div className={'expense-form'}>
       <form onSubmit={formik.handleSubmit}>

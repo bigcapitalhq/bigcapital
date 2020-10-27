@@ -1,0 +1,67 @@
+
+
+.page-form--bill{
+  $self: '.page-form';
+
+  #{$self}__header{
+
+    .bp3-form-group{
+      margin-bottom: 18px;
+    }
+    .bp3-label{
+      min-width: 140px;
+    }
+    .bp3-form-content{
+      width: 100%;
+    }
+
+    .bp3-form-group{
+      &.bp3-inline{
+        max-width: 450px; 
+      }
+
+      &.form-group{  
+        &--vendor{
+          max-width: 650px
+        }
+
+        &--due-date{
+          max-width: 300px;
+
+          .bp3-label{
+            min-width: 95px;
+          }
+        }
+
+        &--expiration-date{
+          max-width: 340px;
+
+          .bp3-label{
+            min-width: 120px;
+          }
+        }
+      }
+    }
+    .row--bill-date{
+
+      .col:first-of-type{
+        max-width: 465px;
+      }
+    }
+    .col--estimate-date{
+      max-width: 530px;
+    }
+  }
+
+  #{$self}__footer{
+    .form-group--note{
+      max-width: 450px;
+      width: 100%;
+
+      textarea{
+        width: 100%;
+        min-height: 60px;
+      }
+    }
+  }
+}

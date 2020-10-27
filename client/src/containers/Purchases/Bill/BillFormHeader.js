@@ -1,24 +1,23 @@
-import React, { useMemo, useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import {
   FormGroup,
   InputGroup,
   Intent,
   Position,
   MenuItem,
-  Classes,
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { FormattedMessage as T } from 'react-intl';
-import { Row, Col } from 'react-grid-system';
 import moment from 'moment';
 import { momentFormatter, compose, tansformDateValue } from 'utils';
 import classNames from 'classnames';
+import { CLASSES } from 'common/classes';
 import {
   ListSelect,
   ErrorMessage,
   FieldRequiredHint,
-  Icon,
-  InputPrependButton,
+  Row,
+  Col,
 } from 'components';
 
 // import withCustomers from 'containers/Customers/withCustomers';
@@ -30,13 +29,7 @@ function BillFormHeader({
   formik: { errors, touched, setFieldValue, getFieldProps, values },
 
   //#withVendors
-  vendorsCurrentPage,
   vendorItems,
-  //#withAccouts
-  accountsList,
-
-  // #withDialog
-  openDialog,
 }) {
   const handleDateChange = useCallback(
     (date_filed) => (date) => {
@@ -80,18 +73,18 @@ function BillFormHeader({
     }
   };
 
-  const handleBillNumberChange = useCallback(() => {
-    openDialog('bill-number-form', {});
-  }, [openDialog]);
-
   return (
-    <div className="page-form page-form--bill">
+    <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
       <div className={'page-form__primary-section'}>
-        {/* Vendor  account name */}
+        {/* Vendor name */}
         <FormGroup
           label={<T id={'vendor_name'} />}
           inline={true}
-          className={classNames('form-group--select-list', Classes.FILL)}
+          className={classNames(
+            'form-group--select-list',
+            'form-group--vendor',
+            CLASSES.FILL,
+          )}
           labelInfo={<FieldRequiredHint />}
           intent={errors.vendor_id && touched.vendor_id && Intent.DANGER}
           helperText={
@@ -111,13 +104,15 @@ function BillFormHeader({
             labelProp={'display_name'}
           />
         </FormGroup>
-        <Row>
-          <Col>
+
+        <Row className={'row--bill-date'}>
+          <Col md={7}>
+            {/* Bill date */}
             <FormGroup
               label={<T id={'bill_date'} />}
               inline={true}
               labelInfo={<FieldRequiredHint />}
-              className={classNames('form-group--select-list', Classes.FILL)}
+              className={classNames('form-group--select-list', CLASSES.FILL)}
               intent={errors.bill_date && touched.bill_date && Intent.DANGER}
               helperText={
                 <ErrorMessage name="bill_date" {...{ errors, touched }} />
@@ -131,11 +126,17 @@ function BillFormHeader({
               />
             </FormGroup>
           </Col>
-          <Col>
+
+          <Col md={5}>
+            {/* Due date */}
             <FormGroup
               label={<T id={'due_date'} />}
               inline={true}
-              className={classNames('form-group--select-list', Classes.FILL)}
+              className={classNames(
+                'form-group--due-date',
+                'form-group--select-list',
+                CLASSES.FILL
+              )}
               intent={errors.due_date && touched.due_date && Intent.DANGER}
               helperText={
                 <ErrorMessage name="due_date" {...{ errors, touched }} />
@@ -150,12 +151,12 @@ function BillFormHeader({
             </FormGroup>
           </Col>
         </Row>
-        {/* bill number */}
+
+        {/* Bill number */}
         <FormGroup
           label={<T id={'bill_number'} />}
           inline={true}
-          className={('form-group--bill_number', Classes.FILL)}
-          labelInfo={<FieldRequiredHint />}
+          className={('form-group--bill_number', CLASSES.FILL)}
           intent={errors.bill_number && touched.bill_number && Intent.DANGER}
           helperText={
             <ErrorMessage name="bill_number" {...{ errors, touched }} />
@@ -164,43 +165,35 @@ function BillFormHeader({
           <InputGroup
             intent={errors.bill_number && touched.bill_number && Intent.DANGER}
             minimal={true}
-            rightElement={
-              <InputPrependButton
-                buttonProps={{
-                  onClick: handleBillNumberChange,
-                  icon: <Icon icon={'settings-18'} />,
-                }}
-                tooltip={true}
-                tooltipProps={{
-                  content: 'Setting your auto-generated bill number',
-                  position: Position.BOTTOM_LEFT,
-                }}
-              />
-            }
             {...getFieldProps('bill_number')}
           />
         </FormGroup>
-      </div>
-      <FormGroup
-        label={<T id={'reference'} />}
-        inline={true}
-        className={classNames('form-group--reference', Classes.FILL)}
-        intent={errors.reference_no && touched.reference_no && Intent.DANGER}
-        helperText={<ErrorMessage name="reference" {...{ errors, touched }} />}
-      >
-        <InputGroup
+
+        {/* Reference */}
+        <FormGroup
+          label={<T id={'reference'} />}
+          inline={true}
+          className={classNames('form-group--reference', CLASSES.FILL)}
           intent={errors.reference_no && touched.reference_no && Intent.DANGER}
-          minimal={true}
-          {...getFieldProps('reference_no')}
-        />
-      </FormGroup>
+          helperText={
+            <ErrorMessage name="reference" {...{ errors, touched }} />
+          }
+        >
+          <InputGroup
+            intent={
+              errors.reference_no && touched.reference_no && Intent.DANGER
+            }
+            minimal={true}
+            {...getFieldProps('reference_no')}
+          />
+        </FormGroup>
+      </div>
     </div>
   );
 }
 
 export default compose(
-  withVendors(({ vendorsCurrentPage, vendorItems }) => ({
-    vendorsCurrentPage,
+  withVendors(({ vendorItems }) => ({
     vendorItems,
   })),
   withAccounts(({ accountsList }) => ({

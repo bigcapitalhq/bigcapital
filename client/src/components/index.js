@@ -26,6 +26,8 @@ import DialogContent from './Dialog/DialogContent';
 import DialogSuspense from './Dialog/DialogSuspense';
 import InputPrependButton from './Forms/InputPrependButton';
 import CategoriesSelectList from './CategoriesSelectList';
+import Row from './Grid/Row';
+import Col from './Grid/Col';
 
 const Hint = FieldHint;
 
@@ -58,5 +60,7 @@ export {
   DialogContent,
   DialogSuspense,
   InputPrependButton,
-  CategoriesSelectList
+  CategoriesSelectList,
+  Col,
+  Row,
 };
