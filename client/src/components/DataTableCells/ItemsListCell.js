@@ -1,15 +1,16 @@
 import React, { useCallback, useMemo } from 'react';
-import EstimateListField from 'components/EstimateListField';
+import ItemListField from 'components/ItemListField';
 import classNames from 'classnames';
 import { FormGroup, Classes, Intent } from '@blueprintjs/core';
 
-function EstimatesListFieldCell({
+
+function ItemsListCell({
   column: { id },
   row: { index },
   cell: { value: initialValue },
-  payload: { products, updateData, errors },
+  payload: { items, updateData, errors },
 }) {
-  const handleProductSelected = useCallback(
+  const handleItemSelected = useCallback(
     (item) => {
       updateData(index, id, item.id);
     },
@@ -21,18 +22,15 @@ function EstimatesListFieldCell({
   return (
     <FormGroup
       intent={error ? Intent.DANGER : null}
-      className={classNames(
-        'form-group--select-list',
-        Classes.FILL,
-      )}
+      className={classNames('form-group--select-list', Classes.FILL)}
     >
-      <EstimateListField
-        products={products}
-        onProductSelected={handleProductSelected}
-        selectedProductId={initialValue}
+      <ItemListField
+        items={items}
+        onItemSelected={handleItemSelected}
+        selectedItemId={initialValue}
       />
     </FormGroup>
   );
 }
 
-export default EstimatesListFieldCell;
+export default ItemsListCell;

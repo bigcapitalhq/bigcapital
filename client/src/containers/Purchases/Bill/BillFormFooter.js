@@ -1,54 +1,32 @@
 import React from 'react';
-import { Intent, Button } from '@blueprintjs/core';
+import { FormGroup, TextArea } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'react-intl';
+import { Row, Col } from 'components';
+import Dragzone from 'components/Dragzone';
 
-export default function BillFormFooter({
-  formik: { isSubmitting },
-  onSubmitClick,
-  onCancelClick,
-  bill,
+export default function BillFloatingActions({
+  formik: { getFieldProps },
+  oninitialFiles,
+  onDropFiles,
 }) {
   return (
-    <div className={'form__floating-footer'}>
-      <Button
-        disabled={isSubmitting}
-        loading={isSubmitting}
-        intent={Intent.PRIMARY}
-        type="submit"
-        onClick={() => {
-          onSubmitClick({ redirect: true });
-        }}
-      >
-        {bill && bill.id ? <T id={'edit'} /> : <T id={'save_send'} />}
-      </Button>
+    <div class="page-form__footer">
+      <Row>
+        <Col md={8}>
+          <FormGroup label={<T id={'note'} />} className={'form-group--note'}>
+            <TextArea growVertically={true} {...getFieldProps('note')} />
+          </FormGroup>
+        </Col>
 
-      <Button
-        disabled={isSubmitting}
-        loading={isSubmitting}
-        intent={Intent.PRIMARY}
-        className={'ml1'}
-        name={'save'}
-        type="submit"
-        onClick={() => {
-          onSubmitClick({ redirect: false });
-        }}
-      >
-        <T id={'save'} />
-      </Button>
-
-      <Button className={'ml1'} disabled={isSubmitting}>
-        <T id={'clear'} />
-      </Button>
-
-      <Button
-        className={'ml1'}
-        type="submit"
-        onClick={() => {
-          onCancelClick && onCancelClick();
-        }}
-      >
-        <T id={'close'} />
-      </Button>
+        <Col md={4}>
+          <Dragzone
+            initialFiles={oninitialFiles}
+            onDrop={onDropFiles}
+            onDeleteFile={onDropFiles}
+            hint={'Attachments: Maxiumum size: 20MB'}
+          />
+        </Col>
+      </Row>
     </div>
   );
 }

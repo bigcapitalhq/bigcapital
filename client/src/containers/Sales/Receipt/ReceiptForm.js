@@ -15,8 +15,8 @@ import { pick } from 'lodash';
 import { Row, Col } from 'react-grid-system';
 
 import ReceiptFromHeader from './ReceiptFormHeader';
-import EstimatesItemsTable from 'containers/Sales/Estimate/EntriesItemsTable';
-import ReceiptFormFooter from './ReceiptFormFooter';
+import EntriesItemsTable from 'containers/Sales/Estimate/EntriesItemsTable';
+import ReceiptReceiveFloatingActions from './ReceiptReceiveFloatingActions';
 
 import withReceiptActions from './withReceiptActions';
 import withReceiptDetail from './withReceiptDetail';
@@ -309,7 +309,7 @@ function ReceiptForm({
       <form onSubmit={formik.handleSubmit}>
         <ReceiptFromHeader formik={formik} />
 
-        <EstimatesItemsTable
+        <EntriesItemsTable
           entries={formik.values.entries}
           onClickAddNewRow={handleClickAddNewRow}
           onClickClearAllLines={handleClearAllLines}
@@ -348,7 +348,7 @@ function ReceiptForm({
           </Col>
         </Row>
       </form>
-      <ReceiptFormFooter
+      <ReceiptReceiveFloatingActions
         formik={formik}
         onSubmitClick={handleSubmitClick}
         receipt={receipt}

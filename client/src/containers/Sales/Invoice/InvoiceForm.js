@@ -14,8 +14,8 @@ import { pick } from 'lodash';
 import { Row, Col } from 'react-grid-system';
 
 import InvoiceFormHeader from './InvoiceFormHeader';
-import EstimatesItemsTable from 'containers/Sales/Estimate/EntriesItemsTable';
-import InvoiceFormFooter from './InvoiceFormFooter';
+import EntriesItemsTable from 'containers/Sales/Estimate/EntriesItemsTable';
+import InvoiceFloatingActions from './InvoiceFloatingActions';
 
 import withInvoiceActions from './withInvoiceActions';
 import withInvoiceDetail from './withInvoiceDetail';
@@ -310,7 +310,7 @@ function InvoiceForm({
     <div className={'invoice-form'}>
       <form onSubmit={formik.handleSubmit}>
         <InvoiceFormHeader formik={formik} />
-        <EstimatesItemsTable
+        <EntriesItemsTable
           entries={formik.values.entries}
           onClickAddNewRow={handleClickAddNewRow}
           onClickClearAllLines={handleClearAllLines}
@@ -349,7 +349,7 @@ function InvoiceForm({
         </Row>
       </form>
 
-      <InvoiceFormFooter
+      <InvoiceFloatingActions
         formik={formik}
         onSubmitClick={handleSubmitClick}
         invoice={invoice}

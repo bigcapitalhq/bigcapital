@@ -16,7 +16,7 @@ import { pick, values } from 'lodash';
 
 import PaymentReceiveHeader from './PaymentReceiveFormHeader';
 import PaymentReceiveItemsTable from './PaymentReceiveItemsTable';
-import PaymentReceiveFooter from './PaymentReceiveFormFooter';
+import PaymentReceiveFloatingActions from './PaymentReceiveFloatingActions';
 
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withMediaActions from 'containers/Media/withMediaActions';
@@ -320,7 +320,7 @@ function PaymentReceiveForm({
         /> */}
       </form>
 
-      <PaymentReceiveFooter
+      <PaymentReceiveFloatingActions
         formik={formik}
         onSubmitClick={handleSubmitClick}
         paymentReceive={paymentReceive}

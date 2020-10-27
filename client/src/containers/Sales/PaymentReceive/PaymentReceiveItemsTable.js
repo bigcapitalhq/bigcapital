@@ -10,7 +10,7 @@ import { compose, formattedAmount, transformUpdatedRows } from 'utils';
 import {
   InputGroupCell,
   MoneyFieldCell,
-  EstimatesListFieldCell,
+  ItemsListCell,
   DivFieldCell,
   EmptyDiv,
 } from 'components/DataTableCells';
