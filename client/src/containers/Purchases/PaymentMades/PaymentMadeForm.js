@@ -16,7 +16,7 @@ import { pick, values } from 'lodash';
 
 import PaymentMadeHeader from './PaymentMadeFormHeader';
 import PaymentMadeItemsTable from './PaymentMadeItemsTable';
-import PaymentMadeFooter from './PaymentMadeFormFooter';
+import PaymentMadeFloatingActions from './PaymentMadeFloatingActions';
 
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withMediaActions from 'containers/Media/withMediaActions';
@@ -319,7 +319,7 @@ function PaymentMadeForm({
           hint={'Attachments: Maxiumum size: 20MB'}
         /> */}
       </form>
-      <PaymentMadeFooter
+      <PaymentMadeFloatingActions
         formik={formik}
         onSubmitClick={handleSubmitClick}
         onCancel={handleCancelClick}

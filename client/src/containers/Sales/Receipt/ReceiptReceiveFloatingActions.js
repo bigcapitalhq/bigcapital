@@ -1,14 +1,12 @@
 import React from 'react';
 import { Intent, Button } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'react-intl';
-import { queryCache } from 'react-query';
 
-export default function EstimateFormFooter({
-  formik: { isSubmitting, resetForm },
+export default function ReceiptReceiveFloatingActions({
+  formik: { isSubmitting },
   onSubmitClick,
   onCancelClick,
-  onClearClick,
-  estimate,
+  receipt,
 }) {
   return (
     <div className={'form__floating-footer'}>
@@ -20,7 +18,7 @@ export default function EstimateFormFooter({
           onSubmitClick({ redirect: true });
         }}
       >
-        {estimate && estimate.id ? <T id={'edit'} /> : <T id={'save_send'} />}
+        {receipt && receipt.id ? <T id={'edit'} /> : <T id={'save_send'} />}
       </Button>
 
       <Button
@@ -36,13 +34,7 @@ export default function EstimateFormFooter({
         <T id={'save'} />
       </Button>
 
-      <Button
-        className={'ml1'}
-        disabled={isSubmitting}
-        // onClick={() => {
-        //   onClearClick && onClearClick();
-        // }}
-      >
+      <Button className={'ml1'} disabled={isSubmitting}>
         <T id={'clear'} />
       </Button>
 

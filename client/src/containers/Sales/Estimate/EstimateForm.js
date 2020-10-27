@@ -15,8 +15,8 @@ import classNames from 'classnames';
 
 import { CLASSES } from 'common/classes';
 import EstimateFormHeader from './EstimateFormHeader';
-import EstimatesItemsTable from './EntriesItemsTable';
-import EstimateFormFooter from './EstimateFormFooter';
+import EntriesItemsTable from './EntriesItemsTable';
+import EstimateFloatingActions from './EstimateFloatingActions';
 
 import withEstimateActions from './withEstimateActions';
 import withEstimateDetail from './withEstimateDetail';
@@ -308,7 +308,7 @@ const EstimateForm = ({
     )}>
       <form onSubmit={formik.handleSubmit}>
         <EstimateFormHeader formik={formik} />
-        <EstimatesItemsTable
+        <EntriesItemsTable
           entries={formik.values.entries}
           onClickAddNewRow={handleClickAddNewRow}
           onClickClearAllLines={handleClearAllLines}
@@ -350,7 +350,7 @@ const EstimateForm = ({
           </Row>
         </div>
       </form>
-      <EstimateFormFooter
+      <EstimateFloatingActions
         formik={formik}
         onSubmitClick={handleSubmitClick}
         estimate={estimate}

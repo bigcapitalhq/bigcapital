@@ -2,7 +2,7 @@ import React from 'react';
 import { Intent, Button } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'react-intl';
 
-export default function EstimateFormFooter({
+export default function InvoiceFloatingActions({
   formik: { isSubmitting },
   onSubmitClick,
   onCancelClick,

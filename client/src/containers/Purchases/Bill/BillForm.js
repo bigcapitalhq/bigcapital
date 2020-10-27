@@ -8,24 +8,21 @@ import React, {
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import moment from 'moment';
-import { Intent, FormGroup, TextArea } from '@blueprintjs/core';
+import { Intent } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { pick } from 'lodash';
 import { CLASSES } from 'common/classes';
 import BillFormHeader from './BillFormHeader';
 import EstimatesItemsTable from 'containers/Sales/Estimate/EntriesItemsTable';
+import BillFloatingActions from './BillFloatingActions';
 import BillFormFooter from './BillFormFooter';
-
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withMediaActions from 'containers/Media/withMediaActions';
-import withBills from './withBills';
 import withBillActions from './withBillActions';
 import withBillDetail from './withBillDetail';
-import withSettings from 'containers/Settings/withSettings';
 
-import { AppToaster, Row, Col  } from 'components';
-import Dragzone from 'components/Dragzone';
+import { AppToaster } from 'components';
 import useMedia from 'hooks/useMedia';
 
 import { compose, repeatValue } from 'utils';
@@ -44,13 +41,6 @@ function BillForm({
 
   //#withDashboard
   changePageTitle,
-
-  // #withBills
-  nextBillNumberChanged,
-
-  // #withSettings
-  billNextNumber,
-  billNumberPrefix,
 
   //#withBillDetail
   bill,
@@ -147,14 +137,11 @@ function BillForm({
     [],
   );
 
-  const billNumber = billNumberPrefix
-    ? `${billNumberPrefix}-${billNextNumber}`
-    : billNextNumber;
 
   const defaultInitialValues = useMemo(
     () => ({
       vendor_id: '',
-      bill_number: billNumber,
+      bill_number: '',
       bill_date: moment(new Date()).format('YYYY-MM-DD'),
       due_date: moment(new Date()).format('YYYY-MM-DD'),
       // status: 'Bill',
@@ -162,7 +149,7 @@ function BillForm({
       note: '',
       entries: [...repeatValue(defaultBill, MIN_LINES_NUMBER)],
     }),
-    [defaultBill, billNumber],
+    [defaultBill],
   );
 
   const orderingIndex = (_bill) => {
@@ -259,11 +246,6 @@ function BillForm({
     },
   });
 
-  useEffect(() => {
-    formik.setFieldValue('bill_number', billNumber);
-    setBillNumberChanged(false);
-  }, [nextBillNumberChanged, billNumber]);
-
   const handleSubmitClick = useCallback(
     (payload) => {
       setPayload(payload);
@@ -290,7 +272,7 @@ function BillForm({
     },
     [setDeletedFiles, deletedFiles],
   );
-  
+
   const onClickCleanAllLines = () => {
     formik.setFieldValue(
       'entries',
@@ -305,10 +287,7 @@ function BillForm({
     );
   };
   return (
-    <div className={classNames(
-      CLASSES.PAGE_FORM,
-      CLASSES.PAGE_FORM_BILL,
-    )}>
+    <div className={classNames(CLASSES.PAGE_FORM, CLASSES.PAGE_FORM_BILL)}>
       <form onSubmit={formik.handleSubmit}>
         <BillFormHeader formik={formik} />
 
@@ -318,33 +297,16 @@ function BillForm({
           onClickAddNewRow={onClickAddNewRow}
           onClickClearAllLines={onClickCleanAllLines}
         />
-        <div class="page-form__footer">
-          <Row>
-            <Col md={8}>
-              <FormGroup label={<T id={'note'} />} className={'form-group--note'}>
-                <TextArea
-                  growVertically={true}
-                  {...formik.getFieldProps('note')}
-                />
-              </FormGroup>
-            </Col>
-
-            <Col md={4}>
-              <Dragzone
-                initialFiles={initialAttachmentFiles}
-                onDrop={handleDropFiles}
-                onDeleteFile={handleDeleteFile}
-                hint={'Attachments: Maxiumum size: 20MB'}
-              />
-            </Col>
-          </Row>
-        </div>
+        <BillFormFooter
+          formik={formik}
+          oninitialFiles={initialAttachmentFiles}
+          onDropFiles={handleDeleteFile}
+        />
       </form>
-      <BillFormFooter
+      <BillFloatingActions
         formik={formik}
         onSubmitClick={handleSubmitClick}
         bill={bill}
-        disabled={formik.isSubmitting}
         onCancelClick={handleCancelClick}
       />
     </div>
@@ -354,11 +316,6 @@ function BillForm({
 export default compose(
   withBillActions,
   withBillDetail(),
-  withBills(({ nextBillNumberChanged }) => ({ nextBillNumberChanged })),
   withDashboardActions,
   withMediaActions,
-  withSettings(({ billsettings }) => ({
-    billNextNumber: billsettings?.next_number,
-    billNumberPrefix: billsettings?.number_prefix,
-  })),
 )(BillForm);

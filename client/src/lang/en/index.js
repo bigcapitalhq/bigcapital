@@ -668,7 +668,7 @@ export default {
   the_bill_has_been_successfully_edited:
     'The bill #{number} has been successfully edited.',
   the_bill_has_been_successfully_created:
-    'The bill has been successfully created.',
+    'The bill #{number} has been successfully created.',
   the_bill_has_been_successfully_deleted:
     'The bill has been successfully deleted.',
   once_delete_this_bill_you_will_able_to_restore_it: `Once you delete this bill, you won\'t be able to restore it later. Are you sure you want to delete this bill?`,

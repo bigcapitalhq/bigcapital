@@ -15,8 +15,8 @@ import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 
 import InvoiceFormHeader from './InvoiceFormHeader';
-import EstimatesItemsTable from 'containers/Sales/Estimate/EntriesItemsTable';
-import InvoiceFormFooter from './InvoiceFormFooter';
+import EntriesItemsTable from 'containers/Sales/Estimate/EntriesItemsTable';
+import InvoiceFloatingActions from './InvoiceFloatingActions';
 
 import withInvoiceActions from './withInvoiceActions';
 import withInvoiceDetail from './withInvoiceDetail';
@@ -311,7 +311,7 @@ function InvoiceForm({
     <div className={classNames(CLASSES.PAGE_FORM, CLASSES.PAGE_FORM_INVOICE)}>
       <form onSubmit={formik.handleSubmit}>
         <InvoiceFormHeader formik={formik} />
-        <EstimatesItemsTable
+        <EntriesItemsTable
           entries={formik.values.entries}
           onClickAddNewRow={handleClickAddNewRow}
           onClickClearAllLines={handleClearAllLines}
@@ -356,7 +356,7 @@ function InvoiceForm({
         </div>
       </form>
 
-      <InvoiceFormFooter
+      <InvoiceFloatingActions
         formik={formik}
         onSubmitClick={handleSubmitClick}
         invoice={invoice}

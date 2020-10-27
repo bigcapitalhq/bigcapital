@@ -10,7 +10,7 @@ import DataTable from 'components/DataTable';
 import {
   InputGroupCell,
   MoneyFieldCell,
-  EstimatesListFieldCell,
+  ItemsListCell,
   PercentFieldCell,
   DivFieldCell,
 } from 'components/DataTableCells';
@@ -76,7 +76,7 @@ const ItemHeaderCell = () => {
   );
 };
 
-function EstimateTable({
+function EntriesItemsTable({
   //#withitems
   itemsCurrentPage,
 
@@ -109,7 +109,8 @@ function EstimateTable({
         Header: ItemHeaderCell,
         id: 'item_id',
         accessor: 'item_id',
-        Cell: EstimatesListFieldCell,
+        Cell: ItemsListCell,
+        // ItemsListCell
         disableSortBy: true,
         width: 180,
       },
@@ -239,7 +240,7 @@ function EstimateTable({
         data={rows}
         rowClassNames={rowClassNames}
         payload={{
-          products: itemsCurrentPage,
+          items: itemsCurrentPage,
           errors: errors.entries || [],
           updateData: handleUpdateData,
           removeRow: handleRemoveRow,
@@ -270,4 +271,4 @@ export default compose(
   withItems(({ itemsCurrentPage }) => ({
     itemsCurrentPage,
   })),
-)(EstimateTable);
+)(EntriesItemsTable);
