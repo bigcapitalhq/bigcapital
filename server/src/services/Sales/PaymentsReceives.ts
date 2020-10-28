@@ -26,6 +26,7 @@ import { formatDateFields, entriesAmountDiff } from 'utils';
 import { ServiceError } from 'exceptions';
 import CustomersService from 'services/Contacts/CustomersService';
 import ItemsEntriesService from 'services/Items/ItemsEntriesService';
+import { SaleInvoice } from 'models';
 
 const ERRORS = {
   PAYMENT_RECEIVE_NO_EXISTS: 'PAYMENT_RECEIVE_NO_EXISTS',
@@ -337,7 +338,24 @@ export default class PaymentReceiveService {
     }
     return paymentReceive;
   }
-  
+
+  /**
+   * Retrieve sale invoices that assocaited to the given payment receive.
+   * @param {number} tenantId - Tenant id.
+   * @param {number} paymentReceiveId - Payment receive id.
+   * @return {Promise<ISaleInvoice>}
+   */
+  public async getPaymentReceiveInvoices(tenantId: number, paymentReceiveId: number) {
+    const { SaleInvoice } = this.tenancy.models(tenantId);
+
+    const paymentReceive = await this.getPaymentReceiveOrThrowError(tenantId, paymentReceiveId);
+    const paymentReceiveInvoicesIds = paymentReceive.entries.map(entry => entry.invoiceId);
+
+    const saleInvoices = await SaleInvoice.query().whereIn('id', paymentReceiveInvoicesIds);
+
+    return saleInvoices;
+  }
+
   /**
    * Retrieve payment receives paginated and filterable list.
    * @param {number} tenantId 
@@ -441,7 +459,6 @@ export default class PaymentReceiveService {
       journal.saveBalance(),
     ]);
   }
-
 
   /**
    * Saves difference changing between old and new invoice payment amount.

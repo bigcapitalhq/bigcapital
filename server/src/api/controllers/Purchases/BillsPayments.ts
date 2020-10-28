@@ -8,6 +8,7 @@ import BaseController from 'api/controllers/BaseController';
 import BillPaymentsService from 'services/Purchases/BillPayments';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import AccountsService from 'services/Accounts/AccountsService';
+import ResourceController from '../Resources';
 
 /**
  * Bills payments controller.
@@ -50,6 +51,12 @@ export default class BillsPayments extends BaseController {
       ],
       this.validationResult,
       asyncMiddleware(this.deleteBillPayment.bind(this)),
+      this.handleServiceError,
+    );
+    router.get('/:id/bills',
+      this.specificBillPaymentValidateSchema,
+      this.validationResult,
+      asyncMiddleware(this.getPaymentBills.bind(this)),
       this.handleServiceError,
     );
     router.get('/:id',
@@ -190,9 +197,30 @@ export default class BillsPayments extends BaseController {
     const { tenantId } = req;
     const { id: billPaymentId } = req.params;
 
-    const billPayment = await this.billPaymentService.getBillPayment(tenantId, billPaymentId);
+    try {
+      const billPayment = await this.billPaymentService.getBillPayment(tenantId, billPaymentId);
+      return res.status(200).send({ bill_payment: billPayment });
+    } catch (error) {
+      next(error);
+    }
+  }
 
-    return res.status(200).send({ bill_payment: billPayment });
+  /**
+   * Retrieve associated bills for the given payment made.
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {NextFunction} next 
+   */
+  async getPaymentBills(req: Request, res: Response, next: NextFunction) {
+    const { tenantId } = req;
+    const { id: billPaymentId } = req.params;
+
+    try {
+      const bills = await this.billPaymentService.getPaymentBills(tenantId, billPaymentId);
+      return res.status(200).send({ bills });
+    } catch (error) {
+      next(error);
+    }
   }
 
   /**

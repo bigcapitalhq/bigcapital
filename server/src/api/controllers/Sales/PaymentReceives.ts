@@ -41,6 +41,13 @@ export default class PaymentReceivesController extends BaseController {
       this.handleServiceErrors,
     );
     router.get(
+      '/:id/invoices',
+      this.paymentReceiveValidation,
+      this.validationResult,
+      asyncMiddleware(this.getPaymentReceiveInvoices.bind(this)),
+      this.handleServiceErrors,
+    );
+    router.get(
       '/:id',
       this.paymentReceiveValidation,
       this.validationResult,
@@ -204,6 +211,26 @@ export default class PaymentReceivesController extends BaseController {
         tenantId, paymentReceiveId
       );
       return res.status(200).send({ paymentReceive });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Retrieve sale invoices that associated with the given payment receive.
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {NextFunction} next 
+   */
+  async getPaymentReceiveInvoices(req: Request, res: Response, next: NextFunction) {
+    const { tenantId } = req;
+    const { id: paymentReceiveId } = req.params;
+
+    try {
+      const invoices = await this.paymentReceiveService.getPaymentReceiveInvoices(
+        tenantId, paymentReceiveId,
+      );
+      return res.status(200).send({ sale_invoices: invoices });
     } catch (error) {
       next(error);
     }

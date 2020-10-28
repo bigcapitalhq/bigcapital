@@ -25,6 +25,7 @@ import TenancyService from 'services/Tenancy/TenancyService';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import { entriesAmountDiff, formatDateFields } from 'utils';
 import { ServiceError } from 'exceptions';
+import { Bill } from 'models';
 
 const ERRORS = {
   BILL_VENDOR_NOT_FOUND: 'VENDOR_NOT_FOUND',
@@ -364,6 +365,22 @@ export default class BillPaymentsService {
 
     await this.eventDispatcher.dispatch(events.billPayment.onDeleted, { tenantId, billPaymentId, oldBillPayment });
     this.logger.info('[bill_payment] deleted successfully.', { tenantId, billPaymentId });
+  }
+
+  /**
+   * Retrieve payment made associated bills.
+   * @param {number} tenantId -
+   * @param {number} billPaymentId -
+   */
+  public async getPaymentBills(tenantId: number, billPaymentId: number) {
+    const { Bill } = this.tenancy.models(tenantId);
+
+    const billPayment = await this.getPaymentMadeOrThrowError(tenantId, billPaymentId);
+    const paymentBillsIds = billPayment.entries.map((entry) => entry.id);
+
+    const bills = await Bill.query().whereIn('id', paymentBillsIds);
+
+    return bills;
   }
 
   /**
