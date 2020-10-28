@@ -103,7 +103,12 @@ function BillForm({
       .label(formatMessage({ id: 'note' })),
     entries: Yup.array().of(
       Yup.object().shape({
-        quantity: Yup.number().nullable(),
+        quantity: Yup.number()
+          .nullable()
+          .when(['rate'], {
+            is: (rate) => rate,
+            then: Yup.number().required(),
+          }),
         rate: Yup.number().nullable(),
         item_id: Yup.number()
           .nullable()
@@ -207,7 +212,7 @@ function BillForm({
     initialValues: {
       ...initialValues,
     },
-    onSubmit: async (values, { setSubmitting, setErrors, resetForm }) => {
+    onSubmit: (values, { setSubmitting, setErrors, resetForm }) => {
       setSubmitting(true);
 
       const form = {
