@@ -783,4 +783,9 @@ export default {
   receipt_number_settings: 'Receipt Number Settings',
   invoice_number_settings: 'Invoice Number Settings',
   receipt_number: 'Receipt Number',
+  estimate_number_is_not_unqiue: 'Estimate number is not unqiue',
+  invoice_number_is_not_unqiue:  'Invoice number is not unqiue',
+  sale_receipt_number_not_unique: 'Receipt number is not unique',
+  sale_invoice_number_is_exists: 'Sale invoice number is exists',
+  bill_number_exists:'Bill number exists'
 };

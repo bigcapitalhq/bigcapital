@@ -27,6 +27,7 @@ import withSettings from 'containers/Settings/withSettings';
 import { AppToaster, Col, Row } from 'components';
 import Dragzone from 'components/Dragzone';
 import useMedia from 'hooks/useMedia';
+import { ERROR } from 'common/errors';
 
 import { compose, repeatValue } from 'utils';
 
@@ -206,6 +207,16 @@ function InvoiceForm({
       : [];
   }, [invoice]);
 
+  const handleErrors = (errors, { setErrors }) => {
+    if (errors.some((e) => e.type === ERROR.SALE_INVOICE_NUMBER_IS_EXISTS)) {
+      setErrors({
+        invoice_no: formatMessage({
+          id: 'sale_invoice_number_is_exists',
+        }),
+      });
+    }
+  };
+
   const formik = useFormik({
     validationSchema,
     initialValues: {
@@ -239,7 +250,8 @@ function InvoiceForm({
             saveInvokeSubmit({ action: 'update', ...payload });
             resetForm();
           })
-          .catch((error) => {
+          .catch((errors) => {
+            handleErrors(errors, { setErrors });
             setSubmitting(false);
           });
       } else {
@@ -257,12 +269,12 @@ function InvoiceForm({
             resetForm();
           })
           .catch((errors) => {
+            handleErrors(errors, { setErrors });
             setSubmitting(false);
           });
       }
     },
   });
-
   useEffect(() => {
     formik.setFieldValue('invoice_no', invoiceNumber);
   }, [invoiceNumber]);
@@ -373,7 +385,7 @@ export default compose(
   withInvoiceDetail(),
 
   withSettings(({ invoiceSettings }) => ({
-    invoiceNextNumber: invoiceSettings?.next_number,
-    invoiceNumberPrefix: invoiceSettings?.number_prefix,
+    invoiceNextNumber: invoiceSettings?.nextNumber,
+    invoiceNumberPrefix: invoiceSettings?.numberPrefix,
   })),
 )(InvoiceForm);

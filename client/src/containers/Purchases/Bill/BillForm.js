@@ -24,7 +24,7 @@ import withBillDetail from './withBillDetail';
 
 import { AppToaster } from 'components';
 import useMedia from 'hooks/useMedia';
-
+import { ERROR } from 'common/errors';
 import { compose, repeatValue } from 'utils';
 
 const MIN_LINES_NUMBER = 5;
@@ -137,7 +137,6 @@ function BillForm({
     [],
   );
 
-
   const defaultInitialValues = useMemo(
     () => ({
       vendor_id: '',
@@ -192,6 +191,16 @@ function BillForm({
       : [];
   }, [bill]);
 
+  const handleErrors = (errors, { setErrors }) => {
+    if (errors.some((e) => e.type === ERROR.BILL_NUMBER_EXISTS)) {
+      setErrors({
+        bill_number: formatMessage({
+          id: 'bill_number_exists',
+        }),
+      });
+    }
+  };
+
   const formik = useFormik({
     // enableReinitialize: true,
     validationSchema,
@@ -222,7 +231,8 @@ function BillForm({
             saveBillSubmit({ action: 'update', ...payload });
             resetForm();
           })
-          .catch((error) => {
+          .catch((errors) => {
+            handleErrors(errors, { setErrors });
             setSubmitting(false);
           });
       } else {
@@ -240,6 +250,7 @@ function BillForm({
             resetForm();
           })
           .catch((errors) => {
+            handleErrors(errors, { setErrors });
             setSubmitting(false);
           });
       }
