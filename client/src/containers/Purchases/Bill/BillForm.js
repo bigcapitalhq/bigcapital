@@ -212,7 +212,7 @@ function BillForm({
     initialValues: {
       ...initialValues,
     },
-    onSubmit: async (values, { setSubmitting, setErrors, resetForm }) => {
+    onSubmit: (values, { setSubmitting, setErrors, resetForm }) => {
       setSubmitting(true);
 
       const form = {
