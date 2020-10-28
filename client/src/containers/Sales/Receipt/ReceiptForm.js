@@ -225,7 +225,7 @@ function ReceiptForm({
     initialValues: {
       ...initialValues,
     },
-    onSubmit: async (values, { setErrors, setSubmitting, resetForm }) => {
+    onSubmit: (values, { setErrors, setSubmitting, resetForm }) => {
       const entries = values.entries.filter(
         (item) => item.item_id && item.quantity,
       );

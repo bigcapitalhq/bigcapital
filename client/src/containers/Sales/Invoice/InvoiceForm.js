@@ -227,7 +227,7 @@ function InvoiceForm({
     initialValues: {
       ...initialValues,
     },
-    onSubmit: async (values, { setSubmitting, setErrors, resetForm }) => {
+    onSubmit: (values, { setSubmitting, setErrors, resetForm }) => {
       setSubmitting(true);
 
       const entries = values.entries.filter(

@@ -117,11 +117,11 @@ const EstimateForm = ({
     entries: Yup.array().of(
       Yup.object().shape({
         quantity: Yup.number()
-        .nullable()
-        .when(['rate'], {
-          is: (rate) => rate,
-          then: Yup.number().required(),
-        }),
+          .nullable()
+          .when(['rate'], {
+            is: (rate) => rate,
+            then: Yup.number().required(),
+          }),
         rate: Yup.number().nullable(),
         item_id: Yup.number()
           .nullable()
@@ -226,7 +226,7 @@ const EstimateForm = ({
     initialValues: {
       ...initialValues,
     },
-    onSubmit: async (values, { setSubmitting, setErrors, resetForm }) => {
+    onSubmit: (values, { setSubmitting, setErrors, resetForm }) => {
       const entries = values.entries.filter(
         (item) => item.item_id && item.quantity,
       );
