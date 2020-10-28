@@ -117,3 +117,17 @@ export const editBill = (id, form) => {
         });
     });
 };
+
+export const fetchDueBills = ({ vendorId }) => (dispatch) => new Promise((resolve, reject) => {
+  const params = { vendor_id: vendorId };
+
+  ApiService.get(`purchases/bills/due`, { params }).then((response) => {
+    dispatch({
+      type: t.DUE_BILLS_SET,
+      payload: {
+        bills: response.data.bills,
+      }
+    });
+    resolve(response);
+  }).catch(error => { reject(error) });
+});

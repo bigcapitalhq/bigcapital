@@ -41,7 +41,7 @@ export default class Bill extends TenantModel {
    * @return {number}
    */
   get dueAmount() {
-    return this.amount - this.paymentAmount;
+    return Math.max(this.amount - this.paymentAmount, 0);
   }
 
   /**
