@@ -407,4 +407,25 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
       filterMeta: dynamicFilter.getResponseMeta(),
     };
   }
+
+  /**
+   * Retrieve due sales invoices.
+   * @param {number} tenantId 
+   * @param {number} customerId 
+   */
+  public async getDueInvoices(
+    tenantId: number,
+    customerId?: number,
+  ): Promise<ISaleInvoice> {
+    const { SaleInvoice } = this.tenancy.models(tenantId);
+
+    const salesInvoices = await SaleInvoice.query().onBuild((query) => {
+      query.modify('dueInvoices');
+
+      if (customerId) {
+        query.where('customer_id', customerId);
+      }
+    });
+    return salesInvoices;
+  }
 }

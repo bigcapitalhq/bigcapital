@@ -1,4 +1,4 @@
-import { Model } from 'objection';
+import { Model, raw } from 'objection';
 import { difference } from 'lodash';
 import TenantModel from 'models/TenantModel';
 
@@ -19,6 +19,14 @@ export default class Bill extends TenantModel {
 
   static get resourceable() {
     return true;
+  }
+
+  static get modifiers() {
+    return {
+      dueBills(query) {
+        query.where(raw('AMOUNT - PAYMENT_AMOUNT > 0'));
+      }
+    }
   }
 
   /**

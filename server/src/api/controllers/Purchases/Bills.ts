@@ -48,6 +48,14 @@ export default class BillsController extends BaseController {
       this.handleServiceError,
     );
     router.get(
+      '/due', [
+        ...this.dueBillsListingValidationSchema
+      ],
+      this.validationResult,
+      asyncMiddleware(this.getDueBills.bind(this)),
+      this.handleServiceError,
+    )
+    router.get(
       '/:id', [
         ...this.specificBillValidationSchema,
       ],
@@ -138,6 +146,12 @@ export default class BillsController extends BaseController {
       query('column_sort_by').optional(),
       query('sort_order').optional().isIn(['desc', 'asc']),
     ];
+  }
+
+  get dueBillsListingValidationSchema() {
+    return [
+      query('vendor_id').optional().trim().escape(),
+    ]
   }
  
   /**
@@ -250,6 +264,24 @@ export default class BillsController extends BaseController {
         pagination: this.transfromToResponse(pagination),
         filter_meta: this.transfromToResponse(filterMeta),
       });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Listing all due bills of the given vendor.
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {NextFunction} next 
+   */
+  public async getDueBills(req: Request, res: Response, next: NextFunction) {
+    const { tenantId } = req;
+    const { vendorId } = this.matchedQueryData(req);
+
+    try {
+      const bills = await this.billsService.getDueBills(tenantId, vendorId);
+      return res.status(200).send({ bills });
     } catch (error) {
       next(error);
     }
