@@ -52,9 +52,11 @@ export default class SaleInvoicesController extends BaseController{
       this.handleServiceErrors,
     );
     router.get(
-      '/due_invoices',
-      this.dueSalesInvoicesListValidationSchema,
-      asyncMiddleware(this.getDueSalesInvoice.bind(this)),
+      '/due', [
+        ...this.dueSalesInvoicesListValidationSchema,
+      ],
+      this.validationResult,
+      asyncMiddleware(this.getDueInvoices.bind(this)),
       this.handleServiceErrors,
     );
     router.get(
@@ -210,40 +212,6 @@ export default class SaleInvoicesController extends BaseController{
       next(error);
     }
   }
-
-  /**
-   * Retrieve the due sales invoices for the given customer.
-   * @param {Request} req 
-   * @param {Response} res 
-   */
-  async getDueSalesInvoice(req: Request, res: Response) {
-    const { Customer, SaleInvoice } = req.models;
-    const { tenantId } = req;
-
-    const filter = {
-      customer_id: null,
-      ...req.query,
-    };
-    if (filter.customer_id) {
-      const foundCustomer = await Customer.query().findById(filter.customer_id);
-
-      if (!foundCustomer) {
-        return res.status(200).send({
-          errors: [{ type: 'CUSTOMER.NOT.FOUND', code: 200 }],
-        });
-      }
-    }    
-    const dueSalesInvoices = await SaleInvoice.query().onBuild((query) => {
-      query.where(raw('BALANCE - PAYMENT_AMOUNT > 0'));
-      if (filter.customer_id) {
-        query.where('customer_id', filter.customer_id);
-      }
-    });
-    return res.status(200).send({
-      due_sales_invoices: dueSalesInvoices, 
-    });
-  }
-
   /**
    * Retrieve paginated sales invoices with custom view metadata.
    * @param {Request} req
@@ -270,6 +238,28 @@ export default class SaleInvoicesController extends BaseController{
         sales_invoices: salesInvoices,
         pagination: this.transfromToResponse(pagination),
         filter_meta: this.transfromToResponse(filterMeta),
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Retrieve due sales invoices.
+   * @param {Request} req - 
+   * @param {Response} res - 
+   * @param {NextFunction} next - 
+   * @return {Response|void}
+   */
+  public async getDueInvoices(req: Request, res: Response, next: NextFunction) {
+    const { tenantId } = req;
+    const { customerId } = this.matchedQueryData(req);
+
+    try {
+      const salesInvoices = await this.saleInvoiceService.getDueInvoices(tenantId, customerId);
+
+      return res.status(200).send({
+        sales_invoices: this.transfromToResponse(salesInvoices),
       });
     } catch (error) {
       next(error);

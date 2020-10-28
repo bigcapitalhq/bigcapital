@@ -1,4 +1,4 @@
-import { Model, mixin } from 'objection';
+import { Model, raw } from 'objection';
 import moment from 'moment';
 import TenantModel from 'models/TenantModel';
 
@@ -33,6 +33,10 @@ export default class SaleInvoice extends TenantModel {
    */
   static get modifiers() {
     return {
+      dueInvoices(query) {
+        query.where(raw('BALANCE - PAYMENT_AMOUNT > 0'));
+      },
+
       filterDateRange(query, startDate, endDate, type = 'day') {
         const dateFormat = 'YYYY-MM-DD HH:mm:ss';
         const fromDate = moment(startDate).startOf(type).format(dateFormat);

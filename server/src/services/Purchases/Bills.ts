@@ -27,6 +27,7 @@ import {
 import { ServiceError } from 'exceptions';
 import ItemsService from 'services/Items/ItemsService';
 import ItemsEntriesService from 'services/Items/ItemsEntriesService';
+import { Bill } from 'models';
 
 const ERRORS = {
   BILL_NOT_FOUND: 'BILL_NOT_FOUND',
@@ -135,7 +136,7 @@ export default class BillsService extends SalesInvoicesCost {
    * 
    * @returns {IBill}
    */
-  private async billDTOToModel(tenantId: number, billDTO: IBillDTO|IBillEditDTO, oldBill?: IBill) {
+  private async billDTOToModel(tenantId: number, billDTO: IBillDTO | IBillEditDTO, oldBill?: IBill) {
     const { ItemEntry } = this.tenancy.models(tenantId);
     let invLotNumber = oldBill?.invLotNumber;
 
@@ -413,6 +414,27 @@ export default class BillsService extends SalesInvoicesCost {
       pagination,
       filterMeta: dynamicFilter.getResponseMeta(),
     };
+  }
+
+  /**
+   * Retrieve all due bills or for specific given vendor id.
+   * @param {number} tenantId - 
+   * @param {number} vendorId - 
+   */
+  public async getDueBills(
+    tenantId: number,
+    vendorId?: number
+  ): Promise<IBill[]> {
+    const { Bill } = this.tenancy.models(tenantId);
+
+    const dueBills = await Bill.query().onBuild((query) => {
+      query.modify('dueBills');
+
+      if (vendorId) {
+        query.where('vendor_id', vendorId);
+      }
+    });
+    return dueBills;
   }
 
   /**

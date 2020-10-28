@@ -9,7 +9,17 @@ const billPageSelector = (state, props, query) => {
 };
 const billItemsSelector = (state) => state.bills.items;
 
+/**
+ * Retrieve bill details.
+ * @return {IBill}
+ */
 const billByIdSelector = (state, props) => state.bills.items[props.billId];
+
+/**
+ * Retrieve vendor due bills ids.
+ * @return {number[]}
+ */
+const billsDueVendorSelector = (state, props) => state.bills.dueBills[props.vendorId];
 
 const billPaginationSelector = (state, props) => {
   const viewId = state.bills.currentViewId;
@@ -51,3 +61,17 @@ export const getBillPaginationMetaFactory = () =>
   createSelector(billPaginationSelector, (billPage) => {
     return billPage?.paginationMeta || {};
   });
+
+/**
+ * Retrieve due bills of specific vendor.
+ */
+export const getVendorDueBillsFactory = () => 
+  createSelector(
+    billItemsSelector,
+    billsDueVendorSelector,
+    (billsItems, dueBillsIds) => {
+      return Array.isArray(dueBillsIds)
+        ? pickItemsFromIds(billsItems, dueBillsIds) || []
+        : [];
+    },
+  );

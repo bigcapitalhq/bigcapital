@@ -4,12 +4,14 @@ import {
   getBillCurrentPageFactory,
   getBillPaginationMetaFactory,
   getBillTableQueryFactory,
+  getVendorDueBillsFactory
 } from 'store/Bills/bills.selectors';
 
 export default (mapState) => {
   const getBillsItems = getBillCurrentPageFactory();
   const getBillsPaginationMeta = getBillPaginationMetaFactory();
   const getBillTableQuery = getBillTableQueryFactory();
+  const getVendorDueBills = getVendorDueBillsFactory();
 
   const mapStateToProps = (state, props) => {
     const tableQuery = getBillTableQuery(state, props);
@@ -23,6 +25,8 @@ export default (mapState) => {
       billsPageination: getBillsPaginationMeta(state, props, tableQuery),
       billsLoading: state.bills.loading,
       nextBillNumberChanged: state.bills.nextBillNumberChanged,
+
+      vendorDueBills: getVendorDueBills(state, props),
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };

@@ -1,4 +1,4 @@
-import { Model } from 'objection';
+import { Model, raw } from 'objection';
 import { difference } from 'lodash';
 import TenantModel from 'models/TenantModel';
 
@@ -21,6 +21,14 @@ export default class Bill extends TenantModel {
     return true;
   }
 
+  static get modifiers() {
+    return {
+      dueBills(query) {
+        query.where(raw('AMOUNT - PAYMENT_AMOUNT > 0'));
+      }
+    }
+  }
+
   /**
    * Timestamps columns.
    */
@@ -33,7 +41,7 @@ export default class Bill extends TenantModel {
    * @return {number}
    */
   get dueAmount() {
-    return this.amount - this.paymentAmount;
+    return Math.max(this.amount - this.paymentAmount, 0);
   }
 
   /**

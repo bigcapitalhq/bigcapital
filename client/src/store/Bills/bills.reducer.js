@@ -13,6 +13,7 @@ const initialState = {
     page: 1,
   },
   nextBillNumberChanged: false,
+  dueBills: {},
 };
 
 const defaultBill = {
@@ -103,6 +104,25 @@ const reducer = createReducer(initialState, {
     const { isChanged } = action.payload;
     state.nextBillNumberChanged = isChanged;
   },
+
+  [t.DUE_BILLS_SET]: (state, action) => {
+    const { bills } = action.payload;
+
+    const _dueBills = { ...state.dueBills };
+    const _bills = { ...state.items };
+
+    bills.forEach((bill) => {
+      _bills[bill.id] = { ...bill };
+      
+      if (!_dueBills[bill.vendor_id]) {
+        _dueBills[bill.vendor_id] = []
+      }
+      _dueBills[bill.vendor_id].push(bill.id);
+    });
+
+    state.items = { ..._bills };
+    state.dueBills = { ..._dueBills };
+  }
 });
 
 export default createTableQueryReducers('bills', reducer);
