@@ -15,7 +15,7 @@ import { pick } from 'lodash';
 import classNames from 'classnames';
 
 import { CLASSES } from 'common/classes';
-
+import { ERROR } from 'common/errors';
 import ReceiptFromHeader from './ReceiptFormHeader';
 import EntriesItemsTable from 'containers/Sales/Estimate/EntriesItemsTable';
 import ReceiptReceiveFloatingActions from './ReceiptReceiveFloatingActions';
@@ -108,7 +108,6 @@ function ReceiptForm({
       .min(1)
       .max(1024)
       .label(formatMessage({ id: 'receipt_message_' })),
-    send_to_email: Yup.string().email().nullable(),
     statement: Yup.string()
       .trim()
       .min(1)
@@ -117,7 +116,12 @@ function ReceiptForm({
 
     entries: Yup.array().of(
       Yup.object().shape({
-        quantity: Yup.number().nullable(),
+        quantity: Yup.number()
+          .nullable()
+          .when(['rate'], {
+            is: (rate) => rate,
+            then: Yup.number().required(),
+          }),
         rate: Yup.number().nullable(),
         item_id: Yup.number()
           .nullable()
@@ -159,7 +163,6 @@ function ReceiptForm({
       deposit_account_id: '',
       receipt_number: receiptNumber,
       receipt_date: moment(new Date()).format('YYYY-MM-DD'),
-      send_to_email: '',
       reference_no: '',
       receipt_message: '',
       statement: '',
@@ -208,12 +211,21 @@ function ReceiptForm({
       : [];
   }, [receipt]);
 
+  const handleErrors = (errors, { setErrors }) => {
+    if (errors.some((e) => e.type === ERROR.SALE_RECEIPT_NUMBER_NOT_UNIQUE)) {
+      setErrors({
+        receipt_number: formatMessage({
+          id: 'sale_receipt_number_not_unique',
+        }),
+      });
+    }
+  };
   const formik = useFormik({
     validationSchema,
     initialValues: {
       ...initialValues,
     },
-    onSubmit: async (values, { setErrors, setSubmitting, resetForm }) => {
+    onSubmit: (values, { setErrors, setSubmitting, resetForm }) => {
       const entries = values.entries.filter(
         (item) => item.item_id && item.quantity,
       );
@@ -225,20 +237,25 @@ function ReceiptForm({
       const requestForm = { ...form };
 
       if (receipt && receipt.id) {
-        requestEditReceipt(receipt.id, requestForm).then(() => {
-          AppToaster.show({
-            message: formatMessage(
-              {
-                id: 'the_receipt_has_been_successfully_edited',
-              },
-              { number: values.receipt_number },
-            ),
-            intent: Intent.SUCCESS,
+        requestEditReceipt(receipt.id, requestForm)
+          .then(() => {
+            AppToaster.show({
+              message: formatMessage(
+                {
+                  id: 'the_receipt_has_been_successfully_edited',
+                },
+                { number: values.receipt_number },
+              ),
+              intent: Intent.SUCCESS,
+            });
+            setSubmitting(false);
+            saveInvokeSubmit({ action: 'update', ...payload });
+            resetForm();
+          })
+          .catch((errors) => {
+            handleErrors(errors, { setErrors });
+            setSubmitting(false);
           });
-          setSubmitting(false);
-          saveInvokeSubmit({ action: 'update', ...payload });
-          resetForm();
-        });
       } else {
         requestSubmitReceipt(requestForm)
           .then((response) => {
@@ -256,6 +273,7 @@ function ReceiptForm({
             resetForm();
           })
           .catch((errors) => {
+            handleErrors(errors, { setErrors });
             setSubmitting(false);
           });
       }

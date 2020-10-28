@@ -8,13 +8,22 @@ import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import withCustomersActions from 'containers/Customers/withCustomersActions';
 import withItemsActions from 'containers/Items/withItemsActions';
 import withInvoiceActions from './withInvoiceActions';
+import withSettingsActions from 'containers/Settings/withSettingsActions';
 
 import { compose } from 'utils';
 
 function Invoices({
+  // #withCustomersActions
   requestFetchCustomers,
+
+  // #withItemsActions
   requestFetchItems,
+
+  // #withInvoiceActions
   requsetFetchInvoice,
+
+  // #withSettingsActions
+  requestFetchOptions,
 }) {
   const history = useHistory();
   const { id } = useParams();
@@ -24,6 +33,8 @@ function Invoices({
     (key, _id) => requsetFetchInvoice(_id),
     { enabled: !!id },
   );
+
+  const fetchSettings = useQuery(['settings'], () => requestFetchOptions({}));
 
   // Handle fetch Items data table or list
   const fetchItems = useQuery('items-table', () => requestFetchItems({}));
@@ -65,4 +76,5 @@ export default compose(
   withInvoiceActions,
   withCustomersActions,
   withItemsActions,
+  withSettingsActions,
 )(Invoices);

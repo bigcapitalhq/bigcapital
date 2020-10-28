@@ -27,6 +27,7 @@ import withSettings from 'containers/Settings/withSettings';
 import { AppToaster, Row, Col } from 'components';
 import Dragzone from 'components/Dragzone';
 import useMedia from 'hooks/useMedia';
+import { ERROR } from 'common/errors';
 
 import { compose, repeatValue } from 'utils';
 
@@ -115,7 +116,13 @@ const EstimateForm = ({
       .label(formatMessage({ id: 'note' })),
     entries: Yup.array().of(
       Yup.object().shape({
-        quantity: Yup.number().nullable(),
+        quantity: Yup.number()
+          .nullable()
+          .when(['rate'], {
+            is: (rate) => rate,
+            then: Yup.number().required(),
+          }),
+        rate: Yup.number().nullable(),
         item_id: Yup.number()
           .nullable()
           .when(['quantity', 'rate'], {
@@ -204,12 +211,22 @@ const EstimateForm = ({
       : [];
   }, [estimate]);
 
+  const handleErrors = (errors, { setErrors }) => {
+    if (errors.some((e) => e.type === ERROR.ESTIMATE_NUMBER_IS_NOT_UNQIUE)) {
+      setErrors({
+        estimate_number: formatMessage({
+          id: 'estimate_number_is_not_unqiue',
+        }),
+      });
+    }
+  };
+
   const formik = useFormik({
     validationSchema,
     initialValues: {
       ...initialValues,
     },
-    onSubmit: async (values, { setSubmitting, setErrors, resetForm }) => {
+    onSubmit: (values, { setSubmitting, setErrors, resetForm }) => {
       const entries = values.entries.filter(
         (item) => item.item_id && item.quantity,
       );
@@ -220,20 +237,25 @@ const EstimateForm = ({
       const requestForm = { ...form };
 
       if (estimate && estimate.id) {
-        requestEditEstimate(estimate.id, requestForm).then((response) => {
-          AppToaster.show({
-            message: formatMessage(
-              {
-                id: 'the_estimate_has_been_successfully_edited',
-              },
-              { number: values.estimate_number },
-            ),
-            intent: Intent.SUCCESS,
+        requestEditEstimate(estimate.id, requestForm)
+          .then((response) => {
+            AppToaster.show({
+              message: formatMessage(
+                {
+                  id: 'the_estimate_has_been_successfully_edited',
+                },
+                { number: values.estimate_number },
+              ),
+              intent: Intent.SUCCESS,
+            });
+            setSubmitting(false);
+            saveEstimateSubmit({ action: 'update', ...payload });
+            resetForm();
+          })
+          .catch((errors) => {
+            handleErrors(errors, { setErrors });
+            setSubmitting(false);
           });
-          setSubmitting(false);
-          saveEstimateSubmit({ action: 'update', ...payload });
-          resetForm();
-        });
       } else {
         requestSubmitEstimate(requestForm)
           .then((response) => {
@@ -249,12 +271,13 @@ const EstimateForm = ({
             saveEstimateSubmit({ action: 'new', ...payload });
           })
           .catch((errors) => {
+            handleErrors(errors, { setErrors });
             setSubmitting(false);
           });
       }
     },
   });
-  
+
   useEffect(() => {
     formik.setFieldValue('estimate_number', estimateNumber);
   }, [estimateNumber]);
@@ -302,10 +325,7 @@ const EstimateForm = ({
   };
 
   return (
-    <div className={classNames(
-      CLASSES.PAGE_FORM,
-      CLASSES.PAGE_FORM_ESTIMATE,
-    )}>
+    <div className={classNames(CLASSES.PAGE_FORM, CLASSES.PAGE_FORM_ESTIMATE)}>
       <form onSubmit={formik.handleSubmit}>
         <EstimateFormHeader formik={formik} />
         <EntriesItemsTable
@@ -338,7 +358,7 @@ const EstimateForm = ({
                 />
               </FormGroup>
             </Col>
-          
+
             <Col md={4}>
               <Dragzone
                 initialFiles={initialAttachmentFiles}
@@ -366,7 +386,7 @@ export default compose(
   withDashboardActions,
   withMediaActions,
   withSettings(({ estimatesSettings }) => ({
-    estimateNextNumber: estimatesSettings?.next_number,
-    estimateNumberPrefix: estimatesSettings?.number_prefix,
+    estimateNextNumber: estimatesSettings?.nextNumber,
+    estimateNumberPrefix: estimatesSettings?.numberPrefix,
   })),
 )(EstimateForm);

@@ -123,7 +123,7 @@ function InvoiceFormHeader({
               className={classNames(
                 'form-group--select-list',
                 'form-group--invoice-date',
-                CLASSES.FILL
+                CLASSES.FILL,
               )}
               intent={
                 errors.invoice_date && touched.invoice_date && Intent.DANGER
@@ -149,7 +149,7 @@ function InvoiceFormHeader({
               className={classNames(
                 'form-group--select-list',
                 'form-group--due-date',
-                CLASSES.FILL
+                CLASSES.FILL,
               )}
               intent={errors.due_date && touched.due_date && Intent.DANGER}
               helperText={
@@ -175,23 +175,23 @@ function InvoiceFormHeader({
           helperText={
             <ErrorMessage name="invoice_no" {...{ errors, touched }} />
           }
-          rightElement={
-            <InputPrependButton
-              buttonProps={{
-                onClick: handleInvoiceNumberChange,
-                icon: <Icon icon={'settings-18'} />,
-              }}
-              tooltip={true}
-              tooltipProps={{
-                content: 'Setting your auto-generated invoice number',
-                position: Position.BOTTOM_LEFT,
-              }}
-            />
-          }
         >
           <InputGroup
             intent={errors.invoice_no && touched.invoice_no && Intent.DANGER}
             minimal={true}
+            rightElement={
+              <InputPrependButton
+                buttonProps={{
+                  onClick: handleInvoiceNumberChange,
+                  icon: <Icon icon={'settings-18'} />,
+                }}
+                tooltip={true}
+                tooltipProps={{
+                  content: 'Setting your auto-generated invoice number',
+                  position: Position.BOTTOM_LEFT,
+                }}
+              />
+            }
             {...getFieldProps('invoice_no')}
           />
         </FormGroup>

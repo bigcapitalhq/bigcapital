@@ -73,7 +73,6 @@ export default class SalesReceiptsController extends BaseController{
       check('customer_id').exists().isNumeric().toInt(),
       check('deposit_account_id').exists().isNumeric().toInt(),
       check('receipt_date').exists().isISO8601(),
-      check('send_to_email').optional().isEmail(),
       check('receipt_number').optional().trim().escape(),
       check('reference_no').optional().trim().escape(),
 
