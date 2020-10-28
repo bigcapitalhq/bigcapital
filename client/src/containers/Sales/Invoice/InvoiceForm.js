@@ -115,7 +115,12 @@ function InvoiceForm({
 
     entries: Yup.array().of(
       Yup.object().shape({
-        quantity: Yup.number().nullable(),
+        quantity: Yup.number()
+          .nullable()
+          .when(['rate'], {
+            is: (rate) => rate,
+            then: Yup.number().required(),
+          }),
         rate: Yup.number().nullable(),
         item_id: Yup.number()
           .nullable()
