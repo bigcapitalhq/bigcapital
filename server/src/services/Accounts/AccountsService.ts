@@ -221,7 +221,7 @@ export default class AccountsService {
     }
     if (accountDTO.parentAccountId) {
       const parentAccount = await this.getParentAccountOrThrowError(
-        accountDTO.parentAccountId, oldAccount.id,
+        tenantId, accountDTO.parentAccountId, oldAccount.id,
       );
       this.throwErrorIfParentHasDiffType(accountDTO, parentAccount);
     }
