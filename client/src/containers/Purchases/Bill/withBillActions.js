@@ -5,6 +5,7 @@ import {
   editBill,
   fetchBillsTable,
   fetchBill,
+  fetchDueBills,
 } from 'store/Bills/bills.actions';
 import t from 'store/types';
 
@@ -15,6 +16,7 @@ const mapDispatchToProps = (dispatch) => ({
   requestDeleteBill: (id) => dispatch(deleteBill({ id })),
   requestFetchBillsTable: (query = {}) =>
     dispatch(fetchBillsTable({ query: { ...query } })),
+  requestFetchDueBills: (vendorId) => dispatch(fetchDueBills({ vendorId })),
 
   changeBillView: (id) =>
     dispatch({

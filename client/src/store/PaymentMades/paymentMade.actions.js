@@ -106,7 +106,20 @@ export const fetchPaymentMade = ({ id }) => {
             type: t.PAYMENT_MADE_SET,
             payload: {
               id,
-              bill_payment: response.data.bill_payment,
+              paymentMade: response.data.bill_payment,
+            },
+          });
+          dispatch({
+            type: t.BILLS_PAYABLE_BY_PAYMENT_ID,
+            payload: {
+              billPaymentId: id,
+              bills: response.data.bill_payment.payable_bills,
+            },
+          });
+          dispatch({
+            type: t.BILLS_ITEMS_SET,
+            payload: {
+              bills: response.data.bill_payment.payable_bills,
             },
           });
           resovle(response);
@@ -118,3 +131,17 @@ export const fetchPaymentMade = ({ id }) => {
         });
     });
 };
+
+export const fetchPaymentMadeBills = ({ paymentMadeId }) => (dispatch) => {
+  return new Promise((resolve, reject) => {
+    ApiService.get(`purchases/bill_payments/${paymentMadeId}/bills`).then((response) => {
+      dispatch({
+        type: t.BILLS_ITEMS_SET,
+        payload: {
+          bills: response.data.bills,
+        },
+      });
+      resolve(response);
+    }).catch((error) => { reject(error) });
+  });
+}

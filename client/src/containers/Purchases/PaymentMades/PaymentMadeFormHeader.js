@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback, useState } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import {
   FormGroup,
   InputGroup,
@@ -7,38 +7,57 @@ import {
   MenuItem,
   Classes,
 } from '@blueprintjs/core';
-
+import { sumBy } from 'lodash';
 import { DateInput } from '@blueprintjs/datetime';
 import { FormattedMessage as T } from 'react-intl';
-import { useParams, useHistory } from 'react-router-dom';
-
 import moment from 'moment';
-import { momentFormatter, compose, tansformDateValue } from 'utils';
 import classNames from 'classnames';
+import { momentFormatter, compose, tansformDateValue } from 'utils';
 import {
   AccountsSelectList,
   ListSelect,
   ErrorMessage,
   FieldRequiredHint,
-  Icon,
-  InputPrependButton,
+  Money,
 } from 'components';
 
+import withBills from '../Bill/withBills';
 import withVender from 'containers/Vendors/withVendors';
 import withAccounts from 'containers/Accounts/withAccounts';
-import withDialogActions from 'containers/Dialog/withDialogActions';
 
+/**
+ * Payment made header form.
+ */
 function PaymentMadeFormHeader({
-  formik: { errors, touched, setFieldValue, getFieldProps, values },
+  paymentMadeId,
+  vendorId,
+
+  // #useFormik
+  errors,
+  touched,
+  setFieldValue,
+  getFieldProps,
+  values,
+
+  onFullAmountChanged,
 
   //#withVender
   vendorsCurrentPage,
   vendorItems,
+
   //#withAccouts
   accountsList,
-  // #withDialogActions
-  openDialog,
+
+  // #withBills
+  vendorPayableBills,
 }) {
+  const isNewMode = !paymentMadeId;
+
+  const payableFullAmount = useMemo(
+    () => sumBy(vendorPayableBills, 'due_amount'),
+    [vendorPayableBills],
+  );
+
   const handleDateChange = useCallback(
     (date_filed) => (date) => {
       const formatted = moment(date).format('YYYY-MM-DD');
@@ -57,6 +76,14 @@ function PaymentMadeFormHeader({
     ),
     [],
   );
+
+  const triggerFullAmountChanged = (value) => {
+    onFullAmountChanged && onFullAmountChanged(value);
+  }
+
+  const handleFullAmountBlur = (event) => {
+    triggerFullAmountChanged(event.currentTarget.value);
+  };
 
   const handleFilterVender = (query, vender, index, exactMatch) => {
     const normalizedTitle = vender.display_name.toLowerCase();
@@ -85,14 +112,15 @@ function PaymentMadeFormHeader({
     [accountsList],
   );
 
-  const handlePaymentNumberChange = useCallback(() => {
-    openDialog('payment-number-form', {});
-  }, [openDialog]);
+  const handleReceiveFullAmountClick = () => {
+    setFieldValue('full_amount', payableFullAmount);
+    triggerFullAmountChanged(payableFullAmount);
+  };
 
   return (
     <div>
       <div>
-        {/* Vendor name */}
+        {/* ------------ Vendor name ------------ */}
         <FormGroup
           label={<T id={'vendor_name'} />}
           inline={true}
@@ -114,10 +142,12 @@ function PaymentMadeFormHeader({
             selectedItemProp={'id'}
             defaultText={<T id={'select_vender_account'} />}
             labelProp={'display_name'}
+            buttonProps={{ disabled: !isNewMode }}
+            disabled={!isNewMode}
           />
         </FormGroup>
 
-        {/* Payment date */}
+        {/* ------------ Payment date ------------ */}
         <FormGroup
           label={<T id={'payment_date'} />}
           inline={true}
@@ -136,7 +166,35 @@ function PaymentMadeFormHeader({
           />
         </FormGroup>
 
-        {/* payment number */}
+        {/* ------------ Full amount ------------ */}
+        <FormGroup
+          label={<T id={'full_amount'} />}
+          inline={true}
+          className={('form-group--full-amount', Classes.FILL)}
+          labelInfo={<FieldRequiredHint />}
+          intent={
+            errors.full_amount && touched.full_amount && Intent.DANGER
+          }
+          helperText={
+            <ErrorMessage name="full_amount" {...{ errors, touched }} />
+          }
+        >
+          <InputGroup
+            intent={
+              errors.full_amount && touched.full_amount && Intent.DANGER
+            }
+            minimal={true}
+            value={values.full_amount}
+            {...getFieldProps('full_amount')}
+            onBlur={handleFullAmountBlur}
+          />
+
+          <a onClick={handleReceiveFullAmountClick} href="#">
+            Receive full amount (<Money amount={payableFullAmount} currency={'USD'} />)
+          </a>
+        </FormGroup>
+
+        {/* ------------ Payment number ------------ */}
         <FormGroup
           label={<T id={'payment_no'} />}
           inline={true}
@@ -154,25 +212,11 @@ function PaymentMadeFormHeader({
               errors.payment_number && touched.payment_number && Intent.DANGER
             }
             minimal={true}
-            rightElement={
-              <InputPrependButton
-                buttonProps={{
-                  onClick: handlePaymentNumberChange,
-                  icon: <Icon icon={'settings-18'} />,
-                }}
-                tooltip={true}
-                tooltipProps={{
-                  content: 'Setting your auto-generated payment number',
-                  position: Position.BOTTOM_LEFT,
-                }}
-              />
-            }
-            minimal={true}
             {...getFieldProps('payment_number')}
           />
         </FormGroup>
 
-        {/* payment account */}
+        {/* ------------ Payment account ------------ */}
         <FormGroup
           label={<T id={'payment_account'} />}
           className={classNames(
@@ -192,7 +236,7 @@ function PaymentMadeFormHeader({
               name={'payment_account_id'}
               {...{ errors, touched }}
             />
-          }
+        }
         >
           <AccountsSelectList
             accounts={paymentAccounts}
@@ -204,7 +248,7 @@ function PaymentMadeFormHeader({
         </FormGroup>
       </div>
 
-      {/* reference */}
+      {/* ------------ Reference ------------ */}
       <FormGroup
         label={<T id={'reference'} />}
         inline={true}
@@ -230,5 +274,7 @@ export default compose(
   withAccounts(({ accountsList }) => ({
     accountsList,
   })),
-  withDialogActions,
+  withBills(({ vendorPayableBills }) => ({
+    vendorPayableBills,
+  })),
 )(PaymentMadeFormHeader);

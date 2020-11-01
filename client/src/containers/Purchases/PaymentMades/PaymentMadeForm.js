@@ -1,96 +1,56 @@
-import React, {
-  useMemo,
-  useCallback,
-  useEffect,
-  useState,
-  useRef,
-} from 'react';
-
+import React, { useMemo, useState, useCallback, useEffect } from 'react';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import moment from 'moment';
-import { Intent, FormGroup, TextArea } from '@blueprintjs/core';
-import { useParams, useHistory } from 'react-router-dom';
+import { Intent, Alert } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
-import { pick, values } from 'lodash';
+import { pick, sumBy } from 'lodash';
 
 import PaymentMadeHeader from './PaymentMadeFormHeader';
 import PaymentMadeItemsTable from './PaymentMadeItemsTable';
 import PaymentMadeFloatingActions from './PaymentMadeFloatingActions';
 
-import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withMediaActions from 'containers/Media/withMediaActions';
 import withPaymentMadeActions from './withPaymentMadeActions';
 import withPaymentMadeDetail from './withPaymentMadeDetail';
 import withPaymentMade from './withPaymentMade';
 import { AppToaster } from 'components';
-import Dragzone from 'components/Dragzone';
-import useMedia from 'hooks/useMedia';
 
-import { compose, repeatValue } from 'utils';
+import { compose, repeatValue, orderingLinesIndexes } from 'utils';
 import withSettings from 'containers/Settings/withSettings';
+import { useHistory } from 'react-router-dom';
 
 const MIN_LINES_NUMBER = 5;
 
+const ERRORS = {
+  PAYMENT_NUMBER_NOT_UNIQUE: 'PAYMENT.NUMBER.NOT.UNIQUE',
+};
+/**
+ * Payment made form component.
+ */
 function PaymentMadeForm({
-  //#withMedia
+  // #withMedia
   requestSubmitMedia,
   requestDeleteMedia,
 
-  //#withPaymentMadesActions
+  // #withPaymentMadesActions
   requestSubmitPaymentMade,
   requestEditPaymentMade,
-  setPaymentNumberChange,
 
-  // #withPaymentMade
-  nextPaymentNumberChanged,
-
-  // #withSettings
-  paymentNextNumber,
-  paymentNumberPrefix,
-
-  //#withDashboard
-  changePageTitle,
-  changePageSubtitle,
-
-  //#withPaymentMadeDetail
+  // #withPaymentMadeDetail
   paymentMade,
 
-  onFormSubmit,
-  onCancelForm,
-  onVenderChange,
+  paymentMadeId,
 }) {
+  const history = useHistory();
   const { formatMessage } = useIntl();
-  const [payload, setPayload] = useState({});
-  const { id } = useParams();
-  const {
-    setFiles,
-    saveMedia,
-    deletedFiles,
-    setDeletedFiles,
-    deleteMedia,
-  } = useMedia({
-    saveCallback: requestSubmitMedia,
-    deleteCallback: requestDeleteMedia,
-  });
 
-  const savedMediaIds = useRef([]);
-  const clearSavedMediaIds = () => {
-    savedMediaIds.current = [];
-  };
+  const [amountChangeAlert, setAmountChangeAlert] = useState(false);
+  const [clearLinesAlert, setClearLinesAlert] = useState(false);
+  const [clearFormAlert, setClearFormAlert] = useState(false);
+  const [fullAmount, setFullAmount] = useState(null);
 
-  useEffect(() => {
-    onVenderChange && onVenderChange(formik.values.vendor_id);
-  });
-
-  useEffect(() => {
-    if (paymentMade && paymentMade.id) {
-      changePageTitle(formatMessage({ id: 'edit_payment_made' }));
-    } else {
-      changePageTitle(formatMessage({ id: 'payment_made' }));
-    }
-  }, [changePageTitle, paymentMade, formatMessage]);
-
+  // Yup validation schema.
   const validationSchema = Yup.object().shape({
     vendor_id: Yup.string()
       .label(formatMessage({ id: 'vendor_name_' }))
@@ -108,11 +68,10 @@ function PaymentMadeForm({
     description: Yup.string(),
     entries: Yup.array().of(
       Yup.object().shape({
-        payment_amount: Yup.number().nullable(),
-        bill_number: Yup.number().nullable(),
-        amount: Yup.number().nullable(),
+        id: Yup.number().nullable(),
         due_amount: Yup.number().nullable(),
-        bill_date: Yup.date(),
+        payment_amount: Yup.number().nullable()
+          .max(Yup.ref("due_amount")),
         bill_id: Yup.number()
           .nullable()
           .when(['payment_amount'], {
@@ -122,194 +81,254 @@ function PaymentMadeForm({
       }),
     ),
   });
-  const handleDropFiles = useCallback((_files) => {
-    setFiles(_files.filter((file) => file.uploaded === false));
-  }, []);
 
-  const savePaymentMadeSubmit = useCallback((payload) => {
-    onFormSubmit && onFormSubmit(payload);
-  });
-
-  const defaultPaymentMade = useMemo(
-    () => ({
-      bill_id: '',
-      bill_date: moment(new Date()).format('YYYY-MM-DD'),
-      bill_number: '',
-      amount: '',
-      due_amount: '',
-      payment_amount: '',
-    }),
+  // Default payment made entry values.
+  const defaultPaymentMadeEntry = useMemo(
+    () => ({ bill_id: '', payment_amount: '', id: null }),
     [],
   );
 
-  const paymentNumber = paymentNumberPrefix
-    ? `${paymentNumberPrefix}-${paymentNextNumber}`
-    : paymentNextNumber;
-
+  // Default initial values.
   const defaultInitialValues = useMemo(
     () => ({
+      full_amount: '',
       vendor_id: '',
       payment_account_id: '',
       payment_date: moment(new Date()).format('YYYY-MM-DD'),
       reference: '',
-      payment_number: paymentNumber,
-      // receive_amount: '',
+      payment_number: '',
       description: '',
-      entries: [...repeatValue(defaultPaymentMade, MIN_LINES_NUMBER)],
+      entries: [],
     }),
-    [defaultPaymentMade],
+    [],
   );
 
-  const orderingIndex = (_entries) => {
-    return _entries.map((item, index) => ({
-      ...item,
-      index: index + 1,
-    }));
-  };
-
+  // Form initial values.
   const initialValues = useMemo(
     () => ({
       ...(paymentMade
         ? {
             ...pick(paymentMade, Object.keys(defaultInitialValues)),
+            full_amount: sumBy(paymentMade.entries, 'payment_amount'),
             entries: [
-              ...paymentMade.entries.map((paymentMade) => ({
-                ...pick(paymentMade, Object.keys(defaultPaymentMade)),
+              ...paymentMade.entries.map((paymentMadeEntry) => ({
+                ...pick(paymentMadeEntry, Object.keys(defaultPaymentMadeEntry)),
               })),
-              ...repeatValue(
-                defaultPaymentMade,
-                Math.max(MIN_LINES_NUMBER - paymentMade.entries.length, 0),
-              ),
             ],
           }
         : {
             ...defaultInitialValues,
-            entries: orderingIndex(defaultInitialValues.entries),
+            entries: orderingLinesIndexes(defaultInitialValues.entries),
           }),
     }),
-    [paymentMade, defaultInitialValues, defaultPaymentMade],
+    [paymentMade, defaultInitialValues, defaultPaymentMadeEntry],
   );
 
-  const initialAttachmentFiles = useMemo(() => {
-    return paymentMade && paymentMade.media
-      ? paymentMade.media.map((attach) => ({
-          preview: attach.attachment_file,
-          uploaded: true,
-          metadata: { ...attach },
-        }))
-      : [];
-  }, [paymentMade]);
+  const handleSubmitForm = (values, { setSubmitting, resetForm, setFieldError }) => {
+    setSubmitting(true);
 
-  const formik = useFormik({
-    validationSchema,
-    initialValues: {
-      ...initialValues,
-    },
-    onSubmit: async (values, { setSubmitting, setErrors, resetForm }) => {
-      setSubmitting(true);
-      const entries = formik.values.entries.filter((item) => {
-        if (item.bill_id !== undefined) {
-          return { ...item };
-        }
+    // Filters entries that have no `bill_id` or `payment_amount`.
+    const entries = values.entries.filter((item) => {
+      return !item.bill_id || item.payment_amount;
+    });
+    // Total payment amount of entries.
+    const totalPaymentAmount = sumBy(entries, 'payment_amount');
+
+    if (totalPaymentAmount <= 0) {
+      AppToaster.show({
+        message: formatMessage({
+          id: 'you_cannot_make_payment_with_zero_total_amount',
+          intent: Intent.WARNING,
+        }),
       });
-      const form = {
-        ...values,
-        entries,
-      };
+      return;
+    }
+    const form = { ...values, entries };
 
-      const requestForm = { ...form };
+    // Triggers once the save request success.
+    const onSaved = (response) => {
+      AppToaster.show({
+        message: formatMessage({
+          id: paymentMadeId
+            ? 'the_payment_made_has_been_successfully_edited'
+            : 'the_payment_made_has_been_successfully_created',
+        }),
+        intent: Intent.SUCCESS,
+      });
+      setSubmitting(false);
+      resetForm();
+    };
 
-      if (paymentMade && paymentMade.id) {
-        requestEditPaymentMade(paymentMade.id, requestForm)
-          .then((response) => {
-            AppToaster.show({
-              message: formatMessage({
-                id: 'the_payment_made_has_been_successfully_edited',
-              }),
-              intent: Intent.SUCCESS,
-            });
-            setSubmitting(false);
-            savePaymentMadeSubmit({ action: 'update', ...payload });
-            resetForm();
-          })
-          .catch((error) => {
-            setSubmitting(false);
-          });
-      } else {
-        requestSubmitPaymentMade(requestForm)
-          .then((response) => {
-            AppToaster.show({
-              message: formatMessage({
-                id: 'the_payment_made_has_been_successfully_created',
-              }),
-              intent: Intent.SUCCESS,
-            });
-            setSubmitting(false);
-            resetForm();
-            savePaymentMadeSubmit({ action: 'new', ...payload });
-          })
-          .catch((errors) => {
-            setSubmitting(false);
-          });
+    const onError = (errors) => {
+      const getError = (errorType) => errors.find((e) => e.type === errorType);
+
+      if (getError(ERRORS.PAYMENT_NUMBER_NOT_UNIQUE)) {
+        setFieldError(
+          'payment_number',
+          formatMessage({ id: 'payment_number_is_not_unique' })
+        );
       }
-    },
+      setSubmitting(false);
+    };
+
+    if (paymentMade && paymentMade.id) {
+      requestEditPaymentMade(paymentMade.id, form).then(onSaved).catch(onError);
+    } else {
+      requestSubmitPaymentMade(form).then(onSaved).catch(onError);
+    }
+  };
+
+  const {
+    errors,
+    touched,
+    setFieldValue,
+    getFieldProps,
+    setValues,
+    values,
+    handleSubmit,
+    isSubmitting,
+  } = useFormik({
+    validationSchema,
+    initialValues,
+    onSubmit: handleSubmitForm,
   });
 
-  const handleDeleteFile = useCallback(
-    (_deletedFiles) => {
-      _deletedFiles.forEach((deletedFile) => {
-        if (deletedFile.upload && deletedFile.metadata.id) {
-          setDeletedFiles([...deletedFiles, deletedFile.metadata.id]);
-        }
-      });
+  const handleFullAmountChange = useCallback(
+    (value) => {
+      if (value !== fullAmount) {
+        setAmountChangeAlert(value);
+      }
     },
-    [setDeletedFiles, deletedFiles],
+    [fullAmount, setAmountChangeAlert],
   );
 
-  const handleSubmitClick = useCallback(
-    (payload) => {
-      setPayload(payload);
-      formik.submitForm();
-    },
-    [setPayload, formik],
-  );
-
-  const handleCancelClick = useCallback(
-    (payload) => {
-      onCancelForm && onCancelForm(payload);
-    },
-    [onCancelForm],
-  );
-
-  const handleClickAddNewRow = () => {
-    formik.setFieldValue(
-      'entries',
-      orderingIndex([...formik.values.entries, defaultPaymentMade]),
-    );
+  // Handle cancel button of amount change alert.
+  const handleCancelAmountChangeAlert = () => {
+    setAmountChangeAlert(false);
   };
 
+  // Handle confirm button of amount change alert.
+  const handleConfirmAmountChangeAlert = () => {
+    setFullAmount(amountChangeAlert);
+    setAmountChangeAlert(false);
+  };
+
+  // Handle update data.
+  const handleUpdataData = useCallback(
+    (entries) => {
+      setFieldValue('entries', entries);
+    },
+    [setFieldValue],
+  );
+
+  // Handle cancel button click.
+  const handleCancelClick = useCallback(() => {
+    history.push('/payment-mades');
+  }, [history]);
+
+  // Handle clear all lines button click.
   const handleClearAllLines = () => {
-    formik.setFieldValue(
-      'entries',
-      orderingIndex([...repeatValue(defaultPaymentMade, MIN_LINES_NUMBER)]),
-    );
+    setClearLinesAlert(true);
   };
 
-  useEffect(() => {
-    formik.setFieldValue('payment_number', paymentNumber);
-    setPaymentNumberChange(false);
-  }, [nextPaymentNumberChanged, paymentNumber]);
+  const handleCancelClearLines = useCallback(() => {
+    setClearLinesAlert(false);
+  }, [setClearLinesAlert]);
+
+  const handleConfirmClearLines = useCallback(() => {
+    setFieldValue(
+      'entries',
+      values.entries.map((entry) => ({
+        ...entry,
+        payment_amount: 0,
+      })),
+    );
+    setClearLinesAlert(false);
+  }, [setFieldValue, setClearLinesAlert, values.entries]);
+
+  // Handle clear button click.
+  const handleClearBtnClick = useCallback(() => {
+    setClearFormAlert(true);
+  }, []);
+
+  // 
+  const handleCancelClearFormAlert = () => {
+    setClearFormAlert(false);
+  };
+
+  const handleConfirmCancelClearFormAlert = () => {
+    setValues({
+      ...defaultInitialValues,
+      ...(paymentMadeId
+        ? {
+            vendor_id: values.vendor_id,
+            payment_number: values.payment_number,
+          }
+        : {}),
+    });
+    setClearFormAlert(false);
+  };
 
   return (
     <div className={'payment_made_form'}>
-      <form onSubmit={formik.handleSubmit}>
-        <PaymentMadeHeader formik={formik} />
+      <form onSubmit={handleSubmit}>
+        <PaymentMadeHeader
+          paymentMadeId={paymentMadeId}
+          vendorId={values.vendor_id}
+          errors={errors}
+          touched={touched}
+          setFieldValue={setFieldValue}
+          getFieldProps={getFieldProps}
+          values={values}
+          onFullAmountChanged={handleFullAmountChange}
+        />
         <PaymentMadeItemsTable
-          formik={formik}
-          entries={formik.values.entries}
-          vendor_id={formik.values.vendor_id}
-          onClickAddNewRow={handleClickAddNewRow}
+          fullAmount={fullAmount}
+          paymentEntries={values.entries}
+          vendorId={values.vendor_id}
+          paymentMadeId={paymentMadeId}
+          onUpdateData={handleUpdataData}
           onClickClearAllLines={handleClearAllLines}
+          errors={errors?.entries}
+        />
+
+        <Alert
+          cancelButtonText={<T id={'cancel'} />}
+          confirmButtonText={<T id={'ok'} />}
+          intent={Intent.WARNING}
+          isOpen={amountChangeAlert}
+          onCancel={handleCancelAmountChangeAlert}
+          onConfirm={handleConfirmAmountChangeAlert}
+        >
+          <p>Are you sure to discard full amount?</p>
+        </Alert>
+
+        <Alert
+          cancelButtonText={<T id={'cancel'} />}
+          confirmButtonText={<T id={'ok'} />}
+          intent={Intent.WARNING}
+          isOpen={clearLinesAlert}
+          onCancel={handleCancelClearLines}
+          onConfirm={handleConfirmClearLines}
+        >
+          <p>Are you sure to discard full amount?</p>
+        </Alert>
+
+        <Alert
+          cancelButtonText={<T id={'cancel'} />}
+          confirmButtonText={<T id={'ok'} />}
+          intent={Intent.WARNING}
+          isOpen={clearFormAlert}
+          onCancel={handleCancelClearFormAlert}
+          onConfirm={handleConfirmCancelClearFormAlert}
+        >
+          <p>Are you sure to clear form data.</p>
+        </Alert>
+
+        <PaymentMadeFloatingActions
+          isSubmitting={isSubmitting}
+          onCancelClick={handleCancelClick}
+          onClearBtnClick={handleClearBtnClick}
         />
 
         {/* <Dragzone
@@ -319,18 +338,12 @@ function PaymentMadeForm({
           hint={'Attachments: Maxiumum size: 20MB'}
         /> */}
       </form>
-      <PaymentMadeFloatingActions
-        formik={formik}
-        onSubmitClick={handleSubmitClick}
-        onCancel={handleCancelClick}
-      />
     </div>
   );
 }
 
 export default compose(
   withPaymentMadeActions,
-  withDashboardActions,
   withMediaActions,
   withPaymentMadeDetail(),
   withPaymentMade(({ nextPaymentNumberChanged }) => ({

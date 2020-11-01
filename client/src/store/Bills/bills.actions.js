@@ -123,11 +123,19 @@ export const fetchDueBills = ({ vendorId }) => (dispatch) => new Promise((resolv
 
   ApiService.get(`purchases/bills/due`, { params }).then((response) => {
     dispatch({
-      type: t.DUE_BILLS_SET,
+      type: t.BILLS_ITEMS_SET,
       payload: {
         bills: response.data.bills,
-      }
+      },
     });
+    if ( vendorId ) {
+      dispatch({
+        type: t.BILLS_PAYABLE_BY_VENDOR_ID,
+        payload: {
+          bills: response.data.bills,
+        }
+      });
+    }
     resolve(response);
   }).catch(error => { reject(error) });
 });

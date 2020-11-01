@@ -1,234 +1,141 @@
-import React, { useState, useMemo, useEffect, useCallback } from 'react';
-import { Button, Intent, Position, Tooltip } from '@blueprintjs/core';
-import { FormattedMessage as T, useIntl } from 'react-intl';
-import { Icon, DataTable } from 'components';
-import moment from 'moment';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { useQuery } from 'react-query';
+import { pick } from 'lodash';
+import { LoadingIndicator, Choose } from 'components';
+import PaymentMadeItemsTableEditor from './PaymentMadeItemsTableEditor';
 
-import { compose, formattedAmount, transformUpdatedRows } from 'utils';
-import {
-  MoneyFieldCell,
-  DivFieldCell,
-  EmptyDiv,
-} from 'components/DataTableCells';
-
+import withPaymentMadeActions from './withPaymentMadeActions';
+import withBillActions from '../Bill/withBillActions';
 import withBills from '../Bill/withBills';
-import { omit, pick } from 'lodash';
 
-const ActionsCellRenderer = ({
-  row: { index },
-  column: { id },
-  cell: { value },
-  data,
-  payload,
-}) => {
-  if (data.length <= index + 1) {
-    return '';
-  }
-  const onRemoveRole = () => {
-    payload.removeRow(index);
-  };
-  return (
-    <Tooltip content={<T id={'remove_the_line'} />} position={Position.LEFT}>
-      <Button
-        icon={<Icon icon={'times-circle'} iconSize={14} />}
-        iconSize={14}
-        className="m12"
-        intent={Intent.DANGER}
-        onClick={onRemoveRole}
-      />
-    </Tooltip>
-  );
-};
+import { compose } from 'utils';
 
-const CellRenderer = (content, type) => (props) => {
-  if (props.data.length === props.row.index + 1) {
-    return '';
-  }
-  return content(props);
-};
-
-const TotalCellRederer = (content, type) => (props) => {
-  if (props.data.length === props.row.index + 1) {
-    const total = props.data.reduce((total, entry) => {
-      const amount = parseInt(entry[type], 10);
-      const computed = amount ? total + amount : total;
-
-      return computed;
-    }, 0);
-    return <span>{formattedAmount(total, 'USD')}</span>;
-  }
-  return content(props);
-};
-
+/**
+ * Payment made items table.
+ */
 function PaymentMadeItemsTable({
-  //#ownProps
-  onClickRemoveRow,
-  onClickAddNewRow,
+  // #ownProps
+  paymentMadeId,
+  vendorId,
+  fullAmount,
+  onUpdateData,
+  paymentEntries = [], // { bill_id: number, payment_amount: number, id?: number }
   onClickClearAllLines,
-  entries,
-  formik: { errors, setFieldValue, values },
+  errors,
+
+  // #withBillActions
+  requestFetchDueBills,
+
+  // #withBills
+  vendorPayableBills,
+  paymentMadePayableBills,
+
+  // #withPaymentMadeDetail
+  paymentMade,
 }) {
-  const [rows, setRows] = useState([]);
-  const [entrie, setEntrie] = useState([]);
-  const { formatMessage } = useIntl();
+  const [tableData, setTableData] = useState([]);
+  const [localAmount, setLocalAmount] = useState(fullAmount);
+
+  // Payable bills based on selected vendor or specific payment made.
+  const payableBills = useMemo(
+    () =>
+      paymentMadeId
+        ? paymentMadePayableBills
+        : vendorId
+        ? vendorPayableBills
+        : [],
+    [paymentMadeId, paymentMadePayableBills, vendorId, vendorPayableBills],
+  );
+  const isNewMode = !paymentMadeId;
+
+  const triggerUpdateData = useCallback((data) => {
+    onUpdateData && onUpdateData(data);
+  }, [onUpdateData]);
+
+  // Merges payment entries with payable bills.
+  const computedTableData = useMemo(() => {
+    const entriesTable = new Map(
+      paymentEntries.map((e) => [e.bill_id, e]),
+    );
+    return payableBills.map((bill) => {
+      const entry = entriesTable.get(bill.id);
+      return {
+        ...bill,
+        bill_id: bill.id,
+        bill_payment_amount: bill.payment_amount,
+        payment_amount: entry ? entry.payment_amount : 0,
+        id: entry ? entry.id : null,
+      }
+    });
+  }, [paymentEntries, payableBills]);
 
   useEffect(() => {
-    setRows([...entries.map((e) => ({ ...e }))]);
-  }, [entries]);
+    setTableData(computedTableData);
+  }, [computedTableData]);
 
-  const columns = useMemo(
-    () => [
-      {
-        Header: '#',
-        accessor: 'index',
-        Cell: ({ row: { index } }) => <span>{index + 1}</span>,
-        width: 40,
-        disableResizing: true,
-        disableSortBy: true,
-      },
-      {
-        Header: formatMessage({ id: 'Date' }),
-        id: 'bill_date',
-        accessor: (r) => moment(r.bill_date).format('YYYY MMM DD'),
-        Cell: CellRenderer(EmptyDiv, 'bill_date'),
-        disableSortBy: true,
-        disableResizing: true,
-        width: 250,
-      },
+  // Handle
+  useEffect(() => {
+    if (localAmount !== fullAmount) {
+      let _fullAmount = fullAmount;
+      const newTableData = tableData.map((data) => {
+        const amount = Math.min(data.due_amount, _fullAmount);
+        _fullAmount -= Math.max(amount, 0);
 
-      {
-        Header: formatMessage({ id: 'bill_number' }),
-        accessor: (row) => `#${row.bill_number}`,
-        Cell: CellRenderer(EmptyDiv, 'bill_number'),
-        disableSortBy: true,
-        className: 'bill_number',
-      },
-      {
-        Header: formatMessage({ id: 'bill_amount' }),
-        accessor: 'amount',
-        Cell: CellRenderer(DivFieldCell, 'amount'),
-        disableSortBy: true,
-        width: 100,
-        className: '',
-      },
-      {
-        Header: formatMessage({ id: 'amount_due' }),
-        accessor: 'due_amount',
-        Cell: TotalCellRederer(DivFieldCell, 'due_amount'),
-        disableSortBy: true,
-        width: 150,
-        className: '',
-      },
-      {
-        Header: formatMessage({ id: 'payment_amount' }),
-        accessor: 'payment_amount',
-        Cell: TotalCellRederer(MoneyFieldCell, 'payment_amount'),
-
-        disableSortBy: true,
-        width: 150,
-        className: '',
-      },
-      {
-        Header: '',
-        accessor: 'action',
-        Cell: ActionsCellRenderer,
-        className: 'actions',
-        disableSortBy: true,
-        disableResizing: true,
-        width: 45,
-      },
-    ],
-    [formatMessage],
-  );
-
-  const handleRemoveRow = useCallback(
-    (rowIndex) => {
-      if (rows.length <= 1) {
-        return;
-      }
-      const removeIndex = parseInt(rowIndex, 10);
-      const newRows = rows.filter((row, index) => index !== removeIndex);
-
-      setFieldValue(
-        'entries',
-        newRows.map((row, index) => ({
-          ...omit(row),
-          index: index - 1,
-        })),
-      );
-      onClickRemoveRow && onClickRemoveRow(removeIndex);
-    },
-    [entrie, setFieldValue, onClickRemoveRow],
-  );
-
-  const onClickNewRow = () => {
-    onClickAddNewRow && onClickAddNewRow();
-  };
-
-  const handleClickClearAllLines = () => {
-    onClickClearAllLines && onClickClearAllLines();
-  };
-
-  const rowClassNames = useCallback((row) => {
-    return { 'row--total': rows.length === row.index + 1 };
-  });
-
-  const handleUpdateData = useCallback(
-    (rowIndex, columnId, value) => {
-      const newRows = rows.map((row, index) => {
-        if (index === rowIndex) {
-          return {
-            ...rows[rowIndex],
-            [columnId]: value,
-          };
-        }
-        return row;
+        return {
+          ...data,
+          payment_amount: amount,
+        };
       });
-      // setRows(newRows);
-      setFieldValue(
-        'entries',
-        newRows,
-        // .map((row) => ({
-        //   ...pick(row, ['payment_amount']),
-        //   invoice_id: row.id,
-        // })),
-      );
-    },
-    [rows, setFieldValue, setRows],
-  );
-  return (
-    <div className={'estimate-form__table'}>
-      <DataTable
-        columns={columns}
-        data={rows}
-        rowClassNames={rowClassNames}
-        spinnerProps={false}
-        payload={{
-          errors: errors.entries || [],
-          updateData: handleUpdateData,
-          removeRow: handleRemoveRow,
-        }}
-      />
-      <div className={'mt1'}>
-        <Button
-          small={true}
-          className={'button--secondary button--new-line'}
-          onClick={onClickNewRow}
-        >
-          <T id={'new_lines'} />
-        </Button>
+      setTableData(newTableData);
+      setLocalAmount(fullAmount);
+      triggerUpdateData(newTableData);
+    }
+  }, [
+    tableData,
+    setTableData,
+    setLocalAmount,
+    triggerUpdateData,
+    localAmount,
+    fullAmount,
+  ]);
 
-        <Button
-          small={true}
-          className={'button--secondary button--clear-lines ml1'}
-          onClick={handleClickClearAllLines}
-        >
-          <T id={'clear_all_lines'} />
-        </Button>
-      </div>
+  // Fetches vendor due bills.
+  const fetchVendorDueBills = useQuery(
+    ['vendor-due-bills', vendorId],
+    (key, _vendorId) => requestFetchDueBills(_vendorId),
+    { enabled: isNewMode && vendorId },
+  );
+
+  // Handle update data.
+  const handleUpdateData = (rows) => {
+    triggerUpdateData(rows);
+  };
+
+  return (
+    <div>
+      <LoadingIndicator loading={fetchVendorDueBills.isFetching}>
+        <Choose>
+          <Choose.When condition={tableData.length > 0}>
+            <PaymentMadeItemsTableEditor
+              data={tableData}
+              errors={errors}
+              onUpdateData={handleUpdateData}
+              onClickClearAllLines={onClickClearAllLines}
+            />
+          </Choose.When>
+
+          <Choose.Otherwise>The vendor has no due invoices.</Choose.Otherwise>
+        </Choose>
+      </LoadingIndicator>
     </div>
   );
 }
 
-export default compose()(PaymentMadeItemsTable);
-// withBills(({}) => ({}))
+export default compose( 
+  withPaymentMadeActions,
+  withBillActions,
+  withBills(({ vendorPayableBills, paymentMadePayableBills }) => ({
+    vendorPayableBills,
+    paymentMadePayableBills,
+  })),
+)(PaymentMadeItemsTable);

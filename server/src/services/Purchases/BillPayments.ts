@@ -489,7 +489,7 @@ export default class BillPaymentsService {
    * @return {object}
    */
   public async getBillPayment(tenantId: number, billPaymentId: number) {
-    const { BillPayment } = this.tenancy.models(tenantId);
+    const { BillPayment, Bill } = this.tenancy.models(tenantId);
     const billPayment = await BillPayment.query()
       .findById(billPaymentId)
       .withGraphFetched('entries')
@@ -499,7 +499,16 @@ export default class BillPaymentsService {
     if (!billPayment) {
       throw new ServiceError(ERRORS.PAYMENT_MADE_NOT_FOUND);
     }
-    return billPayment;
+
+    const payableBills = await Bill.query().onBuild((builder) => {
+      const billsIds = billPayment.entries.map((entry) => entry.billId);
+
+      builder.where('vendor_id', billPayment.vendorId);
+      builder.orWhereIn('id', billsIds);
+      builder.orderByRaw(`FIELD(id, ${billsIds.join(', ')}) DESC`);
+      builder.orderBy('bill_date', 'ASC');
+    })
+    return { billPayment, payableBills };
   }
 
   /**

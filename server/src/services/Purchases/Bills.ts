@@ -1,4 +1,4 @@
-import { omit, sumBy, pick, difference } from 'lodash';
+import { omit, sumBy, pick, difference, assignWith } from 'lodash';
 import moment from 'moment';
 import { Inject, Service } from 'typedi';
 import {
@@ -23,11 +23,13 @@ import {
   IPaginationMeta,
   IFilterMeta,
   IBillsFilter,
+  IBillPaymentEntry,
 } from 'interfaces';
 import { ServiceError } from 'exceptions';
 import ItemsService from 'services/Items/ItemsService';
 import ItemsEntriesService from 'services/Items/ItemsEntriesService';
 import { Bill } from 'models';
+import PaymentMadesSubscriber from 'subscribers/paymentMades';
 
 const ERRORS = {
   BILL_NOT_FOUND: 'BILL_NOT_FOUND',
@@ -428,6 +430,7 @@ export default class BillsService extends SalesInvoicesCost {
     const { Bill } = this.tenancy.models(tenantId);
 
     const dueBills = await Bill.query().onBuild((query) => {
+      query.orderBy('bill_date', 'DESC');
       query.modify('dueBills');
 
       if (vendorId) {

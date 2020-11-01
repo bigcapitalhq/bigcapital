@@ -413,7 +413,7 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
    * @param {number} tenantId 
    * @param {number} customerId 
    */
-  public async getDueInvoices(
+  public async getPayableInvoices(
     tenantId: number,
     customerId?: number,
   ): Promise<ISaleInvoice> {

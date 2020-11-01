@@ -23,6 +23,9 @@ const paymentMadesIds = (state, props) => {
   return state.paymentMades.items[props.paymentMadeId];
 };
 
+const paymentMadeEntries = (state, props) => props.paymentMadeEntries;
+const billsItemsSelector = (state, props) => state.bills.items;
+
 export const getPaymentMadeCurrentPageFactory = () =>
   createSelector(
     paymentMadesPageSelector,
@@ -54,3 +57,15 @@ export const getPaymentMadeByIdFactory = () =>
   createSelector(paymentMadesIds, (payment_Made) => {
     return payment_Made;
   });
+
+export const getPaymentMadeEntriesDataFactory = () => 
+  createSelector(
+    billsItemsSelector,
+    paymentMadeEntries,
+    (billsItems, paymentEntries) => {
+      return Array.isArray(paymentEntries) ? 
+        paymentEntries.map((entry) => ({
+          ...entry, ...(billsItems[entry.bill_id] || {}),
+        })) : [];
+    }
+  ) 

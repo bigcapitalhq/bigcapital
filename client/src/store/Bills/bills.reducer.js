@@ -13,7 +13,10 @@ const initialState = {
     page: 1,
   },
   nextBillNumberChanged: false,
-  dueBills: {},
+  payable: {
+    byVendorId: [],
+    byBillPayamentId: [],
+  },
 };
 
 const defaultBill = {
@@ -105,23 +108,31 @@ const reducer = createReducer(initialState, {
     state.nextBillNumberChanged = isChanged;
   },
 
-  [t.DUE_BILLS_SET]: (state, action) => {
+  [t.BILLS_PAYABLE_BY_VENDOR_ID]: (state, action) => {
     const { bills } = action.payload;
-
-    const _dueBills = { ...state.dueBills };
-    const _bills = { ...state.items };
+    const _data = {};
 
     bills.forEach((bill) => {
-      _bills[bill.id] = { ...bill };
-      
-      if (!_dueBills[bill.vendor_id]) {
-        _dueBills[bill.vendor_id] = []
+      if (!_data[bill.vendor_id]) {
+        _data[bill.vendor_id] = [];
       }
-      _dueBills[bill.vendor_id].push(bill.id);
+      _data[bill.vendor_id].push(bill.id);
     });
 
-    state.items = { ..._bills };
-    state.dueBills = { ..._dueBills };
+    state.payable.byVendorId = {
+      ...state.payable.byVendorId,
+      ..._data,
+    };
+  },
+
+  [t.BILLS_PAYABLE_BY_PAYMENT_ID]: (state, action) => {
+    const { bills, billPaymentId } = action.payload;
+    const _data = [];
+
+    bills.forEach((bill) => {
+      _data.push(bill.id);
+    });
+    state.payable.byBillPayamentId[billPaymentId] = _data;
   }
 });
 
