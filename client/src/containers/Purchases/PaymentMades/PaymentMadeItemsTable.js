@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useQuery } from 'react-query';
-import { pick } from 'lodash';
-import { LoadingIndicator, Choose } from 'components';
+import { CloudLoadingIndicator } from 'components'
 import PaymentMadeItemsTableEditor from './PaymentMadeItemsTableEditor';
 
 import withPaymentMadeActions from './withPaymentMadeActions';
@@ -73,7 +72,7 @@ function PaymentMadeItemsTable({
     setTableData(computedTableData);
   }, [computedTableData]);
 
-  // Handle
+  // Handle mapping `fullAmount` prop to `localAmount` state.
   useEffect(() => {
     if (localAmount !== fullAmount) {
       let _fullAmount = fullAmount;
@@ -111,23 +110,20 @@ function PaymentMadeItemsTable({
     triggerUpdateData(rows);
   };
 
-  return (
-    <div>
-      <LoadingIndicator loading={fetchVendorDueBills.isFetching}>
-        <Choose>
-          <Choose.When condition={tableData.length > 0}>
-            <PaymentMadeItemsTableEditor
-              data={tableData}
-              errors={errors}
-              onUpdateData={handleUpdateData}
-              onClickClearAllLines={onClickClearAllLines}
-            />
-          </Choose.When>
+  const noResultsMessage = (vendorId) ?
+    'There is no payable bills for this vendor that can be applied for this payment' : 
+    'Please select a vendor to display all open bills for it.';
 
-          <Choose.Otherwise>The vendor has no due invoices.</Choose.Otherwise>
-        </Choose>
-      </LoadingIndicator>
-    </div>
+  return (
+    <CloudLoadingIndicator isLoading={fetchVendorDueBills.isFetching}>
+      <PaymentMadeItemsTableEditor
+        noResultsMessage={noResultsMessage}
+        data={tableData}
+        errors={errors}
+        onUpdateData={handleUpdateData}
+        onClickClearAllLines={onClickClearAllLines}
+      />
+    </CloudLoadingIndicator>
   );
 }
 

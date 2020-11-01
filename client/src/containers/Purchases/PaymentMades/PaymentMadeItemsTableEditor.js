@@ -3,7 +3,9 @@ import { Button  } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import moment from 'moment';
 import { sumBy } from 'lodash';
+import classNames from 'classnames';
 
+import { CLASSES } from 'common/classes';
 import { DataTable, Money } from 'components';
 import { transformUpdatedRows } from 'utils';
 import {
@@ -37,13 +39,17 @@ export default function PaymentMadeItemsTableEditor({
   onClickClearAllLines,
   onUpdateData,
   data,
-  errors
+  errors,
+  noResultsMessage
 }) {
   const transformedData = useMemo(() => {
-    return [ ...data, {
+    const rows = data;
+    const totalRow = {
       due_amount: sumBy(data, 'due_amount'),
       payment_amount: sumBy(data, 'payment_amount'),
-    }];
+    };
+    if (rows.length > 0) { rows.push(totalRow) }
+    return rows;
   }, [data]);
 
   const [localData, setLocalData] = useState(transformedData);
@@ -71,10 +77,7 @@ export default function PaymentMadeItemsTableEditor({
         accessor: (r) => moment(r.bill_date).format('YYYY MMM DD'),
         Cell: CellRenderer(EmptyDiv, 'bill_date'),
         disableSortBy: true,
-        disableResizing: true,
-        width: 250,
       },
-
       {
         Header: formatMessage({ id: 'bill_number' }),
         accessor: (row) => `#${row.bill_number}`,
@@ -87,7 +90,6 @@ export default function PaymentMadeItemsTableEditor({
         accessor: 'amount',
         Cell: CellRenderer(DivFieldCell, 'amount'),
         disableSortBy: true,
-        width: 100,
         className: '',
       },
       {
@@ -95,7 +97,6 @@ export default function PaymentMadeItemsTableEditor({
         accessor: 'due_amount',
         Cell: TotalCellRederer(DivFieldCell, 'due_amount'),
         disableSortBy: true,
-        width: 150,
         className: '',
       },
       {
@@ -103,21 +104,19 @@ export default function PaymentMadeItemsTableEditor({
         accessor: 'payment_amount',
         Cell: TotalCellRederer(MoneyFieldCell, 'payment_amount'),
         disableSortBy: true,
-        width: 150,
         className: '',
       },
     ],
     [formatMessage],
   );
 
+  // Handle click clear all lines button.
   const handleClickClearAllLines = () => {
     onClickClearAllLines && onClickClearAllLines();
   };
 
   const rowClassNames = useCallback(
-    (row) => {  
-      return { 'row--total': localData.length === row.index + 1 };
-    },
+    (row) =>  ({ 'row--total': localData.length === row.index + 1 }),
     [localData],
   );
 
@@ -137,7 +136,10 @@ export default function PaymentMadeItemsTableEditor({
   );
 
   return (
-    <div className={'estimate-form__table'}>
+    <div className={classNames(
+      CLASSES.DATATABLE_EDITOR,
+      CLASSES.DATATABLE_EDITOR_ITEMS_ENTRIES,
+    )}>
       <DataTable
         columns={columns}
         data={localData}
@@ -147,11 +149,12 @@ export default function PaymentMadeItemsTableEditor({
           errors,
           updateData: handleUpdateData,
         }}
+        noResults={noResultsMessage}
       />
-      <div className={'mt1'}>
+      <div className={classNames(CLASSES.DATATABLE_EDITOR_ACTIONS, 'mt1')}>
         <Button
           small={true}
-          className={'button--secondary button--clear-lines ml1'}
+          className={'button--secondary button--clear-lines'}
           onClick={handleClickClearAllLines}
         >
           <T id={'clear_all_lines'} />

@@ -12,6 +12,7 @@ import { DateInput } from '@blueprintjs/datetime';
 import { FormattedMessage as T } from 'react-intl';
 import moment from 'moment';
 import classNames from 'classnames';
+import { CLASSES } from 'common/classes';
 import { momentFormatter, compose, tansformDateValue } from 'utils';
 import {
   AccountsSelectList,
@@ -19,6 +20,7 @@ import {
   ErrorMessage,
   FieldRequiredHint,
   Money,
+  Hint,
 } from 'components';
 
 import withBills from '../Bill/withBills';
@@ -118,8 +120,8 @@ function PaymentMadeFormHeader({
   };
 
   return (
-    <div>
-      <div>
+    <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
+      <div className={classNames(CLASSES.PAGE_FORM_HEADER_PRIMARY)}>
         {/* ------------ Vendor name ------------ */}
         <FormGroup
           label={<T id={'vendor_name'} />}
@@ -171,10 +173,10 @@ function PaymentMadeFormHeader({
           label={<T id={'full_amount'} />}
           inline={true}
           className={('form-group--full-amount', Classes.FILL)}
-          labelInfo={<FieldRequiredHint />}
           intent={
             errors.full_amount && touched.full_amount && Intent.DANGER
           }
+          labelInfo={<Hint />}
           helperText={
             <ErrorMessage name="full_amount" {...{ errors, touched }} />
           }
@@ -189,7 +191,7 @@ function PaymentMadeFormHeader({
             onBlur={handleFullAmountBlur}
           />
 
-          <a onClick={handleReceiveFullAmountClick} href="#">
+          <a onClick={handleReceiveFullAmountClick} href="#" className={'receive-full-amount'}>
             Receive full amount (<Money amount={payableFullAmount} currency={'USD'} />)
           </a>
         </FormGroup>
@@ -246,22 +248,22 @@ function PaymentMadeFormHeader({
             selectedAccountId={values.payment_account_id}
           />
         </FormGroup>
-      </div>
 
-      {/* ------------ Reference ------------ */}
-      <FormGroup
-        label={<T id={'reference'} />}
-        inline={true}
-        className={classNames('form-group--reference', Classes.FILL)}
-        intent={errors.reference && touched.reference && Intent.DANGER}
-        helperText={<ErrorMessage name="reference" {...{ errors, touched }} />}
-      >
-        <InputGroup
+        {/* ------------ Reference ------------ */}
+        <FormGroup
+          label={<T id={'reference'} />}
+          inline={true}
+          className={classNames('form-group--reference', Classes.FILL)}
           intent={errors.reference && touched.reference && Intent.DANGER}
-          minimal={true}
-          {...getFieldProps('reference')}
-        />
-      </FormGroup>
+          helperText={<ErrorMessage name="reference" {...{ errors, touched }} />}
+        >
+          <InputGroup
+            intent={errors.reference && touched.reference && Intent.DANGER}
+            minimal={true}
+            {...getFieldProps('reference')}
+          />
+        </FormGroup>
+      </div>
     </div>
   );
 }

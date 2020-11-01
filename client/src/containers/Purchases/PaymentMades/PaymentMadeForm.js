@@ -1,11 +1,13 @@
-import React, { useMemo, useState, useCallback, useEffect } from 'react';
+import React, { useMemo, useState, useCallback } from 'react';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import moment from 'moment';
 import { Intent, Alert } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { pick, sumBy } from 'lodash';
+import classNames from 'classnames';
 
+import { CLASSES } from 'common/classes';
 import PaymentMadeHeader from './PaymentMadeFormHeader';
 import PaymentMadeItemsTable from './PaymentMadeItemsTable';
 import PaymentMadeFloatingActions from './PaymentMadeFloatingActions';
@@ -16,11 +18,9 @@ import withPaymentMadeDetail from './withPaymentMadeDetail';
 import withPaymentMade from './withPaymentMade';
 import { AppToaster } from 'components';
 
-import { compose, repeatValue, orderingLinesIndexes } from 'utils';
+import { compose, orderingLinesIndexes } from 'utils';
 import withSettings from 'containers/Settings/withSettings';
 import { useHistory } from 'react-router-dom';
-
-const MIN_LINES_NUMBER = 5;
 
 const ERRORS = {
   PAYMENT_NUMBER_NOT_UNIQUE: 'PAYMENT.NUMBER.NOT.UNIQUE',
@@ -70,8 +70,7 @@ function PaymentMadeForm({
       Yup.object().shape({
         id: Yup.number().nullable(),
         due_amount: Yup.number().nullable(),
-        payment_amount: Yup.number().nullable()
-          .max(Yup.ref("due_amount")),
+        payment_amount: Yup.number().nullable().max(Yup.ref('due_amount')),
         bill_id: Yup.number()
           .nullable()
           .when(['payment_amount'], {
@@ -124,7 +123,10 @@ function PaymentMadeForm({
     [paymentMade, defaultInitialValues, defaultPaymentMadeEntry],
   );
 
-  const handleSubmitForm = (values, { setSubmitting, resetForm, setFieldError }) => {
+  const handleSubmitForm = (
+    values,
+    { setSubmitting, resetForm, setFieldError },
+  ) => {
     setSubmitting(true);
 
     // Filters entries that have no `bill_id` or `payment_amount`.
@@ -165,7 +167,7 @@ function PaymentMadeForm({
       if (getError(ERRORS.PAYMENT_NUMBER_NOT_UNIQUE)) {
         setFieldError(
           'payment_number',
-          formatMessage({ id: 'payment_number_is_not_unique' })
+          formatMessage({ id: 'payment_number_is_not_unique' }),
         );
       }
       setSubmitting(false);
@@ -251,7 +253,7 @@ function PaymentMadeForm({
     setClearFormAlert(true);
   }, []);
 
-  // 
+  //
   const handleCancelClearFormAlert = () => {
     setClearFormAlert(false);
   };
@@ -270,7 +272,9 @@ function PaymentMadeForm({
   };
 
   return (
-    <div className={'payment_made_form'}>
+    <div
+      className={classNames(CLASSES.PAGE_FORM, CLASSES.PAGE_FORM_PAYMENT_MADE)}
+    >
       <form onSubmit={handleSubmit}>
         <PaymentMadeHeader
           paymentMadeId={paymentMadeId}
@@ -282,6 +286,7 @@ function PaymentMadeForm({
           values={values}
           onFullAmountChanged={handleFullAmountChange}
         />
+
         <PaymentMadeItemsTable
           fullAmount={fullAmount}
           paymentEntries={values.entries}

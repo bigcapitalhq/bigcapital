@@ -1,7 +1,13 @@
 import React from 'react';
 import { Intent, Button } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'react-intl';
+import classNames from 'classnames';
 
+import { CLASSES } from 'common/classes';
+
+/**
+ * Payment made floating actions bar.
+ */
 export default function PaymentMadeFloatingActions({
   isSubmitting,
   onSubmitClick,
@@ -21,7 +27,7 @@ export default function PaymentMadeFloatingActions({
   };
 
   return (
-    <div className={'estimate-form__floating-footer'}>
+    <div className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>
       <Button
         disabled={isSubmitting}
         intent={Intent.PRIMARY}
