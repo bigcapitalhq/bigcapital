@@ -220,27 +220,6 @@ function ExchangeRateFormDialogContent({
               disabled={action === 'edit'}
             />
           </FormGroup>
-
-          <FormGroup
-            label={<T id={'exchange_rate'} />}
-            labelInfo={FieldRequiredHint}
-            intent={
-              errors.exchange_rate && touched.exchange_rate && Intent.DANGER
-            }
-            helperText={
-              <ErrorMessage name="exchange_rate" {...{ errors, touched }} />
-            }
-            inline={true}
-          >
-            <InputGroup
-              medium={true}
-              intent={
-                errors.exchange_rate && touched.exchange_rate && Intent.DANGER
-              }
-              {...getFieldProps('exchange_rate')}
-            />
-          </FormGroup>
-
           <FormGroup
             label={<T id={'currency_code'} />}
             labelInfo={FieldRequiredHint}
@@ -264,6 +243,26 @@ function ExchangeRateFormDialogContent({
               selectedItemProp={'currency_code'}
               defaultText={<T id={'select_currency_code'} />}
               labelProp={'currency_code'}
+              disabled={action === 'edit'}
+            />
+          </FormGroup>
+          <FormGroup
+            label={<T id={'exchange_rate'} />}
+            labelInfo={FieldRequiredHint}
+            intent={
+              errors.exchange_rate && touched.exchange_rate && Intent.DANGER
+            }
+            helperText={
+              <ErrorMessage name="exchange_rate" {...{ errors, touched }} />
+            }
+            inline={true}
+          >
+            <InputGroup
+              medium={true}
+              intent={
+                errors.exchange_rate && touched.exchange_rate && Intent.DANGER
+              }
+              {...getFieldProps('exchange_rate')}
             />
           </FormGroup>
         </div>
