@@ -142,11 +142,16 @@ export default class ExchangeRatesController extends BaseController {
    */
   async editExchangeRate(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
+    const { id: exchangeRateId } = req.params;
     const exchangeRateDTO = this.matchedBodyData(req);
 
     try {
-      const exchangeRate = await this.exchangeRatesService.newExchangeRate(tenantId, exchangeRateDTO)
-      return res.status(200).send({ id: exchangeRate.id });
+      const exchangeRate = await this.exchangeRatesService.editExchangeRate(tenantId, exchangeRateId, exchangeRateDTO)
+
+      return res.status(200).send({
+        id: exchangeRateId,
+        message: 'The exchange rate has been edited successfully.',
+      });
     } catch (error) {
       next(error);
     }
