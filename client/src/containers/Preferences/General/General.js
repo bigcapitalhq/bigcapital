@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { useFormik } from 'formik';
+import { mapKeys, snakeCase } from 'lodash';
 import * as Yup from 'yup';
 import {
   Button,
@@ -9,19 +10,30 @@ import {
   MenuItem,
   Classes,
   Spinner,
+  Position,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { TimezonePicker } from '@blueprintjs/timezone';
 import { useQuery, queryCache } from 'react-query';
 import { FormattedMessage as T, useIntl } from 'react-intl';
+import { DateInput } from '@blueprintjs/datetime';
 import moment from 'moment';
+import { useHistory } from 'react-router-dom';
 
-import { compose, optionsMapToArray } from 'utils';
+import {
+  compose,
+  optionsMapToArray,
+  tansformDateValue,
+  momentFormatter,
+} from 'utils';
 
-import ErrorMessage from 'components/ErrorMessage';
-import AppToaster from 'components/AppToaster';
-import { ListSelect } from 'components';
-import { If } from 'components';
+import {
+  If,
+  FieldRequiredHint,
+  ListSelect,
+  ErrorMessage,
+  AppToaster,
+} from 'components';
 
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withSettings from 'containers/Settings/withSettings';
@@ -40,14 +52,11 @@ function GeneralPreferences({
 }) {
   const { formatMessage } = useIntl();
   const [selectedItems, setSelectedItems] = useState({});
+  const history = useHistory();
 
-  const fetchHook = useQuery(
-    ['settings'],
-    () => {
-      requestFetchOptions();
-    },
-    { manual: true },
-  );
+  const fetchHook = useQuery(['settings'], () => {
+    requestFetchOptions();
+  });
 
   useEffect(() => {
     changePreferencesPageTitle(formatMessage({ id: 'general' }));
@@ -193,16 +202,21 @@ function GeneralPreferences({
     name: Yup.string()
       .required()
       .label(formatMessage({ id: 'organization_name_' })),
+    financial_date_start: Yup.date()
+      .required()
+      .label(formatMessage({ id: 'date_start_' })),
     industry: Yup.string()
       .required()
       .label(formatMessage({ id: 'organization_industry_' })),
     location: Yup.string()
       .required()
       .label(formatMessage({ id: 'location' })),
-    base_currency: Yup.string().required(formatMessage({ id: 'required' })),
-    fiscal_year: Yup.string()
+    base_currency: Yup.string()
       .required()
       .label(formatMessage({ id: 'base_currency_' })),
+    fiscal_year: Yup.string()
+      .required()
+      .label(formatMessage({ id: 'fiscal_year_' })),
     language: Yup.string()
       .required()
       .label(formatMessage({ id: 'language' })),
@@ -213,6 +227,12 @@ function GeneralPreferences({
       .required()
       .label(formatMessage({ id: 'date_format_' })),
   });
+
+  function snakeCaseChange(data) {
+    return mapKeys(data, (value, key) => snakeCase(key));
+  }
+
+  const initialValues = snakeCaseChange(organizationSettings);
 
   const {
     values,
@@ -226,7 +246,7 @@ function GeneralPreferences({
   } = useFormik({
     enableReinitialize: true,
     initialValues: {
-      ...organizationSettings,
+      ...initialValues,
     },
     validationSchema,
     onSubmit: (values, { setSubmitting }) => {
@@ -264,6 +284,13 @@ function GeneralPreferences({
     />
   );
 
+  const handleDateChange = useCallback(
+    (date) => {
+      const formatted = moment(date).format('YYYY-MM-DD');
+      setFieldValue('financial_date_start', formatted);
+    },
+    [setFieldValue],
+  );
   const date_format = (item, { handleClick }) => (
     <MenuItem
       key={item.id}
@@ -300,6 +327,11 @@ function GeneralPreferences({
     },
     [setFieldValue],
   );
+
+  const handleClose = () => {
+    history.goBack();
+  };
+
   return (
     <div
       className={classNames({
@@ -310,6 +342,7 @@ function GeneralPreferences({
       <form onSubmit={handleSubmit}>
         <FormGroup
           label={<T id={'organization_name'} />}
+          labelInfo={<FieldRequiredHint />}
           inline={true}
           intent={errors.name && touched.name && Intent.DANGER}
           helperText={<ErrorMessage name="name" {...{ errors, touched }} />}
@@ -319,6 +352,30 @@ function GeneralPreferences({
             medium={'true'}
             intent={errors.name && touched.name && Intent.DANGER}
             {...getFieldProps('name')}
+          />
+        </FormGroup>
+        <FormGroup
+          label={<T id={'financial_starting_date'} />}
+          labelInfo={<FieldRequiredHint />}
+          inline={true}
+          intent={
+            errors.financial_date_start &&
+            touched.financial_date_start &&
+            Intent.DANGER
+          }
+          helperText={
+            <ErrorMessage
+              name="financial_date_start"
+              {...{ errors, touched }}
+            />
+          }
+          className={classNames('form-group--select-list', Classes.FILL)}
+        >
+          <DateInput
+            {...momentFormatter('MMMM Do YYYY')}
+            value={tansformDateValue(values.financial_date_start)}
+            onChange={handleDateChange}
+            popoverProps={{ position: Position.BOTTOM, minimal: true }}
           />
         </FormGroup>
 
@@ -362,6 +419,7 @@ function GeneralPreferences({
 
         <FormGroup
           label={<T id={'base_currency'} />}
+          labelInfo={<FieldRequiredHint />}
           className={classNames(
             'form-group--base-currency',
             'form-group--select-list',
@@ -392,6 +450,7 @@ function GeneralPreferences({
 
         <FormGroup
           label={<T id={'fiscal_year'} />}
+          labelInfo={<FieldRequiredHint />}
           className={classNames(
             'form-group--fiscal-year',
             'form-group--select-list',
@@ -419,6 +478,7 @@ function GeneralPreferences({
 
         <FormGroup
           label={<T id={'language'} />}
+          labelInfo={<FieldRequiredHint />}
           inline={true}
           className={classNames(
             'form-group--language',
@@ -443,6 +503,7 @@ function GeneralPreferences({
         </FormGroup>
         <FormGroup
           label={<T id={'time_zone'} />}
+          labelInfo={<FieldRequiredHint />}
           inline={true}
           className={classNames(
             'form-group--time-zone',
@@ -463,6 +524,7 @@ function GeneralPreferences({
         </FormGroup>
         <FormGroup
           label={<T id={'date_format'} />}
+          labelInfo={<FieldRequiredHint />}
           inline={true}
           className={classNames(
             'form-group--language',
@@ -497,7 +559,7 @@ function GeneralPreferences({
           >
             <T id={'save'} />
           </Button>
-          <Button onClick={'handleClose'}>
+          <Button onClick={handleClose}>
             <T id={'close'} />
           </Button>
         </div>
@@ -512,7 +574,7 @@ function GeneralPreferences({
 }
 
 export default compose(
-  withSettings,
+  withSettings(({ organizationSettings }) => ({ organizationSettings })),
   withSettingsActions,
   withDashboardActions,
 )(GeneralPreferences);

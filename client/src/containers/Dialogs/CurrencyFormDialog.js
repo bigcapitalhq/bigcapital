@@ -4,9 +4,10 @@ import { Dialog, DialogSuspense } from 'components';
 import withDialogRedux from 'components/DialogReduxConnect';
 import { compose } from 'utils';
 
-const UserFormDialogContent = lazy(() => import('./UserFormDialogContent'));
-
-function UserFormDialog({
+const CurrencyFormDialogContent = lazy(() =>
+  import('./CurencyFormDialogContent'),
+);
+function CurrencyFormDialog({
   dialogName,
   payload = { action: '', id: null },
   isOpen,
@@ -16,20 +17,20 @@ function UserFormDialog({
       name={dialogName}
       title={
         payload.action === 'edit' ? (
-          <T id={'edit_invite'} />
+          <T id={'edit_currency'} />
         ) : (
-          <T id={'invite_user'} />
+          <T id={'new_currency'} />
         )
       }
-      className={'dialog--invite-form'}
+      className={'dialog--currency-form'}
+      isOpen={isOpen}
       autoFocus={true}
       canEscapeKeyClose={true}
-      isOpen={isOpen}
     >
       <DialogSuspense>
-        <UserFormDialogContent
+        <CurrencyFormDialogContent
           dialogName={dialogName}
-          userId={payload.id}
+          currencyId={payload.currencyCode}
           action={payload.action}
         />
       </DialogSuspense>
@@ -37,7 +38,4 @@ function UserFormDialog({
   );
 }
 
-export default compose(
-  // UserFormDialogConnect,
-  withDialogRedux(),
-)(UserFormDialog);
+export default compose(withDialogRedux())(CurrencyFormDialog);

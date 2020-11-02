@@ -1,8 +1,7 @@
 .dashboard-content--preferences {
   // margin-left: 430px;
   margin-left: 410px;
-  width: 100%;
-  // height: max-content;
+  // width: 100%;
   position: relative;
 }
 
@@ -60,11 +59,10 @@
 .preferences__sidebar {
   background: #fdfdfd;
   position: fixed;
-  // left: 220px;
-  left: 200px;
-  top: 1px;
-  min-width: 210px;
-  max-width: 210px;
+  left: 190px;
+  top: -5px;
+  min-width: 220px;
+  max-width: 220px;
   height: 100%;
 
   .sidebar-wrapper {
@@ -108,9 +106,9 @@
 //  Preference
 //---------------------------------
 .preferences__inside-content--general {
+  margin: 20px;
   .bp3-form-group {
-    margin: 25px 20px 20px;
-
+    margin: 18px 18px;
     .bp3-label {
       min-width: 180px;
     }
@@ -141,6 +139,12 @@
       box-shadow: 0 0 0 transparent;
       border: 1px solid #ced4da;
       padding: 8px;
+    }
+    .bp3-button .bp3-icon:first-child:last-child,
+    .bp3-button .bp3-spinner + .bp3-icon:last-child {
+      position: absolute;
+      right: 15px;
+      display: inline-block;
     }
   }
 }
