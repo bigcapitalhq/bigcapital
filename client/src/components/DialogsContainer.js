@@ -6,7 +6,7 @@ import UserFormDialog from 'containers/Dialogs/UserFormDialog';
 // import ItemCategoryDialog from 'containers/Dialogs/ItemCategoryDialog';
 import CurrencyFormDialog from 'containers/Dialogs/CurrencyFormDialog';
 // import InviteUserDialog from 'containers/Dialogs/InviteUserDialog';
-// import ExchangeRateDialog from 'containers/Dialogs/ExchangeRateDialog';
+import ExchangeRateFormDialog from 'containers/Dialogs/ExchangeRateFormDialog';
 import JournalNumberDialog from 'containers/Dialogs/JournalNumberDialog';
 import BillNumberDialog from 'containers/Dialogs/BillNumberDialog';
 import PaymentNumberDialog from 'containers/Dialogs/PaymentNumberDialog';
@@ -25,6 +25,7 @@ export default function DialogsContainer() {
       <InvoiceNumberDialog dialogName={'invoice-number-form'} />
       <CurrencyFormDialog dialogName={'currency-form'} />
       <UserFormDialog dialogName={'user-form'} />
+      <ExchangeRateFormDialog dialogName={'exchangeRate-form'} />
     </div>
   );
 }

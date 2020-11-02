@@ -10,25 +10,32 @@ import {
 } from '@blueprintjs/core';
 import { pick } from 'lodash';
 import * as Yup from 'yup';
-import { FormattedMessage as T, useIntl } from 'react-intl';
 import { useFormik } from 'formik';
 import { useQuery, queryCache } from 'react-query';
 import moment from 'moment';
 import { DateInput } from '@blueprintjs/datetime';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 import { momentFormatter, tansformDateValue } from 'utils';
-import { AppToaster, Dialog, ErrorMessage, ListSelect } from 'components';
+import {
+  AppToaster,
+  Dialog,
+  ErrorMessage,
+  ListSelect,
+  DialogContent,
+  FieldRequiredHint,
+} from 'components';
 import classNames from 'classnames';
-import withExchangeRatesDialog from './ExchangeRateDialog.container';
+import withExchangeRateDetail from 'containers/ExchangeRates/withExchangeRateDetail';
+import withExchangeRatesActions from 'containers/ExchangeRates/withExchangeRatesActions';
 
-/**
- * Exchange rate dialog.
- */
-function ExchangeRateDialog({
-  dialogName,
-  payload = {},
-  isOpen,
+import withCurrencies from 'containers/Currencies/withCurrencies';
+import withCurrenciesActions from 'containers/Currencies/withCurrenciesActions';
+import withDialogActions from 'containers/Dialog/withDialogActions';
 
-  // #withDialog
+import { compose } from 'utils';
+
+function ExchangeRateFormDialogContent({
+  // #withDialogActions
   closeDialog,
 
   // #withCurrencies
@@ -39,11 +46,24 @@ function ExchangeRateDialog({
 
   // #withExchangeRatesActions
   requestSubmitExchangeRate,
-  requestFetchExchangeRates,
   requestEditExchangeRate,
+
+  // #wihtCurrenciesActions
+  requestFetchCurrencies,
+
+  // #ownProp
+  action,
+  exchangeRateId,
+  dialogName,
 }) {
   const { formatMessage } = useIntl();
   const [selectedItems, setSelectedItems] = useState({});
+
+  const fetchCurrencies = useQuery(
+    'currencies',
+    () => requestFetchCurrencies(),
+    { enabled: true },
+  );
 
   const validationSchema = Yup.object().shape({
     exchange_rate: Yup.number()
@@ -66,12 +86,6 @@ function ExchangeRateDialog({
     [],
   );
 
-  const fetchExchangeRatesDialog = useQuery(
-    'exchange-rates-dialog',
-    () => requestFetchExchangeRates(),
-    { manual: true },
-  );
-
   const {
     values,
     touched,
@@ -85,12 +99,12 @@ function ExchangeRateDialog({
     enableReinitialize: true,
     validationSchema,
     initialValues: {
-      ...(payload.action === 'edit' &&
-        pick(exchangeRate, Object.keys(initialValues))),
+      ...initialValues,
+      ...(action === 'edit' && pick(exchangeRate, Object.keys(initialValues))),
     },
     onSubmit: (values, { setSubmitting, setErrors }) => {
-      if (payload.action === 'edit') {
-        requestEditExchangeRate(payload.id, values)
+      if (action === 'edit') {
+        requestEditExchangeRate(exchangeRateId, values)
           .then((response) => {
             closeDialog(dialogName);
             AppToaster.show({
@@ -100,7 +114,7 @@ function ExchangeRateDialog({
               intent: Intent.SUCCESS,
             });
             setSubmitting(false);
-            queryCache.invalidateQueries('exchange-rates-dialog');
+            queryCache.invalidateQueries('exchange-rates-table');
           })
           .catch((error) => {
             setSubmitting(false);
@@ -134,20 +148,10 @@ function ExchangeRateDialog({
     },
   });
 
-  const requiredSpan = useMemo(() => <span class="required">*</span>, []);
-
   const handleClose = useCallback(() => {
     closeDialog(dialogName);
-  }, [dialogName, closeDialog]);
-
-  const onDialogClosed = useCallback(() => {
     resetForm();
-    closeDialog(dialogName);
-  }, [closeDialog, dialogName, resetForm]);
-
-  const onDialogOpening = useCallback(() => {
-    fetchExchangeRatesDialog.refetch();
-  }, [fetchExchangeRatesDialog]);
+  }, [dialogName, closeDialog]);
 
   const handleDateChange = useCallback(
     (date_filed) => (date) => {
@@ -197,31 +201,13 @@ function ExchangeRateDialog({
   }, []);
 
   return (
-    <Dialog
-      name={dialogName}
-      title={
-        payload.action === 'edit' ? (
-          <T id={'edit_exchange_rate'} />
-        ) : (
-          <T id={'new_exchange_rate'} />
-        )
-      }
-      className={classNames(
-        { 'dialog--loading': fetchExchangeRatesDialog.isFetching },
-        'dialog--exchangeRate-form',
-      )}
-      isOpen={isOpen}
-      onClosed={onDialogClosed}
-      onOpening={onDialogOpening}
-      isLoading={fetchExchangeRatesDialog.isFetching}
-      onClose={handleClose}
-    >
+    <DialogContent isLoading={fetchCurrencies.isFetching}>
       <form onSubmit={handleSubmit}>
         <div className={Classes.DIALOG_BODY}>
           <FormGroup
             label={<T id={'date'} />}
             inline={true}
-            labelInfo={requiredSpan}
+            labelInfo={FieldRequiredHint}
             intent={errors.date && touched.date && Intent.DANGER}
             helperText={<ErrorMessage name="date" {...{ errors, touched }} />}
           >
@@ -231,13 +217,13 @@ function ExchangeRateDialog({
               value={tansformDateValue(values.date)}
               onChange={handleDateChange('date')}
               popoverProps={{ position: Position.BOTTOM, minimal: true }}
-              disabled={payload.action === 'edit'}
+              disabled={action === 'edit'}
             />
           </FormGroup>
 
           <FormGroup
             label={<T id={'exchange_rate'} />}
-            labelInfo={requiredSpan}
+            labelInfo={FieldRequiredHint}
             intent={
               errors.exchange_rate && touched.exchange_rate && Intent.DANGER
             }
@@ -257,7 +243,7 @@ function ExchangeRateDialog({
 
           <FormGroup
             label={<T id={'currency_code'} />}
-            labelInfo={requiredSpan}
+            labelInfo={FieldRequiredHint}
             className={classNames('form-group--select-list', Classes.FILL)}
             inline={true}
             intent={
@@ -291,17 +277,19 @@ function ExchangeRateDialog({
               type="submit"
               disabled={isSubmitting}
             >
-              {payload.action === 'edit' ? (
-                <T id={'edit'} />
-              ) : (
-                <T id={'submit'} />
-              )}
+              {action === 'edit' ? <T id={'edit'} /> : <T id={'submit'} />}
             </Button>
           </div>
         </div>
       </form>
-    </Dialog>
+    </DialogContent>
   );
 }
 
-export default withExchangeRatesDialog(ExchangeRateDialog);
+export default compose(
+  withDialogActions,
+  withExchangeRatesActions,
+  withExchangeRateDetail,
+  withCurrenciesActions,
+  withCurrencies(({ currenciesList }) => ({ currenciesList })),
+)(ExchangeRateFormDialogContent);
