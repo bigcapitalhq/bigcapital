@@ -2,9 +2,9 @@ import React, { lazy } from 'react';
 
 import AccountFormDialog from 'containers/Dialogs/AccountFormDialog';
 
-// import UserFormDialog from 'containers/Dialogs/UserFormDialog';
+import UserFormDialog from 'containers/Dialogs/UserFormDialog';
 // import ItemCategoryDialog from 'containers/Dialogs/ItemCategoryDialog';
-// import CurrencyDialog from 'containers/Dialogs/CurrencyDialog';
+import CurrencyFormDialog from 'containers/Dialogs/CurrencyFormDialog';
 // import InviteUserDialog from 'containers/Dialogs/InviteUserDialog';
 // import ExchangeRateDialog from 'containers/Dialogs/ExchangeRateDialog';
 import JournalNumberDialog from 'containers/Dialogs/JournalNumberDialog';
@@ -23,6 +23,8 @@ export default function DialogsContainer() {
       <EstimateNumberDialog dialogName={'estimate-number-form'} />
       <ReceiptNumberDialog dialogName={'receipt-number-form'} />
       <InvoiceNumberDialog dialogName={'invoice-number-form'} />
+      <CurrencyFormDialog dialogName={'currency-form'} />
+      <UserFormDialog dialogName={'user-form'} />
     </div>
   );
 }

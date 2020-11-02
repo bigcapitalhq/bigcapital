@@ -2,10 +2,9 @@ import { createReducer } from '@reduxjs/toolkit';
 import t from 'store/types';
 
 const initialState = {
-  list: {
-    results: [],
-  },
+  list: {},
   userById: {},
+  loading: false,
 };
 
 export default createReducer(initialState, {
@@ -15,6 +14,11 @@ export default createReducer(initialState, {
 
   [t.USER_DETAILS_SET]: (state, action) => {
     state.userById[action.user.id] = action.user;
+  },
+
+  [t.USERS_TABLE_LOADING]: (state, action) => {
+    const { loading } = action.payload;
+    state.loading = !!loading;
   },
 });
 

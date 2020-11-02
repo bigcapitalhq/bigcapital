@@ -1,7 +1,13 @@
 import { connect } from 'react-redux';
 
-export const mapStateToProps = (state, props) => ({
-  usersList: state.users.list.results,
-});
+export default (mapState) => {
+  const mapStateToProps = (state, props) => {
+    const mapped = {
+      usersList: state.users.list,
+      usersLoading: state.users.loading,
+    };
+    return mapState ? mapState(mapped, state, props) : mapped;
+  };
 
-export default connect(mapStateToProps);
+  return connect(mapStateToProps);
+};

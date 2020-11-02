@@ -1,13 +1,5 @@
 import React, { useCallback, useState, useMemo, useEffect } from 'react';
-import {
-  Button,
-  Popover,
-  Menu,
-  MenuItem,
-  Position,
-  Alert,
-  Intent,
-} from '@blueprintjs/core';
+import { Alert, Intent } from '@blueprintjs/core';
 import { useQuery, queryCache } from 'react-query';
 import {
   FormattedMessage as T,
@@ -15,13 +7,12 @@ import {
   useIntl,
 } from 'react-intl';
 
-import Icon from 'components/Icon';
-import LoadingIndicator from 'components/LoadingIndicator';
-import DataTable from 'components/DataTable';
+import CurrenciesDataTable from './CurrenciesDataTable';
+import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
+import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import AppToaster from 'components/AppToaster';
 
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
-import withCurrencies from 'containers/Currencies/withCurrencies';
 import withCurrenciesActions from 'containers/Currencies/withCurrenciesActions';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 
@@ -41,41 +32,34 @@ function CurrenciesList({
 
   // #withDashboardActions
   changePreferencesPageTitle,
-
-  // #ownProps
-  onFetchData,
 }) {
   const [deleteCurrencyState, setDeleteCurrencyState] = useState(false);
+  const [selectedRows, setSelectedRows] = useState([]);
   const { formatMessage } = useIntl();
 
-  const fetchCurrencies = useQuery('currencies-table',
+  const fetchCurrencies = useQuery(
+    'currencies-table',
     () => requestFetchCurrencies(),
     { enabled: true },
   );
-
-
 
   useEffect(() => {
     changePreferencesPageTitle(formatMessage({ id: 'currencies' }));
   }, [changePreferencesPageTitle, formatMessage]);
 
-  const handleEditCurrency = useCallback(
-    (currency) => {
-      openDialog('currency-form', {
-        action: 'edit',
-        currencyCode: currency.currency_code,
-      });
-    },
-    [openDialog],
-  );
+  const handleEditCurrency = useCallback(() => {}, []);
 
-  const onDeleteCurrency = useCallback((currency) => {
+  // Handle click and cancel/confirm currency delete
+  const handleDeleteCurrency = useCallback((currency) => {
     setDeleteCurrencyState(currency);
   }, []);
+
+  // handle cancel delete currency alert.
   const handleCancelCurrencyDelete = () => {
     setDeleteCurrencyState(false);
   };
 
+  // Handle confirm Currency delete
   const handleConfirmCurrencyDelete = useCallback(
     (refetch) => {
       requestDeleteCurrency(deleteCurrencyState.currency_code)
@@ -95,95 +79,44 @@ function CurrenciesList({
     [deleteCurrencyState, requestDeleteCurrency, formatMessage],
   );
 
-  const actionMenuList = useCallback(
-    (currency) => (
-      <Menu>
-        <MenuItem
-          text={<T id={'edit_currency'} />}
-          onClick={() => handleEditCurrency(currency)}
-        />
-
-        <MenuItem
-          text={<T id={'delete_currency'} />}
-          onClick={() => onDeleteCurrency(currency)}
-          intent={Intent.DANGER}
-        />
-      </Menu>
-    ),
-    [handleEditCurrency, onDeleteCurrency],
+  // Handle selected rows change.
+  const handleSelectedRowsChange = useCallback(
+    (accounts) => {
+      setSelectedRows(accounts);
+    },
+    [setSelectedRows],
   );
-
-  const columns = useMemo(
-    () => [
-      {
-        Header: formatMessage({ id: 'currency_name' }),
-        accessor: 'currency_name',
-        width: 150,
-      },
-      {
-        Header: formatMessage({ id: 'currency_code' }),
-        accessor: 'currency_code',
-        className: 'currency_code',
-        width: 120,
-      },
-      {
-        Header: 'Currency sign',
-        width: 120,
-      },
-      {
-        id: 'actions',
-        Header: '',
-        Cell: ({ cell }) => (
-          <Popover
-            content={actionMenuList(cell.row.original)}
-            position={Position.RIGHT_TOP}
-          >
-            <Button icon={<Icon icon="ellipsis-h" />} />
-          </Popover>
-        ),
-        className: 'actions',
-        width: 50,
-      },
-    ],
-    [actionMenuList, formatMessage],
-  );
-
-  const handleDataTableFetchData = useCallback(() => {
-    // fetchCurrencies.refetch();
-  }, [fetchCurrencies]);
 
   return (
-    <LoadingIndicator loading={fetchCurrencies.isFetching}>
-      <DataTable
-        columns={columns}
-        data={currenciesList}
-        onFetchData={handleDataTableFetchData}
-        loading={currenciesLoading}
-      />
-      <Alert
-        cancelButtonText={<T id={'cancel'} />}
-        confirmButtonText={<T id={'delete'} />}
-        icon="trash"
-        intent={Intent.DANGER}
-        isOpen={deleteCurrencyState}
-        onCancel={handleCancelCurrencyDelete}
-        onConfirm={handleConfirmCurrencyDelete}
-      >
-        <p>
-          <FormattedHTMLMessage
-            id={'once_delete_this_currency_you_will_able_to_restore_it'}
-          />
-        </p>
-      </Alert>
-    </LoadingIndicator>
+    <DashboardInsider loading={fetchCurrencies.isFetching}>
+      <DashboardPageContent>
+        <CurrenciesDataTable
+          onDeleteCurrency={handleDeleteCurrency}
+          onEditCurrency={handleEditCurrency}
+          onSelectedRowsChange={handleSelectedRowsChange}
+        />
+        <Alert
+          cancelButtonText={<T id={'cancel'} />}
+          confirmButtonText={<T id={'delete'} />}
+          icon="trash"
+          intent={Intent.DANGER}
+          isOpen={deleteCurrencyState}
+          onCancel={handleCancelCurrencyDelete}
+          onConfirm={handleConfirmCurrencyDelete}
+        >
+          <p>
+            <FormattedHTMLMessage
+              id={'once_delete_this_currency_you_will_able_to_restore_it'}
+            />
+          </p>
+        </Alert>
+      </DashboardPageContent>
+    </DashboardInsider>
   );
 }
 
 export default compose(
   withDashboardActions,
-  withCurrencies(({ currenciesList }) => ({
-    currenciesList,
-  })),
   withCurrenciesActions,
   withDialogActions,
 )(CurrenciesList);

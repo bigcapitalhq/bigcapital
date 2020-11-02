@@ -4,11 +4,20 @@ import t from 'store/types';
 export const fetchUsers = () => {
   return (dispatch) =>
     new Promise((resolve, reject) => {
+      dispatch({
+        type: t.USERS_TABLE_LOADING,
+        payload: { loading: true },
+      });
+
       ApiService.get(`users`)
         .then((response) => {
           dispatch({
             type: t.USERS_LIST_SET,
             users: response.data.users,
+          });
+          dispatch({
+            type: t.USERS_TABLE_LOADING,
+            payload: { loading: false },
           });
           resolve(response);
         })

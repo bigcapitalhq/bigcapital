@@ -7,40 +7,41 @@ import {
   Intent,
 } from '@blueprintjs/core';
 import * as Yup from 'yup';
-import { FormattedMessage as T, useIntl } from 'react-intl';
 import { useFormik } from 'formik';
 import { useQuery, queryCache } from 'react-query';
-import { connect } from 'react-redux';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 import { pick } from 'lodash';
-
-import AppToaster from 'components/AppToaster';
-import Dialog from 'components/Dialog';
-import withDialogRedux from 'components/DialogReduxConnect';
-import ErrorMessage from 'components/ErrorMessage';
 import classNames from 'classnames';
-import withDialogActions from 'containers/Dialog/withDialogActions';
+import {
+  If,
+  ErrorMessage,
+  AppToaster,
+  FieldRequiredHint,
+  DialogContent,
+} from 'components';
 
-import withCurrency from 'containers/Currencies/withCurrency';
+import withDialogActions from 'containers/Dialog/withDialogActions';
+import withCurrencyDetail from 'containers/Currencies/withCurrencyDetail';
 import withCurrenciesActions from 'containers/Currencies/withCurrenciesActions';
 
 import { compose } from 'utils';
 
-function CurrencyDialog({
-  dialogName,
-  payload,
-  isOpen,
-
-  // #withDialogActions
-  closeDialog,
-
-  // #withCurrency
-  currencyCode,
+function CurencyFormDialogContent({
+  // #withCurrencyDetail
   currency,
 
   // #wihtCurrenciesActions
   requestFetchCurrencies,
   requestSubmitCurrencies,
   requestEditCurrency,
+
+  // #withDialogActions
+  closeDialog,
+
+  // #ownProp
+  action,
+  currencyId,
+  dialogName,
 }) {
   const { formatMessage } = useIntl();
   const fetchCurrencies = useQuery('currencies', () =>
@@ -63,7 +64,6 @@ function CurrencyDialog({
     }),
     [],
   );
-
   const {
     values,
     errors,
@@ -75,12 +75,11 @@ function CurrencyDialog({
   } = useFormik({
     enableReinitialize: true,
     initialValues: {
-      ...(payload.action === 'edit' &&
-        pick(currency, Object.keys(initialValues))),
+      ...(action === 'edit' && pick(currency, Object.keys(initialValues))),
     },
     validationSchema: validationSchema,
     onSubmit: (values, { setSubmitting }) => {
-      if (payload.action === 'edit') {
+      if (action === 'edit') {
         requestEditCurrency(currency.id, values)
           .then((response) => {
             closeDialog(dialogName);
@@ -115,7 +114,6 @@ function CurrencyDialog({
       }
     },
   });
-
   const handleClose = useCallback(() => {
     closeDialog(dialogName);
   }, [dialogName, closeDialog]);
@@ -129,35 +127,13 @@ function CurrencyDialog({
     closeDialog(dialogName);
   }, [closeDialog, dialogName, resetForm]);
 
-  const requiredSpan = useMemo(() => <span className={'required'}>*</span>, []);
-
   return (
-    <Dialog
-      name={dialogName}
-      title={
-        payload.action === 'edit' ? (
-          <T id={'edit_currency'} />
-        ) : (
-          <T id={'new_currency'} />
-        )
-      }
-      className={classNames(
-        {
-          'dialog--loading': fetchCurrencies.isFetching,
-        },
-        'dialog--currency-form',
-      )}
-      isOpen={isOpen}
-      onClosed={onDialogClosed}
-      onOpening={onDialogOpening}
-      isLoading={fetchCurrencies.isFetching}
-      onClose={handleClose}
-    >
+    <DialogContent isLoading={fetchCurrencies.isFetching}>
       <form onSubmit={handleSubmit}>
         <div className={Classes.DIALOG_BODY}>
           <FormGroup
             label={<T id={'currency_name'} />}
-            labelInfo={requiredSpan}
+            labelInfo={FieldRequiredHint}
             className={'form-group--currency-name'}
             intent={
               errors.currency_name && touched.currency_name && Intent.DANGER
@@ -178,7 +154,7 @@ function CurrencyDialog({
 
           <FormGroup
             label={<T id={'currency_code'} />}
-            labelInfo={requiredSpan}
+            labelInfo={FieldRequiredHint}
             className={'form-group--currency-code'}
             intent={
               errors.currency_code && touched.currency_code && Intent.DANGER
@@ -208,29 +184,17 @@ function CurrencyDialog({
               type="submit"
               disabled={isSubmitting}
             >
-              {payload.action === 'edit' ? (
-                <T id={'edit'} />
-              ) : (
-                <T id={'submit'} />
-              )}
+              {action === 'edit' ? <T id={'edit'} /> : <T id={'submit'} />}
             </Button>
           </div>
         </div>
       </form>
-    </Dialog>
+    </DialogContent>
   );
 }
 
-const mapStateToProps = (state, props) => ({
-  currency: 'currency-form',
-});
-
-const withCurrencyFormDialog = connect(mapStateToProps);
-
 export default compose(
-  withCurrencyFormDialog,
-  withDialogRedux(null, 'currency-form'),
-  withCurrency,
+  withCurrencyDetail,
   withDialogActions,
   withCurrenciesActions,
-)(CurrencyDialog);
+)(CurencyFormDialogContent);
