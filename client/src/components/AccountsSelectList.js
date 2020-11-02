@@ -76,6 +76,7 @@ export default function AccountsSelectList({
       popoverProps={{ minimal: true }}
       filterable={true}
       onItemSelect={onAccountSelect}
+      disabled={disabled}
     >
       <Button
         disabled={disabled}

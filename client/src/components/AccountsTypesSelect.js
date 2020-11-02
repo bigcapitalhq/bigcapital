@@ -1,13 +1,12 @@
 import React, { useCallback } from 'react';
-import {
-  ListSelect,
-} from 'components';
+import { ListSelect } from 'components';
 
 export default function AccountsTypesSelect({
   accountsTypes,
   selectedTypeId,
   defaultSelectText = 'Select account type',
   onTypeSelected,
+  disabled = false,
   ...restProps
 }) {
   // Filters accounts types items.
@@ -28,7 +27,8 @@ export default function AccountsTypesSelect({
   };
 
   const items = accountsTypes.map((type) => ({
-    id: type.id, label: type.label,
+    id: type.id,
+    label: type.label,
   }));
 
   return (
@@ -40,6 +40,7 @@ export default function AccountsTypesSelect({
       defaultText={defaultSelectText}
       onItemSelect={handleItemSelected}
       itemPredicate={filterAccountTypeItems}
+      disabled={disabled}
       {...restProps}
     />
   );

@@ -15,7 +15,7 @@ export default function ListSelect({
 
   initialSelectedItem,
   onItemSelect,
-
+  disabled = false,
   ...selectProps
 }) {
   const selectedItemObj = useMemo(
@@ -24,7 +24,10 @@ export default function ListSelect({
   );
 
   const selectedInitialItem = useMemo(
-    () => selectProps.items.find((i) => i[selectedItemProp] === initialSelectedItem),
+    () =>
+      selectProps.items.find(
+        (i) => i[selectedItemProp] === initialSelectedItem,
+      ),
     [initialSelectedItem],
   );
 
@@ -65,10 +68,12 @@ export default function ListSelect({
       onItemSelect={handleItemSelect}
       {...selectProps}
       noResults={noResults}
+      disabled={disabled}
     >
       <Button
         text={currentItem ? currentItem[labelProp] : defaultText}
         loading={isLoading}
+        disabled={disabled}
         {...buttonProps}
       />
     </Select>

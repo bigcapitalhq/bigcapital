@@ -282,7 +282,7 @@ function AccountFormDialogContent({
               selectedTypeId={values.account_type_id}
               defaultSelectText={<T id={'select_account_type'} />}
               onTypeSelected={onChangeAccountType}
-              buttonProps={{ disabled: action === 'edit' }}
+              disabled={action === 'edit'}
               popoverProps={{ minimal: true }}
             />
           </FormGroup>
