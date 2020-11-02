@@ -23,7 +23,7 @@ function ExchangeRateTable({
   // #withExchangeRates
   exchangeRatesList,
   exchangeRatesLoading,
-
+  exchangeRatesPageination,
   // #withDialogActions.
   openDialog,
 
@@ -152,6 +152,10 @@ function ExchangeRateTable({
         treeGraph={true}
         onSelectedRowsChange={handelSelectedRowsChange}
         rowContextMenu={rowContextMenu}
+        pagination={true}
+        pagesCount={exchangeRatesPageination.pagesCount}
+        initialPageSize={exchangeRatesPageination.pageSize}
+        initialPageIndex={exchangeRatesPageination.page - 1}
       />
     </LoadingIndicator>
   );
@@ -160,8 +164,15 @@ function ExchangeRateTable({
 export default compose(
   withDialogActions,
   withExchangeRatesActions,
-  withExchangeRates(({ exchangeRatesList, exchangeRatesLoading }) => ({
-    exchangeRatesList,
-    exchangeRatesLoading,
-  })),
+  withExchangeRates(
+    ({
+      exchangeRatesList,
+      exchangeRatesLoading,
+      exchangeRatesPageination,
+    }) => ({
+      exchangeRatesList,
+      exchangeRatesLoading,
+      exchangeRatesPageination,
+    }),
+  ),
 )(ExchangeRateTable);
