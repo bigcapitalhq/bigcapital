@@ -34,8 +34,9 @@ export default class PaymentReceivesController extends BaseController {
       this.handleServiceErrors,
     );
     router.post(
-      '/',
-      this.newPaymentReceiveValidation,
+      '/', [
+        ...this.newPaymentReceiveValidation,
+      ],
       this.validationResult,
       asyncMiddleware(this.newPaymentReceive.bind(this)),
       this.handleServiceErrors,
@@ -87,6 +88,7 @@ export default class PaymentReceivesController extends BaseController {
 
       check('entries').isArray({ min: 1 }),
 
+      check('entries.*.id').optional({ nullable: true }).isNumeric().toInt(),
       check('entries.*.invoice_id').exists().isNumeric().toInt(),
       check('entries.*.payment_amount').exists().isNumeric().toInt(),
     ];

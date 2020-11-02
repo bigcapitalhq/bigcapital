@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useQuery } from 'react-query';
+import { omit } from 'lodash';
 import { CloudLoadingIndicator } from 'components'
 import PaymentMadeItemsTableEditor from './PaymentMadeItemsTableEditor';
 
@@ -26,7 +27,6 @@ function PaymentMadeItemsTable({
   requestFetchDueBills,
 
   // #withBills
-  vendorPayableBills,
   paymentMadePayableBills,
 
   // #withPaymentMadeDetail
@@ -35,20 +35,14 @@ function PaymentMadeItemsTable({
   const [tableData, setTableData] = useState([]);
   const [localAmount, setLocalAmount] = useState(fullAmount);
 
-  // Payable bills based on selected vendor or specific payment made.
-  const payableBills = useMemo(
-    () =>
-      paymentMadeId
-        ? paymentMadePayableBills
-        : vendorId
-        ? vendorPayableBills
-        : [],
-    [paymentMadeId, paymentMadePayableBills, vendorId, vendorPayableBills],
-  );
   const isNewMode = !paymentMadeId;
 
-  const triggerUpdateData = useCallback((data) => {
-    onUpdateData && onUpdateData(data);
+  const triggerUpdateData = useCallback((entries) => {
+    const _data = entries.map((entry) => ({
+      bill_id: entry?.bill?.id,
+      ...omit(entry, ['bill']),
+    }))
+    onUpdateData && onUpdateData(_data);
   }, [onUpdateData]);
 
   // Merges payment entries with payable bills.
@@ -56,17 +50,16 @@ function PaymentMadeItemsTable({
     const entriesTable = new Map(
       paymentEntries.map((e) => [e.bill_id, e]),
     );
-    return payableBills.map((bill) => {
+    return paymentMadePayableBills.map((bill) => {
       const entry = entriesTable.get(bill.id);
       return {
-        ...bill,
-        bill_id: bill.id,
-        bill_payment_amount: bill.payment_amount,
-        payment_amount: entry ? entry.payment_amount : 0,
-        id: entry ? entry.id : null,
+        bill,
+        id: null,
+        payment_number: 0,
+        ...(entry || {}),
       }
     });
-  }, [paymentEntries, payableBills]);
+  }, [paymentEntries, paymentMadePayableBills]);
 
   useEffect(() => {
     setTableData(computedTableData);
@@ -127,11 +120,10 @@ function PaymentMadeItemsTable({
   );
 }
 
-export default compose( 
+export default compose(
   withPaymentMadeActions,
   withBillActions,
-  withBills(({ vendorPayableBills, paymentMadePayableBills }) => ({
-    vendorPayableBills,
+  withBills(({ paymentMadePayableBills }) => ({
     paymentMadePayableBills,
   })),
 )(PaymentMadeItemsTable);

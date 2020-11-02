@@ -1,29 +1,41 @@
 import React from 'react';
 import { Intent, Button } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'react-intl';
+import classNames from 'classnames';
 
-export default function PaymentReceiveFormFooter({
-  formik: { isSubmitting, resetForm },
+import { CLASSES } from 'common/classes';
+
+/**
+ * Payment receive floating actions bar.
+ */
+export default function PaymentReceiveFormFloatingActions({
+  isSubmitting,
   onSubmitClick,
   onCancelClick,
   onClearClick,
-  paymentReceive,
+  paymentReceiveId,
 }) {
+  const handleSubmitClick = (event) => {
+    onSubmitClick && onSubmitClick(event);
+  };
+
+  const handleClearBtnClick = (event) => {
+    onClearClick && onClearClick(event);
+  };
+
+  const handleCloseBtnClick = (event) => {
+    onCancelClick && onCancelClick(event);
+  };
+
   return (
-    <div className={'estimate-form__floating-footer'}>
+    <div className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>
       <Button
         disabled={isSubmitting}
         intent={Intent.PRIMARY}
         type="submit"
-        onClick={() => {
-          onSubmitClick({ redirect: true });
-        }}
-    >
-        {paymentReceive && paymentReceive.id ? (
-          <T id={'edit'} />
-        ) : (
-          <T id={'save_send'} />
-        )}
+        onClick={handleSubmitClick}
+      >
+        {paymentReceiveId ? <T id={'edit'} /> : <T id={'save_send'} />}
       </Button>
 
       <Button
@@ -32,9 +44,7 @@ export default function PaymentReceiveFormFooter({
         className={'ml1'}
         name={'save'}
         type="submit"
-        onClick={() => {
-          onSubmitClick({ redirect: false });
-        }}
+        onClick={handleSubmitClick}
       >
         <T id={'save'} />
       </Button>
@@ -42,18 +52,12 @@ export default function PaymentReceiveFormFooter({
       <Button
         className={'ml1'}
         disabled={isSubmitting}
-        onClick={() => onClearClick && onClearClick()}
+        onClick={handleClearBtnClick}
       >
         <T id={'clear'} />
       </Button>
 
-      <Button
-        className={'ml1'}
-        type="submit"
-        onClick={() => {
-          onCancelClick && onCancelClick();
-        }}
-      >
+      <Button className={'ml1'} type="submit" onClick={handleCloseBtnClick}>
         <T id={'close'} />
       </Button>
     </div>

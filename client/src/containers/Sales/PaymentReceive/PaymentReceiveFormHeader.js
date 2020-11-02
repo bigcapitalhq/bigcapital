@@ -5,35 +5,54 @@ import {
   Intent,
   Position,
   MenuItem,
-  Classes,
 } from '@blueprintjs/core';
 
 import { DateInput } from '@blueprintjs/datetime';
 import { FormattedMessage as T } from 'react-intl';
-import { useParams, useHistory } from 'react-router-dom';
-import { useQuery } from 'react-query';
-
 import moment from 'moment';
-import { momentFormatter, compose, tansformDateValue } from 'utils';
+import { sumBy } from 'lodash';
 import classNames from 'classnames';
+
+import { CLASSES } from 'common/classes'
+import { momentFormatter, compose, tansformDateValue } from 'utils';
 import {
   AccountsSelectList,
   ListSelect,
   ErrorMessage,
   FieldRequiredHint,
+  Hint,
+  Money,
 } from 'components';
 
+import withInvoices from 'containers/Sales/Invoice/withInvoices';
 import withCustomers from 'containers/Customers/withCustomers';
 import withAccounts from 'containers/Accounts/withAccounts';
 
 function PaymentReceiveFormHeader({
-  formik: { errors, touched, setFieldValue, getFieldProps, values },
+  // #useFormik
+  errors,
+  touched,
+  setFieldValue,
+  getFieldProps,
+  values,
+  onFullAmountChanged,
+  paymentReceiveId,
+  customerId,
 
   //#withCustomers
   customers,
+
   //#withAccouts
   accountsList,
+
+  // #withInvoices
+  receivableInvoices,
 }) {
+  // Compute the total receivable amount.
+  const receivableFullAmount = useMemo(
+    () => sumBy(receivableInvoices, 'due_amount'),
+    [receivableInvoices],
+  );
   const handleDateChange = useCallback(
     (date_filed) => (date) => {
       const formatted = moment(date).format('YYYY-MM-DD');
@@ -82,14 +101,28 @@ function PaymentReceiveFormHeader({
     [accountsList],
   );
 
+  const triggerFullAmountChanged = (value) => {
+    onFullAmountChanged && onFullAmountChanged(value);
+  };
+
+  // Handle full amount changed event.
+  const handleFullAmountBlur = (event) => {
+    triggerFullAmountChanged(event.currentTarget.value);
+  };
+  // Handle link click of receive full amount.
+  const handleReceiveFullAmountClick = () => {
+    setFieldValue('full_amount', receivableFullAmount);
+    triggerFullAmountChanged(receivableFullAmount);
+  };
+
   return (
-    <div>
-      <div>
-        {/* Customer name */}
+    <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
+      <div className={classNames(CLASSES.PAGE_FORM_HEADER_PRIMARY)}>
+        {/* ------------- Customer name ------------- */}
         <FormGroup
           label={<T id={'customer_name'} />}
           inline={true}
-          className={classNames('form-group--select-list', Classes.FILL)}
+          className={classNames('form-group--select-list', CLASSES.FILL)}
           labelInfo={<FieldRequiredHint />}
           intent={errors.customer_id && touched.customer_id && Intent.DANGER}
           helperText={
@@ -110,12 +143,12 @@ function PaymentReceiveFormHeader({
           />
         </FormGroup>
 
-        {/* Payment date */}
+        {/* ------------- Payment date ------------- */}
         <FormGroup
           label={<T id={'payment_date'} />}
           inline={true}
           labelInfo={<FieldRequiredHint />}
-          className={classNames('form-group--select-list', Classes.FILL)}
+          className={classNames('form-group--select-list', CLASSES.FILL)}
           intent={errors.payment_date && touched.payment_date && Intent.DANGER}
           helperText={
             <ErrorMessage name="payment_date" {...{ errors, touched }} />
@@ -129,11 +162,39 @@ function PaymentReceiveFormHeader({
           />
         </FormGroup>
 
-        {/* payment receive no */}
+        {/* ------------ Full amount ------------ */}
+        <FormGroup
+          label={<T id={'full_amount'} />}
+          inline={true}
+          className={('form-group--full-amount', CLASSES.FILL)}
+          intent={
+            errors.full_amount && touched.full_amount && Intent.DANGER
+          }
+          labelInfo={<Hint />}
+          helperText={
+            <ErrorMessage name="full_amount" {...{ errors, touched }} />
+          }
+        >
+          <InputGroup
+            intent={
+              errors.full_amount && touched.full_amount && Intent.DANGER
+            }
+            minimal={true}
+            value={values.full_amount}
+            {...getFieldProps('full_amount')}
+            onBlur={handleFullAmountBlur}
+          />
+
+          <a onClick={handleReceiveFullAmountClick} href="#" className={'receive-full-amount'}>
+            Receive full amount (<Money amount={receivableFullAmount} currency={'USD'} />)
+          </a>
+        </FormGroup>
+
+        {/* ------------ Payment receive no. ------------ */}
         <FormGroup
           label={<T id={'payment_receive_no'} />}
           inline={true}
-          className={('form-group--payment_receive_no', Classes.FILL)}
+          className={('form-group--payment_receive_no', CLASSES.FILL)}
           labelInfo={<FieldRequiredHint />}
           intent={
             errors.payment_receive_no &&
@@ -155,13 +216,13 @@ function PaymentReceiveFormHeader({
           />
         </FormGroup>
 
-        {/* deposit account */}
+        {/* ------------ Deposit account ------------ */}
         <FormGroup
           label={<T id={'deposit_to'} />}
           className={classNames(
             'form-group--deposit_account_id',
             'form-group--select-list',
-            Classes.FILL,
+            CLASSES.FILL,
           )}
           inline={true}
           labelInfo={<FieldRequiredHint />}
@@ -185,45 +246,22 @@ function PaymentReceiveFormHeader({
             selectedAccountId={values.deposit_account_id}
           />
         </FormGroup>
-      </div>
 
-      {/* Receive amount */}
-
-      {/* <FormGroup
-        label={<T id={'receive_amount'} />}
-        inline={true}
-        labelInfo={<FieldRequiredHint />}
-        className={classNames('form-group--', Classes.FILL)}
-        intent={
-          errors.receive_amount && touched.receive_amount && Intent.DANGER
-        }
-        helperText={
-          <ErrorMessage name="receive_amount" {...{ errors, touched }} />
-        }
-      >
-        <InputGroup
-          intent={
-            errors.receive_amount && touched.receive_amount && Intent.DANGER
-          }
-          minimal={true}
-          {...getFieldProps('receive_amount')}
-        />
-      </FormGroup> */}
-
-      {/* reference_no */}
-      <FormGroup
-        label={<T id={'reference'} />}
-        inline={true}
-        className={classNames('form-group--reference', Classes.FILL)}
-        intent={errors.reference_no && touched.reference_no && Intent.DANGER}
-        helperText={<ErrorMessage name="reference" {...{ errors, touched }} />}
-      >
-        <InputGroup
+        {/* ------------ Reference No. ------------ */}
+        <FormGroup
+          label={<T id={'reference'} />}
+          inline={true}
+          className={classNames('form-group--reference', CLASSES.FILL)}
           intent={errors.reference_no && touched.reference_no && Intent.DANGER}
-          minimal={true}
-          {...getFieldProps('reference_no')}
-        />
-      </FormGroup>
+          helperText={<ErrorMessage name="reference" {...{ errors, touched }} />}
+        >
+          <InputGroup
+            intent={errors.reference_no && touched.reference_no && Intent.DANGER}
+            minimal={true}
+            {...getFieldProps('reference_no')}
+          />
+        </FormGroup>
+      </div>
     </div>
   );
 }
@@ -234,5 +272,8 @@ export default compose(
   })),
   withAccounts(({ accountsList }) => ({
     accountsList,
+  })),
+  withInvoices(({ paymentReceiveReceivableInvoices }) => ({
+    receivableInvoices: paymentReceiveReceivableInvoices,
   })),
 )(PaymentReceiveFormHeader);

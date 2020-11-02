@@ -121,26 +121,32 @@ export const fetchInvoice = ({ id }) => {
         });
     });
 };
-export const dueInvoices = ({ id }) => {
-  return (dispatch) =>
-    new Promise((resovle, reject) => {
-      ApiService.get(`sales/invoices/due_invoices`, {
-        params: { customer_id: id },
-      })
-        .then((response) => {
-          dispatch({
-            type: t.DUE_INVOICES_SET,
-            payload: {
-              customer_id: id,
-              due_sales_invoices: response.data.due_sales_invoices,
-            },
-          });
-          resovle(response);
-        })
-        .catch((error) => {
-          const { response } = error;
-          const { data } = response;
-          reject(data?.errors);
+
+export const fetchDueInvoices = ({ customerId }) => (dispatch) => new Promise((resovle, reject) => {
+    ApiService.get(`sales/invoices/payable`, {
+      params: { customer_id: customerId },
+    })
+    .then((response) => {
+      dispatch({
+        type: t.INVOICES_ITEMS_SET,
+        payload: {
+          sales_invoices: response.data.sales_invoices,
+        },
+      });
+      if (customerId) {
+        dispatch({
+          type: t.INVOICES_RECEIVABLE_BY_CUSTOMER_ID,
+          payload: {
+            customerId,
+            saleInvoices: response.data.sales_invoices,
+          },
         });
+      }
+      resovle(response);
+    })
+    .catch((error) => {
+      const { response } = error;
+      const { data } = response;
+      reject(data?.errors);
     });
-};
+  });

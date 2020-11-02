@@ -9,89 +9,41 @@ import React, {
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import moment from 'moment';
-import { Intent, FormGroup, TextArea } from '@blueprintjs/core';
-import { useParams, useHistory } from 'react-router-dom';
 import { FormattedMessage as T, useIntl } from 'react-intl';
-import { pick, values } from 'lodash';
+import { pick, sumBy } from 'lodash';
+import { Intent, Alert } from '@blueprintjs/core';
+import classNames from 'classnames';
 
+import { CLASSES } from 'common/classes';
 import PaymentReceiveHeader from './PaymentReceiveFormHeader';
 import PaymentReceiveItemsTable from './PaymentReceiveItemsTable';
 import PaymentReceiveFloatingActions from './PaymentReceiveFloatingActions';
 
-import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withMediaActions from 'containers/Media/withMediaActions';
 import withPaymentReceivesActions from './withPaymentReceivesActions';
-import withInvoices from '../Invoice/withInvoices';
 import withPaymentReceiveDetail from './withPaymentReceiveDetail';
-import withPaymentReceives from './withPaymentReceives';
 import { AppToaster } from 'components';
-import Dragzone from 'components/Dragzone';
-import useMedia from 'hooks/useMedia';
 
-import { compose, repeatValue } from 'utils';
-
-const MIN_LINES_NUMBER = 5;
+import { compose } from 'utils';
 
 function PaymentReceiveForm({
-  //#withMedia
-  requestSubmitMedia,
-  requestDeleteMedia,
+  // #ownProps
+  paymentReceiveId,
 
   //#WithPaymentReceiveActions
   requestSubmitPaymentReceive,
   requestEditPaymentReceive,
 
-  //#withDashboard
-  changePageTitle,
-  changePageSubtitle,
-
-  //#withPaymentReceiveDetail
+  // #withPaymentReceive
   paymentReceive,
-  paymentReceiveInvoices,
-  paymentReceivesItems,
-
-  //#OWn Props
-  // payment_receive,
-  onFormSubmit,
-  onCancelForm,
-  dueInvoiceLength,
-  onCustomerChange,
 }) {
+  const [amountChangeAlert, setAmountChangeAlert] = useState(false);
+  const [clearLinesAlert, setClearLinesAlert] = useState(false);
+  const [fullAmount, setFullAmount] = useState(null);
+
   const { formatMessage } = useIntl();
-  const [payload, setPayload] = useState({});
-  const { id } = useParams();
-  const {
-    setFiles,
-    saveMedia,
-    deletedFiles,
-    setDeletedFiles,
-    deleteMedia,
-  } = useMedia({
-    saveCallback: requestSubmitMedia,
-    deleteCallback: requestDeleteMedia,
-  });
 
-  const savedMediaIds = useRef([]);
-  const clearSavedMediaIds = () => {
-    savedMediaIds.current = [];
-  };
-
-  useEffect(() => {
-    if (paymentReceive && paymentReceive.id) {
-      return;
-    } else {
-      onCustomerChange && onCustomerChange(formik.values.customer_id);
-    }
-  });
-
-  useEffect(() => {
-    if (paymentReceive && paymentReceive.id) {
-      changePageTitle(formatMessage({ id: 'edit_payment_receive' }));
-    } else {
-      changePageTitle(formatMessage({ id: 'payment_receive' }));
-    }
-  }, [changePageTitle, paymentReceive, formatMessage]);
-
+  // Form validation schema.
   const validationSchema = Yup.object().shape({
     customer_id: Yup.string()
       .label(formatMessage({ id: 'customer_name_' }))
@@ -102,9 +54,7 @@ function PaymentReceiveForm({
     deposit_account_id: Yup.number()
       .required()
       .label(formatMessage({ id: 'deposit_account_' })),
-    // receive_amount: Yup.number()
-    //   .required()
-    //   .label(formatMessage({ id: 'receive_amount_' })),
+    full_amount: Yup.number().nullable(),
     payment_receive_no: Yup.number()
       .required()
       .label(formatMessage({ id: 'payment_receive_no_' })),
@@ -112,11 +62,9 @@ function PaymentReceiveForm({
     description: Yup.string().nullable(),
     entries: Yup.array().of(
       Yup.object().shape({
-        payment_amount: Yup.number().nullable(),
-        invoice_no: Yup.number().nullable(),
-        balance: Yup.number().nullable(),
+        id: Yup.number().nullable(),
         due_amount: Yup.number().nullable(),
-        invoice_date: Yup.date(),
+        payment_amount: Yup.number().nullable().max(Yup.ref('due_amount')),
         invoice_id: Yup.number()
           .nullable()
           .when(['payment_amount'], {
@@ -126,15 +74,7 @@ function PaymentReceiveForm({
       }),
     ),
   });
-
-  const handleDropFiles = useCallback((_files) => {
-    setFiles(_files.filter((file) => file.uploaded === false));
-  }, []);
-
-  const savePaymentReceiveSubmit = useCallback((payload) => {
-    onFormSubmit && onFormSubmit(payload);
-  });
-
+  // Default payment receive.
   const defaultPaymentReceive = useMemo(
     () => ({
       invoice_id: '',
@@ -146,6 +86,12 @@ function PaymentReceiveForm({
     }),
     [],
   );
+  const defaultPaymentReceiveEntry = {
+    id: null,
+    payment_amount: null,
+    invoice_id: null,
+  };
+  // Form initial values.
   const defaultInitialValues = useMemo(
     () => ({
       customer_id: '',
@@ -153,20 +99,13 @@ function PaymentReceiveForm({
       payment_date: moment(new Date()).format('YYYY-MM-DD'),
       reference_no: '',
       payment_receive_no: '',
-      // receive_amount: '',
       description: '',
-      entries: [...repeatValue(defaultPaymentReceive, MIN_LINES_NUMBER)],
+      entries: [],
     }),
-    [defaultPaymentReceive],
+    [],
   );
 
-  const orderingIndex = (_entries) => {
-    return _entries.map((item, index) => ({
-      ...item,
-      index: index + 1,
-    }));
-  };
-
+  // Form initial values.
   const initialValues = useMemo(
     () => ({
       ...(paymentReceive
@@ -176,167 +115,205 @@ function PaymentReceiveForm({
               ...paymentReceive.entries.map((paymentReceive) => ({
                 ...pick(paymentReceive, Object.keys(defaultPaymentReceive)),
               })),
-              ...repeatValue(
-                defaultPaymentReceive,
-                Math.max(MIN_LINES_NUMBER - paymentReceive.entries.length, 0),
-              ),
             ],
           }
         : {
             ...defaultInitialValues,
-            entries: orderingIndex(defaultInitialValues.entries),
           }),
     }),
     [paymentReceive, defaultInitialValues, defaultPaymentReceive],
   );
 
-  const initialAttachmentFiles = useMemo(() => {
-    return paymentReceive && paymentReceive.media
-      ? paymentReceive.media.map((attach) => ({
-          preview: attach.attachment_file,
-          uploaded: true,
-          metadata: { ...attach },
-        }))
-      : [];
-  }, [paymentReceive]);
+  // Handle form submit.
+  const handleSubmitForm = (
+    values,
+    { setSubmitting, resetForm, setFieldError },
+  ) => {
+    setSubmitting(true);
 
-  const formik = useFormik({
+    // Filters entries that have no `invoice_id` and `payment_amount`.
+    const entries = values.entries
+      .filter((entry) => entry.invoice_id && entry.payment_amount)
+      .map((entry) => ({
+        ...pick(entry, Object.keys(defaultPaymentReceiveEntry)),
+      }));
+
+    // Calculates the total payment amount of entries.
+    const totalPaymentAmount = sumBy(entries, 'payment_amount');
+
+    if (totalPaymentAmount <= 0) {
+      AppToaster.show({
+        message: formatMessage({
+          id: 'you_cannot_make_payment_with_zero_total_amount',
+          intent: Intent.WARNING,
+        }),
+      });
+      return;
+    }
+    const form = { ...values, entries };
+
+    // Handle request response success.
+    const onSaved = (response) => {
+      AppToaster.show({
+        message: formatMessage({
+          id: paymentReceiveId
+            ? 'the_payment_has_been_received_successfully_edited'
+            : 'the_payment_has_been_received_successfully_created',
+        }),
+        intent: Intent.SUCCESS,
+      });
+      setSubmitting(false);
+      resetForm();
+    };
+    // Handle request response errors.
+    const onError = (errors) => {
+      const getError = (errorType) => errors.find((e) => e.type === errorType);
+
+      if (getError('PAYMENT_RECEIVE_NO_EXISTS')) {
+        setFieldError(
+          'payment_receive_no',
+          formatMessage({ id: 'payment_number_is_not_unique' }),
+        );
+      }
+      setSubmitting(false);
+    };
+
+    if (paymentReceiveId) {
+      requestEditPaymentReceive(paymentReceiveId, form)
+        .then(onSaved)
+        .catch(onError);
+    } else {
+      requestSubmitPaymentReceive(form).then(onSaved).catch(onError);
+    }
+  };
+
+  const {
+    errors,
+    values,
+    setFieldValue,
+    getFieldProps,
+    setValues,
+    handleSubmit,
+    isSubmitting,
+    touched,
+  } = useFormik({
     enableReinitialize: true,
     validationSchema,
     initialValues: {
       ...initialValues,
     },
-    onSubmit: async (values, { setSubmitting, setErrors, resetForm }) => {
-      setSubmitting(true);
-      const entries = formik.values.entries.filter((item) => {
-        if (item.invoice_id !== undefined) {
-          return { ...item };
-        }
-      });
-      const form = {
-        ...values,
-        entries,
-      };
-
-      const requestForm = { ...form };
-
-      if (paymentReceive && paymentReceive.id) {
-        requestEditPaymentReceive(paymentReceive.id, requestForm)
-          .then((response) => {
-            AppToaster.show({
-              message: formatMessage({
-                id: 'the_payment_receive_has_been_successfully_edited',
-              }),
-              intent: Intent.SUCCESS,
-            });
-            setSubmitting(false);
-            savePaymentReceiveSubmit({ action: 'update', ...payload });
-            resetForm();
-          })
-          .catch((error) => {
-            setSubmitting(false);
-          });
-      } else {
-        requestSubmitPaymentReceive(requestForm)
-          .then((response) => {
-            AppToaster.show({
-              message: formatMessage({
-                id: 'the_payment_receive_has_been_successfully_created',
-              }),
-              intent: Intent.SUCCESS,
-            });
-            setSubmitting(false);
-            resetForm();
-            savePaymentReceiveSubmit({ action: 'new', ...payload });
-          })
-          .catch((errors) => {
-            setSubmitting(false);
-          });
-      }
-    },
+    onSubmit: handleSubmitForm,
   });
 
-  const handleDeleteFile = useCallback(
-    (_deletedFiles) => {
-      _deletedFiles.forEach((deletedFile) => {
-        if (deletedFile.upload && deletedFile.metadata.id) {
-          setDeletedFiles([...deletedFiles, deletedFile.metadata.id]);
-        }
-      });
+  // Handle update data.
+  const handleUpdataData = useCallback(
+    (entries) => {
+      setFieldValue('entries', entries);
     },
-    [setDeletedFiles, deletedFiles],
+    [setFieldValue],
   );
 
-  const handleSubmitClick = useCallback(
-    (payload) => {
-      setPayload(payload);
-      formik.submitForm();
+  const handleFullAmountChange = useCallback(
+    (value) => {
+      if (value !== fullAmount) {
+        setAmountChangeAlert(value);
+      }
     },
-    [setPayload, formik],
+    [fullAmount, setAmountChangeAlert],
   );
 
-  const handleCancelClick = useCallback(
-    (payload) => {
-      onCancelForm && onCancelForm(payload);
-    },
-    [onCancelForm],
-  );
+  // Handle clear all lines button click.
+  const handleClearAllLines = useCallback(() => {
+    setClearLinesAlert(true);
+  }, [setClearLinesAlert]);
 
-  const handleClearClick = () => {
-    formik.resetForm();
+  // Handle cancel button click of clear lines alert
+  const handleCancelClearLines = useCallback(() => {
+    setClearLinesAlert(false);
+  }, [setClearLinesAlert]);
+
+  // Handle cancel button of amount change alert.
+  const handleCancelAmountChangeAlert = () => {
+    setAmountChangeAlert(false);
   };
-
-  const handleClickAddNewRow = () => {
-    formik.setFieldValue(
+  // Handle confirm button of amount change alert.
+  const handleConfirmAmountChangeAlert = () => {
+    setFullAmount(amountChangeAlert);
+    setAmountChangeAlert(false);
+  };
+  // Handle confirm clear all lines.
+  const handleConfirmClearLines = useCallback(() => {
+    setFieldValue(
       'entries',
-      orderingIndex([...formik.values.entries, defaultPaymentReceive]),
+      values.entries.map((entry) => ({
+        ...entry,
+        payment_amount: 0,
+      })),
     );
-  };
+    setClearLinesAlert(false);
+  }, [setFieldValue, setClearLinesAlert, values.entries]);
 
-  const handleClearAllLines = () => {
-    formik.setFieldValue(
-      'entries',
-      orderingIndex([...repeatValue(defaultPaymentReceive, MIN_LINES_NUMBER)]),
-    );
-  };
- 
   return (
-    <div className={'payment_receive_form'}>
-      <form onSubmit={formik.handleSubmit}>
-        <PaymentReceiveHeader formik={formik} />
-        <PaymentReceiveItemsTable
-          entries={formik.values.entries}
-          customer_id={formik.values.customer_id}
-          onClickAddNewRow={handleClickAddNewRow}
-          onClickClearAllLines={handleClearAllLines}
-          formik={formik}
-          invoices={paymentReceiveInvoices}
+    <div className={classNames(
+      CLASSES.PAGE_FORM, CLASSES.PAGE_FORM_PAYMENT_RECEIVE
+    )}>
+      <form onSubmit={handleSubmit}>
+        <PaymentReceiveHeader
+          errors={errors}
+          touched={touched}
+          setFieldValue={setFieldValue}
+          getFieldProps={getFieldProps}
+          values={values}
+          paymentReceiveId={paymentReceiveId}
+          customerId={values.customer_id}
+          onFullAmountChanged={handleFullAmountChange}
         />
-        {/* <Dragzone
-          initialFiles={initialAttachmentFiles}
-          onDrop={handleDropFiles}
-          onDeleteFile={handleDeleteFile}
-          hint={'Attachments: Maxiumum size: 20MB'}
-        /> */}
-      </form>
+        <PaymentReceiveItemsTable
+          paymentReceiveId={paymentReceiveId}
+          customerId={values.customer_id}
+          fullAmount={fullAmount}
+          onUpdateData={handleUpdataData}
+          paymentEntries={values.entries}
+          errors={errors?.entries}
+          onClickClearAllLines={handleClearAllLines}
+        />
+        <Alert
+          cancelButtonText={<T id={'cancel'} />}
+          confirmButtonText={<T id={'ok'} />}
+          intent={Intent.WARNING}
+          isOpen={amountChangeAlert}
+          onCancel={handleCancelAmountChangeAlert}
+          onConfirm={handleConfirmAmountChangeAlert}
+        >
+          <p>Are you sure to discard full amount?</p>
+        </Alert>
+        <Alert
+          cancelButtonText={<T id={'cancel'} />}
+          confirmButtonText={<T id={'ok'} />}
+          intent={Intent.WARNING}
+          isOpen={clearLinesAlert}
+          onCancel={handleCancelClearLines}
+          onConfirm={handleConfirmClearLines}
+        >
+          <p>Are you sure to discard full amount?</p>
+        </Alert>
 
-      <PaymentReceiveFloatingActions
-        formik={formik}
-        onSubmitClick={handleSubmitClick}
-        paymentReceive={paymentReceive}
-        onCancel={handleCancelClick}
-        onClearClick={handleClearClick}
-      />
+        <PaymentReceiveFloatingActions
+          isSubmitting={isSubmitting}
+          paymentReceiveId={paymentReceiveId}
+        />
+      </form>
     </div>
   );
 }
 
 export default compose(
   withPaymentReceivesActions,
-  withDashboardActions,
   withMediaActions,
-  withPaymentReceives(({ paymentReceivesItems }) => ({
-    paymentReceivesItems,
+  // withPaymentReceives(({ paymentReceivesItems }) => ({
+  //   paymentReceivesItems,
+  // })),
+  withPaymentReceiveDetail(({ paymentReceive }) => ({
+    paymentReceive,
   })),
-  withPaymentReceiveDetail(),
 )(PaymentReceiveForm);

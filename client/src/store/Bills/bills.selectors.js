@@ -88,3 +88,17 @@ export const getPayableBillsByPaymentMadeFactory = () =>
       : [];
     },
   );
+
+export const getPaymentMadeFormPayableBillsFactory = () => 
+  createSelector(
+    billItemsSelector,
+    billsPayableVendorSelector,
+    billsPayableByPaymentMadeSelector,
+    (billsItems, vendorBillsIds, paymentMadeBillsIds) => {
+      const billsIds = [
+        ...(vendorBillsIds || []),
+        ...(paymentMadeBillsIds || [])
+      ];
+      return pickItemsFromIds(billsItems, billsIds);
+    },
+  );

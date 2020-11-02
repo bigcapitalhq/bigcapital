@@ -1,4 +1,4 @@
-import { omit, sumBy, chain, difference } from 'lodash';
+import { omit, sumBy, difference } from 'lodash';
 import moment from 'moment';
 import { Service, Inject } from 'typedi';
 import {
@@ -26,7 +26,6 @@ import { formatDateFields, entriesAmountDiff } from 'utils';
 import { ServiceError } from 'exceptions';
 import CustomersService from 'services/Contacts/CustomersService';
 import ItemsEntriesService from 'services/Items/ItemsEntriesService';
-import { SaleInvoice } from 'models';
 
 const ERRORS = {
   PAYMENT_RECEIVE_NO_EXISTS: 'PAYMENT_RECEIVE_NO_EXISTS',
@@ -327,16 +326,30 @@ export default class PaymentReceiveService {
    * @param {number} tenantId - Tenant id.
    * @param {Integer} paymentReceiveId - Payment receive id.
    */
-  public async getPaymentReceive(tenantId: number, paymentReceiveId: number) {
-    const { PaymentReceive } = this.tenancy.models(tenantId);
+  public async getPaymentReceive(
+    tenantId: number,
+    paymentReceiveId: number
+  ): Promise<{ paymentReceive: IPaymentReceive[], receivableInvoices: ISaleInvoice }>  {
+    const { PaymentReceive, SaleInvoice } = this.tenancy.models(tenantId);
     const paymentReceive = await PaymentReceive.query()
       .findById(paymentReceiveId)
-      .withGraphFetched('entries.invoice');
+      .withGraphFetched('entries')
+      .withGraphFetched('customer')
+      .withGraphFetched('depositAccount');
     
     if (!paymentReceive) {
       throw new ServiceError(ERRORS.PAYMENT_RECEIVE_NOT_EXISTS);
     }
-    return paymentReceive;
+    // Receivable open invoices.
+    const receivableInvoices = await SaleInvoice.query().onBuild((builder) => {
+      const invoicesIds = paymentReceive.entries.map((entry) => entry.invoiceId);
+
+      builder.where('customer_id', paymentReceive.customerId);
+      builder.orWhereIn('id', invoicesIds);
+      builder.orderByRaw(`FIELD(id, ${invoicesIds.join(', ')}) DESC`);
+      builder.orderBy('invoice_date', 'ASC');
+    });
+    return { paymentReceive, receivableInvoices };
   }
 
   /**

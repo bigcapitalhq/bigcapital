@@ -22,6 +22,10 @@ const invoicesPageSelector = (state, props, query) => {
 
 const invoicesItemsSelector = (state) => state.salesInvoices.items;
 
+const invoicesReceiableCustomerSelector = (state, props) => state.salesInvoices.receivable.byCustomerId[props.customerId];
+const paymentReceivableInvoicesSelector = (state, props) => state.salesInvoices.receivable.byPaymentReceiveId[props.paymentReceiveId];
+
+
 export const getInvoiceTableQueryFactory = () =>
   createSelector(
     paginationLocationQuery,
@@ -55,17 +59,39 @@ export const getInvoicePaginationMetaFactory = () =>
     return invoicePage?.paginationMeta || {};
   });
 
-const dueInvoicesSelector = (state, props) => {
-  return state.salesInvoices.dueInvoices[props.customer_id] || [];
-};
+// export const getCustomerReceivableInvoicesFactory = () => 
+//   createSelector(
+//     invoicesItemsSelector,
+//     invoicesReceiableCustomerSelector,
+//     (invoicesItems, invoicesIds) => {
+//       return Array.isArray(invoicesIds)
+//         ? (pickItemsFromIds(invoicesItems, invoicesIds) || [])
+//         : [];
+//     },
+//   );
 
-export const getdueInvoices = createSelector(
-  dueInvoicesSelector,
-  invoicesItemsSelector,
-  (customerIds, items) => {
-    
-    return typeof customerIds === 'object'
-      ? pickItemsFromIds(items, customerIds) || []
-      : [];
-  },
-);
+// export const getPaymentReceivableInvoicesFactory = () => 
+//     createSelector(
+//       invoicesItemsSelector,
+//       paymentReceivableInvoicesSelector,
+//       (invoicesItems, invoicesIds) => {
+//         return Array.isArray(invoicesIds)
+//           ? (pickItemsFromIds(invoicesItems, invoicesIds) || [])
+//           : [];
+//       },
+//     );
+
+
+export const getPaymentReceiveReceivableInvoicesFactory = () => 
+  createSelector(
+    invoicesItemsSelector,
+    invoicesReceiableCustomerSelector,
+    paymentReceivableInvoicesSelector,
+    (invoicesItems, customerInvoicesIds, paymentInvoicesIds) => {
+      const invoicesIds = [
+        ...(customerInvoicesIds || []),
+        ...(paymentInvoicesIds || []),
+      ];
+      return pickItemsFromIds(invoicesItems, invoicesIds);
+    },
+  );

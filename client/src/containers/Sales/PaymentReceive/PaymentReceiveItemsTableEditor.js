@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { Button  } from '@blueprintjs/core';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { Button } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import moment from 'moment';
 import { sumBy } from 'lodash';
@@ -31,19 +31,15 @@ const TotalCellRederer = (content, type) => (props) => {
   return content(props);
 };
 
-/**
- * Payment made items editor table.
- */
-export default function PaymentMadeItemsTableEditor({
-  //#ownProps
+export default function PaymentReceiveItemsTableEditor ({
   onClickClearAllLines,
   onUpdateData,
   data,
   errors,
-  noResultsMessage
+  noResultsMessage,
 }) {
   const transformedData = useMemo(() => {
-    const rows = data;
+    const rows = [ ...data ];
     const totalRow = {
       due_amount: sumBy(data, 'due_amount'),
       payment_amount: sumBy(data, 'payment_amount'),
@@ -73,30 +69,35 @@ export default function PaymentMadeItemsTableEditor({
       },
       {
         Header: formatMessage({ id: 'Date' }),
-        id: 'bill_date',
-        accessor: (r) => moment(r.bill?.bill_date).format('YYYY MMM DD'),
-        Cell: CellRenderer(EmptyDiv, 'bill_date'),
+        id: 'invoice.invoice_date',
+        accessor: (r) => moment(r.invoice_date).format('YYYY MMM DD'),
+        Cell: CellRenderer(EmptyDiv, 'invoice_date'),
         disableSortBy: true,
+        disableResizing: true,
+        width: 250,
       },
+
       {
-        Header: formatMessage({ id: 'bill_number' }),
-        accessor: (row) => `#${row.bill?.bill_number}`,
-        Cell: CellRenderer(EmptyDiv, 'bill_number'),
-        disableSortBy: true,
-        className: 'bill_number',
-      },
-      {
-        Header: formatMessage({ id: 'bill_amount' }),
-        accessor: r => r.bill?.amount,
-        Cell: CellRenderer(DivFieldCell, 'amount'),
+        Header: formatMessage({ id: 'invocie_number' }),
+        accessor: (row) => `#${row?.invoice?.invoice_no}`,
+        Cell: CellRenderer(EmptyDiv, 'invoice_no'),
         disableSortBy: true,
         className: '',
       },
       {
+        Header: formatMessage({ id: 'invoice_amount' }),
+        accessor: 'invoice.balance',
+        Cell: CellRenderer(DivFieldCell, 'balance'),
+        disableSortBy: true,
+        width: 100,
+        className: '',
+      },
+      {
         Header: formatMessage({ id: 'amount_due' }),
-        accessor: r => r.bill?.due_amount,
+        accessor: 'invoice.due_amount',
         Cell: TotalCellRederer(DivFieldCell, 'due_amount'),
         disableSortBy: true,
+        width: 150,
         className: '',
       },
       {
@@ -104,6 +105,7 @@ export default function PaymentMadeItemsTableEditor({
         accessor: 'payment_amount',
         Cell: TotalCellRederer(MoneyFieldCell, 'payment_amount'),
         disableSortBy: true,
+        width: 150,
         className: '',
       },
     ],
@@ -129,8 +131,9 @@ export default function PaymentMadeItemsTableEditor({
         columnId,
         value,
       );
-      newRows.splice(-1,1); // removes the total row.
-
+      if (newRows.length > 0) {
+        newRows.splice(-1, 1);
+      }
       setLocalData(newRows);
       onUpdateData && onUpdateData(newRows);
     },
@@ -164,4 +167,5 @@ export default function PaymentMadeItemsTableEditor({
       </div>
     </div>
   );
+
 }

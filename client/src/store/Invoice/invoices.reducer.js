@@ -13,6 +13,10 @@ const initialState = {
     page: 1,
   },
   dueInvoices: {},
+  receivable: {
+    byCustomerId: [],
+    byPaymentReceiveId: [],
+  }
 };
 
 const defaultInvoice = {
@@ -97,39 +101,19 @@ const reducer = createReducer(initialState, {
       },
     };
   },
-  [t.DUE_INVOICES_SET]: (state, action) => {
-    const { customer_id, due_sales_invoices } = action.payload;
 
-    const _dueInvoices = [];
+  [t.INVOICES_RECEIVABLE_BY_PAYMENT_ID]: (state, action) => {
+    const { paymentReceiveId, saleInvoices } = action.payload;
+    const saleInvoicesIds = saleInvoices.map((saleInvoice) => saleInvoice.id);
 
-    state.dueInvoices[customer_id] = due_sales_invoices.map((due) => due.id);
-    const _invoices = {};
-    due_sales_invoices.forEach((invoice) => {
-      _invoices[invoice.id] = {
-        ...invoice,
-      };
-    });
-
-    state.items = {
-      ...state.dueInvoices,
-      ...state.items.dueInvoices,
-      ..._invoices,
-    };
+    state.receivable.byPaymentReceiveId[paymentReceiveId] = saleInvoicesIds;
   },
-  [t.RELOAD_INVOICES]: (state, action) => {
-    const { sales_invoices } = action.payload;
 
-    const _sales_invoices = {};
-    sales_invoices.forEach((invoice) => {
-      _sales_invoices[invoice.id] = {
-        ...invoice,
-      };
-    });
+  [t.INVOICES_RECEIVABLE_BY_CUSTOMER_ID]: (state, action) => {
+    const { customerId, saleInvoices } = action.payload;
+    const saleInvoiceIds = saleInvoices.map((saleInvoice) => saleInvoice.id);
 
-    state.items = {
-      ...state.items,
-      ..._sales_invoices,
-    };
+    state.receivable.byCustomerId[customerId] = saleInvoiceIds
   },
 });
 

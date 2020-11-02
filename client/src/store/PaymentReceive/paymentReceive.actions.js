@@ -53,27 +53,28 @@ export const fetchPaymentReceive = ({ id }) => {
       ApiService.get(`sales/payment_receives/${id}`, {})
         .then((response) => {
           dispatch({
-            type: t.RELOAD_INVOICES,
-            payload: {
-              sales_invoices: response.data.paymentReceive.entries.map(
-                (e) => e.invoice,
-              ),
-            },
-          });
-          dispatch({
             type: t.PAYMENT_RECEIVE_SET,
             payload: {
               id,
               paymentReceive: response.data.paymentReceive,
-    
+            },
+          });
+          dispatch({
+            type: t.INVOICES_ITEMS_SET,
+            payload: {
+              sales_invoices: response.data.sale_invoice.receivable_invoices,
+            },
+          });
+          dispatch({
+            type: t.INVOICES_RECEIVABLE_BY_PAYMENT_ID,
+            payload: {
+              paymentReceiveid: response.data.id,
+              saleInvoices: response.data.sale_invoice.receivable_invoices,
             },
           });
           resovle(response);
         })
         .catch((error) => {
-          // const { response } = error;
-          // const { data } = response;
-          // reject(data?.errors);
           reject(error);
         });
     });

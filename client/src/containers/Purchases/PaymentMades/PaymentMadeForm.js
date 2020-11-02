@@ -203,12 +203,10 @@ function PaymentMadeForm({
     },
     [fullAmount, setAmountChangeAlert],
   );
-
   // Handle cancel button of amount change alert.
   const handleCancelAmountChangeAlert = () => {
     setAmountChangeAlert(false);
   };
-
   // Handle confirm button of amount change alert.
   const handleConfirmAmountChangeAlert = () => {
     setFullAmount(amountChangeAlert);
@@ -286,7 +284,6 @@ function PaymentMadeForm({
           values={values}
           onFullAmountChanged={handleFullAmountChange}
         />
-
         <PaymentMadeItemsTable
           fullAmount={fullAmount}
           paymentEntries={values.entries}
@@ -296,7 +293,6 @@ function PaymentMadeForm({
           onClickClearAllLines={handleClearAllLines}
           errors={errors?.entries}
         />
-
         <Alert
           cancelButtonText={<T id={'cancel'} />}
           confirmButtonText={<T id={'ok'} />}

@@ -51,13 +51,13 @@ function PaymentMadeFormHeader({
   accountsList,
 
   // #withBills
-  vendorPayableBills,
+  paymentMadePayableBills,
 }) {
   const isNewMode = !paymentMadeId;
 
   const payableFullAmount = useMemo(
-    () => sumBy(vendorPayableBills, 'due_amount'),
-    [vendorPayableBills],
+    () => sumBy(paymentMadePayableBills, 'due_amount'),
+    [paymentMadePayableBills],
   );
 
   const handleDateChange = useCallback(
@@ -276,7 +276,7 @@ export default compose(
   withAccounts(({ accountsList }) => ({
     accountsList,
   })),
-  withBills(({ vendorPayableBills }) => ({
-    vendorPayableBills,
+  withBills(({ paymentMadePayableBills }) => ({
+    paymentMadePayableBills,
   })),
 )(PaymentMadeFormHeader);

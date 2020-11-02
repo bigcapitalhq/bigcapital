@@ -16,6 +16,7 @@ const CLASSES = {
   PAGE_FORM_INVOICE: 'page-form--invoice',
   PAGE_FORM_RECEIPT: 'page-form--receipt',
   PAGE_FORM_PAYMENT_MADE: 'page-form--payment-made',
+  PAGE_FORM_PAYMENT_RECEIVE: 'page-form--payment-receive',
 
   CLOUD_SPINNER: 'cloud-spinner',
   IS_LOADING: 'is-loading',
