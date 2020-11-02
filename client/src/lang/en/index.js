@@ -73,7 +73,7 @@ export default {
   new_currency: 'New Currency',
   currency_name: 'Currency Name',
   currency_code: 'Currency Code',
-  select_currency_code: 'select Currency Code',
+  select_currency_code: 'Select Currency Code',
   edit_exchange_rate: 'Edit Exchange Rate',
   new_exchange_rate: 'New Exchange Rate',
   delete_exchange_rate: 'Delete Exchange Rate',

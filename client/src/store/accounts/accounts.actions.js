@@ -149,11 +149,11 @@ export const editAccount = (id, form) => {
 };
 
 export const activateAccount = ({ id }) => {
-  return (dispatch) => ApiService.post(`accounts/${id}/active`);
+  return (dispatch) => ApiService.post(`accounts/${id}/activate`);
 };
 
 export const inactiveAccount = ({ id }) => {
-  return (dispatch) => ApiService.post(`accounts/${id}/inactive`);
+  return (dispatch) => ApiService.post(`accounts/${id}/inactivate`);
 };
 
 export const bulkActivateAccounts = ({ ids }) => {

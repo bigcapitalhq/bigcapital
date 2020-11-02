@@ -5,25 +5,39 @@ export const fetchExchangeRates = () => {
   return (dispatch) =>
     new Promise((resolve, reject) => {
       dispatch({
-        type: t.SET_DASHBOARD_REQUEST_LOADING,
-      });
-      dispatch({
         type: t.EXCHANGE_RATE_TABLE_LOADING,
-        loading: true,
+        payload: {
+          loading: true,
+        },
       });
+
       ApiService.get('exchange_rates')
         .then((response) => {
-         
+          dispatch({
+            type: t.EXCHANGE_RATES_PAGE_SET,
+            payload: {
+              exchange_rates: response.data.exchange_rates.results,
+              pagination: response.data.exchange_rates.pagination,
+              customViewId: response.data.exchange_rates.customViewId || -1,
+            },
+          });
           dispatch({
             type: t.EXCHANGE_RATE_LIST_SET,
             exchange_rates: response.data.exchange_rates.results,
           });
+
           dispatch({
-            type: t.SET_DASHBOARD_REQUEST_COMPLETED,
+            type: t.EXCHANGE_RATES_PAGINATION_SET,
+            payload: {
+              pagination: response.data.exchange_rates.pagination,
+              customViewId: response.data.customViewId || -1,
+            },
           });
           dispatch({
             type: t.EXCHANGE_RATE_TABLE_LOADING,
-            loading: false,
+            payload: {
+              loading: false,
+            },
           });
           resolve(response);
         })

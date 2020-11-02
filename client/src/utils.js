@@ -4,20 +4,19 @@ import Currency from 'js-money/lib/currency';
 import PProgress from 'p-progress';
 import accounting from 'accounting';
 
-
 export function removeEmptyFromObject(obj) {
   obj = Object.assign({}, obj);
   var keys = Object.keys(obj);
 
-  keys.forEach(function(key) {
+  keys.forEach(function (key) {
     const value = obj[key];
 
-    if (value === '' || value === null || value === undefined ) {
+    if (value === '' || value === null || value === undefined) {
       delete obj[key];
     }
   });
   return obj;
-};
+}
 
 export const optionsMapToArray = (optionsMap, service = '') => {
   return Object.keys(optionsMap).map((optionKey) => {
@@ -27,7 +26,7 @@ export const optionsMapToArray = (optionsMap, service = '') => {
       key: service ? `${service}_${optionKey}` : `${optionKey}`,
       value: optionValue,
     };
-  })
+  });
 };
 
 export const optionsArrayToMap = (optionsArray) => {
@@ -37,7 +36,7 @@ export const optionsArrayToMap = (optionsArray) => {
   }, {});
 };
 
-export function numberComma(number){
+export function numberComma(number) {
   number = typeof number === 'number' ? String(number) : number;
 
   const parts = number.split('.');
@@ -51,11 +50,11 @@ export function numberComma(number){
 
 export const momentFormatter = (format) => {
   return {
-    formatDate: date => moment(date).format(format),
-    parseDate: str => moment(str, format).toDate(),
+    formatDate: (date) => moment(date).format(format),
+    parseDate: (str) => moment(str, format).toDate(),
     placeholder: `${format}`,
   };
-}
+};
 
 /** Event handler that exposes the target element's value as a boolean. */
 export const handleBooleanChange = (handler) => {
@@ -69,7 +68,7 @@ export const handleStringChange = (handler) => {
 
 /** Event handler that exposes the target element's value as a number. */
 export const handleNumberChange = (handler) => {
-  return handleStringChange(value => handler(+value));
+  return handleStringChange((value) => handler(+value));
 };
 
 export const objectKeysTransform = (obj, transform) => {
@@ -81,29 +80,35 @@ export const objectKeysTransform = (obj, transform) => {
 };
 
 export const compose = (...funcs) =>
-  funcs.reduce((a, b) => (...args) => a(b(...args)), arg => arg);
+  funcs.reduce(
+    (a, b) => (...args) => a(b(...args)),
+    (arg) => arg,
+  );
 
 export const getObjectDiff = (a, b) => {
-  return _.reduce(a, (result, value, key) => {
-      return _.isEqual(value, b[key]) ?
-          result : result.concat(key);
-  }, []);
-}
+  return _.reduce(
+    a,
+    (result, value, key) => {
+      return _.isEqual(value, b[key]) ? result : result.concat(key);
+    },
+    [],
+  );
+};
 
 export const parseDateRangeQuery = (keyword) => {
   const queries = {
-    'today': {
+    today: {
       range: 'day',
     },
-    'this_year': {
+    this_year: {
       range: 'year',
     },
-    'this_month': {
-      range: 'month'
+    this_month: {
+      range: 'month',
     },
-    'this_week': {
-      range: 'week'
-    }
+    this_week: {
+      range: 'week',
+    },
   };
 
   if (typeof queries[keyword] === 'undefined') {
@@ -117,7 +122,6 @@ export const parseDateRangeQuery = (keyword) => {
   };
 };
 
-
 export const defaultExpanderReducer = (tableRows, level) => {
   let currentLevel = 1;
   const expended = [];
@@ -126,7 +130,7 @@ export const defaultExpanderReducer = (tableRows, level) => {
     return rows.forEach((row, index) => {
       const _index = parentIndex ? `${parentIndex}.${index}` : `${index}`;
       expended[_index] = true;
-  
+
       if (row.children && currentLevel < level) {
         walker(row.children, _index);
       }
@@ -135,7 +139,7 @@ export const defaultExpanderReducer = (tableRows, level) => {
   };
   walker(tableRows);
   return expended;
-}
+};
 
 export function formattedAmount(cents, currency) {
   const { symbol, decimal_digits: precision } = Currency[currency];
@@ -143,16 +147,27 @@ export function formattedAmount(cents, currency) {
 
   return accounting.formatMoney(amount, { symbol, precision });
 }
+export function formattedExchangeRate(amount, currency) {
+  const options = {
+    style: 'currency',
+    currency: currency,
+    minimumFractionDigits: 2,
+  };
 
-export const ConditionalWrapper = ({ condition, wrapper, children }) => 
+  const formatter = new Intl.NumberFormat(undefined, options);
+
+  return formatter.format(amount);
+}
+
+export const ConditionalWrapper = ({ condition, wrapper, children }) =>
   condition ? wrapper(children) : children;
 
 export const checkRequiredProperties = (obj, properties) => {
   return properties.some((prop) => {
     const value = obj[prop];
-    return (value === '' || value === null || value === undefined);
-  })
-}
+    return value === '' || value === null || value === undefined;
+  });
+};
 
 export const saveFilesInAsync = (files, actionCb, extraTasks) => {
   const opers = [];
@@ -164,13 +179,17 @@ export const saveFilesInAsync = (files, actionCb, extraTasks) => {
       actionCb(formData, file, (requestProgress) => {
         progress(requestProgress);
       })
-      .then((data) => { resolve(data); })
-      .catch(error => { reject(error); })
+        .then((data) => {
+          resolve(data);
+        })
+        .catch((error) => {
+          reject(error);
+        });
     });
     opers.push(oper);
   });
   return PProgress.all(opers);
-}
+};
 
 export const firstLettersArgs = (...args) => {
   let letters = [];
@@ -181,22 +200,18 @@ export const firstLettersArgs = (...args) => {
     }
   });
   return letters.join('').toUpperCase();
-}
-
+};
 
 export const uniqueMultiProps = (items, props) => {
   return _.uniqBy(items, (item) => {
     return JSON.stringify(_.pick(item, props));
   });
-}
-
+};
 
 export const transformUpdatedRows = (rows, rowIndex, columnIdOrObj, value) => {
-  const columnId =
-    typeof columnIdOrObj !== 'object' ? columnIdOrObj : null;
+  const columnId = typeof columnIdOrObj !== 'object' ? columnIdOrObj : null;
 
-  const updateTable =
-    typeof columnIdOrObj === 'object' ? columnIdOrObj : null;
+  const updateTable = typeof columnIdOrObj === 'object' ? columnIdOrObj : null;
 
   const newData = updateTable ? updateTable : { [columnId]: value };
 
@@ -206,7 +221,7 @@ export const transformUpdatedRows = (rows, rowIndex, columnIdOrObj, value) => {
     }
     return { ...row };
   });
-}
+};
 
 export const tansformDateValue = (date) => {
   return moment(date).toDate() || new Date();
@@ -222,7 +237,7 @@ export const repeatValue = (value, len) => {
 
 export const flatToNestedArray = (
   data,
-  config = { id: 'id', parentId: 'parent_id' }
+  config = { id: 'id', parentId: 'parent_id' },
 ) => {
   const map = {};
   const nestedArray = [];

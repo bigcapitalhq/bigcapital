@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState, useEffect } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import {
   Button,
   Popover,
@@ -10,7 +10,7 @@ import {
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import moment from 'moment';
 
-import { DataTable, Money, Icon } from 'components';
+import { DataTable, Icon, MoneyExchangeRate } from 'components';
 import LoadingIndicator from 'components/LoadingIndicator';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
@@ -23,7 +23,7 @@ function ExchangeRateTable({
   // #withExchangeRates
   exchangeRatesList,
   exchangeRatesLoading,
-
+  exchangeRatesPageination,
   // #withDialogActions.
   openDialog,
 
@@ -31,7 +31,6 @@ function ExchangeRateTable({
   loading,
   onFetchData,
   onDeleteExchangeRate,
-  onEditExchangeRate,
   onSelectedRowsChange,
 }) {
   const [initialMount, setInitialMount] = useState(false);
@@ -52,19 +51,24 @@ function ExchangeRateTable({
     (ExchangeRate) => (
       <Menu>
         <MenuItem
-          text={<T id={'edit_exchange_rate'} />}
+          icon={<Icon icon="pen-18" />}
+          text={formatMessage({ id: 'edit_exchange_rate' })}
           onClick={handelEditExchangeRate(ExchangeRate)}
         />
         <MenuItem
-          text={<T id={'delete_exchange_rate'} />}
+          text={formatMessage({ id: 'delete_exchange_rate' })}
           intent={Intent.DANGER}
           onClick={handleDeleteExchangeRate(ExchangeRate)}
           icon={<Icon icon="trash-16" iconSize={16} />}
         />
       </Menu>
     ),
-    [handelEditExchangeRate, handleDeleteExchangeRate],
+    [handelEditExchangeRate, handleDeleteExchangeRate, formatMessage],
   );
+
+  const rowContextMenu = (cell) => {
+    return actionMenuList(cell.row.original);
+  };
 
   const columns = useMemo(
     () => [
@@ -84,7 +88,12 @@ function ExchangeRateTable({
       {
         id: 'exchange_rate',
         Header: formatMessage({ id: 'exchange_rate' }),
-        accessor: (r) => <Money amount={r.exchange_rate} currency={'USD'} />,
+        accessor: (r) => (
+          <MoneyExchangeRate
+            amount={r.exchange_rate}
+            currency={r.currency_code}
+          />
+        ),
         className: 'exchange_rate',
         width: 150,
       },
@@ -94,14 +103,13 @@ function ExchangeRateTable({
         Cell: ({ cell }) => (
           <Popover
             content={actionMenuList(cell.row.original)}
-            position={Position.RIGHT_BOTTOM}
+            position={Position.RIGHT_TOP}
           >
             <Button icon={<Icon icon="more-h-16" iconSize={16} />} />
           </Popover>
         ),
         className: 'actions',
         width: 50,
-        disableResizing: false,
       },
     ],
     [actionMenuList, formatMessage],
@@ -143,7 +151,11 @@ function ExchangeRateTable({
         expandable={true}
         treeGraph={true}
         onSelectedRowsChange={handelSelectedRowsChange}
-        spinnerProps={{ size: 30 }}
+        rowContextMenu={rowContextMenu}
+        pagination={true}
+        pagesCount={exchangeRatesPageination.pagesCount}
+        initialPageSize={exchangeRatesPageination.pageSize}
+        initialPageIndex={exchangeRatesPageination.page - 1}
       />
     </LoadingIndicator>
   );
@@ -152,8 +164,15 @@ function ExchangeRateTable({
 export default compose(
   withDialogActions,
   withExchangeRatesActions,
-  withExchangeRates(({ exchangeRatesList, exchangeRatesLoading }) => ({
-    exchangeRatesList,
-    exchangeRatesLoading,
-  })),
+  withExchangeRates(
+    ({
+      exchangeRatesList,
+      exchangeRatesLoading,
+      exchangeRatesPageination,
+    }) => ({
+      exchangeRatesList,
+      exchangeRatesLoading,
+      exchangeRatesPageination,
+    }),
+  ),
 )(ExchangeRateTable);
