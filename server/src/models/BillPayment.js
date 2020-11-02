@@ -70,7 +70,7 @@ export default class BillPayment extends TenantModel {
         filter(builder) {
           builder.where('reference_type', 'BillPayment');
         },
-      }
+      },
     };
   }
 

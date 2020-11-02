@@ -198,8 +198,14 @@ export default class BillsPayments extends BaseController {
     const { id: billPaymentId } = req.params;
 
     try {
-      const billPayment = await this.billPaymentService.getBillPayment(tenantId, billPaymentId);
-      return res.status(200).send({ bill_payment: billPayment });
+      const { billPayment, payableBills } = await this.billPaymentService.getBillPayment(tenantId, billPaymentId);
+
+      return res.status(200).send({
+        bill_payment: {
+          ...this.transfromToResponse({ ...billPayment }),
+          payable_bills: payableBills,
+        },
+      });
     } catch (error) {
       next(error);
     }

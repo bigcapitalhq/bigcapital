@@ -19,7 +19,10 @@ const billByIdSelector = (state, props) => state.bills.items[props.billId];
  * Retrieve vendor due bills ids.
  * @return {number[]}
  */
-const billsDueVendorSelector = (state, props) => state.bills.dueBills[props.vendorId];
+const billsPayableVendorSelector = (state, props) => state.bills.payable.byVendorId[props.vendorId];
+const billsPayableByPaymentMadeSelector = (state, props) => {
+  return state.bills.payable.byBillPayamentId[props.paymentMadeId];
+}
 
 const billPaginationSelector = (state, props) => {
   const viewId = state.bills.currentViewId;
@@ -62,16 +65,26 @@ export const getBillPaginationMetaFactory = () =>
     return billPage?.paginationMeta || {};
   });
 
-/**
- * Retrieve due bills of specific vendor.
- */
-export const getVendorDueBillsFactory = () => 
+
+export const getVendorPayableBillsFactory = () => 
   createSelector(
     billItemsSelector,
-    billsDueVendorSelector,
-    (billsItems, dueBillsIds) => {
-      return Array.isArray(dueBillsIds)
-        ? pickItemsFromIds(billsItems, dueBillsIds) || []
+    billsPayableVendorSelector,
+    (billsItems, payableBillsIds) => {
+      return Array.isArray(payableBillsIds)
+        ? pickItemsFromIds(billsItems, payableBillsIds) || []
         : [];
+    },
+  );
+
+
+export const getPayableBillsByPaymentMadeFactory = () => 
+  createSelector(
+    billItemsSelector,
+    billsPayableByPaymentMadeSelector,
+    (billsItems, payableBillsIds) => {
+      return Array.isArray(payableBillsIds)
+      ? pickItemsFromIds(billsItems, payableBillsIds) || []
+      : [];
     },
   );

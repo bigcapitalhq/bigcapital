@@ -1,10 +1,12 @@
-import React, { useCallback, useState, useEffect, useMemo } from 'react';
-import { useParams, useHistory } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { useQuery } from 'react-query';
+import { useIntl } from 'react-intl';
 
 import PaymentMadeForm from './PaymentMadeForm';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 
+import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withVenderActions from 'containers/Vendors/withVendorActions';
 import withAccountsActions from 'containers/Accounts/withAccountsActions';
 import withItemsActions from 'containers/Items/withItemsActions';
@@ -15,7 +17,7 @@ import withSettingsActions from 'containers/Settings/withSettingsActions';
 import { compose } from 'utils';
 
 function PaymentMade({
-  //#withwithAccountsActions
+  //#withAccountsActions
   requestFetchAccounts,
 
   //#withVenderActions
@@ -27,65 +29,61 @@ function PaymentMade({
   //#withPaymentMadesActions
   requestFetchPaymentMade,
 
-  //#withBillActions
-
   // #withSettingsActions
   requestFetchOptions,
-}) {
-  const history = useHistory();
-  const { id } = useParams();
-  const [venderId, setVenderId] = useState(null);
 
-  // Handle fetch accounts data
+  // #withDashboardActions
+  changePageTitle,
+}) {
+  const { id: paymentMadeId } = useParams();
+  const { formatMessage } = useIntl();
+
+  // Handle page title change in new and edit mode.
+  useEffect(() => {
+    if (paymentMadeId) {
+      changePageTitle(formatMessage({ id: 'edit_payment_made' }));
+    } else {
+      changePageTitle(formatMessage({ id: 'payment_made' }));
+    }
+  }, [changePageTitle, paymentMadeId, formatMessage]);
+
+  // Handle fetch accounts data.
   const fetchAccounts = useQuery('accounts-list', (key) =>
     requestFetchAccounts(),
   );
 
-  // Handle fetch Items data table or list
+  // Handle fetch Items data table or list.
   const fetchItems = useQuery('items-list', () => requestFetchItems({}));
 
-  // Handle fetch venders data table or list
+  // Handle fetch venders data table or list.
   const fetchVenders = useQuery('venders-list', () =>
     requestFetchVendorsTable({}),
   );
 
+  // Handle fetch specific payment made details.
   const fetchPaymentMade = useQuery(
-    ['payment-made', id],
+    ['payment-made', paymentMadeId],
     (key, _id) => requestFetchPaymentMade(_id),
-    { enabled: !!id },
+    { enabled: !!paymentMadeId },
   );
 
+  // Fetch payment made settings.
   const fetchSettings = useQuery(['settings'], () => requestFetchOptions({}));
-
-  const handleFormSubmit = useCallback(
-    (payload) => {
-      payload.redirect && history.push('/payment-mades');
-    },
-    [history],
-  );
-  const handleCancel = useCallback(() => {
-    history.goBack();
-  }, [history]);
-
-  const handleVenderChange = (venderId) => {
-    setVenderId(venderId);
-  };
+ 
   return (
     <DashboardInsider
       loading={
         fetchVenders.isFetching ||
         fetchItems.isFetching ||
         fetchAccounts.isFetching ||
-        fetchPaymentMade.isFetching
+        fetchPaymentMade.isFetching ||
+        fetchSettings.isFetching
       }
       name={'payment-made'}
     >
       <PaymentMadeForm
-        onFormSubmit={handleFormSubmit}
-        paymentMadeId={id}
-        onCancelForm={handleCancel}
-        onVenderChange={handleVenderChange}
-      />
+        paymentMadeId={paymentMadeId}
+      /> 
     </DashboardInsider>
   );
 }
@@ -96,5 +94,7 @@ export default compose(
   withAccountsActions,
   withBillActions,
   withPaymentMadeActions,
-  withSettingsActions
+  withSettingsActions,
+  withDashboardActions,
 )(PaymentMade);
+

@@ -1,6 +1,5 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { check, param, query } from 'express-validator';
-import { raw } from 'objection';
 import { Service, Inject } from 'typedi';
 import BaseController from '../BaseController';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
@@ -52,11 +51,11 @@ export default class SaleInvoicesController extends BaseController{
       this.handleServiceErrors,
     );
     router.get(
-      '/due', [
+      '/payable', [
         ...this.dueSalesInvoicesListValidationSchema,
       ],
       this.validationResult,
-      asyncMiddleware(this.getDueInvoices.bind(this)),
+      asyncMiddleware(this.getPayableInvoices.bind(this)),
       this.handleServiceErrors,
     );
     router.get(
@@ -251,12 +250,12 @@ export default class SaleInvoicesController extends BaseController{
    * @param {NextFunction} next - 
    * @return {Response|void}
    */
-  public async getDueInvoices(req: Request, res: Response, next: NextFunction) {
+  public async getPayableInvoices(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const { customerId } = this.matchedQueryData(req);
 
     try {
-      const salesInvoices = await this.saleInvoiceService.getDueInvoices(tenantId, customerId);
+      const salesInvoices = await this.saleInvoiceService.getPayableInvoices(tenantId, customerId);
 
       return res.status(200).send({
         sales_invoices: this.transfromToResponse(salesInvoices),

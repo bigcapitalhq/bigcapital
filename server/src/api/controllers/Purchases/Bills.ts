@@ -151,7 +151,8 @@ export default class BillsController extends BaseController {
   get dueBillsListingValidationSchema() {
     return [
       query('vendor_id').optional().trim().escape(),
-    ]
+      query('payment_made_id').optional().trim().escape(),
+    ];
   }
  
   /**
@@ -331,7 +332,13 @@ export default class BillsController extends BaseController {
           errors: [{ type: 'BILL_ENTRIES_IDS_NOT_FOUND', code: 900 }],
         });
       }
+      if (error.errorType === 'ITEMS_NOT_FOUND') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'ITEMS_NOT_FOUND', code: 1000 }],
+        });
+      }
     }
+    console.log(error.errorType);
     next(error);    
   }
 }

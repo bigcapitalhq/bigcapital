@@ -6,6 +6,7 @@ import {
   deletePaymentMade,
   fetchPaymentMadesTable,
   fetchPaymentMade,
+  fetchPaymentMadeBills,
 } from 'store/PaymentMades/paymentMade.actions';
 
 const mapDispatchToProps = (dispatch) => ({
@@ -15,6 +16,8 @@ const mapDispatchToProps = (dispatch) => ({
   requestDeletePaymentMade: (id) => dispatch(deletePaymentMade({ id })),
   requestFetchPaymentMadesTable: (query = {}) =>
     dispatch(fetchPaymentMadesTable({ query: { ...query } })),
+
+  requestFetchPaymentMadeBills: (paymentMadeId) => dispatch(fetchPaymentMadeBills({ paymentMadeId })),
 
   changePaymentMadeView: (id) =>
     dispatch({

@@ -243,3 +243,7 @@ export const flatToNestedArray = (
   });
   return nestedArray;
 };
+
+export const orderingLinesIndexes = (lines, attribute = 'index') => {
+  return lines.map((line, index) => ({ ...line, [attribute]: index + 1 }));
+};

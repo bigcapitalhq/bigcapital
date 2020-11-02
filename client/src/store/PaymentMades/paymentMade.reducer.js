@@ -39,6 +39,17 @@ const reducer = createReducer(initialState, {
     };
   },
 
+  [t.PAYMENT_MADE_SET]: (state, action) => {
+    const { id, paymentMade } = action.payload;
+    const _oldPaymentMade = (state.items[id] || {});
+
+    state.items[id] = {
+      ...defaultPaymentMade,
+      ..._oldPaymentMade,
+      ...paymentMade,
+    };
+  },
+
   [t.PAYMENT_MADE_DELETE]: (state, action) => {
     const { id } = action.payload;
 

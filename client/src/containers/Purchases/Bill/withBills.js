@@ -4,14 +4,16 @@ import {
   getBillCurrentPageFactory,
   getBillPaginationMetaFactory,
   getBillTableQueryFactory,
-  getVendorDueBillsFactory
+  getVendorPayableBillsFactory,
+  getPayableBillsByPaymentMadeFactory
 } from 'store/Bills/bills.selectors';
 
 export default (mapState) => {
   const getBillsItems = getBillCurrentPageFactory();
   const getBillsPaginationMeta = getBillPaginationMetaFactory();
   const getBillTableQuery = getBillTableQueryFactory();
-  const getVendorDueBills = getVendorDueBillsFactory();
+  const getVendorPayableBills = getVendorPayableBillsFactory();
+  const getPayableBillsByPaymentMade = getPayableBillsByPaymentMadeFactory();
 
   const mapStateToProps = (state, props) => {
     const tableQuery = getBillTableQuery(state, props);
@@ -26,7 +28,8 @@ export default (mapState) => {
       billsLoading: state.bills.loading,
       nextBillNumberChanged: state.bills.nextBillNumberChanged,
 
-      vendorDueBills: getVendorDueBills(state, props),
+      vendorPayableBills: getVendorPayableBills(state, props),
+      paymentMadePayableBills: getPayableBillsByPaymentMade(state, props),
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };

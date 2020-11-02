@@ -28,6 +28,7 @@ import InputPrependButton from './Forms/InputPrependButton';
 import CategoriesSelectList from './CategoriesSelectList';
 import Row from './Grid/Row';
 import Col from './Grid/Col';
+import CloudLoadingIndicator from './CloudLoadingIndicator';
 
 const Hint = FieldHint;
 
@@ -63,4 +64,5 @@ export {
   CategoriesSelectList,
   Col,
   Row,
+  CloudLoadingIndicator,
 };
