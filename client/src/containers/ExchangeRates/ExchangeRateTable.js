@@ -89,7 +89,10 @@ function ExchangeRateTable({
         id: 'exchange_rate',
         Header: formatMessage({ id: 'exchange_rate' }),
         accessor: (r) => (
-          <MoneyExchangeRate amount={r.exchange_rate} currency={'USD'} />
+          <MoneyExchangeRate
+            amount={r.exchange_rate}
+            currency={r.currency_code}
+          />
         ),
         className: 'exchange_rate',
         width: 150,
