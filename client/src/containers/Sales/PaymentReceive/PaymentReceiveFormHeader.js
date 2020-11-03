@@ -13,11 +13,11 @@ import moment from 'moment';
 import { sumBy } from 'lodash';
 import classNames from 'classnames';
 
-import { CLASSES } from 'common/classes'
+import { CLASSES } from 'common/classes';
 import { momentFormatter, compose, tansformDateValue } from 'utils';
 import {
   AccountsSelectList,
-  ListSelect,
+  ContactSelecetList,
   ErrorMessage,
   FieldRequiredHint,
   Hint,
@@ -72,19 +72,6 @@ function PaymentReceiveFormHeader({
     [],
   );
 
-  const handleFilterCustomer = (query, customer, index, exactMatch) => {
-    const normalizedTitle = customer.display_name.toLowerCase();
-    const normalizedQuery = query.toLowerCase();
-    if (exactMatch) {
-      return normalizedTitle === normalizedQuery;
-    } else {
-      return (
-        `${customer.display_name} ${normalizedTitle}`.indexOf(
-          normalizedQuery,
-        ) >= 0
-      );
-    }
-  };
 
   const onChangeSelect = useCallback(
     (filedName) => {
@@ -129,17 +116,11 @@ function PaymentReceiveFormHeader({
             <ErrorMessage name={'customer_id'} {...{ errors, touched }} />
           }
         >
-          <ListSelect
-            items={customers}
-            noResults={<MenuItem disabled={true} text="No results." />}
-            itemRenderer={handleCusomterRenderer}
-            itemPredicate={handleFilterCustomer}
-            popoverProps={{ minimal: true }}
-            onItemSelect={onChangeSelect('customer_id')}
-            selectedItem={values.customer_id}
-            selectedItemProp={'id'}
-            defaultText={<T id={'select_customer_account'} />}
-            labelProp={'display_name'}
+          <ContactSelecetList
+            contactsList={customers}
+            selectedContactId={values.customer_id}
+            defaultSelectText={<T id={'select_customer_account'} />}
+            onContactSelected={onChangeSelect('customer_id')}
           />
         </FormGroup>
 
@@ -167,26 +148,27 @@ function PaymentReceiveFormHeader({
           label={<T id={'full_amount'} />}
           inline={true}
           className={('form-group--full-amount', CLASSES.FILL)}
-          intent={
-            errors.full_amount && touched.full_amount && Intent.DANGER
-          }
+          intent={errors.full_amount && touched.full_amount && Intent.DANGER}
           labelInfo={<Hint />}
           helperText={
             <ErrorMessage name="full_amount" {...{ errors, touched }} />
           }
         >
           <InputGroup
-            intent={
-              errors.full_amount && touched.full_amount && Intent.DANGER
-            }
+            intent={errors.full_amount && touched.full_amount && Intent.DANGER}
             minimal={true}
             value={values.full_amount}
             {...getFieldProps('full_amount')}
             onBlur={handleFullAmountBlur}
           />
 
-          <a onClick={handleReceiveFullAmountClick} href="#" className={'receive-full-amount'}>
-            Receive full amount (<Money amount={receivableFullAmount} currency={'USD'} />)
+          <a
+            onClick={handleReceiveFullAmountClick}
+            href="#"
+            className={'receive-full-amount'}
+          >
+            Receive full amount (
+            <Money amount={receivableFullAmount} currency={'USD'} />)
           </a>
         </FormGroup>
 
@@ -253,10 +235,14 @@ function PaymentReceiveFormHeader({
           inline={true}
           className={classNames('form-group--reference', CLASSES.FILL)}
           intent={errors.reference_no && touched.reference_no && Intent.DANGER}
-          helperText={<ErrorMessage name="reference" {...{ errors, touched }} />}
+          helperText={
+            <ErrorMessage name="reference" {...{ errors, touched }} />
+          }
         >
           <InputGroup
-            intent={errors.reference_no && touched.reference_no && Intent.DANGER}
+            intent={
+              errors.reference_no && touched.reference_no && Intent.DANGER
+            }
             minimal={true}
             {...getFieldProps('reference_no')}
           />

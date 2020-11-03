@@ -16,7 +16,7 @@ import { CLASSES } from 'common/classes';
 import { momentFormatter, compose, tansformDateValue } from 'utils';
 import {
   AccountsSelectList,
-  VendorSelecetList,
+  ContactSelecetList,
   ErrorMessage,
   FieldRequiredHint,
   Money,
@@ -68,16 +68,6 @@ function PaymentMadeFormHeader({
     [setFieldValue],
   );
 
-  const handleVenderRenderer = useCallback(
-    (vender, { handleClick }) => (
-      <MenuItem
-        key={vender.id}
-        text={vender.display_name}
-        onClick={handleClick}
-      />
-    ),
-    [],
-  );
 
   const triggerFullAmountChanged = (value) => {
     onFullAmountChanged && onFullAmountChanged(value);
@@ -85,19 +75,6 @@ function PaymentMadeFormHeader({
 
   const handleFullAmountBlur = (event) => {
     triggerFullAmountChanged(event.currentTarget.value);
-  };
-
-  const handleFilterVender = (query, vender, index, exactMatch) => {
-    const normalizedTitle = vender.display_name.toLowerCase();
-    const normalizedQuery = query.toLowerCase();
-    if (exactMatch) {
-      return normalizedTitle === normalizedQuery;
-    } else {
-      return (
-        `${vender.display_name} ${normalizedTitle}`.indexOf(normalizedQuery) >=
-        0
-      );
-    }
   };
 
   const onChangeSelect = useCallback(
@@ -133,10 +110,11 @@ function PaymentMadeFormHeader({
             <ErrorMessage name={'vendor_id'} {...{ errors, touched }} />
           }
         >
-          <VendorSelecetList
-            vendorsList={vendorItems}
-            selectedVendorId={values.vendor_id}
-            onItemSelect={onChangeSelect('vendor_id')}
+          <ContactSelecetList
+            contactsList={vendorItems}
+            selectedContactId={values.vendor_id}
+            defaultSelectText={ <T id={'select_vender_account'} /> }
+            onContactSelected={onChangeSelect('vendor_id')}
             // buttonProps={{ disabled: !isNewMode }}
             disabled={!isNewMode}
           />

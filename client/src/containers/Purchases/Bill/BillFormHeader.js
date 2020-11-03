@@ -13,7 +13,7 @@ import { momentFormatter, compose, tansformDateValue } from 'utils';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 import {
-  VendorSelecetList,
+  ContactSelecetList,
   ErrorMessage,
   FieldRequiredHint,
   Row,
@@ -48,31 +48,6 @@ function BillFormHeader({
     [setFieldValue],
   );
 
-  const vendorNameRenderer = useCallback(
-    (accept, { handleClick }) => (
-      <MenuItem
-        key={accept.id}
-        text={accept.display_name}
-        onClick={handleClick}
-      />
-    ),
-    [],
-  );
-
-  // Filter vendor name
-  const filterVendorAccount = (query, vendor, _index, exactMatch) => {
-    const normalizedTitle = vendor.display_name.toLowerCase();
-    const normalizedQuery = query.toLowerCase();
-    if (exactMatch) {
-      return normalizedTitle === normalizedQuery;
-    } else {
-      return (
-        `${vendor.display_name} ${normalizedTitle}`.indexOf(normalizedQuery) >=
-        0
-      );
-    }
-  };
-
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
       <div className={'page-form__primary-section'}>
@@ -91,10 +66,11 @@ function BillFormHeader({
             <ErrorMessage name={'vendor_id'} {...{ errors, touched }} />
           }
         >
-          <VendorSelecetList
-            vendorsList={vendorItems}
-            selectedVendorId={values.vendor_id}
-            onItemSelect={onChangeSelected('vendor_id')}
+          <ContactSelecetList
+            contactsList={vendorItems}
+            selectedContactId={values.vendor_id}
+            defaultSelectText={ <T id={'select_vender_account'} /> }
+            onContactSelected={onChangeSelected('vendor_id')}
           />
         </FormGroup>
 
