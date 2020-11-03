@@ -84,7 +84,7 @@ export default class SaleInvoicesController extends BaseController{
       check('customer_id').exists().isNumeric().toInt(),
       check('invoice_date').exists().isISO8601(),
       check('due_date').exists().isISO8601(),
-      check('invoice_no').exists().trim().escape(),
+      check('invoice_no').optional().trim().escape(),
       check('reference_no').optional().trim().escape(),
       check('status').exists().trim().escape(),
 
