@@ -16,7 +16,7 @@ import { CLASSES } from 'common/classes';
 import { momentFormatter, compose, tansformDateValue } from 'utils';
 import {
   AccountsSelectList,
-  ListSelect,
+  VendorSelecetList,
   ErrorMessage,
   FieldRequiredHint,
   Money,
@@ -81,7 +81,7 @@ function PaymentMadeFormHeader({
 
   const triggerFullAmountChanged = (value) => {
     onFullAmountChanged && onFullAmountChanged(value);
-  }
+  };
 
   const handleFullAmountBlur = (event) => {
     triggerFullAmountChanged(event.currentTarget.value);
@@ -133,18 +133,11 @@ function PaymentMadeFormHeader({
             <ErrorMessage name={'vendor_id'} {...{ errors, touched }} />
           }
         >
-          <ListSelect
-            items={vendorItems}
-            noResults={<MenuItem disabled={true} text="No results." />}
-            itemRenderer={handleVenderRenderer}
-            itemPredicate={handleFilterVender}
-            popoverProps={{ minimal: true }}
+          <VendorSelecetList
+            vendorsList={vendorItems}
+            selectedVendorId={values.vendor_id}
             onItemSelect={onChangeSelect('vendor_id')}
-            selectedItem={values.vendor_id}
-            selectedItemProp={'id'}
-            defaultText={<T id={'select_vender_account'} />}
-            labelProp={'display_name'}
-            buttonProps={{ disabled: !isNewMode }}
+            // buttonProps={{ disabled: !isNewMode }}
             disabled={!isNewMode}
           />
         </FormGroup>
@@ -173,26 +166,27 @@ function PaymentMadeFormHeader({
           label={<T id={'full_amount'} />}
           inline={true}
           className={('form-group--full-amount', Classes.FILL)}
-          intent={
-            errors.full_amount && touched.full_amount && Intent.DANGER
-          }
+          intent={errors.full_amount && touched.full_amount && Intent.DANGER}
           labelInfo={<Hint />}
           helperText={
             <ErrorMessage name="full_amount" {...{ errors, touched }} />
           }
         >
           <InputGroup
-            intent={
-              errors.full_amount && touched.full_amount && Intent.DANGER
-            }
+            intent={errors.full_amount && touched.full_amount && Intent.DANGER}
             minimal={true}
             value={values.full_amount}
             {...getFieldProps('full_amount')}
             onBlur={handleFullAmountBlur}
           />
 
-          <a onClick={handleReceiveFullAmountClick} href="#" className={'receive-full-amount'}>
-            Receive full amount (<Money amount={payableFullAmount} currency={'USD'} />)
+          <a
+            onClick={handleReceiveFullAmountClick}
+            href="#"
+            className={'receive-full-amount'}
+          >
+            Receive full amount (
+            <Money amount={payableFullAmount} currency={'USD'} />)
           </a>
         </FormGroup>
 
@@ -238,7 +232,7 @@ function PaymentMadeFormHeader({
               name={'payment_account_id'}
               {...{ errors, touched }}
             />
-        }
+          }
         >
           <AccountsSelectList
             accounts={paymentAccounts}
@@ -255,7 +249,9 @@ function PaymentMadeFormHeader({
           inline={true}
           className={classNames('form-group--reference', Classes.FILL)}
           intent={errors.reference && touched.reference && Intent.DANGER}
-          helperText={<ErrorMessage name="reference" {...{ errors, touched }} />}
+          helperText={
+            <ErrorMessage name="reference" {...{ errors, touched }} />
+          }
         >
           <InputGroup
             intent={errors.reference && touched.reference && Intent.DANGER}

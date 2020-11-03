@@ -13,7 +13,7 @@ import { momentFormatter, compose, tansformDateValue } from 'utils';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 import {
-  ListSelect,
+  VendorSelecetList,
   ErrorMessage,
   FieldRequiredHint,
   Row,
@@ -91,17 +91,10 @@ function BillFormHeader({
             <ErrorMessage name={'vendor_id'} {...{ errors, touched }} />
           }
         >
-          <ListSelect
-            items={vendorItems}
-            noResults={<MenuItem disabled={true} text="No results." />}
-            itemRenderer={vendorNameRenderer}
-            itemPredicate={filterVendorAccount}
-            popoverProps={{ minimal: true }}
+          <VendorSelecetList
+            vendorsList={vendorItems}
+            selectedVendorId={values.vendor_id}
             onItemSelect={onChangeSelected('vendor_id')}
-            selectedItem={values.vendor_id}
-            selectedItemProp={'id'}
-            defaultText={<T id={'select_vendor_account'} />}
-            labelProp={'display_name'}
           />
         </FormGroup>
 
@@ -135,7 +128,7 @@ function BillFormHeader({
               className={classNames(
                 'form-group--due-date',
                 'form-group--select-list',
-                CLASSES.FILL
+                CLASSES.FILL,
               )}
               intent={errors.due_date && touched.due_date && Intent.DANGER}
               helperText={
