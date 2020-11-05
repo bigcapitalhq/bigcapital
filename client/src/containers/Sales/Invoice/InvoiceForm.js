@@ -128,7 +128,7 @@ function InvoiceForm({
             is: (quantity, rate) => quantity || rate,
             then: Yup.number().required(),
           }),
-        discount: Yup.number().nullable(),
+          discount: Yup.number().nullable().min(0).max(100),
         description: Yup.string().nullable(),
       }),
     ),
