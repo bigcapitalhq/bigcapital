@@ -7,6 +7,7 @@ import asyncMiddleware from 'api/middleware/asyncMiddleware';
 import PaymentReceiveService from 'services/Sales/PaymentsReceives';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import { ServiceError } from 'exceptions';
+import HasItemEntries from 'services/Sales/HasItemsEntries';
 
 /**
  * Payments receives controller.
@@ -209,10 +210,19 @@ export default class PaymentReceivesController extends BaseController {
     const { id: paymentReceiveId } = req.params;
 
     try {
-      const paymentReceive = await this.paymentReceiveService.getPaymentReceive(
+      const {
+        paymentReceive,
+        receivableInvoices,
+        paymentReceiveInvoices,
+      } = await this.paymentReceiveService.getPaymentReceive(
         tenantId, paymentReceiveId
       );
-      return res.status(200).send({ paymentReceive });
+
+      return res.status(200).send({
+        payment_receive: this.transfromToResponse({ ...paymentReceive }),
+        receivable_invoices: this.transfromToResponse([ ...receivableInvoices ]),
+        payment_invoices: this.transfromToResponse([ ...paymentReceiveInvoices ]),
+      });
     } catch (error) {
       next(error);
     }
@@ -314,7 +324,7 @@ export default class PaymentReceivesController extends BaseController {
           errors: [{ type: 'INVOICES_IDS_NOT_FOUND', code: 300 }],
         });
       }
-      if (error.errorType === 'ENTRIES_IDS_NOT_FOUND') {
+      if (error.errorType === 'ENTRIES_IDS_NOT_EXISTS') {
         return res.boom.badRequest(null, {
           errors: [{ type: 'ENTRIES_IDS_NOT_FOUND', code: 300 }],
         });
@@ -324,6 +334,12 @@ export default class PaymentReceivesController extends BaseController {
           errors: [{ type: 'CUSTOMER_NOT_FOUND', code: 300 }],
         });
       }
+      if (error.errorType === 'INVALID_PAYMENT_AMOUNT') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'INVALID_PAYMENT_AMOUNT', code: 1000 }],
+        });
+      }
+      console.log(error.errorType);
     }
     next(error);
   }

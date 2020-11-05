@@ -149,7 +149,6 @@ function InvoiceFormHeader({
           label={<T id={'invoice_no'} />}
           inline={true}
           className={classNames('form-group--invoice-no', CLASSES.FILL)}
-          labelInfo={<FieldRequiredHint />}
           intent={errors.invoice_no && touched.invoice_no && Intent.DANGER}
           helperText={
             <ErrorMessage name="invoice_no" {...{ errors, touched }} />

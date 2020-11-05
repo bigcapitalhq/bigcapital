@@ -43,7 +43,7 @@ export default function PaymentMadeItemsTableEditor({
   noResultsMessage
 }) {
   const transformedData = useMemo(() => {
-    const rows = data;
+    const rows = [ ...data ];
     const totalRow = {
       due_amount: sumBy(data, 'due_amount'),
       payment_amount: sumBy(data, 'payment_amount'),
@@ -74,27 +74,27 @@ export default function PaymentMadeItemsTableEditor({
       {
         Header: formatMessage({ id: 'Date' }),
         id: 'bill_date',
-        accessor: (r) => moment(r.bill?.bill_date).format('YYYY MMM DD'),
+        accessor: (r) => moment(r.bill_date).format('YYYY MMM DD'),
         Cell: CellRenderer(EmptyDiv, 'bill_date'),
         disableSortBy: true,
       },
       {
         Header: formatMessage({ id: 'bill_number' }),
-        accessor: (row) => `#${row.bill?.bill_number}`,
+        accessor: (row) => `#${row?.bill_number}`,
         Cell: CellRenderer(EmptyDiv, 'bill_number'),
         disableSortBy: true,
         className: 'bill_number',
       },
       {
         Header: formatMessage({ id: 'bill_amount' }),
-        accessor: r => r.bill?.amount,
+        accessor: 'amount',
         Cell: CellRenderer(DivFieldCell, 'amount'),
         disableSortBy: true,
         className: '',
       },
       {
         Header: formatMessage({ id: 'amount_due' }),
-        accessor: r => r.bill?.due_amount,
+        accessor: 'due_amount',
         Cell: TotalCellRederer(DivFieldCell, 'due_amount'),
         disableSortBy: true,
         className: '',

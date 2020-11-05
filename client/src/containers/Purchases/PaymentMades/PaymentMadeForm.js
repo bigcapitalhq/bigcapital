@@ -1,30 +1,52 @@
-import React, { useMemo, useState, useCallback } from 'react';
+import React, { useMemo, useState, useCallback, useEffect } from 'react';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import moment from 'moment';
 import { Intent, Alert } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
-import { pick, sumBy } from 'lodash';
+import { pick, sumBy, omit } from 'lodash';
 import classNames from 'classnames';
+import { useHistory } from 'react-router-dom';
 
 import { CLASSES } from 'common/classes';
+import { AppToaster } from 'components';
 import PaymentMadeHeader from './PaymentMadeFormHeader';
-import PaymentMadeItemsTable from './PaymentMadeItemsTable';
 import PaymentMadeFloatingActions from './PaymentMadeFloatingActions';
+import PaymentMadeItemsTable from './PaymentMadeItemsTable';
+import PaymentMadeFooter from './PaymentMadeFooter';
 
 import withMediaActions from 'containers/Media/withMediaActions';
 import withPaymentMadeActions from './withPaymentMadeActions';
 import withPaymentMadeDetail from './withPaymentMadeDetail';
 import withPaymentMade from './withPaymentMade';
-import { AppToaster } from 'components';
+import withSettings from 'containers/Settings/withSettings';
+import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 
 import { compose, orderingLinesIndexes } from 'utils';
-import withSettings from 'containers/Settings/withSettings';
-import { useHistory } from 'react-router-dom';
 
 const ERRORS = {
   PAYMENT_NUMBER_NOT_UNIQUE: 'PAYMENT.NUMBER.NOT.UNIQUE',
 };
+
+// Default payment made entry values.
+const defaultPaymentMadeEntry = {
+  bill_id: '',
+  payment_amount: '',
+  id: null,
+  due_amount: null,
+};
+// Default initial values.
+const defaultInitialValues = {
+  full_amount: '',
+  vendor_id: '',
+  payment_account_id: '',
+  payment_date: moment(new Date()).format('YYYY-MM-DD'),
+  reference: '',
+  payment_number: '',
+  description: '',
+  entries: [],
+};
+
 /**
  * Payment made form component.
  */
@@ -40,6 +62,13 @@ function PaymentMadeForm({
   // #withPaymentMadeDetail
   paymentMade,
 
+  // #withBills
+  paymentMadeEntries,
+
+  // #withDashboardActions
+  changePageSubtitle,
+
+  // #ownProps
   paymentMadeId,
 }) {
   const history = useHistory();
@@ -49,6 +78,14 @@ function PaymentMadeForm({
   const [clearLinesAlert, setClearLinesAlert] = useState(false);
   const [clearFormAlert, setClearFormAlert] = useState(false);
   const [fullAmount, setFullAmount] = useState(null);
+
+  const [localPaymentEntries, setLocalPaymentEntries] = useState(paymentMadeEntries);
+
+  useEffect(() => {
+    if (localPaymentEntries !== paymentMadeEntries) {
+      setLocalPaymentEntries(paymentMadeEntries);
+    }
+  }, [localPaymentEntries, paymentMadeEntries])
 
   // Yup validation schema.
   const validationSchema = Yup.object().shape({
@@ -62,7 +99,6 @@ function PaymentMadeForm({
       .required()
       .label(formatMessage({ id: 'payment_account_' })),
     payment_number: Yup.string()
-      .required()
       .label(formatMessage({ id: 'payment_no_' })),
     reference: Yup.string().min(1).max(255).nullable(),
     description: Yup.string(),
@@ -81,27 +117,6 @@ function PaymentMadeForm({
     ),
   });
 
-  // Default payment made entry values.
-  const defaultPaymentMadeEntry = useMemo(
-    () => ({ bill_id: '', payment_amount: '', id: null }),
-    [],
-  );
-
-  // Default initial values.
-  const defaultInitialValues = useMemo(
-    () => ({
-      full_amount: '',
-      vendor_id: '',
-      payment_account_id: '',
-      payment_date: moment(new Date()).format('YYYY-MM-DD'),
-      reference: '',
-      payment_number: '',
-      description: '',
-      entries: [],
-    }),
-    [],
-  );
-
   // Form initial values.
   const initialValues = useMemo(
     () => ({
@@ -110,7 +125,7 @@ function PaymentMadeForm({
             ...pick(paymentMade, Object.keys(defaultInitialValues)),
             full_amount: sumBy(paymentMade.entries, 'payment_amount'),
             entries: [
-              ...paymentMade.entries.map((paymentMadeEntry) => ({
+              ...paymentMadeEntries.map((paymentMadeEntry) => ({
                 ...pick(paymentMadeEntry, Object.keys(defaultPaymentMadeEntry)),
               })),
             ],
@@ -120,7 +135,7 @@ function PaymentMadeForm({
             entries: orderingLinesIndexes(defaultInitialValues.entries),
           }),
     }),
-    [paymentMade, defaultInitialValues, defaultPaymentMadeEntry],
+    [paymentMade, paymentMadeEntries],
   );
 
   const handleSubmitForm = (
@@ -130,9 +145,11 @@ function PaymentMadeForm({
     setSubmitting(true);
 
     // Filters entries that have no `bill_id` or `payment_amount`.
-    const entries = values.entries.filter((item) => {
-      return !item.bill_id || item.payment_amount;
-    });
+    const entries = values.entries
+      .filter((item) => !item.bill_id || item.payment_amount)
+      .map((entry) => ({
+        ...omit(entry, ['due_amount']),
+      }));
     // Total payment amount of entries.
     const totalPaymentAmount = sumBy(entries, 'payment_amount');
 
@@ -159,6 +176,7 @@ function PaymentMadeForm({
       });
       setSubmitting(false);
       resetForm();
+      changePageSubtitle('');
     };
 
     const onError = (errors) => {
@@ -213,10 +231,26 @@ function PaymentMadeForm({
     setAmountChangeAlert(false);
   };
 
+  const transformPaymentEntries = (entries) => {
+    return entries.map((entry) => ({
+      ...pick(entry, Object.keys(defaultPaymentMadeEntry)),
+    }));
+  };
   // Handle update data.
   const handleUpdataData = useCallback(
     (entries) => {
-      setFieldValue('entries', entries);
+      setFieldValue('entries', transformPaymentEntries(entries));
+    },
+    [setFieldValue],
+  );
+
+  const resetEntriesPaymentAmount = (entries) => {
+    return entries.map((entry) => ({ ...entry, payment_amount: 0 }));
+  }
+  // Handle fetch success of vendor bills entries.
+  const handleFetchEntriesSuccess = useCallback(
+    (entries) => {
+      setFieldValue('entries', transformPaymentEntries(entries));
     },
     [setFieldValue],
   );
@@ -236,26 +270,22 @@ function PaymentMadeForm({
   }, [setClearLinesAlert]);
 
   const handleConfirmClearLines = useCallback(() => {
-    setFieldValue(
-      'entries',
-      values.entries.map((entry) => ({
-        ...entry,
-        payment_amount: 0,
-      })),
-    );
+    setLocalPaymentEntries(resetEntriesPaymentAmount(localPaymentEntries));
+    setFieldValue('entries', resetEntriesPaymentAmount(values.entries));
+
     setClearLinesAlert(false);
-  }, [setFieldValue, setClearLinesAlert, values.entries]);
+  }, [setFieldValue, localPaymentEntries, values.entries]);
 
   // Handle clear button click.
   const handleClearBtnClick = useCallback(() => {
     setClearFormAlert(true);
   }, []);
 
-  //
+  // Handle cancel button clear
   const handleCancelClearFormAlert = () => {
     setClearFormAlert(false);
   };
-
+  // Handle confirm button click of clear form alert.
   const handleConfirmCancelClearFormAlert = () => {
     setValues({
       ...defaultInitialValues,
@@ -268,6 +298,24 @@ function PaymentMadeForm({
     });
     setClearFormAlert(false);
   };
+  // Payable full amount.
+  const payableFullAmount = useMemo(() => sumBy(values.entries, 'due_amount'), [
+    values.entries,
+  ]);
+
+  const handlePaymentNoChanged = (paymentNumber) => {
+    changePageSubtitle(paymentNumber);
+  };
+
+ // Clear page subtitle before once page leave.
+  useEffect(() => () => {
+    changePageSubtitle('')
+  }, [changePageSubtitle]);
+
+  const fullAmountPaid = useMemo(
+    () => sumBy(values.entries, 'payment_amount'),
+    [values.entries],
+  );
 
   return (
     <div
@@ -282,49 +330,64 @@ function PaymentMadeForm({
           setFieldValue={setFieldValue}
           getFieldProps={getFieldProps}
           values={values}
+          payableFullAmount={payableFullAmount}
           onFullAmountChanged={handleFullAmountChange}
+          onPaymentNumberChanged={handlePaymentNoChanged}
+          amountPaid={fullAmountPaid}
         />
         <PaymentMadeItemsTable
           fullAmount={fullAmount}
-          paymentEntries={values.entries}
+          paymentEntries={localPaymentEntries}
           vendorId={values.vendor_id}
           paymentMadeId={paymentMadeId}
           onUpdateData={handleUpdataData}
           onClickClearAllLines={handleClearAllLines}
           errors={errors?.entries}
+          onFetchEntriesSuccess={handleFetchEntriesSuccess}
+          vendorPayableBillsEntrie={[]}
         />
         <Alert
           cancelButtonText={<T id={'cancel'} />}
           confirmButtonText={<T id={'ok'} />}
-          intent={Intent.WARNING}
+          intent={Intent.DANGER}
           isOpen={amountChangeAlert}
           onCancel={handleCancelAmountChangeAlert}
           onConfirm={handleConfirmAmountChangeAlert}
         >
-          <p>Are you sure to discard full amount?</p>
+          <p>
+            Changing full amount will change all credit and payment were
+            applied, Is this okay?
+          </p>
         </Alert>
 
         <Alert
           cancelButtonText={<T id={'cancel'} />}
           confirmButtonText={<T id={'ok'} />}
-          intent={Intent.WARNING}
+          intent={Intent.DANGER}
           isOpen={clearLinesAlert}
           onCancel={handleCancelClearLines}
           onConfirm={handleConfirmClearLines}
         >
-          <p>Are you sure to discard full amount?</p>
+          <p>
+            Clearing the table lines will delete all credits and payments were
+            applied. Is this okay?
+          </p>
         </Alert>
 
         <Alert
           cancelButtonText={<T id={'cancel'} />}
           confirmButtonText={<T id={'ok'} />}
-          intent={Intent.WARNING}
+          intent={Intent.DANGER}
           isOpen={clearFormAlert}
           onCancel={handleCancelClearFormAlert}
           onConfirm={handleConfirmCancelClearFormAlert}
         >
-          <p>Are you sure to clear form data.</p>
+          <p>Are you sure you want to clear this transaction?</p>
         </Alert>
+
+        <PaymentMadeFooter
+          getFieldProps={getFieldProps}
+        />
 
         <PaymentMadeFloatingActions
           isSubmitting={isSubmitting}
@@ -347,11 +410,15 @@ export default compose(
   withPaymentMadeActions,
   withMediaActions,
   withPaymentMadeDetail(),
-  withPaymentMade(({ nextPaymentNumberChanged }) => ({
-    nextPaymentNumberChanged,
-  })),
+  withPaymentMade(
+    ({ nextPaymentNumberChanged, paymentMadeEntries }, state, props) => ({
+      nextPaymentNumberChanged,
+      paymentMadeEntries,
+    }),
+  ),
   withSettings(({ billPaymentSettings }) => ({
     paymentNextNumber: billPaymentSettings?.next_number,
     paymentNumberPrefix: billPaymentSettings?.number_prefix,
   })),
+  withDashboardActions,
 )(PaymentMadeForm);

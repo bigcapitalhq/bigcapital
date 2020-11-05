@@ -56,20 +56,33 @@ export const fetchPaymentReceive = ({ id }) => {
             type: t.PAYMENT_RECEIVE_SET,
             payload: {
               id,
-              paymentReceive: response.data.paymentReceive,
+              paymentReceive: response.data.payment_receive,
             },
           });
           dispatch({
             type: t.INVOICES_ITEMS_SET,
             payload: {
-              sales_invoices: response.data.sale_invoice.receivable_invoices,
+              sales_invoices: response.data.receivable_invoices,
+            },
+          });
+          dispatch({
+            type: t.INVOICES_ITEMS_SET,
+            payload: {
+              sales_invoices: response.data.payment_invoices,
             },
           });
           dispatch({
             type: t.INVOICES_RECEIVABLE_BY_PAYMENT_ID,
             payload: {
-              paymentReceiveid: response.data.id,
-              saleInvoices: response.data.sale_invoice.receivable_invoices,
+              paymentReceiveId: response.data.payment_receive.id,
+              saleInvoices: response.data.receivable_invoices,
+            },
+          });
+          dispatch({
+            type: t.INVOICES_BY_PAYMENT_ID,
+            payload: {
+              paymentReceiveId: response.data.payment_receive.id,
+              saleInvoices: response.data.payment_invoices,
             },
           });
           resovle(response);

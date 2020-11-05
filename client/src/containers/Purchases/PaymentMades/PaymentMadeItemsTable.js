@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useQuery } from 'react-query';
-import { omit } from 'lodash';
-import { CloudLoadingIndicator } from 'components'
+import { isEmpty } from 'lodash';
+import { CloudLoadingIndicator } from 'components';
 import PaymentMadeItemsTableEditor from './PaymentMadeItemsTableEditor';
 
 import withPaymentMadeActions from './withPaymentMadeActions';
@@ -22,48 +22,51 @@ function PaymentMadeItemsTable({
   paymentEntries = [], // { bill_id: number, payment_amount: number, id?: number }
   onClickClearAllLines,
   errors,
+  onFetchEntriesSuccess,
 
   // #withBillActions
   requestFetchDueBills,
 
   // #withBills
-  paymentMadePayableBills,
-
-  // #withPaymentMadeDetail
-  paymentMade,
+  vendorPayableBillsEntries,
 }) {
-  const [tableData, setTableData] = useState([]);
-  const [localAmount, setLocalAmount] = useState(fullAmount);
-
   const isNewMode = !paymentMadeId;
 
-  const triggerUpdateData = useCallback((entries) => {
-    const _data = entries.map((entry) => ({
-      bill_id: entry?.bill?.id,
-      ...omit(entry, ['bill']),
-    }))
-    onUpdateData && onUpdateData(_data);
-  }, [onUpdateData]);
+  // Detarmines takes vendor payable bills entries in create mode
+  // or payment made entries in edit mode.
+  const computedTableEntries = useMemo(
+    () =>
+      !isEmpty(paymentEntries)
+        ? paymentEntries
+        : (vendorPayableBillsEntries || []),
+    [vendorPayableBillsEntries, paymentEntries],
+  );
+  const [tableData, setTableData] = useState(computedTableEntries);
+  const [localEntries, setLocalEntries] = useState(computedTableEntries);
 
-  // Merges payment entries with payable bills.
-  const computedTableData = useMemo(() => {
-    const entriesTable = new Map(
-      paymentEntries.map((e) => [e.bill_id, e]),
-    );
-    return paymentMadePayableBills.map((bill) => {
-      const entry = entriesTable.get(bill.id);
-      return {
-        bill,
-        id: null,
-        payment_number: 0,
-        ...(entry || {}),
-      }
-    });
-  }, [paymentEntries, paymentMadePayableBills]);
+  const [localAmount, setLocalAmount] = useState(fullAmount);
+
+  // Triggers `onUpdateData` event that passes changed entries.
+  const triggerUpdateData = useCallback(
+    (entries) => {
+      onUpdateData && onUpdateData(entries);
+    },
+    [onUpdateData],
+  );
+
+  const triggerOnFetchBillsSuccess = useCallback(
+    (bills) => {
+      onFetchEntriesSuccess && onFetchEntriesSuccess(bills);
+    },
+    [onFetchEntriesSuccess],
+  );
 
   useEffect(() => {
-    setTableData(computedTableData);
-  }, [computedTableData]);
+    if (computedTableEntries !== localEntries) {
+      setTableData(computedTableEntries);
+      setLocalEntries(computedTableEntries);
+    }
+  }, [computedTableEntries, localEntries]);
 
   // Handle mapping `fullAmount` prop to `localAmount` state.
   useEffect(() => {
@@ -98,14 +101,34 @@ function PaymentMadeItemsTable({
     { enabled: isNewMode && vendorId },
   );
 
-  // Handle update data.
-  const handleUpdateData = (rows) => {
-    triggerUpdateData(rows);
-  };
+  useEffect(() => {
+    const enabled = isNewMode && vendorId;
 
-  const noResultsMessage = (vendorId) ?
-    'There is no payable bills for this vendor that can be applied for this payment' : 
-    'Please select a vendor to display all open bills for it.';
+    if (!fetchVendorDueBills.isFetching && enabled) {
+      triggerOnFetchBillsSuccess(computedTableEntries);
+    }
+  }, [
+    vendorId,
+    isNewMode,
+    fetchVendorDueBills.isFetching,
+    computedTableEntries,
+    triggerOnFetchBillsSuccess,
+  ]);
+
+  // Handle update data.
+  const handleUpdateData = useCallback(
+    (rows) => {
+      setTableData(rows);
+      triggerUpdateData(rows);
+    },
+    [setTableData, triggerUpdateData],
+  );
+
+  // Detarmines the right no results message before selecting vendor and aftering
+  // selecting vendor id.
+  const noResultsMessage = vendorId
+    ? 'There is no payable bills for this vendor that can be applied for this payment'
+    : 'Please select a vendor to display all open bills for it.';
 
   return (
     <CloudLoadingIndicator isLoading={fetchVendorDueBills.isFetching}>
@@ -123,7 +146,8 @@ function PaymentMadeItemsTable({
 export default compose(
   withPaymentMadeActions,
   withBillActions,
-  withBills(({ paymentMadePayableBills }) => ({
+  withBills(({ paymentMadePayableBills, vendorPayableBillsEntries }) => ({
     paymentMadePayableBills,
+    vendorPayableBillsEntries,
   })),
 )(PaymentMadeItemsTable);

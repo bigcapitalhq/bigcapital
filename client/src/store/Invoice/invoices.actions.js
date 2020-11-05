@@ -72,7 +72,6 @@ export const fetchInvoicesTable = ({ query } = {}) => {
               customViewId: response.data.customViewId || -1,
             },
           });
-
           dispatch({
             type: t.INVOICES_ITEMS_SET,
             payload: {

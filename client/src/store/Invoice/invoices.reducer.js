@@ -16,7 +16,8 @@ const initialState = {
   receivable: {
     byCustomerId: [],
     byPaymentReceiveId: [],
-  }
+  },
+  byPaymentReceiveId: {},
 };
 
 const defaultInvoice = {
@@ -114,6 +115,13 @@ const reducer = createReducer(initialState, {
     const saleInvoiceIds = saleInvoices.map((saleInvoice) => saleInvoice.id);
 
     state.receivable.byCustomerId[customerId] = saleInvoiceIds
+  },
+
+  [t.INVOICES_BY_PAYMENT_ID]: (state, action) => {
+    const { paymentReceiveId, saleInvoices } = action.payload;
+    const saleInvoiceIds = saleInvoices.map((saleInvoice) => saleInvoice.id);
+
+    state.byPaymentReceiveId[paymentReceiveId] = saleInvoiceIds;
   },
 });
 

@@ -1,4 +1,4 @@
-import { mixin } from 'objection';
+import { mixin, Model } from 'objection';
 import TenantModel from 'models/TenantModel';
 
 export default class BillPaymentEntry extends TenantModel {
@@ -14,5 +14,23 @@ export default class BillPaymentEntry extends TenantModel {
    */
   get timestamps() {
     return [];
+  }
+
+  /**
+   * Relationship mapping.
+   */
+  static get relationMappings() {
+    const Bill = require('models/Bill');
+
+    return {
+      bill: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Bill.default,
+        join: {
+          from: 'bills_payments_entries.billId',
+          to: 'bills.id',
+        },
+      },
+    };
   }
 }

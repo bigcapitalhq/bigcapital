@@ -1,28 +1,21 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { pickItemsFromIds, paginationLocationQuery } from 'store/selectors';
 
+// Retreive bills table query.
 const billTableQuery = (state) => state.bills.tableQuery;
 
 const billPageSelector = (state, props, query) => {
   const viewId = state.bills.currentViewId;
   return state.bills.views?.[viewId]?.pages?.[query.page];
 };
+// Retreive bills items.
 const billItemsSelector = (state) => state.bills.items;
 
-/**
- * Retrieve bill details.
- * @return {IBill}
- */
+// Retrieve bill details.
 const billByIdSelector = (state, props) => state.bills.items[props.billId];
 
-/**
- * Retrieve vendor due bills ids.
- * @return {number[]}
- */
+// Retrieve vendor due bills ids.
 const billsPayableVendorSelector = (state, props) => state.bills.payable.byVendorId[props.vendorId];
-const billsPayableByPaymentMadeSelector = (state, props) => {
-  return state.bills.payable.byBillPayamentId[props.paymentMadeId];
-}
 
 const billPaginationSelector = (state, props) => {
   const viewId = state.bills.currentViewId;
@@ -60,12 +53,17 @@ export const getBillByIdFactory = () =>
     return bill;
   });
 
+/**
+ * Retrieve bills datatable pagination meta.
+ */
 export const getBillPaginationMetaFactory = () =>
   createSelector(billPaginationSelector, (billPage) => {
     return billPage?.paginationMeta || {};
   });
 
-
+/**
+ * Retrieve vendor payable bills.
+ */
 export const getVendorPayableBillsFactory = () => 
   createSelector(
     billItemsSelector,
@@ -77,28 +75,24 @@ export const getVendorPayableBillsFactory = () =>
     },
   );
 
-
-export const getPayableBillsByPaymentMadeFactory = () => 
-  createSelector(
-    billItemsSelector,
-    billsPayableByPaymentMadeSelector,
-    (billsItems, payableBillsIds) => {
-      return Array.isArray(payableBillsIds)
-      ? pickItemsFromIds(billsItems, payableBillsIds) || []
-      : [];
-    },
-  );
-
-export const getPaymentMadeFormPayableBillsFactory = () => 
+/**
+ * Retrieve vendor payable bills entries.
+ */
+export const getVendorPayableBillsEntriesFactory = () => 
   createSelector(
     billItemsSelector,
     billsPayableVendorSelector,
-    billsPayableByPaymentMadeSelector,
-    (billsItems, vendorBillsIds, paymentMadeBillsIds) => {
-      const billsIds = [
-        ...(vendorBillsIds || []),
-        ...(paymentMadeBillsIds || [])
-      ];
-      return pickItemsFromIds(billsItems, billsIds);
-    },
+    (billsItems, payableBillsIds) => {
+      const bills = Array.isArray(payableBillsIds)
+        ? pickItemsFromIds(billsItems, payableBillsIds) || []
+        : [];
+
+      return bills.map((bill) => ({
+        ...bill,
+        bill_id: bill.id,
+        total_payment_amount: bill.payment_amount,
+        id: null,
+        payment_amount: null,
+      }));
+    }
   );

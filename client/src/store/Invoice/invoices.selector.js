@@ -19,12 +19,8 @@ const invoicesPageSelector = (state, props, query) => {
   const viewId = state.salesInvoices.currentViewId;
   return state.salesInvoices.views?.[viewId]?.pages?.[query.page];
 };
-
 const invoicesItemsSelector = (state) => state.salesInvoices.items;
-
 const invoicesReceiableCustomerSelector = (state, props) => state.salesInvoices.receivable.byCustomerId[props.customerId];
-const paymentReceivableInvoicesSelector = (state, props) => state.salesInvoices.receivable.byPaymentReceiveId[props.paymentReceiveId];
-
 
 export const getInvoiceTableQueryFactory = () =>
   createSelector(
@@ -59,39 +55,22 @@ export const getInvoicePaginationMetaFactory = () =>
     return invoicePage?.paginationMeta || {};
   });
 
-// export const getCustomerReceivableInvoicesFactory = () => 
-//   createSelector(
-//     invoicesItemsSelector,
-//     invoicesReceiableCustomerSelector,
-//     (invoicesItems, invoicesIds) => {
-//       return Array.isArray(invoicesIds)
-//         ? (pickItemsFromIds(invoicesItems, invoicesIds) || [])
-//         : [];
-//     },
-//   );
-
-// export const getPaymentReceivableInvoicesFactory = () => 
-//     createSelector(
-//       invoicesItemsSelector,
-//       paymentReceivableInvoicesSelector,
-//       (invoicesItems, invoicesIds) => {
-//         return Array.isArray(invoicesIds)
-//           ? (pickItemsFromIds(invoicesItems, invoicesIds) || [])
-//           : [];
-//       },
-//     );
-
-
-export const getPaymentReceiveReceivableInvoicesFactory = () => 
+export const getCustomerReceivableInvoicesEntriesFactory = () => 
   createSelector(
     invoicesItemsSelector,
     invoicesReceiableCustomerSelector,
-    paymentReceivableInvoicesSelector,
-    (invoicesItems, customerInvoicesIds, paymentInvoicesIds) => {
+    (invoicesItems, customerInvoicesIds) => {
       const invoicesIds = [
         ...(customerInvoicesIds || []),
-        ...(paymentInvoicesIds || []),
       ];
-      return pickItemsFromIds(invoicesItems, invoicesIds);
+      const invoices = pickItemsFromIds(invoicesItems, invoicesIds);
+
+      return invoices.map((invoice) => ({
+        ...invoice,
+        invoice_id: invoice.id,
+        total_payment_amount: invoice.payment_amount,
+        id: null,
+        payment_amount: 0,
+      }));
     },
-  );
+  )

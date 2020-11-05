@@ -13,10 +13,12 @@ import classNames from 'classnames';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { pick } from 'lodash';
 import { CLASSES } from 'common/classes';
+
 import BillFormHeader from './BillFormHeader';
 import EstimatesItemsTable from 'containers/Sales/Estimate/EntriesItemsTable';
 import BillFloatingActions from './BillFloatingActions';
 import BillFormFooter from './BillFormFooter';
+
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withMediaActions from 'containers/Media/withMediaActions';
 import withBillActions from './withBillActions';
@@ -41,6 +43,7 @@ function BillForm({
 
   //#withDashboard
   changePageTitle,
+  changePageSubtitle,
 
   //#withBillDetail
   bill,
@@ -234,6 +237,7 @@ function BillForm({
             setSubmitting(false);
             saveBillSubmit({ action: 'update', ...payload });
             resetForm();
+            changePageSubtitle('');
           })
           .catch((errors) => {
             handleErrors(errors, { setErrors });
@@ -301,10 +305,22 @@ function BillForm({
       orderingIndex([...formik.values.entries, defaultBill]),
     );
   };
+
+  const handleBillNumberChanged = useCallback((billNumber) => {
+    changePageSubtitle(billNumber);
+  }, []);
+
+  // Clear page subtitle once unmount bill form page.
+  useEffect(() => () => {
+    changePageSubtitle('');
+  }, [changePageSubtitle]);
+
   return (
     <div className={classNames(CLASSES.PAGE_FORM, CLASSES.PAGE_FORM_BILL)}>
       <form onSubmit={formik.handleSubmit}>
-        <BillFormHeader formik={formik} />
+        <BillFormHeader
+          formik={formik}
+          onBillNumberChanged={handleBillNumberChanged} />
 
         <EstimatesItemsTable
           formik={formik}

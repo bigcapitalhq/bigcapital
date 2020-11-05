@@ -26,7 +26,13 @@
   }
 
   #{$self}__primary-section{
+    display: flex;
     padding-bottom: 2px;
+  }
+
+  #{$self}__big-numbers{
+    margin-left: auto;
+    padding-right: 10px;
   }
 
   .datatable-editor{
@@ -56,6 +62,14 @@
   }
 
   #{$self}__footer{
+    .form-group--statement{
+      max-width: 500px;
+      width: 100%;
 
+      textarea{
+        width: 100%;
+        min-height: 70px;
+      }
+    }
   }
 }

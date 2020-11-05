@@ -1,14 +1,32 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { pickItemsFromIds, paginationLocationQuery } from 'store/selectors';
+import { transformToObject } from 'utils';
 
 const paymentReceivesPageSelector = (state, props, query) => {
   const viewId = state.paymentReceives.currentViewId;
   return state.paymentReceives.views?.[viewId]?.pages?.[query.page];
 };
 
-const paymentReceivesItemsSelector = (state) => {
-  return state.paymentReceives.items;
+const paymentReceivesItemsSelector = (state) => state.paymentReceives.items;
+const paymentReceiveTableQuery = (state) => state.paymentReceives.tableQuery;
+
+const PaymentReceivePaginationSelector = (state, props) => {
+  const viewId = state.paymentReceives.currentViewId;
+  return state.paymentReceives.views?.[viewId];
 };
+const invoicesItemsSelector = (state) => state.salesInvoices.items;
+
+const payemntReceiveById = (state, props) =>
+  state.paymentReceives.items[props.paymentReceiveId];
+
+const invoicesReceivableByPaymentReceiveSelector = (state, props) =>
+  state.salesInvoices.receivable.byPaymentReceiveId[props.paymentReceiveId];
+
+const paymentReceiveInvoicesSelector = (state, props) =>
+  state.salesInvoices.byPaymentReceiveId[props.paymentReceiveId];
+
+const paymentReceiveByIdSelector = (state, props) =>
+  state.paymentReceives.items[props.paymentReceiveId];
 
 export const getPaymentReceiveCurrentPageFactory = () =>
   createSelector(
@@ -21,8 +39,6 @@ export const getPaymentReceiveCurrentPageFactory = () =>
     },
   );
 
-const paymentReceiveTableQuery = (state) => state.paymentReceives.tableQuery;
-
 export const getPaymentReceiveTableQuery = createSelector(
   paginationLocationQuery,
   paymentReceiveTableQuery,
@@ -34,48 +50,19 @@ export const getPaymentReceiveTableQuery = createSelector(
   },
 );
 
-const PaymentReceivePaginationSelector = (state, props) => {
-  const viewId = state.paymentReceives.currentViewId;
-  return state.paymentReceives.views?.[viewId];
-};
-
 export const getPaymentReceivePaginationMetaFactory = () =>
   createSelector(PaymentReceivePaginationSelector, (Page) => {
     return Page?.paginationMeta || {};
   });
-
-const invoicesItems = (state) => {
-  return state.salesInvoices.items;
-};
-
-
-const payemntReceiveById = (state, props) => {
-  return state.paymentReceives.items[props.paymentReceiveId];
-};
 
 export const getPaymentReceiveByIdFactory = () =>
   createSelector(payemntReceiveById, (payment_receive) => {
     return payment_receive;
   });
 
-
-const paymentReceiveInvoicesIdss = (state, props) => {
-  return state.paymentReceives.items[props.paymentReceiveInvoices]
-};
-
-// const invoicesItems = (state) => {
-//   return state.sales_invoices.items;
-// };
-
-// export const  = createSelector(
-//   paymentReceiveInvoicesIds,
-//   invoicesItems,
-//   (ids, items) => {},
-// );
-
 export const getPaymentReceiveInvoices = createSelector(
   payemntReceiveById,
-  invoicesItems,
+  invoicesItemsSelector,
   (paymentRecieve, items) => {
     return typeof paymentRecieve === 'object'
       ? pickItemsFromIds(
@@ -85,3 +72,42 @@ export const getPaymentReceiveInvoices = createSelector(
       : [];
   },
 );
+
+/**
+ * Retrieve payment receive invoices entries.
+ */
+export const getPaymentReceiveEntriesFactory = () =>
+  createSelector(
+    invoicesItemsSelector,
+    invoicesReceivableByPaymentReceiveSelector,
+    paymentReceiveInvoicesSelector,
+    paymentReceiveByIdSelector,
+    (
+      invoicesItems,
+      paymentReceivableInvoicesIds,
+      paymentReceiveInvoicesIds,
+      paymentReceive,
+    ) => {
+      const invoicesIds = [
+        ...(paymentReceivableInvoicesIds || []),
+        ...(paymentReceiveInvoicesIds || []),
+      ];
+      const invoices = pickItemsFromIds(invoicesItems, invoicesIds);
+      const invoicesEntries = transformToObject(
+        paymentReceive?.entries || [],
+        'invoice_id',
+      );
+
+      return invoices.map((invoice) => {
+        const paymentReceiveEntry = invoicesEntries?.[invoice.id] || {};
+
+        return {
+          ...invoice,
+          invoice_id: invoice.id,
+          total_payment_amount: invoice.payment_amount,
+          id: paymentReceiveEntry?.id,
+          payment_amount: paymentReceiveEntry?.payment_amount,
+        };
+      });
+    },
+  );

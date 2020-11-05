@@ -23,7 +23,6 @@ import {
   Hint,
 } from 'components';
 
-import withBills from '../Bill/withBills';
 import withVender from 'containers/Vendors/withVendors';
 import withAccounts from 'containers/Accounts/withAccounts';
 
@@ -32,7 +31,9 @@ import withAccounts from 'containers/Accounts/withAccounts';
  */
 function PaymentMadeFormHeader({
   paymentMadeId,
-  vendorId,
+  payableFullAmount,
+  onPaymentNumberChanged,
+  amountPaid = 0,
 
   // #useFormik
   errors,
@@ -49,16 +50,8 @@ function PaymentMadeFormHeader({
 
   //#withAccouts
   accountsList,
-
-  // #withBills
-  paymentMadePayableBills,
 }) {
   const isNewMode = !paymentMadeId;
-
-  const payableFullAmount = useMemo(
-    () => sumBy(paymentMadePayableBills, 'due_amount'),
-    [paymentMadePayableBills],
-  );
 
   const handleDateChange = useCallback(
     (date_filed) => (date) => {
@@ -67,8 +60,6 @@ function PaymentMadeFormHeader({
     },
     [setFieldValue],
   );
-
-
   const triggerFullAmountChanged = (value) => {
     onFullAmountChanged && onFullAmountChanged(value);
   };
@@ -96,147 +87,159 @@ function PaymentMadeFormHeader({
     triggerFullAmountChanged(payableFullAmount);
   };
 
+  const handlePaymentNumberBlur = (event) => {
+    onPaymentNumberChanged && onPaymentNumberChanged(event.currentTarget.value)
+  };
+
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
       <div className={classNames(CLASSES.PAGE_FORM_HEADER_PRIMARY)}>
-        {/* ------------ Vendor name ------------ */}
-        <FormGroup
-          label={<T id={'vendor_name'} />}
-          inline={true}
-          className={classNames('form-group--select-list', Classes.FILL)}
-          labelInfo={<FieldRequiredHint />}
-          intent={errors.vendor_id && touched.vendor_id && Intent.DANGER}
-          helperText={
-            <ErrorMessage name={'vendor_id'} {...{ errors, touched }} />
-          }
-        >
-          <ContactSelecetList
-            contactsList={vendorItems}
-            selectedContactId={values.vendor_id}
-            defaultSelectText={ <T id={'select_vender_account'} /> }
-            onContactSelected={onChangeSelect('vendor_id')}
-            // buttonProps={{ disabled: !isNewMode }}
-            disabled={!isNewMode}
-          />
-        </FormGroup>
-
-        {/* ------------ Payment date ------------ */}
-        <FormGroup
-          label={<T id={'payment_date'} />}
-          inline={true}
-          labelInfo={<FieldRequiredHint />}
-          className={classNames('form-group--select-list', Classes.FILL)}
-          intent={errors.payment_date && touched.payment_date && Intent.DANGER}
-          helperText={
-            <ErrorMessage name="payment_date" {...{ errors, touched }} />
-          }
-        >
-          <DateInput
-            {...momentFormatter('YYYY/MM/DD')}
-            value={tansformDateValue(values.payment_date)}
-            onChange={handleDateChange('payment_date')}
-            popoverProps={{ position: Position.BOTTOM, minimal: true }}
-          />
-        </FormGroup>
-
-        {/* ------------ Full amount ------------ */}
-        <FormGroup
-          label={<T id={'full_amount'} />}
-          inline={true}
-          className={('form-group--full-amount', Classes.FILL)}
-          intent={errors.full_amount && touched.full_amount && Intent.DANGER}
-          labelInfo={<Hint />}
-          helperText={
-            <ErrorMessage name="full_amount" {...{ errors, touched }} />
-          }
-        >
-          <InputGroup
-            intent={errors.full_amount && touched.full_amount && Intent.DANGER}
-            minimal={true}
-            value={values.full_amount}
-            {...getFieldProps('full_amount')}
-            onBlur={handleFullAmountBlur}
-          />
-
-          <a
-            onClick={handleReceiveFullAmountClick}
-            href="#"
-            className={'receive-full-amount'}
+        <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
+          {/* ------------ Vendor name ------------ */}
+          <FormGroup
+            label={<T id={'vendor_name'} />}
+            inline={true}
+            className={classNames('form-group--select-list', Classes.FILL)}
+            labelInfo={<FieldRequiredHint />}
+            intent={errors.vendor_id && touched.vendor_id && Intent.DANGER}
+            helperText={
+              <ErrorMessage name={'vendor_id'} {...{ errors, touched }} />
+            }
           >
-            Receive full amount (
-            <Money amount={payableFullAmount} currency={'USD'} />)
-          </a>
-        </FormGroup>
+            <ContactSelecetList
+              contactsList={vendorItems}
+              selectedContactId={values.vendor_id}
+              defaultSelectText={ <T id={'select_vender_account'} /> }
+              onContactSelected={onChangeSelect('vendor_id')}
+              disabled={!isNewMode}
+            />
+          </FormGroup>
 
-        {/* ------------ Payment number ------------ */}
-        <FormGroup
-          label={<T id={'payment_no'} />}
-          inline={true}
-          className={('form-group--payment_number', Classes.FILL)}
-          labelInfo={<FieldRequiredHint />}
-          intent={
-            errors.payment_number && touched.payment_number && Intent.DANGER
-          }
-          helperText={
-            <ErrorMessage name="payment_number" {...{ errors, touched }} />
-          }
-        >
-          <InputGroup
+          {/* ------------ Payment date ------------ */}
+          <FormGroup
+            label={<T id={'payment_date'} />}
+            inline={true}
+            labelInfo={<FieldRequiredHint />}
+            className={classNames('form-group--select-list', Classes.FILL)}
+            intent={errors.payment_date && touched.payment_date && Intent.DANGER}
+            helperText={
+              <ErrorMessage name="payment_date" {...{ errors, touched }} />
+            }
+          >
+            <DateInput
+              {...momentFormatter('YYYY/MM/DD')}
+              value={tansformDateValue(values.payment_date)}
+              onChange={handleDateChange('payment_date')}
+              popoverProps={{ position: Position.BOTTOM, minimal: true }}
+            />
+          </FormGroup>
+
+          {/* ------------ Full amount ------------ */}
+          <FormGroup
+            label={<T id={'full_amount'} />}
+            inline={true}
+            className={('form-group--full-amount', Classes.FILL)}
+            intent={
+              errors.full_amount && touched.full_amount && Intent.DANGER
+            }
+            labelInfo={<Hint />}
+            helperText={
+              <ErrorMessage name="full_amount" {...{ errors, touched }} />
+            }
+          >
+            <InputGroup
+              intent={
+                errors.full_amount && touched.full_amount && Intent.DANGER
+              }
+              minimal={true}
+              value={values.full_amount}
+              {...getFieldProps('full_amount')}
+              onBlur={handleFullAmountBlur}
+            />
+
+            <a onClick={handleReceiveFullAmountClick} href="#" className={'receive-full-amount'}>
+              Receive full amount (<Money amount={payableFullAmount} currency={'USD'} />)
+            </a>
+          </FormGroup>
+
+          {/* ------------ Payment number ------------ */}
+          <FormGroup
+            label={<T id={'payment_no'} />}
+            inline={true}
+            className={('form-group--payment_number', Classes.FILL)}
+            labelInfo={<FieldRequiredHint />}
             intent={
               errors.payment_number && touched.payment_number && Intent.DANGER
             }
-            minimal={true}
-            {...getFieldProps('payment_number')}
-          />
-        </FormGroup>
-
-        {/* ------------ Payment account ------------ */}
-        <FormGroup
-          label={<T id={'payment_account'} />}
-          className={classNames(
-            'form-group--payment_account_id',
-            'form-group--select-list',
-            Classes.FILL,
-          )}
-          inline={true}
-          labelInfo={<FieldRequiredHint />}
-          intent={
-            errors.payment_account_id &&
-            touched.payment_account_id &&
-            Intent.DANGER
-          }
-          helperText={
-            <ErrorMessage
-              name={'payment_account_id'}
-              {...{ errors, touched }}
+            helperText={
+              <ErrorMessage name="payment_number" {...{ errors, touched }} />
+            }
+          >
+            <InputGroup
+              intent={
+                errors.payment_number && touched.payment_number && Intent.DANGER
+              }
+              minimal={true}
+              {...getFieldProps('payment_number')}
+              onBlur={handlePaymentNumberBlur}
             />
-          }
-        >
-          <AccountsSelectList
-            accounts={paymentAccounts}
-            labelInfo={<FieldRequiredHint />}
-            onAccountSelected={onChangeSelect('payment_account_id')}
-            defaultSelectText={<T id={'select_payment_account'} />}
-            selectedAccountId={values.payment_account_id}
-          />
-        </FormGroup>
+          </FormGroup>
 
-        {/* ------------ Reference ------------ */}
-        <FormGroup
-          label={<T id={'reference'} />}
-          inline={true}
-          className={classNames('form-group--reference', Classes.FILL)}
-          intent={errors.reference && touched.reference && Intent.DANGER}
-          helperText={
-            <ErrorMessage name="reference" {...{ errors, touched }} />
+          {/* ------------ Payment account ------------ */}
+          <FormGroup
+            label={<T id={'payment_account'} />}
+            className={classNames(
+              'form-group--payment_account_id',
+              'form-group--select-list',
+              Classes.FILL,
+            )}
+            inline={true}
+            labelInfo={<FieldRequiredHint />}
+            intent={
+              errors.payment_account_id &&
+              touched.payment_account_id &&
+              Intent.DANGER
+            }
+            helperText={
+              <ErrorMessage
+                name={'payment_account_id'}
+                {...{ errors, touched }}
+              />
           }
-        >
-          <InputGroup
+          >
+            <AccountsSelectList
+              accounts={paymentAccounts}
+              labelInfo={<FieldRequiredHint />}
+              onAccountSelected={onChangeSelect('payment_account_id')}
+              defaultSelectText={<T id={'select_payment_account'} />}
+              selectedAccountId={values.payment_account_id}
+            />
+          </FormGroup>
+
+          {/* ------------ Reference ------------ */}
+          <FormGroup
+            label={<T id={'reference'} />}
+            inline={true}
+            className={classNames('form-group--reference', Classes.FILL)}
             intent={errors.reference && touched.reference && Intent.DANGER}
-            minimal={true}
-            {...getFieldProps('reference')}
-          />
-        </FormGroup>
+            helperText={<ErrorMessage name="reference" {...{ errors, touched }} />}
+          >
+            <InputGroup
+              intent={errors.reference && touched.reference && Intent.DANGER}
+              minimal={true}
+              {...getFieldProps('reference')}
+            />
+          </FormGroup>
+        </div>
+
+        <div className={classNames(CLASSES.PAGE_FORM_HEADER_BIG_NUMBERS)}>
+          <div class="big-amount">
+            <span class="big-amount__label">Amount Received</span>
+            <h1 class="big-amount__number">
+              <Money amount={amountPaid} currency={'USD'} />
+            </h1>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -249,8 +252,5 @@ export default compose(
   })),
   withAccounts(({ accountsList }) => ({
     accountsList,
-  })),
-  withBills(({ paymentMadePayableBills }) => ({
-    paymentMadePayableBills,
   })),
 )(PaymentMadeFormHeader);

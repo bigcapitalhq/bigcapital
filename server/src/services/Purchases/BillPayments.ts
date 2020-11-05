@@ -1,5 +1,5 @@
 import { Inject, Service } from 'typedi';
-import { entries, omit, sumBy, difference } from 'lodash';
+import { omit, sumBy, difference } from 'lodash';
 import {
   EventDispatcher,
   EventDispatcherInterface,
@@ -172,13 +172,23 @@ export default class BillPaymentsService {
    * @param {NextFunction} next 
    * @return {void}
    */
-  private async validateBillsDueAmount(tenantId: number, billPaymentEntries: IBillPaymentEntryDTO[]) {
+  private async validateBillsDueAmount(
+    tenantId: number,
+    billPaymentEntries: IBillPaymentEntryDTO[],
+    oldPaymentEntries: IBillPaymentEntry[] = []
+  ) {
     const { Bill } = this.tenancy.models(tenantId);
     const billsIds = billPaymentEntries.map((entry: IBillPaymentEntryDTO) => entry.billId);
 
     const storedBills = await Bill.query().whereIn('id', billsIds);
     const storedBillsMap = new Map(
-      storedBills.map((bill: any) => [bill.id, bill]),
+      storedBills
+        .map((bill) => {
+          const oldEntries = oldPaymentEntries.filter(entry => entry.billId === bill.id);
+          const oldPaymentAmount = sumBy(oldEntries, 'paymentAmount') || 0;
+
+          return [bill.id, { ...bill, dueAmount: bill.dueAmount + oldPaymentAmount }];
+        }),
     );
     interface invalidPaymentAmountError{
       index: number,
@@ -328,7 +338,7 @@ export default class BillPaymentsService {
     await this.validateBillsExistance(tenantId, billPaymentObj.entries, billPaymentDTO.vendorId);
 
     // Validates the bills due payment amount.
-    await this.validateBillsDueAmount(tenantId, billPaymentObj.entries);
+    await this.validateBillsDueAmount(tenantId, billPaymentObj.entries, oldBillPayment.entries);
 
     // Validate the payment number uniquiness.
     if (billPaymentObj.paymentNumber) {
@@ -488,27 +498,46 @@ export default class BillPaymentsService {
    * @param {number} billPaymentId - The bill payment id.
    * @return {object}
    */
-  public async getBillPayment(tenantId: number, billPaymentId: number) {
+  public async getBillPayment(tenantId: number, billPaymentId: number): Promise<{
+    billPayment: IBillPayment,
+    payableBills: IBill[],
+    paymentMadeBills: IBill[],
+  }> {
     const { BillPayment, Bill } = this.tenancy.models(tenantId);
     const billPayment = await BillPayment.query()
       .findById(billPaymentId)
-      .withGraphFetched('entries')
+      .withGraphFetched('entries.bill')
       .withGraphFetched('vendor')
       .withGraphFetched('paymentAccount');
-    
+
     if (!billPayment) {
       throw new ServiceError(ERRORS.PAYMENT_MADE_NOT_FOUND);
     }
+    const billsIds = billPayment.entries.map((entry) => entry.billId);
 
-    const payableBills = await Bill.query().onBuild((builder) => {
-      const billsIds = billPayment.entries.map((entry) => entry.billId);
+    // Retrieve all payable bills that assocaited to the payment made transaction.
+    const payableBills = await Bill.query()
+      .modify('dueBills')
+      .whereNotIn('id', billsIds)
+      .where('vendor_id', billPayment.vendorId)
+      .orderBy('bill_date', 'ASC');
 
-      builder.where('vendor_id', billPayment.vendorId);
-      builder.orWhereIn('id', billsIds);
-      builder.orderByRaw(`FIELD(id, ${billsIds.join(', ')}) DESC`);
-      builder.orderBy('bill_date', 'ASC');
-    })
-    return { billPayment, payableBills };
+    // Retrieve all payment made assocaited bills.
+    const paymentMadeBills = billPayment.entries.map((entry) => ({
+      ...(entry.bill),
+      dueAmount: (entry.bill.dueAmount + entry.paymentAmount),
+    }));
+
+    return {
+      billPayment: {
+        ...billPayment,
+        entries: billPayment.entries.map((entry) => ({
+          ...omit(entry, ['bill']),
+        })),
+      },
+      payableBills,
+      paymentMadeBills,
+    };
   }
 
   /**
