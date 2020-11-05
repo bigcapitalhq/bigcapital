@@ -5,6 +5,7 @@ import t from 'store/types';
 const initialState = {
   exchangeRates: {},
   loading: false,
+  views: {},
   tableQuery: {
     page_size: 5,
     page: 1,
@@ -26,17 +27,15 @@ const reducer = createReducer(initialState, {
   },
 
   [t.EXCHANGE_RATE_TABLE_LOADING]: (state, action) => {
- 
     const { loading } = action.payload;
     state.loading = loading;
   },
 
-  [t.ESTIMATES_PAGE_SET]: (state, action) => {
+  [t.EXCHANGE_RATES_PAGE_SET]: (state, action) => {
     const { customViewId, exchange_rates, pagination } = action.payload;
 
     const viewId = customViewId || -1;
     const view = state.views[viewId] || {};
-
     state.views[viewId] = {
       ...view,
       pages: {
