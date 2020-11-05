@@ -54,10 +54,9 @@ export const fetchReceipt = ({ id }) => {
     new Promise((resovle, reject) => {
       ApiService.get(`sales/receipts/${id}`)
         .then((response) => {
-          const { receipt } = response.data;
           dispatch({
             type: t.RECEIPT_SET,
-            payload: { id, receipt },
+            payload: { id, sale_receipt: response.data.sale_receipt },
           });
           resovle(response);
         })
