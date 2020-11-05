@@ -13,7 +13,7 @@ import { momentFormatter, compose, tansformDateValue } from 'utils';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 import {
-  ListSelect,
+  ContactSelecetList,
   ErrorMessage,
   FieldRequiredHint,
   Icon,
@@ -52,21 +52,6 @@ function InvoiceFormHeader({
     [],
   );
 
-  // Filter Customer
-  const filterCustomer = (query, customer, _index, exactMatch) => {
-    const normalizedTitle = customer.display_name.toLowerCase();
-    const normalizedQuery = query.toLowerCase();
-    if (exactMatch) {
-      return normalizedTitle === normalizedQuery;
-    } else {
-      return (
-        `${customer.display_name} ${normalizedTitle}`.indexOf(
-          normalizedQuery,
-        ) >= 0
-      );
-    }
-  };
-
   // handle change customer
   const onChangeCustomer = useCallback(
     (filedName) => {
@@ -99,17 +84,11 @@ function InvoiceFormHeader({
             <ErrorMessage name={'customer_id'} {...{ errors, touched }} />
           }
         >
-          <ListSelect
-            items={customers}
-            noResults={<MenuItem disabled={true} text="No results." />}
-            itemRenderer={CustomerRenderer}
-            itemPredicate={filterCustomer}
-            popoverProps={{ minimal: true }}
-            onItemSelect={onChangeCustomer('customer_id')}
-            selectedItem={values.customer_id}
-            selectedItemProp={'id'}
-            defaultText={<T id={'select_customer_account'} />}
-            labelProp={'display_name'}
+          <ContactSelecetList
+            contactsList={customers}
+            selectedContactId={values.customer_id}
+            defaultSelectText={<T id={'select_customer_account'} />}
+            onContactSelected={onChangeCustomer('customer_id')}
           />
         </FormGroup>
 

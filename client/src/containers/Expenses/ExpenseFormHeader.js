@@ -15,6 +15,7 @@ import { momentFormatter, compose, tansformDateValue } from 'utils';
 import classNames from 'classnames';
 import {
   ListSelect,
+  ContactSelecetList,
   ErrorMessage,
   AccountsSelectList,
   FieldRequiredHint,
@@ -29,7 +30,7 @@ function ExpenseFormHeader({
   currenciesList,
   accountsList,
   accountsTypes,
-  customersItems,
+  customers,
 }) {
   const [selectedItems, setSelectedItems] = useState({});
 
@@ -101,21 +102,6 @@ function ExpenseFormHeader({
     [],
   );
 
-  // Filter Customer
-  const filterCustomer = (query, customer, _index, exactMatch) => {
-    const normalizedTitle = customer.display_name.toLowerCase();
-    const normalizedQuery = query.toLowerCase();
-    if (exactMatch) {
-      return normalizedTitle === normalizedQuery;
-    } else {
-      return (
-        `${customer.display_name} ${normalizedTitle}`.indexOf(
-          normalizedQuery,
-        ) >= 0
-      );
-    }
-  };
-
   // handle change customer
   const onChangeCustomer = useCallback(
     (filedName) => {
@@ -142,17 +128,11 @@ function ExpenseFormHeader({
               />
             }
           >
-            <ListSelect
-              items={customersItems}
-              noResults={<MenuItem disabled={true} text="No results." />}
-              itemRenderer={CustomerRenderer}
-              itemPredicate={filterCustomer}
-              popoverProps={{ minimal: true }}
-              onItemSelect={onChangeCustomer('customer_id')}
-              selectedItem={values.customer_id}
-              selectedItemProp={'id'}
-              defaultText={<T id={'select_customer_account'} />}
-              labelProp={'display_name'}
+            <ContactSelecetList
+              contactsList={customers}
+              selectedContactId={values.customer_id}
+              defaultSelectText={<T id={'select_customer_account'} />}
+              onContactSelected={onChangeCustomer('customer_id')}
             />
           </FormGroup>
         </Col>
@@ -273,7 +253,7 @@ export default compose(
   withCurrencies(({ currenciesList }) => ({
     currenciesList,
   })),
-  withCustomers(({ customersItems }) => ({
-    customersItems,
+  withCustomers(({ customers }) => ({
+    customers,
   })),
 )(ExpenseFormHeader);

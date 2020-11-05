@@ -13,7 +13,7 @@ import { momentFormatter, compose, tansformDateValue } from 'utils';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 import {
-  ListSelect,
+  ContactSelecetList,
   ErrorMessage,
   FieldRequiredHint,
   Row,
@@ -49,31 +49,6 @@ function BillFormHeader({
     [setFieldValue],
   );
 
-  const vendorNameRenderer = useCallback(
-    (accept, { handleClick }) => (
-      <MenuItem
-        key={accept.id}
-        text={accept.display_name}
-        onClick={handleClick}
-      />
-    ),
-    [],
-  );
-
-  // Filter vendor name
-  const filterVendorAccount = (query, vendor, _index, exactMatch) => {
-    const normalizedTitle = vendor.display_name.toLowerCase();
-    const normalizedQuery = query.toLowerCase();
-    if (exactMatch) {
-      return normalizedTitle === normalizedQuery;
-    } else {
-      return (
-        `${vendor.display_name} ${normalizedTitle}`.indexOf(normalizedQuery) >=
-        0
-      );
-    }
-  };
-
   const handleBillNumberBlur = (event) => {
     onBillNumberChanged && onBillNumberChanged(event.currentTarget.value);
   };
@@ -96,17 +71,11 @@ function BillFormHeader({
             <ErrorMessage name={'vendor_id'} {...{ errors, touched }} />
           }
         >
-          <ListSelect
-            items={vendorItems}
-            noResults={<MenuItem disabled={true} text="No results." />}
-            itemRenderer={vendorNameRenderer}
-            itemPredicate={filterVendorAccount}
-            popoverProps={{ minimal: true }}
-            onItemSelect={onChangeSelected('vendor_id')}
-            selectedItem={values.vendor_id}
-            selectedItemProp={'id'}
-            defaultText={<T id={'select_vendor_account'} />}
-            labelProp={'display_name'}
+          <ContactSelecetList
+            contactsList={vendorItems}
+            selectedContactId={values.vendor_id}
+            defaultSelectText={ <T id={'select_vender_account'} /> }
+            onContactSelected={onChangeSelected('vendor_id')}
           />
         </FormGroup>
 
@@ -140,7 +109,7 @@ function BillFormHeader({
               className={classNames(
                 'form-group--due-date',
                 'form-group--select-list',
-                CLASSES.FILL
+                CLASSES.FILL,
               )}
               intent={errors.due_date && touched.due_date && Intent.DANGER}
               helperText={

@@ -16,7 +16,7 @@ import { CLASSES } from 'common/classes';
 import { momentFormatter, compose, tansformDateValue } from 'utils';
 import {
   AccountsSelectList,
-  ListSelect,
+  ContactSelecetList,
   ErrorMessage,
   FieldRequiredHint,
   Hint,
@@ -54,31 +54,6 @@ function PaymentReceiveFormHeader({
     },
     [setFieldValue],
   );
-
-  const handleCusomterRenderer = useCallback(
-    (custom, { handleClick }) => (
-      <MenuItem
-        key={custom.id}
-        text={custom.display_name}
-        onClick={handleClick}
-      />
-    ),
-    [],
-  );
-
-  const handleFilterCustomer = (query, customer, index, exactMatch) => {
-    const normalizedTitle = customer.display_name.toLowerCase();
-    const normalizedQuery = query.toLowerCase();
-    if (exactMatch) {
-      return normalizedTitle === normalizedQuery;
-    } else {
-      return (
-        `${customer.display_name} ${normalizedTitle}`.indexOf(
-          normalizedQuery,
-        ) >= 0
-      );
-    }
-  };
 
   const onChangeSelect = useCallback(
     (filedName) => {
@@ -124,17 +99,11 @@ function PaymentReceiveFormHeader({
               <ErrorMessage name={'customer_id'} {...{ errors, touched }} />
             }
           >
-            <ListSelect
-              items={customers}
-              noResults={<MenuItem disabled={true} text="No results." />}
-              itemRenderer={handleCusomterRenderer}
-              itemPredicate={handleFilterCustomer}
-              popoverProps={{ minimal: true }}
-              onItemSelect={onChangeSelect('customer_id')}
-              selectedItem={values.customer_id}
-              selectedItemProp={'id'}
-              defaultText={<T id={'select_customer_account'} />}
-              labelProp={'display_name'}
+            <ContactSelecetList
+              contactsList={customers}
+              selectedContactId={values.customer_id}
+              defaultSelectText={<T id={'select_customer_account'} />}
+              onContactSelected={onChangeSelect('customer_id')}
             />
           </FormGroup>
 
