@@ -10,7 +10,7 @@ import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import moment from 'moment';
 import { FormattedMessage as T, useIntl } from 'react-intl';
-import { pick, sumBy } from 'lodash';
+import { pick, sumBy, omit } from 'lodash';
 import { Intent, Alert } from '@blueprintjs/core';
 import classNames from 'classnames';
 
@@ -18,6 +18,7 @@ import { CLASSES } from 'common/classes';
 import PaymentReceiveHeader from './PaymentReceiveFormHeader';
 import PaymentReceiveItemsTable from './PaymentReceiveItemsTable';
 import PaymentReceiveFloatingActions from './PaymentReceiveFloatingActions';
+import PaymentReceiveFormFooter from './PaymentReceiveFormFooter';
 
 import withMediaActions from 'containers/Media/withMediaActions';
 import withPaymentReceivesActions from './withPaymentReceivesActions';
@@ -26,22 +27,53 @@ import { AppToaster } from 'components';
 
 import { compose } from 'utils';
 
+// Default payment receive entry.
+const defaultPaymentReceiveEntry = {
+  id: null,
+  payment_amount: null,
+  invoice_id: null,
+  due_amount: null,
+};
+
+// Form initial values.
+const defaultInitialValues = {
+  customer_id: '',
+  deposit_account_id: '',
+  payment_date: moment(new Date()).format('YYYY-MM-DD'),
+  reference_no: '',
+  payment_receive_no: '',
+  description: '',
+  full_amount: '',
+  entries: [],
+};
+
 function PaymentReceiveForm({
   // #ownProps
   paymentReceiveId,
+  mode, //edit, new
 
   //#WithPaymentReceiveActions
   requestSubmitPaymentReceive,
   requestEditPaymentReceive,
 
-  // #withPaymentReceive
+  // #withPaymentReceiveDetail
   paymentReceive,
+  paymentReceiveEntries,
 }) {
   const [amountChangeAlert, setAmountChangeAlert] = useState(false);
   const [clearLinesAlert, setClearLinesAlert] = useState(false);
   const [fullAmount, setFullAmount] = useState(null);
+  const [clearFormAlert, setClearFormAlert] = useState(false);
 
   const { formatMessage } = useIntl();
+
+  const [localPaymentEntries, setLocalPaymentEntries] = useState(paymentReceiveEntries);
+
+  useEffect(() => {
+    if (localPaymentEntries !== paymentReceiveEntries) {
+      setLocalPaymentEntries(paymentReceiveEntries);
+    }
+  }, [localPaymentEntries, paymentReceiveEntries]);
 
   // Form validation schema.
   const validationSchema = Yup.object().shape({
@@ -55,9 +87,9 @@ function PaymentReceiveForm({
       .required()
       .label(formatMessage({ id: 'deposit_account_' })),
     full_amount: Yup.number().nullable(),
-    payment_receive_no: Yup.number()
-      .required()
-      .label(formatMessage({ id: 'payment_receive_no_' })),
+    payment_receive_no: Yup.number().label(
+      formatMessage({ id: 'payment_receive_no_' }),
+    ),
     reference_no: Yup.string().min(1).max(255).nullable(),
     description: Yup.string().nullable(),
     entries: Yup.array().of(
@@ -74,36 +106,6 @@ function PaymentReceiveForm({
       }),
     ),
   });
-  // Default payment receive.
-  const defaultPaymentReceive = useMemo(
-    () => ({
-      invoice_id: '',
-      invoice_date: moment(new Date()).format('YYYY-MM-DD'),
-      invoice_no: '',
-      balance: '',
-      due_amount: '',
-      payment_amount: '',
-    }),
-    [],
-  );
-  const defaultPaymentReceiveEntry = {
-    id: null,
-    payment_amount: null,
-    invoice_id: null,
-  };
-  // Form initial values.
-  const defaultInitialValues = useMemo(
-    () => ({
-      customer_id: '',
-      deposit_account_id: '',
-      payment_date: moment(new Date()).format('YYYY-MM-DD'),
-      reference_no: '',
-      payment_receive_no: '',
-      description: '',
-      entries: [],
-    }),
-    [],
-  );
 
   // Form initial values.
   const initialValues = useMemo(
@@ -112,8 +114,11 @@ function PaymentReceiveForm({
         ? {
             ...pick(paymentReceive, Object.keys(defaultInitialValues)),
             entries: [
-              ...paymentReceive.entries.map((paymentReceive) => ({
-                ...pick(paymentReceive, Object.keys(defaultPaymentReceive)),
+              ...paymentReceiveEntries.map((paymentReceiveEntry) => ({
+                ...pick(
+                  paymentReceiveEntry,
+                  Object.keys(defaultPaymentReceiveEntry),
+                ),
               })),
             ],
           }
@@ -121,7 +126,7 @@ function PaymentReceiveForm({
             ...defaultInitialValues,
           }),
     }),
-    [paymentReceive, defaultInitialValues, defaultPaymentReceive],
+    [paymentReceive, paymentReceiveEntries],
   );
 
   // Handle form submit.
@@ -135,7 +140,7 @@ function PaymentReceiveForm({
     const entries = values.entries
       .filter((entry) => entry.invoice_id && entry.payment_amount)
       .map((entry) => ({
-        ...pick(entry, Object.keys(defaultPaymentReceiveEntry)),
+        ...omit(entry, ['due_amount']),
       }));
 
     // Calculates the total payment amount of entries.
@@ -148,6 +153,7 @@ function PaymentReceiveForm({
           intent: Intent.WARNING,
         }),
       });
+      setSubmitting(false);
       return;
     }
     const form = { ...values, entries };
@@ -196,6 +202,7 @@ function PaymentReceiveForm({
     handleSubmit,
     isSubmitting,
     touched,
+    resetForm,
   } = useFormik({
     enableReinitialize: true,
     validationSchema,
@@ -205,14 +212,29 @@ function PaymentReceiveForm({
     onSubmit: handleSubmitForm,
   });
 
+  const transformDataTableToEntries = (dataTable) => {
+    return dataTable.map((data) => ({
+      ...pick(data, Object.keys(defaultPaymentReceiveEntry)),
+    }));
+  };
+
   // Handle update data.
   const handleUpdataData = useCallback(
     (entries) => {
-      setFieldValue('entries', entries);
+      setFieldValue('entries', transformDataTableToEntries(entries));
     },
     [setFieldValue],
   );
 
+  // Handle fetch success of customer invoices entries.
+  const handleFetchEntriesSuccess = useCallback(
+    (entries) => {
+      setFieldValue('entries', transformDataTableToEntries(entries));
+    },
+    [setFieldValue],
+  );
+
+  // Handles full amount change.
   const handleFullAmountChange = useCallback(
     (value) => {
       if (value !== fullAmount) {
@@ -241,22 +263,51 @@ function PaymentReceiveForm({
     setFullAmount(amountChangeAlert);
     setAmountChangeAlert(false);
   };
+
+  // Reset entries payment amount.
+  const resetEntriesPaymentAmount = (entries) => {
+    return entries.map((entry) => ({ ...entry, payment_amount: 0 }));
+  };
   // Handle confirm clear all lines.
   const handleConfirmClearLines = useCallback(() => {
-    setFieldValue(
-      'entries',
-      values.entries.map((entry) => ({
-        ...entry,
-        payment_amount: 0,
-      })),
-    );
+    setLocalPaymentEntries(resetEntriesPaymentAmount(localPaymentEntries));
+    setFieldValue('entries', resetEntriesPaymentAmount(values.entries));
     setClearLinesAlert(false);
-  }, [setFieldValue, setClearLinesAlert, values.entries]);
+  }, [setFieldValue, setClearLinesAlert, values.entries, localPaymentEntries]);
+
+  // Handle footer clear button click.
+  const handleClearBtnClick = () => {
+    setClearFormAlert(true);
+  };
+  // Handle cancel button click of clear form alert.
+  const handleCancelClearFormAlert = () => {
+    setClearFormAlert(false);
+  };
+  // Handle confirm button click of clear form alert.
+  const handleConfirmCancelClearFormAlert = () => {
+    resetForm();
+    setClearFormAlert(false);
+    setFullAmount(null);
+  };
+
+  // Calculates the total receivable amount from due amount.
+  const receivableFullAmount = useMemo(
+    () => sumBy(values.entries, 'due_amount'),
+    [values.entries],
+  );
+
+  const fullAmountReceived = useMemo(
+    () => sumBy(values.entries, 'payment_amount'),
+    [values.entries],
+  );
 
   return (
-    <div className={classNames(
-      CLASSES.PAGE_FORM, CLASSES.PAGE_FORM_PAYMENT_RECEIVE
-    )}>
+    <div
+      className={classNames(
+        CLASSES.PAGE_FORM,
+        CLASSES.PAGE_FORM_PAYMENT_RECEIVE,
+      )}
+    >
       <form onSubmit={handleSubmit}>
         <PaymentReceiveHeader
           errors={errors}
@@ -267,15 +318,18 @@ function PaymentReceiveForm({
           paymentReceiveId={paymentReceiveId}
           customerId={values.customer_id}
           onFullAmountChanged={handleFullAmountChange}
+          receivableFullAmount={receivableFullAmount}
+          amountReceived={fullAmountReceived}
         />
         <PaymentReceiveItemsTable
           paymentReceiveId={paymentReceiveId}
           customerId={values.customer_id}
           fullAmount={fullAmount}
           onUpdateData={handleUpdataData}
-          paymentEntries={values.entries}
+          paymentReceiveEntries={localPaymentEntries}
           errors={errors?.entries}
           onClickClearAllLines={handleClearAllLines}
+          onFetchEntriesSuccess={handleFetchEntriesSuccess}
         />
         <Alert
           cancelButtonText={<T id={'cancel'} />}
@@ -285,8 +339,12 @@ function PaymentReceiveForm({
           onCancel={handleCancelAmountChangeAlert}
           onConfirm={handleConfirmAmountChangeAlert}
         >
-          <p>Are you sure to discard full amount?</p>
+          <p>
+            Changing full amount will change all credits and payment were
+            applied, Is this okay?
+          </p>
         </Alert>
+
         <Alert
           cancelButtonText={<T id={'cancel'} />}
           confirmButtonText={<T id={'ok'} />}
@@ -295,12 +353,31 @@ function PaymentReceiveForm({
           onCancel={handleCancelClearLines}
           onConfirm={handleConfirmClearLines}
         >
-          <p>Are you sure to discard full amount?</p>
+          <p>
+            Clearing the table lines will delete all credits and payment were
+            applied, Is this okay?
+          </p>
         </Alert>
+
+        <Alert
+          cancelButtonText={<T id={'cancel'} />}
+          confirmButtonText={<T id={'ok'} />}
+          intent={Intent.WARNING}
+          isOpen={clearFormAlert}
+          onCancel={handleCancelClearFormAlert}
+          onConfirm={handleConfirmCancelClearFormAlert}
+        >
+          <p>Are you sure you want to clear this transaction?</p>
+        </Alert>
+
+        <PaymentReceiveFormFooter
+          getFieldProps={getFieldProps}
+        />
 
         <PaymentReceiveFloatingActions
           isSubmitting={isSubmitting}
           paymentReceiveId={paymentReceiveId}
+          onClearClick={handleClearBtnClick}
         />
       </form>
     </div>
@@ -313,7 +390,8 @@ export default compose(
   // withPaymentReceives(({ paymentReceivesItems }) => ({
   //   paymentReceivesItems,
   // })),
-  withPaymentReceiveDetail(({ paymentReceive }) => ({
+  withPaymentReceiveDetail(({ paymentReceive, paymentReceiveEntries }) => ({
     paymentReceive,
+    paymentReceiveEntries,
   })),
 )(PaymentReceiveForm);

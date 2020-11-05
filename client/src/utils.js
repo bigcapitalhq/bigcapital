@@ -262,3 +262,15 @@ export const flatToNestedArray = (
 export const orderingLinesIndexes = (lines, attribute = 'index') => {
   return lines.map((line, index) => ({ ...line, [attribute]: index + 1 }));
 };
+
+
+export const transformToObject = (arr, key) => {
+  return arr.reduce(function(acc, cur, i) {
+    acc[key ? cur[key] : i] = cur;
+    return acc;
+  }, {});
+}
+
+export const itemsStartWith = (items, char) => {
+  return items.filter((item) => item.indexOf(char) === 0);
+};

@@ -6,6 +6,7 @@ export interface ISaleInvoice {
   paymentAmount: number,
   invoiceDate: Date,
   dueDate: Date,
+  dueAmount: number,
   entries: IItemEntry[],
 }
 

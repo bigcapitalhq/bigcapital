@@ -787,5 +787,6 @@ export default {
   invoice_number_is_not_unqiue:  'Invoice number is not unqiue',
   sale_receipt_number_not_unique: 'Receipt number is not unique',
   sale_invoice_number_is_exists: 'Sale invoice number is exists',
-  bill_number_exists:'Bill number exists'
+  bill_number_exists:'Bill number exists',
+  ok: 'Ok!',
 };

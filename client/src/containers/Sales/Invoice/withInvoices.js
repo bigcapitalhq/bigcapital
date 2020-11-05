@@ -4,9 +4,7 @@ import {
   getInvoiceCurrentPageFactory,
   getInvoicePaginationMetaFactory,
   getInvoiceTableQueryFactory,
-  getCustomerReceivableInvoicesFactory,
-  getPaymentReceivableInvoicesFactory,
-  getPaymentReceiveReceivableInvoicesFactory
+  getCustomerReceivableInvoicesEntriesFactory
 } from 'store/Invoice/invoices.selector';
 
 export default (mapState) => {
@@ -15,10 +13,7 @@ export default (mapState) => {
   const getInvoicesPaginationMeta = getInvoicePaginationMetaFactory();
   const getInvoiceTableQuery = getInvoiceTableQueryFactory();
 
-  // const getPaymentReceivableInvoices = getPaymentReceivableInvoicesFactory();
-  // const getCustomerReceivableInvoices = getCustomerReceivableInvoicesFactory();
-  
-  const getPaymentReceiveReceivableInvoices = getPaymentReceiveReceivableInvoicesFactory();
+  const getCustomerReceivableInvoicesEntries = getCustomerReceivableInvoicesEntriesFactory();
 
   const mapStateToProps = (state, props) => {
     const query = getInvoiceTableQuery(state, props);
@@ -30,8 +25,7 @@ export default (mapState) => {
       invoicesTableQuery: query,
       invoicesPageination: getInvoicesPaginationMeta(state, props, query),
       invoicesLoading: state.salesInvoices.loading,
-
-      paymentReceiveReceivableInvoices: getPaymentReceiveReceivableInvoices(state, props),
+      customerInvoiceEntries: getCustomerReceivableInvoicesEntries(state, props),
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };

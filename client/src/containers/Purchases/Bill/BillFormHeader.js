@@ -27,6 +27,7 @@ import withDialogActions from 'containers/Dialog/withDialogActions';
 
 function BillFormHeader({
   formik: { errors, touched, setFieldValue, getFieldProps, values },
+  onBillNumberChanged,
 
   //#withVendors
   vendorItems,
@@ -71,6 +72,10 @@ function BillFormHeader({
         0
       );
     }
+  };
+
+  const handleBillNumberBlur = (event) => {
+    onBillNumberChanged && onBillNumberChanged(event.currentTarget.value);
   };
 
   return (
@@ -166,6 +171,7 @@ function BillFormHeader({
             intent={errors.bill_number && touched.bill_number && Intent.DANGER}
             minimal={true}
             {...getFieldProps('bill_number')}
+            onBlur={handleBillNumberBlur}
           />
         </FormGroup>
 

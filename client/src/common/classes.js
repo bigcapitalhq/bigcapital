@@ -8,6 +8,9 @@ const CLASSES = {
   PAGE_FORM: 'page-form',
   PAGE_FORM_HEADER: 'page-form__header',
   PAGE_FORM_HEADER_PRIMARY: 'page-form__primary-section',
+  PAGE_FORM_HEADER_FIELDS: 'page-form__header-fields',
+  PAGE_FORM_HEADER_BIG_NUMBERS: 'page-form__big-numbers',
+  
   PAGE_FORM_FOOTER: 'page-form__footer',
   PAGE_FORM_FLOATING_ACTIONS: 'page-form__floating-actions',
 

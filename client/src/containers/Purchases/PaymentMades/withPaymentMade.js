@@ -5,11 +5,14 @@ import {
   getPaymentMadeCurrentPageFactory,
   getPaymentMadePaginationMetaFactory,
   getPaymentMadeTableQuery,
+  getPaymentMadeEntriesFactory
 } from 'store/PaymentMades/paymentMade.selector';
 
 export default (mapState) => {
   const getPyamentMadesItems = getPaymentMadeCurrentPageFactory();
   const getPyamentMadesPaginationMeta = getPaymentMadePaginationMetaFactory();
+  const getPaymentMadeEntries = getPaymentMadeEntriesFactory();
+
   const mapStateToProps = (state, props) => {
     const query = getPaymentMadeTableQuery(state, props);
     const mapped = {
@@ -23,8 +26,8 @@ export default (mapState) => {
         query,
       ),
       paymentMadesLoading: state.paymentMades.loading,
-      nextPaymentNumberChanged:
-        state.paymentMades.nextPaymentNumberChanged,
+      nextPaymentNumberChanged: state.paymentMades.nextPaymentNumberChanged,
+      paymentMadeEntries: getPaymentMadeEntries(state, props),
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };

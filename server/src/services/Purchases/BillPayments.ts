@@ -172,13 +172,23 @@ export default class BillPaymentsService {
    * @param {NextFunction} next 
    * @return {void}
    */
-  private async validateBillsDueAmount(tenantId: number, billPaymentEntries: IBillPaymentEntryDTO[]) {
+  private async validateBillsDueAmount(
+    tenantId: number,
+    billPaymentEntries: IBillPaymentEntryDTO[],
+    oldPaymentEntries: IBillPaymentEntry[] = []
+  ) {
     const { Bill } = this.tenancy.models(tenantId);
     const billsIds = billPaymentEntries.map((entry: IBillPaymentEntryDTO) => entry.billId);
 
     const storedBills = await Bill.query().whereIn('id', billsIds);
     const storedBillsMap = new Map(
-      storedBills.map((bill: any) => [bill.id, bill]),
+      storedBills
+        .map((bill) => {
+          const oldEntries = oldPaymentEntries.filter(entry => entry.billId === bill.id);
+          const oldPaymentAmount = sumBy(oldEntries, 'paymentAmount') || 0;
+
+          return [bill.id, { ...bill, dueAmount: bill.dueAmount + oldPaymentAmount }];
+        }),
     );
     interface invalidPaymentAmountError{
       index: number,
@@ -328,7 +338,7 @@ export default class BillPaymentsService {
     await this.validateBillsExistance(tenantId, billPaymentObj.entries, billPaymentDTO.vendorId);
 
     // Validates the bills due payment amount.
-    await this.validateBillsDueAmount(tenantId, billPaymentObj.entries);
+    await this.validateBillsDueAmount(tenantId, billPaymentObj.entries, oldBillPayment.entries);
 
     // Validate the payment number uniquiness.
     if (billPaymentObj.paymentNumber) {

@@ -83,6 +83,7 @@ function PaymentMade({
     >
       <PaymentMadeForm
         paymentMadeId={paymentMadeId}
+        mode={paymentMadeId ? 'edit' : 'new'}
       /> 
     </DashboardInsider>
   );

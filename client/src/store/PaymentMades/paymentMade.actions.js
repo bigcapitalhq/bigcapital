@@ -110,16 +110,29 @@ export const fetchPaymentMade = ({ id }) => {
             },
           });
           dispatch({
+            type: t.BILLS_ITEMS_SET,
+            payload: {
+              bills: response.data.payable_bills,
+            },
+          });
+          dispatch({
             type: t.BILLS_PAYABLE_BY_PAYMENT_ID,
             payload: {
-              billPaymentId: id,
-              bills: response.data.bill_payment.payable_bills,
+              billPaymentId: response.data.bill_payment.id,
+              bills: response.data.payable_bills,
             },
           });
           dispatch({
             type: t.BILLS_ITEMS_SET,
             payload: {
-              bills: response.data.bill_payment.payable_bills,
+              bills: response.data.payment_bills,
+            },
+          });
+          dispatch({
+            type: t.BILLS_BY_PAYMENT_ID,
+            payload: {
+              billPaymentId: response.data.bill_payment.id,
+              bills: response.data.payment_bills,
             },
           });
           resovle(response);

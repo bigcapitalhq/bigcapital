@@ -69,7 +69,7 @@ export default function PaymentReceiveItemsTableEditor ({
       },
       {
         Header: formatMessage({ id: 'Date' }),
-        id: 'invoice.invoice_date',
+        id: 'invoice_date',
         accessor: (r) => moment(r.invoice_date).format('YYYY MMM DD'),
         Cell: CellRenderer(EmptyDiv, 'invoice_date'),
         disableSortBy: true,
@@ -79,14 +79,17 @@ export default function PaymentReceiveItemsTableEditor ({
 
       {
         Header: formatMessage({ id: 'invocie_number' }),
-        accessor: (row) => `#${row?.invoice?.invoice_no}`,
+        accessor: (row) => {
+          const invNumber = row?.invoice_no || row?.id;
+          return `#INV-${invNumber}`;
+        },
         Cell: CellRenderer(EmptyDiv, 'invoice_no'),
         disableSortBy: true,
         className: '',
       },
       {
         Header: formatMessage({ id: 'invoice_amount' }),
-        accessor: 'invoice.balance',
+        accessor: 'balance',
         Cell: CellRenderer(DivFieldCell, 'balance'),
         disableSortBy: true,
         width: 100,
@@ -94,7 +97,7 @@ export default function PaymentReceiveItemsTableEditor ({
       },
       {
         Header: formatMessage({ id: 'amount_due' }),
-        accessor: 'invoice.due_amount',
+        accessor: 'due_amount',
         Cell: TotalCellRederer(DivFieldCell, 'due_amount'),
         disableSortBy: true,
         width: 150,

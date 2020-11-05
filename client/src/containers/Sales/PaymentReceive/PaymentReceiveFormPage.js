@@ -3,13 +3,14 @@ import { useParams } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
 
-import { DashboardInsider } from 'components'
+import DashboardInsider from 'components/Dashboard/DashboardInsider';
 
-// import PaymentReceiveForm from './PaymentReceiveForm';
+import PaymentReceiveForm from './PaymentReceiveForm';
 import withDashboardActions from "containers/Dashboard/withDashboardActions";
 import withAccountsActions from 'containers/Accounts/withAccountsActions';
 import withSettingsActions from 'containers/Settings/withSettingsActions';
 import withPaymentReceivesActions from './withPaymentReceivesActions';
+import withCustomersActions from 'containers/Customers/withCustomersActions';
 
 import { compose } from 'utils';
 
@@ -28,7 +29,7 @@ function PaymentReceiveFormPage({
   requestFetchOptions,
 
   // #withPaymentReceivesActions
-  requestFetchPaymentReceive
+  requestFetchPaymentReceive,
 
   // #withCustomersActions
   requestFetchCustomers
@@ -37,6 +38,8 @@ function PaymentReceiveFormPage({
   const { formatMessage } = useIntl();
 
   useEffect(() => {
+    console.log(paymentReceiveId, 'X');
+
     if (paymentReceiveId) {
       changePageTitle(formatMessage({ id: 'edit_payment_receive' }));
     } else {
@@ -72,9 +75,9 @@ function PaymentReceiveFormPage({
         fetchSettings.isFetching || 
         fetchCustomers.isFetching
       }>
-      {/* <PaymentReceiveForm
+      <PaymentReceiveForm
         paymentReceiveId={paymentReceiveId}
-      /> */}
+      />
     </DashboardInsider>
   )
 }

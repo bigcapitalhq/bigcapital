@@ -12,6 +12,7 @@ import {
   IPaginationMeta,
   IPaymentReceive,
   IPaymentReceiveDTO,
+  IPaymentReceiveEntry,
   IPaymentReceiveEntryDTO,
   IPaymentReceivesFilter,
   ISaleInvoice
@@ -158,14 +159,24 @@ export default class PaymentReceiveService {
    * @param {Response} res -
    * @param {Function} next -
    */
-  async validateInvoicesPaymentsAmount(tenantId: number, paymentReceiveEntries: IPaymentReceiveEntryDTO[]) {
+  async validateInvoicesPaymentsAmount(
+    tenantId: number,
+    paymentReceiveEntries: IPaymentReceiveEntryDTO[],
+    oldPaymentEntries: IPaymentReceiveEntry[] = [],
+  ) {
     const { SaleInvoice } = this.tenancy.models(tenantId);
     const invoicesIds = paymentReceiveEntries.map((e: IPaymentReceiveEntryDTO) => e.invoiceId);
 
     const storedInvoices = await SaleInvoice.query().whereIn('id', invoicesIds);
 
     const storedInvoicesMap = new Map(
-      storedInvoices.map((invoice: ISaleInvoice) => [invoice.id, invoice])
+      storedInvoices
+        .map((invoice: ISaleInvoice) => {
+          const oldEntries = oldPaymentEntries.filter(entry => entry.invoiceId);
+          const oldPaymentAmount = sumBy(oldEntries, 'paymentAmount') || 0,
+
+          return [invoice.id, { ...invoice, dueAmount: invoice.dueAmount + oldPaymentAmount }];
+        })
     );
     const hasWrongPaymentAmount: any[] = [];
 
@@ -301,7 +312,7 @@ export default class PaymentReceiveService {
     await this.validateInvoicesIDsExistance(tenantId, paymentReceiveDTO.customerId, paymentReceiveDTO.entries);
 
     // Validate invoice payment amount.
-    await this.validateInvoicesPaymentsAmount(tenantId, paymentReceiveDTO.entries);
+    await this.validateInvoicesPaymentsAmount(tenantId, paymentReceiveDTO.entries, oldPaymentReceive.entries);
 
     // Update the payment receive transaction.
     const paymentReceive = await PaymentReceive.query()

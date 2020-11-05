@@ -17,6 +17,7 @@ const initialState = {
     byVendorId: [],
     byBillPayamentId: [],
   },
+  byBillPayamentId: {},
 };
 
 const defaultBill = {
@@ -133,6 +134,13 @@ const reducer = createReducer(initialState, {
       _data.push(bill.id);
     });
     state.payable.byBillPayamentId[billPaymentId] = _data;
+  },
+
+  [t.BILLS_BY_PAYMENT_ID]: (state, action) => {
+    const { bills, billPaymentId } = action.payload;
+    const billsIds = bills.map((bill) => bill.id);
+
+    state.byBillPayamentId[billPaymentId] = billsIds;
   }
 });
 

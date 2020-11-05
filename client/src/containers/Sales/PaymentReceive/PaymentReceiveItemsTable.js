@@ -1,11 +1,9 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
-import { Button, Intent, Position, Tooltip } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'react-intl';
-import { Icon, CloudLoadingIndicator } from 'components';
+import { CloudLoadingIndicator } from 'components';
 import { useQuery } from 'react-query';
 import { omit } from 'lodash';
 
-import { compose, formattedAmount } from 'utils';
+import { compose } from 'utils';
 
 import withInvoices from '../Invoice/withInvoices';
 import PaymentReceiveItemsTableEditor from './PaymentReceiveItemsTableEditor';
@@ -18,55 +16,45 @@ function PaymentReceiveItemsTable({
   customerId,
   fullAmount,
   onUpdateData, 
-  paymentEntries = [],// { invoice_id: number, payment_amount: number, id?: number }
+  paymentReceiveEntries = [],
   errors,
   onClickClearAllLines,
+  onFetchEntriesSuccess,
 
   // #withInvoices
-  paymentReceiveReceivableInvoices,
-
-  // #withPaymentReceive
-  receivableInvoices,
+  customerInvoiceEntries,
 
   // #withPaymentReceiveActions
   requestFetchDueInvoices
 }) {
   const isNewMode = !paymentReceiveId;
 
-  const [tableData, setTableData] = useState([]);
-  const [localAmount, setLocalAmount] = useState(fullAmount);
-
-  const computedTableData = useMemo(() => {
-    const entriesTable = new Map(
-      paymentEntries.map((e) => [e.invoice_id, e]),
-    );
-    return receivableInvoices.map((invoice) => {
-      const entry = entriesTable.get(invoice.id);
-
-      return {
-        invoice,
-        id: null,
-        payment_amount: 0,
-        ...(entry || {}),
-      };
-    });
-  }, [
-    receivableInvoices,
-    paymentEntries,
+  // Detarmines takes payment receive invoices entries from customer receivable
+  // invoices or associated payment receive invoices.
+  const computedTableData = useMemo(() => [
+    ...(!isNewMode ? (paymentReceiveEntries || []) : []),
+    ...(isNewMode ? (customerInvoiceEntries || []) : []), 
+  ], [
+    isNewMode,
+    paymentReceiveEntries,
+    customerInvoiceEntries,
   ]);
 
+  const [tableData, setTableData] = useState(computedTableData);
+  const [localEntries, setLocalEntries] = useState(computedTableData);
+
+  const [localAmount, setLocalAmount] = useState(fullAmount);
+
   useEffect(() => {
-    setTableData(computedTableData);
-  }, [computedTableData]);
+    if (computedTableData !== localEntries) {
+      setTableData(computedTableData);
+      setLocalEntries(computedTableData);
+    }
+  }, [computedTableData, localEntries]);
 
   // Triggers `onUpdateData` prop event.
   const triggerUpdateData = useCallback((entries) => {
-    const _data = entries.map((entry) => ({
-      invoice_id: entry?.invoice?.id,
-      ...omit(entry, ['invoice']),
-      due_amount: entry?.invoice?.due_amount,
-    }))
-    onUpdateData && onUpdateData(_data);
+    onUpdateData && onUpdateData(entries);
   }, [onUpdateData]);
 
   useEffect(() => {
@@ -74,7 +62,7 @@ function PaymentReceiveItemsTable({
       let _fullAmount = fullAmount;
       
       const newTableData = tableData.map((data) => {
-        const amount = Math.min(data?.invoice?.due_amount, _fullAmount);
+        const amount = Math.min(data?.due_amount, _fullAmount);
         _fullAmount -= Math.max(amount, 0);
 
         return {
@@ -93,6 +81,7 @@ function PaymentReceiveItemsTable({
     triggerUpdateData,
   ]);
   
+  // Fetches customer receivable invoices.
   const fetchCustomerDueInvoices = useQuery(
     ['customer-due-invoices', customerId],
     (key, _customerId) => requestFetchDueInvoices(_customerId),
@@ -103,14 +92,30 @@ function PaymentReceiveItemsTable({
     'There is no receivable invoices for this customer that can be applied for this payment' :
     'Please select a customer to display all open invoices for it.';
 
+  const triggerOnFetchInvoicesSuccess = useCallback((bills) => {
+    onFetchEntriesSuccess && onFetchEntriesSuccess(bills);
+  }, [onFetchEntriesSuccess])
+
   // Handle update data.
   const handleUpdateData = useCallback((rows) => {
     triggerUpdateData(rows);
-  }, []);
+    setTableData(rows);
+  }, [triggerUpdateData]);
 
+  useEffect(() => {
+    const enabled = isNewMode && customerId;
 
-  console.log(tableData, 'XX');
-
+    if (!fetchCustomerDueInvoices.isFetching && enabled) {
+      triggerOnFetchInvoicesSuccess(computedTableData);
+    }
+  }, [
+    isNewMode,
+    customerId,
+    fetchCustomerDueInvoices.isFetching,
+    computedTableData,
+    triggerOnFetchInvoicesSuccess,
+  ]);
+ 
   return (
     <CloudLoadingIndicator isLoading={fetchCustomerDueInvoices.isFetching}>
       <PaymentReceiveItemsTableEditor
@@ -125,8 +130,8 @@ function PaymentReceiveItemsTable({
 }
 
 export default compose(
-  withInvoices(({ paymentReceiveReceivableInvoices }) => ({
-    receivableInvoices: paymentReceiveReceivableInvoices,
+  withInvoices(({ customerInvoiceEntries }) => ({
+    customerInvoiceEntries,
   })),
   withInvoiceActions,
 )(PaymentReceiveItemsTable);

@@ -280,14 +280,14 @@ export default [
   {
     path: `/payment-receive/:id/edit`,
     component: LazyLoader({
-      loader: () => import('containers/Sales/PaymentReceive/PaymentReceives'),
+      loader: () => import('containers/Sales/PaymentReceive/PaymentReceiveFormPage'),
     }),
     breadcrumb: 'Edit',
   },
   {
     path: `/payment-receive/new`,
     component: LazyLoader({
-      loader: () => import('containers/Sales/PaymentReceive/PaymentReceives'),
+      loader: () => import('containers/Sales/PaymentReceive/PaymentReceiveFormPage'),
     }),
     breadcrumb: 'New Payment Receive',
   },

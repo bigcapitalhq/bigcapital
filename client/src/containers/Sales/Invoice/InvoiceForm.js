@@ -98,7 +98,6 @@ function InvoiceForm({
       .required()
       .label(formatMessage({ id: 'due_date_' })),
     invoice_no: Yup.string()
-      .required()
       .label(formatMessage({ id: 'invoice_no_' })),
     reference_no: Yup.string().min(1).max(255),
     status: Yup.string().required(),
