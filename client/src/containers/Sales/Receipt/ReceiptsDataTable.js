@@ -152,13 +152,13 @@ function ReceiptsDataTable({
         width: 140,
         className: 'deposit_account',
       },
-      {
-        id: 'send_to_email',
-        Header: formatMessage({ id: 'email' }),
-        accessor: 'send_to_email',
-        width: 140,
-        className: 'send_to_email',
-      },
+      // {
+      //   id: 'send_to_email',
+      //   Header: formatMessage({ id: 'email' }),
+      //   accessor: 'send_to_email',
+      //   width: 140,
+      //   className: 'send_to_email',
+      // },
       {
         id: 'amount',
         Header: formatMessage({ id: 'amount' }),

@@ -120,7 +120,7 @@ function BillForm({
             then: Yup.number().required(),
           }),
         total: Yup.number().nullable(),
-        discount: Yup.number().nullable(),
+        discount: Yup.number().nullable().min(0).max(100),
         description: Yup.string().nullable(),
       }),
     ),
@@ -210,7 +210,6 @@ function BillForm({
   };
 
   const formik = useFormik({
-    // enableReinitialize: true,
     validationSchema,
     initialValues: {
       ...initialValues,

@@ -18,11 +18,13 @@ const defaultReceipt = {
 };
 
 const reducer = createReducer(initialState, {
+
   [t.RECEIPT_SET]: (state, action) => {
-    const { id, receipt } = action.payload;
+    const { id, sale_receipt } = action.payload;
     const _receipt = state.items[id] || {};
-    state.items[id] = { ...defaultReceipt, ..._receipt, ...receipt };
+    state.items[id] = { ...defaultReceipt, ..._receipt, ...sale_receipt };
   },
+
 
   [t.RECEIPTS_ITEMS_SET]: (state, action) => {
     const { sales_receipts } = action.payload;
