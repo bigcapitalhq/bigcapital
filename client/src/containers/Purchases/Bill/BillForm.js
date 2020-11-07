@@ -11,7 +11,7 @@ import moment from 'moment';
 import { Intent } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { FormattedMessage as T, useIntl } from 'react-intl';
-import { pick } from 'lodash';
+import { pick, sumBy } from 'lodash';
 import { CLASSES } from 'common/classes';
 
 import BillFormHeader from './BillFormHeader';
@@ -215,11 +215,25 @@ function BillForm({
       ...initialValues,
     },
     onSubmit: (values, { setSubmitting, setErrors, resetForm }) => {
-      setSubmitting(true);
+      const entries = values.entries.filter(
+        (item) => item.item_id && item.quantity,
+      );
+      const totalQuantity = sumBy(entries, (entry) => parseInt(entry.quantity));
+
+      if (totalQuantity === 0) {
+        AppToaster.show({
+          message: formatMessage({
+            id: 'quantity_cannot_be_zero_or_empty',
+          }),
+          intent: Intent.DANGER,
+        });
+        setSubmitting(false);
+        return;
+      }
 
       const form = {
         ...values,
-        entries: values.entries.filter((item) => item.item_id && item.quantity),
+        entries,
       };
       const requestForm = { ...form };
       if (bill && bill.id) {
@@ -311,16 +325,20 @@ function BillForm({
   }, []);
 
   // Clear page subtitle once unmount bill form page.
-  useEffect(() => () => {
-    changePageSubtitle('');
-  }, [changePageSubtitle]);
+  useEffect(
+    () => () => {
+      changePageSubtitle('');
+    },
+    [changePageSubtitle],
+  );
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM, CLASSES.PAGE_FORM_BILL)}>
       <form onSubmit={formik.handleSubmit}>
         <BillFormHeader
           formik={formik}
-          onBillNumberChanged={handleBillNumberChanged} />
+          onBillNumberChanged={handleBillNumberChanged}
+        />
 
         <EstimatesItemsTable
           formik={formik}

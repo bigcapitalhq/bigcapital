@@ -23,6 +23,7 @@ import {
   ListSelect,
   DialogContent,
   FieldRequiredHint,
+  CurrencySelectList,
 } from 'components';
 import classNames from 'classnames';
 import withExchangeRateDetail from 'containers/ExchangeRates/withExchangeRateDetail';
@@ -173,33 +174,6 @@ function ExchangeRateFormDialogContent({
     },
     [setFieldValue, selectedItems],
   );
-
-  const filterCurrencyCode = (query, currency, _index, exactMatch) => {
-    const normalizedTitle = currency.currency_code.toLowerCase();
-    const normalizedQuery = query.toLowerCase();
-
-    if (exactMatch) {
-      return normalizedTitle === normalizedQuery;
-    } else {
-      return (
-        `${currency.currency_code} ${normalizedTitle}`.indexOf(
-          normalizedQuery,
-        ) >= 0
-      );
-    }
-  };
-
-  const currencyCodeRenderer = useCallback((CurrencyCode, { handleClick }) => {
-    return (
-      <MenuItem
-        className={'exchangeRate-menu'}
-        key={CurrencyCode.id}
-        text={CurrencyCode.currency_code}
-        onClick={handleClick}
-      />
-    );
-  }, []);
-
   return (
     <DialogContent isLoading={fetchCurrencies.isFetching}>
       <form onSubmit={handleSubmit}>
@@ -232,17 +206,10 @@ function ExchangeRateFormDialogContent({
               <ErrorMessage name="currency_code" {...{ errors, touched }} />
             }
           >
-            <ListSelect
-              items={currenciesList}
-              noResults={<MenuItem disabled={true} text="No results." />}
-              itemRenderer={currencyCodeRenderer}
-              itemPredicate={filterCurrencyCode}
-              popoverProps={{ minimal: true }}
-              onItemSelect={onItemsSelect('currency_code')}
-              selectedItem={values.currency_code}
-              selectedItemProp={'currency_code'}
-              defaultText={<T id={'select_currency_code'} />}
-              labelProp={'currency_code'}
+            <CurrencySelectList
+              currenciesList={currenciesList}
+              selectedCurrencyCode={values.currency_code}
+              onCurrencySelected={onItemsSelect('currency_code')}
               disabled={action === 'edit'}
             />
           </FormGroup>

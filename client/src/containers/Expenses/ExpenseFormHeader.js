@@ -14,7 +14,7 @@ import moment from 'moment';
 import { momentFormatter, compose, tansformDateValue } from 'utils';
 import classNames from 'classnames';
 import {
-  ListSelect,
+  CurrencySelectList,
   ContactSelecetList,
   ErrorMessage,
   AccountsSelectList,
@@ -42,28 +42,6 @@ function ExpenseFormHeader({
     [setFieldValue],
   );
 
-  const currencyCodeRenderer = useCallback((item, { handleClick }) => {
-    return (
-      <MenuItem key={item.id} text={item.currency_code} onClick={handleClick} />
-    );
-  }, []);
-
-  // Filters Currency code.
-  const filterCurrencyCode = (query, currency, _index, exactMatch) => {
-    const normalizedTitle = currency.currency_code.toLowerCase();
-    const normalizedQuery = query.toLowerCase();
-
-    if (exactMatch) {
-      return normalizedTitle === normalizedQuery;
-    } else {
-      return (
-        `${currency.currency_code} ${normalizedTitle}`.indexOf(
-          normalizedQuery,
-        ) >= 0
-      );
-    }
-  };
-
   // Handles change account.
   const onChangeAccount = useCallback(
     (account) => {
@@ -89,17 +67,6 @@ function ExpenseFormHeader({
   const paymentAccounts = useMemo(
     () => accountsList.filter((a) => a?.type?.key === 'current_asset'),
     [accountsList],
-  );
-
-  const CustomerRenderer = useCallback(
-    (cutomer, { handleClick }) => (
-      <MenuItem
-        key={cutomer.id}
-        text={cutomer.display_name}
-        onClick={handleClick}
-      />
-    ),
-    [],
   );
 
   // handle change customer
@@ -205,17 +172,10 @@ function ExpenseFormHeader({
               <ErrorMessage name="currency_code" {...{ errors, touched }} />
             }
           >
-            <ListSelect
-              items={currenciesList}
-              noResults={<MenuItem disabled={true} text="No results." />}
-              itemRenderer={currencyCodeRenderer}
-              itemPredicate={filterCurrencyCode}
-              popoverProps={{ minimal: true }}
-              onItemSelect={onItemsSelect('currency_code')}
-              selectedItem={values.currency_code}
-              selectedItemProp={'currency_code'}
-              defaultText={<T id={'select_currency'} />}
-              labelProp={'currency_code'}
+            <CurrencySelectList
+              currenciesList={currenciesList}
+              selectedCurrencyCode={values.currency_code}
+              onCurrencySelected={onItemsSelect('currency_code')}
             />
           </FormGroup>
         </Col>

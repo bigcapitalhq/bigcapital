@@ -789,4 +789,6 @@ export default {
   sale_invoice_number_is_exists: 'Sale invoice number is exists',
   bill_number_exists:'Bill number exists',
   ok: 'Ok!',
+  quantity_cannot_be_zero_or_empty: 'Quantity cannot be zero or empty.',
+
 };

@@ -10,7 +10,7 @@ import { useFormik } from 'formik';
 import moment from 'moment';
 import { Intent, FormGroup, TextArea } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
-import { pick } from 'lodash';
+import { pick, sumBy } from 'lodash';
 import classNames from 'classnames';
 
 import { CLASSES } from 'common/classes';
@@ -230,6 +230,19 @@ const EstimateForm = ({
       const entries = values.entries.filter(
         (item) => item.item_id && item.quantity,
       );
+
+      const totalQuantity = sumBy(entries, (entry) => parseInt(entry.quantity));
+
+      if (totalQuantity === 0) {
+        AppToaster.show({
+          message: formatMessage({
+            id: 'quantity_cannot_be_zero_or_empty',
+          }),
+          intent: Intent.DANGER,
+        });
+        setSubmitting(false);
+        return;
+      }
       const form = {
         ...values,
         entries,
@@ -277,7 +290,6 @@ const EstimateForm = ({
       }
     },
   });
-
   useEffect(() => {
     formik.setFieldValue('estimate_number', estimateNumber);
   }, [estimateNumber]);
