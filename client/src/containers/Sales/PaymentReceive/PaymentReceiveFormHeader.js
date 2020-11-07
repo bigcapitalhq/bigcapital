@@ -164,7 +164,6 @@ function PaymentReceiveFormHeader({
             label={<T id={'payment_receive_no'} />}
             inline={true}
             className={('form-group--payment_receive_no', CLASSES.FILL)}
-            labelInfo={<FieldRequiredHint />}
             intent={
               errors.payment_receive_no &&
               touched.payment_receive_no &&

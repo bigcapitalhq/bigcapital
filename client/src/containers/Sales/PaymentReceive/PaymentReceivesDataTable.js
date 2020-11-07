@@ -95,9 +95,13 @@ function PaymentReceivesDataTable({
   const actionMenuList = useCallback(
     (paymentReceive) => (
       <Menu>
-        <MenuItem text={formatMessage({ id: 'view_details' })} />
+        <MenuItem
+          icon={<Icon icon="reader-18" />}
+          text={formatMessage({ id: 'view_details' })}
+        />
         <MenuDivider />
         <MenuItem
+          icon={<Icon icon="pen-18" />}
           text={formatMessage({ id: 'edit_payment_receive' })}
           onClick={handleEditPaymentReceive(paymentReceive)}
         />
@@ -138,7 +142,7 @@ function PaymentReceivesDataTable({
       {
         id: 'payment_receive_no',
         Header: formatMessage({ id: 'payment_receive_no' }),
-        accessor: (row) => `#${row.payment_receive_no}`,
+        accessor: (row) => (row.payment_receive_no ? `#${row.payment_receive_no}` : null),
         width: 140,
         className: 'payment_receive_no',
       },
