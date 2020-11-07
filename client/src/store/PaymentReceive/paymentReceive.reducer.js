@@ -71,9 +71,8 @@ const reducer = createReducer(initialState, {
 
   [t.PAYMENT_RECEIVES_PAGINATION_SET]: (state, action) => {
     const { pagination, customViewId } = action.payload;
-
     const mapped = {
-      pageSize: parseInt(pagination.pageSize, 10),
+      pageSize: parseInt(pagination.page_size, 10),
       page: parseInt(pagination.page, 10),
       total: parseInt(pagination.total, 10),
     };
@@ -96,7 +95,6 @@ const reducer = createReducer(initialState, {
 
     const viewId = customViewId || -1;
     const view = state.views[viewId] || {};
-
     state.views[viewId] = {
       ...view,
       pages: {

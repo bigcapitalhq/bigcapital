@@ -67,7 +67,9 @@ function PaymentReceiveForm({
 
   const { formatMessage } = useIntl();
 
-  const [localPaymentEntries, setLocalPaymentEntries] = useState(paymentReceiveEntries);
+  const [localPaymentEntries, setLocalPaymentEntries] = useState(
+    paymentReceiveEntries,
+  );
 
   useEffect(() => {
     if (localPaymentEntries !== paymentReceiveEntries) {
@@ -340,8 +342,9 @@ function PaymentReceiveForm({
           onConfirm={handleConfirmAmountChangeAlert}
         >
           <p>
-            Changing full amount will change all credits and payment were
-            applied, Is this okay?
+            <T
+              id={'changing_full_amount_will_change_all_credits_and_payment'}
+            />
           </p>
         </Alert>
 
@@ -354,8 +357,7 @@ function PaymentReceiveForm({
           onConfirm={handleConfirmClearLines}
         >
           <p>
-            Clearing the table lines will delete all credits and payment were
-            applied, Is this okay?
+            <T id={'clearing_the_table_lines_will_delete_all_credits'} />
           </p>
         </Alert>
 
@@ -367,12 +369,12 @@ function PaymentReceiveForm({
           onCancel={handleCancelClearFormAlert}
           onConfirm={handleConfirmCancelClearFormAlert}
         >
-          <p>Are you sure you want to clear this transaction?</p>
+          <p>
+            <T id={'are_you_sure_you_want_to_clear_this_transaction'} />
+          </p>
         </Alert>
 
-        <PaymentReceiveFormFooter
-          getFieldProps={getFieldProps}
-        />
+        <PaymentReceiveFormFooter getFieldProps={getFieldProps} />
 
         <PaymentReceiveFloatingActions
           isSubmitting={isSubmitting}

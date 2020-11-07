@@ -111,21 +111,21 @@ export const fetchPaymentReceivesTable = ({ query = {} }) => {
           dispatch({
             type: t.PAYMENT_RECEIVES_PAGE_SET,
             payload: {
-              payment_receives: response.data.payment_receives.results,
-              pagination: response.data.payment_receives.pagination,
+              payment_receives: response.data.payment_receives,
+              pagination: response.data.pagination,
               customViewId: response.data.customViewId || -1,
             },
           });
           dispatch({
             type: t.PAYMENT_RECEIVES_ITEMS_SET,
             payload: {
-              payment_receives: response.data.payment_receives.results,
+              payment_receives: response.data.payment_receives,
             },
           });
           dispatch({
             type: t.PAYMENT_RECEIVES_PAGINATION_SET,
             payload: {
-              pagination: response.data.payment_receives.pagination,
+              pagination: response.data.pagination,
               customViewId: response.data.customViewId || -1,
             },
           });

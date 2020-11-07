@@ -683,12 +683,12 @@ export default {
   payment_receive_no_: 'Payment receive no',
   receive_amount: 'Receive Amount',
   receive_amount_: 'Receive amount',
-  the_payment_receive_has_been_successfully_created:
-    'The payment receive has been successfully created.',
+  the_payment_has_been_received_successfully_created:
+    'The payment has been received successfully created.',
   the_payment_receive_has_been_successfully_deleted:
     'The payment receive has been successfully deleted.',
-  the_payment_receive_has_been_successfully_edited:
-    'The payment receive #{number} has been successfully edited.',
+  the_payment_has_been_received_successfully_edited:
+    'The payment has been received successfully edited.',
   once_delete_this_payment_receive_you_will_able_to_restore_it: `Once you delete this payment receive, you won\'t be able to restore it later. Are you sure you want to delete this payment receive?`,
   select_invoice: 'Select Invoice',
   payment_mades: 'Payment Mades',
@@ -784,7 +784,7 @@ export default {
   invoice_number_settings: 'Invoice Number Settings',
   receipt_number: 'Receipt Number',
   estimate_number_is_not_unqiue: 'Estimate number is not unqiue',
-  invoice_number_is_not_unqiue:  'Invoice number is not unqiue',
+  invoice_number_is_not_unqiue: 'Invoice number is not unqiue',
   sale_receipt_number_not_unique: 'Receipt number is not unique',
   sale_invoice_number_is_exists: 'Sale invoice number is exists',
   bill_number_exists: 'Bill number exists',
@@ -795,5 +795,11 @@ export default {
   opening_balance_at: 'Opening balance at',
   opening_balance: 'Opening balance',
   balance_currency: 'Balance currency',
-  financial_details: 'Financial details'
+  financial_details: 'Financial details',
+  are_you_sure_you_want_to_clear_this_transaction:
+    'Are you sure you want to clear this transaction?',
+  clearing_the_table_lines_will_delete_all_credits:
+    'Clearing the table lines will delete all credits and payment were applied, Is this okay?',
+  changing_full_amount_will_change_all_credits_and_payment:
+    '  Changing full amount will change all credits and payment were applied, Is this okay?',
 };
