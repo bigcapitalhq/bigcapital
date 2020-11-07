@@ -7,6 +7,10 @@ import { compose } from 'utils';
 const CurrencyFormDialogContent = lazy(() =>
   import('./CurencyFormDialogContent'),
 );
+
+/**
+ * Currency form dialog.
+ */
 function CurrencyFormDialog({
   dialogName,
   payload = { action: '', id: null },
