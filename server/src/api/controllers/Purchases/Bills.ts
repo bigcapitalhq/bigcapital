@@ -338,7 +338,6 @@ export default class BillsController extends BaseController {
         });
       }
     }
-    console.log(error.errorType);
     next(error);    
   }
 }

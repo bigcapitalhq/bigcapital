@@ -103,7 +103,7 @@ function MakeJournalEntriesTable({
   onClickClearAllLines,
   defaultRow,
   values,
-  formik: { errors, setFieldValue },
+  errors, setFieldValue,
 }) {
   const [rows, setRows] = useState([]);
   const { formatMessage } = useIntl();

@@ -20,7 +20,7 @@ export default (mapState) => {
       manualJournalsPagination: getManualJournalsPagination(state, props, query),
       manualJournalsLoading: state.manualJournals.loading,
 
-      nextJournalNumberChanged: state.manualJournals.nextJournalNumberChanged,
+      journalNumberChanged: state.manualJournals.journalNumberChanged,
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };

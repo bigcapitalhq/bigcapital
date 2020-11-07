@@ -3,10 +3,10 @@ import { Intent, Button } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'react-intl';
 
 export default function MakeJournalEntriesFooter({
-  formik: { isSubmitting },
+  isSubmitting,
   onSubmitClick,
   onCancelClick,
-  manualJournal,
+  manualJournalId,
 }) {
   return (
     <div>
@@ -19,11 +19,7 @@ export default function MakeJournalEntriesFooter({
             onSubmitClick({ publish: true, redirect: true });
           }}
         >
-          {manualJournal && manualJournal.id ? (
-            <T id={'edit'} />
-          ) : (
-            <T id={'save'} />
-          )}
+          {manualJournalId ? <T id={'edit'} /> : <T id={'save'} />}
         </Button>
 
         <Button

@@ -36,7 +36,10 @@ function MakeJournalEntriesPage({
     requestFetchCustomers(),
   );
 
-  const fetchSettings = useQuery(['settings'], () => requestFetchOptions({}));
+  const fetchSettings = useQuery(
+    ['settings'],
+    () => requestFetchOptions({}),
+  );
 
   const fetchJournal = useQuery(
     ['manual-journal', id],
