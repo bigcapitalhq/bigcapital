@@ -274,3 +274,7 @@ export const transformToObject = (arr, key) => {
 export const itemsStartWith = (items, char) => {
   return items.filter((item) => item.indexOf(char) === 0);
 };
+
+export const saveInvoke = (func, ...rest) => {
+  return func && func(...rest);
+}

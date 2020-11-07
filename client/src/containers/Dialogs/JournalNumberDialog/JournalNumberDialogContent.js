@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { DialogContent } from 'components';
 import { useQuery, queryCache } from 'react-query';
 
@@ -29,29 +29,40 @@ function JournalNumberDialogContent({
   // #withManualJournalsActions
   setJournalNumberChanged,
 }) {
-  const fetchSettings = useQuery(['settings'], () => requestFetchOptions({}));
+  const [isChanged, setIsChanged] = useState(false);
+  
+  const fetchSettings = useQuery(
+    ['settings', { group: 'manual_journal' }],
+    () => requestFetchOptions({}),
+    {
+      onSuccess: () => {
+        if (isChanged) {
+          setJournalNumberChanged(true);
+          setIsChanged(false);
+        }
+      }
+    }
+  );
 
   const handleSubmitForm = (values, { setSubmitting }) => {
-    const options = optionsMapToArray(values).map((option) => {
-      return { key: option.key, ...option, group: 'manual_journals' };
-    });
+    const options = optionsMapToArray(values).map((option) => ({
+      key: option.key, ...option, group: 'manual_journals',
+    }));
 
     requestSubmitOptions({ options }).then(() => {
       setSubmitting(false);
+      setIsChanged(true);
+      
+      queryCache.invalidateQueries('settings');
       closeDialog('journal-number-form');
-      setJournalNumberChanged(true);
-
-      setTimeout(() => {
-        queryCache.invalidateQueries('settings');
-      }, 250);
     }).catch(() => {
       setSubmitting(false);
     });
   };
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     closeDialog('journal-number-form');
-  };
+  }, [closeDialog]);
 
   return (
     <DialogContent isLoading={fetchSettings.isFetching}>
@@ -62,15 +73,15 @@ function JournalNumberDialogContent({
         onClose={handleClose}
       />
     </DialogContent>
-  )
+  );
 }
 
 export default compose(
   withDialogActions,
   withSettingsActions,
   withSettings(({ manualJournalsSettings }) => ({
-    nextNumber: manualJournalsSettings?.next_number,
-    numberPrefix: manualJournalsSettings?.number_prefix,
+    nextNumber: manualJournalsSettings?.nextNumber,
+    numberPrefix: manualJournalsSettings?.numberPrefix,
   })),
   withManualJournalsActions,
 )(JournalNumberDialogContent);

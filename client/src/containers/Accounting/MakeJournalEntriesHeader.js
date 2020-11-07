@@ -11,7 +11,7 @@ import { FormattedMessage as T } from 'react-intl';
 import { Row, Col } from 'react-grid-system';
 import moment from 'moment';
 import classNames from 'classnames';
-import { momentFormatter, tansformDateValue } from 'utils';
+import { momentFormatter, tansformDateValue, saveInvoke } from 'utils';
 import {
   CurrenciesSelectList,
   ErrorMessage,
@@ -27,7 +27,14 @@ import withDialogActions from 'containers/Dialog/withDialogActions';
 import { compose } from 'utils';
 
 function MakeJournalEntriesHeader({
-  formik: { errors, touched, values, setFieldValue, getFieldProps },
+  errors,
+  touched,
+  values,
+  setFieldValue,
+  getFieldProps,
+
+  // #ownProps
+  onJournalNumberChanged,
 
   // #withDialog
   openDialog,
@@ -42,6 +49,11 @@ function MakeJournalEntriesHeader({
   const handleJournalNumberChange = useCallback(() => {
     openDialog('journal-number-form', {});
   }, [openDialog]);
+
+  // Handle journal number field blur event.
+  const handleJournalNumberChanged = (event) => {
+    saveInvoke(onJournalNumberChanged, event.currentTarget.value);
+  };
 
   return (
     <div class="make-journal-entries__header">
@@ -82,6 +94,7 @@ function MakeJournalEntriesHeader({
                 }}
               />}
               {...getFieldProps('journal_number')}
+              onBlur={handleJournalNumberChanged}
             />
           </FormGroup>
         </Col>

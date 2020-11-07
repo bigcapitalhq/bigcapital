@@ -52,6 +52,7 @@ function MakeJournalEntriesForm({
   // #withJournalsActions
   requestMakeJournalEntries,
   requestEditManualJournal,
+  setJournalNumberChanged,
 
   // #withDashboard
   changePageTitle,
@@ -60,12 +61,11 @@ function MakeJournalEntriesForm({
   // #withSettings
   journalNextNumber,
   journalNumberPrefix,
-  
+
   // #withManualJournals
-  nextJournalNumberChanged,
+  journalNumberChanged,
 
-  setJournalNumberChanged,
-
+  // #ownProps
   manualJournalId,
   manualJournal,
   onFormSubmit,
@@ -93,7 +93,7 @@ function MakeJournalEntriesForm({
   };
 
   useEffect(() => {
-    if (manualJournal && manualJournal.id) {
+    if (manualJournal && manualJournal.id) {  
       changePageTitle(formatMessage({ id: 'edit_journal' }));
       changePageSubtitle(`No. ${manualJournal.journal_number}`);
     } else {
@@ -161,8 +161,9 @@ function MakeJournalEntriesForm({
     [],
   );
 
-  const journalNumber = (journalNumberPrefix) ?
-    `${journalNumberPrefix}-${journalNextNumber}` : journalNextNumber;
+  const journalNumber = journalNumberPrefix
+    ? `${journalNumberPrefix}-${journalNextNumber}`
+    : journalNextNumber;
 
   const defaultInitialValues = useMemo(
     () => ({
@@ -269,12 +270,20 @@ function MakeJournalEntriesForm({
     }
   };
 
-  const formik = useFormik({
+  const {
+    values,
+    errors,
+    setFieldError,
+    setFieldValue,
+    handleSubmit,
+    getFieldProps,
+    touched,
+    isSubmitting
+  } = useFormik({
     validationSchema,
-    initialValues: {
-      ...initialValues,
-    },
-    onSubmit: async (values, { setErrors, setSubmitting, resetForm }) => {
+    initialValues,
+    onSubmit: (values, { setErrors, setSubmitting, resetForm }) => {
+      setSubmitting(true);
       const entries = values.entries.filter(
         (entry) => entry.debit || entry.credit,
       );
@@ -369,17 +378,24 @@ function MakeJournalEntriesForm({
   });
 
   useEffect(() => {
-    formik.setFieldValue('journal_number', journalNumber);
-    setJournalNumberChanged(false);
-  }, [nextJournalNumberChanged, journalNumber]);
+    if (journalNumberChanged) {
+      setFieldValue('journal_number', journalNumber);
+      setJournalNumberChanged(false);
+    }
+  }, [journalNumberChanged, setJournalNumberChanged, journalNumber, setFieldValue]);
+
+  // Change page subtitle.
+  useEffect(() => {
+    changePageSubtitle(`No. ${journalNumber}`);
+  }, [changePageSubtitle, journalNumber]);
 
   const handleSubmitClick = useCallback(
     (payload) => {
       setPayload(payload);
       // formik.resetForm();
-      formik.handleSubmit();
+      handleSubmit();
     },
-    [setPayload, formik],
+    [setPayload, handleSubmit],
   );
 
   const handleCancelClick = useCallback(
@@ -401,38 +417,53 @@ function MakeJournalEntriesForm({
   );
 
   // Handle click on add a new line/row.
-  const handleClickAddNewRow = () => {
-    formik.setFieldValue(
+  const handleClickAddNewRow = useCallback(() => {
+    setFieldValue(
       'entries',
-      reorderingEntriesIndex([...formik.values.entries, defaultEntry]),
+      reorderingEntriesIndex([...values.entries, defaultEntry]),
     );
-  };
+  }, [values.entries, defaultEntry, setFieldValue]);
 
   // Handle click `Clear all lines` button.
-  const handleClickClearLines = () => {
-    formik.setFieldValue(
+  const handleClickClearLines = useCallback(() => {
+    setFieldValue(
       'entries',
       reorderingEntriesIndex([...repeatValue(defaultEntry, 4)]),
     );
-  };
+  }, [defaultEntry, setFieldValue]);
+
+  // Handle journal number field change.
+  const handleJournalNumberChanged = useCallback(
+    (journalNumber) => {
+      changePageSubtitle(`No. ${journalNumber}`);
+    },
+    [changePageSubtitle],
+  );
 
   return (
     <div class="make-journal-entries">
-      <form onSubmit={formik.handleSubmit}>
-        <MakeJournalEntriesHeader formik={formik} />
-
+      <form onSubmit={handleSubmit}>
+        <MakeJournalEntriesHeader
+          errors={errors}
+          touched={touched}
+          values={values}
+          setFieldValue={setFieldValue}
+          getFieldProps={getFieldProps}
+          onJournalNumberChanged={handleJournalNumberChanged}
+        />
         <MakeJournalEntriesTable
-          values={formik.values.entries}
-          formik={formik}
+          values={values.entries}
+          errors={errors}
+          setFieldValue={setFieldValue}
           defaultRow={defaultEntry}
           onClickClearAllLines={handleClickClearLines}
           onClickAddNewRow={handleClickAddNewRow}
         />
         <MakeJournalEntriesFooter
-          formik={formik}
+          isSubmitting={isSubmitting}
           onSubmitClick={handleSubmitClick}
           onCancelClick={handleCancelClick}
-          manualJournal={manualJournal}
+          manualJournal={manualJournalId}
         />
       </form>
 
@@ -449,15 +480,15 @@ function MakeJournalEntriesForm({
 export default compose(
   withJournalsActions,
   withManualJournalDetail,
-  withManualJournals(({ nextJournalNumberChanged }) => ({
-    nextJournalNumberChanged,
+  withManualJournals(({ journalNumberChanged }) => ({
+    journalNumberChanged,
   })),
   withAccountsActions,
   withDashboardActions,
   withMediaActions,
   withSettings(({ manualJournalsSettings }) => ({
     journalNextNumber: manualJournalsSettings.nextNumber,
-    journalNumberPrefix: manualJournalsSettings.numberPrefix
+    journalNumberPrefix: manualJournalsSettings.numberPrefix,
   })),
   withManualJournalsActions,
 )(MakeJournalEntriesForm);

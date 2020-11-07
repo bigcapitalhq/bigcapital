@@ -249,7 +249,11 @@ export default class ItemsController extends BaseController {
       filter.filterRoles = JSON.parse(filter.stringifiedFilterRoles);
     }
     try {
-      const { items, pagination, filterMeta } = await this.itemsService.itemsList(tenantId, filter);
+      const {
+        items,
+        pagination,
+        filterMeta
+      } = await this.itemsService.itemsList(tenantId, filter);
 
       return res.status(200).send({
         items,

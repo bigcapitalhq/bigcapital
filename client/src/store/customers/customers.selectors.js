@@ -17,3 +17,10 @@ export const getCustomersItems = createSelector(
       : [];  
   },
 );
+
+export const getCustomersListFactory = () => createSelector(
+  customersItemsSelector,
+  (customersItems) => {
+    return Object.values(customersItems);
+  }
+);
