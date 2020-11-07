@@ -10,7 +10,7 @@ import { useFormik } from 'formik';
 import moment from 'moment';
 import { Intent, FormGroup, TextArea } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
-import { pick } from 'lodash';
+import { pick, sumBy } from 'lodash';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 
@@ -97,8 +97,7 @@ function InvoiceForm({
     due_date: Yup.date()
       .required()
       .label(formatMessage({ id: 'due_date_' })),
-    invoice_no: Yup.string()
-      .label(formatMessage({ id: 'invoice_no_' })),
+    invoice_no: Yup.string().label(formatMessage({ id: 'invoice_no_' })),
     reference_no: Yup.string().min(1).max(255),
     status: Yup.string().required(),
     invoice_message: Yup.string()
@@ -127,7 +126,7 @@ function InvoiceForm({
             is: (quantity, rate) => quantity || rate,
             then: Yup.number().required(),
           }),
-          discount: Yup.number().nullable().min(0).max(100),
+        discount: Yup.number().nullable().min(0).max(100),
         description: Yup.string().nullable(),
       }),
     ),
@@ -232,6 +231,18 @@ function InvoiceForm({
       const entries = values.entries.filter(
         (item) => item.item_id && item.quantity,
       );
+      const totalQuantity = sumBy(entries, (entry) => parseInt(entry.quantity));
+
+      if (totalQuantity === 0) {
+        AppToaster.show({
+          message: formatMessage({
+            id: 'quantity_cannot_be_zero_or_empty',
+          }),
+          intent: Intent.DANGER,
+        });
+        setSubmitting(false);
+        return;
+      }
       const form = {
         ...values,
         entries,
@@ -279,6 +290,7 @@ function InvoiceForm({
       }
     },
   });
+
   useEffect(() => {
     formik.setFieldValue('invoice_no', invoiceNumber);
   }, [invoiceNumber]);
