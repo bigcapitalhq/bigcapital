@@ -38,7 +38,7 @@ export default class PaymentReceive extends TenantModel {
           to: 'contacts.id',
         },
         filter(query) {
-          query.where('contact_type', 'Customer');
+          query.where('contact_service', 'customer');
         }
       },
 

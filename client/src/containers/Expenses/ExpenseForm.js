@@ -211,7 +211,7 @@ function ExpenseForm({
     initialValues: {
       ...initialValues,
     },
-    onSubmit: async (values, { setSubmitting, setErrors, resetForm }) => {
+    onSubmit: (values, { setSubmitting, setErrors, resetForm }) => {
       setSubmitting(true);
       const totalAmount = values.categories.reduce((total, item) => {
         return total + item.amount;
