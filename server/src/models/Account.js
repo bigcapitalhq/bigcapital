@@ -11,7 +11,7 @@ import DependencyGraph from 'lib/DependencyGraph';
 
 export default class Account extends TenantModel {
   /**
-   * Table name
+   * Table name.
    */
   static get tableName() {
     return 'accounts';

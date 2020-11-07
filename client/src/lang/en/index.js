@@ -787,8 +787,13 @@ export default {
   invoice_number_is_not_unqiue:  'Invoice number is not unqiue',
   sale_receipt_number_not_unique: 'Receipt number is not unique',
   sale_invoice_number_is_exists: 'Sale invoice number is exists',
-  bill_number_exists:'Bill number exists',
+  bill_number_exists: 'Bill number exists',
   ok: 'Ok!',
   quantity_cannot_be_zero_or_empty: 'Quantity cannot be zero or empty.',
-
+  customer_email: 'Customer email',
+  customer_phone_number: 'Customer phone number',
+  opening_balance_at: 'Opening balance at',
+  opening_balance: 'Opening balance',
+  balance_currency: 'Balance currency',
+  financial_details: 'Financial details'
 };

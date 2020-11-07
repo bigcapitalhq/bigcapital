@@ -32,7 +32,9 @@ import CloudLoadingIndicator from './CloudLoadingIndicator';
 import MoneyExchangeRate from './MoneyExchangeRate';
 import ContactSelecetList from './ContactSelecetList';
 import CurrencySelectList from './CurrencySelectList'
-
+import SalutationList from './SalutationList';
+import DisplayNameList from './DisplayNameList';
+import MoneyInputGroup from './MoneyInputGroup';
 
 const Hint = FieldHint;
 
@@ -70,6 +72,9 @@ export {
   Row,
   CloudLoadingIndicator,
   MoneyExchangeRate,
-  ContactSelecetList ,
-  CurrencySelectList
+  ContactSelecetList,
+  CurrencySelectList,
+  DisplayNameList,
+  SalutationList,
+  MoneyInputGroup,
 };

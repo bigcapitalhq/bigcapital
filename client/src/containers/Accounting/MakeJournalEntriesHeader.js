@@ -4,13 +4,14 @@ import {
   FormGroup,
   Intent,
   Position,
-  Classes,
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { FormattedMessage as T } from 'react-intl';
 import { Row, Col } from 'react-grid-system';
 import moment from 'moment';
 import classNames from 'classnames';
+
+import { CLASSES } from 'common/classes';
 import { momentFormatter, tansformDateValue, saveInvoke } from 'utils';
 import {
   CurrenciesSelectList,
@@ -19,7 +20,7 @@ import {
   FieldHint,
   FieldRequiredHint,
   Icon,
-  InputPrependButton
+  InputPrependButton,
 } from 'components';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
@@ -75,24 +76,25 @@ function MakeJournalEntriesHeader({
               <ErrorMessage name="journal_number" {...{ errors, touched }} />
             }
             fill={true}
-            
           >
             <InputGroup
               intent={
                 errors.journal_number && touched.journal_number && Intent.DANGER
               }
               fill={true}
-              rightElement={<InputPrependButton
-                buttonProps={{
-                  onClick: handleJournalNumberChange,
-                  icon: (<Icon icon={'settings-18'} />)
-                }}
-                tooltip={true}
-                tooltipProps={{
-                  content: 'Setting your auto-generated journal number',
-                  position: Position.BOTTOM_LEFT,
-                }}
-              />}
+              rightElement={
+                <InputPrependButton
+                  buttonProps={{
+                    onClick: handleJournalNumberChange,
+                    icon: <Icon icon={'settings-18'} />,
+                  }}
+                  tooltip={true}
+                  tooltipProps={{
+                    content: 'Setting your auto-generated journal number',
+                    position: Position.BOTTOM_LEFT,
+                  }}
+                />
+              }
               {...getFieldProps('journal_number')}
               onBlur={handleJournalNumberChanged}
             />
@@ -106,6 +108,7 @@ function MakeJournalEntriesHeader({
             intent={errors.date && touched.date && Intent.DANGER}
             helperText={<ErrorMessage name="date" {...{ errors, touched }} />}
             minimal={true}
+            className={classNames(CLASSES.FILL)}
           >
             <DateInput
               {...momentFormatter('YYYY/MM/DD')}
@@ -169,7 +172,7 @@ function MakeJournalEntriesHeader({
             className={classNames(
               'form-group--account-type',
               'form-group--select-list',
-              Classes.FILL,
+              CLASSES.FILL,
             )}
           >
             <InputGroup
@@ -183,13 +186,20 @@ function MakeJournalEntriesHeader({
         </Col>
 
         <Col width={230}>
-          <CurrenciesSelectList className={Classes.FILL} />
+          <FormGroup
+            label={<T id={'currency'} />}
+            className={classNames(
+              'form-group--select-list',
+              'form-group--currency',
+              CLASSES.FILL
+            )}
+          >
+            <CurrenciesSelectList />
+          </FormGroup>
         </Col>
       </Row>
     </div>
   );
 }
 
-export default compose(
-  withDialogActions,
-)(MakeJournalEntriesHeader);
+export default compose(withDialogActions)(MakeJournalEntriesHeader);

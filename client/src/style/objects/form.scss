@@ -313,6 +313,7 @@ $form-check-input-indeterminate-bg-image: url("data:image/svg+xml,<svg xmlns='ht
   &.#{$ns}-radio {
     .#{$ns}-control-indicator{
       border: 2px solid #cecece;
+      background-color: #fff;
 
       &::before{
         height: 14px;

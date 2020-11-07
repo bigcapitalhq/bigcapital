@@ -1,23 +1,32 @@
 import React from 'react';
-import { handleStringChange } from 'utils';
-import { useIntl } from 'react-intl';
-import { RadioGroup, Radio } from '@blueprintjs/core';
+import classNames from 'classnames';
+import { RadioGroup, Radio, FormGroup } from '@blueprintjs/core';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 
+import { handleStringChange } from 'utils';
+
+/**
+ * Customer type radio field.
+ */
 export default function RadioCustomer(props) {
   const { onChange, ...rest } = props;
   const { formatMessage } = useIntl();
 
   return (
-    <RadioGroup
+    <FormGroup
       inline={true}
-      label={formatMessage({ id: 'customer_type' })}
-      onChange={handleStringChange((value) => {
-        onChange && onChange(value);
-      })}
-      {...rest}
-    >
-      <Radio label={formatMessage({ id: 'business' })} value="business" />
-      <Radio label={formatMessage({ id: 'individual' })} value="individual" />
-    </RadioGroup>
+      label={<T id={'customer_type'} />}
+      className={classNames('form-group--customer_type')}>
+      <RadioGroup  
+        inline={true}
+        onChange={handleStringChange((value) => {
+          onChange && onChange(value);
+        })}
+        {...rest}
+      >
+        <Radio label={formatMessage({ id: 'business' })} value="business" />
+        <Radio label={formatMessage({ id: 'individual' })} value="individual" />
+      </RadioGroup>
+    </FormGroup>
   );
 }

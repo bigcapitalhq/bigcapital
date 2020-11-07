@@ -2,7 +2,6 @@ import t from 'store/types';
 import { createReducer } from '@reduxjs/toolkit';
 import { createTableQueryReducers } from 'store/queryReducers';
 import { omit } from 'lodash';
-import { journalNumberReducers } from 'store/journalNumber.reducer';
 
 const initialState = {
   items: {},
@@ -16,7 +15,6 @@ const initialState = {
   paginationMeta: {
     total: 0,
   },
-  journalNumberChanged: false,
 };
 
 const defaultJournal = {
@@ -117,8 +115,6 @@ const reducer = createReducer(initialState, {
       },
     };    
   },
-
-  ...journalNumberReducers(t.MANUAL_JOURNAL_NUMBER_CHANGED),
 });
 
 export default createTableQueryReducers('manual_journals', reducer);

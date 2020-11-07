@@ -1,16 +1,19 @@
 import React from 'react';
 import { Intent, Button } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'react-intl';
+import classNames from 'classnames';
+import { CLASSES } from 'common/classes';
 
-export default function CustomerFloatingFooter({
-  formik: { isSubmitting, resetForm },
+export default function CustomerFloatingActions({
+  isSubmitting,
+  resetForm,
   onSubmitClick,
   onCancelClick,
 
-  customer,
+  customerId,
 }) {
   return (
-    <div className={'form__floating-footer'}>
+    <div className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>
       <Button
         intent={Intent.PRIMARY}
         disabled={isSubmitting}
@@ -19,7 +22,7 @@ export default function CustomerFloatingFooter({
           onSubmitClick({ publish: true, redirect: true });
         }}
       >
-        {customer && customer.id ? <T id={'edit'} /> : <T id={'save'} />}
+        {customerId ? <T id={'edit'} /> : <T id={'save'} />}
       </Button>
 
       <Button
@@ -32,16 +35,6 @@ export default function CustomerFloatingFooter({
         }}
       >
         <T id={'save_new'} />
-      </Button>
-
-      <Button
-        className={'ml1'}
-        disabled={isSubmitting}
-        onClick={() => {
-          onSubmitClick({ publish: false, redirect: false });
-        }}
-      >
-        <T id={'save_as_draft'} />
       </Button>
 
       <Button

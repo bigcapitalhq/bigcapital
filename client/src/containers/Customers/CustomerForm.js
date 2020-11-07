@@ -1,22 +1,19 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import {
-  FormGroup,
-  Intent,
-  InputGroup,
-  Checkbox,
-} from '@blueprintjs/core';
-import { Row, Col } from 'react-grid-system';
+import { Intent } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 import { pick } from 'lodash';
+import classNames from 'classnames';
 
+import { CLASSES } from 'common/classes';
 import AppToaster from 'components/AppToaster';
-import ErrorMessage from 'components/ErrorMessage';
 
+import CustomerFormPrimarySection from './CustomerFormPrimarySection';
+import CustomerFormAfterPrimarySection from './CustomerFormAfterPrimarySection';
 import CustomersTabs from 'containers/Customers/CustomersTabs';
-import CustomerTypeRadioField from 'containers/Customers/CustomerTypeRadioField';
+import CustomerFloatingActions from './CustomerFloatingActions';
 
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withCustomerDetail from 'containers/Customers/withCustomerDetail';
@@ -26,7 +23,6 @@ import withCustomers from 'containers/Customers//withCustomers';
 import useMedia from 'hooks/useMedia';
 
 import { compose } from 'utils';
-import CustomerFloatingFooter from './CustomerFooter';
 
 function CustomerForm({
   // #withDashboardActions
@@ -73,9 +69,7 @@ function CustomerForm({
       .label(formatMessage({ id: 'customer_type_' })),
     first_name: Yup.string().trim(),
     last_name: Yup.string().trim(),
-
     company_name: Yup.string().trim(),
-
     display_name: Yup.string()
       .trim()
       .required()
@@ -153,13 +147,19 @@ function CustomerForm({
       : changePageTitle(formatMessage({ id: 'new_customer' }));
   }, [changePageTitle, customer, formatMessage]);
 
-  const formik = useFormik({
+  const {
+    setFieldValue,
+    getFieldProps,
+    errors,
+    values,
+    touched,
+    handleSubmit
+  } = useFormik({
     enableReinitialize: true,
     validationSchema: validationSchema,
     initialValues: {
       ...initialValues,
     },
-
     onSubmit: (values, { setSubmitting, resetForm, setErrors }) => {
       const formValues = { ...values, status: payload.publish };
       if (customer && customer.id) {
@@ -172,7 +172,6 @@ function CustomerForm({
               intent: Intent.SUCCESS,
             });
             setSubmitting(false);
-            // history.push('/customers');
             resetForm();
             saveInvokeSubmit({ action: 'update', ...payload });
           })
@@ -199,20 +198,7 @@ function CustomerForm({
     },
   });
 
-  const requiredSpan = useMemo(() => <span class="required">*</span>, []);
-  const handleCustomerTypeCahange = useCallback(
-    (value) => {
-      formik.setFieldValue('customer_type', value);
-    },
-    [formik.setFieldValue],
-  );
-
-  console.log(formik.values, 'ER');
-  const { errors, touched, getFieldProps, values, isSubmitting } = useMemo(
-    () => formik,
-    [formik],
-  );
-
+ 
   const initialAttachmentFiles = useMemo(() => {
     return customer && customer.media
       ? customer.media.map((attach) => ({
@@ -239,9 +225,9 @@ function CustomerForm({
   const handleSubmitClick = useCallback(
     (payload) => {
       setPayload(payload);
-      formik.handleSubmit();
+      handleSubmit();
     },
-    [setPayload, formik],
+    [setPayload, handleSubmit],
   );
 
   const handleCancelClick = useCallback(
@@ -250,180 +236,47 @@ function CustomerForm({
     },
     [onCancelForm],
   );
+
   return (
-    <div className={'customer-form'}>
-      <form onSubmit={formik.handleSubmit}>
-        <div className={'customer-form__primary-section'}>
-          <CustomerTypeRadioField
-            selectedValue={formik.values.customer_type}
-            onChange={handleCustomerTypeCahange}
-            className={'form-group--customer-type'}
-          />
-
-          <Row>
-            <Col md={3.5} className={'form-group--contact-name'}>
-              <FormGroup
-                label={<T id={'contact_name'} />}
-                inline={true}
-                intent={
-                  formik.errors.first_name &&
-                  formik.touched.first_name &&
-                  Intent.DANGER
-                }
-                helperText={
-                  <ErrorMessage name={'first_name'} {...{ errors, touched }} />
-                }
-                // className={'form-group--contact-name'}
-              >
-                <InputGroup
-                  placeholder={'First Name'}
-                  intent={
-                    formik.errors.first_name &&
-                    formik.touched.first_name &&
-                    Intent.DANGER
-                  }
-                  {...formik.getFieldProps('first_name')}
-                />
-              </FormGroup>
-            </Col>
-
-            <Col md={2}>
-              <FormGroup
-                inline={true}
-                intent={
-                  formik.errors.last_name &&
-                  formik.touched.last_name &&
-                  Intent.DANGER
-                }
-                helperText={
-                  <ErrorMessage name={'last_name'} {...{ errors, touched }} />
-                }
-                // className={'form-group--contact-name'}
-              >
-                <InputGroup
-                  placeholder={'Last Name'}
-                  intent={
-                    formik.errors.last_name &&
-                    formik.touched.last_name &&
-                    Intent.DANGER
-                  }
-                  {...formik.getFieldProps('last_name')}
-                />
-              </FormGroup>
-            </Col>
-          </Row>
-          {/* Company Name */}
-          <FormGroup
-            label={<T id={'company_name'} />}
-            className={'form-group--company_name'}
-            labelInfo={requiredSpan}
-            intent={
-              formik.errors.company_name &&
-              formik.touched.company_name &&
-              Intent.DANGER
-            }
-            inline={true}
-            helperText={
-              <ErrorMessage {...{ errors, touched }} name={'company_name'} />
-            }
-          >
-            <InputGroup
-              intent={
-                formik.errors.company_name &&
-                formik.touched.company_name &&
-                Intent.DANGER
-              }
-              {...formik.getFieldProps('company_name')}
+    <div className={classNames(CLASSES.PAGE_FORM, CLASSES.PAGE_FORM_CUSTOMER)}>
+      <form onSubmit={handleSubmit}>
+        <div class={classNames(CLASSES.PAGE_FORM_HEADER)}>
+          <div className={classNames(CLASSES.PAGE_FORM_HEADER_PRIMARY)}>
+            <CustomerFormPrimarySection
+              setFieldValue={setFieldValue}
+              getFieldProps={getFieldProps}
+              errors={errors}
+              values={values}
+              touched={touched}
             />
-          </FormGroup>
-          {/* Display Name */}
-          <FormGroup
-            label={<T id={'display_name'} />}
-            intent={
-              formik.errors.display_name &&
-              formik.touched.display_name &&
-              Intent.DANGER
-            }
-            inline={true}
-            helperText={
-              <ErrorMessage {...{ errors, touched }} name={'display_name'} />
-            }
-          >
-            <InputGroup
-              intent={
-                formik.errors.display_name &&
-                formik.touched.display_name &&
-                Intent.DANGER
-              }
-              {...formik.getFieldProps('display_name')}
+          </div>
+
+          <div className={'page-form__after-priamry-section'}>
+            <CustomerFormAfterPrimarySection
+              setFieldValue={setFieldValue}
+              getFieldProps={getFieldProps}
+              errors={errors}
+              values={values}
+              touched={touched}
             />
-          </FormGroup>
+          </div>
         </div>
-        <Row>
-          {/* Email */}
-          <Col md={6}>
-            <FormGroup
-              label={<T id={'email'} />}
-              intent={
-                formik.errors.email && formik.touched.email && Intent.DANGER
-              }
-              helperText={
-                <ErrorMessage name={'email'} {...{ errors, touched }} />
-              }
-              className={'form-group--email'}
-              inline={true}
-            >
-              <InputGroup
-                intent={
-                  formik.errors.email && formik.touched.email && Intent.DANGER
-                }
-                {...formik.getFieldProps('email')}
-              />
-            </FormGroup>
-          </Col>
 
-          {/* Active checkbox */}
-          <FormGroup label={' '} inline={true} className={'form-group--active'}>
-            <Checkbox
-              inline={true}
-              label={<T id={'active'} />}
-              defaultChecked={formik.values.active}
-              {...formik.getFieldProps('active')}
-            />
-          </FormGroup>
-        </Row>
-
-        <FormGroup
-          label={<T id={'phone_number'} />}
-          intent={
-            formik.errors.work_phone &&
-            formik.touched.work_phone &&
-            Intent.DANGER
-          }
-          helperText={
-            <ErrorMessage name={'work_phone'} {...{ errors, touched }} />
-          }
-          className={'form-group--phone-number'}
-          inline={true}
-        >
-          <InputGroup
-            intent={
-              formik.errors.work_phone &&
-              formik.touched.work_phone &&
-              Intent.DANGER
-            }
-            {...formik.getFieldProps('work_phone')}
-          />
-        </FormGroup>
-
-        <CustomersTabs formik={formik} />
+        <div className={classNames(CLASSES.PAGE_FORM_TABS)}>
+          <CustomersTabs
+            setFieldValue={setFieldValue}
+            getFieldProps={getFieldProps}
+            errors={errors}
+            values={values}
+            touched={touched} />
+        </div>
       </form>
 
-      <CustomerFloatingFooter
-        formik={formik}
+      <CustomerFloatingActions
         onSubmitClick={handleSubmitClick}
         customer={customer}
         onCancelClick={handleCancelClick}
+        customerId={null}
       />
     </div>
   );

@@ -4,8 +4,15 @@ import { FormattedMessage as T, useIntl } from 'react-intl';
 import CustomerAddressTabs from './CustomerAddressTabs';
 import CustomerNotTabs from './CustomerNotTabs';
 import CustomerAttachmentTabs from './CustomerAttachmentTabs';
+import CustomerFinancialPanel from './CustomerFinancialPanel';
 
-function CustomersTabs({ formik }) {
+function CustomersTabs({
+  setFieldValue,
+  getFieldProps,
+  errors,
+  values,
+  touched,
+}) {
   const [animate, setAnimate] = useState(true);
   const { formatMessage } = useIntl();
   const handleChangeTabs = useCallback(() => {}, []);
@@ -14,25 +21,36 @@ function CustomersTabs({ formik }) {
     <div>
       <Tabs animate={animate} id={'customer-tabs'} large={true}>
         <Tab
-          id={'other'}
-          title={formatMessage({ id: 'other' })}
-          panel={'Other'}
+          id={'financial'}
+          title={formatMessage({ id: 'financial_details' })}
+          panel={<CustomerFinancialPanel
+            values={values}
+            errors={errors} 
+            setFieldValue={setFieldValue}
+            touched={touched}
+          />}
         />
         <Tab
           id={'address'}
           title={formatMessage({ id: 'address' })}
-          panel={<CustomerAddressTabs formik={formik} />}
+          panel={<CustomerAddressTabs
+            setFieldValue={setFieldValue}
+            getFieldProps={getFieldProps}
+            errors={errors}
+            values={values}
+            touched={touched}
+          />}
         />
         <Tab
           id={'attachement'}
           title={formatMessage({ id: 'attachement' })}
           panel={<CustomerAttachmentTabs />}
         />
-        <Tab
+        {/* <Tab
           id={'note'}
           title={formatMessage({ id: 'note' })}
           panel={<CustomerNotTabs formik={formik} />}
-        />
+        /> */}
       </Tabs>
     </div>
   );

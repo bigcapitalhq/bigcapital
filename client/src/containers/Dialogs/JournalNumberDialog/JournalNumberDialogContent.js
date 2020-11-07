@@ -28,20 +28,10 @@ function JournalNumberDialogContent({
 
   // #withManualJournalsActions
   setJournalNumberChanged,
-}) {
-  const [isChanged, setIsChanged] = useState(false);
-  
+}) {  
   const fetchSettings = useQuery(
-    ['settings', { group: 'manual_journal' }],
+    ['settings'],
     () => requestFetchOptions({}),
-    {
-      onSuccess: () => {
-        if (isChanged) {
-          setJournalNumberChanged(true);
-          setIsChanged(false);
-        }
-      }
-    }
   );
 
   const handleSubmitForm = (values, { setSubmitting }) => {
@@ -51,10 +41,11 @@ function JournalNumberDialogContent({
 
     requestSubmitOptions({ options }).then(() => {
       setSubmitting(false);
-      setIsChanged(true);
-      
-      queryCache.invalidateQueries('settings');
       closeDialog('journal-number-form');
+
+      setTimeout(() => {
+        queryCache.invalidateQueries('settings');
+      }, 250);
     }).catch(() => {
       setSubmitting(false);
     });

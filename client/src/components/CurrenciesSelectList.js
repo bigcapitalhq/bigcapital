@@ -2,18 +2,14 @@
 
 import React, {useCallback} from 'react';
 import {
-  FormGroup,
   MenuItem,
   Button,
 } from '@blueprintjs/core';
 import {
   Select
 } from '@blueprintjs/select';
-import classNames from 'classnames';
-import { FormattedMessage as T } from 'react-intl';
 
 export default function CurrenciesSelectList({
-  formGroupProps,
   selectProps,
   onItemSelect,
   className,
@@ -43,30 +39,18 @@ export default function CurrenciesSelectList({
   };
 
   return (
-    <FormGroup
-      label={<T id={'currency'}/>}
-      className={
-        classNames(
-          'form-group--select-list',
-          'form-group--currency',
-          className,
-        )
-      }
-      {...formGroupProps}
+    <Select
+      items={currencies}
+      noResults={<MenuItem disabled={true} text='No results.' />}
+      itemRenderer={currencyItem}
+      itemPredicate={filterCurrenciesPredicator}
+      popoverProps={{ minimal: true }}
+      onItemSelect={onCurrencySelect}
+      {...selectProps}
     >
-      <Select
-        items={currencies}
-        noResults={<MenuItem disabled={true} text='No results.' />}
-        itemRenderer={currencyItem}
-        itemPredicate={filterCurrenciesPredicator}
-        popoverProps={{ minimal: true }}
-        onItemSelect={onCurrencySelect}
-        {...selectProps}
-      >
-        <Button
-          text={'USD US dollars'}
-        />
-      </Select>
-    </FormGroup>
+      <Button
+        text={'USD US dollars'}
+      />
+    </Select>
   );
 }

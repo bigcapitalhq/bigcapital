@@ -21,14 +21,13 @@ import withManualJournalDetail from 'containers/Accounting/withManualJournalDeta
 import withAccountsActions from 'containers/Accounts/withAccountsActions';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withSettings from 'containers/Settings/withSettings';
-import withManualJournals from './withManualJournals';
 
 import AppToaster from 'components/AppToaster';
 import Dragzone from 'components/Dragzone';
 import withMediaActions from 'containers/Media/withMediaActions';
 
 import useMedia from 'hooks/useMedia';
-import { compose, repeatValue } from 'utils';
+import { compose, repeatValue, orderingLinesIndexes } from 'utils';
 import withManualJournalsActions from './withManualJournalsActions';
 
 const ERROR = {
@@ -52,7 +51,6 @@ function MakeJournalEntriesForm({
   // #withJournalsActions
   requestMakeJournalEntries,
   requestEditManualJournal,
-  setJournalNumberChanged,
 
   // #withDashboard
   changePageTitle,
@@ -61,9 +59,6 @@ function MakeJournalEntriesForm({
   // #withSettings
   journalNextNumber,
   journalNumberPrefix,
-
-  // #withManualJournals
-  journalNumberChanged,
 
   // #ownProps
   manualJournalId,
@@ -143,12 +138,6 @@ function MakeJournalEntriesForm({
 
   const [payload, setPayload] = useState({});
 
-  const reorderingEntriesIndex = (entries) =>
-    entries.map((entry, index) => ({
-      ...entry,
-      index: index + 1,
-    }));
-
   const defaultEntry = useMemo(
     () => ({
       index: 0,
@@ -188,7 +177,7 @@ function MakeJournalEntriesForm({
           }
         : {
             ...defaultInitialValues,
-            entries: reorderingEntriesIndex(defaultInitialValues.entries),
+            entries: orderingLinesIndexes(defaultInitialValues.entries),
           }),
     }),
     [manualJournal, defaultInitialValues, defaultEntry],
@@ -377,12 +366,9 @@ function MakeJournalEntriesForm({
     },
   });
 
-  useEffect(() => {
-    if (journalNumberChanged) {
-      setFieldValue('journal_number', journalNumber);
-      setJournalNumberChanged(false);
-    }
-  }, [journalNumberChanged, setJournalNumberChanged, journalNumber, setFieldValue]);
+  useEffect(() => {    
+    setFieldValue('journal_number', journalNumber);
+  }, [journalNumber, setFieldValue]);
 
   // Change page subtitle.
   useEffect(() => {
@@ -420,7 +406,7 @@ function MakeJournalEntriesForm({
   const handleClickAddNewRow = useCallback(() => {
     setFieldValue(
       'entries',
-      reorderingEntriesIndex([...values.entries, defaultEntry]),
+      orderingLinesIndexes([...values.entries, defaultEntry]),
     );
   }, [values.entries, defaultEntry, setFieldValue]);
 
@@ -428,7 +414,7 @@ function MakeJournalEntriesForm({
   const handleClickClearLines = useCallback(() => {
     setFieldValue(
       'entries',
-      reorderingEntriesIndex([...repeatValue(defaultEntry, 4)]),
+      orderingLinesIndexes([...repeatValue(defaultEntry, 4)]),
     );
   }, [defaultEntry, setFieldValue]);
 
@@ -480,9 +466,6 @@ function MakeJournalEntriesForm({
 export default compose(
   withJournalsActions,
   withManualJournalDetail,
-  withManualJournals(({ journalNumberChanged }) => ({
-    journalNumberChanged,
-  })),
   withAccountsActions,
   withDashboardActions,
   withMediaActions,
