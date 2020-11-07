@@ -31,6 +31,8 @@ import Col from './Grid/Col';
 import CloudLoadingIndicator from './CloudLoadingIndicator';
 import MoneyExchangeRate from './MoneyExchangeRate';
 import ContactSelecetList from './ContactSelecetList';
+import CurrencySelectList from './CurrencySelectList'
+
 
 const Hint = FieldHint;
 
@@ -69,4 +71,5 @@ export {
   CloudLoadingIndicator,
   MoneyExchangeRate,
   ContactSelecetList ,
+  CurrencySelectList
 };
