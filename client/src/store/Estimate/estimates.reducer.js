@@ -13,8 +13,7 @@ const initialState = {
     page: 1,
   },
   currentViewId: -1,
-
-  estimateNumberChanged: false,
+  
 };
 
 const defaultEstimate = {

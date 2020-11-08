@@ -23,7 +23,7 @@ export default (mapState) => {
       estimatesPageination: getEstimatesPaginationMeta(state, props, query),
       estimatesLoading: state.salesEstimates.loading,
 
-      estimateNumberChanged: state.salesEstimates.estimateNumberChanged,
+      estimateNumberChanged: state.salesEstimates.journalNumberChanged,
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };

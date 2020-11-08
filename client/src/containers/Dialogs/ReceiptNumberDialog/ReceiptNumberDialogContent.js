@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { DialogContent } from 'components';
 import { useQuery, queryCache } from 'react-query';
 
 import ReferenceNumberForm from 'containers/JournalNumber/ReferenceNumberForm';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
-import withSettingsActions from 'containers/Settings/withSettingsActions';
 import withSettings from 'containers/Settings/withSettings';
+import withSettingsActions from 'containers/Settings/withSettingsActions';
+import withReceiptActions from 'containers/Sales/Receipt/withReceiptActions';
 
 import { compose, optionsMapToArray } from 'utils';
 
@@ -25,6 +26,9 @@ function ReceiptNumberDialogContent({
 
   // #withDialogActions
   closeDialog,
+
+  // #withReceiptActions
+  setReceiptNumberChanged,
 }) {
   const fetchSettings = useQuery(['settings'], () => requestFetchOptions({}));
 
@@ -40,6 +44,7 @@ function ReceiptNumberDialogContent({
 
         setTimeout(() => {
           queryCache.invalidateQueries('settings');
+          setReceiptNumberChanged(true);
         }, 250);
       })
       .catch(() => {
@@ -47,9 +52,9 @@ function ReceiptNumberDialogContent({
       });
   };
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     closeDialog('receipt-number-form');
-  };
+  }, [closeDialog]);
 
   return (
     <DialogContent isLoading={fetchSettings.isFetching}>
@@ -67,7 +72,8 @@ export default compose(
   withDialogActions,
   withSettingsActions,
   withSettings(({ receiptSettings }) => ({
-    nextNumber: receiptSettings?.next_number,
-    numberPrefix: receiptSettings?.number_prefix,
+    nextNumber: receiptSettings?.nextNumber,
+    numberPrefix: receiptSettings?.numberPrefix,
   })),
+  withReceiptActions,
 )(ReceiptNumberDialogContent);

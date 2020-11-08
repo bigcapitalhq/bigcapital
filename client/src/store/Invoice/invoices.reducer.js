@@ -1,5 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { createTableQueryReducers } from 'store/queryReducers';
+import { journalNumberChangedReducer } from 'store/journalNumber.reducer';
 
 import t from 'store/types';
 
@@ -114,7 +115,7 @@ const reducer = createReducer(initialState, {
     const { customerId, saleInvoices } = action.payload;
     const saleInvoiceIds = saleInvoices.map((saleInvoice) => saleInvoice.id);
 
-    state.receivable.byCustomerId[customerId] = saleInvoiceIds
+    state.receivable.byCustomerId[customerId] = saleInvoiceIds;
   },
 
   [t.INVOICES_BY_PAYMENT_ID]: (state, action) => {
@@ -123,6 +124,8 @@ const reducer = createReducer(initialState, {
 
     state.byPaymentReceiveId[paymentReceiveId] = saleInvoiceIds;
   },
+
+  ...journalNumberChangedReducer(t.INVOICE_NUMBER_CHANGED),
 });
 
 export default createTableQueryReducers('sales_invoices', reducer);

@@ -1,16 +1,10 @@
 import React, { useMemo, useCallback, useState } from 'react';
-import {
-  FormGroup,
-  InputGroup,
-  Intent,
-  Position,
-  MenuItem,
-} from '@blueprintjs/core';
+import { FormGroup, InputGroup, Intent, Position } from '@blueprintjs/core';
 
 import { DateInput } from '@blueprintjs/datetime';
 import { FormattedMessage as T } from 'react-intl';
 import moment from 'moment';
-import { momentFormatter, compose, tansformDateValue } from 'utils';
+import { momentFormatter, compose, tansformDateValue, saveInvoke } from 'utils';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 import {
@@ -31,10 +25,15 @@ function ReceiptFormHeader({
 
   //#withCustomers
   customers,
+
   //#withAccouts
   accountsList,
+
   //#withDialogActions
   openDialog,
+
+  // #ownProps
+  onReceiptNumberChanged,
 }) {
   const handleDateChange = useCallback(
     (date) => {
@@ -64,10 +63,14 @@ function ReceiptFormHeader({
     openDialog('receipt-number-form', {});
   }, [openDialog]);
 
+  const handleReceiptNumberChanged = (event) => {
+    saveInvoke(onReceiptNumberChanged, event.currentTarget.value);
+  };
+
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
       <div className={classNames(CLASSES.PAGE_FORM_HEADER_PRIMARY)}>
-        {/*- Customer name -*/}
+        {/* ----------- Customer name ----------- */}
         <FormGroup
           label={<T id={'customer_name'} />}
           inline={true}
@@ -90,7 +93,7 @@ function ReceiptFormHeader({
           />
         </FormGroup>
 
-        {/*- Deposit account -*/}
+        {/* ----------- Deposit account ----------- */}
         <FormGroup
           label={<T id={'deposit_account'} />}
           className={classNames(
@@ -119,7 +122,7 @@ function ReceiptFormHeader({
             selectedAccountId={values.deposit_account_id}
           />
         </FormGroup>
-
+        {/* ----------- Receipt date ----------- */}
         <FormGroup
           label={<T id={'receipt_date'} />}
           inline={true}
@@ -137,7 +140,7 @@ function ReceiptFormHeader({
           />
         </FormGroup>
 
-        {/* receipt_no */}
+        {/* ----------- Receipt number ----------- */}
         <FormGroup
           label={<T id={'receipt'} />}
           inline={true}
@@ -169,10 +172,11 @@ function ReceiptFormHeader({
               />
             }
             {...getFieldProps('receipt_number')}
+            onBlur={handleReceiptNumberChanged}
           />
         </FormGroup>
 
-        {/*- Reference -*/}
+        {/* ----------- Reference ----------- */}
         <FormGroup
           label={<T id={'reference'} />}
           inline={true}

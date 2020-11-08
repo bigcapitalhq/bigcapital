@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { DialogContent } from 'components';
 import { useQuery, queryCache } from 'react-query';
 
 import ReferenceNumberForm from 'containers/JournalNumber/ReferenceNumberForm';
 import withDialogActions from 'containers/Dialog/withDialogActions';
+import withSettings from 'containers/Settings/withSettings';
 import withSettingsActions from 'containers/Settings/withSettingsActions';
 import withEstimateActions from 'containers/Sales/Estimate/withEstimateActions';
-import withSettings from 'containers/Settings/withSettings';
 
 import { compose, optionsMapToArray } from 'utils';
 
@@ -49,9 +49,9 @@ function EstimateNumberDialogContent({
       });
   };
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     closeDialog('estimate-number-form');
-  };
+  }, [closeDialog]);
 
   return (
     <DialogContent isLoading={fetchSettings.isFetching}>
@@ -69,8 +69,8 @@ export default compose(
   withDialogActions,
   withSettingsActions,
   withSettings(({ estimatesSettings }) => ({
-    nextNumber: estimatesSettings?.next_number,
-    numberPrefix: estimatesSettings?.number_prefix,
+    nextNumber: estimatesSettings?.nextNumber,
+    numberPrefix: estimatesSettings?.numberPrefix,
   })),
   withEstimateActions,
 )(EstimateNumberDialogContent);

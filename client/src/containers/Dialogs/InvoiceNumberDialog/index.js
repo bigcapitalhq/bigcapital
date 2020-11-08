@@ -11,7 +11,7 @@ const InvoiceNumberDialogContent = lazy(() =>
 function InvoiceNumberDialog({ dialogName, payload = { id: null }, isOpen }) {
   return (
     <Dialog
-    title={<T id={'bill_number_settings'} />}
+    title={<T id={'invoice_number_settings'} />}
     name={dialogName}
     autoFocus={true}
     canEscapeKeyClose={true}

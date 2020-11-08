@@ -18,8 +18,10 @@ import InvoiceFormHeader from './InvoiceFormHeader';
 import EntriesItemsTable from 'containers/Sales/Estimate/EntriesItemsTable';
 import InvoiceFloatingActions from './InvoiceFloatingActions';
 
+import withInvoices from './withInvoices';
 import withInvoiceActions from './withInvoiceActions';
 import withInvoiceDetail from './withInvoiceDetail';
+
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withMediaActions from 'containers/Media/withMediaActions';
 import withSettings from 'containers/Settings/withSettings';
@@ -33,26 +35,35 @@ import { compose, repeatValue } from 'utils';
 
 const MIN_LINES_NUMBER = 4;
 
+/**
+ * Invoice form.
+ */
+
 function InvoiceForm({
-  //#WithMedia
+  // #WithMedia
   requestSubmitMedia,
   requestDeleteMedia,
 
-  //#WithInvoiceActions
+  // #WithInvoiceActions
   requestSubmitInvoice,
   requestEditInvoice,
+  setInvoiceNumberChanged,
 
-  //#withDashboard
+  // #withDashboard
   changePageTitle,
+  changePageSubtitle,
 
   // #withSettings
   invoiceNextNumber,
   invoiceNumberPrefix,
 
-  //#withInvoiceDetail
+  // #withInvoiceDetail
   invoice,
 
-  //#own Props
+  // #withInvoices
+  invoiceNumberChanged,
+
+  // #own Props
   invoiceId,
   onFormSubmit,
   onCancelForm,
@@ -79,13 +90,20 @@ function InvoiceForm({
   const clearSavedMediaIds = () => {
     savedMediaIds.current = [];
   };
+
+  const invoiceNumber = invoiceNumberPrefix
+    ? `${invoiceNumberPrefix}-${invoiceNextNumber}`
+    : invoiceNextNumber;
+
   useEffect(() => {
     if (invoice && invoice.id) {
       changePageTitle(formatMessage({ id: 'edit_invoice' }));
+      changePageSubtitle(`No. ${invoice.invoice_no}`);
     } else {
+      changePageSubtitle(`No. ${invoiceNumber}`);
       changePageTitle(formatMessage({ id: 'new_invoice' }));
     }
-  }, [changePageTitle, invoice, formatMessage]);
+  }, [changePageTitle, changePageSubtitle, invoice, formatMessage]);
 
   const validationSchema = Yup.object().shape({
     customer_id: Yup.string()
@@ -150,10 +168,6 @@ function InvoiceForm({
     }),
     [],
   );
-
-  const invoiceNumber = invoiceNumberPrefix
-    ? `${invoiceNumberPrefix}-${invoiceNextNumber}`
-    : invoiceNextNumber;
 
   const defaultInitialValues = useMemo(
     () => ({
@@ -290,10 +304,18 @@ function InvoiceForm({
       }
     },
   });
-
   useEffect(() => {
-    formik.setFieldValue('invoice_no', invoiceNumber);
-  }, [invoiceNumber]);
+    if (invoiceNumberChanged) {
+      formik.setFieldValue('invoice_no', invoiceNumber);
+      changePageSubtitle(`No. ${invoiceNumber}`);
+      setInvoiceNumberChanged(false);
+    }
+  }, [
+    invoiceNumber,
+    invoiceNumberChanged,
+    formik.setFieldValue,
+    changePageSubtitle,
+  ]);
 
   const handleSubmitClick = useCallback(
     (payload) => {
@@ -335,10 +357,20 @@ function InvoiceForm({
     );
   };
 
+  const handleInvoiceNumberChanged = useCallback(
+    (invoiceNumber) => {
+      changePageSubtitle(`No. ${invoiceNumber}`);
+    },
+    [changePageSubtitle],
+  );
+
   return (
     <div className={classNames(CLASSES.PAGE_FORM, CLASSES.PAGE_FORM_INVOICE)}>
       <form onSubmit={formik.handleSubmit}>
-        <InvoiceFormHeader formik={formik} />
+        <InvoiceFormHeader
+          onInvoiceNumberChanged={handleInvoiceNumberChanged}
+          formik={formik}
+        />
         <EntriesItemsTable
           entries={formik.values.entries}
           onClickAddNewRow={handleClickAddNewRow}
@@ -404,4 +436,5 @@ export default compose(
     invoiceNextNumber: invoiceSettings?.nextNumber,
     invoiceNumberPrefix: invoiceSettings?.numberPrefix,
   })),
+  withInvoices(({ invoiceNumberChanged }) => ({ invoiceNumberChanged })),
 )(InvoiceForm);

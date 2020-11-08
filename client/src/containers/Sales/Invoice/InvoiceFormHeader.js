@@ -9,7 +9,7 @@ import {
 import { DateInput } from '@blueprintjs/datetime';
 import { FormattedMessage as T } from 'react-intl';
 import moment from 'moment';
-import { momentFormatter, compose, tansformDateValue } from 'utils';
+import { momentFormatter, compose, tansformDateValue, saveInvoke } from 'utils';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 import {
@@ -32,6 +32,9 @@ function InvoiceFormHeader({
   customers,
   //#withDialogActions
   openDialog,
+
+  // #ownProps
+  onInvoiceNumberChanged,
 }) {
   const handleDateChange = useCallback(
     (date_filed) => (date) => {
@@ -39,17 +42,6 @@ function InvoiceFormHeader({
       setFieldValue(date_filed, formatted);
     },
     [setFieldValue],
-  );
-
-  const CustomerRenderer = useCallback(
-    (cutomer, { handleClick }) => (
-      <MenuItem
-        key={cutomer.id}
-        text={cutomer.display_name}
-        onClick={handleClick}
-      />
-    ),
-    [],
   );
 
   // handle change customer
@@ -65,6 +57,10 @@ function InvoiceFormHeader({
   const handleInvoiceNumberChange = useCallback(() => {
     openDialog('invoice-number-form', {});
   }, [openDialog]);
+
+  const handleInvoiceNumberChanged = (event) => {
+    saveInvoke(onInvoiceNumberChanged, event.currentTarget.value);
+  };
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
@@ -144,6 +140,7 @@ function InvoiceFormHeader({
             </FormGroup>
           </Col>
         </Row>
+        
         {/* ----------- Invoice number ----------- */}
         <FormGroup
           label={<T id={'invoice_no'} />}
@@ -171,6 +168,7 @@ function InvoiceFormHeader({
               />
             }
             {...getFieldProps('invoice_no')}
+            onBlur={handleInvoiceNumberChanged}
           />
         </FormGroup>
 

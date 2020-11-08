@@ -28,6 +28,10 @@ const mapDispatchToProps = (dispatch) => ({
       type: t.RECEIPTS_TABLE_QUERIES_ADD,
       queries,
     }),
-});
+    setReceiptNumberChanged:(isChanged) => dispatch({
+      type: t.RECEIPT_NUMBER_CHANGED,
+      payload: { isChanged },
+    }),
+  });
 
 export default connect(null, mapDispatchToProps);

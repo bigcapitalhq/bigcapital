@@ -18,9 +18,10 @@ import EstimateFormHeader from './EstimateFormHeader';
 import EntriesItemsTable from './EntriesItemsTable';
 import EstimateFloatingActions from './EstimateFloatingActions';
 
+import withEstimates from './withEstimates';
 import withEstimateActions from './withEstimateActions';
 import withEstimateDetail from './withEstimateDetail';
-import withEstimates from './withEstimates';
+
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withMediaActions from 'containers/Media/withMediaActions';
 import withSettings from 'containers/Settings/withSettings';
@@ -34,6 +35,10 @@ import { compose, repeatValue } from 'utils';
 
 const MIN_LINES_NUMBER = 4;
 
+/**
+ * Estimate form.
+ */
+
 const EstimateForm = ({
   //#WithMedia
   requestSubmitMedia,
@@ -43,6 +48,7 @@ const EstimateForm = ({
   requestSubmitEstimate,
   requestEditEstimate,
   setEstimateNumberChanged,
+
   //#withDashboard
   changePageTitle,
   changePageSubtitle,
@@ -378,6 +384,7 @@ const EstimateForm = ({
         <div class={classNames(CLASSES.PAGE_FORM_FOOTER)}>
           <Row>
             <Col md={8}>
+              {/* --------- Customer Note --------- */}
               <FormGroup
                 label={<T id={'customer_note'} />}
                 className={'form-group--customer_note'}
@@ -387,7 +394,7 @@ const EstimateForm = ({
                   {...formik.getFieldProps('note')}
                 />
               </FormGroup>
-
+              {/* --------- Terms and conditions --------- */}
               <FormGroup
                 label={<T id={'terms_conditions'} />}
                 className={'form-group--terms_conditions'}
