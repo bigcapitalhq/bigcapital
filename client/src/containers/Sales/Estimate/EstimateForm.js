@@ -20,6 +20,7 @@ import EstimateFloatingActions from './EstimateFloatingActions';
 
 import withEstimateActions from './withEstimateActions';
 import withEstimateDetail from './withEstimateDetail';
+import withEstimates from './withEstimates';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withMediaActions from 'containers/Media/withMediaActions';
 import withSettings from 'containers/Settings/withSettings';
@@ -41,7 +42,7 @@ const EstimateForm = ({
   //#WithEstimateActions
   requestSubmitEstimate,
   requestEditEstimate,
-
+  setEstimateNumberChanged,
   //#withDashboard
   changePageTitle,
   changePageSubtitle,
@@ -52,6 +53,9 @@ const EstimateForm = ({
 
   //#withEstimateDetail
   estimate,
+
+  // #withEstimates
+  estimateNumberChanged,
 
   //#own Props
   estimateId,
@@ -81,10 +85,16 @@ const EstimateForm = ({
     savedMediaIds.current = [];
   };
 
+  const estimateNumber = estimateNumberPrefix
+    ? `${estimateNumberPrefix}-${estimateNextNumber}`
+    : estimateNextNumber;
+
   useEffect(() => {
     if (estimate && estimate.id) {
       changePageTitle(formatMessage({ id: 'edit_estimate' }));
+      changePageSubtitle(`No. ${estimate.estimate_number}`);
     } else {
+      changePageSubtitle(`No. ${estimateNumber}`);
       changePageTitle(formatMessage({ id: 'new_estimate' }));
     }
   }, [changePageTitle, estimate, formatMessage]);
@@ -153,9 +163,6 @@ const EstimateForm = ({
     }),
     [],
   );
-  const estimateNumber = estimateNumberPrefix
-    ? `${estimateNumberPrefix}-${estimateNextNumber}`
-    : estimateNextNumber;
 
   const defaultInitialValues = useMemo(
     () => ({
@@ -290,9 +297,20 @@ const EstimateForm = ({
       }
     },
   });
+
   useEffect(() => {
-    formik.setFieldValue('estimate_number', estimateNumber);
-  }, [estimateNumber]);
+    if (estimateNumberChanged) {
+      formik.setFieldValue('estimate_number', estimateNumber);
+      changePageSubtitle(`No. ${estimateNumber}`);
+      setEstimateNumberChanged(false);
+    }
+  }, [
+    estimateNumber,
+    estimateNumberChanged,
+    setEstimateNumberChanged,
+    formik.setFieldValue,
+    changePageSubtitle,
+  ]);
 
   const handleSubmitClick = useCallback(
     (payload) => {
@@ -336,10 +354,20 @@ const EstimateForm = ({
     );
   };
 
+  const handleEstimateNumberChange = useCallback(
+    (estimateNumber) => {
+      changePageSubtitle(`No. ${estimateNumber}`);
+    },
+    [changePageSubtitle],
+  );
+
   return (
     <div className={classNames(CLASSES.PAGE_FORM, CLASSES.PAGE_FORM_ESTIMATE)}>
       <form onSubmit={formik.handleSubmit}>
-        <EstimateFormHeader formik={formik} />
+        <EstimateFormHeader
+          onEstimateNumberChanged={handleEstimateNumberChange}
+          formik={formik}
+        />
         <EntriesItemsTable
           entries={formik.values.entries}
           onClickAddNewRow={handleClickAddNewRow}
@@ -400,5 +428,8 @@ export default compose(
   withSettings(({ estimatesSettings }) => ({
     estimateNextNumber: estimatesSettings?.nextNumber,
     estimateNumberPrefix: estimatesSettings?.numberPrefix,
+  })),
+  withEstimates(({ estimateNumberChanged }) => ({
+    estimateNumberChanged,
   })),
 )(EstimateForm);

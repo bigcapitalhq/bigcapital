@@ -1,5 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { createTableQueryReducers } from 'store/queryReducers';
+import { journalNumberChangedReducer } from 'store/journalNumber.reducer';
 
 import t from 'store/types';
 
@@ -12,6 +13,8 @@ const initialState = {
     page: 1,
   },
   currentViewId: -1,
+
+  estimateNumberChanged: false,
 };
 
 const defaultEstimate = {
@@ -98,6 +101,8 @@ const reducer = createReducer(initialState, {
       },
     };
   },
+
+  ...journalNumberChangedReducer(t.ESTIMATE_NUMBER_CHANGED),
 });
 
 export default createTableQueryReducers('sales_estimates', reducer);

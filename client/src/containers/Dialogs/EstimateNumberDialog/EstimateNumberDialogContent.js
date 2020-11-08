@@ -5,6 +5,7 @@ import { useQuery, queryCache } from 'react-query';
 import ReferenceNumberForm from 'containers/JournalNumber/ReferenceNumberForm';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withSettingsActions from 'containers/Settings/withSettingsActions';
+import withEstimateActions from 'containers/Sales/Estimate/withEstimateActions';
 import withSettings from 'containers/Settings/withSettings';
 
 import { compose, optionsMapToArray } from 'utils';
@@ -23,6 +24,9 @@ function EstimateNumberDialogContent({
 
   // #withDialogActions
   closeDialog,
+
+  // #withEstimateActions
+  setEstimateNumberChanged,
 }) {
   const fetchSettings = useQuery(['settings'], () => requestFetchOptions({}));
 
@@ -37,6 +41,7 @@ function EstimateNumberDialogContent({
 
         setTimeout(() => {
           queryCache.invalidateQueries('settings');
+          setEstimateNumberChanged(true);
         }, 250);
       })
       .catch(() => {
@@ -67,4 +72,5 @@ export default compose(
     nextNumber: estimatesSettings?.next_number,
     numberPrefix: estimatesSettings?.number_prefix,
   })),
+  withEstimateActions,
 )(EstimateNumberDialogContent);
