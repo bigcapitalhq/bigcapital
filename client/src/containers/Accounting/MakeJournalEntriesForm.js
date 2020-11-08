@@ -52,6 +52,7 @@ function MakeJournalEntriesForm({
   // #withJournalsActions
   requestMakeJournalEntries,
   requestEditManualJournal,
+  setJournalNumberChanged,
 
   // #withManualJournals
   journalNumberChanged,
@@ -96,14 +97,20 @@ function MakeJournalEntriesForm({
     : journalNextNumber;
 
   useEffect(() => {
-    if (manualJournal && manualJournal.id) {  
+    if (manualJournal && manualJournal.id) {
       changePageTitle(formatMessage({ id: 'edit_journal' }));
       changePageSubtitle(`No. ${manualJournal.journal_number}`);
     } else {
       changePageSubtitle(`No. ${journalNumber}`);
       changePageTitle(formatMessage({ id: 'new_journal' }));
     }
-  }, [changePageTitle, changePageSubtitle, journalNumber, manualJournal, formatMessage]);
+  }, [
+    changePageTitle,
+    changePageSubtitle,
+    journalNumber,
+    manualJournal,
+    formatMessage,
+  ]);
 
   const validationSchema = Yup.object().shape({
     journal_number: Yup.string()
@@ -271,7 +278,7 @@ function MakeJournalEntriesForm({
     handleSubmit,
     getFieldProps,
     touched,
-    isSubmitting
+    isSubmitting,
   } = useFormik({
     validationSchema,
     initialValues,
@@ -375,8 +382,15 @@ function MakeJournalEntriesForm({
     if (journalNumberChanged) {
       setFieldValue('journal_number', journalNumber);
       changePageSubtitle(`No. ${journalNumber}`);
+      setJournalNumberChanged(false);
     }
-  }, [journalNumber, journalNumberChanged, setFieldValue, changePageSubtitle]);
+  }, [
+    journalNumber,
+    journalNumberChanged,
+    setJournalNumberChanged,
+    setFieldValue,
+    changePageSubtitle,
+  ]);
 
   const handleSubmitClick = useCallback(
     (payload) => {
@@ -478,6 +492,6 @@ export default compose(
   })),
   withManualJournalsActions,
   withManualJournals(({ journalNumberChanged }) => ({
-    journalNumberChanged
-  }))
+    journalNumberChanged,
+  })),
 )(MakeJournalEntriesForm);
