@@ -47,7 +47,10 @@ export interface IContact extends IContactAddress{
   contactType: string,
 
   balance: number,
+  currencyCode: string,
+
   openingBalance: number,
+  openingBalanceAt: Date,
 
   firstName: string,
   lastName: string,
@@ -64,7 +67,10 @@ export interface IContact extends IContactAddress{
 export interface IContactNewDTO {
   contactType?: string,
 
+  currencyCode?: string,
+
   openingBalance?: number,
+  openingBalanceAt?: string,
 
   firstName?: string,
   lastName?: string,
@@ -80,8 +86,6 @@ export interface IContactNewDTO {
 }
 export interface IContactEditDTO {
   contactType?: string,
-
-  openingBalance?: number,
 
   firstName?: string,
   lastName?: string,
@@ -104,7 +108,10 @@ export interface ICustomer extends IContact {
 export interface ICustomerNewDTO extends IContactAddressDTO {
   customerType: string,
 
+  currencyCode: string,
+
   openingBalance?: number,
+  openingBalanceAt?: string,
 
   firstName?: string,
   lastName?: string,
@@ -120,8 +127,6 @@ export interface ICustomerNewDTO extends IContactAddressDTO {
 };
 export interface ICustomerEditDTO extends IContactAddressDTO {
   customerType: string,
-
-  openingBalance?: number,
 
   firstName?: string,
   lastName?: string,
@@ -142,7 +147,10 @@ export interface IVendor extends IContact {
   contactService: 'vendor',
 }
 export interface IVendorNewDTO extends IContactAddressDTO {
+  currencyCode: string,
+
   openingBalance?: number,
+  openingBalanceAt?: string,
 
   firstName?: string,
   lastName?: string,
@@ -157,8 +165,6 @@ export interface IVendorNewDTO extends IContactAddressDTO {
   active?: boolean, 
 };
 export interface IVendorEditDTO extends IContactAddressDTO {
-  openingBalance?: number,
-
   firstName?: string,
   lastName?: string,
   companyName?: string,

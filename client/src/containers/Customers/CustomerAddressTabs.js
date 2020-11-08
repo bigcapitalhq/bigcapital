@@ -12,11 +12,7 @@ const CustomerBillingAddress = ({
   getFieldProps,
 }) => {
   return (
-    <div
-      className={
-        'customer-form__tabs-section customer-form__tabs-section--address'
-      }
-    >
+    <div className={'tab-panel--address'}>
       <Row>
         <Col xs={6}>
           <h4>

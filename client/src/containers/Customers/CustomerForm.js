@@ -143,9 +143,45 @@ function CustomerForm({
 
   useEffect(() => {
     customer && customer.id
-      ? changePageTitle(formatMessage({ id: 'edit_customer_details' }))
+      ? changePageTitle(formatMessage({ id: 'edit_customer' }))
       : changePageTitle(formatMessage({ id: 'new_customer' }));
   }, [changePageTitle, customer, formatMessage]);
+
+  const handleFormSubmit = (values, { setSubmitting, resetForm, setErrors }) => {
+    const formValues = { ...values, status: payload.publish };
+    if (customer && customer.id) {
+      requestEditCustomer(customer.id, formValues)
+        .then((response) => {
+          AppToaster.show({
+            message: formatMessage({
+              id: 'the_item_customer_has_been_successfully_edited',
+            }),
+            intent: Intent.SUCCESS,
+          });
+          setSubmitting(false);
+          resetForm();
+          saveInvokeSubmit({ action: 'update', ...payload });
+        })
+        .catch((errors) => {
+          setSubmitting(false);
+        });
+    } else {
+      requestSubmitCustomer(formValues)
+        .then((response) => {
+          AppToaster.show({
+            message: formatMessage({
+              id: 'the_customer_has_been_successfully_created',
+            }),
+            intent: Intent.SUCCESS,
+          });
+          setSubmitting(false);
+          saveInvokeSubmit({ action: 'new', ...payload });
+        })
+        .catch((errors) => {
+          setSubmitting(false);
+        });
+    }
+  };
 
   const {
     setFieldValue,
@@ -160,42 +196,7 @@ function CustomerForm({
     initialValues: {
       ...initialValues,
     },
-    onSubmit: (values, { setSubmitting, resetForm, setErrors }) => {
-      const formValues = { ...values, status: payload.publish };
-      if (customer && customer.id) {
-        requestEditCustomer(customer.id, formValues)
-          .then((response) => {
-            AppToaster.show({
-              message: formatMessage({
-                id: 'the_item_customer_has_been_successfully_edited',
-              }),
-              intent: Intent.SUCCESS,
-            });
-            setSubmitting(false);
-            resetForm();
-            saveInvokeSubmit({ action: 'update', ...payload });
-          })
-          .catch((errors) => {
-            setSubmitting(false);
-          });
-      } else {
-        requestSubmitCustomer(formValues)
-          .then((response) => {
-            AppToaster.show({
-              message: formatMessage({
-                id: 'the_customer_has_been_successfully_created',
-              }),
-              intent: Intent.SUCCESS,
-            });
-            // history.push('/customers');
-            setSubmitting(false);
-            saveInvokeSubmit({ action: 'new', ...payload });
-          })
-          .catch((errors) => {
-            setSubmitting(false);
-          });
-      }
-    },
+    onSubmit: handleFormSubmit,
   });
 
  

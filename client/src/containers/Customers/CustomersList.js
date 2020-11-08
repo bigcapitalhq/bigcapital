@@ -135,11 +135,10 @@ function CustomersList({
         filter_roles: filterConditions || '',
       });
     },
-    [fetchCustomers],
+    [addCustomersTableQueries],
   );
 
   // Handle Customers bulk delete button click.,
-
   const handleBulkDelete = useCallback(
     (customersIds) => {
       setBulkDelete(customersIds);
@@ -184,7 +183,7 @@ function CustomersList({
 
       <DashboardPageContent>
         <CustomersTable
-          loadong={tableLoading}
+          loading={tableLoading}
           onDeleteCustomer={handleDeleteCustomer}
           onEditCustomer={handleEditCustomer}
           onfetchData={handleFetchData}

@@ -17,17 +17,21 @@ export default class ContactsController extends BaseController {
       check('work_phone').optional().trim().escape(),
       check('personal_phone').optional().trim().escape(),
 
+      check('billing_address_1').optional().trim().escape(),
+      check('billing_address_2').optional().trim().escape(),
       check('billing_address_city').optional().trim().escape(),
       check('billing_address_country').optional().trim().escape(),
       check('billing_address_email').optional().isEmail().trim().escape(),
-      check('billing_address_zipcode').optional().trim().escape(),
+      check('billing_address_postcode').optional().trim().escape(),
       check('billing_address_phone').optional().trim().escape(),
       check('billing_address_state').optional().trim().escape(),
 
+      check('shipping_address_1').optional().trim().escape(),
+      check('shipping_address_2').optional().trim().escape(),
       check('shipping_address_city').optional().trim().escape(),
       check('shipping_address_country').optional().trim().escape(),
       check('shipping_address_email').optional().isEmail().trim().escape(),
-      check('shipping_address_zip_code').optional().trim().escape(),
+      check('shipping_address_postcode').optional().trim().escape(),
       check('shipping_address_phone').optional().trim().escape(),
       check('shipping_address_state').optional().trim().escape(),
 

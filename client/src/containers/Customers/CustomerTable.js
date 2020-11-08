@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import {
   Button,
   Popover,
@@ -6,17 +6,23 @@ import {
   MenuItem,
   MenuDivider,
   Position,
+  Intent,
 } from '@blueprintjs/core';
 
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import DataTable from 'components/DataTable';
 import Icon from 'components/Icon';
+import { Money } from 'components';
 import { useUpdateEffect } from 'hooks';
 
 import LoadingIndicator from 'components/LoadingIndicator';
 import withCustomers from './withCustomers';
 
-import { compose } from 'utils';
+import { compose, firstLettersArgs, saveInvoke } from 'utils';
+
+const AvatarCell = (row) => {
+  return <span className="avatar">{firstLettersArgs(row.display_name)}</span>;
+};
 
 const CustomerTable = ({
   loading,
@@ -32,7 +38,6 @@ const CustomerTable = ({
   onSelectedRowsChange,
 }) => {
   const { formatMessage } = useIntl();
-
   const [initialMount, setInitialMount] = useState(false);
 
   useUpdateEffect(() => {
@@ -41,36 +46,64 @@ const CustomerTable = ({
     }
   }, [customersLoading, setInitialMount]);
 
-  const handleEditCustomer = useCallback(
-    (customer) => () => {
-      onEditCustomer && onEditCustomer(customer);
+  // Customers actions list.
+  const renderContextMenu = useMemo(
+    () => ({ customer, onEditCustomer, onDeleteCustomer }) => {
+      const handleEditCustomer = () => {
+        saveInvoke(onEditCustomer, customer);
+      };
+      const handleDeleteCustomer = () => {
+        saveInvoke(onDeleteCustomer, customer);
+      };
+      return (
+        <Menu>
+          <MenuItem
+            icon={<Icon icon="reader-18" />}
+            text={formatMessage({ id: 'view_details' })}
+          />
+          <MenuDivider />
+          <MenuItem
+            icon={<Icon icon="pen-18" />}
+            text={formatMessage({ id: 'edit_customer' })}
+            onClick={handleEditCustomer}
+          />
+          <MenuItem
+            icon={<Icon icon="trash-16" iconSize={16} />}
+            text={formatMessage({ id: 'delete_customer' })}
+            intent={Intent.DANGER}
+            onClick={handleDeleteCustomer}
+          />
+        </Menu>
+      );
     },
-    [onEditCustomer],
+    [formatMessage],
   );
 
-  const handleDeleteCustomer = useCallback(
-    (customer) => () => {
-      onDeleteCustomer && onDeleteCustomer(customer);
-    },
-    [onDeleteCustomer],
-  );
-  const actionMenuList = useCallback((customer) => (
-    <Menu>
-      <MenuItem text={<T id={'view_details'} />} />
-      <MenuDivider />
-      <MenuItem
-        text={<T id={'edit_customer'} />}
-        onClick={handleEditCustomer(customer)}
-      />
-      <MenuItem
-        text={<T id={'delete_customer'} />}
-        onClick={handleDeleteCustomer(customer)}
-      />
-    </Menu>
-  ));
+  // Renders actions table cell.
+  const renderActionsCell = useMemo(() => ({ cell }) => (
+    <Popover
+      content={renderContextMenu({
+        customer: cell.row.original,
+        onEditCustomer,
+        onDeleteCustomer,
+      })}
+      position={Position.RIGHT_BOTTOM}
+    >
+      <Button icon={<Icon icon="more-h-16" iconSize={16} />} />
+    </Popover>
+  ), [onDeleteCustomer, onEditCustomer, renderContextMenu]);
 
   const columns = useMemo(
     () => [
+      {
+        id: 'avatar',
+        Header: '',
+        accessor: AvatarCell,
+        className: 'avatar',
+        width: 50,
+        disableResizing: true,
+        disableSortBy: true,
+      },
       {
         id: 'display_name',
         Header: formatMessage({ id: 'display_name' }),
@@ -95,26 +128,20 @@ const CustomerTable = ({
       {
         id: 'receivable_balance',
         Header: formatMessage({ id: 'receivable_balance' }),
-        // accessor: '',
+        accessor: (r) => <Money amount={r.closing_balance} currency={'USD'} />,
         className: 'receivable_balance',
         width: 100,
       },
-
       {
         id: 'actions',
-        Cell: ({ cell }) => (
-          <Popover
-            content={actionMenuList(cell.row.original)}
-            position={Position.RIGHT_BOTTOM}
-          >
-            <Button icon={<Icon icon="more-h-16" iconSize={16} />} />
-          </Popover>
-        ),
+        Cell: renderActionsCell,
         className: 'actions',
-        width: 50,
+        width: 70,
+        disableResizing: true,
+        disableSortBy: true,
       },
     ],
-    [actionMenuList, formatMessage],
+    [formatMessage, renderActionsCell],
   );
 
   const selectionColumn = useMemo(
@@ -138,6 +165,13 @@ const CustomerTable = ({
     [onSelectedRowsChange],
   );
 
+  const rowContextMenu = (cell) =>
+    renderContextMenu({
+      customer: cell.row.original,
+      onEditCustomer,
+      onDeleteCustomer,
+    });
+
   return (
     <LoadingIndicator loading={loading} mount={false}>
       <DataTable
@@ -146,11 +180,12 @@ const CustomerTable = ({
         data={customers}
         selectionColumn={selectionColumn}
         onFetchData={handleFetchDate}
-        expandable={true}
-        treeGraph={true}
+        expandable={false}
+        treeGraph={false}
         onSelectedRowsChange={handleSelectedRowsChange}
         loading={customersLoading && !initialMount}
         spinnerProps={{ size: 30 }}
+        rowContextMenu={rowContextMenu}
       />
     </LoadingIndicator>
   );

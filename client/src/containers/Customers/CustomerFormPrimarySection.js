@@ -32,13 +32,14 @@ export default function CustomerFormPrimarySection({
   );
 
   // Handle salutation field select.
-  const handleSalutationSelect = (salutation) => {
+  const handleSalutationSelect = useCallback((salutation) => {
     setFieldValue('salutation', salutation.label);
-  };
+  }, [setFieldValue]);
+
   // Handle display name field select.
-  const handleDisplayNameSelect = (displayName) => {
+  const handleDisplayNameSelect = useCallback((displayName) => {
     setFieldValue('display_name', displayName.label);
-  };
+  }, [setFieldValue]);
 
   return (
     <div className={'customer-form__primary-section-content'}>
@@ -116,6 +117,7 @@ export default function CustomerFormPrimarySection({
           firstName={values.first_name}
           lastName={values.last_name}
           company={values.company_name}
+          salutation={values.salutation}
           onItemSelect={handleDisplayNameSelect}
           popoverProps={{ minimal: true }}
         />

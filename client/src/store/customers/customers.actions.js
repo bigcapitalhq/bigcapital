@@ -47,7 +47,7 @@ export const fetchCustomers = ({ query }) => {
     new Promise((resolve, reject) => {
       const pageQuery = getState().items.tableQuery;
       dispatch({
-        type: t.ITEMS_TABLE_LOADING,
+        type: t.CUSTOMERS_TABLE_LOADING,
         payload: { loading: true },
       });
       ApiService.get(`customers`, { params: { ...pageQuery, ...query } })

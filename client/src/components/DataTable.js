@@ -12,8 +12,6 @@ import {
   Checkbox,
   Spinner,
   ContextMenu,
-  Menu,
-  MenuItem,
 } from '@blueprintjs/core';
 import classnames from 'classnames';
 import { FixedSizeList } from 'react-window';

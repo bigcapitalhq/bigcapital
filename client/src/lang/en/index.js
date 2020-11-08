@@ -501,7 +501,6 @@ export default {
   billing_address: 'Billing Address',
   shipping_address: 'Shipping Address',
   customers_list: 'Customers List',
-  edit_customer_details: 'Edit Customer Details',
   receivable_balance: 'Receivable balance',
   the_customer_has_been_successfully_created:
     'The customer has been successfully created.',
@@ -804,4 +803,6 @@ export default {
     '  Changing full amount will change all credits and payment were applied, Is this okay?',
   address_line_1: 'Address line 1',
   address_line_2: 'Address line 2',
+  website: 'Website',
+  notes: 'Notes',
 };

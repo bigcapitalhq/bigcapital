@@ -26,6 +26,7 @@ export default class CustomersController extends ContactsController {
       ...this.contactDTOSchema,
       ...this.contactNewDTOSchema,
       ...this.customerDTOSchema,
+      ...this.createCustomerDTOSchema,
     ],
       this.validationResult,
       asyncMiddleware(this.newCustomer.bind(this)),
@@ -77,10 +78,24 @@ export default class CustomersController extends ContactsController {
   get customerDTOSchema() {
     return [
       check('customer_type').exists().trim().escape(),
-      check('opening_balance').optional().isNumeric().toInt(),
     ];
   }
 
+  /**
+   * Create customer DTO schema.
+   */
+  get createCustomerDTOSchema() {
+    return [
+      check('opening_balance').optional().isNumeric().toInt(),
+      check('opening_balance_at').optional().isISO8601(),
+
+      check('currency_code').optional().trim().escape(),
+    ];
+  }
+
+  /**
+   * List param query schema.
+   */
   get validateListQuerySchema() {
     return [
       query('column_sort_by').optional().trim().escape(),

@@ -1,5 +1,5 @@
 import { Inject, Service } from 'typedi';
-import { difference, upperFirst } from 'lodash';
+import { difference, upperFirst, omit } from 'lodash';
 import { ServiceError } from "exceptions";
 import TenancyService from 'services/Tenancy/TenancyService';
 import {
@@ -39,16 +39,38 @@ export default class ContactsService {
   }
 
   /**
+   * Converts contact DTO object to model object attributes to insert or update.
+   * @param {IContactNewDTO | IContactEditDTO} contactDTO 
+   */
+  private transformContactObj(contactDTO: IContactNewDTO | IContactEditDTO) {
+    return {
+      ...omit(contactDTO, [
+        'billingAddress1', 'billingAddress2',
+        'shippingAddress1', 'shippingAddress2',
+      ]),
+      billing_address_1: contactDTO?.billingAddress1,
+      billing_address_2: contactDTO?.billingAddress2,
+      shipping_address_1: contactDTO?.shippingAddress1,
+      shipping_address_2: contactDTO?.shippingAddress2,
+    };
+  }
+
+  /**
    * Creates a new contact on the storage.
    * @param {number} tenantId 
    * @param {TContactService} contactService
    * @param {IContactDTO} contactDTO 
    */
-  async newContact(tenantId: number, contactDTO: IContactNewDTO, contactService: TContactService) {
+  async newContact(
+    tenantId: number,
+    contactDTO: IContactNewDTO,
+    contactService: TContactService,
+  ) {
     const { contactRepository } = this.tenancy.repositories(tenantId);
+    const contactObj = this.transformContactObj(contactDTO);
 
     this.logger.info('[contacts] trying to insert contact to the storage.', { tenantId, contactDTO });
-    const contact = await contactRepository.insert({ contactService, ...contactDTO });
+    const contact = await contactRepository.insert({ contactService, ...contactObj });
 
     this.logger.info('[contacts] contact inserted successfully.', { tenantId, contact });
     return contact;
@@ -63,10 +85,12 @@ export default class ContactsService {
    */
   async editContact(tenantId: number, contactId: number, contactDTO: IContactEditDTO, contactService: TContactService) {
     const { Contact } = this.tenancy.models(tenantId);
+    const contactObj = this.transformContactObj(contactDTO);
+
     const contact = await this.getContactByIdOrThrowError(tenantId, contactId, contactService);
 
     this.logger.info('[contacts] trying to edit the given contact details.', { tenantId, contactId, contactDTO });
-    await Contact.query().findById(contactId).patch({ ...contactDTO })
+    await Contact.query().findById(contactId).patch({ ...contactObj })
   }
 
   /**

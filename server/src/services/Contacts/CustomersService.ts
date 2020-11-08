@@ -12,12 +12,15 @@ import {
   ICustomerEditDTO,
   ICustomer,
   IPaginationMeta,
-  ICustomersFilter
+  ICustomersFilter,
+  IContactNewDTO,
+  IContactEditDTO
  } from 'interfaces';
 import { ServiceError } from 'exceptions';
 import TenancyService from 'services/Tenancy/TenancyService';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import events from 'subscribers/events';
+import moment from 'moment';
 
 @Service()
 export default class CustomersService {
@@ -41,13 +44,25 @@ export default class CustomersService {
    * @param {ICustomerNewDTO|ICustomerEditDTO} customerDTO 
    * @returns {IContactDTO}
    */
-  private customerToContactDTO(customerDTO: ICustomerNewDTO | ICustomerEditDTO) {
+  private customerToContactDTO(customerDTO: ICustomerNewDTO|ICustomerEditDTO): IContactNewDTO|IContactEditDTO {
     return {
       ...omit(customerDTO, ['customerType']),
       contactType: customerDTO.customerType,
       active: (typeof customerDTO.active === 'undefined') ?
         true : customerDTO.active,
     };
+  }
+
+  /**
+   * Transforms new customer DTO to contact.
+   * @param customerDTO 
+   */
+  private transformNewCustomerDTO(customerDTO: ICustomerNewDTO): IContactNewDTO {
+    return {
+      ...this.customerToContactDTO(customerDTO),
+      openingBalanceAt: customerDTO?.openingBalanceAt
+        ? moment(customerDTO.openingBalanceAt).toMySqlDateTime() : null,
+    }
   }
 
   /**
@@ -62,8 +77,8 @@ export default class CustomersService {
   ): Promise<ICustomer> {
     this.logger.info('[customer] trying to create a new customer.', { tenantId, customerDTO });
 
-    const contactDTO = this.customerToContactDTO(customerDTO)
-    const customer = await this.contactService.newContact(tenantId, contactDTO, 'customer');
+    const customerObj = this.transformNewCustomerDTO(customerDTO);
+    const customer = await this.contactService.newContact(tenantId, customerObj, 'customer');
 
     this.logger.info('[customer] created successfully.', { tenantId, customerDTO });
     await this.eventDispatcher.dispatch(events.customers.onCreated, {
