@@ -28,7 +28,7 @@ export default function CustomerFinancialPanel({
   );
 
   return (
-    <div>
+    <div className={'customer-form__tabs-section customer-form__tabs-section--financial'}>
       <Row>
         <Col xs={6}>
           <FormGroup

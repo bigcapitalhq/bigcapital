@@ -16,9 +16,10 @@
   #{$self}__header{
 
     .bp3-form-group{
+      max-width: 500px;
 
       .bp3-label{
-        width: 200px;
+        min-width: 150px;
       }
 
       .bp3-form-content{
@@ -27,6 +28,7 @@
     }
 
     .form-group--contact_name{
+      max-width: 100%;
 
       .bp3-control-group > *{
         flex-shrink: unset;
@@ -54,16 +56,40 @@
     margin-top: 26px; 
   }
 
+  .form-group--phone-number{
+
+    .bp3-control-group > *{
+      flex-shrink: unset;
+      padding-right: 5px;
+      padding-left: 5px;
+
+      &:first-child{
+        padding-left: 0;
+      }
+      &:last-child{
+        padding-right: 0;
+      }
+    }
+  }
+
   #{$self}__tabs{
     margin-top: 20px;
+    max-width: 1000px;
 
     .bp3-form-group{
-      
+      max-width: 440px;
+
       .bp3-label{
         min-width: 145px;
       }
       .bp3-form-content{
         width: 100%;
+      }
+
+      textarea.bp3-input{
+        max-width: 100%;
+        width: 100%;
+        min-height: 50px;
       }
     }
 
@@ -102,6 +128,11 @@
         }
       }
     }
+  }
+
+  #{$self}__floating-actions {
+    margin-left: -20px;
+    margin-right: -20px;
   }
 }
 

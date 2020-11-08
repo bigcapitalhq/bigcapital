@@ -802,4 +802,6 @@ export default {
     'Clearing the table lines will delete all credits and payment were applied, Is this okay?',
   changing_full_amount_will_change_all_credits_and_payment:
     '  Changing full amount will change all credits and payment were applied, Is this okay?',
+  address_line_1: 'Address line 1',
+  address_line_2: 'Address line 2',
 };

@@ -1,6 +1,10 @@
 import React from 'react';
-import { FormGroup, Intent, InputGroup } from '@blueprintjs/core';
-import { Row, Col } from 'react-grid-system';
+import {
+  FormGroup,
+  Intent,
+  InputGroup,
+  ControlGroup,
+} from '@blueprintjs/core';
 import { FormattedMessage as T } from 'react-intl';
 import { ErrorMessage } from 'components';
 
@@ -11,14 +15,12 @@ export default function CustomerFormAfterPrimarySection({
   values,
   touched,
 }) {
-  return ( 
+  return (
     <div class="customer-form__after-primary-section-content">
-      {/*------------ Customer email -----------*/}    
+      {/*------------ Customer email -----------*/}
       <FormGroup
         intent={errors.email && touched.email && Intent.DANGER}
-        helperText={
-          <ErrorMessage name={'email'} {...{ errors, touched }} />
-        }
+        helperText={<ErrorMessage name={'email'} {...{ errors, touched }} />}
         className={'form-group--email'}
         label={<T id={'customer_email'} />}
         inline={true}
@@ -28,9 +30,8 @@ export default function CustomerFormAfterPrimarySection({
           {...getFieldProps('email')}
         />
       </FormGroup>
-  
 
-      {/*------------ Customer email -----------*/}    
+      {/*------------ Customer email -----------*/}
       <FormGroup
         intent={errors.work_phone && touched.work_phone && Intent.DANGER}
         helperText={
@@ -40,28 +41,31 @@ export default function CustomerFormAfterPrimarySection({
         label={<T id={'phone_number'} />}
         inline={true}
       >
-        <InputGroup
-          intent={
-            errors.work_phone && touched.work_phone && Intent.DANGER
-          }
-          {...getFieldProps('work_phone')}
-        />
+        <ControlGroup>
+          <InputGroup
+            intent={errors.work_phone && touched.work_phone && Intent.DANGER}
+            {...getFieldProps('work_phone')}
+            placeholder={'Work'}
+          />
+
+          <InputGroup
+            intent={errors.work_phone && touched.work_phone && Intent.DANGER}
+            {...getFieldProps('work_phone')}
+            placeholder={'Mobile'}
+          />
+        </ControlGroup>
       </FormGroup>
 
-      {/*------------ Customer website -----------*/}    
+      {/*------------ Customer website -----------*/}
       <FormGroup
         intent={errors.website && touched.website && Intent.DANGER}
-        helperText={
-          <ErrorMessage name={'website'} {...{ errors, touched }} />
-        }
+        helperText={<ErrorMessage name={'website'} {...{ errors, touched }} />}
         className={'form-group--website'}
         label={<T id={'website'} />}
         inline={true}
       >
         <InputGroup
-          intent={
-            errors.website && touched.website && Intent.DANGER
-          }
+          intent={errors.website && touched.website && Intent.DANGER}
           {...getFieldProps('website')}
         />
       </FormGroup>

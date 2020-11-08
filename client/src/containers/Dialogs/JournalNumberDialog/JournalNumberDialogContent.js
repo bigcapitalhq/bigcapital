@@ -45,6 +45,7 @@ function JournalNumberDialogContent({
 
       setTimeout(() => {
         queryCache.invalidateQueries('settings');
+        setJournalNumberChanged(true);
       }, 250);
     }).catch(() => {
       setSubmitting(false);

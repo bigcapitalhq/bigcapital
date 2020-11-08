@@ -24,6 +24,10 @@ const mapActionsToProps = (dispatch) => ({
     type: t.MANUAL_JOURNALS_TABLE_QUERIES_ADD,
     queries,
   }),
+  setJournalNumberChanged: (isChanged) => dispatch({
+    type: t.MANUAL_JOURNAL_NUMBER_CHANGED,
+    payload: { isChanged },
+  }),
 });
 
 export default connect(null, mapActionsToProps);

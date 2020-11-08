@@ -87,7 +87,7 @@ function Row ({
       cols = propValue;
     }
 
-    const infix = brkPoint !== 'xs' ? `-${brkPoint}` : '';
+    const infix = `-${brkPoint}`;
 
     if (cols != null) classes.push(`${sizePrefix}${infix}-${cols}`);
   });

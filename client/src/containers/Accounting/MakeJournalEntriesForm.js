@@ -29,6 +29,7 @@ import withMediaActions from 'containers/Media/withMediaActions';
 import useMedia from 'hooks/useMedia';
 import { compose, repeatValue, orderingLinesIndexes } from 'utils';
 import withManualJournalsActions from './withManualJournalsActions';
+import withManualJournals from './withManualJournals';
 
 const ERROR = {
   JOURNAL_NUMBER_ALREADY_EXISTS: 'JOURNAL.NUMBER.ALREADY.EXISTS',
@@ -51,6 +52,9 @@ function MakeJournalEntriesForm({
   // #withJournalsActions
   requestMakeJournalEntries,
   requestEditManualJournal,
+
+  // #withManualJournals
+  journalNumberChanged,
 
   // #withDashboard
   changePageTitle,
@@ -87,14 +91,19 @@ function MakeJournalEntriesForm({
     savedMediaIds.current = [];
   };
 
+  const journalNumber = journalNumberPrefix
+    ? `${journalNumberPrefix}-${journalNextNumber}`
+    : journalNextNumber;
+
   useEffect(() => {
     if (manualJournal && manualJournal.id) {  
       changePageTitle(formatMessage({ id: 'edit_journal' }));
       changePageSubtitle(`No. ${manualJournal.journal_number}`);
     } else {
+      changePageSubtitle(`No. ${journalNumber}`);
       changePageTitle(formatMessage({ id: 'new_journal' }));
     }
-  }, [changePageTitle, changePageSubtitle, manualJournal, formatMessage]);
+  }, [changePageTitle, changePageSubtitle, journalNumber, manualJournal, formatMessage]);
 
   const validationSchema = Yup.object().shape({
     journal_number: Yup.string()
@@ -149,11 +158,6 @@ function MakeJournalEntriesForm({
     }),
     [],
   );
-
-  const journalNumber = journalNumberPrefix
-    ? `${journalNumberPrefix}-${journalNextNumber}`
-    : journalNextNumber;
-
   const defaultInitialValues = useMemo(
     () => ({
       journal_number: journalNumber,
@@ -366,14 +370,13 @@ function MakeJournalEntriesForm({
     },
   });
 
-  useEffect(() => {    
-    setFieldValue('journal_number', journalNumber);
-  }, [journalNumber, setFieldValue]);
-
-  // Change page subtitle.
+  // Observes journal number settings changes.
   useEffect(() => {
-    changePageSubtitle(`No. ${journalNumber}`);
-  }, [changePageSubtitle, journalNumber]);
+    if (journalNumberChanged) {
+      setFieldValue('journal_number', journalNumber);
+      changePageSubtitle(`No. ${journalNumber}`);
+    }
+  }, [journalNumber, journalNumberChanged, setFieldValue, changePageSubtitle]);
 
   const handleSubmitClick = useCallback(
     (payload) => {
@@ -474,4 +477,7 @@ export default compose(
     journalNumberPrefix: manualJournalsSettings.numberPrefix,
   })),
   withManualJournalsActions,
+  withManualJournals(({ journalNumberChanged }) => ({
+    journalNumberChanged
+  }))
 )(MakeJournalEntriesForm);

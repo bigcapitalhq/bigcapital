@@ -3,7 +3,13 @@ import t from 'store/types';
 
 export const submitOptions = ({ form }) => {
   return (dispatch) => {
-    return ApiService.post('settings', form);
+    return ApiService.post('settings', form).then((response) => {
+      dispatch({
+        type: t.SETTING_SET,
+        options: form.options,
+      });
+      return response;
+    });
   };
 };
 

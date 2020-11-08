@@ -270,14 +270,14 @@ function CustomerForm({
             values={values}
             touched={touched} />
         </div>
-      </form>
 
-      <CustomerFloatingActions
-        onSubmitClick={handleSubmitClick}
-        customer={customer}
-        onCancelClick={handleCancelClick}
-        customerId={null}
-      />
+        <CustomerFloatingActions
+          onSubmitClick={handleSubmitClick}
+          customer={customer}
+          onCancelClick={handleCancelClick}
+          customerId={null}
+        />
+      </form>
     </div>
   );
 }
