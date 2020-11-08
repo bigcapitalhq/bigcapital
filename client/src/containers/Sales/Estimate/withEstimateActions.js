@@ -27,6 +27,11 @@ const mapDipatchToProps = (dispatch) => ({
       type: t.ESTIMATES_TABLE_QUERIES_ADD,
       queries,
     }),
+  setEstimateNumberChanged: (isChanged) =>
+    dispatch({
+      type: t.ESTIMATE_NUMBER_CHANGED,
+      payload: { isChanged },
+    }),
 });
 
 export default connect(null, mapDipatchToProps);

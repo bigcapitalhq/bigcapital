@@ -11,17 +11,20 @@ import { useFormik } from 'formik';
 import moment from 'moment';
 import { Intent, FormGroup, TextArea } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
-import { pick,sumBy } from 'lodash';
+import { pick, sumBy } from 'lodash';
 import classNames from 'classnames';
 
 import { CLASSES } from 'common/classes';
 import { ERROR } from 'common/errors';
+
 import ReceiptFromHeader from './ReceiptFormHeader';
 import EntriesItemsTable from 'containers/Sales/Estimate/EntriesItemsTable';
 import ReceiptReceiveFloatingActions from './ReceiptReceiveFloatingActions';
 
+import withReceipts from './withReceipts';
 import withReceiptActions from './withReceiptActions';
 import withReceiptDetail from './withReceiptDetail';
+
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withMediaActions from 'containers/Media/withMediaActions';
 import withSettings from 'containers/Settings/withSettings';
@@ -34,6 +37,10 @@ import { compose, repeatValue } from 'utils';
 
 const MIN_LINES_NUMBER = 4;
 
+/**
+ * Receipt form.
+ */
+
 function ReceiptForm({
   //#withMedia
   requestSubmitMedia,
@@ -42,16 +49,21 @@ function ReceiptForm({
   //#withReceiptActions
   requestSubmitReceipt,
   requestEditReceipt,
+  setReceiptNumberChanged,
 
   //#withReceiptDetail
   receipt,
 
   //#withDashboard
   changePageTitle,
+  changePageSubtitle,
 
   // #withSettings
   receiptNextNumber,
   receiptNumberPrefix,
+
+  // #withReceipts
+  receiptNumberChanged,
 
   //#own Props
   receiptId,
@@ -81,13 +93,19 @@ function ReceiptForm({
     savedMediaIds.current = [];
   };
 
+  const receiptNumber = receiptNumberPrefix
+    ? `${receiptNumberPrefix}-${receiptNextNumber}`
+    : receiptNextNumber;
+
   useEffect(() => {
     if (receipt && receipt.id) {
       changePageTitle(formatMessage({ id: 'edit_receipt' }));
+      changePageSubtitle(`No. ${receipt.receipt_number}`);
     } else {
+      changePageSubtitle(`No. ${receiptNumber}`);
       changePageTitle(formatMessage({ id: 'new_receipt' }));
     }
-  }, [changePageTitle, receipt, formatMessage]);
+  }, [changePageTitle, changePageSubtitle, receipt, formatMessage]);
 
   const validationSchema = Yup.object().shape({
     customer_id: Yup.string()
@@ -152,10 +170,6 @@ function ReceiptForm({
     }),
     [],
   );
-
-  const receiptNumber = receiptNumberPrefix
-    ? `${receiptNumberPrefix}-${receiptNextNumber}`
-    : receiptNextNumber;
 
   const defaultInitialValues = useMemo(
     () => ({
@@ -293,6 +307,19 @@ function ReceiptForm({
     },
   });
 
+  useEffect(() => {
+    if (receiptNumberChanged) {
+      formik.setFieldValue('receipt_number', receiptNumber);
+      changePageSubtitle(`No. ${receiptNumber}`);
+      setReceiptNumberChanged(false);
+    }
+  }, [
+    receiptNumber,
+    receiptNumberChanged,
+    formik.setFieldValue,
+    changePageSubtitle,
+  ]);
+
   const handleDeleteFile = useCallback(
     (_deletedFiles) => {
       _deletedFiles.forEach((deletedFile) => {
@@ -333,14 +360,20 @@ function ReceiptForm({
     );
   };
 
-  useEffect(() => {
-    formik.setFieldValue('receipt_number', receiptNumber);
-  }, [receiptNumber]);
+  const handleReceiptNumberChanged = useCallback(
+    (receiptNumber) => {
+      changePageSubtitle(`No. ${receiptNumber}`);
+    },
+    [changePageSubtitle],
+  );
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_RECEIPT, CLASSES.PAGE_FORM)}>
       <form onSubmit={formik.handleSubmit}>
-        <ReceiptFromHeader formik={formik} />
+        <ReceiptFromHeader
+          onReceiptNumberChanged={handleReceiptNumberChanged}
+          formik={formik}
+        />
 
         <EntriesItemsTable
           entries={formik.values.entries}
@@ -352,6 +385,7 @@ function ReceiptForm({
         <div className={classNames(CLASSES.PAGE_FORM_FOOTER)}>
           <Row>
             <Col md={8}>
+              {/* --------- Receipt message --------- */}
               <FormGroup
                 label={<T id={'receipt_message'} />}
                 className={'form-group--receipt_message'}
@@ -362,6 +396,7 @@ function ReceiptForm({
                 />
               </FormGroup>
 
+              {/* --------- Statement--------- */}
               <FormGroup
                 label={<T id={'statement'} />}
                 className={'form-group--statement'}
@@ -403,4 +438,5 @@ export default compose(
     receiptNextNumber: receiptSettings?.nextNumber,
     receiptNumberPrefix: receiptSettings?.numberPrefix,
   })),
+  withReceipts(({ receiptNumberChanged }) => ({ receiptNumberChanged })),
 )(ReceiptForm);

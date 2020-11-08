@@ -27,6 +27,11 @@ const mapDipatchToProps = (dispatch) => ({
       type: t.INVOICES_TABLE_QUERIES_ADD,
       _queries,
     }),
+
+    setInvoiceNumberChanged: (isChanged) => dispatch({
+      type: t.INVOICE_NUMBER_CHANGED,
+      payload: { isChanged },
+    }),
 });
 
 export default connect(null, mapDipatchToProps);

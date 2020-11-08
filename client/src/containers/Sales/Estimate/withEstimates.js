@@ -13,14 +13,17 @@ export default (mapState) => {
 
   const mapStateToProps = (state, props) => {
     const query = getEstimatesTableQuery(state, props);
-  
+
     const mapped = {
       estimatesCurrentPage: getEstimatesItems(state, props, query),
       estimateViews: getResourceViews(state, props, 'sales_estimates'),
       estimateItems: state.salesEstimates.items,
       estimateTableQuery: query,
+
       estimatesPageination: getEstimatesPaginationMeta(state, props, query),
       estimatesLoading: state.salesEstimates.loading,
+
+      estimateNumberChanged: state.salesEstimates.journalNumberChanged,
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };

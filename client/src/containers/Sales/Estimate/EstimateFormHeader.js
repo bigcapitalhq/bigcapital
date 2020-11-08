@@ -10,7 +10,7 @@ import {
 import { DateInput } from '@blueprintjs/datetime';
 import { FormattedMessage as T } from 'react-intl';
 import moment from 'moment';
-import { momentFormatter, compose, tansformDateValue } from 'utils';
+import { momentFormatter, compose, tansformDateValue, saveInvoke } from 'utils';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 import {
@@ -33,6 +33,8 @@ function EstimateFormHeader({
   customers,
   // #withDialogActions
   openDialog,
+  // #ownProps
+  onEstimateNumberChanged,
 }) {
   const handleDateChange = useCallback(
     (date_filed) => (date) => {
@@ -67,9 +69,14 @@ function EstimateFormHeader({
     openDialog('estimate-number-form', {});
   }, [openDialog]);
 
+  const handleEstimateNumberChanged = (event) => {
+    saveInvoke(onEstimateNumberChanged, event.currentTarget.value);
+  };
+
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
       <div className={'page-form__primary-section'}>
+        {/* ----------- Customer name ----------- */}
         <FormGroup
           label={<T id={'customer_name'} />}
           inline={true}
@@ -94,6 +101,7 @@ function EstimateFormHeader({
 
         <Row>
           <Col md={8} className={'col--estimate-date'}>
+            {/* ----------- Estimate date ----------- */}
             <FormGroup
               label={<T id={'estimate_date'} />}
               inline={true}
@@ -119,6 +127,7 @@ function EstimateFormHeader({
             </FormGroup>
           </Col>
           <Col md={4} className={'col--expiration-date'}>
+            {/* ----------- Expiration date ----------- */}
             <FormGroup
               label={<T id={'expiration_date'} />}
               inline={true}
@@ -146,7 +155,7 @@ function EstimateFormHeader({
           </Col>
         </Row>
 
-        {/*- Estimate -*/}
+        {/* ----------- Estimate number ----------- */}
         <FormGroup
           label={<T id={'estimate'} />}
           inline={true}
@@ -178,9 +187,11 @@ function EstimateFormHeader({
               />
             }
             {...getFieldProps('estimate_number')}
+            onBlur={handleEstimateNumberChanged}
           />
         </FormGroup>
 
+        {/* ----------- Reference ----------- */}
         <FormGroup
           label={<T id={'reference'} />}
           inline={true}

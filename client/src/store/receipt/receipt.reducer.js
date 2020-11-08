@@ -1,6 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { createTableQueryReducers } from 'store/queryReducers';
 import t from 'store/types';
+import { journalNumberChangedReducer } from 'store/journalNumber.reducer';
 
 const initialState = {
   items: {},
@@ -18,13 +19,11 @@ const defaultReceipt = {
 };
 
 const reducer = createReducer(initialState, {
-
   [t.RECEIPT_SET]: (state, action) => {
     const { id, sale_receipt } = action.payload;
     const _receipt = state.items[id] || {};
     state.items[id] = { ...defaultReceipt, ..._receipt, ...sale_receipt };
   },
-
 
   [t.RECEIPTS_ITEMS_SET]: (state, action) => {
     const { sales_receipts } = action.payload;
@@ -94,6 +93,7 @@ const reducer = createReducer(initialState, {
       },
     };
   },
+  ...journalNumberChangedReducer(t.RECEIPT_NUMBER_CHANGED),
 });
 
 export default createTableQueryReducers('sales_receipts', reducer);

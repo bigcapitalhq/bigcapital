@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { DialogContent } from 'components';
 import { useQuery, queryCache } from 'react-query';
 
 import ReferenceNumberForm from 'containers/JournalNumber/ReferenceNumberForm';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
-import withSettingsActions from 'containers/Settings/withSettingsActions';
 import withSettings from 'containers/Settings/withSettings';
+import withSettingsActions from 'containers/Settings/withSettingsActions';
+import withInvoicesActions from 'containers/Sales/Invoice/withInvoiceActions';
 
 import { compose, optionsMapToArray } from 'utils';
 
@@ -25,6 +26,9 @@ function InvoiceNumberDialogContent({
 
   // #withDialogActions
   closeDialog,
+
+  // #withInvoicesActions
+  setInvoiceNumberChanged,
 }) {
   const fetchSettings = useQuery(['settings'], () => requestFetchOptions({}));
 
@@ -40,6 +44,7 @@ function InvoiceNumberDialogContent({
 
         setTimeout(() => {
           queryCache.invalidateQueries('settings');
+          setInvoiceNumberChanged(true);
         }, 250);
       })
       .catch(() => {
@@ -47,9 +52,9 @@ function InvoiceNumberDialogContent({
       });
   };
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     closeDialog('invoice-number-form');
-  };
+  }, [closeDialog]);
 
   return (
     <DialogContent isLoading={fetchSettings.isFetching}>
@@ -67,8 +72,8 @@ export default compose(
   withDialogActions,
   withSettingsActions,
   withSettings(({ invoiceSettings }) => ({
-    nextNumber: invoiceSettings?.next_number,
-    numberPrefix: invoiceSettings?.number_prefix,
+    nextNumber: invoiceSettings?.nextNumber,
+    numberPrefix: invoiceSettings?.numberPrefix,
   })),
-
-) (InvoiceNumberDialogContent);
+  withInvoicesActions,
+)(InvoiceNumberDialogContent);
