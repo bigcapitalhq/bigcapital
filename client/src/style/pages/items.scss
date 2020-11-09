@@ -1,56 +1,136 @@
 
 
+.page-form--item{
+  $self: '.page-form';
+  padding: 20px;
 
-.item-form{
-  padding: 22px;
-  padding-bottom: 90px;
-
-  &__primary-section{
-    background-color: #FAFAFA;
-    padding: 40px 22px 22px;
-    margin: -22px -22px 22px;
-    background-color: #FAFAFA;
+  #{$self}__header{
+    padding: 0;
   }
-  &__accounts-section{
-    h4{
-      margin: 0;
+  #{$self}__primary-section{
+    padding: 30px 22px 0;
+    margin: -20px -20px 24px;
+    overflow: hidden;
+  }
+
+  #{$self}__body{
+    .bp3-form-group{
+      max-width: 500px;
+      margin-bottom: 14px;
+  
+      &.bp3-inline{
+  
+        .bp3-label{
+          min-width: 140px;
+        }
+      }
+      .bp3-form-content{
+        width: 100%;
+      }
+    }
+  
+    h3{
       font-weight: 500;
-      margin-bottom: 20px;
-      color: #828282;
+      font-size: 14px;
+      margin-bottom: 1.4rem;
     }
-    > div:first-of-type{
-      padding-right: 15px !important;
-    }
-
-    > div ~ div{
-      padding-left: 15px !important;
-      border-left: 1px solid #e8e8e8;
-    }
-  }
-
-  .#{$ns}-form-group{
-    .#{$ns}-label{
-      width: 130px;
-    }
-
-    .#{$ns}-form-content{
-      width: 250px;
-    }    
-  }
-
-  .form-group--item-type,
-  .form-group--item-name{
     
-    .#{$ns}-form-content{
-      width: 350px;
-    }  
+    .bp3-control{
+      
+      h3{
+        display: inline;
+        margin-bottom: 0;
+      }
+    }
+   
+    .form-group--sellable,
+    .form-group--purchasable{
+      margin-bottom: 1rem;
+    }
   }
 
-  .form-group--active{
-    margin-bottom: 5px;
+  #{$self}__section{
+    max-width: 850px;
+    margin-bottom: 1rem;
 
-    .bp3-control.bp3-checkbox{
-      margin: 0;
+    .bp3-form-group{
+      max-width: 400px;
     }
+
+    &--selling-cost{
+      border-bottom: 1px solid #eaeaea;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.25rem;
+    }
+  }
+
+  #{$self}__floating-actions{
+    margin-left: -20px;
+    margin-right: -20px;
+
+    .form-group--active{
+      display: inline-block;
+      margin: 0;
+      margin-left: 40px;
+    }
+  }
+
+  .bp3-tooltip-indicator{
+    border-bottom: 1px dashed #d0d0d0;
   }
 }
+
+
+// .item-form{
+//   padding: 22px;
+//   padding-bottom: 90px;
+
+//   &__primary-section{
+//     background-color: #FAFAFA;
+//     padding: 40px 22px 22px;
+//     margin: -22px -22px 22px;
+//     background-color: #FAFAFA;
+//   }
+//   &__accounts-section{
+//     h4{
+//       margin: 0;
+//       font-weight: 500;
+//       margin-bottom: 20px;
+//       color: #828282;
+//     }
+//     > div:first-of-type{
+//       padding-right: 15px !important;
+//     }
+
+//     > div ~ div{
+//       padding-left: 15px !important;
+//       border-left: 1px solid #e8e8e8;
+//     }
+//   }
+
+//   .#{$ns}-form-group{
+//     .#{$ns}-label{
+//       width: 130px;
+//     }
+
+//     .#{$ns}-form-content{
+//       width: 250px;
+//     }    
+//   }
+
+//   .form-group--item-type,
+//   .form-group--item-name{
+    
+//     .#{$ns}-form-content{
+//       width: 350px;
+//     }  
+//   }
+
+//   .form-group--active{
+//     margin-bottom: 5px;
+
+//     .bp3-control.bp3-checkbox{
+//       margin: 0;
+//     }
+//   }
+// }

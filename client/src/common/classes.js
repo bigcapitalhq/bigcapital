@@ -11,6 +11,7 @@ const CLASSES = {
   PAGE_FORM_HEADER_FIELDS: 'page-form__header-fields',
   PAGE_FORM_HEADER_BIG_NUMBERS: 'page-form__big-numbers',
   PAGE_FORM_TABS: 'page-form__tabs',
+  PAGE_FORM_BODY: 'page-form__body',
   
   PAGE_FORM_FOOTER: 'page-form__footer',
   PAGE_FORM_FLOATING_ACTIONS: 'page-form__floating-actions',
@@ -22,6 +23,7 @@ const CLASSES = {
   PAGE_FORM_PAYMENT_MADE: 'page-form--payment-made',
   PAGE_FORM_PAYMENT_RECEIVE: 'page-form--payment-receive',
   PAGE_FORM_CUSTOMER: 'page-form--customer',
+  PAGE_FORM_ITEM: 'page-form--item',
 
   FORM_GROUP_LIST_SELECT: 'form-group--select-list',
 

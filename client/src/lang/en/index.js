@@ -805,4 +805,6 @@ export default {
   address_line_2: 'Address line 2',
   website: 'Website',
   notes: 'Notes',
+  i_purchase_this_item: 'I purchase this item from a vendor.',
+  i_sell_this_item: 'I sell this item to a customer.',
 };
