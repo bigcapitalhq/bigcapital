@@ -86,8 +86,8 @@ export default class CustomersController extends ContactsController {
    */
   get createCustomerDTOSchema() {
     return [
-      check('opening_balance').optional().isNumeric().toInt(),
-      check('opening_balance_at').optional().isISO8601(),
+      check('opening_balance').optional({ nullable: true }).isNumeric().toInt(),
+      check('opening_balance_at').optional({ nullable: true }).isISO8601(),
 
       check('currency_code').optional().trim().escape(),
     ];

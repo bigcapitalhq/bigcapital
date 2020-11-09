@@ -7,6 +7,7 @@ import i18n from 'i18n';
 import routes from 'api';
 import LoggerMiddleware from 'api/middleware/LoggerMiddleware';
 import AgendashController from 'api/controllers/Agendash';
+import ConvertEmptyStringsToNull from 'api/middleware/ConvertEmptyStringsToNull';
 import config from 'config';
 
 export default ({ app }) => {
@@ -35,6 +36,9 @@ export default ({ app }) => {
 
   // Logger middleware.
   app.use(LoggerMiddleware);
+
+  // Converts empty strings to null of request body.
+  app.use(ConvertEmptyStringsToNull);
 
   // Prefix all application routes.
   app.use(config.api.prefix, routes());

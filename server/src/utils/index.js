@@ -195,6 +195,16 @@ const entriesAmountDiff = (newEntries, oldEntries, amountAttribute, idAttribute)
     .value();
 };
 
+const convertEmptyStringsToNull = (obj) => {
+  return _.mapValues(obj, (value, key) => {
+    return typeof value === 'string' ? 
+      value.trim() === '' ?
+      null :
+      value :
+      value;
+  });
+};
+
 export {
   hashPassword,
   origin,
@@ -214,4 +224,5 @@ export {
   getDefinedOptions,
 
   entriesAmountDiff,
+  convertEmptyStringsToNull,
 };
