@@ -8,61 +8,61 @@ import {
   TextArea,
   MenuItem,
 } from '@blueprintjs/core';
-import { Select } from '@blueprintjs/select';
 import { pick } from 'lodash';
 import * as Yup from 'yup';
-import { FormattedMessage as T, useIntl } from 'react-intl';
 import { useFormik } from 'formik';
-import { compose } from 'utils';
 import { useQuery, queryCache } from 'react-query';
+import { FormattedMessage as T, useIntl } from 'react-intl';
+
 import classNames from 'classnames';
-import { connect } from 'react-redux';
+import {
+  ListSelect,
+  AccountsSelectList,
+  FieldRequiredHint,
+  Hint,
+  AppToaster,
+  ErrorMessage,
+  DialogContent,
+} from 'components';
 
-import AppToaster from 'components/AppToaster';
-import ErrorMessage from 'components/ErrorMessage';
-import { ListSelect, AccountsSelectList } from 'components';
-
-import Dialog from 'components/Dialog';
-import withDialogActions from 'containers/Dialog/withDialogActions';
-import withDialogRedux from 'components/DialogReduxConnect';
+import withItemCategories from 'containers/Items/withItemCategories';
+import withItemCategoryDetail from 'containers/Items/withItemCategoryDetail';
+import withItemCategoriesActions from 'containers/Items/withItemCategoriesActions';
 
 import withAccounts from 'containers/Accounts/withAccounts';
 import withAccountsActions from 'containers/Accounts/withAccountsActions';
-import withItemCategoryDetail from 'containers/Items/withItemCategoryDetail';
-import withItemCategories from 'containers/Items/withItemCategories';
-import withItemCategoriesActions from 'containers/Items/withItemCategoriesActions';
 
-import Icon from 'components/Icon';
+import withDialogActions from 'containers/Dialog/withDialogActions';
+import { compose } from 'utils';
 
-function ItemCategoryDialog({
-  dialogName,
-  payload = {},
-  isOpen,
-
-  // #withDialog
-  openDialog,
+function ItemCategoryFormDialogContent({
+  // #withDialogActions
   closeDialog,
 
   // #withItemCategoryDetail
-  itemCategoryId,
   itemCategory,
 
   // #withItemCategories
   categoriesList,
 
+  // #withItemCategoriesActions
+  requestSubmitItemCategory,
+  requestEditItemCategory,
+  requestFetchItemCategories,
+
   //# withAccount
   accountsList,
 
-  // #withItemCategoriesActions
-  requestSubmitItemCategory,
-  requestFetchItemCategories,
-  requestEditItemCategory,
-
   // #withAccountsActions
   requestFetchAccounts,
+
+  // #ownProp
+  action,
+  itemCategoryId,
+  dialogName,
 }) {
-  const [selectedParentCategory, setParentCategory] = useState(null);
   const { formatMessage } = useIntl();
+  const [selectedParentCategory, setParentCategory] = useState(null);
 
   const fetchList = useQuery(['items-categories-list'], () =>
     requestFetchItemCategories(),
@@ -101,34 +101,33 @@ function ItemCategoryDialog({
     values,
     errors,
     touched,
+    isSubmitting,
     setFieldValue,
     handleSubmit,
-    resetForm,
     getFieldProps,
-    isSubmitting,
   } = useFormik({
     enableReinitialize: true,
-    initialValues: {
-      ...(payload.action === 'edit' &&
-        pick(itemCategory, Object.keys(initialValues))),
-    },
     validationSchema,
+    initialValues: {
+      ...initialValues,
+      ...(action === 'edit' && pick(itemCategory, Object.keys(initialValues))),
+    },
     onSubmit: (values, { setSubmitting }) => {
       const afterSubmit = () => {
         closeDialog(dialogName);
         queryCache.invalidateQueries('items-categories-list');
         queryCache.invalidateQueries('accounts-list');
       };
-      if (payload.action === 'edit') {
-        requestEditItemCategory(payload.id, values)
+      if (action === 'edit') {
+        requestEditItemCategory(itemCategoryId, values)
           .then((response) => {
-            afterSubmit(response);
             AppToaster.show({
               message: formatMessage({
                 id: 'the_item_category_has_been_successfully_edited',
               }),
               intent: Intent.SUCCESS,
             });
+            afterSubmit(response);
           })
           .catch((error) => {
             setSubmitting(false);
@@ -136,13 +135,13 @@ function ItemCategoryDialog({
       } else {
         requestSubmitItemCategory(values)
           .then((response) => {
-            afterSubmit(response);
             AppToaster.show({
               message: formatMessage({
                 id: 'the_item_category_has_been_successfully_created',
               }),
               intent: Intent.SUCCESS,
             });
+            afterSubmit(response);
           })
           .catch((error) => {
             setSubmitting(false);
@@ -150,6 +149,7 @@ function ItemCategoryDialog({
       }
     },
   });
+
   const filterItemCategory = useCallback(
     (query, category, _index, exactMatch) => {
       const normalizedTitle = category.name.toLowerCase();
@@ -182,12 +182,6 @@ function ItemCategoryDialog({
     closeDialog(dialogName);
   }, [dialogName, closeDialog]);
 
-  // Handle the dialog opening.
-  const onDialogOpening = useCallback(() => {
-    fetchList.refetch();
-    fetchAccounts.refetch();
-  }, [fetchList, fetchAccounts]);
-
   const onChangeParentCategory = useCallback(
     (parentCategory) => {
       setParentCategory(parentCategory);
@@ -205,41 +199,15 @@ function ItemCategoryDialog({
     [setFieldValue],
   );
 
-  const onDialogClosed = useCallback(() => {
-    resetForm();
-    closeDialog(dialogName);
-  }, [resetForm, closeDialog, dialogName]);
-
-  const requiredSpan = useMemo(() => <span class="required">*</span>, []);
-  const infoIcon = useMemo(() => <Icon icon="info-circle" iconSize={12} />, []);
-
   return (
-    <Dialog
-      name={dialogName}
-      title={
-        payload.action === 'edit' ? (
-          <T id={'edit_category'} />
-        ) : (
-          <T id={'new_category'} />
-        )
-      }
-      className={classNames(
-        {
-          'dialog--loading': fetchList.isFetching || fetchAccounts.isFetching,
-        },
-        'dialog--category-form',
-      )}
-      isOpen={isOpen}
-      onClosed={onDialogClosed}
-      onOpening={onDialogOpening}
-      isLoading={fetchList.isFetching || fetchAccounts.isFetching}
-      onClose={handleClose}
-    >
+    <DialogContent isLoading={fetchList.isFetching || fetchAccounts.isFetching}>
       <form onSubmit={handleSubmit}>
         <div className={Classes.DIALOG_BODY}>
+          
+          {/* ----------- Category name ----------- */}
           <FormGroup
             label={<T id={'category_name'} />}
-            labelInfo={requiredSpan}
+            labelInfo={FieldRequiredHint}
             className={'form-group--category-name'}
             intent={errors.name && touched.name && Intent.DANGER}
             helperText={<ErrorMessage name="name" {...{ errors, touched }} />}
@@ -251,10 +219,10 @@ function ItemCategoryDialog({
               {...getFieldProps('name')}
             />
           </FormGroup>
-
+          {/* ----------- Parent Category ----------- */}
           <FormGroup
             label={<T id={'parent_category'} />}
-            labelInfo={infoIcon}
+            labelInfo={Hint}
             className={classNames(
               'form-group--select-list',
               'form-group--parent-category',
@@ -286,7 +254,7 @@ function ItemCategoryDialog({
               labelProp={'name'}
             />
           </FormGroup>
-
+          {/* ----------- Description ----------- */}
           <FormGroup
             label={<T id={'description'} />}
             className={'form-group--description'}
@@ -302,8 +270,7 @@ function ItemCategoryDialog({
               {...getFieldProps('description')}
             />
           </FormGroup>
-
-          {/* cost account */}
+          {/* ----------- Cost account ----------- */}
           <FormGroup
             label={<T id={'cost_account'} />}
             inline={true}
@@ -326,8 +293,7 @@ function ItemCategoryDialog({
               selectedAccountId={values.cost_account_id}
             />
           </FormGroup>
-
-          {/* sell Account */}
+          {/* ----------- Sell account ----------- */}
           <FormGroup
             label={<T id={'sell_account'} />}
             inline={true}
@@ -350,7 +316,7 @@ function ItemCategoryDialog({
               selectedAccountId={values.sell_account_id}
             />
           </FormGroup>
-          {/* inventory Account */}
+          {/* ----------- inventory account ----------- */}
           <FormGroup
             label={<T id={'inventory_account'} />}
             inline={true}
@@ -390,29 +356,16 @@ function ItemCategoryDialog({
               type="submit"
               disabled={isSubmitting}
             >
-              {payload.action === 'edit' ? (
-                <T id={'edit'} />
-              ) : (
-                <T id={'submit'} />
-              )}
+              {action === 'edit' ? <T id={'edit'} /> : <T id={'submit'} />}
             </Button>
           </div>
         </div>
       </form>
-    </Dialog>
+    </DialogContent>
   );
 }
 
-const mapStateToProps = (state, props) => ({
-  dialogName: 'item-category-form',
-  itemCategoryId: props?.payload?.id || null,
-});
-
-const withItemCategoryDialog = connect(mapStateToProps);
-
 export default compose(
-  withDialogRedux(null, 'item-category-form'),
-  withItemCategoryDialog,
   withDialogActions,
   withItemCategoryDetail(),
   withItemCategories(({ categoriesList }) => ({
@@ -423,4 +376,4 @@ export default compose(
   })),
   withItemCategoriesActions,
   withAccountsActions,
-)(ItemCategoryDialog);
+)(ItemCategoryFormDialogContent);
