@@ -175,8 +175,8 @@ export default class CustomersController extends ContactsController {
     const { id: contactId } = req.params;
 
     try {
-      const contact = await this.customersService.getCustomer(tenantId, contactId)
-      return res.status(200).send({ contact });
+      const customer = await this.customersService.getCustomer(tenantId, contactId);
+      return res.status(200).send({ customer });
     } catch (error) {
       next(error);
     }

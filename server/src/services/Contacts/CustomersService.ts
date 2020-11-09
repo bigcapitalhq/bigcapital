@@ -14,7 +14,8 @@ import {
   IPaginationMeta,
   ICustomersFilter,
   IContactNewDTO,
-  IContactEditDTO
+  IContactEditDTO,
+  IContact
  } from 'interfaces';
 import { ServiceError } from 'exceptions';
 import TenancyService from 'services/Tenancy/TenancyService';
@@ -63,6 +64,13 @@ export default class CustomersService {
       openingBalanceAt: customerDTO?.openingBalanceAt
         ? moment(customerDTO.openingBalanceAt).toMySqlDateTime() : null,
     }
+  }
+
+  private transformContactToCustomer(contactModel: IContact) {
+    return {
+      ...omit(contactModel, ['contactService', 'contactType']),
+      customerType: contactModel.contactService,
+    };
   }
 
   /**
@@ -153,7 +161,8 @@ export default class CustomersService {
    * @param {number} customerId 
    */
   public async getCustomer(tenantId: number, customerId: number) {
-    return this.contactService.getContact(tenantId, customerId, 'customer');
+    const contact = await this.contactService.getContact(tenantId, customerId, 'customer');
+    return this.transformContactToCustomer(contact);
   }
 
   /**
@@ -177,7 +186,7 @@ export default class CustomersService {
     );
 
     return {
-      customers: results,
+      customers: results.map(this.transformContactToCustomer),
       pagination,
       filterMeta: dynamicList.getResponseMeta(),
     };
