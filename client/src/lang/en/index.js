@@ -219,6 +219,8 @@ export default {
     'The item category has been successfully edited.',
   the_item_category_has_been_successfully_deleted:
     'The item category has been successfully deleted',
+    once_delete_these_item_categories_you_will_not_able_restore_them:
+    "Once you delete these categories, you won't be able to retrieve them later. Are you sure you want to delete them?",
   once_delete_these_views_you_will_not_able_restore_them:
     "Once you delete the custom view, you won't be able to restore it later. Are you sure you want to delete this view?",
   the_custom_view_has_been_successfully_deleted:
@@ -346,7 +348,7 @@ export default {
   once_delete_this_currency_you_will_able_to_restore_it: `Once you delete this currency, you won\'t be able to restore it later. Are you sure you want to delete this currency?`,
   once_delete_this_exchange_rate_you_will_able_to_restore_it: `Once you delete this exchange rate, you won\'t be able to restore it later. Are you sure you want to delete this exchange rate?`,
   once_delete_these_exchange_rates_you_will_not_able_restore_them: `Once you delete these exchange rates, you won't be able to retrieve them later. Are you sure you want to delete them?`,
-  once_delete_this_item_category_you_will_able_to_restore_it: `Once you delete this item, you won\'t be able to restore it later. Are you sure you want to delete this item?`,
+  once_delete_this_item_category_you_will_able_to_restore_it: `Once you delete this category, you won\'t be able to restore it later. Are you sure you want to delete this item?`,
   select_business_location: 'Select Business Location',
   select_base_currency: 'Select Base Currency',
   select_fiscal_year: 'Select Fiscal Year',
@@ -807,4 +809,5 @@ export default {
   notes: 'Notes',
   i_purchase_this_item: 'I purchase this item from a vendor.',
   i_sell_this_item: 'I sell this item to a customer.',
+  select_display_name_as:'Select display name as',
 };
