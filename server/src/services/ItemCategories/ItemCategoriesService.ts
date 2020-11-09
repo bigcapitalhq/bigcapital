@@ -82,7 +82,11 @@ export default class ItemCategoriesService implements IItemCategoriesService {
    * @param {IItemCategoryOTD} itemCategoryOTD 
    * @return {Promise<void>}
    */
-  public async newItemCategory(tenantId: number, itemCategoryOTD: IItemCategoryOTD, authorizedUser: ISystemUser): Promise<IItemCategory> {
+  public async newItemCategory(
+    tenantId: number,
+    itemCategoryOTD: IItemCategoryOTD,
+    authorizedUser: ISystemUser
+  ): Promise<IItemCategory> {
     const { ItemCategory } = this.tenancy.models(tenantId);
     this.logger.info('[item_category] trying to insert a new item category.', { tenantId });
 
@@ -181,7 +185,13 @@ export default class ItemCategoriesService implements IItemCategoriesService {
    * @param {IItemCategoryOTD} itemCategoryOTD 
    * @return {Promise<void>}
    */
-  public async editItemCategory(tenantId: number, itemCategoryId: number, itemCategoryOTD: IItemCategoryOTD, authorizedUser: ISystemUser): Promise<IItemCategory> {
+  public async editItemCategory(
+    tenantId: number,
+    itemCategoryId: number,
+    itemCategoryOTD: IItemCategoryOTD,
+    authorizedUser: ISystemUser,
+  ): Promise<IItemCategory> {
+    const { ItemCategory } = this.tenancy.models(tenantId);
     const oldItemCategory = await this.getItemCategoryOrThrowError(tenantId, itemCategoryId);
 
     if (itemCategoryOTD.sellAccountId) {       
