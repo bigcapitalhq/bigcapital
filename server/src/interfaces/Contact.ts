@@ -52,12 +52,14 @@ export interface IContact extends IContactAddress{
   openingBalance: number,
   openingBalanceAt: Date,
 
+  salutation: string,
   firstName: string,
   lastName: string,
   companyName: string,
   displayName: string,
 
   email: string,
+  website: string,
   workPhone: string,
   personalPhone: string,
 
@@ -72,26 +74,30 @@ export interface IContactNewDTO {
   openingBalance?: number,
   openingBalanceAt?: string,
 
+  salutation?: string,
   firstName?: string,
   lastName?: string,
   companyName?: string,
   displayName: string,
 
+  website?: string,
   email?: string,
   workPhone?: string,
   personalPhone?: string,
 
   note?: string,
-  active: boolean, 
+  active: boolean,
 }
 export interface IContactEditDTO {
   contactType?: string,
 
+  salutation?: string,
   firstName?: string,
   lastName?: string,
   companyName?: string,
   displayName: string,
 
+  website?: string,
   email?: string,
   workPhone?: string,
   personalPhone?: string,
@@ -113,11 +119,13 @@ export interface ICustomerNewDTO extends IContactAddressDTO {
   openingBalance?: number,
   openingBalanceAt?: string,
 
+  salutation?: string,
   firstName?: string,
   lastName?: string,
   companyName?: string,
   displayName: string,
 
+  website?: string,
   email?: string,
   workPhone?: string,
   personalPhone?: string,
@@ -128,11 +136,13 @@ export interface ICustomerNewDTO extends IContactAddressDTO {
 export interface ICustomerEditDTO extends IContactAddressDTO {
   customerType: string,
 
+  salutation?: string,
   firstName?: string,
   lastName?: string,
   companyName?: string,
   displayName: string,
 
+  website?: string,
   email?: string,
   workPhone?: string,
   personalPhone?: string,
@@ -152,11 +162,13 @@ export interface IVendorNewDTO extends IContactAddressDTO {
   openingBalance?: number,
   openingBalanceAt?: string,
 
+  salutation?: string,
   firstName?: string,
   lastName?: string,
   companyName?: string,
   displayName: string,
 
+  website?: string,
   email?: string,
   workPhone?: string,
   personalPhone?: string,
@@ -165,11 +177,13 @@ export interface IVendorNewDTO extends IContactAddressDTO {
   active?: boolean, 
 };
 export interface IVendorEditDTO extends IContactAddressDTO {
+  salutation?: string,
   firstName?: string,
   lastName?: string,
   companyName?: string,
   displayName?: string,
 
+  website?: string,
   email?: string,
   workPhone?: string,
   personalPhone?: string,

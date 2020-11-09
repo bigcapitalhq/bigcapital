@@ -7,6 +7,7 @@ export default class ContactsController extends BaseController {
    */
   get contactDTOSchema(): ValidationChain[] {
     return [
+      check('salutation').optional().trim().escape(),
       check('first_name').optional().trim().escape(),
       check('last_name').optional().trim().escape(),
 
@@ -14,6 +15,7 @@ export default class ContactsController extends BaseController {
       check('display_name').exists().trim().escape(),
 
       check('email').optional().isEmail().trim().escape(),
+      check('website').optional().trim().escape(),
       check('work_phone').optional().trim().escape(),
       check('personal_phone').optional().trim().escape(),
 

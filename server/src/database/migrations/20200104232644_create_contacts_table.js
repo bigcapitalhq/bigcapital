@@ -12,6 +12,7 @@ exports.up = function(knex) {
     table.decimal('opening_balance', 13, 3).defaultTo(0);
     table.date('opening_balance_at');
 
+    table.string('salutation').nullable();
     table.string('first_name').nullable();
     table.string('last_name').nullable();
     table.string('company_name').nullable();
@@ -21,9 +22,10 @@ exports.up = function(knex) {
     table.string('email').nullable();
     table.string('work_phone').nullable();
     table.string('personal_phone').nullable();
+    table.string('website').nullable();
 
-    table.string('billing_address1').nullable();
-    table.string('billing_address2').nullable();
+    table.string('billing_address_1').nullable();
+    table.string('billing_address_2').nullable();
     table.string('billing_address_city').nullable();
     table.string('billing_address_country').nullable();
     table.string('billing_address_email').nullable();

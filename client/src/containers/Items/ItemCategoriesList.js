@@ -59,7 +59,7 @@ const ItemCategoryList = ({
   );
 
   const fetchResourceFields = useQuery(
-    ['resource-fields', 'items_categories'],
+    ['resource-fields', 'item_category'],
     (key, resourceName) => requestFetchResourceFields(resourceName),
   );
 
