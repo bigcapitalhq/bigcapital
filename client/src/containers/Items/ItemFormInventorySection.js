@@ -1,11 +1,17 @@
 import React from 'react';
-import { FormGroup, Intent, InputGroup, Classes } from '@blueprintjs/core';
-import { AccountsSelectList, ErrorMessage, Col, Row } from 'components';
+import {
+  FormGroup,
+  Intent,
+  InputGroup,
+  Position,
+} from '@blueprintjs/core';
+import { DateInput } from '@blueprintjs/datetime';
+import { AccountsSelectList, ErrorMessage, Col, Row, Hint } from 'components';
+import { CLASSES } from 'common/classes';
 import { FormattedMessage as T } from 'react-intl';
 import classNames from 'classnames';
 import withAccounts from 'containers/Accounts/withAccounts';
-
-import { compose } from 'utils';
+import { compose, tansformDateValue, momentFormatter } from 'utils';
 
 /**
  * Item form inventory sections.
@@ -21,12 +27,12 @@ function ItemFormInventorySection({
 }) {
   return (
     <div class="page-form__section page-form__section--inventory">
+      <h3>
+        <T id={'inventory_information'} />
+      </h3>
+
       <Row>
         <Col xs={6}>
-          <h3>
-            <T id={'inventory_information'} />
-          </h3>
-
           {/*------------- Inventory account ------------- */}
           <FormGroup
             label={<T id={'inventory_account'} />}
@@ -45,7 +51,7 @@ function ItemFormInventorySection({
             className={classNames(
               'form-group--item-inventory_account',
               'form-group--select-list',
-              Classes.FILL,
+              CLASSES.FILL,
             )}
           >
             <AccountsSelectList
@@ -59,26 +65,50 @@ function ItemFormInventorySection({
           </FormGroup>
 
           <FormGroup
-            label={<T id={'opening_stock'} />}
-            className={'form-group--item-stock'}
+            label={<T id={'opening_quantity'} />}
+            labelInfo={<Hint />}
+            className={'form-group--opening_quantity'}
             inline={true}
           >
             <InputGroup
               medium={true}
-              intent={errors.stock && Intent.DANGER}
-              {...getFieldProps('stock')}
+              intent={errors.opening_quantity && Intent.DANGER}
+              {...getFieldProps('opening_quantity')}
             />
           </FormGroup>
 
           <FormGroup
-            label={'Opening average cost'}
-            className={'form-group--item-stock'}
+            label={<T id={'opening_date'} />}
+            labelInfo={<Hint />}
+            className={classNames(
+              'form-group--select-list',
+              'form-group--opening_date',
+              CLASSES.FILL,
+            )}
+            inline={true}
+          >
+            <DateInput
+              {...momentFormatter('YYYY/MM/DD')}
+              value={tansformDateValue(values.payment_date)}
+              onChange={(value) => {
+                setFieldValue('opening_date', value);
+              }}
+              popoverProps={{ position: Position.BOTTOM, minimal: true }}
+            />
+          </FormGroup>
+        </Col>
+
+        <Col xs={6}>
+          <FormGroup
+            label={'Opening average rate'}
+            labelInfo={<Hint />}
+            className={'form-group--opening_average_rate'}
             inline={true}
           >
             <InputGroup
               medium={true}
-              intent={errors.stock && Intent.DANGER}
-              {...getFieldProps('stock')}
+              intent={errors.opening_average_rate && Intent.DANGER}
+              {...getFieldProps('opening_average_rate')}
             />
           </FormGroup>
         </Col>

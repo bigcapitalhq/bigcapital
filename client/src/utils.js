@@ -278,3 +278,10 @@ export const itemsStartWith = (items, char) => {
 export const saveInvoke = (func, ...rest) => {
   return func && func(...rest);
 }
+
+export const transformToForm = (obj, emptyInitialValues) => {
+  return _.pickBy(
+    obj,
+    (val, key) => val !== null && Object.keys(emptyInitialValues).includes(key),
+  )
+}

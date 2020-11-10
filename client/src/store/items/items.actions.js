@@ -80,7 +80,7 @@ export const deleteItem = ({ id }) => {
           resolve(response);
         })
         .catch((error) => {
-          reject(error);
+          reject(error?.response?.data);
         });
     });
 };
