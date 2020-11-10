@@ -41,6 +41,7 @@ const defaultInitialValues = {
   purchasable: true,
 };
 
+
 /**
  * Item form.
  */
@@ -119,13 +120,12 @@ function ItemForm({
         then: Yup.number().required(),
         otherwise: Yup.number().nullable(),
       })
-      .label(formatMessage({ id: 'Inventory account' })),
+      .label(formatMessage({ id: 'inventory_account' })),
     category_id: Yup.number().positive().nullable(),
     stock: Yup.string() || Yup.boolean(),
     sellable: Yup.boolean().required(),
     purchasable: Yup.boolean().required(),
   });
-
 
   /**
    * Initial values in create and edit mode.
@@ -150,6 +150,14 @@ function ItemForm({
       : changePageTitle(formatMessage({ id: 'new_item' }));
   }, [changePageTitle, isNewMode, formatMessage]);
 
+  const transformApiErrors = (errors) => {
+    const fields = {};
+    if (errors.find(e => e.type === 'ITEM.NAME.ALREADY.EXISTS')) {
+      fields.name = formatMessage({ id: 'the_name_used_before' })
+    }
+    return fields;
+  }
+
   // Handles the form submit.
   const handleFormSubmit = (values, { setSubmitting, resetForm, setErrors }) => {
     setSubmitting(true);
@@ -173,8 +181,13 @@ function ItemForm({
       history.push('/items');
       queryCache.removeQueries(['items-table']);
     };
-    const onError = (response) => {
+    const onError = ({ response }) => {
       setSubmitting(false);
+
+      if (response.data.errors) {
+        const _errors = transformApiErrors(response.data.errors);
+        setErrors({ ..._errors });
+      }
     };
     if (isNewMode) {
       requestSubmitItem(form).then(onSuccess).catch(onError);
@@ -204,7 +217,7 @@ function ItemForm({
     } else {
       changePageSubtitle('');
     }
-  }, [values.item_type]);
+  }, [values.item_type, changePageSubtitle, formatMessage]);
 
   const initialAttachmentFiles = useMemo(() => {
     return itemDetail && itemDetail.media
@@ -240,24 +253,24 @@ function ItemForm({
       <form onSubmit={handleSubmit}>
         <div class={classNames(CLASSES.PAGE_FORM_BODY)}>
           <ItemFormPrimarySection
+            errors={errors}
+            touched={touched}
+            values={values}
             getFieldProps={getFieldProps}
             setFieldValue={setFieldValue}
-            errors={errors}
-            touched={touched}
-            values={values}
           />
           <ItemFormBody
-            getFieldProps={getFieldProps}
             touched={touched}
             errors={errors}
             values={values}
+            getFieldProps={getFieldProps}
             setFieldValue={setFieldValue}
           />
           <ItemFormInventorySection
             errors={errors}
             touched={touched}
-            setFieldValue={setFieldValue}
             values={values}
+            setFieldValue={setFieldValue}
             getFieldProps={getFieldProps}
           />
         </div>

@@ -81,56 +81,21 @@
 }
 
 
-// .item-form{
-//   padding: 22px;
-//   padding-bottom: 90px;
 
-//   &__primary-section{
-//     background-color: #FAFAFA;
-//     padding: 40px 22px 22px;
-//     margin: -22px -22px 22px;
-//     background-color: #FAFAFA;
-//   }
-//   &__accounts-section{
-//     h4{
-//       margin: 0;
-//       font-weight: 500;
-//       margin-bottom: 20px;
-//       color: #828282;
-//     }
-//     > div:first-of-type{
-//       padding-right: 15px !important;
-//     }
+.dashboard__insider--items-list{
 
-//     > div ~ div{
-//       padding-left: 15px !important;
-//       border-left: 1px solid #e8e8e8;
-//     }
-//   }
 
-//   .#{$ns}-form-group{
-//     .#{$ns}-label{
-//       width: 130px;
-//     }
+  .bigcapital-datatable{
 
-//     .#{$ns}-form-content{
-//       width: 250px;
-//     }    
-//   }
+    .table{
+      .tbody{
+        .item_type.td{
 
-//   .form-group--item-type,
-//   .form-group--item-name{
-    
-//     .#{$ns}-form-content{
-//       width: 350px;
-//     }  
-//   }
-
-//   .form-group--active{
-//     margin-bottom: 5px;
-
-//     .bp3-control.bp3-checkbox{
-//       margin: 0;
-//     }
-//   }
-// }
+          .bp3-tag{
+            font-size: 13px;
+          }
+        }
+      }
+    }
+  }
+}

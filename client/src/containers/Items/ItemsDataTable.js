@@ -7,6 +7,7 @@ import {
   MenuDivider,
   Position,
   Intent,
+  Tag,
 } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { Icon, DataTable, Money, If, Choose } from 'components';
@@ -14,6 +15,7 @@ import { Icon, DataTable, Money, If, Choose } from 'components';
 import LoadingIndicator from 'components/LoadingIndicator';
 import withItems from 'containers/Items/withItems';
 import { compose } from 'utils';
+
 
 const ItemsDataTable = ({
   loading,
@@ -87,43 +89,58 @@ const ItemsDataTable = ({
       {
         Header: formatMessage({ id: 'item_name' }),
         accessor: 'name',
-        className: 'actions',
+        className: 'name',
+        width: 180,
       },
       {
-        Header: formatMessage({ id: 'sku' }),
+        Header: formatMessage({ id: 'item_code' }),
         accessor: 'sku',
         className: 'sku',
+        width: 120,
+      },
+      {
+        Header: formatMessage({ id: 'item_type' }),
+        accessor: (row) =>
+          row.type ? (
+            <Tag minimal={true} round={true} intent={Intent.NONE}>
+              {formatMessage({ id: row.type })}
+            </Tag>
+          ) : (
+            ''
+          ),
+        className: 'item_type',
+        width: 120,
       },
       {
         Header: formatMessage({ id: 'category' }),
         accessor: 'category.name',
         className: 'category',
+        width: 150,
       },
       {
         Header: formatMessage({ id: 'sell_price' }),
         accessor: (row) => <Money amount={row.sell_price} currency={'USD'} />,
         className: 'sell-price',
+        width: 150,
       },
       {
         Header: formatMessage({ id: 'cost_price' }),
         accessor: (row) => <Money amount={row.cost_price} currency={'USD'} />,
         className: 'cost-price',
+        width: 150,
       },
-      // {
-      //   Header: 'Cost Account',
-      //   accessor: 'cost_account.name',
-      //   className: "cost-account",
-      // },
-      // {
-      //   Header: 'Sell Account',
-      //   accessor: 'sell_account.name',
-      //   className: "sell-account",
-      // },
-      // {
-      //   Header: 'Inventory Account',
-      //   accessor: 'inventory_account.name',
-      //   className: "inventory-account",
-      // },
+      {
+        Header: formatMessage({ id: 'quantity_on_hand' }),
+        accessor: 'quantity_on_hand',
+        className: 'quantity_on_hand',
+        width: 140,
+      },
+      {
+        Header: formatMessage({ id: 'average_rate' }),
+        accessor: 'average_cost_rate',
+        className: 'average_cost_rate',
+        width: 140,
+      },
       {
         id: 'actions',
         Cell: ({ cell }) => (

@@ -9,7 +9,7 @@ import {
   Position,
   Tooltip,
 } from '@blueprintjs/core';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'react-intl';
 import {
   CategoriesSelectList,
   ErrorMessage,
@@ -83,7 +83,7 @@ function ItemFormPrimarySection({
               />
               <Radio
                 label={<T id={'non_inventory'} />}
-                value="non_inventory"
+                value="non-inventory"
               />
             </RadioGroup>
           </FormGroup>

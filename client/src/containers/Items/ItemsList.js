@@ -189,8 +189,6 @@ function ItemsList({
   return (
     <DashboardInsider
       loading={fetchResourceViews.isFetching || fetchResourceFields.isFetching}
-      // isLoading={fetchHook.isFetching}
-
       name={'items-list'}
     >
       <ItemsActionsBar

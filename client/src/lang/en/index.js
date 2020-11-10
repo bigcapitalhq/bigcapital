@@ -812,4 +812,7 @@ export default {
   select_display_name_as:'Select display name as',
   opening_date: 'Opening date',
   item_code: 'Item code',
+  quantity_on_hand: 'Quantity on hand',
+  average_rate: 'Average rate',
+  the_name_used_before: 'The name is already used.'
 };
