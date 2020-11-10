@@ -89,6 +89,7 @@ export default class BillsController extends BaseController {
   get billValidationSchema() {
     return [
       check('bill_number').exists().trim().escape(),
+      check('reference_no').optional().trim().escape(),
       check('bill_date').exists().isISO8601(),
       check('due_date').optional().isISO8601(),
       check('vendor_id').exists().isNumeric().toInt(),
@@ -111,6 +112,7 @@ export default class BillsController extends BaseController {
   get billEditValidationSchema() {
     return [
       check('bill_number').exists().trim().escape(),
+      check('reference_no').optional().trim().escape(),
       check('bill_date').exists().isISO8601(),
       check('due_date').optional().isISO8601(),
       check('vendor_id').exists().isNumeric().toInt(),

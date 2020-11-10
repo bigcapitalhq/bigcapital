@@ -6,13 +6,11 @@ exports.up = function(knex) {
     table.string('bill_number');
     table.date('bill_date').index();
     table.date('due_date').index();
-    table.string('reference_no');
+    table.string('reference_no').index();
     table.string('status').index();
     table.text('note');
-
     table.decimal('amount', 13, 3).defaultTo(0);
     table.decimal('payment_amount', 13, 3).defaultTo(0);
-
     table.string('inv_lot_number').index();
     table.integer('user_id').unsigned();
     table.timestamps();
