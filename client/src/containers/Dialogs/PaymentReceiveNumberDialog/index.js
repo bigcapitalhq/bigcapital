@@ -4,25 +4,30 @@ import { Dialog, DialogSuspense } from 'components';
 import withDialogRedux from 'components/DialogReduxConnect';
 import { compose } from 'utils';
 
-const PaymentNumbereDialogConetnet = lazy(() =>
-  import('./PaymentNumberDialogContent'),
+const PaymentReceiveNumbereDialogConetnet = lazy(() =>
+  import('./PaymentReceiveNumberDialogContent'),
 );
 
-function PaymentNumberDialog({ dialogName, payload = { id: null }, isOpen }) {
+function PaymentReceiveNumberDialog({
+  dialogName,
+  payload = { id: null },
+  isOpen,
+}) {
   return (
     <Dialog
-      name={dialogName}
-      name={dialogName}
       title={<T id={'payment_number_settings'} />}
+      name={dialogName}
       autoFocus={true}
       canEscapeKeyClose={true}
       isOpen={isOpen}
     >
       <DialogSuspense>
-        <PaymentNumbereDialogConetnet paymentNumberId={payload.id} />
+        <PaymentReceiveNumbereDialogConetnet
+          paymentReceiveNumberId={payload.id}
+        />
       </DialogSuspense>
     </Dialog>
   );
 }
 
-export default compose(withDialogRedux())(PaymentNumberDialog);
+export default compose(withDialogRedux())(PaymentReceiveNumberDialog);

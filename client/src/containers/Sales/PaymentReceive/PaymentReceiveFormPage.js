@@ -35,17 +35,6 @@ function PaymentReceiveFormPage({
   requestFetchCustomers
 }) {
   const { id: paymentReceiveId } = useParams();
-  const { formatMessage } = useIntl();
-
-  useEffect(() => {
-    console.log(paymentReceiveId, 'X');
-
-    if (paymentReceiveId) {
-      changePageTitle(formatMessage({ id: 'edit_payment_receive' }));
-    } else {
-      changePageTitle(formatMessage({ id: 'payment_receive' }));
-    }
-  }, [changePageTitle, paymentReceiveId, formatMessage]);
 
   // Fetches payment recevie details.
   const fetchPaymentReceive = useQuery(
@@ -72,7 +61,7 @@ function PaymentReceiveFormPage({
       loading={
         fetchPaymentReceive.isFetching ||
         fetchAccounts.isFetching ||
-        fetchSettings.isFetching || 
+        // fetchSettings.isFetching || 
         fetchCustomers.isFetching
       }>
       <PaymentReceiveForm

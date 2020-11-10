@@ -13,18 +13,21 @@ import moment from 'moment';
 import classNames from 'classnames';
 
 import { CLASSES } from 'common/classes';
-import { momentFormatter, compose, tansformDateValue } from 'utils';
+import { momentFormatter, compose, tansformDateValue, saveInvoke } from 'utils';
 import {
   AccountsSelectList,
   ContactSelecetList,
   ErrorMessage,
   FieldRequiredHint,
+  Icon,
+  InputPrependButton,
   Hint,
   Money,
 } from 'components';
 
 import withCustomers from 'containers/Customers/withCustomers';
 import withAccounts from 'containers/Accounts/withAccounts';
+import withDialogActions from 'containers/Dialog/withDialogActions';
 
 function PaymentReceiveFormHeader({
   // #useFormik
@@ -46,6 +49,11 @@ function PaymentReceiveFormHeader({
 
   // #withInvoices
   receivableInvoices,
+  // #ownProps
+  onPaymentReceiveNumberChanged,
+
+  //#withDialogActions
+  openDialog,
 }) {
   const handleDateChange = useCallback(
     (date_filed) => (date) => {
@@ -76,6 +84,14 @@ function PaymentReceiveFormHeader({
   const handleReceiveFullAmountClick = () => {
     setFieldValue('full_amount', receivableFullAmount);
     triggerFullAmountChanged(receivableFullAmount);
+  };
+
+  const handlePaymentReceiveNumberChange = useCallback(() => {
+    openDialog('payment-receive-number-form', {});
+  }, [openDialog]);
+
+  const handlePaymentReceiveNumberChanged = (event) => {
+    saveInvoke(onPaymentReceiveNumberChanged, event.currentTarget.value);
   };
 
   return (
@@ -177,7 +193,22 @@ function PaymentReceiveFormHeader({
                 Intent.DANGER
               }
               minimal={true}
+              rightElement={
+                <InputPrependButton
+                  buttonProps={{
+                    onClick: handlePaymentReceiveNumberChange,
+                    icon: <Icon icon={'settings-18'} />,
+                  }}
+                  tooltip={true}
+                  tooltipProps={{
+                    content:
+                      'Setting your auto-generated Payment Receive number',
+                    position: Position.BOTTOM_LEFT,
+                  }}
+                />
+              }
               {...getFieldProps('payment_receive_no')}
+              onBlur={handlePaymentReceiveNumberChanged}
             />
           </FormGroup>
 
@@ -255,4 +286,5 @@ export default compose(
   withAccounts(({ accountsList }) => ({
     accountsList,
   })),
+  withDialogActions,
 )(PaymentReceiveFormHeader);

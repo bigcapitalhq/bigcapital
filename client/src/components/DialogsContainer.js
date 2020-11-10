@@ -19,7 +19,7 @@ export default function DialogsContainer() {
       <AccountFormDialog dialogName={'account-form'} />
       <JournalNumberDialog dialogName={'journal-number-form'} />
       {/* <BillNumberDialog dialogName={'bill-number-form'} /> */}
-      <PaymentReceiveNumberDialog dialogName={'payment-number-form'} />
+      <PaymentReceiveNumberDialog dialogName={'payment-receive-number-form'} />
       <EstimateNumberDialog dialogName={'estimate-number-form'} />
       <ReceiptNumberDialog dialogName={'receipt-number-form'} />
       <InvoiceNumberDialog dialogName={'invoice-number-form'} />
