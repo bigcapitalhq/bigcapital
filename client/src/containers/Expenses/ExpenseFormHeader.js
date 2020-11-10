@@ -63,12 +63,6 @@ function ExpenseFormHeader({
     [setFieldValue, selectedItems],
   );
 
-  // Filter payment accounts.
-  const paymentAccounts = useMemo(
-    () => accountsList.filter((a) => a?.type?.key === 'current_asset'),
-    [accountsList],
-  );
-
   // handle change customer
   const onChangeCustomer = useCallback(
     (filedName) => {
@@ -126,10 +120,11 @@ function ExpenseFormHeader({
             }
           >
             <AccountsSelectList
-              accounts={paymentAccounts}
+              accounts={accountsList}
               onAccountSelected={onChangeAccount}
               defaultSelectText={<T id={'select_payment_account'} />}
               selectedAccountId={values.payment_account_id}
+              filterByTypes={['current_asset']}
             />
           </FormGroup>
         </Col>

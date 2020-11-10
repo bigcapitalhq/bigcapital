@@ -76,11 +76,6 @@ function PaymentMadeFormHeader({
     },
     [setFieldValue],
   );
-  // Filter Payment accounts.
-  const paymentAccounts = useMemo(
-    () => accountsList.filter((a) => a?.type?.key === 'current_asset'),
-    [accountsList],
-  );
 
   const handleReceiveFullAmountClick = () => {
     setFieldValue('full_amount', payableFullAmount);
@@ -208,11 +203,12 @@ function PaymentMadeFormHeader({
           }
           >
             <AccountsSelectList
-              accounts={paymentAccounts}
+              accounts={accountsList}
               labelInfo={<FieldRequiredHint />}
               onAccountSelected={onChangeSelect('payment_account_id')}
               defaultSelectText={<T id={'select_payment_account'} />}
               selectedAccountId={values.payment_account_id}
+              filterByTypes={['current_asset']}
             />
           </FormGroup>
 

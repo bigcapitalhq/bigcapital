@@ -5,10 +5,20 @@ import { FormGroup, Classes, Intent } from '@blueprintjs/core';
 
 // Account cell renderer.
 const AccountCellRenderer = ({
-  column: { id, accountsDataProp },
+  column: {
+    id,
+    accountsDataProp,
+    filterAccountsByRootType,
+    filterAccountsByTypes,
+  },
   row: { index, original },
   cell: { value: initialValue },
-  payload: { accounts: defaultAccounts, updateData, errors, ...restProps },
+  payload: {
+    accounts: defaultAccounts,
+    updateData,
+    errors,
+    ...restPayloadProps
+  },
 }) => {
   const handleAccountSelected = useCallback(
     (account) => {
@@ -19,9 +29,10 @@ const AccountCellRenderer = ({
   const error = errors?.[index]?.[id];
 
   const accounts = useMemo(
-    () => restProps[accountsDataProp] || defaultAccounts,
-    [restProps, defaultAccounts, accountsDataProp],
+    () => restPayloadProps[accountsDataProp] || defaultAccounts,
+    [restPayloadProps, defaultAccounts, accountsDataProp],
   );
+
   return (
     <FormGroup
       intent={error ? Intent.DANGER : null}
@@ -35,6 +46,8 @@ const AccountCellRenderer = ({
         accounts={accounts}
         onAccountSelected={handleAccountSelected}
         selectedAccountId={initialValue}
+        filterByRootTypes={filterAccountsByRootType}
+        filterByTypes={filterAccountsByTypes}
       />
     </FormGroup>
   );

@@ -2,6 +2,7 @@ import React, { useCallback, useState, useEffect, useMemo } from 'react';
 import { MenuItem, Button } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
 import { FormattedMessage as T } from 'react-intl';
+import { isEmpty } from 'lodash';
 
 export default function AccountsSelectList({
   accounts,
@@ -10,11 +11,36 @@ export default function AccountsSelectList({
   defaultSelectText = 'Select account',
   onAccountSelected,
   disabled = false,
+  filterByRootTypes = [],
+  filterByTypes = [],
+  filterByNormal
 }) {
+  // Filters accounts based on filter props.
+  const filteredAccounts = useMemo(() => {
+    let filteredAccounts = [...accounts];
+
+    if (!isEmpty(filterByRootTypes)) {
+      filteredAccounts = filteredAccounts.filter(
+        (account) => filterByRootTypes.indexOf(account.type.root_type) !== -1,
+      );
+    }
+    if (!isEmpty(filterByTypes)) {
+      filteredAccounts = filteredAccounts.filter(
+        (account) => filterByTypes.indexOf(account.type.key) !== -1,
+      );
+    }
+    if (!isEmpty(filterByNormal)) {
+      filteredAccounts = filteredAccounts.filter(
+        (account) => filterByTypes.indexOf(account.type.normal) === filterByNormal,
+      );
+    }
+    return filteredAccounts;
+  }, [accounts, filterByRootTypes, filterByTypes, filterByNormal]);
+
   // Find initial account object to set it as default account in initial render.
   const initialAccount = useMemo(
-    () => accounts.find((a) => a.id === initialAccountId),
-    [initialAccountId],
+    () => filteredAccounts.find((a) => a.id === initialAccountId),
+    [initialAccountId, filteredAccounts],
   );
 
   const [selectedAccount, setSelectedAccount] = useState(
@@ -24,11 +50,11 @@ export default function AccountsSelectList({
   useEffect(() => {
     if (typeof selectedAccountId !== 'undefined') {
       const account = selectedAccountId
-        ? accounts.find((a) => a.id === selectedAccountId)
+        ? filteredAccounts.find((a) => a.id === selectedAccountId)
         : null;
       setSelectedAccount(account);
     }
-  }, [selectedAccountId, accounts, setSelectedAccount]);
+  }, [selectedAccountId, filteredAccounts, setSelectedAccount]);
 
   // Account item of select accounts field.
   const accountItem = useCallback((item, { handleClick, modifiers, query }) => {
@@ -69,7 +95,7 @@ export default function AccountsSelectList({
 
   return (
     <Select
-      items={accounts}
+      items={filteredAccounts}
       noResults={<MenuItem disabled={true} text={<T id={'no_accounts'} />} />}
       itemRenderer={accountItem}
       itemPredicate={filterAccountsPredicater}

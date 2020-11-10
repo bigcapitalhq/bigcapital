@@ -104,6 +104,7 @@ function ItemFormBody({
               defaultSelectText={<T id={'select_account'} />}
               selectedAccountId={values.sell_account_id}
               disabled={!values.sellable}
+              filterByTypes={['income']}
             />
           </FormGroup>
 
@@ -173,6 +174,7 @@ function ItemFormBody({
               defaultSelectText={<T id={'select_account'} />}
               selectedAccountId={values.cost_account_id}
               disabled={!values.purchasable}
+              filterByTypes={['cost_of_goods_sold']}
             />
           </FormGroup>
         </Col>

@@ -127,7 +127,7 @@ function ExpenseTable({
         disableSortBy: true,
         disableResizing: true,
         width: 250,
-        accountsDataProp: 'expenseAccounts',
+        filterAccountsByRootType: ['expense'],
       },
       {
         Header: formatMessage({ id: 'amount_currency' }, { currency: 'USD' }),
@@ -220,12 +220,6 @@ function ExpenseTable({
     [rows],
   );
 
-  // Filter expense accounts.
-  const expenseAccounts = useMemo(
-    () => accountsList.filter((a) => a?.type?.root_type === 'expense'),
-    [accountsList],
-  );
-
   return (
     <div className={'dashboard__insider--expense-form__table'}>
       <DataTable
@@ -235,7 +229,6 @@ function ExpenseTable({
         sticky={true}
         payload={{
           accounts: accountsList,
-          expenseAccounts,
           errors: errors.categories || [],
           updateData: handleUpdateData,
           removeRow: handleRemoveRow,
