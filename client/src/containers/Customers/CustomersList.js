@@ -16,8 +16,10 @@ import CustomersTable from 'containers/Customers/CustomerTable';
 import CustomerActionsBar from 'containers/Customers/CustomerActionsBar';
 import CustomersViewsTabs from 'containers/Customers/CustomersViewsTabs';
 
+import withCustomers from 'containers/Customers/withCustomers';
 import withCustomersActions from 'containers/Customers/withCustomersActions';
 import withResourceActions from 'containers/Resources/withResourcesActions';
+import withViewsActions from 'containers/Views/withViewsActions';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 
 import { compose } from 'utils';
@@ -30,7 +32,10 @@ function CustomersList({
   requestFetchResourceViews,
   requestFetchResourceFields,
 
-  //#withCustomersActions
+  // #withCustomers
+  customersTableQuery,
+
+  // #withCustomersActions
   requestFetchCustomers,
   requestDeleteCustomer,
   requestDeleteBulkCustomers,
@@ -57,9 +62,10 @@ function CustomersList({
   //   ]);
   // });
 
-  const fetchCustomers = useQuery('customers-table', () => {
-    requestFetchCustomers({});
-  });
+  const fetchCustomers = useQuery(
+    ['customers-table', customersTableQuery],
+    () => requestFetchCustomers(),
+  );
 
   const handleEditCustomer = useCallback(
     (cusomter) => {
@@ -67,6 +73,7 @@ function CustomersList({
     },
     [history],
   );
+
   // Handle click delete customer.
   const handleDeleteCustomer = useCallback(
     (customer) => {
@@ -169,26 +176,29 @@ function CustomersList({
   }, [requestDeleteBulkCustomers, bulkDelete, formatMessage]);
 
   return (
-    <DashboardInsider
-      loading={fetchCustomers.isFetching}
-      name={'customers-list'}
-    >
+    <DashboardInsider name={'customers-list'}>
       <CustomerActionsBar
         selectedRows={selectedRows}
         onFilterChanged={handleFilterChanged}
         onBulkDelete={handleBulkDelete}
       />
 
-      <CustomersViewsTabs />
-
       <DashboardPageContent>
-        <CustomersTable
-          loading={tableLoading}
-          onDeleteCustomer={handleDeleteCustomer}
-          onEditCustomer={handleEditCustomer}
-          onfetchData={handleFetchData}
-          onSelectedRowsChange={handleSelectedRowsChange}
-        />
+        <Switch>
+          <Route
+            exact={true}
+            path={['/customers/:custom_view_id/custom_view', '/customers']}
+          >
+            <CustomersViewsTabs />
+            <CustomersTable
+              loading={fetchCustomers.isFetching}
+              onDeleteCustomer={handleDeleteCustomer}
+              onEditCustomer={handleEditCustomer}
+              onfetchData={handleFetchData}
+              onSelectedRowsChange={handleSelectedRowsChange}
+            />
+          </Route>
+        </Switch>
 
         <Alert
           cancelButtonText={<T id={'cancel'} />}
@@ -230,6 +240,7 @@ function CustomersList({
 
 export default compose(
   withResourceActions,
-  withDashboardActions,
   withCustomersActions,
+  withDashboardActions,
+  withCustomers(({ customersTableQuery }) => ({ customersTableQuery })),
 )(CustomersList);

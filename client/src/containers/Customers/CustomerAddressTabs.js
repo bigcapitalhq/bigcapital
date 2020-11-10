@@ -18,7 +18,7 @@ const CustomerBillingAddress = ({
           <h4>
             <T id={'billing_address'} />
           </h4>
-
+          {/*------------ Billing Address country -----------*/}
           <FormGroup
             className={'form-group--journal-number'}
             intent={
@@ -44,7 +44,7 @@ const CustomerBillingAddress = ({
               {...getFieldProps('billing_address_country')}
             />
           </FormGroup>
-
+          {/*------------ Billing Address 1  -----------*/}
           <FormGroup
             label={<T id={'address_line_1'} />}
             className={'form-group--address_line_1'}
@@ -67,7 +67,7 @@ const CustomerBillingAddress = ({
               {...getFieldProps('billing_address_1')}
             />
           </FormGroup>
-
+          {/*------------ Billing Address 2  -----------*/}
           <FormGroup
             label={<T id={'address_line_2'} />}
             className={'form-group--journal-number'}
@@ -90,7 +90,7 @@ const CustomerBillingAddress = ({
               {...getFieldProps('billing_address_2')}
             />
           </FormGroup>
-
+          {/*------------ Billing Address city  -----------*/}
           <FormGroup
             label={<T id={'city_town'} />}
             className={'form-group--journal-number'}
@@ -116,7 +116,7 @@ const CustomerBillingAddress = ({
               {...getFieldProps('billing_address_city')}
             />
           </FormGroup>
-
+          {/*------------ Billing Address state  -----------*/}
           <FormGroup
             label={<T id={'state'} />}
             className={'form-group--journal-number'}
@@ -142,47 +142,47 @@ const CustomerBillingAddress = ({
               {...getFieldProps('billing_address_state')}
             />
           </FormGroup>
-
+          {/*------------ Billing Address postcode  -----------*/}
           <FormGroup
             label={<T id={'zip_code'} />}
             intent={
-              errors.billing_address_zipcode &&
-              touched.billing_address_zipcode &&
+              errors.billing_address_postcode &&
+              touched.billing_address_postcode &&
               Intent.DANGER
             }
             inline={true}
             helperText={
               <ErrorMessage
-                name="billing_address_zipcode"
+                name="billing_address_postcode"
                 {...{ errors, touched }}
               />
             }
           >
             <InputGroup
               intent={
-                errors.billing_address_zipcode &&
-                touched.billing_address_zipcode &&
+                errors.billing_address_postcode &&
+                touched.billing_address_postcode &&
                 Intent.DANGER
               }
-              {...getFieldProps('billing_address_zipcode')}
+              {...getFieldProps('billing_address_postcode')}
             />
           </FormGroup>
-
+          {/*------------ Billing Address phone  -----------*/}
           <FormGroup
             label={<T id={'phone'} />}
             intent={
-              errors.shipping_phone && touched.shipping_phone && Intent.DANGER
+              errors.billing_address_phone && touched.billing_address_phone && Intent.DANGER
             }
             inline={true}
             helperText={
-              <ErrorMessage name="shipping_phone" {...{ errors, touched }} />
+              <ErrorMessage name="billing_address_phone" {...{ errors, touched }} />
             }
           >
             <InputGroup
               intent={
-                errors.shipping_phone && touched.shipping_phone && Intent.DANGER
+                errors.billing_address_phone && touched.billing_address_phone && Intent.DANGER
               }
-              {...getFieldProps('shipping_phone')}
+              {...getFieldProps('billing_address_phone')}
             />
           </FormGroup>
         </Col>
@@ -191,7 +191,7 @@ const CustomerBillingAddress = ({
           <h4>
             <T id={'shipping_address'} />
           </h4>
-
+          {/*------------ Shipping Address country -----------*/}
           <FormGroup
             label={<T id={'country'} />}
             className={'form-group--journal-number'}
@@ -217,7 +217,7 @@ const CustomerBillingAddress = ({
               {...getFieldProps('shipping_address_country')}
             />
           </FormGroup>
-
+          {/*------------ Shipping Address 1  -----------*/}
           <FormGroup
             label={<T id={'address_line_1'} />}
             className={'form-group--journal-number'}
@@ -240,7 +240,7 @@ const CustomerBillingAddress = ({
               {...getFieldProps('billing_address_1')}
             />
           </FormGroup>
-
+          {/*------------ Shipping Address 2  -----------*/}
           <FormGroup
             label={<T id={'address_line_2'} />}
             className={'form-group--journal-number'}
@@ -263,7 +263,7 @@ const CustomerBillingAddress = ({
               {...getFieldProps('billing_address_2')}
             />
           </FormGroup>
-
+          {/*------------ Shipping Address city  -----------*/}
           <FormGroup
             label={<T id={'city_town'} />}
             className={'form-group--journal-number'}
@@ -289,7 +289,7 @@ const CustomerBillingAddress = ({
               {...getFieldProps('shipping_address_city')}
             />
           </FormGroup>
-
+          {/*------------ Shipping Address state  -----------*/}
           <FormGroup
             label={<T id={'state'} />}
             className={'form-group--journal-number'}
@@ -315,47 +315,47 @@ const CustomerBillingAddress = ({
               {...getFieldProps('shipping_address_state')}
             />
           </FormGroup>
-
+          {/*------------ Shipping Address postcode  -----------*/}
           <FormGroup
             label={<T id={'zip_code'} />}
             intent={
-              errors.shipping_address_zipcode &&
-              touched.shipping_address_zipcode &&
+              errors.shipping_address_postcode &&
+              touched.shipping_address_postcode &&
               Intent.DANGER
             }
             inline={true}
             helperText={
               <ErrorMessage
-                name="shipping_address_zipcode"
+                name="shipping_address_postcode"
                 {...{ errors, touched }}
               />
             }
           >
             <InputGroup
               intent={
-                errors.shipping_address_zipcode &&
-                touched.shipping_address_zipcode &&
+                errors.shipping_address_postcode &&
+                touched.shipping_address_postcode &&
                 Intent.DANGER
               }
-              {...getFieldProps('shipping_address_zipcode')}
+              {...getFieldProps('shipping_address_postcode')}
             />
           </FormGroup>
-
+          {/*------------ Shipping Address phone  -----------*/}
           <FormGroup
             label={<T id={'phone'} />}
             intent={
-              errors.shipping_phone && touched.shipping_phone && Intent.DANGER
+              errors.shipping_address_phone && touched.shipping_address_phone && Intent.DANGER
             }
             inline={true}
             helperText={
-              <ErrorMessage name="shipping_phone" {...{ errors, touched }} />
+              <ErrorMessage name="shipping_address_phone" {...{ errors, touched }} />
             }
           >
             <InputGroup
               intent={
-                errors.shipping_phone && touched.shipping_phone && Intent.DANGER
+                errors.shipping_address_phone && touched.shipping_address_phone && Intent.DANGER
               }
-              {...getFieldProps('shipping_phone')}
+              {...getFieldProps('shipping_address_phone')}
             />
           </FormGroup>
         </Col>

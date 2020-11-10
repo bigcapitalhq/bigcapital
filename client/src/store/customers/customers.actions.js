@@ -1,14 +1,9 @@
-import { resolve } from 'p-progress';
 import ApiService from 'services/ApiService';
 import t from 'store/types';
 
 export const submitCustomer = ({ form }) => {
   return (dispatch) =>
     new Promise((resolve, reject) => {
-      dispatch({
-        type: t.SET_DASHBOARD_REQUEST_LOADING,
-      });
-
       ApiService.post('customers', form)
         .then((response) => {
           resolve(response);
@@ -25,10 +20,6 @@ export const submitCustomer = ({ form }) => {
 export const editCustomer = ({ form, id }) => {
   return (dispatch) =>
     new Promise((resolve, reject) => {
-      dispatch({
-        type: t.SET_DASHBOARD_REQUEST_LOADING,
-      });
-
       ApiService.post(`customers/${id}`, form)
         .then((response) => {
           resolve(response);
@@ -45,7 +36,8 @@ export const editCustomer = ({ form, id }) => {
 export const fetchCustomers = ({ query }) => {
   return (dispatch, getState) =>
     new Promise((resolve, reject) => {
-      const pageQuery = getState().items.tableQuery;
+      const pageQuery = getState().customers.tableQuery;
+      
       dispatch({
         type: t.CUSTOMERS_TABLE_LOADING,
         payload: { loading: true },
@@ -53,14 +45,25 @@ export const fetchCustomers = ({ query }) => {
       ApiService.get(`customers`, { params: { ...pageQuery, ...query } })
         .then((response) => {
           dispatch({
-            type: t.CUSTOMERS_ITEMS_SET,
-            customers: response.data.customers,
+            type: t.CUSTOMERS_PAGE_SET,
+            payload: {
+              customers: response.data.customers,
+              customViewId: response.data.customViewId || -1,
+              paginationMeta: response.data.pagination,
+            },
           });
           dispatch({
-            type: t.CUSTOMERS_PAGE_SET,
-            customers: response.data.customers,
-            customViewId: response.data.customers?.viewMeta?.customViewId || -1,
-            paginationMeta: response.data.pagination,
+            type: t.CUSTOMERS_ITEMS_SET,
+            payload: {
+              customers: response.data.customers,
+            },
+          });
+          dispatch({
+            type: t.CUSTOMERS_PAGINATION_SET,
+            payload: {
+              pagination: response.data.pagination,
+              customViewId: response.data.customViewId || -1,
+            },
           });
           dispatch({
             type: t.CUSTOMERS_TABLE_LOADING,
@@ -83,7 +86,7 @@ export const fetchCustomer = ({ id }) => {
             type: t.CUSTOMER_SET,
             payload: {
               id,
-              customer: response.data.contact,
+              customer: response.data.customer,
             },
           });
           resolve(response);
@@ -99,7 +102,10 @@ export const deleteCustomer = ({ id }) => {
     new Promise((resolve, reject) => {
       ApiService.delete(`customers/${id}`)
         .then((response) => {
-          dispatch({ type: t.CUSTOMER_DELETE, id });
+          dispatch({
+            type: t.CUSTOMER_DELETE,
+            payload: { id },
+          });
           resolve(response);
         })
         .catch((error) => {

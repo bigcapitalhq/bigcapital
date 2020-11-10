@@ -2,22 +2,25 @@ import React, { useCallback } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { useQuery } from 'react-query';
 
-import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import CustomerForm from 'containers/Customers/CustomerForm';
+import DashboardInsider from 'components/Dashboard/DashboardInsider';
 
-import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withCustomersActions from './withCustomersActions';
+import withCurrenciesActions from 'containers/Currencies/withCurrenciesActions';
 
 import { compose } from 'utils';
 
 function Customer({
-  // #withDashboardActions
-  changePageTitle,
+  // // #withDashboardActions
+  // changePageTitle,
 
-  formik,
+  // formik,
   //#withCustomersActions
   requestFetchCustomers,
   requestFetchCustomer,
+
+  // #wihtCurrenciesActions
+  requestFetchCurrencies,
 }) {
   const { id } = useParams();
   const history = useHistory();
@@ -32,7 +35,11 @@ function Customer({
     (key, customerId) => requestFetchCustomer(customerId),
     { enabled: id && id },
   );
-  
+  // Handle fetch Currencies data table
+  const fetchCurrencies = useQuery('currencies', () =>
+    requestFetchCurrencies(),
+  );
+
   const handleFormSubmit = useCallback(
     (payload) => {
       payload.redirect && history.push('/customers');
@@ -46,7 +53,11 @@ function Customer({
 
   return (
     <DashboardInsider
-      loading={fetchCustomer.isFetching || fetchCustomers.isFetching}
+      loading={
+        fetchCustomer.isFetching ||
+        fetchCustomers.isFetching ||
+        fetchCurrencies.isFetching
+      }
       name={'customer-form'}
     >
       <CustomerForm
@@ -58,4 +69,4 @@ function Customer({
   );
 }
 
-export default compose(withDashboardActions, withCustomersActions)(Customer);
+export default compose(withCustomersActions, withCurrenciesActions)(Customer);

@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
+import moment from 'moment';
 import { Intent } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { useHistory } from 'react-router-dom';
@@ -24,6 +25,9 @@ import useMedia from 'hooks/useMedia';
 
 import { compose } from 'utils';
 
+/**
+ * Customer form.
+ */
 function CustomerForm({
   // #withDashboardActions
   changePageTitle,
@@ -36,7 +40,6 @@ function CustomerForm({
 
   // #withCustomersActions
   requestSubmitCustomer,
-  requestFetchCustomers,
   requestEditCustomer,
 
   // #withMediaActions
@@ -67,6 +70,7 @@ function CustomerForm({
       .required()
       .trim()
       .label(formatMessage({ id: 'customer_type_' })),
+    salutation: Yup.string().trim(),
     first_name: Yup.string().trim(),
     last_name: Yup.string().trim(),
     company_name: Yup.string().trim(),
@@ -74,48 +78,71 @@ function CustomerForm({
       .trim()
       .required()
       .label(formatMessage({ id: 'display_name_' })),
+
     email: Yup.string().email(),
-
     work_phone: Yup.number(),
+    personal_phone: Yup.number(),
+    website: Yup.string().url(),
+
     active: Yup.boolean(),
+    note: Yup.string().trim(),
 
-    billing_address_city: Yup.string().trim(),
     billing_address_country: Yup.string().trim(),
-    billing_address_email: Yup.string().email(),
-    billing_address_zipcode: Yup.number().nullable(),
-    billing_address_phone: Yup.number(),
+    billing_address_1: Yup.string().trim(),
+    billing_address_2: Yup.string().trim(),
+    billing_address_city: Yup.string().trim(),
     billing_address_state: Yup.string().trim(),
+    billing_address_postcode: Yup.number().nullable(),
+    billing_address_phone: Yup.number(),
 
-    shipping_address_city: Yup.string().trim(),
     shipping_address_country: Yup.string().trim(),
-    shipping_address_email: Yup.string().email(),
-    shipping_address_zipcode: Yup.number().nullable(),
-    shipping_address_phone: Yup.number(),
+    shipping_address_1: Yup.string().trim(),
+    shipping_address_2: Yup.string().trim(),
+    shipping_address_city: Yup.string().trim(),
     shipping_address_state: Yup.string().trim(),
+    shipping_address_postcode: Yup.number().nullable(),
+    shipping_address_phone: Yup.number(),
+
+    opening_balance: Yup.number(),
+    currency_code: Yup.string(),
+    opening_balance_at: Yup.date(),
   });
 
   const defaultInitialValues = useMemo(
     () => ({
       customer_type: 'business',
+      salutation: '',
       first_name: '',
       last_name: '',
       company_name: '',
       display_name: '',
+
       email: '',
       work_phone: '',
+      personal_phone: '',
+      website: '',
+      note: '',
       active: true,
 
-      billing_address_city: '',
       billing_address_country: '',
-      billing_address_zipcode: null,
-      billing_address_phone: '',
+      billing_address_1: '',
+      billing_address_2: '',
+      billing_address_city: '',
       billing_address_state: '',
+      billing_address_postcode: null,
+      billing_address_phone: '',
 
-      shipping_address_city: '',
       shipping_address_country: '',
-      shipping_address_zipcode: null,
-      shipping_address_phone: '',
+      shipping_address_1: '',
+      shipping_address_2: '',
+      shipping_address_city: '',
       shipping_address_state: '',
+      shipping_address_postcode: null,
+      shipping_address_phone: '',
+
+      opening_balance: '',
+      currency_code: '',
+      opening_balance_at: moment(new Date()).format('YYYY-MM-DD'),
     }),
     [],
   );
@@ -147,7 +174,10 @@ function CustomerForm({
       : changePageTitle(formatMessage({ id: 'new_customer' }));
   }, [changePageTitle, customer, formatMessage]);
 
-  const handleFormSubmit = (values, { setSubmitting, resetForm, setErrors }) => {
+  const handleFormSubmit = (
+    values,
+    { setSubmitting, resetForm, setErrors },
+  ) => {
     const formValues = { ...values, status: payload.publish };
     if (customer && customer.id) {
       requestEditCustomer(customer.id, formValues)
@@ -189,7 +219,8 @@ function CustomerForm({
     errors,
     values,
     touched,
-    handleSubmit
+    isSubmitting,
+    handleSubmit,
   } = useFormik({
     enableReinitialize: true,
     validationSchema: validationSchema,
@@ -199,7 +230,6 @@ function CustomerForm({
     onSubmit: handleFormSubmit,
   });
 
- 
   const initialAttachmentFiles = useMemo(() => {
     return customer && customer.media
       ? customer.media.map((attach) => ({
@@ -209,6 +239,7 @@ function CustomerForm({
         }))
       : [];
   }, []);
+
   const handleDropFiles = useCallback((_files) => {
     setFiles(_files.filter((file) => file.uploaded === false));
   }, []);
@@ -269,16 +300,19 @@ function CustomerForm({
             getFieldProps={getFieldProps}
             errors={errors}
             values={values}
-            touched={touched} />
+            touched={touched}
+            customerId={customer}
+          />
         </div>
-
-        <CustomerFloatingActions
-          onSubmitClick={handleSubmitClick}
-          customer={customer}
-          onCancelClick={handleCancelClick}
-          customerId={null}
-        />
       </form>
+
+      <CustomerFloatingActions
+        isSubmitting={isSubmitting}
+        onSubmitClick={handleSubmitClick}
+        // customer={customer}
+        onCancelClick={handleCancelClick}
+        customerId={customer}
+      />
     </div>
   );
 }

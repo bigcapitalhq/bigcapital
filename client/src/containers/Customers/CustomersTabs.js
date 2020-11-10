@@ -12,9 +12,11 @@ export default function CustomersTabs({
   errors,
   values,
   touched,
+  customerId,
 }) {
   const { formatMessage } = useIntl();
-
+  const [customer] = useState(customerId);
+  
   return (
     <div>
       <Tabs
@@ -32,6 +34,7 @@ export default function CustomersTabs({
               errors={errors}
               setFieldValue={setFieldValue}
               touched={touched}
+              customerId={customer}
             />
           }
         />

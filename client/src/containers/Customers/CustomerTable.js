@@ -10,14 +10,12 @@ import {
 } from '@blueprintjs/core';
 
 import { FormattedMessage as T, useIntl } from 'react-intl';
-import DataTable from 'components/DataTable';
-import Icon from 'components/Icon';
-import { Money } from 'components';
 import { useUpdateEffect } from 'hooks';
 
 import LoadingIndicator from 'components/LoadingIndicator';
-import withCustomers from './withCustomers';
+import { DataTable, Icon, Money } from 'components';
 
+import withCustomers from './withCustomers';
 import { compose, firstLettersArgs, saveInvoke } from 'utils';
 
 const AvatarCell = (row) => {
@@ -25,13 +23,13 @@ const AvatarCell = (row) => {
 };
 
 const CustomerTable = ({
-  loading,
-
   //#withCustomers
   customers,
   customersLoading,
+  customerPagination,
 
-  //#props
+  //#OwnProps
+  loading,
   onEditCustomer,
   onDeleteCustomer,
   onFetchData,
@@ -80,18 +78,21 @@ const CustomerTable = ({
   );
 
   // Renders actions table cell.
-  const renderActionsCell = useMemo(() => ({ cell }) => (
-    <Popover
-      content={renderContextMenu({
-        customer: cell.row.original,
-        onEditCustomer,
-        onDeleteCustomer,
-      })}
-      position={Position.RIGHT_BOTTOM}
-    >
-      <Button icon={<Icon icon="more-h-16" iconSize={16} />} />
-    </Popover>
-  ), [onDeleteCustomer, onEditCustomer, renderContextMenu]);
+  const renderActionsCell = useMemo(
+    () => ({ cell }) => (
+      <Popover
+        content={renderContextMenu({
+          customer: cell.row.original,
+          onEditCustomer,
+          onDeleteCustomer,
+        })}
+        position={Position.RIGHT_BOTTOM}
+      >
+        <Button icon={<Icon icon="more-h-16" iconSize={16} />} />
+      </Popover>
+    ),
+    [onDeleteCustomer, onEditCustomer, renderContextMenu],
+  );
 
   const columns = useMemo(
     () => [
@@ -186,14 +187,19 @@ const CustomerTable = ({
         loading={customersLoading && !initialMount}
         spinnerProps={{ size: 30 }}
         rowContextMenu={rowContextMenu}
+        pagination={true}
+        pagesCount={customerPagination.pagesCount}
+        initialPageSize={customerPagination.pageSize}
+        initialPageIndex={customerPagination.page - 1}
       />
     </LoadingIndicator>
   );
 };
 
 export default compose(
-  withCustomers(({ customers, customersLoading }) => ({
+  withCustomers(({ customers, customersLoading, customerPagination }) => ({
     customers,
     customersLoading,
+    customerPagination,
   })),
 )(CustomerTable);

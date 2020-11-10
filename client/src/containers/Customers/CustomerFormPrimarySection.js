@@ -32,15 +32,20 @@ export default function CustomerFormPrimarySection({
   );
 
   // Handle salutation field select.
-  const handleSalutationSelect = useCallback((salutation) => {
-    setFieldValue('salutation', salutation.label);
-  }, [setFieldValue]);
+  const handleSalutationSelect = useCallback(
+    (salutation) => {
+      setFieldValue('salutation', salutation.label);
+    },
+    [setFieldValue],
+  );
 
   // Handle display name field select.
-  const handleDisplayNameSelect = useCallback((displayName) => {
-    setFieldValue('display_name', displayName.label);
-  }, [setFieldValue]);
-
+  const handleDisplayNameSelect = useCallback(
+    (displayName) => {
+      setFieldValue('display_name', displayName.label);
+    },
+    [setFieldValue],
+  );
   return (
     <div className={'customer-form__primary-section-content'}>
       {/**-----------Customer type. -----------*/}
@@ -58,6 +63,7 @@ export default function CustomerFormPrimarySection({
         <ControlGroup>
           <SalutationList
             onItemSelect={handleSalutationSelect}
+            selectedItem={values.salutation}
             popoverProps={{ minimal: true }}
             className={classNames(
               CLASSES.FORM_GROUP_LIST_SELECT,
@@ -119,6 +125,7 @@ export default function CustomerFormPrimarySection({
           company={values.company_name}
           salutation={values.salutation}
           onItemSelect={handleDisplayNameSelect}
+          // selectedItem={values.display_name}
           popoverProps={{ minimal: true }}
         />
       </FormGroup>

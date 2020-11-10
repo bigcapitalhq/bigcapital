@@ -1,26 +1,54 @@
 import { createSelector } from 'reselect';
-import { pickItemsFromIds } from 'store/selectors';
+import { pickItemsFromIds, paginationLocationQuery } from 'store/selectors';
 
-const customersViewsSelector = state => state.customers.views;
-const customersItemsSelector = state => state.customers.items;
-const customersCurrentViewSelector = state => state.customers.currentViewId;
+const customerTableQuery = (state) => state.customers.tableQuery;
 
-export const getCustomersItems = createSelector(
-  customersViewsSelector,
-  customersItemsSelector,
-  customersCurrentViewSelector,
-  (customersViews, customersItems, currentViewId) => {
-    const customersView = customersViews[currentViewId || -1];
+const customersByIdSelector = (state, props) => {
+  return state.customers.items[props.customerId];
+};
 
-    return (typeof customersView === 'object') 
-      ? pickItemsFromIds(customersItems, customersView.ids) || []
-      : [];  
-  },
-);
+const customersPaginationSelector = (state, props) => {
+  const viewId = state.customers.currentViewId;
+  return state.customers.views?.[viewId];
+};
 
-export const getCustomersListFactory = () => createSelector(
-  customersItemsSelector,
-  (customersItems) => {
-    return Object.values(customersItems);
-  }
-);
+const customerPageSelector = (state, props, query) => {
+  const viewId = state.customers.currentViewId;
+  return state.customers.views?.[viewId]?.pages?.[query.page];
+};
+
+const customersItemsSelector = (state) => state.customers.items;
+
+export const getCustomerTableQueryFactory = () =>
+  createSelector(
+    paginationLocationQuery,
+    customerTableQuery,
+    (locationQuery, tableQuery) => {
+      return {
+        ...locationQuery,
+        ...tableQuery,
+      };
+    },
+  );
+
+export const getCustomerCurrentPageFactory = () =>
+  createSelector(
+    customerPageSelector,
+    customersItemsSelector,
+    (customerPage, customersItems) => {
+      return typeof customerPage === 'object'
+        ? pickItemsFromIds(customersItems, customerPage.ids) || []
+        : [];
+    },
+  );
+
+export const getCustomersByIdFactory = () =>
+  createSelector(customersByIdSelector, (customer) => {
+    return customer;
+  });
+
+export const getCustomerPaginationMetaFactory = () =>
+  createSelector(customersPaginationSelector, (customerPage) => {
+    return customerPage?.paginationMeta || {};
+  });
+

@@ -31,12 +31,8 @@ export default function CustomerFormAfterPrimarySection({
         />
       </FormGroup>
 
-      {/*------------ Customer email -----------*/}
+      {/*------------ Phone number -----------*/}
       <FormGroup
-        intent={errors.work_phone && touched.work_phone && Intent.DANGER}
-        helperText={
-          <ErrorMessage name={'work_phone'} {...{ errors, touched }} />
-        }
         className={'form-group--phone-number'}
         label={<T id={'phone_number'} />}
         inline={true}
@@ -49,8 +45,8 @@ export default function CustomerFormAfterPrimarySection({
           />
 
           <InputGroup
-            intent={errors.work_phone && touched.work_phone && Intent.DANGER}
-            {...getFieldProps('work_phone')}
+            intent={errors.personal_phone && touched.personal_phone && Intent.DANGER}
+            {...getFieldProps('personal_phone')}
             placeholder={'Mobile'}
           />
         </ControlGroup>

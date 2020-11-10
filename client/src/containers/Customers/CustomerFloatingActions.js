@@ -15,8 +15,8 @@ export default function CustomerFloatingActions({
   return (
     <div className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>
       <Button
-        intent={Intent.PRIMARY}
         disabled={isSubmitting}
+        intent={Intent.PRIMARY}
         type="submit"
         onClick={() => {
           onSubmitClick({ publish: true, redirect: true });
