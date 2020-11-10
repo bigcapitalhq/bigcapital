@@ -6,7 +6,7 @@ import {
 } from '@blueprintjs/core';
 import { queryCache } from 'react-query';
 import { useHistory } from 'react-router-dom';
-import { pick } from 'lodash';
+import { pick, pickBy } from 'lodash';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames';
 
@@ -23,7 +23,23 @@ import useMedia from 'hooks/useMedia';
 import withItemDetail from 'containers/Items/withItemDetail';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 
-import { compose } from 'utils';
+import { compose, transformToForm } from 'utils';
+
+const defaultInitialValues = {
+  active: true,
+  name: '',
+  type: 'service',
+  sku: '',
+  cost_price: '',
+  sell_price: '',
+  cost_account_id: '',
+  sell_account_id: '',
+  inventory_account_id: '',
+  category_id: '',
+  note: '',
+  sellable: true,
+  purchasable: true,
+};
 
 /**
  * Item form.
@@ -71,54 +87,61 @@ function ItemForm({
       .required()
       .label(formatMessage({ id: 'item_type_' })),
     sku: Yup.string().trim(),
-    cost_price: Yup.number(),
-    sell_price: Yup.number(),
+    cost_price: Yup.number()
+      .when(['purchasable'], {
+        is: true,
+        then: Yup.number().required(),
+        otherwise: Yup.number().nullable(true),
+      }),
+    sell_price: Yup.number()
+      .when(['sellable'], {
+        is: true,
+        then: Yup.number().required(),
+        otherwise: Yup.number().nullable(true),
+      }),
     cost_account_id: Yup.number()
-      .required()
+      .when(['purchasable'], {
+        is: true,
+        then: Yup.number().required(),
+        otherwise: Yup.number().nullable(true),
+      })
       .label(formatMessage({ id: 'cost_account_id' })),
     sell_account_id: Yup.number()
-      .required()
+      .when(['sellable'], {
+        is: true,
+        then: Yup.number().required(),
+        otherwise: Yup.number().nullable(),
+      })
       .label(formatMessage({ id: 'sell_account_id' })),
-    inventory_account_id: Yup.number().when('type', {
-      is: (value) => value === 'inventory',
-      then: Yup.number().required(),
-      otherwise: Yup.number().nullable(),
-    }),
-    category_id: Yup.number().nullable(),
+    inventory_account_id: Yup.number()
+      .when(['type'], {
+        is: (value) => value === 'inventory',
+        then: Yup.number().required(),
+        otherwise: Yup.number().nullable(),
+      })
+      .label(formatMessage({ id: 'Inventory account' })),
+    category_id: Yup.number().positive().nullable(),
     stock: Yup.string() || Yup.boolean(),
     sellable: Yup.boolean().required(),
     purchasable: Yup.boolean().required(),
   });
 
-  const defaultInitialValues = useMemo(
-    () => ({
-      active: true,
-      name: '',
-      type: 'service',
-      sku: '',
-      cost_price: 0,
-      sell_price: 0,
-      cost_account_id: null,
-      sell_account_id: null,
-      inventory_account_id: null,
-      category_id: null,
-      note: '',
-      sellable: true,
-      purchasable: true,
-    }),
-    [],
-  );
+
+  /**
+   * Initial values in create and edit mode.
+   */
   const initialValues = useMemo(
     () => ({
-      ...(itemDetail
-        ? {
-            ...pick(itemDetail, Object.keys(defaultInitialValues)),
-          }
-        : {
-            ...defaultInitialValues,
-          }),
+      ...defaultInitialValues,
+
+      /**
+       * We only care about the fields in the form. Previously unfilled optional
+       * values such as `notes` come back from the API as null, so remove those
+       * as well.
+       */
+      ...transformToForm(itemDetail, defaultInitialValues),
     }),
-    [itemDetail, defaultInitialValues],
+    [],
   );
 
   useEffect(() => {
@@ -141,7 +164,7 @@ function ItemForm({
               'the_item_has_been_successfully_edited',
           },
           {
-            number: itemDetail.id,
+            number: itemId,
           },
         ),
         intent: Intent.SUCCESS,
@@ -156,7 +179,7 @@ function ItemForm({
     if (isNewMode) {
       requestSubmitItem(form).then(onSuccess).catch(onError);
     } else {
-      requestEditItem(form).then(onSuccess).catch(onError);
+      requestEditItem(itemId, form).then(onSuccess).catch(onError);
     }
   };
 

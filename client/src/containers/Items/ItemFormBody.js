@@ -36,15 +36,15 @@ function ItemFormBody({
     <div class="page-form__section page-form__section--selling-cost">
       <Row>
         <Col xs={6}>
-          
           {/*------------- Sellable checkbox ------------- */}
-          <FormGroup
-            inline={true}
-            className={'form-group--sellable'}
-          >
+          <FormGroup inline={true} className={'form-group--sellable'}>
             <Checkbox
               inline={true}
-              label={<h3><T id={'i_purchase_this_item'} /></h3>}
+              label={
+                <h3>
+                  <T id={'i_purchase_this_item'} />
+                </h3>
+              }
               checked={values.sellable}
               {...getFieldProps('sellable')}
             />
@@ -54,26 +54,22 @@ function ItemFormBody({
           <FormGroup
             label={<T id={'selling_price'} />}
             className={'form-group--item-selling-price'}
-            intent={
-              errors.selling_price && touched.selling_price && Intent.DANGER
-            }
+            intent={errors.sell_price && touched.sell_price && Intent.DANGER}
             helperText={
-              <ErrorMessage {...{ errors, touched }} name="selling_price" />
+              <ErrorMessage {...{ errors, touched }} name="sell_price" />
             }
             inline={true}
           >
             <MoneyInputGroup
-              value={values.selling_price}
+              value={values.sell_price}
               prefix={'$'}
               onChange={(e, value) => {
-                setFieldValue('selling_price', value);
+                setFieldValue('sell_price', value);
               }}
               inputGroupProps={{
                 medium: true,
                 intent:
-                  errors.selling_price &&
-                  touched.selling_price &&
-                  Intent.DANGER,
+                  errors.sell_price && touched.sell_price && Intent.DANGER,
               }}
               disabled={!values.sellable}
             />
@@ -107,18 +103,18 @@ function ItemFormBody({
               filterByTypes={['income']}
             />
           </FormGroup>
-
         </Col>
 
         <Col xs={6}>
           {/*------------- Purchasable checbox ------------- */}
-          <FormGroup
-            inline={true}
-            className={'form-group--purchasable'}
-          >
+          <FormGroup inline={true} className={'form-group--purchasable'}>
             <Checkbox
               inline={true}
-              label={<h3><T id={'i_sell_this_item'} /></h3>}
+              label={
+                <h3>
+                  <T id={'i_sell_this_item'} />
+                </h3>
+              }
               defaultChecked={values.purchasable}
               {...getFieldProps('purchasable')}
             />
@@ -169,7 +165,7 @@ function ItemFormBody({
             <AccountsSelectList
               accounts={accountsList}
               onAccountSelected={(account) => {
-                setFieldValue('cost_account_id', account.id)
+                setFieldValue('cost_account_id', account.id);
               }}
               defaultSelectText={<T id={'select_account'} />}
               selectedAccountId={values.cost_account_id}

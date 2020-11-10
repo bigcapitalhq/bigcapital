@@ -39,6 +39,14 @@ function ItemFormPrimarySection({
   // #withItemCategories
   categoriesList,
 }) {
+
+  const itemTypeHintContent = (
+    <>
+      <div class="mb1"><strong>{'Service: '}</strong>{'Services that you provide to customers. '}</div>
+      <div class="mb1"><strong>{'Inventory: '}</strong>{'Products you buy and/or sell and that you track quantities of.'}</div>
+      <div class="mb1"><strong>{'Non-Inventory: '}</strong>{'Products you buy and/or sell but don’t need to (or can’t) track quantities of, for example, nuts and bolts used in an installation.'}</div>
+    </>);
+
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_PRIMARY)}>
       <Row>
@@ -47,7 +55,12 @@ function ItemFormPrimarySection({
           <FormGroup
             medium={true}
             label={<T id={'item_type'} />}
-            labelInfo={<FieldRequiredHint />}
+            labelInfo={
+              <span>
+                <FieldRequiredHint />
+                <Hint content={itemTypeHintContent} position={Position.BOTTOM_LEFT} />
+              </span>
+            }
             className={'form-group--item-type'}
             intent={errors.type && touched.type && Intent.DANGER}
             helperText={<ErrorMessage {...{ errors, touched }} name="type" />}
@@ -56,48 +69,20 @@ function ItemFormPrimarySection({
             <RadioGroup
               inline={true}
               onChange={handleStringChange((value) => {
-                setFieldValue('item_type', value);
+                setFieldValue('type', value);
               })}
-              selectedValue={values.item_type}
+              selectedValue={values.type}
             >
               <Radio
-                label={
-                  <Tooltip
-                    className={Classes.TOOLTIP_INDICATOR}
-                    content={'Services that you provide to customers.'}
-                    position={Position.BOTTOM_LEFT}
-                  >
-                    <T id={'service'} />
-                  </Tooltip>
-                }
+                label={<T id={'service'} />}
                 value="service"
               />
               <Radio
-                label={
-                  <Tooltip
-                    className={Classes.TOOLTIP_INDICATOR}
-                    content={
-                      'Products you buy and/or sell and that you track quantities of.'
-                    }
-                    position={Position.BOTTOM_LEFT}
-                  >
-                    <T id={'inventory'} />
-                  </Tooltip>
-                }
+                label={<T id={'inventory'} />}
                 value="inventory"
               />
               <Radio
-                label={
-                  <Tooltip
-                    className={Classes.TOOLTIP_INDICATOR}
-                    content={
-                      'Products you buy and/or sell but don’t need to (or can’t) track quantities of, for example, nuts and bolts used in an installation.'
-                    }
-                    position={Position.BOTTOM_LEFT}
-                  >
-                    <T id={'non_inventory'} />
-                  </Tooltip>
-                }
+                label={<T id={'non_inventory'} />}
                 value="non_inventory"
               />
             </RadioGroup>
@@ -121,7 +106,7 @@ function ItemFormPrimarySection({
 
           {/*----------- SKU ----------*/}
           <FormGroup
-            label={<T id={'sku'} />}
+            label={<T id={'item_code'} />}
             labelInfo={<Hint />}
             className={'form-group--item-sku'}
             intent={errors.sku && touched.sku && Intent.DANGER}

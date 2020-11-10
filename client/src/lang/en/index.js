@@ -100,7 +100,7 @@ export default {
   cost_price: 'Cost Price',
   inventory_information: 'Inventory Information',
   inventory_account: 'Inventory Account',
-  opening_stock: 'Opening Stock',
+  opening_quantity: 'Opening quantity',
   save: 'Save',
   save_as_draft: 'Save as Draft',
   active: 'Active',
@@ -810,4 +810,6 @@ export default {
   i_purchase_this_item: 'I purchase this item from a vendor.',
   i_sell_this_item: 'I sell this item to a customer.',
   select_display_name_as:'Select display name as',
+  opening_date: 'Opening date',
+  item_code: 'Item code',
 };
