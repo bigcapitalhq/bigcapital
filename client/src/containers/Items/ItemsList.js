@@ -97,6 +97,16 @@ function ItemsList({
         intent: Intent.SUCCESS,
       });
       setDeleteItem(false);
+    }).catch(({ errors }) => {
+      if (errors.find(error => error.type === 'ITEM_HAS_ASSOCIATED_TRANSACTINS')) {
+        AppToaster.show({
+          message: formatMessage({
+            id: 'the_item_has_associated_transactions',
+          }),
+          intent: Intent.DANGER,
+        });
+      }
+      setDeleteItem(false);
     });
   }, [requestDeleteItem, deleteItem, formatMessage]);
 

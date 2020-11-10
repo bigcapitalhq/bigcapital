@@ -814,5 +814,6 @@ export default {
   item_code: 'Item code',
   quantity_on_hand: 'Quantity on hand',
   average_rate: 'Average rate',
-  the_name_used_before: 'The name is already used.'
+  the_name_used_before: 'The name is already used.',
+  the_item_has_associated_transactions: 'The item has associated transactions.'
 };
