@@ -64,12 +64,6 @@ function PaymentReceiveFormHeader({
     [setFieldValue],
   );
 
-  // Filter deposit accounts.
-  const depositAccounts = useMemo(
-    () => accountsList.filter((a) => a?.type?.key === 'current_asset'),
-    [accountsList],
-  );
-
   const triggerFullAmountChanged = (value) => {
     onFullAmountChanged && onFullAmountChanged(value);
   };
@@ -210,11 +204,12 @@ function PaymentReceiveFormHeader({
             }
           >
             <AccountsSelectList
-              accounts={depositAccounts}
+              accounts={accountsList}
               labelInfo={<FieldRequiredHint />}
               onAccountSelected={onChangeSelect('deposit_account_id')}
               defaultSelectText={<T id={'select_deposit_account'} />}
               selectedAccountId={values.deposit_account_id}
+              filterByTypes={['current_asset']}
             />
           </FormGroup>
 
