@@ -77,7 +77,11 @@ export default class CustomersController extends ContactsController {
    */
   get customerDTOSchema() {
     return [
-      check('customer_type').exists().trim().escape(),
+      check('customer_type')
+        .exists()
+        .isIn(['business', 'individual'])
+        .trim()
+        .escape(),
     ];
   }
 
@@ -121,7 +125,11 @@ export default class CustomersController extends ContactsController {
 
     try {
       const contact = await this.customersService.newCustomer(tenantId, contactDTO);
-      return res.status(200).send({ id: contact.id });
+
+      return res.status(200).send({
+        id: contact.id,
+        message: 'The customer has been created successfully.',
+      });
     } catch (error) {
       next(error);
     }
@@ -140,7 +148,11 @@ export default class CustomersController extends ContactsController {
 
     try {
       await this.customersService.editCustomer(tenantId, contactId, contactDTO);
-      return res.status(200).send({ id: contactId });
+
+      return res.status(200).send({
+        id: contactId,
+        message: 'The customer has been edited successfully.',
+      });
     } catch (error) {
       next(error);
     }
@@ -176,7 +188,10 @@ export default class CustomersController extends ContactsController {
 
     try {
       const customer = await this.customersService.getCustomer(tenantId, contactId);
-      return res.status(200).send({ customer });
+
+      return res.status(200).send({
+        customer: this.transfromToResponse(customer),
+      });
     } catch (error) {
       next(error);
     }
@@ -221,10 +236,14 @@ export default class CustomersController extends ContactsController {
     }
 
     try {
-      const { customers, pagination, filterMeta } = await this.customersService.getCustomersList(tenantId, filter);
+      const {
+        customers,
+        pagination,
+        filterMeta,
+      } = await this.customersService.getCustomersList(tenantId, filter);
 
       return res.status(200).send({
-        customers,
+        customers: this.transfromToResponse(customers),
         pagination: this.transfromToResponse(pagination),
         filter_meta: this.transfromToResponse(filterMeta),
       });
@@ -242,19 +261,24 @@ export default class CustomersController extends ContactsController {
    */
   handlerServiceErrors(error: Error, req: Request, res: Response, next: NextFunction) {
     if (error instanceof ServiceError) {
+      if (error.errorType === 'contact_not_found') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'CUSTOMER.NOT.FOUND', code: 100 }],
+        });
+      }
       if (error.errorType === 'contacts_not_found') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'CUSTOMERS.NOT.FOUND', code: 100 }],
+          errors: [{ type: 'CUSTOMERS.NOT.FOUND', code: 200 }],
         });
       }
       if (error.errorType === 'some_customers_have_invoices') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'SOME.CUSTOMERS.HAVE.SALES_INVOICES', code: 200 }],
+          errors: [{ type: 'SOME.CUSTOMERS.HAVE.SALES_INVOICES', code: 300 }],
         });
       }
       if (error.errorType === 'customer_has_invoices') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'CUSTOMER.HAS.SALES_INVOICES', code: 200 }],
+          errors: [{ type: 'CUSTOMER.HAS.SALES_INVOICES', code: 400 }],
         });
       }
     }

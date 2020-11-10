@@ -45,7 +45,9 @@ export default class CustomersService {
    * @param {ICustomerNewDTO|ICustomerEditDTO} customerDTO 
    * @returns {IContactDTO}
    */
-  private customerToContactDTO(customerDTO: ICustomerNewDTO|ICustomerEditDTO): IContactNewDTO|IContactEditDTO {
+  private customerToContactDTO(
+    customerDTO: ICustomerNewDTO | ICustomerEditDTO,
+  ): IContactNewDTO | IContactEditDTO {
     return {
       ...omit(customerDTO, ['customerType']),
       contactType: customerDTO.customerType,
@@ -69,7 +71,7 @@ export default class CustomersService {
   private transformContactToCustomer(contactModel: IContact) {
     return {
       ...omit(contactModel, ['contactService', 'contactType']),
-      customerType: contactModel.contactService,
+      customerType: contactModel.contactType,
     };
   }
 
