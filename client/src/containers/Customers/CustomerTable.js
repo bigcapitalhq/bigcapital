@@ -122,7 +122,12 @@ const CustomerTable = ({
       {
         id: 'phone_number',
         Header: formatMessage({ id: 'phone_number' }),
-        accessor: 'work_phone',
+        accessor: (row) => (
+          <div>
+            <div className={'work_phone'}>{row.work_phone}</div>
+            <div className={'personal_phone'}>{row.personal_phone}</div>
+          </div>
+        ),
         className: 'phone_number',
         width: 100,
       },

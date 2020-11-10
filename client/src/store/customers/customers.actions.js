@@ -37,7 +37,7 @@ export const fetchCustomers = ({ query }) => {
   return (dispatch, getState) =>
     new Promise((resolve, reject) => {
       const pageQuery = getState().customers.tableQuery;
-      
+
       dispatch({
         type: t.CUSTOMERS_TABLE_LOADING,
         payload: { loading: true },
@@ -99,14 +99,14 @@ export const fetchCustomer = ({ id }) => {
 
 export const deleteCustomer = ({ id }) => {
   return (dispatch) =>
-    new Promise((resolve, reject) => {
+    new Promise((resovle, reject) => {
       ApiService.delete(`customers/${id}`)
         .then((response) => {
           dispatch({
             type: t.CUSTOMER_DELETE,
             payload: { id },
           });
-          resolve(response);
+          resovle(response);
         })
         .catch((error) => {
           reject(error.response.data.errors || []);

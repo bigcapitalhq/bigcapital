@@ -55,9 +55,8 @@ const customersReducer = createReducer(initialState, {
 
   [t.CUSTOMER_DELETE]: (state, action) => {
     const { id } = action.payload;
-
     if (typeof state.items[id] !== 'undefined') {
-      delete state.items[action.id];
+      delete state.items[id];
     }
   },
 

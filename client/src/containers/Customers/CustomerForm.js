@@ -79,10 +79,10 @@ function CustomerForm({
       .required()
       .label(formatMessage({ id: 'display_name_' })),
 
-    email: Yup.string().email(),
+    email: Yup.string().email().nullable(),
     work_phone: Yup.number(),
     personal_phone: Yup.number(),
-    website: Yup.string().url(),
+    website: Yup.string().url().nullable(),
 
     active: Yup.boolean(),
     note: Yup.string().trim(),
@@ -103,7 +103,7 @@ function CustomerForm({
     shipping_address_postcode: Yup.number().nullable(),
     shipping_address_phone: Yup.number(),
 
-    opening_balance: Yup.number(),
+    opening_balance: Yup.number().nullable(),
     currency_code: Yup.string(),
     opening_balance_at: Yup.date(),
   });
