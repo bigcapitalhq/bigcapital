@@ -139,7 +139,7 @@ function ItemFormPrimarySection({
               categoriesList={categoriesList}
               selecetedCategoryId={values.category_id}
               onCategorySelected={(category) => {
-                setFieldValue('item_category_id', category.id);
+                setFieldValue('category_id', category.id);
               }}
               popoverProps={{ minimal: true }}
             />

@@ -80,7 +80,7 @@ export default class ItemsCategoriesController extends BaseController {
     return [
       check('name').exists().trim().escape(),
       check('parent_category_id')
-        .optional({ nullable: true, checkFalsy: true })
+        .optional({ nullable: true })
         .isNumeric()
         .toInt(),
       check('description')
@@ -88,15 +88,15 @@ export default class ItemsCategoriesController extends BaseController {
         .trim()
         .escape(),
       check('sell_account_id')
-        .optional({ nullable: true, checkFalsy: true })
+        .optional({ nullable: true })
         .isNumeric()
         .toInt(),
       check('cost_account_id')
-        .optional()
+        .optional({ nullable: true })
         .isNumeric()
         .toInt(),
       check('inventory_account_id')
-        .optional()
+        .optional({ nullable: true })
         .isNumeric()
         .toInt(),
     ]
