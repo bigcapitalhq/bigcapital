@@ -16,6 +16,11 @@
   .bp3-form-group{
     max-width: 500px;
 
+    .bp3-control{
+      margin-top: 8px;
+      margin-bottom: 8px;
+    }
+
     &.bp3-inline{
 
       .bp3-label{

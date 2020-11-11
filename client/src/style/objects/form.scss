@@ -344,19 +344,13 @@ $form-check-input-indeterminate-bg-image: url("data:image/svg+xml,<svg xmlns='ht
   color: #4b5d6b;
 }
 
-.bp3-input-group{
-  display: flex;
-
-  .bp3-input:not(:last-child) {
-    border-radius: 3px 0 0 3px;
-    border-right-width: 0;
-  }
-
-  .bp3-input-action{
-    position: relative;
-  }
+.bp3-control-group{
 
   .input-prepend{
+
+    &:not(.bp3-fixed){
+      flex: 0;
+    }
 
     &__text,
     &__button{

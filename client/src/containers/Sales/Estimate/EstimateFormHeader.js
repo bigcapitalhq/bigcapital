@@ -6,6 +6,7 @@ import {
   Position,
   MenuItem,
   Classes,
+  ControlGroup,
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { FormattedMessage as T } from 'react-intl';
@@ -168,27 +169,29 @@ function EstimateFormHeader({
             <ErrorMessage name="estimate_number" {...{ errors, touched }} />
           }
         >
-          <InputGroup
-            intent={
-              errors.estimate_number && touched.estimate_number && Intent.DANGER
-            }
-            minimal={true}
-            rightElement={
-              <InputPrependButton
-                buttonProps={{
-                  onClick: handleEstimateNumberChange,
-                  icon: <Icon icon={'settings-18'} />,
-                }}
-                tooltip={true}
-                tooltipProps={{
-                  content: 'Setting your auto-generated estimate number',
-                  position: Position.BOTTOM_LEFT,
-                }}
-              />
-            }
-            {...getFieldProps('estimate_number')}
-            onBlur={handleEstimateNumberChanged}
-          />
+          <ControlGroup fill={true}>
+            <InputGroup
+              intent={
+                errors.estimate_number &&
+                touched.estimate_number &&
+                Intent.DANGER
+              }
+              minimal={true}
+              {...getFieldProps('estimate_number')}
+              onBlur={handleEstimateNumberChanged}
+            />
+            <InputPrependButton
+              buttonProps={{
+                onClick: handleEstimateNumberChange,
+                icon: <Icon icon={'settings-18'} />,
+              }}
+              tooltip={true}
+              tooltipProps={{
+                content: 'Setting your auto-generated estimate number',
+                position: Position.BOTTOM_LEFT,
+              }}
+            />
+          </ControlGroup>
         </FormGroup>
 
         {/* ----------- Reference ----------- */}

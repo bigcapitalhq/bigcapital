@@ -4,7 +4,7 @@ import {
   InputGroup,
   Intent,
   Position,
-  MenuItem,
+  ControlGroup,
 } from '@blueprintjs/core';
 
 import { DateInput } from '@blueprintjs/datetime';
@@ -186,30 +186,29 @@ function PaymentReceiveFormHeader({
               />
             }
           >
-            <InputGroup
-              intent={
-                errors.payment_receive_no &&
-                touched.payment_receive_no &&
-                Intent.DANGER
-              }
-              minimal={true}
-              rightElement={
-                <InputPrependButton
-                  buttonProps={{
-                    onClick: handlePaymentReceiveNumberChange,
-                    icon: <Icon icon={'settings-18'} />,
-                  }}
-                  tooltip={true}
-                  tooltipProps={{
-                    content:
-                      'Setting your auto-generated Payment Receive number',
-                    position: Position.BOTTOM_LEFT,
-                  }}
-                />
-              }
-              {...getFieldProps('payment_receive_no')}
-              onBlur={handlePaymentReceiveNumberChanged}
-            />
+            <ControlGroup fill={true}>
+              <InputGroup
+                intent={
+                  errors.payment_receive_no &&
+                  touched.payment_receive_no &&
+                  Intent.DANGER
+                }
+                minimal={true}
+                {...getFieldProps('payment_receive_no')}
+                onBlur={handlePaymentReceiveNumberChanged}
+              />
+              <InputPrependButton
+                buttonProps={{
+                  onClick: handlePaymentReceiveNumberChange,
+                  icon: <Icon icon={'settings-18'} />,
+                }}
+                tooltip={true}
+                tooltipProps={{
+                  content: 'Setting your auto-generated Payment Receive number',
+                  position: Position.BOTTOM_LEFT,
+                }}
+              />
+            </ControlGroup>
           </FormGroup>
 
           {/* ------------ Deposit account ------------ */}

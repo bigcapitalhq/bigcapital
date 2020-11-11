@@ -9,7 +9,7 @@ import React, {
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import moment from 'moment';
-import { Intent, FormGroup, TextArea } from '@blueprintjs/core';
+import { Intent, FormGroup, TextArea, ControlGroup } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { pick, sumBy } from 'lodash';
 import classNames from 'classnames';

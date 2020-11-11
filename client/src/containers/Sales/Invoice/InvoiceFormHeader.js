@@ -4,7 +4,7 @@ import {
   InputGroup,
   Intent,
   Position,
-  MenuItem,
+  ControlGroup,
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { FormattedMessage as T } from 'react-intl';
@@ -140,7 +140,7 @@ function InvoiceFormHeader({
             </FormGroup>
           </Col>
         </Row>
-        
+
         {/* ----------- Invoice number ----------- */}
         <FormGroup
           label={<T id={'invoice_no'} />}
@@ -151,25 +151,25 @@ function InvoiceFormHeader({
             <ErrorMessage name="invoice_no" {...{ errors, touched }} />
           }
         >
-          <InputGroup
-            intent={errors.invoice_no && touched.invoice_no && Intent.DANGER}
-            minimal={true}
-            rightElement={
-              <InputPrependButton
-                buttonProps={{
-                  onClick: handleInvoiceNumberChange,
-                  icon: <Icon icon={'settings-18'} />,
-                }}
-                tooltip={true}
-                tooltipProps={{
-                  content: 'Setting your auto-generated invoice number',
-                  position: Position.BOTTOM_LEFT,
-                }}
-              />
-            }
-            {...getFieldProps('invoice_no')}
-            onBlur={handleInvoiceNumberChanged}
-          />
+          <ControlGroup fill={true}>
+            <InputGroup
+              intent={errors.invoice_no && touched.invoice_no && Intent.DANGER}
+              minimal={true}
+              {...getFieldProps('invoice_no')}
+              onBlur={handleInvoiceNumberChanged}
+            />
+            <InputPrependButton
+              buttonProps={{
+                onClick: handleInvoiceNumberChange,
+                icon: <Icon icon={'settings-18'} />,
+              }}
+              tooltip={true}
+              tooltipProps={{
+                content: 'Setting your auto-generated invoice number',
+                position: Position.BOTTOM_LEFT,
+              }}
+            />
+          </ControlGroup>
         </FormGroup>
 
         {/* ----------- Reference ----------- */}
