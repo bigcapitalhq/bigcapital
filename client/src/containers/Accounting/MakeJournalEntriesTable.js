@@ -292,7 +292,7 @@ export default compose(
   withAccounts(({ accountsList }) => ({
     accountsList,
   })),
-  withCustomers(({ customersItems }) => ({
-    customers: customersItems,
+  withCustomers(({ customers }) => ({
+    customers,
   })),
 )(MakeJournalEntriesTable);

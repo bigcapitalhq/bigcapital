@@ -1,5 +1,8 @@
 import moment from 'moment';
 import _ from 'lodash';
+import {
+  Intent,
+} from '@blueprintjs/core';
 import Currency from 'js-money/lib/currency';
 import PProgress from 'p-progress';
 import accounting from 'accounting';
@@ -284,4 +287,8 @@ export const transformToForm = (obj, emptyInitialValues) => {
     obj,
     (val, key) => val !== null && Object.keys(emptyInitialValues).includes(key),
   )
+}
+
+export function inputIntent({ error, touched }){
+  return error && touched ? Intent.DANGER : '';
 }
