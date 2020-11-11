@@ -4,8 +4,6 @@ import { useFormik } from 'formik';
 import moment from 'moment';
 import { Intent } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
-import { useHistory } from 'react-router-dom';
-import { pick } from 'lodash';
 import classNames from 'classnames';
 
 import { CLASSES } from 'common/classes';
@@ -23,7 +21,43 @@ import withMediaActions from 'containers/Media/withMediaActions';
 import withCustomers from 'containers/Customers//withCustomers';
 import useMedia from 'hooks/useMedia';
 
-import { compose } from 'utils';
+import { compose, transformToForm } from 'utils';
+
+const defaultInitialValues = {
+  customer_type: 'business',
+  salutation: '',
+  first_name: '',
+  last_name: '',
+  company_name: '',
+  display_name: '',
+
+  email: '',
+  work_phone: '',
+  personal_phone: '',
+  website: '',
+  note: '',
+  active: true,
+
+  billing_address_country: '',
+  billing_address_1: '',
+  billing_address_2: '',
+  billing_address_city: '',
+  billing_address_state: '',
+  billing_address_postcode: '',
+  billing_address_phone: '',
+
+  shipping_address_country: '',
+  shipping_address_1: '',
+  shipping_address_2: '',
+  shipping_address_city: '',
+  shipping_address_state: '',
+  shipping_address_postcode: '',
+  shipping_address_phone: '',
+
+  opening_balance: '',
+  currency_code: '',
+  opening_balance_at: moment(new Date()).format('YYYY-MM-DD'),
+};
 
 /**
  * Customer form.
@@ -36,7 +70,7 @@ function CustomerForm({
   customers,
 
   // #withCustomerDetail
-  customer,
+  customerDetail,
 
   // #withCustomersActions
   requestSubmitCustomer,
@@ -47,11 +81,13 @@ function CustomerForm({
   requestDeleteMedia,
 
   // #Props
+  customerId,
   onFormSubmit,
   onCancelForm,
 }) {
+  const isNewMode = !customerId;
+
   const { formatMessage } = useIntl();
-  const history = useHistory();
   const [payload, setPayload] = useState({});
 
   const {
@@ -108,56 +144,15 @@ function CustomerForm({
     opening_balance_at: Yup.date(),
   });
 
-  const defaultInitialValues = useMemo(
-    () => ({
-      customer_type: 'business',
-      salutation: '',
-      first_name: '',
-      last_name: '',
-      company_name: '',
-      display_name: '',
-
-      email: '',
-      work_phone: '',
-      personal_phone: '',
-      website: '',
-      note: '',
-      active: true,
-
-      billing_address_country: '',
-      billing_address_1: '',
-      billing_address_2: '',
-      billing_address_city: '',
-      billing_address_state: '',
-      billing_address_postcode: null,
-      billing_address_phone: '',
-
-      shipping_address_country: '',
-      shipping_address_1: '',
-      shipping_address_2: '',
-      shipping_address_city: '',
-      shipping_address_state: '',
-      shipping_address_postcode: null,
-      shipping_address_phone: '',
-
-      opening_balance: '',
-      currency_code: '',
-      opening_balance_at: moment(new Date()).format('YYYY-MM-DD'),
-    }),
-    [],
-  );
-
+  /**
+   * Initial values in create and edit mode.
+   */
   const initialValues = useMemo(
     () => ({
-      ...(customer
-        ? {
-            ...pick(customer, Object.keys(defaultInitialValues)),
-          }
-        : {
-            ...defaultInitialValues,
-          }),
+      ...defaultInitialValues,
+      ...transformToForm(customerDetail, defaultInitialValues),
     }),
-    [customer, defaultInitialValues],
+    [customerDetail, defaultInitialValues],
   );
 
   const saveInvokeSubmit = useCallback(
@@ -169,18 +164,20 @@ function CustomerForm({
   );
 
   useEffect(() => {
-    customer && customer.id
+    !isNewMode
       ? changePageTitle(formatMessage({ id: 'edit_customer' }))
       : changePageTitle(formatMessage({ id: 'new_customer' }));
-  }, [changePageTitle, customer, formatMessage]);
+  }, [changePageTitle, isNewMode, formatMessage]);
 
+  //Handles the form submit.
   const handleFormSubmit = (
     values,
     { setSubmitting, resetForm, setErrors },
   ) => {
     const formValues = { ...values, status: payload.publish };
-    if (customer && customer.id) {
-      requestEditCustomer(customer.id, formValues)
+
+    if (customerDetail && customerDetail.id) {
+      requestEditCustomer(customerDetail.id, formValues)
         .then((response) => {
           AppToaster.show({
             message: formatMessage({
@@ -220,6 +217,7 @@ function CustomerForm({
     values,
     touched,
     isSubmitting,
+    setErrors,
     handleSubmit,
   } = useFormik({
     enableReinitialize: true,
@@ -231,8 +229,8 @@ function CustomerForm({
   });
 
   const initialAttachmentFiles = useMemo(() => {
-    return customer && customer.media
-      ? customer.media.map((attach) => ({
+    return customerDetail && customerDetail.media
+      ? customerDetail.media.map((attach) => ({
           preview: attach.attachment_file,
           upload: true,
           metadata: { ...attach },
@@ -301,7 +299,7 @@ function CustomerForm({
             errors={errors}
             values={values}
             touched={touched}
-            customerId={customer}
+            customerId={customerDetail}
           />
         </div>
       </form>
@@ -311,7 +309,7 @@ function CustomerForm({
         onSubmitClick={handleSubmitClick}
         // customer={customer}
         onCancelClick={handleCancelClick}
-        customerId={customer}
+        customerId={customerDetail}
       />
     </div>
   );

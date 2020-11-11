@@ -219,7 +219,7 @@ export default {
     'The item category has been successfully edited.',
   the_item_category_has_been_successfully_deleted:
     'The item category has been successfully deleted',
-    once_delete_these_item_categories_you_will_not_able_restore_them:
+  once_delete_these_item_categories_you_will_not_able_restore_them:
     "Once you delete these categories, you won't be able to retrieve them later. Are you sure you want to delete them?",
   once_delete_these_views_you_will_not_able_restore_them:
     "Once you delete the custom view, you won't be able to restore it later. Are you sure you want to delete this view?",
@@ -809,11 +809,12 @@ export default {
   notes: 'Notes',
   i_purchase_this_item: 'I purchase this item from a vendor.',
   i_sell_this_item: 'I sell this item to a customer.',
-  select_display_name_as:'Select display name as',
+  select_display_name_as: 'Select display name as',
   opening_date: 'Opening date',
   item_code: 'Item code',
   quantity_on_hand: 'Quantity on hand',
   average_rate: 'Average rate',
   the_name_used_before: 'The name is already used.',
-  the_item_has_associated_transactions: 'The item has associated transactions.'
+  the_item_has_associated_transactions: 'The item has associated transactions.',
+  customer_has_sales_invoices: 'Customer has sales invoices',
 };
