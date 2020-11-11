@@ -15,8 +15,7 @@ export default function CustomersTabs({
   customerId,
 }) {
   const { formatMessage } = useIntl();
-  const [customer] = useState(customerId);
-  
+ 
   return (
     <div>
       <Tabs
@@ -28,39 +27,17 @@ export default function CustomersTabs({
         <Tab
           id={'financial'}
           title={formatMessage({ id: 'financial_details' })}
-          panel={
-            <CustomerFinancialPanel
-              values={values}
-              errors={errors}
-              setFieldValue={setFieldValue}
-              touched={touched}
-              customerId={customer}
-            />
-          }
+          panel={<CustomerFinancialPanel />}
         />
         <Tab
           id={'address'}
           title={formatMessage({ id: 'address' })}
-          panel={
-            <CustomerAddressTabs
-              setFieldValue={setFieldValue}
-              getFieldProps={getFieldProps}
-              errors={errors}
-              values={values}
-              touched={touched}
-            />
-          }
+          panel={<CustomerAddressTabs />}
         />
         <Tab
           id="notes"
           title={formatMessage({ id: 'notes' })}
-          panel={
-            <CustomerNotePanel
-              errors={errors}
-              touched={touched}
-              getFieldProps={getFieldProps}
-            />
-          }
+          panel={<CustomerNotePanel />}
         />
         <Tab
           id={'attachement'}

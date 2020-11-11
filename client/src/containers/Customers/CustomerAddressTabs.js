@@ -1,16 +1,11 @@
 import React from 'react';
-import { FormGroup, Intent, InputGroup, TextArea } from '@blueprintjs/core';
+import { FormGroup, InputGroup, TextArea } from '@blueprintjs/core';
 import { Row, Col } from 'components';
 import { FormattedMessage as T } from 'react-intl';
+import { FastField, ErrorMessage } from 'formik';
+import { inputIntent } from 'utils';
 
-import ErrorMessage from 'components/ErrorMessage';
-
-const CustomerBillingAddress = ({
-  errors,
-  touched,
-  setFieldValue,
-  getFieldProps,
-}) => {
+const CustomerBillingAddress = ({}) => {
   return (
     <div className={'tab-panel--address'}>
       <Row>
@@ -19,172 +14,105 @@ const CustomerBillingAddress = ({
             <T id={'billing_address'} />
           </h4>
           {/*------------ Billing Address country -----------*/}
-          <FormGroup
-            className={'form-group--journal-number'}
-            intent={
-              errors.billing_address_country &&
-              touched.billing_address_country &&
-              Intent.DANGER
-            }
-            inline={true}
-            helperText={
-              <ErrorMessage
-                name="billing_address_country"
-                {...{ errors, touched }}
-              />
-            }
-            label={<T id={'country'} />}
-          >
-            <InputGroup
-              intent={
-                errors.billing_address_country &&
-                touched.billing_address_country &&
-                Intent.DANGER
-              }
-              {...getFieldProps('billing_address_country')}
-            />
-          </FormGroup>
+          <FastField name={'billing_address_country'}>
+            {({ field, field: { value }, meta: { error, touched } }) => (
+              <FormGroup
+                className={'form-group--journal-number'}
+                intent={inputIntent({ error, touched })}
+                inline={true}
+                helperText={<ErrorMessage name="billing_address_country" />}
+                label={<T id={'country'} />}
+              >
+                <InputGroup {...field} />
+              </FormGroup>
+            )}
+          </FastField>
+
           {/*------------ Billing Address 1  -----------*/}
-          <FormGroup
-            label={<T id={'address_line_1'} />}
-            className={'form-group--address_line_1'}
-            intent={
-              errors.billing_address_1 &&
-              touched.billing_address_1 &&
-              Intent.DANGER
-            }
-            inline={true}
-            helperText={
-              <ErrorMessage name="billing_address_1" {...{ errors, touched }} />
-            }
-          >
-            <TextArea
-              intent={
-                errors.billing_address_1 &&
-                touched.billing_address_1 &&
-                Intent.DANGER
-              }
-              {...getFieldProps('billing_address_1')}
-            />
-          </FormGroup>
+          <FastField name={'billing_address_1'}>
+            {({ field, field: { value }, meta: { error, touched } }) => (
+              <FormGroup
+                label={<T id={'address_line_1'} />}
+                className={'form-group--address_line_1'}
+                intent={inputIntent({ error, touched })}
+                inline={true}
+                helperText={<ErrorMessage name="billing_address_1" />}
+              >
+                <TextArea {...field} />
+              </FormGroup>
+            )}
+          </FastField>
+
           {/*------------ Billing Address 2  -----------*/}
-          <FormGroup
-            label={<T id={'address_line_2'} />}
-            className={'form-group--journal-number'}
-            intent={
-              errors.billing_address_2 &&
-              touched.billing_address_2 &&
-              Intent.DANGER
-            }
-            inline={true}
-            helperText={
-              <ErrorMessage name="billing_address_2" {...{ errors, touched }} />
-            }
-          >
-            <TextArea
-              intent={
-                errors.billing_address_2 &&
-                touched.billing_address_2 &&
-                Intent.DANGER
-              }
-              {...getFieldProps('billing_address_2')}
-            />
-          </FormGroup>
+          <FastField name={'billing_address_2'}>
+            {({ field, field: { value }, meta: { error, touched } }) => (
+              <FormGroup
+                label={<T id={'address_line_2'} />}
+                className={'form-group--journal-number'}
+                intent={inputIntent({ error, touched })}
+                inline={true}
+                helperText={<ErrorMessage name="billing_address_2" />}
+              >
+                <TextArea {...field} />
+              </FormGroup>
+            )}
+          </FastField>
           {/*------------ Billing Address city  -----------*/}
-          <FormGroup
-            label={<T id={'city_town'} />}
-            className={'form-group--journal-number'}
-            intent={
-              errors.billing_address_city &&
-              touched.billing_address_city &&
-              Intent.DANGER
-            }
-            inline={true}
-            helperText={
-              <ErrorMessage
-                name="billing_address_city"
-                {...{ errors, touched }}
-              />
-            }
-          >
-            <InputGroup
-              intent={
-                errors.billing_address_city &&
-                touched.billing_address_city &&
-                Intent.DANGER
-              }
-              {...getFieldProps('billing_address_city')}
-            />
-          </FormGroup>
+          <FastField name={'billing_address_city'}>
+            {({ field, field: { value }, meta: { error, touched } }) => (
+              <FormGroup
+                label={<T id={'city_town'} />}
+                className={'form-group--journal-number'}
+                intent={inputIntent({ error, touched })}
+                inline={true}
+                helperText={<ErrorMessage name="billing_address_city" />}
+              >
+                <InputGroup {...field} />
+              </FormGroup>
+            )}
+          </FastField>
+
           {/*------------ Billing Address state  -----------*/}
-          <FormGroup
-            label={<T id={'state'} />}
-            className={'form-group--journal-number'}
-            intent={
-              errors.billing_address_state &&
-              touched.billing_address_state &&
-              Intent.DANGER
-            }
-            inline={true}
-            helperText={
-              <ErrorMessage
-                name="billing_address_state"
-                {...{ errors, touched }}
-              />
-            }
-          >
-            <InputGroup
-              intent={
-                errors.billing_address_state &&
-                touched.billing_address_state &&
-                Intent.DANGER
-              }
-              {...getFieldProps('billing_address_state')}
-            />
-          </FormGroup>
+          <FastField name={'billing_address_state'}>
+            {({ field, field: { value }, meta: { error, touched } }) => (
+              <FormGroup
+                label={<T id={'state'} />}
+                className={'form-group--journal-number'}
+                intent={inputIntent({ error, touched })}
+                inline={true}
+                helperText={<ErrorMessage name="billing_address_state" />}
+              >
+                <InputGroup {...field} />
+              </FormGroup>
+            )}
+          </FastField>
           {/*------------ Billing Address postcode  -----------*/}
-          <FormGroup
-            label={<T id={'zip_code'} />}
-            intent={
-              errors.billing_address_postcode &&
-              touched.billing_address_postcode &&
-              Intent.DANGER
-            }
-            inline={true}
-            helperText={
-              <ErrorMessage
-                name="billing_address_postcode"
-                {...{ errors, touched }}
-              />
-            }
-          >
-            <InputGroup
-              intent={
-                errors.billing_address_postcode &&
-                touched.billing_address_postcode &&
-                Intent.DANGER
-              }
-              {...getFieldProps('billing_address_postcode')}
-            />
-          </FormGroup>
+          <FastField name={'billing_address_postcode'}>
+            {({ field, field: { value }, meta: { error, touched } }) => (
+              <FormGroup
+                label={<T id={'zip_code'} />}
+                intent={inputIntent({ error, touched })}
+                inline={true}
+                helperText={<ErrorMessage name="billing_address_postcode" />}
+              >
+                <InputGroup {...field} />
+              </FormGroup>
+            )}
+          </FastField>
+
           {/*------------ Billing Address phone  -----------*/}
-          <FormGroup
-            label={<T id={'phone'} />}
-            intent={
-              errors.billing_address_phone && touched.billing_address_phone && Intent.DANGER
-            }
-            inline={true}
-            helperText={
-              <ErrorMessage name="billing_address_phone" {...{ errors, touched }} />
-            }
-          >
-            <InputGroup
-              intent={
-                errors.billing_address_phone && touched.billing_address_phone && Intent.DANGER
-              }
-              {...getFieldProps('billing_address_phone')}
-            />
-          </FormGroup>
+          <FastField name={'billing_address_phone'}>
+            {({ field, field: { value }, meta: { error, touched } }) => (
+              <FormGroup
+                label={<T id={'phone'} />}
+                intent={inputIntent({ error, touched })}
+                inline={true}
+                helperText={<ErrorMessage name="billing_address_phone" />}
+              >
+                <InputGroup {...field} />
+              </FormGroup>
+            )}
+          </FastField>
         </Col>
 
         <Col xs={6}>
@@ -192,172 +120,107 @@ const CustomerBillingAddress = ({
             <T id={'shipping_address'} />
           </h4>
           {/*------------ Shipping Address country -----------*/}
-          <FormGroup
-            label={<T id={'country'} />}
-            className={'form-group--journal-number'}
-            intent={
-              errors.shipping_address_country &&
-              touched.shipping_address_country &&
-              Intent.DANGER
-            }
-            inline={true}
-            helperText={
-              <ErrorMessage
-                name="shipping_address_country"
-                {...{ errors, touched }}
-              />
-            }
-          >
-            <InputGroup
-              intent={
-                errors.shipping_address_country &&
-                touched.shipping_address_country &&
-                Intent.DANGER
-              }
-              {...getFieldProps('shipping_address_country')}
-            />
-          </FormGroup>
+          <FastField name={'shipping_address_country'}>
+            {({ field, field: { value }, meta: { error, touched } }) => (
+              <FormGroup
+                label={<T id={'country'} />}
+                className={'form-group--journal-number'}
+                intent={inputIntent({ error, touched })}
+                inline={true}
+                helperText={<ErrorMessage name="shipping_address_country" />}
+              >
+                <InputGroup {...field} />
+              </FormGroup>
+            )}
+          </FastField>
+
           {/*------------ Shipping Address 1  -----------*/}
-          <FormGroup
-            label={<T id={'address_line_1'} />}
-            className={'form-group--journal-number'}
-            intent={
-              errors.shipping_address_1 &&
-              touched.shipping_address_1 &&
-              Intent.DANGER
-            }
-            inline={true}
-            helperText={
-              <ErrorMessage name="shipping_address_1" {...{ errors, touched }} />
-            }
-          >
-            <TextArea
-              intent={
-                errors.shipping_address_1 &&
-                touched.shipping_address_1 &&
-                Intent.DANGER
-              }
-              {...getFieldProps('shipping_address_1')}
-            />
-          </FormGroup>
+          <FastField name={'shipping_address_1'}>
+            {({ field, field: { value }, meta: { error, touched } }) => (
+              <FormGroup
+                label={<T id={'address_line_1'} />}
+                className={'form-group--journal-number'}
+                intent={inputIntent({ error, touched })}
+                inline={true}
+                helperText={<ErrorMessage name="shipping_address_1" />}
+              >
+                <TextArea {...field} />
+              </FormGroup>
+            )}
+          </FastField>
+
           {/*------------ Shipping Address 2  -----------*/}
-          <FormGroup
-            label={<T id={'address_line_2'} />}
-            className={'form-group--journal-number'}
-            intent={
-              errors.shipping_address_2 &&
-              touched.shipping_address_2 &&
-              Intent.DANGER
-            }
-            inline={true}
-            helperText={
-              <ErrorMessage name="shipping_address_2" {...{ errors, touched }} />
-            }
-          >
-            <TextArea
-              intent={
-                errors.shipping_address_2 &&
-                touched.shipping_address_2 &&
-                Intent.DANGER
-              }
-              {...getFieldProps('shipping_address_2')}
-            />
-          </FormGroup>
+          <FastField name={'shipping_address_2'}>
+            {({ field, field: { value }, meta: { error, touched } }) => (
+              <FormGroup
+                label={<T id={'address_line_2'} />}
+                className={'form-group--journal-number'}
+                intent={inputIntent({ error, touched })}
+                inline={true}
+                helperText={<ErrorMessage name="shipping_address_2" />}
+              >
+                <InputGroup {...field} />
+              </FormGroup>
+            )}
+          </FastField>
+
           {/*------------ Shipping Address city  -----------*/}
-          <FormGroup
-            label={<T id={'city_town'} />}
-            className={'form-group--journal-number'}
-            intent={
-              errors.shipping_address_city &&
-              touched.shipping_address_city &&
-              Intent.DANGER
-            }
-            inline={true}
-            helperText={
-              <ErrorMessage
-                name="shipping_address_city"
-                {...{ errors, touched }}
-              />
-            }
-          >
-            <InputGroup
-              intent={
-                errors.shipping_address_city &&
-                touched.shipping_address_city &&
-                Intent.DANGER
-              }
-              {...getFieldProps('shipping_address_city')}
-            />
-          </FormGroup>
+          <FastField name={'shipping_address_city'}>
+            {({ field, field: { value }, meta: { error, touched } }) => (
+              <FormGroup
+                label={<T id={'city_town'} />}
+                className={'form-group--journal-number'}
+                intent={inputIntent({ error, touched })}
+                inline={true}
+                helperText={<ErrorMessage name="shipping_address_city" />}
+              >
+                <InputGroup {...field} />
+              </FormGroup>
+            )}
+          </FastField>
+
           {/*------------ Shipping Address state  -----------*/}
-          <FormGroup
-            label={<T id={'state'} />}
-            className={'form-group--journal-number'}
-            intent={
-              errors.shipping_address_state &&
-              touched.shipping_address_state &&
-              Intent.DANGER
-            }
-            inline={true}
-            helperText={
-              <ErrorMessage
-                name="shipping_address_state"
-                {...{ errors, touched }}
-              />
-            }
-          >
-            <InputGroup
-              intent={
-                errors.shipping_address_state &&
-                touched.shipping_address_state &&
-                Intent.DANGER
-              }
-              {...getFieldProps('shipping_address_state')}
-            />
-          </FormGroup>
+          <FastField name={'shipping_address_state'}>
+            {({ field, field: { value }, meta: { error, touched } }) => (
+              <FormGroup
+                label={<T id={'state'} />}
+                className={'form-group--journal-number'}
+                intent={inputIntent({ error, touched })}
+                inline={true}
+                helperText={<ErrorMessage name="shipping_address_state" />}
+              >
+                <InputGroup {...field} />
+              </FormGroup>
+            )}
+          </FastField>
+
           {/*------------ Shipping Address postcode  -----------*/}
-          <FormGroup
-            label={<T id={'zip_code'} />}
-            intent={
-              errors.shipping_address_postcode &&
-              touched.shipping_address_postcode &&
-              Intent.DANGER
-            }
-            inline={true}
-            helperText={
-              <ErrorMessage
-                name="shipping_address_postcode"
-                {...{ errors, touched }}
-              />
-            }
-          >
-            <InputGroup
-              intent={
-                errors.shipping_address_postcode &&
-                touched.shipping_address_postcode &&
-                Intent.DANGER
-              }
-              {...getFieldProps('shipping_address_postcode')}
-            />
-          </FormGroup>
+          <FastField name={'shipping_address_postcode'}>
+            {({ field, field: { value }, meta: { error, touched } }) => (
+              <FormGroup
+                label={<T id={'zip_code'} />}
+                intent={inputIntent({ error, touched })}
+                inline={true}
+                helperText={<ErrorMessage name="shipping_address_postcode" />}
+              >
+                <InputGroup {...field} />
+              </FormGroup>
+            )}
+          </FastField>
+
           {/*------------ Shipping Address phone  -----------*/}
-          <FormGroup
-            label={<T id={'phone'} />}
-            intent={
-              errors.shipping_address_phone && touched.shipping_address_phone && Intent.DANGER
-            }
-            inline={true}
-            helperText={
-              <ErrorMessage name="shipping_address_phone" {...{ errors, touched }} />
-            }
-          >
-            <InputGroup
-              intent={
-                errors.shipping_address_phone && touched.shipping_address_phone && Intent.DANGER
-              }
-              {...getFieldProps('shipping_address_phone')}
-            />
-          </FormGroup>
+          <FastField name={'shipping_address_phone'}>
+            {({ field, field: { value }, meta: { error, touched } }) => (
+              <FormGroup
+                label={<T id={'phone'} />}
+                intent={inputIntent({ error, touched })}
+                inline={true}
+                helperText={<ErrorMessage name="shipping_address_phone" />}
+              >
+                <InputGroup {...field} />
+              </FormGroup>
+            )}
+          </FastField>
         </Col>
       </Row>
     </div>

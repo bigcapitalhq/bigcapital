@@ -1,6 +1,6 @@
 import React from 'react';
-import { Field, FastField, ErrorMessage } from 'formik';
-import { FormGroup, Intent, InputGroup, Position } from '@blueprintjs/core';
+import { FastField, ErrorMessage } from 'formik';
+import { FormGroup, InputGroup, Position } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { AccountsSelectList, Col, Row, Hint } from 'components';
 import { CLASSES } from 'common/classes';

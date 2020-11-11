@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react';
 import {
   FormGroup,
-  Intent,
   InputGroup,
   RadioGroup,
   Classes,
@@ -104,10 +103,7 @@ function ItemFormPrimarySection({
                 helperText={<ErrorMessage name={'name'} />}
                 inline={true}
               >
-                <InputGroup
-                  medium={true}
-                  {...field}
-                />
+                <InputGroup medium={true} {...field} />
               </FormGroup>
             )}
           </FastField>
@@ -117,16 +113,12 @@ function ItemFormPrimarySection({
             {({ field, meta: { error, touched } }) => (
               <FormGroup
                 label={<T id={'item_code'} />}
-                labelInfo={<Hint />}
-                className={'  -group--item-sku'}
+                className={'form-group--item_code'}
                 intent={inputIntent({ error, touched })}
                 helperText={<ErrorMessage name={'code'} />}
                 inline={true}
               >
-                <InputGroup
-                  medium={true}
-                  {...field}
-                />
+                <InputGroup medium={true} {...field} />
               </FormGroup>
             )}
           </FastField>

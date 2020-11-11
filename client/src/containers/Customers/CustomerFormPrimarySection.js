@@ -1,58 +1,27 @@
-import React, { useMemo, useCallback } from 'react';
+import React from 'react';
 import classNames from 'classnames';
-import { FormGroup, Intent, InputGroup, ControlGroup } from '@blueprintjs/core';
+import { FormGroup, InputGroup, ControlGroup } from '@blueprintjs/core';
+import { FastField, Field, ErrorMessage } from 'formik';
 import { FormattedMessage as T } from 'react-intl';
 import {
   Hint,
   FieldRequiredHint,
   SalutationList,
   DisplayNameList,
-  ErrorMessage,
-  Row,
-  Col,
 } from 'components';
 import CustomerTypeRadioField from 'containers/Customers/CustomerTypeRadioField';
 import { CLASSES } from 'common/classes';
+import { inputIntent } from 'utils';
 
 /**
  * Customer form primary section.
  */
 export default function CustomerFormPrimarySection({
-  setFieldValue,
-  getFieldProps,
-  errors,
-  values,
-  touched,
 }) {
-  const handleCustomerTypeCahange = useCallback(
-    (value) => {
-      setFieldValue('customer_type', value);
-    },
-    [setFieldValue],
-  );
-
-  // Handle salutation field select.
-  const handleSalutationSelect = useCallback(
-    (salutation) => {
-      setFieldValue('salutation', salutation.label);
-    },
-    [setFieldValue],
-  );
-
-  // Handle display name field select.
-  const handleDisplayNameSelect = useCallback(
-    (displayName) => {
-      setFieldValue('display_name', displayName.label);
-    },
-    [setFieldValue],
-  );
   return (
     <div className={'customer-form__primary-section-content'}>
       {/**-----------Customer type. -----------*/}
-      <CustomerTypeRadioField
-        selectedValue={values.customer_type}
-        onChange={handleCustomerTypeCahange}
-      />
+      <CustomerTypeRadioField />
 
       {/**----------- Contact name -----------*/}
       <FormGroup
@@ -61,74 +30,93 @@ export default function CustomerFormPrimarySection({
         inline={true}
       >
         <ControlGroup>
-          <SalutationList
-            onItemSelect={handleSalutationSelect}
-            selectedItem={values.salutation}
-            popoverProps={{ minimal: true }}
-            className={classNames(
-              CLASSES.FORM_GROUP_LIST_SELECT,
-              CLASSES.FILL,
-              'input-group--salutation-list',
-              'select-list--fill-button',
+          <FastField name={'salutation'}>
+            {({ form, field: { value }, meta: { error, touched } }) => (
+              <SalutationList
+                onItemSelect={(salutation) => {
+                  form.setFieldValue('salutation', salutation.label);
+                }}
+                selectedItem={value}
+                popoverProps={{ minimal: true }}
+                className={classNames(
+                  CLASSES.FORM_GROUP_LIST_SELECT,
+                  CLASSES.FILL,
+                  'input-group--salutation-list',
+                  'select-list--fill-button',
+                )}
+              />
             )}
-          />
-          <InputGroup
-            placeholder={'First Name'}
-            intent={errors.first_name && touched.first_name && Intent.DANGER}
-            {...getFieldProps('first_name')}
-            className={classNames('input-group--first-name')}
-          />
-          <InputGroup
-            placeholder={'Last Name'}
-            intent={errors.last_name && touched.last_name && Intent.DANGER}
-            {...getFieldProps('last_name')}
-            className={classNames('input-group--last-name')}
-          />
+          </FastField>
+
+          <FastField name={'first_name'}>
+            {({ field, meta: { error, touched } }) => (
+              <InputGroup
+                placeholder={'First Name'}
+                intent={inputIntent({ error, touched })}
+                className={classNames('input-group--first-name')}
+                {...field}
+              />
+            )}
+          </FastField>
+
+          <FastField name={'last_name'}>
+            {({ field, meta: { error, touched } }) => (
+              <InputGroup
+                placeholder={'Last Name'}
+                intent={inputIntent({ error, touched })}
+                className={classNames('input-group--last-name')}
+                {...field}
+              />
+            )}
+          </FastField>
         </ControlGroup>
       </FormGroup>
 
       {/*----------- Company Name -----------*/}
-      <FormGroup
-        className={classNames('form-group--company_name')}
-        label={<T id={'company_name'} />}
-        intent={errors.company_name && touched.company_name && Intent.DANGER}
-        helperText={
-          <ErrorMessage {...{ errors, touched }} name={'company_name'} />
-        }
-        inline={true}
-      >
-        <InputGroup
-          intent={errors.company_name && touched.company_name && Intent.DANGER}
-          {...getFieldProps('company_name')}
-        />
-      </FormGroup>
+      <FastField name={'company_name'}>
+        {({ field, meta: { error, touched } }) => (
+          <FormGroup
+            className={classNames('form-group--company_name')}
+            label={<T id={'company_name'} />}
+            intent={inputIntent({ error, touched })}
+            helperText={<ErrorMessage name={'company_name'} />}
+            inline={true}
+          >
+            <InputGroup {...field} />
+          </FormGroup>
+        )}
+      </FastField>
 
       {/*----------- Display Name -----------*/}
-      <FormGroup
-        intent={errors.display_name && touched.display_name && Intent.DANGER}
-        helperText={
-          <ErrorMessage {...{ errors, touched }} name={'display_name'} />
-        }
-        label={
-          <>
-            <T id={'display_name'} />
-            <FieldRequiredHint />
-            <Hint />
-          </>
-        }
-        className={classNames(CLASSES.FORM_GROUP_LIST_SELECT, CLASSES.FILL)}
-        inline={true}
-      >
-        <DisplayNameList
-          firstName={values.first_name}
-          lastName={values.last_name}
-          company={values.company_name}
-          salutation={values.salutation}
-          onItemSelect={handleDisplayNameSelect}
-          // selectedItem={values.display_name}
-          popoverProps={{ minimal: true }}
-        />
-      </FormGroup>
+      <Field name={'display_name'}>
+        {({ form, field: { value }, meta: { error, touched } }) => (
+          <FormGroup
+            helperText={<ErrorMessage name={'display_name'} />}
+            intent={inputIntent({ error, touched })}
+            label={
+              <>
+                <T id={'display_name'} />
+                <FieldRequiredHint />
+                <Hint />
+              </>
+            }
+            className={classNames(CLASSES.FORM_GROUP_LIST_SELECT, CLASSES.FILL)}
+            inline={true}
+          >
+            <DisplayNameList
+              firstName={form.values.first_name}
+              lastName={form.values.last_name}
+              company={form.values.company_name}
+              salutation={form.values.salutation}
+              onItemSelect={(displayName) => {
+                form.setFieldValue('display_name', displayName.label);
+              }}
+              selectedItem={value}
+              popoverProps={{ minimal: true }}
+            />
+          </FormGroup>
+        )}
+      </Field>
     </div>
   );
 }

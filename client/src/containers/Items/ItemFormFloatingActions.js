@@ -20,7 +20,7 @@ export default function ItemFormFloatingActions({ isSubmitting, itemId, onCancel
       </Button>
 
       <Button className={'ml1'} disabled={isSubmitting}>
-        <T id={'save_as_draft'} />
+        <T id={'save_new'} />
       </Button>
 
       <Button className={'ml1'} onClick={handleCancelBtnClick}>
@@ -43,9 +43,3 @@ export default function ItemFormFloatingActions({ isSubmitting, itemId, onCancel
     </div>
   );
 }
-
-// function areEqual(prevProps, nextProps) {
-//   return prevProps.isSubmitting === nextProps.isSubmitting;
-// }
-
-// export default memo(ItemFormFloatingActions, areEqual);

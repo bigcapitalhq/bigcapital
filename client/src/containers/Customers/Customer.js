@@ -42,7 +42,7 @@ function Customer({
 
   const handleFormSubmit = useCallback(
     (payload) => {
-      payload.redirect && history.push('/customers');
+      
     },
     [history],
   );

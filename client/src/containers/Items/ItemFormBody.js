@@ -2,7 +2,6 @@ import React from 'react';
 import { FastField, ErrorMessage } from 'formik';
 import {
   FormGroup,
-  Intent,
   Classes,
   Checkbox,
 } from '@blueprintjs/core';
