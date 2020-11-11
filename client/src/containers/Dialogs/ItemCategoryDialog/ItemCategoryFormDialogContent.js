@@ -8,12 +8,10 @@ import {
   TextArea,
   MenuItem,
 } from '@blueprintjs/core';
-import { pick } from 'lodash';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { useQuery, queryCache } from 'react-query';
 import { FormattedMessage as T, useIntl } from 'react-intl';
-
 import classNames from 'classnames';
 import {
   ListSelect,
@@ -31,16 +29,29 @@ import withItemCategoriesActions from 'containers/Items/withItemCategoriesAction
 
 import withAccounts from 'containers/Accounts/withAccounts';
 import withAccountsActions from 'containers/Accounts/withAccountsActions';
-
 import withDialogActions from 'containers/Dialog/withDialogActions';
-import { compose } from 'utils';
+
+import { compose, transformToForm } from 'utils';
+
+const defaultInitialValues = {
+  name: '',
+  description: '',
+  parent_category_id: '',
+  cost_account_id: '',
+  sell_account_id: '',
+  inventory_account_id: '',
+};
+
+/**
+ * Item Category form dialog content.
+ */
 
 function ItemCategoryFormDialogContent({
   // #withDialogActions
   closeDialog,
 
   // #withItemCategoryDetail
-  itemCategory,
+  itemCategoryDetail,
 
   // #withItemCategories
   categoriesList,
@@ -61,40 +72,71 @@ function ItemCategoryFormDialogContent({
   itemCategoryId,
   dialogName,
 }) {
+  const isNewMode = !itemCategoryId;
+
   const { formatMessage } = useIntl();
   const [selectedParentCategory, setParentCategory] = useState(null);
 
-  const fetchList = useQuery(['items-categories-list'], () =>
+  // Fetches categories list.
+  const fetchCategoriesList = useQuery(['items-categories-list'], () =>
     requestFetchItemCategories(),
   );
-  const fetchAccounts = useQuery(
-    'accounts-list',
-    () => requestFetchAccounts(),
-    { enabled: false },
+
+  // Fetches accounts list.
+  const fetchAccountsList = useQuery('accounts-list', () =>
+    requestFetchAccounts(),
   );
 
   const validationSchema = Yup.object().shape({
     name: Yup.string()
       .required()
       .label(formatMessage({ id: 'category_name_' })),
-    parent_category_id: Yup.string().nullable(),
+    parent_category_id: Yup.number().nullable(),
     cost_account_id: Yup.number().nullable(),
     sell_account_id: Yup.number().nullable(),
-    inventory_account_id: Yup.number(),
+    inventory_account_id: Yup.number().nullable(),
     description: Yup.string().trim().nullable(),
   });
 
   const initialValues = useMemo(
     () => ({
-      name: '',
-      description: '',
-      parent_category_id: null,
-      cost_account_id: null,
-      sell_account_id: null,
-      inventory_account_id: null,
+      ...defaultInitialValues,
+      ...transformToForm(itemCategoryDetail, defaultInitialValues),
     }),
     [],
   );
+
+  // Handles the form submit.
+  const handleFormSubmit = (values, { setSubmitting }) => {
+    setSubmitting(true);
+    const form = { ...values };
+    const afterSubmit = () => {
+      closeDialog(dialogName);
+      queryCache.invalidateQueries('items-categories-list');
+      queryCache.invalidateQueries('accounts-list');
+    };
+    const onSuccess = ({ response }) => {
+      AppToaster.show({
+        message: formatMessage({
+          id: isNewMode
+            ? 'the_item_category_has_been_successfully_created'
+            : 'the_item_category_has_been_successfully_edited',
+        }),
+        intent: Intent.SUCCESS,
+      });
+      afterSubmit(response);
+    };
+    const onError = ({ response }) => {
+      setSubmitting(false);
+    };
+    if (isNewMode) {
+      requestSubmitItemCategory(form).then(onSuccess).catch(onError);
+    } else {
+      requestEditItemCategory(itemCategoryId, form)
+        .then(onSuccess)
+        .catch(onError);
+    }
+  };
 
   // Formik
   const {
@@ -108,49 +150,12 @@ function ItemCategoryFormDialogContent({
   } = useFormik({
     enableReinitialize: true,
     validationSchema,
-    initialValues: {
-      ...initialValues,
-      ...(action === 'edit' && pick(itemCategory, Object.keys(initialValues))),
-    },
-    onSubmit: (values, { setSubmitting }) => {
-      const afterSubmit = () => {
-        closeDialog(dialogName);
-        queryCache.invalidateQueries('items-categories-list');
-        queryCache.invalidateQueries('accounts-list');
-      };
-      if (action === 'edit') {
-        requestEditItemCategory(itemCategoryId, values)
-          .then((response) => {
-            AppToaster.show({
-              message: formatMessage({
-                id: 'the_item_category_has_been_successfully_edited',
-              }),
-              intent: Intent.SUCCESS,
-            });
-            afterSubmit(response);
-          })
-          .catch((error) => {
-            setSubmitting(false);
-          });
-      } else {
-        requestSubmitItemCategory(values)
-          .then((response) => {
-            AppToaster.show({
-              message: formatMessage({
-                id: 'the_item_category_has_been_successfully_created',
-              }),
-              intent: Intent.SUCCESS,
-            });
-            afterSubmit(response);
-          })
-          .catch((error) => {
-            setSubmitting(false);
-          });
-      }
-    },
+    initialValues,
+    onSubmit: handleFormSubmit,
   });
 
-  const filterItemCategory = useCallback(
+  // Filters Item Categories list.
+  const filterItemCategories = useCallback(
     (query, category, _index, exactMatch) => {
       const normalizedTitle = category.name.toLowerCase();
       const normalizedQuery = query.toLowerCase();
@@ -200,10 +205,11 @@ function ItemCategoryFormDialogContent({
   );
 
   return (
-    <DialogContent isLoading={fetchList.isFetching || fetchAccounts.isFetching}>
+    <DialogContent
+      isLoading={fetchCategoriesList.isFetching || fetchAccountsList.isFetching}
+    >
       <form onSubmit={handleSubmit}>
         <div className={Classes.DIALOG_BODY}>
-          
           {/* ----------- Category name ----------- */}
           <FormGroup
             label={<T id={'category_name'} />}
@@ -245,7 +251,7 @@ function ItemCategoryFormDialogContent({
               items={categoriesList}
               noResults={<MenuItem disabled={true} text="No results." />}
               itemRenderer={parentCategoryItem}
-              itemPredicate={filterItemCategory}
+              itemPredicate={filterItemCategories}
               popoverProps={{ minimal: true }}
               onItemSelect={onChangeParentCategory}
               selectedItem={values.parent_category_id}
@@ -291,6 +297,7 @@ function ItemCategoryFormDialogContent({
               onAccountSelected={onItemAccountSelect('cost_account_id')}
               defaultSelectText={<T id={'select_account'} />}
               selectedAccountId={values.cost_account_id}
+              filterByTypes={['cost_of_goods_sold']}
             />
           </FormGroup>
           {/* ----------- Sell account ----------- */}
@@ -314,6 +321,7 @@ function ItemCategoryFormDialogContent({
               onAccountSelected={onItemAccountSelect('sell_account_id')}
               defaultSelectText={<T id={'select_account'} />}
               selectedAccountId={values.sell_account_id}
+              filterByTypes={['income']}
             />
           </FormGroup>
           {/* ----------- inventory account ----------- */}
