@@ -1,15 +1,14 @@
 import React from 'react';
+import { FastField, ErrorMessage } from 'formik';
 import {
   FormGroup,
   Intent,
-  InputGroup,
   Classes,
   Checkbox,
 } from '@blueprintjs/core';
 import {
   AccountsSelectList,
   MoneyInputGroup,
-  ErrorMessage,
   Col,
   Row,
   Hint,
@@ -18,161 +17,158 @@ import { FormattedMessage as T } from 'react-intl';
 import classNames from 'classnames';
 import withAccounts from 'containers/Accounts/withAccounts';
 
-import { compose } from 'utils';
+import { compose, inputIntent } from 'utils';
 
 /**
  * Item form body.
  */
-function ItemFormBody({
-  getFieldProps,
-  touched,
-  errors,
-  values,
-  setFieldValue,
-
-  accountsList,
-}) {
+function ItemFormBody({ accountsList }) {
   return (
     <div class="page-form__section page-form__section--selling-cost">
       <Row>
         <Col xs={6}>
-          {/*------------- Sellable checkbox ------------- */}
-          <FormGroup inline={true} className={'form-group--sellable'}>
-            <Checkbox
-              inline={true}
-              label={
-                <h3>
-                  <T id={'i_purchase_this_item'} />
-                </h3>
-              }
-              checked={values.sellable}
-              {...getFieldProps('sellable')}
-            />
-          </FormGroup>
+          {/*------------- Purchasable checbox ------------- */}
+          <FastField name={'sellable'}>
+            {({ field, field: { value } }) => (
+              <FormGroup inline={true} className={'form-group--sellable'}>
+                <Checkbox
+                  inline={true}
+                  label={
+                    <h3>
+                      <T id={'i_sell_this_item'} />
+                    </h3>
+                  }
+                  defaultChecked={value}
+                  {...field}
+                />
+              </FormGroup>
+            )}
+          </FastField>
 
           {/*------------- Selling price ------------- */}
-          <FormGroup
-            label={<T id={'selling_price'} />}
-            className={'form-group--item-selling-price'}
-            intent={errors.sell_price && touched.sell_price && Intent.DANGER}
-            helperText={
-              <ErrorMessage {...{ errors, touched }} name="sell_price" />
-            }
-            inline={true}
-          >
-            <MoneyInputGroup
-              value={values.sell_price}
-              prefix={'$'}
-              onChange={(e, value) => {
-                setFieldValue('sell_price', value);
-              }}
-              inputGroupProps={{
-                medium: true,
-                intent:
-                  errors.sell_price && touched.sell_price && Intent.DANGER,
-              }}
-              disabled={!values.sellable}
-            />
-          </FormGroup>
-
-          {/*------------- Selling account ------------- */}
-          <FormGroup
-            label={<T id={'account'} />}
-            labelInfo={<Hint />}
-            inline={true}
-            intent={
-              errors.sell_account_id && touched.sell_account_id && Intent.DANGER
-            }
-            helperText={
-              <ErrorMessage {...{ errors, touched }} name="sell_account_id" />
-            }
-            className={classNames(
-              'form-group--sell-account',
-              'form-group--select-list',
-              Classes.FILL,
+          <FastField name={'sell_price'}>
+            {({ form, field, field: { value }, meta: { error, touched } }) => (
+              <FormGroup
+                label={<T id={'selling_price'} />}
+                className={'form-group--sell_price'}
+                intent={inputIntent({ error, touched })}
+                helperText={<ErrorMessage name={'sell_price'} />}
+                inline={true}
+              >
+                <MoneyInputGroup
+                  value={value}
+                  prefix={'$'}
+                  inputGroupProps={{
+                    medium: true,
+                    // intent: error && touched/ && Intent.DANGER,
+                  }}
+                  disabled={!form.values.sellable}
+                  onChange={field.onChange}
+                />
+              </FormGroup>
             )}
-          >
-            <AccountsSelectList
-              accounts={accountsList}
-              onAccountSelected={(account) => {
-                setFieldValue('sell_account_id', account.id);
-              }}
-              defaultSelectText={<T id={'select_account'} />}
-              selectedAccountId={values.sell_account_id}
-              disabled={!values.sellable}
-              filterByTypes={['income']}
-            />
-          </FormGroup>
+          </FastField>
+
+           {/*------------- Selling account ------------- */}
+          <FastField name={'sell_account_id'}>
+            {({ form, field: { value }, meta: { error, touched } }) => (
+              <FormGroup
+                label={<T id={'account'} />}
+                labelInfo={<Hint />}
+                inline={true}
+                intent={inputIntent({ error, touched })}
+                helperText={<ErrorMessage name="sell_account_id" />}
+                className={classNames(
+                  'form-group--sell-account',
+                  'form-group--select-list',
+                  Classes.FILL,
+                )}
+              >
+                <AccountsSelectList
+                  accounts={accountsList}
+                  onAccountSelected={(account) => {
+                    form.setFieldValue('sell_account_id', account.id);
+                  }}
+                  defaultSelectText={<T id={'select_account'} />}
+                  selectedAccountId={value}
+                  disabled={!form.values.sellable}
+                  filterByTypes={['income']}
+                />
+              </FormGroup>
+            )}
+          </FastField>
         </Col>
 
         <Col xs={6}>
-          {/*------------- Purchasable checbox ------------- */}
-          <FormGroup inline={true} className={'form-group--purchasable'}>
-            <Checkbox
-              inline={true}
-              label={
-                <h3>
-                  <T id={'i_sell_this_item'} />
-                </h3>
-              }
-              defaultChecked={values.purchasable}
-              {...getFieldProps('purchasable')}
-            />
-          </FormGroup>
+          {/*------------- Sellable checkbox ------------- */}
+          <FastField name={'purchasable'}>
+            {({ field, field: { value }, meta: { error, touched } }) => (
+              <FormGroup inline={true} className={'form-group--purchasable'}>
+                <Checkbox
+                  inline={true}
+                  label={
+                    <h3>
+                      <T id={'i_purchase_this_item'} />
+                    </h3>
+                  }
+                  checked={value}
+                  {...field}
+                />
+              </FormGroup>
+            )}
+          </FastField>
 
           {/*------------- Cost price ------------- */}
-          <FormGroup
-            label={<T id={'cost_price'} />}
-            className={'form-group--item-cost-price'}
-            intent={errors.cost_price && touched.cost_price && Intent.DANGER}
-            helperText={
-              <ErrorMessage {...{ errors, touched }} name="cost_price" />
-            }
-            inline={true}
-          >
-            <MoneyInputGroup
-              value={values.cost_price}
-              prefix={'$'}
-              onChange={(e, value) => {
-                setFieldValue('cost_price', value);
-              }}
-              inputGroupProps={{
-                medium: true,
-                intent:
-                  errors.cost_price && touched.cost_price && Intent.DANGER,
-              }}
-              disabled={!values.purchasable}
-            />
-          </FormGroup>
+          <FastField name={'cost_price'}>
+            {({ field, form, field: { value }, meta: { error, touched } }) => (
+              <FormGroup
+                label={<T id={'cost_price'} />}
+                className={'form-group--item-cost-price'}
+                intent={inputIntent({ error, touched })}
+                helperText={<ErrorMessage name="cost_price" />}
+                inline={true}
+              >
+                <MoneyInputGroup
+                  value={value}
+                  prefix={'$'}
+                  inputGroupProps={{
+                    medium: true,
+                  }}
+                  disabled={!form.values.purchasable}
+                  {...field}
+                />
+              </FormGroup>
+            )}
+          </FastField>
 
           {/*------------- Cost account ------------- */}
-          <FormGroup
-            label={<T id={'account'} />}
-            labelInfo={<Hint />}
-            inline={true}
-            intent={
-              errors.cost_account_id && touched.cost_account_id && Intent.DANGER
-            }
-            helperText={
-              <ErrorMessage {...{ errors, touched }} name="cost_account_id" />
-            }
-            className={classNames(
-              'form-group--cost-account',
-              'form-group--select-list',
-              Classes.FILL,
+          <FastField name={'cost_account_id'}>
+            {({ form, field: { value }, meta: { error, touched } }) => (
+              <FormGroup
+                label={<T id={'account'} />}
+                labelInfo={<Hint />}
+                inline={true}
+                intent={inputIntent({ error, touched })}
+                helperText={<ErrorMessage name="cost_account_id" />}
+                className={classNames(
+                  'form-group--cost-account',
+                  'form-group--select-list',
+                  Classes.FILL,
+                )}
+              >
+                <AccountsSelectList
+                  accounts={accountsList}
+                  onAccountSelected={(account) => {
+                    form.setFieldValue('cost_account_id', account.id);
+                  }}
+                  defaultSelectText={<T id={'select_account'} />}
+                  selectedAccountId={value}
+                  disabled={!form.values.purchasable}
+                  filterByTypes={['cost_of_goods_sold']}
+                />
+              </FormGroup>
             )}
-          >
-            <AccountsSelectList
-              accounts={accountsList}
-              onAccountSelected={(account) => {
-                setFieldValue('cost_account_id', account.id);
-              }}
-              defaultSelectText={<T id={'select_account'} />}
-              selectedAccountId={values.cost_account_id}
-              disabled={!values.purchasable}
-              filterByTypes={['cost_of_goods_sold']}
-            />
-          </FormGroup>
+          </FastField>
         </Col>
       </Row>
     </div>

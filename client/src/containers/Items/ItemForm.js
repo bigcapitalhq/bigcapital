@@ -1,9 +1,7 @@
 import React, { useMemo, useCallback, useEffect } from 'react';
 import * as Yup from 'yup';
-import { useFormik } from 'formik';
-import {
-  Intent
-} from '@blueprintjs/core';
+import { useFormik, Formik, Form } from 'formik';
+import { Intent } from '@blueprintjs/core';
 import { queryCache } from 'react-query';
 import { useHistory } from 'react-router-dom';
 import { pick, pickBy } from 'lodash';
@@ -40,7 +38,6 @@ const defaultInitialValues = {
   sellable: true,
   purchasable: true,
 };
-
 
 /**
  * Item form.
@@ -88,18 +85,16 @@ function ItemForm({
       .required()
       .label(formatMessage({ id: 'item_type_' })),
     sku: Yup.string().trim(),
-    cost_price: Yup.number()
-      .when(['purchasable'], {
-        is: true,
-        then: Yup.number().required(),
-        otherwise: Yup.number().nullable(true),
-      }),
-    sell_price: Yup.number()
-      .when(['sellable'], {
-        is: true,
-        then: Yup.number().required(),
-        otherwise: Yup.number().nullable(true),
-      }),
+    cost_price: Yup.number().when(['purchasable'], {
+      is: true,
+      then: Yup.number().required(),
+      otherwise: Yup.number().nullable(true),
+    }),
+    sell_price: Yup.number().when(['sellable'], {
+      is: true,
+      then: Yup.number().required(),
+      otherwise: Yup.number().nullable(true),
+    }),
     cost_account_id: Yup.number()
       .when(['purchasable'], {
         is: true,
@@ -145,21 +140,24 @@ function ItemForm({
   );
 
   useEffect(() => {
-    (!isNewMode)
+    !isNewMode
       ? changePageTitle(formatMessage({ id: 'edit_item_details' }))
       : changePageTitle(formatMessage({ id: 'new_item' }));
   }, [changePageTitle, isNewMode, formatMessage]);
 
   const transformApiErrors = (errors) => {
     const fields = {};
-    if (errors.find(e => e.type === 'ITEM.NAME.ALREADY.EXISTS')) {
-      fields.name = formatMessage({ id: 'the_name_used_before' })
+    if (errors.find((e) => e.type === 'ITEM.NAME.ALREADY.EXISTS')) {
+      fields.name = formatMessage({ id: 'the_name_used_before' });
     }
     return fields;
-  }
+  };
 
   // Handles the form submit.
-  const handleFormSubmit = (values, { setSubmitting, resetForm, setErrors }) => {
+  const handleFormSubmit = (
+    values,
+    { setSubmitting, resetForm, setErrors },
+  ) => {
     setSubmitting(true);
     const form = { ...values };
 
@@ -167,9 +165,9 @@ function ItemForm({
       AppToaster.show({
         message: formatMessage(
           {
-            id: (isNewMode) ?
-              'service_has_been_successful_created' : 
-              'the_item_has_been_successfully_edited',
+            id: isNewMode
+              ? 'service_has_been_successful_created'
+              : 'the_item_has_been_successfully_edited',
           },
           {
             number: itemId,
@@ -196,28 +194,13 @@ function ItemForm({
     }
   };
 
-  const {
-    getFieldProps,
-    setFieldValue,
-    values,
-    touched,
-    errors,
-    handleSubmit,
-    isSubmitting,
-  } = useFormik({
-    enableReinitialize: true,
-    validationSchema: validationSchema,
-    initialValues,
-    onSubmit: handleFormSubmit
-  });
-
-  useEffect(() => {
-    if (values.item_type) {
-      changePageSubtitle(formatMessage({ id: values.item_type }));
-    } else {
-      changePageSubtitle('');
-    }
-  }, [values.item_type, changePageSubtitle, formatMessage]);
+  // useEffect(() => {
+  //   if (values.item_type) {
+  //     changePageSubtitle(formatMessage({ id: values.item_type }));
+  //   } else {
+  //     changePageSubtitle('');
+  //   }
+  // }, [values.item_type, changePageSubtitle, formatMessage]);
 
   const initialAttachmentFiles = useMemo(() => {
     return itemDetail && itemDetail.media
@@ -228,10 +211,13 @@ function ItemForm({
         }))
       : [];
   }, [itemDetail]);
- 
-  const handleDropFiles = useCallback((_files) => {
-    setFiles(_files.filter((file) => file.uploaded === false));
-  }, [setFiles]);
+
+  const handleDropFiles = useCallback(
+    (_files) => {
+      setFiles(_files.filter((file) => file.uploaded === false));
+    },
+    [setFiles],
+  );
 
   const handleDeleteFile = useCallback(
     (_deletedFiles) => {
@@ -250,39 +236,30 @@ function ItemForm({
 
   return (
     <div class={classNames(CLASSES.PAGE_FORM_ITEM)}>
-      <form onSubmit={handleSubmit}>
-        <div class={classNames(CLASSES.PAGE_FORM_BODY)}>
-          <ItemFormPrimarySection
-            errors={errors}
-            touched={touched}
-            values={values}
-            getFieldProps={getFieldProps}
-            setFieldValue={setFieldValue}
-          />
-          <ItemFormBody
-            touched={touched}
-            errors={errors}
-            values={values}
-            getFieldProps={getFieldProps}
-            setFieldValue={setFieldValue}
-          />
-          <ItemFormInventorySection
-            errors={errors}
-            touched={touched}
-            values={values}
-            setFieldValue={setFieldValue}
-            getFieldProps={getFieldProps}
-          />
-        </div>
-        <ItemFormFloatingActions
-          isSubmitting={isSubmitting}
-          itemId={itemId}
-          onCancelClick={handleCancelBtnClick}
-        />
-      </form>
+      <Formik
+        enableReinitialize={true}
+        validationSchema={validationSchema}
+        initialValues={initialValues}
+        onSubmit={handleFormSubmit}
+      >
+        {({ isSubmitting }) => (
+          <Form>
+            <div class={classNames(CLASSES.PAGE_FORM_BODY)}>
+              <ItemFormPrimarySection />
+              <ItemFormBody />
+              <ItemFormInventorySection />
+            </div>
+            <ItemFormFloatingActions
+              isSubmitting={isSubmitting}
+              itemId={itemId}
+              onCancelClick={handleCancelBtnClick}
+            />
+          </Form>
+        )}
+      </Formik>
     </div>
   );
-};
+}
 
 export default compose(
   withItemsActions,
