@@ -9,6 +9,7 @@ import {
 } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'react-intl';
 import { ErrorMessage, FastField } from 'formik';
+import { useIntl } from 'react-intl';
 import {
   CategoriesSelectList,
   Hint,
@@ -21,6 +22,7 @@ import { CLASSES } from 'common/classes';
 
 import withItemCategories from 'containers/Items/withItemCategories';
 import withAccounts from 'containers/Accounts/withAccounts';
+import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 
 import { compose, handleStringChange, inputIntent } from 'utils';
 
@@ -30,7 +32,12 @@ import { compose, handleStringChange, inputIntent } from 'utils';
 function ItemFormPrimarySection({
   // #withItemCategories
   categoriesList,
+
+  // #withDashboardActions
+  changePageSubtitle
 }) {
+  const { formatMessage } = useIntl();
+
   const itemTypeHintContent = (
     <>
       <div class="mb1">
@@ -78,6 +85,7 @@ function ItemFormPrimarySection({
                   inline={true}
                   onChange={handleStringChange((_value) => {
                     form.setFieldValue('type', _value);
+                    changePageSubtitle(formatMessage({ id: _value }));
                   })}
                   selectedValue={value}
                 >
@@ -171,4 +179,5 @@ export default compose(
   withItemCategories(({ categoriesList }) => ({
     categoriesList,
   })),
+  withDashboardActions
 )(ItemFormPrimarySection);

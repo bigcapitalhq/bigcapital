@@ -37,7 +37,7 @@ function ItemFormBody({ accountsList }) {
                       <T id={'i_sell_this_item'} />
                     </h3>
                   }
-                  defaultChecked={value}
+                  checked={value}
                   {...field}
                 />
               </FormGroup>
@@ -59,7 +59,7 @@ function ItemFormBody({ accountsList }) {
                   prefix={'$'}
                   inputGroupProps={{
                     medium: true,
-                    // intent: error && touched/ && Intent.DANGER,
+                    ...field,
                   }}
                   disabled={!form.values.sellable}
                   onChange={field.onChange}
@@ -132,9 +132,9 @@ function ItemFormBody({ accountsList }) {
                   prefix={'$'}
                   inputGroupProps={{
                     medium: true,
+                    ...field,
                   }}
                   disabled={!form.values.purchasable}
-                  {...field}
                 />
               </FormGroup>
             )}

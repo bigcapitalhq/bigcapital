@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback, useEffect } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
@@ -59,6 +59,9 @@ function ItemForm({
   requestDeleteMedia,
 }) {
   const isNewMode = !itemId;
+
+  // Holds data of submit button once clicked to form submit function.
+  const [submitPayload, setSubmitPayload] = useState({});
 
   const history = useHistory();
   const { formatMessage } = useIntl();
@@ -165,8 +168,8 @@ function ItemForm({
         message: formatMessage(
           {
             id: isNewMode
-              ? 'service_has_been_successful_created'
-              : 'the_item_has_been_successfully_edited',
+              ? 'the_item_has_been_created_successfully'
+              : 'the_item_has_been_edited_successfully',
           },
           {
             number: itemId,
@@ -174,9 +177,13 @@ function ItemForm({
         ),
         intent: Intent.SUCCESS,
       });
+      resetForm();
       setSubmitting(false);
-      history.push('/items');
       queryCache.removeQueries(['items-table']);
+
+      if (submitPayload.redirect) {
+        history.push('/items');
+      }
     };
     const onError = ({ response }) => {
       setSubmitting(false);
@@ -193,13 +200,11 @@ function ItemForm({
     }
   };
 
-  // useEffect(() => {
-  //   if (values.item_type) {
-  //     changePageSubtitle(formatMessage({ id: values.item_type }));
-  //   } else {
-  //     changePageSubtitle('');
-  //   }
-  // }, [values.item_type, changePageSubtitle, formatMessage]);
+  useEffect(() => {
+    if (itemDetail && itemDetail.type) {
+      changePageSubtitle(formatMessage({ id: itemDetail.type }));
+    }
+  }, [itemDetail, changePageSubtitle, formatMessage]);
 
   const initialAttachmentFiles = useMemo(() => {
     return itemDetail && itemDetail.media
@@ -229,9 +234,17 @@ function ItemForm({
     [setDeletedFiles, deletedFiles],
   );
 
-  const handleCancelBtnClick = useCallback(() => {
+  const handleCancelBtnClick = () => {
     history.goBack();
-  }, [history]);
+  };
+
+  const handleSubmitAndNewClick = () => {
+    setSubmitPayload({ redirect: false });
+  };
+
+  const handleSubmitClick = () => {
+    setSubmitPayload({ redirect: true });
+  };
 
   return (
     <div class={classNames(CLASSES.PAGE_FORM_ITEM)}>
@@ -241,7 +254,7 @@ function ItemForm({
         initialValues={initialValues}
         onSubmit={handleFormSubmit}
       >
-        {({ isSubmitting }) => (
+        {({ isSubmitting, handleSubmit }) => (
           <Form>
             <div class={classNames(CLASSES.PAGE_FORM_BODY)}>
               <ItemFormPrimarySection />
@@ -251,7 +264,10 @@ function ItemForm({
             <ItemFormFloatingActions
               isSubmitting={isSubmitting}
               itemId={itemId}
+              handleSubmit={handleSubmit}
               onCancelClick={handleCancelBtnClick}
+              onSubmitAndNewClick={handleSubmitAndNewClick}
+              onSubmitClick={handleSubmitClick}
             />
           </Form>
         )}

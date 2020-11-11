@@ -1,12 +1,11 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import * as Yup from 'yup';
-import { useFormik, Formik, Form } from 'formik';
+import { Formik, Form } from 'formik';
 import moment from 'moment';
 import { Intent } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
-import { useHistory } from 'react-router-dom';
-import { pick } from 'lodash';
 import classNames from 'classnames';
+import { useHistory } from 'react-router-dom';
 
 import { CLASSES } from 'common/classes';
 import AppToaster from 'components/AppToaster';
@@ -23,7 +22,43 @@ import withMediaActions from 'containers/Media/withMediaActions';
 import withCustomers from 'containers/Customers//withCustomers';
 import useMedia from 'hooks/useMedia';
 
-import { compose, saveInvoke } from 'utils';
+import { compose, transformToForm } from 'utils';
+
+const defaultInitialValues = {
+  customer_type: 'business',
+  salutation: '',
+  first_name: '',
+  last_name: '',
+  company_name: '',
+  display_name: '',
+
+  email: '',
+  work_phone: '',
+  personal_phone: '',
+  website: '',
+  note: '',
+  active: true,
+
+  billing_address_country: '',
+  billing_address_1: '',
+  billing_address_2: '',
+  billing_address_city: '',
+  billing_address_state: '',
+  billing_address_postcode: '',
+  billing_address_phone: '',
+
+  shipping_address_country: '',
+  shipping_address_1: '',
+  shipping_address_2: '',
+  shipping_address_city: '',
+  shipping_address_state: '',
+  shipping_address_postcode: '',
+  shipping_address_phone: '',
+
+  opening_balance: '',
+  currency_code: '',
+  opening_balance_at: moment(new Date()).format('YYYY-MM-DD'),
+};
 
 /**
  * Customer form.
@@ -51,8 +86,11 @@ function CustomerForm({
   onFormSubmit,
   onCancelForm,
 }) {
-  const { formatMessage } = useIntl();
+  const isNewMode = !customerId;
+  const [submitPayload, setSubmitPayload] = useState({});
+
   const history = useHistory();
+  const { formatMessage } = useIntl();
   const {
     setFiles,
     saveMedia,
@@ -107,98 +145,55 @@ function CustomerForm({
     opening_balance_at: Yup.date(),
   });
 
-  const defaultInitialValues = useMemo(
-    () => ({
-      customer_type: 'business',
-      salutation: '',
-      first_name: '',
-      last_name: '',
-      company_name: '',
-      display_name: '',
-
-      email: '',
-      work_phone: '',
-      personal_phone: '',
-      website: '',
-      note: '',
-      active: true,
-
-      billing_address_country: '',
-      billing_address_1: '',
-      billing_address_2: '',
-      billing_address_city: '',
-      billing_address_state: '',
-      billing_address_postcode: '',
-      billing_address_phone: '',
-
-      shipping_address_country: '',
-      shipping_address_1: '',
-      shipping_address_2: '',
-      shipping_address_city: '',
-      shipping_address_state: '',
-      shipping_address_postcode: '',
-      shipping_address_phone: '',
-
-      opening_balance: '',
-      currency_code: '',
-      opening_balance_at: moment(new Date()).format('YYYY-MM-DD'),
-    }),
-    [],
-  );
-
+  /**
+   * Initial values in create and edit mode.
+   */
   const initialValues = useMemo(
     () => ({
-      ...(customer
-        ? {
-            ...pick(customer, Object.keys(defaultInitialValues)),
-          }
-        : {
-            ...defaultInitialValues,
-          }),
+      ...defaultInitialValues,
+      ...transformToForm(customer, defaultInitialValues),
     }),
     [customer, defaultInitialValues],
   );
 
   useEffect(() => {
-    customer && customer.id
+    !isNewMode
       ? changePageTitle(formatMessage({ id: 'edit_customer' }))
       : changePageTitle(formatMessage({ id: 'new_customer' }));
-  }, [changePageTitle, customer, formatMessage]);
+  }, [changePageTitle, isNewMode, formatMessage]);
 
+  //Handles the form submit.
   const handleFormSubmit = (
     values,
     { setSubmitting, resetForm, setErrors },
   ) => {
     const formValues = { ...values };
+
+    const onSuccess = () => {
+      AppToaster.show({
+        message: formatMessage({
+          id: customer ?
+            'the_item_customer_has_been_successfully_edited' :
+            'the_customer_has_been_successfully_created',
+        }),
+        intent: Intent.SUCCESS,
+      });
+      setSubmitting(false);
+      resetForm();
+
+      if (!submitPayload.noRedirect) {
+        history.push('/customers');
+      }
+    };
+
+    const onError = () => {
+      setSubmitting(false);
+    };
+
     if (customer && customer.id) {
-      requestEditCustomer(customer.id, formValues)
-        .then((response) => {
-          AppToaster.show({
-            message: formatMessage({
-              id: 'the_item_customer_has_been_successfully_edited',
-            }),
-            intent: Intent.SUCCESS,
-          });
-          setSubmitting(false);
-          resetForm();
-        })
-        .catch((errors) => {
-          setSubmitting(false);
-        });
+      requestEditCustomer(customer.id, formValues).then(onSuccess).catch(onError);
     } else {
-      requestSubmitCustomer(formValues)
-        .then((response) => {
-          AppToaster.show({
-            message: formatMessage({
-              id: 'the_customer_has_been_successfully_created',
-            }),
-            intent: Intent.SUCCESS,
-          });
-          setSubmitting(false);
-        })
-        .catch((errors) => {
-          setSubmitting(false);
-        });
+      requestSubmitCustomer(formValues).then(onSuccess).catch(onError);
     }
   };
 
@@ -226,12 +221,14 @@ function CustomerForm({
     },
     [setDeletedFiles, deletedFiles],
   );
-  const handleCancelClick = useCallback(
-    (payload, event) => {
-     
-    },
-    [],
-  );
+
+  const handleCancelClick = () => {
+    history.goBack();
+  };
+
+  const handleSubmitAndNewClick = () => {
+    setSubmitPayload({ noRedirect: true });
+  };
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM, CLASSES.PAGE_FORM_CUSTOMER)}>
@@ -258,8 +255,9 @@ function CustomerForm({
 
             <CustomerFloatingActions
               isSubmitting={isSubmitting}
-              onCancelClick={handleCancelClick}
               customerId={customer}
+              onCancelClick={handleCancelClick}
+              onSubmitAndNewClick={handleSubmitAndNewClick}
             />
           </Form>
         )}

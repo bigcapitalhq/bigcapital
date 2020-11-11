@@ -3,23 +3,49 @@ import { Button, Intent, FormGroup, Checkbox } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'react-intl';
 import { saveInvoke } from 'utils';
 import classNames from 'classnames';
-import { ErrorMessage, FastField } from 'formik';
+import { FastField } from 'formik';
 import { CLASSES } from 'common/classes';
 
 /**
  * Item form floating actions.
  */
-export default function ItemFormFloatingActions({ isSubmitting, itemId, onCancelClick }) {
+export default function ItemFormFloatingActions({
+  isSubmitting,
+  itemId,
+  handleSubmit,
+  onCancelClick,
+  onSubmitClick,
+  onSubmitAndNewClick,
+}) {
   const handleCancelBtnClick = (event) => {
     saveInvoke(onCancelClick, event.currentTarget.value);
   };
+
+  const handleSubmitBtnClick = (event) => {
+    saveInvoke(onSubmitClick, event);
+  };
+
+  const handleSubmitAndNewBtnClick = (event) => {
+    saveInvoke(onSubmitAndNewClick, event);
+  };
+
   return (
     <div className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>
-      <Button intent={Intent.PRIMARY} disabled={isSubmitting} type="submit">
+      <Button
+        intent={Intent.PRIMARY}
+        disabled={isSubmitting}
+        onClick={handleSubmitBtnClick}
+        type="submit"
+      >
         {itemId ? <T id={'edit'} /> : <T id={'save'} />}
       </Button>
 
-      <Button className={'ml1'} disabled={isSubmitting}>
+      <Button
+        className={'ml1'}
+        disabled={isSubmitting}
+        onClick={handleSubmitAndNewBtnClick}
+        type="submit"
+      >
         <T id={'save_new'} />
       </Button>
 

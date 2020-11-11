@@ -3,13 +3,14 @@ import { Intent, Button } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'react-intl';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
+import { saveInvoke } from 'utils';
 
 export default function CustomerFloatingActions({
-  isSubmitting,
-  resetForm,
   onSubmitClick,
+  onSubmitAndNewClick,
   onCancelClick,
 
+  isSubmitting,
   customerId,
 }) {
   return (
@@ -18,8 +19,8 @@ export default function CustomerFloatingActions({
         disabled={isSubmitting}
         intent={Intent.PRIMARY}
         type="submit"
-        onClick={() => {
-          onSubmitClick({ publish: true, redirect: true });
+        onClick={(event) => {
+          saveInvoke(onSubmitClick, event);
         }}
       >
         {customerId ? <T id={'edit'} /> : <T id={'save'} />}
@@ -30,8 +31,9 @@ export default function CustomerFloatingActions({
         intent={Intent.PRIMARY}
         className={'ml1'}
         name={'save_and_new'}
-        onClick={() => {
-          onSubmitClick({ publish: true, redirect: false });
+        type="submit"
+        onClick={(event) => {
+          saveInvoke(onSubmitAndNewClick, event);
         }}
       >
         <T id={'save_new'} />
@@ -39,8 +41,8 @@ export default function CustomerFloatingActions({
 
       <Button
         className={'ml1'}
-        onClick={() => {
-          onCancelClick && onCancelClick();
+        onClick={(event) => {
+          saveInvoke(onCancelClick, event);
         }}
       >
         <T id={'close'} />

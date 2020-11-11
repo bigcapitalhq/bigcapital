@@ -87,17 +87,33 @@ function CustomersList({
     setDeleteCustomer(false);
   }, [setDeleteCustomer]);
 
-  // handle confirm delete customer.
-  const handleConfirmDeleteCustomer = useCallback(() => {
-    requestDeleteCustomer(deleteCustomer.id).then(() => {
+   const transformErrors = (errors) => {
+    if (errors.some((e) => e.type === 'CUSTOMER.HAS.SALES_INVOICES')) {
       AppToaster.show({
         message: formatMessage({
-          id: 'the_customer_has_been_successfully_deleted',
+          id: 'customer_has_sales_invoices',
         }),
-        intent: Intent.SUCCESS,
+        intent: Intent.DANGER,
       });
-      setDeleteCustomer(false);
-    });
+    }
+  };
+
+  // handle confirm delete customer.
+  const handleConfirmDeleteCustomer = useCallback(() => {
+    requestDeleteCustomer(deleteCustomer.id)
+      .then(() => {
+        setDeleteCustomer(false);
+        AppToaster.show({
+          message: formatMessage({
+            id: 'the_customer_has_been_successfully_deleted',
+          }),
+          intent: Intent.SUCCESS,
+        });
+      })
+      .catch((errors) => {
+        setDeleteCustomer(false);
+        transformErrors(errors);
+      });
   }, [requestDeleteCustomer, deleteCustomer, formatMessage]);
 
   // Handle fetch data table.
