@@ -1,6 +1,8 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { createTableQueryReducers } from 'store/queryReducers';
 import { omit } from 'lodash';
+import { journalNumberChangedReducer } from 'store/journalNumber.reducer';
+
 import t from 'store/types';
 
 const initialState = {
@@ -105,5 +107,7 @@ const reducer = createReducer(initialState, {
       },
     };
   },
+
+  ...journalNumberChangedReducer(t.PAYMENT_RECEIVE_NUMBER_CHANGED),
 });
 export default createTableQueryReducers('payment_receives', reducer);

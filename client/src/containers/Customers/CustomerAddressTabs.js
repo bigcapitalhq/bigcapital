@@ -222,22 +222,22 @@ const CustomerBillingAddress = ({
             label={<T id={'address_line_1'} />}
             className={'form-group--journal-number'}
             intent={
-              errors.billing_address_1 &&
-              touched.billing_address_1 &&
+              errors.shipping_address_1 &&
+              touched.shipping_address_1 &&
               Intent.DANGER
             }
             inline={true}
             helperText={
-              <ErrorMessage name="billing_address_1" {...{ errors, touched }} />
+              <ErrorMessage name="shipping_address_1" {...{ errors, touched }} />
             }
           >
             <TextArea
               intent={
-                errors.billing_address_1 &&
-                touched.billing_address_1 &&
+                errors.shipping_address_1 &&
+                touched.shipping_address_1 &&
                 Intent.DANGER
               }
-              {...getFieldProps('billing_address_1')}
+              {...getFieldProps('shipping_address_1')}
             />
           </FormGroup>
           {/*------------ Shipping Address 2  -----------*/}
@@ -245,22 +245,22 @@ const CustomerBillingAddress = ({
             label={<T id={'address_line_2'} />}
             className={'form-group--journal-number'}
             intent={
-              errors.billing_address_2 &&
-              touched.billing_address_2 &&
+              errors.shipping_address_2 &&
+              touched.shipping_address_2 &&
               Intent.DANGER
             }
             inline={true}
             helperText={
-              <ErrorMessage name="billing_address_2" {...{ errors, touched }} />
+              <ErrorMessage name="shipping_address_2" {...{ errors, touched }} />
             }
           >
             <TextArea
               intent={
-                errors.billing_address_2 &&
-                touched.billing_address_2 &&
+                errors.shipping_address_2 &&
+                touched.shipping_address_2 &&
                 Intent.DANGER
               }
-              {...getFieldProps('billing_address_2')}
+              {...getFieldProps('shipping_address_2')}
             />
           </FormGroup>
           {/*------------ Shipping Address city  -----------*/}

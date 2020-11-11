@@ -23,30 +23,16 @@ import PaymentReceiveFormFooter from './PaymentReceiveFormFooter';
 import withMediaActions from 'containers/Media/withMediaActions';
 import withPaymentReceivesActions from './withPaymentReceivesActions';
 import withPaymentReceiveDetail from './withPaymentReceiveDetail';
+import withPaymentReceives from './withPaymentReceives';
+import withSettings from 'containers/Settings/withSettings';
+import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import { AppToaster } from 'components';
 
 import { compose } from 'utils';
 
-// Default payment receive entry.
-const defaultPaymentReceiveEntry = {
-  id: null,
-  payment_amount: null,
-  invoice_id: null,
-  due_amount: null,
-};
-
-// Form initial values.
-const defaultInitialValues = {
-  customer_id: '',
-  deposit_account_id: '',
-  payment_date: moment(new Date()).format('YYYY-MM-DD'),
-  reference_no: '',
-  payment_receive_no: '',
-  description: '',
-  full_amount: '',
-  entries: [],
-};
-
+/**
+ * Payment Receive form.
+ */
 function PaymentReceiveForm({
   // #ownProps
   paymentReceiveId,
@@ -55,10 +41,22 @@ function PaymentReceiveForm({
   //#WithPaymentReceiveActions
   requestSubmitPaymentReceive,
   requestEditPaymentReceive,
+  setPaymentReceiveNumberChanged,
 
   // #withPaymentReceiveDetail
   paymentReceive,
   paymentReceiveEntries,
+
+  // #withSettings
+  paymentReceiveNextNumber,
+  paymentReceiveNumberPrefix,
+
+  // #withPaymentReceives
+  paymentReceiveNumberChanged,
+
+  // #withDashboardAction
+  changePageTitle,
+  changePageSubtitle,
 }) {
   const [amountChangeAlert, setAmountChangeAlert] = useState(false);
   const [clearLinesAlert, setClearLinesAlert] = useState(false);
@@ -70,6 +68,26 @@ function PaymentReceiveForm({
   const [localPaymentEntries, setLocalPaymentEntries] = useState(
     paymentReceiveEntries,
   );
+
+  const paymentReceiveNumber = paymentReceiveNumberPrefix
+    ? `${paymentReceiveNumberPrefix}-${paymentReceiveNextNumber}`
+    : paymentReceiveNextNumber;
+
+  useEffect(() => {
+    if (paymentReceive && paymentReceiveId) {
+      changePageTitle(formatMessage({ id: 'edit_payment_receive' }));
+      changePageSubtitle(`No. ${paymentReceive.payment_receive_no}`);
+    } else {
+      changePageSubtitle(`No. ${paymentReceiveNumber}`);
+      changePageTitle(formatMessage({ id: 'payment_receive' }));
+    }
+  }, [
+    changePageTitle,
+    changePageSubtitle,
+    paymentReceive,
+    paymentReceiveId,
+    formatMessage,
+  ]);
 
   useEffect(() => {
     if (localPaymentEntries !== paymentReceiveEntries) {
@@ -89,7 +107,7 @@ function PaymentReceiveForm({
       .required()
       .label(formatMessage({ id: 'deposit_account_' })),
     full_amount: Yup.number().nullable(),
-    payment_receive_no: Yup.number().label(
+    payment_receive_no: Yup.string().label(
       formatMessage({ id: 'payment_receive_no_' }),
     ),
     reference_no: Yup.string().min(1).max(255).nullable(),
@@ -108,6 +126,26 @@ function PaymentReceiveForm({
       }),
     ),
   });
+
+  // Default payment receive entry.
+  const defaultPaymentReceiveEntry = {
+    id: null,
+    payment_amount: null,
+    invoice_id: null,
+    due_amount: null,
+  };
+
+  // Form initial values.
+  const defaultInitialValues = {
+    customer_id: '',
+    deposit_account_id: '',
+    payment_date: moment(new Date()).format('YYYY-MM-DD'),
+    reference_no: '',
+    payment_receive_no: paymentReceiveNumber,
+    description: '',
+    full_amount: '',
+    entries: [],
+  };
 
   // Form initial values.
   const initialValues = useMemo(
@@ -303,6 +341,27 @@ function PaymentReceiveForm({
     [values.entries],
   );
 
+  useEffect(() => {
+    if (paymentReceiveNumberChanged) {
+      setFieldValue('payment_receive_no', paymentReceiveNumber);
+      changePageSubtitle(`No. ${paymentReceiveNumber}`);
+      setPaymentReceiveNumberChanged(false);
+    }
+  }, [
+    paymentReceiveNumber,
+    paymentReceiveNumberChanged,
+    setFieldValue,
+    changePageSubtitle,
+  ]);
+
+
+  const handlePaymentReceiveNumberChanged = useCallback(
+    (payment_receive_no) => {
+      changePageSubtitle(`No.${payment_receive_no}`);
+    },
+    [changePageSubtitle],
+  );
+
   return (
     <div
       className={classNames(
@@ -322,6 +381,7 @@ function PaymentReceiveForm({
           onFullAmountChanged={handleFullAmountChange}
           receivableFullAmount={receivableFullAmount}
           amountReceived={fullAmountReceived}
+          onPaymentReceiveNumberChanged={handlePaymentReceiveNumberChanged}
         />
         <PaymentReceiveItemsTable
           paymentReceiveId={paymentReceiveId}
@@ -388,12 +448,17 @@ function PaymentReceiveForm({
 
 export default compose(
   withPaymentReceivesActions,
+  withDashboardActions,
   withMediaActions,
-  // withPaymentReceives(({ paymentReceivesItems }) => ({
-  //   paymentReceivesItems,
-  // })),
   withPaymentReceiveDetail(({ paymentReceive, paymentReceiveEntries }) => ({
     paymentReceive,
     paymentReceiveEntries,
+  })),
+  withSettings(({ paymentReceiveSettings }) => ({
+    paymentReceiveNextNumber: paymentReceiveSettings?.nextNumber,
+    paymentReceiveNumberPrefix: paymentReceiveSettings?.numberPrefix,
+  })),
+  withPaymentReceives(({ paymentReceiveNumberChanged }) => ({
+    paymentReceiveNumberChanged,
   })),
 )(PaymentReceiveForm);

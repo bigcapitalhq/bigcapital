@@ -6,7 +6,6 @@ import {
   getPaymentReceiveTableQuery,
 } from 'store/PaymentReceive/paymentReceive.selector';
 
-
 export default (mapState) => {
   const getPyamentReceivesItems = getPaymentReceiveCurrentPageFactory();
   const getPyamentReceivesPaginationMeta = getPaymentReceivePaginationMetaFactory();
@@ -17,8 +16,14 @@ export default (mapState) => {
       paymentReceivesViews: getResourceViews(state, props, 'payment_receives'),
       paymentReceivesItems: state.paymentReceives.items,
       paymentReceivesTableQuery: query,
-      paymentReceivesPageination: getPyamentReceivesPaginationMeta(state, props, query),
+      paymentReceivesPageination: getPyamentReceivesPaginationMeta(
+        state,
+        props,
+        query,
+      ),
       paymentReceivesLoading: state.paymentReceives.loading,
+
+      paymentReceiveNumberChanged: state.paymentReceives.journalNumberChanged,
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };
