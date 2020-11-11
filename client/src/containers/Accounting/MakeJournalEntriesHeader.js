@@ -4,6 +4,7 @@ import {
   FormGroup,
   Intent,
   Position,
+  ControlGroup,
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { FormattedMessage as T } from 'react-intl';
@@ -77,27 +78,29 @@ function MakeJournalEntriesHeader({
             }
             fill={true}
           >
-            <InputGroup
-              intent={
-                errors.journal_number && touched.journal_number && Intent.DANGER
-              }
-              fill={true}
-              rightElement={
-                <InputPrependButton
-                  buttonProps={{
-                    onClick: handleJournalNumberChange,
-                    icon: <Icon icon={'settings-18'} />,
-                  }}
-                  tooltip={true}
-                  tooltipProps={{
-                    content: 'Setting your auto-generated journal number',
-                    position: Position.BOTTOM_LEFT,
-                  }}
-                />
-              }
-              {...getFieldProps('journal_number')}
-              onBlur={handleJournalNumberChanged}
-            />
+            <ControlGroup fill={true}>
+              <InputGroup
+                intent={
+                  errors.journal_number &&
+                  touched.journal_number &&
+                  Intent.DANGER
+                }
+                fill={true}
+                {...getFieldProps('journal_number')}
+                onBlur={handleJournalNumberChanged}
+              />
+              <InputPrependButton
+                buttonProps={{
+                  onClick: handleJournalNumberChange,
+                  icon: <Icon icon={'settings-18'} />,
+                }}
+                tooltip={true}
+                tooltipProps={{
+                  content: 'Setting your auto-generated journal number',
+                  position: Position.BOTTOM_LEFT,
+                }}
+              />
+            </ControlGroup>
           </FormGroup>
         </Col>
 
@@ -191,7 +194,7 @@ function MakeJournalEntriesHeader({
             className={classNames(
               'form-group--select-list',
               'form-group--currency',
-              CLASSES.FILL
+              CLASSES.FILL,
             )}
           >
             <CurrenciesSelectList />
