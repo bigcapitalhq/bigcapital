@@ -2,6 +2,7 @@ import React, { useCallback, useState, useEffect, useMemo } from 'react';
 import { MenuItem, Button } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
 import { FormattedMessage as T } from 'react-intl';
+import classNames from 'classnames';
 import { isEmpty } from 'lodash';
 
 export default function AccountsSelectList({
@@ -103,6 +104,7 @@ export default function AccountsSelectList({
       filterable={true}
       onItemSelect={onAccountSelect}
       disabled={disabled}
+      className={classNames('form-group--select-list')}
     >
       <Button
         disabled={disabled}

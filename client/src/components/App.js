@@ -1,5 +1,5 @@
 import React from 'react';
-import { IntlProvider } from 'react-intl';
+import { RawIntlProvider } from 'react-intl';
 import { Router, Switch, Route } from 'react-router';
 import { createBrowserHistory } from 'history';
 import { ReactQueryConfigProvider } from 'react-query';
@@ -9,8 +9,8 @@ import PrivateRoute from 'components/Guards/PrivateRoute';
 import Authentication from 'components/Authentication';
 import DashboardPrivatePages from 'components/Dashboard/PrivatePages';
 import GlobalErrors from 'containers/GlobalErrors/GlobalErrors';
+import intl from 'services/intl';
 
-import messages from 'lang/en';
 import 'style/App.scss';
 
 function App({ locale }) {
@@ -22,7 +22,7 @@ function App({ locale }) {
     },
   };
   return (
-    <IntlProvider locale={locale} messages={messages}>
+    <RawIntlProvider value={intl}>
       <div className="App">
         <ReactQueryConfigProvider config={queryConfig}>
           <Router history={history}>
@@ -41,7 +41,7 @@ function App({ locale }) {
           <ReactQueryDevtools />
         </ReactQueryConfigProvider>
       </div>
-    </IntlProvider>
+    </RawIntlProvider>
   );
 }
 

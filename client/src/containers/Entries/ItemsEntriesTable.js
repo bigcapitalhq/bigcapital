@@ -15,8 +15,14 @@ import {
 } from 'components/DataTableCells';
 
 import withItems from 'containers/Items/withItems';
-import { compose, formattedAmount } from 'utils';
+import {
+  compose,
+  formattedAmount,
+  orderingLinesIndexes,
+  saveInvoke,
+} from 'utils';
 
+// Actions cell renderer component.
 const ActionsCellRenderer = ({
   row: { index },
   column: { id },
@@ -43,7 +49,8 @@ const ActionsCellRenderer = ({
   );
 };
 
-const TotalEstimateCellRederer = (content, type) => (props) => {
+// Total cell renderer.
+const TotalCellRenderer = (content, type) => (props) => {
   if (props.data.length === props.row.index + 1) {
     const total = props.data.reduce((total, entry) => {
       const amount = parseInt(entry[type], 10);
@@ -66,28 +73,24 @@ const CellRenderer = (content, type) => (props) => {
   return content(props);
 };
 
-const ItemHeaderCell = () => {
-  return (
-    <>
-      <T id={'product_and_service'} />
-      <Hint />
-    </>
-  );
-};
+const ItemHeaderCell = () => (
+  <>
+    <T id={'product_and_service'} />
+    <Hint />
+  </>
+);
 
-function EntriesItemsTable({
+function ItemsEntriesTable({
   //#withitems
   itemsCurrentPage,
 
   //#ownProps
+  entries,
+  errors,
+  onUpdateData,
   onClickRemoveRow,
   onClickAddNewRow,
   onClickClearAllLines,
-  entries,
-  
-  errors,
-  setFieldValue,
-  values,
 }) {
   const [rows, setRows] = useState([]);
   const { formatMessage } = useIntl();
@@ -112,7 +115,6 @@ function EntriesItemsTable({
         id: 'item_id',
         accessor: 'item_id',
         Cell: ItemsListCell,
-        // ItemsListCell
         disableSortBy: true,
         width: 180,
       },
@@ -136,7 +138,7 @@ function EntriesItemsTable({
       {
         Header: formatMessage({ id: 'rate' }),
         accessor: 'rate',
-        Cell: TotalEstimateCellRederer(MoneyFieldCell, 'rate'),
+        Cell: TotalCellRenderer(MoneyFieldCell, 'rate'),
         disableSortBy: true,
         width: 80,
         className: 'rate',
@@ -153,7 +155,7 @@ function EntriesItemsTable({
         Header: formatMessage({ id: 'total' }),
         accessor: (row) =>
           calculateDiscount(row.discount, row.quantity, row.rate),
-        Cell: TotalEstimateCellRederer(DivFieldCell, 'total'),
+        Cell: TotalCellRenderer(DivFieldCell, 'total'),
         disableSortBy: true,
         width: 120,
         className: 'total',
@@ -173,7 +175,7 @@ function EntriesItemsTable({
 
   const handleUpdateData = useCallback(
     (rowIndex, columnId, value) => {
-      const newRow = rows.map((row, index) => {
+      const newRows = rows.map((row, index) => {
         if (index === rowIndex) {
           const newRow = { ...rows[rowIndex], [columnId]: value };
           return {
@@ -187,14 +189,9 @@ function EntriesItemsTable({
         }
         return row;
       });
-      setFieldValue(
-        'entries',
-        newRow.map((row) => ({
-          ...omit(row, ['total']),
-        })),
-      );
+      saveInvoke(onUpdateData, newRows);
     },
-    [rows, setFieldValue],
+    [rows, onUpdateData],
   );
 
   const handleRemoveRow = useCallback(
@@ -202,27 +199,18 @@ function EntriesItemsTable({
       if (rows.length <= 1) {
         return;
       }
-
-      const removeIndex = parseInt(rowIndex, 10);
-      const newRows = rows.filter((row, index) => index !== removeIndex);
-      setFieldValue(
-        'entries',
-        newRows.map((row, index) => ({
-          ...omit(row),
-          index: index + 1,
-        })),
-      );
-      onClickRemoveRow && onClickRemoveRow(removeIndex);
+      const removeIndex = parseInt(rowIndex, 10); 
+      saveInvoke(onClickRemoveRow, removeIndex);
     },
-    [rows, setFieldValue, onClickRemoveRow],
+    [rows, onClickRemoveRow],
   );
 
-  const onClickNewRow = () => {
-    onClickAddNewRow && onClickAddNewRow();
+  const onClickNewRow = (event) => {
+    saveInvoke(onClickAddNewRow, event);
   };
 
-  const handleClickClearAllLines = () => {
-    onClickClearAllLines && onClickClearAllLines();
+  const handleClickClearAllLines = (event) => {
+    saveInvoke(onClickClearAllLines, event);
   };
 
   const rowClassNames = useCallback(
@@ -233,17 +221,20 @@ function EntriesItemsTable({
   );
 
   return (
-    <div className={classNames(
-      CLASSES.DATATABLE_EDITOR,
-      CLASSES.DATATABLE_EDITOR_ITEMS_ENTRIES,
-    )}>
+    <div
+      className={classNames(
+        CLASSES.DATATABLE_EDITOR,
+        CLASSES.DATATABLE_EDITOR_ITEMS_ENTRIES,
+      )}
+    >
       <DataTable
         columns={columns}
         data={rows}
         rowClassNames={rowClassNames}
+        sticky={true}
         payload={{
           items: itemsCurrentPage,
-          errors: errors.entries || [],
+          errors: errors || [],
           updateData: handleUpdateData,
           removeRow: handleRemoveRow,
         }}
@@ -273,4 +264,4 @@ export default compose(
   withItems(({ itemsCurrentPage }) => ({
     itemsCurrentPage,
   })),
-)(EntriesItemsTable);
+)(ItemsEntriesTable);

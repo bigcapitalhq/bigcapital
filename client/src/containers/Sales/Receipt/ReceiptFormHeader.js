@@ -1,22 +1,20 @@
-import React, { useMemo, useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import {
   FormGroup,
   InputGroup,
-  Intent,
   Position,
   ControlGroup,
 } from '@blueprintjs/core';
 
 import { DateInput } from '@blueprintjs/datetime';
 import { FormattedMessage as T } from 'react-intl';
-import moment from 'moment';
-import { momentFormatter, compose, tansformDateValue, saveInvoke } from 'utils';
 import classNames from 'classnames';
+import { FastField, ErrorMessage } from 'formik';
+
 import { CLASSES } from 'common/classes';
 import {
   AccountsSelectList,
   ContactSelecetList,
-  ErrorMessage,
   FieldRequiredHint,
   Icon,
   InputPrependButton,
@@ -26,9 +24,17 @@ import withCustomers from 'containers/Customers/withCustomers';
 import withAccounts from 'containers/Accounts/withAccounts';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 
-function ReceiptFormHeader({
-  formik: { errors, touched, setFieldValue, getFieldProps, values },
+import {
+  momentFormatter,
+  compose,
+  tansformDateValue,
+  saveInvoke,
+  handleDateChange,
+  inputIntent,
+} from 'utils';
 
+
+function ReceiptFormHeader({
   //#withCustomers
   customers,
 
@@ -41,30 +47,6 @@ function ReceiptFormHeader({
   // #ownProps
   onReceiptNumberChanged,
 }) {
-  const handleDateChange = useCallback(
-    (date) => {
-      const formatted = moment(date).format('YYYY-MM-DD');
-      setFieldValue('receipt_date', formatted);
-    },
-    [setFieldValue],
-  );
-
-  // handle change
-  const onChangeSelect = useCallback(
-    (filedName) => {
-      return (item) => {
-        setFieldValue(filedName, item.id);
-      };
-    },
-    [setFieldValue],
-  );
-
-  // Filter deposit accounts.
-  const depositAccounts = useMemo(
-    () => accountsList.filter((a) => a?.type?.key === 'current_asset'),
-    [accountsList],
-  );
-
   const handleReceiptNumberChange = useCallback(() => {
     openDialog('receipt-number-form', {});
   }, [openDialog]);
@@ -77,129 +59,124 @@ function ReceiptFormHeader({
     <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
       <div className={classNames(CLASSES.PAGE_FORM_HEADER_PRIMARY)}>
         {/* ----------- Customer name ----------- */}
-        <FormGroup
-          label={<T id={'customer_name'} />}
-          inline={true}
-          className={classNames(
-            'form-group--select-list',
-            CLASSES.FILL,
-            'form-group--customer',
+        <FastField name={'customer_id'}>
+          {({ form, field: { value }, meta: { error, touched } }) => (
+            <FormGroup
+              label={<T id={'customer_name'} />}
+              inline={true}
+              className={classNames(CLASSES.FILL, 'form-group--customer')}
+              labelInfo={<FieldRequiredHint />}
+              intent={inputIntent({ error, touched })}
+              helperText={<ErrorMessage name={'customer_id'} />}
+            >
+              <ContactSelecetList
+                contactsList={customers}
+                selectedContactId={value}
+                defaultSelectText={<T id={'select_customer_account'} />}
+                onContactSelected={(contact) => {
+                  form.setFieldValue('customer_id', contact.id);
+                }}
+              />
+            </FormGroup>
           )}
-          labelInfo={<FieldRequiredHint />}
-          intent={errors.customer_id && touched.customer_id && Intent.DANGER}
-          helperText={
-            <ErrorMessage name={'customer_id'} {...{ errors, touched }} />
-          }
-        >
-          <ContactSelecetList
-            contactsList={customers}
-            selectedContactId={values.customer_id}
-            defaultSelectText={<T id={'select_customer_account'} />}
-            onContactSelected={onChangeSelect('customer_id')}
-          />
-        </FormGroup>
+        </FastField>
 
         {/* ----------- Deposit account ----------- */}
-        <FormGroup
-          label={<T id={'deposit_account'} />}
-          className={classNames(
-            'form-group--deposit-account',
-            'form-group--select-list',
-            CLASSES.FILL,
+        <FastField name={'deposit_account_id'}>
+          {({ form, field: { value }, meta: { error, touched } }) => (
+            <FormGroup
+              label={<T id={'deposit_account'} />}
+              className={classNames(
+                'form-group--deposit-account',
+                CLASSES.FILL,
+              )}
+              inline={true}
+              labelInfo={<FieldRequiredHint />}
+              intent={inputIntent({ error, touched })}
+              helperText={<ErrorMessage name={'deposit_account_id'} />}
+            >
+              <AccountsSelectList
+                accounts={accountsList}
+                onAccountSelected={(account) => {
+                  form.setFieldValue('deposit_account_id', account.id);
+                }}
+                defaultSelectText={<T id={'select_deposit_account'} />}
+                selectedAccountId={value}
+                filterByTypes={['current_asset']}
+              />
+            </FormGroup>
           )}
-          inline={true}
-          labelInfo={<FieldRequiredHint />}
-          intent={
-            errors.deposit_account_id &&
-            touched.deposit_account_id &&
-            Intent.DANGER
-          }
-          helperText={
-            <ErrorMessage
-              name={'deposit_account_id'}
-              {...{ errors, touched }}
-            />
-          }
-        >
-          <AccountsSelectList
-            accounts={depositAccounts}
-            onAccountSelected={onChangeSelect('deposit_account_id')}
-            defaultSelectText={<T id={'select_deposit_account'} />}
-            selectedAccountId={values.deposit_account_id}
-          />
-        </FormGroup>
+        </FastField>
+
         {/* ----------- Receipt date ----------- */}
-        <FormGroup
-          label={<T id={'receipt_date'} />}
-          inline={true}
-          className={classNames('form-group--select-list', CLASSES.FILL)}
-          intent={errors.receipt_date && touched.receipt_date && Intent.DANGER}
-          helperText={
-            <ErrorMessage name="receipt_date" {...{ errors, touched }} />
-          }
-        >
-          <DateInput
-            {...momentFormatter('YYYY/MM/DD')}
-            value={tansformDateValue(values.receipt_date)}
-            onChange={handleDateChange}
-            popoverProps={{ position: Position.BOTTOM, minimal: true }}
-          />
-        </FormGroup>
+        <FastField name={'receipt_date'}>
+          {({ form, field: { value }, meta: { error, touched } }) => (
+            <FormGroup
+              label={<T id={'receipt_date'} />}
+              inline={true}
+              className={classNames(CLASSES.FILL)}
+              intent={inputIntent({ error, touched })}
+              helperText={<ErrorMessage name="receipt_date" />}
+            >
+              <DateInput
+                {...momentFormatter('YYYY/MM/DD')}
+                value={tansformDateValue(value)}
+                onChange={handleDateChange((formattedDate) => {
+                  form.setFieldValue('receipt_date', formattedDate);
+                })}
+                popoverProps={{ position: Position.BOTTOM, minimal: true }}
+              />
+            </FormGroup>
+          )}
+        </FastField>
 
         {/* ----------- Receipt number ----------- */}
-        <FormGroup
-          label={<T id={'receipt'} />}
-          inline={true}
-          className={('form-group--receipt_number', CLASSES.FILL)}
-          labelInfo={<FieldRequiredHint />}
-          intent={
-            errors.receipt_number && touched.receipt_number && Intent.DANGER
-          }
-          helperText={
-            <ErrorMessage name="receipt_number" {...{ errors, touched }} />
-          }
-        >
-          <ControlGroup fill={true}>
-            <InputGroup
-              intent={
-                errors.receipt_number && touched.receipt_number && Intent.DANGER
-              }
-              minimal={true}
-              {...getFieldProps('receipt_number')}
-              onBlur={handleReceiptNumberChanged}
-            />
-            <InputPrependButton
-              buttonProps={{
-                onClick: handleReceiptNumberChange,
-                icon: <Icon icon={'settings-18'} />,
-              }}
-              tooltip={true}
-              tooltipProps={{
-                content: 'Setting your auto-generated receipt number',
-                position: Position.BOTTOM_LEFT,
-              }}
-            />
-          </ControlGroup>
-        </FormGroup>
+        <FastField name={'receipt_number'}>
+          {({ field, meta: { error, touched } }) => (
+            <FormGroup
+              label={<T id={'receipt'} />}
+              inline={true}
+              className={('form-group--receipt_number', CLASSES.FILL)}
+              labelInfo={<FieldRequiredHint />}
+              intent={inputIntent({ error, touched })}
+              helperText={<ErrorMessage name="receipt_number" />}
+            >
+              <ControlGroup fill={true}>
+                <InputGroup
+                  minimal={true}
+                  {...field}
+                  onBlur={handleReceiptNumberChanged}
+                />
+                <InputPrependButton
+                  buttonProps={{
+                    onClick: handleReceiptNumberChange,
+                    icon: <Icon icon={'settings-18'} />,
+                  }}
+                  tooltip={true}
+                  tooltipProps={{
+                    content: 'Setting your auto-generated receipt number',
+                    position: Position.BOTTOM_LEFT,
+                  }}
+                />
+              </ControlGroup>
+            </FormGroup>
+          )}
+        </FastField>
 
         {/* ----------- Reference ----------- */}
-        <FormGroup
-          label={<T id={'reference'} />}
-          inline={true}
-          className={classNames('form-group--reference', CLASSES.FILL)}
-          intent={errors.reference_no && touched.reference_no && Intent.DANGER}
-          helperText={
-            <ErrorMessage name="reference" {...{ errors, touched }} />
-          }
-        >
-          <InputGroup
-            intent={
-              errors.reference_no && touched.reference_no && Intent.DANGER
-            }
-            minimal={true}
-            {...getFieldProps('reference_no')}
-          />
-        </FormGroup>
+        <FastField name={'reference'}>
+          {({ field, meta: { error, touched } }) => (
+            <FormGroup
+              label={<T id={'reference'} />}
+              inline={true}
+              className={classNames('form-group--reference', CLASSES.FILL)}
+              intent={inputIntent({ error, touched })}
+              helperText={<ErrorMessage name="reference" />}
+            >
+              <InputGroup minimal={true} {...field} />
+            </FormGroup>
+          )}
+        </FastField>
       </div>
     </div>
   );

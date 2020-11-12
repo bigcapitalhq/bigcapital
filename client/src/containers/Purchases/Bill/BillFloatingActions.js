@@ -1,12 +1,15 @@
 import React from 'react';
 import { Intent, Button } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'react-intl';
+import { saveInvoke } from 'utils';
 
 export default function BillFloatingActions({
-  formik: { isSubmitting },
+  isSubmitting,
   onSubmitClick,
+  onSubmitAndNewClick,
   onCancelClick,
-  bill,
+  onClearClick,
+  billId,
 }) {
   return (
     <div className={'form__floating-footer'}>
@@ -15,11 +18,11 @@ export default function BillFloatingActions({
         loading={isSubmitting}
         intent={Intent.PRIMARY}
         type="submit"
-        onClick={() => {
-          onSubmitClick({ redirect: true });
+        onClick={(event) => {
+          saveInvoke(onSubmitClick, event);
         }}
       >
-        {bill && bill.id ? <T id={'edit'} /> : <T id={'save_send'} />}
+        {billId ? <T id={'edit'} /> : <T id={'save'} />}
       </Button>
 
       <Button
@@ -27,24 +30,29 @@ export default function BillFloatingActions({
         loading={isSubmitting}
         intent={Intent.PRIMARY}
         className={'ml1'}
-        name={'save'}
         type="submit"
-        onClick={() => {
-          onSubmitClick({ redirect: false });
+        onClick={(event) => {
+          saveInvoke(onSubmitAndNewClick, event);
         }}
       >
-        <T id={'save'} />
+        <T id={'save_new'} />
       </Button>
 
-      <Button className={'ml1'} disabled={isSubmitting}>
+      <Button
+        className={'ml1'}
+        disabled={isSubmitting}
+        onClick={(event) => {
+          saveInvoke(onClearClick, event);
+        }}
+      >
         <T id={'clear'} />
       </Button>
 
       <Button
         className={'ml1'}
         type="submit"
-        onClick={() => {
-          onCancelClick && onCancelClick();
+        onClick={(event) => {
+          saveInvoke(onCancelClick, event);
         }}
       >
         <T id={'close'} />

@@ -35,6 +35,7 @@ import CurrencySelectList from './CurrencySelectList'
 import SalutationList from './SalutationList';
 import DisplayNameList from './DisplayNameList';
 import MoneyInputGroup from './MoneyInputGroup';
+import Dragzone from './Dragzone';
 
 const Hint = FieldHint;
 
@@ -77,4 +78,5 @@ export {
   DisplayNameList,
   SalutationList,
   MoneyInputGroup,
+  Dragzone,
 };

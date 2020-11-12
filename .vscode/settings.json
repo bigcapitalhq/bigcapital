@@ -26,5 +26,5 @@
     "editor.tabSize": 2,
     "editor.insertSpaces": true,
     "git.ignoreLimitWarning": true,
-    "god.tsconfig": "./tsconfig.json",
+    "god.tsconfig": "./server/tsconfig.json",
 }

@@ -57,6 +57,7 @@ export default function ContactSelecetList({
       itemPredicate={FilterContacts}
       itemRenderer={handleContactRenderer}
       popoverProps={{ minimal: true }}
+      className={'form-group--select-list'}
       {...restProps}
     />
   );

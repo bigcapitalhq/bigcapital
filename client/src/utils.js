@@ -74,6 +74,10 @@ export const handleNumberChange = (handler) => {
   return handleStringChange((value) => handler(+value));
 };
 
+export const handleDateChange = (handler) => {
+  return (date) => handler(moment(date).format('YYYY-MM-DD'), date);
+};
+
 export const objectKeysTransform = (obj, transform) => {
   return Object.keys(obj).reduce((acc, key) => {
     const computedKey = transform(key);

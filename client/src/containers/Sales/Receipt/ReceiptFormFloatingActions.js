@@ -1,18 +1,18 @@
 import React from 'react';
 import { Intent, Button } from '@blueprintjs/core';
-import { useFormikContext } from 'formik';
 import { FormattedMessage as T } from 'react-intl';
-import { CLASSES } from 'common/classes';
+import { useFormikContext } from 'formik';
 import classNames from 'classnames';
+import { CLASSES } from 'common/classes';
 import { saveInvoke } from 'utils';
 
-export default function InvoiceFloatingActions({
+export default function ReceiptFormFloatingActions({
   isSubmitting,
+  receiptId,
   onSubmitClick,
-  onSubmitAndNewClick,
   onCancelClick,
   onClearClick,
-  invoice,
+  onSubmitAndNewClick,
 }) {
   const { resetForm } = useFormikContext();
 
@@ -26,13 +26,14 @@ export default function InvoiceFloatingActions({
           saveInvoke(onSubmitClick, event);
         }}
       >
-        {invoice && invoice.id ? <T id={'edit'} /> : <T id={'save'} />}
+        {receiptId ? <T id={'edit'} /> : <T id={'save'} />}
       </Button>
 
       <Button
         disabled={isSubmitting}
         intent={Intent.PRIMARY}
         className={'ml1'}
+        name={'save'}
         type="submit"
         onClick={(event) => {
           saveInvoke(onSubmitAndNewClick, event);
@@ -41,14 +42,18 @@ export default function InvoiceFloatingActions({
         <T id={'save_new'} />
       </Button>
 
-      <Button className={'ml1'} disabled={isSubmitting} onClick={(event) => {
-        resetForm();
-        saveInvoke(onClearClick, event);
-      }}>
+      <Button
+        className={'ml1'}
+        disabled={isSubmitting}
+        onClick={(event) => {
+          resetForm();
+          saveInvoke(onClearClick, event);
+        }}
+      >
         <T id={'clear'} />
       </Button>
 
-      <Button className={'ml1'} type="submit" onClick={(event) => {
+      <Button className={'ml1'} onClick={(event) => {
         saveInvoke(onCancelClick, event);
       }}>
         <T id={'close'} />

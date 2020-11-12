@@ -1,22 +1,18 @@
-import React, { useMemo, useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import {
   FormGroup,
   InputGroup,
-  Intent,
   Position,
-  MenuItem,
-  Classes,
   ControlGroup,
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { FormattedMessage as T } from 'react-intl';
-import moment from 'moment';
+import { FastField, ErrorMessage } from 'formik';
 import { momentFormatter, compose, tansformDateValue, saveInvoke } from 'utils';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 import {
   ContactSelecetList,
-  ErrorMessage,
   FieldRequiredHint,
   Icon,
   InputPrependButton,
@@ -27,9 +23,10 @@ import {
 import withCustomers from 'containers/Customers/withCustomers';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 
-function EstimateFormHeader({
-  formik: { errors, touched, setFieldValue, getFieldProps, values },
+import { inputIntent, handleDateChange } from 'utils';
+import { formatMessage } from 'services/intl';
 
+function EstimateFormHeader({
   //#withCustomers
   customers,
   // #withDialogActions
@@ -37,35 +34,6 @@ function EstimateFormHeader({
   // #ownProps
   onEstimateNumberChanged,
 }) {
-  const handleDateChange = useCallback(
-    (date_filed) => (date) => {
-      const formatted = moment(date).format('YYYY-MM-DD');
-      setFieldValue(date_filed, formatted);
-    },
-    [setFieldValue],
-  );
-
-  const CustomerRenderer = useCallback(
-    (cutomer, { handleClick }) => (
-      <MenuItem
-        key={cutomer.id}
-        text={cutomer.display_name}
-        onClick={handleClick}
-      />
-    ),
-    [],
-  );
-
-  // handle change customer
-  const onChangeCustomer = useCallback(
-    (filedName) => {
-      return (customer) => {
-        setFieldValue(filedName, customer.id);
-      };
-    },
-    [setFieldValue],
-  );
-
   const handleEstimateNumberChange = useCallback(() => {
     openDialog('estimate-number-form', {});
   }, [openDialog]);
@@ -78,138 +46,136 @@ function EstimateFormHeader({
     <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
       <div className={'page-form__primary-section'}>
         {/* ----------- Customer name ----------- */}
-        <FormGroup
-          label={<T id={'customer_name'} />}
-          inline={true}
-          className={classNames(
-            'form-group--select-list',
-            'form-group--customer',
-            Classes.FILL,
+        <FastField name={'customer_id'}>
+          {({ form, field: { value }, meta: { error, touched } }) => (
+            <FormGroup
+              label={<T id={'customer_name'} />}
+              inline={true}
+              className={classNames(
+                CLASSES.FILL,
+                'form-group--customer',
+              )}
+              labelInfo={<FieldRequiredHint />}
+              intent={inputIntent({ error, touched })}
+              helperText={<ErrorMessage name={'customer_id'} />}
+            >
+              <ContactSelecetList
+                contactsList={customers}
+                selectedContactId={value}
+                defaultSelectText={<T id={'select_customer_account'} />}
+                onContactSelected={(customer) => {
+                  form.setFieldValue('customer_id', customer.id);
+                }}
+              />
+            </FormGroup>
           )}
-          labelInfo={<FieldRequiredHint />}
-          intent={errors.customer_id && touched.customer_id && Intent.DANGER}
-          helperText={
-            <ErrorMessage name={'customer_id'} {...{ errors, touched }} />
-          }
-        >
-          <ContactSelecetList
-            contactsList={customers}
-            selectedContactId={values.customer_id}
-            defaultSelectText={<T id={'select_customer_account'} />}
-            onContactSelected={onChangeCustomer('customer_id')}
-          />
-        </FormGroup>
+        </FastField>
 
         <Row>
           <Col md={8} className={'col--estimate-date'}>
             {/* ----------- Estimate date ----------- */}
-            <FormGroup
-              label={<T id={'estimate_date'} />}
-              inline={true}
-              labelInfo={<FieldRequiredHint />}
-              className={classNames(
-                'form-group--select-list',
-                'form-group--estimate-date',
-                Classes.FILL,
+            <FastField name={'estimate_date'}>
+              {({ form, field: { value }, meta: { error, touched } }) => (
+                <FormGroup
+                  label={<T id={'estimate_date'} />}
+                  inline={true}
+                  labelInfo={<FieldRequiredHint />}
+                  className={classNames(
+                    CLASSES.FILL,
+                    'form-group--estimate-date',
+                  )}
+                  intent={inputIntent({ error, touched })}
+                  helperText={<ErrorMessage name="estimate_date" />}
+                >
+                  <DateInput
+                    {...momentFormatter('YYYY/MM/DD')}
+                    value={tansformDateValue(value)}
+                    onChange={handleDateChange((formattedDate) => {
+                      form.setFieldValue('estimate_date', formatMessage);
+                    })}
+                    popoverProps={{ position: Position.BOTTOM, minimal: true }}
+                  />
+                </FormGroup>
               )}
-              intent={
-                errors.estimate_date && touched.estimate_date && Intent.DANGER
-              }
-              helperText={
-                <ErrorMessage name="estimate_date" {...{ errors, touched }} />
-              }
-            >
-              <DateInput
-                {...momentFormatter('YYYY/MM/DD')}
-                value={tansformDateValue(values.estimate_date)}
-                onChange={handleDateChange('estimate_date')}
-                popoverProps={{ position: Position.BOTTOM, minimal: true }}
-              />
-            </FormGroup>
+            </FastField>
           </Col>
+
           <Col md={4} className={'col--expiration-date'}>
             {/* ----------- Expiration date ----------- */}
-            <FormGroup
-              label={<T id={'expiration_date'} />}
-              inline={true}
-              className={classNames(
-                'form-group--select-list',
-                'form-group--expiration-date',
-                Classes.FILL,
+            <FastField name={'expiration_date'}>
+              {({ form, field: { value }, meta: { error, touched } }) => (
+                <FormGroup
+                  label={<T id={'expiration_date'} />}
+                  inline={true}
+                  className={classNames(
+                    CLASSES.FORM_GROUP_LIST_SELECT,
+                    CLASSES.FILL,
+                    'form-group--expiration-date',
+                  )}
+                  intent={inputIntent({ error, touched })}
+                  helperText={<ErrorMessage name="expiration_date" />}
+                >
+                  <DateInput
+                    {...momentFormatter('YYYY/MM/DD')}
+                    value={tansformDateValue(value)}
+                    onChange={handleDateChange((formattedDate) => {
+                      form.setFieldValue('expiration_date', formattedDate);
+                    })}
+                    popoverProps={{ position: Position.BOTTOM, minimal: true }}
+                  />
+                </FormGroup>
               )}
-              intent={
-                errors.expiration_date &&
-                touched.expiration_date &&
-                Intent.DANGER
-              }
-              helperText={
-                <ErrorMessage name="expiration_date" {...{ errors, touched }} />
-              }
-            >
-              <DateInput
-                {...momentFormatter('YYYY/MM/DD')}
-                value={tansformDateValue(values.expiration_date)}
-                onChange={handleDateChange('expiration_date')}
-                popoverProps={{ position: Position.BOTTOM, minimal: true }}
-              />
-            </FormGroup>
+            </FastField>
           </Col>
         </Row>
 
         {/* ----------- Estimate number ----------- */}
-        <FormGroup
-          label={<T id={'estimate'} />}
-          inline={true}
-          className={('form-group--estimate-number', Classes.FILL)}
-          labelInfo={<FieldRequiredHint />}
-          intent={
-            errors.estimate_number && touched.estimate_number && Intent.DANGER
-          }
-          helperText={
-            <ErrorMessage name="estimate_number" {...{ errors, touched }} />
-          }
-        >
-          <ControlGroup fill={true}>
-            <InputGroup
-              intent={
-                errors.estimate_number &&
-                touched.estimate_number &&
-                Intent.DANGER
-              }
-              minimal={true}
-              {...getFieldProps('estimate_number')}
-              onBlur={handleEstimateNumberChanged}
-            />
-            <InputPrependButton
-              buttonProps={{
-                onClick: handleEstimateNumberChange,
-                icon: <Icon icon={'settings-18'} />,
-              }}
-              tooltip={true}
-              tooltipProps={{
-                content: 'Setting your auto-generated estimate number',
-                position: Position.BOTTOM_LEFT,
-              }}
-            />
-          </ControlGroup>
-        </FormGroup>
+        <FastField name={'estimate_number'}>
+          {({ form, field, meta: { error, touched } }) => (
+            <FormGroup
+              label={<T id={'estimate'} />}
+              inline={true}
+              className={('form-group--estimate-number', CLASSES.FILL)}
+              labelInfo={<FieldRequiredHint />}
+              intent={inputIntent({ error, touched })}
+              helperText={<ErrorMessage name="estimate_number" />}
+            >
+              <ControlGroup fill={true}>
+                <InputGroup
+                  minimal={true}
+                  {...field}
+                  onBlur={handleEstimateNumberChanged}
+                />
+                <InputPrependButton
+                  buttonProps={{
+                    onClick: handleEstimateNumberChange,
+                    icon: <Icon icon={'settings-18'} />,
+                  }}
+                  tooltip={true}
+                  tooltipProps={{
+                    content: 'Setting your auto-generated estimate number',
+                    position: Position.BOTTOM_LEFT,
+                  }}
+                />
+              </ControlGroup>
+            </FormGroup>
+          )}
+        </FastField>
 
         {/* ----------- Reference ----------- */}
-        <FormGroup
-          label={<T id={'reference'} />}
-          inline={true}
-          className={classNames('form-group--reference', Classes.FILL)}
-          intent={errors.reference && touched.reference && Intent.DANGER}
-          helperText={
-            <ErrorMessage name="reference" {...{ errors, touched }} />
-          }
-        >
-          <InputGroup
-            intent={errors.reference && touched.reference && Intent.DANGER}
-            minimal={true}
-            {...getFieldProps('reference')}
-          />
-        </FormGroup>
+        <FastField name={'reference'}>
+          {({ form, field, meta: { error, touched } }) => (
+            <FormGroup
+              label={<T id={'reference'} />}
+              inline={true}
+              className={classNames('form-group--reference', CLASSES.FILL)}
+              intent={inputIntent({ error, touched })}
+              helperText={<ErrorMessage name="reference" />}
+            >
+              <InputGroup minimal={true} {...field} />
+            </FormGroup>
+          )}
+        </FastField>
       </div>
     </div>
   );

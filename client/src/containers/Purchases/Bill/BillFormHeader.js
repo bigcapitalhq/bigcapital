@@ -1,167 +1,152 @@
-import React, { useCallback } from 'react';
-import {
-  FormGroup,
-  InputGroup,
-  Intent,
-  Position,
-  MenuItem,
-} from '@blueprintjs/core';
+import React from 'react';
+import { FormGroup, InputGroup, Position } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { FormattedMessage as T } from 'react-intl';
-import moment from 'moment';
-import { momentFormatter, compose, tansformDateValue } from 'utils';
+import { FastField, ErrorMessage } from 'formik';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
-import {
-  ContactSelecetList,
-  ErrorMessage,
-  FieldRequiredHint,
-  Row,
-  Col,
-} from 'components';
+import { ContactSelecetList, FieldRequiredHint, Row, Col } from 'components';
 
-// import withCustomers from 'containers/Customers/withCustomers';
 import withVendors from 'containers/Vendors/withVendors';
 import withAccounts from 'containers/Accounts/withAccounts';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 
+import {
+  momentFormatter,
+  compose,
+  tansformDateValue,
+  handleDateChange,
+  inputIntent,
+  saveInvoke,
+} from 'utils';
+
+/**
+ * Fill form header.
+ */
 function BillFormHeader({
-  formik: { errors, touched, setFieldValue, getFieldProps, values },
   onBillNumberChanged,
 
   //#withVendors
   vendorItems,
 }) {
-  const handleDateChange = useCallback(
-    (date_filed) => (date) => {
-      const formatted = moment(date).format('YYYY-MM-DD');
-      setFieldValue(date_filed, formatted);
-    },
-    [setFieldValue],
-  );
-
-  const onChangeSelected = useCallback(
-    (filedName) => {
-      return (item) => {
-        setFieldValue(filedName, item.id);
-      };
-    },
-    [setFieldValue],
-  );
-
   const handleBillNumberBlur = (event) => {
-    onBillNumberChanged && onBillNumberChanged(event.currentTarget.value);
+    saveInvoke(onBillNumberChanged, event.currentTarget.value);
   };
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
       <div className={'page-form__primary-section'}>
-        {/* Vendor name */}
-        <FormGroup
-          label={<T id={'vendor_name'} />}
-          inline={true}
-          className={classNames(
-            'form-group--select-list',
-            'form-group--vendor',
-            CLASSES.FILL,
+        {/* ------- Vendor name ------ */}
+        <FastField name={'vendor_id'}>
+          {({ form, field: { value }, meta: { error, touched } }) => (
+            <FormGroup
+              label={<T id={'vendor_name'} />}
+              inline={true}
+              className={classNames(CLASSES.FILL, 'form-group--vendor')}
+              labelInfo={<FieldRequiredHint />}
+              intent={inputIntent({ error, touched })}
+              helperText={<ErrorMessage name={'vendor_id'} />}
+            >
+              <ContactSelecetList
+                contactsList={vendorItems}
+                selectedContactId={value}
+                defaultSelectText={<T id={'select_vender_account'} />}
+                onContactSelected={(contact) => {
+                  form.setFieldValue('vendor_id', contact.id);
+                }}
+              />
+            </FormGroup>
           )}
-          labelInfo={<FieldRequiredHint />}
-          intent={errors.vendor_id && touched.vendor_id && Intent.DANGER}
-          helperText={
-            <ErrorMessage name={'vendor_id'} {...{ errors, touched }} />
-          }
-        >
-          <ContactSelecetList
-            contactsList={vendorItems}
-            selectedContactId={values.vendor_id}
-            defaultSelectText={ <T id={'select_vender_account'} /> }
-            onContactSelected={onChangeSelected('vendor_id')}
-          />
-        </FormGroup>
+        </FastField>
 
         <Row className={'row--bill-date'}>
           <Col md={7}>
-            {/* Bill date */}
-            <FormGroup
-              label={<T id={'bill_date'} />}
-              inline={true}
-              labelInfo={<FieldRequiredHint />}
-              className={classNames('form-group--select-list', CLASSES.FILL)}
-              intent={errors.bill_date && touched.bill_date && Intent.DANGER}
-              helperText={
-                <ErrorMessage name="bill_date" {...{ errors, touched }} />
-              }
-            >
-              <DateInput
-                {...momentFormatter('YYYY/MM/DD')}
-                value={tansformDateValue(values.bill_date)}
-                onChange={handleDateChange('bill_date')}
-                popoverProps={{ position: Position.BOTTOM, minimal: true }}
-              />
-            </FormGroup>
+            {/* ------- Bill date ------- */}
+            <FastField name={'bill_date'}>
+              {({ form, field: { value }, meta: { error, touched } }) => (
+                <FormGroup
+                  label={<T id={'bill_date'} />}
+                  inline={true}
+                  labelInfo={<FieldRequiredHint />}
+                  className={classNames(CLASSES.FILL)}
+                  intent={inputIntent({ error, touched })}
+                  helperText={<ErrorMessage name="bill_date" />}
+                >
+                  <DateInput
+                    {...momentFormatter('YYYY/MM/DD')}
+                    value={tansformDateValue(value)}
+                    onChange={handleDateChange((formattedDate) => {
+                      form.setFieldValue('bill_date', formattedDate);
+                    })}
+                    popoverProps={{ position: Position.BOTTOM, minimal: true }}
+                  />
+                </FormGroup>
+              )}
+            </FastField>
           </Col>
 
           <Col md={5}>
-            {/* Due date */}
-            <FormGroup
-              label={<T id={'due_date'} />}
-              inline={true}
-              className={classNames(
-                'form-group--due-date',
-                'form-group--select-list',
-                CLASSES.FILL,
+            {/* ------- Due date ------- */}
+            <FastField name={'due_date'}>
+              {({ form, field: { value }, meta: { error, touched } }) => (
+                <FormGroup
+                  label={<T id={'due_date'} />}
+                  inline={true}
+                  className={classNames(
+                    'form-group--due-date',
+                    'form-group--select-list',
+                    CLASSES.FILL,
+                  )}
+                  intent={inputIntent({ error, touched })}
+                  helperText={<ErrorMessage name="due_date" />}
+                >
+                  <DateInput
+                    {...momentFormatter('YYYY/MM/DD')}
+                    value={tansformDateValue(value)}
+                    onChange={handleDateChange((formattedDate) => {
+                      form.setFieldValue('due_date', formattedDate);
+                    })}
+                    popoverProps={{ position: Position.BOTTOM, minimal: true }}
+                  />
+                </FormGroup>
               )}
-              intent={errors.due_date && touched.due_date && Intent.DANGER}
-              helperText={
-                <ErrorMessage name="due_date" {...{ errors, touched }} />
-              }
-            >
-              <DateInput
-                {...momentFormatter('YYYY/MM/DD')}
-                value={tansformDateValue(values.due_date)}
-                onChange={handleDateChange('due_date')}
-                popoverProps={{ position: Position.BOTTOM, minimal: true }}
-              />
-            </FormGroup>
+            </FastField>
           </Col>
         </Row>
 
-        {/* Bill number */}
-        <FormGroup
-          label={<T id={'bill_number'} />}
-          inline={true}
-          className={('form-group--bill_number', CLASSES.FILL)}
-          intent={errors.bill_number && touched.bill_number && Intent.DANGER}
-          helperText={
-            <ErrorMessage name="bill_number" {...{ errors, touched }} />
-          }
-        >
-          <InputGroup
-            intent={errors.bill_number && touched.bill_number && Intent.DANGER}
-            minimal={true}
-            {...getFieldProps('bill_number')}
-            onBlur={handleBillNumberBlur}
-          />
-        </FormGroup>
+        {/* ------- Bill number ------- */}
+        <FastField name={'bill_number'}>
+          {({ field, meta: { error, touched } }) => (
+            <FormGroup
+              label={<T id={'bill_number'} />}
+              inline={true}
+              className={('form-group--bill_number', CLASSES.FILL)}
+              intent={inputIntent({ error, touched })}
+              helperText={<ErrorMessage name="bill_number" />}
+            >
+              <InputGroup
+                minimal={true}
+                {...field}
+                onBlur={handleBillNumberBlur}
+              />
+            </FormGroup>
+          )}
+        </FastField>
 
-        {/* Reference */}
-        <FormGroup
-          label={<T id={'reference'} />}
-          inline={true}
-          className={classNames('form-group--reference', CLASSES.FILL)}
-          intent={errors.reference_no && touched.reference_no && Intent.DANGER}
-          helperText={
-            <ErrorMessage name="reference" {...{ errors, touched }} />
-          }
-        >
-          <InputGroup
-            intent={
-              errors.reference_no && touched.reference_no && Intent.DANGER
-            }
-            minimal={true}
-            {...getFieldProps('reference_no')}
-          />
-        </FormGroup>
+        {/* ------- Reference ------- */}
+        <FastField name={'reference_no'}>
+          {({ field, meta: { error, touched } }) => (
+            <FormGroup
+              label={<T id={'reference'} />}
+              inline={true}
+              className={classNames('form-group--reference', CLASSES.FILL)}
+              intent={inputIntent({ error, touched })}
+              helperText={<ErrorMessage name="reference" />}
+            >
+              <InputGroup minimal={true} {...field} />
+            </FormGroup>
+          )}
+        </FastField>
       </div>
     </div>
   );
