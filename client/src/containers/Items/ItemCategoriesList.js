@@ -9,6 +9,7 @@ import {
 } from 'react-intl';
 
 import AppToaster from 'components/AppToaster';
+import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import ItemCategoriesDataTable from 'containers/Items/ItemCategoriesTable';
 import ItemsCategoryActionsBar from 'containers/Items/ItemsCategoryActionsBar';
@@ -156,7 +157,7 @@ const ItemCategoryList = ({
 
   return (
     <DashboardInsider
-      loading={fetchResourceFields.isFetching}
+      loading={fetchResourceFields.isFetching || fetchCategories.isFetching}
       name={'item-category-list'}
     >
       <ItemsCategoryActionsBar
@@ -164,50 +165,50 @@ const ItemCategoryList = ({
         onFilterChanged={handleFilterChanged}
         onBulkDelete={handleBulkDelete}
       />
+      <DashboardPageContent>
+        <ItemCategoriesDataTable
+          onEditCategory={handleEditCategory}
+          onFetchData={handleFetchData}
+          onSelectedRowsChange={handleSelectedRowsChange}
+          onDeleteCategory={handleDeleteCategory}
+        />
 
-      <ItemCategoriesDataTable
-        onEditCategory={handleEditCategory}
-        onFetchData={handleFetchData}
-        onSelectedRowsChange={handleSelectedRowsChange}
-        onDeleteCategory={handleDeleteCategory}
-        loading={fetchCategories.isFetching}
-      />
+        <Alert
+          cancelButtonText={<T id={'cancel'} />}
+          confirmButtonText={<T id={'delete'} />}
+          icon="trash"
+          intent={Intent.DANGER}
+          isOpen={deleteCategory}
+          onCancel={handleCancelItemDelete}
+          onConfirm={handleConfirmItemDelete}
+        >
+          <p>
+            <FormattedHTMLMessage
+              id={'once_delete_this_item_category_you_will_able_to_restore_it'}
+            />
+          </p>
+        </Alert>
 
-      <Alert
-        cancelButtonText={<T id={'cancel'} />}
-        confirmButtonText={<T id={'delete'} />}
-        icon="trash"
-        intent={Intent.DANGER}
-        isOpen={deleteCategory}
-        onCancel={handleCancelItemDelete}
-        onConfirm={handleConfirmItemDelete}
-      >
-        <p>
-          <FormattedHTMLMessage
-            id={'once_delete_this_item_category_you_will_able_to_restore_it'}
-          />
-        </p>
-      </Alert>
-
-      <Alert
-        cancelButtonText={<T id={'cancel'} />}
-        confirmButtonText={`${formatMessage({
-          id: 'delete',
-        })} (${selectedRowsCount})`}
-        icon="trash"
-        intent={Intent.DANGER}
-        isOpen={bulkDelete}
-        onCancel={handleCancelBulkDelete}
-        onConfirm={handleConfirmBulkDelete}
-      >
-        <p>
-          <FormattedHTMLMessage
-            id={
-              'once_delete_these_item_categories_you_will_not_able_restore_them'
-            }
-          />
-        </p>
-      </Alert>
+        <Alert
+          cancelButtonText={<T id={'cancel'} />}
+          confirmButtonText={`${formatMessage({
+            id: 'delete',
+          })} (${selectedRowsCount})`}
+          icon="trash"
+          intent={Intent.DANGER}
+          isOpen={bulkDelete}
+          onCancel={handleCancelBulkDelete}
+          onConfirm={handleConfirmBulkDelete}
+        >
+          <p>
+            <FormattedHTMLMessage
+              id={
+                'once_delete_these_item_categories_you_will_not_able_restore_them'
+              }
+            />
+          </p>
+        </Alert>
+      </DashboardPageContent>
     </DashboardInsider>
   );
 };

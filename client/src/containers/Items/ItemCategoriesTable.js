@@ -21,6 +21,7 @@ import withDialogActions from 'containers/Dialog/withDialogActions';
 const ItemsCategoryList = ({
   // #withItemCategories
   categoriesList,
+  categoriesTableLoading,
 
   // #withDialogActions.
   openDialog,
@@ -72,21 +73,21 @@ const ItemsCategoryList = ({
         id: 'name',
         Header: formatMessage({ id: 'category_name' }),
         accessor: 'name',
-        width: 150,
+        width: 220,
       },
       {
         id: 'description',
         Header: formatMessage({ id: 'description' }),
         accessor: 'description',
         className: 'description',
-        width: 150,
+        width: 220,
       },
       {
         id: 'count',
         Header: formatMessage({ id: 'count' }),
         accessor: 'count',
         className: 'count',
-        width: 50,
+        width: 180,
       },
       {
         id: 'actions',
@@ -94,14 +95,13 @@ const ItemsCategoryList = ({
         Cell: ({ cell }) => (
           <Popover
             content={actionMenuList(cell.row.original)}
-            position={Position.RIGHT_BOTTOM}
+            position={Position.RIGHT_TOP}
           >
             <Button icon={<Icon icon="more-h-16" iconSize={16} />} />
           </Popover>
         ),
         className: 'actions',
         width: 50,
-        disableResizing: false,
       },
     ],
     [actionMenuList, formatMessage],
@@ -148,9 +148,9 @@ const ItemsCategoryList = ({
         manualSortBy={true}
         selectionColumn={selectionColumn}
         expandable={true}
+        sticky={true}
         onSelectedRowsChange={handleSelectedRowsChange}
-        treeGraph={true}
-        spinnerProps={{ size: 30 }}
+        loading={categoriesTableLoading}
         rowContextMenu={handleRowContextMenu}
       />
     </LoadingIndicator>
@@ -158,8 +158,9 @@ const ItemsCategoryList = ({
 };
 
 export default compose(
-  withItemCategories(({ categoriesList }) => ({
+  withItemCategories(({ categoriesList, categoriesTableLoading }) => ({
     categoriesList,
+    categoriesTableLoading,
   })),
   withDialogActions,
 )(ItemsCategoryList);
