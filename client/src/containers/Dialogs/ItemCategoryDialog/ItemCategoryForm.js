@@ -24,6 +24,7 @@ export default function ItemCategoryForm({
   accountsList,
   categoriesList,
   isSubmitting,
+  onClose
 }) {
   // Filters Item Categories list.
   const filterItemCategories = useCallback(
@@ -203,7 +204,7 @@ export default function ItemCategoryForm({
 
       <div className={Classes.DIALOG_FOOTER}>
         <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-          <Button>
+          <Button onClick={onClose}>
             <T id={'close'} />
           </Button>
           <Button intent={Intent.PRIMARY} type="submit" disabled={isSubmitting}>

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { Intent } from '@blueprintjs/core';
 import * as Yup from 'yup';
 import { useQuery, queryCache } from 'react-query';
@@ -121,6 +121,11 @@ function ItemCategoryFormDialogContent({
     }
   };
 
+  // Handles dialog close.
+  const handleClose = useCallback(() => {
+    closeDialog(dialogName);
+  }, [closeDialog, dialogName]);
+
   return (
     <DialogContent
       isLoading={fetchCategoriesList.isFetching || fetchAccountsList.isFetching}
@@ -136,6 +141,7 @@ function ItemCategoryFormDialogContent({
             accountsList={accountsList}
             categoriesList={categoriesList}
             isSubmitting={isSubmitting}
+            onClose={handleClose}
           />
         )}
       </Formik>
