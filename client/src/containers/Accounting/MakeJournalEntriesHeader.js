@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from 'react';
+import React, { useMemo, useState, useCallback } from 'react';
 import {
   InputGroup,
   FormGroup,
@@ -15,16 +15,18 @@ import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 import { momentFormatter, tansformDateValue, saveInvoke } from 'utils';
 import {
-  CurrenciesSelectList,
   ErrorMessage,
   Hint,
   FieldHint,
   FieldRequiredHint,
   Icon,
   InputPrependButton,
+  CurrencySelectList,
 } from 'components';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
+import withCurrencies from 'containers/Currencies/withCurrencies';
+import withSettings from 'containers/Settings/withSettings';
 
 import { compose } from 'utils';
 
@@ -36,11 +38,20 @@ function MakeJournalEntriesHeader({
   getFieldProps,
 
   // #ownProps
+  manualJournal,
   onJournalNumberChanged,
+
+  // #withSettings
+  baseCurrency,
+
+  // #withCurrencies
+  currenciesList,
 
   // #withDialog
   openDialog,
 }) {
+  const [selectedItems, setSelectedItems] = useState({});
+
   const handleDateChange = useCallback(
     (date) => {
       const formatted = moment(date).format('YYYY-MM-DD');
@@ -56,6 +67,19 @@ function MakeJournalEntriesHeader({
   const handleJournalNumberChanged = (event) => {
     saveInvoke(onJournalNumberChanged, event.currentTarget.value);
   };
+
+  const onItemsSelect = useCallback(
+    (filedName) => {
+      return (filed) => {
+        setSelectedItems({
+          ...selectedItems,
+          [filedName]: filed,
+        });
+        setFieldValue(filedName, filed.currency_code);
+      };
+    },
+    [setFieldValue, selectedItems],
+  );
 
   return (
     <div class="make-journal-entries__header">
@@ -197,7 +221,12 @@ function MakeJournalEntriesHeader({
               CLASSES.FILL,
             )}
           >
-            <CurrenciesSelectList />
+            <CurrencySelectList
+              currenciesList={currenciesList}
+              selectedCurrencyCode={values.currency_code}
+              onCurrencySelected={onItemsSelect('currency_code')}
+              defaultSelectText={baseCurrency}
+            />
           </FormGroup>
         </Col>
       </Row>
@@ -205,4 +234,12 @@ function MakeJournalEntriesHeader({
   );
 }
 
-export default compose(withDialogActions)(MakeJournalEntriesHeader);
+export default compose(
+  withDialogActions,
+  withSettings(({ organizationSettings }) => ({
+    baseCurrency: organizationSettings?.baseCurrency,
+  })),
+  withCurrencies(({ currenciesList }) => ({
+    currenciesList,
+  })),
+)(MakeJournalEntriesHeader);

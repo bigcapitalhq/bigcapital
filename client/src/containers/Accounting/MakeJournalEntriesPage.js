@@ -8,6 +8,7 @@ import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import withCustomersActions from 'containers/Customers/withCustomersActions';
 import withAccountsActions from 'containers/Accounts/withAccountsActions';
 import withManualJournalsActions from 'containers/Accounting/withManualJournalsActions';
+import withCurrenciesActions from 'containers/Currencies/withCurrenciesActions';
 import withSettingsActions from 'containers/Settings/withSettingsActions';
 
 import { compose } from 'utils';
@@ -21,6 +22,9 @@ function MakeJournalEntriesPage({
 
   // #withManualJournalActions
   requestFetchManualJournal,
+
+  // #wihtCurrenciesActions
+  requestFetchCurrencies,
 
   // #withSettingsActions
   requestFetchOptions,
@@ -36,10 +40,11 @@ function MakeJournalEntriesPage({
     requestFetchCustomers(),
   );
 
-  const fetchSettings = useQuery(
-    ['settings'],
-    () => requestFetchOptions({}),
+  const fetchCurrencies = useQuery('currencies', () =>
+    requestFetchCurrencies(),
   );
+
+  const fetchSettings = useQuery(['settings'], () => requestFetchOptions({}));
 
   const fetchJournal = useQuery(
     ['manual-journal', id],
@@ -63,6 +68,7 @@ function MakeJournalEntriesPage({
       loading={
         fetchJournal.isFetching ||
         fetchAccounts.isFetching ||
+        fetchCurrencies.isFetching ||
         fetchCustomers.isFetching
       }
       name={'make-journal-page'}
@@ -80,5 +86,6 @@ export default compose(
   withAccountsActions,
   withCustomersActions,
   withManualJournalsActions,
-  withSettingsActions
+  withCurrenciesActions,
+  withSettingsActions,
 )(MakeJournalEntriesPage);

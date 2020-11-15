@@ -126,6 +126,7 @@ function MakeJournalEntriesForm({
     date: Yup.date()
       .required()
       .label(formatMessage({ id: 'date' })),
+    currency_code: Yup.string(),
     reference: Yup.string().min(1).max(255),
     description: Yup.string().min(1).max(1024),
     entries: Yup.array().of(
@@ -172,6 +173,7 @@ function MakeJournalEntriesForm({
       date: moment(new Date()).format('YYYY-MM-DD'),
       description: '',
       reference: '',
+      currency_code: '',
       entries: [...repeatValue(defaultEntry, 4)],
     }),
     [defaultEntry, journalNumber],
@@ -442,11 +444,12 @@ function MakeJournalEntriesForm({
     },
     [changePageSubtitle],
   );
-
+  console.log(values, 'Val');
   return (
     <div class="make-journal-entries">
       <form onSubmit={handleSubmit}>
         <MakeJournalEntriesHeader
+          manualJournal={manualJournalId}
           errors={errors}
           touched={touched}
           values={values}
