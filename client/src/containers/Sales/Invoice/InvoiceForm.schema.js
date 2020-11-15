@@ -11,7 +11,8 @@ const Schema = Yup.object().shape({
   due_date: Yup.date()
     .required()
     .label(formatMessage({ id: 'due_date_' })),
-  invoice_no: Yup.string().label(formatMessage({ id: 'invoice_no_' })),
+  invoice_no: Yup.string()
+  .label(formatMessage({ id: 'invoice_no_' })),
   reference_no: Yup.string().min(1).max(255),
   status: Yup.string().required(),
   invoice_message: Yup.string()

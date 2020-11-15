@@ -9,7 +9,6 @@ const Schema = Yup.object().shape({
     .required()
     .label(formatMessage({ id: 'receipt_date_' })),
   receipt_number: Yup.string()
-    .required()
     .label(formatMessage({ id: 'receipt_no_' })),
   deposit_account_id: Yup.number()
     .required()
