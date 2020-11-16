@@ -60,7 +60,7 @@ function PaymentReceiveList({
     () => requestFetchPaymentReceiveTable(),
   );
 
-  //handle dalete Payment Receive
+  // Handle dalete Payment Receive
   const handleDeletePaymentReceive = useCallback(
     (paymentReceive) => {
       setDeletePaymentReceive(paymentReceive);
@@ -68,12 +68,12 @@ function PaymentReceiveList({
     [setDeletePaymentReceive],
   );
 
-  // handle cancel Payment Receive
+  // Handle cancel payment Receive.
   const handleCancelPaymentReceiveDelete = useCallback(() => {
     setDeletePaymentReceive(false);
   }, [setDeletePaymentReceive]);
 
-  // handleConfirm delete payment receive
+  // Handle confirm delete payment receive.
   const handleConfirmPaymentReceiveDelete = useCallback(() => {
     requestDeletePaymentReceive(deletePaymentReceive.id).then(() => {
       AppToaster.show({
@@ -94,24 +94,6 @@ function PaymentReceiveList({
   const selectedRowsCount = useMemo(() => Object.values(selectedRows).length, [
     selectedRows,
   ]);
-
-  const handleFetchData = useCallback(
-    ({ pageIndex, pageSize, sortBy }) => {
-      const page = pageIndex + 1;
-
-      addPaymentReceivesTableQueries({
-        ...(sortBy.length > 0
-          ? {
-              column_sort_by: sortBy[0].id,
-              sort_order: sortBy[0].desc ? 'desc' : 'asc',
-            }
-          : {}),
-        page_size: pageSize,
-        page,
-      });
-    },
-    [addPaymentReceivesTableQueries],
-  );
 
   // Handle filter change to re-fetch data-table.
   const handleFilterChanged = useCallback(() => {}, [fetchPaymentReceives]);
@@ -145,9 +127,7 @@ function PaymentReceiveList({
           >
             <PaymentReceiveViewTabs />
             <PaymentReceivesDataTable
-              loading={fetchPaymentReceives.isFetching}
               onDeletePaymentReceive={handleDeletePaymentReceive}
-              onFetchData={handleFetchData}
               onEditPaymentReceive={handleEditPaymentReceive}
               onSelectedRowsChange={handleSelectedRowsChange}
             />

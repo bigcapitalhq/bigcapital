@@ -137,25 +137,6 @@ function ExpensesList({
   // Handle filter change to re-fetch data-table.
   const handleFilterChanged = useCallback(() => {}, []);
 
-  // Handle fetch data of manual jouranls datatable.
-  const handleFetchData = useCallback(
-    ({ pageIndex, pageSize, sortBy }) => {
-      const page = pageIndex + 1;
-
-      addExpensesTableQueries({
-        ...(sortBy.length > 0
-          ? {
-              column_sort_by: sortBy[0].id,
-              sort_order: sortBy[0].desc ? 'desc' : 'asc',
-            }
-          : {}),
-        page_size: pageSize,
-        page,
-      });
-    },
-    [addExpensesTableQueries],
-  );
-
   //   const fetchExpenses = useQuery(['expenses-table', expensesTableQuery], () =>
   //   requestFetchExpensesTable(),
   // );
@@ -217,9 +198,7 @@ function ExpensesList({
             <ExpenseViewTabs />
 
             <ExpenseDataTable
-              loading={fetchExpenses.isFetching}
               onDeleteExpense={handleDeleteExpense}
-              onFetchData={handleFetchData}
               onEditExpense={handleEidtExpense}
               onPublishExpense={handlePublishExpense}
               onSelectedRowsChange={handleSelectedRowsChange}

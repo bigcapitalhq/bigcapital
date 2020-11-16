@@ -8,85 +8,48 @@ import {
   MenuDivider,
   Position,
 } from '@blueprintjs/core';
-import { useParams } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import moment from 'moment';
 
-import { compose } from 'utils';
-import { useUpdateEffect } from 'hooks';
+import { compose, saveInvoke } from 'utils';
+import { useIsValuePassed } from 'hooks';
 
 import LoadingIndicator from 'components/LoadingIndicator';
 import { DataTable, Money, Icon } from 'components';
 
-import withDialogActions from 'containers/Dialog/withDialogActions';
-import withDashboardActions from 'containers/Dashboard/withDashboardActions';
-import withViewDetails from 'containers/Views/withViewDetails';
-
 import withEstimates from './withEstimates';
 import withEstimateActions from './withEstimateActions';
-import withCurrentView from 'containers/Views/withCurrentView';
 
+// Estimates transactions datatable.
 function EstimatesDataTable({
-  //#withEitimates
+  // #withEstimates
   estimatesCurrentPage,
   estimatesLoading,
   estimatesPageination,
-  estimateItems,
+  estimatesTableQuery,
 
-  // #withDashboardActions
-  changeCurrentView,
-  changePageSubtitle,
-  setTopbarEditView,
+  // #withEstimatesActions
+  addEstimatesTableQueries,
 
-  // #withView
-  viewMeta,
-
-  //#OwnProps
-  loading,
-  onFetchData,
+  // #ownProps
   onEditEstimate,
   onDeleteEstimate,
   onSelectedRowsChange,
 }) {
-  const [initialMount, setInitialMount] = useState(false);
-  const { custom_view_id: customViewId } = useParams();
   const { formatMessage } = useIntl();
-
-  useEffect(() => {
-    setInitialMount(false);
-  }, []);
-
-  useUpdateEffect(() => {
-    if (!estimatesLoading) {
-      setInitialMount(true);
-    }
-  }, [estimatesLoading, setInitialMount]);
-
-  useEffect(() => {
-    if (customViewId) {
-      changeCurrentView(customViewId);
-      setTopbarEditView(customViewId);
-    }
-    changePageSubtitle(customViewId && viewMeta ? viewMeta.name : '');
-  }, [
-    customViewId,
-    changeCurrentView,
-    changePageSubtitle,
-    setTopbarEditView,
-    viewMeta,
-  ]);
+  const isLoaded = useIsValuePassed(estimatesLoading, false);
 
   const handleEditEstimate = useCallback(
     (estimate) => () => {
-      onEditEstimate && onEditEstimate(estimate);
+      saveInvoke(onEditEstimate, estimate);
     },
     [onEditEstimate],
   );
 
   const handleDeleteEstimate = useCallback(
     (estimate) => () => {
-      onDeleteEstimate && onDeleteEstimate(estimate);
+      saveInvoke(onDeleteEstimate, estimate);
     },
     [onDeleteEstimate],
   );
@@ -185,74 +148,64 @@ function EstimatesDataTable({
     ],
     [actionMenuList, formatMessage],
   );
-  const selectionColumn = useMemo(
-    () => ({
-      minWidth: 40,
-      width: 40,
-      maxWidth: 40,
-    }),
-    [],
-  );
 
-  const handleDataTableFetchData = useCallback(
-    (...args) => {
-      onFetchData && onFetchData(...args);
+  const handleFetchData = useCallback(
+    ({ pageIndex, pageSize, sortBy }) => {
+      const page = pageIndex + 1;
+
+      addEstimatesTableQueries({
+        ...(sortBy.length > 0
+          ? {
+              column_sort_by: sortBy[0].id,
+              sort_order: sortBy[0].desc ? 'desc' : 'asc',
+            }
+          : {}),
+        page_size: pageSize,
+        page,
+      });
     },
-    [onFetchData],
+    [addEstimatesTableQueries],
   );
 
   const handleSelectedRowsChange = useCallback(
     (selectedRows) => {
-      onSelectedRowsChange &&
-        onSelectedRowsChange(selectedRows.map((s) => s.original));
+      saveInvoke(
+        onSelectedRowsChange,
+        selectedRows.map((s) => s.original),
+      );
     },
     [onSelectedRowsChange],
   );
-  console.log(estimatesCurrentPage, 'estimatesCurrentPage');
-  console.log(estimateItems, 'estimateItems');
 
   return (
-    <div>
-      <LoadingIndicator loading={loading} mount={false}>
-        <DataTable
-          columns={columns}
-          data={estimatesCurrentPage}
-          onFetchData={handleDataTableFetchData}
-          manualSortBy={true}
-          selectionColumn={true}
-          noInitialFetch={true}
-          sticky={true}
-          loading={estimatesLoading && !initialMount}
-          onSelectedRowsChange={handleSelectedRowsChange}
-          rowContextMenu={onRowContextMenu}
-          pagination={true}
-          pagesCount={estimatesPageination.pagesCount}
-          initialPageSize={estimatesPageination.pageSize}
-          initialPageIndex={estimatesPageination.page - 1}
-        />
-      </LoadingIndicator>
-    </div>
+    <LoadingIndicator loading={estimatesLoading && !isLoaded} mount={false}>
+      <DataTable
+        columns={columns}
+        data={estimatesCurrentPage}
+        onFetchData={handleFetchData}
+        manualSortBy={true}
+        selectionColumn={true}
+        noInitialFetch={true}
+        sticky={true}
+        onSelectedRowsChange={handleSelectedRowsChange}
+        rowContextMenu={onRowContextMenu}
+        pagination={true}
+        pagesCount={estimatesPageination.pagesCount}
+        initialPageSize={estimatesTableQuery.page_size}
+        initialPageIndex={estimatesTableQuery.page - 1}
+      />
+    </LoadingIndicator>
   );
 }
 
 export default compose(
-  withRouter,
-  withCurrentView,
-  withDialogActions,
-  withDashboardActions,
   withEstimateActions,
   withEstimates(
-    ({
+    ({ estimatesCurrentPage, estimatesLoading, estimatesPageination, estimatesTableQuery }) => ({
       estimatesCurrentPage,
       estimatesLoading,
       estimatesPageination,
-      estimateItems,
-    }) => ({
-      estimatesCurrentPage,
-      estimatesLoading,
-      estimatesPageination,
-      estimateItems,
+      estimatesTableQuery
     }),
   ),
-  withViewDetails(),
 )(EstimatesDataTable);

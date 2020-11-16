@@ -29,7 +29,7 @@ const mapDispatchToProps = (dispatch) => ({
   addExpensesTableQueries: (queries) =>
     dispatch({
       type: t.EXPENSES_TABLE_QUERIES_ADD,
-      queries,
+      payload: { queries },
     }),
 });
 

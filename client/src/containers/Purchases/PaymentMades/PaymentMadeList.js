@@ -95,24 +95,6 @@ function PaymentMadeList({
     selectedRows,
   ]);
 
-  const handleFetchData = useCallback(
-    ({ pageIndex, pageSize, sortBy }) => {
-      const page = pageIndex + 1;
-
-      addPaymentMadesTableQueries({
-        ...(sortBy.length > 0
-          ? {
-              column_sort_by: sortBy[0].id,
-              sort_order: sortBy[0].desc ? 'desc' : 'asc',
-            }
-          : {}),
-        page_size: pageSize,
-        page,
-      });
-    },
-    [addPaymentMadesTableQueries],
-  );
-
   // Handle filter change to re-fetch data-table.
   const handleFilterChanged = useCallback(() => {}, [fetchPaymentMades]);
 
@@ -145,14 +127,13 @@ function PaymentMadeList({
           >
             <PaymentMadeViewTabs />
             <PaymentMadeDataTable
-              loading={fetchPaymentMades.isFetching}
               onDeletePaymentMade={handleDeletePaymentMade}
-              onFetchData={handleFetchData}
               onEditPaymentMade={handleEditPaymentMade}
               onSelectedRowsChange={handleSelectedRowsChange}
             />
           </Route>
         </Switch>
+
         <Alert
           cancelButtonText={<T id={'cancel'} />}
           confirmButtonText={<T id={'delete'} />}

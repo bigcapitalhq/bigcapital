@@ -1,6 +1,8 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { createTableQueryReducers } from 'store/queryReducers';
-import { omit } from 'lodash';
+import {
+  createTableQueryReducers,
+  viewPaginationSetReducer,
+} from 'store/journalNumber.reducer';
 import t from 'store/types';
 
 const initialState = {
@@ -9,7 +11,7 @@ const initialState = {
   loading: false,
   currentViewId: -1,
   tableQuery: {
-    page_size: 5,
+    page_size: 12,
     page: 1,
   },
   nextPaymentNumberChanged: false,
@@ -19,11 +21,12 @@ const defaultPaymentMade = {
   entries: [],
 };
 
-const reducer = createReducer(initialState, {
+export default createReducer(initialState, {
   [t.PAYMENT_MADES_TABLE_LOADING]: (state, action) => {
     const { loading } = action.payload;
     state.loading = loading;
   },
+
   [t.PAYMENT_MADES_ITEMS_SET]: (state, action) => {
     const { bill_payments } = action.payload;
     const _bill_payments = {};
@@ -41,7 +44,7 @@ const reducer = createReducer(initialState, {
 
   [t.PAYMENT_MADE_SET]: (state, action) => {
     const { id, paymentMade } = action.payload;
-    const _oldPaymentMade = (state.items[id] || {});
+    const _oldPaymentMade = state.items[id] || {};
 
     state.items[id] = {
       ...defaultPaymentMade,
@@ -56,28 +59,6 @@ const reducer = createReducer(initialState, {
     if (typeof state.items[id] !== 'undefined') {
       delete state.items[id];
     }
-  },
-
-  [t.PAYMENT_MADES_PAGINATION_SET]: (state, action) => {
-    const { pagination, customViewId } = action.payload;
-
-    const mapped = {
-      pageSize: parseInt(pagination.pageSize, 10),
-      page: parseInt(pagination.page, 10),
-      total: parseInt(pagination.total, 10),
-    };
-    const paginationMeta = {
-      ...mapped,
-      pagesCount: Math.ceil(mapped.total / mapped.pageSize),
-      pageIndex: Math.max(mapped.page - 1, 0),
-    };
-    state.views = {
-      ...state.views,
-      [customViewId]: {
-        ...(state.views?.[customViewId] || {}),
-        paginationMeta,
-      },
-    };
   },
 
   [t.PAYMENT_MADES_PAGE_SET]: (state, action) => {
@@ -97,10 +78,11 @@ const reducer = createReducer(initialState, {
     };
   },
 
-  [t.PAYMENT_MADES_NUMBER_CHANGED]:(state,action)=>{
+  [t.PAYMENT_MADES_NUMBER_CHANGED]: (state, action) => {
     const { isChanged } = action.payload;
-    state.nextPaymentNumberChanged = isChanged
+    state.nextPaymentNumberChanged = isChanged;
+  },
 
-  }
+  ...viewPaginationSetReducer(t.PAYMENT_MADES_PAGINATION_SET),
+  ...createTableQueryReducers('PAYMENT_MADES'),
 });
-export default createTableQueryReducers('bill_payments', reducer);

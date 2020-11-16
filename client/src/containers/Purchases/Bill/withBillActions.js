@@ -27,7 +27,7 @@ const mapDispatchToProps = (dispatch) => ({
   addBillsTableQueries: (queries) =>
     dispatch({
       type: t.BILLS_TABLE_QUERIES_ADD,
-      queries,
+      payload: { queries }
     }),
   setBillNumberChanged: (isChanged) =>
     dispatch({

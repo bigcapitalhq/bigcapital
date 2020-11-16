@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback } from 'react';
+import React, { useEffect, useRef, useCallback, useMemo } from 'react';
 import {
   useTable,
   useExpanded,
@@ -7,20 +7,18 @@ import {
   useResizeColumns,
   useSortBy,
   useFlexLayout,
+  useAsyncDebounce,
 } from 'react-table';
-import {
-  Checkbox,
-  Spinner,
-  ContextMenu,
-} from '@blueprintjs/core';
+import { Checkbox, Spinner, ContextMenu } from '@blueprintjs/core';
 import classnames from 'classnames';
 import { FixedSizeList } from 'react-window';
 import { useSticky } from 'react-table-sticky';
 import { ScrollSync, ScrollSyncPane } from 'react-scroll-sync';
 
-import { ConditionalWrapper } from 'utils';
 import { useUpdateEffect } from 'hooks';
-import { If, Pagination } from 'components';
+import { If, Pagination, Choose } from 'components';
+
+import { ConditionalWrapper, saveInvoke } from 'utils';
 
 const IndeterminateCheckbox = React.forwardRef(
   ({ indeterminate, ...rest }, ref) => {
@@ -31,10 +29,13 @@ const IndeterminateCheckbox = React.forwardRef(
 export default function DataTable({
   columns,
   data,
+
   loading,
   onFetchData,
+
   onSelectedRowsChange,
   manualSortBy = false,
+  manualPagination = true,
   selectionColumn = false,
   expandSubRows = true,
   className,
@@ -53,11 +54,24 @@ export default function DataTable({
 
   pagination = false,
   pagesCount: controlledPageCount,
-  initialPageIndex,
-  initialPageSize,
+
+  // Pagination props.
+  initialPageIndex = 0,
+  initialPageSize = 10,
   rowContextMenu,
 
   expandColumnSpace = 1.5,
+
+  updateDebounceTime = 200,
+
+  // Read this document to know why! https://bit.ly/2Uw9SEc
+  autoResetPage = true,
+  autoResetExpanded = true,
+  autoResetGroupBy = true,
+  autoResetSelectedRows = true,
+  autoResetSortBy = true,
+  autoResetFilters = true,
+  autoResetRowState = true,
 }) {
   const {
     getTableProps,
@@ -85,18 +99,25 @@ export default function DataTable({
   } = useTable(
     {
       columns,
-      data: data,
+      data,
       initialState: {
         pageIndex: initialPageIndex,
         pageSize: initialPageSize,
-        expanded,
-      }, // Pass our hoisted table state
-      manualPagination: true,
+      },
+      manualPagination,
       pageCount: controlledPageCount,
       getSubRows: (row) => row.children,
       manualSortBy,
       expandSubRows,
       payload,
+
+      autoResetPage,
+      autoResetExpanded,
+      autoResetGroupBy,
+      autoResetSelectedRows,
+      autoResetSortBy,
+      autoResetFilters,
+      autoResetRowState,
     },
     useSortBy,
     useExpanded,
@@ -145,18 +166,23 @@ export default function DataTable({
   );
 
   const isInitialMount = useRef(noInitialFetch);
-
+  const onFetchDataDebounced = useAsyncDebounce(
+    (...args) => {
+      saveInvoke(onFetchData, ...args);
+    },
+    updateDebounceTime,
+  );
   // When these table states change, fetch new data!
   useEffect(() => {
     if (isInitialMount.current) {
       isInitialMount.current = false;
     } else {
-      onFetchData && onFetchData({ pageIndex, pageSize, sortBy });
+      onFetchDataDebounced({ pageIndex, pageSize, sortBy });
     }
-  }, [pageIndex, pageSize, manualSortBy ? sortBy : null, onFetchData]);
+  }, [pageIndex, pageSize, sortBy, onFetchDataDebounced]);
 
   useUpdateEffect(() => {
-    onSelectedRowsChange && onSelectedRowsChange(selectedFlatRows);
+    saveInvoke(onSelectedRowsChange, selectedFlatRows);
   }, [selectedRowIds, onSelectedRowsChange]);
 
   // Renders table cell.
@@ -177,40 +203,50 @@ export default function DataTable({
         {
           // Use the row.canExpand and row.getToggleRowExpandedProps prop getter
           // to build the toggle for expanding a row
-          row.canExpand && expandable && index === expandToggleColumn && (
-            <span
-              {...row.getToggleRowExpandedProps({
-                className: 'expand-toggle',
-              })}
-            >
-              <span
-                className={classnames({
-                  'arrow-down': row.isExpanded,
-                  'arrow-right': !row.isExpanded,
-                })}
-              />
-            </span>
-          )
         }
+        <If
+          condition={
+            row.canExpand && expandable && index === expandToggleColumn
+          }
+        >
+          <span
+            {...row.getToggleRowExpandedProps({ className: 'expand-toggle' })}
+          >
+            <span
+              className={classnames({
+                'arrow-down': row.isExpanded,
+                'arrow-right': !row.isExpanded,
+              })}
+            />
+          </span>
+        </If>
         {cell.render('Cell')}
       </ConditionalWrapper>
     ),
-    [expandable, expandToggleColumn],
+    [expandable, expandToggleColumn, expandColumnSpace],
   );
 
-  const handleRowContextMenu = (cell, row) => (e) => {
-    if (typeof rowContextMenu === 'function') {
-      e.preventDefault();
-      const tr = e.currentTarget.closest('.tr');
-      tr.classList.add('is-context-menu-active');
+  // Handle rendering row context menu.
+  const handleRowContextMenu = useMemo(
+    () => (cell, row) => (e) => {
+      if (typeof rowContextMenu === 'function') {
+        e.preventDefault();
+        const tr = e.currentTarget.closest('.tr');
+        tr.classList.add('is-context-menu-active');
 
-      const DropdownEl = rowContextMenu(cell, row);
+        const DropdownEl = rowContextMenu(cell, row);
 
-      ContextMenu.show(DropdownEl, { left: e.clientX, top: e.clientY }, () => {
-        tr.classList.remove('is-context-menu-active');
-      });
-    }
-  };
+        ContextMenu.show(
+          DropdownEl,
+          { left: e.clientX, top: e.clientY },
+          () => {
+            tr.classList.remove('is-context-menu-active');
+          },
+        );
+      }
+    },
+    [rowContextMenu],
+  );
 
   // Renders table row.
   const RenderRow = useCallback(
@@ -221,9 +257,13 @@ export default function DataTable({
       return (
         <div
           {...row.getRowProps({
-            className: classnames('tr', {
-              'is-expanded': row.isExpanded && row.canExpand,
-            }, rowClasses),
+            className: classnames(
+              'tr',
+              {
+                'is-expanded': row.isExpanded && row.canExpand,
+              },
+              rowClasses,
+            ),
             style,
           })}
         >
@@ -243,7 +283,7 @@ export default function DataTable({
         </div>
       );
     },
-    [prepareRow, rowClassNames, expandable, RenderCell, expandToggleColumn],
+    [prepareRow, rowClassNames, RenderCell, handleRowContextMenu],
   );
 
   // Renders virtualize circle table rows.
@@ -254,7 +294,7 @@ export default function DataTable({
     },
     [RenderRow, rows],
   );
-
+  // Renders page with multi-rows.
   const RenderPage = useCallback(
     ({ style, index } = {}) => {
       return page.map((row, index) => RenderRow({ row }));
@@ -284,6 +324,21 @@ export default function DataTable({
     RenderPage,
   ]);
 
+  const handlePageChange = useCallback(
+    (currentPage) => {
+      gotoPage(currentPage - 1);
+    },
+    [gotoPage],
+  );
+
+  const handlePageSizeChange = useCallback(
+    (pageSize, currentPage) => {
+      gotoPage(0);
+      setPageSize(pageSize);
+    },
+    [gotoPage, setPageSize],
+  );
+
   return (
     <div
       className={classnames('bigcapital-datatable', className, {
@@ -308,7 +363,11 @@ export default function DataTable({
                         className: classnames(column.className || '', 'th'),
                       })}
                     >
-                      {expandable && index + 1 === expandToggleColumn && (
+                      <If
+                        condition={
+                          expandable && index + 1 === expandToggleColumn
+                        }
+                      >
                         <span
                           {...getToggleAllRowsExpandedProps()}
                           className="expand-toggle"
@@ -320,12 +379,12 @@ export default function DataTable({
                             })}
                           />
                         </span>
-                      )}
+                      </If>
 
                       <div {...column.getSortByToggleProps()}>
                         {column.render('Header')}
 
-                        {column.isSorted && (
+                        <If condition={column.isSorted}>
                           <span
                             className={classnames(
                               {
@@ -335,7 +394,7 @@ export default function DataTable({
                               'sort-icon',
                             )}
                           ></span>
-                        )}
+                        </If>
                       </div>
 
                       {column.canResize && (
@@ -358,37 +417,36 @@ export default function DataTable({
           <ScrollSyncPane>
             <div {...getTableBodyProps()} className="tbody">
               <div class="tbody-inner" style={{ minWidth: totalColumnsWidth }}>
-                <If condition={!loading}>{RenderTBody()}</If>
+                <Choose>
+                  <Choose.When condition={loading}>
+                    <div class="loading">
+                      <Spinner {...spinnerProps} />
+                    </div>
+                  </Choose.When>
 
-                <If condition={!loading && page.length === 0}>
-                  <div className={'tr no-results'}>
-                    <div class="td">{noResults}</div>
-                  </div>
-                </If>
+                  <Choose.Otherwise>
+                    {RenderTBody()}
+
+                    <If condition={page.length === 0}>
+                      <div className={'tr no-results'}>
+                        <div class="td">{noResults}</div>
+                      </div>
+                    </If>
+                  </Choose.Otherwise>
+                </Choose>
               </div>
-
-              <If condition={loading}>
-                <div class="loading">
-                  <Spinner size={spinnerProps.size} />
-                </div>
-              </If>
             </div>
           </ScrollSyncPane>
         </div>
       </ScrollSync>
 
-      <If condition={pagination && pageCount && !loading}>
+      <If condition={pagination && !loading}>
         <Pagination
           initialPage={pageIndex + 1}
           total={pageSize * pageCount}
           size={pageSize}
-          onPageChange={(currentPage) => {
-            gotoPage(currentPage - 1);
-          }}
-          onPageSizeChange={(pageSize, currentPage) => {
-            gotoPage(currentPage - 1);
-            setPageSize(pageSize);
-          }}
+          onPageChange={handlePageChange}
+          onPageSizeChange={handlePageSizeChange}
         />
       </If>
     </div>

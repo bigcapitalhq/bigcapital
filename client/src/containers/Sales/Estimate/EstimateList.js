@@ -29,7 +29,7 @@ function EstimateList({
   requestFetchResourceFields,
 
   // #withEstimate
-  estimateTableQuery,
+  estimatesTableQuery,
   estimateViews,
 
   //#withEistimateActions
@@ -52,7 +52,7 @@ function EstimateList({
   //   (key, resourceName) => requestFetchResourceFields(resourceName),
   // );
 
-  const fetchEstimate = useQuery(['estimates-table', estimateTableQuery], () =>
+  const fetchEstimate = useQuery(['estimates-table', estimatesTableQuery], () =>
     requestFetchEstimatesTable(),
   );
 
@@ -100,23 +100,6 @@ function EstimateList({
     },
     [history],
   );
-  const handleFetchData = useCallback(
-    ({ pageIndex, pageSize, sortBy }) => {
-      const page = pageIndex + 1;
-
-      addEstimatesTableQueries({
-        ...(sortBy.length > 0
-          ? {
-              column_sort_by: sortBy[0].id,
-              sort_order: sortBy[0].desc ? 'desc' : 'asc',
-            }
-          : {}),
-        page_size: pageSize,
-        page,
-      });
-    },
-    [addEstimatesTableQueries],
-  );
 
   const handleSelectedRowsChange = useCallback(
     (estimate) => {
@@ -142,14 +125,13 @@ function EstimateList({
           >
             <EstimateViewTabs />
             <EstimatesDataTable
-              loading={fetchEstimate.isFetching}
               onDeleteEstimate={handleDeleteEstimate}
-              onFetchData={handleFetchData}
               onEditEstimate={handleEditEstimate}
               onSelectedRowsChange={handleSelectedRowsChange}
             />
           </Route>
         </Switch>
+
         <Alert
           cancelButtonText={<T id={'cancel'} />}
           confirmButtonText={<T id={'delete'} />}
@@ -173,8 +155,8 @@ export default compose(
   withEstimateActions,
   withDashboardActions,
   withViewsActions,
-  withEstimates(({ estimateTableQuery, estimateViews }) => ({
-    estimateTableQuery,
+  withEstimates(({ estimatesTableQuery, estimateViews }) => ({
+    estimatesTableQuery,
     estimateViews,
   })),
 )(EstimateList);

@@ -22,7 +22,6 @@ export default (mapState) => {
         query,
       ),
       paymentReceivesLoading: state.paymentReceives.loading,
-
       paymentReceiveNumberChanged: state.paymentReceives.journalNumberChanged,
     };
     return mapState ? mapState(mapped, state, props) : mapped;

@@ -17,8 +17,8 @@ import { FormattedMessage as T, useIntl } from 'react-intl';
 import moment from 'moment';
 
 import Icon from 'components/Icon';
-import { compose } from 'utils';
-import { useUpdateEffect } from 'hooks';
+import { compose, saveInvoke } from 'utils';
+import { useIsValuePassed } from 'hooks';
 
 import LoadingIndicator from 'components/LoadingIndicator';
 import { If, Money } from 'components';
@@ -32,11 +32,15 @@ import withExpensesActions from 'containers/Expenses/withExpensesActions';
 import withCurrentView from 'containers/Views/withCurrentView';
 
 function ExpensesDataTable({
-  //#withExpenes
+  // #withExpenes
   expensesCurrentPage,
   expensesLoading,
   expensesPagination,
-  
+  expensesTableQuery,
+
+  // #withExpensesActions
+  addExpensesTableQueries,
+
   // #withDashboardActions
   changeCurrentView,
   changePageSubtitle,
@@ -46,26 +50,15 @@ function ExpensesDataTable({
   viewMeta,
 
   // #ownProps
-  loading,
-  onFetchData,
   onEditExpense,
   onDeleteExpense,
   onPublishExpense,
   onSelectedRowsChange,
 }) {
   const { custom_view_id: customViewId } = useParams();
-  const [initialMount, setInitialMount] = useState(false);
+  const isLoadedBefore = useIsValuePassed(expensesLoading, false);
+
   const { formatMessage } = useIntl();
-
-  useEffect(()=>{
-    setInitialMount(false)
-  },[customViewId])
-
-  useUpdateEffect(() => {
-    if (!expensesLoading) {
-      setInitialMount(true);
-    }
-  }, [expensesLoading, setInitialMount]);
 
   useEffect(() => {
     if (customViewId) {
@@ -81,23 +74,40 @@ function ExpensesDataTable({
     viewMeta,
   ]);
 
+  // Handle fetch data of manual jouranls datatable.
+  const handleFetchData = useCallback(
+    ({ pageIndex, pageSize, sortBy }) => {
+      addExpensesTableQueries({
+        ...(sortBy.length > 0
+          ? {
+              column_sort_by: sortBy[0].id,
+              sort_order: sortBy[0].desc ? 'desc' : 'asc',
+            }
+          : {}),
+        page_size: pageSize,
+        page: pageIndex + 1,
+      });
+    },
+    [addExpensesTableQueries],
+  );
+
   const handlePublishExpense = useCallback(
     (expense) => () => {
-      onPublishExpense && onPublishExpense(expense);
+      saveInvoke(onPublishExpense, expense);
     },
     [onPublishExpense],
   );
 
   const handleEditExpense = useCallback(
     (expense) => () => {
-      onEditExpense && onEditExpense(expense);
+      saveInvoke(onEditExpense, expense);
     },
     [onEditExpense],
   );
 
   const handleDeleteExpense = useCallback(
     (expense) => () => {
-      onDeleteExpense && onDeleteExpense(expense);
+      saveInvoke(onDeleteExpense, expense);
     },
     [onDeleteExpense],
   );
@@ -107,7 +117,8 @@ function ExpensesDataTable({
       <Menu>
         <MenuItem
           icon={<Icon icon="reader-18" />}
-          text={formatMessage({ id: 'view_details' })} />
+          text={formatMessage({ id: 'view_details' })}
+        />
         <MenuDivider />
         <If condition={!expense.published}>
           <MenuItem
@@ -244,42 +255,39 @@ function ExpensesDataTable({
     [actionMenuList, formatMessage],
   );
 
-  const handleDataTableFetchData = useCallback(
-    (...args) => {
-      onFetchData && onFetchData(...args);
-    },
-    [onFetchData],
-  );
-
   const handleSelectedRowsChange = useCallback(
     (selectedRows) => {
-      onSelectedRowsChange &&
-        onSelectedRowsChange(selectedRows.map((s) => s.original));
+      saveInvoke(
+        onSelectedRowsChange,
+        selectedRows.map((s) => s.original),
+      );
     },
     [onSelectedRowsChange],
   );
 
   return (
-    <div>
-      <LoadingIndicator loading={loading} mount={false}>
-        <DataTable
-          columns={columns}
-          data={expensesCurrentPage}
-          onFetchData={handleDataTableFetchData}
-          manualSortBy={true}
-          selectionColumn={true}
-          noInitialFetch={true}
-          sticky={true}
-          loading={expensesLoading && !initialMount}
-          onSelectedRowsChange={handleSelectedRowsChange}
-          rowContextMenu={onRowContextMenu}
-          pagination={true}
-          pagesCount={expensesPagination.pagesCount}
-          initialPageSize={expensesPagination.pageSize}
-          initialPageIndex={expensesPagination.page - 1}
-        />
-      </LoadingIndicator>
-    </div>
+    <LoadingIndicator
+      loading={expensesLoading && !isLoadedBefore}
+      mount={false}
+    >
+      <DataTable
+        columns={columns}
+        data={expensesCurrentPage}
+        manualSortBy={true}
+        selectionColumn={true}
+        noInitialFetch={true}
+        sticky={true}
+        onSelectedRowsChange={handleSelectedRowsChange}
+        onFetchData={handleFetchData}
+        rowContextMenu={onRowContextMenu}
+        pagination={true}
+        pagesCount={expensesPagination.pagesCount}
+        autoResetSortBy={false}
+        autoResetPage={false}
+        initialPageSize={expensesTableQuery.page_size}
+        initialPageIndex={expensesTableQuery.page - 1}
+      />
+    </LoadingIndicator>
   );
 }
 
@@ -289,10 +297,18 @@ export default compose(
   withDialogActions,
   withDashboardActions,
   withExpensesActions,
-  withExpenses(({ expensesCurrentPage, expensesLoading, expensesPagination }) => ({
-    expensesCurrentPage,
-    expensesLoading,
-    expensesPagination,
-  })),
+  withExpenses(
+    ({
+      expensesCurrentPage,
+      expensesLoading,
+      expensesPagination,
+      expensesTableQuery,
+    }) => ({
+      expensesCurrentPage,
+      expensesLoading,
+      expensesPagination,
+      expensesTableQuery,
+    }),
+  ),
   withViewDetails(),
 )(ExpensesDataTable);

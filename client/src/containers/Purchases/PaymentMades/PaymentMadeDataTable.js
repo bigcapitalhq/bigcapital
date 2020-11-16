@@ -1,81 +1,58 @@
-import React, { useEffect, useCallback, useState, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import {
   Intent,
   Button,
-  Classes,
   Popover,
   Menu,
   MenuItem,
   MenuDivider,
   Position,
 } from '@blueprintjs/core';
-import { useParams } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import moment from 'moment';
 
-import { compose } from 'utils';
-import { useUpdateEffect } from 'hooks';
+import { compose, saveInvoke } from 'utils';
+import { useIsValuePassed } from 'hooks';
 
 import LoadingIndicator from 'components/LoadingIndicator';
 import { DataTable, Money, Icon } from 'components';
-
-import withDialogActions from 'containers/Dialog/withDialogActions';
-import withDashboardActions from 'containers/Dashboard/withDashboardActions';
-import withViewDetails from 'containers/Views/withViewDetails';
 
 import withPaymentMade from './withPaymentMade';
 import withPaymentMadeActions from './withPaymentMadeActions';
 import withCurrentView from 'containers/Views/withCurrentView';
 
+/**
+ * Payment made datatable transactions.
+ */
 function PaymentMadeDataTable({
-  //#withPaymentMades
+  // #withPaymentMades
   paymentMadeCurrentPage,
   paymentMadePageination,
-  paymentMadeLoading,
-  paymentMadeItems,
+  paymentMadesLoading,
+  paymentMadeTableQuery,
 
-  // #withDashboardActions
-  changeCurrentView,
-  changePageSubtitle,
-  setTopbarEditView,
+  // #withPaymentMadeActions
+  addPaymentMadesTableQueries,
 
-  // #withView
-  viewMeta,
-
-  //#OwnProps
-  loading,
-  onFetchData,
+  // #ownProps
   onEditPaymentMade,
   onDeletePaymentMade,
   onSelectedRowsChange,
 }) {
-  const [initialMount, setInitialMount] = useState(false);
-  const { custom_view_id: customViewId } = useParams();
+  const isLoaded = useIsValuePassed(paymentMadesLoading, false);
   const { formatMessage } = useIntl();
-
-  useEffect(() => {
-    setInitialMount(false);
-  }, [customViewId]);
-
-  useUpdateEffect(() => {
-    if (!paymentMadeLoading) {
-      setInitialMount(true);
-    }
-  }, [paymentMadeLoading, setInitialMount]);
-
-
 
   const handleEditPaymentMade = useCallback(
     (paymentMade) => () => {
-      onEditPaymentMade && onEditPaymentMade(paymentMade);
+      saveInvoke(onEditPaymentMade, paymentMade);
     },
     [onEditPaymentMade],
   );
 
   const handleDeletePaymentMade = useCallback(
     (paymentMade) => () => {
-      onDeletePaymentMade && onDeletePaymentMade(paymentMade);
+      saveInvoke(onDeletePaymentMade, paymentMade);
     },
     [onDeletePaymentMade],
   );
@@ -89,7 +66,7 @@ function PaymentMadeDataTable({
         />
         <MenuDivider />
         <MenuItem
-             icon={<Icon icon="pen-18" />}
+          icon={<Icon icon="pen-18" />}
           text={formatMessage({ id: 'edit_payment_made' })}
           onClick={handleEditPaymentMade(paymentMade)}
         />
@@ -176,59 +153,69 @@ function PaymentMadeDataTable({
   );
 
   const handleDataTableFetchData = useCallback(
-    (...args) => {
-      onFetchData && onFetchData(...args);
+    ({ pageIndex, pageSize, sortBy }) => {
+      addPaymentMadesTableQueries({
+        ...(sortBy.length > 0
+          ? {
+              column_sort_by: sortBy[0].id,
+              sort_order: sortBy[0].desc ? 'desc' : 'asc',
+            }
+          : {}),
+        page_size: pageSize,
+        page: pageIndex + 1,
+      });
     },
-    [onFetchData],
+    [addPaymentMadesTableQueries],
   );
+
   const handleSelectedRowsChange = useCallback(
     (selectedRows) => {
-      onSelectedRowsChange &&
-        onSelectedRowsChange(selectedRows.map((s) => s.original));
+      saveInvoke(
+        onSelectedRowsChange,
+        selectedRows.map((s) => s.original),
+      );
     },
     [onSelectedRowsChange],
   );
 
   return (
-    <div>
-      <LoadingIndicator loading={loading} mount={false}>
-        <DataTable
-          columns={columns}
-          data={paymentMadeCurrentPage}
-          onFetchData={handleDataTableFetchData}
-          manualSortBy={true}
-          selectionColumn={true}
-          noInitialFetch={true}
-          sticky={true}
-          loading={paymentMadeLoading && !initialMount}
-          onSelectedRowsChange={handleSelectedRowsChange}
-          rowContextMenu={onRowContextMenu}
-          pagination={true}
-          pagesCount={paymentMadePageination.pagesCount}
-          initialPageSize={paymentMadePageination.pageSize}
-          initialPageIndex={paymentMadePageination.page - 1}
-        />
-      </LoadingIndicator>
-    </div>
+    <LoadingIndicator loading={paymentMadesLoading && !isLoaded} mount={false}>
+      <DataTable
+        columns={columns}
+        data={paymentMadeCurrentPage}
+        onFetchData={handleDataTableFetchData}
+        manualSortBy={true}
+        selectionColumn={true}
+        noInitialFetch={true}
+        sticky={true}
+        onSelectedRowsChange={handleSelectedRowsChange}
+        rowContextMenu={onRowContextMenu}
+        pagination={true}
+        pagesCount={paymentMadePageination.pagesCount}
+        initialPageSize={paymentMadeTableQuery.page_size}
+        initialPageIndex={paymentMadeTableQuery.page - 1}
+        autoResetSortBy={false}
+        autoResetPage={false}
+      />
+    </LoadingIndicator>
   );
 }
 
 export default compose(
   withRouter,
   withCurrentView,
-  withDialogActions,
-  withDashboardActions,
   withPaymentMadeActions,
   withPaymentMade(
     ({
       paymentMadeCurrentPage,
-      paymentMadeLoading,
+      paymentMadesLoading,
       paymentMadePageination,
+      paymentMadeTableQuery,
     }) => ({
       paymentMadeCurrentPage,
-      paymentMadeLoading,
+      paymentMadesLoading,
       paymentMadePageination,
+      paymentMadeTableQuery,
     }),
   ),
-  withViewDetails(),
 )(PaymentMadeDataTable);

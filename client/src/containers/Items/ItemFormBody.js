@@ -101,7 +101,7 @@ function ItemFormBody({ accountsList }) {
         <Col xs={6}>
           {/*------------- Sellable checkbox ------------- */}
           <FastField name={'purchasable'}>
-            {({ field, field: { value }, meta: { error, touched } }) => (
+            {({ form, field: { value, onChange }, meta: { error, touched } }) => (
               <FormGroup inline={true} className={'form-group--purchasable'}>
                 <Checkbox
                   inline={true}
@@ -111,7 +111,7 @@ function ItemFormBody({ accountsList }) {
                     </h3>
                   }
                   checked={value}
-                  {...field}
+                  onChange={onChange}
                 />
               </FormGroup>
             )}

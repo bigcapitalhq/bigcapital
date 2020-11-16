@@ -1,8 +1,11 @@
 import t from 'store/types';
 import { createReducer } from '@reduxjs/toolkit';
-import { createTableQueryReducers } from 'store/queryReducers';
 import { omit } from 'lodash';
-import { journalNumberChangedReducer } from 'store/journalNumber.reducer';
+import {
+  journalNumberChangedReducer,
+  viewPaginationSetReducer,
+  createTableQueryReducers,
+} from 'store/journalNumber.reducer';
 
 const initialState = {
   items: {},
@@ -10,7 +13,7 @@ const initialState = {
   loading: false,
   currentViewId: -1,
   tableQuery: {
-    page_size: 6,
+    page_size: 12,
     page: 1,
   },
   paginationMeta: {
@@ -23,8 +26,7 @@ const defaultJournal = {
   entries: [],
 };
 
-const reducer = createReducer(initialState, {
-  
+export default createReducer(initialState, {
   [t.MANUAL_JOURNAL_SET]: (state, action) => {
     const { id, manualJournal } = action.payload;
     state.items[id] = { ...defaultJournal, ...manualJournal };
@@ -32,7 +34,7 @@ const reducer = createReducer(initialState, {
 
   [t.MANUAL_JOURNAL_PUBLISH]: (state, action) => {
     const { id } = action.payload;
-    const item = state.items[id] || {}
+    const item = state.items[id] || {};
 
     state.items[id] = { ...item, status: 1 };
   },
@@ -57,15 +59,15 @@ const reducer = createReducer(initialState, {
 
     const viewId = customViewId || -1;
     const view = state.views[viewId] || {};
- 
+
     state.views[viewId] = {
       ...view,
       pages: {
         ...(state.views?.[viewId]?.pages || {}),
         [pagination.page]: {
-          ids: (manualJournals.map((i) => i.id)),
+          ids: manualJournals.map((i) => i.id),
         },
-      }
+      },
     };
   },
 
@@ -95,34 +97,11 @@ const reducer = createReducer(initialState, {
     state.items = items;
   },
 
-  [t.MANUAL_JOURNALS_PAGINATION_SET]: (state, action) => {
-    const { pagination, customViewId } = action.payload;
-    const mapped = {
-      pageSize: parseInt(pagination.pageSize, 10),
-      page: parseInt(pagination.page, 10),
-      total: parseInt(pagination.total, 10),
-    };
-
-    const paginationMeta = {
-      ...mapped,
-      pagesCount: Math.ceil(mapped.total / mapped.pageSize),
-      pageIndex: Math.max(mapped.page - 1, 0),
-    };
-
-    state.views = {
-      ...state.views,
-      [customViewId]: {
-        ...(state.views?.[customViewId] || {}),
-        paginationMeta,
-      },
-    };    
-  },
-
+  ...viewPaginationSetReducer(t.MANUAL_JOURNALS_PAGINATION_SET),
   ...journalNumberChangedReducer(t.MANUAL_JOURNAL_NUMBER_CHANGED),
+  ...createTableQueryReducers('MANUAL_JOURNALS'),
 });
-
-export default createTableQueryReducers('manual_journals', reducer);
 
 export const getManualJournal = (state, id) => {
   return state.manualJournals.items[id];
-}
+};

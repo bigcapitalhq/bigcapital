@@ -16,19 +16,20 @@ const mapDipatchToProps = (dispatch) => ({
   requestFetchInvoiceTable: (query = {}) =>
     dispatch(fetchInvoicesTable({ query: { ...query } })),
   requestDeleteInvoice: (id) => dispatch(deleteInvoice({ id })),
-  requestFetchDueInvoices: (customerId) => dispatch(fetchDueInvoices({ customerId })),
+  requestFetchDueInvoices: (customerId) =>
+    dispatch(fetchDueInvoices({ customerId })),
   changeInvoiceView: (id) =>
     dispatch({
       type: t.INVOICES_SET_CURRENT_VIEW,
       currentViewId: parseInt(id, 10),
     }),
-  addInvoiceTableQueries: (_queries) =>
+  addInvoiceTableQueries: (queries) =>
     dispatch({
       type: t.INVOICES_TABLE_QUERIES_ADD,
-      _queries,
+      payload: { queries },
     }),
-
-    setInvoiceNumberChanged: (isChanged) => dispatch({
+  setInvoiceNumberChanged: (isChanged) =>
+    dispatch({
       type: t.INVOICE_NUMBER_CHANGED,
       payload: { isChanged },
     }),

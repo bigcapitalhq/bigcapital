@@ -29,7 +29,6 @@ export default (mapState) => {
         state,
         props,
       ),
-
       invoiceNumberChanged: state.salesInvoices.journalNumberChanged,
     };
     return mapState ? mapState(mapped, state, props) : mapped;

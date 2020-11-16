@@ -27,8 +27,8 @@ const mapDispatchToProps = (dispatch) => ({
 
   addPaymentMadesTableQueries: (queries) =>
     dispatch({
-      type: t.PAYMENT_MADE_TABLE_QUERIES_ADD,
-      queries,
+      type: t.PAYMENT_MADES_TABLE_QUERIES_ADD,
+      payload: { queries },
     }),
   setPaymentNumberChange: (isChanged) =>
     dispatch({

@@ -1,21 +1,25 @@
 import t from 'store/types';
-import { snakeCase } from 'lodash';
 import { createReducer } from '@reduxjs/toolkit';
-import { createTableQueryReducers } from 'store/queryReducers';
+import {
+  viewPaginationSetReducer,
+  createTableQueryReducers,
+} from 'store/journalNumber.reducer';
 
 const initialState = {
   items: {},
   views: {},
   loading: false,
   currentViewId: -1,
+
+  // Responsible for data fetch query based on this query.
   tableQuery: {
-    page_size: 5,
+    page_size: 12,
     page: 1,
   },
   errors: [],
 };
 
-const customersReducer = createReducer(initialState, {
+export default createReducer(initialState, {
   [t.CUSTOMER_SET]: (state, action) => {
     const { id, customer } = action.payload;
     const _customers = state.items[id] || {};
@@ -65,28 +69,6 @@ const customersReducer = createReducer(initialState, {
     state.loading = loading;
   },
 
-  [t.CUSTOMERS_PAGINATION_SET]: (state, action) => {
-    const { pagination, customViewId } = action.payload;
-
-    const mapped = {
-      pageSize: parseInt(pagination.page_size, 10),
-      page: parseInt(pagination.page, 10),
-      total: parseInt(pagination.total, 10),
-    };
-    const paginationMeta = {
-      ...mapped,
-      pagesCount: Math.ceil(mapped.total / mapped.pageSize),
-      pageIndex: Math.max(mapped.page - 1, 0),
-    };
-    state.views = {
-      ...state.views,
-      [customViewId]: {
-        ...(state.views?.[customViewId] || {}),
-        paginationMeta,
-      },
-    };
-  },
-
   [t.CUSTOMERS_BULK_DELETE]: (state, action) => {
     const { ids } = action.payload;
     const items = { ...state.items };
@@ -98,9 +80,10 @@ const customersReducer = createReducer(initialState, {
     });
     state.items = items;
   },
-});
 
-export default createTableQueryReducers('customers', customersReducer);
+  ...viewPaginationSetReducer(t.CUSTOMERS_PAGINATION_SET),
+  ...createTableQueryReducers('CUSTOMERS'),
+});
 
 export const getCustomerById = (state, id) => {
   return state.customers.items[id];

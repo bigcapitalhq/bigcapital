@@ -19,7 +19,7 @@ export const mapDispatchToProps = (dispatch) => ({
   addCustomersTableQueries: (queries) =>
     dispatch({
       type: t.CUSTOMERS_TABLE_QUERIES_ADD,
-      queries,
+      payload: { queries }
     }),
 });
 

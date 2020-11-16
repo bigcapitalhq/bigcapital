@@ -39,9 +39,9 @@ function CustomersViewsTabs({
   useEffect(() => {
     setTopbarEditView(customViewId);
     changePageSubtitle(customViewId && viewItem ? viewItem.name : '');
-    addCustomersTableQueries({
-      custom_view_id: customViewId,
-    });
+    // addCustomersTableQueries({
+    //   custom_view_id: customViewId,
+    // });
     return () => {
       setTopbarEditView(null);
       changePageSubtitle('');

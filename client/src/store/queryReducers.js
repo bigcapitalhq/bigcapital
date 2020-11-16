@@ -6,7 +6,7 @@ export const createTableQueryReducers =
     const RESOURCE_NAME = resourceName.toUpperCase();
 
     switch (action.type) {
-      case `${RESOURCE_NAME}_TABLE_QUERY_SET`:
+      case `${RESOURCE_NAME}/TABLE_QUERY_SET`:
         return {
           ...state,
           tableQuery: {
@@ -14,15 +14,11 @@ export const createTableQueryReducers =
             [state.key]: state.value,
           }
         };
-      case `${RESOURCE_NAME}_TABLE_QUERIES_ADD`:
+      case `${RESOURCE_NAME}/TABLE_QUERIES_ADD`:
         return {
-          ...state,
-          tableQuery: {
-            ...state.tableQuery,
-            ...action.queries
-          },
+          
         };
       default:
         return reducer(state, action);
-    }  
+    }
 }

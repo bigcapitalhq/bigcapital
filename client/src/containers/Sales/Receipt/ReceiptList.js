@@ -30,7 +30,6 @@ function ReceiptList({
 
   //#withReceipts
   receiptTableQuery,
-  receiptview,
 
   //#withReceiptActions
   requestFetchReceiptsTable,
@@ -96,10 +95,8 @@ function ReceiptList({
   //   [fetchReceipt],
   // );
 
-    // Handle filter change to re-fetch data-table.
-    const handleFilterChanged = useCallback(() => {}, [fetchReceipts]);
-
-
+  // Handle filter change to re-fetch data-table.
+  const handleFilterChanged = useCallback(() => {}, [fetchReceipts]);
 
   // Calculates the selected rows
   const selectedRowsCount = useMemo(() => Object.values(selectedRows).length, [
@@ -111,23 +108,6 @@ function ReceiptList({
       history.push(`/receipts/${receipt.id}/edit`);
     },
     [history],
-  );
-  const handleFetchData = useCallback(
-    ({ pageIndex, pageSize, sortBy }) => {
-      const page = pageIndex + 1;
-
-      addReceiptsTableQueries({
-        ...(sortBy.length > 0
-          ? {
-              column_sort_by: sortBy[0].id,
-              sort_order: sortBy[0].desc ? 'desc' : 'asc',
-            }
-          : {}),
-        page_size: pageSize,
-        page,
-      });
-    },
-    [addReceiptsTableQueries],
   );
 
   const handleSelectedRowsChange = useCallback(
@@ -154,14 +134,13 @@ function ReceiptList({
           >
             <ReceiptViewTabs />
             <ReceiptsDataTable
-              loading={fetchReceipts.isLoading}
               onDeleteReceipt={handleDeleteReceipt}
-              onFetchData={handleFetchData}
               onEditReceipt={handleEditReceipt}
               onSelectedRowsChange={handleSelectedRowsChange}
             />
           </Route>
         </Switch>
+
         <Alert
           cancelButtonText={<T id={'cancel'} />}
           confirmButtonText={<T id={'delete'} />}

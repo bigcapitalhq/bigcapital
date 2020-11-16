@@ -1,12 +1,20 @@
 import { createSelector } from '@reduxjs/toolkit';
-import { pickItemsFromIds, paginationLocationQuery } from 'store/selectors';
+import {
+  pickItemsFromIds,
+  paginationLocationQuery,
+  defaultPaginationMeta,
+  getCurrentPageResults,
+} from 'store/selectors';
 
 // Retreive bills table query.
 const billTableQuery = (state) => state.bills.tableQuery;
 
 const billPageSelector = (state, props, query) => {
   const viewId = state.bills.currentViewId;
-  return state.bills.views?.[viewId]?.pages?.[query.page];
+  const currentView = state.bills.views?.[viewId];
+  const currentPageId = currentView?.paginationMeta?.page;
+
+  return currentView?.pages?.[currentPageId];
 };
 // Retreive bills items.
 const billItemsSelector = (state) => state.bills.items;
@@ -15,7 +23,8 @@ const billItemsSelector = (state) => state.bills.items;
 const billByIdSelector = (state, props) => state.bills.items[props.billId];
 
 // Retrieve vendor due bills ids.
-const billsPayableVendorSelector = (state, props) => state.bills.payable.byVendorId[props.vendorId];
+const billsPayableVendorSelector = (state, props) =>
+  state.bills.payable.byVendorId[props.vendorId];
 
 const billPaginationSelector = (state, props) => {
   const viewId = state.bills.currentViewId;
@@ -58,13 +67,16 @@ export const getBillByIdFactory = () =>
  */
 export const getBillPaginationMetaFactory = () =>
   createSelector(billPaginationSelector, (billPage) => {
-    return billPage?.paginationMeta || {};
+    return {
+      ...defaultPaginationMeta(),
+      ...(billPage?.paginationMeta || {}),
+    };
   });
 
 /**
  * Retrieve vendor payable bills.
  */
-export const getVendorPayableBillsFactory = () => 
+export const getVendorPayableBillsFactory = () =>
   createSelector(
     billItemsSelector,
     billsPayableVendorSelector,
@@ -78,7 +90,7 @@ export const getVendorPayableBillsFactory = () =>
 /**
  * Retrieve vendor payable bills entries.
  */
-export const getVendorPayableBillsEntriesFactory = () => 
+export const getVendorPayableBillsEntriesFactory = () =>
   createSelector(
     billItemsSelector,
     billsPayableVendorSelector,
@@ -94,5 +106,5 @@ export const getVendorPayableBillsEntriesFactory = () =>
         id: null,
         payment_amount: null,
       }));
-    }
+    },
   );

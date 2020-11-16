@@ -1,7 +1,10 @@
 import t from 'store/types';
 import { createReducer } from '@reduxjs/toolkit';
 import { getItemsViewPages } from 'store/items/items.selectors';
-import { createTableQueryReducers } from 'store/queryReducers';
+import {
+  viewPaginationSetReducer,
+  createTableQueryReducers,
+} from 'store/journalNumber.reducer';
 
 const initialState = {
   items: {},
@@ -9,12 +12,15 @@ const initialState = {
   itemsRelation: {},
   currentPage: 1,
   currentViewId: -1,
-  tableQuery: {},
   bulkActions: {},
   loading: false,
+  tableQuery: {
+    page_size: 12,
+    page: 1,
+  },
 };
 
-const itemsReducer = createReducer(initialState, {
+export default createReducer(initialState, {
   [t.ITEMS_SET]: (state, action) => {
     const _items = {};
 
@@ -111,9 +117,10 @@ const itemsReducer = createReducer(initialState, {
     });
     state.items = items;
   },
-});
 
-export default createTableQueryReducers('items', itemsReducer);
+  ...viewPaginationSetReducer(t.ITEMS_PAGINATION_SET),
+  ...createTableQueryReducers('ITEMS'),
+});
 
 export const getItemById = (state, id) => {
   return state.items.items[id];

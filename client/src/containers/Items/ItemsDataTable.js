@@ -10,34 +10,46 @@ import {
   Tag,
 } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
-import { Icon, DataTable, Money, If, Choose } from 'components';
+import { Icon, DataTable, Money } from 'components';
+import { useIsValuePassed } from 'hooks';
 
 import LoadingIndicator from 'components/LoadingIndicator';
 import withItems from 'containers/Items/withItems';
-import { compose } from 'utils';
+import withItemsActions from 'containers/Items/withItemsActions';
+import { compose, saveInvoke } from 'utils';
 
-
-const ItemsDataTable = ({
-  loading,
-
+function ItemsDataTable({
   // #withItems
   itemsTableLoading,
   itemsCurrentPage,
+  itemsTableQuery,
+
+  // #withItemsActions
+  addItemsTableQueries,
 
   // props
   onEditItem,
   onDeleteItem,
-  onFetchData,
   onSelectedRowsChange,
-}) => {
+}) {
   const { formatMessage } = useIntl();
-  const [initialMount, setInitialMount] = useState(false);
+  const isLoadedBefore = useIsValuePassed(itemsTableLoading, false);
 
-  useEffect(() => {
-    if (!itemsTableLoading) {
-      setInitialMount(true);
-    }
-  }, [itemsTableLoading, setInitialMount]);
+  const handleFetchData = useCallback(
+    ({ pageIndex, pageSize, sortBy }) => {
+      addItemsTableQueries({
+        page_size: pageSize,
+        page: pageIndex + 1,
+        ...(sortBy.length > 0
+          ? {
+              column_sort_by: sortBy[0].id,
+              sort_order: sortBy[0].desc ? 'desc' : 'asc',
+            }
+          : {}),
+      });
+    },
+    [addItemsTableQueries],
+  );
 
   const handleEditItem = useCallback(
     (item) => () => {
@@ -46,7 +58,6 @@ const ItemsDataTable = ({
     [onEditItem],
   );
 
-  // const handleDeleteItem = (item) => () => { onDeleteItem(item); };
   const handleDeleteItem = useCallback(
     (item) => () => {
       onDeleteItem(item);
@@ -158,48 +169,49 @@ const ItemsDataTable = ({
     [actionMenuList, formatMessage],
   );
 
-  const selectionColumn = useMemo(
-    () => ({
-      minWidth: 42,
-      width: 42,
-      maxWidth: 42,
-    }),
-    [],
-  );
-
-  const handleFetchData = useCallback((...args) => {
-    onFetchData && onFetchData(...args);
-  }, []);
-
+  // Handle selected row change.
   const handleSelectedRowsChange = useCallback(
     (selectedRows) => {
-      onSelectedRowsChange &&
-        onSelectedRowsChange(selectedRows.map((s) => s.original));
+      saveInvoke(
+        onSelectedRowsChange,
+        selectedRows.map((s) => s.original),
+      );
     },
     [onSelectedRowsChange],
   );
+
   return (
-    <LoadingIndicator loading={loading} mount={false}>
+    <LoadingIndicator
+      loading={itemsTableLoading && !isLoadedBefore}
+      mount={false}
+    >
       <DataTable
         columns={columns}
         data={itemsCurrentPage}
-        selectionColumn={selectionColumn}
         onFetchData={handleFetchData}
-        loading={itemsTableLoading && !initialMount}
         noInitialFetch={true}
         expandable={true}
-        treeGraph={true}
+        selectionColumn={true}
         spinnerProps={{ size: 30 }}
         onSelectedRowsChange={handleSelectedRowsChange}
         rowContextMenu={handleRowContextMenu}
+        sticky={true}
+        pagination={true}
+        pagesCount={2}
+        autoResetSortBy={false}
+        autoResetPage={false}
+        initialPageSize={itemsTableQuery.page_size}
+        initialPageIndex={itemsTableQuery.page - 1}
       />
     </LoadingIndicator>
   );
 };
 
 export default compose(
-  withItems(({ itemsCurrentPage, itemsTableLoading }) => ({
+  withItems(({ itemsCurrentPage, itemsTableLoading, itemsTableQuery }) => ({
     itemsCurrentPage,
     itemsTableLoading,
+    itemsTableQuery,
   })),
+  withItemsActions,
 )(ItemsDataTable);

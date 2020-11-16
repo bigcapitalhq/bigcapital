@@ -90,23 +90,7 @@ function BillList({
     history.push(`/bills/${bill.id}/edit`);
   });
 
-  const handleFetchData = useCallback(
-    ({ pageIndex, pageSize, sortBy }) => {
-      const page = pageIndex + 1;
-
-      addBillsTableQueries({
-        ...(sortBy.length > 0
-          ? {
-              column_sort_by: sortBy[0].id,
-              sort_order: sortBy[0].desc ? 'desc' : 'asc',
-            }
-          : {}),
-        page_size: pageSize,
-        page,
-      });
-    },
-    [addBillsTableQueries],
-  );
+  
 
   // Handle selected rows change.
   const handleSelectedRowsChange = useCallback(
@@ -141,9 +125,7 @@ function BillList({
           <Route exact={true}>
             <BillViewTabs />
             <BillsDataTable
-              loading={fetchBills.isFetching}
               onDeleteBill={handleDeleteBill}
-              onFetchData={handleFetchData}
               onEditBill={handleEditBill}
               onSelectedRowsChange={handleSelectedRowsChange}
             />

@@ -1,21 +1,19 @@
-import React, { useEffect, useCallback, useState, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import {
   Intent,
   Button,
-  Classes,
   Popover,
   Menu,
   MenuItem,
   MenuDivider,
   Position,
 } from '@blueprintjs/core';
-import { useParams } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import moment from 'moment';
 
-import { compose } from 'utils';
-import { useUpdateEffect } from 'hooks';
+import { compose, saveInvoke } from 'utils';
+import { useIsValuePassed } from 'hooks';
 
 import LoadingIndicator from 'components/LoadingIndicator';
 import { DataTable, Money, Icon } from 'components';
@@ -29,58 +27,26 @@ import withPaymentReceivesActions from './withPaymentReceivesActions';
 import withCurrentView from 'containers/Views/withCurrentView';
 
 function PaymentReceivesDataTable({
-  //#withPaymentReceives
+  // #withPaymentReceives
   PaymentReceivesCurrentPage,
   paymentReceivesPageination,
   paymentReceivesLoading,
-  paymentReceivesItems,
+  paymentReceivesTableQuery,
 
-  // #withDashboardActions
-  changeCurrentView,
-  changePageSubtitle,
-  setTopbarEditView,
+  // #withPaymentReceivesActions
+  addPaymentReceivesTableQueries,
 
-  // #withView
-  viewMeta,
-
-  //#OwnProps
-  loading,
-  onFetchData,
+  // #OwnProps
   onEditPaymentReceive,
   onDeletePaymentReceive,
   onSelectedRowsChange,
 }) {
-  const [initialMount, setInitialMount] = useState(false);
-  const { custom_view_id: customViewId } = useParams();
+  const isLoaded = useIsValuePassed(paymentReceivesLoading, false);
   const { formatMessage } = useIntl();
-
-  useEffect(() => {
-    setInitialMount(false);
-  }, [customViewId]);
-
-  useUpdateEffect(() => {
-    if (!paymentReceivesLoading) {
-      setInitialMount(true);
-    }
-  }, [paymentReceivesLoading, setInitialMount]);
-
-  // useEffect(() => {
-  //   if (customViewId) {
-  //     changeCurrentView(customViewId);
-  //     setTopbarEditView(customViewId);
-  //   }
-  //   changePageSubtitle(customViewId && viewMeta ? viewMeta.name : '');
-  // }, [
-  //   customViewId,
-  //   changeCurrentView,
-  //   changePageSubtitle,
-  //   setTopbarEditView,
-  //   viewMeta,
-  // ]);
 
   const handleEditPaymentReceive = useCallback(
     (paymentReceive) => () => {
-      onEditPaymentReceive && onEditPaymentReceive(paymentReceive);
+      saveInvoke(onEditPaymentReceive, paymentReceive);
     },
     [onEditPaymentReceive],
   );
@@ -90,6 +56,32 @@ function PaymentReceivesDataTable({
       onDeletePaymentReceive && onDeletePaymentReceive(paymentReceive);
     },
     [onDeletePaymentReceive],
+  );
+
+  const handleDataTableFetchData = useCallback(
+    ({ pageIndex, pageSize, sortBy }) => {
+      addPaymentReceivesTableQueries({
+        ...(sortBy.length > 0
+          ? {
+              column_sort_by: sortBy[0].id,
+              sort_order: sortBy[0].desc ? 'desc' : 'asc',
+            }
+          : {}),
+        page_size: pageSize,
+        page: pageIndex + 1,
+      });
+    },
+    [addPaymentReceivesTableQueries],
+  );
+
+  const handleSelectedRowsChange = useCallback(
+    (selectedRows) => {
+      saveInvoke(
+        onSelectedRowsChange,
+        selectedRows.map((s) => s.original),
+      );
+    },
+    [onSelectedRowsChange],
   );
 
   const actionMenuList = useCallback(
@@ -142,7 +134,8 @@ function PaymentReceivesDataTable({
       {
         id: 'payment_receive_no',
         Header: formatMessage({ id: 'payment_receive_no' }),
-        accessor: (row) => (row.payment_receive_no ? `#${row.payment_receive_no}` : null),
+        accessor: (row) =>
+          row.payment_receive_no ? `#${row.payment_receive_no}` : null,
         width: 140,
         className: 'payment_receive_no',
       },
@@ -186,41 +179,29 @@ function PaymentReceivesDataTable({
     [actionMenuList, formatMessage],
   );
 
-  const handleDataTableFetchData = useCallback(
-    (...args) => {
-      onFetchData && onFetchData(...args);
-    },
-    [onFetchData],
-  );
-  const handleSelectedRowsChange = useCallback(
-    (selectedRows) => {
-      onSelectedRowsChange &&
-        onSelectedRowsChange(selectedRows.map((s) => s.original));
-    },
-    [onSelectedRowsChange],
-  );
-
   return (
-    <div>
-      <LoadingIndicator loading={loading} mount={false}>
-        <DataTable
-          columns={columns}
-          data={PaymentReceivesCurrentPage}
-          onFetchData={handleDataTableFetchData}
-          manualSortBy={true}
-          selectionColumn={true}
-          noInitialFetch={true}
-          sticky={true}
-          loading={paymentReceivesLoading && !initialMount}
-          onSelectedRowsChange={handleSelectedRowsChange}
-          rowContextMenu={onRowContextMenu}
-          pagination={true}
-          pagesCount={paymentReceivesPageination.pagesCount}
-          initialPageSize={paymentReceivesPageination.pageSize}
-          initialPageIndex={paymentReceivesPageination.page - 1}
-        />
-      </LoadingIndicator>
-    </div>
+    <LoadingIndicator
+      loading={paymentReceivesLoading && !isLoaded}
+      mount={false}
+    >
+      <DataTable
+        columns={columns}
+        data={PaymentReceivesCurrentPage}
+        onFetchData={handleDataTableFetchData}
+        manualSortBy={true}
+        selectionColumn={true}
+        noInitialFetch={true}
+        sticky={true}
+        onSelectedRowsChange={handleSelectedRowsChange}
+        rowContextMenu={onRowContextMenu}
+        pagination={true}
+        autoResetSortBy={false}
+        autoResetPage={false}
+        pagesCount={paymentReceivesPageination.pagesCount}
+        initialPageSize={paymentReceivesTableQuery.page_size}
+        initialPageIndex={paymentReceivesTableQuery.page - 1}
+      />
+    </LoadingIndicator>
   );
 }
 
@@ -235,10 +216,12 @@ export default compose(
       PaymentReceivesCurrentPage,
       paymentReceivesLoading,
       paymentReceivesPageination,
+      paymentReceivesTableQuery
     }) => ({
       PaymentReceivesCurrentPage,
       paymentReceivesLoading,
       paymentReceivesPageination,
+      paymentReceivesTableQuery
     }),
   ),
   withViewDetails(),

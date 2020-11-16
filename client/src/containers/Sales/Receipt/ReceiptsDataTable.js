@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import {
   Intent,
   Button,
@@ -8,85 +8,50 @@ import {
   MenuDivider,
   Position,
 } from '@blueprintjs/core';
-import { useParams } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import moment from 'moment';
 
-import { compose } from 'utils';
-import { useUpdateEffect } from 'hooks';
+import { compose, saveInvoke } from 'utils';
+import { useIsValuePassed } from 'hooks';
 
-import LoadingIndicator from 'components/LoadingIndicator';
-import { DataTable, Money, Icon } from 'components';
+import { LoadingIndicator, DataTable, Money, Icon } from 'components';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
-import withViewDetails from 'containers/Views/withViewDetails';
 
 import withReceipts from './withReceipts';
 import withReceiptActions from './withReceiptActions';
-import withCurrentView from 'containers/Views/withCurrentView';
 
 function ReceiptsDataTable({
   //#withReceipts
   receiptsCurrentPage,
   receiptsLoading,
   receiptsPagination,
-  receiptItems,
-  // #withDashboardActions
-  changeCurrentView,
-  changePageSubtitle,
-  setTopbarEditView,
+  receiptTableQuery,
 
-  // #withView
-  viewMeta,
+  // #withReceiptsActions
+  addReceiptsTableQueries,
 
   // #Own Props
-
   loading,
-  onFetchData,
   onEditReceipt,
   onDeleteReceipt,
   onSelectedRowsChange,
 }) {
-  const [initialMount, setInitialMount] = useState(false);
-  const { custom_view_id: customViewId } = useParams();
   const { formatMessage } = useIntl();
-
-  useUpdateEffect(() => {
-    if (!receiptsLoading) {
-      setInitialMount(true);
-    }
-  }, [receiptsLoading, setInitialMount]);
-
-  useEffect(() => {
-    setInitialMount(false);
-  }, []);
-
-  useEffect(() => {
-    if (customViewId) {
-      changeCurrentView(customViewId);
-      setTopbarEditView(customViewId);
-    }
-    changePageSubtitle(customViewId && viewMeta ? viewMeta.name : '');
-  }, [
-    customViewId,
-    changeCurrentView,
-    changePageSubtitle,
-    setTopbarEditView,
-    viewMeta,
-  ]);
+  const isLoadedBefore = useIsValuePassed(receiptsLoading, false);
 
   const handleEditReceipt = useCallback(
     (receipt) => () => {
-      onEditReceipt && onEditReceipt(receipt);
+      saveInvoke(onEditReceipt, receipt);
     },
     [onEditReceipt],
   );
 
   const handleDeleteReceipt = useCallback(
     (receipt) => () => {
-      onDeleteReceipt && onDeleteReceipt(receipt);
+      saveInvoke(onDeleteReceipt, receipt);
     },
     [onDeleteReceipt],
   );
@@ -194,50 +159,61 @@ function ReceiptsDataTable({
   );
 
   const handleDataTableFetchData = useCallback(
-    (...args) => {
-      onFetchData && onFetchData(...args);
+    ({ sortBy, pageIndex, pageSize }) => {
+      const page = pageIndex + 1;
+
+      addReceiptsTableQueries({
+        ...(sortBy.length > 0
+          ? {
+              column_sort_by: sortBy[0].id,
+              sort_order: sortBy[0].desc ? 'desc' : 'asc',
+            }
+          : {}),
+        page_size: pageSize,
+        page,
+      });
     },
-    [onFetchData],
+    [addReceiptsTableQueries],
   );
 
   const handleSelectedRowsChange = useCallback(
     (selectedRows) => {
-      onSelectedRowsChange &&
-        onSelectedRowsChange(selectedRows.map((s) => s.original));
+      saveInvoke(
+        onSelectedRowsChange,
+        selectedRows.map((s) => s.original),
+      );
     },
     [onSelectedRowsChange],
   );
 
-  console.log(receiptsCurrentPage, 'receiptCurrnetPage');
-  console.log(receiptItems, 'receiptItems');
-
   return (
-    <div>
-      <LoadingIndicator loading={loading} mount={false}>
-        <DataTable
-          columns={columns}
-          data={receiptsCurrentPage}
-          loading={receiptsLoading && !initialMount}
-          onFetchData={handleDataTableFetchData}
-          manualSortBy={true}
-          selectionColumn={true}
-          noInitialFetch={true}
-          sticky={true}
-          onSelectedRowsChange={handleSelectedRowsChange}
-          rowContextMenu={onRowContextMenu}
-          pagination={true}
-          pagesCount={receiptsPagination.pagesCount}
-          initialPageSize={receiptsPagination.pageSize}
-          initialPageIndex={receiptsPagination.page - 1}
-        />
-      </LoadingIndicator>
-    </div>
+    <LoadingIndicator
+      loading={receiptsLoading && !isLoadedBefore}
+      mount={false}
+    >
+      <DataTable
+        columns={columns}
+        data={receiptsCurrentPage}
+        onFetchData={handleDataTableFetchData}
+        manualSortBy={true}
+        selectionColumn={true}
+        noInitialFetch={true}
+        sticky={true}
+        onSelectedRowsChange={handleSelectedRowsChange}
+        rowContextMenu={onRowContextMenu}
+        pagination={true}
+        pagesCount={receiptsPagination.pagesCount}
+        autoResetSortBy={false}
+        autoResetPage={false}
+        initialPageSize={receiptTableQuery.page_size}
+        initialPageIndex={receiptTableQuery.page - 1}
+      />
+    </LoadingIndicator>
   );
 }
 
 export default compose(
   withRouter,
-  withCurrentView,
   withDialogActions,
   withDashboardActions,
   withReceiptActions,
@@ -246,13 +222,12 @@ export default compose(
       receiptsCurrentPage,
       receiptsLoading,
       receiptsPagination,
-      receiptItems,
+      receiptTableQuery,
     }) => ({
       receiptsCurrentPage,
       receiptsLoading,
       receiptsPagination,
-      receiptItems,
+      receiptTableQuery,
     }),
   ),
-  withViewDetails(),
 )(ReceiptsDataTable);

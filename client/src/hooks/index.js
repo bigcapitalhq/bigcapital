@@ -21,6 +21,20 @@ export function useUpdateEffect(effect, dependencies = []) {
   }, dependencies);
 }
 
+
+export function useIsValuePassed(value, compatatorValue) {
+  const cache = useRef([value]);
+
+  useEffect(() => {
+    if (cache.current.indexOf(value) === -1) {
+      cache.current.push(value);
+    }
+  }, [value]);
+
+  return cache.current.indexOf(compatatorValue) !== -1;
+}
+
+
 export default {
   useAsync,
   useUpdateEffect,

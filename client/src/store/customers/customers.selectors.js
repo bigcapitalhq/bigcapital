@@ -1,5 +1,9 @@
 import { createSelector } from 'reselect';
-import { pickItemsFromIds, paginationLocationQuery } from 'store/selectors';
+import {
+  pickItemsFromIds,
+  paginationLocationQuery,
+  defaultPaginationMeta,
+} from 'store/selectors';
 
 const customerTableQuery = (state) => state.customers.tableQuery;
 
@@ -12,9 +16,12 @@ const customersPaginationSelector = (state, props) => {
   return state.customers.views?.[viewId];
 };
 
-const customerPageSelector = (state, props, query) => {
+const customerPageSelector = (state, props) => {
   const viewId = state.customers.currentViewId;
-  return state.customers.views?.[viewId]?.pages?.[query.page];
+  const currentView = state.customers.views?.[viewId];
+  const currentPageId = currentView?.paginationMeta?.page;
+
+  return currentView?.pages?.[currentPageId];
 };
 
 const customersItemsSelector = (state) => state.customers.items;
@@ -49,6 +56,8 @@ export const getCustomersByIdFactory = () =>
 
 export const getCustomerPaginationMetaFactory = () =>
   createSelector(customersPaginationSelector, (customerPage) => {
-    return customerPage?.paginationMeta || {};
+    return {
+      ...defaultPaginationMeta(),
+      ...(customerPage?.paginationMeta || {}),
+    };
   });
-

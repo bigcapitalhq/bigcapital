@@ -22,7 +22,7 @@ const mapActionsToProps = (dispatch) => ({
   }),
   addManualJournalsTableQueries: (queries) => dispatch({
     type: t.MANUAL_JOURNALS_TABLE_QUERIES_ADD,
-    queries,
+    payload: { queries },
   }),
   setJournalNumberChanged: (isChanged) => dispatch({
     type: t.MANUAL_JOURNAL_NUMBER_CHANGED,

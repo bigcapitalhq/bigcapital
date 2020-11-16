@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import {
   Intent,
   Button,
@@ -8,13 +8,12 @@ import {
   MenuDivider,
   Position,
 } from '@blueprintjs/core';
-import { useParams } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import moment from 'moment';
 
-import { compose } from 'utils';
-import { useUpdateEffect } from 'hooks';
+import { compose, saveInvoke } from 'utils';
+import { useIsValuePassed } from 'hooks';
 
 import LoadingIndicator from 'components/LoadingIndicator';
 import { DataTable, Money, Icon } from 'components';
@@ -27,66 +26,34 @@ import withInvoices from './withInvoices';
 import withInvoiceActions from './withInvoiceActions';
 import withCurrentView from 'containers/Views/withCurrentView';
 
+// Invoices datatable.
 function InvoicesDataTable({
-  //#withInvoices
+  // #withInvoices
   invoicesCurrentPage,
   invoicesLoading,
   invoicesPageination,
-  invoicesItems,
 
-  // #withDashboardActions
-  changeCurrentView,
-  changePageSubtitle,
-  setTopbarEditView,
+  // #withInvoicesActions
+  addInvoiceTableQueries,
 
-  // #withView
-  viewMeta,
-
-  //#OwnProps
-  loading,
-  onFetchData,
+  // #OwnProps
   onEditInvoice,
   onDeleteInvoice,
   onSelectedRowsChange,
 }) {
-  const [initialMount, setInitialMount] = useState(false);
-  const { custom_view_id: customViewId } = useParams();
   const { formatMessage } = useIntl();
-
-  useEffect(() => {
-    setInitialMount(false);
-  }, [customViewId]);
-
-  useUpdateEffect(() => {
-    if (!invoicesLoading) {
-      setInitialMount(true);
-    }
-  }, [invoicesLoading, setInitialMount]);
-
-  // useEffect(() => {
-  //   if (customViewId) {
-  //     changeCurrentView(customViewId);
-  //     setTopbarEditView(customViewId);
-  //   }
-  //   changePageSubtitle(customViewId && viewMeta ? viewMeta.name : '');
-  // }, [
-  //   customViewId,
-  //   changeCurrentView,
-  //   changePageSubtitle,
-  //   setTopbarEditView,
-  //   viewMeta,
-  // ]);
+  const isLoadedBefore = useIsValuePassed(invoicesLoading, false);
 
   const handleEditInvoice = useCallback(
     (_invoice) => () => {
-      onEditInvoice && onEditInvoice(_invoice);
+      saveInvoke(onEditInvoice, _invoice);
     },
     [onEditInvoice],
   );
 
   const handleDeleteInvoice = useCallback(
     (_invoice) => () => {
-      onDeleteInvoice && onDeleteInvoice(_invoice);
+      saveInvoke(onDeleteInvoice, _invoice);
     },
     [onDeleteInvoice],
   );
@@ -194,49 +161,54 @@ function InvoicesDataTable({
   );
 
   const handleDataTableFetchData = useCallback(
-    (...args) => {
-      onFetchData && onFetchData(...args);
+    ({ pageSize, pageIndex, sortBy }) => {
+      addInvoiceTableQueries({
+        ...(sortBy.length > 0
+          ? {
+              column_sort_by: sortBy[0].id,
+              sort_order: sortBy[0].desc ? 'desc' : 'asc',
+            }
+          : {}),
+        page_size: pageSize,
+        page: pageIndex + 1,
+      });
     },
-    [onFetchData],
+    [addInvoiceTableQueries],
   );
+
   const handleSelectedRowsChange = useCallback(
     (selectedRows) => {
-      onSelectedRowsChange &&
-        onSelectedRowsChange(selectedRows.map((s) => s.original));
+      saveInvoke(
+        onSelectedRowsChange,
+        selectedRows.map((s) => s.original),
+      );
     },
     [onSelectedRowsChange],
   );
 
-  const selectionColumn = useMemo(
-    () => ({
-      minWidth: 40,
-      width: 40,
-      maxWidth: 40,
-    }),
-    [],
-  );
-
   return (
-    <div>
-      <LoadingIndicator loading={loading} mount={false}>
-        <DataTable
-          columns={columns}
-          data={invoicesCurrentPage}
-          onFetchData={handleDataTableFetchData}
-          manualSortBy={true}
-          selectionColumn={true}
-          noInitialFetch={true}
-          sticky={true}
-          loading={invoicesLoading && !initialMount}
-          onSelectedRowsChange={handleSelectedRowsChange}
-          rowContextMenu={onRowContextMenu}
-          pagination={true}
-          pagesCount={invoicesPageination.pagesCount}
-          initialPageSize={invoicesPageination.pageSize}
-          initialPageIndex={invoicesPageination.page - 1}
-        />
-      </LoadingIndicator>
-    </div>
+    <LoadingIndicator
+      loading={invoicesLoading && !isLoadedBefore}
+      mount={false}
+    >
+      <DataTable
+        columns={columns}
+        data={invoicesCurrentPage}
+        onFetchData={handleDataTableFetchData}
+        manualSortBy={true}
+        selectionColumn={true}
+        noInitialFetch={true}
+        sticky={true}
+        onSelectedRowsChange={handleSelectedRowsChange}
+        rowContextMenu={onRowContextMenu}
+        pagination={true}
+        autoResetSortBy={false}
+        autoResetPage={false}
+        pagesCount={invoicesPageination.pagesCount}
+        initialPageSize={invoicesPageination.pageSize}
+        initialPageIndex={invoicesPageination.page - 1}
+      />
+    </LoadingIndicator>
   );
 }
 
@@ -247,10 +219,16 @@ export default compose(
   withDashboardActions,
   withInvoiceActions,
   withInvoices(
-    ({ invoicesCurrentPage, invoicesLoading, invoicesPageination }) => ({
+    ({
       invoicesCurrentPage,
       invoicesLoading,
       invoicesPageination,
+      invoicesTableQuery,
+    }) => ({
+      invoicesCurrentPage,
+      invoicesLoading,
+      invoicesPageination,
+      invoicesTableQuery,
     }),
   ),
   withViewDetails(),

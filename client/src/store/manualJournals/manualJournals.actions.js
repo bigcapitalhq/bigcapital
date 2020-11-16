@@ -138,7 +138,7 @@ export const fetchManualJournalsTable = ({ query } = {}) => {
             manual_journals: response.data.manual_journals,
           });
           dispatch({
-            type: 'MANUAL_JOURNALS_PAGINATION_SET',
+            type: t.MANUAL_JOURNALS_PAGINATION_SET,
             payload: {
               pagination: response.data.pagination,
               customViewId:

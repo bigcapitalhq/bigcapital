@@ -31,11 +31,15 @@ export const fetchItems = ({ query }) => {
             paginationMeta: response.data.pagination,
           });
           dispatch({
+            type: t.ITEMS_PAGINATION_SET,
+            payload: {
+              pagination: response.data.pagination,
+              customViewId: response.data.customViewId || -1,
+            }
+          })
+          dispatch({
             type: t.ITEMS_TABLE_LOADING,
             payload: { loading: false },
-          });
-          dispatch({
-            type: t.SET_DASHBOARD_REQUEST_COMPLETED,
           });
           resolve(response);
         })
