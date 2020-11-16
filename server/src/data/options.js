@@ -92,6 +92,10 @@ export default {
       key: "number_prefix",
       type: "string",
     },
+    {
+      key: "preferred_deposit_account",
+      type: "number",
+    },
   ],
   sales_invoices: [
     {
@@ -124,6 +128,12 @@ export default {
     },
     {
       key: "preferred_inventory_account",
+      type: "number",
+    },
+  ],
+  expenses: [
+    {
+      key: "preferred_payment_account",
       type: "number",
     },
   ],

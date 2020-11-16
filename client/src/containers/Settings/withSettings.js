@@ -11,6 +11,7 @@ export default (mapState) => {
       receiptSettings: state.settings.data.salesReceipts,
       invoiceSettings: state.settings.data.salesInvoices,
       itemsSettings: state.settings.data.items,
+      expenseSettings: state.settings.data.expenses,
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };

@@ -56,13 +56,13 @@ function ExpenseForm({
 
   // #withSettings
   baseCurrency,
+  preferredPaymentAccount,
 
   // #own Props
   expenseId,
   onFormSubmit,
   onCancelForm,
 }) {
-
   const [payload, setPayload] = useState({});
 
   const history = useHistory();
@@ -148,7 +148,7 @@ function ExpenseForm({
 
   const defaultInitialValues = useMemo(
     () => ({
-      payment_account_id: '',
+      payment_account_id: parseInt(preferredPaymentAccount),
       beneficiary: '',
       payment_date: moment(new Date()).format('YYYY-MM-DD'),
       description: '',
@@ -410,7 +410,8 @@ export default compose(
   withDashboardActions,
   withMediaActions,
   withExpenseDetail(),
-  withSettings(({ organizationSettings }) => ({
+  withSettings(({ organizationSettings, expenseSettings }) => ({
     baseCurrency: organizationSettings?.baseCurrency,
+    preferredPaymentAccount: expenseSettings?.preferredPaymentAccount,
   })),
 )(ExpenseForm);
