@@ -105,12 +105,26 @@ export default {
   ],
   payment_receives: [
     {
-      key: 'next_number',
-      type: 'number',
+      key: "next_number",
+      type: "number",
     },
     {
-      key: 'number_prefix',
-      type: 'string',
+      key: "number_prefix",
+      type: "string",
     },
-  ]
+  ],
+  items: [
+    {
+      key: "preferred_sell_account",
+      type: "number",
+    },
+    {
+      key: "preferred_cost_account",
+      type: "number",
+    },
+    {
+      key: "preferred_inventory_account",
+      type: "number",
+    },
+  ],
 };
