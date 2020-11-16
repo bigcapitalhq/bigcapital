@@ -11,10 +11,11 @@ import moment from 'moment';
 import { Intent, FormGroup, TextArea } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { pick } from 'lodash';
+import { useHistory } from 'react-router-dom';
 
 import ExpenseFormHeader from './ExpenseFormHeader';
 import ExpenseTable from './ExpenseTable';
-import ExpenseFloatingFooter from './ExpenseFooter';
+import ExpenseFloatingFooter from './ExpenseFloatingActions';
 
 import withExpensesActions from 'containers/Expenses/withExpensesActions';
 import withExpenseDetail from 'containers/Expenses/withExpenseDetail';
@@ -26,13 +27,16 @@ import AppToaster from 'components/AppToaster';
 import Dragzone from 'components/Dragzone';
 
 import useMedia from 'hooks/useMedia';
-import { compose, repeatValue } from 'utils';
+import { compose, repeatValue, transformToForm } from 'utils';
 
 const MIN_LINES_NUMBER = 4;
 const ERROR = {
   EXPENSE_ALREADY_PUBLISHED: 'EXPENSE.ALREADY.PUBLISHED',
 };
 
+/**
+ * Expense form.
+ */
 function ExpenseForm({
   // #withMedia
   requestSubmitMedia,
@@ -54,8 +58,13 @@ function ExpenseForm({
   onFormSubmit,
   onCancelForm,
 }) {
-  const { formatMessage } = useIntl();
+  const isNewMode = !expenseId;
+
   const [payload, setPayload] = useState({});
+
+  const history = useHistory();
+  const { formatMessage } = useIntl();
+
   const {
     setFiles,
     saveMedia,
@@ -66,23 +75,6 @@ function ExpenseForm({
     saveCallback: requestSubmitMedia,
     deleteCallback: requestDeleteMedia,
   });
-
-  const handleDropFiles = useCallback((_files) => {
-    setFiles(_files.filter((file) => file.uploaded === false));
-  }, []);
-
-  const savedMediaIds = useRef([]);
-  const clearSavedMediaIds = () => {
-    savedMediaIds.current = [];
-  };
-
-  useEffect(() => {
-    if (expense && expense.id) {
-      changePageTitle(formatMessage({ id: 'edit_expense' }));
-    } else {
-      changePageTitle(formatMessage({ id: 'new_expense' }));
-    }
-  }, [changePageTitle, expense, formatMessage]);
 
   const validationSchema = Yup.object().shape({
     beneficiary: Yup.string().label(formatMessage({ id: 'beneficiary' })),
@@ -117,11 +109,27 @@ function ExpenseForm({
     ),
   });
 
+  const handleDropFiles = useCallback((_files) => {
+    setFiles(_files.filter((file) => file.uploaded === false));
+  }, []);
+
+  const savedMediaIds = useRef([]);
+  const clearSavedMediaIds = () => {
+    savedMediaIds.current = [];
+  };
+
+  useEffect(() => {
+    if (expense && expense.id) {
+      changePageTitle(formatMessage({ id: 'edit_expense' }));
+    } else {
+      changePageTitle(formatMessage({ id: 'new_expense' }));
+    }
+  }, [changePageTitle, expense, formatMessage]);
+
   const saveInvokeSubmit = useCallback(
     (payload) => {
       onFormSubmit && onFormSubmit(payload);
     },
-
     [onFormSubmit],
   );
 
@@ -205,7 +213,15 @@ function ExpenseForm({
     }
   };
 
-  const formik = useFormik({
+  const {
+    values,
+    errors,
+    touched,
+    isSubmitting,
+    setFieldValue,
+    handleSubmit,
+    getFieldProps,
+  } = useFormik({
     enableReinitialize: true,
     validationSchema,
     initialValues: {
@@ -294,20 +310,20 @@ function ExpenseForm({
     },
   });
 
-  const handleSubmitClick = useCallback(
-    (payload) => {
-      setPayload(payload);
-      formik.submitForm();
-    },
-    [setPayload, formik],
-  );
+  const handleSubmitClick = useCallback(() => {
+    setPayload({ publish: true, redirect: true });
+  }, [setPayload]);
 
-  const handleCancelClick = useCallback(
-    (payload) => {
-      onCancelForm && onCancelForm(payload);
-    },
-    [onCancelForm],
-  );
+  const handleCancelClick = useCallback(() => {
+    history.goBack();
+  }, []);
+
+  const handleSubmitAndNewClick = useCallback(() => {
+    setPayload({ publish: true, redirect: false });
+  });
+  const handleSubmitAndDraftClick = useCallback(() => {
+    setPayload({ publish: false, redirect: false });
+  });
 
   const handleDeleteFile = useCallback(
     (_deletedFiles) => {
@@ -322,14 +338,14 @@ function ExpenseForm({
 
   // Handle click on add a new line/row.
   const handleClickAddNewRow = () => {
-    formik.setFieldValue(
+    setFieldValue(
       'categories',
-      orderingCategoriesIndex([...formik.values.categories, defaultCategory]),
+      orderingCategoriesIndex([...values.categories, defaultCategory]),
     );
   };
 
   const handleClearAllLines = () => {
-    formik.setFieldValue(
+    setFieldValue(
       'categories',
       orderingCategoriesIndex([
         ...repeatValue(defaultCategory, MIN_LINES_NUMBER),
@@ -337,21 +353,23 @@ function ExpenseForm({
     );
   };
 
-  const categories = formik.values.categories.filter(
-    (category) =>
-      category.amount && category.index && category.expense_account_id,
-  );
-
   return (
     <div className={'expense-form'}>
-      <form onSubmit={formik.handleSubmit}>
-        <ExpenseFormHeader formik={formik} />
+      <form onSubmit={handleSubmit}>
+        <ExpenseFormHeader
+          errors={errors}
+          touched={touched}
+          values={values}
+          setFieldValue={setFieldValue}
+          getFieldProps={getFieldProps}
+        />
 
         <ExpenseTable
-          categories={formik.values.categories}
+          categories={values.categories}
           onClickAddNewRow={handleClickAddNewRow}
           onClickClearAllLines={handleClearAllLines}
-          formik={formik}
+          errors={errors}
+          setFieldValue={setFieldValue}
           defaultRow={defaultCategory}
         />
         <div class="expense-form-footer">
@@ -359,10 +377,7 @@ function ExpenseForm({
             label={<T id={'description'} />}
             className={'form-group--description'}
           >
-            <TextArea
-              growVertically={true}
-              {...formik.getFieldProps('description')}
-            />
+            <TextArea growVertically={true} {...getFieldProps('description')} />
           </FormGroup>
 
           <Dragzone
@@ -372,13 +387,16 @@ function ExpenseForm({
             hint={'Attachments: Maxiumum size: 20MB'}
           />
         </div>
+
+        <ExpenseFloatingFooter
+          isSubmitting={isSubmitting}
+          onSubmitClick={handleSubmitClick}
+          onCancelClick={handleCancelClick}
+          onDraftClick={handleSubmitAndDraftClick}
+          onSubmitAndNewClick={handleSubmitAndNewClick}
+          expense={expense}
+        />
       </form>
-      <ExpenseFloatingFooter
-        formik={formik}
-        onSubmitClick={handleSubmitClick}
-        expense={expense}
-        onCancelClick={handleCancelClick}
-      />
     </div>
   );
 }

@@ -94,7 +94,8 @@ function ExpenseTable({
   onClickClearAllLines,
   defaultRow,
   categories,
-  formik: { errors, setFieldValue, resetForm },
+  errors,
+  setFieldValue,
 }) {
   const [rows, setRows] = useState([]);
   const { formatMessage } = useIntl();

@@ -26,7 +26,11 @@ import withAccounts from 'containers/Accounts/withAccounts';
 import withCustomers from 'containers/Customers/withCustomers';
 
 function ExpenseFormHeader({
-  formik: { errors, touched, setFieldValue, getFieldProps, values },
+  errors,
+  touched,
+  setFieldValue,
+  getFieldProps,
+  values,
   currenciesList,
   accountsList,
   accountsTypes,
