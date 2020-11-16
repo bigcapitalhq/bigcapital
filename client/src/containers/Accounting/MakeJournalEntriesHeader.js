@@ -26,7 +26,6 @@ import {
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withCurrencies from 'containers/Currencies/withCurrencies';
-import withSettings from 'containers/Settings/withSettings';
 
 import { compose } from 'utils';
 
@@ -40,9 +39,6 @@ function MakeJournalEntriesHeader({
   // #ownProps
   manualJournal,
   onJournalNumberChanged,
-
-  // #withSettings
-  baseCurrency,
 
   // #withCurrencies
   currenciesList,
@@ -225,7 +221,7 @@ function MakeJournalEntriesHeader({
               currenciesList={currenciesList}
               selectedCurrencyCode={values.currency_code}
               onCurrencySelected={onItemsSelect('currency_code')}
-              defaultSelectText={baseCurrency}
+              defaultSelectText={values.currency_code}
             />
           </FormGroup>
         </Col>
@@ -236,9 +232,6 @@ function MakeJournalEntriesHeader({
 
 export default compose(
   withDialogActions,
-  withSettings(({ organizationSettings }) => ({
-    baseCurrency: organizationSettings?.baseCurrency,
-  })),
   withCurrencies(({ currenciesList }) => ({
     currenciesList,
   })),
