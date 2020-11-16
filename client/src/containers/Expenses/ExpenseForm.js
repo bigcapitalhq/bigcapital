@@ -22,6 +22,7 @@ import withExpenseDetail from 'containers/Expenses/withExpenseDetail';
 import withAccountsActions from 'containers/Accounts/withAccountsActions';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withMediaActions from 'containers/Media/withMediaActions';
+import withSettings from 'containers/Settings/withSettings';
 
 import AppToaster from 'components/AppToaster';
 import Dragzone from 'components/Dragzone';
@@ -53,12 +54,14 @@ function ExpenseForm({
   //#withExpenseDetail
   expense,
 
+  // #withSettings
+  baseCurrency,
+
   // #own Props
   expenseId,
   onFormSubmit,
   onCancelForm,
 }) {
-  const isNewMode = !expenseId;
 
   const [payload, setPayload] = useState({});
 
@@ -150,7 +153,7 @@ function ExpenseForm({
       payment_date: moment(new Date()).format('YYYY-MM-DD'),
       description: '',
       reference_no: '',
-      currency_code: '',
+      currency_code: baseCurrency,
       categories: [...repeatValue(defaultCategory, MIN_LINES_NUMBER)],
     }),
     [defaultCategory],
@@ -407,4 +410,7 @@ export default compose(
   withDashboardActions,
   withMediaActions,
   withExpenseDetail(),
+  withSettings(({ organizationSettings }) => ({
+    baseCurrency: organizationSettings?.baseCurrency,
+  })),
 )(ExpenseForm);

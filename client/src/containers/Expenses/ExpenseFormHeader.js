@@ -26,14 +26,21 @@ import withAccounts from 'containers/Accounts/withAccounts';
 import withCustomers from 'containers/Customers/withCustomers';
 
 function ExpenseFormHeader({
+  // #ownProps
   errors,
   touched,
   setFieldValue,
   getFieldProps,
   values,
+
+  //withCurrencies
   currenciesList,
+
+  // #withAccounts
   accountsList,
   accountsTypes,
+
+  // #withCustomers
   customers,
 }) {
   const [selectedItems, setSelectedItems] = useState({});
@@ -175,6 +182,7 @@ function ExpenseFormHeader({
               currenciesList={currenciesList}
               selectedCurrencyCode={values.currency_code}
               onCurrencySelected={onItemsSelect('currency_code')}
+              defaultSelectText={values.currency_code}
             />
           </FormGroup>
         </Col>
