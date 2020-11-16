@@ -107,6 +107,8 @@ export default {
   draft: 'Draft',
   published: 'Published',
   new_item: 'New Item',
+  cost_price_: 'Cost price',
+  sell_price_: 'Sell price',
   table_views: 'Table Views',
   delete: 'Delete',
   delete_count: 'Delete ({count})',

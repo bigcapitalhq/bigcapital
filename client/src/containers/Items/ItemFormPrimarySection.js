@@ -34,7 +34,7 @@ function ItemFormPrimarySection({
   categoriesList,
 
   // #withDashboardActions
-  changePageSubtitle
+  changePageSubtitle,
 }) {
   const { formatMessage } = useIntl();
 
@@ -88,13 +88,14 @@ function ItemFormPrimarySection({
                     changePageSubtitle(formatMessage({ id: _value }));
                   })}
                   selectedValue={value}
+                  disabled={value === 'inventory'}
                 >
                   <Radio label={<T id={'service'} />} value="service" />
-                  <Radio label={<T id={'inventory'} />} value="inventory" />
                   <Radio
                     label={<T id={'non_inventory'} />}
                     value="non-inventory"
                   />
+                  <Radio label={<T id={'inventory'} />} value="inventory" />
                 </RadioGroup>
               </FormGroup>
             )}
@@ -179,5 +180,5 @@ export default compose(
   withItemCategories(({ categoriesList }) => ({
     categoriesList,
   })),
-  withDashboardActions
+  withDashboardActions,
 )(ItemFormPrimarySection);

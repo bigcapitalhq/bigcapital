@@ -68,7 +68,7 @@ function AccountFormDialogContent({
       .max(255)
       .label(formatMessage({ id: 'account_name_' })),
     code: Yup.string().digits().min(3).max(6),
-    account_type_id: Yup.number()
+    account_type_id: Yup.number().nullable()
       .required()
       .label(formatMessage({ id: 'account_type_id' })),
     description: Yup.string().min(3).max(512).nullable().trim(),
@@ -76,7 +76,7 @@ function AccountFormDialogContent({
   });
   const initialValues = useMemo(
     () => ({
-      account_type_id: null,
+      account_type_id: '',
       name: '',
       code: '',
       description: '',

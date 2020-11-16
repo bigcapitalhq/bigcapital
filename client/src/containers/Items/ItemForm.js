@@ -89,12 +89,14 @@ function ItemForm({
     sku: Yup.string().trim(),
     cost_price: Yup.number().when(['purchasable'], {
       is: true,
-      then: Yup.number().required(),
+      then: Yup.number().required()
+      .label(formatMessage({ id: 'cost_price_' })),
       otherwise: Yup.number().nullable(true),
     }),
     sell_price: Yup.number().when(['sellable'], {
       is: true,
-      then: Yup.number().required(),
+      then: Yup.number().required()
+      .label(formatMessage({ id: 'sell_price_' })),
       otherwise: Yup.number().nullable(true),
     }),
     cost_account_id: Yup.number()

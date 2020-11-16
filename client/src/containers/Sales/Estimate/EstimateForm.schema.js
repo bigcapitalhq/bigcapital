@@ -12,10 +12,9 @@ const Schema =  Yup.object().shape({
     .required()
     .label(formatMessage({ id: 'expiration_date_' })),
   estimate_number: Yup.string()
-    .required()
     .nullable()
     .label(formatMessage({ id: 'estimate_number_' })),
-  reference: Yup.string().min(1).max(255),
+  reference: Yup.string().min(1).max(255).nullable(),
   note: Yup.string()
     .trim()
     .min(1)

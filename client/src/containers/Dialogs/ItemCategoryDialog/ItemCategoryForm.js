@@ -24,6 +24,7 @@ export default function ItemCategoryForm({
   accountsList,
   categoriesList,
   isSubmitting,
+  onClose,
 }) {
   // Filters Item Categories list.
   const filterItemCategories = useCallback(
@@ -73,7 +74,7 @@ export default function ItemCategoryForm({
         </FastField>
 
         {/* ----------- Parent Category ----------- */}
-        <FastField name={'parent_account_id'}>
+        <FastField name={'parent_category_id'}>
           {({ form, field: { value }, meta: { error, touched } }) => (
             <FormGroup
               label={<T id={'parent_category'} />}
@@ -106,7 +107,7 @@ export default function ItemCategoryForm({
         </FastField>
 
         {/* ----------- Description ----------- */}
-        <FastField name={'description`'}>
+        <FastField name={'description'}>
           {({ field, field: { value }, meta: { error, touched } }) => (
             <FormGroup
               label={<T id={'description'} />}
@@ -137,7 +138,7 @@ export default function ItemCategoryForm({
               <AccountsSelectList
                 accounts={accountsList}
                 onAccountSelected={(account) => {
-                  form.setFieldValue(account.id);
+                  form.setFieldValue('cost_account_id', account.id);
                 }}
                 defaultSelectText={<T id={'select_account'} />}
                 selectedAccountId={value}
@@ -203,7 +204,7 @@ export default function ItemCategoryForm({
 
       <div className={Classes.DIALOG_FOOTER}>
         <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-          <Button>
+          <Button onClick={onClose}>
             <T id={'close'} />
           </Button>
           <Button intent={Intent.PRIMARY} type="submit" disabled={isSubmitting}>

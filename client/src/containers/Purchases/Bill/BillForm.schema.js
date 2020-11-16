@@ -12,7 +12,6 @@ const BillFormSchema = Yup.object().shape({
     .required()
     .label(formatMessage({ id: 'due_date_' })),
   bill_number: Yup.string()
-    .required()
     .label(formatMessage({ id: 'bill_number_' })),
   reference_no: Yup.string().nullable().min(1).max(255),
   note: Yup.string()
