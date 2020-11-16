@@ -22,7 +22,6 @@ export default (mapState) => {
       receiptsPagination: getReceiptPaginationMeta(state, props, tableQuery),
 
       receiptsLoading: state.salesReceipts.loading,
-      
       receiptNumberChanged: state.salesReceipts.journalNumberChanged,
     };
 

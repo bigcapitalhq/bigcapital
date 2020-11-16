@@ -26,7 +26,7 @@ const mapDispatchToProps = (dispatch) => ({
   addReceiptsTableQueries: (queries) =>
     dispatch({
       type: t.RECEIPTS_TABLE_QUERIES_ADD,
-      queries,
+      payload: { queries },
     }),
     setReceiptNumberChanged:(isChanged) => dispatch({
       type: t.RECEIPT_NUMBER_CHANGED,

@@ -48,3 +48,11 @@ export const paginationLocationQuery = (state, props) => {
       )
     : null;
 }
+
+export const defaultPaginationMeta = () => ({
+  pageSize: 0,
+  page: 1,
+  total: 0,
+  pagesCount: 0,
+  pageIndex: 0,
+})

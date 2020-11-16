@@ -16,8 +16,8 @@ import { FormattedMessage as T, useIntl } from 'react-intl';
 import moment from 'moment';
 
 import Icon from 'components/Icon';
-import { compose } from 'utils';
-import { useUpdateEffect } from 'hooks';
+import { compose, saveInvoke } from 'utils';
+import { useIsValuePassed } from 'hooks';
 
 import LoadingIndicator from 'components/LoadingIndicator';
 import DataTable from 'components/DataTable';
@@ -41,29 +41,22 @@ function BillsDataTable({
   changePageSubtitle,
   setTopbarEditView,
 
+  // #withBillsActions
+  addBillsTableQueries,
+
   // #withView
   viewMeta,
 
-  //#OwnProps
+  // #ownProps
   loading,
   onFetchData,
   onEditBill,
   onDeleteBill,
   onSelectedRowsChange,
 }) {
-  const [initialMount, setInitialMount] = useState(false);
   const { custom_view_id: customViewId } = useParams();
   const { formatMessage } = useIntl();
-
-  useEffect(() => {
-    setInitialMount(false);
-  }, [customViewId]);
-
-  useUpdateEffect(() => {
-    if (!billsLoading) {
-      setInitialMount(true);
-    }
-  }, [billsLoading, setInitialMount]);
+  const isLoadedBefore = useIsValuePassed(billsLoading, false);
 
   useEffect(() => {
     if (customViewId) {
@@ -79,16 +72,34 @@ function BillsDataTable({
     viewMeta,
   ]);
 
+  const handleFetchData = useCallback(
+    ({ pageIndex, pageSize, sortBy }) => {
+      const page = pageIndex + 1;
+
+      addBillsTableQueries({
+        ...(sortBy.length > 0
+          ? {
+              column_sort_by: sortBy[0].id,
+              sort_order: sortBy[0].desc ? 'desc' : 'asc',
+            }
+          : {}),
+        page_size: pageSize,
+        page,
+      });
+    },
+    [addBillsTableQueries],
+  );
+
   const handleEditBill = useCallback(
     (_bill) => () => {
-      onEditBill && onEditBill(_bill);
+      saveInvoke(onEditBill, _bill);
     },
     [onEditBill],
   );
 
   const handleDeleteBill = useCallback(
     (_bill) => () => {
-      onDeleteBill && onDeleteBill(_bill);
+      saveInvoke(onDeleteBill, _bill);
     },
     [onDeleteBill],
   );
@@ -147,7 +158,6 @@ function BillsDataTable({
         width: 140,
         className: 'bill_number',
       },
-
       {
         id: 'due_date',
         Header: formatMessage({ id: 'due_date' }),
@@ -195,41 +205,34 @@ function BillsDataTable({
     [actionMenuList, formatMessage],
   );
 
-  const handleDataTableFetchData = useCallback(
-    (...args) => {
-      onFetchData && onFetchData(...args);
-    },
-    [onFetchData],
-  );
   const handleSelectedRowsChange = useCallback(
     (selectedRows) => {
-      onSelectedRowsChange &&
-        onSelectedRowsChange(selectedRows.map((s) => s.original));
+      saveInvoke(
+        onSelectedRowsChange,
+        selectedRows.map((s) => s.original),
+      );
     },
     [onSelectedRowsChange],
   );
 
   return (
-    <div>
-      <LoadingIndicator loading={loading} mount={false}>
-        <DataTable
-          columns={columns}
-          data={billsCurrentPage}
-          onFetchData={handleDataTableFetchData}
-          manualSortBy={true}
-          selectionColumn={true}
-          noInitialFetch={true}
-          sticky={true}
-          loading={billsLoading && !initialMount}
-          onSelectedRowsChange={handleSelectedRowsChange}
-          rowContextMenu={onRowContextMenu}
-          pagination={true}
-          pagesCount={billsPageination.pagesCount}
-          initialPageSize={billsPageination.pageSize}
-          initialPageIndex={billsPageination.page - 1}
-        />
-      </LoadingIndicator>
-    </div>
+    <LoadingIndicator loading={billsLoading && !isLoadedBefore} mount={false}>
+      <DataTable
+        columns={columns}
+        data={billsCurrentPage}
+        onFetchData={handleFetchData}
+        manualSortBy={true}
+        selectionColumn={true}
+        noInitialFetch={true}
+        sticky={true}
+        onSelectedRowsChange={handleSelectedRowsChange}
+        rowContextMenu={onRowContextMenu}
+        pagination={true}
+        pagesCount={billsPageination.pagesCount}
+        initialPageSize={billsPageination.pageSize}
+        initialPageIndex={billsPageination.page - 1}
+      />
+    </LoadingIndicator>
   );
 }
 
@@ -239,10 +242,18 @@ export default compose(
   withDialogActions,
   withDashboardActions,
   withBillActions,
-  withBills(({ billsCurrentPage, billsLoading, billsPageination }) => ({
-    billsCurrentPage,
-    billsLoading,
-    billsPageination,
-  })),
+  withBills(
+    ({
+      billsCurrentPage,
+      billsLoading,
+      billsPageination,
+      billsTableQuery,
+    }) => ({
+      billsCurrentPage,
+      billsLoading,
+      billsPageination,
+      billsTableQuery,
+    }),
+  ),
   withViewDetails(),
 )(BillsDataTable);

@@ -1,9 +1,12 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { pickItemsFromIds, paginationLocationQuery } from 'store/selectors';
 
-const receiptsPageSelector = (state, props, query) => {
+const receiptsPageSelector = (state) => {
   const viewId = state.salesReceipts.currentViewId;
-  return state.salesReceipts.views?.[viewId]?.pages?.[query.page];
+  const currentView = state.salesReceipts.views?.[viewId];
+  const currentPageId = currentView?.paginationMeta?.page;
+
+  return currentView?.pages?.[currentPageId];
 };
 
 const receiptsPaginationSelector = (state, props) => {
@@ -17,7 +20,7 @@ const receiptTableQuery = (state) => state.salesReceipts.tableQuery;
 
 const receiptByIdSelector = (state, props) => state.salesReceipts.items[props.receiptId];
 
-
+// Retrieve current page sale receipts results. 
 export const getReceiptCurrentPageFactory = () =>
   createSelector(
     receiptsPageSelector,
@@ -29,6 +32,7 @@ export const getReceiptCurrentPageFactory = () =>
     },
   );
 
+// Retrieve receipts table query.
 export const getReceiptsTableQueryFactory = () =>
   createSelector(
     paginationLocationQuery,
@@ -41,11 +45,13 @@ export const getReceiptsTableQueryFactory = () =>
     },
   );
 
+// Retrieve specific receipts by the passed receipt id.
 export const getReceiptByIdFactory = () =>
   createSelector(receiptByIdSelector, (receipt) => {
     return receipt;
   });
 
+// Retrieve receipts pagination meta.
 export const getReceiptsPaginationMetaFactory = () =>
   createSelector(receiptsPaginationSelector, (receiptPage) => {
     return receiptPage?.paginationMeta || {};

@@ -20,6 +20,9 @@ import withViewsActions from 'containers/Views/withViewsActions';
 
 import { compose } from 'utils';
 
+/**
+ * Invoices list.
+ */
 function InvoiceList({
   // #withDashboardActions
   changePageTitle,
@@ -94,26 +97,8 @@ function InvoiceList({
     selectedRows,
   ]);
 
-  const handleFetchData = useCallback(
-    ({ pageIndex, pageSize, sortBy }) => {
-      const page = pageIndex + 1;
-
-      addInvoiceTableQueries({
-        ...(sortBy.length > 0
-          ? {
-              column_sort_by: sortBy[0].id,
-              sort_order: sortBy[0].desc ? 'desc' : 'asc',
-            }
-          : {}),
-        page_size: pageSize,
-        page,
-      });
-    },
-    [addInvoiceTableQueries],
-  );
-
   // Handle filter change to re-fetch data-table.
-  const handleFilterChanged = useCallback(() => {}, [fetchInvoices]);
+  const handleFilterChanged = useCallback(() => {}, []);
 
   // Handle selected rows change.
   const handleSelectedRowsChange = useCallback(
@@ -140,14 +125,13 @@ function InvoiceList({
           >
             <InvoiceViewTabs />
             <InvoicesDataTable
-              loading={fetchInvoices.isFetching}
               onDeleteInvoice={handleDeleteInvoice}
-              onFetchData={handleFetchData}
               onEditInvoice={handleEditInvoice}
               onSelectedRowsChange={handleSelectedRowsChange}
             />
           </Route>
         </Switch>
+
         <Alert
           cancelButtonText={<T id={'cancel'} />}
           confirmButtonText={<T id={'delete'} />}

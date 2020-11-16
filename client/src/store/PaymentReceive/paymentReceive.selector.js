@@ -1,10 +1,17 @@
 import { createSelector } from '@reduxjs/toolkit';
-import { pickItemsFromIds, paginationLocationQuery } from 'store/selectors';
+import {
+  pickItemsFromIds,
+  paginationLocationQuery,
+  defaultPaginationMeta,
+} from 'store/selectors';
 import { transformToObject } from 'utils';
 
-const paymentReceivesPageSelector = (state, props, query) => {
+const paymentReceivesPageSelector = (state) => {
   const viewId = state.paymentReceives.currentViewId;
-  return state.paymentReceives.views?.[viewId]?.pages?.[query.page];
+  const viewMeta = state.paymentReceives.views?.[viewId];
+
+  const currentPageId = viewMeta?.paginationMeta?.page;
+  return viewMeta?.pages?.[currentPageId];
 };
 
 const paymentReceivesItemsSelector = (state) => state.paymentReceives.items;
@@ -28,17 +35,19 @@ const paymentReceiveInvoicesSelector = (state, props) =>
 const paymentReceiveByIdSelector = (state, props) =>
   state.paymentReceives.items[props.paymentReceiveId];
 
+// Retrieve payment receive current page results.
 export const getPaymentReceiveCurrentPageFactory = () =>
   createSelector(
     paymentReceivesPageSelector,
     paymentReceivesItemsSelector,
-    (Page, Items) => {
-      return typeof Page === 'object'
-        ? pickItemsFromIds(Items, Page.ids) || []
+    (expensesPage, expensesItems) => {
+      return typeof expensesPage === 'object'
+        ? pickItemsFromIds(expensesItems, expensesPage.ids) || []
         : [];
     },
   );
 
+// Retrieve payment receives table fetch query.
 export const getPaymentReceiveTableQuery = createSelector(
   paginationLocationQuery,
   paymentReceiveTableQuery,
@@ -50,16 +59,22 @@ export const getPaymentReceiveTableQuery = createSelector(
   },
 );
 
+// Retrieve payment receive pagination meta.
 export const getPaymentReceivePaginationMetaFactory = () =>
-  createSelector(PaymentReceivePaginationSelector, (Page) => {
-    return Page?.paginationMeta || {};
+  createSelector(PaymentReceivePaginationSelector, (page) => {
+    return {
+      ...defaultPaginationMeta(),
+      ...(page?.paginationMeta || {}),
+    };
   });
 
+// Retrieve payment receive based on the passed payment receive id.
 export const getPaymentReceiveByIdFactory = () =>
   createSelector(payemntReceiveById, (payment_receive) => {
     return payment_receive;
   });
 
+// Retrieve the payment receive associated invoices.
 export const getPaymentReceiveInvoices = createSelector(
   payemntReceiveById,
   invoicesItemsSelector,
@@ -73,9 +88,7 @@ export const getPaymentReceiveInvoices = createSelector(
   },
 );
 
-/**
- * Retrieve payment receive invoices entries.
- */
+// Retrieve payment receive invoices entries.
 export const getPaymentReceiveEntriesFactory = () =>
   createSelector(
     invoicesItemsSelector,

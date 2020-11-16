@@ -2,7 +2,7 @@ import { createSelector } from '@reduxjs/toolkit';
 import {
   pickItemsFromIds,
   paginationLocationQuery,
-  getItemById,
+  defaultPaginationMeta,
 } from 'store/selectors';
 
 const invoiceTableQuery = (state) => state.salesInvoices.tableQuery;
@@ -17,10 +17,15 @@ const invoicesPaginationSelector = (state, props) => {
 
 const invoicesPageSelector = (state, props, query) => {
   const viewId = state.salesInvoices.currentViewId;
-  return state.salesInvoices.views?.[viewId]?.pages?.[query.page];
+  const currentView = state.salesInvoices.views?.[viewId];
+  const currentPageId = currentView?.paginationMeta?.page;
+
+  return currentView?.pages?.[currentPageId];
 };
+
 const invoicesItemsSelector = (state) => state.salesInvoices.items;
-const invoicesReceiableCustomerSelector = (state, props) => state.salesInvoices.receivable.byCustomerId[props.customerId];
+const invoicesReceiableCustomerSelector = (state, props) =>
+  state.salesInvoices.receivable.byCustomerId[props.customerId];
 
 export const getInvoiceTableQueryFactory = () =>
   createSelector(
@@ -34,6 +39,7 @@ export const getInvoiceTableQueryFactory = () =>
     },
   );
 
+// Retrieve invoices of the current view and view.
 export const getInvoiceCurrentPageFactory = () =>
   createSelector(
     invoicesPageSelector,
@@ -45,24 +51,27 @@ export const getInvoiceCurrentPageFactory = () =>
     },
   );
 
+// Retrieve specific invoice by the passed invoice id.
 export const getInvoiecsByIdFactory = () =>
   createSelector(invoicesByIdSelector, (invoice) => {
     return invoice;
   });
 
+// Retrieve invoices pagination meta.
 export const getInvoicePaginationMetaFactory = () =>
   createSelector(invoicesPaginationSelector, (invoicePage) => {
-    return invoicePage?.paginationMeta || {};
+    return {
+      ...defaultPaginationMeta(),
+      ...(invoicePage?.paginationMeta || {}),
+    };
   });
 
-export const getCustomerReceivableInvoicesEntriesFactory = () => 
+export const getCustomerReceivableInvoicesEntriesFactory = () =>
   createSelector(
     invoicesItemsSelector,
     invoicesReceiableCustomerSelector,
     (invoicesItems, customerInvoicesIds) => {
-      const invoicesIds = [
-        ...(customerInvoicesIds || []),
-      ];
+      const invoicesIds = [...(customerInvoicesIds || [])];
       const invoices = pickItemsFromIds(invoicesItems, invoicesIds);
 
       return invoices.map((invoice) => ({
@@ -73,4 +82,4 @@ export const getCustomerReceivableInvoicesEntriesFactory = () =>
         payment_amount: 0,
       }));
     },
-  )
+  );

@@ -25,7 +25,7 @@ const mapDipatchToProps = (dispatch) => ({
   addEstimatesTableQueries: (queries) =>
     dispatch({
       type: t.ESTIMATES_TABLE_QUERIES_ADD,
-      queries,
+      payload: { queries },
     }),
   setEstimateNumberChanged: (isChanged) =>
     dispatch({

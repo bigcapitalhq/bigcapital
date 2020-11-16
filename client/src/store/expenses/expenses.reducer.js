@@ -1,5 +1,8 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { createTableQueryReducers } from 'store/queryReducers';
+import {
+  viewPaginationSetReducer,
+  createTableQueryReducers,
+} from 'store/journalNumber.reducer';
 
 import t from 'store/types';
 
@@ -7,6 +10,7 @@ const initialState = {
   items: {},
   views: {},
   loading: false,
+  // 
   tableQuery: {
     page_size: 12,
     page: 1,
@@ -18,7 +22,7 @@ const defaultExpense = {
   categories: [],
 };
 
-const reducer = createReducer(initialState, {
+export default createReducer(initialState, {
   [t.EXPENSE_SET]: (state, action) => {
     const { id, expense } = action.payload;
     const oldExpense = state.items[id] || {};
@@ -66,29 +70,6 @@ const reducer = createReducer(initialState, {
     };
   },
 
-  [t.EXPENSES_PAGINATION_SET]: (state, action) => {
-    const { pagination, customViewId } = action.payload;
-
-    const mapped = {
-      pageSize: parseInt(pagination.pageSize, 10),
-      page: parseInt(pagination.page, 10),
-      total: parseInt(pagination.total, 10),
-    };
-    const paginationMeta = {
-      ...mapped,
-      pagesCount: Math.ceil(mapped.total / mapped.pageSize),
-      pageIndex: Math.max(mapped.page - 1, 0),
-    };
-
-    state.views = {
-      ...state.views,
-      [customViewId]: {
-        ...(state.views?.[customViewId] || {}),
-        paginationMeta,
-      },
-    };
-  },
-
   [t.EXPENSES_TABLE_LOADING]: (state, action) => {
     const { loading } = action.payload;
     state.loading = loading;
@@ -117,9 +98,10 @@ const reducer = createReducer(initialState, {
     });
     state.items = items;
   },
-});
 
-export default createTableQueryReducers('expenses', reducer);
+  ...viewPaginationSetReducer(t.EXPENSES_PAGINATION_SET),
+  ...createTableQueryReducers('EXPENSES'),
+});
 
 export const getExpenseById = (state, id) => {
   return state.expenses.items[id];

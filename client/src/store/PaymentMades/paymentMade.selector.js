@@ -1,12 +1,19 @@
 import { createSelector } from '@reduxjs/toolkit';
-import { pickItemsFromIds, paginationLocationQuery } from 'store/selectors';
+import {
+  pickItemsFromIds,
+  paginationLocationQuery,
+  defaultPaginationMeta,
+} from 'store/selectors';
 import { transformToObject } from 'utils';
 
 const paymentMadeTableQuery = (state) => state.paymentMades.tableQuery;
 
-const paymentMadesPageSelector = (state, props, query) => {
+const paymentMadesPageSelector = (state) => {
   const viewId = state.paymentMades.currentViewId;
-  return state.paymentMades.views?.[viewId]?.pages?.[query.page];
+  const currentView = state.paymentMades.views?.[viewId];
+  const currentPageId = currentView?.paginationMeta?.page;
+
+  return currentView?.pages?.[currentPageId];
 };
 
 const paymentMadesItemsSelector = (state) => state.paymentMades.items;
@@ -16,12 +23,15 @@ const PaymentMadePaginationSelector = (state, props) => {
   return state.paymentMades.views?.[viewId];
 };
 
-const paymentMadeById = (state, props) => state.paymentMades.items[props.paymentMadeId];
+const paymentMadeById = (state, props) =>
+  state.paymentMades.items[props.paymentMadeId];
 
 const paymentMadeEntries = (state, props) => props.paymentMadeEntries;
 const billsItemsSelector = (state, props) => state.bills.items;
-const billsPayableByPaymentMadeSelector = (state, props) => state.bills.payable.byBillPayamentId[props.paymentMadeId];
-const paymentMadeBillsSelector = (state, props) => state.bills.byBillPayamentId[props.paymentMadeId];
+const billsPayableByPaymentMadeSelector = (state, props) =>
+  state.bills.payable.byBillPayamentId[props.paymentMadeId];
+const paymentMadeBillsSelector = (state, props) =>
+  state.bills.byBillPayamentId[props.paymentMadeId];
 
 export const getPaymentMadeCurrentPageFactory = () =>
   createSelector(
@@ -46,8 +56,11 @@ export const getPaymentMadeTableQuery = createSelector(
 );
 
 export const getPaymentMadePaginationMetaFactory = () =>
-  createSelector(PaymentMadePaginationSelector, (Page) => {
-    return Page?.paginationMeta || {};
+  createSelector(PaymentMadePaginationSelector, (page) => {
+    return {
+      ...defaultPaginationMeta(),
+      ...(page?.paginationMeta || {}),
+    };
   });
 
 export const getPaymentMadeByIdFactory = () =>
@@ -55,39 +68,40 @@ export const getPaymentMadeByIdFactory = () =>
     return payment_Made;
   });
 
-export const getPaymentMadeEntriesDataFactory = () => 
+export const getPaymentMadeEntriesDataFactory = () =>
   createSelector(
     billsItemsSelector,
     paymentMadeEntries,
     (billsItems, paymentEntries) => {
-      return Array.isArray(paymentEntries) ? 
-        paymentEntries.map((entry) => ({
-          ...entry, ...(billsItems[entry.bill_id] || {}),
-        })) : [];
-    }
+      return Array.isArray(paymentEntries)
+        ? paymentEntries.map((entry) => ({
+            ...entry,
+            ...(billsItems[entry.bill_id] || {}),
+          }))
+        : [];
+    },
   );
 
-export const getPaymentMadeEntriesFactory = () => 
+// Retrieve payment made entries.
+export const getPaymentMadeEntriesFactory = () =>
   createSelector(
     billsItemsSelector,
     billsPayableByPaymentMadeSelector,
     paymentMadeBillsSelector,
     paymentMadeById,
-    (
-      billsItems,
-      paymentPayableBillsIds,
-      paymentMadeBillsIds,
-      paymentMade,
-    ) => {
+    (billsItems, paymentPayableBillsIds, paymentMadeBillsIds, paymentMade) => {
       const billsIds = [
         ...(paymentPayableBillsIds || []),
         ...(paymentMadeBillsIds || []),
       ];
       const bills = pickItemsFromIds(billsItems, billsIds);
-      const billEntries = transformToObject((paymentMade?.entries || []), 'bill_id');
+      const billEntries = transformToObject(
+        paymentMade?.entries || [],
+        'bill_id',
+      );
 
       return bills.map((bill) => {
-        const paymentMadeEntry = (billEntries?.[bill.id] || {});
+        const paymentMadeEntry = billEntries?.[bill.id] || {};
 
         return {
           ...bill,

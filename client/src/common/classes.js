@@ -29,6 +29,9 @@ const CLASSES = {
 
   CLOUD_SPINNER: 'cloud-spinner',
   IS_LOADING: 'is-loading',
+
+  DATATABLE_EMPTY_STATE: 'datatable-empty-state',
+  DATATABLE_EMPTY_STATE_TITLE: 'datatable-empty-state__title',
   ...Classes,
 };
 

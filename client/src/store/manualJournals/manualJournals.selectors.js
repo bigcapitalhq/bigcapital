@@ -1,9 +1,12 @@
 import { createSelector } from 'reselect';
-import { pickItemsFromIds, paginationLocationQuery } from 'store/selectors';
+import { pickItemsFromIds, paginationLocationQuery, defaultPaginationMeta } from 'store/selectors';
 
-const manualJournalsPageSelector = (state, props, query) => {
+const manualJournalsPageSelector = (state) => {
   const viewId = state.manualJournals.currentViewId;
-  return state.manualJournals.views?.[viewId]?.pages?.[query.page];
+  const currentView = state.manualJournals.views?.[viewId];
+  const currentPageId = currentView?.paginationMeta?.page;
+
+  return currentView?.pages?.[currentPageId];
 };
 
 const manualJournalsPaginationSelector = (state, props) => {
@@ -15,6 +18,7 @@ const manualJournalsTableQuery = (state) => state.manualJournals.tableQuery;
 const manualJournalsDataSelector = (state) => state.manualJournals.items;
 
 
+// Retrieve manual jounral current page results.
 export const getManualJournalsItems = createSelector(
   manualJournalsPageSelector,
   manualJournalsDataSelector,
@@ -25,13 +29,18 @@ export const getManualJournalsItems = createSelector(
   },
 );
 
+// Retrieve manual journals pagination meta.
 export const getManualJournalsPagination = createSelector(
   manualJournalsPaginationSelector,
   (manualJournalsPage) => {
-    return manualJournalsPage?.paginationMeta || {};
+    return {
+      ...defaultPaginationMeta(),
+      ...(manualJournalsPage?.paginationMeta || {}),
+    };
   },
 );
 
+// Retrieve manual jouranls table query.
 export const getManualJournalsTableQuery = createSelector(
   paginationLocationQuery,
   manualJournalsTableQuery,

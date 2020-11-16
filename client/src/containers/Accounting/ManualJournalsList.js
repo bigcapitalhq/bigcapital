@@ -161,8 +161,6 @@ function ManualJournalsTable({
   const handleFetchData = useCallback(
     ({ pageIndex, pageSize, sortBy }) => {
       const page = pageIndex + 1;
-      // addQuery('page_size', pageSize);
-      // addQuery('page', page);
 
       addManualJournalsTableQueries({
         ...(sortBy.length > 0
@@ -224,7 +222,6 @@ function ManualJournalsTable({
 
             <ManualJournalsDataTable
               onDeleteJournal={handleDeleteJournal}
-              onFetchData={handleFetchData}
               onEditJournal={handleEditJournal}
               onPublishJournal={handlePublishJournal}
               onSelectedRowsChange={handleSelectedRowsChange}

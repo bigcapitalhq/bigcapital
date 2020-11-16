@@ -1,8 +1,10 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { createTableQueryReducers } from 'store/queryReducers';
 import { omit } from 'lodash';
-import { journalNumberChangedReducer } from 'store/journalNumber.reducer';
-
+import {
+  journalNumberChangedReducer,
+  viewPaginationSetReducer,
+  createTableQueryReducers,
+} from 'store/journalNumber.reducer';
 import t from 'store/types';
 
 const initialState = {
@@ -11,7 +13,7 @@ const initialState = {
   loading: false,
   currentViewId: -1,
   tableQuery: {
-    page_size: 5,
+    page_size: 12,
     page: 1,
   },
 };
@@ -20,7 +22,7 @@ const defaultPaymentReceive = {
   entries: [],
 };
 
-const reducer = createReducer(initialState, {
+export default createReducer(initialState, {
   [t.PAYMENT_RECEIVE_SET]: (state, action) => {
     const { id, paymentReceive } = action.payload;
 
@@ -71,27 +73,6 @@ const reducer = createReducer(initialState, {
     }
   },
 
-  [t.PAYMENT_RECEIVES_PAGINATION_SET]: (state, action) => {
-    const { pagination, customViewId } = action.payload;
-    const mapped = {
-      pageSize: parseInt(pagination.page_size, 10),
-      page: parseInt(pagination.page, 10),
-      total: parseInt(pagination.total, 10),
-    };
-    const paginationMeta = {
-      ...mapped,
-      pagesCount: Math.ceil(mapped.total / mapped.pageSize),
-      pageIndex: Math.max(mapped.page - 1, 0),
-    };
-    state.views = {
-      ...state.views,
-      [customViewId]: {
-        ...(state.views?.[customViewId] || {}),
-        paginationMeta,
-      },
-    };
-  },
-
   [t.PAYMENT_RECEIVES_PAGE_SET]: (state, action) => {
     const { customViewId, payment_receives, pagination } = action.payload;
 
@@ -109,5 +90,6 @@ const reducer = createReducer(initialState, {
   },
 
   ...journalNumberChangedReducer(t.PAYMENT_RECEIVE_NUMBER_CHANGED),
+  ...viewPaginationSetReducer(t.PAYMENT_RECEIVES_PAGINATION_SET),
+  ...createTableQueryReducers('PAYMENT_RECEIVES'),
 });
-export default createTableQueryReducers('payment_receives', reducer);

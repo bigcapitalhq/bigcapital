@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useRef, useEffect, useCallback, useMemo } from 'react';
 import {
   Button,
   Popover,
@@ -8,14 +8,15 @@ import {
   Position,
   Intent,
 } from '@blueprintjs/core';
-
 import { FormattedMessage as T, useIntl } from 'react-intl';
-import { useUpdateEffect } from 'hooks';
+import { useIsValuePassed } from 'hooks';
 
 import LoadingIndicator from 'components/LoadingIndicator';
 import { DataTable, Icon, Money } from 'components';
 
 import withCustomers from './withCustomers';
+import withCustomersActions from './withCustomersActions';
+
 import { compose, firstLettersArgs, saveInvoke } from 'utils';
 
 const AvatarCell = (row) => {
@@ -27,6 +28,10 @@ const CustomerTable = ({
   customers,
   customersLoading,
   customerPagination,
+  customersTableQuery,
+
+  // #withCustomersActions
+  addCustomersTableQueries,
 
   //#OwnProps
   loading,
@@ -36,13 +41,7 @@ const CustomerTable = ({
   onSelectedRowsChange,
 }) => {
   const { formatMessage } = useIntl();
-  const [initialMount, setInitialMount] = useState(false);
-
-  useUpdateEffect(() => {
-    if (!customersLoading) {
-      setInitialMount(true);
-    }
-  }, [customersLoading, setInitialMount]);
+  const isLoadedBefore = useIsValuePassed(loading, false);
 
   // Customers actions list.
   const renderContextMenu = useMemo(
@@ -94,6 +93,7 @@ const CustomerTable = ({
     [onDeleteCustomer, onEditCustomer, renderContextMenu],
   );
 
+  // Table columns.
   const columns = useMemo(
     () => [
       {
@@ -150,18 +150,22 @@ const CustomerTable = ({
     [formatMessage, renderActionsCell],
   );
 
-  const selectionColumn = useMemo(
-    () => ({
-      minWidth: 42,
-      width: 42,
-      maxWidth: 42,
-    }),
-    [],
+  // Handle fetch data table.
+  const handleFetchData = useCallback(
+    ({ pageIndex, pageSize, sortBy }) => {
+      addCustomersTableQueries({
+        page: pageIndex + 1,
+        page_size: pageSize,
+        ...(sortBy.length > 0
+          ? {
+              column_sort_order: sortBy[0].id,
+              sort_order: sortBy[0].desc ? 'desc' : 'asc',
+            }
+          : {}),
+      });
+    },
+    [addCustomersTableQueries],
   );
-
-  const handleFetchDate = useCallback((...args) => {
-    onFetchData && onFetchData(...args);
-  });
 
   const handleSelectedRowsChange = useCallback(
     (selectedRows) => {
@@ -179,32 +183,47 @@ const CustomerTable = ({
     });
 
   return (
-    <LoadingIndicator loading={loading} mount={false}>
+    <LoadingIndicator
+      loading={customersLoading && !isLoadedBefore}
+      mount={false}
+    >
       <DataTable
         noInitialFetch={true}
         columns={columns}
         data={customers}
-        selectionColumn={selectionColumn}
-        onFetchData={handleFetchDate}
+        // loading={customersLoading}
+        onFetchData={handleFetchData}
+        selectionColumn={true}
         expandable={false}
-        treeGraph={false}
+        sticky={true}
         onSelectedRowsChange={handleSelectedRowsChange}
-        loading={customersLoading && !initialMount}
         spinnerProps={{ size: 30 }}
         rowContextMenu={rowContextMenu}
         pagination={true}
+        manualSortBy={true}
         pagesCount={customerPagination.pagesCount}
-        initialPageSize={customerPagination.pageSize}
-        initialPageIndex={customerPagination.page - 1}
+        autoResetSortBy={false}
+        autoResetPage={false}
+        initialPageSize={customersTableQuery.page_size}
+        initialPageIndex={customersTableQuery.page - 1}
       />
     </LoadingIndicator>
   );
 };
 
 export default compose(
-  withCustomers(({ customers, customersLoading, customerPagination }) => ({
-    customers,
-    customersLoading,
-    customerPagination,
-  })),
+  withCustomers(
+    ({
+      customers,
+      customersLoading,
+      customerPagination,
+      customersTableQuery,
+    }) => ({
+      customers,
+      customersLoading,
+      customerPagination,
+      customersTableQuery,
+    }),
+  ),
+  withCustomersActions,
 )(CustomerTable);

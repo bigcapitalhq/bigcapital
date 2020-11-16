@@ -15,12 +15,21 @@ import { withRouter, useParams } from 'react-router-dom';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import moment from 'moment';
 
-import { DataTable, If, Money, Choose, Icon } from 'components';
-import { compose } from 'utils';
+import {
+  DataTable,
+  If,
+  Money,
+  Choose,
+  Icon,
+  LoadingIndicator,
+} from 'components';
+import { useIsValuePassed } from 'hooks';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withManualJournals from 'containers/Accounting/withManualJournals';
 import withManualJournalsActions from 'containers/Accounting/withManualJournalsActions';
+
+import { compose, saveInvoke } from 'utils';
 
 /**
  * Status column accessor.
@@ -68,44 +77,36 @@ function ManualJournalsDataTable({
   manualJournalsPagination,
   manualJournalsTableQuery,
 
-  onFetchData,
+  // #withManualJournalsActions
+  addManualJournalsTableQueries,
+
+  // #ownProps
   onEditJournal,
   onDeleteJournal,
   onPublishJournal,
   onSelectedRowsChange,
 }) {
-  const [isMounted, setIsMounted] = useState(false);
   const { custom_view_id: customViewId } = useParams();
-
   const { formatMessage } = useIntl();
-
-  useEffect(() => {
-    setIsMounted(false);
-  }, [customViewId]);
-
-  useEffect(() => {
-    if (!manualJournalsLoading) {
-      setIsMounted(true);
-    }
-  }, [manualJournalsLoading, setIsMounted]);
+  const isLoadedBefore = useIsValuePassed(manualJournalsLoading, false);
 
   const handlePublishJournal = useCallback(
     (journal) => () => {
-      onPublishJournal && onPublishJournal(journal);
+      saveInvoke(onPublishJournal, journal);
     },
     [onPublishJournal],
   );
 
   const handleEditJournal = useCallback(
     (journal) => () => {
-      onEditJournal && onEditJournal(journal);
+      saveInvoke(onEditJournal, journal);
     },
     [onEditJournal],
   );
 
   const handleDeleteJournal = useCallback(
     (journal) => () => {
-      onDeleteJournal && onDeleteJournal(journal);
+      saveInvoke(onDeleteJournal, journal);
     },
     [onDeleteJournal],
   );
@@ -115,7 +116,8 @@ function ManualJournalsDataTable({
       <Menu>
         <MenuItem
           icon={<Icon icon="reader-18" />}
-          text={formatMessage({ id: 'view_details' })} />
+          text={formatMessage({ id: 'view_details' })}
+        />
         <MenuDivider />
         <If condition={!journal.status}>
           <MenuItem
@@ -182,7 +184,7 @@ function ManualJournalsDataTable({
       {
         id: 'status',
         Header: formatMessage({ id: 'status' }),
-        accessor: row => StatusAccessor(row),
+        accessor: (row) => StatusAccessor(row),
         width: 95,
         className: 'status',
       },
@@ -221,46 +223,52 @@ function ManualJournalsDataTable({
   );
 
   const handleDataTableFetchData = useCallback(
-    (...args) => {
-      onFetchData && onFetchData(...args);
+    ({ pageIndex, pageSize, sortBy }) => {
+      addManualJournalsTableQueries({
+        ...(sortBy.length > 0
+          ? {
+              column_sort_by: sortBy[0].id,
+              sort_order: sortBy[0].desc ? 'desc' : 'asc',
+            }
+          : {}),
+        page_size: pageSize,
+        page: pageIndex + 1,
+      });
     },
-    [onFetchData],
+    [addManualJournalsTableQueries],
   );
 
   const handleSelectedRowsChange = useCallback(
     (selectedRows) => {
-      onSelectedRowsChange &&
-        onSelectedRowsChange(selectedRows.map((s) => s.original));
+      saveInvoke(
+        onSelectedRowsChange,
+        selectedRows.map((s) => s.original),
+      );
     },
     [onSelectedRowsChange],
   );
-  const selectionColumn = useMemo(
-    () => ({
-      minWidth: 40,
-      width: 40,
-      maxWidth: 40,
-    }),
-    [],
-  );
 
   return (
-    <DataTable
-      noInitialFetch={true}
-      columns={columns}
-      data={manualJournalsCurrentPage}
-      onFetchData={handleDataTableFetchData}
-      manualSortBy={true}
-      selectionColumn={selectionColumn}
-      expandable={true}
-      sticky={true}
-      onSelectedRowsChange={handleSelectedRowsChange}
-      loading={manualJournalsLoading && !isMounted}
-      rowContextMenu={onRowContextMenu}
-      pagination={true}
-      pagesCount={manualJournalsPagination.pagesCount}
-      initialPageSize={manualJournalsTableQuery.page_size}
-      initialPageIndex={manualJournalsTableQuery.page - 1}
-    />
+    <LoadingIndicator loading={manualJournalsLoading && !isLoadedBefore}>
+      <DataTable
+        noInitialFetch={true}
+        columns={columns}
+        data={manualJournalsCurrentPage}
+        onFetchData={handleDataTableFetchData}
+        manualSortBy={true}
+        selectionColumn={true}
+        expandable={true}
+        sticky={true}
+        onSelectedRowsChange={handleSelectedRowsChange}
+        rowContextMenu={onRowContextMenu}
+        pagesCount={manualJournalsPagination.pagesCount}
+        pagination={true}
+        initialPageSize={manualJournalsTableQuery.page_size}
+        initialPageIndex={manualJournalsTableQuery.page - 1}
+        autoResetSortBy={false}
+        autoResetPage={false}
+      />
+    </LoadingIndicator>
   );
 }
 

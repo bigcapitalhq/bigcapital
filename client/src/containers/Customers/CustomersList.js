@@ -52,15 +52,12 @@ function CustomersList({
 
   useEffect(() => {
     changePageTitle(formatMessage({ id: 'customers_list' }));
-  }, [changePageTitle]);
+  }, [changePageTitle, formatMessage]);
 
   // Fetch customers resource views and fields.
-  // const fetchHook = useQuery('resource-customers', () => {
-  //   return Promise.all([
-  //     requestFetchResourceViews('customers'),
-  //     requestFetchResourceFields('customers'),
-  //   ]);
-  // });
+  // const fetchResourceViews = useQuery(['resource-views', 'customers'],
+  //   () => requestFetchResourceViews('customers')
+  // );
 
   const fetchCustomers = useQuery(
     ['customers-table', customersTableQuery],
@@ -116,22 +113,6 @@ function CustomersList({
       });
   }, [requestDeleteCustomer, deleteCustomer, formatMessage]);
 
-  // Handle fetch data table.
-  const handleFetchData = useCallback(
-    ({ pageIndex, pageSize, sortBy }) => {
-      addCustomersTableQueries({
-        ...(sortBy.length > 0
-          ? {
-              column_sort_order: sortBy[0].id,
-              sort_order: sortBy[0].desc ? 'desc' : 'asc',
-            }
-          : {}),
-      });
-      fetchCustomers.refetch();
-    },
-    [fetchCustomers, addCustomersTableQueries],
-  );
-
   // Handle selected rows change.
   const handleSelectedRowsChange = useCallback(
     (customer) => {
@@ -154,9 +135,9 @@ function CustomersList({
   // Handle filter change to re-fetch the items.
   const handleFilterChanged = useCallback(
     (filterConditions) => {
-      addCustomersTableQueries({
-        filter_roles: filterConditions || '',
-      });
+      // addCustomersTableQueries({
+      //   filter_roles: filterConditions || '',
+      // });
     },
     [addCustomersTableQueries],
   );
@@ -210,7 +191,6 @@ function CustomersList({
               loading={fetchCustomers.isFetching}
               onDeleteCustomer={handleDeleteCustomer}
               onEditCustomer={handleEditCustomer}
-              onfetchData={handleFetchData}
               onSelectedRowsChange={handleSelectedRowsChange}
             />
           </Route>
@@ -258,5 +238,6 @@ export default compose(
   withResourceActions,
   withCustomersActions,
   withDashboardActions,
+  withViewsActions,
   withCustomers(({ customersTableQuery }) => ({ customersTableQuery })),
 )(CustomersList);

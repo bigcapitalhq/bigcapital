@@ -1,5 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit';
-import { pickItemsFromIds, paginationLocationQuery } from 'store/selectors';
+import { pickItemsFromIds, paginationLocationQuery, defaultPaginationMeta } from 'store/selectors';
 
 const estimateTableQuery = (state) => state.salesEstimates.tableQuery;
 
@@ -14,9 +14,12 @@ const estimateItemsSelector = (state) => state.salesEstimates.items;
 
 const estimatesPageSelector = (state, props, query) => {
   const viewId = state.salesEstimates.currentViewId;
-  return state.salesEstimates.views?.[viewId]?.pages?.[query.page];
+  const currentPageId = state.salesEstimates.views?.[viewId]?.paginationMeta?.page;
+
+  return state.salesEstimates.views?.[viewId]?.pages?.[currentPageId];
 };
 
+// Retrieve estimates table query.
 export const getEstimatesTableQueryFactory = () =>
   createSelector(
     paginationLocationQuery,
@@ -29,6 +32,7 @@ export const getEstimatesTableQueryFactory = () =>
     },
   );
 
+// Retreive estimate results of the current page.
 export const getEstimateCurrentPageFactory = () =>
   createSelector(
     estimatesPageSelector,
@@ -40,12 +44,17 @@ export const getEstimateCurrentPageFactory = () =>
     },
   );
 
+// Retrieve specific estimate by the passed estimate id.
 export const getEstimateByIdFactory = () =>
   createSelector(estimateByIdSelector, (estimate) => {
     return estimate;
   });
 
+// Retrieve estimates pagination meta.
 export const getEstimatesPaginationMetaFactory = () =>
   createSelector(estimatesCurrentViewSelector, (estimateView) => {
-    return estimateView?.paginationMeta || {};
+    return {
+      ...defaultPaginationMeta(),
+      ...(estimateView?.paginationMeta || {}),
+    };
   });

@@ -43,7 +43,6 @@ function ItemsList({
 }) {
   const [deleteItem, setDeleteItem] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
-  const [tableLoading, setTableLoading] = useState(false);
   const [bulkDelete, setBulkDelete] = useState(false);
 
   const { formatMessage } = useIntl();
@@ -53,16 +52,19 @@ function ItemsList({
     changePageTitle(formatMessage({ id: 'items_list' }));
   }, [changePageTitle]);
 
+  // Handle fetching the resource views.
   const fetchResourceViews = useQuery(
     ['resource-views', 'items'],
     (key, resourceName) => requestFetchResourceViews(resourceName),
   );
 
+  // Handle fetching the resource fields.
   const fetchResourceFields = useQuery(
     ['resource-fields', 'items'],
     (key, resourceName) => requestFetchResourceFields(resourceName),
   );
 
+  // Handle fetching the items table based on the given query.
   const fetchItems = useQuery(['items-table', itemsTableQuery], () =>
     requestFetchItems({}),
   );
@@ -112,18 +114,7 @@ function ItemsList({
 
   const handleFetchData = useCallback(
     ({ pageIndex, pageSize, sortBy }) => {
-      const page = pageIndex + 1;
-
-      addItemsTableQueries({
-        ...(sortBy.length > 0
-          ? {
-              column_sort_by: sortBy[0].id,
-              sort_order: sortBy[0].desc ? 'desc' : 'asc',
-            }
-          : {}),
-        page_size: pageSize,
-        page,
-      });
+     
     },
     [addItemsTableQueries],
   );
@@ -135,22 +126,8 @@ function ItemsList({
         filter_roles: filterConditions || '',
       });
     },
-    [fetchItems],
+    [addItemsTableQueries],
   );
-
-  // Handle custom view change to re-fetch the items.
-  const handleCustomViewChanged = useCallback(
-    (customViewId) => {
-      setTableLoading(true);
-    },
-    [fetchItems],
-  );
-
-  useEffect(() => {
-    if (tableLoading && !fetchItems.isFetching) {
-      setTableLoading(false);
-    }
-  }, [tableLoading, fetchItems.isFetching]);
 
   // Handle selected rows change.
   const handleSelectedRowsChange = useCallback(
@@ -213,16 +190,13 @@ function ItemsList({
             exact={true}
             path={['/items/:custom_view_id/custom_view', '/items']}
           >
-            <ItemsViewsTabs onViewChanged={handleCustomViewChanged} />
+            <ItemsViewsTabs />
 
             <ItemsDataTable
-              loading={fetchItems.isFetching}
               onDeleteItem={handleDeleteItem}
               onEditItem={handleEditItem}
-              onFetchData={handleFetchData}
               onSelectedRowsChange={handleSelectedRowsChange}
             />
-
             <Alert
               cancelButtonText={<T id={'cancel'} />}
               confirmButtonText={<T id={'delete'} />}

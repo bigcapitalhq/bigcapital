@@ -1,7 +1,9 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { createTableQueryReducers } from 'store/queryReducers';
-import { journalNumberChangedReducer } from 'store/journalNumber.reducer';
-
+import {
+  journalNumberChangedReducer,
+  viewPaginationSetReducer,
+  createTableQueryReducers,
+ } from 'store/journalNumber.reducer';
 import t from 'store/types';
 
 const initialState = {
@@ -10,7 +12,7 @@ const initialState = {
   loading: false,
   currentViewId: -1,
   tableQuery: {
-    page_size: 5,
+    page_size: 12,
     page: 1,
   },
   dueInvoices: {},
@@ -25,7 +27,7 @@ const defaultInvoice = {
   entries: [],
 };
 
-const reducer = createReducer(initialState, {
+export default createReducer(initialState, {
   [t.INVOICE_SET]: (state, action) => {
     const { id, sale_invoice } = action.payload;
     const _invoice = state.items[id] || {};
@@ -82,28 +84,6 @@ const reducer = createReducer(initialState, {
     };
   },
 
-  [t.INVOICES_PAGINATION_SET]: (state, action) => {
-    const { pagination, customViewId } = action.payload;
-
-    const mapped = {
-      pageSize: parseInt(pagination.page_size, 10),
-      page: parseInt(pagination.page, 10),
-      total: parseInt(pagination.total, 10),
-    };
-    const paginationMeta = {
-      ...mapped,
-      pagesCount: Math.ceil(mapped.total / mapped.pageSize),
-      pageIndex: Math.max(mapped.page - 1, 0),
-    };
-    state.views = {
-      ...state.views,
-      [customViewId]: {
-        ...(state.views?.[customViewId] || {}),
-        paginationMeta,
-      },
-    };
-  },
-
   [t.INVOICES_RECEIVABLE_BY_PAYMENT_ID]: (state, action) => {
     const { paymentReceiveId, saleInvoices } = action.payload;
     const saleInvoicesIds = saleInvoices.map((saleInvoice) => saleInvoice.id);
@@ -126,9 +106,9 @@ const reducer = createReducer(initialState, {
   },
 
   ...journalNumberChangedReducer(t.INVOICE_NUMBER_CHANGED),
+  ...viewPaginationSetReducer(t.INVOICES_PAGINATION_SET),
+  ...createTableQueryReducers('INVOICES'),
 });
-
-export default createTableQueryReducers('sales_invoices', reducer);
 
 export const getInvoiceById = (state, id) => {
   return state.sales_invoices.items[id];

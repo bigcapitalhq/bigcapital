@@ -1,6 +1,8 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { createTableQueryReducers } from 'store/queryReducers';
-import { journalNumberChangedReducer } from 'store/journalNumber.reducer';
+import {
+  journalNumberChangedReducer,
+  createTableQueryReducers,
+} from 'store/journalNumber.reducer';
 
 import t from 'store/types';
 
@@ -9,18 +11,17 @@ const initialState = {
   views: {},
   loading: false,
   tableQuery: {
-    page_size: 5,
+    page_size: 12,
     page: 1,
   },
   currentViewId: -1,
-  
 };
 
 const defaultEstimate = {
   entries: [],
 };
 
-const reducer = createReducer(initialState, {
+export default createReducer(initialState, {
   [t.ESTIMATE_SET]: (state, action) => {
     const { id, estimate } = action.payload;
     const _estimate = state.items[id] || {};
@@ -102,9 +103,8 @@ const reducer = createReducer(initialState, {
   },
 
   ...journalNumberChangedReducer(t.ESTIMATE_NUMBER_CHANGED),
+  ...createTableQueryReducers('ESTIMATES'),
 });
-
-export default createTableQueryReducers('sales_estimates', reducer);
 
 export const getEstimateById = (state, id) => {
   return state.sales_estimates.items[id];

@@ -20,16 +20,17 @@ const mapDispatchToProps = (dispatch) => ({
 
   changePaymentReceiveView: (id) =>
     dispatch({
-      type: t.PAYMENT_RECEIVE_SET_CURRENT_VIEW,
+      type: t.PAYMENT_RECEIVES_SET_CURRENT_VIEW,
       currentViewId: parseInt(id, 10),
     }),
 
   addPaymentReceivesTableQueries: (queries) =>
     dispatch({
-      type: t.PAYMENT_RECEIVE_TABLE_QUERIES_ADD,
-      queries,
+      type: t.PAYMENT_RECEIVES_TABLE_QUERIES_ADD,
+      payload: { queries }
     }),
-    setPaymentReceiveNumberChanged: (isChanged) =>
+
+  setPaymentReceiveNumberChanged: (isChanged) =>
     dispatch({
       type: t.PAYMENT_RECEIVE_NUMBER_CHANGED,
       payload: { isChanged },
