@@ -79,6 +79,7 @@ function ReceiptForm({
   // #withSettings
   receiptNextNumber,
   receiptNumberPrefix,
+  preferredDepositAccount,
 
   //#own Props
   receiptId,
@@ -88,7 +89,7 @@ function ReceiptForm({
   const { formatMessage } = useIntl();
   const history = useHistory();
 
-  const [submitPayload, setSubmitPayload ] = useState({});
+  const [submitPayload, setSubmitPayload] = useState({});
   const isNewMode = !receiptId;
 
   const receiptNumber = receiptNumberPrefix
@@ -130,6 +131,7 @@ function ReceiptForm({
         : {
             ...defaultInitialValues,
             receipt_number: receiptNumber,
+            deposit_account_id: parseInt(preferredDepositAccount),
             entries: orderingLinesIndexes(defaultInitialValues.entries),
           }),
     }),
@@ -264,5 +266,6 @@ export default compose(
   withSettings(({ receiptSettings }) => ({
     receiptNextNumber: receiptSettings?.nextNumber,
     receiptNumberPrefix: receiptSettings?.numberPrefix,
+    preferredDepositAccount: receiptSettings?.preferredDepositAccount,
   })),
 )(ReceiptForm);

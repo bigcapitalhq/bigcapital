@@ -19,6 +19,7 @@ import withMediaActions from 'containers/Media/withMediaActions';
 import useMedia from 'hooks/useMedia';
 import withItemDetail from 'containers/Items/withItemDetail';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
+import withSettings from 'containers/Settings/withSettings';
 
 import { compose, transformToForm } from 'utils';
 
@@ -53,6 +54,11 @@ function ItemForm({
   // #withDashboardActions
   changePageTitle,
   changePageSubtitle,
+
+  // #withSettings
+  preferredCostAccount,
+  preferredSellAccount,
+  preferredInventoryAccount,
 
   // #withMediaActions
   requestSubmitMedia,
@@ -89,14 +95,16 @@ function ItemForm({
     sku: Yup.string().trim(),
     cost_price: Yup.number().when(['purchasable'], {
       is: true,
-      then: Yup.number().required()
-      .label(formatMessage({ id: 'cost_price_' })),
+      then: Yup.number()
+        .required()
+        .label(formatMessage({ id: 'cost_price_' })),
       otherwise: Yup.number().nullable(true),
     }),
     sell_price: Yup.number().when(['sellable'], {
       is: true,
-      then: Yup.number().required()
-      .label(formatMessage({ id: 'sell_price_' })),
+      then: Yup.number()
+        .required()
+        .label(formatMessage({ id: 'sell_price_' })),
       otherwise: Yup.number().nullable(true),
     }),
     cost_account_id: Yup.number()
@@ -132,7 +140,9 @@ function ItemForm({
   const initialValues = useMemo(
     () => ({
       ...defaultInitialValues,
-
+      cost_account_id: parseInt(preferredCostAccount),
+      sell_account_id: parseInt(preferredSellAccount),
+      inventory_account_id: parseInt(preferredInventoryAccount),
       /**
        * We only care about the fields in the form. Previously unfilled optional
        * values such as `notes` come back from the API as null, so remove those
@@ -283,4 +293,9 @@ export default compose(
   withItemDetail,
   withDashboardActions,
   withMediaActions,
+  withSettings(({ itemsSettings }) => ({
+    preferredCostAccount: itemsSettings.preferredCostAccount,
+    preferredSellAccount: itemsSettings.preferredSellAccount,
+    preferredInventoryAccount: itemsSettings.preferredInventoryAccount,
+  })),
 )(ItemForm);
