@@ -26,6 +26,8 @@ const customerPageSelector = (state, props) => {
 
 const customersItemsSelector = (state) => state.customers.items;
 
+const customersCurrentViewIdSelector = (state) => state.customers.currentViewId;
+
 export const getCustomerTableQueryFactory = () =>
   createSelector(
     paginationLocationQuery,
@@ -60,4 +62,9 @@ export const getCustomerPaginationMetaFactory = () =>
       ...defaultPaginationMeta(),
       ...(customerPage?.paginationMeta || {}),
     };
+  });
+
+export const getCustomersCurrentViewIdFactory = () =>
+  createSelector(customersCurrentViewIdSelector, (currentViewId) => {
+    return currentViewId;
   });

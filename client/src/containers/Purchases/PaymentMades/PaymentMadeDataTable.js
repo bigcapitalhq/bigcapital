@@ -15,8 +15,8 @@ import moment from 'moment';
 import { compose, saveInvoke } from 'utils';
 import { useIsValuePassed } from 'hooks';
 
-import LoadingIndicator from 'components/LoadingIndicator';
-import { DataTable, Money, Icon } from 'components';
+import { DataTable, Money, Icon, Choose, LoadingIndicator } from 'components';
+import PaymentMadesEmptyStatus from './PaymentMadesEmptyStatus';
 
 import withPaymentMade from './withPaymentMade';
 import withPaymentMadeActions from './withPaymentMadeActions';
@@ -31,6 +31,7 @@ function PaymentMadeDataTable({
   paymentMadePageination,
   paymentMadesLoading,
   paymentMadeTableQuery,
+  paymentMadesCurrentViewId,
 
   // #withPaymentMadeActions
   addPaymentMadesTableQueries,
@@ -178,25 +179,38 @@ function PaymentMadeDataTable({
     [onSelectedRowsChange],
   );
 
+  const showEmptyStatuts = [
+    paymentMadeCurrentPage.length === 0,
+    paymentMadesCurrentViewId === -1,
+  ].every(condition => condition === true);
+
   return (
-    <LoadingIndicator loading={paymentMadesLoading && !isLoaded} mount={false}>
-      <DataTable
-        columns={columns}
-        data={paymentMadeCurrentPage}
-        onFetchData={handleDataTableFetchData}
-        manualSortBy={true}
-        selectionColumn={true}
-        noInitialFetch={true}
-        sticky={true}
-        onSelectedRowsChange={handleSelectedRowsChange}
-        rowContextMenu={onRowContextMenu}
-        pagination={true}
-        pagesCount={paymentMadePageination.pagesCount}
-        initialPageSize={paymentMadeTableQuery.page_size}
-        initialPageIndex={paymentMadeTableQuery.page - 1}
-        autoResetSortBy={false}
-        autoResetPage={false}
-      />
+    <LoadingIndicator loading={paymentMadesLoading && !isLoaded}>
+      <Choose>
+        <Choose.When condition={showEmptyStatuts}>
+          <PaymentMadesEmptyStatus />
+        </Choose.When>
+
+        <Choose.Otherwise>
+          <DataTable
+            columns={columns}
+            data={paymentMadeCurrentPage}
+            onFetchData={handleDataTableFetchData}
+            manualSortBy={true}
+            selectionColumn={true}
+            noInitialFetch={true}
+            sticky={true}
+            onSelectedRowsChange={handleSelectedRowsChange}
+            rowContextMenu={onRowContextMenu}
+            pagination={true}
+            pagesCount={paymentMadePageination.pagesCount}
+            initialPageSize={paymentMadeTableQuery.page_size}
+            initialPageIndex={paymentMadeTableQuery.page - 1}
+            autoResetSortBy={false}
+            autoResetPage={false}
+          />
+        </Choose.Otherwise>
+      </Choose>
     </LoadingIndicator>
   );
 }
@@ -211,11 +225,13 @@ export default compose(
       paymentMadesLoading,
       paymentMadePageination,
       paymentMadeTableQuery,
+      paymentMadesCurrentViewId
     }) => ({
       paymentMadeCurrentPage,
       paymentMadesLoading,
       paymentMadePageination,
       paymentMadeTableQuery,
+      paymentMadesCurrentViewId
     }),
   ),
 )(PaymentMadeDataTable);

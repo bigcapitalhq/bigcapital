@@ -50,7 +50,7 @@ function ItemsList({
 
   useEffect(() => {
     changePageTitle(formatMessage({ id: 'items_list' }));
-  }, [changePageTitle]);
+  }, [changePageTitle, formatMessage]);
 
   // Handle fetching the resource views.
   const fetchResourceViews = useQuery(

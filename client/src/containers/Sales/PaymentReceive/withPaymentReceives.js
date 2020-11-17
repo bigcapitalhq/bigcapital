@@ -4,11 +4,14 @@ import {
   getPaymentReceiveCurrentPageFactory,
   getPaymentReceivePaginationMetaFactory,
   getPaymentReceiveTableQuery,
+  getPaymentReceivesCurrentViewIdFactory,
 } from 'store/PaymentReceive/paymentReceive.selector';
 
 export default (mapState) => {
   const getPyamentReceivesItems = getPaymentReceiveCurrentPageFactory();
   const getPyamentReceivesPaginationMeta = getPaymentReceivePaginationMetaFactory();
+  const getPaymentReceivesCurrentViewId = getPaymentReceivesCurrentViewIdFactory();
+
   const mapStateToProps = (state, props) => {
     const query = getPaymentReceiveTableQuery(state, props);
     const mapped = {
@@ -23,6 +26,7 @@ export default (mapState) => {
       ),
       paymentReceivesLoading: state.paymentReceives.loading,
       paymentReceiveNumberChanged: state.paymentReceives.journalNumberChanged,
+      paymentReceivesCurrentViewId: getPaymentReceivesCurrentViewId(state, props),
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };

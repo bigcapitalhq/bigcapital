@@ -20,9 +20,9 @@ import Icon from 'components/Icon';
 import { compose, saveInvoke } from 'utils';
 import { useIsValuePassed } from 'hooks';
 
-import LoadingIndicator from 'components/LoadingIndicator';
-import { If, Money } from 'components';
+import { If, Money, Choose, LoadingIndicator } from 'components';
 import DataTable from 'components/DataTable';
+import ExpensesEmptyStatus from './ExpensesEmptyStatus';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
@@ -37,6 +37,7 @@ function ExpensesDataTable({
   expensesLoading,
   expensesPagination,
   expensesTableQuery,
+  expensesCurrentViewId,
 
   // #withExpensesActions
   addExpensesTableQueries,
@@ -265,28 +266,41 @@ function ExpensesDataTable({
     [onSelectedRowsChange],
   );
 
+  const showEmptyStatus = [
+    expensesCurrentViewId === -1,
+    expensesCurrentPage.length === 0
+  ].every(condition => condition === true);
+
   return (
     <LoadingIndicator
       loading={expensesLoading && !isLoadedBefore}
       mount={false}
     >
-      <DataTable
-        columns={columns}
-        data={expensesCurrentPage}
-        manualSortBy={true}
-        selectionColumn={true}
-        noInitialFetch={true}
-        sticky={true}
-        onSelectedRowsChange={handleSelectedRowsChange}
-        onFetchData={handleFetchData}
-        rowContextMenu={onRowContextMenu}
-        pagination={true}
-        pagesCount={expensesPagination.pagesCount}
-        autoResetSortBy={false}
-        autoResetPage={false}
-        initialPageSize={expensesTableQuery.page_size}
-        initialPageIndex={expensesTableQuery.page - 1}
-      />
+      <Choose>
+        <Choose.When condition={showEmptyStatus}>
+          <ExpensesEmptyStatus />
+        </Choose.When>
+
+        <Choose.Otherwise>
+          <DataTable
+            columns={columns}
+            data={expensesCurrentPage}
+            manualSortBy={true}
+            selectionColumn={true}
+            noInitialFetch={true}
+            sticky={true}
+            onSelectedRowsChange={handleSelectedRowsChange}
+            onFetchData={handleFetchData}
+            rowContextMenu={onRowContextMenu}
+            pagination={true}
+            pagesCount={expensesPagination.pagesCount}
+            autoResetSortBy={false}
+            autoResetPage={false}
+            initialPageSize={expensesTableQuery.page_size}
+            initialPageIndex={expensesTableQuery.page - 1}
+          />
+        </Choose.Otherwise>
+      </Choose>
     </LoadingIndicator>
   );
 }
@@ -303,11 +317,13 @@ export default compose(
       expensesLoading,
       expensesPagination,
       expensesTableQuery,
+      expensesCurrentViewId,
     }) => ({
       expensesCurrentPage,
       expensesLoading,
       expensesPagination,
       expensesTableQuery,
+      expensesCurrentViewId,
     }),
   ),
   withViewDetails(),

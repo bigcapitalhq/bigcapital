@@ -5,6 +5,7 @@ import {
   getInvoicePaginationMetaFactory,
   getInvoiceTableQueryFactory,
   getCustomerReceivableInvoicesEntriesFactory,
+  getInvoicesCurrentViewIdFactory,
 } from 'store/Invoice/invoices.selector';
 
 export default (mapState) => {
@@ -15,11 +16,15 @@ export default (mapState) => {
 
   const getCustomerReceivableInvoicesEntries = getCustomerReceivableInvoicesEntriesFactory();
 
+  const getInvoicesCurrentViewId = getInvoicesCurrentViewIdFactory();
+
   const mapStateToProps = (state, props) => {
     const query = getInvoiceTableQuery(state, props);
 
     const mapped = {
       invoicesCurrentPage: getInvoicesItems(state, props, query),
+      invoicesCurrentViewId: getInvoicesCurrentViewId(state, props),
+
       invoicesViews: getResourceViews(state, props, 'sales_invoices'),
       invoicesItems: state.salesInvoices.items,
       invoicesTableQuery: query,

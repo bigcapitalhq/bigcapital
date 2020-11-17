@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import {
   Button,
   Popover,
@@ -10,14 +10,18 @@ import {
   Tag,
 } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
-import { Icon, DataTable, Money } from 'components';
-import { useIsValuePassed } from 'hooks';
+import classNames from 'classnames';
 
-import LoadingIndicator from 'components/LoadingIndicator';
+import { Icon, DataTable, Money, LoadingIndicator, Choose } from 'components';
+import ItemsEmptyStatus from './ItemsEmptyStatus';
+import { useIsValuePassed } from 'hooks';
+import { CLASSES } from 'common/classes';
+
 import withItems from 'containers/Items/withItems';
 import withItemsActions from 'containers/Items/withItemsActions';
 import { compose, saveInvoke } from 'utils';
 
+// Items datatable.
 function ItemsDataTable({
   // #withItems
   itemsTableLoading,
@@ -181,31 +185,38 @@ function ItemsDataTable({
   );
 
   return (
-    <LoadingIndicator
-      loading={itemsTableLoading && !isLoadedBefore}
-      mount={false}
-    >
-      <DataTable
-        columns={columns}
-        data={itemsCurrentPage}
-        onFetchData={handleFetchData}
-        noInitialFetch={true}
-        expandable={true}
-        selectionColumn={true}
-        spinnerProps={{ size: 30 }}
-        onSelectedRowsChange={handleSelectedRowsChange}
-        rowContextMenu={handleRowContextMenu}
-        sticky={true}
-        pagination={true}
-        pagesCount={2}
-        autoResetSortBy={false}
-        autoResetPage={false}
-        initialPageSize={itemsTableQuery.page_size}
-        initialPageIndex={itemsTableQuery.page - 1}
-      />
-    </LoadingIndicator>
+    <div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>
+      <LoadingIndicator loading={itemsTableLoading && !isLoadedBefore}>
+        <Choose>
+          <Choose.When condition={true}>
+            <ItemsEmptyStatus />
+          </Choose.When>
+
+          <Choose.Otherwise>
+            <DataTable
+              columns={columns}
+              data={itemsCurrentPage}
+              onFetchData={handleFetchData}
+              noInitialFetch={true}
+              expandable={true}
+              selectionColumn={true}
+              spinnerProps={{ size: 30 }}
+              onSelectedRowsChange={handleSelectedRowsChange}
+              rowContextMenu={handleRowContextMenu}
+              sticky={true}
+              pagination={true}
+              pagesCount={2}
+              autoResetSortBy={false}
+              autoResetPage={false}
+              initialPageSize={itemsTableQuery.page_size}
+              initialPageIndex={itemsTableQuery.page - 1}
+            />
+          </Choose.Otherwise>
+        </Choose>
+      </LoadingIndicator>
+    </div>
   );
-};
+}
 
 export default compose(
   withItems(({ itemsCurrentPage, itemsTableLoading, itemsTableQuery }) => ({

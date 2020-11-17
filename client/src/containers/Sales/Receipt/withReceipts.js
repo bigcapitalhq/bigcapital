@@ -4,12 +4,14 @@ import {
   getReceiptCurrentPageFactory,
   getReceiptsTableQueryFactory,
   getReceiptsPaginationMetaFactory,
+  getReceiptsCurrentViewIdFactory
 } from 'store/receipt/receipt.selector';
 
 export default (mapState) => {
   const getReceiptsItems = getReceiptCurrentPageFactory();
   const getReceiptPaginationMeta = getReceiptsPaginationMetaFactory();
   const getReceiptsTableQuery = getReceiptsTableQueryFactory();
+  const getReceiptsCurrentViewId = getReceiptsCurrentViewIdFactory();
 
   const mapStateToProps = (state, props) => {
     const tableQuery = getReceiptsTableQuery(state, props);
@@ -23,6 +25,8 @@ export default (mapState) => {
 
       receiptsLoading: state.salesReceipts.loading,
       receiptNumberChanged: state.salesReceipts.journalNumberChanged,
+
+      receiptsCurrentViewId: getReceiptsCurrentViewId(state, props),
     };
 
     return mapState ? mapState(mapped, state, props) : mapped;

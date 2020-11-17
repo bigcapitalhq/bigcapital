@@ -19,8 +19,9 @@ import Icon from 'components/Icon';
 import { compose, saveInvoke } from 'utils';
 import { useIsValuePassed } from 'hooks';
 
-import LoadingIndicator from 'components/LoadingIndicator';
+import { LoadingIndicator, Choose } from 'components';
 import DataTable from 'components/DataTable';
+import BillsEmptyStatus from './BillsEmptyStatus';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
@@ -30,11 +31,13 @@ import withBills from './withBills';
 import withBillActions from './withBillActions';
 import withCurrentView from 'containers/Views/withCurrentView';
 
+// Bills transactions datatable.
 function BillsDataTable({
-  //#withBills
+  // #withBills
   billsCurrentPage,
   billsLoading,
   billsPageination,
+  billsCurrentViewId,
 
   // #withDashboardActions
   changeCurrentView,
@@ -215,23 +218,36 @@ function BillsDataTable({
     [onSelectedRowsChange],
   );
 
+  const showEmptyStatus = [
+    billsCurrentViewId === -1,
+    billsCurrentPage.length === 0,
+  ].every(condition => condition === true);
+
   return (
     <LoadingIndicator loading={billsLoading && !isLoadedBefore} mount={false}>
-      <DataTable
-        columns={columns}
-        data={billsCurrentPage}
-        onFetchData={handleFetchData}
-        manualSortBy={true}
-        selectionColumn={true}
-        noInitialFetch={true}
-        sticky={true}
-        onSelectedRowsChange={handleSelectedRowsChange}
-        rowContextMenu={onRowContextMenu}
-        pagination={true}
-        pagesCount={billsPageination.pagesCount}
-        initialPageSize={billsPageination.pageSize}
-        initialPageIndex={billsPageination.page - 1}
-      />
+      <Choose>
+        <Choose.When condition={showEmptyStatus}>
+          <BillsEmptyStatus />
+        </Choose.When>
+
+        <Choose.Otherwise>
+          <DataTable
+            columns={columns}
+            data={billsCurrentPage}
+            onFetchData={handleFetchData}
+            manualSortBy={true}
+            selectionColumn={true}
+            noInitialFetch={true}
+            sticky={true}
+            onSelectedRowsChange={handleSelectedRowsChange}
+            rowContextMenu={onRowContextMenu}
+            pagination={true}
+            pagesCount={billsPageination.pagesCount}
+            initialPageSize={billsPageination.pageSize}
+            initialPageIndex={billsPageination.page - 1}
+          />
+        </Choose.Otherwise>
+      </Choose>
     </LoadingIndicator>
   );
 }
@@ -248,11 +264,13 @@ export default compose(
       billsLoading,
       billsPageination,
       billsTableQuery,
+      billsCurrentViewId
     }) => ({
       billsCurrentPage,
       billsLoading,
       billsPageination,
       billsTableQuery,
+      billsCurrentViewId
     }),
   ),
   withViewDetails(),

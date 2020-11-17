@@ -5,11 +5,13 @@ import {
   getExpenseByIdFactory,
   getExpensesTableQuery,
   getExpensesPaginationMetaFactory,
+  getExpensesCurrentViewIdFactory,
 } from 'store/expenses/expenses.selectors';
 
 export default (mapState) => {
   const getExpensesItems = getExpensesCurrentPageFactory();
   const getExpensesPaginationMeta = getExpensesPaginationMetaFactory();
+  const getExpensesCurrentViewId = getExpensesCurrentViewIdFactory();
 
   const mapStateToProps = (state, props) => {
     const query = getExpensesTableQuery(state, props);
@@ -21,6 +23,7 @@ export default (mapState) => {
       expensesTableQuery: query,
       expensesPagination: getExpensesPaginationMeta(state, props),
       expensesLoading: state.expenses.loading,
+      expensesCurrentViewId: getExpensesCurrentViewId(state, props),
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };

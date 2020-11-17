@@ -31,6 +31,8 @@ const billPaginationSelector = (state, props) => {
   return state.bills.views?.[viewId];
 };
 
+const getBillsCurrentViewIdSelector = (state) => state.bills.currentViewId;
+
 export const getBillTableQueryFactory = () =>
   createSelector(
     paginationLocationQuery,
@@ -107,4 +109,13 @@ export const getVendorPayableBillsEntriesFactory = () =>
         payment_amount: null,
       }));
     },
+  );
+
+// Retreive the current bills view id.
+export const getBillsCurrentViewIdFactory = () => 
+  createSelector(
+    getBillsCurrentViewIdSelector,
+    (currentViewId) => {
+      return currentViewId;
+    }
   );

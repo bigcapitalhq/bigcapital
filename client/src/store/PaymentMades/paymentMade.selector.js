@@ -27,11 +27,16 @@ const paymentMadeById = (state, props) =>
   state.paymentMades.items[props.paymentMadeId];
 
 const paymentMadeEntries = (state, props) => props.paymentMadeEntries;
+
 const billsItemsSelector = (state, props) => state.bills.items;
+
 const billsPayableByPaymentMadeSelector = (state, props) =>
   state.bills.payable.byBillPayamentId[props.paymentMadeId];
+
 const paymentMadeBillsSelector = (state, props) =>
   state.bills.byBillPayamentId[props.paymentMadeId];
+
+const paymentMadesCurrentViewIdSelector = (state) => state.paymentMades.currentViewId;
 
 export const getPaymentMadeCurrentPageFactory = () =>
   createSelector(
@@ -113,3 +118,12 @@ export const getPaymentMadeEntriesFactory = () =>
       });
     },
   );
+
+// Retrieve payment mades current view id.
+export const getPaymentMadesCurrentViewIdFactory = () => 
+    createSelector(
+      paymentMadesCurrentViewIdSelector,
+      (currentViewId) => {
+        return currentViewId;
+      }
+    );

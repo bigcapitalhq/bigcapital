@@ -4,11 +4,13 @@ import {
   getCustomerCurrentPageFactory,
   getCustomerPaginationMetaFactory,
   getCustomerTableQueryFactory,
+  getCustomersCurrentViewIdFactory,
 } from 'store/customers/customers.selectors';
 
 export default (mapState) => {
   const getCustomersList = getCustomerCurrentPageFactory();
   const getCustomerPaginationMeta = getCustomerPaginationMetaFactory();
+  const getCustomersCurrentViewId = getCustomersCurrentViewIdFactory();
   const getCustomerTableQuery = getCustomerTableQueryFactory();
 
   const mapStateToProps = (state, props) => {
@@ -21,6 +23,7 @@ export default (mapState) => {
       customerPagination: getCustomerPaginationMeta(state, props, query),
       customersLoading: state.customers.loading,
       customersItems: state.customers.items,
+      customersCurrentViewId: getCustomersCurrentViewId(state, props),
       // customerErrors: state.customers.errors,
     };
     return mapState ? mapState(mapped, state, props) : mapped;

@@ -25,6 +25,8 @@ import {
 } from 'components';
 import { useIsValuePassed } from 'hooks';
 
+import ManualJournalsEmptyStatus from './ManualJournalsEmptyStatus';
+
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withManualJournals from 'containers/Accounting/withManualJournals';
 import withManualJournalsActions from 'containers/Accounting/withManualJournalsActions';
@@ -76,6 +78,7 @@ function ManualJournalsDataTable({
   manualJournalsLoading,
   manualJournalsPagination,
   manualJournalsTableQuery,
+  manualJournalsCurrentViewId,
 
   // #withManualJournalsActions
   addManualJournalsTableQueries,
@@ -248,26 +251,39 @@ function ManualJournalsDataTable({
     [onSelectedRowsChange],
   );
 
+  const showEmptyStatus = [
+    manualJournalsCurrentViewId === -1,
+    manualJournalsCurrentPage.length === 0,
+  ].every(condition => condition === true);
+
   return (
     <LoadingIndicator loading={manualJournalsLoading && !isLoadedBefore}>
-      <DataTable
-        noInitialFetch={true}
-        columns={columns}
-        data={manualJournalsCurrentPage}
-        onFetchData={handleDataTableFetchData}
-        manualSortBy={true}
-        selectionColumn={true}
-        expandable={true}
-        sticky={true}
-        onSelectedRowsChange={handleSelectedRowsChange}
-        rowContextMenu={onRowContextMenu}
-        pagesCount={manualJournalsPagination.pagesCount}
-        pagination={true}
-        initialPageSize={manualJournalsTableQuery.page_size}
-        initialPageIndex={manualJournalsTableQuery.page - 1}
-        autoResetSortBy={false}
-        autoResetPage={false}
-      />
+      <Choose>
+        <Choose.When condition={showEmptyStatus}>
+          <ManualJournalsEmptyStatus />
+        </Choose.When>
+
+        <Choose.Otherwise>
+          <DataTable
+            noInitialFetch={true}
+            columns={columns}
+            data={manualJournalsCurrentPage}
+            onFetchData={handleDataTableFetchData}
+            manualSortBy={true}
+            selectionColumn={true}
+            expandable={true}
+            sticky={true}
+            onSelectedRowsChange={handleSelectedRowsChange}
+            rowContextMenu={onRowContextMenu}
+            pagesCount={manualJournalsPagination.pagesCount}
+            pagination={true}
+            initialPageSize={manualJournalsTableQuery.page_size}
+            initialPageIndex={manualJournalsTableQuery.page - 1}
+            autoResetSortBy={false}
+            autoResetPage={false}
+          />
+        </Choose.Otherwise>
+      </Choose>
     </LoadingIndicator>
   );
 }
@@ -282,11 +298,13 @@ export default compose(
       manualJournalsLoading,
       manualJournalsPagination,
       manualJournalsTableQuery,
+      manualJournalsCurrentViewId,
     }) => ({
       manualJournalsCurrentPage,
       manualJournalsLoading,
       manualJournalsPagination,
       manualJournalsTableQuery,
+      manualJournalsCurrentViewId
     }),
   ),
 )(ManualJournalsDataTable);

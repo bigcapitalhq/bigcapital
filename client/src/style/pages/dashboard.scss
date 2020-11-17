@@ -239,6 +239,7 @@
   }
   &__insider{
     margin-bottom: 40px;
+    flex: 1 0 0;
   }
 
   &__offline-badge{
@@ -276,16 +277,19 @@
   }
 
   &__insider{
+    display: flex;
+    flex-direction: column;
     
-    &--loading{
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100%;
+    > .dashboard__loading-indicator{
+      margin-top: auto;
+      margin-bottom: auto;
     }
   }
 
   &__page-content{
+    display: flex;
+    flex-direction: column;
+    flex: 1 0 0;
 
     .bigcapital-datatable{
 
@@ -302,6 +306,18 @@
 
     .dashboard__loading-indicator{
       padding-top: 150px;
+    }
+  }
+
+  &__datatable{
+    display: flex;
+    flex: 1 0 0;
+    flex-direction: column;
+
+    .datatable-empty-status{
+      margin-top: auto;
+      margin-bottom: auto;
+      padding-bottom: 40px;
     }
   }
 

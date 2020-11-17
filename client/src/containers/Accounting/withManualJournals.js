@@ -4,10 +4,12 @@ import {
   getManualJournalsItems,
   getManualJournalsPagination,
   getManualJournalsTableQuery,
+  getManualJournalsCurrentViewIdFactory
 } from 'store/manualJournals/manualJournals.selectors';
 
 
 export default (mapState) => {
+  const getManualJournalsCurrentViewId = getManualJournalsCurrentViewIdFactory();
   const mapStateToProps = (state, props) => {
     const query = getManualJournalsTableQuery(state, props);
 
@@ -21,6 +23,8 @@ export default (mapState) => {
       manualJournalsLoading: state.manualJournals.loading,
 
       journalNumberChanged: state.manualJournals.journalNumberChanged,
+
+      manualJournalsCurrentViewId: getManualJournalsCurrentViewId(state, props),
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };

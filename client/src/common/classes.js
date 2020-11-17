@@ -1,6 +1,7 @@
 import { Classes } from '@blueprintjs/core';
 
 const CLASSES = {
+  DASHBOARD_DATATABLE: 'dashboard__datatable',
   DATATABLE_EDITOR: 'datatable-editor',
   DATATABLE_EDITOR_ACTIONS: 'datatable-editor__actions',
   DATATABLE_EDITOR_ITEMS_ENTRIES: 'items-entries-table',
@@ -30,8 +31,11 @@ const CLASSES = {
   CLOUD_SPINNER: 'cloud-spinner',
   IS_LOADING: 'is-loading',
 
-  DATATABLE_EMPTY_STATE: 'datatable-empty-state',
-  DATATABLE_EMPTY_STATE_TITLE: 'datatable-empty-state__title',
+  DATATABLE_EMPTY_STATUS: 'datatable-empty-status',
+  DATATABLE_EMPTY_STATUS_TITLE: 'datatable-empty-status__title',
+  DATATABLE_EMPTY_STATUS_DESC: 'datatable-empty-status__desc',
+  DATATABLE_EMPTY_STATUS_ACTIONS: 'datatable-empty-status__actions',
+
   ...Classes,
 };
 

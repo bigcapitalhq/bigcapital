@@ -8,6 +8,8 @@ const getPageExpensesQuery = (state, props) => {
   return currentPageId || 0;
 };
 
+const getExpensesCurrentViewIdSelector = (state) => state.expenses.currentViewId;
+
 const expensesPageSelector = (state, props, query) => {
   const viewId = state.expenses.currentViewId;
   const currentPageId = getPageExpensesQuery(state, { viewId });
@@ -59,5 +61,13 @@ export const getExpensesPaginationMetaFactory = () => createSelector(
   manualJournalsPaginationSelector,
   (expensesPage) => {
     return expensesPage?.paginationMeta || {};
+  },
+);
+
+// Retrieve expenses current view id.
+export const getExpensesCurrentViewIdFactory = () => createSelector(
+  getExpensesCurrentViewIdSelector,
+  (currentViewId) => {
+    return currentViewId;
   },
 );

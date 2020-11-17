@@ -50,7 +50,6 @@ const ItemFormContainer = ({
   );
 
   const handleCancel = useCallback(() => {
-    // history.push('/items');
     history.goBack();
   }, [history]);
 
