@@ -4,17 +4,17 @@ import {
   editVendor,
   deleteVendor,
   fetchVendorsTable,
+  fetchVendor,
 } from 'store/vendors/vendors.actions';
 import t from 'store/types';
 
-
 const mapDipatchToProps = (dispatch) => ({
   requestSubmitVendor: (form) => dispatch(submitVendor({ form })),
-  requestEditVendor: (id, form) => dispatch(editVendor(id, form)),
+  requestEditVendor: (id, form) => dispatch(editVendor({ id, form })),
+  requsetFetchVendor: (id) => dispatch(fetchVendor({ id })),
   requestFetchVendorsTable: (query = {}) =>
     dispatch(fetchVendorsTable({ query: { ...query } })),
   requestDeleteVender: (id) => dispatch(deleteVendor({ id })),
-
   changeVendorView: (id) =>
     dispatch({
       type: t.VENDORS_SET_CURRENT_VIEW,
@@ -29,4 +29,3 @@ const mapDipatchToProps = (dispatch) => ({
 });
 
 export default connect(null, mapDipatchToProps);
-
