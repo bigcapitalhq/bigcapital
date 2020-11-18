@@ -9,11 +9,14 @@ import {
   Position,
 } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
+import classNames from 'classnames';
 
 import Icon from 'components/Icon';
 import LoadingIndicator from 'components/LoadingIndicator';
 import { compose } from 'utils';
 import DataTable from 'components/DataTable';
+
+import { CLASSES } from 'common/classes';
 
 import withItemCategories from './withItemCategories';
 import withDialogActions from 'containers/Dialog/withDialogActions';
@@ -139,21 +142,23 @@ const ItemsCategoryList = ({
   );
 
   return (
-    <LoadingIndicator mount={false}>
-      <DataTable
-        noInitialFetch={true}
-        columns={columns}
-        data={categoriesList}
-        onFetchData={handelFetchData}
-        manualSortBy={true}
-        selectionColumn={selectionColumn}
-        expandable={true}
-        sticky={true}
-        onSelectedRowsChange={handleSelectedRowsChange}
-        loading={categoriesTableLoading}
-        rowContextMenu={handleRowContextMenu}
-      />
-    </LoadingIndicator>
+    <div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>
+      <LoadingIndicator mount={false}>
+        <DataTable
+          noInitialFetch={true}
+          columns={columns}
+          data={categoriesList}
+          onFetchData={handelFetchData}
+          manualSortBy={true}
+          selectionColumn={selectionColumn}
+          expandable={true}
+          sticky={true}
+          onSelectedRowsChange={handleSelectedRowsChange}
+          loading={categoriesTableLoading}
+          rowContextMenu={handleRowContextMenu}
+        />
+      </LoadingIndicator>
+    </div>
   );
 };
 

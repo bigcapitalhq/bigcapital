@@ -204,17 +204,20 @@ body.authentication {
 }
 
 
+// .page-form
+//    .page-form__header
+//    .page-form__content
+//    .page-form__floating-actions
 .page-form{
   
-  &__header{   
-    padding: 20px;
+  &__header{
+    background-color: #fbfbfb;
+    padding: 30px 20px 20px;
+    padding-bottom: 6px;
   }
 
   &__primary-section{
-    background-color: #fbfbfb;
-    padding: 30px 20px 20px;
-    margin: -20px;
-    padding-bottom: 6px;
+    
   }
 
   &__header-fields{

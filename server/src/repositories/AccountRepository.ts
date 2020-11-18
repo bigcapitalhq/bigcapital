@@ -107,10 +107,12 @@ export default class AccountRepository extends TenantRepository {
    * @param  {IAccount} account
    * @return {void}
    */
-  async edit(accountId: number, account: IAccount): Promise<void> {
+  async edit(accountId: number, accountInput: IAccount): Promise<void> {
     const { Account } = this.models;
-    await Account.query().findById(accountId).patch({ ...account });
+    const account = await Account.query().patchAndFetchById(accountId, { ...accountInput });
     this.flushCache();
+
+    return account;
   }
 
   /**

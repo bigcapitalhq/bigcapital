@@ -1,6 +1,8 @@
 
 .Pane.Pane2 {
-  overflow: auto;  
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .Resizer {

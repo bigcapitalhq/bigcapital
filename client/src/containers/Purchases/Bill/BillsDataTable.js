@@ -1,8 +1,7 @@
-import React, { useEffect, useCallback, useState, useMemo } from 'react';
+import React, { useEffect, useCallback, useMemo } from 'react';
 import {
   Intent,
   Button,
-  Classes,
   Popover,
   Menu,
   MenuItem,
@@ -14,9 +13,11 @@ import { useParams } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import moment from 'moment';
+import classNames from 'classnames';
 
 import Icon from 'components/Icon';
 import { compose, saveInvoke } from 'utils';
+import { CLASSES } from 'common/classes';
 import { useIsValuePassed } from 'hooks';
 
 import { LoadingIndicator, Choose } from 'components';
@@ -221,34 +222,36 @@ function BillsDataTable({
   const showEmptyStatus = [
     billsCurrentViewId === -1,
     billsCurrentPage.length === 0,
-  ].every(condition => condition === true);
+  ].every((condition) => condition === true);
 
   return (
-    <LoadingIndicator loading={billsLoading && !isLoadedBefore} mount={false}>
-      <Choose>
-        <Choose.When condition={showEmptyStatus}>
-          <BillsEmptyStatus />
-        </Choose.When>
+    <div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>
+      <LoadingIndicator loading={billsLoading && !isLoadedBefore} mount={false}>
+        <Choose>
+          <Choose.When condition={showEmptyStatus}>
+            <BillsEmptyStatus />
+          </Choose.When>
 
-        <Choose.Otherwise>
-          <DataTable
-            columns={columns}
-            data={billsCurrentPage}
-            onFetchData={handleFetchData}
-            manualSortBy={true}
-            selectionColumn={true}
-            noInitialFetch={true}
-            sticky={true}
-            onSelectedRowsChange={handleSelectedRowsChange}
-            rowContextMenu={onRowContextMenu}
-            pagination={true}
-            pagesCount={billsPageination.pagesCount}
-            initialPageSize={billsPageination.pageSize}
-            initialPageIndex={billsPageination.page - 1}
-          />
-        </Choose.Otherwise>
-      </Choose>
-    </LoadingIndicator>
+          <Choose.Otherwise>
+            <DataTable
+              columns={columns}
+              data={billsCurrentPage}
+              onFetchData={handleFetchData}
+              manualSortBy={true}
+              selectionColumn={true}
+              noInitialFetch={true}
+              sticky={true}
+              onSelectedRowsChange={handleSelectedRowsChange}
+              rowContextMenu={onRowContextMenu}
+              pagination={true}
+              pagesCount={billsPageination.pagesCount}
+              initialPageSize={billsPageination.pageSize}
+              initialPageIndex={billsPageination.page - 1}
+            />
+          </Choose.Otherwise>
+        </Choose>
+      </LoadingIndicator>
+    </div>
   );
 }
 
@@ -264,13 +267,13 @@ export default compose(
       billsLoading,
       billsPageination,
       billsTableQuery,
-      billsCurrentViewId
+      billsCurrentViewId,
     }) => ({
       billsCurrentPage,
       billsLoading,
       billsPageination,
       billsTableQuery,
-      billsCurrentViewId
+      billsCurrentViewId,
     }),
   ),
   withViewDetails(),

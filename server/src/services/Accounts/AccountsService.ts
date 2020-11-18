@@ -203,6 +203,8 @@ export default class AccountsService {
    * @param {IAccountDTO} accountDTO 
    */
   public async editAccount(tenantId: number, accountId: number, accountDTO: IAccountDTO) {
+    this.logger.info('[account] trying to edit account.', { tenantId, accountId });
+
     const { accountRepository } = this.tenancy.repositories(tenantId);
     const oldAccount = await this.getAccountOrThrowError(tenantId, accountId);
 

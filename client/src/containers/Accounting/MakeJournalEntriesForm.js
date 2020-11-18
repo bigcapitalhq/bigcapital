@@ -444,7 +444,6 @@ function MakeJournalEntriesForm({
     },
     [changePageSubtitle],
   );
-  console.log(values, 'Val');
   return (
     <div class="make-journal-entries">
       <form onSubmit={handleSubmit}>

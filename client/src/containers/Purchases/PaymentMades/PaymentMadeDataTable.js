@@ -11,10 +11,12 @@ import {
 import { withRouter } from 'react-router';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import moment from 'moment';
+import classNames from 'classnames';
 
 import { compose, saveInvoke } from 'utils';
 import { useIsValuePassed } from 'hooks';
 
+import { CLASSES } from 'common/classes';
 import { DataTable, Money, Icon, Choose, LoadingIndicator } from 'components';
 import PaymentMadesEmptyStatus from './PaymentMadesEmptyStatus';
 
@@ -182,36 +184,38 @@ function PaymentMadeDataTable({
   const showEmptyStatuts = [
     paymentMadeCurrentPage.length === 0,
     paymentMadesCurrentViewId === -1,
-  ].every(condition => condition === true);
+  ].every((condition) => condition === true);
 
   return (
-    <LoadingIndicator loading={paymentMadesLoading && !isLoaded}>
-      <Choose>
-        <Choose.When condition={showEmptyStatuts}>
-          <PaymentMadesEmptyStatus />
-        </Choose.When>
+    <div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>
+      <LoadingIndicator loading={paymentMadesLoading && !isLoaded}>
+        <Choose>
+          <Choose.When condition={showEmptyStatuts}>
+            <PaymentMadesEmptyStatus />
+          </Choose.When>
 
-        <Choose.Otherwise>
-          <DataTable
-            columns={columns}
-            data={paymentMadeCurrentPage}
-            onFetchData={handleDataTableFetchData}
-            manualSortBy={true}
-            selectionColumn={true}
-            noInitialFetch={true}
-            sticky={true}
-            onSelectedRowsChange={handleSelectedRowsChange}
-            rowContextMenu={onRowContextMenu}
-            pagination={true}
-            pagesCount={paymentMadePageination.pagesCount}
-            initialPageSize={paymentMadeTableQuery.page_size}
-            initialPageIndex={paymentMadeTableQuery.page - 1}
-            autoResetSortBy={false}
-            autoResetPage={false}
-          />
-        </Choose.Otherwise>
-      </Choose>
-    </LoadingIndicator>
+          <Choose.Otherwise>
+            <DataTable
+              columns={columns}
+              data={paymentMadeCurrentPage}
+              onFetchData={handleDataTableFetchData}
+              manualSortBy={true}
+              selectionColumn={true}
+              noInitialFetch={true}
+              sticky={true}
+              onSelectedRowsChange={handleSelectedRowsChange}
+              rowContextMenu={onRowContextMenu}
+              pagination={true}
+              pagesCount={paymentMadePageination.pagesCount}
+              initialPageSize={paymentMadeTableQuery.page_size}
+              initialPageIndex={paymentMadeTableQuery.page - 1}
+              autoResetSortBy={false}
+              autoResetPage={false}
+            />
+          </Choose.Otherwise>
+        </Choose>
+      </LoadingIndicator>
+    </div>
   );
 }
 
@@ -225,13 +229,13 @@ export default compose(
       paymentMadesLoading,
       paymentMadePageination,
       paymentMadeTableQuery,
-      paymentMadesCurrentViewId
+      paymentMadesCurrentViewId,
     }) => ({
       paymentMadeCurrentPage,
       paymentMadesLoading,
       paymentMadePageination,
       paymentMadeTableQuery,
-      paymentMadesCurrentViewId
+      paymentMadesCurrentViewId,
     }),
   ),
 )(PaymentMadeDataTable);

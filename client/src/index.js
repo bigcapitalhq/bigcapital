@@ -7,12 +7,17 @@ import App from 'components/App';
 import * as serviceWorker from 'serviceWorker';
 import createStore from 'store/createStore';
 import AppProgress from 'components/NProgress/AppProgress';
-import { setLocale } from 'yup';
+
 import {locale} from 'lang/en/locale';
+import whyDidYouRender from "@welldone-software/why-did-you-render";
+
+whyDidYouRender(React, {
+  onlyLogs: true,
+  titleColor: "green",
+  diffNameColor: "aqua"
+});
 
 
-
-setLocale(locale)
 ReactDOM.render(
   <Provider store={createStore}>
     <BrowserRouter>

@@ -6,6 +6,7 @@ export default (mapState) => {
     const mapped = {
       pageTitle: state.dashboard.pageTitle,
       pageSubtitle: state.dashboard.pageSubtitle,
+      pageHint: state.dashboard.pageHint,
       editViewId: state.dashboard.topbarEditViewId,
       sidebarExpended: state.dashboard.sidebarExpended,
       preferencesPageTitle: state.dashboard.preferencesPageTitle,

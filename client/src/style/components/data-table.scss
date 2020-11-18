@@ -6,7 +6,7 @@
 
     .table .thead{
       .th{
-        border-bottom-color: #eaeaea;
+        border-bottom-color: #D2DDE2;
       }
     }
   }
@@ -25,11 +25,10 @@
         padding: 0.6rem 0.5rem;
         background: #fafafa;
         font-size: 14px;
-        color: #445165;
+        color: #58667b;
         font-weight: 500;
         border-bottom: 1px solid rgb(224, 224, 224);
       }
-
       .sort-icon{
         width: 0;
         height: 0;
@@ -145,7 +144,7 @@
         }
       }      
       .tr:hover .td{
-        background: #fafafa;
+        background: #f3f7fc;
       }
 
       .tr.is-context-menu-active .td{

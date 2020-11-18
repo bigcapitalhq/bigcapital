@@ -4,12 +4,12 @@
   display: flex;
   height: 100vh;
 
- 
   &__topbar{
     width: 100%;
     min-height: 60px;
     display: flex;
     justify-content: space-between;
+    background-color: #fff;
     border-bottom: 1px solid #F2EFEF;
 
     &-right,
@@ -121,7 +121,7 @@
 
       &,
       &-group{
-        height: 42px;
+        height: 40px;
       }
 
       .#{$ns}-navbar-divider{
@@ -138,7 +138,7 @@
         }
         &.bp3-minimal:active,
         &.bp3-minimal.bp3-active{
-          background: rgba(167, 182, 194, 0.12);
+          background: #a7b6c21f;
           color: #32304a;
         }
 
@@ -150,7 +150,7 @@
           }
         }
         .#{$ns}-icon{
-          color: #2A293D;
+          color: #32304a;
           margin-right: 7px;
         }
         &.#{$ns}-minimal.#{$ns}-intent-danger{
@@ -203,7 +203,7 @@
 
     h1{
       font-size: 22px;
-      color: #333363;
+      color: #48485c;
       font-weight: 400;
       margin: 0;
     }
@@ -233,13 +233,17 @@
     }
   }
   
+  &__hint{
+    display: inline-block;
+    margin-top: 4px;
+    margin-left: 4px;
+  }
 
   &__subtitle{
     
   }
   &__insider{
-    margin-bottom: 40px;
-    flex: 1 0 0;
+    
   }
 
   &__offline-badge{
@@ -260,6 +264,7 @@
     display: flex;
     flex-direction: column;
     height: 100%;
+    min-width: 850px;
 
     &:before{
       content: "";
@@ -279,7 +284,9 @@
   &__insider{
     display: flex;
     flex-direction: column;
-    
+    flex: 1 0 0;
+    background-color: #FBFBFB;
+
     > .dashboard__loading-indicator{
       margin-top: auto;
       margin-bottom: auto;
@@ -313,6 +320,23 @@
     display: flex;
     flex: 1 0 0;
     flex-direction: column;
+    background: #fff;
+    margin: 20px;
+    border: 1px solid #d2dce2;
+
+    .bigcapital-datatable{
+      display: flex;
+      flex-direction: column;
+      flex: 1 0 0;
+
+      .pagination{
+        margin-top: auto;
+      }
+
+      &:not(.has-pagination){
+        padding-bottom: 30px;
+      }
+    }
 
     .datatable-empty-status{
       margin-top: auto;
@@ -323,7 +347,6 @@
 
   &__preferences-topbar{
     border-bottom: 1px solid #E5E5E5;
-    // height: 70px;
     height: 65px;
     padding: 0 0 0 22px;
     display: flex;
@@ -360,6 +383,43 @@
           }
         }
       }      
+    }
+  }
+
+  &__card{
+    border: 1px solid #d2dce2;
+    background: #fff;
+
+    &--page{
+      flex: 1 0 0;
+      margin: 20px;
+    }
+  }
+
+  &__error-boundary{
+    text-align: center;
+    margin-top: auto;
+    margin-bottom: auto;
+
+    h1{
+      font-size: 26px;
+      font-weight: 600;
+      margin: 0px 0 10px;
+      color: #2c3a5d;
+    }   
+
+    p{
+      font-size: 16px;
+      color: #1f3255;
+      opacity: 0.8;
+    }
+
+    .bp3-icon{
+      margin-top: 6px;
+
+      path{
+        fill: #a1afca;
+      }
     }
   }
 }
@@ -408,7 +468,7 @@
 
 .navbar--dashboard-views{
   box-shadow: 0 0 0;
-  border-bottom: 1px solid #EAEAEA;
+  border-bottom: 1px solid #d2dce2;
 }
 
 .navbar-omnibar{

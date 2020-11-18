@@ -1,5 +1,5 @@
 import React from 'react';
-import { FastField, ErrorMessage } from 'formik';
+import { FastField, Field, ErrorMessage } from 'formik';
 import {
   FormGroup,
   Classes,
@@ -27,8 +27,8 @@ function ItemFormBody({ accountsList }) {
       <Row>
         <Col xs={6}>
           {/*------------- Purchasable checbox ------------- */}
-          <FastField name={'sellable'}>
-            {({ field, field: { value } }) => (
+          <FastField name={'sellable'} type="checkbox">
+            {({ field: { onChange, onBlur, name, checked } }) => (
               <FormGroup inline={true} className={'form-group--sellable'}>
                 <Checkbox
                   inline={true}
@@ -37,8 +37,10 @@ function ItemFormBody({ accountsList }) {
                       <T id={'i_sell_this_item'} />
                     </h3>
                   }
-                  checked={value}
-                  {...field}
+                  name={'sellable'}
+                  checked={!!checked}
+                  onChange={onChange}
+                  onBlur={onBlur}
                 />
               </FormGroup>
             )}

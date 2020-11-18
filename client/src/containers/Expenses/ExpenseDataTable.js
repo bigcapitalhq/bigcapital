@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState, useMemo } from 'react';
+import React, { useEffect, useCallback, useMemo } from 'react';
 import {
   Intent,
   Button,
@@ -15,12 +15,15 @@ import { useParams } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import moment from 'moment';
+import classNames from 'classnames';
 
 import Icon from 'components/Icon';
 import { compose, saveInvoke } from 'utils';
 import { useIsValuePassed } from 'hooks';
 
 import { If, Money, Choose, LoadingIndicator } from 'components';
+import { CLASSES } from 'common/classes';
+
 import DataTable from 'components/DataTable';
 import ExpensesEmptyStatus from './ExpensesEmptyStatus';
 
@@ -268,40 +271,39 @@ function ExpensesDataTable({
 
   const showEmptyStatus = [
     expensesCurrentViewId === -1,
-    expensesCurrentPage.length === 0
-  ].every(condition => condition === true);
+    expensesCurrentPage.length === 0,
+  ].every((condition) => condition === true);
 
   return (
-    <LoadingIndicator
-      loading={expensesLoading && !isLoadedBefore}
-      mount={false}
-    >
-      <Choose>
-        <Choose.When condition={showEmptyStatus}>
-          <ExpensesEmptyStatus />
-        </Choose.When>
+    <div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>
+      <LoadingIndicator loading={expensesLoading && !isLoadedBefore}>
+        <Choose>
+          <Choose.When condition={showEmptyStatus}>
+            <ExpensesEmptyStatus />
+          </Choose.When>
 
-        <Choose.Otherwise>
-          <DataTable
-            columns={columns}
-            data={expensesCurrentPage}
-            manualSortBy={true}
-            selectionColumn={true}
-            noInitialFetch={true}
-            sticky={true}
-            onSelectedRowsChange={handleSelectedRowsChange}
-            onFetchData={handleFetchData}
-            rowContextMenu={onRowContextMenu}
-            pagination={true}
-            pagesCount={expensesPagination.pagesCount}
-            autoResetSortBy={false}
-            autoResetPage={false}
-            initialPageSize={expensesTableQuery.page_size}
-            initialPageIndex={expensesTableQuery.page - 1}
-          />
-        </Choose.Otherwise>
-      </Choose>
-    </LoadingIndicator>
+          <Choose.Otherwise>
+            <DataTable
+              columns={columns}
+              data={expensesCurrentPage}
+              manualSortBy={true}
+              selectionColumn={true}
+              noInitialFetch={true}
+              sticky={true}
+              onSelectedRowsChange={handleSelectedRowsChange}
+              onFetchData={handleFetchData}
+              rowContextMenu={onRowContextMenu}
+              pagination={true}
+              pagesCount={expensesPagination.pagesCount}
+              autoResetSortBy={false}
+              autoResetPage={false}
+              initialPageSize={expensesTableQuery.page_size}
+              initialPageIndex={expensesTableQuery.page - 1}
+            />
+          </Choose.Otherwise>
+        </Choose>
+      </LoadingIndicator>
+    </div>
   );
 }
 

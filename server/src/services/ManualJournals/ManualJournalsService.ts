@@ -407,6 +407,7 @@ export default class ManualJournalsService implements IManualJournalsService {
     this.logger.info('[manual_journals] trying to get manual journals list.', { tenantId, filter });
     const { results, pagination } = await ManualJournal.query().onBuild((builder) => {
       dynamicList.buildQuery()(builder);
+      builder.withGraphFetched('entries.account');
     }).pagination(filter.page - 1, filter.pageSize);
 
     return {

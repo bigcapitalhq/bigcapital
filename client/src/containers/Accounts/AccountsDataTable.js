@@ -12,22 +12,19 @@ import {
 } from '@blueprintjs/core';
 import { withRouter } from 'react-router';
 import { FormattedMessage as T, useIntl } from 'react-intl';
-import classnames from 'classnames';
-import {
-  Icon,
-  DataTable,
-  Money,
-  If,
-  Choose,
-} from 'components';
+import classNames from 'classnames';
+import { Icon, DataTable, Money, If, Choose } from 'components';
 import { compose } from 'utils';
 import { useUpdateEffect } from 'hooks';
+
+import { CLASSES } from 'common/classes';
 
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withAccountsActions from 'containers/Accounts/withAccountsActions';
 import withAccounts from 'containers/Accounts/withAccounts';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withCurrentView from 'containers/Views/withCurrentView';
+
 
 
 function NormalCell({ cell }) {
@@ -52,7 +49,7 @@ function NormalCell({ cell }) {
 function BalanceCell({ cell }) {
   const account = cell.row.original;
 
-  return (account.amount) ? (
+  return account.amount ? (
     <span>
       <Money amount={account.amount} currency={'USD'} />
     </span>
@@ -64,13 +61,14 @@ function BalanceCell({ cell }) {
 function InactiveSemafro() {
   return (
     <Tooltip
-      content={<T id='inactive' />}
-      className={classnames(
+      content={<T id="inactive" />}
+      className={classNames(
         Classes.TOOLTIP_INDICATOR,
-        'bp3-popover-wrapper--inactive-semafro'
+        'bp3-popover-wrapper--inactive-semafro',
       )}
       position={Position.TOP}
-      hoverOpenDelay={250}>
+      hoverOpenDelay={250}
+    >
       <div className="inactive-semafro"></div>
     </Tooltip>
   );
@@ -82,7 +80,7 @@ function AccountNameAccessor(row) {
       <Choose>
         <Choose.When condition={!!row.description}>
           <Tooltip
-            className={classnames(
+            className={classNames(
               Classes.TOOLTIP_INDICATOR,
               'bp3-popover-wrapper--account-desc',
             )}
@@ -94,9 +92,7 @@ function AccountNameAccessor(row) {
           </Tooltip>
         </Choose.When>
 
-        <Choose.Otherwise>
-          { row.name }
-        </Choose.Otherwise>
+        <Choose.Otherwise>{row.name}</Choose.Otherwise>
       </Choose>
 
       <If condition={!row.active}>
@@ -159,7 +155,8 @@ function AccountsDataTable({
       <Menu>
         <MenuItem
           icon={<Icon icon="reader-18" />}
-          text={formatMessage({ id: 'view_details' })} />
+          text={formatMessage({ id: 'view_details' })}
+        />
         <MenuDivider />
         <MenuItem
           icon={<Icon icon="pen-18" />}
@@ -287,20 +284,22 @@ function AccountsDataTable({
   );
 
   return (
-    <DataTable
-      noInitialFetch={true}
-      columns={columns}
-      data={accountsTable}
-      onFetchData={handleDatatableFetchData}
-      manualSortBy={true}
-      selectionColumn={selectionColumn}
-      expandable={true}
-      sticky={true}
-      onSelectedRowsChange={handleSelectedRowsChange}
-      loading={accountsLoading && !isMounted}
-      rowContextMenu={rowContextMenu}
-      expandColumnSpace={1}
-    />
+    <div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>
+      <DataTable
+        noInitialFetch={true}
+        columns={columns}
+        data={accountsTable}
+        onFetchData={handleDatatableFetchData}
+        manualSortBy={true}
+        selectionColumn={selectionColumn}
+        expandable={true}
+        sticky={true}
+        onSelectedRowsChange={handleSelectedRowsChange}
+        loading={accountsLoading && !isMounted}
+        rowContextMenu={rowContextMenu}
+        expandColumnSpace={1}
+      />
+    </div>
   );
 }
 

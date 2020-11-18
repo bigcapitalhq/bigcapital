@@ -10,9 +10,11 @@ import {
 } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { useIsValuePassed } from 'hooks';
+import classNames from 'classnames';
 
 import CustomersEmptyStatus from './CustomersEmptyStatus';
 import { DataTable, Icon, Money, Choose, LoadingIndicator } from 'components';
+import { CLASSES } from 'common/classes';
 
 import withCustomers from './withCustomers';
 import withCustomersActions from './withCustomersActions';
@@ -186,42 +188,41 @@ const CustomerTable = ({
   const showEmptyStatus = [
     customersCurrentViewId === -1,
     customers.length === 0,
-  ].every(condition => condition === true);
+  ].every((condition) => condition === true);
 
   return (
-    <LoadingIndicator
-      loading={customersLoading && !isLoadedBefore}
-      mount={false}
-    >
-      <Choose>
-        <Choose.When condition={showEmptyStatus}>
-          <CustomersEmptyStatus />
-        </Choose.When>
+    <div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>
+      <LoadingIndicator loading={customersLoading && !isLoadedBefore}>
+        <Choose>
+          <Choose.When condition={showEmptyStatus}>
+            <CustomersEmptyStatus />
+          </Choose.When>
 
-        <Choose.Otherwise>
-          <DataTable
-            noInitialFetch={true}
-            columns={columns}
-            data={customers}
-            // loading={customersLoading}
-            onFetchData={handleFetchData}
-            selectionColumn={true}
-            expandable={false}
-            sticky={true}
-            onSelectedRowsChange={handleSelectedRowsChange}
-            spinnerProps={{ size: 30 }}
-            rowContextMenu={rowContextMenu}
-            pagination={true}
-            manualSortBy={true}
-            pagesCount={customerPagination.pagesCount}
-            autoResetSortBy={false}
-            autoResetPage={false}
-            initialPageSize={customersTableQuery.page_size}
-            initialPageIndex={customersTableQuery.page - 1}
-          />
-        </Choose.Otherwise>
-      </Choose>
-    </LoadingIndicator>
+          <Choose.Otherwise>
+            <DataTable
+              noInitialFetch={true}
+              columns={columns}
+              data={customers}
+              // loading={customersLoading}
+              onFetchData={handleFetchData}
+              selectionColumn={true}
+              expandable={false}
+              sticky={true}
+              onSelectedRowsChange={handleSelectedRowsChange}
+              spinnerProps={{ size: 30 }}
+              rowContextMenu={rowContextMenu}
+              pagination={true}
+              manualSortBy={true}
+              pagesCount={customerPagination.pagesCount}
+              autoResetSortBy={false}
+              autoResetPage={false}
+              initialPageSize={customersTableQuery.page_size}
+              initialPageIndex={customersTableQuery.page - 1}
+            />
+          </Choose.Otherwise>
+        </Choose>
+      </LoadingIndicator>
+    </div>
   );
 };
 
@@ -238,7 +239,7 @@ export default compose(
       customersLoading,
       customerPagination,
       customersTableQuery,
-      customersCurrentViewId
+      customersCurrentViewId,
     }),
   ),
   withCustomersActions,

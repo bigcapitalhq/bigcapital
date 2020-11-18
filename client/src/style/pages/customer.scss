@@ -8,9 +8,11 @@
     padding: 0;
   }
   #{$self}__primary-section{
-    padding: 30px 22px 0;
-    margin: -20px -20px 14px;
+    padding: 10px 0 0;
+    margin: 0 0 20px;
     overflow: hidden;
+    border-bottom: 1px solid #e4e4e4;
+    max-width: 1000px;
   }
 
   .bp3-form-group{
@@ -41,7 +43,6 @@
       &:not(:last-child) {
         padding-right: 10px;
       }
-
       &.input-group--salutation-list{
         width: 25%;
       }
@@ -158,8 +159,8 @@
   }
 
   #{$self}__floating-actions {
-    margin-left: -20px;
-    margin-right: -20px;
+    margin-left: -40px;
+    margin-right: -40px;
   }
 }
 

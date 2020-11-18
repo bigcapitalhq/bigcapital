@@ -1,11 +1,11 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
-import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import { queryCache } from 'react-query';
 import { useHistory } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames';
+import { defaultTo } from 'lodash';
 
 import { CLASSES } from 'common/classes';
 import AppToaster from 'components/AppToaster';
@@ -22,6 +22,8 @@ import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withSettings from 'containers/Settings/withSettings';
 
 import { compose, transformToForm } from 'utils';
+import { transitionItemTypeKeyToLabel } from './utils';
+import { EditItemFormSchema, CreateItemFormSchema } from './ItemForm.schema';
 
 const defaultInitialValues = {
   active: true,
@@ -83,66 +85,15 @@ function ItemForm({
     deleteCallback: requestDeleteMedia,
   });
 
-  const validationSchema = Yup.object().shape({
-    active: Yup.boolean(),
-    name: Yup.string()
-      .required()
-      .label(formatMessage({ id: 'item_name_' })),
-    type: Yup.string()
-      .trim()
-      .required()
-      .label(formatMessage({ id: 'item_type_' })),
-    sku: Yup.string().trim(),
-    cost_price: Yup.number().when(['purchasable'], {
-      is: true,
-      then: Yup.number()
-        .required()
-        .label(formatMessage({ id: 'cost_price_' })),
-      otherwise: Yup.number().nullable(true),
-    }),
-    sell_price: Yup.number().when(['sellable'], {
-      is: true,
-      then: Yup.number()
-        .required()
-        .label(formatMessage({ id: 'sell_price_' })),
-      otherwise: Yup.number().nullable(true),
-    }),
-    cost_account_id: Yup.number()
-      .when(['purchasable'], {
-        is: true,
-        then: Yup.number().required(),
-        otherwise: Yup.number().nullable(true),
-      })
-      .label(formatMessage({ id: 'cost_account_id' })),
-    sell_account_id: Yup.number()
-      .when(['sellable'], {
-        is: true,
-        then: Yup.number().required(),
-        otherwise: Yup.number().nullable(),
-      })
-      .label(formatMessage({ id: 'sell_account_id' })),
-    inventory_account_id: Yup.number()
-      .when(['type'], {
-        is: (value) => value === 'inventory',
-        then: Yup.number().required(),
-        otherwise: Yup.number().nullable(),
-      })
-      .label(formatMessage({ id: 'inventory_account' })),
-    category_id: Yup.number().positive().nullable(),
-    stock: Yup.string() || Yup.boolean(),
-    sellable: Yup.boolean().required(),
-    purchasable: Yup.boolean().required(),
-  });
-
   /**
    * Initial values in create and edit mode.
    */
   const initialValues = useMemo(
     () => ({
       ...defaultInitialValues,
-      cost_account_id: parseInt(preferredCostAccount),
-      sell_account_id: parseInt(preferredSellAccount),
-      inventory_account_id: parseInt(preferredInventoryAccount),
+      cost_account_id: defaultTo(preferredCostAccount, ''),
+      sell_account_id: defaultTo(preferredSellAccount, ''),
+      inventory_account_id: defaultTo(preferredInventoryAccount, ''),
       /**
        * We only care about the fields in the form. Previously unfilled optional
        * values such as `notes` come back from the API as null, so remove those
@@ -150,7 +101,12 @@ function ItemForm({
        */
       ...transformToForm(itemDetail, defaultInitialValues),
     }),
-    [],
+    [
+      itemDetail,
+      preferredCostAccount,
+      preferredSellAccount,
+      preferredInventoryAccount,
+    ],
   );
 
   useEffect(() => {
@@ -214,7 +170,7 @@ function ItemForm({
 
   useEffect(() => {
     if (itemDetail && itemDetail.type) {
-      changePageSubtitle(formatMessage({ id: itemDetail.type }));
+      changePageSubtitle(transitionItemTypeKeyToLabel(itemDetail.type));
     }
   }, [itemDetail, changePageSubtitle, formatMessage]);
 
@@ -262,14 +218,14 @@ function ItemForm({
     <div class={classNames(CLASSES.PAGE_FORM_ITEM)}>
       <Formik
         enableReinitialize={true}
-        validationSchema={validationSchema}
+        validationSchema={isNewMode ? CreateItemFormSchema : EditItemFormSchema}
         initialValues={initialValues}
         onSubmit={handleFormSubmit}
       >
         {({ isSubmitting, handleSubmit }) => (
           <Form>
             <div class={classNames(CLASSES.PAGE_FORM_BODY)}>
-              <ItemFormPrimarySection />
+              <ItemFormPrimarySection itemId={itemId} />
               <ItemFormBody />
               <ItemFormInventorySection />
             </div>
@@ -294,8 +250,10 @@ export default compose(
   withDashboardActions,
   withMediaActions,
   withSettings(({ itemsSettings }) => ({
-    preferredCostAccount: itemsSettings.preferredCostAccount,
-    preferredSellAccount: itemsSettings.preferredSellAccount,
-    preferredInventoryAccount: itemsSettings.preferredInventoryAccount,
+    preferredCostAccount: parseInt(itemsSettings?.preferredCostAccount),
+    preferredSellAccount: parseInt(itemsSettings?.preferredSellAccount),
+    preferredInventoryAccount: parseInt(
+      itemsSettings?.preferredInventoryAccount,
+    ),
   })),
 )(ItemForm);

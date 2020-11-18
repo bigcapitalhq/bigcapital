@@ -172,9 +172,9 @@ function CustomerForm({
     const onSuccess = () => {
       AppToaster.show({
         message: formatMessage({
-          id: customer ?
-            'the_item_customer_has_been_successfully_edited' :
-            'the_customer_has_been_successfully_created',
+          id: customer
+            ? 'the_item_customer_has_been_successfully_edited'
+            : 'the_customer_has_been_successfully_created',
         }),
         intent: Intent.SUCCESS,
       });
@@ -191,7 +191,9 @@ function CustomerForm({
     };
 
     if (customer && customer.id) {
-      requestEditCustomer(customer.id, formValues).then(onSuccess).catch(onError);
+      requestEditCustomer(customer.id, formValues)
+        .then(onSuccess)
+        .catch(onError);
     } else {
       requestSubmitCustomer(formValues).then(onSuccess).catch(onError);
     }
@@ -239,14 +241,12 @@ function CustomerForm({
       >
         {({ isSubmitting }) => (
           <Form>
-            <div class={classNames(CLASSES.PAGE_FORM_HEADER)}>
-              <div className={classNames(CLASSES.PAGE_FORM_HEADER_PRIMARY)}>
-                <CustomerFormPrimarySection />
-              </div>
+            <div className={classNames(CLASSES.PAGE_FORM_HEADER_PRIMARY)}>
+              <CustomerFormPrimarySection />
+            </div>
 
-              <div className={'page-form__after-priamry-section'}>
-                <CustomerFormAfterPrimarySection />
-              </div>
+            <div className={'page-form__after-priamry-section'}>
+              <CustomerFormAfterPrimarySection />
             </div>
 
             <div className={classNames(CLASSES.PAGE_FORM_TABS)}>

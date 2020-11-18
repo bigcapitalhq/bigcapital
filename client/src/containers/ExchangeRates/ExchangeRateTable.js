@@ -9,6 +9,9 @@ import {
 } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import moment from 'moment';
+import classNames from 'classnames';
+
+import { CLASSES } from 'common/classes';
 
 import { DataTable, Icon, MoneyExchangeRate } from 'components';
 import LoadingIndicator from 'components/LoadingIndicator';
@@ -140,24 +143,26 @@ function ExchangeRateTable({
   );
 
   return (
-    <LoadingIndicator loading={loading} mount={false}>
-      <DataTable
-        columns={columns}
-        data={exchangeRatesList}
-        onFetchData={handelFetchData}
-        loading={exchangeRatesLoading && !initialMount}
-        manualSortBy={true}
-        selectionColumn={selectionColumn}
-        expandable={true}
-        treeGraph={true}
-        onSelectedRowsChange={handelSelectedRowsChange}
-        rowContextMenu={rowContextMenu}
-        pagination={true}
-        pagesCount={exchangeRatesPageination.pagesCount}
-        initialPageSize={exchangeRatesPageination.pageSize}
-        initialPageIndex={exchangeRatesPageination.page - 1}
-      />
-    </LoadingIndicator>
+    <div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>
+      <LoadingIndicator loading={loading} mount={false}>
+        <DataTable
+          columns={columns}
+          data={exchangeRatesList}
+          onFetchData={handelFetchData}
+          loading={exchangeRatesLoading && !initialMount}
+          manualSortBy={true}
+          selectionColumn={selectionColumn}
+          expandable={true}
+          treeGraph={true}
+          onSelectedRowsChange={handelSelectedRowsChange}
+          rowContextMenu={rowContextMenu}
+          pagination={true}
+          pagesCount={exchangeRatesPageination.pagesCount}
+          initialPageSize={exchangeRatesPageination.pageSize}
+          initialPageIndex={exchangeRatesPageination.page - 1}
+        />
+      </LoadingIndicator>
+    </div>
   );
 }
 

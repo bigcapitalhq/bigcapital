@@ -63,7 +63,9 @@ function PaymentReceiveFormPage({
         fetchAccounts.isFetching ||
         // fetchSettings.isFetching || 
         fetchCustomers.isFetching
-      }>
+      }
+      name={'payment-receive-form'}
+    >
       <PaymentReceiveForm
         paymentReceiveId={paymentReceiveId}
       />

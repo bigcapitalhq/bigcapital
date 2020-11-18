@@ -2,6 +2,9 @@ import { Classes } from '@blueprintjs/core';
 
 const CLASSES = {
   DASHBOARD_DATATABLE: 'dashboard__datatable',
+  DASHBOARD_CARD: 'dashboard__card',
+  DASHBOARD_CARD_PAGE: 'dashboard__card--page',
+
   DATATABLE_EDITOR: 'datatable-editor',
   DATATABLE_EDITOR_ACTIONS: 'datatable-editor__actions',
   DATATABLE_EDITOR_ITEMS_ENTRIES: 'items-entries-table',
@@ -13,7 +16,7 @@ const CLASSES = {
   PAGE_FORM_HEADER_BIG_NUMBERS: 'page-form__big-numbers',
   PAGE_FORM_TABS: 'page-form__tabs',
   PAGE_FORM_BODY: 'page-form__body',
-  
+
   PAGE_FORM_FOOTER: 'page-form__footer',
   PAGE_FORM_FLOATING_ACTIONS: 'page-form__floating-actions',
 

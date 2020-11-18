@@ -213,8 +213,11 @@ export default {
   once_delete_this_item_you_will_able_to_restore_it: `Once you delete this item, you won\'t be able to restore the item later. Are you sure you want to delete ?<br /><br />If you're not sure, you can inactivate it instead.`,
   the_item_has_been_successfully_deleted:
     'The item has been successfully deleted.',
+  the_item_has_been_created_successfully:
+    'The item has been created successfully.',
   the_item_has_been_successfully_edited:
     'The item #{number} has been successfully edited.',
+
   the_item_category_has_been_successfully_created:
     'The item category has been successfully created.',
   the_item_category_has_been_successfully_edited:
@@ -819,4 +822,5 @@ export default {
   the_name_used_before: 'The name is already used.',
   the_item_has_associated_transactions: 'The item has associated transactions.',
   customer_has_sales_invoices: 'Customer has sales invoices',
+  account_name_is_already_used: 'Account name is already used.',
 };

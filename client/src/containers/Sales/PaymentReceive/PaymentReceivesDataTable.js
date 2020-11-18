@@ -11,9 +11,12 @@ import {
 import { withRouter } from 'react-router';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import moment from 'moment';
+import classNames from 'classnames';
 
 import { compose, saveInvoke } from 'utils';
 import { useIsValuePassed } from 'hooks';
+
+import { CLASSES } from 'common/classes';
 
 import PaymentReceivesEmptyStatus from './PaymentReceivesEmptyStatus';
 import { LoadingIndicator, DataTable, Choose, Money, Icon } from 'components';
@@ -186,6 +189,7 @@ function PaymentReceivesDataTable({
   ].every(condition => condition === true); 
 
   return (
+    <div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>
     <LoadingIndicator
       loading={paymentReceivesLoading && !isLoaded}
       mount={false}
@@ -216,6 +220,7 @@ function PaymentReceivesDataTable({
         </Choose.Otherwise>
       </Choose>
     </LoadingIndicator>
+    </div>
   );
 }
 

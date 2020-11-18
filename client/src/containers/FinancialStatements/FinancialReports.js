@@ -3,6 +3,7 @@ import { useIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
 import { For } from 'components';
 
+import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import financialReportMenus from 'config/financialReportsMenu';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 
@@ -42,9 +43,11 @@ function FinancialReports({
   }, [changePageTitle, formatMessage]);
 
   return (
-    <div class="financial-reports">
-      <For render={FinancialReportsSection} of={financialReportMenus} />
-    </div>
+    <DashboardInsider name={'financial-reports'}>
+      <div class="financial-reports">
+        <For render={FinancialReportsSection} of={financialReportMenus} />
+      </div>
+    </DashboardInsider>
   );
 }
 

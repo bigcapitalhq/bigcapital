@@ -38,6 +38,7 @@ import DisplayNameList from './DisplayNameList';
 import MoneyInputGroup from './MoneyInputGroup';
 import Dragzone from './Dragzone';
 import EmptyStatus from './EmptyStatus';
+import DashboardCard from './Dashboard/DashboardCard';
 
 const Hint = FieldHint;
 
@@ -81,5 +82,6 @@ export {
   SalutationList,
   MoneyInputGroup,
   Dragzone,
-  EmptyStatus
+  EmptyStatus,
+  DashboardCard,
 };

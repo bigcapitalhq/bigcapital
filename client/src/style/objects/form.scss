@@ -19,12 +19,19 @@ $form-check-input-indeterminate-bg-image: url("data:image/svg+xml,<svg xmlns='ht
 }
 
 // Form
-.bp3-label{
+label.bp3-label{
   color: #353535;
   font-weight: 400;
 
   .required{
     color: red;
+  }
+
+  .bp3-form-group.bp3-inline &{
+    margin: 0 10px 0 0;
+    line-height: 1.6;
+    padding-top: calc(.3rem + 1px);
+    padding-bottom: calc(.3rem + 1px);
   }
 }
 

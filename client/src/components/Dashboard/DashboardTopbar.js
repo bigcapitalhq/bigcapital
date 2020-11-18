@@ -1,5 +1,4 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { useHistory } from 'react-router';
 import {
   Navbar,
@@ -14,7 +13,7 @@ import { FormattedMessage as T } from 'react-intl';
 
 import DashboardTopbarUser from 'components/Dashboard/TopbarUser';
 import DashboardBreadcrumbs from 'components/Dashboard/DashboardBreadcrumbs';
-import { Icon, If } from 'components';
+import { Icon, Hint, If } from 'components';
 
 import withSearch from 'containers/GeneralSearch/withSearch';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
@@ -78,8 +77,18 @@ function DashboardTopbar({
         <div class="dashboard__title">
           <h1>{pageTitle}</h1>
 
+          <If condition={true}>
+            <div class="dashboard__hint">
+              <Hint
+                content={
+                  'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.'
+                }
+              />
+            </div>
+          </If>
+
           <If condition={pageSubtitle}>
-            <h3>{ pageSubtitle }</h3>
+            <h3>{pageSubtitle}</h3>
           </If>
 
           <If condition={pageSubtitle && editViewId}>

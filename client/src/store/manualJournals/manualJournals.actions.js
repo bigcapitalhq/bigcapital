@@ -1,4 +1,4 @@
-import { omit } from 'lodash';
+import { omit, flatten } from 'lodash';
 import ApiService from 'services/ApiService';
 import t from 'store/types';
 
@@ -135,7 +135,14 @@ export const fetchManualJournalsTable = ({ query } = {}) => {
           });
           dispatch({
             type: t.MANUAL_JOURNALS_ITEMS_SET,
-            manual_journals: response.data.manual_journals,
+            manual_journals: [
+              ...response.data.manual_journals.map((manualJournal) => ({
+                ...manualJournal,
+                entries: manualJournal.entries.map((entry) => ({
+                  ...omit(entry, ['account']),
+                }))
+              })),
+            ]
           });
           dispatch({
             type: t.MANUAL_JOURNALS_PAGINATION_SET,
@@ -144,6 +151,12 @@ export const fetchManualJournalsTable = ({ query } = {}) => {
               customViewId:
                 response.data.manual_journals?.viewMeta?.customViewId || -1,
             },
+          });
+          dispatch({
+            type: t.ACCOUNTS_ITEMS_SET,
+            accounts: flatten(response.data.manual_journals?.map(
+              journal => journal?.entries.map(entry => entry.account),
+            )),
           });
           dispatch({
             type: t.MANUAL_JOURNALS_TABLE_LOADING,

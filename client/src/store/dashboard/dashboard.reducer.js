@@ -4,6 +4,7 @@ import { createReducer } from '@reduxjs/toolkit';
 const initialState = {
   pageTitle: '',
   pageSubtitle: '',
+  pageHint: '',
   preferencesPageTitle: '',
   sidebarExpended: true,
   dialogs: {},
@@ -18,6 +19,10 @@ export default createReducer(initialState, {
 
   [t.ALTER_DASHBOARD_PAGE_SUBTITLE]: (state, action) => {
     state.pageSubtitle = action.pageSubtitle;
+  },
+
+  [t.CHANGE_DASHBOARD_PAGE_HINT]: (state, action) => {
+    state.pageHint = action.pageHint;
   },
 
   [t.CHANGE_PREFERENCES_PAGE_TITLE]: (state, action) => {

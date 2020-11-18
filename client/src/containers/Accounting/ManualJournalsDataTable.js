@@ -1,19 +1,18 @@
-import React, { useEffect, useCallback, useState, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import {
   Intent,
   Button,
-  Classes,
   Popover,
   Tooltip,
   Menu,
   MenuItem,
   MenuDivider,
   Position,
-  Tag,
 } from '@blueprintjs/core';
 import { withRouter, useParams } from 'react-router-dom';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
 import moment from 'moment';
+import classNames from 'classnames';
 
 import {
   DataTable,
@@ -23,9 +22,11 @@ import {
   Icon,
   LoadingIndicator,
 } from 'components';
+import { CLASSES } from 'common/classes';
 import { useIsValuePassed } from 'hooks';
 
 import ManualJournalsEmptyStatus from './ManualJournalsEmptyStatus';
+import { AmountPopoverContent, NoteAccessor, StatusAccessor } from './components';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withManualJournals from 'containers/Accounting/withManualJournals';
@@ -33,44 +34,7 @@ import withManualJournalsActions from 'containers/Accounting/withManualJournalsA
 
 import { compose, saveInvoke } from 'utils';
 
-/**
- * Status column accessor.
- */
-const StatusAccessor = (row) => {
-  return (
-    <Choose>
-      <Choose.When condition={!!row.status}>
-        <Tag minimal={true}>
-          <T id={'published'} />
-        </Tag>
-      </Choose.When>
 
-      <Choose.Otherwise>
-        <Tag minimal={true} intent={Intent.WARNING}>
-          <T id={'draft'} />
-        </Tag>
-      </Choose.Otherwise>
-    </Choose>
-  );
-};
-
-/**
- * Note column accessor.
- */
-function NoteAccessor(row) {
-  return (
-    <If condition={row.description}>
-      <Tooltip
-        className={Classes.TOOLTIP_INDICATOR}
-        content={row.description}
-        position={Position.LEFT_TOP}
-        hoverOpenDelay={50}
-      >
-        <Icon icon={'file-alt'} iconSize={16} />
-      </Tooltip>
-    </If>
-  );
-}
 
 function ManualJournalsDataTable({
   // #withManualJournals
@@ -166,7 +130,14 @@ function ManualJournalsDataTable({
       {
         id: 'amount',
         Header: formatMessage({ id: 'amount' }),
-        accessor: (r) => <Money amount={r.amount} currency={'USD'} />,
+        accessor: (r) => (
+          <Tooltip
+            content={<AmountPopoverContent journalEntries={r.entries} />}
+            position={Position.RIGHT_BOTTOM}
+          >
+            <Money amount={r.amount} currency={'USD'} />
+          </Tooltip>
+        ),
         className: 'amount',
         width: 115,
       },
@@ -254,37 +225,39 @@ function ManualJournalsDataTable({
   const showEmptyStatus = [
     manualJournalsCurrentViewId === -1,
     manualJournalsCurrentPage.length === 0,
-  ].every(condition => condition === true);
+  ].every((condition) => condition === true);
 
   return (
-    <LoadingIndicator loading={manualJournalsLoading && !isLoadedBefore}>
-      <Choose>
-        <Choose.When condition={showEmptyStatus}>
-          <ManualJournalsEmptyStatus />
-        </Choose.When>
+    <div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>
+      <LoadingIndicator loading={manualJournalsLoading && !isLoadedBefore}>
+        <Choose>
+          <Choose.When condition={showEmptyStatus}>
+            <ManualJournalsEmptyStatus />
+          </Choose.When>
 
-        <Choose.Otherwise>
-          <DataTable
-            noInitialFetch={true}
-            columns={columns}
-            data={manualJournalsCurrentPage}
-            onFetchData={handleDataTableFetchData}
-            manualSortBy={true}
-            selectionColumn={true}
-            expandable={true}
-            sticky={true}
-            onSelectedRowsChange={handleSelectedRowsChange}
-            rowContextMenu={onRowContextMenu}
-            pagesCount={manualJournalsPagination.pagesCount}
-            pagination={true}
-            initialPageSize={manualJournalsTableQuery.page_size}
-            initialPageIndex={manualJournalsTableQuery.page - 1}
-            autoResetSortBy={false}
-            autoResetPage={false}
-          />
-        </Choose.Otherwise>
-      </Choose>
-    </LoadingIndicator>
+          <Choose.Otherwise>
+            <DataTable
+              noInitialFetch={true}
+              columns={columns}
+              data={manualJournalsCurrentPage}
+              onFetchData={handleDataTableFetchData}
+              manualSortBy={true}
+              selectionColumn={true}
+              expandable={true}
+              sticky={true}
+              onSelectedRowsChange={handleSelectedRowsChange}
+              rowContextMenu={onRowContextMenu}
+              pagesCount={manualJournalsPagination.pagesCount}
+              pagination={true}
+              initialPageSize={manualJournalsTableQuery.page_size}
+              initialPageIndex={manualJournalsTableQuery.page - 1}
+              autoResetSortBy={false}
+              autoResetPage={false}
+            />
+          </Choose.Otherwise>
+        </Choose>
+      </LoadingIndicator>
+    </div>
   );
 }
 
@@ -304,7 +277,7 @@ export default compose(
       manualJournalsLoading,
       manualJournalsPagination,
       manualJournalsTableQuery,
-      manualJournalsCurrentViewId
+      manualJournalsCurrentViewId,
     }),
   ),
 )(ManualJournalsDataTable);

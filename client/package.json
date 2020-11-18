@@ -42,7 +42,7 @@
     "eslint-plugin-react-hooks": "^1.6.1",
     "file-loader": "4.3.0",
     "flow-bin": "^0.123.0",
-    "formik": "^2.1.4",
+    "formik": "^2.2.5",
     "fs-extra": "^8.1.0",
     "html-webpack-plugin": "4.0.0-beta.11",
     "identity-obj-proxy": "3.0.0",
@@ -70,6 +70,7 @@
     "react-dev-utils": "^10.2.0",
     "react-dom": "^16.12.0",
     "react-dropzone": "^11.0.1",
+    "react-error-boundary": "^3.0.2",
     "react-grid-system": "^6.2.3",
     "react-hook-form": "^4.9.4",
     "react-intl": "^3.12.0",
@@ -130,6 +131,7 @@
   },
   "devDependencies": {
     "@babel/preset-flow": "^7.9.0",
+    "@welldone-software/why-did-you-render": "^6.0.0-rc.1",
     "http-proxy-middleware": "^1.0.0",
     "react-query-devtools": "^2.1.1",
     "redux-devtools": "^3.5.0"

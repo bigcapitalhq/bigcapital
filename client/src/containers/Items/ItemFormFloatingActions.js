@@ -56,7 +56,7 @@ export default function ItemFormFloatingActions({
       {/*----------- Active ----------*/}
       <FastField name={'active'}>
         {({ field, field: { value } }) => (
-          <FormGroup label={' '} inline={true} className={'form-group--active'}>
+          <FormGroup inline={true} className={'form-group--active'}>
             <Checkbox
               inline={true}
               label={<T id={'active'} />}

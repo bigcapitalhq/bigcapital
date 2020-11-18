@@ -14,6 +14,12 @@ const mapActionsToProps = (dispatch) => ({
       pageSubtitle,
     }),
 
+  changePageHint: (pageHint) => 
+    dispatch({
+      type: t.CHANGE_DASHBOARD_PAGE_HINT,
+      payload: { pageHint }
+    }),
+
   setTopbarEditView: (id) =>
     dispatch({
       type: t.SET_TOPBAR_EDIT_VIEW,

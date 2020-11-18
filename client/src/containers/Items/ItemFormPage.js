@@ -3,6 +3,7 @@ import { useParams, useHistory } from 'react-router-dom';
 import { useQuery } from 'react-query';
 
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
+import DashboardCard from 'components/Dashboard/DashboardCard';
 import ItemForm from 'containers/Items/ItemForm';
 
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
@@ -62,11 +63,13 @@ const ItemFormContainer = ({
       }
       name={'item-form'}
     >
-      <ItemForm
-        onFormSubmit={handleFormSubmit}
-        itemId={id}
-        onCancelForm={handleCancel}
-      />
+      <DashboardCard page>
+        <ItemForm
+          onFormSubmit={handleFormSubmit}
+          itemId={id}
+          onCancelForm={handleCancel}
+        />
+      </DashboardCard>
     </DashboardInsider>
   );
 };

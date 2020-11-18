@@ -11,10 +11,12 @@ import {
 import { withRouter } from 'react-router';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import moment from 'moment';
+import classNames from 'classnames';
 
 import { compose, saveInvoke } from 'utils';
 import { useIsValuePassed } from 'hooks';
 
+import { CLASSES } from 'common/classes';
 import { Choose, LoadingIndicator, DataTable, Money, Icon } from 'components';
 
 import ReceiptsEmptyStatus from './ReceiptsEmptyStatus';
@@ -192,36 +194,38 @@ function ReceiptsDataTable({
   const showEmptyStatus = [
     receiptsCurrentViewId === -1,
     receiptsCurrentPage.length === 0,
-  ].every(condition => condition === true);
+  ].every((condition) => condition === true);
 
   return (
-    <LoadingIndicator loading={receiptsLoading && !isLoadedBefore}>
-      <Choose>
-        <Choose.When condition={showEmptyStatus}>
-          <ReceiptsEmptyStatus />
-        </Choose.When>
+    <div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>
+      <LoadingIndicator loading={receiptsLoading && !isLoadedBefore}>
+        <Choose>
+          <Choose.When condition={showEmptyStatus}>
+            <ReceiptsEmptyStatus />
+          </Choose.When>
 
-        <Choose.Otherwise>
-          <DataTable
-            columns={columns}
-            data={receiptsCurrentPage}
-            onFetchData={handleDataTableFetchData}
-            manualSortBy={true}
-            selectionColumn={true}
-            noInitialFetch={true}
-            sticky={true}
-            onSelectedRowsChange={handleSelectedRowsChange}
-            rowContextMenu={onRowContextMenu}
-            pagination={true}
-            pagesCount={receiptsPagination.pagesCount}
-            autoResetSortBy={false}
-            autoResetPage={false}
-            initialPageSize={receiptTableQuery.page_size}
-            initialPageIndex={receiptTableQuery.page - 1}
-          />
-        </Choose.Otherwise>
-      </Choose>
-    </LoadingIndicator>
+          <Choose.Otherwise>
+            <DataTable
+              columns={columns}
+              data={receiptsCurrentPage}
+              onFetchData={handleDataTableFetchData}
+              manualSortBy={true}
+              selectionColumn={true}
+              noInitialFetch={true}
+              sticky={true}
+              onSelectedRowsChange={handleSelectedRowsChange}
+              rowContextMenu={onRowContextMenu}
+              pagination={true}
+              pagesCount={receiptsPagination.pagesCount}
+              autoResetSortBy={false}
+              autoResetPage={false}
+              initialPageSize={receiptTableQuery.page_size}
+              initialPageIndex={receiptTableQuery.page - 1}
+            />
+          </Choose.Otherwise>
+        </Choose>
+      </LoadingIndicator>
+    </div>
   );
 }
 
@@ -236,13 +240,13 @@ export default compose(
       receiptsLoading,
       receiptsPagination,
       receiptTableQuery,
-      receiptsCurrentViewId
+      receiptsCurrentViewId,
     }) => ({
       receiptsCurrentPage,
       receiptsLoading,
       receiptsPagination,
       receiptTableQuery,
-      receiptsCurrentViewId
+      receiptsCurrentViewId,
     }),
   ),
 )(ReceiptsDataTable);

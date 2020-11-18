@@ -198,7 +198,11 @@ export default class AccountsController extends BaseController{
 
     try {
       const account = await this.accountsService.editAccount(tenantId, accountId, accountDTO);
-      return res.status(200).send({ id: account.id });
+
+      return res.status(200).send({
+        id: account.id,
+        message: 'The account has been edited successfully',
+      });
     } catch (error) {
       next(error);
     }

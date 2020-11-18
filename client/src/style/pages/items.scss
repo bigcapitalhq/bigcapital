@@ -1,5 +1,4 @@
 
-
 .page-form--item{
   $self: '.page-form';
   padding: 20px;
@@ -8,9 +7,12 @@
     padding: 0;
   }
   #{$self}__primary-section{
-    padding: 30px 22px 0;
-    margin: -20px -20px 24px;
     overflow: hidden;
+    padding-top: 10px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eaeaea;
+    padding-bottom: 5px;
+    max-width: 1000px;
   }
 
   #{$self}__body{
@@ -65,8 +67,8 @@
   }
 
   #{$self}__floating-actions{
-    margin-left: -20px;
-    margin-right: -20px;
+    margin-left: -40px;
+    margin-right: -40px;
 
     .form-group--active{
       display: inline-block;

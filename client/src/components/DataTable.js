@@ -343,6 +343,7 @@ export default function DataTable({
     <div
       className={classnames('bigcapital-datatable', className, {
         'has-sticky': sticky,
+        'has-pagination': pagination,
         'is-expandable': expandable,
         'is-loading': loading,
         'has-virtualized-rows': virtualizedRows,

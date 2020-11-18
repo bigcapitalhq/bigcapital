@@ -285,15 +285,18 @@
   &__list{
     display: flex;
     flex-flow: wrap;
-    margin-left: -28px;
+    margin-left: -20px;
   }
 
   &__item{
     width: 270px;
-    margin-bottom: 40px;
-    margin-left: 28px;
-    border-top: 2px solid #DDD;
+    margin-bottom: 20px;
+    margin-left: 20px;
+    border: 1px solid #d1dee2;
+    border-top: 3px solid #d1dee2;
     padding-top: 16px;
+    background: #fff;
+    padding: 20px;
 
     .title{
       font-size: 16px;
@@ -303,6 +306,7 @@
       color: rgb(31, 50, 85);
       line-height: 1.55;
       margin-top: 12px;
+      margin-bottom: 0;
     }
   }
 }

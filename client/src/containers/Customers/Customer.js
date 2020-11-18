@@ -2,6 +2,7 @@ import React, { useCallback } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { useQuery } from 'react-query';
 
+import { DashboardCard } from 'components';
 import CustomerForm from 'containers/Customers/CustomerForm';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 
@@ -40,12 +41,7 @@ function Customer({
     requestFetchCurrencies(),
   );
 
-  const handleFormSubmit = useCallback(
-    (payload) => {
-      
-    },
-    [history],
-  );
+  const handleFormSubmit = useCallback((payload) => {}, [history]);
 
   const handleCancel = useCallback(() => {
     history.goBack();
@@ -60,11 +56,13 @@ function Customer({
       }
       name={'customer-form'}
     >
-      <CustomerForm
-        onFormSubmit={handleFormSubmit}
-        customerId={id}
-        onCancelForm={handleCancel}
-      />
+      <DashboardCard page>
+        <CustomerForm
+          onFormSubmit={handleFormSubmit}
+          customerId={id}
+          onCancelForm={handleCancel}
+        />
+      </DashboardCard>
     </DashboardInsider>
   );
 }
