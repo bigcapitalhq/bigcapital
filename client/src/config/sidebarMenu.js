@@ -83,8 +83,8 @@ export default [
         href: '/customers',
       },
       {
-        text: <T id={'new_customers'} />,
-        href: '/customers/new',
+        text: <T id={'vendors'} />,
+        href: '/vendors',
       },
     ],
   },

@@ -1,8 +1,16 @@
 import { createSelector } from '@reduxjs/toolkit';
-import { pickItemsFromIds, paginationLocationQuery } from 'store/selectors';
+import {
+  pickItemsFromIds,
+  paginationLocationQuery,
+  defaultPaginationMeta,
+} from 'store/selectors';
 
 const vendorsTableQuery = (state) => {
   return state.vendors.tableQuery;
+};
+
+const vendorByIdSelector = (state, props) => {
+  return state.vendors.items[props.vendorId];
 };
 
 export const getVendorsTableQuery = createSelector(
@@ -18,7 +26,10 @@ export const getVendorsTableQuery = createSelector(
 
 const vendorsPageSelector = (state, props, query) => {
   const viewId = state.vendors.currentViewId;
-  return state.vendors.views?.[viewId]?.pages?.[query.page];
+  const currentView = state.vendors.views?.[viewId];
+  const currentPageId = currentView?.pages;
+  return currentView?.pages?.[currentPageId];
+  // return state.vendors.views?.[viewId]?.pages?.[query.page];
 };
 
 const vendorsItemsSelector = (state) => state.vendors.items;
@@ -41,14 +52,13 @@ const vendorsPaginationSelector = (state, props) => {
 
 export const getVendorsPaginationMetaFactory = () =>
   createSelector(vendorsPaginationSelector, (vendorPage) => {
-    return vendorPage?.paginationMeta || {};
+    return {
+      ...defaultPaginationMeta(),
+      ...(vendorPage?.paginationMeta || {}),
+    };
   });
 
-const vendorByIdSelector = (state, props) => {
-  return state.vendors.items[props.vendorId];
-};
-
-export const getEstimateByIdFactory = () =>
+export const getVendorByIdFactory = () =>
   createSelector(vendorByIdSelector, (vendor) => {
     return vendor;
   });

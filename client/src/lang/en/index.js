@@ -819,4 +819,22 @@ export default {
   the_name_used_before: 'The name is already used.',
   the_item_has_associated_transactions: 'The item has associated transactions.',
   customer_has_sales_invoices: 'Customer has sales invoices',
-};
+  vendors: 'Vendors',
+  vendor_email: 'Vendor Email',
+  new_vendor: 'New Vendor',
+  edit_vendor: 'Edit Vendor',
+  delete_vendor: 'Delete Vendor',
+  vendors_list: 'Vendors List',
+  the_vendor_has_been_successfully_created:
+    'The vendor has been successfully created.',
+  the_vendor_has_been_successfully_deleted:
+    'The vendor has been successfully deleted.',
+  the_vendors_has_been_successfully_deleted:
+    'The vendors has been successfully deleted.',
+  the_item_vendor_has_been_successfully_edited:
+    'The item vendor has been successfully edited.',
+  once_delete_this_vendor_you_will_able_to_restore_it: `Once you delete this vendor, you won\'t be able to restore it later. Are you sure you want to delete this vendor?`,
+  once_delete_these_vendors_you_will_not_able_restore_them:
+    "Once you delete these vendors, you won't be able to retrieve them later. Are you sure you want to delete them?",
+    vendor_has_bills:'Vendor has bills'
+  };
