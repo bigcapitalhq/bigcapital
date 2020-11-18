@@ -35,6 +35,9 @@ const paymentReceiveInvoicesSelector = (state, props) =>
 const paymentReceiveByIdSelector = (state, props) =>
   state.paymentReceives.items[props.paymentReceiveId];
 
+const paymentReceivesCurrentViewIdSelector = (state) =>
+  state.paymentReceives.currentViewId;
+
 // Retrieve payment receive current page results.
 export const getPaymentReceiveCurrentPageFactory = () =>
   createSelector(
@@ -123,4 +126,11 @@ export const getPaymentReceiveEntriesFactory = () =>
         };
       });
     },
+  );
+
+// Retrieve payment receives current view id.
+export const getPaymentReceivesCurrentViewIdFactory = () =>
+  createSelector(
+    paymentReceivesCurrentViewIdSelector,
+    (currentViewId) => currentViewId,
   );

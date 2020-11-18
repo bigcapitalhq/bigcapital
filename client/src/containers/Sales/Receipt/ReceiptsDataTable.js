@@ -15,7 +15,9 @@ import moment from 'moment';
 import { compose, saveInvoke } from 'utils';
 import { useIsValuePassed } from 'hooks';
 
-import { LoadingIndicator, DataTable, Money, Icon } from 'components';
+import { Choose, LoadingIndicator, DataTable, Money, Icon } from 'components';
+
+import ReceiptsEmptyStatus from './ReceiptsEmptyStatus';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
@@ -24,16 +26,17 @@ import withReceipts from './withReceipts';
 import withReceiptActions from './withReceiptActions';
 
 function ReceiptsDataTable({
-  //#withReceipts
+  // #withReceipts
   receiptsCurrentPage,
   receiptsLoading,
   receiptsPagination,
   receiptTableQuery,
+  receiptsCurrentViewId,
 
   // #withReceiptsActions
   addReceiptsTableQueries,
 
-  // #Own Props
+  // #ownProps
   loading,
   onEditReceipt,
   onDeleteReceipt,
@@ -186,28 +189,38 @@ function ReceiptsDataTable({
     [onSelectedRowsChange],
   );
 
+  const showEmptyStatus = [
+    receiptsCurrentViewId === -1,
+    receiptsCurrentPage.length === 0,
+  ].every(condition => condition === true);
+
   return (
-    <LoadingIndicator
-      loading={receiptsLoading && !isLoadedBefore}
-      mount={false}
-    >
-      <DataTable
-        columns={columns}
-        data={receiptsCurrentPage}
-        onFetchData={handleDataTableFetchData}
-        manualSortBy={true}
-        selectionColumn={true}
-        noInitialFetch={true}
-        sticky={true}
-        onSelectedRowsChange={handleSelectedRowsChange}
-        rowContextMenu={onRowContextMenu}
-        pagination={true}
-        pagesCount={receiptsPagination.pagesCount}
-        autoResetSortBy={false}
-        autoResetPage={false}
-        initialPageSize={receiptTableQuery.page_size}
-        initialPageIndex={receiptTableQuery.page - 1}
-      />
+    <LoadingIndicator loading={receiptsLoading && !isLoadedBefore}>
+      <Choose>
+        <Choose.When condition={showEmptyStatus}>
+          <ReceiptsEmptyStatus />
+        </Choose.When>
+
+        <Choose.Otherwise>
+          <DataTable
+            columns={columns}
+            data={receiptsCurrentPage}
+            onFetchData={handleDataTableFetchData}
+            manualSortBy={true}
+            selectionColumn={true}
+            noInitialFetch={true}
+            sticky={true}
+            onSelectedRowsChange={handleSelectedRowsChange}
+            rowContextMenu={onRowContextMenu}
+            pagination={true}
+            pagesCount={receiptsPagination.pagesCount}
+            autoResetSortBy={false}
+            autoResetPage={false}
+            initialPageSize={receiptTableQuery.page_size}
+            initialPageIndex={receiptTableQuery.page - 1}
+          />
+        </Choose.Otherwise>
+      </Choose>
     </LoadingIndicator>
   );
 }
@@ -223,11 +236,13 @@ export default compose(
       receiptsLoading,
       receiptsPagination,
       receiptTableQuery,
+      receiptsCurrentViewId
     }) => ({
       receiptsCurrentPage,
       receiptsLoading,
       receiptsPagination,
       receiptTableQuery,
+      receiptsCurrentViewId
     }),
   ),
 )(ReceiptsDataTable);

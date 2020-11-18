@@ -1,6 +1,8 @@
 import { createSelector } from 'reselect';
 import { pickItemsFromIds, paginationLocationQuery, defaultPaginationMeta } from 'store/selectors';
 
+const manualJournalsCurrentViewIdSelector = (state) => state.manualJournals.currentViewId;
+
 const manualJournalsPageSelector = (state) => {
   const viewId = state.manualJournals.currentViewId;
   const currentView = state.manualJournals.views?.[viewId];
@@ -51,3 +53,12 @@ export const getManualJournalsTableQuery = createSelector(
     };
   },
 );
+
+// Retrieve manual journals current view id.
+export const getManualJournalsCurrentViewIdFactory = () => 
+  createSelector(
+    manualJournalsCurrentViewIdSelector,
+    (currentViewId) => {
+      return currentViewId;
+    },
+  );

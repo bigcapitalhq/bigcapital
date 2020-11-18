@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import {
   Button,
   Popover,
@@ -11,8 +11,8 @@ import {
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { useIsValuePassed } from 'hooks';
 
-import LoadingIndicator from 'components/LoadingIndicator';
-import { DataTable, Icon, Money } from 'components';
+import CustomersEmptyStatus from './CustomersEmptyStatus';
+import { DataTable, Icon, Money, Choose, LoadingIndicator } from 'components';
 
 import withCustomers from './withCustomers';
 import withCustomersActions from './withCustomersActions';
@@ -29,6 +29,7 @@ const CustomerTable = ({
   customersLoading,
   customerPagination,
   customersTableQuery,
+  customersCurrentViewId,
 
   // #withCustomersActions
   addCustomersTableQueries,
@@ -182,31 +183,44 @@ const CustomerTable = ({
       onDeleteCustomer,
     });
 
+  const showEmptyStatus = [
+    customersCurrentViewId === -1,
+    customers.length === 0,
+  ].every(condition => condition === true);
+
   return (
     <LoadingIndicator
       loading={customersLoading && !isLoadedBefore}
       mount={false}
     >
-      <DataTable
-        noInitialFetch={true}
-        columns={columns}
-        data={customers}
-        // loading={customersLoading}
-        onFetchData={handleFetchData}
-        selectionColumn={true}
-        expandable={false}
-        sticky={true}
-        onSelectedRowsChange={handleSelectedRowsChange}
-        spinnerProps={{ size: 30 }}
-        rowContextMenu={rowContextMenu}
-        pagination={true}
-        manualSortBy={true}
-        pagesCount={customerPagination.pagesCount}
-        autoResetSortBy={false}
-        autoResetPage={false}
-        initialPageSize={customersTableQuery.page_size}
-        initialPageIndex={customersTableQuery.page - 1}
-      />
+      <Choose>
+        <Choose.When condition={showEmptyStatus}>
+          <CustomersEmptyStatus />
+        </Choose.When>
+
+        <Choose.Otherwise>
+          <DataTable
+            noInitialFetch={true}
+            columns={columns}
+            data={customers}
+            // loading={customersLoading}
+            onFetchData={handleFetchData}
+            selectionColumn={true}
+            expandable={false}
+            sticky={true}
+            onSelectedRowsChange={handleSelectedRowsChange}
+            spinnerProps={{ size: 30 }}
+            rowContextMenu={rowContextMenu}
+            pagination={true}
+            manualSortBy={true}
+            pagesCount={customerPagination.pagesCount}
+            autoResetSortBy={false}
+            autoResetPage={false}
+            initialPageSize={customersTableQuery.page_size}
+            initialPageIndex={customersTableQuery.page - 1}
+          />
+        </Choose.Otherwise>
+      </Choose>
     </LoadingIndicator>
   );
 };
@@ -218,11 +232,13 @@ export default compose(
       customersLoading,
       customerPagination,
       customersTableQuery,
+      customersCurrentViewId,
     }) => ({
       customers,
       customersLoading,
       customerPagination,
       customersTableQuery,
+      customersCurrentViewId
     }),
   ),
   withCustomersActions,

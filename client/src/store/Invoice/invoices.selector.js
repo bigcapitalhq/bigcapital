@@ -27,6 +27,8 @@ const invoicesItemsSelector = (state) => state.salesInvoices.items;
 const invoicesReceiableCustomerSelector = (state, props) =>
   state.salesInvoices.receivable.byCustomerId[props.customerId];
 
+const getInvoicesCurrentViewIdSelector = (state) => state.salesInvoices.currentViewId;
+
 export const getInvoiceTableQueryFactory = () =>
   createSelector(
     paginationLocationQuery,
@@ -51,6 +53,8 @@ export const getInvoiceCurrentPageFactory = () =>
     },
   );
 
+
+ 
 // Retrieve specific invoice by the passed invoice id.
 export const getInvoiecsByIdFactory = () =>
   createSelector(invoicesByIdSelector, (invoice) => {
@@ -82,4 +86,13 @@ export const getCustomerReceivableInvoicesEntriesFactory = () =>
         payment_amount: 0,
       }));
     },
+  );
+
+// Retrieve sale invoices current view id.
+export const getInvoicesCurrentViewIdFactory = () => 
+  createSelector(
+    getInvoicesCurrentViewIdSelector,
+    (currentViewId) => {
+      return currentViewId;
+    }
   );

@@ -19,6 +19,10 @@ const estimatesPageSelector = (state, props, query) => {
   return state.salesEstimates.views?.[viewId]?.pages?.[currentPageId];
 };
 
+const getEstimatesCurrentViewIdSelector = (state, props) => {
+  return state.salesEstimates.currentViewId;
+};
+
 // Retrieve estimates table query.
 export const getEstimatesTableQueryFactory = () =>
   createSelector(
@@ -58,3 +62,12 @@ export const getEstimatesPaginationMetaFactory = () =>
       ...(estimateView?.paginationMeta || {}),
     };
   });
+
+
+// Retrieve estimates current view id.
+export const getEstimatesCurrentViewIdFactory = () => 
+  createSelector(
+    getEstimatesCurrentViewIdSelector,
+    (currentViewId) => {
+      return currentViewId;
+    });

@@ -76,7 +76,6 @@ function EstimateViewTabs({
     history.push('/custom_views/estimates/new');
   };
 
-  console.log(estimateViews, 'estimateViews');
   return (
     <Navbar className={'navbar--dashboard-views'}>
       <NavbarGroup align={Alignment.LEFT}>

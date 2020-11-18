@@ -20,6 +20,8 @@ const receiptTableQuery = (state) => state.salesReceipts.tableQuery;
 
 const receiptByIdSelector = (state, props) => state.salesReceipts.items[props.receiptId];
 
+const receiptsCurrentViewIdSelector = (state) => state.salesReceipts.currentViewId;
+
 // Retrieve current page sale receipts results. 
 export const getReceiptCurrentPageFactory = () =>
   createSelector(
@@ -56,3 +58,9 @@ export const getReceiptsPaginationMetaFactory = () =>
   createSelector(receiptsPaginationSelector, (receiptPage) => {
     return receiptPage?.paginationMeta || {};
   });
+
+// Retrieve receipts current view id.
+export const getReceiptsCurrentViewIdFactory = () => 
+  createSelector(
+    receiptsCurrentViewIdSelector,
+    (currentViewId) => currentViewId);

@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import {
   Intent,
   Button,
@@ -8,15 +8,17 @@ import {
   MenuDivider,
   Position,
 } from '@blueprintjs/core';
-import { withRouter } from 'react-router';
+import classNames from 'classnames';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import moment from 'moment';
 
+import { CLASSES } from 'common/classes';
 import { compose, saveInvoke } from 'utils';
 import { useIsValuePassed } from 'hooks';
 
 import LoadingIndicator from 'components/LoadingIndicator';
-import { DataTable, Money, Icon } from 'components';
+import { DataTable, Money, Choose, Icon } from 'components';
+import EstimatesEmptyStatus from './EstimatesEmptyStatus';
 
 import withEstimates from './withEstimates';
 import withEstimateActions from './withEstimateActions';
@@ -28,6 +30,7 @@ function EstimatesDataTable({
   estimatesLoading,
   estimatesPageination,
   estimatesTableQuery,
+  estimatesCurrentViewId,
 
   // #withEstimatesActions
   addEstimatesTableQueries,
@@ -177,35 +180,57 @@ function EstimatesDataTable({
     [onSelectedRowsChange],
   );
 
+  const showEmptyStatus = [
+    estimatesCurrentPage.length === 0,
+    estimatesCurrentViewId === -1,
+  ].every(d => d === true);
+
   return (
-    <LoadingIndicator loading={estimatesLoading && !isLoaded} mount={false}>
-      <DataTable
-        columns={columns}
-        data={estimatesCurrentPage}
-        onFetchData={handleFetchData}
-        manualSortBy={true}
-        selectionColumn={true}
-        noInitialFetch={true}
-        sticky={true}
-        onSelectedRowsChange={handleSelectedRowsChange}
-        rowContextMenu={onRowContextMenu}
-        pagination={true}
-        pagesCount={estimatesPageination.pagesCount}
-        initialPageSize={estimatesTableQuery.page_size}
-        initialPageIndex={estimatesTableQuery.page - 1}
-      />
-    </LoadingIndicator>
+    <div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>
+      <LoadingIndicator loading={estimatesLoading && !isLoaded} mount={false}>
+        <Choose>
+          <Choose.When condition={showEmptyStatus}>
+            <EstimatesEmptyStatus />
+          </Choose.When>
+
+          <Choose.Otherwise>
+            <DataTable
+              columns={columns}
+              data={estimatesCurrentPage}
+              onFetchData={handleFetchData}
+              manualSortBy={true}
+              selectionColumn={true}
+              noInitialFetch={true}
+              sticky={true}
+              onSelectedRowsChange={handleSelectedRowsChange}
+              rowContextMenu={onRowContextMenu}
+              pagination={true}
+              pagesCount={estimatesPageination.pagesCount}
+              initialPageSize={estimatesTableQuery.page_size}
+              initialPageIndex={estimatesTableQuery.page - 1}
+            />
+          </Choose.Otherwise>
+        </Choose>
+      </LoadingIndicator>
+    </div>
   );
 }
 
 export default compose(
   withEstimateActions,
   withEstimates(
-    ({ estimatesCurrentPage, estimatesLoading, estimatesPageination, estimatesTableQuery }) => ({
+    ({
       estimatesCurrentPage,
       estimatesLoading,
       estimatesPageination,
-      estimatesTableQuery
+      estimatesTableQuery,
+      estimatesCurrentViewId,
+    }) => ({
+      estimatesCurrentPage,
+      estimatesLoading,
+      estimatesPageination,
+      estimatesTableQuery,
+      estimatesCurrentViewId,
     }),
   ),
 )(EstimatesDataTable);

@@ -463,3 +463,40 @@ body.authentication {
     }
   }
 }
+
+
+.datatable-empty-status{
+  max-width: 550px;
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+  margin-top: 200px;
+
+  &__title{
+    font-size: 20px;
+    color: #2c3a5d;
+    font-weight: 600;
+    margin-left: auto;
+    margin-bottom: 12px;
+    margin-right: auto;
+    margin-top: 0;
+    line-height: 1.4;
+  }
+  &__desc{
+    font-size: 16px;
+    color: #1f3255;
+    opacity: 0.8;
+    line-height: 1.6;
+  }
+  &__actions{
+    margin-top: 26px;
+
+    .bp3-button{
+      min-height: 36px;
+
+      & + .bp3-button{
+        margin-left: 10px;
+      }
+    }
+  }
+}

@@ -11,12 +11,15 @@ import {
 import { withRouter } from 'react-router';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import moment from 'moment';
+import classNames from 'classnames';
+
+import { CLASSES } from 'common/classes';
 
 import { compose, saveInvoke } from 'utils';
 import { useIsValuePassed } from 'hooks';
 
-import LoadingIndicator from 'components/LoadingIndicator';
-import { DataTable, Money, Icon } from 'components';
+import { LoadingIndicator, Choose, DataTable, Money, Icon } from 'components';
+import InvoicesEmptyStatus from './InvoicesEmptyStatus';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
@@ -32,6 +35,7 @@ function InvoicesDataTable({
   invoicesCurrentPage,
   invoicesLoading,
   invoicesPageination,
+  invoicesCurrentViewId,
 
   // #withInvoicesActions
   addInvoiceTableQueries,
@@ -186,29 +190,41 @@ function InvoicesDataTable({
     [onSelectedRowsChange],
   );
 
+  const showEmptyStatus = [
+    invoicesCurrentPage.length === 0,
+    invoicesCurrentViewId === -1,
+  ].every((d) => d === true);
+
   return (
-    <LoadingIndicator
-      loading={invoicesLoading && !isLoadedBefore}
-      mount={false}
-    >
-      <DataTable
-        columns={columns}
-        data={invoicesCurrentPage}
-        onFetchData={handleDataTableFetchData}
-        manualSortBy={true}
-        selectionColumn={true}
-        noInitialFetch={true}
-        sticky={true}
-        onSelectedRowsChange={handleSelectedRowsChange}
-        rowContextMenu={onRowContextMenu}
-        pagination={true}
-        autoResetSortBy={false}
-        autoResetPage={false}
-        pagesCount={invoicesPageination.pagesCount}
-        initialPageSize={invoicesPageination.pageSize}
-        initialPageIndex={invoicesPageination.page - 1}
-      />
-    </LoadingIndicator>
+    <div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>
+      <LoadingIndicator loading={invoicesLoading && !isLoadedBefore}>
+        <Choose>
+          <Choose.When condition={showEmptyStatus}>
+            <InvoicesEmptyStatus />
+          </Choose.When>
+
+          <Choose.Otherwise>
+            <DataTable
+              columns={columns}
+              data={invoicesCurrentPage}
+              onFetchData={handleDataTableFetchData}
+              manualSortBy={true}
+              selectionColumn={true}
+              noInitialFetch={true}
+              sticky={true}
+              onSelectedRowsChange={handleSelectedRowsChange}
+              rowContextMenu={onRowContextMenu}
+              pagination={true}
+              autoResetSortBy={false}
+              autoResetPage={false}
+              pagesCount={invoicesPageination.pagesCount}
+              initialPageSize={invoicesPageination.pageSize}
+              initialPageIndex={invoicesPageination.page - 1}
+            />
+          </Choose.Otherwise>
+        </Choose>
+      </LoadingIndicator>
+    </div>
   );
 }
 
@@ -224,11 +240,13 @@ export default compose(
       invoicesLoading,
       invoicesPageination,
       invoicesTableQuery,
+      invoicesCurrentViewId,
     }) => ({
       invoicesCurrentPage,
       invoicesLoading,
       invoicesPageination,
       invoicesTableQuery,
+      invoicesCurrentViewId,
     }),
   ),
   withViewDetails(),

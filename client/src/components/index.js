@@ -1,3 +1,4 @@
+
 import If from './Utils/If';
 import Money from './Money';
 import Icon from './Icon';
@@ -36,6 +37,7 @@ import SalutationList from './SalutationList';
 import DisplayNameList from './DisplayNameList';
 import MoneyInputGroup from './MoneyInputGroup';
 import Dragzone from './Dragzone';
+import EmptyStatus from './EmptyStatus';
 
 const Hint = FieldHint;
 
@@ -79,4 +81,5 @@ export {
   SalutationList,
   MoneyInputGroup,
   Dragzone,
+  EmptyStatus
 };

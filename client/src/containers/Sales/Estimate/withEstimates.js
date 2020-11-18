@@ -4,18 +4,22 @@ import {
   getEstimateCurrentPageFactory,
   getEstimatesTableQueryFactory,
   getEstimatesPaginationMetaFactory,
+  getEstimatesCurrentViewIdFactory,
 } from 'store/Estimate/estimates.selectors';
 
 export default (mapState) => {
   const getEstimatesItems = getEstimateCurrentPageFactory();
   const getEstimatesPaginationMeta = getEstimatesPaginationMetaFactory();
   const getEstimatesTableQuery = getEstimatesTableQueryFactory();
+  const getEstimatesCurrentViewId = getEstimatesCurrentViewIdFactory();
 
   const mapStateToProps = (state, props) => {
     const query = getEstimatesTableQuery(state, props);
 
     const mapped = {
       estimatesCurrentPage: getEstimatesItems(state, props, query),
+      estimatesCurrentViewId: getEstimatesCurrentViewId(state, props),
+
       estimateViews: getResourceViews(state, props, 'sales_estimates'),
       estimateItems: state.salesEstimates.items,
       
