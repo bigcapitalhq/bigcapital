@@ -37,7 +37,7 @@ const defaultInitialValues = {
   inventory_account_id: '',
   category_id: '',
   note: '',
-  sellable: true,
+  sellable: 1,
   purchasable: true,
 };
 

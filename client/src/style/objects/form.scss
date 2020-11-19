@@ -98,6 +98,45 @@ label.bp3-label{
   }
 }
 
+.input-group-prepend{
+
+  .input-group-text{
+    display: flex;
+    align-items: center;
+    padding: .375rem .75rem;
+    margin-bottom: 0;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    text-align: center;
+    white-space: nowrap;
+    background-color: #e9ecef;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    height: 100%;
+
+    .bp3-form-group &{
+      padding: .25rem .5rem;
+      font-size: .875rem;
+      line-height: 1.5;
+      border-radius: .2rem;
+    }
+  }
+}
+
+.bp3-form-group{
+
+  .bp3-input-group{
+    flex: 1 1 auto;
+  }
+  .bp3-control-group{
+    > .input-group-prepend:first-child .input-group-text{
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+  } 
+}
 
 .#{$ns}-html-select{
   .bp3-icon-double-caret-vertical{

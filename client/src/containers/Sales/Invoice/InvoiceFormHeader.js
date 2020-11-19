@@ -8,7 +8,6 @@ import {
 import { DateInput } from '@blueprintjs/datetime';
 import { FastField, ErrorMessage } from 'formik';
 import { FormattedMessage as T } from 'react-intl';
-import moment from 'moment';
 import { momentFormatter, compose, tansformDateValue, saveInvoke } from 'utils';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';

@@ -75,9 +75,7 @@ function CustomerFinancialPanel({
                 <MoneyInputGroup
                   value={value}
                   prefix={'$'}
-                  inputGroupProps={{
-                    fill: true,
-                  }}
+                  inputGroupProps={{ fill: true }}
                   disabled={customerId}
                   {...field}
                 />

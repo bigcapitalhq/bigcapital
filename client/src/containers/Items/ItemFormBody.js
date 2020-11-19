@@ -1,34 +1,33 @@
 import React from 'react';
 import { FastField, Field, ErrorMessage } from 'formik';
-import {
-  FormGroup,
-  Classes,
-  Checkbox,
-} from '@blueprintjs/core';
+import { FormGroup, Classes, Checkbox, ControlGroup } from '@blueprintjs/core';
 import {
   AccountsSelectList,
   MoneyInputGroup,
   Col,
   Row,
   Hint,
+  InputPrependText,
 } from 'components';
 import { FormattedMessage as T } from 'react-intl';
 import classNames from 'classnames';
+
 import withAccounts from 'containers/Accounts/withAccounts';
+import withSettings from 'containers/Settings/withSettings';
 
 import { compose, inputIntent } from 'utils';
 
 /**
  * Item form body.
  */
-function ItemFormBody({ accountsList }) {
+function ItemFormBody({ accountsList, baseCurrency }) {
   return (
     <div class="page-form__section page-form__section--selling-cost">
       <Row>
         <Col xs={6}>
           {/*------------- Purchasable checbox ------------- */}
           <FastField name={'sellable'} type="checkbox">
-            {({ field: { onChange, onBlur, name, checked } }) => (
+            {({ field }) => (
               <FormGroup inline={true} className={'form-group--sellable'}>
                 <Checkbox
                   inline={true}
@@ -38,17 +37,15 @@ function ItemFormBody({ accountsList }) {
                     </h3>
                   }
                   name={'sellable'}
-                  checked={!!checked}
-                  onChange={onChange}
-                  onBlur={onBlur}
+                  {...field}
                 />
               </FormGroup>
             )}
           </FastField>
 
           {/*------------- Selling price ------------- */}
-          <FastField name={'sell_price'}>
-            {({ form, field, field: { value }, meta: { error, touched } }) => (
+          <Field name={'sell_price'}>
+            {({ form, field: { value }, meta: { error, touched } }) => (
               <FormGroup
                 label={<T id={'selling_price'} />}
                 className={'form-group--sell_price'}
@@ -56,21 +53,23 @@ function ItemFormBody({ accountsList }) {
                 helperText={<ErrorMessage name={'sell_price'} />}
                 inline={true}
               >
-                <MoneyInputGroup
-                  value={value}
-                  prefix={'$'}
-                  inputGroupProps={{
-                    medium: true,
-                    ...field,
-                  }}
-                  disabled={!form.values.sellable}
-                  onChange={field.onChange}
-                />
+                <ControlGroup>
+                  <InputPrependText text={baseCurrency} />
+                  <MoneyInputGroup
+                    value={value}
+                    prefix={'$'}
+                    inputGroupProps={{ fill: true }}
+                    disabled={!form.values.sellable}
+                    onChange={(evt, value) => {
+                      form.setFieldValue('sell_price', value);
+                    }}
+                  />
+                </ControlGroup>
               </FormGroup>
             )}
-          </FastField>
+          </Field>
 
-           {/*------------- Selling account ------------- */}
+          {/*------------- Selling account ------------- */}
           <FastField name={'sell_account_id'}>
             {({ form, field: { value }, meta: { error, touched } }) => (
               <FormGroup
@@ -102,8 +101,8 @@ function ItemFormBody({ accountsList }) {
 
         <Col xs={6}>
           {/*------------- Sellable checkbox ------------- */}
-          <FastField name={'purchasable'}>
-            {({ form, field: { value, onChange }, meta: { error, touched } }) => (
+          <FastField name={'purchasable'} type={'checkbox'}>
+            {({ field }) => (
               <FormGroup inline={true} className={'form-group--purchasable'}>
                 <Checkbox
                   inline={true}
@@ -112,15 +111,14 @@ function ItemFormBody({ accountsList }) {
                       <T id={'i_purchase_this_item'} />
                     </h3>
                   }
-                  checked={value}
-                  onChange={onChange}
+                  {...field}
                 />
               </FormGroup>
             )}
           </FastField>
 
           {/*------------- Cost price ------------- */}
-          <FastField name={'cost_price'}>
+          <Field name={'cost_price'}>
             {({ field, form, field: { value }, meta: { error, touched } }) => (
               <FormGroup
                 label={<T id={'cost_price'} />}
@@ -129,18 +127,21 @@ function ItemFormBody({ accountsList }) {
                 helperText={<ErrorMessage name="cost_price" />}
                 inline={true}
               >
-                <MoneyInputGroup
-                  value={value}
-                  prefix={'$'}
-                  inputGroupProps={{
-                    medium: true,
-                    ...field,
-                  }}
-                  disabled={!form.values.purchasable}
-                />
+                <ControlGroup>
+                  <InputPrependText text={baseCurrency} />
+                  <MoneyInputGroup
+                    value={value}
+                    prefix={'$'}
+                    inputGroupProps={{ medium: true }}
+                    disabled={!form.values.purchasable}
+                    onChange={(evt, unformattedValue) => {
+                      form.setFieldValue('cost_price', unformattedValue);
+                    }}
+                  />
+                </ControlGroup>
               </FormGroup>
             )}
-          </FastField>
+          </Field>
 
           {/*------------- Cost account ------------- */}
           <FastField name={'cost_account_id'}>
@@ -179,5 +180,8 @@ function ItemFormBody({ accountsList }) {
 export default compose(
   withAccounts(({ accountsList }) => ({
     accountsList,
+  })),
+  withSettings(({ organization }) => ({
+    baseCurrency: 'USD',
   })),
 )(ItemFormBody);
