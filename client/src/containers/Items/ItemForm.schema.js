@@ -52,5 +52,14 @@ const Schema = Yup.object().shape({
   purchasable: Yup.boolean().required(),
 });
 
+
+export const transformItemFormData = (item, defaultValue) => {
+  return {
+    ...item,
+    sellable: item?.sellable ? Boolean(item.sellable) : defaultValue.sellable,
+    purchasable: item?.purchasable ? Boolean(item.purchasable) : defaultValue.purchasable,
+  };
+}
+
 export const CreateItemFormSchema = Schema;
 export const EditItemFormSchema = Schema;

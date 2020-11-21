@@ -9,10 +9,12 @@ import {
   Intent,
 } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
+import classNames from 'classnames';
 import { useIsValuePassed } from 'hooks';
 
-import LoadingIndicator from 'components/LoadingIndicator';
-import { DataTable, Icon, Money } from 'components';
+import VendorsEmptyStatus from './VendorsEmptyStatus';
+import { DataTable, LoadingIndicator, Icon, Money, Choose } from 'components';
+import { CLASSES } from 'common/classes';
 
 import withVendors from './withVendors';
 import withVendorsActions from './withVendorActions';
@@ -34,8 +36,7 @@ function VendorsTable({
   // #withVendorsActions
   addVendorsTableQueries,
 
-  // #OwnProps
-  loading,
+  // #ownProps
   onEditVendor,
   onDeleteVendor,
   onSelectedRowsChange,
@@ -182,29 +183,41 @@ function VendorsTable({
       onDeleteVendor,
     });
 
-  console.log(vendorsCurrentPage, 'vendorsCurrentPage');
   return (
-    <LoadingIndicator loading={vendorsLoading && !isLoadedBefore} mount={false}>
-      <DataTable
-        noInitialFetch={true}
-        columns={columns}
-        data={vendorItems}
-        onFetchData={handleFetchData}
-        selectionColumn={true}
-        expandable={false}
-        sticky={true}
-        onSelectedRowsChange={handleSelectedRowsChange}
-        spinnerProps={{ size: 30 }}
-        rowContextMenu={rowContextMenu}
-        pagination={true}
-        manualSortBy={true}
-        pagesCount={vendorsPageination.pagesCount}
-        autoResetSortBy={false}
-        autoResetPage={false}
-        initialPageSize={vendorTableQuery.page_size}
-        initialPageIndex={vendorTableQuery.page - 1}
-      />
-    </LoadingIndicator>
+    <div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>
+      <LoadingIndicator
+        loading={vendorsLoading && !isLoadedBefore}
+        mount={false}
+      >
+        <Choose>
+          <Choose.When condition={true}>
+            <VendorsEmptyStatus />
+          </Choose.When>
+
+          <Choose.Otherwise>
+            <DataTable
+              noInitialFetch={true}
+              columns={columns}
+              data={vendorItems}
+              onFetchData={handleFetchData}
+              selectionColumn={true}
+              expandable={false}
+              sticky={true}
+              onSelectedRowsChange={handleSelectedRowsChange}
+              spinnerProps={{ size: 30 }}
+              rowContextMenu={rowContextMenu}
+              pagination={true}
+              manualSortBy={true}
+              pagesCount={vendorsPageination.pagesCount}
+              autoResetSortBy={false}
+              autoResetPage={false}
+              initialPageSize={vendorTableQuery.page_size}
+              initialPageIndex={vendorTableQuery.page - 1}
+            />
+          </Choose.Otherwise>
+        </Choose>
+      </LoadingIndicator>
+    </div>
   );
 }
 

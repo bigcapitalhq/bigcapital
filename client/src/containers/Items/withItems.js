@@ -1,26 +1,29 @@
 import {connect} from 'react-redux';
 import {
   getResourceViews,
-  getViewPages,
 } from 'store/customViews/customViews.selectors'
 import {
-  getCurrentPageResults
-} from 'store/selectors';
+  getItemsCurrentPageFactory,
+  getItemsPaginationMetaFactory,
+  getItemsTableQueryFactory,
+  getItemsCurrentViewIdFactory
+} from 'store/items/items.selectors';
 
 export default (mapState) => {
-  const mapStateToProps = (state, props) => {
-    const viewPages = getViewPages(state.items.views, state.items.currentViewId);
+  const getItemsCurrentPage = getItemsCurrentPageFactory();
+  const getItemsPaginationMeta = getItemsPaginationMetaFactory();
+  const getItemsTableQuery = getItemsTableQueryFactory();
+  const getItemsCurrentViewId = getItemsCurrentViewIdFactory();
 
+  const mapStateToProps = (state, props) => {
     const mapped = {
       itemsViews: getResourceViews(state, props, 'items'),
-      itemsCurrentPage: getCurrentPageResults(
-        state.items.items,
-        viewPages,
-        state.items.currentPage,
-      ),
+      itemsCurrentPage: getItemsCurrentPage(state, props),
       itemsBulkSelected: state.items.bulkActions,
       itemsTableLoading: state.items.loading,
-      itemsTableQuery: state.items.tableQuery,
+      itemsTableQuery: getItemsTableQuery(state, props),
+      itemsPagination: getItemsPaginationMeta(state, props),
+      itemsCurrentViewId: getItemsCurrentViewId(state, props),
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };

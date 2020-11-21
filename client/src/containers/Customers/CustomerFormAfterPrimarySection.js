@@ -38,6 +38,7 @@ export default function CustomerFormAfterPrimarySection({}) {
               />
             )}
           </FastField>
+
           <FastField name={'personal_phone'}>
             {({ field, meta: { error, touched } }) => (
               <InputGroup
