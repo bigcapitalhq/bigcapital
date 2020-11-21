@@ -126,6 +126,7 @@ function ExpensesDataTable({
         <MenuDivider />
         <If condition={!expense.published}>
           <MenuItem
+            icon={<Icon icon={'arrow-to-top'} size={16} />}
             text={formatMessage({ id: 'publish_expense' })}
             onClick={handlePublishExpense(expense)}
           />

@@ -88,6 +88,7 @@ function ManualJournalsDataTable({
         <MenuDivider />
         <If condition={!journal.status}>
           <MenuItem
+            icon={<Icon icon="arrow-to-top" />}
             text={formatMessage({ id: 'publish_journal' })}
             onClick={handlePublishJournal(journal)}
           />
