@@ -1,5 +1,6 @@
 import * as Yup from 'yup';
 import { formatMessage } from 'services/intl';
+import { DATATYPES_LENGTH } from 'common/dataTypes';
 
 const BillFormSchema = Yup.object().shape({
   vendor_id: Yup.number()
@@ -12,22 +13,24 @@ const BillFormSchema = Yup.object().shape({
     .required()
     .label(formatMessage({ id: 'due_date_' })),
   bill_number: Yup.string()
+    .max(DATATYPES_LENGTH.STRING)
     .label(formatMessage({ id: 'bill_number_' })),
-  reference_no: Yup.string().nullable().min(1).max(255),
+  reference_no: Yup.string().nullable().min(1).max(DATATYPES_LENGTH.STRING),
   note: Yup.string()
     .trim()
     .min(1)
-    .max(1024)
+    .max(DATATYPES_LENGTH.TEXT)
     .label(formatMessage({ id: 'note' })),
   entries: Yup.array().of(
     Yup.object().shape({
       quantity: Yup.number()
         .nullable()
+        .max(DATATYPES_LENGTH.INT_10)
         .when(['rate'], {
           is: (rate) => rate,
           then: Yup.number().required(),
         }),
-      rate: Yup.number().nullable(),
+      rate: Yup.number().nullable().max(DATATYPES_LENGTH.INT_10),
       item_id: Yup.number()
         .nullable()
         .when(['quantity', 'rate'], {
@@ -35,8 +38,8 @@ const BillFormSchema = Yup.object().shape({
           then: Yup.number().required(),
         }),
       total: Yup.number().nullable(),
-      discount: Yup.number().nullable().min(0).max(100),
-      description: Yup.string().nullable(),
+      discount: Yup.number().nullable().min(0).max(DATATYPES_LENGTH.INT_10),
+      description: Yup.string().nullable().max(DATATYPES_LENGTH.TEXT),
     }),
   ),
 });
@@ -44,7 +47,4 @@ const BillFormSchema = Yup.object().shape({
 const CreateBillFormSchema = BillFormSchema;
 const EditBillFormSchema = BillFormSchema;
 
-export {
-  CreateBillFormSchema,
-  EditBillFormSchema,
-};
+export { CreateBillFormSchema, EditBillFormSchema };

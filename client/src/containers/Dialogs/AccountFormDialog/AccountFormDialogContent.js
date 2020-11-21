@@ -30,7 +30,10 @@ import withAccountsActions from 'containers/Accounts/withAccountsActions';
 import withAccountDetail from 'containers/Accounts/withAccountDetail';
 import withAccounts from 'containers/Accounts/withAccounts';
 import withDialogActions from 'containers/Dialog/withDialogActions';
-
+import {
+  EditAccountFormSchema,
+  CreateAccountFormSchema,
+} from './AccountForm.schema';
 import { compose } from 'utils';
 
 /**
@@ -61,19 +64,12 @@ function AccountFormDialogContent({
   accountTypeId,
 }) {
   const { formatMessage } = useIntl();
-  const validationSchema = Yup.object().shape({
-    name: Yup.string()
-      .required()
-      .min(3)
-      .max(255)
-      .label(formatMessage({ id: 'account_name_' })),
-    code: Yup.string().digits().min(3).max(6),
-    account_type_id: Yup.number().nullable()
-      .required()
-      .label(formatMessage({ id: 'account_type_id' })),
-    description: Yup.string().min(3).max(512).nullable().trim(),
-    parent_account_id: Yup.number().nullable(),
-  });
+  const isNewMode = !accountId;
+
+  const validationSchema = isNewMode
+    ? CreateAccountFormSchema
+    : EditAccountFormSchema;
+    
   const initialValues = useMemo(
     () => ({
       account_type_id: '',
@@ -194,18 +190,14 @@ function AccountFormDialogContent({
   }, [closeDialog, dialogName]);
 
   // Fetches accounts list.
-  const fetchAccountsList = useQuery(
-    'accounts-list',
-    () => requestFetchAccounts(),
+  const fetchAccountsList = useQuery('accounts-list', () =>
+    requestFetchAccounts(),
   );
 
   // Fetches accounts types.
-  const fetchAccountsTypes = useQuery(
-    'accounts-types-list',
-    async () => {
-      await requestFetchAccountTypes();
-    },
-  );
+  const fetchAccountsTypes = useQuery('accounts-types-list', async () => {
+    await requestFetchAccountTypes();
+  });
 
   // Fetch the given account id on edit mode.
   const fetchAccount = useQuery(

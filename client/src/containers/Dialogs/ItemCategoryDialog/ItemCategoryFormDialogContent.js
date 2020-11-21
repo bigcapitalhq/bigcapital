@@ -1,11 +1,11 @@
 import React, { useMemo, useCallback } from 'react';
 import { Intent } from '@blueprintjs/core';
-import * as Yup from 'yup';
 import { useQuery, queryCache } from 'react-query';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { Formik } from 'formik';
 import { AppToaster, DialogContent } from 'components';
 
+import ItemCategoryForm from './ItemCategoryForm';
 import withItemCategories from 'containers/Items/withItemCategories';
 import withItemCategoryDetail from 'containers/Items/withItemCategoryDetail';
 import withItemCategoriesActions from 'containers/Items/withItemCategoriesActions';
@@ -14,8 +14,11 @@ import withAccounts from 'containers/Accounts/withAccounts';
 import withAccountsActions from 'containers/Accounts/withAccountsActions';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 
+import {
+  EditItemCategoryFormSchema,
+  CreateItemCategoryFormSchema,
+} from './itemCategoryForm.schema';
 import { compose, transformToForm } from 'utils';
-import ItemCategoryForm from './ItemCategoryForm';
 
 const defaultInitialValues = {
   name: '',
@@ -70,17 +73,6 @@ function ItemCategoryFormDialogContent({
     requestFetchAccounts(),
   );
 
-  const validationSchema = Yup.object().shape({
-    name: Yup.string()
-      .required()
-      .label(formatMessage({ id: 'category_name_' })),
-    parent_category_id: Yup.number().nullable(),
-    cost_account_id: Yup.number().nullable(),
-    sell_account_id: Yup.number().nullable(),
-    inventory_account_id: Yup.number().nullable(),
-    description: Yup.string().trim().nullable(),
-  });
-
   const initialValues = useMemo(
     () => ({
       ...defaultInitialValues,
@@ -131,7 +123,9 @@ function ItemCategoryFormDialogContent({
       isLoading={fetchCategoriesList.isFetching || fetchAccountsList.isFetching}
     >
       <Formik
-        validationSchema={validationSchema}
+        validationSchema={
+          isNewMode ? CreateItemCategoryFormSchema : EditItemCategoryFormSchema
+        }
         initialValues={initialValues}
         onSubmit={handleFormSubmit}
       >
