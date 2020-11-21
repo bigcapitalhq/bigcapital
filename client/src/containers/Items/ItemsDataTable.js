@@ -27,6 +27,8 @@ function ItemsDataTable({
   itemsTableLoading,
   itemsCurrentPage,
   itemsTableQuery,
+  itemsCurrentViewId,
+  itemsPagination,
 
   // #withItemsActions
   addItemsTableQueries,
@@ -120,9 +122,7 @@ function ItemsDataTable({
             <Tag minimal={true} round={true} intent={Intent.NONE}>
               {formatMessage({ id: row.type })}
             </Tag>
-          ) : (
-            ''
-          ),
+          ) : (''),
         className: 'item_type',
         width: 120,
       },
@@ -184,11 +184,16 @@ function ItemsDataTable({
     [onSelectedRowsChange],
   );
 
+  const showEmptyStatus = [
+    itemsCurrentPage.length === 0,
+    itemsCurrentViewId === -1,
+  ].every((condition) => condition === true);
+
   return (
     <div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>
       <LoadingIndicator loading={itemsTableLoading && !isLoadedBefore}>
         <Choose>
-          <Choose.When condition={true}>
+          <Choose.When condition={showEmptyStatus}>
             <ItemsEmptyStatus />
           </Choose.When>
 
@@ -198,14 +203,14 @@ function ItemsDataTable({
               data={itemsCurrentPage}
               onFetchData={handleFetchData}
               noInitialFetch={true}
-              expandable={true}
               selectionColumn={true}
               spinnerProps={{ size: 30 }}
               onSelectedRowsChange={handleSelectedRowsChange}
               rowContextMenu={handleRowContextMenu}
+              expandable={false}
               sticky={true}
               pagination={true}
-              pagesCount={2}
+              pagesCount={itemsPagination.pagesCount}
               autoResetSortBy={false}
               autoResetPage={false}
               initialPageSize={itemsTableQuery.page_size}
@@ -219,10 +224,20 @@ function ItemsDataTable({
 }
 
 export default compose(
-  withItems(({ itemsCurrentPage, itemsTableLoading, itemsTableQuery }) => ({
-    itemsCurrentPage,
-    itemsTableLoading,
-    itemsTableQuery,
-  })),
+  withItems(
+    ({
+      itemsCurrentPage,
+      itemsTableLoading,
+      itemsTableQuery,
+      itemsCurrentViewId,
+      itemsPagination
+    }) => ({
+      itemsCurrentPage,
+      itemsTableLoading,
+      itemsTableQuery,
+      itemsCurrentViewId,
+      itemsPagination
+    }),
+  ),
   withItemsActions,
 )(ItemsDataTable);

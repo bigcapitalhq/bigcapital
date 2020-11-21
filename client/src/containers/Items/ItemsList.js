@@ -65,8 +65,9 @@ function ItemsList({
   );
 
   // Handle fetching the items table based on the given query.
-  const fetchItems = useQuery(['items-table', itemsTableQuery], () =>
-    requestFetchItems({}),
+  const fetchItems = useQuery(
+    ['items-table', itemsTableQuery],
+    (key, _query) => requestFetchItems({ ..._query }),
   );
 
   // Handle click delete item.

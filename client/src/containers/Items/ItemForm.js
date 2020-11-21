@@ -23,7 +23,11 @@ import withSettings from 'containers/Settings/withSettings';
 
 import { compose, transformToForm } from 'utils';
 import { transitionItemTypeKeyToLabel } from './utils';
-import { EditItemFormSchema, CreateItemFormSchema } from './ItemForm.schema';
+import {
+  EditItemFormSchema,
+  CreateItemFormSchema,
+  transformItemFormData,
+} from './ItemForm.schema';
 
 const defaultInitialValues = {
   active: true,
@@ -99,7 +103,10 @@ function ItemForm({
        * values such as `notes` come back from the API as null, so remove those
        * as well.
        */
-      ...transformToForm(itemDetail, defaultInitialValues),
+      ...transformToForm(
+        transformItemFormData(itemDetail, defaultInitialValues),
+        defaultInitialValues,
+      ),
     }),
     [
       itemDetail,

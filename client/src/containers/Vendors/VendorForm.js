@@ -153,9 +153,18 @@ function VendorForm({
       >
         {({ isSubmitting }) => (
           <Form>
-            <VendorFormPrimarySection />
-            <VendorFormAfterPrimarySection />
-            <VendorTabs vendor={vendorId} />
+            <div className={classNames(CLASSES.PAGE_FORM_HEADER_PRIMARY)}>
+              <VendorFormPrimarySection />
+            </div>
+
+            <div className={'page-form__after-priamry-section'}>
+              <VendorFormAfterPrimarySection />
+            </div>
+
+            <div className={classNames(CLASSES.PAGE_FORM_TABS)}>
+              <VendorTabs vendor={vendorId} />
+            </div>
+
             <VendorFloatingActions
               isSubmitting={isSubmitting}
               vendor={vendorId}

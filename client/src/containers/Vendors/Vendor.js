@@ -2,6 +2,7 @@ import React, { useCallback } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { useQuery } from 'react-query';
 
+import { DashboardCard } from 'components';
 import VendorFrom from './VendorForm';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 
@@ -53,11 +54,13 @@ function Vendor({
       }
       name={'vendor-form'}
     >
-      <VendorFrom
-        onFormSubmit={handleFormSubmit}
-        vendorId={id}
-        onCancelForm={handleCancel}
-      />
+      <DashboardCard page>
+        <VendorFrom
+          onFormSubmit={handleFormSubmit}
+          vendorId={id}
+          onCancelForm={handleCancel}
+        />
+      </DashboardCard>
     </DashboardInsider>
   );
 }

@@ -43,35 +43,13 @@ export default createReducer(initialState, {
 
     const viewId = customViewId || -1;
     const view = state.views[viewId] || {};
-    const viewPages = getItemsViewPages(state.views, viewId);
-
-    items.forEach((item) => {
-      const stateItem = state.items[item.id];
-      const itemRelation = state.itemsRelation[stateItem.id];
-
-      if (typeof itemRelation === 'undefined') {
-        state.itemsRelation[item.id] = [];
-      }
-      const filteredRelation = state.itemsRelation[item.id].filter(
-        (relation) =>
-          relation.viewId === viewId &&
-          relation.pageNumber === paginationMeta.page,
-      );
-
-      filteredRelation.push({
-        viewId,
-        pageNumber: paginationMeta.page,
-      });
-      state.itemsRelation[item.id] = filteredRelation;
-    });
 
     state.views[viewId] = {
       ...view,
       pages: {
-        ...viewPages,
+        ...(state.views?.[viewId]?.pages || {}),
         [paginationMeta.page]: {
-          ids: items.map((i) => i.id),
-          meta: paginationMeta,
+          ids: items.map((item) => item.id),
         },
       },
     };

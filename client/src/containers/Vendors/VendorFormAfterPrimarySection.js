@@ -12,7 +12,7 @@ import { inputIntent } from 'utils';
  */
 function VendorFormAfterPrimarySection() {
   return (
-    <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
+    <div class="customer-form__after-primary-section-content">
       {/*------------ Vendor email -----------*/}
       <FastField name={'email'}>
         {({ field, meta: { error, touched } }) => (
@@ -27,6 +27,7 @@ function VendorFormAfterPrimarySection() {
           </FormGroup>
         )}
       </FastField>
+
       {/*------------ Phone number -----------*/}
       <FormGroup
         className={'form-group--phone-number'}
@@ -54,6 +55,7 @@ function VendorFormAfterPrimarySection() {
           </FastField>
         </ControlGroup>
       </FormGroup>
+
       {/*------------ Vendor website -----------*/}
       <FastField name={'website'}>
         {({ field, meta: { error, touched } }) => (

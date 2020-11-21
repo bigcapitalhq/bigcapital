@@ -5,12 +5,14 @@ import {
   defaultPaginationMeta,
 } from 'store/selectors';
 
-const vendorsTableQuery = (state) => {
-  return state.vendors.tableQuery;
-};
+const vendorsTableQuery = (state) => state.vendors.tableQuery;
+const vendorByIdSelector = (state, props) =>
+  state.vendors.items[props.vendorId];
+const vendorsItemsSelector = (state) => state.vendors.items;
 
-const vendorByIdSelector = (state, props) => {
-  return state.vendors.items[props.vendorId];
+const vendorsPaginationSelector = (state, props) => {
+  const viewId = state.vendors.currentViewId;
+  return state.vendors.views?.[viewId];
 };
 
 export const getVendorsTableQuery = createSelector(
@@ -28,11 +30,9 @@ const vendorsPageSelector = (state, props, query) => {
   const viewId = state.vendors.currentViewId;
   const currentView = state.vendors.views?.[viewId];
   const currentPageId = currentView?.pages;
-  return currentView?.pages?.[currentPageId];
-  // return state.vendors.views?.[viewId]?.pages?.[query.page];
-};
 
-const vendorsItemsSelector = (state) => state.vendors.items;
+  return currentView?.pages?.[currentPageId];
+};
 
 export const getVendorCurrentPageFactory = () =>
   createSelector(
@@ -44,11 +44,6 @@ export const getVendorCurrentPageFactory = () =>
         : [];
     },
   );
-
-const vendorsPaginationSelector = (state, props) => {
-  const viewId = state.vendors.currentViewId;
-  return state.vendors.views?.[viewId];
-};
 
 export const getVendorsPaginationMetaFactory = () =>
   createSelector(vendorsPaginationSelector, (vendorPage) => {

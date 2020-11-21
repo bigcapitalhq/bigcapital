@@ -27,6 +27,7 @@ const CLASSES = {
   PAGE_FORM_PAYMENT_MADE: 'page-form--payment-made',
   PAGE_FORM_PAYMENT_RECEIVE: 'page-form--payment-receive',
   PAGE_FORM_CUSTOMER: 'page-form--customer',
+  PAGE_FORM_VENDOR: 'page-form--customer',
   PAGE_FORM_ITEM: 'page-form--item',
 
   FORM_GROUP_LIST_SELECT: 'form-group--select-list',

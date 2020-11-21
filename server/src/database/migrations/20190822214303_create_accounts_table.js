@@ -1,7 +1,6 @@
-
 exports.up = function (knex) {
   return knex.schema.createTable('accounts', (table) => {
-    table.increments('id').comment('Auto-generated id');;
+    table.increments('id').comment('Auto-generated id');
     table.string('name').index();
     table.string('slug');
     table.integer('account_type_id').unsigned().references('id').inTable('account_types');
