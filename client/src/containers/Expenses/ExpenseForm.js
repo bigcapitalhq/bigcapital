@@ -26,7 +26,10 @@ import withSettings from 'containers/Settings/withSettings';
 
 import AppToaster from 'components/AppToaster';
 import Dragzone from 'components/Dragzone';
-
+import {
+  CreateExpenseFormSchema,
+  EditExpenseFormSchema,
+} from './ExpenseForm.schema';
 import useMedia from 'hooks/useMedia';
 import { compose, repeatValue, transformToForm } from 'utils';
 
@@ -64,8 +67,9 @@ function ExpenseForm({
   onCancelForm,
 }) {
   const [payload, setPayload] = useState({});
-
   const history = useHistory();
+  
+  const isNewMode = !expenseId;
   const { formatMessage } = useIntl();
 
   const {
@@ -79,38 +83,9 @@ function ExpenseForm({
     deleteCallback: requestDeleteMedia,
   });
 
-  const validationSchema = Yup.object().shape({
-    beneficiary: Yup.string().label(formatMessage({ id: 'beneficiary' })),
-    payment_account_id: Yup.number()
-      .required()
-      .label(formatMessage({ id: 'payment_account_' })),
-    payment_date: Yup.date()
-      .required()
-      .label(formatMessage({ id: 'payment_date_' })),
-    reference_no: Yup.string().min(1).max(255),
-    currency_code: Yup.string()
-      .nullable()
-      .label(formatMessage({ id: 'currency_code' })),
-    description: Yup.string()
-      .trim()
-      .min(1)
-      .max(1024)
-      .label(formatMessage({ id: 'description' })),
-    publish: Yup.boolean().label(formatMessage({ id: 'publish' })),
-    categories: Yup.array().of(
-      Yup.object().shape({
-        index: Yup.number().min(1).max(1000).nullable(),
-        amount: Yup.number().decimalScale(13).nullable(),
-        expense_account_id: Yup.number()
-          .nullable()
-          .when(['amount'], {
-            is: (amount) => amount,
-            then: Yup.number().required(),
-          }),
-        description: Yup.string().nullable(),
-      }),
-    ),
-  });
+  const validationSchema = isNewMode
+    ? CreateExpenseFormSchema
+    : EditExpenseFormSchema;
 
   const handleDropFiles = useCallback((_files) => {
     setFiles(_files.filter((file) => file.uploaded === false));

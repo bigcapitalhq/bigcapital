@@ -1,16 +1,21 @@
 import * as Yup from 'yup';
 import { formatMessage } from 'services/intl';
+import { DATATYPES_LENGTH } from 'common/dataTypes';
 
 const Schema = Yup.object().shape({
   active: Yup.boolean(),
   name: Yup.string()
     .required()
+    .min(0)
+    .max(DATATYPES_LENGTH.STRING)
     .label(formatMessage({ id: 'item_name_' })),
   type: Yup.string()
     .trim()
     .required()
+    .min(0)
+    .max(DATATYPES_LENGTH.STRING)
     .label(formatMessage({ id: 'item_type_' })),
-  sku: Yup.string().trim(),
+  sku: Yup.string().trim().min(0).max(DATATYPES_LENGTH.STRING),
   cost_price: Yup.number().when(['purchasable'], {
     is: true,
     then: Yup.number()

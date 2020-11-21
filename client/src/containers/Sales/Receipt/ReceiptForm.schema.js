@@ -1,5 +1,6 @@
 import * as Yup from 'yup';
 import { formatMessage } from 'services/intl';
+import { DATATYPES_LENGTH } from 'common/dataTypes';
 
 const Schema = Yup.object().shape({
   customer_id: Yup.string()
@@ -10,38 +11,40 @@ const Schema = Yup.object().shape({
     .label(formatMessage({ id: 'receipt_date_' })),
   receipt_number: Yup.string()
     .nullable()
+    .max(DATATYPES_LENGTH.STRING)
     .label(formatMessage({ id: 'receipt_no_' })),
   deposit_account_id: Yup.number()
     .required()
     .label(formatMessage({ id: 'deposit_account_' })),
-  reference_no: Yup.string().min(1).max(255),
+  reference_no: Yup.string().min(1).max(DATATYPES_LENGTH.STRING),
   receipt_message: Yup.string()
     .trim()
     .min(1)
-    .max(1024)
+    .max(DATATYPES_LENGTH.STRING)
     .label(formatMessage({ id: 'receipt_message_' })),
   statement: Yup.string()
     .trim()
     .min(1)
-    .max(1024)
+    .max(DATATYPES_LENGTH.TEXT)
     .label(formatMessage({ id: 'note' })),
   entries: Yup.array().of(
     Yup.object().shape({
       quantity: Yup.number()
         .nullable()
+        .max(DATATYPES_LENGTH.INT_10)
         .when(['rate'], {
           is: (rate) => rate,
           then: Yup.number().required(),
         }),
-      rate: Yup.number().nullable(),
+      rate: Yup.number().nullable().max(DATATYPES_LENGTH.INT_10),
       item_id: Yup.number()
         .nullable()
         .when(['quantity', 'rate'], {
           is: (quantity, rate) => quantity || rate,
           then: Yup.number().required(),
         }),
-      discount: Yup.number().nullable().min(0).max(100),
-      description: Yup.string().nullable(),
+      discount: Yup.number().nullable().min(0).max(DATATYPES_LENGTH.INT_10),
+      description: Yup.string().nullable().max(DATATYPES_LENGTH.TEXT),
     }),
   ),
 });

@@ -26,6 +26,10 @@ import withPaymentReceiveDetail from './withPaymentReceiveDetail';
 import withPaymentReceives from './withPaymentReceives';
 import withSettings from 'containers/Settings/withSettings';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
+import {
+  EditPaymentReceiveFormSchema,
+  CreatePaymentReceiveFormSchema,
+} from './PaymentReceiveForm.schema';
 import { AppToaster } from 'components';
 
 import { compose } from 'utils';
@@ -64,7 +68,7 @@ function PaymentReceiveForm({
   const [clearFormAlert, setClearFormAlert] = useState(false);
 
   const { formatMessage } = useIntl();
-
+  const isNewMode = !paymentReceiveId;
   const [localPaymentEntries, setLocalPaymentEntries] = useState(
     paymentReceiveEntries,
   );
@@ -96,37 +100,10 @@ function PaymentReceiveForm({
   }, [localPaymentEntries, paymentReceiveEntries]);
 
   // Form validation schema.
-  const validationSchema = Yup.object().shape({
-    customer_id: Yup.string()
-      .label(formatMessage({ id: 'customer_name_' }))
-      .required(),
-    payment_date: Yup.date()
-      .required()
-      .label(formatMessage({ id: 'payment_date_' })),
-    deposit_account_id: Yup.number()
-      .required()
-      .label(formatMessage({ id: 'deposit_account_' })),
-    full_amount: Yup.number().nullable(),
-    payment_receive_no: Yup.string().label(
-      formatMessage({ id: 'payment_receive_no_' }),
-    ),
-    reference_no: Yup.string().min(1).max(255).nullable(),
-    description: Yup.string().nullable(),
-    entries: Yup.array().of(
-      Yup.object().shape({
-        id: Yup.number().nullable(),
-        due_amount: Yup.number().nullable(),
-        payment_amount: Yup.number().nullable().max(Yup.ref('due_amount')),
-        invoice_id: Yup.number()
-          .nullable()
-          .when(['payment_amount'], {
-            is: (payment_amount) => payment_amount,
-            then: Yup.number().required(),
-          }),
-      }),
-    ),
-  });
-
+  const validationSchema = isNewMode
+    ? CreatePaymentReceiveFormSchema
+    : EditPaymentReceiveFormSchema;
+  
   // Default payment receive entry.
   const defaultPaymentReceiveEntry = {
     id: null,
@@ -353,7 +330,6 @@ function PaymentReceiveForm({
     setFieldValue,
     changePageSubtitle,
   ]);
-
 
   const handlePaymentReceiveNumberChanged = useCallback(
     (payment_receive_no) => {

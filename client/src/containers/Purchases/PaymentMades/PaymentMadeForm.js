@@ -21,7 +21,10 @@ import withPaymentMadeDetail from './withPaymentMadeDetail';
 import withPaymentMade from './withPaymentMade';
 import withSettings from 'containers/Settings/withSettings';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
-
+import {
+  EditPaymentMadeFormSchema,
+  CreatePaymentMadeFormSchema,
+} from './PaymentMadeForm.schema';
 import { compose, orderingLinesIndexes } from 'utils';
 
 const ERRORS = {
@@ -73,50 +76,27 @@ function PaymentMadeForm({
 }) {
   const history = useHistory();
   const { formatMessage } = useIntl();
-
+  const isNewMode = !paymentMadeId;
   const [amountChangeAlert, setAmountChangeAlert] = useState(false);
   const [clearLinesAlert, setClearLinesAlert] = useState(false);
   const [clearFormAlert, setClearFormAlert] = useState(false);
   const [fullAmount, setFullAmount] = useState(null);
 
-  const [localPaymentEntries, setLocalPaymentEntries] = useState(paymentMadeEntries);
+  const [localPaymentEntries, setLocalPaymentEntries] = useState(
+    paymentMadeEntries,
+  );
 
   useEffect(() => {
     if (localPaymentEntries !== paymentMadeEntries) {
       setLocalPaymentEntries(paymentMadeEntries);
     }
-  }, [localPaymentEntries, paymentMadeEntries])
+  }, [localPaymentEntries, paymentMadeEntries]);
 
   // Yup validation schema.
-  const validationSchema = Yup.object().shape({
-    vendor_id: Yup.string()
-      .label(formatMessage({ id: 'vendor_name_' }))
-      .required(),
-    payment_date: Yup.date()
-      .required()
-      .label(formatMessage({ id: 'payment_date_' })),
-    payment_account_id: Yup.number()
-      .required()
-      .label(formatMessage({ id: 'payment_account_' })),
-    payment_number: Yup.string()
-      .label(formatMessage({ id: 'payment_no_' })),
-    reference: Yup.string().min(1).max(255).nullable(),
-    description: Yup.string(),
-    entries: Yup.array().of(
-      Yup.object().shape({
-        id: Yup.number().nullable(),
-        due_amount: Yup.number().nullable(),
-        payment_amount: Yup.number().nullable().max(Yup.ref('due_amount')),
-        bill_id: Yup.number()
-          .nullable()
-          .when(['payment_amount'], {
-            is: (payment_amount) => payment_amount,
-            then: Yup.number().required(),
-          }),
-      }),
-    ),
-  });
-
+  const validationSchema = isNewMode
+    ? CreatePaymentMadeFormSchema
+    : EditPaymentMadeFormSchema;
+    
   // Form initial values.
   const initialValues = useMemo(
     () => ({
@@ -246,7 +226,7 @@ function PaymentMadeForm({
 
   const resetEntriesPaymentAmount = (entries) => {
     return entries.map((entry) => ({ ...entry, payment_amount: 0 }));
-  }
+  };
   // Handle fetch success of vendor bills entries.
   const handleFetchEntriesSuccess = useCallback(
     (entries) => {
@@ -307,10 +287,13 @@ function PaymentMadeForm({
     changePageSubtitle(paymentNumber);
   };
 
- // Clear page subtitle before once page leave.
-  useEffect(() => () => {
-    changePageSubtitle('')
-  }, [changePageSubtitle]);
+  // Clear page subtitle before once page leave.
+  useEffect(
+    () => () => {
+      changePageSubtitle('');
+    },
+    [changePageSubtitle],
+  );
 
   const fullAmountPaid = useMemo(
     () => sumBy(values.entries, 'payment_amount'),
@@ -385,9 +368,7 @@ function PaymentMadeForm({
           <p>Are you sure you want to clear this transaction?</p>
         </Alert>
 
-        <PaymentMadeFooter
-          getFieldProps={getFieldProps}
-        />
+        <PaymentMadeFooter getFieldProps={getFieldProps} />
 
         <PaymentMadeFloatingActions
           isSubmitting={isSubmitting}
