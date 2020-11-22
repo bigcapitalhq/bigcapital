@@ -204,8 +204,8 @@ export default {
     'The journal #{number} has been successfully edited.',
   the_journal_has_been_successfully_deleted:
     'The journal has been successfully deleted',
-  the_manual_journal_id_has_been_published:
-    'The manual journal id has been published',
+  the_manual_journal_has_been_published:
+    'The manual journal has been published',
   the_journals_has_been_successfully_deleted:
     'The journals has been successfully deleted ',
   credit: 'Credit',
@@ -841,4 +841,7 @@ export default {
   once_delete_these_vendors_you_will_not_able_restore_them:
     "Once you delete these vendors, you won't be able to retrieve them later. Are you sure you want to delete them?",
   vendor_has_bills: 'Vendor has bills',
+
+  are_sure_to_publish_this_manual_journal:
+    'Are you sure you want to publish this manual journal?',
 };
