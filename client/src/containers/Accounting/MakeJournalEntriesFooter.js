@@ -38,7 +38,7 @@ export default function MakeJournalEntriesFooter({
           disabled={isSubmitting}
           className={'button-secondary ml1'}
           onClick={() => {
-            onSubmitClick({ publish: false, redirect: false });
+            onSubmitClick({ publish: false, redirect: true });
           }}
         >
           <T id={'save_as_draft'} />
