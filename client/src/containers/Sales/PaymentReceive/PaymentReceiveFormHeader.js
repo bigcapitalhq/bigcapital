@@ -21,12 +21,15 @@ import {
   FieldRequiredHint,
   Icon,
   InputPrependButton,
+  MoneyInputGroup,
+  InputPrependText,
   Hint,
   Money,
 } from 'components';
 
 import withCustomers from 'containers/Customers/withCustomers';
 import withAccounts from 'containers/Accounts/withAccounts';
+import withSettings from 'containers/Settings/withSettings';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 
 function PaymentReceiveFormHeader({
@@ -46,6 +49,9 @@ function PaymentReceiveFormHeader({
 
   //#withAccouts
   accountsList,
+
+  //#withSettings
+  baseCurrency,
 
   // #withInvoices
   receivableInvoices,
@@ -149,15 +155,17 @@ function PaymentReceiveFormHeader({
               <ErrorMessage name="full_amount" {...{ errors, touched }} />
             }
           >
-            <InputGroup
-              intent={
-                errors.full_amount && touched.full_amount && Intent.DANGER
-              }
-              minimal={true}
-              value={values.full_amount}
-              {...getFieldProps('full_amount')}
-              onBlur={handleFullAmountBlur}
-            />
+            <ControlGroup>
+              <InputPrependText text={baseCurrency} />
+              <MoneyInputGroup
+                value={values.full_amount}
+                inputGroupProps={{
+                  medium: true,
+                  onBlur: { handleFullAmountBlur },
+                  ...getFieldProps('full_amount'),
+                }}
+              />
+            </ControlGroup>
 
             <a
               onClick={handleReceiveFullAmountClick}
@@ -165,7 +173,7 @@ function PaymentReceiveFormHeader({
               className={'receive-full-amount'}
             >
               Receive full amount (
-              <Money amount={receivableFullAmount} currency={'USD'} />)
+              <Money amount={receivableFullAmount} currency={baseCurrency} />)
             </a>
           </FormGroup>
 
@@ -269,7 +277,7 @@ function PaymentReceiveFormHeader({
           <div class="big-amount">
             <span class="big-amount__label">Amount Received</span>
             <h1 class="big-amount__number">
-              <Money amount={amountReceived} currency={'USD'} />
+              <Money amount={amountReceived} currency={baseCurrency} />
             </h1>
           </div>
         </div>
@@ -284,6 +292,9 @@ export default compose(
   })),
   withAccounts(({ accountsList }) => ({
     accountsList,
+  })),
+  withSettings(({ organizationSettings }) => ({
+    baseCurrency: organizationSettings?.baseCurrency,
   })),
   withDialogActions,
 )(PaymentReceiveFormHeader);
