@@ -111,7 +111,7 @@ function ReceiptsDataTable({
       {
         id: 'receipt_number',
         Header: formatMessage({ id: 'receipt_number' }),
-        accessor: (row) => `#${row.receipt_number}`,
+        accessor: (row) => (row.receipt_number ? `#${row.receipt_number}` : null),
         width: 140,
         className: 'receipt_number',
       },

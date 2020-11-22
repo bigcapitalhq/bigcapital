@@ -112,7 +112,7 @@ function InvoicesDataTable({
       {
         id: 'invoice_no',
         Header: formatMessage({ id: 'invoice_no__' }),
-        accessor: (row) => `#${row.invoice_no}`,
+        accessor: (row) => (row.invoice_no ? `#${row.invoice_no}` : null),
         width: 140,
         className: 'invoice_no',
       },

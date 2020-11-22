@@ -158,7 +158,7 @@ function BillsDataTable({
       {
         id: 'bill_number',
         Header: formatMessage({ id: 'bill_number' }),
-        accessor: (row) => `#${row.bill_number}`,
+        accessor: (row) => (row.bill_number ? `#${row.bill_number}` : null),
         width: 140,
         className: 'bill_number',
       },
