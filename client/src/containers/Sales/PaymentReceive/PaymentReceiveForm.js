@@ -106,10 +106,10 @@ function PaymentReceiveForm({
   
   // Default payment receive entry.
   const defaultPaymentReceiveEntry = {
-    id: null,
-    payment_amount: null,
-    invoice_id: null,
-    due_amount: null,
+    id: '',
+    payment_amount: '',
+    invoice_id: '',
+    due_amount: '',
   };
 
   // Form initial values.
