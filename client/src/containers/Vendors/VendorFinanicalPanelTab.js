@@ -1,9 +1,15 @@
 import React from 'react';
 import classNames from 'classnames';
-import { FormGroup, Position, Classes } from '@blueprintjs/core';
+import { FormGroup, ControlGroup, Position, Classes } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { FastField, ErrorMessage } from 'formik';
-import { MoneyInputGroup, CurrencySelectList, Row, Col } from 'components';
+import {
+  MoneyInputGroup,
+  InputPrependText,
+  CurrencySelectList,
+  Row,
+  Col,
+} from 'components';
 import { FormattedMessage as T } from 'react-intl';
 
 import withCurrencies from 'containers/Currencies/withCurrencies';
@@ -50,7 +56,12 @@ function VendorFinanicalPanelTab({
           </FastField>
           {/*------------ Opening balance  -----------*/}
           <FastField name={'opening_balance'}>
-            {({ field, field: { value }, meta: { error, touched } }) => (
+            {({
+              form: { values },
+              field,
+              field: { value },
+              meta: { error, touched },
+            }) => (
               <FormGroup
                 label={<T id={'opening_balance'} />}
                 className={classNames(
@@ -60,16 +71,19 @@ function VendorFinanicalPanelTab({
                 intent={inputIntent({ error, touched })}
                 inline={true}
               >
-                <MoneyInputGroup
-                  value={value}
-                  onChange={field.onChange}
-                  prefix={'$'}
-                  inputGroupProps={{
-                    fill: true,
-                    ...field,
-                  }}
-                  disabled={vendorId}
-                />
+                <ControlGroup>
+                  <InputPrependText text={values.currency_code } />
+                  <MoneyInputGroup
+                    value={value}
+                    onChange={field.onChange}
+                    prefix={'$'}
+                    inputGroupProps={{
+                      fill: true,
+                      ...field,
+                    }}
+                    disabled={vendorId}
+                  />
+                </ControlGroup>
               </FormGroup>
             )}
           </FastField>

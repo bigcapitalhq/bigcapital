@@ -22,6 +22,7 @@ import VendorFloatingActions from './VendorFloatingActions';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withVendorDetail from './withVendorDetail';
 import withVendorActions from './withVendorActions';
+import withSettings from 'containers/Settings/withSettings';
 
 import { compose, transformToForm } from 'utils';
 
@@ -73,6 +74,9 @@ function VendorForm({
   requestSubmitVendor,
   requestEditVendor,
 
+  // #withSettings
+  baseCurrency,
+
   // #OwnProps
   vendorId,
 }) {
@@ -88,6 +92,7 @@ function VendorForm({
   const initialValues = useMemo(
     () => ({
       ...defaultInitialValues,
+      currency_code: baseCurrency,
       ...transformToForm(vendor, defaultInitialValues),
     }),
     [defaultInitialValues],
@@ -181,5 +186,8 @@ function VendorForm({
 export default compose(
   withVendorDetail(),
   withDashboardActions,
+  withSettings(({ organizationSettings }) => ({
+    baseCurrency: organizationSettings?.baseCurrency,
+  })),
   withVendorActions,
 )(VendorForm);
