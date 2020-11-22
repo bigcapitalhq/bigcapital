@@ -250,7 +250,7 @@ function CustomerForm({
             </div>
 
             <div className={classNames(CLASSES.PAGE_FORM_TABS)}>
-              <CustomersTabs customerId={customerId} />
+              <CustomersTabs customer={customerId} />
             </div>
 
             <CustomerFloatingActions

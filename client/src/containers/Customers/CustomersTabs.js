@@ -6,16 +6,9 @@ import CustomerAttachmentTabs from './CustomerAttachmentTabs';
 import CustomerFinancialPanel from './CustomerFinancialPanel';
 import CustomerNotePanel from './CustomerNotePanel';
 
-export default function CustomersTabs({
-  setFieldValue,
-  getFieldProps,
-  errors,
-  values,
-  touched,
-  customerId,
-}) {
+export default function CustomersTabs({ customer }) {
   const { formatMessage } = useIntl();
- 
+
   return (
     <div>
       <Tabs
@@ -27,7 +20,7 @@ export default function CustomersTabs({
         <Tab
           id={'financial'}
           title={formatMessage({ id: 'financial_details' })}
-          panel={<CustomerFinancialPanel />}
+          panel={<CustomerFinancialPanel customerId={customer} />}
         />
         <Tab
           id={'address'}
