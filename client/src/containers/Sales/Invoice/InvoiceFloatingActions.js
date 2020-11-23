@@ -1,58 +1,171 @@
-import React from 'react';
-import { Intent, Button } from '@blueprintjs/core';
+import React, { useCallback } from 'react';
+import {
+  Intent,
+  Button,
+  ButtonGroup,
+  Popover,
+  PopoverInteractionKind,
+  Position,
+  Menu,
+  MenuItem,
+} from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 import { FormattedMessage as T } from 'react-intl';
 import { CLASSES } from 'common/classes';
 import classNames from 'classnames';
 import { saveInvoke } from 'utils';
+import { Icon } from 'components';
 
 export default function InvoiceFloatingActions({
   isSubmitting,
   onSubmitClick,
-  onSubmitAndNewClick,
   onCancelClick,
   onClearClick,
   invoice,
 }) {
-  const { resetForm } = useFormikContext();
+  const { resetForm, submitForm } = useFormikContext();
+
+  const handleSubmitPublishAndNewBtnClick = useCallback(
+    (event) => {
+      submitForm();
+      saveInvoke(onSubmitClick, event, {
+        redirect: false,
+        publish: true,
+        resetForm: true,
+      });
+    },
+    [submitForm],
+  );
+
+  const handleSubmitPublishContinueEditingBtnClick = useCallback(
+    (event) => {
+      submitForm();
+      saveInvoke(onSubmitClick, event, {
+        redirect: false,
+        publish: true,
+      });
+    },
+    [submitForm],
+  );
+
+  const handleSubmitDraftAndNewBtnClick = useCallback(
+    (event) => {
+      submitForm();
+      saveInvoke(onSubmitClick, event, {
+        redirect: false,
+        publish: false,
+        resetForm: true,
+      });
+    },
+    [submitForm],
+  );
+
+  const handleSubmitDraftContinueEditingBtnClick = useCallback(
+    (event) => {
+      submitForm();
+      saveInvoke(onSubmitClick, event, {
+        redirect: false,
+        publish: true,
+      });
+    },
+    [submitForm],
+  );
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>
-      <Button
-        disabled={isSubmitting}
-        intent={Intent.PRIMARY}
-        type="submit"
-        onClick={(event) => {
-          saveInvoke(onSubmitClick, event);
-        }}
-      >
-        {invoice && invoice.id ? <T id={'edit'} /> : <T id={'save'} />}
-      </Button>
+      <ButtonGroup>
+        {/* ----------- Save And Publish ----------- */}
+        <Button
+          disabled={isSubmitting}
+          intent={Intent.PRIMARY}
+          type="submit"
+          onClick={(event) => {
+            saveInvoke(onSubmitClick, event, {
+              redirect: true,
+              publish: true,
+            });
+          }}
+          text={
+            invoice && invoice.id ? (
+              <T id={'edit'} />
+            ) : (
+              <T id={'save_publish'} />
+            )
+          }
+        />
+        <Popover
+          content={
+            <Menu>
+              <MenuItem
+                text={<T id={'publish_and_new'} />}
+                onClick={handleSubmitPublishAndNewBtnClick}
+              />
+              <MenuItem
+                text={<T id={'publish_continue_editing'} />}
+                onClick={handleSubmitPublishContinueEditingBtnClick}
+              />
+            </Menu>
+          }
+          interactionKind={PopoverInteractionKind.CLICK}
+          position={Position.BOTTOM_LEFT}
+        >
+          <Button
+            intent={Intent.PRIMARY}
+            rightIcon={<Icon icon="arrow-drop-up-16" iconSize={20} />}
+          />
+        </Popover>
 
-      <Button
-        disabled={isSubmitting}
-        intent={Intent.PRIMARY}
-        className={'ml1'}
-        type="submit"
-        onClick={(event) => {
-          saveInvoke(onSubmitAndNewClick, event);
-        }}
-      >
-        <T id={'save_new'} />
-      </Button>
-
-      <Button className={'ml1'} disabled={isSubmitting} onClick={(event) => {
-        resetForm();
-        saveInvoke(onClearClick, event);
-      }}>
-        <T id={'clear'} />
-      </Button>
-
-      <Button className={'ml1'} type="submit" onClick={(event) => {
-        saveInvoke(onCancelClick, event);
-      }}>
-        <T id={'close'} />
-      </Button>
+        {/* ----------- Save As Draft ----------- */}
+        <Button
+          disabled={isSubmitting}
+          className={'ml1'}
+          type="submit"
+          onClick={(event) => {
+            saveInvoke(onSubmitClick, event, {
+              redirect: true,
+              publish: false,
+            });
+          }}
+          text={<T id={'save_as_draft'} />}
+        />
+        <Popover
+          content={
+            <Menu>
+              <MenuItem
+                text={<T id={'save_and_new'} />}
+                onClick={handleSubmitDraftAndNewBtnClick}
+              />
+              <MenuItem
+                text={<T id={'save_continue_editing'} />}
+                onClick={handleSubmitDraftContinueEditingBtnClick}
+              />
+            </Menu>
+          }
+          interactionKind={PopoverInteractionKind.CLICK}
+          position={Position.BOTTOM_LEFT}
+        >
+          <Button rightIcon={<Icon icon="arrow-drop-up-16" iconSize={20} />} />
+        </Popover>
+        {/* ----------- Clear ----------- */}
+        <Button
+          className={'ml1'}
+          disabled={isSubmitting}
+          onClick={(event) => {
+            resetForm();
+            saveInvoke(onClearClick, event);
+          }}
+          text={invoice && invoice.id ? <T id={'reset'} /> : <T id={'clear'} />}
+        />
+        {/* ----------- Cancel ----------- */}
+        <Button
+          className={'ml1'}
+          type="submit"
+          onClick={(event) => {
+            saveInvoke(onCancelClick, event);
+          }}
+          text={<T id={'cancel'} />}
+        />
+      </ButtonGroup>
     </div>
   );
 }
