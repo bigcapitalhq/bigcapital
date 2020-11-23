@@ -216,13 +216,19 @@ const EstimateForm = ({
     [changePageSubtitle],
   );
 
-  const handleSubmitClick = useCallback((event) => {
-    setSubmitPayload({ redirect: true });
-  }, [setSubmitPayload]);
+  const handleSubmitClick = useCallback(
+    (event, payload) => {
+      setSubmitPayload({ ...payload });
+    },
+    [setSubmitPayload],
+  );
 
-  const handleCancelClick = useCallback((event) => {
-    history.goBack();
-  }, [history]);
+  const handleCancelClick = useCallback(
+    (event) => {
+      history.goBack();
+    },
+    [history],
+  );
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM, CLASSES.PAGE_FORM_ESTIMATE)}>
@@ -238,15 +244,16 @@ const EstimateForm = ({
             <EstimateFormHeader
               onEstimateNumberChanged={handleEstimateNumberChange}
             />
-            <EstimateNumberWatcher estimateNumber={estimateNumber}  />
+            <EstimateNumberWatcher estimateNumber={estimateNumber} />
             <EditableItemsEntriesTable />
             <EstimateFormFooter />
             <EstimateFloatingActions
-              isSubmiting={isSubmitting}
+              isSubmitting={isSubmitting}
               estimateId={estimateId}
               onSubmitClick={handleSubmitClick}
               onCancelClick={handleCancelClick}
             />
+      
           </Form>
         )}
       </Formik>

@@ -16,6 +16,10 @@ import classNames from 'classnames';
 import { saveInvoke } from 'utils';
 import { Icon } from 'components';
 
+
+/**
+ * Invoice floating actions bar.
+ */
 export default function InvoiceFloatingActions({
   isSubmitting,
   onSubmitClick,
@@ -106,6 +110,7 @@ export default function InvoiceFloatingActions({
               />
             </Menu>
           }
+          minimal={true}
           interactionKind={PopoverInteractionKind.CLICK}
           position={Position.BOTTOM_LEFT}
         >
@@ -141,6 +146,7 @@ export default function InvoiceFloatingActions({
               />
             </Menu>
           }
+          minimal={true}
           interactionKind={PopoverInteractionKind.CLICK}
           position={Position.BOTTOM_LEFT}
         >
@@ -159,7 +165,6 @@ export default function InvoiceFloatingActions({
         {/* ----------- Cancel ----------- */}
         <Button
           className={'ml1'}
-          type="submit"
           onClick={(event) => {
             saveInvoke(onCancelClick, event);
           }}

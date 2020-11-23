@@ -59,7 +59,6 @@ const defaultInitialValues = {
 /**
  * Receipt form.
  */
-
 function ReceiptForm({
   //#withMedia
   requestSubmitMedia,
@@ -218,17 +217,19 @@ function ReceiptForm({
     [changePageSubtitle],
   );
 
-  const handleSubmitClick = (event) => {
-    setSubmitPayload({ redirect: true });
-  };
+  const handleSubmitClick = useCallback(
+    (event, payload) => {
+      setSubmitPayload({ ...payload });
+    },
+    [setSubmitPayload],
+  );
 
-  const handleSubmitAndNewClick = (event) => {
-    setSubmitPayload({ redirect: false });
-  };
-
-  const handleCancelClick = (event) => {
-    history.goBack();
-  };
+  const handleCancelClick = useCallback(
+    (event) => {
+      history.goBack();
+    },
+    [history],
+  );
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_RECEIPT, CLASSES.PAGE_FORM)}>
@@ -239,20 +240,22 @@ function ReceiptForm({
         initialValues={initialValues}
         onSubmit={handleFormSubmit}
       >
-        <Form>
-          <ReceiptFromHeader
-            onReceiptNumberChanged={handleReceiptNumberChanged}
-          />
-          <ReceiptNumberWatcher receiptNumber={receiptNumber} />
-          <EditableItemsEntriesTable />
-          <ReceiptFormFooter />
-          <ReceiptFormFloatingActions
-            receiptId={receiptId}
-            onSubmitClick={handleSubmitClick}
-            onSubmitAndNewClick={handleSubmitAndNewClick}
-            onCancelForm={handleCancelClick}
-          />
-        </Form>
+        {({ isSubmitting }) => (
+          <Form>
+            <ReceiptFromHeader
+              onReceiptNumberChanged={handleReceiptNumberChanged}
+            />
+            <ReceiptNumberWatcher receiptNumber={receiptNumber} />
+            <EditableItemsEntriesTable />
+            <ReceiptFormFooter />
+            <ReceiptFormFloatingActions
+              isSubmitting={isSubmitting}
+              receiptId={receiptId}
+              onSubmitClick={handleSubmitClick}
+              onCancelClick={handleCancelClick}
+            />
+          </Form>
+        )}
       </Formik>
     </div>
   );
