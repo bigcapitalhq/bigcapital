@@ -844,12 +844,11 @@ export default {
 
   are_sure_to_publish_this_manual_journal:
     'Are you sure you want to publish this manual journal?',
-    save_publish:'Save and Publish',
-    publish_and_new: 'Publish and new',
-    publish_continue_editing:'Publish (continue editing)',
-    save_and_new:'Save and new',
-    save_continue_editing:'Save (continue editing)',
-    reset:'Reset ',     
-
-
+  save_publish: 'Save and Publish',
+  publish_and_new: 'Publish and new',
+  publish_continue_editing: 'Publish (continue editing)',
+  save_and_new: 'Save and new',
+  save_continue_editing: 'Save (continue editing)',
+  reset: 'Reset ',
+  save_and_send: 'Save and Send',
 };

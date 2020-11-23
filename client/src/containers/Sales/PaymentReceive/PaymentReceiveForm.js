@@ -13,6 +13,7 @@ import { FormattedMessage as T, useIntl } from 'react-intl';
 import { pick, sumBy, omit } from 'lodash';
 import { Intent, Alert } from '@blueprintjs/core';
 import classNames from 'classnames';
+import { useHistory } from 'react-router-dom';
 
 import { CLASSES } from 'common/classes';
 import PaymentReceiveHeader from './PaymentReceiveFormHeader';
@@ -66,8 +67,11 @@ function PaymentReceiveForm({
   const [clearLinesAlert, setClearLinesAlert] = useState(false);
   const [fullAmount, setFullAmount] = useState(null);
   const [clearFormAlert, setClearFormAlert] = useState(false);
+  const [submitPayload, setSubmitPayload] = useState({});
 
   const { formatMessage } = useIntl();
+  const history = useHistory();
+
   const isNewMode = !paymentReceiveId;
   const [localPaymentEntries, setLocalPaymentEntries] = useState(
     paymentReceiveEntries,
@@ -103,7 +107,7 @@ function PaymentReceiveForm({
   const validationSchema = isNewMode
     ? CreatePaymentReceiveFormSchema
     : EditPaymentReceiveFormSchema;
-  
+
   // Default payment receive entry.
   const defaultPaymentReceiveEntry = {
     id: '',
@@ -187,6 +191,10 @@ function PaymentReceiveForm({
       });
       setSubmitting(false);
       resetForm();
+
+      if (submitPayload.redirect) {
+        history.push('/payment-receives');
+      }
     };
     // Handle request response errors.
     const onError = (errors) => {
@@ -220,6 +228,7 @@ function PaymentReceiveForm({
     isSubmitting,
     touched,
     resetForm,
+    submitForm,
   } = useFormik({
     enableReinitialize: true,
     validationSchema,
@@ -338,6 +347,17 @@ function PaymentReceiveForm({
     [changePageSubtitle],
   );
 
+  const handleSubmitClick = useCallback(
+    (event, payload) => {
+      setSubmitPayload({ ...payload });
+    },
+    [setSubmitPayload],
+  );
+
+  const handleCancelClick = useCallback(() => {
+    history.goBack();
+  }, [history]);
+
   return (
     <div
       className={classNames(
@@ -416,6 +436,9 @@ function PaymentReceiveForm({
           isSubmitting={isSubmitting}
           paymentReceiveId={paymentReceiveId}
           onClearClick={handleClearBtnClick}
+          onSubmitClick={handleSubmitClick}
+          onCancelClick={handleCancelClick}
+          onSubmitForm={submitForm}
         />
       </form>
     </div>
