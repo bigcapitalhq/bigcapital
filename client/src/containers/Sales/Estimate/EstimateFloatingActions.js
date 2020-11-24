@@ -1,18 +1,37 @@
 import React from 'react';
-import { Intent, Button } from '@blueprintjs/core';
+import {
+  Intent,
+  Button,
+  ButtonGroup,
+  Popover,
+  PopoverInteractionKind,
+  Position,
+  Menu,
+  MenuItem,
+} from '@blueprintjs/core';
 import { FormattedMessage as T } from 'react-intl';
+import { CLASSES } from 'common/classes';
+import classNames from 'classnames';
+import { useFormikContext } from 'formik';
 import { saveInvoke } from 'utils';
+import { Icon } from 'components';
 
+/**
+ * Estimate floating actions bar.
+ */
 export default function EstimateFloatingActions({
   isSubmitting,
   onSubmitClick,
   onCancelClick,
   onClearClick,
-  onSubmitAndNewClick,
   estimateId,
 }) {
+  const { resetForm, submitForm } = useFormikContext();
+
   const handleSubmitBtnClick = (event) => {
-    saveInvoke(onSubmitClick, event);
+    saveInvoke(onSubmitClick, event, {
+      redirect: true,
+    });
   };
 
   const handleCancelBtnClick = (event) => {
@@ -20,49 +39,60 @@ export default function EstimateFloatingActions({
   };
 
   const handleClearBtnClick = (event) => {
-    saveInvoke(onClearClick, event);
+    // saveInvoke(onClearClick, event);
+    resetForm();
   };
 
   const handleSubmitAndNewClick = (event) => {
-    saveInvoke(onSubmitAndNewClick, event);
-  }
+    submitForm();
+    saveInvoke(onSubmitClick, event, {
+      redirect: false,
+    });
+  };
 
   return (
-    <div className={'form__floating-footer'}>
-      <Button
-        disabled={isSubmitting}
-        intent={Intent.PRIMARY}
-        type="submit"
-        onClick={handleSubmitBtnClick}
-      >
-        {(estimateId) ? <T id={'edit'} /> : <T id={'save'} />}
-      </Button>
-
-      <Button
-        disabled={isSubmitting}
-        intent={Intent.PRIMARY}
-        className={'ml1'}
-        type="submit"
-        onClick={handleSubmitAndNewClick}
-      >
-        <T id={'save_new'} />
-      </Button>
-
-      <Button
-        className={'ml1'}
-        disabled={isSubmitting}
-        onClick={handleClearBtnClick}
-      >
-        <T id={'clear'} />
-      </Button>
-
-      <Button
-        className={'ml1'}
-        type="submit"
-        onClick={handleCancelBtnClick}
-      >
-        <T id={'close'} />
-      </Button>
+    <div className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>
+      <ButtonGroup>
+        {/* ----------- Save and New ----------- */}
+        <Button
+          disabled={isSubmitting}
+          intent={Intent.PRIMARY}
+          type="submit"
+          onClick={handleSubmitBtnClick}
+          text={estimateId ? <T id={'edit'} /> : <T id={'save'} />}
+        />
+        <Popover
+          content={
+            <Menu>
+              <MenuItem
+                text={<T id={'save_and_new'} />}
+                onClick={handleSubmitAndNewClick}
+              />
+            </Menu>
+          }
+          minimal={true}
+          interactionKind={PopoverInteractionKind.CLICK}
+          position={Position.BOTTOM_LEFT}
+        >
+          <Button
+            intent={Intent.PRIMARY}
+            rightIcon={<Icon icon="arrow-drop-up-16" iconSize={20} />}
+          />
+        </Popover>
+        {/* ----------- Clear & Reset----------- */}
+        <Button
+          className={'ml1'}
+          disabled={isSubmitting}
+          onClick={handleClearBtnClick}
+          text={estimateId ? <T id={'reset'} /> : <T id={'clear'} />}
+        />
+        {/* ----------- Cancel  ----------- */}
+        <Button
+          className={'ml1'}
+          onClick={handleCancelBtnClick}
+          text={<T id={'cancel'} />}
+        />
+      </ButtonGroup>
     </div>
   );
 }

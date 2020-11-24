@@ -66,9 +66,9 @@ function ExpenseForm({
   onFormSubmit,
   onCancelForm,
 }) {
-  const [payload, setPayload] = useState({});
+  const [submitPayload, setSubmitPayload] = useState({});
   const history = useHistory();
-  
+
   const isNewMode = !expenseId;
   const { formatMessage } = useIntl();
 
@@ -199,6 +199,8 @@ function ExpenseForm({
     setFieldValue,
     handleSubmit,
     getFieldProps,
+    submitForm,
+    resetForm,
   } = useFormik({
     enableReinitialize: true,
     validationSchema,
@@ -228,7 +230,7 @@ function ExpenseForm({
 
       const form = {
         ...values,
-        publish: payload.publish,
+        publish: submitPayload.publish,
         categories,
       };
       const saveExpense = (mdeiaIds) =>
@@ -246,7 +248,7 @@ function ExpenseForm({
                   intent: Intent.SUCCESS,
                 });
                 setSubmitting(false);
-                saveInvokeSubmit({ action: 'update', ...payload });
+                saveInvokeSubmit({ action: 'update', ...submitPayload });
                 clearSavedMediaIds([]);
                 resetForm();
               })
@@ -265,8 +267,11 @@ function ExpenseForm({
                   intent: Intent.SUCCESS,
                 });
                 setSubmitting(false);
-                resetForm();
-                saveInvokeSubmit({ action: 'new', ...payload });
+
+                if (submitPayload.resetForm) {
+                  resetForm();
+                }
+                saveInvokeSubmit({ action: 'new', ...submitPayload });
                 clearSavedMediaIds();
               })
               .catch((errors) => {
@@ -288,20 +293,17 @@ function ExpenseForm({
     },
   });
 
-  const handleSubmitClick = useCallback(() => {
-    setPayload({ publish: true, redirect: true });
-  }, [setPayload]);
+  const handleSubmitClick = useCallback(
+    (event, payload) => {
+      setSubmitPayload({ ...payload });
+    },
+    [setSubmitPayload],
+  );
 
   const handleCancelClick = useCallback(() => {
     history.goBack();
-  }, []);
+  }, [history]);
 
-  const handleSubmitAndNewClick = useCallback(() => {
-    setPayload({ publish: true, redirect: false });
-  });
-  const handleSubmitAndDraftClick = useCallback(() => {
-    setPayload({ publish: false, redirect: false });
-  });
 
   const handleDeleteFile = useCallback(
     (_deletedFiles) => {
@@ -370,8 +372,8 @@ function ExpenseForm({
           isSubmitting={isSubmitting}
           onSubmitClick={handleSubmitClick}
           onCancelClick={handleCancelClick}
-          onDraftClick={handleSubmitAndDraftClick}
-          onSubmitAndNewClick={handleSubmitAndNewClick}
+          onSubmitForm={submitForm}
+          onResetForm={resetForm}
           expense={expense}
         />
       </form>

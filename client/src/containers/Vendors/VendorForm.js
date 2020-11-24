@@ -143,9 +143,12 @@ function VendorForm({
     history.goBack();
   }, [history]);
 
-  const handleSubmitAndNewClick = useCallback(() => {
-    setSubmitPayload({ noRedirect: true });
-  });
+  const handleSubmitClick = useCallback(
+    (event, payload) => {
+      setSubmitPayload({ ...payload });
+    },
+    [setSubmitPayload],
+  );
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM, CLASSES.PAGE_FORM_CUSTOMER)}>
@@ -173,8 +176,8 @@ function VendorForm({
             <VendorFloatingActions
               isSubmitting={isSubmitting}
               vendor={vendorId}
+              onSubmitClick={handleSubmitClick}
               onCancelClick={handleCancelClick}
-              onSubmitAndNewClick={handleSubmitAndNewClick}
             />
           </Form>
         )}

@@ -229,13 +229,19 @@ function CustomerForm({
     [setDeletedFiles, deletedFiles],
   );
 
-  const handleCancelClick = () => {
-    history.goBack();
-  };
+  const handleCancelClick = useCallback(
+    (event) => {
+      history.goBack();
+    },
+    [history],
+  );
 
-  const handleSubmitAndNewClick = () => {
-    setSubmitPayload({ noRedirect: true });
-  };
+  const handleSubmitClick = useCallback(
+    (event, payload) => {
+      setSubmitPayload({ ...payload });
+    },
+    [setSubmitPayload],
+  );
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM, CLASSES.PAGE_FORM_CUSTOMER)}>
@@ -261,8 +267,8 @@ function CustomerForm({
             <CustomerFloatingActions
               isSubmitting={isSubmitting}
               customerId={customer}
+              onSubmitClick={handleSubmitClick}
               onCancelClick={handleCancelClick}
-              onSubmitAndNewClick={handleSubmitAndNewClick}
             />
           </Form>
         )}

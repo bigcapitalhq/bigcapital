@@ -61,6 +61,7 @@ function PaymentReceiveForm({
   const [clearLinesAlert, setClearLinesAlert] = useState(false);
   const [fullAmount, setFullAmount] = useState(null);
   const [clearFormAlert, setClearFormAlert] = useState(false);
+  const [submitPayload, setSubmitPayload] = useState({});
 
   const { formatMessage } = useIntl();
   const [localPaymentEntries, setLocalPaymentEntries] = useState(
@@ -190,7 +191,10 @@ function PaymentReceiveForm({
       });
       setSubmitting(false);
       resetForm();
-      history.push('/payment-receives');
+
+      if (submitPayload.redirect) {
+        history.push('/payment-receives');
+      }
     };
     // Handle request response errors.
     const onError = (errors) => {
@@ -224,6 +228,7 @@ function PaymentReceiveForm({
     isSubmitting,
     touched,
     resetForm,
+    submitForm,
   } = useFormik({
     enableReinitialize: true,
     validationSchema,
@@ -351,6 +356,17 @@ function PaymentReceiveForm({
     [changePageSubtitle],
   );
 
+  const handleSubmitClick = useCallback(
+    (event, payload) => {
+      setSubmitPayload({ ...payload });
+    },
+    [setSubmitPayload],
+  );
+
+  const handleCancelClick = useCallback(() => {
+    history.goBack();
+  }, [history]);
+
   return (
     <div
       className={classNames(
@@ -429,6 +445,9 @@ function PaymentReceiveForm({
           isSubmitting={isSubmitting}
           paymentReceiveId={paymentReceiveId}
           onClearClick={handleClearBtnClick}
+          onSubmitClick={handleSubmitClick}
+          onCancelClick={handleCancelClick}
+          onSubmitForm={submitForm}
         />
       </form>
     </div>

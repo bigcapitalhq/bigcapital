@@ -228,8 +228,8 @@ const EstimateForm = ({
   );
 
   const handleSubmitClick = useCallback(
-    (event) => {
-      setSubmitPayload({ redirect: true });
+    (event, payload) => {
+      setSubmitPayload({ ...payload });
     },
     [setSubmitPayload],
   );
@@ -259,11 +259,12 @@ const EstimateForm = ({
             <EditableItemsEntriesTable filterSellableItems={true} />
             <EstimateFormFooter />
             <EstimateFloatingActions
-              isSubmiting={isSubmitting}
+              isSubmitting={isSubmitting}
               estimateId={estimateId}
               onSubmitClick={handleSubmitClick}
               onCancelClick={handleCancelClick}
             />
+      
           </Form>
         )}
       </Formik>
