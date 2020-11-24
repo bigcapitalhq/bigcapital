@@ -19,7 +19,7 @@ export interface IPaymentReceiveDTO {
   amount: number,
   referenceNo: string,
   depositAccountId: number,
-  paymentReceiveNo: string,
+  paymentReceiveNo?: string,
   description: string,
   entries: IPaymentReceiveEntryDTO[],
 };

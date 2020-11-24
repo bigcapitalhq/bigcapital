@@ -27,7 +27,7 @@ export interface IBillPaymentEntryDTO {
 export interface IBillPaymentDTO {
   vendorId: number,
   paymentAccountId: number,
-  paymentNumber: string,
+  paymentNumber?: string,
   paymentDate: Date,
   description: string,
   reference: string,

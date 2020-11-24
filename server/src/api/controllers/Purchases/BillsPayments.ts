@@ -82,7 +82,7 @@ export default class BillsPayments extends BaseController {
     return [
       check('vendor_id').exists().isNumeric().toInt(),
       check('payment_account_id').exists().isNumeric().toInt(),
-      check('payment_number').exists().trim().escape(),
+      check('payment_number').optional({ nullable: true }).trim().escape(),
       check('payment_date').exists(),
       check('description').optional().trim().escape(),
       check('reference').optional().trim().escape(),
