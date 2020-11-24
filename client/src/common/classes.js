@@ -40,6 +40,8 @@ const CLASSES = {
   DATATABLE_EMPTY_STATUS_DESC: 'datatable-empty-status__desc',
   DATATABLE_EMPTY_STATUS_ACTIONS: 'datatable-empty-status__actions',
 
+  SELECT_LIST_FILL_POPOVER: 'select-list--fill-popover',
+
   ...Classes,
 };
 

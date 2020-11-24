@@ -4,6 +4,7 @@ import { Select } from '@blueprintjs/select';
 import { FormattedMessage as T } from 'react-intl';
 import classNames from 'classnames';
 import { isEmpty } from 'lodash';
+import { CLASSES } from 'common/classes';
 
 export default function AccountsSelectList({
   accounts,
@@ -12,6 +13,7 @@ export default function AccountsSelectList({
   defaultSelectText = 'Select account',
   onAccountSelected,
   disabled = false,
+  popoverFill = false,
   filterByRootTypes = [],
   filterByTypes = [],
   filterByNormal
@@ -61,7 +63,7 @@ export default function AccountsSelectList({
   const accountItem = useCallback((item, { handleClick, modifiers, query }) => {
     return (
       <MenuItem
-        text={item.name}
+        text={item.htmlName || item.name}
         label={item.code}
         key={item.id}
         onClick={handleClick}
@@ -100,11 +102,13 @@ export default function AccountsSelectList({
       noResults={<MenuItem disabled={true} text={<T id={'no_accounts'} />} />}
       itemRenderer={accountItem}
       itemPredicate={filterAccountsPredicater}
-      popoverProps={{ minimal: true }}
+      popoverProps={{ minimal: true, usePortal: !popoverFill, inline: popoverFill }}
       filterable={true}
       onItemSelect={onAccountSelect}
       disabled={disabled}
-      className={classNames('form-group--select-list')}
+      className={classNames('form-group--select-list', {
+        [CLASSES.SELECT_LIST_FILL_POPOVER]: popoverFill,
+      })}
     >
       <Button
         disabled={disabled}

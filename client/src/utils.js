@@ -1,8 +1,6 @@
 import moment from 'moment';
 import _ from 'lodash';
-import {
-  Intent,
-} from '@blueprintjs/core';
+import { Intent } from '@blueprintjs/core';
 import Currency from 'js-money/lib/currency';
 import PProgress from 'p-progress';
 import accounting from 'accounting';
@@ -270,13 +268,12 @@ export const orderingLinesIndexes = (lines, attribute = 'index') => {
   return lines.map((line, index) => ({ ...line, [attribute]: index + 1 }));
 };
 
-
 export const transformToObject = (arr, key) => {
-  return arr.reduce(function(acc, cur, i) {
+  return arr.reduce(function (acc, cur, i) {
     acc[key ? cur[key] : i] = cur;
     return acc;
   }, {});
-}
+};
 
 export const itemsStartWith = (items, char) => {
   return items.filter((item) => item.indexOf(char) === 0);
@@ -284,15 +281,90 @@ export const itemsStartWith = (items, char) => {
 
 export const saveInvoke = (func, ...rest) => {
   return func && func(...rest);
-}
+};
 
 export const transformToForm = (obj, emptyInitialValues) => {
   return _.pickBy(
     obj,
     (val, key) => val !== null && Object.keys(emptyInitialValues).includes(key),
-  )
+  );
+};
+
+export function inputIntent({ error, touched }) {
+  return error && touched ? Intent.DANGER : '';
 }
 
-export function inputIntent({ error, touched }){
-  return error && touched ? Intent.DANGER : '';
+export function listToTree(
+  inputList,
+  {
+    idFieldKey = 'id',
+    parentFieldKey = 'parent_account_id',
+    nodeMapper = (node) => ({ ...node }),
+  },
+) {
+  var map = {},
+    node,
+    roots = [],
+    i;
+  const list = inputList.map((item) => nodeMapper(item));
+
+  for (i = 0; i < list.length; i += 1) {
+    map[list[i][idFieldKey]] = i;
+    list[i].children = [];
+  }
+  for (i = 0; i < list.length; i += 1) {
+    node = list[i];
+
+    if (node[parentFieldKey]) {
+      list[map[node[parentFieldKey]]].children.push(node);
+    } else {
+      roots.push(node);
+    }
+  }
+  return roots;
+}
+
+export function treeToList(
+  list,
+  {
+    idFieldKey = 'id',
+    childrenFieldKey = 'children',
+    nodeMapper = (node, depth) => node,
+  },
+) {
+  let depth = 0;
+
+  const walker = (tree) => {
+    return tree.reduce(function (acc, o) {
+      depth += 1;
+
+      if (o[idFieldKey]) {
+        acc.push(nodeMapper(o, depth));
+      }
+      if (o[childrenFieldKey]) {
+        acc = acc.concat(walker(o.children));
+      }
+      depth -= 1;
+      return acc;
+    }, []);
+  };
+  return walker(list);
+}
+
+export function defaultToTransform(
+  value,
+  defaultOrTransformedValue,
+  defaultValue,
+) {
+  const _defaultValue =
+    typeof defaultValue === 'undefined'
+      ? defaultOrTransformedValue
+      : defaultValue;
+
+  const _transfromedValue =
+    typeof defaultValue === 'undefined' ? value : defaultOrTransformedValue;
+
+  return value == null || value !== value || value === ''
+    ? _defaultValue
+    : _transfromedValue;
 }

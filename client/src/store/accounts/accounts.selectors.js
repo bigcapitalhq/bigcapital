@@ -1,12 +1,13 @@
 import { createSelector } from 'reselect';
+import { repeat } from 'lodash';
 import { pickItemsFromIds, getItemById } from 'store/selectors';
-import { flatToNestedArray } from 'utils';
+import { flatToNestedArray, treeToList } from 'utils';
 
 const accountsViewsSelector = (state) => state.accounts.views;
 const accountsDataSelector = (state) => state.accounts.items;
 const accountsCurrentViewSelector = (state) => state.accounts.currentViewId;
 const accountIdPropSelector = (state, props) => props.accountId;
-const accountsListSelector = (state) => state.accounts.list;
+const accountsListSelector = (state) => state.accounts.listTree;
 
 export const getAccountsItems = createSelector(
   accountsViewsSelector,
@@ -30,8 +31,23 @@ export const getAccountsListFactory = () =>
   createSelector(
     accountsListSelector,
     accountsDataSelector,
-    (accounts, accountsItems) => {
-      return pickItemsFromIds(accountsItems, accounts);
+    (accountsTree, accountsItems) => {
+      return treeToList(accountsTree, {
+        idFieldKey: 'id',
+        childrenFieldKey: 'children',
+        nodeMapper: (node, depth) => {
+          const account = accountsItems[node.id];
+          const spaceChar = String.fromCharCode(160);
+
+          return {
+            ...account,
+            htmlName: (depth > 1)
+              ? (`${repeat(spaceChar, (depth - 1) * 2)}${account.name}`) :
+                account.name,
+            depth,
+          };
+        }
+      });
     },
   );
 
