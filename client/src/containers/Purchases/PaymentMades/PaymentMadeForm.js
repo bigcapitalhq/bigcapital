@@ -81,6 +81,7 @@ function PaymentMadeForm({
   const [clearLinesAlert, setClearLinesAlert] = useState(false);
   const [clearFormAlert, setClearFormAlert] = useState(false);
   const [fullAmount, setFullAmount] = useState(null);
+  const [submitPayload, setSubmitPayload] = useState({});
 
   const [localPaymentEntries, setLocalPaymentEntries] = useState(
     paymentMadeEntries,
@@ -96,7 +97,7 @@ function PaymentMadeForm({
   const validationSchema = isNewMode
     ? CreatePaymentMadeFormSchema
     : EditPaymentMadeFormSchema;
-    
+
   // Form initial values.
   const initialValues = useMemo(
     () => ({
@@ -155,8 +156,13 @@ function PaymentMadeForm({
         intent: Intent.SUCCESS,
       });
       setSubmitting(false);
-      resetForm();
+      // resetForm();
       changePageSubtitle('');
+
+      if (submitPayload.redirect) {
+        history.push('/payment-mades');
+      }
+
     };
 
     const onError = (errors) => {
@@ -187,6 +193,7 @@ function PaymentMadeForm({
     values,
     handleSubmit,
     isSubmitting,
+    submitForm,
   } = useFormik({
     validationSchema,
     initialValues,
@@ -300,6 +307,14 @@ function PaymentMadeForm({
     [values.entries],
   );
 
+  const handleSubmitClick = useCallback(
+    (event, payload) => {
+      setSubmitPayload({ ...payload });
+    },
+    [setSubmitPayload],
+  );
+
+
   return (
     <div
       className={classNames(CLASSES.PAGE_FORM, CLASSES.PAGE_FORM_PAYMENT_MADE)}
@@ -372,8 +387,11 @@ function PaymentMadeForm({
 
         <PaymentMadeFloatingActions
           isSubmitting={isSubmitting}
+          paymentMadeId={paymentMadeId}
+          onSubmitClick={handleSubmitClick}
           onCancelClick={handleCancelClick}
           onClearBtnClick={handleClearBtnClick}
+          onSubmitForm={submitForm}
         />
 
         {/* <Dragzone

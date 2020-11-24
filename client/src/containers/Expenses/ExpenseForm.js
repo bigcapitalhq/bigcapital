@@ -304,7 +304,6 @@ function ExpenseForm({
     history.goBack();
   }, [history]);
 
-
   const handleDeleteFile = useCallback(
     (_deletedFiles) => {
       _deletedFiles.forEach((deletedFile) => {
@@ -332,7 +331,7 @@ function ExpenseForm({
       ]),
     );
   };
-
+  
   return (
     <div className={'expense-form'}>
       <form onSubmit={handleSubmit}>
@@ -374,7 +373,8 @@ function ExpenseForm({
           onCancelClick={handleCancelClick}
           onSubmitForm={submitForm}
           onResetForm={resetForm}
-          expense={expense}
+          expense={expenseId}
+          expensePublished={true}
         />
       </form>
     </div>

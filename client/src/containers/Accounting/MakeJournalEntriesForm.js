@@ -11,6 +11,7 @@ import moment from 'moment';
 import { Intent } from '@blueprintjs/core';
 import { useIntl } from 'react-intl';
 import { pick, setWith } from 'lodash';
+import { useHistory } from 'react-router-dom';
 
 import MakeJournalEntriesHeader from './MakeJournalEntriesHeader';
 import MakeJournalEntriesFooter from './MakeJournalEntriesFooter';
@@ -77,6 +78,9 @@ function MakeJournalEntriesForm({
   onCancelForm,
 }) {
   const { formatMessage } = useIntl();
+  const history = useHistory();
+  const [submitPayload, setSubmitPayload] = useState({});
+
   const {
     setFiles,
     saveMedia,
@@ -163,8 +167,6 @@ function MakeJournalEntriesForm({
     [onFormSubmit],
   );
 
-  const [payload, setPayload] = useState({});
-
   const defaultEntry = useMemo(
     () => ({
       index: 0,
@@ -183,6 +185,7 @@ function MakeJournalEntriesForm({
       date: moment(new Date()).format('YYYY-MM-DD'),
       description: '',
       reference: '',
+      status:'',
       currency_code: '',
       entries: [...repeatValue(defaultEntry, 4)],
     }),
@@ -289,6 +292,8 @@ function MakeJournalEntriesForm({
     setFieldValue,
     handleSubmit,
     getFieldProps,
+    submitForm,
+    resetForm,
     touched,
     isSubmitting,
   } = useFormik({
@@ -327,7 +332,7 @@ function MakeJournalEntriesForm({
         setSubmitting(false);
         return;
       }
-      const form = { ...values, status: payload.publish, entries };
+      const form = { ...values, status: submitPayload.publish, entries };
 
       const saveJournal = (mediaIds) =>
         new Promise((resolve, reject) => {
@@ -344,7 +349,7 @@ function MakeJournalEntriesForm({
                   intent: Intent.SUCCESS,
                 });
                 setSubmitting(false);
-                saveInvokeSubmit({ action: 'update', ...payload });
+                saveInvokeSubmit({ action: 'update', ...submitPayload });
                 clearSavedMediaIds([]);
                 resetForm();
                 resolve(response);
@@ -364,9 +369,11 @@ function MakeJournalEntriesForm({
                   intent: Intent.SUCCESS,
                 });
                 setSubmitting(false);
-                saveInvokeSubmit({ action: 'new', ...payload });
+                saveInvokeSubmit({ action: 'new', ...submitPayload });
                 clearSavedMediaIds();
-                resetForm();
+                if (submitPayload.resetForm) {
+                  resetForm();
+                }
                 resolve(response);
               })
               .catch((errors) => {
@@ -407,20 +414,15 @@ function MakeJournalEntriesForm({
   ]);
 
   const handleSubmitClick = useCallback(
-    (payload) => {
-      setPayload(payload);
-      // formik.resetForm();
-      handleSubmit();
+    (event, payload) => {
+      setSubmitPayload({ ...payload });
     },
-    [setPayload, handleSubmit],
+    [setSubmitPayload],
   );
 
-  const handleCancelClick = useCallback(
-    (payload) => {
-      onCancelForm && onCancelForm(payload);
-    },
-    [onCancelForm],
-  );
+  const handleCancelClick = useCallback(() => {
+    history.goBack();
+  }, [history]);
 
   const handleDeleteFile = useCallback(
     (_deletedFiles) => {
@@ -453,11 +455,12 @@ function MakeJournalEntriesForm({
   const handleJournalNumberChanged = useCallback(
     (journalNumber) => {
       changePageSubtitle(
-        defaultToTransform(journalNumber, `No. ${journalNumber}`, '')
+        defaultToTransform(journalNumber, `No. ${journalNumber}`, ''),
       );
     },
     [changePageSubtitle],
   );
+
   return (
     <div class="make-journal-entries">
       <form onSubmit={handleSubmit}>
@@ -482,7 +485,10 @@ function MakeJournalEntriesForm({
           isSubmitting={isSubmitting}
           onSubmitClick={handleSubmitClick}
           onCancelClick={handleCancelClick}
-          manualJournal={manualJournalId}
+          manualJournalId={manualJournalId}
+          manualJournalPublished={values.status}
+          onSubmitForm={submitForm}
+          onResetForm={resetForm}
         />
       </form>
 

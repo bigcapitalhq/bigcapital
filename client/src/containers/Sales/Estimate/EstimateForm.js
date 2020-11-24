@@ -103,9 +103,9 @@ const EstimateForm = ({
     : estimateNextNumber;
 
   useEffect(() => {
-    const transNumber = !isNewMode ? estimate.estimate_number  : estimateNumber;
+    const transNumber = !isNewMode ? estimate.estimate_number : estimateNumber;
 
-    if (isNewMode) {
+    if (!isNewMode) {
       changePageTitle(formatMessage({ id: 'edit_estimate' }));
     } else {
       changePageTitle(formatMessage({ id: 'new_estimate' }));
@@ -199,10 +199,12 @@ const EstimateForm = ({
         intent: Intent.SUCCESS,
       });
       setSubmitting(false);
-      resetForm();
 
       if (submitPayload.redirect) {
         history.push('/estimates');
+      }
+      if (submitPayload.resetForm) {
+        resetForm();
       }
     };
 
@@ -263,8 +265,8 @@ const EstimateForm = ({
               estimateId={estimateId}
               onSubmitClick={handleSubmitClick}
               onCancelClick={handleCancelClick}
+              estimatePublished={true}
             />
-      
           </Form>
         )}
       </Formik>

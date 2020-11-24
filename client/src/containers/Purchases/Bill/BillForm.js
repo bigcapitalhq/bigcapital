@@ -22,7 +22,12 @@ import withBillDetail from './withBillDetail';
 import { AppToaster } from 'components';
 
 import { ERROR } from 'common/errors';
-import { compose, repeatValue, defaultToTransform, orderingLinesIndexes } from 'utils';
+import {
+  compose,
+  repeatValue,
+  defaultToTransform,
+  orderingLinesIndexes,
+} from 'utils';
 
 const MIN_LINES_NUMBER = 5;
 
@@ -154,11 +159,13 @@ function BillForm({
       });
       setSubmitting(false);
 
-      resetForm();
       changePageSubtitle('');
 
       if (submitPayload.redirect) {
-        history.go('/bills');
+        history.push('/bills');
+      }
+      if (submitPayload.resetForm) {
+        resetForm();
       }
     };
     // Handle the request error.
@@ -189,9 +196,12 @@ function BillForm({
     [changePageSubtitle],
   );
 
-  const handleSubmitClick = useCallback(() => {
-    setSubmitPayload({ redirect: true });
-  }, [setSubmitPayload]);
+  const handleSubmitClick = useCallback(
+    (event, payload) => {
+      setSubmitPayload({ ...payload });
+    },
+    [setSubmitPayload],
+  );
 
   const handleCancelClick = useCallback(() => {
     history.goBack();
@@ -218,6 +228,7 @@ function BillForm({
             <BillFloatingActions
               isSubmitting={isSubmitting}
               billId={billId}
+              billPublished={true}
               onSubmitClick={handleSubmitClick}
               onCancelForm={handleCancelClick}
             />

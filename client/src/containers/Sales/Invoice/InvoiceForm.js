@@ -186,7 +186,6 @@ function InvoiceForm({
         intent: Intent.SUCCESS,
       });
       setSubmitting(false);
-      resetForm();
 
       if (submitPayload.redirect) {
         history.push('/invoices');
@@ -230,7 +229,7 @@ function InvoiceForm({
     },
     [changePageSubtitle],
   );
-
+  
   return (
     <div className={classNames(CLASSES.PAGE_FORM, CLASSES.PAGE_FORM_INVOICE)}>
       <Formik
@@ -253,9 +252,10 @@ function InvoiceForm({
             <InvoiceFormFooter />
             <InvoiceFloatingActions
               isSubmitting={isSubmitting}
-              invoice={invoice}
+              invoice={invoiceId}
               onCancelClick={handleCancelClick}
               onSubmitClick={handleSubmitClick}
+              invoicePublished={true}
             />
           </Form>
         )}

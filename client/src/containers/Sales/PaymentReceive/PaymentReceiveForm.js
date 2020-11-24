@@ -190,10 +190,12 @@ function PaymentReceiveForm({
         intent: Intent.SUCCESS,
       });
       setSubmitting(false);
-      resetForm();
 
       if (submitPayload.redirect) {
         history.push('/payment-receives');
+      }
+      if (submitPayload.resetForm) {
+        resetForm();
       }
     };
     // Handle request response errors.
@@ -366,7 +368,7 @@ function PaymentReceiveForm({
   const handleCancelClick = useCallback(() => {
     history.goBack();
   }, [history]);
-
+  
   return (
     <div
       className={classNames(
