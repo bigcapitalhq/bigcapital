@@ -4,7 +4,7 @@ exports.up = function(knex) {
     table.increments();
     table.integer('payment_receive_id').unsigned().index().references('id').inTable('payment_receives');
     table.integer('invoice_id').unsigned().index().references('id').inTable('sales_invoices');
-    table.decimal('payment_amount').unsigned();
+    table.decimal('payment_amount', 13, 3).unsigned();
   })  
 };
 

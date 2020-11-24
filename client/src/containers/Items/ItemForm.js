@@ -33,7 +33,7 @@ const defaultInitialValues = {
   active: true,
   name: '',
   type: 'service',
-  sku: '',
+  code: '',
   cost_price: '',
   sell_price: '',
   cost_account_id: '',

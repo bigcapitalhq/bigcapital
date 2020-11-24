@@ -135,7 +135,7 @@ function ItemFormPrimarySection({
           </FastField>
 
           {/*----------- Item category ----------*/}
-          <FastField name={'type'}>
+          <FastField name={'category_id'}>
             {({ form, field: { value }, meta: { error, touched } }) => (
               <FormGroup
                 label={<T id={'category'} />}
@@ -143,7 +143,6 @@ function ItemFormPrimarySection({
                 intent={inputIntent({ error, touched })}
                 helperText={<ErrorMessage name="category_id" />}
                 className={classNames(
-                  'form-group--select-list',
                   'form-group--category',
                   Classes.FILL,
                 )}
@@ -154,7 +153,6 @@ function ItemFormPrimarySection({
                   onCategorySelected={(category) => {
                     form.setFieldValue('category_id', category.id);
                   }}
-                  popoverProps={{ minimal: true }}
                 />
               </FormGroup>
             )}

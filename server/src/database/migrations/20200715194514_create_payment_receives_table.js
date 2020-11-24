@@ -8,7 +8,7 @@ exports.up = function(knex) {
     table.decimal('amount', 13, 3).defaultTo(0);
     table.string('reference_no').index();
     table.integer('deposit_account_id').unsigned().references('id').inTable('accounts');
-    table.string('payment_receive_no');
+    table.string('payment_receive_no').nullable();
     table.text('description');
     table.integer('user_id').unsigned().index();
     table.timestamps();

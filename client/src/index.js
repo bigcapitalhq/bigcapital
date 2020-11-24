@@ -9,14 +9,6 @@ import * as serviceWorker from 'serviceWorker';
 import { store, persistor } from 'store/createStore';
 import AppProgress from 'components/NProgress/AppProgress';
 
-import whyDidYouRender from '@welldone-software/why-did-you-render';
-
-whyDidYouRender(React, {
-  onlyLogs: true,
-  titleColor: 'green',
-  diffNameColor: 'aqua',
-});
-
 ReactDOM.render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>

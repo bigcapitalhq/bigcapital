@@ -9,6 +9,9 @@ export default function EditableItemsEntriesTable({
   defaultEntry,
   minLinesNumber = 2,
   linesNumber = 5,
+
+  filterSellableItems = false,
+  filterPurchasableItems = false,
 }) {
   const { setFieldValue, values } = useFormikContext();
   const [clearLinesAlert, setClearLinesAlert] = useState(false);
@@ -58,6 +61,8 @@ export default function EditableItemsEntriesTable({
             }}
             entries={value}
             errors={error}
+            filterPurchasableItems={filterPurchasableItems}
+            filterSellableItems={filterSellableItems}
             onClickAddNewRow={handleClickAddNewRow}
             onClickClearAllLines={handleClearAllLines}
             onClickRemoveRow={handleClickRemoveLine}

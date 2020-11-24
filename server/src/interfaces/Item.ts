@@ -4,7 +4,7 @@ export interface IItem{
   id: number,
   name: string,
   type: string,
-  sku: string,
+  code: string,
 
   sellable: boolean,
   purchasable: boolean,
@@ -33,7 +33,7 @@ export interface IItem{
 export interface IItemDTO {
   name: string,
   type: string,
-  sku: string,
+  code: string,
 
   sellable: boolean,
   purchasable: boolean,

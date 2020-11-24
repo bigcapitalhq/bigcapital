@@ -111,8 +111,8 @@ function ItemsDataTable({
       },
       {
         Header: formatMessage({ id: 'item_code' }),
-        accessor: 'sku',
-        className: 'sku',
+        accessor: 'code',
+        className: 'code',
         width: 120,
       },
       {

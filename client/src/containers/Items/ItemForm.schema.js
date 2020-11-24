@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import { defaultTo } from 'lodash';
 import { formatMessage } from 'services/intl';
 import { DATATYPES_LENGTH } from 'common/dataTypes';
 
@@ -15,7 +16,7 @@ const Schema = Yup.object().shape({
     .min(0)
     .max(DATATYPES_LENGTH.STRING)
     .label(formatMessage({ id: 'item_type_' })),
-  sku: Yup.string().trim().min(0).max(DATATYPES_LENGTH.STRING),
+  code: Yup.string().trim().min(0).max(DATATYPES_LENGTH.STRING),
   cost_price: Yup.number().when(['purchasable'], {
     is: true,
     then: Yup.number()
@@ -61,8 +62,8 @@ const Schema = Yup.object().shape({
 export const transformItemFormData = (item, defaultValue) => {
   return {
     ...item,
-    sellable: item?.sellable ? Boolean(item.sellable) : defaultValue.sellable,
-    purchasable: item?.purchasable ? Boolean(item.purchasable) : defaultValue.purchasable,
+    sellable: !!defaultTo(item?.sellable, defaultValue.sellable),
+    purchasable: !!defaultTo(item?.purchasable, defaultValue.purchasable),
   };
 }
 

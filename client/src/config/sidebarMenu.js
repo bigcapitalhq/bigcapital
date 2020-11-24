@@ -1,4 +1,4 @@
-import React from 'react';
+  import React from 'react';
 import { FormattedMessage as T } from 'react-intl';
 
 export default [
@@ -13,7 +13,6 @@ export default [
   {
     divider: true,
   },
-
   {
     text: 'Sales & inventory',
     label: true,
@@ -41,16 +40,18 @@ export default [
       {
         text: <T id={'estimates'} />,
         href: '/estimates',
+        newTabHref: '/estimates/new',
       },
-
       {
         text: <T id={'invocies'} />,
         href: '/invoices',
+        newTabHref: '/invoices/new',
       },
 
       {
         text: <T id={'payment_receives'} />,
         href: '/payment-receives',
+        newTabHref: '/payment-receives/new',
       },
       {
         divider: true,
@@ -58,6 +59,7 @@ export default [
       {
         text: <T id={'receipts'} />,
         href: '/receipts',
+        newTabHref: '/receipts/new',
       },
     ],
   },
@@ -67,11 +69,12 @@ export default [
       {
         text: <T id={'bills'} />,
         href: '/bills',
+        newTabHref: '/bills/new',
       },
-
       {
         text: <T id={'payment_made'} />,
         href: '/payment-mades',
+        newTabHref: '/payment-mades/new',
       },
     ],
   },
@@ -81,10 +84,12 @@ export default [
       {
         text: <T id={'customers'} />,
         href: '/customers',
+        newTabHref: '/customers/new',
       },
       {
         text: <T id={'vendors'} />,
         href: '/vendors',
+        newTabHref: '/vendors/new',
       },
     ],
   },
@@ -139,6 +144,7 @@ export default [
       {
         text: <T id={'all_reports'} />,
         href: '/financial-reports',
+        matchExact: true,
       },
       {
         divider: true,

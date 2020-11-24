@@ -27,7 +27,7 @@ function ItemFormBody({ accountsList, baseCurrency }) {
         <Col xs={6}>
           {/*------------- Purchasable checbox ------------- */}
           <FastField name={'sellable'} type="checkbox">
-            {({ field }) => (
+            {({ form, field }) => (
               <FormGroup inline={true} className={'form-group--sellable'}>
                 <Checkbox
                   inline={true}
@@ -44,7 +44,7 @@ function ItemFormBody({ accountsList, baseCurrency }) {
           </FastField>
 
           {/*------------- Selling price ------------- */}
-          <Field name={'sell_price'}>
+          <FastField name={'sell_price'}>
             {({ form, field: { value }, meta: { error, touched } }) => (
               <FormGroup
                 label={<T id={'selling_price'} />}
@@ -67,7 +67,7 @@ function ItemFormBody({ accountsList, baseCurrency }) {
                 </ControlGroup>
               </FormGroup>
             )}
-          </Field>
+          </FastField>
 
           {/*------------- Selling account ------------- */}
           <FastField name={'sell_account_id'}>
@@ -93,6 +93,7 @@ function ItemFormBody({ accountsList, baseCurrency }) {
                   selectedAccountId={value}
                   disabled={!form.values.sellable}
                   filterByTypes={['income']}
+                  popoverFill={true}
                 />
               </FormGroup>
             )}
@@ -118,7 +119,7 @@ function ItemFormBody({ accountsList, baseCurrency }) {
           </FastField>
 
           {/*------------- Cost price ------------- */}
-          <Field name={'cost_price'}>
+          <FastField name={'cost_price'}>
             {({ field, form, field: { value }, meta: { error, touched } }) => (
               <FormGroup
                 label={<T id={'cost_price'} />}
@@ -141,7 +142,7 @@ function ItemFormBody({ accountsList, baseCurrency }) {
                 </ControlGroup>
               </FormGroup>
             )}
-          </Field>
+          </FastField>
 
           {/*------------- Cost account ------------- */}
           <FastField name={'cost_account_id'}>
@@ -167,6 +168,7 @@ function ItemFormBody({ accountsList, baseCurrency }) {
                   selectedAccountId={value}
                   disabled={!form.values.purchasable}
                   filterByTypes={['cost_of_goods_sold']}
+                  popoverFill={true}
                 />
               </FormGroup>
             )}

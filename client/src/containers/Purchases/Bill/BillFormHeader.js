@@ -54,6 +54,7 @@ function BillFormHeader({
                 onContactSelected={(contact) => {
                   form.setFieldValue('vendor_id', contact.id);
                 }}
+                popoverFill={true}
               />
             </FormGroup>
           )}

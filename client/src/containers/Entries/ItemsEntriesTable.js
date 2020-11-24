@@ -91,6 +91,8 @@ function ItemsEntriesTable({
   onClickRemoveRow,
   onClickAddNewRow,
   onClickClearAllLines,
+  filterPurchasableItems = false,
+  filterSellableItems = false,
 }) {
   const [rows, setRows] = useState([]);
   const { formatMessage } = useIntl();
@@ -117,6 +119,8 @@ function ItemsEntriesTable({
         Cell: ItemsListCell,
         disableSortBy: true,
         width: 180,
+        filterPurchasable: filterPurchasableItems,
+        filterSellable: filterSellableItems,
       },
       {
         Header: formatMessage({ id: 'description' }),

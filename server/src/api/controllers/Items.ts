@@ -81,7 +81,7 @@ export default class ItemsController extends BaseController {
       check('name').exists(),
       check('type').exists().trim().escape()
         .isIn(['service', 'non-inventory', 'inventory']),
-      check('sku').optional({ nullable: true }).trim().escape(),
+      check('code').optional({ nullable: true }).trim().escape(),
       // Purchase attributes.
       check('purchasable').optional().isBoolean().toBoolean(),
       check('cost_price')

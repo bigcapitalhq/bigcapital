@@ -4,7 +4,7 @@ exports.up = function (knex) {
     table.increments();
     table.string('name').index();
     table.string('type').index();
-    table.string('sku');
+    table.string('code');
     table.boolean('sellable').index();
     table.boolean('purchasable').index();
     table.decimal('sell_price', 13, 3).unsigned();

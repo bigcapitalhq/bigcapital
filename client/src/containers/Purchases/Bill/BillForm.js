@@ -22,7 +22,7 @@ import withBillDetail from './withBillDetail';
 import { AppToaster } from 'components';
 
 import { ERROR } from 'common/errors';
-import { compose, repeatValue, orderingLinesIndexes } from 'utils';
+import { compose, repeatValue, defaultToTransform, orderingLinesIndexes } from 'utils';
 
 const MIN_LINES_NUMBER = 5;
 
@@ -207,7 +207,10 @@ function BillForm({
         {({ isSubmitting, values }) => (
           <Form>
             <BillFormHeader onBillNumberChanged={handleBillNumberChanged} />
-            <EditableItemsEntriesTable defaultEntry={defaultBill} />
+            <EditableItemsEntriesTable
+              defaultEntry={defaultBill}
+              filterPurchasableItems={true}
+            />
             <BillFormFooter
               oninitialFiles={[]}
               // onDropFiles={handleDeleteFile}
