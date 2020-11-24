@@ -17,6 +17,11 @@ import MakeJournalEntriesHeader from './MakeJournalEntriesHeader';
 import MakeJournalEntriesFooter from './MakeJournalEntriesFooter';
 import MakeJournalEntriesTable from './MakeJournalEntriesTable';
 
+import {
+  CreateMakeJournalFormSchema,
+  EditMakeJournalFormSchema,
+} from './MakeJournalEntriesForm.schema';
+
 import withJournalsActions from 'containers/Accounting/withJournalsActions';
 import withManualJournalDetail from 'containers/Accounting/withManualJournalDetail';
 import withAccountsActions from 'containers/Accounts/withAccountsActions';
@@ -77,6 +82,7 @@ function MakeJournalEntriesForm({
   onFormSubmit,
   onCancelForm,
 }) {
+  const isNewMode = !manualJournalId;
   const { formatMessage } = useIntl();
   const history = useHistory();
   const [submitPayload, setSubmitPayload] = useState({});
@@ -126,39 +132,9 @@ function MakeJournalEntriesForm({
     formatMessage,
   ]);
 
-  const validationSchema = Yup.object().shape({
-    journal_number: Yup.string()
-      .required()
-      .min(1)
-      .max(255)
-      .label(formatMessage({ id: 'journal_number_' })),
-    journal_type: Yup.string()
-      .required()
-      .min(1)
-      .max(255)
-      .label(formatMessage({ id: 'journal_type' })),
-    date: Yup.date()
-      .required()
-      .label(formatMessage({ id: 'date' })),
-    currency_code: Yup.string(),
-    reference: Yup.string().min(1).max(255),
-    description: Yup.string().min(1).max(1024),
-    entries: Yup.array().of(
-      Yup.object().shape({
-        credit: Yup.number().decimalScale(13).nullable(),
-        debit: Yup.number().decimalScale(13).nullable(),
-        account_id: Yup.number()
-          .nullable()
-          .when(['credit', 'debit'], {
-            is: (credit, debit) => credit || debit,
-            then: Yup.number().required(),
-          }),
-        contact_id: Yup.number().nullable(),
-        contact_type: Yup.string().nullable(),
-        note: Yup.string().max(255).nullable(),
-      }),
-    ),
-  });
+  const validationSchema = isNewMode
+    ? CreateMakeJournalFormSchema
+    : EditMakeJournalFormSchema;
 
   const saveInvokeSubmit = useCallback(
     (payload) => {
@@ -185,7 +161,7 @@ function MakeJournalEntriesForm({
       date: moment(new Date()).format('YYYY-MM-DD'),
       description: '',
       reference: '',
-      status:'',
+      status: '',
       currency_code: '',
       entries: [...repeatValue(defaultEntry, 4)],
     }),

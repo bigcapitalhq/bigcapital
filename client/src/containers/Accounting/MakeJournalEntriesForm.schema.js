@@ -4,7 +4,7 @@ import { DATATYPES_LENGTH } from 'common/dataTypes';
 
 const Schema = Yup.object().shape({
   journal_number: Yup.string()
-    .required()
+    // .required()
     .min(1)
     .max(DATATYPES_LENGTH.STRING)
     .label(formatMessage({ id: 'journal_number_' })),
@@ -17,8 +17,9 @@ const Schema = Yup.object().shape({
     .required()
     .label(formatMessage({ id: 'date' })),
   currency_code: Yup.string().max(3),
-  reference: Yup.string().min(1).max(DATATYPES_LENGTH.STRING),
+  reference: Yup.string().nullable().min(1).max(DATATYPES_LENGTH.STRING),
   description: Yup.string().min(1).max(DATATYPES_LENGTH.STRING),
+  status: Yup.boolean(),
   entries: Yup.array().of(
     Yup.object().shape({
       credit: Yup.number().decimalScale(13).nullable(),
