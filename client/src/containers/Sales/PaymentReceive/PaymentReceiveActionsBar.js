@@ -49,7 +49,7 @@ function PaymentReceiveActionsBar({
   const { formatMessage } = useIntl();
 
   const handleClickNewPaymentReceive = useCallback(() => {
-    history.push('/payment-receive/new');
+    history.push('/payment-receives/new');
   }, [history]);
 
   // const filterDropdown = FilterDropdown({

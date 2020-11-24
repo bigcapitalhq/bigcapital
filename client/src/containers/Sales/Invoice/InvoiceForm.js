@@ -30,7 +30,12 @@ import { AppToaster } from 'components';
 import useMedia from 'hooks/useMedia';
 import { ERROR } from 'common/errors';
 
-import { compose, repeatValue, saveInvoke, orderingLinesIndexes } from 'utils';
+import {
+  compose,
+  repeatValue,
+  defaultToTransform,
+  orderingLinesIndexes,
+} from 'utils';
 import { useHistory } from 'react-router-dom';
 
 const MIN_LINES_NUMBER = 4;
@@ -94,13 +99,16 @@ function InvoiceForm({
     : invoiceNextNumber;
 
   useEffect(() => {
+    const transactionNumber = invoice ? invoice.invoice_no : invoiceNumber;
+
     if (invoice && invoice.id) {
       changePageTitle(formatMessage({ id: 'edit_invoice' }));
-      changePageSubtitle(`No. ${invoice.invoice_no}`);
     } else {
-      changePageSubtitle(`No. ${invoiceNumber}`);
       changePageTitle(formatMessage({ id: 'new_invoice' }));
     }
+    changePageSubtitle(
+      defaultToTransform(transactionNumber, `No. ${transactionNumber}`, ''),
+    );
   }, [
     changePageTitle,
     changePageSubtitle,
@@ -216,7 +224,9 @@ function InvoiceForm({
 
   const handleInvoiceNumberChanged = useCallback(
     (invoiceNumber) => {
-      changePageSubtitle(`No. ${invoiceNumber}`);
+      changePageSubtitle(
+        defaultToTransform(invoiceNumber, `No. ${invoiceNumber}`, ''),
+      );
     },
     [changePageSubtitle],
   );
@@ -236,7 +246,10 @@ function InvoiceForm({
               onInvoiceNumberChanged={handleInvoiceNumberChanged}
             />
             <InvoiceNumberChangeWatcher invoiceNumber={invoiceNumber} />
-            <EditableItemsEntriesTable defaultEntry={defaultInvoice} />
+            <EditableItemsEntriesTable
+              defaultEntry={defaultInvoice}
+              filterSellableItems={true}
+            />
             <InvoiceFormFooter />
             <InvoiceFloatingActions
               isSubmitting={isSubmitting}

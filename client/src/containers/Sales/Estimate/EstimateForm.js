@@ -31,7 +31,12 @@ import Dragzone from 'components/Dragzone';
 import useMedia from 'hooks/useMedia';
 import { ERROR } from 'common/errors';
 
-import { compose, repeatValue, orderingLinesIndexes } from 'utils';
+import {
+  compose,
+  repeatValue,
+  defaultToTransform,
+  orderingLinesIndexes,
+} from 'utils';
 
 const MIN_LINES_NUMBER = 4;
 
@@ -98,16 +103,20 @@ const EstimateForm = ({
     : estimateNextNumber;
 
   useEffect(() => {
-    if (estimate && estimate.id) {
+    const transNumber = !isNewMode ? estimate.estimate_number  : estimateNumber;
+
+    if (isNewMode) {
       changePageTitle(formatMessage({ id: 'edit_estimate' }));
-      changePageSubtitle(`No. ${estimate.estimate_number}`);
     } else {
-      changePageSubtitle(`No. ${estimateNumber}`);
       changePageTitle(formatMessage({ id: 'new_estimate' }));
     }
+    changePageSubtitle(
+      defaultToTransform(estimateNumber, `No. ${transNumber}`, ''),
+    );
   }, [
     estimate,
     estimateNumber,
+    isNewMode,
     formatMessage,
     changePageTitle,
     changePageSubtitle,
@@ -211,18 +220,26 @@ const EstimateForm = ({
 
   const handleEstimateNumberChange = useCallback(
     (estimateNumber) => {
-      changePageSubtitle(`No. ${estimateNumber}`);
+      changePageSubtitle(
+        defaultToTransform(estimateNumber, `No. ${estimateNumber}`, ''),
+      );
     },
     [changePageSubtitle],
   );
 
-  const handleSubmitClick = useCallback((event) => {
-    setSubmitPayload({ redirect: true });
-  }, [setSubmitPayload]);
+  const handleSubmitClick = useCallback(
+    (event) => {
+      setSubmitPayload({ redirect: true });
+    },
+    [setSubmitPayload],
+  );
 
-  const handleCancelClick = useCallback((event) => {
-    history.goBack();
-  }, [history]);
+  const handleCancelClick = useCallback(
+    (event) => {
+      history.goBack();
+    },
+    [history],
+  );
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM, CLASSES.PAGE_FORM_ESTIMATE)}>
@@ -238,8 +255,8 @@ const EstimateForm = ({
             <EstimateFormHeader
               onEstimateNumberChanged={handleEstimateNumberChange}
             />
-            <EstimateNumberWatcher estimateNumber={estimateNumber}  />
-            <EditableItemsEntriesTable />
+            <EstimateNumberWatcher estimateNumber={estimateNumber} />
+            <EditableItemsEntriesTable filterSellableItems={true} />
             <EstimateFormFooter />
             <EstimateFloatingActions
               isSubmiting={isSubmitting}

@@ -32,7 +32,12 @@ import { AppToaster } from 'components';
 import Dragzone from 'components/Dragzone';
 import useMedia from 'hooks/useMedia';
 
-import { compose, repeatValue, orderingLinesIndexes } from 'utils';
+import {
+  compose,
+  repeatValue,
+  orderingLinesIndexes,
+  defaultToTransform,
+} from 'utils';
 
 const MIN_LINES_NUMBER = 4;
 
@@ -97,14 +102,20 @@ function ReceiptForm({
     : receiptNextNumber;
 
   useEffect(() => {
+    const transactionNumber = !isNewMode
+      ? receipt.receipt_number
+      : receiptNumber;
+
     if (receipt && receipt.id) {
       changePageTitle(formatMessage({ id: 'edit_receipt' }));
-      changePageSubtitle(`No. ${receipt.receipt_number}`);
     } else {
-      changePageSubtitle(`No. ${receiptNumber}`);
       changePageTitle(formatMessage({ id: 'new_receipt' }));
     }
+    changePageSubtitle(
+      defaultToTransform(transactionNumber, `No. ${transactionNumber}`, ''),
+    );
   }, [
+    isNewMode,
     changePageTitle,
     changePageSubtitle,
     receipt,
@@ -213,7 +224,9 @@ function ReceiptForm({
 
   const handleReceiptNumberChanged = useCallback(
     (receiptNumber) => {
-      changePageSubtitle(`No. ${receiptNumber}`);
+      changePageSubtitle(
+        defaultToTransform(receiptNumber, `No. ${receiptNumber}`, ''),
+      );
     },
     [changePageSubtitle],
   );
@@ -244,7 +257,7 @@ function ReceiptForm({
             onReceiptNumberChanged={handleReceiptNumberChanged}
           />
           <ReceiptNumberWatcher receiptNumber={receiptNumber} />
-          <EditableItemsEntriesTable />
+          <EditableItemsEntriesTable filterSellableItems={true} />
           <ReceiptFormFooter />
           <ReceiptFormFloatingActions
             receiptId={receiptId}

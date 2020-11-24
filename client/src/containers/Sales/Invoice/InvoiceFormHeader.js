@@ -66,6 +66,7 @@ function InvoiceFormHeader({
                 onContactSelected={(customer) => {
                   form.setFieldValue('customer_id', customer.id);
                 }}
+                popoverFill={true}
               />
             </FormGroup>
           )}

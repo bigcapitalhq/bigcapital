@@ -1,5 +1,5 @@
 import { Inject, Service } from 'typedi';
-import { difference, rest } from 'lodash';
+import { difference, defaultTo } from 'lodash';
 import {
   EventDispatcher,
   EventDispatcherInterface,
@@ -45,8 +45,7 @@ export default class VendorsService {
   private vendorToContactDTO(vendorDTO: IVendorNewDTO|IVendorEditDTO) {
     return {
       ...vendorDTO,
-      active: (typeof vendorDTO.active === 'undefined') ?
-        true : vendorDTO.active,
+      active: defaultTo(vendorDTO.active, true),
     };
   }
 
@@ -62,6 +61,7 @@ export default class VendorsService {
     const contactDTO = this.vendorToContactDTO(vendorDTO);
     const vendor = await this.contactService.newContact(tenantId, contactDTO, 'vendor');
 
+    // Triggers `onVendorCreated` event.
     await this.eventDispatcher.dispatch(events.vendors.onCreated, {
       tenantId, vendorId: vendor.id, vendor,
     });

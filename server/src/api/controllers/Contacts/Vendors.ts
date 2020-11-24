@@ -1,6 +1,7 @@
 import { Request, Response, Router, NextFunction } from 'express';
 import { Service, Inject } from 'typedi';
-import { check, query, ValidationChain } from 'express-validator';
+import { body, query, ValidationChain, check } from 'express-validator';
+
 import ContactsController from 'api/controllers/Contacts/Contacts';
 import VendorsService from 'services/Contacts/VendorsService';
 import { ServiceError } from 'exceptions';
@@ -72,7 +73,7 @@ export default class VendorsController extends ContactsController {
    */
   get vendorDTOSchema(): ValidationChain[] {
     return [
-      check('opening_balance').optional().isNumeric().toInt(),
+      check('currency_code').optional().trim().escape(),
     ];
   }
 
@@ -105,7 +106,11 @@ export default class VendorsController extends ContactsController {
 
     try {
       const vendor = await this.vendorsService.newVendor(tenantId, contactDTO);
-      return res.status(200).send({ id: vendor.id });
+
+      return res.status(200).send({
+        id: vendor.id,
+        message: 'The vendor has been created successfully.',
+      });
     } catch (error) {
       next(error);
     }
@@ -124,7 +129,11 @@ export default class VendorsController extends ContactsController {
 
     try {
       await this.vendorsService.editVendor(tenantId, contactId, contactDTO);
-      return res.status(200).send({ id: contactId });
+
+      return res.status(200).send({
+        id: contactId,
+        message: 'The vendor has been edited successfully.',
+      });
     } catch (error) {
       next(error);
     }
@@ -142,7 +151,11 @@ export default class VendorsController extends ContactsController {
 
     try {
       await this.vendorsService.deleteVendor(tenantId, contactId)
-      return res.status(200).send({ id: contactId });
+
+      return res.status(200).send({
+        id: contactId,
+        message: 'The vendor has been deleted successfully.',
+      });
     } catch (error) {
       next(error);
     }
@@ -198,7 +211,11 @@ export default class VendorsController extends ContactsController {
     };
 
     try {
-      const { vendors, pagination, filterMeta } = await this.vendorsService.getVendorsList(tenantId, vendorsFilter);
+      const {
+        vendors,
+        pagination,
+        filterMeta,
+      } = await this.vendorsService.getVendorsList(tenantId, vendorsFilter);
 
       return res.status(200).send({
         vendors,
@@ -219,21 +236,27 @@ export default class VendorsController extends ContactsController {
    */
   handlerServiceErrors(error, req: Request, res: Response, next: NextFunction) {
     if (error instanceof ServiceError) {
+      if (error.errorType === 'contact_not_found') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'VENDOR.NOT.FOUND', code: 100 }],
+        });
+      }
       if (error.errorType === 'contacts_not_found') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'VENDORS.NOT.FOUND', code: 100 }],
+          errors: [{ type: 'VENDORS.NOT.FOUND', code: 200 }],
         });
       }
       if (error.errorType === 'some_vendors_have_bills') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'SOME.VENDORS.HAVE.BILLS', code: 200 }],
+          errors: [{ type: 'SOME.VENDORS.HAVE.BILLS', code: 300 }],
         });
       }
       if (error.errorType === 'vendor_has_bills') {
         return res.status(400).send({
-          errors: [{ type: 'VENDOR.HAS.BILLS', code: 200 }],
+          errors: [{ type: 'VENDOR.HAS.BILLS', code: 400 }],
         });
       }
     }
+    next(error);
   }
 }

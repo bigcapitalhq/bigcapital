@@ -84,7 +84,7 @@ export default class PaymentReceivesController extends BaseController {
       check('payment_date').exists(),
       check('reference_no').optional(),
       check('deposit_account_id').exists().isNumeric().toInt(),
-      check('payment_receive_no').exists().trim().escape(),
+      check('payment_receive_no').optional({ nullable: true }).trim().escape(),
       check('statement').optional().trim().escape(),
 
       check('entries').isArray({ min: 1 }),

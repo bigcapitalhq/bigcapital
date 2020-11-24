@@ -13,6 +13,7 @@ const Schema = Yup.object().shape({
     .required()
     .label(formatMessage({ id: 'payment_account_' })),
   payment_number: Yup.string()
+    .nullable()
     .max(DATATYPES_LENGTH.STRING)
     .label(formatMessage({ id: 'payment_no_' })),
   reference: Yup.string().min(1).max(DATATYPES_LENGTH.STRING).nullable(),

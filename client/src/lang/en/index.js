@@ -91,7 +91,6 @@ export default {
   count: 'Count',
   item_type: 'Item Type',
   item_name: 'Item Name',
-  sku: 'SKU',
   category: 'Category',
   account: 'Account',
   sales_information: 'Sales Information',
@@ -689,12 +688,12 @@ export default {
   payment_receive_no_: 'Payment receive no',
   receive_amount: 'Receive Amount',
   receive_amount_: 'Receive amount',
-  the_payment_has_been_received_successfully_created:
-    'The payment has been received successfully created.',
+  the_payment_receive_transaction_has_been_created:
+    'The payment receive transaction has been created successfully.',
   the_payment_receive_has_been_successfully_deleted:
     'The payment receive has been successfully deleted.',
-  the_payment_has_been_received_successfully_edited:
-    'The payment has been received successfully edited.',
+  the_payment_receive_transaction_has_been_edited:
+    'The payment receive transaction has been edited successfully.',
   once_delete_this_payment_receive_you_will_able_to_restore_it: `Once you delete this payment receive, you won\'t be able to restore it later. Are you sure you want to delete this payment receive?`,
   select_invoice: 'Select Invoice',
   payment_mades: 'Payment Mades',
@@ -841,4 +840,6 @@ export default {
   once_delete_these_vendors_you_will_not_able_restore_them:
     "Once you delete these vendors, you won't be able to retrieve them later. Are you sure you want to delete them?",
   vendor_has_bills: 'Vendor has bills',
+  the_item_has_been_edited_successfully: 'The item has been edited successfully.',
+  you_cannot_make_payment_with_zero_total_amount: 'You cannot record payment transaction with zero total amount',
 };

@@ -1,4 +1,4 @@
-import { check, param, query, ValidationChain } from 'express-validator';
+import { check, param, query, body, ValidationChain } from 'express-validator';
 import BaseController from "api/controllers/BaseController";
 
 export default class ContactsController extends BaseController {
@@ -48,7 +48,8 @@ export default class ContactsController extends BaseController {
    */
   get contactNewDTOSchema(): ValidationChain[] {
     return [
-      check('balance').optional().isNumeric().toInt(),
+      check('opening_balance').optional({ nullable: true }).isNumeric().toInt(),
+      body('opening_balance_at').if(body('opening_balance').exists()).exists(),
     ];
   }
 

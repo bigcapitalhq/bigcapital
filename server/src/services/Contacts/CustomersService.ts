@@ -1,5 +1,5 @@
 import { Inject, Service } from 'typedi';
-import { omit, difference } from 'lodash';
+import { omit, difference, defaultTo } from 'lodash';
 import {
   EventDispatcher,
   EventDispatcherInterface,
@@ -51,8 +51,7 @@ export default class CustomersService {
     return {
       ...omit(customerDTO, ['customerType']),
       contactType: customerDTO.customerType,
-      active: (typeof customerDTO.active === 'undefined') ?
-        true : customerDTO.active,
+      active: defaultTo(customerDTO.active, true),
     };
   }
 

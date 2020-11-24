@@ -21,7 +21,7 @@ export default function PaymentReceivesEmptyStatus() {
             intent={Intent.PRIMARY}
             large={true}
             onClick={() => {
-              history.push('/payment-receive/new');
+              history.push('/payment-receives/new');
             }}
           >
             New payment receive

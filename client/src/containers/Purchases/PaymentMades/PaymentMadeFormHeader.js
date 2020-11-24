@@ -107,6 +107,7 @@ function PaymentMadeFormHeader({
               defaultSelectText={ <T id={'select_vender_account'} /> }
               onContactSelected={onChangeSelect('vendor_id')}
               disabled={!isNewMode}
+              popoverFill={true}
             />
           </FormGroup>
 

@@ -1,18 +1,11 @@
-import React, {
-  useMemo,
-  useCallback,
-  useEffect,
-  useState,
-  useRef,
-} from 'react';
-
-import * as Yup from 'yup';
+import React, { useMemo, useCallback, useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import moment from 'moment';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { pick, sumBy, omit } from 'lodash';
 import { Intent, Alert } from '@blueprintjs/core';
 import classNames from 'classnames';
+import { useHistory } from 'react-router-dom';
 
 import { CLASSES } from 'common/classes';
 import PaymentReceiveHeader from './PaymentReceiveFormHeader';
@@ -32,7 +25,7 @@ import {
 } from './PaymentReceiveForm.schema';
 import { AppToaster } from 'components';
 
-import { compose } from 'utils';
+import { compose, defaultToTransform } from 'utils';
 
 /**
  * Payment Receive form.
@@ -62,35 +55,45 @@ function PaymentReceiveForm({
   changePageTitle,
   changePageSubtitle,
 }) {
+  const history = useHistory();
+
   const [amountChangeAlert, setAmountChangeAlert] = useState(false);
   const [clearLinesAlert, setClearLinesAlert] = useState(false);
   const [fullAmount, setFullAmount] = useState(null);
   const [clearFormAlert, setClearFormAlert] = useState(false);
 
   const { formatMessage } = useIntl();
-  const isNewMode = !paymentReceiveId;
   const [localPaymentEntries, setLocalPaymentEntries] = useState(
     paymentReceiveEntries,
   );
+  const isNewMode = !paymentReceiveId;
 
   const paymentReceiveNumber = paymentReceiveNumberPrefix
     ? `${paymentReceiveNumberPrefix}-${paymentReceiveNextNumber}`
     : paymentReceiveNextNumber;
 
   useEffect(() => {
+    const transactionNumber = !isNewMode
+      ? paymentReceive.payment_receive_no
+      : paymentReceiveNumber;
+
     if (paymentReceive && paymentReceiveId) {
       changePageTitle(formatMessage({ id: 'edit_payment_receive' }));
       changePageSubtitle(`No. ${paymentReceive.payment_receive_no}`);
     } else {
-      changePageSubtitle(`No. ${paymentReceiveNumber}`);
       changePageTitle(formatMessage({ id: 'payment_receive' }));
     }
+    changePageSubtitle(
+      defaultToTransform(transactionNumber, `No. ${transactionNumber}`, ''),
+    );
   }, [
+    isNewMode,
     changePageTitle,
     changePageSubtitle,
     paymentReceive,
     paymentReceiveId,
     formatMessage,
+    paymentReceiveNumber,
   ]);
 
   useEffect(() => {
@@ -103,7 +106,7 @@ function PaymentReceiveForm({
   const validationSchema = isNewMode
     ? CreatePaymentReceiveFormSchema
     : EditPaymentReceiveFormSchema;
-  
+
   // Default payment receive entry.
   const defaultPaymentReceiveEntry = {
     id: null,
@@ -167,8 +170,8 @@ function PaymentReceiveForm({
       AppToaster.show({
         message: formatMessage({
           id: 'you_cannot_make_payment_with_zero_total_amount',
-          intent: Intent.WARNING,
         }),
+        intent: Intent.DANGER,
       });
       setSubmitting(false);
       return;
@@ -180,13 +183,14 @@ function PaymentReceiveForm({
       AppToaster.show({
         message: formatMessage({
           id: paymentReceiveId
-            ? 'the_payment_has_been_received_successfully_edited'
-            : 'the_payment_has_been_received_successfully_created',
+            ? 'the_payment_receive_transaction_has_been_edited'
+            : 'the_payment_receive_transaction_has_been_created',
         }),
         intent: Intent.SUCCESS,
       });
       setSubmitting(false);
       resetForm();
+      history.push('/payment-receives');
     };
     // Handle request response errors.
     const onError = (errors) => {
@@ -321,7 +325,13 @@ function PaymentReceiveForm({
   useEffect(() => {
     if (paymentReceiveNumberChanged) {
       setFieldValue('payment_receive_no', paymentReceiveNumber);
-      changePageSubtitle(`No. ${paymentReceiveNumber}`);
+      changePageSubtitle(
+        defaultToTransform(
+          paymentReceiveNumber,
+          `No. ${paymentReceiveNumber}`,
+          '',
+        ),
+      );
       setPaymentReceiveNumberChanged(false);
     }
   }, [
@@ -329,11 +339,14 @@ function PaymentReceiveForm({
     paymentReceiveNumberChanged,
     setFieldValue,
     changePageSubtitle,
+    setPaymentReceiveNumberChanged,
   ]);
 
   const handlePaymentReceiveNumberChanged = useCallback(
     (payment_receive_no) => {
-      changePageSubtitle(`No.${payment_receive_no}`);
+      changePageSubtitle(
+        defaultToTransform(payment_receive_no, `No.${payment_receive_no}`, ''),
+      );
     },
     [changePageSubtitle],
   );

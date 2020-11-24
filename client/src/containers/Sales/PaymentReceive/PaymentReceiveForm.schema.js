@@ -14,6 +14,7 @@ const Schema = Yup.object().shape({
     .label(formatMessage({ id: 'deposit_account_' })),
   full_amount: Yup.number().nullable(),
   payment_receive_no: Yup.string()
+    .nullable()
     .max(DATATYPES_LENGTH.STRING)
     .label(formatMessage({ id: 'payment_receive_no_' })),
   reference_no: Yup.string().min(1).max(DATATYPES_LENGTH.STRING).nullable(),

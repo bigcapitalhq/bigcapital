@@ -76,6 +76,7 @@ function ReceiptFormHeader({
                 onContactSelected={(contact) => {
                   form.setFieldValue('customer_id', contact.id);
                 }}
+                popoverFill={true}
               />
             </FormGroup>
           )}
@@ -103,6 +104,7 @@ function ReceiptFormHeader({
                 defaultSelectText={<T id={'select_deposit_account'} />}
                 selectedAccountId={value}
                 filterByTypes={['current_asset']}
+                popoverFill={true}
               />
             </FormGroup>
           )}

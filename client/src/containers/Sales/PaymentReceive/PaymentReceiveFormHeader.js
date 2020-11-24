@@ -114,6 +114,7 @@ function PaymentReceiveFormHeader({
               selectedContactId={values.customer_id}
               defaultSelectText={<T id={'select_customer_account'} />}
               onContactSelected={onChangeSelect('customer_id')}
+              popoverFill={true}
             />
           </FormGroup>
 

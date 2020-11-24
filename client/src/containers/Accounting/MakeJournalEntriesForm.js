@@ -27,7 +27,12 @@ import Dragzone from 'components/Dragzone';
 import withMediaActions from 'containers/Media/withMediaActions';
 
 import useMedia from 'hooks/useMedia';
-import { compose, repeatValue, orderingLinesIndexes } from 'utils';
+import {
+  compose,
+  repeatValue,
+  orderingLinesIndexes,
+  defaultToTransform,
+} from 'utils';
 import withManualJournalsActions from './withManualJournalsActions';
 import withManualJournals from './withManualJournals';
 
@@ -97,13 +102,18 @@ function MakeJournalEntriesForm({
     : journalNextNumber;
 
   useEffect(() => {
+    const transactionNumber = manualJournal
+      ? manualJournal.journal_number
+      : journalNumber;
+
     if (manualJournal && manualJournal.id) {
       changePageTitle(formatMessage({ id: 'edit_journal' }));
-      changePageSubtitle(`No. ${manualJournal.journal_number}`);
     } else {
-      changePageSubtitle(`No. ${journalNumber}`);
       changePageTitle(formatMessage({ id: 'new_journal' }));
     }
+    changePageSubtitle(
+      defaultToTransform(transactionNumber, `No. ${transactionNumber}`, ''),
+    );
   }, [
     changePageTitle,
     changePageSubtitle,
@@ -383,7 +393,9 @@ function MakeJournalEntriesForm({
   useEffect(() => {
     if (journalNumberChanged) {
       setFieldValue('journal_number', journalNumber);
-      changePageSubtitle(`No. ${journalNumber}`);
+      changePageSubtitle(
+        defaultToTransform(journalNumber, `No. ${journalNumber}`, ''),
+      );
       setJournalNumberChanged(false);
     }
   }, [
@@ -440,7 +452,9 @@ function MakeJournalEntriesForm({
   // Handle journal number field change.
   const handleJournalNumberChanged = useCallback(
     (journalNumber) => {
-      changePageSubtitle(`No. ${journalNumber}`);
+      changePageSubtitle(
+        defaultToTransform(journalNumber, `No. ${journalNumber}`, '')
+      );
     },
     [changePageSubtitle],
   );

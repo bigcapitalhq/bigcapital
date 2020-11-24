@@ -89,12 +89,16 @@ $sidebar-submenu-item-bg-color: #01287d;
         margin-top: 3px;
         color: rgba(255, 255, 255, 0.25);
       }
-      &-label{
+      &-labeler{
         display: block;
         color: $sidebar-menu-label-color;
         font-size: 12px;
         padding: 6px 16px;
         margin-top: 4px;
+      }
+
+      &:hover .bp3-button.menu-item__add-btn{
+        display: inline-block;
       }
     }
 
@@ -186,6 +190,44 @@ $sidebar-submenu-item-bg-color: #01287d;
           opacity: 1;
         }
       }      
+    }
+  }
+
+  .bp3-button.menu-item__add-btn{
+    width: auto;
+    
+    padding: 2px;
+    margin-right: 0px;
+    position: relative;
+    top: 1px;
+    border-radius: 3px;
+    display: none;
+    vertical-align: top;
+
+    &:not([class*="bp3-intent-"]):not(.bp3-minimal):not(:disabled){
+
+      .bp3-icon{
+        color: rgba(255, 255, 255, 0.4);
+      }
+      &,
+      &:hover{
+        min-height: auto;
+        min-width: auto;
+        outline: 0;
+        background-color: transparent;
+      }
+
+      &:hover{
+        background-color: rgba(255, 255, 255, 0.12);
+
+        .bp3-icon{
+          color: rgba(255, 255, 255, 0.6);
+        }
+      }
+    }
+    .bp3-icon{
+      margin: 0;
+      display: block;
     }
   }
 }

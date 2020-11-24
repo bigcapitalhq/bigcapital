@@ -49,7 +49,7 @@ function PaymentMadeActionsBar({
   const { formatMessage } = useIntl();
 
   const handleClickNewPaymentMade = useCallback(() => {
-    history.push('/payment-made/new');
+    history.push('/payment-mades/new');
   }, [history]);
 
   // const filterDropdown = FilterDropdown({

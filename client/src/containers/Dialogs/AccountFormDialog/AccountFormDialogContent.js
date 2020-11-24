@@ -345,6 +345,7 @@ function AccountFormDialogContent({
                 onAccountSelected={onChangeSubaccount}
                 defaultSelectText={<T id={'select_parent_account'} />}
                 selectedAccountId={values.parent_account_id}
+                popoverFill={true}
               />
             </FormGroup>
           </If>
