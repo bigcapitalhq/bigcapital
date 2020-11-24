@@ -163,7 +163,6 @@ function PaymentMadeFormHeader({
             label={<T id={'payment_no'} />}
             inline={true}
             className={('form-group--payment_number', Classes.FILL)}
-            labelInfo={<FieldRequiredHint />}
             intent={
               errors.payment_number && touched.payment_number && Intent.DANGER
             }

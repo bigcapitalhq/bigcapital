@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { Route, Switch, useHistory, withRouter } from 'react-router-dom';
-import { useQuery } from 'react-query';
+import { queryCache, useQuery } from 'react-query';
 import { Alert, Intent } from '@blueprintjs/core';
 import AppToaster from 'components/AppToaster';
 import {
@@ -53,6 +53,7 @@ function ManualJournalsTable({
   const [deleteManualJournal, setDeleteManualJournal] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
   const [bulkDelete, setBulkDelete] = useState(false);
+  const [publishManualJournal, setPublishManualJournal] = useState(false);
 
   const { formatMessage } = useIntl();
 
@@ -176,19 +177,36 @@ function ManualJournalsTable({
     [addManualJournalsTableQueries],
   );
 
-  const handlePublishJournal = useCallback(
-    (journal) => {
-      requestPublishManualJournal(journal.id).then(() => {
+  // Handle publish manual Journal click.
+  const handlePublishMaunalJournal = useCallback(
+    (jouranl) => {
+      setPublishManualJournal(jouranl);
+    },
+    [setPublishManualJournal],
+  );
+
+  // Handle cancel manual journal alert.
+  const handleCancelPublishMaunalJournal = useCallback(() => {
+    setPublishManualJournal(false);
+  }, [setPublishManualJournal]);
+
+  // Handle publish manual journal confirm.
+  const handleConfirmPublishManualJournal = useCallback(() => {
+    requestPublishManualJournal(publishManualJournal.id)
+      .then(() => {
+        setPublishManualJournal(false);
         AppToaster.show({
           message: formatMessage({
-            id: 'the_manual_journal_id_has_been_published',
+            id: 'the_manual_journal_has_been_published',
           }),
           intent: Intent.SUCCESS,
         });
+        queryCache.invalidateQueries('manual-journals-table');
+      })
+      .catch((error) => {
+        setPublishManualJournal(false);
       });
-    },
-    [requestPublishManualJournal, formatMessage],
-  );
+  }, [publishManualJournal, requestPublishManualJournal, formatMessage]);
 
   // Handle selected rows change.
   const handleSelectedRowsChange = useCallback(
@@ -223,7 +241,7 @@ function ManualJournalsTable({
             <ManualJournalsDataTable
               onDeleteJournal={handleDeleteJournal}
               onEditJournal={handleEditJournal}
-              onPublishJournal={handlePublishJournal}
+              onPublishJournal={handlePublishMaunalJournal}
               onSelectedRowsChange={handleSelectedRowsChange}
             />
           </Route>
@@ -258,6 +276,18 @@ function ManualJournalsTable({
             <T
               id={'once_delete_these_journals_you_will_not_able_restore_them'}
             />
+          </p>
+        </Alert>
+        <Alert
+          cancelButtonText={<T id={'cancel'} />}
+          confirmButtonText={<T id={'publish'} />}
+          intent={Intent.WARNING}
+          isOpen={publishManualJournal}
+          onCancel={handleCancelPublishMaunalJournal}
+          onConfirm={handleConfirmPublishManualJournal}
+        >
+          <p>
+            <T id={'are_sure_to_publish_this_manual_journal'} />
           </p>
         </Alert>
       </DashboardPageContent>

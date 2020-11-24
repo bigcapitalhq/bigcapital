@@ -159,7 +159,7 @@ const CustomerBillingAddress = ({}) => {
                 inline={true}
                 helperText={<ErrorMessage name="shipping_address_2" />}
               >
-                <InputGroup {...field} />
+                <TextArea {...field} />
               </FormGroup>
             )}
           </FastField>

@@ -110,7 +110,7 @@ function PaymentMadeDataTable({
       {
         id: 'payment_number',
         Header: formatMessage({ id: 'payment_number' }),
-        accessor: (row) => `#${row.payment_number}`,
+        accessor: (row) => (row.payment_number ? `#${row.payment_number}` : null),
         width: 140,
         className: 'payment_number',
       },

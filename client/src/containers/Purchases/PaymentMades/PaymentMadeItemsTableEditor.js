@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { Button  } from '@blueprintjs/core';
+import { Button } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import moment from 'moment';
 import { sumBy } from 'lodash';
@@ -26,7 +26,7 @@ const CellRenderer = (content, type) => (props) => {
 
 const TotalCellRederer = (content, type) => (props) => {
   if (props.data.length === props.row.index + 1) {
-    return <Money amount={props.cell.row.original[type]} currency={'USD'} />
+    return <Money amount={props.cell.row.original[type]} currency={'USD'} />;
   }
   return content(props);
 };
@@ -40,15 +40,17 @@ export default function PaymentMadeItemsTableEditor({
   onUpdateData,
   data,
   errors,
-  noResultsMessage
+  noResultsMessage,
 }) {
   const transformedData = useMemo(() => {
-    const rows = [ ...data ];
+    const rows = [...data];
     const totalRow = {
       due_amount: sumBy(data, 'due_amount'),
       payment_amount: sumBy(data, 'payment_amount'),
     };
-    if (rows.length > 0) { rows.push(totalRow) }
+    if (rows.length > 0) {
+      rows.push(totalRow);
+    }
     return rows;
   }, [data]);
 
@@ -80,7 +82,7 @@ export default function PaymentMadeItemsTableEditor({
       },
       {
         Header: formatMessage({ id: 'bill_number' }),
-        accessor: (row) => `#${row?.bill_number}`,
+        accessor: (row) => `#${row?.bill_number || ''}`,
         Cell: CellRenderer(EmptyDiv, 'bill_number'),
         disableSortBy: true,
         className: 'bill_number',
@@ -116,7 +118,7 @@ export default function PaymentMadeItemsTableEditor({
   };
 
   const rowClassNames = useCallback(
-    (row) =>  ({ 'row--total': localData.length === row.index + 1 }),
+    (row) => ({ 'row--total': localData.length === row.index + 1 }),
     [localData],
   );
 
@@ -129,7 +131,7 @@ export default function PaymentMadeItemsTableEditor({
         columnId,
         value,
       );
-      newRows.splice(-1,1); // removes the total row.
+      newRows.splice(-1, 1); // removes the total row.
 
       setLocalData(newRows);
       onUpdateData && onUpdateData(newRows);
@@ -138,10 +140,12 @@ export default function PaymentMadeItemsTableEditor({
   );
 
   return (
-    <div className={classNames(
-      CLASSES.DATATABLE_EDITOR,
-      CLASSES.DATATABLE_EDITOR_ITEMS_ENTRIES,
-    )}>
+    <div
+      className={classNames(
+        CLASSES.DATATABLE_EDITOR,
+        CLASSES.DATATABLE_EDITOR_ITEMS_ENTRIES,
+      )}
+    >
       <DataTable
         columns={columns}
         data={localData}

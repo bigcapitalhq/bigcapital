@@ -19,6 +19,7 @@ const Schema = Yup.object().shape({
     .trim()
     .min(1)
     .max(DATATYPES_LENGTH.TEXT)
+    .nullable()
     .label(formatMessage({ id: 'description' })),
   publish: Yup.boolean().label(formatMessage({ id: 'publish' })),
   categories: Yup.array().of(

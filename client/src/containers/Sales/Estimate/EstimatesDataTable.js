@@ -114,7 +114,7 @@ function EstimatesDataTable({
       {
         id: 'estimate_number',
         Header: formatMessage({ id: 'estimate_number' }),
-        accessor: (row) => `#${row.estimate_number}`,
+        accessor: (row) => (row.estimate_number ? `#${row.estimate_number}` : null),
         width: 140,
         className: 'estimate_number',
       },

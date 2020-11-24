@@ -203,8 +203,8 @@ export default {
     'The journal #{number} has been successfully edited.',
   the_journal_has_been_successfully_deleted:
     'The journal has been successfully deleted',
-  the_manual_journal_id_has_been_published:
-    'The manual journal id has been published',
+  the_manual_journal_has_been_published:
+    'The manual journal has been published',
   the_journals_has_been_successfully_deleted:
     'The journals has been successfully deleted ',
   credit: 'Credit',
@@ -842,4 +842,6 @@ export default {
   vendor_has_bills: 'Vendor has bills',
   the_item_has_been_edited_successfully: 'The item has been edited successfully.',
   you_cannot_make_payment_with_zero_total_amount: 'You cannot record payment transaction with zero total amount',
+  are_sure_to_publish_this_manual_journal:
+    'Are you sure you want to publish this manual journal?',
 };

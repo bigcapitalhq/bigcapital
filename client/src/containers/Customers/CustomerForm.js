@@ -20,6 +20,7 @@ import withCustomerDetail from 'containers/Customers/withCustomerDetail';
 import withCustomersActions from 'containers/Customers/withCustomersActions';
 import withMediaActions from 'containers/Media/withMediaActions';
 import withCustomers from 'containers/Customers//withCustomers';
+import withSettings from 'containers/Settings/withSettings';
 import useMedia from 'hooks/useMedia';
 
 import { compose, transformToForm } from 'utils';
@@ -72,6 +73,9 @@ function CustomerForm({
 
   // #withCustomerDetail
   customer,
+
+  // #withSettings
+  baseCurrency,
 
   // #withCustomersActions
   requestSubmitCustomer,
@@ -151,6 +155,7 @@ function CustomerForm({
   const initialValues = useMemo(
     () => ({
       ...defaultInitialValues,
+      currency_code: baseCurrency,
       ...transformToForm(customer, defaultInitialValues),
     }),
     [customer, defaultInitialValues],
@@ -250,7 +255,7 @@ function CustomerForm({
             </div>
 
             <div className={classNames(CLASSES.PAGE_FORM_TABS)}>
-              <CustomersTabs customerId={customerId} />
+              <CustomersTabs customer={customerId} />
             </div>
 
             <CustomerFloatingActions
@@ -270,6 +275,9 @@ export default compose(
   withCustomerDetail,
   withCustomers(({ customers }) => ({
     customers,
+  })),
+  withSettings(({ organizationSettings }) => ({
+    baseCurrency: organizationSettings?.baseCurrency,
   })),
   withDashboardActions,
   withCustomersActions,

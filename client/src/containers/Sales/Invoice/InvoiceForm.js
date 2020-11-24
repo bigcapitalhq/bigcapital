@@ -42,10 +42,10 @@ const MIN_LINES_NUMBER = 4;
 
 const defaultInvoice = {
   index: 0,
-  item_id: null,
-  rate: null,
+  item_id: '',
+  rate: '',
   discount: 0,
-  quantity: null,
+  quantity: '',
   description: '',
 };
 

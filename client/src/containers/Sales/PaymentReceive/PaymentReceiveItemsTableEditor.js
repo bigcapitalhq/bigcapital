@@ -26,12 +26,12 @@ const CellRenderer = (content, type) => (props) => {
 
 const TotalCellRederer = (content, type) => (props) => {
   if (props.data.length === props.row.index + 1) {
-    return <Money amount={props.cell.row.original[type]} currency={'USD'} />
+    return <Money amount={props.cell.row.original[type]} currency={'USD'} />;
   }
   return content(props);
 };
 
-export default function PaymentReceiveItemsTableEditor ({
+export default function PaymentReceiveItemsTableEditor({
   onClickClearAllLines,
   onUpdateData,
   data,
@@ -39,12 +39,14 @@ export default function PaymentReceiveItemsTableEditor ({
   noResultsMessage,
 }) {
   const transformedData = useMemo(() => {
-    const rows = [ ...data ];
+    const rows = [...data];
     const totalRow = {
       due_amount: sumBy(data, 'due_amount'),
       payment_amount: sumBy(data, 'payment_amount'),
     };
-    if (rows.length > 0) { rows.push(totalRow) }
+    if (rows.length > 0) {
+      rows.push(totalRow);
+    }
     return rows;
   }, [data]);
 
@@ -81,7 +83,7 @@ export default function PaymentReceiveItemsTableEditor ({
         Header: formatMessage({ id: 'invocie_number' }),
         accessor: (row) => {
           const invNumber = row?.invoice_no || row?.id;
-          return `#INV-${invNumber}`;
+          return `#INV-${invNumber || ''}`;
         },
         Cell: CellRenderer(EmptyDiv, 'invoice_no'),
         disableSortBy: true,
@@ -121,7 +123,7 @@ export default function PaymentReceiveItemsTableEditor ({
   };
 
   const rowClassNames = useCallback(
-    (row) =>  ({ 'row--total': localData.length === row.index + 1 }),
+    (row) => ({ 'row--total': localData.length === row.index + 1 }),
     [localData],
   );
 
@@ -144,10 +146,12 @@ export default function PaymentReceiveItemsTableEditor ({
   );
 
   return (
-    <div className={classNames(
-      CLASSES.DATATABLE_EDITOR,
-      CLASSES.DATATABLE_EDITOR_ITEMS_ENTRIES,
-    )}>
+    <div
+      className={classNames(
+        CLASSES.DATATABLE_EDITOR,
+        CLASSES.DATATABLE_EDITOR_ITEMS_ENTRIES,
+      )}
+    >
       <DataTable
         columns={columns}
         data={localData}
@@ -170,5 +174,4 @@ export default function PaymentReceiveItemsTableEditor ({
       </div>
     </div>
   );
-
 }
