@@ -30,30 +30,27 @@
   padding-right: 12px;
 }
 
+
 .bp3-button:not([class*="bp3-intent-"]):not(.bp3-minimal){
-  background-color: #E6EFFB;
   color: #555555;
   box-shadow: 0 0 0 transparent;
-
-  &:hover,
-  &:focus{
-    background-color: #CFDCEE;
-  }
 
   &.bp3-small{
     font-size: 13px;
     min-height: 29px;
   }
-
   .form-group--select-list &{
     border-radius: 2px;
 
     &,
     &:hover{
-      background: #fff;
       box-shadow: 0 0 0 transparent;  
       border: 1px solid #ced4da;
-    }
+      
+      &:not(:disabled) {
+        background: #fff;      
+      }
+    }  
   }
   .form-group--select-list.bp3-intent-danger &{
     

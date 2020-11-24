@@ -19,7 +19,6 @@ import { CLASSES } from 'common/classes';
 import { 
   NormalCell,
   BalanceCell,
-  AccountNameAccessor
 } from './components';
 
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
@@ -136,7 +135,7 @@ function AccountsDataTable({
       {
         id: 'name',
         Header: formatMessage({ id: 'account_name' }),
-        accessor: AccountNameAccessor,
+        accessor: 'name',
         className: 'account_name',
         width: 220,
       },

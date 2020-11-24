@@ -58,7 +58,7 @@
       margin-bottom: 0;
     }
     .table {
-      border: 1px dotted rgb(195, 195, 195);
+      border: 1px solid #d2dce2;
       border-bottom: transparent;
       border-left: transparent;
 
@@ -73,6 +73,10 @@
             width: 100%;
             font-weight: 500;
           }
+        }
+
+        &:first-child{
+          border-left: 1px solid #d2dce2;
         }
       }
 

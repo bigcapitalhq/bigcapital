@@ -20,6 +20,15 @@ $sidebar-zindex: 15;
 $pt-font-family: Noto Sans, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
   Oxygen, Ubuntu, Cantarell, Open Sans, Helvetica Neue, Icons16, sans-serif;
 
+$button-box-shadow: 0 0 0 !default;
+$button-box-shadow-active: 0 0 0 !default;
+$button-intent-box-shadow: 0 0 0 !default;
+$button-intent-box-shadow-active: 0 0 0 !default;
+
+$button-background-color-disabled: #E9ECEF !default;
+$button-background-color: #E6EFFB !default;
+$button-background-color-hover: #CFDCEE !default;
+
 // Blueprint framework.
 @import '@blueprintjs/core/src/blueprint.scss';
 @import '@blueprintjs/datetime/src/blueprint-datetime.scss';
@@ -114,6 +123,8 @@ body.authentication {
 }
 
 .select-list--fill-popover {
+  position: relative;
+
   .bp3-transition-container,
   .bp3-popover {
     min-width: 100%;
@@ -245,7 +256,7 @@ body.authentication {
       margin-bottom: 0;
     }
     .table {
-      border: 1px dotted rgb(195, 195, 195);
+      border: 1px solid #d2dce2;
       border-bottom: transparent;
       border-left: transparent;
 
@@ -260,6 +271,10 @@ body.authentication {
             width: 100%;
             font-weight: 500;
           }
+        }
+
+        &:first-child{
+          border-left: 1px solid #d2dce2;
         }
       }
 

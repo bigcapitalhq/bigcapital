@@ -54,31 +54,3 @@ export function InactiveSemafro() {
     </Tooltip>
   );
 }
-
-export function AccountNameAccessor(row) {
-  return (
-    <>
-      <Choose>
-        <Choose.When condition={!!row.description}>
-          <Tooltip
-            className={classNames(
-              Classes.TOOLTIP_INDICATOR,
-              'bp3-popover-wrapper--account-desc',
-            )}
-            content={row.description}
-            position={Position.RIGHT_TOP}
-            hoverOpenDelay={500}
-          >
-            {row.name}
-          </Tooltip>
-        </Choose.When>
-
-        <Choose.Otherwise>{row.name}</Choose.Otherwise>
-      </Choose>
-
-      <If condition={!row.active}>
-        <InactiveSemafro />
-      </If>
-    </>
-  );
-}
