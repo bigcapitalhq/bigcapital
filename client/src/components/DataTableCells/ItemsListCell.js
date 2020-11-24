@@ -4,8 +4,8 @@ import classNames from 'classnames';
 import { FormGroup, Classes, Intent } from '@blueprintjs/core';
 
 
-function ItemsListCell({
-  column: { id },
+export default function ItemsListCell({
+  column: { id, filterSellable, filterPurchasable },
   row: { index },
   cell: { value: initialValue },
   payload: { items, updateData, errors },
@@ -28,9 +28,9 @@ function ItemsListCell({
         items={items}
         onItemSelected={handleItemSelected}
         selectedItemId={initialValue}
+        sellable={filterSellable}
+        purchasable={filterPurchasable}
       />
     </FormGroup>
   );
 }
-
-export default ItemsListCell;

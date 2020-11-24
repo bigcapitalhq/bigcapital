@@ -2,13 +2,15 @@ import React, { useCallback, useState, useEffect, useMemo } from 'react';
 import { FormattedMessage as T } from 'react-intl';
 import { ListSelect } from 'components';
 import { MenuItem } from '@blueprintjs/core';
+import classNames from 'classnames';
+import { CLASSES } from 'common/classes';
 
 export default function ContactSelecetList({
   contactsList,
   selectedContactId,
   defaultSelectText = <T id={'select_contact'} />,
   onContactSelected,
-  // disabled = false,
+  popoverFill = false,
   ...restProps
 }) {
   const [selecetedContact, setSelectedContact] = useState(null);
@@ -56,8 +58,10 @@ export default function ContactSelecetList({
       onItemSelect={onContactSelect}
       itemPredicate={FilterContacts}
       itemRenderer={handleContactRenderer}
-      popoverProps={{ minimal: true }}
-      className={'form-group--select-list'}
+      popoverProps={{ minimal: true, usePortal: !popoverFill }}
+      className={classNames(CLASSES.FORM_GROUP_LIST_SELECT, {
+        [CLASSES.SELECT_LIST_FILL_POPOVER]: popoverFill,
+      })}
       {...restProps}
     />
   );

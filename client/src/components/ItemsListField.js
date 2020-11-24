@@ -8,8 +8,23 @@ function ItemsListField({
   selectedItemId,
   defautlSelectText = 'Click to select an item.',
   onItemSelected,
+
+  sellable = false,
+  purchasable = false,
 }) {
-  const initialItem = useMemo(() => items.find((a) => a.id === initialItemId), [
+  const filteredItems = useMemo(() => {
+    let filteredItems = [...items];
+
+    if (sellable) {
+      filteredItems = filteredItems.filter((item) => item.sellable);
+    }
+    if (purchasable) {
+      filteredItems = filteredItems.filter((item) => item.purchasable);
+    }
+    return filteredItems;
+  }, [items, sellable, purchasable])
+
+  const initialItem = useMemo(() => filteredItems.find((a) => a.id === initialItemId), [
     initialItemId,
   ]);
 
@@ -18,11 +33,11 @@ function ItemsListField({
   useEffect(() => {
     if (typeof selectedItemId !== 'undefined') {
       const item = selectedItemId
-        ? items.find((a) => a.id === selectedItemId)
+        ? filteredItems.find((a) => a.id === selectedItemId)
         : null;
       setSelectedItem(item);
     }
-  }, [selectedItemId, items, setSelectedItem]);
+  }, [selectedItemId, filteredItems, setSelectedItem]);
 
   const onItemSelect = useCallback(
     (item) => {
@@ -34,7 +49,7 @@ function ItemsListField({
 
   const itemRenderer = useCallback(
     (item, { handleClick }) => (
-      <MenuItem key={item.id} text={item.name} onClick={handleClick} />
+      <MenuItem key={item.id} text={item.name} label={item.code} onClick={handleClick} />
     ),
     [],
   );
@@ -52,7 +67,7 @@ function ItemsListField({
 
   return (
     <ListSelect
-      items={items}
+      items={filteredItems}
       noResults={<MenuItem disabled={true} text="No results." />}
       itemRenderer={itemRenderer}
       itemPredicate={filterItem}

@@ -2,12 +2,17 @@ import React, { useCallback } from 'react';
 import { FormattedMessage as T } from 'react-intl';
 import { ListSelect } from 'components';
 import { MenuItem } from '@blueprintjs/core';
+import { saveInvoke } from 'utils';
+import classNames from 'classnames';
+import { CLASSES } from 'common/classes';
 
 export default function CategoriesSelectList({
   categoriesList,
   selecetedCategoryId,
   defaultSelectText = <T id={'select_category'} />,
   onCategorySelected,
+  popoverFill = false,
+  className,
   ...restProps
 }) {
   
@@ -23,9 +28,10 @@ export default function CategoriesSelectList({
   };
 
   const handleItemCategorySelected = useCallback(
-    (ItemCategory) => onCategorySelected && onCategorySelected(ItemCategory),
-    [],
+    (ItemCategory) => saveInvoke(onCategorySelected, ItemCategory),
+    [onCategorySelected],
   );
+
   const categoryItem = useCallback(
     (item, { handleClick }) => (
       <MenuItem key={item.id} text={item.name} onClick={handleClick} />
@@ -43,6 +49,10 @@ export default function CategoriesSelectList({
       onItemSelect={handleItemCategorySelected}
       itemPredicate={filterItemCategory}
       itemRenderer={categoryItem}
+      popoverProps={{ minimal: true,  usePortal: !popoverFill }}
+      className={classNames('form-group--select-list', {
+        [CLASSES.SELECT_LIST_FILL_POPOVER]: popoverFill,
+      }, className)}
       {...restProps}
     />
   );
