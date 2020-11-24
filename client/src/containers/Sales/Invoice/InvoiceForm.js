@@ -191,7 +191,11 @@ function InvoiceForm({
       if (submitPayload.redirect) {
         history.push('/invoices');
       }
+      if (submitPayload.resetForm) {
+        resetForm();
+      }
     };
+
     // Handle the request error.
     const onError = (errors) => {
       if (errors) {
@@ -207,20 +211,16 @@ function InvoiceForm({
     }
   };
 
-  const handleCancelClick = useCallback(
-    (payload) => {
-      history.goBack();
+  const handleCancelClick = useCallback(() => {
+    history.goBack();
+  }, [history]);
+
+  const handleSubmitClick = useCallback(
+    (event, payload) => {
+      setSubmitPayload({ ...payload });
     },
-    [history],
+    [setSubmitPayload],
   );
-
-  const handleSubmitClick = useCallback(() => {
-    setSubmitPayload({ redirect: true });
-  }, [setSubmitPayload]);
-
-  const handleSubmitAndNewClick = useCallback(() => {
-    setSubmitPayload({ redirect: false });
-  }, [setSubmitPayload]);
 
   const handleInvoiceNumberChanged = useCallback(
     (invoiceNumber) => {
@@ -256,7 +256,6 @@ function InvoiceForm({
               invoice={invoice}
               onCancelClick={handleCancelClick}
               onSubmitClick={handleSubmitClick}
-              onSubmitAndNewClick={handleSubmitAndNewClick}
             />
           </Form>
         )}
