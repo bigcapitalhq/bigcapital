@@ -1,11 +1,13 @@
 import t from 'store/types';
 import { createReducer} from '@reduxjs/toolkit';
 import { createTableQueryReducers } from 'store/queryReducers';
+import { listToTree } from 'utils';
 
 const initialState = {
   items: {},
   views: {},
   list: [],
+  listTree: [],
   accountsTypes: [],
   accountsById: {},
   tableQuery: {
@@ -44,6 +46,15 @@ const accountsReducer = createReducer(initialState, {
   [t.ACCOUNTS_LIST_SET]: (state, action) => {
     const { accounts } = action.payload;
     state.list = accounts.map(account => account.id);
+    state.listTree = listToTree(accounts, {
+      parentFieldKey: 'parent_account_id',
+      idFieldKey: 'id',
+      nodeMapper: (item) => ({
+        id: item.id,
+        parent_account_id: item.parent_account_id,
+        children: [],
+      }),
+    });
   },
 
   [t.ACCOUNT_TYPES_LIST_SET]: (state, action) => {

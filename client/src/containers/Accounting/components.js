@@ -31,7 +31,7 @@ const AmountPopoverContentLineRender = ({
       </Choose.When>
 
       <Choose.When condition={isCredit}>
-        <div class={'ml1'}>
+        <div>
           D. <Money amount={journalEntry.credit} currency={'USD'} /> USD -{' '}
           {account.name} <If condition={account.code}>({account.code})</If>
         </div>

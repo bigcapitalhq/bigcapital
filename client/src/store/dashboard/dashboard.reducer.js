@@ -1,5 +1,7 @@
 import t from 'store/types';
 import { createReducer } from '@reduxjs/toolkit';
+import { persistReducer } from 'redux-persist'
+import storage from 'redux-persist/lib/storage' // defaults to localStorage for web
 
 const initialState = {
   pageTitle: '',
@@ -12,7 +14,7 @@ const initialState = {
   requestsLoading: 0,
 };
 
-export default createReducer(initialState, {
+const reducerInstance = createReducer(initialState, {
   [t.CHANGE_DASHBOARD_PAGE_TITLE]: (state, action) => {
     state.pageTitle = action.pageTitle;
   },
@@ -64,6 +66,18 @@ export default createReducer(initialState, {
     state.sidebarExpended = !state.sidebarExpended;
   }
 });
+
+export default persistReducer({
+  key: 'bigcapital:dashboard',
+  blacklist: [
+    'pageTitle',
+    'pageSubtitle',
+    'pageHint',
+    'preferencesPageTitle',
+    'topbarEditViewId'
+  ],
+  storage,
+}, reducerInstance);
 
 export const getDialogPayload = (state, dialogName) => {
   return typeof state.dashboard.dialogs[dialogName] !== 'undefined'

@@ -1,12 +1,12 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { useHistory } from 'react-router';
 import { connect } from 'react-redux';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
 import { useParams, withRouter } from 'react-router-dom';
-import { pick, debounce } from 'lodash';
+import { pick } from 'lodash';
 
 import { useUpdateEffect } from 'hooks';
-import { DashboardViewsTabs, Icon } from 'components';
+import { DashboardViewsTabs } from 'components';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withAccounts from 'containers/Accounts/withAccounts';
 import withAccountsTableActions from 'containers/Accounts/withAccountsTableActions';
@@ -34,7 +34,6 @@ function AccountsViewsTabs({
   customViewChanged,
   onViewChanged,
 }) {
-
   const history = useHistory();
   const { custom_view_id: customViewId = null } = useParams();
 

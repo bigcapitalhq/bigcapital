@@ -6,18 +6,21 @@ import {
   MenuItem,
   MenuDivider,
   Position,
-  Classes,
-  Tooltip,
   Intent,
 } from '@blueprintjs/core';
 import { withRouter } from 'react-router';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import classNames from 'classnames';
-import { Icon, DataTable, Money, If, Choose } from 'components';
+import { Icon, DataTable, If } from 'components';
 import { compose } from 'utils';
 import { useUpdateEffect } from 'hooks';
 
 import { CLASSES } from 'common/classes';
+import { 
+  NormalCell,
+  BalanceCell,
+  AccountNameAccessor
+} from './components';
 
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withAccountsActions from 'containers/Accounts/withAccountsActions';
@@ -25,82 +28,6 @@ import withAccounts from 'containers/Accounts/withAccounts';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withCurrentView from 'containers/Views/withCurrentView';
 
-
-
-function NormalCell({ cell }) {
-  const { formatMessage } = useIntl();
-
-  const account = cell.row.original;
-  const normal = account?.type?.normal || '';
-  const arrowDirection = normal === 'credit' ? 'down' : 'up';
-
-  return (
-    <Tooltip
-      className={Classes.TOOLTIP_INDICATOR}
-      content={formatMessage({ id: normal })}
-      position={Position.RIGHT}
-      hoverOpenDelay={100}
-    >
-      <Icon icon={`arrow-${arrowDirection}`} />
-    </Tooltip>
-  );
-}
-
-function BalanceCell({ cell }) {
-  const account = cell.row.original;
-
-  return account.amount ? (
-    <span>
-      <Money amount={account.amount} currency={'USD'} />
-    </span>
-  ) : (
-    <span class="placeholder">—</span>
-  );
-}
-
-function InactiveSemafro() {
-  return (
-    <Tooltip
-      content={<T id="inactive" />}
-      className={classNames(
-        Classes.TOOLTIP_INDICATOR,
-        'bp3-popover-wrapper--inactive-semafro',
-      )}
-      position={Position.TOP}
-      hoverOpenDelay={250}
-    >
-      <div className="inactive-semafro"></div>
-    </Tooltip>
-  );
-}
-
-function AccountNameAccessor(row) {
-  return (
-    <>
-      <Choose>
-        <Choose.When condition={!!row.description}>
-          <Tooltip
-            className={classNames(
-              Classes.TOOLTIP_INDICATOR,
-              'bp3-popover-wrapper--account-desc',
-            )}
-            content={row.description}
-            position={Position.RIGHT_TOP}
-            hoverOpenDelay={500}
-          >
-            {row.name}
-          </Tooltip>
-        </Choose.When>
-
-        <Choose.Otherwise>{row.name}</Choose.Otherwise>
-      </Choose>
-
-      <If condition={!row.active}>
-        <InactiveSemafro />
-      </If>
-    </>
-  );
-}
 
 function AccountsDataTable({
   // #withDashboardActions
