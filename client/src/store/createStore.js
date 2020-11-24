@@ -1,34 +1,35 @@
-import { createStore as createReduxStore, applyMiddleware, compose } from 'redux';
+import {
+  createStore as createReduxStore,
+  applyMiddleware,
+  compose,
+} from 'redux';
 import thunkMiddleware from 'redux-thunk';
+import { persistStore, persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 import monitorReducerEnhancer from 'store/enhancers/monitorReducer';
-import loggerMiddleware from 'middleware/logger'
+import loggerMiddleware from 'middleware/logger';
 import rootReducer from 'store/reducers';
-import persistState from 'redux-localstorage'
 
-const persistPaths = ['dashboard', 'authentication'];
+const persistConfig = {
+  key: 'bigcapital:root',
+  blacklist: ['dashboard'],
+  storage,
+};
 
-const createStore = (initialState = {
-  // ...loadState(),
-}) => {
+const createStoreFactory = (initialState = {}) => {
   /**
   |--------------------------------------------------
   | Middleware Configuration
   |--------------------------------------------------
   */
-  const middleware = [
-    thunkMiddleware,
-    loggerMiddleware,
-  ];
+  const middleware = [thunkMiddleware, loggerMiddleware];
 
   /**
   |--------------------------------------------------
   | Store Enhancers
   |--------------------------------------------------
   */
-  const enhancers = [
-    monitorReducerEnhancer,
-    persistState(persistPaths, { key: 'bigcapital' }),
-  ];
+  const enhancers = [monitorReducerEnhancer];
   let composeEnhancers = compose;
 
   if (process.env.NODE_ENV === 'development') {
@@ -43,11 +44,14 @@ const createStore = (initialState = {
   |--------------------------------------------------
   */
   const store = createReduxStore(
-    rootReducer,
+    persistReducer(persistConfig, rootReducer),
     initialState,
-    composeEnhancers(applyMiddleware(...middleware), ...enhancers)
+    composeEnhancers(applyMiddleware(...middleware), ...enhancers),
   );
   store.asyncReducers = {};
   return store;
 };
-export default createStore();
+
+export const createStore = createStoreFactory;
+export const store = createStoreFactory();
+export const persistor = persistStore(store);

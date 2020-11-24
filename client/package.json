@@ -89,7 +89,7 @@
     "react-use": "^13.26.1",
     "react-window": "^1.8.5",
     "redux": "^4.0.5",
-    "redux-localstorage": "^0.4.1",
+    "redux-persist": "^6.0.0",
     "redux-thunk": "^2.3.0",
     "resolve": "1.15.0",
     "resolve-url-loader": "3.1.1",
