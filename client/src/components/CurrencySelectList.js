@@ -1,14 +1,16 @@
 import React, { useCallback, useState, useEffect, useMemo } from 'react';
 import { FormattedMessage as T } from 'react-intl';
-import { ListSelect } from 'components';
-import { MenuItem } from '@blueprintjs/core';
+import { CLASSES } from 'common/classes';
+import classNames from 'classnames';
+import { MenuItem, Button } from '@blueprintjs/core';
+import { Select } from '@blueprintjs/select';
 
 export default function CurrencySelectList({
   currenciesList,
   selectedCurrencyCode,
   defaultSelectText = <T id={'select_currency_code'} />,
   onCurrencySelected,
-  ...restProps
+  popoverFill = false,
 }) {
   const [selectedCurrency, setSelectedCurrency] = useState(null);
 
@@ -27,7 +29,7 @@ export default function CurrencySelectList({
       );
     }
   };
-
+  
   const onCurrencySelect = useCallback((currency) => {
     setSelectedCurrency({ ...currency });
     onCurrencySelected && onCurrencySelected(currency);
@@ -44,17 +46,26 @@ export default function CurrencySelectList({
   }, []);
 
   return (
-    <ListSelect
+    <Select
       items={currenciesList}
-      selectedItemProp={'currency_code'}
-      selectedItem={selectedCurrencyCode}
-      labelProp={'currency_code'}
-      defaultText={defaultSelectText}
-      onItemSelect={onCurrencySelect}
-      itemPredicate={filterCurrencies}
       itemRenderer={currencyCodeRenderer}
-      popoverProps={{ minimal: true }}
-      {...restProps}
-    />
+      itemPredicate={filterCurrencies}
+      onItemSelect={onCurrencySelect}
+      filterable={true}
+      popoverProps={{
+        minimal: true,
+        usePortal: !popoverFill,
+        inline: popoverFill,
+      }}
+      className={classNames('form-group--select-list', {
+        [CLASSES.SELECT_LIST_FILL_POPOVER]: popoverFill,
+      })}
+    >
+      <Button
+        text={
+          selectedCurrency ? selectedCurrencyCode : defaultSelectText
+        }
+      />
+    </Select>
   );
 }
