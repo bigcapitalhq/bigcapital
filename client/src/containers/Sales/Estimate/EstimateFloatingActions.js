@@ -89,7 +89,7 @@ export default function EstimateFloatingActions({
   return (
     <div className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>
       {/* ----------- Save And Publish ----------- */}
-      <If condition={!estimateId}>
+      <If condition={!estimateId || !estimatePublished}>
         <ButtonGroup>
           <Button
             disabled={isSubmitting}

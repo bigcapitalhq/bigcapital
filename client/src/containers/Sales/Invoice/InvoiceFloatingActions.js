@@ -89,7 +89,7 @@ export default function InvoiceFloatingActions({
   return (
     <div className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>
       {/* ----------- Save And Publish ----------- */}
-      <If condition={!invoice}>
+      <If condition={!invoice || !invoicePublished}>
         <ButtonGroup>
           <Button
             disabled={isSubmitting}

@@ -89,7 +89,7 @@ export default function ReceiptFormFloatingActions({
   return (
     <div className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>
       {/* ----------- Save And Publish ----------- */}
-      <If condition={!receiptId}>
+      <If condition={!receiptId || !receiptPublished}>
         <ButtonGroup>
           <Button
             disabled={isSubmitting}

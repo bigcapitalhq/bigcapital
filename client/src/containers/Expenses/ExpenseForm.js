@@ -129,6 +129,7 @@ function ExpenseForm({
       description: '',
       reference_no: '',
       currency_code: baseCurrency,
+      is_published: '',
       categories: [...repeatValue(defaultCategory, MIN_LINES_NUMBER)],
     }),
     [defaultCategory],
@@ -230,7 +231,7 @@ function ExpenseForm({
 
       const form = {
         ...values,
-        publish: submitPayload.publish,
+        is_published: submitPayload.publish,
         categories,
       };
       const saveExpense = (mdeiaIds) =>
@@ -374,7 +375,7 @@ function ExpenseForm({
           onSubmitForm={submitForm}
           onResetForm={resetForm}
           expense={expenseId}
-          expensePublished={true}
+          expensePublished={values.is_published}
         />
       </form>
     </div>

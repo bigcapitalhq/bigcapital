@@ -124,7 +124,7 @@ function ExpensesDataTable({
           text={formatMessage({ id: 'view_details' })}
         />
         <MenuDivider />
-        <If condition={!expense.published}>
+        <If condition={!expense.is_published}>
           <MenuItem
             icon={<Icon icon={'arrow-to-top'} size={16} />}
             text={formatMessage({ id: 'publish_expense' })}
@@ -209,7 +209,7 @@ function ExpensesDataTable({
         id: 'publish',
         Header: formatMessage({ id: 'publish' }),
         accessor: (r) => {
-          return r.published ? (
+          return !!r.is_published ? (
             <Tag minimal={true}>
               <T id={'published'} />
             </Tag>

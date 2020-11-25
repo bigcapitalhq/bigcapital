@@ -90,7 +90,7 @@ export default function ExpenseFloatingFooter({
   return (
     <div className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>
       {/* ----------- Save And Publish ----------- */}
-      <If condition={!expense}>
+      <If condition={!expense || !expensePublished}>
         <ButtonGroup>
           <Button
             disabled={isSubmitting}
