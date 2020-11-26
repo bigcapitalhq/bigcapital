@@ -35,7 +35,7 @@ const defaultBill = {
   index: 0,
   item_id: '',
   rate: '',
-  discount: '',
+  discount: 0,
   quantity: '',
   description: '',
 };
@@ -50,6 +50,9 @@ const defaultInitialValues = {
   entries: [...repeatValue(defaultBill, MIN_LINES_NUMBER)],
 };
 
+/**
+ * Bill form.
+ */
 function BillForm({
   //#WithMedia
   requestSubmitMedia,
@@ -79,12 +82,12 @@ function BillForm({
   const isNewMode = !billId;
 
   useEffect(() => {
-    if (bill && bill.id) {
+    if (!isNewMode) {
       changePageTitle(formatMessage({ id: 'edit_bill' }));
     } else {
       changePageTitle(formatMessage({ id: 'new_bill' }));
     }
-  }, [changePageTitle, bill, formatMessage]);
+  }, [changePageTitle, isNewMode, formatMessage]);
 
   // Initial values in create and edit mode.
   const initialValues = useMemo(
@@ -146,12 +149,13 @@ function BillForm({
     };
     // Handle the request success.
     const onSuccess = (response) => {
+      console.log(submitPayload, 'EE');
       AppToaster.show({
         message: formatMessage(
           {
             id: isNewMode
-              ? 'the_bill_has_been_successfully_created'
-              : 'the_bill_has_been_successfully_edited',
+              ? 'the_bill_has_been_successfully_edited'
+              : 'the_bill_has_been_successfully_created',
           },
           { number: values.bill_number },
         ),
@@ -173,7 +177,7 @@ function BillForm({
       handleErrors(errors, { setErrors });
       setSubmitting(false);
     };
-    if (isNewMode) {
+    if (bill && bill.id) {
       requestEditBill(bill.id, form).then(onSuccess).catch(onError);
     } else {
       requestSubmitBill(form).then(onSuccess).catch(onError);
@@ -214,7 +218,7 @@ function BillForm({
         initialValues={initialValues}
         onSubmit={handleFormSubmit}
       >
-        {({ isSubmitting, values }) => (
+        {({ isSubmitting }) => (
           <Form>
             <BillFormHeader onBillNumberChanged={handleBillNumberChanged} />
             <EditableItemsEntriesTable
@@ -230,7 +234,7 @@ function BillForm({
               billId={billId}
               billPublished={true}
               onSubmitClick={handleSubmitClick}
-              onCancelForm={handleCancelClick}
+              onCancelClick={handleCancelClick}
             />
           </Form>
         )}

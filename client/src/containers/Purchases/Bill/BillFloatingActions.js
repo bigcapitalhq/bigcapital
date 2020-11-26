@@ -9,10 +9,10 @@ import {
   Menu,
   MenuItem,
 } from '@blueprintjs/core';
-import { useFormikContext } from 'formik';
 import { FormattedMessage as T } from 'react-intl';
 import { CLASSES } from 'common/classes';
 import classNames from 'classnames';
+import { useFormikContext } from 'formik';
 import { saveInvoke } from 'utils';
 import { If, Icon } from 'components';
 
@@ -22,17 +22,16 @@ import { If, Icon } from 'components';
 export default function BillFloatingActions({
   isSubmitting,
   onSubmitClick,
-  onSubmitAndNewClick,
   onCancelClick,
   onClearClick,
   billId,
   billPublished,
 }) {
   const { resetForm, submitForm } = useFormikContext();
-
   const handleSubmitPublishBtnClick = (event) => {
     saveInvoke(onSubmitClick, event, {
       redirect: true,
+      publish: true,
     });
   };
 
@@ -73,7 +72,7 @@ export default function BillFloatingActions({
     submitForm();
     saveInvoke(onSubmitClick, event, {
       redirect: false,
-      publish: true,
+      publish: false,
     });
   };
 
@@ -89,7 +88,7 @@ export default function BillFloatingActions({
   return (
     <div className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>
       {/* ----------- Save And Publish ----------- */}
-      <If condition={!billId}>
+      <If condition={!billId || !billPublished}>
         <ButtonGroup>
           <Button
             disabled={isSubmitting}
@@ -108,36 +107,6 @@ export default function BillFloatingActions({
                 <MenuItem
                   text={<T id={'publish_continue_editing'} />}
                   onClick={handleSubmitPublishContinueEditingBtnClick}
-                />
-              </Menu>
-            }
-            minimal={true}
-            interactionKind={PopoverInteractionKind.CLICK}
-            position={Position.BOTTOM_LEFT}
-          >
-            <Button
-              intent={Intent.PRIMARY}
-              rightIcon={<Icon icon="arrow-drop-up-16" iconSize={20} />}
-            />
-          </Popover>
-        </ButtonGroup>
-      </If>
-      {/* ----------- Save and New ----------- */}
-      <If condition={billId && billPublished}>
-        <ButtonGroup>
-          <Button
-            disabled={isSubmitting}
-            intent={Intent.PRIMARY}
-            type="submit"
-            onClick={handleSubmitPublishBtnClick}
-            text={<T id={'save'} />}
-          />
-          <Popover
-            content={
-              <Menu>
-                <MenuItem
-                  text={<T id={'save_and_new'} />}
-                  onClick={handleSubmitPublishAndNewBtnClick}
                 />
               </Menu>
             }
@@ -183,6 +152,37 @@ export default function BillFloatingActions({
           </Popover>
         </ButtonGroup>
       </If>
+      {/* ----------- Save and New ----------- */}
+      <If condition={billId && billPublished}>
+        <ButtonGroup>
+          <Button
+            disabled={isSubmitting}
+            intent={Intent.PRIMARY}
+            type="submit"
+            onClick={handleSubmitPublishBtnClick}
+            text={<T id={'save'} />}
+          />
+          <Popover
+            content={
+              <Menu>
+                <MenuItem
+                  text={<T id={'save_and_new'} />}
+                  onClick={handleSubmitPublishAndNewBtnClick}
+                />
+              </Menu>
+            }
+            minimal={true}
+            interactionKind={PopoverInteractionKind.CLICK}
+            position={Position.BOTTOM_LEFT}
+          >
+            <Button
+              intent={Intent.PRIMARY}
+              rightIcon={<Icon icon="arrow-drop-up-16" iconSize={20} />}
+            />
+          </Popover>
+        </ButtonGroup>
+      </If>
+
       {/* ----------- Clear & Reset----------- */}
       <Button
         className={'ml1'}
