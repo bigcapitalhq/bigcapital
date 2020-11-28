@@ -1,19 +1,20 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { FormGroup, Intent } from '@blueprintjs/core';
-import MoneyInputGroup from 'components/MoneyInputGroup';
+import { MoneyInputGroup } from 'components';
+import { CLASSES } from 'common/classes';
 
 // Input form cell renderer.
 const MoneyFieldCellRenderer = ({
-  row: { index },
+  row: { index, moneyInputGroupProps = {} },
   column: { id },
   cell: { value: initialValue },
   payload: { errors, updateData },
 }) => {
   const [value, setValue] = useState(initialValue);
 
-  const handleFieldChange = useCallback((e, value) => {
+  const handleFieldChange = useCallback((value) => {
     setValue(value);
-  }, []);
+  }, [setValue]);
 
   function isNumeric(data) {
     return (
@@ -21,7 +22,7 @@ const MoneyFieldCellRenderer = ({
     );
   }
 
-  const onBlur = () => {
+  const handleFieldBlur = () => {
     const updateValue = isNumeric(value) ? parseFloat(value) : value;
     updateData(index, id, updateValue);
   };
@@ -34,15 +35,14 @@ const MoneyFieldCellRenderer = ({
 
   return (
     <FormGroup
-      intent={error ? Intent.DANGER : null}>
+      intent={error ? Intent.DANGER : null}
+      className={CLASSES.FILL}>
       <MoneyInputGroup
         value={value}
         prefix={'$'}
         onChange={handleFieldChange}
-        inputGroupProps={{
-          fill: true,
-          onBlur,
-        }}
+        onBlur={handleFieldBlur}
+        {...moneyInputGroupProps}
       />
     </FormGroup>
   );

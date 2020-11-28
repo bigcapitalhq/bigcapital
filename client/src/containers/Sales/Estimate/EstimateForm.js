@@ -14,7 +14,7 @@ import {
 } from './EstimateForm.schema';
 
 import EstimateFormHeader from './EstimateFormHeader';
-import EditableItemsEntriesTable from 'containers/Entries/EditableItemsEntriesTable';
+import EstimateFormBody from './EstimateFormBody';
 import EstimateFloatingActions from './EstimateFloatingActions';
 import EstimateFormFooter from './EstimateFormFooter';
 import EstimateNumberWatcher from './EstimateNumberWatcher';
@@ -43,9 +43,9 @@ const MIN_LINES_NUMBER = 4;
 const defaultEstimate = {
   index: 0,
   item_id: '',
-  rate: '',
-  discount: 0,
-  quantity: '',
+  rate: 0,
+  discount: '',
+  quantity: 1,
   description: '',
 };
 
@@ -242,7 +242,11 @@ const EstimateForm = ({
   );
 
   return (
-    <div className={classNames(CLASSES.PAGE_FORM, CLASSES.PAGE_FORM_ESTIMATE)}>
+    <div className={classNames(
+      CLASSES.PAGE_FORM,
+      CLASSES.PAGE_FORM_STRIP_STYLE,
+      CLASSES.PAGE_FORM_ESTIMATE,
+    )}>
       <Formik
         validationSchema={
           isNewMode ? CreateEstimateFormSchema : EditEstimateFormSchema
@@ -256,7 +260,7 @@ const EstimateForm = ({
               onEstimateNumberChanged={handleEstimateNumberChange}
             />
             <EstimateNumberWatcher estimateNumber={estimateNumber} />
-            <EditableItemsEntriesTable filterSellableItems={true} />
+            <EstimateFormBody />
             <EstimateFormFooter />
             <EstimateFloatingActions
               isSubmitting={isSubmitting}

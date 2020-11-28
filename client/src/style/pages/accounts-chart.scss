@@ -4,7 +4,7 @@
   .bigcapital-datatable{
     .normal{
       .#{$ns}-icon{
-        color: #838d9b;
+        color: #6E8091;
         padding-left: 15px;
       }
     }
@@ -12,8 +12,8 @@
     .table{
       .tbody{
         .tr:not(.no-results) .td{
-          padding-top: 0.36rem;
-          padding-bottom: 0.36rem;
+          padding-top: 0.3rem;
+          padding-bottom: 0.3rem;
         }
         .account_name{
           > div{

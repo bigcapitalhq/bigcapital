@@ -5,6 +5,7 @@ import ContactsListFieldCell from './ContactsListFieldCell';
 import ItemsListCell from './ItemsListCell';
 import PercentFieldCell from './PercentFieldCell';
 import { DivFieldCell, EmptyDiv } from './DivFieldCell';
+
 export {
   AccountsListFieldCell,
   MoneyFieldCell,

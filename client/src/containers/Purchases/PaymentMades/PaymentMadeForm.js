@@ -31,7 +31,7 @@ const ERRORS = {
   PAYMENT_NUMBER_NOT_UNIQUE: 'PAYMENT.NUMBER.NOT.UNIQUE',
 };
 
-// Default payment made entry values.
+// Default payment made entry values.x
 const defaultPaymentMadeEntry = {
   bill_id: '',
   payment_amount: '',
@@ -96,7 +96,7 @@ function PaymentMadeForm({
   const validationSchema = isNewMode
     ? CreatePaymentMadeFormSchema
     : EditPaymentMadeFormSchema;
-    
+
   // Form initial values.
   const initialValues = useMemo(
     () => ({
@@ -302,7 +302,11 @@ function PaymentMadeForm({
 
   return (
     <div
-      className={classNames(CLASSES.PAGE_FORM, CLASSES.PAGE_FORM_PAYMENT_MADE)}
+      className={classNames(
+        CLASSES.PAGE_FORM,
+        CLASSES.PAGE_FORM_STRIP_STYLE,
+        CLASSES.PAGE_FORM_PAYMENT_MADE,
+      )}
     >
       <form onSubmit={handleSubmit}>
         <PaymentMadeHeader
@@ -318,17 +322,20 @@ function PaymentMadeForm({
           onPaymentNumberChanged={handlePaymentNoChanged}
           amountPaid={fullAmountPaid}
         />
-        <PaymentMadeItemsTable
-          fullAmount={fullAmount}
-          paymentEntries={localPaymentEntries}
-          vendorId={values.vendor_id}
-          paymentMadeId={paymentMadeId}
-          onUpdateData={handleUpdataData}
-          onClickClearAllLines={handleClearAllLines}
-          errors={errors?.entries}
-          onFetchEntriesSuccess={handleFetchEntriesSuccess}
-          vendorPayableBillsEntrie={[]}
-        />
+
+        <div className={classNames(CLASSES.PAGE_FORM_BODY)}>
+          <PaymentMadeItemsTable
+            fullAmount={fullAmount}
+            paymentEntries={localPaymentEntries}
+            vendorId={values.vendor_id}
+            paymentMadeId={paymentMadeId}
+            onUpdateData={handleUpdataData}
+            onClickClearAllLines={handleClearAllLines}
+            errors={errors?.entries}
+            onFetchEntriesSuccess={handleFetchEntriesSuccess}
+            vendorPayableBillsEntrie={[]}
+          />
+        </div>
         <Alert
           cancelButtonText={<T id={'cancel'} />}
           confirmButtonText={<T id={'ok'} />}

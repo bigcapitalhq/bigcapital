@@ -16,7 +16,8 @@ export default function AccountsSelectList({
   popoverFill = false,
   filterByRootTypes = [],
   filterByTypes = [],
-  filterByNormal
+  filterByNormal,
+  buttonProps = {}
 }) {
   // Filters accounts based on filter props.
   const filteredAccounts = useMemo(() => {
@@ -113,6 +114,7 @@ export default function AccountsSelectList({
       <Button
         disabled={disabled}
         text={selectedAccount ? selectedAccount.name : defaultSelectText}
+        {...buttonProps}
       />
     </Select>
   );

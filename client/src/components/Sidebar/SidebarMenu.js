@@ -42,7 +42,9 @@ export default function SidebarMenu() {
       ) : null;
 
       return item.spacer ? (
-        <div class="bp3-menu-spacer"></div>
+        <div class="bp3-menu-spacer" style={{
+          'height': `${item.spacer}px`,
+        }}></div>
       ) : item.divider ? (
         <MenuDivider key={index} title={item.title} />
       ) : item.label ? (

@@ -7,6 +7,11 @@
 
   #{$self}__header{
 
+    display: flex;
+
+    &-fields{
+      flex: 1 0 0;
+    }
     .bp3-form-group{
       margin-bottom: 18px;
     }
@@ -19,21 +24,10 @@
 
     .bp3-form-group{
       &.bp3-inline{
-        max-width: 420px; 
+        max-width: 440px; 
       }
 
       &.form-group{  
-        &--vendor{
-          max-width: 650px
-        }
-
-        &--due-date{
-          max-width: 300px;
-
-          .bp3-label{
-            min-width: 95px;
-          }
-        }
 
         &--expiration-date{
           max-width: 340px;

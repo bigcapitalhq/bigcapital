@@ -41,7 +41,7 @@ const ItemsCategoryList = ({
     (category) => () => {
       openDialog('item-category-form', { action: 'edit', id: category.id });
     },
-    [],
+    [openDialog],
   );
 
   const handleDeleteCategory = useCallback(

@@ -41,11 +41,22 @@ const mapActionsToProps = (dispatch) => ({
       type: t.SIDEBAR_EXPEND_TOGGLE,
     }),
 
-  changePreferencesPageTitle: (pageTitle) =>
-    dispatch({
-      type: 'CHANGE_PREFERENCES_PAGE_TITLE',
-      pageTitle,
-    }),
+  changePreferencesPageTitle: (pageTitle) => dispatch({
+    type: 'CHANGE_PREFERENCES_PAGE_TITLE',
+    pageTitle,
+  }),
+  setSidebarShrink: () => dispatch({
+    type: t.SIDEBAR_SHRINK,
+  }),
+  setSidebarExpand: () => dispatch({
+    type: t.SIDEBAR_SHRINK,
+  }),
+  resetSidebarPreviousExpand: () => dispatch({
+    type: t.RESET_SIDEBAR_PREVIOUS_EXPAND,
+  }),
+  recordSidebarPreviousExpand: () => dispatch({
+    type: t.RECORD_SIDEBAR_PREVIOUS_EXPAND,
+  }),
 });
 
 export default connect(null, mapActionsToProps);

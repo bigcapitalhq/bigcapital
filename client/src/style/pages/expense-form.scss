@@ -1,239 +1,38 @@
-.dashboard__insider--expense-form {
-  padding-bottom: 80px;
-  display: flex;
-  flex-direction: column;
-  background: #fff;
-
-  &__header {
-    padding: 25px 27px 20px;
-    background: #fbfbfb;
-    width: 100%;
-    .bp3-form-group {
-      .bp3-label {
-        font-weight: 500;
-        font-size: 13px;
-        color: #444;
-      }
-      .bp3-form-content {
-        .bp3-button:not([class*='bp3-intent-']):not(.bp3-minimal) {
-          
-        }
-      }
-      .bp3-input-group {
-      
-      }
-      &.form-group--ref_no {
-        .bp3-input-group .bp3-input {
-     
-        }
-      }
-    }
-
-    .form-group--payment_account {
-      .bp3-form-group {
-     
-      }
-      .bp3-form-content {
-        .bp3-button:not([class*='bp3-intent-']):not(.bp3-minimal) {
- 
-        }
-      }
-    }
-    .form-group--currency {
-      .bp3-form-group {
-     
-      }
-      .bp3-form-content {
-        .bp3-button:not([class*='bp3-intent-']):not(.bp3-minimal) {
-        
-        }
-      }
-    }
-  }
-
-  &__table {
-    padding: 15px 15px 0;
-
-    .bp3-form-group {
-      margin-bottom: 0;
-    }
-    .table {
-      border: 1px solid #d2dce2;
-      border-bottom: transparent;
-      border-left: transparent;
-
-      .th,
-      .td {
-        border-left: 1px dotted rgb(195, 195, 195);
-
-        &.index {
-          > span,
-          > div {
-            text-align: center;
-            width: 100%;
-            font-weight: 500;
-          }
-        }
-
-        &:first-child{
-          border-left: 1px solid #d2dce2;
-        }
-      }
-
-      .thead {
-        .tr .th {
-          padding: 10px 10px;
-          background-color: #f2f5fa;
-          font-size: 14px;
-          font-weight: 500;
-          color: #333;
-        }
-      }
-
-      .tbody {
-        .tr .td {
-          padding: 7px;
-          border-bottom: 1px dotted rgb(195, 195, 195);
-          min-height: 46px;
-
-          &.index {
-            background-color: #f2f5fa;
-            text-align: center;
-
-            > span {
-              margin-top: auto;
-              margin-bottom: auto;
-            }
-          }
-        }
-        .tr {
-          .bp3-form-group .bp3-input,
-          .form-group--select-list .bp3-button {
-            border-radius: 3px;
-            padding-left: 8px;
-            padding-right: 8px;
-          }
-
-          .bp3-form-group:not(.bp3-intent-danger) .bp3-input,
-          .form-group--select-list:not(.bp3-intent-danger) .bp3-button {
-            border-color: #E5E5E5;
-          }
-
-          &:last-of-type {
-            .td {
-              border-bottom: transparent;
-
-              .bp3-button,
-              .bp3-input-group {
-                display: none;
-              }
-            }
-          }
-
-          .td.actions {
-            .bp3-button {
-              background-color: transparent;
-              color: #e68f8e;
-
-              &:hover {
-                color: #c23030;
-              }
-            }
-          }
-
-          &.row--total {
-            
-            .td.amount{
-              font-weight: bold;
-            }
-          }
-        }
-      }
-      .th {
-        color: #444;
-        font-weight: 600;
-        border-bottom: 1px dotted #666;
-      }
-
-      .td {
-        border-bottom: 1px dotted #999;
-
-        &.description{
-          .bp3-form-group{
-            width: 100%;
-          }
-        }
-      }
-
-      .actions.td {
-        .bp3-button {
-          background: transparent;
-          margin: 0;
-        }
-      }
-    }
-  }
-  .bp3-button {
-    &.button--clear-lines {
-      background-color: #fcefef;
-    }
-  }
-  .button--clear-lines,
-  .button--new-line {
-    padding-left: 14px;
-    padding-right: 14px;
-  }
-  .dropzone-container {
-    margin-top: 0;
-    align-self: flex-end;
-  }
-  .dropzone {
-    width: 300px;
-    height: 75px;
-  }
-
-  .expense-form-footer{
-    display: flex;
-    padding: 30px 25px 0;
-    justify-content: space-between;
-  }
-
-  .form-group--description {
- 
-    .bp3-label {
-      font-weight: 500;
-      font-size: 13px;
-      color: #444;
-    }
-    .bp3-form-content {
-      // width: 280px;
-      textarea {
-        width: 450px;
-        min-height: 75px;
-      }
-    }
-  }
+.dashboard__insider--expense-form{
+  background-color: #fff;
 }
+.page-form--expense{
+  $self: '.page-form';
 
+  #{$self}__header{
+    display: flex;
 
-.dashboard__insider--expenses{
+    &-fields{
+      flex: 1 0 0;
+    }
 
-  .bigcapital-datatable{
+    .bp3-label{
+      min-width: 140px;
+    }
+    .bp3-form-content{
+      width: 100%;
+    }
 
-    .tbody{
-      .total_amount{
-        font-weight: 600;
+    .bp3-form-group{
+      margin-bottom: 18px;
+
+      &.bp3-inline{
+        max-width: 440px; 
       }
+    }
+  }
 
-      .td.description{
-        .bp3-icon{
-          color: #666;
-        }
-        .bp3-tooltip-indicator{
-          cursor: initial;
-          border-bottom: 0;
-        }
-      }
+  .form-group--description{
+    max-width: 500px;
+
+    textarea{
+      min-height: 60px;
+      width: 100%;
     }
   }
 }

@@ -1,48 +1,33 @@
-.make-journal-entries {
-  padding-bottom: 20px;
-  display: flex;
-  flex-direction: column;
 
-  &__header {
-    padding: 25px 27px 20px;
-    background: #fbfbfb;
+.page-form--make-journal-entries{
+  $self: '.page-form';  
 
-    .bp3-form-group {
-      .bp3-label {
-        font-weight: 500;
-        font-size: 13px;
-        color: #444;
+  #{$self}__header{
+    .bp3-label{
+      min-width: 140px;
+    }
+    .bp3-form-content{
+      width: 100%;
+    }
+
+    .bp3-form-group{
+      margin-bottom: 18px;
+
+      &.bp3-inline{
+        max-width: 440px; 
       }
     }
   }
 
-  &__table {
-    
-  }
+  .form-group--description{
+    max-width: 500px;
 
-  .bp3-button {
-    &.button--clear-lines {
-      background-color: #fcefef;
+    textarea{
+      min-height: 60px;
+      width: 100%;
     }
   }
-  .button--clear-lines,
-  .button--new-line {
-    padding-left: 14px;
-    padding-right: 14px;
-  }
-
-  .dropzone-container {
-    margin-left: auto;
-  }
-
-  .dropzone {
-    width: 300px;
-    height: 75px;
-
-    margin-right: 20px;
-  }
 }
-
 
 .dialog--journal-number-settings{
 

@@ -65,7 +65,7 @@ $sidebar-submenu-item-bg-color: #01287d;
     .#{$ns}-menu-item {
       color: $sidebar-menu-item-color;
       border-radius: 0;
-      padding: 8px 16px;
+      padding: 8px 18px;
       font-size: 15px;
       font-weight: 400;
 
@@ -93,7 +93,7 @@ $sidebar-submenu-item-bg-color: #01287d;
         display: block;
         color: $sidebar-menu-label-color;
         font-size: 12px;
-        padding: 6px 16px;
+        padding: 6px 18px;
         margin-top: 4px;
       }
 
@@ -137,7 +137,7 @@ $sidebar-submenu-item-bg-color: #01287d;
       color: $sidebar-menu-item-color;
     }
     .#{$ns}-menu-divider {
-      border-top-color: rgba(255, 255, 255, 0.125);
+      border-top-color: rgba(255, 255, 255, 0.15);
       color: #6b708c;
       margin: 4px 0;
     }

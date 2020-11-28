@@ -142,6 +142,9 @@ function PaymentReceiveFormHeader({
               value={tansformDateValue(values.payment_date)}
               onChange={handleDateChange('payment_date')}
               popoverProps={{ position: Position.BOTTOM, minimal: true }}
+              inputProps={{
+                leftIcon: (<Icon icon={'date-range'} />),
+              }}
             />
           </FormGroup>
 

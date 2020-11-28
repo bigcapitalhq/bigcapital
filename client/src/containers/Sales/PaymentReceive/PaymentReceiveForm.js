@@ -371,6 +371,7 @@ function PaymentReceiveForm({
     <div
       className={classNames(
         CLASSES.PAGE_FORM,
+        CLASSES.PAGE_FORM_STRIP_STYLE,
         CLASSES.PAGE_FORM_PAYMENT_RECEIVE,
       )}
     >
@@ -388,16 +389,18 @@ function PaymentReceiveForm({
           amountReceived={fullAmountReceived}
           onPaymentReceiveNumberChanged={handlePaymentReceiveNumberChanged}
         />
-        <PaymentReceiveItemsTable
-          paymentReceiveId={paymentReceiveId}
-          customerId={values.customer_id}
-          fullAmount={fullAmount}
-          onUpdateData={handleUpdataData}
-          paymentReceiveEntries={localPaymentEntries}
-          errors={errors?.entries}
-          onClickClearAllLines={handleClearAllLines}
-          onFetchEntriesSuccess={handleFetchEntriesSuccess}
-        />
+        <div className={classNames(CLASSES.PAGE_FORM_BODY)}>
+          <PaymentReceiveItemsTable
+            paymentReceiveId={paymentReceiveId}
+            customerId={values.customer_id}
+            fullAmount={fullAmount}
+            onUpdateData={handleUpdataData}
+            paymentReceiveEntries={localPaymentEntries}
+            errors={errors?.entries}
+            onClickClearAllLines={handleClearAllLines}
+            onFetchEntriesSuccess={handleFetchEntriesSuccess}
+          />
+        </div>
         <Alert
           cancelButtonText={<T id={'cancel'} />}
           confirmButtonText={<T id={'ok'} />}

@@ -12,47 +12,39 @@ import PreferencesSidebar from 'components/Preferences/PreferencesSidebar';
 import Search from 'containers/GeneralSearch/Search';
 import DashboardSplitPane from 'components/Dashboard/DashboardSplitePane';
 
-
 import withSettingsActions from 'containers/Settings/withSettingsActions';
 
 import { compose } from 'utils';
-
 
 function Dashboard({
   // #withSettings
   requestFetchOptions,
 }) {
-  const fetchOptions = useQuery(
-    ['options'], () => requestFetchOptions(),
-  );
+  const fetchOptions = useQuery(['options'], () => requestFetchOptions());
 
   return (
-    
-      <DashboardLoadingIndicator isLoading={fetchOptions.isFetching}>
-        <Switch>
-          <Route path="/preferences">
-            <DashboardSplitPane>
-              <Sidebar />
-              <PreferencesSidebar />
-            </DashboardSplitPane>
-            <PreferencesContent />
-          </Route>
+    <DashboardLoadingIndicator isLoading={fetchOptions.isFetching}>
+      <Switch>
+        <Route path="/preferences">
+          <DashboardSplitPane>
+            <Sidebar />
+            <PreferencesSidebar />
+          </DashboardSplitPane>
+          <PreferencesContent />
+        </Route>
 
-          <Route path="/">
-            <DashboardSplitPane>
-              <Sidebar />
-              <DashboardContent />
-            </DashboardSplitPane>
-          </Route>
-        </Switch>
+        <Route path="/">
+          <DashboardSplitPane>
+            <Sidebar />
+            <DashboardContent />
+          </DashboardSplitPane>
+        </Route>
+      </Switch>
 
-        <Search />
-        <DialogsContainer />
-      </DashboardLoadingIndicator>
-    
+      <Search />
+      <DialogsContainer />
+    </DashboardLoadingIndicator>
   );
 }
 
-export default compose(
-  withSettingsActions,
-)(Dashboard);
+export default compose(withSettingsActions)(Dashboard);

@@ -1,6 +1,6 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { FormGroup, Intent } from '@blueprintjs/core';
-import MoneyInputGroup from 'components/MoneyInputGroup';
+import { MoneyInputGroup } from 'components';
 
 const PercentFieldCell = ({
   cell: { value: initialValue },
@@ -10,14 +10,15 @@ const PercentFieldCell = ({
 }) => {
   const [value, setValue] = useState(initialValue);
 
-  const onBlur = (e) => {
-    updateData(index, id, parseInt(e.target.value, 10));
+  const handleBlurChange = (newValue) => {
+    const parsedValue = newValue === '' || newValue === undefined
+      ? '' : parseInt(newValue, 10);
+    updateData(index, id, parsedValue);
   };
 
-  const onChange = useCallback((e) => {
-    setValue(e.target.value);
-  }, []);
-
+  const handleChange = useCallback((value) => {
+    setValue(value);
+  }, [setValue]);
 
   useEffect(() => {
     setValue(initialValue);
@@ -29,12 +30,8 @@ const PercentFieldCell = ({
     <FormGroup intent={error ? Intent.DANGER : null}>
       <MoneyInputGroup
         value={value}
-        suffix={'%'}
-        onChange={onChange}
-        inputGroupProps={{
-          fill: true,
-          onBlur,
-        }}
+        onChange={handleChange}
+        onBlurValue={handleBlurChange}
       />
     </FormGroup>
   );

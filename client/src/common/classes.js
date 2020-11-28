@@ -8,6 +8,7 @@ const CLASSES = {
   DATATABLE_EDITOR: 'datatable-editor',
   DATATABLE_EDITOR_ACTIONS: 'datatable-editor__actions',
   DATATABLE_EDITOR_ITEMS_ENTRIES: 'items-entries-table',
+  DATATABLE_EDITOR_HAS_TOTAL_ROW: 'has-total-row',
 
   PAGE_FORM: 'page-form',
   PAGE_FORM_HEADER: 'page-form__header',
@@ -16,6 +17,7 @@ const CLASSES = {
   PAGE_FORM_HEADER_BIG_NUMBERS: 'page-form__big-numbers',
   PAGE_FORM_TABS: 'page-form__tabs',
   PAGE_FORM_BODY: 'page-form__body',
+  PAGE_FORM_STRIP_STYLE: 'page-form--strip',
 
   PAGE_FORM_FOOTER: 'page-form__footer',
   PAGE_FORM_FLOATING_ACTIONS: 'page-form__floating-actions',
@@ -29,6 +31,8 @@ const CLASSES = {
   PAGE_FORM_CUSTOMER: 'page-form--customer',
   PAGE_FORM_VENDOR: 'page-form--customer',
   PAGE_FORM_ITEM: 'page-form--item',
+  PAGE_FORM_MAKE_JOURNAL: 'page-form--make-journal-entries',
+  PAGE_FORM_EXPENSE: 'page-form--expense',
 
   FORM_GROUP_LIST_SELECT: 'form-group--select-list',
 

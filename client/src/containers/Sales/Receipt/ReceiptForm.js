@@ -16,7 +16,7 @@ import {
 } from './ReceiptForm.schema';
 
 import ReceiptFromHeader from './ReceiptFormHeader';
-import EditableItemsEntriesTable from 'containers/Entries/EditableItemsEntriesTable';
+import ReceiptFormBody from './ReceiptFormBody';
 import ReceiptFormFloatingActions from './ReceiptFormFloatingActions';
 import ReceiptFormFooter from './ReceiptFormFooter';
 import ReceiptNumberWatcher from './ReceiptNumberWatcher';
@@ -245,7 +245,11 @@ function ReceiptForm({
   );
 
   return (
-    <div className={classNames(CLASSES.PAGE_FORM_RECEIPT, CLASSES.PAGE_FORM)}>
+    <div className={classNames(
+      CLASSES.PAGE_FORM,
+      CLASSES.PAGE_FORM_STRIP_STYLE,
+      CLASSES.PAGE_FORM_RECEIPT,
+    )}>
       <Formik
         validationSchema={
           isNewMode ? CreateReceiptFormSchema : EditReceiptFormSchema
@@ -259,7 +263,7 @@ function ReceiptForm({
               onReceiptNumberChanged={handleReceiptNumberChanged}
             />
             <ReceiptNumberWatcher receiptNumber={receiptNumber} />
-            <EditableItemsEntriesTable filterSellableItems={true} />
+            <ReceiptFormBody />
             <ReceiptFormFooter />
             <ReceiptFormFloatingActions
               isSubmitting={isSubmitting}

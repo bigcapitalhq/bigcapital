@@ -27,7 +27,7 @@ function DashboardSplitPane({
     <SplitPane
       allowResize={sidebarExpended}
       split="vertical"
-      minSize={180}
+      minSize={190}
       maxSize={300}
       defaultSize={sidebarExpended ? defaultSize : 50}
       size={sidebarExpended ? defaultSize : 50}

@@ -32,9 +32,23 @@ function PaymentReceiveFormPage({
   requestFetchPaymentReceive,
 
   // #withCustomersActions
-  requestFetchCustomers
+  requestFetchCustomers,
+
+  // #withDashboardActions
+  setSidebarShrink,
+  resetSidebarPreviousExpand,
 }) {
   const { id: paymentReceiveId } = useParams();
+
+  useEffect(() => {
+    // Shrink the sidebar by foce.
+    setSidebarShrink();
+
+    return () => {
+      // Reset the sidebar to the previous status.
+      resetSidebarPreviousExpand();
+    };
+  }, [resetSidebarPreviousExpand, setSidebarShrink]);
 
   // Fetches payment recevie details.
   const fetchPaymentReceive = useQuery(

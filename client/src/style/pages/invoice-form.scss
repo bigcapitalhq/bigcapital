@@ -6,6 +6,12 @@
   $self: '.page-form';
 
   #{$self}__header{
+    display: flex;
+
+    &-fields{
+      flex: 1 0 0;
+    }
+
     .bp3-label{
       min-width: 140px;
     }
@@ -17,23 +23,9 @@
       margin-bottom: 18px;
 
       &.bp3-inline{
-        max-width: 420px; 
-      }
-
-      &.form-group{
-        &--customer-name{
-          max-width: 600px
-        }
-        &--due-date{
-          max-width: 300px;
-  
-          .bp3-label{
-            min-width: 95px;
-          }
-        }
+        max-width: 440px; 
       }
     }
-
     .col--invoice-date{  
       max-width: 435px;
     }

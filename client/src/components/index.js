@@ -35,11 +35,12 @@ import ContactSelecetList from './ContactSelecetList';
 import CurrencySelectList from './CurrencySelectList'
 import SalutationList from './SalutationList';
 import DisplayNameList from './DisplayNameList';
-import MoneyInputGroup from './MoneyInputGroup';
+import MoneyInputGroup from './Forms/MoneyInputGroup';
 import Dragzone from './Dragzone';
 import EmptyStatus from './EmptyStatus';
 import DashboardCard from './Dashboard/DashboardCard';
 import InputPrependText from './Forms/InputPrependText';
+import PageFormBigNumber from './PageFormBigNumber';
 
 const Hint = FieldHint;
 
@@ -86,4 +87,5 @@ export {
   EmptyStatus,
   DashboardCard,
   InputPrependText,
+  PageFormBigNumber
 };

@@ -148,10 +148,9 @@ export const defaultExpanderReducer = (tableRows, level) => {
 
 export function formattedAmount(cents, currency) {
   const { symbol, decimal_digits: precision } = Currency[currency];
-  const amount = cents / Math.pow(10, precision);
-
-  return accounting.formatMoney(amount, { symbol, precision });
+  return accounting.formatMoney(cents, { symbol, precision });
 }
+
 export function formattedExchangeRate(amount, currency) {
   const options = {
     style: 'currency',
@@ -367,4 +366,8 @@ export function defaultToTransform(
   return value == null || value !== value || value === ''
     ? _defaultValue
     : _transfromedValue;
+}
+
+export function isBlank(value) {
+  return _.isEmpty(value) && !_.isNumber(value) || _.isNaN(value);
 }

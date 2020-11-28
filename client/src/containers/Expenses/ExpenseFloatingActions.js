@@ -141,6 +141,7 @@ export default function ExpenseFloatingFooter({
         >
           <Button rightIcon={<Icon icon="arrow-drop-up-16" iconSize={20} />} />
         </Popover>
+
         {/* ----------- Clear ----------- */}
         <Button
           className={'ml1'}

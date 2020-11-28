@@ -1,5 +1,6 @@
-import React, { useCallback, useState, useEffect, useMemo } from 'react';
+import React, { useCallback, useState } from 'react';
 import { FormattedMessage as T } from 'react-intl';
+import classNames from 'classnames';
 import { ListSelect } from 'components';
 import { MenuItem } from '@blueprintjs/core';
 
@@ -8,6 +9,7 @@ export default function CurrencySelectList({
   selectedCurrencyCode,
   defaultSelectText = <T id={'select_currency_code'} />,
   onCurrencySelected,
+  className,
   ...restProps
 }) {
   const [selectedCurrency, setSelectedCurrency] = useState(null);
@@ -54,6 +56,7 @@ export default function CurrencySelectList({
       itemPredicate={filterCurrencies}
       itemRenderer={currencyCodeRenderer}
       popoverProps={{ minimal: true }}
+      className={classNames('form-group--select-list', className)}
       {...restProps}
     />
   );

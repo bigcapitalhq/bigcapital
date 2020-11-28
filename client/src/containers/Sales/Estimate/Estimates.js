@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { useQuery } from 'react-query';
 
@@ -9,6 +9,7 @@ import withCustomersActions from 'containers/Customers/withCustomersActions';
 import withItemsActions from 'containers/Items/withItemsActions';
 import withEstimateActions from './withEstimateActions';
 import withSettingsActions from 'containers/Settings/withSettingsActions';
+import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 
 import { compose } from 'utils';
 
@@ -24,9 +25,23 @@ function Estimates({
 
   // #withSettingsActions
   requestFetchOptions,
+
+  // #withDashboardActions
+  setSidebarShrink,
+  resetSidebarPreviousExpand
 }) {
   const history = useHistory();
   const { id } = useParams();
+
+  useEffect(() => {
+    // Shrink the sidebar by foce.
+    setSidebarShrink();
+
+    return () => {
+      // Reset the sidebar to the previous status.
+      resetSidebarPreviousExpand();
+    };
+  }, [resetSidebarPreviousExpand, setSidebarShrink]);
 
   const fetchEstimate = useQuery(
     ['estimate', id],
@@ -78,4 +93,5 @@ export default compose(
   withCustomersActions,
   withItemsActions,
   withSettingsActions,
+  withDashboardActions,
 )(Estimates);

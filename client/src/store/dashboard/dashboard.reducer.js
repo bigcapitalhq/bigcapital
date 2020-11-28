@@ -9,6 +9,7 @@ const initialState = {
   pageHint: '',
   preferencesPageTitle: '',
   sidebarExpended: true,
+  previousSidebarExpended: null,
   dialogs: {},
   topbarEditViewId: null,
   requestsLoading: 0,
@@ -62,9 +63,25 @@ const reducerInstance = createReducer(initialState, {
     state.requestsLoading = Math.max(requestsLoading, 0);
   },
 
+  [t.RECORD_SIDEBAR_PREVIOUS_EXPAND]: (state) => {
+    state.previousSidebarExpended = state.sidebarExpended;
+  },
+
   [t.SIDEBAR_EXPEND_TOGGLE]: (state) => {
     state.sidebarExpended = !state.sidebarExpended;
-  }
+  },
+
+  [t.SIDEBAR_EXPAND]: (state) => {
+    state.sidebarExpended = true;
+  },
+
+  [t.SIDEBAR_SHRINK]: (state) => {
+    state.sidebarExpended = false;
+  },
+
+  [t.RESET_SIDEBAR_PREVIOUS_EXPAND]: (state) => {
+    state.sidebarExpended = state.previousSidebarExpended;
+  },
 });
 
 export default persistReducer({

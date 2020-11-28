@@ -12,7 +12,7 @@ import { EditBillFormSchema, CreateBillFormSchema } from './BillForm.schema';
 import BillFormHeader from './BillFormHeader';
 import BillFloatingActions from './BillFloatingActions';
 import BillFormFooter from './BillFormFooter';
-import EditableItemsEntriesTable from 'containers/Entries/EditableItemsEntriesTable';
+
 
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withMediaActions from 'containers/Media/withMediaActions';
@@ -23,6 +23,7 @@ import { AppToaster } from 'components';
 
 import { ERROR } from 'common/errors';
 import { compose, repeatValue, defaultToTransform, orderingLinesIndexes } from 'utils';
+import BillFormBody from './BillFormBody';
 
 const MIN_LINES_NUMBER = 5;
 
@@ -31,7 +32,7 @@ const defaultBill = {
   item_id: '',
   rate: '',
   discount: '',
-  quantity: '',
+  quantity: 1,
   description: '',
 };
 
@@ -198,7 +199,11 @@ function BillForm({
   }, [history]);
 
   return (
-    <div className={classNames(CLASSES.PAGE_FORM, CLASSES.PAGE_FORM_BILL)}>
+    <div className={classNames(
+      CLASSES.PAGE_FORM,
+      CLASSES.PAGE_FORM_STRIP_STYLE,
+      CLASSES.PAGE_FORM_BILL,
+    )}>
       <Formik
         validationSchema={isNewMode ? CreateBillFormSchema : EditBillFormSchema}
         initialValues={initialValues}
@@ -207,10 +212,7 @@ function BillForm({
         {({ isSubmitting, values }) => (
           <Form>
             <BillFormHeader onBillNumberChanged={handleBillNumberChanged} />
-            <EditableItemsEntriesTable
-              defaultEntry={defaultBill}
-              filterPurchasableItems={true}
-            />
+            <BillFormBody defaultBill={defaultBill} />
             <BillFormFooter
               oninitialFiles={[]}
               // onDropFiles={handleDeleteFile}

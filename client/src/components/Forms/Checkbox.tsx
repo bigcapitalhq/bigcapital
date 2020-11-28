@@ -3,7 +3,7 @@ import {
   Checkbox as BPCheckbox,    
 } from '@blueprintjs/core';
 
-export default function CheckboxComponent(props) {
+export default function CheckboxComponent(props: any) {
   const { field, form, ...rest } = props;
   const [value, setValue] = useState(field.value || false);
 

@@ -229,6 +229,7 @@ function ItemsEntriesTable({
       className={classNames(
         CLASSES.DATATABLE_EDITOR,
         CLASSES.DATATABLE_EDITOR_ITEMS_ENTRIES,
+        CLASSES.DATATABLE_EDITOR_HAS_TOTAL_ROW,
       )}
     >
       <DataTable
@@ -243,7 +244,7 @@ function ItemsEntriesTable({
           removeRow: handleRemoveRow,
         }}
       />
-      <div className={classNames(CLASSES.DATATABLE_EDITOR_ACTIONS, 'mt1')}>
+      <div className={classNames(CLASSES.DATATABLE_EDITOR_ACTIONS)}>
         <Button
           small={true}
           className={'button--secondary button--new-line'}

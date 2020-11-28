@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { useQuery } from 'react-query';
 
@@ -10,6 +10,7 @@ import withAccountsActions from 'containers/Accounts/withAccountsActions';
 import withItemsActions from 'containers/Items/withItemsActions';
 import withReceiptActions from './withReceiptActions';
 import withSettingsActions from 'containers/Settings/withSettingsActions';
+import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 
 import { compose } from 'utils';
 
@@ -28,9 +29,23 @@ function Receipts({
 
   // #withSettingsActions
   requestFetchOptions,
+
+  // #withDashboardActions
+  setSidebarShrink,
+  resetSidebarPreviousExpand,
 }) {
   const history = useHistory();
   const { id } = useParams();
+
+  useEffect(() => {
+    // Shrink the sidebar by foce.
+    setSidebarShrink();
+
+    return () => {
+      // Reset the sidebar to the previous status.
+      resetSidebarPreviousExpand();
+    };
+  }, [resetSidebarPreviousExpand, setSidebarShrink]);  
 
   const fetchReceipt = useQuery(
     ['receipt', id],
@@ -86,4 +101,5 @@ export default compose(
   withItemsActions,
   withAccountsActions,
   withSettingsActions,
+  withDashboardActions
 )(Receipts);

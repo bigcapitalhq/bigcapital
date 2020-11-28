@@ -29,6 +29,10 @@ function DashboardTopbar({
 
   // #withDashboardActions
   toggleSidebarExpend,
+  recordSidebarPreviousExpand,
+
+  // #withDashboard
+  sidebarExpended,
 
   // #withGlobalSearch
   openGlobalSearch,
@@ -41,13 +45,20 @@ function DashboardTopbar({
 
   const handleSidebarToggleBtn = () => {
     toggleSidebarExpend();
+    recordSidebarPreviousExpand();
   };
   return (
     <div class="dashboard__topbar">
       <div class="dashboard__topbar-left">
         <div class="dashboard__topbar-sidebar-toggle">
           <Tooltip
-            content={<T id={'close_sidebar'} />}
+            content={
+              !sidebarExpended ? (
+                <T id={'open_sidebar'} />
+              ) : (
+                <T id={'close_sidebar'} />
+              )
+            }
             position={Position.RIGHT}
           >
             <Button minimal={true} onClick={handleSidebarToggleBtn}>
@@ -147,10 +158,11 @@ function DashboardTopbar({
 
 export default compose(
   withSearch,
-  withDashboard(({ pageTitle, pageSubtitle, editViewId }) => ({
+  withDashboard(({ pageTitle, pageSubtitle, editViewId, sidebarExpended }) => ({
     pageTitle,
     pageSubtitle,
     editViewId,
+    sidebarExpended
   })),
   withDashboardActions,
 )(DashboardTopbar);

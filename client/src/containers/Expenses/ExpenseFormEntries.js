@@ -2,11 +2,19 @@ import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { Button, Intent, Position, Tooltip } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { omit } from 'lodash';
+import classNames from 'classnames';
+
+import { CLASSES } from 'common/classes';
 
 import DataTable from 'components/DataTable';
 import Icon from 'components/Icon';
 import { Hint } from 'components';
-import { compose, formattedAmount, transformUpdatedRows } from 'utils';
+import {
+  compose,
+  formattedAmount,
+  transformUpdatedRows,
+  saveInvoke,
+} from 'utils';
 import {
   AccountsListFieldCell,
   MoneyFieldCell,
@@ -92,17 +100,17 @@ function ExpenseTable({
   onClickRemoveRow,
   onClickAddNewRow,
   onClickClearAllLines,
-  defaultRow,
-  categories,
-  errors,
-  setFieldValue,
+
+  entries,
+  error,
+  onChange,
 }) {
   const [rows, setRows] = useState([]);
   const { formatMessage } = useIntl();
 
   useEffect(() => {
-    setRows([...categories.map((e) => ({ ...e, rowType: 'editor' }))]);
-  }, [categories]);
+    setRows([...entries.map((e) => ({ ...e, rowType: 'editor' }))]);
+  }, [entries]);
 
   // Final table rows editor rows and total and final blank row.
   const tableRows = useMemo(() => [...rows, { rowType: 'total' }], [rows]);
@@ -126,8 +134,7 @@ function ExpenseTable({
         Cell: TotalExpenseCellRenderer(AccountsListFieldCell),
         className: 'expense_account_id',
         disableSortBy: true,
-        disableResizing: true,
-        width: 250,
+        width: 40,
         filterAccountsByRootType: ['expense'],
       },
       {
@@ -135,8 +142,7 @@ function ExpenseTable({
         accessor: 'amount',
         Cell: TotalAmountCellRenderer(MoneyFieldCell, 'amount'),
         disableSortBy: true,
-        disableResizing: true,
-        width: 180,
+        width: 40,
         className: 'amount',
       },
       {
@@ -145,6 +151,7 @@ function ExpenseTable({
         Cell: NoteCellRenderer(InputGroupCell),
         disableSortBy: true,
         className: 'description',
+        width: 100,
       },
       {
         Header: '',
@@ -168,8 +175,8 @@ function ExpenseTable({
         columnIdOrObj,
         value,
       );
-      setFieldValue(
-        'categories',
+      saveInvoke(
+        onChange,
         newRows
           .filter((row) => row.rowType === 'editor')
           .map((row) => ({
@@ -177,7 +184,7 @@ function ExpenseTable({
           })),
       );
     },
-    [rows, setFieldValue],
+    [rows, onChange],
   );
 
   // Handles click remove datatable row.
@@ -187,12 +194,11 @@ function ExpenseTable({
       if (rows.length <= 1) {
         return;
       }
-
       const removeIndex = parseInt(rowIndex, 10);
       const newRows = rows.filter((row, index) => index !== removeIndex);
 
-      setFieldValue(
-        'categories',
+      saveInvoke(
+        onChange,
         newRows
           .filter((row) => row.rowType === 'editor')
           .map((row, index) => ({
@@ -200,18 +206,18 @@ function ExpenseTable({
             index: index + 1,
           })),
       );
-      onClickRemoveRow && onClickRemoveRow(removeIndex);
+      saveInvoke(onClickRemoveRow, removeIndex);
     },
-    [rows, setFieldValue, onClickRemoveRow],
+    [rows, onChange, onClickRemoveRow],
   );
 
   // Invoke when click on add new line button.
   const onClickNewRow = () => {
-    onClickAddNewRow && onClickAddNewRow();
+    saveInvoke(onClickAddNewRow);
   };
   // Invoke when click on clear all lines button.
   const handleClickClearAllLines = () => {
-    onClickClearAllLines && onClickClearAllLines();
+    saveInvoke(onClickClearAllLines);
   };
   // Rows classnames callback.
   const rowClassNames = useCallback(
@@ -222,7 +228,12 @@ function ExpenseTable({
   );
 
   return (
-    <div className={'dashboard__insider--expense-form__table'}>
+    <div
+      className={classNames(
+        CLASSES.DATATABLE_EDITOR,
+        CLASSES.DATATABLE_EDITOR_HAS_TOTAL_ROW,
+      )}
+    >
       <DataTable
         columns={columns}
         data={tableRows}
@@ -230,12 +241,12 @@ function ExpenseTable({
         sticky={true}
         payload={{
           accounts: accountsList,
-          errors: errors.categories || [],
+          errors: error,
           updateData: handleUpdateData,
           removeRow: handleRemoveRow,
         }}
       />
-      <div className={'mt1'}>
+      <div className={classNames(CLASSES.DATATABLE_EDITOR_ACTIONS)}>
         <Button
           small={true}
           className={'button--secondary button--new-line'}

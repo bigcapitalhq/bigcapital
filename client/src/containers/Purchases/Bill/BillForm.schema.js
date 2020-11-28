@@ -1,6 +1,7 @@
 import * as Yup from 'yup';
 import { formatMessage } from 'services/intl';
 import { DATATYPES_LENGTH } from 'common/dataTypes';
+import { isBlank } from 'utils';
 
 const BillFormSchema = Yup.object().shape({
   vendor_id: Yup.number()
@@ -34,7 +35,7 @@ const BillFormSchema = Yup.object().shape({
       item_id: Yup.number()
         .nullable()
         .when(['quantity', 'rate'], {
-          is: (quantity, rate) => quantity || rate,
+          is: (quantity, rate) => !isBlank(quantity) && !isBlank(rate),
           then: Yup.number().required(),
         }),
       total: Yup.number().nullable(),

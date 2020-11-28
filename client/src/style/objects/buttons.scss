@@ -1,14 +1,21 @@
 
-.form-group--select-list.bp3-fill{
+.form-group--select-list{
 
-  .bp3-popover-wrapper{
-    &,
-    .bp3-popover-target{
-      width: 100%;
+  .bp3-popover-target{
+
+    .bp3-icon{
+      position: absolute;
+      top: 0;
+      left: 0;
+      margin: 7px;
+
+      + .bp3-button-text{
+        padding-left: 20px;
+      }
     }
+
     .bp3-button{
-      width: 100%;
-      justify-content: space-between;
+      padding-left: 10px;
       color: #333;
     }
   }
@@ -18,6 +25,7 @@
 
   .bp3-popover-open{
     .bp3-button{
+      
       border-color: #80bdff;
     }
   }

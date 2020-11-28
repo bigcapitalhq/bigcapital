@@ -482,6 +482,7 @@ export default {
   contact: 'Contact',
   contacts: 'Contacts',
   close_sidebar: 'Close sidebar.',
+  open_sidebar: 'Open sidebar.',
   recalc_report: 'Re-calc Report',
   remove_the_line: 'Remove the line',
   no_results: 'No results',
@@ -851,4 +852,6 @@ export default {
   save_continue_editing: 'Save (continue editing)',
   reset: 'Reset ',
   save_and_send: 'Save and Send',
+  posting_date: 'Posting date',
+  customer: 'Customer',
 };

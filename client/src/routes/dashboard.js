@@ -252,7 +252,7 @@ export default [
   },
 
   // Invoices.
-  {
+{
     path: `/invoices/:id/edit`,
     component: LazyLoader({
       loader: () => import('containers/Sales/Invoice/Invoices'),

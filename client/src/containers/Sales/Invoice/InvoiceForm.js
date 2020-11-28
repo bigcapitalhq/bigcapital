@@ -44,8 +44,8 @@ const defaultInvoice = {
   index: 0,
   item_id: '',
   rate: '',
-  discount: 0,
-  quantity: '',
+  discount: '',
+  quantity: 1,
   description: '',
 };
 
@@ -232,7 +232,11 @@ function InvoiceForm({
   );
 
   return (
-    <div className={classNames(CLASSES.PAGE_FORM, CLASSES.PAGE_FORM_INVOICE)}>
+    <div className={classNames(
+      CLASSES.PAGE_FORM,
+      CLASSES.PAGE_FORM_STRIP_STYLE,
+      CLASSES.PAGE_FORM_INVOICE
+    )}>
       <Formik
         validationSchema={
           isNewMode ? CreateInvoiceFormSchema : EditInvoiceFormSchema
@@ -246,10 +250,13 @@ function InvoiceForm({
               onInvoiceNumberChanged={handleInvoiceNumberChanged}
             />
             <InvoiceNumberChangeWatcher invoiceNumber={invoiceNumber} />
-            <EditableItemsEntriesTable
-              defaultEntry={defaultInvoice}
-              filterSellableItems={true}
-            />
+
+            <div className={classNames(CLASSES.PAGE_FORM_BODY)}>
+              <EditableItemsEntriesTable
+                defaultEntry={defaultInvoice}
+                filterSellableItems={true}
+              />
+            </div>
             <InvoiceFormFooter />
             <InvoiceFloatingActions
               isSubmitting={isSubmitting}
@@ -269,7 +276,6 @@ export default compose(
   withDashboardActions,
   withMediaActions,
   withInvoiceDetail(),
-
   withSettings(({ invoiceSettings }) => ({
     invoiceNextNumber: invoiceSettings?.nextNumber,
     invoiceNumberPrefix: invoiceSettings?.numberPrefix,

@@ -1,6 +1,7 @@
 import * as Yup from 'yup';
 import { formatMessage } from 'services/intl';
 import { DATATYPES_LENGTH } from 'common/dataTypes';
+import { isBlank } from 'utils';
 
 const Schema = Yup.object().shape({
   customer_id: Yup.string()
@@ -40,7 +41,7 @@ const Schema = Yup.object().shape({
       item_id: Yup.number()
         .nullable()
         .when(['quantity', 'rate'], {
-          is: (quantity, rate) => quantity || rate,
+          is: (quantity, rate) => !isBlank(quantity) && !isBlank(rate),
           then: Yup.number().required(),
         }),
       discount: Yup.number().nullable().min(0).max(DATATYPES_LENGTH.INT_10),

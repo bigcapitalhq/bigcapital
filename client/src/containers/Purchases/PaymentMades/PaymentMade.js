@@ -34,9 +34,21 @@ function PaymentMade({
 
   // #withDashboardActions
   changePageTitle,
+  setSidebarShrink,
+  resetSidebarPreviousExpand,
 }) {
   const { id: paymentMadeId } = useParams();
   const { formatMessage } = useIntl();
+
+  useEffect(() => {
+    // Shrink the sidebar by foce.
+    setSidebarShrink();
+
+    return () => {
+      // Reset the sidebar to the previous status.
+      resetSidebarPreviousExpand();
+    };
+  }, [resetSidebarPreviousExpand, setSidebarShrink]);
 
   // Handle page title change in new and edit mode.
   useEffect(() => {

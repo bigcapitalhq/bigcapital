@@ -1,6 +1,7 @@
 import * as Yup from 'yup';
 import { formatMessage } from 'services/intl';
 import { DATATYPES_LENGTH } from 'common/dataTypes';
+import { isBlank } from 'utils';
 
 const Schema = Yup.object().shape({
   beneficiary: Yup.string().label(formatMessage({ id: 'beneficiary' })),
@@ -25,11 +26,11 @@ const Schema = Yup.object().shape({
   categories: Yup.array().of(
     Yup.object().shape({
       index: Yup.number().min(1).max(DATATYPES_LENGTH.INT_10).nullable(),
-      amount: Yup.number().decimalScale(13).nullable(),
+      amount: Yup.number().nullable(),
       expense_account_id: Yup.number()
         .nullable()
         .when(['amount'], {
-          is: (amount) => amount,
+          is: (amount) => !isBlank(amount),
           then: Yup.number().required(),
         }),
       description: Yup.string().max(DATATYPES_LENGTH.TEXT).nullable(),

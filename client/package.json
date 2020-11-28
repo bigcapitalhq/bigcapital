@@ -131,10 +131,15 @@
   },
   "devDependencies": {
     "@babel/preset-flow": "^7.9.0",
+    "@types/jest": "^26.0.15",
+    "@types/node": "^14.14.9",
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
     "@welldone-software/why-did-you-render": "^6.0.0-rc.1",
     "http-proxy-middleware": "^1.0.0",
     "react-query-devtools": "^2.1.1",
-    "redux-devtools": "^3.5.0"
+    "redux-devtools": "^3.5.0",
+    "typescript": "^4.1.2"
   },
   "jest": {
     "roots": [

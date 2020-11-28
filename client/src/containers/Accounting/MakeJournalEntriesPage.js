@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { useQuery } from 'react-query';
 
@@ -10,6 +10,7 @@ import withAccountsActions from 'containers/Accounts/withAccountsActions';
 import withManualJournalsActions from 'containers/Accounting/withManualJournalsActions';
 import withCurrenciesActions from 'containers/Currencies/withCurrenciesActions';
 import withSettingsActions from 'containers/Settings/withSettingsActions';
+import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 
 import { compose } from 'utils';
 
@@ -28,9 +29,23 @@ function MakeJournalEntriesPage({
 
   // #withSettingsActions
   requestFetchOptions,
+
+  // #withDashboardActions
+  setSidebarShrink,
+  resetSidebarPreviousExpand
 }) {
   const history = useHistory();
   const { id } = useParams();
+
+  useEffect(() => {
+    // Shrink the sidebar by foce.
+    setSidebarShrink();
+
+    return () => {
+      // Reset the sidebar to the previous status.
+      resetSidebarPreviousExpand();
+    };
+  }, [resetSidebarPreviousExpand, setSidebarShrink]);
 
   const fetchAccounts = useQuery('accounts-list', (key) =>
     requestFetchAccounts(),
@@ -88,4 +103,5 @@ export default compose(
   withManualJournalsActions,
   withCurrenciesActions,
   withSettingsActions,
+  withDashboardActions,
 )(MakeJournalEntriesPage);

@@ -6,6 +6,11 @@
   $self: '.page-form';
 
   #{$self}__header{
+    display: flex;
+
+    &-fields{
+      flex: 1 0 0;
+    }
     
     .bp3-form-group{
       margin-bottom: 18px;
@@ -20,30 +25,8 @@
 
     .bp3-form-group{
       &.bp3-inline{
-        max-width: 420px; 
+        max-width: 440px; 
       }
-    }
-
-    .bp3-form-group{
-
-      &.form-group{
-
-        &--customer{
-          max-width: 650px;
-        }
-
-        &--expiration-date{
-          max-width: 340px;
-
-          .bp3-label{
-            min-width: 120px;
-          }
-        }
-      }
-    }
-
-    .col--estimate-date{
-      max-width: 435px;
     }
   }
 

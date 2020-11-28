@@ -2,90 +2,31 @@ import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { Button, Tooltip, Position, Intent } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { omit } from 'lodash';
+import classNames from 'classnames';
 
+import { CLASSES } from 'common/classes';
 import DataTable from 'components/DataTable';
-import Icon from 'components/Icon';
-import { Hint } from 'components';
-import { compose, formattedAmount, transformUpdatedRows } from 'utils';
+import {
+  compose,
+  formattedAmount,
+  transformUpdatedRows,
+  saveInvoke,
+} from 'utils';
 import {
   AccountsListFieldCell,
   MoneyFieldCell,
   InputGroupCell,
   ContactsListFieldCell,
 } from 'components/DataTableCells';
+import {
+  ContactHeaderCell,
+  ActionsCellRenderer,
+  TotalAccountCellRenderer,
+  TotalCreditDebitCellRenderer,
+  NoteCellRenderer,
+} from './components';
 import withAccounts from 'containers/Accounts/withAccounts';
 import withCustomers from 'containers/Customers/withCustomers';
-
-// Contact header cell.
-function ContactHeaderCell() {
-  return (
-    <>
-      <T id={'contact'} />
-      <Hint
-        content={<T id={'contact_column_hint'} />}
-        position={Position.LEFT_BOTTOM}
-      />
-    </>
-  );
-}
-
-// Actions cell renderer.
-const ActionsCellRenderer = ({
-  row: { index },
-  column: { id },
-  cell: { value: initialValue },
-  data,
-  payload,
-}) => {
-  if (data.length <= index + 2) {
-    return '';
-  }
-  const onClickRemoveRole = () => {
-    payload.removeRow(index);
-  };
-  return (
-    <Tooltip content={<T id={'remove_the_line'} />} position={Position.LEFT}>
-      <Button
-        icon={<Icon icon="times-circle" iconSize={14} />}
-        iconSize={14}
-        className="ml2"
-        minimal={true}
-        intent={Intent.DANGER}
-        onClick={onClickRemoveRole}
-      />
-    </Tooltip>
-  );
-};
-
-// Total text cell renderer.
-const TotalAccountCellRenderer = (chainedComponent) => (props) => {
-  if (props.data.length === props.row.index + 2) {
-    return <span>{'Total USD'}</span>;
-  }
-  return chainedComponent(props);
-};
-
-// Total credit/debit cell renderer.
-const TotalCreditDebitCellRenderer = (chainedComponent, type) => (props) => {
-  if (props.data.length === props.row.index + 2) {
-    const total = props.data.reduce((total, entry) => {
-      const amount = parseInt(entry[type], 10);
-      const computed = amount ? total + amount : total;
-
-      return computed;
-    }, 0);
-
-    return <span>{formattedAmount(total, 'USD')}</span>;
-  }
-  return chainedComponent(props);
-};
-
-const NoteCellRenderer = (chainedComponent) => (props) => {
-  if (props.data.length === props.row.index + 2) {
-    return '';
-  }
-  return chainedComponent(props);
-};
 
 /**
  * Make journal entries table component.
@@ -101,22 +42,19 @@ function MakeJournalEntriesTable({
   onClickRemoveRow,
   onClickAddNewRow,
   onClickClearAllLines,
-  defaultRow,
-  values,
-  errors, setFieldValue,
+  onChange,
+  entries,
+  error,
 }) {
   const [rows, setRows] = useState([]);
   const { formatMessage } = useIntl();
 
   useEffect(() => {
-    setRows([...values.map((e) => ({ ...e, rowType: 'editor' }))]);
-  }, [values, setRows]);
+    setRows([...entries.map((e) => ({ ...e, rowType: 'editor' }))]);
+  }, [entries, setRows]);
 
   // Final table rows editor rows and total and final blank row.
-  const tableRows = useMemo(
-    () => [...rows, { rowType: 'total' }, { rowType: 'final_space' }],
-    [rows],
-  );
+  const tableRows = useMemo(() => [...rows, { rowType: 'total' }], [rows]);
 
   // Memorized data table columns.
   const columns = useMemo(
@@ -138,8 +76,7 @@ function MakeJournalEntriesTable({
         Cell: TotalAccountCellRenderer(AccountsListFieldCell),
         className: 'account',
         disableSortBy: true,
-        disableResizing: true,
-        width: 250,
+        width: 140,
       },
       {
         Header: formatMessage({ id: 'credit_currency' }, { currency: 'USD' }),
@@ -147,8 +84,7 @@ function MakeJournalEntriesTable({
         Cell: TotalCreditDebitCellRenderer(MoneyFieldCell, 'credit'),
         className: 'credit',
         disableSortBy: true,
-        disableResizing: true,
-        width: 150,
+        width: 100,
       },
       {
         Header: formatMessage({ id: 'debit_currency' }, { currency: 'USD' }),
@@ -156,8 +92,7 @@ function MakeJournalEntriesTable({
         Cell: TotalCreditDebitCellRenderer(MoneyFieldCell, 'debit'),
         className: 'debit',
         disableSortBy: true,
-        disableResizing: true,
-        width: 150,
+        width: 100,
       },
       {
         Header: ContactHeaderCell,
@@ -165,9 +100,8 @@ function MakeJournalEntriesTable({
         accessor: 'contact_id',
         Cell: NoteCellRenderer(ContactsListFieldCell),
         className: 'contact',
-        disableResizing: true,
         disableSortBy: true,
-        width: 200,
+        width: 120,
       },
       {
         Header: formatMessage({ id: 'note' }),
@@ -175,6 +109,7 @@ function MakeJournalEntriesTable({
         Cell: NoteCellRenderer(InputGroupCell),
         disableSortBy: true,
         className: 'note',
+        width: 200,
       },
       {
         Header: '',
@@ -190,9 +125,9 @@ function MakeJournalEntriesTable({
   );
 
   // Handles click new line.
-  const onClickNewRow = useCallback(() => {
-    onClickAddNewRow && onClickAddNewRow();
-  }, [defaultRow, rows, onClickAddNewRow]);
+  const onClickNewRow = () => {
+    saveInvoke(onClickAddNewRow);
+  };
 
   // Handles update datatable data.
   const handleUpdateData = useCallback(
@@ -203,8 +138,8 @@ function MakeJournalEntriesTable({
         columnIdOrObj,
         value,
       );
-      setFieldValue(
-        'entries',
+      saveInvoke(
+        onChange,
         newRows
           .filter((row) => row.rowType === 'editor')
           .map((row) => ({
@@ -212,26 +147,27 @@ function MakeJournalEntriesTable({
           })),
       );
     },
-    [rows, setFieldValue],
+    [rows, onChange],
   );
 
   const handleRemoveRow = useCallback(
     (rowIndex) => {
       // Can't continue if there is just one row line or less.
-      if (rows.length <= 2) { return; }
-
+      if (rows.length <= 2) {
+        return;
+      }
       const removeIndex = parseInt(rowIndex, 10);
       const newRows = rows.filter((row, index) => index !== removeIndex);
 
-      setFieldValue(
-        'entries',
+      saveInvoke(
+        onChange,
         newRows
           .filter((row) => row.rowType === 'editor')
           .map((row) => ({ ...omit(row, ['rowType']) })),
       );
-      onClickRemoveRow && onClickRemoveRow(removeIndex);
+      saveInvoke(onClickRemoveRow, removeIndex);
     },
-    [rows, setFieldValue, onClickRemoveRow],
+    [rows, onChange, onClickRemoveRow],
   );
 
   // Rows class names callback.
@@ -243,11 +179,16 @@ function MakeJournalEntriesTable({
   );
 
   const handleClickClearAllLines = () => {
-    onClickClearAllLines && onClickClearAllLines();
+    saveInvoke(onClickClearAllLines);
   };
 
   return (
-    <div class="make-journal-entries__table datatable-editor">
+    <div
+      className={classNames(
+        CLASSES.DATATABLE_EDITOR,
+        CLASSES.DATATABLE_EDITOR_HAS_TOTAL_ROW,
+      )}
+    >
       <DataTable
         columns={columns}
         data={tableRows}
@@ -255,7 +196,7 @@ function MakeJournalEntriesTable({
         sticky={true}
         payload={{
           accounts: accountsList,
-          errors: errors.entries || [],
+          errors: error,
           updateData: handleUpdateData,
           removeRow: handleRemoveRow,
           contacts: [
@@ -266,8 +207,7 @@ function MakeJournalEntriesTable({
           ],
         }}
       />
-
-      <div class="mt1">
+      <div className={classNames(CLASSES.DATATABLE_EDITOR_ACTIONS)}>
         <Button
           small={true}
           className={'button--secondary button--new-line'}

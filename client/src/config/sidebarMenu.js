@@ -3,7 +3,7 @@ import { FormattedMessage as T } from 'react-intl';
 
 export default [
   {
-    divider: true,
+    spacer: 1,
   },
   {
     text: <T id={'homepage'} />,
@@ -11,7 +11,7 @@ export default [
     href: '/homepage',
   },
   {
-    divider: true,
+    spacer: 1,
   },
   {
     text: 'Sales & inventory',
