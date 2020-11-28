@@ -11,6 +11,7 @@ export default function CurrencySelectList({
   defaultSelectText = <T id={'select_currency_code'} />,
   onCurrencySelected,
   popoverFill = false,
+  disabled = false,
 }) {
   const [selectedCurrency, setSelectedCurrency] = useState(null);
 
@@ -29,7 +30,7 @@ export default function CurrencySelectList({
       );
     }
   };
-  
+
   const onCurrencySelect = useCallback((currency) => {
     setSelectedCurrency({ ...currency });
     onCurrencySelected && onCurrencySelected(currency);
@@ -44,6 +45,15 @@ export default function CurrencySelectList({
       />
     );
   }, []);
+
+  useEffect(() => {
+    if (typeof selectedCurrencyCode !== 'undefined') {
+      const currency = selectedCurrencyCode
+        ? currenciesList.find((a) => a.currency_code === selectedCurrencyCode)
+        : null;
+      setSelectedCurrency(currency);
+    }
+  }, [selectedCurrencyCode, currenciesList, setSelectedCurrency]);
 
   return (
     <Select
@@ -62,8 +72,9 @@ export default function CurrencySelectList({
       })}
     >
       <Button
+        disabled={disabled}
         text={
-          selectedCurrency ? selectedCurrencyCode : defaultSelectText
+          selectedCurrency ? selectedCurrency.currency_code : defaultSelectText
         }
       />
     </Select>
