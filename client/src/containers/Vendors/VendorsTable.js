@@ -136,7 +136,9 @@ function VendorsTable({
       {
         id: 'receivable_balance',
         Header: formatMessage({ id: 'receivable_balance' }),
-        accessor: (r) => <Money amount={r.closing_balance} currency={'USD'} />,
+        accessor: (r) => (
+          <Money amount={r.closing_balance} currency={r.currency_code} />
+        ),
         className: 'receivable_balance',
         width: 100,
       },
