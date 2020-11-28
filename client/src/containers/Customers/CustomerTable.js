@@ -137,7 +137,9 @@ const CustomerTable = ({
       {
         id: 'receivable_balance',
         Header: formatMessage({ id: 'receivable_balance' }),
-        accessor: (r) => <Money amount={r.closing_balance} currency={'USD'} />,
+        accessor: (r) => (
+          <Money amount={r.closing_balance} currency={r.currency_code} />
+        ),
         className: 'receivable_balance',
         width: 100,
       },
@@ -189,7 +191,6 @@ const CustomerTable = ({
     customersCurrentViewId === -1,
     customers.length === 0,
   ].every((condition) => condition === true);
-
   return (
     <div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>
       <LoadingIndicator loading={customersLoading && !isLoadedBefore}>

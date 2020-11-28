@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import {
   Intent,
   Button,
@@ -10,25 +10,23 @@ import {
   MenuItem,
 } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'react-intl';
-import { useFormikContext } from 'formik';
-import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
+import classNames from 'classnames';
 import { saveInvoke } from 'utils';
 import { If, Icon } from 'components';
 
 /**
- * Receipt floating actions bar.
+ * Make Journal floating actions bar.
  */
-export default function ReceiptFormFloatingActions({
+export default function MakeJournalEntriesFooter({
   isSubmitting,
-  receiptId,
-  receiptPublished,
   onSubmitClick,
   onCancelClick,
-  onClearClick,
+  manualJournalId,
+  onSubmitForm,
+  onResetForm,
+  manualJournalPublished,
 }) {
-  const { resetForm, submitForm } = useFormikContext();
-
   const handleSubmitPublishBtnClick = (event) => {
     saveInvoke(onSubmitClick, event, {
       redirect: true,
@@ -37,7 +35,7 @@ export default function ReceiptFormFloatingActions({
   };
 
   const handleSubmitPublishAndNewBtnClick = (event) => {
-    submitForm();
+    onSubmitForm();
     saveInvoke(onSubmitClick, event, {
       redirect: false,
       publish: true,
@@ -46,7 +44,7 @@ export default function ReceiptFormFloatingActions({
   };
 
   const handleSubmitPublishContinueEditingBtnClick = (event) => {
-    submitForm();
+    onSubmitForm();
     saveInvoke(onSubmitClick, event, {
       redirect: false,
       publish: true,
@@ -61,7 +59,7 @@ export default function ReceiptFormFloatingActions({
   };
 
   const handleSubmitDraftAndNewBtnClick = (event) => {
-    submitForm();
+    onSubmitForm();
     saveInvoke(onSubmitClick, event, {
       redirect: false,
       publish: false,
@@ -70,7 +68,7 @@ export default function ReceiptFormFloatingActions({
   };
 
   const handleSubmitDraftContinueEditingBtnClick = (event) => {
-    submitForm();
+    onSubmitForm();
     saveInvoke(onSubmitClick, event, {
       redirect: false,
       publish: false,
@@ -83,13 +81,13 @@ export default function ReceiptFormFloatingActions({
 
   const handleClearBtnClick = (event) => {
     // saveInvoke(onClearClick, event);
-    resetForm();
+    onResetForm();
   };
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>
       {/* ----------- Save And Publish ----------- */}
-      <If condition={!receiptId || !receiptPublished}>
+      <If condition={!manualJournalId || !manualJournalPublished}>
         <ButtonGroup>
           <Button
             disabled={isSubmitting}
@@ -154,7 +152,7 @@ export default function ReceiptFormFloatingActions({
         </ButtonGroup>
       </If>
       {/* ----------- Save and New ----------- */}
-      <If condition={receiptId && receiptPublished}>
+      <If condition={manualJournalId && manualJournalPublished}>
         <ButtonGroup>
           <Button
             disabled={isSubmitting}
@@ -188,7 +186,7 @@ export default function ReceiptFormFloatingActions({
         className={'ml1'}
         disabled={isSubmitting}
         onClick={handleClearBtnClick}
-        text={receiptId ? <T id={'reset'} /> : <T id={'clear'} />}
+        text={manualJournalId ? <T id={'reset'} /> : <T id={'clear'} />}
       />
       {/* ----------- Cancel ----------- */}
       <Button

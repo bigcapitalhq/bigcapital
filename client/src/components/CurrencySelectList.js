@@ -1,16 +1,17 @@
 import React, { useCallback, useState } from 'react';
 import { FormattedMessage as T } from 'react-intl';
+import { CLASSES } from 'common/classes';
 import classNames from 'classnames';
-import { ListSelect } from 'components';
-import { MenuItem } from '@blueprintjs/core';
+import { MenuItem, Button } from '@blueprintjs/core';
+import { Select } from '@blueprintjs/select';
 
 export default function CurrencySelectList({
   currenciesList,
   selectedCurrencyCode,
   defaultSelectText = <T id={'select_currency_code'} />,
   onCurrencySelected,
-  className,
-  ...restProps
+  popoverFill = false,
+  disabled = false,
 }) {
   const [selectedCurrency, setSelectedCurrency] = useState(null);
 
@@ -45,19 +46,37 @@ export default function CurrencySelectList({
     );
   }, []);
 
+  useEffect(() => {
+    if (typeof selectedCurrencyCode !== 'undefined') {
+      const currency = selectedCurrencyCode
+        ? currenciesList.find((a) => a.currency_code === selectedCurrencyCode)
+        : null;
+      setSelectedCurrency(currency);
+    }
+  }, [selectedCurrencyCode, currenciesList, setSelectedCurrency]);
+
   return (
-    <ListSelect
+    <Select
       items={currenciesList}
-      selectedItemProp={'currency_code'}
-      selectedItem={selectedCurrencyCode}
-      labelProp={'currency_code'}
-      defaultText={defaultSelectText}
-      onItemSelect={onCurrencySelect}
-      itemPredicate={filterCurrencies}
       itemRenderer={currencyCodeRenderer}
-      popoverProps={{ minimal: true }}
-      className={classNames('form-group--select-list', className)}
-      {...restProps}
-    />
+      itemPredicate={filterCurrencies}
+      onItemSelect={onCurrencySelect}
+      filterable={true}
+      popoverProps={{
+        minimal: true,
+        usePortal: !popoverFill,
+        inline: popoverFill,
+      }}
+      className={classNames('form-group--select-list', {
+        [CLASSES.SELECT_LIST_FILL_POPOVER]: popoverFill,
+      })}
+    >
+      <Button
+        disabled={disabled}
+        text={
+          selectedCurrency ? selectedCurrency.currency_code : defaultSelectText
+        }
+      />
+    </Select>
   );
 }

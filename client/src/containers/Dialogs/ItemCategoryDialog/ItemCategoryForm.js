@@ -62,7 +62,7 @@ export default function ItemCategoryForm({
           {({ field, field: { value }, meta: { error, touched } }) => (
             <FormGroup
               label={<T id={'category_name'} />}
-              labelInfo={FieldRequiredHint}
+              labelInfo={<FieldRequiredHint />}
               className={'form-group--category-name'}
               intent={inputIntent({ error, touched })}
               helperText={<ErrorMessage name="name" />}

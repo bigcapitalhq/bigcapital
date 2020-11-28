@@ -32,6 +32,7 @@ function VendorsTable({
   vendorsPageination,
   vendorTableQuery,
   vendorItems,
+  vendorsCurrentViewId,
 
   // #withVendorsActions
   addVendorsTableQueries,
@@ -135,7 +136,9 @@ function VendorsTable({
       {
         id: 'receivable_balance',
         Header: formatMessage({ id: 'receivable_balance' }),
-        accessor: (r) => <Money amount={r.closing_balance} currency={'USD'} />,
+        accessor: (r) => (
+          <Money amount={r.closing_balance} currency={r.currency_code} />
+        ),
         className: 'receivable_balance',
         width: 100,
       },
@@ -182,6 +185,10 @@ function VendorsTable({
       onEditVendor,
       onDeleteVendor,
     });
+  const showEmptyStatus = [
+    vendorsCurrentViewId === -1,
+    vendorItems.length === 0,
+  ].every((condition) => condition === true);
 
   return (
     <div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>
@@ -190,7 +197,7 @@ function VendorsTable({
         mount={false}
       >
         <Choose>
-          <Choose.When condition={true}>
+          <Choose.When condition={showEmptyStatus}>
             <VendorsEmptyStatus />
           </Choose.When>
 
@@ -228,11 +235,13 @@ export default compose(
       vendorsLoading,
       vendorTableQuery,
       vendorsPageination,
+      vendorsCurrentViewId,
     }) => ({
       vendorItems,
       vendorsLoading,
       vendorsPageination,
       vendorTableQuery,
+      vendorsCurrentViewId,
     }),
   ),
   withVendorsActions,

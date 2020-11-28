@@ -201,10 +201,12 @@ function ReceiptForm({
         intent: Intent.SUCCESS,
       });
       setSubmitting(false);
-      resetForm();
 
       if (submitPayload.redirect) {
         history.push('/receipts');
+      }
+      if (submitPayload.resetForm) {
+        resetForm();
       }
     };
 
@@ -243,7 +245,7 @@ function ReceiptForm({
     },
     [history],
   );
-
+  
   return (
     <div className={classNames(
       CLASSES.PAGE_FORM,
@@ -268,6 +270,7 @@ function ReceiptForm({
             <ReceiptFormFloatingActions
               isSubmitting={isSubmitting}
               receiptId={receiptId}
+              receiptPublished={true}
               onSubmitClick={handleSubmitClick}
               onCancelClick={handleCancelClick}
             />

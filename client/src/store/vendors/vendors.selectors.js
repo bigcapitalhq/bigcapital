@@ -10,6 +10,8 @@ const vendorByIdSelector = (state, props) =>
   state.vendors.items[props.vendorId];
 const vendorsItemsSelector = (state) => state.vendors.items;
 
+const vendorsCurrentViewIdSelector = (state) => state.vendors.currentViewId;
+
 const vendorsPaginationSelector = (state, props) => {
   const viewId = state.vendors.currentViewId;
   return state.vendors.views?.[viewId];
@@ -56,4 +58,9 @@ export const getVendorsPaginationMetaFactory = () =>
 export const getVendorByIdFactory = () =>
   createSelector(vendorByIdSelector, (vendor) => {
     return vendor;
+  });
+
+  export const getVendorsCurrentViewIdFactory = () =>
+  createSelector(vendorsCurrentViewIdSelector, (currentViewId) => {
+    return currentViewId;
   });

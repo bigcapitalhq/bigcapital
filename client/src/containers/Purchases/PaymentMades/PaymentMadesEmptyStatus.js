@@ -21,7 +21,7 @@ export default function PaymentMadesEmptyStatus() {
             intent={Intent.PRIMARY}
             large={true}
             onClick={() => {
-              history.push('/payment-made/new');
+              history.push('/payment-mades/new');
             }}
           >
             New bill payment

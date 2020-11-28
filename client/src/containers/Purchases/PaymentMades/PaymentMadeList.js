@@ -87,7 +87,7 @@ function PaymentMadeList({
   }, [deletePaymentMade, requestDeletePaymentMade, formatMessage]);
 
   const handleEditPaymentMade = useCallback((payment) => {
-    history.push(`/payment-made/${payment.id}/edit`);
+    history.push(`/payment-mades/${payment.id}/edit`);
   });
 
   // Calculates the selected rows count.

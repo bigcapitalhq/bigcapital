@@ -46,6 +46,9 @@ const defaultInitialValues = {
   entries: [...repeatValue(defaultBill, MIN_LINES_NUMBER)],
 };
 
+/**
+ * Bill form.
+ */
 function BillForm({
   //#WithMedia
   requestSubmitMedia,
@@ -75,12 +78,12 @@ function BillForm({
   const isNewMode = !billId;
 
   useEffect(() => {
-    if (bill && bill.id) {
+    if (!isNewMode) {
       changePageTitle(formatMessage({ id: 'edit_bill' }));
     } else {
       changePageTitle(formatMessage({ id: 'new_bill' }));
     }
-  }, [changePageTitle, bill, formatMessage]);
+  }, [changePageTitle, isNewMode, formatMessage]);
 
   // Initial values in create and edit mode.
   const initialValues = useMemo(
@@ -146,8 +149,8 @@ function BillForm({
         message: formatMessage(
           {
             id: isNewMode
-              ? 'the_bill_has_been_successfully_created'
-              : 'the_bill_has_been_successfully_edited',
+              ? 'the_bill_has_been_successfully_created' :
+              'the_bill_has_been_successfully_edited',
           },
           { number: values.bill_number },
         ),
@@ -155,11 +158,13 @@ function BillForm({
       });
       setSubmitting(false);
 
-      resetForm();
       changePageSubtitle('');
 
       if (submitPayload.redirect) {
-        history.go('/bills');
+        history.push('/bills');
+      }
+      if (submitPayload.resetForm) {
+        resetForm();
       }
     };
     // Handle the request error.
@@ -167,7 +172,7 @@ function BillForm({
       handleErrors(errors, { setErrors });
       setSubmitting(false);
     };
-    if (isNewMode) {
+    if (bill && bill.id) {
       requestEditBill(bill.id, form).then(onSuccess).catch(onError);
     } else {
       requestSubmitBill(form).then(onSuccess).catch(onError);
@@ -190,9 +195,12 @@ function BillForm({
     [changePageSubtitle],
   );
 
-  const handleSubmitClick = useCallback(() => {
-    setSubmitPayload({ redirect: true });
-  }, [setSubmitPayload]);
+  const handleSubmitClick = useCallback(
+    (event, payload) => {
+      setSubmitPayload({ ...payload });
+    },
+    [setSubmitPayload],
+  );
 
   const handleCancelClick = useCallback(() => {
     history.goBack();
@@ -209,7 +217,7 @@ function BillForm({
         initialValues={initialValues}
         onSubmit={handleFormSubmit}
       >
-        {({ isSubmitting, values }) => (
+        {({ isSubmitting }) => (
           <Form>
             <BillFormHeader onBillNumberChanged={handleBillNumberChanged} />
             <BillFormBody defaultBill={defaultBill} />
@@ -220,8 +228,9 @@ function BillForm({
             <BillFloatingActions
               isSubmitting={isSubmitting}
               billId={billId}
+              billPublished={true}
               onSubmitClick={handleSubmitClick}
-              onCancelForm={handleCancelClick}
+              onCancelClick={handleCancelClick}
             />
           </Form>
         )}

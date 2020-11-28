@@ -78,20 +78,20 @@ export default function CustomerFloatingActions({
             rightIcon={<Icon icon="arrow-drop-up-16" iconSize={20} />}
           />
         </Popover>
-        {/* ----------- Clear & Reset----------- */}
-        <Button
-          className={'ml1'}
-          disabled={isSubmitting}
-          onClick={handleClearBtnClick}
-          text={customerId ? <T id={'reset'} /> : <T id={'clear'} />}
-        />
-        {/* ----------- Cancel  ----------- */}
-        <Button
-          className={'ml1'}
-          onClick={handleCancelBtnClick}
-          text={<T id={'cancel'} />}
-        />
       </ButtonGroup>
+      {/* ----------- Clear & Reset----------- */}
+      <Button
+        className={'ml1'}
+        disabled={isSubmitting}
+        onClick={handleClearBtnClick}
+        text={customerId ? <T id={'reset'} /> : <T id={'clear'} />}
+      />
+      {/* ----------- Cancel  ----------- */}
+      <Button
+        className={'ml1'}
+        onClick={handleCancelBtnClick}
+        text={<T id={'cancel'} />}
+      />
     </div>
   );
 }

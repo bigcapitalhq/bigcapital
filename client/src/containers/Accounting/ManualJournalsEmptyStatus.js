@@ -21,7 +21,7 @@ export default function ManualJournalsEmptyStatus() {
             intent={Intent.PRIMARY}
             large={true}
             onClick={() => {
-              history.push('/invoices/new');
+              history.push('/make-journal-entry');
             }}
           >
             Make journal
