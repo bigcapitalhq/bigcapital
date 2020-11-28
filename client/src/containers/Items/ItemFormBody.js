@@ -60,8 +60,8 @@ function ItemFormBody({ accountsList, baseCurrency }) {
                     prefix={'$'}
                     inputGroupProps={{ fill: true }}
                     disabled={!form.values.sellable}
-                    onChange={(evt, value) => {
-                      form.setFieldValue('sell_price', value);
+                    onChange={(unformattedValue) => {
+                      form.setFieldValue('sell_price', unformattedValue);
                     }}
                   />
                 </ControlGroup>
@@ -135,7 +135,7 @@ function ItemFormBody({ accountsList, baseCurrency }) {
                     prefix={'$'}
                     inputGroupProps={{ medium: true }}
                     disabled={!form.values.purchasable}
-                    onChange={(evt, unformattedValue) => {
+                    onChange={(unformattedValue) => {
                       form.setFieldValue('cost_price', unformattedValue);
                     }}
                   />
