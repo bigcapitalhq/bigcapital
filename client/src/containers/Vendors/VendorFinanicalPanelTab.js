@@ -63,12 +63,7 @@ function VendorFinanicalPanelTab({
           </FastField>
           {/*------------ Opening balance  -----------*/}
           <FastField name={'opening_balance'}>
-            {({
-              form: { values },
-              field,
-              field: { value },
-              meta: { error, touched },
-            }) => (
+            {({ form, field, field: { value }, meta: { error, touched } }) => (
               <FormGroup
                 label={<T id={'opening_balance'} />}
                 className={classNames(
@@ -79,14 +74,15 @@ function VendorFinanicalPanelTab({
                 inline={true}
               >
                 <ControlGroup>
-                  <InputPrependText text={values.currency_code} />
+                  <InputPrependText text={form.values.currency_code} />
                   <MoneyInputGroup
                     value={value}
-                    onChange={field.onChange}
-                    prefix={'$'}
                     inputGroupProps={{
                       fill: true,
-                      ...field,
+                      // ...field,
+                    }}
+                    onChange={(balance) => {
+                      form.setFieldValue('opening_balance', balance);
                     }}
                     disabled={vendorId}
                   />

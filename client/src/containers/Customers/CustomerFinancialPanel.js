@@ -61,7 +61,7 @@ function CustomerFinancialPanel({
           {/*------------ Opening balance  -----------*/}
           <FastField name={'opening_balance'}>
             {({
-              form: { values },
+              form,
               field,
               field: { value },
               meta: { error, touched },
@@ -76,12 +76,14 @@ function CustomerFinancialPanel({
                 inline={true}
               >
                 <ControlGroup>
-                  <InputPrependText text={values.currency_code} />
+                  <InputPrependText text={form.values.currency_code} />
                   <MoneyInputGroup
                     value={value}
                     inputGroupProps={{ fill: true }}
                     disabled={customerId}
-                    {...field}
+                    onChange={(balance) => {
+                      form.setFieldValue('opening_balance', balance);
+                    }}
                   />
                 </ControlGroup>
               </FormGroup>
