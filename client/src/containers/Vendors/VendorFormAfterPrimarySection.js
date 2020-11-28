@@ -6,7 +6,6 @@ import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 import { inputIntent } from 'utils';
 
-
 /**
  * Vendor form  after primary section.
  */
@@ -66,7 +65,7 @@ function VendorFormAfterPrimarySection() {
             label={<T id={'website'} />}
             inline={true}
           >
-            <InputGroup {...field} />
+            <InputGroup placeholder={'http://'} {...field} />
           </FormGroup>
         )}
       </FastField>

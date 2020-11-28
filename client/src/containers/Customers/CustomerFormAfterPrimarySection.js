@@ -61,7 +61,7 @@ export default function CustomerFormAfterPrimarySection({}) {
             label={<T id={'website'} />}
             inline={true}
           >
-            <InputGroup {...field} />
+            <InputGroup placeholder={'http://'} {...field} />
           </FormGroup>
         )}
       </FastField>
