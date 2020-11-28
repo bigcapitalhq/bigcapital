@@ -32,6 +32,7 @@ function VendorsTable({
   vendorsPageination,
   vendorTableQuery,
   vendorItems,
+  vendorsCurrentViewId,
 
   // #withVendorsActions
   addVendorsTableQueries,
@@ -182,6 +183,10 @@ function VendorsTable({
       onEditVendor,
       onDeleteVendor,
     });
+  const showEmptyStatus = [
+    vendorsCurrentViewId === -1,
+    vendorItems.length === 0,
+  ].every((condition) => condition === true);
 
   return (
     <div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>
@@ -190,7 +195,7 @@ function VendorsTable({
         mount={false}
       >
         <Choose>
-          <Choose.When condition={true}>
+          <Choose.When condition={showEmptyStatus}>
             <VendorsEmptyStatus />
           </Choose.When>
 
@@ -228,11 +233,13 @@ export default compose(
       vendorsLoading,
       vendorTableQuery,
       vendorsPageination,
+      vendorsCurrentViewId,
     }) => ({
       vendorItems,
       vendorsLoading,
       vendorsPageination,
       vendorTableQuery,
+      vendorsCurrentViewId,
     }),
   ),
   withVendorsActions,
