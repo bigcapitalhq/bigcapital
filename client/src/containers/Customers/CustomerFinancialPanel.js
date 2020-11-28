@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import { FormGroup, Position, Classes, ControlGroup } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { FastField, ErrorMessage } from 'formik';
+import moment from 'moment';
 import {
   MoneyInputGroup,
   InputPrependText,
@@ -27,7 +28,6 @@ function CustomerFinancialPanel({
 
   customerId,
 }) {
-
   return (
     <div className={'tab-panel--financial'}>
       <Row>
@@ -44,6 +44,12 @@ function CustomerFinancialPanel({
               >
                 <DateInput
                   {...momentFormatter('YYYY/MM/DD')}
+                  onChange={(date) => {
+                    form.setFieldValue(
+                      'opening_balance_at',
+                      moment(date).format('YYYY-MM-DD'),
+                    );
+                  }}
                   value={tansformDateValue(value)}
                   popoverProps={{ position: Position.BOTTOM, minimal: true }}
                   disabled={customerId}
