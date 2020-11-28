@@ -17,14 +17,14 @@ const Schema = Yup.object().shape({
     .max(DATATYPES_LENGTH.STRING)
     .label(formatMessage({ id: 'item_type_' })),
   code: Yup.string().trim().min(0).max(DATATYPES_LENGTH.STRING),
-  cost_price: Yup.number().when(['purchasable'], {
+  cost_price: Yup.number().min(0).when(['purchasable'], {
     is: true,
     then: Yup.number()
       .required()
       .label(formatMessage({ id: 'cost_price_' })),
     otherwise: Yup.number().nullable(true),
   }),
-  sell_price: Yup.number().when(['sellable'], {
+  sell_price: Yup.number().min(0).when(['sellable'], {
     is: true,
     then: Yup.number()
       .required()
