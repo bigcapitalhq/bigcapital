@@ -1,5 +1,7 @@
 import React, { useCallback } from 'react';
+import classNames from 'classnames';
 import { ListSelect } from 'components';
+import { CLASSES } from 'common/classes';
 
 export default function AccountsTypesSelect({
   accountsTypes,
@@ -7,6 +9,7 @@ export default function AccountsTypesSelect({
   defaultSelectText = 'Select account type',
   onTypeSelected,
   disabled = false,
+  popoverFill = false,
   ...restProps
 }) {
   // Filters accounts types items.
@@ -41,6 +44,9 @@ export default function AccountsTypesSelect({
       onItemSelect={handleItemSelected}
       itemPredicate={filterAccountTypeItems}
       disabled={disabled}
+      className={classNames('form-group--select-list', {
+        [CLASSES.SELECT_LIST_FILL_POPOVER]: popoverFill,
+      })}
       {...restProps}
     />
   );

@@ -1,49 +1,37 @@
 import React, { useCallback, useMemo, useEffect } from 'react';
-import {
-  Button,
-  Classes,
-  FormGroup,
-  InputGroup,
-  Intent,
-  TextArea,
-  Checkbox,
-  Position,
-} from '@blueprintjs/core';
-import { useFormik } from 'formik';
+import { Intent } from '@blueprintjs/core';
+import { Formik } from 'formik';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { pick, omit } from 'lodash';
 import { useQuery, queryCache } from 'react-query';
-import classNames from 'classnames';
-import Yup from 'services/yup';
-import {
-  If,
-  ErrorMessage,
-  AppToaster,
-  FieldRequiredHint,
-  Hint,
-  AccountsSelectList,
-  AccountsTypesSelect,
-  DialogContent,
-} from 'components';
+import { AppToaster, DialogContent } from 'components';
+
+import AccountFormDialogFields from './AccountFormDialogFields';
 
 import withAccountsActions from 'containers/Accounts/withAccountsActions';
 import withAccountDetail from 'containers/Accounts/withAccountDetail';
-import withAccounts from 'containers/Accounts/withAccounts';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import {
   EditAccountFormSchema,
   CreateAccountFormSchema,
 } from './AccountForm.schema';
-import { compose } from 'utils';
+
+import { compose, transformToForm } from 'utils';
+import { transformApiErrors, transformAccountToForm } from './utils';
+
+const defaultInitialValues = {
+  account_type_id: '',
+  parent_account_id: '',
+  name: '',
+  code: '',
+  description: '',
+  subaccount: false,
+};
 
 /**
  * Account form dialog content.
  */
 function AccountFormDialogContent({
-  // #withAccounts
-  accountsTypes,
-  accounts,
-
   // #withAccountDetail
   account,
 
@@ -57,132 +45,80 @@ function AccountFormDialogContent({
   closeDialog,
 
   // #ownProp
+  dialogName,
   accountId,
   action,
-  dialogName,
   parentAccountId,
   accountTypeId,
 }) {
   const { formatMessage } = useIntl();
   const isNewMode = !accountId;
 
+  // Form validation schema in create and edit mode.
   const validationSchema = isNewMode
     ? CreateAccountFormSchema
     : EditAccountFormSchema;
-    
-  const initialValues = useMemo(
-    () => ({
-      account_type_id: '',
-      name: '',
-      code: '',
-      description: '',
-    }),
-    [],
-  );
-  const transformApiErrors = (errors) => {
-    const fields = {};
-    if (errors.find((e) => e.type === 'NOT_UNIQUE_CODE')) {
-      fields.code = formatMessage({ id: 'account_code_is_not_unique' });
+
+  // Callbacks handles form submit.
+  const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
+    const form = omit(values, ['subaccount']);
+    const toastAccountName = values.code
+      ? `${values.code} - ${values.name}`
+      : values.name;
+
+    // Handle request success.
+    const handleSuccess = () => {
+      closeDialog(dialogName);
+      queryCache.invalidateQueries('accounts-table');
+      queryCache.invalidateQueries('accounts-list');
+
+      AppToaster.show({
+        message: formatMessage(
+          {
+            id: isNewMode
+              ? 'service_has_been_successful_created'
+              : 'service_has_been_successful_edited',
+          },
+          {
+            name: toastAccountName,
+            service: formatMessage({ id: 'account' }),
+          },
+        ),
+        intent: Intent.SUCCESS,
+      });
+    };
+    // Handle request error.
+    const handleError = (errors) => {
+      const errorsTransformed = transformApiErrors(errors);
+      setErrors({ ...errorsTransformed });
+      setSubmitting(false);
+    };
+    if (accountId) {
+      requestEditAccount(accountId, form)
+        .then(handleSuccess)
+        .catch(handleError);
+    } else {
+      requestSubmitAccount({ form }).then(handleSuccess).catch(handleError);
     }
-    if (errors.find((e) => e.type === 'ACCOUNT.NAME.NOT.UNIQUE')) {
-      fields.name = formatMessage({ id: 'account_name_is_already_used' });
-    }
-    return fields;
   };
 
-  // Formik
-  const {
-    errors,
-    values,
-    touched,
-    setFieldValue,
-    resetForm,
-    handleSubmit,
-    isSubmitting,
-    getFieldProps,
-  } = useFormik({
-    enableReinitialize: true,
-    initialValues: {
-      ...initialValues,
-      ...(accountId && pick(account, Object.keys(initialValues))),
-    },
-    validationSchema,
-    onSubmit: (values, { setSubmitting, setErrors }) => {
-      const form = omit(values, ['subaccount']);
-      const toastAccountName = values.code
-        ? `${values.code} - ${values.name}`
-        : values.name;
-
-      const afterSubmit = () => {
-        closeDialog(dialogName);
-        queryCache.invalidateQueries('accounts-table');
-        queryCache.invalidateQueries('accounts-list');
-      };
-      const afterErrors = (errors) => {
-        const errorsTransformed = transformApiErrors(errors);
-        setErrors({ ...errorsTransformed });
-        setSubmitting(false);
-      };
-      if (accountId) {
-        requestEditAccount(accountId, form)
-          .then((response) => {
-            afterSubmit(response);
-
-            AppToaster.show({
-              message: formatMessage(
-                { id: 'service_has_been_successful_edited' },
-                {
-                  name: toastAccountName,
-                  service: formatMessage({ id: 'account' }),
-                },
-              ),
-              intent: Intent.SUCCESS,
-            });
-          })
-          .catch(afterErrors);
-      } else {
-        requestSubmitAccount({ form })
-          .then((response) => {
-            afterSubmit(response);
-
-            AppToaster.show({
-              message: formatMessage(
-                { id: 'service_has_been_successful_created' },
-                {
-                  name: toastAccountName,
-                  service: formatMessage({ id: 'account' }),
-                },
-              ),
-              intent: Intent.SUCCESS,
-              position: Position.BOTTOM,
-            });
-          })
-          .catch(afterErrors);
-      }
-    },
-  });
-
-  useEffect(() => {
-    if (values.parent_account_id) {
-      setFieldValue('subaccount', true);
-    }
-  }, [values.parent_account_id]);
-
-  // Reset `parent account id` after change `account type`.
-  useEffect(() => {
-    setFieldValue('parent_account_id', null);
-  }, [values.account_type_id]);
-
-  // Filtered accounts based on the given account type.
-  const filteredAccounts = useMemo(
-    () =>
-      accounts.filter(
-        (account) =>
-          account.account_type_id === values.account_type_id ||
-          !values.account_type_id,
-      ),
-    [accounts, values.account_type_id],
-  );
+  // Form initial values in create and edit mode.
+  const initialValues = {
+    ...defaultInitialValues,
+    /**
+     * We only care about the fields in the form. Previously unfilled optional
+     * values such as `notes` come back from the API as null, so remove those
+     * as well.
+     */
+    ...transformToForm(
+      transformAccountToForm(account, {
+        action,
+        parentAccountId,
+        accountTypeId,
+      }),
+      defaultInitialValues,
+    ),
+  };
 
   // Handles dialog close.
   const handleClose = useCallback(() => {
@@ -195,9 +131,9 @@ function AccountFormDialogContent({
   );
 
   // Fetches accounts types.
-  const fetchAccountsTypes = useQuery('accounts-types-list', async () => {
-    await requestFetchAccountTypes();
-  });
+  const fetchAccountsTypes = useQuery('accounts-types-list', () =>
+    requestFetchAccountTypes(),
+  );
 
   // Fetch the given account id on edit mode.
   const fetchAccount = useQuery(
@@ -211,176 +147,15 @@ function AccountFormDialogContent({
     fetchAccountsTypes.isFetching ||
     fetchAccount.isFetching;
 
-  // Fetch requests on dialog opening.
-  const onDialogOpening = useCallback(() => {
-    fetchAccountsList.refetch();
-    fetchAccountsTypes.refetch();
-
-    if (action === 'edit' && accountId) {
-      fetchAccount.refetch();
-    }
-    if (action === 'new_child') {
-      setFieldValue('parent_account_id', parentAccountId);
-      setFieldValue('account_type_id', accountTypeId);
-    }
-  }, [
-    parentAccountId,
-    accountTypeId,
-    fetchAccount,
-    fetchAccountsList,
-    fetchAccountsTypes,
-  ]);
-
-  // Handle account type change.
-  const onChangeAccountType = useCallback(
-    (accountType) => {
-      setFieldValue('account_type_id', accountType.id);
-    },
-    [setFieldValue],
-  );
-
-  // Handles change sub-account.
-  const onChangeSubaccount = useCallback(
-    (account) => {
-      setFieldValue('parent_account_id', account.id);
-    },
-    [setFieldValue],
-  );
-
-  // Handle dialog on closed.
-  const onDialogClosed = useCallback(() => {
-    resetForm();
-  }, [resetForm]);
-
   return (
     <DialogContent isLoading={isFetching}>
-      <form onSubmit={handleSubmit}>
-        <div className={Classes.DIALOG_BODY}>
-          <FormGroup
-            label={<T id={'account_type'} />}
-            labelInfo={<FieldRequiredHint />}
-            className={classNames(
-              'form-group--account-type',
-              'form-group--select-list',
-              Classes.FILL,
-            )}
-            inline={true}
-            helperText={
-              <ErrorMessage name="account_type_id" {...{ errors, touched }} />
-            }
-            intent={
-              errors.account_type_id && touched.account_type_id && Intent.DANGER
-            }
-          >
-            <AccountsTypesSelect
-              accountsTypes={accountsTypes}
-              selectedTypeId={values.account_type_id}
-              defaultSelectText={<T id={'select_account_type'} />}
-              onTypeSelected={onChangeAccountType}
-              disabled={action === 'edit'}
-              popoverProps={{ minimal: true }}
-            />
-          </FormGroup>
-
-          <FormGroup
-            label={<T id={'account_name'} />}
-            labelInfo={<FieldRequiredHint />}
-            className={'form-group--account-name'}
-            intent={errors.name && touched.name && Intent.DANGER}
-            helperText={<ErrorMessage name="name" {...{ errors, touched }} />}
-            inline={true}
-          >
-            <InputGroup
-              medium={true}
-              intent={errors.name && touched.name && Intent.DANGER}
-              {...getFieldProps('name')}
-            />
-          </FormGroup>
-
-          <FormGroup
-            label={<T id={'account_code'} />}
-            className={'form-group--account-code'}
-            intent={errors.code && touched.code && Intent.DANGER}
-            helperText={<ErrorMessage name="code" {...{ errors, touched }} />}
-            inline={true}
-            labelInfo={<Hint content={<T id="account_code_hint" />} />}
-          >
-            <InputGroup
-              medium={true}
-              intent={errors.code && touched.code && Intent.DANGER}
-              {...getFieldProps('code')}
-            />
-          </FormGroup>
-
-          <FormGroup
-            label={' '}
-            className={classNames('form-group--subaccount')}
-            inline={true}
-          >
-            <Checkbox
-              inline={true}
-              label={
-                <>
-                  <T id={'sub_account'} />
-                  <Hint />
-                </>
-              }
-              {...getFieldProps('subaccount')}
-              checked={values.subaccount}
-            />
-          </FormGroup>
-
-          <If condition={values.subaccount}>
-            <FormGroup
-              label={<T id={'parent_account'} />}
-              className={classNames(
-                'form-group--parent-account',
-                'form-group--select-list',
-                Classes.FILL,
-              )}
-              inline={true}
-            >
-              <AccountsSelectList
-                accounts={filteredAccounts}
-                onAccountSelected={onChangeSubaccount}
-                defaultSelectText={<T id={'select_parent_account'} />}
-                selectedAccountId={values.parent_account_id}
-                popoverFill={true}
-              />
-            </FormGroup>
-          </If>
-
-          <FormGroup
-            label={<T id={'description'} />}
-            className={'form-group--description'}
-            intent={errors.description && Intent.DANGER}
-            helperText={errors.description && errors.credential}
-            inline={true}
-          >
-            <TextArea
-              growVertically={true}
-              height={280}
-              {...getFieldProps('description')}
-            />
-          </FormGroup>
-        </div>
-
-        <div className={Classes.DIALOG_FOOTER}>
-          <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-            <Button onClick={handleClose} style={{ minWidth: '75px' }}>
-              <T id={'close'} />
-            </Button>
-            <Button
-              intent={Intent.PRIMARY}
-              disabled={isSubmitting}
-              style={{ minWidth: '75px' }}
-              type="submit"
-            >
-              {action === 'edit' ? <T id={'edit'} /> : <T id={'submit'} />}
-            </Button>
-          </div>
-        </div>
-      </form>
+      <Formik
+        validationSchema={validationSchema}
+        initialValues={initialValues}
+        onSubmit={handleFormSubmit}
+      >
+        <AccountFormDialogFields isNewMode={isNewMode} onClose={handleClose} />
+      </Formik>
     </DialogContent>
   );
 }
@@ -388,9 +163,5 @@ function AccountFormDialogContent({
 export default compose(
   withAccountsActions,
   withAccountDetail,
-  withAccounts(({ accountsTypes, accountsList }) => ({
-    accountsTypes,
-    accounts: accountsList,
-  })),
   withDialogActions,
 )(AccountFormDialogContent);
