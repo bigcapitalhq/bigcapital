@@ -232,7 +232,7 @@ function ItemForm({
         {({ isSubmitting, handleSubmit }) => (
           <Form>
             <div class={classNames(CLASSES.PAGE_FORM_BODY)}>
-              <ItemFormPrimarySection itemId={itemId} />
+              <ItemFormPrimarySection itemType={itemDetail?.type}/>
               <ItemFormBody />
               <ItemFormInventorySection />
             </div>

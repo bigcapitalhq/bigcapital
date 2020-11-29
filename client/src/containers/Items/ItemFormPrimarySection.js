@@ -38,10 +38,8 @@ function ItemFormPrimarySection({
   changePageSubtitle,
 
   // #ownProps
-  itemId,
+  itemType,
 }) {
-  const { formatMessage } = useIntl();
-  const isNewMode = !itemId;
 
   const itemTypeHintContent = (
     <>
@@ -91,7 +89,7 @@ function ItemFormPrimarySection({
                 changePageSubtitle(transitionItemTypeKeyToLabel(_value));
               })}
               selectedValue={value}
-              disabled={value === 'inventory' && !isNewMode}
+              disabled={itemType === 'inventory'}
             >
               <Radio label={<T id={'service'} />} value="service" />
               <Radio label={<T id={'non_inventory'} />} value="non-inventory" />
@@ -142,10 +140,7 @@ function ItemFormPrimarySection({
                 inline={true}
                 intent={inputIntent({ error, touched })}
                 helperText={<ErrorMessage name="category_id" />}
-                className={classNames(
-                  'form-group--category',
-                  Classes.FILL,
-                )}
+                className={classNames('form-group--category', Classes.FILL)}
               >
                 <CategoriesSelectList
                   categoriesList={categoriesList}
