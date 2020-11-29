@@ -1,23 +1,25 @@
 import * as Yup from 'yup';
 import { formatMessage } from 'services/intl';
+import { DATATYPES_LENGTH } from 'common/dataTypes';
 
 const Schema = Yup.object().shape({
   journal_number: Yup.string()
     .required()
     .min(1)
-    .max(255)
+    .max(DATATYPES_LENGTH.STRING)
     .label(formatMessage({ id: 'journal_number_' })),
   journal_type: Yup.string()
     .required()
     .min(1)
-    .max(255)
+    .max(DATATYPES_LENGTH.STRING)
     .label(formatMessage({ id: 'journal_type' })),
   date: Yup.date()
     .required()
     .label(formatMessage({ id: 'date' })),
-  currency_code: Yup.string(),
-  reference: Yup.string().min(1).max(255),
-  description: Yup.string().min(1).max(1024),
+  currency_code: Yup.string().max(3),
+  status: Yup.boolean(),
+  reference: Yup.string().nullable().min(1).max(DATATYPES_LENGTH.STRING),
+  description: Yup.string().min(1).max(DATATYPES_LENGTH.STRING),
   entries: Yup.array().of(
     Yup.object().shape({
       credit: Yup.number().nullable(),
@@ -30,7 +32,7 @@ const Schema = Yup.object().shape({
         }),
       contact_id: Yup.number().nullable(),
       contact_type: Yup.string().nullable(),
-      note: Yup.string().max(255).nullable(),
+      note: Yup.string().max(DATATYPES_LENGTH.TEXT).nullable(),
     }),
   ),
 });

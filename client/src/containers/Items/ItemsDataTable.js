@@ -19,7 +19,7 @@ import { CLASSES } from 'common/classes';
 
 import withItems from 'containers/Items/withItems';
 import withItemsActions from 'containers/Items/withItemsActions';
-import { compose, saveInvoke } from 'utils';
+import { compose, saveInvoke, isBlank, defaultToTransform } from 'utils';
 
 // Items datatable.
 function ItemsDataTable({
@@ -122,7 +122,9 @@ function ItemsDataTable({
             <Tag minimal={true} round={true} intent={Intent.NONE}>
               {formatMessage({ id: row.type })}
             </Tag>
-          ) : (''),
+          ) : (
+            ''
+          ),
         className: 'item_type',
         width: 120,
       },
@@ -134,13 +136,23 @@ function ItemsDataTable({
       },
       {
         Header: formatMessage({ id: 'sell_price' }),
-        accessor: (row) => <Money amount={row.sell_price} currency={'USD'} />,
+        accessor: (row) =>
+          !isBlank(row.sell_price) ? (
+            <Money amount={row.sell_price} currency={'USD'} />
+          ) : (
+            ''
+          ),
         className: 'sell-price',
         width: 150,
       },
       {
         Header: formatMessage({ id: 'cost_price' }),
-        accessor: (row) => <Money amount={row.cost_price} currency={'USD'} />,
+        accessor: (row) =>
+        !isBlank(row.sell_price) ? (
+          <Money amount={row.cost_price} currency={'USD'} />
+        ) : (
+          ''
+        ),
         className: 'cost-price',
         width: 150,
       },
@@ -230,13 +242,13 @@ export default compose(
       itemsTableLoading,
       itemsTableQuery,
       itemsCurrentViewId,
-      itemsPagination
+      itemsPagination,
     }) => ({
       itemsCurrentPage,
       itemsTableLoading,
       itemsTableQuery,
       itemsCurrentViewId,
-      itemsPagination
+      itemsPagination,
     }),
   ),
   withItemsActions,

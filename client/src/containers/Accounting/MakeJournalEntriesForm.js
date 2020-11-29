@@ -1,10 +1,11 @@
-import React, { useMemo, useEffect, useCallback } from 'react';
+import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import { Formik, Form } from 'formik';
 import moment from 'moment';
 import { Intent } from '@blueprintjs/core';
 import { useIntl } from 'react-intl';
 import { pick } from 'lodash';
 import classNames from 'classnames';
+import { useHistory } from 'react-router-dom';
 
 import { CLASSES } from 'common/classes';
 import {
@@ -50,6 +51,7 @@ const defaultInitialValues = {
   description: '',
   reference: '',
   currency_code: '',
+  status: '',
   entries: [...repeatValue(defaultEntry, 4)],
 };
 
@@ -84,7 +86,9 @@ function MakeJournalEntriesForm({
   onCancelForm,
 }) {
   const isNewMode = !manualJournalId;
+  const [submitPayload, setSubmitPayload] = useState({});
   const { formatMessage } = useIntl();
+  const history = useHistory();
 
   const journalNumber = isNewMode
     ? `${journalNumberPrefix}-${journalNextNumber}`
@@ -120,7 +124,7 @@ function MakeJournalEntriesForm({
               ...pick(entry, Object.keys(defaultEntry)),
             })),
           }
-          : {
+        : {
             ...defaultInitialValues,
             journal_number: journalNumber,
             entries: orderingLinesIndexes(defaultInitialValues.entries),
@@ -172,10 +176,10 @@ function MakeJournalEntriesForm({
       setSubmitting(false);
       return;
     }
-    const form = { ...values, entries };
+    const form = { ...values, status: submitPayload.publish, entries };
 
     const handleError = (error) => {
-    transformErrors(error, { setErrors });
+      transformErrors(error, { setErrors });
       setSubmitting(false);
     };
 
@@ -191,8 +195,15 @@ function MakeJournalEntriesForm({
         ),
         intent: Intent.SUCCESS,
       });
+
       setSubmitting(false);
-      resetForm();
+
+      if (submitPayload.redirect) {
+        history.push('/manual-journals');
+      }
+      if (submitPayload.resetForm) {
+        resetForm();
+      }
     };
 
     if (isNewMode) {
@@ -203,12 +214,24 @@ function MakeJournalEntriesForm({
         .catch(handleError);
     }
   };
+
+  const handleCancelClick = useCallback(() => {
+    history.goBack();
+  }, [history]);
+
+  const handleSubmitClick = useCallback(
+    (event, payload) => {
+      setSubmitPayload({ ...payload });
+    },
+    [setSubmitPayload],
+  );
+  console.log(submitPayload, 'RR');
   return (
     <div
       className={classNames(
         CLASSES.PAGE_FORM,
         CLASSES.PAGE_FORM_STRIP_STYLE,
-        CLASSES.PAGE_FORM_MAKE_JOURNAL
+        CLASSES.PAGE_FORM_MAKE_JOURNAL,
       )}
     >
       <Formik
@@ -228,6 +251,9 @@ function MakeJournalEntriesForm({
             <MakeJournalFormFloatingActions
               isSubmitting={isSubmitting}
               manualJournal={manualJournalId}
+              manualJournalPublished={values.status}
+              onCancelClick={handleCancelClick}
+              onSubmitClick={handleSubmitClick}
             />
           </Form>
         )}
