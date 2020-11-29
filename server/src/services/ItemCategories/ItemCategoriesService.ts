@@ -269,6 +269,9 @@ export default class ItemCategoriesService implements IItemCategoriesService {
     const dynamicList = await this.dynamicListService.dynamicList(tenantId, ItemCategory, filter);
 
     const itemCategories = await ItemCategory.query().onBuild((query) => {
+      // Subquery to calculate sumation of assocaited items to the item category.
+      query.select('*', ItemCategory.relatedQuery('items').count().as('count'));
+
       dynamicList.buildQuery()(query);
     });
     return { itemCategories, filterMeta: dynamicList.getResponseMeta() };
