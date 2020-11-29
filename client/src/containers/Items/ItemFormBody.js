@@ -183,7 +183,7 @@ export default compose(
   withAccounts(({ accountsList }) => ({
     accountsList,
   })),
-  withSettings(({ organization }) => ({
-    baseCurrency: 'USD',
+  withSettings(({ organizationSettings }) => ({
+    baseCurrency: organizationSettings?.baseCurrency,
   })),
 )(ItemFormBody);
