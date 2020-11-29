@@ -8,7 +8,7 @@ const Schema = Yup.object().shape({
     .min(3)
     .max(DATATYPES_LENGTH.STRING)
     .label(formatMessage({ id: 'account_name_' })),
-  code: Yup.string().digits().min(3).max(6),
+  code: Yup.string().nullable().min(3).max(6),
   account_type_id: Yup.number()
     .nullable()
     .required()

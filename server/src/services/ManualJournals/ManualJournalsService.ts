@@ -345,7 +345,7 @@ export default class ManualJournalsService implements IManualJournalsService {
     await this.validateManualJournalsExistance(tenantId, manualJournalsIds);
 
     this.logger.info('[manual_journal] trying to delete the manual journals.', { tenantId, manualJournalsIds });
-    await ManualJournal.query().where('id', manualJournalsIds).delete();
+    await ManualJournal.query().whereIn('id', manualJournalsIds).delete();
 
     // Triggers `onManualJournalDeletedBulk` event.
     this.eventDispatcher.dispatch(events.manualJournals.onDeletedBulk, {
