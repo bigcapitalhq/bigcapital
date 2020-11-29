@@ -128,6 +128,7 @@ export default class ManualJournalsController extends BaseController {
         .isLength({ max: DATATYPES_LENGTH.STRING }),
       check('reference')
         .optional({ nullable: true })
+        .isString()
         .trim()
         .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
@@ -144,15 +145,11 @@ export default class ManualJournalsController extends BaseController {
         .isInt({ max: DATATYPES_LENGTH.INT_10 }).toInt(),
       check('entries.*.credit')
         .optional({ nullable: true })
-        .isNumeric()
-        .isDecimal()
-        .isFloat({ max: DATATYPES_LENGTH.INT_13_3 }) // 13, 3
+        .isFloat({ min: 0, max: DATATYPES_LENGTH.DECIMAL_13_3 })
         .toFloat(),
       check('entries.*.debit')
         .optional({ nullable: true })
-        .isNumeric()
-        .isDecimal()
-        .isFloat({ max: DATATYPES_LENGTH.INT_13_3 }) // 13, 3
+        .isFloat({ min: 0, max: DATATYPES_LENGTH.DECIMAL_13_3 })
         .toFloat(),
       check('entries.*.account_id').isInt({ max: DATATYPES_LENGTH.INT_10 }).toInt(),
       check('entries.*.note')
@@ -245,7 +242,11 @@ export default class ManualJournalsController extends BaseController {
 
     try {
       await this.manualJournalsService.deleteManualJournal(tenantId, manualJournalId);
-      return res.status(200).send();
+
+      return res.status(200).send({
+        id: manualJournalId,
+        message: 'Manual journal has been deleted successfully.',
+      });
     } catch (error) {
       next(error);
     }
@@ -263,7 +264,11 @@ export default class ManualJournalsController extends BaseController {
 
     try {
       await this.manualJournalsService.deleteManualJournals(tenantId, manualJournalsIds);
-      return res.status(200).send();
+
+      return res.status(200).send({
+        ids: manualJournalsIds,
+        message: 'Manual journal have been delete successfully.',
+      });
     } catch (error) {
       next(error);
     }
@@ -280,7 +285,8 @@ export default class ManualJournalsController extends BaseController {
     const manualJournalDTO = this.matchedBodyData(req);
 
     try {
-      const { manualJournal } = await this.manualJournalsService.makeJournalEntries(tenantId, manualJournalDTO, user);
+      const { manualJournal } = await this.manualJournalsService
+        .makeJournalEntries(tenantId, manualJournalDTO, user);
 
       return res.status(200).send({ id: manualJournal.id });
     } catch (error) {
