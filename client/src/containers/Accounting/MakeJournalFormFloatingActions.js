@@ -1,5 +1,6 @@
 import React from 'react';
 import { Intent, Button } from '@blueprintjs/core';
+import { useFormikContext } from 'formik';
 import classNames from 'classnames';
 import { FormattedMessage as T } from 'react-intl';
 import { saveInvoke } from 'utils';
@@ -11,6 +12,8 @@ export default function MakeJournalFloatingAction({
   onCancelClick,
   manualJournalId,
 }) {
+  const { submitForm } = useFormikContext();
+
   return (
     <div className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>
       <Button
@@ -18,6 +21,7 @@ export default function MakeJournalFloatingAction({
         intent={Intent.PRIMARY}
         name={'save'}
         onClick={() => {
+          submitForm();
           saveInvoke(onSubmitClick, { publish: true, redirect: true });
         }}
       >

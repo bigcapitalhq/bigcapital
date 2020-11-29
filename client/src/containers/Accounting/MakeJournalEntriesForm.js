@@ -17,11 +17,6 @@ import MakeJournalEntriesField from './MakeJournalEntriesField';
 import MakeJournalNumberWatcher from './MakeJournalNumberWatcher';
 import MakeJournalFormFooter from './MakeJournalFormFooter';
 
-import {
-  CreateMakeJournalFormSchema,
-  EditMakeJournalFormSchema,
-} from './MakeJournalEntriesForm.schema';
-
 import withJournalsActions from 'containers/Accounting/withJournalsActions';
 import withManualJournalDetail from 'containers/Accounting/withManualJournalDetail';
 import withAccountsActions from 'containers/Accounts/withAccountsActions';
@@ -201,11 +196,11 @@ function MakeJournalEntriesForm({
     };
 
     if (isNewMode) {
+      requestMakeJournalEntries(form).then(handleSuccess).catch(handleError);
+    } else {
       requestEditManualJournal(manualJournal.id, form)
         .then(handleSuccess)
         .catch(handleError);
-    } else {
-      requestMakeJournalEntries(form).then(handleSuccess).catch(handleError);
     }
   };
   return (

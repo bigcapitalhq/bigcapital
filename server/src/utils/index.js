@@ -169,7 +169,7 @@ const getDefinedOptions = () => {
 };
 
 const getDefinedOption = (key, group) => {
-  return definedOptions?.[group]?.find(option => option.key == key);
+  return definedOptions?.[group]?.find((option) => option.key == key);
 };
 
 const isDefinedOptionConfigurable = (key, group) => {
@@ -179,30 +179,36 @@ const isDefinedOptionConfigurable = (key, group) => {
   return definedOption?.config || false;
 };
 
-const entriesAmountDiff = (newEntries, oldEntries, amountAttribute, idAttribute) => {
+const entriesAmountDiff = (
+  newEntries,
+  oldEntries,
+  amountAttribute,
+  idAttribute
+) => {
   const oldEntriesTable = _.chain(oldEntries)
     .groupBy(idAttribute)
-    .mapValues((group) => (_.sumBy(group, amountAttribute) || 0))
+    .mapValues((group) => _.sumBy(group, amountAttribute) || 0)
     .value();
 
   return _.chain(newEntries)
     .groupBy(idAttribute)
-    .mapValues((group) => (_.sumBy(group, amountAttribute) || 0))
+    .mapValues((group) => _.sumBy(group, amountAttribute) || 0)
     .mapValues((value, key) => value - (oldEntriesTable[key] || 0))
-    .mapValues((value, key) => ({ [idAttribute]: key, [amountAttribute]: value }))
+    .mapValues((value, key) => ({
+      [idAttribute]: key,
+      [amountAttribute]: value,
+    }))
     .filter((entry) => entry[amountAttribute] != 0)
     .values()
     .value();
 };
 
-const convertEmptyStringsToNull = (obj) => {
-  return _.mapValues(obj, (value, key) => {
-    return typeof value === 'string' ? 
-      value.trim() === '' ?
-      null :
-      value :
-      value;
-  });
+const convertEmptyStringToNull = (value) => {
+  return typeof value === 'string'
+    ? value.trim() === ''
+      ? null
+      : value
+    : value;
 };
 
 export {
@@ -218,11 +224,9 @@ export {
   getTotalDeep,
   applyMixins,
   formatDateFields,
-
   isDefinedOptionConfigurable,
   getDefinedOption,
   getDefinedOptions,
-
   entriesAmountDiff,
-  convertEmptyStringsToNull,
+  convertEmptyStringToNull,
 };
