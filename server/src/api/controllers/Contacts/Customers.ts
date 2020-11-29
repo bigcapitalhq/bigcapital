@@ -90,7 +90,7 @@ export default class CustomersController extends ContactsController {
    */
   get createCustomerDTOSchema() {
     return [
-      check('currency_code').optional().trim().escape(),
+      check('currency_code').optional().isString().trim().escape().isLength({ max: 3, min: 3 }),
     ];
   }
 

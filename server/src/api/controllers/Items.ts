@@ -7,6 +7,7 @@ import BaseController from 'api/controllers/BaseController';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import { ServiceError } from 'exceptions';
 import { IItemDTO } from 'interfaces';
+import { DATATYPES_LENGTH } from 'data/DataTypes';
 
 @Service()
 export default class ItemsController extends BaseController {
@@ -78,44 +79,74 @@ export default class ItemsController extends BaseController {
    */
   get validateItemSchema(): ValidationChain[] {
     return [
-      check('name').exists(),
-      check('type').exists().trim().escape()
+      check('name').exists().isString().isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('type').exists()
+        .isString()
+        .trim()
+        .escape()
         .isIn(['service', 'non-inventory', 'inventory']),
-      check('code').optional({ nullable: true }).trim().escape(),
+      check('code')
+        .optional({ nullable: true })
+        .isString()
+        .trim()
+        .escape()
+        .isLength({ max: DATATYPES_LENGTH.STRING }),
       // Purchase attributes.
       check('purchasable').optional().isBoolean().toBoolean(),
       check('cost_price')
+        .optional({ nullable: true })
+        .isFloat({ min: 0, max: DATATYPES_LENGTH.DECIMAL_13_3 })
+        .toFloat()
         .if(check('purchasable').equals('true'))
-        .exists()
-        .isNumeric()
-        .toFloat(),
+        .exists(),
       check('cost_account_id')
+        .optional({ nullable: true })
+        .isInt({ min: 0, max: DATATYPES_LENGTH.INT_10 })
+        .toInt()
         .if(check('purchasable').equals('true'))
-        .exists()
-        .isInt()
-        .toInt(),
+        .exists(),
       // Sell attributes.
       check('sellable').optional().isBoolean().toBoolean(),
       check('sell_price')
+        .optional({ nullable: true })
+        .isFloat({ min: 0, max: DATATYPES_LENGTH.DECIMAL_13_3 })
+        .toFloat()
         .if(check('sellable').equals('true'))
-        .exists()
-        .isNumeric()
-        .toFloat(),
+        .exists(),
       check('sell_account_id')
+        .optional({ nullable: true })
+        .isInt({ min: 0, max: DATATYPES_LENGTH.INT_10 })
+        .toInt()
         .if(check('sellable').equals('true'))
-        .exists()
-        .isInt()
-        .toInt(),
+        .exists(),
       check('inventory_account_id')
+        .optional({ nullable: true })
+        .isInt({ min: 0, max: DATATYPES_LENGTH.INT_10 })
+        .toInt()
         .if(check('type').equals('inventory'))
-        .exists()
-        .isInt()
+        .exists(),
+      check('sell_description')
+        .optional({ nullable: true })
+        .isString()
+        .trim()
+        .escape()
+        .isLength({ max: DATATYPES_LENGTH.TEXT }),
+      check('cost_description')
+        .optional({ nullable: true })
+        .isString()
+        .trim()
+        .escape()
+        .isLength({ max: DATATYPES_LENGTH.TEXT }),
+      check('category_id')
+        .optional({ nullable: true })
+        .isInt({ min: 0, max: DATATYPES_LENGTH.INT_10 })
         .toInt(),
-      check('sell_description').optional({ nullable: true }).trim().escape(),
-      check('cost_description').optional({ nullable: true }).trim().escape(),
-
-      check('category_id').optional({ nullable: true }).isInt().toInt(),
-      check('note').optional(),
+      check('note')
+        .optional()
+        .isString()
+        .trim()
+        .escape()
+        .isLength({ max: DATATYPES_LENGTH.TEXT }),
       check('active').optional().isBoolean().toBoolean(),
 
       check('media_ids').optional().isArray(),

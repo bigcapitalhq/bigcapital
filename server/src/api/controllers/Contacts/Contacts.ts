@@ -1,5 +1,6 @@
 import { check, param, query, body, ValidationChain } from 'express-validator';
 import BaseController from "api/controllers/BaseController";
+import { DATATYPES_LENGTH } from 'data/DataTypes';
 
 export default class ContactsController extends BaseController {
   /**
@@ -7,37 +8,37 @@ export default class ContactsController extends BaseController {
    */
   get contactDTOSchema(): ValidationChain[] {
     return [
-      check('salutation').optional().trim().escape(),
-      check('first_name').optional().trim().escape(),
-      check('last_name').optional().trim().escape(),
+      check('salutation').optional().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('first_name').optional().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('last_name').optional().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
 
-      check('company_name').optional().trim().escape(),
-      check('display_name').exists().trim().escape(),
+      check('company_name').optional().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('display_name').exists().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
 
-      check('email').optional({ nullable: true }).normalizeEmail().isEmail(),
-      check('website').optional().trim().isURL(),
-      check('work_phone').optional().trim().escape(),
-      check('personal_phone').optional().trim().escape(),
+      check('email').optional({ nullable: true }).isString().normalizeEmail().isEmail().isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('website').optional().isString().trim().isURL().isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('work_phone').optional().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('personal_phone').optional().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
 
-      check('billing_address_1').optional().trim().escape(),
-      check('billing_address_2').optional().trim().escape(),
-      check('billing_address_city').optional().trim().escape(),
-      check('billing_address_country').optional().trim().escape(),
-      check('billing_address_email').optional().isEmail().trim().escape(),
-      check('billing_address_postcode').optional().trim().escape(),
-      check('billing_address_phone').optional().trim().escape(),
-      check('billing_address_state').optional().trim().escape(),
+      check('billing_address_1').optional().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('billing_address_2').optional().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('billing_address_city').optional().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('billing_address_country').optional().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('billing_address_email').optional().isString().isEmail().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('billing_address_postcode').optional().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('billing_address_phone').optional().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('billing_address_state').optional().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
 
-      check('shipping_address_1').optional().trim().escape(),
-      check('shipping_address_2').optional().trim().escape(),
-      check('shipping_address_city').optional().trim().escape(),
-      check('shipping_address_country').optional().trim().escape(),
-      check('shipping_address_email').optional().isEmail().trim().escape(),
-      check('shipping_address_postcode').optional().trim().escape(),
-      check('shipping_address_phone').optional().trim().escape(),
-      check('shipping_address_state').optional().trim().escape(),
+      check('shipping_address_1').optional().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('shipping_address_2').optional().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('shipping_address_city').optional().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('shipping_address_country').optional().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('shipping_address_email').optional().isString().isEmail().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('shipping_address_postcode').optional().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('shipping_address_phone').optional().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('shipping_address_state').optional().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
 
-      check('note').optional().trim().escape(),
+      check('note').optional().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.TEXT }),
       check('active').optional().isBoolean().toBoolean(),
     ];
   }
@@ -48,8 +49,10 @@ export default class ContactsController extends BaseController {
    */
   get contactNewDTOSchema(): ValidationChain[] {
     return [
-      check('opening_balance').optional({ nullable: true }).isNumeric().toInt(),
-      body('opening_balance_at').if(body('opening_balance').exists()).exists(),
+      check('opening_balance').optional({ nullable: true }).isInt({ min: 0, max: DATATYPES_LENGTH.DECIMAL_13_3 }).toInt(),
+      body('opening_balance_at')
+        .if(body('opening_balance').exists()).exists()
+        .isISO8601(),
     ];
   }
 

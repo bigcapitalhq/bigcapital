@@ -6,6 +6,7 @@ import ManualJournalsService from 'services/ManualJournals/ManualJournalsService
 import { Inject, Service } from "typedi";
 import { ServiceError } from 'exceptions';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
+import { DATATYPES_LENGTH } from 'data/DataTypes';
 
 @Service()
 export default class ManualJournalsController extends BaseController {
@@ -113,30 +114,54 @@ export default class ManualJournalsController extends BaseController {
   get manualJournalValidationSchema() {
     return [
       check('date').exists().isISO8601(),
-      check('journal_number').exists().trim().escape(),
-      check('journal_type').optional({ nullable: true }).trim().escape(),
-      check('reference').optional({ nullable: true }),
-      check('description').optional().trim().escape(),
+      check('journal_number')
+        .exists()
+        .isString()
+        .trim()
+        .escape()
+        .isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('journal_type')
+        .optional({ nullable: true })
+        .isString()
+        .trim()
+        .escape()
+        .isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('reference')
+        .optional({ nullable: true })
+        .trim()
+        .escape()
+        .isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('description')
+        .optional()
+        .isString()
+        .trim()
+        .escape()
+        .isLength({ max: DATATYPES_LENGTH.TEXT }),
       check('status').optional().isBoolean().toBoolean(),
       check('entries').isArray({ min: 2 }),
-      check('entries.*.index').exists().isNumeric().toInt(),
+      check('entries.*.index')
+        .exists()
+        .isInt({ max: DATATYPES_LENGTH.INT_10 }).toInt(),
       check('entries.*.credit')
         .optional({ nullable: true })
         .isNumeric()
         .isDecimal()
-        .isFloat({ max: 9999999999.999 }) // 13, 3
+        .isFloat({ max: DATATYPES_LENGTH.INT_13_3 }) // 13, 3
         .toFloat(),
       check('entries.*.debit')
         .optional({ nullable: true })
         .isNumeric()
         .isDecimal()
-        .isFloat({ max: 9999999999.999 }) // 13, 3
+        .isFloat({ max: DATATYPES_LENGTH.INT_13_3 }) // 13, 3
         .toFloat(),
-      check('entries.*.account_id').isNumeric().toInt(),
-      check('entries.*.note').optional(),
+      check('entries.*.account_id').isInt({ max: DATATYPES_LENGTH.INT_10 }).toInt(),
+      check('entries.*.note')
+        .optional()
+        .isString()
+        .isLength({ max: DATATYPES_LENGTH.STRING }),
       check('entries.*.contact_id')
         .optional({ nullable: true })
-        .isNumeric()
+        .isInt({ max: DATATYPES_LENGTH.INT_10 })
         .toInt(),
       check('entries.*.contact_type').optional().isIn(['vendor', 'customer']),
     ]

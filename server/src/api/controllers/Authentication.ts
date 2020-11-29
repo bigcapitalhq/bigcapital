@@ -6,6 +6,7 @@ import asyncMiddleware from 'api/middleware/asyncMiddleware';
 import AuthenticationService from 'services/Authentication';
 import { ILoginDTO, ISystemUser, IRegisterOTD } from 'interfaces';
 import { ServiceError, ServiceErrors } from "exceptions";
+import { DATATYPES_LENGTH } from 'data/DataTypes';
 
 @Service()
 export default class AuthenticationController extends BaseController{
@@ -60,12 +61,12 @@ export default class AuthenticationController extends BaseController{
    */
   get registerSchema(): ValidationChain[] {
     return [
-      check('first_name').exists().trim().escape(),
-      check('last_name').exists().trim().escape(),
-      check('email').exists().isEmail().trim().escape(),
-      check('phone_number').exists().trim().escape(),
-      check('password').exists().trim().escape(),
-      check('country').exists().trim().escape(),
+      check('first_name').exists().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('last_name').exists().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('email').exists().isString().isEmail().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('phone_number').exists().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('password').exists().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('country').exists().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
     ];
   }
 
