@@ -15,7 +15,7 @@ export default class ContactsController extends BaseController {
       check('display_name').exists().trim().escape(),
 
       check('email').optional({ nullable: true }).normalizeEmail().isEmail(),
-      check('website').optional().trim().escape(),
+      check('website').optional().trim().isURL(),
       check('work_phone').optional().trim().escape(),
       check('personal_phone').optional().trim().escape(),
 
