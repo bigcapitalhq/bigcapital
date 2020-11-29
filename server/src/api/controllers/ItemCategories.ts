@@ -11,6 +11,7 @@ import { IItemCategoryOTD } from 'interfaces';
 import { ServiceError } from 'exceptions';
 import BaseController from 'api/controllers/BaseController';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
+import { DATATYPES_LENGTH } from 'data/DataTypes';
 
 @Service()
 export default class ItemsCategoriesController extends BaseController {
@@ -78,26 +79,32 @@ export default class ItemsCategoriesController extends BaseController {
    */
   get categoryValidationSchema() {
     return [
-      check('name').exists().trim().escape(),
+      check('name')
+        .exists()
+        .trim()
+        .escape()
+        .isLength({ min: 0, max: DATATYPES_LENGTH.STRING }),
       check('parent_category_id')
         .optional({ nullable: true })
-        .isNumeric()
+        .isInt({ min: 0, max: DATATYPES_LENGTH.INT_10 })
         .toInt(),
       check('description')
         .optional()
+        .isString()
         .trim()
-        .escape(),
+        .escape()
+        .isLength({ max: DATATYPES_LENGTH.TEXT }),
       check('sell_account_id')
         .optional({ nullable: true })
-        .isNumeric()
+        .isInt({ min: 0, max: DATATYPES_LENGTH.INT_10 })
         .toInt(),
       check('cost_account_id')
         .optional({ nullable: true })
-        .isNumeric()
+        .isInt({ min: 0, max: DATATYPES_LENGTH.INT_10 })
         .toInt(),
       check('inventory_account_id')
         .optional({ nullable: true })
-        .isNumeric()
+        .isInt({ min: 0, max: DATATYPES_LENGTH.INT_10 })
         .toInt(),
     ]
   }

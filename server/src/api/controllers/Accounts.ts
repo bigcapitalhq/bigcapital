@@ -7,6 +7,7 @@ import AccountsService from 'services/Accounts/AccountsService';
 import { IAccountDTO, IAccountsFilter } from 'interfaces';
 import { ServiceError } from 'exceptions';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
+import { DATATYPES_LENGTH } from 'data/DataTypes';
 
 @Service()
 export default class AccountsController extends BaseController{
@@ -112,7 +113,7 @@ export default class AccountsController extends BaseController{
     return [
       check('name')
         .exists()
-        .isLength({ min: 3, max: 255 })
+        .isLength({ min: 3, max: DATATYPES_LENGTH.STRING })
         .trim()
         .escape(),
       check('code')
@@ -122,16 +123,16 @@ export default class AccountsController extends BaseController{
         .escape(),
       check('account_type_id')
         .exists()
-        .isNumeric()
+        .isInt({ min: 0, max: DATATYPES_LENGTH.INT_10 })
         .toInt(),
       check('description')
         .optional({ nullable: true })
-        .isLength({ max: 512 })
+        .isLength({ max: DATATYPES_LENGTH.TEXT })
         .trim()
         .escape(),
       check('parent_account_id')
         .optional({ nullable: true })
-        .isNumeric()
+        .isInt({ min: 0, max: DATATYPES_LENGTH.INT_10 })
         .toInt(),
     ];
   }

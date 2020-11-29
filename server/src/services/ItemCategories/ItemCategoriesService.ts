@@ -224,7 +224,11 @@ export default class ItemCategoriesService implements IItemCategoriesService {
    */
   public async deleteItemCategory(tenantId: number, itemCategoryId: number, authorizedUser: ISystemUser) {
     this.logger.info('[item_category] trying to delete item category.', { tenantId, itemCategoryId });
+
+    // Retrieve item category or throw not found error.
     await this.getItemCategoryOrThrowError(tenantId, itemCategoryId);
+
+    // Unassociate items with item category.
     await this.unassociateItemsWithCategories(tenantId, itemCategoryId);
 
     const { ItemCategory } = this.tenancy.models(tenantId);
@@ -265,6 +269,9 @@ export default class ItemCategoriesService implements IItemCategoriesService {
     const dynamicList = await this.dynamicListService.dynamicList(tenantId, ItemCategory, filter);
 
     const itemCategories = await ItemCategory.query().onBuild((query) => {
+      // Subquery to calculate sumation of assocaited items to the item category.
+      query.select('*', ItemCategory.relatedQuery('items').count().as('count'));
+
       dynamicList.buildQuery()(query);
     });
     return { itemCategories, filterMeta: dynamicList.getResponseMeta() };
@@ -276,11 +283,14 @@ export default class ItemCategoriesService implements IItemCategoriesService {
    * @param {number|number[]} itemCategoryId - 
    * @return {Promise<void>}
    */
-  private async unassociateItemsWithCategories(tenantId: number, itemCategoryId: number|number[]): Promise<void> {
+  private async unassociateItemsWithCategories(
+    tenantId: number,
+    itemCategoryId: number | number[],
+  ): Promise<void> {
     const { Item } = this.tenancy.models(tenantId);
     const ids = Array.isArray(itemCategoryId) ? itemCategoryId : [itemCategoryId];
 
-    await Item.query().whereIn('id', ids).patch({ category_id: null });
+    await Item.query().whereIn('category_id', ids).patch({ category_id: null });
   }
 
   /**
@@ -288,7 +298,11 @@ export default class ItemCategoriesService implements IItemCategoriesService {
    * @param {number} tenantId 
    * @param {number[]} itemCategoriesIds 
    */
-  public async deleteItemCategories(tenantId: number, itemCategoriesIds: number[], authorizedUser: ISystemUser) {
+  public async deleteItemCategories(
+    tenantId: number,
+    itemCategoriesIds: number[],
+    authorizedUser: ISystemUser,
+  ) {
     this.logger.info('[item_category] trying to delete item categories.', { tenantId, itemCategoriesIds });
     const { ItemCategory } = this.tenancy.models(tenantId);
 

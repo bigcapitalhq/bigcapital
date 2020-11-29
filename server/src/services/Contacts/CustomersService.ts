@@ -69,7 +69,7 @@ export default class CustomersService {
 
   private transformContactToCustomer(contactModel: IContact) {
     return {
-      ...omit(contactModel, ['contactService', 'contactType']),
+      ...omit(contactModel.toJSON(), ['contactService', 'contactType']),
       customerType: contactModel.contactType,
     };
   }
@@ -174,7 +174,11 @@ export default class CustomersService {
   public async getCustomersList(
     tenantId: number,
     customersFilter: ICustomersFilter
-  ): Promise<{ customers: ICustomer[], pagination: IPaginationMeta, filterMeta: IFilterMeta }> {
+  ): Promise<{
+    customers: ICustomer[],
+    pagination: IPaginationMeta,
+    filterMeta: IFilterMeta,
+  }> {
     const { Contact } = this.tenancy.models(tenantId);
     const dynamicList = await this.dynamicListService.dynamicList(tenantId, Contact, customersFilter);
 

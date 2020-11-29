@@ -18,6 +18,7 @@ exports.up = function (knex) {
     table.text('purchase_description').nullable();
     table.integer('quantity_on_hand');
     table.text('note').nullable();
+    table.boolean('active');
     table.integer('category_id').unsigned().index().references('id').inTable('items_categories');
     table.integer('user_id').unsigned().index();
     table.timestamps();
