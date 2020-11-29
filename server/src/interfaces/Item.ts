@@ -22,6 +22,7 @@ export interface IItem{
 
   quantityOnHand: number,
   note: string,
+  active: boolean,
 
   categoryId: number,
   userId: number,
@@ -52,6 +53,7 @@ export interface IItemDTO {
 
   quantityOnHand: number,
   note: string,
+  active: boolean,
 
   categoryId: number,
 }

@@ -1,4 +1,4 @@
-import { difference } from "lodash";
+import { defaultTo, difference } from "lodash";
 import { Service, Inject } from "typedi";
 import { IItemsFilter, IItemsService, IItemDTO, IItem } from 'interfaces';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
@@ -176,7 +176,10 @@ export default class ItemsService implements IItemsService {
     if (itemDTO.inventoryAccountId) {
       await this.validateItemInventoryAccountExistance(tenantId, itemDTO.inventoryAccountId);
     }
-    const storedItem = await Item.query().insertAndFetch({ ...itemDTO });
+    const storedItem = await Item.query().insertAndFetch({
+      ...itemDTO,
+      active: defaultTo(itemDTO.active, 1),
+    });
     this.logger.info('[items] item inserted successfully.', { tenantId, itemDTO });
 
     return storedItem;

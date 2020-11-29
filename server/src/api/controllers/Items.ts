@@ -116,6 +116,7 @@ export default class ItemsController extends BaseController {
 
       check('category_id').optional({ nullable: true }).isInt().toInt(),
       check('note').optional(),
+      check('active').optional().isBoolean().toBoolean(),
 
       check('media_ids').optional().isArray(),
       check('media_ids.*').exists().isNumeric().toInt(),
