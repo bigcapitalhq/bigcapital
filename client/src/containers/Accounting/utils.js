@@ -12,6 +12,7 @@ const ERROR = {
   RECEIVABLE_ENTRIES_HAS_NO_CUSTOMERS: 'RECEIVABLE.ENTRIES.HAS.NO.CUSTOMERS',
   CREDIT_DEBIT_SUMATION_SHOULD_NOT_EQUAL_ZERO:
     'CREDIT.DEBIT.SUMATION.SHOULD.NOT.EQUAL.ZERO',
+  ENTRIES_SHOULD_ASSIGN_WITH_CONTACT: 'ENTRIES_SHOULD_ASSIGN_WITH_CONTACT',
 };
 
 // Transform API errors in toasts messages.
@@ -27,14 +28,6 @@ export const transformErrors = (resErrors, { setErrors, errors }) => {
       newErrors = setWith(newErrors, `entries.[${index}].${prop}`, message);
     });
 
-  if ((error = getError(ERROR.PAYABLE_ENTRIES_HAS_NO_VENDORS))) {
-    toastMessages.push(
-      formatMessage({
-        id: 'vendors_should_selected_with_payable_account_only',
-      }),
-    );
-    setEntriesErrors(error.indexes, 'contact_id', 'error');
-  }
   if ((error = getError(ERROR.RECEIVABLE_ENTRIES_HAS_NO_CUSTOMERS))) {
     toastMessages.push(
       formatMessage({
@@ -43,21 +36,20 @@ export const transformErrors = (resErrors, { setErrors, errors }) => {
     );
     setEntriesErrors(error.indexes, 'contact_id', 'error');
   }
-  if ((error = getError(ERROR.CUSTOMERS_NOT_WITH_RECEVIABLE_ACC))) {
-    toastMessages.push(
-      formatMessage({
-        id: 'customers_should_selected_with_receivable_account_only',
-      }),
-    );
-    setEntriesErrors(error.indexes, 'account_id', 'error');
-  }
-  if ((error = getError(ERROR.VENDORS_NOT_WITH_PAYABLE_ACCOUNT))) {
-    toastMessages.push(
-      formatMessage({
-        id: 'vendors_should_selected_with_payable_account_only',
-      }),
-    );
-    setEntriesErrors(error.indexes, 'account_id', 'error');
+  if ((error = getError(ERROR.ENTRIES_SHOULD_ASSIGN_WITH_CONTACT))) {
+    if (error.meta.contact_type === 'customer') {
+      toastMessages.push(
+        formatMessage({
+          id: 'receivable_accounts_should_assign_with_customers',
+        }),
+      );
+    }
+    if (error.meta.contact_type === 'vendor') {
+      toastMessages.push(
+        formatMessage({ id: 'payable_accounts_should_assign_with_vendors' }),
+      );
+    }
+    setEntriesErrors(error.meta.indexes, 'contact_id', 'error');
   }
   if ((error = getError(ERROR.JOURNAL_NUMBER_ALREADY_EXISTS))) {
     newErrors = setWith(

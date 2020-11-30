@@ -30,12 +30,12 @@ export default class ManualJournalsController extends BaseController {
       this.validationResult,
       asyncMiddleware(this.getManualJournalsList.bind(this)),
       this.dynamicListService.handlerErrorsToResponse,
-      this.catchServiceErrors,
+      this.catchServiceErrors.bind(this),
     );
     router.get(
       '/:id',
       asyncMiddleware(this.getManualJournal.bind(this)),
-      this.catchServiceErrors,
+      this.catchServiceErrors.bind(this),
     );
     router.post(
       '/publish', [
@@ -43,7 +43,7 @@ export default class ManualJournalsController extends BaseController {
       ],
       this.validationResult,
       asyncMiddleware(this.publishManualJournals.bind(this)),
-      this.catchServiceErrors,
+      this.catchServiceErrors.bind(this),
     );
     router.post(
       '/:id/publish', [
@@ -51,7 +51,7 @@ export default class ManualJournalsController extends BaseController {
       ],
       this.validationResult,
       asyncMiddleware(this.publishManualJournal.bind(this)),
-      this.catchServiceErrors,
+      this.catchServiceErrors.bind(this),
     );
     router.post(
       '/:id', [
@@ -60,7 +60,7 @@ export default class ManualJournalsController extends BaseController {
     ],
       this.validationResult,
       asyncMiddleware(this.editManualJournal.bind(this)),
-      this.catchServiceErrors,
+      this.catchServiceErrors.bind(this),
     );
     router.delete(
       '/:id', [
@@ -68,7 +68,7 @@ export default class ManualJournalsController extends BaseController {
       ],
       this.validationResult,
       asyncMiddleware(this.deleteManualJournal.bind(this)),
-      this.catchServiceErrors,
+      this.catchServiceErrors.bind(this),
     );
     router.delete(
       '/', [
@@ -76,7 +76,7 @@ export default class ManualJournalsController extends BaseController {
       ],
       this.validationResult,
       asyncMiddleware(this.deleteBulkManualJournals.bind(this)),
-      this.catchServiceErrors,
+      this.catchServiceErrors.bind(this),
     );
     router.post(
       '/', [
@@ -84,7 +84,7 @@ export default class ManualJournalsController extends BaseController {
       ],
       this.validationResult,
       asyncMiddleware(this.makeJournalEntries.bind(this)),
-      this.catchServiceErrors,
+      this.catchServiceErrors.bind(this),
     );
     return router;
   }
@@ -133,7 +133,7 @@ export default class ManualJournalsController extends BaseController {
         .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
       check('description')
-        .optional()
+        .optional({ nullable: true })
         .isString()
         .trim()
         .escape()
@@ -153,7 +153,7 @@ export default class ManualJournalsController extends BaseController {
         .toFloat(),
       check('entries.*.account_id').isInt({ max: DATATYPES_LENGTH.INT_10 }).toInt(),
       check('entries.*.note')
-        .optional()
+        .optional({ nullable: true })
         .isString()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
       check('entries.*.contact_id')
@@ -368,43 +368,45 @@ export default class ManualJournalsController extends BaseController {
       if (error.errorType === 'credit_debit_not_equal_zero') {
         return res.boom.badRequest(
           'Credit and debit should not be equal zero.',
-          { errors: [{ type: 'CREDIT.DEBIT.SUMATION.SHOULD.NOT.EQUAL.ZERO', code: 400, }] }
+          { errors: [{ type: 'CREDIT.DEBIT.SUMATION.SHOULD.NOT.EQUAL.ZERO', code: 200, }] }
         )
       }
       if (error.errorType === 'credit_debit_not_equal') {
         return res.boom.badRequest(
           'Credit and debit should be equal.',
-          { errors: [{ type: 'CREDIT.DEBIT.NOT.EQUALS', code: 100 }] }
+          { errors: [{ type: 'CREDIT.DEBIT.NOT.EQUALS', code: 300 }] }
         )
       }
       if (error.errorType === 'acccounts_ids_not_found') {
         return res.boom.badRequest(
           'Journal entries some of accounts ids not exists.',
-          { errors: [{ type: 'ACCOUNTS.IDS.NOT.FOUND', code: 200 }] }
+          { errors: [{ type: 'ACCOUNTS.IDS.NOT.FOUND', code: 400 }] }
         )
       }
       if (error.errorType === 'journal_number_exists') {
         return res.boom.badRequest(
           'Journal number should be unique.',
-          { errors: [{ type: 'JOURNAL.NUMBER.ALREADY.EXISTS', code: 300 }] },
+          { errors: [{ type: 'JOURNAL.NUMBER.ALREADY.EXISTS', code: 500 }] },
         );
       }
-      if (error.errorType === 'payabel_entries_have_no_vendors') {
+      if (error.errorType === 'ENTRIES_SHOULD_ASSIGN_WITH_CONTACT') {
         return res.boom.badRequest(
           '',
-          { errors: [{ type: '' }] },
-        );
-      }
-      if (error.errorType === 'receivable_entries_have_no_customers') {
-        return res.boom.badRequest(
-          '',
-          { errors: [{ type: '' }] },
+          {
+            errors: [
+              {
+                type: 'ENTRIES_SHOULD_ASSIGN_WITH_CONTACT',
+                code: 600,
+                meta: this.transfromToResponse(error.payload),
+              }
+            ]
+          },
         );
       }
       if (error.errorType === 'contacts_not_found') {
         return res.boom.badRequest(
           '',
-          { errors: [{ type: '' }] },
+          { errors: [{ type: 'CONTACTS_NOT_FOUND', code: 700  }] },
         );
       }
     }
