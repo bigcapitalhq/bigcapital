@@ -40,7 +40,6 @@ const defaultInitialValues = {
   sell_account_id: '',
   inventory_account_id: '',
   category_id: '',
-  note: '',
   sellable: 1,
   purchasable: true,
 };
@@ -232,7 +231,7 @@ function ItemForm({
         {({ isSubmitting, handleSubmit }) => (
           <Form>
             <div class={classNames(CLASSES.PAGE_FORM_BODY)}>
-              <ItemFormPrimarySection itemType={itemDetail?.type}/>
+              <ItemFormPrimarySection itemType={itemDetail?.type} />
               <ItemFormBody />
               <ItemFormInventorySection />
             </div>
