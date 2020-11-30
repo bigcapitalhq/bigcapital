@@ -74,7 +74,7 @@ export default class VendorsController extends ContactsController {
   get vendorDTOSchema(): ValidationChain[] {
     return [
       check('currency_code')
-        .optional()
+        .optional({ nullable: true })
         .isString()
         .trim()
         .escape()

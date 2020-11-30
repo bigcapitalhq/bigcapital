@@ -1,5 +1,5 @@
 import { check, param, query, body, ValidationChain } from 'express-validator';
-import BaseController from "api/controllers/BaseController";
+import BaseController from 'api/controllers/BaseController';
 import { DATATYPES_LENGTH } from 'data/DataTypes';
 
 export default class ContactsController extends BaseController {
@@ -8,37 +8,169 @@ export default class ContactsController extends BaseController {
    */
   get contactDTOSchema(): ValidationChain[] {
     return [
-      check('salutation').optional().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('first_name').optional().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('last_name').optional().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('salutation')
+        .optional({ nullable: true })
+        .isString()
+        .trim()
+        .escape()
+        .isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('first_name')
+        .optional({ nullable: true })
+        .isString()
+        .trim()
+        .escape()
+        .isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('last_name')
+        .optional({ nullable: true })
+        .isString()
+        .trim()
+        .escape()
+        .isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('company_name')
+        .optional({ nullable: true })
+        .isString()
+        .trim()
+        .escape()
+        .isLength({ max: DATATYPES_LENGTH.STRING }),
 
-      check('company_name').optional().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('display_name').exists().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('display_name')
+        .exists()
+        .isString()
+        .trim()
+        .escape()
+        .isLength({ max: DATATYPES_LENGTH.STRING }),
 
-      check('email').optional({ nullable: true }).isString().normalizeEmail().isEmail().isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('website').optional().isString().trim().isURL().isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('work_phone').optional().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('personal_phone').optional().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('email')
+        .optional({ nullable: true })
+        .isString()
+        .normalizeEmail()
+        .isEmail()
+        .isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('website')
+        .optional({ nullable: true })
+        .isString()
+        .trim()
+        .isURL()
+        .isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('work_phone')
+        .optional({ nullable: true })
+        .isString()
+        .trim()
+        .escape()
+        .isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('personal_phone')
+        .optional({ nullable: true })
+        .isString()
+        .trim()
+        .escape()
+        .isLength({ max: DATATYPES_LENGTH.STRING }),
 
-      check('billing_address_1').optional().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('billing_address_2').optional().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('billing_address_city').optional().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('billing_address_country').optional().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('billing_address_email').optional().isString().isEmail().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('billing_address_postcode').optional().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('billing_address_phone').optional().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('billing_address_state').optional().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('billing_address_1')
+        .optional({ nullable: true })
+        .isString()
+        .trim()
+        .escape()
+        .isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('billing_address_2')
+        .optional({ nullable: true })
+        .isString()
+        .trim()
+        .escape()
+        .isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('billing_address_city')
+        .optional({ nullable: true })
+        .isString()
+        .trim()
+        .escape()
+        .isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('billing_address_country')
+        .optional({ nullable: true })
+        .isString()
+        .trim()
+        .escape()
+        .isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('billing_address_email')
+        .optional({ nullable: true })
+        .isString()
+        .isEmail()
+        .trim()
+        .escape()
+        .isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('billing_address_postcode')
+        .optional({ nullable: true })
+        .isString()
+        .trim()
+        .escape()
+        .isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('billing_address_phone')
+        .optional({ nullable: true })
+        .isString()
+        .trim()
+        .escape()
+        .isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('billing_address_state')
+        .optional({ nullable: true })
+        .isString()
+        .trim()
+        .escape()
+        .isLength({ max: DATATYPES_LENGTH.STRING }),
 
-      check('shipping_address_1').optional().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('shipping_address_2').optional().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('shipping_address_city').optional().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('shipping_address_country').optional().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('shipping_address_email').optional().isString().isEmail().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('shipping_address_postcode').optional().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('shipping_address_phone').optional().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('shipping_address_state').optional().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('shipping_address_1')
+        .optional({ nullable: true })
+        .isString()
+        .trim()
+        .escape()
+        .isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('shipping_address_2')
+        .optional({ nullable: true })
+        .isString()
+        .trim()
+        .escape()
+        .isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('shipping_address_city')
+        .optional({ nullable: true })
+        .isString()
+        .trim()
+        .escape()
+        .isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('shipping_address_country')
+        .optional({ nullable: true })
+        .isString()
+        .trim()
+        .escape()
+        .isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('shipping_address_email')
+        .optional({ nullable: true })
+        .isString()
+        .isEmail()
+        .trim()
+        .escape()
+        .isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('shipping_address_postcode')
+        .optional({ nullable: true })
+        .isString()
+        .trim()
+        .escape()
+        .isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('shipping_address_phone')
+        .optional({ nullable: true })
+        .isString()
+        .trim()
+        .escape()
+        .isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('shipping_address_state')
+        .optional({ nullable: true })
+        .isString()
+        .trim()
+        .escape()
+        .isLength({ max: DATATYPES_LENGTH.STRING }),
 
-      check('note').optional().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.TEXT }),
+      check('note')
+        .optional({ nullable: true })
+        .isString()
+        .trim()
+        .escape()
+        .isLength({ max: DATATYPES_LENGTH.TEXT }),
       check('active').optional().isBoolean().toBoolean(),
     ];
   }
@@ -49,9 +181,13 @@ export default class ContactsController extends BaseController {
    */
   get contactNewDTOSchema(): ValidationChain[] {
     return [
-      check('opening_balance').optional({ nullable: true }).isInt({ min: 0, max: DATATYPES_LENGTH.DECIMAL_13_3 }).toInt(),
+      check('opening_balance')
+        .optional({ nullable: true })
+        .isInt({ min: 0, max: DATATYPES_LENGTH.DECIMAL_13_3 })
+        .toInt(),
       body('opening_balance_at')
-        .if(body('opening_balance').exists()).exists()
+        .if(body('opening_balance').exists())
+        .exists()
         .isISO8601(),
     ];
   }
@@ -61,18 +197,14 @@ export default class ContactsController extends BaseController {
    * @returns {ValidationChain[]}
    */
   get contactEditDTOSchema(): ValidationChain[] {
-    return [
-
-    ]
+    return [];
   }
 
   /**
    * @returns {ValidationChain[]}
    */
   get specificContactSchema(): ValidationChain[] {
-    return [
-      param('id').exists().isNumeric().toInt(),
-    ];
+    return [param('id').exists().isNumeric().toInt()];
   }
 
   /**
@@ -82,6 +214,6 @@ export default class ContactsController extends BaseController {
     return [
       query('ids').isArray({ min: 2 }),
       query('ids.*').isNumeric().toInt(),
-    ]
+    ];
   }
 }
