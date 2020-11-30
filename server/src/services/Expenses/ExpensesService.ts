@@ -20,7 +20,7 @@ const ERRORS = {
   TOTAL_AMOUNT_EQUALS_ZERO: 'total_amount_equals_zero',
   PAYMENT_ACCOUNT_HAS_INVALID_TYPE: 'payment_account_has_invalid_type',
   EXPENSES_ACCOUNT_HAS_INVALID_TYPE: 'expenses_account_has_invalid_type',
-  EXPENSE_ACCOUNT_ALREADY_PUBLISED: 'expense_already_published',
+  EXPENSE_ALREADY_PUBLISHED: 'expense_already_published',
 };
 
 @Service()
@@ -219,7 +219,7 @@ export default class ExpensesService implements IExpensesService {
    */
   private validateExpenseIsNotPublished(expense: IExpense) {
     if (expense.publishedAt) {
-      throw new ServiceError(ERRORS.EXPENSE_ACCOUNT_ALREADY_PUBLISED);
+      throw new ServiceError(ERRORS.EXPENSE_ALREADY_PUBLISHED);
     }
   }
 
