@@ -13,10 +13,14 @@ import {
 import { CLASSES } from 'common/classes';
 import { inputIntent } from 'utils';
 
+import { useAutofocus } from 'hooks';
+
 /**
  * Vendor form primary section.
  */
 function VendorFormPrimarySection() {
+  const firstNameFieldRef = useAutofocus();
+
   return (
     <div className={'customer-form__primary-section-content'}>
       {/**----------- Vendor name -----------*/}
@@ -50,6 +54,7 @@ function VendorFormPrimarySection() {
                 placeholder={'First Name'}
                 intent={inputIntent({ error, touched })}
                 className={classNames('input-group--first-name')}
+                inputRef={(ref) => (firstNameFieldRef.current = ref)}
                 {...field}
               />
             )}

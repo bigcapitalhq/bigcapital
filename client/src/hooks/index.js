@@ -1,5 +1,6 @@
 import {useRef, useEffect} from 'react';
 import useAsync from './async';
+import useAutofocus from './useAutofocus';
 
 // import use from 'async';
 
@@ -34,8 +35,7 @@ export function useIsValuePassed(value, compatatorValue) {
   return cache.current.indexOf(compatatorValue) !== -1;
 }
 
-
-export default {
+export {
   useAsync,
-  useUpdateEffect,
+  useAutofocus,
 }

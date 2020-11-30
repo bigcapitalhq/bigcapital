@@ -19,6 +19,8 @@ import {
 } from 'components';
 import { inputIntent } from 'utils';
 
+import { useAutofocus } from 'hooks';
+
 export default function ItemCategoryForm({
   itemCategoryId,
   accountsList,
@@ -26,6 +28,8 @@ export default function ItemCategoryForm({
   isSubmitting,
   onClose,
 }) {
+  const categoryNameFieldRef = useAutofocus();
+
   // Filters Item Categories list.
   const filterItemCategories = useCallback(
     (query, category, _index, exactMatch) => {
@@ -68,7 +72,11 @@ export default function ItemCategoryForm({
               helperText={<ErrorMessage name="name" />}
               inline={true}
             >
-              <InputGroup medium={true} {...field} />
+              <InputGroup
+                medium={true}
+                inputRef={(ref) => (categoryNameFieldRef.current = ref)}
+                {...field}
+              />
             </FormGroup>
           )}
         </FastField>

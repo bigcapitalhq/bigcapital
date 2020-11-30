@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
   FormGroup,
   InputGroup,
@@ -40,6 +40,14 @@ function ItemFormPrimarySection({
   // #ownProps
   itemType,
 }) {
+  const nameFieldRef = useRef(null);
+
+  useEffect(() => {
+    // Auto focus item name field once component mount.
+    if (nameFieldRef.current) {
+      nameFieldRef.current.focus();
+    }
+  }, []);
 
   const itemTypeHintContent = (
     <>
@@ -112,7 +120,11 @@ function ItemFormPrimarySection({
                 helperText={<ErrorMessage name={'name'} />}
                 inline={true}
               >
-                <InputGroup medium={true} {...field} />
+                <InputGroup
+                  medium={true}
+                  {...field}
+                  inputRef={(ref) => (nameFieldRef.current = ref)}
+                />
               </FormGroup>
             )}
           </FastField>

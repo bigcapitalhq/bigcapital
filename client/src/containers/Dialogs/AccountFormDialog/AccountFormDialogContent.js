@@ -1,8 +1,8 @@
-import React, { useCallback, useMemo, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import { Intent } from '@blueprintjs/core';
 import { Formik } from 'formik';
 import { FormattedMessage as T, useIntl } from 'react-intl';
-import { pick, omit } from 'lodash';
+import { omit } from 'lodash';
 import { useQuery, queryCache } from 'react-query';
 import { AppToaster, DialogContent } from 'components';
 
