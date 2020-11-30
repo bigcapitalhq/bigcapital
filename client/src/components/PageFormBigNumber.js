@@ -10,9 +10,8 @@ export default function PageFormBigNumber({ label, amount, currencyCode }) {
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_BIG_NUMBERS)}>
       <div class="big-amount">
         <span class="big-amount__label">{ label }</span>
-
         <h1 class="big-amount__number">
-          <Money amount={0} currency={'LYD'} />
+          <Money amount={amount} currency={currencyCode} />
         </h1>
       </div>
     </div>

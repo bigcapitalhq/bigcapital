@@ -229,7 +229,7 @@ function InvoiceForm({
     },
     [changePageSubtitle],
   );
-  
+
   return (
     <div className={classNames(
       CLASSES.PAGE_FORM,

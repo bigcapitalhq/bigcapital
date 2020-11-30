@@ -1,5 +1,8 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import classNames from 'classnames';
+import { sumBy } from 'lodash';
+import { useFormikContext } from 'formik';
+
 import { CLASSES } from 'common/classes';
 
 import InvoiceFormHeaderFields from './InvoiceFormHeaderFields';
@@ -12,15 +15,21 @@ export default function InvoiceFormHeader({
   // #ownProps
   onInvoiceNumberChanged,
 }) {
+  const { values } = useFormikContext();
+
+  // Calculate the total due amount of invoice entries.
+  const totalDueAmount = useMemo(() => sumBy(values.entries, 'total'), [
+    values.entries,
+  ]);
+
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
       <InvoiceFormHeaderFields
         onInvoiceNumberChanged={onInvoiceNumberChanged}
       />
-
       <PageFormBigNumber
         label={'Due Amount'}
-        amount={0}
+        amount={totalDueAmount}
         currencyCode={'LYD'}
       />
     </div>

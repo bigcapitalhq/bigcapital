@@ -1,28 +1,34 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import classNames from 'classnames';
+import { sumBy } from 'lodash';
+import { useFormikContext } from 'formik';
 
-import { Money } from 'components';
 import { CLASSES } from 'common/classes';
 import ReceiptFormHeaderFields from './ReceiptFormHeaderFields';
+
+import { PageFormBigNumber } from 'components';
 
 export default function ReceiptFormHeader({
   // #ownProps
   onReceiptNumberChanged,
 }) {
+  const { values } = useFormikContext();
+
+  // Calculate the total due amount of bill entries.
+  const totalDueAmount = useMemo(() => sumBy(values.entries, 'total'), [
+    values.entries,
+  ]);
+
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
       <ReceiptFormHeaderFields
         onReceiptNumberChanged={onReceiptNumberChanged}
       />
-
-      <div className={classNames(CLASSES.PAGE_FORM_HEADER_BIG_NUMBERS)}>
-        <div class="big-amount">
-          <span class="big-amount__label">Due Amount</span>
-          <h1 class="big-amount__number">
-            <Money amount={0} currency={'LYD'} />
-          </h1>
-        </div>
-      </div>
+      <PageFormBigNumber
+        label={'Due Amount'}
+        amount={totalDueAmount}
+        currencyCode={'LYD'}
+      />
     </div>
   );
 }
