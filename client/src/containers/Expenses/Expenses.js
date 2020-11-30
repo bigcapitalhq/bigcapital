@@ -30,6 +30,7 @@ function Expenses({
   // #withDashboardActions
   setSidebarShrink,
   resetSidebarPreviousExpand,
+  setDashboardBackLink,
 }) {
   const history = useHistory();
   const { id } = useParams();
@@ -37,12 +38,16 @@ function Expenses({
   useEffect(() => {
     // Shrink the sidebar by foce.
     setSidebarShrink();
+    // Show the back link on dashboard topbar.
+    setDashboardBackLink(true);
 
     return () => {
       // Reset the sidebar to the previous status.
       resetSidebarPreviousExpand();
+      // Hide the back link on dashboard topbar.
+      setDashboardBackLink(false);
     };
-  }, [resetSidebarPreviousExpand, setSidebarShrink]);
+  }, [resetSidebarPreviousExpand, setSidebarShrink, setDashboardBackLink]);
 
   const fetchAccounts = useQuery('accounts-list', (key) =>
     requestFetchAccounts(),

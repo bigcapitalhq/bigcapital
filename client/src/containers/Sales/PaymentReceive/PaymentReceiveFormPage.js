@@ -6,7 +6,7 @@ import { useQuery } from 'react-query';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 
 import PaymentReceiveForm from './PaymentReceiveForm';
-import withDashboardActions from "containers/Dashboard/withDashboardActions";
+import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withAccountsActions from 'containers/Accounts/withAccountsActions';
 import withSettingsActions from 'containers/Settings/withSettingsActions';
 import withPaymentReceivesActions from './withPaymentReceivesActions';
@@ -18,7 +18,6 @@ import { compose } from 'utils';
  * Payment receive form page.
  */
 function PaymentReceiveFormPage({
-
   // #withDashboardAction
   changePageTitle,
 
@@ -37,25 +36,30 @@ function PaymentReceiveFormPage({
   // #withDashboardActions
   setSidebarShrink,
   resetSidebarPreviousExpand,
+  setDashboardBackLink,
 }) {
   const { id: paymentReceiveId } = useParams();
 
   useEffect(() => {
     // Shrink the sidebar by foce.
     setSidebarShrink();
+    // Show the back link on dashboard topbar.
+    setDashboardBackLink(true);
 
     return () => {
       // Reset the sidebar to the previous status.
       resetSidebarPreviousExpand();
+      // Hide the back link on dashboard topbar.
+      setDashboardBackLink(false);
     };
-  }, [resetSidebarPreviousExpand, setSidebarShrink]);
+  }, [resetSidebarPreviousExpand, setSidebarShrink, setDashboardBackLink]);
 
   // Fetches payment recevie details.
   const fetchPaymentReceive = useQuery(
     ['payment-receive', paymentReceiveId],
     (key, _id) => requestFetchPaymentReceive(_id),
     { enabled: paymentReceiveId },
-  )
+  );
 
   // Handle fetch accounts data.
   const fetchAccounts = useQuery('accounts-list', (key) =>
@@ -66,8 +70,8 @@ function PaymentReceiveFormPage({
   const fetchSettings = useQuery(['settings'], () => requestFetchOptions({}));
 
   // Fetches customers list.
-  const fetchCustomers = useQuery(
-    ['customers-list'], () => requestFetchCustomers(),
+  const fetchCustomers = useQuery(['customers-list'], () =>
+    requestFetchCustomers(),
   );
 
   return (
@@ -75,16 +79,14 @@ function PaymentReceiveFormPage({
       loading={
         fetchPaymentReceive.isFetching ||
         fetchAccounts.isFetching ||
-        // fetchSettings.isFetching || 
+        // fetchSettings.isFetching ||
         fetchCustomers.isFetching
       }
       name={'payment-receive-form'}
     >
-      <PaymentReceiveForm
-        paymentReceiveId={paymentReceiveId}
-      />
+      <PaymentReceiveForm paymentReceiveId={paymentReceiveId} />
     </DashboardInsider>
-  )
+  );
 }
 
 export default compose(

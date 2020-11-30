@@ -13,6 +13,7 @@ import { FormattedMessage as T } from 'react-intl';
 
 import DashboardTopbarUser from 'components/Dashboard/TopbarUser';
 import DashboardBreadcrumbs from 'components/Dashboard/DashboardBreadcrumbs';
+import DashboardBackLink from 'components/Dashboard/DashboardBackLink';
 import { Icon, Hint, If } from 'components';
 
 import withSearch from 'containers/GeneralSearch/withSearch';
@@ -114,6 +115,8 @@ function DashboardTopbar({
         <div class="dashboard__breadcrumbs">
           <DashboardBreadcrumbs />
         </div>
+
+        <DashboardBackLink />
       </div>
 
       <div class="dashboard__topbar-right">

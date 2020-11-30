@@ -29,6 +29,7 @@ function Invoices({
   // #withDashboardActions
   setSidebarShrink,
   resetSidebarPreviousExpand,
+  setDashboardBackLink,
 }) {
   const history = useHistory();
   const { id } = useParams();
@@ -36,18 +37,22 @@ function Invoices({
   useEffect(() => {
     // Shrink the sidebar by foce.
     setSidebarShrink();
+    // Show the back link on dashboard topbar.
+    setDashboardBackLink(true);
 
     return () => {
       // Reset the sidebar to the previous status.
       resetSidebarPreviousExpand();
+      // Hide the back link on dashboard topbar.
+      setDashboardBackLink(false);
     };
-  }, [resetSidebarPreviousExpand, setSidebarShrink]);
+  }, [resetSidebarPreviousExpand, setSidebarShrink, setDashboardBackLink]);
 
   const fetchInvoice = useQuery(
     ['invoice', id],
     (key, _id) => requsetFetchInvoice(_id),
     { enabled: !!id },
-);
+  );
 
   const fetchSettings = useQuery(['settings'], () => requestFetchOptions({}));
 

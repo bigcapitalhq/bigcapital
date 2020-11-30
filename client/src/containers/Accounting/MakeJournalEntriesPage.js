@@ -32,7 +32,8 @@ function MakeJournalEntriesPage({
 
   // #withDashboardActions
   setSidebarShrink,
-  resetSidebarPreviousExpand
+  resetSidebarPreviousExpand,
+  setDashboardBackLink
 }) {
   const history = useHistory();
   const { id } = useParams();
@@ -40,10 +41,14 @@ function MakeJournalEntriesPage({
   useEffect(() => {
     // Shrink the sidebar by foce.
     setSidebarShrink();
+    // Show the back link on dashboard topbar.
+    setDashboardBackLink('/manual-journals');
 
     return () => {
       // Reset the sidebar to the previous status.
       resetSidebarPreviousExpand();
+      // Hide the back link on dashboard topbar.
+      setDashboardBackLink(false);
     };
   }, [resetSidebarPreviousExpand, setSidebarShrink]);
 

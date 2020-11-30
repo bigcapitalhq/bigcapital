@@ -13,6 +13,7 @@ const initialState = {
   dialogs: {},
   topbarEditViewId: null,
   requestsLoading: 0,
+  backLink: false,
 };
 
 const reducerInstance = createReducer(initialState, {
@@ -82,6 +83,11 @@ const reducerInstance = createReducer(initialState, {
   [t.RESET_SIDEBAR_PREVIOUS_EXPAND]: (state) => {
     state.sidebarExpended = state.previousSidebarExpended;
   },
+
+  [t.SET_DASHBOARD_BACK_LINK]: (state, action) => {
+    const { backLink } = action.payload;
+    state.backLink = backLink;
+  }
 });
 
 export default persistReducer({

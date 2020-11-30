@@ -36,6 +36,7 @@ function PaymentMade({
   changePageTitle,
   setSidebarShrink,
   resetSidebarPreviousExpand,
+  setDashboardBackLink
 }) {
   const { id: paymentMadeId } = useParams();
   const { formatMessage } = useIntl();
@@ -43,12 +44,16 @@ function PaymentMade({
   useEffect(() => {
     // Shrink the sidebar by foce.
     setSidebarShrink();
+    // Show the back link on dashboard topbar.
+    setDashboardBackLink(true);
 
     return () => {
       // Reset the sidebar to the previous status.
       resetSidebarPreviousExpand();
+      // Hide the back link on dashboard topbar.
+      setDashboardBackLink(false);
     };
-  }, [resetSidebarPreviousExpand, setSidebarShrink]);
+  }, [resetSidebarPreviousExpand, setSidebarShrink, setDashboardBackLink]);
 
   // Handle page title change in new and edit mode.
   useEffect(() => {

@@ -10,6 +10,7 @@ export default (mapState) => {
       editViewId: state.dashboard.topbarEditViewId,
       sidebarExpended: state.dashboard.sidebarExpended,
       preferencesPageTitle: state.dashboard.preferencesPageTitle,
+      dashboardBackLink: state.dashboard.backLink,
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };

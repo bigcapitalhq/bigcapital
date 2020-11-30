@@ -9,7 +9,7 @@ import withBreadcrumbs from 'react-router-breadcrumbs-hoc';
 import routes from 'routes/dashboard';
 import { useHistory } from 'react-router-dom';
 
-function DashboardBreadcrumbs( {breadcrumbs }){
+function DashboardBreadcrumbs({ breadcrumbs }){
   const history = useHistory();
 
   return(

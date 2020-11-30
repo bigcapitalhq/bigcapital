@@ -130,7 +130,7 @@ export default [
     children: [
       {
         text: <T id={'expenses'} />,
-        href: '/expenses-list',
+        href: '/expenses',
       },
       {
         text: <T id={'new_expense'} />,

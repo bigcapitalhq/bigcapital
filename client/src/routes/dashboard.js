@@ -174,7 +174,7 @@ export default [
     breadcrumb: 'Edit',
   },
   {
-    path: `/expenses-list`,
+    path: `/expenses`,
     component: LazyLoader({
       loader: () => import('containers/Expenses/ExpensesList'),
     }),

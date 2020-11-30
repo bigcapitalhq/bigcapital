@@ -111,6 +111,15 @@
     }
   }
 
+  &__back-link{
+    margin-left: 24px;
+    display: flex;
+
+    a{
+      margin: auto 0;
+    }
+  }
+
   &__actions-bar{
     border-bottom: 2px solid #EAEAEA;
 

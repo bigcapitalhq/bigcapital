@@ -57,6 +57,11 @@ const mapActionsToProps = (dispatch) => ({
   recordSidebarPreviousExpand: () => dispatch({
     type: t.RECORD_SIDEBAR_PREVIOUS_EXPAND,
   }),
+
+  setDashboardBackLink: (backLink) => dispatch({
+    type: t.SET_DASHBOARD_BACK_LINK,
+    payload: { backLink }
+  })
 });
 
 export default connect(null, mapActionsToProps);
