@@ -100,8 +100,6 @@ function ExpenseForm({
       ...(expense
         ? {
             ...pick(expense, Object.keys(defaultInitialValues)),
-            currency_code: baseCurrency,
-            payment_account_id: defaultTo(preferredPaymentAccount, ''),
             categories: [
               ...expense.categories.map((category) => ({
                 ...pick(category, Object.keys(defaultCategory)),
@@ -114,6 +112,8 @@ function ExpenseForm({
           }
         : {
             ...defaultInitialValues,
+            currency_code: baseCurrency,
+            payment_account_id: defaultTo(preferredPaymentAccount, ''),
             categories: orderingLinesIndexes(defaultInitialValues.categories),
           }),
     }),
