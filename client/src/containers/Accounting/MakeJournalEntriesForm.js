@@ -225,7 +225,7 @@ function MakeJournalEntriesForm({
     },
     [setSubmitPayload],
   );
-  console.log(submitPayload, 'RR');
+
   return (
     <div
       className={classNames(
