@@ -11,7 +11,7 @@ const Schema = Yup.object().shape({
   payment_date: Yup.date()
     .required()
     .label(formatMessage({ id: 'payment_date_' })),
-  reference_no: Yup.string().min(1).max(DATATYPES_LENGTH.STRING),
+  reference_no: Yup.string().min(1).max(DATATYPES_LENGTH.STRING).nullable(),
   currency_code: Yup.string()
     .nullable()
     .max(3)
