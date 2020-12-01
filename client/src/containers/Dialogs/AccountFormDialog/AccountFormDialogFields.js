@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Form, FastField, Field, ErrorMessage, useFormikContext } from 'formik';
 import classNames from 'classnames';
 import { FormattedMessage as T } from 'react-intl';
@@ -22,6 +22,7 @@ import withAccounts from 'containers/Accounts/withAccounts';
 
 import { inputIntent } from 'utils';
 import { compose } from 'redux';
+import { useAutofocus } from 'hooks';
 
 /**
  * Account form dialogs fields.
@@ -36,6 +37,7 @@ function AccountFormDialogFields({
   accountsTypes,
 }) {
   const { values, isSubmitting } = useFormikContext();
+  const accountNameFieldRef = useAutofocus();
 
   return (
     <Form>
@@ -75,7 +77,11 @@ function AccountFormDialogFields({
               helperText={<ErrorMessage name="name" />}
               inline={true}
             >
-              <InputGroup medium={true} {...field} />
+              <InputGroup
+                medium={true}
+                inputRef={(ref) => (accountNameFieldRef.current = ref)}
+                {...field}
+              />
             </FormGroup>
           )}
         </FastField>

@@ -12,12 +12,14 @@ import {
 import CustomerTypeRadioField from 'containers/Customers/CustomerTypeRadioField';
 import { CLASSES } from 'common/classes';
 import { inputIntent } from 'utils';
+import { useAutofocus } from 'hooks';
 
 /**
  * Customer form primary section.
  */
-export default function CustomerFormPrimarySection({
-}) {
+export default function CustomerFormPrimarySection({}) {
+  const firstNameFieldRef = useAutofocus();
+
   return (
     <div className={'customer-form__primary-section-content'}>
       {/**-----------Customer type. -----------*/}
@@ -54,6 +56,7 @@ export default function CustomerFormPrimarySection({
                 placeholder={'First Name'}
                 intent={inputIntent({ error, touched })}
                 className={classNames('input-group--first-name')}
+                inputRef={(ref) => (firstNameFieldRef.current = ref)}
                 {...field}
               />
             )}
