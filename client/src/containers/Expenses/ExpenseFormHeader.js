@@ -23,7 +23,7 @@ export default function ExpenseFormHeader() {
       <PageFormBigNumber
         label={'Expense Amount'}
         amount={totalExpenseAmount}
-        currencyCode={'LYD'}
+        currencyCode={values?.currency_code}
       />
     </div>
   );

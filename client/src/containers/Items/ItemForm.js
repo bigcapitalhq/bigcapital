@@ -30,7 +30,7 @@ import {
 } from './ItemForm.schema';
 
 const defaultInitialValues = {
-  active: true,
+  active: 1,
   name: '',
   type: 'service',
   code: '',

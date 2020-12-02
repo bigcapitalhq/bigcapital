@@ -1,13 +1,11 @@
-import React, {
-  useMemo,
-  useEffect,
-} from 'react';
+import React, { useMemo, useEffect,useState,useCallback } from 'react';
 import { Intent } from '@blueprintjs/core';
 import { useIntl } from 'react-intl';
 import { defaultTo, pick } from 'lodash';
 import { Formik, Form } from 'formik';
 import moment from 'moment';
 import classNames from 'classnames';
+import { useHistory } from 'react-router-dom';
 import { CLASSES } from 'common/classes';
 
 import ExpenseFormHeader from './ExpenseFormHeader';
@@ -28,9 +26,7 @@ import {
   CreateExpenseFormSchema,
   EditExpenseFormSchema,
 } from './ExpenseForm.schema';
-import {
-  transformErrors,
-} from './utils';
+import { transformErrors } from './utils';
 import { compose, repeatValue, orderingLinesIndexes } from 'utils';
 
 const MIN_LINES_NUMBER = 4;
@@ -49,6 +45,7 @@ const defaultInitialValues = {
   description: '',
   reference_no: '',
   currency_code: '',
+  is_published:'',
   categories: [...repeatValue(defaultCategory, MIN_LINES_NUMBER)],
 };
 
@@ -82,12 +79,14 @@ function ExpenseForm({
   onCancelForm,
 }) {
   const isNewMode = !expenseId;
+  const [submitPayload, setSubmitPayload] = useState({});
   const { formatMessage } = useIntl();
+  const history = useHistory();
 
   const validationSchema = isNewMode
     ? CreateExpenseFormSchema
     : EditExpenseFormSchema;
- 
+
   useEffect(() => {
     if (isNewMode) {
       changePageTitle(formatMessage({ id: 'new_expense' }));
@@ -101,8 +100,6 @@ function ExpenseForm({
       ...(expense
         ? {
             ...pick(expense, Object.keys(defaultInitialValues)),
-            currency_code: baseCurrency,
-            payment_account_id: defaultTo(preferredPaymentAccount, ''),
             categories: [
               ...expense.categories.map((category) => ({
                 ...pick(category, Object.keys(defaultCategory)),
@@ -115,9 +112,9 @@ function ExpenseForm({
           }
         : {
             ...defaultInitialValues,
-            categories: orderingLinesIndexes(
-              defaultInitialValues.categories,
-            ),
+            currency_code: baseCurrency,
+            payment_account_id: defaultTo(preferredPaymentAccount, ''),
+            categories: orderingLinesIndexes(defaultInitialValues.categories),
           }),
     }),
     [expense, baseCurrency, preferredPaymentAccount],
@@ -146,22 +143,30 @@ function ExpenseForm({
 
     const form = {
       ...values,
-      publish: 1,
+      is_published: submitPayload.publish,
       categories,
     };
     // Handle request success.
     const handleSuccess = (response) => {
       AppToaster.show({
         message: formatMessage(
-          { id: isNewMode ?
-            'the_expense_has_been_successfully_created' : 
-            'the_expense_has_been_successfully_edited' },
+          {
+            id: isNewMode
+              ? 'the_expense_has_been_successfully_created'
+              : 'the_expense_has_been_successfully_edited',
+          },
           { number: values.payment_account_id },
         ),
         intent: Intent.SUCCESS,
       });
       setSubmitting(false);
-      resetForm();
+
+      if (submitPayload.redirect) {
+        history.push('/expenses');
+      }
+      if (submitPayload.resetForm) {
+        resetForm();
+      }
     };
 
     // Handle request error
@@ -172,16 +177,30 @@ function ExpenseForm({
     if (isNewMode) {
       requestSubmitExpense(form).then(handleSuccess).catch(handleError);
     } else {
-      requestEditExpense(expense.id, form).then(handleSuccess).catch(handleError);
+      requestEditExpense(expense.id, form)
+        .then(handleSuccess)
+        .catch(handleError);
     }
   };
- 
+  const handleCancelClick = useCallback(() => {
+    history.goBack();
+  }, [history]);
+
+  const handleSubmitClick = useCallback(
+    (event, payload) => {
+      setSubmitPayload({ ...payload });
+    },
+    [setSubmitPayload],
+  );
+
   return (
-    <div className={classNames(
-      CLASSES.PAGE_FORM,
-      CLASSES.PAGE_FORM_STRIP_STYLE,
-      CLASSES.PAGE_FORM_EXPENSE
-    )}>
+    <div
+      className={classNames(
+        CLASSES.PAGE_FORM,
+        CLASSES.PAGE_FORM_STRIP_STYLE,
+        CLASSES.PAGE_FORM_EXPENSE,
+      )}
+    >
       <Formik
         validationSchema={validationSchema}
         initialValues={initialValues}
@@ -192,7 +211,13 @@ function ExpenseForm({
             <ExpenseFormHeader />
             <ExpenseFormBody />
             <ExpenseFormFooter />
-            <ExpenseFloatingFooter />
+            <ExpenseFloatingFooter
+              isSubmitting={isSubmitting}
+              expense={expenseId}
+              expensePublished={values.is_published}
+              onCancelClick={handleCancelClick}
+              onSubmitClick={handleSubmitClick}
+            />
           </Form>
         )}
       </Formik>
@@ -208,6 +233,9 @@ export default compose(
   withExpenseDetail(),
   withSettings(({ organizationSettings, expenseSettings }) => ({
     baseCurrency: organizationSettings?.baseCurrency,
-    preferredPaymentAccount: parseInt(expenseSettings?.preferredPaymentAccount, 10),
+    preferredPaymentAccount: parseInt(
+      expenseSettings?.preferredPaymentAccount,
+      10,
+    ),
   })),
 )(ExpenseForm);

@@ -23,13 +23,11 @@ export default function ExpenseFloatingFooter({
   isSubmitting,
   onSubmitClick,
   onCancelClick,
-  onDraftClick,
-  onClearClick,
-  onSubmitForm,
-  onResetForm,
   expense,
   expensePublished,
 }) {
+  const { submitForm, resetForm } = useFormikContext();
+
   const handleSubmitPublishBtnClick = (event) => {
     saveInvoke(onSubmitClick, event, {
       redirect: true,
@@ -38,7 +36,7 @@ export default function ExpenseFloatingFooter({
   };
 
   const handleSubmitPublishAndNewBtnClick = (event) => {
-    onSubmitForm();
+    submitForm();
     saveInvoke(onSubmitClick, event, {
       redirect: false,
       publish: true,
@@ -47,7 +45,7 @@ export default function ExpenseFloatingFooter({
   };
 
   const handleSubmitPublishContinueEditingBtnClick = (event) => {
-    onSubmitForm();
+    submitForm();
     saveInvoke(onSubmitClick, event, {
       redirect: false,
       publish: true,
@@ -62,7 +60,7 @@ export default function ExpenseFloatingFooter({
   };
 
   const handleSubmitDraftAndNewBtnClick = (event) => {
-    onSubmitForm();
+    submitForm();
     saveInvoke(onSubmitClick, event, {
       redirect: false,
       publish: false,
@@ -71,7 +69,7 @@ export default function ExpenseFloatingFooter({
   };
 
   const handleSubmitDraftContinueEditingBtnClick = (event) => {
-    onSubmitForm();
+    submitForm();
     saveInvoke(onSubmitClick, event, {
       redirect: false,
       publish: false,
@@ -84,9 +82,8 @@ export default function ExpenseFloatingFooter({
 
   const handleClearBtnClick = (event) => {
     // saveInvoke(onClearClick, event);
-    onResetForm();
+    resetForm();
   };
-
   return (
     <div className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>
       {/* ----------- Save And Publish ----------- */}

@@ -187,7 +187,7 @@ function ExpensesDataTable({
       {
         id: 'total_amount',
         Header: formatMessage({ id: 'full_amount' }),
-        accessor: (r) => <Money amount={r.total_amount} currency={'USD'} />,
+        accessor: (r) => <Money amount={r.total_amount} currency={r.currency_code} />,
         className: 'total_amount',
         width: 150,
       },
@@ -209,7 +209,7 @@ function ExpensesDataTable({
         id: 'publish',
         Header: formatMessage({ id: 'publish' }),
         accessor: (r) => {
-          return !!r.is_published ? (
+          return r.is_published ? (
             <Tag minimal={true}>
               <T id={'published'} />
             </Tag>

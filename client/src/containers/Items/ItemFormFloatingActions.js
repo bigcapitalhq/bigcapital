@@ -6,7 +6,6 @@ import classNames from 'classnames';
 import { FastField } from 'formik';
 import { CLASSES } from 'common/classes';
 
-
 /**
  * Item form floating actions.
  */
@@ -56,13 +55,13 @@ export default function ItemFormFloatingActions({
 
       {/*----------- Active ----------*/}
       <FastField name={'active'} type={'checkbox'}>
-        {({ form, field, field: { value } }) => (
+        {({ field }) => (
           <FormGroup inline={true} className={'form-group--active'}>
             <Checkbox
               inline={true}
               label={<T id={'active'} />}
-              checked={value}
-              onChange={() => form.setFieldValue('active', !value)}
+              name={'active'}
+              {...field}
             />
           </FormGroup>
         )}

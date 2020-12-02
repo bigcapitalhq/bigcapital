@@ -64,6 +64,7 @@ export const transformItemFormData = (item, defaultValue) => {
     ...item,
     sellable: !!defaultTo(item?.sellable, defaultValue.sellable),
     purchasable: !!defaultTo(item?.purchasable, defaultValue.purchasable),
+    active: !!defaultTo(item?.active, defaultValue.active),
   };
 }
 
