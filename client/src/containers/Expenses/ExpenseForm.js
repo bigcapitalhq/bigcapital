@@ -143,7 +143,7 @@ function ExpenseForm({
 
     const form = {
       ...values,
-      is_published: submitPayload.publish,
+      publish: submitPayload.publish,
       categories,
     };
     // Handle request success.

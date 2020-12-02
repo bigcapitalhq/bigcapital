@@ -251,7 +251,7 @@ export default class ExpensesController extends BaseController {
    */
   async bulkDeleteExpenses(req: Request, res: Response, next: NextFunction) {
     const { tenantId, user } = req;
-    const { ids: expensesIds } = req.params;
+    const { ids: expensesIds } = req.query;
 
     try {
       await this.expensesService.deleteBulkExpenses(

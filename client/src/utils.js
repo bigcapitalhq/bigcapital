@@ -329,15 +329,16 @@ export function treeToList(
     idFieldKey = 'id',
     childrenFieldKey = 'children',
     nodeMapper = (node, depth) => node,
+    nodeFilter = (node, depth) => true,
   },
 ) {
   let depth = 0;
 
   const walker = (tree) => {
-    return tree.reduce(function (acc, o) {
+    return tree.reduce((acc, o) => {
       depth += 1;
 
-      if (o[idFieldKey]) {
+      if (o[idFieldKey] && nodeFilter(o, depth)) {  
         acc.push(nodeMapper(o, depth));
       }
       if (o[childrenFieldKey]) {
