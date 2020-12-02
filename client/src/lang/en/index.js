@@ -194,8 +194,12 @@ export default {
     'The accounts have been successfully deleted.',
   are_sure_to_inactive_this_account:
     'Are you sure you want to inactive this account? You will be able to activate it later',
+  are_sure_to_inactive_this_accounts:
+    'Are you sure you want to inactive this accounts? You will be able to activate it later',
   are_sure_to_activate_this_account:
     'Are you sure you want to activate this account? You will be able to inactivate it later',
+  are_sure_to_activate_this_accounts:
+    'Are you sure you want to activate this accounts? You will be able to inactivate it later',
   once_delete_this_account_you_will_able_to_restore_it: `Once you delete this account, you won\'t be able to restore it later. Are you sure you want to delete this account?<br /><br />If you're not sure, you can inactivate this account instead.`,
   the_journal_has_been_successfully_created:
     'The journal #{number} has been successfully created.',
@@ -451,7 +455,7 @@ export default {
   the_expense_has_been_successfully_deleted:
     'The expense has been successfully deleted',
   the_expenses_have_been_successfully_deleted:
-    'The expenses #{number} have been successfully deleted',
+    'The expenses have been successfully deleted',
   once_delete_these_expenses_you_will_not_able_restore_them:
     "Once you delete these expenses, you won't be able to retrieve them later. Are you sure you want to delete them?",
   the_expense_has_been_published: 'The expense has been published',
@@ -841,8 +845,10 @@ export default {
   once_delete_these_vendors_you_will_not_able_restore_them:
     "Once you delete these vendors, you won't be able to retrieve them later. Are you sure you want to delete them?",
   vendor_has_bills: 'Vendor has bills',
-  the_item_has_been_edited_successfully: 'The item has been edited successfully.',
-  you_cannot_make_payment_with_zero_total_amount: 'You cannot record payment transaction with zero total amount',
+  the_item_has_been_edited_successfully:
+    'The item has been edited successfully.',
+  you_cannot_make_payment_with_zero_total_amount:
+    'You cannot record payment transaction with zero total amount',
   are_sure_to_publish_this_manual_journal:
     'Are you sure you want to publish this manual journal?',
   save_publish: 'Save and Publish',
@@ -855,5 +861,8 @@ export default {
   posting_date: 'Posting date',
   customer: 'Customer',
   email_is_already_used: 'The email is already used.',
-  the_item_categories_has_been_deleted_successfully: 'The item categories has been deleted successfully .',
+  the_item_categories_has_been_deleted_successfully:
+    'The item categories has been deleted successfully .',
+  receivable_accounts_should_assign_with_customers:
+    'receivable accounts should assign with customers',
 };
