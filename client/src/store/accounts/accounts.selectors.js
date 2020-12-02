@@ -35,6 +35,7 @@ export const getAccountsListFactory = () =>
       return treeToList(accountsTree, {
         idFieldKey: 'id',
         childrenFieldKey: 'children',
+        nodeFilter: (node, depth) => accountsItems[node.id],
         nodeMapper: (node, depth) => {
           const account = accountsItems[node.id];
           const spaceChar = String.fromCharCode(160);

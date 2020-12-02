@@ -1,6 +1,21 @@
 .dashboard__insider--expense-form{
   background-color: #fff;
 }
+.dashboard__insider--expenses{
+
+
+  .bigcapital-datatable{
+
+    .tbody{
+      .tr .td.total_amount{
+        span{
+          font-weight: 600;
+        }
+      }
+    }
+  }
+}
+
 .page-form--expense{
   $self: '.page-form';
 

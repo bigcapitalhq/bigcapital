@@ -106,7 +106,7 @@ const ItemCategoryList = ({
         setDeleteCategory(false);
         AppToaster.show({
           message: formatMessage({
-            id: 'the_item_category_has_been_successfully_deleted',
+            id: 'the_item_category_has_been_deleted_successfully',
           }),
           intent: Intent.SUCCESS,
         });
@@ -135,7 +135,7 @@ const ItemCategoryList = ({
         setBulkDelete(false);
         AppToaster.show({
           message: formatMessage({
-            id: 'the_item_categories_has_been_successfully_deleted',
+            id: 'the_item_categories_has_been_deleted_successfully',
           }),
           intent: Intent.SUCCESS,
         });

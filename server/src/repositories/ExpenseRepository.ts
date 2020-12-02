@@ -85,9 +85,9 @@ export default class ExpenseRepository extends TenantRepository {
    * @param {number[]} expensesIds 
    */
   async bulkDelete(expensesIds: number[]): Promise<void> {
-    const { Expense } = this.models;
+    const { Expense, ExpenseCategory } = this.models;
 
-    await Expense.query().whereIn('expense_id', expensesIds).delete();
+    await ExpenseCategory.query().whereIn('expense_id', expensesIds).delete();
     await Expense.query().whereIn('id', expensesIds).delete();
 
     this.flushCache();
