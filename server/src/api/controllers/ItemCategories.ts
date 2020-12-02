@@ -84,10 +84,6 @@ export default class ItemsCategoriesController extends BaseController {
         .trim()
         .escape()
         .isLength({ min: 0, max: DATATYPES_LENGTH.STRING }),
-      check('parent_category_id')
-        .optional({ nullable: true })
-        .isInt({ min: 0, max: DATATYPES_LENGTH.INT_10 })
-        .toInt(),
       check('description')
         .optional({ nullable: true })
         .isString()

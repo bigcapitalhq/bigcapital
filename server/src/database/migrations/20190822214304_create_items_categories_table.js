@@ -3,7 +3,7 @@ exports.up = function (knex) {
   return knex.schema.createTable('items_categories', (table) => {
     table.increments();
     table.string('name').index();
-    table.integer('parent_category_id').unsigned().references('id').inTable('items_categories');
+   
     table.text('description');
     table.integer('user_id').unsigned().index();
 
