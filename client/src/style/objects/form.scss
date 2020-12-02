@@ -45,8 +45,8 @@ label.bp3-label{
 
   &:focus,
   &.bp3-active{
-    box-shadow: 0 0 0 .2rem rgba(0,123,255,.25); 
-    border-color: #80bdff;
+    box-shadow: 0 0 0 1px #116cd0; 
+    border-color: #116cd0;
   }
 
   &.bp3-disabled,
