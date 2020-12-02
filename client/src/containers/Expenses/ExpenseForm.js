@@ -45,7 +45,7 @@ const defaultInitialValues = {
   description: '',
   reference_no: '',
   currency_code: '',
-  is_published:'',
+  publish:'',
   categories: [...repeatValue(defaultCategory, MIN_LINES_NUMBER)],
 };
 
@@ -143,7 +143,7 @@ function ExpenseForm({
 
     const form = {
       ...values,
-      is_published: submitPayload.publish,
+      publish: submitPayload.publish,
       categories,
     };
     // Handle request success.
@@ -214,7 +214,7 @@ function ExpenseForm({
             <ExpenseFloatingFooter
               isSubmitting={isSubmitting}
               expense={expenseId}
-              expensePublished={values.is_published}
+              expensePublished={values.publish}
               onCancelClick={handleCancelClick}
               onSubmitClick={handleSubmitClick}
             />
