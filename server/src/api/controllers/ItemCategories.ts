@@ -110,7 +110,7 @@ export default class ItemsCategoriesController extends BaseController {
    */
   get categoriesBulkValidationSchema() {
     return [
-      query('ids').isArray({ min: 2 }),
+      query('ids').isArray({ min: 1 }),
       query('ids.*').isNumeric().toInt(),
     ];
   }

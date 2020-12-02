@@ -221,8 +221,8 @@ export default {
     'The item category has been successfully created.',
   the_item_category_has_been_successfully_edited:
     'The item category has been successfully edited.',
-  the_item_category_has_been_successfully_deleted:
-    'The item category has been successfully deleted',
+  the_item_category_has_been_deleted_successfully:
+    'The item category has been deleted successfully.',
   once_delete_these_item_categories_you_will_not_able_restore_them:
     "Once you delete these categories, you won't be able to retrieve them later. Are you sure you want to delete them?",
   once_delete_these_views_you_will_not_able_restore_them:
@@ -855,4 +855,5 @@ export default {
   posting_date: 'Posting date',
   customer: 'Customer',
   email_is_already_used: 'The email is already used.',
+  the_item_categories_has_been_deleted_successfully: 'The item categories has been deleted successfully .',
 };

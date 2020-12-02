@@ -97,7 +97,8 @@ export default persistReducer({
     'pageSubtitle',
     'pageHint',
     'preferencesPageTitle',
-    'topbarEditViewId'
+    'topbarEditViewId',
+    'backLink'
   ],
   storage,
 }, reducerInstance);
