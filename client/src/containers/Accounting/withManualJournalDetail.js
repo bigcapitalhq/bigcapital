@@ -1,8 +1,11 @@
 import { connect } from 'react-redux';
-import { getManualJournal } from 'store/manualJournals/manualJournals.reducers';
+import { getManualJournalByIdFactory } from 'store/manualJournals/manualJournals.selectors';
 
-const mapStateToProps = (state, props) => ({
-  manualJournal: getManualJournal(state, props.manualJournalId),
-});
+export default () => {
+  const getManualJournalById = getManualJournalByIdFactory();
 
-export default connect(mapStateToProps);
+  const mapStateToProps = (state, props) => ({
+    manualJournal: getManualJournalById(state, props),
+  });
+  return connect(mapStateToProps);
+};

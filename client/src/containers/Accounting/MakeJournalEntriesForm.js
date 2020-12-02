@@ -270,7 +270,7 @@ function MakeJournalEntriesForm({
 
 export default compose(
   withJournalsActions,
-  withManualJournalDetail,
+  withManualJournalDetail(),
   withAccountsActions,
   withDashboardActions,
   withMediaActions,

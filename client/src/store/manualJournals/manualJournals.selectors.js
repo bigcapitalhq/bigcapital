@@ -1,7 +1,12 @@
 import { createSelector } from 'reselect';
-import { pickItemsFromIds, paginationLocationQuery, defaultPaginationMeta } from 'store/selectors';
+import {
+  pickItemsFromIds,
+  paginationLocationQuery,
+  defaultPaginationMeta,
+} from 'store/selectors';
 
-const manualJournalsCurrentViewIdSelector = (state) => state.manualJournals.currentViewId;
+const manualJournalsCurrentViewIdSelector = (state) =>
+  state.manualJournals.currentViewId;
 
 const manualJournalsPageSelector = (state) => {
   const viewId = state.manualJournals.currentViewId;
@@ -18,7 +23,7 @@ const manualJournalsPaginationSelector = (state, props) => {
 
 const manualJournalsTableQuery = (state) => state.manualJournals.tableQuery;
 const manualJournalsDataSelector = (state) => state.manualJournals.items;
-
+const manualJournalByIdSelector = (state, props) => state.manualJournals.items[props.manualJournalId];
 
 // Retrieve manual jounral current page results.
 export const getManualJournalsItems = createSelector(
@@ -55,10 +60,12 @@ export const getManualJournalsTableQuery = createSelector(
 );
 
 // Retrieve manual journals current view id.
-export const getManualJournalsCurrentViewIdFactory = () => 
-  createSelector(
-    manualJournalsCurrentViewIdSelector,
-    (currentViewId) => {
-      return currentViewId;
-    },
-  );
+export const getManualJournalsCurrentViewIdFactory = () =>
+  createSelector(manualJournalsCurrentViewIdSelector, (currentViewId) => {
+    return currentViewId;
+  });
+
+export const getManualJournalByIdFactory = () =>
+  createSelector(manualJournalByIdSelector, (manualJournal) => {
+    return manualJournal;
+  });
