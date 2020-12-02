@@ -152,7 +152,7 @@ export default [
     breadcrumb: 'Financial Reports',
   },
   {
-    path: `/ExchangeRates`,
+    path: `/exchange-rates`,
     component: LazyLoader({
       loader: () => import('containers/ExchangeRates/ExchangeRate'),
     }),

@@ -117,7 +117,7 @@ export default [
       },
       {
         text: <T id={'exchange_rate'} />,
-        href: '/ExchangeRates',
+        href: '/exchange-rates',
       },
     ],
   },

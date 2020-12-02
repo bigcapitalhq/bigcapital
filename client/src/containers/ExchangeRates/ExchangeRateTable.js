@@ -13,7 +13,7 @@ import classNames from 'classnames';
 
 import { CLASSES } from 'common/classes';
 
-import { DataTable, Icon, MoneyExchangeRate } from 'components';
+import { DataTable, Icon, Money } from 'components';
 import LoadingIndicator from 'components/LoadingIndicator';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
@@ -92,7 +92,7 @@ function ExchangeRateTable({
         id: 'exchange_rate',
         Header: formatMessage({ id: 'exchange_rate' }),
         accessor: (r) => (
-          <MoneyExchangeRate
+          <Money
             amount={r.exchange_rate}
             currency={r.currency_code}
           />
