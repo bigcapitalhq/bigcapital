@@ -12,17 +12,17 @@ import {
 import { withRouter } from 'react-router';
 import { snakeCase } from 'lodash';
 
-import {
-  FormattedMessage as T,
-  FormattedHTMLMessage,
-  useIntl,
-} from 'react-intl';
-import { compose } from 'utils';
-import LoadingIndicator from 'components/LoadingIndicator';
-import { DataTable, Icon, If, AppToaster } from 'components';
+import { FormattedMessage as T, useIntl } from 'react-intl';
+import { compose, firstLettersArgs } from 'utils';
+
+import { DataTable, Icon, If } from 'components';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withUsers from 'containers/Users/withUsers';
+
+const AvatarCell = (row) => {
+  return <span className={'avatar'}>{ firstLettersArgs(row.email) }</span>;
+}
 
 function UsersDataTable({
   // #withDialogActions
@@ -39,7 +39,6 @@ function UsersDataTable({
   onDeleteUser,
   onSelectedRowsChange,
 }) {
-  const [initialMount, setInitialMount] = useState(false);
   const { formatMessage } = useIntl();
 
   const onEditUser = useCallback(
@@ -80,7 +79,7 @@ function UsersDataTable({
         />
       </Menu>
     ),
-    [onInactiveUser, onDeleteUser, onEditUser],
+    [onInactiveUser, onDeleteUser, onEditUser, formatMessage],
   );
   const onRowContextMenu = useCallback(
     (cell) => {
@@ -91,6 +90,12 @@ function UsersDataTable({
 
   const columns = useMemo(
     () => [
+      {
+        id: 'avatar',
+        Header: '',
+        accessor: AvatarCell,
+        width: 100,
+      },
       {
         id: 'full_name',
         Header: formatMessage({ id: 'full_name' }),
@@ -154,27 +159,15 @@ function UsersDataTable({
     },
     [onFetchData],
   );
-  const handleSelectedRowsChange = useCallback(
-    (selectedRows) => {
-      onSelectedRowsChange &&
-        onSelectedRowsChange(selectedRows.map((s) => s.original));
-    },
-    [onSelectedRowsChange],
-  );
-
   return (
-    <LoadingIndicator loading={loading} mount={false}>
-      <DataTable
-        columns={columns}
-        data={usersList}
-        onFetchData={handelDataTableFetchData}
-        loading={usersLoading && !initialMount}
-        manualSortBy={true}
-        noInitialFetch={true}
-        onSelectedRowsChange={handleSelectedRowsChange}
-        rowContextMenu={onRowContextMenu}
-      />
-    </LoadingIndicator>
+    <DataTable
+      columns={columns}
+      data={usersList}
+      loading={loading}
+      onFetchData={handelDataTableFetchData}
+      noInitialFetch={true}
+      rowContextMenu={onRowContextMenu}
+    />
   );
 }
 

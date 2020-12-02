@@ -1,6 +1,7 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import { connect } from 'react-redux';
+import classNames from 'classnames';
+import { CLASSES } from 'common/classes';
 
 import DashboardTopbarUser from 'components/Dashboard/TopbarUser';
 import UsersActions from 'containers/Preferences/Users/UsersActions';
@@ -11,15 +12,19 @@ import { compose } from 'utils';
 
 function PreferencesTopbar({ preferencesPageTitle }) {
   return (
-    <div class="dashboard__preferences-topbar">
-      <div class="dashboard__title">
+    <div
+      className={classNames(
+        CLASSES.PREFERENCES_PAGE_TOPBAR,
+        CLASSES.PREFERENCES_TOPBAR,
+      )}
+    >
+      <div class="preferences-topbar__title">
         <h2>{preferencesPageTitle}</h2>
       </div>
-      <div class="preferences__topbar-actions">
+      <div class="preferences-topbar__actions">
         <Route pathname="/preferences">
           <Switch>
             <Route exact path={'/preferences/users'} component={UsersActions} />
-
             <Route
               exact
               path={'/preferences/currencies'}
@@ -29,7 +34,7 @@ function PreferencesTopbar({ preferencesPageTitle }) {
         </Route>
       </div>
 
-      <div class="dashboard__topbar-user">
+      <div class="preferences-topbar__user">
         <DashboardTopbarUser />
       </div>
     </div>

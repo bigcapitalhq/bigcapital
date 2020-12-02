@@ -854,4 +854,5 @@ export default {
   save_and_send: 'Save and Send',
   posting_date: 'Posting date',
   customer: 'Customer',
+  email_is_already_used: 'The email is already used.',
 };

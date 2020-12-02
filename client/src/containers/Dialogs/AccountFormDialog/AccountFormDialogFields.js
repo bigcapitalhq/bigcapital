@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Form, FastField, Field, ErrorMessage, useFormikContext } from 'formik';
 import classNames from 'classnames';
 import { FormattedMessage as T } from 'react-intl';
@@ -28,7 +28,7 @@ import { useAutofocus } from 'hooks';
  * Account form dialogs fields.
  */
 function AccountFormDialogFields({
-  // #ownProps
+  // #ownPropscl
   onClose,
   isNewMode,
 

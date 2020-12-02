@@ -588,3 +588,15 @@ body.authentication {
   max-width: 250px;
   margin-left: auto;
 }
+
+.card{
+  background: #fff;
+  border: 1px solid #d2dce2;
+}
+
+
+.form-group--select-list{
+  button{
+    justify-content: start;
+  }
+}

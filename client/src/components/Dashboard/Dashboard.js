@@ -7,8 +7,7 @@ import DashboardLoadingIndicator from './DashboardLoadingIndicator';
 import Sidebar from 'components/Sidebar/Sidebar';
 import DashboardContent from 'components/Dashboard/DashboardContent';
 import DialogsContainer from 'components/DialogsContainer';
-import PreferencesContent from 'components/Preferences/PreferencesContent';
-import PreferencesSidebar from 'components/Preferences/PreferencesSidebar';
+import PreferencesPage from 'components/Preferences/PreferencesPage';
 import Search from 'containers/GeneralSearch/Search';
 import DashboardSplitPane from 'components/Dashboard/DashboardSplitePane';
 
@@ -28,9 +27,8 @@ function Dashboard({
         <Route path="/preferences">
           <DashboardSplitPane>
             <Sidebar />
-            <PreferencesSidebar />
+            <PreferencesPage />
           </DashboardSplitPane>
-          <PreferencesContent />
         </Route>
 
         <Route path="/">

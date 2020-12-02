@@ -1,20 +1,20 @@
+
+
 import React from 'react';
-import { Button, Intent } from '@blueprintjs/core';
-import { compose } from 'utils';
-import withDialogActions from 'containers/Dialog/withDialogActions';
+import classNames from 'classnames';
 
-function Currencies({ openDialog }) {
-  const onClickNewCurrency = () => {
-    openDialog('currency-form',{});
-  };
+import { CLASSES } from 'common/classes';
+import CurrenciesList from './CurrenciesList';
 
+export default function PreferencesCurrenciesPage() {
   return (
-    <div className={'preferences__inside-content'}>
-      <div className={'preferences__tabs'}>
-        
+    <div className={classNames(
+      CLASSES.PREFERENCES_PAGE_INSIDE_CONTENT,
+      CLASSES.PREFERENCES_PAGE_INSIDE_CONTENT_CURRENCIES,
+    )}>
+      <div className={classNames(CLASSES.CARD)}>
+        <CurrenciesList />
       </div>
     </div>
-  );
+  )
 }
-
-export default compose(withDialogActions)(Currencies);

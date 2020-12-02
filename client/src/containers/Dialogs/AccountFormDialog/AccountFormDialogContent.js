@@ -154,7 +154,11 @@ function AccountFormDialogContent({
         initialValues={initialValues}
         onSubmit={handleFormSubmit}
       >
-        <AccountFormDialogFields isNewMode={isNewMode} onClose={handleClose} />
+        <AccountFormDialogFields
+          dialogName={dialogName}
+          isNewMode={isNewMode}
+          onClose={handleClose}
+        />
       </Formik>
     </DialogContent>
   );

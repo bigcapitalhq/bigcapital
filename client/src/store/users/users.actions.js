@@ -49,7 +49,16 @@ export const deleteUser = ({ id }) => {
 };
 
 export const submitInvite = ({ form }) => {
-  return (dispatch) => ApiService.post(`invite/send`, form);
+  return (dispatch) => new Promise((resolve, reject) => {
+    ApiService.post(`invite/send`, form)
+      .then((response) => { resolve(response); })
+      .catch((error) => {
+        const { response } = error;
+        const { data } = response;
+
+        reject(data?.errors);
+    });
+  });
 };
 
 export const editUser = ({ form, id }) => {

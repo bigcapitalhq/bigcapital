@@ -21,9 +21,4 @@ export default [
     disabled: false,
     href: '/preferences/accountant',
   },
-  {
-    text: <T id={'accounts'}/>,
-    disabled: false,
-    href: '/preferences/accounts',
-  },
 ];

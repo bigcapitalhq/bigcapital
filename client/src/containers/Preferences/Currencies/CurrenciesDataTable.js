@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import {
   Intent,
   Button,
@@ -8,10 +8,9 @@ import {
   Position,
 } from '@blueprintjs/core';
 import { withRouter } from 'react-router';
-import { FormattedMessage as T, useIntl } from 'react-intl';
-import { compose } from 'utils';
-import { useUpdateEffect } from 'hooks';
-import LoadingIndicator from 'components/LoadingIndicator';
+import { useIntl } from 'react-intl';
+import { compose, saveInvoke } from 'utils';
+
 import { DataTable, Icon } from 'components';
 
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
@@ -23,23 +22,14 @@ function CurrenciesDataTable({
   currenciesList,
   currenciesLoading,
 
-  loading,
+  // #ownProps
   onFetchData,
-  onSelectedRowsChange,
   onDeleteCurrency,
 
   // #withDialog.
   openDialog,
 }) {
-  const [initialMount, setInitialMount] = useState(false);
-
   const { formatMessage } = useIntl();
-
-  useUpdateEffect(() => {
-    if (!currenciesLoading) {
-      setInitialMount(true);
-    }
-  }, [currenciesLoading, setInitialMount]);
 
   const handleEditCurrency = useCallback(
     (currency) => {
@@ -59,7 +49,6 @@ function CurrenciesDataTable({
           text={formatMessage({ id: 'edit_currency' })}
           onClick={() => handleEditCurrency(currency)}
         />
-
         <MenuItem
           icon={<Icon icon="trash-16" iconSize={16} />}
           text={formatMessage({ id: 'delete_currency' })}
@@ -116,31 +105,20 @@ function CurrenciesDataTable({
 
   const handleDataTableFetchData = useCallback(
     (...args) => {
-      onFetchData && onFetchData(...args);
+      saveInvoke(onFetchData, ...args);
     },
     [onFetchData],
   );
 
-  const handleSelectedRowsChange = useCallback(
-    (selectedRows) => {
-      onSelectedRowsChange &&
-        onSelectedRowsChange(selectedRows.map((s) => s.original));
-    },
-    [onSelectedRowsChange],
-  );
-
   return (
-    <LoadingIndicator loading={loading} mount={false}>
-      <DataTable
-        columns={columns}
-        data={currenciesList}
-        onFetchData={handleDataTableFetchData}
-        noInitialFetch={true}
-        loading={currenciesLoading && !initialMount}
-        onSelectedRowsChange={handleSelectedRowsChange}
-        rowContextMenu={onRowContextMenu}
-      />
-    </LoadingIndicator>
+    <DataTable
+      columns={columns}
+      data={currenciesList}
+      loading={currenciesLoading}
+      onFetchData={handleDataTableFetchData}
+      noInitialFetch={true}
+      rowContextMenu={onRowContextMenu}
+    />
   );
 }
 
@@ -148,7 +126,8 @@ export default compose(
   withRouter,
   withDashboardActions,
   withDialogActions,
-  withCurrencies(({ currenciesList }) => ({
+  withCurrencies(({ currenciesList, currenciesLoading }) => ({
     currenciesList,
+    currenciesLoading,
   })),
 )(CurrenciesDataTable);
