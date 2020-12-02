@@ -32,7 +32,7 @@ export default function InvoiceFloatingActions({
   const handleSubmitPublishBtnClick = (event) => {
     saveInvoke(onSubmitClick, event, {
       redirect: true,
-      publish: true
+      publish: true,
     });
   };
 
@@ -116,6 +116,7 @@ export default function InvoiceFloatingActions({
             position={Position.BOTTOM_LEFT}
           >
             <Button
+              disabled={isSubmitting}
               intent={Intent.PRIMARY}
               rightIcon={<Icon icon="arrow-drop-up-16" iconSize={20} />}
             />
@@ -148,6 +149,7 @@ export default function InvoiceFloatingActions({
             position={Position.BOTTOM_LEFT}
           >
             <Button
+              disabled={isSubmitting}
               rightIcon={<Icon icon="arrow-drop-up-16" iconSize={20} />}
             />
           </Popover>
@@ -177,6 +179,7 @@ export default function InvoiceFloatingActions({
             position={Position.BOTTOM_LEFT}
           >
             <Button
+              disabled={isSubmitting}
               intent={Intent.PRIMARY}
               rightIcon={<Icon icon="arrow-drop-up-16" iconSize={20} />}
             />

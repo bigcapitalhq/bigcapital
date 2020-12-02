@@ -84,6 +84,7 @@ export default function PaymentMadeFloatingActions({
           position={Position.BOTTOM_LEFT}
         >
           <Button
+            disabled={isSubmitting}
             intent={Intent.PRIMARY}
             rightIcon={<Icon icon="arrow-drop-up-16" iconSize={20} />}
           />
