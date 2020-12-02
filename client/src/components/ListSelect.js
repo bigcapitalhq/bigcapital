@@ -2,6 +2,8 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { Button, MenuItem } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
 import { FormattedMessage as T } from 'react-intl';
+import classNames from 'classnames';
+import { CLASSES } from 'common/classes';
 
 export default function ListSelect({
   buttonProps,
@@ -69,6 +71,10 @@ export default function ListSelect({
       {...selectProps}
       noResults={noResults}
       disabled={disabled}
+      className={classNames(
+        CLASSES.FORM_GROUP_LIST_SELECT,
+        selectProps.className,
+      )}
     >
       <Button
         text={currentItem ? currentItem[labelProp] : defaultText}

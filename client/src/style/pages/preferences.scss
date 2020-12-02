@@ -1,16 +1,37 @@
 .dashboard-content--preferences {
-  // margin-left: 430px;
-  margin-left: 410px;
-  // width: 100%;
-  position: relative;
+  flex-direction: row;
+  flex: 1 0 0;
+  min-width: auto;
+  background-color: #fbfbfb;
 }
-
-.preferences {
-  &__inside-content--tabable {
-    margin-left: -25px;
-    margin-right: -25px;
+.dashboard {
+  &__preferences-content {
+    flex: 1 0 0;
+    display: flex;
+    flex-direction: column;
   }
+}
+.preferences-page {
+  &__inside-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 
+    &--tabable {
+      margin-left: -25px;
+      margin-right: -25px;
+    }
+
+    .card{
+      margin: 15px;
+    }
+    .bigcapital-datatable{
+
+      .table .tbody .tbody-inner > .loading{
+        padding: 30px 0;
+      }
+    }
+  }
   &__inside-content {
     .#{$ns}-tab-list {
       border-bottom: 1px solid #e5e5e5;
@@ -29,8 +50,75 @@
   &__tabs-extra-actions {
     margin-left: auto;
   }
+}
 
-  &__topbar-actions {
+.preferences-page {
+  display: flex;
+  flex: 1 0 0;
+
+  &__content {
+    flex: 1 0 0;
+    display: flex;
+    flex-direction: column;
+    margin-left: 220px;
+
+    .dashboard__card {
+      margin: 15px;
+      flex: 1 0 0;
+    }
+  }
+}
+
+// Preferences topbar.
+// -----------------------------
+.preferences-topbar {
+  border-bottom: 1px solid #d2dde2;
+  min-height: 60px;
+  flex: 60px 0 0;
+  padding: 0 0 0 22px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+
+  &__title {
+    h2 {
+      font-size: 22px;
+      font-weight: 400;
+      margin: 0;
+      color: #48485b;
+    }
+  }
+
+  &__user {
+    display: flex;
+    align-items: center;
+    margin-right: 14px;
+
+    .bp3-button:not([class*='bp3-intent-']):not(.bp3-minimal) {
+      padding: 0;
+      background-size: contain;
+      background-color: #eed1f2;
+      border-radius: 50%;
+      height: 35px;
+      width: 35px;
+
+      .user-text {
+        font-size: 12px;
+        color: #804f87;
+      }
+      &,
+      &:hover,
+      &:focus {
+        background-color: #eed1f2;
+        border: 0;
+        box-shadow: none;
+      }
+    }
+  }
+
+  &__actions {
     margin-left: auto;
     padding-right: 15px;
     margin-right: 15px;
@@ -40,51 +128,60 @@
       margin-left: 10px;
     }
   }
-
-  &-button {
-    margin-right: 10px;
-  }
-
-  &__floating-footer {
-    position: fixed;
-    bottom: 0;
-    left: 430px;
-    right: 0;
-    background: #fff;
-    padding: 10px 18px;
-    border-top: 1px solid #ececec;
-  }
 }
 
-.preferences__sidebar {
-  background: #fdfdfd;
-  position: fixed;
-  left: 190px;
-  top: -5px;
+// Preferences sidebar.
+// -----------------------------
+.preferences-sidebar {
+  background: #e5eaee;
+  border-right: 1px solid #c6d0d9;
   min-width: 220px;
   max-width: 220px;
   height: 100%;
+  position: fixed;
 
-  .sidebar-wrapper {
+  &__wrapper {
+    height: 100%;
   }
 
-  &-head {
+  .ScrollbarsCustom-Track {
+    &.ScrollbarsCustom-TrackY,
+    &.ScrollbarsCustom-TrackX{
+      background: rgba(0, 0, 0, 0);
+    }
+  }
+  .ScrollbarsCustom-Thumb{
+    &.ScrollbarsCustom-ThumbX,
+    &.ScrollbarsCustom-ThumbY {
+      background: rgba(0, 0, 0, 0);
+    }
+  }
+
+  &:hover {
+    .ScrollbarsCustom-Thumb{
+      &.ScrollbarsCustom-ThumbX,
+      &.ScrollbarsCustom-ThumbY {
+        background: rgba(0, 0, 0, 0.15);
+      }      
+    }
+  }
+
+  &__head {
     display: flex;
     flex-direction: row;
     align-items: center;
-    border-bottom: 1px solid #e5e5e5;
-    height: 70px;
+    height: 60px;
     padding: 0 22px;
 
     h2 {
       font-size: 22px;
-      font-weight: 300;
-      color: #555;
+      color: #48485b;
+      font-weight: 400;
       margin: 0;
     }
   }
 
-  &-menu {
+  &__menu {
     padding: 0;
     background: transparent;
 
@@ -96,69 +193,124 @@
 
       &:hover,
       &.#{$ns}-active {
-        background-color: #ebf1f5;
+        background-color: rgba(255, 255, 255, 0.5);
         color: #333;
       }
     }
   }
 }
 
-//  Preference
+//  General page
 //---------------------------------
-.preferences__inside-content--general {
-  margin: 20px;
-  .bp3-form-group {
-    margin: 18px 18px;
-    .bp3-label {
-      min-width: 180px;
-    }
-    .bp3-form-content {
-      width: 50%;
+.preferences-page__inside-content--general {
+  .card {
+    padding: 25px;
+
+    .card__footer {
+      padding-top: 16px;
+      border-top: 1px solid #e0e7ea;
+      margin-top: 30px;
+
+      .bp3-button {
+        min-width: 60px;
+
+        + .bp3-button{
+          margin-left: 10px;
+        }
+      }
     }
   }
 
-  .form-group--org-name,
-  .form-group--org-industry {
+  .bp3-form-group {
+    max-width: 550px;
+
+    .bp3-label {
+      min-width: 180px;
+    }
+
     .bp3-form-content {
-      position: relative;
-      width: 70%;
-    }
-  }
-  .form-group--time-zone {
-    .bp3-menu {
-      max-height: 300px;
-      max-width: 400px;
-      overflow: auto;
-      padding: 0;
-    }
-    .bp3-text-muted {
-      color: #000000;
-    }
-    .bp3-button:not([class*='bp3-intent-']):not(.bp3-minimal) {
-      background: #fff;
-      box-shadow: 0 0 0 transparent;
-      border: 1px solid #ced4da;
-      padding: 8px;
-    }
-    .bp3-button .bp3-icon:first-child:last-child,
-    .bp3-button .bp3-spinner + .bp3-icon:last-child {
-      position: absolute;
-      right: 15px;
-      display: inline-block;
+      width: 100%;
     }
   }
 }
 
 // Users/Roles List.
 // ---------------------------------
-.preferences__inside-content--users-roles {
+.preferences-page__inside-content--users{
+
   .bigcapital-datatable {
-    .table .th,
-    .table .td {
-      padding: 0.8rem 0.5rem;
+
+    .td{
+      .avatar{
+        height: 28px;
+        width: 28px;
+        text-align: center;
+        background: #b7bfc6;
+        border-radius: 50%;
+        line-height: 28px;
+        color: #fff;
+        text-transform: uppercase;
+        margin-left: 10px;
+      }
     }
     .td.status {
       text-transform: uppercase;
+    }
+
+    .tr:last-child .td{
+      border-bottom: 0;
+    }
+  }
+}
+
+// Currencies List.
+// ---------------------------------
+.preferences-page__inside-content--currencies{
+
+  .bigcapital-datatable {
+
+    .tr:last-child .td{
+      border-bottom: 0;
+    }
+  }
+}
+
+// Accountant.
+// ---------------------------------
+.preferences-page__inside-content--accountant {
+  .card {
+    padding: 25px;
+
+    .card__footer {
+      padding-top: 16px;
+      border-top: 1px solid #e0e7ea;
+      margin-top: 30px;
+
+      .bp3-button {
+        min-width: 60px;
+
+        + .bp3-button{
+          margin-left: 10px;
+        }
+      }
+    }
+  }
+
+  .form-group--select-list{
+
+    button{
+      min-width: 250px;
+    }
+  }
+
+  .bp3-form-group {
+    
+    .bp3-form-helper-text{
+      margin-top: 7px;
+    }
+
+    label.bp3-label {
+      margin-bottom: 7px;
     }
   }
 }

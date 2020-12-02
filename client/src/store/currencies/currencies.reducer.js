@@ -3,6 +3,7 @@ import t from 'store/types';
 
 const initialState = {
   data: {},
+  loading: false,
 };
 
 export default createReducer(initialState, {

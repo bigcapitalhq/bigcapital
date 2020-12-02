@@ -99,9 +99,6 @@ export default class ItemCategoriesService implements IItemCategoriesService {
     if (itemCategoryOTD.inventoryAccountId) {
       await this.validateInventoryAccount(tenantId, itemCategoryOTD.inventoryAccountId);
     }
-    if (itemCategoryOTD.parentCategoryId) {
-      await this.getItemCategoryOrThrowError(tenantId, itemCategoryOTD.parentCategoryId);
-    }
 
     const itemCategoryObj = this.transformOTDToObject(itemCategoryOTD, authorizedUser);
     const itemCategory = await ItemCategory.query().insert({ ...itemCategoryObj });
@@ -203,10 +200,6 @@ export default class ItemCategoriesService implements IItemCategoriesService {
     if (itemCategoryOTD.inventoryAccountId) {
       await this.validateInventoryAccount(tenantId, itemCategoryOTD.inventoryAccountId);
     }
-    if (itemCategoryOTD.parentCategoryId) {
-      await this.getItemCategoryOrThrowError(tenantId, itemCategoryOTD.parentCategoryId);
-    }
-
     const itemCategoryObj = this.transformOTDToObject(itemCategoryOTD, authorizedUser);
     const itemCategory = await ItemCategory.query().patchAndFetchById(itemCategoryId, { ...itemCategoryObj });
 

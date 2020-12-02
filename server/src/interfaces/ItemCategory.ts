@@ -4,8 +4,6 @@ import { ISystemUser } from "./User";
 export interface IItemCategory {
   id: number,
   name: string,
-
-  parentCategoryId?: number,
   description?: string,
   userId: number,
 
@@ -19,7 +17,6 @@ export interface IItemCategory {
 export interface IItemCategoryOTD {
   name: string,
 
-  parentCategoryId?: number,
   description?: string,
   userId: number,
 

@@ -57,13 +57,6 @@ export default class ItemCategory extends TenantModel {
         column: 'description',
         columnType: 'string'
       },
-      parent_category_id: {
-        label: 'Parent category',
-        column: 'parent_category_id',
-        relation: 'items_categories.id',
-        relationColumn: 'items_categories.id',
-        optionsResource: 'item_category',
-      },
       user: {
         label: 'User',
         column: 'user_id',

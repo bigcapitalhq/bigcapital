@@ -10,6 +10,9 @@ const CLASSES = {
   DATATABLE_EDITOR_ITEMS_ENTRIES: 'items-entries-table',
   DATATABLE_EDITOR_HAS_TOTAL_ROW: 'has-total-row',
 
+  DASHBOARD_CONTENT: 'dashboard-content',
+  DASHBOARD_CONTENT_PREFERENCES: 'dashboard-content--preferences',
+
   PAGE_FORM: 'page-form',
   PAGE_FORM_HEADER: 'page-form__header',
   PAGE_FORM_HEADER_PRIMARY: 'page-form__primary-section',
@@ -46,7 +49,24 @@ const CLASSES = {
 
   SELECT_LIST_FILL_POPOVER: 'select-list--fill-popover',
 
+
+  PREFERENCES_PAGE: 'preferences-page',
+  PREFERENCES_PAGE_SIDEBAR: 'preferences-page__sidebar',
+  PREFERENCES_PAGE_TOPBAR: 'preferences-page__topbar',
+  PREFERENCES_PAGE_CONTENT: 'preferences-page__content',
+  PREFERENCES_PAGE_TABS: 'preferences-page__tabs',
+
+  PREFERENCES_SIDEBAR: 'preferences-sidebar',
+  PREFERENCES_TOPBAR: 'preferences-topbar',
+
+  PREFERENCES_PAGE_INSIDE_CONTENT: 'preferences-page__inside-content',
+  PREFERENCES_PAGE_INSIDE_CONTENT_GENERAL: 'preferences-page__inside-content--general',
+  PREFERENCES_PAGE_INSIDE_CONTENT_USERS: 'preferences-page__inside-content--users',
+  PREFERENCES_PAGE_INSIDE_CONTENT_CURRENCIES: 'preferences-page__inside-content--currencies',
+  PREFERENCES_PAGE_INSIDE_CONTENT_ACCOUNTANT: 'preferences-page__inside-content--accountant',
+
   ...Classes,
+  CARD: 'card',
 };
 
 export {

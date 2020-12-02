@@ -1,6 +1,6 @@
-import React, { useCallback, useState, useMemo, useEffect } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { Alert, Intent } from '@blueprintjs/core';
-import { useQuery, queryCache } from 'react-query';
+import { useQuery } from 'react-query';
 import {
   FormattedMessage as T,
   FormattedHTMLMessage,
@@ -8,33 +8,23 @@ import {
 } from 'react-intl';
 
 import CurrenciesDataTable from './CurrenciesDataTable';
-import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
-import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import AppToaster from 'components/AppToaster';
 
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withCurrenciesActions from 'containers/Currencies/withCurrenciesActions';
-import withDialogActions from 'containers/Dialog/withDialogActions';
 
 import { compose } from 'utils';
 
+// Currencies landing list page.
 function CurrenciesList({
-  // #withCurrencies
-  currenciesList,
-  currenciesLoading,
-
   // #withCurrenciesActions
   requestDeleteCurrency,
   requestFetchCurrencies,
-
-  // #withDialogActions
-  openDialog,
 
   // #withDashboardActions
   changePreferencesPageTitle,
 }) {
   const [deleteCurrencyState, setDeleteCurrencyState] = useState(false);
-  const [selectedRows, setSelectedRows] = useState([]);
   const { formatMessage } = useIntl();
 
   const fetchCurrencies = useQuery(
@@ -52,7 +42,7 @@ function CurrenciesList({
   // Handle click and cancel/confirm currency delete
   const handleDeleteCurrency = useCallback((currency) => {
     setDeleteCurrencyState(currency);
-  }, []);
+  }, [setDeleteCurrencyState]);
 
   // handle cancel delete currency alert.
   const handleCancelCurrencyDelete = () => {
@@ -79,44 +69,29 @@ function CurrenciesList({
     [deleteCurrencyState, requestDeleteCurrency, formatMessage],
   );
 
-  // Handle selected rows change.
-  const handleSelectedRowsChange = useCallback(
-    (accounts) => {
-      setSelectedRows(accounts);
-    },
-    [setSelectedRows],
-  );
-
   return (
-    <DashboardInsider loading={fetchCurrencies.isFetching}>
-      <DashboardPageContent>
-        <CurrenciesDataTable
-          onDeleteCurrency={handleDeleteCurrency}
-          onEditCurrency={handleEditCurrency}
-          onSelectedRowsChange={handleSelectedRowsChange}
-        />
-        <Alert
-          cancelButtonText={<T id={'cancel'} />}
-          confirmButtonText={<T id={'delete'} />}
-          icon="trash"
-          intent={Intent.DANGER}
-          isOpen={deleteCurrencyState}
-          onCancel={handleCancelCurrencyDelete}
-          onConfirm={handleConfirmCurrencyDelete}
-        >
-          <p>
-            <FormattedHTMLMessage
-              id={'once_delete_this_currency_you_will_able_to_restore_it'}
-            />
-          </p>
-        </Alert>
-      </DashboardPageContent>
-    </DashboardInsider>
+    <>
+      <CurrenciesDataTable
+        onDeleteCurrency={handleDeleteCurrency}
+        onEditCurrency={handleEditCurrency}
+      />
+      <Alert
+        cancelButtonText={<T id={'cancel'} />}
+        confirmButtonText={<T id={'delete'} />}
+        intent={Intent.DANGER}
+        isOpen={deleteCurrencyState}
+        onCancel={handleCancelCurrencyDelete}
+        onConfirm={handleConfirmCurrencyDelete}
+      >
+        <p>
+          Once you delete this currency, you won't be able to restore it later. Are you sure you want to delete ?
+        </p>
+      </Alert>
+    </>
   );
 }
 
 export default compose(
   withDashboardActions,
   withCurrenciesActions,
-  withDialogActions,
 )(CurrenciesList);

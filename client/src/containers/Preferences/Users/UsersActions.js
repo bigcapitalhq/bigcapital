@@ -1,9 +1,9 @@
-import React, {useCallback} from 'react';
+import React from 'react';
 import {
   Button,
   Intent,
 } from '@blueprintjs/core';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T } from 'react-intl';
 
 import Icon from 'components/Icon';
 import withDialogActions from 'containers/Dialog/withDialogActions';
@@ -13,9 +13,9 @@ function UsersActions({
   openDialog,
   closeDialog,
 }) {
-  const onClickNewUser = useCallback(() => {
-    openDialog('user-form');
-  }, [openDialog]);
+  const onClickNewUser = () => {
+    openDialog('invite-user');
+  };
 
   return (
     <div className="preferences-actions">

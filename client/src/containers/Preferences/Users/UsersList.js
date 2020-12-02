@@ -1,47 +1,32 @@
-import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { queryCache, useQuery } from 'react-query';
 import { Alert, Intent } from '@blueprintjs/core';
 
-import withDialogActions from 'containers/Dialog/withDialogActions';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
-import withUsers from 'containers/Users/withUsers';
-import UsersDataTable from './UsersDataTable';
 import withUsersActions from 'containers/Users/withUsersActions';
-import DashboardInsider from 'components/Dashboard/DashboardInsider';
-import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 
+import UsersDataTable from './UsersDataTable';
 import {
   FormattedMessage as T,
   FormattedHTMLMessage,
   useIntl,
 } from 'react-intl';
-import { snakeCase } from 'lodash';
 
 import AppToaster from 'components/AppToaster';
 
 import { compose } from 'utils';
 
 function UsersListPreferences({
-  // #withDialog
-  openDialog,
-
   // #withDashboardActions
   changePreferencesPageTitle,
-
-  // #withUsers
-  usersList,
 
   // #withUsersActions
   requestDeleteUser,
   requestInactiveUser,
   requestFetchUsers,
-
-  // #ownProps
-  onFetchData,
 }) {
   const [deleteUserState, setDeleteUserState] = useState(false);
   const [inactiveUserState, setInactiveUserState] = useState(false);
-  const [selectedRows, setSelectedRows] = useState([]);
 
   const { formatMessage } = useIntl();
 
@@ -91,9 +76,6 @@ function UsersListPreferences({
 
   const handleEditUser = useCallback(() => {}, []);
 
-
-
-
   // Handle confirm User delete
   const handleConfirmUserDelete = useCallback(() => {
     if (!deleteUserState) {
@@ -115,63 +97,44 @@ function UsersListPreferences({
       });
   }, [deleteUserState, requestDeleteUser, formatMessage]);
 
-  // const handelDataTableFetchData = useCallback(() => {
-  //   onFetchData && onFetchData();
-  // }, [onFetchData]);
-
-  // Handle selected rows change.
-  const handleSelectedRowsChange = useCallback(
-    (accounts) => {
-      setSelectedRows(accounts);
-    },
-    [setSelectedRows],
-  );
 
   return (
-    <DashboardInsider loading={fetchUsers.isFetching}>
-      <DashboardPageContent>
-        <UsersDataTable
-          onDeleteUser={handleDeleteUser}
-          onInactiveUser={handleInactiveUser}
-          onEditUser={handleEditUser}
-          // onFetchData={handleFetchData}
-          onSelectedRowsChange={handleSelectedRowsChange}
-        />
-
-        <Alert
-          cancelButtonText={<T id={'cancel'} />}
-          confirmButtonText={<T id={'delete'} />}
-          icon="trash"
-          intent={Intent.DANGER}
-          isOpen={deleteUserState}
-          onCancel={handleCancelUserDelete}
-          onConfirm={handleConfirmUserDelete}
-        >
-          <p>
-            <FormattedHTMLMessage
-              id={'once_delete_this_account_you_will_able_to_restore_it'}
-            />
-          </p>
-        </Alert>
-        <Alert
-          cancelButtonText={<T id={'cancel'} />}
-          confirmButtonText={<T id={'inactivate'} />}
-          intent={Intent.WARNING}
-          isOpen={inactiveUserState}
-          onCancel={handleCancelInactiveUser}
-          onConfirm={handleConfirmUserActive}
-        >
-          <p>
-            <T id={'are_sure_to_inactive_this_account'} />
-          </p>
-        </Alert>
-      </DashboardPageContent>
-    </DashboardInsider>
+    <>
+      <UsersDataTable
+        loading={fetchUsers.isFetching}
+        onDeleteUser={handleDeleteUser}
+        onInactiveUser={handleInactiveUser}
+        onEditUser={handleEditUser}
+      />
+      <Alert
+        cancelButtonText={<T id={'cancel'} />}
+        confirmButtonText={<T id={'delete'} />}
+        intent={Intent.DANGER}
+        isOpen={deleteUserState}
+        onCancel={handleCancelUserDelete}
+        onConfirm={handleConfirmUserDelete}
+      >
+        <p>
+          Once you delete this user, you won't be able to restore it later. Are you sure you want to delete ?
+        </p>
+      </Alert>
+      <Alert
+        cancelButtonText={<T id={'cancel'} />}
+        confirmButtonText={<T id={'inactivate'} />}
+        intent={Intent.WARNING}
+        isOpen={inactiveUserState}
+        onCancel={handleCancelInactiveUser}
+        onConfirm={handleConfirmUserActive}
+      >
+        <p>
+          <T id={'are_sure_to_inactive_this_account'} />
+        </p>
+      </Alert>
+    </>
   );
 }
 
 export default compose(
-  withDialogActions,
   withDashboardActions,
   withUsersActions,
 )(UsersListPreferences);
