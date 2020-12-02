@@ -7,7 +7,6 @@ const Schema = Yup.object().shape({
     .required()
     .max(DATATYPES_LENGTH.STRING)
     .label(formatMessage({ id: 'category_name_' })),
-  parent_category_id: Yup.number().nullable(),
   cost_account_id: Yup.number().nullable(),
   sell_account_id: Yup.number().nullable(),
   inventory_account_id: Yup.number().nullable(),

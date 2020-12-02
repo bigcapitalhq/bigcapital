@@ -30,34 +30,6 @@ export default function ItemCategoryForm({
 }) {
   const categoryNameFieldRef = useAutofocus();
 
-  // Filters Item Categories list.
-  const filterItemCategories = useCallback(
-    (query, category, _index, exactMatch) => {
-      const normalizedTitle = category.name.toLowerCase();
-      const normalizedQuery = query.toLowerCase();
-
-      if (exactMatch) {
-        return normalizedTitle === normalizedQuery;
-      } else {
-        return normalizedTitle.indexOf(normalizedQuery) >= 0;
-      }
-    },
-    [],
-  );
-
-  const parentCategoryItem = useCallback(
-    (category, { handleClick, modifiers, query }) => {
-      return (
-        <MenuItem
-          text={category.name}
-          key={category.id}
-          onClick={handleClick}
-        />
-      );
-    },
-    [],
-  );
-
   return (
     <Form>
       <div className={Classes.DIALOG_BODY}>
@@ -81,38 +53,6 @@ export default function ItemCategoryForm({
           )}
         </FastField>
 
-        {/* ----------- Parent Category ----------- */}
-        <FastField name={'parent_category_id'}>
-          {({ form, field: { value }, meta: { error, touched } }) => (
-            <FormGroup
-              label={<T id={'parent_category'} />}
-              labelInfo={Hint}
-              className={classNames(
-                'form-group--select-list',
-                'form-group--parent-category',
-                Classes.FILL,
-              )}
-              inline={true}
-              helperText={<ErrorMessage name="parent_category_id" />}
-              intent={inputIntent({ error, touched })}
-            >
-              <ListSelect
-                items={categoriesList}
-                noResults={<MenuItem disabled={true} text="No results." />}
-                itemRenderer={parentCategoryItem}
-                itemPredicate={filterItemCategories}
-                popoverProps={{ minimal: true }}
-                onItemSelect={(parentCategory) => {
-                  form.setFieldValue('parent_category_id', parentCategory.id);
-                }}
-                selectedItem={value}
-                selectedItemProp={'id'}
-                defaultText={<T id={'select_parent_category'} />}
-                labelProp={'name'}
-              />
-            </FormGroup>
-          )}
-        </FastField>
 
         {/* ----------- Description ----------- */}
         <FastField name={'description'}>

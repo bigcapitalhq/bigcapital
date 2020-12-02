@@ -23,7 +23,6 @@ import { compose, transformToForm } from 'utils';
 const defaultInitialValues = {
   name: '',
   description: '',
-  parent_category_id: '',
   cost_account_id: '',
   sell_account_id: '',
   inventory_account_id: '',
