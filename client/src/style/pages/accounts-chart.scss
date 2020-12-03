@@ -4,7 +4,7 @@
   .bigcapital-datatable{
     .normal{
       .#{$ns}-icon{
-        color: #6E8091;
+        color: #7f91a2;
         padding-left: 15px;
       }
     }
@@ -14,6 +14,14 @@
         .tr:not(.no-results) .td{
           padding-top: 0.3rem;
           padding-bottom: 0.3rem;
+        }
+
+        .tr.inactive .td{
+          color: #646b82;
+
+          &.normal .#{$ns}-icon{
+            color: #9eaab6;
+          }
         }
         .account_name{
           .bp3-popover-wrapper--inactive-semafro{

@@ -206,6 +206,12 @@ function AccountsDataTable({
     [onSelectedRowsChange],
   );
 
+  const rowClassNames = (row) => {
+    return {
+      'inactive': !row.original.active,
+    };
+  };
+
   return (
     <div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>
       <DataTable
@@ -219,6 +225,7 @@ function AccountsDataTable({
         onSelectedRowsChange={handleSelectedRowsChange}
         loading={accountsLoading && !isMounted}
         rowContextMenu={rowContextMenu}
+        rowClassNames={rowClassNames}
         expandColumnSpace={1}
         autoResetExpanded={false}
         selectionColumnWidth={50}
