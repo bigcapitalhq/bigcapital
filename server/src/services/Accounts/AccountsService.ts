@@ -1,5 +1,5 @@
 import { Inject, Service } from 'typedi';
-import { difference } from 'lodash';
+import { difference, chain, uniq } from 'lodash';
 import { kebabCase } from 'lodash'
 import TenancyService from 'services/Tenancy/TenancyService';
 import { ServiceError } from 'exceptions';
@@ -273,23 +273,20 @@ export default class AccountsService {
   }
 
   /**
-   * Throws error if account has children accounts.
-   * @param {number} tenantId 
-   * @param {number} accountId 
+   * Unlink the given parent account with children accounts.
+   * @param {number} tenantId -
+   * @param {number|number[]} parentAccountId -  
    */
-  private async throwErrorIfAccountHasChildren(tenantId: number, accountId: number) {
+  private async unassociateChildrenAccountsFromParent(
+    tenantId: number,
+    parentAccountId: number | number[],
+  ) {
     const { Account } = this.tenancy.models(tenantId);
+    const accountsIds = Array.isArray(parentAccountId) ? parentAccountId : [parentAccountId];
 
-    this.logger.info('[account] validating if the account has children.', {
-      tenantId, accountId,
-    });
-    const childAccounts = await Account.query().where(
-      'parent_account_id',
-      accountId,
-    );
-    if (childAccounts.length > 0) {
-      throw new ServiceError('account_has_children');
-    }
+    await Account.query()
+      .whereIn('parent_account_id', accountsIds)
+      .patch({ parent_account_id: null });
   }
 
   /**
@@ -316,10 +313,14 @@ export default class AccountsService {
     const { accountRepository } = this.tenancy.repositories(tenantId);
     const account = await this.getAccountOrThrowError(tenantId, accountId);
 
+    // Throw error if the account was predefined.
     this.throwErrorIfAccountPredefined(account);
 
-    await this.throwErrorIfAccountHasChildren(tenantId, accountId);
+    // Throw error if the account has transactions.
     await this.throwErrorIfAccountHasTransactions(tenantId, accountId);
+
+    // Unlink the parent account from children accounts.
+    await this.unassociateChildrenAccountsFromParent(tenantId, accountId);
 
     await accountRepository.deleteById(account.id);
     this.logger.info('[account] account has been deleted successfully.', {
@@ -336,7 +337,10 @@ export default class AccountsService {
    * @param {number[]} accountsIds 
    * @return {IAccount[]}
    */
-  private async getAccountsOrThrowError(tenantId: number, accountsIds: number[]): IAccount[] {
+  private async getAccountsOrThrowError(
+    tenantId: number,
+    accountsIds: number[]
+  ): Promise<IAccount[]> {
     const { Account } = this.tenancy.models(tenantId);
 
     this.logger.info('[account] trying to validate accounts not exist.', { tenantId, accountsIds });
@@ -400,14 +404,21 @@ export default class AccountsService {
     const { Account } = this.tenancy.models(tenantId);
     const accounts = await this.getAccountsOrThrowError(tenantId, accountsIds);
 
+    // Validate the accounts are not predefined.
     this.validatePrefinedAccounts(accounts);
+
+    // Valdiate the accounts have transactions.
     await this.validateAccountsHaveTransactions(tenantId, accountsIds);
+
+    // Unlink the parent account from children accounts.
+    await this.unassociateChildrenAccountsFromParent(tenantId, accountsIds);
+
+    // Delete the accounts in one query.
     await Account.query().whereIn('id', accountsIds).delete();
 
     this.logger.info('[account] given accounts deleted in bulk successfully.', {
       tenantId, accountsIds
     });
-
     // Triggers `onBulkDeleted` event.
     this.eventDispatcher.dispatch(events.accounts.onBulkDeleted);
   }
@@ -420,10 +431,23 @@ export default class AccountsService {
    */
   public async activateAccounts(tenantId: number, accountsIds: number[], activate: boolean = true) {
     const { Account } = this.tenancy.models(tenantId);
+    const { accountRepository } = this.tenancy.repositories(tenantId);
+
+    // Retrieve the given account or throw not found.
     await this.getAccountsOrThrowError(tenantId, accountsIds);
 
+    // Get all children accounts.
+    const accountsGraph = await accountRepository.getDependencyGraph();
+    const dependenciesAccounts = chain(accountsIds)
+      .map(accountId => accountsGraph.dependenciesOf(accountId))
+      .flatten()
+      .value();
+
+    // The children and parent accounts.
+    const patchAccountsIds = uniq([...dependenciesAccounts, accountsIds]);
+
     this.logger.info('[account] trying activate/inactive the given accounts ids.', { accountsIds });
-    await Account.query().whereIn('id', accountsIds)
+    await Account.query().whereIn('id', patchAccountsIds)
       .patch({
         active: activate ? 1 : 0,
       });
@@ -441,14 +465,25 @@ export default class AccountsService {
    */
   public async activateAccount(tenantId: number, accountId: number, activate?: boolean) {
     const { Account } = this.tenancy.models(tenantId);
+    const { accountRepository } = this.tenancy.repositories(tenantId);
+
+    // Retrieve the given account or throw not found error.
     const account = await this.getAccountOrThrowError(tenantId, accountId);
 
+    // Get all children accounts.
+    const accountsGraph = await accountRepository.getDependencyGraph();
+    const dependenciesAccounts = accountsGraph.dependenciesOf(accountId);
+
     this.logger.info('[account] trying to activate/inactivate the given account id.');
-    await Account.query().where('id', accountId)
+    await Account.query()
+      .whereIn('id', [...dependenciesAccounts, accountId])
       .patch({
         active: activate ? 1 : 0,
       })
-    this.logger.info('[account] account have been activated successfully.', { tenantId, accountId });
+    this.logger.info('[account] account have been activated successfully.', {
+      tenantId,
+      accountId
+    });
 
     // Triggers `onAccountActivated` event.
     this.eventDispatcher.dispatch(events.accounts.onActivated);

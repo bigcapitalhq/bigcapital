@@ -192,10 +192,7 @@ function AccountsDataTable({
     [actionMenuList, formatMessage],
   );
 
-  const selectionColumn = useMemo(
-    () => ({ minWidth: 40, width: 40, maxWidth: 40 }),
-    [],
-  );
+ 
 
   const handleDatatableFetchData = useCallback((...params) => {
     onFetchData && onFetchData(...params);
@@ -216,14 +213,15 @@ function AccountsDataTable({
         columns={columns}
         data={accountsTable}
         onFetchData={handleDatatableFetchData}
-        manualSortBy={true}
-        selectionColumn={selectionColumn}
+        selectionColumn={true}
         expandable={true}
         sticky={true}
         onSelectedRowsChange={handleSelectedRowsChange}
         loading={accountsLoading && !isMounted}
         rowContextMenu={rowContextMenu}
         expandColumnSpace={1}
+        autoResetExpanded={false}
+        selectionColumnWidth={50}
       />
     </div>
   );

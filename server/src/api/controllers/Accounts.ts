@@ -155,7 +155,7 @@ export default class AccountsController extends BaseController{
 
   get bulkSelectIdsQuerySchema() {
     return [
-      query('ids').isArray({ min: 2 }),
+      query('ids').isArray({ min: 1 }),
       query('ids.*').isNumeric().toInt(),
     ];
   }
@@ -240,7 +240,11 @@ export default class AccountsController extends BaseController{
 
     try {
       await this.accountsService.deleteAccount(tenantId, accountId);
-      return res.status(200).send({ id: accountId });
+
+      return res.status(200).send({
+        id: accountId,
+        message: 'The deleted account has been deleted successfully.',
+      });
     } catch (error) {
       next(error);
     }
@@ -298,7 +302,12 @@ export default class AccountsController extends BaseController{
       const isActive = (type === 'activate' ? true : false);
       await this.accountsService.activateAccounts(tenantId, accountsIds, isActive);
 
-      return res.status(200).send({ ids: accountsIds });
+      const activatedText = isActive ? 'activated' : 'inactivated';
+
+      return res.status(200).send({
+        ids: accountsIds,
+        message: `The given accounts have been ${activatedText} successfully`,
+      });
     } catch (error) {
       next(error);
     }
@@ -316,8 +325,11 @@ export default class AccountsController extends BaseController{
 
     try {
       await this.accountsService.deleteAccounts(tenantId, accountsIds);
-      return res.status(200).send({ ids: accountsIds });
 
+      return res.status(200).send({
+        ids: accountsIds,
+        message: 'The given accounts have been deleted successfully.',
+      });
     } catch (error) {
       next(error);
     }
@@ -424,12 +436,6 @@ export default class AccountsController extends BaseController{
         return res.boom.badRequest(
           'The given account code is not unique.',
           { errors: [{ type: 'NOT_UNIQUE_CODE', code: 600 }] }
-        );
-      }
-      if (error.errorType === 'account_has_children') {
-        return res.boom.badRequest(
-          'You could not delete account has children.',
-          { errors: [{ type: 'ACCOUNT.HAS.CHILD.ACCOUNTS', code: 700 }] }
         );
       }
       if (error.errorType === 'account_has_associated_transactions') {

@@ -256,7 +256,7 @@ export const flatToNestedArray = (
     if (!item[config.parentId]) {
       nestedArray.push(item);
     }
-    if (parentItemId) {
+    if (parentItemId && map[parentItemId]) {
       map[parentItemId].children.push(item);
     }
   });

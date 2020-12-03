@@ -63,6 +63,7 @@ export default function DataTable({
   expandColumnSpace = 1.5,
 
   updateDebounceTime = 200,
+  selectionColumnWidth = 42,
 
   // Read this document to know why! https://bit.ly/2Uw9SEc
   autoResetPage = true,
@@ -134,9 +135,9 @@ export default function DataTable({
               {
                 id: 'selection',
                 disableResizing: true,
-                minWidth: 42,
-                width: 42,
-                maxWidth: 42,
+                minWidth: selectionColumnWidth,
+                width: selectionColumnWidth,
+                maxWidth: selectionColumnWidth,
                 // The header can use the table's getToggleAllRowsSelectedProps method
                 // to render a checkbox
                 Header: ({ getToggleAllRowsSelectedProps }) => (
