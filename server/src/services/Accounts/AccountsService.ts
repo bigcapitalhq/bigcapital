@@ -183,6 +183,9 @@ export default class AccountsService {
         tenantId, accountDTO.parentAccountId
       );
       this.throwErrorIfParentHasDiffType(accountDTO, parentAccount);
+
+      // Inherit active status from parent account.
+      accountDTO.active = parentAccount.active;
     }
     const account = await accountRepository.insert({
       ...accountDTO,

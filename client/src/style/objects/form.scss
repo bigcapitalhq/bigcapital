@@ -48,10 +48,20 @@ label.bp3-label{
     box-shadow: 0 0 0 1px #116cd0; 
     border-color: #116cd0;
   }
-
   &.bp3-disabled,
   &:disabled{
     background: #e9ecef;
+  }
+
+  .bp3-form-group.bp3-intent-danger &{
+    box-shadow: 0 0 0 transparent;
+    border-color: #db3737;
+
+    &:focus,
+    &.bp3-active{
+      box-shadow: 0 0 0 1px #db3737; 
+      border-color: #db3737;
+    }
   }
 }
 
@@ -65,15 +75,6 @@ label.bp3-label{
         inset 0 0 0 1px #db3737,
         inset 0 0 0 1px rgba(16, 22, 26, 0.15),
         inset 0 1px 1px rgba(16, 22, 26, 0.2);
-    }
-
-    .bp3-input{
-      border-color: rgb(219, 55, 55);
-      box-shadow: 0 0 0 0 transparent;
-
-      &:focus{
-        box-shadow: 0 0 0 0.2rem rgba(219, 55, 55, 0.25);
-      }
     }
   }
 

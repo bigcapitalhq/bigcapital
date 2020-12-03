@@ -228,6 +228,7 @@ function AccountsDataTable({
         rowClassNames={rowClassNames}
         expandColumnSpace={1}
         autoResetExpanded={false}
+        autoResetSortBy={false}
         selectionColumnWidth={50}
       />
     </div>
