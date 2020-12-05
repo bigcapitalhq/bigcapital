@@ -1,25 +1,41 @@
 import { createReducer } from '@reduxjs/toolkit';
+import { createTableQueryReducers } from 'store/queryReducers';
 import t from 'store/types';
 
 const initialState = {
-  list: {},
+  items: {},
   userById: {},
   loading: false,
 };
 
 export default createReducer(initialState, {
   [t.USERS_LIST_SET]: (state, action) => {
-    state.list = action.users;
+    const { users } = action.payload;
+    const _users = {};
+
+    users.forEach((user) => {
+      _users[user.id] = {
+        ...user,
+      };
+    });
+    state.items = {
+      ...state.items,
+      ..._users,
+    };
   },
 
   [t.USER_DETAILS_SET]: (state, action) => {
-    state.userById[action.user.id] = action.user;
+    const { id, user } = action.payload;
+    const _user = state.items[id] || {};
+    state.items[id] = { ..._user, ...user };
   },
 
   [t.USERS_TABLE_LOADING]: (state, action) => {
     const { loading } = action.payload;
-    state.loading = !!loading;
+    state.loading = loading;
   },
+
+  ...createTableQueryReducers('USERS'),
 });
 
 /**
