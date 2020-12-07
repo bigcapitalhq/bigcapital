@@ -129,7 +129,7 @@ export const fetchManualJournalsTable = ({ query } = {}) => {
             payload: {
               manualJournals: response.data.manual_journals,
               customViewId:
-                response.data.manual_journals?.viewMeta?.customViewId || -1,
+              response.data?.filter_meta?.view?.custom_view_id || -1,
               pagination: response.data.pagination,
             },
           });
@@ -140,23 +140,25 @@ export const fetchManualJournalsTable = ({ query } = {}) => {
                 ...manualJournal,
                 entries: manualJournal.entries.map((entry) => ({
                   ...omit(entry, ['account']),
-                }))
+                })),
               })),
-            ]
+            ],
           });
           dispatch({
             type: t.MANUAL_JOURNALS_PAGINATION_SET,
             payload: {
               pagination: response.data.pagination,
               customViewId:
-                response.data.manual_journals?.viewMeta?.customViewId || -1,
+                response.data?.filter_meta?.view?.custom_view_id || -1,
             },
           });
           dispatch({
             type: t.ACCOUNTS_ITEMS_SET,
-            accounts: flatten(response.data.manual_journals?.map(
-              journal => journal?.entries.map(entry => entry.account),
-            )),
+            accounts: flatten(
+              response.data.manual_journals?.map((journal) =>
+                journal?.entries.map((entry) => entry.account),
+              ),
+            ),
           });
           dispatch({
             type: t.MANUAL_JOURNALS_TABLE_LOADING,

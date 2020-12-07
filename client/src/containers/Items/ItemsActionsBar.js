@@ -1,5 +1,5 @@
-import React, { useMemo, useCallback, useState } from 'react';
-import { useRouteMatch, useHistory } from 'react-router-dom';
+import React, { useMemo, useCallback, useState, useEffect } from 'react';
+import { useRouteMatch, useHistory, useParams } from 'react-router-dom';
 import classNames from 'classnames';
 import {
   MenuItem,
@@ -14,13 +14,11 @@ import {
   Intent,
 } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
-
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import Icon from 'components/Icon';
 import FilterDropdown from 'components/FilterDropdown';
-import { If } from 'components';
+import { If, DashboardActionViewsList } from 'components';
 
-import withDialogActions from 'containers/Dialog/withDialogActions';
 import withResourceDetail from 'containers/Resources/withResourceDetails';
 import withItems from 'containers/Items/withItems';
 import withItemsActions from './withItemsActions';
@@ -29,9 +27,7 @@ import { compose } from 'utils';
 import { connect } from 'react-redux';
 
 const ItemsActionsBar = ({
-  openDialog,
-
-  resourceName = 'items',
+  // #withResourceDetail
   resourceFields,
 
   // #withItems
@@ -39,18 +35,15 @@ const ItemsActionsBar = ({
 
   //#withItemActions
   addItemsTableQueries,
+  changeItemsCurrentView,
 
   onFilterChanged,
   selectedRows = [],
   onBulkDelete,
 }) => {
-  const { path } = useRouteMatch();
+  const { formatMessage } = useIntl();
   const history = useHistory();
   const [filterCount, setFilterCount] = useState(0);
-  const { formatMessage } = useIntl();
-  const viewsMenuItems = itemsViews.map((view) => (
-    <MenuItem href={`${path}/${view.id}/custom_view`} text={view.name} />
-  ));
 
   const onClickNewItem = useCallback(() => {
     history.push('/items/new');
@@ -60,22 +53,13 @@ const ItemsActionsBar = ({
     selectedRows,
   ]);
 
-  // name
-  // const filterDropdown = FilterDropdown({
-  //   fields: resourceFields,
-  //   onFilterChange: (filterConditions) => {
-  //     setFilterCount(filterConditions.length);
-  //     onFilterChanged && onFilterChanged(filterConditions);
-  //   },
-  // });
-
   const filterDropdown = FilterDropdown({
+    fields: resourceFields,
     initialCondition: {
       fieldKey: 'name',
       compatator: 'contains',
       value: '',
     },
-    fields: resourceFields,
     onFilterChange: (filterConditions) => {
       addItemsTableQueries({
         filter_roles: filterConditions || '',
@@ -84,30 +68,25 @@ const ItemsActionsBar = ({
     },
   });
 
-  // const onClickNewCategory = useCallback(() => {
-  //   openDialog('item-form', {});
-  // }, [openDialog]);
-
   const handleBulkDelete = useCallback(() => {
     onBulkDelete && onBulkDelete(selectedRows.map((r) => r.id));
   }, [onBulkDelete, selectedRows]);
 
+  const handleTabChange = (viewId) => {
+    changeItemsCurrentView(viewId.id || -1);
+    addItemsTableQueries({
+      custom_view_id: viewId.id || null,
+    });
+  };
+
   return (
     <DashboardActionsBar>
       <NavbarGroup>
-        <Popover
-          content={<Menu>{viewsMenuItems}</Menu>}
-          minimal={true}
-          interactionKind={PopoverInteractionKind.HOVER}
-          position={Position.BOTTOM_LEFT}
-        >
-          <Button
-            className={classNames(Classes.MINIMAL, 'button--table-views')}
-            icon={<Icon icon="table-16" iconSize={16} />}
-            text={<T id={'table_views'} />}
-            rightIcon={'caret-down'}
-          />
-        </Popover>
+        <DashboardActionViewsList
+          resourceName={'items'}
+          views={itemsViews}
+          onChange={handleTabChange}
+        />
 
         <NavbarDivider />
 
@@ -170,7 +149,6 @@ const withItemsActionsBar = connect(mapStateToProps);
 
 export default compose(
   withItemsActionsBar,
-  withDialogActions,
   withItems(({ itemsViews }) => ({
     itemsViews,
   })),

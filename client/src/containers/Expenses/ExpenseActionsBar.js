@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback, useState } from 'react';
 import Icon from 'components/Icon';
 import {
   Button,
@@ -21,7 +21,7 @@ import FilterDropdown from 'components/FilterDropdown';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 
-import { If } from 'components';
+import { If, DashboardActionViewsList } from 'components';
 
 import withResourceDetail from 'containers/Resources/withResourceDetails';
 import withExpenses from 'containers/Expenses/withExpenses';
@@ -29,6 +29,9 @@ import withExpensesActions from 'containers/Expenses/withExpensesActions';
 
 import { compose } from 'utils';
 
+/**
+ * Expenses actions bar.
+ */
 function ExpensesActionsBar({
   // #withResourceDetail
   resourceFields,
@@ -38,17 +41,14 @@ function ExpensesActionsBar({
 
   //#withExpensesActions
   addExpensesTableQueries,
+  changeExpensesView,
 
   onFilterChanged,
   selectedRows,
   onBulkDelete,
 }) {
-  const { path } = useRouteMatch();
+  const [filterCount, setFilterCount] = useState(0);
   const history = useHistory();
-
-  const viewsMenuItems = expensesViews.map((view) => (
-    <MenuItem href={`${path}/${view.id}/custom_view`} text={view.name} />
-  ));
 
   const onClickNewExpense = useCallback(() => {
     history.push('/expenses/new');
@@ -78,22 +78,20 @@ function ExpensesActionsBar({
     onBulkDelete && onBulkDelete(selectedRows.map((r) => r.id));
   }, [onBulkDelete, selectedRows]);
 
+  const handleTabChange = (viewId) => {
+    changeExpensesView(viewId.id || -1);
+    addExpensesTableQueries({
+      custom_view_id: viewId.id || null,
+    });
+  };
   return (
     <DashboardActionsBar>
       <NavbarGroup>
-        <Popover
-          content={<Menu>{viewsMenuItems}</Menu>}
-          minimal={true}
-          interactionKind={PopoverInteractionKind.HOVER}
-          position={Position.BOTTOM_LEFT}
-        >
-          <Button
-            className={classNames(Classes.MINIMAL, 'button--table-views')}
-            icon={<Icon icon="table-16" iconSize={16} />}
-            text={<T id={'table_views'} />}
-            rightIcon={'caret-down'}
-          />
-        </Popover>
+        <DashboardActionViewsList
+          resourceName={'expenses'}
+          views={expensesViews}
+          onChange={handleTabChange}
+        />
         <NavbarDivider />
         <Button
           className={Classes.MINIMAL}
@@ -108,7 +106,9 @@ function ExpensesActionsBar({
           position={Position.BOTTOM_LEFT}
         >
           <Button
-            className={classNames(Classes.MINIMAL, 'button--filter')}
+            className={classNames(Classes.MINIMAL, 'button--filter', {
+              'has-active-filters': filterCount > 0,
+            })}
             text="Filter"
             icon={<Icon icon="filter-16" iconSize={16} />}
           />

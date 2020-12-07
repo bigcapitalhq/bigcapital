@@ -65,9 +65,8 @@ function ItemsList({
   );
 
   // Handle fetching the items table based on the given query.
-  const fetchItems = useQuery(
-    ['items-table', itemsTableQuery],
-    (key, _query) => requestFetchItems({ ..._query }),
+  const fetchItems = useQuery(['items-table', itemsTableQuery], (key, _query) =>
+    requestFetchItems({ ..._query }),
   );
 
   // Handle click delete item.
@@ -92,33 +91,36 @@ function ItemsList({
 
   // handle confirm delete item.
   const handleConfirmDeleteItem = useCallback(() => {
-    requestDeleteItem(deleteItem.id).then(() => {
-      AppToaster.show({
-        message: formatMessage({
-          id: 'the_item_has_been_successfully_deleted',
-        }),
-        intent: Intent.SUCCESS,
-      });
-      setDeleteItem(false);
-    }).catch(({ errors }) => {
-      if (errors.find(error => error.type === 'ITEM_HAS_ASSOCIATED_TRANSACTINS')) {
+    requestDeleteItem(deleteItem.id)
+      .then(() => {
         AppToaster.show({
           message: formatMessage({
-            id: 'the_item_has_associated_transactions',
+            id: 'the_item_has_been_successfully_deleted',
           }),
-          intent: Intent.DANGER,
+          intent: Intent.SUCCESS,
         });
-      }
-      setDeleteItem(false);
-    });
+        setDeleteItem(false);
+      })
+      .catch(({ errors }) => {
+        if (
+          errors.find(
+            (error) => error.type === 'ITEM_HAS_ASSOCIATED_TRANSACTINS',
+          )
+        ) {
+          AppToaster.show({
+            message: formatMessage({
+              id: 'the_item_has_associated_transactions',
+            }),
+            intent: Intent.DANGER,
+          });
+        }
+        setDeleteItem(false);
+      });
   }, [requestDeleteItem, deleteItem, formatMessage]);
 
-  const handleFetchData = useCallback(
-    ({ pageIndex, pageSize, sortBy }) => {
-     
-    },
-    [addItemsTableQueries],
-  );
+  const handleFetchData = useCallback(({ pageIndex, pageSize, sortBy }) => {}, [
+    addItemsTableQueries,
+  ]);
 
   // Handle filter change to re-fetch the items.
   const handleFilterChanged = useCallback(
@@ -197,6 +199,7 @@ function ItemsList({
               onDeleteItem={handleDeleteItem}
               onEditItem={handleEditItem}
               onSelectedRowsChange={handleSelectedRowsChange}
+              itemsViewLoading={fetchItems.isFetching}
             />
             <Alert
               cancelButtonText={<T id={'cancel'} />}

@@ -38,29 +38,21 @@ function AccountsViewsTabs({
   const { custom_view_id: customViewId = null } = useParams();
 
   useEffect(() => {
-    changeAccountsCurrentView(customViewId || -1);
     setTopbarEditView(customViewId);
     changePageSubtitle(customViewId && viewItem ? viewItem.name : '');
-
-    addAccountsTableQueries({
-      custom_view_id: customViewId,
-    });
-
-    return () => {
-      setTopbarEditView(null);
-      changePageSubtitle('');
-      changeAccountsCurrentView(null);
-    };
-  }, [customViewId]);
-
-  useUpdateEffect(() => {
-    onViewChanged && onViewChanged(customViewId);
   }, [customViewId]);
 
   // Handle click a new view tab.
   const handleClickNewView = () => {
     setTopbarEditView(null);
     history.push('/custom_views/accounts/new');
+  };
+
+  const handleTabChange = (viewId) => {
+    changeAccountsCurrentView(viewId || -1);
+    // addAccountsTableQueries({
+    //   custom_view_id: viewId || null,
+    // });
   };
 
   const tabs = accountsViews.map((view) => ({
@@ -72,6 +64,7 @@ function AccountsViewsTabs({
         <DashboardViewsTabs
           initialViewId={customViewId}
           resourceName={'accounts'}
+          onChange={handleTabChange}
           tabs={tabs}
         />
       </NavbarGroup>

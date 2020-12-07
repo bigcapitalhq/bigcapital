@@ -37,6 +37,7 @@ function ItemsDataTable({
   onEditItem,
   onDeleteItem,
   onSelectedRowsChange,
+  itemsViewLoading,
 }) {
   const { formatMessage } = useIntl();
   const isLoadedBefore = useIsValuePassed(itemsTableLoading, false);
@@ -148,11 +149,11 @@ function ItemsDataTable({
       {
         Header: formatMessage({ id: 'cost_price' }),
         accessor: (row) =>
-        !isBlank(row.sell_price) ? (
-          <Money amount={row.cost_price} currency={'USD'} />
-        ) : (
-          ''
-        ),
+          !isBlank(row.sell_price) ? (
+            <Money amount={row.cost_price} currency={'USD'} />
+          ) : (
+            ''
+          ),
         className: 'cost-price',
         width: 150,
       },
@@ -203,7 +204,9 @@ function ItemsDataTable({
 
   return (
     <div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>
-      <LoadingIndicator loading={itemsTableLoading && !isLoadedBefore}>
+      <LoadingIndicator
+        loading={(itemsTableLoading && !isLoadedBefore) || itemsViewLoading}
+      >
         <Choose>
           <Choose.When condition={showEmptyStatus}>
             <ItemsEmptyStatus />

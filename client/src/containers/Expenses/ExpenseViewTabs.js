@@ -3,10 +3,9 @@ import { useHistory } from 'react-router';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
 import { useParams, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { pick, debounce } from 'lodash';
+import { pick } from 'lodash';
 
 import { DashboardViewsTabs } from 'components';
-import { useUpdateEffect } from 'hooks';
 
 import withExpenses from './withExpenses';
 import withExpensesActions from './withExpensesActions';
@@ -15,6 +14,9 @@ import withViewDetails from 'containers/Views/withViewDetails';
 
 import { compose } from 'utils';
 
+/**
+ * Expesne views tabs.
+ */
 function ExpenseViewTabs({
   // #withExpenses
   expensesViews,
@@ -38,55 +40,32 @@ function ExpenseViewTabs({
   const { custom_view_id: customViewId = null } = useParams();
 
   useEffect(() => {
-    changeExpensesView(customViewId || -1);
     setTopbarEditView(customViewId);
     changePageSubtitle(customViewId && viewItem ? viewItem.name : '');
-
-    addExpensesTableQueries({
-      custom_view_id: customViewId,
-    });
-    return () => {
-      setTopbarEditView(null);
-      changePageSubtitle('');
-      changeExpensesView(null);
-    };
-  }, [customViewId, addExpensesTableQueries, changeExpensesView]);
-
-  useUpdateEffect(() => {
-    onViewChanged && onViewChanged(customViewId);
   }, [customViewId]);
 
-  const debounceChangeHistory = useRef(
-    debounce((toUrl) => {
-      history.push(toUrl);
-    }, 250),
-  );
-
-  const handleTabsChange = (viewId) => {
-    const toPath = viewId ? `${viewId}/custom_view` : '';
-    debounceChangeHistory.current(`/expenses-list/${toPath}`);
-    setTopbarEditView(viewId);
+  const handleTabChange = (viewId) => {
+    changeExpensesView(viewId || -1);
+    addExpensesTableQueries({
+      custom_view_id: viewId || null,
+    });
   };
-
   const tabs = expensesViews.map((view) => ({
     ...pick(view, ['name', 'id']),
   }));
 
   // Handle click a new view tab.
-  const handleClickNewView = () => {
-    setTopbarEditView(null);
-    history.push('/custom_views/expenses/new');
-  };
+  const handleClickNewView = () => {};
 
   return (
     <Navbar className={'navbar--dashboard-views'}>
       <NavbarGroup align={Alignment.LEFT}>
         <DashboardViewsTabs
           initialViewId={customViewId}
-          baseUrl={'/expenses-list'}
+          resourceName={'expenses'}
           tabs={tabs}
           onNewViewTabClick={handleClickNewView}
-          onChange={handleTabsChange}
+          onChange={handleTabChange}
         />
       </NavbarGroup>
     </Navbar>
