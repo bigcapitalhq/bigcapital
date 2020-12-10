@@ -13,7 +13,9 @@ export const fetchUsers = () => {
         .then((response) => {
           dispatch({
             type: t.USERS_LIST_SET,
-            users: response.data.users,
+            payload: {
+              users: response.data.users,
+            },
           });
           dispatch({
             type: t.USERS_TABLE_LOADING,
@@ -34,7 +36,10 @@ export const fetchUser = ({ id }) => {
         .then((response) => {
           dispatch({
             type: t.USER_DETAILS_SET,
-            user: response.data.user,
+            payload: {
+              id,
+              user: response.data.user,
+            },
           });
           resolve(response);
         })
@@ -45,24 +50,49 @@ export const fetchUser = ({ id }) => {
 };
 
 export const deleteUser = ({ id }) => {
-  return (dispatch) => ApiService.delete(`users/${id}`);
+  return (dispatch) =>
+    new Promise((resolve, reject) => {
+      ApiService.delete(`users/${id}`)
+        .then((response) => {
+          dispatch({ type: t.USER_DELETE, id });
+          resolve(response);
+        })
+        .catch((error) => {
+          reject(error.response.data.errors || []);
+        });
+    });
 };
 
 export const submitInvite = ({ form }) => {
-  return (dispatch) => new Promise((resolve, reject) => {
-    ApiService.post(`invite/send`, form)
-      .then((response) => { resolve(response); })
-      .catch((error) => {
-        const { response } = error;
-        const { data } = response;
+  return (dispatch) =>
+    new Promise((resolve, reject) => {
+      ApiService.post(`invite/send`, form)
+        .then((response) => {
+          resolve(response);
+        })
+        .catch((error) => {
+          const { response } = error;
+          const { data } = response;
 
-        reject(data?.errors);
+          reject(data?.errors);
+        });
     });
-  });
 };
 
 export const editUser = ({ form, id }) => {
-  return (dispatch) => ApiService.post(`users/${id}`, form);
+  return (dispatch) =>
+    new Promise((resolve, reject) => {
+      ApiService.post(`users/${id}`, form)
+        .then((response) => {
+          resolve(response);
+        })
+        .catch((error) => {
+          const { response } = error;
+          const { data } = response;
+
+          reject(data?.errors);
+        });
+    });
 };
 
 export const inactiveUser = ({ id }) => {
