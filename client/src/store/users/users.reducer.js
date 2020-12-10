@@ -34,6 +34,12 @@ export default createReducer(initialState, {
     const { loading } = action.payload;
     state.loading = loading;
   },
+  [t.USER_DELETE]: (state, action) => {
+    const { id } = action.payload;
+    if (typeof state.items[id] !== 'undefined') {
+      delete state.items[id];
+    }
+  },
 
   ...createTableQueryReducers('USERS'),
 });

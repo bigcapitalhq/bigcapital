@@ -54,7 +54,12 @@ export const deleteUser = ({ id }) => {
     new Promise((resolve, reject) => {
       ApiService.delete(`users/${id}`)
         .then((response) => {
-          dispatch({ type: t.USER_DELETE, id });
+          dispatch({
+            type: t.USER_DELETE,
+            payload: {
+              id,
+            },
+          });
           resolve(response);
         })
         .catch((error) => {
