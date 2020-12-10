@@ -111,8 +111,8 @@ exports.up = function (knex) {
       normal: 'debit',
       root_type: 'expenses',
       child_type: 'expenses',
-      balance_sheet: true,
-      income_sheet: false,
+      balance_sheet: false,
+      income_sheet: true,
     },
     {
       id: 8,

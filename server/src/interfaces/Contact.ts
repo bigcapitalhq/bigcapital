@@ -43,6 +43,7 @@ export interface IContactAddressDTO {
   shippingAddressState?: string,
 };
 export interface IContact extends IContactAddress{
+  id?: number,
   contactService: 'customer' | 'vendor',
   contactType: string,
 

@@ -10,9 +10,11 @@ export interface IAccountDTO {
 };
 
 export interface IAccount {
+  id: number,
   name: string,
   slug: string,
   code: string,
+  index: number,
   description: string,
   accountTypeId: number,
   parentAccountId: number,
@@ -20,6 +22,8 @@ export interface IAccount {
   predefined: boolean,
   amount: number,
   currencyCode: string,
+  transactions?: any[],
+  type?: any[],
 };
 
 export interface IAccountsFilter extends IDynamicListFilterDTO {

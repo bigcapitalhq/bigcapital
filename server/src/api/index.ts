@@ -91,7 +91,7 @@ export default () => {
   dashboard.use('/items', Container.get(Items).router());
   dashboard.use('/item_categories', Container.get(ItemCategories).router());
   dashboard.use('/expenses', Container.get(Expenses).router());
-  dashboard.use('/financial_statements', FinancialStatements.router());
+  dashboard.use('/financial_statements', Container.get(FinancialStatements).router());
   dashboard.use('/customers', Container.get(Customers).router());
   dashboard.use('/vendors', Container.get(Vendors).router());
   dashboard.use('/sales', Container.get(Sales).router());

@@ -6,7 +6,7 @@
   "scripts": {
     "build": "webpack",
     "start": "cross-env NODE_PATH=./src nodemon",
-    "inspect": "cross-env NODE_PATH=./src nodemon --inspect src/server.ts"
+    "inspect": "cross-env NODE_PATH=./src nodemon src/server.ts"
   },
   "author": "Ahmed Bouhuolia, <a.bouhuolia@gmail.com>",
   "license": "ISC",
@@ -59,6 +59,7 @@
     "node-cache": "^4.2.1",
     "nodemailer": "^6.3.0",
     "nodemon": "^1.19.1",
+    "object-hash": "^2.0.3",
     "objection": "^2.0.10",
     "objection-filter": "^4.0.1",
     "objection-soft-delete": "^1.0.7",

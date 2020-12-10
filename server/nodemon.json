@@ -1,11 +1,17 @@
 {
+  "restartable": "rs",
   "watch": [
     "src",
     ".env"
   ],
-  "ext": "js,ts,json",
   "ignore": [
+    ".git",
     "src/**/*.spec.ts"
   ],
-  "exec": "ts-node  --transpile-only ./src/server.ts"
+  "execMap": {
+    "ts": "node --inspect -r ts-node/register/transpile-only ./src/server.ts"
+  },
+  "env": {
+    "NODE_ENV": "development"
+  }
 }

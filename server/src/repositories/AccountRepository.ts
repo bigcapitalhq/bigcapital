@@ -1,25 +1,7 @@
 import TenantRepository from 'repositories/TenantRepository';
 import { IAccount } from 'interfaces';
-import { Account } from 'models';
 
 export default class AccountRepository extends TenantRepository {
-  models: any;
-  repositories: any;
-  cache: any;
-
-  /**
-   * Constructor method.
-   * @param {number} tenantId - The given tenant id.
-   */
-  constructor(
-    tenantId: number,
-  ) {
-    super(tenantId);
-
-    this.models = this.tenancy.models(tenantId);
-    this.cache = this.tenancy.cache(tenantId);
-  }
-
   /**
    * Retrieve accounts dependency graph.
    * @returns {}
@@ -27,8 +9,9 @@ export default class AccountRepository extends TenantRepository {
   async getDependencyGraph() {
     const { Account } = this.models;
     const accounts = await this.allAccounts();
+    const cacheKey = this.getCacheKey('accounts.depGraph');
 
-    return this.cache.get('accounts.depGraph', async () => {
+    return this.cache.get(cacheKey, async () => {
       return Account.toDependencyGraph(accounts);
     });
   }
@@ -37,10 +20,13 @@ export default class AccountRepository extends TenantRepository {
    * Retrieve all accounts on the storage.
    * @return {IAccount[]}
    */
-  allAccounts(): IAccount[] {
+  allAccounts(withRelations?: string|string[]): IAccount[] {
     const { Account } = this.models;
-    return this.cache.get('accounts', async () => {
-      return Account.query();
+    const cacheKey = this.getCacheKey('accounts.depGraph', withRelations);
+    
+    return this.cache.get(cacheKey, async () => {
+      return Account.query()
+        .withGraphFetched(withRelations);
     });
   }
 
@@ -51,7 +37,9 @@ export default class AccountRepository extends TenantRepository {
    */
   getBySlug(slug: string): IAccount {
     const { Account } = this.models;
-    return this.cache.get(`accounts.slug.${slug}`, () => {
+    const cacheKey = this.getCacheKey('accounts.slug', slug);
+
+    return this.cache.get(cacheKey, () => {
       return Account.query().findOne('slug', slug);
     });
   }
@@ -63,7 +51,9 @@ export default class AccountRepository extends TenantRepository {
    */
   findById(id: number): IAccount {
     const { Account } = this.models;
-    return this.cache.get(`accounts.id.${id}`, () => {
+    const cacheKey = this.getCacheKey('accounts.id', id);
+
+    return this.cache.get(cacheKey, () => {
       return Account.query().findById(id);
     });
   }
@@ -75,7 +65,11 @@ export default class AccountRepository extends TenantRepository {
    */
   findByIds(accountsIds: number[]) {
     const { Account } = this.models;
-    return Account.query().whereIn('id', accountsIds);
+    const cacheKey = this.getCacheKey('accounts.id', accountsIds);
+
+    return this.cache.get(cacheKey, () => {
+      return Account.query().whereIn('id', accountsIds);
+    });
   }
 
   /**
@@ -143,6 +137,6 @@ export default class AccountRepository extends TenantRepository {
    * Flush repository cache.
    */
   flushCache(): void {
-    this.cache.delStartWith('accounts');
+    this.cache.delStartWith(this.repositoryName);
   }
 }

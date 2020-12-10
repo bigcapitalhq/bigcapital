@@ -340,7 +340,7 @@ export default class AccountsService {
    * @param {number[]} accountsIds 
    * @return {IAccount[]}
    */
-  private async getAccountsOrThrowError(
+  public async getAccountsOrThrowError(
     tenantId: number,
     accountsIds: number[]
   ): Promise<IAccount[]> {
@@ -521,8 +521,7 @@ export default class AccountsService {
    * -----------
    * Precedures.
    * -----------
-   * - Transfer the given account transactions to another account 
-   *  with the same root type.
+   * - Transfer the given account transactions to another account with the same root type.
    * - Delete the given account.
    * -------
    * @param {number} tenantId - 

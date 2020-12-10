@@ -2,22 +2,6 @@ import TenantRepository from 'repositories/TenantRepository';
 import { IContact } from 'interfaces';
 
 export default class ContactRepository extends TenantRepository {
-  cache: any;
-  models: any;
-
-  /**
-   * Constructor method.
-   * @param {number} tenantId - The given tenant id.
-   */
-  constructor(
-    tenantId: number,
-  ) {
-    super(tenantId);
-
-    this.models = this.tenancy.models(tenantId);
-    this.cache = this.tenancy.cache(tenantId);
-  }
-
   /**
    * Retrieve the given contact model.
    * @param {number} contactId 

@@ -81,7 +81,7 @@ export default class HasTenancyService {
   setI18nLocals(tenantId: number, locals: any) {
     return this.singletonService(tenantId, 'i18n', () => {
       return locals;
-    })
+    });
   }
 
   /**

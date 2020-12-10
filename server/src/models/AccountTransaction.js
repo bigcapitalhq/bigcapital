@@ -28,7 +28,7 @@ export default class AccountTransaction extends TenantModel {
        * @param {number[]} accountsIds 
        */
       filterAccounts(query, accountsIds) {
-        if (accountsIds.length > 0) {
+        if (Array.isArray(accountsIds) && accountsIds.length > 0) {
           query.whereIn('account_id', accountsIds);
         }
       },
@@ -63,9 +63,11 @@ export default class AccountTransaction extends TenantModel {
             q.where('credit', '<=', toAmount);
             q.orWhere('debit', '<=', toAmount);
           });
-        }
+        } 
       },
       sumationCreditDebit(query) {
+        query.select(['accountId']);
+
         query.sum('credit as credit');
         query.sum('debit as debit');
         query.groupBy('account_id');
@@ -75,6 +77,16 @@ export default class AccountTransaction extends TenantModel {
       },
       filterContactIds(query, contactIds) {
         query.whereIn('contact_id', contactIds);
+      },
+
+      openingBalance(query, fromDate) {
+        query.modify('filterDateRange', null, fromDate)
+        query.modify('sumationCreditDebit')
+      },
+
+      closingBalance(query, toDate) {
+        query.modify('filterDateRange', null, toDate)
+        query.modify('sumationCreditDebit')
       },
     };
   }

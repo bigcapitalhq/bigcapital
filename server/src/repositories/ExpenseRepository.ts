@@ -3,21 +3,6 @@ import { IExpense } from 'interfaces';
 import moment from "moment";
 
 export default class ExpenseRepository extends TenantRepository {
-  models: any;
-  repositories: any;
-  cache: any;
-
-  /**
-   * Constructor method.
-   * @param {number} tenantId 
-   */
-  constructor(tenantId: number) {
-    super(tenantId);
-
-    this.models = this.tenancy.models(tenantId);
-    this.cache = this.tenancy.cache(tenantId);
-  }
-
   /**
    * Retrieve the given expense by id.
    * @param  {number} expenseId 

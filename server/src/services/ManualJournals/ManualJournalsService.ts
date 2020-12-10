@@ -356,7 +356,7 @@ export default class ManualJournalsService implements IManualJournalsService {
     // Triggers `onManualJournalCreated` event.
     this.eventDispatcher.dispatch(events.manualJournals.onCreated, {
       tenantId,
-      manualJournal,
+      manualJournal: { ...manualJournal, entries: manualJournalObj.entries },
     });
     this.logger.info(
       '[manual_journal] the manual journal inserted successfully.',

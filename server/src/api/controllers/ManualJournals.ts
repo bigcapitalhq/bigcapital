@@ -338,7 +338,11 @@ export default class ManualJournalsController extends BaseController {
       filter.filterRoles = JSON.parse(filter.stringifiedFilterRoles);
     }
     try {
-      const { manualJournals, pagination, filterMeta } = await this.manualJournalsService.getManualJournals(tenantId, filter);
+      const {
+        manualJournals,
+        pagination,
+        filterMeta
+      } = await this.manualJournalsService.getManualJournals(tenantId, filter);
 
       return res.status(200).send({
         manual_journals: manualJournals,

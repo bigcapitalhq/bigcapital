@@ -3,19 +3,6 @@ import TenantRepository from "./TenantRepository";
 
 
 export default class VendorRepository extends TenantRepository {
-  models: any;
-  cache: any;
-
-  /**
-   * Constructor method.
-   * @param {number} tenantId 
-   */
-  constructor(tenantId: number) {
-    super(tenantId);
-
-    this.models = this.tenancy.models(tenantId);
-    this.cache = this.tenancy.cache(tenantId);
-  }
 
   /**
    * Retrieve vendor details of the given id.
@@ -68,7 +55,6 @@ export default class VendorRepository extends TenantRepository {
       [changeMethod]('balance', Math.abs(amount));
   }
 
-  
   async changeDiffBalance(
     vendorId: number,
     amount: number,

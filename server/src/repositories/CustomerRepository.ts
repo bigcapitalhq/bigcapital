@@ -1,18 +1,12 @@
 import TenantRepository from "./TenantRepository";
 
 export default class CustomerRepository extends TenantRepository {
-  models: any;
-  cache: any;
+  all() {
+    const { Contact } = this.models;
 
-  /**
-   * Constructor method.
-   * @param {number} tenantId 
-   */
-  constructor(tenantId: number) {
-    super(tenantId);
-
-    this.models = this.tenancy.models(tenantId);
-    this.cache = this.tenancy.cache(tenantId);
+    return this.cache.get('customers', () => {
+      return Contact.query().modify('customer');
+    });
   }
 
   /**

@@ -211,6 +211,18 @@ const convertEmptyStringToNull = (value) => {
     : value;
 };
 
+const formatNumber = (balance, { noCents = false, divideOn1000 = false }) => {
+  let formattedBalance = parseFloat(balance);
+
+  if (noCents) {
+    formattedBalance = parseInt(formattedBalance, 10);
+  }
+  if (divideOn1000) {
+    formattedBalance /= 1000;
+  }
+  return formattedBalance + '';
+};
+
 export {
   hashPassword,
   origin,
@@ -229,4 +241,5 @@ export {
   getDefinedOptions,
   entriesAmountDiff,
   convertEmptyStringToNull,
+  formatNumber
 };

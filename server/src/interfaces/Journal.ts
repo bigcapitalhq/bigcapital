@@ -1,6 +1,7 @@
 
 
 export interface IJournalEntry {
+  id: number,
   index?: number,
 
   date: Date,
@@ -18,6 +19,8 @@ export interface IJournalEntry {
 };
 
 export interface IJournalPoster {
+  entries: IJournalEntry[],
+
   credit(entry: IJournalEntry): void;
   debit(entry: IJournalEntry): void;
 
@@ -26,6 +29,9 @@ export interface IJournalPoster {
   saveEntries(): void;
   saveBalance(): void;
   deleteEntries(): void; 
+
+  getAccountBalance(accountId: number, closingDate?: Date | string, dateType?: string): number;
+  getAccountEntries(accountId: number): IJournalEntry[];
 }
 
 export type TEntryType = 'credit' | 'debit';

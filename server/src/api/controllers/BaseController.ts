@@ -2,6 +2,7 @@ import { Response, Request, NextFunction } from 'express';
 import { matchedData, validationResult } from "express-validator";
 import { camelCase, snakeCase, omit } from "lodash";
 import { mapKeysDeep } from 'utils'
+import asyncMiddleware from 'api/middleware/asyncMiddleware';
 
 export default class BaseController {
 
@@ -62,5 +63,9 @@ export default class BaseController {
    */
   transfromToResponse(data: any) {
     return mapKeysDeep(data, (v, k) => snakeCase(k));
+  }
+
+  asyncMiddleware(callback) {
+    return asyncMiddleware(callback);
   }
 }
