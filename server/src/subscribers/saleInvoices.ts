@@ -64,7 +64,7 @@ export default class SaleInvoiceSubscriber {
   public async handleInvoiceNextNumberIncrement({ tenantId, saleInvoiceId, saleInvoice }) {
     await this.settingsService.incrementNextNumber(tenantId, {
       key: 'next_number',
-      group: 'sales_invoices'
+      group: 'sales_invoices',
     });
   }
 }

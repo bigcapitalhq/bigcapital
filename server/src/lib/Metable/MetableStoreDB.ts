@@ -4,6 +4,7 @@ import {
   IMetableStoreStorage,
 } from 'interfaces';
 import MetableStore from './MetableStore';
+import { isBlank } from 'utils';
 
 export default class MetableDBStore extends MetableStore implements IMetableStoreStorage{
   model: Model;
@@ -26,8 +27,27 @@ export default class MetableDBStore extends MetableStore implements IMetableStor
     this.model = null;
 
     this.extraQuery = (query, meta) => {
-      query.where('key', meta[this.KEY_COLUMN]);
+      const whereQuery = {
+        key: meta[this.KEY_COLUMN],
+        ...this.transfromMetaExtraColumns(meta),
+      };
+      query.where(whereQuery);
     };
+  }
+
+  /**
+   * Transformes meta query.
+   * @param {IMetadata} meta 
+   */
+  private transfromMetaExtraColumns(meta: IMetadata) {
+    return this.extraColumns.reduce((obj, column) => {
+      const metaValue = meta[column];
+
+      if (!isBlank(metaValue)) {
+        obj[column] = metaValue;
+      }
+      return obj;
+    }, {});
   }
 
   /**
@@ -116,14 +136,9 @@ export default class MetableDBStore extends MetableStore implements IMetableStor
       const insertData = {
         [this.KEY_COLUMN]: meta.key,
         [this.VALUE_COLUMN]: meta.value,
-
-        ...this.extraColumns.reduce((obj, column) => {
-          if (typeof meta[column] !== 'undefined') {
-            obj[column] = meta[column];
-          }
-          return obj;
-        }, {}),
+        ...this.transfromMetaExtraColumns(meta),
       };
+      
       const insertOper = this.model.query()
         .insert(insertData)
         .then(() => {
@@ -155,7 +170,7 @@ export default class MetableDBStore extends MetableStore implements IMetableStor
    * @param {String} valueType -
    * @return {String|Number|Boolean} -
    */
-  static formatMetaValue(value: string|number|boolean, valueType: striung|false) {
+  static formatMetaValue(value: string|number|boolean, valueType: string|false) {
     let parsedValue: string|number|boolean;
 
     switch (valueType) {

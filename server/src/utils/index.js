@@ -223,6 +223,10 @@ const formatNumber = (balance, { noCents = false, divideOn1000 = false }) => {
   return formattedBalance + '';
 };
 
+const isBlank = (value) => {
+  return _.isEmpty(value) && !_.isNumber(value) || _.isNaN(value);
+}
+
 export {
   hashPassword,
   origin,
@@ -241,5 +245,6 @@ export {
   getDefinedOptions,
   entriesAmountDiff,
   convertEmptyStringToNull,
-  formatNumber
+  formatNumber,
+  isBlank
 };

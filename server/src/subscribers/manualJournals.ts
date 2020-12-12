@@ -19,7 +19,7 @@ export class ManualJournalSubscriber {
    * @param {{ tenantId: number, manualJournal: IManualJournal }} 
    */
   @On(events.manualJournals.onCreated)
-  public async onManualJournalCreated({ tenantId, manualJournal }) {
+  public async handleWriteJournalEntries({ tenantId, manualJournal }) {
     const manualJournalsService = Container.get(ManualJournalsService);
 
     await manualJournalsService
@@ -31,7 +31,7 @@ export class ManualJournalSubscriber {
    * @param {{ tenantId: number, manualJournal: IManualJournal }} 
    */
   @On(events.manualJournals.onEdited)
-  public async onManualJournalEdited({ tenantId, manualJournal }) {
+  public async handleRewriteJournalEntries({ tenantId, manualJournal }) {
     const manualJournalsService = Container.get(ManualJournalsService);
 
     await manualJournalsService
@@ -43,7 +43,7 @@ export class ManualJournalSubscriber {
    * @param {{ tenantId: number, manualJournalId: number }}
    */
   @On(events.manualJournals.onDeleted)
-  public async onManualJournalDeleted({ tenantId, manualJournalId, }) {
+  public async handleRevertJournalEntries({ tenantId, manualJournalId, }) {
     const manualJournalsService = Container.get(ManualJournalsService);
 
     await manualJournalsService
@@ -55,9 +55,10 @@ export class ManualJournalSubscriber {
    */
   @On(events.manualJournals.onCreated)
   public async handleJournalNextNumberIncrement({ tenantId }) {
-    await this.settingsService.incrementNextNumber(tenantId, {
+    const query = {
       group: 'manual_journals',
       key: 'next_number',
-    });
+    };
+    await this.settingsService.incrementNextNumber(tenantId, query);
   }
 }

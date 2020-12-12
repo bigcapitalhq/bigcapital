@@ -11,7 +11,7 @@ export interface IMetadata {
 
 export interface IMetaQuery {
   key: string,
-  group: string,
+  group?: string,
 };
 
 export interface IMetableStore {
