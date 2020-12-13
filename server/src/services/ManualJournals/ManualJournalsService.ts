@@ -197,7 +197,8 @@ export default class ManualJournalsService implements IManualJournalsService {
     contactRequired: boolean = true,
   ): Promise<void> {
     const { accountRepository } = this.tenancy.repositories(tenantId);
-    const payableAccount = await accountRepository.getBySlug(accountBySlug);
+    const payableAccount = await accountRepository.findOne({ slug: accountBySlug });
+
     const entriesHasNoVendorContact = manualJournalDTO.entries.filter(
       (e) =>
         e.accountId === payableAccount.id &&

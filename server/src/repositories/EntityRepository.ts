@@ -1,71 +1,71 @@
-import hashObject from 'object-hash';
-import EntityRepository from './EntityRepository';
+import { cloneDeep, cloneDeepWith, forOwn, isString } from 'lodash';
+import ModelEntityNotFound from 'exceptions/ModelEntityNotFound';
 
-export default class CachableRepository extends EntityRepository{
-  repositoryName: string;
-  cache: any;
+export default class EntityRepository {
+  modelInstance: any;
+  idColumn: string;
+  knex: any;
 
   /**
    * Constructor method.
    * @param {Knex} knex 
-   * @param {Cache} cache 
    */
-  constructor(knex, cache) {
-    super(knex);
-    this.cache = cache;
+  constructor(knex) {
+    this.knex = knex;
+    this.idColumn = 'id';
   }
 
   /**
-   * Retrieve the cache key of the method name and arguments.
-   * @param {string} method 
-   * @param {...any} args 
-   * @return {string}
+   * Sets the model to the repository and bind it to knex instance.
    */
-  getCacheKey(method, ...args) {
-    const hashArgs = hashObject({ ...args });
-    const repositoryName = this.repositoryName;
+  set model(model) {
+    if (!this.modelInstance) {
+      this.modelInstance = model.bindKnex(this.knex);
+    }
+  }
 
-    return `${repositoryName}-${method}-${hashArgs}`;
+  /**
+   * Retrieve the repository model binded it to knex instance.
+   */
+  get model() {
+    return this.modelInstance;
   }
 
   /**
    * Retrieve all entries with specified relations.
+   * 
    * @param withRelations 
    */
   all(withRelations?) {
-    const cacheKey = this.getCacheKey('all', withRelations);
-
-    return this.cache.get(cacheKey, () => {
-      return super.all(withRelations);
-    });
+    return this.model.query().withGraphFetched(withRelations);
   }
 
   /**
    * Finds list of entities with specified attributes
+   *
    * @param {Object} attributeValues - values to filter retrieved entities by
    * @param {string || string[]} [withRelations] - name of relation(s) to eagerly retrieve.
    * @returns {Promise<Object[]>} - query builder. You can chain additional methods to it or call "await" or then() on it to execute
    */
   find(attributeValues = {}, withRelations?) {
-    const cacheKey = this.getCacheKey('find', attributeValues, withRelations);
-
-    return this.cache.get(cacheKey, () => {
-      return super.find(attributeValues, withRelations);
-    });
+    return this.model
+      .query()
+      .where(attributeValues)
+      .withGraphFetched(withRelations);
   }
 
   /**
    * Finds list of entities with attribute values that are different from specified ones
+   *
    * @param {Object} attributeValues - values to filter retrieved entities by
    * @param {string || string[]} [withRelations] - name of relation(s) to eagerly retrieve, as defined in model relationMappings()
-   * @returns {Promise<Object[]>} - query builder. You can chain additional methods to it or call "await" or then() on it to execute
+   * @returns {PromiseLike<Object[]>} - query builder. You can chain additional methods to it or call "await" or then() on it to execute
    */
   findWhereNot(attributeValues = {}, withRelations?) {
-    const cacheKey = this.getCacheKey('findWhereNot', attributeValues, withRelations);
-
-    return this.cache.get(cacheKey, () => {
-      return super.findWhereNot(attributeValues, withRelations);
-    });
+    return this.model
+      .query()
+      .whereNot(attributeValues)
+      .withGraphFetched(withRelations);
   }
 
   /**
@@ -78,11 +78,22 @@ export default class CachableRepository extends EntityRepository{
    * @returns {PromiseLike<Object[]>} - query builder. You can chain additional methods to it or call "await" or then() on it to execute
    */
   findWhereIn(searchParam, attributeValues, withRelations?) {
-    const cacheKey = this.getCacheKey('findWhereIn', attributeValues, withRelations);
-
-    return this.cache.get(cacheKey, () => {
-      return super.findWhereIn(searchParam, attributeValues, withRelations);
-    });
+    if (isString(searchParam)) {
+      return this.model
+        .query()
+        .whereIn(searchParam, attributeValues)
+        .withGraphFetched(withRelations);
+    } else {
+      const builder = this.model.query(this.knex).withGraphFetched(withRelations);
+      forOwn(searchParam, (value, key) => {
+        if (Array.isArray(value)) {
+          builder.whereIn(key, value);
+        } else {
+          builder.where(key, value);
+        }
+      });
+      return builder;
+    }
   }
 
   /**
@@ -92,12 +103,9 @@ export default class CachableRepository extends EntityRepository{
    * @param {string || string[]} [withRelations] - name of relation(s) to eagerly retrieve, as defined in model relationMappings()
    * @returns {Promise<Object>}
    */
-  findOne(attributeValues = {}, withRelations?) {
-    const cacheKey = this.getCacheKey('findOne', attributeValues, withRelations);
-
-    return this.cache.get(cacheKey, () => {
-      return super.findOne(attributeValues, withRelations);
-    });
+  async findOne(attributeValues = {}, withRelations?) {
+    const results = await this.find(attributeValues, withRelations);
+    return results[0] || null;
   }
 
   /**
@@ -108,55 +116,62 @@ export default class CachableRepository extends EntityRepository{
    * @returns {Promise<Object>}
    */
   findOneById(id, withRelations?) {
-    const cacheKey = this.getCacheKey('findOneById', id, withRelations);
-
-    return this.cache.get(cacheKey, () => {
-      return super.findOneById(id, withRelations);
-    });
+    return this.findOne({ [this.idColumn]: id }, withRelations);
   }
 
   /**
    * Persists new entity or an array of entities.
    * This method does not recursively persist related entities, use createRecursively (to be implemented) for that.
    * Batch insert only works on PostgreSQL
+   *
    * @param {Object} entity - model instance or parameters for a new entity
    * @returns {Promise<Object>} - query builder. You can chain additional methods to it or call "await" or then() on it to execute
    */
-  async create(entity) {
-    const result = await super.create(entity);
+  create(entity) {
+    // Keep the input parameter immutable
+    const instanceDTO = cloneDeep(entity);
 
-    // Flushes the repository cache after insert operation.
-    this.flushCache();
-
-    return result;
+    return this.model.query().insert(instanceDTO);
   }
 
   /**
    * Persists updated entity. If previously set fields are not present, performs an incremental update (does not remove fields unless explicitly set to null)
    *
-   * @param {Object} entity - single entity instance
-   * @param {Object} [trx] - knex transaction instance. If not specified, new implicit transaction will be used.
+   * @param   {Object} entity - single entity instance
    * @returns {Promise<integer>} number of affected rows
    */
   async update(entity, whereAttributes?) {
-    const result = await super.update(entity, whereAttributes);
+    const entityDto = cloneDeep(entity);
+    const identityClause = {};
 
-    // Flushes the repository cache after update operation.
-    this.flushCache();
+    if (Array.isArray(this.idColumn)) {
+      this.idColumn.forEach((idColumn) => (identityClause[idColumn] = entityDto[idColumn]));
+    } else {
+      identityClause[this.idColumn] = entityDto[this.idColumn];
+    }
+    const whereConditions = (whereAttributes || identityClause);
+    const modifiedEntitiesCount = await this.model
+      .query()
+      .where(whereConditions)
+      .update(entityDto);
 
-    return result;
+    if (modifiedEntitiesCount === 0) {
+      throw new ModelEntityNotFound(entityDto[this.idColumn]);
+    }
+    return modifiedEntitiesCount;
   }
 
   /**
+   * 
    * @param {Object} attributeValues - values to filter deleted entities by
    * @param {Object} [trx]
    * @returns {Promise<integer>} Query builder. After promise is resolved, returns count of deleted rows
    */
-  async deleteBy(attributeValues) {
-    const result = await super.deleteBy(attributeValues);
-    this.flushCache();
-
-    return result;
+  deleteBy(attributeValues) {
+    return this.model
+      .query()
+      .delete()
+      .where(attributeValues);
   }
 
   /**
@@ -164,25 +179,29 @@ export default class CachableRepository extends EntityRepository{
    * @returns {Promise<integer>} Query builder. After promise is resolved, returns count of deleted rows
    */
   deleteById(id: number|string) {
-    const result = super.deleteById(id);
-
-    // Flushes the repository cache after insert operation.
-    this.flushCache();
-
-    return result;
+    return this.deleteBy({
+      [this.idColumn]: id
+    });
   }
 
   /**
    * 
-   * @param {string|number[]} values -
+   * @param {string} field -
+   * @param {number|string} values -
    */
-  async deleteWhereIn(values: string | number[]) {
-    const result = await super.deleteWhereIdIn(values);
+  deleteWhereIn(field: string, values: string|number[]) {
+    return this.model
+      .query()
+      .whereIn(field, values)
+      .delete();
+  }
 
-    // Flushes the repository cache after delete operation.
-    this.flushCache();
-
-    return result;
+  /**
+   * 
+   * @param {string|number[]} values 
+   */
+  deleteWhereIdIn(values: string|number[]) {
+    return this.deleteWhereIn(this.idColumn, values);
   }
 
   /**
@@ -190,34 +209,23 @@ export default class CachableRepository extends EntityRepository{
    * @param graph 
    * @param options 
    */
-  async upsertGraph(graph, options) {
-    const result = await super.upsertGraph(graph, options);
-
-    // Flushes the repository cache after insert operation.
-    this.flushCache();
-
-    return result;
+  upsertGraph(graph, options) {
+    // Keep the input grpah immutable
+    const graphCloned = cloneDeep(graph);
+    return this.model.upsertGraph(graphCloned)
   }
 
   /**
    * 
-   * @param {} whereAttributes 
+   * @param {object} whereAttributes 
    * @param {string} field 
-   * @param {number} amount 
+   * @param amount 
    */
-  async changeNumber(whereAttributes, field: string, amount: number) {
-    const result = await super.changeNumber(whereAttributes, field, amount);
+  changeNumber(whereAttributes, field: string, amount: number) {
+    const changeMethod = (amount > 0) ? 'increment' : 'decrement';
 
-    // Flushes the repository cache after update operation.
-    this.flushCache();
-
-    return result;
-  }
-
-  /**
-   * Flush repository cache.
-   */
-  flushCache(): void {
-    this.cache.delStartWith(this.repositoryName);
+    return this.model.query()
+      .where(whereAttributes)
+      [changeMethod](field, Math.abs(amount));
   }
 }

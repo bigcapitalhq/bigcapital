@@ -1,15 +1,9 @@
 import { Model, raw } from 'objection';
+import moment from 'moment';
 import { difference } from 'lodash';
 import TenantModel from 'models/TenantModel';
 
 export default class Bill extends TenantModel {
-  /**
-   * Virtual attributes.
-   */
-  static get virtualAttributes() {
-    return ['dueAmount'];
-  }
-
   /**
    * Table name
    */
@@ -36,12 +30,87 @@ export default class Bill extends TenantModel {
     return ['createdAt', 'updatedAt'];
   }
 
+    /**
+   * Virtual attributes.
+   */
+  static get virtualAttributes() {
+    return ['dueAmount', 'isOpen', 'isPartiallyPaid', 'isFullyPaid', 'isPaid', 'remainingDays', 'overdueDays', 'isOverdue'];
+  }
+
   /**
    * Due amount of the given.
    * @return {number}
    */
   get dueAmount() {
     return Math.max(this.amount - this.paymentAmount, 0);
+  }
+
+  /**
+   * Detarmine whether the bill is open.
+   * @return {boolean}
+   */
+  get isOpen() {
+    return !!this.openedAt;
+  }
+
+  /**
+   * Deetarmine whether the bill paid partially.
+   * @return {boolean}
+   */
+  get isPartiallyPaid() {
+    return this.dueAmount !== this.amount && this.dueAmount > 0;
+  }
+
+  /**
+   * Deetarmine whether the bill paid fully.
+   * @return {boolean}
+   */
+  get isFullyPaid() {
+    return this.dueAmount === 0;
+  } 
+
+  /**
+   * Detarmines whether the bill paid fully or partially.
+   * @return {boolean}
+   */
+  get isPaid() {
+    return this.isPartiallyPaid || this.isFullyPaid;
+  }
+
+  /**
+   * Retrieve the remaining days in number
+   * @return {number|null}
+   */
+  get remainingDays() {
+    // Can't continue in case due date not defined.
+    if (!this.dueDate) { return null; }
+
+    const date = moment();
+    const dueDate = moment(this.dueDate);
+
+    return Math.max(dueDate.diff(date, 'days'), 0);
+  }
+
+  /**
+   * Retrieve the overdue days in number.
+   * @return {number|null}
+   */
+  get overdueDays() {
+    // Can't continue in case due date not defined.
+    if (!this.dueDate) { return null; }
+
+    const date = moment();
+    const dueDate = moment(this.dueDate);
+
+    return Math.max(date.diff(dueDate, 'days'), 0);
+  }
+
+  /**
+   * Detarmines the due date is over.
+   * @return {boolean}
+   */
+  get isOverdue() {
+    return this.overdueDays > 0;
   }
 
   /**

@@ -66,7 +66,7 @@ export default class ProfitLossSheetService {
     const baseCurrency = settings.get({ group: 'organization', key: 'base_currency' });
 
     // Retrieve all accounts on the storage.
-    const accounts = await accountRepository.allAccounts('type');
+    const accounts = await accountRepository.all('type');
     const accountsGraph = await accountRepository.getDependencyGraph();
 
     // Retrieve all journal transactions based on the given query.

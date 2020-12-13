@@ -28,11 +28,23 @@ export default class SaleInvoicesController extends BaseController{
 
     router.post(
       '/',
-      this.saleInvoiceValidationSchema,
+      [
+        ...this.saleInvoiceValidationSchema,
+        check('from_estimate_id').optional().isNumeric().toInt(),
+      ],
       this.validationResult,
       asyncMiddleware(this.newSaleInvoice.bind(this)),
       this.handleServiceErrors,
     );
+    router.post(
+      '/:id/deliver',
+      [
+        ...this.specificSaleInvoiceValidation,
+      ],
+      this.validationResult,
+      asyncMiddleware(this.deliverSaleInvoice.bind(this)),
+      this.handleServiceErrors,
+    )
     router.post(
       '/:id',
       [
@@ -86,7 +98,7 @@ export default class SaleInvoicesController extends BaseController{
       check('due_date').exists().isISO8601(),
       check('invoice_no').optional().trim().escape(),
       check('reference_no').optional().trim().escape(),
-      check('status').exists().trim().escape(),
+      check('delivered').default(false).isBoolean().toBoolean(),
 
       check('invoice_message').optional().trim().escape(),
       check('terms_conditions').optional().trim().escape(),
@@ -168,6 +180,28 @@ export default class SaleInvoicesController extends BaseController{
       // Update the given sale invoice details.
       await this.saleInvoiceService.editSaleInvoice(tenantId, saleInvoiceId, saleInvoiceOTD);
       return res.status(200).send({ id: saleInvoiceId });
+    } catch (error) {
+      next(error);
+    }
+  }
+  
+  /**
+   * Deliver the given sale invoice.
+   * @param {Request} req -
+   * @param {Response} res -
+   * @param {NextFunction} next -
+   */
+  async deliverSaleInvoice(req: Request, res: Response, next: NextFunction) {
+    const { tenantId } = req;
+    const { id: saleInvoiceId } = req.params;
+
+    try {
+      await this.saleInvoiceService.deliverSaleInvoice(tenantId, saleInvoiceId);
+
+      return res.status(200).send({
+        id: saleInvoiceId,
+        message: 'The given sale invoice has been published successfully',
+      });
     } catch (error) {
       next(error);
     }
@@ -317,6 +351,11 @@ export default class SaleInvoicesController extends BaseController{
       if (error.errorType === 'contact_not_found') {
         return res.boom.badRequest(null, {
           errors: [{ type: 'CUSTOMER_NOT_FOUND', code: 200 }],
+        });
+      }
+      if (error.errorType === 'SALE_INVOICE_ALREADY_DELIVERED') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'SALE_INVOICE_ALREADY_DELIVERED', code: 200 }],
         });
       }
     }

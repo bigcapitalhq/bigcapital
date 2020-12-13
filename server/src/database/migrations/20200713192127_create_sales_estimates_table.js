@@ -1,3 +1,4 @@
+const { default: TrialBalanceSheet } = require("services/FinancialStatements/TrialBalanceSheet/TrialBalanceSheet");
 
 exports.up = function(knex) {
   return knex.schema.createTable('sales_estimates', (table) => {
@@ -11,7 +12,13 @@ exports.up = function(knex) {
     table.text('note');
     table.text('terms_conditions');
     table.text('send_to_email');
+    
+    table.date('delivered_at').index();
     table.integer('user_id').unsigned().index();
+
+    table.integer('converted_to_invoice_id').unsigned();
+    table.date('converted_to_invoice_at');
+
     table.timestamps();
   });  
 };

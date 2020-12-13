@@ -12,6 +12,7 @@ exports.up = function(knex) {
     table.decimal('amount', 13, 3).defaultTo(0);
     table.decimal('payment_amount', 13, 3).defaultTo(0);
     table.string('inv_lot_number').index();
+    table.date('opened_at').index();
     table.integer('user_id').unsigned();
     table.timestamps();
   });

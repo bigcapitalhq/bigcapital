@@ -1,6 +1,7 @@
 import { Model, raw } from 'objection';
 import moment from 'moment';
 import TenantModel from 'models/TenantModel';
+import { defaultToTransform } from 'utils';
 
 export default class SaleInvoice extends TenantModel {
   /**
@@ -22,6 +23,90 @@ export default class SaleInvoice extends TenantModel {
    */
   get timestamps() {
     return ['created_at', 'updated_at'];
+  }
+
+  /**
+   * Virtual attributes.
+   */
+  static get virtualAttributes() {
+    return ['dueAmount', 'isDelivered', 'isOverdue', 'isPartiallyPaid', 'isFullyPaid', 'isPaid', 'remainingDays', 'overdueDays'];
+  }
+
+  /**
+   * Detarmines whether the invoice is delivered.
+   * @return {boolean}
+   */
+  get isDelivered() {
+    return !!this.deliveredAt;
+  }
+
+  /**
+   * Detarmines the due date is over.
+   * @return {boolean}
+   */
+  get isOverdue() {
+    return this.overdueDays > 0;
+  }
+
+  /**
+   * Retrieve the invoice due amount.
+   * (Invoice amount - payment amount = Due amount)
+   * @return {boolean}
+   */
+  dueAmount() {
+    return Math.max(this.balance - this.paymentAmount, 0);
+  }
+
+  /**
+   * Detarmine whether the invoice paid partially.
+   * @return {boolean}
+   */
+  get isPartiallyPaid() {
+    return this.dueAmount !== this.balance && this.dueAmount > 0;
+  }
+
+  /**
+   * Deetarmine whether the invoice paid fully.
+   * @return {boolean}
+   */
+  get isFullyPaid() {
+    return this.dueAmount === 0;
+  }
+
+  /**
+   * Detarmines whether the invoice paid fully or partially.
+   * @return {boolean}
+   */
+  get isPaid() {
+    return this.isPartiallyPaid || this.isFullyPaid;
+  }
+
+  /**
+   * Retrieve the remaining days in number
+   * @return {number|null}
+   */
+  get remainingDays() {
+    // Can't continue in case due date not defined.
+    if (!this.dueDate) { return null; }
+
+    const date = moment();
+    const dueDate = moment(this.dueDate);
+
+    return Math.max(dueDate.diff(date, 'days'), 0);
+  }
+
+  /**
+   * Retrieve the overdue days in number.
+   * @return {number|null}
+   */
+  get overdueDays() {
+    // Can't continue in case due date not defined.
+    if (!this.dueDate) { return null; }
+
+    const date = moment();
+    const dueDate = moment(this.dueDate);
+
+    return Math.max(date.diff(dueDate, 'days'), 0);
   }
 
   static get resourceable() {
@@ -67,6 +152,7 @@ export default class SaleInvoice extends TenantModel {
     const ItemEntry = require('models/ItemEntry');
     const Contact = require('models/Contact');
     const InventoryCostLotTracker = require('models/InventoryCostLotTracker');
+    const PaymentReceiveEntry = require('models/PaymentReceiveEntry');
 
     return {
       entries: {
@@ -115,7 +201,16 @@ export default class SaleInvoice extends TenantModel {
         filter(builder) {
           builder.where('transaction_type', 'SaleInvoice');
         },
-      }
+      },
+
+      paymentEntries: {
+        relation: Model.HasManyRelation,
+        modelClass: PaymentReceiveEntry.default,
+        join: {
+          from: 'sales_invoices.id',
+          to: 'payment_receives_entries.invoice_id',
+        },
+      },
     };
   }
 

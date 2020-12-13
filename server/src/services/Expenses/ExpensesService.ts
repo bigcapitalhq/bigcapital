@@ -15,6 +15,7 @@ import events from 'subscribers/events';
 
 const ERRORS = {
   EXPENSE_NOT_FOUND: 'expense_not_found',
+  EXPENSES_NOT_FOUND: 'EXPENSES_NOT_FOUND',
   PAYMENT_ACCOUNT_NOT_FOUND: 'payment_account_not_found',
   SOME_ACCOUNTS_NOT_FOUND: 'some_expenses_not_found',
   TOTAL_AMOUNT_EQUALS_ZERO: 'total_amount_equals_zero',
@@ -48,7 +49,7 @@ export default class ExpensesService implements IExpensesService {
     this.logger.info('[expenses] trying to get the given payment account.', { tenantId, paymentAccountId });
 
     const { accountRepository } = this.tenancy.repositories(tenantId);
-    const paymentAccount = await accountRepository.findById(paymentAccountId)
+    const paymentAccount = await accountRepository.findOneById(paymentAccountId)
 
     if (!paymentAccount) {
       this.logger.info('[expenses] the given payment account not found.', { tenantId, paymentAccountId });
@@ -68,8 +69,8 @@ export default class ExpensesService implements IExpensesService {
   private async getExpensesAccountsOrThrowError(tenantId: number, expenseAccountsIds: number[]) {
     this.logger.info('[expenses] trying to get expenses accounts.', { tenantId, expenseAccountsIds });
 
-    const { Account } = this.tenancy.models(tenantId);
-    const storedExpenseAccounts = await Account.query().whereIn(
+    const { accountRepository } = this.tenancy.repositories(tenantId);
+    const storedExpenseAccounts = await accountRepository.findWhereIn(
       'id', expenseAccountsIds,
     );
     const storedExpenseAccountsIds = storedExpenseAccounts.map((a: IAccount) => a.id);
@@ -108,7 +109,10 @@ export default class ExpensesService implements IExpensesService {
     this.logger.info('[expenses] trying to validate expenses accounts type.', { tenantId, expensesAccounts });
 
     const { accountTypeRepository } = this.tenancy.repositories(tenantId);
+
+    // Retrieve accounts types of the given root type.
     const expensesTypes = await accountTypeRepository.getByRootType('expense');
+
     const expensesTypesIds = expensesTypes.map(t => t.id);
     const invalidExpenseAccounts: number[] = [];
 
@@ -132,6 +136,8 @@ export default class ExpensesService implements IExpensesService {
     this.logger.info('[expenses] trying to validate payment account type.', { tenantId, paymentAccount });
 
     const { accountTypeRepository } = this.tenancy.repositories(tenantId);
+
+    // Retrieve account tpy eof the given key.
     const validAccountsType = await accountTypeRepository.getByKeys([
       'current_asset', 'fixed_asset',
     ]);
@@ -200,7 +206,9 @@ export default class ExpensesService implements IExpensesService {
     const { expenseRepository } = this.tenancy.repositories(tenantId);
 
     this.logger.info('[expense] trying to get the given expense.', { tenantId, expenseId });
-    const expense = await expenseRepository.getById(expenseId);
+
+    // Retrieve the given expense by id.
+    const expense = await expenseRepository.findOneById(expenseId);
 
     if (!expense) {
       this.logger.info('[expense] the given expense not found.', { tenantId, expenseId });
@@ -209,8 +217,27 @@ export default class ExpensesService implements IExpensesService {
     return expense;
   }
 
-  async getExpensesOrThrowError(tenantId: number, expensesIds: number[]) {
+  /**
+   * Retrieve the give expenses models or throw not found service error.
+   * @param {number} tenantId -
+   * @param {number[]} expensesIds -
+   */
+  async getExpensesOrThrowError(
+    tenantId: number,
+    expensesIds: number[]
+  ): Promise<IExpense> {
+    const { expenseRepository } = this.tenancy.repositories(tenantId);
 
+    const storedExpenses = expenseRepository.findWhereIn('id', expensesIds);
+
+    const storedExpensesIds = storedExpenses.map((expense) => expense.id);
+    const notFoundExpenses = difference(expensesIds, storedExpensesIds);
+
+    if (notFoundExpenses.length > 0) {
+      this.logger.info('[expense] the give expenses ids not found.', { tenantId, expensesIds });
+      throw new ServiceError(ERRORS.EXPENSES_NOT_FOUND)
+    }
+    return storedExpenses;
   }
 
   /**
@@ -301,7 +328,12 @@ export default class ExpensesService implements IExpensesService {
 
     // - Update the expense on the storage.
     const expenseObj = this.expenseDTOToModel(expenseDTO);
-    const expenseModel = await expenseRepository.update(expenseId, expenseObj, null);
+
+    // - Upsert the expense object with expense entries.
+    const expenseModel = await expenseRepository.upsertGraph({
+      id: expenseId,
+      ...expenseObj,
+    });
 
     this.logger.info('[expense] the expense updated on the storage successfully.', { tenantId, expenseDTO });
     return expenseModel;
@@ -348,7 +380,7 @@ export default class ExpensesService implements IExpensesService {
 
     // 6. Save the expense to the storage.
     const expenseObj = this.expenseDTOToModel(expenseDTO, authorizedUser);
-    const expenseModel = await expenseRepository.create(expenseObj);
+    const expenseModel = await expenseRepository.upsertGraph(expenseObj);
 
     this.logger.info('[expense] the expense stored to the storage successfully.', { tenantId, expenseDTO });
 
@@ -394,7 +426,7 @@ export default class ExpensesService implements IExpensesService {
     const { expenseRepository } = this.tenancy.repositories(tenantId);
 
     this.logger.info('[expense] trying to delete the expense.', { tenantId, expenseId });
-    await expenseRepository.delete(expenseId);
+    await expenseRepository.deleteById(expenseId);
 
     this.logger.info('[expense] the expense deleted successfully.', { tenantId, expenseId });
 
@@ -413,7 +445,7 @@ export default class ExpensesService implements IExpensesService {
     const { expenseRepository } = this.tenancy.repositories(tenantId);
 
     this.logger.info('[expense] trying to delete the given expenses.', { tenantId, expensesIds });
-    await expenseRepository.bulkDelete(expensesIds);
+    await expenseRepository.deleteWhereIdIn(expensesIds);
 
     this.logger.info('[expense] the given expenses deleted successfully.', { tenantId, expensesIds });
 
@@ -432,7 +464,7 @@ export default class ExpensesService implements IExpensesService {
     const { expenseRepository } = this.tenancy.repositories(tenantId);
 
     this.logger.info('[expense] trying to publish the given expenses.', { tenantId, expensesIds });
-    await expenseRepository.bulkPublish(expensesIds);
+    await expenseRepository.whereIdInPublish(expensesIds);
 
     this.logger.info('[expense] the given expenses ids published successfully.', { tenantId, expensesIds });
 
@@ -474,13 +506,13 @@ export default class ExpensesService implements IExpensesService {
    * @return {Promise<IExpense>}
    */
   public async getExpense(tenantId: number, expenseId: number): Promise<IExpense> {
-    const { Expense } = this.tenancy.models(tenantId);
+    const { expenseRepository } = this.tenancy.repositories(tenantId);
 
-    const expense = await Expense.query().findById(expenseId)
-      .withGraphFetched('paymentAccount')
-      .withGraphFetched('media')
-      .withGraphFetched('categories.expenseAccount');
-
+    const expense = await expenseRepository.findOneById(expenseId, [
+      'paymentAccount',
+      'media',
+      'categories.expenseAccount',
+    ]);
     if (!expense) {
       throw new ServiceError(ERRORS.EXPENSE_NOT_FOUND);
     }

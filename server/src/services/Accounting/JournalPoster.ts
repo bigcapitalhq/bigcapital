@@ -166,7 +166,7 @@ export default class JournalPoster implements IJournalPoster {
       accountsIds.map(async (account: number) => {
         const accountChange = accountsChange[account];
         const accountNode = this.accountsDepGraph.getNodeData(account);
-        const accountTypeMeta = await accountTypeRepository.getTypeMeta(accountNode.accountTypeId);
+        const accountTypeMeta = await accountTypeRepository.findOneById(accountNode.accountTypeId);
         const { normal }: { normal: TEntryType } = accountTypeMeta;
         let change = 0;
 

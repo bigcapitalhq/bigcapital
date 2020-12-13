@@ -12,6 +12,7 @@ import ItemsEntriesService from 'services/Items/ItemsEntriesService';
 import events from 'subscribers/events';
 import { ServiceError } from 'exceptions';
 import CustomersService from 'services/Contacts/CustomersService';
+import moment from 'moment';
 
 
 const ERRORS = {
@@ -19,6 +20,8 @@ const ERRORS = {
   CUSTOMER_NOT_FOUND: 'CUSTOMER_NOT_FOUND',
   SALE_ESTIMATE_NUMBER_EXISTANCE: 'SALE_ESTIMATE_NUMBER_EXISTANCE',
   ITEMS_IDS_NOT_EXISTS: 'ITEMS_IDS_NOT_EXISTS',
+  SALE_ESTIMATE_ALREADY_DELIVERED: 'SALE_ESTIMATE_ALREADY_DELIVERED',
+  SALE_ESTIMATE_CONVERTED_TO_INVOICE: 'SALE_ESTIMATE_CONVERTED_TO_INVOICE'
 };
 /**
  * Sale estimate service.
@@ -81,22 +84,55 @@ export default class SaleEstimateService {
   }
 
   /**
+   * Transform DTO object ot model object.
+   * @param  {number} tenantId 
+   * @param  {ISaleEstimateDTO} saleEstimateDTO 
+   * @param  {ISaleEstimate} oldSaleEstimate 
+   * @return {ISaleEstimate}
+   */
+  transformDTOToModel(
+    tenantId: number,
+    estimateDTO: ISaleEstimateDTO,
+    oldSaleEstimate?: ISaleEstimate,
+  ): ISaleEstimate {
+    const { ItemEntry } = this.tenancy.models(tenantId);
+    const amount = sumBy(estimateDTO.entries, e => ItemEntry.calcAmount(e));
+
+    return {
+      amount,
+      ...formatDateFields(
+        omit(estimateDTO, ['delivered', 'entries']),
+        ['estimateDate', 'expirationDate']
+      ),
+      entries: estimateDTO.entries.map((entry) => ({ 
+        reference_type: 'SaleEstimate',
+        ...omit(entry, ['total', 'amount', 'id']),
+      })),
+
+      // Avoid rewrite the deliver date in edit mode when already published.
+      ...(estimateDTO.delivered && (!oldSaleEstimate?.deliveredAt)) && ({
+        deliveredAt: moment().toMySqlDateTime(),
+      }),
+    };
+  }
+
+  /**
    * Creates a new estimate with associated entries.
    * @async
    * @param {number} tenantId - The tenant id.
    * @param {EstimateDTO} estimate
    * @return {Promise<ISaleEstimate>}
    */
-  public async createEstimate(tenantId: number, estimateDTO: ISaleEstimateDTO): Promise<ISaleEstimate> {
-    const { SaleEstimate, ItemEntry } = this.tenancy.models(tenantId);
+  public async createEstimate(
+    tenantId: number,
+    estimateDTO: ISaleEstimateDTO
+  ): Promise<ISaleEstimate> {
+    const { SaleEstimate } = this.tenancy.models(tenantId);
 
     this.logger.info('[sale_estimate] inserting sale estimate to the storage.');
 
-    const amount = sumBy(estimateDTO.entries, e => ItemEntry.calcAmount(e));
-    const estimateObj = {
-      amount,
-      ...formatDateFields(estimateDTO, ['estimateDate', 'expirationDate']),
-    };
+    // Transform DTO object ot model object.
+    const estimateObj = this.transformDTOToModel(tenantId, estimateDTO);
 
     // Validate estimate number uniquiness on the storage.
     if (estimateDTO.estimateNumber) {
@@ -112,13 +148,7 @@ export default class SaleEstimateService {
     await this.itemsEntriesService.validateNonSellableEntriesItems(tenantId, estimateDTO.entries);
 
     const saleEstimate = await SaleEstimate.query()
-      .upsertGraphAndFetch({
-        ...omit(estimateObj, ['entries']),
-        entries: estimateObj.entries.map((entry) => ({ 
-          reference_type: 'SaleEstimate',
-          ...omit(entry, ['total', 'amount', 'id']),
-        }))
-      });
+      .upsertGraphAndFetch({ ...estimateObj });
 
     this.logger.info('[sale_estimate] insert sale estimated success.');
     await this.eventDispatcher.dispatch(events.saleEstimate.onCreated, {
@@ -136,15 +166,16 @@ export default class SaleEstimateService {
    * @param {EstimateDTO} estimate
    * @return {void}
    */
-  public async editEstimate(tenantId: number, estimateId: number, estimateDTO: ISaleEstimateDTO): Promise<ISaleEstimate> {
-    const { SaleEstimate, ItemEntry } = this.tenancy.models(tenantId);
+  public async editEstimate(
+    tenantId: number,
+    estimateId: number,
+    estimateDTO: ISaleEstimateDTO
+  ): Promise<ISaleEstimate> {
+    const { SaleEstimate } = this.tenancy.models(tenantId);
     const oldSaleEstimate = await this.getSaleEstimateOrThrowError(tenantId, estimateId);
 
-    const amount = sumBy(estimateDTO.entries, (e) => ItemEntry.calcAmount(e));
-    const estimateObj = {
-      amount,
-      ...formatDateFields(estimateDTO, ['estimateDate', 'expirationDate']),
-    };
+    // Transform DTO object ot model object.
+    const estimateObj = this.transformDTOToModel(tenantId, estimateDTO, oldSaleEstimate);
 
     // Validate estimate number uniquiness on the storage.
     if (estimateDTO.estimateNumber) {
@@ -166,11 +197,7 @@ export default class SaleEstimateService {
     const saleEstimate = await SaleEstimate.query()
       .upsertGraphAndFetch({
         id: estimateId,
-        ...omit(estimateObj, ['entries']),
-        entries: estimateObj.entries.map((entry) => ({
-          reference_type: 'SaleEstimate',
-          ...omit(entry, ['total', 'amount']),
-        })),
+        ...estimateObj
       });
 
     await this.eventDispatcher.dispatch(events.saleEstimate.onEdited, {
@@ -193,6 +220,11 @@ export default class SaleEstimateService {
 
     // Retrieve sale estimate or throw not found service error.
     const oldSaleEstimate = await this.getSaleEstimateOrThrowError(tenantId, estimateId);
+
+    // Throw error if the sale estimate converted to sale invoice.
+    if (oldSaleEstimate.convertedToInvoiceId) {
+      throw new ServiceError(ERRORS.SALE_ESTIMATE_CONVERTED_TO_INVOICE);
+    }
 
     this.logger.info('[sale_estimate] delete sale estimate and associated entries from the storage.');
     await ItemEntry.query()
@@ -253,5 +285,71 @@ export default class SaleEstimateService {
       pagination,
       filterMeta: dynamicFilter.getResponseMeta(),
     };
+  }
+
+  /**
+   * Converts estimate to invoice.
+   * @param {number} tenantId -
+   * @param {number} estimateId -
+   * @return {Promise<void>}
+   */
+  async convertEstimateToInvoice(
+    tenantId: number,
+    estimateId: number,
+    invoiceId: number,
+  ): Promise<void> {
+    const { SaleEstimate } = this.tenancy.models(tenantId);
+
+    // Retrieve details of the given sale estimate.
+    const saleEstimate = await this.getSaleEstimateOrThrowError(tenantId, estimateId);
+
+    await SaleEstimate.query().where('id', estimateId).patch({
+      convertedToInvoiceId: invoiceId,
+      convertedToInvoiceAt: moment().toMySqlDateTime(),
+    });
+  }
+
+  /**
+   * Unlink the converted sale estimates from the given sale invoice.
+   * @param {number} tenantId -
+   * @param {number} invoiceId -
+   * @return {Promise<void>}
+   */
+  async unlinkConvertedEstimateFromInvoice(
+    tenantId: number,
+    invoiceId: number,
+  ): Promise<void> {
+    const { SaleEstimate } = this.tenancy.models(tenantId);
+
+    await SaleEstimate.query().where({
+      convertedToInvoiceId: invoiceId,
+    }).patch({
+      convertedToInvoiceId: null,
+      convertedToInvoiceAt: null,
+    });
+  }
+
+  /**
+   * Mark the sale estimate as delivered.
+   * @param {number} tenantId - Tenant id.
+   * @param {number} saleEstimateId - Sale estimate id.
+   */
+  public async deliverSaleEstimate(
+    tenantId: number,
+    saleEstimateId: number,
+  ): Promise<void> {
+    const { SaleEstimate } = this.tenancy.models(tenantId);
+
+    // Retrieve details of the given sale estimate id.
+    const saleEstimate = await this.getSaleEstimateOrThrowError(tenantId, saleEstimateId);
+
+    // Throws error in case the sale estimate already published.
+    if (saleEstimate.isDelivered) {
+      throw new ServiceError(ERRORS.SALE_ESTIMATE_ALREADY_DELIVERED);
+    }
+    // Record the delivered at on the storage.
+    await SaleEstimate.query().where('id', saleEstimateId).patch({
+      deliveredAt: moment().toMySqlDateTime()
+    });
   }
 }

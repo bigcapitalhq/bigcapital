@@ -1,58 +1,17 @@
-import { IVendor } from "interfaces";
+import { Vendor } from "models";
 import TenantRepository from "./TenantRepository";
 
-
 export default class VendorRepository extends TenantRepository {
-
   /**
-   * Retrieve vendor details of the given id.
-   * @param {number} vendorId - Vendor id.
+   * Constructor method.
    */
-  findById(vendorId: number) {
-    const { Contact } = this.models;
-    return Contact.query().findById(vendorId);
-  }
-
-  /**
-   * Retrieve the bill that associated to the given vendor id.
-   * @param {number} vendorId - Vendor id.
-   */
-  getBills(vendorId: number) {
-    const { Bill } = this.models;
-
-    return this.cache.get(`vendors.bills.${vendorId}`, () => {
-      return Bill.query().where('vendor_id', vendorId);
-    });
-  }
-
-  /**
-   * Retrieve all the given vendors.
-   * @param {numner[]} vendorsIds 
-   * @return {IVendor}
-   */
-  vendors(vendorsIds: number[]): IVendor[] {
-    const { Contact } = this.models;
-    return Contact.query().modifier('vendor').whereIn('id', vendorsIds);
-  }
-
-  /**
-   * Retrieve vendors with associated bills.
-   * @param {number[]} vendorIds 
-   */
-  vendorsWithBills(vendorIds: number[]) {
-    const { Contact } = this.models;
-    return Contact.query().modify('vendor')
-      .whereIn('id', vendorIds)
-      .withGraphFetched('bills');
+  constructor(knex, cache) {
+    super(knex, cache);
+    this.model = Vendor;
   }
 
   changeBalance(vendorId: number, amount: number) {
-    const { Contact } = this.models;
-    const changeMethod = (amount > 0) ? 'increment' : 'decrement';
-
-    return Contact.query()
-      .where('id', vendorId)
-      [changeMethod]('balance', Math.abs(amount));
+    return super.changeNumber({ id: vendorId }, 'balance', amount);
   }
 
   async changeDiffBalance(

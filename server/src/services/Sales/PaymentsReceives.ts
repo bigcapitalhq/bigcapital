@@ -119,7 +119,7 @@ export default class PaymentReceiveService {
     const { accountTypeRepository, accountRepository } = this.tenancy.repositories(tenantId);
 
     const currentAssetTypes = await accountTypeRepository.getByChildType('current_asset');
-    const depositAccount = await accountRepository.findById(depositAccountId);
+    const depositAccount = await accountRepository.findOneById(depositAccountId);
 
     const currentAssetTypesIds = currentAssetTypes.map(type => type.id);
 

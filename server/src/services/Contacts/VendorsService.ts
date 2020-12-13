@@ -194,8 +194,10 @@ export default class VendorsService {
    * @param {number} vendorId 
    */
   private async vendorHasNoBillsOrThrowError(tenantId: number, vendorId: number) {
-    const { vendorRepository } = this.tenancy.repositories(tenantId);
-    const bills = await vendorRepository.getBills(vendorId);
+    const { billRepository } = this.tenancy.repositories(tenantId);
+
+    // Retrieve the bill that associated to the given vendor id.
+    const bills = await billRepository.find({ vendor_id: vendorId });
 
     if (bills.length > 0) {
       throw new ServiceError('vendor_has_bills')
@@ -209,14 +211,14 @@ export default class VendorsService {
    * @throws {ServiceError}
    */
   private async vendorsHaveNoBillsOrThrowError(tenantId: number, vendorsIds: number[]) {
-    const { vendorRepository } = this.tenancy.repositories(tenantId);
+    const { billRepository } = this.tenancy.repositories(tenantId);
 
-    const vendorsWithBills = await vendorRepository.vendorsWithBills(vendorsIds);
-    const vendorsIdsWithBills = vendorsWithBills
-      .filter((vendor: IVendor) => vendor.bills.length > 0)
-      .map((vendor: IVendor) => vendor.id);
+    // Retrieves bills that assocaited to the given vendors.
+    const vendorsBills = await billRepository.findWhereIn('vendor_id', vendorsIds);
+    const billsVendorsIds = vendorsBills.map((bill) => bill.vendorId);
 
-    const vendorsHaveInvoices = difference(vendorsIds, vendorsIdsWithBills);
+    // The difference between the vendors ids and bills vendors ids.
+    const vendorsHaveInvoices = difference(vendorsIds, billsVendorsIds);
 
     if (vendorsHaveInvoices.length > 0) {
       throw new ServiceError('some_vendors_have_bills');

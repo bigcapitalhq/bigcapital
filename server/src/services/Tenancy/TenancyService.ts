@@ -69,7 +69,10 @@ export default class HasTenancyService {
    */
   repositories(tenantId: number) {
     return this.singletonService(tenantId, 'repositories', () => {
-      return tenantRepositoriesLoader(tenantId);
+      const cache = this.cache(tenantId);
+      const knex = this.knex(tenantId);
+
+      return tenantRepositoriesLoader(knex, cache);
     });
   }
 

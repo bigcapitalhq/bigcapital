@@ -27,10 +27,13 @@ export default class ContactsService {
    * @return {Promise<IContact>}
    */
   public async getContactByIdOrThrowError(tenantId: number, contactId: number, contactService: TContactService) {
-    const { Contact } = this.tenancy.models(tenantId);
+    const { contactRepository } = this.tenancy.repositories(tenantId);
 
     this.logger.info('[contact] trying to validate contact existance.', { tenantId, contactId });
-    const contact = await Contact.query().findById(contactId).where('contact_service', contactService);
+    const contact = await contactRepository.findOne({
+      id: contactId,
+      contactService: contactService,
+    });
 
     if (!contact) {
       throw new ServiceError('contact_not_found');
@@ -70,7 +73,7 @@ export default class ContactsService {
     const contactObj = this.transformContactObj(contactDTO);
 
     this.logger.info('[contacts] trying to insert contact to the storage.', { tenantId, contactDTO });
-    const contact = await contactRepository.insert({ contactService, ...contactObj });
+    const contact = await contactRepository.create({ contactService, ...contactObj });
 
     this.logger.info('[contacts] contact inserted successfully.', { tenantId, contact });
     return contact;
@@ -84,13 +87,13 @@ export default class ContactsService {
    * @param {IContactDTO} contactDTO 
    */
   async editContact(tenantId: number, contactId: number, contactDTO: IContactEditDTO, contactService: TContactService) {
-    const { Contact } = this.tenancy.models(tenantId);
+    const { contactRepository } = this.tenancy.repositories(tenantId);
     const contactObj = this.transformContactObj(contactDTO);
 
     const contact = await this.getContactByIdOrThrowError(tenantId, contactId, contactService);
 
     this.logger.info('[contacts] trying to edit the given contact details.', { tenantId, contactId, contactDTO });
-    await Contact.query().findById(contactId).patch({ ...contactObj })
+    await contactRepository.update({ ...contactObj }, { id: contactId });
   }
 
   /**
@@ -105,6 +108,8 @@ export default class ContactsService {
     const contact = await this.getContactByIdOrThrowError(tenantId, contactId, contactService);
 
     this.logger.info('[contacts] trying to delete the given contact.', { tenantId, contactId });
+
+    // Deletes contact of the given id.
     await contactRepository.deleteById(contactId);
   }
 
@@ -151,7 +156,7 @@ export default class ContactsService {
     const { contactRepository } = this.tenancy.repositories(tenantId);
     this.getContactsOrThrowErrorNotFound(tenantId, contactsIds, contactService);
 
-    await contactRepository.bulkDelete(contactsIds);
+    await contactRepository.deleteWhereIdIn(contactsIds);
   }
 
   /**

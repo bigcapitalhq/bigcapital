@@ -7,9 +7,9 @@ export default class SettingsStore extends MetableStoreDB {
    * Constructor method.
    * @param {number} tenantId 
    */
-  constructor(knex: Knex) {
+  constructor(repository) {
     super();
     this.setExtraColumns(['group']);
-    this.setModel(Setting.bindKnex(knex));
+    this.setRepository(repository);
   }
 }

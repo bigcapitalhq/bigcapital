@@ -13,6 +13,7 @@ export interface ISaleEstimate {
   entries: IItemEntry[],
   sendToEmail: string,
   createdAt?: Date,
+  deliveredAt: string|Date,
 };
 export interface ISaleEstimateDTO {
   customerId: number,
@@ -23,6 +24,7 @@ export interface ISaleEstimateDTO {
   note: string,
   termsConditions: string,
   sendToEmail: string,
+  delivered: boolean,
 };
 
 export interface ISalesEstimatesFilter extends IDynamicListFilterDTO { 

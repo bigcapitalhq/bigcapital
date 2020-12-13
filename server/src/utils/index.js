@@ -227,6 +227,24 @@ const isBlank = (value) => {
   return _.isEmpty(value) && !_.isNumber(value) || _.isNaN(value);
 }
 
+function defaultToTransform(
+  value,
+  defaultOrTransformedValue,
+  defaultValue,
+) {
+  const _defaultValue =
+    typeof defaultValue === 'undefined'
+      ? defaultOrTransformedValue
+      : defaultValue;
+
+  const _transfromedValue =
+    typeof defaultValue === 'undefined' ? value : defaultOrTransformedValue;
+
+  return value == null || value !== value || value === ''
+    ? _defaultValue
+    : _transfromedValue;
+}
+
 export {
   hashPassword,
   origin,
@@ -246,5 +264,6 @@ export {
   entriesAmountDiff,
   convertEmptyStringToNull,
   formatNumber,
-  isBlank
+  isBlank,
+  defaultToTransform
 };

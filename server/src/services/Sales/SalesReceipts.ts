@@ -66,12 +66,12 @@ export default class SalesReceiptService {
    */
   async validateReceiptDepositAccountExistance(tenantId: number, accountId: number) {
     const { accountRepository, accountTypeRepository } = this.tenancy.repositories(tenantId);
-    const depositAccount = await accountRepository.findById(accountId);
+    const depositAccount = await accountRepository.findOneById(accountId);
 
     if (!depositAccount) {
       throw new ServiceError(ERRORS.DEPOSIT_ACCOUNT_NOT_FOUND);
     }
-    const depositAccountType = await accountTypeRepository.getTypeMeta(depositAccount.accountTypeId);
+    const depositAccountType = await accountTypeRepository.findOneById(depositAccount.accountTypeId);
 
     if (!depositAccountType || depositAccountType.childRoot === 'current_asset') {
       throw new ServiceError(ERRORS.DEPOSIT_ACCOUNT_NOT_CURRENT_ASSET);

@@ -1,7 +1,27 @@
-import { Model } from 'objection';
+import { Model, QueryBuilder } from 'objection';
 import TenantModel from 'models/TenantModel';
 
-export default class Contact extends TenantModel {
+
+class CustomerQueryBuilder extends QueryBuilder {
+  constructor(...args) {
+    super(...args);
+
+    this.onBuild((builder) => {
+      if (builder.isFind() || builder.isDelete() || builder.isUpdate()) {
+        builder.where('contact_service', 'customer');
+      }
+    });
+  }
+}
+
+export default class Customer extends TenantModel {
+  /**
+   * Query builder.
+   */
+  static get QueryBuilder() {
+    return CustomerQueryBuilder;
+  }
+
   /**
    * Table name
    */
@@ -31,30 +51,10 @@ export default class Contact extends TenantModel {
   }
 
   /**
-   * Model modifiers.
-   */
-  static get modifiers() {
-    return {
-      filterContactIds(query, customerIds) {
-        query.whereIn('id', customerIds);
-      },
-
-      customer(query) {
-        query.where('contact_service', 'customer');
-      },
-
-      vendor(query){
-        query.where('contact_service', 'vendor');
-      }
-    };
-  }
-
-  /**
    * Relationship mapping.
    */
   static get relationMappings() {
     const SaleInvoice = require('models/SaleInvoice');
-    const Bill = require('models/Bill');
 
     return {
       salesInvoices: {
@@ -65,15 +65,6 @@ export default class Contact extends TenantModel {
           to: 'sales_invoices.customerId',
         },
       },
-
-      bills: {
-        relation: Model.HasManyRelation,
-        modelClass: Bill.default,
-        join: {
-          from: 'contacts.id',
-          to: 'bills.vendorId',
-        },
-      }
     };
   }
 

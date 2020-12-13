@@ -15,13 +15,15 @@ import {
   ICustomersFilter,
   IContactNewDTO,
   IContactEditDTO,
-  IContact
+  IContact,
+  ISaleInvoice
  } from 'interfaces';
 import { ServiceError } from 'exceptions';
 import TenancyService from 'services/Tenancy/TenancyService';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import events from 'subscribers/events';
 import moment from 'moment';
+import SaleInvoiceRepository from 'repositories/SaleInvoiceRepository';
 
 @Service()
 export default class CustomersService {
@@ -68,6 +70,7 @@ export default class CustomersService {
   }
 
   private transformContactToCustomer(contactModel: IContact) {
+    console.log(contactModel);
     return {
       ...omit(contactModel.toJSON(), ['contactService', 'contactType']),
       customerType: contactModel.contactType,
@@ -263,8 +266,10 @@ export default class CustomersService {
    * @return {Promise<void>}
    */
   private async customerHasNoInvoicesOrThrowError(tenantId: number, customerId: number) {
-    const { customerRepository } = this.tenancy.repositories(tenantId);
-    const salesInvoice = await customerRepository.getSalesInvoices(customerId);
+    const { saleInvoiceRepository } = this.tenancy.repositories(tenantId);
+
+    // Retrieve the sales invoices that assocaited to the given customer.
+    const salesInvoice = await saleInvoiceRepository.find({ customer_id: customerId });
 
     if (salesInvoice.length > 0) {
       throw new ServiceError('customer_has_invoices');
@@ -279,14 +284,13 @@ export default class CustomersService {
    * @return {Promise<void>}
    */
   private async customersHaveNoInvoicesOrThrowError(tenantId: number, customersIds: number[]) {
-    const { customerRepository } = this.tenancy.repositories(tenantId);
+    const { saleInvoiceRepository } = this.tenancy.repositories(tenantId);
 
-    const customersWithInvoices = await customerRepository.customersWithSalesInvoices(
-      customersIds,
+    const customersInvoices = await saleInvoiceRepository.findWhereIn(
+      'customer_id', customersIds
     );
-    const customersIdsWithInvoice = customersWithInvoices
-      .filter((customer: ICustomer) => customer.salesInvoices.length > 0)
-      .map((customer: ICustomer) => customer.id);
+    const customersIdsWithInvoice = customersInvoices
+      .map((saleInvoice: ISaleInvoice) => saleInvoice.customerId);
 
     const customersHaveInvoices = difference(customersIds, customersIdsWithInvoice);
 

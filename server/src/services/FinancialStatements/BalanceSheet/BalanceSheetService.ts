@@ -67,7 +67,7 @@ export default class BalanceSheetStatementService
     this.logger.info('[balance_sheet] trying to calculate the report.', { filter, tenantId });
 
     // Retrieve all accounts on the storage.
-    const accounts = await accountRepository.allAccounts('type');
+    const accounts = await accountRepository.all('type');
     const accountsGraph = await accountRepository.getDependencyGraph();
 
     // Retrieve all journal transactions based on the given query.

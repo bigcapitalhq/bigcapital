@@ -1,5 +1,7 @@
-import { Model, mixin } from 'objection';
+import moment from 'moment';
+import { Model } from 'objection';
 import TenantModel from 'models/TenantModel';
+import { defaultToTransform } from 'utils';
 
 export default class SaleEstimate extends TenantModel {
   /**
@@ -14,6 +16,41 @@ export default class SaleEstimate extends TenantModel {
    */
   get timestamps() {
     return ['createdAt', 'updatedAt'];
+  }
+
+  /**
+   * Virtual attributes.
+   */
+  static get virtualAttributes() {
+    return ['isDelivered', 'isExpired', 'isConvertedToInvoice'];
+  } 
+
+  /**
+   * Detarmines whether the sale estimate converted to sale invoice.
+   * @return {boolean}
+   */
+  get isConvertedToInvoice() {
+    return !!(this.convertedToInvoiceId && this.convertedToInvoiceAt);
+  }
+
+  /**
+   * Detarmines whether the estimate is delivered.
+   * @return {boolean}
+   */
+  get isDelivered() {
+    return !!this.deliveredAt;
+  }
+
+  /**
+   * Detarmines whether the estimate is expired.
+   * @return {boolean}
+   */
+  get isExpired() {
+    return defaultToTransform(
+      this.expirationDate,
+      moment().isAfter(this.expirationDate, 'day'),
+      false,
+    );
   }
 
   /**

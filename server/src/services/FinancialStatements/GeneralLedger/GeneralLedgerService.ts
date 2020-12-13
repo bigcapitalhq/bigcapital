@@ -80,7 +80,7 @@ export default class GeneralLedgerService {
     const baseCurrency = settings.get({ group: 'organization', key: 'base_currency' });
 
     // Retrieve all accounts from the storage.
-    const accounts = await accountRepository.allAccounts('type');
+    const accounts = await accountRepository.all('type');
     const accountsGraph = await accountRepository.getDependencyGraph();
 
     // Retreive journal transactions from/to the given date.

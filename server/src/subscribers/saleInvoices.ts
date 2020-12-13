@@ -3,17 +3,19 @@ import { On, EventSubscriber } from "event-dispatch";
 import events from 'subscribers/events';
 import TenancyService from 'services/Tenancy/TenancyService';
 import SettingsService from 'services/Settings/SettingsService';
-
+import SaleEstimateService from 'services/Sales/SalesEstimate';
 @EventSubscriber()
 export default class SaleInvoiceSubscriber {
   logger: any;
   tenancy: TenancyService;
   settingsService: SettingsService;
+  saleEstimatesService: SaleEstimateService;
 
   constructor() {
     this.logger = Container.get('logger');
     this.tenancy = Container.get(TenancyService);
     this.settingsService = Container.get(SettingsService);
+    this.saleEstimatesService = Container.get(SaleEstimateService);
   }
 
   /**
@@ -25,6 +27,20 @@ export default class SaleInvoiceSubscriber {
 
     this.logger.info('[sale_invoice] trying to increment customer balance.', { tenantId });
     await customerRepository.changeBalance(saleInvoice.customerId, saleInvoice.balance);
+  }
+
+  /**
+   * 
+   */
+  @On(events.saleInvoice.onCreated)
+  public async handleMarkEstimateConvert({ tenantId, saleInvoice, saleInvoiceId }) {
+    if (saleInvoice.fromEstiamteId) {
+      this.saleEstimatesService.convertEstimateToInvoice(
+        tenantId,
+        saleInvoice.fromEstiamteId,
+        saleInvoiceId,
+      );
+    }
   }
 
   /**

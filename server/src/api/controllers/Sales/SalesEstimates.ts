@@ -7,6 +7,7 @@ import asyncMiddleware from 'api/middleware/asyncMiddleware';
 import SaleEstimateService from 'services/Sales/SalesEstimate';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import { ServiceError } from "exceptions";
+import { Request } from 'express-validator/src/base';
 
 @Service()
 export default class SalesEstimatesController extends BaseController {
@@ -28,6 +29,15 @@ export default class SalesEstimatesController extends BaseController {
       ],
       this.validationResult,
       asyncMiddleware(this.newEstimate.bind(this)),
+      this.handleServiceErrors,
+    );
+    router.post(
+      '/:id/deliver',
+      [
+        ...this.validateSpecificEstimateSchema,
+      ],
+      this.validationResult,
+      asyncMiddleware(this.deliverSaleEstimate.bind(this)),
       this.handleServiceErrors,
     );
     router.post(
@@ -75,6 +85,7 @@ export default class SalesEstimatesController extends BaseController {
       check('expiration_date').optional().isISO8601(),
       check('reference').optional(),
       check('estimate_number').exists().trim().escape(),
+      check('delivered').default(false).isBoolean().toBoolean(),
 
       check('entries').exists().isArray({ min: 1 }),
       check('entries.*.index').exists().isNumeric().toInt(),
@@ -165,6 +176,27 @@ export default class SalesEstimatesController extends BaseController {
       await this.saleEstimateService.deleteEstimate(tenantId, estimateId);
 
       return res.status(200).send({ id: estimateId });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Deliver the given sale estimate.
+   * @param {Request} req 
+   * @param {Response} res 
+   */
+  async deliverSaleEstimate(req: Request, res: Response, next: NextFunction) {
+    const { id: estimateId } = req.params;
+    const { tenantId } = req;
+
+    try {
+      await this.saleEstimateService.deliverSaleEstimate(tenantId, estimateId);
+
+      return res.status(200).send({
+        id: estimateId,
+        message: 'The sale estimate has been delivered successfully.',
+      });
     } catch (error) {
       next(error);
     }

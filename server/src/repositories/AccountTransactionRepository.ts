@@ -1,7 +1,4 @@
-
-import { QueryBuilder } from 'knex';
 import { AccountTransaction } from 'models';
-import hashObject from 'object-hash';
 import TenantRepository from 'repositories/TenantRepository';
 
 
@@ -17,13 +14,19 @@ interface IJournalTransactionsFilter {
 };
 
 export default class AccountTransactionsRepository extends TenantRepository {
+  /**
+   * Constructor method.
+   */
+  constructor(knex, cache) {
+    super(knex, cache);
+    this.model = AccountTransaction;
+  }
 
   journal(filter: IJournalTransactionsFilter) {
-    const { AccountTransaction } = this.models;
     const cacheKey = this.getCacheKey('transactions.journal', filter);
 
     return this.cache.get(cacheKey, () => {
-      return AccountTransaction.query()
+      return this.model.query()
         .modify('filterAccounts', filter.accountsIds)
         .modify('filterDateRange', filter.fromDate, filter.toDate)
         .withGraphFetched('account.type')

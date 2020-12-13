@@ -115,7 +115,7 @@ export default class AccountsService {
     const { accountRepository } = this.tenancy.repositories(tenantId);
 
     this.logger.info('[accounts] validating the account existance.', { tenantId, accountId });
-    const account = await accountRepository.findById(accountId);
+    const account = await accountRepository.findOneById(accountId);
 
     if (!account) {
       this.logger.info('[accounts] the given account not found.', { accountId });
@@ -187,7 +187,7 @@ export default class AccountsService {
       // Inherit active status from parent account.
       accountDTO.active = parentAccount.active;
     }
-    const account = await accountRepository.insert({
+    const account = await accountRepository.create({
       ...accountDTO,
       slug: kebabCase(accountDTO.name),
     });
@@ -231,7 +231,10 @@ export default class AccountsService {
       this.throwErrorIfParentHasDiffType(accountDTO, parentAccount);
     }
     // Update the account on the storage.
-    const account = await accountRepository.edit(oldAccount.id, accountDTO);
+    const account = await accountRepository.updateAndFetch({
+      id: oldAccount.id,
+      ...accountDTO
+    });
     this.logger.info('[account] account edited successfully.', {
       account, accountDTO, tenantId
     });
@@ -545,8 +548,8 @@ export default class AccountsService {
 
     this.throwErrorIfAccountPredefined(account);
 
-    const accountType = await accountTypeRepository.getTypeMeta(account.accountTypeId);
-    const toAccountType = await accountTypeRepository.getTypeMeta(toAccount.accountTypeId);
+    const accountType = await accountTypeRepository.findOneById(account.accountTypeId);
+    const toAccountType = await accountTypeRepository.findOneById(toAccount.accountTypeId);
 
     if (accountType.rootType !== toAccountType.rootType) {
       throw new ServiceError('close_account_and_to_account_not_same_type');

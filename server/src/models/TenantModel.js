@@ -8,7 +8,8 @@ export default class TenantModel extends BaseModel {
    */
   static query(...args) {
     const Logger = Container.get('logger');
-    return super.query(...args).onBuildKnex(knexQueryBuilder => {
+
+    return super.query(...args).onBuildKnex((knexQueryBuilder) => {
       const { userParams: { tenantId } } = knexQueryBuilder.client.config;
 
       knexQueryBuilder.on('query', queryData => {

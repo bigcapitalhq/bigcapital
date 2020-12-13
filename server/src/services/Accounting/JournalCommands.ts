@@ -65,8 +65,8 @@ export default class JournalCommands{
   async customerOpeningBalance(customerId: number, openingBalance: number) {
     const { accountRepository } = this.repositories;
 
-    const openingBalanceAccount = await accountRepository.getBySlug('opening-balance');
-    const receivableAccount = await accountRepository.getBySlug('accounts-receivable');
+    const openingBalanceAccount = await accountRepository.findOne({ slug: 'opening-balance' });
+    const receivableAccount = await accountRepository.findOne({ slug: 'accounts-receivable' });
 
     const commonEntry = {
       referenceType: 'CustomerOpeningBalance',
@@ -98,8 +98,8 @@ export default class JournalCommands{
   async vendorOpeningBalance(vendorId: number, openingBalance: number) {
     const { accountRepository } = this.repositories;
 
-    const payableAccount = await accountRepository.getBySlug('accounts-payable');
-    const otherCost = await accountRepository.getBySlug('other-expenses');
+    const payableAccount = await accountRepository.findOne({ slug: 'accounts-payable' });
+    const otherCost = await accountRepository.findOne({ slug: 'other-expenses' });
 
     const commonEntry = {
       referenceType: 'VendorOpeningBalance',

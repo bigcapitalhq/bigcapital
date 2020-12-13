@@ -18,6 +18,12 @@ import ItemEntry from './ItemEntry';
 import InventoryTransaction from './InventoryTransaction';
 import AccountType from './AccountType';
 import InventoryLotCostTracker from './InventoryCostLotTracker';
+import Customer from './Customer';
+import Contact from './Contact';
+import Vendor from './Vendor';
+import ExpenseCategory from './ExpenseCategory';
+import Expense from './Expense';
+import ManualJournal from './ManualJournal';
 
 export {
   SaleEstimate,
@@ -40,4 +46,10 @@ export {
   InventoryLotCostTracker,
   AccountType,
   Option,
+  Contact,
+  ExpenseCategory,
+  Expense,
+  ManualJournal,
+  Customer,
+  Vendor,
 };

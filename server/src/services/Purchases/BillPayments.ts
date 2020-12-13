@@ -70,7 +70,9 @@ export default class BillPaymentsService {
    */
   private async getVendorOrThrowError(tenantId: number, vendorId: number) {
     const { vendorRepository } = this.tenancy.repositories(tenantId);
-    const vendor = await vendorRepository.findById(vendorId);
+
+    // Retrieve vendor details of the given id.
+    const vendor = await vendorRepository.findOneById(vendorId);
 
     if (!vendor) {
       throw new ServiceError(ERRORS.BILL_VENDOR_NOT_FOUND)
@@ -106,7 +108,7 @@ export default class BillPaymentsService {
     const { accountTypeRepository, accountRepository } = this.tenancy.repositories(tenantId);
 
     const currentAssetTypes = await accountTypeRepository.getByChildType('current_asset');
-    const paymentAccount = await accountRepository.findById(paymentAccountId);
+    const paymentAccount = await accountRepository.findOneById(paymentAccountId);
 
     const currentAssetTypesIds = currentAssetTypes.map(type => type.id);
 
@@ -405,7 +407,9 @@ export default class BillPaymentsService {
 
     const paymentAmount = sumBy(billPayment.entries, 'paymentAmount');
     const formattedDate = moment(billPayment.paymentDate).format('YYYY-MM-DD');
-    const payableAccount = await accountRepository.getBySlug('accounts-payable');
+
+    // Retrieve AP account from the storage.
+    const payableAccount = await accountRepository.findOne({ slug: 'accounts-payable' });
 
     const journal = new JournalPoster(tenantId);
     const commonJournal = {

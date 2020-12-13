@@ -58,7 +58,7 @@ export default class TrialBalanceSheetService {
     this.logger.info('[trial_balance_sheet] trying to calcualte the report.', { tenantId, filter });
 
     // Retrieve all accounts on the storage.
-    const accounts = await accountRepository.allAccounts('type');
+    const accounts = await accountRepository.all('type');
     const accountsGraph = await accountRepository.getDependencyGraph();
 
     // Retrieve all journal transactions based on the given query.

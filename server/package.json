@@ -40,7 +40,7 @@
     "express-boom": "^3.0.0",
     "express-fileupload": "^1.1.7-alpha.3",
     "express-oauth-server": "^2.0.0",
-    "express-validator": "^6.2.0",
+    "express-validator": "^6.8.0",
     "helmet": "^3.21.0",
     "i18n": "^0.8.5",
     "is-my-json-valid": "^2.20.5",

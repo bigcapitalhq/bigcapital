@@ -11,6 +11,7 @@ export interface IBillDTO {
   note: string,
   amount: number,
   paymentAmount: number,
+  open: boolean,
   entries: IItemEntryDTO[],
 };
 
@@ -24,6 +25,7 @@ export interface IBillEditDTO {
   note: string,
   amount: number,
   paymentAmount: number,
+  open: boolean,
   entries: IItemEntryDTO[],
 };
 
@@ -41,6 +43,7 @@ export interface IBill {
   paymentAmount: number,
 
   invLotNumber: string,
+  openedAt: Date | string,
 
   entries: IItemEntry[],
 };

@@ -7,17 +7,25 @@ import ViewRepository from 'repositories/ViewRepository';
 import ViewRoleRepository from 'repositories/ViewRoleRepository';
 import ContactRepository from 'repositories/ContactRepository';
 import AccountTransactionsRepository from 'repositories/AccountTransactionRepository';
+import SettingRepository from 'repositories/SettingRepository';
+import ExpenseEntryRepository from 'repositories/ExpenseEntryRepository';
+import BillRepository from 'repositories/BillRepository';
+import SaleInvoiceRepository from 'repositories/SaleInvoiceRepository';
 
-export default (tenantId: number) => {
+export default (knex, cache) => {
   return {
-    accountRepository: new AccountRepository(tenantId),
-    transactionsRepository: new AccountTransactionsRepository(tenantId),
-    accountTypeRepository: new AccountTypeRepository(tenantId),
-    customerRepository: new CustomerRepository(tenantId), 
-    vendorRepository: new VendorRepository(tenantId),
-    contactRepository: new ContactRepository(tenantId),
-    expenseRepository: new ExpenseRepository(tenantId),
-    viewRepository: new ViewRepository(tenantId),
-    viewRoleRepository: new ViewRoleRepository(tenantId),
+    accountRepository: new AccountRepository(knex, cache),
+    transactionsRepository: new AccountTransactionsRepository(knex, cache),
+    accountTypeRepository: new AccountTypeRepository(knex, cache),
+    customerRepository: new CustomerRepository(knex, cache), 
+    vendorRepository: new VendorRepository(knex, cache),
+    contactRepository: new ContactRepository(knex, cache),
+    expenseRepository: new ExpenseRepository(knex, cache),
+    expenseEntryRepository: new ExpenseEntryRepository(knex, cache),
+    viewRepository: new ViewRepository(knex, cache),
+    viewRoleRepository: new ViewRoleRepository(knex, cache),
+    settingRepository: new SettingRepository(knex, cache),
+    billRepository: new BillRepository(knex, cache),
+    saleInvoiceRepository: new SaleInvoiceRepository(knex, cache),
   };
 };

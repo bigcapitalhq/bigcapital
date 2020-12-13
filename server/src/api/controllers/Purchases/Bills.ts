@@ -39,6 +39,14 @@ export default class BillsController extends BaseController {
       this.handleServiceError,
     );
     router.post(
+      '/:id/open', [
+      ...this.specificBillValidationSchema,
+    ],
+      this.validationResult,
+      asyncMiddleware(this.openBill.bind(this)),
+      this.handleServiceError,
+    );
+    router.post(
       '/:id', [
         ...this.billValidationSchema,
         ...this.specificBillValidationSchema,
@@ -94,6 +102,8 @@ export default class BillsController extends BaseController {
       check('due_date').optional().isISO8601(),
       check('vendor_id').exists().isNumeric().toInt(),
       check('note').optional().trim().escape(),
+      check('open').default(false).isBoolean().toBoolean(),
+
       check('entries').isArray({ min: 1 }),
 
       check('entries.*.id').optional().isNumeric().toInt(),
@@ -117,6 +127,8 @@ export default class BillsController extends BaseController {
       check('due_date').optional().isISO8601(),
       check('vendor_id').exists().isNumeric().toInt(),
       check('note').optional().trim().escape(),
+      check('open').default(false).isBoolean().toBoolean(),
+
       check('entries').isArray({ min: 1 }),
 
       check('entries.*.id').optional().isNumeric().toInt(),
@@ -185,15 +197,37 @@ export default class BillsController extends BaseController {
    * @param {Response} res
    */
   async editBill(req: Request, res: Response, next: NextFunction) {
-    const { id: billId } = req.params;
+    const { id: billId, user } = req.params;
     const { tenantId } = req;
     const billDTO: IBillEditDTO = this.matchedBodyData(req);
 
     try {
-      const editedBill = await this.billsService.editBill(tenantId, billId, billDTO);
+      await this.billsService.editBill(tenantId, billId, billDTO, user);
+
       return res.status(200).send({
         id: billId,
         message: 'The bill has been edited successfully.',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Open the given bill.
+   * @param {Request} req -
+   * @param {Response} res -
+   */
+  async openBill(req: Request, res: Response, next: NextFunction) {
+    const { id: billId } = req.params;
+    const { tenantId } = req;
+
+    try {
+      await this.billsService.openBill(tenantId, billId);
+
+      return res.status(200).send({
+        id: billId,
+        message: 'The bill has been opened successfully.',
       });
     } catch (error) {
       next(error);
@@ -337,6 +371,11 @@ export default class BillsController extends BaseController {
       if (error.errorType === 'ITEMS_NOT_FOUND') {
         return res.boom.badRequest(null, {
           errors: [{ type: 'ITEMS_NOT_FOUND', code: 1000 }],
+        });
+      }
+      if (error.errorType === 'BILL_ALREADY_OPEN') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'BILL_ALREADY_OPEN', code: 1100 }],
         });
       }
     }

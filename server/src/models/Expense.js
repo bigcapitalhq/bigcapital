@@ -1,7 +1,6 @@
 import { Model } from "objection";
 import TenantModel from "models/TenantModel";
 import { viewRolesBuilder } from "lib/ViewRolesBuilder";
-import Media from "./Media";
 
 export default class Expense extends TenantModel {
   /**

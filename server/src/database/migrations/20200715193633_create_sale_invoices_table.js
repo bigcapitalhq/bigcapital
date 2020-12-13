@@ -7,7 +7,6 @@ exports.up = function(knex) {
     table.date('due_date');
     table.string('invoice_no').index();
     table.string('reference_no');
-    table.string('status').index();
 
     table.text('invoice_message');
     table.text('terms_conditions');
@@ -16,6 +15,8 @@ exports.up = function(knex) {
     table.decimal('payment_amount', 13, 3);
 
     table.string('inv_lot_number').index();
+
+    table.date('delivered_at').index();
     table.timestamps();
   });  
 };

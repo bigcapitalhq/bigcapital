@@ -1,6 +1,4 @@
 import { Router, Request, Response } from 'express';
-import MomentFormat from 'lib/MomentFormats';
-import moment from 'moment';
 
 export default class Ping {
   /**

@@ -1,12 +1,12 @@
-import { ManualJournal } from 'models';
 import TenantRepository from 'repositories/TenantRepository';
+import Setting from 'models/Setting';
 
-export default class JournalRepository extends TenantRepository {
+export default class SettingRepository extends TenantRepository {
   /**
    * Constructor method.
    */
   constructor(knex, cache) {
     super(knex, cache);
-    this.model = ManualJournal;
+    this.model = Setting;
   }
 }

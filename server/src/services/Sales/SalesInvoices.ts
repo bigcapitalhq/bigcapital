@@ -1,5 +1,6 @@
 import { Service, Inject } from 'typedi';
-import { omit, sumBy, difference, pick, chain } from 'lodash';
+import { omit, sumBy, pick, chain } from 'lodash';
+import moment from 'moment';
 import {
   EventDispatcher,
   EventDispatcherInterface,
@@ -10,7 +11,9 @@ import {
   IItemEntry,
   ISalesInvoicesFilter,
   IPaginationMeta,
-  IFilterMeta
+  IFilterMeta,
+  ISaleInvoiceCreateDTO,
+  ISaleInvoiceEditDTO,
 } from 'interfaces';
 import events from 'subscribers/events';
 import JournalPoster from 'services/Accounting/JournalPoster';
@@ -23,11 +26,13 @@ import { ServiceError } from 'exceptions';
 import ItemsService from 'services/Items/ItemsService';
 import ItemsEntriesService from 'services/Items/ItemsEntriesService';
 import CustomersService from 'services/Contacts/CustomersService';
+import SaleEstimateService from 'services/Sales/SalesEstimate';
 
 
 const ERRORS = {
   INVOICE_NUMBER_NOT_UNIQUE: 'INVOICE_NUMBER_NOT_UNIQUE',
   SALE_INVOICE_NOT_FOUND: 'SALE_INVOICE_NOT_FOUND',
+  SALE_INVOICE_ALREADY_DELIVERED: 'SALE_INVOICE_ALREADY_DELIVERED',
   ENTRIES_ITEMS_IDS_NOT_EXISTS: 'ENTRIES_ITEMS_IDS_NOT_EXISTS',
   NOT_SELLABLE_ITEMS: 'NOT_SELLABLE_ITEMS',
   SALE_INVOICE_NO_NOT_UNIQUE: 'SALE_INVOICE_NO_NOT_UNIQUE'
@@ -62,6 +67,9 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
 
   @Inject()
   customersService: CustomersService;
+
+  @Inject()
+  saleEstimatesService: SaleEstimateService;
 
   /**
    * 
@@ -102,6 +110,33 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
   }
 
   /**
+   * Transform DTO object to model object.
+   * @param {number} tenantId - Tenant id.
+   * @param {ISaleInvoiceOTD} saleInvoiceDTO - Sale invoice DTO.
+   */
+  transformDTOToModel(
+    tenantId: number,
+    saleInvoiceDTO: ISaleInvoiceCreateDTO|ISaleInvoiceEditDTO,
+    oldSaleInvoice?: ISaleInvoice
+  ): ISaleInvoice {
+    const { ItemEntry } = this.tenancy.models(tenantId);
+    const balance = sumBy(saleInvoiceDTO.entries, e => ItemEntry.calcAmount(e));
+
+    return {
+      ...formatDateFields(
+        omit(saleInvoiceDTO, ['delivered']),
+        ['invoiceDate', 'dueDate']
+      ),
+      // Avoid rewrite the deliver date in edit mode when already published.
+      ...(saleInvoiceDTO.delivered && (!oldSaleInvoice?.deliveredAt)) && ({
+        deliveredAt: moment().toMySqlDateTime(),
+      }),
+      balance,
+      paymentAmount: 0,
+    }
+  }
+
+  /**
    * Creates a new sale invoices and store it to the storage
    * with associated to entries and journal transactions.
    * @async
@@ -109,18 +144,16 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
    * @param {ISaleInvoice} saleInvoiceDTO - 
    * @return {ISaleInvoice}
    */
-  public async createSaleInvoice(tenantId: number, saleInvoiceDTO: ISaleInvoiceOTD): Promise<ISaleInvoice> {
-    const { SaleInvoice, ItemEntry } = this.tenancy.models(tenantId);
-
-    const balance = sumBy(saleInvoiceDTO.entries, e => ItemEntry.calcAmount(e));
+  public async createSaleInvoice(
+    tenantId: number,
+    saleInvoiceDTO: ISaleInvoiceCreateDTO
+  ): Promise<ISaleInvoice> {
+    const { SaleInvoice } = this.tenancy.models(tenantId);
+    
     const invLotNumber = 1;
 
-    const saleInvoiceObj: ISaleInvoice = {
-      ...formatDateFields(saleInvoiceDTO, ['invoiceDate', 'dueDate']),
-      balance,
-      paymentAmount: 0,
-      // invLotNumber,
-    };
+    // Transform DTO object to model object.
+    const saleInvoiceObj = this.transformDTOToModel(tenantId, saleInvoiceDTO);
 
     // Validate customer existance.
     await this.customersService.getCustomerByIdOrThrowError(tenantId, saleInvoiceDTO.customerId);
@@ -131,6 +164,8 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
     }
     // Validate items ids existance.
     await this.itemsEntriesService.validateItemsIdsExistance(tenantId, saleInvoiceDTO.entries);
+
+    // Validate items should be sellable items.
     await this.itemsEntriesService.validateNonSellableEntriesItems(tenantId, saleInvoiceDTO.entries);
 
     this.logger.info('[sale_invoice] inserting sale invoice to the storage.');
@@ -165,11 +200,8 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
     const balance = sumBy(saleInvoiceDTO.entries, e => ItemEntry.calcAmount(e));
     const oldSaleInvoice = await this.getInvoiceOrThrowError(tenantId, saleInvoiceId);
 
-    const saleInvoiceObj = {
-      ...formatDateFields(saleInvoiceDTO, ['invoiceDate', 'dueDate']),
-      balance,
-      // invLotNumber: oldSaleInvoice.invLotNumber,
-    };
+    // Transform DTO object to model object.
+    const saleInvoiceObj = this.transformDTOToModel(tenantId, saleInvoiceDTO, oldSaleInvoice);
 
     // Validate customer existance.
     await this.customersService.getCustomerByIdOrThrowError(tenantId, saleInvoiceDTO.customerId);
@@ -203,8 +235,32 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
     await this.eventDispatcher.dispatch(events.saleInvoice.onEdited, {
       saleInvoice, oldSaleInvoice, tenantId, saleInvoiceId,
     });
-
     return saleInvoice;
+  }
+
+  /**
+   * Deliver the given sale invoice.
+   * @param  {number} tenantId - Tenant id.
+   * @param  {number} saleInvoiceId - Sale invoice id.
+   * @return {Promise<void>}
+   */
+  public async deliverSaleInvoice(
+    tenantId: number,
+    saleInvoiceId: number,
+  ): Promise<void> {
+    const { saleInvoiceRepository } = this.tenancy.repositories(tenantId);
+
+    // Retrieve details of the given sale invoice id.
+    const saleInvoice = await this.getInvoiceOrThrowError(tenantId, saleInvoiceId);
+
+    // Throws error in case the sale invoice already published.
+    if (saleInvoice.isDelivered) {
+      throw new ServiceError(ERRORS.SALE_INVOICE_ALREADY_DELIVERED);
+    }
+    // Record the delivered at on the storage.
+    await saleInvoiceRepository.update({
+      deliveredAt: moment().toMySqlDateTime()
+    }, { id: saleInvoiceId });
   }
 
   /**
@@ -217,6 +273,12 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
     const { SaleInvoice, ItemEntry } = this.tenancy.models(tenantId);
 
     const oldSaleInvoice = await this.getInvoiceOrThrowError(tenantId, saleInvoiceId);
+
+    // Unlink the converted sale estimates from the given sale invoice.
+    await this.saleEstimatesService.unlinkConvertedEstimateFromInvoice(
+      tenantId,
+      saleInvoiceId,
+    );
 
     this.logger.info('[sale_invoice] delete sale invoice with entries.');
     await SaleInvoice.query().where('id', saleInvoiceId).delete();

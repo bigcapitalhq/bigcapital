@@ -7,7 +7,7 @@ import MetableStore from './MetableStore';
 import { isBlank } from 'utils';
 
 export default class MetableDBStore extends MetableStore implements IMetableStoreStorage{
-  model: Model;
+  repository: any;
   KEY_COLUMN: string;
   VALUE_COLUMN: string;
   TYPE_COLUMN: string;
@@ -24,14 +24,13 @@ export default class MetableDBStore extends MetableStore implements IMetableStor
     this.KEY_COLUMN = 'key';
     this.VALUE_COLUMN = 'value';
     this.TYPE_COLUMN = 'type';
-    this.model = null;
+    this.repository = null;
 
-    this.extraQuery = (query, meta) => {
-      const whereQuery = {
+    this.extraQuery = (meta) => {
+      return {
         key: meta[this.KEY_COLUMN],
         ...this.transfromMetaExtraColumns(meta),
       };
-      query.where(whereQuery);
     };
   }
 
@@ -51,11 +50,11 @@ export default class MetableDBStore extends MetableStore implements IMetableStor
   }
 
   /**
-   * Set model of this metadata collection.
-   * @param {Object} model -
+   * Set repository entity of this metadata collection.
+   * @param {Object} repository -
    */
-  setModel(model: Model) {
-    this.model = model;
+  setRepository(repository) {
+    this.repository = repository;
   }
   
   /**
@@ -89,10 +88,10 @@ export default class MetableDBStore extends MetableStore implements IMetableStor
     const opers = [];
 
     updated.forEach((meta) => {
-      const updateOper = this.model.query().onBuild((query) => {
-        this.extraQuery(query, meta);
-      }).patch({
+      const updateOper = this.repository.update({
         [this.VALUE_COLUMN]: meta.value,
+      }, {
+        ...this.extraQuery(meta),
       }).then(() => {
         meta._markAsUpdated = false;
       });
@@ -112,9 +111,9 @@ export default class MetableDBStore extends MetableStore implements IMetableStor
 
     if (deleted.length > 0) {
       deleted.forEach((meta) => {
-        const deleteOper = this.model.query().onBuild((query) => {
-          this.extraQuery(query, meta);
-        }).delete().then(() => {
+        const deleteOper = this.repository.deleteBy({
+          ...this.extraQuery(meta),
+        }).then(() => {
           meta._markAsDeleted = false;
         });
         opers.push(deleteOper);
@@ -138,9 +137,7 @@ export default class MetableDBStore extends MetableStore implements IMetableStor
         [this.VALUE_COLUMN]: meta.value,
         ...this.transfromMetaExtraColumns(meta),
       };
-      
-      const insertOper = this.model.query()
-        .insert(insertData)
+      const insertOper = this.repository.create(insertData)
         .then(() => {
           meta._markAsInserted = false;
         });
@@ -155,7 +152,7 @@ export default class MetableDBStore extends MetableStore implements IMetableStor
    * @param {Boolean} force -
    */
   async load() {
-    const metadata = await this.model.query();
+    const metadata = await this.repository.all();
     const mappedMetadata = this.mapMetadataCollection(metadata);
 
     mappedMetadata.forEach((meta: IMetadata) => {

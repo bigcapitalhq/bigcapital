@@ -48,7 +48,7 @@ export default class ViewsService implements IViewsService {
     const resourceModel = this.getResourceModelOrThrowError(tenantId, resourceModelName);
 
     const { viewRepository } = this.tenancy.repositories(tenantId);
-    return viewRepository.allByResource(resourceModel.name);
+    return viewRepository.allByResource(resourceModel.name, ['columns', 'roles']);
   }
 
   /**
@@ -104,7 +104,7 @@ export default class ViewsService implements IViewsService {
     const { viewRepository } = this.tenancy.repositories(tenantId);
 
     this.logger.info('[view] trying to get view from storage.', { tenantId, viewId });
-    const view = await viewRepository.getById(viewId);
+    const view = await viewRepository.findOneById(viewId);
 
     if (!view) {
       this.logger.info('[view] view not found.', { tenantId, viewId });
@@ -191,7 +191,7 @@ export default class ViewsService implements IViewsService {
     }
     // Save view details.
     this.logger.info('[views] trying to insert to storage.', { tenantId, viewDTO })
-    const view = await viewRepository.insert({
+    const view = await viewRepository.create({
       predefined: false,
       name: viewDTO.name,
       rolesLogicExpression: viewDTO.logicExpression,
@@ -245,7 +245,8 @@ export default class ViewsService implements IViewsService {
     }
     // Update view details.
     this.logger.info('[views] trying to update view details.', { tenantId, viewId });
-    const view = await viewRepository.update(viewId, {
+    const view = await viewRepository.upsertGraph({
+      id: viewId,
       predefined: false,
       name: viewEditDTO.name,
       rolesLogicExpression: viewEditDTO.logicExpression,
