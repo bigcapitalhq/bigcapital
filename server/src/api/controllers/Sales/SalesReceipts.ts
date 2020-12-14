@@ -23,6 +23,16 @@ export default class SalesReceiptsController extends BaseController{
     const router = Router();
 
     router.post(
+      '/:id/close',
+      [
+        ...this.specificReceiptValidationSchema,
+      ],
+      this.validationResult,
+      asyncMiddleware(this.closeSaleReceipt.bind(this)),
+      this.handleServiceErrors,
+    )
+
+    router.post(
       '/:id', [
         ...this.specificReceiptValidationSchema,
         ...this.salesReceiptsValidationSchema,
@@ -75,6 +85,7 @@ export default class SalesReceiptsController extends BaseController{
       check('receipt_date').exists().isISO8601(),
       check('receipt_number').optional().trim().escape(),
       check('reference_no').optional().trim().escape(),
+      check('closed').default(false).isBoolean().toBoolean(),
 
       check('entries').exists().isArray({ min: 1 }),
       
@@ -189,6 +200,31 @@ export default class SalesReceiptsController extends BaseController{
   }
 
   /**
+   * Marks the given the sale receipt as closed.
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {NextFunction} next 
+   */
+  async closeSaleReceipt(req: Request, res: Response, next: NextFunction) {
+    const { tenantId } = req;
+    const { id: saleReceiptId } = req.params;
+
+    try {
+      // Update the given sale receipt details.
+      await this.saleReceiptService.closeSaleReceipt(
+        tenantId,
+        saleReceiptId,
+      );
+      return res.status(200).send({
+        id: saleReceiptId,
+        message: 'Sale receipt has been closed successfully.',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
    * Listing sales receipts.
    * @param {Request} req 
    * @param {Response} res
@@ -294,6 +330,11 @@ export default class SalesReceiptsController extends BaseController{
       if (error.errorType === 'SALE_RECEIPT_NUMBER_NOT_UNIQUE') {
         return res.boom.badRequest(null, {
           errors: [{ type: 'SALE_RECEIPT_NUMBER_NOT_UNIQUE', code: 900 }],
+        });
+      }
+      if (error.errorType === 'SALE_RECEIPT_IS_ALREADY_CLOSED') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'SALE_RECEIPT_IS_ALREADY_CLOSED', code: 1000 }],
         });
       }
     }

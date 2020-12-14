@@ -21,7 +21,10 @@ const ERRORS = {
   SALE_ESTIMATE_NUMBER_EXISTANCE: 'SALE_ESTIMATE_NUMBER_EXISTANCE',
   ITEMS_IDS_NOT_EXISTS: 'ITEMS_IDS_NOT_EXISTS',
   SALE_ESTIMATE_ALREADY_DELIVERED: 'SALE_ESTIMATE_ALREADY_DELIVERED',
-  SALE_ESTIMATE_CONVERTED_TO_INVOICE: 'SALE_ESTIMATE_CONVERTED_TO_INVOICE'
+  SALE_ESTIMATE_CONVERTED_TO_INVOICE: 'SALE_ESTIMATE_CONVERTED_TO_INVOICE',
+  SALE_ESTIMATE_ALREADY_REJECTED: 'SALE_ESTIMATE_ALREADY_REJECTED',
+  SALE_ESTIMATE_ALREADY_APPROVED: 'SALE_ESTIMATE_ALREADY_APPROVED',
+  SALE_ESTIMATE_NOT_DELIVERED: 'SALE_ESTIMATE_NOT_DELIVERED'
 };
 /**
  * Sale estimate service.
@@ -350,6 +353,63 @@ export default class SaleEstimateService {
     // Record the delivered at on the storage.
     await SaleEstimate.query().where('id', saleEstimateId).patch({
       deliveredAt: moment().toMySqlDateTime()
+    });
+  }
+
+  /**
+   * Mark the sale estimate as approved from the customer.
+   * @param {number} tenantId 
+   * @param {number} saleEstimateId 
+   */
+  public async approveSaleEstimate(
+    tenantId: number,
+    saleEstimateId: number,
+  ): Promise<void> {
+    const { SaleEstimate } = this.tenancy.models(tenantId);
+
+    // Retrieve details of the given sale estimate id.
+    const saleEstimate = await this.getSaleEstimateOrThrowError(tenantId, saleEstimateId);
+
+    // Throws error in case the sale estimate still not delivered to customer.
+    if (!saleEstimate.isDelivered) {
+      throw new ServiceError(ERRORS.SALE_ESTIMATE_NOT_DELIVERED);
+    }
+      // Throws error in case the sale estimate already approved.
+    if (saleEstimate.isApproved) {
+      throw new ServiceError(ERRORS.SALE_ESTIMATE_ALREADY_APPROVED);
+    }
+    await SaleEstimate.query().where('id', saleEstimateId).patch({
+      approvedAt: moment().toMySqlDateTime(),
+      rejectedAt: null,
+    });
+  }
+
+  /**
+   * Mark the sale estimate as rejected from the customer.
+   * @param {number} tenantId 
+   * @param {number} saleEstimateId 
+   */
+  public async rejectSaleEstimate(
+    tenantId: number,
+    saleEstimateId: number,
+  ): Promise<void> {
+    const { SaleEstimate } = this.tenancy.models(tenantId);
+
+    // Retrieve details of the given sale estimate id.
+    const saleEstimate = await this.getSaleEstimateOrThrowError(tenantId, saleEstimateId);
+
+    // Throws error in case the sale estimate still not delivered to customer.
+    if (!saleEstimate.isDelivered) {
+      throw new ServiceError(ERRORS.SALE_ESTIMATE_NOT_DELIVERED);
+    }
+    // Throws error in case the sale estimate already rejected.
+    if (saleEstimate.isRejected) {
+      throw new ServiceError(ERRORS.SALE_ESTIMATE_ALREADY_REJECTED);
+    }
+    // Mark the sale estimate as reject on the storage.
+    await SaleEstimate.query().where('id', saleEstimateId).patch({
+      rejectedAt: moment().toMySqlDateTime(),
+      approvedAt: null,
     });
   }
 }

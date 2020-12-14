@@ -1,11 +1,12 @@
 import { omit, sumBy } from 'lodash';
 import { Service, Inject } from 'typedi';
+import moment from 'moment';
 import {
   EventDispatcher,
   EventDispatcherInterface,
 } from 'decorators/eventDispatcher';
 import events from 'subscribers/events';
-import { ISaleReceipt } from 'interfaces';
+import { ISaleReceipt, ISaleReceiptDTO } from 'interfaces';
 import JournalPosterService from 'services/Sales/JournalPosterService';
 import TenancyService from 'services/Tenancy/TenancyService';
 import { formatDateFields } from 'utils';
@@ -13,13 +14,15 @@ import { IFilterMeta, IPaginationMeta } from 'interfaces';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import { ServiceError } from 'exceptions';
 import ItemsEntriesService from 'services/Items/ItemsEntriesService';
+import { ItemEntry } from 'models';
 
 
 const ERRORS = {
   SALE_RECEIPT_NOT_FOUND: 'SALE_RECEIPT_NOT_FOUND',
   DEPOSIT_ACCOUNT_NOT_FOUND: 'DEPOSIT_ACCOUNT_NOT_FOUND',
   DEPOSIT_ACCOUNT_NOT_CURRENT_ASSET: 'DEPOSIT_ACCOUNT_NOT_CURRENT_ASSET',
-  SALE_RECEIPT_NUMBER_NOT_UNIQUE: 'SALE_RECEIPT_NUMBER_NOT_UNIQUE'
+  SALE_RECEIPT_NUMBER_NOT_UNIQUE: 'SALE_RECEIPT_NUMBER_NOT_UNIQUE',
+  SALE_RECEIPT_IS_ALREADY_CLOSED: 'SALE_RECEIPT_IS_ALREADY_CLOSED'
 };
 @Service()
 export default class SalesReceiptService {
@@ -103,19 +106,45 @@ export default class SalesReceiptService {
   }
 
   /**
+   * Transform DTO object to model object.
+   * @param {ISaleReceiptDTO} saleReceiptDTO -
+   * @param {ISaleReceipt} oldSaleReceipt -
+   * @returns {ISaleReceipt}
+   */
+  transformObjectDTOToModel(
+    saleReceiptDTO: ISaleReceiptDTO,
+    oldSaleReceipt?: ISaleReceipt
+  ): ISaleReceipt {
+    const amount = sumBy(saleReceiptDTO.entries, e => ItemEntry.calcAmount(e));
+
+    return {
+      amount,
+      ...formatDateFields(
+        omit(saleReceiptDTO, ['closed', 'entries']),
+        ['receiptDate']
+      ),
+      // Avoid rewrite the deliver date in edit mode when already published.
+      ...(saleReceiptDTO.closed && (!oldSaleReceipt?.closedAt)) && ({
+        closedAt: moment().toMySqlDateTime(),
+      }),
+      entries: saleReceiptDTO.entries.map((entry) => ({
+        reference_type: 'SaleReceipt',
+        ...omit(entry, ['id', 'amount']),
+      })),
+    };
+  }
+
+  /**
    * Creates a new sale receipt with associated entries.
    * @async
    * @param {ISaleReceipt} saleReceipt
    * @return {Object}
    */
   public async createSaleReceipt(tenantId: number, saleReceiptDTO: any): Promise<ISaleReceipt> {
-    const { SaleReceipt, ItemEntry } = this.tenancy.models(tenantId);
+    const { SaleReceipt } = this.tenancy.models(tenantId);
 
-    const amount = sumBy(saleReceiptDTO.entries, e => ItemEntry.calcAmount(e));
-    const saleReceiptObj = {
-      amount,
-      ...formatDateFields(saleReceiptDTO, ['receiptDate'])
-    };
+    // Transform sale receipt DTO to model.
+    const saleReceiptObj = this.transformObjectDTOToModel(saleReceiptDTO);
 
     // Validate receipt deposit account existance and type.
     await this.validateReceiptDepositAccountExistance(tenantId, saleReceiptDTO.depositAccountId);
@@ -131,15 +160,8 @@ export default class SalesReceiptService {
       await this.validateReceiptNumberUnique(tenantId, saleReceiptDTO.receiptNumber);
     }
     this.logger.info('[sale_receipt] trying to insert sale receipt graph.', { tenantId, saleReceiptDTO });
-    const saleReceipt = await SaleReceipt.query()
-      .insertGraphAndFetch({
-        ...omit(saleReceiptObj, ['entries']),
+    const saleReceipt = await SaleReceipt.query().insertGraphAndFetch({ ...saleReceiptObj });
 
-        entries: saleReceiptObj.entries.map((entry) => ({
-          reference_type: 'SaleReceipt',
-          ...omit(entry, ['id', 'amount']),
-        }))
-      });
     await this.eventDispatcher.dispatch(events.saleReceipt.onCreated, { tenantId, saleReceipt });
 
     this.logger.info('[sale_receipt] sale receipt inserted successfully.', { tenantId });
@@ -156,13 +178,11 @@ export default class SalesReceiptService {
   public async editSaleReceipt(tenantId: number, saleReceiptId: number, saleReceiptDTO: any) {
     const { SaleReceipt, ItemEntry } = this.tenancy.models(tenantId);
 
-    const amount = sumBy(saleReceiptDTO.entries, e => ItemEntry.calcAmount(e));
-    const saleReceiptObj = {
-      amount,
-      ...formatDateFields(saleReceiptDTO, ['receiptDate'])
-    };
     // Retrieve sale receipt or throw not found service error.
     const oldSaleReceipt = await this.getSaleReceiptOrThrowError(tenantId, saleReceiptId);
+  
+    // Transform sale receipt DTO to model.
+    const saleReceiptObj = this.transformObjectDTOToModel(saleReceiptDTO, oldSaleReceipt);
 
     // Validate receipt deposit account existance and type.
     await this.validateReceiptDepositAccountExistance(tenantId, saleReceiptDTO.depositAccountId);
@@ -178,16 +198,10 @@ export default class SalesReceiptService {
       await this.validateReceiptNumberUnique(tenantId, saleReceiptDTO.receiptNumber, saleReceiptId);
     }
 
-    const saleReceipt = await SaleReceipt.query()
-      .upsertGraphAndFetch({
-        id: saleReceiptId,
-        ...omit(saleReceiptObj, ['entries']),
-
-        entries: saleReceiptObj.entries.map((entry) => ({
-          reference_type: 'SaleReceipt',
-          ...omit(entry, ['amount']),
-        }))
-      });
+    const saleReceipt = await SaleReceipt.query().upsertGraphAndFetch({
+      id: saleReceiptId,
+      ...saleReceiptObj
+    });
 
     this.logger.info('[sale_receipt] edited successfully.', { tenantId, saleReceiptId });
     await this.eventDispatcher.dispatch(events.saleReceipt.onEdited, {
@@ -264,5 +278,30 @@ export default class SalesReceiptService {
       pagination,
       filterMeta: dynamicFilter.getResponseMeta(),
     };
+  }
+
+  /**
+   * Mark the given sale receipt as closed.
+   * @param {number} tenantId 
+   * @param {number} saleReceiptId 
+   * @return {Promise<void>}
+   */
+  async closeSaleReceipt(
+    tenantId: number,
+    saleReceiptId: number
+  ): Promise<void> {
+    const { SaleReceipt } = this.tenancy.models(tenantId);
+
+    // Retrieve sale receipt or throw not found service error.
+    const oldSaleReceipt = await this.getSaleReceiptOrThrowError(tenantId, saleReceiptId);
+
+    // Throw service error if the sale receipt already closed.
+    if (oldSaleReceipt.isClosed) {
+      throw new ServiceError(ERRORS.SALE_RECEIPT_IS_ALREADY_CLOSED);
+    }
+    // Mark the sale receipt as closed on the storage.
+    await SaleReceipt.query().findById(saleReceiptId).patch({
+      closedAt: moment().toMySqlDateTime(),
+    });
   }
 }

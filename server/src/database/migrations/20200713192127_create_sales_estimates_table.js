@@ -14,6 +14,9 @@ exports.up = function(knex) {
     table.text('send_to_email');
     
     table.date('delivered_at').index();
+    table.date('approved_at').index();
+    table.date('rejected_at').index();
+
     table.integer('user_id').unsigned().index();
 
     table.integer('converted_to_invoice_id').unsigned();

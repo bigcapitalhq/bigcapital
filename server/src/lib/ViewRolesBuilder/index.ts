@@ -124,6 +124,12 @@ export function buildRoleQuery(model: IModel, role: IFilterRole) {
   const fieldRelation = getRoleFieldColumn(model, role.fieldKey);
   const comparatorColumn = fieldRelation.relationColumn || `${model.tableName}.${fieldRelation.column}`;
 
+  // 
+  if (typeof fieldRelation.query !== 'undefined') {
+    return (builder) => {
+      fieldRelation.query(builder, role);
+    };
+  }
   switch (fieldRelation.columnType) {
     case 'number':
       return numberRoleQueryBuilder(role, comparatorColumn);

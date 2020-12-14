@@ -49,8 +49,9 @@ export default class DynamicFilterViews extends DynamicFilterRoleAbstructor {
     this.responseMeta = {
       view: {
         logicExpression: this.logicExpression,
-        filterRoles: this.filterRoles
-          .map((filterRole) => ({ ...omit(filterRole, ['id', 'viewId']) })),
+        filterRoles: this.filterRoles.map((filterRole) =>
+          ({ ...omit(filterRole, ['id', 'viewId']) })
+        ),
         customViewId: this.viewId,
       }
     };

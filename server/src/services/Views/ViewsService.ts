@@ -41,14 +41,17 @@ export default class ViewsService implements IViewsService {
    * @param {number} tenantId - 
    * @param {string} resourceModel - 
    */
-  public async listResourceViews(tenantId: number, resourceModelName: string): Promise<IView[]> {
+  public async listResourceViews(
+    tenantId: number,
+    resourceModelName: string,
+  ): Promise<IView[]> {
     this.logger.info('[views] trying to retrieve resource views.', { tenantId, resourceModelName });
 
     // Validate the resource model name is valid.
     const resourceModel = this.getResourceModelOrThrowError(tenantId, resourceModelName);
 
     const { viewRepository } = this.tenancy.repositories(tenantId);
-    return viewRepository.allByResource(resourceModel.name, ['columns', 'roles']);
+    return viewRepository.allByResource(resourceModel.name, 'roles');
   }
 
   /**
@@ -56,7 +59,10 @@ export default class ViewsService implements IViewsService {
    * @param {string} resourceName 
    * @param {IViewRoleDTO[]} viewRoles 
    */
-  private validateResourceRolesFieldsExistance(ResourceModel: IModel, viewRoles: IViewRoleDTO[]) {
+  private validateResourceRolesFieldsExistance(
+    ResourceModel: IModel,
+    viewRoles: IViewRoleDTO[],
+  ) {
     const resourceFieldsKeys = getModelFieldsKeys(ResourceModel);
 
     const fieldsKeys = viewRoles.map(viewRole => viewRole.fieldKey);
@@ -73,7 +79,10 @@ export default class ViewsService implements IViewsService {
    * @param {string} resourceName 
    * @param {IViewColumnDTO[]} viewColumns 
    */
-  private validateResourceColumnsExistance(ResourceModel: IModel, viewColumns: IViewColumnDTO[]) {
+  private validateResourceColumnsExistance(
+    ResourceModel: IModel,
+    viewColumns: IViewColumnDTO[],
+  ) {
     const resourceFieldsKeys = getModelFieldsKeys(ResourceModel);
 
     const fieldsKeys = viewColumns.map((viewColumn: IViewColumnDTO) => viewColumn.fieldKey);
@@ -118,7 +127,10 @@ export default class ViewsService implements IViewsService {
    * @param {number} tenantId 
    * @param {number} resourceModel 
    */
-  private getResourceModelOrThrowError(tenantId: number, resourceModel: string): IModel {
+  private getResourceModelOrThrowError(
+    tenantId: number,
+    resourceModel: string,
+  ): IModel {
     return this.resourceService.getResourceModel(tenantId, resourceModel);
   }
 
@@ -137,7 +149,9 @@ export default class ViewsService implements IViewsService {
   ): void {
     const { View } = this.tenancy.models(tenantId);
 
-    this.logger.info('[views] trying to validate view name uniqiness.', { tenantId, resourceModel, viewName });
+    this.logger.info('[views] trying to validate view name uniqiness.', {
+      tenantId, resourceModel, viewName,
+    });
     const foundViews = await View.query()
       .where('resource_model', resourceModel)
       .where('name', viewName)
