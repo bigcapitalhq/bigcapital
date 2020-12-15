@@ -8,6 +8,7 @@ import routes from 'api';
 import LoggerMiddleware from 'api/middleware/LoggerMiddleware';
 import AgendashController from 'api/controllers/Agendash';
 import ConvertEmptyStringsToNull from 'api/middleware/ConvertEmptyStringsToNull';
+import RateLimiterMiddleware from 'api/middleware/RateLimiterMiddleware'
 import config from 'config';
 
 export default ({ app }) => {
@@ -41,6 +42,7 @@ export default ({ app }) => {
   app.use(ConvertEmptyStringsToNull);
 
   // Prefix all application routes.
+  app.use(config.api.prefix, RateLimiterMiddleware)
   app.use(config.api.prefix, routes());
 
   // Agendash application load.

@@ -50,18 +50,32 @@ export default class AuthenticationService implements IAuthenticationService {
    * @param  {string} password - Password.
    * @return {Promise<{user: IUser, token: string}>}
    */
-  public async signIn(emailOrPhone: string, password: string): Promise<{user: ISystemUser, token: string, tenant: ITenant }> {
+  public async signIn(
+    emailOrPhone: string,
+    password: string
+  ): Promise<{
+    user: ISystemUser,
+    token: string,
+    tenant: ITenant
+  }> {
     this.logger.info('[login] Someone trying to login.', { emailOrPhone, password });
 
     const { systemUserRepository } = this.sysRepositories;
+    const loginThrottler = Container.get('rateLimiter.login');
+
     const user = await systemUserRepository.findByCrediential(emailOrPhone);
 
     if (!user) {
+      await loginThrottler.hit(emailOrPhone);
+
       this.logger.info('[login] invalid data');
       throw new ServiceError('invalid_details');
     }
+
     this.logger.info('[login] check password validation.', { emailOrPhone, password });
     if (!user.verifyPassword(password)) {
+      await loginThrottler.hit(emailOrPhone);
+
       throw new ServiceError('invalid_password');
     }
 
@@ -80,7 +94,7 @@ export default class AuthenticationService implements IAuthenticationService {
 
     // Triggers `onLogin` event.
     this.eventDispatcher.dispatch(events.auth.login, {
-      emailOrPhone, password,
+      emailOrPhone, password, user,
     });
     const tenant = await user.$relatedQuery('tenant');
 

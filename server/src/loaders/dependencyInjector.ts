@@ -7,6 +7,8 @@ import dbManagerFactory from 'loaders/dbManager';
 import i18n from 'loaders/i18n';
 import repositoriesLoader from 'loaders/systemRepositories';
 import Cache from 'services/Cache';
+import redisLoader from './redisLoader';
+import rateLimiterLoaders from './rateLimiterLoader';
 
 export default ({ mongoConnection, knex }) => {
   try {
@@ -41,6 +43,9 @@ export default ({ mongoConnection, knex }) => {
 
     Container.set('repositories', repositoriesLoader());
     LoggerInstance.info('[DI] repositories has been injected into container');
+
+    rateLimiterLoaders();
+    LoggerInstance.info('[DI] rate limiter has been injected into container.');
 
     return { agenda: agendaInstance };
   } catch (e) {

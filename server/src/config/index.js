@@ -122,4 +122,27 @@ export default {
     user: process.env.LICENSES_AUTH_USER,
     password: process.env.LICENSES_AUTH_PASSWORD,
   },
+
+  /**
+   * Redis storage configuration.
+   */
+  redis: {
+    port: 6379,
+  },
+
+  /**
+   * Throttler configuration.
+   */
+  throttler: {
+    login: {
+      points: 5,
+      duration: 60 * 60 * 24 * 1, // Store number for 90 days since first fail
+      blockDuration: 60 * 15,
+    },
+    requests: {
+      points: 30,
+      duration: 60,
+      blockDuration: 60 * 10,
+    }
+  }
 };

@@ -64,6 +64,7 @@
     "objection-filter": "^4.0.1",
     "objection-soft-delete": "^1.0.7",
     "pluralize": "^8.0.0",
+    "rate-limiter-flexible": "^2.1.14",
     "reflect-metadata": "^0.1.13",
     "ts-transformer-keys": "^0.4.2",
     "tsyringe": "^4.3.0",

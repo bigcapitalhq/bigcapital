@@ -7,6 +7,7 @@ import AuthenticationService from 'services/Authentication';
 import { ILoginDTO, ISystemUser, IRegisterOTD } from 'interfaces';
 import { ServiceError, ServiceErrors } from "exceptions";
 import { DATATYPES_LENGTH } from 'data/DataTypes';
+import LoginThrottlerMiddleware from 'api/middleware/LoginThrottlerMiddleware';
 
 @Service()
 export default class AuthenticationController extends BaseController{
@@ -23,6 +24,7 @@ export default class AuthenticationController extends BaseController{
       '/login',
       this.loginSchema,
       this.validationResult,
+      LoginThrottlerMiddleware,
       asyncMiddleware(this.login.bind(this))
     );
     router.post(

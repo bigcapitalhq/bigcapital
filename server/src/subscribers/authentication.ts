@@ -7,8 +7,14 @@ import events from 'subscribers/events';
 export class AuthenticationSubscriber {
 
   @On(events.auth.login)
-  public onLogin(payload) {
-    const { emailOrPhone, password } = payload;
+  public async onLogin(payload) {
+    const { emailOrPhone, password, user } = payload;
+
+    const loginThrottler = Container.get('rateLimiter.login');
+
+    // Reset the login throttle by the given email and phone number.
+    await loginThrottler.reset(user.email);
+    await loginThrottler.reset(user.phoneNumber);
   }
 
   @On(events.auth.register)
