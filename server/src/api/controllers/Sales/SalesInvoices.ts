@@ -264,7 +264,11 @@ export default class SaleInvoicesController extends BaseController{
     }
 
     try {
-      const { salesInvoices, filterMeta, pagination } = await this.saleInvoiceService.salesInvoicesList(
+      const {
+        salesInvoices,
+        filterMeta,
+        pagination,
+      } = await this.saleInvoiceService.salesInvoicesList(
         tenantId, filter,
       );
       return res.status(200).send({

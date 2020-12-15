@@ -39,7 +39,7 @@ export default class DynamicListService implements IDynamicListService {
    */
   private async getCustomViewOrThrowError(tenantId: number, viewId: number, model: IModel) {
     const { viewRepository } = this.tenancy.repositories(tenantId);
-    const view = await viewRepository.findOneById(viewId);
+    const view = await viewRepository.findOneById(viewId, 'roles');
 
     if (!view || view.resourceModel !== model.name) {
       throw new ServiceError(ERRORS.VIEW_NOT_FOUND);

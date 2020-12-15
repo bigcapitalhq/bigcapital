@@ -11,6 +11,7 @@ export interface ISaleReceipt {
   receiptMessage: string,
   receiptNumber: string,
   statement: string,
+  closedAt: Date|string,
   entries: any[],
 };
 
@@ -26,6 +27,7 @@ export interface ISaleReceiptDTO {
   referenceNo: string,
   receiptMessage: string,
   statement: string,
+  closed: boolean,
   entries: any[],
 };
 

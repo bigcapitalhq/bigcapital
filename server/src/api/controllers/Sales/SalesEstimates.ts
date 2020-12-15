@@ -41,6 +41,24 @@ export default class SalesEstimatesController extends BaseController {
       this.handleServiceErrors,
     );
     router.post(
+      '/:id/approve',
+      [
+        this.validateSpecificEstimateSchema,
+      ],
+      this.validationResult,
+      asyncMiddleware(this.approveSaleEstimate.bind(this)),
+      this.handleServiceErrors
+    );
+    router.post(
+      '/:id/reject',
+      [
+        this.validateSpecificEstimateSchema,
+      ],
+      this.validationResult,
+      asyncMiddleware(this.rejectSaleEstimate.bind(this)),
+      this.handleServiceErrors,
+    )
+    router.post(
       '/:id', [
         ...this.validateSpecificEstimateSchema,
         ...this.estimateValidationSchema,
@@ -203,7 +221,54 @@ export default class SalesEstimatesController extends BaseController {
   }
 
   /**
+   * Marks the sale estimate as approved.
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {NextFunction} next 
+   */
+  async approveSaleEstimate(req: Request, res: Response, next: NextFunction) {
+    const { id: estimateId } = req.params;
+    const { tenantId } = req;
+
+    try {
+      await this.saleEstimateService.approveSaleEstimate(tenantId, estimateId);
+
+      return res.status(200).send({
+        id: estimateId,
+        message: 'The sale estimate has been approved successfully.',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Marks the sale estimate as rejected.
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {NextFunction} next 
+   */
+  async rejectSaleEstimate(req: Request, res: Response, next: NextFunction) {
+    const { id: estimateId } = req.params;
+    const { tenantId } = req;
+
+    try {
+      await this.saleEstimateService.rejectSaleEstimate(tenantId, estimateId);
+
+      return res.status(200).send({
+        id: estimateId,
+        message: 'The sale estimate has been rejected successfully.',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
    * Retrieve the given estimate with associated entries.
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {NextFunction} next 
    */
   async getEstimate(req: Request, res: Response, next: NextFunction) {
     const { id: estimateId } = req.params;
@@ -302,9 +367,29 @@ export default class SalesEstimatesController extends BaseController {
           errors: [{ type: 'NOT_SELL_ABLE_ITEMS', code: 800 }],
         });
       }
-      if (error.errorType === 'contact_not_found') {
+      if (error.errorType === 'SALE_ESTIMATE_ALREADY_APPROVED') {
         return res.boom.badRequest(null, {
           errors: [{ type: 'CUSTOMER_NOT_FOUND', code: 900 }],
+        });
+      }
+      if (error.errorType === 'SALE_ESTIMATE_ALREADY_APPROVED') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'CUSTOMER_NOT_FOUND', code: 1000 }],
+        });
+      }
+      if (error.errorType === 'SALE_ESTIMATE_NOT_DELIVERED') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'SALE_ESTIMATE_NOT_DELIVERED', code: 1100 }],
+        });
+      }
+      if (error.errorType === 'SALE_ESTIMATE_ALREADY_REJECTED') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'SALE_ESTIMATE_ALREADY_REJECTED', code: 1200 }],
+        });
+      }
+      if (error.errorType === 'contact_not_found') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'CUSTOMER_NOT_FOUND', code: 1300 }],
         });
       }
     }

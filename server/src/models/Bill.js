@@ -2,6 +2,7 @@ import { Model, raw } from 'objection';
 import moment from 'moment';
 import { difference } from 'lodash';
 import TenantModel from 'models/TenantModel';
+import { query } from 'winston';
 
 export default class Bill extends TenantModel {
   /**
@@ -17,9 +18,49 @@ export default class Bill extends TenantModel {
 
   static get modifiers() {
     return {
+      /**
+       * Filters the bills in draft status.
+       */
+      draft(query) {
+        query.where('opened_at', null);
+      },
+      /**
+       * Filters the opened bills.
+       */
+      opened(query) {
+        query.whereNot('opened_at', null);
+      },
+      /**
+       * Filters the unpaid bills.
+       */
+      unpaid(query) {
+        query.where('payment_amount', 0);
+      },
+      /**
+       * Filters the due bills.
+       */
       dueBills(query) {
         query.where(raw('AMOUNT - PAYMENT_AMOUNT > 0'));
-      }
+      },
+      /**
+       * Filters the overdue bills.
+       */
+      overdue(query) {
+        query.where('due_date', '<', moment().format('YYYY-MM-DD'));
+      },
+      /**
+       * Filters the partially paid bills.
+       */
+      partiallyPaid(query) {
+        query.whereNot('payment_amount', 0);
+        query.whereNot(raw('`PAYMENT_AMOUNT` = `AMOUNT`'));
+      },
+      /**
+       * Filters the paid bills.
+       */
+      paid(query) {
+        query.where(raw('`PAYMENT_AMOUNT` = `AMOUNT`'));
+      },
     }
   }
 
@@ -34,7 +75,16 @@ export default class Bill extends TenantModel {
    * Virtual attributes.
    */
   static get virtualAttributes() {
-    return ['dueAmount', 'isOpen', 'isPartiallyPaid', 'isFullyPaid', 'isPaid', 'remainingDays', 'overdueDays', 'isOverdue'];
+    return [
+      'dueAmount',
+      'isOpen',
+      'isPartiallyPaid',
+      'isFullyPaid',
+      'isPaid',
+      'remainingDays',
+      'overdueDays',
+      'isOverdue',
+    ];
   }
 
   /**
@@ -181,11 +231,6 @@ export default class Bill extends TenantModel {
 
   static get fields() {
     return {
-      created_at: {
-        label: 'Created at',
-        column: 'created_at',
-        columnType: 'date',
-      },
       vendor: {
         label: 'Vendor',
         column: 'vendor_id',
@@ -216,7 +261,23 @@ export default class Bill extends TenantModel {
       },
       status: {
         label: 'Status',
-        column: 'status',
+        options: [],
+        query: (query, role) => {
+          switch(role.value) {
+            case 'draft':
+              query.modify('draft'); break;
+            case 'opened':
+              query.modify('opened'); break;
+            case 'unpaid':
+              query.modify('unpaid'); break;
+            case 'overdue':
+              query.modify('overdue'); break;
+            case 'partially-paid':
+              query.modify('partiallyPaid'); break;
+            case 'paid':
+              query.modify('paid'); break;
+          }
+        },
       },
       amount: {
         label: 'Amount',
@@ -233,6 +294,14 @@ export default class Bill extends TenantModel {
       note: {
         label: 'Note',
         column: 'note',
+      },
+      user: {
+
+      },
+      created_at: {
+        label: 'Created at',
+        column: 'created_at',
+        columnType: 'date',
       },
     }
   }

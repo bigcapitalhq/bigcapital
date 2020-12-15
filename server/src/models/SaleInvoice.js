@@ -2,6 +2,7 @@ import { Model, raw } from 'objection';
 import moment from 'moment';
 import TenantModel from 'models/TenantModel';
 import { defaultToTransform } from 'utils';
+import { QueryBuilder } from 'knex';
 
 export default class SaleInvoice extends TenantModel {
   /**
@@ -29,7 +30,16 @@ export default class SaleInvoice extends TenantModel {
    * Virtual attributes.
    */
   static get virtualAttributes() {
-    return ['dueAmount', 'isDelivered', 'isOverdue', 'isPartiallyPaid', 'isFullyPaid', 'isPaid', 'remainingDays', 'overdueDays'];
+    return [
+      'dueAmount',
+      'isDelivered',
+      'isOverdue',
+      'isPartiallyPaid',
+      'isFullyPaid',
+      'isPaid',
+      'remainingDays',
+      'overdueDays',
+    ];
   }
 
   /**
@@ -118,10 +128,15 @@ export default class SaleInvoice extends TenantModel {
    */
   static get modifiers() {
     return {
+      /**
+       * Filters the due invoices.
+       */
       dueInvoices(query) {
         query.where(raw('BALANCE - PAYMENT_AMOUNT > 0'));
       },
-
+      /**
+       * Filters the invoices between the given date range.
+       */
       filterDateRange(query, startDate, endDate, type = 'day') {
         const dateFormat = 'YYYY-MM-DD HH:mm:ss';
         const fromDate = moment(startDate).startOf(type).format(dateFormat);
@@ -134,14 +149,44 @@ export default class SaleInvoice extends TenantModel {
           query.where('invoice_date', '<=', toDate);
         }
       },
+      /**
+       * Filters the invoices in draft status.
+       */
+      draft(query) {
+        query.where('delivered_at', null);
+      },
+      /**
+       * Filters the delivered invoices.
+       */
+      delivered(query) {
+        query.whereNot('delivered_at', null);
+      },
+      /**
+       * Filters the unpaid invoices.
+       */
+      unpaid(query) {
+        query.where(raw('PAYMENT_AMOUNT = 0'));
+      },
+      /**
+       * Filters the overdue invoices.
+       */
+      overdue(query) {
+        query.where('due_date', '<', moment().format('YYYY-MM-DD'));
+      },
+      /**
+       * Filters the partially invoices.
+       */
+      partiallyPaid(query) {
+        query.whereNot('payment_amount', 0);
+        query.whereNot(raw('`PAYMENT_AMOUNT` = `BALANCE`'));
+      },
+      /**
+       * Filters the paid invoices.
+       */
+      paid(query) {
+        query.where(raw('PAYMENT_AMOUNT = BALANCE'));
+      }
     };
-  }
-
-  /**
-   * Due amount of the given.
-   */
-  get dueAmount() {
-    return Math.max(this.balance - this.paymentAmount, 0);
   }
 
   /**
@@ -232,11 +277,106 @@ export default class SaleInvoice extends TenantModel {
    */
   static get fields() {
     return {
+      customer: {
+        label: 'Customer',
+        column: 'customer_id',
+        fieldType: 'options',
+        optionsResource: 'customers',
+        optionsKey: 'id',
+        optionsLable: 'displayName',
+      },
+      invoice_date: {
+        label: 'Invoice date',
+        column: 'invoice_date',
+        columnType: 'date',
+        fieldType: 'date',
+      },
+      due_date: {
+        label: 'Due date',
+        column: 'due_date',
+        columnType: 'date',
+        fieldType: 'date',
+      },
+      invoice_no: {
+        label: 'Invoice No.',
+        column: 'invoice_no',
+        columnType: 'number',
+        fieldType: 'number',
+      },
+      refernece_no: {
+        label: 'Reference No.',
+        column: 'reference_no',
+        columnType: 'number',
+        fieldType: 'number',
+      },
+      invoice_message: {
+        label: 'Invoice message',
+        column: 'invoice_message',
+        columnType: 'text',
+        fieldType: 'text',
+      },
+      terms_conditions: {
+        label: 'Terms & conditions',
+        column: 'terms_conditions',
+        columnType: 'text',
+        fieldType: 'text',
+      },
+      invoice_amount: {
+        label: 'Invoice amount',
+        column: 'invoice_amount',
+        columnType: 'number',
+        fieldType: 'number',
+      },
+      payment_amount: {
+        label: 'Payment amount',
+        column: 'payment_amount',
+        columnType: 'number',
+        fieldType: 'number',
+      },
+      due_amount: {
+        label: 'Due amount',
+        column: 'due_amount',
+        columnType: 'number',
+        fieldType: 'number',
+      },
       created_at: {
         label: 'Created at',
         column: 'created_at',
         columnType: 'date',
       },
+      status: {
+        label: 'Status',
+        options: [
+          { key: 'draft', label: 'Draft', },
+          { key: 'delivered', label: 'Delivered' },
+          { key: 'unpaid', label: 'Unpaid' },
+          { key: 'overdue', label: 'Overdue' },
+          { key: 'partially-paid', label: 'Partially paid' },
+          { key: 'paid', label: 'Paid' },
+        ],
+        query: (query, role) => {
+          switch(role.value) {
+            case 'draft':
+              query.modify('draft');
+              break;
+            case 'delivered':
+              query.modify('delivered');
+              break;
+            case 'unpaid':
+              query.modify('unpaid');
+              break;
+            case 'overdue':
+              query.modify('overdue');
+              break;
+            case 'partially-paid':
+              query.modify('partiallyPaid');
+              break;
+            case 'paid':
+              query.modify('paid');
+              break;
+          }
+        },
+      }
     };
   }
 }

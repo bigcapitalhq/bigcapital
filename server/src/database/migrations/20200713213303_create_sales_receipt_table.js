@@ -6,11 +6,12 @@ exports.up = function(knex) {
     table.integer('deposit_account_id').unsigned().index().references('id').inTable('accounts');
     table.integer('customer_id').unsigned().index().references('id').inTable('contacts');
     table.date('receipt_date').index();
-    table.string('receipt_number');
-    table.string('reference_no');
+    table.string('receipt_number').index();
+    table.string('reference_no').index();
     table.string('send_to_email');
     table.text('receipt_message');
     table.text('statement');
+    table.date('closed_at').index();
     table.timestamps();
   })  
 };

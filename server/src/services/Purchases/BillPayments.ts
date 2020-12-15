@@ -25,7 +25,6 @@ import TenancyService from 'services/Tenancy/TenancyService';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import { entriesAmountDiff, formatDateFields } from 'utils';
 import { ServiceError } from 'exceptions';
-import { Bill } from 'models';
 
 const ERRORS = {
   BILL_VENDOR_NOT_FOUND: 'VENDOR_NOT_FOUND',

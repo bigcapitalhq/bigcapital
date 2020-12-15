@@ -14,6 +14,6 @@ export default class ViewRepository extends TenantRepository {
    * Retrieve all views of the given resource id.
    */
   allByResource(resourceModel: string, withRelations?) {
-    return super.find({ resource_mode: resourceModel }, withRelations);
+    return super.find({ resource_model: resourceModel }, withRelations);
   }
 }

@@ -449,12 +449,19 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
   public async salesInvoicesList(
     tenantId: number,
     salesInvoicesFilter: ISalesInvoicesFilter
-  ): Promise<{ salesInvoices: ISaleInvoice[], pagination: IPaginationMeta, filterMeta: IFilterMeta }> {
+  ): Promise<{
+    salesInvoices: ISaleInvoice[],
+    pagination: IPaginationMeta,
+    filterMeta: IFilterMeta
+  }> {
     const { SaleInvoice } = this.tenancy.models(tenantId);
     const dynamicFilter = await this.dynamicListService.dynamicList(tenantId, SaleInvoice, salesInvoicesFilter);
     
     this.logger.info('[sale_invoice] try to get sales invoices list.', { tenantId, salesInvoicesFilter });
-    const { results, pagination } = await SaleInvoice.query().onBuild((builder) => {
+    const {
+      results,
+      pagination,
+    } = await SaleInvoice.query().onBuild((builder) => {
       builder.withGraphFetched('entries');
       builder.withGraphFetched('customer');
       dynamicFilter.buildQuery()(builder);

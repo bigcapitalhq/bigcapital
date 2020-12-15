@@ -16,6 +16,32 @@ export default class SaleReceipt extends TenantModel {
     return ['created_at', 'updated_at'];
   }
 
+   /**
+   * Virtual attributes.
+   */
+  static get virtualAttributes() {
+    return [
+      'isClosed',
+      'isDraft',
+    ];
+  }
+
+  /**
+   * Detarmine whether the sale receipt closed.
+   * @return {boolean}
+   */
+  get isClosed() {
+    return !!this.closedAt;
+  }
+
+  /**
+   * Detarmines whether the sale receipt drafted.
+   * @return {boolean}
+   */
+  get isDraft() {
+    return !this.closedAt;
+  }
+
   /**
    * Relationship mapping.
    */
