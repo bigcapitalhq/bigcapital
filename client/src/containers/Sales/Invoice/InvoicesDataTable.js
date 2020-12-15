@@ -18,9 +18,16 @@ import { CLASSES } from 'common/classes';
 import { compose, saveInvoke } from 'utils';
 import { useIsValuePassed } from 'hooks';
 
-import { LoadingIndicator, Choose, DataTable, Money, Icon } from 'components';
+import {
+  LoadingIndicator,
+  Choose,
+  If,
+  DataTable,
+  Money,
+  Icon,
+} from 'components';
 import InvoicesEmptyStatus from './InvoicesEmptyStatus';
-
+import { statusAccessor } from './components';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withViewDetails from 'containers/Views/withViewDetails';
@@ -141,7 +148,7 @@ function InvoicesDataTable({
       {
         id: 'status',
         Header: formatMessage({ id: 'status' }),
-        accessor: 'status',
+        accessor: (row) => statusAccessor(row),
         width: 140,
         className: 'status',
       },
