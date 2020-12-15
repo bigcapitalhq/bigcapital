@@ -3,7 +3,7 @@ import { Formik, Form } from 'formik';
 import moment from 'moment';
 import { Intent } from '@blueprintjs/core';
 import { useIntl } from 'react-intl';
-import { pick, sumBy, omit } from 'lodash';
+import { pick, sumBy, omit, values } from 'lodash';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 
@@ -53,7 +53,7 @@ const defaultInitialValues = {
   customer_id: '',
   invoice_date: moment(new Date()).format('YYYY-MM-DD'),
   due_date: moment(new Date()).format('YYYY-MM-DD'),
-  status: 'SEND',
+  delivered: '',
   invoice_no: '',
   reference_no: '',
   invoice_message: '',
@@ -170,6 +170,7 @@ function InvoiceForm({
     }
     const form = {
       ...values,
+      delivered: submitPayload.deliver,
       entries: entries.map((entry) => ({ ...omit(entry, ['total']) })),
     };
     // Handle the request success.
@@ -262,7 +263,7 @@ function InvoiceForm({
               invoice={invoiceId}
               onCancelClick={handleCancelClick}
               onSubmitClick={handleSubmitClick}
-              invoicePublished={true}
+              isDelivered={values.delivered}
             />
           </Form>
         )}

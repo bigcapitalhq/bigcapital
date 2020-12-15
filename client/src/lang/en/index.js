@@ -865,4 +865,15 @@ export default {
     'The item categories has been deleted successfully .',
   receivable_accounts_should_assign_with_customers:
     'receivable accounts should assign with customers',
+  delivered: 'Delivered',
+  save_and_deliver: 'Save and Deliver',
+  deliver_and_new: 'Deliver and new',
+  deliver_continue_editing: 'Deliver (continue editing)',
+  due_in: 'Due in',
+  day_partially_paid: 'Day Partially paid,',
+  due: 'Due.',
+  overdue_by: 'Overdue by',
+  day: 'day.',
+  day_partially_paid: 'Day Partially paid',
+  paid: 'Paid',
 };

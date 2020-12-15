@@ -17,7 +17,7 @@ const Schema = Yup.object().shape({
     .max(DATATYPES_LENGTH.STRING)
     .label(formatMessage({ id: 'invoice_no_' })),
   reference_no: Yup.string().min(1).max(DATATYPES_LENGTH.STRING),
-  status: Yup.string().required(),
+  delivered: Yup.boolean().required(),
   invoice_message: Yup.string()
     .trim()
     .min(1)

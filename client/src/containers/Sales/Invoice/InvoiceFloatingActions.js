@@ -25,38 +25,38 @@ export default function InvoiceFloatingActions({
   onCancelClick,
   onClearClick,
   invoice,
-  invoicePublished,
+  isDelivered,
 }) {
   const { resetForm, submitForm } = useFormikContext();
 
-  const handleSubmitPublishBtnClick = (event) => {
+  const handleSubmitDeliverBtnClick = (event) => {
     saveInvoke(onSubmitClick, event, {
       redirect: true,
-      publish: true,
+      delivered: true,
     });
   };
 
-  const handleSubmitPublishAndNewBtnClick = (event) => {
+  const handleSubmitDeliverAndNewBtnClick = (event) => {
     submitForm();
     saveInvoke(onSubmitClick, event, {
       redirect: false,
-      publish: true,
+      delivered: true,
       resetForm: true,
     });
   };
 
-  const handleSubmitPublishContinueEditingBtnClick = (event) => {
+  const handleSubmitDeliverContinueEditingBtnClick = (event) => {
     submitForm();
     saveInvoke(onSubmitClick, event, {
       redirect: false,
-      publish: true,
+      delivered: true,
     });
   };
 
   const handleSubmitDraftBtnClick = (event) => {
     saveInvoke(onSubmitClick, event, {
       redirect: true,
-      publish: false,
+      delivered: false,
     });
   };
 
@@ -64,7 +64,7 @@ export default function InvoiceFloatingActions({
     submitForm();
     saveInvoke(onSubmitClick, event, {
       redirect: false,
-      publish: false,
+      delivered: false,
       resetForm: true,
     });
   };
@@ -73,7 +73,7 @@ export default function InvoiceFloatingActions({
     submitForm();
     saveInvoke(onSubmitClick, event, {
       redirect: false,
-      publish: false,
+      delivered: false,
     });
   };
 
@@ -88,26 +88,26 @@ export default function InvoiceFloatingActions({
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>
-      {/* ----------- Save And Publish ----------- */}
-      <If condition={!invoice || !invoicePublished}>
+      {/* ----------- Save And Deliver ----------- */}
+      <If condition={!invoice || !isDelivered}>
         <ButtonGroup>
           <Button
             disabled={isSubmitting}
             intent={Intent.PRIMARY}
             type="submit"
-            onClick={handleSubmitPublishBtnClick}
-            text={<T id={'save_publish'} />}
+            onClick={handleSubmitDeliverBtnClick}
+            text={<T id={'save_and_deliver'} />}
           />
           <Popover
             content={
               <Menu>
                 <MenuItem
-                  text={<T id={'publish_and_new'} />}
-                  onClick={handleSubmitPublishAndNewBtnClick}
+                  text={<T id={'deliver_and_new'} />}
+                  onClick={handleSubmitDeliverAndNewBtnClick}
                 />
                 <MenuItem
-                  text={<T id={'publish_continue_editing'} />}
-                  onClick={handleSubmitPublishContinueEditingBtnClick}
+                  text={<T id={'deliver_continue_editing'} />}
+                  onClick={handleSubmitDeliverContinueEditingBtnClick}
                 />
               </Menu>
             }
@@ -156,13 +156,13 @@ export default function InvoiceFloatingActions({
         </ButtonGroup>
       </If>
       {/* ----------- Save and New ----------- */}
-      <If condition={invoice && invoicePublished}>
+      <If condition={invoice && isDelivered}>
         <ButtonGroup>
           <Button
             disabled={isSubmitting}
             intent={Intent.PRIMARY}
             type="submit"
-            onClick={handleSubmitPublishBtnClick}
+            onClick={handleSubmitDeliverBtnClick}
             text={<T id={'save'} />}
           />
           <Popover
@@ -170,7 +170,7 @@ export default function InvoiceFloatingActions({
               <Menu>
                 <MenuItem
                   text={<T id={'save_and_new'} />}
-                  onClick={handleSubmitPublishAndNewBtnClick}
+                  onClick={handleSubmitDeliverAndNewBtnClick}
                 />
               </Menu>
             }
