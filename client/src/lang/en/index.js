@@ -902,4 +902,25 @@ export default {
   open: 'Open',
   are_sure_to_open_this_bill: 'Are you sure you want to open this bill?',
   opened: 'Opened',
+  the_estimate_has_been_successfully_delivered:
+    'The estimate has been successfully delivered.',
+  the_estimate_has_been_successfully_approved:
+    'The estimate has been successfully approved.',
+  the_estimate_has_been_successfully_rejected:
+    'The estimate has been successfully rejected.',
+  are_sure_to_deliver_this_estimate:
+    'Are you sure you want to deliver this estimate?',
+  approve: 'Approve',
+  are_sure_to_approve_this_estimate:
+    'Are you sure you want to approve this estimate?',
+  reject: 'Reject',
+  are_sure_to_reject_this_estimate:
+    'Are you sure you want to reject this estimate?',
+  mark_as_approved: 'Mark as approved',
+  mark_as_rejected: 'Mark as rejected',
+  delivered:'Delivered',
+  rejected:'Rejected',
+  approved:'Approved'
+
+
 };

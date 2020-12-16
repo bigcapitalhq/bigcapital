@@ -7,6 +7,7 @@ import {
   MenuItem,
   MenuDivider,
   Position,
+  Tag,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { FormattedMessage as T, useIntl } from 'react-intl';
@@ -17,9 +18,9 @@ import { compose, saveInvoke } from 'utils';
 import { useIsValuePassed } from 'hooks';
 
 import LoadingIndicator from 'components/LoadingIndicator';
-import { DataTable, Money, Choose, Icon } from 'components';
+import { DataTable, Money, Choose, Icon, If } from 'components';
 import EstimatesEmptyStatus from './EstimatesEmptyStatus';
-
+import { statusAccessor } from './components';
 import withEstimates from './withEstimates';
 import withEstimateActions from './withEstimateActions';
 
@@ -38,6 +39,9 @@ function EstimatesDataTable({
   // #ownProps
   onEditEstimate,
   onDeleteEstimate,
+  onDeliverEstimate,
+  onApproveEstimate,
+  onRejectEstimate,
   onSelectedRowsChange,
 }) {
   const { formatMessage } = useIntl();
@@ -70,6 +74,40 @@ function EstimatesDataTable({
           text={formatMessage({ id: 'edit_estimate' })}
           onClick={handleEditEstimate(estimate)}
         />
+        <If condition={!estimate.is_delivered}>
+          <MenuItem
+            text={formatMessage({ id: 'mark_as_delivered' })}
+            onClick={() => onDeliverEstimate(estimate)}
+          />
+        </If>
+        <Choose>
+          <Choose.When
+            condition={estimate.is_delivered && estimate.is_approved}
+          >
+            <MenuItem
+              text={formatMessage({ id: 'mark_as_rejected' })}
+              onClick={() => onRejectEstimate(estimate)}
+            />
+          </Choose.When>
+          <Choose.When
+            condition={estimate.is_delivered && estimate.is_rejected}
+          >
+            <MenuItem
+              text={formatMessage({ id: 'mark_as_approved' })}
+              onClick={() => onApproveEstimate(estimate)}
+            />
+          </Choose.When>
+          <Choose.When condition={estimate.is_delivered}>
+            <MenuItem
+              text={formatMessage({ id: 'mark_as_approved' })}
+              onClick={() => onApproveEstimate(estimate)}
+            />
+            <MenuItem
+              text={formatMessage({ id: 'mark_as_rejected' })}
+              onClick={() => onRejectEstimate(estimate)}
+            />
+          </Choose.When>
+        </Choose>
         <MenuItem
           text={formatMessage({ id: 'delete_estimate' })}
           intent={Intent.DANGER}
@@ -114,7 +152,8 @@ function EstimatesDataTable({
       {
         id: 'estimate_number',
         Header: formatMessage({ id: 'estimate_number' }),
-        accessor: (row) => (row.estimate_number ? `#${row.estimate_number}` : null),
+        accessor: (row) =>
+          row.estimate_number ? `#${row.estimate_number}` : null,
         width: 140,
         className: 'estimate_number',
       },
@@ -126,6 +165,15 @@ function EstimatesDataTable({
         width: 140,
         className: 'amount',
       },
+
+      {
+        id: 'status',
+        Header: formatMessage({ id: 'status' }),
+        accessor: (row) => statusAccessor(row),
+        width: 140,
+        className: 'status',
+      },
+
       {
         id: 'reference',
         Header: formatMessage({ id: 'reference_no' }),
@@ -133,6 +181,7 @@ function EstimatesDataTable({
         width: 140,
         className: 'reference',
       },
+
       {
         id: 'actions',
         Header: '',
@@ -183,7 +232,7 @@ function EstimatesDataTable({
   const showEmptyStatus = [
     estimatesCurrentPage.length === 0,
     estimatesCurrentViewId === -1,
-  ].every(d => d === true);
+  ].every((d) => d === true);
 
   return (
     <div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>

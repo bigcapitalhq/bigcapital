@@ -75,7 +75,7 @@ export const fetchEstimate = ({ id }) => {
 
 export const fetchEstimatesTable = ({ query = {} }) => {
   return (dispatch, getState) =>
-    new Promise((resolve, rejcet) => {
+    new Promise((resolve, reject) => {
       const pageQuery = getState().salesEstimates.tableQuery;
       dispatch({
         type: t.ESTIMATES_TABLE_LOADING,
@@ -117,7 +117,17 @@ export const fetchEstimatesTable = ({ query = {} }) => {
           resolve(response);
         })
         .catch((error) => {
-          rejcet(error);
+          reject(error);
         });
     });
+};
+
+export const deliverEstimate = ({ id }) => {
+  return (dispatch) => ApiService.post(`sales/estimates/${id}/deliver`);
+};
+export const approveEstimate = ({ id }) => {
+  return (dispatch) => ApiService.post(`sales/estimates/${id}/approve`);
+};
+export const rejectEstimate = ({ id }) => {
+  return (dispatch) => ApiService.post(`sales/estimates/${id}/reject`);
 };
