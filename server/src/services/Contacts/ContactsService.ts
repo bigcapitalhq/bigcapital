@@ -31,13 +31,17 @@ export default class ContactsService {
    * @param {TContactService} contactService
    * @return {Promise<IContact>}
    */
-  public async getContactByIdOrThrowError(tenantId: number, contactId: number, contactService: TContactService) {
+  public async getContactByIdOrThrowError(
+    tenantId: number,
+    contactId: number,
+    contactService?: TContactService
+  ) {
     const { contactRepository } = this.tenancy.repositories(tenantId);
 
     this.logger.info('[contact] trying to validate contact existance.', { tenantId, contactId });
     const contact = await contactRepository.findOne({
       id: contactId,
-      contactService: contactService,
+      ...(contactService) && ({ contactService }),
     });
 
     if (!contact) {

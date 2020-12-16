@@ -205,14 +205,15 @@ export default class EntityRepository {
   }
 
   /**
-   * 
+   * Arbitrary relation graphs can be upserted (insert + update + delete)
+   * using the upsertGraph method.
    * @param graph 
    * @param options 
    */
   upsertGraph(graph, options) {
     // Keep the input grpah immutable
     const graphCloned = cloneDeep(graph);
-    return this.model.upsertGraph(graphCloned)
+    return this.model.query().upsertGraph(graphCloned, options)
   }
 
   /**

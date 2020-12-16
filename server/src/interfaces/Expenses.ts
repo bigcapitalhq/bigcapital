@@ -22,7 +22,7 @@ export interface IExpense {
   publishedAt: Date|null,
   userId: number,
   paymentDate: Date,
-
+  payeeId: number,
   categories: IExpenseCategory[],
 }
 
@@ -43,7 +43,7 @@ export interface IExpenseDTO {
   publish: boolean,
   userId: number,
   paymentDate: Date,
-
+  payeeId: number,
   categories: IExpenseCategoryDTO[],
 }
 

@@ -12,6 +12,7 @@ import JournalCommands from 'services/Accounting/JournalCommands';
 import { IExpense, IExpensesFilter, IAccount, IExpenseDTO, IExpensesService, ISystemUser, IPaginationMeta } from 'interfaces';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import events from 'subscribers/events';
+import ContactsService from "services/Contacts/ContactsService";
 
 const ERRORS = {
   EXPENSE_NOT_FOUND: 'expense_not_found',
@@ -37,6 +38,9 @@ export default class ExpensesService implements IExpensesService {
 
   @EventDispatcher()
   eventDispatcher: EventDispatcherInterface;
+
+  @Inject()
+  contactsService: ContactsService;
 
   /**
    * Retrieve the payment account details or returns not found server error in case the 
@@ -323,6 +327,13 @@ export default class ExpensesService implements IExpensesService {
     // - Validate expenses accounts type.
     await this.validateExpensesAccountsType(tenantId, expensesAccounts);
 
+    // - Validate the expense payee contact id existance on storage.
+    if (expenseDTO.payeeId) {
+      await this.contactsService.getContactByIdOrThrowError(
+        tenantId,
+        expenseDTO.payeeId,
+      )
+    }
     // - Validate the given expense categories not equal zero.
     this.validateCategoriesNotEqualZero(expenseDTO);
 
@@ -346,8 +357,9 @@ export default class ExpensesService implements IExpensesService {
    * 2. Validate expense accounts exist on the storage.
    * 3. Validate payment account type.
    * 4. Validate expenses accounts type.
-   * 5. Validate the given expense categories not equal zero.
-   * 6. Stores the expense to the storage.
+   * 5. Validate the expense payee contact id existance on storage.
+   * 6. Validate the given expense categories not equal zero.
+   * 7. Stores the expense to the storage.
    * ---------
    * @param {number} tenantId 
    * @param {IExpenseDTO} expenseDTO 
@@ -359,26 +371,33 @@ export default class ExpensesService implements IExpensesService {
   ): Promise<IExpense> {
     const { expenseRepository } = this.tenancy.repositories(tenantId);
 
-    // 1. Validate payment account existance on the storage.
+    // - Validate payment account existance on the storage.
     const paymentAccount = await this.getPaymentAccountOrThrowError(
       tenantId,
       expenseDTO.paymentAccountId,
     );
-    // 2. Validate expense accounts exist on the storage.
+    // - Validate expense accounts exist on the storage.
     const expensesAccounts = await this.getExpensesAccountsOrThrowError(
       tenantId,
       this.mapExpensesAccountsIdsFromDTO(expenseDTO),
     );
-    // 3. Validate payment account type.
+    // - Validate payment account type.
     await this.validatePaymentAccountType(tenantId, paymentAccount);
 
-    // 4. Validate expenses accounts type.
+    // - Validate expenses accounts type.
     await this.validateExpensesAccountsType(tenantId, expensesAccounts);
 
-    // 5. Validate the given expense categories not equal zero.
+    // - Validate the expense payee contact id existance on storage.
+    if (expenseDTO.payeeId) {
+      await this.contactsService.getContactByIdOrThrowError(
+        tenantId,
+        expenseDTO.payeeId,
+      )
+    }
+    // - Validate the given expense categories not equal zero.
     this.validateCategoriesNotEqualZero(expenseDTO);
 
-    // 6. Save the expense to the storage.
+    // - Save the expense to the storage.
     const expenseObj = this.expenseDTOToModel(expenseDTO, authorizedUser);
     const expenseModel = await expenseRepository.upsertGraph(expenseObj);
 
