@@ -186,7 +186,7 @@ export default class ItemsController extends BaseController {
    */
   get validateBulkSelectSchema(): ValidationChain[] {
     return [
-      query('ids').isArray({ min: 2 }),
+      query('ids').isArray({ min: 1 }),
       query('ids.*').isNumeric().toInt(),
     ];
   }
@@ -318,6 +318,8 @@ export default class ItemsController extends BaseController {
 
       return res.status(200).send({ item: storedItem });
     } catch (error) {
+      console.log(error);
+
       next(error)
     }
   }
@@ -369,7 +371,11 @@ export default class ItemsController extends BaseController {
   
     try {
       await this.itemsService.bulkDeleteItems(tenantId, itemsIds);
-      return res.status(200).send({ ids: itemsIds });
+
+      return res.status(200).send({
+        ids: itemsIds,
+        message: 'Items have been deleted successfully.',
+      });
     } catch (error) {
       next(error);
     }
