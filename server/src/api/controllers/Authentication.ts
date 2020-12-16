@@ -122,9 +122,9 @@ export default class AuthenticationController extends BaseController{
       // Focus with me! In case whitelist is not empty and the given coutry is not 
       // in whitelist throw the error.
       // 
-      // And in case the blacklist is not empty and the given country exists 
+      // Or in case the blacklist is not empty and the given country exists 
       // in the blacklist throw the goddamn error.
-      (whitelist.length > 0 && whitelist.indexOf(value) === -1) && 
+      (whitelist.length > 0 && whitelist.indexOf(value) === -1) || 
       (blacklist.length > 0 && blacklist.indexOf(value) !== -1)
     ) {
       throw new Error('The country code is not supported yet.');
