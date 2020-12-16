@@ -918,9 +918,17 @@ export default {
     'Are you sure you want to reject this estimate?',
   mark_as_approved: 'Mark as approved',
   mark_as_rejected: 'Mark as rejected',
-  delivered:'Delivered',
-  rejected:'Rejected',
-  approved:'Approved'
-
-
-};
+  delivered: 'Delivered',
+  rejected: 'Rejected',
+  approved: 'Approved',
+  the_item_has_been_successfully_inactivated:
+    'The item has been successfully inactivated.',
+  the_item_has_been_successfully_activated:
+    'The item has been successfully activated.',
+  are_sure_to_inactive_this_item:
+    'Are you sure you want to inactive this item? You will be able to activate it later',
+  are_sure_to_activate_this_item:
+    'Are you sure you want to activate this item? You will be able to inactivate it later',
+    inactivate_item: 'Inactivate Item',
+    activate_item: 'Activate Item',
+  };
