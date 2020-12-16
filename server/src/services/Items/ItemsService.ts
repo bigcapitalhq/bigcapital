@@ -232,6 +232,40 @@ export default class ItemsService implements IItemsService {
     await Item.query().findById(itemId).delete();
     this.logger.info('[items] deleted successfully.', { tenantId, itemId });
   }
+  
+  /**
+   * Activates the given item on the storage.
+   * @param {number} tenantId -
+   * @param {number} itemId -
+   * @return {Promise<void>}
+   */
+  public async activateItem(tenantId: number, itemId: number): Promise<void> {
+    const { Item } = this.tenancy.models(tenantId);
+
+    this.logger.info('[items] trying to activate the given item.', { tenantId, itemId });
+    const item = await this.getItemOrThrowError(tenantId, itemId);
+
+    await Item.query().findById(itemId).patch({ active: true });
+
+    this.logger.info('[items] activated successfully.', { tenantId, itemId });
+  }
+
+  /**
+   * Inactivates the given item on the storage.
+   * @param {number} tenantId 
+   * @param {number} itemId 
+   * @return {Promise<void>}
+   */
+   public async inactivateItem(tenantId: number, itemId: number): Promise<void> {
+    const { Item } = this.tenancy.models(tenantId);
+
+    this.logger.info('[items] trying to inactivate the given item.', { tenantId, itemId });
+    const item = await this.getItemOrThrowError(tenantId, itemId);
+
+    await Item.query().findById(itemId).patch({ active: false });
+
+    this.logger.info('[items] activated successfully.', { tenantId, itemId });
+  }
 
   /**
    * Retrieve the item details of the given id with associated details.

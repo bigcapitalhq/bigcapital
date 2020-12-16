@@ -31,6 +31,22 @@ export default class ItemsController extends BaseController {
       this.handlerServiceErrors,
     );
     router.post(
+      '/:id/activate', [
+      ...this.validateSpecificItemSchema,
+    ],
+      this.validationResult,
+      asyncMiddleware(this.activateItem.bind(this)),
+      this.handlerServiceErrors
+    );
+    router.post(
+      '/:id/inactivate', [
+        ...this.validateSpecificItemSchema,
+    ],
+      this.validationResult,
+      asyncMiddleware(this.inactivateItem.bind(this)),
+      this.handlerServiceErrors,
+    )
+    router.post(
       '/:id', [
       ...this.validateItemSchema,
       ...this.validateSpecificItemSchema,
@@ -221,6 +237,50 @@ export default class ItemsController extends BaseController {
     try {
       await this.itemsService.editItem(tenantId, itemId, item);
       return res.status(200).send({ id: itemId });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Activates the given item.
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {NextFunction} next 
+   */
+  async activateItem(req: Request, res: Response, next: NextFunction) {
+    const { tenantId } = req;
+    const itemId: number = req.params.id;
+
+    try {
+      await this.itemsService.activateItem(tenantId, itemId);
+
+      return res.status(200).send({
+        id: itemId,
+        message: 'The item has been activated successfully.',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Inactivates the given item.
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {NextFunction} next 
+   */
+  async inactivateItem(req: Request, res: Response, next: NextFunction) {
+    const { tenantId } = req;
+    const itemId: number = req.params.id;
+
+    try {
+      await this.itemsService.inactivateItem(tenantId, itemId);
+
+      return res.status(200).send({
+        id: itemId,
+        message: 'The item has been inactivated successfully.',
+      });
     } catch (error) {
       next(error);
     }
