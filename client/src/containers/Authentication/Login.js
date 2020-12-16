@@ -25,24 +25,26 @@ import { compose } from 'utils';
 const ERRORS_TYPES = {
   INVALID_DETAILS: 'INVALID_DETAILS',
   USER_INACTIVE: 'USER_INACTIVE',
+  LOGIN_TO_MANY_ATTEMPTS: 'LOGIN_TO_MANY_ATTEMPTS',
 };
-function Login({
-  requestLogin,
-}) {
+function Login({ requestLogin }) {
   const { formatMessage } = useIntl();
   const history = useHistory();
   const [shown, setShown] = useState(false);
-  const passwordRevealer = () => { setShown(!shown); };
-
+  const passwordRevealer = () => {
+    setShown(!shown);
+  };
 
   // Validation schema.
   const loginValidationSchema = Yup.object().shape({
     crediential: Yup.string()
       .required()
-      .email().label(formatMessage({id:'email'})),
+      .email()
+      .label(formatMessage({ id: 'email' })),
     password: Yup.string()
       .required()
-      .min(4).label(formatMessage({id:'password'}))
+      .min(4)
+      .label(formatMessage({ id: 'password' })),
   });
 
   // Formik validation schema and submit handler.
@@ -62,58 +64,97 @@ function Login({
       requestLogin({
         crediential: values.crediential,
         password: values.password,
-      }).then(() => {
-        setSubmitting(false);
-      }).catch((errors) => {
-        const toastBuilders = [];
-        if (errors.find((e) => e.type === ERRORS_TYPES.INVALID_DETAILS)) {
-          toastBuilders.push({
-            message: formatMessage({ id: 'email_and_password_entered_did_not_match' }),
-            intent: Intent.DANGER,
+      })
+        .then(() => {
+          setSubmitting(false);
+        })
+        .catch((errors) => {
+          const toastBuilders = [];
+          if (errors.find((e) => e.type === ERRORS_TYPES.INVALID_DETAILS)) {
+            toastBuilders.push({
+              message: formatMessage({
+                id: 'email_and_password_entered_did_not_match',
+              }),
+              intent: Intent.DANGER,
+            });
+          }
+          if (errors.find((e) => e.type === ERRORS_TYPES.USER_INACTIVE)) {
+            toastBuilders.push({
+              message: formatMessage({
+                id: 'the_user_has_been_suspended_from_admin',
+              }),
+              intent: Intent.DANGER,
+            });
+          }
+          if (
+            errors.find((e) => e.type === ERRORS_TYPES.LOGIN_TO_MANY_ATTEMPTS)
+          ) {
+            toastBuilders.push({
+              message: formatMessage({
+                id: 'your_account_has_been_locked',
+              }),
+              intent: Intent.DANGER,
+            });
+          }
+          toastBuilders.forEach((builder) => {
+            Toaster.show(builder);
           });
-        }
-        if (errors.find((e) => e.type === ERRORS_TYPES.USER_INACTIVE)) {
-          toastBuilders.push({
-            message: formatMessage({ id: 'the_user_has_been_suspended_from_admin' }),
-            intent: Intent.DANGER,
-          });
-        }
-        toastBuilders.forEach(builder => {
-          Toaster.show(builder);
+          setSubmitting(false);
         });
-        setSubmitting(false);
-      });
     },
   });
 
-  const passwordRevealerTmp = useMemo(() => (
-    <span class="password-revealer" onClick={() => passwordRevealer()}>
-      <If condition={shown}>
-        <><Icon icon='eye-slash' /> <span class="text"><T id={'hide'} /></span></>
-      </If>
-      <If condition={!shown}>
-        <><Icon icon='eye' /> <span class="text"><T id={'show'} /></span></>
-      </If>
-    </span>), [shown, passwordRevealer]);
+  const passwordRevealerTmp = useMemo(
+    () => (
+      <span class="password-revealer" onClick={() => passwordRevealer()}>
+        <If condition={shown}>
+          <>
+            <Icon icon="eye-slash" />{' '}
+            <span class="text">
+              <T id={'hide'} />
+            </span>
+          </>
+        </If>
+        <If condition={!shown}>
+          <>
+            <Icon icon="eye" />{' '}
+            <span class="text">
+              <T id={'show'} />
+            </span>
+          </>
+        </If>
+      </span>
+    ),
+    [shown, passwordRevealer],
+  );
 
   return (
     <AuthInsider>
-      <div className='login-form'>
+      <div className="login-form">
         <div className={'authentication-page__label-section'}>
-          <h3><T id={'log_in'} /></h3>
+          <h3>
+            <T id={'log_in'} />
+          </h3>
           <T id={'need_bigcapital_account'} />
-          <Link to='/auth/register'> <T id={'create_an_account'} /></Link>
+          <Link to="/auth/register">
+            {' '}
+            <T id={'create_an_account'} />
+          </Link>
         </div>
 
         <form onSubmit={handleSubmit} className={'authentication-page__form'}>
           <FormGroup
             label={<T id={'email_or_phone_number'} />}
-            intent={(errors.crediential && touched.crediential) && Intent.DANGER}
-            helperText={<ErrorMessage name={'crediential'} {...{ errors, touched }} />}
+            intent={errors.crediential && touched.crediential && Intent.DANGER}
+            helperText={
+              <ErrorMessage name={'crediential'} {...{ errors, touched }} />
+            }
             className={'form-group--crediential'}
           >
             <InputGroup
-              intent={(errors.crediential && touched.crediential) && Intent.DANGER}
+              intent={
+                errors.crediential && touched.crediential && Intent.DANGER
+              }
               large={true}
               {...getFieldProps('crediential')}
             />
@@ -122,22 +163,22 @@ function Login({
           <FormGroup
             label={<T id={'password'} />}
             labelInfo={passwordRevealerTmp}
-            intent={(errors.password && touched.password) && Intent.DANGER}
-            helperText={<ErrorMessage name={'password'} {...{ errors, touched }} />}
+            intent={errors.password && touched.password && Intent.DANGER}
+            helperText={
+              <ErrorMessage name={'password'} {...{ errors, touched }} />
+            }
             className={'form-group--password has-password-revealer'}
           >
             <InputGroup
               large={true}
-              intent={(errors.password && touched.password) && Intent.DANGER}
+              intent={errors.password && touched.password && Intent.DANGER}
               type={shown ? 'text' : 'password'}
               {...getFieldProps('password')}
             />
           </FormGroup>
 
           <div className={'login-form__checkbox-section'}>
-            <Checkbox
-              large={true}
-              className={'checkbox--remember-me'}>
+            <Checkbox large={true} className={'checkbox--remember-me'}>
               <T id={'keep_me_logged_in'} />
             </Checkbox>
           </div>
@@ -165,6 +206,4 @@ function Login({
   );
 }
 
-export default compose(
-  withAuthenticationActions,
-)(Login);
+export default compose(withAuthenticationActions)(Login);

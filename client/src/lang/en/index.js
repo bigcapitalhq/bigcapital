@@ -876,4 +876,6 @@ export default {
   day: 'day.',
   day_partially_paid: 'Day Partially paid',
   paid: 'Paid',
+  your_account_has_been_locked:
+    'Your account has been locked due to repeated failed login attempts. Please wait a few minutes before trying again.',
 };
