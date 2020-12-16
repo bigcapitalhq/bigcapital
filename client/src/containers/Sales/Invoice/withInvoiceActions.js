@@ -6,6 +6,7 @@ import {
   fetchInvoice,
   fetchInvoicesTable,
   fetchDueInvoices,
+  deliverInvoice,
 } from 'store/Invoice/invoices.actions';
 import t from 'store/types';
 
@@ -18,6 +19,7 @@ const mapDipatchToProps = (dispatch) => ({
   requestDeleteInvoice: (id) => dispatch(deleteInvoice({ id })),
   requestFetchDueInvoices: (customerId) =>
     dispatch(fetchDueInvoices({ customerId })),
+  requestDeliverInvoice: (id) => dispatch(deliverInvoice({ id })),
   changeInvoiceView: (id) =>
     dispatch({
       type: t.INVOICES_SET_CURRENT_VIEW,

@@ -43,6 +43,7 @@ const defaultInitialValues = {
   due_date: moment(new Date()).format('YYYY-MM-DD'),
   reference_no: '',
   note: '',
+  open:'',
   entries: [...repeatValue(defaultBill, MIN_LINES_NUMBER)],
 };
 
@@ -141,6 +142,7 @@ function BillForm({
 
     const form = {
       ...values,
+      open:submitPayload.status,
       entries: entries.map((entry) => ({ ...omit(entry, ['total']) })),
     };
     // Handle the request success.
@@ -217,7 +219,7 @@ function BillForm({
         initialValues={initialValues}
         onSubmit={handleFormSubmit}
       >
-        {({ isSubmitting }) => (
+        {({ isSubmitting ,values }) => (
           <Form>
             <BillFormHeader onBillNumberChanged={handleBillNumberChanged} />
             <BillFormBody defaultBill={defaultBill} />
@@ -228,7 +230,7 @@ function BillForm({
             <BillFloatingActions
               isSubmitting={isSubmitting}
               billId={billId}
-              billPublished={true}
+              isOpen={values.open}
               onSubmitClick={handleSubmitClick}
               onCancelClick={handleCancelClick}
             />

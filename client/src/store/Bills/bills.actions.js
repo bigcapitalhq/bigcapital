@@ -139,3 +139,7 @@ export const fetchDueBills = ({ vendorId }) => (dispatch) => new Promise((resolv
     resolve(response);
   }).catch(error => { reject(error) });
 });
+
+export const openBill = ({ id }) => {
+  return (dispatch) => ApiService.post(`purchases/bills/${id}/open`);
+};

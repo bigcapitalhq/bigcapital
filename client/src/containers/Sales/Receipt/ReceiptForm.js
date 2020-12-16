@@ -58,6 +58,7 @@ const defaultInitialValues = {
   reference_no: '',
   receipt_message: '',
   statement: '',
+  closed:'',
   entries: [...repeatValue(defaultReceipt, MIN_LINES_NUMBER)],
 };
 
@@ -182,6 +183,7 @@ function ReceiptForm({
     }
     const form = {
       ...values,
+      closed: submitPayload.status,
       entries: entries.map((entry) => ({
         // Exclude all properties that out of request entries schema.
         ...pick(entry, Object.keys(defaultReceipt)),
@@ -259,7 +261,7 @@ function ReceiptForm({
         initialValues={initialValues}
         onSubmit={handleFormSubmit}
       >
-        {({ isSubmitting }) => (
+        {({ isSubmitting ,values }) => (
           <Form>
             <ReceiptFromHeader
               onReceiptNumberChanged={handleReceiptNumberChanged}
@@ -270,7 +272,7 @@ function ReceiptForm({
             <ReceiptFormFloatingActions
               isSubmitting={isSubmitting}
               receiptId={receiptId}
-              receiptPublished={true}
+              isClosed={values.closed}
               onSubmitClick={handleSubmitClick}
               onCancelClick={handleCancelClick}
             />

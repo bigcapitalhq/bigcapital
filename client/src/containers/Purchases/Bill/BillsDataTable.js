@@ -7,6 +7,7 @@ import {
   MenuItem,
   MenuDivider,
   Position,
+  Tag,
 } from '@blueprintjs/core';
 
 import { useParams } from 'react-router-dom';
@@ -20,7 +21,7 @@ import { compose, saveInvoke } from 'utils';
 import { CLASSES } from 'common/classes';
 import { useIsValuePassed } from 'hooks';
 
-import { LoadingIndicator, Choose } from 'components';
+import { LoadingIndicator, Choose, If } from 'components';
 import DataTable from 'components/DataTable';
 import BillsEmptyStatus from './BillsEmptyStatus';
 
@@ -56,6 +57,7 @@ function BillsDataTable({
   onFetchData,
   onEditBill,
   onDeleteBill,
+  onOpenBill,
   onSelectedRowsChange,
 }) {
   const { custom_view_id: customViewId } = useParams();
@@ -121,6 +123,13 @@ function BillsDataTable({
           text={formatMessage({ id: 'edit_bill' })}
           onClick={handleEditBill(bill)}
         />
+        <If condition={!bill.is_open}>
+          <MenuItem
+            text={formatMessage({ id: 'mark_as_opened' })}
+            onClick={() => onOpenBill(bill)}
+          />
+        </If>
+
         <MenuItem
           text={formatMessage({ id: 'delete_bill' })}
           intent={Intent.DANGER}
@@ -186,7 +195,21 @@ function BillsDataTable({
       {
         id: 'status',
         Header: formatMessage({ id: 'status' }),
-        accessor: 'status',
+        accessor: (row) => (
+          <Choose>
+            <Choose.When condition={row.is_open}>
+              <Tag minimal={true}>
+                <T id={'opened'} />
+              </Tag>
+            </Choose.When>
+
+            <Choose.Otherwise>
+              <Tag minimal={true} intent={Intent.WARNING}>
+                <T id={'draft'} />
+              </Tag>
+            </Choose.Otherwise>
+          </Choose>
+        ),
         width: 140,
         className: 'status',
       },

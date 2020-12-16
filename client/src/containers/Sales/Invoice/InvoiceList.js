@@ -38,11 +38,13 @@ function InvoiceList({
   //#withInvoiceActions
   requestFetchInvoiceTable,
   requestDeleteInvoice,
+  requestDeliverInvoice,
   addInvoiceTableQueries,
 }) {
   const history = useHistory();
   const { formatMessage } = useIntl();
   const [deleteInvoice, setDeleteInvoice] = useState(false);
+  const [deliverInvoice, setDeliverInvoice] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
 
   useEffect(() => {
@@ -88,6 +90,34 @@ function InvoiceList({
     });
   }, [deleteInvoice, requestDeleteInvoice, formatMessage]);
 
+  // Handle cancel/confirm invoice deliver.
+  const handleDeliverInvoice = useCallback((invoice) => {
+    setDeliverInvoice(invoice);
+  }, []);
+
+  // Handle cancel deliver invoice alert.
+  const handleCancelDeliverInvoice = useCallback(() => {
+    setDeliverInvoice(false);
+  }, []);
+
+  // Handle confirm invoiec deliver.
+  const handleConfirmInvoiceDeliver = useCallback(() => {
+    requestDeliverInvoice(deliverInvoice.id)
+      .then(() => {
+        setDeliverInvoice(false);
+        AppToaster.show({
+          message: formatMessage({
+            id: 'the_invoice_has_been_successfully_delivered',
+          }),
+          intent: Intent.SUCCESS,
+        });
+        queryCache.invalidateQueries('invoices-table');
+      })
+      .catch((error) => {
+        // setDeliverInvoice(false);
+      });
+  }, [deliverInvoice, requestDeliverInvoice, formatMessage]);
+
   const handleEditInvoice = useCallback((invoice) => {
     history.push(`/invoices/${invoice.id}/edit`);
   });
@@ -127,6 +157,7 @@ function InvoiceList({
             <InvoicesDataTable
               onDeleteInvoice={handleDeleteInvoice}
               onEditInvoice={handleEditInvoice}
+              onDeliverInvoice={handleDeliverInvoice}
               onSelectedRowsChange={handleSelectedRowsChange}
             />
           </Route>
@@ -143,6 +174,18 @@ function InvoiceList({
         >
           <p>
             <T id={'once_delete_this_invoice_you_will_able_to_restore_it'} />
+          </p>
+        </Alert>
+        <Alert
+          cancelButtonText={<T id={'cancel'} />}
+          confirmButtonText={<T id={'deliver'} />}
+          intent={Intent.WARNING}
+          isOpen={deliverInvoice}
+          onCancel={handleCancelDeliverInvoice}
+          onConfirm={handleConfirmInvoiceDeliver}
+        >
+          <p>
+            <T id={'are_sure_to_deliver_this_invoice'} />
           </p>
         </Alert>
       </DashboardPageContent>

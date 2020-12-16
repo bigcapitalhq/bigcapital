@@ -25,37 +25,37 @@ export default function BillFloatingActions({
   onCancelClick,
   onClearClick,
   billId,
-  billPublished,
+  isOpen,
 }) {
   const { resetForm, submitForm } = useFormikContext();
-  const handleSubmitPublishBtnClick = (event) => {
+  const handleSubmitOpenBtnClick = (event) => {
     saveInvoke(onSubmitClick, event, {
       redirect: true,
-      publish: true,
+      status: true,
     });
   };
 
-  const handleSubmitPublishAndNewBtnClick = (event) => {
+  const handleSubmitOpenAndNewBtnClick = (event) => {
     submitForm();
     saveInvoke(onSubmitClick, event, {
       redirect: false,
-      publish: true,
+      status: true,
       resetForm: true,
     });
   };
 
-  const handleSubmitPublishContinueEditingBtnClick = (event) => {
+  const handleSubmitOpenContinueEditingBtnClick = (event) => {
     submitForm();
     saveInvoke(onSubmitClick, event, {
       redirect: false,
-      publish: true,
+      status: true,
     });
   };
 
   const handleSubmitDraftBtnClick = (event) => {
     saveInvoke(onSubmitClick, event, {
       redirect: true,
-      publish: false,
+      status: false,
     });
   };
 
@@ -63,7 +63,7 @@ export default function BillFloatingActions({
     submitForm();
     saveInvoke(onSubmitClick, event, {
       redirect: false,
-      publish: false,
+      status: false,
       resetForm: true,
     });
   };
@@ -72,7 +72,7 @@ export default function BillFloatingActions({
     submitForm();
     saveInvoke(onSubmitClick, event, {
       redirect: false,
-      publish: false,
+      status: false,
     });
   };
 
@@ -87,26 +87,26 @@ export default function BillFloatingActions({
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>
-      {/* ----------- Save And Publish ----------- */}
-      <If condition={!billId || !billPublished}>
+      {/* ----------- Save And Open ----------- */}
+      <If condition={!billId || !isOpen}>
         <ButtonGroup>
           <Button
             disabled={isSubmitting}
             intent={Intent.PRIMARY}
             type="submit"
-            onClick={handleSubmitPublishBtnClick}
-            text={<T id={'save_publish'} />}
+            onClick={handleSubmitOpenBtnClick}
+            text={<T id={'save_open'} />}
           />
           <Popover
             content={
               <Menu>
                 <MenuItem
-                  text={<T id={'publish_and_new'} />}
-                  onClick={handleSubmitPublishAndNewBtnClick}
+                  text={<T id={'open_and_new'} />}
+                  onClick={handleSubmitOpenAndNewBtnClick}
                 />
                 <MenuItem
-                  text={<T id={'publish_continue_editing'} />}
-                  onClick={handleSubmitPublishContinueEditingBtnClick}
+                  text={<T id={'open_continue_editing'} />}
+                  onClick={handleSubmitOpenContinueEditingBtnClick}
                 />
               </Menu>
             }
@@ -155,13 +155,13 @@ export default function BillFloatingActions({
         </ButtonGroup>
       </If>
       {/* ----------- Save and New ----------- */}
-      <If condition={billId && billPublished}>
+      <If condition={billId && isOpen}>
         <ButtonGroup>
           <Button
             disabled={isSubmitting}
             intent={Intent.PRIMARY}
             type="submit"
-            onClick={handleSubmitPublishBtnClick}
+            onClick={handleSubmitOpenBtnClick}
             text={<T id={'save'} />}
           />
           <Popover
@@ -169,7 +169,7 @@ export default function BillFloatingActions({
               <Menu>
                 <MenuItem
                   text={<T id={'save_and_new'} />}
-                  onClick={handleSubmitPublishAndNewBtnClick}
+                  onClick={handleSubmitOpenAndNewBtnClick}
                 />
               </Menu>
             }

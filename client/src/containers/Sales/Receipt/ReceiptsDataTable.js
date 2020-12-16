@@ -7,6 +7,7 @@ import {
   MenuItem,
   MenuDivider,
   Position,
+  Tag,
 } from '@blueprintjs/core';
 import { withRouter } from 'react-router';
 import { FormattedMessage as T, useIntl } from 'react-intl';
@@ -17,7 +18,14 @@ import { compose, saveInvoke } from 'utils';
 import { useIsValuePassed } from 'hooks';
 
 import { CLASSES } from 'common/classes';
-import { Choose, LoadingIndicator, DataTable, Money, Icon } from 'components';
+import {
+  Choose,
+  LoadingIndicator,
+  DataTable,
+  Money,
+  Icon,
+  If,
+} from 'components';
 
 import ReceiptsEmptyStatus from './ReceiptsEmptyStatus';
 
@@ -42,6 +50,7 @@ function ReceiptsDataTable({
   loading,
   onEditReceipt,
   onDeleteReceipt,
+  onCloseReceipt,
   onSelectedRowsChange,
 }) {
   const { formatMessage } = useIntl();
@@ -62,7 +71,7 @@ function ReceiptsDataTable({
   );
 
   const actionMenuList = useCallback(
-    (estimate) => (
+    (receipt) => (
       <Menu>
         <MenuItem
           icon={<Icon icon="reader-18" />}
@@ -72,12 +81,18 @@ function ReceiptsDataTable({
         <MenuItem
           icon={<Icon icon="pen-18" />}
           text={formatMessage({ id: 'edit_receipt' })}
-          onClick={handleEditReceipt(estimate)}
+          onClick={handleEditReceipt(receipt)}
         />
+        <If condition={!receipt.is_closed}>
+          <MenuItem
+            text={formatMessage({ id: 'mark_as_closed' })}
+            onClick={() => onCloseReceipt(receipt)}
+          />
+        </If>
         <MenuItem
           text={formatMessage({ id: 'delete_receipt' })}
           intent={Intent.DANGER}
-          onClick={handleDeleteReceipt(estimate)}
+          onClick={handleDeleteReceipt(receipt)}
           icon={<Icon icon="trash-16" iconSize={16} />}
         />
       </Menu>
@@ -111,7 +126,8 @@ function ReceiptsDataTable({
       {
         id: 'receipt_number',
         Header: formatMessage({ id: 'receipt_number' }),
-        accessor: (row) => (row.receipt_number ? `#${row.receipt_number}` : null),
+        accessor: (row) =>
+          row.receipt_number ? `#${row.receipt_number}` : null,
         width: 140,
         className: 'receipt_number',
       },
@@ -133,6 +149,28 @@ function ReceiptsDataTable({
         id: 'amount',
         Header: formatMessage({ id: 'amount' }),
         accessor: (r) => <Money amount={r.amount} currency={'USD'} />,
+
+        width: 140,
+        className: 'amount',
+      },
+      {
+        id: 'status',
+        Header: formatMessage({ id: 'status' }),
+        accessor: (row) => (
+          <Choose>
+            <Choose.When condition={row.is_closed}>
+              <Tag minimal={true}>
+                <T id={'closed'} />
+              </Tag>
+            </Choose.When>
+
+            <Choose.Otherwise>
+              <Tag minimal={true} intent={Intent.WARNING}>
+                <T id={'draft'} />
+              </Tag>
+            </Choose.Otherwise>
+          </Choose>
+        ),
 
         width: 140,
         className: 'amount',

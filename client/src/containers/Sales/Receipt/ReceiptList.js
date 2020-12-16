@@ -34,11 +34,13 @@ function ReceiptList({
   //#withReceiptActions
   requestFetchReceiptsTable,
   requestDeleteReceipt,
+  requestCloseReceipt,
   addReceiptsTableQueries,
 }) {
   const history = useHistory();
   const { formatMessage } = useIntl();
   const [deleteReceipt, setDeleteReceipt] = useState(false);
+  const [closeReceipt, setCloseReceipt] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
 
   const fetchReceipts = useQuery(['receipts-table', receiptTableQuery], () =>
@@ -84,6 +86,34 @@ function ReceiptList({
       setDeleteReceipt(false);
     });
   }, [deleteReceipt, requestDeleteReceipt, formatMessage]);
+
+  // Handle cancel/confirm receipt deliver.
+  const handleCloseReceipt = useCallback((receipt) => {
+    setCloseReceipt(receipt);
+  }, []);
+
+  // Handle cancel close receipt alert.
+  const handleCancelCloseReceipt = useCallback(() => {
+    setCloseReceipt(false);
+  }, []);
+
+  // Handle confirm receipt close.
+  const handleConfirmReceiptClose = useCallback(() => {
+    requestCloseReceipt(closeReceipt.id)
+      .then(() => {
+        setCloseReceipt(false);
+        AppToaster.show({
+          message: formatMessage({
+            id: 'the_receipt_has_been_successfully_closed',
+          }),
+          intent: Intent.SUCCESS,
+        });
+        queryCache.invalidateQueries('receipts-table');
+      })
+      .catch((error) => {
+        setCloseReceipt(false);
+      });
+  }, [closeReceipt, requestCloseReceipt, formatMessage]);
 
   // Handle filter change to re-fetch data-table.
   // const handleFilterChanged = useCallback(
@@ -136,6 +166,7 @@ function ReceiptList({
             <ReceiptsDataTable
               onDeleteReceipt={handleDeleteReceipt}
               onEditReceipt={handleEditReceipt}
+              onCloseReceipt={handleCloseReceipt}
               onSelectedRowsChange={handleSelectedRowsChange}
             />
           </Route>
@@ -152,6 +183,18 @@ function ReceiptList({
         >
           <p>
             <T id={'once_delete_this_receipt_you_will_able_to_restore_it'} />
+          </p>
+        </Alert>
+        <Alert
+          cancelButtonText={<T id={'cancel'} />}
+          confirmButtonText={<T id={'close'} />}
+          intent={Intent.WARNING}
+          isOpen={closeReceipt}
+          onCancel={handleCancelCloseReceipt}
+          onConfirm={handleConfirmReceiptClose}
+        >
+          <p>
+            <T id={'are_sure_to_close_this_receipt'} />
           </p>
         </Alert>
       </DashboardPageContent>
