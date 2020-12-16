@@ -251,4 +251,31 @@ export default class VendorsService {
       filterMeta: dynamicFilter.getResponseMeta(),
     };
   }
+
+  /**
+   * Changes the opeing balance of the given vendor.
+   * @param {number} tenantId 
+   * @param {number} vendorId 
+   * @param {number} openingBalance 
+   * @param {Date|string} openingBalanceAt 
+   */
+  public async changeOpeningBalance(
+    tenantId: number,
+    vendorId: number,
+    openingBalance: number,
+    openingBalanceAt: Date|string,
+  ): Promise<void> {
+
+    await this.contactService.changeOpeningBalance(
+      tenantId,
+      vendorId,
+      'vendor',
+      openingBalance,
+      openingBalanceAt,
+    );
+    // Triggers `onOpeingBalanceChanged` event.
+    await this.eventDispatcher.dispatch(events.vendors.onOpeningBalanceChanged, {
+      tenantId, vendorId, openingBalance, openingBalanceAt
+    });
+  }
 }

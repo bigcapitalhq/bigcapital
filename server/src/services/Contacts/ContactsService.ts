@@ -1,5 +1,6 @@
 import { Inject, Service } from 'typedi';
 import { difference, upperFirst, omit } from 'lodash';
+import moment from 'moment';
 import { ServiceError } from "exceptions";
 import TenancyService from 'services/Tenancy/TenancyService';
 import {
@@ -10,6 +11,10 @@ import {
 import JournalPoster from '../Accounting/JournalPoster';
 
 type TContactService = 'customer' | 'vendor';
+
+const ERRORS = {
+  OPENING_BALANCE_DATE_REQUIRED: 'OPENING_BALANCE_DATE_REQUIRED',
+};
 
 @Service()
 export default class ContactsService {
@@ -26,13 +31,17 @@ export default class ContactsService {
    * @param {TContactService} contactService
    * @return {Promise<IContact>}
    */
-  public async getContactByIdOrThrowError(tenantId: number, contactId: number, contactService: TContactService) {
+  public async getContactByIdOrThrowError(
+    tenantId: number,
+    contactId: number,
+    contactService?: TContactService
+  ) {
     const { contactRepository } = this.tenancy.repositories(tenantId);
 
     this.logger.info('[contact] trying to validate contact existance.', { tenantId, contactId });
     const contact = await contactRepository.findOne({
       id: contactId,
-      contactService: contactService,
+      ...(contactService) && ({ contactService }),
     });
 
     if (!contact) {
@@ -184,5 +193,41 @@ export default class ContactsService {
       journal.saveBalance(),
       journal.deleteEntries(),
     ]);
+  }
+
+  /**
+   * Chanages the opening balance of the given contact.
+   * @param {number} tenantId 
+   * @param {number} contactId
+   * @param {ICustomerChangeOpeningBalanceDTO} changeOpeningBalance 
+   * @return {Promise<void>}
+   */
+  public async changeOpeningBalance(
+    tenantId: number,
+    contactId: number,
+    contactService: string,
+    openingBalance: number,
+    openingBalanceAt?: Date|string,
+  ): Promise<void> {
+    const { contactRepository } = this.tenancy.repositories(tenantId);
+
+    // Retrieve the given contact details or throw not found service error.
+    const contact = await this.getContactByIdOrThrowError(tenantId, contactId, contactService);
+
+    // Should the opening balance date be required.
+    if (!contact.openingBalanceAt && !openingBalanceAt) {
+      throw new ServiceError(ERRORS.OPENING_BALANCE_DATE_REQUIRED);
+    };
+    // Changes the customer the opening balance and opening balance date.
+    await contactRepository.update({
+      openingBalance: openingBalance,
+
+      ...(openingBalanceAt) && ({
+        openingBalanceAt: moment(openingBalanceAt).toMySqlDateTime(),
+      }),
+    }, {
+      id: contactId,
+      contactService,
+    });
   }
 }

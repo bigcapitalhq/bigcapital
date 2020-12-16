@@ -104,6 +104,7 @@ export default class ExpensesController extends BaseController {
       check('currency_code').optional().isString().isLength({ max: 3 }),
       check('exchange_rate').optional({ nullable: true }).isNumeric().toFloat(),
       check('publish').optional().isBoolean().toBoolean(),
+      check('payee_id').optional({ nullable: true }).isNumeric().toInt(),
 
       check('categories').exists().isArray({ min: 1 }),
       check('categories.*.index')
@@ -390,6 +391,11 @@ export default class ExpensesController extends BaseController {
       if (error.errorType === 'expense_already_published') {
         return res.boom.badRequest(null, {
           errors: [{ type: 'EXPENSE_ALREADY_PUBLISHED', code: 700 }],
+        });
+      }
+      if (error.errorType === 'contact_not_found') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'CONTACT_NOT_FOUND', code: 800 }],
         });
       }
     }

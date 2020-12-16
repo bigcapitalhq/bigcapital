@@ -1,6 +1,7 @@
 import TenantRepository from "./TenantRepository";
 import moment from "moment";
 import { Expense } from 'models';
+
 export default class ExpenseRepository extends TenantRepository {
   /**
    * Constructor method.

@@ -28,6 +28,17 @@ export default class VendorsController extends ContactsController {
       asyncMiddleware(this.newVendor.bind(this)),
       this.handlerServiceErrors,
     );
+    router.post(
+      '/:id/opening_balance',
+      [
+        ...this.specificContactSchema,
+        check('opening_balance').exists().isNumeric().toFloat(),
+        check('opening_balance_at').optional().isISO8601(),
+      ],
+      this.validationResult,
+      asyncMiddleware(this.editOpeningBalanceVendor.bind(this)),
+      this.handlerServiceErrors,
+    );
     router.post('/:id', [
       ...this.contactDTOSchema,
       ...this.contactEditDTOSchema,
@@ -138,6 +149,36 @@ export default class VendorsController extends ContactsController {
       return res.status(200).send({
         id: contactId,
         message: 'The vendor has been edited successfully.',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Changes the opening balance of the given vendor.
+   * @param {Request} req -
+   * @param {Response} res -
+   * @param {NextFunction} next -
+   */
+  async editOpeningBalanceVendor(req: Request, res: Response, next: NextFunction) {
+    const { tenantId } = req;
+    const { id: vendorId } = req.params;
+    const {
+      openingBalance,
+      openingBalanceAt,
+    } = this.matchedBodyData(req);
+
+    try {
+      await this.vendorsService.changeOpeningBalance(
+        tenantId,
+        vendorId,
+        openingBalance,
+        openingBalanceAt,
+      );
+      return res.status(200).send({
+        id: vendorId,
+        message: 'The opening balance of the given vendor has been changed successfully.',
       });
     } catch (error) {
       next(error);
@@ -259,6 +300,11 @@ export default class VendorsController extends ContactsController {
       if (error.errorType === 'vendor_has_bills') {
         return res.status(400).send({
           errors: [{ type: 'VENDOR.HAS.BILLS', code: 400 }],
+        });
+      }
+      if (error.errorType === 'OPENING_BALANCE_DATE_REQUIRED') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'OPENING_BALANCE_DATE_REQUIRED', code: 500 }],
         });
       }
     }
