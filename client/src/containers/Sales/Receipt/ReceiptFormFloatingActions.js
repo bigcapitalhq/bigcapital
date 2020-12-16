@@ -22,41 +22,41 @@ import { If, Icon } from 'components';
 export default function ReceiptFormFloatingActions({
   isSubmitting,
   receiptId,
-  receiptPublished,
+  isClosed,
   onSubmitClick,
   onCancelClick,
   onClearClick,
 }) {
   const { resetForm, submitForm } = useFormikContext();
 
-  const handleSubmitPublishBtnClick = (event) => {
+  const handleSubmitCloseBtnClick = (event) => {
     saveInvoke(onSubmitClick, event, {
       redirect: true,
-      publish: true,
+      status: true,
     });
   };
 
-  const handleSubmitPublishAndNewBtnClick = (event) => {
+  const handleSubmitCloseAndNewBtnClick = (event) => {
     submitForm();
     saveInvoke(onSubmitClick, event, {
       redirect: false,
-      publish: true,
+      status: true,
       resetForm: true,
     });
   };
 
-  const handleSubmitPublishContinueEditingBtnClick = (event) => {
+  const handleSubmitCloseContinueEditingBtnClick = (event) => {
     submitForm();
     saveInvoke(onSubmitClick, event, {
       redirect: false,
-      publish: true,
+      status: true,
     });
   };
 
   const handleSubmitDraftBtnClick = (event) => {
     saveInvoke(onSubmitClick, event, {
       redirect: true,
-      publish: false,
+      status: false,
     });
   };
 
@@ -64,7 +64,7 @@ export default function ReceiptFormFloatingActions({
     submitForm();
     saveInvoke(onSubmitClick, event, {
       redirect: false,
-      publish: false,
+      status: false,
       resetForm: true,
     });
   };
@@ -73,7 +73,7 @@ export default function ReceiptFormFloatingActions({
     submitForm();
     saveInvoke(onSubmitClick, event, {
       redirect: false,
-      publish: false,
+      status: false,
     });
   };
 
@@ -88,26 +88,26 @@ export default function ReceiptFormFloatingActions({
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>
-      {/* ----------- Save And Publish ----------- */}
-      <If condition={!receiptId || !receiptPublished}>
+      {/* ----------- Save And Close ----------- */}
+      <If condition={!receiptId || !isClosed}>
         <ButtonGroup>
           <Button
             disabled={isSubmitting}
             intent={Intent.PRIMARY}
             type="submit"
-            onClick={handleSubmitPublishBtnClick}
-            text={<T id={'save_publish'} />}
+            onClick={handleSubmitCloseBtnClick}
+            text={<T id={'save_close'} />}
           />
           <Popover
             content={
               <Menu>
                 <MenuItem
-                  text={<T id={'publish_and_new'} />}
-                  onClick={handleSubmitPublishAndNewBtnClick}
+                  text={<T id={'close_and_new'} />}
+                  onClick={handleSubmitCloseAndNewBtnClick}
                 />
                 <MenuItem
-                  text={<T id={'publish_continue_editing'} />}
-                  onClick={handleSubmitPublishContinueEditingBtnClick}
+                  text={<T id={'close_continue_editing'} />}
+                  onClick={handleSubmitCloseContinueEditingBtnClick}
                 />
               </Menu>
             }
@@ -156,13 +156,13 @@ export default function ReceiptFormFloatingActions({
         </ButtonGroup>
       </If>
       {/* ----------- Save and New ----------- */}
-      <If condition={receiptId && receiptPublished}>
+      <If condition={receiptId && isClosed}>
         <ButtonGroup>
           <Button
             disabled={isSubmitting}
             intent={Intent.PRIMARY}
             type="submit"
-            onClick={handleSubmitPublishBtnClick}
+            onClick={handleSubmitCloseBtnClick}
             text={<T id={'save'} />}
           />
           <Popover
@@ -170,7 +170,7 @@ export default function ReceiptFormFloatingActions({
               <Menu>
                 <MenuItem
                   text={<T id={'save_and_new'} />}
-                  onClick={handleSubmitPublishAndNewBtnClick}
+                  onClick={handleSubmitCloseAndNewBtnClick}
                 />
               </Menu>
             }

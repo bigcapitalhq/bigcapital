@@ -116,3 +116,7 @@ export const fetchReceiptsTable = ({ query = {} }) => {
         });
     });
 };
+
+export const closeReceipt = ({ id }) => {
+  return (dispatch) => ApiService.post(`sales/receipts/${id}/close`);
+};
