@@ -866,7 +866,7 @@ export default {
   receivable_accounts_should_assign_with_customers:
     'receivable accounts should assign with customers',
   delivered: 'Delivered',
-  save_and_deliver: 'Save and Deliver',
+  save_and_deliver: 'Save & Deliver',
   deliver_and_new: 'Deliver and new',
   deliver_continue_editing: 'Deliver (continue editing)',
   due_in: 'Due in',
@@ -878,4 +878,28 @@ export default {
   paid: 'Paid',
   your_account_has_been_locked:
     'Your account has been locked due to repeated failed login attempts. Please wait a few minutes before trying again.',
+  the_invoice_has_been_successfully_delivered:
+    'The invoice has been successfully delivered.',
+  are_sure_to_deliver_this_invoice:
+    'Are you sure you want to deliver this invoice?',
+  mark_as_delivered: 'Mark as delivered',
+  deliver: 'Deliver',
+  mark_as_closed: 'Mark as closed',
+  mark_as_opened: 'Mark as opened',
+  save_close: 'Save & Close',
+  save_open: 'Save & Open',
+  close_and_new: 'Close and new',
+  close_continue_editing: 'Close (continue editing)',
+  the_receipt_has_been_successfully_closed:
+    'The receipt has been successfully closed.',
+  are_sure_to_close_this_receipt:
+    'Are you sure you want to close this receipt?',
+  closed: 'Closed',
+  open_and_new: 'Open and new',
+  open_continue_editing: 'Open (continue editing)',
+  the_bill_has_been_successfully_opened:
+    'The bill has been successfully opened.',
+  open: 'Open',
+  are_sure_to_open_this_bill: 'Are you sure you want to open this bill?',
+  opened: 'Opened',
 };

@@ -35,11 +35,13 @@ function BillList({
   //#withBillActions
   requestFetchBillsTable,
   requestDeleteBill,
+  requestOpenBill,
   addBillsTableQueries,
 }) {
   const history = useHistory();
   const { formatMessage } = useIntl();
   const [deleteBill, setDeleteBill] = useState(false);
+  const [openBill, setOpenBill] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
 
   useEffect(() => {
@@ -86,11 +88,35 @@ function BillList({
     });
   }, [deleteBill, requestDeleteBill, formatMessage]);
 
+  // Handle cancel/confirm bill open.
+  const handleOpenBill = useCallback((bill) => {
+    setOpenBill(bill);
+  }, []);
+
+  // Handle cancel open bill alert.
+  const handleCancelOpenBill = useCallback(() => {
+    setOpenBill(false);
+  }, []);
+
+  // Handle confirm bill open.
+  const handleConfirmBillOpen = useCallback(() => {
+    requestOpenBill(openBill.id)
+      .then(() => {
+        setOpenBill(false);
+        AppToaster.show({
+          message: formatMessage({
+            id: 'the_bill_has_been_successfully_opened',
+          }),
+          intent: Intent.SUCCESS,
+        });
+        queryCache.invalidateQueries('bills-table');
+      })
+      .catch((error) => {});
+  }, [openBill, requestOpenBill, formatMessage]);
+
   const handleEditBill = useCallback((bill) => {
     history.push(`/bills/${bill.id}/edit`);
   });
-
-  
 
   // Handle selected rows change.
   const handleSelectedRowsChange = useCallback(
@@ -127,6 +153,7 @@ function BillList({
             <BillsDataTable
               onDeleteBill={handleDeleteBill}
               onEditBill={handleEditBill}
+              onOpenBill={handleOpenBill}
               onSelectedRowsChange={handleSelectedRowsChange}
             />
           </Route>
@@ -142,6 +169,18 @@ function BillList({
         >
           <p>
             <T id={'once_delete_this_bill_you_will_able_to_restore_it'} />
+          </p>
+        </Alert>
+        <Alert
+          cancelButtonText={<T id={'cancel'} />}
+          confirmButtonText={<T id={'open'} />}
+          intent={Intent.WARNING}
+          isOpen={openBill}
+          onCancel={handleCancelOpenBill}
+          onConfirm={handleConfirmBillOpen}
+        >
+          <p>
+            <T id={'are_sure_to_open_this_bill'} />
           </p>
         </Alert>
       </DashboardPageContent>
