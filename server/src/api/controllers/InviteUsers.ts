@@ -1,10 +1,6 @@
 import { Service, Inject } from 'typedi';
 import { Router, Request, Response } from 'express';
-import {
-  check,
-  body,
-  param,
-} from 'express-validator';
+import { check, body, param } from 'express-validator';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
 import InviteUserService from 'services/InviteUsers';
 import { ServiceErrors, ServiceError } from 'exceptions';
@@ -21,11 +17,11 @@ export default class InviteUsersController extends BaseController {
   authRouter() {
     const router = Router();
 
-    router.post('/send', [
-      body('email').exists().trim().escape(),
-    ],
+    router.post(
+      '/send',
+      [body('email').exists().trim().escape()],
       this.validationResult,
-      asyncMiddleware(this.sendInvite.bind(this)),
+      asyncMiddleware(this.sendInvite.bind(this))
     );
     return router;
   }
@@ -36,15 +32,15 @@ export default class InviteUsersController extends BaseController {
   nonAuthRouter() {
     const router = Router();
 
-    router.post('/accept/:token', [
-        ...this.inviteUserDTO,
-      ],
+    router.post(
+      '/accept/:token',
+      [...this.inviteUserDTO],
       this.validationResult,
       asyncMiddleware(this.accept.bind(this))
     );
-    router.get('/invited/:token', [
-        param('token').exists().trim().escape(),
-      ],
+    router.get(
+      '/invited/:token',
+      [param('token').exists().trim().escape()],
       this.validationResult,
       asyncMiddleware(this.invited.bind(this))
     );
@@ -67,9 +63,9 @@ export default class InviteUsersController extends BaseController {
 
   /**
    * Invite a user to the authorized user organization.
-   * @param {Request} req - 
-   * @param {Response} res - 
-   * @param {NextFunction} next - 
+   * @param {Request} req -
+   * @param {Response} res -
+   * @param {NextFunction} next -
    */
   async sendInvite(req: Request, res: Response, next: Function) {
     const { email } = req.body;
@@ -78,11 +74,12 @@ export default class InviteUsersController extends BaseController {
 
     try {
       await this.inviteUsersService.sendInvite(tenantId, email, user);
+
       return res.status(200).send({
         type: 'success',
         code: 'INVITE.SENT.SUCCESSFULLY',
         message: 'The invite has been sent to the given email.',
-      })
+      });
     } catch (error) {
       if (error instanceof ServiceError) {
         if (error.errorType === 'email_already_invited') {
@@ -98,9 +95,9 @@ export default class InviteUsersController extends BaseController {
 
   /**
    * Accept the inviation.
-   * @param {Request} req - 
-   * @param {Response} res - 
-   * @param {NextFunction} next - 
+   * @param {Request} req -
+   * @param {Response} res -
+   * @param {NextFunction} next -
    */
   async accept(req: Request, res: Response, next: Function) {
     const inviteUserInput: IInviteUserInput = this.matchedBodyData(req, {
@@ -135,15 +132,18 @@ export default class InviteUsersController extends BaseController {
 
   /**
    * Check if the invite token is valid.
-   * @param {Request} req - 
-   * @param {Response} res - 
-   * @param {NextFunction} next -  
+   * @param {Request} req -
+   * @param {Response} res -
+   * @param {NextFunction} next -
    */
   async invited(req: Request, res: Response, next: Function) {
     const { token } = req.params;
 
     try {
-      const { inviteToken, orgName } = await this.inviteUsersService.checkInvite(token);
+      const {
+        inviteToken,
+        orgName,
+      } = await this.inviteUsersService.checkInvite(token);
 
       return res.status(200).send({
         inviteToken: inviteToken.token,
@@ -151,7 +151,6 @@ export default class InviteUsersController extends BaseController {
         organizationName: orgName?.value,
       });
     } catch (error) {
-
       if (error instanceof ServiceError) {
         if (error.errorType === 'invite_token_invalid') {
           return res.status(400).send({

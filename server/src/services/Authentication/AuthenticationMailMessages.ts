@@ -1,9 +1,8 @@
-import fs from 'fs';
-import { Service, Container } from "typedi";
-import Mustache from 'mustache';
-import path from 'path';
+
+import { Service } from "typedi";
 import { ISystemUser } from 'interfaces';
 import config from 'config';
+import Mail from "lib/Mail";
 
 @Service()
 export default class AuthenticationMailMesssages {
@@ -13,31 +12,23 @@ export default class AuthenticationMailMesssages {
    * @param {string} organizationName - 
    * @return {Promise<void>}
    */
-  sendWelcomeMessage(user: ISystemUser, organizationName: string): Promise<void> {
-    const Mail = Container.get('mail');
-    
-    const filePath = path.join(global.__root, 'views/mail/Welcome.html');
-    const template = fs.readFileSync(filePath, 'utf8');
-    const rendered = Mustache.render(template, {
-      email: user.email,
-      firstName: user.firstName,
-      organizationName,
-    });
-    const mailOptions = {
-      to: user.email,
-      from: `${process.env.MAIL_FROM_NAME} ${process.env.MAIL_FROM_ADDRESS}`,
-      subject: 'Welcome to Bigcapital',
-      html: rendered,
-    };
-    return new Promise((resolve, reject) => {
-      Mail.sendMail(mailOptions, (error) => {
-        if (error) {
-          resolve(error);
-          return;
-        }
-        reject();
+  async sendWelcomeMessage(
+    user: ISystemUser,
+    organizationId: string
+  ): Promise<void> {
+
+    const mail = new Mail()
+      .setView('mail/Welcome.html')
+      .setSubject('Welcome to Bigcapital')
+      .setTo(user.email)
+      .setData({
+        firstName: user.firstName,
+        organizationId,
+        successPhoneNumber: config.customerSuccess.phoneNumber,
+        successEmail: config.customerSuccess.email,
       });
-    });
+
+    await mail.send();
   }
 
   /**
@@ -46,31 +37,22 @@ export default class AuthenticationMailMesssages {
    * @param {string} token - Reset password token.
    * @return {Promise<void>}
    */
-  sendResetPasswordMessage(user: ISystemUser, token: string): Promise<void> {
-    const Mail = Container.get('mail');
+  async sendResetPasswordMessage(
+    user: ISystemUser,
+    token: string
+  ): Promise<void> {
 
-    const filePath = path.join(global.__root, 'views/mail/ResetPassword.html');
-    const template = fs.readFileSync(filePath, 'utf8');
-    const rendered = Mustache.render(template, {
-      resetPasswordUrl: `${config.baseURL}/reset/${token}`,
-      first_name: user.firstName,
-      last_name: user.lastName,
-      contact_us_email: config.contactUsMail,
-    });
-    const mailOptions = {
-      to: user.email,
-      from: `${process.env.MAIL_FROM_NAME} ${process.env.MAIL_FROM_ADDRESS}`,
-      subject: 'Bigcapital - Password Reset',
-      html: rendered,
-    };
-    return new Promise((resolve, reject) => {
-      Mail.sendMail(mailOptions, (error) => {
-        if (error) {
-          reject(error);
-          return;
-        }
-        resolve();
+    const mail = new Mail()
+      .setSubject('Bigcapital - Password Reset')
+      .setView('mail/ResetPassword.html')
+      .setTo(user.email)
+      .setData({
+        resetPasswordUrl: `${config.baseURL}/reset/${token}`,
+        first_name: user.firstName,
+        last_name: user.lastName,
+        contact_us_email: config.contactUsMail,
       });
-    });
+    
+    await mail.send();
   }
 }

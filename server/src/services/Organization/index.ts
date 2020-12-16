@@ -9,7 +9,7 @@ import events from 'subscribers/events';
 import {
   TenantAlreadyInitialized,
   TenantAlreadySeeded,
-  TenantDatabaseNotBuilt
+  TenantDatabaseNotBuilt,
 } from 'exceptions';
 import TenantsManager from 'services/Tenancy/TenantsManager';
 
@@ -35,10 +35,10 @@ export default class OrganizationService {
 
   /**
    * Builds the database schema and seed data of the given organization id.
-   * @param  {srting} organizationId 
+   * @param  {srting} organizationId
    * @return {Promise<void>}
    */
-  public async build(organizationId: string): Promise<void> {
+  public async build(organizationId: string, user: ISystemUser): Promise<void> {
     const tenant = await this.getTenantByOrgIdOrThrowError(organizationId);
     this.throwIfTenantInitizalized(tenant);
 
@@ -46,15 +46,18 @@ export default class OrganizationService {
 
     try {
       if (!tenantHasDB) {
-        this.logger.info('[organization] trying to create tenant database.', { organizationId });
+        this.logger.info('[organization] trying to create tenant database.', {
+          organizationId, userId: user.id,
+        });
         await this.tenantsManager.createDatabase(tenant);
       }
-      this.logger.info('[organization] trying to migrate tenant database.', { organizationId });
+      this.logger.info('[organization] trying to migrate tenant database.', {
+        organizationId, userId: user.id,
+      });
       await this.tenantsManager.migrateTenant(tenant);
 
       // Throws `onOrganizationBuild` event.
-      this.eventDispatcher.dispatch(events.organization.build, { tenant });
-
+      this.eventDispatcher.dispatch(events.organization.build, { tenant, user });
     } catch (error) {
       if (error instanceof TenantAlreadyInitialized) {
         throw new ServiceError(ERRORS.TENANT_ALREADY_INITIALIZED);
@@ -66,7 +69,7 @@ export default class OrganizationService {
 
   /**
    * Seeds initial core data to the given organization tenant.
-   * @param  {number} organizationId 
+   * @param  {number} organizationId
    * @return {Promise<void>}
    */
   public async seed(organizationId: string): Promise<void> {
@@ -74,12 +77,13 @@ export default class OrganizationService {
     this.throwIfTenantSeeded(tenant);
 
     try {
-      this.logger.info('[organization] trying to seed tenant database.', { organizationId });
+      this.logger.info('[organization] trying to seed tenant database.', {
+        organizationId,
+      });
       await this.tenantsManager.seedTenant(tenant);
 
       // Throws `onOrganizationBuild` event.
       this.eventDispatcher.dispatch(events.organization.seeded, { tenant });
-
     } catch (error) {
       if (error instanceof TenantAlreadySeeded) {
         throw new ServiceError(ERRORS.TENANT_ALREADY_SEEDED);
@@ -93,11 +97,13 @@ export default class OrganizationService {
 
   /**
    * Listing all associated organizations to the given user.
-   * @param {ISystemUser} user - 
+   * @param {ISystemUser} user -
    * @return {Promise<void>}
    */
   public async listOrganizations(user: ISystemUser): Promise<ITenant[]> {
-    this.logger.info('[organization] trying to list all organizations.', { user });
+    this.logger.info('[organization] trying to list all organizations.', {
+      user,
+    });
 
     const { tenantRepository } = this.sysRepositories;
     const tenant = await tenantRepository.getById(user.tenantId);
@@ -107,7 +113,7 @@ export default class OrganizationService {
 
   /**
    * Throws error in case the given tenant is undefined.
-   * @param {ITenant} tenant 
+   * @param {ITenant} tenant
    */
   private throwIfTenantNotExists(tenant: ITenant) {
     if (!tenant) {
@@ -118,7 +124,7 @@ export default class OrganizationService {
 
   /**
    * Throws error in case the given tenant is already initialized.
-   * @param {ITenant} tenant 
+   * @param {ITenant} tenant
    */
   private throwIfTenantInitizalized(tenant: ITenant) {
     if (tenant.initializedAt) {
@@ -128,7 +134,7 @@ export default class OrganizationService {
 
   /**
    * Throws service if the tenant already seeded.
-   * @param {ITenant} tenant 
+   * @param {ITenant} tenant
    */
   private throwIfTenantSeeded(tenant: ITenant) {
     if (tenant.seededAt) {
@@ -137,9 +143,9 @@ export default class OrganizationService {
   }
 
   /**
-   * Retrieve tenant model by the given organization id or throw not found 
+   * Retrieve tenant model by the given organization id or throw not found
    * error if the tenant not exists on the storage.
-   * @param  {string} organizationId 
+   * @param  {string} organizationId
    * @return {ITenant}
    */
   private async getTenantByOrgIdOrThrowError(organizationId: string) {

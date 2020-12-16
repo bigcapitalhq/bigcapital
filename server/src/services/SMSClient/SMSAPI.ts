@@ -8,7 +8,7 @@ export default class SMSAPI {
   }
 
   /**
-   * 
+   * Sends the message to the target via the client.
    * @param {string} to 
    * @param {string} message 
    * @param {array} extraParams 

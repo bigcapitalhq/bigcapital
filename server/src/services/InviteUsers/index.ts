@@ -1,21 +1,18 @@
-import { Service, Inject } from "typedi";
+import { Service, Inject } from 'typedi';
 import uniqid from 'uniqid';
 import moment from 'moment';
 import {
   EventDispatcher,
   EventDispatcherInterface,
 } from 'decorators/eventDispatcher';
-import { ServiceError } from "exceptions";
-import { Invite, Tenant } from "system/models";
+import { ServiceError } from 'exceptions';
+import { Invite, Tenant } from 'system/models';
 import { Option } from 'models';
 import { hashPassword } from 'utils';
 import TenancyService from 'services/Tenancy/TenancyService';
-import InviteUsersMailMessages from "services/InviteUsers/InviteUsersMailMessages";
+import InviteUsersMailMessages from 'services/InviteUsers/InviteUsersMailMessages';
 import events from 'subscribers/events';
-import {
-  ISystemUser,
-  IInviteUserInput,
-} from 'interfaces';
+import { ISystemUser, IInviteUserInput } from 'interfaces';
 
 @Service()
 export default class InviteUserService {
@@ -36,12 +33,15 @@ export default class InviteUserService {
 
   /**
    * Accept the received invite.
-   * @param {string} token 
-   * @param {IInviteUserInput} inviteUserInput 
+   * @param {string} token
+   * @param {IInviteUserInput} inviteUserInput
    * @throws {ServiceErrors}
    * @returns {Promise<void>}
    */
-  async acceptInvite(token: string, inviteUserInput: IInviteUserInput): Promise<void> {
+  async acceptInvite(
+    token: string,
+    inviteUserInput: IInviteUserInput
+  ): Promise<void> {
     const inviteToken = await this.getInviteOrThrowError(token);
     await this.validateUserPhoneNumber(inviteUserInput);
 
@@ -61,14 +61,20 @@ export default class InviteUserService {
     });
 
     this.logger.info('[accept_invite] trying to delete the given token.');
-    const deleteInviteTokenOper = Invite.query().where('token', inviteToken.token).delete();
+    const deleteInviteTokenOper = Invite.query()
+      .where('token', inviteToken.token)
+      .delete();
 
     // Await all async operations.
-    const [updatedUser] = await Promise.all([updateUserOper, deleteInviteTokenOper]);
+    const [updatedUser] = await Promise.all([
+      updateUserOper,
+      deleteInviteTokenOper,
+    ]);
 
     // Triggers `onUserAcceptInvite` event.
     this.eventDispatcher.dispatch(events.inviteUser.acceptInvite, {
-      inviteToken, user: updatedUser,
+      inviteToken,
+      user: updatedUser,
     });
   }
 
@@ -77,10 +83,17 @@ export default class InviteUserService {
    * @param {number} tenantId -
    * @param {string} email -
    * @param {IUser} authorizedUser -
-   * 
+   *
    * @return {Promise<IInvite>}
    */
-  public async sendInvite(tenantId: number, email: string, authorizedUser: ISystemUser): Promise<{ invite: IInvite, user: ISystemUser }> {
+  public async sendInvite(
+    tenantId: number,
+    email: string,
+    authorizedUser: ISystemUser
+  ): Promise<{
+    invite: IInvite,
+    user: ISystemUser
+  }> {
     await this.throwErrorIfUserEmailExists(email);
 
     this.logger.info('[send_invite] trying to store invite token.');
@@ -90,7 +103,9 @@ export default class InviteUserService {
       token: uniqid(),
     });
 
-    this.logger.info('[send_invite] trying to store user with email and tenant.');
+    this.logger.info(
+      '[send_invite] trying to store user with email and tenant.'
+    );
     const { systemUserRepository } = this.sysRepositories;
     const user = await systemUserRepository.create({
       email,
@@ -100,39 +115,45 @@ export default class InviteUserService {
 
     // Triggers `onUserSendInvite` event.
     this.eventDispatcher.dispatch(events.inviteUser.sendInvite, {
-      invite,      
+      invite,
     });
     return { invite, user };
   }
 
   /**
    * Validate the given invite token.
-   * @param {string} token - the given token string. 
+   * @param {string} token - the given token string.
    * @throws {ServiceError}
    */
-  public async checkInvite(token: string): Promise<{ inviteToken: string, orgName: object}> {
-    const inviteToken = await this.getInviteOrThrowError(token)
+  public async checkInvite(
+    token: string
+  ): Promise<{ inviteToken: string; orgName: object }> {
+    const inviteToken = await this.getInviteOrThrowError(token);
 
     // Find the tenant that associated to the given token.
     const tenant = await Tenant.query().findOne('id', inviteToken.tenantId);
 
     const tenantDb = this.tenantsManager.knexInstance(tenant.organizationId);
 
-    const orgName = await Option.bindKnex(tenantDb).query()
-      .findOne('key', 'organization_name')
+    const orgName = await Option.bindKnex(tenantDb)
+      .query()
+      .findOne('key', 'organization_name');
 
     // Triggers `onUserCheckInvite` event.
     this.eventDispatcher.dispatch(events.inviteUser.checkInvite, {
-      inviteToken, orgName,
+      inviteToken,
+      orgName,
     });
     return { inviteToken, orgName };
   }
 
   /**
    * Throws error in case the given user email not exists on the storage.
-   * @param {string} email 
+   * @param {string} email
    */
-  private async throwErrorIfUserEmailExists(email: string): Promise<ISystemUser> {
+  private async throwErrorIfUserEmailExists(
+    email: string
+  ): Promise<ISystemUser> {
     const { systemUserRepository } = this.sysRepositories;
     const foundUser = await systemUserRepository.getByEmail(email);
 
@@ -160,12 +181,16 @@ export default class InviteUserService {
 
   /**
    * Validate the given user email and phone number uniquine.
-   * @param {IInviteUserInput} inviteUserInput 
+   * @param {IInviteUserInput} inviteUserInput
    */
-  private async validateUserPhoneNumber(inviteUserInput: IInviteUserInput): Promise<ISystemUser> {
+  private async validateUserPhoneNumber(
+    inviteUserInput: IInviteUserInput
+  ): Promise<ISystemUser> {
     const { systemUserRepository } = this.sysRepositories;
-    const foundUser = await systemUserRepository.getByPhoneNumber(inviteUserInput.phoneNumber)
-   
+    const foundUser = await systemUserRepository.getByPhoneNumber(
+      inviteUserInput.phoneNumber
+    );
+
     if (foundUser) {
       throw new ServiceError('phone_number_exists');
     }

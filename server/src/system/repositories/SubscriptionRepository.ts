@@ -14,6 +14,7 @@ export default class SubscriptionRepository extends SystemRepository{
 	 */
 	getBySlugInTenant(slug: string, tenantId: number) {
 		const key = `subscription.slug.${slug}.tenant.${tenantId}`;
+
 		return this.cache.get(key, () => {
 			return PlanSubscription.query().findOne('slug', slug).where('tenant_id', tenantId);
 		});

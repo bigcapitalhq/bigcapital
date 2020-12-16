@@ -371,10 +371,15 @@
                         <hr />
                         
                         <p class="align-center">
-                          <h3>Hi {{ firstName }}, Welcome to Bigcapital</h3>
+                          <h3>Hi {{ firstName }}, Welcome to Bigcapital, </h3>
                         </p>
-                        <p class="mgb-1x">You’ve joined the new Bigcapital workspace {{ organizationName }}.</p>
-                        <p class="mgb-2-5x">If you need any help to get started please don't hesitate to contact us to help you via phone number or email.</p>
+
+                        <p class="mgb-1x">
+                          Your organization Id: <strong>{{ organizationId }}</strong>
+                        </p>
+                        <p class="mgb-1x">We are available to help you get started and answer any questions you may have. You can also email <a href="mailto:{{ successEmail }}">{{ successEmail }}</a> or call <u>{{ successPhoneNumber }}</u> about your set-up questions.</p>
+
+                        <p class="mgb-2-5x">Thank you for trusting Bigcapital Software for your business needs. We look forward to serving you!</p>
                       </td>
                     </tr>
                   </table>

@@ -1,8 +1,8 @@
-import { Service, Inject, Container } from "typedi";
+import { Service, Inject, Container } from 'typedi';
 import JWT from 'jsonwebtoken';
 import uniqid from 'uniqid';
 import { omit } from 'lodash';
-import moment from "moment";
+import moment from 'moment';
 import {
   EventDispatcher,
   EventDispatcherInterface,
@@ -46,7 +46,7 @@ export default class AuthenticationService implements IAuthenticationService {
   /**
    * Signin and generates JWT token.
    * @throws  {ServiceError}
-   * @param  {string} emailOrPhone - Email or phone number. 
+   * @param  {string} emailOrPhone - Email or phone number.
    * @param  {string} password - Password.
    * @return {Promise<{user: IUser, token: string}>}
    */
@@ -54,11 +54,14 @@ export default class AuthenticationService implements IAuthenticationService {
     emailOrPhone: string,
     password: string
   ): Promise<{
-    user: ISystemUser,
-    token: string,
-    tenant: ITenant
+    user: ISystemUser;
+    token: string;
+    tenant: ITenant;
   }> {
-    this.logger.info('[login] Someone trying to login.', { emailOrPhone, password });
+    this.logger.info('[login] Someone trying to login.', {
+      emailOrPhone,
+      password,
+    });
 
     const { systemUserRepository } = this.sysRepositories;
     const loginThrottler = Container.get('rateLimiter.login');
@@ -72,7 +75,10 @@ export default class AuthenticationService implements IAuthenticationService {
       throw new ServiceError('invalid_details');
     }
 
-    this.logger.info('[login] check password validation.', { emailOrPhone, password });
+    this.logger.info('[login] check password validation.', {
+      emailOrPhone,
+      password,
+    });
     if (!user.verifyPassword(password)) {
       await loginThrottler.hit(emailOrPhone);
 
@@ -87,14 +93,18 @@ export default class AuthenticationService implements IAuthenticationService {
     this.logger.info('[login] generating JWT token.', { userId: user.id });
     const token = this.generateToken(user);
 
-    this.logger.info('[login] updating user last login at.', { userId: user.id });
+    this.logger.info('[login] updating user last login at.', {
+      userId: user.id,
+    });
     await systemUserRepository.patchLastLoginAt(user.id);
 
     this.logger.info('[login] Logging success.', { user, token });
 
     // Triggers `onLogin` event.
     this.eventDispatcher.dispatch(events.auth.login, {
-      emailOrPhone, password, user,
+      emailOrPhone,
+      password,
+      user,
     });
     const tenant = await user.$relatedQuery('tenant');
 
@@ -111,8 +121,12 @@ export default class AuthenticationService implements IAuthenticationService {
    */
   private async validateEmailAndPhoneUniqiness(registerDTO: IRegisterDTO) {
     const { systemUserRepository } = this.sysRepositories;
-    const isEmailExists = await systemUserRepository.getByEmail(registerDTO.email);
-    const isPhoneExists = await systemUserRepository.getByPhoneNumber(registerDTO.phoneNumber);
+    const isEmailExists = await systemUserRepository.getByEmail(
+      registerDTO.email
+    );
+    const isPhoneExists = await systemUserRepository.getByPhoneNumber(
+      registerDTO.phoneNumber
+    );
 
     const errorReasons: ServiceError[] = [];
 
@@ -132,7 +146,7 @@ export default class AuthenticationService implements IAuthenticationService {
   /**
    * Registers a new tenant with user from user input.
    * @throws {ServiceErrors}
-   * @param {IUserDTO} user 
+   * @param {IUserDTO} user
    */
   public async register(registerDTO: IRegisterDTO): Promise<ISystemUser> {
     this.logger.info('[register] Someone trying to register.');
@@ -141,7 +155,7 @@ export default class AuthenticationService implements IAuthenticationService {
     this.logger.info('[register] Creating a new tenant organization.');
     const tenant = await this.newTenantOrganization();
 
-    this.logger.info('[register] Trying hashing the password.')
+    this.logger.info('[register] Trying hashing the password.');
     const hashedPassword = await hashPassword(registerDTO.password);
 
     const { systemUserRepository } = this.sysRepositories;
@@ -153,7 +167,9 @@ export default class AuthenticationService implements IAuthenticationService {
     });
     // Triggers `onRegister` event.
     this.eventDispatcher.dispatch(events.auth.register, {
-      registerDTO, user: registeredUser
+      registerDTO,
+      tenant,
+      user: registeredUser,
     });
     return registeredUser;
   }
@@ -170,14 +186,14 @@ export default class AuthenticationService implements IAuthenticationService {
   /**
    * Validate the given email existance on the storage.
    * @throws {ServiceError}
-   * @param  {string} email - email address. 
+   * @param  {string} email - email address.
    */
   private async validateEmailExistance(email: string): Promise<ISystemUser> {
     const { systemUserRepository } = this.sysRepositories;
     const userByEmail = await systemUserRepository.getByEmail(email);
 
     if (!userByEmail) {
-      this.logger.info('[send_reset_password] The given email not found.');  
+      this.logger.info('[send_reset_password] The given email not found.');
       throw new ServiceError('email_not_found');
     }
     return userByEmail;
@@ -185,7 +201,7 @@ export default class AuthenticationService implements IAuthenticationService {
 
   /**
    * Generates and retrieve password reset token for the given user email.
-   * @param {string} email 
+   * @param {string} email
    * @return {<Promise<IPasswordReset>}
    */
   public async sendResetPassword(email: string): Promise<IPasswordReset> {
@@ -193,7 +209,9 @@ export default class AuthenticationService implements IAuthenticationService {
     const user = await this.validateEmailExistance(email);
 
     // Delete all stored tokens of reset password that associate to the give email.
-    this.logger.info('[send_reset_password] trying to delete all tokens by email.');
+    this.logger.info(
+      '[send_reset_password] trying to delete all tokens by email.'
+    );
     this.deletePasswordResetToken(email);
 
     const token: string = uniqid();
@@ -202,8 +220,10 @@ export default class AuthenticationService implements IAuthenticationService {
     const passwordReset = await PasswordReset.query().insert({ email, token });
 
     // Triggers `onSendResetPassword` event.
-    this.eventDispatcher.dispatch(events.auth.sendResetPassword, { user, token });
-
+    this.eventDispatcher.dispatch(events.auth.sendResetPassword, {
+      user,
+      token,
+    });
     return passwordReset;
   }
 
@@ -215,14 +235,20 @@ export default class AuthenticationService implements IAuthenticationService {
    */
   public async resetPassword(token: string, password: string): Promise<void> {
     const { systemUserRepository } = this.sysRepositories;
-    const tokenModel: IPasswordReset = await PasswordReset.query().findOne('token', token);
+    const tokenModel: IPasswordReset = await PasswordReset.query().findOne(
+      'token',
+      token
+    );
 
     if (!tokenModel) {
       this.logger.info('[reset_password] token invalid.');
       throw new ServiceError('token_invalid');
     }
     // Different between tokne creation datetime and current time.
-    if (moment().diff(tokenModel.createdAt, 'seconds') > config.resetPasswordSeconds) {
+    if (
+      moment().diff(tokenModel.createdAt, 'seconds') >
+      config.resetPasswordSeconds
+    ) {
       this.logger.info('[reset_password] token expired.');
 
       // Deletes the expired token by expired token email.
@@ -235,7 +261,7 @@ export default class AuthenticationService implements IAuthenticationService {
       throw new ServiceError('user_not_found');
     }
     const hashedPassword = await hashPassword(password);
-    
+
     this.logger.info('[reset_password] saving a new hashed password.');
     await systemUserRepository.edit(user.id, { password: hashedPassword });
 
@@ -243,13 +269,17 @@ export default class AuthenticationService implements IAuthenticationService {
     await this.deletePasswordResetToken(tokenModel.email);
 
     // Triggers `onResetPassword` event.
-    this.eventDispatcher.dispatch(events.auth.resetPassword, { user, token, password });
+    this.eventDispatcher.dispatch(events.auth.resetPassword, {
+      user,
+      token,
+      password,
+    });
     this.logger.info('[reset_password] reset password success.');
   }
 
   /**
    * Deletes the password reset token by the given email.
-   * @param  {string} email  
+   * @param  {string} email
    * @returns {Promise}
    */
   private async deletePasswordResetToken(email: string) {
@@ -259,7 +289,7 @@ export default class AuthenticationService implements IAuthenticationService {
 
   /**
    * Generates JWT token for the given user.
-   * @param {ISystemUser} user 
+   * @param {ISystemUser} user
    * @return {string} token
    */
   generateToken(user: ISystemUser): string {
@@ -273,7 +303,7 @@ export default class AuthenticationService implements IAuthenticationService {
         id: user.id, // We are gonna use this in the middleware 'isAuth'
         exp: exp.getTime() / 1000,
       },
-      config.jwtSecret,
+      config.jwtSecret
     );
   }
 }

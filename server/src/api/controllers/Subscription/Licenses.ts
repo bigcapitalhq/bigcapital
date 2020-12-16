@@ -1,5 +1,5 @@
 import { Service, Inject } from 'typedi';
-import { Router, Request, Response } from 'express'
+import { Router, Request, Response } from 'express';
 import { check, oneOf, ValidationChain } from 'express-validator';
 import basicAuth from 'express-basic-auth';
 import config from 'config';
@@ -20,42 +20,41 @@ export default class LicensesController extends BaseController {
   router() {
     const router = Router();
 
-    router.use(basicAuth({
-      users: {
-        [config.licensesAuth.user]: config.licensesAuth.password,
-      },
-      challenge: true,
-    }));
+    router.use(
+      basicAuth({
+        users: {
+          [config.licensesAuth.user]: config.licensesAuth.password,
+        },
+        challenge: true,
+      })
+    );
 
     router.post(
       '/generate',
       this.generateLicenseSchema,
       this.validationResult,
       asyncMiddleware(this.validatePlanExistance.bind(this)),
-      asyncMiddleware(this.generateLicense.bind(this)),
+      asyncMiddleware(this.generateLicense.bind(this))
     );
     router.post(
       '/disable/:licenseId',
       this.validationResult,
       asyncMiddleware(this.validateLicenseExistance.bind(this)),
       asyncMiddleware(this.validateNotDisabledLicense.bind(this)),
-      asyncMiddleware(this.disableLicense.bind(this)),
+      asyncMiddleware(this.disableLicense.bind(this))
     );
     router.post(
       '/send',
       this.sendLicenseSchemaValidation,
       this.validationResult,
-      asyncMiddleware(this.sendLicense.bind(this)),
+      asyncMiddleware(this.sendLicense.bind(this))
     );
     router.delete(
       '/:licenseId',
       asyncMiddleware(this.validateLicenseExistance.bind(this)),
-      asyncMiddleware(this.deleteLicense.bind(this)),
+      asyncMiddleware(this.deleteLicense.bind(this))
     );
-    router.get(
-      '/',
-      asyncMiddleware(this.listLicenses.bind(this)),
-    );
+    router.get('/', asyncMiddleware(this.listLicenses.bind(this)));
     return router;
   }
 
@@ -66,9 +65,9 @@ export default class LicensesController extends BaseController {
     return [
       check('loop').exists().isNumeric().toInt(),
       check('period').exists().isNumeric().toInt(),
-      check('period_interval').exists().isIn([
-        'month', 'months', 'year', 'years', 'day', 'days'
-      ]),
+      check('period_interval')
+        .exists()
+        .isIn(['month', 'months', 'year', 'years', 'day', 'days']),
       check('plan_id').exists().isNumeric().toInt(),
     ];
   }
@@ -78,12 +77,11 @@ export default class LicensesController extends BaseController {
    */
   get specificLicenseSchema(): ValidationChain[] {
     return [
-      oneOf([
-        check('license_id').exists().isNumeric().toInt(),
-      ], [
-        check('license_code').exists().isNumeric().toInt(),
-      ])
-    ]
+      oneOf(
+        [check('license_id').exists().isNumeric().toInt()],
+        [check('license_code').exists().isNumeric().toInt()]
+      ),
+    ];
   }
 
   /**
@@ -103,9 +101,9 @@ export default class LicensesController extends BaseController {
 
   /**
    * Validate the plan existance on the storage.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {Function} next 
+   * @param {Request} req
+   * @param {Response} res
+   * @param {Function} next
    */
   async validatePlanExistance(req: Request, res: Response, next: Function) {
     const body = this.matchedBodyData(req);
@@ -122,8 +120,8 @@ export default class LicensesController extends BaseController {
 
   /**
    * Valdiate the license existance on the storage.
-   * @param {Request} req 
-   * @param {Response} res 
+   * @param {Request} req
+   * @param {Response} res
    * @param {Function}
    */
   async validateLicenseExistance(req: Request, res: Response, next: Function) {
@@ -142,11 +140,15 @@ export default class LicensesController extends BaseController {
 
   /**
    * Validates whether the license id is disabled.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {Function} next 
+   * @param {Request} req
+   * @param {Response} res
+   * @param {Function} next
    */
-  async validateNotDisabledLicense(req: Request, res: Response, next: Function) {
+  async validateNotDisabledLicense(
+    req: Request,
+    res: Response,
+    next: Function
+  ) {
     const licenseId = req.params.licenseId || req.query.licenseId;
     const foundLicense = await License.query().findById(licenseId);
 
@@ -160,31 +162,36 @@ export default class LicensesController extends BaseController {
 
   /**
    * Generate licenses codes with given period in bulk.
-   * @param {Request} req 
-   * @param {Response} res 
+   * @param {Request} req
+   * @param {Response} res
    * @return {Response}
    */
   async generateLicense(req: Request, res: Response, next: Function) {
-    const { loop = 10, period, periodInterval, planId } = this.matchedBodyData(req);
+    const { loop = 10, period, periodInterval, planId } = this.matchedBodyData(
+      req
+    );
 
     try {
       await this.licenseService.generateLicenses(
-        loop, period, periodInterval, planId,
+        loop,
+        period,
+        periodInterval,
+        planId
       );
       return res.status(200).send({
         code: 100,
         type: 'LICENSEES.GENERATED.SUCCESSFULLY',
-        message: 'The licenses have been generated successfully.'
+        message: 'The licenses have been generated successfully.',
       });
     } catch (error) {
       next(error);
-    }    
+    }
   }
 
   /**
    * Disable the given license on the storage.
-   * @param {Request} req 
-   * @param {Response} res 
+   * @param {Request} req
+   * @param {Response} res
    * @return {Response}
    */
   async disableLicense(req: Request, res: Response) {
@@ -197,8 +204,8 @@ export default class LicensesController extends BaseController {
 
   /**
    * Deletes the given license code on the storage.
-   * @param {Request} req 
-   * @param {Response} res 
+   * @param {Request} req
+   * @param {Response} res
    * @return {Response}
    */
   async deleteLicense(req: Request, res: Response) {
@@ -211,13 +218,19 @@ export default class LicensesController extends BaseController {
 
   /**
    * Send license code in the given period to the customer via email or phone number
-   * @param {Request} req 
-   * @param {Response} res 
+   * @param {Request} req
+   * @param {Response} res
    * @return {Response}
    */
   async sendLicense(req: Request, res: Response) {
-    const { phoneNumber, email, period, periodInterval, planId } = this.matchedBodyData(req);
- 
+    const {
+      phoneNumber,
+      email,
+      period,
+      periodInterval,
+      planId,
+    } = this.matchedBodyData(req);
+
     const license = await License.query()
       .modify('filterActiveLicense')
       .where('license_period', period)
@@ -228,12 +241,15 @@ export default class LicensesController extends BaseController {
     if (!license) {
       return res.status(400).send({
         status: 110,
-        message: 'There is no licenses availiable right now with the given period and plan.',
+        message:
+          'There is no licenses availiable right now with the given period and plan.',
         code: 'NO.AVALIABLE.LICENSE.CODE',
       });
     }
     await this.licenseService.sendLicenseToCustomer(
-      license.licenseCode, phoneNumber, email,
+      license.licenseCode,
+      phoneNumber,
+      email
     );
     return res.status(200).send({
       status: 100,
@@ -244,8 +260,8 @@ export default class LicensesController extends BaseController {
 
   /**
    * Listing licenses.
-   * @param {Request} req 
-   * @param {Response} res 
+   * @param {Request} req
+   * @param {Response} res
    */
   async listLicenses(req: Request, res: Response) {
     const filter: ILicensesFilter = {
@@ -255,11 +271,10 @@ export default class LicensesController extends BaseController {
       active: false,
       ...req.query,
     };
-    const licenses = await License.query()
-      .onBuild((builder) => {
-        builder.modify('filter', filter);
-        builder.orderBy('createdAt', 'ASC');
-      });
+    const licenses = await License.query().onBuild((builder) => {
+      builder.modify('filter', filter);
+      builder.orderBy('createdAt', 'ASC');
+    });
     return res.status(200).send({ licenses });
   }
 }

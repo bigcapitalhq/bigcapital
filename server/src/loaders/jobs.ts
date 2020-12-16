@@ -16,13 +16,10 @@ export default ({ agenda }: { agenda: Agenda }) => {
   new WelcomeEmailJob(agenda);
   new ResetPasswordMailJob(agenda);
   new WelcomeSMSJob(agenda);
-  
-  // User invite mail.
-  agenda.define(
-    'user-invite-mail',
-    { priority: 'high' },
-    new UserInviteMailJob().handler,
-  )
+  new UserInviteMailJob(agenda);
+  new SendLicenseViaEmailJob(agenda);
+  new SendLicenseViaPhoneJob(agenda);
+
   agenda.define(
     'compute-item-cost',
     { priority: 'high', concurrency: 20 },
@@ -33,16 +30,7 @@ export default ({ agenda }: { agenda: Agenda }) => {
     { priority: 'normal', concurrency: 1, },
     new RewriteInvoicesJournalEntries().handler,
   );
-  agenda.define(
-    'send-license-via-phone',
-    { priority: 'high', concurrency: 1, },
-    new SendLicenseViaPhoneJob().handler,
-  );
-  agenda.define(
-    'send-license-via-email',
-    { priority: 'high', concurrency: 1, },
-    new SendLicenseViaEmailJob().handler,
-  );
+
   agenda.define(
     'send-sms-notification-subscribe-end',
     { priority: 'nromal', concurrency: 1, },

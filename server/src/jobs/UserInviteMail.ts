@@ -6,6 +6,18 @@ export default class UserInviteMailJob {
   inviteUsersService: InviteUserService;
 
   /**
+   * Constructor method.
+   * @param {Agenda} agenda 
+   */
+  constructor(agenda) {
+    agenda.define(
+      'user-invite-mail',
+      { priority: 'high' },
+      this.handler.bind(this),
+    );
+  }
+
+  /**
    * Handle invite user job.
    * @param {Job} job 
    * @param {Function} done 

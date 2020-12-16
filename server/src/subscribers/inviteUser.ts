@@ -24,6 +24,5 @@ export class InviteUserSubscriber {
     const { invite } = payload;
     const agenda = Container.get('agenda');
 
-
   }
 }

@@ -2,6 +2,17 @@ import { Container } from 'typedi';
 import LicenseService from 'services/Payment/License';
 
 export default class SendLicenseViaPhoneJob {
+  /**
+   * Constructor method.
+   */
+  constructor(agenda) {
+    agenda.define(
+      'send-license-via-phone',
+      { priority: 'high', concurrency: 1, },
+      this.handler,
+    );
+  }
+
   public async handler(job, done: Function): Promise<void> {
     const { phoneNumber, licenseCode } = job.attrs.data;
 

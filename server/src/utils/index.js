@@ -245,6 +245,7 @@ function defaultToTransform(
     : _transfromedValue;
 }
 
+
 export {
   hashPassword,
   origin,
@@ -265,5 +266,5 @@ export {
   convertEmptyStringToNull,
   formatNumber,
   isBlank,
-  defaultToTransform
+  defaultToTransform,
 };

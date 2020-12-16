@@ -58,9 +58,10 @@ export default class OrganizationController extends BaseController{
    */
   async build(req: Request, res: Response, next: Function) {
     const { organizationId } = req.tenant;
+    const { user } = req;
   
     try {
-      await this.organizationService.build(organizationId);
+      await this.organizationService.build(organizationId, user);
 
       return res.status(200).send({
         type: 'success',

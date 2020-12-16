@@ -374,12 +374,12 @@
                         <p class="align-center">
                           <h3>License Code</h3>
                         </p>
-                        <p class="mgb-1x">License {{ licenseCode }},</p>
-                        <p class="mgb-2-5x">Click On The link blow to reset your password.</p>
-                        
+                        <p class="mgb-1x">
+                          <h1>{{ licenseCode }}</h1>
+                        </p>
                         <p class="email-note">
                           This is an automatically generated email please do not reply to
-                          this email. If you face any issues, please contact us at {{ contact_us_email }}</p>
+                          this email. If you face any issues, please contact us at <a href="mailto:{{ successEmail }}">{{ successEmail }}</a> or call <u>{{ successPhoneNumber }}</u></p>
                       </td>
                     </tr>
                   </table>

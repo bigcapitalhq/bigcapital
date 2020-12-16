@@ -4,12 +4,13 @@ import events from 'subscribers/events';
 
 @EventSubscriber()
 export class OrganizationSubscriber {
-
+  /**
+   * Sends welcome SMS once the organization build completed.
+   */
   @On(events.organization.build)
-  public async onBuild(payload) {
-    const { tenant, user } = payload;
+  public async onBuild({ tenant, user }) {
     const agenda = Container.get('agenda');
-
-    await agenda.now('welcome-sms', { tenant, user });
+ 
+    await agenda.now('welcome-sms', { tenant, user });    
   }
 }

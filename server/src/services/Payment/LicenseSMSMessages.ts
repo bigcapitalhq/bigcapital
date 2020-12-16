@@ -11,7 +11,7 @@ export default class SubscriptionSMSMessages {
    * @param {string} licenseCode 
    */
   public async sendLicenseSMSMessage(phoneNumber: string, licenseCode: string) {
-    const message: string = `Your license card number: ${licenseCode}.`;
+    const message: string = `Your license card number: ${licenseCode}. If you need any help please contact us. Bigcapital.`;
     return this.smsClient.sendMessage(phoneNumber, message);
   }
 }

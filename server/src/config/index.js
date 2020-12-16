@@ -57,7 +57,7 @@ export default {
   mail: {
     host: process.env.MAIL_HOST,
     port: process.env.MAIL_PORT,
-    secure: process.env.MAIL_SECURE,
+    secure: !!parseInt(process.env.MAIL_SECURE, 10),
     username: process.env.MAIL_USERNAME,
     password: process.env.MAIL_PASSWORD,
   },
@@ -105,7 +105,11 @@ export default {
   /**
    * 
    */
-  contactUsMail: process.env.CONTACT_US_MAIL,
+  customerSuccess: {
+    email: 'success@bigcapital.ly',
+    phoneNumber: '(218) 92 791 8381'
+  },
+
   baseURL: process.env.BASE_URL,
 
   /**

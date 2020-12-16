@@ -6,7 +6,7 @@ import parsePhoneNumber from 'libphonenumber-js';
 import BaseController from 'api/controllers/BaseController';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
 import AuthenticationService from 'services/Authentication';
-import { ILoginDTO, ISystemUser, IRegisterOTD } from 'interfaces';
+import { ILoginDTO, ISystemUser, IRegisterDTO } from 'interfaces';
 import { ServiceError, ServiceErrors } from "exceptions";
 import { DATATYPES_LENGTH } from 'data/DataTypes';
 import LoginThrottlerMiddleware from 'api/middleware/LoginThrottlerMiddleware';
@@ -206,7 +206,7 @@ export default class AuthenticationController extends BaseController{
    * @param {Response} res 
    */
   async register(req: Request, res: Response, next: Function) {
-    const registerDTO: IRegisterOTD = this.matchedBodyData(req);
+    const registerDTO: IRegisterDTO = this.matchedBodyData(req);
 
     try {
       const registeredUser: ISystemUser = await this.authService.register(registerDTO);

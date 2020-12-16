@@ -218,7 +218,11 @@ export default class ItemsController extends BaseController {
 
     try {
       const storedItem = await this.itemsService.newItem(tenantId, itemDTO);
-      return res.status(200).send({ id: storedItem.id });
+
+      return res.status(200).send({
+        id: storedItem.id,
+        message: 'Item has been created successfully.',
+      });
     } catch (error) {
       next(error);
     }
