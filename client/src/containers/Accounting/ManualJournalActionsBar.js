@@ -21,7 +21,7 @@ import FilterDropdown from 'components/FilterDropdown';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 
-import { If } from 'components';
+import { If, DashboardActionViewsList } from 'components';
 
 import withResourceDetail from 'containers/Resources/withResourceDetails';
 import withManualJournals from 'containers/Accounting/withManualJournals';
@@ -29,9 +29,11 @@ import withManualJournalsActions from 'containers/Accounting/withManualJournalsA
 
 import { compose } from 'utils';
 
+/**
+ * Manual journal actions bar.
+ */
 function ManualJournalActionsBar({
   // #withResourceDetail
-  resourceName = 'manual_journals',
   resourceFields,
 
   // #withManualJournals
@@ -39,20 +41,14 @@ function ManualJournalActionsBar({
 
   // #withManualJournalsActions
   addManualJournalsTableQueries,
+  changeManualJournalCurrentView,
 
   onFilterChanged,
   selectedRows = [],
   onBulkDelete,
 }) {
-  const { path } = useRouteMatch();
   const [filterCount, setFilterCount] = useState(0);
   const history = useHistory();
-
-  const viewsMenuItems = manualJournalsViews.map((view) => {
-    return (
-      <MenuItem href={`${path}/${view.id}/custom_view`} text={view.name} />
-    );
-  });
 
   const onClickNewManualJournal = useCallback(() => {
     history.push('/make-journal-entry');
@@ -73,32 +69,30 @@ function ManualJournalActionsBar({
       onFilterChanged && onFilterChanged(filterConditions);
     },
   });
-  const hasSelectedRows = useMemo(
-    () => selectedRows.length > 0, 
-    [selectedRows]);
+  const hasSelectedRows = useMemo(() => selectedRows.length > 0, [
+    selectedRows,
+  ]);
 
   // Handle delete button click.
   const handleBulkDelete = useCallback(() => {
     onBulkDelete && onBulkDelete(selectedRows.map((r) => r.id));
   }, [onBulkDelete, selectedRows]);
 
+  const handleTabChange = (viewId) => {
+    changeManualJournalCurrentView(viewId.id || -1);
+    addManualJournalsTableQueries({
+      custom_view_id: viewId.id || null,
+    });
+  };
+
   return (
     <DashboardActionsBar>
       <NavbarGroup>
-        <Popover
-          content={<Menu>{viewsMenuItems}</Menu>}
-          minimal={true}
-          interactionKind={PopoverInteractionKind.HOVER}
-          position={Position.BOTTOM_LEFT}
-        >
-          <Button
-            className={classNames(Classes.MINIMAL, 'button--table-views')}
-            icon={<Icon icon="table-16" iconSize={16} />}
-            text={<T id={'table_views'} />}
-            rightIcon={'caret-down'}
-          />
-        </Popover>
-
+        <DashboardActionViewsList
+          resourceName={'manual-journals'}
+          views={manualJournalsViews}
+          onChange={handleTabChange}
+        />
         <NavbarDivider />
 
         <Button

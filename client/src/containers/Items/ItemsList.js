@@ -261,6 +261,7 @@ function ItemsList({
               onInactiveItem={handleInactiveItem}
               onActivateItem={handleActivateItem}
               onSelectedRowsChange={handleSelectedRowsChange}
+              itemsViewLoading={fetchItems.isFetching}
             />
             <Alert
               cancelButtonText={<T id={'cancel'} />}

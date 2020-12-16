@@ -1,6 +1,10 @@
 import { createSelector } from 'reselect';
 import { repeat } from 'lodash';
-import { pickItemsFromIds, getItemById } from 'store/selectors';
+import {
+  pickItemsFromIds,
+  getItemById,
+  paginationLocationQuery,
+} from 'store/selectors';
 import { flatToNestedArray, treeToList } from 'utils';
 
 const accountsViewsSelector = (state) => state.accounts.views;
@@ -8,6 +12,16 @@ const accountsDataSelector = (state) => state.accounts.items;
 const accountsCurrentViewSelector = (state) => state.accounts.currentViewId;
 const accountIdPropSelector = (state, props) => props.accountId;
 const accountsListSelector = (state) => state.accounts.listTree;
+const accountsTableQuery = (state, props) => state.accounts.tableQuery;
+
+export const getAccountsTableQuery = createSelector(
+  accountsTableQuery,
+  (tableQuery) => {
+    return {
+      ...tableQuery,
+    };
+  },
+);
 
 export const getAccountsItems = createSelector(
   accountsViewsSelector,
@@ -42,12 +56,13 @@ export const getAccountsListFactory = () =>
 
           return {
             ...account,
-            htmlName: (depth > 1)
-              ? (`${repeat(spaceChar, (depth - 1) * 2)}${account.name}`) :
-                account.name,
+            htmlName:
+              depth > 1
+                ? `${repeat(spaceChar, (depth - 1) * 2)}${account.name}`
+                : account.name,
             depth,
           };
-        }
+        },
       });
     },
   );

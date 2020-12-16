@@ -151,7 +151,7 @@ function ManualJournalsTable({
   );
 
   // Handle filter change to re-fetch data-table.
-  const handleFilterChanged = useCallback(() => {}, [fetchManualJournals]);
+  const handleFilterChanged = useCallback(() => {}, []);
 
   // Handle view change to re-fetch data table.
   // const handleViewChanged = useCallback(() => {
@@ -243,6 +243,7 @@ function ManualJournalsTable({
               onEditJournal={handleEditJournal}
               onPublishJournal={handlePublishMaunalJournal}
               onSelectedRowsChange={handleSelectedRowsChange}
+              manualJournalViewLoading={fetchManualJournals.isFetching}
             />
           </Route>
         </Switch>

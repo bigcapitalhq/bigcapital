@@ -1,29 +1,21 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router';
 import { connect } from 'react-redux';
-import {
-  Alignment,
-  Navbar,
-  NavbarGroup,
-  Tabs,
-  Tab,
-  Button,
-} from '@blueprintjs/core';
+import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
 import { useParams } from 'react-router-dom';
-import Icon from 'components/Icon';
-import { Link, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { compose } from 'utils';
-import { useUpdateEffect } from 'hooks';
 import { DashboardViewsTabs } from 'components';
-import { pick, debounce } from 'lodash';
+import { pick } from 'lodash';
 
 import withItemsActions from 'containers/Items/withItemsActions';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withViewDetail from 'containers/Views/withViewDetails';
 import withItems from 'containers/Items/withItems';
 
-import { FormattedMessage as T } from 'react-intl';
-
+/**
+ * Items views tabs.
+ */
 function ItemsViewsTabs({
   // #withViewDetail
   viewId,
@@ -43,62 +35,34 @@ function ItemsViewsTabs({
   // #props
   onViewChanged,
 }) {
-  const history = useHistory();
   const { custom_view_id: customViewId = null } = useParams();
 
-  const handleClickNewView = () => {
-    setTopbarEditView(null);
-    history.push('/custom_views/items/new');
-  };
-
-  const handleViewLinkClick = () => {
-    setTopbarEditView(customViewId);
-  };
-
   useEffect(() => {
-    changeItemsCurrentView(customViewId || -1);
     setTopbarEditView(customViewId);
     changePageSubtitle(customViewId && viewItem ? viewItem.name : '');
-
-    addItemsTableQueries({
-      custom_view_id: customViewId || null,
-    });
-
-    return () => {
-      setTopbarEditView(null);
-      changeItemsCurrentView(-1);
-      changePageSubtitle('');
-    };
-  }, [customViewId, addItemsTableQueries, changeItemsCurrentView]);
-
-  useUpdateEffect(() => {
-    onViewChanged && onViewChanged(customViewId);
   }, [customViewId]);
 
-  const debounceChangeHistory = useRef(
-    debounce((toUrl) => {
-      history.push(toUrl);
-    }, 250),
-  );
-
-  const handleTabsChange = (viewId) => {
-    const toPath = viewId ? `${viewId}/custom_view` : '';
-    debounceChangeHistory.current(`/items/${toPath}`);
-    setTopbarEditView(viewId);
-  };
+  const handleClickNewView = () => {};
 
   const tabs = itemsViews.map((view) => ({
     ...pick(view, ['name', 'id']),
   }));
+
+  const handleTabChange = (viewId) => {
+    changeItemsCurrentView(viewId || -1);
+    addItemsTableQueries({
+      custom_view_id: viewId || null,
+    });
+  };
+
   return (
     <Navbar className="navbar--dashboard-views">
       <NavbarGroup align={Alignment.LEFT}>
         <DashboardViewsTabs
           initialViewId={customViewId}
-          baseUrl={'/items'}
+          resourceName={'items'}
           tabs={tabs}
-          onNewViewTabClick={handleClickNewView}
-          onChange={handleTabsChange}
+          onChange={handleTabChange}
         />
       </NavbarGroup>
     </Navbar>

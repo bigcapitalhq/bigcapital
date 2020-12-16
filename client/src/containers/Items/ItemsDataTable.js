@@ -46,6 +46,7 @@ function ItemsDataTable({
   onInactiveItem,
   onActivateItem,
   onSelectedRowsChange,
+  itemsViewLoading,
 }) {
   const { formatMessage } = useIntl();
   const isLoadedBefore = useIsValuePassed(itemsTableLoading, false);
@@ -238,7 +239,9 @@ function ItemsDataTable({
 
   return (
     <div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>
-      <LoadingIndicator loading={itemsTableLoading && !isLoadedBefore}>
+      <LoadingIndicator
+        loading={(itemsTableLoading && !isLoadedBefore) || itemsViewLoading}
+      >
         <Choose>
           <Choose.When condition={showEmptyStatus}>
             <ItemsEmptyStatus />

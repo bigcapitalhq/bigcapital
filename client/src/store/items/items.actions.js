@@ -12,12 +12,13 @@ export const editItem = ({ id, form }) => {
 export const fetchItems = ({ query }) => {
   return (dispatch, getState) =>
     new Promise((resolve, reject) => {
-      const pageQuery = getState().items.tableQuery;
+      let pageQuery = getState().items.tableQuery;
 
       dispatch({
         type: t.ITEMS_TABLE_LOADING,
         payload: { loading: true },
       });
+      
       ApiService.get(`items`, { params: { ...pageQuery, ...query } })
         .then((response) => {
           dispatch({
@@ -27,16 +28,18 @@ export const fetchItems = ({ query }) => {
           dispatch({
             type: t.ITEMS_PAGE_SET,
             items: response.data.items,
-            customViewId: response.data?.filter_meta?.view?.custom_view_id,
+            customViewId:
+              response.data?.filter_meta?.view?.custom_view_id || -1,
             paginationMeta: response.data.pagination,
           });
           dispatch({
             type: t.ITEMS_PAGINATION_SET,
             payload: {
               pagination: response.data.pagination,
-              customViewId: response.data.customViewId || -1,
-            }
-          })
+              customViewId:
+                response.data?.filter_meta?.view?.custom_view_id || -1,
+            },
+          });
           dispatch({
             type: t.ITEMS_TABLE_LOADING,
             payload: { loading: false },
@@ -44,9 +47,6 @@ export const fetchItems = ({ query }) => {
           resolve(response);
         })
         .catch((error) => {
-          dispatch({
-            type: t.SET_DASHBOARD_REQUEST_COMPLETED,
-          });
           reject(error);
         });
     });

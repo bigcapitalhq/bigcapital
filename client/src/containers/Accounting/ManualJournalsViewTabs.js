@@ -1,15 +1,10 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { useHistory } from 'react-router';
-import {
-  Alignment,
-  Navbar,
-  NavbarGroup,
-} from '@blueprintjs/core';
+import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
 import { useParams, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { pick, debounce } from 'lodash';
+import { pick } from 'lodash';
 
-import { useUpdateEffect } from 'hooks';
 import { DashboardViewsTabs, Icon } from 'components';
 
 import withManualJournals from './withManualJournals';
@@ -19,6 +14,9 @@ import withViewDetail from 'containers/Views/withViewDetails';
 
 import { compose } from 'utils';
 
+/**
+ * Manual journal views tabs.
+ */
 function ManualJournalsViewTabs({
   // #withViewDetail
   viewId,
@@ -38,50 +36,32 @@ function ManualJournalsViewTabs({
   // #ownProps
   onViewChanged,
 }) {
-  const history = useHistory();
   const { custom_view_id: customViewId } = useParams();
 
   useEffect(() => {
-    changeManualJournalCurrentView(customViewId || -1);
     setTopbarEditView(customViewId);
     changePageSubtitle(customViewId && viewItem ? viewItem.name : '');
-
-    addManualJournalsTableQueries({
-      custom_view_id: customViewId,
-    });
-  }, [customViewId, addManualJournalsTableQueries]);
-
-  useUpdateEffect(() => {
-    onViewChanged && onViewChanged(customViewId);
   }, [customViewId]);
 
   const tabs = manualJournalsViews.map((view) => ({
     ...pick(view, ['name', 'id']),
   }));
 
-  const debounceChangeHistory = useRef(
-    debounce((toUrl) => {
-      history.push(toUrl);
-    }, 250),
-  );
-
-  const handleClickNewView = () => {
-    setTopbarEditView(null);
-    history.push('/custom_views/manual_journals/new');
-  };
+  const handleClickNewView = () => {};
 
   const handleTabChange = (viewId) => {
-    const toPath = viewId ? `${viewId}/custom_view` : '';
-    debounceChangeHistory.current(`/manual-journals/${toPath}`);
-    setTopbarEditView(viewId);
+    changeManualJournalCurrentView(viewId || -1);
+    addManualJournalsTableQueries({
+      custom_view_id: viewId || null,
+    });
   };
 
   return (
     <Navbar className="navbar--dashboard-views">
       <NavbarGroup align={Alignment.LEFT}>
         <DashboardViewsTabs
+          resourceName={'manual-journals'}
           initialViewId={customViewId}
-          baseUrl={'/manual-journals'}
           tabs={tabs}
           onChange={handleTabChange}
           onNewViewTabClick={handleClickNewView}

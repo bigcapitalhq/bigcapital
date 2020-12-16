@@ -26,15 +26,17 @@ import { CLASSES } from 'common/classes';
 import { useIsValuePassed } from 'hooks';
 
 import ManualJournalsEmptyStatus from './ManualJournalsEmptyStatus';
-import { AmountPopoverContent, NoteAccessor, StatusAccessor } from './components';
+import {
+  AmountPopoverContent,
+  NoteAccessor,
+  StatusAccessor,
+} from './components';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withManualJournals from 'containers/Accounting/withManualJournals';
 import withManualJournalsActions from 'containers/Accounting/withManualJournalsActions';
 
 import { compose, saveInvoke } from 'utils';
-
-
 
 function ManualJournalsDataTable({
   // #withManualJournals
@@ -52,6 +54,7 @@ function ManualJournalsDataTable({
   onDeleteJournal,
   onPublishJournal,
   onSelectedRowsChange,
+  manualJournalViewLoading,
 }) {
   const { custom_view_id: customViewId } = useParams();
   const { formatMessage } = useIntl();
@@ -230,7 +233,11 @@ function ManualJournalsDataTable({
 
   return (
     <div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>
-      <LoadingIndicator loading={manualJournalsLoading && !isLoadedBefore}>
+      <LoadingIndicator
+        loading={
+          (manualJournalsLoading && !isLoadedBefore) || manualJournalViewLoading
+        }
+      >
         <Choose>
           <Choose.When condition={showEmptyStatus}>
             <ManualJournalsEmptyStatus />

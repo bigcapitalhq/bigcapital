@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import classNames from 'classnames';
 import {
   Button,
@@ -15,15 +15,21 @@ import { Icon } from 'components';
 
 export default function DashboardActionViewsList({
   resourceName,
-  views
+  views,
+  onChange,
 }) {
   const history = useHistory();
 
   const handleClickViewItem = (view) => {
-    history.push(view ? `/${resourceName}/${view.id}/custom_view` : '/accounts');
+    history.push(
+      view ? `/${resourceName}/${view.id}/custom_view` : '/accounts',
+    );
+    onChange && onChange(view);
   };
   const viewsMenuItems = views.map((view) => {
-    return <MenuItem onClick={() => handleClickViewItem(view)} text={view.name} />;
+    return (
+      <MenuItem onClick={() => handleClickViewItem(view)} text={view.name} />
+    );
   });
 
   return (

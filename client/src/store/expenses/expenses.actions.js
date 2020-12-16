@@ -20,21 +20,23 @@ export const fetchExpensesTable = ({ query } = {}) => {
             payload: {
               expenses: response.data.expenses,
               pagination: response.data.pagination,
-              customViewId: response.data.customViewId || -1,
-            },            
+              customViewId:
+                response.data?.filter_meta?.view?.custom_view_id || -1,
+            },
           });
           dispatch({
             type: t.EXPENSES_ITEMS_SET,
             payload: {
               expenses: response.data.expenses,
-            }
+            },
           });
           dispatch({
             type: t.EXPENSES_PAGINATION_SET,
             payload: {
               pagination: response.data.pagination,
-              customViewId: response.data.customViewId || -1,
-            }
+              customViewId:
+                response.data?.filter_meta?.view?.custom_view_id || -1,
+            },
           });
           dispatch({
             type: t.EXPENSES_TABLE_LOADING,
@@ -54,7 +56,7 @@ export const fetchExpense = ({ id }) => {
   return (dispatch) =>
     new Promise((resolve, reject) => {
       ApiService.get(`expenses/${id}`)
-      .then((response) => {
+        .then((response) => {
           dispatch({
             type: t.EXPENSE_SET,
             payload: {
