@@ -10,15 +10,11 @@ export default (mapState) => {
   const getAccountsList = getAccountsListFactory();
 
   const mapStateToProps = (state, props) => {
-    const query = getAccountsTableQuery(state, props);
-
     const mapped = {
       accountsViews: getResourceViews(state, props, 'accounts'),
       accountsTable: getAccountsItems(state, props),
       accountsList: getAccountsList(state, props),
       accountsTypes: state.accounts.accountsTypes,
-
-      // accountsTableQuery: query,
       accountsTableQuery: state.accounts.tableQuery,
       accountsLoading: state.accounts.loading,
       accountErrors: state.accounts.errors,
