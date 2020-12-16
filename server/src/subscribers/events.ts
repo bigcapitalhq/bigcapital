@@ -146,6 +146,7 @@ export default {
     onEdited: 'onCustomerEdited',
     onDeleted: 'onCustomerDeleted',
     onBulkDeleted: 'onBulkDeleted',
+    onOpeningBalanceChanged: 'onOpeingBalanceChanged',
   },
 
   /**
@@ -156,6 +157,7 @@ export default {
     onEdited: 'onVendorEdited',
     onDeleted: 'onVendorDeleted',
     onBulkDeleted: 'onVendorBulkDeleted',
+    onOpeningBalanceChanged: 'onOpeingBalanceChanged',
   },
 
   items: {

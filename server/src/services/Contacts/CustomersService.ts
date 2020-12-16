@@ -16,14 +16,13 @@ import {
   IContactNewDTO,
   IContactEditDTO,
   IContact,
-  ISaleInvoice
+  ISaleInvoice,
  } from 'interfaces';
 import { ServiceError } from 'exceptions';
 import TenancyService from 'services/Tenancy/TenancyService';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import events from 'subscribers/events';
 import moment from 'moment';
-import SaleInvoiceRepository from 'repositories/SaleInvoiceRepository';
 
 @Service()
 export default class CustomersService {
@@ -297,5 +296,32 @@ export default class CustomersService {
     if (customersHaveInvoices.length > 0) {
       throw new ServiceError('some_customers_have_invoices');
     }
+  }
+
+  /**
+   * Changes the opening balance of the given customer.
+   * @param {number} tenantId 
+   * @param {number} customerId 
+   * @param {number} openingBalance 
+   * @param {string|Date} openingBalanceAt 
+   */
+  public async changeOpeningBalance(
+    tenantId: number,
+    customerId: number,
+    openingBalance: number,
+    openingBalanceAt: Date|string,
+  ) {
+
+    await this.contactService.changeOpeningBalance(
+      tenantId,
+      customerId,
+      'customer',
+      openingBalance,
+      openingBalanceAt,
+    );
+    // Triggers `onOpeingBalanceChanged` event.
+    await this.eventDispatcher.dispatch(events.customers.onOpeningBalanceChanged, {
+      tenantId, customerId, openingBalance, openingBalanceAt
+    });
   }
 }
