@@ -50,6 +50,7 @@ function InvoicesDataTable({
   // #OwnProps
   onEditInvoice,
   onDeleteInvoice,
+  onDeliverInvoice,
   onSelectedRowsChange,
 }) {
   const { formatMessage } = useIntl();
@@ -82,6 +83,12 @@ function InvoicesDataTable({
           text={formatMessage({ id: 'edit_invoice' })}
           onClick={handleEditInvoice(invoice)}
         />
+        <If condition={!invoice.is_delivered}>
+          <MenuItem
+            text={formatMessage({ id: 'mark_as_delivered' })}
+            onClick={() => onDeliverInvoice(invoice)}
+          />
+        </If>
         <MenuItem
           text={formatMessage({ id: 'delete_invoice' })}
           intent={Intent.DANGER}

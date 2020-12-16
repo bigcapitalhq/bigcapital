@@ -232,11 +232,13 @@ function InvoiceForm({
   );
 
   return (
-    <div className={classNames(
-      CLASSES.PAGE_FORM,
-      CLASSES.PAGE_FORM_STRIP_STYLE,
-      CLASSES.PAGE_FORM_INVOICE
-    )}>
+    <div
+      className={classNames(
+        CLASSES.PAGE_FORM,
+        CLASSES.PAGE_FORM_STRIP_STYLE,
+        CLASSES.PAGE_FORM_INVOICE,
+      )}
+    >
       <Formik
         validationSchema={
           isNewMode ? CreateInvoiceFormSchema : EditInvoiceFormSchema
@@ -244,7 +246,7 @@ function InvoiceForm({
         initialValues={initialValues}
         onSubmit={handleSubmit}
       >
-        {({ isSubmitting }) => (
+        {({ isSubmitting, values }) => (
           <Form>
             <InvoiceFormHeader
               onInvoiceNumberChanged={handleInvoiceNumberChanged}
