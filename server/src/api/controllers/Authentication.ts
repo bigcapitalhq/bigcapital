@@ -1,6 +1,8 @@
 import { Request, Response, Router } from 'express';
 import { check, ValidationChain } from 'express-validator';
 import { Service, Inject } from 'typedi';
+import countries from 'country-codes-list';
+import parsePhoneNumber from 'libphonenumber-js';
 import BaseController from 'api/controllers/BaseController';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
 import AuthenticationService from 'services/Authentication';
@@ -8,6 +10,7 @@ import { ILoginDTO, ISystemUser, IRegisterOTD } from 'interfaces';
 import { ServiceError, ServiceErrors } from "exceptions";
 import { DATATYPES_LENGTH } from 'data/DataTypes';
 import LoginThrottlerMiddleware from 'api/middleware/LoginThrottlerMiddleware';
+import config from 'config';
 
 @Service()
 export default class AuthenticationController extends BaseController{
@@ -63,13 +66,82 @@ export default class AuthenticationController extends BaseController{
    */
   get registerSchema(): ValidationChain[] {
     return [
-      check('first_name').exists().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('last_name').exists().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('email').exists().isString().isEmail().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('phone_number').exists().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('password').exists().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('country').exists().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('first_name')
+        .exists()
+        .isString()
+        .trim()
+        .escape()
+        .isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('last_name')
+        .exists()
+        .isString()
+        .trim()
+        .escape()
+        .isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('email')
+        .exists()
+        .isString()
+        .isEmail()
+        .trim()
+        .escape()
+        .isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('phone_number')
+        .exists()
+        .isString()
+        .trim()
+        .escape()
+        .custom(this.phoneNumberValidator)
+        .isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('password')
+        .exists()
+        .isString()
+        .trim()
+        .escape()
+        .isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('country')
+        .exists()
+        .isString()
+        .trim()
+        .escape()
+        .custom(this.countryValidator)
+        .isLength({ max: DATATYPES_LENGTH.STRING }),
     ];
+  }
+
+  /**
+   * Country validator.
+   */
+  countryValidator(value, { req }) {
+    const { countries: { whitelist, blacklist } } = config.registration;
+    const foundCountry = countries.findOne('countryCode', value);
+
+    if (!foundCountry) {
+      throw new Error('The country code is invalid.');
+    }
+    if (
+      // Focus with me! In case whitelist is not empty and the given coutry is not 
+      // in whitelist throw the error.
+      // 
+      // And in case the blacklist is not empty and the given country exists 
+      // in the blacklist throw the goddamn error.
+      (whitelist.length > 0 && whitelist.indexOf(value) === -1) && 
+      (blacklist.length > 0 && blacklist.indexOf(value) !== -1)
+    ) {
+      throw new Error('The country code is not supported yet.');
+    }
+    return true;
+  }
+
+  /**
+   * Phone number validator.
+   */
+  phoneNumberValidator(value, { req }) {
+    const phoneNumber = parsePhoneNumber(value, req.body.country);
+
+    if (!phoneNumber || !phoneNumber.isValid()) {
+      throw new Error('Phone number is invalid with the given country code.');
+    }
+    return true;
   }
 
   /**
