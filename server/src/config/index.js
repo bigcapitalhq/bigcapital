@@ -144,5 +144,17 @@ export default {
       duration: 60,
       blockDuration: 60 * 10,
     }
+  },
+
+  /**
+   * Users registeration configuration.
+   */
+  registration: {
+    countries: {
+      whitelist: [
+        'LY',
+      ],
+      blacklist: [],
+    }
   }
 };

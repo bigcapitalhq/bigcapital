@@ -31,6 +31,22 @@ export default class ItemsController extends BaseController {
       this.handlerServiceErrors,
     );
     router.post(
+      '/:id/activate', [
+      ...this.validateSpecificItemSchema,
+    ],
+      this.validationResult,
+      asyncMiddleware(this.activateItem.bind(this)),
+      this.handlerServiceErrors
+    );
+    router.post(
+      '/:id/inactivate', [
+        ...this.validateSpecificItemSchema,
+    ],
+      this.validationResult,
+      asyncMiddleware(this.inactivateItem.bind(this)),
+      this.handlerServiceErrors,
+    )
+    router.post(
       '/:id', [
       ...this.validateItemSchema,
       ...this.validateSpecificItemSchema,
@@ -170,7 +186,7 @@ export default class ItemsController extends BaseController {
    */
   get validateBulkSelectSchema(): ValidationChain[] {
     return [
-      query('ids').isArray({ min: 2 }),
+      query('ids').isArray({ min: 1 }),
       query('ids.*').isNumeric().toInt(),
     ];
   }
@@ -227,6 +243,50 @@ export default class ItemsController extends BaseController {
   }
 
   /**
+   * Activates the given item.
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {NextFunction} next 
+   */
+  async activateItem(req: Request, res: Response, next: NextFunction) {
+    const { tenantId } = req;
+    const itemId: number = req.params.id;
+
+    try {
+      await this.itemsService.activateItem(tenantId, itemId);
+
+      return res.status(200).send({
+        id: itemId,
+        message: 'The item has been activated successfully.',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Inactivates the given item.
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {NextFunction} next 
+   */
+  async inactivateItem(req: Request, res: Response, next: NextFunction) {
+    const { tenantId } = req;
+    const itemId: number = req.params.id;
+
+    try {
+      await this.itemsService.inactivateItem(tenantId, itemId);
+
+      return res.status(200).send({
+        id: itemId,
+        message: 'The item has been inactivated successfully.',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
    * Deletes the given item from the storage.
    * @param {Request} req 
    * @param {Response} res 
@@ -258,6 +318,8 @@ export default class ItemsController extends BaseController {
 
       return res.status(200).send({ item: storedItem });
     } catch (error) {
+      console.log(error);
+
       next(error)
     }
   }
@@ -309,7 +371,11 @@ export default class ItemsController extends BaseController {
   
     try {
       await this.itemsService.bulkDeleteItems(tenantId, itemsIds);
-      return res.status(200).send({ ids: itemsIds });
+
+      return res.status(200).send({
+        ids: itemsIds,
+        message: 'Items have been deleted successfully.',
+      });
     } catch (error) {
       next(error);
     }
