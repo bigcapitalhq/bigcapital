@@ -186,25 +186,18 @@ function BillsDataTable({
         className: 'amount',
       },
       {
-        id: 'reference_no',
-        Header: formatMessage({ id: 'reference_no' }),
-        accessor: 'reference_no',
-        width: 140,
-        className: 'reference_no',
-      },
-      {
         id: 'status',
         Header: formatMessage({ id: 'status' }),
         accessor: (row) => (
           <Choose>
             <Choose.When condition={row.is_open}>
-              <Tag minimal={true}>
+              <Tag minimal={true} intent={Intent.SUCCESS}>
                 <T id={'opened'} />
               </Tag>
             </Choose.When>
 
             <Choose.Otherwise>
-              <Tag minimal={true} intent={Intent.WARNING}>
+              <Tag minimal={true}>
                 <T id={'draft'} />
               </Tag>
             </Choose.Otherwise>
@@ -212,6 +205,13 @@ function BillsDataTable({
         ),
         width: 140,
         className: 'status',
+      },
+      {
+        id: 'reference_no',
+        Header: formatMessage({ id: 'reference_no' }),
+        accessor: 'reference_no',
+        width: 140,
+        className: 'reference_no',
       },
       {
         id: 'actions',

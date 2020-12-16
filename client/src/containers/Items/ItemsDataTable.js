@@ -12,7 +12,14 @@ import {
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import classNames from 'classnames';
 
-import { Icon, DataTable, Money, LoadingIndicator, Choose } from 'components';
+import {
+  Icon,
+  DataTable,
+  Money,
+  LoadingIndicator,
+  Choose,
+  If,
+} from 'components';
 import ItemsEmptyStatus from './ItemsEmptyStatus';
 import { useIsValuePassed } from 'hooks';
 import { CLASSES } from 'common/classes';
@@ -36,6 +43,8 @@ function ItemsDataTable({
   // props
   onEditItem,
   onDeleteItem,
+  onInactiveItem,
+  onActivateItem,
   onSelectedRowsChange,
 }) {
   const { formatMessage } = useIntl();
@@ -83,6 +92,20 @@ function ItemsDataTable({
           text={formatMessage({ id: 'edit_item' })}
           onClick={handleEditItem(item)}
         />
+        <If condition={item.active}>
+          <MenuItem
+            text={formatMessage({ id: 'inactivate_item' })}
+            icon={<Icon icon="pause-16" iconSize={16} />}
+            onClick={() => onInactiveItem(item)}
+          />
+        </If>
+        <If condition={!item.active}>
+          <MenuItem
+            text={formatMessage({ id: 'activate_item' })}
+            icon={<Icon icon="play-16" iconSize={16} />}
+            onClick={() => onActivateItem(item)}
+          />
+        </If>
         <MenuItem
           text={formatMessage({ id: 'delete_item' })}
           icon={<Icon icon="trash-16" iconSize={16} />}
@@ -91,7 +114,13 @@ function ItemsDataTable({
         />
       </Menu>
     ),
-    [handleEditItem, handleDeleteItem, formatMessage],
+    [
+      handleEditItem,
+      handleDeleteItem,
+      onInactiveItem,
+      onActivateItem,
+      formatMessage,
+    ],
   );
 
   const handleRowContextMenu = useCallback(
@@ -148,11 +177,11 @@ function ItemsDataTable({
       {
         Header: formatMessage({ id: 'cost_price' }),
         accessor: (row) =>
-        !isBlank(row.sell_price) ? (
-          <Money amount={row.cost_price} currency={'USD'} />
-        ) : (
-          ''
-        ),
+          !isBlank(row.sell_price) ? (
+            <Money amount={row.cost_price} currency={'USD'} />
+          ) : (
+            ''
+          ),
         className: 'cost-price',
         width: 150,
       },
@@ -196,6 +225,12 @@ function ItemsDataTable({
     [onSelectedRowsChange],
   );
 
+  const rowClassNames = (row) => {
+    return {
+      inactive: !row.original.active,
+    };
+  };
+
   const showEmptyStatus = [
     itemsCurrentPage.length === 0,
     itemsCurrentViewId === -1,
@@ -221,6 +256,7 @@ function ItemsDataTable({
               rowContextMenu={handleRowContextMenu}
               expandable={false}
               sticky={true}
+              rowClassNames={rowClassNames}
               pagination={true}
               pagesCount={itemsPagination.pagesCount}
               autoResetSortBy={false}

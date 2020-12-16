@@ -5,6 +5,9 @@ import {
   deleteEstimate,
   fetchEstimate,
   fetchEstimatesTable,
+  deliverEstimate,
+  approveEstimate,
+  rejectEstimate
 } from 'store/Estimate/estimates.actions';
 import t from 'store/types';
 
@@ -15,6 +18,9 @@ const mapDipatchToProps = (dispatch) => ({
   requestFetchEstimatesTable: (query = {}) =>
     dispatch(fetchEstimatesTable({ query: { ...query } })),
   requestDeleteEstimate: (id) => dispatch(deleteEstimate({ id })),
+  requestDeliverdEstimate: (id) => dispatch(deliverEstimate({ id })),
+  requestApproveEstimate: (id) => dispatch(approveEstimate({ id })),
+  requestRejectEstimate: (id) => dispatch(rejectEstimate({ id })),
 
   changeEstimateView: (id) =>
     dispatch({

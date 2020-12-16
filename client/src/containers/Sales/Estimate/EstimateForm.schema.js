@@ -27,6 +27,7 @@ const Schema = Yup.object().shape({
     .min(1)
     .max(DATATYPES_LENGTH.TEXT)
     .label(formatMessage({ id: 'note' })),
+  delivered: Yup.boolean().required(),
   entries: Yup.array().of(
     Yup.object().shape({
       quantity: Yup.number()

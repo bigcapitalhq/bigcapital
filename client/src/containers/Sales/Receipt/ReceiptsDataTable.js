@@ -159,7 +159,7 @@ function ReceiptsDataTable({
         accessor: (row) => (
           <Choose>
             <Choose.When condition={row.is_closed}>
-              <Tag minimal={true}>
+              <Tag minimal={true} intent={Intent.SUCCESS}>
                 <T id={'closed'} />
               </Tag>
             </Choose.When>

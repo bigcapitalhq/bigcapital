@@ -146,18 +146,18 @@ function InvoicesDataTable({
         className: 'balance',
       },
       {
-        id: 'reference_no',
-        Header: formatMessage({ id: 'reference_no' }),
-        accessor: 'reference_no',
-        width: 140,
-        className: 'reference_no',
-      },
-      {
         id: 'status',
         Header: formatMessage({ id: 'status' }),
         accessor: (row) => statusAccessor(row),
         width: 140,
         className: 'status',
+      },
+      {
+        id: 'reference_no',
+        Header: formatMessage({ id: 'reference_no' }),
+        accessor: 'reference_no',
+        width: 140,
+        className: 'reference_no',
       },
       {
         id: 'actions',

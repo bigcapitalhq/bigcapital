@@ -902,4 +902,33 @@ export default {
   open: 'Open',
   are_sure_to_open_this_bill: 'Are you sure you want to open this bill?',
   opened: 'Opened',
-};
+  the_estimate_has_been_successfully_delivered:
+    'The estimate has been successfully delivered.',
+  the_estimate_has_been_successfully_approved:
+    'The estimate has been successfully approved.',
+  the_estimate_has_been_successfully_rejected:
+    'The estimate has been successfully rejected.',
+  are_sure_to_deliver_this_estimate:
+    'Are you sure you want to deliver this estimate?',
+  approve: 'Approve',
+  are_sure_to_approve_this_estimate:
+    'Are you sure you want to approve this estimate?',
+  reject: 'Reject',
+  are_sure_to_reject_this_estimate:
+    'Are you sure you want to reject this estimate?',
+  mark_as_approved: 'Mark as approved',
+  mark_as_rejected: 'Mark as rejected',
+  delivered: 'Delivered',
+  rejected: 'Rejected',
+  approved: 'Approved',
+  the_item_has_been_successfully_inactivated:
+    'The item has been successfully inactivated.',
+  the_item_has_been_successfully_activated:
+    'The item has been successfully activated.',
+  are_sure_to_inactive_this_item:
+    'Are you sure you want to inactive this item? You will be able to activate it later',
+  are_sure_to_activate_this_item:
+    'Are you sure you want to activate this item? You will be able to inactivate it later',
+    inactivate_item: 'Inactivate Item',
+    activate_item: 'Activate Item',
+  };

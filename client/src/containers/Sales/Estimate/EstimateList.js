@@ -1,6 +1,6 @@
 import React, { useEffect, useCallback, useMemo, useState } from 'react';
 import { Route, Switch, useHistory } from 'react-router-dom';
-import { useQuery } from 'react-query';
+import { useQuery, queryCache } from 'react-query';
 import { Alert, Intent } from '@blueprintjs/core';
 
 import AppToaster from 'components/AppToaster';
@@ -35,11 +35,18 @@ function EstimateList({
   //#withEistimateActions
   requestFetchEstimatesTable,
   requestDeleteEstimate,
+  requestDeliverdEstimate,
+  requestApproveEstimate,
+  requestRejectEstimate,
   addEstimatesTableQueries,
 }) {
   const history = useHistory();
   const { formatMessage } = useIntl();
   const [deleteEstimate, setDeleteEstimate] = useState(false);
+  const [deliverEstimate, setDeliverEstimate] = useState(false);
+  const [approveEstimate, setApproveEstimate] = useState(false);
+  const [rejectEstimate, setRejectEstimate] = useState(false);
+
   const [selectedRows, setSelectedRows] = useState([]);
 
   // const fetchResourceViews = useQuery(
@@ -86,6 +93,88 @@ function EstimateList({
     });
   }, [deleteEstimate, requestDeleteEstimate, formatMessage]);
 
+  // Handle cancel/confirm estimate deliver.
+  const handleDeliverEstimate = useCallback((estimate) => {
+    setDeliverEstimate(estimate);
+  }, []);
+
+  // Handle cancel deliver estimate alert.
+  const handleCancelDeliverEstimate = useCallback(() => {
+    setDeliverEstimate(false);
+  }, []);
+
+  // Handle confirm estimate deliver.
+  const handleConfirmEstimateDeliver = useCallback(() => {
+    requestDeliverdEstimate(deliverEstimate.id)
+      .then(() => {
+        setDeliverEstimate(false);
+        AppToaster.show({
+          message: formatMessage({
+            id: 'the_estimate_has_been_successfully_delivered',
+          }),
+          intent: Intent.SUCCESS,
+        });
+        queryCache.invalidateQueries('estimates-table');
+      })
+      .catch((error) => {
+        // setDeliverEstimate(false);
+      });
+  }, [deliverEstimate, requestDeliverdEstimate, formatMessage]);
+
+  // Handle cancel/confirm estimate approve.
+  const handleApproveEstimate = useCallback((estimate) => {
+    setApproveEstimate(estimate);
+  }, []);
+
+  // Handle cancel approve estimate alert.
+  const handleCancelApproveEstimate = useCallback(() => {
+    setApproveEstimate(false);
+  }, []);
+
+  // Handle confirm estimate approve.
+  const handleConfirmEstimateApprove = useCallback(() => {
+    requestApproveEstimate(approveEstimate.id)
+      .then(() => {
+        setApproveEstimate(false);
+        AppToaster.show({
+          message: formatMessage({
+            id: 'the_estimate_has_been_successfully_approved',
+          }),
+          intent: Intent.SUCCESS,
+        });
+        queryCache.invalidateQueries('estimates-table');
+      })
+      .catch((error) => {
+        // setApproveEstimate(false);
+      });
+  }, [approveEstimate, requestApproveEstimate, formatMessage]);
+
+  // Handle cancel/confirm estimate reject.
+  const handleRejectEstimate = useCallback((estimate) => {
+    setRejectEstimate(estimate);
+  }, []);
+
+  // Handle cancel reject estimate alert.
+  const handleCancelRejectEstimate = useCallback(() => {
+    setRejectEstimate(false);
+  }, []);
+
+  // Handle confirm estimate reject.
+  const handleConfirmEstimateReject = useCallback(() => {
+    requestRejectEstimate(rejectEstimate.id)
+      .then(() => {
+        setRejectEstimate(false);
+        AppToaster.show({
+          message: formatMessage({
+            id: 'the_estimate_has_been_successfully_rejected',
+          }),
+          intent: Intent.SUCCESS,
+        });
+        queryCache.invalidateQueries('estimates-table');
+      })
+      .catch((error) => {});
+  }, [rejectEstimate, requestRejectEstimate, formatMessage]);
+
   // Handle filter change to re-fetch data-table.
   const handleFilterChanged = useCallback(() => {}, [fetchEstimate]);
 
@@ -127,6 +216,9 @@ function EstimateList({
             <EstimatesDataTable
               onDeleteEstimate={handleDeleteEstimate}
               onEditEstimate={handleEditEstimate}
+              onDeliverEstimate={handleDeliverEstimate}
+              onApproveEstimate={handleApproveEstimate}
+              onRejectEstimate={handleRejectEstimate}
               onSelectedRowsChange={handleSelectedRowsChange}
             />
           </Route>
@@ -143,6 +235,42 @@ function EstimateList({
         >
           <p>
             <T id={'once_delete_this_estimate_you_will_able_to_restore_it'} />
+          </p>
+        </Alert>
+        <Alert
+          cancelButtonText={<T id={'cancel'} />}
+          confirmButtonText={<T id={'deliver'} />}
+          intent={Intent.WARNING}
+          isOpen={deliverEstimate}
+          onCancel={handleCancelDeliverEstimate}
+          onConfirm={handleConfirmEstimateDeliver}
+        >
+          <p>
+            <T id={'are_sure_to_deliver_this_estimate'} />
+          </p>
+        </Alert>
+        <Alert
+          cancelButtonText={<T id={'cancel'} />}
+          confirmButtonText={<T id={'approve'} />}
+          intent={Intent.WARNING}
+          isOpen={approveEstimate}
+          onCancel={handleCancelApproveEstimate}
+          onConfirm={handleConfirmEstimateApprove}
+        >
+          <p>
+            <T id={'are_sure_to_approve_this_estimate'} />
+          </p>
+        </Alert>
+        <Alert
+          cancelButtonText={<T id={'cancel'} />}
+          confirmButtonText={<T id={'reject'} />}
+          intent={Intent.WARNING}
+          isOpen={rejectEstimate}
+          onCancel={handleCancelRejectEstimate}
+          onConfirm={handleConfirmEstimateReject}
+        >
+          <p>
+            <T id={'are_sure_to_approve_this_estimate'} />
           </p>
         </Alert>
       </DashboardPageContent>

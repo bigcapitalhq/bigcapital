@@ -105,3 +105,11 @@ export const deleteBulkItems = ({ ids }) => {
         });
     });
 };
+
+export const activateItem = ({ id }) => {
+  return (dispatch) => ApiService.post(`items/${id}/activate`);
+};
+
+export const inactiveItem = ({ id }) => {
+  return (dispatch) => ApiService.post(`items/${id}/inactivate`);
+};

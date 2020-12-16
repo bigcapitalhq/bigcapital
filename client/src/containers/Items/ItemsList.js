@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback, useState, useMemo } from 'react';
 import { Route, Switch, useHistory } from 'react-router-dom';
 import { Intent, Alert } from '@blueprintjs/core';
-import { useQuery } from 'react-query';
+import { useQuery, queryCache } from 'react-query';
 import {
   FormattedMessage as T,
   FormattedHTMLMessage,
@@ -38,10 +38,14 @@ function ItemsList({
   // #withItemsActions
   requestDeleteItem,
   requestFetchItems,
+  requestInactiveItem,
+  requestActivateItem,
   addItemsTableQueries,
   requestDeleteBulkItems,
 }) {
   const [deleteItem, setDeleteItem] = useState(false);
+  const [inactiveItem, setInactiveItem] = useState(false);
+  const [activateItem, setActivateItem] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
   const [bulkDelete, setBulkDelete] = useState(false);
 
@@ -65,9 +69,8 @@ function ItemsList({
   );
 
   // Handle fetching the items table based on the given query.
-  const fetchItems = useQuery(
-    ['items-table', itemsTableQuery],
-    (key, _query) => requestFetchItems({ ..._query }),
+  const fetchItems = useQuery(['items-table', itemsTableQuery], (key, _query) =>
+    requestFetchItems({ ..._query }),
   );
 
   // Handle click delete item.
@@ -92,33 +95,36 @@ function ItemsList({
 
   // handle confirm delete item.
   const handleConfirmDeleteItem = useCallback(() => {
-    requestDeleteItem(deleteItem.id).then(() => {
-      AppToaster.show({
-        message: formatMessage({
-          id: 'the_item_has_been_successfully_deleted',
-        }),
-        intent: Intent.SUCCESS,
-      });
-      setDeleteItem(false);
-    }).catch(({ errors }) => {
-      if (errors.find(error => error.type === 'ITEM_HAS_ASSOCIATED_TRANSACTINS')) {
+    requestDeleteItem(deleteItem.id)
+      .then(() => {
         AppToaster.show({
           message: formatMessage({
-            id: 'the_item_has_associated_transactions',
+            id: 'the_item_has_been_successfully_deleted',
           }),
-          intent: Intent.DANGER,
+          intent: Intent.SUCCESS,
         });
-      }
-      setDeleteItem(false);
-    });
+        setDeleteItem(false);
+      })
+      .catch(({ errors }) => {
+        if (
+          errors.find(
+            (error) => error.type === 'ITEM_HAS_ASSOCIATED_TRANSACTINS',
+          )
+        ) {
+          AppToaster.show({
+            message: formatMessage({
+              id: 'the_item_has_associated_transactions',
+            }),
+            intent: Intent.DANGER,
+          });
+        }
+        setDeleteItem(false);
+      });
   }, [requestDeleteItem, deleteItem, formatMessage]);
 
-  const handleFetchData = useCallback(
-    ({ pageIndex, pageSize, sortBy }) => {
-     
-    },
-    [addItemsTableQueries],
-  );
+  const handleFetchData = useCallback(({ pageIndex, pageSize, sortBy }) => {}, [
+    addItemsTableQueries,
+  ]);
 
   // Handle filter change to re-fetch the items.
   const handleFilterChanged = useCallback(
@@ -174,6 +180,62 @@ function ItemsList({
     setBulkDelete(false);
   }, []);
 
+  // Handle cancel/confirm item inactive.
+  const handleInactiveItem = useCallback((item) => {
+    setInactiveItem(item);
+  }, []);
+
+  // Handle cancel inactive item alert.
+  const handleCancelInactiveItem = useCallback(() => {
+    setInactiveItem(false);
+  }, []);
+
+  // Handle confirm item Inactive.
+  const handleConfirmItemInactive = useCallback(() => {
+    requestInactiveItem(inactiveItem.id)
+      .then(() => {
+        setInactiveItem(false);
+        AppToaster.show({
+          message: formatMessage({
+            id: 'the_item_has_been_successfully_inactivated',
+          }),
+          intent: Intent.SUCCESS,
+        });
+        queryCache.invalidateQueries('items-table');
+      })
+      .catch((error) => {
+        setInactiveItem(false);
+      });
+  }, [inactiveItem, requestInactiveItem, formatMessage]);
+
+  // Handle activate item click.
+  const handleActivateItem = useCallback((item) => {
+    setActivateItem(item);
+  });
+
+  // Handle activate item alert cancel.
+  const handleCancelActivateItem = useCallback(() => {
+    setActivateItem(false);
+  });
+
+  // Handle activate item confirm.
+  const handleConfirmItemActivate = useCallback(() => {
+    requestActivateItem(activateItem.id)
+      .then(() => {
+        setActivateItem(false);
+        AppToaster.show({
+          message: formatMessage({
+            id: 'the_item_has_been_successfully_activated',
+          }),
+          intent: Intent.SUCCESS,
+        });
+        queryCache.invalidateQueries('items-table');
+      })
+      .catch((error) => {
+        setActivateItem(false);
+      });
+  }, [activateItem, requestActivateItem, formatMessage]);
+
   return (
     <DashboardInsider
       loading={fetchResourceViews.isFetching || fetchResourceFields.isFetching}
@@ -196,6 +258,8 @@ function ItemsList({
             <ItemsDataTable
               onDeleteItem={handleDeleteItem}
               onEditItem={handleEditItem}
+              onInactiveItem={handleInactiveItem}
+              onActivateItem={handleActivateItem}
               onSelectedRowsChange={handleSelectedRowsChange}
             />
             <Alert
@@ -229,6 +293,30 @@ function ItemsList({
                 <T
                   id={'once_delete_these_items_you_will_not_able_restore_them'}
                 />
+              </p>
+            </Alert>
+            <Alert
+              cancelButtonText={<T id={'cancel'} />}
+              confirmButtonText={<T id={'inactivate'} />}
+              intent={Intent.WARNING}
+              isOpen={inactiveItem}
+              onCancel={handleCancelInactiveItem}
+              onConfirm={handleConfirmItemInactive}
+            >
+              <p>
+                <T id={'are_sure_to_inactive_this_item'} />
+              </p>
+            </Alert>
+            <Alert
+              cancelButtonText={<T id={'cancel'} />}
+              confirmButtonText={<T id={'activate'} />}
+              intent={Intent.WARNING}
+              isOpen={activateItem}
+              onCancel={handleCancelActivateItem}
+              onConfirm={handleConfirmItemActivate}
+            >
+              <p>
+                <T id={'are_sure_to_activate_this_item'} />
               </p>
             </Alert>
           </Route>

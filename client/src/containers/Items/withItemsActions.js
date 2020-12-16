@@ -6,6 +6,8 @@ import {
   submitItem,
   editItem,
   deleteBulkItems,
+  activateItem,
+  inactiveItem,
 } from 'store/items/items.actions';
 import t from 'store/types';
 
@@ -16,6 +18,8 @@ export const mapDispatchToProps = (dispatch) => ({
   requestDeleteBulkItems: (ids) => dispatch(deleteBulkItems({ ids })),
   requestSubmitItem: (form) => dispatch(submitItem({ form })),
   requestEditItem: (id, form) => dispatch(editItem({ id, form })),
+  requestInactiveItem: (id) => dispatch(inactiveItem({ id })),
+  requestActivateItem: (id) => dispatch(activateItem({ id })),
   addBulkActionItem: (id) =>
     dispatch({
       type: t.ITEM_BULK_ACTION_ADD,

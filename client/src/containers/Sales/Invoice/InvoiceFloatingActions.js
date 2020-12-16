@@ -32,7 +32,7 @@ export default function InvoiceFloatingActions({
   const handleSubmitDeliverBtnClick = (event) => {
     saveInvoke(onSubmitClick, event, {
       redirect: true,
-      delivered: true,
+      deliver: true,
     });
   };
 
@@ -40,7 +40,7 @@ export default function InvoiceFloatingActions({
     submitForm();
     saveInvoke(onSubmitClick, event, {
       redirect: false,
-      delivered: true,
+      deliver: true,
       resetForm: true,
     });
   };
@@ -49,14 +49,14 @@ export default function InvoiceFloatingActions({
     submitForm();
     saveInvoke(onSubmitClick, event, {
       redirect: false,
-      delivered: true,
+      deliver: true,
     });
   };
 
   const handleSubmitDraftBtnClick = (event) => {
     saveInvoke(onSubmitClick, event, {
       redirect: true,
-      delivered: false,
+      deliver: false,
     });
   };
 
@@ -64,7 +64,7 @@ export default function InvoiceFloatingActions({
     submitForm();
     saveInvoke(onSubmitClick, event, {
       redirect: false,
-      delivered: false,
+      deliver: false,
       resetForm: true,
     });
   };
@@ -73,7 +73,7 @@ export default function InvoiceFloatingActions({
     submitForm();
     saveInvoke(onSubmitClick, event, {
       redirect: false,
-      delivered: false,
+      deliver: false,
     });
   };
 

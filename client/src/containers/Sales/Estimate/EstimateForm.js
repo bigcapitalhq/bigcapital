@@ -54,6 +54,7 @@ const defaultInitialValues = {
   estimate_date: moment(new Date()).format('YYYY-MM-DD'),
   expiration_date: moment(new Date()).format('YYYY-MM-DD'),
   estimate_number: '',
+  delivered: '',
   reference: '',
   note: '',
   terms_conditions: '',
@@ -181,6 +182,7 @@ const EstimateForm = ({
     }
     const form = {
       ...values,
+      delivered: submitPayload.deliver,
       // Exclude all entries properties that out of request schema.
       entries: entries.map((entry) => ({
         ...pick(entry, Object.keys(defaultEstimate)),
@@ -256,7 +258,7 @@ const EstimateForm = ({
         initialValues={initialValues}
         onSubmit={handleFormSubmit}
       >
-        {({ isSubmitting }) => (
+        {({ isSubmitting ,values }) => (
           <Form>
             <EstimateFormHeader
               onEstimateNumberChanged={handleEstimateNumberChange}
@@ -269,7 +271,7 @@ const EstimateForm = ({
               estimateId={estimateId}
               onSubmitClick={handleSubmitClick}
               onCancelClick={handleCancelClick}
-              estimatePublished={true}
+              isDelivered={values.delivered}
             />
           </Form>
         )}

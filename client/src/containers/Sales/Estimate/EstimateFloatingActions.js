@@ -25,38 +25,38 @@ export default function EstimateFloatingActions({
   onCancelClick,
   onClearClick,
   estimateId,
-  estimatePublished,
+  isDelivered,
 }) {
   const { resetForm, submitForm } = useFormikContext();
 
-  const handleSubmitPublishBtnClick = (event) => {
+  const handleSubmitDeliverBtnClick = (event) => {
     saveInvoke(onSubmitClick, event, {
       redirect: true,
-      publish: true,
+      deliver: true,
     });
   };
 
-  const handleSubmitPublishAndNewBtnClick = (event) => {
+  const handleSubmitDeliverAndNewBtnClick = (event) => {
     submitForm();
     saveInvoke(onSubmitClick, event, {
       redirect: false,
-      publish: true,
+      deliver: true,
       resetForm: true,
     });
   };
 
-  const handleSubmitPublishContinueEditingBtnClick = (event) => {
+  const handleSubmitDeliverContinueEditingBtnClick = (event) => {
     submitForm();
     saveInvoke(onSubmitClick, event, {
       redirect: false,
-      publish: true,
+      deliver: true,
     });
   };
 
   const handleSubmitDraftBtnClick = (event) => {
     saveInvoke(onSubmitClick, event, {
       redirect: true,
-      publish: false,
+      deliver: false,
     });
   };
 
@@ -64,7 +64,7 @@ export default function EstimateFloatingActions({
     submitForm();
     saveInvoke(onSubmitClick, event, {
       redirect: false,
-      publish: false,
+      deliver: false,
       resetForm: true,
     });
   };
@@ -73,7 +73,7 @@ export default function EstimateFloatingActions({
     submitForm();
     saveInvoke(onSubmitClick, event, {
       redirect: false,
-      publish: false,
+      deliver: false,
     });
   };
 
@@ -88,26 +88,26 @@ export default function EstimateFloatingActions({
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>
-      {/* ----------- Save And Publish ----------- */}
-      <If condition={!estimateId || !estimatePublished}>
+      {/* ----------- Save And Deliver ----------- */}
+      <If condition={!estimateId || !isDelivered}>
         <ButtonGroup>
           <Button
             disabled={isSubmitting}
             intent={Intent.PRIMARY}
             type="submit"
-            onClick={handleSubmitPublishBtnClick}
-            text={<T id={'save_publish'} />}
+            onClick={handleSubmitDeliverBtnClick}
+            text={<T id={'save_and_deliver'} />}
           />
           <Popover
             content={
               <Menu>
                 <MenuItem
                   text={<T id={'publish_and_new'} />}
-                  onClick={handleSubmitPublishAndNewBtnClick}
+                  onClick={handleSubmitDeliverAndNewBtnClick}
                 />
                 <MenuItem
                   text={<T id={'publish_continue_editing'} />}
-                  onClick={handleSubmitPublishContinueEditingBtnClick}
+                  onClick={handleSubmitDeliverContinueEditingBtnClick}
                 />
               </Menu>
             }
@@ -156,13 +156,13 @@ export default function EstimateFloatingActions({
         </ButtonGroup>
       </If>
       {/* ----------- Save and New ----------- */}
-      <If condition={estimateId && estimatePublished}>
+      <If condition={estimateId && isDelivered}>
         <ButtonGroup>
           <Button
             disabled={isSubmitting}
             intent={Intent.PRIMARY}
             type="submit"
-            onClick={handleSubmitPublishBtnClick}
+            onClick={handleSubmitDeliverBtnClick}
             text={<T id={'save'} />}
           />
           <Popover
@@ -170,7 +170,7 @@ export default function EstimateFloatingActions({
               <Menu>
                 <MenuItem
                   text={<T id={'save_and_new'} />}
-                  onClick={handleSubmitPublishAndNewBtnClick}
+                  onClick={handleSubmitDeliverAndNewBtnClick}
                 />
               </Menu>
             }
