@@ -73,7 +73,7 @@ function RegisterUserForm({ requestRegister, requestLogin }) {
     validationSchema: ValidationSchema,
     initialValues: {
       ...initialValues,
-      country: 'libya',
+      country: 'LY',
     },
     onSubmit: (values, { setSubmitting, setErrors }) => {
       requestRegister(values)
@@ -152,7 +152,6 @@ function RegisterUserForm({ requestRegister, requestLogin }) {
         </div>
 
         <form onSubmit={handleSubmit} className={'authentication-page__form'}>
-          
           <Row className={'name-section'}>
             <Col md={6}>
               <FormGroup
@@ -279,6 +278,4 @@ function RegisterUserForm({ requestRegister, requestLogin }) {
   );
 }
 
-export default compose(
-  withAuthenticationActions,
-)(RegisterUserForm);
+export default compose(withAuthenticationActions)(RegisterUserForm);

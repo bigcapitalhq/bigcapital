@@ -49,18 +49,19 @@ function EstimateList({
 
   const [selectedRows, setSelectedRows] = useState([]);
 
-  // const fetchResourceViews = useQuery(
-  //   ['resource-views', 'sales_estimates'],
-  //   (key, resourceName) => requestFetchResourceViews(resourceName),
-  // );
+  const fetchResourceViews = useQuery(
+    ['resource-views', 'sale_estimate'],
+    (key, resourceName) => requestFetchResourceViews(resourceName),
+  );
 
-  // const fetchResourceFields = useQuery(
-  //   ['resource-fields', 'sales_estimates'],
-  //   (key, resourceName) => requestFetchResourceFields(resourceName),
-  // );
+  const fetchResourceFields = useQuery(
+    ['resource-fields', 'sale_estimate'],
+    (key, resourceName) => requestFetchResourceFields(resourceName),
+  );
 
-  const fetchEstimate = useQuery(['estimates-table', estimatesTableQuery], () =>
-    requestFetchEstimatesTable(),
+  const fetchEstimate = useQuery(
+    ['estimates-table', estimatesTableQuery],
+    (key, _query) => requestFetchEstimatesTable({ ..._query }),
   );
 
   useEffect(() => {
@@ -117,7 +118,7 @@ function EstimateList({
         queryCache.invalidateQueries('estimates-table');
       })
       .catch((error) => {
-        // setDeliverEstimate(false);
+        setDeliverEstimate(false);
       });
   }, [deliverEstimate, requestDeliverdEstimate, formatMessage]);
 
@@ -145,7 +146,7 @@ function EstimateList({
         queryCache.invalidateQueries('estimates-table');
       })
       .catch((error) => {
-        // setApproveEstimate(false);
+        setApproveEstimate(false);
       });
   }, [approveEstimate, requestApproveEstimate, formatMessage]);
 
@@ -176,7 +177,7 @@ function EstimateList({
   }, [rejectEstimate, requestRejectEstimate, formatMessage]);
 
   // Handle filter change to re-fetch data-table.
-  const handleFilterChanged = useCallback(() => {}, [fetchEstimate]);
+  const handleFilterChanged = useCallback(() => {}, []);
 
   // Calculates the selected rows
   const selectedRowsCount = useMemo(() => Object.values(selectedRows).length, [
@@ -198,8 +199,8 @@ function EstimateList({
   );
   return (
     <DashboardInsider
-      // loading={fetchResourceViews.isFetching || fetchResourceFields.isFetching}
-      name={'sales_estimates'}
+      loading={fetchResourceViews.isFetching || fetchResourceFields.isFetching}
+      name={'sale_estimate'}
     >
       <EstimateActionsBar
         // onBulkDelete={}

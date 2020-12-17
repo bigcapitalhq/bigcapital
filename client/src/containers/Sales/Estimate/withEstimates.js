@@ -20,7 +20,7 @@ export default (mapState) => {
       estimatesCurrentPage: getEstimatesItems(state, props, query),
       estimatesCurrentViewId: getEstimatesCurrentViewId(state, props),
 
-      estimateViews: getResourceViews(state, props, 'sales_estimates'),
+      estimateViews: getResourceViews(state, props, 'sale_estimate'),
       estimateItems: state.salesEstimates.items,
       
       estimatesTableQuery: query,

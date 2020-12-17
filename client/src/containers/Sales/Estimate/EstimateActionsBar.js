@@ -3,8 +3,6 @@ import Icon from 'components/Icon';
 import {
   Button,
   Classes,
-  Menu,
-  MenuItem,
   Popover,
   NavbarDivider,
   NavbarGroup,
@@ -38,7 +36,7 @@ function EstimateActionsBar({
 
   // #withEstimateActions
   addEstimatesTableQueries,
-
+  changeEstimateView,
   // #own Porps
   onFilterChanged,
   selectedRows = [],
@@ -52,48 +50,25 @@ function EstimateActionsBar({
     history.push('/estimates/new');
   }, [history]);
 
-  // const filterDropdown = FilterDropdown({
-  //   fields: resourceFields,
-  //   initialCondition: {
-  //     fieldKey: 'estimate_number',
-  //     compatator: 'contains',
-  //     value: '',
-  //   },
-  //   onFilterChange: (filterConditions) => {
-  //     setFilterCount(filterConditions.length || 0);
-  //     addEstimatesTableQueries({
-  //       filter_roles: filterConditions || '',
-  //     });
-  //     onFilterChanged && onFilterChanged(filterConditions);
-  //   },
-  // });
-
   const hasSelectedRows = useMemo(() => selectedRows.length > 0, [
     selectedRows,
   ]);
 
-  const viewsMenuItems = estimateViews.map((view) => {
-    return (
-      <MenuItem href={`${path}/${view.id}/custom_view`} text={view.name} />
-    );
-  });
-
+  const handleTabChange = (viewId) => {
+    changeEstimateView(viewId.id || -1);
+    addEstimatesTableQueries({
+      custom_view_id: viewId.id || null,
+    });
+  };
+  
   return (
     <DashboardActionsBar>
       <NavbarGroup>
-        <Popover
-          content={<Menu>{viewsMenuItems}</Menu>}
-          minimal={true}
-          interactionKind={PopoverInteractionKind.HOVER}
-          position={Position.BOTTOM_LEFT}
-        >
-          <Button
-            className={classNames(Classes.MINIMAL, 'button--table-views')}
-            icon={<Icon icon="table-16" iconSize={16} />}
-            text={<T id={'table_views'} />}
-            rightIcon={'caret-down'}
-          />
-        </Popover>
+        <DashboardActionViewsList
+          resourceName={'estimates'}
+          views={estimateViews}
+          onChange={handleTabChange}
+        />
 
         <NavbarDivider />
         <Button
@@ -151,7 +126,7 @@ function EstimateActionsBar({
 }
 
 const mapStateToProps = (state, props) => ({
-  resourceName: 'sales_estimates',
+  resourceName: 'sale_estimate',
 });
 const withEstimateActionsBar = connect(mapStateToProps);
 

@@ -3,8 +3,6 @@ import Icon from 'components/Icon';
 import {
   Button,
   Classes,
-  Menu,
-  MenuItem,
   Popover,
   NavbarDivider,
   NavbarGroup,
@@ -40,13 +38,12 @@ function InvoiceActionsBar({
 
   // #withInvoiceActions
   addInvoiceTableQueries,
-
+  changeInvoiceView,
   // #own Porps
   onFilterChanged,
   selectedRows = [],
 }) {
   const history = useHistory();
-  const { path } = useRouteMatch();
   const [filterCount, setFilterCount] = useState(0);
   const { formatMessage } = useIntl();
 
@@ -54,10 +51,21 @@ function InvoiceActionsBar({
     history.push('/invoices/new');
   }, [history]);
 
+  const hasSelectedRows = useMemo(() => selectedRows.length > 0, [
+    selectedRows,
+  ]);
+
+  const handleTabChange = (viewId) => {
+    changeInvoiceView(viewId.id || -1);
+    addInvoiceTableQueries({
+      custom_view_id: viewId.id || null,
+    });
+  };
+
   // const filterDropdown = FilterDropdown({
   //   initialCondition: {
-  //     fieldKey: 'reference_no',
-  //     compatator: 'contains',
+  //     fieldKey: '',
+  //     compatator: '',
   //     value: '',
   //   },
   //   fields: resourceFields,
@@ -69,16 +77,13 @@ function InvoiceActionsBar({
   //   },
   // });
 
-  const hasSelectedRows = useMemo(() => selectedRows.length > 0, [
-    selectedRows,
-  ]);
-
   return (
     <DashboardActionsBar>
       <NavbarGroup>
         <DashboardActionViewsList
-          resourceName={'sales_invoices'}
+          resourceName={'invoices'}
           views={invoicesViews}
+          onChange={handleTabChange}
         />
         <NavbarDivider />
         <Button

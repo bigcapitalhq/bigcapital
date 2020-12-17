@@ -69,7 +69,8 @@ export const fetchInvoicesTable = ({ query } = {}) => {
             payload: {
               sales_invoices: response.data.sales_invoices,
               pagination: response.data.pagination,
-              customViewId: response.data.customViewId || -1,
+              customViewId:
+                response.data?.filter_meta?.view?.custom_view_id || -1,
             },
           });
           dispatch({
@@ -82,7 +83,7 @@ export const fetchInvoicesTable = ({ query } = {}) => {
             type: t.INVOICES_PAGINATION_SET,
             payload: {
               pagination: response.data.pagination,
-              customViewId: response.data.customViewId || -1,
+              customViewId: response.data?.filter_meta?.view?.custom_view_id ||-1
             },
           });
           dispatch({

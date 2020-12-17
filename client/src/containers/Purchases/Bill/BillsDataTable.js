@@ -60,23 +60,8 @@ function BillsDataTable({
   onOpenBill,
   onSelectedRowsChange,
 }) {
-  const { custom_view_id: customViewId } = useParams();
   const { formatMessage } = useIntl();
   const isLoadedBefore = useIsValuePassed(billsLoading, false);
-
-  useEffect(() => {
-    if (customViewId) {
-      changeCurrentView(customViewId);
-      setTopbarEditView(customViewId);
-    }
-    changePageSubtitle(customViewId && viewMeta ? viewMeta.name : '');
-  }, [
-    customViewId,
-    changeCurrentView,
-    changePageSubtitle,
-    setTopbarEditView,
-    viewMeta,
-  ]);
 
   const handleFetchData = useCallback(
     ({ pageIndex, pageSize, sortBy }) => {

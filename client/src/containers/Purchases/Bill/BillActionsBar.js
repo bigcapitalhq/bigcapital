@@ -38,19 +38,29 @@ function BillActionsBar({
 
   //#withBillActions
   addBillsTableQueries,
-
+  changeBillView,
   // #own Porps
   onFilterChanged,
   selectedRows = [],
 }) {
   const history = useHistory();
-  const { path } = useRouteMatch();
   const [filterCount, setFilterCount] = useState(0);
   const { formatMessage } = useIntl();
 
   const handleClickNewBill = useCallback(() => {
     history.push('/bills/new');
   }, [history]);
+
+  const hasSelectedRows = useMemo(() => selectedRows.length > 0, [
+    selectedRows,
+  ]);
+
+  const handleTabChange = (viewId) => {
+    changeBillView(viewId.id || -1);
+    addBillsTableQueries({
+      custom_view_id: viewId.id || null,
+    });
+  };
 
   //   const FilterDropdown = FilterDropdown({
   //   initialCondition: {
@@ -67,14 +77,14 @@ function BillActionsBar({
   //   },
   // });
 
-  const hasSelectedRows = useMemo(() => selectedRows.length > 0, [
-    selectedRows,
-  ]);
-
   return (
     <DashboardActionsBar>
       <NavbarGroup>
-        <DashboardActionViewsList resourceName={'bills'} views={[]} />
+        <DashboardActionViewsList
+          resourceName={'bills'}
+          views={billsViews}
+          onChange={handleTabChange}
+        />
         <NavbarDivider />
         <Button
           className={Classes.MINIMAL}
@@ -139,10 +149,8 @@ export default compose(
   withResourceDetail(({ resourceFields }) => ({
     resourceFields,
   })),
-
-  // withBills(({billsViews})=>({
-  //   billsViews
-  // })),
-
+  withBills(({ billsViews }) => ({
+    billsViews,
+  })),
   withBillActions,
 )(BillActionsBar);
