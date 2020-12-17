@@ -160,5 +160,8 @@ export default {
       ],
       blacklist: [],
     }
-  }
+  },
+
+  protocol: '',
+  hostname: '',
 };

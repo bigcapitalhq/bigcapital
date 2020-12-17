@@ -1,12 +1,20 @@
 import TenantRepository from "./TenantRepository";
-import { Customer } from 'models'
+import { Customer } from 'models';
+
 export default class CustomerRepository extends TenantRepository {
   /**
-   * Constructor method.
+   * Contact repository. 
    */
   constructor(knex, cache) {
     super(knex, cache);
-    this.model = Customer;
+    this.repositoryName = 'ContactRepository';
+  }
+
+  /**
+   * Gets the repository's model.
+   */
+  get model() {
+    return Customer.bindKnex(this.knex);
   }
 
   changeBalance(vendorId: number, amount: number) {

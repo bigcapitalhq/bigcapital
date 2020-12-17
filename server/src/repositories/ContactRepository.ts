@@ -4,10 +4,9 @@ import { Contact } from 'models'
 
 export default class ContactRepository extends TenantRepository {
   /**
-   * Constructor method.
+   * Gets the repository's model.
    */
-  constructor(knex, cache) {
-    super(knex, cache);
-    this.model = Contact;
+  get model() {
+    return Contact.bindKnex(this.knex);
   }
 }

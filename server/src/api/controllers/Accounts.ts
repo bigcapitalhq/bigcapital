@@ -10,13 +10,13 @@ import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import { DATATYPES_LENGTH } from 'data/DataTypes';
 
 @Service()
-export default class AccountsController extends BaseController{
+export default class AccountsController extends BaseController {
   @Inject()
   accountsService: AccountsService;
 
   @Inject()
   dynamicListService: DynamicListingService;
- 
+
   /**
    * Router constructor method.
    */
@@ -24,84 +24,72 @@ export default class AccountsController extends BaseController{
     const router = Router();
 
     router.post(
-      '/bulk/:type(activate|inactivate)', [
-        ...this.bulkSelectIdsQuerySchema
-      ],
+      '/bulk/:type(activate|inactivate)',
+      [...this.bulkSelectIdsQuerySchema],
       this.validationResult,
       asyncMiddleware(this.bulkToggleActivateAccounts.bind(this))
     );
     router.post(
-      '/:id/activate', [
-        ...this.accountParamSchema,
-      ],
+      '/:id/activate',
+      [...this.accountParamSchema],
       asyncMiddleware(this.activateAccount.bind(this)),
-      this.catchServiceErrors,
+      this.catchServiceErrors
     );
     router.post(
-      '/:id/inactivate', [
-        ...this.accountParamSchema,
-      ],
+      '/:id/inactivate',
+      [...this.accountParamSchema],
       asyncMiddleware(this.inactivateAccount.bind(this)),
-      this.catchServiceErrors,
+      this.catchServiceErrors
     );
     router.post(
-      '/:id/close', [
-        ...this.accountParamSchema,
-        ...this.closingAccountSchema,
-      ],
+      '/:id/close',
+      [...this.accountParamSchema, ...this.closingAccountSchema],
       this.validationResult,
       asyncMiddleware(this.closeAccount.bind(this)),
-      this.catchServiceErrors,
-    )
+      this.catchServiceErrors
+    );
     router.post(
-      '/:id', [
-        ...this.accountDTOSchema,
-        ...this.accountParamSchema,
-      ],
+      '/:id',
+      [...this.accountDTOSchema, ...this.accountParamSchema],
       this.validationResult,
       asyncMiddleware(this.editAccount.bind(this)),
-      this.catchServiceErrors,
+      this.catchServiceErrors
     );
     router.post(
-      '/', [
-        ...this.accountDTOSchema,
-      ],
+      '/',
+      [...this.accountDTOSchema],
       this.validationResult,
       asyncMiddleware(this.newAccount.bind(this)),
-      this.catchServiceErrors,
+      this.catchServiceErrors
     );
     router.get(
-      '/:id', [
-        ...this.accountParamSchema,
-      ],
+      '/:id',
+      [...this.accountParamSchema],
       this.validationResult,
       asyncMiddleware(this.getAccount.bind(this)),
-      this.catchServiceErrors,
+      this.catchServiceErrors
     );
     router.get(
-      '/', [
-        ...this.accountsListSchema,
-      ],
+      '/',
+      [...this.accountsListSchema],
       this.validationResult,
       asyncMiddleware(this.getAccountsList.bind(this)),
       this.dynamicListService.handlerErrorsToResponse,
-      this.catchServiceErrors,
+      this.catchServiceErrors
     );
     router.delete(
-      '/', [
-        ...this.bulkSelectIdsQuerySchema,
-      ],
+      '/',
+      [...this.bulkSelectIdsQuerySchema],
       this.validationResult,
       asyncMiddleware(this.deleteBulkAccounts.bind(this)),
-      this.catchServiceErrors,
+      this.catchServiceErrors
     );
     router.delete(
-      '/:id', [
-        ...this.accountParamSchema
-      ],
+      '/:id',
+      [...this.accountParamSchema],
       this.validationResult,
       asyncMiddleware(this.deleteAccount.bind(this)),
-      this.catchServiceErrors,
+      this.catchServiceErrors
     );
     return router;
   }
@@ -138,9 +126,7 @@ export default class AccountsController extends BaseController{
   }
 
   get accountParamSchema() {
-    return [
-      param('id').exists().isNumeric().toInt()
-    ];
+    return [param('id').exists().isNumeric().toInt()];
   }
 
   get accountsListSchema() {
@@ -164,21 +150,24 @@ export default class AccountsController extends BaseController{
     return [
       check('to_account_id').exists().isNumeric().toInt(),
       check('delete_after_closing').exists().isBoolean(),
-    ]
+    ];
   }
 
   /**
    * Creates a new account.
-   * @param {Request} req - 
+   * @param {Request} req -
    * @param {Response} res -
-   * @param {NextFunction} next - 
+   * @param {NextFunction} next -
    */
   async newAccount(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const accountDTO: IAccountDTO = this.matchedBodyData(req);
 
     try {
-      const account = await this.accountsService.newAccount(tenantId, accountDTO);
+      const account = await this.accountsService.newAccount(
+        tenantId,
+        accountDTO
+      );
 
       return res.status(200).send({ id: account.id });
     } catch (error) {
@@ -188,7 +177,7 @@ export default class AccountsController extends BaseController{
 
   /**
    * Edit account details.
-   * @param {Request} req 
+   * @param {Request} req
    * @param {Response} res
    * @return {Response}
    */
@@ -198,7 +187,11 @@ export default class AccountsController extends BaseController{
     const accountDTO: IAccountDTO = this.matchedBodyData(req);
 
     try {
-      const account = await this.accountsService.editAccount(tenantId, accountId, accountDTO);
+      const account = await this.accountsService.editAccount(
+        tenantId,
+        accountId,
+        accountDTO
+      );
 
       return res.status(200).send({
         id: account.id,
@@ -211,18 +204,20 @@ export default class AccountsController extends BaseController{
 
   /**
    * Get details of the given account.
-   * @param {Request} req 
+   * @param {Request} req
    * @param {Response} res
    * @return {Response}
    */
   async getAccount(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const { id: accountId } = req.params;
-    
-    try {
-      const account = await this.accountsService.getAccount(tenantId, accountId);
-      return res.status(200).send({ account });
 
+    try {
+      const account = await this.accountsService.getAccount(
+        tenantId,
+        accountId
+      );
+      return res.status(200).send({ account });
     } catch (error) {
       next(error);
     }
@@ -230,7 +225,7 @@ export default class AccountsController extends BaseController{
 
   /**
    * Delete the given account.
-   * @param {Request} req 
+   * @param {Request} req
    * @param {Response} res
    * @return {Response}
    */
@@ -252,11 +247,11 @@ export default class AccountsController extends BaseController{
 
   /**
    * Activate the given account.
-   * @param {Response} res - 
-   * @param {Request} req - 
+   * @param {Response} res -
+   * @param {Request} req -
    * @return {Response}
    */
-  async activateAccount(req: Request, res: Response, next: Function){
+  async activateAccount(req: Request, res: Response, next: Function) {
     const { id: accountId } = req.params;
     const { tenantId } = req;
 
@@ -270,18 +265,17 @@ export default class AccountsController extends BaseController{
 
   /**
    * Inactive the given account.
-   * @param {Response} res - 
-   * @param {Request} req - 
+   * @param {Response} res -
+   * @param {Request} req -
    * @return {Response}
    */
-  async inactivateAccount(req: Request, res: Response, next: Function){
+  async inactivateAccount(req: Request, res: Response, next: Function) {
     const { id: accountId } = req.params;
     const { tenantId } = req;
 
     try {
       await this.accountsService.activateAccount(tenantId, accountId, false);
       return res.status(200).send({ id: accountId });
-
     } catch (error) {
       next(error);
     }
@@ -289,18 +283,26 @@ export default class AccountsController extends BaseController{
 
   /**
    * Bulk activate/inactivate accounts.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
-  async bulkToggleActivateAccounts(req: Request, res: Response, next: Function) {
+  async bulkToggleActivateAccounts(
+    req: Request,
+    res: Response,
+    next: Function
+  ) {
     const { type } = req.params;
-    const { tenantId  } = req;
+    const { tenantId } = req;
     const { ids: accountsIds } = req.query;
-    
+
     try {
-      const isActive = (type === 'activate' ? true : false);
-      await this.accountsService.activateAccounts(tenantId, accountsIds, isActive);
+      const isActive = type === 'activate' ? true : false;
+      await this.accountsService.activateAccounts(
+        tenantId,
+        accountsIds,
+        isActive
+      );
 
       const activatedText = isActive ? 'activated' : 'inactivated';
 
@@ -315,9 +317,9 @@ export default class AccountsController extends BaseController{
 
   /**
    * Deletes accounts in bulk.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
   async deleteBulkAccounts(req: Request, res: Response, next: NextFunction) {
     const { ids: accountsIds } = req.query;
@@ -337,8 +339,8 @@ export default class AccountsController extends BaseController{
 
   /**
    * Retrieve accounts datatable list.
-   * @param {Request} req 
-   * @param {Response} res 
+   * @param {Request} req
+   * @param {Response} res
    */
   async getAccountsList(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
@@ -352,11 +354,14 @@ export default class AccountsController extends BaseController{
       filter.filterRoles = JSON.parse(filter.stringifiedFilterRoles);
     }
     try {
-      const { accounts, filterMeta } = await this.accountsService.getAccountsList(tenantId, filter);
+      const {
+        accounts,
+        filterMeta,
+      } = await this.accountsService.getAccountsList(tenantId, filter);
 
       return res.status(200).send({
         accounts,
-        filter_meta: this.transfromToResponse(filterMeta)
+        filter_meta: this.transfromToResponse(filterMeta),
       });
     } catch (error) {
       next(error);
@@ -365,9 +370,9 @@ export default class AccountsController extends BaseController{
 
   /**
    * Closes the given account.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param next 
+   * @param {Request} req
+   * @param {Response} res
+   * @param next
    */
   async closeAccount(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
@@ -389,72 +394,72 @@ export default class AccountsController extends BaseController{
 
   /**
    * Transforms service errors to response.
-   * @param {Error} 
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {ServiceError} error 
-   */ 
+   * @param {Error}
+   * @param {Request} req
+   * @param {Response} res
+   * @param {ServiceError} error
+   */
   catchServiceErrors(error, req: Request, res: Response, next: NextFunction) {
     if (error instanceof ServiceError) {
       if (error.errorType === 'account_not_found') {
-        return res.boom.notFound(
-          'The given account not found.',
-          { errors: [{ type: 'ACCOUNT.NOT.FOUND', code: 100 }] }
-        );
+        return res.boom.notFound('The given account not found.', {
+          errors: [{ type: 'ACCOUNT.NOT.FOUND', code: 100 }],
+        });
       }
       if (error.errorType === 'account_name_not_unqiue') {
-        return res.boom.badRequest(
-          'The given account not unique.',
-          { errors: [{ type: 'ACCOUNT.NAME.NOT.UNIQUE', code: 150 }], }
-        );
+        return res.boom.badRequest('The given account not unique.', {
+          errors: [{ type: 'ACCOUNT.NAME.NOT.UNIQUE', code: 150 }],
+        });
       }
       if (error.errorType === 'account_type_not_found') {
-        return res.boom.badRequest(
-          'The given account type not found.',
-          { errors: [{ type: 'ACCOUNT_TYPE_NOT_FOUND', code: 200 }] }
-        );
+        return res.boom.badRequest('The given account type not found.', {
+          errors: [{ type: 'ACCOUNT_TYPE_NOT_FOUND', code: 200 }],
+        });
       }
       if (error.errorType === 'account_type_not_allowed_to_changed') {
         return res.boom.badRequest(
           'Not allowed to change account type of the account.',
-          { errors: [{ type: 'NOT.ALLOWED.TO.CHANGE.ACCOUNT.TYPE', code: 300 }] }
+          {
+            errors: [{ type: 'NOT.ALLOWED.TO.CHANGE.ACCOUNT.TYPE', code: 300 }],
+          }
         );
       }
       if (error.errorType === 'parent_account_not_found') {
-        return res.boom.badRequest(
-          'The parent account not found.',
-          { errors: [{ type: 'PARENT_ACCOUNT_NOT_FOUND', code: 400 }] },
-        );
+        return res.boom.badRequest('The parent account not found.', {
+          errors: [{ type: 'PARENT_ACCOUNT_NOT_FOUND', code: 400 }],
+        });
       }
       if (error.errorType === 'parent_has_different_type') {
-        return res.boom.badRequest(
-          'The parent account has different type.',
-          { errors: [{ type: 'PARENT.ACCOUNT.HAS.DIFFERENT.ACCOUNT.TYPE', code: 500 }] }
-        );
+        return res.boom.badRequest('The parent account has different type.', {
+          errors: [
+            { type: 'PARENT.ACCOUNT.HAS.DIFFERENT.ACCOUNT.TYPE', code: 500 },
+          ],
+        });
       }
       if (error.errorType === 'account_code_not_unique') {
-        return res.boom.badRequest(
-          'The given account code is not unique.',
-          { errors: [{ type: 'NOT_UNIQUE_CODE', code: 600 }] }
-        );
+        return res.boom.badRequest('The given account code is not unique.', {
+          errors: [{ type: 'NOT_UNIQUE_CODE', code: 600 }],
+        });
       }
       if (error.errorType === 'account_has_associated_transactions') {
         return res.boom.badRequest(
           'You could not delete account has associated transactions.',
-          { errors: [{ type: 'ACCOUNT.HAS.ASSOCIATED.TRANSACTIONS', code: 800 }] }
+          {
+            errors: [
+              { type: 'ACCOUNT.HAS.ASSOCIATED.TRANSACTIONS', code: 800 },
+            ],
+          }
         );
       }
       if (error.errorType === 'account_predefined') {
-        return res.boom.badRequest(
-          'You could not delete predefined account',
-          { errors: [{ type: 'ACCOUNT.PREDEFINED', code: 900 }] }
-        );
+        return res.boom.badRequest('You could not delete predefined account', {
+          errors: [{ type: 'ACCOUNT.PREDEFINED', code: 900 }],
+        });
       }
       if (error.errorType === 'accounts_not_found') {
-        return res.boom.notFound(
-          'Some of the given accounts not found.',
-          { errors: [{ type: 'SOME.ACCOUNTS.NOT_FOUND', code: 1000 }] },
-        );
+        return res.boom.notFound('Some of the given accounts not found.', {
+          errors: [{ type: 'SOME.ACCOUNTS.NOT_FOUND', code: 1000 }],
+        });
       }
       if (error.errorType === 'predefined_accounts') {
         return res.boom.badRequest(
@@ -465,10 +470,17 @@ export default class AccountsController extends BaseController{
       if (error.errorType === 'close_account_and_to_account_not_same_type') {
         return res.boom.badRequest(
           'The close account has different root type with to account.',
-          { errors: [{ type: 'CLOSE_ACCOUNT_AND_TO_ACCOUNT_NOT_SAME_TYPE', code: 1200 }] },
+          {
+            errors: [
+              {
+                type: 'CLOSE_ACCOUNT_AND_TO_ACCOUNT_NOT_SAME_TYPE',
+                code: 1200,
+              },
+            ],
+          }
         );
       }
     }
-    next(error)
+    next(error);
   }
-};
+}

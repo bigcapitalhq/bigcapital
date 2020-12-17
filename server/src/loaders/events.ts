@@ -2,6 +2,7 @@
 // Here we import all events.
 import 'subscribers/authentication';
 import 'subscribers/organization';
+import 'subscribers/inviteUser';
 import 'subscribers/manualJournals';
 import 'subscribers/expenses';
 import 'subscribers/bills';

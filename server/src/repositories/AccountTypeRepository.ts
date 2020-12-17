@@ -4,11 +4,10 @@ import { AccountType } from 'models';
 
 export default class AccountTypeRepository extends TenantRepository {
   /**
-   * Constructor method.
+   * Gets the repository's model.
    */
-  constructor(knex, cache) {
-    super(knex, cache);
-    this.model = AccountType;
+  get model() {
+    return AccountType.bindKnex(this.knex);
   }
 
   /**

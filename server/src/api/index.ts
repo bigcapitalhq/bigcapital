@@ -49,8 +49,8 @@ export default () => {
   app.use('/invite', Container.get(InviteUsers).nonAuthRouter());
   app.use('/licenses', Container.get(Licenses).router());
   app.use('/subscription', Container.get(Subscription).router());
-  
   app.use('/organization', Container.get(Organization).router());
+  app.use('/ping', Container.get(Ping).router());
   
   // - Settings routes.
   // ---------------------------
@@ -81,7 +81,6 @@ export default () => {
   dashboard.use(EnsureConfiguredMiddleware);
   dashboard.use(EnsureTenantIsSeeded);
 
-  dashboard.use('/ping', Container.get(Ping).router());
 
   dashboard.use('/users', Container.get(Users).router());
   dashboard.use('/invite', Container.get(InviteUsers).authRouter());

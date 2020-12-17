@@ -41,7 +41,7 @@ export default class SubscriptionService {
     const { tenantRepository } = this.sysRepositories;
 
     const plan = await Plan.query().findOne('slug', planSlug);
-    const tenant = await tenantRepository.getById(tenantId);
+    const tenant = await tenantRepository.findOneById(tenantId);
 
     const paymentViaLicense = new LicensePaymentMethod();
     const paymentContext = new PaymentContext(paymentViaLicense);

@@ -13,7 +13,7 @@ const attachCurrentUser = async (req: Request, res: Response, next: Function) =>
 
   try {
     Logger.info('[attach_user_middleware] finding system user by id.');
-    const user = await systemUserRepository.getById(req.token.id);
+    const user = await systemUserRepository.findOneById(req.token.id);
     console.log(user);
 
     if (!user) {

@@ -21,10 +21,8 @@ export default async ({ expressApp }) => {
   objectionLoader({ knex });
 
   // It returns the agenda instance because it's needed in the subsequent loaders
-  const { agenda } = await dependencyInjectorLoader({
-    mongoConnection,
-    knex,
-  });
+  const { agenda } = await dependencyInjectorLoader({ mongoConnection, knex });
+
   await jobsLoader({ agenda });
   Logger.info('[init] Jobs loaded');
 

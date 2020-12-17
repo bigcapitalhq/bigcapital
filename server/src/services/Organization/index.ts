@@ -106,7 +106,7 @@ export default class OrganizationService {
     });
 
     const { tenantRepository } = this.sysRepositories;
-    const tenant = await tenantRepository.getById(user.tenantId);
+    const tenant = await tenantRepository.findOneById(user.tenantId);
 
     return [tenant];
   }
@@ -150,7 +150,8 @@ export default class OrganizationService {
    */
   private async getTenantByOrgIdOrThrowError(organizationId: string) {
     const { tenantRepository } = this.sysRepositories;
-    const tenant = await tenantRepository.getByOrgId(organizationId);
+    const tenant = await tenantRepository.findOne({ organizationId });
+
     this.throwIfTenantNotExists(tenant);
 
     return tenant;

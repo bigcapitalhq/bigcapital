@@ -15,11 +15,10 @@ interface IJournalTransactionsFilter {
 
 export default class AccountTransactionsRepository extends TenantRepository {
   /**
-   * Constructor method.
+   * Gets the repository's model.
    */
-  constructor(knex, cache) {
-    super(knex, cache);
-    this.model = AccountTransaction;
+  get model() {
+    return AccountTransaction.bindKnex(this.knex);
   }
 
   journal(filter: IJournalTransactionsFilter) {

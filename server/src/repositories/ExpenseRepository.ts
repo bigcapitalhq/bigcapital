@@ -4,19 +4,18 @@ import { Expense } from 'models';
 
 export default class ExpenseRepository extends TenantRepository {
   /**
-   * Constructor method.
+   * Gets the repository's model.
    */
-  constructor(knex, cache) {
-    super(knex, cache);
-    this.model = Expense;
+  get model() {
+    return Expense.bindKnex(this.knex);
   }
 
   /**
    * Publish the given expense.
    * @param {number} expenseId 
    */
-  async publish(expenseId: number): Promise<void> {
-    super.update({
+  publish(expenseId: number): Promise<void> {
+    return super.update({
       id: expenseId,
       publishedAt: moment().toMySqlDateTime(),
     });

@@ -3,10 +3,9 @@ import TenantRepository from 'repositories/TenantRepository';
 
 export default class BillRepository extends TenantRepository {
   /**
-   * Constructor method.
+   * Gets the repository's model.
    */
-  constructor(knex, cache) {
-    super(knex, cache);
-    this.model = Bill;
+  get model() {
+    return Bill.bindKnex(this.knex);
   }
 }

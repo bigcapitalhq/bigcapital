@@ -4,17 +4,17 @@ import {
   EventDispatcher,
   EventDispatcherInterface,
 } from 'decorators/eventDispatcher';
-import JournalPoster from "services/Accounting/JournalPoster";
-import JournalCommands from "services/Accounting/JournalCommands";
+import JournalPoster from 'services/Accounting/JournalPoster';
+import JournalCommands from 'services/Accounting/JournalCommands';
 import ContactsService from 'services/Contacts/ContactsService';
-import { 
+import {
   IVendorNewDTO,
   IVendorEditDTO,
   IVendor,
   IVendorsFilter,
   IPaginationMeta,
-  IFilterMeta
- } from 'interfaces';
+  IFilterMeta,
+} from 'interfaces';
 import { ServiceError } from 'exceptions';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import TenancyService from 'services/Tenancy/TenancyService';
@@ -39,10 +39,10 @@ export default class VendorsService {
 
   /**
    * Converts vendor to contact DTO.
-   * @param {IVendorNewDTO|IVendorEditDTO} vendorDTO 
+   * @param {IVendorNewDTO|IVendorEditDTO} vendorDTO
    * @returns {IContactDTO}
    */
-  private vendorToContactDTO(vendorDTO: IVendorNewDTO|IVendorEditDTO) {
+  private vendorToContactDTO(vendorDTO: IVendorNewDTO | IVendorEditDTO) {
     return {
       ...vendorDTO,
       active: defaultTo(vendorDTO.active, true),
@@ -51,31 +51,49 @@ export default class VendorsService {
 
   /**
    * Creates a new vendor.
-   * @param {number} tenantId 
-   * @param {IVendorNewDTO} vendorDTO 
+   * @param {number} tenantId
+   * @param {IVendorNewDTO} vendorDTO
    * @return {Promise<void>}
    */
   public async newVendor(tenantId: number, vendorDTO: IVendorNewDTO) {
-    this.logger.info('[vendor] trying create a new vendor.', { tenantId, vendorDTO });
+    this.logger.info('[vendor] trying create a new vendor.', {
+      tenantId,
+      vendorDTO,
+    });
 
     const contactDTO = this.vendorToContactDTO(vendorDTO);
-    const vendor = await this.contactService.newContact(tenantId, contactDTO, 'vendor');
+    const vendor = await this.contactService.newContact(
+      tenantId,
+      contactDTO,
+      'vendor'
+    );
 
     // Triggers `onVendorCreated` event.
     await this.eventDispatcher.dispatch(events.vendors.onCreated, {
-      tenantId, vendorId: vendor.id, vendor,
+      tenantId,
+      vendorId: vendor.id,
+      vendor,
     });
     return vendor;
   }
 
   /**
    * Edits details of the given vendor.
-   * @param {number} tenantId 
-   * @param {IVendorEditDTO} vendorDTO 
+   * @param {number} tenantId
+   * @param {IVendorEditDTO} vendorDTO
    */
-  public async editVendor(tenantId: number, vendorId: number, vendorDTO: IVendorEditDTO) {
+  public async editVendor(
+    tenantId: number,
+    vendorId: number,
+    vendorDTO: IVendorEditDTO
+  ) {
     const contactDTO = this.vendorToContactDTO(vendorDTO);
-    const vendor = await this.contactService.editContact(tenantId, vendorId, contactDTO, 'vendor');
+    const vendor = await this.contactService.editContact(
+      tenantId,
+      vendorId,
+      contactDTO,
+      'vendor'
+    );
 
     await this.eventDispatcher.dispatch(events.vendors.onEdited);
 
@@ -84,17 +102,21 @@ export default class VendorsService {
 
   /**
    * Retrieve the given vendor details by id or throw not found.
-   * @param {number} tenantId 
-   * @param {number} customerId 
+   * @param {number} tenantId
+   * @param {number} customerId
    */
   private getVendorByIdOrThrowError(tenantId: number, customerId: number) {
-    return this.contactService.getContactByIdOrThrowError(tenantId, customerId, 'vendor');
+    return this.contactService.getContactByIdOrThrowError(
+      tenantId,
+      customerId,
+      'vendor'
+    );
   }
 
   /**
    * Deletes the given vendor from the storage.
-   * @param {number} tenantId 
-   * @param {number} vendorId 
+   * @param {number} tenantId
+   * @param {number} vendorId
    * @return {Promise<void>}
    */
   public async deleteVendor(tenantId: number, vendorId: number) {
@@ -103,17 +125,23 @@ export default class VendorsService {
     await this.getVendorByIdOrThrowError(tenantId, vendorId);
     await this.vendorHasNoBillsOrThrowError(tenantId, vendorId);
 
-    this.logger.info('[vendor] trying to delete vendor.', { tenantId, vendorId });
+    this.logger.info('[vendor] trying to delete vendor.', {
+      tenantId,
+      vendorId,
+    });
     await Contact.query().findById(vendorId).delete();
 
-    await this.eventDispatcher.dispatch(events.vendors.onDeleted, { tenantId, vendorId });
+    await this.eventDispatcher.dispatch(events.vendors.onDeleted, {
+      tenantId,
+      vendorId,
+    });
     this.logger.info('[vendor] deleted successfully.', { tenantId, vendorId });
   }
 
   /**
    * Retrieve the given vendor details.
-   * @param {number} tenantId 
-   * @param {number} vendorId 
+   * @param {number} tenantId
+   * @param {number} vendorId
    */
   public async getVendor(tenantId: number, vendorId: number) {
     return this.contactService.getContact(tenantId, vendorId, 'vendor');
@@ -121,26 +149,26 @@ export default class VendorsService {
 
   /**
    * Writes vendor opening balance journal entries.
-   * @param {number} tenantId 
-   * @param {number} vendorId 
-   * @param {number} openingBalance 
+   * @param {number} tenantId
+   * @param {number} vendorId
+   * @param {number} openingBalance
    * @return {Promise<void>}
    */
   public async writeVendorOpeningBalanceJournal(
     tenantId: number,
     vendorId: number,
-    openingBalance: number,
+    openingBalance: number
   ) {
     const journal = new JournalPoster(tenantId);
     const journalCommands = new JournalCommands(journal);
 
-    this.logger.info('[vendor] writing opening balance journal entries.', { tenantId, vendorId });
-    await journalCommands.vendorOpeningBalance(vendorId, openingBalance)
-    
-    await Promise.all([
-      journal.saveBalance(),
-      journal.saveEntries(),
-    ]);
+    this.logger.info('[vendor] writing opening balance journal entries.', {
+      tenantId,
+      vendorId,
+    });
+    await journalCommands.vendorOpeningBalance(vendorId, openingBalance);
+
+    await Promise.all([journal.saveBalance(), journal.saveEntries()]);
   }
 
   /**
@@ -149,28 +177,43 @@ export default class VendorsService {
    * @param {number} vendorId -
    * @return {Promise<void>}
    */
-  public async revertOpeningBalanceEntries(tenantId: number, vendorId: number|number[]) {
+  public async revertOpeningBalanceEntries(
+    tenantId: number,
+    vendorId: number | number[]
+  ) {
     const id = Array.isArray(vendorId) ? vendorId : [vendorId];
 
-    this.logger.info('[customer] trying to revert opening balance journal entries.', { tenantId, customerId });
+    this.logger.info(
+      '[customer] trying to revert opening balance journal entries.',
+      { tenantId, customerId }
+    );
     await this.contactService.revertJEntriesContactsOpeningBalance(
-      tenantId, id, 'vendor',
+      tenantId,
+      id,
+      'vendor'
     );
   }
 
   /**
    * Retrieve the given vendors or throw error if one of them not found.
-   * @param {numebr} tenantId 
+   * @param {numebr} tenantId
    * @param {number[]} vendorsIds
    */
-  private getVendorsOrThrowErrorNotFound(tenantId: number, vendorsIds: number[]) {
-    return this.contactService.getContactsOrThrowErrorNotFound(tenantId, vendorsIds, 'vendor');
+  private getVendorsOrThrowErrorNotFound(
+    tenantId: number,
+    vendorsIds: number[]
+  ) {
+    return this.contactService.getContactsOrThrowErrorNotFound(
+      tenantId,
+      vendorsIds,
+      'vendor'
+    );
   }
 
   /**
    * Deletes the given vendors from the storage.
-   * @param {number} tenantId 
-   * @param {number[]} vendorsIds 
+   * @param {number} tenantId
+   * @param {number[]} vendorsIds
    * @return {Promise<void>}
    */
   public async deleteBulkVendors(
@@ -183,38 +226,53 @@ export default class VendorsService {
     await this.vendorsHaveNoBillsOrThrowError(tenantId, vendorsIds);
 
     await Contact.query().whereIn('id', vendorsIds).delete();
-    await this.eventDispatcher.dispatch(events.vendors.onBulkDeleted, { tenantId, vendorsIds });
+    await this.eventDispatcher.dispatch(events.vendors.onBulkDeleted, {
+      tenantId,
+      vendorsIds,
+    });
 
-    this.logger.info('[vendor] bulk deleted successfully.', { tenantId, vendorsIds });
+    this.logger.info('[vendor] bulk deleted successfully.', {
+      tenantId,
+      vendorsIds,
+    });
   }
 
   /**
    * Validates the vendor has no associated bills or throw service error.
-   * @param {number} tenantId 
-   * @param {number} vendorId 
+   * @param {number} tenantId
+   * @param {number} vendorId
    */
-  private async vendorHasNoBillsOrThrowError(tenantId: number, vendorId: number) {
+  private async vendorHasNoBillsOrThrowError(
+    tenantId: number,
+    vendorId: number
+  ) {
     const { billRepository } = this.tenancy.repositories(tenantId);
 
     // Retrieve the bill that associated to the given vendor id.
     const bills = await billRepository.find({ vendor_id: vendorId });
 
     if (bills.length > 0) {
-      throw new ServiceError('vendor_has_bills')
+      throw new ServiceError('vendor_has_bills');
     }
   }
 
   /**
    * Throws error in case one of vendors have associated bills.
-   * @param  {number} tenantId 
-   * @param  {number[]} customersIds 
+   * @param  {number} tenantId
+   * @param  {number[]} customersIds
    * @throws {ServiceError}
    */
-  private async vendorsHaveNoBillsOrThrowError(tenantId: number, vendorsIds: number[]) {
+  private async vendorsHaveNoBillsOrThrowError(
+    tenantId: number,
+    vendorsIds: number[]
+  ) {
     const { billRepository } = this.tenancy.repositories(tenantId);
 
     // Retrieves bills that assocaited to the given vendors.
-    const vendorsBills = await billRepository.findWhereIn('vendor_id', vendorsIds);
+    const vendorsBills = await billRepository.findWhereIn(
+      'vendor_id',
+      vendorsIds
+    );
     const billsVendorsIds = vendorsBills.map((bill) => bill.vendorId);
 
     // The difference between the vendors ids and bills vendors ids.
@@ -233,17 +291,23 @@ export default class VendorsService {
   public async getVendorsList(
     tenantId: number,
     vendorsFilter: IVendorsFilter
-  ): Promise<{ vendors: IVendor[], pagination: IPaginationMeta, filterMeta: IFilterMeta }> {
-    const { Contact } = this.tenancy.models(tenantId);
-    const dynamicFilter = await this.dynamicListService.dynamicList(tenantId, Contact, vendorsFilter);
-
-    const { results, pagination } = await Contact.query().onBuild((builder) => {
-      builder.modify('vendor');
-      dynamicFilter.buildQuery()(builder);
-    }).pagination(
-      vendorsFilter.page - 1,
-      vendorsFilter.pageSize,
+  ): Promise<{
+    vendors: IVendor[];
+    pagination: IPaginationMeta;
+    filterMeta: IFilterMeta;
+  }> {
+    const { Vendor } = this.tenancy.models(tenantId);
+    const dynamicFilter = await this.dynamicListService.dynamicList(
+      tenantId,
+      Vendor,
+      vendorsFilter
     );
+
+    const { results, pagination } = await Vendor.query()
+      .onBuild((builder) => {
+        dynamicFilter.buildQuery()(builder);
+      })
+      .pagination(vendorsFilter.page - 1, vendorsFilter.pageSize);
 
     return {
       vendors: results,
@@ -254,28 +318,33 @@ export default class VendorsService {
 
   /**
    * Changes the opeing balance of the given vendor.
-   * @param {number} tenantId 
-   * @param {number} vendorId 
-   * @param {number} openingBalance 
-   * @param {Date|string} openingBalanceAt 
+   * @param {number} tenantId
+   * @param {number} vendorId
+   * @param {number} openingBalance
+   * @param {Date|string} openingBalanceAt
    */
   public async changeOpeningBalance(
     tenantId: number,
     vendorId: number,
     openingBalance: number,
-    openingBalanceAt: Date|string,
+    openingBalanceAt: Date | string
   ): Promise<void> {
-
     await this.contactService.changeOpeningBalance(
       tenantId,
       vendorId,
       'vendor',
       openingBalance,
-      openingBalanceAt,
+      openingBalanceAt
     );
     // Triggers `onOpeingBalanceChanged` event.
-    await this.eventDispatcher.dispatch(events.vendors.onOpeningBalanceChanged, {
-      tenantId, vendorId, openingBalance, openingBalanceAt
-    });
+    await this.eventDispatcher.dispatch(
+      events.vendors.onOpeningBalanceChanged,
+      {
+        tenantId,
+        vendorId,
+        openingBalance,
+        openingBalanceAt,
+      }
+    );
   }
 }

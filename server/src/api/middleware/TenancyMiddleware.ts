@@ -20,7 +20,7 @@ export default async (req: Request, res: Response, next: NextFunction) => {
   const { tenantRepository } = Container.get('repositories');
 
   Logger.info('[tenancy_middleware] trying get tenant by org. id from storage.');
-  const tenant = await tenantRepository.getByOrgId(organizationId);
+  const tenant = await tenantRepository.findOne({ organizationId });
 
   // When the given organization id not found on the system storage.
   if (!tenant) {

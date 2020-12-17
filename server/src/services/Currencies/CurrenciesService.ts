@@ -3,7 +3,7 @@ import {
   ICurrencyEditDTO,
   ICurrencyDTO,
   ICurrenciesService,
-  ICurrency
+  ICurrency,
 } from 'interfaces';
 import {
   EventDispatcher,
@@ -14,7 +14,7 @@ import TenancyService from 'services/Tenancy/TenancyService';
 
 const ERRORS = {
   CURRENCY_NOT_FOUND: 'currency_not_found',
-  CURRENCY_CODE_EXISTS: 'currency_code_exists'
+  CURRENCY_CODE_EXISTS: 'currency_code_exists',
 };
 
 @Service()
@@ -30,40 +30,62 @@ export default class CurrenciesService implements ICurrenciesService {
 
   /**
    * Retrieve currency by given currency code or throw not found error.
-   * @param {number} tenantId 
-   * @param {string} currencyCode 
-   * @param {number} currencyId 
+   * @param {number} tenantId
+   * @param {string} currencyCode
+   * @param {number} currencyId
    */
-  private async validateCurrencyCodeUniquiness(tenantId: number, currencyCode: string, currencyId?: number) {
+  private async validateCurrencyCodeUniquiness(
+    tenantId: number,
+    currencyCode: string,
+    currencyId?: number
+  ) {
     const { Currency } = this.tenancy.models(tenantId);
 
-    this.logger.info('[currencies] trying to validate currency code existance.', { tenantId, currencyCode });
+    this.logger.info(
+      '[currencies] trying to validate currency code existance.',
+      { tenantId, currencyCode }
+    );
     const foundCurrency = await Currency.query().onBuild((query) => {
       query.findOne('currency_code', currencyCode);
 
       if (currencyId) {
-        query.whereNot('id', currencyId)
+        query.whereNot('id', currencyId);
       }
     });
     if (foundCurrency) {
-      this.logger.info('[currencies] the currency code already exists.', { tenantId, currencyCode });
+      this.logger.info('[currencies] the currency code already exists.', {
+        tenantId,
+        currencyCode,
+      });
       throw new ServiceError(ERRORS.CURRENCY_CODE_EXISTS);
     }
   }
 
   /**
    * Retrieve currency by the given currency code or throw service error.
-   * @param {number} tenantId 
-   * @param {string} currencyCode 
+   * @param {number} tenantId
+   * @param {string} currencyCode
    */
-  private async getCurrencyByCodeOrThrowError(tenantId: number, currencyCode: string) {
+  private async getCurrencyByCodeOrThrowError(
+    tenantId: number,
+    currencyCode: string
+  ) {
     const { Currency } = this.tenancy.models(tenantId);
 
-    this.logger.info('[currencies] trying to validate currency code existance.', { tenantId, currencyCode });
-    const foundCurrency = await Currency.query().findOne('currency_code', currencyCode);
+    this.logger.info(
+      '[currencies] trying to validate currency code existance.',
+      { tenantId, currencyCode }
+    );
+    const foundCurrency = await Currency.query().findOne(
+      'currency_code',
+      currencyCode
+    );
 
     if (!foundCurrency) {
-      this.logger.info('[currencies] the given currency code not exists.', { tenantId, currencyCode });
+      this.logger.info('[currencies] the given currency code not exists.', {
+        tenantId,
+        currencyCode,
+      });
       throw new ServiceError(ERRORS.CURRENCY_NOT_FOUND);
     }
     return foundCurrency;
@@ -71,17 +93,26 @@ export default class CurrenciesService implements ICurrenciesService {
 
   /**
    * Retrieve currency by given id or throw not found error.
-   * @param {number} tenantId 
-   * @param {number} currencyId 
+   * @param {number} tenantId
+   * @param {number} currencyId
    */
-  private async getCurrencyIdOrThrowError(tenantId: number, currencyId: number) {
+  private async getCurrencyIdOrThrowError(
+    tenantId: number,
+    currencyId: number
+  ) {
     const { Currency } = this.tenancy.models(tenantId);
 
-    this.logger.info('[currencies] trying to validate currency by id existance.', { tenantId, currencyId });
+    this.logger.info(
+      '[currencies] trying to validate currency by id existance.',
+      { tenantId, currencyId }
+    );
     const foundCurrency = await Currency.query().findOne('id', currencyId);
 
     if (!foundCurrency) {
-      this.logger.info('[currencies] the currency code not found.', { tenantId, currencyId });
+      this.logger.info('[currencies] the currency code not found.', {
+        tenantId,
+        currencyId,
+      });
       throw new ServiceError(ERRORS.CURRENCY_NOT_FOUND);
     }
     return foundCurrency;
@@ -89,56 +120,87 @@ export default class CurrenciesService implements ICurrenciesService {
 
   /**
    * Creates a new currency.
-   * @param {number} tenantId 
-   * @param {ICurrencyDTO} currencyDTO 
+   * @param {number} tenantId
+   * @param {ICurrencyDTO} currencyDTO
    */
   public async newCurrency(tenantId: number, currencyDTO: ICurrencyDTO) {
     const { Currency } = this.tenancy.models(tenantId);
-    this.logger.info('[currencies] try to insert new currency.', { tenantId, currencyDTO });
+    this.logger.info('[currencies] try to insert new currency.', {
+      tenantId,
+      currencyDTO,
+    });
 
-    await this.validateCurrencyCodeUniquiness(tenantId, currencyDTO.currencyCode);
+    await this.validateCurrencyCodeUniquiness(
+      tenantId,
+      currencyDTO.currencyCode
+    );
 
     await Currency.query().insert({ ...currencyDTO });
-    this.logger.info('[currencies] the currency inserted successfully.', { tenantId, currencyDTO });
+    this.logger.info('[currencies] the currency inserted successfully.', {
+      tenantId,
+      currencyDTO,
+    });
   }
 
   /**
    * Edit details of the given currency.
-   * @param {number} tenantId 
-   * @param {number} currencyId 
-   * @param {ICurrencyDTO} currencyDTO 
+   * @param {number} tenantId
+   * @param {number} currencyId
+   * @param {ICurrencyDTO} currencyDTO
    */
-  public async editCurrency(tenantId: number, currencyId: number, currencyDTO: ICurrencyEditDTO): Promise<ICurrency> {
+  public async editCurrency(
+    tenantId: number,
+    currencyId: number,
+    currencyDTO: ICurrencyEditDTO
+  ): Promise<ICurrency> {
     const { Currency } = this.tenancy.models(tenantId);
 
-    this.logger.info('[currencies] try to edit currency.', { tenantId, currencyId, currencyDTO });
+    this.logger.info('[currencies] try to edit currency.', {
+      tenantId,
+      currencyId,
+      currencyDTO,
+    });
     await this.getCurrencyIdOrThrowError(tenantId, currencyId);
 
-    const currency = await Currency.query().patchAndFetchById(currencyId, { ...currencyDTO });
-    this.logger.info('[currencies] the currency edited successfully.', { tenantId, currencyDTO });
+    const currency = await Currency.query().patchAndFetchById(currencyId, {
+      ...currencyDTO,
+    });
+    this.logger.info('[currencies] the currency edited successfully.', {
+      tenantId,
+      currencyDTO,
+    });
 
     return currency;
   }
 
   /**
    * Delete the given currency code.
-   * @param {number} tenantId 
-   * @param {string} currencyCode 
+   * @param {number} tenantId
+   * @param {string} currencyCode
    * @return {Promise<}
    */
-  public async deleteCurrency(tenantId: number, currencyCode: string): Promise<void> {
+  public async deleteCurrency(
+    tenantId: number,
+    currencyCode: string
+  ): Promise<void> {
     const { Currency } = this.tenancy.models(tenantId);
-    this.logger.info('[currencies] trying to delete the given currency.', { tenantId, currencyCode });
+    this.logger.info('[currencies] trying to delete the given currency.', {
+      tenantId,
+      currencyCode,
+    });
 
     await this.getCurrencyByCodeOrThrowError(tenantId, currencyCode);
-    
+
     await Currency.query().where('currency_code', currencyCode).delete();
-    this.logger.info('[currencies] the currency deleted successfully.', { tenantId, currencyCode });
+    this.logger.info('[currencies] the currency deleted successfully.', {
+      tenantId,
+      currencyCode,
+    });
   }
 
   /**
    * Listing currencies.
-   * @param {number} tenantId 
+   * @param {number} tenantId
    * @return {Promise<ICurrency[]>}
    */
   public async listCurrencies(tenantId: number): Promise<ICurrency[]> {

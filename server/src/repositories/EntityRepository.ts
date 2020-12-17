@@ -2,7 +2,6 @@ import { cloneDeep, cloneDeepWith, forOwn, isString } from 'lodash';
 import ModelEntityNotFound from 'exceptions/ModelEntityNotFound';
 
 export default class EntityRepository {
-  modelInstance: any;
   idColumn: string;
   knex: any;
 
@@ -16,19 +15,10 @@ export default class EntityRepository {
   }
 
   /**
-   * Sets the model to the repository and bind it to knex instance.
-   */
-  set model(model) {
-    if (!this.modelInstance) {
-      this.modelInstance = model.bindKnex(this.knex);
-    }
-  }
-
-  /**
    * Retrieve the repository model binded it to knex instance.
    */
   get model() {
-    return this.modelInstance;
+    throw new Error("The repository's model is not defined.");
   }
 
   /**

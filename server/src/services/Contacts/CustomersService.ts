@@ -181,11 +181,10 @@ export default class CustomersService {
     pagination: IPaginationMeta,
     filterMeta: IFilterMeta,
   }> {
-    const { Contact } = this.tenancy.models(tenantId);
-    const dynamicList = await this.dynamicListService.dynamicList(tenantId, Contact, customersFilter);
+    const { Customer } = this.tenancy.models(tenantId);
+    const dynamicList = await this.dynamicListService.dynamicList(tenantId, Customer, customersFilter);
 
-    const { results, pagination } = await Contact.query().onBuild((query) => {
-      query.modify('customer');
+    const { results, pagination } = await Customer.query().onBuild((query) => {
       dynamicList.buildQuery()(query);
     }).pagination(
       customersFilter.page - 1,

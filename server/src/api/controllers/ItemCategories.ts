@@ -1,9 +1,5 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import {
-  check,
-  param,
-  query,
-} from 'express-validator';
+import { check, param, query } from 'express-validator';
 import ItemCategoriesService from 'services/ItemCategories/ItemCategoriesService';
 import { Inject, Service } from 'typedi';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
@@ -27,49 +23,51 @@ export default class ItemsCategoriesController extends BaseController {
   router() {
     const router = Router();
 
-    router.post('/:id', [
+    router.post(
+      '/:id',
+      [
         ...this.categoryValidationSchema,
         ...this.specificCategoryValidationSchema,
-      ], 
+      ],
       this.validationResult,
       asyncMiddleware(this.editCategory.bind(this)),
-      this.handlerServiceError,
+      this.handlerServiceError
     );
-    router.post('/', [
-        ...this.categoryValidationSchema,
-      ],
+    router.post(
+      '/',
+      [...this.categoryValidationSchema],
       this.validationResult,
       asyncMiddleware(this.newCategory.bind(this)),
-      this.handlerServiceError,
+      this.handlerServiceError
     );
-    router.delete('/', [
-        ...this.categoriesBulkValidationSchema,
-      ],
+    router.delete(
+      '/',
+      [...this.categoriesBulkValidationSchema],
       this.validationResult,
       asyncMiddleware(this.bulkDeleteCategories.bind(this)),
-      this.handlerServiceError,
+      this.handlerServiceError
     );
-    router.delete('/:id', [
-        ...this.specificCategoryValidationSchema
-      ],
+    router.delete(
+      '/:id',
+      [...this.specificCategoryValidationSchema],
       this.validationResult,
       asyncMiddleware(this.deleteItem.bind(this)),
-      this.handlerServiceError,
+      this.handlerServiceError
     );
-    router.get('/:id', [
-        ...this.specificCategoryValidationSchema,
-      ],
+    router.get(
+      '/:id',
+      [...this.specificCategoryValidationSchema],
       this.validationResult,
       asyncMiddleware(this.getCategory.bind(this)),
-      this.handlerServiceError,
+      this.handlerServiceError
     );
-    router.get('/', [
-        ...this.categoriesListValidationSchema
-      ],
+    router.get(
+      '/',
+      [...this.categoriesListValidationSchema],
       this.validationResult,
       asyncMiddleware(this.getList.bind(this)),
       this.handlerServiceError,
-      this.dynamicListService.handlerErrorsToResponse,
+      this.dynamicListService.handlerErrorsToResponse
     );
     return router;
   }
@@ -102,7 +100,7 @@ export default class ItemsCategoriesController extends BaseController {
         .optional({ nullable: true })
         .isInt({ min: 0, max: DATATYPES_LENGTH.INT_10 })
         .toInt(),
-    ]
+    ];
   }
 
   /**
@@ -131,22 +129,24 @@ export default class ItemsCategoriesController extends BaseController {
    * Validate specific item category schema.
    */
   get specificCategoryValidationSchema() {
-    return [
-      param('id').exists().toInt(),
-    ];
-  } 
+    return [param('id').exists().toInt()];
+  }
 
   /**
    * Creates a new item category.
-   * @param {Request} req 
-   * @param {Response} res 
+   * @param {Request} req
+   * @param {Response} res
    */
   async newCategory(req: Request, res: Response, next: NextFunction) {
     const { user, tenantId } = req;
     const itemCategoryOTD: IItemCategoryOTD = this.matchedBodyData(req);
 
     try {
-      const itemCategory = await this.itemCategoriesService.newItemCategory(tenantId, itemCategoryOTD, user);
+      const itemCategory = await this.itemCategoriesService.newItemCategory(
+        tenantId,
+        itemCategoryOTD,
+        user
+      );
       return res.status(200).send({ id: itemCategory.id });
     } catch (error) {
       next(error);
@@ -155,8 +155,8 @@ export default class ItemsCategoriesController extends BaseController {
 
   /**
    * Edit details of the given category item.
-   * @param  {Request} req - 
-   * @param  {Response} res - 
+   * @param  {Request} req -
+   * @param  {Response} res -
    * @return {Response}
    */
   async editCategory(req: Request, res: Response, next: NextFunction) {
@@ -165,7 +165,12 @@ export default class ItemsCategoriesController extends BaseController {
     const itemCategoryOTD: IItemCategoryOTD = this.matchedBodyData(req);
 
     try {
-      await this.itemCategoriesService.editItemCategory(tenantId, itemCategoryId, itemCategoryOTD, user);
+      await this.itemCategoriesService.editItemCategory(
+        tenantId,
+        itemCategoryId,
+        itemCategoryOTD,
+        user
+      );
       return res.status(200).send({ id: itemCategoryId });
     } catch (error) {
       next(error);
@@ -174,8 +179,8 @@ export default class ItemsCategoriesController extends BaseController {
 
   /**
    * Delete the give item category.
-   * @param  {Request} req - 
-   * @param  {Response} res - 
+   * @param  {Request} req -
+   * @param  {Response} res -
    * @return {Response}
    */
   async deleteItem(req: Request, res: Response, next: NextFunction) {
@@ -183,7 +188,11 @@ export default class ItemsCategoriesController extends BaseController {
     const { tenantId, user } = req;
 
     try {
-      await this.itemCategoriesService.deleteItemCategory(tenantId, itemCategoryId, user);
+      await this.itemCategoriesService.deleteItemCategory(
+        tenantId,
+        itemCategoryId,
+        user
+      );
       return res.status(200).send({ id: itemCategoryId });
     } catch (error) {
       next(error);
@@ -192,8 +201,8 @@ export default class ItemsCategoriesController extends BaseController {
 
   /**
    * Retrieve the list of items.
-   * @param  {Request} req - 
-   * @param  {Response} res - 
+   * @param  {Request} req -
+   * @param  {Response} res -
    * @return {Response}
    */
   async getList(req: Request, res: Response, next: NextFunction) {
@@ -206,8 +215,13 @@ export default class ItemsCategoriesController extends BaseController {
     };
 
     try {
-      const { itemCategories, filterMeta }  = await this.itemCategoriesService.getItemCategoriesList(
-        tenantId, itemCategoriesFilter, user,
+      const {
+        itemCategories,
+        filterMeta,
+      } = await this.itemCategoriesService.getItemCategoriesList(
+        tenantId,
+        itemCategoriesFilter,
+        user
       );
       return res.status(200).send({
         item_categories: itemCategories,
@@ -220,8 +234,8 @@ export default class ItemsCategoriesController extends BaseController {
 
   /**
    * Retrieve details of the given category.
-   * @param  {Request} req - 
-   * @param  {Response} res - 
+   * @param  {Request} req -
+   * @param  {Response} res -
    * @return {Response}
    */
   async getCategory(req: Request, res: Response, next: NextFunction) {
@@ -229,7 +243,11 @@ export default class ItemsCategoriesController extends BaseController {
     const { tenantId, user } = req;
 
     try {
-      const itemCategory = await this.itemCategoriesService.getItemCategory(tenantId, itemCategoryId, user);
+      const itemCategory = await this.itemCategoriesService.getItemCategory(
+        tenantId,
+        itemCategoryId,
+        user
+      );
       return res.status(200).send({ category: itemCategory });
     } catch (error) {
       next(error);
@@ -238,8 +256,8 @@ export default class ItemsCategoriesController extends BaseController {
 
   /**
    * Bulk delete the given item categories.
-   * @param  {Request} req - 
-   * @param  {Response} res - 
+   * @param  {Request} req -
+   * @param  {Response} res -
    * @return {Response}
    */
   async bulkDeleteCategories(req: Request, res: Response, next: NextFunction) {
@@ -247,7 +265,11 @@ export default class ItemsCategoriesController extends BaseController {
     const { tenantId, user } = req;
 
     try {
-      await this.itemCategoriesService.deleteItemCategories(tenantId, itemCategoriesIds, user);
+      await this.itemCategoriesService.deleteItemCategories(
+        tenantId,
+        itemCategoriesIds,
+        user
+      );
       return res.status(200).send({ ids: itemCategoriesIds });
     } catch (error) {
       next(error);
@@ -256,12 +278,17 @@ export default class ItemsCategoriesController extends BaseController {
 
   /**
    * Handles service error.
-   * @param {Error} error 
-   * @param {Request} req - 
-   * @param {Response} res - 
-   * @param {NextFunction} next 
+   * @param {Error} error
+   * @param {Request} req -
+   * @param {Response} res -
+   * @param {NextFunction} next
    */
-  handlerServiceError(error: Error, req: Request, res: Response, next: NextFunction) {
+  handlerServiceError(
+    error: Error,
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     if (error instanceof ServiceError) {
       if (error.errorType === 'CATEGORY_NOT_FOUND') {
         return res.boom.badRequest(null, {
@@ -295,7 +322,7 @@ export default class ItemsCategoriesController extends BaseController {
       }
       if (error.errorType === 'INVENTORY_ACCOUNT_NOT_FOUND') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'INVENTORY.ACCOUNT.NOT.FOUND', code: 200}],
+          errors: [{ type: 'INVENTORY.ACCOUNT.NOT.FOUND', code: 200 }],
         });
       }
       if (error.errorType === 'INVENTORY_ACCOUNT_NOT_INVENTORY') {
@@ -306,4 +333,4 @@ export default class ItemsCategoriesController extends BaseController {
     }
     next(error);
   }
-};
+}

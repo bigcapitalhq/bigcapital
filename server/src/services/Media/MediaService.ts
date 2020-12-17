@@ -157,7 +157,7 @@ export default class MediaService implements IMediaService {
 
     const mediaIds = Array.isArray(mediaId) ? mediaId : [mediaId];
 
-    const tenant = await tenantRepository.getById(tenantId);
+    const tenant = await tenantRepository.findOneById(tenantId);
     const media = await this.getMediaByIdsOrThrowError(tenantId, mediaIds);
 
     const tenantPath = `${publicPath}${tenant.organizationId}`;
@@ -192,7 +192,7 @@ export default class MediaService implements IMediaService {
 
     this.logger.info('[media] trying to upload media.', { tenantId });
 
-    const tenant = await tenantRepository.getById(tenantId);
+    const tenant = await tenantRepository.findOneById(tenantId);
     const fileName = `${attachment.md5}.png`;
 
     // Validate the attachment.

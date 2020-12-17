@@ -3,10 +3,9 @@ import TenantRepository from 'repositories/TenantRepository';
 
 export default class JournalRepository extends TenantRepository {
   /**
-   * Constructor method.
+   * Gets the repository's model.
    */
-  constructor(knex, cache) {
-    super(knex, cache);
-    this.model = ManualJournal;
+  get model() {
+    return ManualJournal.bindKnex(this.knex);
   }
 }

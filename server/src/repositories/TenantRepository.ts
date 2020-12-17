@@ -11,6 +11,5 @@ export default class TenantRepository extends CachableRepository {
    */
   constructor(knex, cache) {
     super(knex, cache);
-    this.repositoryName = this.constructor.name;
   }
 }

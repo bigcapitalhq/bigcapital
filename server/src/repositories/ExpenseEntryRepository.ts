@@ -3,10 +3,9 @@ import { ExpenseCategory } from 'models';
 
 export default class ExpenseEntyRepository extends TenantRepository {
   /**
-   * Constructor method.
+   * Gets the repository's model.
    */
-  constructor(knex, cache) {
-    super(knex, cache);
-    this.model = ExpenseCategory;
+  get model() {
+    return ExpenseCategory.bindKnex(this.knex);
   }
 }

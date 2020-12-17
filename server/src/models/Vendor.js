@@ -1,8 +1,8 @@
 import { Model, QueryBuilder } from 'objection';
 import TenantModel from 'models/TenantModel';
+import PaginationQueryBuilder from './Pagination';
 
-
-class VendorQueryBuilder extends QueryBuilder {
+class VendorQueryBuilder extends PaginationQueryBuilder {
   constructor(...args) {
     super(...args);
 

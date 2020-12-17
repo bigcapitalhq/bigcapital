@@ -3,10 +3,9 @@ import Setting from 'models/Setting';
 
 export default class SettingRepository extends TenantRepository {
   /**
-   * Constructor method.
+   * Gets the repository's model.
    */
-  constructor(knex, cache) {
-    super(knex, cache);
-    this.model = Setting;
+  get model() {
+    return Setting.bindKnex(this.knex);
   }
 }

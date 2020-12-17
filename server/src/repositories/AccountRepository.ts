@@ -1,24 +1,25 @@
 import { Account } from 'models';
 import TenantRepository from 'repositories/TenantRepository';
+import { IAccount } from 'interfaces';
 
 export default class AccountRepository extends TenantRepository {
   /**
-   * Constructor method.
+   * Gets the repository's model.
    */
-  constructor(knex, cache) {
-    super(knex, cache);
-    this.model = Account;
+  get model() {
+    return Account.bindKnex(this.knex);
   }
 
   /**
    * Retrieve accounts dependency graph.
    * @returns {}
    */
-  async getDependencyGraph(withRelation) {
-    const accounts = await this.all(withRelation);
+  async getDependencyGraph(withRelation) {    
     const cacheKey = this.getCacheKey('accounts.depGraph', withRelation);
 
     return this.cache.get(cacheKey, async () => {
+      const accounts = await this.all(withRelation);
+
       return this.model.toDependencyGraph(accounts);
     });
   }
@@ -34,5 +35,51 @@ export default class AccountRepository extends TenantRepository {
 
     await this.model.query().where('id', accountId)[method]('amount', amount);
     this.flushCache();
+  }
+
+  /**
+   * Activate user by the given id.
+   * @param  {number} userId - User id.
+   * @return {Promise<void>}
+   */
+  activateById(userId: number): Promise<IAccount> {
+    return super.update({ active: 1 }, { id: userId });
+  }
+
+  /**
+   * Inactivate user by the given id.
+   * @param  {number} userId - User id.
+   * @return {Promise<void>}
+   */
+  inactivateById(userId: number): Promise<void> {
+    return super.update({ active: 0 }, { id: userId });
+  }
+
+  /**
+   * Activate user by the given id.
+   * @param  {number} userId - User id.
+   * @return {Promise<void>}
+   */
+  async activateByIds(userIds: number[]): Promise<IAccount> {
+    const results = await this.model.query()
+      .whereIn('id', userIds)
+      .patch({ active: true });
+
+    this.flushCache();
+    return results;
+  }
+
+  /**
+   * Inactivate user by the given id.
+   * @param  {number} userId - User id.
+   * @return {Promise<void>}
+   */
+  async inactivateByIds(userIds: number[]): Promise<IAccount> {
+    const results = await this.model.query()
+      .whereIn('id', userIds)
+      .patch({ active: false });
+
+    this.flushCache();
+    return results;
   }
 }

@@ -13,6 +13,7 @@ export default class CachableRepository extends EntityRepository{
   constructor(knex, cache) {
     super(knex);
     this.cache = cache;
+    this.repositoryName = this.constructor.name;
   }
 
   /**

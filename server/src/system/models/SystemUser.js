@@ -23,6 +23,14 @@ export default class SystemUser extends mixin(SystemModel, [SoftDelete({
     return ['createdAt', 'updatedAt'];
   }
 
+  static get virtualAttributes() {
+    return ['fullName'];
+  }
+
+  get fullName() {
+    return (this.firstName + ' ' + this.lastName).trim();
+  }
+
   /**
    * Relationship mapping.
    */

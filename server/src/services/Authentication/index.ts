@@ -1,7 +1,7 @@
 import { Service, Inject, Container } from 'typedi';
 import JWT from 'jsonwebtoken';
 import uniqid from 'uniqid';
-import { omit } from 'lodash';
+import { omit, cloneDeep } from 'lodash';
 import moment from 'moment';
 import {
   EventDispatcher,
@@ -62,7 +62,6 @@ export default class AuthenticationService implements IAuthenticationService {
       emailOrPhone,
       password,
     });
-
     const { systemUserRepository } = this.sysRepositories;
     const loginThrottler = Container.get('rateLimiter.login');
 
@@ -108,10 +107,13 @@ export default class AuthenticationService implements IAuthenticationService {
     });
     const tenant = await user.$relatedQuery('tenant');
 
-    // Remove password property from user object.
-    Reflect.deleteProperty(user, 'password');
+    // Keep the user object immutable
+    const outputUser = cloneDeep(user);
 
-    return { user, token, tenant };
+    // Remove password property from user object.
+    Reflect.deleteProperty(outputUser, 'password');
+
+    return { user: outputUser, token, tenant };
   }
 
   /**
@@ -121,10 +123,10 @@ export default class AuthenticationService implements IAuthenticationService {
    */
   private async validateEmailAndPhoneUniqiness(registerDTO: IRegisterDTO) {
     const { systemUserRepository } = this.sysRepositories;
-    const isEmailExists = await systemUserRepository.getByEmail(
+    const isEmailExists = await systemUserRepository.findOneByEmail(
       registerDTO.email
     );
-    const isPhoneExists = await systemUserRepository.getByPhoneNumber(
+    const isPhoneExists = await systemUserRepository.findOneByPhoneNumber(
       registerDTO.phoneNumber
     );
 
@@ -190,7 +192,7 @@ export default class AuthenticationService implements IAuthenticationService {
    */
   private async validateEmailExistance(email: string): Promise<ISystemUser> {
     const { systemUserRepository } = this.sysRepositories;
-    const userByEmail = await systemUserRepository.getByEmail(email);
+    const userByEmail = await systemUserRepository.findOneByEmail(email);
 
     if (!userByEmail) {
       this.logger.info('[send_reset_password] The given email not found.');
@@ -255,7 +257,7 @@ export default class AuthenticationService implements IAuthenticationService {
       await this.deletePasswordResetToken(tokenModel.email);
       throw new ServiceError('token_expired');
     }
-    const user = await systemUserRepository.getByEmail(tokenModel.email);
+    const user = await systemUserRepository.findOneByEmail(tokenModel.email);
 
     if (!user) {
       throw new ServiceError('user_not_found');

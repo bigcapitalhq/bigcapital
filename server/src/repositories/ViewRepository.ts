@@ -3,11 +3,10 @@ import TenantRepository from 'repositories/TenantRepository';
 
 export default class ViewRepository extends TenantRepository {
   /**
-   * Constructor method.
+   * Gets the repository's model.
    */
-  constructor(knex, cache) {
-    super(knex, cache);
-    this.model = View;
+  get model() {
+    return View.bindKnex(this.knex);
   }
 
   /**

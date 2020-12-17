@@ -109,7 +109,7 @@ export default class OrganizationController extends BaseController{
             errors: [{ type: 'TENANT.NOT.FOUND', code: 100 }],
           });
         }
-        if (error.errorType === 'tenant_seeded') {
+        if (error.errorType === 'tenant_already_seeded') {
           return res.status(400).send({
             errors: [{ type: 'TENANT.DATABASE.ALREADY.SEEDED', code: 200 }],
           });
