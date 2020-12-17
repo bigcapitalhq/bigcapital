@@ -25,7 +25,7 @@ export default (mapState) => {
       invoicesCurrentPage: getInvoicesItems(state, props, query),
       invoicesCurrentViewId: getInvoicesCurrentViewId(state, props),
 
-      invoicesViews: getResourceViews(state, props, 'sales_invoices'),
+      invoicesViews: getResourceViews(state, props, 'sale_invoice'),
       invoicesItems: state.salesInvoices.items,
       invoicesTableQuery: query,
       invoicesPageination: getInvoicesPaginationMeta(state, props, query),

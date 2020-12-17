@@ -15,6 +15,9 @@ import withViewDetails from 'containers/Views/withViewDetails';
 
 import { compose } from 'utils';
 
+/**
+ * Invoices views tabs.
+ */
 function InvoiceViewTabs({
   //#withInvoices
   invoicesViews,
@@ -38,54 +41,34 @@ function InvoiceViewTabs({
   const { custom_view_id: customViewId = null } = useParams();
 
   useEffect(() => {
-    changeInvoiceView(customViewId || -1);
     setTopbarEditView(customViewId);
     changePageSubtitle(customViewId && viewItem ? viewItem.name : '');
-
-    addInvoiceTableQueries({
-      custom_view_id: customViewId,
-    });
-    return () => {
-      setTopbarEditView(null);
-      changePageSubtitle('');
-      changeInvoiceView(null);
-    };
-  }, [customViewId, addInvoiceTableQueries, changeInvoiceView]);
-
-  useUpdateEffect(() => {
-    onViewChanged && onViewChanged(customViewId);
   }, [customViewId]);
 
-
-
-  const debounceChangeHistory = useRef(
-    debounce((toUrl) => {
-      history.push(toUrl);
-    }, 250),
-  );
-
-  const handleTabsChange = (viewId) => {
-    const toPath = viewId ? `${viewId}/custom_view` : '';
-    debounceChangeHistory.current(`/invoices/${toPath}`);
-    setTopbarEditView(viewId);
-  };
   const tabs = invoicesViews.map((view) => ({
     ...pick(view, ['name', 'id']),
   }));
+
+  const handleTabsChange = (viewId) => {
+    changeInvoiceView(viewId || -1);
+    addInvoiceTableQueries({
+      custom_view_id: customViewId || null,
+    });
+    setTopbarEditView(viewId);
+  };
 
   // Handle click a new view tab.
   const handleClickNewView = () => {
     setTopbarEditView(null);
     history.push('/custom_views/invoices/new');
   };
-  console.log(invoicesViews, 'invoicesViews');
 
   return (
     <Navbar className={'navbar--dashboard-views'}>
       <NavbarGroup align={Alignment.LEFT}>
         <DashboardViewsTabs
           initialViewId={customViewId}
-          baseUrl={'/invoices'}
+          resourceName={'invoices'}
           tabs={tabs}
           onNewViewTabClick={handleClickNewView}
           onChange={handleTabsChange}

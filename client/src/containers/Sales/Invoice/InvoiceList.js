@@ -51,18 +51,19 @@ function InvoiceList({
     changePageTitle(formatMessage({ id: 'invoice_list' }));
   }, [changePageTitle, formatMessage]);
 
-  // const fetchResourceViews = useQuery(
-  //   ['resource-views', 'sales_invoices'],
-  //   (key, resourceName) => requestFetchResourceViews(resourceName),
-  // );
+  const fetchResourceViews = useQuery(
+    ['resource-views', 'sale_invoice'],
+    (key, resourceName) => requestFetchResourceViews(resourceName),
+  );
 
-  // const fetchResourceFields = useQuery(
-  //   ['resource-fields', 'sales_invoices'],
-  //   (key, resourceName) => requestFetchResourceFields(resourceName),
-  // );
+  const fetchResourceFields = useQuery(
+    ['resource-fields', 'sale_invoice'],
+    (key, resourceName) => requestFetchResourceFields(resourceName),
+  );
 
-  const fetchInvoices = useQuery(['invoices-table', invoicesTableQuery], () =>
-    requestFetchInvoiceTable(),
+  const fetchInvoices = useQuery(
+    ['invoices-table', invoicesTableQuery],
+    (key, query) => requestFetchInvoiceTable({ ...query }),
   );
   //handle dalete Invoice
   const handleDeleteInvoice = useCallback(
@@ -139,7 +140,7 @@ function InvoiceList({
   );
   return (
     <DashboardInsider
-      // loading={fetchResourceViews.isFetching || fetchResourceFields.isFetching}
+      loading={fetchResourceViews.isFetching || fetchResourceFields.isFetching}
       name={'sales_invoices'}
     >
       <InvoiceActionsBar
