@@ -112,6 +112,7 @@ export default class CurrenciesController extends BaseController {
 
       return res.status(200).send({
         currency_code: currencyDTO.currencyCode,
+        message: 'The currency has been created successfully.',
       });
     } catch (error) {
       next(error);
@@ -130,7 +131,10 @@ export default class CurrenciesController extends BaseController {
 
     try {
       await this.currenciesService.deleteCurrency(tenantId, currencyCode);
-      return res.status(200).send({ currency_code: currencyCode });
+      return res.status(200).send({
+        currency_code: currencyCode,
+        message: 'The currency has been deleted successfully.',
+      });
     } catch (error) {
       next(error);
     }
@@ -149,7 +153,10 @@ export default class CurrenciesController extends BaseController {
 
     try {
       const currency = await this.currenciesService.editCurrency(tenantId, currencyId, editCurrencyDTO);
-      return res.status(200).send({ currency_code: currency.currencyCode });
+      return res.status(200).send({
+        currency_code: currency.currencyCode,
+        message: 'The currency has been edited successfully.',
+      });
     } catch (error) {
       next(error);
     }

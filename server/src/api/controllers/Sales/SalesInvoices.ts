@@ -159,7 +159,10 @@ export default class SaleInvoicesController extends BaseController{
       const storedSaleInvoice = await this.saleInvoiceService.createSaleInvoice(
         tenantId, saleInvoiceOTD,
       );
-      return res.status(200).send({ id: storedSaleInvoice.id });
+      return res.status(200).send({
+        id: storedSaleInvoice.id,
+        message: 'The sale invoice has been created successfully.',
+      });
     } catch (error) {
       next(error)
     }
@@ -179,7 +182,10 @@ export default class SaleInvoicesController extends BaseController{
     try {
       // Update the given sale invoice details.
       await this.saleInvoiceService.editSaleInvoice(tenantId, saleInvoiceId, saleInvoiceOTD);
-      return res.status(200).send({ id: saleInvoiceId });
+      return res.status(200).send({
+        id: saleInvoiceId,
+        message: 'The sale invoice has beeen edited successfully.',
+      });
     } catch (error) {
       next(error);
     }
@@ -221,7 +227,10 @@ export default class SaleInvoicesController extends BaseController{
       // Deletes the sale invoice with associated entries and journal transaction.
       await this.saleInvoiceService.deleteSaleInvoice(tenantId, saleInvoiceId);
   
-      return res.status(200).send({ id: saleInvoiceId });
+      return res.status(200).send({
+        id: saleInvoiceId,
+        message: 'The sale invoice has been deleted successfully.',
+      });
     } catch (error) {
       next(error);
     }

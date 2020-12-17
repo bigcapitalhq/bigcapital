@@ -134,10 +134,10 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
     );
 
     return {
-      ...formatDateFields(omit(saleInvoiceDTO, ['delivered', 'entries']), [
-        'invoiceDate',
-        'dueDate',
-      ]),
+      ...formatDateFields(
+        omit(saleInvoiceDTO, ['delivered', 'entries']),
+        ['invoiceDate', 'dueDate']
+      ),
       // Avoid rewrite the deliver date in edit mode when already published.
       ...(saleInvoiceDTO.delivered &&
         !oldSaleInvoice?.deliveredAt && {
@@ -145,7 +145,7 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
         }),
       balance,
       paymentAmount: 0,
-      entries: saleInvoiceObj.entries.map((entry) => ({
+      entries: saleInvoiceDTO.entries.map((entry) => ({
         reference_type: 'SaleInvoice',
         ...omit(entry, ['amount', 'id']),
       })),
