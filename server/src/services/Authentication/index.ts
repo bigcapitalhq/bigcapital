@@ -279,7 +279,7 @@ export default class AuthenticationService implements IAuthenticationService {
     const hashedPassword = await hashPassword(password);
 
     this.logger.info('[reset_password] saving a new hashed password.');
-    await systemUserRepository.edit(user.id, { password: hashedPassword });
+    await systemUserRepository.update({ password: hashedPassword }, { id: user.id });
 
     // Deletes the used token.
     await this.deletePasswordResetToken(tokenModel.email);

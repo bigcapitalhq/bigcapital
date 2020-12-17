@@ -226,6 +226,7 @@ export default class AuthenticationController extends BaseController{
 
       return res.status(200).send({
         code: 'SEND_RESET_PASSWORD_SUCCESS',
+        message: 'The reset password message has been sent successfully.'
       });
     } catch(error) {
       if (error instanceof ServiceError) {
@@ -249,6 +250,7 @@ export default class AuthenticationController extends BaseController{
 
       return res.status(200).send({
         type: 'RESET_PASSWORD_SUCCESS',
+        message: 'The password has been reset successfully.'
       })
     } catch(error) {
       next(error);
@@ -299,5 +301,6 @@ export default class AuthenticationController extends BaseController{
         return res.boom.badRequest(null, { errors: errorReasons });
       }
     }
+    next(error);
   }
 };
