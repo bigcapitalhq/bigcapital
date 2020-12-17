@@ -23,6 +23,17 @@ import AuthenticationMailMessages from 'services/Authentication/AuthenticationMa
 import AuthenticationSMSMessages from 'services/Authentication/AuthenticationSMSMessages';
 import TenantsManager from 'services/Tenancy/TenantsManager';
 
+
+const ERRORS = {
+  INVALID_DETAILS: 'INVALID_DETAILS',
+  USER_INACTIVE: 'USER_INACTIVE',
+  EMAIL_NOT_FOUND: 'EMAIL_NOT_FOUND',
+  TOKEN_INVALID: 'TOKEN_INVALID',
+  USER_NOT_FOUND: 'USER_NOT_FOUND',
+  TOKEN_EXPIRED: 'TOKEN_EXPIRED',
+  PHONE_NUMBER_EXISTS: 'PHONE_NUMBER_EXISTS',
+  EMAIL_EXISTS: 'EMAIL_EXISTS'
+};
 @Service()
 export default class AuthenticationService implements IAuthenticationService {
   @Inject('logger')
@@ -65,13 +76,15 @@ export default class AuthenticationService implements IAuthenticationService {
     const { systemUserRepository } = this.sysRepositories;
     const loginThrottler = Container.get('rateLimiter.login');
 
+    // Finds the user of the given email or phone number.
     const user = await systemUserRepository.findByCrediential(emailOrPhone);
 
     if (!user) {
+      // Hits the loging throttler to the given crediential.
       await loginThrottler.hit(emailOrPhone);
 
       this.logger.info('[login] invalid data');
-      throw new ServiceError('invalid_details');
+      throw new ServiceError(ERRORS.INVALID_DETAILS);
     }
 
     this.logger.info('[login] check password validation.', {
@@ -79,14 +92,14 @@ export default class AuthenticationService implements IAuthenticationService {
       password,
     });
     if (!user.verifyPassword(password)) {
+      // Hits the loging throttler to the given crediential.
       await loginThrottler.hit(emailOrPhone);
 
-      throw new ServiceError('invalid_password');
+      throw new ServiceError(ERRORS.INVALID_DETAILS);
     }
-
     if (!user.active) {
       this.logger.info('[login] user inactive.', { userId: user.id });
-      throw new ServiceError('user_inactive');
+      throw new ServiceError(ERRORS.USER_INACTIVE);
     }
 
     this.logger.info('[login] generating JWT token.', { userId: user.id });
@@ -107,7 +120,7 @@ export default class AuthenticationService implements IAuthenticationService {
     });
     const tenant = await user.$relatedQuery('tenant');
 
-    // Keep the user object immutable
+    // Keep the user object immutable.
     const outputUser = cloneDeep(user);
 
     // Remove password property from user object.
@@ -129,16 +142,15 @@ export default class AuthenticationService implements IAuthenticationService {
     const isPhoneExists = await systemUserRepository.findOneByPhoneNumber(
       registerDTO.phoneNumber
     );
-
     const errorReasons: ServiceError[] = [];
 
     if (isPhoneExists) {
       this.logger.info('[register] phone number exists on the storage.');
-      errorReasons.push(new ServiceError('phone_number_exists'));
+      errorReasons.push(new ServiceError(ERRORS.PHONE_NUMBER_EXISTS));
     }
     if (isEmailExists) {
       this.logger.info('[register] email exists on the storage.');
-      errorReasons.push(new ServiceError('email_exists'));
+      errorReasons.push(new ServiceError(ERRORS.EMAIL_EXISTS));
     }
     if (errorReasons.length > 0) {
       throw new ServiceErrors(errorReasons);
@@ -196,7 +208,7 @@ export default class AuthenticationService implements IAuthenticationService {
 
     if (!userByEmail) {
       this.logger.info('[send_reset_password] The given email not found.');
-      throw new ServiceError('email_not_found');
+      throw new ServiceError(ERRORS.EMAIL_NOT_FOUND);
     }
     return userByEmail;
   }
@@ -237,14 +249,16 @@ export default class AuthenticationService implements IAuthenticationService {
    */
   public async resetPassword(token: string, password: string): Promise<void> {
     const { systemUserRepository } = this.sysRepositories;
+
+    // Finds the password reset token.
     const tokenModel: IPasswordReset = await PasswordReset.query().findOne(
       'token',
       token
     );
-
+    // In case the password reset token not found throw token invalid error..
     if (!tokenModel) {
       this.logger.info('[reset_password] token invalid.');
-      throw new ServiceError('token_invalid');
+      throw new ServiceError(ERRORS.TOKEN_INVALID);
     }
     // Different between tokne creation datetime and current time.
     if (
@@ -255,12 +269,12 @@ export default class AuthenticationService implements IAuthenticationService {
 
       // Deletes the expired token by expired token email.
       await this.deletePasswordResetToken(tokenModel.email);
-      throw new ServiceError('token_expired');
+      throw new ServiceError(ERRORS.TOKEN_EXPIRED);
     }
     const user = await systemUserRepository.findOneByEmail(tokenModel.email);
 
     if (!user) {
-      throw new ServiceError('user_not_found');
+      throw new ServiceError(ERRORS.USER_NOT_FOUND);
     }
     const hashedPassword = await hashPassword(password);
 

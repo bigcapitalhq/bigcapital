@@ -28,25 +28,29 @@ export default class AuthenticationController extends BaseController{
       this.loginSchema,
       this.validationResult,
       LoginThrottlerMiddleware,
-      asyncMiddleware(this.login.bind(this))
+      asyncMiddleware(this.login.bind(this)),
+      this.handlerErrors
     );
     router.post(
       '/register',
       this.registerSchema,
       this.validationResult,
-      asyncMiddleware(this.register.bind(this))
+      asyncMiddleware(this.register.bind(this)),
+      this.handlerErrors
     );
     router.post(
       '/send_reset_password',
       this.sendResetPasswordSchema,
       this.validationResult,
-      asyncMiddleware(this.sendResetPassword.bind(this))
+      asyncMiddleware(this.sendResetPassword.bind(this)),
+      this.handlerErrors
     );
     router.post(
       '/reset/:token',
       this.resetPasswordSchema,
       this.validationResult,
-      asyncMiddleware(this.resetPassword.bind(this))
+      asyncMiddleware(this.resetPassword.bind(this)),
+      this.handlerErrors
     );
     return router;
   }
@@ -184,18 +188,6 @@ export default class AuthenticationController extends BaseController{
       );
       return res.status(200).send({ token, user, tenant });
     } catch (error) {
-      if (error instanceof ServiceError) {
-        if (['invalid_details', 'invalid_password'].indexOf(error.errorType) !== -1) {
-          return res.boom.badRequest(null, {
-            errors: [{ type: 'INVALID_DETAILS', code: 100 }],
-          });
-        }
-        if (error.errorType === 'user_inactive') {
-          return res.boom.badRequest(null, {
-            errors: [{ type: 'USER_INACTIVE', code: 200 }],
-          });
-        }
-      }
       next(error);
     }
   }
@@ -217,19 +209,6 @@ export default class AuthenticationController extends BaseController{
         message: 'Register organization has been success.',
       });
     } catch (error) {
-      if (error instanceof ServiceErrors) {
-        const errorReasons = [];
-
-        if (error.hasType('phone_number_exists')) {
-          errorReasons.push({ type: 'PHONE_NUMBER_EXISTS', code: 100 });
-        }
-        if (error.hasType('email_exists')) {
-          errorReasons.push({ type: 'EMAIL.EXISTS', code: 200 });
-        }
-        if (errorReasons.length > 0) {
-          return res.boom.badRequest(null, { errors: errorReasons });
-        }
-      }
       next(error);
     }
   }
@@ -250,11 +229,7 @@ export default class AuthenticationController extends BaseController{
       });
     } catch(error) {
       if (error instanceof ServiceError) {
-        if (error.errorType === 'email_not_found') {
-          return res.status(400).send({
-            errors: [{ type: 'EMAIL.NOT.REGISTERED', code: 200 }],
-          });
-        }
+        
       }
       next(error);
     }
@@ -276,19 +251,53 @@ export default class AuthenticationController extends BaseController{
         type: 'RESET_PASSWORD_SUCCESS',
       })
     } catch(error) {
-      if (error instanceof ServiceError) {
-        if (error.errorType === 'token_invalid' || error.errorType === 'token_expired') {
-          return res.boom.badRequest(null, {
-            errors: [{ type: 'TOKEN_INVALID', code: 100 }],
-          });
-        }
-        if (error.errorType === 'user_not_found') {
-          return res.boom.badRequest(null, {
-            errors: [{ type: 'USER_NOT_FOUND', code: 120 }],
-          });
-        }
-      }
       next(error);
+    }
+  }
+
+  /**
+   * Handles the service errors.
+   */
+  handlerErrors(error, req: Request, res: Response, next: Function) {
+    if (error instanceof ServiceError) {
+      if (['INVALID_DETAILS', 'invalid_password'].indexOf(error.errorType) !== -1) {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'INVALID_DETAILS', code: 100 }],
+        });
+      }
+      if (error.errorType === 'USER_INACTIVE') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'USER_INACTIVE', code: 200 }],
+        });
+      }
+      if (error.errorType === 'TOKEN_INVALID' || error.errorType === 'TOKEN_EXPIRED') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'TOKEN_INVALID', code: 300 }],
+        });
+      }
+      if (error.errorType === 'USER_NOT_FOUND') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'USER_NOT_FOUND', code: 400 }],
+        });
+      }
+      if (error.errorType === 'EMAIL_NOT_FOUND') {
+        return res.status(400).send({
+          errors: [{ type: 'EMAIL.NOT.REGISTERED', code: 500 }],
+        });
+      }
+    }
+    if (error instanceof ServiceErrors) {
+      const errorReasons = [];
+
+      if (error.hasType('PHONE_NUMBER_EXISTS')) {
+        errorReasons.push({ type: 'PHONE_NUMBER_EXISTS', code: 100 });
+      }
+      if (error.hasType('EMAIL_EXISTS')) {
+        errorReasons.push({ type: 'EMAIL.EXISTS', code: 200 });
+      }
+      if (errorReasons.length > 0) {
+        return res.boom.badRequest(null, { errors: errorReasons });
+      }
     }
   }
 };
