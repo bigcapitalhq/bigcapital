@@ -1,4 +1,5 @@
 import Option from './Option';
+import Setting from './Setting';
 import SaleEstimate from './SaleEstimate';
 import SaleEstimateEntry from './SaleEstimateEntry';
 import SaleReceipt from './SaleReceipt';
@@ -52,4 +53,5 @@ export {
   ManualJournal,
   Customer,
   Vendor,
+  Setting
 };

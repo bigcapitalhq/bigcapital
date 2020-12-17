@@ -21,7 +21,8 @@ export default class InviteUsersController extends BaseController {
       '/send',
       [body('email').exists().trim().escape()],
       this.validationResult,
-      asyncMiddleware(this.sendInvite.bind(this))
+      asyncMiddleware(this.sendInvite.bind(this)),
+      this.handleServicesError,
     );
     return router;
   }
@@ -36,13 +37,15 @@ export default class InviteUsersController extends BaseController {
       '/accept/:token',
       [...this.inviteUserDTO],
       this.validationResult,
-      asyncMiddleware(this.accept.bind(this))
+      asyncMiddleware(this.accept.bind(this)),
+      this.handleServicesError,
     );
     router.get(
       '/invited/:token',
       [param('token').exists().trim().escape()],
       this.validationResult,
-      asyncMiddleware(this.invited.bind(this))
+      asyncMiddleware(this.invited.bind(this)),
+      this.handleServicesError,
     );
 
     return router;
@@ -81,13 +84,6 @@ export default class InviteUsersController extends BaseController {
         message: 'The invite has been sent to the given email.',
       });
     } catch (error) {
-      if (error instanceof ServiceError) {
-        if (error.errorType === 'email_already_invited') {
-          return res.status(400).send({
-            errors: [{ type: 'EMAIL.ALREADY.INVITED' }],
-          });
-        }
-      }
       next(error);
     }
     return res.status(200).send();
@@ -114,18 +110,6 @@ export default class InviteUsersController extends BaseController {
         message: 'User invite has been accepted successfully.',
       });
     } catch (error) {
-      if (error instanceof ServiceError) {
-        if (error.errorType === 'phone_number_exists') {
-          return res.status(400).send({
-            errors: [{ type: 'PHONE_NUMBER.EXISTS' }],
-          });
-        }
-        if (error.errorType === 'invite_token_invalid') {
-          return res.status(400).send({
-            errors: [{ type: 'INVITE.TOKEN.INVALID' }],
-          });
-        }
-      }
       next(error);
     }
   }
@@ -151,14 +135,31 @@ export default class InviteUsersController extends BaseController {
         organizationName: orgName?.value,
       });
     } catch (error) {
-      if (error instanceof ServiceError) {
-        if (error.errorType === 'invite_token_invalid') {
-          return res.status(400).send({
-            errors: [{ type: 'INVITE.TOKEN.INVALID' }],
-          });
-        }
-      }
       next(error);
     }
+  }
+
+  /**
+   * Handles the service error.
+   */
+  handleServicesError(error, req: Request, res: Response, next: Function) {
+    if (error instanceof ServiceError) {
+      if (error.errorType === 'EMAIL_ALREADY_INVITED') {
+        return res.status(400).send({
+          errors: [{ type: 'EMAIL.ALREADY.INVITED' }],
+        });
+      }
+      if (error.errorType === 'INVITE_TOKEN_INVALID') {
+        return res.status(400).send({
+          errors: [{ type: 'INVITE.TOKEN.INVALID' }],
+        });
+      }
+      if (error.errorType === 'PHONE_NUMBER_EXISTS') {
+        return res.status(400).send({
+          errors: [{ type: 'PHONE_NUMBER.EXISTS' }],
+        });
+      }
+    }
+    next(error);
   }
 }

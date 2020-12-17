@@ -7,13 +7,19 @@ import {
 } from 'decorators/eventDispatcher';
 import { ServiceError } from 'exceptions';
 import { Invite, Tenant } from 'system/models';
-import { Option } from 'models';
+import { Setting } from 'models';
 import { hashPassword } from 'utils';
 import TenancyService from 'services/Tenancy/TenancyService';
 import InviteUsersMailMessages from 'services/InviteUsers/InviteUsersMailMessages';
 import events from 'subscribers/events';
 import { ISystemUser, IInviteUserInput } from 'interfaces';
+import TenantsManagerService from 'services/Tenancy/TenantsManager';
 
+const ERRORS = {
+  EMAIL_ALREADY_INVITED: 'EMAIL_ALREADY_INVITED',
+  INVITE_TOKEN_INVALID: 'INVITE_TOKEN_INVALID',
+  PHONE_NUMBER_EXISTS: 'PHONE_NUMBER_EXISTS'
+};
 @Service()
 export default class InviteUserService {
   @EventDispatcher()
@@ -30,6 +36,9 @@ export default class InviteUserService {
 
   @Inject('repositories')
   sysRepositories: any;
+
+  @Inject()
+  tenantsManager: TenantsManagerService;
 
   /**
    * Accept the received invite.
@@ -135,13 +144,17 @@ export default class InviteUserService {
     const inviteToken = await this.getInviteOrThrowError(token);
 
     // Find the tenant that associated to the given token.
-    const tenant = await Tenant.query().findOne('id', inviteToken.tenantId);
+    const tenant = await Tenant.query().findById(inviteToken.tenantId);
 
-    const tenantDb = this.tenantsManager.knexInstance(tenant.organizationId);
+    // Setup the knex instance.
+    this.tenantsManager.setupKnexInstance(tenant);
 
-    const orgName = await Option.bindKnex(tenantDb)
+    // Retrieve the knex instance of the given tenant.
+    const tenantKnexInstance = this.tenantsManager.getKnexInstance(tenant.id);
+
+    const orgName = await Setting.bindKnex(tenantKnexInstance)
       .query()
-      .findOne('key', 'organization_name');
+      .findOne({ key: 'name', group: 'organization' });
 
     // Triggers `onUserCheckInvite` event.
     this.eventDispatcher.dispatch(events.inviteUser.checkInvite, {
@@ -162,7 +175,7 @@ export default class InviteUserService {
     const foundUser = await systemUserRepository.findOneByEmail(email);
 
     if (foundUser) {
-      throw new ServiceError('email_already_invited');
+      throw new ServiceError(ERRORS.EMAIL_ALREADY_INVITED);
     }
     return foundUser;
   }
@@ -178,7 +191,7 @@ export default class InviteUserService {
 
     if (!inviteToken) {
       this.logger.info('[aceept_invite] the invite token is invalid.');
-      throw new ServiceError('invite_token_invalid');
+      throw new ServiceError(ERRORS.INVITE_TOKEN_INVALID);
     }
     return inviteToken;
   }
@@ -189,14 +202,13 @@ export default class InviteUserService {
    */
   private async validateUserPhoneNumber(
     inviteUserInput: IInviteUserInput
-  ): Promise<ISystemUser> {
+  ): Promise<void> {
     const { systemUserRepository } = this.sysRepositories;
     const foundUser = await systemUserRepository.findOneByPhoneNumber(
       inviteUserInput.phoneNumber
     );
-
     if (foundUser) {
-      throw new ServiceError('phone_number_exists');
+      throw new ServiceError(ERRORS.PHONE_NUMBER_EXISTS);
     }
   }
 }
