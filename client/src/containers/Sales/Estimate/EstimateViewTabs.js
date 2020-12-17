@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import { pick, debounce } from 'lodash';
 
 import { DashboardViewsTabs } from 'components';
-import { useUpdateEffect } from 'hooks';
 
 import withEstimates from './withEstimates';
 import withEstimateActions from './withEstimateActions';
@@ -15,6 +14,9 @@ import withViewDetails from 'containers/Views/withViewDetails';
 
 import { compose } from 'utils';
 
+/**
+ * Estimates views tabs.
+ */
 function EstimateViewTabs({
   // #withExpenses
   estimateViews,
@@ -37,53 +39,35 @@ function EstimateViewTabs({
   const { custom_view_id: customViewId = null } = useParams();
 
   useEffect(() => {
-    changeEstimateView(customViewId || -1);
     setTopbarEditView(customViewId);
     changePageSubtitle(customViewId && viewItem ? viewItem.name : '');
-
-    addEstimatesTableQueries({
-      custom_view_id: customViewId,
-    });
-    return () => {
-      setTopbarEditView(null);
-      changePageSubtitle('');
-      changeEstimateView(null);
-    };
-  }, [customViewId, addEstimatesTableQueries, changeEstimateView]);
-
-  useUpdateEffect(() => {
-    onViewChanged && onViewChanged(customViewId);
   }, [customViewId]);
 
-  const debounceChangeHistory = useRef(
-    debounce((toUrl) => {
-      history.push(toUrl);
-    }, 250),
-  );
-
-  const handleTabsChange = (viewId) => {
-    const toPath = viewId ? `${viewId}/custom_view` : '';
-    debounceChangeHistory.current(`/estimates/${toPath}`);
-    setTopbarEditView(viewId);
-  };
   const tabs = estimateViews.map((view) => ({
     ...pick(view, ['name', 'id']),
   }));
+
+  const handleTabsChange = (viewId) => {
+    changeEstimateView(viewId || -1);
+    addEstimatesTableQueries({
+      custom_view_id: viewId || null,
+    });
+    setTopbarEditView(viewId);
+  };
 
   // Handle click a new view tab.
   const handleClickNewView = () => {
     setTopbarEditView(null);
     history.push('/custom_views/estimates/new');
   };
-
+  
   return (
     <Navbar className={'navbar--dashboard-views'}>
       <NavbarGroup align={Alignment.LEFT}>
         <DashboardViewsTabs
           initialViewId={customViewId}
-          baseUrl={'/estimates'}
+          resourceName={'estimates'}
           tabs={tabs}
-          onNewViewTabClick={handleClickNewView}
           onChange={handleTabsChange}
         />
       </NavbarGroup>

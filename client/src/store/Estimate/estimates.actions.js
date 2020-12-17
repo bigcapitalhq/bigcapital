@@ -92,7 +92,8 @@ export const fetchEstimatesTable = ({ query = {} }) => {
             payload: {
               sales_estimates: response.data.sales_estimates,
               pagination: response.data.pagination,
-              customViewId: response.data.customViewId || -1,
+              customViewId:
+                response.data?.filter_meta?.view?.custom_view_id || -1,
             },
           });
           dispatch({
@@ -105,7 +106,8 @@ export const fetchEstimatesTable = ({ query = {} }) => {
             type: t.ESTIMATES_PAGINATION_SET,
             payload: {
               pagination: response.data.pagination,
-              customViewId: response.data.customViewId || -1,
+              customViewId:
+                response.data?.filter_meta?.view?.custom_view_id || -1,
             },
           });
           dispatch({
