@@ -21,7 +21,8 @@ export const fetchBillsTable = ({ query = {} }) => {
             payload: {
               bills: response.data.bills,
               pagination: response.data.pagination,
-              customViewId: response.data.customViewId || -1,
+              customViewId:
+                response.data?.filter_meta?.view?.custom_view_id || -1,
             },
           });
           dispatch({
@@ -34,7 +35,8 @@ export const fetchBillsTable = ({ query = {} }) => {
             type: t.BILLS_PAGINATION_SET,
             payload: {
               pagination: response.data.pagination,
-              customViewId: response.data.customViewId || -1,
+              customViewId:
+                response.data?.filter_meta?.view?.custom_view_id || -1,
             },
           });
           dispatch({
@@ -118,27 +120,32 @@ export const editBill = (id, form) => {
     });
 };
 
-export const fetchDueBills = ({ vendorId }) => (dispatch) => new Promise((resolve, reject) => {
-  const params = { vendor_id: vendorId };
+export const fetchDueBills = ({ vendorId }) => (dispatch) =>
+  new Promise((resolve, reject) => {
+    const params = { vendor_id: vendorId };
 
-  ApiService.get(`purchases/bills/due`, { params }).then((response) => {
-    dispatch({
-      type: t.BILLS_ITEMS_SET,
-      payload: {
-        bills: response.data.bills,
-      },
-    });
-    if ( vendorId ) {
-      dispatch({
-        type: t.BILLS_PAYABLE_BY_VENDOR_ID,
-        payload: {
-          bills: response.data.bills,
+    ApiService.get(`purchases/bills/due`, { params })
+      .then((response) => {
+        dispatch({
+          type: t.BILLS_ITEMS_SET,
+          payload: {
+            bills: response.data.bills,
+          },
+        });
+        if (vendorId) {
+          dispatch({
+            type: t.BILLS_PAYABLE_BY_VENDOR_ID,
+            payload: {
+              bills: response.data.bills,
+            },
+          });
         }
+        resolve(response);
+      })
+      .catch((error) => {
+        reject(error);
       });
-    }
-    resolve(response);
-  }).catch(error => { reject(error) });
-});
+  });
 
 export const openBill = ({ id }) => {
   return (dispatch) => ApiService.post(`purchases/bills/${id}/open`);

@@ -38,51 +38,34 @@ function BillViewTabs({
   const { custom_view_id: customViewId = null } = useParams();
 
   useEffect(() => {
-    changeBillView(customViewId || -1);
     setTopbarEditView(customViewId);
     changePageSubtitle(customViewId && viewItem ? viewItem.name : '');
-
-    addBillsTableQueries({
-      custom_view_id: customViewId,
-    });
-    return () => {
-      setTopbarEditView(null);
-      changePageSubtitle('');
-      changeBillView(null);
-    };
-  }, [customViewId, addBillsTableQueries, changeBillView]);
-
-  useUpdateEffect(() => {
-    onViewChanged && onViewChanged(customViewId);
   }, [customViewId]);
 
-  const debounceChangeHistory = useRef(
-    debounce((toUrl) => {
-      history.push(toUrl);
-    }, 250),
-  );
   // Handle click a new view tab.
   const handleClickNewView = () => {
     setTopbarEditView(null);
     history.push('/custom_views/invoices/new');
   };
+
   const handleTabsChange = (viewId) => {
-    const toPath = viewId ? `${viewId}/custom_view` : '';
-    debounceChangeHistory.current(`/bills/${toPath}`);
+    changeBillView(viewId || -1);
+    addBillsTableQueries({
+      custom_view_id: customViewId || null,
+    });
     setTopbarEditView(viewId);
   };
+
   const tabs = billsViews.map((view) => ({
     ...pick(view, ['name', 'id']),
   }));
-
-  console.log(billsViews, 'billsViews');
 
   return (
     <Navbar className={'navbar--dashboard-views'}>
       <NavbarGroup align={Alignment.LEFT}>
         <DashboardViewsTabs
           initialViewId={customViewId}
-          baseUrl={'/bills'}
+          resourceName={'bills'}
           tabs={tabs}
           onNewViewTabClick={handleClickNewView}
           onChange={handleTabsChange}

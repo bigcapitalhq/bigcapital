@@ -21,6 +21,9 @@ import withViewsActions from 'containers/Views/withViewsActions';
 
 import { compose } from 'utils';
 
+/**
+ * Bills list.
+ */
 function BillList({
   // #withDashboardActions
   changePageTitle,
@@ -58,8 +61,8 @@ function BillList({
     (key, resourceName) => requestFetchResourceFields(resourceName),
   );
 
-  const fetchBills = useQuery(['bills-table', billsTableQuery], () =>
-    requestFetchBillsTable(),
+  const fetchBills = useQuery(['bills-table', billsTableQuery], (key, query) =>
+    requestFetchBillsTable({ ...query }),
   );
 
   //handle dalete Bill
@@ -127,14 +130,7 @@ function BillList({
   );
 
   // Handle filter change to re-fetch data-table.
-  const handleFilterChanged = useCallback(
-    (filterConditions) => {
-      addBillsTableQueries({
-        filter_roles: filterConditions || '',
-      });
-    },
-    [fetchBills],
-  );
+  const handleFilterChanged = useCallback((filterConditions) => {}, []);
 
   return (
     <DashboardInsider
@@ -148,7 +144,10 @@ function BillList({
       />
       <DashboardPageContent>
         <Switch>
-          <Route exact={true}>
+          <Route
+            exact={true}
+            path={['/bills/:custom_view_id/custom_view', '/bills']}
+          >
             <BillViewTabs />
             <BillsDataTable
               onDeleteBill={handleDeleteBill}
