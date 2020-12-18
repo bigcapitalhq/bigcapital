@@ -9,6 +9,7 @@ import { If, Icon } from 'components';
 export default function DashboardViewsTabs({
   initialViewId = 0,
   tabs,
+  defaultTabText = <T id={'all'} />,
   allTab = true,
   newViewTab = true,
   resourceName,
@@ -60,7 +61,7 @@ export default function DashboardViewsTabs({
       onChange={handleTabsChange}
     >
       {allTab && (
-        <Tab id={0} title={<T id={'all'} />} onClick={handleViewLinkClick} />
+        <Tab id={0} title={defaultTabText} onClick={handleViewLinkClick} />
       )}
       {mappedTabs.map((tab) => (
         <Tab id={tab.id} title={tab.name} onClick={handleTabClick} />
