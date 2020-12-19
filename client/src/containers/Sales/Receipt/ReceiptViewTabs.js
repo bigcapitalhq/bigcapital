@@ -15,6 +15,9 @@ import withViewDetails from 'containers/Views/withViewDetails';
 
 import { compose } from 'utils';
 
+/**
+ * Receipt views tabs.
+ */
 function ReceiptViewTabs({
   //#withReceipts
   receiptview,
@@ -37,38 +40,25 @@ function ReceiptViewTabs({
   const { custom_view_id: customViewId = null } = useParams();
 
   useEffect(() => {
-    changeReceiptView(customViewId || -1);
     setTopbarEditView(customViewId);
     changePageSubtitle(customViewId && viewItem ? viewItem.name : '');
+    // changeReceiptView(customViewId || -1);
+    // addReceiptsTableQueries({
+    //   custom_view_id: customViewId || null,
+    // });
+  }, [customViewId, addReceiptsTableQueries]);
 
-    addReceiptsTableQueries({
-      custom_view_id: customViewId,
-    });
-    return () => {
-      setTopbarEditView(null);
-      changePageSubtitle('');
-      changeReceiptView(null);
-    };
-  }, [customViewId, addReceiptsTableQueries, changeReceiptView]);
-
-  useUpdateEffect(() => {
-    onViewChanged && onViewChanged(customViewId);
-  }, [customViewId]);
-
-  const debounceChangeHistory = useRef(
-    debounce((toUrl) => {
-      history.push(toUrl);
-    }, 250),
-  );
-
-  const handleTabsChange = (viewId) => {
-    const toPath = viewId ? `${viewId}/custom_view` : '';
-    debounceChangeHistory.current(`/receipts/${toPath}`);
-    setTopbarEditView(viewId);
-  };
   const tabs = receiptview.map((view) => ({
     ...pick(view, ['name', 'id']),
   }));
+
+  const handleTabsChange = (viewId) => {
+    changeReceiptView(viewId || -1);
+    addReceiptsTableQueries({
+      custom_view_id: viewId || null,
+    });
+    setTopbarEditView(viewId);
+  };
 
   // Handle click a new view tab.
   const handleClickNewView = () => {
@@ -76,16 +66,13 @@ function ReceiptViewTabs({
     history.push('/custom_views/receipts/new');
   };
 
-  console.log(receiptview, 'receiptview');
-
   return (
     <Navbar className={'navbar--dashboard-views'}>
       <NavbarGroup align={Alignment.LEFT}>
         <DashboardViewsTabs
           initialViewId={customViewId}
-          baseUrl={'/receipts'}
           tabs={tabs}
-          onNewViewTabClick={handleClickNewView}
+          resourceName={'receipts'}
           onChange={handleTabsChange}
         />
       </NavbarGroup>

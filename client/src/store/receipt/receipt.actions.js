@@ -87,7 +87,8 @@ export const fetchReceiptsTable = ({ query = {} }) => {
             payload: {
               sales_receipts: response.data.sale_receipts,
               pagination: response.data.pagination,
-              customViewId: response.data.customViewId || -1,
+              customViewId:
+                response.data?.filter_meta?.view?.custom_view_id || -1,
             },
           });
           dispatch({
@@ -100,7 +101,8 @@ export const fetchReceiptsTable = ({ query = {} }) => {
             type: t.RECEIPTS_PAGINATION_SET,
             payload: {
               pagination: response.data.pagination,
-              customViewId: response.data.customViewId || -1,
+              customViewId:
+                response.data?.filter_meta?.view?.custom_view_id || -1,
             },
           });
           dispatch({
