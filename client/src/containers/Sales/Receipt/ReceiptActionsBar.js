@@ -37,12 +37,12 @@ function ReceiptActionsBar({
   receiptview,
   //#withReceiptActions
   addReceiptsTableQueries,
+  changeReceiptView,
 
   //#OWn Props
   onFilterChanged,
   selectedRows = [],
 }) {
-  const { path } = useRouteMatch();
   const history = useHistory();
   const [filterCount, setFilterCount] = useState(0);
   const { formatMessage } = useIntl();
@@ -50,6 +50,17 @@ function ReceiptActionsBar({
   const onClickNewReceipt = useCallback(() => {
     history.push('/receipts/new');
   }, [history]);
+
+  const hasSelectedRows = useMemo(() => selectedRows.length > 0, [
+    selectedRows,
+  ]);
+
+  const handleTabChange = (viewId) => {
+    changeReceiptView(viewId.id || -1);
+    addReceiptsTableQueries({
+      custom_view_id: viewId.id || null,
+    });
+  };
 
   // const filterDropdown = FilterDropdown({
   //   initialCondition: {
@@ -66,16 +77,13 @@ function ReceiptActionsBar({
   //   },
   // });
 
-  const hasSelectedRows = useMemo(() => selectedRows.length > 0, [
-    selectedRows,
-  ]);
-
   return (
     <DashboardActionsBar>
       <NavbarGroup>
         <DashboardActionViewsList
-          resourceName={'sales_receipts'}
+          resourceName={'receipts'}
           views={receiptview}
+          onChange={handleTabChange}
         />
 
         <NavbarDivider />

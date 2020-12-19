@@ -40,6 +40,9 @@ function ItemsViewsTabs({
   useEffect(() => {
     setTopbarEditView(customViewId);
     changePageSubtitle(customViewId && viewItem ? viewItem.name : '');
+    addItemsTableQueries({
+      custom_view_id: customViewId || null,
+    });
   }, [customViewId]);
 
   const handleClickNewView = () => {};

@@ -43,19 +43,15 @@ function ReceiptList({
   const [closeReceipt, setCloseReceipt] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
 
-  const fetchReceipts = useQuery(['receipts-table', receiptTableQuery], () =>
-    requestFetchReceiptsTable(),
+  const fetchReceipts = useQuery(
+    ['receipts-table', receiptTableQuery],
+    (key, query) => requestFetchReceiptsTable({ ...query }),
   );
 
-  // const fetchResourceViews = useQuery(
-  //   ['resource-views', 'sales_receipts'],
-  //   (key, resourceName) => requestFetchResourceViews(resourceName),
-  // );
-
-  // const fetchResourceFields = useQuery(
-  //   ['resource-fields', 'sales_receipts'],
-  //   (key, resourceName) => requestFetchResourceFields(resourceName),
-  // );
+  const fetchResourceViews = useQuery(
+    ['resource-views', 'sale_receipt'],
+    (key, resourceName) => requestFetchResourceViews(resourceName),
+  );
 
   useEffect(() => {
     changePageTitle(formatMessage({ id: 'receipt_list' }));
@@ -150,7 +146,7 @@ function ReceiptList({
   return (
     <DashboardInsider
       name={'sales_receipts'}
-      // loading={fetchResourceViews.isFetching || fetchResourceFields.isFetching}
+      loading={fetchResourceViews.isFetching}
     >
       <DashboardPageContent>
         <ReceiptActionsBar
