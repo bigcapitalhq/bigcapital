@@ -6,13 +6,6 @@ import { QueryBuilder } from 'knex';
 
 export default class SaleInvoice extends TenantModel {
   /**
-   * Virtual attributes.
-   */
-  static get virtualAttributes() {
-    return ['dueAmount'];
-  }
-
-  /**
    * Table name
    */
   static get tableName() {
@@ -60,10 +53,10 @@ export default class SaleInvoice extends TenantModel {
 
   /**
    * Retrieve the invoice due amount.
-   * (Invoice amount - payment amount = Due amount)
+   * Equation (Invoice amount - payment amount = Due amount)
    * @return {boolean}
    */
-  dueAmount() {
+  get dueAmount() {
     return Math.max(this.balance - this.paymentAmount, 0);
   }
 
