@@ -339,7 +339,18 @@ export default class PaymentReceivesController extends BaseController {
           errors: [{ type: 'INVALID_PAYMENT_AMOUNT', code: 1000 }],
         });
       }
-      console.log(error.errorType);
+      if (error.errorType === 'INVOICES_NOT_DELIVERED_YET') {
+        return res.boom.badRequest(null, {
+          errors: [{
+            type: 'INVOICES_NOT_DELIVERED_YET', code: 200,
+            data: {
+              not_delivered_invoices_ids: error.payload.notDeliveredInvoices.map(
+                (invoice) => invoice.id
+              )
+            }
+          }],
+        });
+      }
     }
     next(error);
   }

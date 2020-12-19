@@ -1,10 +1,9 @@
-import { Container, Inject, Service } from 'typedi';
+import { Container } from 'typedi';
 import { EventSubscriber, On } from 'event-dispatch';
 import events from 'subscribers/events';
 import TenancyService from 'services/Tenancy/TenancyService';
 import BillsService from 'services/Purchases/Bills';
 import JournalPosterService from 'services/Sales/JournalPosterService';
-import VendorRepository from 'repositories/VendorRepository';
 
 @EventSubscriber()
 export default class BillSubscriber {
@@ -13,11 +12,13 @@ export default class BillSubscriber {
   logger: any;
   journalPosterService: JournalPosterService;
 
+  /**
+   * Constructor method.
+   */
   constructor() {
     this.tenancy = Container.get(TenancyService);
     this.billsService = Container.get(BillsService);
     this.logger = Container.get('logger');
-
     this.journalPosterService = Container.get(JournalPosterService);
   }
 
@@ -29,7 +30,10 @@ export default class BillSubscriber {
     const { vendorRepository } = this.tenancy.repositories(tenantId);
 
     // Increments vendor balance.
-    this.logger.info('[bill] trying to increment vendor balance.', { tenantId, billId });
+    this.logger.info('[bill] trying to increment vendor balance.', {
+      tenantId,
+      billId,
+    });
     await vendorRepository.changeBalance(bill.vendorId, bill.amount);
   }
 
@@ -61,7 +65,10 @@ export default class BillSubscriber {
     const { vendorRepository } = this.tenancy.repositories(tenantId);
 
     // Decrements vendor balance.
-    this.logger.info('[bill] trying to decrement vendor balance.', { tenantId, billId });
+    this.logger.info('[bill] trying to decrement vendor balance.', {
+      tenantId,
+      billId,
+    });
     await vendorRepository.changeBalance(oldBill.vendorId, oldBill.amount * -1);
   }
 
@@ -71,8 +78,15 @@ export default class BillSubscriber {
   @On(events.bill.onDeleted)
   async handlerDeleteJournalEntries({ tenantId, billId }) {
     // Delete associated bill journal transactions.
-    this.logger.info('[bill] trying to delete journal entries.', { tenantId, billId });
-    await this.journalPosterService.revertJournalTransactions(tenantId, billId, 'Bill');
+    this.logger.info('[bill] trying to delete journal entries.', {
+      tenantId,
+      billId,
+    });
+    await this.journalPosterService.revertJournalTransactions(
+      tenantId,
+      billId,
+      'Bill'
+    );
   }
 
   /**
@@ -83,12 +97,15 @@ export default class BillSubscriber {
     const { vendorRepository } = this.tenancy.repositories(tenantId);
 
     // Changes the diff vendor balance between old and new amount.
-    this.logger.info('[bill[ change vendor the different balance.', { tenantId, billId });
+    this.logger.info('[bill[ change vendor the different balance.', {
+      tenantId,
+      billId,
+    });
     await vendorRepository.changeDiffBalance(
       bill.vendorId,
       bill.amount,
       oldBill.amount,
-      oldBill.vendorId,
+      oldBill.vendorId
     );
   }
 }

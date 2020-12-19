@@ -35,7 +35,8 @@ const ERRORS = {
   DEPOSIT_ACCOUNT_NOT_CURRENT_ASSET_TYPE: 'DEPOSIT_ACCOUNT_NOT_CURRENT_ASSET_TYPE',
   INVALID_PAYMENT_AMOUNT: 'INVALID_PAYMENT_AMOUNT',
   INVOICES_IDS_NOT_FOUND: 'INVOICES_IDS_NOT_FOUND',
-  ENTRIES_IDS_NOT_EXISTS: 'ENTRIES_IDS_NOT_EXISTS'
+  ENTRIES_IDS_NOT_EXISTS: 'ENTRIES_IDS_NOT_EXISTS',
+  INVOICES_NOT_DELIVERED_YET: 'INVOICES_NOT_DELIVERED_YET'
 };
 /**
  * Payment receive service.
@@ -151,6 +152,13 @@ export default class PaymentReceiveService {
     if (notFoundInvoicesIDs.length > 0) {
       throw new ServiceError(ERRORS.INVOICES_IDS_NOT_FOUND);
     }
+    // Filters the not delivered invoices.
+    const notDeliveredInvoices = storedInvoices.filter((invoice) => !invoice.isDelivered);
+
+    if (notDeliveredInvoices.length > 0) {
+      throw new ServiceError(ERRORS.INVOICES_NOT_DELIVERED_YET, null, { notDeliveredInvoices });
+    }
+    return storedInvoices;
   }
 
   /**

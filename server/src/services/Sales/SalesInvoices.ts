@@ -7,7 +7,7 @@ import {
 } from 'decorators/eventDispatcher';
 import {
   ISaleInvoice,
-  ISaleInvoiceOTD,
+  ISaleInvoiceDTO,
   IItemEntry,
   ISalesInvoicesFilter,
   IPaginationMeta,
@@ -121,7 +121,7 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
   /**
    * Transform DTO object to model object.
    * @param {number} tenantId - Tenant id.
-   * @param {ISaleInvoiceOTD} saleInvoiceDTO - Sale invoice DTO.
+   * @param {ISaleInvoiceDTO} saleInvoiceDTO - Sale invoice DTO.
    */
   transformDTOToModel(
     tenantId: number,
@@ -134,10 +134,10 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
     );
 
     return {
-      ...formatDateFields(
-        omit(saleInvoiceDTO, ['delivered', 'entries']),
-        ['invoiceDate', 'dueDate']
-      ),
+      ...formatDateFields(omit(saleInvoiceDTO, ['delivered', 'entries']), [
+        'invoiceDate',
+        'dueDate',
+      ]),
       // Avoid rewrite the deliver date in edit mode when already published.
       ...(saleInvoiceDTO.delivered &&
         !oldSaleInvoice?.deliveredAt && {
@@ -156,9 +156,9 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
    * Creates a new sale invoices and store it to the storage
    * with associated to entries and journal transactions.
    * @async
-   * @param {number} tenantId =
-   * @param {ISaleInvoice} saleInvoiceDTO -
-   * @return {ISaleInvoice}
+   * @param  {number} tenantId - Tenant id.
+   * @param  {ISaleInvoice} saleInvoiceDTO - Sale invoice object DTO.
+   * @return {Promise<ISaleInvoice>}
    */
   public async createSaleInvoice(
     tenantId: number,
@@ -200,7 +200,7 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
     const saleInvoice = await saleInvoiceRepository.upsertGraph({
       ...saleInvoiceObj,
     });
-
+    // Triggers the event `onSaleInvoiceCreated`.
     await this.eventDispatcher.dispatch(events.saleInvoice.onCreated, {
       tenantId,
       saleInvoice,
@@ -217,9 +217,10 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
   /**
    * Edit the given sale invoice.
    * @async
-   * @param {number} tenantId -
-   * @param {Number} saleInvoiceId -
-   * @param {ISaleInvoice} saleInvoice -
+   * @param {number} tenantId - Tenant id.
+   * @param {Number} saleInvoiceId - Sale invoice id.
+   * @param {ISaleInvoice} saleInvoice - Sale invoice DTO object.
+   * @return {Promise<ISaleInvoice>}
    */
   public async editSaleInvoice(
     tenantId: number,
@@ -228,9 +229,6 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
   ): Promise<ISaleInvoice> {
     const { SaleInvoice, ItemEntry } = this.tenancy.models(tenantId);
 
-    const balance = sumBy(saleInvoiceDTO.entries, (e) =>
-      ItemEntry.calcAmount(e)
-    );
     const oldSaleInvoice = await this.getInvoiceOrThrowError(
       tenantId,
       saleInvoiceId
@@ -242,13 +240,11 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
       saleInvoiceDTO,
       oldSaleInvoice
     );
-
     // Validate customer existance.
     await this.customersService.getCustomerByIdOrThrowError(
       tenantId,
       saleInvoiceDTO.customerId
     );
-
     // Validate sale invoice number uniquiness.
     if (saleInvoiceDTO.invoiceNo) {
       await this.validateInvoiceNumberUnique(
@@ -281,15 +277,9 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
     const saleInvoice: ISaleInvoice = await SaleInvoice.query().upsertGraphAndFetch(
       {
         id: saleInvoiceId,
-        ...omit(saleInvoiceObj, ['entries', 'invLotNumber']),
-
-        entries: saleInvoiceObj.entries.map((entry) => ({
-          reference_type: 'SaleInvoice',
-          ...omit(entry, ['amount']),
-        })),
+        ...saleInvoiceObj,
       }
     );
-
     // Triggers `onSaleInvoiceEdited` event.
     await this.eventDispatcher.dispatch(events.saleInvoice.onEdited, {
       saleInvoice,

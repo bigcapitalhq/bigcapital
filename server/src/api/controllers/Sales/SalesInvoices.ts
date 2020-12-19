@@ -7,10 +7,10 @@ import SaleInvoiceService from 'services/Sales/SalesInvoices';
 import ItemsService from 'services/Items/ItemsService';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import { ServiceError } from 'exceptions';
-import { ISaleInvoiceOTD, ISalesInvoicesFilter } from 'interfaces';
+import { ISaleInvoiceDTO, ISalesInvoicesFilter } from 'interfaces';
 
 @Service()
-export default class SaleInvoicesController extends BaseController{
+export default class SaleInvoicesController extends BaseController {
   @Inject()
   itemsService: ItemsService;
 
@@ -34,17 +34,15 @@ export default class SaleInvoicesController extends BaseController{
       ],
       this.validationResult,
       asyncMiddleware(this.newSaleInvoice.bind(this)),
-      this.handleServiceErrors,
+      this.handleServiceErrors
     );
     router.post(
       '/:id/deliver',
-      [
-        ...this.specificSaleInvoiceValidation,
-      ],
+      [...this.specificSaleInvoiceValidation],
       this.validationResult,
       asyncMiddleware(this.deliverSaleInvoice.bind(this)),
-      this.handleServiceErrors,
-    )
+      this.handleServiceErrors
+    );
     router.post(
       '/:id',
       [
@@ -53,29 +51,28 @@ export default class SaleInvoicesController extends BaseController{
       ],
       this.validationResult,
       asyncMiddleware(this.editSaleInvoice.bind(this)),
-      this.handleServiceErrors,
+      this.handleServiceErrors
     );
     router.delete(
       '/:id',
       this.specificSaleInvoiceValidation,
       this.validationResult,
       asyncMiddleware(this.deleteSaleInvoice.bind(this)),
-      this.handleServiceErrors,
+      this.handleServiceErrors
     );
     router.get(
-      '/payable', [
-        ...this.dueSalesInvoicesListValidationSchema,
-      ],
+      '/payable',
+      [...this.dueSalesInvoicesListValidationSchema],
       this.validationResult,
       asyncMiddleware(this.getPayableInvoices.bind(this)),
-      this.handleServiceErrors,
+      this.handleServiceErrors
     );
     router.get(
       '/:id',
       this.specificSaleInvoiceValidation,
       this.validationResult,
       asyncMiddleware(this.getSaleInvoice.bind(this)),
-      this.handleServiceErrors,
+      this.handleServiceErrors
     );
     router.get(
       '/',
@@ -83,8 +80,8 @@ export default class SaleInvoicesController extends BaseController{
       this.validationResult,
       asyncMiddleware(this.getSalesInvoices.bind(this)),
       this.handleServiceErrors,
-      this.dynamicListService.handlerErrorsToResponse,
-    )
+      this.dynamicListService.handlerErrorsToResponse
+    );
     return router;
   }
 
@@ -131,7 +128,7 @@ export default class SaleInvoicesController extends BaseController{
       query('column_sort_by').optional(),
       query('sort_order').optional().isIn(['desc', 'asc']),
       query('page').optional().isNumeric().toInt(),
-      query('page_size').optional().isNumeric().toInt(), 
+      query('page_size').optional().isNumeric().toInt(),
     ];
   }
 
@@ -139,9 +136,7 @@ export default class SaleInvoicesController extends BaseController{
    * Due sale invoice list validation schema.
    */
   get dueSalesInvoicesListValidationSchema() {
-    return [
-      query('customer_id').optional().isNumeric().toInt(),
-    ];
+    return [query('customer_id').optional().isNumeric().toInt()];
   }
 
   /**
@@ -152,19 +147,20 @@ export default class SaleInvoicesController extends BaseController{
    */
   async newSaleInvoice(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
-    const saleInvoiceOTD: ISaleInvoiceOTD = this.matchedBodyData(req);
+    const saleInvoiceOTD: ISaleInvoiceDTO = this.matchedBodyData(req);
 
     try {
       // Creates a new sale invoice with associated entries.
       const storedSaleInvoice = await this.saleInvoiceService.createSaleInvoice(
-        tenantId, saleInvoiceOTD,
+        tenantId,
+        saleInvoiceOTD
       );
       return res.status(200).send({
         id: storedSaleInvoice.id,
         message: 'The sale invoice has been created successfully.',
       });
     } catch (error) {
-      next(error)
+      next(error);
     }
   }
 
@@ -177,20 +173,24 @@ export default class SaleInvoicesController extends BaseController{
   async editSaleInvoice(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const { id: saleInvoiceId } = req.params;
-    const saleInvoiceOTD: ISaleInvoiceOTD = this.matchedBodyData(req);
+    const saleInvoiceOTD: ISaleInvoiceDTO = this.matchedBodyData(req);
 
     try {
       // Update the given sale invoice details.
-      await this.saleInvoiceService.editSaleInvoice(tenantId, saleInvoiceId, saleInvoiceOTD);
+      await this.saleInvoiceService.editSaleInvoice(
+        tenantId,
+        saleInvoiceId,
+        saleInvoiceOTD
+      );
       return res.status(200).send({
         id: saleInvoiceId,
-        message: 'The sale invoice has beeen edited successfully.',
+        message: 'The sale invoice has been edited successfully.',
       });
     } catch (error) {
       next(error);
     }
   }
-  
+
   /**
    * Deliver the given sale invoice.
    * @param {Request} req -
@@ -226,7 +226,7 @@ export default class SaleInvoicesController extends BaseController{
     try {
       // Deletes the sale invoice with associated entries and journal transaction.
       await this.saleInvoiceService.deleteSaleInvoice(tenantId, saleInvoiceId);
-  
+
       return res.status(200).send({
         id: saleInvoiceId,
         message: 'The sale invoice has been deleted successfully.',
@@ -247,7 +247,8 @@ export default class SaleInvoicesController extends BaseController{
 
     try {
       const saleInvoice = await this.saleInvoiceService.getSaleInvoice(
-        tenantId, saleInvoiceId,
+        tenantId,
+        saleInvoiceId
       );
       return res.status(200).send({ sale_invoice: saleInvoice });
     } catch (error) {
@@ -260,7 +261,11 @@ export default class SaleInvoicesController extends BaseController{
    * @param {Response} res
    * @param {Function} next
    */
-  public async getSalesInvoices(req: Request, res: Response, next: NextFunction) {
+  public async getSalesInvoices(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { tenantId } = req;
     const filter: ISalesInvoicesFilter = {
       filterRoles: [],
@@ -277,9 +282,7 @@ export default class SaleInvoicesController extends BaseController{
         salesInvoices,
         filterMeta,
         pagination,
-      } = await this.saleInvoiceService.salesInvoicesList(
-        tenantId, filter,
-      );
+      } = await this.saleInvoiceService.salesInvoicesList(tenantId, filter);
       return res.status(200).send({
         sales_invoices: salesInvoices,
         pagination: this.transfromToResponse(pagination),
@@ -292,17 +295,24 @@ export default class SaleInvoicesController extends BaseController{
 
   /**
    * Retrieve due sales invoices.
-   * @param {Request} req - 
-   * @param {Response} res - 
-   * @param {NextFunction} next - 
+   * @param {Request} req -
+   * @param {Response} res -
+   * @param {NextFunction} next -
    * @return {Response|void}
    */
-  public async getPayableInvoices(req: Request, res: Response, next: NextFunction) {
+  public async getPayableInvoices(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { tenantId } = req;
     const { customerId } = this.matchedQueryData(req);
 
     try {
-      const salesInvoices = await this.saleInvoiceService.getPayableInvoices(tenantId, customerId);
+      const salesInvoices = await this.saleInvoiceService.getPayableInvoices(
+        tenantId,
+        customerId
+      );
 
       return res.status(200).send({
         sales_invoices: this.transfromToResponse(salesInvoices),
@@ -314,12 +324,17 @@ export default class SaleInvoicesController extends BaseController{
 
   /**
    * Handles service errors.
-   * @param {Error} error 
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
+   * @param {Error} error
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
-  handleServiceErrors(error: Error, req: Request, res: Response, next: NextFunction) {
+  handleServiceErrors(
+    error: Error,
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     if (error instanceof ServiceError) {
       if (error.errorType === 'INVOICE_NUMBER_NOT_UNIQUE') {
         return res.boom.badRequest(null, {
@@ -328,7 +343,7 @@ export default class SaleInvoicesController extends BaseController{
       }
       if (error.errorType === 'SALE_INVOICE_NOT_FOUND') {
         return res.status(404).send({
-          errors: [{ type: 'SALE.INVOICE.NOT.FOUND', code: 200 }]
+          errors: [{ type: 'SALE.INVOICE.NOT.FOUND', code: 200 }],
         });
       }
       if (error.errorType === 'ENTRIES_ITEMS_IDS_NOT_EXISTS') {
@@ -372,6 +387,6 @@ export default class SaleInvoicesController extends BaseController{
         });
       }
     }
-    next(error); 
+    next(error);
   }
 }
