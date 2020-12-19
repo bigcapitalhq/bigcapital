@@ -23,6 +23,7 @@ import {
   IPaginationMeta,
   IFilterMeta,
   IBillsFilter,
+  IItemEntry,
 } from 'interfaces';
 import { ServiceError } from 'exceptions';
 import ItemsService from 'services/Items/ItemsService';
@@ -221,7 +222,6 @@ export default class BillsService extends SalesInvoicesCost {
       authorizedUser,
       null
     );
-
     // Retrieve vendor or throw not found service error.
     await this.getVendorOrThrowError(tenantId, billDTO.vendorId);
 
@@ -372,26 +372,39 @@ export default class BillsService extends SalesInvoicesCost {
    * @param {Bill} bill
    * @param {number} billId
    */
-  public recordInventoryTransactions(
+  public async recordInventoryTransactions(
     tenantId: number,
-    bill: any,
-    billId: number,
+    bill: IBill,
     override?: boolean
-  ) {
-    const inventoryTransactions = bill.entries.map((entry) => ({
-      ...pick(entry, ['item_id', 'quantity', 'rate']),
+  ): Promise<void> {
+    const invTransactions = bill.entries.map((entry: IItemEntry) => ({
+      ...pick(entry, ['itemId', 'quantity', 'rate']),
       lotNumber: bill.invLotNumber,
       transactionType: 'Bill',
-      transactionId: billId,
+      transactionId: bill.id,
       direction: 'IN',
-      date: bill.bill_date,
+      date: bill.billDate,
       entryId: entry.id,
     }));
 
-    return this.inventoryService.recordInventoryTransactions(
+    await this.inventoryService.recordInventoryTransactions(
       tenantId,
-      inventoryTransactions,
+      invTransactions,
       override
+    );
+  }
+
+  /**
+   * Reverts the inventory transactions of the given bill id.
+   * @param {number} tenantId - Tenant id.
+   * @param {number} billId - Bill id.
+   * @return {Promise<void>}
+   */
+  public async revertInventoryTransactions(tenantId: number, billId: number) {
+    await this.inventoryService.deleteInventoryTransactions(
+      tenantId,
+      billId,
+      'Bill',
     );
   }
 
@@ -437,7 +450,6 @@ export default class BillsService extends SalesInvoicesCost {
       Bill,
       billsFilter
     );
-
     this.logger.info('[bills] trying to get bills data table.', {
       tenantId,
       billsFilter,

@@ -1,4 +1,5 @@
 import { Container, Service, Inject } from 'typedi';
+import { IInventoryTransaction, IItem } from 'interfaces'
 import InventoryAverageCost from 'services/Inventory/InventoryAverageCost';
 import InventoryCostLotTracker from 'services/Inventory/InventoryCostLotTracker';
 import TenancyService from 'services/Tenancy/TenancyService';
@@ -60,27 +61,30 @@ export default class InventoryService {
 
   /**
    * Records the inventory transactions. 
-   * @param {number} tenantId - Tenant id.
-   * @param {Bill} bill 
-   * @param {number} billId 
+   * @param  {number} tenantId - Tenant id.
+   * @param  {Bill} bill - Bill model object.
+   * @param  {number} billId - Bill id.
+   * @return {Promise<void>}
    */
   async recordInventoryTransactions(
     tenantId: number,
-    entries: [],
+    entries: IInventoryTransaction[],
     deleteOld: boolean,
-  ) {
+  ): Promise<void> {
     const { InventoryTransaction, Item } = this.tenancy.models(tenantId);
 
-    const entriesItemsIds = entries.map((e: any) => e.item_id);
+    // Mapping the inventory entries items ids.
+    const entriesItemsIds = entries.map((e: any) => e.itemId);
     const inventoryItems = await Item.query()
       .whereIn('id', entriesItemsIds)
       .where('type', 'inventory');
 
-    const inventoryItemsIds = inventoryItems.map((i: any) => i.id);
+    // Mapping the inventory items ids.
+    const inventoryItemsIds = inventoryItems.map((i: IItem) => i.id);
 
     // Filter the bill entries that have inventory items.
     const inventoryEntries = entries.filter(
-      (entry: any) => inventoryItemsIds.indexOf(entry.item_id) !== -1
+      (entry: IInventoryTransaction) => inventoryItemsIds.indexOf(entry.itemId) !== -1
     );
     inventoryEntries.forEach(async (entry: any) => {
       if (deleteOld) {

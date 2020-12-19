@@ -9,6 +9,7 @@ export interface IInventoryTransaction {
   rate: number,
   transactionType: string,
   transactionId: string,
+  lotNumber: string,
 };
 
 export interface IInventoryLotCost {

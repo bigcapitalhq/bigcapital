@@ -4,6 +4,7 @@ import events from 'subscribers/events';
 import TenancyService from 'services/Tenancy/TenancyService';
 import SettingsService from 'services/Settings/SettingsService';
 import SaleEstimateService from 'services/Sales/SalesEstimate';
+import SaleInvoicesService from 'services/Sales/SalesInvoices';
 
 @EventSubscriber()
 export default class SaleInvoiceSubscriber {
@@ -11,12 +12,14 @@ export default class SaleInvoiceSubscriber {
   tenancy: TenancyService;
   settingsService: SettingsService;
   saleEstimatesService: SaleEstimateService;
+  saleInvoicesService: SaleInvoicesService;
 
   constructor() {
     this.logger = Container.get('logger');
     this.tenancy = Container.get(TenancyService);
     this.settingsService = Container.get(SettingsService);
     this.saleEstimatesService = Container.get(SaleEstimateService);
+    this.saleInvoicesService = Container.get(SaleInvoicesService);
   }
 
   /**
@@ -113,5 +116,33 @@ export default class SaleInvoiceSubscriber {
       key: 'next_number',
       group: 'sales_invoices',
     });
+  }
+
+  /**
+   * Handles the writing inventory transactions once the invoice created.
+   */
+  @On(events.saleInvoice.onCreated)
+  public async handleWritingInventoryTransactions({ tenantId, saleInvoice }) {
+    this.logger.info('[sale_invoice] trying to write inventory transactions.', {
+      tenantId,
+    });
+    await this.saleInvoicesService.recordInventoryTranscactions(
+      tenantId,
+      saleInvoice,
+    );
+  }
+
+  /**
+   * Handles deleting the inventory transactions once the invoice deleted.
+   */
+  @On(events.saleInvoice.onDeleted)
+  public async handleDeletingInventoryTransactions({ tenantId, saleInvoiceId }) {
+    this.logger.info('[sale_invoice] trying to revert inventory transactions.', {
+      tenantId, saleInvoiceId,
+    });
+    await this.saleInvoicesService.revertInventoryTransactions(
+      tenantId,
+      saleInvoiceId,
+    );
   }
 }

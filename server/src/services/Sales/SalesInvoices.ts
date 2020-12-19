@@ -7,13 +7,13 @@ import {
 } from 'decorators/eventDispatcher';
 import {
   ISaleInvoice,
-  ISaleInvoiceDTO,
   IItemEntry,
+  ISaleInvoiceCreateDTO,
+  ISaleInvoiceEditDTO,
+  IInventoryTransaction,
   ISalesInvoicesFilter,
   IPaginationMeta,
   IFilterMeta,
-  ISaleInvoiceCreateDTO,
-  ISaleInvoiceEditDTO,
 } from 'interfaces';
 import events from 'subscribers/events';
 import JournalPoster from 'services/Accounting/JournalPoster';
@@ -351,39 +351,59 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
       .where('reference_type', 'SaleInvoice')
       .delete();
 
+    // Triggers `onSaleInvoiceDeleted` event.
     await this.eventDispatcher.dispatch(events.saleInvoice.onDeleted, {
       tenantId,
       oldSaleInvoice,
+      saleInvoiceId,
     });
   }
 
   /**
    * Records the inventory transactions from the givne sale invoice input.
-   * @param {SaleInvoice} saleInvoice -
-   * @param {number} saleInvoiceId -
-   * @param {boolean} override -
+   * @parma {number} tenantId - Tenant id.
+   * @param {SaleInvoice} saleInvoice - Sale invoice DTO.
+   * @param {number} saleInvoiceId - Sale invoice id.
+   * @param {boolean} override - Allow to override old transactions.
    */
-  private recordInventoryTranscactions(
+  public recordInventoryTranscactions(
     tenantId: number,
-    saleInvoice,
-    saleInvoiceId: number,
+    saleInvoice: ISaleInvoice,
     override?: boolean
   ) {
     this.logger.info('[sale_invoice] saving inventory transactions');
-    const inventortyTransactions = saleInvoice.entries.map((entry) => ({
-      ...pick(entry, ['item_id', 'quantity', 'rate']),
-      lotNumber: saleInvoice.invLotNumber,
-      transactionType: 'SaleInvoice',
-      transactionId: saleInvoiceId,
-      direction: 'OUT',
-      date: saleInvoice.invoice_date,
-      entryId: entry.id,
-    }));
+    const invTransactions: IInventoryTransaction[] = saleInvoice.entries.map(
+      (entry: IItemEntry) => ({
+        ...pick(entry, ['itemId', 'quantity', 'rate']),
+        lotNumber: 1,
+        transactionType: 'SaleInvoice',
+        transactionId: saleInvoice.id,
+        direction: 'OUT',
+        date: saleInvoice.invoiceDate,
+        entryId: entry.id,
+      })
+    );
 
     return this.inventoryService.recordInventoryTransactions(
       tenantId,
-      inventortyTransactions,
+      invTransactions,
       override
+    );
+  }
+
+  /**
+   * Reverting the inventory transactions once the invoice deleted.
+   * @param {number} tenantId - Tenant id.
+   * @param {number} billId - Bill id.
+   */
+  public revertInventoryTransactions(
+    tenantId: number,
+    billId: number
+  ): Promise<void> {
+    return this.inventoryService.deleteInventoryTransactions(
+      tenantId,
+      billId,
+      'SaleInvoice'
     );
   }
 
@@ -392,7 +412,7 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
    * @param {string} transactionType
    * @param {number} transactionId
    */
-  private async revertInventoryTransactions(
+  private async revertInventoryTransactions_(
     tenantId: number,
     inventoryTransactions: array
   ) {

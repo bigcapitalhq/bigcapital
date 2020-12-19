@@ -81,7 +81,6 @@ export default () => {
   dashboard.use(EnsureConfiguredMiddleware);
   dashboard.use(EnsureTenantIsSeeded);
 
-
   dashboard.use('/users', Container.get(Users).router());
   dashboard.use('/invite', Container.get(InviteUsers).authRouter());
   dashboard.use('/currencies', Container.get(Currencies).router());
