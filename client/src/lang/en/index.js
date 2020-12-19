@@ -869,12 +869,9 @@ export default {
   save_and_deliver: 'Save & Deliver',
   deliver_and_new: 'Deliver and new',
   deliver_continue_editing: 'Deliver (continue editing)',
-  due_in: 'Due in',
-  day_partially_paid: 'Day Partially paid,',
-  due: 'Due.',
-  overdue_by: 'Overdue by',
-  day: 'day.',
-  day_partially_paid: 'Day Partially paid',
+  due_in: 'Due in {due} day.',
+  day_partially_paid: 'Partially paid {due} due.',
+  overdue_by: 'Overdue by {overdue} day.',
   paid: 'Paid',
   your_account_has_been_locked:
     'Your account has been locked due to repeated failed login attempts. Please wait a few minutes before trying again.',
@@ -929,6 +926,6 @@ export default {
     'Are you sure you want to inactive this item? You will be able to activate it later',
   are_sure_to_activate_this_item:
     'Are you sure you want to activate this item? You will be able to inactivate it later',
-    inactivate_item: 'Inactivate Item',
-    activate_item: 'Activate Item',
-  };
+  inactivate_item: 'Inactivate Item',
+  activate_item: 'Activate Item',
+};

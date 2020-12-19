@@ -45,12 +45,12 @@
   }
 }
 .status-accessor {
-  span > p {
+  span {
     font-size: 13px;
     font-weight: 400;
     line-height: 1.5;
   }
-  .fully-paid {
+  .fully-paid-status {
     display: inline-block;
     border-radius: 50%;
     background: #2ba01d;
@@ -62,14 +62,14 @@
     background: rgba(92, 112, 128, 0.2);
     border-radius: 40px;
     display: block;
-    height: 6px;
+    height: 5px;
     overflow: hidden;
     position: relative;
+    margin-top: 5px;
     width: 80%;
   }
-}
-
-.overdue-status {
-}
-.remaining-status {
+  &.overdue-status {
+  }
+  &.remaining-status {
+  }
 }
