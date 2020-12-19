@@ -18,6 +18,9 @@ export default class VendorsSubscriber {
     this.vendorsService = Container.get(VendorsService);
   }
 
+  /**
+   * Writes the open balance journal entries once the vendor created.
+   */
   @On(events.vendors.onCreated)
   async handleWriteOpeningBalanceEntries({ tenantId, vendorId, vendor }) {
     // Writes the vendor opening balance journal entries.
@@ -30,6 +33,9 @@ export default class VendorsSubscriber {
     }
   }
 
+  /**
+   * Revert the opening balance journal entries once the vendor deleted.
+   */
   @On(events.vendors.onDeleted)
   async handleRevertOpeningBalanceEntries({ tenantId, vendorId }) {
     await this.vendorsService.revertOpeningBalanceEntries(
@@ -37,6 +43,9 @@ export default class VendorsSubscriber {
     );
   }
 
+  /**
+   * Revert the opening balance journal entries once the vendors deleted in bulk.
+   */
   @On(events.vendors.onBulkDeleted)
   async handleBulkRevertOpeningBalanceEntries({ tenantId, vendorsIds }) {
     await this.vendorsService.revertOpeningBalanceEntries(

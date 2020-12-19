@@ -11,6 +11,8 @@ interface IJournalTransactionsFilter {
   toAmount: number,
   contactsIds?: number[],
   contactType?: string,
+  referenceType?: string[],
+  referenceId?: number[],
 };
 
 export default class AccountTransactionsRepository extends TenantRepository {
@@ -41,6 +43,12 @@ export default class AccountTransactionsRepository extends TenantRepository {
           }
           if (filter.contactType) {
             query.where('contact_type', filter.contactType);
+          }
+          if (filter.referenceType && filter.referenceType.length > 0) {
+            query.whereIn('reference_type', filter.referenceType);
+          }
+          if (filter.referenceId && filter.referenceId.length > 0) {
+            query.whereIn('reference_id', filter.referenceId);
           }
         });
     });

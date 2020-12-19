@@ -177,7 +177,20 @@ export default class CachableRepository extends EntityRepository{
    * 
    * @param {string|number[]} values -
    */
-  async deleteWhereIn(values: string | number[]) {
+  async deleteWhereIn(field: string, values: string | number[]) {
+    const result = await super.deleteWhereIn(field, values);
+
+    // Flushes the repository cache after delete operation.
+    this.flushCache();
+
+    return result;
+  }
+
+  /**
+   * 
+   * @param {string|number[]} values 
+   */
+  async deleteWhereIdIn(values: string | number[]) {
     const result = await super.deleteWhereIdIn(values);
 
     // Flushes the repository cache after delete operation.

@@ -175,7 +175,7 @@ export default class EntityRepository {
   }
 
   /**
-   * 
+   * Deletes the given entries in the array on the specific field.
    * @param {string} field -
    * @param {number|string} values -
    */

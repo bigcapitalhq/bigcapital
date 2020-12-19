@@ -197,8 +197,8 @@ export default class BillsController extends BaseController {
    * @param {Response} res
    */
   async editBill(req: Request, res: Response, next: NextFunction) {
-    const { id: billId, user } = req.params;
-    const { tenantId } = req;
+    const { id: billId } = req.params;
+    const { tenantId, user } = req;
     const billDTO: IBillEditDTO = this.matchedBodyData(req);
 
     try {

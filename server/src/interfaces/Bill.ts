@@ -46,6 +46,7 @@ export interface IBill {
   openedAt: Date | string,
 
   entries: IItemEntry[],
+  userId: number,
 };
 
 export interface IBillsFilter extends IDynamicListFilterDTO { 

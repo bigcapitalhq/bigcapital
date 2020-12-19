@@ -1,4 +1,6 @@
 import { sumBy, chain } from 'lodash';
+import moment from 'moment';
+import { IBill } from 'interfaces';
 import JournalPoster from "./JournalPoster";
 import JournalEntry from "./JournalEntry";
 import { AccountTransaction } from 'models';
@@ -7,6 +9,7 @@ import {
   IManualJournal,
   IExpense,
   IExpenseCategory,
+  IItem,
 } from 'interfaces';
 
 interface IInventoryCostEntity {
@@ -55,6 +58,68 @@ export default class JournalCommands{
     
     this.repositories = this.journal.repositories;
     this.models = this.journal.models;
+  }
+
+  /**
+   * Records the bill journal entries.
+   * @param {IBill} bill 
+   * @param {boolean} override - Override the old bill entries.
+   */
+  async bill(bill: IBill, override: boolean = false): Promise<void> {
+    const { transactionsRepository, accountRepository } = this.repositories;
+    const { Item, ItemEntry } = this.models;
+
+    const entriesItemsIds = bill.entries.map((entry) => entry.itemId);
+
+    // Retrieve the bill transaction items.
+    const storedItems = await Item.query().whereIn('id', entriesItemsIds);
+
+    const storedItemsMap = new Map(storedItems.map((item) => [item.id, item]));
+    const payableAccount = await accountRepository.findOne({ slug: 'accounts-payable' });
+    const formattedDate = moment(bill.billDate).format('YYYY-MM-DD');
+
+    const commonJournalMeta = {
+      debit: 0,
+      credit: 0,
+      referenceId: bill.id,
+      referenceType: 'Bill',
+      date: formattedDate,
+      userId: bill.userId,
+    };
+    // Overrides the old bill entries.
+    if (override) {
+      const entries = await transactionsRepository.journal({
+        referenceType: ['Bill'],
+        referenceId: [bill.id],
+      });
+      this.journal.fromTransactions(entries);
+      this.journal.removeEntries();
+    }
+    const payableEntry = new JournalEntry({
+      ...commonJournalMeta,
+      credit: bill.amount,
+      account: payableAccount.id,
+      contactId: bill.vendorId,
+      contactType: 'Vendor',
+      index: 1,
+    });
+    this.journal.credit(payableEntry);
+
+    bill.entries.forEach((entry, index) => {
+      const item: IItem = storedItemsMap.get(entry.itemId);
+      const amount = ItemEntry.calcAmount(entry);
+
+      const debitEntry = new JournalEntry({
+        ...commonJournalMeta,
+        debit: amount,
+        account:
+          ['inventory'].indexOf(item.type) !== -1
+            ? item.inventoryAccountId
+            : item.costAccountId,
+        index: index + 2,
+      });
+      this.journal.debit(debitEntry);
+    });
   }
 
   /**

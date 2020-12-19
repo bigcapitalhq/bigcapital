@@ -21,7 +21,7 @@ export default class JournalPoster implements IJournalPoster {
   deletedEntriesIds: number[] = [];
   entries: IJournalEntry[] = [];
   balancesChange: IAccountsChange = {};
-  accountsDepGraph: IAccountsChange = {};
+  accountsDepGraph: IAccountsChange;
 
   accountsBalanceTable: { [key: number]: number; } = {};
 
@@ -250,12 +250,12 @@ export default class JournalPoster implements IJournalPoster {
    * @returns {Promise<void>}
    */
   public async saveEntries() {
-    const { AccountTransaction } = this.models;
+    const { transactionsRepository } = this.repositories;
     const saveOperations: Promise<void>[] = [];
 
     this.entries.forEach((entry) => {
-      const oper = AccountTransaction.query()
-        .insert({
+      const oper = transactionsRepository
+        .create({
           accountId: entry.account,
           ...omit(entry, ['account']),
         });
@@ -309,12 +309,10 @@ export default class JournalPoster implements IJournalPoster {
    * @return {Promise<void>}
    */
   public async deleteEntries() {
-    const { AccountTransaction } = this.models;
+    const { transactionsRepository } = this.repositories;
 
     if (this.deletedEntriesIds.length > 0) {
-      await AccountTransaction.query()
-        .whereIn('id', this.deletedEntriesIds)
-        .delete();
+      await transactionsRepository.deleteWhereIdIn(this.deletedEntriesIds);
     }
   }
 
@@ -331,7 +329,6 @@ export default class JournalPoster implements IJournalPoster {
       });
     });
   }
-
 
   /**
    * Calculates the entries balance change.

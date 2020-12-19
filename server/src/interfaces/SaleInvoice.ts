@@ -12,7 +12,7 @@ export interface ISaleInvoice {
   deliveredAt: string|Date,
 }
 
-export interface ISaleInvoiceOTD {
+export interface ISaleInvoiceDTO {
   invoiceDate: Date,
   dueDate: Date,
   referenceNo: string,
@@ -24,11 +24,11 @@ export interface ISaleInvoiceOTD {
   delivered: boolean,
 }
 
-export interface ISaleInvoiceCreateDTO extends ISaleInvoiceOTD {
+export interface ISaleInvoiceCreateDTO extends ISaleInvoiceDTO {
   fromEstiamteId: number,  
 };
 
-export interface ISaleInvoiceEditDTO extends ISaleInvoiceOTD {
+export interface ISaleInvoiceEditDTO extends ISaleInvoiceDTO {
 
 };
 
