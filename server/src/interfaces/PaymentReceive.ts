@@ -13,8 +13,18 @@ export interface IPaymentReceive {
   entries: IPaymentReceiveEntry[],
   userId: number,
 };
-export interface IPaymentReceiveDTO {
+export interface IPaymentReceiveCreateDTO {
   customerId: number,
+  paymentDate: Date,
+  amount: number,
+  referenceNo: string,
+  depositAccountId: number,
+  paymentReceiveNo?: string,
+  description: string,
+  entries: IPaymentReceiveEntryDTO[],
+};
+
+export interface IPaymentReceiveEditDTO {
   paymentDate: Date,
   amount: number,
   referenceNo: string,

@@ -80,7 +80,6 @@ export default class PaymentReceivesController extends BaseController {
    */
   get paymentReceiveSchema(): ValidationChain[] {
     return [
-      check('customer_id').exists().isNumeric().toInt(),
       check('payment_date').exists(),
       check('reference_no').optional(),
       check('deposit_account_id').exists().isNumeric().toInt(),
@@ -121,7 +120,10 @@ export default class PaymentReceivesController extends BaseController {
    * @return {Array}
    */
   get newPaymentReceiveValidation() {
-    return [...this.paymentReceiveSchema];
+    return [
+      check('customer_id').exists().isNumeric().toInt(),
+      ...this.paymentReceiveSchema,
+    ];
   }
 
   /**
@@ -172,7 +174,10 @@ export default class PaymentReceivesController extends BaseController {
       await this.paymentReceiveService.editPaymentReceive(
         tenantId, paymentReceiveId, paymentReceive,
       );
-      return res.status(200).send({ id: paymentReceiveId });  
+      return res.status(200).send({
+        id: paymentReceiveId,
+        message: 'The payment receive has been edited successfully.'
+      });  
     } catch (error) {
       next(error);
     }

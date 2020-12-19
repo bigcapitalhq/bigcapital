@@ -25,7 +25,7 @@ export interface ISaleInvoiceDTO {
 }
 
 export interface ISaleInvoiceCreateDTO extends ISaleInvoiceDTO {
-  fromEstiamteId: number,  
+  fromEstimateId: number,  
 };
 
 export interface ISaleInvoiceEditDTO extends ISaleInvoiceDTO {

@@ -206,7 +206,7 @@ export default class SaleInvoicesController extends BaseController {
 
       return res.status(200).send({
         id: saleInvoiceId,
-        message: 'The given sale invoice has been published successfully',
+        message: 'The given sale invoice has been delivered successfully',
       });
     } catch (error) {
       next(error);

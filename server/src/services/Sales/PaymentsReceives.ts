@@ -12,6 +12,8 @@ import {
   IPaginationMeta,
   IPaymentReceive,
   IPaymentReceiveDTO,
+  IPaymentReceiveCreateDTO,
+  IPaymentReceiveEditDTO,  
   IPaymentReceiveEntry,
   IPaymentReceiveEntryDTO,
   IPaymentReceivesFilter,
@@ -236,7 +238,7 @@ export default class PaymentReceiveService {
    * @param {number} tenantId - Tenant id.
    * @param {IPaymentReceive} paymentReceive
    */
-  public async createPaymentReceive(tenantId: number, paymentReceiveDTO: IPaymentReceiveDTO) {
+  public async createPaymentReceive(tenantId: number, paymentReceiveDTO: IPaymentReceiveCreateDTO) {
     const { PaymentReceive } = this.tenancy.models(tenantId);
     const paymentAmount = sumBy(paymentReceiveDTO.entries, 'paymentAmount');
 
@@ -293,7 +295,7 @@ export default class PaymentReceiveService {
   public async editPaymentReceive(
     tenantId: number,
     paymentReceiveId: number,
-    paymentReceiveDTO: any,
+    paymentReceiveDTO: IPaymentReceiveEditDTO,
   ) {
     const { PaymentReceive } = this.tenancy.models(tenantId);
     const paymentAmount = sumBy(paymentReceiveDTO.entries, 'paymentAmount');
@@ -310,14 +312,11 @@ export default class PaymentReceiveService {
     // Validate the deposit account existance and type.
     this.getDepositAccountOrThrowError(tenantId, paymentReceiveDTO.depositAccountId);
 
-    // Validate customer existance.
-    await this.customersService.getCustomerByIdOrThrowError(tenantId, paymentReceiveDTO.customerId);
-
     // Validate the entries ids existance on payment receive type.
     await this.validateEntriesIdsExistance(tenantId, paymentReceiveId, paymentReceiveDTO.entries);
 
     // Validate payment receive invoices IDs existance and associated to the given customer id.
-    await this.validateInvoicesIDsExistance(tenantId, paymentReceiveDTO.customerId, paymentReceiveDTO.entries);
+    await this.validateInvoicesIDsExistance(tenantId, oldPaymentReceive.customerId, paymentReceiveDTO.entries);
 
     // Validate invoice payment amount.
     await this.validateInvoicesPaymentsAmount(tenantId, paymentReceiveDTO.entries, oldPaymentReceive.entries);
@@ -536,7 +535,7 @@ export default class PaymentReceiveService {
    * @param {number} tenantId - Tenant id.
    * @param {Array} paymentReceiveEntries
    * @param {Array} newPaymentReceiveEntries
-   * @return 
+   * @return {Promise<void>}
    */
   public async saveChangeInvoicePaymentAmount(
     tenantId: number,
