@@ -37,11 +37,20 @@ export default class BillSubscriber {
    * Handles writing journal entries once bill created.
    */
   @On(events.bill.onCreated)
-  @On(events.bill.onEdited)
-  async handlerWriteJournalEntries({ tenantId, billId, bill }) {
+  async handlerWriteJournalEntriesOnCreate({ tenantId, bill }) {
     // Writes the journal entries for the given bill transaction.
     this.logger.info('[bill] writing bill journal entries.', { tenantId });
-    await this.billsService.recordJournalTransactions(tenantId, bill, billId);
+    await this.billsService.recordJournalTransactions(tenantId, bill);
+  }
+
+  /**
+   * Handles the overwriting journal entries once bill edited.
+   */
+  @On(events.bill.onEdited)
+  async handleOverwriteJournalEntriesOnEdit({ tenantId, bill }) {
+    // Overwrite the journal entries for the given bill transaction.
+    this.logger.info('[bill] overwriting bill journal entries.', { tenantId });
+    await this.billsService.recordJournalTransactions(tenantId, bill, true);
   }
 
   /**

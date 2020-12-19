@@ -27,6 +27,7 @@ import {
 import { ServiceError } from 'exceptions';
 import ItemsService from 'services/Items/ItemsService';
 import ItemsEntriesService from 'services/Items/ItemsEntriesService';
+import JournalCommands from 'services/Accounting/JournalCommands';
 
 const ERRORS = {
   BILL_NOT_FOUND: 'BILL_NOT_FOUND',
@@ -139,8 +140,8 @@ export default class BillsService extends SalesInvoicesCost {
   private async billDTOToModel(
     tenantId: number,
     billDTO: IBillDTO | IBillEditDTO,
-    oldBill?: IBill,
     authorizedUser: ISystemUser,
+    oldBill?: IBill,
   ) {
     const { ItemEntry } = this.tenancy.models(tenantId);
     let invLotNumber = oldBill?.invLotNumber;
@@ -156,7 +157,7 @@ export default class BillsService extends SalesInvoicesCost {
 
     return {
       ...formatDateFields(
-        omit(billDTO, ['open']),
+        omit(billDTO, ['open', 'entries']),
         ['billDate', 'dueDate']
       ),
       amount,
@@ -165,7 +166,6 @@ export default class BillsService extends SalesInvoicesCost {
         reference_type: 'Bill',
         ...omit(entry, ['amount', 'id']),
       })),
-
       // Avoid rewrite the open date in edit mode when already opened.
       ...(billDTO.open && (!oldBill?.openedAt)) && ({
         openedAt: moment().toMySqlDateTime(),
@@ -197,7 +197,7 @@ export default class BillsService extends SalesInvoicesCost {
     const { Bill } = this.tenancy.models(tenantId);
 
     this.logger.info('[bill] trying to create a new bill', { tenantId, billDTO });
-    const billObj = await this.billDTOToModel(tenantId, billDTO, null, authorizedUser);
+    const billObj = await this.billDTOToModel(tenantId, billDTO, authorizedUser, null);
 
     // Retrieve vendor or throw not found service error.
     await this.getVendorOrThrowError(tenantId, billDTO.vendorId);
@@ -253,7 +253,7 @@ export default class BillsService extends SalesInvoicesCost {
     const oldBill = await this.getBillOrThrowError(tenantId, billId);
 
     // Transforms the bill DTO object to model object.
-    const billObj = await this.billDTOToModel(tenantId, billDTO, oldBill, authorizedUser);
+    const billObj = await this.billDTOToModel(tenantId, billDTO, authorizedUser, oldBill);
 
     // Retrieve vendor details or throw not found service error.
     await this.getVendorOrThrowError(tenantId, billDTO.vendorId);
@@ -342,62 +342,16 @@ export default class BillsService extends SalesInvoicesCost {
    * @param {IBill} bill
    * @param {Integer} billId
    */
-  public async recordJournalTransactions(tenantId: number, bill: IBill, billId?: number) {
-    const { AccountTransaction, Item, ItemEntry } = this.tenancy.models(tenantId);
-    const { accountRepository } = this.tenancy.repositories(tenantId);
-
-    const entriesItemsIds = bill.entries.map((entry) => entry.itemId);
-    const formattedDate = moment(bill.billDate).format('YYYY-MM-DD');
-
-    const storedItems = await Item.query().whereIn('id', entriesItemsIds);
-
-    const storedItemsMap = new Map(storedItems.map((item) => [item.id, item]));
-    const payableAccount = await accountRepository.find({ slug: 'accounts-payable' });
-
+  public async recordJournalTransactions(
+    tenantId: number,
+    bill: IBill,
+    override: boolean = false,
+  ) {
     const journal = new JournalPoster(tenantId);
+    const journalCommands = new JournalCommands(journal);
 
-    const commonJournalMeta = {
-      debit: 0,
-      credit: 0,
-      referenceId: bill.id,
-      referenceType: 'Bill',
-      date: formattedDate,
-      userId: bill.userId,
-    };
-    if (billId) {
-      const transactions = await AccountTransaction.query()
-        .whereIn('reference_type', ['Bill'])
-        .whereIn('reference_id', [billId])
-        .withGraphFetched('account.type');
+    await journalCommands.bill(bill, override)
 
-      journal.loadEntries(transactions);
-      journal.removeEntries();
-    }
-    const payableEntry = new JournalEntry({
-      ...commonJournalMeta,
-      credit: bill.amount,
-      account: payableAccount.id,
-      contactId: bill.vendorId,
-      contactType: 'Vendor',
-      index: 1,
-    });
-    journal.credit(payableEntry);
-
-    bill.entries.forEach((entry, index) => {
-      const item: IItem = storedItemsMap.get(entry.itemId);
-      const amount = ItemEntry.calcAmount(entry);
-
-      const debitEntry = new JournalEntry({
-        ...commonJournalMeta,
-        debit: amount,
-        account:
-          ['inventory'].indexOf(item.type) !== -1
-            ? item.inventoryAccountId
-            : item.costAccountId,
-        index: index + 2,
-      });
-      journal.debit(debitEntry);
-    });
     return Promise.all([
       journal.deleteEntries(),
       journal.saveEntries(),
