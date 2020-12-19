@@ -46,6 +46,10 @@ exports.up = (knex) => {
         { field_key: 'status', index: 1, comparator: 'is', value: 'rejected', view_id: 31 },
         { field_key: 'status', index: 1, comparator: 'is', value: 'invoiced', view_id: 32 },
         { field_key: 'status', index: 1, comparator: 'is', value: 'expired', view_id: 33 },
+  
+        // Sale receipts.
+        { field_key: 'status', index: 1, comparator: 'is', value: 'draft', view_id: 34 },
+        { field_key: 'status', index: 1, comparator: 'is', value: 'closed', view_id: 35 },
       ]);
     });
 };

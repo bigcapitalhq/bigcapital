@@ -43,6 +43,27 @@ export default class SaleReceipt extends TenantModel {
   }
 
   /**
+   * Model modifiers.
+   */
+  static get modifiers() {
+    return {
+      /**
+       * Filters the closed receipts.
+       */
+      closed(query) {
+        query.whereNot('closed_at', null);
+      },
+
+      /**
+       * Filters the invoices in draft status.
+       */
+      draft(query) {
+        query.where('closed_at', null);
+      },
+    };
+  }
+
+  /**
    * Relationship mapping.
    */
   static get relationMappings() {
@@ -104,11 +125,78 @@ export default class SaleReceipt extends TenantModel {
    */
   static get fields() {
     return {
+      amount: {
+        label: 'Amount',
+        column: 'amount',
+        columnType: 'number',
+        fieldType: 'number',
+      },
+      deposit_account: {
+        column: 'deposit_account_id',
+        lable: 'Deposit account',
+        relation: "accounts.id",
+        optionsResource: "account",
+      },
+      customer: {
+        label: 'Customer',
+        column: 'customer_id',
+        fieldType: 'options',
+        optionsResource: 'customers',
+        optionsKey: 'id',
+        optionsLable: 'displayName',
+      },
+      receipt_date: {
+        label: 'Receipt date',
+        column: 'receipt_date',
+        columnType: 'date',
+        fieldType: 'date',
+      },
+      receipt_number: {
+        label: 'Receipt No.',
+        column: 'receipt_number',
+        columnType: 'string',
+        fieldType: 'text',
+      },
+      reference_no: {
+        label: 'Reference No.',
+        column: 'reference_no',
+        columnType: 'text',
+        fieldType: 'text',
+      },
+      receipt_message: {
+        label: 'Receipt message',
+        column: 'receipt_message',
+        columnType: 'text',
+        fieldType: 'text',
+      },
+      statement: {
+        label: 'Statement',
+        column: 'statement',
+        columnType: 'text',
+        fieldType: 'text',
+      },
       created_at: {
         label: 'Created at',
         column: 'created_at',
         columnType: 'date',
       },
+      status: {
+        label: 'Status',
+        options: [
+          { key: 'draft', label: 'Draft', },
+          { key: 'closed', label: 'Closed' },
+        ],
+        query: (query, role) => {
+          switch(role.value) {
+            case 'draft':
+              query.modify('draft');
+              break;
+            case 'closed':
+              query.modify('closed');
+              break;
+          }
+        },
+      }
     };
   }
 }

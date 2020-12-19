@@ -56,6 +56,10 @@ exports.up = (knex) => {
         { id: 31, name: 'Rejected', slug: 'rejected', roles_logic_expression: '1', resource_model: 'SaleEstimate', predefined: true },
         { id: 32, name: 'Invoiced', slug: 'invoiced', roles_logic_expression: '1', resource_model: 'SaleEstimate', predefined: true },
         { id: 33, name: 'Expired', slug: 'expired', roles_logic_expression: '1', resource_model: 'SaleEstimate', predefined: true },
+
+        // Sale receipts.
+        { id: 34, name: 'Draft', slug: 'draft', roles_logic_expression: '1', resource_model: 'SaleReceipt', predefined: true },
+        { id: 35, name: 'Closed', slug: 'closed', roles_logic_expression: '1', resource_model: 'SaleReceipt', predefined: true },
       ]);
     });
 };
