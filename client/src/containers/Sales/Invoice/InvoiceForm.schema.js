@@ -17,7 +17,7 @@ const Schema = Yup.object().shape({
     .max(DATATYPES_LENGTH.STRING)
     .label(formatMessage({ id: 'invoice_no_' })),
   reference_no: Yup.string().min(1).max(DATATYPES_LENGTH.STRING),
-  delivered: Yup.boolean().required(),
+  delivered: Yup.boolean(),
   invoice_message: Yup.string()
     .trim()
     .min(1)
@@ -43,7 +43,7 @@ const Schema = Yup.object().shape({
           is: (quantity, rate) => !isBlank(quantity) && !isBlank(rate),
           then: Yup.number().required(),
         }),
-      discount: Yup.number().nullable().min(0).max(DATATYPES_LENGTH.INT_10),
+      discount: Yup.number().nullable().min(0).max(100),
       description: Yup.string().nullable().max(DATATYPES_LENGTH.TEXT),
     }),
   ),
