@@ -928,4 +928,5 @@ export default {
     'Are you sure you want to activate this item? You will be able to inactivate it later',
   inactivate_item: 'Inactivate Item',
   activate_item: 'Activate Item',
+  all_payments:'All Payments'
 };

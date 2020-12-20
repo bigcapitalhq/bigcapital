@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { useHistory } from 'react-router';
+import { FormattedMessage as T } from 'react-intl';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
 import { useParams, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -80,7 +81,7 @@ function PaymentMadeViewTabs({
       <NavbarGroup align={Alignment.LEFT}>
         <DashboardViewsTabs
           initialViewId={customViewId}
-          baseUrl={'/payment-mades'}
+          defaultTabText={<T id={'all_payments'} />}
           tabs={tabs}
           onNewViewTabClick={handleClickNewView}
           onChange={handleTabsChange}
