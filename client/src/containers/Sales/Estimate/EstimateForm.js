@@ -43,8 +43,8 @@ const MIN_LINES_NUMBER = 4;
 const defaultEstimate = {
   index: 0,
   item_id: '',
-  rate: 0,
-  discount: '',
+  rate: '',
+  discount: 0,
   quantity: 1,
   description: '',
 };
@@ -164,6 +164,8 @@ const EstimateForm = ({
     values,
     { setSubmitting, setErrors, resetForm },
   ) => {
+    setSubmitting(true);
+
     const entries = values.entries.filter(
       (item) => item.item_id && item.quantity,
     );
@@ -211,7 +213,9 @@ const EstimateForm = ({
     };
 
     const onError = (errors) => {
-      handleErrors(errors, { setErrors });
+      if (errors) {
+        handleErrors(errors, { setErrors });
+      }
       setSubmitting(false);
     };
 
@@ -246,11 +250,13 @@ const EstimateForm = ({
   );
 
   return (
-    <div className={classNames(
-      CLASSES.PAGE_FORM,
-      CLASSES.PAGE_FORM_STRIP_STYLE,
-      CLASSES.PAGE_FORM_ESTIMATE,
-    )}>
+    <div
+      className={classNames(
+        CLASSES.PAGE_FORM,
+        CLASSES.PAGE_FORM_STRIP_STYLE,
+        CLASSES.PAGE_FORM_ESTIMATE,
+      )}
+    >
       <Formik
         validationSchema={
           isNewMode ? CreateEstimateFormSchema : EditEstimateFormSchema
@@ -258,13 +264,13 @@ const EstimateForm = ({
         initialValues={initialValues}
         onSubmit={handleFormSubmit}
       >
-        {({ isSubmitting ,values }) => (
+        {({ isSubmitting, values }) => (
           <Form>
             <EstimateFormHeader
               onEstimateNumberChanged={handleEstimateNumberChange}
             />
             <EstimateNumberWatcher estimateNumber={estimateNumber} />
-            <EstimateFormBody />
+            <EstimateFormBody defaultEstimate={defaultEstimate} />
             <EstimateFormFooter />
             <EstimateFloatingActions
               isSubmitting={isSubmitting}

@@ -27,7 +27,7 @@ const Schema = Yup.object().shape({
     .min(1)
     .max(DATATYPES_LENGTH.TEXT)
     .label(formatMessage({ id: 'note' })),
-  delivered: Yup.boolean().required(),
+  delivered: Yup.boolean(),
   entries: Yup.array().of(
     Yup.object().shape({
       quantity: Yup.number()
@@ -44,7 +44,7 @@ const Schema = Yup.object().shape({
           is: (quantity, rate) => !isBlank(quantity) && !isBlank(rate),
           then: Yup.number().required(),
         }),
-      discount: Yup.number().nullable().min(0).max(DATATYPES_LENGTH.INT_10),
+      discount: Yup.number().nullable().min(0).max(100),
       description: Yup.string().nullable().max(DATATYPES_LENGTH.TEXT),
     }),
   ),
