@@ -4,16 +4,20 @@ import { sumBy } from 'lodash';
 import { useFormikContext } from 'formik';
 
 import { CLASSES } from 'common/classes';
-
 import InvoiceFormHeaderFields from './InvoiceFormHeaderFields';
+
 import { PageFormBigNumber } from 'components';
+import withSettings from 'containers/Settings/withSettings';
+import { compose } from 'redux';
 
 /**
  * Invoice form header section.
  */
-export default function InvoiceFormHeader({
+function InvoiceFormHeader({
   // #ownProps
   onInvoiceNumberChanged,
+  // #withSettings
+  baseCurrency,
 }) {
   const { values } = useFormikContext();
 
@@ -30,8 +34,13 @@ export default function InvoiceFormHeader({
       <PageFormBigNumber
         label={'Due Amount'}
         amount={totalDueAmount}
-        currencyCode={'LYD'}
+        currencyCode={baseCurrency}
       />
     </div>
   );
 }
+export default compose(
+  withSettings(({ organizationSettings }) => ({
+    baseCurrency: organizationSettings?.baseCurrency,
+  })),
+)(InvoiceFormHeader);

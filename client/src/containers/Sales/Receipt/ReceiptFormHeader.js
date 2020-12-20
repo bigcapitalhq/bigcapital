@@ -7,10 +7,17 @@ import { CLASSES } from 'common/classes';
 import ReceiptFormHeaderFields from './ReceiptFormHeaderFields';
 
 import { PageFormBigNumber } from 'components';
+import withSettings from 'containers/Settings/withSettings';
+import { compose } from 'redux';
 
-export default function ReceiptFormHeader({
+/**
+ * Receipt form header section.
+ */
+function ReceiptFormHeader({
   // #ownProps
   onReceiptNumberChanged,
+  // #withSettings
+  baseCurrency,
 }) {
   const { values } = useFormikContext();
 
@@ -27,8 +34,14 @@ export default function ReceiptFormHeader({
       <PageFormBigNumber
         label={'Due Amount'}
         amount={totalDueAmount}
-        currencyCode={'LYD'}
+        currencyCode={baseCurrency}
       />
     </div>
   );
 }
+
+export default compose(
+  withSettings(({ organizationSettings }) => ({
+    baseCurrency: organizationSettings?.baseCurrency,
+  })),
+)(ReceiptFormHeader);
