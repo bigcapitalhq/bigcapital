@@ -83,7 +83,7 @@ function EstimateFormHeader({
               {...momentFormatter('YYYY/MM/DD')}
               value={tansformDateValue(value)}
               onChange={handleDateChange((formattedDate) => {
-                form.setFieldValue('estimate_date', formatMessage);
+                form.setFieldValue('estimate_date', formattedDate);
               })}
               popoverProps={{ position: Position.BOTTOM, minimal: true }}
               inputProps={{
