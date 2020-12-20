@@ -4,10 +4,13 @@ import { CLASSES } from 'common/classes';
 
 import EditableItemsEntriesTable from 'containers/Entries/EditableItemsEntriesTable';
 
-export default function ExpenseFormBody() {
+export default function ExpenseFormBody({ defaultReceipt }) {
   return (
     <div className={classNames(CLASSES.PAGE_FORM_BODY)}>
-      <EditableItemsEntriesTable filterSellableItems={true} />
+      <EditableItemsEntriesTable
+        defaultEntry={defaultReceipt}
+        filterSellableItems={true}
+      />
     </div>
-  )
+  );
 }
