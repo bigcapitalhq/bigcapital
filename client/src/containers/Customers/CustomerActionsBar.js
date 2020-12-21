@@ -20,17 +20,20 @@ import FilterDropdown from 'components/FilterDropdown';
 import { If, DashboardActionViewsList } from 'components';
 
 import withResourceDetail from 'containers/Resources/withResourceDetails';
-import withDashboardActions from 'containers/Dashboard/withDashboardActions';
-import addCustomersTableQueries from 'containers/Customers/withCustomersActions';
-import { compose } from 'utils';
+import withCustomers from 'containers/Customers/withCustomers';
 import withCustomersActions from 'containers/Customers/withCustomersActions';
+import { compose } from 'utils';
 
 const CustomerActionsBar = ({
   // #withResourceDetail
   resourceFields,
 
+  // #withCustomers
+  customersViews,
+
   //#withCustomersActions
   addCustomersTableQueries,
+  changeCustomerView,
 
   // #ownProps
   selectedRows = [],
@@ -45,16 +48,6 @@ const CustomerActionsBar = ({
     history.push('/customers/new');
   }, [history]);
 
-  // const filterDropdown = FilterDropdown({
-  //   fields: resourceFields,
-  //   onFilterChange: (filterConditions) => {
-  //     setFilterCount(filterConditions.length || 0);
-  //     addCustomersTableQueries({
-  //       filter_roles: filterConditions || '',
-  //     });
-  //     onFilterChanged && onFilterChanged(filterConditions);
-  //   },
-  // });
 
   const hasSelectedRows = useMemo(() => selectedRows.length > 0, [
     selectedRows,
@@ -64,12 +57,20 @@ const CustomerActionsBar = ({
     onBulkDelete && onBulkDelete(selectedRows.map((r) => r.id));
   }, [onBulkDelete, selectedRows]);
 
+  const handleTabChange = (viewId) => {
+    changeCustomerView(viewId.id || -1);
+    addCustomersTableQueries({
+      custom_view_id: viewId.id || null,
+    });
+  };
+
   return (
     <DashboardActionsBar>
       <NavbarGroup>
         <DashboardActionViewsList
           resourceName={'customers'}
-          views={[]}
+          views={customersViews}
+          onChange={handleTabChange}
         />
         <NavbarDivider />
 
@@ -132,5 +133,8 @@ export default compose(
   withCustomersActions,
   withResourceDetail(({ resourceFields }) => ({
     resourceFields,
+  })),
+  withCustomers(({ customersViews }) => ({
+    customersViews,
   })),
 )(CustomerActionsBar);

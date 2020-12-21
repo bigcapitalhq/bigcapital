@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo } from 'react';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
 import { compose } from 'redux';
-import { useParams, withRouter, useHistory } from 'react-router-dom';
+import { useParams, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { DashboardViewsTabs } from 'components';
@@ -9,6 +9,7 @@ import { DashboardViewsTabs } from 'components';
 import withCustomers from 'containers/Customers/withCustomers';
 import withCustomersActions from 'containers/Customers/withCustomersActions';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
+import withViewDetail from 'containers/Views/withViewDetails';
 import { pick } from 'lodash';
 
 /**
@@ -24,29 +25,35 @@ function CustomersViewsTabs({
 
   // #withCustomersActions
   addCustomersTableQueries,
+  changeCustomerView,
 
   // #withDashboardActions
   setTopbarEditView,
   changePageSubtitle,
 }) {
-  const history = useHistory();
   const { custom_view_id: customViewId = null } = useParams();
 
-  const tabs = useMemo(() => customersViews.map((view) => ({
-    ...pick(view, ['name', 'id']),
-  }), [customersViews]));
-
   useEffect(() => {
-    setTopbarEditView(customViewId);
     changePageSubtitle(customViewId && viewItem ? viewItem.name : '');
-    // addCustomersTableQueries({
-    //   custom_view_id: customViewId,
-    // });
-    return () => {
-      setTopbarEditView(null);
-      changePageSubtitle('');
-    };
+    setTopbarEditView(customViewId);
   }, [customViewId]);
+  
+  const tabs = useMemo(() =>
+    customersViews.map(
+      (view) => ({
+        ...pick(view, ['name', 'id']),
+      }),
+      [customersViews],
+    ),
+  );
+
+  const handleTabsChange = (viewId) => {
+    changeCustomerView(viewId || -1);
+    addCustomersTableQueries({
+      custom_view_id: viewId || null,
+    });
+    setTopbarEditView(viewId);
+  };
 
   return (
     <Navbar className="navbar--dashboard-views">
@@ -55,6 +62,7 @@ function CustomersViewsTabs({
           initialViewId={customViewId}
           resourceName={'customers'}
           tabs={tabs}
+          onChange={handleTabsChange}
         />
       </NavbarGroup>
     </Navbar>
@@ -72,6 +80,7 @@ export default compose(
   withDashboardActions,
   withCustomersViewsTabs,
   withCustomersActions,
+  withViewDetail(),
   withCustomers(({ customersViews }) => ({
     customersViews,
   })),
