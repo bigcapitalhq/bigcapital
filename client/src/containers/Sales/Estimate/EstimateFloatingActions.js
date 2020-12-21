@@ -102,11 +102,11 @@ export default function EstimateFloatingActions({
             content={
               <Menu>
                 <MenuItem
-                  text={<T id={'publish_and_new'} />}
+                  text={<T id={'deliver_and_new'} />}
                   onClick={handleSubmitDeliverAndNewBtnClick}
                 />
                 <MenuItem
-                  text={<T id={'publish_continue_editing'} />}
+                  text={<T id={'deliver_continue_editing'} />}
                   onClick={handleSubmitDeliverContinueEditingBtnClick}
                 />
               </Menu>

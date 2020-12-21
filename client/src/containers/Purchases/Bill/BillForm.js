@@ -31,7 +31,7 @@ const defaultBill = {
   index: 0,
   item_id: '',
   rate: '',
-  discount: '',
+  discount: 0,
   quantity: 1,
   description: '',
 };

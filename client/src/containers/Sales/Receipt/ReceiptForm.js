@@ -267,7 +267,7 @@ function ReceiptForm({
               onReceiptNumberChanged={handleReceiptNumberChanged}
             />
             <ReceiptNumberWatcher receiptNumber={receiptNumber} />
-            <ReceiptFormBody />
+            <ReceiptFormBody defaultReceipt ={defaultReceipt} />
             <ReceiptFormFooter />
             <ReceiptFormFloatingActions
               isSubmitting={isSubmitting}

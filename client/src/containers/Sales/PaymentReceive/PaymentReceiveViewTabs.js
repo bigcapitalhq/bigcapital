@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { useHistory } from 'react-router';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
 import { useParams, withRouter } from 'react-router-dom';
+import { FormattedMessage as T } from 'react-intl';
 import { connect } from 'react-redux';
 import { pick, debounce } from 'lodash';
 
@@ -82,8 +83,8 @@ function PaymentReceiveViewTabs({
       <NavbarGroup align={Alignment.LEFT}>
         <DashboardViewsTabs
           initialViewId={customViewId}
-          baseUrl={'/payment-receives'}
           tabs={tabs}
+          defaultTabText={<T id={'all_payments'}/>}
           onNewViewTabClick={handleClickNewView}
           onChange={handleTabsChange}
         />

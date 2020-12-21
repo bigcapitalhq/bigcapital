@@ -1,22 +1,22 @@
 import React, { useMemo } from 'react';
-import { compose } from 'utils';
 import classNames from 'classnames';
 import { sumBy } from 'lodash';
 import { useFormikContext } from 'formik';
 
 import { CLASSES } from 'common/classes';
 
-import { PageFormBigNumber } from 'components';
-
-import withCustomers from 'containers/Customers/withCustomers';
-import withDialogActions from 'containers/Dialog/withDialogActions';
-
 import EstimateFormHeaderFields from './EstimateFormHeaderFields';
+import { PageFormBigNumber } from 'components';
+import withSettings from 'containers/Settings/withSettings';
+import { compose } from 'utils';
 
 // Estimate form top header.
 function EstimateFormHeader({
   // #ownProps
   onEstimateNumberChanged,
+
+  // #withSettings
+  baseCurrency,
 }) {
   const { values } = useFormikContext();
 
@@ -33,15 +33,14 @@ function EstimateFormHeader({
       <PageFormBigNumber
         label={'Amount'}
         amount={totalDueAmount}
-        currencyCode={'LYD'}
+        currencyCode={baseCurrency}
       />
     </div>
   );
 }
 
 export default compose(
-  withCustomers(({ customers }) => ({
-    customers,
+  withSettings(({ organizationSettings }) => ({
+    baseCurrency: organizationSettings?.baseCurrency,
   })),
-  withDialogActions,
 )(EstimateFormHeader);

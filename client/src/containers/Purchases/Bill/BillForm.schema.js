@@ -22,7 +22,7 @@ const BillFormSchema = Yup.object().shape({
     .min(1)
     .max(DATATYPES_LENGTH.TEXT)
     .label(formatMessage({ id: 'note' })),
-  open: Yup.boolean().required(),
+  open: Yup.boolean(),
   entries: Yup.array().of(
     Yup.object().shape({
       quantity: Yup.number()
