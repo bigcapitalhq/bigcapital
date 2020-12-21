@@ -253,7 +253,7 @@ export default class VendorsController extends ContactsController {
     const { tenantId } = req;
     const vendorsFilter: IVendorsFilter = {
       filterRoles: [],
-      ...this.matchedBodyData(req),
+      ...this.matchedQueryData(req),
     };
 
     try {

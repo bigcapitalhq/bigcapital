@@ -50,6 +50,18 @@ exports.up = (knex) => {
         // Sale receipts.
         { field_key: 'status', index: 1, comparator: 'is', value: 'draft', view_id: 34 },
         { field_key: 'status', index: 1, comparator: 'is', value: 'closed', view_id: 35 },
+
+        // Customers
+        { field_key: 'status', index: 1, comparator: 'is', value: 'active', view_id: 36 },
+        { field_key: 'status', index: 1, comparator: 'is', value: 'inactive', view_id: 37 },
+        { field_key: 'status', index: 1, comparator: 'is', value: 'overdue', view_id: 38 },
+        { field_key: 'status', index: 1, comparator: 'is', value: 'unpaid', view_id: 39 },
+
+        // Vendors
+        { field_key: 'status', index: 1, comparator: 'is', value: 'active', view_id: 40 },
+        { field_key: 'status', index: 1, comparator: 'is', value: 'inactive', view_id: 41 },
+        { field_key: 'status', index: 1, comparator: 'is', value: 'overdue', view_id: 42 },
+        { field_key: 'status', index: 1, comparator: 'is', value: 'unpaid', view_id: 43 },
       ]);
     });
 };

@@ -60,6 +60,18 @@ exports.up = (knex) => {
         // Sale receipts.
         { id: 34, name: 'Draft', slug: 'draft', roles_logic_expression: '1', resource_model: 'SaleReceipt', predefined: true },
         { id: 35, name: 'Closed', slug: 'closed', roles_logic_expression: '1', resource_model: 'SaleReceipt', predefined: true },
+
+        // Customers
+        { id: 36, name: 'Active', slug: 'active', roles_logic_expression: '1', resource_model: 'Customer', predefined: true },
+        { id: 37, name: 'Inactive', slug: 'inactive', roles_logic_expression: '1', resource_model: 'Customer', predefined: true },
+        { id: 38, name: 'Overdue', slug: 'overdue', roles_logic_expression: '1', resource_model: 'Customer', predefined: true },
+        { id: 39, name: 'Unpaid', slug: 'inpaid', roles_logic_expression: '1', resource_model: 'Customer', predefined: true },
+
+        // Vendors
+        { id: 40, name: 'Active', slug: 'active', roles_logic_expression: '1', resource_model: 'Vendor', predefined: true },
+        { id: 41, name: 'Inactive', slug: 'inactive', roles_logic_expression: '1', resource_model: 'Vendor', predefined: true },
+        { id: 42, name: 'Overdue', slug: 'overdue', roles_logic_expression: '1', resource_model: 'Vendor', predefined: true },
+        { id: 43, name: 'Unpaid', slug: 'overdue', roles_logic_expression: '1', resource_model: 'Vendor', predefined: true },
       ]);
     });
 };

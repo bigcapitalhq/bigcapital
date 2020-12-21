@@ -69,7 +69,6 @@ export default class CustomersService {
   }
 
   private transformContactToCustomer(contactModel: IContact) {
-    console.log(contactModel);
     return {
       ...omit(contactModel.toJSON(), ['contactService', 'contactType']),
       customerType: contactModel.contactType,
