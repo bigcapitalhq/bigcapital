@@ -20,11 +20,10 @@ const mapDipatchToProps = (dispatch) => ({
       type: t.VENDORS_SET_CURRENT_VIEW,
       currentViewId: parseInt(id, 10),
     }),
-
   addVendorsTableQueries: (queries) =>
     dispatch({
       type: t.VENDORS_TABLE_QUERIES_ADD,
-      queries,
+      payload: { queries },
     }),
 });
 

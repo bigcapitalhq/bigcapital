@@ -28,13 +28,15 @@ function VendorsList({
   // #withDashboardActions
   changePageTitle,
 
+  // #withResourceActions
+  requestFetchResourceViews,
+
   // #withVendors
   vendorTableQuery,
 
   // #withVendorActions
   requestDeleteVender,
   requestFetchVendorsTable,
-  addVendorsTableQueries,
 }) {
   const [deleteVendor, setDeleteVendor] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
@@ -47,9 +49,16 @@ function VendorsList({
     changePageTitle(formatMessage({ id: 'vendors_list' }));
   }, [changePageTitle, formatMessage]);
 
-  // Handle fetch customers data table
-  const fetchVendors = useQuery(['vendors-table', vendorTableQuery], () =>
-    requestFetchVendorsTable(),
+  // Fetch vendors resource views and fields.
+  const fetchResourceViews = useQuery(
+    ['resource-views', 'vendors'],
+    (key, resourceName) => requestFetchResourceViews(resourceName),
+  );
+
+  // Handle fetch vendors data table
+  const fetchVendors = useQuery(
+    ['vendors-table', vendorTableQuery],
+    (key, query) => requestFetchVendorsTable({ ...query }),
   );
 
   // Handle Edit vendor data table
@@ -114,20 +123,22 @@ function VendorsList({
     if (tableLoading && !fetchVendors.isFetching) {
       setTableLoading(false);
     }
-  }, [tableLoading, fetchVendors]);
+  }, [tableLoading, fetchVendors.isFetching]);
 
   return (
-    <DashboardInsider name={'vendors-list'}>
+    <DashboardInsider
+      loading={fetchResourceViews.isFetching}
+      name={'vendors-list'}
+    >
       <VendorActionsBar selectedRows={selectedRows} />
       <DashboardPageContent>
         <Switch>
           <Route
             exact={true}
-            // path={}
+            path={['/vendors/:custom_view_id/custom_view', '/vendors']}
           >
             <VendorsViewsTabs />
             <VendorsTable
-              loading={fetchVendors.isFetching}
               onDeleteVendor={handleDeleteVendor}
               onEditVendor={handleEditVendor}
               onSelectedRowsChange={handleSelectedRowsChange}
@@ -155,7 +166,9 @@ function VendorsList({
 }
 
 export default compose(
+  withResourceActions,
   withVendorActions,
   withDashboardActions,
+  withViewsActions,
   withVendors(({ vendorTableQuery }) => ({ vendorTableQuery })),
 )(VendorsList);

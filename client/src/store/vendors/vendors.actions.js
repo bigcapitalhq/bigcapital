@@ -5,6 +5,7 @@ export const fetchVendorsTable = ({ query }) => {
   return (dispatch, getState) =>
     new Promise((resolve, reject) => {
       const pageQuery = getState().vendors.tableQuery;
+
       dispatch({
         type: t.VENDORS_TABLE_LOADING,
         payload: { loading: true },
@@ -15,7 +16,8 @@ export const fetchVendorsTable = ({ query }) => {
             type: t.VENDORS_PAGE_SET,
             payload: {
               vendors: response.data.vendors,
-              customViewId: response.data.customViewId || -1,
+              customViewId:
+                response.data?.filter_meta?.view?.custom_view_id || -1,
               paginationMeta: response.data.pagination,
             },
           });
@@ -29,7 +31,8 @@ export const fetchVendorsTable = ({ query }) => {
             type: t.VENDORS_PAGINATION_SET,
             payload: {
               pagination: response.data.pagination,
-              customViewId: response.data.customViewId || -1,
+              customViewId:
+                response.data?.filter_meta?.view?.custom_view_id || -1,
             },
           });
           dispatch({

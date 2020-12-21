@@ -9,10 +9,11 @@ import { DashboardViewsTabs } from 'components';
 import withVendors from './withVendors';
 import withVendorActions from './withVendorActions';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
+import withViewDetail from 'containers/Views/withViewDetails';
 import { pick } from 'lodash';
 
 /**
- * Customers views tabs.
+ * Vendors views tabs.
  */
 function VendorViewsTabs({
   // #withViewDetail
@@ -22,11 +23,20 @@ function VendorViewsTabs({
   // #withVendors
   vendorViews,
 
+  // #withVendorActions
+  addVendorsTableQueries,
+  changeVendorView,
+
   // #withDashboardActions
   setTopbarEditView,
   changePageSubtitle,
 }) {
   const { custom_view_id: customViewId = null } = useParams();
+
+  useEffect(() => {
+    changePageSubtitle(customViewId && viewItem ? viewItem.name : '');
+    setTopbarEditView(customViewId);
+  }, [customViewId]);
 
   const tabs = useMemo(() =>
     vendorViews.map(
@@ -37,6 +47,13 @@ function VendorViewsTabs({
     ),
   );
 
+  const handleTabsChange = (viewId) => {
+    changeVendorView(viewId || -1);
+    addVendorsTableQueries({
+      custom_view_id: viewId || null,
+    });
+  };
+  
   return (
     <Navbar className="navbar--dashboard-views">
       <NavbarGroup align={Alignment.LEFT}>
@@ -44,14 +61,25 @@ function VendorViewsTabs({
           initialViewId={customViewId}
           resourceName={'vendors'}
           tabs={tabs}
+          onChange={handleTabsChange}
         />
       </NavbarGroup>
     </Navbar>
   );
 }
 
+const mapStateToProps = (state, ownProps) => ({
+  viewId: ownProps.match.params.custom_view_id,
+});
+
+
+const withVendorsViewsTabs = connect(mapStateToProps);
+
 export default compose(
   withRouter,
   withDashboardActions,
+  withVendorsViewsTabs,
+  withVendorActions,
+  withViewDetail(),
   withVendors(({ vendorViews }) => ({ vendorViews })),
 )(VendorViewsTabs);

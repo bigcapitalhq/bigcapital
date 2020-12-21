@@ -16,11 +16,20 @@ import { useHistory } from 'react-router-dom';
 
 import Icon from 'components/Icon';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
-import { DashboardActionViewsList } from 'components';
-import withResourceDetail from 'containers/Resources/withResourceDetails';
+import { If, DashboardActionViewsList } from 'components';
+
+import withVendors from './withVendors';
+import withVendorActions from './withVendorActions';
 import { compose } from 'utils';
 
 function VendorActionsBar({
+  // #withVendors
+  vendorViews,
+
+  // #withVendorActions
+  addVendorsTableQueries,
+  changeVendorView,
+
   // #ownProps
   selectedRows = [],
 }) {
@@ -32,11 +41,25 @@ function VendorActionsBar({
     history.push('/vendors/new');
   }, [history]);
 
+  const hasSelectedRows = useMemo(() => selectedRows.length > 0, [
+    selectedRows,
+  ]);
 
+  const handleTabChange = (viewId) => {
+    changeVendorView(viewId.id || -1);
+    addVendorsTableQueries({
+      custom_view_id: viewId.id || null,
+    });
+  };
+  
   return (
     <DashboardActionsBar>
       <NavbarGroup>
-        <DashboardActionViewsList resourceName={'vendors'} views={[]} />
+        <DashboardActionViewsList
+          resourceName={'vendors'}
+          views={vendorViews}
+          onChange={handleTabChange}
+        />
         <NavbarDivider />
         <Button
           className={Classes.MINIMAL}
@@ -62,6 +85,14 @@ function VendorActionsBar({
             icon={<Icon icon="filter-16" iconSize={16} />}
           />
         </Popover>
+        <If condition={hasSelectedRows}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="trash-16" iconSize={16} />}
+            text={<T id={'delete'} />}
+            intent={Intent.DANGER}
+          />
+        </If>
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon="file-import-16" iconSize={16} />}
@@ -76,5 +107,13 @@ function VendorActionsBar({
     </DashboardActionsBar>
   );
 }
+const mapStateToProps = (state, props) => ({
+  resourceName: 'vendors',
+});
+const withVendorsActionsBar = connect(mapStateToProps);
 
-export default VendorActionsBar;
+export default compose(
+  withVendorsActionsBar,
+  withVendorActions,
+  withVendors(({ vendorViews }) => ({ vendorViews })),
+)(VendorActionsBar);

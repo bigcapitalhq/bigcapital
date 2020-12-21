@@ -13,7 +13,7 @@ const initialState = {
   currentViewId: -1,
 
   tableQuery: {
-    page_size: 5,
+    page_size: 12,
     page: 1,
   },
 };
@@ -23,13 +23,16 @@ export default createReducer(initialState, {
     const _vendors = state.items[id] || {};
     state.items[id] = { ..._vendors, ...vendor };
   },
+
   [t.VENDORS_TABLE_LOADING]: (state, action) => {
     const { loading } = action.payload;
     state.loading = loading;
   },
+
   [t.VENDORS_ITEMS_SET]: (state, action) => {
     const { vendors } = action.payload;
     const _vendors = {};
+
     vendors.forEach((vendor) => {
       _vendors[vendor.id] = {
         ...vendor,
@@ -40,21 +43,28 @@ export default createReducer(initialState, {
       ..._vendors,
     };
   },
+
+  [t.VENDORS_SET_CURRENT_VIEW]: (state, action) => {
+    state.currentViewId = action.currentViewId;
+  },
+
   [t.VENDORS_PAGE_SET]: (state, action) => {
     const { customViewId, vendors, paginationMeta } = action.payload;
 
     const viewId = customViewId || -1;
     const view = state.views[viewId] || {};
+
     state.views[viewId] = {
       ...view,
       pages: {
         ...(state.views?.[viewId]?.pages || {}),
-        [paginationMeta.total]: {
+        [paginationMeta.page]: {
           ids: vendors.map((i) => i.id),
         },
       },
     };
   },
+
   [t.VENDOR_DELETE]: (state, action) => {
     const { id } = action.payload;
 
@@ -62,6 +72,6 @@ export default createReducer(initialState, {
       delete state.items[id];
     }
   },
-  // ...viewPaginationSetReducer(t.VENDORS_PAGINATION_SET),
+  ...viewPaginationSetReducer(t.VENDORS_PAGINATION_SET),
   ...createTableQueryReducers('VENDORS'),
 });
