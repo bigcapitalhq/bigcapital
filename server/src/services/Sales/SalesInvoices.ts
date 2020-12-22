@@ -1,6 +1,7 @@
 import { Service, Inject } from 'typedi';
-import { omit, sumBy, pick, chain } from 'lodash';
+import { omit, sumBy, pick, map } from 'lodash';
 import moment from 'moment';
+import uniqid from 'uniqid';
 import {
   EventDispatcher,
   EventDispatcherInterface,
@@ -16,7 +17,6 @@ import {
   IFilterMeta,
 } from 'interfaces';
 import events from 'subscribers/events';
-import JournalPoster from 'services/Accounting/JournalPoster';
 import InventoryService from 'services/Inventory/Inventory';
 import SalesInvoicesCost from 'services/Sales/SalesInvoicesCost';
 import TenancyService from 'services/Tenancy/TenancyService';
@@ -71,7 +71,6 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
   saleEstimatesService: SaleEstimateService;
 
   /**
-   *
    * Validate whether sale invoice number unqiue on the storage.
    */
   async validateInvoiceNumberUnique(
@@ -166,8 +165,6 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
   ): Promise<ISaleInvoice> {
     const { saleInvoiceRepository } = this.tenancy.repositories(tenantId);
 
-    const invLotNumber = 1;
-
     // Transform DTO object to model object.
     const saleInvoiceObj = this.transformDTOToModel(tenantId, saleInvoiceDTO);
 
@@ -176,7 +173,6 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
       tenantId,
       saleInvoiceDTO.customerId
     );
-
     // Validate sale invoice number uniquiness.
     if (saleInvoiceDTO.invoiceNo) {
       await this.validateInvoiceNumberUnique(
@@ -258,13 +254,11 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
       tenantId,
       saleInvoiceDTO.entries
     );
-
     // Validate non-sellable entries items.
     await this.itemsEntriesService.validateNonSellableEntriesItems(
       tenantId,
       saleInvoiceDTO.entries
     );
-
     // Validate the items entries existance.
     await this.itemsEntriesService.validateEntriesIdsExistance(
       tenantId,
@@ -337,7 +331,6 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
       tenantId,
       saleInvoiceId
     );
-
     // Unlink the converted sale estimates from the given sale invoice.
     await this.saleEstimatesService.unlinkConvertedEstimateFromInvoice(
       tenantId,
@@ -360,91 +353,113 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
   }
 
   /**
-   * Records the inventory transactions from the givne sale invoice input.
-   * @parma {number} tenantId - Tenant id.
+   * Records the inventory transactions of the given sale invoice in case
+   * the invoice has inventory entries only.
+   * 
+   * @param {number} tenantId - Tenant id.
    * @param {SaleInvoice} saleInvoice - Sale invoice DTO.
    * @param {number} saleInvoiceId - Sale invoice id.
    * @param {boolean} override - Allow to override old transactions.
+   * @return {Promise<void>}
    */
-  public recordInventoryTranscactions(
+  public async recordInventoryTranscactions(
     tenantId: number,
-    saleInvoice: ISaleInvoice,
+    saleInvoiceId: number,
+    saleInvoiceDate: Date,
     override?: boolean
-  ) {
-    this.logger.info('[sale_invoice] saving inventory transactions');
-    const invTransactions: IInventoryTransaction[] = saleInvoice.entries.map(
-      (entry: IItemEntry) => ({
-        ...pick(entry, ['itemId', 'quantity', 'rate']),
-        lotNumber: 1,
-        transactionType: 'SaleInvoice',
-        transactionId: saleInvoice.id,
-        direction: 'OUT',
-        date: saleInvoice.invoiceDate,
-        entryId: entry.id,
-      })
-    );
+  ): Promise<void> {
+    // Gets the next inventory lot number.
+    const lotNumber = this.inventoryService.getNextLotNumber(tenantId);
 
-    return this.inventoryService.recordInventoryTransactions(
+    // Loads the inventory items entries of the given sale invoice.
+    const inventoryEntries = await this.itemsEntriesService.getInventoryEntries(
       tenantId,
-      invTransactions,
+      'SaleInvoice',
+      saleInvoiceId
+    );
+    // Can't continue if there is no entries has inventory items in the invoice.
+    if (inventoryEntries.length <= 0) return;
+
+    // Inventory transactions.
+    const inventoryTranscations = this.inventoryService.transformItemEntriesToInventory(
+      inventoryEntries,
+      'SaleInvoice',
+      saleInvoiceId,
+      'OUT',
+      saleInvoiceDate,
+      lotNumber
+    );
+    // Records the inventory transactions of the given sale invoice.
+    await this.inventoryService.recordInventoryTransactions(
+      tenantId,
+      inventoryTranscations,
       override
     );
+    // Increment and save the next lot number settings.
+    await this.inventoryService.incrementNextLotNumber(tenantId);
+
+    // Triggers `onInventoryTransactionsCreated` event.
+    await this.eventDispatcher.dispatch(
+      events.saleInvoice.onInventoryTransactionsCreated,
+      {
+        tenantId,
+        saleInvoiceId,
+      }
+    );
+  }
+
+  /**
+   * Records the journal entries of the given sale invoice just
+   * in case the invoice has no inventory items entries.
+   * 
+   * @param {number} tenantId - 
+   * @param {number} saleInvoiceId 
+   * @param {boolean} override
+   * @return {Promise<void>}
+   */
+  public async recordNonInventoryJournalEntries(
+    tenantId: number,
+    saleInvoiceId: number,
+    override: boolean = false
+  ): Promise<void> {
+    const { SaleInvoice } = this.tenancy.models(tenantId);
+
+    // Loads the inventory items entries of the given sale invoice.
+    const inventoryEntries = await this.itemsEntriesService.getInventoryEntries(
+      tenantId,
+      'SaleInvoice',
+      saleInvoiceId
+    );
+    // Can't continue if the sale invoice has inventory items entries.
+    if (inventoryEntries.length > 0) return;
+
+    const saleInvoice = await SaleInvoice.query()
+      .findById(saleInvoiceId)
+      .withGraphFetched('entries.item');
+
+    await this.writeNonInventoryInvoiceEntries(tenantId, saleInvoice, override);
   }
 
   /**
    * Reverting the inventory transactions once the invoice deleted.
    * @param {number} tenantId - Tenant id.
    * @param {number} billId - Bill id.
+   * @return {Promise<void>}
    */
-  public revertInventoryTransactions(
+  public async revertInventoryTransactions(
     tenantId: number,
-    billId: number
+    saleInvoiceId: number
   ): Promise<void> {
-    return this.inventoryService.deleteInventoryTransactions(
+    await this.inventoryService.deleteInventoryTransactions(
       tenantId,
-      billId,
+      saleInvoiceId,
       'SaleInvoice'
     );
-  }
-
-  /**
-   * Deletes the inventory transactions.
-   * @param {string} transactionType
-   * @param {number} transactionId
-   */
-  private async revertInventoryTransactions_(
-    tenantId: number,
-    inventoryTransactions: array
-  ) {
-    const { InventoryTransaction } = this.tenancy.models(tenantId);
-    const opers: Promise<[]>[] = [];
-
-    this.logger.info('[sale_invoice] reverting inventory transactions');
-
-    inventoryTransactions.forEach((trans: any) => {
-      switch (trans.direction) {
-        case 'OUT':
-          if (trans.inventoryTransactionId) {
-            const revertRemaining = InventoryTransaction.query()
-              .where('id', trans.inventoryTransactionId)
-              .where('direction', 'OUT')
-              .increment('remaining', trans.quanitity);
-
-            opers.push(revertRemaining);
-          }
-          break;
-        case 'IN':
-          const removeRelationOper = InventoryTransaction.query()
-            .where('inventory_transaction_id', trans.id)
-            .where('direction', 'IN')
-            .update({
-              inventory_transaction_id: null,
-            });
-          opers.push(removeRelationOper);
-          break;
-      }
-    });
-    return Promise.all(opers);
+    // Triggers 'onInventoryTransactionsDeleted' event.
+    this.eventDispatcher.dispatch(
+      events.saleInvoice.onInventoryTransactionsDeleted,
+      { tenantId, saleInvoiceId },
+    );
   }
 
   /**
@@ -480,61 +495,27 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
     saleInvoiceId: number,
     override?: boolean
   ) {
-    const { SaleInvoice } = this.tenancy.models(tenantId);
+    const { SaleInvoice, Item } = this.tenancy.models(tenantId);
+
+    // Retrieve the sale invoice with associated entries.
     const saleInvoice: ISaleInvoice = await SaleInvoice.query()
       .findById(saleInvoiceId)
-      .withGraphFetched('entries.item');
+      .withGraphFetched('entries');
 
-    const inventoryItemsIds = chain(saleInvoice.entries)
-      .filter((entry: IItemEntry) => entry.item.type === 'inventory')
-      .map((entry: IItemEntry) => entry.itemId)
-      .uniq()
-      .value();
+    // Retrieve the inventory items that associated to the sale invoice entries.
+    const inventoryItems = await Item.query()
+      .whereIn('id', map(saleInvoice.entries, 'itemId'))
+      .where('type', 'inventory');
 
-    if (inventoryItemsIds.length === 0) {
-      await this.writeNonInventoryInvoiceJournals(
-        tenantId,
-        saleInvoice,
-        override
-      );
-    } else {
+    const inventoryItemsIds = map(inventoryItems, 'id');
+
+    if (inventoryItemsIds.length > 0) {
       await this.scheduleComputeItemsCost(
         tenantId,
         inventoryItemsIds,
-        saleInvoice.invoice_date
+        saleInvoice.invoiceDate
       );
     }
-  }
-
-  /**
-   * Writes the sale invoice journal entries.
-   * @param {SaleInvoice} saleInvoice -
-   */
-  async writeNonInventoryInvoiceJournals(
-    tenantId: number,
-    saleInvoice: ISaleInvoice,
-    override: boolean
-  ) {
-    const { AccountTransaction } = this.tenancy.models(tenantId);
-
-    const journal = new JournalPoster(tenantId);
-
-    if (override) {
-      const oldTransactions = await AccountTransaction.query()
-        .where('reference_type', 'SaleInvoice')
-        .where('reference_id', saleInvoice.id)
-        .withGraphFetched('account.type');
-
-      journal.loadEntries(oldTransactions);
-      journal.removeEntries();
-    }
-    this.saleInvoiceJournal(saleInvoice, journal);
-
-    await Promise.all([
-      journal.deleteEntries(),
-      journal.saveEntries(),
-      journal.saveBalance(),
-    ]);
   }
 
   /**

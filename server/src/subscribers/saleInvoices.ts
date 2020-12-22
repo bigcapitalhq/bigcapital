@@ -61,6 +61,64 @@ export default class SaleInvoiceSubscriber {
   }
 
   /**
+   * Handles sale invoice next number increment once invoice created.
+   */
+  @On(events.saleInvoice.onCreated)
+  public async handleInvoiceNextNumberIncrement({
+    tenantId,
+    saleInvoiceId,
+    saleInvoice,
+  }) {
+    await this.settingsService.incrementNextNumber(tenantId, {
+      key: 'next_number',
+      group: 'sales_invoices',
+    });
+  }
+
+  /**
+   * Handles the writing inventory transactions once the invoice created.
+   */
+  @On(events.saleInvoice.onCreated)
+  public async handleWritingInventoryTransactions({ tenantId, saleInvoice }) {
+    this.logger.info('[sale_invoice] trying to write inventory transactions.', {
+      tenantId,
+    });
+    await this.saleInvoicesService.recordInventoryTranscactions(
+      tenantId,
+      saleInvoice.id,
+      saleInvoice.invoiceDate,
+    );
+  }
+
+  /**
+   * Records journal entries of the non-inventory invoice.
+   */
+  @On(events.saleInvoice.onCreated)
+  @On(events.saleInvoice.onEdited)
+  public async handleWritingNonInventoryEntries({ tenantId, saleInvoice }) {
+    await this.saleInvoicesService.recordNonInventoryJournalEntries(
+      tenantId,
+      saleInvoice.id,
+    );
+  }
+
+  /**
+   * 
+   */
+  @On(events.saleInvoice.onEdited)
+  public async handleRewritingInventoryTransactions({ tenantId, saleInvoice }) {
+    this.logger.info('[sale_invoice] trying to write inventory transactions.', {
+      tenantId,
+    });
+    await this.saleInvoicesService.recordInventoryTranscactions(
+      tenantId,
+      saleInvoice.id,
+      saleInvoice.invoiceDate,
+      true,
+    );
+  }
+
+  /**
    * Handles customer balance diff balnace change once sale invoice edited.
    */
   @On(events.saleInvoice.onEdited)
@@ -104,35 +162,6 @@ export default class SaleInvoiceSubscriber {
   }
 
   /**
-   * Handles sale invoice next number increment once invoice created.
-   */
-  @On(events.saleInvoice.onCreated)
-  public async handleInvoiceNextNumberIncrement({
-    tenantId,
-    saleInvoiceId,
-    saleInvoice,
-  }) {
-    await this.settingsService.incrementNextNumber(tenantId, {
-      key: 'next_number',
-      group: 'sales_invoices',
-    });
-  }
-
-  /**
-   * Handles the writing inventory transactions once the invoice created.
-   */
-  @On(events.saleInvoice.onCreated)
-  public async handleWritingInventoryTransactions({ tenantId, saleInvoice }) {
-    this.logger.info('[sale_invoice] trying to write inventory transactions.', {
-      tenantId,
-    });
-    await this.saleInvoicesService.recordInventoryTranscactions(
-      tenantId,
-      saleInvoice,
-    );
-  }
-
-  /**
    * Handles deleting the inventory transactions once the invoice deleted.
    */
   @On(events.saleInvoice.onDeleted)
@@ -141,6 +170,20 @@ export default class SaleInvoiceSubscriber {
       tenantId, saleInvoiceId,
     });
     await this.saleInvoicesService.revertInventoryTransactions(
+      tenantId,
+      saleInvoiceId,
+    );
+  }
+
+  /**
+   * Schedules compute invoice items cost job.
+   */
+  @On(events.saleInvoice.onInventoryTransactionsCreated)
+  public async handleComputeItemsCosts({ tenantId, saleInvoiceId }) {
+    this.logger.info('[sale_invoice] trying to compute the invoice items cost.', {
+      tenantId, saleInvoiceId,
+    });
+    await this.saleInvoicesService.scheduleComputeInvoiceItemsCost(
       tenantId,
       saleInvoiceId,
     );

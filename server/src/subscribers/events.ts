@@ -82,6 +82,8 @@ export default {
     onDeleted: 'onSaleInvoiceDeleted',
     onBulkDelete: 'onSaleInvoiceBulkDeleted',
     onPublished: 'onSaleInvoicePublished',
+    onInventoryTransactionsCreated: 'onInvoiceInventoryTransactionsCreated',
+    onInventoryTransactionsDeleted: 'onInvoiceInventoryTransactionsDeleted',
   },
 
   /**
@@ -125,6 +127,7 @@ export default {
     onDeleted: 'onBillDeleted',
     onBulkDeleted: 'onBillBulkDeleted',
     onPublished: 'onBillPublished',
+    onInventoryTransactionsCreated: 'onBillInventoryTransactionsCreated'
   },
 
   /**
@@ -165,5 +168,14 @@ export default {
     onEdited: 'onItemEdited',
     onDeleted: 'onItemDeleted',
     onBulkDeleted: 'onItemBulkDeleted',
+  },
+
+  /**
+   * Inventory service.
+   */
+  inventory: {
+    onComputeItemCostJobScheduled: 'onComputeItemCostJobScheduled',
+    onComputeItemCostJobStarted: 'onComputeItemCostJobStarted',
+    onComputeItemCostJobCompleted: 'onComputeItemCostJobCompleted'
   }
 }

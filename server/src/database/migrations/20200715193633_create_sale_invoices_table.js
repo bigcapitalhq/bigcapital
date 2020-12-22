@@ -17,6 +17,7 @@ exports.up = function(knex) {
     table.string('inv_lot_number').index();
 
     table.date('delivered_at').index();
+    table.integer('user_id').unsigned();
     table.timestamps();
   });  
 };

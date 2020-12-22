@@ -10,6 +10,9 @@ import {
   IExpense,
   IExpenseCategory,
   IItem,
+  ISaleInvoice,
+  IInventoryLotCost,
+  IItemEntry,
 } from 'interfaces';
 
 interface IInventoryCostEntity {
@@ -407,6 +410,121 @@ export default class JournalCommands{
           this.journal.credit(inventoryCredit);
           break;
       }
+    });
+  }
+
+  /**
+   * Writes journal entries for given sale invoice.
+   * ----------
+   * - Receivable accounts -> Debit -> XXXX
+   *    - Income -> Credit -> XXXX
+   * 
+   * - Cost of goods sold -> Debit -> YYYY
+   *    - Inventory assets -> YYYY
+   * 
+   * @param {ISaleInvoice} saleInvoice 
+   * @param {JournalPoster} journal 
+   */
+  saleInvoice(
+    saleInvoice: ISaleInvoice & {
+      costTransactions: IInventoryLotCost[],
+      entries: IItemEntry & { item: IItem },
+    },
+    receivableAccountsId: number,
+  ) {
+    let inventoryTotal: number = 0;
+
+    const commonEntry = {
+      referenceType: 'SaleInvoice',
+      referenceId: saleInvoice.id,
+      date: saleInvoice.invoiceDate,
+    };
+    const costTransactions: Map<number, number> = new Map(
+      saleInvoice.costTransactions.map((trans: IInventoryLotCost) => [
+        trans.entryId, trans.cost,
+      ]),
+    );
+    // XXX Debit - Receivable account.
+    const receivableEntry = new JournalEntry({
+      ...commonEntry,
+      debit: saleInvoice.balance,
+      account: receivableAccountsId,
+      index: 1,
+    });
+    this.journal.debit(receivableEntry);
+
+    saleInvoice.entries.forEach((entry: IItemEntry & { item: IItem }, index) => {
+      const cost: number = costTransactions.get(entry.id);
+      const income: number = entry.quantity * entry.rate;
+  
+      if (entry.item.type === 'inventory' && cost) {
+        // XXX Debit - Cost account.
+        const costEntry = new JournalEntry({
+          ...commonEntry,
+          debit: cost,
+          account: entry.item.costAccountId,
+          note: entry.description,
+          index: index + 3,
+        });
+        this.journal.debit(costEntry);
+        inventoryTotal += cost;
+      }
+      // XXX Credit - Income account.
+      const incomeEntry = new JournalEntry({
+        ...commonEntry,
+        credit: income,
+        account: entry.item.sellAccountId,
+        note: entry.description,
+        index: index + 2,
+      });
+      this.journal.credit(incomeEntry);
+
+      if (inventoryTotal > 0) {
+        // XXX Credit - Inventory account.
+        const inventoryEntry = new JournalEntry({
+          ...commonEntry,
+          credit: inventoryTotal,
+          account: entry.item.inventoryAccountId,
+          index: index + 4,
+        });
+        this.journal.credit(inventoryEntry);
+      }
+    });
+  }
+
+  saleInvoiceNonInventory(
+    saleInvoice: ISaleInvoice & {
+      entries: IItemEntry & { item: IItem },
+    },
+    receivableAccountsId: number,
+  ) {
+    const commonEntry = {
+      referenceType: 'SaleInvoice',
+      referenceId: saleInvoice.id,
+      date: saleInvoice.invoiceDate,
+    };
+
+    // XXX Debit - Receivable account.
+    const receivableEntry = new JournalEntry({
+      ...commonEntry,
+      debit: saleInvoice.balance,
+      account: receivableAccountsId,
+      index: 1,
+    });
+    this.journal.debit(receivableEntry);
+
+    saleInvoice.entries.forEach((entry: IItemEntry & { item: IItem }, index: number) => {
+      const income: number = entry.quantity * entry.rate;
+  
+      // XXX Credit - Income account.
+      const incomeEntry = new JournalEntry({
+        ...commonEntry,
+        credit: income,
+        account: entry.item.sellAccountId,
+        note: entry.description,
+        index: index + 2,
+      });
+      this.journal.credit(incomeEntry);
     });
   }
 }

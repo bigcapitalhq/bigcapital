@@ -19,17 +19,8 @@ export default ({ agenda }: { agenda: Agenda }) => {
   new UserInviteMailJob(agenda);
   new SendLicenseViaEmailJob(agenda);
   new SendLicenseViaPhoneJob(agenda);
-
-  agenda.define(
-    'compute-item-cost',
-    { priority: 'high', concurrency: 20 },
-    new ComputeItemCost(agenda).handler,
-  );
-  agenda.define(
-    'rewrite-invoices-journal-entries',
-    { priority: 'normal', concurrency: 1, },
-    new RewriteInvoicesJournalEntries().handler,
-  );
+  new ComputeItemCost(agenda);
+  new RewriteInvoicesJournalEntries(agenda);
 
   agenda.define(
     'send-sms-notification-subscribe-end',

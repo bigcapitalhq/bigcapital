@@ -1,8 +1,11 @@
 import { pick } from 'lodash';
+import { raw } from 'objection';
 import { IInventoryTransaction } from 'interfaces';
 import InventoryCostMethod from 'services/Inventory/InventoryCostMethod';
 
-export default class InventoryAverageCostMethod extends InventoryCostMethod implements IInventoryCostMethod {
+export default class InventoryAverageCostMethod
+  extends InventoryCostMethod
+  implements IInventoryCostMethod {
   startingDate: Date;
   itemId: number;
   costTransactions: any[];
@@ -13,13 +16,9 @@ export default class InventoryAverageCostMethod extends InventoryCostMethod impl
    * @param {Date} startingDate -
    * @param {number} itemId - The given inventory item id.
    */
-  constructor(
-    tenantId: number,
-    startingDate: Date,
-    itemId: number,
-  ) {
-    super();
-  
+  constructor(tenantId: number, startingDate: Date, itemId: number) {
+    super(tenantId, startingDate, itemId);
+
     this.startingDate = startingDate;
     this.itemId = itemId;
     this.costTransactions = [];
@@ -27,154 +26,216 @@ export default class InventoryAverageCostMethod extends InventoryCostMethod impl
 
   /**
    * Computes items costs from the given date using average cost method.
-   *
+   * ----------
    * - Calculate the items average cost in the given date.
-   * - Remove the journal entries that associated to the inventory transacions 
+   * - Remove the journal entries that associated to the inventory transacions
    *   after the given date.
-   * - Re-compute the inventory transactions and re-write the journal entries 
+   * - Re-compute the inventory transactions and re-write the journal entries
    *   after the given date.
    * ----------
-   * @asycn
-   * @param {Date} startingDate 
-   * @param {number} referenceId 
-   * @param {string} referenceType 
+   * @async
+   * @param {Date} startingDate
+   * @param {number} referenceId
+   * @param {string} referenceType
    */
   public async computeItemCost() {
     const { InventoryTransaction } = this.tenantModels;
-    const openingAvgCost = await this.getOpeningAvaregeCost(this.startingDate, this.itemId);
+    const {
+      averageCost,
+      openingQuantity,
+      openingCost,
+    } = await this.getOpeningAvaregeCost(this.startingDate, this.itemId);
 
     const afterInvTransactions: IInventoryTransaction[] = await InventoryTransaction.query()
-      .modify('filterDateRange', this.startingDate)  
+      .modify('filterDateRange', this.startingDate)
       .orderBy('date', 'ASC')
       .orderByRaw("FIELD(direction, 'IN', 'OUT')")
+      .orderBy('lot_number', 'ASC')
       .where('item_id', this.itemId)
       .withGraphFetched('item');
-
-    // Tracking inventroy transactions and retrieve cost transactions
-    // based on average rate cost method. 
+    
+    // Tracking inventroy transactions and retrieve cost transactions based on
+    // average rate cost method.
     const costTransactions = this.trackingCostTransactions(
       afterInvTransactions,
-      openingAvgCost,
+      openingQuantity,
+      openingCost
     );
+    // Revert the inveout out lots transactions
+    await this.revertTheInventoryOutLotTrans();
+
+    // Store inventory lots cost transactions.
     await this.storeInventoryLotsCost(costTransactions);
   }
 
   /**
    * Get items Avarege cost from specific date from inventory transactions.
-   * @static
-   * @param {Date} startingDate 
+   * @async
+   * @param {Date} closingDate
    * @return {number}
    */
-  public async getOpeningAvaregeCost(startingDate: Date, itemId: number) {
-    const { InventoryTransaction } = this.tenantModels;
+  public async getOpeningAvaregeCost(closingDate: Date, itemId: number) {
+    const { InventoryCostLotTracker } = this.tenantModels;
+
     const commonBuilder = (builder: any) => {
-      if (startingDate) {
-        builder.where('date', '<', startingDate);
+      if (closingDate) {
+        builder.where('date', '<', closingDate);
       }
       builder.where('item_id', itemId);
-      builder.groupBy('rate');
-      builder.groupBy('quantity');
-      builder.groupBy('item_id');
-      builder.groupBy('direction');
       builder.sum('rate as rate');
       builder.sum('quantity as quantity');
+      builder.sum('cost as cost');
+      builder.first();
     };
     // Calculates the total inventory total quantity and rate `IN` transactions.
-
-    // @todo total `IN` transactions.
-    const inInvSumationOper: Promise<any> = InventoryTransaction.query()
+    const inInvSumationOper: Promise<any> = InventoryCostLotTracker.query()
       .onBuild(commonBuilder)
-      .where('direction', 'IN')
-      .first();
+      .where('direction', 'IN');
 
     // Calculates the total inventory total quantity and rate `OUT` transactions.
-    // @todo total `OUT` transactions.
-    const outInvSumationOper: Promise<any> = InventoryTransaction.query()
+    const outInvSumationOper: Promise<any> = InventoryCostLotTracker.query()
       .onBuild(commonBuilder)
-      .where('direction', 'OUT')
-      .first();
+      .where('direction', 'OUT');
 
     const [inInvSumation, outInvSumation] = await Promise.all([
       inInvSumationOper,
       outInvSumationOper,
     ]);
     return this.computeItemAverageCost(
-      inInvSumation?.quantity  || 0,
-      inInvSumation?.rate      || 0,
-      outInvSumation?.quantity || 0,
-      outInvSumation?.rate     || 0
+      inInvSumation?.cost || 0,
+      inInvSumation?.quantity || 0,
+      outInvSumation?.cost || 0,
+      outInvSumation?.quantity || 0
     );
   }
 
   /**
    * Computes the item average cost.
-   * @static 
-   * @param {number} quantityIn 
-   * @param {number} rateIn 
-   * @param {number} quantityOut 
-   * @param {number} rateOut 
+   * @static
+   * @param {number} quantityIn
+   * @param {number} rateIn
+   * @param {number} quantityOut
+   * @param {number} rateOut
    */
   public computeItemAverageCost(
-    quantityIn: number,
-    rateIn: number,
+    totalCostIn: number,
+    totalQuantityIn: number,
 
-    quantityOut: number,
-    rateOut: number,
+    totalCostOut: number,
+    totalQuantityOut: number
   ) {
-    const totalQuantity = (quantityIn - quantityOut);
-    const totalRate = (rateIn - rateOut);
-    const averageCost = (totalRate) ? (totalQuantity / totalRate) : totalQuantity;
+    const openingCost = totalCostIn - totalCostOut;
+    const openingQuantity = totalQuantityIn - totalQuantityOut;
 
-    return averageCost;
+    const averageCost = openingQuantity ? openingCost / openingQuantity : 0;
+
+    return { averageCost, openingCost, openingQuantity };
   }
 
   /**
    * Records the journal entries from specific item inventory transactions.
-   * @param {IInventoryTransaction[]} invTransactions 
-   * @param {number} openingAverageCost 
-   * @param {string} referenceType 
-   * @param {number} referenceId 
-   * @param {JournalCommand} journalCommands 
+   * @param {IInventoryTransaction[]} invTransactions
+   * @param {number} openingAverageCost
+   * @param {string} referenceType
+   * @param {number} referenceId
+   * @param {JournalCommand} journalCommands
    */
   public trackingCostTransactions(
     invTransactions: IInventoryTransaction[],
-    openingAverageCost: number,
+    openingQuantity: number = 0,
+    openingCost: number = 0
   ) {
     const costTransactions: any[] = [];
-    let accQuantity: number = 0;
-    let accCost: number = 0;
+
+    // Cumulative item quantity and cost. This will decrement after
+    // each out transactions depends on its quantity and cost.
+    let accQuantity: number = openingQuantity;
+    let accCost: number = openingCost;
 
     invTransactions.forEach((invTransaction: IInventoryTransaction) => {
       const commonEntry = {
         invTransId: invTransaction.id,
-        ...pick(invTransaction, ['date', 'direction', 'itemId', 'quantity', 'rate', 'entryId',
-          'transactionId', 'transactionType']),
+        ...pick(invTransaction, [
+          'date',
+          'direction',
+          'itemId',
+          'quantity',
+          'rate',
+          'entryId',
+          'transactionId',
+          'transactionType',
+          'lotNumber',
+        ]),
       };
-      switch(invTransaction.direction) {
+      switch (invTransaction.direction) {
         case 'IN':
+          const inCost = invTransaction.rate * invTransaction.quantity;
+
+          // Increases the quantity and cost in `IN` inventory transactions.
           accQuantity += invTransaction.quantity;
-          accCost += invTransaction.rate * invTransaction.quantity;
+          accCost += inCost;
 
           costTransactions.push({
             ...commonEntry,
+            cost: inCost,
           });
           break;
         case 'OUT':
-          const transactionAvgCost = accCost ? (accCost / accQuantity) : 0;
-          const averageCost = transactionAvgCost;
-          const cost = (invTransaction.quantity * averageCost);
-          const income = (invTransaction.quantity * invTransaction.rate);
+          // Average cost = Total cost / Total quantity
+          const averageCost = accQuantity ? accCost / accQuantity : 0;
 
-          accQuantity -= invTransaction.quantity;
-          accCost -= income;
+          const quantity =
+            accQuantity > 0
+              ? Math.min(invTransaction.quantity, accQuantity)
+              : invTransaction.quantity;
 
+          // Cost = the transaction quantity * Average cost.
+          const cost = quantity * averageCost;
+
+          // Revenue = transaction quanity * rate.
+          // const revenue = quantity * invTransaction.rate;
           costTransactions.push({
             ...commonEntry,
+            quantity,
             cost,
           });
+          accQuantity = Math.max(accQuantity - quantity, 0);
+          accCost = Math.max(accCost - cost, 0);
+
+          if (invTransaction.quantity > quantity) {
+            const remainingQuantity = Math.max(
+              invTransaction.quantity - quantity,
+              0
+            );
+            const remainingIncome = remainingQuantity * invTransaction.rate;
+
+            costTransactions.push({
+              ...commonEntry,
+              quantity: remainingQuantity,
+              cost: 0,
+            });
+            accQuantity = Math.max(accQuantity - remainingQuantity, 0);
+            accCost = Math.max(accCost - remainingIncome, 0);
+          }
           break;
       }
     });
     return costTransactions;
+  }
+
+  /**
+   * Reverts the inventory lots `OUT` transactions.
+   * @param {Date} openingDate - Opening date.
+   * @param {number} itemId - Item id.
+   * @returns {Promise<void>}
+   */
+  async revertTheInventoryOutLotTrans(): Promise<void> {
+    const { InventoryCostLotTracker } = this.tenantModels;
+
+    await InventoryCostLotTracker.query()
+      .modify('filterDateRange', this.startingDate)
+      .orderBy('date', 'DESC')
+      .where('item_id', this.itemId)
+      .delete();
   }
 }

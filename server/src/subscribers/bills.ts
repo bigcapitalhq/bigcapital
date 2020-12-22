@@ -117,7 +117,8 @@ export default class BillSubscriber {
     this.logger.info('[bill] writing the inventory transactions', { tenantId });
     this.billsService.recordInventoryTransactions(
       tenantId,
-      bill,
+      bill.id,
+      bill.billDate,
     );
   }
 
@@ -129,7 +130,8 @@ export default class BillSubscriber {
     this.logger.info('[bill] overwriting the inventory transactions.', { tenantId });
     this.billsService.recordInventoryTransactions(
       tenantId,
-      bill,
+      bill.id,
+      bill.billDate,
       true,
     );
   }
@@ -141,6 +143,21 @@ export default class BillSubscriber {
   async handleRevertInventoryTransactions({ tenantId, billId }) {
     this.logger.info('[bill] reverting the bill inventory transactions', { tenantId, billId });
     this.billsService.revertInventoryTransactions(
+      tenantId,
+      billId,
+    );
+  }
+
+  /**
+   * Schedules items cost compute jobs once the inventory transactions created
+   * of the bill transaction.
+   */
+  @On(events.bill.onInventoryTransactionsCreated)
+  public async handleComputeItemsCosts({ tenantId, billId }) {
+    this.logger.info('[bill] trying to compute the bill items cost.', {
+      tenantId, billId,
+    });    
+    await this.billsService.scheduleComputeBillItemsCost(
       tenantId,
       billId,
     );

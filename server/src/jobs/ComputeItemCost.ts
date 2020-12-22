@@ -1,20 +1,30 @@
 import { Container } from 'typedi';
-import moment from 'moment';
+import {EventDispatcher} from "event-dispatch";
+// import {
+//   EventDispatcher,
+// } from 'decorators/eventDispatcher';
+import events from 'subscribers/events';
 import InventoryService from 'services/Inventory/Inventory';
-import SalesInvoicesCost from 'services/Sales/SalesInvoicesCost';
 
 export default class ComputeItemCostJob {
-  depends: number;
   agenda: any;
-  startingDate: Date;
+  eventDispatcher: EventDispatcher;
   
+  /**
+   * 
+   * @param agenda 
+   */
   constructor(agenda) {
     this.agenda = agenda;
-    this.depends = 0;
-    this.startingDate = null;
+    this.eventDispatcher = new EventDispatcher();
 
-    this.agenda.on('complete:compute-item-cost', this.onJobFinished.bind(this));
+    agenda.define(
+      'compute-item-cost',
+      { priority: 'high', concurrency: 1 },
+      this.handler.bind(this),
+    );
     this.agenda.on('start:compute-item-cost', this.onJobStart.bind(this));
+    this.agenda.on('complete:compute-item-cost', this.onJobCompleted.bind(this));
   }
 
   /**
@@ -23,12 +33,14 @@ export default class ComputeItemCostJob {
    */
   public async handler(job, done: Function): Promise<void> {
     const Logger = Container.get('logger');
-    const { startingDate, itemId, costMethod = 'FIFO' } = job.attrs.data;
+    const inventoryService = Container.get(InventoryService);
+
+    const { startingDate, itemId, tenantId } = job.attrs.data;
 
     Logger.info(`Compute item cost - started: ${job.attrs.data}`);
 
     try {
-      await InventoryService.computeItemCost(startingDate, itemId, costMethod);  
+      await inventoryService.computeItemCost(tenantId, startingDate, itemId);
       Logger.info(`Compute item cost - completed: ${job.attrs.data}`);
       done();
     } catch(e) {
@@ -42,30 +54,24 @@ export default class ComputeItemCostJob {
    * @param {Job} job - .
    */
   async onJobStart(job) {
-    const { startingDate } = job.attrs.data;
-    this.depends += 1;
+    const { startingDate, itemId, tenantId } = job.attrs.data;
 
-    if (!this.startingDate || moment(this.startingDate).isBefore(startingDate)) {
-      this.startingDate = startingDate;
-    }
+    await this.eventDispatcher.dispatch(
+      events.inventory.onComputeItemCostJobStarted,
+      { startingDate, itemId, tenantId }
+    );
   }
 
   /**
    * Handle job complete items cost finished.
    * @param {Job} job - 
    */
-  async onJobFinished() {
-    const agenda = Container.get('agenda');
-    const startingDate = this.startingDate;
+  async onJobCompleted(job) {
+    const { startingDate, itemId, tenantId } = job.attrs.data;
 
-    this.depends = Math.max(this.depends - 1, 0);
-
-    if (this.depends === 0) {
-      this.startingDate = null;
-
-      await agenda.now('rewrite-invoices-journal-entries', {
-        startingDate,
-      });
-    }
+    await this.eventDispatcher.dispatch(
+      events.inventory.onComputeItemCostJobCompleted,
+      { startingDate, itemId, tenantId },
+    );
   }
 }

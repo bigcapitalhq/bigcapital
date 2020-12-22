@@ -1,8 +1,14 @@
 import { Container, Service, Inject } from 'typedi';
-import { IInventoryTransaction, IItem } from 'interfaces'
+import { pick } from 'lodash';
+import {
+  EventDispatcher,
+  EventDispatcherInterface,
+} from 'decorators/eventDispatcher';
+import { IInventoryTransaction, IItem, IItemEntry } from 'interfaces'
 import InventoryAverageCost from 'services/Inventory/InventoryAverageCost';
 import InventoryCostLotTracker from 'services/Inventory/InventoryCostLotTracker';
 import TenancyService from 'services/Tenancy/TenancyService';
+import events from 'subscribers/events';
 
 type TCostMethod = 'FIFO' | 'LIFO' | 'AVG';
 
@@ -10,6 +16,31 @@ type TCostMethod = 'FIFO' | 'LIFO' | 'AVG';
 export default class InventoryService {
   @Inject()
   tenancy: TenancyService;
+
+  @EventDispatcher()
+  eventDispatcher: EventDispatcherInterface;
+
+  /**
+   * Transforms the items entries to inventory transactions.
+   */
+  transformItemEntriesToInventory(
+    itemEntries: IItemEntry[],
+    transactionType: string,
+    transactionId: number,
+    direction: 'IN'|'OUT',
+    date: Date|string,
+    lotNumber: number,
+  ) {
+    return itemEntries.map((entry: IItemEntry) => ({
+      ...pick(entry, ['itemId', 'quantity', 'rate']),
+      lotNumber,
+      transactionType,
+      transactionId,
+      direction,
+      date,
+      entryId: entry.id,
+    }));
+  }
 
   /**
    * Computes the given item cost and records the inventory lots transactions
@@ -21,25 +52,23 @@ export default class InventoryService {
   async computeItemCost(tenantId: number, fromDate: Date, itemId: number) {
     const { Item } = this.tenancy.models(tenantId);
 
-    const item = await Item.query()
-      .findById(itemId)
-      .withGraphFetched('category');
+    // Fetches the item with assocaited item category.
+    const item = await Item.query().findById(itemId);
 
     // Cannot continue if the given item was not inventory item.
     if (item.type !== 'inventory') {
       throw new Error('You could not compute item cost has no inventory type.');
     }
-    const costMethod: TCostMethod = item.category.costMethod;
     let costMethodComputer: IInventoryCostMethod;
 
     // Switch between methods based on the item cost method.
-    switch(costMethod) {
+    switch('AVG') {
       case 'FIFO':
       case 'LIFO':
-        costMethodComputer = new InventoryCostLotTracker(fromDate, itemId);
+        costMethodComputer = new InventoryCostLotTracker(tenantId, fromDate, itemId);
         break;
       case 'AVG':
-        costMethodComputer = new InventoryAverageCost(fromDate, itemId);
+        costMethodComputer = new InventoryAverageCost(tenantId, fromDate, itemId);
         break;
     }
     return costMethodComputer.computeItemCost();
@@ -54,9 +83,36 @@ export default class InventoryService {
   async scheduleComputeItemCost(tenantId: number, itemId: number, startingDate: Date|string) {
     const agenda = Container.get('agenda');
 
-    return agenda.schedule('in 3 seconds', 'compute-item-cost', {
-      startingDate, itemId, tenantId,
+    // Cancel any `compute-item-cost` in the queue has upper starting date 
+    // with the same given item.
+    await agenda.cancel({
+      name: 'compute-item-cost',
+      nextRunAt: { $ne: null },
+      'data.tenantId': tenantId,
+      'data.itemId': itemId,
+      'data.startingDate': { "$gt": startingDate } 
     });
+
+    // Retrieve any `compute-item-cost` in the queue has lower starting date
+    // with the same given item.
+    const dependsJobs = await agenda.jobs({
+      name: 'compute-item-cost',
+      nextRunAt: { $ne: null },
+      'data.tenantId': tenantId,
+      'data.itemId': itemId,
+      'data.startingDate': { "$lte": startingDate }
+    });
+    if (dependsJobs.length === 0) {
+      await agenda.schedule('in 30 seconds', 'compute-item-cost', {
+        startingDate, itemId, tenantId,
+      });
+
+      // Triggers `onComputeItemCostJobScheduled` event.
+      await this.eventDispatcher.dispatch(
+        events.inventory.onComputeItemCostJobScheduled,
+        { startingDate, itemId, tenantId },
+      );
+    }
   }
 
   /**
@@ -68,24 +124,11 @@ export default class InventoryService {
    */
   async recordInventoryTransactions(
     tenantId: number,
-    entries: IInventoryTransaction[],
+    inventoryEntries: IInventoryTransaction[],
     deleteOld: boolean,
   ): Promise<void> {
     const { InventoryTransaction, Item } = this.tenancy.models(tenantId);
 
-    // Mapping the inventory entries items ids.
-    const entriesItemsIds = entries.map((e: any) => e.itemId);
-    const inventoryItems = await Item.query()
-      .whereIn('id', entriesItemsIds)
-      .where('type', 'inventory');
-
-    // Mapping the inventory items ids.
-    const inventoryItemsIds = inventoryItems.map((i: IItem) => i.id);
-
-    // Filter the bill entries that have inventory items.
-    const inventoryEntries = entries.filter(
-      (entry: IInventoryTransaction) => inventoryItemsIds.indexOf(entry.itemId) !== -1
-    );
     inventoryEntries.forEach(async (entry: any) => {
       if (deleteOld) {
         await this.deleteInventoryTransactions(
@@ -108,14 +151,14 @@ export default class InventoryService {
    * @param {number} transactionId 
    * @return {Promise}
    */
-  deleteInventoryTransactions(
+  async deleteInventoryTransactions(
     tenantId: number,
     transactionId: number,
     transactionType: string,
-  ) {
+  ): Promise<void> {
     const { InventoryTransaction } = this.tenancy.models(tenantId);
 
-    return InventoryTransaction.query()
+    await InventoryTransaction.query()
       .where('transaction_type', transactionType)
       .where('transaction_id', transactionId)
       .delete();
@@ -125,22 +168,37 @@ export default class InventoryService {
    * Retrieve the lot number after the increment.
    * @param {number} tenantId - Tenant id.
    */
-  async nextLotNumber(tenantId: number) {
-    const { Option } = this.tenancy.models(tenantId);
+  getNextLotNumber(tenantId: number) {
+    const settings = this.tenancy.settings(tenantId);
 
     const LOT_NUMBER_KEY = 'lot_number_increment';
-    const effectRows = await Option.query()
-      .where('key', LOT_NUMBER_KEY)
-      .increment('value', 1);
+    const storedLotNumber = settings.find({ key: LOT_NUMBER_KEY });
 
-    if (effectRows === 0) {
-      await Option.query()
-        .insert({
-          key: LOT_NUMBER_KEY,
-          value: 1,
-        });
+    return (storedLotNumber && storedLotNumber.value) ?
+      parseInt(storedLotNumber.value, 10) : 1;
+  }
+
+  /**
+   * Increment the next inventory LOT number.
+   * @param {number} tenantId 
+   * @return {Promise<number>}
+   */
+  async incrementNextLotNumber(tenantId: number) {
+    const settings = this.tenancy.settings(tenantId);
+
+    const LOT_NUMBER_KEY = 'lot_number_increment';
+    const storedLotNumber = settings.find({ key: LOT_NUMBER_KEY });
+
+    let lotNumber = 1;
+
+    if (storedLotNumber && storedLotNumber.value) {
+      lotNumber = parseInt(storedLotNumber.value, 10);
+      lotNumber += 1;
     }
-    const options = await Option.query();
-    return options.getMeta(LOT_NUMBER_KEY, 1);
+    settings.set({ key: LOT_NUMBER_KEY }, lotNumber);
+
+    await settings.save();
+
+    return lotNumber;
   }
 }

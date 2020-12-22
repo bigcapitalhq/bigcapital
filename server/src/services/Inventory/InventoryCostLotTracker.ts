@@ -29,7 +29,7 @@ export default class InventoryCostLotTracker extends InventoryCostMethod impleme
     itemId: number,
     costMethod: TCostMethod = 'FIFO'
   ) {
-    super();
+    super(tenantId, startingDate, itemId);
 
     this.startingDate = startingDate;
     this.itemId = itemId;
@@ -129,7 +129,7 @@ export default class InventoryCostLotTracker extends InventoryCostMethod impleme
         .withGraphFetched('item');
 
     this.outTransactions = [ ...afterOUTTransactions ];
-  }
+  }  
 
   private async fetchItemsMapped() {
     const itemsIds = chain(this.inTransactions).map((e) => e.itemId).uniq().value();

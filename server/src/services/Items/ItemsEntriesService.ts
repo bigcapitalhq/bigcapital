@@ -1,4 +1,4 @@
-import { difference } from 'lodash';
+import { difference, map } from 'lodash';
 import { Inject, Service } from 'typedi';
 import {
   IItemEntry,
@@ -7,6 +7,7 @@ import {
 } from 'interfaces';
 import { ServiceError } from 'exceptions';
 import TenancyService from 'services/Tenancy/TenancyService';
+import { ItemEntry } from 'models';
 
 const ERRORS = {
   ITEMS_NOT_FOUND: 'ITEMS_NOT_FOUND',
@@ -19,6 +20,39 @@ const ERRORS = {
 export default class ItemsEntriesService {
   @Inject()
   tenancy: TenancyService;
+
+  /**
+   * Retrieve the inventory items entries of the reference id and type.
+   * @param {number} tenantId 
+   * @param {string} referenceType 
+   * @param {string} referenceId 
+   * @return {Promise<IItemEntry[]>}
+   */
+  public async getInventoryEntries(
+    tenantId: number,
+    referenceType: string,
+    referenceId: number,
+  ): Promise<IItemEntry[]> {
+    const { Item, ItemEntry } = this.tenancy.models(tenantId);
+
+    const itemsEntries = await ItemEntry.query()
+      .where('reference_type', referenceType)
+      .where('reference_id', referenceId);
+
+    // Inventory items.
+    const inventoryItems = await Item.query()
+      .whereIn('id', map(itemsEntries, 'itemId'))
+      .where('type', 'inventory');
+
+    // Inventory items ids.
+    const inventoryItemsIds = map(inventoryItems, 'id');
+    
+    // Filtering the inventory items entries.
+    const inventoryItemsEntries = itemsEntries.filter(
+      (itemEntry) => inventoryItemsIds.indexOf(itemEntry.itemId) !== -1
+    );
+    return inventoryItemsEntries;
+  }
 
   /**
    * Validates the entries items ids.

@@ -1,4 +1,4 @@
-import { omit, sumBy, pick, difference, assignWith } from 'lodash';
+import { omit, sumBy, pick, map } from 'lodash';
 import moment from 'moment';
 import { Inject, Service } from 'typedi';
 import {
@@ -7,7 +7,6 @@ import {
 } from 'decorators/eventDispatcher';
 import events from 'subscribers/events';
 import JournalPoster from 'services/Accounting/JournalPoster';
-import JournalEntry from 'services/Accounting/JournalEntry';
 import AccountsService from 'services/Accounts/AccountsService';
 import InventoryService from 'services/Inventory/Inventory';
 import SalesInvoicesCost from 'services/Sales/SalesInvoicesCost';
@@ -24,6 +23,7 @@ import {
   IFilterMeta,
   IBillsFilter,
   IItemEntry,
+  IInventoryTransaction,
 } from 'interfaces';
 import { ServiceError } from 'exceptions';
 import ItemsService from 'services/Items/ItemsService';
@@ -159,11 +159,7 @@ export default class BillsService extends SalesInvoicesCost {
     oldBill?: IBill
   ) {
     const { ItemEntry } = this.tenancy.models(tenantId);
-    let invLotNumber = oldBill?.invLotNumber;
 
-    // if (!invLotNumber) {
-    //   invLotNumber = await this.inventoryService.nextLotNumber(tenantId);
-    // }
     const entries = billDTO.entries.map((entry) => ({
       ...entry,
       amount: ItemEntry.calcAmount(entry),
@@ -176,7 +172,6 @@ export default class BillsService extends SalesInvoicesCost {
         'dueDate',
       ]),
       amount,
-      invLotNumber,
       entries: entries.map((entry) => ({
         reference_type: 'Bill',
         ...omit(entry, ['amount', 'id']),
@@ -369,29 +364,51 @@ export default class BillsService extends SalesInvoicesCost {
 
   /**
    * Records the inventory transactions from the given bill input.
-   * @param {Bill} bill
-   * @param {number} billId
+   * @param {Bill} bill - Bill model object.
+   * @param {number} billId - Bill id.
+   * @return {Promise<void>}
    */
   public async recordInventoryTransactions(
     tenantId: number,
-    bill: IBill,
+    billId: number,
+    billDate: Date,
     override?: boolean
   ): Promise<void> {
-    const invTransactions = bill.entries.map((entry: IItemEntry) => ({
-      ...pick(entry, ['itemId', 'quantity', 'rate']),
-      lotNumber: bill.invLotNumber,
-      transactionType: 'Bill',
-      transactionId: bill.id,
-      direction: 'IN',
-      date: bill.billDate,
-      entryId: entry.id,
-    }));
+    // Retrieve the next inventory lot number.
+    const lotNumber = this.inventoryService.getNextLotNumber(tenantId);
 
+    const inventoryEntries = await this.itemsEntriesService.getInventoryEntries(
+      tenantId,
+      'Bill',
+      billId
+    );
+    // Can't continue if there is no entries has inventory items in the bill.
+    if (inventoryEntries.length <= 0) return;
+
+    // Inventory transactions.
+    const inventoryTranscations = this.inventoryService.transformItemEntriesToInventory(
+      inventoryEntries,
+      'Bill',
+      billId,
+      'IN',
+      billDate,
+      lotNumber,
+    );
+    // Records the inventory transactions.
     await this.inventoryService.recordInventoryTransactions(
       tenantId,
-      invTransactions,
+      inventoryTranscations,
       override
     );
+    // Save the next lot number settings.
+    await this.inventoryService.incrementNextLotNumber(tenantId);
+
+    // Triggers `onInventoryTransactionsCreated` event.
+    this.eventDispatcher.dispatch(events.bill.onInventoryTransactionsCreated, {
+      tenantId,
+      billId,
+      billDate,
+    });
   }
 
   /**
@@ -404,7 +421,7 @@ export default class BillsService extends SalesInvoicesCost {
     await this.inventoryService.deleteInventoryTransactions(
       tenantId,
       billId,
-      'Bill',
+      'Bill'
     );
   }
 
@@ -519,22 +536,26 @@ export default class BillsService extends SalesInvoicesCost {
    * @param {IBill} bill -
    * @return {Promise}
    */
-  public async scheduleComputeBillItemsCost(tenantId: number, bill) {
-    const { Item } = this.tenancy.models(tenantId);
-    const billItemsIds = bill.entries.map((entry) => entry.item_id);
+  public async scheduleComputeBillItemsCost(tenantId: number, billId: number) {
+    const { Item, Bill } = this.tenancy.models(tenantId);
+
+    // Retrieve the bill with associated entries.
+    const bill = await Bill.query()
+      .findById(billId)
+      .withGraphFetched('entries');
 
     // Retrieves inventory items only.
     const inventoryItems = await Item.query()
-      .whereIn('id', billItemsIds)
+      .whereIn('id', map(bill.entries, 'itemId'))
       .where('type', 'inventory');
 
-    const inventoryItemsIds = inventoryItems.map((i) => i.id);
+    const inventoryItemsIds = map(inventoryItems, 'id');
 
     if (inventoryItemsIds.length > 0) {
       await this.scheduleComputeItemsCost(
         tenantId,
         inventoryItemsIds,
-        bill.bill_date
+        bill.billDate
       );
     }
   }
