@@ -6,8 +6,10 @@ import {
 } from 'store/selectors';
 
 const vendorsTableQuery = (state) => state.vendors.tableQuery;
+
 const vendorByIdSelector = (state, props) =>
   state.vendors.items[props.vendorId];
+
 const vendorsItemsSelector = (state) => state.vendors.items;
 
 const vendorsCurrentViewIdSelector = (state) => state.vendors.currentViewId;
@@ -17,22 +19,24 @@ const vendorsPaginationSelector = (state, props) => {
   return state.vendors.views?.[viewId];
 };
 
-export const getVendorsTableQuery = createSelector(
-  paginationLocationQuery,
-  vendorsTableQuery,
-  (locationQuery, tableQuery) => {
-    return {
-      ...locationQuery,
-      ...tableQuery,
-    };
-  },
-);
+export const getVendorTableQueryFactory = () =>
+  createSelector(
+    paginationLocationQuery,
+    vendorsTableQuery,
+    (locationQuery, tableQuery) => {
+      return {
+        ...locationQuery,
+        ...tableQuery,
+      };
+    },
+  );
+
 
 const vendorsPageSelector = (state, props, query) => {
   const viewId = state.vendors.currentViewId;
   const currentView = state.vendors.views?.[viewId];
-  const currentPageId = currentView?.pages;
-
+  const currentPageId = currentView?.paginationMeta?.page;
+  
   return currentView?.pages?.[currentPageId];
 };
 

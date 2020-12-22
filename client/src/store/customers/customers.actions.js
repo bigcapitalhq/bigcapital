@@ -48,7 +48,8 @@ export const fetchCustomers = ({ query }) => {
             type: t.CUSTOMERS_PAGE_SET,
             payload: {
               customers: response.data.customers,
-              customViewId: response.data.customViewId || -1,
+              customViewId:
+                response.data?.filter_meta?.view?.custom_view_id || -1,
               paginationMeta: response.data.pagination,
             },
           });
@@ -62,7 +63,8 @@ export const fetchCustomers = ({ query }) => {
             type: t.CUSTOMERS_PAGINATION_SET,
             payload: {
               pagination: response.data.pagination,
-              customViewId: response.data.customViewId || -1,
+              customViewId:
+                response.data?.filter_meta?.view?.custom_view_id || -1,
             },
           });
           dispatch({

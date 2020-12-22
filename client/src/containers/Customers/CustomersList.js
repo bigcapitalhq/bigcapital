@@ -55,13 +55,14 @@ function CustomersList({
   }, [changePageTitle, formatMessage]);
 
   // Fetch customers resource views and fields.
-  // const fetchResourceViews = useQuery(['resource-views', 'customers'],
-  //   () => requestFetchResourceViews('customers')
-  // );
-
+  const fetchResourceViews = useQuery(
+    ['resource-views', 'customers'],
+    (key, resourceName) => requestFetchResourceViews(resourceName),
+  );
+ 
   const fetchCustomers = useQuery(
     ['customers-table', customersTableQuery],
-    () => requestFetchCustomers(),
+    (key, query) => requestFetchCustomers({ ...query }),
   );
 
   const handleEditCustomer = useCallback(
@@ -84,7 +85,7 @@ function CustomersList({
     setDeleteCustomer(false);
   }, [setDeleteCustomer]);
 
-   const transformErrors = (errors) => {
+  const transformErrors = (errors) => {
     if (errors.some((e) => e.type === 'CUSTOMER.HAS.SALES_INVOICES')) {
       AppToaster.show({
         message: formatMessage({
@@ -132,16 +133,6 @@ function CustomersList({
     selectedRows,
   ]);
 
-  // Handle filter change to re-fetch the items.
-  const handleFilterChanged = useCallback(
-    (filterConditions) => {
-      // addCustomersTableQueries({
-      //   filter_roles: filterConditions || '',
-      // });
-    },
-    [addCustomersTableQueries],
-  );
-
   // Handle Customers bulk delete button click.,
   const handleBulkDelete = useCallback(
     (customersIds) => {
@@ -173,10 +164,12 @@ function CustomersList({
   }, [requestDeleteBulkCustomers, bulkDelete, formatMessage]);
 
   return (
-    <DashboardInsider name={'customers-list'}>
+    <DashboardInsider
+      loading={fetchResourceViews.isFetching}
+      name={'customers-list'}
+    >
       <CustomerActionsBar
         selectedRows={selectedRows}
-        onFilterChanged={handleFilterChanged}
         onBulkDelete={handleBulkDelete}
       />
 
@@ -188,7 +181,6 @@ function CustomersList({
           >
             <CustomersViewsTabs />
             <CustomersTable
-              loading={fetchCustomers.isFetching}
               onDeleteCustomer={handleDeleteCustomer}
               onEditCustomer={handleEditCustomer}
               onSelectedRowsChange={handleSelectedRowsChange}

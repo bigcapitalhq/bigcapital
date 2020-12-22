@@ -38,12 +38,13 @@ function VendorsTable({
   addVendorsTableQueries,
 
   // #ownProps
+  loading,
   onEditVendor,
   onDeleteVendor,
   onSelectedRowsChange,
 }) {
   const { formatMessage } = useIntl();
-  const isLoadedBefore = useIsValuePassed(vendorsLoading, false);
+  const isLoadedBefore = useIsValuePassed(loading, false);
 
   // Vendor actions list.
   const renderContextMenu = useMemo(

@@ -49,6 +49,7 @@ export default createReducer(initialState, {
     state.views[viewId] = {
       ...view,
       pages: {
+        
         ...(state.views?.[viewId]?.pages || {}),
         [paginationMeta.page]: {
           ids: customers.map((i) => i.id),
@@ -62,6 +63,10 @@ export default createReducer(initialState, {
     if (typeof state.items[id] !== 'undefined') {
       delete state.items[id];
     }
+  },
+
+  [t.CUSTOMERS_SET_CURRENT_VIEW]: (state, action) => {
+    state.currentViewId = action.currentViewId;
   },
 
   [t.CUSTOMERS_TABLE_LOADING]: (state, action) => {

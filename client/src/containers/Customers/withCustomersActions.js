@@ -19,8 +19,14 @@ export const mapDispatchToProps = (dispatch) => ({
   addCustomersTableQueries: (queries) =>
     dispatch({
       type: t.CUSTOMERS_TABLE_QUERIES_ADD,
-      payload: { queries }
+      payload: { queries },
     }),
+  changeCustomerView: (id) => {
+    dispatch({
+      type: t.CUSTOMERS_SET_CURRENT_VIEW,
+      currentViewId: parseInt(id, 10),
+    });
+  },
 });
 
 export default connect(null, mapDispatchToProps);
