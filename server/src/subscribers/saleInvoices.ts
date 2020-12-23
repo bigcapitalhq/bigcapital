@@ -5,6 +5,7 @@ import TenancyService from 'services/Tenancy/TenancyService';
 import SettingsService from 'services/Settings/SettingsService';
 import SaleEstimateService from 'services/Sales/SalesEstimate';
 import SaleInvoicesService from 'services/Sales/SalesInvoices';
+import ItemsEntriesService from 'services/Items/ItemsEntriesService';
 
 @EventSubscriber()
 export default class SaleInvoiceSubscriber {
@@ -13,6 +14,7 @@ export default class SaleInvoiceSubscriber {
   settingsService: SettingsService;
   saleEstimatesService: SaleEstimateService;
   saleInvoicesService: SaleInvoicesService;
+  itemsEntriesService: ItemsEntriesService;
 
   constructor() {
     this.logger = Container.get('logger');
@@ -20,6 +22,7 @@ export default class SaleInvoiceSubscriber {
     this.settingsService = Container.get(SettingsService);
     this.saleEstimatesService = Container.get(SaleEstimateService);
     this.saleInvoicesService = Container.get(SaleInvoicesService);
+    this.itemsEntriesService = Container.get(ItemsEntriesService);
   }
 
   /**
@@ -186,6 +189,46 @@ export default class SaleInvoiceSubscriber {
     await this.saleInvoicesService.scheduleComputeInvoiceItemsCost(
       tenantId,
       saleInvoiceId,
+    );
+  }
+
+  /**
+   * Increments the sale invoice items once the invoice created. 
+   */
+  @On(events.saleInvoice.onCreated)
+  public async handleDecrementSaleInvoiceItemsQuantity({ tenantId, saleInvoice }) {
+    await this.itemsEntriesService.decrementItemsQuantity(
+      tenantId,
+      saleInvoice.entries,
+    );
+  }
+
+  /**
+   * Decrements the sale invoice items once the invoice deleted.
+   */
+  @On(events.saleInvoice.onDeleted)
+  public async handleIncrementSaleInvoiceItemsQuantity({ tenantId, oldSaleInvoice }) {
+    await this.itemsEntriesService.incrementItemsEntries(
+      tenantId,
+      oldSaleInvoice.entries,
+    );
+  }
+
+  /**
+   * Handle increment/decrement the different items quantity once the sale invoice be edited.
+   */
+  @On(events.saleInvoice.onEdited)
+  public async handleChangeSaleInvoiceItemsQuantityOnEdit({ tenantId, saleInvoice, oldSaleInvoice }) {
+    await this.itemsEntriesService.changeItemsQuantity(
+      tenantId,
+      saleInvoice.entries.map((entry) => ({
+        ...entry,
+        quantity: entry.quantity * -1,
+      })),
+      oldSaleInvoice.entries.map((entry) => ({
+        ...entry,
+        quantity: entry.quantity * -1,
+      })),
     );
   }
 }

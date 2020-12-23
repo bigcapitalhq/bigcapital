@@ -251,6 +251,7 @@ export default class ItemsService implements IItemsService {
     const storedItem = await Item.query().insertAndFetch({
       ...itemDTO,
       active: defaultTo(itemDTO.active, 1),
+      quantityOnHand: itemDTO.type === 'inventory' ? 0 : null,
     });
     this.logger.info('[items] item inserted successfully.', {
       tenantId,

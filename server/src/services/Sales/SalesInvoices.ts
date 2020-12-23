@@ -1,17 +1,14 @@
 import { Service, Inject } from 'typedi';
-import { omit, sumBy, pick, map } from 'lodash';
+import { omit, sumBy, map } from 'lodash';
 import moment from 'moment';
-import uniqid from 'uniqid';
 import {
   EventDispatcher,
   EventDispatcherInterface,
 } from 'decorators/eventDispatcher';
 import {
   ISaleInvoice,
-  IItemEntry,
   ISaleInvoiceCreateDTO,
   ISaleInvoiceEditDTO,
-  IInventoryTransaction,
   ISalesInvoicesFilter,
   IPaginationMeta,
   IFilterMeta,
@@ -109,7 +106,8 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
    */
   async getInvoiceOrThrowError(tenantId: number, saleInvoiceId: number) {
     const { SaleInvoice } = this.tenancy.models(tenantId);
-    const saleInvoice = await SaleInvoice.query().findById(saleInvoiceId);
+    const saleInvoice = await SaleInvoice.query().findById(saleInvoiceId)
+      .withGraphFetched('entries');
 
     if (!saleInvoice) {
       throw new ServiceError(ERRORS.SALE_INVOICE_NOT_FOUND);
@@ -355,7 +353,7 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
   /**
    * Records the inventory transactions of the given sale invoice in case
    * the invoice has inventory entries only.
-   * 
+   *
    * @param {number} tenantId - Tenant id.
    * @param {SaleInvoice} saleInvoice - Sale invoice DTO.
    * @param {number} saleInvoiceId - Sale invoice id.
@@ -411,9 +409,9 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
   /**
    * Records the journal entries of the given sale invoice just
    * in case the invoice has no inventory items entries.
-   * 
-   * @param {number} tenantId - 
-   * @param {number} saleInvoiceId 
+   *
+   * @param {number} tenantId -
+   * @param {number} saleInvoiceId
    * @param {boolean} override
    * @return {Promise<void>}
    */
@@ -458,7 +456,7 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
     // Triggers 'onInventoryTransactionsDeleted' event.
     this.eventDispatcher.dispatch(
       events.saleInvoice.onInventoryTransactionsDeleted,
-      { tenantId, saleInvoiceId },
+      { tenantId, saleInvoiceId }
     );
   }
 

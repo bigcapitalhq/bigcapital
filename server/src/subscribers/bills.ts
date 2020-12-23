@@ -4,6 +4,7 @@ import events from 'subscribers/events';
 import TenancyService from 'services/Tenancy/TenancyService';
 import BillsService from 'services/Purchases/Bills';
 import JournalPosterService from 'services/Sales/JournalPosterService';
+import ItemsEntriesService from 'services/Items/ItemsEntriesService';
 
 @EventSubscriber()
 export default class BillSubscriber {
@@ -11,6 +12,7 @@ export default class BillSubscriber {
   billsService: BillsService;
   logger: any;
   journalPosterService: JournalPosterService;
+  itemsEntriesService: ItemsEntriesService;
 
   /**
    * Constructor method.
@@ -20,6 +22,7 @@ export default class BillSubscriber {
     this.billsService = Container.get(BillsService);
     this.logger = Container.get('logger');
     this.journalPosterService = Container.get(JournalPosterService);
+    this.itemsEntriesService = Container.get(ItemsEntriesService);
   }
 
   /**
@@ -118,7 +121,7 @@ export default class BillSubscriber {
     this.billsService.recordInventoryTransactions(
       tenantId,
       bill.id,
-      bill.billDate,
+      bill.billDate
     );
   }
 
@@ -127,12 +130,14 @@ export default class BillSubscriber {
    */
   @On(events.bill.onEdited)
   async handleOverwritingInventoryTransactions({ tenantId, bill }) {
-    this.logger.info('[bill] overwriting the inventory transactions.', { tenantId });
+    this.logger.info('[bill] overwriting the inventory transactions.', {
+      tenantId,
+    });
     this.billsService.recordInventoryTransactions(
       tenantId,
       bill.id,
       bill.billDate,
-      true,
+      true
     );
   }
 
@@ -141,11 +146,11 @@ export default class BillSubscriber {
    */
   @On(events.bill.onDeleted)
   async handleRevertInventoryTransactions({ tenantId, billId }) {
-    this.logger.info('[bill] reverting the bill inventory transactions', { tenantId, billId });
-    this.billsService.revertInventoryTransactions(
+    this.logger.info('[bill] reverting the bill inventory transactions', {
       tenantId,
       billId,
-    );
+    });
+    this.billsService.revertInventoryTransactions(tenantId, billId);
   }
 
   /**
@@ -155,11 +160,47 @@ export default class BillSubscriber {
   @On(events.bill.onInventoryTransactionsCreated)
   public async handleComputeItemsCosts({ tenantId, billId }) {
     this.logger.info('[bill] trying to compute the bill items cost.', {
-      tenantId, billId,
-    });    
-    await this.billsService.scheduleComputeBillItemsCost(
       tenantId,
       billId,
+    });
+    await this.billsService.scheduleComputeBillItemsCost(tenantId, billId);
+  }
+
+  /**
+   * Increments the sale invoice items once the invoice created.
+   */
+  @On(events.bill.onCreated)
+  public async handleDecrementSaleInvoiceItemsQuantity({ tenantId, bill }) {
+    await this.itemsEntriesService.incrementItemsEntries(
+      tenantId,
+      bill.entries
+    );
+  }
+
+  /**
+   * Decrements the sale invoice items once the invoice deleted.
+   */
+  @On(events.bill.onDeleted)
+  public async handleIncrementSaleInvoiceItemsQuantity({ tenantId, oldBill }) {
+    await this.itemsEntriesService.decrementItemsQuantity(
+      tenantId,
+      oldBill.entries
+    );
+  }
+
+  /**
+   * Handle increment/decrement the different items quantity once the sale invoice be edited.
+   */
+  @On(events.bill.onEdited)
+  public async handleChangeSaleInvoiceItemsQuantityOnEdit({
+    tenantId,
+    bill,
+    oldBill,
+  }) {
+    await this.itemsEntriesService.changeItemsQuantity(
+      tenantId,
+      bill.entries,
+      oldBill.entries
     );
   }
 }
