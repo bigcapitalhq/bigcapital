@@ -25,6 +25,7 @@ export default class ItemsController extends BaseController {
 
     router.post('/', [
       ...this.validateItemSchema,
+      ...this.validateNewItemSchema,
     ],
       this.validationResult,
       asyncMiddleware(this.newItem.bind(this)),
@@ -88,6 +89,17 @@ export default class ItemsController extends BaseController {
       this.handlerServiceErrors,
     );
     return router;
+  }
+
+  /**
+   * New item validation schema.
+   */
+  get validateNewItemSchema(): ValidationChain[] {
+    return [
+      check('opening_quantity').default(0).isInt({ min: 0 }).toInt(),
+      check('opening_cost').optional({ nullable: true }).isFloat({ min: 0 }).toFloat(),
+      check('opening_date').optional({ nullable: true }).isISO8601(),
+    ];
   }
 
   /**

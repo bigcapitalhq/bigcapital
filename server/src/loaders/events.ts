@@ -14,3 +14,4 @@ import 'subscribers/paymentReceives';
 import 'subscribers/saleEstimates';
 import 'subscribers/saleReceipts';
 import 'subscribers/inventory';
+import 'subscribers/items';

@@ -127,20 +127,38 @@ export default class InventoryService {
     inventoryEntries: IInventoryTransaction[],
     deleteOld: boolean,
   ): Promise<void> {
+    inventoryEntries.forEach(async (entry: IInventoryTransaction) => {
+      await this.recordInventoryTransaction(
+        tenantId,
+        entry,
+        deleteOld,
+      );
+    });
+  }
+
+  /**
+   * 
+   * @param {number} tenantId 
+   * @param {IInventoryTransaction} inventoryEntry 
+   * @param {boolean} deleteOld 
+   */
+  async recordInventoryTransaction(
+    tenantId: number,
+    inventoryEntry: IInventoryTransaction,
+    deleteOld: boolean = false,
+  ) {
     const { InventoryTransaction, Item } = this.tenancy.models(tenantId);
 
-    inventoryEntries.forEach(async (entry: any) => {
-      if (deleteOld) {
-        await this.deleteInventoryTransactions(
-          tenantId,
-          entry.transactionId,
-          entry.transactionType,
-        );
-      }
-      await InventoryTransaction.query().insert({
-        ...entry,
-        lotNumber: entry.lotNumber,
-      });
+    if (deleteOld) {
+      await this.deleteInventoryTransactions(
+        tenantId,
+        inventoryEntry.transactionId,
+        inventoryEntry.transactionType,
+      );
+    }
+    await InventoryTransaction.query().insert({
+      ...inventoryEntry,
+      lotNumber: inventoryEntry.lotNumber,
     });
   }
 

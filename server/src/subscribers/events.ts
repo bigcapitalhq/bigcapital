@@ -168,7 +168,7 @@ export default {
   /**
    * Items service.
    */
-  items: {
+  item: {
     onCreated: 'onItemCreated',
     onEdited: 'onItemEdited',
     onDeleted: 'onItemDeleted',

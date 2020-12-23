@@ -1,9 +1,15 @@
 import { defaultTo, difference } from 'lodash';
 import { Service, Inject } from 'typedi';
+import {
+  EventDispatcher,
+  EventDispatcherInterface,
+} from 'decorators/eventDispatcher';
+import events from 'subscribers/events';
 import { IItemsFilter, IItemsService, IItemDTO, IItem } from 'interfaces';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import TenancyService from 'services/Tenancy/TenancyService';
 import { ServiceError } from 'exceptions';
+import InventoryService from 'services/Inventory/Inventory';
 
 const ERRORS = {
   NOT_FOUND: 'NOT_FOUND',
@@ -31,6 +37,12 @@ export default class ItemsService implements IItemsService {
 
   @Inject('logger')
   logger: any;
+
+  @Inject()
+  inventoryService: InventoryService;
+
+  @EventDispatcher()
+  eventDispatcher: EventDispatcherInterface;
 
   /**
    * Retrieve item details or throw not found error.
@@ -248,17 +260,55 @@ export default class ItemsService implements IItemsService {
         itemDTO.inventoryAccountId
       );
     }
-    const storedItem = await Item.query().insertAndFetch({
+    const item = await Item.query().insertAndFetch({
       ...itemDTO,
       active: defaultTo(itemDTO.active, 1),
-      quantityOnHand: itemDTO.type === 'inventory' ? 0 : null,
+      quantityOnHand:
+        itemDTO.type === 'inventory'
+          ? defaultTo(itemDTO.openingQuantity, 0)
+          : null,
     });
     this.logger.info('[items] item inserted successfully.', {
       tenantId,
       itemDTO,
     });
+    // Triggers `onItemCreated` event.
+    await this.eventDispatcher.dispatch(events.item.onCreated, {
+      tenantId,
+      item,
+      itemId: item.id,
+    });
+    return item;
+  }
 
-    return storedItem;
+  /**
+   * Records the opening items inventory transaction.
+   * @param {number} tenantId
+   * @param itemId
+   * @param openingQuantity
+   * @param openingCost
+   * @param openingDate
+   */
+  public async recordOpeningItemsInventoryTransaction(
+    tenantId: number,
+    itemId: number,
+    openingQuantity: number,
+    openingCost: number,
+    openingDate: Date
+  ): Promise<void> {
+    // Gets the next inventory lot number.
+    const lotNumber = this.inventoryService.getNextLotNumber(tenantId);
+
+    await this.inventoryService.recordInventoryTransaction(tenantId, {
+      date: openingDate,
+      quantity: openingQuantity,
+      rate: openingCost,
+      direction: 'IN',
+      transactionType: 'OpeningItem',
+      itemId,
+      lotNumber,
+    });
+    await this.inventoryService.incrementNextLotNumber(tenantId);
   }
 
   /**

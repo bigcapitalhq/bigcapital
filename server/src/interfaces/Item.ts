@@ -21,6 +21,11 @@ export interface IItem{
   purchaseDescription: string,
 
   quantityOnHand: number,
+
+  openingQuantity: number,
+  openingCost: number,
+  openingDate: Date,
+
   note: string,
   active: boolean,
 
@@ -52,6 +57,11 @@ export interface IItemDTO {
   purchaseDescription: string,
 
   quantityOnHand: number,
+
+  openingQuantity?: number,
+  openingCost?: number,
+  openingDate?: Date,
+
   note: string,
   active: boolean,
 

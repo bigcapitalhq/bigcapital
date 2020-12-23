@@ -8,7 +8,7 @@ export interface IInventoryTransaction {
   quantity: number,
   rate: number,
   transactionType: string,
-  transactionId: string,
+  transactionId: number,
   lotNumber: string,
   entryId: number
 };
