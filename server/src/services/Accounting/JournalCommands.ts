@@ -239,7 +239,7 @@ export default class JournalCommands{
       .whereIn('reference_id', Array.isArray(referenceId) ? referenceId : [referenceId])
       .withGraphFetched('account.type');
 
-    this.journal.loadEntries(transactions);
+    this.journal.fromTransactions(transactions);
     this.journal.removeEntries();
   }
 

@@ -12,6 +12,7 @@ import ExpenseEntryRepository from 'repositories/ExpenseEntryRepository';
 import BillRepository from 'repositories/BillRepository';
 import SaleInvoiceRepository from 'repositories/SaleInvoiceRepository';
 import ItemRepository from 'repositories/ItemRepository';
+import InventoryTransactionRepository from 'repositories/InventoryTransactionRepository';
 
 export default (knex, cache) => {
   return {
@@ -29,5 +30,6 @@ export default (knex, cache) => {
     billRepository: new BillRepository(knex, cache),
     saleInvoiceRepository: new SaleInvoiceRepository(knex, cache),
     itemRepository: new ItemRepository(knex, cache),
+    inventoryTransactionRepository: new InventoryTransactionRepository(knex, cache),
   };
 };

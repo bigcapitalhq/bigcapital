@@ -1,5 +1,5 @@
 import { Service, Inject } from 'typedi';
-import { omit, sumBy, map } from 'lodash';
+import { omit, sumBy } from 'lodash';
 import moment from 'moment';
 import {
   EventDispatcher,
@@ -106,7 +106,8 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
    */
   async getInvoiceOrThrowError(tenantId: number, saleInvoiceId: number) {
     const { SaleInvoice } = this.tenancy.models(tenantId);
-    const saleInvoice = await SaleInvoice.query().findById(saleInvoiceId)
+    const saleInvoice = await SaleInvoice.query()
+      .findById(saleInvoiceId)
       .withGraphFetched('entries');
 
     if (!saleInvoice) {
@@ -183,7 +184,6 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
       tenantId,
       saleInvoiceDTO.entries
     );
-
     // Validate items should be sellable items.
     await this.itemsEntriesService.validateNonSellableEntriesItems(
       tenantId,
@@ -227,7 +227,6 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
       tenantId,
       saleInvoiceId
     );
-
     // Transform DTO object to model object.
     const saleInvoiceObj = this.transformDTOToModel(
       tenantId,
@@ -325,10 +324,17 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
   ): Promise<void> {
     const { SaleInvoice, ItemEntry } = this.tenancy.models(tenantId);
 
+    // Retrieve the given sale invoice with associated entries or throw not found error.
     const oldSaleInvoice = await this.getInvoiceOrThrowError(
       tenantId,
       saleInvoiceId
     );
+    // Triggers `onSaleInvoiceDelete` event.
+    await this.eventDispatcher.dispatch(events.saleInvoice.onDelete, {
+      tenantId,
+      saleInvoice: oldSaleInvoice,
+      saleInvoiceId,
+    });
     // Unlink the converted sale estimates from the given sale invoice.
     await this.saleEstimatesService.unlinkConvertedEstimateFromInvoice(
       tenantId,
@@ -448,6 +454,14 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
     tenantId: number,
     saleInvoiceId: number
   ): Promise<void> {
+    const { inventoryTransactionRepository } = this.tenancy.repositories(tenantId);
+
+    // Retrieve the inventory transactions of the given sale invoice.
+    const oldInventoryTransactions = await inventoryTransactionRepository.find({
+      transactionId: saleInvoiceId,
+      transactionType: 'SaleInvoice',
+    });
+    // Delete the inventory transaction of the given sale invoice.
     await this.inventoryService.deleteInventoryTransactions(
       tenantId,
       saleInvoiceId,
@@ -456,7 +470,7 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
     // Triggers 'onInventoryTransactionsDeleted' event.
     this.eventDispatcher.dispatch(
       events.saleInvoice.onInventoryTransactionsDeleted,
-      { tenantId, saleInvoiceId }
+      { tenantId, saleInvoiceId, oldInventoryTransactions }
     );
   }
 
@@ -480,40 +494,6 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
       throw new ServiceError(ERRORS.SALE_INVOICE_NOT_FOUND);
     }
     return saleInvoice;
-  }
-
-  /**
-   * Schedules compute sale invoice items cost based on each item
-   * cost method.
-   * @param  {ISaleInvoice} saleInvoice
-   * @return {Promise}
-   */
-  async scheduleComputeInvoiceItemsCost(
-    tenantId: number,
-    saleInvoiceId: number,
-    override?: boolean
-  ) {
-    const { SaleInvoice, Item } = this.tenancy.models(tenantId);
-
-    // Retrieve the sale invoice with associated entries.
-    const saleInvoice: ISaleInvoice = await SaleInvoice.query()
-      .findById(saleInvoiceId)
-      .withGraphFetched('entries');
-
-    // Retrieve the inventory items that associated to the sale invoice entries.
-    const inventoryItems = await Item.query()
-      .whereIn('id', map(saleInvoice.entries, 'itemId'))
-      .where('type', 'inventory');
-
-    const inventoryItemsIds = map(inventoryItems, 'id');
-
-    if (inventoryItemsIds.length > 0) {
-      await this.scheduleComputeItemsCost(
-        tenantId,
-        inventoryItemsIds,
-        saleInvoice.invoiceDate
-      );
-    }
   }
 
   /**

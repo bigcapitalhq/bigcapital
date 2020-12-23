@@ -79,6 +79,7 @@ export default {
   saleInvoice: {
     onCreated: 'onSaleInvoiceCreated',
     onEdited: 'onSaleInvoiceEdited',
+    onDelete: 'onSaleInvoiceDelete',
     onDeleted: 'onSaleInvoiceDeleted',
     onBulkDelete: 'onSaleInvoiceBulkDeleted',
     onPublished: 'onSaleInvoicePublished',
@@ -127,7 +128,8 @@ export default {
     onDeleted: 'onBillDeleted',
     onBulkDeleted: 'onBillBulkDeleted',
     onPublished: 'onBillPublished',
-    onInventoryTransactionsCreated: 'onBillInventoryTransactionsCreated'
+    onInventoryTransactionsCreated: 'onBillInventoryTransactionsCreated',
+    onInventoryTransactionsDeleted: 'onBillInventoryTransactionsDeleted'
   },
 
   /**
@@ -163,6 +165,9 @@ export default {
     onOpeningBalanceChanged: 'onOpeingBalanceChanged',
   },
 
+  /**
+   * Items service.
+   */
   items: {
     onCreated: 'onItemCreated',
     onEdited: 'onItemEdited',

@@ -1,4 +1,5 @@
 import { Container } from 'typedi';
+import { head, map } from 'lodash';
 import { On, EventSubscriber } from 'event-dispatch';
 import events from 'subscribers/events';
 import TenancyService from 'services/Tenancy/TenancyService';
@@ -89,7 +90,7 @@ export default class SaleInvoiceSubscriber {
     await this.saleInvoicesService.recordInventoryTranscactions(
       tenantId,
       saleInvoice.id,
-      saleInvoice.invoiceDate,
+      saleInvoice.invoiceDate
     );
   }
 
@@ -101,12 +102,12 @@ export default class SaleInvoiceSubscriber {
   public async handleWritingNonInventoryEntries({ tenantId, saleInvoice }) {
     await this.saleInvoicesService.recordNonInventoryJournalEntries(
       tenantId,
-      saleInvoice.id,
+      saleInvoice.id
     );
   }
 
   /**
-   * 
+   * Rewriting the inventory transactions once the sale invoice be edited.
    */
   @On(events.saleInvoice.onEdited)
   public async handleRewritingInventoryTransactions({ tenantId, saleInvoice }) {
@@ -117,7 +118,7 @@ export default class SaleInvoiceSubscriber {
       tenantId,
       saleInvoice.id,
       saleInvoice.invoiceDate,
-      true,
+      true
     );
   }
 
@@ -167,14 +168,22 @@ export default class SaleInvoiceSubscriber {
   /**
    * Handles deleting the inventory transactions once the invoice deleted.
    */
-  @On(events.saleInvoice.onDeleted)
-  public async handleDeletingInventoryTransactions({ tenantId, saleInvoiceId }) {
-    this.logger.info('[sale_invoice] trying to revert inventory transactions.', {
-      tenantId, saleInvoiceId,
-    });
+  @On(events.saleInvoice.onDelete)
+  public async handleDeletingInventoryTransactions({
+    tenantId,
+    saleInvoiceId,
+    oldSaleInvoice,
+  }) {
+    this.logger.info(
+      '[sale_invoice] trying to revert inventory transactions.',
+      {
+        tenantId,
+        saleInvoiceId,
+      }
+    );
     await this.saleInvoicesService.revertInventoryTransactions(
       tenantId,
-      saleInvoiceId,
+      saleInvoiceId
     );
   }
 
@@ -182,24 +191,54 @@ export default class SaleInvoiceSubscriber {
    * Schedules compute invoice items cost job.
    */
   @On(events.saleInvoice.onInventoryTransactionsCreated)
-  public async handleComputeItemsCosts({ tenantId, saleInvoiceId }) {
-    this.logger.info('[sale_invoice] trying to compute the invoice items cost.', {
-      tenantId, saleInvoiceId,
-    });
-    await this.saleInvoicesService.scheduleComputeInvoiceItemsCost(
+  public async handleComputeCostsOnInventoryTransactionsCreated({
+    tenantId,
+    saleInvoiceId,
+  }) {
+    this.logger.info(
+      '[sale_invoice] trying to compute the invoice items cost.',
+      {
+        tenantId,
+        saleInvoiceId,
+      }
+    );
+    await this.saleInvoicesService.scheduleComputeCostByInvoiceId(
       tenantId,
-      saleInvoiceId,
+      saleInvoiceId
     );
   }
 
   /**
-   * Increments the sale invoice items once the invoice created. 
+   * Schedules compute items cost once the inventory transactions deleted.
+   */
+  @On(events.saleInvoice.onInventoryTransactionsDeleted)
+  public async handleComputeCostsOnInventoryTransactionsDeleted({
+    tenantId,
+    saleInvoiceId,
+    oldInventoryTransactions,
+  }) {
+    const inventoryItemsIds = map(oldInventoryTransactions, 'itemId');
+    const startingDates = map(oldInventoryTransactions, 'date');
+    const startingDate = head(startingDates);
+
+    await this.saleInvoicesService.scheduleComputeCostByItemsIds(
+      tenantId,
+      inventoryItemsIds,
+      startingDate
+    );
+  }
+
+  /**
+   * Increments the sale invoice items once the invoice created.
    */
   @On(events.saleInvoice.onCreated)
-  public async handleDecrementSaleInvoiceItemsQuantity({ tenantId, saleInvoice }) {
+  public async handleDecrementSaleInvoiceItemsQuantity({
+    tenantId,
+    saleInvoice,
+  }) {
     await this.itemsEntriesService.decrementItemsQuantity(
       tenantId,
-      saleInvoice.entries,
+      saleInvoice.entries
     );
   }
 
@@ -207,10 +246,13 @@ export default class SaleInvoiceSubscriber {
    * Decrements the sale invoice items once the invoice deleted.
    */
   @On(events.saleInvoice.onDeleted)
-  public async handleIncrementSaleInvoiceItemsQuantity({ tenantId, oldSaleInvoice }) {
+  public async handleIncrementSaleInvoiceItemsQuantity({
+    tenantId,
+    oldSaleInvoice,
+  }) {
     await this.itemsEntriesService.incrementItemsEntries(
       tenantId,
-      oldSaleInvoice.entries,
+      oldSaleInvoice.entries
     );
   }
 
@@ -218,7 +260,11 @@ export default class SaleInvoiceSubscriber {
    * Handle increment/decrement the different items quantity once the sale invoice be edited.
    */
   @On(events.saleInvoice.onEdited)
-  public async handleChangeSaleInvoiceItemsQuantityOnEdit({ tenantId, saleInvoice, oldSaleInvoice }) {
+  public async handleChangeSaleInvoiceItemsQuantityOnEdit({
+    tenantId,
+    saleInvoice,
+    oldSaleInvoice,
+  }) {
     await this.itemsEntriesService.changeItemsQuantity(
       tenantId,
       saleInvoice.entries.map((entry) => ({
@@ -228,7 +274,7 @@ export default class SaleInvoiceSubscriber {
       oldSaleInvoice.entries.map((entry) => ({
         ...entry,
         quantity: entry.quantity * -1,
-      })),
+      }))
     );
   }
 }

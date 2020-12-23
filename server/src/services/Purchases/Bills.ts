@@ -392,7 +392,7 @@ export default class BillsService extends SalesInvoicesCost {
       billId,
       'IN',
       billDate,
-      lotNumber,
+      lotNumber
     );
     // Records the inventory transactions.
     await this.inventoryService.recordInventoryTransactions(
@@ -418,10 +418,24 @@ export default class BillsService extends SalesInvoicesCost {
    * @return {Promise<void>}
    */
   public async revertInventoryTransactions(tenantId: number, billId: number) {
+    const { inventoryTransactionRepository } = this.tenancy.repositories(
+      tenantId
+    );
+
+    // Retrieve the inventory transactions of the given sale invoice.
+    const oldInventoryTransactions = await inventoryTransactionRepository.find({
+      transactionId: billId,
+      transactionType: 'Bill',
+    });
     await this.inventoryService.deleteInventoryTransactions(
       tenantId,
       billId,
       'Bill'
+    );
+    // Triggers 'onInventoryTransactionsDeleted' event.
+    this.eventDispatcher.dispatch(
+      events.bill.onInventoryTransactionsDeleted,
+      { tenantId, billId, oldInventoryTransactions }
     );
   }
 

@@ -1,5 +1,6 @@
 import { Container } from 'typedi';
 import { EventSubscriber, On } from 'event-dispatch';
+import { map, head } from 'lodash';
 import events from 'subscribers/events';
 import TenancyService from 'services/Tenancy/TenancyService';
 import BillsService from 'services/Purchases/Bills';
@@ -163,7 +164,27 @@ export default class BillSubscriber {
       tenantId,
       billId,
     });
-    await this.billsService.scheduleComputeBillItemsCost(tenantId, billId);
+    await this.billsService.scheduleComputeCostByBillId(tenantId, billId);
+  }
+
+  /**
+   * Handles computes items costs once the inventory transactions deleted.
+   */
+  @On(events.bill.onInventoryTransactionsDeleted)
+  public async handleComputeCostsOnInventoryTransactionsDeleted({
+    tenantId,
+    billId,
+    oldInventoryTransactions,
+  }) {
+    const inventoryItemsIds = map(oldInventoryTransactions, 'itemId');
+    const startingDates = map(oldInventoryTransactions, 'date');
+    const startingDate = head(startingDates);
+
+    await this.billsService.scheduleComputeCostByItemsIds(
+      tenantId,
+      inventoryItemsIds,
+      startingDate
+    );
   }
 
   /**
