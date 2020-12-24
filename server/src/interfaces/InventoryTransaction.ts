@@ -10,7 +10,9 @@ export interface IInventoryTransaction {
   transactionType: string,
   transactionId: number,
   lotNumber: string,
-  entryId: number
+  entryId: number,
+  createdAt?: Date,
+  updatedAt?: Date,
 };
 
 export interface IInventoryLotCost {
@@ -18,11 +20,12 @@ export interface IInventoryLotCost {
   date: Date,
   direction: string,
   itemId: number,
+  quantity: number,
   rate: number,
   remaining: number,
   cost: number,
   lotNumber: string|number,
   transactionType: string,
-  transactionId: string,
+  transactionId: number,
   entryId: number
 }

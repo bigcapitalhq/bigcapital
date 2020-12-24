@@ -1,4 +1,4 @@
-import { defaultTo, difference } from 'lodash';
+import { defaultTo, difference, omit } from 'lodash';
 import { Service, Inject } from 'typedi';
 import {
   EventDispatcher,
@@ -283,11 +283,11 @@ export default class ItemsService implements IItemsService {
 
   /**
    * Records the opening items inventory transaction.
-   * @param {number} tenantId
-   * @param itemId
-   * @param openingQuantity
-   * @param openingCost
-   * @param openingDate
+   * @param {number} tenantId -
+   * @param itemId -
+   * @param openingQuantity -
+   * @param openingCost -
+   * @param openingDate -
    */
   public async recordOpeningItemsInventoryTransaction(
     tenantId: number,
@@ -299,14 +299,24 @@ export default class ItemsService implements IItemsService {
     // Gets the next inventory lot number.
     const lotNumber = this.inventoryService.getNextLotNumber(tenantId);
 
-    await this.inventoryService.recordInventoryTransaction(tenantId, {
-      date: openingDate,
-      quantity: openingQuantity,
-      rate: openingCost,
-      direction: 'IN',
-      transactionType: 'OpeningItem',
-      itemId,
-      lotNumber,
+    // Records the inventory transaction.
+    const inventoryTransaction = await this.inventoryService.recordInventoryTransaction(
+      tenantId,
+      {
+        date: openingDate,
+        quantity: openingQuantity,
+        rate: openingCost,
+        direction: 'IN',
+        transactionType: 'OpeningItem',
+        itemId,
+        lotNumber,
+      }
+    );
+    // Records the inventory cost lot transaction.
+    await this.inventoryService.recordInventoryCostLotTransaction(tenantId, {
+      ...omit(inventoryTransaction, ['updatedAt', 'createdAt']),
+      cost: openingQuantity * openingCost,
+      remaining: 0,
     });
     await this.inventoryService.incrementNextLotNumber(tenantId);
   }

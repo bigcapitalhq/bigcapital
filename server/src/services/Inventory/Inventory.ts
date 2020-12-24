@@ -4,7 +4,7 @@ import {
   EventDispatcher,
   EventDispatcherInterface,
 } from 'decorators/eventDispatcher';
-import { IInventoryTransaction, IItem, IItemEntry } from 'interfaces'
+import { IInventoryLotCost, IInventoryTransaction, IItem, IItemEntry } from 'interfaces'
 import InventoryAverageCost from 'services/Inventory/InventoryAverageCost';
 import InventoryCostLotTracker from 'services/Inventory/InventoryCostLotTracker';
 import TenancyService from 'services/Tenancy/TenancyService';
@@ -146,7 +146,7 @@ export default class InventoryService {
     tenantId: number,
     inventoryEntry: IInventoryTransaction,
     deleteOld: boolean = false,
-  ) {
+  ): Promise<IInventoryTransaction> {
     const { InventoryTransaction, Item } = this.tenancy.models(tenantId);
 
     if (deleteOld) {
@@ -156,7 +156,7 @@ export default class InventoryService {
         inventoryEntry.transactionType,
       );
     }
-    await InventoryTransaction.query().insert({
+    return InventoryTransaction.query().insert({
       ...inventoryEntry,
       lotNumber: inventoryEntry.lotNumber,
     });
@@ -180,6 +180,23 @@ export default class InventoryService {
       .where('transaction_type', transactionType)
       .where('transaction_id', transactionId)
       .delete();
+  }
+
+  /**
+   * Records the inventory cost lot transaction.
+   * @param {number} tenantId 
+   * @param {IInventoryLotCost} inventoryLotEntry 
+   * @return {Promise<IInventoryLotCost>}
+   */
+  async recordInventoryCostLotTransaction(
+    tenantId: number,
+    inventoryLotEntry: IInventoryLotCost,
+  ): Promise<void> {
+    const { InventoryCostLotTracker } = this.tenancy.models(tenantId);
+    
+    return InventoryCostLotTracker.query().insert({
+      ...inventoryLotEntry,
+    });
   }
 
   /**
