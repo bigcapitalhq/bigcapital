@@ -1,18 +1,37 @@
 import React from 'react';
 import { FastField, ErrorMessage } from 'formik';
-import { FormGroup, InputGroup, Position } from '@blueprintjs/core';
+import {
+  FormGroup,
+  InputGroup,
+  ControlGroup,
+  Position,
+} from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
-import { AccountsSelectList, Col, Row, Hint } from 'components';
+import {
+  AccountsSelectList,
+  MoneyInputGroup,
+  InputPrependText,
+  Col,
+  Row,
+  Hint,
+} from 'components';
 import { CLASSES } from 'common/classes';
 import { FormattedMessage as T } from 'react-intl';
 import classNames from 'classnames';
 import withAccounts from 'containers/Accounts/withAccounts';
-import { compose, tansformDateValue, momentFormatter, inputIntent } from 'utils';
+import withSettings from 'containers/Settings/withSettings';
+import {
+  compose,
+  tansformDateValue,
+  momentFormatter,
+  inputIntent,
+  handleDateChange,
+} from 'utils';
 
 /**
  * Item form inventory sections.
  */
-function ItemFormInventorySection({ accountsList }) {
+function ItemFormInventorySection({ accountsList, baseCurrency }) {
   return (
     <div class="page-form__section page-form__section--inventory">
       <h3>
@@ -47,23 +66,23 @@ function ItemFormInventorySection({ accountsList }) {
             )}
           </FastField>
 
+          {/*------------- Opening quantity ------------- */}
           <FastField name={'opening_quantity'}>
-            {({ field, field: { value }, meta: { touched, error } }) => (
+            {({ field, meta: { touched, error } }) => (
               <FormGroup
                 label={<T id={'opening_quantity'} />}
                 labelInfo={<Hint />}
                 className={'form-group--opening_quantity'}
                 intent={inputIntent({ error, touched })}
+                helperText={<ErrorMessage name={'opening_quantity'} />}
                 inline={true}
               >
-                <InputGroup
-                  medium={true}
-                  {...field}
-                />
+                <InputGroup medium={true} {...field} />
               </FormGroup>
             )}
           </FastField>
 
+          {/*------------- Opening date ------------- */}
           <FastField name={'opening_date'}>
             {({ form, field: { value }, meta: { touched, error } }) => (
               <FormGroup
@@ -75,14 +94,16 @@ function ItemFormInventorySection({ accountsList }) {
                   CLASSES.FILL,
                 )}
                 intent={inputIntent({ error, touched })}
+                helperText={<ErrorMessage name={'opening_date'} />}
                 inline={true}
               >
                 <DateInput
                   {...momentFormatter('YYYY/MM/DD')}
                   value={tansformDateValue(value)}
-                  onChange={(value) => {
+                  onChange={handleDateChange((value) => {
                     form.setFieldValue('opening_date', value);
-                  }}
+                  })}
+                  helperText={<ErrorMessage name={'opening_date'} />}
                   popoverProps={{ position: Position.BOTTOM, minimal: true }}
                 />
               </FormGroup>
@@ -90,20 +111,28 @@ function ItemFormInventorySection({ accountsList }) {
           </FastField>
         </Col>
 
+        {/*------------- Opening cost ------------- */}
         <Col xs={6}>
-          <FastField name={'opening_average_rate'}>
-            {({ field, field: { value }, meta: { touched, error } }) => (
+          <FastField name={'opening_cost'}>
+            {({ form, field: { value }, meta: { touched, error } }) => (
               <FormGroup
-                label={'Opening average rate'}
+                label={<T id={'opening_average_cost'} />}
                 labelInfo={<Hint />}
-                className={'form-group--opening_average_rate'}
+                className={'form-group--opening_cost'}
                 intent={inputIntent({ error, touched })}
+                helperText={<ErrorMessage name={'opening_cost'} />}
                 inline={true}
               >
-                <InputGroup
-                  medium={true}
-                  {...field}
-                />
+                <ControlGroup>
+                  <InputPrependText text={baseCurrency} />
+                  <MoneyInputGroup
+                    value={value}
+                    inputGroupProps={{ fill: true }}
+                    onChange={(unformattedValue) => {
+                      form.setFieldValue('opening_cost', unformattedValue);
+                    }}
+                  />
+                </ControlGroup>
               </FormGroup>
             )}
           </FastField>
@@ -116,5 +145,8 @@ function ItemFormInventorySection({ accountsList }) {
 export default compose(
   withAccounts(({ accountsList }) => ({
     accountsList,
+  })),
+  withSettings(({ organizationSettings }) => ({
+    baseCurrency: organizationSettings?.baseCurrency,
   })),
 )(ItemFormInventorySection);

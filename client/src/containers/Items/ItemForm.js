@@ -6,6 +6,7 @@ import { useHistory } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames';
 import { defaultTo } from 'lodash';
+import moment from 'moment';
 
 import { CLASSES } from 'common/classes';
 import AppToaster from 'components/AppToaster';
@@ -42,6 +43,9 @@ const defaultInitialValues = {
   category_id: '',
   sellable: 1,
   purchasable: true,
+  opening_quantity: '',
+  opening_cost: '',
+  opening_date: moment(new Date()).format('YYYY-MM-DD'),
 };
 
 /**

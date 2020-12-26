@@ -57,7 +57,6 @@ function ItemFormBody({ accountsList, baseCurrency }) {
                   <InputPrependText text={baseCurrency} />
                   <MoneyInputGroup
                     value={value}
-                    prefix={'$'}
                     inputGroupProps={{ fill: true }}
                     disabled={!form.values.sellable}
                     onChange={(unformattedValue) => {
@@ -132,7 +131,6 @@ function ItemFormBody({ accountsList, baseCurrency }) {
                   <InputPrependText text={baseCurrency} />
                   <MoneyInputGroup
                     value={value}
-                    prefix={'$'}
                     inputGroupProps={{ medium: true }}
                     disabled={!form.values.purchasable}
                     onChange={(unformattedValue) => {
