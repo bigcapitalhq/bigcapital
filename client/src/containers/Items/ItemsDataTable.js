@@ -186,7 +186,7 @@ function ItemsDataTable({
       {
         Header: formatMessage({ id: 'cost_price' }),
         accessor: (row) =>
-          !isBlank(row.sell_price) ? (
+          !isBlank(row.cost_price) ? (
             <Money amount={row.cost_price} currency={'USD'} />
           ) : (
             ''
