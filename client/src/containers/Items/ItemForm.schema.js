@@ -70,6 +70,7 @@ const Schema = Yup.object().shape({
     otherwise: Yup.number().nullable(),
   }),
   opening_quantity: Yup.number()
+    .integer()
     .min(1)
     .nullable()
     .label(formatMessage({ id: 'opening_quantity_' })),
