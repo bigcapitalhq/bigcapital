@@ -100,6 +100,7 @@ export default {
   inventory_information: 'Inventory Information',
   inventory_account: 'Inventory Account',
   opening_quantity: 'Opening quantity',
+  opening_cost: 'Opening cost',
   save: 'Save',
   save_as_draft: 'Save as Draft',
   active: 'Active',
@@ -930,4 +931,8 @@ export default {
   activate_item: 'Activate Item',
   all_payments:'All Payments',
   hide_customizer: 'Hide Customizer',
+  opening_quantity_: 'Opening quantity',
+  opening_average_cost: 'Opening average cost',
+  opening_cost_: 'Opening cost ',
+  opening_date_: 'Opening date ',
 };

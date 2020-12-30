@@ -124,6 +124,14 @@ function ItemsDataTable({
     ],
   );
 
+  const quantityonHandCell = ({ value: quantity }) => {
+    return quantity <= 0 ? (
+      <span className={'quantity_on_hand'}>{quantity}</span>
+    ) : (
+      <span>{quantity}</span>
+    );
+  };
+
   const handleRowContextMenu = useCallback(
     (cell) => {
       return actionMenuList(cell.row.original);
@@ -178,7 +186,7 @@ function ItemsDataTable({
       {
         Header: formatMessage({ id: 'cost_price' }),
         accessor: (row) =>
-          !isBlank(row.sell_price) ? (
+          !isBlank(row.cost_price) ? (
             <Money amount={row.cost_price} currency={'USD'} />
           ) : (
             ''
@@ -189,13 +197,7 @@ function ItemsDataTable({
       {
         Header: formatMessage({ id: 'quantity_on_hand' }),
         accessor: 'quantity_on_hand',
-        className: 'quantity_on_hand',
-        width: 140,
-      },
-      {
-        Header: formatMessage({ id: 'average_rate' }),
-        accessor: 'average_cost_rate',
-        className: 'average_cost_rate',
+        Cell: quantityonHandCell,
         width: 140,
       },
       {
