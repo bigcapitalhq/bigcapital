@@ -9,10 +9,7 @@ import {
   IJournalPoster,
   IAccountType,
 } from 'interfaces';
-import {
-  dateRangeCollection,
-  flatToNestedArray,
-} from 'utils';
+import { dateRangeCollection, flatToNestedArray } from 'utils';
 import BalanceSheetStructure from 'data/BalanceSheetStructure';
 import FinancialSheet from '../FinancialSheet';
 
@@ -37,7 +34,7 @@ export default class BalanceSheetStatement extends FinancialSheet {
     query: IBalanceSheetQuery,
     accounts: IAccount & { type: IAccountType }[],
     journalFinancial: IJournalPoster,
-    baseCurrency: string,
+    baseCurrency: string
   ) {
     super();
 
@@ -48,9 +45,8 @@ export default class BalanceSheetStatement extends FinancialSheet {
     this.journalFinancial = journalFinancial;
     this.baseCurrency = baseCurrency;
 
-    this.comparatorDateType = query.displayColumnsType === 'total'
-      ? 'day'
-      : query.displayColumnsBy;
+    this.comparatorDateType =
+      query.displayColumnsType === 'total' ? 'day' : query.displayColumnsBy;
 
     this.initDateRangeCollection();
   }
@@ -73,20 +69,24 @@ export default class BalanceSheetStatement extends FinancialSheet {
    * @param {IBalanceSheetSection[]} sections -
    * @return {IBalanceSheetAccountTotal}
    */
-  private getSectionTotal(sections: IBalanceSheetSection[]): IBalanceSheetAccountTotal {
+  private getSectionTotal(
+    sections: IBalanceSheetSection[]
+  ): IBalanceSheetAccountTotal {
     const amount = sumBy(sections, 'total.amount');
     const formattedAmount = this.formatNumber(amount);
     const currencyCode = this.baseCurrency;
 
     return { amount, formattedAmount, currencyCode };
-  };
+  }
 
   /**
    * Retrieve accounts total periods.
-   * @param {IBalanceSheetAccount[]} sections - 
+   * @param {IBalanceSheetAccount[]} sections -
    * @return {IBalanceSheetAccountTotal[]}
    */
-  private getSectionTotalPeriods(sections: IBalanceSheetAccount[]): IBalanceSheetAccountTotal[] {
+  private getSectionTotalPeriods(
+    sections: Array<IBalanceSheetAccount|IBalanceSheetSection>
+  ): IBalanceSheetAccountTotal[] {
     return this.dateRangeSet.map((date, index) => {
       const amount = sumBy(sections, `totalPeriods[${index}].amount`);
       const formattedAmount = this.formatNumber(amount);
@@ -98,10 +98,12 @@ export default class BalanceSheetStatement extends FinancialSheet {
 
   /**
    * Gets the date range set from start to end date.
-   * @param {IAccount} account 
+   * @param {IAccount} account
    * @return {IBalanceSheetAccountTotal[]}
    */
-  private getAccountTotalPeriods (account: IAccount): IBalanceSheetAccountTotal[] {
+  private getAccountTotalPeriods(
+    account: IAccount
+  ): IBalanceSheetAccountTotal[] {
     return this.dateRangeSet.map((date) => {
       const amount = this.journalFinancial.getAccountBalance(
         account.id,
@@ -114,29 +116,30 @@ export default class BalanceSheetStatement extends FinancialSheet {
       return { amount, formattedAmount, currencyCode, date };
     });
   }
-  
+
   /**
    * Retrieve account total and total periods with account meta.
-   * @param {IAccount} account -  
+   * @param {IAccount} account -
    * @param {IBalanceSheetQuery} query -
    * @return {IBalanceSheetAccount}
    */
   private balanceSheetAccountMapper(account: IAccount): IBalanceSheetAccount {
     // Calculates the closing balance of the given account in the specific date point.
     const amount = this.journalFinancial.getAccountBalance(
-      account.id, this.query.toDate,
+      account.id,
+      this.query.toDate
     );
     const formattedAmount = this.formatNumber(amount);
 
     // Retrieve all entries that associated to the given account.
-    const entries = this.journalFinancial.getAccountEntries(account.id)
+    const entries = this.journalFinancial.getAccountEntries(account.id);
 
     return {
       ...pick(account, ['id', 'index', 'name', 'code', 'parentAccountId']),
       type: 'account',
       hasTransactions: entries.length > 0,
       // Total date periods.
-      ...this.query.displayColumnsType === 'date_periods' && ({
+      ...(this.query.displayColumnsType === 'date_periods' && {
         totalPeriods: this.getAccountTotalPeriods(account),
       }),
       total: {
@@ -145,7 +148,7 @@ export default class BalanceSheetStatement extends FinancialSheet {
         currencyCode: this.baseCurrency,
       },
     };
-  };
+  }
 
   /**
    * Strcuture accounts related mapper.
@@ -155,10 +158,10 @@ export default class BalanceSheetStatement extends FinancialSheet {
    */
   private structureRelatedAccountsMapper(
     sectionAccountsTypes: string[],
-    accounts: IAccount & { type: IAccountType }[],
+    accounts: IAccount & { type: IAccountType }[]
   ): {
-    children: IBalanceSheetAccount[],
-    total: IBalanceSheetAccountTotal,
+    children: IBalanceSheetAccount[];
+    total: IBalanceSheetAccountTotal;
   } {
     const filteredAccounts = accounts
       // Filter accounts that associated to the section accounts types.
@@ -169,7 +172,7 @@ export default class BalanceSheetStatement extends FinancialSheet {
       // Filter accounts that have no transaction when `noneTransactions` is on.
       .filter(
         (section: IBalanceSheetAccount) =>
-          !(!section.hasTransactions && this.query.noneTransactions),
+          !(!section.hasTransactions && this.query.noneTransactions)
       )
       // Filter accounts that have zero total amount when `noneZero` is on.
       .filter(
@@ -181,10 +184,10 @@ export default class BalanceSheetStatement extends FinancialSheet {
     const totalAmount = sumBy(filteredAccounts, 'total.amount');
 
     return {
-      children: flatToNestedArray(
-        filteredAccounts,
-        { id: 'id', parentId: 'parentAccountId' }
-      ),
+      children: flatToNestedArray(filteredAccounts, {
+        id: 'id',
+        parentId: 'parentAccountId',
+      }),
       total: {
         amount: totalAmount,
         formattedAmount: this.formatNumber(totalAmount),
@@ -196,8 +199,32 @@ export default class BalanceSheetStatement extends FinancialSheet {
           }
         : {}),
     };
-  };
-  
+  }
+
+  /**
+   * Mappes the structure sections.
+   * @param {IBalanceSheetStructureSection} structure 
+   * @param {IAccount} accounts 
+   */
+  private structureSectionMapper(
+    structure: IBalanceSheetStructureSection,
+    accounts: IAccount[]
+  ) {
+    const children = this.balanceSheetStructureWalker(
+      structure.children,
+      accounts
+    );
+    return {
+      children,
+      total: this.getSectionTotal(children),
+      ...(this.query.displayColumnsType === 'date_periods'
+        ? {
+            totalPeriods: this.getSectionTotalPeriods(children),
+          }
+        : {}),
+    };
+  }
+
   /**
    * Balance sheet structure mapper.
    * @param {IBalanceSheetStructureSection} structure -
@@ -205,29 +232,18 @@ export default class BalanceSheetStatement extends FinancialSheet {
    */
   private balanceSheetStructureMapper(
     structure: IBalanceSheetStructureSection,
-    accounts: IAccount & { type: IAccountType }[],
+    accounts: IAccount & { type: IAccountType }[]
   ): IBalanceSheetSection {
     const result = {
       name: structure.name,
       sectionType: structure.sectionType,
       type: structure.type,
-      ...(structure.type === 'accounts_section'
-        ? {
-          ...this.structureRelatedAccountsMapper(
+      ...(structure.type === 'accounts_section')
+        ? this.structureRelatedAccountsMapper(
             structure._accountsTypesRelated,
-            accounts,
-          ),
-        }
-        : (() => {
-          const children = this.balanceSheetStructureWalker(
-            structure.children,
-            accounts,
-          );
-          return {
-            children,
-            total: this.getSectionTotal(children),
-          };
-        })()),
+            accounts
+          )
+        : this.structureSectionMapper(structure, accounts),
     };
     return result;
   }
@@ -239,21 +255,24 @@ export default class BalanceSheetStatement extends FinancialSheet {
    */
   private balanceSheetStructureWalker(
     reportStructure: IBalanceSheetStructureSection[],
-    balanceSheetAccounts: IAccount & { type: IAccountType }[],
+    balanceSheetAccounts: IAccount & { type: IAccountType }[]
   ): IBalanceSheetSection[] {
-    return reportStructure
-      .map((structure: IBalanceSheetStructureSection) =>
-        this.balanceSheetStructureMapper(structure, balanceSheetAccounts)
-      )
-      // Filter the structure sections that have no children.
-      .filter((structure: IBalanceSheetSection) =>
-        structure.children.length > 0 || structure._forceShow
-      );
+    return (
+      reportStructure
+        .map((structure: IBalanceSheetStructureSection) =>
+          this.balanceSheetStructureMapper(structure, balanceSheetAccounts)
+        )
+        // Filter the structure sections that have no children.
+        .filter(
+          (structure: IBalanceSheetSection) =>
+            structure.children.length > 0 || structure._forceShow
+        )
+    );
   }
 
   /**
    * Retrieve date range columns of the given query.
-   * @param {IBalanceSheetQuery} query 
+   * @param {IBalanceSheetQuery} query
    * @return {string[]}
    */
   private dateRangeColumns(): string[] {
@@ -278,7 +297,7 @@ export default class BalanceSheetStatement extends FinancialSheet {
   public reportData(): IBalanceSheetSection[] {
     return this.balanceSheetStructureWalker(
       BalanceSheetStructure,
-      this.accounts,
-    )
+      this.accounts
+    );
   }
 }

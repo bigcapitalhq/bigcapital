@@ -1,106 +1,120 @@
-import React, { useState, useCallback, useMemo } from 'react';
-import { Row, Col } from 'react-grid-system';
-import { momentFormatter } from 'utils';
+import React from 'react';
+import { FastField, ErrorMessage } from 'formik';
+import { HTMLSelect, FormGroup, Intent, Position } from '@blueprintjs/core';
+import moment from 'moment';
+import { Row, Col, Hint } from 'components';
+import { momentFormatter, parseDateRangeQuery } from 'utils';
 import { DateInput } from '@blueprintjs/datetime';
 import { useIntl } from 'react-intl';
-import { HTMLSelect, FormGroup, Intent, Position } from '@blueprintjs/core';
-import { Hint } from 'components';
-import { parseDateRangeQuery } from 'utils';
+import { dateRangeOptions } from 'containers/FinancialStatements/common';
 
-export default function FinancialStatementDateRange({ formik }) {
-  const intl = useIntl();
-  const [reportDateRange, setReportDateRange] = useState('this_year');
-
-  const dateRangeOptions = useMemo(
-    () => [
-      { value: 'today', label: 'Today' },
-      { value: 'this_week', label: 'This Week' },
-      { value: 'this_month', label: 'This Month' },
-      { value: 'this_quarter', label: 'This Quarter' },
-      { value: 'this_year', label: 'This Year' },
-      { value: 'custom', label: 'Custom Range' },
-    ],
-    [],
-  );
-
-  const handleDateChange = useCallback(
-    (name) => (date) => {
-      setReportDateRange('custom');
-      formik.setFieldValue(name, date);
-    },
-    [setReportDateRange, formik],
-  );
-
-  // Handles date range field change.
-  const handleDateRangeChange = useCallback(
-    (e) => {
-      const value = e.target.value;
-      if (value !== 'custom') {
-        const dateRange = parseDateRangeQuery(value);
-        if (dateRange) {
-          formik.setFieldValue('from_date', dateRange.from_date);
-          formik.setFieldValue('to_date', dateRange.to_date);
-        }
-      }
-      setReportDateRange(value);
-    },
-    [formik],
-  );
+/**
+ * Financial statement - Date range select.
+ */
+export default function FinancialStatementDateRange() {
+  const { formatMessage } = useIntl();
 
   return (
     <>
-      <Col width={260}>
-        <FormGroup
-          label={intl.formatMessage({ id: 'report_date_range' })}
-          labelInfo={<Hint />}
-          minimal={true}
-          fill={true}
-        >
-          <HTMLSelect
-            fill={true}
-            options={dateRangeOptions}
-            value={reportDateRange}
-            onChange={handleDateRangeChange}
-          />
-        </FormGroup>
-      </Col>
+      <Row>
+        <Col xs={4}>
+          <FastField name={'date_range'}>
+            {({
+              form: { setFieldValue },
+              field: { value },
+            }) => (
+              <FormGroup
+                label={formatMessage({ id: 'report_date_range' })}
+                labelInfo={<Hint />}
+                minimal={true}
+                fill={true}
+              >
+                <HTMLSelect
+                  fill={true}
+                  options={dateRangeOptions}
+                  value={value}
+                  onChange={(e) => {
+                    const newValue = e.target.value;
 
-      <Col width={260}>
-        <FormGroup
-          label={intl.formatMessage({ id: 'from_date' })}
-          labelInfo={<Hint />}
-          fill={true}
-          intent={formik.errors.from_date && Intent.DANGER}
-        >
-          <DateInput
-            {...momentFormatter('YYYY/MM/DD')}
-            value={formik.values.from_date}
-            onChange={handleDateChange('from_date')}
-            popoverProps={{ position: Position.BOTTOM }}
-            minimal={true}
-            fill={true}
-          />
-        </FormGroup>
-      </Col>
+                    if (newValue !== 'custom') {
+                      const dateRange = parseDateRangeQuery(newValue);
 
-      <Col width={260}>
-        <FormGroup
-          label={intl.formatMessage({ id: 'to_date' })}
-          labelInfo={<Hint />}
-          fill={true}
-          intent={formik.errors.to_date && Intent.DANGER}
-        >
-          <DateInput
-            {...momentFormatter('YYYY/MM/DD')}
-            value={formik.values.to_date}
-            onChange={handleDateChange('to_date')}
-            popoverProps={{ position: Position.BOTTOM }}
-            fill={true}
-            minimal={true}
-            intent={formik.errors.to_date && Intent.DANGER}
-          />
-        </FormGroup>
-      </Col>
+                      if (dateRange) {
+                        setFieldValue('fromDate', moment(dateRange.fromDate).toDate());
+                        setFieldValue('toDate', moment(dateRange.toDate).toDate());
+                      }
+                    }
+                    setFieldValue('dateRange', newValue);
+                  }}
+                />
+              </FormGroup>
+            )}
+          </FastField>
+        </Col>
+      </Row>
+
+      <Row>
+        <Col xs={4}>
+          <FastField name={'fromDate'}>
+            {({
+              form: { setFieldValue },
+              field: { value },
+              meta: { error, touched },
+            }) => (
+              <FormGroup
+                label={formatMessage({ id: 'from_date' })}
+                labelInfo={<Hint />}
+                fill={true}
+                intent={error && Intent.DANGER}
+                helperText={<ErrorMessage name={'fromDate'} />}
+              >
+                <DateInput
+                  {...momentFormatter('YYYY-MM-DD')}
+                  value={value}
+                  onChange={(selectedDate) => {
+                    setFieldValue('fromDate', selectedDate);
+                  }}
+                  popoverProps={{ minimal: true, position: Position.BOTTOM }}
+                  canClearSelection={false}
+                  minimal={true}
+                  fill={true}
+                />
+              </FormGroup>
+            )}
+          </FastField>
+        </Col>
+
+        <Col xs={4}>
+          <FastField name={'toDate'}>
+            {({
+              form: { setFieldValue },
+              field: { value },
+              meta: { error },
+            }) => (
+              <FormGroup
+                label={formatMessage({ id: 'to_date' })}
+                labelInfo={<Hint />}
+                fill={true}
+                intent={error && Intent.DANGER}
+                helperText={<ErrorMessage name={'toDate'} />}
+              >
+                <DateInput
+                  {...momentFormatter('YYYY-MM-DD')}
+                  value={value}
+                  onChange={(selectedDate) => {
+                    setFieldValue('toDate', selectedDate);
+                  }}
+                  popoverProps={{ minimal: true, position: Position.BOTTOM }}
+                  canClearSelection={false}
+                  fill={true}
+                  minimal={true}
+                  intent={error && Intent.DANGER}
+                />
+              </FormGroup>
+            )}
+          </FastField>
+        </Col>
+      </Row>
     </>
   );
 }

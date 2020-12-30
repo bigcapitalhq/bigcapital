@@ -1,28 +1,36 @@
 import { connect } from 'react-redux';
 import {
-  getFinancialSheet,
-  getFinancialSheetAccounts,
-  getFinancialSheetColumns,
-  getFinancialSheetQuery,
-  getFinancialSheetTableRows,
+  getFinancialSheetFactory,
+  getFinancialSheetAccountsFactory,
+  getFinancialSheetColumnsFactory,
+  getFinancialSheetQueryFactory,
+  getFinancialSheetTableRowsFactory,
 } from 'store/financialStatement/financialStatements.selectors';
-
 
 export default (mapState) => {
   const mapStateToProps = (state, props) => {
-    const { balanceSheetIndex } = props;
+    const getBalanceSheet = getFinancialSheetFactory('balanceSheet');
+    const getBalanceSheetAccounts = getFinancialSheetAccountsFactory(
+      'balanceSheet',
+    );
+    const getBalanceSheetTableRows = getFinancialSheetTableRowsFactory(
+      'balanceSheet',
+    );
+    const getBalanceSheetColumns = getFinancialSheetColumnsFactory('balanceSheet');
+    const getBalanceSheetQuery = getFinancialSheetQueryFactory('balanceSheet');
+
     const mapped = {
-      balanceSheet: getFinancialSheet(state.financialStatements.balanceSheet.sheets, balanceSheetIndex),
-      balanceSheetAccounts: getFinancialSheetAccounts(state.financialStatements.balanceSheet.sheets, balanceSheetIndex),
-      balanceSheetTableRows: getFinancialSheetTableRows(state.financialStatements.balanceSheet.sheets, balanceSheetIndex),
-      balanceSheetColumns: getFinancialSheetColumns(state.financialStatements.balanceSheet.sheets, balanceSheetIndex),
-      balanceSheetQuery: getFinancialSheetQuery(state.financialStatements.balanceSheet.sheets, balanceSheetIndex),
+      balanceSheet: getBalanceSheet(state, props),
+      balanceSheetAccounts: getBalanceSheetAccounts(state, props),
+      balanceSheetTableRows: getBalanceSheetTableRows(state, props),
+      balanceSheetColumns: getBalanceSheetColumns(state, props),
+      balanceSheetQuery: getBalanceSheetQuery(state, props),
       balanceSheetLoading: state.financialStatements.balanceSheet.loading,
       balanceSheetFilter: state.financialStatements.balanceSheet.filter,
       balanceSheetRefresh: state.financialStatements.balanceSheet.refresh,
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };
-  
+
   return connect(mapStateToProps);
-}
+};

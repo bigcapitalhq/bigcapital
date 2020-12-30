@@ -55,6 +55,10 @@ export default class TrialBalanceSheetService {
       transactionsRepository,
     } = this.tenancy.repositories(tenantId);
 
+    // Settings tenant service.
+    const settings = this.tenancy.settings(tenantId);
+    const baseCurrency = settings.get({ group: 'organization', key: 'base_currency' });
+
     this.logger.info('[trial_balance_sheet] trying to calcualte the report.', { tenantId, filter });
 
     // Retrieve all accounts on the storage.
@@ -76,6 +80,7 @@ export default class TrialBalanceSheetService {
       filter,
       accounts,
       transactionsJournal,
+      baseCurrency
     );
     // Trial balance sheet data.
     const trialBalanceSheetData = trialBalanceInstance.reportData();

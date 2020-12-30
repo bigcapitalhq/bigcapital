@@ -1,6 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
 import moment from 'moment';
-import { connect } from 'react-redux';
 import { defaultExpanderReducer, compose } from 'utils';
 import { useIntl } from 'react-intl';
 
@@ -8,7 +7,6 @@ import FinancialSheet from 'components/FinancialSheet';
 import DataTable from 'components/DataTable';
 import Money from 'components/Money';
 
-import { getFinancialSheetIndexByQuery } from 'store/financialStatement/financialStatements.selectors';
 import withGeneralLedger from './withGeneralLedger';
 
 const ROW_TYPE = {
@@ -20,7 +18,6 @@ const ROW_TYPE = {
 
 function GeneralLedgerTable({
   companyName,
-  onFetchData,
 
   generalLedgerSheetLoading,
   generalLedgerTableRows,
@@ -29,35 +26,29 @@ function GeneralLedgerTable({
   const { formatMessage } = useIntl();
 
   // Account name column accessor.
-  const accountNameAccessor = useCallback(
-    (row) => {
-      switch (row.rowType) {
-        case ROW_TYPE.OPENING_BALANCE:
-          return 'Opening Balance';
-        case ROW_TYPE.CLOSING_BALANCE:
-          return 'Closing Balance';
-        default:
-          return row.name;
-      }
-    },
-    [ROW_TYPE],
-  );
+  const accountNameAccessor = (row) => {
+    switch (row.rowType) {
+      case ROW_TYPE.OPENING_BALANCE:
+        return 'Opening Balance';
+      case ROW_TYPE.CLOSING_BALANCE:
+        return 'Closing Balance';
+      default:
+        return row.name;
+    }
+  };
 
   // Date accessor.
-  const dateAccessor = useCallback(
-    (row) => {
-      const TYPES = [
-        ROW_TYPE.OPENING_BALANCE,
-        ROW_TYPE.CLOSING_BALANCE,
-        ROW_TYPE.TRANSACTION,
-      ];
+  const dateAccessor = (row) => {
+    const TYPES = [
+      ROW_TYPE.OPENING_BALANCE,
+      ROW_TYPE.CLOSING_BALANCE,
+      ROW_TYPE.TRANSACTION,
+    ];
 
-      return TYPES.indexOf(row.rowType) !== -1
-        ? moment(row.date).format('DD MMM YYYY')
-        : '';
-    },
-    [moment, ROW_TYPE],
-  );
+    return TYPES.indexOf(row.rowType) !== -1
+      ? moment(row.date).format('DD MMM YYYY')
+      : '';
+  };
 
   // Amount cell
   const amountCell = useCallback(({ cell }) => {
@@ -72,10 +63,6 @@ function GeneralLedgerTable({
     }
     return <Money amount={transaction.amount} currency={'USD'} />;
   }, []);
-
-  const referenceLink = useCallback((row) => {
-    return <a href="">{row.referenceId}</a>;
-  });
 
   const columns = useMemo(
     () => [
@@ -99,7 +86,7 @@ function GeneralLedgerTable({
       },
       {
         Header: formatMessage({ id: 'trans_num' }),
-        accessor: referenceLink,
+        accessor: 'reference_id',
         className: 'transaction_number',
         width: 110,
       },
@@ -125,10 +112,6 @@ function GeneralLedgerTable({
     [],
   );
 
-  const handleFetchData = useCallback(() => {
-    onFetchData && onFetchData();
-  }, [onFetchData]);
-
   // Default expanded rows of general ledger table.
   const expandedRows = useMemo(
     () => defaultExpanderReducer(generalLedgerTableRows, 1),
@@ -140,12 +123,11 @@ function GeneralLedgerTable({
   return (
     <FinancialSheet
       companyName={companyName}
-      // sheetType={formatMessage({ id: 'general_ledger_sheet' })}
+      sheetType={formatMessage({ id: 'general_ledger_sheet' })}
       fromDate={generalLedgerQuery.from_date}
       toDate={generalLedgerQuery.to_date}
       name="general-ledger"
       loading={generalLedgerSheetLoading}
-      minimal={true}
       fullWidth={true}
     >
       <DataTable
@@ -155,7 +137,6 @@ function GeneralLedgerTable({
         })}
         columns={columns}
         data={generalLedgerTableRows}
-        onFetchData={handleFetchData}
         rowClassNames={rowClassNames}
         expanded={expandedRows}
         virtualizedRows={true}
@@ -169,21 +150,7 @@ function GeneralLedgerTable({
   );
 }
 
-const mapStateToProps = (state, props) => {
-  const { generalLedgerQuery } = props;
-
-  return {
-    generalLedgerIndex: getFinancialSheetIndexByQuery(
-      state.financialStatements.generalLedger.sheets,
-      generalLedgerQuery,
-    ),
-  };
-};
-
-const withGeneralLedgerTable = connect(mapStateToProps);
-
 export default compose(
-  withGeneralLedgerTable,
   withGeneralLedger(
     ({
       generalLedgerTableRows,

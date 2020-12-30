@@ -9,11 +9,10 @@ import {
   Position,
 } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'react-intl';
-import Icon from 'components/Icon';
-import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar'
-import { If } from 'components';
 import classNames from 'classnames';
-import FilterDropdown from 'components/FilterDropdown';
+
+import Icon from 'components/Icon';
+import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 
 import withGeneralLedger from './withGeneralLedger';
 import withGeneralLedgerActions from './withGeneralLedgerActions';
@@ -21,7 +20,7 @@ import withGeneralLedgerActions from './withGeneralLedgerActions';
 import { compose } from 'utils';
 
 /**
- * General ledger actions bar.
+ * General ledger - Actions bar.
  */
 function GeneralLedgerActionsBar({
   // #withGeneralLedger
@@ -29,12 +28,13 @@ function GeneralLedgerActionsBar({
 
   // #withGeneralLedgerActions
   toggleGeneralLedgerSheetFilter,
-  refreshGeneralLedgerSheet
+  refreshGeneralLedgerSheet,
 }) {
-  const handleFilterClick = () => {
+  // Handle customize button click.
+  const handleCustomizeClick = () => {
     toggleGeneralLedgerSheetFilter();
   };
-
+  // Handle re-calculate button click.
   const handleRecalcReport = () => {
     refreshGeneralLedgerSheet(true);
   };
@@ -43,62 +43,50 @@ function GeneralLedgerActionsBar({
     <DashboardActionsBar>
       <NavbarGroup>
         <Button
-          className={classNames(Classes.MINIMAL, 'button--table-views')}
-          icon={<Icon icon='cog-16' iconSize={16} />}
-          text={<T id={'customize_report'}/>}
-        />
-
-        <NavbarDivider />
-
-        <Button
-          className={classNames(
-            Classes.MINIMAL,
-            'button--gray-highlight',
-          )}
-          text={'Re-calc Report'}
+          className={classNames(Classes.MINIMAL, 'button--gray-highlight')}
+          text={<T id={'recalc_report'} />}
           onClick={handleRecalcReport}
           icon={<Icon icon="refresh-16" iconSize={16} />}
         />
+        <NavbarDivider />
 
-        <If condition={generalLedgerSheetFilter}>
-          <Button
-            className={Classes.MINIMAL}
-            text={<T id={'hide_filter'} />}
-            icon={<Icon icon="arrow-to-top" />}
-            onClick={handleFilterClick}
-          />
-        </If>
-
-        <If condition={!generalLedgerSheetFilter}>
-          <Button
-            className={Classes.MINIMAL}
-            text={<T id={'show_filter'} />}
-            icon={<Icon icon="arrow-to-bottom" />}
-            onClick={handleFilterClick}
-          />
-        </If>
+        <Button
+          className={classNames(Classes.MINIMAL, 'button--table-views')}
+          icon={<Icon icon="cog-16" iconSize={16} />}
+          text={
+            generalLedgerSheetFilter ? (
+              <T id={'hide_customizer'} />
+            ) : (
+              <T id={'customize_report'} />
+            )
+          }
+          onClick={handleCustomizeClick}
+          active={generalLedgerSheetFilter}
+        />
+        <NavbarDivider />
 
         <Popover
           interactionKind={PopoverInteractionKind.CLICK}
-          position={Position.BOTTOM_LEFT}>
-
+          position={Position.BOTTOM_LEFT}
+        >
           <Button
             className={classNames(Classes.MINIMAL, 'button--filter')}
-            text={<T id={'filter'}/>}
-            icon={<Icon icon="filter-16" iconSize={16} /> } />
+            text={<T id={'filter'} />}
+            icon={<Icon icon="filter-16" iconSize={16} />}
+          />
         </Popover>
 
         <NavbarDivider />
 
         <Button
           className={Classes.MINIMAL}
-          icon={<Icon icon='print-16' iconSize={16} />}
-          text={<T id={'print'}/>}
+          icon={<Icon icon="print-16" iconSize={16} />}
+          text={<T id={'print'} />}
         />
         <Button
           className={Classes.MINIMAL}
-          icon={<Icon icon='file-export-16' iconSize={16} />}
-          text={<T id={'export'}/>}
+          icon={<Icon icon="file-export-16" iconSize={16} />}
+          text={<T id={'export'} />}
         />
       </NavbarGroup>
     </DashboardActionsBar>
@@ -106,6 +94,8 @@ function GeneralLedgerActionsBar({
 }
 
 export default compose(
-  withGeneralLedger(({ generalLedgerSheetFilter }) => ({ generalLedgerSheetFilter })),
+  withGeneralLedger(({ generalLedgerSheetFilter }) => ({
+    generalLedgerSheetFilter,
+  })),
   withGeneralLedgerActions,
 )(GeneralLedgerActionsBar);

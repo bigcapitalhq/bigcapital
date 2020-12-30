@@ -1,22 +1,23 @@
 import {connect} from 'react-redux';
 import {
-  getFinancialSheetIndexByQuery,
-  getFinancialSheet,
-  getFinancialSheetColumns,
-  getFinancialSheetQuery,
-  getFinancialSheetTableRows,
+  getFinancialSheetFactory,
+  getFinancialSheetColumnsFactory,
+  getFinancialSheetQueryFactory,
+  getFinancialSheetTableRowsFactory,
 } from 'store/financialStatement/financialStatements.selectors';
-
 
 export default (mapState) => {
   const mapStateToProps = (state, props) => {
-    const { profitLossIndex } = props;
+    const getProfitLossSheet = getFinancialSheetFactory('profitLoss');
+    const getProfitLossColumns = getFinancialSheetColumnsFactory('profitLoss');
+    const getProfitLossQuery = getFinancialSheetQueryFactory('profitLoss');
+    const getProfitLossTableRows = getFinancialSheetTableRowsFactory('profitLoss');
 
     const mapped = {
-      profitLossSheet: getFinancialSheet(state.financialStatements.profitLoss.sheets, profitLossIndex),
-      profitLossColumns: getFinancialSheetColumns(state.financialStatements.profitLoss.sheets, profitLossIndex),
-      profitLossQuery: getFinancialSheetQuery(state.financialStatements.profitLoss.sheets, profitLossIndex),
-      profitLossTableRows: getFinancialSheetTableRows(state.financialStatements.profitLoss.sheets, profitLossIndex),
+      profitLossSheet: getProfitLossSheet(state, props),
+      profitLossColumns: getProfitLossColumns(state, props),
+      profitLossQuery: getProfitLossQuery(state, props),
+      profitLossTableRows: getProfitLossTableRows(state, props),
 
       profitLossSheetLoading: state.financialStatements.profitLoss.loading,
       profitLossSheetFilter: state.financialStatements.profitLoss.filter,

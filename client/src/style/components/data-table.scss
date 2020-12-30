@@ -296,6 +296,12 @@
 
       .tbody{
         .tr .td{
+          border-bottom: 0;
+        }
+        .tr:not(:first-child) .td{
+          border-top: 1px dotted #CCC;
+        }
+        .tr:last-child .td{
           border-bottom: 1px dotted #CCC;
         }
       }

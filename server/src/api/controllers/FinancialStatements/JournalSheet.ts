@@ -67,7 +67,7 @@ export default class JournalSheetController extends BaseController {
     const baseCurrency = settings.get({ group: 'organization', key: 'base_currency' });
 
     try {
-      const data = await this.journalService.journalSheet(tenantId, filter);
+      const { data, query } = await this.journalService.journalSheet(tenantId, filter);
 
       return res.status(200).send({
         organization_name: organizationName,

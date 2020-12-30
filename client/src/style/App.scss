@@ -117,6 +117,9 @@ $button-background-color-hover: #CFDCEE !default;
 body.authentication {
   background-color: #fcfdff;
 }
+body.hide-scrollbar .Pane2{
+  overflow: hidden;
+}
 
 .bp3-toast {
   box-shadow: none;

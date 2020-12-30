@@ -1,31 +1,56 @@
 import React, { useMemo, useCallback } from 'react';
-import { connect } from 'react-redux';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames';
+
 
 import Money from 'components/Money';
 import FinancialSheet from 'components/FinancialSheet';
 import DataTable from 'components/DataTable';
 
-import withSettings from 'containers/Settings/withSettings';
 import withBalanceSheetDetail from './withBalanceSheetDetail';
-import { getFinancialSheetIndexByQuery } from 'store/financialStatement/financialStatements.selectors';
 
-import { compose, defaultExpanderReducer } from 'utils';
+import { compose, defaultExpanderReducer, getColumnWidth } from 'utils';
 
+// Total cell.
+function TotalCell({ cell }) {
+  const row = cell.row.original;
+
+  if (row.total) {
+    return (
+      <Money
+        amount={row.total.formatted_amount}
+        currency={row.total.currency_code}
+      />
+    );
+  }
+  return '';
+}
+
+// Total period cell.
+const TotalPeriodCell = (index) => ({ cell }) => {
+  const { original } = cell.row;
+
+  if (original.total_periods && original.total_periods[index]) {
+    const amount = original.total_periods[index].formatted_amount;
+    const currencyCode = original.total_periods[index].currency_code;
+
+    return <Money amount={amount} currency={currencyCode} />;
+  }
+  return '';
+};
+
+/**
+ * Balance sheet table.
+ */
 function BalanceSheetTable({
-  // #withPreferences
-  organizationSettings,
-
   // #withBalanceSheetDetail
-  balanceSheetAccounts,
   balanceSheetTableRows,
   balanceSheetColumns,
   balanceSheetQuery,
   balanceSheetLoading,
 
   // #ownProps
-  onFetchData,
+  companyName,
 }) {
   const { formatMessage } = useIntl();
 
@@ -33,35 +58,18 @@ function BalanceSheetTable({
     () => [
       {
         Header: formatMessage({ id: 'account_name' }),
-        accessor: 'name',
+        accessor: (row) => (row.code ? `${row.name} - ${row.code}` : row.name),
         className: 'account_name',
-        width: 120,
-      },
-      {
-        Header: formatMessage({ id: 'code' }),
-        accessor: 'code',
-        className: 'code',
-        width: 60,
+        width: 240,
       },
       ...(balanceSheetQuery.display_columns_type === 'total'
         ? [
             {
               Header: formatMessage({ id: 'total' }),
               accessor: 'balance.formatted_amount',
-              Cell: ({ cell }) => {
-                const row = cell.row.original;
-                if (row.total) {
-                  return (
-                    <Money
-                      amount={row.total.formatted_amount}
-                      currency={'USD'}
-                    />
-                  );
-                }
-                return '';
-              },
+              Cell: TotalCell,
               className: 'total',
-              width: 80,
+              width: 140,
             },
           ]
         : []),
@@ -70,44 +78,43 @@ function BalanceSheetTable({
             id: `date_period_${index}`,
             Header: column,
             accessor: `total_periods[${index}]`,
-            Cell: ({ cell }) => {
-              const { original } = cell.row;
-              if (original.total_periods && original.total_periods[index]) {
-                const amount = original.total_periods[index].formatted_amount;
-                return <Money amount={amount} currency={'USD'} />;
-              }
-              return '';
-            },
+            Cell: TotalPeriodCell(index),
             className: classNames('total-period', `total-periods-${index}`),
-            width: 80,
+            width: getColumnWidth(
+              balanceSheetTableRows,
+              `total_periods.${index}.formatted_amount`,
+              { minWidth: 100 },
+            ),
           }))
         : []),
     ],
-  [balanceSheetQuery, balanceSheetColumns, formatMessage],
+    [balanceSheetQuery, balanceSheetColumns, balanceSheetTableRows, formatMessage],
   );
-
-  const handleFetchData = useCallback(() => {
-    onFetchData && onFetchData();
-  }, [onFetchData]);
 
   // Calculates the default expanded rows of balance sheet table.
   const expandedRows = useMemo(
-    () => defaultExpanderReducer(balanceSheetTableRows, 3),
+    () => defaultExpanderReducer(balanceSheetTableRows, 4),
     [balanceSheetTableRows],
   );
 
-  const rowClassNames = (row) => {
+  const rowClassNames = useCallback((row) => {
     const { original } = row;
-    console.log(row);
+    const rowTypes = Array.isArray(original.row_types)
+      ? original.row_types
+      : [];
+
     return {
-      [`row_type--${original.row_type}`]: original.row_type,
+      ...rowTypes.reduce((acc, rowType) => {
+        acc[`row_type--${rowType}`] = rowType;
+        return acc;
+      }, {}),
     };
-  };
+  }, []);
 
   return (
     <FinancialSheet
       name="balance-sheet"
-      companyName={organizationSettings.name}
+      companyName={companyName}
       sheetType={formatMessage({ id: 'balance_sheet' })}
       fromDate={balanceSheetQuery.from_date}
       toDate={balanceSheetQuery.to_date}
@@ -119,46 +126,29 @@ function BalanceSheetTable({
         columns={columns}
         data={balanceSheetTableRows}
         rowClassNames={rowClassNames}
-        onFetchData={handleFetchData}
         noInitialFetch={true}
-        expanded={expandedRows}
         expandable={true}
+        expanded={expandedRows}
         expandToggleColumn={1}
-        sticky={true}
         expandColumnSpace={0.8}
+        sticky={true}
       />
     </FinancialSheet>
   );
 }
 
-const mapStateToProps = (state, props) => {
-  const { balanceSheetQuery } = props;
-  return {
-    balanceSheetIndex: getFinancialSheetIndexByQuery(
-      state.financialStatements.balanceSheet.sheets,
-      balanceSheetQuery,
-    ),
-  };
-};
-
-const withBalanceSheetTable = connect(mapStateToProps);
-
 export default compose(
-  withBalanceSheetTable,
   withBalanceSheetDetail(
     ({
-      balanceSheetAccounts,
       balanceSheetTableRows,
       balanceSheetColumns,
       balanceSheetQuery,
       balanceSheetLoading,
     }) => ({
-      balanceSheetAccounts,
       balanceSheetTableRows,
       balanceSheetColumns,
       balanceSheetQuery,
       balanceSheetLoading,
     }),
   ),
-  withSettings,
 )(BalanceSheetTable);

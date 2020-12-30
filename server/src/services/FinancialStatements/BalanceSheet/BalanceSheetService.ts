@@ -72,7 +72,8 @@ export default class BalanceSheetStatementService
 
     // Retrieve all journal transactions based on the given query.
     const transactions = await transactionsRepository.journal({
-      fromDate: query.toDate,
+      fromDate: query.fromDate,
+      toDate: query.toDate,
     });
     // Transform transactions to journal collection.
     const transactionsJournal = Journal.fromTransactions(

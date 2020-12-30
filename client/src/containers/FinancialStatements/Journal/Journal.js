@@ -2,6 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { useQuery } from 'react-query';
 import moment from 'moment';
 import { useIntl } from 'react-intl';
+import { queryCache } from 'react-query';
 
 import { compose } from 'utils';
 import JournalTable from './JournalTable';
@@ -12,79 +13,89 @@ import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import withSettings from 'containers/Settings/withSettings';
 
-
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withJournalActions from './withJournalActions';
+import withJournal from './withJournal';
+
+import { transformFilterFormToQuery } from 'containers/FinancialStatements/common';
 
 function Journal({
   // #withJournalActions
   requestFetchJournalSheet,
+  refreshJournalSheet,
+
+  // #withJournal
+  journalSheetRefresh,
 
   // #withDashboardActions
   changePageTitle,
+  setDashboardBackLink,
 
   // #withPreferences
-  organizationSettings,
+  organizationName,
 }) {
   const [filter, setFilter] = useState({
-    from_date: moment().startOf('year').format('YYYY-MM-DD'),
-    to_date: moment().endOf('year').format('YYYY-MM-DD'),
+    fromDate: moment().startOf('year').format('YYYY-MM-DD'),
+    toDate: moment().endOf('year').format('YYYY-MM-DD'),
     basis: 'accural',
   });
   const { formatMessage } = useIntl();
+
+  const fetchJournalSheet = useQuery(['journal-sheet', filter], (key, query) =>
+    requestFetchJournalSheet({
+      ...transformFilterFormToQuery(filter),
+    }),
+  );
 
   useEffect(() => {
     changePageTitle(formatMessage({ id: 'journal_sheet' }));
   }, [changePageTitle, formatMessage]);
 
-  const fetchHook = useQuery(
-    ['journal', filter],
-    (key, query) => requestFetchJournalSheet(query),
-    { manual: true },
-  );
+  useEffect(() => {
+    // Show the back link on dashboard topbar.
+    setDashboardBackLink(true);
+
+    return () => {
+      // Hide the back link on dashboard topbar.
+      setDashboardBackLink(false);
+    };
+  });
+
+  useEffect(() => {
+    if (journalSheetRefresh) {
+      queryCache.invalidateQueries('journal-sheet');
+      refreshJournalSheet(false);
+    }
+  }, [journalSheetRefresh, refreshJournalSheet]);
 
   // Handle financial statement filter change.
   const handleFilterSubmit = useCallback(
     (filter) => {
       const _filter = {
         ...filter,
-        from_date: moment(filter.from_date).format('YYYY-MM-DD'),
-        to_date: moment(filter.to_date).format('YYYY-MM-DD'),
+        fromDate: moment(filter.fromDate).format('YYYY-MM-DD'),
+        toDate: moment(filter.toDate).format('YYYY-MM-DD'),
       };
       setFilter(_filter);
-      fetchHook.refetch({ force: true });
+      queryCache.invalidateQueries('journal-sheet');
     },
-    [fetchHook],
+    [setFilter],
   );
-
-  const handlePrintClick = useCallback(() => {}, []);
-
-  const handleExportClick = useCallback(() => {}, []);
-
-  const handleFetchData = useCallback(({ sortBy, pageIndex, pageSize }) => {
-    fetchHook.refetch({ force: true });
-  }, []);
-
   return (
     <DashboardInsider>
-      <JournalActionsBar
-        onSubmitFilter={handleFilterSubmit}
-        onPrintClick={handlePrintClick}
-        onExportClick={handleExportClick}
-      />
+      <JournalActionsBar />
 
       <DashboardPageContent>
         <div class="financial-statement financial-statement--journal">
           <JournalHeader
-            pageFilter={filter}
             onSubmitFilter={handleFilterSubmit}
+            pageFilter={filter}
           />
 
           <div class="financial-statement__body">
             <JournalTable
-              companyName={organizationSettings.name}
+              companyName={organizationName}
               journalQuery={filter}
-              onFetchData={handleFetchData}
             />
           </div>
         </div>
@@ -96,5 +107,10 @@ function Journal({
 export default compose(
   withDashboardActions,
   withJournalActions,
-  withSettings,
+  withSettings(({ organizationSettings }) => ({
+    organizationName: organizationSettings.name,
+  })),
+  withJournal(({ journalSheetRefresh }) => ({
+    journalSheetRefresh,
+  })),
 )(Journal);

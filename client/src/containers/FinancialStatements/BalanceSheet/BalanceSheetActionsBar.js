@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   NavbarGroup,
   Button,
@@ -13,13 +13,10 @@ import classNames from 'classnames';
 
 import Icon from 'components/Icon';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
-import FilterDropdown from 'components/FilterDropdown';
-import { If } from 'components';
 
 import { compose } from 'utils';
 import withBalanceSheetDetail from './withBalanceSheetDetail';
 import withBalanceSheetActions from './withBalanceSheetActions';
-
 
 function BalanceSheetActionsBar({
   // #withBalanceSheetDetail
@@ -27,12 +24,13 @@ function BalanceSheetActionsBar({
 
   // #withBalanceSheetActions
   toggleBalanceSheetFilter,
-  refreshBalanceSheet
+  refreshBalanceSheet,
 }) {
   const handleFilterToggleClick = () => {
     toggleBalanceSheetFilter();
   };
 
+  // Handle recalculate the report button.
   const handleRecalcReport = () => {
     refreshBalanceSheet(true);
   };
@@ -41,39 +39,21 @@ function BalanceSheetActionsBar({
     <DashboardActionsBar>
       <NavbarGroup>
         <Button
-          className={classNames(Classes.MINIMAL, 'button--table-views')}
-          icon={<Icon icon="cog-16" iconSize={16} />}
-          text={<T id={'customize_report'} />}
-        />
-        <NavbarDivider />
-
-        <Button
-          className={classNames(
-            Classes.MINIMAL,
-            'button--gray-highlight',
-          )}
+          className={classNames(Classes.MINIMAL, 'button--gray-highlight')}
           text={<T id={'recalc_report'} />}
           onClick={handleRecalcReport}
           icon={<Icon icon="refresh-16" iconSize={16} />}
         />
+        <NavbarDivider />
 
-        <If condition={balanceSheetFilter}>
-          <Button
-            className={Classes.MINIMAL}
-            text={<T id={'hide_filter'} />}
-            onClick={handleFilterToggleClick}
-            icon={<Icon icon="arrow-to-top" />}
-          />
-        </If>
-
-        <If condition={!balanceSheetFilter}>
-          <Button
-            className={Classes.MINIMAL}
-            text={<T id={'show_filter'} />}
-            onClick={handleFilterToggleClick}
-            icon={<Icon icon="arrow-to-bottom" />}
-          />
-        </If>
+        <Button
+          className={classNames(Classes.MINIMAL, 'button--table-views')}
+          icon={<Icon icon="cog-16" iconSize={16} />}
+          text={!balanceSheetFilter ? <T id={'customize_report'} /> : <T id={'hide_customizer'} />}
+          onClick={handleFilterToggleClick}
+          active={balanceSheetFilter}
+        />
+        <NavbarDivider />
 
         <Popover
           // content={}
@@ -91,7 +71,7 @@ function BalanceSheetActionsBar({
 
         <Button
           className={Classes.MINIMAL}
-          icon={<Icon icon='print-16' iconSize={16} />}
+          icon={<Icon icon="print-16" iconSize={16} />}
           text={<T id={'print'} />}
         />
         <Button

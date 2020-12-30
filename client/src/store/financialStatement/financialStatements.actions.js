@@ -95,7 +95,7 @@ export const fetchProfitLossSheet = ({ query }) => {
     ApiService.get('/financial_statements/profit_loss_sheet', { params: query }).then((response) => {
       dispatch({
         type: t.PROFIT_LOSS_SHEET_SET,
-        profitLoss: response.data.profitLoss,
+        profitLoss: response.data.data,
         columns: response.data.columns,
         query: response.data.query,
       });

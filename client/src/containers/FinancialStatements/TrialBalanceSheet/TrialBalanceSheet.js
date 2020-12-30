@@ -2,73 +2,93 @@ import React, { useEffect, useCallback, useState } from 'react';
 import { useQuery } from 'react-query';
 import moment from 'moment';
 import { useIntl } from 'react-intl';
+import { queryCache } from 'react-query';
 
+import TrialBalanceActionsBar from './TrialBalanceActionsBar';
 import TrialBalanceSheetHeader from './TrialBalanceSheetHeader';
 import TrialBalanceSheetTable from './TrialBalanceSheetTable';
-import TrialBalanceActionsBar from './TrialBalanceActionsBar';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 
 import { compose } from 'utils';
+import { transformFilterFormToQuery } from 'containers/FinancialStatements/common';
 
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withTrialBalanceActions from './withTrialBalanceActions';
 import withSettings from 'containers/Settings/withSettings';
+import withTrialBalance from './withTrialBalance';
 
+/**
+ * Trial balance sheet.
+ */
 function TrialBalanceSheet({
   // #withDashboardActions
   changePageTitle,
+  setDashboardBackLink,
+
+  // #withTrialBalance
+  trialBalanceSheetRefresh,
 
   // #withTrialBalanceActions
   fetchTrialBalanceSheet,
+  refreshTrialBalance,
 
   // #withPreferences
-  organizationSettings,
+  organizationName,
 }) {
-  const [filter, setFilter] = useState({
-    from_date: moment().startOf('year').format('YYYY-MM-DD'),
-    to_date: moment().endOf('year').format('YYYY-MM-DD'),
-    basis: 'accural',
-    none_zero: false,
-  });
-  const [refresh, setRefresh] = useState(true);
   const { formatMessage } = useIntl();
 
-  const fetchHook = useQuery(
-    ['trial-balance', filter],
-    (key, query) => fetchTrialBalanceSheet(query),
+  const [filter, setFilter] = useState({
+    fromDate: moment().startOf('year').format('YYYY-MM-DD'),
+    toDate: moment().endOf('year').format('YYYY-MM-DD'),
+    basis: 'accural',
+    accountsFilter: 'all-accounts',
+  });
+
+  // Fetches trial balance sheet.
+  const fetchSheet = useQuery(
+    ['trial-balance-sheet', filter],
+    (key, query) =>
+      fetchTrialBalanceSheet({
+        ...transformFilterFormToQuery(query),
+      }),
     { manual: true },
   );
-
-  // handle fetch data of trial balance table.
-  const handleFetchData = useCallback(() => {
-    setRefresh(true);
-  }, []);
-
   // Change page title of the dashboard.
   useEffect(() => {
     changePageTitle(formatMessage({ id: 'trial_balance_sheet' }));
   }, [changePageTitle, formatMessage]);
 
+  useEffect(() => {
+    // Show the back link on dashboard topbar.
+    setDashboardBackLink(true);
+
+    return () => {
+      // Hide the back link on dashboard topbar.
+      setDashboardBackLink(false);
+    };
+  });
+
   const handleFilterSubmit = useCallback(
     (filter) => {
       const parsedFilter = {
         ...filter,
-        from_date: moment(filter.from_date).format('YYYY-MM-DD'),
-        to_date: moment(filter.to_date).format('YYYY-MM-DD'),
+        fromDate: moment(filter.fromDate).format('YYYY-MM-DD'),
+        toDate: moment(filter.toDate).format('YYYY-MM-DD'),
       };
       setFilter(parsedFilter);
-      setRefresh(true);
+      refreshTrialBalance(true);
     },
-    [fetchHook],
+    [setFilter, refreshTrialBalance],
   );
 
+  // Observes the trial balance sheet refresh to invaoid the query.
   useEffect(() => {
-    if (refresh) {
-      fetchHook.refetch({ force: true });
-      setRefresh(false);
+    if (trialBalanceSheetRefresh) {
+      queryCache.invalidateQueries('trial-balance-sheet');
+      refreshTrialBalance(false);
     }
-  }, [refresh, fetchHook.refetch]);
+  }, [trialBalanceSheetRefresh, refreshTrialBalance]);
 
   return (
     <DashboardInsider>
@@ -82,11 +102,7 @@ function TrialBalanceSheet({
           />
 
           <div class="financial-statement__body">
-            <TrialBalanceSheetTable
-              companyName={organizationSettings.name}
-              trialBalanceQuery={filter}
-              onFetchData={handleFetchData}
-            />
+            <TrialBalanceSheetTable companyName={organizationName} />
           </div>
         </div>
       </DashboardPageContent>
@@ -97,5 +113,10 @@ function TrialBalanceSheet({
 export default compose(
   withDashboardActions,
   withTrialBalanceActions,
-  withSettings,
+  withTrialBalance(({ trialBalanceSheetRefresh }) => ({
+    trialBalanceSheetRefresh,
+  })),
+  withSettings(({ organizationSettings }) => ({
+    organizationName: organizationSettings.name,
+  })),
 )(TrialBalanceSheet);
