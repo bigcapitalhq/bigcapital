@@ -87,7 +87,7 @@ function PaymentReceiveList({
   }, [deletePaymentReceive, requestDeletePaymentReceive, formatMessage]);
 
   const handleEditPaymentReceive = useCallback((payment) => {
-    history.push(`/payment-receive/${payment.id}/edit`);
+    history.push(`/payment-receives/${payment.id}/edit`);
   });
 
   // Calculates the selected rows count.
