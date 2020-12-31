@@ -100,11 +100,11 @@ export default function ItemsSuggestField({
       inputProps={{ placeholder: defautlSelectText }}
       resetOnClose={true}
       fill={true}
-      {...suggestProps}
       popoverProps={{ minimal: true }}
       className={classNames(CLASSES.FORM_GROUP_LIST_SELECT, {
         [CLASSES.SELECT_LIST_FILL_POPOVER]: popoverFill,
       })}
+      {...suggestProps}
     />
   );
 }
