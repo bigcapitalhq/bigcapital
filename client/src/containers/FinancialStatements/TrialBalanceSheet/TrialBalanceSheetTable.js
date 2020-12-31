@@ -1,11 +1,9 @@
-import React, { useCallback, useMemo } from 'react';
-import { connect } from 'react-redux';
+import React, { useMemo } from 'react';
 import { useIntl } from 'react-intl';
 
 import FinancialSheet from 'components/FinancialSheet';
 import DataTable from 'components/DataTable';
 import Money from 'components/Money';
-import { getFinancialSheetIndexByQuery } from 'store/financialStatement/financialStatements.selectors';
 
 import withTrialBalance from './withTrialBalance';
 
@@ -13,14 +11,12 @@ import { compose } from 'utils';
 
 function TrialBalanceSheetTable({
   // #withTrialBalanceDetail
-  trialBalanceAccounts,
+  trialBalance,
   trialBalanceSheetLoading,
 
   // #withTrialBalanceTable
-  trialBalanceIndex,
   trialBalanceQuery,
 
-  onFetchData,
   companyName,
 }) {
   const { formatMessage } = useIntl();
@@ -29,54 +25,45 @@ function TrialBalanceSheetTable({
     () => [
       {
         Header: formatMessage({ id: 'account_name' }),
-        accessor: 'name',
+        accessor: (row) => (row.code ? `${row.name} - ${row.code}` : row.name),
         className: 'name',
         minWidth: 150,
         maxWidth: 150,
         width: 150,
       },
       {
-        Header: formatMessage({ id: 'code' }),
-        accessor: 'code',
-        className: 'code',
-        minWidth: 80,
-        maxWidth: 80,
-        width: 80,
-      },
-      {
         Header: formatMessage({ id: 'credit' }),
         accessor: 'credit',
-        Cell: ({ cell }) => <Money amount={cell.row.original.credit} currency="USD" />,
+        Cell: ({ cell }) => {
+          const { currency_code, credit } = cell.row.original;
+          return (<Money amount={credit} currency={currency_code} />);
+        },
         className: 'credit',
-        minWidth: 95,
-        maxWidth: 95,
         width: 95,
       },
       {
         Header: formatMessage({ id: 'debit' }),
         accessor: 'debit',
-        Cell: ({ cell }) => <Money amount={cell.row.original.debit} currency="USD" />,
+        Cell: ({ cell }) => {
+          const { currency_code, debit } = cell.row.original;
+          return (<Money amount={debit} currency={currency_code} />);
+        },
         className: 'debit',
-        minWidth: 95,
-        maxWidth: 95,
         width: 95,
       },
       {
         Header: formatMessage({ id: 'balance' }),
         accessor: 'balance',
-        Cell: ({ cell }) => <Money amount={cell.row.original.balance} currency="USD" />,
+        Cell: ({ cell }) => {
+          const { currency_code, balance } = cell.row.original;
+          return (<Money amount={balance} currency={currency_code} />);
+        },
         className: 'balance',
-        minWidth: 95,
-        maxWidth: 95,
         width: 95,
       },
     ],
     [formatMessage],
   );
-
-  const handleFetchData = useCallback(() => {
-    onFetchData && onFetchData();
-  }, [onFetchData]);
 
   return (
     <FinancialSheet
@@ -86,12 +73,12 @@ function TrialBalanceSheetTable({
       toDate={trialBalanceQuery.to_date}
       name="trial-balance"
       loading={trialBalanceSheetLoading}
+      basis={'cash'}
     >
       <DataTable
         className="bigcapital-datatable--financial-report"
         columns={columns}
-        data={trialBalanceAccounts}
-        onFetchData={handleFetchData}
+        data={trialBalance.data}
         expandable={true}
         expandToggleColumn={1}
         expandColumnSpace={1}
@@ -101,25 +88,14 @@ function TrialBalanceSheetTable({
   );
 }
 
-const mapStateToProps = (state, props) => {
-  const { trialBalanceQuery } = props;
-  return {
-    trialBalanceIndex: getFinancialSheetIndexByQuery(
-      state.financialStatements.trialBalance.sheets,
-      trialBalanceQuery,
-    ),
-  };
-};
-
-const withTrialBalanceTable = connect(mapStateToProps);
-
 export default compose(
-  withTrialBalanceTable,
   withTrialBalance(({
-    trialBalanceAccounts,
+    trialBalance,
     trialBalanceSheetLoading,
+    trialBalanceQuery
   }) => ({
-    trialBalanceAccounts,
-    trialBalanceSheetLoading
+    trialBalance,
+    trialBalanceSheetLoading,
+    trialBalanceQuery
   })),
 )(TrialBalanceSheetTable);

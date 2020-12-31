@@ -1,126 +1,105 @@
-import React, { useCallback, useEffect } from 'react';
-import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
-import { Row, Col, Visible } from 'react-grid-system';
-import { FormGroup } from '@blueprintjs/core';
+import React, { useEffect } from 'react';
+import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 import moment from 'moment';
 import * as Yup from 'yup';
-import { useFormik } from 'formik';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { Formik, Form } from 'formik';
 
-import FinancialStatementDateRange from 'containers/FinancialStatements/FinancialStatementDateRange';
-import SelectDisplayColumnsBy from '../SelectDisplayColumnsBy';
-import RadiosAccountingBasis from '../RadiosAccountingBasis';
-import FinancialAccountsFilter from '../FinancialAccountsFilter';
+import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
 
 import withBalanceSheet from './withBalanceSheetDetail';
 import withBalanceSheetActions from './withBalanceSheetActions';
 
 import { compose } from 'utils';
+import BalanceSheetHeaderGeneralPanal from './BalanceSheetHeaderGeneralPanal';
 
 function BalanceSheetHeader({
+  // #ownProps
   onSubmitFilter,
   pageFilter,
-  show,
-  refresh,
+
+  // #withBalanceSheet
+  balanceSheetFilter,
 
   // #withBalanceSheetActions
-  refreshBalanceSheet,
+  toggleBalanceSheetFilter,
 }) {
   const { formatMessage } = useIntl();
 
-  const formik = useFormik({
-    enableReinitialize: true,
-    initialValues: {
-      ...pageFilter,
-      basis: 'cash',
-      from_date: moment(pageFilter.from_date).toDate(),
-      to_date: moment(pageFilter.to_date).toDate(),
-      none_zero: false,
-    },
-    validationSchema: Yup.object().shape({
-      from_date: Yup.date()
-        .required()
-        .label(formatMessage({ id: 'from_data' })),
-      to_date: Yup.date()
-        .min(Yup.ref('from_date'))
-        .required()
-        .label(formatMessage({ id: 'to_date' })),
-      none_zero: Yup.boolean(),
-    }),
-    onSubmit: (values, actions) => {
-      onSubmitFilter(values);
-      actions.setSubmitting(false);
-    },
+  // Filter form initial values.
+  const initialValues = {
+    basis: 'cash',
+    ...pageFilter,
+    fromDate: moment(pageFilter.fromDate).toDate(),
+    toDate: moment(pageFilter.toDate).toDate(),
+  };
+
+  // Validation schema.
+  const validationSchema = Yup.object().shape({
+    dateRange: Yup.string().optional(),
+    fromDate: Yup.date()
+      .required()
+      .label(formatMessage({ id: 'fromDate' })),
+    toDate: Yup.date()
+      .min(Yup.ref('fromDate'))
+      .required()
+      .label(formatMessage({ id: 'toDate' })),
+    accountsFilter: Yup.string(),
+    displayColumnsType: Yup.string(),
   });
 
-  // Handle item select of `display columns by` field.
-  const onItemSelectDisplayColumns = useCallback(
-    (item) => {
-      formik.setFieldValue('display_columns_type', item.type);
-      formik.setFieldValue('display_columns_by', item.by);
-    },
-    [formik],
-  );
+  // Handle form submit.
+  const handleSubmit = (values, actions) => {
+    onSubmitFilter(values);
+    toggleBalanceSheetFilter();
+    actions.setSubmitting(false);
+  };
 
-  const handleAccountingBasisChange = useCallback(
-    (value) => {
-      formik.setFieldValue('basis', value);
-    },
-    [formik],
-  );
-
-  useEffect(() => {
-    if (refresh) {
-      formik.submitForm();
-      refreshBalanceSheet(false);
-    }
-  }, [refresh]);
-
-  const handleAccountsFilterSelect = (filterType) => {
-    const noneZero = filterType.key === 'without-zero-balance' ? true : false;
-    formik.setFieldValue('none_zero', noneZero);
+  // Handle cancel button click.
+  const handleCancelClick = () => {
+    toggleBalanceSheetFilter();
+  };
+  // Handle drawer close action.
+  const handleDrawerClose = () => {
+    toggleBalanceSheetFilter();
   };
 
   return (
-    <FinancialStatementHeader show={show}>
-      <Row>
-        <FinancialStatementDateRange formik={formik} />
-
-        <Visible xl>
-          <Col width={'100%'} />
-        </Visible>
-
-        <Col width={260} offset={10}>
-          <SelectDisplayColumnsBy onItemSelect={onItemSelectDisplayColumns} />
-        </Col>
-
-        <Col width={260}>
-          <FormGroup
-            label={<T id={'filter_accounts'} />}
-            className="form-group--select-list bp3-fill"
-            inline={false}
-          >
-            <FinancialAccountsFilter
-              initialSelectedItem={'all-accounts'}
-              onItemSelect={handleAccountsFilterSelect}
+    <FinancialStatementHeader
+      isOpen={balanceSheetFilter}
+      drawerProps={{ onClose: handleDrawerClose }}
+    >
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
+      >
+        <Form>
+          <Tabs animate={true} vertical={true} renderActiveTabPanelOnly={true}>
+            <Tab
+              id="general"
+              title={<T id={'general'} />}
+              panel={<BalanceSheetHeaderGeneralPanal />}
             />
-          </FormGroup>
-        </Col>
+          </Tabs>
 
-        <Col width={260}>
-          <RadiosAccountingBasis
-            selectedValue={formik.values.basis}
-            onChange={handleAccountingBasisChange}
-          />
-        </Col>
-      </Row>
+          <div class="financial-header-drawer__footer">
+            <Button className={'mr1'} intent={Intent.PRIMARY} type={'submit'}>
+              <T id={'calculate_report'} />
+            </Button>
+            <Button onClick={handleCancelClick} minimal={true}>
+              <T id={'cancel'} />
+            </Button>
+          </div>
+        </Form>
+      </Formik>
     </FinancialStatementHeader>
   );
 }
 
 export default compose(
-  withBalanceSheet(({ balanceSheetRefresh }) => ({
-    refresh: balanceSheetRefresh,
+  withBalanceSheet(({ balanceSheetFilter }) => ({
+    balanceSheetFilter,
   })),
   withBalanceSheetActions,
 )(BalanceSheetHeader);

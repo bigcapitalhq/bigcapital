@@ -112,7 +112,7 @@ export default [
     component: LazyLoader({
       loader: () =>
         import(
-          'containers/FinancialStatements/TrialBalanceSheet/TrialBalanceSheet'
+        'containers/FinancialStatements/TrialBalanceSheet/TrialBalanceSheet'
         ),
     }),
     breadcrumb: 'Trial Balance Sheet',
@@ -127,16 +127,16 @@ export default [
     }),
     breadcrumb: 'Profit Loss Sheet',
   },
-  {
-    path: '/financial-reports/receivable-aging-summary',
-    component: LazyLoader({
-      loader: () =>
-        import(
-          'containers/FinancialStatements/ReceivableAgingSummary/ReceivableAgingSummary'
-        ),
-    }),
-    breadcrumb: 'Receivable Aging Summary',
-  },
+  // {
+  //   path: '/financial-reports/receivable-aging-summary',
+  //   component: LazyLoader({
+  //     loader: () =>
+  //       import(
+  //         'containers/FinancialStatements/ReceivableAgingSummary/ReceivableAgingSummary'
+  //       ),
+  //   }),
+  //   breadcrumb: 'Receivable Aging Summary',
+  // },
   {
     path: `/financial-reports/journal-sheet`,
     component: LazyLoader({

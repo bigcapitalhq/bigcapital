@@ -81,8 +81,6 @@ export default class JournalSheet extends FinancialSheet {
    * @return {IJournalReport}
    */
   reportData(): IJournalReport {
-    return {
-      entries: this.entriesWalker(this.journal.entries),
-    };
+    return this.entriesWalker(this.journal.entries);
   }
 }

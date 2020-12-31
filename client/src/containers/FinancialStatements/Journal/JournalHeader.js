@@ -1,12 +1,12 @@
-import React, { useCallback, useEffect } from 'react';
-import { Row, Col } from 'react-grid-system';
-import { Button } from '@blueprintjs/core';
+import React from 'react';
 import moment from 'moment';
-import { useFormik } from 'formik';
-import { FormattedMessage as T } from 'react-intl';
+import { Formik, Form } from 'formik';
+import { Tab, Tabs, Button, Intent } from '@blueprintjs/core';
 import * as Yup from 'yup';
+import { FormattedMessage as T } from 'react-intl';
 
-import FinancialStatementDateRange from 'containers/FinancialStatements/FinancialStatementDateRange';
+import JournalSheetHeaderGeneralPanel from './JournalSheetHeaderGeneralPanel';
+
 import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
 
 import withJournal from './withJournal';
@@ -23,49 +23,75 @@ function JournalHeader({
 
   // #withJournalActions
   refreshJournalSheet,
+  toggleJournalSheetFilter,
 
   // #withJournal
   journalSheetFilter,
   journalSheetRefresh,
 }) {
-  const formik = useFormik({
-    enableReinitialize: true,
-    initialValues: {
-      ...pageFilter,
-      from_date: moment(pageFilter.from_date).toDate(),
-      to_date: moment(pageFilter.to_date).toDate(),
-    },
-    validationSchema: Yup.object().shape({
-      from_date: Yup.date().required(),
-      to_date: Yup.date().min(Yup.ref('from_date')).required(),
-    }),
-    onSubmit: (values, { setSubmitting }) => {
-      onSubmitFilter(values);
-      setSubmitting(false);
-    },
+  const initialValues = {
+    ...pageFilter,
+    fromDate: moment(pageFilter.fromDate).toDate(),
+    toDate: moment(pageFilter.toDate).toDate(),
+  };
+
+  // Validation schema.
+  const validationSchema = Yup.object().shape({
+    fromDate: Yup.date().required(),
+    toDate: Yup.date().min(Yup.ref('fromDate')).required(),
   });
 
-  useEffect(() => {
-    if (journalSheetRefresh) {
-      formik.submitForm();
-      refreshJournalSheet(false);
-    }
-  }, [formik, journalSheetRefresh]);
+  // Handle form submit.
+  const handleSubmit = (values, { setSubmitting }) => {
+    onSubmitFilter(values);
+    setSubmitting(false);
+    toggleJournalSheetFilter();
+  };
+
+  // Handle cancel journal drawer header.
+  const handleCancelClick = () => {
+    toggleJournalSheetFilter();
+  };
+
+  const handleDrawerClose = () => {
+    toggleJournalSheetFilter();
+  };
 
   return (
-    <FinancialStatementHeader show={journalSheetFilter}>
-      <Row>
-        <FinancialStatementDateRange formik={formik} />
-      </Row>
+    <FinancialStatementHeader
+      isOpen={journalSheetFilter}
+      drawerProps={{ onClose: handleDrawerClose }}
+    >
+      <Formik
+        initialValues={initialValues}
+        onSubmit={handleSubmit}
+        validationSchema={validationSchema}
+      >
+        <Form>
+          <Tabs animate={true} vertical={true} renderActiveTabPanelOnly={true}>
+            <Tab
+              id="general"
+              title={'General'}
+              panel={<JournalSheetHeaderGeneralPanel />}
+            />
+          </Tabs>
+
+          <div class="financial-header-drawer__footer">
+            <Button className={'mr1'} intent={Intent.PRIMARY} type={'submit'}>
+              <T id={'calculate_report'} />
+            </Button>
+            <Button onClick={handleCancelClick} minimal={true}>
+              <T id={'cancel'} />
+            </Button>
+          </div>
+        </Form>
+      </Formik>
     </FinancialStatementHeader>
   );
 }
 
 export default compose(
-  withJournal(({
-    journalSheetFilter,
-    journalSheetRefresh
-  }) => ({
+  withJournal(({ journalSheetFilter, journalSheetRefresh }) => ({
     journalSheetFilter,
     journalSheetRefresh,
   })),

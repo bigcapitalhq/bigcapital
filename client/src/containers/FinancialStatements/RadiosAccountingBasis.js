@@ -1,28 +1,34 @@
 import React from 'react';
-import {handleStringChange} from 'utils';
-import {useIntl} from 'react-intl';
-import {
-  RadioGroup,
-  Radio,
-} from "@blueprintjs/core";
-
+import { FastField } from 'formik';
+import { handleStringChange } from 'utils';
+import { useIntl } from 'react-intl';
+import { RadioGroup, Radio } from '@blueprintjs/core';
 
 export default function RadiosAccountingBasis(props) {
-  const { onChange, ...rest } = props;
-  const {formatMessage} = useIntl();
+  const { key = 'basis', ...rest } = props;
+  const { formatMessage } = useIntl();
 
   return (
-    <RadioGroup
-      inline={true}
-      label={formatMessage({'id': 'accounting_basis'})}
-      name="basis"
-      onChange={handleStringChange((value) => {
-        onChange && onChange(value);
-      })}
-      className={'radio-group---accounting-basis'}
-      {...rest}>
-      <Radio label={formatMessage({id:'cash'})} value="cash" />
-      <Radio label={formatMessage({id:'accrual'})} value="accural" />
-    </RadioGroup>
+    <FastField name={'basis'}>
+      {({
+        form: { setFieldValue },
+        field: { value },
+      }) => (
+        <RadioGroup
+          inline={true}
+          label={formatMessage({ id: 'accounting_basis' })}
+          name="basis"
+          onChange={handleStringChange((value) => {
+            setFieldValue(key, value);
+          })}
+          className={'radio-group---accounting-basis'}
+          selectedValue={value}
+          {...rest}
+        >
+          <Radio label={formatMessage({ id: 'cash' })} value="cash" />
+          <Radio label={formatMessage({ id: 'accrual' })} value="accural" />
+        </RadioGroup>
+      )}
+    </FastField>
   );
 }

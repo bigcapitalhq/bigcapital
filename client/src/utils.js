@@ -122,24 +122,22 @@ export const parseDateRangeQuery = (keyword) => {
   const query = queries[keyword];
 
   return {
-    from_date: moment().startOf(query.range).toDate(),
-    to_date: moment().endOf(query.range).toDate(),
+    fromDate: moment().startOf(query.range).toDate(),
+    toDate: moment().endOf(query.range).toDate(),
   };
 };
 
 export const defaultExpanderReducer = (tableRows, level) => {
-  let currentLevel = 1;
   const expended = [];
 
-  const walker = (rows, parentIndex = null) => {
+  const walker = (rows, parentIndex = null, currentLevel = 1) => {
     return rows.forEach((row, index) => {
       const _index = parentIndex ? `${parentIndex}.${index}` : `${index}`;
       expended[_index] = true;
 
       if (row.children && currentLevel < level) {
-        walker(row.children, _index);
+        walker(row.children, _index, currentLevel + 1);
       }
-      currentLevel++;
     }, {});
   };
   walker(tableRows);
@@ -372,3 +370,21 @@ export function defaultToTransform(
 export function isBlank(value) {
   return _.isEmpty(value) && !_.isNumber(value) || _.isNaN(value);
 }
+
+
+
+export const getColumnWidth = (
+  rows,
+  accessor,
+  { maxWidth, minWidth, magicSpacing = 14 },
+) => {
+  const cellLength = Math.max(
+    ...rows.map((row) => (`${_.get(row, accessor)}` || '').length),
+  );
+  let result = cellLength * magicSpacing;
+
+  result = minWidth ? Math.max(minWidth, result) : result;
+  result = maxWidth ? Math.min(maxWidth, result) : result;
+
+  return result;
+};

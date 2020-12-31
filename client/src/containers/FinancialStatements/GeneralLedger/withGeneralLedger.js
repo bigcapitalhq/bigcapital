@@ -1,27 +1,20 @@
 import { connect } from 'react-redux';
 import {
-  getFinancialSheet,
-  getFinancialSheetQuery,
-  getFinancialSheetTableRows,
+  getFinancialSheetFactory,
+  getFinancialSheetQueryFactory,
+  getFinancialSheetTableRowsFactory,
 } from 'store/financialStatement/financialStatements.selectors';
 
 export default (mapState) => {
   const mapStateToProps = (state, props) => {
-    const { generalLedgerIndex } = props;
+    const getGeneralLedgerSheet = getFinancialSheetFactory('generalLedger');
+    const getSheetTableRows = getFinancialSheetTableRowsFactory('generalLedger');
+    const getSheetQuery = getFinancialSheetQueryFactory('generalLedger');
 
     const mapped = {
-      generalLedgerSheet: getFinancialSheet(
-        state.financialStatements.generalLedger.sheets,
-        generalLedgerIndex,
-      ),
-      generalLedgerTableRows: getFinancialSheetTableRows(
-        state.financialStatements.generalLedger.sheets,
-        generalLedgerIndex,
-      ),
-      generalLedgerQuery: getFinancialSheetQuery(
-        state.financialStatements.generalLedger.sheets,
-        generalLedgerIndex,
-      ),
+      generalLedgerSheet: getGeneralLedgerSheet(state, props),
+      generalLedgerTableRows: getSheetTableRows(state, props),
+      generalLedgerQuery: getSheetQuery(state, props),
       generalLedgerSheetLoading:
         state.financialStatements.generalLedger.loading,
       generalLedgerSheetFilter: state.financialStatements.generalLedger.filter,

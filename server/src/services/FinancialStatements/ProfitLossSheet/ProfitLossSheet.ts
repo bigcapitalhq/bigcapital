@@ -1,6 +1,6 @@
 import { flatten, pick, sumBy } from 'lodash';
-import { IProfitLossSheetQuery } from "interfaces/ProfitLossSheet";
-import FinancialSheet from "../FinancialSheet";
+import { IProfitLossSheetQuery } from 'interfaces/ProfitLossSheet';
+import FinancialSheet from '../FinancialSheet';
 import {
   IAccount,
   IAccountType,
@@ -34,7 +34,7 @@ export default class ProfitLossSheet extends FinancialSheet {
     query: IProfitLossSheetQuery,
     accounts: IAccount & { type: IAccountType }[],
     journal: IJournalPoster,
-    baseCurrency: string,
+    baseCurrency: string
   ) {
     super();
 
@@ -44,9 +44,8 @@ export default class ProfitLossSheet extends FinancialSheet {
     this.accounts = accounts;
     this.journal = journal;
     this.baseCurrency = baseCurrency;
-    this.comparatorDateType = query.displayColumnsType === 'total'
-      ? 'day'
-      : query.displayColumnsBy;
+    this.comparatorDateType =
+      query.displayColumnsType === 'total' ? 'day' : query.displayColumnsBy;
 
     this.initDateRangeCollection();
   }
@@ -56,7 +55,7 @@ export default class ProfitLossSheet extends FinancialSheet {
    * @return {IAccount & { type: IAccountType }[]}
    */
   get incomeAccounts() {
-    return this.accounts.filter(a => a.type.key === 'income');
+    return this.accounts.filter((a) => a.type.key === 'income');
   }
 
   /**
@@ -64,7 +63,7 @@ export default class ProfitLossSheet extends FinancialSheet {
    * @return {IAccount & { type: IAccountType }[]}
    */
   get expensesAccounts() {
-    return this.accounts.filter(a => a.type.key === 'expense');
+    return this.accounts.filter((a) => a.type.key === 'expense');
   }
 
   /**
@@ -72,7 +71,7 @@ export default class ProfitLossSheet extends FinancialSheet {
    * @return {IAccount & { type: IAccountType }[]}}
    */
   get otherExpensesAccounts() {
-    return this.accounts.filter(a => a.type.key === 'other_expense');
+    return this.accounts.filter((a) => a.type.key === 'other_expense');
   }
 
   /**
@@ -80,7 +79,7 @@ export default class ProfitLossSheet extends FinancialSheet {
    * @return {IAccount & { type: IAccountType }[]}
    */
   get costOfSalesAccounts() {
-    return this.accounts.filter(a => a.type.key === 'cost_of_goods_sold');
+    return this.accounts.filter((a) => a.type.key === 'cost_of_goods_sold');
   }
 
   /**
@@ -105,7 +104,7 @@ export default class ProfitLossSheet extends FinancialSheet {
     const amount = this.journal.getAccountBalance(
       account.id,
       this.query.toDate,
-      this.comparatorDateType,
+      this.comparatorDateType
     );
     const formattedAmount = this.formatNumber(amount);
     const currencyCode = this.baseCurrency;
@@ -123,13 +122,13 @@ export default class ProfitLossSheet extends FinancialSheet {
       const amount = this.journal.getAccountBalance(
         account.id,
         date,
-        this.comparatorDateType,
+        this.comparatorDateType
       );
       const formattedAmount = this.formatNumber(amount);
       const currencyCode = this.baseCurrency;
-      
+
       return { date, amount, formattedAmount, currencyCode };
-    })
+    });
   }
 
   /**
@@ -153,26 +152,30 @@ export default class ProfitLossSheet extends FinancialSheet {
   }
 
   /**
-   * 
+   *
    * @param {IAccount[]} accounts -
    * @return {IProfitLossSheetAccount[]}
    */
-  private accountsWalker(accounts: IAccount & { type: IAccountType }[]): IProfitLossSheetAccount[] {
+  private accountsWalker(
+    accounts: IAccount & { type: IAccountType }[]
+  ): IProfitLossSheetAccount[] {
     const flattenAccounts = accounts
       .map(this.accountMapper.bind(this))
       // Filter accounts that have no transaction when `noneTransactions` is on.
-      .filter((account: IProfitLossSheetAccount) => 
-        !(!account.hasTransactions && this.query.noneTransactions),
+      .filter(
+        (account: IProfitLossSheetAccount) =>
+          !(!account.hasTransactions && this.query.noneTransactions)
       )
       // Filter accounts that have zero total amount when `noneZero` is on.
-      .filter((account: IProfitLossSheetAccount) => 
-        !(account.total.amount === 0 && this.query.noneZero)
+      .filter(
+        (account: IProfitLossSheetAccount) =>
+          !(account.total.amount === 0 && this.query.noneZero)
       );
 
-    return flatToNestedArray(
-      flattenAccounts,      
-      { id: 'id', parentId: 'parentAccountId' },
-    );
+    return flatToNestedArray(flattenAccounts, {
+      id: 'id',
+      parentId: 'parentAccountId',
+    });
   }
 
   /**
@@ -180,7 +183,9 @@ export default class ProfitLossSheet extends FinancialSheet {
    * @param {IAccount[]} accounts -
    * @return {IProfitLossSheetTotal}
    */
-  private gatTotalSection(accounts: IProfitLossSheetAccount[]): IProfitLossSheetTotal {
+  private gatTotalSection(
+    accounts: IProfitLossSheetAccount[]
+  ): IProfitLossSheetTotal {
     const amount = sumBy(accounts, 'total.amount');
     const formattedAmount = this.formatNumber(amount);
     const currencyCode = this.baseCurrency;
@@ -190,10 +195,12 @@ export default class ProfitLossSheet extends FinancialSheet {
 
   /**
    * Retrieve the report total section in periods display type.
-   * @param {IAccount} accounts - 
+   * @param {IAccount} accounts -
    * @return {IProfitLossSheetTotal[]}
    */
-  private getTotalPeriodsSection(accounts: IProfitLossSheetAccount[]): IProfitLossSheetTotal[] {
+  private getTotalPeriodsSection(
+    accounts: IProfitLossSheetAccount[]
+  ): IProfitLossSheetTotal[] {
     return this.dateRangeSet.map((date, index) => {
       const amount = sumBy(accounts, `totalPeriods[${index}].amount`);
       const formattedAmount = this.formatNumber(amount);
@@ -213,7 +220,7 @@ export default class ProfitLossSheet extends FinancialSheet {
       ...(this.query.displayColumnsType === 'date_periods' && {
         totalPeriods: this.getTotalPeriodsSection(accounts),
       }),
-    }
+    };
   }
 
   /**
@@ -266,10 +273,13 @@ export default class ProfitLossSheet extends FinancialSheet {
 
   private getSummarySectionDatePeriods(
     positiveSections: IProfitLossSheetTotalSection[],
-    minesSections: IProfitLossSheetTotalSection[],
+    minesSections: IProfitLossSheetTotalSection[]
   ) {
     return this.dateRangeSet.map((date, index: number) => {
-      const totalPositive = sumBy(positiveSections, `totalPeriods[${index}].amount`);
+      const totalPositive = sumBy(
+        positiveSections,
+        `totalPeriods[${index}].amount`
+      );
       const totalMines = sumBy(minesSections, `totalPeriods[${index}].amount`);
 
       const amount = totalPositive - totalMines;
@@ -278,11 +288,11 @@ export default class ProfitLossSheet extends FinancialSheet {
 
       return { date, amount, formattedAmount, currencyCode };
     });
-  };
+  }
 
   private getSummarySectionTotal(
     positiveSections: IProfitLossSheetTotalSection[],
-    minesSections: IProfitLossSheetTotalSection[],
+    minesSections: IProfitLossSheetTotalSection[]
   ) {
     const totalPositiveSections = sumBy(positiveSections, 'total.amount');
     const totalMinesSections = sumBy(minesSections, 'total.amount');
@@ -291,36 +301,37 @@ export default class ProfitLossSheet extends FinancialSheet {
     const formattedAmount = this.formatNumber(amount);
     const currencyCode = this.baseCurrency;
 
-    return { amount, formattedAmount, currencyCode };    
+    return { amount, formattedAmount, currencyCode };
   }
 
   /**
    * Retrieve the summary section
-   * @param 
+   * @param
    */
   private getSummarySection(
-    sections: IProfitLossSheetTotalSection|IProfitLossSheetTotalSection[],
-    subtractSections: IProfitLossSheetTotalSection|IProfitLossSheetTotalSection[]
+    sections: IProfitLossSheetTotalSection | IProfitLossSheetTotalSection[],
+    subtractSections:
+      | IProfitLossSheetTotalSection
+      | IProfitLossSheetTotalSection[]
   ): IProfitLossSheetTotalSection {
     const positiveSections = Array.isArray(sections) ? sections : [sections];
-    const minesSections = Array.isArray(subtractSections) ? subtractSections : [subtractSections];
+    const minesSections = Array.isArray(subtractSections)
+      ? subtractSections
+      : [subtractSections];
 
     return {
       total: this.getSummarySectionTotal(positiveSections, minesSections),
       ...(this.query.displayColumnsType === 'date_periods' && {
         totalPeriods: [
-          ...this.getSummarySectionDatePeriods(
-            positiveSections,
-            minesSections,
-          ),
+          ...this.getSummarySectionDatePeriods(positiveSections, minesSections),
         ],
       }),
-    }
+    };
   }
 
   /**
    * Retrieve date range columns of the given query.
-   * @param {IBalanceSheetQuery} query 
+   * @param {IBalanceSheetQuery} query
    * @return {string[]}
    */
   private dateRangeColumns(): string[] {
@@ -341,7 +352,10 @@ export default class ProfitLossSheet extends FinancialSheet {
     const grossProfit = this.getSummarySection(income, costOfSales);
 
     // - Operating profit = Gross profit - Expenses.
-    const operatingProfit = this.getSummarySection(grossProfit, [expenses, costOfSales]);
+    const operatingProfit = this.getSummarySection(grossProfit, [
+      expenses,
+      costOfSales,
+    ]);
 
     // - Net income = Operating profit - Other expenses.
     const netIncome = this.getSummarySection(operatingProfit, otherExpenses);

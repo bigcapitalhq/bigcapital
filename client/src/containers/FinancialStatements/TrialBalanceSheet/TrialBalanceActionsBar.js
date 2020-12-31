@@ -1,20 +1,24 @@
 import React from 'react';
-import { NavbarGroup, Button, Classes, NavbarDivider } from '@blueprintjs/core';
-import Icon from 'components/Icon';
-import { FormattedMessage as T } from 'react-intl';
-import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
+import {
+  NavbarGroup,
+  Button,
+  Classes,
+  NavbarDivider,
+  Popover,
+  PopoverInteractionKind,
+  Position,
+} from '@blueprintjs/core';
 import classNames from 'classnames';
-// import FilterDropdown from 'components/FilterDropdown';
+import { FormattedMessage as T } from 'react-intl';
 
-import { If } from 'components';
+import Icon from 'components/Icon';
+import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 
 import withTrialBalance from './withTrialBalance';
 import withTrialBalanceActions from './withTrialBalanceActions';
 import { compose } from 'utils';
 
-
 function TrialBalanceActionsBar({
-
   // #withTrialBalance
   trialBalanceSheetFilter,
 
@@ -22,7 +26,6 @@ function TrialBalanceActionsBar({
   toggleTrialBalanceFilter,
   refreshTrialBalance,
 }) {
-
   const handleFilterToggleClick = () => {
     toggleTrialBalanceFilter();
   };
@@ -35,45 +38,43 @@ function TrialBalanceActionsBar({
     <DashboardActionsBar>
       <NavbarGroup>
         <Button
-          className={classNames(Classes.MINIMAL, 'button--table-views')}
-          icon={<Icon icon="cog-16" iconSize={16} />}
-          text={<T id={'customize_report'} />}
-        />
-        <NavbarDivider />
-
-        <Button
-          className={classNames(
-            Classes.MINIMAL,
-            'button--gray-highlight',
-          )}
+          className={classNames(Classes.MINIMAL, 'button--gray-highlight')}
           text={'Re-calc Report'}
           onClick={handleRecalcReport}
           icon={<Icon icon="refresh-16" iconSize={16} />}
         />
-
-        <If condition={trialBalanceSheetFilter}>
-          <Button
-            className={Classes.MINIMAL}
-            text={<T id={'hide_filter'} />}
-            icon={<Icon icon="arrow-to-top" />}
-            onClick={handleFilterToggleClick}
-          />
-        </If>
-
-        <If condition={!trialBalanceSheetFilter}>
-          <Button
-            className={Classes.MINIMAL}
-            text={<T id={'show_filter'} />}
-            icon={<Icon icon="arrow-to-bottom" />}
-            onClick={handleFilterToggleClick}
-          />
-        </If>
-
         <NavbarDivider />
 
         <Button
+          className={classNames(Classes.MINIMAL, 'button--table-views')}
+          icon={<Icon icon="cog-16" iconSize={16} />}
+          text={
+            trialBalanceSheetFilter ? (
+              <T id={'hide_customizer'} />
+            ) : (
+              <T id={'customize_report'} />
+            )
+          }
+          active={trialBalanceSheetFilter}
+          onClick={handleFilterToggleClick}
+        />
+        <NavbarDivider />
+
+        <Popover
+          // content={}
+          interactionKind={PopoverInteractionKind.CLICK}
+          position={Position.BOTTOM_LEFT}
+        >
+          <Button
+            className={classNames(Classes.MINIMAL, 'button--filter')}
+            text={<T id={'filter'} />}
+            icon={<Icon icon="filter-16" iconSize={16} />}
+          />
+        </Popover>
+
+        <Button
           className={Classes.MINIMAL}
-          icon={<Icon icon='print-16' iconSize={16} />}
+          icon={<Icon icon="print-16" iconSize={16} />}
           text={<T id={'print'} />}
         />
         <Button
@@ -87,6 +88,8 @@ function TrialBalanceActionsBar({
 }
 
 export default compose(
-  withTrialBalance(({ trialBalanceSheetFilter }) => ({ trialBalanceSheetFilter })),
-  withTrialBalanceActions
+  withTrialBalance(({ trialBalanceSheetFilter }) => ({
+    trialBalanceSheetFilter,
+  })),
+  withTrialBalanceActions,
 )(TrialBalanceActionsBar);

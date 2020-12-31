@@ -4,6 +4,7 @@ import { compose } from 'utils';
 import { useQuery } from 'react-query';
 import moment from 'moment';
 import { useIntl } from 'react-intl';
+import { queryCache } from 'react-query';
 
 import BalanceSheetHeader from './BalanceSheetHeader';
 import BalanceSheetTable from './BalanceSheetTable';
@@ -18,65 +19,73 @@ import withSettings from 'containers/Settings/withSettings';
 import withBalanceSheetActions from './withBalanceSheetActions';
 import withBalanceSheetDetail from './withBalanceSheetDetail';
 
+import { transformFilterFormToQuery } from 'containers/FinancialStatements/common';
+
 function BalanceSheet({
   // #withDashboardActions
   changePageTitle,
+  setDashboardBackLink,
 
   // #withBalanceSheetActions
   fetchBalanceSheet,
+  refreshBalanceSheet,
 
   // #withBalanceSheetDetail
-  balanceSheetFilter,
+  balanceSheetRefresh,
 
   // #withPreferences
-  organizationSettings,
+  organizationName,
 }) {
   const { formatMessage } = useIntl();
+
   const [filter, setFilter] = useState({
-    from_date: moment().startOf('year').format('YYYY-MM-DD'),
-    to_date: moment().endOf('year').format('YYYY-MM-DD'),
+    fromDate: moment().startOf('year').format('YYYY-MM-DD'),
+    toDate: moment().endOf('year').format('YYYY-MM-DD'),
     basis: 'cash',
-    display_columns_type: 'total',
-    display_columns_by: '',
-    none_zero: false,
+    displayColumnsType: 'total',
+    accountsFilter: 'all-accounts',
   });
-  const [refresh, setRefresh] = useState(true);
 
-  const fetchHook = useQuery(
-    ['balance-sheet', filter],
-    (key, query) => fetchBalanceSheet({ ...query }),
-    { manual: true },
+  // Fetches the balance sheet.
+  const fetchHook = useQuery(['balance-sheet', filter], (key, query) =>
+    fetchBalanceSheet({ ...transformFilterFormToQuery(query) }),
   );
-
-  // Handle fetch the data of balance sheet.
-  const handleFetchData = useCallback(() => {
-    setRefresh(true);
-  }, []);
 
   useEffect(() => {
     changePageTitle(formatMessage({ id: 'balance_sheet' }));
   }, [changePageTitle, formatMessage]);
+
+  // Observes the balance sheet refresh to invalid the query to refresh it.
+  useEffect(() => {
+    if (balanceSheetRefresh) {
+      queryCache.invalidateQueries('balance-sheet');
+      refreshBalanceSheet(false);
+    }
+  }, [balanceSheetRefresh, refreshBalanceSheet]);
+
+  useEffect(() => {
+    // Show the back link on dashboard topbar.
+    setDashboardBackLink(true);
+
+    return () => {
+      // Hide the back link on dashboard topbar.
+      setDashboardBackLink(false);
+    };
+  });
 
   // Handle re-fetch balance sheet after filter change.
   const handleFilterSubmit = useCallback(
     (filter) => {
       const _filter = {
         ...filter,
-        from_date: moment(filter.from_date).format('YYYY-MM-DD'),
-        to_date: moment(filter.to_date).format('YYYY-MM-DD'),
+        fromDate: moment(filter.fromDate).format('YYYY-MM-DD'),
+        toDate: moment(filter.toDate).format('YYYY-MM-DD'),
       };
       setFilter({ ..._filter });
-      setRefresh(true);
+      refreshBalanceSheet(true);
     },
-    [setFilter],
+    [setFilter, refreshBalanceSheet],
   );
-
-  useEffect(() => {
-    if (refresh) {
-      fetchHook.refetch({ force: true });
-      setRefresh(false);
-    }
-  }, [refresh]);
 
   return (
     <DashboardInsider>
@@ -87,15 +96,9 @@ function BalanceSheet({
           <BalanceSheetHeader
             pageFilter={filter}
             onSubmitFilter={handleFilterSubmit}
-            show={balanceSheetFilter}
           />
-
           <div class="financial-statement__body">
-            <BalanceSheetTable
-              companyName={organizationSettings.name}
-              balanceSheetQuery={filter}
-              onFetchData={handleFetchData}
-            />
+            <BalanceSheetTable companyName={organizationName} />
           </div>
         </FinancialStatement>
       </DashboardPageContent>
@@ -106,8 +109,10 @@ function BalanceSheet({
 export default compose(
   withDashboardActions,
   withBalanceSheetActions,
-  withBalanceSheetDetail(({ balanceSheetFilter }) => ({
-    balanceSheetFilter,
+  withBalanceSheetDetail(({ balanceSheetRefresh }) => ({
+    balanceSheetRefresh,
   })),
-  withSettings,
+  withSettings(({ organizationSettings }) => ({
+    organizationName: organizationSettings.name,
+  })),
 )(BalanceSheet);

@@ -1,28 +1,22 @@
 import {connect} from 'react-redux';
 import {
-  getFinancialSheetAccounts,
-  getFinancialSheetQuery,
+  getFinancialSheetFactory,
+  getFinancialSheetQueryFactory,
 } from 'store/financialStatement/financialStatements.selectors';
-
 
 export default (mapState) => {
   const mapStateToProps = (state, props) => {
-    const { trialBalanceIndex } = props;
+    const getTrialBalance = getFinancialSheetFactory('trialBalance');
+    const getBalanceSheetQuery = getFinancialSheetQueryFactory('trialBalance');
+
     const mapped = {
-      trialBalanceAccounts: getFinancialSheetAccounts(
-        state.financialStatements.trialBalance.sheets,
-        trialBalanceIndex
-      ),
-      trialBalanceQuery: getFinancialSheetQuery(
-        state.financialStatements.trialBalance.sheets,
-        trialBalanceIndex
-      ),
+      trialBalance: getTrialBalance(state, props),
+      trialBalanceQuery: getBalanceSheetQuery(state, props),
       trialBalanceSheetLoading: state.financialStatements.trialBalance.loading,
       trialBalanceSheetFilter: state.financialStatements.trialBalance.filter,
       trialBalanceSheetRefresh: state.financialStatements.trialBalance.refresh,
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };
-
   return connect(mapStateToProps);
 };

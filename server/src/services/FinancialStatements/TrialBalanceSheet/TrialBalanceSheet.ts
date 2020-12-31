@@ -13,6 +13,7 @@ export default class TrialBalanceSheet extends FinancialSheet{
   query: ITrialBalanceSheetQuery;
   accounts: IAccount & { type: IAccountType }[];
   journalFinancial: any;
+  baseCurrency: string;
 
   /**
    * Constructor method.
@@ -25,7 +26,8 @@ export default class TrialBalanceSheet extends FinancialSheet{
     tenantId: number,
     query: ITrialBalanceSheetQuery,
     accounts: IAccount & { type: IAccountType }[],
-    journalFinancial: any
+    journalFinancial: any,
+    baseCurrency: string,
   ) {
     super();
 
@@ -35,6 +37,7 @@ export default class TrialBalanceSheet extends FinancialSheet{
     this.accounts = accounts;
     this.journalFinancial = journalFinancial;
     this.numberFormat = this.query.numberFormat;
+    this.baseCurrency = baseCurrency;
   }
 
   /**
@@ -58,6 +61,7 @@ export default class TrialBalanceSheet extends FinancialSheet{
       credit: trial.credit,
       debit: trial.debit,
       balance: trial.balance,
+      currencyCode: this.baseCurrency,
 
       formattedCredit: this.formatNumber(trial.credit),
       formattedDebit: this.formatNumber(trial.debit),

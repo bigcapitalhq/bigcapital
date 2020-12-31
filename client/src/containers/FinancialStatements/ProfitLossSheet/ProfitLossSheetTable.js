@@ -1,13 +1,11 @@
 import React, { useMemo, useCallback } from 'react';
-import { connect } from 'react-redux';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 
 import FinancialSheet from 'components/FinancialSheet';
 import DataTable from 'components/DataTable';
 import Money from 'components/Money';
 
-import { compose, defaultExpanderReducer } from 'utils';
-import { getFinancialSheetIndexByQuery } from 'store/financialStatement/financialStatements.selectors';
+import { compose, defaultExpanderReducer, getColumnWidth } from 'utils';
 import withProfitLossDetail from './withProfitLoss';
 
 function ProfitLossSheetTable({
@@ -18,7 +16,6 @@ function ProfitLossSheetTable({
   profitLossSheetLoading,
 
   // #ownProps
-  onFetchData,
   companyName,
 }) {
   const { formatMessage } = useIntl();
@@ -26,14 +23,10 @@ function ProfitLossSheetTable({
   const columns = useMemo(
     () => [
       {
-        Header: formatMessage({ id: 'account_name' }),
-        accessor: 'name',
+        Header: formatMessage({ id: 'account' }),
+        accessor: (row) => (row.code ? `${row.name} - ${row.code}` : row.name),
         className: 'name',
-      },
-      {
-        Header: formatMessage({ id: 'account_code' }),
-        accessor: 'code',
-        className: 'account_code',
+        width: 240,
       },
       ...(profitLossQuery.display_columns_type === 'total'
         ? [
@@ -45,13 +38,14 @@ function ProfitLossSheetTable({
                   return (
                     <Money
                       amount={row.total.formatted_amount}
-                      currency={'USD'}
+                      currency={row.total.currency_code}
                     />
                   );
                 }
                 return '';
               },
               className: 'total',
+              width: 140,
             },
           ]
         : []),
@@ -60,40 +54,44 @@ function ProfitLossSheetTable({
             id: `date_period_${index}`,
             Header: column,
             accessor: (row) => {
-              if (row.periods && row.periods[index]) {
-                const amount = row.periods[index].formatted_amount;
+              if (row.total_periods && row.total_periods[index]) {
+                const amount = row.total_periods[index].formatted_amount;
                 return <Money amount={amount} currency={'USD'} />;
               }
               return '';
             },
-            width: 100,
+            width: getColumnWidth(
+              profitLossTableRows,
+              `total_periods.${index}.formatted_amount`,
+              { minWidth: 100 },
+            ),
+            className: 'total-period',
           }))
         : []),
     ],
-    [profitLossQuery.display_columns_type, profitLossColumns, formatMessage],
-  );
-
-  // Handle data table fetch data.
-  const handleFetchData = useCallback(
-    (...args) => {
-      onFetchData && onFetchData(...args);
-    },
-    [onFetchData],
+    [profitLossQuery.display_columns_type, profitLossTableRows, profitLossColumns, formatMessage],
   );
 
   // Retrieve default expanded rows of balance sheet.
   const expandedRows = useMemo(
-    () => defaultExpanderReducer(profitLossTableRows, 1),
+    () => defaultExpanderReducer(profitLossTableRows, 3),
     [profitLossTableRows],
   );
 
   // Retrieve conditional datatable row classnames.
-  const rowClassNames = useCallback(
-    (row) => ({
-      [`row--${row.rowType}`]: row.rowType,
-    }),
-    [],
-  );
+  const rowClassNames = useCallback((row) => {
+    const { original } = row;
+    const rowTypes = Array.isArray(original.rowTypes)
+      ? original.rowTypes
+      : [];
+
+    return {
+      ...rowTypes.reduce((acc, rowType) => {
+        acc[`row_type--${rowType}`] = rowType;
+        return acc;
+      }, {}),
+    };
+  }, []);
 
   return (
     <FinancialSheet
@@ -109,7 +107,6 @@ function ProfitLossSheetTable({
         className="bigcapital-datatable--financial-report"
         columns={columns}
         data={profitLossTableRows}
-        onFetchData={handleFetchData}
         noInitialFetch={true}
         expanded={expandedRows}
         rowClassNames={rowClassNames}
@@ -121,19 +118,14 @@ function ProfitLossSheetTable({
   );
 }
 
-const mapStateToProps = (state, props) => ({
-  profitLossIndex: getFinancialSheetIndexByQuery(
-    state.financialStatements.profitLoss.sheets,
-    props.profitLossQuery,
-  ),
-});
-
-const withProfitLossTable = connect(mapStateToProps);
-
 export default compose(
-  withProfitLossTable,
   withProfitLossDetail(
-    ({ profitLossQuery, profitLossColumns, profitLossTableRows, profitLossSheetLoading }) => ({
+    ({
+      profitLossQuery,
+      profitLossColumns,
+      profitLossTableRows,
+      profitLossSheetLoading,
+    }) => ({
       profitLossColumns,
       profitLossQuery,
       profitLossTableRows,

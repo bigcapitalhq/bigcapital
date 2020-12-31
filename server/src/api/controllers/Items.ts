@@ -1,6 +1,6 @@
 import { Inject, Service } from 'typedi';
 import { Router, Request, Response, NextFunction } from 'express';
-import { check, param, query, ValidationChain } from 'express-validator';
+import { check, param, body, query, ValidationChain } from 'express-validator';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
 import ItemsService from 'services/Items/ItemsService';
 import BaseController from 'api/controllers/BaseController';
@@ -23,70 +23,62 @@ export default class ItemsController extends BaseController {
   router() {
     const router = Router();
 
-    router.post('/', [
-      ...this.validateItemSchema,
-      ...this.validateNewItemSchema,
-    ],
+    router.post(
+      '/',
+      [...this.validateItemSchema, ...this.validateNewItemSchema],
       this.validationResult,
       asyncMiddleware(this.newItem.bind(this)),
-      this.handlerServiceErrors,
+      this.handlerServiceErrors
     );
     router.post(
-      '/:id/activate', [
-      ...this.validateSpecificItemSchema,
-    ],
+      '/:id/activate',
+      [...this.validateSpecificItemSchema],
       this.validationResult,
       asyncMiddleware(this.activateItem.bind(this)),
       this.handlerServiceErrors
     );
     router.post(
-      '/:id/inactivate', [
-        ...this.validateSpecificItemSchema,
-    ],
+      '/:id/inactivate',
+      [...this.validateSpecificItemSchema],
       this.validationResult,
       asyncMiddleware(this.inactivateItem.bind(this)),
-      this.handlerServiceErrors,
-    )
+      this.handlerServiceErrors
+    );
     router.post(
-      '/:id', [
-      ...this.validateItemSchema,
-      ...this.validateSpecificItemSchema,
-    ],
+      '/:id',
+      [...this.validateItemSchema, ...this.validateSpecificItemSchema],
       this.validationResult,
       asyncMiddleware(this.editItem.bind(this)),
-      this.handlerServiceErrors,
+      this.handlerServiceErrors
     );
-    router.delete('/', [
-      ...this.validateBulkSelectSchema,
-    ],
+    router.delete(
+      '/',
+      [...this.validateBulkSelectSchema],
       this.validationResult,
       asyncMiddleware(this.bulkDeleteItems.bind(this)),
       this.handlerServiceErrors
     );
     router.delete(
-      '/:id', [
-      ...this.validateSpecificItemSchema,
-    ],
+      '/:id',
+      [...this.validateSpecificItemSchema],
       this.validationResult,
       asyncMiddleware(this.deleteItem.bind(this)),
-      this.handlerServiceErrors,
+      this.handlerServiceErrors
     );
     router.get(
-      '/:id', [
-      ...this.validateSpecificItemSchema,
-    ],
+      '/:id',
+      [...this.validateSpecificItemSchema],
       this.validationResult,
       asyncMiddleware(this.getItem.bind(this)),
-      this.handlerServiceErrors,
+      this.handlerServiceErrors
     );
     router.get(
-      '/', [
-      ...this.validateListQuerySchema,
-    ],
+      '/',
+      [...this.validateListQuerySchema],
       this.validationResult,
       asyncMiddleware(this.getItemsList.bind(this)),
       this.dynamicListService.handlerErrorsToResponse,
-      this.handlerServiceErrors,
+      this.handlerServiceErrors
     );
     return router;
   }
@@ -97,8 +89,21 @@ export default class ItemsController extends BaseController {
   get validateNewItemSchema(): ValidationChain[] {
     return [
       check('opening_quantity').default(0).isInt({ min: 0 }).toInt(),
-      check('opening_cost').optional({ nullable: true }).isFloat({ min: 0 }).toFloat(),
-      check('opening_date').optional({ nullable: true }).isISO8601(),
+      check('opening_cost')
+        .if(body('opening_quantity').exists().isInt({ min: 1 }))
+        .exists()
+        .isFloat(),
+      check('opening_cost')
+        .optional({ nullable: true })
+        .isFloat({ min: 0 })
+        .toFloat(),
+      check('opening_date')
+        .if(
+          body('opening_quantity').exists().isFloat({ min: 1 }) ||
+          body('opening_cost').exists().isFloat({ min: 1 })
+        )
+        .exists(),
+      check('opening_date').optional({ nullable: true }).isISO8601().toDate(),
     ];
   }
 
@@ -107,8 +112,12 @@ export default class ItemsController extends BaseController {
    */
   get validateItemSchema(): ValidationChain[] {
     return [
-      check('name').exists().isString().isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('type').exists()
+      check('name')
+        .exists()
+        .isString()
+        .isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('type')
+        .exists()
         .isString()
         .trim()
         .escape()
@@ -127,12 +136,11 @@ export default class ItemsController extends BaseController {
         .toFloat()
         .if(check('purchasable').equals('true'))
         .exists(),
+      check('cost_account_id').if(check('purchasable').equals('true')).exists(),
       check('cost_account_id')
         .optional({ nullable: true })
         .isInt({ min: 0, max: DATATYPES_LENGTH.INT_10 })
-        .toInt()
-        .if(check('purchasable').equals('true'))
-        .exists(),
+        .toInt(),
       // Sell attributes.
       check('sellable').optional().isBoolean().toBoolean(),
       check('sell_price')
@@ -141,18 +149,18 @@ export default class ItemsController extends BaseController {
         .toFloat()
         .if(check('sellable').equals('true'))
         .exists(),
+      check('sell_account_id').if(check('sellable').equals('true')).exists(),
       check('sell_account_id')
         .optional({ nullable: true })
         .isInt({ min: 0, max: DATATYPES_LENGTH.INT_10 })
-        .toInt()
-        .if(check('sellable').equals('true'))
+        .toInt(),
+      check('inventory_account_id')
+        .if(check('type').equals('inventory'))
         .exists(),
       check('inventory_account_id')
         .optional({ nullable: true })
         .isInt({ min: 0, max: DATATYPES_LENGTH.INT_10 })
-        .toInt()
-        .if(check('type').equals('inventory'))
-        .exists(),
+        .toInt(),
       check('sell_description')
         .optional({ nullable: true })
         .isString()
@@ -187,9 +195,7 @@ export default class ItemsController extends BaseController {
    * @return {ValidationChain[]}
    */
   get validateSpecificItemSchema(): ValidationChain[] {
-    return [
-      param('id').exists().isNumeric().toInt(),
-    ];
+    return [param('id').exists().isNumeric().toInt()];
   }
 
   /**
@@ -216,13 +222,13 @@ export default class ItemsController extends BaseController {
 
       query('custom_view_id').optional().isNumeric().toInt(),
       query('stringified_filter_roles').optional().isJSON(),
-    ]
+    ];
   }
 
   /**
    * Stores the given item details to the storage.
-   * @param {Request} req 
-   * @param {Response} res 
+   * @param {Request} req
+   * @param {Response} res
    */
   async newItem(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
@@ -242,14 +248,14 @@ export default class ItemsController extends BaseController {
 
   /**
    * Updates the given item details on the storage.
-   * @param {Request} req 
-   * @param {Response} res 
+   * @param {Request} req
+   * @param {Response} res
    */
   async editItem(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const itemId: number = req.params.id;
     const item: IItemDTO = this.matchedBodyData(req);
-    
+
     try {
       await this.itemsService.editItem(tenantId, itemId, item);
       return res.status(200).send({ id: itemId });
@@ -260,9 +266,9 @@ export default class ItemsController extends BaseController {
 
   /**
    * Activates the given item.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
   async activateItem(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
@@ -282,9 +288,9 @@ export default class ItemsController extends BaseController {
 
   /**
    * Inactivates the given item.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
   async inactivateItem(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
@@ -304,8 +310,8 @@ export default class ItemsController extends BaseController {
 
   /**
    * Deletes the given item from the storage.
-   * @param {Request} req 
-   * @param {Response} res 
+   * @param {Request} req
+   * @param {Response} res
    */
   async deleteItem(req: Request, res: Response, next: NextFunction) {
     const itemId: number = req.params.id;
@@ -320,10 +326,10 @@ export default class ItemsController extends BaseController {
   }
 
   /**
-   * Retrieve details the given item id. 
-   * @param {Request} req 
-   * @param {Response} res 
-   * @return {Response} 
+   * Retrieve details the given item id.
+   * @param {Request} req
+   * @param {Response} res
+   * @return {Response}
    */
   async getItem(req: Request, res: Response, next: NextFunction) {
     const itemId: number = req.params.id;
@@ -336,14 +342,14 @@ export default class ItemsController extends BaseController {
     } catch (error) {
       console.log(error);
 
-      next(error)
+      next(error);
     }
   }
 
   /**
    * Retrieve items datatable list.
-   * @param {Request} req 
-   * @param {Response} res 
+   * @param {Request} req
+   * @param {Response} res
    */
   async getItemsList(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
@@ -362,7 +368,7 @@ export default class ItemsController extends BaseController {
       const {
         items,
         pagination,
-        filterMeta
+        filterMeta,
       } = await this.itemsService.itemsList(tenantId, filter);
 
       return res.status(200).send({
@@ -377,14 +383,14 @@ export default class ItemsController extends BaseController {
 
   /**
    * Deletes items in bulk.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
   async bulkDeleteItems(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const { ids: itemsIds } = req.query;
-  
+
     try {
       await this.itemsService.bulkDeleteItems(tenantId, itemsIds);
 
@@ -399,12 +405,17 @@ export default class ItemsController extends BaseController {
 
   /**
    * Handles service errors.
-   * @param {Error} error 
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
+   * @param {Error} error
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
-  handlerServiceErrors(error: Error, req: Request, res: Response, next: NextFunction) {
+  handlerServiceErrors(
+    error: Error,
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     if (error instanceof ServiceError) {
       if (error.errorType === 'NOT_FOUND') {
         return res.status(400).send({
@@ -479,7 +490,7 @@ export default class ItemsController extends BaseController {
       if (error.errorType === 'ITEM_HAS_ASSOCIATED_TRANSACTINS') {
         return res.status(400).send({
           errors: [{ type: 'ITEM_HAS_ASSOCIATED_TRANSACTINS', code: 320 }],
-        })
+        });
       }
     }
     next(error);

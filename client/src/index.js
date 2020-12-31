@@ -9,6 +9,14 @@ import * as serviceWorker from 'serviceWorker';
 import { store, persistor } from 'store/createStore';
 import AppProgress from 'components/NProgress/AppProgress';
 
+if (process.env.NODE_ENV === 'development') {
+  const whyDidYouRender = require('@welldone-software/why-did-you-render');
+
+  whyDidYouRender(React, {
+    trackAllPureComponents: false,
+  });
+}
+
 ReactDOM.render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>

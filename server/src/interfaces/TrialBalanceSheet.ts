@@ -23,6 +23,7 @@ export interface ITrialBalanceAccount {
   credit: number,
   debit: number,
   balance: number,
+  currencyCode: string,
 
   formattedCredit: string,
   formattedDebit: string,

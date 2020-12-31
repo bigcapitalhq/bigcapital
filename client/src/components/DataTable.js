@@ -104,6 +104,7 @@ export default function DataTable({
       initialState: {
         pageIndex: initialPageIndex,
         pageSize: initialPageSize,
+        expanded
       },
       manualPagination,
       pageCount: controlledPageCount,

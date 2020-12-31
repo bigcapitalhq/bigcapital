@@ -1,16 +1,14 @@
 import React, { useCallback, useMemo } from 'react';
-import { connect } from 'react-redux';
 import moment from 'moment';
 import { useIntl } from 'react-intl';
 
 import FinancialSheet from 'components/FinancialSheet';
 import DataTable from 'components/DataTable';
-import { compose, defaultExpanderReducer } from 'utils';
-
 import Money from 'components/Money';
-import { getFinancialSheetIndexByQuery } from 'store/financialStatement/financialStatements.selectors';
 
 import withJournal from './withJournal';
+
+import { compose, defaultExpanderReducer } from 'utils';
 
 function JournalSheetTable({
   // #withJournal
@@ -106,12 +104,12 @@ function JournalSheetTable({
   return (
     <FinancialSheet
       companyName={companyName}
-      // sheetType={formatMessage({ id: 'journal_sheet' })}
+      sheetType={formatMessage({ id: 'journal_sheet' })}
       fromDate={journalSheetQuery.from_date}
       toDate={journalSheetQuery.to_date}
       name="journal"
       loading={journalSheetLoading}
-      minimal={true}
+      // minimal={true}
       fullWidth={true}
     >
       <DataTable
@@ -129,20 +127,7 @@ function JournalSheetTable({
   );
 }
 
-const mapStateToProps = (state, props) => {
-  const { journalQuery } = props;
-  return {
-    journalIndex: getFinancialSheetIndexByQuery(
-      state.financialStatements.journal.sheets,
-      journalQuery,
-    ),
-  };
-};
-
-const withJournalTable = connect(mapStateToProps);
-
 export default compose(
-  withJournalTable,
   withJournal(
     ({ journalSheetTableRows, journalSheetLoading, journalSheetQuery }) => ({
       journalSheetTableRows,

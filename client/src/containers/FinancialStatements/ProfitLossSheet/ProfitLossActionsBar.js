@@ -1,17 +1,23 @@
 import React from 'react';
-import { NavbarGroup, Button, Classes, NavbarDivider } from '@blueprintjs/core';
+import {
+  NavbarGroup,
+  Button,
+  Classes,
+  NavbarDivider,
+  Popover,
+  Position,
+  PopoverInteractionKind,
+} from '@blueprintjs/core';
 import { FormattedMessage as T } from 'react-intl';
 import classNames from 'classnames';
 
 import Icon from 'components/Icon';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 
-import { If } from 'components';
 import withProfitLossActions from './withProfitLossActions';
 import withProfitLoss from './withProfitLoss';
 
 import { compose } from 'utils';
-
 
 function ProfitLossActionsBar({
   // #withProfitLoss
@@ -33,45 +39,43 @@ function ProfitLossActionsBar({
     <DashboardActionsBar>
       <NavbarGroup>
         <Button
-          className={classNames(Classes.MINIMAL, 'button--table-views')}
-          icon={<Icon icon="cog-16" iconSize={16} />}
-          text={<T id={'customize_report'} />}
-        />
-        <NavbarDivider />
-
-        <Button
-          className={classNames(
-            Classes.MINIMAL,
-            'button--gray-highlight',
-          )}
-          text={'Re-calc Report'}
+          className={classNames(Classes.MINIMAL, 'button--gray-highlight')}
+          text={<T id={'recalc_report'} />}
           onClick={handleRecalcReport}
           icon={<Icon icon="refresh-16" iconSize={16} />}
         />
-
-        <If condition={profitLossSheetFilter}>
-          <Button
-            className={Classes.MINIMAL}
-            text={<T id={'hide_filter'} />}
-            icon={<Icon icon="arrow-to-top" />}
-            onClick={handleFilterClick}
-          />
-        </If>
-
-        <If condition={!profitLossSheetFilter}>
-          <Button
-            className={Classes.MINIMAL}
-            text={<T id={'show_filter'} />}
-            icon={<Icon icon="arrow-to-bottom" />}
-            onClick={handleFilterClick}
-          />
-        </If>
-
         <NavbarDivider />
 
         <Button
+          className={classNames(Classes.MINIMAL, 'button--table-views')}
+          icon={<Icon icon="cog-16" iconSize={16} />}
+          text={
+            profitLossSheetFilter ? (
+              <T id={'hide_customizer'} />
+            ) : (
+              <T id={'customize_report'} />
+            )
+          }
+          onClick={handleFilterClick}
+          active={profitLossSheetFilter}
+        />
+        <NavbarDivider />
+
+        <Popover
+          // content={}
+          interactionKind={PopoverInteractionKind.CLICK}
+          position={Position.BOTTOM_LEFT}
+        >
+          <Button
+            className={classNames(Classes.MINIMAL, 'button--filter')}
+            text={<T id={'filter'} />}
+            icon={<Icon icon="filter-16" iconSize={16} />}
+          />
+        </Popover>
+
+        <Button
           className={Classes.MINIMAL}
-          icon={<Icon icon='print-16' iconSize={16} />}
+          icon={<Icon icon="print-16" iconSize={16} />}
           text={<T id={'print'} />}
         />
         <Button

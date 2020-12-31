@@ -1,17 +1,14 @@
-import {getObjectDiff} from 'utils';
+import { createSelector } from 'reselect';
+import { camelCase } from 'lodash';
 
+const transformSheetType = (sheetType) => {
+  return camelCase(sheetType);
+};
 
 // Financial Statements selectors.
-
-/**
- * Retrieve financial statement sheet by the given query.
- * @param {array} sheets 
- * @param {object} query 
- */
-export const getFinancialSheetIndexByQuery = (sheets, query) => {
-  return sheets.findIndex(balanceSheet => (
-    getObjectDiff(query, balanceSheet.query).length === 0
-  ));
+export const sheetByTypeSelector = (sheetType) => (state, props) => {
+  const sheetName = transformSheetType(sheetType);
+  return state.financialStatements[sheetName].sheet;
 };
 
 /**
@@ -19,38 +16,56 @@ export const getFinancialSheetIndexByQuery = (sheets, query) => {
  * @param {array} sheets 
  * @param {number} index 
  */
-export const getFinancialSheet = (sheets, index) => {
-  return (typeof sheets[index] !== 'undefined') ? sheets[index] : null;
-};
+export const getFinancialSheetFactory = (sheetType) => 
+  createSelector(
+    sheetByTypeSelector(sheetType),
+    (sheet) => {
+      return sheet;
+    },
+  );
 
 /**
  * Retrieve financial statement columns by the given sheet index.
  * @param {array} sheets 
  * @param {number} index 
  */
-export const getFinancialSheetColumns = (sheets, index) => {
-  const sheet = getFinancialSheet(sheets, index);
-  return (sheet && sheet.columns) ? sheet.columns : [];
-};
+export const getFinancialSheetColumnsFactory = (sheetType) => 
+  createSelector(
+    sheetByTypeSelector(sheetType),
+    (sheet) => {
+      return (sheet && sheet.columns) ? sheet.columns : [];    
+    },
+  );
 
 /**
  * Retrieve financial statement query by the given sheet index.
- * @param {array} sheets 
- * @param {number} index 
  */
-export const getFinancialSheetQuery = (sheets, index) => {
-  const sheet = getFinancialSheet(sheets, index);
-  return (sheet && sheet.query) ? sheet.query : {};
-};
+export const getFinancialSheetQueryFactory = (sheetType) =>
+  createSelector(
+    sheetByTypeSelector(sheetType),
+    (sheet) => {
+      return (sheet && sheet.query) ? sheet.query : {};
+    },
+  );
 
+/**
+ * Retrieve financial statement accounts by the given sheet index.
+ */
+export const getFinancialSheetAccountsFactory = (sheetType) => 
+  createSelector(
+    sheetByTypeSelector(sheetType),
+    (sheet) => {
+      return (sheet && sheet.accounts) ? sheet.accounts : []; 
+    }
+  );
 
-export const getFinancialSheetAccounts = (sheets, index) => {
-  const sheet = getFinancialSheet(sheets, index);
-  return (sheet && sheet.accounts) ? sheet.accounts : []; 
-};
-
-
-export const getFinancialSheetTableRows = (sheets, index) => {
-  const sheet = getFinancialSheet(sheets, index);
-  return (sheet && sheet.tableRows) ? sheet.tableRows : []; 
-};
+/**
+ * Retrieve financial statement table rows by the given sheet index.
+ */
+export const getFinancialSheetTableRowsFactory = (sheetType) => 
+  createSelector(
+    sheetByTypeSelector(sheetType),
+    (sheet) => {
+      return (sheet && sheet.tableRows) ? sheet.tableRows : []; 
+    }
+  );

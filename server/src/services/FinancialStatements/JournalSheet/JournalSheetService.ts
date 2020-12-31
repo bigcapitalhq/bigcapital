@@ -1,12 +1,12 @@
-import { Service, Inject } from "typedi";
+import { Service, Inject } from 'typedi';
 import { IJournalReportQuery } from 'interfaces';
 import moment from 'moment';
-import JournalSheet from "./JournalSheet";
-import TenancyService from "services/Tenancy/TenancyService";
-import Journal from "services/Accounting/JournalPoster";
+import JournalSheet from './JournalSheet';
+import TenancyService from 'services/Tenancy/TenancyService';
+import Journal from 'services/Accounting/JournalPoster';
 
 @Service()
-export default class JournalSheetService  {
+export default class JournalSheetService {
   @Inject()
   tenancy: TenancyService;
 
@@ -33,13 +33,10 @@ export default class JournalSheetService  {
 
   /**
    * Journal sheet.
-   * @param {number} tenantId 
-   * @param {IJournalSheetFilterQuery} query 
+   * @param {number} tenantId
+   * @param {IJournalSheetFilterQuery} query
    */
-  async journalSheet(
-    tenantId: number,
-    query: IJournalReportQuery,
-  ) {
+  async journalSheet(tenantId: number, query: IJournalReportQuery) {
     const {
       accountRepository,
       transactionsRepository,
@@ -49,11 +46,17 @@ export default class JournalSheetService  {
       ...this.defaultQuery,
       ...query,
     };
-    this.logger.info('[journal] trying to calculate the report.', { tenantId, filter });
+    this.logger.info('[journal] trying to calculate the report.', {
+      tenantId,
+      filter,
+    });
 
     // Settings service.
     const settings = this.tenancy.settings(tenantId);
-    const baseCurrency = settings.get({ group: 'organization', key: 'base_currency' });
+    const baseCurrency = settings.get({
+      group: 'organization',
+      key: 'base_currency',
+    });
 
     // Retrieve all accounts on the storage.
     const accountsGraph = await accountRepository.getDependencyGraph();
@@ -66,10 +69,12 @@ export default class JournalSheetService  {
       fromAmount: filter.fromRange,
       toAmount: filter.toRange,
     });
-
     // Transform the transactions array to journal collection.
-    const transactionsJournal = Journal.fromTransactions(transactions, tenantId, accountsGraph);
-
+    const transactionsJournal = Journal.fromTransactions(
+      transactions,
+      tenantId,
+      accountsGraph
+    );
     // Journal report instance.
     const journalSheetInstance = new JournalSheet(
       tenantId,
@@ -80,6 +85,9 @@ export default class JournalSheetService  {
     // Retrieve journal report columns.
     const journalSheetData = journalSheetInstance.reportData();
 
-    return journalSheetData;
+    return {
+      data: journalSheetData,
+      query: filter,
+    };
   }
 }

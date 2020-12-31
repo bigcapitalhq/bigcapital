@@ -11,16 +11,16 @@ import {
 import { FormattedMessage as T } from 'react-intl';
 import Icon from 'components/Icon';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
-import FilterDropdown from 'components/FilterDropdown';
 import classNames from 'classnames';
-
-import { If } from 'components';
 
 import withJournalActions from './withJournalActions';
 import withJournal from './withJournal';
 
 import { compose } from 'utils';
 
+/**
+ * Journal sheeet - Actions bar.
+ */
 function JournalActionsBar({
   // #withJournal
   journalSheetFilter,
@@ -41,35 +41,27 @@ function JournalActionsBar({
     <DashboardActionsBar>
       <NavbarGroup>
         <Button
-          className={classNames(Classes.MINIMAL, 'button--table-views')}
-          icon={<Icon icon="cog-16" iconSize={16} />}
-          text={<T id={'customize_report'} />}
-        />
-        <NavbarDivider />
-
-        <Button
           className={classNames(Classes.MINIMAL, 'button--gray-highlight')}
           text={<T id={'recalc_report'} />}
           onClick={handleRecalcReport}
           icon={<Icon icon="refresh-16" iconSize={16} />}
         />
-        <If condition={journalSheetFilter}>
-          <Button
-            className={Classes.MINIMAL}
-            text={<T id={'hide_filter'} />}
-            icon={<Icon icon="arrow-to-top" />}
-            onClick={handleFilterToggleClick}
-          />
-        </If>
+        <NavbarDivider />
 
-        <If condition={!journalSheetFilter}>
-          <Button
-            className={Classes.MINIMAL}
-            text={<T id={'show_filter'} />}
-            icon={<Icon icon="arrow-to-bottom" />}
-            onClick={handleFilterToggleClick}
-          />
-        </If>
+        <Button
+          className={classNames(Classes.MINIMAL, 'button--table-views')}
+          icon={<Icon icon="cog-16" iconSize={16} />}
+          text={
+            (journalSheetFilter) ? (
+              <T id={'hide_customizer'} />
+            ) : (
+              <T id={'customize_report'} />
+            )
+          }
+          active={journalSheetFilter}
+          onClick={handleFilterToggleClick}
+        />
+        <NavbarDivider />
 
         <Popover
           interactionKind={PopoverInteractionKind.CLICK}

@@ -49,7 +49,6 @@ const CLASSES = {
 
   SELECT_LIST_FILL_POPOVER: 'select-list--fill-popover',
 
-
   PREFERENCES_PAGE: 'preferences-page',
   PREFERENCES_PAGE_SIDEBAR: 'preferences-page__sidebar',
   PREFERENCES_PAGE_TOPBAR: 'preferences-page__topbar',

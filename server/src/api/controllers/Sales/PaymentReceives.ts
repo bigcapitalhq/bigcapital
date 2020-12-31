@@ -7,7 +7,6 @@ import asyncMiddleware from 'api/middleware/asyncMiddleware';
 import PaymentReceiveService from 'services/Sales/PaymentsReceives';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import { ServiceError } from 'exceptions';
-import HasItemEntries from 'services/Sales/HasItemsEntries';
 
 /**
  * Payments receives controller.
@@ -20,7 +19,7 @@ export default class PaymentReceivesController extends BaseController {
 
   @Inject()
   dynamicListService: DynamicListingService;
- 
+
   /**
    * Router constructor.
    */
@@ -32,29 +31,28 @@ export default class PaymentReceivesController extends BaseController {
       this.editPaymentReceiveValidation,
       this.validationResult,
       asyncMiddleware(this.editPaymentReceive.bind(this)),
-      this.handleServiceErrors,
+      this.handleServiceErrors
     );
     router.post(
-      '/', [
-        ...this.newPaymentReceiveValidation,
-      ],
+      '/',
+      [...this.newPaymentReceiveValidation],
       this.validationResult,
       asyncMiddleware(this.newPaymentReceive.bind(this)),
-      this.handleServiceErrors,
+      this.handleServiceErrors
     );
     router.get(
       '/:id/invoices',
       this.paymentReceiveValidation,
       this.validationResult,
       asyncMiddleware(this.getPaymentReceiveInvoices.bind(this)),
-      this.handleServiceErrors,
+      this.handleServiceErrors
     );
     router.get(
       '/:id',
       this.paymentReceiveValidation,
       this.validationResult,
       asyncMiddleware(this.getPaymentReceive.bind(this)),
-      this.handleServiceErrors,
+      this.handleServiceErrors
     );
     router.get(
       '/',
@@ -62,14 +60,14 @@ export default class PaymentReceivesController extends BaseController {
       this.validationResult,
       asyncMiddleware(this.getPaymentReceiveList.bind(this)),
       this.handleServiceErrors,
-      this.dynamicListService.handlerErrorsToResponse,
+      this.dynamicListService.handlerErrorsToResponse
     );
     router.delete(
       '/:id',
       this.paymentReceiveValidation,
       this.validationResult,
       asyncMiddleware(this.deletePaymentReceive.bind(this)),
-      this.handleServiceErrors,
+      this.handleServiceErrors
     );
     return router;
   }
@@ -105,7 +103,7 @@ export default class PaymentReceivesController extends BaseController {
       query('sort_order').optional().isIn(['desc', 'asc']),
       query('page').optional().isNumeric().toInt(),
       query('page_size').optional().isNumeric().toInt(),
-    ]
+    ];
   }
 
   /**
@@ -144,11 +142,10 @@ export default class PaymentReceivesController extends BaseController {
     const paymentReceive: IPaymentReceiveDTO = this.matchedBodyData(req);
 
     try {
-      const storedPaymentReceive = await this.paymentReceiveService
-        .createPaymentReceive(
-          tenantId,
-          paymentReceive,
-        );
+      const storedPaymentReceive = await this.paymentReceiveService.createPaymentReceive(
+        tenantId,
+        paymentReceive
+      );
       return res.status(200).send({
         id: storedPaymentReceive.id,
         message: 'The payment receive has been created successfully.',
@@ -172,12 +169,14 @@ export default class PaymentReceivesController extends BaseController {
 
     try {
       await this.paymentReceiveService.editPaymentReceive(
-        tenantId, paymentReceiveId, paymentReceive,
+        tenantId,
+        paymentReceiveId,
+        paymentReceive
       );
       return res.status(200).send({
         id: paymentReceiveId,
-        message: 'The payment receive has been edited successfully.'
-      });  
+        message: 'The payment receive has been edited successfully.',
+      });
     } catch (error) {
       next(error);
     }
@@ -193,7 +192,10 @@ export default class PaymentReceivesController extends BaseController {
     const { id: paymentReceiveId } = req.params;
 
     try {
-      await this.paymentReceiveService.deletePaymentReceive(tenantId, paymentReceiveId);
+      await this.paymentReceiveService.deletePaymentReceive(
+        tenantId,
+        paymentReceiveId
+      );
 
       return res.status(200).send({
         id: paymentReceiveId,
@@ -220,13 +222,14 @@ export default class PaymentReceivesController extends BaseController {
         receivableInvoices,
         paymentReceiveInvoices,
       } = await this.paymentReceiveService.getPaymentReceive(
-        tenantId, paymentReceiveId
+        tenantId,
+        paymentReceiveId
       );
 
       return res.status(200).send({
         payment_receive: this.transfromToResponse({ ...paymentReceive }),
-        receivable_invoices: this.transfromToResponse([ ...receivableInvoices ]),
-        payment_invoices: this.transfromToResponse([ ...paymentReceiveInvoices ]),
+        receivable_invoices: this.transfromToResponse([...receivableInvoices]),
+        payment_invoices: this.transfromToResponse([...paymentReceiveInvoices]),
       });
     } catch (error) {
       next(error);
@@ -235,17 +238,22 @@ export default class PaymentReceivesController extends BaseController {
 
   /**
    * Retrieve sale invoices that associated with the given payment receive.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
-  async getPaymentReceiveInvoices(req: Request, res: Response, next: NextFunction) {
+  async getPaymentReceiveInvoices(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { tenantId } = req;
     const { id: paymentReceiveId } = req.params;
 
     try {
       const invoices = await this.paymentReceiveService.getPaymentReceiveInvoices(
-        tenantId, paymentReceiveId,
+        tenantId,
+        paymentReceiveId
       );
       return res.status(200).send({ sale_invoices: invoices });
     } catch (error) {
@@ -255,9 +263,9 @@ export default class PaymentReceivesController extends BaseController {
 
   /**
    * Retrieve payment receive list with pagination metadata.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @return {Response} 
+   * @param {Request} req
+   * @param {Response} res
+   * @return {Response}
    */
   async getPaymentReceiveList(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
@@ -278,7 +286,10 @@ export default class PaymentReceivesController extends BaseController {
         paymentReceives,
         pagination,
         filterMeta,
-      } = await this.paymentReceiveService.listPaymentReceives(tenantId, filter);
+      } = await this.paymentReceiveService.listPaymentReceives(
+        tenantId,
+        filter
+      );
 
       return res.status(200).send({
         payment_receives: paymentReceives,
@@ -292,12 +303,17 @@ export default class PaymentReceivesController extends BaseController {
 
   /**
    * Handles service errors.
-   * @param error 
-   * @param req 
-   * @param res 
-   * @param next 
+   * @param error
+   * @param req
+   * @param res
+   * @param next
    */
-  handleServiceErrors(error: Error, req: Request, res: Response, next: NextFunction) {
+  handleServiceErrors(
+    error: Error,
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     if (error instanceof ServiceError) {
       if (error.errorType === 'DEPOSIT_ACCOUNT_NOT_FOUND') {
         return res.boom.badRequest(null, {
@@ -316,7 +332,9 @@ export default class PaymentReceivesController extends BaseController {
       }
       if (error.errorType === 'DEPOSIT_ACCOUNT_NOT_CURRENT_ASSET_TYPE') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'DEPOSIT_ACCOUNT_NOT_CURRENT_ASSET_TYPE', code: 300 }],
+          errors: [
+            { type: 'DEPOSIT_ACCOUNT_NOT_CURRENT_ASSET_TYPE', code: 300 },
+          ],
         });
       }
       if (error.errorType === 'INVALID_PAYMENT_AMOUNT_INVALID') {
@@ -346,14 +364,17 @@ export default class PaymentReceivesController extends BaseController {
       }
       if (error.errorType === 'INVOICES_NOT_DELIVERED_YET') {
         return res.boom.badRequest(null, {
-          errors: [{
-            type: 'INVOICES_NOT_DELIVERED_YET', code: 200,
-            data: {
-              not_delivered_invoices_ids: error.payload.notDeliveredInvoices.map(
-                (invoice) => invoice.id
-              )
-            }
-          }],
+          errors: [
+            {
+              type: 'INVOICES_NOT_DELIVERED_YET',
+              code: 200,
+              data: {
+                not_delivered_invoices_ids: error.payload.notDeliveredInvoices.map(
+                  (invoice) => invoice.id
+                ),
+              },
+            },
+          ],
         });
       }
     }

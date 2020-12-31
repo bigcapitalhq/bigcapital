@@ -41,6 +41,7 @@ import EmptyStatus from './EmptyStatus';
 import DashboardCard from './Dashboard/DashboardCard';
 import InputPrependText from './Forms/InputPrependText';
 import PageFormBigNumber from './PageFormBigNumber';
+import AccountsMultiSelect from './AccountsMultiSelect';
 
 const Hint = FieldHint;
 
@@ -87,5 +88,6 @@ export {
   EmptyStatus,
   DashboardCard,
   InputPrependText,
-  PageFormBigNumber
+  PageFormBigNumber,
+  AccountsMultiSelect,
 };

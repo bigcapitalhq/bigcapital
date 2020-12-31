@@ -2,6 +2,8 @@ import React, {useState, useCallback, useEffect} from 'react';
 import moment from 'moment';
 import {compose} from 'utils';
 import { useQuery } from 'react-query';
+import { useIntl } from 'react-intl';
+import { queryCache } from 'react-query';
 
 import ProfitLossSheetHeader from './ProfitLossSheetHeader';
 import ProfitLossSheetTable from './ProfitLossSheetTable';
@@ -13,59 +15,71 @@ import DashboardPageContent from 'components/Dashboard/DashboardPageContent'
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withProfitLossActions from './withProfitLossActions';
 import withProfitLoss from './withProfitLoss';
-// import SettingsConnect from 'connectors/Settings.connect';
 import withSettings from 'containers/Settings/withSettings';
 
+import { transformFilterFormToQuery } from 'containers/FinancialStatements/common';
 
 function ProfitLossSheet({
   // #withDashboardActions
   changePageTitle,
+  setDashboardBackLink,
+
+  // #withProfitLoss
+  profitLossSheetRefresh,
 
   // #withProfitLossActions
   fetchProfitLossSheet,
+  refreshProfitLossSheet,
 
   // #withPreferences
-  organizationSettings,
+  organizationName,
 }) {
   const [filter, setFilter] = useState({
     basis: 'cash',
-    from_date: moment().startOf('year').format('YYYY-MM-DD'),
-    to_date: moment().endOf('year').format('YYYY-MM-DD'),
+    fromDate: moment().startOf('year').format('YYYY-MM-DD'),
+    toDate: moment().endOf('year').format('YYYY-MM-DD'),
+    displayColumnsType: 'total',
+    accountsFilter: 'all-accounts',
   });
-  const [refresh, setRefresh] = useState(true);
+  const { formatMessage } = useIntl();
 
   // Change page title of the dashboard.
   useEffect(() => {
-    changePageTitle('Profit/Loss Sheet');
-  }, [changePageTitle]);
+    changePageTitle(formatMessage({ id: 'profit_loss_sheet' }));
+  }, [changePageTitle, formatMessage]);
+
+  // Observes the P&L sheet refresh to invalid the query to refresh it.
+  useEffect(() => {
+    if (profitLossSheetRefresh) {
+      refreshProfitLossSheet(false);
+      queryCache.invalidateQueries('profit-loss-sheet');
+    }
+  }, [profitLossSheetRefresh, refreshProfitLossSheet]);
+
+  useEffect(() => {
+    // Show the back link on dashboard topbar.
+    setDashboardBackLink(true);
+
+    return () => {
+      // Hide the back link on dashboard topbar.
+      setDashboardBackLink(false);
+    };
+  });
 
   // Fetches profit/loss sheet.
-  const fetchHook = useQuery(['profit-loss', filter],
-    (key, query) => fetchProfitLossSheet(query),
+  const fetchSheetHook = useQuery(['profit-loss-sheet', filter],
+    (key, query) => fetchProfitLossSheet({ ...transformFilterFormToQuery(query) }),
     { manual: true });
 
   // Handle submit filter.
   const handleSubmitFilter = useCallback((filter) => {
     const _filter = {
       ...filter,
-      from_date: moment(filter.from_date).format('YYYY-MM-DD'),
-      to_date: moment(filter.to_date).format('YYYY-MM-DD'),
+      fromDate: moment(filter.fromDate).format('YYYY-MM-DD'),
+      toDate: moment(filter.toDate).format('YYYY-MM-DD'),
     };
     setFilter(_filter);
-    setRefresh(true);
-  }, []);
-
-  // Handle fetch data of profit/loss sheet table.
-  const handleFetchData = useCallback(() => {
-    setRefresh(true);
-  }, []);
-
-  useEffect(() => {
-    if (refresh) {
-      fetchHook.refetch({ force: true });
-      setRefresh(false);
-    }
-  }, [refresh, fetchHook]);
+  }, [setFilter]);
 
   return (
     <DashboardInsider>
@@ -79,10 +93,9 @@ function ProfitLossSheet({
 
           <div class="financial-statement__body">
             <ProfitLossSheetTable
-              companyName={organizationSettings.name}
-              profitLossQuery={filter}
-              onFetchData={handleFetchData} />
-          </div> 
+              companyName={organizationName}
+              profitLossQuery={filter} />
+          </div>
         </div>
       </DashboardPageContent>
     </DashboardInsider>
@@ -92,5 +105,8 @@ function ProfitLossSheet({
 export default compose(
   withDashboardActions,
   withProfitLossActions,
-  withSettings,
+  withProfitLoss(({ profitLossSheetRefresh }) => ({ profitLossSheetRefresh })),
+  withSettings(({ organizationSettings }) => ({
+    organizationName: organizationSettings.name,
+  })),
 )(ProfitLossSheet);

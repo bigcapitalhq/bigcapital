@@ -1,14 +1,13 @@
-import React, { useEffect, useCallback, useState} from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 import moment from 'moment';
-import GeneralLedgerTable from 'containers/FinancialStatements/GeneralLedger/GeneralLedgerTable';
 import { useQuery } from 'react-query';
 import { useIntl } from 'react-intl';
+import { queryCache } from 'react-query';
 
+import GeneralLedgerTable from 'containers/FinancialStatements/GeneralLedger/GeneralLedgerTable';
 import GeneralLedgerHeader from './GeneralLedgerHeader';
 
-import { compose } from 'utils';
-
-import DashboardInsider from 'components/Dashboard/DashboardInsider'
+import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import GeneralLedgerActionsBar from './GeneralLedgerActionsBar';
 
@@ -17,73 +16,101 @@ import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withAccountsActions from 'containers/Accounts/withAccountsActions';
 import withSettings from 'containers/Settings/withSettings';
 
+import { compose } from 'utils';
 
+import { transformFilterFormToQuery } from 'containers/FinancialStatements/common';
+import withGeneralLedger from './withGeneralLedger';
+
+/**
+ * General Ledger (GL) sheet.
+ */
 function GeneralLedger({
   // #withDashboardActions
   changePageTitle,
+  setDashboardBackLink,
 
   // #withGeneralLedgerActions
   fetchGeneralLedger,
-  
+  refreshGeneralLedgerSheet,
+
   // #withAccountsActions
   requestFetchAccounts,
 
+  // #withGeneralLedger
+  generalLedgerSheetRefresh,
+
   // #withSettings
-  organizationSettings,
+  organizationName,
 }) {
-  const { formatMessage } = useIntl()
+  const { formatMessage } = useIntl();
   const [filter, setFilter] = useState({
-    from_date: moment().startOf('year').format('YYYY-MM-DD'),
-    to_date: moment().endOf('year').format('YYYY-MM-DD'),
+    fromDate: moment().startOf('year').format('YYYY-MM-DD'),
+    toDate: moment().endOf('year').format('YYYY-MM-DD'),
     basis: 'accural',
-    none_zero: true,
   });
 
   // Change page title of the dashboard.
   useEffect(() => {
-    changePageTitle(formatMessage({id:'general_ledger'}));
-  }, [changePageTitle,formatMessage]);
+    changePageTitle(formatMessage({ id: 'general_ledger' }));
+  }, [changePageTitle, formatMessage]);
 
-  const fetchAccounts = useQuery(['accounts-list'],
-    () => requestFetchAccounts());
+  useEffect(() => {
+    // Show the back link on dashboard topbar.
+    setDashboardBackLink(true);
 
-  const fetchSheet = useQuery(['general-ledger', filter],
-    (key, query) => fetchGeneralLedger(query),
-    { manual: true });
-
-  // Handle fetch data of trial balance table.
-  const handleFetchData = useCallback(() => {
-    fetchSheet.refetch({ force: true });
-  }, []);
-  
-  // Handle financial statement filter change.
-  const handleFilterSubmit = useCallback((filter) => {
-    const parsedFilter = {
-      ...filter,
-      from_date: moment(filter.from_date).format('YYYY-MM-DD'),
-      to_date: moment(filter.to_date).format('YYYY-MM-DD'),
+    return () => {
+      // Hide the back link on dashboard topbar.
+      setDashboardBackLink(false);
     };
-    setFilter(parsedFilter);
-  }, [setFilter]);
+  });
 
-  const handleFilterChanged = () => { };
+  // Observes the GL sheet refresh to invalid the query to refresh it.
+  useEffect(() => {
+    if (generalLedgerSheetRefresh) {
+      queryCache.invalidateQueries('general-ledger');
+      refreshGeneralLedgerSheet(false);
+    }
+  }, [generalLedgerSheetRefresh, refreshGeneralLedgerSheet]);
+
+  // Fetches accounts list.
+  const fetchAccounts = useQuery(['accounts-list'], () =>
+    requestFetchAccounts(),
+  );
+  // Fetches the general ledger sheet.
+  const fetchSheet = useQuery(['general-ledger', filter], (key, q) =>
+    fetchGeneralLedger({ ...transformFilterFormToQuery(q) }),
+  );
+
+  // Handle financial statement filter change.
+  const handleFilterSubmit = useCallback(
+    (filter) => {
+      const parsedFilter = {
+        ...filter,
+        fromDate: moment(filter.fromDate).format('YYYY-MM-DD'),
+        toDate: moment(filter.toDate).format('YYYY-MM-DD'),
+      };
+      setFilter(parsedFilter);
+      refreshGeneralLedgerSheet(true);
+    },
+    [setFilter, refreshGeneralLedgerSheet],
+  );
 
   return (
     <DashboardInsider>
-      <GeneralLedgerActionsBar
-        onFilterChanged={handleFilterChanged} />
+      <GeneralLedgerActionsBar />
 
       <DashboardPageContent>
         <div class="financial-statement financial-statement--general-ledger">
           <GeneralLedgerHeader
             pageFilter={filter}
-            onSubmitFilter={handleFilterSubmit} />
+            onSubmitFilter={handleFilterSubmit}
+          />
 
           <div class="financial-statement__body">
             <GeneralLedgerTable
-              companyName={organizationSettings.name}
+              companyName={organizationName}
               generalLedgerQuery={filter}
-              onFetchData={handleFetchData} />
+            />
           </div>
         </div>
       </DashboardPageContent>
@@ -95,5 +122,10 @@ export default compose(
   withGeneralLedgerActions,
   withDashboardActions,
   withAccountsActions,
-  withSettings,
+  withGeneralLedger(({ generalLedgerSheetRefresh }) => ({
+    generalLedgerSheetRefresh,
+  })),
+  withSettings(({ organizationSettings }) => ({
+    organizationName: organizationSettings.name,
+  })),
 )(GeneralLedger);
