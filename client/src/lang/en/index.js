@@ -934,4 +934,5 @@ export default {
   opening_average_cost: 'Opening average cost',
   opening_cost_: 'Opening cost ',
   opening_date_: 'Opening date ',
+  no_results:'No results.'
 };

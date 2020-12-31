@@ -1,8 +1,8 @@
-import React, { useCallback, useMemo } from 'react';
-import ItemsListField from 'components/ItemsListField';
+import React, { useCallback } from 'react';
+// import ItemsListField from 'components/ItemsListField';
+import ItemsSuggestField from 'components/ItemsSuggestField';
 import classNames from 'classnames';
 import { FormGroup, Classes, Intent } from '@blueprintjs/core';
-
 
 export default function ItemsListCell({
   column: { id, filterSellable, filterPurchasable },
@@ -24,7 +24,7 @@ export default function ItemsListCell({
       intent={error ? Intent.DANGER : null}
       className={classNames('form-group--select-list', Classes.FILL)}
     >
-      <ItemsListField
+      <ItemsSuggestField
         items={items}
         onItemSelected={handleItemSelected}
         selectedItemId={initialValue}
