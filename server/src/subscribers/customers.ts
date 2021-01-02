@@ -1,4 +1,4 @@
-import { Container, Inject, Service } from 'typedi';
+import { Container } from 'typedi';
 import { EventSubscriber, On } from 'event-dispatch';
 import events from 'subscribers/events';
 import TenancyService from 'services/Tenancy/TenancyService';
@@ -15,6 +15,9 @@ export default class CustomersSubscriber {
     this.customersService = Container.get(CustomersService);
   }
 
+  /**
+   * Handles the writing opening balance journal entries once the customer created.
+   */
   @On(events.customers.onCreated)
   async handleWriteOpenBalanceEntries({ tenantId, customerId, customer }) {
 
@@ -24,10 +27,14 @@ export default class CustomersSubscriber {
         tenantId,
         customer.id,
         customer.openingBalance,
+        customer.openingBalanceAt,
       );
     }
   }
 
+  /**
+   * Handles the deleting opeing balance journal entrise once the customer deleted.
+   */
   @On(events.customers.onDeleted)
   async handleRevertOpeningBalanceEntries({ tenantId, customerId }) {
 
@@ -36,6 +43,10 @@ export default class CustomersSubscriber {
     );
   }
 
+  /**
+   * Handles the deleting opening balance journal entries once the given
+   * customers deleted.
+   */
   @On(events.customers.onBulkDeleted)
   async handleBulkRevertOpeningBalanceEntries({ tenantId, customersIds }) {
 

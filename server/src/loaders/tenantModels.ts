@@ -10,6 +10,7 @@ import Bill from 'models/Bill';
 import BillPayment from 'models/BillPayment';
 import BillPaymentEntry from 'models/BillPaymentEntry';
 import Currency from 'models/Currency';
+import Contact from 'models/Contact';
 import Vendor from 'models/Vendor';
 import Customer from 'models/Customer';
 import ExchangeRate from 'models/ExchangeRate';
@@ -69,6 +70,7 @@ export default (knex) => {
     MediaLink,
     Vendor,
     Customer,
+    Contact,
   };
   return mapValues(models, (model) => model.bindKnex(knex));
 }

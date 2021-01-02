@@ -1,5 +1,5 @@
 import { Inject, Service } from 'typedi';
-import { omit, difference, defaultTo } from 'lodash';
+import { omit, intersection, defaultTo } from 'lodash';
 import {
   EventDispatcher,
   EventDispatcherInterface,
@@ -71,6 +71,10 @@ export default class CustomersService {
     };
   }
 
+  /**
+   * Transforms the contact model to customer model.
+   * @param {IContact} contactModel
+   */
   private transformContactToCustomer(contactModel: IContact) {
     return {
       ...omit(contactModel.toJSON(), ['contactService', 'contactType']),
@@ -172,6 +176,7 @@ export default class CustomersService {
 
     await this.contactService.deleteContact(tenantId, customerId, 'customer');
 
+    // Throws `onCustomerDeleted` event.
     await this.eventDispatcher.dispatch(events.customers.onDeleted, {
       tenantId,
       customerId,
@@ -180,29 +185,6 @@ export default class CustomersService {
       tenantId,
       customerId,
     });
-  }
-
-  /**
-   * Reverts customer opening balance journal entries.
-   * @param {number} tenantId -
-   * @param {number} customerId -
-   * @return {Promise<void>}
-   */
-  public async revertOpeningBalanceEntries(
-    tenantId: number,
-    customerId: number | number[]
-  ) {
-    const id = Array.isArray(customerId) ? customerId : [customerId];
-
-    this.logger.info(
-      '[customer] trying to revert opening balance journal entries.',
-      { tenantId, customerId }
-    );
-    await this.contactService.revertJEntriesContactsOpeningBalance(
-      tenantId,
-      id,
-      'customer'
-    );
   }
 
   /**
@@ -262,14 +244,41 @@ export default class CustomersService {
   public async writeCustomerOpeningBalanceJournal(
     tenantId: number,
     customerId: number,
-    openingBalance: number
+    openingBalance: number,
+    openingBalanceAt: Date | string
   ) {
     const journal = new JournalPoster(tenantId);
     const journalCommands = new JournalCommands(journal);
 
-    await journalCommands.customerOpeningBalance(customerId, openingBalance);
-
+    await journalCommands.customerOpeningBalance(
+      customerId,
+      openingBalance,
+      openingBalanceAt
+    );
     await Promise.all([journal.saveBalance(), journal.saveEntries()]);
+  }
+
+  /**
+   * Reverts customer opening balance journal entries.
+   * @param {number} tenantId -
+   * @param {number} customerId -
+   * @return {Promise<void>}
+   */
+  public async revertOpeningBalanceEntries(
+    tenantId: number,
+    customerId: number | number[]
+  ) {
+    const id = Array.isArray(customerId) ? customerId : [customerId];
+
+    this.logger.info(
+      '[customer] trying to revert opening balance journal entries.',
+      { tenantId, customerId }
+    );
+    await this.contactService.revertJEntriesContactsOpeningBalance(
+      tenantId,
+      id,
+      'customer'
+    );
   }
 
   /**
@@ -310,11 +319,20 @@ export default class CustomersService {
   public async deleteBulkCustomers(tenantId: number, customersIds: number[]) {
     const { Contact } = this.tenancy.models(tenantId);
 
+    // Validate the customers existance on the storage.
     await this.getCustomersOrThrowErrorNotFound(tenantId, customersIds);
+
+    // Validate the customers have no associated invoices.
     await this.customersHaveNoInvoicesOrThrowError(tenantId, customersIds);
 
+    // Deletes the given customers.
     await Contact.query().whereIn('id', customersIds).delete();
-    await this.eventDispatcher.dispatch(events.customers.onBulkDeleted);
+
+    // Triggers `onCustomersBulkDeleted` event.
+    await this.eventDispatcher.dispatch(events.customers.onBulkDeleted, {
+      tenantId,
+      customersIds,
+    });
   }
 
   /**
@@ -361,12 +379,10 @@ export default class CustomersService {
     const customersIdsWithInvoice = customersInvoices.map(
       (saleInvoice: ISaleInvoice) => saleInvoice.customerId
     );
-
-    const customersHaveInvoices = difference(
+    const customersHaveInvoices = intersection(
       customersIds,
       customersIdsWithInvoice
     );
-
     if (customersHaveInvoices.length > 0) {
       throw new ServiceError('some_customers_have_invoices');
     }

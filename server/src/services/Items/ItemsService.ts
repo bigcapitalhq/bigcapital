@@ -465,7 +465,7 @@ export default class ItemsService implements IItemsService {
     const { Item } = this.tenancy.models(tenantId);
 
     const storedItems = await Item.query().whereIn('id', itemsIDs);
-    const storedItemsIds = storedItems.map((t) => t.id);
+    const storedItemsIds = storedItems.map((t: IItem) => t.id);
 
     const notFoundItemsIds = difference(itemsIDs, storedItemsIds);
     return notFoundItemsIds;
@@ -474,7 +474,7 @@ export default class ItemsService implements IItemsService {
   /**
    * Deletes items in bulk.
    * @param {number} tenantId
-   * @param {number[]} itemsIds
+   * @param {number[]} itemsIds - Items ids.
    */
   public async bulkDeleteItems(tenantId: number, itemsIds: number[]) {
     const { Item } = this.tenancy.models(tenantId);

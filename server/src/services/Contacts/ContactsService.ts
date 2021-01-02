@@ -182,14 +182,14 @@ export default class ContactsService {
   async getContactsOrThrowErrorNotFound(
     tenantId: number,
     contactsIds: number[],
-    contactService: TContactService
+    contactService: TContactService,
   ) {
     const { Contact } = this.tenancy.models(tenantId);
     const contacts = await Contact.query()
       .whereIn('id', contactsIds)
       .where('contact_service', contactService);
-    const storedContactsIds = contacts.map((contact: IContact) => contact.id);
 
+    const storedContactsIds = contacts.map((contact: IContact) => contact.id);
     const notFoundCustomers = difference(contactsIds, storedContactsIds);
 
     if (notFoundCustomers.length > 0) {
@@ -211,6 +211,8 @@ export default class ContactsService {
     contactService: TContactService
   ) {
     const { contactRepository } = this.tenancy.repositories(tenantId);
+
+    // Retrieve the given contacts or throw not found service error.
     this.getContactsOrThrowErrorNotFound(tenantId, contactsIds, contactService);
 
     await contactRepository.deleteWhereIdIn(contactsIds);
@@ -230,11 +232,12 @@ export default class ContactsService {
     const { AccountTransaction } = this.tenancy.models(tenantId);
     const journal = new JournalPoster(tenantId);
 
+    // Loads the contact opening balance journal transactions.
     const contactsTransactions = await AccountTransaction.query()
       .whereIn('reference_id', contactsIds)
       .where('reference_type', `${upperFirst(contactService)}OpeningBalance`);
 
-    journal.loadEntries(contactsTransactions);
+    journal.fromTransactions(contactsTransactions);
     journal.removeEntries();
 
     await Promise.all([journal.saveBalance(), journal.deleteEntries()]);

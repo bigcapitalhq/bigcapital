@@ -212,7 +212,7 @@ export default class ContactsController extends BaseController {
    */
   get bulkContactsSchema(): ValidationChain[] {
     return [
-      query('ids').isArray({ min: 2 }),
+      query('ids').isArray({ min: 1 }),
       query('ids.*').isNumeric().toInt(),
     ];
   }
