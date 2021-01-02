@@ -103,6 +103,7 @@ function ItemsList({
           }),
           intent: Intent.SUCCESS,
         });
+        queryCache.invalidateQueries('items-table');
         setDeleteItem(false);
       })
       .catch(({ errors }) => {
