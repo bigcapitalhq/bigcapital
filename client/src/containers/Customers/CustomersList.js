@@ -59,7 +59,7 @@ function CustomersList({
     ['resource-views', 'customers'],
     (key, resourceName) => requestFetchResourceViews(resourceName),
   );
- 
+
   const fetchCustomers = useQuery(
     ['customers-table', customersTableQuery],
     (key, query) => requestFetchCustomers({ ...query }),
@@ -146,6 +146,20 @@ function CustomersList({
     setBulkDelete(false);
   }, []);
 
+  const transformApiErrors = (errors) => {
+    if (
+      errors.find(
+        (error) => error.type === 'SOME.CUSTOMERS.HAVE.SALES_INVOICES',
+      )
+    ) {
+      AppToaster.show({
+        message: formatMessage({
+          id: 'some_customers_have_sales_invoices',
+        }),
+        intent: Intent.DANGER,
+      });
+    }
+  };
   // Handle confirm customers bulk delete.
   const handleConfirmBulkDelete = useCallback(() => {
     requestDeleteBulkCustomers(bulkDelete)
@@ -158,7 +172,8 @@ function CustomersList({
           intent: Intent.SUCCESS,
         });
       })
-      .catch((error) => {
+      .catch((errors) => {
+        transformApiErrors(errors);
         setBulkDelete(false);
       });
   }, [requestDeleteBulkCustomers, bulkDelete, formatMessage]);

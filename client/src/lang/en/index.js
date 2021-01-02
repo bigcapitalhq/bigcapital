@@ -938,5 +938,6 @@ export default {
   no_results: 'No results.',
   the_invoice_cannot_be_deleted:
     'The invoice cannot be deleted cause has associated payment transactions',
-    category_name_exists:'Category name exists'
-  };
+  category_name_exists: 'Category name exists',
+  some_customers_have_sales_invoices: 'Some customers have sales invoices',
+};
