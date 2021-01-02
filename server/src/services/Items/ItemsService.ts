@@ -335,6 +335,9 @@ export default class ItemsService implements IItemsService {
     // Validates the given item existance on the storage.
     const oldItem = await this.getItemOrThrowError(tenantId, itemId);
 
+    // Validate whether the given item name already exists on the storage.
+    await this.validateItemNameUniquiness(tenantId, itemDTO.name, itemId);
+
     // Validate the item category existance on the storage,
     if (itemDTO.categoryId) {
       await this.validateItemCategoryExistance(tenantId, itemDTO.categoryId);
