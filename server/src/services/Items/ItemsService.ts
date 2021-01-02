@@ -1,4 +1,4 @@
-import { defaultTo, difference, omit } from 'lodash';
+import { defaultTo, difference, omit, pick } from 'lodash';
 import { Service, Inject } from 'typedi';
 import {
   EventDispatcher,
@@ -230,6 +230,25 @@ export default class ItemsService implements IItemsService {
   }
 
   /**
+   * Transforms the item DTO to model.
+   * @param  {IItemDTO} itemDTO - Item DTO.
+   * @return {IItem}
+   */
+  private transformNewItemDTOToModel(itemDTO: IItemDTO) {
+    const inventoryAttrs = ['openingQuantity', 'openingCost', 'openingDate'];
+
+    return {
+      ...omit(itemDTO, inventoryAttrs),
+      ...(itemDTO.type === 'inventory' ? pick(itemDTO, inventoryAttrs) : {}),
+      active: defaultTo(itemDTO.active, 1),
+      quantityOnHand:
+        itemDTO.type === 'inventory'
+          ? defaultTo(itemDTO.openingQuantity, 0)
+          : null,
+    };
+  }
+
+  /**
    * Creates a new item.
    * @param {number} tenantId DTO
    * @param {IItemDTO} item
@@ -263,12 +282,7 @@ export default class ItemsService implements IItemsService {
       );
     }
     const item = await Item.query().insertAndFetch({
-      ...itemDTO,
-      active: defaultTo(itemDTO.active, 1),
-      quantityOnHand:
-        itemDTO.type === 'inventory'
-          ? defaultTo(itemDTO.openingQuantity, 0)
-          : null,
+      ...this.transformNewItemDTOToModel(itemDTO)
     });
     this.logger.info('[items] item inserted successfully.', {
       tenantId,
@@ -469,7 +483,7 @@ export default class ItemsService implements IItemsService {
    */
   private async validateItemsIdsExists(
     tenantId: number,
-    itemsIDs: number[],
+    itemsIDs: number[]
   ): Promise<void> {
     const { Item } = this.tenancy.models(tenantId);
 
