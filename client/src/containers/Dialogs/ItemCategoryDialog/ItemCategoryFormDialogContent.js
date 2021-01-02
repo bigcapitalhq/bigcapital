@@ -80,8 +80,16 @@ function ItemCategoryFormDialogContent({
     [],
   );
 
+  const transformErrors = (errors, { setErrors }) => {
+    if (errors.find((error) => error.type === 'CATEGORY_NAME_EXISTS')) {
+      setErrors({
+        name: formatMessage({ id: 'category_name_exists' }),
+      });
+    }
+  };
+  
   // Handles the form submit.
-  const handleFormSubmit = (values, { setSubmitting }) => {
+  const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
     setSubmitting(true);
     const form = { ...values };
     const afterSubmit = () => {
@@ -100,7 +108,9 @@ function ItemCategoryFormDialogContent({
       });
       afterSubmit(response);
     };
-    const onError = ({ response }) => {
+
+    const onError = (errors) => {
+      transformErrors(errors, { setErrors });
       setSubmitting(false);
     };
     if (isNewMode) {
