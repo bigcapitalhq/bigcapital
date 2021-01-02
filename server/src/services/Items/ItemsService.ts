@@ -13,6 +13,8 @@ import InventoryService from 'services/Inventory/Inventory';
 
 const ERRORS = {
   NOT_FOUND: 'NOT_FOUND',
+  ITEMS_NOT_FOUND: 'ITEMS_NOT_FOUND',
+
   ITEM_NAME_EXISTS: 'ITEM_NAME_EXISTS',
   ITEM_CATEOGRY_NOT_FOUND: 'ITEM_CATEOGRY_NOT_FOUND',
   COST_ACCOUNT_NOT_COGS: 'COST_ACCOUNT_NOT_COGS',
@@ -457,18 +459,27 @@ export default class ItemsService implements IItemsService {
   }
 
   /**
-   * Validates the given items IDs exists or not returns the not found ones.
-   * @param  {Array} itemsIDs
-   * @return {Array}
+   * Validates the given items IDs exists or throw not found service error.
+   * @param {number} tenantId -
+   * @param {number[]} itemsIDs -
+   * @return {Promise<void>}
    */
-  private async validateItemsIdsExists(tenantId: number, itemsIDs: number[]) {
+  private async validateItemsIdsExists(
+    tenantId: number,
+    itemsIDs: number[],
+  ): Promise<void> {
     const { Item } = this.tenancy.models(tenantId);
 
     const storedItems = await Item.query().whereIn('id', itemsIDs);
     const storedItemsIds = storedItems.map((t: IItem) => t.id);
 
     const notFoundItemsIds = difference(itemsIDs, storedItemsIds);
-    return notFoundItemsIds;
+
+    if (notFoundItemsIds.length > 0) {
+      throw new ServiceError(ERRORS.ITEMS_NOT_FOUND, null, {
+        notFoundItemsIds,
+      });
+    }
   }
 
   /**
@@ -483,7 +494,7 @@ export default class ItemsService implements IItemsService {
       tenantId,
       itemsIds,
     });
-    /// Validates the given items exist on the storage.
+    // Validates the given items exist on the storage.
     await this.validateItemsIdsExists(tenantId, itemsIds);
 
     // Validate the items have no associated invoices or bills.
