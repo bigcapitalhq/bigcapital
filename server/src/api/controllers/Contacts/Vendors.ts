@@ -118,10 +118,10 @@ export default class VendorsController extends ContactsController {
    */
   async newVendor(req: Request, res: Response, next: NextFunction) {
     const contactDTO: IVendorNewDTO = this.matchedBodyData(req);
-    const { tenantId } = req;
+    const { tenantId, user } = req;
 
     try {
-      const vendor = await this.vendorsService.newVendor(tenantId, contactDTO);
+      const vendor = await this.vendorsService.newVendor(tenantId, contactDTO, user);
 
       return res.status(200).send({
         id: vendor.id,
@@ -140,11 +140,11 @@ export default class VendorsController extends ContactsController {
    */
   async editVendor(req: Request, res: Response, next: NextFunction) {
     const contactDTO: IVendorEditDTO = this.matchedBodyData(req);
-    const { tenantId } = req;
+    const { tenantId, user } = req;
     const { id: contactId } = req.params;
 
     try {
-      await this.vendorsService.editVendor(tenantId, contactId, contactDTO);
+      await this.vendorsService.editVendor(tenantId, contactId, contactDTO, user);
 
       return res.status(200).send({
         id: contactId,
@@ -162,7 +162,7 @@ export default class VendorsController extends ContactsController {
    * @param {NextFunction} next -
    */
   async editOpeningBalanceVendor(req: Request, res: Response, next: NextFunction) {
-    const { tenantId } = req;
+    const { tenantId, user } = req;
     const { id: vendorId } = req.params;
     const {
       openingBalance,
@@ -192,11 +192,11 @@ export default class VendorsController extends ContactsController {
    * @param {NextFunction} next 
    */
   async deleteVendor(req: Request, res: Response, next: NextFunction) {
-    const { tenantId } = req;
+    const { tenantId, user } = req;
     const { id: contactId } = req.params;
 
     try {
-      await this.vendorsService.deleteVendor(tenantId, contactId)
+      await this.vendorsService.deleteVendor(tenantId, contactId, user)
 
       return res.status(200).send({
         id: contactId,
@@ -214,11 +214,12 @@ export default class VendorsController extends ContactsController {
    * @param {NextFunction} next 
    */
   async getVendor(req: Request, res: Response, next: NextFunction) {
-    const { tenantId } = req;
+    const { tenantId, user } = req;
     const { id: vendorId } = req.params;
 
     try {
-      const vendor = await this.vendorsService.getVendor(tenantId, vendorId)
+      const vendor = await this.vendorsService.getVendor(tenantId, vendorId, user)
+
       return res.status(200).send({ vendor });
     } catch (error) {
       next(error);
@@ -233,10 +234,10 @@ export default class VendorsController extends ContactsController {
    */
   async deleteBulkVendors(req: Request, res: Response, next: NextFunction) {
     const { ids: contactsIds } = req.query;
-    const { tenantId } = req;
+    const { tenantId, user } = req;
 
     try {
-      await this.vendorsService.deleteBulkVendors(tenantId, contactsIds)
+      await this.vendorsService.deleteBulkVendors(tenantId, contactsIds, user)
 
       return res.status(200).send({
         ids: contactsIds,

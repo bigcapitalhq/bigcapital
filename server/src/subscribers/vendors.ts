@@ -22,13 +22,15 @@ export default class VendorsSubscriber {
    * Writes the open balance journal entries once the vendor created.
    */
   @On(events.vendors.onCreated)
-  async handleWriteOpeningBalanceEntries({ tenantId, vendorId, vendor }) {
+  async handleWriteOpeningBalanceEntries({ tenantId, vendorId, vendor, authorizedUser }) {
     // Writes the vendor opening balance journal entries.
     if (vendor.openingBalance) {
       await this.vendorsService.writeVendorOpeningBalanceJournal(
         tenantId,
         vendor.id,
         vendor.openingBalance,
+        vendor.openingBalanceAt,
+        authorizedUser.id
       );
     }
   }
@@ -37,7 +39,7 @@ export default class VendorsSubscriber {
    * Revert the opening balance journal entries once the vendor deleted.
    */
   @On(events.vendors.onDeleted)
-  async handleRevertOpeningBalanceEntries({ tenantId, vendorId }) {
+  async handleRevertOpeningBalanceEntries({ tenantId, vendorId, authorizedUser }) {
     await this.vendorsService.revertOpeningBalanceEntries(
       tenantId, vendorId,
     );
@@ -47,7 +49,7 @@ export default class VendorsSubscriber {
    * Revert the opening balance journal entries once the vendors deleted in bulk.
    */
   @On(events.vendors.onBulkDeleted)
-  async handleBulkRevertOpeningBalanceEntries({ tenantId, vendorsIds }) {
+  async handleBulkRevertOpeningBalanceEntries({ tenantId, vendorsIds, authorizedUser }) {
     await this.vendorsService.revertOpeningBalanceEntries(
       tenantId, vendorsIds,
     );

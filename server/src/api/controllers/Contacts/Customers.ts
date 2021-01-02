@@ -22,12 +22,14 @@ export default class CustomersController extends ContactsController {
   router() {
     const router = Router();
 
-    router.post('/', [
-      ...this.contactDTOSchema,
-      ...this.contactNewDTOSchema,
-      ...this.customerDTOSchema,
-      ...this.createCustomerDTOSchema,
-    ],
+    router.post(
+      '/',
+      [
+        ...this.contactDTOSchema,
+        ...this.contactNewDTOSchema,
+        ...this.customerDTOSchema,
+        ...this.createCustomerDTOSchema,
+      ],
       this.validationResult,
       asyncMiddleware(this.newCustomer.bind(this)),
       this.handlerServiceErrors
@@ -41,41 +43,43 @@ export default class CustomersController extends ContactsController {
       ],
       this.validationResult,
       asyncMiddleware(this.editOpeningBalanceCustomer.bind(this)),
-      this.handlerServiceErrors,
+      this.handlerServiceErrors
     );
-    router.post('/:id', [
-      ...this.contactDTOSchema,
-      ...this.contactEditDTOSchema,
-      ...this.customerDTOSchema,
-    ],
+    router.post(
+      '/:id',
+      [
+        ...this.contactDTOSchema,
+        ...this.contactEditDTOSchema,
+        ...this.customerDTOSchema,
+      ],
       this.validationResult,
       asyncMiddleware(this.editCustomer.bind(this)),
-      this.handlerServiceErrors,
+      this.handlerServiceErrors
     );
-    router.delete('/:id', [
-      ...this.specificContactSchema,
-    ],
+    router.delete(
+      '/:id',
+      [...this.specificContactSchema],
       this.validationResult,
       asyncMiddleware(this.deleteCustomer.bind(this)),
-      this.handlerServiceErrors,
+      this.handlerServiceErrors
     );
-    router.delete('/', [
-      ...this.bulkContactsSchema,
-    ],
+    router.delete(
+      '/',
+      [...this.bulkContactsSchema],
       this.validationResult,
       asyncMiddleware(this.deleteBulkCustomers.bind(this)),
-      this.handlerServiceErrors,
+      this.handlerServiceErrors
     );
-    router.get('/', [
-      ...this.validateListQuerySchema,
-    ],
+    router.get(
+      '/',
+      [...this.validateListQuerySchema],
       this.validationResult,
       asyncMiddleware(this.getCustomersList.bind(this)),
-      this.dynamicListService.handlerErrorsToResponse,
+      this.dynamicListService.handlerErrorsToResponse
     );
-    router.get('/:id', [
-      ...this.specificContactSchema,
-    ],
+    router.get(
+      '/:id',
+      [...this.specificContactSchema],
       this.validationResult,
       asyncMiddleware(this.getCustomer.bind(this)),
       this.handlerServiceErrors
@@ -128,16 +132,20 @@ export default class CustomersController extends ContactsController {
 
   /**
    * Creates a new customer.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
   async newCustomer(req: Request, res: Response, next: NextFunction) {
     const contactDTO: ICustomerNewDTO = this.matchedBodyData(req);
-    const { tenantId } = req;
+    const { tenantId, user } = req;
 
     try {
-      const contact = await this.customersService.newCustomer(tenantId, contactDTO);
+      const contact = await this.customersService.newCustomer(
+        tenantId,
+        contactDTO,
+        user
+      );
 
       return res.status(200).send({
         id: contact.id,
@@ -150,17 +158,22 @@ export default class CustomersController extends ContactsController {
 
   /**
    * Edits the given customer details.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
   async editCustomer(req: Request, res: Response, next: NextFunction) {
     const contactDTO: ICustomerEditDTO = this.matchedBodyData(req);
-    const { tenantId } = req;
+    const { tenantId, user } = req;
     const { id: contactId } = req.params;
 
     try {
-      await this.customersService.editCustomer(tenantId, contactId, contactDTO);
+      await this.customersService.editCustomer(
+        tenantId,
+        contactId,
+        contactDTO,
+        user
+      );
 
       return res.status(200).send({
         id: contactId,
@@ -177,24 +190,26 @@ export default class CustomersController extends ContactsController {
    * @param {Response} res -
    * @param {NextFunction} next -
    */
-  async editOpeningBalanceCustomer(req: Request, res: Response, next: NextFunction) {
-    const { tenantId } = req;
+  async editOpeningBalanceCustomer(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { tenantId, user } = req;
     const { id: customerId } = req.params;
-    const {
-      openingBalance,
-      openingBalanceAt,
-    } = this.matchedBodyData(req);
+    const { openingBalance, openingBalanceAt } = this.matchedBodyData(req);
 
     try {
       await this.customersService.changeOpeningBalance(
         tenantId,
         customerId,
         openingBalance,
-        openingBalanceAt,
+        openingBalanceAt
       );
       return res.status(200).send({
         id: customerId,
-        message: 'The opening balance of the given customer has been changed successfully.',
+        message:
+          'The opening balance of the given customer has been changed successfully.',
       });
     } catch (error) {
       next(error);
@@ -203,16 +218,20 @@ export default class CustomersController extends ContactsController {
 
   /**
    * Retrieve details of the given customer id.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
   async getCustomer(req: Request, res: Response, next: NextFunction) {
-    const { tenantId } = req;
+    const { tenantId, user } = req;
     const { id: contactId } = req.params;
 
     try {
-      const customer = await this.customersService.getCustomer(tenantId, contactId);
+      const customer = await this.customersService.getCustomer(
+        tenantId,
+        contactId,
+        user
+      );
 
       return res.status(200).send({
         customer: this.transfromToResponse(customer),
@@ -224,16 +243,16 @@ export default class CustomersController extends ContactsController {
 
   /**
    * Deletes the given customer from the storage.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
   async deleteCustomer(req: Request, res: Response, next: NextFunction) {
-    const { tenantId } = req;
+    const { tenantId, user } = req;
     const { id: contactId } = req.params;
 
     try {
-      await this.customersService.deleteCustomer(tenantId, contactId);
+      await this.customersService.deleteCustomer(tenantId, contactId, user);
 
       return res.status(200).send({
         id: contactId,
@@ -246,16 +265,20 @@ export default class CustomersController extends ContactsController {
 
   /**
    * Deletes customers in bulk.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
   async deleteBulkCustomers(req: Request, res: Response, next: NextFunction) {
     const { ids: contactsIds } = req.query;
-    const { tenantId } = req;
+    const { tenantId, user } = req;
 
     try {
-      await this.customersService.deleteBulkCustomers(tenantId, contactsIds)
+      await this.customersService.deleteBulkCustomers(
+        tenantId,
+        contactsIds,
+        user
+      );
 
       return res.status(200).send({
         ids: contactsIds,
@@ -268,9 +291,9 @@ export default class CustomersController extends ContactsController {
 
   /**
    * Retrieve customers paginated and filterable list.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
   async getCustomersList(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
@@ -305,12 +328,17 @@ export default class CustomersController extends ContactsController {
 
   /**
    * Handles service errors.
-   * @param {Error} error 
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
+   * @param {Error} error
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
-  handlerServiceErrors(error: Error, req: Request, res: Response, next: NextFunction) {
+  handlerServiceErrors(
+    error: Error,
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     if (error instanceof ServiceError) {
       if (error.errorType === 'contact_not_found') {
         return res.boom.badRequest(null, {
