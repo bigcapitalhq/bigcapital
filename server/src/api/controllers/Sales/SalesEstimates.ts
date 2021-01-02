@@ -155,7 +155,10 @@ export default class SalesEstimatesController extends BaseController {
     try {
       const storedEstimate = await this.saleEstimateService.createEstimate(tenantId, estimateDTO);
 
-      return res.status(200).send({ id: storedEstimate.id });
+      return res.status(200).send({
+        id: storedEstimate.id,
+        message: 'The sale estimate has been created successfully.',
+      });
     } catch (error) {
       next(error);
     }
@@ -175,7 +178,10 @@ export default class SalesEstimatesController extends BaseController {
       // Update estimate with associated estimate entries.
       await this.saleEstimateService.editEstimate(tenantId, estimateId, estimateDTO);
 
-      return res.status(200).send({ id: estimateId });  
+      return res.status(200).send({
+        id: estimateId,
+        message: 'The sale estimate has been created successfully.',
+      });  
     } catch (error) {
       next(error);
     }
@@ -193,7 +199,10 @@ export default class SalesEstimatesController extends BaseController {
     try {
       await this.saleEstimateService.deleteEstimate(tenantId, estimateId);
 
-      return res.status(200).send({ id: estimateId });
+      return res.status(200).send({
+        id: estimateId,
+        message: 'The sale estimate has been deleted successfully.'
+      });
     } catch (error) {
       next(error);
     }
@@ -276,6 +285,7 @@ export default class SalesEstimatesController extends BaseController {
 
     try {
       const estimate = await this.saleEstimateService.getEstimate(tenantId, estimateId);
+
       return res.status(200).send({ estimate });
     } catch (error) {
       next(error);

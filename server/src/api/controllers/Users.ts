@@ -104,7 +104,11 @@ export default class UsersController extends BaseController{
 
     try {
       await this.usersService.editUser(tenantId, userId, userDTO);
-      return res.status(200).send({ id: userId });
+
+      return res.status(200).send({
+        id: userId,
+        message: 'The user has been edited successfully.',
+      });
     } catch (error) {
       next(error);
     }
@@ -122,7 +126,10 @@ export default class UsersController extends BaseController{
 
     try {
       await this.usersService.deleteUser(tenantId, id);
-      return res.status(200).send({ id });
+      return res.status(200).send({
+        id,
+        message: 'The user has been deleted successfully.'
+      });
     } catch (error) {
       next(error);
     }
@@ -175,7 +182,11 @@ export default class UsersController extends BaseController{
 
     try {
       await this.usersService.activateUser(tenantId, userId, user);
-      return res.status(200).send({ id: userId });
+
+      return res.status(200).send({
+        id: userId,
+        message: 'The user has been activated successfully.',
+      });
     } catch(error) {
       next(error);
     }
@@ -193,7 +204,11 @@ export default class UsersController extends BaseController{
 
     try {
       await this.usersService.inactivateUser(tenantId, userId, user);
-      return res.status(200).send({ id: userId });
+
+      return res.status(200).send({
+        id: userId,
+        message: 'The user has been inactivated successfully.',
+      });
     } catch(error) {
       next(error);
     }

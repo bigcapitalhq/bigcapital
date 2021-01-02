@@ -194,7 +194,10 @@ export default class ExpensesController extends BaseController {
         expenseDTO,
         user
       );
-      return res.status(200).send({ id: expenseId });
+      return res.status(200).send({
+        id: expenseId,
+        message: 'The expense has been created successfully.'
+      });
     } catch (error) {
       next(error);
     }
@@ -215,7 +218,7 @@ export default class ExpensesController extends BaseController {
 
       return res.status(200).send({
         id: expenseId,
-        message: 'The expense has been deleted.',
+        message: 'The expense has been deleted successfully.',
       });
     } catch (error) {
       next(error);
@@ -237,7 +240,7 @@ export default class ExpensesController extends BaseController {
 
       return res.status(200).send({
         id: expenseId,
-        message: 'The expense has been published',
+        message: 'The expense has been published successfully',
       });
     } catch (error) {
       next(error);
@@ -260,7 +263,10 @@ export default class ExpensesController extends BaseController {
         expensesIds,
         user
       );
-      return res.status(200).send({ ids: expensesIds });
+      return res.status(200).send({
+        ids: expensesIds,
+        message: 'The expenses have been deleted successfully.',
+      });
     } catch (error) {
       next(error);
     }
@@ -282,7 +288,10 @@ export default class ExpensesController extends BaseController {
         expensesIds,
         user
       );
-      return res.status(200).send({});
+      return res.status(200).send({
+        ids: expensesIds,
+        message: 'The expenses have been published successfully.',
+      });
     } catch (error) {
       next(error);
     }

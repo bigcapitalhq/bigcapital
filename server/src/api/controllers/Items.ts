@@ -239,7 +239,7 @@ export default class ItemsController extends BaseController {
 
       return res.status(200).send({
         id: storedItem.id,
-        message: 'Item has been created successfully.',
+        message: 'The item has been created successfully.',
       });
     } catch (error) {
       next(error);
@@ -258,7 +258,11 @@ export default class ItemsController extends BaseController {
 
     try {
       await this.itemsService.editItem(tenantId, itemId, item);
-      return res.status(200).send({ id: itemId });
+
+      return res.status(200).send({
+        id: itemId,
+        message: 'The item has been edited successfully.'
+      });
     } catch (error) {
       next(error);
     }
@@ -319,7 +323,11 @@ export default class ItemsController extends BaseController {
 
     try {
       await this.itemsService.deleteItem(tenantId, itemId);
-      return res.status(200).send({ id: itemId });
+
+      return res.status(200).send({
+        id: itemId,
+        message: 'The item has been deleted successfully.'
+      });
     } catch (error) {
       next(error);
     }
@@ -340,8 +348,6 @@ export default class ItemsController extends BaseController {
 
       return res.status(200).send({ item: storedItem });
     } catch (error) {
-      console.log(error);
-
       next(error);
     }
   }

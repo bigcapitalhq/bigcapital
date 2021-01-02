@@ -213,7 +213,10 @@ export default class CustomersController extends ContactsController {
 
     try {
       await this.customersService.deleteCustomer(tenantId, contactId)
-      return res.status(200).send({ id: contactId });
+      return res.status(200).send({
+        id: contactId,
+        message: 'The customer has been deleted successfully.',
+      });
     } catch (error) {
       next(error);
     }
@@ -252,7 +255,11 @@ export default class CustomersController extends ContactsController {
 
     try {
       await this.customersService.deleteBulkCustomers(tenantId, contactsIds)
-      return res.status(200).send({ ids: contactsIds });
+
+      return res.status(200).send({
+        ids: contactsIds,
+        message: 'The customers have been deleted successfully.',
+      });
     } catch (error) {
       next(error);
     }

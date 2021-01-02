@@ -130,13 +130,12 @@ export default class CustomersService {
    * @return {Promise<void>}
    */
   public async deleteCustomer(tenantId: number, customerId: number): Promise<void> {
-    const { Contact } = this.tenancy.models(tenantId);
     this.logger.info('[customer] trying to delete customer.', { tenantId, customerId });
 
     await this.getCustomerByIdOrThrowError(tenantId, customerId);
     await this.customerHasNoInvoicesOrThrowError(tenantId, customerId);
 
-    await Contact.query().findById(customerId).delete();
+    await this.contactService.deleteContact(tenantId, customerId, 'customer');
 
     await this.eventDispatcher.dispatch(events.customers.onDeleted, { tenantId, customerId });
     this.logger.info('[customer] deleted successfully.', { tenantId, customerId });

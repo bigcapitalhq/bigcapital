@@ -205,7 +205,10 @@ export default class ManualJournalsController extends BaseController {
     try {
       await this.manualJournalsService.publishManualJournal(tenantId, manualJournalId);
 
-      return res.status(200).send();
+      return res.status(200).send({
+        id: manualJournalId,
+        message: 'The manual journal has been published successfully.',
+      });
     } catch (error) {
       next(error);
     }
@@ -224,7 +227,10 @@ export default class ManualJournalsController extends BaseController {
     try {
       await this.manualJournalsService.publishManualJournals(tenantId, manualJournalsIds);
 
-      return res.status(200).send();
+      return res.status(200).send({
+        ids: manualJournalsIds,
+        message: 'The manual journals have been published successfully.',
+      });
     } catch (error) {
       next(error);
     }
@@ -288,7 +294,10 @@ export default class ManualJournalsController extends BaseController {
       const { manualJournal } = await this.manualJournalsService
         .makeJournalEntries(tenantId, manualJournalDTO, user);
 
-      return res.status(200).send({ id: manualJournal.id });
+      return res.status(200).send({
+        id: manualJournal.id,
+        message: 'The manual journal has been created successfully.',
+      });
     } catch (error) {
       next(error);
     }
@@ -312,7 +321,10 @@ export default class ManualJournalsController extends BaseController {
         manualJournalDTO,
         user,
       );
-      return res.status(200).send({ id: manualJournal.id });
+      return res.status(200).send({
+        id: manualJournal.id,
+        message: 'The manual journal has been edited successfully.',
+      });
     } catch (error) {
       next(error);
     }

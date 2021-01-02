@@ -120,8 +120,6 @@ export default class VendorsService {
    * @return {Promise<void>}
    */
   public async deleteVendor(tenantId: number, vendorId: number) {
-    const { Contact } = this.tenancy.models(tenantId);
-
     await this.getVendorByIdOrThrowError(tenantId, vendorId);
     await this.vendorHasNoBillsOrThrowError(tenantId, vendorId);
 
@@ -129,7 +127,7 @@ export default class VendorsService {
       tenantId,
       vendorId,
     });
-    await Contact.query().findById(vendorId).delete();
+    await this.contactService.deleteContact(tenantId, vendorId, 'vendor');
 
     await this.eventDispatcher.dispatch(events.vendors.onDeleted, {
       tenantId,
