@@ -202,27 +202,6 @@ export default class CustomersController extends ContactsController {
   }
 
   /**
-   * Deletes the given customer from the storage.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
-   */
-  async deleteCustomer(req: Request, res: Response, next: NextFunction) {
-    const { tenantId } = req;
-    const { id: contactId } = req.params;
-
-    try {
-      await this.customersService.deleteCustomer(tenantId, contactId)
-      return res.status(200).send({
-        id: contactId,
-        message: 'The customer has been deleted successfully.',
-      });
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  /**
    * Retrieve details of the given customer id.
    * @param {Request} req 
    * @param {Response} res 
@@ -237,6 +216,28 @@ export default class CustomersController extends ContactsController {
 
       return res.status(200).send({
         customer: this.transfromToResponse(customer),
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Deletes the given customer from the storage.
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {NextFunction} next 
+   */
+  async deleteCustomer(req: Request, res: Response, next: NextFunction) {
+    const { tenantId } = req;
+    const { id: contactId } = req.params;
+
+    try {
+      await this.customersService.deleteCustomer(tenantId, contactId);
+
+      return res.status(200).send({
+        id: contactId,
+        message: 'The customer has been deleted successfully.',
       });
     } catch (error) {
       next(error);

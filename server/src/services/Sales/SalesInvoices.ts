@@ -24,7 +24,6 @@ import ItemsService from 'services/Items/ItemsService';
 import ItemsEntriesService from 'services/Items/ItemsEntriesService';
 import CustomersService from 'services/Contacts/CustomersService';
 import SaleEstimateService from 'services/Sales/SalesEstimate';
-import { PaymentReceiveEntry } from 'models';
 
 const ERRORS = {
   INVOICE_NUMBER_NOT_UNIQUE: 'INVOICE_NUMBER_NOT_UNIQUE',
@@ -33,7 +32,8 @@ const ERRORS = {
   ENTRIES_ITEMS_IDS_NOT_EXISTS: 'ENTRIES_ITEMS_IDS_NOT_EXISTS',
   NOT_SELLABLE_ITEMS: 'NOT_SELLABLE_ITEMS',
   SALE_INVOICE_NO_NOT_UNIQUE: 'SALE_INVOICE_NO_NOT_UNIQUE',
-  INVOICE_HAS_ASSOCIATED_PAYMENT_ENTRIES: 'INVOICE_HAS_ASSOCIATED_PAYMENT_ENTRIES',
+  INVOICE_HAS_ASSOCIATED_PAYMENT_ENTRIES:
+    'INVOICE_HAS_ASSOCIATED_PAYMENT_ENTRIES',
 };
 
 /**
@@ -107,11 +107,12 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
    * @param {Function} next
    */
   async getInvoiceOrThrowError(tenantId: number, saleInvoiceId: number) {
-    const { SaleInvoice } = this.tenancy.models(tenantId);
-    const saleInvoice = await SaleInvoice.query()
-      .findById(saleInvoiceId)
-      .withGraphFetched('entries');
+    const { saleInvoiceRepository } = this.tenancy.repositories(tenantId);
 
+    const saleInvoice = await saleInvoiceRepository.findOneById(
+      saleInvoiceId,
+      'entries'
+    );
     if (!saleInvoice) {
       throw new ServiceError(ERRORS.SALE_INVOICE_NOT_FOUND);
     }
@@ -223,7 +224,7 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
     saleInvoiceId: number,
     saleInvoiceDTO: any
   ): Promise<ISaleInvoice> {
-    const { SaleInvoice, ItemEntry } = this.tenancy.models(tenantId);
+    const { SaleInvoice } = this.tenancy.models(tenantId);
 
     const oldSaleInvoice = await this.getInvoiceOrThrowError(
       tenantId,
@@ -328,7 +329,7 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
     // Retrieve the sale invoice associated payment receive entries.
     const entries = await PaymentReceiveEntry.query().where(
       'invoice_id',
-      saleInvoiceId,
+      saleInvoiceId
     );
     if (entries.length > 0) {
       throw new ServiceError(ERRORS.INVOICE_HAS_ASSOCIATED_PAYMENT_ENTRIES);
@@ -346,7 +347,8 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
     tenantId: number,
     saleInvoiceId: number
   ): Promise<void> {
-    const { SaleInvoice, ItemEntry } = this.tenancy.models(tenantId);
+    const { ItemEntry } = this.tenancy.models(tenantId);
+    const { saleInvoiceRepository } = this.tenancy.repositories(tenantId);
 
     // Retrieve the given sale invoice with associated entries or throw not found error.
     const oldSaleInvoice = await this.getInvoiceOrThrowError(
@@ -369,7 +371,8 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
     );
 
     this.logger.info('[sale_invoice] delete sale invoice with entries.');
-    await SaleInvoice.query().where('id', saleInvoiceId).delete();
+    await saleInvoiceRepository.deleteById(saleInvoiceId);
+
     await ItemEntry.query()
       .where('reference_id', saleInvoiceId)
       .where('reference_type', 'SaleInvoice')
@@ -453,7 +456,7 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
     saleInvoiceId: number,
     override: boolean = false
   ): Promise<void> {
-    const { SaleInvoice } = this.tenancy.models(tenantId);
+    const { saleInvoiceRepository } = this.tenancy.repositories(tenantId);
 
     // Loads the inventory items entries of the given sale invoice.
     const inventoryEntries = await this.itemsEntriesService.getInventoryEntries(
@@ -464,9 +467,10 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
     // Can't continue if the sale invoice has inventory items entries.
     if (inventoryEntries.length > 0) return;
 
-    const saleInvoice = await SaleInvoice.query()
-      .findById(saleInvoiceId)
-      .withGraphFetched('entries.item');
+    const saleInvoice = await saleInvoiceRepository.findOneById(
+      saleInvoiceId,
+      'entries.item'
+    );
 
     await this.writeNonInventoryInvoiceEntries(tenantId, saleInvoice, override);
   }
