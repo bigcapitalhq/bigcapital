@@ -16,8 +16,21 @@ export const submitItem = ({ form }) => {
         });
     });
 };
-export const editItem = ({ id, form }) => {
-  return (dispatch) => ApiService.post(`items/${id}`, form);
+
+export const editItem = (id, form) => {
+  return (dispatch) =>
+    new Promise((resolve, reject) => {
+      ApiService.post(`items/${id}`, form)
+        .then((response) => {
+          resolve(response);
+        })
+        .catch((error) => {
+          const { response } = error;
+          const { data } = response;
+
+          reject(data?.errors);
+        });
+    });
 };
 
 export const fetchItems = ({ query }) => {
@@ -29,7 +42,7 @@ export const fetchItems = ({ query }) => {
         type: t.ITEMS_TABLE_LOADING,
         payload: { loading: true },
       });
-      
+
       ApiService.get(`items`, { params: { ...pageQuery, ...query } })
         .then((response) => {
           dispatch({

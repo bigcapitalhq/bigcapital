@@ -17,7 +17,7 @@ export const mapDispatchToProps = (dispatch) => ({
   requestDeleteItem: (id) => dispatch(deleteItem({ id })),
   requestDeleteBulkItems: (ids) => dispatch(deleteBulkItems({ ids })),
   requestSubmitItem: (form) => dispatch(submitItem({ form })),
-  requestEditItem: (id, form) => dispatch(editItem({ id, form })),
+  requestEditItem: (id, form) => dispatch(editItem( id, form )),
   requestInactiveItem: (id) => dispatch(inactiveItem({ id })),
   requestActivateItem: (id) => dispatch(activateItem({ id })),
   addBulkActionItem: (id) =>
