@@ -1,7 +1,8 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useCallback } from 'react';
 import { FormGroup, Intent, Classes } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { ContactSelecetList } from 'components';
+import ContactsSuggestField from 'components/ContactsSuggestField';
 
 export default function ContactsListCellRenderer({
   column: { id },
@@ -30,7 +31,7 @@ export default function ContactsListCellRenderer({
         Classes.FILL,
       )}
     >
-      <ContactSelecetList
+      <ContactsSuggestField
         contactsList={contacts}
         onContactSelected={handleContactSelected}
         selectedContactId={original?.contact_id}

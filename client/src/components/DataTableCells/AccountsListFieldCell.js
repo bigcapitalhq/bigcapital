@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
-import AccountsSelectList from 'components/AccountsSelectList';
+import AccountsSuggestField from 'components/AccountsSuggestField';
+// import AccountsSelectList from 'components/AccountsSelectList';
 import classNames from 'classnames';
 import { FormGroup, Classes, Intent } from '@blueprintjs/core';
 
@@ -42,7 +43,7 @@ const AccountCellRenderer = ({
         Classes.FILL,
       )}
     >
-      <AccountsSelectList
+      <AccountsSuggestField
         accounts={accounts}
         onAccountSelected={handleAccountSelected}
         selectedAccountId={initialValue}
