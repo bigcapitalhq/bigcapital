@@ -11,13 +11,13 @@ import {
   IFilterMeta,
   IPaginationMeta,
   IPaymentReceive,
-  IPaymentReceiveDTO,
   IPaymentReceiveCreateDTO,
   IPaymentReceiveEditDTO,
   IPaymentReceiveEntry,
   IPaymentReceiveEntryDTO,
   IPaymentReceivesFilter,
   ISaleInvoice,
+  ISystemUser,
 } from 'interfaces';
 import AccountsService from 'services/Accounts/AccountsService';
 import JournalPoster from 'services/Accounting/JournalPoster';
@@ -29,6 +29,7 @@ import { formatDateFields, entriesAmountDiff } from 'utils';
 import { ServiceError } from 'exceptions';
 import CustomersService from 'services/Contacts/CustomersService';
 import ItemsEntriesService from 'services/Items/ItemsEntriesService';
+import JournalCommands from 'services/Accounting/JournalCommands';
 
 const ERRORS = {
   PAYMENT_RECEIVE_NO_EXISTS: 'PAYMENT_RECEIVE_NO_EXISTS',
@@ -270,7 +271,8 @@ export default class PaymentReceiveService {
    */
   public async createPaymentReceive(
     tenantId: number,
-    paymentReceiveDTO: IPaymentReceiveCreateDTO
+    paymentReceiveDTO: IPaymentReceiveCreateDTO,
+    authorizedUser: ISystemUser
   ) {
     const { PaymentReceive } = this.tenancy.models(tenantId);
     const paymentAmount = sumBy(paymentReceiveDTO.entries, 'paymentAmount');
@@ -323,6 +325,7 @@ export default class PaymentReceiveService {
       tenantId,
       paymentReceive,
       paymentReceiveId: paymentReceive.id,
+      authorizedUser,
     });
     this.logger.info('[payment_receive] updated successfully.', {
       tenantId,
@@ -350,7 +353,8 @@ export default class PaymentReceiveService {
   public async editPaymentReceive(
     tenantId: number,
     paymentReceiveId: number,
-    paymentReceiveDTO: IPaymentReceiveEditDTO
+    paymentReceiveDTO: IPaymentReceiveEditDTO,
+    authorizedUser: ISystemUser
   ) {
     const { PaymentReceive } = this.tenancy.models(tenantId);
     const paymentAmount = sumBy(paymentReceiveDTO.entries, 'paymentAmount');
@@ -417,6 +421,7 @@ export default class PaymentReceiveService {
       paymentReceiveId,
       paymentReceive,
       oldPaymentReceive,
+      authorizedUser,
     });
     this.logger.info('[payment_receive] upserted successfully.', {
       tenantId,
@@ -438,7 +443,11 @@ export default class PaymentReceiveService {
    * @param {Integer} paymentReceiveId - Payment receive id.
    * @param {IPaymentReceive} paymentReceive - Payment receive object.
    */
-  async deletePaymentReceive(tenantId: number, paymentReceiveId: number) {
+  async deletePaymentReceive(
+    tenantId: number,
+    paymentReceiveId: number,
+    authorizedUser: ISystemUser
+  ) {
     const { PaymentReceive, PaymentReceiveEntry } = this.tenancy.models(
       tenantId
     );
@@ -460,6 +469,7 @@ export default class PaymentReceiveService {
       tenantId,
       paymentReceiveId,
       oldPaymentReceive,
+      authorizedUser,
     });
     this.logger.info('[payment_receive] deleted successfully.', {
       tenantId,
@@ -474,7 +484,7 @@ export default class PaymentReceiveService {
    */
   public async getPaymentReceive(
     tenantId: number,
-    paymentReceiveId: number
+    paymentReceiveId: number,
   ): Promise<{
     paymentReceive: IPaymentReceive;
     receivableInvoices: ISaleInvoice[];
@@ -595,55 +605,57 @@ export default class PaymentReceiveService {
    * --------
    * - Account receivable -> Debit
    * - Payment account [current asset] -> Credit
-   * @async
-   * @param {number} tenantId - Tenant id.
-   * @param {IPaymentReceive} paymentReceive
-   * @param {Number} paymentReceiveId
    */
-  private async recordPaymentReceiveJournalEntries(
+  public async recordPaymentReceiveJournalEntries(
     tenantId: number,
-    paymentReceive: any,
-    paymentReceiveId?: number
-  ) {
-    const { Account, AccountTransaction } = this.tenancy.models(tenantId);
+    paymentReceive: IPaymentReceive,
+    authorizedUserId: number,
+    override: boolean = false
+  ): Promise<void> {
+    const {
+      accountRepository,
+      transactionsRepository,
+    } = this.tenancy.repositories(tenantId);
 
-    const paymentAmount = sumBy(paymentReceive.entries, 'payment_amount');
-    const formattedDate = moment(paymentReceive.payment_date).format(
-      'YYYY-MM-DD'
-    );
-    const receivableAccount = await this.accountsService.getAccountByType(
-      tenantId,
-      'accounts_receivable'
-    );
-    const accountsDepGraph = await Account.depGraph().query();
-    const journal = new JournalPoster(accountsDepGraph);
+    const paymentAmount = sumBy(paymentReceive.entries, 'paymentAmount');
+
+    // Retrieve the receivable account.
+    const receivableAccount = await accountRepository.findOne({
+      slug: 'accounts-receivable',
+    });
+    // Accounts dependency graph.
+    const accountsDepGraph = await accountRepository.getDependencyGraph();
+
+    const journal = new JournalPoster(tenantId, accountsDepGraph);
     const commonJournal = {
       debit: 0,
       credit: 0,
       referenceId: paymentReceive.id,
       referenceType: 'PaymentReceive',
-      date: formattedDate,
+      date: paymentReceive.paymentDate,
+      userId: authorizedUserId,
     };
-    if (paymentReceiveId) {
-      const transactions = await AccountTransaction.query()
-        .whereIn('reference_type', ['PaymentReceive'])
-        .where('reference_id', paymentReceiveId)
-        .withGraphFetched('account.type');
-
-      journal.loadEntries(transactions);
+    if (override) {
+      const transactions = await transactionsRepository.journal({
+        referenceType: ['PaymentReceive'],
+        referenceId: [paymentReceive.id],
+      });
+      journal.fromTransactions(transactions);
       journal.removeEntries();
     }
     const creditReceivable = new JournalEntry({
       ...commonJournal,
       credit: paymentAmount,
       contactType: 'Customer',
-      contactId: paymentReceive.customer_id,
+      contactId: paymentReceive.customerId,
       account: receivableAccount.id,
+      index: 1,
     });
     const debitDepositAccount = new JournalEntry({
       ...commonJournal,
       debit: paymentAmount,
-      account: paymentReceive.deposit_account_id,
+      account: paymentReceive.depositAccountId,
+      index: 2,
     });
     journal.credit(creditReceivable);
     journal.debit(debitDepositAccount);
@@ -653,6 +665,28 @@ export default class PaymentReceiveService {
       journal.saveEntries(),
       journal.saveBalance(),
     ]);
+  }
+
+  /**
+   * Reverts the given payment receive journal entries.
+   * @param {number} tenantId 
+   * @param {number} paymentReceiveId 
+   */
+  async revertPaymentReceiveJournalEntries(
+    tenantId: number,
+    paymentReceiveId: number,
+  ) {
+    const { accountRepository } = this.tenancy.repositories(tenantId);
+
+    // Accounts dependency graph.
+    const accountsDepGraph = await accountRepository.getDependencyGraph();
+
+    const journal = new JournalPoster(tenantId, accountsDepGraph);
+    const commands = new JournalCommands(journal);
+
+    await commands.revertJournalEntries(paymentReceiveId, 'PaymentReceive');
+
+    await Promise.all([journal.saveBalance(), journal.deleteEntries()]);
   }
 
   /**

@@ -13,7 +13,6 @@ import {
   IPaginationMeta,
   IFilterMeta,
   ISystemUser,
-  ISystemService,
 } from 'interfaces';
 import events from 'subscribers/events';
 import InventoryService from 'services/Inventory/Inventory';
@@ -239,19 +238,19 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
     const saleInvoiceObj = this.transformDTOToModel(
       tenantId,
       saleInvoiceDTO,
-      oldSaleInvoice
+      oldSaleInvoice,
     );
     // Validate customer existance.
     await this.customersService.getCustomerByIdOrThrowError(
       tenantId,
-      saleInvoiceDTO.customerId
+      saleInvoiceDTO.customerId,
     );
     // Validate sale invoice number uniquiness.
     if (saleInvoiceDTO.invoiceNo) {
       await this.validateInvoiceNumberUnique(
         tenantId,
         saleInvoiceDTO.invoiceNo,
-        saleInvoiceId
+        saleInvoiceId,
       );
     }
     // Validate items ids existance.
@@ -262,7 +261,7 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
     // Validate non-sellable entries items.
     await this.itemsEntriesService.validateNonSellableEntriesItems(
       tenantId,
-      saleInvoiceDTO.entries
+      saleInvoiceDTO.entries,
     );
     // Validate the items entries existance.
     await this.itemsEntriesService.validateEntriesIdsExistance(
@@ -502,7 +501,6 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
     const { inventoryTransactionRepository } = this.tenancy.repositories(
       tenantId
     );
-
     // Retrieve the inventory transactions of the given sale invoice.
     const oldInventoryTransactions = await inventoryTransactionRepository.find({
       transactionId: saleInvoiceId,

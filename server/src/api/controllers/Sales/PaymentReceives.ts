@@ -138,13 +138,14 @@ export default class PaymentReceivesController extends BaseController {
    * Records payment receive to the given customer with associated invoices.
    */
   async newPaymentReceive(req: Request, res: Response, next: NextFunction) {
-    const { tenantId } = req;
+    const { tenantId, user } = req;
     const paymentReceive: IPaymentReceiveDTO = this.matchedBodyData(req);
 
     try {
       const storedPaymentReceive = await this.paymentReceiveService.createPaymentReceive(
         tenantId,
-        paymentReceive
+        paymentReceive,
+        user
       );
       return res.status(200).send({
         id: storedPaymentReceive.id,
@@ -162,7 +163,7 @@ export default class PaymentReceivesController extends BaseController {
    * @return {Response}
    */
   async editPaymentReceive(req: Request, res: Response, next: NextFunction) {
-    const { tenantId } = req;
+    const { tenantId, user } = req;
     const { id: paymentReceiveId } = req.params;
 
     const paymentReceive: IPaymentReceiveDTO = this.matchedBodyData(req);
@@ -171,7 +172,8 @@ export default class PaymentReceivesController extends BaseController {
       await this.paymentReceiveService.editPaymentReceive(
         tenantId,
         paymentReceiveId,
-        paymentReceive
+        paymentReceive,
+        user
       );
       return res.status(200).send({
         id: paymentReceiveId,
@@ -188,13 +190,14 @@ export default class PaymentReceivesController extends BaseController {
    * @param {Response} res
    */
   async deletePaymentReceive(req: Request, res: Response, next: NextFunction) {
-    const { tenantId } = req;
+    const { tenantId, user } = req;
     const { id: paymentReceiveId } = req.params;
 
     try {
       await this.paymentReceiveService.deletePaymentReceive(
         tenantId,
-        paymentReceiveId
+        paymentReceiveId,
+        user
       );
 
       return res.status(200).send({
@@ -223,7 +226,8 @@ export default class PaymentReceivesController extends BaseController {
         paymentReceiveInvoices,
       } = await this.paymentReceiveService.getPaymentReceive(
         tenantId,
-        paymentReceiveId
+        paymentReceiveId,
+        user
       );
 
       return res.status(200).send({

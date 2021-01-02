@@ -10,7 +10,6 @@ export default class PaymentReceivesSubscriber {
   tenancy: TenancyService;
   logger: any;
   paymentReceivesService: PaymentReceiveService;
-
   settingsService: SettingsService;
 
   constructor() {
@@ -18,6 +17,26 @@ export default class PaymentReceivesSubscriber {
     this.logger = Container.get('logger');
     this.paymentReceivesService = Container.get(PaymentReceiveService);
     this.settingsService = Container.get(SettingsService);
+  }
+
+  /**
+   * Handle journal entries writing once the payment receive created.
+   */
+  @On(events.paymentReceive.onCreated)
+  async handleWriteJournalEntriesOnceCreated({
+    tenantId,
+    paymentReceiveId,
+    paymentReceive,
+    authorizedUser,
+  }) {
+    this.logger.info('[payment_receive] trying to write journal entries.', {
+      tenantId, paymentReceiveId,
+    });
+    await this.paymentReceivesService.recordPaymentReceiveJournalEntries(
+      tenantId,
+      paymentReceive,
+      authorizedUser.id,
+    );
   }
 
   /**
@@ -76,6 +95,27 @@ export default class PaymentReceivesSubscriber {
   }
 
   /**
+   * Handle journal entries writing once the payment receive edited.
+   */
+  @On(events.paymentReceive.onEdited)
+  async handleOverwriteJournalEntriesOnceEdited({
+    tenantId,
+    paymentReceiveId,
+    paymentReceive,
+    authorizedUser,
+  }) {
+    this.logger.info('[payment_receive] trying to overwrite journal entries.', {
+      tenantId, paymentReceiveId,
+    });
+    await this.paymentReceivesService.recordPaymentReceiveJournalEntries(
+      tenantId,
+      paymentReceive,
+      authorizedUser.id,
+      true
+    );
+  }
+
+  /**
    * Handle sale invoice increment/decrement payment amount once created, edited or deleted.
    */
   @On(events.paymentReceive.onCreated)
@@ -117,6 +157,24 @@ export default class PaymentReceivesSubscriber {
       })),
       oldPaymentReceive.entries
     );
+  }
+
+  /**
+   * Handles revert journal entries once deleted.
+   */
+  @On(events.paymentReceive.onDeleted)
+  async handleRevertJournalEntriesOnceDeleted({
+    tenantId,
+    paymentReceiveId,
+  }) {
+    this.logger.info('[payment_receive] trying to revert journal entries.', {
+      tenantId,
+      paymentReceiveId,
+    });
+    await this.paymentReceivesService.revertPaymentReceiveJournalEntries(
+      tenantId,
+      paymentReceiveId
+    )
   }
 
   /**
