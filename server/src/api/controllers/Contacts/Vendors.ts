@@ -237,7 +237,11 @@ export default class VendorsController extends ContactsController {
 
     try {
       await this.vendorsService.deleteBulkVendors(tenantId, contactsIds)
-      return res.status(200).send({ ids: contactsIds });
+
+      return res.status(200).send({
+        ids: contactsIds,
+        message: 'The vendors have been deleted successfully.',
+      });
     } catch (error) {
       next(error);
     }
@@ -294,12 +298,12 @@ export default class VendorsController extends ContactsController {
       }
       if (error.errorType === 'some_vendors_have_bills') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'SOME.VENDORS.HAVE.BILLS', code: 300 }],
+          errors: [{ type: 'SOME.VENDORS.HAVE.ASSOCIATED.BILLS', code: 300 }],
         });
       }
       if (error.errorType === 'vendor_has_bills') {
         return res.status(400).send({
-          errors: [{ type: 'VENDOR.HAS.BILLS', code: 400 }],
+          errors: [{ type: 'VENDOR.HAS.ASSOCIATED.BILLS', code: 400 }],
         });
       }
       if (error.errorType === 'OPENING_BALANCE_DATE_REQUIRED') {

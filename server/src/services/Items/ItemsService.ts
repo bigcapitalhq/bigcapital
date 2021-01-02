@@ -483,10 +483,14 @@ export default class ItemsService implements IItemsService {
       tenantId,
       itemsIds,
     });
+    /// Validates the given items exist on the storage.
     await this.validateItemsIdsExists(tenantId, itemsIds);
+
+    // Validate the items have no associated invoices or bills.
     await this.validateHasNoInvoicesOrBills(tenantId, itemsIds);
 
     await Item.query().whereIn('id', itemsIds).delete();
+
     this.logger.info('[items] deleted successfully in bulk.', {
       tenantId,
       itemsIds,

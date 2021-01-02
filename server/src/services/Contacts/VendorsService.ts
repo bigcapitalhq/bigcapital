@@ -1,5 +1,5 @@
 import { Inject, Service } from 'typedi';
-import { difference, defaultTo } from 'lodash';
+import { intersection, defaultTo } from 'lodash';
 import {
   EventDispatcher,
   EventDispatcherInterface,
@@ -220,10 +220,14 @@ export default class VendorsService {
   ): Promise<void> {
     const { Contact } = this.tenancy.models(tenantId);
 
+    // Validate the given vendors exists on the storage.
     await this.getVendorsOrThrowErrorNotFound(tenantId, vendorsIds);
+
+    // Validate the given vendors have no assocaited bills.
     await this.vendorsHaveNoBillsOrThrowError(tenantId, vendorsIds);
 
     await Contact.query().whereIn('id', vendorsIds).delete();
+
     await this.eventDispatcher.dispatch(events.vendors.onBulkDeleted, {
       tenantId,
       vendorsIds,
@@ -262,7 +266,7 @@ export default class VendorsService {
    */
   private async vendorsHaveNoBillsOrThrowError(
     tenantId: number,
-    vendorsIds: number[]
+    vendorsIds: number[],
   ) {
     const { billRepository } = this.tenancy.repositories(tenantId);
 
@@ -273,8 +277,8 @@ export default class VendorsService {
     );
     const billsVendorsIds = vendorsBills.map((bill) => bill.vendorId);
 
-    // The difference between the vendors ids and bills vendors ids.
-    const vendorsHaveInvoices = difference(vendorsIds, billsVendorsIds);
+    // The intersection between vendors and vendors that have bills.
+    const vendorsHaveInvoices = intersection(vendorsIds, billsVendorsIds);
 
     if (vendorsHaveInvoices.length > 0) {
       throw new ServiceError('some_vendors_have_bills');
