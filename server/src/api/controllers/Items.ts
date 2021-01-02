@@ -428,6 +428,11 @@ export default class ItemsController extends BaseController {
           errors: [{ type: 'ITEM.NOT.FOUND', code: 140 }],
         });
       }
+      if (error.errorType === 'ITEMS_NOT_FOUND') {
+        return res.status(400).send({
+          errors: [{ type: 'ITEMS_NOT_FOUND', code: 130 }],
+        });
+      }
       if (error.errorType === 'ITEM_CATEOGRY_NOT_FOUND') {
         return res.status(400).send({
           errors: [{ type: 'ITEM_CATEGORY.NOT.FOUND', code: 140 }],
