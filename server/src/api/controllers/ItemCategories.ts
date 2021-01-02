@@ -147,7 +147,10 @@ export default class ItemsCategoriesController extends BaseController {
         itemCategoryOTD,
         user
       );
-      return res.status(200).send({ id: itemCategory.id });
+      return res.status(200).send({
+        id: itemCategory.id,
+        message: 'The item category has been created successfully.',
+      });
     } catch (error) {
       next(error);
     }
@@ -171,7 +174,10 @@ export default class ItemsCategoriesController extends BaseController {
         itemCategoryOTD,
         user
       );
-      return res.status(200).send({ id: itemCategoryId });
+      return res.status(200).send({
+        id: itemCategoryId,
+        message: 'The item category has been edited successfully.',
+      });
     } catch (error) {
       next(error);
     }
@@ -193,7 +199,10 @@ export default class ItemsCategoriesController extends BaseController {
         itemCategoryId,
         user
       );
-      return res.status(200).send({ id: itemCategoryId });
+      return res.status(200).send({
+        id: itemCategoryId,
+        message: 'The item category has been deleted successfully.',
+      });
     } catch (error) {
       next(error);
     }
@@ -270,7 +279,10 @@ export default class ItemsCategoriesController extends BaseController {
         itemCategoriesIds,
         user
       );
-      return res.status(200).send({ ids: itemCategoriesIds });
+      return res.status(200).send({
+        ids: itemCategoriesIds,
+        message: 'The item categories have been deleted successfully.',
+      });
     } catch (error) {
       next(error);
     }
@@ -297,37 +309,42 @@ export default class ItemsCategoriesController extends BaseController {
       }
       if (error.errorType === 'ITEM_CATEGORIES_NOT_FOUND') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'ITEM_CATEGORIES_NOT_FOUND', code: 120 }],
+          errors: [{ type: 'ITEM_CATEGORIES_NOT_FOUND', code: 200 }],
+        });
+      }
+      if (error.errorType === 'CATEGORY_NAME_EXISTS') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'CATEGORY_NAME_EXISTS', code: 300 }],
         });
       }
       if (error.errorType === 'COST_ACCOUNT_NOT_FOUMD') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'COST.ACCOUNT.NOT.FOUND', code: 120 }],
+          errors: [{ type: 'COST.ACCOUNT.NOT.FOUND', code: 400 }],
         });
       }
       if (error.errorType === 'COST_ACCOUNT_NOT_COGS') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'COST.ACCOUNT.NOT.COGS.TYPE', code: 220 }],
+          errors: [{ type: 'COST.ACCOUNT.NOT.COGS.TYPE', code: 500 }],
         });
       }
       if (error.errorType === 'SELL_ACCOUNT_NOT_INCOME') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'SELL.ACCOUNT.NOT.FOUND', code: 130 }],
+          errors: [{ type: 'SELL.ACCOUNT.NOT.FOUND', code: 600 }],
         });
       }
       if (error.errorType === 'SELL_ACCOUNT_NOT_FOUND') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'SELL.ACCOUNT.NOT.INCOME.TYPE', code: 230 }],
+          errors: [{ type: 'SELL.ACCOUNT.NOT.INCOME.TYPE', code: 700 }],
         });
       }
       if (error.errorType === 'INVENTORY_ACCOUNT_NOT_FOUND') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'INVENTORY.ACCOUNT.NOT.FOUND', code: 200 }],
+          errors: [{ type: 'INVENTORY.ACCOUNT.NOT.FOUND', code: 800 }],
         });
       }
       if (error.errorType === 'INVENTORY_ACCOUNT_NOT_INVENTORY') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'INVENTORY.ACCOUNT.NOT.CURRENT.ASSET', code: 300 }],
+          errors: [{ type: 'INVENTORY.ACCOUNT.NOT.CURRENT.ASSET', code: 900 }],
         });
       }
     }

@@ -176,6 +176,16 @@ export default {
   },
 
   /**
+   * Item category service.
+   */
+  itemCategory: {
+    onCreated: 'onItemCategoryCreated',
+    onEdited: 'onItemCategoryEdited',
+    onDeleted: 'onItemCategoryDeleted',
+    onBulkDeleted: 'onItemCategoryBulkDeleted',
+  },
+
+  /**
    * Inventory service.
    */
   inventory: {
