@@ -19,8 +19,12 @@ export default class CustomersSubscriber {
    * Handles the writing opening balance journal entries once the customer created.
    */
   @On(events.customers.onCreated)
-  async handleWriteOpenBalanceEntries({ tenantId, customerId, customer }) {
-
+  async handleWriteOpenBalanceEntries({
+    tenantId,
+    customerId,
+    customer,
+    authorizedUser,
+  }) {
     // Writes the customer opening balance journal entries.
     if (customer.openingBalance) {
       await this.customersService.writeCustomerOpeningBalanceJournal(
@@ -28,6 +32,7 @@ export default class CustomersSubscriber {
         customer.id,
         customer.openingBalance,
         customer.openingBalanceAt,
+        authorizedUser.id
       );
     }
   }
@@ -36,10 +41,14 @@ export default class CustomersSubscriber {
    * Handles the deleting opeing balance journal entrise once the customer deleted.
    */
   @On(events.customers.onDeleted)
-  async handleRevertOpeningBalanceEntries({ tenantId, customerId }) {
-
+  async handleRevertOpeningBalanceEntries({
+    tenantId,
+    customerId,
+    authorizedUser,
+  }) {
     await this.customersService.revertOpeningBalanceEntries(
-      tenantId, customerId,
+      tenantId,
+      customerId
     );
   }
 
@@ -48,10 +57,14 @@ export default class CustomersSubscriber {
    * customers deleted.
    */
   @On(events.customers.onBulkDeleted)
-  async handleBulkRevertOpeningBalanceEntries({ tenantId, customersIds }) {
-
+  async handleBulkRevertOpeningBalanceEntries({
+    tenantId,
+    customersIds,
+    authorizedUser,
+  }) {
     await this.customersService.revertOpeningBalanceEntries(
-      tenantId, customersIds,
+      tenantId,
+      customersIds
     );
   }
 }

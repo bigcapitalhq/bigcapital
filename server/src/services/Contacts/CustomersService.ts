@@ -17,6 +17,8 @@ import {
   IContactEditDTO,
   IContact,
   ISaleInvoice,
+  ISystemService,
+  ISystemUser,
 } from 'interfaces';
 import { ServiceError } from 'exceptions';
 import TenancyService from 'services/Tenancy/TenancyService';
@@ -90,20 +92,20 @@ export default class CustomersService {
    */
   public async newCustomer(
     tenantId: number,
-    customerDTO: ICustomerNewDTO
+    customerDTO: ICustomerNewDTO,
+    authorizedUser: ISystemUser
   ): Promise<ICustomer> {
     this.logger.info('[customer] trying to create a new customer.', {
       tenantId,
       customerDTO,
     });
-
     const customerObj = this.transformNewCustomerDTO(customerDTO);
+
     const customer = await this.contactService.newContact(
       tenantId,
       customerObj,
       'customer'
     );
-
     this.logger.info('[customer] created successfully.', {
       tenantId,
       customerDTO,
@@ -112,6 +114,7 @@ export default class CustomersService {
       customer,
       tenantId,
       customerId: customer.id,
+      authorizedUser,
     });
 
     return customer;
@@ -127,7 +130,8 @@ export default class CustomersService {
   public async editCustomer(
     tenantId: number,
     customerId: number,
-    customerDTO: ICustomerEditDTO
+    customerDTO: ICustomerEditDTO,
+    authorizedUser: ISystemUser
   ): Promise<ICustomer> {
     const contactDTO = this.customerToContactDTO(customerDTO);
 
@@ -143,11 +147,13 @@ export default class CustomersService {
       'customer'
     );
 
+    // Triggers `onCustomerEdited` event.
     this.eventDispatcher.dispatch(events.customers.onEdited);
     this.logger.info('[customer] edited successfully.', {
       tenantId,
       customerId,
       customer,
+      authorizedUser,
     });
 
     return customer;
@@ -161,7 +167,8 @@ export default class CustomersService {
    */
   public async deleteCustomer(
     tenantId: number,
-    customerId: number
+    customerId: number,
+    authorizedUser: ISystemUser
   ): Promise<void> {
     this.logger.info('[customer] trying to delete customer.', {
       tenantId,
@@ -184,6 +191,7 @@ export default class CustomersService {
     this.logger.info('[customer] deleted successfully.', {
       tenantId,
       customerId,
+      authorizedUser,
     });
   }
 
@@ -192,7 +200,11 @@ export default class CustomersService {
    * @param {number} tenantId
    * @param {number} customerId
    */
-  public async getCustomer(tenantId: number, customerId: number) {
+  public async getCustomer(
+    tenantId: number,
+    customerId: number,
+    authorizedUser: ISystemUser
+  ) {
     const contact = await this.contactService.getContact(
       tenantId,
       customerId,
@@ -245,7 +257,8 @@ export default class CustomersService {
     tenantId: number,
     customerId: number,
     openingBalance: number,
-    openingBalanceAt: Date | string
+    openingBalanceAt: Date | string,
+    authorizedUserId: number
   ) {
     const journal = new JournalPoster(tenantId);
     const journalCommands = new JournalCommands(journal);
@@ -253,7 +266,8 @@ export default class CustomersService {
     await journalCommands.customerOpeningBalance(
       customerId,
       openingBalance,
-      openingBalanceAt
+      openingBalanceAt,
+      authorizedUserId
     );
     await Promise.all([journal.saveBalance(), journal.saveEntries()]);
   }
@@ -316,7 +330,11 @@ export default class CustomersService {
    * @param {number[]} customersIds
    * @return {Promise<void>}
    */
-  public async deleteBulkCustomers(tenantId: number, customersIds: number[]) {
+  public async deleteBulkCustomers(
+    tenantId: number,
+    customersIds: number[],
+    authorizedUser: ISystemUser,
+  ): Promise<void> {
     const { Contact } = this.tenancy.models(tenantId);
 
     // Validate the customers existance on the storage.
@@ -332,6 +350,7 @@ export default class CustomersService {
     await this.eventDispatcher.dispatch(events.customers.onBulkDeleted, {
       tenantId,
       customersIds,
+      authorizedUser,
     });
   }
 

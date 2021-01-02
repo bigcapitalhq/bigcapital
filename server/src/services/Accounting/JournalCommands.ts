@@ -1,8 +1,8 @@
 import { sumBy, chain } from 'lodash';
 import moment from 'moment';
-import { IBill } from 'interfaces';
-import JournalPoster from "./JournalPoster";
-import JournalEntry from "./JournalEntry";
+import { IBill, ISystemUser } from 'interfaces';
+import JournalPoster from './JournalPoster';
+import JournalEntry from './JournalEntry';
 import { AccountTransaction } from 'models';
 import {
   IInventoryTransaction,
@@ -16,37 +16,37 @@ import {
 } from 'interfaces';
 
 interface IInventoryCostEntity {
-  date: Date,
+  date: Date;
 
-  referenceType: string,
-  referenceId: number,
+  referenceType: string;
+  referenceId: number;
 
-  costAccount: number,
-  incomeAccount: number,
-  inventoryAccount: number,
+  costAccount: number;
+  incomeAccount: number;
+  inventoryAccount: number;
 
-  inventory: number,
-  cost: number,
-  income: number,
-};
+  inventory: number;
+  cost: number;
+  income: number;
+}
 
 interface NonInventoryJEntries {
-  date: Date,
+  date: Date;
 
-  referenceType: string,
-  referenceId: number,
+  referenceType: string;
+  referenceId: number;
 
-  receivable: number,
-  payable: number,
+  receivable: number;
+  payable: number;
 
-  incomeAccountId: number,
-  income: number,
+  incomeAccountId: number;
+  income: number;
 
-  costAccountId: number,
-  cost: number,
-};
+  costAccountId: number;
+  cost: number;
+}
 
-export default class JournalCommands{
+export default class JournalCommands {
   journal: JournalPoster;
 
   models: any;
@@ -54,18 +54,18 @@ export default class JournalCommands{
 
   /**
    * Constructor method.
-   * @param {JournalPoster} journal - 
+   * @param {JournalPoster} journal -
    */
   constructor(journal: JournalPoster) {
     this.journal = journal;
-    
+
     this.repositories = this.journal.repositories;
     this.models = this.journal.models;
   }
 
   /**
    * Records the bill journal entries.
-   * @param {IBill} bill 
+   * @param {IBill} bill
    * @param {boolean} override - Override the old bill entries.
    */
   async bill(bill: IBill, override: boolean = false): Promise<void> {
@@ -78,7 +78,9 @@ export default class JournalCommands{
     const storedItems = await Item.query().whereIn('id', entriesItemsIds);
 
     const storedItemsMap = new Map(storedItems.map((item) => [item.id, item]));
-    const payableAccount = await accountRepository.findOne({ slug: 'accounts-payable' });
+    const payableAccount = await accountRepository.findOne({
+      slug: 'accounts-payable',
+    });
     const formattedDate = moment(bill.billDate).format('YYYY-MM-DD');
 
     const commonJournalMeta = {
@@ -127,32 +129,45 @@ export default class JournalCommands{
 
   /**
    * Customer opening balance journals.
-   * @param {number} customerId 
-   * @param {number} openingBalance 
+   * @param {number} customerId
+   * @param {number} openingBalance
    */
-  async customerOpeningBalance(customerId: number, openingBalance: number) {
+  async customerOpeningBalance(
+    customerId: number,
+    openingBalance: number,
+    openingBalanceAt: Date | string,
+    userId: number
+  ) {
     const { accountRepository } = this.repositories;
 
-    const openingBalanceAccount = await accountRepository.findOne({ slug: 'opening-balance' });
-    const receivableAccount = await accountRepository.findOne({ slug: 'accounts-receivable' });
+    const openingBalanceAccount = await accountRepository.findOne({
+      slug: 'opening-balance',
+    });
+    const receivableAccount = await accountRepository.findOne({
+      slug: 'accounts-receivable',
+    });
 
     const commonEntry = {
       referenceType: 'CustomerOpeningBalance',
       referenceId: customerId,
       contactType: 'Customer',
       contactId: customerId,
+      date: openingBalanceAt,
+      userId,
     };
-    const creditEntry = new JournalEntry({
-      ...commonEntry,
-      credit: openingBalance,
-      debit: 0,
-      account: openingBalanceAccount.id,
-    });
     const debitEntry = new JournalEntry({
       ...commonEntry,
       credit: 0,
       debit: openingBalance,
       account: receivableAccount.id,
+      index: 1,
+    });
+    const creditEntry = new JournalEntry({
+      ...commonEntry,
+      credit: openingBalance,
+      debit: 0,
+      account: openingBalanceAccount.id,
+      index: 2,
     });
     this.journal.debit(debitEntry);
     this.journal.credit(creditEntry);
@@ -160,32 +175,47 @@ export default class JournalCommands{
 
   /**
    * Vendor opening balance journals
-   * @param {number} vendorId 
-   * @param {number} openingBalance 
+   * @param {number} vendorId
+   * @param {number} openingBalance
+   * @param {Date|string} openingBalanceAt
+   * @param {number} authorizedUserId
    */
-  async vendorOpeningBalance(vendorId: number, openingBalance: number) {
+  async vendorOpeningBalance(
+    vendorId: number,
+    openingBalance: number,
+    openingBalanceAt: Date|string,
+    authorizedUserId: ISystemUser
+  ) {
     const { accountRepository } = this.repositories;
 
-    const payableAccount = await accountRepository.findOne({ slug: 'accounts-payable' });
-    const otherCost = await accountRepository.findOne({ slug: 'other-expenses' });
+    const payableAccount = await accountRepository.findOne({
+      slug: 'accounts-payable',
+    });
+    const otherCost = await accountRepository.findOne({
+      slug: 'other-expenses',
+    });
 
     const commonEntry = {
       referenceType: 'VendorOpeningBalance',
       referenceId: vendorId,
       contactType: 'Vendor',
       contactId: vendorId,
+      date: openingBalanceAt,
+      userId: authorizedUserId,
     };
     const creditEntry = new JournalEntry({
       ...commonEntry,
       account: payableAccount.id,
       credit: openingBalance,
       debit: 0,
+      index: 1,
     });
     const debitEntry = new JournalEntry({
       ...commonEntry,
       account: otherCost.id,
       debit: openingBalance,
       credit: 0,
+      index: 2,
     });
     this.journal.debit(debitEntry);
     this.journal.credit(creditEntry);
@@ -193,7 +223,7 @@ export default class JournalCommands{
 
   /**
    * Writes journal entries of expense model object.
-   * @param {IExpense} expense 
+   * @param {IExpense} expense
    */
   expense(expense: IExpense) {
     const mixinEntry = {
@@ -224,32 +254,37 @@ export default class JournalCommands{
   }
 
   /**
-   * 
-   * @param {number|number[]} referenceId 
-   * @param {string} referenceType 
+   *
+   * @param {number|number[]} referenceId
+   * @param {string} referenceType
    */
   async revertJournalEntries(
-    referenceId: number|number[],
+    referenceId: number | number[],
     referenceType: string
   ) {
     const { AccountTransaction } = this.models;
 
     const transactions = await AccountTransaction.query()
       .where('reference_type', referenceType)
-      .whereIn('reference_id', Array.isArray(referenceId) ? referenceId : [referenceId])
+      .whereIn(
+        'reference_id',
+        Array.isArray(referenceId) ? referenceId : [referenceId]
+      )
       .withGraphFetched('account.type');
 
     this.journal.fromTransactions(transactions);
     this.journal.removeEntries();
   }
 
-
   /**
    * Writes journal entries from manual journal model object.
-   * @param {IManualJournal} manualJournalObj 
-   * @param {number} manualJournalId 
+   * @param {IManualJournal} manualJournalObj
+   * @param {number} manualJournalId
    */
-  async manualJournal(manualJournalObj: IManualJournal, manualJournalId: number) {
+  async manualJournal(
+    manualJournalObj: IManualJournal,
+    manualJournalId: number
+  ) {
     manualJournalObj.entries.forEach((entry) => {
       const jouranlEntry = new JournalEntry({
         debit: entry.debit,
@@ -276,39 +311,49 @@ export default class JournalCommands{
   /**
    * Removes and revert accounts balance journal entries that associated
    * to the given inventory transactions.
-   * @param {IInventoryTransaction[]} inventoryTransactions 
-   * @param {Journal} journal 
+   * @param {IInventoryTransaction[]} inventoryTransactions
+   * @param {Journal} journal
    */
-  revertEntriesFromInventoryTransactions(inventoryTransactions: IInventoryTransaction[]) {
+  revertEntriesFromInventoryTransactions(
+    inventoryTransactions: IInventoryTransaction[]
+  ) {
     const groupedInvTransactions = chain(inventoryTransactions)
-      .groupBy((invTransaction: IInventoryTransaction) => invTransaction.transactionType)
-      .map((groupedTrans: IInventoryTransaction[], transType: string) => [groupedTrans, transType])
+      .groupBy(
+        (invTransaction: IInventoryTransaction) =>
+          invTransaction.transactionType
+      )
+      .map((groupedTrans: IInventoryTransaction[], transType: string) => [
+        groupedTrans,
+        transType,
+      ])
       .value();
 
     return Promise.all(
-      groupedInvTransactions.map(async (grouped: [IInventoryTransaction[], string]) => {
-        const [invTransGroup, referenceType] = grouped;
-        const referencesIds = invTransGroup.map((trans: IInventoryTransaction) => trans.transactionId);
+      groupedInvTransactions.map(
+        async (grouped: [IInventoryTransaction[], string]) => {
+          const [invTransGroup, referenceType] = grouped;
+          const referencesIds = invTransGroup.map(
+            (trans: IInventoryTransaction) => trans.transactionId
+          );
 
-        const _transactions = await AccountTransaction.tenant()
-          .query()
-          .where('reference_type', referenceType)
-          .whereIn('reference_id', referencesIds)
-          .withGraphFetched('account.type');
+          const _transactions = await AccountTransaction.tenant()
+            .query()
+            .where('reference_type', referenceType)
+            .whereIn('reference_id', referencesIds)
+            .withGraphFetched('account.type');
 
-        if (_transactions.length > 0) {
-          this.journal.loadEntries(_transactions);
-          this.journal.removeEntries(_transactions.map((t: any) => t.id));
+          if (_transactions.length > 0) {
+            this.journal.loadEntries(_transactions);
+            this.journal.removeEntries(_transactions.map((t: any) => t.id));
+          }
         }
-      })
+      )
     );
   }
 
-  public async nonInventoryEntries(
-    transactions: NonInventoryJEntries[]
-  ) {
+  public async nonInventoryEntries(transactions: NonInventoryJEntries[]) {
     const receivableAccount = { id: 10 };
-    const payableAccount = {id: 11};
+    const payableAccount = { id: 11 };
 
     transactions.forEach((trans: NonInventoryJEntries) => {
       const commonEntry = {
@@ -317,12 +362,12 @@ export default class JournalCommands{
         referenceType: trans.referenceType,
       };
 
-      switch(trans.referenceType) {  
+      switch (trans.referenceType) {
         case 'Bill':
           const payableEntry: JournalEntry = new JournalEntry({
             ...commonEntry,
             credit: trans.payable,
-            account: payableAccount.id,            
+            account: payableAccount.id,
           });
           const costEntry: JournalEntry = new JournalEntry({
             ...commonEntry,
@@ -349,14 +394,12 @@ export default class JournalCommands{
   }
 
   /**
-   * 
+   *
    * @param {string} referenceType -
    * @param {number} referenceId -
    * @param {ISaleInvoice[]} sales -
    */
-  public async inventoryEntries(
-    transactions: IInventoryCostEntity[], 
-  ) {
+  public async inventoryEntries(transactions: IInventoryCostEntity[]) {
     const receivableAccount = { id: 10 };
     const payableAccount = { id: 11 };
 
@@ -366,12 +409,12 @@ export default class JournalCommands{
         referenceId: sale.referenceId,
         referenceType: sale.referenceType,
       };
-      switch(sale.referenceType) {
+      switch (sale.referenceType) {
         case 'Bill':
           const inventoryDebit: JournalEntry = new JournalEntry({
             ...commonEntry,
             debit: sale.inventory,
-            account: sale.inventoryAccount,          
+            account: sale.inventoryAccount,
           });
           const payableEntry: JournalEntry = new JournalEntry({
             ...commonEntry,
@@ -401,7 +444,7 @@ export default class JournalCommands{
           const inventoryCredit: JournalEntry = new JournalEntry({
             ...commonEntry,
             credit: sale.cost,
-            account: sale.inventoryAccount,          
+            account: sale.inventoryAccount,
           });
           this.journal.debit(receivableEntry);
           this.journal.debit(costEntry);
@@ -418,19 +461,19 @@ export default class JournalCommands{
    * ----------
    * - Receivable accounts -> Debit -> XXXX
    *    - Income -> Credit -> XXXX
-   * 
+   *
    * - Cost of goods sold -> Debit -> YYYY
    *    - Inventory assets -> YYYY
-   * 
-   * @param {ISaleInvoice} saleInvoice 
-   * @param {JournalPoster} journal 
+   *
+   * @param {ISaleInvoice} saleInvoice
+   * @param {JournalPoster} journal
    */
   saleInvoice(
     saleInvoice: ISaleInvoice & {
-      costTransactions: IInventoryLotCost[],
-      entries: IItemEntry & { item: IItem },
+      costTransactions: IInventoryLotCost[];
+      entries: IItemEntry & { item: IItem };
     },
-    receivableAccountsId: number,
+    receivableAccountsId: number
   ) {
     let inventoryTotal: number = 0;
 
@@ -441,8 +484,9 @@ export default class JournalCommands{
     };
     const costTransactions: Map<number, number> = new Map(
       saleInvoice.costTransactions.map((trans: IInventoryLotCost) => [
-        trans.entryId, trans.cost,
-      ]),
+        trans.entryId,
+        trans.cost,
+      ])
     );
     // XXX Debit - Receivable account.
     const receivableEntry = new JournalEntry({
@@ -453,50 +497,52 @@ export default class JournalCommands{
     });
     this.journal.debit(receivableEntry);
 
-    saleInvoice.entries.forEach((entry: IItemEntry & { item: IItem }, index) => {
-      const cost: number = costTransactions.get(entry.id);
-      const income: number = entry.quantity * entry.rate;
-  
-      if (entry.item.type === 'inventory' && cost) {
-        // XXX Debit - Cost account.
-        const costEntry = new JournalEntry({
-          ...commonEntry,
-          debit: cost,
-          account: entry.item.costAccountId,
-          note: entry.description,
-          index: index + 3,
-        });
-        this.journal.debit(costEntry);
-        inventoryTotal += cost;
-      }
-      // XXX Credit - Income account.
-      const incomeEntry = new JournalEntry({
-        ...commonEntry,
-        credit: income,
-        account: entry.item.sellAccountId,
-        note: entry.description,
-        index: index + 2,
-      });
-      this.journal.credit(incomeEntry);
+    saleInvoice.entries.forEach(
+      (entry: IItemEntry & { item: IItem }, index) => {
+        const cost: number = costTransactions.get(entry.id);
+        const income: number = entry.quantity * entry.rate;
 
-      if (inventoryTotal > 0) {
-        // XXX Credit - Inventory account.
-        const inventoryEntry = new JournalEntry({
+        if (entry.item.type === 'inventory' && cost) {
+          // XXX Debit - Cost account.
+          const costEntry = new JournalEntry({
+            ...commonEntry,
+            debit: cost,
+            account: entry.item.costAccountId,
+            note: entry.description,
+            index: index + 3,
+          });
+          this.journal.debit(costEntry);
+          inventoryTotal += cost;
+        }
+        // XXX Credit - Income account.
+        const incomeEntry = new JournalEntry({
           ...commonEntry,
-          credit: inventoryTotal,
-          account: entry.item.inventoryAccountId,
-          index: index + 4,
+          credit: income,
+          account: entry.item.sellAccountId,
+          note: entry.description,
+          index: index + 2,
         });
-        this.journal.credit(inventoryEntry);
+        this.journal.credit(incomeEntry);
+
+        if (inventoryTotal > 0) {
+          // XXX Credit - Inventory account.
+          const inventoryEntry = new JournalEntry({
+            ...commonEntry,
+            credit: inventoryTotal,
+            account: entry.item.inventoryAccountId,
+            index: index + 4,
+          });
+          this.journal.credit(inventoryEntry);
+        }
       }
-    });
+    );
   }
 
   saleInvoiceNonInventory(
     saleInvoice: ISaleInvoice & {
-      entries: IItemEntry & { item: IItem },
+      entries: IItemEntry & { item: IItem };
     },
-    receivableAccountsId: number,
+    receivableAccountsId: number
   ) {
     const commonEntry = {
       referenceType: 'SaleInvoice',
@@ -513,18 +559,20 @@ export default class JournalCommands{
     });
     this.journal.debit(receivableEntry);
 
-    saleInvoice.entries.forEach((entry: IItemEntry & { item: IItem }, index: number) => {
-      const income: number = entry.quantity * entry.rate;
-  
-      // XXX Credit - Income account.
-      const incomeEntry = new JournalEntry({
-        ...commonEntry,
-        credit: income,
-        account: entry.item.sellAccountId,
-        note: entry.description,
-        index: index + 2,
-      });
-      this.journal.credit(incomeEntry);
-    });
+    saleInvoice.entries.forEach(
+      (entry: IItemEntry & { item: IItem }, index: number) => {
+        const income: number = entry.quantity * entry.rate;
+
+        // XXX Credit - Income account.
+        const incomeEntry = new JournalEntry({
+          ...commonEntry,
+          credit: income,
+          account: entry.item.sellAccountId,
+          note: entry.description,
+          index: index + 2,
+        });
+        this.journal.credit(incomeEntry);
+      }
+    );
   }
 }

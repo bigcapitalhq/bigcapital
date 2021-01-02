@@ -14,6 +14,7 @@ import {
   IVendorsFilter,
   IPaginationMeta,
   IFilterMeta,
+  ISystemUser,
 } from 'interfaces';
 import { ServiceError } from 'exceptions';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
@@ -55,24 +56,28 @@ export default class VendorsService {
    * @param {IVendorNewDTO} vendorDTO
    * @return {Promise<void>}
    */
-  public async newVendor(tenantId: number, vendorDTO: IVendorNewDTO) {
+  public async newVendor(
+    tenantId: number,
+    vendorDTO: IVendorNewDTO,
+    authorizedUser: ISystemUser
+  ) {
     this.logger.info('[vendor] trying create a new vendor.', {
       tenantId,
       vendorDTO,
     });
-
     const contactDTO = this.vendorToContactDTO(vendorDTO);
+
     const vendor = await this.contactService.newContact(
       tenantId,
       contactDTO,
       'vendor'
     );
-
     // Triggers `onVendorCreated` event.
     await this.eventDispatcher.dispatch(events.vendors.onCreated, {
       tenantId,
       vendorId: vendor.id,
       vendor,
+      authorizedUser,
     });
     return vendor;
   }
@@ -85,7 +90,8 @@ export default class VendorsService {
   public async editVendor(
     tenantId: number,
     vendorId: number,
-    vendorDTO: IVendorEditDTO
+    vendorDTO: IVendorEditDTO,
+    authorizedUser: ISystemUser
   ) {
     const contactDTO = this.vendorToContactDTO(vendorDTO);
     const vendor = await this.contactService.editContact(
@@ -95,8 +101,13 @@ export default class VendorsService {
       'vendor'
     );
 
-    await this.eventDispatcher.dispatch(events.vendors.onEdited);
-
+    // Triggers `onVendorEdited` event.
+    await this.eventDispatcher.dispatch(events.vendors.onEdited, {
+      tenantId,
+      vendorId,
+      vendor,
+      authorizedUser,
+    });
     return vendor;
   }
 
@@ -119,8 +130,15 @@ export default class VendorsService {
    * @param {number} vendorId
    * @return {Promise<void>}
    */
-  public async deleteVendor(tenantId: number, vendorId: number) {
+  public async deleteVendor(
+    tenantId: number,
+    vendorId: number,
+    authorizedUser: ISystemUser
+  ) {
+    // Validate the vendor existance on the storage.
     await this.getVendorByIdOrThrowError(tenantId, vendorId);
+
+    // Validate the vendor has no associated bills.
     await this.vendorHasNoBillsOrThrowError(tenantId, vendorId);
 
     this.logger.info('[vendor] trying to delete vendor.', {
@@ -129,9 +147,11 @@ export default class VendorsService {
     });
     await this.contactService.deleteContact(tenantId, vendorId, 'vendor');
 
+    // Triggers `onVendorDeleted` event.
     await this.eventDispatcher.dispatch(events.vendors.onDeleted, {
       tenantId,
       vendorId,
+      authorizedUser,
     });
     this.logger.info('[vendor] deleted successfully.', { tenantId, vendorId });
   }
@@ -155,7 +175,9 @@ export default class VendorsService {
   public async writeVendorOpeningBalanceJournal(
     tenantId: number,
     vendorId: number,
-    openingBalance: number
+    openingBalance: number,
+    openingBalanceAt: Date | string,
+    user: ISystemUser
   ) {
     const journal = new JournalPoster(tenantId);
     const journalCommands = new JournalCommands(journal);
@@ -164,8 +186,12 @@ export default class VendorsService {
       tenantId,
       vendorId,
     });
-    await journalCommands.vendorOpeningBalance(vendorId, openingBalance);
-
+    await journalCommands.vendorOpeningBalance(
+      vendorId,
+      openingBalance,
+      openingBalanceAt,
+      user
+    );
     await Promise.all([journal.saveBalance(), journal.saveEntries()]);
   }
 
@@ -183,7 +209,7 @@ export default class VendorsService {
 
     this.logger.info(
       '[customer] trying to revert opening balance journal entries.',
-      { tenantId, customerId }
+      { tenantId, vendorId }
     );
     await this.contactService.revertJEntriesContactsOpeningBalance(
       tenantId,
@@ -216,7 +242,8 @@ export default class VendorsService {
    */
   public async deleteBulkVendors(
     tenantId: number,
-    vendorsIds: number[]
+    vendorsIds: number[],
+    authorizedUser: ISystemUser
   ): Promise<void> {
     const { Contact } = this.tenancy.models(tenantId);
 
@@ -228,9 +255,11 @@ export default class VendorsService {
 
     await Contact.query().whereIn('id', vendorsIds).delete();
 
+    // Triggers `onVendorsBulkDeleted` event.
     await this.eventDispatcher.dispatch(events.vendors.onBulkDeleted, {
       tenantId,
       vendorsIds,
+      authorizedUser,
     });
 
     this.logger.info('[vendor] bulk deleted successfully.', {
@@ -266,7 +295,7 @@ export default class VendorsService {
    */
   private async vendorsHaveNoBillsOrThrowError(
     tenantId: number,
-    vendorsIds: number[],
+    vendorsIds: number[]
   ) {
     const { billRepository } = this.tenancy.repositories(tenantId);
 
@@ -299,12 +328,12 @@ export default class VendorsService {
     filterMeta: IFilterMeta;
   }> {
     const { Vendor } = this.tenancy.models(tenantId);
+
     const dynamicFilter = await this.dynamicListService.dynamicList(
       tenantId,
       Vendor,
       vendorsFilter
     );
-
     const { results, pagination } = await Vendor.query()
       .onBuild((builder) => {
         dynamicFilter.buildQuery()(builder);
