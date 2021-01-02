@@ -184,12 +184,12 @@ export default class SaleInvoicesCost {
 
   /**
    * Writes the sale invoice journal entries.
-   * @param {SaleInvoice} saleInvoice -
    */
   async writeNonInventoryInvoiceEntries(
     tenantId: number,
     saleInvoice: ISaleInvoice,
-    override: boolean
+    authorizedUserId: number,
+    override: boolean = false,
   ) {
     const { accountRepository } = this.tenancy.repositories(tenantId);
     const { AccountTransaction } = this.tenancy.models(tenantId);
@@ -210,7 +210,11 @@ export default class SaleInvoicesCost {
       journal.fromTransactions(oldTransactions);
       journal.removeEntries();
     }
-    journalCommands.saleInvoiceNonInventory(saleInvoice, receivableAccount.id);
+    journalCommands.saleInvoiceNonInventory(
+      saleInvoice,
+      receivableAccount.id,
+      authorizedUserId,
+    );
 
     await Promise.all([
       journal.deleteEntries(),

@@ -146,14 +146,15 @@ export default class SaleInvoicesController extends BaseController {
    * @param {Function} next
    */
   async newSaleInvoice(req: Request, res: Response, next: NextFunction) {
-    const { tenantId } = req;
-    const saleInvoiceOTD: ISaleInvoiceDTO = this.matchedBodyData(req);
+    const { tenantId, user } = req;
+    const saleInvoiceDTO: ISaleInvoiceDTO = this.matchedBodyData(req);
 
     try {
       // Creates a new sale invoice with associated entries.
       const storedSaleInvoice = await this.saleInvoiceService.createSaleInvoice(
         tenantId,
-        saleInvoiceOTD
+        saleInvoiceDTO,
+        user
       );
       return res.status(200).send({
         id: storedSaleInvoice.id,
@@ -171,7 +172,7 @@ export default class SaleInvoicesController extends BaseController {
    * @param {Function} next
    */
   async editSaleInvoice(req: Request, res: Response, next: NextFunction) {
-    const { tenantId } = req;
+    const { tenantId, user } = req;
     const { id: saleInvoiceId } = req.params;
     const saleInvoiceOTD: ISaleInvoiceDTO = this.matchedBodyData(req);
 
@@ -180,7 +181,8 @@ export default class SaleInvoicesController extends BaseController {
       await this.saleInvoiceService.editSaleInvoice(
         tenantId,
         saleInvoiceId,
-        saleInvoiceOTD
+        saleInvoiceOTD,
+        user
       );
       return res.status(200).send({
         id: saleInvoiceId,
@@ -198,12 +200,15 @@ export default class SaleInvoicesController extends BaseController {
    * @param {NextFunction} next -
    */
   async deliverSaleInvoice(req: Request, res: Response, next: NextFunction) {
-    const { tenantId } = req;
+    const { tenantId, user } = req;
     const { id: saleInvoiceId } = req.params;
 
     try {
-      await this.saleInvoiceService.deliverSaleInvoice(tenantId, saleInvoiceId);
-
+      await this.saleInvoiceService.deliverSaleInvoice(
+        tenantId,
+        saleInvoiceId,
+        user
+      );
       return res.status(200).send({
         id: saleInvoiceId,
         message: 'The given sale invoice has been delivered successfully',
@@ -221,11 +226,11 @@ export default class SaleInvoicesController extends BaseController {
    */
   async deleteSaleInvoice(req: Request, res: Response, next: NextFunction) {
     const { id: saleInvoiceId } = req.params;
-    const { tenantId } = req;
+    const { tenantId, user } = req;
 
     try {
       // Deletes the sale invoice with associated entries and journal transaction.
-      await this.saleInvoiceService.deleteSaleInvoice(tenantId, saleInvoiceId);
+      await this.saleInvoiceService.deleteSaleInvoice(tenantId, saleInvoiceId, user);
 
       return res.status(200).send({
         id: saleInvoiceId,
@@ -388,7 +393,9 @@ export default class SaleInvoicesController extends BaseController {
       }
       if (error.errorType === 'INVOICE_HAS_ASSOCIATED_PAYMENT_ENTRIES') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'INVOICE_HAS_ASSOCIATED_PAYMENT_ENTRIES', code: 1100 }],
+          errors: [
+            { type: 'INVOICE_HAS_ASSOCIATED_PAYMENT_ENTRIES', code: 1100 },
+          ],
         });
       }
     }

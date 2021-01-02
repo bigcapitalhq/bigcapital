@@ -538,16 +538,24 @@ export default class JournalCommands {
     );
   }
 
+  /**
+   * 
+   * @param {ISaleInvoice} saleInvoice 
+   * @param {number} receivableAccountsId 
+   * @param {number} authorizedUserId 
+   */
   saleInvoiceNonInventory(
     saleInvoice: ISaleInvoice & {
       entries: IItemEntry & { item: IItem };
     },
-    receivableAccountsId: number
+    receivableAccountsId: number,
+    authorizedUserId: number,
   ) {
     const commonEntry = {
       referenceType: 'SaleInvoice',
       referenceId: saleInvoice.id,
       date: saleInvoice.invoiceDate,
+      userId: authorizedUserId,
     };
 
     // XXX Debit - Receivable account.

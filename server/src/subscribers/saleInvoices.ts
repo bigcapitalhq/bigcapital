@@ -99,10 +99,11 @@ export default class SaleInvoiceSubscriber {
    */
   @On(events.saleInvoice.onCreated)
   @On(events.saleInvoice.onEdited)
-  public async handleWritingNonInventoryEntries({ tenantId, saleInvoice }) {
+  public async handleWritingNonInventoryEntries({ tenantId, saleInvoice, authorizedUser }) {
     await this.saleInvoicesService.recordNonInventoryJournalEntries(
       tenantId,
-      saleInvoice.id
+      saleInvoice.id,
+      authorizedUser.id,
     );
   }
 

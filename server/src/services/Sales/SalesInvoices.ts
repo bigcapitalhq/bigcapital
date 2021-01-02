@@ -12,6 +12,8 @@ import {
   ISalesInvoicesFilter,
   IPaginationMeta,
   IFilterMeta,
+  ISystemUser,
+  ISystemService,
 } from 'interfaces';
 import events from 'subscribers/events';
 import InventoryService from 'services/Inventory/Inventory';
@@ -163,7 +165,8 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
    */
   public async createSaleInvoice(
     tenantId: number,
-    saleInvoiceDTO: ISaleInvoiceCreateDTO
+    saleInvoiceDTO: ISaleInvoiceCreateDTO,
+    authorizedUser: ISystemUser
   ): Promise<ISaleInvoice> {
     const { saleInvoiceRepository } = this.tenancy.repositories(tenantId);
 
@@ -202,6 +205,7 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
       tenantId,
       saleInvoice,
       saleInvoiceId: saleInvoice.id,
+      authorizedUser,
     });
     this.logger.info('[sale_invoice] successfully inserted.', {
       tenantId,
@@ -222,7 +226,8 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
   public async editSaleInvoice(
     tenantId: number,
     saleInvoiceId: number,
-    saleInvoiceDTO: any
+    saleInvoiceDTO: any,
+    authorizedUser: ISystemUser
   ): Promise<ISaleInvoice> {
     const { SaleInvoice } = this.tenancy.models(tenantId);
 
@@ -280,6 +285,7 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
       oldSaleInvoice,
       tenantId,
       saleInvoiceId,
+      authorizedUser,
     });
     return saleInvoice;
   }
@@ -292,7 +298,8 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
    */
   public async deliverSaleInvoice(
     tenantId: number,
-    saleInvoiceId: number
+    saleInvoiceId: number,
+    authorizedUser: ISystemUser
   ): Promise<void> {
     const { saleInvoiceRepository } = this.tenancy.repositories(tenantId);
 
@@ -345,7 +352,8 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
    */
   public async deleteSaleInvoice(
     tenantId: number,
-    saleInvoiceId: number
+    saleInvoiceId: number,
+    authorizedUser: ISystemUser
   ): Promise<void> {
     const { ItemEntry } = this.tenancy.models(tenantId);
     const { saleInvoiceRepository } = this.tenancy.repositories(tenantId);
@@ -383,6 +391,7 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
       tenantId,
       oldSaleInvoice,
       saleInvoiceId,
+      authorizedUser,
     });
   }
 
@@ -400,7 +409,7 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
     tenantId: number,
     saleInvoiceId: number,
     saleInvoiceDate: Date,
-    override?: boolean
+    override?: boolean,
   ): Promise<void> {
     // Gets the next inventory lot number.
     const lotNumber = this.inventoryService.getNextLotNumber(tenantId);
@@ -454,6 +463,7 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
   public async recordNonInventoryJournalEntries(
     tenantId: number,
     saleInvoiceId: number,
+    authorizedUserId: number,
     override: boolean = false
   ): Promise<void> {
     const { saleInvoiceRepository } = this.tenancy.repositories(tenantId);
@@ -471,8 +481,12 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
       saleInvoiceId,
       'entries.item'
     );
-
-    await this.writeNonInventoryInvoiceEntries(tenantId, saleInvoice, override);
+    await this.writeNonInventoryInvoiceEntries(
+      tenantId,
+      saleInvoice,
+      authorizedUserId,
+      override
+    );
   }
 
   /**
@@ -514,7 +528,8 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
    */
   public async getSaleInvoice(
     tenantId: number,
-    saleInvoiceId: number
+    saleInvoiceId: number,
+    authorizedUser: ISystemUser
   ): Promise<ISaleInvoice> {
     const { SaleInvoice } = this.tenancy.models(tenantId);
 
