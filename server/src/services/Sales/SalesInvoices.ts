@@ -24,6 +24,7 @@ import ItemsService from 'services/Items/ItemsService';
 import ItemsEntriesService from 'services/Items/ItemsEntriesService';
 import CustomersService from 'services/Contacts/CustomersService';
 import SaleEstimateService from 'services/Sales/SalesEstimate';
+import { PaymentReceiveEntry } from 'models';
 
 const ERRORS = {
   INVOICE_NUMBER_NOT_UNIQUE: 'INVOICE_NUMBER_NOT_UNIQUE',
@@ -32,6 +33,7 @@ const ERRORS = {
   ENTRIES_ITEMS_IDS_NOT_EXISTS: 'ENTRIES_ITEMS_IDS_NOT_EXISTS',
   NOT_SELLABLE_ITEMS: 'NOT_SELLABLE_ITEMS',
   SALE_INVOICE_NO_NOT_UNIQUE: 'SALE_INVOICE_NO_NOT_UNIQUE',
+  INVOICE_HAS_ASSOCIATED_PAYMENT_ENTRIES: 'INVOICE_HAS_ASSOCIATED_PAYMENT_ENTRIES',
 };
 
 /**
@@ -313,6 +315,28 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
   }
 
   /**
+   * Validate the sale invoice has no payment entries.
+   * @param {number} tenantId
+   * @param {number} saleInvoiceId
+   */
+  async validateInvoiceHasNoPaymentEntries(
+    tenantId: number,
+    saleInvoiceId: number
+  ) {
+    const { PaymentReceiveEntry } = this.tenancy.models(tenantId);
+
+    // Retrieve the sale invoice associated payment receive entries.
+    const entries = await PaymentReceiveEntry.query().where(
+      'invoice_id',
+      saleInvoiceId,
+    );
+    if (entries.length > 0) {
+      throw new ServiceError(ERRORS.INVOICE_HAS_ASSOCIATED_PAYMENT_ENTRIES);
+    }
+    return entries;
+  }
+
+  /**
    * Deletes the given sale invoice with associated entries
    * and journal transactions.
    * @async
@@ -329,6 +353,9 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
       tenantId,
       saleInvoiceId
     );
+    // Validate the sale invoice has no associated payment entries.
+    await this.validateInvoiceHasNoPaymentEntries(tenantId, saleInvoiceId);
+
     // Triggers `onSaleInvoiceDelete` event.
     await this.eventDispatcher.dispatch(events.saleInvoice.onDelete, {
       tenantId,
@@ -454,7 +481,9 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
     tenantId: number,
     saleInvoiceId: number
   ): Promise<void> {
-    const { inventoryTransactionRepository } = this.tenancy.repositories(tenantId);
+    const { inventoryTransactionRepository } = this.tenancy.repositories(
+      tenantId
+    );
 
     // Retrieve the inventory transactions of the given sale invoice.
     const oldInventoryTransactions = await inventoryTransactionRepository.find({

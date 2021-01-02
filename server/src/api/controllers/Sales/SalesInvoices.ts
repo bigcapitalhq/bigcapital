@@ -338,7 +338,7 @@ export default class SaleInvoicesController extends BaseController {
     if (error instanceof ServiceError) {
       if (error.errorType === 'INVOICE_NUMBER_NOT_UNIQUE') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'SALE.INVOICE.NUMBER.IS.EXISTS', code: 200 }],
+          errors: [{ type: 'SALE.INVOICE.NUMBER.IS.EXISTS', code: 100 }],
         });
       }
       if (error.errorType === 'SALE_INVOICE_NOT_FOUND') {
@@ -348,42 +348,47 @@ export default class SaleInvoicesController extends BaseController {
       }
       if (error.errorType === 'ENTRIES_ITEMS_IDS_NOT_EXISTS') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'ENTRIES_ITEMS_IDS_NOT_EXISTS', code: 200 }],
+          errors: [{ type: 'ENTRIES_ITEMS_IDS_NOT_EXISTS', code: 300 }],
         });
       }
       if (error.errorType === 'NOT_SELLABLE_ITEMS') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'NOT_SELLABLE_ITEMS', code: 200 }],
+          errors: [{ type: 'NOT_SELLABLE_ITEMS', code: 400 }],
         });
       }
       if (error.errorType === 'SALE_INVOICE_NO_NOT_UNIQUE') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'SALE_INVOICE_NO_NOT_UNIQUE', code: 200 }],
+          errors: [{ type: 'SALE_INVOICE_NO_NOT_UNIQUE', code: 500 }],
         });
       }
       if (error.errorType === 'ITEMS_NOT_FOUND') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'ITEMS_NOT_FOUND', code: 200 }],
+          errors: [{ type: 'ITEMS_NOT_FOUND', code: 600 }],
         });
       }
       if (error.errorType === 'ENTRIES_IDS_NOT_FOUND') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'ENTRIES_IDS_NOT_FOUND', code: 200 }],
+          errors: [{ type: 'ENTRIES_IDS_NOT_FOUND', code: 700 }],
         });
       }
       if (error.errorType === 'NOT_SELL_ABLE_ITEMS') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'NOT_SELL_ABLE_ITEMS', code: 200 }],
+          errors: [{ type: 'NOT_SELL_ABLE_ITEMS', code: 800 }],
         });
       }
       if (error.errorType === 'contact_not_found') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'CUSTOMER_NOT_FOUND', code: 200 }],
+          errors: [{ type: 'CUSTOMER_NOT_FOUND', code: 900 }],
         });
       }
       if (error.errorType === 'SALE_INVOICE_ALREADY_DELIVERED') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'SALE_INVOICE_ALREADY_DELIVERED', code: 200 }],
+          errors: [{ type: 'SALE_INVOICE_ALREADY_DELIVERED', code: 1000 }],
+        });
+      }
+      if (error.errorType === 'INVOICE_HAS_ASSOCIATED_PAYMENT_ENTRIES') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'INVOICE_HAS_ASSOCIATED_PAYMENT_ENTRIES', code: 1100 }],
         });
       }
     }
