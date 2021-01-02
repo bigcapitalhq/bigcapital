@@ -78,17 +78,36 @@ function InvoiceList({
     setDeleteInvoice(false);
   }, [setDeleteInvoice]);
 
-  // handleConfirm delete invoice
-  const handleConfirmInvoiceDelete = useCallback(() => {
-    requestDeleteInvoice(deleteInvoice.id).then(() => {
+  const handleDeleteErrors = (errors) => {
+    if (
+      errors.find(
+        (error) => error.type === 'INVOICE_HAS_ASSOCIATED_PAYMENT_ENTRIES',
+      )
+    ) {
       AppToaster.show({
         message: formatMessage({
-          id: 'the_invocie_has_been_successfully_deleted',
+          id: 'the_invoice_cannot_be_deleted',
         }),
-        intent: Intent.SUCCESS,
+        intent: Intent.DANGER,
       });
-      setDeleteInvoice(false);
-    });
+    }
+  };
+
+  // handleConfirm delete invoice
+  const handleConfirmInvoiceDelete = useCallback(() => {
+    requestDeleteInvoice(deleteInvoice.id)
+      .then(() => {
+        AppToaster.show({
+          message: formatMessage({
+            id: 'the_invocie_has_been_successfully_deleted',
+          }),
+          intent: Intent.SUCCESS,
+        });
+      })
+      .catch((errors) => {
+        handleDeleteErrors(errors);
+        setDeleteInvoice(false);
+      });
   }, [deleteInvoice, requestDeleteInvoice, formatMessage]);
 
   // Handle cancel/confirm invoice deliver.
