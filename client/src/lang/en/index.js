@@ -929,11 +929,15 @@ export default {
     'Are you sure you want to activate this item? You will be able to inactivate it later',
   inactivate_item: 'Inactivate Item',
   activate_item: 'Activate Item',
-  all_payments:'All Payments',
+  all_payments: 'All Payments',
   hide_customizer: 'Hide Customizer',
   opening_quantity_: 'Opening quantity',
   opening_average_cost: 'Opening average cost',
   opening_cost_: 'Opening cost ',
   opening_date_: 'Opening date ',
-  no_results:'No results.'
+  no_results: 'No results.',
+  the_invoice_cannot_be_deleted:
+    'The invoice cannot be deleted cause has associated payment transactions',
+  category_name_exists: 'Category name exists',
+  some_customers_have_sales_invoices: 'Some customers have sales invoices',
 };

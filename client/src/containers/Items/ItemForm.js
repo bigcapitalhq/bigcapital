@@ -163,11 +163,10 @@ function ItemForm({
         history.push('/items');
       }
     };
-    const onError = ({ response }) => {
+    const onError = (errors) => {
       setSubmitting(false);
-
-      if (response.data.errors) {
-        const _errors = transformApiErrors(response.data.errors);
+      if (errors) {
+        const _errors = transformApiErrors(errors);
         setErrors({ ..._errors });
       }
     };
