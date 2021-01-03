@@ -7,8 +7,8 @@ exports.up = function(knex) {
     table.string('journal_type').index();
     table.decimal('amount', 13, 3);
     table.date('date').index();
-    table.boolean('status').defaultTo(false).index();
     table.string('description');
+    table.date('published_at').index();
     table.string('attachment_file');
     table.integer('user_id').unsigned().index();
     table.timestamps();

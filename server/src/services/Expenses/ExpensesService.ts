@@ -674,7 +674,7 @@ export default class ExpensesService implements IExpensesService {
     // Filters the published expenses.
     const publishedExpenses = this.getPublishedExpenses(oldExpenses);
 
-    // Mappes the published expenses to get id.
+    // Mappes the not-published expenses to get id.
     const notPublishedExpensesIds = map(notPublishedExpenses, 'id');
 
     if (notPublishedExpensesIds.length > 0) {

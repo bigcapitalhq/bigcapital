@@ -370,7 +370,6 @@ export default class PaymentReceiveService {
       tenantId,
       paymentReceiveId
     );
-
     // Validate payment receive number uniquiness.
     if (paymentReceiveDTO.paymentReceiveNo) {
       await this.validatePaymentReceiveNoExistance(
@@ -391,21 +390,18 @@ export default class PaymentReceiveService {
       paymentReceiveId,
       paymentReceiveDTO.entries
     );
-
     // Validate payment receive invoices IDs existance and associated to the given customer id.
     await this.validateInvoicesIDsExistance(
       tenantId,
       oldPaymentReceive.customerId,
       paymentReceiveDTO.entries
     );
-
     // Validate invoice payment amount.
     await this.validateInvoicesPaymentsAmount(
       tenantId,
       paymentReceiveDTO.entries,
       oldPaymentReceive.entries
     );
-
     // Update the payment receive transaction.
     const paymentReceive = await PaymentReceive.query().upsertGraphAndFetch({
       id: paymentReceiveId,
@@ -669,8 +665,8 @@ export default class PaymentReceiveService {
 
   /**
    * Reverts the given payment receive journal entries.
-   * @param {number} tenantId 
-   * @param {number} paymentReceiveId 
+   * @param {number} tenantId - Tenant id.
+   * @param {number} paymentReceiveId - Payment receive id.
    */
   async revertPaymentReceiveJournalEntries(
     tenantId: number,
