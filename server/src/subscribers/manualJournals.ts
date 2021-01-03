@@ -1,5 +1,5 @@
 import { Inject, Container } from 'typedi';
-import { On, EventSubscriber } from "event-dispatch";
+import { On, EventSubscriber } from 'event-dispatch';
 import events from 'subscribers/events';
 import SettingsService from 'services/Settings/SettingsService';
 import ManualJournalsService from 'services/ManualJournals/ManualJournalsService';
@@ -8,46 +8,104 @@ import ManualJournalsService from 'services/ManualJournals/ManualJournalsService
 export class ManualJournalSubscriber {
   logger: any;
   settingsService: SettingsService;
+  manualJournalsService: ManualJournalsService;
 
   constructor() {
     this.logger = Container.get('logger');
     this.settingsService = Container.get(SettingsService);
+    this.manualJournalsService = Container.get(ManualJournalsService);
   }
 
   /**
    * Handle manual journal created event.
-   * @param {{ tenantId: number, manualJournal: IManualJournal }} 
    */
   @On(events.manualJournals.onCreated)
-  public async handleWriteJournalEntries({ tenantId, manualJournal }) {
-    const manualJournalsService = Container.get(ManualJournalsService);
-
-    await manualJournalsService
-      .writeJournalEntries(tenantId, manualJournal.id, manualJournal);
+  public async handleWriteJournalEntriesOnCreated({ tenantId, manualJournal }) {
+    // Ingore writing manual journal journal entries in case was not published.
+    if (manualJournal.publishedAt) {
+      await this.manualJournalsService.writeJournalEntries(
+        tenantId, 
+        manualJournal
+      );
+    }
   }
 
   /**
    * Handle manual journal edited event.
-   * @param {{ tenantId: number, manualJournal: IManualJournal }} 
    */
   @On(events.manualJournals.onEdited)
-  public async handleRewriteJournalEntries({ tenantId, manualJournal }) {
-    const manualJournalsService = Container.get(ManualJournalsService);
+  public async handleRewriteJournalEntriesOnEdited({
+    tenantId,
+    manualJournal,
+    oldManualJournal,
+  }) {
+    if (manualJournal.publishedAt) {
+      await this.manualJournalsService.writeJournalEntries(
+        tenantId,
+        manualJournal,
+        true
+      );
+    }
+  }
 
-    await manualJournalsService
-      .writeJournalEntries(tenantId, manualJournal.id, manualJournal, true);
+  /**
+   * Handles writing journal entries once the manula journal publish.
+   */
+  @On(events.manualJournals.onPublished)
+  public async handleWriteJournalEntriesOnPublished({
+    tenantId,
+    manualJournal,
+  }) {
+    await this.manualJournalsService.writeJournalEntries(
+      tenantId,
+      manualJournal
+    );
   }
 
   /**
    * Handle manual journal deleted event.
-   * @param {{ tenantId: number, manualJournalId: number }}
    */
   @On(events.manualJournals.onDeleted)
-  public async handleRevertJournalEntries({ tenantId, manualJournalId, }) {
-    const manualJournalsService = Container.get(ManualJournalsService);
+  public async handleRevertJournalEntries({
+    tenantId,
+    manualJournalId,
+    oldManualJournal,
+  }) {
+    await this.manualJournalsService.revertJournalEntries(
+      tenantId,
+      manualJournalId
+    );
+  }
 
-    await manualJournalsService
-      .writeJournalEntries(tenantId, manualJournalId, null, true);
+  /**
+   * Handles the writing journal entries once the manual journals bulk published.
+   */
+  @On(events.manualJournals.onPublishedBulk)
+  public async handleWritingJournalEntriesOnBulkPublish({
+    tenantId,
+    oldManualJournals,
+  }) {
+    const notPublishedJournals = this.manualJournalsService.getNonePublishedManualJournals(
+      oldManualJournals
+    );
+    await this.manualJournalsService.writeJournalEntries(
+      tenantId,
+      notPublishedJournals
+    );
+  }
+
+  /**
+   * Handles revert journal entries once manual journals bulk delete.
+   */
+  @On(events.manualJournals.onDeletedBulk)
+  public async handleRevertJournalEntriesOnBulkDelete({
+    tenantId,
+    manualJournalsIds,
+  }) {
+    await this.manualJournalsService.revertJournalEntries(
+      tenantId,
+      manualJournalsIds
+    );
   }
 
   /**

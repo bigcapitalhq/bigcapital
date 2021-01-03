@@ -1,6 +1,5 @@
 import { Model } from 'objection';
 import TenantModel from 'models/TenantModel';
-import { AccountTransaction } from 'models';
 
 export default class ManualJournal extends TenantModel {
   /**
@@ -27,9 +26,18 @@ export default class ManualJournal extends TenantModel {
   static get relationMappings() {
     const Media = require('models/Media');
     const AccountTransaction = require('models/AccountTransaction');
+    const ManualJournalEntry = require('models/ManualJournalEntry');
 
     return {
       entries: {
+        relation: Model.HasManyRelation,
+        modelClass: ManualJournalEntry.default,
+        join: {
+          from: 'manual_journals.id',
+          to: 'manual_journals_entries.manualJournalId',
+        },
+      },
+      transactions: {
         relation: Model.HasManyRelation,
         modelClass: AccountTransaction.default,
         join: {

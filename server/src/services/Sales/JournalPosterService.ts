@@ -17,7 +17,7 @@ export default class JournalPosterService {
    */
   async revertJournalTransactions(
     tenantId: number,
-    referenceId: number,
+    referenceId: number|number[],
     referenceType: string
   ) {
     const journal = new JournalPoster(tenantId);

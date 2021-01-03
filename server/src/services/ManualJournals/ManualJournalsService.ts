@@ -1,4 +1,4 @@
-import { difference, sumBy, omit, groupBy } from 'lodash';
+import { difference, sumBy, omit, map } from 'lodash';
 import { Service, Inject } from 'typedi';
 import moment from 'moment';
 import { ServiceError } from 'exceptions';
@@ -8,7 +8,6 @@ import {
   IManualJournalsFilter,
   ISystemUser,
   IManualJournal,
-  IManualJournalEntryDTO,
   IPaginationMeta,
 } from 'interfaces';
 import TenancyService from 'services/Tenancy/TenancyService';
@@ -20,6 +19,7 @@ import {
 } from 'decorators/eventDispatcher';
 import JournalPoster from 'services/Accounting/JournalPoster';
 import JournalCommands from 'services/Accounting/JournalCommands';
+import JournalPosterService from 'services/Sales/JournalPosterService';
 
 const ERRORS = {
   NOT_FOUND: 'manual_journal_not_found',
@@ -29,11 +29,20 @@ const ERRORS = {
   JOURNAL_NUMBER_EXISTS: 'journal_number_exists',
   ENTRIES_SHOULD_ASSIGN_WITH_CONTACT: 'ENTRIES_SHOULD_ASSIGN_WITH_CONTACT',
   CONTACTS_NOT_FOUND: 'contacts_not_found',
+  MANUAL_JOURNAL_ALREADY_PUBLISHED: 'MANUAL_JOURNAL_ALREADY_PUBLISHED',
 };
 
 const CONTACTS_CONFIG = [
-  { accountBySlug: 'accounts-receivable', contactService: 'customer', assignRequired: false, },
-  { accountBySlug: 'accounts-payable', contactService: 'vendor', assignRequired: true },
+  {
+    accountBySlug: 'accounts-receivable',
+    contactService: 'customer',
+    assignRequired: false,
+  },
+  {
+    accountBySlug: 'accounts-payable',
+    contactService: 'vendor',
+    assignRequired: true,
+  },
 ];
 
 @Service()
@@ -43,6 +52,9 @@ export default class ManualJournalsService implements IManualJournalsService {
 
   @Inject()
   dynamicListService: DynamicListingService;
+
+  @Inject()
+  journalService: JournalPosterService;
 
   @Inject('logger')
   logger: any;
@@ -55,7 +67,7 @@ export default class ManualJournalsService implements IManualJournalsService {
    * @param {number} tenantId
    * @param {number} manualJournalId
    */
-  private async validateManualJournalExistance(
+  private async getManualJournalOrThrowError(
     tenantId: number,
     manualJournalId: number
   ) {
@@ -65,7 +77,9 @@ export default class ManualJournalsService implements IManualJournalsService {
       tenantId,
       manualJournalId,
     });
-    const manualJournal = await ManualJournal.query().findById(manualJournalId);
+    const manualJournal = await ManualJournal.query()
+      .findById(manualJournalId)
+      .withGraphFetched('entries');
 
     if (!manualJournal) {
       this.logger.warn('[manual_journal] not exists on the storage.', {
@@ -74,24 +88,24 @@ export default class ManualJournalsService implements IManualJournalsService {
       });
       throw new ServiceError(ERRORS.NOT_FOUND);
     }
+    return manualJournal;
   }
 
   /**
    * Validate manual journals existance.
-   * @param  {number} tenantId
-   * @param  {number[]} manualJournalsIds
+   * @param {number} tenantId - Tenant id.
+   * @param {number[]} manualJournalsIds - Manual jorunal ids.
    * @throws {ServiceError}
    */
-  private async validateManualJournalsExistance(
+  private async getManualJournalsOrThrowError(
     tenantId: number,
     manualJournalsIds: number[]
   ) {
     const { ManualJournal } = this.tenancy.models(tenantId);
 
-    const manualJournals = await ManualJournal.query().whereIn(
-      'id',
-      manualJournalsIds
-    );
+    const manualJournals = await ManualJournal.query()
+      .whereIn('id', manualJournalsIds)
+      .withGraphFetched('entries');
 
     const notFoundManualJournals = difference(
       manualJournalsIds,
@@ -100,6 +114,7 @@ export default class ManualJournalsService implements IManualJournalsService {
     if (notFoundManualJournals.length > 0) {
       throw new ServiceError(ERRORS.NOT_FOUND);
     }
+    return manualJournals;
   }
 
   /**
@@ -134,8 +149,8 @@ export default class ManualJournalsService implements IManualJournalsService {
 
   /**
    * Validate manual entries accounts existance on the storage.
-   * @param {number} tenantId
-   * @param {IManualJournalDTO} manualJournalDTO
+   * @param {number} tenantId -
+   * @param {IManualJournalDTO} manualJournalDTO -
    */
   private async validateAccountsExistance(
     tenantId: number,
@@ -183,7 +198,7 @@ export default class ManualJournalsService implements IManualJournalsService {
   }
 
   /**
-   * 
+   *
    * @param {number} tenantId
    * @param {IManualJournalDTO} manualJournalDTO
    * @param {string} accountBySlug
@@ -194,10 +209,12 @@ export default class ManualJournalsService implements IManualJournalsService {
     manualJournalDTO: IManualJournalDTO,
     accountBySlug: string,
     contactType: string,
-    contactRequired: boolean = true,
+    contactRequired: boolean = true
   ): Promise<void> {
     const { accountRepository } = this.tenancy.repositories(tenantId);
-    const payableAccount = await accountRepository.findOne({ slug: accountBySlug });
+    const payableAccount = await accountRepository.findOne({
+      slug: accountBySlug,
+    });
 
     const entriesHasNoVendorContact = manualJournalDTO.entries.filter(
       (e) =>
@@ -205,12 +222,12 @@ export default class ManualJournalsService implements IManualJournalsService {
         ((!e.contactId && contactRequired) || e.contactType !== contactType)
     );
     if (entriesHasNoVendorContact.length > 0) {
-      const indexes = entriesHasNoVendorContact.map(e => e.index);
+      const indexes = entriesHasNoVendorContact.map((e) => e.index);
 
       throw new ServiceError(ERRORS.ENTRIES_SHOULD_ASSIGN_WITH_CONTACT, '', {
         contactType,
         accountBySlug,
-        indexes
+        indexes,
       });
     }
   }
@@ -222,8 +239,8 @@ export default class ManualJournalsService implements IManualJournalsService {
    */
   private async dynamicValidateAccountsWithContactType(
     tenantId: number,
-    manualJournalDTO: IManualJournalDTO,
-  ): Promise<any>{
+    manualJournalDTO: IManualJournalDTO
+  ): Promise<any> {
     return Promise.all(
       CONTACTS_CONFIG.map(({ accountBySlug, contactService, assignRequired }) =>
         this.validateAccountsWithContactType(
@@ -232,7 +249,7 @@ export default class ManualJournalsService implements IManualJournalsService {
           accountBySlug,
           contactService,
           assignRequired
-        ),
+        )
       )
     );
   }
@@ -244,23 +261,28 @@ export default class ManualJournalsService implements IManualJournalsService {
    */
   private async validateContactsExistance(
     tenantId: number,
-    manualJournalDTO: IManualJournalDTO,
+    manualJournalDTO: IManualJournalDTO
   ) {
     const { contactRepository } = this.tenancy.repositories(tenantId);
 
     // Filters the entries that have contact only.
-    const entriesContactPairs = manualJournalDTO.entries
-      .filter((entry) => entry.contactId);
+    const entriesContactPairs = manualJournalDTO.entries.filter(
+      (entry) => entry.contactId
+    );
 
     if (entriesContactPairs.length > 0) {
-      const entriesContactsIds = entriesContactPairs.map(entry => entry.contactId);
+      const entriesContactsIds = entriesContactPairs.map(
+        (entry) => entry.contactId
+      );
 
       // Retrieve all stored contacts on the storage from contacts entries.
       const storedContacts = await contactRepository.findByIds(
-        entriesContactsIds,
+        entriesContactsIds
       );
       // Converts the stored contacts to map with id as key and entry as value.
-      const storedContactsMap = new Map(storedContacts.map(contact => [contact.id, contact]));
+      const storedContactsMap = new Map(
+        storedContacts.map((contact) => [contact.id, contact])
+      );
       const notFoundContactsIds = [];
 
       entriesContactPairs.forEach((contactEntry) => {
@@ -284,35 +306,49 @@ export default class ManualJournalsService implements IManualJournalsService {
   }
 
   /**
-   * Transform manual journal DTO to graphed model to save it.
-   * @param {IManualJournalDTO} manualJournalDTO
+   * Transform the new manual journal DTO to upsert graph operation.
+   * @param {IManualJournalDTO} manualJournalDTO - Manual jorunal DTO.
    * @param {ISystemUser} authorizedUser
    */
-  private transformDTOToModel(
+  private transformNewDTOToModel(
     manualJournalDTO: IManualJournalDTO,
-    user: ISystemUser
-  ): IManualJournal {
+    authorizedUser: ISystemUser
+  ) {
     const amount = sumBy(manualJournalDTO.entries, 'credit') || 0;
     const date = moment(manualJournalDTO.date).format('YYYY-MM-DD');
 
     return {
-      ...manualJournalDTO,
+      ...omit(manualJournalDTO, ['publish']),
+      ...(manualJournalDTO.publish
+        ? { publishedAt: moment().toMySqlDateTime() }
+        : {}),
       amount,
       date,
-      userId: user.id,
-      entries: this.transformDTOToEntriesModel(manualJournalDTO.entries),
+      userId: authorizedUser.id,
     };
   }
 
   /**
-   * Transform DTO to model.
-   * @param {IManualJournalEntryDTO[]} entries
+   * Transform the edit manual journal DTO to upsert graph operation.
+   * @param {IManualJournalDTO} manualJournalDTO - Manual jorunal DTO.
+   * @param {IManualJournal} oldManualJournal
    */
-  private transformDTOToEntriesModel(entries: IManualJournalEntryDTO[]) {
-    return entries.map((entry: IManualJournalEntryDTO) => ({
-      ...omit(entry, ['accountId']),
-      account: entry.accountId,
-    }));
+  private transformEditDTOToModel(
+    manualJournalDTO: IManualJournalDTO,
+    oldManualJournal: IManualJournal
+  ) {
+    const amount = sumBy(manualJournalDTO.entries, 'credit') || 0;
+    const date = moment(manualJournalDTO.date).format('YYYY-MM-DD');
+
+    return {
+      id: oldManualJournal.id,
+      ...omit(manualJournalDTO, ['publish']),
+      ...(manualJournalDTO.publish && !oldManualJournal.publishedAt
+        ? { publishedAt: moment().toMySqlDateTime() }
+        : {}),
+      amount,
+      date,
+    };
   }
 
   /**
@@ -341,23 +377,26 @@ export default class ManualJournalsService implements IManualJournalsService {
     await this.validateManualJournalNoUnique(tenantId, manualJournalDTO);
 
     // Validate accounts with contact type from the given config.
-    await this.dynamicValidateAccountsWithContactType(tenantId, manualJournalDTO);
-
+    await this.dynamicValidateAccountsWithContactType(
+      tenantId,
+      manualJournalDTO
+    );
     this.logger.info(
       '[manual_journal] trying to save manual journal to the storage.',
       { tenantId, manualJournalDTO }
     );
-    const manualJournalObj = this.transformDTOToModel(
+    const manualJournalObj = this.transformNewDTOToModel(
       manualJournalDTO,
       authorizedUser
     );
-    const manualJournal = await ManualJournal.query().insertAndFetch({
-      ...omit(manualJournalObj, ['entries']),
+    const manualJournal = await ManualJournal.query().upsertGraph({
+      ...manualJournalObj,
     });
     // Triggers `onManualJournalCreated` event.
     this.eventDispatcher.dispatch(events.manualJournals.onCreated, {
       tenantId,
-      manualJournal: { ...manualJournal, entries: manualJournalObj.entries },
+      manualJournal,
+      manualJournalId: manualJournal.id,
     });
     this.logger.info(
       '[manual_journal] the manual journal inserted successfully.',
@@ -379,12 +418,17 @@ export default class ManualJournalsService implements IManualJournalsService {
     manualJournalId: number,
     manualJournalDTO: IManualJournalDTO,
     authorizedUser: ISystemUser
-  ): Promise<{ manualJournal: IManualJournal }> {
+  ): Promise<{
+    manualJournal: IManualJournal;
+    oldManualJournal: IManualJournal;
+  }> {
     const { ManualJournal } = this.tenancy.models(tenantId);
 
     // Validates the manual journal existance on the storage.
-    await this.validateManualJournalExistance(tenantId, manualJournalId);
-
+    const oldManualJournal = await this.getManualJournalOrThrowError(
+      tenantId,
+      manualJournalId
+    );
     // Validates the total credit and debit to be equals.
     this.valdiateCreditDebitTotalEquals(manualJournalDTO);
 
@@ -401,29 +445,30 @@ export default class ManualJournalsService implements IManualJournalsService {
       manualJournalId
     );
     // Validate accounts with contact type from the given config.
-    await this.dynamicValidateAccountsWithContactType(tenantId, manualJournalDTO);
-
-    const manualJournalObj = this.transformDTOToModel(
-      manualJournalDTO,
-      authorizedUser
+    await this.dynamicValidateAccountsWithContactType(
+      tenantId,
+      manualJournalDTO
     );
-
-    const storedManualJournal = await ManualJournal.query()
-      .where('id', manualJournalId)
-      .patch({
-        ...omit(manualJournalObj, ['entries']),
-      });
-    const manualJournal: IManualJournal = {
+    // Transform manual journal DTO to model.
+    const manualJournalObj = this.transformEditDTOToModel(
+      manualJournalDTO,
+      oldManualJournal
+    );
+    await ManualJournal.query().upsertGraph({
       ...manualJournalObj,
-      id: manualJournalId,
-    };
+    });
+    // Retrieve the given manual journal with associated entries after modifications.
+    const manualJournal = await ManualJournal.query()
+      .findById(manualJournalId)
+      .withGraphFetched('entries');
 
     // Triggers `onManualJournalEdited` event.
     this.eventDispatcher.dispatch(events.manualJournals.onEdited, {
       tenantId,
       manualJournal,
+      oldManualJournal,
     });
-    return { manualJournal };
+    return { manualJournal, oldManualJournal };
   }
 
   /**
@@ -435,25 +480,40 @@ export default class ManualJournalsService implements IManualJournalsService {
   public async deleteManualJournal(
     tenantId: number,
     manualJournalId: number
-  ): Promise<void> {
-    const { ManualJournal } = this.tenancy.models(tenantId);
-    await this.validateManualJournalExistance(tenantId, manualJournalId);
+  ): Promise<{
+    oldManualJournal: IManualJournal;
+  }> {
+    const { ManualJournal, ManualJournalEntry } = this.tenancy.models(tenantId);
 
+    // Validate the manual journal exists on the storage.
+    const oldManualJournal = await this.getManualJournalOrThrowError(
+      tenantId,
+      manualJournalId
+    );
     this.logger.info('[manual_journal] trying to delete the manual journal.', {
       tenantId,
       manualJournalId,
     });
+    // Deletes the manual journal entries.
+    await ManualJournalEntry.query()
+      .where('manual_journal_id', manualJournalId)
+      .delete();
+
+    // Deletes the manual journal transaction.
     await ManualJournal.query().findById(manualJournalId).delete();
 
     // Triggers `onManualJournalDeleted` event.
     this.eventDispatcher.dispatch(events.manualJournals.onDeleted, {
       tenantId,
       manualJournalId,
+      oldManualJournal,
     });
     this.logger.info(
       '[manual_journal] the given manual journal deleted successfully.',
       { tenantId, manualJournalId }
     );
+
+    return { oldManualJournal };
   }
 
   /**
@@ -465,14 +525,26 @@ export default class ManualJournalsService implements IManualJournalsService {
   public async deleteManualJournals(
     tenantId: number,
     manualJournalsIds: number[]
-  ): Promise<void> {
-    const { ManualJournal } = this.tenancy.models(tenantId);
-    await this.validateManualJournalsExistance(tenantId, manualJournalsIds);
+  ): Promise<{
+    oldManualJournals: IManualJournal[]
+  }> {
+    const { ManualJournal, ManualJournalEntry } = this.tenancy.models(tenantId);
 
+    // Validate the manual journals exist on the storage.
+    const oldManualJournals = await this.getManualJournalsOrThrowError(
+      tenantId,
+      manualJournalsIds
+    );
     this.logger.info('[manual_journal] trying to delete the manual journals.', {
       tenantId,
       manualJournalsIds,
     });
+    // Deletes the manual journal entries.
+    await ManualJournalEntry.query()
+      .whereIn('manual_journal_id', manualJournalsIds)
+      .delete();
+
+    // Deletes the manual journal transaction.
     await ManualJournal.query().whereIn('id', manualJournalsIds).delete();
 
     // Triggers `onManualJournalDeletedBulk` event.
@@ -484,6 +556,7 @@ export default class ManualJournalsService implements IManualJournalsService {
       '[manual_journal] the given manual journals deleted successfully.',
       { tenantId, manualJournalsIds }
     );
+    return { oldManualJournals };
   }
 
   /**
@@ -494,51 +567,130 @@ export default class ManualJournalsService implements IManualJournalsService {
   public async publishManualJournals(
     tenantId: number,
     manualJournalsIds: number[]
-  ): Promise<void> {
+  ): Promise<{
+    meta: {
+      alreadyPublished: number;
+      published: number;
+      total: number;
+    };
+  }> {
     const { ManualJournal } = this.tenancy.models(tenantId);
-    await this.validateManualJournalsExistance(tenantId, manualJournalsIds);
+
+    // Retrieve manual journals or throw service error.
+    const oldManualJournals = await this.getManualJournalsOrThrowError(
+      tenantId,
+      manualJournalsIds
+    );
+    // Filters the not published journals.
+    const notPublishedJournals = this.getNonePublishedManualJournals(
+      oldManualJournals
+    );
+    // Filters the published journals.
+    const publishedJournals = this.getPublishedManualJournals(
+      oldManualJournals
+    );
+    // Mappes the not-published journals to get id.
+    const notPublishedJournalsIds = map(notPublishedJournals, 'id');
 
     this.logger.info('[manual_journal] trying to publish the manual journal.', {
       tenantId,
       manualJournalsIds,
     });
-    await ManualJournal.query()
-      .whereIn('id', manualJournalsIds)
-      .patch({ status: 1 });
 
+    if (notPublishedJournals.length > 0) {
+      // Mark the given manual journals as published.
+      await ManualJournal.query().whereIn('id', notPublishedJournalsIds).patch({
+        publishedAt: moment().toMySqlDateTime(),
+      });
+    }
     // Triggers `onManualJournalPublishedBulk` event.
     this.eventDispatcher.dispatch(events.manualJournals.onPublishedBulk, {
       tenantId,
       manualJournalsIds,
+      oldManualJournals,
     });
     this.logger.info(
       '[manual_journal] the given manula journal published successfully.',
-      { tenantId, manualJournalId }
+      { tenantId, manualJournalsIds }
     );
+
+    return {
+      meta: {
+        alreadyPublished: publishedJournals.length,
+        published: notPublishedJournals.length,
+        total: oldManualJournals.length,
+      },
+    };
+  }
+
+  /**
+   * Validates expenses is not already published before.
+   * @param {IManualJournal} manualJournal
+   */
+  private validateManualJournalIsNotPublished(manualJournal: IManualJournal) {
+    if (manualJournal.publishedAt) {
+      throw new ServiceError(ERRORS.MANUAL_JOURNAL_ALREADY_PUBLISHED);
+    }
+  }
+
+  /**
+   * Filters the not published manual jorunals.
+   * @param {IManualJournal[]} manualJournal - Manual journal.
+   * @return {IManualJournal[]}
+   */
+  public getNonePublishedManualJournals(
+    manualJournals: IManualJournal[]
+  ): IManualJournal[] {
+    return manualJournals.filter((manualJournal) => !manualJournal.publishedAt);
+  }
+
+  /**
+   * Filters the published manual journals.
+   * @param {IManualJournal[]} manualJournal - Manual journal.
+   * @return {IManualJournal[]}
+   */
+  public getPublishedManualJournals(
+    manualJournals: IManualJournal[]
+  ): IManualJournal[] {
+    return manualJournals.filter((expense) => expense.publishedAt);
   }
 
   /**
    * Publish the given manual journal.
-   * @param {number} tenantId
-   * @param {number} manualJournalId
+   * @param {number} tenantId - Tenant id.
+   * @param {number} manualJournalId - Manual journal id.
    */
   public async publishManualJournal(
     tenantId: number,
     manualJournalId: number
   ): Promise<void> {
     const { ManualJournal } = this.tenancy.models(tenantId);
-    await this.validateManualJournalExistance(tenantId, manualJournalId);
 
+    const oldManualJournal = await this.getManualJournalOrThrowError(
+      tenantId,
+      manualJournalId
+    );
     this.logger.info('[manual_journal] trying to publish the manual journal.', {
       tenantId,
       manualJournalId,
     });
-    await ManualJournal.query().findById(manualJournalId).patch({ status: 1 });
+    this.validateManualJournalIsNotPublished(oldManualJournal);
+
+    // Mark the given manual journal as published.
+    await ManualJournal.query().findById(manualJournalId).patch({
+      publishedAt: moment().toMySqlDateTime(),
+    });
+    // Retrieve the manual journal with enrties after modification.
+    const manualJournal = await ManualJournal.query()
+      .findById(manualJournalId)
+      .withGraphFetched('entries');
 
     // Triggers `onManualJournalPublishedBulk` event.
     this.eventDispatcher.dispatch(events.manualJournals.onPublished, {
       tenantId,
+      manualJournal,
       manualJournalId,
+      oldManualJournal,
     });
     this.logger.info(
       '[manual_journal] the given manula journal published successfully.',
@@ -592,7 +744,7 @@ export default class ManualJournalsService implements IManualJournalsService {
   public async getManualJournal(tenantId: number, manualJournalId: number) {
     const { ManualJournal } = this.tenancy.models(tenantId);
 
-    await this.validateManualJournalExistance(tenantId, manualJournalId);
+    await this.getManualJournalOrThrowError(tenantId, manualJournalId);
 
     this.logger.info(
       '[manual_journals] trying to get specific manual journal.',
@@ -601,9 +753,31 @@ export default class ManualJournalsService implements IManualJournalsService {
     const manualJournal = await ManualJournal.query()
       .findById(manualJournalId)
       .withGraphFetched('entries')
+      .withGraphFetched('transactions')
       .withGraphFetched('media');
 
     return manualJournal;
+  }
+
+  /**
+   * Reverts the manual journal journal entries.
+   * @param {number} tenantId
+   * @param {number|number[]} manualJournalId
+   * @return {Promise<void>}
+   */
+  public async revertJournalEntries(
+    tenantId: number,
+    manualJournalId: number | number[]
+  ): Promise<void> {
+    this.logger.info('[manual_journal] trying to revert journal entries.', {
+      tenantId,
+      manualJournalId,
+    });
+    return this.journalService.revertJournalTransactions(
+      tenantId,
+      manualJournalId,
+      'Journal'
+    );
   }
 
   /**
@@ -615,26 +789,30 @@ export default class ManualJournalsService implements IManualJournalsService {
    */
   public async writeJournalEntries(
     tenantId: number,
-    manualJournalId: number,
-    manualJournalObj?: IManualJournal | null,
-    override?: Boolean
+    manualJorunal: IManualJournal | IManualJournal[],
+    override: Boolean = false
   ) {
     const journal = new JournalPoster(tenantId);
     const journalCommands = new JournalCommands(journal);
 
+    const manualJournals = Array.isArray(manualJorunal)
+      ? manualJorunal
+      : [manualJorunal];
+    const manualJournalsIds = map(manualJournals, 'id');
+
     if (override) {
       this.logger.info('[manual_journal] trying to revert journal entries.', {
         tenantId,
-        manualJournalId,
+        manualJorunal,
       });
-      await journalCommands.revertJournalEntries(manualJournalId, 'Journal');
+      await journalCommands.revertJournalEntries(manualJournalsIds, 'Journal');
     }
-    if (manualJournalObj) {
-      journalCommands.manualJournal(manualJournalObj, manualJournalId);
-    }
+    manualJournals.forEach((manualJournal) => {
+      journalCommands.manualJournal(manualJournal);
+    });
     this.logger.info('[manual_journal] trying to save journal entries.', {
       tenantId,
-      manualJournalId,
+      manualJorunal,
     });
     await Promise.all([
       journal.saveBalance(),
@@ -643,7 +821,7 @@ export default class ManualJournalsService implements IManualJournalsService {
     ]);
     this.logger.info(
       '[manual_journal] the journal entries saved successfully.',
-      { tenantId, manualJournalId }
+      { tenantId, manualJournalId: manualJorunal.id }
     );
   }
 }

@@ -1,6 +1,6 @@
 import { sumBy, chain } from 'lodash';
 import moment from 'moment';
-import { IBill, ISystemUser } from 'interfaces';
+import { IBill, IManualJournalEntry, ISystemUser } from 'interfaces';
 import JournalPoster from './JournalPoster';
 import JournalEntry from './JournalEntry';
 import { AccountTransaction } from 'models';
@@ -257,9 +257,9 @@ export default class JournalCommands {
   }
 
   /**
-   *
-   * @param {number|number[]} referenceId
-   * @param {string} referenceType
+   * Reverts the jouranl entries.
+   * @param {number|number[]} referenceId - Reference id.
+   * @param {string} referenceType - Reference type.
    */
   async revertJournalEntries(
     referenceId: number | number[],
@@ -286,15 +286,14 @@ export default class JournalCommands {
    */
   async manualJournal(
     manualJournalObj: IManualJournal,
-    manualJournalId: number
   ) {
-    manualJournalObj.entries.forEach((entry) => {
+    manualJournalObj.entries.forEach((entry: IManualJournalEntry) => {
       const jouranlEntry = new JournalEntry({
         debit: entry.debit,
         credit: entry.credit,
-        account: entry.account,
+        account: entry.accountId,
         referenceType: 'Journal',
-        referenceId: manualJournalId,
+        referenceId: manualJournalObj.id,
         contactType: entry.contactType,
         contactId: entry.contactId,
         note: entry.note,

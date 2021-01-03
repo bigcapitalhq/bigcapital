@@ -32,6 +32,7 @@ import Option from 'models/Option';
 import InventoryCostLotTracker from 'models/InventoryCostLotTracker';
 import InventoryTransaction from 'models/InventoryTransaction';
 import ManualJournal from 'models/ManualJournal';
+import ManualJournalEntry from 'models/ManualJournalEntry';
 import Media from 'models/Media';
 import MediaLink from 'models/MediaLink';
 
@@ -45,6 +46,7 @@ export default (knex) => {
     ItemCategory,
     ItemEntry,
     ManualJournal,
+    ManualJournalEntry,
     Bill,
     BillPayment,
     BillPaymentEntry,
