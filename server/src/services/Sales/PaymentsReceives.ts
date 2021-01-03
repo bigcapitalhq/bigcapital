@@ -17,6 +17,7 @@ import {
   IPaymentReceiveEntryDTO,
   IPaymentReceivesFilter,
   ISaleInvoice,
+  ISystemService,
   ISystemUser,
 } from 'interfaces';
 import AccountsService from 'services/Accounts/AccountsService';
@@ -481,6 +482,7 @@ export default class PaymentReceiveService {
   public async getPaymentReceive(
     tenantId: number,
     paymentReceiveId: number,
+    authorizedUser: ISystemService
   ): Promise<{
     paymentReceive: IPaymentReceive;
     receivableInvoices: ISaleInvoice[];

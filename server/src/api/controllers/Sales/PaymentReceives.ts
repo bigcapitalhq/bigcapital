@@ -216,7 +216,7 @@ export default class PaymentReceivesController extends BaseController {
    * @param {Response} res -
    */
   async getPaymentReceive(req: Request, res: Response, next: NextFunction) {
-    const { tenantId } = req;
+    const { tenantId, user } = req;
     const { id: paymentReceiveId } = req.params;
 
     try {

@@ -15,4 +15,22 @@ export default class ManualJournalEntry extends TenantModel {
   get timestamps() {
     return [];
   }
+
+  /**
+   * Relationship mapping.
+   */
+  static get relationMappings() {
+    const Account = require('models/Account');
+
+    return {
+      account: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Account.default,
+        join: {
+          from: 'manual_journals_entries.accountId',
+          to: 'accounts.id',
+        },
+      },
+    };
+  }
 }

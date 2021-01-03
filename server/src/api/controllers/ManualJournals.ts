@@ -244,7 +244,9 @@ export default class ManualJournalsController extends BaseController {
         tenantId,
         manualJournalId
       );
-      return res.status(200).send({ manualJournal });
+      return res.status(200).send({
+        manual_journal: manualJournal
+      });
     } catch (error) {
       next(error);
     }
