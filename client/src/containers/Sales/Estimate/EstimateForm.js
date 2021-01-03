@@ -264,7 +264,7 @@ const EstimateForm = ({
         initialValues={initialValues}
         onSubmit={handleFormSubmit}
       >
-        {({ isSubmitting, values }) => (
+        {({ isSubmitting}) => (
           <Form>
             <EstimateFormHeader
               onEstimateNumberChanged={handleEstimateNumberChange}
@@ -274,10 +274,9 @@ const EstimateForm = ({
             <EstimateFormFooter />
             <EstimateFloatingActions
               isSubmitting={isSubmitting}
-              estimateId={estimateId}
+              estimate={estimate}
               onSubmitClick={handleSubmitClick}
               onCancelClick={handleCancelClick}
-              isDelivered={values.delivered}
             />
           </Form>
         )}

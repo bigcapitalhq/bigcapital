@@ -23,9 +23,7 @@ export default function EstimateFloatingActions({
   isSubmitting,
   onSubmitClick,
   onCancelClick,
-  onClearClick,
-  estimateId,
-  isDelivered,
+  estimate,
 }) {
   const { resetForm, submitForm } = useFormikContext();
 
@@ -82,14 +80,13 @@ export default function EstimateFloatingActions({
   };
 
   const handleClearBtnClick = (event) => {
-    // saveInvoke(onClearClick, event);
     resetForm();
   };
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>
       {/* ----------- Save And Deliver ----------- */}
-      <If condition={!estimateId || !isDelivered}>
+      <If condition={!estimate || !estimate?.is_delivered}>
         <ButtonGroup>
           <Button
             disabled={isSubmitting}
@@ -156,7 +153,7 @@ export default function EstimateFloatingActions({
         </ButtonGroup>
       </If>
       {/* ----------- Save and New ----------- */}
-      <If condition={estimateId && isDelivered}>
+      <If condition={estimate && estimate?.is_delivered}>
         <ButtonGroup>
           <Button
             disabled={isSubmitting}
@@ -192,7 +189,7 @@ export default function EstimateFloatingActions({
         className={'ml1'}
         disabled={isSubmitting}
         onClick={handleClearBtnClick}
-        text={estimateId ? <T id={'reset'} /> : <T id={'clear'} />}
+        text={estimate ? <T id={'reset'} /> : <T id={'clear'} />}
       />
       {/* ----------- Cancel ----------- */}
       <Button

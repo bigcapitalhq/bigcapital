@@ -246,7 +246,7 @@ function InvoiceForm({
         initialValues={initialValues}
         onSubmit={handleSubmit}
       >
-        {({ isSubmitting, values }) => (
+        {({ isSubmitting}) => (
           <Form>
             <InvoiceFormHeader
               onInvoiceNumberChanged={handleInvoiceNumberChanged}
@@ -262,10 +262,9 @@ function InvoiceForm({
             <InvoiceFormFooter />
             <InvoiceFloatingActions
               isSubmitting={isSubmitting}
-              invoice={invoiceId}
+              invoice={invoice}
               onCancelClick={handleCancelClick}
               onSubmitClick={handleSubmitClick}
-              isDelivered={values.delivered}
             />
           </Form>
         )}

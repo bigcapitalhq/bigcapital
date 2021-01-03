@@ -23,9 +23,7 @@ export default function BillFloatingActions({
   isSubmitting,
   onSubmitClick,
   onCancelClick,
-  onClearClick,
-  billId,
-  isOpen,
+  bill,
 }) {
   const { resetForm, submitForm } = useFormikContext();
   const handleSubmitOpenBtnClick = (event) => {
@@ -81,14 +79,13 @@ export default function BillFloatingActions({
   };
 
   const handleClearBtnClick = (event) => {
-    // saveInvoke(onClearClick, event);
     resetForm();
   };
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>
       {/* ----------- Save And Open ----------- */}
-      <If condition={!billId || !isOpen}>
+      <If condition={!bill || !bill?.is_open}>
         <ButtonGroup>
           <Button
             disabled={isSubmitting}
@@ -155,7 +152,7 @@ export default function BillFloatingActions({
         </ButtonGroup>
       </If>
       {/* ----------- Save and New ----------- */}
-      <If condition={billId && isOpen}>
+      <If condition={bill && bill?.is_open}>
         <ButtonGroup>
           <Button
             disabled={isSubmitting}
@@ -191,7 +188,7 @@ export default function BillFloatingActions({
         className={'ml1'}
         disabled={isSubmitting}
         onClick={handleClearBtnClick}
-        text={billId ? <T id={'reset'} /> : <T id={'clear'} />}
+        text={bill ? <T id={'reset'} /> : <T id={'clear'} />}
       />
       {/* ----------- Cancel ----------- */}
       <Button

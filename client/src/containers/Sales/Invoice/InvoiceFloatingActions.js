@@ -23,9 +23,7 @@ export default function InvoiceFloatingActions({
   isSubmitting,
   onSubmitClick,
   onCancelClick,
-  onClearClick,
   invoice,
-  isDelivered,
 }) {
   const { resetForm, submitForm } = useFormikContext();
 
@@ -82,14 +80,13 @@ export default function InvoiceFloatingActions({
   };
 
   const handleClearBtnClick = (event) => {
-    // saveInvoke(onClearClick, event);
     resetForm();
   };
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>
       {/* ----------- Save And Deliver ----------- */}
-      <If condition={!invoice || !isDelivered}>
+      <If condition={!invoice || !invoice?.is_delivered}>
         <ButtonGroup>
           <Button
             disabled={isSubmitting}
@@ -156,7 +153,7 @@ export default function InvoiceFloatingActions({
         </ButtonGroup>
       </If>
       {/* ----------- Save and New ----------- */}
-      <If condition={invoice && isDelivered}>
+      <If condition={invoice && invoice?.is_delivered}>
         <ButtonGroup>
           <Button
             disabled={isSubmitting}

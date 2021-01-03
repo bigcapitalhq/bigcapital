@@ -58,7 +58,7 @@ const defaultInitialValues = {
   reference_no: '',
   receipt_message: '',
   statement: '',
-  closed:'',
+  closed: '',
   entries: [...repeatValue(defaultReceipt, MIN_LINES_NUMBER)],
 };
 
@@ -247,13 +247,15 @@ function ReceiptForm({
     },
     [history],
   );
-  
+
   return (
-    <div className={classNames(
-      CLASSES.PAGE_FORM,
-      CLASSES.PAGE_FORM_STRIP_STYLE,
-      CLASSES.PAGE_FORM_RECEIPT,
-    )}>
+    <div
+      className={classNames(
+        CLASSES.PAGE_FORM,
+        CLASSES.PAGE_FORM_STRIP_STYLE,
+        CLASSES.PAGE_FORM_RECEIPT,
+      )}
+    >
       <Formik
         validationSchema={
           isNewMode ? CreateReceiptFormSchema : EditReceiptFormSchema
@@ -261,18 +263,17 @@ function ReceiptForm({
         initialValues={initialValues}
         onSubmit={handleFormSubmit}
       >
-        {({ isSubmitting ,values }) => (
+        {({ isSubmitting}) => (
           <Form>
             <ReceiptFromHeader
               onReceiptNumberChanged={handleReceiptNumberChanged}
             />
             <ReceiptNumberWatcher receiptNumber={receiptNumber} />
-            <ReceiptFormBody defaultReceipt ={defaultReceipt} />
+            <ReceiptFormBody defaultReceipt={defaultReceipt} />
             <ReceiptFormFooter />
             <ReceiptFormFloatingActions
               isSubmitting={isSubmitting}
-              receiptId={receiptId}
-              isClosed={values.closed}
+              receipt={receipt}
               onSubmitClick={handleSubmitClick}
               onCancelClick={handleCancelClick}
             />

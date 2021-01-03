@@ -21,11 +21,9 @@ import { If, Icon } from 'components';
  */
 export default function ReceiptFormFloatingActions({
   isSubmitting,
-  receiptId,
-  isClosed,
+  receipt,
   onSubmitClick,
   onCancelClick,
-  onClearClick,
 }) {
   const { resetForm, submitForm } = useFormikContext();
 
@@ -82,14 +80,13 @@ export default function ReceiptFormFloatingActions({
   };
 
   const handleClearBtnClick = (event) => {
-    // saveInvoke(onClearClick, event);
     resetForm();
   };
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>
       {/* ----------- Save And Close ----------- */}
-      <If condition={!receiptId || !isClosed}>
+      <If condition={!receipt || !receipt?.is_closed}>
         <ButtonGroup>
           <Button
             disabled={isSubmitting}
@@ -156,7 +153,7 @@ export default function ReceiptFormFloatingActions({
         </ButtonGroup>
       </If>
       {/* ----------- Save and New ----------- */}
-      <If condition={receiptId && isClosed}>
+      <If condition={receipt && receipt?.is_closed}>
         <ButtonGroup>
           <Button
             disabled={isSubmitting}
@@ -191,7 +188,7 @@ export default function ReceiptFormFloatingActions({
         className={'ml1'}
         disabled={isSubmitting}
         onClick={handleClearBtnClick}
-        text={receiptId ? <T id={'reset'} /> : <T id={'clear'} />}
+        text={receipt ? <T id={'reset'} /> : <T id={'clear'} />}
       />
       {/* ----------- Cancel ----------- */}
       <Button
