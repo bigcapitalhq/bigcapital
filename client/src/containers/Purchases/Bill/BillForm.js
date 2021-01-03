@@ -219,7 +219,7 @@ function BillForm({
         initialValues={initialValues}
         onSubmit={handleFormSubmit}
       >
-        {({ isSubmitting ,values }) => (
+        {({ isSubmitting}) => (
           <Form>
             <BillFormHeader onBillNumberChanged={handleBillNumberChanged} />
             <BillFormBody defaultBill={defaultBill} />
@@ -229,8 +229,7 @@ function BillForm({
             />
             <BillFloatingActions
               isSubmitting={isSubmitting}
-              billId={billId}
-              isOpen={values.open}
+              bill={bill}
               onSubmitClick={handleSubmitClick}
               onCancelClick={handleCancelClick}
             />
