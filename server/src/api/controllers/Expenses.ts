@@ -170,7 +170,10 @@ export default class ExpensesController extends BaseController {
         expenseDTO,
         user
       );
-      return res.status(200).send({ id: expense.id });
+      return res.status(200).send({
+        id: expense.id,
+        message: 'The expense has been created successfully.',
+      });
     } catch (error) {
       next(error);
     }
@@ -196,7 +199,7 @@ export default class ExpensesController extends BaseController {
       );
       return res.status(200).send({
         id: expenseId,
-        message: 'The expense has been created successfully.'
+        message: 'The expense has been edited successfully.',
       });
     } catch (error) {
       next(error);
@@ -283,7 +286,9 @@ export default class ExpensesController extends BaseController {
     const { ids: expensesIds } = req.query;
 
     try {
-      await this.expensesService.publishBulkExpenses(
+      const {
+        meta: { alreadyPublished, published, total },
+      } = await this.expensesService.publishBulkExpenses(
         tenantId,
         expensesIds,
         user
@@ -291,6 +296,11 @@ export default class ExpensesController extends BaseController {
       return res.status(200).send({
         ids: expensesIds,
         message: 'The expenses have been published successfully.',
+        meta: {
+          alreadyPublished,
+          published,
+          total,
+        },
       });
     } catch (error) {
       next(error);
@@ -370,6 +380,11 @@ export default class ExpensesController extends BaseController {
       if (error.errorType === 'expense_not_found') {
         return res.boom.badRequest('Expense not found.', {
           errors: [{ type: 'EXPENSE_NOT_FOUND', code: 100 }],
+        });
+      }
+      if (error.errorType === 'EXPENSES_NOT_FOUND') {
+        return res.boom.badRequest('Expenses not found.', {
+          errors: [{ type: 'EXPENSES_NOT_FOUND', code: 110 }],
         });
       }
       if (error.errorType === 'total_amount_equals_zero') {

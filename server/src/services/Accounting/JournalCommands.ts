@@ -225,12 +225,15 @@ export default class JournalCommands {
    * Writes journal entries of expense model object.
    * @param {IExpense} expense
    */
-  expense(expense: IExpense) {
+  expense(
+    expense: IExpense,
+    userId: number,
+  ) {
     const mixinEntry = {
       referenceType: 'Expense',
       referenceId: expense.id,
       date: expense.paymentDate,
-      userId: expense.userId,
+      userId,
       draft: !expense.publishedAt,
     };
     const paymentJournalEntry = new JournalEntry({

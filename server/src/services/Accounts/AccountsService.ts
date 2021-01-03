@@ -16,6 +16,22 @@ import {
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import events from 'subscribers/events';
 
+const ERRORS = {
+  ACCOUNT_NOT_FOUND: 'account_not_found',
+  ACCOUNT_TYPE_NOT_FOUND: 'account_type_not_found',
+  PARENT_ACCOUNT_NOT_FOUND: 'parent_account_not_found',
+  ACCOUNT_CODE_NOT_UNIQUE: 'account_code_not_unique',
+  ACCOUNT_NAME_NOT_UNIQUE: 'account_name_not_unqiue',
+  PARENT_ACCOUNT_HAS_DIFFERENT_TYPE: 'parent_has_different_type',
+  ACCOUNT_TYPE_NOT_ALLOWED_TO_CHANGE: 'account_type_not_allowed_to_changed',
+  ACCOUNT_PREDEFINED: 'account_predefined',
+  ACCOUNT_HAS_ASSOCIATED_TRANSACTIONS: 'account_has_associated_transactions',
+  PREDEFINED_ACCOUNTS: 'predefined_accounts',
+  ACCOUNTS_HAVE_TRANSACTIONS: 'accounts_have_transactions',
+  CLOSE_ACCOUNT_AND_TO_ACCOUNT_NOT_SAME_TYPE: 'close_account_and_to_account_not_same_type',
+  ACCOUNTS_NOT_FOUND: 'accounts_not_found',
+}
+
 @Service()
 export default class AccountsService {
   @Inject()
@@ -50,7 +66,7 @@ export default class AccountsService {
 
     if (!accountType) {
       this.logger.info('[accounts] account type not found.');
-      throw new ServiceError('account_type_not_found');
+      throw new ServiceError(ERRORS.ACCOUNT_TYPE_NOT_FOUND);
     }
     return accountType;
   }
@@ -85,7 +101,7 @@ export default class AccountsService {
         tenantId,
         accountId,
       });
-      throw new ServiceError('parent_account_not_found');
+      throw new ServiceError(ERRORS.PARENT_ACCOUNT_NOT_FOUND);
     }
     return parentAccount;
   }
@@ -124,7 +140,7 @@ export default class AccountsService {
         tenantId,
         accountCode,
       });
-      throw new ServiceError('account_code_not_unique');
+      throw new ServiceError(ERRORS.ACCOUNT_CODE_NOT_UNIQUE);
     }
   }
 
@@ -138,7 +154,7 @@ export default class AccountsService {
     parentAccount: IAccount
   ) {
     if (accountDTO.accountTypeId !== parentAccount.accountTypeId) {
-      throw new ServiceError('parent_has_different_type');
+      throw new ServiceError(ERRORS.PARENT_ACCOUNT_HAS_DIFFERENT_TYPE);
     }
   }
 
@@ -161,7 +177,7 @@ export default class AccountsService {
       this.logger.info('[accounts] the given account not found.', {
         accountId,
       });
-      throw new ServiceError('account_not_found');
+      throw new ServiceError(ERRORS.ACCOUNT_NOT_FOUND);
     }
     return account;
   }
@@ -178,7 +194,7 @@ export default class AccountsService {
     newAccount: IAccount | IAccountDTO
   ) {
     if (oldAccount.accountTypeId !== newAccount.accountTypeId) {
-      throw new ServiceError('account_type_not_allowed_to_changed');
+      throw new ServiceError(ERRORS.ACCOUNT_TYPE_NOT_ALLOWED_TO_CHANGE);
     }
   }
 
@@ -208,7 +224,7 @@ export default class AccountsService {
         }
       });
     if (foundAccount) {
-      throw new ServiceError('account_name_not_unqiue');
+      throw new ServiceError(ERRORS.ACCOUNT_NAME_NOT_UNIQUE);
     }
   }
 
@@ -346,7 +362,7 @@ export default class AccountsService {
    */
   private throwErrorIfAccountPredefined(account: IAccount) {
     if (account.predefined) {
-      throw new ServiceError('account_predefined');
+      throw new ServiceError(ERRORS.ACCOUNT_PREDEFINED);
     }
   }
 
@@ -384,7 +400,7 @@ export default class AccountsService {
       accountId
     );
     if (accountTransactions.length > 0) {
-      throw new ServiceError('account_has_associated_transactions');
+      throw new ServiceError(ERRORS.ACCOUNT_HAS_ASSOCIATED_TRANSACTIONS);
     }
   }
 
@@ -441,7 +457,7 @@ export default class AccountsService {
         tenantId,
         notFoundAccounts,
       });
-      throw new ServiceError('accounts_not_found');
+      throw new ServiceError(ERRORS.ACCOUNTS_NOT_FOUND);
     }
     return storedAccounts;
   }
@@ -458,7 +474,7 @@ export default class AccountsService {
 
     if (predefined.length > 0) {
       this.logger.error('[accounts] some accounts predefined.', { predefined });
-      throw new ServiceError('predefined_accounts');
+      throw new ServiceError(ERRORS.PREDEFINED_ACCOUNTS);
     }
     return predefined;
   }
@@ -487,7 +503,7 @@ export default class AccountsService {
       }
     });
     if (accountsHasTransactions.length > 0) {
-      throw new ServiceError('accounts_have_transactions');
+      throw new ServiceError(ERRORS.ACCOUNTS_HAVE_TRANSACTIONS);
     }
   }
 
@@ -677,7 +693,7 @@ export default class AccountsService {
     );
 
     if (accountType.rootType !== toAccountType.rootType) {
-      throw new ServiceError('close_account_and_to_account_not_same_type');
+      throw new ServiceError(ERRORS.CLOSE_ACCOUNT_AND_TO_ACCOUNT_NOT_SAME_TYPE);
     }
     const updateAccountBalanceOper = await accountRepository.balanceChange(
       accountId,

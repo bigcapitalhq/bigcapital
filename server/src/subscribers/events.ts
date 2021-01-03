@@ -68,7 +68,6 @@ export default {
     onEdited: 'onExpenseEdited',
     onDeleted: 'onExpenseDelted',
     onPublished: 'onExpensePublished',
-
     onBulkDeleted: 'onExpenseBulkDeleted',
     onBulkPublished: 'onBulkPublished',
   },

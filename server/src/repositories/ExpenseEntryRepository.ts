@@ -1,7 +1,7 @@
 import TenantRepository from "./TenantRepository";
 import { ExpenseCategory } from 'models';
 
-export default class ExpenseEntyRepository extends TenantRepository {
+export default class ExpenseEntryRepository extends TenantRepository {
   /**
    * Gets the repository's model.
    */

@@ -400,7 +400,11 @@ export default class ItemsService implements IItemsService {
     const { Item } = this.tenancy.models(tenantId);
 
     this.logger.info('[items] trying to delete item.', { tenantId, itemId });
+
+    // Retreive the given item or throw not found service error.
     await this.getItemOrThrowError(tenantId, itemId);
+
+    // Validate the item has no associated invoices or bills.
     await this.validateHasNoInvoicesOrBills(tenantId, itemId);
 
     await Item.query().findById(itemId).delete();

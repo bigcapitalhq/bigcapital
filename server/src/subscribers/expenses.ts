@@ -16,36 +16,49 @@ export default class ExpensesSubscriber {
   }
 
   /**
-   * On expense created.
+   * Handles the writing journal entries once the expense created.
    */
   @On(events.expenses.onCreated)
-  public async onExpenseCreated({ expenseId, tenantId }) {
-    const { expenseRepository } = this.tenancy.repositories(tenantId);
-    const expense = await expenseRepository.getById(expenseId);
- 
+  public async onExpenseCreated({
+    expenseId,
+    expense,
+    tenantId,
+    authorizedUser,
+  }) {
     // In case expense published, write journal entries.
     if (expense.publishedAt) {
-      await this.expensesService.writeJournalEntries(tenantId, expense, false);
+      await this.expensesService.writeJournalEntries(
+        tenantId,
+        expense,
+        authorizedUser.id,
+        false
+      );
     }
   }
-  
+
   /**
-   * On expense edited.
+   * Handle writing expense journal entries once the expense edited.
    */
   @On(events.expenses.onEdited)
-  public async onExpenseEdited({ expenseId, tenantId }) {
-    const { expenseRepository } = this.tenancy.repositories(tenantId);
-    const expense = await expenseRepository.getById(expenseId);
-
+  public async onExpenseEdited({
+    expenseId,
+    tenantId,
+    expense,
+    authorizedUser,
+  }) {
     // In case expense published, write journal entries.
     if (expense.publishedAt) {
-      await this.expensesService.writeJournalEntries(tenantId, expense, true);
+      await this.expensesService.writeJournalEntries(
+        tenantId,
+        expense,
+        authorizedUser.id,
+        true
+      );
     }
   }
 
   /**
-   * 
-   * @param param0 
+   * Reverts expense journal entries once the expense deleted.
    */
   @On(events.expenses.onDeleted)
   public async onExpenseDeleted({ expenseId, tenantId }) {
@@ -53,35 +66,61 @@ export default class ExpensesSubscriber {
   }
 
   /**
-   * 
-   * @param param0 
+   * Handles writing expense journal once the expense publish.
    */
   @On(events.expenses.onPublished)
-  public async onExpensePublished({ expenseId, tenantId }) {
-    const { expenseRepository } = this.tenancy.repositories(tenantId);
-    const expense = await expenseRepository.getById(expenseId);
- 
+  public async onExpensePublished({
+    expenseId,
+    tenantId,
+    expense,
+    authorizedUser,
+  }) {
     // In case expense published, write journal entries.
     if (expense.publishedAt) {
-      await this.expensesService.writeJournalEntries(tenantId, expense, false);
+      await this.expensesService.writeJournalEntries(
+        tenantId,
+        expense,
+        authorizedUser.id,
+        false
+      );
     }
   }
 
   /**
-   * 
-   * @param param0 
+   * Handles the revert journal entries once the expenses deleted in bulk.
    */
   @On(events.expenses.onBulkDeleted)
-  public onExpenseBulkDeleted({ expensesIds, tenantId }) {
-
+  public async handleRevertJournalEntriesOnceDeleted({
+    expensesIds,
+    tenantId,
+  }) {
+    await this.expensesService.revertJournalEntries(tenantId, expensesIds);
   }
 
   /**
-   * 
-   * @param param0 
+   * Handles writing journal entriers of the not-published expenses.
    */
   @On(events.expenses.onBulkPublished)
-  public onExpenseBulkPublished({ expensesIds, tenantId }) {
+  public async onExpenseBulkPublished({
+    expensesIds,
+    tenantId,
+    expenses,
+    oldExpenses,
+    authorizedUser,
+  }) {
+    // Filters the not published expenses.
+    const notPublishedExpenses = this.expensesService.getNonePublishedExpenses(
+      oldExpenses
+    );
+    // Can't continue if there is no not-published expoenses.
+    if (notPublishedExpenses.length === 0) { return; }
 
+    // Writing the journal entries of not-published expenses.
+    await this.expensesService.writeJournalEntries(
+      tenantId,
+      notPublishedExpenses,
+      authorizedUser.id,
+      false
+    );
   }
 }
