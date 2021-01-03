@@ -144,7 +144,7 @@ export default {
       blockDuration: 60 * 15,
     },
     requests: {
-      points: 30,
+      points: 60,
       duration: 60,
       blockDuration: 60 * 10,
     }
