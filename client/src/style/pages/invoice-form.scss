@@ -51,11 +51,13 @@
     line-height: 1.5;
   }
   .fully-paid-status {
+    height: 19px;
+    width: 19px;
     display: inline-block;
-    border-radius: 50%;
     background: #2ba01d;
-    color: #ffffff;
+    border-radius: 50%;
     margin-right: 6px;
+    color: #ffffff;
   }
 
   .bp3-progress-bar {
