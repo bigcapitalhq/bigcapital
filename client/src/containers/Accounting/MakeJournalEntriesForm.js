@@ -51,7 +51,7 @@ const defaultInitialValues = {
   description: '',
   reference: '',
   currency_code: '',
-  status: '',
+  publish: '',
   entries: [...repeatValue(defaultEntry, 4)],
 };
 
@@ -176,7 +176,7 @@ function MakeJournalEntriesForm({
       setSubmitting(false);
       return;
     }
-    const form = { ...values, status: submitPayload.publish, entries };
+    const form = { ...values, publish: submitPayload.publish, entries };
 
     const handleError = (error) => {
       transformErrors(error, { setErrors });
@@ -239,7 +239,7 @@ function MakeJournalEntriesForm({
         validationSchema={isNewMode ? CreateJournalSchema : EditJournalSchema}
         onSubmit={handleSubmit}
       >
-        {({ isSubmitting, values }) => (
+        {({ isSubmitting}) => (
           <Form>
             <MakeJournalEntriesHeader
               manualJournal={manualJournalId}
@@ -250,8 +250,8 @@ function MakeJournalEntriesForm({
             <MakeJournalFormFooter />
             <MakeJournalFormFloatingActions
               isSubmitting={isSubmitting}
-              manualJournal={manualJournalId}
-              manualJournalPublished={values.status}
+              manualJournal={manualJournal}
+              // manualJournalPublished={values.status}
               onCancelClick={handleCancelClick}
               onSubmitClick={handleSubmitClick}
             />

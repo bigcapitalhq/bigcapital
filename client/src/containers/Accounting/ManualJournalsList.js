@@ -62,10 +62,10 @@ function ManualJournalsTable({
     () => requestFetchResourceViews('manual_journals'),
   );
 
-  const fetchResourceFields = useQuery(
-    ['resource-fields', 'manual-journals'],
-    () => requestFetchResourceFields('manual_journals'),
-  );
+  // const fetchResourceFields = useQuery(
+  //   ['resource-fields', 'manual-journals'],
+  //   () => requestFetchResourceFields('manual_journals'),
+  // );
 
   const fetchManualJournals = useQuery(
     ['manual-journals-table', manualJournalsTableQuery],
@@ -218,7 +218,7 @@ function ManualJournalsTable({
 
   return (
     <DashboardInsider
-      loading={fetchResourceViews.isFetching || fetchResourceFields.isFetching}
+      loading={fetchResourceViews.isFetching}
       name={'manual-journals'}
     >
       <ManualJournalsActionsBar
