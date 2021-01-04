@@ -16,8 +16,21 @@ export default class ManualJournal extends TenantModel {
     return ['createdAt', 'updatedAt'];
   }
 
-  static get resourceable() {
-    return true;
+  /**
+   * Virtual attributes.
+   */
+  static get virtualAttributes() {
+    return [
+      'isPublished',
+    ];
+  }
+
+  /**
+   * Detarmines whether the invoice is published.
+   * @return {boolean}
+   */
+  get isPublished() {
+    return !!this.publishedAt;
   }
 
   /**
