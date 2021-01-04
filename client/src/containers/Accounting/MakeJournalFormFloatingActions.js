@@ -24,11 +24,8 @@ export default function MakeJournalFloatingAction({
   onSubmitClick,
   onCancelClick,
   manualJournal,
-  manualJournalPublished,
 }) {
   const { submitForm, resetForm } = useFormikContext();
-
-
 
   const handleSubmitPublishBtnClick = (event) => {
     saveInvoke(onSubmitClick, event, {
@@ -83,14 +80,13 @@ export default function MakeJournalFloatingAction({
   };
 
   const handleClearBtnClick = (event) => {
-    // saveInvoke(onClearClick, event);
     resetForm();
   };
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>
       {/* ----------- Save And Publish ----------- */}
-      <If condition={!manualJournal || !manualJournalPublished}>
+      <If condition={!manualJournal || !manualJournal?.is_published}>
         <ButtonGroup>
           <Button
             disabled={isSubmitting}
@@ -155,7 +151,7 @@ export default function MakeJournalFloatingAction({
         </ButtonGroup>
       </If>
       {/* ----------- Save and New ----------- */}
-      <If condition={manualJournal && manualJournalPublished}>
+      <If condition={manualJournal && manualJournal?.is_published}>
         <ButtonGroup>
           <Button
             disabled={isSubmitting}

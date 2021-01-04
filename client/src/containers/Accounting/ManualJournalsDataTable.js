@@ -89,7 +89,7 @@ function ManualJournalsDataTable({
           text={formatMessage({ id: 'view_details' })}
         />
         <MenuDivider />
-        <If condition={!journal.status}>
+        <If condition={!journal.is_published}>
           <MenuItem
             icon={<Icon icon="arrow-to-top" />}
             text={formatMessage({ id: 'publish_journal' })}
@@ -160,11 +160,11 @@ function ManualJournalsDataTable({
         className: 'journal_type',
       },
       {
-        id: 'status',
-        Header: formatMessage({ id: 'status' }),
+        id: 'publish',
+        Header: formatMessage({ id: 'publish' }),
         accessor: (row) => StatusAccessor(row),
         width: 95,
-        className: 'status',
+        className: 'publish',
       },
       {
         id: 'note',

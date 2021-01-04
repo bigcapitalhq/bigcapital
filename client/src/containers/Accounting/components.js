@@ -57,12 +57,12 @@ export function AmountPopoverContent({ journalEntries }) {
 }
 
 /**
- * Status column accessor.
+ * publish column accessor.
  */
 export const StatusAccessor = (row) => {
   return (
     <Choose>
-      <Choose.When condition={!!row.status}>
+      <Choose.When condition={!!row.is_published}>
         <Tag minimal={true}>
           <T id={'published'} />
         </Tag>

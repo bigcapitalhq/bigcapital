@@ -27,7 +27,7 @@ export const fetchManualJournal = ({ id }) => {
             type: t.MANUAL_JOURNAL_SET,
             payload: {
               id,
-              manualJournal: response.data.manualJournal,
+              manualJournal: response.data.manual_journal,
             },
           });
           resolve(response);
@@ -129,7 +129,7 @@ export const fetchManualJournalsTable = ({ query } = {}) => {
             payload: {
               manualJournals: response.data.manual_journals,
               customViewId:
-              response.data?.filter_meta?.view?.custom_view_id || -1,
+                response.data?.filter_meta?.view?.custom_view_id || -1,
               pagination: response.data.pagination,
             },
           });

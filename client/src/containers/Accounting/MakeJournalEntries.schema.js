@@ -17,9 +17,9 @@ const Schema = Yup.object().shape({
     .required()
     .label(formatMessage({ id: 'date' })),
   currency_code: Yup.string().max(3),
-  status: Yup.boolean(),
+  publish: Yup.boolean(),
   reference: Yup.string().nullable().min(1).max(DATATYPES_LENGTH.STRING),
-  description: Yup.string().min(1).max(DATATYPES_LENGTH.STRING),
+  description: Yup.string().min(1).max(DATATYPES_LENGTH.STRING).nullable(),
   entries: Yup.array().of(
     Yup.object().shape({
       credit: Yup.number().nullable(),
