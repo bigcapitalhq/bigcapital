@@ -80,6 +80,7 @@ export default {
     onEdited: 'onSaleInvoiceEdited',
     onDelete: 'onSaleInvoiceDelete',
     onDeleted: 'onSaleInvoiceDeleted',
+    onDelivered: 'onSaleInvoiceDelivered',
     onBulkDelete: 'onSaleInvoiceBulkDeleted',
     onPublished: 'onSaleInvoicePublished',
     onInventoryTransactionsCreated: 'onInvoiceInventoryTransactionsCreated',

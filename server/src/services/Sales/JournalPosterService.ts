@@ -19,7 +19,7 @@ export default class JournalPosterService {
     tenantId: number,
     referenceId: number|number[],
     referenceType: string
-  ) {
+  ): Promise<void> {
     const journal = new JournalPoster(tenantId);
     const journalCommand = new JournalCommands(journal);
 

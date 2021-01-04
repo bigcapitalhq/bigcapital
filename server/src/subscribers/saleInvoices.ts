@@ -7,6 +7,7 @@ import SettingsService from 'services/Settings/SettingsService';
 import SaleEstimateService from 'services/Sales/SalesEstimate';
 import SaleInvoicesService from 'services/Sales/SalesInvoices';
 import ItemsEntriesService from 'services/Items/ItemsEntriesService';
+import SalesInvoicesCost from 'services/Sales/SalesInvoicesCost';
 
 @EventSubscriber()
 export default class SaleInvoiceSubscriber {
@@ -16,6 +17,7 @@ export default class SaleInvoiceSubscriber {
   saleEstimatesService: SaleEstimateService;
   saleInvoicesService: SaleInvoicesService;
   itemsEntriesService: ItemsEntriesService;
+  salesInvoicesCost: SalesInvoicesCost;
 
   constructor() {
     this.logger = Container.get('logger');
@@ -24,6 +26,7 @@ export default class SaleInvoiceSubscriber {
     this.saleEstimatesService = Container.get(SaleEstimateService);
     this.saleInvoicesService = Container.get(SaleInvoicesService);
     this.itemsEntriesService = Container.get(ItemsEntriesService);
+    this.salesInvoicesCost = Container.get(SalesInvoicesCost);
   }
 
   /**
@@ -95,15 +98,38 @@ export default class SaleInvoiceSubscriber {
   }
 
   /**
-   * Records journal entries of the non-inventory invoice.
+   * Handles handle write income journal entries of sale invoice.
    */
   @On(events.saleInvoice.onCreated)
-  @On(events.saleInvoice.onEdited)
-  public async handleWritingNonInventoryEntries({ tenantId, saleInvoice, authorizedUser }) {
-    await this.saleInvoicesService.recordNonInventoryJournalEntries(
+  public async handleWriteInvoiceIncomeJournalEntries({
+    tenantId,
+    saleInvoiceId,
+    saleInvoice,
+    authorizedUser,
+  }) {
+    const { saleInvoiceRepository } = this.tenancy.repositories(tenantId);
+
+    const saleInvoiceWithItems = await saleInvoiceRepository.findOneById(
+      saleInvoiceId,
+      'entries.item'
+    );
+    await this.saleInvoicesService.writesIncomeJournalEntries(
       tenantId,
-      saleInvoice.id,
-      authorizedUser.id,
+      saleInvoiceWithItems
+    );
+  }
+
+  /**
+   * Increments the sale invoice items once the invoice created.
+   */
+  @On(events.saleInvoice.onCreated)
+  public async handleDecrementSaleInvoiceItemsQuantity({
+    tenantId,
+    saleInvoice,
+  }) {
+    await this.itemsEntriesService.decrementItemsQuantity(
+      tenantId,
+      saleInvoice.entries
     );
   }
 
@@ -147,6 +173,29 @@ export default class SaleInvoiceSubscriber {
   }
 
   /**
+   * Records journal entries of the non-inventory invoice.
+   */
+  @On(events.saleInvoice.onEdited)
+  public async handleRewriteJournalEntriesOnceInvoiceEdit({
+    tenantId,
+    saleInvoiceId,
+    saleInvoice,
+    authorizedUser,
+  }) {
+    const { saleInvoiceRepository } = this.tenancy.repositories(tenantId);
+
+    const saleInvoiceWithItems = await saleInvoiceRepository.findOneById(
+      saleInvoiceId,
+      'entries.item'
+    );
+    await this.saleInvoicesService.writesIncomeJournalEntries(
+      tenantId,
+      saleInvoiceWithItems,
+      true
+    );
+  }
+
+  /**
    * Handles customer balance decrement once sale invoice deleted.
    */
   @On(events.saleInvoice.onDeleted)
@@ -163,6 +212,20 @@ export default class SaleInvoiceSubscriber {
     await customerRepository.changeBalance(
       oldSaleInvoice.customerId,
       oldSaleInvoice.balance * -1
+    );
+  }
+
+  /**
+   * Handle reverting journal entries once sale invoice delete.
+   */
+  @On(events.saleInvoice.onDelete)
+  public async handleRevertingInvoiceJournalEntriesOnDelete({
+    tenantId,
+    saleInvoiceId,
+  }) {
+    await this.saleInvoicesService.revertInvoiceJournalEntries(
+      tenantId,
+      saleInvoiceId,
     );
   }
 
@@ -203,7 +266,7 @@ export default class SaleInvoiceSubscriber {
         saleInvoiceId,
       }
     );
-    await this.saleInvoicesService.scheduleComputeCostByInvoiceId(
+    await this.salesInvoicesCost.scheduleComputeCostByInvoiceId(
       tenantId,
       saleInvoiceId
     );
@@ -222,24 +285,10 @@ export default class SaleInvoiceSubscriber {
     const startingDates = map(oldInventoryTransactions, 'date');
     const startingDate = head(startingDates);
 
-    await this.saleInvoicesService.scheduleComputeCostByItemsIds(
+    await this.salesInvoicesCost.scheduleComputeCostByItemsIds(
       tenantId,
       inventoryItemsIds,
       startingDate
-    );
-  }
-
-  /**
-   * Increments the sale invoice items once the invoice created.
-   */
-  @On(events.saleInvoice.onCreated)
-  public async handleDecrementSaleInvoiceItemsQuantity({
-    tenantId,
-    saleInvoice,
-  }) {
-    await this.itemsEntriesService.decrementItemsQuantity(
-      tenantId,
-      saleInvoice.entries
     );
   }
 

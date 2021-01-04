@@ -272,10 +272,12 @@ export default class SaleInvoicesController extends BaseController {
     next: NextFunction
   ) {
     const { tenantId } = req;
-    const filter: ISalesInvoicesFilter = {
+    const filter = {
       filterRoles: [],
       sortOrder: 'asc',
       columnSortBy: 'created_at',
+      page: 1,
+      pageSize: 12,
       ...this.matchedQueryData(req),
     };
     if (filter.stringifiedFilterRoles) {

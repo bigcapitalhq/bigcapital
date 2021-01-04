@@ -164,4 +164,5 @@ export default {
 
   protocol: '',
   hostname: '',
+  scheduleComputeItemCost: 'in 5 seconds'
 };

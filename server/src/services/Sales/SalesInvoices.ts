@@ -13,10 +13,13 @@ import {
   IPaginationMeta,
   IFilterMeta,
   ISystemUser,
+  IItem,
+  IItemEntry,
 } from 'interfaces';
+import JournalPoster from 'services/Accounting/JournalPoster';
+import JournalCommands from 'services/Accounting/JournalCommands';
 import events from 'subscribers/events';
 import InventoryService from 'services/Inventory/Inventory';
-import SalesInvoicesCost from 'services/Sales/SalesInvoicesCost';
 import TenancyService from 'services/Tenancy/TenancyService';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import { formatDateFields } from 'utils';
@@ -25,6 +28,7 @@ import ItemsService from 'services/Items/ItemsService';
 import ItemsEntriesService from 'services/Items/ItemsEntriesService';
 import CustomersService from 'services/Contacts/CustomersService';
 import SaleEstimateService from 'services/Sales/SalesEstimate';
+import JournalPosterService from './JournalPosterService';
 
 const ERRORS = {
   INVOICE_NUMBER_NOT_UNIQUE: 'INVOICE_NUMBER_NOT_UNIQUE',
@@ -42,7 +46,7 @@ const ERRORS = {
  * @service
  */
 @Service()
-export default class SaleInvoicesService extends SalesInvoicesCost {
+export default class SaleInvoicesService {
   @Inject()
   tenancy: TenancyService;
 
@@ -69,6 +73,9 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
 
   @Inject()
   saleEstimatesService: SaleEstimateService;
+
+  @Inject()
+  journalService: JournalPosterService;
 
   /**
    * Validate whether sale invoice number unqiue on the storage.
@@ -99,6 +106,28 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
       });
       throw new ServiceError(ERRORS.INVOICE_NUMBER_NOT_UNIQUE);
     }
+  }
+
+  /**
+   * Validate the sale invoice has no payment entries.
+   * @param {number} tenantId
+   * @param {number} saleInvoiceId
+   */
+  async validateInvoiceHasNoPaymentEntries(
+    tenantId: number,
+    saleInvoiceId: number
+  ) {
+    const { PaymentReceiveEntry } = this.tenancy.models(tenantId);
+
+    // Retrieve the sale invoice associated payment receive entries.
+    const entries = await PaymentReceiveEntry.query().where(
+      'invoice_id',
+      saleInvoiceId
+    );
+    if (entries.length > 0) {
+      throw new ServiceError(ERRORS.INVOICE_HAS_ASSOCIATED_PAYMENT_ENTRIES);
+    }
+    return entries;
   }
 
   /**
@@ -148,7 +177,7 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
       balance,
       paymentAmount: 0,
       entries: saleInvoiceDTO.entries.map((entry) => ({
-        reference_type: 'SaleInvoice',
+        referenceType: 'SaleInvoice',
         ...omit(entry, ['amount', 'id']),
       })),
     };
@@ -208,7 +237,7 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
     });
     this.logger.info('[sale_invoice] successfully inserted.', {
       tenantId,
-      saleInvoice,
+      saleInvoiceId: saleInvoice.id,
     });
 
     return saleInvoice;
@@ -238,19 +267,19 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
     const saleInvoiceObj = this.transformDTOToModel(
       tenantId,
       saleInvoiceDTO,
-      oldSaleInvoice,
+      oldSaleInvoice
     );
     // Validate customer existance.
     await this.customersService.getCustomerByIdOrThrowError(
       tenantId,
-      saleInvoiceDTO.customerId,
+      saleInvoiceDTO.customerId
     );
     // Validate sale invoice number uniquiness.
     if (saleInvoiceDTO.invoiceNo) {
       await this.validateInvoiceNumberUnique(
         tenantId,
         saleInvoiceDTO.invoiceNo,
-        saleInvoiceId,
+        saleInvoiceId
       );
     }
     // Validate items ids existance.
@@ -261,7 +290,7 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
     // Validate non-sellable entries items.
     await this.itemsEntriesService.validateNonSellableEntriesItems(
       tenantId,
-      saleInvoiceDTO.entries,
+      saleInvoiceDTO.entries
     );
     // Validate the items entries existance.
     await this.itemsEntriesService.validateEntriesIdsExistance(
@@ -270,7 +299,6 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
       'SaleInvoice',
       saleInvoiceDTO.entries
     );
-
     this.logger.info('[sale_invoice] trying to update sale invoice.');
     const saleInvoice: ISaleInvoice = await SaleInvoice.query().upsertGraphAndFetch(
       {
@@ -280,10 +308,10 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
     );
     // Triggers `onSaleInvoiceEdited` event.
     await this.eventDispatcher.dispatch(events.saleInvoice.onEdited, {
-      saleInvoice,
-      oldSaleInvoice,
       tenantId,
       saleInvoiceId,
+      saleInvoice,
+      oldSaleInvoice,
       authorizedUser,
     });
     return saleInvoice;
@@ -303,51 +331,33 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
     const { saleInvoiceRepository } = this.tenancy.repositories(tenantId);
 
     // Retrieve details of the given sale invoice id.
-    const saleInvoice = await this.getInvoiceOrThrowError(
+    const oldSaleInvoice = await this.getInvoiceOrThrowError(
       tenantId,
       saleInvoiceId
     );
-
     // Throws error in case the sale invoice already published.
-    if (saleInvoice.isDelivered) {
+    if (oldSaleInvoice.isDelivered) {
       throw new ServiceError(ERRORS.SALE_INVOICE_ALREADY_DELIVERED);
     }
     // Record the delivered at on the storage.
     await saleInvoiceRepository.update(
-      {
-        deliveredAt: moment().toMySqlDateTime(),
-      },
+      { deliveredAt: moment().toMySqlDateTime(), },
       { id: saleInvoiceId }
     );
-  }
-
-  /**
-   * Validate the sale invoice has no payment entries.
-   * @param {number} tenantId
-   * @param {number} saleInvoiceId
-   */
-  async validateInvoiceHasNoPaymentEntries(
-    tenantId: number,
-    saleInvoiceId: number
-  ) {
-    const { PaymentReceiveEntry } = this.tenancy.models(tenantId);
-
-    // Retrieve the sale invoice associated payment receive entries.
-    const entries = await PaymentReceiveEntry.query().where(
-      'invoice_id',
-      saleInvoiceId
-    );
-    if (entries.length > 0) {
-      throw new ServiceError(ERRORS.INVOICE_HAS_ASSOCIATED_PAYMENT_ENTRIES);
-    }
-    return entries;
+    // Triggers `onSaleInvoiceDelivered` event.
+    this.eventDispatcher.dispatch(events.saleInvoice.onDelivered, {
+      tenantId,
+      saleInvoiceId,
+      oldSaleInvoice,
+    });
   }
 
   /**
    * Deletes the given sale invoice with associated entries
    * and journal transactions.
-   * @async
+   * @param {number} tenantId - Tenant id.
    * @param {Number} saleInvoiceId - The given sale invoice id.
+   * @param {ISystemUser} authorizedUser -
    */
   public async deleteSaleInvoice(
     tenantId: number,
@@ -376,14 +386,14 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
       tenantId,
       saleInvoiceId
     );
-
     this.logger.info('[sale_invoice] delete sale invoice with entries.');
-    await saleInvoiceRepository.deleteById(saleInvoiceId);
 
     await ItemEntry.query()
       .where('reference_id', saleInvoiceId)
       .where('reference_type', 'SaleInvoice')
       .delete();
+
+    await saleInvoiceRepository.deleteById(saleInvoiceId);
 
     // Triggers `onSaleInvoiceDeleted` event.
     await this.eventDispatcher.dispatch(events.saleInvoice.onDeleted, {
@@ -408,7 +418,7 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
     tenantId: number,
     saleInvoiceId: number,
     saleInvoiceDate: Date,
-    override?: boolean,
+    override?: boolean
   ): Promise<void> {
     // Gets the next inventory lot number.
     const lotNumber = this.inventoryService.getNextLotNumber(tenantId);
@@ -451,41 +461,38 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
   }
 
   /**
-   * Records the journal entries of the given sale invoice just
-   * in case the invoice has no inventory items entries.
-   *
-   * @param {number} tenantId -
-   * @param {number} saleInvoiceId
-   * @param {boolean} override
-   * @return {Promise<void>}
+   * Writes the sale invoice income journal entries.
+   * @param {number} tenantId - Tenant id.
+   * @param {ISaleInvoice} saleInvoice - Sale invoice id.
    */
-  public async recordNonInventoryJournalEntries(
+  public async writesIncomeJournalEntries(
     tenantId: number,
-    saleInvoiceId: number,
-    authorizedUserId: number,
+    saleInvoice: ISaleInvoice & {
+      entries: IItemEntry & { item: IItem };
+    },
     override: boolean = false
   ): Promise<void> {
-    const { saleInvoiceRepository } = this.tenancy.repositories(tenantId);
+    const { accountRepository } = this.tenancy.repositories(tenantId);
 
-    // Loads the inventory items entries of the given sale invoice.
-    const inventoryEntries = await this.itemsEntriesService.getInventoryEntries(
-      tenantId,
-      'SaleInvoice',
-      saleInvoiceId
-    );
-    // Can't continue if the sale invoice has inventory items entries.
-    if (inventoryEntries.length > 0) return;
+    const journal = new JournalPoster(tenantId);
+    const journalCommands = new JournalCommands(journal);
 
-    const saleInvoice = await saleInvoiceRepository.findOneById(
-      saleInvoiceId,
-      'entries.item'
-    );
-    await this.writeNonInventoryInvoiceEntries(
-      tenantId,
+    const receivableAccount = await accountRepository.findOne({
+      slug: 'accounts-receivable',
+    });
+    if (override) {
+      await journalCommands.revertInvoiceIncomeEntries(saleInvoice.id);
+    }
+    // Records the sale invoice journal entries.
+    await journalCommands.saleInvoiceIncomeEntries(
       saleInvoice,
-      authorizedUserId,
-      override
+      receivableAccount.id
     );
+    await Promise.all([
+      journal.deleteEntries(),
+      journal.saveBalance(),
+      journal.saveEntries()
+    ]);
   }
 
   /**
@@ -516,6 +523,23 @@ export default class SaleInvoicesService extends SalesInvoicesCost {
     this.eventDispatcher.dispatch(
       events.saleInvoice.onInventoryTransactionsDeleted,
       { tenantId, saleInvoiceId, oldInventoryTransactions }
+    );
+  }
+
+  /**
+   * Reverting the sale invoice journal entries.
+   * @param {number} tenantId
+   * @param {number} saleInvoiceId
+   * @return {Promise<void>}
+   */
+  public async revertInvoiceJournalEntries(
+    tenantId: number,
+    saleInvoiceId: number | number[]
+  ): Promise<void> {
+    return this.journalService.revertJournalTransactions(
+      tenantId,
+      saleInvoiceId,
+      'SaleInvoice'
     );
   }
 

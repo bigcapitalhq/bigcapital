@@ -9,7 +9,8 @@ export interface ISaleInvoice {
   dueAmount: number,
   customerId: number,
   entries: IItemEntry[],
-  deliveredAt: string|Date,
+  deliveredAt: string | Date,
+  userId: number,
 }
 
 export interface ISaleInvoiceDTO {

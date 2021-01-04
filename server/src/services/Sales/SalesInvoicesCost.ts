@@ -24,7 +24,7 @@ export default class SaleInvoicesCost {
   async scheduleComputeCostByItemsIds(
     tenantId: number,
     inventoryItemsIds: number[],
-    startingDate: Date,
+    startingDate: Date
   ) {
     const asyncOpers: Promise<[]>[] = [];
 
@@ -32,7 +32,7 @@ export default class SaleInvoicesCost {
       const oper: Promise<[]> = this.inventoryService.scheduleComputeItemCost(
         tenantId,
         inventoryItemId,
-        startingDate,
+        startingDate
       );
       asyncOpers.push(oper);
     });
@@ -49,7 +49,7 @@ export default class SaleInvoicesCost {
    */
   async scheduleComputeCostByInvoiceId(
     tenantId: number,
-    saleInvoiceId: number,
+    saleInvoiceId: number
   ) {
     const { SaleInvoice } = this.tenancy.models(tenantId);
 
@@ -62,7 +62,7 @@ export default class SaleInvoicesCost {
     return this.scheduleComputeCostByEntries(
       tenantId,
       saleInvoice.entries,
-      saleInvoice.invoiceDate,
+      saleInvoice.invoiceDate
     );
   }
 
@@ -82,24 +82,24 @@ export default class SaleInvoicesCost {
     const bill = await Bill.query()
       .findById(billId)
       .withGraphFetched('entries');
-    
+
     return this.scheduleComputeCostByEntries(
       tenantId,
       bill.entries,
-      bill.billDate,
+      bill.billDate
     );
   }
 
   /**
    * Schedules the compute inventory items by the given invoice.
-   * @param {number} tenantId 
-   * @param {ISaleInvoice & { entries: IItemEntry[] }} saleInvoice 
-   * @param {boolean} override 
+   * @param {number} tenantId
+   * @param {ISaleInvoice & { entries: IItemEntry[] }} saleInvoice
+   * @param {boolean} override
    */
   async scheduleComputeCostByEntries(
     tenantId: number,
     entries: IItemEntry[],
-    startingDate: Date,
+    startingDate: Date
   ) {
     const { Item } = this.tenancy.models(tenantId);
 
@@ -121,105 +121,57 @@ export default class SaleInvoicesCost {
 
   /**
    * Schedule writing journal entries.
-   * @param {Date} startingDate 
+   * @param {Date} startingDate
    * @return {Promise<agenda>}
    */
   scheduleWriteJournalEntries(tenantId: number, startingDate?: Date) {
     const agenda = Container.get('agenda');
 
     return agenda.schedule('in 3 seconds', 'rewrite-invoices-journal-entries', {
-      startingDate, tenantId,
+      startingDate,
+      tenantId,
     });
   }
 
   /**
    * Writes journal entries from sales invoices.
    * @param {number} tenantId - The tenant id.
-   * @param {Date} startingDate 
-   * @param {boolean} override 
+   * @param {Date} startingDate - Starting date.
+   * @param {boolean} override
    */
-  async writeJournalEntries(tenantId: number, startingDate: Date, override: boolean) {
-    const { AccountTransaction, SaleInvoice, Account } = this.tenancy.models(tenantId);
+  async writeInventoryCostJournalEntries(
+    tenantId: number,
+    startingDate: Date,
+    override: boolean
+  ) {
+    const { InventoryCostLotTracker } = this.tenancy.models(tenantId);
     const { accountRepository } = this.tenancy.repositories(tenantId);
 
-    const receivableAccount = await accountRepository.findOne({
-      slug: 'accounts-receivable',
-    });
-    const salesInvoices = await SaleInvoice.query()
-      .onBuild((builder: any) => {
-        builder.modify('filterDateRange', startingDate);
-        builder.orderBy('invoice_date', 'ASC');
+    const inventoryCostLotTrans = await InventoryCostLotTracker.query()
+      .where('direction', 'OUT')
+      .modify('groupedEntriesCost')
+      .modify('filterDateRange', startingDate)
+      .orderBy('date', 'ASC')
+      .where('cost', '>', 0)
+      .withGraphFetched('item');
 
-        builder.withGraphFetched('entries.item');
-        builder.withGraphFetched('costTransactions(groupedEntriesCost)');
-      });
     const accountsDepGraph = await accountRepository.getDependencyGraph();
-    const journal = new JournalPoster(tenantId, accountsDepGraph);
 
+    const journal = new JournalPoster(tenantId, accountsDepGraph);
     const journalCommands = new JournalCommands(journal);
 
     if (override) {
-      const oldTransactions = await AccountTransaction.query()
-        .whereIn('reference_type', ['SaleInvoice'])
-        .onBuild((builder: any) => {
-          builder.modify('filterDateRange', startingDate);
-        })
-        .withGraphFetched('account.type');
-
-      journal.fromTransactions(oldTransactions);
-      journal.removeEntries();
+      await journalCommands.revertInventoryCostJournalEntries(startingDate);
     }
-    salesInvoices.forEach((saleInvoice: ISaleInvoice & {
-      costTransactions: IInventoryLotCost[],
-      entries: IItemEntry & { item: IItem },
-    }) => {
-      journalCommands.saleInvoice(saleInvoice, receivableAccount.id);
-    });
+    inventoryCostLotTrans.forEach(
+      (inventoryCostLot: IInventoryLotCost & { item: IItem }) => {
+        journalCommands.saleInvoiceInventoryCost(inventoryCostLot);
+      }
+    );
     return Promise.all([
       journal.deleteEntries(),
       journal.saveEntries(),
-      journal.saveBalance(),
-    ]);
-  }
-
-  /**
-   * Writes the sale invoice journal entries.
-   */
-  async writeNonInventoryInvoiceEntries(
-    tenantId: number,
-    saleInvoice: ISaleInvoice,
-    authorizedUserId: number,
-    override: boolean = false,
-  ) {
-    const { accountRepository } = this.tenancy.repositories(tenantId);
-    const { AccountTransaction } = this.tenancy.models(tenantId);
-
-    // Receivable account.
-    const receivableAccount = await accountRepository.findOne({
-      slug: 'accounts-receivable',
-    });
-    const journal = new JournalPoster(tenantId);
-    const journalCommands = new JournalCommands(journal);
-
-    if (override) {
-      const oldTransactions = await AccountTransaction.query()
-        .where('reference_type', 'SaleInvoice')
-        .where('reference_id', saleInvoice.id)
-        .withGraphFetched('account.type');
-
-      journal.fromTransactions(oldTransactions);
-      journal.removeEntries();
-    }
-    journalCommands.saleInvoiceNonInventory(
-      saleInvoice,
-      receivableAccount.id,
-      authorizedUserId,
-    );
-
-    await Promise.all([
-      journal.deleteEntries(),
-      journal.saveEntries(),
-      journal.saveBalance(),
+      journal.saveBalance()
     ]);
   }
 }

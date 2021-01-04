@@ -23,14 +23,13 @@ export default class InventoryCostLotTracker extends TenantModel {
   static get modifiers() {
     return {
       groupedEntriesCost(query) {
-        query.select(['entry_id', 'transaction_id', 'transaction_type']);
+        query.select(['date', 'item_id', 'transaction_id', 'transaction_type']);
+        query.sum('cost as cost');
 
-        query.groupBy('item_id');
-        query.groupBy('entry_id');
         query.groupBy('transaction_id');
         query.groupBy('transaction_type');
-
-        query.sum('cost as cost');
+        query.groupBy('date');
+        query.groupBy('item_id');
       },
       filterDateRange(query, startDate, endDate, type = 'day') {
         const dateFormat = 'YYYY-MM-DD HH:mm:ss';

@@ -17,7 +17,6 @@ import {
   IContactEditDTO,
   IContact,
   ISaleInvoice,
-  ISystemService,
   ISystemUser,
 } from 'interfaces';
 import { ServiceError } from 'exceptions';
