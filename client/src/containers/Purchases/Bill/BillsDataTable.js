@@ -17,11 +17,11 @@ import moment from 'moment';
 import classNames from 'classnames';
 
 import Icon from 'components/Icon';
-import { compose, saveInvoke } from 'utils';
+import { compose, saveInvoke, isBlank } from 'utils';
 import { CLASSES } from 'common/classes';
 import { useIsValuePassed } from 'hooks';
 
-import { LoadingIndicator, Choose, If } from 'components';
+import { LoadingIndicator, Money, Choose, If } from 'components';
 import DataTable from 'components/DataTable';
 import BillsEmptyStatus from './BillsEmptyStatus';
 
@@ -32,6 +32,7 @@ import withViewDetails from 'containers/Views/withViewDetails';
 import withBills from './withBills';
 import withBillActions from './withBillActions';
 import withCurrentView from 'containers/Views/withCurrentView';
+import withSettings from 'containers/Settings/withSettings';
 
 // Bills transactions datatable.
 function BillsDataTable({
@@ -51,6 +52,9 @@ function BillsDataTable({
 
   // #withView
   viewMeta,
+
+  // #withSettings
+  baseCurrency,
 
   // #ownProps
   loading,
@@ -166,7 +170,12 @@ function BillsDataTable({
       {
         id: 'amount',
         Header: formatMessage({ id: 'amount' }),
-        accessor: 'amount',
+        accessor: (row) =>
+          !isBlank(row.amount) ? (
+            <Money amount={row.amount} currency={baseCurrency} />
+          ) : (
+            ''
+          ),
         width: 140,
         className: 'amount',
       },
@@ -284,5 +293,8 @@ export default compose(
       billsCurrentViewId,
     }),
   ),
+  withSettings(({ organizationSettings }) => ({
+    baseCurrency: organizationSettings?.baseCurrency,
+  })),
   withViewDetails(),
 )(BillsDataTable);

@@ -26,6 +26,7 @@ import { CLASSES } from 'common/classes';
 
 import withItems from 'containers/Items/withItems';
 import withItemsActions from 'containers/Items/withItemsActions';
+import withSettings from 'containers/Settings/withSettings';
 import { compose, saveInvoke, isBlank, defaultToTransform } from 'utils';
 
 // Items datatable.
@@ -39,6 +40,9 @@ function ItemsDataTable({
 
   // #withItemsActions
   addItemsTableQueries,
+
+  // #withSettings
+  baseCurrency,
 
   // props
   onEditItem,
@@ -176,7 +180,7 @@ function ItemsDataTable({
         Header: formatMessage({ id: 'sell_price' }),
         accessor: (row) =>
           !isBlank(row.sell_price) ? (
-            <Money amount={row.sell_price} currency={'USD'} />
+            <Money amount={row.sell_price} currency={baseCurrency} />
           ) : (
             ''
           ),
@@ -187,7 +191,7 @@ function ItemsDataTable({
         Header: formatMessage({ id: 'cost_price' }),
         accessor: (row) =>
           !isBlank(row.cost_price) ? (
-            <Money amount={row.cost_price} currency={'USD'} />
+            <Money amount={row.cost_price} currency={baseCurrency} />
           ) : (
             ''
           ),
@@ -292,5 +296,8 @@ export default compose(
       itemsPagination,
     }),
   ),
+  withSettings(({ organizationSettings }) => ({
+    baseCurrency: organizationSettings?.baseCurrency,
+  })),
   withItemsActions,
 )(ItemsDataTable);
