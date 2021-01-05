@@ -1,5 +1,6 @@
 import { Container } from 'typedi';
 import { EventSubscriber, On } from 'event-dispatch';
+import { map, head } from 'lodash';
 import events from 'subscribers/events';
 import SaleInvoicesCost from 'services/Sales/SalesInvoicesCost';
 
@@ -7,16 +8,20 @@ import SaleInvoicesCost from 'services/Sales/SalesInvoicesCost';
 export class InventorySubscriber {
   depends: number = 0;
   startingDate: Date;
+  saleInvoicesCost: SaleInvoicesCost;
+  agenda: any;
+
+  constructor() {
+    this.saleInvoicesCost = Container.get(SaleInvoicesCost);
+    this.agenda = Container.get('agenda');
+  }
 
   /**
    * Handle run writing the journal entries once the compute items jobs completed.
    */
   @On(events.inventory.onComputeItemCostJobCompleted)
   async onComputeItemCostJobFinished({ itemId, tenantId, startingDate }) {
-    const saleInvoicesCost = Container.get(SaleInvoicesCost);
-    const agenda = Container.get('agenda');
-
-    const dependsComputeJobs = await agenda.jobs({
+    const dependsComputeJobs = await this.agenda.jobs({
       name: 'compute-item-cost',
       nextRunAt: { $ne: null },
       'data.tenantId': tenantId,
@@ -25,10 +30,53 @@ export class InventorySubscriber {
     if (dependsComputeJobs.length === 0) {
       this.startingDate = null;
 
-      await saleInvoicesCost.scheduleWriteJournalEntries(
+      await this.saleInvoicesCost.scheduleWriteJournalEntries(
         tenantId,
         startingDate
       );
     }
+  }
+
+  /**
+   * 
+   */
+  @On(events.inventory.onInventoryTransactionsCreated)
+  async handleScheduleItemsCostOnInventoryTransactionsCreated({
+    tenantId,
+    inventoryEntries,
+    transactionId,
+    transactionType,
+    transactionDate,
+    transactionDirection,
+    override
+  }) {
+    const inventoryItemsIds = map(inventoryEntries, 'itemId');
+
+    await this.saleInvoicesCost.scheduleComputeCostByItemsIds(
+      tenantId,
+      inventoryItemsIds,
+      transactionDate,
+    );
+  }
+
+  /**
+   * Schedules compute items cost once the inventory transactions deleted.
+   */
+  @On(events.inventory.onInventoryTransactionsDeleted)
+  async handleScheduleItemsCostOnInventoryTransactionsDeleted({
+    tenantId,
+    transactionType,
+    transactionId,
+    oldInventoryTransactions
+  }) {
+    const inventoryItemsIds = map(oldInventoryTransactions, 'itemId');
+    const startingDates = map(oldInventoryTransactions, 'date');
+    const startingDate = head(startingDates);
+
+    await this.saleInvoicesCost.scheduleComputeCostByItemsIds(
+      tenantId,
+      inventoryItemsIds,
+      startingDate
+    );
   }
 }

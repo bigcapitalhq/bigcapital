@@ -1,9 +1,10 @@
 
+export type TInventoryTransactionDirection = 'IN' | 'OUT';
 
 export interface IInventoryTransaction {
   id?: number,
   date: Date,
-  direction: string,
+  direction: TInventoryTransactionDirection,
   itemId: number,
   quantity: number,
   rate: number,

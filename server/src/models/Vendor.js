@@ -129,8 +129,6 @@ export default class Vendor extends TenantModel {
           { key: 'unpaid', label: 'Unpaid' },
         ],
         query: (query, role) => {
-          console.log(role);
-
           switch(role.value) {
             case 'active':
               query.modify('active');

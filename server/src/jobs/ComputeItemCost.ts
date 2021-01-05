@@ -29,7 +29,6 @@ export default class ComputeItemCostJob {
 
   /**
    * The job handler.
-   * @param {} -
    */
   public async handler(job, done: Function): Promise<void> {
     const Logger = Container.get('logger');
@@ -51,7 +50,6 @@ export default class ComputeItemCostJob {
 
   /**
    * Handle the job started.
-   * @param {Job} job - .
    */
   async onJobStart(job) {
     const { startingDate, itemId, tenantId } = job.attrs.data;

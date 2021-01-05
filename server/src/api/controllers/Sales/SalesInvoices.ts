@@ -248,12 +248,13 @@ export default class SaleInvoicesController extends BaseController {
    */
   async getSaleInvoice(req: Request, res: Response, next: NextFunction) {
     const { id: saleInvoiceId } = req.params;
-    const { tenantId } = req;
+    const { tenantId, user } = req;
 
     try {
       const saleInvoice = await this.saleInvoiceService.getSaleInvoice(
         tenantId,
-        saleInvoiceId
+        saleInvoiceId,
+        user
       );
       return res.status(200).send({ sale_invoice: saleInvoice });
     } catch (error) {

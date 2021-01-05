@@ -73,7 +73,7 @@ export default class ProfitLossSheetController extends BaseController {
         query: this.transfromToResponse(query),
       });
     } catch (error) {
-      console.log(error);
+      next(error);
     }
   }
 }

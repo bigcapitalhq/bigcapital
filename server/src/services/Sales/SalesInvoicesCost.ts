@@ -1,9 +1,8 @@
 import { Container, Service, Inject } from 'typedi';
-import { map } from 'lodash';
 import JournalPoster from 'services/Accounting/JournalPoster';
 import InventoryService from 'services/Inventory/Inventory';
 import TenancyService from 'services/Tenancy/TenancyService';
-import { ISaleInvoice, IItemEntry, IInventoryLotCost, IItem } from 'interfaces';
+import { IInventoryLotCost, IItem } from 'interfaces';
 import JournalCommands from 'services/Accounting/JournalCommands';
 
 @Service()
@@ -37,86 +36,6 @@ export default class SaleInvoicesCost {
       asyncOpers.push(oper);
     });
     return Promise.all([...asyncOpers]);
-  }
-
-  /**
-   * Schedules compute sale invoice items cost based on each item
-   * cost method.
-   * @param {number} tenantId - Tenant id.
-   * @param {ISaleInvoice} saleInvoiceId - Sale invoice id.
-   * @param {boolean} override - Allow to override old computes in edit mode.
-   * @return {Promise}
-   */
-  async scheduleComputeCostByInvoiceId(
-    tenantId: number,
-    saleInvoiceId: number
-  ) {
-    const { SaleInvoice } = this.tenancy.models(tenantId);
-
-    // Retrieve the sale invoice with associated entries.
-    const saleInvoice: ISaleInvoice = await SaleInvoice.query()
-      .findById(saleInvoiceId)
-      .withGraphFetched('entries');
-
-    // Schedule compute inventory items cost by the given invoice model object.
-    return this.scheduleComputeCostByEntries(
-      tenantId,
-      saleInvoice.entries,
-      saleInvoice.invoiceDate
-    );
-  }
-
-  /**
-   * Schedules the compute inventory items cost by the given bill id.
-   * @param {number} tenantId - Tenant id.
-   * @param {number} billId - Bill id.
-   * @return {Promise<void>}
-   */
-  async scheduleComputeCostByBillId(
-    tenantId: number,
-    billId: number
-  ): Promise<void> {
-    const { Bill } = this.tenancy.models(tenantId);
-
-    // Retrieve the bill with associated entries.
-    const bill = await Bill.query()
-      .findById(billId)
-      .withGraphFetched('entries');
-
-    return this.scheduleComputeCostByEntries(
-      tenantId,
-      bill.entries,
-      bill.billDate
-    );
-  }
-
-  /**
-   * Schedules the compute inventory items by the given invoice.
-   * @param {number} tenantId
-   * @param {ISaleInvoice & { entries: IItemEntry[] }} saleInvoice
-   * @param {boolean} override
-   */
-  async scheduleComputeCostByEntries(
-    tenantId: number,
-    entries: IItemEntry[],
-    startingDate: Date
-  ) {
-    const { Item } = this.tenancy.models(tenantId);
-
-    // Retrieve the inventory items that associated to the sale invoice entries.
-    const inventoryItems = await Item.query()
-      .whereIn('id', map(entries, 'itemId'))
-      .where('type', 'inventory');
-
-    const inventoryItemsIds = map(inventoryItems, 'id');
-
-    if (inventoryItemsIds.length > 0) {
-      await this.scheduleComputeCostByItemsIds(
-        tenantId,
-        inventoryItemsIds,
-        startingDate
-      );
-    }
   }
 
   /**

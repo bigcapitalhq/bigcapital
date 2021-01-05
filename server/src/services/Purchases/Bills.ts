@@ -1,4 +1,4 @@
-import { omit, sumBy, pick, map } from 'lodash';
+import { omit, sumBy } from 'lodash';
 import moment from 'moment';
 import { Inject, Service } from 'typedi';
 import {
@@ -16,19 +16,17 @@ import { formatDateFields } from 'utils';
 import {
   IBillDTO,
   IBill,
-  IItem,
   ISystemUser,
   IBillEditDTO,
   IPaginationMeta,
   IFilterMeta,
   IBillsFilter,
-  IItemEntry,
-  IInventoryTransaction,
 } from 'interfaces';
 import { ServiceError } from 'exceptions';
 import ItemsService from 'services/Items/ItemsService';
 import ItemsEntriesService from 'services/Items/ItemsEntriesService';
 import JournalCommands from 'services/Accounting/JournalCommands';
+import JournalPosterService from 'services/Sales/JournalPosterService';
 
 const ERRORS = {
   BILL_NOT_FOUND: 'BILL_NOT_FOUND',
@@ -70,6 +68,9 @@ export default class BillsService extends SalesInvoicesCost {
 
   @Inject()
   itemsEntriesService: ItemsEntriesService;
+
+  @Inject()
+  journalPosterService: JournalPosterService;
 
   /**
    * Validates whether the vendor is exist.
@@ -363,106 +364,6 @@ export default class BillsService extends SalesInvoicesCost {
   }
 
   /**
-   * Records the inventory transactions from the given bill input.
-   * @param {Bill} bill - Bill model object.
-   * @param {number} billId - Bill id.
-   * @return {Promise<void>}
-   */
-  public async recordInventoryTransactions(
-    tenantId: number,
-    billId: number,
-    billDate: Date,
-    override?: boolean
-  ): Promise<void> {
-    // Retrieve the next inventory lot number.
-    const lotNumber = this.inventoryService.getNextLotNumber(tenantId);
-
-    const inventoryEntries = await this.itemsEntriesService.getInventoryEntries(
-      tenantId,
-      'Bill',
-      billId
-    );
-    // Can't continue if there is no entries has inventory items in the bill.
-    if (inventoryEntries.length <= 0) return;
-
-    // Inventory transactions.
-    const inventoryTranscations = this.inventoryService.transformItemEntriesToInventory(
-      inventoryEntries,
-      'Bill',
-      billId,
-      'IN',
-      billDate,
-      lotNumber
-    );
-    // Records the inventory transactions.
-    await this.inventoryService.recordInventoryTransactions(
-      tenantId,
-      inventoryTranscations,
-      override
-    );
-    // Save the next lot number settings.
-    await this.inventoryService.incrementNextLotNumber(tenantId);
-
-    // Triggers `onInventoryTransactionsCreated` event.
-    this.eventDispatcher.dispatch(events.bill.onInventoryTransactionsCreated, {
-      tenantId,
-      billId,
-      billDate,
-    });
-  }
-
-  /**
-   * Reverts the inventory transactions of the given bill id.
-   * @param {number} tenantId - Tenant id.
-   * @param {number} billId - Bill id.
-   * @return {Promise<void>}
-   */
-  public async revertInventoryTransactions(tenantId: number, billId: number) {
-    const { inventoryTransactionRepository } = this.tenancy.repositories(
-      tenantId
-    );
-
-    // Retrieve the inventory transactions of the given sale invoice.
-    const oldInventoryTransactions = await inventoryTransactionRepository.find({
-      transactionId: billId,
-      transactionType: 'Bill',
-    });
-    await this.inventoryService.deleteInventoryTransactions(
-      tenantId,
-      billId,
-      'Bill'
-    );
-    // Triggers 'onInventoryTransactionsDeleted' event.
-    this.eventDispatcher.dispatch(
-      events.bill.onInventoryTransactionsDeleted,
-      { tenantId, billId, oldInventoryTransactions }
-    );
-  }
-
-  /**
-   * Records the bill journal transactions.
-   * @async
-   * @param {IBill} bill
-   * @param {Integer} billId
-   */
-  public async recordJournalTransactions(
-    tenantId: number,
-    bill: IBill,
-    override: boolean = false
-  ) {
-    const journal = new JournalPoster(tenantId);
-    const journalCommands = new JournalCommands(journal);
-
-    await journalCommands.bill(bill, override);
-
-    return Promise.all([
-      journal.deleteEntries(),
-      journal.saveEntries(),
-      journal.saveBalance(),
-    ]);
-  }
-
-  /**
    * Retrieve bills data table list.
    * @param {number} tenantId -
    * @param {IBillsFilter} billsFilter -
@@ -545,36 +446,6 @@ export default class BillsService extends SalesInvoicesCost {
   }
 
   /**
-   * Schedules compute bill items cost based on each item cost method.
-   * @param {number} tenantId -
-   * @param {IBill} bill -
-   * @return {Promise}
-   */
-  public async scheduleComputeBillItemsCost(tenantId: number, billId: number) {
-    const { Item, Bill } = this.tenancy.models(tenantId);
-
-    // Retrieve the bill with associated entries.
-    const bill = await Bill.query()
-      .findById(billId)
-      .withGraphFetched('entries');
-
-    // Retrieves inventory items only.
-    const inventoryItems = await Item.query()
-      .whereIn('id', map(bill.entries, 'itemId'))
-      .where('type', 'inventory');
-
-    const inventoryItemsIds = map(inventoryItems, 'id');
-
-    if (inventoryItemsIds.length > 0) {
-      await this.scheduleComputeItemsCost(
-        tenantId,
-        inventoryItemsIds,
-        bill.billDate
-      );
-    }
-  }
-
-  /**
    * Mark the bill as open.
    * @param {number} tenantId
    * @param {number} billId
@@ -588,10 +459,89 @@ export default class BillsService extends SalesInvoicesCost {
     if (oldBill.isOpen) {
       throw new ServiceError(ERRORS.BILL_ALREADY_OPEN);
     }
-
     // Record the bill opened at on the storage.
     await Bill.query().findById(billId).patch({
       openedAt: moment().toMySqlDateTime(),
     });
+  }
+
+  /**
+   * Records the inventory transactions from the given bill input.
+   * @param {Bill} bill - Bill model object.
+   * @param {number} billId - Bill id.
+   * @return {Promise<void>}
+   */
+  public async recordInventoryTransactions(
+    tenantId: number,
+    bill: IBill,
+    override?: boolean
+  ): Promise<void> {
+    await this.inventoryService.recordInventoryTransactionsFromItemsEntries(
+      tenantId,
+      bill.id,
+      'Bill',
+      bill.billDate,
+      'IN',
+      override
+    );
+    // Triggers `onInventoryTransactionsCreated` event.
+    this.eventDispatcher.dispatch(events.bill.onInventoryTransactionsCreated, {
+      tenantId,
+      bill,
+    });
+  }
+
+  /**
+   * Reverts the inventory transactions of the given bill id.
+   * @param {number} tenantId - Tenant id.
+   * @param {number} billId - Bill id.
+   * @return {Promise<void>}
+   */
+  public async revertInventoryTransactions(tenantId: number, billId: number) {
+    // Deletes the inventory transactions by the given reference id and type.
+    await this.inventoryService.deleteInventoryTransactions(
+      tenantId,
+      billId,
+      'Bill'
+    );
+  }
+
+  /**
+   * Records the bill journal transactions.
+   * @async
+   * @param {IBill} bill
+   * @param {Integer} billId
+   */
+  public async recordJournalTransactions(
+    tenantId: number,
+    bill: IBill,
+    override: boolean = false
+  ) {
+    const journal = new JournalPoster(tenantId);
+    const journalCommands = new JournalCommands(journal);
+
+    await journalCommands.bill(bill, override);
+
+    return Promise.all([
+      journal.deleteEntries(),
+      journal.saveEntries(),
+      journal.saveBalance(),
+    ]);
+  }
+
+  /**
+   * Reverts the bill journal entries.
+   * @param {number} tenantId
+   * @param {number} billId
+   */
+  public async revertJournalEntries(
+    tenantId: number,
+    billId: number
+  ): Promise<void> {
+    await this.journalPosterService.revertJournalTransactions(
+      tenantId,
+      billId,
+      'Bill'
+    );
   }
 }

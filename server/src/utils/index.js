@@ -174,8 +174,6 @@ const getDefinedOption = (key, group) => {
 
 const isDefinedOptionConfigurable = (key, group) => {
   const definedOption = getDefinedOption(key, group);
-  console.log(definedOption, 'definedOption');
-
   return definedOption?.config || false;
 };
 

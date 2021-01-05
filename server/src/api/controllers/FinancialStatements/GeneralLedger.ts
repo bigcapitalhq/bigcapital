@@ -1,4 +1,4 @@
-import { Router, Request, Response } from 'express';
+import { Router, Request, Response, NextFunction } from 'express';
 import { query, ValidationChain } from 'express-validator';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
 import BaseController from '../BaseController';
@@ -48,7 +48,7 @@ export default class GeneralLedgerReportController extends BaseController{
    * @param {Request} req - 
    * @param {Response} res - 
    */
-  async generalLedger(req: Request, res: Response) {
+  async generalLedger(req: Request, res: Response, next: NextFunction) {
     const { tenantId, settings } = req;
     const filter = this.matchedQueryData(req);
 
@@ -68,7 +68,7 @@ export default class GeneralLedgerReportController extends BaseController{
         query: this.transfromToResponse(query),
       });
     } catch (error) {
-      console.log(error);
+      next(error);
     }
   }
 }

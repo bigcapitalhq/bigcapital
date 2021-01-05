@@ -140,7 +140,6 @@ export default class BillsPayments extends BaseController {
         message: 'Payment made has been created successfully.',
       });
     } catch (error) {
-      console.log(error);
       next(error);
     }
   }

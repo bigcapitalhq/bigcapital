@@ -1,5 +1,5 @@
 import { Container } from 'typedi';
-import { On, EventSubscriber } from "event-dispatch";
+import { On, EventSubscriber } from 'event-dispatch';
 import events from 'subscribers/events';
 import TenancyService from 'services/Tenancy/TenancyService';
 import SettingsService from 'services/Settings/SettingsService';
@@ -15,7 +15,7 @@ export default class SaleReceiptSubscriber {
     this.tenancy = Container.get(TenancyService);
     this.settingsService = Container.get(SettingsService);
   }
-
+ 
   /**
    * Handle sale receipt increment next number once be created.
    */

@@ -11,7 +11,6 @@ exports.up = function(knex) {
     table.string('contact_type').nullable().index();
     table.integer('contact_id').unsigned().nullable().index();
     table.string('note');
-    table.boolean('draft').defaultTo(false);
     table.integer('user_id').unsigned().index();
     table.integer('index').unsigned();
     table.date('date').index();

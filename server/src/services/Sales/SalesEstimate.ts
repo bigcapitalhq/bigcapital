@@ -1,6 +1,12 @@
 import { omit, sumBy } from 'lodash';
 import { Service, Inject } from 'typedi';
-import { IEstimatesFilter, IFilterMeta, IPaginationMeta, ISaleEstimate, ISaleEstimateDTO } from 'interfaces';
+import {
+  IEstimatesFilter,
+  IFilterMeta,
+  IPaginationMeta,
+  ISaleEstimate,
+  ISaleEstimateDTO,
+} from 'interfaces';
 import {
   EventDispatcher,
   EventDispatcherInterface,
@@ -14,7 +20,6 @@ import { ServiceError } from 'exceptions';
 import CustomersService from 'services/Contacts/CustomersService';
 import moment from 'moment';
 
-
 const ERRORS = {
   SALE_ESTIMATE_NOT_FOUND: 'SALE_ESTIMATE_NOT_FOUND',
   CUSTOMER_NOT_FOUND: 'CUSTOMER_NOT_FOUND',
@@ -24,8 +29,9 @@ const ERRORS = {
   SALE_ESTIMATE_CONVERTED_TO_INVOICE: 'SALE_ESTIMATE_CONVERTED_TO_INVOICE',
   SALE_ESTIMATE_ALREADY_REJECTED: 'SALE_ESTIMATE_ALREADY_REJECTED',
   SALE_ESTIMATE_ALREADY_APPROVED: 'SALE_ESTIMATE_ALREADY_APPROVED',
-  SALE_ESTIMATE_NOT_DELIVERED: 'SALE_ESTIMATE_NOT_DELIVERED'
+  SALE_ESTIMATE_NOT_DELIVERED: 'SALE_ESTIMATE_NOT_DELIVERED',
 };
+
 /**
  * Sale estimate service.
  * @Service
@@ -52,26 +58,32 @@ export default class SaleEstimateService {
 
   /**
    * Retrieve sale estimate or throw service error.
-   * @param {number} tenantId 
+   * @param {number} tenantId
    * @return {ISaleEstimate}
    */
   async getSaleEstimateOrThrowError(tenantId: number, saleEstimateId: number) {
     const { SaleEstimate } = this.tenancy.models(tenantId);
-    const foundSaleEstimate = await SaleEstimate.query().findById(saleEstimateId);
-    
+    const foundSaleEstimate = await SaleEstimate.query().findById(
+      saleEstimateId
+    );
+
     if (!foundSaleEstimate) {
       throw new ServiceError(ERRORS.SALE_ESTIMATE_NOT_FOUND);
     }
     return foundSaleEstimate;
   }
- 
+
   /**
    * Validate the estimate number unique on the storage.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {Function} next 
+   * @param {Request} req
+   * @param {Response} res
+   * @param {Function} next
    */
-  async validateEstimateNumberExistance(tenantId: number, estimateNumber: string, notEstimateId?: number) {
+  async validateEstimateNumberExistance(
+    tenantId: number,
+    estimateNumber: string,
+    notEstimateId?: number
+  ) {
     const { SaleEstimate } = this.tenancy.models(tenantId);
 
     const foundSaleEstimate = await SaleEstimate.query()
@@ -88,34 +100,35 @@ export default class SaleEstimateService {
 
   /**
    * Transform DTO object ot model object.
-   * @param  {number} tenantId 
-   * @param  {ISaleEstimateDTO} saleEstimateDTO 
-   * @param  {ISaleEstimate} oldSaleEstimate 
+   * @param  {number} tenantId
+   * @param  {ISaleEstimateDTO} saleEstimateDTO
+   * @param  {ISaleEstimate} oldSaleEstimate
    * @return {ISaleEstimate}
    */
   transformDTOToModel(
     tenantId: number,
     estimateDTO: ISaleEstimateDTO,
-    oldSaleEstimate?: ISaleEstimate,
+    oldSaleEstimate?: ISaleEstimate
   ): ISaleEstimate {
     const { ItemEntry } = this.tenancy.models(tenantId);
-    const amount = sumBy(estimateDTO.entries, e => ItemEntry.calcAmount(e));
+    const amount = sumBy(estimateDTO.entries, (e) => ItemEntry.calcAmount(e));
 
     return {
       amount,
-      ...formatDateFields(
-        omit(estimateDTO, ['delivered', 'entries']),
-        ['estimateDate', 'expirationDate']
-      ),
-      entries: estimateDTO.entries.map((entry) => ({ 
+      ...formatDateFields(omit(estimateDTO, ['delivered', 'entries']), [
+        'estimateDate',
+        'expirationDate',
+      ]),
+      entries: estimateDTO.entries.map((entry) => ({
         reference_type: 'SaleEstimate',
         ...omit(entry, ['total', 'amount', 'id']),
       })),
 
       // Avoid rewrite the deliver date in edit mode when already published.
-      ...(estimateDTO.delivered && (!oldSaleEstimate?.deliveredAt)) && ({
-        deliveredAt: moment().toMySqlDateTime(),
-      }),
+      ...(estimateDTO.delivered &&
+        !oldSaleEstimate?.deliveredAt && {
+          deliveredAt: moment().toMySqlDateTime(),
+        }),
     };
   }
 
@@ -139,23 +152,35 @@ export default class SaleEstimateService {
 
     // Validate estimate number uniquiness on the storage.
     if (estimateDTO.estimateNumber) {
-      await this.validateEstimateNumberExistance(tenantId, estimateDTO.estimateNumber);
+      await this.validateEstimateNumberExistance(
+        tenantId,
+        estimateDTO.estimateNumber
+      );
     }
     // Retrieve the given customer or throw not found service error.
     await this.customersService.getCustomer(tenantId, estimateDTO.customerId);
 
     // Validate items IDs existance on the storage.
-    await this.itemsEntriesService.validateItemsIdsExistance(tenantId, estimateDTO.entries);
+    await this.itemsEntriesService.validateItemsIdsExistance(
+      tenantId,
+      estimateDTO.entries
+    );
 
     // Validate non-sellable items.
-    await this.itemsEntriesService.validateNonSellableEntriesItems(tenantId, estimateDTO.entries);
+    await this.itemsEntriesService.validateNonSellableEntriesItems(
+      tenantId,
+      estimateDTO.entries
+    );
 
-    const saleEstimate = await SaleEstimate.query()
-      .upsertGraphAndFetch({ ...estimateObj });
+    const saleEstimate = await SaleEstimate.query().upsertGraphAndFetch({
+      ...estimateObj,
+    });
 
     this.logger.info('[sale_estimate] insert sale estimated success.');
     await this.eventDispatcher.dispatch(events.saleEstimate.onCreated, {
-      tenantId, saleEstimate, saleEstimateId: saleEstimate.id,
+      tenantId,
+      saleEstimate,
+      saleEstimateId: saleEstimate.id,
     });
 
     return saleEstimate;
@@ -175,38 +200,61 @@ export default class SaleEstimateService {
     estimateDTO: ISaleEstimateDTO
   ): Promise<ISaleEstimate> {
     const { SaleEstimate } = this.tenancy.models(tenantId);
-    const oldSaleEstimate = await this.getSaleEstimateOrThrowError(tenantId, estimateId);
-
+    const oldSaleEstimate = await this.getSaleEstimateOrThrowError(
+      tenantId,
+      estimateId
+    );
     // Transform DTO object ot model object.
-    const estimateObj = this.transformDTOToModel(tenantId, estimateDTO, oldSaleEstimate);
-
+    const estimateObj = this.transformDTOToModel(
+      tenantId,
+      estimateDTO,
+      oldSaleEstimate
+    );
     // Validate estimate number uniquiness on the storage.
     if (estimateDTO.estimateNumber) {
-      await this.validateEstimateNumberExistance(tenantId, estimateDTO.estimateNumber, estimateId);
+      await this.validateEstimateNumberExistance(
+        tenantId,
+        estimateDTO.estimateNumber,
+        estimateId
+      );
     }
     // Retrieve the given customer or throw not found service error.
     await this.customersService.getCustomer(tenantId, estimateDTO.customerId);
 
     // Validate sale estimate entries existance.
-    await this.itemsEntriesService.validateEntriesIdsExistance(tenantId, estimateId, 'SaleEstiamte', estimateDTO.entries);
-
+    await this.itemsEntriesService.validateEntriesIdsExistance(
+      tenantId,
+      estimateId,
+      'SaleEstiamte',
+      estimateDTO.entries
+    );
     // Validate items IDs existance on the storage.
-    await this.itemsEntriesService.validateItemsIdsExistance(tenantId, estimateDTO.entries);
-
+    await this.itemsEntriesService.validateItemsIdsExistance(
+      tenantId,
+      estimateDTO.entries
+    );
     // Validate non-sellable items.
-    await this.itemsEntriesService.validateNonSellableEntriesItems(tenantId, estimateDTO.entries);
+    await this.itemsEntriesService.validateNonSellableEntriesItems(
+      tenantId,
+      estimateDTO.entries
+    );
 
     this.logger.info('[sale_estimate] editing sale estimate on the storage.');
-    const saleEstimate = await SaleEstimate.query()
-      .upsertGraphAndFetch({
-        id: estimateId,
-        ...estimateObj
-      });
+    const saleEstimate = await SaleEstimate.query().upsertGraphAndFetch({
+      id: estimateId,
+      ...estimateObj,
+    });
 
     await this.eventDispatcher.dispatch(events.saleEstimate.onEdited, {
-      tenantId, estimateId, saleEstimate, oldSaleEstimate,
+      tenantId,
+      estimateId,
+      saleEstimate,
+      oldSaleEstimate,
     });
-    this.logger.info('[sale_estiamte] edited successfully', { tenantId, estimateId });
+    this.logger.info('[sale_estiamte] edited successfully', {
+      tenantId,
+      estimateId,
+    });
 
     return saleEstimate;
   }
@@ -218,28 +266,41 @@ export default class SaleEstimateService {
    * @param {IEstimate} estimateId
    * @return {void}
    */
-  public async deleteEstimate(tenantId: number, estimateId: number): Promise<void> {
+  public async deleteEstimate(
+    tenantId: number,
+    estimateId: number
+  ): Promise<void> {
     const { SaleEstimate, ItemEntry } = this.tenancy.models(tenantId);
 
     // Retrieve sale estimate or throw not found service error.
-    const oldSaleEstimate = await this.getSaleEstimateOrThrowError(tenantId, estimateId);
+    const oldSaleEstimate = await this.getSaleEstimateOrThrowError(
+      tenantId,
+      estimateId
+    );
 
     // Throw error if the sale estimate converted to sale invoice.
     if (oldSaleEstimate.convertedToInvoiceId) {
       throw new ServiceError(ERRORS.SALE_ESTIMATE_CONVERTED_TO_INVOICE);
     }
 
-    this.logger.info('[sale_estimate] delete sale estimate and associated entries from the storage.');
+    this.logger.info(
+      '[sale_estimate] delete sale estimate and associated entries from the storage.'
+    );
     await ItemEntry.query()
       .where('reference_id', estimateId)
       .where('reference_type', 'SaleEstimate')
       .delete();
 
     await SaleEstimate.query().where('id', estimateId).delete();
-    this.logger.info('[sale_estimate] deleted successfully.', { tenantId, estimateId });
+    this.logger.info('[sale_estimate] deleted successfully.', {
+      tenantId,
+      estimateId,
+    });
 
     await this.eventDispatcher.dispatch(events.saleEstimate.onDeleted, {
-      tenantId, saleEstimateId: estimateId, oldSaleEstimate,
+      tenantId,
+      saleEstimateId: estimateId,
+      oldSaleEstimate,
     });
   }
 
@@ -255,7 +316,7 @@ export default class SaleEstimateService {
       .findById(estimateId)
       .withGraphFetched('entries')
       .withGraphFetched('customer');
-    
+
     if (!estimate) {
       throw new ServiceError(ERRORS.SALE_ESTIMATE_NOT_FOUND);
     }
@@ -270,18 +331,25 @@ export default class SaleEstimateService {
   public async estimatesList(
     tenantId: number,
     estimatesFilter: IEstimatesFilter
-  ): Promise<{ salesEstimates: ISaleEstimate[], pagination: IPaginationMeta, filterMeta: IFilterMeta }> {
+  ): Promise<{
+    salesEstimates: ISaleEstimate[];
+    pagination: IPaginationMeta;
+    filterMeta: IFilterMeta;
+  }> {
     const { SaleEstimate } = this.tenancy.models(tenantId);
-    const dynamicFilter = await this.dynamicListService.dynamicList(tenantId, SaleEstimate, estimatesFilter);
-
-    const { results, pagination } = await SaleEstimate.query().onBuild(builder => {
-      builder.withGraphFetched('customer');
-      builder.withGraphFetched('entries');
-      dynamicFilter.buildQuery()(builder);
-    }).pagination(
-      estimatesFilter.page - 1,
-      estimatesFilter.pageSize,
+    const dynamicFilter = await this.dynamicListService.dynamicList(
+      tenantId,
+      SaleEstimate,
+      estimatesFilter
     );
+
+    const { results, pagination } = await SaleEstimate.query()
+      .onBuild((builder) => {
+        builder.withGraphFetched('customer');
+        builder.withGraphFetched('entries');
+        dynamicFilter.buildQuery()(builder);
+      })
+      .pagination(estimatesFilter.page - 1, estimatesFilter.pageSize);
 
     return {
       salesEstimates: results,
@@ -299,12 +367,15 @@ export default class SaleEstimateService {
   async convertEstimateToInvoice(
     tenantId: number,
     estimateId: number,
-    invoiceId: number,
+    invoiceId: number
   ): Promise<void> {
     const { SaleEstimate } = this.tenancy.models(tenantId);
 
     // Retrieve details of the given sale estimate.
-    const saleEstimate = await this.getSaleEstimateOrThrowError(tenantId, estimateId);
+    const saleEstimate = await this.getSaleEstimateOrThrowError(
+      tenantId,
+      estimateId
+    );
 
     await SaleEstimate.query().where('id', estimateId).patch({
       convertedToInvoiceId: invoiceId,
@@ -320,16 +391,18 @@ export default class SaleEstimateService {
    */
   async unlinkConvertedEstimateFromInvoice(
     tenantId: number,
-    invoiceId: number,
+    invoiceId: number
   ): Promise<void> {
     const { SaleEstimate } = this.tenancy.models(tenantId);
 
-    await SaleEstimate.query().where({
-      convertedToInvoiceId: invoiceId,
-    }).patch({
-      convertedToInvoiceId: null,
-      convertedToInvoiceAt: null,
-    });
+    await SaleEstimate.query()
+      .where({
+        convertedToInvoiceId: invoiceId,
+      })
+      .patch({
+        convertedToInvoiceId: null,
+        convertedToInvoiceAt: null,
+      });
   }
 
   /**
@@ -339,12 +412,15 @@ export default class SaleEstimateService {
    */
   public async deliverSaleEstimate(
     tenantId: number,
-    saleEstimateId: number,
+    saleEstimateId: number
   ): Promise<void> {
     const { SaleEstimate } = this.tenancy.models(tenantId);
 
     // Retrieve details of the given sale estimate id.
-    const saleEstimate = await this.getSaleEstimateOrThrowError(tenantId, saleEstimateId);
+    const saleEstimate = await this.getSaleEstimateOrThrowError(
+      tenantId,
+      saleEstimateId
+    );
 
     // Throws error in case the sale estimate already published.
     if (saleEstimate.isDelivered) {
@@ -352,29 +428,32 @@ export default class SaleEstimateService {
     }
     // Record the delivered at on the storage.
     await SaleEstimate.query().where('id', saleEstimateId).patch({
-      deliveredAt: moment().toMySqlDateTime()
+      deliveredAt: moment().toMySqlDateTime(),
     });
   }
 
   /**
    * Mark the sale estimate as approved from the customer.
-   * @param {number} tenantId 
-   * @param {number} saleEstimateId 
+   * @param {number} tenantId
+   * @param {number} saleEstimateId
    */
   public async approveSaleEstimate(
     tenantId: number,
-    saleEstimateId: number,
+    saleEstimateId: number
   ): Promise<void> {
     const { SaleEstimate } = this.tenancy.models(tenantId);
 
     // Retrieve details of the given sale estimate id.
-    const saleEstimate = await this.getSaleEstimateOrThrowError(tenantId, saleEstimateId);
+    const saleEstimate = await this.getSaleEstimateOrThrowError(
+      tenantId,
+      saleEstimateId
+    );
 
     // Throws error in case the sale estimate still not delivered to customer.
     if (!saleEstimate.isDelivered) {
       throw new ServiceError(ERRORS.SALE_ESTIMATE_NOT_DELIVERED);
     }
-      // Throws error in case the sale estimate already approved.
+    // Throws error in case the sale estimate already approved.
     if (saleEstimate.isApproved) {
       throw new ServiceError(ERRORS.SALE_ESTIMATE_ALREADY_APPROVED);
     }
@@ -386,17 +465,20 @@ export default class SaleEstimateService {
 
   /**
    * Mark the sale estimate as rejected from the customer.
-   * @param {number} tenantId 
-   * @param {number} saleEstimateId 
+   * @param {number} tenantId
+   * @param {number} saleEstimateId
    */
   public async rejectSaleEstimate(
     tenantId: number,
-    saleEstimateId: number,
+    saleEstimateId: number
   ): Promise<void> {
     const { SaleEstimate } = this.tenancy.models(tenantId);
 
     // Retrieve details of the given sale estimate id.
-    const saleEstimate = await this.getSaleEstimateOrThrowError(tenantId, saleEstimateId);
+    const saleEstimate = await this.getSaleEstimateOrThrowError(
+      tenantId,
+      saleEstimateId
+    );
 
     // Throws error in case the sale estimate still not delivered to customer.
     if (!saleEstimate.isDelivered) {
