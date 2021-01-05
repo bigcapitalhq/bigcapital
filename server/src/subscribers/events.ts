@@ -83,8 +83,6 @@ export default {
     onDelivered: 'onSaleInvoiceDelivered',
     onBulkDelete: 'onSaleInvoiceBulkDeleted',
     onPublished: 'onSaleInvoicePublished',
-    onInventoryTransactionsCreated: 'onInvoiceInventoryTransactionsCreated',
-    onInventoryTransactionsDeleted: 'onInvoiceInventoryTransactionsDeleted',
   },
 
   /**
@@ -128,8 +126,6 @@ export default {
     onDeleted: 'onBillDeleted',
     onBulkDeleted: 'onBillBulkDeleted',
     onPublished: 'onBillPublished',
-    onInventoryTransactionsCreated: 'onBillInventoryTransactionsCreated',
-    onInventoryTransactionsDeleted: 'onBillInventoryTransactionsDeleted'
   },
 
   /**
@@ -189,6 +185,9 @@ export default {
    * Inventory service.
    */
   inventory: {
+    onInventoryTransactionsCreated: 'onInventoryTransactionsCreated',
+    onInventoryTransactionsDeleted: 'onInventoryTransactionsDeleted',
+
     onComputeItemCostJobScheduled: 'onComputeItemCostJobScheduled',
     onComputeItemCostJobStarted: 'onComputeItemCostJobStarted',
     onComputeItemCostJobCompleted: 'onComputeItemCostJobCompleted'

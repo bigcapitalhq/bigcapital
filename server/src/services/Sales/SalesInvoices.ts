@@ -341,7 +341,7 @@ export default class SaleInvoicesService {
     }
     // Record the delivered at on the storage.
     await saleInvoiceRepository.update(
-      { deliveredAt: moment().toMySqlDateTime(), },
+      { deliveredAt: moment().toMySqlDateTime() },
       { id: saleInvoiceId }
     );
     // Triggers `onSaleInvoiceDelivered` event.
@@ -416,47 +416,16 @@ export default class SaleInvoicesService {
    */
   public async recordInventoryTranscactions(
     tenantId: number,
-    saleInvoiceId: number,
-    saleInvoiceDate: Date,
+    saleInvoice: ISaleInvoice,
     override?: boolean
   ): Promise<void> {
-    // Gets the next inventory lot number.
-    const lotNumber = this.inventoryService.getNextLotNumber(tenantId);
-
-    // Loads the inventory items entries of the given sale invoice.
-    const inventoryEntries = await this.itemsEntriesService.getInventoryEntries(
+    await this.inventoryService.recordInventoryTransactionsFromItemsEntries(
       tenantId,
+      saleInvoice.id,
       'SaleInvoice',
-      saleInvoiceId
-    );
-    // Can't continue if there is no entries has inventory items in the invoice.
-    if (inventoryEntries.length <= 0) return;
-
-    // Inventory transactions.
-    const inventoryTranscations = this.inventoryService.transformItemEntriesToInventory(
-      inventoryEntries,
-      'SaleInvoice',
-      saleInvoiceId,
+      saleInvoice.invoiceDate,
       'OUT',
-      saleInvoiceDate,
-      lotNumber
-    );
-    // Records the inventory transactions of the given sale invoice.
-    await this.inventoryService.recordInventoryTransactions(
-      tenantId,
-      inventoryTranscations,
       override
-    );
-    // Increment and save the next lot number settings.
-    await this.inventoryService.incrementNextLotNumber(tenantId);
-
-    // Triggers `onInventoryTransactionsCreated` event.
-    await this.eventDispatcher.dispatch(
-      events.saleInvoice.onInventoryTransactionsCreated,
-      {
-        tenantId,
-        saleInvoiceId,
-      }
     );
   }
 
@@ -491,7 +460,7 @@ export default class SaleInvoicesService {
     await Promise.all([
       journal.deleteEntries(),
       journal.saveBalance(),
-      journal.saveEntries()
+      journal.saveEntries(),
     ]);
   }
 
@@ -505,24 +474,13 @@ export default class SaleInvoicesService {
     tenantId: number,
     saleInvoiceId: number
   ): Promise<void> {
-    const { inventoryTransactionRepository } = this.tenancy.repositories(
-      tenantId
-    );
-    // Retrieve the inventory transactions of the given sale invoice.
-    const oldInventoryTransactions = await inventoryTransactionRepository.find({
-      transactionId: saleInvoiceId,
-      transactionType: 'SaleInvoice',
-    });
     // Delete the inventory transaction of the given sale invoice.
-    await this.inventoryService.deleteInventoryTransactions(
+    const {
+      oldInventoryTransactions,
+    } = await this.inventoryService.deleteInventoryTransactions(
       tenantId,
       saleInvoiceId,
       'SaleInvoice'
-    );
-    // Triggers 'onInventoryTransactionsDeleted' event.
-    this.eventDispatcher.dispatch(
-      events.saleInvoice.onInventoryTransactionsDeleted,
-      { tenantId, saleInvoiceId, oldInventoryTransactions }
     );
   }
 
@@ -545,8 +503,9 @@ export default class SaleInvoicesService {
 
   /**
    * Retrieve sale invoice with associated entries.
-   * @async
-   * @param {Number} saleInvoiceId
+   * @param {Number} saleInvoiceId - 
+   * @param {ISystemUser} authorizedUser - 
+   * @return {Promise<ISaleInvoice>}
    */
   public async getSaleInvoice(
     tenantId: number,

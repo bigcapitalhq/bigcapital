@@ -8,13 +8,15 @@ import {
 import {
   IInventoryLotCost,
   IInventoryTransaction,
-  IItem,
+  TInventoryTransactionDirection,
   IItemEntry,
+  IItemEntryTransactionType,
 } from 'interfaces';
 import InventoryAverageCost from 'services/Inventory/InventoryAverageCost';
 import InventoryCostLotTracker from 'services/Inventory/InventoryCostLotTracker';
 import TenancyService from 'services/Tenancy/TenancyService';
 import events from 'subscribers/events';
+import ItemsEntriesService from 'services/Items/ItemsEntriesService';
 
 type TCostMethod = 'FIFO' | 'LIFO' | 'AVG';
 
@@ -26,22 +28,23 @@ export default class InventoryService {
   @EventDispatcher()
   eventDispatcher: EventDispatcherInterface;
 
+  @Inject()
+  itemsEntriesService: ItemsEntriesService;
+
   /**
    * Transforms the items entries to inventory transactions.
    */
   transformItemEntriesToInventory(
     itemEntries: IItemEntry[],
-    transactionType: string,
-    transactionId: number,
-    direction: 'IN' | 'OUT',
+    direction: TInventoryTransactionDirection,
     date: Date | string,
     lotNumber: number
   ) {
     return itemEntries.map((entry: IItemEntry) => ({
       ...pick(entry, ['itemId', 'quantity', 'rate']),
       lotNumber,
-      transactionType,
-      transactionId,
+      transactionType: entry.referenceType,
+      transactionId: entry.referenceId,
       direction,
       date,
       entryId: entry.id,
@@ -130,7 +133,6 @@ export default class InventoryService {
           tenantId,
         }
       );
-
       // Triggers `onComputeItemCostJobScheduled` event.
       await this.eventDispatcher.dispatch(
         events.inventory.onComputeItemCostJobScheduled,
@@ -157,10 +159,12 @@ export default class InventoryService {
   }
 
   /**
-   *
-   * @param {number} tenantId
-   * @param {IInventoryTransaction} inventoryEntry
-   * @param {boolean} deleteOld
+   * Writes the inventory transactiosn on the storage from the given 
+   * inventory transactions entries.
+   * 
+   * @param {number} tenantId - 
+   * @param {IInventoryTransaction} inventoryEntry -
+   * @param {boolean} deleteOld -
    */
   async recordInventoryTransaction(
     tenantId: number,
@@ -183,23 +187,103 @@ export default class InventoryService {
   }
 
   /**
+   * Records the inventory transactions from items entries that have (inventory) type.
+   *
+   * @param {number} tenantId
+   * @param {number} transactionId
+   * @param {string} transactionType
+   * @param {Date|string} transactionDate
+   * @param {boolean} override
+   */
+  async recordInventoryTransactionsFromItemsEntries(
+    tenantId: number,
+    transactionId: number,
+    transactionType: IItemEntryTransactionType,
+    transactionDate: Date | string,
+    transactionDirection: TInventoryTransactionDirection,
+    override: boolean = false
+  ): Promise<void> {
+    // Gets the next inventory lot number.
+    const lotNumber = this.getNextLotNumber(tenantId);
+
+    // Loads the inventory items entries of the given sale invoice.
+    const inventoryEntries = await this.itemsEntriesService.getInventoryEntries(
+      tenantId,
+      transactionType,
+      transactionId
+    );
+    // Can't continue if there is no entries has inventory items in the invoice.
+    if (inventoryEntries.length <= 0) {
+      return;
+    }
+    // Inventory transactions.
+    const inventoryTranscations = this.transformItemEntriesToInventory(
+      inventoryEntries,
+      transactionDirection,
+      transactionDate,
+      lotNumber
+    );
+    // Records the inventory transactions of the given sale invoice.
+    await this.recordInventoryTransactions(
+      tenantId,
+      inventoryTranscations,
+      override
+    );
+    // Increment and save the next lot number settings.
+    await this.incrementNextLotNumber(tenantId);
+
+    // Triggers `onInventoryTransactionsCreated` event.
+    this.eventDispatcher.dispatch(
+      events.inventory.onInventoryTransactionsCreated,
+      {
+        tenantId,
+        inventoryEntries,
+        transactionId,
+        transactionType,
+        transactionDate,
+        transactionDirection,
+        override,
+      }
+    );
+  }
+
+  /**
    * Deletes the given inventory transactions.
    * @param {number} tenantId - Tenant id.
    * @param {string} transactionType
    * @param {number} transactionId
-   * @return {Promise}
+   * @return {Promise<{
+ *    oldInventoryTransactions: IInventoryTransaction[]
+   * }>}
    */
   async deleteInventoryTransactions(
     tenantId: number,
     transactionId: number,
     transactionType: string
-  ): Promise<void> {
-    const { InventoryTransaction } = this.tenancy.models(tenantId);
+  ): Promise<{ oldInventoryTransactions: IInventoryTransaction[] }> {
+    const { inventoryTransactionRepository } = this.tenancy.repositories(tenantId);
 
-    await InventoryTransaction.query()
-      .where('transaction_type', transactionType)
-      .where('transaction_id', transactionId)
-      .delete();
+    // Retrieve the inventory transactions of the given sale invoice.
+    const oldInventoryTransactions = await inventoryTransactionRepository.find({
+      transactionId,
+      transactionType,
+    });
+    // Deletes the inventory transactions by the given transaction type and id.
+    await inventoryTransactionRepository.deleteBy({
+      transactionType,
+      transactionId,
+    });
+    // Triggers `onInventoryTransactionsDeleted` event.
+    this.eventDispatcher.dispatch(
+      events.inventory.onInventoryTransactionsDeleted,
+      {
+        tenantId,
+        oldInventoryTransactions,
+        transactionId,
+        transactionType,
+      }
+    );
+    return { oldInventoryTransactions };
   }
 
   /**

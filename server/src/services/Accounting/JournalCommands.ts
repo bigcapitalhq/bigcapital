@@ -1,6 +1,6 @@
 import { sumBy, chain } from 'lodash';
 import moment, { LongDateFormatKey } from 'moment';
-import { IBill, IManualJournalEntry, ISystemUser } from 'interfaces';
+import { IBill, IManualJournalEntry, ISaleReceipt, ISystemUser } from 'interfaces';
 import JournalPoster from './JournalPoster';
 import JournalEntry from './JournalEntry';
 import { AccountTransaction } from 'models';
@@ -410,6 +410,53 @@ export default class JournalCommands {
     this.journal.debit(receivableEntry);
 
     saleInvoice.entries.forEach(
+      (entry: IItemEntry & { item: IItem }, index: number) => {
+        const income: number = entry.quantity * entry.rate;
+
+        // XXX Credit - Income account.
+        const incomeEntry = new JournalEntry({
+          ...commonEntry,
+          credit: income,
+          account: entry.item.sellAccountId,
+          note: entry.description,
+          index: index + 2,
+        });
+        this.journal.credit(incomeEntry);
+      }
+    );
+  }
+
+  /**
+   * Writes the sale invoice income journal entries.
+   * -----
+   * - Deposit account -> Debit -> XXXX
+   *    - Income -> Credit -> XXXX
+   * 
+   * @param {ISaleInvoice} saleInvoice
+   * @param {number} receivableAccountsId
+   * @param {number} authorizedUserId
+   */
+  async saleReceiptIncomeEntries(
+    saleReceipt: ISaleReceipt & {
+      entries: IItemEntry & { item: IItem };
+    },
+  ): Promise<void> {
+    const commonEntry = {
+      referenceType: 'SaleReceipt',
+      referenceId: saleReceipt.id,
+      date: saleReceipt.receiptDate,
+      userId: saleReceipt.userId,
+    };
+    // XXX Debit - Deposit account.
+    const depositEntry = new JournalEntry({
+      ...commonEntry,
+      debit: saleReceipt.amount,
+      account: saleReceipt.depositAccountId,
+      index: 1,
+    });
+    this.journal.debit(depositEntry);
+
+    saleReceipt.entries.forEach(
       (entry: IItemEntry & { item: IItem }, index: number) => {
         const income: number = entry.quantity * entry.rate;
 

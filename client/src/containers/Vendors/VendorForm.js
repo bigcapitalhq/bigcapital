@@ -97,7 +97,6 @@ function VendorForm({
     }),
     [defaultInitialValues],
   );
-  console.log(isNewMode, 'Val');
   useEffect(() => {
     !isNewMode
       ? changePageTitle(formatMessage({ id: 'edit_vendor' }))

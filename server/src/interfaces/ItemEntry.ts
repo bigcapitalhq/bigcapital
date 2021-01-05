@@ -1,4 +1,5 @@
 
+export type IItemEntryTransactionType = 'SaleInvoice' | 'Bill' | 'SaleReceipt';
 
 export interface IItemEntry {
   id?: number,

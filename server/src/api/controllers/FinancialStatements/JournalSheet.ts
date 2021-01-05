@@ -1,5 +1,5 @@
 import { Inject, Service } from 'typedi';
-import { Request, Response, Router } from 'express';
+import { Request, Response, Router, NextFunction } from 'express';
 import { castArray } from 'lodash';
 import { query, oneOf } from 'express-validator';
 import JournalSheetService from 'services/FinancialStatements/JournalSheet/JournalSheetService';
@@ -55,7 +55,7 @@ export default class JournalSheetController extends BaseController {
    * @param {Request} req - 
    * @param {Response} res -
    */
-  async journal(req: Request, res: Response) {
+  async journal(req: Request, res: Response, next: NextFunction) {
     const { tenantId, settings } = req;
     let filter = this.matchedQueryData(req);
 
@@ -76,7 +76,7 @@ export default class JournalSheetController extends BaseController {
         query: this.transfromToResponse(query),
       });
     } catch (error) {
-      console.log(error);
+      next(error);
     }
   }
 }
