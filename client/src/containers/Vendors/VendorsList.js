@@ -128,7 +128,7 @@ function VendorsList({
   return (
     <DashboardInsider
       loading={fetchResourceViews.isFetching}
-      name={'vendors-list'}
+      name={'customers-list'}
     >
       <VendorActionsBar selectedRows={selectedRows} />
       <DashboardPageContent>
