@@ -13,7 +13,7 @@ export default abstract class AgingReport extends FinancialSheet{
    * @param {number} agingPeriodsFreq
    */
   agingRangePeriods(
-    asDay: string,
+    asDay: Date|string,
     agingDaysBefore: number,
     agingPeriodsFreq: number
   ): IAgingPeriod[] {

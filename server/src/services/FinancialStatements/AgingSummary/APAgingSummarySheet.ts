@@ -20,6 +20,13 @@ export default class APAgingSummarySheet extends AgingSummaryReport {
   readonly unpaidInvoicesByContactId: Dictionary<IBill[]>;
   readonly agingPeriods: IAgingPeriod[];
 
+  /**
+   * Constructor method.
+   * @param {number} tenantId - Tenant id.
+   * @param {IAPAgingSummaryQuery} query - Report query.
+   * @param {IVendor[]} vendors - Unpaid bills.
+   * @param {string} baseCurrency - Base currency of the organization.
+   */
   constructor(
     tenantId: number,
     query: IAPAgingSummaryQuery,
@@ -44,16 +51,14 @@ export default class APAgingSummarySheet extends AgingSummaryReport {
       this.query.agingDaysBefore,
       this.query.agingPeriods
     );
-    this.initContactsAgingPeriods();
-    this.calcUnpaidInvoicesAgingPeriods();
   }
 
   /**
    * Retrieve the vendor section data.
    * @param  {IVendor} vendor
-   * @return {IAPAgingSummaryData}
+   * @return {IAPAgingSummaryVendor}
    */
-  protected vendorData(vendor: IVendor): IAPAgingSummaryVendor {
+  private vendorData(vendor: IVendor): IAPAgingSummaryVendor {
     const agingPeriods = this.getContactAgingPeriods(vendor.id);
     const amount = sumBy(agingPeriods, 'total');
 
@@ -68,8 +73,8 @@ export default class APAgingSummarySheet extends AgingSummaryReport {
    * Retrieve vendors aging periods.
    * @return {IAPAgingSummaryVendor[]}
    */
-  private vendorsWalker(): IAPAgingSummaryVendor[] {
-    return this.contacts
+  private vendorsWalker(vendors: IVendor[]): IAPAgingSummaryVendor[] {
+    return vendors
       .map((vendor) => this.vendorData(vendor))
       .filter(
         (vendor: IAPAgingSummaryVendor) =>
@@ -82,9 +87,12 @@ export default class APAgingSummarySheet extends AgingSummaryReport {
    * @return {IAPAgingSummaryData}
    */
   public reportData(): IAPAgingSummaryData {
+    const vendorsAgingPeriods = this.vendorsWalker(this.contacts);
+    const totalAgingPeriods = this.getTotalAgingPeriods(vendorsAgingPeriods);
+
     return {
-      vendors: this.vendorsWalker(),
-      total: this.getTotalAgingPeriods(),
+      vendors: vendorsAgingPeriods,
+      total: totalAgingPeriods,
     }
   }
 

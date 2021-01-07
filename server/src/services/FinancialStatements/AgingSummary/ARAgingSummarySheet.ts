@@ -52,8 +52,6 @@ export default class ARAgingSummarySheet extends AgingSummaryReport {
       this.query.agingDaysBefore,
       this.query.agingPeriods
     );
-    this.initContactsAgingPeriods();
-    this.calcUnpaidInvoicesAgingPeriods();
   }
 
   /**
@@ -77,8 +75,8 @@ export default class ARAgingSummarySheet extends AgingSummaryReport {
    * @param {ICustomer[]} customers
    * @return {IARAgingSummaryCustomer[]}
    */
-  private customersWalker(): IARAgingSummaryCustomer[] {
-    return this.contacts
+  private customersWalker(customers: ICustomer[]): IARAgingSummaryCustomer[] {
+    return customers
       .map((customer) => this.customerData(customer))
       .filter(
         (customer: IARAgingSummaryCustomer) =>
@@ -91,9 +89,12 @@ export default class ARAgingSummarySheet extends AgingSummaryReport {
    * @return {IARAgingSummaryData}
    */
   public reportData(): IARAgingSummaryData {
+    const customersAgingPeriods = this.customersWalker(this.contacts);
+    const totalAgingPeriods = this.getTotalAgingPeriods(customersAgingPeriods);
+
     return {
-      customers: this.customersWalker(),
-      total: this.getTotalAgingPeriods(),
+      customers: customersAgingPeriods,
+      total: totalAgingPeriods,
     };
   }
 
