@@ -14,13 +14,13 @@ import BalanceSheetStructure from 'data/BalanceSheetStructure';
 import FinancialSheet from '../FinancialSheet';
 
 export default class BalanceSheetStatement extends FinancialSheet {
-  query: IBalanceSheetQuery;
-  tenantId: number;
-  accounts: IAccount & { type: IAccountType }[];
-  journalFinancial: IJournalPoster;
-  comparatorDateType: string;
-  dateRangeSet: string[];
-  baseCurrency: string;
+  readonly query: IBalanceSheetQuery;
+  readonly tenantId: number;
+  readonly accounts: IAccount & { type: IAccountType }[];
+  readonly journalFinancial: IJournalPoster;
+  readonly comparatorDateType: string;
+  readonly dateRangeSet: string[];
+  readonly baseCurrency: string;
 
   /**
    * Constructor method.

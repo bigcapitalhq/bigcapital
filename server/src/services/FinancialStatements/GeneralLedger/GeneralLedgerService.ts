@@ -1,10 +1,10 @@
-import { Service, Inject } from "typedi";
+import { Service, Inject } from 'typedi';
 import moment from 'moment';
-import { ServiceError } from "exceptions";
+import { ServiceError } from 'exceptions';
 import { difference } from 'lodash';
 import { IGeneralLedgerSheetQuery } from 'interfaces';
 import TenancyService from 'services/Tenancy/TenancyService';
-import Journal from "services/Accounting/JournalPoster";
+import Journal from 'services/Accounting/JournalPoster';
 import GeneralLedgerSheet from 'services/FinancialStatements/GeneralLedger/GeneralLedger';
 
 const ERRORS = {
@@ -39,8 +39,8 @@ export default class GeneralLedgerService {
 
   /**
    * Validates accounts existance on the storage.
-   * @param {number} tenantId 
-   * @param {number[]} accountsIds 
+   * @param {number} tenantId
+   * @param {number[]} accountsIds
    */
   async validateAccountsExistance(tenantId: number, accountsIds: number[]) {
     const { Account } = this.tenancy.models(tenantId);
@@ -49,35 +49,42 @@ export default class GeneralLedgerService {
     const storedAccountsIds = storedAccounts.map((a) => a.id);
 
     if (difference(accountsIds, storedAccountsIds).length > 0) {
-      throw new ServiceError(ERRORS.ACCOUNTS_NOT_FOUND)
+      throw new ServiceError(ERRORS.ACCOUNTS_NOT_FOUND);
     }
   }
 
   /**
    * Retrieve general ledger report statement.
    * ----------
-   * @param {number} tenantId 
-   * @param {IGeneralLedgerSheetQuery} query 
+   * @param {number} tenantId
+   * @param {IGeneralLedgerSheetQuery} query
    * @return {IGeneralLedgerStatement}
    */
-  async generalLedger(tenantId: number, query: IGeneralLedgerSheetQuery):
-    Promise<{
-      data: any,
-      query: IGeneralLedgerSheetQuery,
-    }> {
+  async generalLedger(
+    tenantId: number,
+    query: IGeneralLedgerSheetQuery
+  ): Promise<{
+    data: any;
+    query: IGeneralLedgerSheetQuery;
+  }> {
     const {
       accountRepository,
       transactionsRepository,
     } = this.tenancy.repositories(tenantId);
+    const settings = this.tenancy.settings(tenantId);
 
     const filter = {
       ...this.defaultQuery,
       ...query,
     };
-    this.logger.info('[general_ledger] trying to calculate the report.', { tenantId, filter })
-
-    const settings = this.tenancy.settings(tenantId);
-    const baseCurrency = settings.get({ group: 'organization', key: 'base_currency' });
+    this.logger.info('[general_ledger] trying to calculate the report.', {
+      tenantId,
+      filter,
+    });
+    const baseCurrency = settings.get({
+      group: 'organization',
+      key: 'base_currency',
+    });
 
     // Retrieve all accounts from the storage.
     const accounts = await accountRepository.all('type');
@@ -98,12 +105,22 @@ export default class GeneralLedgerService {
       toDate: filter.toDate,
       sumationCreditDebit: true,
     });
-
     // Transform array transactions to journal collection.
-    const transactionsJournal = Journal.fromTransactions(transactions, tenantId, accountsGraph);
-    const openingTransJournal = Journal.fromTransactions(openingBalanceTrans, tenantId, accountsGraph);
-    const closingTransJournal = Journal.fromTransactions(closingBalanceTrans, tenantId, accountsGraph);
-
+    const transactionsJournal = Journal.fromTransactions(
+      transactions,
+      tenantId,
+      accountsGraph
+    );
+    const openingTransJournal = Journal.fromTransactions(
+      openingBalanceTrans,
+      tenantId,
+      accountsGraph
+    );
+    const closingTransJournal = Journal.fromTransactions(
+      closingBalanceTrans,
+      tenantId,
+      accountsGraph
+    );
     // General ledger report instance.
     const generalLedgerInstance = new GeneralLedgerSheet(
       tenantId,
@@ -120,6 +137,6 @@ export default class GeneralLedgerService {
     return {
       data: reportData,
       query: filter,
-    }
+    };
   }
 }

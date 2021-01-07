@@ -1,154 +1,107 @@
+import { groupBy, sumBy, defaultTo } from 'lodash';
 import {
   ICustomer,
   IARAgingSummaryQuery,
-  ARAgingSummaryCustomer,
-  IAgingPeriodClosingBalance,
+  IARAgingSummaryCustomer,
   IAgingPeriodTotal,
-  IJournalPoster,
-  IAccount,
-  IAgingPeriod
-} from "interfaces";
+  IAgingPeriod,
+  ISaleInvoice,
+  IARAgingSummaryData,
+  IARAgingSummaryColumns,
+} from 'interfaces';
 import AgingSummaryReport from './AgingSummary';
-
+import { Dictionary } from 'tsyringe/dist/typings/types';
 
 export default class ARAgingSummarySheet extends AgingSummaryReport {
-  tenantId: number;
-  query: IARAgingSummaryQuery;
-  customers: ICustomer[];
-  journal: IJournalPoster;
-  ARAccount: IAccount;
-  agingPeriods: IAgingPeriod[];
-  baseCurrency: string;
+  readonly tenantId: number;
+  readonly query: IARAgingSummaryQuery;
+  readonly contacts: ICustomer[];
+  readonly agingPeriods: IAgingPeriod[];
+  readonly baseCurrency: string;
+  readonly dueInvoices: ISaleInvoice[];
+  readonly unpaidInvoicesByContactId: Dictionary<ISaleInvoice[]>;
 
   /**
    * Constructor method.
-   * @param {number} tenantId 
-   * @param {IARAgingSummaryQuery} query 
-   * @param {ICustomer[]} customers 
-   * @param {IJournalPoster} journal 
+   * @param {number} tenantId
+   * @param {IARAgingSummaryQuery} query
+   * @param {ICustomer[]} customers
+   * @param {IJournalPoster} journal
    */
   constructor(
     tenantId: number,
     query: IARAgingSummaryQuery,
     customers: ICustomer[],
-    journal: IJournalPoster,
-    ARAccount: IAccount,
-    baseCurrency: string,
+    unpaidSaleInvoices: ISaleInvoice[],
+    baseCurrency: string
   ) {
     super();
 
     this.tenantId = tenantId;
-    this.customers = customers;
+    this.contacts = customers;
     this.query = query;
-    this.numberFormat = this.query.numberFormat;
-    this.journal = journal;
-    this.ARAccount = ARAccount;
     this.baseCurrency = baseCurrency;
+    this.numberFormat = this.query.numberFormat;
+    this.unpaidInvoicesByContactId = groupBy(unpaidSaleInvoices, 'customerId');
+    this.dueInvoices = unpaidSaleInvoices;
+    this.periodsByContactId = {};
 
-    this.initAgingPeriod();
-  }
-
-  /**
-   * Initializes the aging periods.
-   */
-  private initAgingPeriod() {
+    // Initializes the aging periods.
     this.agingPeriods = this.agingRangePeriods(
       this.query.asDate,
       this.query.agingDaysBefore,
       this.query.agingPeriods
     );
-  }
-
-  /**
-   * 
-   * @param {ICustomer} customer 
-   * @param {IAgingPeriod} agingPeriod 
-   */
-  private agingPeriodCloser(
-    customer: ICustomer,
-    agingPeriod: IAgingPeriod,
-  ): IAgingPeriodClosingBalance {
-    // Calculate the trial balance between the given date period.
-    const agingTrialBalance = this.journal.getContactTrialBalance(
-      this.ARAccount.id,
-      customer.id,
-      'customer',
-      agingPeriod.fromPeriod,
-    );
-    return {
-      ...agingPeriod,
-      closingBalance: agingTrialBalance.debit,
-    };
-  }
-
-  /**
-   * 
-   * @param {ICustomer} customer 
-   */
-  private getCustomerAging(customer: ICustomer, totalReceivable: number): IAgingPeriodTotal[] {
-    const agingClosingBalance = this.agingPeriods
-      .map((agingPeriod: IAgingPeriod) => this.agingPeriodCloser(customer, agingPeriod));
-
-    const aging = this.contactAgingBalance(
-      agingClosingBalance,
-      totalReceivable
-    );
-    return aging;
+    this.initContactsAgingPeriods();
+    this.calcUnpaidInvoicesAgingPeriods();
   }
 
   /**
    * Mapping aging customer.
    * @param {ICustomer} customer -
-   * @return {ARAgingSummaryCustomer[]}
+   * @return {IARAgingSummaryCustomer[]}
    */
-  private customerMapper(customer: ICustomer): ARAgingSummaryCustomer {
-    // Calculate the trial balance total of the given customer.
-    const trialBalance = this.journal.getContactTrialBalance(
-      this.ARAccount.id,
-      customer.id,
-      'customer'
-    );
-    const amount = trialBalance.balance;
-    const formattedAmount = this.formatNumber(amount);
-    const currencyCode = this.baseCurrency;
+  private customerData(customer: ICustomer): IARAgingSummaryCustomer {
+    const agingPeriods = this.getContactAgingPeriods(customer.id);
+    const amount = sumBy(agingPeriods, 'total');
 
     return {
       customerName: customer.displayName,
-      aging: this.getCustomerAging(customer, trialBalance.balance),
-      total: {
-        amount,
-        formattedAmount,
-        currencyCode,
-      },
+      aging: agingPeriods,
+      total: this.formatTotalAmount(amount),
     };
   }
 
   /**
-   * Retrieve customers walker.
-   * @param {ICustomer[]} customers 
-   * @return {ARAgingSummaryCustomer[]}
+   * Retrieve customers report.
+   * @param {ICustomer[]} customers
+   * @return {IARAgingSummaryCustomer[]}
    */
-  private customersWalker(customers: ICustomer[]): ARAgingSummaryCustomer[] {
-    return customers
-      .map((customer: ICustomer) => this.customerMapper(customer))
-
-      // Filter customers that have zero total amount when `noneZero` is on.
-      .filter((customer: ARAgingSummaryCustomer) =>
-        !(customer.total.amount === 0 && this.query.noneZero),
+  private customersWalker(): IARAgingSummaryCustomer[] {
+    return this.contacts
+      .map((customer) => this.customerData(customer))
+      .filter(
+        (customer: IARAgingSummaryCustomer) =>
+          !(customer.total.total === 0 && this.query.noneZero)
       );
   }
 
   /**
-   * Retrieve AR. aging summary report data.
+   * Retrieve A/R aging summary report data.
+   * @return {IARAgingSummaryData}
    */
-  public reportData() {
-    return this.customersWalker(this.customers);
+  public reportData(): IARAgingSummaryData {
+    return {
+      customers: this.customersWalker(),
+      total: this.getTotalAgingPeriods(),
+    };
   }
 
   /**
    * Retrieve AR aging summary report columns.
+   * @return {IARAgingSummaryColumns}
    */
-  reportColumns() {
-    return []
+  public reportColumns(): IARAgingSummaryColumns {
+    return this.agingPeriods;
   }
 }

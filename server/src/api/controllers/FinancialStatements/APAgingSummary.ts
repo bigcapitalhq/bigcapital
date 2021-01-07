@@ -1,13 +1,14 @@
-import { Service, Inject } from 'typedi';
 import { Router, Request, Response } from 'express';
-import { query, oneOf } from 'express-validator';
-import BaseController from '../BaseController';
-import ARAgingSummaryService from 'services/FinancialStatements/AgingSummary/ARAgingSummaryService';
+import { query } from 'express-validator';
+import { Inject } from 'typedi';
+import BaseController from 'api/controllers/BaseController';
+import asyncMiddleware from 'api/middleware/asyncMiddleware';
+import APAgingSummaryReportService from 'services/FinancialStatements/AgingSummary/APAgingSummaryService';
+import { findPhoneNumbersInText } from 'libphonenumber-js';
 
-@Service()
-export default class ARAgingSummaryReportController extends BaseController {
+export default class APAgingSummaryReportController extends BaseController {
   @Inject()
-  ARAgingSummaryService: ARAgingSummaryService;
+  APAgingSummaryService: APAgingSummaryReportService;
 
   /**
    * Router constructor.
@@ -18,37 +19,30 @@ export default class ARAgingSummaryReportController extends BaseController {
     router.get(
       '/',
       this.validationSchema,
-      this.validationResult,
-      this.asyncMiddleware(this.receivableAgingSummary.bind(this))
+      asyncMiddleware(this.payableAgingSummary.bind(this))
     );
     return router;
   }
 
   /**
-   * Receivable aging summary validation roles.
+   * Validation schema.
    */
   get validationSchema() {
     return [
       query('as_date').optional().isISO8601(),
-      query('aging_days_before').optional().isInt({ max: 500 }).toInt(),
-      query('aging_periods').optional().isInt({ max: 12 }).toInt(),
+      query('aging_days_before').optional().isNumeric().toInt(),
+      query('aging_periods').optional().isNumeric().toInt(),
       query('number_format.no_cents').optional().isBoolean().toBoolean(),
       query('number_format.1000_divide').optional().isBoolean().toBoolean(),
-      oneOf(
-        [
-          query('customer_ids').optional().isArray({ min: 1 }),
-          query('customer_ids.*').isNumeric().toInt(),
-        ],
-        [query('customer_ids').optional().isNumeric().toInt()]
-      ),
+      query('vendors_ids.*').isNumeric().toInt(),
       query('none_zero').optional().isBoolean().toBoolean(),
     ];
   }
-
+ 
   /**
-   * Retrieve receivable aging summary report.
+   * Retrieve payable aging summary report.
    */
-  async receivableAgingSummary(req: Request, res: Response) {
+  async payableAgingSummary(req: Request, res: Response, next: NextFunction) {
     const { tenantId, settings } = req;
     const filter = this.matchedQueryData(req);
 
@@ -66,7 +60,7 @@ export default class ARAgingSummaryReportController extends BaseController {
         data,
         columns,
         query,
-      } = await this.ARAgingSummaryService.ARAgingSummary(tenantId, filter);
+      } = await this.APAgingSummaryService.APAgingSummary(tenantId, filter);
 
       return res.status(200).send({
         organization_name: organizationName,
@@ -76,7 +70,7 @@ export default class ARAgingSummaryReportController extends BaseController {
         query: this.transfromToResponse(query),
       });
     } catch (error) {
-      console.log(error);
+      next(error);
     }
   }
 }
