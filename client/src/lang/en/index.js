@@ -635,7 +635,7 @@ export default {
     'The invoice #{number} has been successfully edited.',
   the_invocie_has_been_successfully_created:
     'The invoice #{number} has been successfully created.',
-  the_invocie_has_been_successfully_deleted:
+  the_invoice_has_been_successfully_deleted:
     'The invoice has been successfully deleted.',
   once_delete_this_invoice_you_will_able_to_restore_it: `Once you delete this invoice, you won\'t be able to restore it later. Are you sure you want to delete this invoice?`,
   receipt_list: 'Receipt List',

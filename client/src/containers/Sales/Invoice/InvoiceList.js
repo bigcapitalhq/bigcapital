@@ -97,9 +97,10 @@ function InvoiceList({
   const handleConfirmInvoiceDelete = useCallback(() => {
     requestDeleteInvoice(deleteInvoice.id)
       .then(() => {
+        setDeleteInvoice(false);
         AppToaster.show({
           message: formatMessage({
-            id: 'the_invocie_has_been_successfully_deleted',
+            id: 'the_invoice_has_been_successfully_deleted',
           }),
           intent: Intent.SUCCESS,
         });
@@ -109,7 +110,7 @@ function InvoiceList({
         setDeleteInvoice(false);
       });
   }, [deleteInvoice, requestDeleteInvoice, formatMessage]);
-
+  
   // Handle cancel/confirm invoice deliver.
   const handleDeliverInvoice = useCallback((invoice) => {
     setDeliverInvoice(invoice);
