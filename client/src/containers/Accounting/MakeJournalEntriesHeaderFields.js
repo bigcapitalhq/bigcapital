@@ -48,6 +48,7 @@ function MakeJournalEntriesHeader({
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
+      {/*------------ Posting date -----------*/}
       <FastField name={'date'}>
         {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
@@ -77,6 +78,7 @@ function MakeJournalEntriesHeader({
         )}
       </FastField>
 
+      {/*------------ Journal number -----------*/}
       <FastField name={'journal_number'}>
         {({ form, field, meta: { error, touched } }) => (
           <FormGroup
@@ -115,6 +117,7 @@ function MakeJournalEntriesHeader({
         )}
       </FastField>
 
+      {/*------------ Reference -----------*/}
       <FastField name={'reference'}>
         {({ form, field, meta: { error, touched } }) => (
           <FormGroup
@@ -136,14 +139,12 @@ function MakeJournalEntriesHeader({
         )}
       </FastField>
 
+      {/*------------ Journal type  -----------*/}
       <FastField name={'journal_type'}>
         {({ form, field, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'journal_type'} />}
-            className={classNames(
-              'form-group--account-type',
-              CLASSES.FILL,
-            )}
+            className={classNames('form-group--account-type', CLASSES.FILL)}
             inline={true}
           >
             <InputGroup
@@ -155,14 +156,12 @@ function MakeJournalEntriesHeader({
         )}
       </FastField>
 
-      <FastField name={'currency'}>
+      {/*------------ Currency  -----------*/}
+      <FastField name={'currency_code'}>
         {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'currency'} />}
-            className={classNames(
-              'form-group--currency',
-              CLASSES.FILL,
-            )}
+            className={classNames('form-group--currency', CLASSES.FILL)}
             inline={true}
           >
             <CurrencySelectList
