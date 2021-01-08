@@ -35,6 +35,7 @@ import withViewDetails from 'containers/Views/withViewDetails';
 import withInvoices from './withInvoices';
 import withInvoiceActions from './withInvoiceActions';
 import withCurrentView from 'containers/Views/withCurrentView';
+import withSettings from 'containers/Settings/withSettings';
 
 // Invoices datatable.
 function InvoicesDataTable({
@@ -46,6 +47,9 @@ function InvoicesDataTable({
 
   // #withInvoicesActions
   addInvoiceTableQueries,
+
+  // #withSettings
+  baseCurrency,
 
   // #OwnProps
   onEditInvoice,
@@ -141,7 +145,7 @@ function InvoicesDataTable({
       {
         id: 'balance',
         Header: formatMessage({ id: 'balance' }),
-        accessor: (r) => <Money amount={r.balance} currency={'USD'} />,
+        accessor: (r) => <Money amount={r.balance} currency={baseCurrency} />,
         width: 140,
         className: 'balance',
       },
@@ -263,5 +267,8 @@ export default compose(
       invoicesCurrentViewId,
     }),
   ),
+  withSettings(({ organizationSettings }) => ({
+    baseCurrency: organizationSettings?.baseCurrency,
+  })),
   withViewDetails(),
 )(InvoicesDataTable);

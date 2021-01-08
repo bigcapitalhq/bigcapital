@@ -23,6 +23,7 @@ import PaymentMadesEmptyStatus from './PaymentMadesEmptyStatus';
 import withPaymentMade from './withPaymentMade';
 import withPaymentMadeActions from './withPaymentMadeActions';
 import withCurrentView from 'containers/Views/withCurrentView';
+import withSettings from 'containers/Settings/withSettings';
 
 /**
  * Payment made datatable transactions.
@@ -37,6 +38,9 @@ function PaymentMadeDataTable({
 
   // #withPaymentMadeActions
   addPaymentMadesTableQueries,
+
+  // #withSettings
+  baseCurrency,
 
   // #ownProps
   onEditPaymentMade,
@@ -110,7 +114,8 @@ function PaymentMadeDataTable({
       {
         id: 'payment_number',
         Header: formatMessage({ id: 'payment_number' }),
-        accessor: (row) => (row.payment_number ? `#${row.payment_number}` : null),
+        accessor: (row) =>
+          row.payment_number ? `#${row.payment_number}` : null,
         width: 140,
         className: 'payment_number',
       },
@@ -124,7 +129,7 @@ function PaymentMadeDataTable({
       {
         id: 'amount',
         Header: formatMessage({ id: 'amount' }),
-        accessor: (r) => <Money amount={r.amount} currency={'USD'} />,
+        accessor: (r) => <Money amount={r.amount} currency={baseCurrency} />,
         width: 140,
         className: 'amount',
       },
@@ -238,4 +243,7 @@ export default compose(
       paymentMadesCurrentViewId,
     }),
   ),
+  withSettings(({ organizationSettings }) => ({
+    baseCurrency: organizationSettings?.baseCurrency,
+  })),
 )(PaymentMadeDataTable);

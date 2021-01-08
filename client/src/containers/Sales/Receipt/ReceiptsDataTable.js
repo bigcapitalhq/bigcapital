@@ -34,6 +34,7 @@ import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 
 import withReceipts from './withReceipts';
 import withReceiptActions from './withReceiptActions';
+import withSettings from 'containers/Settings/withSettings';
 
 function ReceiptsDataTable({
   // #withReceipts
@@ -45,6 +46,9 @@ function ReceiptsDataTable({
 
   // #withReceiptsActions
   addReceiptsTableQueries,
+
+  // #withSettings
+  baseCurrency,
 
   // #ownProps
   loading,
@@ -138,17 +142,10 @@ function ReceiptsDataTable({
         width: 140,
         className: 'deposit_account',
       },
-      // {
-      //   id: 'send_to_email',
-      //   Header: formatMessage({ id: 'email' }),
-      //   accessor: 'send_to_email',
-      //   width: 140,
-      //   className: 'send_to_email',
-      // },
       {
         id: 'amount',
         Header: formatMessage({ id: 'amount' }),
-        accessor: (r) => <Money amount={r.amount} currency={'USD'} />,
+        accessor: (r) => <Money amount={r.amount} currency={baseCurrency} />,
 
         width: 140,
         className: 'amount',
@@ -287,4 +284,7 @@ export default compose(
       receiptsCurrentViewId,
     }),
   ),
+  withSettings(({ organizationSettings }) => ({
+    baseCurrency: organizationSettings?.baseCurrency,
+  })),
 )(ReceiptsDataTable);

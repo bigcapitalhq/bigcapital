@@ -28,6 +28,7 @@ import withViewDetails from 'containers/Views/withViewDetails';
 import withPaymentReceives from './withPaymentReceives';
 import withPaymentReceivesActions from './withPaymentReceivesActions';
 import withCurrentView from 'containers/Views/withCurrentView';
+import withSettings from 'containers/Settings/withSettings';
 
 function PaymentReceivesDataTable({
   // #withPaymentReceives
@@ -40,6 +41,9 @@ function PaymentReceivesDataTable({
   // #withPaymentReceivesActions
   addPaymentReceivesTableQueries,
 
+  // #withSettings
+  baseCurrency,
+  
   // #OwnProps
   onEditPaymentReceive,
   onDeletePaymentReceive,
@@ -146,7 +150,7 @@ function PaymentReceivesDataTable({
       {
         id: 'amount',
         Header: formatMessage({ id: 'amount' }),
-        accessor: (r) => <Money amount={r.amount} currency={'USD'} />,
+        accessor: (r) => <Money amount={r.amount} currency={baseCurrency} />,
         width: 140,
         className: 'amount',
       },
@@ -186,40 +190,40 @@ function PaymentReceivesDataTable({
   const showEmptyStatus = [
     paymentReceivesCurrentViewId === -1,
     PaymentReceivesCurrentPage.length === 0,
-  ].every(condition => condition === true); 
+  ].every((condition) => condition === true);
 
   return (
     <div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>
-    <LoadingIndicator
-      loading={paymentReceivesLoading && !isLoaded}
-      mount={false}
-    >
-      <Choose>
-        <Choose.When condition={showEmptyStatus}>
-          <PaymentReceivesEmptyStatus />
-        </Choose.When>
+      <LoadingIndicator
+        loading={paymentReceivesLoading && !isLoaded}
+        mount={false}
+      >
+        <Choose>
+          <Choose.When condition={showEmptyStatus}>
+            <PaymentReceivesEmptyStatus />
+          </Choose.When>
 
-        <Choose.Otherwise>
-          <DataTable
-            columns={columns}
-            data={PaymentReceivesCurrentPage}
-            onFetchData={handleDataTableFetchData}
-            manualSortBy={true}
-            selectionColumn={true}
-            noInitialFetch={true}
-            sticky={true}
-            onSelectedRowsChange={handleSelectedRowsChange}
-            rowContextMenu={onRowContextMenu}
-            pagination={true}
-            autoResetSortBy={false}
-            autoResetPage={false}
-            pagesCount={paymentReceivesPageination.pagesCount}
-            initialPageSize={paymentReceivesTableQuery.page_size}
-            initialPageIndex={paymentReceivesTableQuery.page - 1}
-          />
-        </Choose.Otherwise>
-      </Choose>
-    </LoadingIndicator>
+          <Choose.Otherwise>
+            <DataTable
+              columns={columns}
+              data={PaymentReceivesCurrentPage}
+              onFetchData={handleDataTableFetchData}
+              manualSortBy={true}
+              selectionColumn={true}
+              noInitialFetch={true}
+              sticky={true}
+              onSelectedRowsChange={handleSelectedRowsChange}
+              rowContextMenu={onRowContextMenu}
+              pagination={true}
+              autoResetSortBy={false}
+              autoResetPage={false}
+              pagesCount={paymentReceivesPageination.pagesCount}
+              initialPageSize={paymentReceivesTableQuery.page_size}
+              initialPageIndex={paymentReceivesTableQuery.page - 1}
+            />
+          </Choose.Otherwise>
+        </Choose>
+      </LoadingIndicator>
     </div>
   );
 }
@@ -245,5 +249,8 @@ export default compose(
       paymentReceivesCurrentViewId,
     }),
   ),
+  withSettings(({ organizationSettings }) => ({
+    baseCurrency: organizationSettings?.baseCurrency,
+  })),
   withViewDetails(),
 )(PaymentReceivesDataTable);

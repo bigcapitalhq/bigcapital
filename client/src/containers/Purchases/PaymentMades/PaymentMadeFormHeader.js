@@ -170,7 +170,7 @@ function PaymentMadeFormHeader({
               className={'receive-full-amount'}
             >
               Receive full amount (
-              <Money amount={payableFullAmount} currency={'USD'} />)
+              <Money amount={payableFullAmount} currency={baseCurrency} />)
             </a>
           </FormGroup>
 
@@ -250,7 +250,7 @@ function PaymentMadeFormHeader({
           <div class="big-amount">
             <span class="big-amount__label">Amount Received</span>
             <h1 class="big-amount__number">
-              <Money amount={amountPaid} currency={'USD'} />
+              <Money amount={amountPaid} currency={baseCurrency} />
             </h1>
           </div>
         </div>
