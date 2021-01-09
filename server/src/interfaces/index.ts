@@ -39,3 +39,4 @@ export * from './AgingReport';
 export * from './ARAgingSummaryReport';
 export * from './APAgingSummaryReport';
 export * from './Mailable';
+export * from './InventoryAdjustment';

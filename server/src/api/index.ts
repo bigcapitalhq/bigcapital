@@ -37,6 +37,7 @@ import Media from 'api/controllers/Media';
 import Ping from 'api/controllers/Ping';
 import Subscription from 'api/controllers/Subscription';
 import Licenses from 'api/controllers/Subscription/Licenses';
+import InventoryAdjustments from 'api/controllers/Inventory/InventoryAdjustments';
 
 export default () => {
   const app = Router();
@@ -99,6 +100,7 @@ export default () => {
   dashboard.use('/resources', Container.get(Resources).router());
   dashboard.use('/exchange_rates', Container.get(ExchangeRates).router());
   dashboard.use('/media', Container.get(Media).router());
+  dashboard.use('/inventory_adjustments', Container.get(InventoryAdjustments).router());
 
   app.use('/', dashboard);
 

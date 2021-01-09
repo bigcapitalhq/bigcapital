@@ -191,5 +191,11 @@ export default {
     onComputeItemCostJobScheduled: 'onComputeItemCostJobScheduled',
     onComputeItemCostJobStarted: 'onComputeItemCostJobStarted',
     onComputeItemCostJobCompleted: 'onComputeItemCostJobCompleted'
+  },
+
+  inventoryAdjustment: {
+    onCreated: 'onInventoryAdjustmentCreated',
+    onQuickCreated: 'onInventoryAdjustmentQuickCreated',
+    onDeleted: 'onInventoryAdjustmentDeleted',
   }
 }
