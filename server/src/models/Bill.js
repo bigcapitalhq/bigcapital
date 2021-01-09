@@ -49,6 +49,12 @@ export default class Bill extends TenantModel {
         query.where('due_date', '<', moment().format('YYYY-MM-DD'));
       },
       /**
+       * Filters the not overdue invoices.
+       */
+      notOverdue(query, asDate = moment().format('YYYY-MM-DD')) {
+        query.where('due_date', '>=', asDate);
+      },
+      /**
        * Filters the partially paid bills.
        */
       partiallyPaid(query) {
@@ -61,7 +67,13 @@ export default class Bill extends TenantModel {
       paid(query) {
         query.where(raw('`PAYMENT_AMOUNT` = `AMOUNT`'));
       },
-    }
+      /**
+       * Filters the bills from the given date.
+       */
+      fromDate(query, fromDate) {
+        query.where('bill_date', '<=', fromDate)
+      }
+    };
   }
 
   /**
@@ -71,7 +83,7 @@ export default class Bill extends TenantModel {
     return ['createdAt', 'updatedAt'];
   }
 
-    /**
+  /**
    * Virtual attributes.
    */
   static get virtualAttributes() {
@@ -117,7 +129,7 @@ export default class Bill extends TenantModel {
    */
   get isFullyPaid() {
     return this.dueAmount === 0;
-  } 
+  }
 
   /**
    * Detarmines whether the bill paid fully or partially.
@@ -133,7 +145,9 @@ export default class Bill extends TenantModel {
    */
   get remainingDays() {
     // Can't continue in case due date not defined.
-    if (!this.dueDate) { return null; }
+    if (!this.dueDate) {
+      return null;
+    }
 
     const date = moment();
     const dueDate = moment(this.dueDate);
@@ -146,13 +160,7 @@ export default class Bill extends TenantModel {
    * @return {number|null}
    */
   get overdueDays() {
-    // Can't continue in case due date not defined.
-    if (!this.dueDate) { return null; }
-
-    const date = moment();
-    const dueDate = moment(this.dueDate);
-
-    return Math.max(date.diff(dueDate, 'days'), 0);
+    return this.getOverdueDays();
   }
 
   /**
@@ -161,6 +169,17 @@ export default class Bill extends TenantModel {
    */
   get isOverdue() {
     return this.overdueDays > 0;
+  }
+
+  getOverdueDays(asDate = moment().format('YYYY-MM-DD')) {
+    // Can't continue in case due date not defined.
+    if (!this.dueDate) {
+      return null;
+    }
+    const date = moment(asDate);
+    const dueDate = moment(this.dueDate);
+
+    return Math.max(date.diff(dueDate, 'days'), 0);
   }
 
   /**
@@ -180,7 +199,7 @@ export default class Bill extends TenantModel {
         },
         filter(query) {
           query.where('contact_service', 'vendor');
-        }
+        },
       },
 
       entries: {
@@ -199,26 +218,22 @@ export default class Bill extends TenantModel {
 
   /**
    * Retrieve the not found bills ids as array that associated to the given vendor.
-   * @param {Array} billsIds 
-   * @param {number} vendorId - 
+   * @param {Array} billsIds
+   * @param {number} vendorId -
    * @return {Array}
    */
   static async getNotFoundBills(billsIds, vendorId) {
-    const storedBills = await this.query()
-      .onBuild((builder) => {
-        builder.whereIn('id', billsIds);
+    const storedBills = await this.query().onBuild((builder) => {
+      builder.whereIn('id', billsIds);
 
-        if (vendorId) {
-          builder.where('vendor_id', vendorId);
-        }
-      });
-      
+      if (vendorId) {
+        builder.where('vendor_id', vendorId);
+      }
+    });
+
     const storedBillsIds = storedBills.map((t) => t.id);
 
-    const notFoundBillsIds = difference(
-      billsIds,
-      storedBillsIds,
-    );
+    const notFoundBillsIds = difference(billsIds, storedBillsIds);
     return notFoundBillsIds;
   }
 
@@ -263,19 +278,25 @@ export default class Bill extends TenantModel {
         label: 'Status',
         options: [],
         query: (query, role) => {
-          switch(role.value) {
+          switch (role.value) {
             case 'draft':
-              query.modify('draft'); break;
+              query.modify('draft');
+              break;
             case 'opened':
-              query.modify('opened'); break;
+              query.modify('opened');
+              break;
             case 'unpaid':
-              query.modify('unpaid'); break;
+              query.modify('unpaid');
+              break;
             case 'overdue':
-              query.modify('overdue'); break;
+              query.modify('overdue');
+              break;
             case 'partially-paid':
-              query.modify('partiallyPaid'); break;
+              query.modify('partiallyPaid');
+              break;
             case 'paid':
-              query.modify('paid'); break;
+              query.modify('paid');
+              break;
           }
         },
       },
@@ -295,14 +316,12 @@ export default class Bill extends TenantModel {
         label: 'Note',
         column: 'note',
       },
-      user: {
-
-      },
+      user: {},
       created_at: {
         label: 'Created at',
         column: 'created_at',
         columnType: 'date',
       },
-    }
+    };
   }
 }

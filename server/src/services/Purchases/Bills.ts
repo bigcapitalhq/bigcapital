@@ -56,7 +56,7 @@ export default class BillsService extends SalesInvoicesCost {
 
   @Inject()
   tenancy: TenancyService;
-
+  
   @EventDispatcher()
   eventDispatcher: EventDispatcherInterface;
 
@@ -206,7 +206,7 @@ export default class BillsService extends SalesInvoicesCost {
     billDTO: IBillDTO,
     authorizedUser: ISystemUser
   ): Promise<IBill> {
-    const { Bill } = this.tenancy.models(tenantId);
+    const { billRepository } = this.tenancy.repositories(tenantId);
 
     this.logger.info('[bill] trying to create a new bill', {
       tenantId,
@@ -236,7 +236,7 @@ export default class BillsService extends SalesInvoicesCost {
       billDTO.entries
     );
     // Inserts the bill graph object to the storage.
-    const bill = await Bill.query().insertGraph({ ...billObj });
+    const bill = await billRepository.upsertGraph({ ...billObj });
 
     // Triggers `onBillCreated` event.
     await this.eventDispatcher.dispatch(events.bill.onCreated, {
@@ -275,7 +275,7 @@ export default class BillsService extends SalesInvoicesCost {
     billDTO: IBillEditDTO,
     authorizedUser: ISystemUser
   ): Promise<IBill> {
-    const { Bill } = this.tenancy.models(tenantId);
+    const { billRepository } = this.tenancy.repositories(tenantId);
 
     this.logger.info('[bill] trying to edit bill.', { tenantId, billId });
     const oldBill = await this.getBillOrThrowError(tenantId, billId);
@@ -314,7 +314,7 @@ export default class BillsService extends SalesInvoicesCost {
       billDTO.entries
     );
     // Update the bill transaction.
-    const bill = await Bill.query().upsertGraphAndFetch({
+    const bill = await billRepository.upsertGraph({
       id: billId,
       ...billObj,
     });
@@ -339,7 +339,8 @@ export default class BillsService extends SalesInvoicesCost {
    * @return {void}
    */
   public async deleteBill(tenantId: number, billId: number) {
-    const { Bill, ItemEntry } = this.tenancy.models(tenantId);
+    const { ItemEntry } = this.tenancy.models(tenantId);
+    const { billRepository } = this.tenancy.repositories(tenantId);
 
     // Retrieve the given bill or throw not found error.
     const oldBill = await this.getBillOrThrowError(tenantId, billId);
@@ -351,7 +352,7 @@ export default class BillsService extends SalesInvoicesCost {
       .delete();
 
     // Delete the bill transaction.
-    const deleteBillOper = Bill.query().where('id', billId).delete();
+    const deleteBillOper = billRepository.deleteById(billId);
 
     await Promise.all([deleteBillEntriesOper, deleteBillOper]);
 

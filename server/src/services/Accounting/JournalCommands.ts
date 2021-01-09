@@ -291,8 +291,6 @@ export default class JournalCommands {
       referenceType: ['SaleInvoice'],
       index: [3, 4],
     });
-    console.log(transactions);
-
     this.journal.fromTransactions(transactions);
     this.journal.removeEntries();
   }

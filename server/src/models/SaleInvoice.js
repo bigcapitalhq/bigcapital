@@ -103,17 +103,25 @@ export default class SaleInvoice extends TenantModel {
    * @return {number|null}
    */
   get overdueDays() {
-    // Can't continue in case due date not defined.
-    if (!this.dueDate) { return null; }
-
-    const date = moment();
-    const dueDate = moment(this.dueDate);
-
-    return Math.max(date.diff(dueDate, 'days'), 0);
+    return this.getOverdueDays();
   }
 
   static get resourceable() {
     return true;
+  }
+
+  /**
+   * 
+   * @param {*} asDate 
+   */
+  getOverdueDays(asDate = moment().format('YYYY-MM-DD')) {
+    // Can't continue in case due date not defined.
+    if (!this.dueDate) { return null; }
+
+    const date = moment(asDate);
+    const dueDate = moment(this.dueDate);
+
+    return Math.max(date.diff(dueDate, 'days'), 0);
   }
 
   /**
@@ -163,8 +171,14 @@ export default class SaleInvoice extends TenantModel {
       /**
        * Filters the overdue invoices.
        */
-      overdue(query) {
-        query.where('due_date', '<', moment().format('YYYY-MM-DD'));
+      overdue(query, asDate = moment().format('YYYY-MM-DD')) {
+        query.where('due_date', '<', asDate);
+      },
+      /**
+       * Filters the not overdue invoices.
+       */
+      notOverdue(query, asDate = moment().format('YYYY-MM-DD')) {
+        query.where('due_date', '>=', asDate);
       },
       /**
        * Filters the partially invoices.
@@ -178,6 +192,12 @@ export default class SaleInvoice extends TenantModel {
        */
       paid(query) {
         query.where(raw('PAYMENT_AMOUNT = BALANCE'));
+      },
+      /**
+       * Filters the sale invoices from the given date.
+       */
+      fromDate(query, fromDate) {
+        query.where('invoice_date', '<=', fromDate)
       }
     };
   }

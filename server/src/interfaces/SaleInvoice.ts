@@ -7,6 +7,7 @@ export interface ISaleInvoice {
   invoiceDate: Date,
   dueDate: Date,
   dueAmount: number,
+  overdueDays: number,
   customerId: number,
   entries: IItemEntry[],
   deliveredAt: string | Date,

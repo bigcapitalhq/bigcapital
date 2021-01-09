@@ -42,6 +42,9 @@ export interface IBill {
   amount: number,
   paymentAmount: number,
 
+  dueAmount: number,
+  overdueDays: number,
+
   invLotNumber: string,
   openedAt: Date | string,
 

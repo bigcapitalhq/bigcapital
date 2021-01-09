@@ -1,75 +1,185 @@
-import moment from 'moment';
-import { omit, reverse } from 'lodash';
-import { IAgingPeriod, IAgingPeriodClosingBalance, IAgingPeriodTotal } from 'interfaces';
-import FinancialSheet from '../FinancialSheet';
+import { defaultTo, sumBy, get } from 'lodash';
+import {
+  IAgingPeriod,
+  ISaleInvoice,
+  IBill,
+  IAgingPeriodTotal,
+  IARAgingSummaryCustomer,
+  IContact,
+  IARAgingSummaryQuery,
+} from 'interfaces';
+import AgingReport from './AgingReport';
+import { Dictionary } from 'tsyringe/dist/typings/types';
 
-export default class AgingSummaryReport extends FinancialSheet{
+export default abstract class AgingSummaryReport extends AgingReport {
+  protected readonly contacts: IContact[];
+  protected readonly agingPeriods: IAgingPeriod[] = [];
+  protected readonly baseCurrency: string;
+  protected readonly query: IARAgingSummaryQuery;
+  protected readonly overdueInvoicesByContactId: Dictionary<
+    (ISaleInvoice | IBill)[]
+  >;
+  protected readonly currentInvoicesByContactId: Dictionary<
+    (ISaleInvoice | IBill)[]
+  >;
 
   /**
-   * 
-   * @param {Array} agingPeriods 
-   * @param {Numeric} customerBalance 
+   * Setes initial aging periods to the given customer id.
+   * @param {number} customerId - Customer id.
    */
-  contactAgingBalance(
-    agingPeriods: IAgingPeriodClosingBalance[],
-    receivableTotalCredit: number,
-  ): IAgingPeriodTotal[] {
-    let prevAging = 0;
-    let receivableCredit = receivableTotalCredit;
-    let diff = receivableCredit;
+  protected getInitialAgingPeriodsTotal() {
+    return this.agingPeriods.map((agingPeriod) => ({
+      ...agingPeriod,
+      ...this.formatTotalAmount(0),
+    }));
+  }
 
-    const periods = reverse(agingPeriods).map((agingPeriod) => { 
-      const agingAmount = (agingPeriod.closingBalance - prevAging);
-      const subtract = Math.min(diff, agingAmount);
-      diff -= Math.min(agingAmount, diff);
+  /**
+   * Calculates the given contact aging periods.
+   * @param {ICustomer} customer
+   * @return {(IAgingPeriod & IAgingPeriodTotal)[]}
+   */
+  protected getContactAgingPeriods(
+    contactId: number
+  ): (IAgingPeriod & IAgingPeriodTotal)[] {
+    const unpaidInvoices = this.getUnpaidInvoicesByContactId(contactId);
+    const initialAgingPeriods = this.getInitialAgingPeriodsTotal();
 
-      const total = Math.max(agingAmount - subtract, 0);
+    return unpaidInvoices.reduce((agingPeriods, unpaidInvoice) => {
+      const newAgingPeriods = this.getContactAgingDueAmount(
+        agingPeriods,
+        unpaidInvoice.dueAmount,
+        unpaidInvoice.getOverdueDays(this.query.asDate)
+      );
+      return newAgingPeriods;
+    }, initialAgingPeriods);
+  }
 
-      const output = {
-        ...omit(agingPeriod, ['closingBalance']),
-        total,
+  /**
+   * Sets the customer aging due amount to the table. (Xx)
+   * @param {number} customerId - Customer id.
+   * @param {number} dueAmount - Due amount.
+   * @param {number} overdueDays - Overdue days.
+   */
+  protected getContactAgingDueAmount(
+    agingPeriods: any,
+    dueAmount: number,
+    overdueDays: number
+  ): (IAgingPeriod & IAgingPeriodTotal)[] {
+    const newAgingPeriods = agingPeriods.map((agingPeriod) => {
+      const isInAgingPeriod =
+        agingPeriod.beforeDays <= overdueDays &&
+        (agingPeriod.toDays > overdueDays || !agingPeriod.toDays);
+
+      return {
+        ...agingPeriod,
+        total: isInAgingPeriod
+          ? agingPeriod.total + dueAmount
+          : agingPeriod.total,
       };
-      prevAging = agingPeriod.closingBalance;
-      return output;
     });
-    return reverse(periods);
+    return newAgingPeriods;
   }
 
   /**
-   * 
-   * @param {*} asDay 
-   * @param {*} agingDaysBefore 
-   * @param {*} agingPeriodsFreq 
+   * Retrieve the aging period total object.
+   * @param {number} amount
+   * @return {IAgingPeriodTotal}
    */
-  agingRangePeriods(asDay, agingDaysBefore, agingPeriodsFreq): IAgingPeriod[] {
-    const totalAgingDays = agingDaysBefore * agingPeriodsFreq;
-    const startAging = moment(asDay).startOf('day');
-    const endAging = startAging.clone().subtract('days', totalAgingDays).endOf('day');
-
-    const agingPeriods: IAgingPeriod[] = [];
-    const startingAging = startAging.clone();
-
-    let beforeDays = 1;
-    let toDays = 0;
-
-    while (startingAging > endAging) {
-      const currentAging = startingAging.clone();
-      startingAging.subtract('days', agingDaysBefore).endOf('day');
-      toDays += agingDaysBefore;
-
-      agingPeriods.push({
-        fromPeriod: moment(currentAging).toDate(),
-        toPeriod: moment(startingAging).toDate(),
-        beforeDays: beforeDays === 1 ? 0 : beforeDays,
-        toDays: toDays,
-        ...(startingAging.valueOf() === endAging.valueOf()) ? {
-          toPeriod: null,
-          toDays: null,
-        } : {},
-      });
-      beforeDays += agingDaysBefore;
-    }
-    return agingPeriods;
+  protected formatTotalAmount(amount: number): IAgingPeriodTotal {
+    return {
+      total: amount,
+      formattedTotal: this.formatNumber(amount),
+      currencyCode: this.baseCurrency,
+    };
   }
 
+  /**
+   * Calculates the total of the aging period by the given index.
+   * @param {number} index
+   * @return {number}
+   */
+  protected getTotalAgingPeriodByIndex(
+    contactsAgingPeriods: any,
+    index: number
+  ): number {
+    return this.contacts.reduce((acc, customer) => {
+      const totalPeriod = contactsAgingPeriods[index]
+        ? contactsAgingPeriods[index].total
+        : 0;
+
+      return acc + totalPeriod;
+    }, 0);
+  }
+
+  /**
+   * Retrieve the due invoices by the given customer id.
+   * @param  {number} customerId -
+   * @return {ISaleInvoice[]}
+   */
+  protected getUnpaidInvoicesByContactId(
+    contactId: number
+  ): (ISaleInvoice | IBill)[] {
+    return defaultTo(this.overdueInvoicesByContactId[contactId], []);
+  }
+
+  /**
+   * Retrieve total aging periods of the report.
+   * @return {(IAgingPeriodTotal & IAgingPeriod)[]}
+   */
+  protected getTotalAgingPeriods(
+    contactsAgingPeriods: IARAgingSummaryCustomer[]
+  ): (IAgingPeriodTotal & IAgingPeriod)[] {
+    return this.agingPeriods.map((agingPeriod, index) => {
+      const total = sumBy(contactsAgingPeriods, `aging[${index}].total`);
+
+      return {
+        ...agingPeriod,
+        ...this.formatTotalAmount(total),
+      };
+    });
+  }
+
+  /**
+   * Retrieve the current invoices by the given contact id.
+   * @param {number} contactId 
+   * @return {(ISaleInvoice | IBill)[]}
+   */
+  protected getCurrentInvoicesByContactId(
+    contactId: number
+  ): (ISaleInvoice | IBill)[] {
+    return get(this.currentInvoicesByContactId, contactId, []);
+  }
+
+  /**
+   * Retrieve the contact total due amount.
+   * @param {number} contactId
+   * @return {number}
+   */
+  protected getContactCurrentTotal(contactId: number): number {
+    const currentInvoices = this.getCurrentInvoicesByContactId(contactId);
+    return sumBy(currentInvoices, invoice => invoice.dueAmount);
+  }
+
+  /**
+   * Retrieve to total sumation of the given customers sections.
+   * @param {IARAgingSummaryCustomer[]} contactsSections - 
+   * @return {number}
+   */
+  protected getTotalCurrent(
+    customersSummary: IARAgingSummaryCustomer[]
+  ): number {
+    return sumBy(customersSummary, summary => summary.current.total);
+  }
+
+  /**
+   * Retrieve the total of the given aging periods.
+   * @param {IAgingPeriodTotal[]} agingPeriods
+   * @return {number}
+   */
+  protected getAgingPeriodsTotal(
+    agingPeriods: IAgingPeriodTotal[],
+  ): number {
+    return sumBy(agingPeriods, 'total');
+  }
 }
