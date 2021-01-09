@@ -1,6 +1,8 @@
 import { Service, Inject } from 'typedi';
 import { Router, Request, Response } from 'express';
+import { castArray } from 'lodash';
 import { query, oneOf } from 'express-validator';
+import { IARAgingSummaryQuery } from 'interfaces';
 import BaseController from '../BaseController';
 import ARAgingSummaryService from 'services/FinancialStatements/AgingSummary/ARAgingSummaryService';
 
@@ -34,13 +36,8 @@ export default class ARAgingSummaryReportController extends BaseController {
       query('aging_periods').optional().isInt({ max: 12 }).toInt(),
       query('number_format.no_cents').optional().isBoolean().toBoolean(),
       query('number_format.1000_divide').optional().isBoolean().toBoolean(),
-      oneOf(
-        [
-          query('customer_ids').optional().isArray({ min: 1 }),
-          query('customer_ids.*').isNumeric().toInt(),
-        ],
-        [query('customer_ids').optional().isNumeric().toInt()]
-      ),
+      query('customers_ids').optional().isArray({ min: 1 }),
+      query('customers_ids.*').isInt({ min: 1 }).toInt(),
       query('none_zero').default(true).isBoolean().toBoolean(),
     ];
   }

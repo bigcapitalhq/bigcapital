@@ -1,10 +1,9 @@
-import { Router, Request, Response } from 'express';
+import { Router, Request, Response, NextFunction } from 'express';
 import { query } from 'express-validator';
 import { Inject } from 'typedi';
 import BaseController from 'api/controllers/BaseController';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
 import APAgingSummaryReportService from 'services/FinancialStatements/AgingSummary/APAgingSummaryService';
-import { findPhoneNumbersInText } from 'libphonenumber-js';
 
 export default class APAgingSummaryReportController extends BaseController {
   @Inject()
@@ -34,8 +33,9 @@ export default class APAgingSummaryReportController extends BaseController {
       query('aging_periods').optional().isNumeric().toInt(),
       query('number_format.no_cents').optional().isBoolean().toBoolean(),
       query('number_format.1000_divide').optional().isBoolean().toBoolean(),
-      query('vendors_ids.*').isNumeric().toInt(),
-      query('none_zero').optional().isBoolean().toBoolean(),
+      query('vendors_ids').optional().isArray({ min: 1 }),
+      query('vendors_ids.*').isInt({ min: 1 }).toInt(),
+      query('none_zero').default(true).isBoolean().toBoolean(),
     ];
   }
  

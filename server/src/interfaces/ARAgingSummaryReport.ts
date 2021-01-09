@@ -26,9 +26,10 @@ export interface IARAgingSummaryTotal {
   current: IAgingPeriodTotal,
   aging: (IAgingPeriodTotal & IAgingPeriod)[],
 };
+
 export interface IARAgingSummaryData {
   customers: IARAgingSummaryCustomer[],
   total: IARAgingSummaryTotal,
-}
+};
 
 export type IARAgingSummaryColumns = IAgingPeriod[];
