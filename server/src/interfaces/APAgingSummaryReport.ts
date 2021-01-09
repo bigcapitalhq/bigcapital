@@ -17,13 +17,19 @@ export interface IAPAgingSummaryQuery {
 
 export interface IAPAgingSummaryVendor {
   vendorName: string,
+  current: IAgingPeriodTotal,
   aging: (IAgingPeriod & IAgingPeriodTotal)[],
   total: IAgingPeriodTotal,
-}
+};
+
+export interface IAPAgingSummaryTotal {
+  current: IAgingPeriodTotal,
+  aging: (IAgingPeriodTotal & IAgingPeriod)[],
+};
 
 export interface IAPAgingSummaryData {
   vendors: IAPAgingSummaryVendor[],
-  total: (IAgingPeriod & IAgingPeriodTotal)[],
-}
+  total: IAPAgingSummaryTotal,
+};
 
 export type IAPAgingSummaryColumns = IAgingPeriod[];

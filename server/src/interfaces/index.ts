@@ -35,5 +35,7 @@ export * from './TrialBalanceSheet';
 export * from './GeneralLedgerSheet'
 export * from './ProfitLossSheet';
 export * from './JournalReport';
+export * from './AgingReport';
 export * from './ARAgingSummaryReport';
+export * from './APAgingSummaryReport';
 export * from './Mailable';

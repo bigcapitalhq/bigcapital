@@ -321,7 +321,6 @@ export default class SaleInvoicesController extends BaseController {
         tenantId,
         customerId
       );
-
       return res.status(200).send({
         sales_invoices: this.transfromToResponse(salesInvoices),
       });

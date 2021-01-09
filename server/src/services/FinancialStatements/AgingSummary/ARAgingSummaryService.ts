@@ -3,6 +3,7 @@ import { Inject, Service } from 'typedi';
 import { IARAgingSummaryQuery } from 'interfaces';
 import TenancyService from 'services/Tenancy/TenancyService';
 import ARAgingSummarySheet from './ARAgingSummarySheet';
+import SaleInvoiceRepository from 'repositories/SaleInvoiceRepository';
 
 @Service()
 export default class ARAgingSummaryService {
@@ -30,14 +31,14 @@ export default class ARAgingSummaryService {
   }
 
   /**
-   * 
+   *
    * @param {number} tenantId
    * @param query
    */
   async ARAgingSummary(tenantId: number, query: IARAgingSummaryQuery) {
     const {
       customerRepository,
-      saleInvoiceRepository
+      saleInvoiceRepository,
     } = this.tenancy.repositories(tenantId);
 
     const filter = {
@@ -57,15 +58,21 @@ export default class ARAgingSummaryService {
     // Retrieve all customers from the storage.
     const customers = await customerRepository.all();
 
+    // Retrieve all overdue sale invoices.
+    const overdueSaleInvoices = await saleInvoiceRepository.overdueInvoices(
+      filter.asDate
+    );
     // Retrieve all due sale invoices.
-    const dueSaleInvoices = await saleInvoiceRepository.dueInvoices();
-
+    const currentInvoices = await saleInvoiceRepository.dueInvoices(
+      filter.asDate
+    );
     // AR aging summary report instance.
     const ARAgingSummaryReport = new ARAgingSummarySheet(
       tenantId,
       filter,
       customers,
-      dueSaleInvoices,
+      overdueSaleInvoices,
+      currentInvoices,
       baseCurrency
     );
     // AR aging summary report data and columns.

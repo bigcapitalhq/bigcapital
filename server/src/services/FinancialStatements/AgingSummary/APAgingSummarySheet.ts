@@ -1,4 +1,4 @@
-import { groupBy, sumBy } from 'lodash';
+import { groupBy, sum } from 'lodash';
 import AgingSummaryReport from './AgingSummary';
 import {
   IAPAgingSummaryQuery,
@@ -17,7 +17,9 @@ export default class APAgingSummarySheet extends AgingSummaryReport {
   readonly unpaidBills: IBill[];
   readonly baseCurrency: string;
 
-  readonly unpaidInvoicesByContactId: Dictionary<IBill[]>;
+  readonly overdueInvoicesByContactId: Dictionary<IBill[]>;
+  readonly currentInvoicesByContactId: Dictionary<IBill[]>;
+
   readonly agingPeriods: IAgingPeriod[];
 
   /**
@@ -31,6 +33,7 @@ export default class APAgingSummarySheet extends AgingSummaryReport {
     tenantId: number,
     query: IAPAgingSummaryQuery,
     vendors: IVendor[],
+    overdueBills: IBill[],
     unpaidBills: IBill[],
     baseCurrency: string
   ) {
@@ -40,10 +43,10 @@ export default class APAgingSummarySheet extends AgingSummaryReport {
     this.query = query;
     this.numberFormat = this.query.numberFormat;
     this.contacts = vendors;
-    this.unpaidBills = unpaidBills;
     this.baseCurrency = baseCurrency;
 
-    this.unpaidInvoicesByContactId = groupBy(unpaidBills, 'vendorId');
+    this.overdueInvoicesByContactId = groupBy(overdueBills, 'vendorId');
+    this.currentInvoicesByContactId = groupBy(unpaidBills, 'vendorId');
 
     // Initializes the aging periods.
     this.agingPeriods = this.agingRangePeriods(
@@ -60,10 +63,14 @@ export default class APAgingSummarySheet extends AgingSummaryReport {
    */
   private vendorData(vendor: IVendor): IAPAgingSummaryVendor {
     const agingPeriods = this.getContactAgingPeriods(vendor.id);
-    const amount = sumBy(agingPeriods, 'total');
+    const currentTotal = this.getContactCurrentTotal(vendor.id);
+    const agingPeriodsTotal = this.getAgingPeriodsTotal(agingPeriods);
+
+    const amount = sum([agingPeriodsTotal, currentTotal]);
 
     return {
       vendorName: vendor.displayName,
+      current: this.formatTotalAmount(currentTotal),
       aging: agingPeriods,
       total: this.formatTotalAmount(amount),
     };
@@ -89,17 +96,21 @@ export default class APAgingSummarySheet extends AgingSummaryReport {
   public reportData(): IAPAgingSummaryData {
     const vendorsAgingPeriods = this.vendorsWalker(this.contacts);
     const totalAgingPeriods = this.getTotalAgingPeriods(vendorsAgingPeriods);
+    const totalCurrent = this.getTotalCurrent(vendorsAgingPeriods);
 
     return {
       vendors: vendorsAgingPeriods,
-      total: totalAgingPeriods,
+      total: {
+        current: this.formatTotalAmount(totalCurrent),
+        aging: totalAgingPeriods,
+      },
     }
   }
 
   /**
    * Retrieve the A/P aging summary report columns.
    */
-  reportColumns(): IAPAgingSummaryColumns {
+  public reportColumns(): IAPAgingSummaryColumns {
     return this.agingPeriods;
   }
 }

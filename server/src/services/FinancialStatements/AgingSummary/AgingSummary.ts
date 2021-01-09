@@ -1,4 +1,4 @@
-import { defaultTo, sumBy } from 'lodash';
+import { defaultTo, sumBy, get } from 'lodash';
 import {
   IAgingPeriod,
   ISaleInvoice,
@@ -6,6 +6,7 @@ import {
   IAgingPeriodTotal,
   IARAgingSummaryCustomer,
   IContact,
+  IARAgingSummaryQuery,
 } from 'interfaces';
 import AgingReport from './AgingReport';
 import { Dictionary } from 'tsyringe/dist/typings/types';
@@ -14,13 +15,13 @@ export default abstract class AgingSummaryReport extends AgingReport {
   protected readonly contacts: IContact[];
   protected readonly agingPeriods: IAgingPeriod[] = [];
   protected readonly baseCurrency: string;
-  protected readonly unpaidInvoices: (ISaleInvoice | IBill)[];
-  protected readonly unpaidInvoicesByContactId: Dictionary<
+  protected readonly query: IARAgingSummaryQuery;
+  protected readonly overdueInvoicesByContactId: Dictionary<
     (ISaleInvoice | IBill)[]
   >;
-  protected periodsByContactId: {
-    [key: number]: (IAgingPeriod & IAgingPeriodTotal)[];
-  } = {};
+  protected readonly currentInvoicesByContactId: Dictionary<
+    (ISaleInvoice | IBill)[]
+  >;
 
   /**
    * Setes initial aging periods to the given customer id.
@@ -48,7 +49,7 @@ export default abstract class AgingSummaryReport extends AgingReport {
       const newAgingPeriods = this.getContactAgingDueAmount(
         agingPeriods,
         unpaidInvoice.dueAmount,
-        unpaidInvoice.overdueDays
+        unpaidInvoice.getOverdueDays(this.query.asDate)
       );
       return newAgingPeriods;
     }, initialAgingPeriods);
@@ -81,7 +82,7 @@ export default abstract class AgingSummaryReport extends AgingReport {
   }
 
   /**
-   * Retrieve the aging period total object. (xx)
+   * Retrieve the aging period total object.
    * @param {number} amount
    * @return {IAgingPeriodTotal}
    */
@@ -112,14 +113,14 @@ export default abstract class AgingSummaryReport extends AgingReport {
   }
 
   /**
-   * Retrieve the due invoices by the given customer id. (XX)
-   * @param {number} customerId -
+   * Retrieve the due invoices by the given customer id.
+   * @param  {number} customerId -
    * @return {ISaleInvoice[]}
    */
   protected getUnpaidInvoicesByContactId(
     contactId: number
   ): (ISaleInvoice | IBill)[] {
-    return defaultTo(this.unpaidInvoicesByContactId[contactId], []);
+    return defaultTo(this.overdueInvoicesByContactId[contactId], []);
   }
 
   /**
@@ -137,5 +138,48 @@ export default abstract class AgingSummaryReport extends AgingReport {
         ...this.formatTotalAmount(total),
       };
     });
+  }
+
+  /**
+   * Retrieve the current invoices by the given contact id.
+   * @param {number} contactId 
+   * @return {(ISaleInvoice | IBill)[]}
+   */
+  protected getCurrentInvoicesByContactId(
+    contactId: number
+  ): (ISaleInvoice | IBill)[] {
+    return get(this.currentInvoicesByContactId, contactId, []);
+  }
+
+  /**
+   * Retrieve the contact total due amount.
+   * @param {number} contactId
+   * @return {number}
+   */
+  protected getContactCurrentTotal(contactId: number): number {
+    const currentInvoices = this.getCurrentInvoicesByContactId(contactId);
+    return sumBy(currentInvoices, invoice => invoice.dueAmount);
+  }
+
+  /**
+   * Retrieve to total sumation of the given customers sections.
+   * @param {IARAgingSummaryCustomer[]} contactsSections - 
+   * @return {number}
+   */
+  protected getTotalCurrent(
+    customersSummary: IARAgingSummaryCustomer[]
+  ): number {
+    return sumBy(customersSummary, summary => summary.current.total);
+  }
+
+  /**
+   * Retrieve the total of the given aging periods.
+   * @param {IAgingPeriodTotal[]} agingPeriods
+   * @return {number}
+   */
+  protected getAgingPeriodsTotal(
+    agingPeriods: IAgingPeriodTotal[],
+  ): number {
+    return sumBy(agingPeriods, 'total');
   }
 }

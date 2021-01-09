@@ -1,9 +1,8 @@
-import { groupBy, sumBy, defaultTo } from 'lodash';
+import { groupBy, sum } from 'lodash';
 import {
   ICustomer,
   IARAgingSummaryQuery,
   IARAgingSummaryCustomer,
-  IAgingPeriodTotal,
   IAgingPeriod,
   ISaleInvoice,
   IARAgingSummaryData,
@@ -18,8 +17,9 @@ export default class ARAgingSummarySheet extends AgingSummaryReport {
   readonly contacts: ICustomer[];
   readonly agingPeriods: IAgingPeriod[];
   readonly baseCurrency: string;
-  readonly dueInvoices: ISaleInvoice[];
-  readonly unpaidInvoicesByContactId: Dictionary<ISaleInvoice[]>;
+
+  readonly overdueInvoicesByContactId: Dictionary<ISaleInvoice[]>;
+  readonly currentInvoicesByContactId: Dictionary<ISaleInvoice[]>;
 
   /**
    * Constructor method.
@@ -32,7 +32,8 @@ export default class ARAgingSummarySheet extends AgingSummaryReport {
     tenantId: number,
     query: IARAgingSummaryQuery,
     customers: ICustomer[],
-    unpaidSaleInvoices: ISaleInvoice[],
+    overdueSaleInvoices: ISaleInvoice[],
+    currentSaleInvoices: ISaleInvoice[],
     baseCurrency: string
   ) {
     super();
@@ -42,9 +43,9 @@ export default class ARAgingSummarySheet extends AgingSummaryReport {
     this.query = query;
     this.baseCurrency = baseCurrency;
     this.numberFormat = this.query.numberFormat;
-    this.unpaidInvoicesByContactId = groupBy(unpaidSaleInvoices, 'customerId');
-    this.dueInvoices = unpaidSaleInvoices;
-    this.periodsByContactId = {};
+
+    this.overdueInvoicesByContactId = groupBy(overdueSaleInvoices, 'customerId');
+    this.currentInvoicesByContactId = groupBy(currentSaleInvoices, 'customerId');
 
     // Initializes the aging periods.
     this.agingPeriods = this.agingRangePeriods(
@@ -61,10 +62,13 @@ export default class ARAgingSummarySheet extends AgingSummaryReport {
    */
   private customerData(customer: ICustomer): IARAgingSummaryCustomer {
     const agingPeriods = this.getContactAgingPeriods(customer.id);
-    const amount = sumBy(agingPeriods, 'total');
+    const currentTotal = this.getContactCurrentTotal(customer.id);
+    const agingPeriodsTotal = this.getAgingPeriodsTotal(agingPeriods);
+    const amount = sum([agingPeriodsTotal, currentTotal]);
 
     return {
       customerName: customer.displayName,
+      current: this.formatTotalAmount(currentTotal),
       aging: agingPeriods,
       total: this.formatTotalAmount(amount),
     };
@@ -91,10 +95,14 @@ export default class ARAgingSummarySheet extends AgingSummaryReport {
   public reportData(): IARAgingSummaryData {
     const customersAgingPeriods = this.customersWalker(this.contacts);
     const totalAgingPeriods = this.getTotalAgingPeriods(customersAgingPeriods);
+    const totalCurrent = this.getTotalCurrent(customersAgingPeriods);
 
     return {
       customers: customersAgingPeriods,
-      total: totalAgingPeriods,
+      total: {
+        current: this.formatTotalAmount(totalCurrent),
+        aging: totalAgingPeriods,
+      }
     };
   }
 

@@ -41,7 +41,7 @@ export default class ARAgingSummaryReportController extends BaseController {
         ],
         [query('customer_ids').optional().isNumeric().toInt()]
       ),
-      query('none_zero').optional().isBoolean().toBoolean(),
+      query('none_zero').default(true).isBoolean().toBoolean(),
     ];
   }
 

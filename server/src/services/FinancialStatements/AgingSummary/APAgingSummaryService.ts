@@ -36,6 +36,7 @@ export default class PayableAgingSummaryService {
   async APAgingSummary(tenantId: number, query) {
     const {
       vendorRepository,
+      billRepository
     } = this.tenancy.repositories(tenantId);
     const { Bill } = this.tenancy.models(tenantId);
 
@@ -55,15 +56,19 @@ export default class PayableAgingSummaryService {
     // Retrieve all vendors from the storage.
     const vendors = await vendorRepository.all();
 
-    // Retrieve all unpaid vendors bills.
-    const unpaidBills = await Bill.query().modify('unpaid');
+    // Retrieve all overdue vendors bills.
+    const overdueBills = await billRepository.overdueBills(
+      filter.asDate,
+    );
+    const dueBills = await billRepository.dueBills(filter.asDate);
 
     // A/P aging summary report instance.
     const APAgingSummaryReport = new APAgingSummarySheet(
       tenantId,
       filter,
       vendors,
-      unpaidBills,
+      overdueBills,
+      dueBills,
       baseCurrency,
     );
     // A/P aging summary report data and columns.
