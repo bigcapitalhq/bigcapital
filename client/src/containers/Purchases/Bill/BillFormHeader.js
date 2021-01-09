@@ -7,11 +7,18 @@ import { CLASSES } from 'common/classes';
 
 import BillFormHeaderFields from './BillFormHeaderFields';
 import { PageFormBigNumber } from 'components';
+import withSettings from 'containers/Settings/withSettings';
+import { compose } from 'redux';
 
 /**
  * Fill form header.
  */
-export default function BillFormHeader({ onBillNumberChanged }) {
+function BillFormHeader({
+  onBillNumberChanged,
+
+  // #withSettings
+  baseCurrency,
+}) {
   const { values } = useFormikContext();
 
   // Calculate the total due amount of bill entries.
@@ -25,8 +32,13 @@ export default function BillFormHeader({ onBillNumberChanged }) {
       <PageFormBigNumber
         label={'Due Amount'}
         amount={totalDueAmount}
-        currencyCode={'LYD'}
+        currencyCode={baseCurrency}
       />
     </div>
   );
 }
+export default compose(
+  withSettings(({ organizationSettings }) => ({
+    baseCurrency: organizationSettings?.baseCurrency,
+  })),
+)(BillFormHeader);

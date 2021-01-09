@@ -23,6 +23,7 @@ import EstimatesEmptyStatus from './EstimatesEmptyStatus';
 import { statusAccessor } from './components';
 import withEstimates from './withEstimates';
 import withEstimateActions from './withEstimateActions';
+import withSettings from 'containers/Settings/withSettings';
 
 // Estimates transactions datatable.
 function EstimatesDataTable({
@@ -35,6 +36,9 @@ function EstimatesDataTable({
 
   // #withEstimatesActions
   addEstimatesTableQueries,
+
+  // #withSettings
+  baseCurrency,
 
   // #ownProps
   onEditEstimate,
@@ -160,7 +164,7 @@ function EstimatesDataTable({
       {
         id: 'amount',
         Header: formatMessage({ id: 'amount' }),
-        accessor: (r) => <Money amount={r.amount} currency={'USD'} />,
+        accessor: (r) => <Money amount={r.amount} currency={baseCurrency} />,
 
         width: 140,
         className: 'amount',
@@ -282,4 +286,7 @@ export default compose(
       estimatesCurrentViewId,
     }),
   ),
+  withSettings(({ organizationSettings }) => ({
+    baseCurrency: organizationSettings?.baseCurrency,
+  })),
 )(EstimatesDataTable);

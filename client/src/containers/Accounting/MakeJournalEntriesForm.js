@@ -3,7 +3,7 @@ import { Formik, Form } from 'formik';
 import moment from 'moment';
 import { Intent } from '@blueprintjs/core';
 import { useIntl } from 'react-intl';
-import { pick } from 'lodash';
+import { pick, defaultTo } from 'lodash';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 
@@ -78,7 +78,7 @@ function MakeJournalEntriesForm({
   // #withSettings
   journalNextNumber,
   journalNumberPrefix,
-
+  baseCurrency,
   // #ownProps
   manualJournalId,
   manualJournal,
@@ -126,7 +126,8 @@ function MakeJournalEntriesForm({
           }
         : {
             ...defaultInitialValues,
-            journal_number: journalNumber,
+            journal_number: defaultTo(journalNumber, ''),
+            currency_code: defaultTo(baseCurrency, ''),
             entries: orderingLinesIndexes(defaultInitialValues.entries),
           }),
     }),
@@ -239,7 +240,7 @@ function MakeJournalEntriesForm({
         validationSchema={isNewMode ? CreateJournalSchema : EditJournalSchema}
         onSubmit={handleSubmit}
       >
-        {({ isSubmitting}) => (
+        {({ isSubmitting }) => (
           <Form>
             <MakeJournalEntriesHeader
               manualJournal={manualJournalId}
@@ -274,9 +275,10 @@ export default compose(
   withAccountsActions,
   withDashboardActions,
   withMediaActions,
-  withSettings(({ manualJournalsSettings }) => ({
+  withSettings(({ manualJournalsSettings, organizationSettings }) => ({
     journalNextNumber: parseInt(manualJournalsSettings?.nextNumber, 10),
     journalNumberPrefix: manualJournalsSettings?.numberPrefix,
+    baseCurrency: organizationSettings?.baseCurrency,
   })),
   withManualJournalsActions,
 )(MakeJournalEntriesForm);

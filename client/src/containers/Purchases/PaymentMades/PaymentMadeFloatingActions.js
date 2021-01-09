@@ -45,6 +45,7 @@ export default function PaymentMadeFloatingActions({
     onSubmitForm();
     saveInvoke(onSubmitClick, event, {
       redirect: false,
+      resetForm: true,
     });
   };
 
