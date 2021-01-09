@@ -156,13 +156,14 @@ function PaymentMadeForm({
         intent: Intent.SUCCESS,
       });
       setSubmitting(false);
-      // resetForm();
-      changePageSubtitle('');
+      // changePageSubtitle('');
 
       if (submitPayload.redirect) {
         history.push('/payment-mades');
       }
-
+      if (submitPayload.resetForm) {
+        resetForm();
+      }
     };
 
     const onError = (errors) => {
@@ -193,6 +194,7 @@ function PaymentMadeForm({
     values,
     handleSubmit,
     isSubmitting,
+    resetForm,
     submitForm,
   } = useFormik({
     validationSchema,
@@ -244,13 +246,13 @@ function PaymentMadeForm({
 
   // Handle cancel button click.
   const handleCancelClick = useCallback(() => {
-    history.push('/payment-mades');
+    history.goBack();
   }, [history]);
 
   // Handle clear all lines button click.
-  const handleClearAllLines = () => {
+  const handleClearAllLines = useCallback(() => {
     setClearLinesAlert(true);
-  };
+  },[setClearLinesAlert]);
 
   const handleCancelClearLines = useCallback(() => {
     setClearLinesAlert(false);
@@ -284,6 +286,7 @@ function PaymentMadeForm({
         : {}),
     });
     setClearFormAlert(false);
+    resetForm();
   };
   // Payable full amount.
   const payableFullAmount = useMemo(() => sumBy(values.entries, 'due_amount'), [
@@ -313,7 +316,6 @@ function PaymentMadeForm({
     },
     [setSubmitPayload],
   );
-
 
   return (
     <div
@@ -382,12 +384,14 @@ function PaymentMadeForm({
         <Alert
           cancelButtonText={<T id={'cancel'} />}
           confirmButtonText={<T id={'ok'} />}
-          intent={Intent.DANGER}
+          intent={Intent.WARNING}
           isOpen={clearFormAlert}
           onCancel={handleCancelClearFormAlert}
           onConfirm={handleConfirmCancelClearFormAlert}
         >
-          <p>Are you sure you want to clear this transaction?</p>
+          <p>
+            <T id={'are_you_sure_you_want_to_clear_this_transaction'} />
+          </p>
         </Alert>
 
         <PaymentMadeFooter getFieldProps={getFieldProps} />
