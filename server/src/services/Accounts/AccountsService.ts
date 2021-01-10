@@ -164,7 +164,7 @@ export default class AccountsService {
    * @param {number} accountId
    * @return {IAccount}
    */
-  private async getAccountOrThrowError(tenantId: number, accountId: number) {
+  public async getAccountOrThrowError(tenantId: number, accountId: number) {
     const { accountRepository } = this.tenancy.repositories(tenantId);
 
     this.logger.info('[accounts] validating the account existance.', {

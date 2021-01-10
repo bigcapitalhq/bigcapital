@@ -43,19 +43,13 @@ export class InventorySubscriber {
   @On(events.inventory.onInventoryTransactionsCreated)
   async handleScheduleItemsCostOnInventoryTransactionsCreated({
     tenantId,
-    inventoryEntries,
-    transactionId,
-    transactionType,
-    transactionDate,
-    transactionDirection,
-    override
+    inventoryTransactions
   }) {
-    const inventoryItemsIds = map(inventoryEntries, 'itemId');
+    const inventoryItemsIds = map(inventoryTransactions, 'itemId');
 
-    await this.saleInvoicesCost.scheduleComputeCostByItemsIds(
+    await this.saleInvoicesCost.computeItemsCostByInventoryTransactions(
       tenantId,
-      inventoryItemsIds,
-      transactionDate,
+      inventoryTransactions
     );
   }
 
@@ -69,6 +63,12 @@ export class InventorySubscriber {
     transactionId,
     oldInventoryTransactions
   }) {
+    // Ignore compute item cost with theses transaction types.
+    const ignoreWithTransactionTypes = ['OpeningItem'];
+
+    if (ignoreWithTransactionTypes.indexOf(transactionType) !== -1) {
+      return;
+    }
     const inventoryItemsIds = map(oldInventoryTransactions, 'itemId');
     const startingDates = map(oldInventoryTransactions, 'date');
     const startingDate = head(startingDates);

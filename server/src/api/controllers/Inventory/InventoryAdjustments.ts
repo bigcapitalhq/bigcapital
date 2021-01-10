@@ -115,8 +115,8 @@ export default class InventoryAdjustmentsController extends BaseController {
         tenantId,
         adjustmentId
       );
-
       return res.status(200).send({
+        id: adjustmentId,
         message: 'The inventory adjustment has been deleted successfully.',
       });
     } catch (error) {

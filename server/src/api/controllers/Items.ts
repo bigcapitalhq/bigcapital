@@ -25,14 +25,14 @@ export default class ItemsController extends BaseController {
 
     router.post(
       '/',
-      [...this.validateItemSchema, ...this.validateNewItemSchema],
+      this.validateItemSchema,
       this.validationResult,
       asyncMiddleware(this.newItem.bind(this)),
       this.handlerServiceErrors
     );
     router.post(
       '/:id/activate',
-      [...this.validateSpecificItemSchema],
+      this.validateSpecificItemSchema,
       this.validationResult,
       asyncMiddleware(this.activateItem.bind(this)),
       this.handlerServiceErrors
@@ -81,30 +81,6 @@ export default class ItemsController extends BaseController {
       this.handlerServiceErrors
     );
     return router;
-  }
-
-  /**
-   * New item validation schema.
-   */
-  get validateNewItemSchema(): ValidationChain[] {
-    return [
-      check('opening_quantity').default(0).isInt({ min: 0 }).toInt(),
-      check('opening_cost')
-        .if(body('opening_quantity').exists().isInt({ min: 1 }))
-        .exists()
-        .isFloat(),
-      check('opening_cost')
-        .optional({ nullable: true })
-        .isFloat({ min: 0 })
-        .toFloat(),
-      check('opening_date')
-        .if(
-          body('opening_quantity').exists().isFloat({ min: 1 }) ||
-          body('opening_cost').exists().isFloat({ min: 1 })
-        )
-        .exists(),
-      check('opening_date').optional({ nullable: true }).isISO8601().toDate(),
-    ];
   }
 
   /**
@@ -501,6 +477,11 @@ export default class ItemsController extends BaseController {
       if (error.errorType === 'ITEM_HAS_ASSOCIATED_TRANSACTINS') {
         return res.status(400).send({
           errors: [{ type: 'ITEM_HAS_ASSOCIATED_TRANSACTINS', code: 320 }],
+        });
+      }
+      if (error.errorType === 'ITEM_HAS_ASSOCIATED_INVENTORY_ADJUSTMENT') {
+        return res.status(400).send({
+          errors: [{ type: 'ITEM_HAS_ASSOCIATED_INVENTORY_ADJUSTMENT', code: 330 }],
         });
       }
     }

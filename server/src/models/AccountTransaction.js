@@ -17,6 +17,34 @@ export default class AccountTransaction extends TenantModel {
     return ['createdAt'];
   }
 
+  static get virtualAttributes() {
+    return ['referenceTypeFormatted'];
+  }
+
+  /**
+   * Retrieve formatted reference type.
+   * @return {string}
+   */
+  get referenceTypeFormatted() {
+    return AccountTransaction.getReferenceTypeFormatted(this.referenceType);
+  }
+
+  /**
+   * Reference type formatted.
+   */
+  static getReferenceTypeFormatted(referenceType) {
+    const mapped = {
+      'SaleInvoice': 'Sale invoice',
+      'SaleReceipt': 'Sale receipt',
+      'PaymentReceive': 'Payment receive',
+      'BillPayment': 'Payment made',
+      'VendorOpeningBalance': 'Vendor opening balance',
+      'CustomerOpeningBalance': 'Customer opening balance',
+      'InventoryAdjustment': 'Inventory adjustment'
+    };
+    return mapped[referenceType] || '';
+  }
+
   /**
    * Model modifiers.
    */

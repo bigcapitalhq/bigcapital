@@ -1,5 +1,5 @@
 
-type IAdjustmentTypes = 'increment' | 'decrement' | 'value_adjustment';
+type IAdjustmentTypes = 'increment' | 'decrement';
 
 export interface IQuickInventoryAdjustmentDTO {
   date: Date | string;
@@ -20,6 +20,7 @@ export interface IInventoryAdjustment {
   reason: string;
   description: string;
   referenceNo: string;
+  inventoryDirection?: 'IN' | 'OUT',
   entries: IInventoryAdjustmentEntry[];
   userId: number;
 };

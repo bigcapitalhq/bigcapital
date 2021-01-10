@@ -30,25 +30,34 @@ export default class ExchangeRatesService implements IExchangeRatesService {
   eventDispatcher: EventDispatcherInterface;
 
   @Inject()
-  tenancy: TenancyService;  
+  tenancy: TenancyService;
 
   /**
    * Creates a new exchange rate.
-   * @param {number} tenantId 
-   * @param {IExchangeRateDTO} exchangeRateDTO 
+   * @param {number} tenantId
+   * @param {IExchangeRateDTO} exchangeRateDTO
    * @returns {Promise<IExchangeRate>}
    */
-  public async newExchangeRate(tenantId: number, exchangeRateDTO: IExchangeRateDTO): Promise<IExchangeRate> {
+  public async newExchangeRate(
+    tenantId: number,
+    exchangeRateDTO: IExchangeRateDTO
+  ): Promise<IExchangeRate> {
     const { ExchangeRate } = this.tenancy.models(tenantId);
 
-    this.logger.info('[exchange_rates] trying to insert new exchange rate.', { tenantId, exchangeRateDTO });
+    this.logger.info('[exchange_rates] trying to insert new exchange rate.', {
+      tenantId,
+      exchangeRateDTO,
+    });
     await this.validateExchangeRatePeriodExistance(tenantId, exchangeRateDTO);
 
     const exchangeRate = await ExchangeRate.query().insertAndFetch({
       ...exchangeRateDTO,
       date: moment(exchangeRateDTO.date).format('YYYY-MM-DD'),
     });
-    this.logger.info('[exchange_rates] inserted successfully.', { tenantId, exchangeRateDTO });
+    this.logger.info('[exchange_rates] inserted successfully.', {
+      tenantId,
+      exchangeRateDTO,
+    });
     return exchangeRate;
   }
 
@@ -58,14 +67,28 @@ export default class ExchangeRatesService implements IExchangeRatesService {
    * @param {number} exchangeRateId - Exchange rate id.
    * @param {IExchangeRateEditDTO} editExRateDTO - Edit exchange rate DTO.
    */
-  public async editExchangeRate(tenantId: number, exchangeRateId: number, editExRateDTO: IExchangeRateEditDTO): Promise<void> {
+  public async editExchangeRate(
+    tenantId: number,
+    exchangeRateId: number,
+    editExRateDTO: IExchangeRateEditDTO
+  ): Promise<void> {
     const { ExchangeRate } = this.tenancy.models(tenantId);
 
-    this.logger.info('[exchange_rates] trying to edit exchange rate.', { tenantId, exchangeRateId, editExRateDTO });
+    this.logger.info('[exchange_rates] trying to edit exchange rate.', {
+      tenantId,
+      exchangeRateId,
+      editExRateDTO,
+    });
     await this.validateExchangeRateExistance(tenantId, exchangeRateId);
 
-    await ExchangeRate.query().where('id', exchangeRateId).update({ ...editExRateDTO });
-    this.logger.info('[exchange_rates] exchange rate edited successfully.', { tenantId, exchangeRateId, editExRateDTO });
+    await ExchangeRate.query()
+      .where('id', exchangeRateId)
+      .update({ ...editExRateDTO });
+    this.logger.info('[exchange_rates] exchange rate edited successfully.', {
+      tenantId,
+      exchangeRateId,
+      editExRateDTO,
+    });
   }
 
   /**
@@ -73,7 +96,10 @@ export default class ExchangeRatesService implements IExchangeRatesService {
    * @param {number} tenantId - Tenant id.
    * @param {number} exchangeRateId - Exchange rate id.
    */
-  public async deleteExchangeRate(tenantId: number, exchangeRateId: number): Promise<void> {
+  public async deleteExchangeRate(
+    tenantId: number,
+    exchangeRateId: number
+  ): Promise<void> {
     const { ExchangeRate } = this.tenancy.models(tenantId);
     await this.validateExchangeRateExistance(tenantId, exchangeRateId);
 
@@ -83,29 +109,43 @@ export default class ExchangeRatesService implements IExchangeRatesService {
   /**
    * Listing exchange rates details.
    * @param {number} tenantId - Tenant id.
-   * @param {IExchangeRateFilter} exchangeRateFilter - Exchange rates list filter. 
+   * @param {IExchangeRateFilter} exchangeRateFilter - Exchange rates list filter.
    */
-  public async listExchangeRates(tenantId: number, exchangeRateFilter: IExchangeRateFilter): Promise<void> {
+  public async listExchangeRates(
+    tenantId: number,
+    exchangeRateFilter: IExchangeRateFilter
+  ): Promise<void> {
     const { ExchangeRate } = this.tenancy.models(tenantId);
-    const exchangeRates = await ExchangeRate.query()
-      .pagination(exchangeRateFilter.page - 1, exchangeRateFilter.pageSize);
-    
+    const exchangeRates = await ExchangeRate.query().pagination(
+      exchangeRateFilter.page - 1,
+      exchangeRateFilter.pageSize
+    );
+
     return exchangeRates;
   }
 
   /**
    * Deletes exchange rates in bulk.
-   * @param {number} tenantId 
-   * @param {number[]} exchangeRatesIds 
+   * @param {number} tenantId
+   * @param {number[]} exchangeRatesIds
    */
-  public async deleteBulkExchangeRates(tenantId: number, exchangeRatesIds: number[]): Promise<void> {
+  public async deleteBulkExchangeRates(
+    tenantId: number,
+    exchangeRatesIds: number[]
+  ): Promise<void> {
     const { ExchangeRate } = this.tenancy.models(tenantId);
 
-    this.logger.info('[exchange_rates] trying delete in bulk.', { tenantId, exchangeRatesIds });
+    this.logger.info('[exchange_rates] trying delete in bulk.', {
+      tenantId,
+      exchangeRatesIds,
+    });
     await this.validateExchangeRatesIdsExistance(tenantId, exchangeRatesIds);
 
     await ExchangeRate.query().whereIn('id', exchangeRatesIds).delete();
-    this.logger.info('[exchange_rates] deleted successfully.', { tenantId, exchangeRatesIds });
+    this.logger.info('[exchange_rates] deleted successfully.', {
+      tenantId,
+      exchangeRatesIds,
+    });
   }
 
   /**
@@ -114,16 +154,23 @@ export default class ExchangeRatesService implements IExchangeRatesService {
    * @param {IExchangeRateDTO} exchangeRateDTO - Exchange rate DTO.
    * @return {Promise<void>}
    */
-  private async validateExchangeRatePeriodExistance(tenantId: number, exchangeRateDTO: IExchangeRateDTO): Promise<void> {
+  private async validateExchangeRatePeriodExistance(
+    tenantId: number,
+    exchangeRateDTO: IExchangeRateDTO
+  ): Promise<void> {
     const { ExchangeRate } = this.tenancy.models(tenantId);
 
-    this.logger.info('[exchange_rates] trying to validate period existance.', { tenantId });
+    this.logger.info('[exchange_rates] trying to validate period existance.', {
+      tenantId,
+    });
     const foundExchangeRate = await ExchangeRate.query()
       .where('currency_code', exchangeRateDTO.currencyCode)
       .where('date', exchangeRateDTO.date);
 
     if (foundExchangeRate.length > 0) {
-      this.logger.info('[exchange_rates] given exchange rate period exists.', { tenantId });
+      this.logger.info('[exchange_rates] given exchange rate period exists.', {
+        tenantId,
+      });
       throw new ServiceError(ERRORS.EXCHANGE_RATE_PERIOD_EXISTS);
     }
   }
@@ -134,14 +181,25 @@ export default class ExchangeRatesService implements IExchangeRatesService {
    * @param {number} exchangeRateId - Exchange rate id.
    * @returns {Promise<void>}
    */
-  private async validateExchangeRateExistance(tenantId: number, exchangeRateId: number) {
+  private async validateExchangeRateExistance(
+    tenantId: number,
+    exchangeRateId: number
+  ) {
     const { ExchangeRate } = this.tenancy.models(tenantId);
 
-    this.logger.info('[exchange_rates] trying to validate exchange rate id existance.', { tenantId, exchangeRateId });
-    const foundExchangeRate = await ExchangeRate.query().findById(exchangeRateId);
+    this.logger.info(
+      '[exchange_rates] trying to validate exchange rate id existance.',
+      { tenantId, exchangeRateId }
+    );
+    const foundExchangeRate = await ExchangeRate.query().findById(
+      exchangeRateId
+    );
 
     if (!foundExchangeRate) {
-      this.logger.info('[exchange_rates] exchange rate not found.', { tenantId, exchangeRateId });
+      this.logger.info('[exchange_rates] exchange rate not found.', {
+        tenantId,
+        exchangeRateId,
+      });
       throw new ServiceError(ERRORS.EXCHANGE_RATE_NOT_FOUND);
     }
   }
@@ -152,12 +210,23 @@ export default class ExchangeRatesService implements IExchangeRatesService {
    * @param {number[]} exchangeRatesIds - Exchange rates ids.
    * @returns {Promise<void>}
    */
-  private async validateExchangeRatesIdsExistance(tenantId: number, exchangeRatesIds: number[]): Promise<void> {
+  private async validateExchangeRatesIdsExistance(
+    tenantId: number,
+    exchangeRatesIds: number[]
+  ): Promise<void> {
     const { ExchangeRate } = this.tenancy.models(tenantId);
 
-    const storedExchangeRates = await ExchangeRate.query().whereIn('id', exchangeRatesIds);
-    const storedExchangeRatesIds = storedExchangeRates.map((category) => category.id);
-    const notFoundExRates = difference(exchangeRatesIds, storedExchangeRatesIds);
+    const storedExchangeRates = await ExchangeRate.query().whereIn(
+      'id',
+      exchangeRatesIds
+    );
+    const storedExchangeRatesIds = storedExchangeRates.map(
+      (category) => category.id
+    );
+    const notFoundExRates = difference(
+      exchangeRatesIds,
+      storedExchangeRatesIds
+    );
 
     if (notFoundExRates.length > 0) {
       throw new ServiceError(ERRORS.NOT_FOUND_EXCHANGE_RATES);

@@ -231,7 +231,6 @@ export default class JournalCommands {
       referenceId: expense.id,
       date: expense.paymentDate,
       userId,
-      draft: !expense.publishedAt,
     };
     const paymentJournalEntry = new JournalEntry({
       credit: expense.totalAmount,
@@ -330,7 +329,6 @@ export default class JournalCommands {
         note: entry.note,
         date: manualJournalObj.date,
         userId: manualJournalObj.userId,
-        draft: !manualJournalObj.status,
         index: entry.index,
       });
       if (entry.debit) {
@@ -354,7 +352,7 @@ export default class JournalCommands {
     inventoryCostLot: IInventoryLotCost & { item: IItem }
   ) {
     const commonEntry = {
-      referenceType: 'SaleInvoice',
+      referenceType: inventoryCostLot.transactionType,
       referenceId: inventoryCostLot.transactionId,
       date: inventoryCostLot.date,
     };

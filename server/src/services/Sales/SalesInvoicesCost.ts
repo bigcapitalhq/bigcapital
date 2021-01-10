@@ -1,8 +1,10 @@
 import { Container, Service, Inject } from 'typedi';
+import { chain } from 'lodash';
+import moment from 'moment';
 import JournalPoster from 'services/Accounting/JournalPoster';
 import InventoryService from 'services/Inventory/Inventory';
 import TenancyService from 'services/Tenancy/TenancyService';
-import { IInventoryLotCost, IItem } from 'interfaces';
+import { IInventoryLotCost, IInventoryTransaction, IItem } from 'interfaces';
 import JournalCommands from 'services/Accounting/JournalCommands';
 
 @Service()
@@ -24,7 +26,7 @@ export default class SaleInvoicesCost {
     tenantId: number,
     inventoryItemsIds: number[],
     startingDate: Date
-  ) {
+  ): Promise<void> {
     const asyncOpers: Promise<[]>[] = [];
 
     inventoryItemsIds.forEach((inventoryItemId: number) => {
@@ -35,7 +37,61 @@ export default class SaleInvoicesCost {
       );
       asyncOpers.push(oper);
     });
-    return Promise.all([...asyncOpers]);
+    await Promise.all([...asyncOpers]);
+  }
+
+  /**
+   * Retrieve the max dated inventory transactions in the transactions that
+   * have the same item id.
+   * @param {IInventoryTransaction[]} inventoryTransactions
+   * @return {IInventoryTransaction[]}
+   */
+  getMaxDateInventoryTransactions(
+    inventoryTransactions: IInventoryTransaction[]
+  ): IInventoryTransaction[] {
+    return chain(inventoryTransactions)
+      .reduce((acc: any, transaction) => {
+        const compatatorDate = acc[transaction.itemId];
+
+        if (
+          !compatatorDate ||
+          moment(compatatorDate.date).isBefore(transaction.date)
+        ) {
+          return {
+            ...acc,
+            [transaction.itemId]: {
+              ...transaction,
+            },
+          };
+        }
+        return acc;
+      }, {})
+      .values()
+      .value();
+  }
+
+  /**
+   * Computes items costs by the given inventory transaction.
+   * @param {number} tenantId
+   * @param {IInventoryTransaction[]} inventoryTransactions
+   */
+  async computeItemsCostByInventoryTransactions(
+    tenantId: number,
+    inventoryTransactions: IInventoryTransaction[]
+  ) {
+    const asyncOpers: Promise<[]>[] = [];
+    const reducedTransactions = this.getMaxDateInventoryTransactions(
+      inventoryTransactions
+    );
+    reducedTransactions.forEach((transaction) => {
+      const oper: Promise<[]> = this.inventoryService.scheduleComputeItemCost(
+        tenantId,
+        transaction.itemId,
+        transaction.date
+      );
+      asyncOpers.push(oper);
+    });
+    await Promise.all([...asyncOpers]);
   }
 
   /**
@@ -90,7 +146,7 @@ export default class SaleInvoicesCost {
     return Promise.all([
       journal.deleteEntries(),
       journal.saveEntries(),
-      journal.saveBalance()
+      journal.saveBalance(),
     ]);
   }
 }

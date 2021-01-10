@@ -10,6 +10,7 @@ import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import TenancyService from 'services/Tenancy/TenancyService';
 import { ServiceError } from 'exceptions';
 import InventoryService from 'services/Inventory/Inventory';
+import InventoryAdjustmentEntry from 'models/InventoryAdjustmentEntry';
 
 const ERRORS = {
   NOT_FOUND: 'NOT_FOUND',
@@ -27,6 +28,8 @@ const ERRORS = {
 
   ITEMS_HAVE_ASSOCIATED_TRANSACTIONS: 'ITEMS_HAVE_ASSOCIATED_TRANSACTIONS',
   ITEM_HAS_ASSOCIATED_TRANSACTINS: 'ITEM_HAS_ASSOCIATED_TRANSACTINS',
+
+  ITEM_HAS_ASSOCIATED_INVENTORY_ADJUSTMENT: 'ITEM_HAS_ASSOCIATED_INVENTORY_ADJUSTMENT',
 };
 
 @Service()
@@ -52,7 +55,7 @@ export default class ItemsService implements IItemsService {
    * @param {number} itemId
    * @return {Promise<void>}
    */
-  private async getItemOrThrowError(
+  public async getItemOrThrowError(
     tenantId: number,
     itemId: number
   ): Promise<void> {
@@ -235,16 +238,10 @@ export default class ItemsService implements IItemsService {
    * @return {IItem}
    */
   private transformNewItemDTOToModel(itemDTO: IItemDTO) {
-    const inventoryAttrs = ['openingQuantity', 'openingCost', 'openingDate'];
-
     return {
-      ...omit(itemDTO, inventoryAttrs),
-      ...(itemDTO.type === 'inventory' ? pick(itemDTO, inventoryAttrs) : {}),
+      ...itemDTO,
       active: defaultTo(itemDTO.active, 1),
-      quantityOnHand:
-        itemDTO.type === 'inventory'
-          ? defaultTo(itemDTO.openingQuantity, 0)
-          : null,
+      quantityOnHand: itemDTO.type === 'inventory' ? 0 : null,
     };
   }
 
@@ -282,7 +279,7 @@ export default class ItemsService implements IItemsService {
       );
     }
     const item = await Item.query().insertAndFetch({
-      ...this.transformNewItemDTOToModel(itemDTO)
+      ...this.transformNewItemDTOToModel(itemDTO),
     });
     this.logger.info('[items] item inserted successfully.', {
       tenantId,
@@ -295,46 +292,6 @@ export default class ItemsService implements IItemsService {
       itemId: item.id,
     });
     return item;
-  }
-
-  /**
-   * Records the opening items inventory transaction.
-   * @param {number} tenantId -
-   * @param itemId -
-   * @param openingQuantity -
-   * @param openingCost -
-   * @param openingDate -
-   */
-  public async recordOpeningItemsInventoryTransaction(
-    tenantId: number,
-    itemId: number,
-    openingQuantity: number,
-    openingCost: number,
-    openingDate: Date
-  ): Promise<void> {
-    // Gets the next inventory lot number.
-    const lotNumber = this.inventoryService.getNextLotNumber(tenantId);
-
-    // Records the inventory transaction.
-    const inventoryTransaction = await this.inventoryService.recordInventoryTransaction(
-      tenantId,
-      {
-        date: openingDate,
-        quantity: openingQuantity,
-        rate: openingCost,
-        direction: 'IN',
-        transactionType: 'OpeningItem',
-        itemId,
-        lotNumber,
-      }
-    );
-    // Records the inventory cost lot transaction.
-    await this.inventoryService.recordInventoryCostLotTransaction(tenantId, {
-      ...omit(inventoryTransaction, ['updatedAt', 'createdAt']),
-      cost: openingQuantity * openingCost,
-      remaining: 0,
-    });
-    await this.inventoryService.incrementNextLotNumber(tenantId);
   }
 
   /**
@@ -398,16 +355,19 @@ export default class ItemsService implements IItemsService {
    */
   public async deleteItem(tenantId: number, itemId: number) {
     const { Item } = this.tenancy.models(tenantId);
-
     this.logger.info('[items] trying to delete item.', { tenantId, itemId });
 
     // Retreive the given item or throw not found service error.
     await this.getItemOrThrowError(tenantId, itemId);
 
+    // Validate the item has no associated inventory transactions.
+    await this.validateHasNoInventoryAdjustments(tenantId, itemId); 
+
     // Validate the item has no associated invoices or bills.
     await this.validateHasNoInvoicesOrBills(tenantId, itemId);
-
+    
     await Item.query().findById(itemId).delete();
+
     this.logger.info('[items] deleted successfully.', { tenantId, itemId });
   }
 
@@ -518,6 +478,9 @@ export default class ItemsService implements IItemsService {
     // Validates the given items exist on the storage.
     await this.validateItemsIdsExists(tenantId, itemsIds);
 
+    // Validate the item has no associated inventory transactions.
+    await this.validateHasNoInventoryAdjustments(tenantId, itemsIds); 
+
     // Validate the items have no associated invoices or bills.
     await this.validateHasNoInvoicesOrBills(tenantId, itemsIds);
 
@@ -541,7 +504,6 @@ export default class ItemsService implements IItemsService {
       Item,
       itemsFilter
     );
-
     const { results, pagination } = await Item.query()
       .onBuild((builder) => {
         builder.withGraphFetched('inventoryAccount');
@@ -582,6 +544,26 @@ export default class ItemsService implements IItemsService {
           ? ERRORS.ITEMS_HAVE_ASSOCIATED_TRANSACTIONS
           : ERRORS.ITEM_HAS_ASSOCIATED_TRANSACTINS
       );
+    }
+  }
+
+  /**
+   * Validates the given item has no associated inventory adjustment transactions.
+   * @param {number} tenantId -
+   * @param {number} itemId -
+   */
+  private async validateHasNoInventoryAdjustments(
+    tenantId: number,
+    itemId: number[] | number,
+  ): Promise<void> {
+    const { InventoryAdjustmentEntry } = this.tenancy.models(tenantId);
+    const itemsIds = Array.isArray(itemId) ? itemId : [itemId];
+
+    const inventoryAdjEntries = await InventoryAdjustmentEntry.query()
+      .whereIn('item_id', itemsIds);
+    
+    if (inventoryAdjEntries.length > 0) {
+      throw new ServiceError(ERRORS.ITEM_HAS_ASSOCIATED_INVENTORY_ADJUSTMENT);
     }
   }
 }

@@ -10,7 +10,8 @@ exports.up = function(knex) {
     table.integer('quantity').unsigned();
     table.decimal('rate', 13, 3).unsigned();
 
-    table.string('lot_number').index();
+    table.integer('lot_number').index();
+    table.integer('cost_account_id').unsigned().index().references('id').inTable('accounts');
  
     table.string('transaction_type').index();
     table.integer('transaction_id').unsigned().index();

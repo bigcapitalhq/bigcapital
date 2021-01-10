@@ -39,7 +39,7 @@ export default class InventoryService {
     direction: TInventoryTransactionDirection,
     date: Date | string,
     lotNumber: number
-  ) {
+  ): IInventoryTransaction[] {
     return itemEntries.map((entry: IItemEntry) => ({
       ...pick(entry, ['itemId', 'quantity', 'rate']),
       lotNumber,
@@ -150,19 +150,36 @@ export default class InventoryService {
    */
   async recordInventoryTransactions(
     tenantId: number,
-    inventoryEntries: IInventoryTransaction[],
-    deleteOld: boolean
+    transactions: IInventoryTransaction[],
+    override: boolean = false
   ): Promise<void> {
-    inventoryEntries.forEach(async (entry: IInventoryTransaction) => {
-      await this.recordInventoryTransaction(tenantId, entry, deleteOld);
+    const bulkInsertOpers = [];
+
+    transactions.forEach((transaction: IInventoryTransaction) => {
+      const oper = this.recordInventoryTransaction(
+        tenantId,
+        transaction,
+        override
+      );
+      bulkInsertOpers.push(oper);
     });
+    const inventoryTransactions = await Promise.all(bulkInsertOpers);
+
+    // Triggers `onInventoryTransactionsCreated` event.
+    this.eventDispatcher.dispatch(
+      events.inventory.onInventoryTransactionsCreated,
+      {
+        tenantId,
+        inventoryTransactions,
+      }
+    );
   }
 
   /**
-   * Writes the inventory transactiosn on the storage from the given 
+   * Writes the inventory transactiosn on the storage from the given
    * inventory transactions entries.
-   * 
-   * @param {number} tenantId - 
+   *
+   * @param {number} tenantId -
    * @param {IInventoryTransaction} inventoryEntry -
    * @param {boolean} deleteOld -
    */
@@ -203,7 +220,7 @@ export default class InventoryService {
     transactionDirection: TInventoryTransactionDirection,
     override: boolean = false
   ): Promise<void> {
-    // Gets the next inventory lot number.
+    // Retrieve the next inventory lot number.
     const lotNumber = this.getNextLotNumber(tenantId);
 
     // Loads the inventory items entries of the given sale invoice.
@@ -231,20 +248,6 @@ export default class InventoryService {
     );
     // Increment and save the next lot number settings.
     await this.incrementNextLotNumber(tenantId);
-
-    // Triggers `onInventoryTransactionsCreated` event.
-    this.eventDispatcher.dispatch(
-      events.inventory.onInventoryTransactionsCreated,
-      {
-        tenantId,
-        inventoryEntries,
-        transactionId,
-        transactionType,
-        transactionDate,
-        transactionDirection,
-        override,
-      }
-    );
   }
 
   /**
@@ -253,7 +256,7 @@ export default class InventoryService {
    * @param {string} transactionType
    * @param {number} transactionId
    * @return {Promise<{
- *    oldInventoryTransactions: IInventoryTransaction[]
+   *    oldInventoryTransactions: IInventoryTransaction[]
    * }>}
    */
   async deleteInventoryTransactions(
@@ -261,7 +264,9 @@ export default class InventoryService {
     transactionId: number,
     transactionType: string
   ): Promise<{ oldInventoryTransactions: IInventoryTransaction[] }> {
-    const { inventoryTransactionRepository } = this.tenancy.repositories(tenantId);
+    const { inventoryTransactionRepository } = this.tenancy.repositories(
+      tenantId
+    );
 
     // Retrieve the inventory transactions of the given sale invoice.
     const oldInventoryTransactions = await inventoryTransactionRepository.find({
