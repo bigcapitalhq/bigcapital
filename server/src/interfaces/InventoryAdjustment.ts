@@ -9,8 +9,8 @@ export interface IQuickInventoryAdjustmentDTO {
   description: string;
   referenceNo: string;
   itemId: number;
-  newQuantity: number;
-  newValue: number;
+  quantity: number;
+  cost: number;
 };
 
 export interface IInventoryAdjustment {
@@ -20,7 +20,8 @@ export interface IInventoryAdjustment {
   reason: string;
   description: string;
   referenceNo: string;
-  entries: IInventoryAdjustmentEntry[]
+  entries: IInventoryAdjustmentEntry[];
+  userId: number;
 };
 
 export interface IInventoryAdjustmentEntry {
@@ -28,9 +29,10 @@ export interface IInventoryAdjustmentEntry {
   adjustmentId?: number,
   index: number,
   itemId: number;
-  newQuantity: number;
-  newValue: number;
-}
+  quantity?: number;
+  cost?: number;
+  value?: number;
+};
 
 export interface IInventoryAdjustmentsFilter{
   page: number,

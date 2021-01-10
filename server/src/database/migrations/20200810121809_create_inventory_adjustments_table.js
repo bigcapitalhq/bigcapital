@@ -4,9 +4,12 @@ exports.up = function(knex) {
     table.increments();
     table.date('date').index();
     table.string('type').index();
+    table.integer('adjustment_account_id').unsigned().references('id').inTable('accounts');
     table.string('reason');
     table.string('reference_no').index();
     table.string('description');
+    table.integer('user_id').unsigned();
+    table.timestamps();
   });  
 };
 

@@ -2,8 +2,8 @@ import { Inject, Service } from 'typedi';
 import { Router, Request, Response, NextFunction } from 'express';
 import { check, param } from 'express-validator';
 import { ServiceError } from 'exceptions';
-import BaseController from "../BaseController";
-import InventoryAdjustmentService from "services/Inventory/InventoryAdjustmentService";
+import BaseController from '../BaseController';
+import InventoryAdjustmentService from 'services/Inventory/InventoryAdjustmentService';
 
 @Service()
 export default class InventoryAdjustmentsController extends BaseController {
@@ -18,12 +18,10 @@ export default class InventoryAdjustmentsController extends BaseController {
 
     router.delete(
       '/:id',
-      [
-        param('id').exists().isNumeric().toInt(),
-      ],
+      [param('id').exists().isNumeric().toInt()],
       this.validationResult,
       this.asyncMiddleware(this.deleteInventoryAdjustment.bind(this)),
-      this.handleServiceErrors,
+      this.handleServiceErrors
     );
     router.post(
       '/quick',
@@ -46,14 +44,24 @@ export default class InventoryAdjustmentsController extends BaseController {
   get validatateQuickAdjustment() {
     return [
       check('date').exists().isISO8601(),
-      check('type').exists().isIn(['increment', 'decrement', 'value_adjustment']),
+      check('type')
+        .exists()
+        .isIn(['increment', 'decrement', 'value_adjustment']),
       check('reference_no').exists(),
       check('adjustment_account_id').exists().isInt().toInt(),
       check('reason').exists().isString().exists(),
       check('description').optional().isString(),
       check('item_id').exists().isInt().toInt(),
-      check('new_quantity').optional().isInt(),
-      check('new_value').optional().toFloat(),
+      check('quantity')
+        .if(check('type').exists().isIn(['increment', 'decrement']))
+        .exists()
+        .isInt()
+        .toInt(),
+      check('cost')
+        .if(check('type').exists().isIn(['increment']))
+        .exists()
+        .isFloat()
+        .toInt(),
     ];
   }
 
@@ -63,15 +71,24 @@ export default class InventoryAdjustmentsController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  async createQuickInventoryAdjustment(req: Request, res: Response, next: NextFunction) {
-    const { tenantId } = req;
+  async createQuickInventoryAdjustment(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { tenantId, user } = req;
     const quickInventoryAdjustment = this.matchedBodyData(req);
+    console.log(quickInventoryAdjustment);
 
     try {
-      await this.inventoryAdjustmentService
-        .createQuickAdjustment(tenantId, quickInventoryAdjustment);
-      
+      const inventoryAdjustment = await this.inventoryAdjustmentService.createQuickAdjustment(
+        tenantId,
+        quickInventoryAdjustment,
+        user
+      );
+
       return res.status(200).send({
+        id: inventoryAdjustment.id,
         message: 'The inventory adjustment has been created successfully.',
       });
     } catch (error) {
@@ -85,14 +102,20 @@ export default class InventoryAdjustmentsController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  async deleteInventoryAdjustment(req: Request, res: Response, next: NextFunction) {
+  async deleteInventoryAdjustment(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { tenantId } = req;
     const { id: adjustmentId } = req.params;
 
     try {
-      await this.inventoryAdjustmentService
-        .deleteInventoryAdjustment(tenantId, adjustmentId);
-      
+      await this.inventoryAdjustmentService.deleteInventoryAdjustment(
+        tenantId,
+        adjustmentId
+      );
+
       return res.status(200).send({
         message: 'The inventory adjustment has been deleted successfully.',
       });
@@ -103,11 +126,15 @@ export default class InventoryAdjustmentsController extends BaseController {
 
   /**
    * Retrieve the inventory adjustments paginated list.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
-  async getInventoryAdjustments(req: Request, res: Response, next: NextFunction) {
+  async getInventoryAdjustments(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { tenantId } = req;
     const filter = {
       page: 1,
@@ -119,9 +146,11 @@ export default class InventoryAdjustmentsController extends BaseController {
       const {
         pagination,
         inventoryAdjustments,
-      } = await this.inventoryAdjustmentService
-        .getInventoryAdjustments(tenantId, filter);
-      
+      } = await this.inventoryAdjustmentService.getInventoryAdjustments(
+        tenantId,
+        filter
+      );
+
       return res.status(200).send({
         inventoy_adjustments: inventoryAdjustments,
         pagination: this.transfromToResponse(pagination),
@@ -147,7 +176,11 @@ export default class InventoryAdjustmentsController extends BaseController {
     if (error instanceof ServiceError) {
       if (error.errorType === 'INVENTORY_ADJUSTMENT_NOT_FOUND') {
         return res.status(400).send({
-          errors: [{ type: 'INVENTORY_ADJUSTMENT.NOT.FOUND', code: 100 }],
+          errors: [{
+            type: 'INVENTORY_ADJUSTMENT.NOT.FOUND',
+            code: 100,
+            message: 'The inventory adjustment not found.'
+          }],
         });
       }
       if (error.errorType === 'NOT_FOUND') {
@@ -163,7 +196,7 @@ export default class InventoryAdjustmentsController extends BaseController {
       if (error.errorType === 'ITEM_SHOULD_BE_INVENTORY_TYPE') {
         return res.boom.badRequest(
           'You could not make adjustment on item has no inventory type.',
-          { errors: [{ type: 'ITEM_SHOULD_BE_INVENTORY_TYPE', code: 300 }], }
+          { errors: [{ type: 'ITEM_SHOULD_BE_INVENTORY_TYPE', code: 300 }] }
         );
       }
     }

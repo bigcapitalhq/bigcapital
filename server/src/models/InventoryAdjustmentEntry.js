@@ -3,7 +3,7 @@ import TenantModel from 'models/TenantModel';
 
 export default class InventoryAdjustmentEntry extends TenantModel {
   /**
-   * Table name
+   * Table name.
    */
   static get tableName() {
     return 'inventory_adjustments_entries';
@@ -13,15 +13,28 @@ export default class InventoryAdjustmentEntry extends TenantModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const Account = require('models/InventoryAdjustment');
-    
+    const InventoryAdjustment = require('models/InventoryAdjustment');
+    const Item = require('models/Item');
+
     return {
-      entries: {
+      inventoryAdjustment: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Account.default,
+        modelClass: InventoryAdjustment.default,
         join: {
           from: 'inventory_adjustments_entries.adjustmentId',
           to: 'inventory_adjustments.id',
+        },
+      },
+
+      /**
+       * Entry item.
+       */
+      item: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Item.default,
+        join: {
+          from: 'inventory_adjustments_entries.itemId',
+          to: 'items.id',
         },
       },
     };

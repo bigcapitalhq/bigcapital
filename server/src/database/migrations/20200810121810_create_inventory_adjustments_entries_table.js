@@ -5,8 +5,9 @@ exports.up = function(knex) {
     table.integer('adjustment_id').unsigned().index().references('id').inTable('inventory_adjustments');
     table.integer('index').unsigned();
     table.integer('item_id').unsigned().index().references('id').inTable('items');
-    table.decimal('new_quantity').unsigned();
-    table.decimal('new_cost').unsigned();
+    table.integer('quantity');
+    table.decimal('cost').unsigned();
+    table.decimal('value').unsigned();
   });
 };
 

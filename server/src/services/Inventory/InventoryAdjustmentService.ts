@@ -9,7 +9,8 @@ import {
   IQuickInventoryAdjustmentDTO,
   IInventoryAdjustment,
   IPaginationMeta,
-  IInventoryAdjustmentsFilter
+  IInventoryAdjustmentsFilter,
+  ISystemUser,
 } from 'interfaces';
 import events from 'subscribers/events';
 import AccountsService from 'services/Accounts/AccountsService';
@@ -44,16 +45,26 @@ export default class InventoryAdjustmentService {
    * @return {IInventoryAdjustment}
    */
   transformQuickAdjToModel(
-    adjustmentDTO: IQuickInventoryAdjustmentDTO
+    adjustmentDTO: IQuickInventoryAdjustmentDTO,
+    authorizedUser: ISystemUser
   ): IInventoryAdjustment {
     return {
-      ...omit(adjustmentDTO, ['newQuantity', 'newCost', 'itemId']),
+      ...omit(adjustmentDTO, ['quantity', 'cost', 'itemId']),
+      userId: authorizedUser.id,
       entries: [
         {
           index: 1,
           itemId: adjustmentDTO.itemId,
-          newQuantity: adjustmentDTO.newQuantity,
-          newCost: adjustmentDTO.newCost,
+          ...(['increment', 'decrement'].indexOf(adjustmentDTO.type) !== -1
+            ? {
+                quantity: adjustmentDTO.quantity,
+              }
+            : {}),
+          ...('increment' === adjustmentDTO.type
+            ? {
+                cost: adjustmentDTO.cost,
+              }
+            : {}),
         },
       ],
     };
@@ -97,10 +108,18 @@ export default class InventoryAdjustmentService {
    */
   async createQuickAdjustment(
     tenantId: number,
-    quickAdjustmentDTO: IQuickInventoryAdjustmentDTO
-  ) {
+    quickAdjustmentDTO: IQuickInventoryAdjustmentDTO,
+    authorizedUser: ISystemUser
+  ): Promise<IInventoryAdjustment> {
     const { InventoryAdjustment } = this.tenancy.models(tenantId);
 
+    this.logger.info(
+      '[inventory_adjustment] trying to create quick adjustment..',
+      {
+        tenantId,
+        quickAdjustmentDTO,
+      }
+    );
     // Retrieve the adjustment account or throw not found error.
     const adjustmentAccount = await this.accountsService.getAccountOrThrowError(
       tenantId,
@@ -116,10 +135,10 @@ export default class InventoryAdjustmentService {
 
     // Transform the DTO to inventory adjustment model.
     const invAdjustmentObject = this.transformQuickAdjToModel(
-      quickAdjustmentDTO
+      quickAdjustmentDTO,
+      authorizedUser
     );
-
-    await InventoryAdjustment.query().upsertGraph({
+    const inventoryAdjustment = await InventoryAdjustment.query().upsertGraph({
       ...invAdjustmentObject,
     });
     // Triggers `onInventoryAdjustmentQuickCreated` event.
@@ -129,6 +148,14 @@ export default class InventoryAdjustmentService {
         tenantId,
       }
     );
+    this.logger.info(
+      '[inventory_adjustment] quick adjustment created successfully.',
+      {
+        tenantId,
+        quickAdjustmentDTO,
+      }
+    );
+    return inventoryAdjustment;
   }
 
   /**
@@ -150,6 +177,10 @@ export default class InventoryAdjustmentService {
       InventoryAdjustment,
     } = this.tenancy.models(tenantId);
 
+    this.logger.info('[inventory_adjustment] trying to delete adjustment.', {
+      tenantId,
+      inventoryAdjustmentId,
+    });
     // Deletes the inventory adjustment entries.
     await InventoryAdjustmentEntry.query()
       .where('adjustment_id', inventoryAdjustmentId)
@@ -162,12 +193,19 @@ export default class InventoryAdjustmentService {
     await this.eventDispatcher.dispatch(events.inventoryAdjustment.onDeleted, {
       tenantId,
     });
+    this.logger.info(
+      '[inventory_adjustment] the adjustment deleted successfully.',
+      {
+        tenantId,
+        inventoryAdjustmentId,
+      }
+    );
   }
 
   /**
    * Retrieve the inventory adjustments paginated list.
-   * @param {number} tenantId 
-   * @param {IInventoryAdjustmentsFilter} adjustmentsFilter 
+   * @param {number} tenantId
+   * @param {IInventoryAdjustmentsFilter} adjustmentsFilter
    */
   async getInventoryAdjustments(
     tenantId: number,
@@ -179,7 +217,8 @@ export default class InventoryAdjustmentService {
     const { InventoryAdjustment } = this.tenancy.models(tenantId);
 
     const { results, pagination } = await InventoryAdjustment.query()
-      .withGraphFetched('entries')
+      .withGraphFetched('entries.item')
+      .withGraphFetched('adjustmentAccount')
       .pagination(adjustmentsFilter.page - 1, adjustmentsFilter.pageSize);
 
     return {
