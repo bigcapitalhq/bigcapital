@@ -85,7 +85,7 @@ export default class BalanceSheetStatement extends FinancialSheet {
    * @return {IBalanceSheetAccountTotal[]}
    */
   private getSectionTotalPeriods(
-    sections: Array<IBalanceSheetAccount|IBalanceSheetSection>
+    sections: Array<IBalanceSheetAccount | IBalanceSheetSection>
   ): IBalanceSheetAccountTotal[] {
     return this.dateRangeSet.map((date, index) => {
       const amount = sumBy(sections, `totalPeriods[${index}].amount`);
@@ -203,8 +203,8 @@ export default class BalanceSheetStatement extends FinancialSheet {
 
   /**
    * Mappes the structure sections.
-   * @param {IBalanceSheetStructureSection} structure 
-   * @param {IAccount} accounts 
+   * @param {IBalanceSheetStructureSection} structure
+   * @param {IAccount} accounts
    */
   private structureSectionMapper(
     structure: IBalanceSheetStructureSection,
@@ -238,12 +238,12 @@ export default class BalanceSheetStatement extends FinancialSheet {
       name: structure.name,
       sectionType: structure.sectionType,
       type: structure.type,
-      ...(structure.type === 'accounts_section')
+      ...(structure.type === 'accounts_section'
         ? this.structureRelatedAccountsMapper(
-            structure._accountsTypesRelated,
+            structure.accountsTypesRelated,
             accounts
           )
-        : this.structureSectionMapper(structure, accounts),
+        : this.structureSectionMapper(structure, accounts)),
     };
     return result;
   }
@@ -259,13 +259,30 @@ export default class BalanceSheetStatement extends FinancialSheet {
   ): IBalanceSheetSection[] {
     return (
       reportStructure
-        .map((structure: IBalanceSheetStructureSection) =>
-          this.balanceSheetStructureMapper(structure, balanceSheetAccounts)
-        )
-        // Filter the structure sections that have no children.
+        .map((structure: IBalanceSheetStructureSection) => {
+          const sheetSection = this.balanceSheetStructureMapper(
+            structure,
+            balanceSheetAccounts
+          );
+          return [sheetSection, structure];
+        })
+        // Filter the structure sections that have no children and not always show.
         .filter(
-          (structure: IBalanceSheetSection) =>
-            structure.children.length > 0 || structure._forceShow
+          ([sheetSection, structure]: [
+            IBalanceSheetSection,
+            IBalanceSheetStructureSection
+          ]) => {
+            return sheetSection.children.length > 0 || structure.alwaysShow;
+          }
+        )
+        // Mappes the balance sheet scetions only
+        .map(
+          ([sheetSection, structure]: [
+            IBalanceSheetSection,
+            IBalanceSheetStructureSection
+          ]) => {
+            return sheetSection;
+          }
         )
     );
   }
@@ -295,6 +312,10 @@ export default class BalanceSheetStatement extends FinancialSheet {
    * @return {IBalanceSheetSection[]}
    */
   public reportData(): IBalanceSheetSection[] {
+    // Returns nothing if there is no entries in the journal between the given period.
+    if (this.journalFinancial.entries.length === 0) {
+      return [];
+    }
     return this.balanceSheetStructureWalker(
       BalanceSheetStructure,
       this.accounts

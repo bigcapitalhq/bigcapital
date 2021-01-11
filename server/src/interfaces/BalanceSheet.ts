@@ -37,8 +37,8 @@ export interface IBalanceSheetStructureSection {
   sectionType?: string,
   type: 'section' | 'accounts_section',
   children?: IBalanceSheetStructureSection[],
-  _accountsTypesRelated?: string[],
-  _forceShow?: boolean,
+  accountsTypesRelated?: string[],
+  alwaysShow?: boolean,
 }
 
 export interface IBalanceSheetAccountTotal {
@@ -69,6 +69,6 @@ export interface IBalanceSheetSection {
   total: IBalanceSheetAccountTotal,
   totalPeriods?: IBalanceSheetAccountTotal[];
 
-  _accountsTypesRelated?: string[],
+  accountsTypesRelated?: string[],
   _forceShow?: boolean,
 }

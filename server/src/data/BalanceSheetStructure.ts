@@ -9,20 +9,20 @@ const balanceSheetStructure: IBalanceSheetStructureSection[] = [
       {
         name: 'Current Asset',
         type: 'accounts_section',
-        _accountsTypesRelated: ['current_asset'],
+        accountsTypesRelated: ['current_asset'],
       },
       {
         name: 'Fixed Asset',
         type: 'accounts_section',
-        _accountsTypesRelated: ['fixed_asset'],
+        accountsTypesRelated: ['fixed_asset'],
       },
       {
         name: 'Other Asset',
         type: 'accounts_section',
-        _accountsTypesRelated: ['other_asset'],
+        accountsTypesRelated: ['other_asset'],
       },
     ],
-    _forceShow: true,
+    alwaysShow: true,
   },
   {
     name: 'Liabilities and Equity',
@@ -37,17 +37,17 @@ const balanceSheetStructure: IBalanceSheetStructureSection[] = [
           {
             name: 'Current Liability',
             type: 'accounts_section',
-            _accountsTypesRelated: ['current_liability'],
+            accountsTypesRelated: ['current_liability'],
           },
           {
             name: 'Long Term Liability',
             type: 'accounts_section',
-            _accountsTypesRelated: ['long_term_liability'],
+            accountsTypesRelated: ['long_term_liability'],
           },
           {
             name: 'Other Liability',
             type: 'accounts_section',
-            _accountsTypesRelated: ['other_liability'],
+            accountsTypesRelated: ['other_liability'],
           },
         ],
       },
@@ -55,10 +55,10 @@ const balanceSheetStructure: IBalanceSheetStructureSection[] = [
         name: 'Equity',
         sectionType: 'equity',
         type: 'accounts_section',
-        _accountsTypesRelated: ['equity'],
+        accountsTypesRelated: ['equity'],
       },
     ],
-    _forceShow: true,
+    alwaysShow: true,
   },
 ];
 

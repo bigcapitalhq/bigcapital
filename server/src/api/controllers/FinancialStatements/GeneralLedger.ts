@@ -6,8 +6,7 @@ import { Inject, Service } from 'typedi';
 import GeneralLedgerService from 'services/FinancialStatements/GeneralLedger/GeneralLedgerService';
 
 @Service()
-export default class GeneralLedgerReportController extends BaseController{
-
+export default class GeneralLedgerReportController extends BaseController {
   @Inject()
   generalLedgetService: GeneralLedgerService;
 
@@ -17,7 +16,8 @@ export default class GeneralLedgerReportController extends BaseController{
   router() {
     const router = Router();
 
-    router.get('/', 
+    router.get(
+      '/',
       this.validationSchema,
       this.validationResult,
       asyncMiddleware(this.generalLedger.bind(this))
@@ -35,9 +35,9 @@ export default class GeneralLedgerReportController extends BaseController{
       query('basis').optional(),
       query('number_format.no_cents').optional().isBoolean().toBoolean(),
       query('number_format.divide_1000').optional().isBoolean().toBoolean(),
-      query('none_transactions').optional().isBoolean().toBoolean(),
-      query('accounts_ids').optional(),
-      query('accounts_ids.*').isNumeric().toInt(),
+      query('none_transactions').default(true).isBoolean().toBoolean(),
+      query('accounts_ids').optional().isArray({ min: 1 }),
+      query('accounts_ids.*').isInt().toInt(),
       query('orderBy').optional().isIn(['created_at', 'name', 'code']),
       query('order').optional().isIn(['desc', 'asc']),
     ];
@@ -45,22 +45,27 @@ export default class GeneralLedgerReportController extends BaseController{
 
   /**
    * Retrieve the general ledger financial statement.
-   * @param {Request} req - 
-   * @param {Response} res - 
+   * @param {Request} req -
+   * @param {Response} res -
    */
   async generalLedger(req: Request, res: Response, next: NextFunction) {
     const { tenantId, settings } = req;
     const filter = this.matchedQueryData(req);
 
-    const organizationName = settings.get({ group: 'organization', key: 'name' });
-    const baseCurrency = settings.get({ group: 'organization', key: 'base_currency' });
+    const organizationName = settings.get({
+      group: 'organization',
+      key: 'name',
+    });
+    const baseCurrency = settings.get({
+      group: 'organization',
+      key: 'base_currency',
+    });
 
     try {
-      const {
-        data,
-        query,
-      } = await this.generalLedgetService.generalLedger(tenantId, filter);
-
+      const { data, query } = await this.generalLedgetService.generalLedger(
+        tenantId,
+        filter
+      );
       return res.status(200).send({
         organization_name: organizationName,
         base_currency: baseCurrency,

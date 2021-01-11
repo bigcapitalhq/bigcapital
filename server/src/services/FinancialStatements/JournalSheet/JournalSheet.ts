@@ -1,12 +1,13 @@
-import { sumBy, chain } from 'lodash';
+import { sumBy, chain, omit } from 'lodash';
 import {
   IJournalEntry,
   IJournalPoster,
   IJournalReportEntriesGroup,
   IJournalReportQuery,
-  IJournalReport
-} from "interfaces";
-import FinancialSheet from "../FinancialSheet";
+  IJournalReport,
+} from 'interfaces';
+import FinancialSheet from '../FinancialSheet';
+import { AccountTransaction } from 'models';
 
 export default class JournalSheet extends FinancialSheet {
   tenantId: number;
@@ -16,14 +17,14 @@ export default class JournalSheet extends FinancialSheet {
 
   /**
    * Constructor method.
-   * @param {number} tenantId 
-   * @param {IJournalPoster} journal 
+   * @param {number} tenantId
+   * @param {IJournalPoster} journal
    */
   constructor(
     tenantId: number,
     query: IJournalReportQuery,
     journal: IJournalPoster,
-    baseCurrency: string,
+    baseCurrency: string
   ) {
     super();
 
@@ -35,22 +36,37 @@ export default class JournalSheet extends FinancialSheet {
   }
 
   /**
+   * Mappes the journal entries.
+   * @param {IJournalEntry[]} entries - 
+   */
+  entriesMapper(
+    entries: IJournalEntry[],
+  ) {
+    return entries.map((entry: IJournalEntry) => {
+      return {
+        ...omit(entry, 'account'),
+        currencyCode: this.baseCurrency,
+      };
+    })
+  }
+
+  /**
    * Mapping journal entries groups.
    * @param {IJournalEntry[]} entriesGroup -
    * @param {string} key -
    * @return {IJournalReportEntriesGroup}
    */
-  entriesGroupMapper(
+  entriesGroupsMapper(
     entriesGroup: IJournalEntry[],
-    key: string,
+    key: string
   ): IJournalReportEntriesGroup {
     const totalCredit = sumBy(entriesGroup, 'credit');
     const totalDebit = sumBy(entriesGroup, 'debit');
 
     return {
       id: key,
-      entries: entriesGroup,
-      
+      entries: this.entriesMapper(entriesGroup),
+
       currencyCode: this.baseCurrency,
 
       credit: totalCredit,
@@ -63,16 +79,15 @@ export default class JournalSheet extends FinancialSheet {
 
   /**
    * Mapping the journal entries to entries groups.
-   * @param {IJournalEntry[]} entries 
+   * @param {IJournalEntry[]} entries
    * @return {IJournalReportEntriesGroup[]}
    */
   entriesWalker(entries: IJournalEntry[]): IJournalReportEntriesGroup[] {
     return chain(entries)
       .groupBy((entry) => `${entry.referenceId}-${entry.referenceType}`)
-      .map((
-        entriesGroup: IJournalEntry[],
-        key: string
-      ) => this.entriesGroupMapper(entriesGroup, key))
+      .map((entriesGroup: IJournalEntry[], key: string) =>
+        this.entriesGroupsMapper(entriesGroup, key)
+      )
       .value();
   }
 
