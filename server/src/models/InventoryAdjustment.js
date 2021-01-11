@@ -20,7 +20,7 @@ export default class InventoryAdjustment extends TenantModel {
    * Virtual attributes.
    */
   static get virtualAttributes() {
-    return ['inventoryDirection'];
+    return ['inventoryDirection', 'isPublished'];
   }
 
   /**
@@ -28,6 +28,14 @@ export default class InventoryAdjustment extends TenantModel {
    */
   get inventoryDirection() {
     return InventoryAdjustment.getInventoryDirection(this.type);
+  }
+
+  /**
+   * Detarmines whether the adjustment is published.
+   * @return {boolean}
+   */
+  get isPublished() {
+    return !!this.publishedAt;
   }
 
   static getInventoryDirection(type) {

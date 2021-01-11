@@ -27,6 +27,9 @@ export default class InventoryAdjustmentsSubscriber {
     tenantId,
     inventoryAdjustment,
   }) {
+    // Can't continue if the inventory adjustment is not published.
+    if (!inventoryAdjustment.isPublished) { return; }
+
     await this.inventoryAdjustment.writeInventoryTransactions(
       tenantId,
       inventoryAdjustment
@@ -39,11 +42,29 @@ export default class InventoryAdjustmentsSubscriber {
   @On(events.inventoryAdjustment.onDeleted)
   async handleRevertInventoryTransactionsOnceDeleted({
     tenantId,
-    inventoryAdjustmentId
+    inventoryAdjustmentId,
+    oldInventoryTransaction,
   }) {
+    // Can't continue if the inventory adjustment is not published.
+    if (!oldInventoryTransaction.isPublished) { return; }
+
     await this.inventoryAdjustment.revertInventoryTransactions(
       tenantId,
       inventoryAdjustmentId,
     );
+  }
+
+  /**
+   * Handles writing inventory transactions once the quick adjustment created.
+   */
+  @On(events.inventoryAdjustment.onPublished)
+  async handleWriteInventoryTransactionsOncePublished({
+    tenantId,
+    inventoryAdjustment,
+  }) {
+    await this.inventoryAdjustment.writeInventoryTransactions(
+      tenantId,
+      inventoryAdjustment
+    )
   }
 }

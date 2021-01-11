@@ -193,9 +193,13 @@ export default {
     onComputeItemCostJobCompleted: 'onComputeItemCostJobCompleted'
   },
 
+  /**
+   * Inventory adjustment service.
+   */
   inventoryAdjustment: {
     onCreated: 'onInventoryAdjustmentCreated',
     onQuickCreated: 'onInventoryAdjustmentQuickCreated',
     onDeleted: 'onInventoryAdjustmentDeleted',
+    onPublished: 'onInventoryAdjustmentPublished',
   }
 }

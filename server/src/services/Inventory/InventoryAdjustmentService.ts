@@ -1,5 +1,6 @@
 import { Inject, Service } from 'typedi';
 import { omit } from 'lodash';
+import moment from 'moment';
 import {
   EventDispatcher,
   EventDispatcherInterface,
@@ -54,16 +55,21 @@ export default class InventoryAdjustmentService {
     authorizedUser: ISystemUser
   ): IInventoryAdjustment {
     return {
-      ...omit(adjustmentDTO, ['quantity', 'cost', 'itemId']),
+      ...omit(adjustmentDTO, ['quantity', 'cost', 'itemId', 'publish']),
       userId: authorizedUser.id,
+      ...(adjustmentDTO.publish
+        ? {
+            publishedAt: moment().toMySqlDateTime(),
+          }
+        : {}),
       entries: [
         {
           index: 1,
           itemId: adjustmentDTO.itemId,
           ...('increment' === adjustmentDTO.type
             ? {
-              quantity: adjustmentDTO.quantity,
-              cost: adjustmentDTO.cost,
+                quantity: adjustmentDTO.quantity,
+                cost: adjustmentDTO.cost,
               }
             : {}),
           ...('decrement' === adjustmentDTO.type
@@ -213,6 +219,50 @@ export default class InventoryAdjustmentService {
   }
 
   /**
+   * Publish the inventory adjustment transaction.
+   * @param tenantId 
+   * @param inventoryAdjustmentId 
+   */
+  async publishInventoryAdjustment(
+    tenantId: number,
+    inventoryAdjustmentId: number
+  ): Promise<void> {
+    const { InventoryAdjustment } = this.tenancy.models(tenantId);
+
+    // Retrieve the inventory adjustment or throw not found service error.
+    const oldInventoryAdjustment = await this.getInventoryAdjustmentOrThrowError(
+      tenantId,
+      inventoryAdjustmentId
+    );
+    this.logger.info('[inventory_adjustment] trying to publish adjustment.', {
+      tenantId,
+      inventoryAdjustmentId,
+    });
+    // Publish the inventory adjustment transaction.
+    await InventoryAdjustment.query()
+      .findById(inventoryAdjustmentId)
+      .patch({
+        publishedAt: moment().toMySqlDateTime(),
+      });
+
+    // Retrieve the inventory adjustment after the modification.
+    const inventoryAdjustment = await InventoryAdjustment.query()
+      .findById(inventoryAdjustmentId)
+      .withGraphFetched('entries');
+
+    // Triggers `onInventoryAdjustmentDeleted` event.
+    await this.eventDispatcher.dispatch(
+      events.inventoryAdjustment.onPublished,
+      {
+        tenantId,
+        inventoryAdjustmentId,
+        inventoryAdjustment,
+        oldInventoryAdjustment,
+      }
+    );
+  }
+
+  /**
    * Retrieve the inventory adjustments paginated list.
    * @param {number} tenantId
    * @param {IInventoryAdjustmentsFilter} adjustmentsFilter
@@ -246,7 +296,7 @@ export default class InventoryAdjustmentService {
   async writeInventoryTransactions(
     tenantId: number,
     inventoryAdjustment: IInventoryAdjustment,
-    override: boolean = false,
+    override: boolean = false
   ): Promise<void> {
     // Gets the next inventory lot number.
     const lotNumber = this.inventoryService.getNextLotNumber(tenantId);

@@ -16,6 +16,13 @@ export default class InventoryAdjustmentsController extends BaseController {
   router() {
     const router = Router();
 
+    router.post(
+      '/:id/publish',
+      [param('id').exists().isNumeric().toInt()],
+      this.validationResult,
+      this.asyncMiddleware(this.publishInventoryAdjustment.bind(this)),
+      this.handleServiceErrors
+    );
     router.delete(
       '/:id',
       [param('id').exists().isNumeric().toInt()],
@@ -62,6 +69,7 @@ export default class InventoryAdjustmentsController extends BaseController {
         .exists()
         .isFloat()
         .toInt(),
+      check('publish').default(false).isBoolean().toBoolean(),
     ];
   }
 
@@ -118,6 +126,34 @@ export default class InventoryAdjustmentsController extends BaseController {
       return res.status(200).send({
         id: adjustmentId,
         message: 'The inventory adjustment has been deleted successfully.',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Publish the given inventory adjustment transaction.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   */
+  async publishInventoryAdjustment(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { tenantId } = req;
+    const { id: adjustmentId } = req.params;
+
+    try {
+      await this.inventoryAdjustmentService.publishInventoryAdjustment(
+        tenantId,
+        adjustmentId
+      );
+      return res.status(200).send({
+        id: adjustmentId,
+        message: 'The inventory adjustment has been published successfully.',
       });
     } catch (error) {
       next(error);
