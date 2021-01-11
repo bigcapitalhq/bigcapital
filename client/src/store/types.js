@@ -26,6 +26,7 @@ import paymentReceives from './PaymentReceive/paymentReceive.type';
 import paymentMades from './PaymentMades/paymentMade.type';
 import organizations from './organizations/organizations.types';
 import subscription from './subscription/subscription.types';
+import inventoryAdjustments from './inventoryAdjustments/inventoryAdjustment.type';
 
 export default {
   ...authentication,
@@ -56,4 +57,5 @@ export default {
   ...paymentMades,
   ...organizations,
   ...subscription,
+  ...inventoryAdjustments
 };

@@ -940,4 +940,18 @@ export default {
     'The invoice cannot be deleted cause has associated payment transactions',
   category_name_exists: 'Category name exists',
   some_customers_have_sales_invoices: 'Some customers have sales invoices',
+  inventory_adjustments: 'Inventory adjustments',
+  make_adjustment: 'Make a adjustment',
+  adjustment_type: 'Adjustment type',
+  decrement: 'Decrement',
+  new_quantity: 'New quantity',
+  reason: 'Reason',
+  increment: 'Increment',
+  cost: 'Cost',
+  qty_on_hand: 'Qty on hand',
+  adjustment_account: 'Adjustment account',
+  inventory_adjustment_list:'Inventory Adjustment List',
+  delete_adjustment:'Delete Adjustment',
+  the_make_adjustment_has_been_successfully_created:
+    'The make adjustment has been successfully created.',
 };

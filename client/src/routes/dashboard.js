@@ -89,6 +89,14 @@ export default [
     }),
     breadcrumb: 'Items',
   },
+  // Inventory adjustments
+  {
+    path: `/inventory-adjustments`,
+    component: LazyLoader({
+      loader: () => import('containers/Items/InventoryAdjustmentList'),
+    }),
+    breadcrumb: 'Inventory a adjustments',
+  },
 
   // Financial Reports.
   {
@@ -112,7 +120,7 @@ export default [
     component: LazyLoader({
       loader: () =>
         import(
-        'containers/FinancialStatements/TrialBalanceSheet/TrialBalanceSheet'
+          'containers/FinancialStatements/TrialBalanceSheet/TrialBalanceSheet'
         ),
     }),
     breadcrumb: 'Trial Balance Sheet',
@@ -252,7 +260,7 @@ export default [
   },
 
   // Invoices.
-{
+  {
     path: `/invoices/:id/edit`,
     component: LazyLoader({
       loader: () => import('containers/Sales/Invoice/Invoices'),

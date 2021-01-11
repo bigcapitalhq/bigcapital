@@ -54,21 +54,21 @@ function ManualJournalActionsBar({
     history.push('/make-journal-entry');
   }, [history]);
 
-  const filterDropdown = FilterDropdown({
-    fields: resourceFields,
-    initialCondition: {
-      fieldKey: 'journal_number',
-      compatator: 'contains',
-      value: '',
-    },
-    onFilterChange: (filterConditions) => {
-      setFilterCount(filterConditions.length || 0);
-      addManualJournalsTableQueries({
-        filter_roles: filterConditions || '',
-      });
-      onFilterChanged && onFilterChanged(filterConditions);
-    },
-  });
+  // const filterDropdown = FilterDropdown({
+  //   fields: resourceFields,
+  //   initialCondition: {
+  //     fieldKey: 'journal_number',
+  //     compatator: 'contains',
+  //     value: '',
+  //   },
+  //   onFilterChange: (filterConditions) => {
+  //     setFilterCount(filterConditions.length || 0);
+  //     addManualJournalsTableQueries({
+  //       filter_roles: filterConditions || '',
+  //     });
+  //     onFilterChanged && onFilterChanged(filterConditions);
+  //   },
+  // });
   const hasSelectedRows = useMemo(() => selectedRows.length > 0, [
     selectedRows,
   ]);
@@ -103,7 +103,7 @@ function ManualJournalActionsBar({
         />
         <Popover
           minimal={true}
-          content={filterDropdown}
+          // content={filterDropdown}
           interactionKind={PopoverInteractionKind.CLICK}
           position={Position.BOTTOM_LEFT}
         >

@@ -25,8 +25,8 @@ export default [
         href: '/items',
       },
       {
-        text: <T id={'new_item'} />,
-        href: '/items/new',
+        text: <T id={'inventory_adjustments'} />,
+        href: '/inventory-adjustments',
       },
       {
         text: <T id={'category_list'} />,
