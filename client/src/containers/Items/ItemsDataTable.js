@@ -27,6 +27,7 @@ import { CLASSES } from 'common/classes';
 import withItems from 'containers/Items/withItems';
 import withItemsActions from 'containers/Items/withItemsActions';
 import withSettings from 'containers/Settings/withSettings';
+import withDialogActions from 'containers/Dialog/withDialogActions';
 import { compose, saveInvoke, isBlank, defaultToTransform } from 'utils';
 
 // Items datatable.
@@ -37,6 +38,9 @@ function ItemsDataTable({
   itemsTableQuery,
   itemsCurrentViewId,
   itemsPagination,
+
+  // #withDialogActions
+  openDialog,
 
   // #withItemsActions
   addItemsTableQueries,
@@ -84,6 +88,11 @@ function ItemsDataTable({
     },
     [onDeleteItem],
   );
+
+  const handleMakeAdjustment = useCallback(() => {
+    openDialog('inventory-adjustment-form', {});
+  }, [openDialog]);
+
   const actionMenuList = useCallback(
     (item) => (
       <Menu>
@@ -109,6 +118,13 @@ function ItemsDataTable({
             text={formatMessage({ id: 'activate_item' })}
             icon={<Icon icon="play-16" iconSize={16} />}
             onClick={() => onActivateItem(item)}
+          />
+        </If>
+        
+        <If condition={item.type === 'inventory'}>
+          <MenuItem
+            text={formatMessage({ id: 'make_adjustment' })}
+            onClick={handleMakeAdjustment}
           />
         </If>
         <MenuItem
@@ -300,4 +316,5 @@ export default compose(
     baseCurrency: organizationSettings?.baseCurrency,
   })),
   withItemsActions,
+  withDialogActions,
 )(ItemsDataTable);

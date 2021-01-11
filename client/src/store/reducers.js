@@ -27,6 +27,7 @@ import paymentReceives from './PaymentReceive/paymentReceive.reducer';
 import paymentMades from './PaymentMades/paymentMade.reducer';
 import organizations from './organizations/organizations.reducers';
 import subscriptions from './subscription/subscription.reducer';
+import inventoryAdjustments from './inventoryAdjustments/inventoryAdjustment.reducer';
 
 export default combineReducers({
   authentication,
@@ -56,4 +57,5 @@ export default combineReducers({
   vendors,
   paymentReceives,
   paymentMades,
+  inventoryAdjustments,
 });
