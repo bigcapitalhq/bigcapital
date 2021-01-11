@@ -23,10 +23,12 @@ import 'subscribers/SaleReceipt/SyncItemsQuantity';
 import 'subscribers/SaleReceipt/WriteInventoryTransactions';
 import 'subscribers/SaleReceipt/WriteJournalEntries';
 
+import 'subscribers/Inventory/Inventory';
+import 'subscribers/Inventory/InventoryAdjustment';
+
 import 'subscribers/customers';
 import 'subscribers/vendors';
 import 'subscribers/paymentMades';
 import 'subscribers/paymentReceives';
 import 'subscribers/saleEstimates';
-import 'subscribers/inventory';
 import 'subscribers/items';

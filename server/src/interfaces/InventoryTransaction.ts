@@ -3,14 +3,14 @@ export type TInventoryTransactionDirection = 'IN' | 'OUT';
 
 export interface IInventoryTransaction {
   id?: number,
-  date: Date,
+  date: Date|string,
   direction: TInventoryTransactionDirection,
   itemId: number,
   quantity: number,
   rate: number,
   transactionType: string,
   transactionId: number,
-  lotNumber: string,
+  lotNumber: number,
   entryId: number,
   createdAt?: Date,
   updatedAt?: Date,
@@ -25,7 +25,7 @@ export interface IInventoryLotCost {
   rate: number,
   remaining: number,
   cost: number,
-  lotNumber: string|number,
+  lotNumber: number,
   transactionType: string,
   transactionId: number,
   entryId: number

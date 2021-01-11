@@ -35,6 +35,8 @@ import ManualJournal from 'models/ManualJournal';
 import ManualJournalEntry from 'models/ManualJournalEntry';
 import Media from 'models/Media';
 import MediaLink from 'models/MediaLink';
+import InventoryAdjustment from 'models/InventoryAdjustment';
+import InventoryAdjustmentEntry from 'models/InventoryAdjustmentEntry';
 
 export default (knex) => {
   const models = {
@@ -73,6 +75,8 @@ export default (knex) => {
     Vendor,
     Customer,
     Contact,
+    InventoryAdjustment,
+    InventoryAdjustmentEntry,
   };
   return mapValues(models, (model) => model.bindKnex(knex));
 }

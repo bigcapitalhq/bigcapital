@@ -17,6 +17,28 @@ export default class InventoryAdjustment extends TenantModel {
   }
 
   /**
+   * Virtual attributes.
+   */
+  static get virtualAttributes() {
+    return ['inventoryDirection'];
+  }
+
+  /**
+   * Retrieve formatted reference type.
+   */
+  get inventoryDirection() {
+    return InventoryAdjustment.getInventoryDirection(this.type);
+  }
+
+  static getInventoryDirection(type) {
+    const directions = {
+      'increment': 'IN',
+      'decrement': 'OUT',
+    };
+    return directions[type] || '';
+  }
+
+  /**
    * Relationship mapping.
    */
   static get relationMappings() {

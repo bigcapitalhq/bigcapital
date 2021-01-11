@@ -11,11 +11,13 @@ import {
   IPaginationMeta,
   IInventoryAdjustmentsFilter,
   ISystemUser,
+  IInventoryTransaction,
 } from 'interfaces';
 import events from 'subscribers/events';
 import AccountsService from 'services/Accounts/AccountsService';
 import ItemsService from 'services/Items/ItemsService';
 import HasTenancyService from 'services/Tenancy/TenancyService';
+import InventoryService from './Inventory';
 
 const ERRORS = {
   INVENTORY_ADJUSTMENT_NOT_FOUND: 'INVENTORY_ADJUSTMENT_NOT_FOUND',
@@ -39,6 +41,9 @@ export default class InventoryAdjustmentService {
   @EventDispatcher()
   eventDispatcher: EventDispatcherInterface;
 
+  @Inject()
+  inventoryService: InventoryService;
+
   /**
    * Transformes the quick inventory adjustment DTO to model object.
    * @param {IQuickInventoryAdjustmentDTO} adjustmentDTO -
@@ -55,14 +60,15 @@ export default class InventoryAdjustmentService {
         {
           index: 1,
           itemId: adjustmentDTO.itemId,
-          ...(['increment', 'decrement'].indexOf(adjustmentDTO.type) !== -1
-            ? {
-                quantity: adjustmentDTO.quantity,
-              }
-            : {}),
           ...('increment' === adjustmentDTO.type
             ? {
-                cost: adjustmentDTO.cost,
+              quantity: adjustmentDTO.quantity,
+              cost: adjustmentDTO.cost,
+              }
+            : {}),
+          ...('decrement' === adjustmentDTO.type
+            ? {
+                quantity: adjustmentDTO.quantity,
               }
             : {}),
         },
@@ -138,6 +144,7 @@ export default class InventoryAdjustmentService {
       quickAdjustmentDTO,
       authorizedUser
     );
+    // Saves the inventory adjustment with assocaited entries to the storage.
     const inventoryAdjustment = await InventoryAdjustment.query().upsertGraph({
       ...invAdjustmentObject,
     });
@@ -146,6 +153,8 @@ export default class InventoryAdjustmentService {
       events.inventoryAdjustment.onQuickCreated,
       {
         tenantId,
+        inventoryAdjustment,
+        inventoryAdjustmentId: inventoryAdjustment.id,
       }
     );
     this.logger.info(
@@ -192,6 +201,7 @@ export default class InventoryAdjustmentService {
     // Triggers `onInventoryAdjustmentDeleted` event.
     await this.eventDispatcher.dispatch(events.inventoryAdjustment.onDeleted, {
       tenantId,
+      inventoryAdjustmentId,
     });
     this.logger.info(
       '[inventory_adjustment] the adjustment deleted successfully.',
@@ -225,5 +235,62 @@ export default class InventoryAdjustmentService {
       inventoryAdjustments: results,
       pagination,
     };
+  }
+
+  /**
+   * Writes the inventory transactions from the inventory adjustment transaction.
+   * @param  {number} tenantId
+   * @param  {IInventoryAdjustment} inventoryAdjustment
+   * @return {Promise<void>}
+   */
+  async writeInventoryTransactions(
+    tenantId: number,
+    inventoryAdjustment: IInventoryAdjustment,
+    override: boolean = false,
+  ): Promise<void> {
+    // Gets the next inventory lot number.
+    const lotNumber = this.inventoryService.getNextLotNumber(tenantId);
+
+    const commonTransaction = {
+      direction: inventoryAdjustment.inventoryDirection,
+      date: inventoryAdjustment.date,
+      transactionType: 'InventoryAdjustment',
+      transactionId: inventoryAdjustment.id,
+    };
+    const inventoryTransactions = [];
+
+    inventoryAdjustment.entries.forEach((entry) => {
+      inventoryTransactions.push({
+        ...commonTransaction,
+        itemId: entry.itemId,
+        quantity: entry.quantity,
+        rate: entry.cost,
+        lotNumber,
+      });
+    });
+    // Saves the given inventory transactions to the storage.
+    this.inventoryService.recordInventoryTransactions(
+      tenantId,
+      inventoryTransactions,
+      override
+    );
+    // Increment and save the next lot number settings.
+    await this.inventoryService.incrementNextLotNumber(tenantId);
+  }
+
+  /**
+   * Reverts the inventory transactions from the inventory adjustment transaction.
+   * @param {number} tenantId
+   * @param {number} inventoryAdjustmentId
+   */
+  async revertInventoryTransactions(
+    tenantId: number,
+    inventoryAdjustmentId: number
+  ): Promise<{ oldInventoryTransactions: IInventoryTransaction[] }> {
+    return this.inventoryService.deleteInventoryTransactions(
+      tenantId,
+      inventoryAdjustmentId,
+      'InventoryAdjustment'
+    );
   }
 }
