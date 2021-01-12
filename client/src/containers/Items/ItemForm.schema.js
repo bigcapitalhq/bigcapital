@@ -61,26 +61,6 @@ const Schema = Yup.object().shape({
   stock: Yup.string() || Yup.boolean(),
   sellable: Yup.boolean().required(),
   purchasable: Yup.boolean().required(),
-  opening_cost: Yup.number().when(['opening_quantity'], {
-    is: (value) => value,
-    then: Yup.number()
-      .min(0)
-      .required()
-      .label(formatMessage({ id: 'opening_cost_' })),
-    otherwise: Yup.number().nullable(),
-  }),
-  opening_quantity: Yup.number()
-    .integer()
-    .min(1)
-    .nullable()
-    .label(formatMessage({ id: 'opening_quantity_' })),
-  opening_date: Yup.date().when(['opening_quantity', 'opening_cost'], {
-    is: (quantity, cost) => !isBlank(quantity) && !isBlank(cost),
-    then: Yup.date()
-      .required()
-      .label(formatMessage({ id: 'opening_date_' })),
-    otherwise: Yup.date().nullable(),
-  }),
 });
 
 export const transformItemFormData = (item, defaultValue) => {
