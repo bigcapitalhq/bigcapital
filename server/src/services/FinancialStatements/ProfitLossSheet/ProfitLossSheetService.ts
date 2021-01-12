@@ -27,8 +27,11 @@ export default class ProfitLossSheetService {
       fromDate: moment().startOf('year').format('YYYY-MM-DD'),
       toDate: moment().endOf('year').format('YYYY-MM-DD'),
       numberFormat: {
-        noCents: false,
         divideOn1000: false,
+        negativeFormat: 'mines',
+        showZero: false,
+        formatMoney: 'total',
+        precision: 2,
       },
       basis: 'accural',
       noneZero: false,
@@ -41,8 +44,8 @@ export default class ProfitLossSheetService {
 
   /**
    * Retrieve profit/loss sheet statement.
-   * @param {number} tenantId 
-   * @param {IProfitLossSheetQuery} query 
+   * @param {number} tenantId
+   * @param {IProfitLossSheetQuery} query
    * @return { }
    */
   async profitLossSheet(tenantId: number, query: IProfitLossSheetQuery) {
@@ -55,16 +58,24 @@ export default class ProfitLossSheetService {
       ...this.defaultQuery,
       ...query,
     };
-    this.logger.info('[profit_loss_sheet] trying to calculate the report.', { tenantId, filter });
+    this.logger.info('[profit_loss_sheet] trying to calculate the report.', {
+      tenantId,
+      filter,
+    });
 
     // Get the given accounts or throw not found service error.
     if (filter.accountsIds.length > 0) {
-      await this.accountsService.getAccountsOrThrowError(tenantId, filter.accountsIds);
+      await this.accountsService.getAccountsOrThrowError(
+        tenantId,
+        filter.accountsIds
+      );
     }
     // Settings tenant service.
     const settings = this.tenancy.settings(tenantId);
-    const baseCurrency = settings.get({ group: 'organization', key: 'base_currency' });
-
+    const baseCurrency = settings.get({
+      group: 'organization',
+      key: 'base_currency',
+    });
     // Retrieve all accounts on the storage.
     const accounts = await accountRepository.all('type');
     const accountsGraph = await accountRepository.getDependencyGraph();
@@ -75,8 +86,11 @@ export default class ProfitLossSheetService {
       toDate: query.toDate,
     });
     // Transform transactions to journal collection.
-    const transactionsJournal = Journal.fromTransactions(transactions, tenantId, accountsGraph);
-
+    const transactionsJournal = Journal.fromTransactions(
+      transactions,
+      tenantId,
+      accountsGraph
+    );
     // Profit/Loss report instance.
     const profitLossInstance = new ProfitLossSheet(
       tenantId,

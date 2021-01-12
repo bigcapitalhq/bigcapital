@@ -1,11 +1,11 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { query } from 'express-validator';
 import { Inject } from 'typedi';
-import BaseController from 'api/controllers/BaseController';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
 import APAgingSummaryReportService from 'services/FinancialStatements/AgingSummary/APAgingSummaryService';
+import BaseFinancialReportController from './BaseFinancialReportController';
 
-export default class APAgingSummaryReportController extends BaseController {
+export default class APAgingSummaryReportController extends BaseFinancialReportController {
   @Inject()
   APAgingSummaryService: APAgingSummaryReportService;
 
@@ -28,11 +28,10 @@ export default class APAgingSummaryReportController extends BaseController {
    */
   get validationSchema() {
     return [
+      ...this.sheetNumberFormatValidationSchema,
       query('as_date').optional().isISO8601(),
       query('aging_days_before').optional().isNumeric().toInt(),
       query('aging_periods').optional().isNumeric().toInt(),
-      query('number_format.no_cents').optional().isBoolean().toBoolean(),
-      query('number_format.1000_divide').optional().isBoolean().toBoolean(),
       query('vendors_ids').optional().isArray({ min: 1 }),
       query('vendors_ids.*').isInt({ min: 1 }).toInt(),
       query('none_zero').default(true).isBoolean().toBoolean(),

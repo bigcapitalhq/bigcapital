@@ -187,7 +187,7 @@ export default class ProfitLossSheet extends FinancialSheet {
     accounts: IProfitLossSheetAccount[]
   ): IProfitLossSheetTotal {
     const amount = sumBy(accounts, 'total.amount');
-    const formattedAmount = this.formatNumber(amount);
+    const formattedAmount = this.formatTotalNumber(amount);
     const currencyCode = this.baseCurrency;
 
     return { amount, formattedAmount, currencyCode };
@@ -203,7 +203,7 @@ export default class ProfitLossSheet extends FinancialSheet {
   ): IProfitLossSheetTotal[] {
     return this.dateRangeSet.map((date, index) => {
       const amount = sumBy(accounts, `totalPeriods[${index}].amount`);
-      const formattedAmount = this.formatNumber(amount);
+      const formattedAmount = this.formatTotalNumber(amount);
       const currencyCode = this.baseCurrency;
 
       return { amount, formattedAmount, currencyCode };
@@ -229,7 +229,7 @@ export default class ProfitLossSheet extends FinancialSheet {
    */
   private get incomeSection(): IProfitLossSheetAccountsSection {
     return {
-      sectionTitle: 'Income accounts',
+      name: 'Income accounts',
       entryNormal: 'credit',
       ...this.sectionMapper(this.incomeAccounts),
     };
@@ -241,7 +241,7 @@ export default class ProfitLossSheet extends FinancialSheet {
    */
   private get expensesSection(): IProfitLossSheetAccountsSection {
     return {
-      sectionTitle: 'Expense accounts',
+      name: 'Expense accounts',
       entryNormal: 'debit',
       ...this.sectionMapper(this.expensesAccounts),
     };
@@ -253,7 +253,7 @@ export default class ProfitLossSheet extends FinancialSheet {
    */
   private get otherExpensesSection(): IProfitLossSheetAccountsSection {
     return {
-      sectionTitle: 'Other expenses accounts',
+      name: 'Other expenses accounts',
       entryNormal: 'debit',
       ...this.sectionMapper(this.otherExpensesAccounts),
     };
@@ -265,7 +265,7 @@ export default class ProfitLossSheet extends FinancialSheet {
    */
   private get costOfSalesSection(): IProfitLossSheetAccountsSection {
     return {
-      sectionTitle: 'Cost of sales',
+      name: 'Cost of sales',
       entryNormal: 'debit',
       ...this.sectionMapper(this.costOfSalesAccounts),
     };
@@ -283,7 +283,7 @@ export default class ProfitLossSheet extends FinancialSheet {
       const totalMines = sumBy(minesSections, `totalPeriods[${index}].amount`);
 
       const amount = totalPositive - totalMines;
-      const formattedAmount = this.formatNumber(amount);
+      const formattedAmount = this.formatTotalNumber(amount);
       const currencyCode = this.baseCurrency;
 
       return { date, amount, formattedAmount, currencyCode };
@@ -298,7 +298,7 @@ export default class ProfitLossSheet extends FinancialSheet {
     const totalMinesSections = sumBy(minesSections, 'total.amount');
 
     const amount = totalPositiveSections - totalMinesSections;
-    const formattedAmount = this.formatNumber(amount);
+    const formattedAmount = this.formatTotalNumber(amount);
     const currencyCode = this.baseCurrency;
 
     return { amount, formattedAmount, currencyCode };

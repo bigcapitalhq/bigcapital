@@ -1,11 +1,11 @@
 import { Service, Inject } from 'typedi';
 import { Router, Request, Response, NextFunction } from 'express';
 import { query, ValidationChain } from 'express-validator';
-import BaseController from '../BaseController';
 import ProfitLossSheetService from 'services/FinancialStatements/ProfitLossSheet/ProfitLossSheetService';
+import BaseFinancialReportController from './BaseFinancialReportController';
 
 @Service()
-export default class ProfitLossSheetController extends BaseController {
+export default class ProfitLossSheetController extends BaseFinancialReportController {
   @Inject()
   profitLossSheetService: ProfitLossSheetService;
 
@@ -29,11 +29,10 @@ export default class ProfitLossSheetController extends BaseController {
    */
   get validationSchema(): ValidationChain[] {
     return [
+      ...this.sheetNumberFormatValidationSchema,
       query('basis').optional(),
       query('from_date').optional().isISO8601(),
       query('to_date').optional().isISO8601(),
-      query('number_format.no_cents').optional().isBoolean(),
-      query('number_format.divide_1000').optional().isBoolean(),
       query('basis').optional(),
       query('none_zero').optional().isBoolean().toBoolean(),
       query('none_transactions').optional().isBoolean().toBoolean(),

@@ -15,14 +15,17 @@ export default class PayableAgingSummaryService {
   /**
    * Default report query.
    */
-  get defaultQuery() {
+  get defaultQuery(): IAPAgingSummaryQuery {
     return {
       asDate: moment().format('YYYY-MM-DD'),
       agingDaysBefore: 30,
       agingPeriods: 3,
       numberFormat: {
-        noCents: false,
+        precision: 2,
         divideOn1000: false,
+        showZero: false,
+        formatMoney: 'total',
+        negativeFormat: 'mines'
       },
       vendorsIds: [],
       noneZero: false,

@@ -68,7 +68,7 @@ export default class ARAgingSummarySheet extends AgingSummaryReport {
 
     return {
       customerName: customer.displayName,
-      current: this.formatTotalAmount(currentTotal),
+      current: this.formatAmount(currentTotal),
       aging: agingPeriods,
       total: this.formatTotalAmount(amount),
     };

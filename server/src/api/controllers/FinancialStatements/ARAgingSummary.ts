@@ -1,13 +1,11 @@
 import { Service, Inject } from 'typedi';
 import { Router, Request, Response } from 'express';
-import { castArray } from 'lodash';
-import { query, oneOf } from 'express-validator';
-import { IARAgingSummaryQuery } from 'interfaces';
-import BaseController from '../BaseController';
+import { query } from 'express-validator';
 import ARAgingSummaryService from 'services/FinancialStatements/AgingSummary/ARAgingSummaryService';
+import BaseFinancialReportController from './BaseFinancialReportController';
 
 @Service()
-export default class ARAgingSummaryReportController extends BaseController {
+export default class ARAgingSummaryReportController extends BaseFinancialReportController {
   @Inject()
   ARAgingSummaryService: ARAgingSummaryService;
 
@@ -31,11 +29,11 @@ export default class ARAgingSummaryReportController extends BaseController {
    */
   get validationSchema() {
     return [
+      ...this.sheetNumberFormatValidationSchema,
+
       query('as_date').optional().isISO8601(),
       query('aging_days_before').optional().isInt({ max: 500 }).toInt(),
       query('aging_periods').optional().isInt({ max: 12 }).toInt(),
-      query('number_format.no_cents').optional().isBoolean().toBoolean(),
-      query('number_format.1000_divide').optional().isBoolean().toBoolean(),
       query('customers_ids').optional().isArray({ min: 1 }),
       query('customers_ids.*').isInt({ min: 1 }).toInt(),
       query('none_zero').default(true).isBoolean().toBoolean(),

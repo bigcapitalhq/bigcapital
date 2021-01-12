@@ -15,14 +15,17 @@ export default class ARAgingSummaryService {
   /**
    * Default report query.
    */
-  get defaultQuery() {
+  get defaultQuery(): IARAgingSummaryQuery {
     return {
       asDate: moment().format('YYYY-MM-DD'),
       agingDaysBefore: 30,
       agingPeriods: 3,
       numberFormat: {
-        no_cents: false,
-        divide_1000: false,
+        divideOn1000: false,
+        negativeFormat: 'mines',
+        showZero: false,
+        formatMoney: 'total',
+        precision: 2,
       },
       customersIds: [],
       noneZero: false,
@@ -50,6 +53,7 @@ export default class ARAgingSummaryService {
     });
     // Settings tenant service.
     const settings = this.tenancy.settings(tenantId);
+
     const baseCurrency = settings.get({
       group: 'organization',
       key: 'base_currency',

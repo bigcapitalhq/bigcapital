@@ -1,12 +1,12 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { query, ValidationChain } from 'express-validator';
-import asyncMiddleware from 'api/middleware/asyncMiddleware';
-import BaseController from '../BaseController';
 import { Inject, Service } from 'typedi';
+import asyncMiddleware from 'api/middleware/asyncMiddleware';
 import GeneralLedgerService from 'services/FinancialStatements/GeneralLedger/GeneralLedgerService';
+import BaseFinancialReportController from './BaseFinancialReportController';
 
 @Service()
-export default class GeneralLedgerReportController extends BaseController {
+export default class GeneralLedgerReportController extends BaseFinancialReportController {
   @Inject()
   generalLedgetService: GeneralLedgerService;
 

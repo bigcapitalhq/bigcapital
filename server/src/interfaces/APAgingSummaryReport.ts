@@ -2,15 +2,15 @@ import {
   IAgingPeriod,
   IAgingPeriodTotal
 } from './AgingReport';
+import {
+  INumberFormatQuery
+} from './FinancialStatements';
 
 export interface IAPAgingSummaryQuery {
   asDate: Date | string;
   agingDaysBefore: number;
   agingPeriods: number;
-  numberFormat: {
-    noCents: boolean;
-    divideOn1000: boolean;
-  };
+  numberFormat: INumberFormatQuery;
   vendorsIds: number[];
   noneZero: boolean;
 }

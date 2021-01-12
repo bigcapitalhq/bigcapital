@@ -2,11 +2,11 @@ import { Inject, Service } from 'typedi';
 import { Request, Response, Router, NextFunction } from 'express';
 import { castArray } from 'lodash';
 import { query, oneOf } from 'express-validator';
+import BaseFinancialReportController from './BaseFinancialReportController';
 import JournalSheetService from 'services/FinancialStatements/JournalSheet/JournalSheetService';
-import BaseController from '../BaseController';
 
 @Service()
-export default class JournalSheetController extends BaseController {
+export default class JournalSheetController extends BaseFinancialReportController {
   @Inject()
   journalService: JournalSheetService;
 

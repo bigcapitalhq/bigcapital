@@ -1,13 +1,13 @@
 import { Inject, Service } from 'typedi';
-import {  Request, Response, Router, NextFunction } from 'express';
+import { Request, Response, Router, NextFunction } from 'express';
 import { query, ValidationChain } from 'express-validator';
-import asyncMiddleware from 'api/middleware/asyncMiddleware';
-import BaseController from '../BaseController';
-import TrialBalanceSheetService from 'services/FinancialStatements/TrialBalanceSheet/TrialBalanceSheetService';
 import { castArray } from 'lodash';
+import asyncMiddleware from 'api/middleware/asyncMiddleware';
+import TrialBalanceSheetService from 'services/FinancialStatements/TrialBalanceSheet/TrialBalanceSheetService';
+import BaseFinancialReportController from './BaseFinancialReportController';
 
 @Service()
-export default class TrialBalanceSheetController extends BaseController {
+export default class TrialBalanceSheetController extends BaseFinancialReportController {
   @Inject()
   trialBalanceSheetService: TrialBalanceSheetService;
 
@@ -17,7 +17,8 @@ export default class TrialBalanceSheetController extends BaseController {
   router() {
     const router = Router();
 
-    router.get('/',
+    router.get(
+      '/',
       this.trialBalanceSheetValidationSchema,
       this.validationResult,
       asyncMiddleware(this.trialBalanceSheet.bind(this))
@@ -31,11 +32,10 @@ export default class TrialBalanceSheetController extends BaseController {
    */
   get trialBalanceSheetValidationSchema(): ValidationChain[] {
     return [
+      ...this.sheetNumberFormatValidationSchema,
       query('basis').optional(),
       query('from_date').optional().isISO8601(),
       query('to_date').optional().isISO8601(),
-      query('number_format.no_cents').optional().isBoolean().toBoolean(),
-      query('number_format.1000_divide').optional().isBoolean().toBoolean(),
       query('account_ids').isArray().optional(),
       query('account_ids.*').isNumeric().toInt(),
       query('basis').optional(),
@@ -46,7 +46,11 @@ export default class TrialBalanceSheetController extends BaseController {
   /**
    * Retrieve the trial balance sheet.
    */
-  public async trialBalanceSheet(req: Request, res: Response, next: NextFunction) {
+  public async trialBalanceSheet(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { tenantId, settings } = req;
     let filter = this.matchedQueryData(req);
 
@@ -54,18 +58,29 @@ export default class TrialBalanceSheetController extends BaseController {
       ...filter,
       accountsIds: castArray(filter.accountsIds),
     };
-    const organizationName = settings.get({ group: 'organization', key: 'name' });
-    const baseCurrency = settings.get({ group: 'organization', key: 'base_currency' });
+    const organizationName = settings.get({
+      group: 'organization',
+      key: 'name',
+    });
+    const baseCurrency = settings.get({
+      group: 'organization',
+      key: 'base_currency',
+    });
 
     try {
-      const { data, query } = await this.trialBalanceSheetService
-        .trialBalanceSheet(tenantId, filter);
-      
+      const {
+        data,
+        query,
+      } = await this.trialBalanceSheetService.trialBalanceSheet(
+        tenantId,
+        filter
+      );
+
       return res.status(200).send({
         organization_name: organizationName,
         base_currency: baseCurrency,
         data: this.transfromToResponse(data),
-        query: this.transfromToResponse(query)
+        query: this.transfromToResponse(query),
       });
     } catch (error) {
       next(error);
