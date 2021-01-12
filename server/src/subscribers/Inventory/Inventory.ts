@@ -30,7 +30,7 @@ export class InventorySubscriber {
     if (dependsComputeJobs.length === 0) {
       this.startingDate = null;
 
-      await this.saleInvoicesCost.scheduleWriteJournalEntries(
+    await this.saleInvoicesCost.scheduleWriteJournalEntries(
         tenantId,
         startingDate
       );

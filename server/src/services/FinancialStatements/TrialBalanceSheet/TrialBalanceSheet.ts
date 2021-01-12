@@ -1,4 +1,3 @@
-
 import {
   ITrialBalanceSheetQuery,
   ITrialBalanceAccount,
@@ -8,7 +7,7 @@ import {
 import FinancialSheet from '../FinancialSheet';
 import { flatToNestedArray } from 'utils';
 
-export default class TrialBalanceSheet extends FinancialSheet{
+export default class TrialBalanceSheet extends FinancialSheet {
   tenantId: number;
   query: ITrialBalanceSheetQuery;
   accounts: IAccount & { type: IAccountType }[];
@@ -17,17 +16,17 @@ export default class TrialBalanceSheet extends FinancialSheet{
 
   /**
    * Constructor method.
-   * @param {number} tenantId 
-   * @param {ITrialBalanceSheetQuery} query 
-   * @param {IAccount[]} accounts 
-   * @param journalFinancial 
+   * @param {number} tenantId
+   * @param {ITrialBalanceSheetQuery} query
+   * @param {IAccount[]} accounts
+   * @param journalFinancial
    */
   constructor(
     tenantId: number,
     query: ITrialBalanceSheetQuery,
     accounts: IAccount & { type: IAccountType }[],
     journalFinancial: any,
-    baseCurrency: string,
+    baseCurrency: string
   ) {
     super();
 
@@ -42,13 +41,15 @@ export default class TrialBalanceSheet extends FinancialSheet{
 
   /**
    * Account mapper.
-   * @param {IAccount} account 
+   * @param {IAccount} account
    */
-  private accountMapper(account: IAccount & { type: IAccountType }): ITrialBalanceAccount {
+  private accountMapper(
+    account: IAccount & { type: IAccountType }
+  ): ITrialBalanceAccount {
     const trial = this.journalFinancial.getTrialBalanceWithDepands(account.id);
 
     // Retrieve all entries that associated to the given account.
-    const entries = this.journalFinancial.getAccountEntries(account.id)
+    const entries = this.journalFinancial.getAccountEntries(account.id);
 
     return {
       id: account.id,
@@ -71,29 +72,35 @@ export default class TrialBalanceSheet extends FinancialSheet{
 
   /**
    * Accounts walker.
-   * @param {IAccount[]} accounts 
+   * @param {IAccount[]} accounts
    */
   private accountsWalker(
     accounts: IAccount & { type: IAccountType }[]
   ): ITrialBalanceAccount[] {
     const flattenAccounts = accounts
       // Mapping the trial balance accounts sections.
-      .map((account: IAccount & { type: IAccountType }) => this.accountMapper(account))
-
+      .map((account: IAccount & { type: IAccountType }) =>
+        this.accountMapper(account)
+      )
       // Filter accounts that have no transaction when `noneTransactions` is on.
-      .filter((trialAccount: ITrialBalanceAccount): boolean =>
-        !(!trialAccount.hasTransactions && this.query.noneTransactions),
+      .filter(
+        (trialAccount: ITrialBalanceAccount): boolean =>
+          !(!trialAccount.hasTransactions && this.query.noneTransactions)
       )
       // Filter accounts that have zero total amount when `noneZero` is on.
       .filter(
         (trialAccount: ITrialBalanceAccount): boolean =>
-          !(trialAccount.credit === 0 && trialAccount.debit === 0 && this.query.noneZero)
-    );
-    
-    return flatToNestedArray(
-      flattenAccounts,      
-      { id: 'id', parentId: 'parentAccountId' },
-    );
+          !(
+            trialAccount.credit === 0 &&
+            trialAccount.debit === 0 &&
+            this.query.noneZero
+          )
+      );
+
+    return flatToNestedArray(flattenAccounts, {
+      id: 'id',
+      parentId: 'parentAccountId',
+    });
   }
 
   /**

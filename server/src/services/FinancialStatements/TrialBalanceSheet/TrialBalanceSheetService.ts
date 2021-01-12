@@ -1,13 +1,12 @@
-import { Service, Inject } from "typedi";
+import { Service, Inject } from 'typedi';
 import moment from 'moment';
 import TenancyService from 'services/Tenancy/TenancyService';
 import { ITrialBalanceSheetQuery, ITrialBalanceStatement } from 'interfaces';
-import TrialBalanceSheet from "./TrialBalanceSheet";
+import TrialBalanceSheet from './TrialBalanceSheet';
 import Journal from 'services/Accounting/JournalPoster';
 
 @Service()
 export default class TrialBalanceSheetService {
-
   @Inject()
   tenancy: TenancyService;
 
@@ -36,16 +35,15 @@ export default class TrialBalanceSheetService {
   /**
    * Retrieve trial balance sheet statement.
    * -------------
-   * @param {number} tenantId 
-   * @param {IBalanceSheetQuery} query 
-   * 
+   * @param {number} tenantId
+   * @param {IBalanceSheetQuery} query
+   *
    * @return {IBalanceSheetStatement}
    */
   public async trialBalanceSheet(
     tenantId: number,
-    query: ITrialBalanceSheetQuery,
+    query: ITrialBalanceSheetQuery
   ): Promise<ITrialBalanceStatement> {
-
     const filter = {
       ...this.defaultQuery,
       ...query,
@@ -57,10 +55,15 @@ export default class TrialBalanceSheetService {
 
     // Settings tenant service.
     const settings = this.tenancy.settings(tenantId);
-    const baseCurrency = settings.get({ group: 'organization', key: 'base_currency' });
+    const baseCurrency = settings.get({
+      group: 'organization',
+      key: 'base_currency',
+    });
 
-    this.logger.info('[trial_balance_sheet] trying to calcualte the report.', { tenantId, filter });
-
+    this.logger.info('[trial_balance_sheet] trying to calcualte the report.', {
+      tenantId,
+      filter,
+    });
     // Retrieve all accounts on the storage.
     const accounts = await accountRepository.all('type');
     const accountsGraph = await accountRepository.getDependencyGraph();
@@ -72,8 +75,11 @@ export default class TrialBalanceSheetService {
       sumationCreditDebit: true,
     });
     // Transform transactions array to journal collection.
-    const transactionsJournal = Journal.fromTransactions(transactions, tenantId, accountsGraph);
-
+    const transactionsJournal = Journal.fromTransactions(
+      transactions,
+      tenantId,
+      accountsGraph
+    );
     // Trial balance report instance.
     const trialBalanceInstance = new TrialBalanceSheet(
       tenantId,
@@ -88,6 +94,6 @@ export default class TrialBalanceSheetService {
     return {
       data: trialBalanceSheetData,
       query: filter,
-    }
+    };
   }
 }

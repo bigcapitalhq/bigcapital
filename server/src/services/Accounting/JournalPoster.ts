@@ -324,6 +324,7 @@ export default class JournalPoster implements IJournalPoster {
     transactions.forEach((transaction) => {
       this.entries.push({
         ...transaction,
+        referenceTypeFormatted: transaction.referenceTypeFormatted,
         account: transaction.accountId,
         accountNormal: get(transaction, 'account.type.normal'),
       });
@@ -417,7 +418,7 @@ export default class JournalPoster implements IJournalPoster {
    * @param {Number} account -
    * @param {Date|String} closingDate -
    */
-  getTrialBalance(accountId, closingDate, dateType) {
+  getTrialBalance(accountId, closingDate) {
     const momentClosingDate = moment(closingDate);
     const result = {
       credit: 0,
@@ -426,8 +427,8 @@ export default class JournalPoster implements IJournalPoster {
     };
     this.entries.forEach((entry) => {
       if (
-        (!momentClosingDate.isAfter(entry.date, dateType) &&
-          !momentClosingDate.isSame(entry.date, dateType)) ||
+        (!momentClosingDate.isAfter(entry.date, 'day') &&
+          !momentClosingDate.isSame(entry.date, 'day')) ||
         (entry.account !== accountId && accountId)
       ) {
         return;
@@ -478,8 +479,8 @@ export default class JournalPoster implements IJournalPoster {
     accountId: number,
     contactId: number,
     contactType: string,
-    closingDate: Date|string,
-    openingDate: Date|string,
+    closingDate?: Date|string,
+    openingDate?: Date|string,
   ) {
     const momentClosingDate = moment(closingDate);
     const momentOpeningDate = moment(openingDate);

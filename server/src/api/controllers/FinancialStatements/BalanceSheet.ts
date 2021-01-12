@@ -1,5 +1,5 @@
 import { Inject, Service } from 'typedi';
-import { Router, Request, Response, NextFunction  } from 'express';
+import { Router, Request, Response, NextFunction } from 'express';
 import { query, ValidationChain } from 'express-validator';
 import { castArray } from 'lodash';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
@@ -7,7 +7,7 @@ import BaseController from '../BaseController';
 import BalanceSheetStatementService from 'services/FinancialStatements/BalanceSheet/BalanceSheetService';
 
 @Service()
-export default class BalanceSheetStatementController extends BaseController{
+export default class BalanceSheetStatementController extends BaseController {
   @Inject()
   balanceSheetService: BalanceSheetStatementService;
 
@@ -32,25 +32,15 @@ export default class BalanceSheetStatementController extends BaseController{
    */
   get balanceSheetValidationSchema(): ValidationChain[] {
     return [
-      query('accounting_method')
-        .optional()
-        .isIn(['cash', 'accural']),
+      query('accounting_method').optional().isIn(['cash', 'accural']),
       query('from_date').optional(),
       query('to_date').optional(),
-      query('display_columns_type')
-        .optional()
-        .isIn(['date_periods', 'total']),
+      query('display_columns_type').optional().isIn(['date_periods', 'total']),
       query('display_columns_by')
         .optional({ nullable: true, checkFalsy: true })
         .isIn(['year', 'month', 'week', 'day', 'quarter']),
-      query('number_format.no_cents')
-        .optional()
-        .isBoolean()
-        .toBoolean(),
-      query('number_format.divide_1000')
-        .optional()
-        .isBoolean()
-        .toBoolean(),
+      query('number_format.no_cents').optional().isBoolean().toBoolean(),
+      query('number_format.divide_1000').optional().isBoolean().toBoolean(),
       query('account_ids').isArray().optional(),
       query('account_ids.*').isNumeric().toInt(),
       query('none_zero').optional().isBoolean().toBoolean(),
@@ -69,14 +59,20 @@ export default class BalanceSheetStatementController extends BaseController{
       ...filter,
       accountsIds: castArray(filter.accountsIds),
     };
-    const organizationName = settings.get({ group: 'organization', key: 'name' });
-    const baseCurrency = settings.get({ group: 'organization', key: 'base_currency' });
+    const organizationName = settings.get({
+      group: 'organization',
+      key: 'name',
+    });
+    const baseCurrency = settings.get({
+      group: 'organization',
+      key: 'base_currency',
+    });
 
     try {
       const {
         data,
         columns,
-        query
+        query,
       } = await this.balanceSheetService.balanceSheet(tenantId, filter);
 
       return res.status(200).send({
@@ -85,9 +81,9 @@ export default class BalanceSheetStatementController extends BaseController{
         data: this.transfromToResponse(data),
         columns: this.transfromToResponse(columns),
         query: this.transfromToResponse(query),
-      })
+      });
     } catch (error) {
       next(error);
     }
   }
-};
+}

@@ -9,6 +9,7 @@ exports.up = function(knex) {
     table.string('reference_no').index();
     table.string('description');
     table.integer('user_id').unsigned();
+    table.date('published_at');
     table.timestamps();
   });  
 };
