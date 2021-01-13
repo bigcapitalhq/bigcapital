@@ -78,6 +78,48 @@ export const generalLedgerToTableRows = (accounts) => {
   }, []);
 };
 
+export const ARAgingSummaryTableRowsMapper = (sheet, total) => {
+  const rows = [];
+
+  const mapAging = (agingPeriods) => {
+    return agingPeriods.reduce((acc, aging, index) => {
+      acc[`aging-${index}`] = aging.formatted_total;
+      return acc;
+    }, {});
+  };
+  sheet.customers.forEach((customer) => {
+    const agingRow = mapAging(customer.aging);
+
+    rows.push({
+      rowType: 'customer',
+      name: customer.customer_name,
+      ...agingRow,
+      current: customer.current.formatted_total,
+      total: customer.total.formatted_total,
+    });
+  });
+  return [
+    ...rows,
+    {
+      name: 'TOTAL',
+      rowType: 'total',
+      current: sheet.total.current.formatted_total,
+      ...mapAging(sheet.total.aging),
+      total: sheet.total.total.formatted_total,
+    } 
+  ];
+};
+
+export const mapTrialBalanceSheetToRows = (sheet) => {
+  return [
+    {
+      name: 'Total',
+      ...sheet.total,
+    },
+    ...sheet.accounts,
+  ];
+};
+
 export const profitLossToTableRowsMapper = (profitLoss) => {
 
   return [

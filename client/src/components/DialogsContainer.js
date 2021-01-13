@@ -1,7 +1,6 @@
 import React, { lazy } from 'react';
 
 import AccountFormDialog from 'containers/Dialogs/AccountFormDialog';
-
 import InviteUserDialog from 'containers/Dialogs/InviteUserDialog';
 import ItemCategoryDialog from 'containers/Dialogs/ItemCategoryDialog';
 import CurrencyFormDialog from 'containers/Dialogs/CurrencyFormDialog';

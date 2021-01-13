@@ -135,16 +135,16 @@ export default [
     }),
     breadcrumb: 'Profit Loss Sheet',
   },
-  // {
-  //   path: '/financial-reports/receivable-aging-summary',
-  //   component: LazyLoader({
-  //     loader: () =>
-  //       import(
-  //         'containers/FinancialStatements/ReceivableAgingSummary/ReceivableAgingSummary'
-  //       ),
-  //   }),
-  //   breadcrumb: 'Receivable Aging Summary',
-  // },
+  {
+    path: '/financial-reports/receivable-aging-summary',
+    component: LazyLoader({
+      loader: () =>
+        import(
+          'containers/FinancialStatements/ARAgingSummary/ARAgingSummary'
+        ),
+    }),
+    breadcrumb: 'Receivable Aging Summary',
+  },
   {
     path: `/financial-reports/journal-sheet`,
     component: LazyLoader({
@@ -236,7 +236,7 @@ export default [
     breadcrumb: 'Vendors',
   },
 
-  //Estimates
+  // Estimates
   {
     path: `/estimates/:id/edit`,
     component: LazyLoader({

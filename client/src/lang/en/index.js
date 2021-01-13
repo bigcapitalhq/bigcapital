@@ -954,4 +954,5 @@ export default {
   delete_adjustment:'Delete Adjustment',
   the_make_adjustment_has_been_successfully_created:
     'The make adjustment has been successfully created.',
+  current: 'Current',
 };

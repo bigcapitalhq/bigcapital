@@ -96,12 +96,14 @@ export default class ARAgingSummarySheet extends AgingSummaryReport {
     const customersAgingPeriods = this.customersWalker(this.contacts);
     const totalAgingPeriods = this.getTotalAgingPeriods(customersAgingPeriods);
     const totalCurrent = this.getTotalCurrent(customersAgingPeriods);
+    const totalCustomersTotal = this.getTotalContactsTotals(customersAgingPeriods);
 
     return {
       customers: customersAgingPeriods,
       total: {
         current: this.formatTotalAmount(totalCurrent),
         aging: totalAgingPeriods,
+        total: this.formatTotalAmount(totalCustomersTotal),
       }
     };
   }

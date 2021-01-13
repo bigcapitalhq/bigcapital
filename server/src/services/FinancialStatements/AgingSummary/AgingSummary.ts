@@ -79,7 +79,6 @@ export default abstract class AgingSummaryReport extends AgingReport {
       return {
         ...agingPeriod,
         total,
-        formattedAmount: this.formatAmount(total),
       };
     });
     return newAgingPeriods;
@@ -197,5 +196,12 @@ export default abstract class AgingSummaryReport extends AgingReport {
    */
   protected getAgingPeriodsTotal(agingPeriods: IAgingPeriodTotal[]): number {
     return sumBy(agingPeriods, 'total');
+  }
+
+
+  protected getTotalContactsTotals(
+    customersSummary: IARAgingSummaryCustomer[]
+  ): number {
+    return sumBy(customersSummary, (summary) => summary.total.total);
   }
 }

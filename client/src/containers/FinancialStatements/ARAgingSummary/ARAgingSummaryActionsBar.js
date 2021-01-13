@@ -1,9 +1,9 @@
 import React from 'react';
 import {
-  NavbarGroup,
-  Button,
-  Classes,
   NavbarDivider,
+  NavbarGroup,
+  Classes,
+  Button,
   Popover,
   PopoverInteractionKind,
   Position,
@@ -11,28 +11,31 @@ import {
 import { FormattedMessage as T } from 'react-intl';
 import classNames from 'classnames';
 
-import Icon from 'components/Icon';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
+import Icon from 'components/Icon';
+
+import withARAgingSummary from './withARAgingSummary';
+import withARAgingSummaryActions from './withARAgingSummaryActions';
 
 import { compose } from 'utils';
-import withBalanceSheetDetail from './withBalanceSheetDetail';
-import withBalanceSheetActions from './withBalanceSheetActions';
 
-function BalanceSheetActionsBar({
-  // #withBalanceSheetDetail
-  balanceSheetFilter,
+/**
+ * AR Aging summary sheet - Actions bar.
+ */
+function ARAgingSummaryActionsBar({
+  // #withReceivableAging
+  receivableAgingFilter,
 
-  // #withBalanceSheetActions
-  toggleBalanceSheetFilter,
-  refreshBalanceSheet,
+  // #withReceivableAgingActions
+  toggleFilterARAgingSummary,
+  refreshARAgingSummary,
 }) {
   const handleFilterToggleClick = () => {
-    toggleBalanceSheetFilter();
+    toggleFilterARAgingSummary();
   };
-
-  // Handle recalculate the report button.
+  // Handles re-calculate report button.
   const handleRecalcReport = () => {
-    refreshBalanceSheet(true);
+    refreshARAgingSummary(true);
   };
 
   return (
@@ -50,29 +53,22 @@ function BalanceSheetActionsBar({
           className={classNames(Classes.MINIMAL, 'button--table-views')}
           icon={<Icon icon="cog-16" iconSize={16} />}
           text={
-            !balanceSheetFilter ? (
-              <T id={'customize_report'} />
+            receivableAgingFilter ? (
+              <T id="hide_customizer" />
             ) : (
-              <T id={'hide_customizer'} />
+              <T id={'customize_report'} />
             )
           }
           onClick={handleFilterToggleClick}
-          active={balanceSheetFilter}
+          active={receivableAgingFilter}
         />
         <NavbarDivider />
 
-        <Popover
-          // content={}
-          interactionKind={PopoverInteractionKind.CLICK}
-          position={Position.BOTTOM_LEFT}
-        >
-          <Button
-            className={classNames(Classes.MINIMAL, 'button--filter')}
-            text={<T id={'filter'} />}
-            icon={<Icon icon="filter-16" iconSize={16} />}
-          />
-        </Popover>
-
+        <Button
+          className={Classes.MINIMAL}
+          text={<T id={'filter'} />}
+          icon={<Icon icon="filter-16" iconSize={16} />}
+        />        
         <NavbarDivider />
 
         <Button
@@ -91,6 +87,8 @@ function BalanceSheetActionsBar({
 }
 
 export default compose(
-  withBalanceSheetDetail(({ balanceSheetFilter }) => ({ balanceSheetFilter })),
-  withBalanceSheetActions,
-)(BalanceSheetActionsBar);
+  withARAgingSummaryActions,
+  withARAgingSummary(({ receivableAgingSummaryFilter }) => ({
+    receivableAgingFilter: receivableAgingSummaryFilter,
+  })),
+)(ARAgingSummaryActionsBar);

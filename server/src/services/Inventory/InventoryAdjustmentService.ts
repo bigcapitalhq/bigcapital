@@ -220,8 +220,8 @@ export default class InventoryAdjustmentService {
 
   /**
    * Publish the inventory adjustment transaction.
-   * @param tenantId 
-   * @param inventoryAdjustmentId 
+   * @param tenantId
+   * @param inventoryAdjustmentId
    */
   async publishInventoryAdjustment(
     tenantId: number,
@@ -239,11 +239,9 @@ export default class InventoryAdjustmentService {
       inventoryAdjustmentId,
     });
     // Publish the inventory adjustment transaction.
-    await InventoryAdjustment.query()
-      .findById(inventoryAdjustmentId)
-      .patch({
-        publishedAt: moment().toMySqlDateTime(),
-      });
+    await InventoryAdjustment.query().findById(inventoryAdjustmentId).patch({
+      publishedAt: moment().toMySqlDateTime(),
+    });
 
     // Retrieve the inventory adjustment after the modification.
     const inventoryAdjustment = await InventoryAdjustment.query()
