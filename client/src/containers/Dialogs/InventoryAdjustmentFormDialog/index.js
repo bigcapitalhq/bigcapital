@@ -27,7 +27,7 @@ function InventoryAdjustmentFormDialog({
       <DialogSuspense>
         <InventoryAdjustmentFormDialogContent
           dialogName={dialogName}
-          action={payload.action}
+          itemDetail={payload}
         />
       </DialogSuspense>
     </Dialog>

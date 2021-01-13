@@ -4,10 +4,11 @@ import t from 'store/types';
 export const submitInventoryAdjustment = ({ form }) => {
   return (dispatch) =>
     new Promise((resolve, reject) => {
-      ApiService.post('inventory_adjustments', form).then((response) => {
-        resolve(response);
-      }),
-        caches((error) => {
+      ApiService.post('inventory_adjustments/quick', form)
+        .then((response) => {
+          resolve(response);
+        })
+        .catch((error) => {
           const { response } = error;
           const { data } = response;
 
@@ -51,7 +52,7 @@ export const fetchInventoryAdjustmentsTable = ({ query } = {}) => {
           dispatch({
             type: t.INVENTORY_ADJUSTMENTS_PAGE_SET,
             payload: {
-              inventory_adjustments: response.data,
+              inventory_adjustments: response.data.inventoy_adjustments,
               pagination: response.data.pagination,
               customViewId:
                 response.data?.filter_meta?.view?.custom_view_id || -1,
@@ -60,7 +61,7 @@ export const fetchInventoryAdjustmentsTable = ({ query } = {}) => {
           dispatch({
             type: t.INVENTORY_ADJUSTMENT_ITEMS_SET,
             payload: {
-              inventory_adjustment: response.data,
+              inventory_adjustment: response.data.inventoy_adjustments,
             },
           });
           dispatch({
