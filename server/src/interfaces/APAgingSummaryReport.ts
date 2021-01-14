@@ -1,6 +1,7 @@
 import {
   IAgingPeriod,
-  IAgingPeriodTotal
+  IAgingPeriodTotal,
+  IAgingAmount
 } from './AgingReport';
 import {
   INumberFormatQuery
@@ -17,14 +18,15 @@ export interface IAPAgingSummaryQuery {
 
 export interface IAPAgingSummaryVendor {
   vendorName: string,
-  current: IAgingPeriodTotal,
-  aging: (IAgingPeriod & IAgingPeriodTotal)[],
-  total: IAgingPeriodTotal,
+  current: IAgingAmount,
+  aging: IAgingPeriodTotal[],
+  total: IAgingAmount,
 };
 
 export interface IAPAgingSummaryTotal {
-  current: IAgingPeriodTotal,
-  aging: (IAgingPeriodTotal & IAgingPeriod)[],
+  current: IAgingAmount,
+  aging: IAgingPeriodTotal[],
+  total: IAgingAmount,
 };
 
 export interface IAPAgingSummaryData {

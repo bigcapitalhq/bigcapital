@@ -57,7 +57,6 @@ export default class JournalSheetService {
       group: 'organization',
       key: 'base_currency',
     });
-
     // Retrieve all accounts on the storage.
     const accountsGraph = await accountRepository.getDependencyGraph();
 

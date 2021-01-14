@@ -7,9 +7,9 @@ import {
   IAccount,
   IJournalPoster,
   IAccountType,
-  IJournalEntry
+  IJournalEntry,
 } from 'interfaces';
-import FinancialSheet from "../FinancialSheet";
+import FinancialSheet from '../FinancialSheet';
 
 export default class GeneralLedgerSheet extends FinancialSheet {
   tenantId: number;
@@ -35,7 +35,7 @@ export default class GeneralLedgerSheet extends FinancialSheet {
     transactions: IJournalPoster,
     openingBalancesJournal: IJournalPoster,
     closingBalancesJournal: IJournalPoster,
-    baseCurrency: string,
+    baseCurrency: string
   ) {
     super();
 
@@ -51,7 +51,7 @@ export default class GeneralLedgerSheet extends FinancialSheet {
 
   /**
    * Mapping the account transactions to general ledger transactions of the given account.
-   * @param {IAccount} account 
+   * @param {IAccount} account
    * @return {IGeneralLedgerSheetAccountTransaction[]}
    */
   private accountTransactionsMapper(
@@ -59,34 +59,45 @@ export default class GeneralLedgerSheet extends FinancialSheet {
   ): IGeneralLedgerSheetAccountTransaction[] {
     const entries = this.transactions.getAccountEntries(account.id);
 
-    return entries.map((transaction: IJournalEntry): IGeneralLedgerSheetAccountTransaction => {
-      let amount = 0;
+    return entries.map(
+      (transaction: IJournalEntry): IGeneralLedgerSheetAccountTransaction => {
+        let amount = 0;
 
-      if (account.type.normal === 'credit') {
-        amount += transaction.credit - transaction.debit;
-      } else if (account.type.normal === 'debit') {
-        amount += transaction.debit - transaction.credit;
+        if (account.type.normal === 'credit') {
+          amount += transaction.credit - transaction.debit;
+        } else if (account.type.normal === 'debit') {
+          amount += transaction.debit - transaction.credit;
+        }
+        const formattedAmount = this.formatNumber(amount);
+
+        return {
+          ...pick(transaction, [
+            'id',
+            'note',
+            'transactionType',
+            'referenceType',
+            'referenceId',
+            'referenceTypeFormatted',
+            'date',
+          ]),
+          amount,
+          formattedAmount,
+          currencyCode: this.baseCurrency,
+        };
       }
-      const formattedAmount = this.formatNumber(amount);
-
-      return {
-        ...pick(transaction, ['id', 'note', 'transactionType', 'referenceType',
-          'referenceId', 'date']),
-        amount,
-        formattedAmount,
-        currencyCode: this.baseCurrency,
-      };
-    });
+    );
   }
 
   /**
    * Retrieve account opening balance.
-   * @param {IAccount} account 
+   * @param {IAccount} account
    * @return {IGeneralLedgerSheetAccountBalance}
    */
-  private accountOpeningBalance(account: IAccount): IGeneralLedgerSheetAccountBalance {  
+  private accountOpeningBalance(
+    account: IAccount
+  ): IGeneralLedgerSheetAccountBalance {
     const amount = this.openingBalancesJournal.getAccountBalance(account.id);
-    const formattedAmount = this.formatNumber(amount);
+    const formattedAmount = this.formatTotalNumber(amount);
     const currencyCode = this.baseCurrency;
     const date = this.query.fromDate;
 
@@ -95,12 +106,14 @@ export default class GeneralLedgerSheet extends FinancialSheet {
 
   /**
    * Retrieve account closing balance.
-   * @param {IAccount} account 
+   * @param {IAccount} account
    * @return {IGeneralLedgerSheetAccountBalance}
    */
-  private accountClosingBalance(account: IAccount): IGeneralLedgerSheetAccountBalance {  
+  private accountClosingBalance(
+    account: IAccount
+  ): IGeneralLedgerSheetAccountBalance {
     const amount = this.closingBalancesJournal.getAccountBalance(account.id);
-    const formattedAmount = this.formatNumber(amount);
+    const formattedAmount = this.formatTotalNumber(amount);
     const currencyCode = this.baseCurrency;
     const date = this.query.toDate;
 
@@ -109,35 +122,42 @@ export default class GeneralLedgerSheet extends FinancialSheet {
 
   /**
    * Retreive general ledger accounts sections.
-   * @param {IAccount} account 
+   * @param {IAccount} account
    * @return {IGeneralLedgerSheetAccount}
    */
   private accountMapper(
-    account: IAccount & { type: IAccountType },
+    account: IAccount & { type: IAccountType }
   ): IGeneralLedgerSheetAccount {
     return {
       ...pick(account, ['id', 'name', 'code', 'index', 'parentAccountId']),
       opening: this.accountOpeningBalance(account),
       transactions: this.accountTransactionsMapper(account),
       closing: this.accountClosingBalance(account),
-    }
+    };
   }
 
   /**
    * Retrieve mapped accounts with general ledger transactions and opeing/closing balance.
-   * @param {IAccount[]} accounts - 
+   * @param {IAccount[]} accounts -
    * @return {IGeneralLedgerSheetAccount[]}
    */
   private accountsWalker(
     accounts: IAccount & { type: IAccountType }[]
   ): IGeneralLedgerSheetAccount[] {
-    return accounts
-      .map((account: IAccount & { type: IAccountType }) => this.accountMapper(account))
-
-      // Filter general ledger accounts that have no transactions when `noneTransactions` is on.
-      .filter((generalLedgerAccount: IGeneralLedgerSheetAccount) => (
-        !(generalLedgerAccount.transactions.length === 0 && this.query.noneTransactions)
-      ));
+    return (
+      accounts
+        .map((account: IAccount & { type: IAccountType }) =>
+          this.accountMapper(account)
+        )
+        // Filter general ledger accounts that have no transactions when `noneTransactions` is on.
+        .filter(
+          (generalLedgerAccount: IGeneralLedgerSheetAccount) =>
+            !(
+              generalLedgerAccount.transactions.length === 0 &&
+              this.query.noneTransactions
+            )
+        )
+    );
   }
 
   /**

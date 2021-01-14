@@ -83,7 +83,7 @@ export const ARAgingSummaryTableRowsMapper = (sheet, total) => {
 
   const mapAging = (agingPeriods) => {
     return agingPeriods.reduce((acc, aging, index) => {
-      acc[`aging-${index}`] = aging.formatted_total;
+      acc[`aging-${index}`] = aging.total.formatted_amount;
       return acc;
     }, {});
   };
@@ -94,18 +94,21 @@ export const ARAgingSummaryTableRowsMapper = (sheet, total) => {
       rowType: 'customer',
       name: customer.customer_name,
       ...agingRow,
-      current: customer.current.formatted_total,
-      total: customer.total.formatted_total,
+      current: customer.current.formatted_amount,
+      total: customer.total.formatted_amount,
     });
   });
+  if (rows.length <= 0) {
+    return [];
+  }
   return [
     ...rows,
     {
       name: 'TOTAL',
       rowType: 'total',
-      current: sheet.total.current.formatted_total,
+      current: sheet.total.current.formatted_amount,
       ...mapAging(sheet.total.aging),
-      total: sheet.total.total.formatted_total,
+      total: sheet.total.total.formatted_amount,
     } 
   ];
 };

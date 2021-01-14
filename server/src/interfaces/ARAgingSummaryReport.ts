@@ -1,10 +1,5 @@
-import {
-  IAgingPeriod,
-  IAgingPeriodTotal
-} from './AgingReport';
-import {
-  INumberFormatQuery
-} from './FinancialStatements';
+import { IAgingPeriod, IAgingPeriodTotal, IAgingAmount } from './AgingReport';
+import { INumberFormatQuery } from './FinancialStatements';
 
 export interface IARAgingSummaryQuery {
   asDate: Date | string;
@@ -17,20 +12,20 @@ export interface IARAgingSummaryQuery {
 
 export interface IARAgingSummaryCustomer {
   customerName: string;
-  current: IAgingPeriodTotal,
-  aging: (IAgingPeriodTotal & IAgingPeriod)[];
-  total: IAgingPeriodTotal;
+  current: IAgingAmount;
+  aging: IAgingPeriodTotal[];
+  total: IAgingAmount;
 }
 
 export interface IARAgingSummaryTotal {
-  current: IAgingPeriodTotal,
-  aging: (IAgingPeriodTotal & IAgingPeriod)[],
-  total: IAgingPeriodTotal,
-};
+  current: IAgingAmount;
+  aging: IAgingPeriodTotal[];
+  total: IAgingAmount;
+}
 
 export interface IARAgingSummaryData {
-  customers: IARAgingSummaryCustomer[],
-  total: IARAgingSummaryTotal,
-};
+  customers: IARAgingSummaryCustomer[];
+  total: IARAgingSummaryTotal;
+}
 
 export type IARAgingSummaryColumns = IAgingPeriod[];

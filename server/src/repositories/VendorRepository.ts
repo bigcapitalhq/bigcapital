@@ -7,7 +7,7 @@ export default class VendorRepository extends TenantRepository {
    */
   constructor(knex, cache) {
     super(knex, cache);
-    this.repositoryName = 'ContactRepository';
+    this.repositoryName = 'VendorRepository';
   }
 
   /**
@@ -15,6 +15,10 @@ export default class VendorRepository extends TenantRepository {
    */
   get model() {
     return Vendor.bindKnex(this.knex);
+  }
+
+  unpaid() {
+      
   }
 
   changeBalance(vendorId: number, amount: number) {
