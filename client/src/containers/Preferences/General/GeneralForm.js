@@ -105,7 +105,7 @@ export default function PreferencesGeneralForm({}) {
               selectedItem={value}
               selectedItemProp={'value'}
               defaultText={<T id={'select_business_location'} />}
-              labelProp={'name'}
+              textProp={'name'}
               popoverProps={{ minimal: true }}
             />
           </FormGroup>
@@ -130,7 +130,7 @@ export default function PreferencesGeneralForm({}) {
               selectedItem={value}
               selectedItemProp={'code'}
               defaultText={<T id={'select_base_currency'} />}
-              labelProp={'label'}
+              textProp={'label'}
               popoverProps={{ minimal: true }}
             />
           </FormGroup>
@@ -150,7 +150,7 @@ export default function PreferencesGeneralForm({}) {
             <ListSelect
               items={fiscalYearOptions}
               selectedItemProp={'value'}
-              labelProp={'name'}
+              textProp={'name'}
               defaultText={<T id={'select_fiscal_year'} />}
               selectedItem={value}
               onItemSelect={(item) => {}}
@@ -173,7 +173,7 @@ export default function PreferencesGeneralForm({}) {
             <ListSelect
               items={languages}
               selectedItemProp={'value'}
-              labelProp={'name'}
+              textProp={'name'}
               defaultText={<T id={'select_language'} />}
               selectedItem={value}
               onItemSelect={(item) => {}}
@@ -227,7 +227,7 @@ export default function PreferencesGeneralForm({}) {
               selectedItem={value}
               selectedItemProp={'value'}
               defaultText={<T id={'select_date_format'} />}
-              labelProp={'name'}
+              textProp={'name'}
               popoverProps={{ minimal: true }}
             />
           </FormGroup>

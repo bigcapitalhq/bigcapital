@@ -29,7 +29,7 @@ function PaymentReceiveListField({
       onItemSelect={onInvoiceSelect}
       selectedItem={`${selectedInvoiceId}`}
       selectedItemProp={'id'}
-      labelProp={'name'}
+      textProp={'name'}
       defaultText={defaultSelectText}
     />
   );

@@ -34,7 +34,7 @@ export default function DisplayNameList({
     <ListSelect
       items={formatOptions}
       selectedItemProp={'label'}
-      labelProp={'label'}
+      textProp={'label'}
       defaultText={'Select display name as'}
       filterable={false}
       { ...restProps }

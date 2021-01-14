@@ -81,7 +81,7 @@ function InventoryAdjustmentFormDialogFields({
               filterable={false}
               selectedItem={value}
               selectedItemProp={'value'}
-              labelProp={'name'}
+              textProp={'name'}
               popoverProps={{ minimal: true }}
             />
           </FormGroup>

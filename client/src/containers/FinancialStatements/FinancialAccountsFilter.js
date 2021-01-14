@@ -54,7 +54,7 @@ export default function FinancialAccountsFilter({ ...restProps }) {
                 filterable={false}
                 selectedItem={value}
                 selectedItemProp={'key'}
-                labelProp={'name'}
+                textProp={'name'}
                 onItemSelect={(item) => {
                   setFieldValue('accountsFilter', item.key);
                 }}

@@ -13,7 +13,7 @@ export default function SalutationList({
     <ListSelect
       items={items}
       selectedItemProp={'key'}
-      labelProp={'label'}
+      textProp={'label'}
       defaultText={'Salutation'}
       filterable={false}
       {...restProps}

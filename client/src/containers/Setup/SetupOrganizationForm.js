@@ -321,7 +321,7 @@ function SetupOrganizationForm({
                 selectedItem={values.base_currency}
                 selectedItemProp={'value'}
                 defaultText={<T id={'select_base_currency'} />}
-                labelProp={'name'}
+                textProp={'name'}
               />
             </FormGroup>
           </Col>
@@ -351,7 +351,7 @@ function SetupOrganizationForm({
                 selectedItem={values.language}
                 selectedItemProp={'value'}
                 defaultText={<T id={'select_language'} />}
-                labelProp={'name'}
+                textProp={'name'}
               />
             </FormGroup>
           </Col>
@@ -380,7 +380,7 @@ function SetupOrganizationForm({
             selectedItem={values.fiscal_year}
             selectedItemProp={'value'}
             defaultText={<T id={'select_fiscal_year'} />}
-            labelProp={'name'}
+            textProp={'name'}
           />
         </FormGroup>
 
