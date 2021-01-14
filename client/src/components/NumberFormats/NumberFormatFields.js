@@ -115,6 +115,19 @@ export default function NumberFormatFields({
             </FormGroup>
           )}
         </FastField>
+        {/*------------ show negative in red-----------*/}
+        <FastField name={'show_in_red'} type={'checkbox'}>
+          {({ field }) => (
+            <FormGroup inline={true}>
+              <Checkbox
+                inline={true}
+                label={<T id={'show_negative_in_red'} />}
+                name={'show_in_red'}
+                {...field}
+              />
+            </FormGroup>
+          )}
+        </FastField>
         {/*------------ Divide on 1000 -----------*/}
         <FastField name={'divide_on_1000'} type={'checkbox'}>
           {({ field }) => (

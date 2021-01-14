@@ -14,6 +14,7 @@ function NumberFormats() {
     () => ({
       format_money: '',
       show_zero: '',
+      show_in_red: '',
       divide_on_1000: '',
       negative_format: '',
       precision: '',
@@ -21,8 +22,7 @@ function NumberFormats() {
     [],
   );
   // Handle cancel button click.
-  const handleCancelClick = useCallback(() => {
-  }, []);
+  const handleCancelClick = useCallback(() => {}, []);
 
   // Handle form submit.
   const handleFormSubmit = (values, { setSubmitting }) => {

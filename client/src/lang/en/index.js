@@ -961,6 +961,7 @@ export default {
   qty: 'Quantity on hand',
   money_format: 'Money format',
   show_zero: 'Show zero',
+  show_negative_in_red: 'Show negative in red',
   divide_on_1000: 'Divide on 1000',
   negative_format: 'Negative format',
   decimal_places: 'Decimal places',
