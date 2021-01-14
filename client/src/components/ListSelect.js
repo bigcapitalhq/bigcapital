@@ -10,6 +10,7 @@ export default function ListSelect({
   defaultText,
   noResultsText = <T id="no_results" />,
   isLoading = false,
+  textProp,
   labelProp,
 
   selectedItem,
@@ -52,8 +53,9 @@ export default function ListSelect({
   const itemRenderer = (item, { handleClick, modifiers, query }) => {
     return (
       <MenuItem
-        text={item[labelProp]}
+        text={item[textProp]}
         key={item[selectedItemProp]}
+        label={item[labelProp]}
         onClick={handleClick}
       />
     );
@@ -77,7 +79,7 @@ export default function ListSelect({
       )}
     >
       <Button
-        text={currentItem ? currentItem[labelProp] : defaultText}
+        text={currentItem ? currentItem[textProp] : defaultText}
         loading={isLoading}
         disabled={disabled}
         {...buttonProps}

@@ -1,0 +1,14 @@
+import * as Yup from 'yup';
+import { DATATYPES_LENGTH } from 'common/dataTypes';
+import { defaultTo } from 'lodash';
+
+
+const Schema = Yup.object().shape({
+  format_money: Yup.string(),
+  show_zero: Yup.boolean(),
+  divide_on_1000: Yup.boolean(),
+  negative_format: Yup.string(),
+  precision: Yup.string(),
+});
+
+export const CreateNumberFormateSchema = Schema;

@@ -959,4 +959,13 @@ export default {
   once_delete_this_inventory_a_adjustment_you_will_able_to_restore_it: `Once you delete this inventory a adjustment, you won\'t be able to restore it later. Are you sure you want to delete this invoice?`,
   select_adjustment_account: 'Select Adjustment account',
   qty: 'Quantity on hand',
+  money_format: 'Money format',
+  show_zero: 'Show zero',
+  divide_on_1000: 'Divide on 1000',
+  negative_format: 'Negative format',
+  decimal_places: 'Decimal places',
+  run: 'Run',
+  you_could_not_delete_item_that_has_associated_inventory_adjustments_transacions:
+    'You could not delete item that has associated inventory adjustments transactions',
+  format: 'Format',
 };
