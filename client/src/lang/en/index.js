@@ -968,4 +968,5 @@ export default {
   you_could_not_delete_item_that_has_associated_inventory_adjustments_transacions:
     'You could not delete item that has associated inventory adjustments transactions',
   format: 'Format',
+  current: 'Current',
 };

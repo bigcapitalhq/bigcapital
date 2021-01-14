@@ -71,7 +71,7 @@ function BalanceSheet({
       // Hide the back link on dashboard topbar.
       setDashboardBackLink(false);
     };
-  });
+  }, [setDashboardBackLink]);
 
   // Handle re-fetch balance sheet after filter change.
   const handleFilterSubmit = useCallback(

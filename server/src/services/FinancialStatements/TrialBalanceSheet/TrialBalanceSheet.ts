@@ -1,11 +1,18 @@
+import { sumBy } from 'lodash';
 import {
   ITrialBalanceSheetQuery,
   ITrialBalanceAccount,
   IAccount,
+  ITrialBalanceTotal,
   IAccountType,
 } from 'interfaces';
 import FinancialSheet from '../FinancialSheet';
 import { flatToNestedArray } from 'utils';
+
+const AMOUNT_TYPE = {
+  TOTAL: 'TOTAL',
+  SECTION_TOTAL: 'SECTION_TOTAL',
+};
 
 export default class TrialBalanceSheet extends FinancialSheet {
   tenantId: number;
@@ -104,9 +111,36 @@ export default class TrialBalanceSheet extends FinancialSheet {
   }
 
   /**
+   * Retrieve trial balance total section.
+   * @param {ITrialBalanceAccount[]} accountsBalances
+   * @return {ITrialBalanceTotal}
+   */
+  private tatalSection(
+    accountsBalances: ITrialBalanceAccount[]
+  ): ITrialBalanceTotal {
+    const credit = sumBy(accountsBalances, 'credit');
+    const debit = sumBy(accountsBalances, 'debit');
+    const balance = sumBy(accountsBalances, 'balance');
+    const currencyCode = this.baseCurrency;
+
+    return {
+      credit,
+      debit,
+      balance,
+      currencyCode,
+      formattedCredit: this.formatTotalNumber(credit),
+      formattedDebit: this.formatTotalNumber(debit),
+      formattedBalance: this.formatTotalNumber(balance),
+    };
+  }
+
+  /**
    * Retrieve trial balance sheet statement data.
    */
   public reportData() {
-    return this.accountsWalker(this.accounts);
+    const accounts = this.accountsWalker(this.accounts);
+    const total = this.tatalSection(accounts);
+
+    return { accounts, total };
   }
 }

@@ -7,6 +7,7 @@ import {
   ISaleInvoice,
   IARAgingSummaryData,
   IARAgingSummaryColumns,
+  IARAgingSummaryTotal,
 } from 'interfaces';
 import AgingSummaryReport from './AgingSummary';
 import { Dictionary } from 'tsyringe/dist/typings/types';
@@ -44,8 +45,14 @@ export default class ARAgingSummarySheet extends AgingSummaryReport {
     this.baseCurrency = baseCurrency;
     this.numberFormat = this.query.numberFormat;
 
-    this.overdueInvoicesByContactId = groupBy(overdueSaleInvoices, 'customerId');
-    this.currentInvoicesByContactId = groupBy(currentSaleInvoices, 'customerId');
+    this.overdueInvoicesByContactId = groupBy(
+      overdueSaleInvoices,
+      'customerId'
+    );
+    this.currentInvoicesByContactId = groupBy(
+      currentSaleInvoices,
+      'customerId'
+    );
 
     // Initializes the aging periods.
     this.agingPeriods = this.agingRangePeriods(
@@ -68,7 +75,7 @@ export default class ARAgingSummarySheet extends AgingSummaryReport {
 
     return {
       customerName: customer.displayName,
-      current: this.formatTotalAmount(currentTotal),
+      current: this.formatAmount(currentTotal),
       aging: agingPeriods,
       total: this.formatTotalAmount(amount),
     };
@@ -84,8 +91,28 @@ export default class ARAgingSummarySheet extends AgingSummaryReport {
       .map((customer) => this.customerData(customer))
       .filter(
         (customer: IARAgingSummaryCustomer) =>
-          !(customer.total.total === 0 && this.query.noneZero)
+          !(customer.total.amount === 0 && this.query.noneZero)
       );
+  }
+
+  /**
+   * Retrieve the customers aging and current total.
+   * @param {IARAgingSummaryCustomer} customersAgingPeriods
+   */
+  private getCustomersTotal(
+    customersAgingPeriods: IARAgingSummaryCustomer[]
+  ): IARAgingSummaryTotal {
+    const totalAgingPeriods = this.getTotalAgingPeriods(customersAgingPeriods);
+    const totalCurrent = this.getTotalCurrent(customersAgingPeriods);
+    const totalCustomersTotal = this.getTotalContactsTotals(
+      customersAgingPeriods
+    );
+
+    return {
+      current: this.formatTotalAmount(totalCurrent),
+      aging: totalAgingPeriods,
+      total: this.formatTotalAmount(totalCustomersTotal),
+    };
   }
 
   /**
@@ -94,15 +121,11 @@ export default class ARAgingSummarySheet extends AgingSummaryReport {
    */
   public reportData(): IARAgingSummaryData {
     const customersAgingPeriods = this.customersWalker(this.contacts);
-    const totalAgingPeriods = this.getTotalAgingPeriods(customersAgingPeriods);
-    const totalCurrent = this.getTotalCurrent(customersAgingPeriods);
+    const customersTotal = this.getCustomersTotal(customersAgingPeriods);
 
     return {
       customers: customersAgingPeriods,
-      total: {
-        current: this.formatTotalAmount(totalCurrent),
-        aging: totalAgingPeriods,
-      }
+      total: customersTotal,
     };
   }
 

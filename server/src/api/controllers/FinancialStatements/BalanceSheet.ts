@@ -3,11 +3,11 @@ import { Router, Request, Response, NextFunction } from 'express';
 import { query, ValidationChain } from 'express-validator';
 import { castArray } from 'lodash';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
-import BaseController from '../BaseController';
 import BalanceSheetStatementService from 'services/FinancialStatements/BalanceSheet/BalanceSheetService';
+import BaseFinancialReportController from './BaseFinancialReportController';
 
 @Service()
-export default class BalanceSheetStatementController extends BaseController {
+export default class BalanceSheetStatementController extends BaseFinancialReportController {
   @Inject()
   balanceSheetService: BalanceSheetStatementService;
 
@@ -32,6 +32,8 @@ export default class BalanceSheetStatementController extends BaseController {
    */
   get balanceSheetValidationSchema(): ValidationChain[] {
     return [
+      ...this.sheetNumberFormatValidationSchema,
+
       query('accounting_method').optional().isIn(['cash', 'accural']),
       query('from_date').optional(),
       query('to_date').optional(),
@@ -39,8 +41,6 @@ export default class BalanceSheetStatementController extends BaseController {
       query('display_columns_by')
         .optional({ nullable: true, checkFalsy: true })
         .isIn(['year', 'month', 'week', 'day', 'quarter']),
-      query('number_format.no_cents').optional().isBoolean().toBoolean(),
-      query('number_format.divide_1000').optional().isBoolean().toBoolean(),
       query('account_ids').isArray().optional(),
       query('account_ids.*').isNumeric().toInt(),
       query('none_zero').optional().isBoolean().toBoolean(),

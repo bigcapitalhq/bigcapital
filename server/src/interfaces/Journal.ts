@@ -11,6 +11,8 @@ export interface IJournalEntry {
   referenceType: string,
   referenceId: number,
 
+  referenceTypeFormatted: string,
+
   transactionType?: string,
   note?: string,
   userId?: number,

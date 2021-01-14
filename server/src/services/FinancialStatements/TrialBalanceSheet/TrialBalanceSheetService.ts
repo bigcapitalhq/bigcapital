@@ -1,12 +1,13 @@
 import { Service, Inject } from 'typedi';
 import moment from 'moment';
 import TenancyService from 'services/Tenancy/TenancyService';
-import { ITrialBalanceSheetQuery, ITrialBalanceStatement } from 'interfaces';
-import TrialBalanceSheet from './TrialBalanceSheet';
 import Journal from 'services/Accounting/JournalPoster';
+import { INumberFormatQuery, ITrialBalanceSheetQuery, ITrialBalanceStatement } from 'interfaces';
+import TrialBalanceSheet from './TrialBalanceSheet';
+import FinancialSheet from '../FinancialSheet';
 
 @Service()
-export default class TrialBalanceSheetService {
+export default class TrialBalanceSheetService extends FinancialSheet {
   @Inject()
   tenancy: TenancyService;
 
@@ -22,8 +23,11 @@ export default class TrialBalanceSheetService {
       fromDate: moment().startOf('year').format('YYYY-MM-DD'),
       toDate: moment().endOf('year').format('YYYY-MM-DD'),
       numberFormat: {
-        noCents: false,
         divideOn1000: false,
+        negativeFormat: 'mines',
+        showZero: false,
+        formatMoney: 'total',
+        precision: 2,
       },
       basis: 'accural',
       noneZero: false,
@@ -42,7 +46,7 @@ export default class TrialBalanceSheetService {
    */
   public async trialBalanceSheet(
     tenantId: number,
-    query: ITrialBalanceSheetQuery
+    query: ITrialBalanceSheetQuery,
   ): Promise<ITrialBalanceStatement> {
     const filter = {
       ...this.defaultQuery,

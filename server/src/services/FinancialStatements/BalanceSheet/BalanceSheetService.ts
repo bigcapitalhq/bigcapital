@@ -29,8 +29,11 @@ export default class BalanceSheetStatementService
       fromDate: moment().startOf('year').format('YYYY-MM-DD'),
       toDate: moment().endOf('year').format('YYYY-MM-DD'),
       numberFormat: {
-        noCents: false,
+        precision: 2,
         divideOn1000: false,
+        showZero: false,
+        formatMoney: 'total',
+        negativeFormat: 'mines'
       },
       noneZero: false,
       noneTransactions: false,

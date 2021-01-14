@@ -145,7 +145,7 @@
 }
 
 .financial-sheet{
-  border: 2px solid #EBEBEB;
+  border: 2px solid #f0f0f0;
   border-radius: 10px;
   min-width: 640px;
   width: auto;
@@ -366,15 +366,26 @@
   &--receivable-aging-summary{
 
     .financial-sheet__table{
-      .tbody{
-        .row-type--total{
-          font-weight: 600;
 
-          .td{
-            background-color: #fafbff;
-            border-bottom-color: #666;
-            border-bottom-style: dotted;
-          }          
+      .bigcapital-datatable{
+        .tbody,
+        .thead{
+          .tr .td.customer_name ~ .td,
+          .tr .th.customer_name ~ .th{
+            justify-content: flex-end;
+          }
+        }
+        .tbody{
+          
+          .row-type--total{
+            font-weight: 600;
+  
+            .td{
+              border-top-color: #BBB;
+              border-top-style: solid;
+              border-bottom: 3px double #666;
+            }
+          }
         }
       }
     }    

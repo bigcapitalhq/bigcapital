@@ -7,9 +7,11 @@ import {
   IVendor,
   IAPAgingSummaryData,
   IAPAgingSummaryVendor,
-  IAPAgingSummaryColumns
+  IAPAgingSummaryColumns,
+  IAPAgingSummaryTotal
 } from 'interfaces';
 import { Dictionary } from 'tsyringe/dist/typings/types';
+
 export default class APAgingSummarySheet extends AgingSummaryReport {
   readonly tenantId: number;
   readonly query: IAPAgingSummaryQuery;
@@ -57,6 +59,23 @@ export default class APAgingSummarySheet extends AgingSummaryReport {
   }
 
   /**
+   * Retrieve the vendors aging and current total.
+   * @param  {IAPAgingSummaryTotal} vendorsAgingPeriods 
+   * @return {IAPAgingSummaryTotal}
+   */
+  getVendorsTotal(vendorsAgingPeriods): IAPAgingSummaryTotal {
+    const totalAgingPeriods = this.getTotalAgingPeriods(vendorsAgingPeriods);
+    const totalCurrent = this.getTotalCurrent(vendorsAgingPeriods);
+    const totalVendorsTotal = this.getTotalContactsTotals(vendorsAgingPeriods);
+
+    return {
+      current: this.formatTotalAmount(totalCurrent),
+      aging: totalAgingPeriods,
+      total: this.formatTotalAmount(totalVendorsTotal),
+    };
+  }
+
+  /**
    * Retrieve the vendor section data.
    * @param  {IVendor} vendor
    * @return {IAPAgingSummaryVendor}
@@ -85,7 +104,7 @@ export default class APAgingSummarySheet extends AgingSummaryReport {
       .map((vendor) => this.vendorData(vendor))
       .filter(
         (vendor: IAPAgingSummaryVendor) =>
-          !(vendor.total.total === 0 && this.query.noneZero)
+          !(vendor.total.amount === 0 && this.query.noneZero)
       );
   }
 
@@ -95,16 +114,12 @@ export default class APAgingSummarySheet extends AgingSummaryReport {
    */
   public reportData(): IAPAgingSummaryData {
     const vendorsAgingPeriods = this.vendorsWalker(this.contacts);
-    const totalAgingPeriods = this.getTotalAgingPeriods(vendorsAgingPeriods);
-    const totalCurrent = this.getTotalCurrent(vendorsAgingPeriods);
+    const vendorsTotal = this.getVendorsTotal(vendorsAgingPeriods);
 
     return {
       vendors: vendorsAgingPeriods,
-      total: {
-        current: this.formatTotalAmount(totalCurrent),
-        aging: totalAgingPeriods,
-      },
-    }
+      total: vendorsTotal,
+    };
   }
 
   /**

@@ -7,11 +7,11 @@ import {
 const mapActionsToProps = (dispatch) => ({
   requestReceivableAgingSummary: (query) =>
     dispatch(fetchReceivableAgingSummary({ query })),
-  toggleFilterReceivableAgingSummary: () =>
+  toggleFilterARAgingSummary: () =>
     dispatch({
       type: 'RECEIVABLE_AGING_SUMMARY_FILTER_TOGGLE',
     }),
-  refreshReceivableAgingSummary: (refresh) =>
+  refreshARAgingSummary: (refresh) =>
     dispatch(receivableAgingSummaryRefresh(refresh)),
 });
 

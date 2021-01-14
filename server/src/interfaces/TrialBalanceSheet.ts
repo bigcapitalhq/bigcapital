@@ -1,38 +1,41 @@
+import { INumberFormatQuery } from './FinancialStatements';
 
 export interface ITrialBalanceSheetQuery {
-  fromDate: Date|string,
-  toDate: Date|string,
-  numberFormat: {
-    noCents: boolean,
-    divideOn1000: boolean,
-  },
-  basis: 'cash' | 'accural',
-  noneZero: boolean,
-  noneTransactions: boolean,
-  accountIds: number[],
+  fromDate: Date | string;
+  toDate: Date | string;
+  numberFormat: INumberFormatQuery;
+  basis: 'cash' | 'accural';
+  noneZero: boolean;
+  noneTransactions: boolean;
+  accountIds: number[];
 }
 
-export interface ITrialBalanceAccount {
-  id: number,
-  parentAccountId: number,
-  name: string,
-  code: string,
-  accountNormal: string,
-  hasTransactions: boolean,
+export interface ITrialBalanceTotal {
+  credit: number;
+  debit: number;
+  balance: number;
+  currencyCode: string;
 
-  credit: number,
-  debit: number,
-  balance: number,
-  currencyCode: string,
-
-  formattedCredit: string,
-  formattedDebit: string,
-  formattedBalance: string,
+  formattedCredit: string;
+  formattedDebit: string;
+  formattedBalance: string;
 }
 
-export type ITrialBalanceSheetData = IBalanceSheetSection[];
+export interface ITrialBalanceAccount extends ITrialBalanceTotal {
+  id: number;
+  parentAccountId: number;
+  name: string;
+  code: string;
+  accountNormal: string;
+  hasTransactions: boolean;
+}
+
+export type ITrialBalanceSheetData = {
+  accounts: ITrialBalanceAccount[];
+  total: ITrialBalanceTotal;
+};
 
 export interface ITrialBalanceStatement {
-  data: ITrialBalanceSheetData,
-  query: ITrialBalanceSheetQuery,
+  data: ITrialBalanceSheetData;
+  query: ITrialBalanceSheetQuery;
 }

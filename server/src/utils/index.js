@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import moment from 'moment';
 import _ from 'lodash';
+import accounting from 'accounting';
 import definedOptions from 'data/options';
 
 const hashPassword = (password) =>
@@ -192,7 +193,7 @@ const entriesAmountDiff = (
     .groupBy(idAttribute)
     .mapValues((group) => _.sumBy(group, amountAttribute) || 0)
     .mergeWith(oldEntriesTable, (objValue, srcValue) => {
-      return (_.isNumber(objValue) ? objValue - srcValue : srcValue * -1); 
+      return _.isNumber(objValue) ? objValue - srcValue : srcValue * -1;
     })
     .value();
 
@@ -214,27 +215,56 @@ const convertEmptyStringToNull = (value) => {
     : value;
 };
 
-const formatNumber = (balance, { noCents = false, divideOn1000 = false }) => {
+const getNegativeFormat = (formatName) => {
+  switch (formatName) {
+    case 'parentheses':
+      return '(%s%v)';
+    case 'mines':
+      return '-%s%v';
+  }
+};
+
+const formatNumber = (
+  balance,
+  {
+    precision = 2,
+    divideOn1000 = false,
+    excerptZero = false,
+    negativeFormat = 'mines',
+    thousand = ',',
+    decimal = '.',
+    zeroSign = '',
+    symbol = '$',
+    money = true,
+  }
+) => {
+  const negForamt = getNegativeFormat(negativeFormat);
+  const format = '%s%v';
+
   let formattedBalance = parseFloat(balance);
 
-  if (noCents) {
-    formattedBalance = parseInt(formattedBalance, 10);
-  }
   if (divideOn1000) {
     formattedBalance /= 1000;
   }
-  return formattedBalance + '';
+  return accounting.formatMoney(
+    formattedBalance,
+    money ? symbol : '',
+    precision,
+    thousand,
+    decimal,
+    {
+      pos: format,
+      neg: negForamt,
+      zero: excerptZero ? zeroSign : format,
+    }
+  );
 };
 
 const isBlank = (value) => {
-  return _.isEmpty(value) && !_.isNumber(value) || _.isNaN(value);
-}
+  return (_.isEmpty(value) && !_.isNumber(value)) || _.isNaN(value);
+};
 
-function defaultToTransform(
-  value,
-  defaultOrTransformedValue,
-  defaultValue,
-) {
+function defaultToTransform(value, defaultOrTransformedValue, defaultValue) {
   const _defaultValue =
     typeof defaultValue === 'undefined'
       ? defaultOrTransformedValue
@@ -247,7 +277,6 @@ function defaultToTransform(
     ? _defaultValue
     : _transfromedValue;
 }
-
 
 export {
   hashPassword,

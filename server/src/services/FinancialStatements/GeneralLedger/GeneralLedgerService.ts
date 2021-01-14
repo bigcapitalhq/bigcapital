@@ -85,8 +85,7 @@ export default class GeneralLedgerService {
       group: 'organization',
       key: 'base_currency',
     });
-
-    // Retrieve all accounts from the storage.
+    // Retrieve all accounts with associated type from the storage.
     const accounts = await accountRepository.all('type');
     const accountsGraph = await accountRepository.getDependencyGraph();
 
@@ -111,11 +110,13 @@ export default class GeneralLedgerService {
       tenantId,
       accountsGraph
     );
+    // Accounts opening transactions. 
     const openingTransJournal = Journal.fromTransactions(
       openingBalanceTrans,
       tenantId,
       accountsGraph
     );
+    // Accounts closing transactions.
     const closingTransJournal = Journal.fromTransactions(
       closingBalanceTrans,
       tenantId,

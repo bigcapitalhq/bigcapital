@@ -157,7 +157,8 @@ export const fetchReceivableAgingSummary = ({ query }) => {
         dispatch({
           type: t.RECEIVABLE_AGING_SUMMARY_SET,
           payload: {
-            aging: response.data.aging,
+            customers: response.data.data.customers,
+            total: response.data.data.total,
             columns: response.data.columns,
             query,
           },
@@ -172,7 +173,7 @@ export const fetchReceivableAgingSummary = ({ query }) => {
       })
       .catch((error) => {
         reject(error);
-      })
+      });
   });
 }
 

@@ -73,7 +73,7 @@ export default class BalanceSheetStatement extends FinancialSheet {
     sections: IBalanceSheetSection[]
   ): IBalanceSheetAccountTotal {
     const amount = sumBy(sections, 'total.amount');
-    const formattedAmount = this.formatNumber(amount);
+    const formattedAmount = this.formatTotalNumber(amount);
     const currencyCode = this.baseCurrency;
 
     return { amount, formattedAmount, currencyCode };
@@ -89,7 +89,25 @@ export default class BalanceSheetStatement extends FinancialSheet {
   ): IBalanceSheetAccountTotal[] {
     return this.dateRangeSet.map((date, index) => {
       const amount = sumBy(sections, `totalPeriods[${index}].amount`);
-      const formattedAmount = this.formatNumber(amount);
+
+      const formattedAmount = this.formatTotalNumber(amount);
+      const currencyCode = this.baseCurrency;
+
+      return { date, amount, formattedAmount, currencyCode };
+    });
+  }
+
+  /**
+   * Retrieve accounts total periods.
+   * @param {Array<IBalanceSheetAccount>} accounts -
+   * @return {IBalanceSheetAccountTotal[]}
+   */
+  private getAccountsTotalPeriods(
+    accounts: Array<IBalanceSheetAccount>
+  ): IBalanceSheetAccountTotal[] {
+    return this.dateRangeSet.map((date, index) => {
+      const amount = sumBy(accounts, `totalPeriods[${index}].amount`);
+      const formattedAmount = this.formatNumber(amount)
       const currencyCode = this.baseCurrency;
 
       return { date, amount, formattedAmount, currencyCode };
@@ -190,12 +208,12 @@ export default class BalanceSheetStatement extends FinancialSheet {
       }),
       total: {
         amount: totalAmount,
-        formattedAmount: this.formatNumber(totalAmount),
+        formattedAmount: this.formatTotalNumber(totalAmount),
         currencyCode: this.baseCurrency,
       },
       ...(this.query.displayColumnsType === 'date_periods'
         ? {
-            totalPeriods: this.getSectionTotalPeriods(filteredAccounts),
+            totalPeriods: this.getAccountsTotalPeriods(filteredAccounts),
           }
         : {}),
     };
@@ -232,7 +250,7 @@ export default class BalanceSheetStatement extends FinancialSheet {
    */
   private balanceSheetStructureMapper(
     structure: IBalanceSheetStructureSection,
-    accounts: IAccount & { type: IAccountType }[]
+    accounts: IAccount & { type: IAccountType }[],
   ): IBalanceSheetSection {
     const result = {
       name: structure.name,
@@ -276,14 +294,9 @@ export default class BalanceSheetStatement extends FinancialSheet {
           }
         )
         // Mappes the balance sheet scetions only
-        .map(
-          ([sheetSection, structure]: [
-            IBalanceSheetSection,
-            IBalanceSheetStructureSection
-          ]) => {
-            return sheetSection;
-          }
-        )
+        .map(([sheetSection]: [IBalanceSheetSection]) => {
+          return sheetSection;
+        })
     );
   }
 

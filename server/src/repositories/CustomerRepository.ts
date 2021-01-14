@@ -7,7 +7,7 @@ export default class CustomerRepository extends TenantRepository {
    */
   constructor(knex, cache) {
     super(knex, cache);
-    this.repositoryName = 'ContactRepository';
+    this.repositoryName = 'CustomerRepository';
   }
 
   /**

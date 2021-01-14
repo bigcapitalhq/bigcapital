@@ -1,13 +1,12 @@
-
+import {
+  INumberFormatQuery,
+} from './FinancialStatements';
 
 export interface IProfitLossSheetQuery {
   basis: string,
   fromDate: Date | string,
   toDate: Date | string,
-  numberFormat: {
-    noCents: boolean,
-    divideOn1000: boolean,
-  },
+  numberFormat: INumberFormatQuery,
   noneZero: boolean,
   noneTransactions: boolean,
   accountsIds: number[],
@@ -34,8 +33,8 @@ export interface IProfitLossSheetAccount {
 };
 
 export interface IProfitLossSheetAccountsSection {
-  sectionTitle: string,
-  entryNormal: 'credit',
+  name: string,
+  entryNormal: 'credit' | 'debit',
   accounts: IProfitLossSheetAccount[],
   total: IProfitLossSheetTotal,
   totalPeriods?: IProfitLossSheetTotal[],

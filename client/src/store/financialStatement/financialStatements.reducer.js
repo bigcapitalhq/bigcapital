@@ -1,11 +1,12 @@
 import { createReducer } from '@reduxjs/toolkit';
 import t from 'store/types';
-import { omit } from 'lodash';
 import {
   mapBalanceSheetToTableRows,
   journalToTableRowsMapper,
   generalLedgerToTableRows,
-  profitLossToTableRowsMapper
+  profitLossToTableRowsMapper,
+  ARAgingSummaryTableRowsMapper,
+  mapTrialBalanceSheetToRows,
 } from './financialStatements.mappers';
 
 const initialState = {
@@ -41,44 +42,12 @@ const initialState = {
     filter: true,
   },
   receivableAgingSummary: {
-    sheets: [],
+    sheet: {},
     loading: false,
     tableRows: [],
     filter: true,
     refresh: false,
   },
-};
-
-
-
-
-const mapContactAgingSummary = (sheet) => {
-  const rows = [];
-
-  const mapAging = (agingPeriods) => {
-    return agingPeriods.reduce((acc, aging, index) => {
-      acc[`aging-${index}`] = aging.formatted_total;
-      return acc;
-    }, {});
-  };
-  sheet.customers.forEach((customer) => {
-    const agingRow = mapAging(customer.aging);
-
-    rows.push({
-      rowType: 'customer',
-      customer_name: customer.customer_name,
-      ...agingRow,
-      total: customer.total,
-    });
-  });
-
-  rows.push({
-    rowType: 'total',
-    customer_name: 'Total',
-    ...mapAging(sheet.total),
-    total: 0,
-  });
-  return rows;
 };
 
 const financialStatementFilterToggle = (financialName, statePath) => {
@@ -112,8 +81,10 @@ export default createReducer(initialState, {
   ...financialStatementFilterToggle('BALANCE_SHEET', 'balanceSheet'),
 
   [t.TRAIL_BALANCE_STATEMENT_SET]: (state, action) => {
+    debugger;
     const trailBalanceSheet = {
-      data: action.data.data,
+      sheet: action.data.data,
+      tableRows: mapTrialBalanceSheetToRows(action.data.data),
       query: action.data.query,
     };
     state.trialBalance.sheet = trailBalanceSheet;
@@ -154,7 +125,7 @@ export default createReducer(initialState, {
       accounts: action.data.data,
       tableRows: generalLedgerToTableRows(action.data.data),
     };
-    state.generalLedger.sheet = generalLedger;  
+    state.generalLedger.sheet = generalLedger;
   },
 
   [t.GENERAL_LEDGER_SHEET_LOADING]: (state, action) => {
@@ -173,7 +144,7 @@ export default createReducer(initialState, {
       columns: action.columns,
       tableRows: profitLossToTableRowsMapper(action.profitLoss),
     };
-    state.profitLoss.sheet = profitLossSheet;  
+    state.profitLoss.sheet = profitLossSheet;
   },
 
   [t.PROFIT_LOSS_SHEET_LOADING]: (state, action) => {
@@ -187,34 +158,28 @@ export default createReducer(initialState, {
 
   ...financialStatementFilterToggle('PROFIT_LOSS', 'profitLoss'),
 
-  // [t.RECEIVABLE_AGING_SUMMARY_LOADING]: (state, action) => {
-  //   const { loading } = action.payload;
-  //   state.receivableAgingSummary.loading = loading;
-  // },
+ 
 
-  // [t.RECEIVABLE_AGING_SUMMARY_SET]: (state, action) => {
-  //   const { aging, columns, query } = action.payload;
-  //   const index = getFinancialSheetIndexByQuery(
-  //     state.receivableAgingSummary.sheets,
-  //     query,
-  //   );
+  [t.RECEIVABLE_AGING_SUMMARY_SET]: (state, action) => {
+    const { customers, total, columns, query } = action.payload;
 
-  //   const receivableSheet = {
-  //     query,
-  //     columns,
-  //     aging,
-  //     tableRows: mapContactAgingSummary(aging),
-  //   };
-  //   if (index !== -1) {
-  //     state.receivableAgingSummary[index] = receivableSheet;
-  //   } else {
-  //     state.receivableAgingSummary.sheets.push(receivableSheet);
-  //   }
-  // },
-  // [t.RECEIVABLE_AGING_SUMMARY_REFRESH]: (state, action) => {
-  //   const { refresh } = action.payload;
-  //   state.receivableAgingSummary.refresh = !!refresh;
-  // },
+    const receivableSheet = {
+      query,
+      columns,
+      customers,
+      total,
+      tableRows: ARAgingSummaryTableRowsMapper({ customers, columns, total }),
+    };
+    state.receivableAgingSummary.sheet = receivableSheet;
+  },
+  [t.RECEIVABLE_AGING_SUMMARY_REFRESH]: (state, action) => {
+    const { refresh } = action.payload;
+    state.receivableAgingSummary.refresh = !!refresh;
+  },
+   [t.RECEIVABLE_AGING_SUMMARY_LOADING]: (state, action) => {
+    const { loading } = action.payload;
+    state.receivableAgingSummary.loading = loading;
+  },
   ...financialStatementFilterToggle(
     'RECEIVABLE_AGING_SUMMARY',
     'receivableAgingSummary',
