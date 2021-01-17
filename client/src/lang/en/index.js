@@ -950,9 +950,24 @@ export default {
   cost: 'Cost',
   qty_on_hand: 'Qty on hand',
   adjustment_account: 'Adjustment account',
-  inventory_adjustment_list:'Inventory Adjustment List',
-  delete_adjustment:'Delete Adjustment',
+  inventory_adjustment_list: 'Inventory Adjustment List',
+  delete_adjustment: 'Delete Adjustment',
   the_make_adjustment_has_been_successfully_created:
     'The make adjustment has been successfully created.',
+  the_adjustment_has_been_successfully_deleted:
+    'The adjustment has been successfully deleted.',
+  once_delete_this_inventory_a_adjustment_you_will_able_to_restore_it: `Once you delete this inventory a adjustment, you won\'t be able to restore it later. Are you sure you want to delete this invoice?`,
+  select_adjustment_account: 'Select Adjustment account',
+  qty: 'Quantity on hand',
+  money_format: 'Money format',
+  show_zero: 'Show zero',
+  show_negative_in_red: 'Show negative in red',
+  divide_on_1000: 'Divide on 1000',
+  negative_format: 'Negative format',
+  decimal_places: 'Decimal places',
+  run: 'Run',
+  you_could_not_delete_item_that_has_associated_inventory_adjustments_transacions:
+    'You could not delete item that has associated inventory adjustments transactions',
+  format: 'Format',
   current: 'Current',
 };

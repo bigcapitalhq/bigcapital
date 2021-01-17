@@ -158,7 +158,7 @@ function DynamicFilterValueField({
             selectedItem={value}
             selectedItemProp={optionsKey}
             defaultText={`Select an option`}
-            labelProp={optionsLabel}
+            textProp={optionsLabel}
             buttonProps={{
               onClick: handleBtnClick
             }}

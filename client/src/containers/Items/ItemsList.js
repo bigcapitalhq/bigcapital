@@ -98,6 +98,33 @@ function ItemsList({
     setDeleteItem(false);
   }, [setDeleteItem]);
 
+  const handleDeleteErrors = (errors) => {
+    if (
+      errors.find((error) => error.type === 'ITEM_HAS_ASSOCIATED_TRANSACTINS')
+    ) {
+      AppToaster.show({
+        message: formatMessage({
+          id: 'the_item_has_associated_transactions',
+        }),
+        intent: Intent.DANGER,
+      });
+    }
+
+    if (
+      errors.find(
+        (error) => error.type === 'ITEM_HAS_ASSOCIATED_INVENTORY_ADJUSTMENT',
+      )
+    ) {
+      AppToaster.show({
+        message: formatMessage({
+          id:
+            'you_could_not_delete_item_that_has_associated_inventory_adjustments_transacions',
+        }),
+        intent: Intent.DANGER,
+      });
+    }
+  };
+
   // handle confirm delete item.
   const handleConfirmDeleteItem = useCallback(() => {
     requestDeleteItem(deleteItem.id)
@@ -112,19 +139,8 @@ function ItemsList({
         setDeleteItem(false);
       })
       .catch(({ errors }) => {
-        if (
-          errors.find(
-            (error) => error.type === 'ITEM_HAS_ASSOCIATED_TRANSACTINS',
-          )
-        ) {
-          AppToaster.show({
-            message: formatMessage({
-              id: 'the_item_has_associated_transactions',
-            }),
-            intent: Intent.DANGER,
-          });
-        }
         setDeleteItem(false);
+        handleDeleteErrors(errors);
       });
   }, [requestDeleteItem, deleteItem, formatMessage]);
 

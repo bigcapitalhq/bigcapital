@@ -7,7 +7,7 @@ import {
 import t from 'store/types';
 
 const mapDispatchToProps = (dispatch) => ({
-  requestSubmitInventoryAdjustment: (form) =>
+  requestSubmitInventoryAdjustment: ({ form }) =>
     dispatch(submitInventoryAdjustment({ form })),
   requestFetchInventoryAdjustmentTable: (query = {}) =>
     dispatch(fetchInventoryAdjustmentsTable({ query: { ...query } })),

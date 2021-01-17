@@ -45,9 +45,6 @@ const defaultInitialValues = {
   category_id: '',
   sellable: 1,
   purchasable: true,
-  opening_quantity: '',
-  opening_cost: '',
-  opening_date: moment(new Date()).format('YYYY-MM-DD'),
 };
 
 /**

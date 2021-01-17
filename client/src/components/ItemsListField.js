@@ -75,7 +75,7 @@ function ItemsListField({
       onItemSelect={onItemSelect}
       selectedItem={`${selectedItemId}`}
       selectedItemProp={'id'}
-      labelProp={'name'}
+      textProp={'name'}
       defaultText={selectedItem ? selectedItem.name : defautlSelectText}
     />
   );

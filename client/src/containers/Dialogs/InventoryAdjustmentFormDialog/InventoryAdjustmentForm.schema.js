@@ -6,22 +6,25 @@ const Schema = Yup.object().shape({
   date: Yup.date()
     .required()
     .label(formatMessage({ id: 'date' })),
-  type: Yup.number().required(),
-  adjustment_account_id: Yup.number().required(),
+  type: Yup.string().required(),
+  adjustment_account_id: Yup.string().required(),
+  item_id: Yup.number().required(),
   reason: Yup.string()
     .required()
     .label(formatMessage({ id: 'reason' })),
-  quantity: Yup.number().when(['type'], {
-    is: (type) => type,
-    then: Yup.number().required(),
-  }),
+  quantity_on_hand: Yup.number()
+    .min(0)
+    .required()
+    .label(formatMessage({ id: 'qty' })),
+  quantity: Yup.number().integer().max(Yup.ref('quantity_on_hand')).required(),
   cost: Yup.number().when(['type'], {
     is: (type) => type,
-    then: Yup.number().required(),
+    then: Yup.number(),
   }),
   reference_no: Yup.string(),
-  new_quantity: Yup.number(),
+  new_quantity: Yup.number().min(Yup.ref('quantity')).required(),
   description: Yup.string().min(3).max(DATATYPES_LENGTH.TEXT).nullable().trim(),
+  publish: Yup.boolean(),
 });
 
 export const CreateInventoryAdjustmentFormSchema = Schema;

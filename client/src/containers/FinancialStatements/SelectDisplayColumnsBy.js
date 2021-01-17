@@ -27,7 +27,7 @@ export default function SelectsListColumnsBy(props) {
                 filterable={false}
                 selectedItem={value}
                 selectedItemProp={'key'}
-                labelProp={'name'}
+                textProp={'name'}
                 onItemSelect={(item) => {
                   form.setFieldValue('displayColumnsType', item.key);
                 }}

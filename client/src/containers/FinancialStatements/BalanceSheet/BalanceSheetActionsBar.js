@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   NavbarGroup,
   Button,
@@ -13,6 +13,7 @@ import classNames from 'classnames';
 
 import Icon from 'components/Icon';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
+import NumberFormats from 'components/NumberFormats';
 
 import { compose } from 'utils';
 import withBalanceSheetDetail from './withBalanceSheetDetail';
@@ -69,6 +70,18 @@ function BalanceSheetActionsBar({
           <Button
             className={classNames(Classes.MINIMAL, 'button--filter')}
             text={<T id={'filter'} />}
+            icon={<Icon icon="filter-16" iconSize={16} />}
+          />
+        </Popover>
+        <Popover
+          content={<NumberFormats />}
+          minimal={true}
+          interactionKind={PopoverInteractionKind.CLICK}
+          position={Position.BOTTOM_LEFT}
+        >
+          <Button
+            className={classNames(Classes.MINIMAL, 'button--filter')}
+            text={<T id={'format'} />}
             icon={<Icon icon="filter-16" iconSize={16} />}
           />
         </Popover>

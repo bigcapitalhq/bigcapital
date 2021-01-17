@@ -75,6 +75,17 @@ function ItemsDataTable({
     [addItemsTableQueries],
   );
 
+  const handleMakeAdjustment = useCallback(
+    (item) => () => {
+      openDialog('inventory-adjustment-form', {
+        action: 'make_adjustment',
+        item_id: item.id,
+        quantity_on_hand: item.quantity_on_hand,
+      });
+    },
+    [openDialog],
+  );
+
   const handleEditItem = useCallback(
     (item) => () => {
       onEditItem && onEditItem(item);
@@ -88,10 +99,6 @@ function ItemsDataTable({
     },
     [onDeleteItem],
   );
-
-  const handleMakeAdjustment = useCallback(() => {
-    openDialog('inventory-adjustment-form', {});
-  }, [openDialog]);
 
   const actionMenuList = useCallback(
     (item) => (
@@ -120,11 +127,11 @@ function ItemsDataTable({
             onClick={() => onActivateItem(item)}
           />
         </If>
-        
+
         <If condition={item.type === 'inventory'}>
           <MenuItem
             text={formatMessage({ id: 'make_adjustment' })}
-            onClick={handleMakeAdjustment}
+            onClick={handleMakeAdjustment(item)}
           />
         </If>
         <MenuItem

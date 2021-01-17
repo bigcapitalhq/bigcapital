@@ -39,7 +39,7 @@ export default function AccountsTypesSelect({
       items={items}
       selectedItemProp={'id'}
       selectedItem={selectedTypeId}
-      labelProp={'label'}
+      textProp={'label'}
       defaultText={defaultSelectText}
       onItemSelect={handleItemSelected}
       itemPredicate={filterAccountTypeItems}

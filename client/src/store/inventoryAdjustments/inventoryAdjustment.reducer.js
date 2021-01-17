@@ -14,9 +14,6 @@ const initialState = {
     page_size: 12,
     page: 1,
   },
-  paginationMeta: {
-    total: 0,
-  },
 };
 
 export default createReducer(initialState, {
@@ -37,7 +34,6 @@ export default createReducer(initialState, {
 
     const viewId = customViewId || -1;
     const view = state.views[viewId] || {};
-
     state.views[viewId] = {
       ...view,
       pages: {
@@ -49,7 +45,6 @@ export default createReducer(initialState, {
     };
   },
 
-  //useless
   [t.INVENTORY_ADJUSTMENT_ITEMS_SET]: (state, action) => {
     const { inventory_adjustment } = action.payload;
     const _inventory_adjustment = {};

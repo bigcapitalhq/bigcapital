@@ -44,7 +44,7 @@ export default function CategoriesSelectList({
       items={categoriesList}
       selectedItemProp={'id'}
       selectedItem={selecetedCategoryId}
-      labelProp={'name'}
+      textProp={'name'}
       defaultText={defaultSelectText}
       onItemSelect={handleItemCategorySelected}
       itemPredicate={filterItemCategory}
