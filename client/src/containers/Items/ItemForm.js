@@ -6,7 +6,6 @@ import { useHistory } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames';
 import { defaultTo } from 'lodash';
-import moment from 'moment';
 
 import { CLASSES } from 'common/classes';
 import AppToaster from 'components/AppToaster';
@@ -18,7 +17,7 @@ import ItemFormInventorySection from './ItemFormInventorySection';
 import withItemsActions from 'containers/Items/withItemsActions';
 import withMediaActions from 'containers/Media/withMediaActions';
 import useMedia from 'hooks/useMedia';
-import withItemDetail from 'containers/Items/withItemDetail';
+import withItem from 'containers/Items/withItem';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withSettings from 'containers/Settings/withSettings';
 
@@ -56,7 +55,7 @@ function ItemForm({
   requestEditItem,
 
   itemId,
-  itemDetail,
+  item,
   onFormSubmit,
 
   // #withDashboardActions
@@ -106,12 +105,12 @@ function ItemForm({
        * as well.
        */
       ...transformToForm(
-        transformItemFormData(itemDetail, defaultInitialValues),
+        transformItemFormData(item, defaultInitialValues),
         defaultInitialValues,
       ),
     }),
     [
-      itemDetail,
+      item,
       preferredCostAccount,
       preferredSellAccount,
       preferredInventoryAccount,
@@ -177,20 +176,20 @@ function ItemForm({
   };
 
   useEffect(() => {
-    if (itemDetail && itemDetail.type) {
-      changePageSubtitle(transitionItemTypeKeyToLabel(itemDetail.type));
+    if (item && item.type) {
+      changePageSubtitle(transitionItemTypeKeyToLabel(item.type));
     }
-  }, [itemDetail, changePageSubtitle, formatMessage]);
+  }, [item, changePageSubtitle, formatMessage]);
 
   const initialAttachmentFiles = useMemo(() => {
-    return itemDetail && itemDetail.media
-      ? itemDetail.media.map((attach) => ({
+    return item && item.media
+      ? item.media.map((attach) => ({
           preview: attach.attachment_file,
           upload: true,
           metadata: { ...attach },
         }))
       : [];
-  }, [itemDetail]);
+  }, [item]);
 
   const handleDropFiles = useCallback(
     (_files) => {
@@ -233,7 +232,7 @@ function ItemForm({
         {({ isSubmitting, handleSubmit }) => (
           <Form>
             <div class={classNames(CLASSES.PAGE_FORM_BODY)}>
-              <ItemFormPrimarySection itemType={itemDetail?.type} />
+              <ItemFormPrimarySection itemType={item?.type} />
               <ItemFormBody />
               <ItemFormInventorySection />
             </div>
@@ -254,7 +253,7 @@ function ItemForm({
 
 export default compose(
   withItemsActions,
-  withItemDetail,
+  withItem(({ item }) => ({ item })),
   withDashboardActions,
   withMediaActions,
   withSettings(({ itemsSettings }) => ({

@@ -1,16 +1,16 @@
-import React, { useRef } from 'react';
-import { FastField, ErrorMessage, useFormikContext } from 'formik';
-import { FormGroup, InputGroup, Intent } from '@blueprintjs/core';
+import React from 'react';
+import { FastField, ErrorMessage } from 'formik';
+import { FormGroup, InputGroup } from '@blueprintjs/core';
 import { inputIntent } from 'utils';
-import { Row, Col, If, FieldRequiredHint } from 'components';
+import { Row, Col  } from 'components';
 import { FormattedMessage as T } from 'react-intl';
 import { decrementCalc, dec } from './utils';
 
 function DecrementAdjustmentFields() {
   return (
-    <Row>
+    <Row className={'row--decrement-fields'}>
       {/*------------ Quantity on hand  -----------*/}
-      <Col sm={3}>
+      <Col className={'col--quantity-on-hand'}>
         <FastField name={'quantity_on_hand'}>
           {({ field, meta: { error, touched } }) => (
             <FormGroup
@@ -23,8 +23,13 @@ function DecrementAdjustmentFields() {
           )}
         </FastField>
       </Col>
+
+      <Col className={'col--sign'}>
+        <span>–</span>
+      </Col>
+      
       {/*------------ Decrement -----------*/}
-      <Col sm={2}>
+      <Col className={'col--decrement'}>
         <FastField name={'quantity'}>
           {({
             form: { values, setFieldValue },
@@ -47,8 +52,12 @@ function DecrementAdjustmentFields() {
           )}
         </FastField>
       </Col>
+
+      <Col className={'col--sign'}>
+        <span>=</span>
+      </Col>
       {/*------------ New quantity -----------*/}
-      <Col sm={4}>
+      <Col className={'col--quantity'}>
         <FastField name={'new_quantity'}>
           {({
             form: { values, setFieldValue },

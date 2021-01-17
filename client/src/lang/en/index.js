@@ -970,4 +970,5 @@ export default {
     'You could not delete item that has associated inventory adjustments transactions',
   format: 'Format',
   current: 'Current',
+  adjustment_reasons: 'Adjustment reasons'
 };

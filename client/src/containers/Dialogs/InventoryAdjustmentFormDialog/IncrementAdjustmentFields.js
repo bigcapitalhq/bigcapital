@@ -1,7 +1,7 @@
 import React from 'react';
-import { FastField, ErrorMessage, useFormikContext } from 'formik';
-import { FormGroup, InputGroup, Intent } from '@blueprintjs/core';
-import { Row, Col, FieldRequiredHint } from 'components';
+import { FastField, ErrorMessage } from 'formik';
+import { FormGroup, InputGroup } from '@blueprintjs/core';
+import { Row, Col } from 'components';
 import { inputIntent } from 'utils';
 import { FormattedMessage as T } from 'react-intl';
 import { decrementCalc, incrementCalc } from './utils';
@@ -10,7 +10,7 @@ function IncrementAdjustmentFields() {
   return (
     <Row>
       {/*------------ Quantity on hand  -----------*/}
-      <Col sm={3}>
+      <Col className={'col--quantity-on-hand'}>
         <FastField name={'quantity_on_hand'}>
           {({ field, meta: { error, touched } }) => (
             <FormGroup
@@ -23,8 +23,14 @@ function IncrementAdjustmentFields() {
           )}
         </FastField>
       </Col>
+
+      {/*------------ Sign -----------*/}
+      <Col className={'col--sign'}>
+        <span>+</span>
+      </Col>
+
       {/*------------ Increment -----------*/}
-      <Col sm={2}>
+      <Col className={'col--quantity'}>
         <FastField name={'quantity'}>
           {({
             form: { values, setFieldValue },
@@ -47,8 +53,9 @@ function IncrementAdjustmentFields() {
           )}
         </FastField>
       </Col>
+
       {/*------------ Cost -----------*/}
-      <Col sm={2}>
+      <Col className={'col--cost'}>
         <FastField name={'cost'}>
           {({ field, meta: { error, touched } }) => (
             <FormGroup
@@ -61,8 +68,14 @@ function IncrementAdjustmentFields() {
           )}
         </FastField>
       </Col>
+
+      {/*------------ Sign -----------*/}
+      <Col className={'col--sign'}>
+        <span>=</span>
+      </Col>
+
       {/*------------ New quantity -----------*/}
-      <Col sm={4}>
+      <Col className={'col--quantity-on-hand'}>
         <FastField name={'new_quantity'}>
           {({
             form: { values, setFieldValue },
