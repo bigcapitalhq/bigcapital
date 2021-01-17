@@ -13,7 +13,7 @@ const InventoryAdjustmentFormDialogContent = lazy(() =>
  */
 function InventoryAdjustmentFormDialog({
   dialogName,
-  payload = { action: '', id: null },
+  payload = { action: '', itemId: null },
   isOpen,
 }) {
   return (
@@ -23,11 +23,12 @@ function InventoryAdjustmentFormDialog({
       isOpen={isOpen}
       canEscapeJeyClose={true}
       autoFocus={true}
+      className={'dialog--adjustment-item'}
     >
       <DialogSuspense>
         <InventoryAdjustmentFormDialogContent
           dialogName={dialogName}
-          itemDetail={payload}
+          itemId={payload.itemId}
         />
       </DialogSuspense>
     </Dialog>

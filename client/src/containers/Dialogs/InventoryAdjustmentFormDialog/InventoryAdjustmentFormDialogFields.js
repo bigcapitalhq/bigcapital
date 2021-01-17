@@ -1,5 +1,5 @@
 import React from 'react';
-import { FastField, ErrorMessage, useFormikContext } from 'formik';
+import { FastField, ErrorMessage, Field, useFormikContext } from 'formik';
 import {
   Classes,
   FormGroup,
@@ -10,21 +10,22 @@ import {
 import classNames from 'classnames';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { DateInput } from '@blueprintjs/datetime';
-import { ListSelect, Choose, If, FieldRequiredHint } from 'components';
+import { compose } from 'redux';
+import { ListSelect, FieldRequiredHint, Col, Row } from 'components';
 import {
   inputIntent,
   momentFormatter,
   tansformDateValue,
   handleDateChange,
+  toSafeNumber
 } from 'utils';
 import { CLASSES } from 'common/classes';
 import adjustmentType from 'common/adjustmentType';
-import IncrementAdjustmentFields from './IncrementAdjustmentFields';
-import DecrementAdjustmentFields from './DecrementAdjustmentFields';
+
 import AccountsSuggestField from 'components/AccountsSuggestField';
 import withAccounts from 'containers/Accounts/withAccounts';
-import { compose } from 'redux';
-import { decrementCalc, incrementCalc, dec } from './utils';
+import { diffQuantity } from './utils';
+import InventoryAdjustmentQuantityFields from './InventoryAdjustmentQuantityFields';
 
 /**
  * Inventory adjustment form dialogs fields.
@@ -38,83 +39,71 @@ function InventoryAdjustmentFormDialogFields({
 
   return (
     <div className={Classes.DIALOG_BODY}>
-      {/*------------ Date -----------*/}
-      <FastField name={'date'}>
-        {({ form, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'date'} />}
-            labelInfo={<FieldRequiredHint />}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="date" />}
-            minimal={true}
-            className={classNames(CLASSES.FILL)}
-          >
-            <DateInput
-              {...momentFormatter('YYYY/MM/DD')}
-              onChange={handleDateChange((formattedDate) => {
-                form.setFieldValue('date', formattedDate);
-              })}
-              value={tansformDateValue(value)}
-              popoverProps={{
-                position: Position.BOTTOM,
-                minimal: true,
-              }}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      <Row>
+        <Col xs={5}>
+          {/*------------ Date -----------*/}
+          <FastField name={'date'}>
+            {({ form, field: { value }, meta: { error, touched } }) => (
+              <FormGroup
+                label={<T id={'date'} />}
+                labelInfo={<FieldRequiredHint />}
+                intent={inputIntent({ error, touched })}
+                helperText={<ErrorMessage name="date" />}
+                minimal={true}
+                className={classNames(CLASSES.FILL, 'form-group--date')}
+              >
+                <DateInput
+                  {...momentFormatter('YYYY/MM/DD')}
+                  onChange={handleDateChange((formattedDate) => {
+                    form.setFieldValue('date', formattedDate);
+                  })}
+                  value={tansformDateValue(value)}
+                  popoverProps={{
+                    position: Position.BOTTOM,
+                    minimal: true,
+                  }}
+                />
+              </FormGroup>
+            )}
+          </FastField>
+        </Col>
 
-      {/*------------ Adjustment type -----------*/}
-      <FastField name={'type'}>
-        {({ form, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'adjustment_type'} />}
-            labelInfo={<FieldRequiredHint />}
-            helperText={<ErrorMessage name="type" />}
-            intent={inputIntent({ error, touched })}
-            className={classNames(CLASSES.FILL)}
-          >
-            <ListSelect
-              items={adjustmentType}
-              onItemSelect={(type) => {
-                form.setFieldValue('type', type.value);
-                type?.value == 'increment'
-                  ? form.setFieldValue('new_quantity', incrementCalc(values))
-                  : form.setFieldValue(
-                      'new_quantity',
-                      values.quantity_on_hand - values.quantity,
+        <Col xs={5}>
+          {/*------------ Adjustment type -----------*/}
+          <Field name={'type'}>
+            {({ form: { values, setFieldValue }, field: { value }, meta: { error, touched } }) => (
+              <FormGroup
+                label={<T id={'adjustment_type'} />}
+                labelInfo={<FieldRequiredHint />}
+                helperText={<ErrorMessage name="type" />}
+                intent={inputIntent({ error, touched })}
+                className={classNames(CLASSES.FILL, 'form-group--type')}
+              >
+                <ListSelect
+                  items={adjustmentType}
+                  onItemSelect={(type) => {
+                    const result = diffQuantity(
+                      toSafeNumber(values.quantity),
+                      toSafeNumber(values.quantity_on_hand),
+                      type.value
                     );
-              }}
-              filterable={false}
-              selectedItem={value}
-              selectedItemProp={'value'}
-              textProp={'name'}
-              popoverProps={{ minimal: true }}
-            />
-          </FormGroup>
-        )}
-      </FastField>
-      <Choose>
-        <Choose.When condition={values.type === 'decrement'}>
-          <DecrementAdjustmentFields />
-        </Choose.When>
-        <Choose.When condition={values.type === 'increment'}>
-          <IncrementAdjustmentFields />
-        </Choose.When>
-      </Choose>
-      {/*------------ Reason -----------*/}
-      <FastField name={'reason'}>
-        {({ form, field, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'reason'} />}
-            labelInfo={<FieldRequiredHint />}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="reason" />}
-          >
-            <InputGroup fill={true} {...field} />
-          </FormGroup>
-        )}
-      </FastField>
+                    setFieldValue('type', type.value);
+                    setFieldValue('new_quantity', result);
+                  }}
+                  filterable={false}
+                  selectedItem={value}
+                  selectedItemProp={'value'}
+                  textProp={'name'}
+                  popoverProps={{ minimal: true }}
+                />
+              </FormGroup>
+            )}
+          </Field>
+        </Col>
+      </Row>
+
+      <InventoryAdjustmentQuantityFields />
+
       {/*------------ Adjustment account -----------*/}
       <FastField name={'adjustment_account_id'}>
         {({ form, field, meta: { error, touched } }) => (
@@ -123,6 +112,7 @@ function InventoryAdjustmentFormDialogFields({
             labelInfo={<FieldRequiredHint />}
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name="reason" />}
+            className={'form-group--adjustment-account'}
           >
             <AccountsSuggestField
               accounts={accountsList}
@@ -138,27 +128,29 @@ function InventoryAdjustmentFormDialogFields({
           </FormGroup>
         )}
       </FastField>
+
       {/*------------ Reference -----------*/}
       <FastField name={'reference_no'}>
         {({ form, field, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'reference_no'} />}
-            className={classNames(CLASSES.FILL)}
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name="reference_no" />}
+            className={'form-group--reference-no'}
           >
             <InputGroup {...field} />
           </FormGroup>
         )}
       </FastField>
+
       {/*------------ description -----------*/}
-      <FastField name={'description'}>
+      <FastField name={'reason'}>
         {({ field, meta: { error, touched } }) => (
           <FormGroup
-            label={<T id={'description'} />}
-            className={'form-group--description'}
+            label={<T id={'adjustment_reasons'} />}
+            className={'form-group--adjustment-reasons'}
             intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name={'description'} />}
+            helperText={<ErrorMessage name={'adjustment_reasons'} />}
           >
             <TextArea growVertically={true} large={true} {...field} />
           </FormGroup>

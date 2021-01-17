@@ -79,8 +79,7 @@ function ItemsDataTable({
     (item) => () => {
       openDialog('inventory-adjustment-form', {
         action: 'make_adjustment',
-        item_id: item.id,
-        quantity_on_hand: item.quantity_on_hand,
+        itemId: item.id,
       });
     },
     [openDialog],

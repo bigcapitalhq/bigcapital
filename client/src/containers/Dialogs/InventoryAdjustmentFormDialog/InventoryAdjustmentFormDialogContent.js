@@ -1,17 +1,26 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Intent } from '@blueprintjs/core';
 import { Formik, Form } from 'formik';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
 import { useQuery, queryCache } from 'react-query';
 import moment from 'moment';
-import { omit } from 'lodash';
+import { omit, get } from 'lodash';
+
+import 'style/pages/Items/ItemAdjustmentDialog.scss';
 
 import { AppToaster, DialogContent } from 'components';
+
 import { CreateInventoryAdjustmentFormSchema } from './InventoryAdjustmentForm.schema';
+
 import InventoryAdjustmentFormDialogFields from './InventoryAdjustmentFormDialogFields';
 import InventoryAdjustmentFloatingActions from './InventoryAdjustmentFloatingActions';
+
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withInventoryAdjustmentActions from 'containers/Items/withInventoryAdjustmentActions';
+import withAccountsActions from 'containers/Accounts/withAccountsActions';
+import withItem from 'containers/Items/withItem';
+import withItemsActions from 'containers/Items/withItemsActions';
+
 import { compose } from 'utils';
 
 const defaultInitialValues = {
@@ -24,7 +33,6 @@ const defaultInitialValues = {
   quantity: '',
   reference_no: '',
   quantity_on_hand: '',
-  description: '',
   publish: '',
 };
 
@@ -41,8 +49,14 @@ function InventoryAdjustmentFormDialogContent({
   // #withInventoryAdjustmentActions
   requestSubmitInventoryAdjustment,
 
+  // #withItemsActions
+  requestFetchItem,
+
+  // #withItem
+  item,
+
   // #ownProp
-  itemDetail,
+  itemId,
   dialogName,
 }) {
   const { formatMessage } = useIntl();
@@ -51,13 +65,16 @@ function InventoryAdjustmentFormDialogContent({
   // Fetches accounts list.
   const fetchAccount = useQuery('accounts-list', () => requestFetchAccounts());
 
-  const initialValues = useMemo(
-    () => ({
-      ...defaultInitialValues,
-      ...itemDetail,
-    }),
-    [],
-  );
+  // Fetches the item details.
+  const fetchItem = useQuery(['item', itemId],
+    (key, id) => requestFetchItem(id));
+
+  // Initial form values.
+  const initialValues = {
+    ...defaultInitialValues,
+    item_id: itemId,
+    quantity_on_hand: get(item, 'quantity_on_hand', 0),
+  };
 
   // Handles the form submit.
   const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
@@ -65,7 +82,6 @@ function InventoryAdjustmentFormDialogContent({
       ...omit(values, ['quantity_on_hand', 'new_quantity', 'action']),
       publish: submitPayload.publish,
     };
-
     const onSuccess = ({ response }) => {
       closeDialog(dialogName);
       queryCache.invalidateQueries('accounts-list');
@@ -88,7 +104,7 @@ function InventoryAdjustmentFormDialogContent({
   const handleCloseClick = useCallback(() => {
     closeDialog(dialogName);
   }, [closeDialog, dialogName]);
-
+  
   const handleSubmitClick = useCallback(
     (event, payload) => {
       setSubmitPayload({ ...payload });
@@ -97,7 +113,7 @@ function InventoryAdjustmentFormDialogContent({
   );
 
   return (
-    <DialogContent>
+    <DialogContent isLoading={fetchAccount.isFetching || fetchItem.isFetching}>
       <Formik
         validationSchema={CreateInventoryAdjustmentFormSchema}
         initialValues={initialValues}
@@ -118,4 +134,9 @@ function InventoryAdjustmentFormDialogContent({
 export default compose(
   withInventoryAdjustmentActions,
   withDialogActions,
+  withAccountsActions,
+  withItem(({ item }) => ({
+    item: item
+  })),
+  withItemsActions,
 )(InventoryAdjustmentFormDialogContent);
