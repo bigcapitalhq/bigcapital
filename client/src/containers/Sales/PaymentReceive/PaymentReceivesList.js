@@ -42,7 +42,7 @@ function PaymentReceiveList({
   const [selectedRows, setSelectedRows] = useState([]);
 
   useEffect(() => {
-    changePageTitle(formatMessage({ id: 'payment_Receive_list' }));
+    changePageTitle(formatMessage({ id: 'payment_Receives_list' }));
   }, [changePageTitle, formatMessage]);
 
   const fetchResourceViews = useQuery(

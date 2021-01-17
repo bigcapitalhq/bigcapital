@@ -40,7 +40,7 @@ export default [
         newTabHref: '/estimates/new',
       },
       {
-        text: <T id={'invocies'} />,
+        text: <T id={'invoices'} />,
         href: '/invoices',
         newTabHref: '/invoices/new',
       },

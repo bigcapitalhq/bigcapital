@@ -21,7 +21,7 @@ import 'style/pages/PaymentMade/PageForm.scss'
 /**
  * Payment made - Page form.
  */
-function PaymentMade({
+function PaymentMadeFormPage({
   //#withAccountsActions
   requestFetchAccounts,
 
@@ -119,5 +119,5 @@ export default compose(
   withPaymentMadeActions,
   withSettingsActions,
   withDashboardActions,
-)(PaymentMade);
+)(PaymentMadeFormPage);
 

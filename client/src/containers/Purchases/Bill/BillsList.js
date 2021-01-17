@@ -24,7 +24,7 @@ import { compose } from 'utils';
 /**
  * Bills list.
  */
-function BillList({
+function BillsList({
   // #withDashboardActions
   changePageTitle,
 
@@ -48,7 +48,7 @@ function BillList({
   const [selectedRows, setSelectedRows] = useState([]);
 
   useEffect(() => {
-    changePageTitle(formatMessage({ id: 'bill_list' }));
+    changePageTitle(formatMessage({ id: 'bills_list' }));
   }, [changePageTitle, formatMessage]);
 
   const fetchResourceViews = useQuery(
@@ -195,4 +195,4 @@ export default compose(
   withBills(({ billsTableQuery }) => ({
     billsTableQuery,
   })),
-)(BillList);
+)(BillsList);

@@ -20,7 +20,7 @@ import withViewsActions from 'containers/Views/withViewsActions';
 
 import { compose } from 'utils';
 
-function EstimateList({
+function EstimatesList({
   // #withDashboardActions
   changePageTitle,
 
@@ -65,7 +65,7 @@ function EstimateList({
   );
 
   useEffect(() => {
-    changePageTitle(formatMessage({ id: 'estimate_list' }));
+    changePageTitle(formatMessage({ id: 'estimates_list' }));
   }, [changePageTitle, formatMessage]);
 
   // handle delete estimate click
@@ -288,4 +288,4 @@ export default compose(
     estimatesTableQuery,
     estimateViews,
   })),
-)(EstimateList);
+)(EstimatesList);

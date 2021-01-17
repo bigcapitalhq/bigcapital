@@ -18,7 +18,7 @@ import 'style/pages/Expense/PageForm.scss';
 /**
  * Expense page form.
  */
-function Expenses({
+function ExpenseFormPage({
   // #withwithAccountsActions
   requestFetchAccounts,
   requestFetchAccountTypes,
@@ -109,4 +109,4 @@ export default compose(
   withExpensesActions,
   withCustomersActions,
   withDashboardActions,
-)(Expenses);
+)(ExpenseFormPage);

@@ -23,7 +23,7 @@ import { compose } from 'utils';
 /**
  * Invoices list.
  */
-function InvoiceList({
+function InvoicesList({
   // #withDashboardActions
   changePageTitle,
 
@@ -48,7 +48,7 @@ function InvoiceList({
   const [selectedRows, setSelectedRows] = useState([]);
 
   useEffect(() => {
-    changePageTitle(formatMessage({ id: 'invoice_list' }));
+    changePageTitle(formatMessage({ id: 'invoices_list' }));
   }, [changePageTitle, formatMessage]);
 
   const fetchResourceViews = useQuery(
@@ -222,4 +222,4 @@ export default compose(
   withInvoices(({ invoicesTableQuery }) => ({
     invoicesTableQuery,
   })),
-)(InvoiceList);
+)(InvoicesList);

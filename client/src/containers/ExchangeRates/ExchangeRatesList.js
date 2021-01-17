@@ -21,7 +21,7 @@ import withExchangeRatesActions from 'containers/ExchangeRates/withExchangeRates
 
 import { compose } from 'utils';
 
-function ExchangeRate({
+function ExchangeRatesList({
   // #withDashboardActions
   changePageTitle,
 
@@ -51,7 +51,7 @@ function ExchangeRate({
   useEffect(() => {
     id
       ? changePageTitle(formatMessage({ id: 'exchange_rate_details' }))
-      : changePageTitle(formatMessage({ id: 'exchange_rate_list' }));
+      : changePageTitle(formatMessage({ id: 'exchange_rates_list' }));
   }, [id, changePageTitle, formatMessage]);
 
   const handelDeleteExchangeRate = useCallback(
@@ -201,4 +201,4 @@ export default compose(
   withResourceActions,
   withDashboardActions,
   withDialogActions,
-)(ExchangeRate);
+)(ExchangeRatesList);

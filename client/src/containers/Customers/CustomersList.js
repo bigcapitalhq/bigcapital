@@ -71,8 +71,8 @@ function CustomersList({
   );
 
   const handleEditCustomer = useCallback(
-    (cusomter) => {
-      history.push(`/customers/${cusomter.id}/edit`);
+    (customer) => {
+      history.push(`/customers/${customer.id}/edit`);
     },
     [history],
   );

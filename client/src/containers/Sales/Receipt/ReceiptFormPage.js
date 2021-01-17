@@ -2,28 +2,30 @@ import React, { useCallback, useEffect } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { useQuery } from 'react-query';
 
-import EstimateForm from './EstimateForm';
+import ReceiptFrom from './ReceiptForm';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 
 import withCustomersActions from 'containers/Customers/withCustomersActions';
+import withAccountsActions from 'containers/Accounts/withAccountsActions';
 import withItemsActions from 'containers/Items/withItemsActions';
-import withEstimateActions from './withEstimateActions';
+import withReceiptActions from './withReceiptActions';
 import withSettingsActions from 'containers/Settings/withSettingsActions';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 
 import { compose } from 'utils';
 
-import 'style/pages/SaleEstimate/PageForm.scss';
+function ReceiptFormPage({
+  //#withwithAccountsActions
+  requestFetchAccounts,
 
-function Estimates({
-  // #withCustomersActions
+  //#withCustomersActions
   requestFetchCustomers,
 
-  // #withItemsActions
+  //#withItemsActions
   requestFetchItems,
 
-  // #withEstimateActions
-  requsetFetchEstimate,
+  //#withReceiptsActions
+  requestFetchReceipt,
 
   // #withSettingsActions
   requestFetchOptions,
@@ -50,45 +52,48 @@ function Estimates({
     };
   }, [resetSidebarPreviousExpand, setSidebarShrink, setDashboardBackLink]);
 
-  const fetchEstimate = useQuery(
-    ['estimate', id],
-    (key, _id) => requsetFetchEstimate(_id),
+  const fetchReceipt = useQuery(
+    ['receipt', id],
+    (key, _id) => requestFetchReceipt(_id),
     { enabled: !!id },
   );
+  const fetchAccounts = useQuery('accounts-list', (key) =>
+    requestFetchAccounts(),
+  );
 
-  // Handle fetch Items data table or list
-  const fetchItems = useQuery('items-list', () => requestFetchItems({}));
-
-  // Handle fetch customers data table or list
   const fetchCustomers = useQuery('customers-table', () =>
     requestFetchCustomers({}),
   );
 
-  //
+  // Handle fetch Items data table or list
+  const fetchItems = useQuery('items-table', () => requestFetchItems({}));
+
+  const fetchSettings = useQuery(['settings'], () => requestFetchOptions({}));
+
   const handleFormSubmit = useCallback(
     (payload) => {
-      payload.redirect && history.push('/estimates');
+      payload.redirect && history.push('/receipts');
     },
     [history],
   );
+
   const handleCancel = useCallback(() => {
     history.goBack();
   }, [history]);
-
-  const fetchSettings = useQuery(['settings'], () => requestFetchOptions({}));
 
   return (
     <DashboardInsider
       loading={
         fetchCustomers.isFetching ||
         fetchItems.isFetching ||
-        fetchEstimate.isFetching
+        fetchAccounts.isFetching ||
+        fetchReceipt.isFetching
       }
-      name={'estimate-form'}
+      name={'receipt-form'}
     >
-      <EstimateForm
-        estimateId={id}
+      <ReceiptFrom
         onFormSubmit={handleFormSubmit}
+        receiptId={id}
         onCancelForm={handleCancel}
       />
     </DashboardInsider>
@@ -96,9 +101,10 @@ function Estimates({
 }
 
 export default compose(
-  withEstimateActions,
+  withReceiptActions,
   withCustomersActions,
   withItemsActions,
+  withAccountsActions,
   withSettingsActions,
   withDashboardActions,
-)(Estimates);
+)(ReceiptFormPage);

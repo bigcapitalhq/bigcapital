@@ -13,7 +13,7 @@ import { compose } from 'utils';
 
 import 'style/pages/Customers/PageForm.scss';
 
-function Customer({
+function CustomerFormPage({
   // // #withDashboardActions
   // changePageTitle,
 
@@ -69,4 +69,4 @@ function Customer({
   );
 }
 
-export default compose(withCustomersActions, withCurrenciesActions)(Customer);
+export default compose(withCustomersActions, withCurrenciesActions)(CustomerFormPage);
