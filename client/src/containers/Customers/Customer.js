@@ -11,6 +11,8 @@ import withCurrenciesActions from 'containers/Currencies/withCurrenciesActions';
 
 import { compose } from 'utils';
 
+import 'style/pages/Customers/PageForm.scss';
+
 function Customer({
   // // #withDashboardActions
   // changePageTitle,

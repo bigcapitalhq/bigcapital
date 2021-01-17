@@ -3,8 +3,6 @@ import Icon from 'components/Icon';
 import {
   Button,
   Classes,
-  Menu,
-  MenuItem,
   Popover,
   NavbarDivider,
   NavbarGroup,
@@ -14,7 +12,7 @@ import {
 } from '@blueprintjs/core';
 
 import classNames from 'classnames';
-import { useRouteMatch, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 
 import { connect } from 'react-redux';

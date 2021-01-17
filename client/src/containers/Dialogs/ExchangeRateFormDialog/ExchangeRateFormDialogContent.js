@@ -6,7 +6,6 @@ import {
   InputGroup,
   Intent,
   Position,
-  MenuItem,
 } from '@blueprintjs/core';
 import { pick } from 'lodash';
 import * as Yup from 'yup';
@@ -18,9 +17,7 @@ import { FormattedMessage as T, useIntl } from 'react-intl';
 import { momentFormatter, tansformDateValue } from 'utils';
 import {
   AppToaster,
-  Dialog,
   ErrorMessage,
-  ListSelect,
   DialogContent,
   FieldRequiredHint,
   CurrencySelectList,
@@ -35,6 +32,11 @@ import withDialogActions from 'containers/Dialog/withDialogActions';
 
 import { compose } from 'utils';
 
+import 'style/pages/ExchangeRate/ExchangeRateDialog.scss';
+
+/**
+ * Exchange rate form content.
+ */
 function ExchangeRateFormDialogContent({
   // #withDialogActions
   closeDialog,

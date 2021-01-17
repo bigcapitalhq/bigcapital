@@ -1,0 +1,68 @@
+@import '../../Base.scss';
+
+.dashboard__insider--accounts-chart {
+  .bigcapital-datatable {
+    .normal {
+      .#{$ns}-icon {
+        color: #7f91a2;
+        padding-left: 15px;
+      }
+    }
+
+    .table {
+      .tbody {
+        .tr:not(.no-results) .td {
+          padding-top: 0.3rem;
+          padding-bottom: 0.3rem;
+        }
+
+        .tr.inactive .td {
+          color: #646b82;
+
+          &.normal .#{$ns}-icon {
+            color: #9eaab6;
+          }
+        }
+        .account_name {
+          .bp3-popover-wrapper--inactive-semafro {
+            margin-left: 8px;
+            margin-right: 6px;
+            float: right;
+            border: 0;
+          }
+          .bp3-popover-wrapper--account-desc {
+            border-bottom-color: #bbb;
+          }
+          .inactive-semafro {
+            height: 7px;
+            width: 7px;
+            background: #bbb;
+            display: inline-block;
+            border-radius: 8px;
+          }
+        }
+        .account-desc{
+          font-size: 11px;
+          color: hsl(0, 0%, 50%);
+          margin-top: 2px;
+          line-height: 1.25;
+          padding-bottom: 2px;
+          display: block;
+        }
+        .normal {
+          .bp3-popover-wrapper {
+            width: 100%;
+          }
+          .bp3-tooltip-indicator {
+            cursor: initial;
+            border-bottom: 0;
+          }
+        }
+        .actions {
+          padding-right: 18px;
+          justify-content: right;
+        }
+      }
+    }
+  }
+}

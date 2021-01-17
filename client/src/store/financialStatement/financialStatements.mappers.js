@@ -17,7 +17,7 @@ export const mapBalanceSheetToTableRows = (accounts) => {
           ? [
               {
                 name: `Total ${account.name}`,
-                row_types: rowTypes,
+                row_types: ['total-row', account.section_type],
                 total: { ...account.total },
                 ...(account.total_periods && {
                   total_periods: account.total_periods,
@@ -104,7 +104,7 @@ export const ARAgingSummaryTableRowsMapper = (sheet, total) => {
   return [
     ...rows,
     {
-      name: 'TOTAL',
+      name: 'Total Aged Receivable',
       rowType: 'total',
       current: sheet.total.current.formatted_amount,
       ...mapAging(sheet.total.aging),
@@ -115,11 +115,12 @@ export const ARAgingSummaryTableRowsMapper = (sheet, total) => {
 
 export const mapTrialBalanceSheetToRows = (sheet) => {
   return [
+    ...sheet.accounts,
     {
       name: 'Total',
+      rowTypes: ['total'],
       ...sheet.total,
     },
-    ...sheet.accounts,
   ];
 };
 

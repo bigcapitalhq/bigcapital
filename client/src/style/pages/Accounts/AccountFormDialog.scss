@@ -1,0 +1,51 @@
+@import '../../Base.scss';
+
+// Account Form Dialog.
+// ----------------------------
+.dialog--account-form {
+  &:not(.dialog--loading) .bp3-dialog-body {
+    margin-bottom: 30px;
+  }
+
+  .bp3-dialog-body {
+    .bp3-form-group.bp3-inline {
+      .bp3-label {
+        min-width: 140px;
+      }
+      .bp3-form-content {
+        width: 250px;
+      }
+
+      &.form-group--description {
+        .bp3-form-content {
+          width: 280px;
+        }
+        textarea {
+          min-width: 100%;
+          max-width: 100%;
+          width: 100%;
+          min-height: 60px;
+        }
+      }
+    }
+
+    .form-group--account-code {
+      margin-bottom: 16px;
+    }
+    .form-group--subaccount {
+      margin-bottom: 16px;
+
+      .bp3-icon-info-circle {
+        color: #a1b2c5;
+        position: relative;
+        top: -2px;
+        margin-left: 2px;
+      }
+    }
+    .form-group--description {
+      textarea {
+        padding: 6px;
+      }
+    }
+  }
+}

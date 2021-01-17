@@ -15,7 +15,11 @@ import UserFormDialogForm from './InviteUserDialogForm';
 
 import { transformApiErrors } from './utils';
 
-//
+import 'style/pages/Users/InviteFormDialog.scss'
+
+/**
+ * Invite user dialog content.
+ */
 function InviteUserDialogContent({
   // #wihtCurrenciesActions
   requestFetchUser,

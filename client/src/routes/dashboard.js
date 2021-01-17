@@ -11,7 +11,6 @@ export default [
     }),
     breadcrumb: 'Home',
   },
-
   // Accounts.
   {
     path: `/accounts`,
@@ -20,7 +19,6 @@ export default [
     }),
     breadcrumb: 'Accounts Chart',
   },
-
   // Custom views.
   {
     path: `/custom_views/:resource_slug/new`,
@@ -36,8 +34,7 @@ export default [
     }),
     breadcrumb: 'Edit',
   },
-
-  // Accounting
+  // Accounting.
   {
     path: `/make-journal-entry`,
     component: LazyLoader({
@@ -81,7 +78,7 @@ export default [
     breadcrumb: 'New Item',
   },
 
-  // Items
+  // Items.
   {
     path: `/items`,
     component: LazyLoader({
@@ -89,7 +86,7 @@ export default [
     }),
     breadcrumb: 'Items',
   },
-  // Inventory adjustments
+  // Inventory adjustments.
   {
     path: `/inventory-adjustments`,
     component: LazyLoader({
@@ -166,7 +163,7 @@ export default [
     }),
     breadcrumb: 'Exchange Rates',
   },
-  // Expenses
+  // Expenses.
   {
     path: `/expenses/new`,
     component: LazyLoader({

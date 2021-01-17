@@ -19,6 +19,8 @@ import withARAgingSummary from './withARAgingSummary';
 import { compose } from 'utils';
 import { transfromFilterFormToQuery } from './common';
 
+import 'style/pages/FinancialStatements/ARAgingSummary.scss';
+
 /**
  * AR aging summary report.
  */

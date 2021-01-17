@@ -8,6 +8,7 @@ import InvoiceFormHeaderFields from './InvoiceFormHeaderFields';
 
 import { PageFormBigNumber } from 'components';
 import withSettings from 'containers/Settings/withSettings';
+
 import { compose } from 'redux';
 
 /**

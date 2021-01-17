@@ -16,6 +16,11 @@ import withSettingsActions from 'containers/Settings/withSettingsActions';
 
 import { compose } from 'utils';
 
+import 'style/pages/PaymentMade/PageForm.scss'
+
+/**
+ * Payment made - Page form.
+ */
 function PaymentMade({
   //#withAccountsActions
   requestFetchAccounts,

@@ -3,7 +3,7 @@ import { Formik, Form } from 'formik';
 import moment from 'moment';
 import { Intent } from '@blueprintjs/core';
 import { useIntl } from 'react-intl';
-import { pick, sumBy, omit, values } from 'lodash';
+import { pick, sumBy, omit } from 'lodash';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 

@@ -6,7 +6,6 @@ import AppToaster from 'components/AppToaster';
 import {
   FormattedMessage as T,
   useIntl,
-  FormattedHTMLMessage,
 } from 'react-intl';
 
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
@@ -24,6 +23,8 @@ import withRouteActions from 'containers/Router/withRouteActions';
 import withResourceActions from 'containers/Resources/withResourcesActions';
 
 import { compose } from 'utils';
+
+import 'style/pages/ManualJournal/List.scss';
 
 /**
  * Manual journals table.

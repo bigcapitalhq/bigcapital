@@ -17,6 +17,9 @@ import { TimezonePicker } from '@blueprintjs/timezone';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { DateInput } from '@blueprintjs/datetime';
 import { withWizard } from 'react-albus';
+
+import 'style/pages/Setup/Organization.scss';
+
 import { momentFormatter, tansformDateValue } from 'utils';
 import { ListSelect, ErrorMessage, FieldRequiredHint } from 'components';
 

@@ -11,9 +11,7 @@ import { useFormik } from 'formik';
 import { useQuery, queryCache } from 'react-query';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { pick } from 'lodash';
-import classNames from 'classnames';
 import {
-  If,
   ErrorMessage,
   AppToaster,
   FieldRequiredHint,
@@ -25,6 +23,8 @@ import withCurrencyDetail from 'containers/Currencies/withCurrencyDetail';
 import withCurrenciesActions from 'containers/Currencies/withCurrenciesActions';
 
 import { compose } from 'utils';
+
+import 'style/pages/Currency/CurrencyFormDialog.scss'
 
 function CurencyFormDialogContent({
   // #withCurrencyDetail

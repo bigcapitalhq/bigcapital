@@ -29,15 +29,14 @@ import withMediaActions from 'containers/Media/withMediaActions';
 import withSettings from 'containers/Settings/withSettings';
 
 import { AppToaster } from 'components';
-import Dragzone from 'components/Dragzone';
-import useMedia from 'hooks/useMedia';
-
 import {
   compose,
   repeatValue,
   orderingLinesIndexes,
   defaultToTransform,
 } from 'utils';
+
+import 'style/pages/SaleReceipt/PageForm.scss'
 
 const MIN_LINES_NUMBER = 4;
 
@@ -66,18 +65,18 @@ const defaultInitialValues = {
  * Receipt form.
  */
 function ReceiptForm({
-  //#withMedia
+  // #withMedia
   requestSubmitMedia,
   requestDeleteMedia,
 
-  //#withReceiptActions
+  // #withReceiptActions
   requestSubmitReceipt,
   requestEditReceipt,
 
-  //#withReceiptDetail
+  // #withReceiptDetail
   receipt,
 
-  //#withDashboard
+  // #withDashboard
   changePageTitle,
   changePageSubtitle,
 

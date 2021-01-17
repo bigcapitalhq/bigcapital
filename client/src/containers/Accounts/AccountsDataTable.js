@@ -27,6 +27,7 @@ import withAccounts from 'containers/Accounts/withAccounts';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withCurrentView from 'containers/Views/withCurrentView';
 
+import { accountNameAccessor } from './utils';
 
 function AccountsDataTable({
   // #withDashboardActions
@@ -135,7 +136,7 @@ function AccountsDataTable({
       {
         id: 'name',
         Header: formatMessage({ id: 'account_name' }),
-        accessor: 'name',
+        accessor: accountNameAccessor,
         className: 'account_name',
         width: 220,
       },

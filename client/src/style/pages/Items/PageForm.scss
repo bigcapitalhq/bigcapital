@@ -1,0 +1,80 @@
+.page-form--item {
+  $self: '.page-form';
+  padding: 20px;
+
+  #{$self}__header {
+    padding: 0;
+  }
+  #{$self}__primary-section {
+    overflow: hidden;
+    padding-top: 5px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eaeaea;
+    padding-bottom: 5px;
+    max-width: 1000px;
+  }
+
+  #{$self}__body {
+    .bp3-form-group {
+      max-width: 500px;
+      margin-bottom: 14px;
+
+      &.bp3-inline {
+        .bp3-label {
+          min-width: 140px;
+        }
+      }
+      .bp3-form-content {
+        width: 100%;
+      }
+    }
+
+    h3 {
+      font-weight: 500;
+      font-size: 14px;
+      margin-bottom: 1.4rem;
+    }
+
+    .bp3-control {
+      h3 {
+        display: inline;
+        margin-bottom: 0;
+      }
+    }
+
+    .form-group--sellable,
+    .form-group--purchasable {
+      margin-bottom: 1rem;
+    }
+  }
+
+  #{$self}__section {
+    max-width: 850px;
+    margin-bottom: 1rem;
+
+    .bp3-form-group {
+      max-width: 400px;
+    }
+
+    &--selling-cost {
+      border-bottom: 1px solid #eaeaea;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.25rem;
+    }
+  }
+
+  #{$self}__floating-actions {
+    margin-left: -40px;
+    margin-right: -40px;
+
+    .form-group--active {
+      display: inline-block;
+      margin: 0;
+      margin-left: 40px;
+    }
+  }
+
+  .bp3-tooltip-indicator {
+    border-bottom: 1px dashed #d0d0d0;
+  }
+}

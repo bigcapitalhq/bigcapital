@@ -1,4 +1,4 @@
-import React, { lazy } from 'react';
+import React from 'react';
 
 import AccountFormDialog from 'containers/Dialogs/AccountFormDialog';
 import InviteUserDialog from 'containers/Dialogs/InviteUserDialog';
@@ -6,7 +6,6 @@ import ItemCategoryDialog from 'containers/Dialogs/ItemCategoryDialog';
 import CurrencyFormDialog from 'containers/Dialogs/CurrencyFormDialog';
 import ExchangeRateFormDialog from 'containers/Dialogs/ExchangeRateFormDialog';
 import JournalNumberDialog from 'containers/Dialogs/JournalNumberDialog';
-// import BillNumberDialog from 'containers/Dialogs/BillNumberDialog';
 import PaymentReceiveNumberDialog from 'containers/Dialogs/PaymentReceiveNumberDialog';
 import EstimateNumberDialog from 'containers/Dialogs/EstimateNumberDialog';
 import ReceiptNumberDialog from 'containers/Dialogs/ReceiptNumberDialog';
@@ -18,7 +17,6 @@ export default function DialogsContainer() {
     <div>
       <AccountFormDialog dialogName={'account-form'} />
       <JournalNumberDialog dialogName={'journal-number-form'} />
-      {/* <BillNumberDialog dialogName={'bill-number-form'} /> */}
       <PaymentReceiveNumberDialog dialogName={'payment-receive-number-form'} />
       <EstimateNumberDialog dialogName={'estimate-number-form'} />
       <ReceiptNumberDialog dialogName={'receipt-number-form'} />

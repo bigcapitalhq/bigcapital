@@ -1,0 +1,113 @@
+// Financial sheet.
+// -----------------------
+.financial-sheet {
+  border: 2px solid #f0f0f0;
+  border-radius: 10px;
+  min-width: 640px;
+  width: auto;
+  padding: 30px 18px;
+  max-width: 100%;
+  margin: 35px auto;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+
+  &__title {
+    margin: 0;
+    font-weight: 400;
+    font-size: 20px;
+    color: #464646;
+    text-align: center;
+  }
+  &__sheet-type {
+    text-align: center;
+    margin: 0;
+    font-size: 16px;
+    font-weight: 400;
+    color: #666;
+    margin-top: 6px;
+  }
+  &__date {
+    text-align: center;
+    color: #666;
+    margin-top: 6px;
+  }
+  &__table {
+    margin-top: 24px;
+
+    .table {
+      .tbody,
+      .thead {
+        .tr .td,
+        .tr .th {
+          background: #fff;
+        }
+      }
+
+      .tr.no-results {
+        .td {
+          flex-direction: column;
+          padding: 20px;
+          color: #666;
+          align-items: center;
+        }
+      }
+    }
+  }
+  &__inner {
+    &.is-loading {
+      display: none;
+    }
+  }
+  &__basis {
+    color: #888;
+    text-align: center;
+    margin-top: auto;
+    padding-top: 18px;
+    font-size: 13px;
+  }
+  .dashboard__loading-indicator {
+    margin: auto;
+    padding: 0;
+  }
+  &--expended {
+    width: auto;
+  }
+
+  &--minimal {
+    border: 0;
+    padding: 0;
+    margin-top: 20px;
+
+    .financial-sheet {
+      &__title {
+        font-size: 18px;
+        color: #333;
+      }
+      &__title + .financial-sheet__date {
+        margin-top: 8px;
+      }
+      &__table {
+        margin-top: 20px;
+      }
+    }
+  }
+  &.is-full-width {
+    width: 100%;
+    margin-top: 25px;
+  }
+}
+
+.financial-statement {
+  &__header {
+  }
+
+  &__body {
+    padding-left: 15px;
+    padding-right: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}

@@ -27,6 +27,8 @@ import { AppToaster } from 'components';
 
 import { compose, defaultToTransform } from 'utils';
 
+import 'style/pages/PaymentReceive/PageForm.scss'
+
 /**
  * Payment Receive form.
  */

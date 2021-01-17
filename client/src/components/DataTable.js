@@ -20,6 +20,8 @@ import { If, Pagination, Choose } from 'components';
 
 import { ConditionalWrapper, saveInvoke } from 'utils';
 
+import 'style/components/DataTable/DataTable.scss';
+
 const IndeterminateCheckbox = React.forwardRef(
   ({ indeterminate, ...rest }, ref) => {
     return <Checkbox indeterminate={indeterminate} {...rest} />;

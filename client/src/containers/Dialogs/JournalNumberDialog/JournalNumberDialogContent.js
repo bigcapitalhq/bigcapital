@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import { DialogContent } from 'components';
 import { useQuery, queryCache } from 'react-query';
 
@@ -10,6 +10,8 @@ import withSettings from 'containers/Settings/withSettings';
 import withManualJournalsActions from 'containers/Accounting/withManualJournalsActions';
 
 import { compose, optionsMapToArray } from 'utils';
+
+import 'style/pages/ManualJournal/JournalNumberDialog.scss'
 
 /**
  * Journal number dialog's content.

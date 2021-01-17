@@ -7,11 +7,11 @@ import Money from 'components/Money';
 
 import withTrialBalance from './withTrialBalance';
 
-import { compose } from 'utils';
+import { compose, getColumnWidth } from 'utils';
 
 function TrialBalanceSheetTable({
   // #withTrialBalanceDetail
-  trialBalance,
+  trialBalanceTableRows,
   trialBalanceSheetLoading,
 
   // #withTrialBalanceTable
@@ -27,43 +27,56 @@ function TrialBalanceSheetTable({
         Header: formatMessage({ id: 'account_name' }),
         accessor: (row) => (row.code ? `${row.name} - ${row.code}` : row.name),
         className: 'name',
-        minWidth: 150,
-        maxWidth: 150,
-        width: 150,
+        width: 160,
       },
       {
         Header: formatMessage({ id: 'credit' }),
         accessor: 'credit',
         Cell: ({ cell }) => {
           const { currency_code, credit } = cell.row.original;
-          return (<Money amount={credit} currency={currency_code} />);
+          return <Money amount={credit} currency={currency_code} />;
         },
         className: 'credit',
-        width: 95,
+        width: getColumnWidth(trialBalanceTableRows, `credit`, {
+          minWidth: 95,
+        }),
       },
       {
         Header: formatMessage({ id: 'debit' }),
         accessor: 'debit',
         Cell: ({ cell }) => {
           const { currency_code, debit } = cell.row.original;
-          return (<Money amount={debit} currency={currency_code} />);
+          return <Money amount={debit} currency={currency_code} />;
         },
-        className: 'debit',
-        width: 95,
+        width: getColumnWidth(trialBalanceTableRows, `debit`, { minWidth: 95 }),
       },
       {
         Header: formatMessage({ id: 'balance' }),
         accessor: 'balance',
         Cell: ({ cell }) => {
           const { currency_code, balance } = cell.row.original;
-          return (<Money amount={balance} currency={currency_code} />);
+          return <Money amount={balance} currency={currency_code} />;
         },
         className: 'balance',
-        width: 95,
+        width: getColumnWidth(trialBalanceTableRows, `balance`, {
+          minWidth: 95,
+        }),
       },
     ],
-    [formatMessage],
+    [trialBalanceTableRows, formatMessage],
   );
+
+  const rowClassNames = (row) => {
+    const { original } = row;
+    const rowTypes = Array.isArray(original.rowTypes) ? original.rowTypes : [];
+
+    return {
+      ...rowTypes.reduce((acc, rowType) => {
+        acc[`row_type--${rowType}`] = rowType;
+        return acc;
+      }, {}),
+    };
+  };
 
   return (
     <FinancialSheet
@@ -78,24 +91,27 @@ function TrialBalanceSheetTable({
       <DataTable
         className="bigcapital-datatable--financial-report"
         columns={columns}
-        data={trialBalance.data}
+        data={trialBalanceTableRows}
         expandable={true}
         expandToggleColumn={1}
         expandColumnSpace={1}
         sticky={true}
+        rowClassNames={rowClassNames}
       />
     </FinancialSheet>
   );
 }
 
 export default compose(
-  withTrialBalance(({
-    trialBalance,
-    trialBalanceSheetLoading,
-    trialBalanceQuery
-  }) => ({
-    trialBalance,
-    trialBalanceSheetLoading,
-    trialBalanceQuery
-  })),
+  withTrialBalance(
+    ({
+      trialBalanceTableRows,
+      trialBalanceSheetLoading,
+      trialBalanceQuery,
+    }) => ({
+      trialBalanceTableRows,
+      trialBalanceSheetLoading,
+      trialBalanceQuery,
+    }),
+  ),
 )(TrialBalanceSheetTable);

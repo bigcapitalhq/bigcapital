@@ -13,6 +13,11 @@ import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 
 import { compose } from 'utils';
 
+import 'style/pages/Expense/PageForm.scss';
+
+/**
+ * Expense page form.
+ */
 function Expenses({
   // #withwithAccountsActions
   requestFetchAccounts,

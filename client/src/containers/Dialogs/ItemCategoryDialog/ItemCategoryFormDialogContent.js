@@ -20,6 +20,8 @@ import {
 } from './itemCategoryForm.schema';
 import { compose, transformToForm } from 'utils';
 
+import 'style/pages/ItemCategory/ItemCategoryDialog.scss'
+
 const defaultInitialValues = {
   name: '',
   description: '',

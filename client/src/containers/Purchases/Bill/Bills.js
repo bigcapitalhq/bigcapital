@@ -14,17 +14,19 @@ import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 
 import { compose } from 'utils';
 
+import 'style/pages/Bills/PageForm.scss';
+
 function Bills({
-  //#withwithAccountsActions
+  // #withwithAccountsActions
   requestFetchAccounts,
 
-  //#withVendorActions
+  // #withVendorActions
   requestFetchVendorsTable,
 
-  //#withItemsActions
+  // #withItemsActions
   requestFetchItems,
 
-  //# withBilleActions
+  // #withBilleActions
   requestFetchBill,
 
   // #withSettingsActions

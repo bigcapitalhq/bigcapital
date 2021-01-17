@@ -8,6 +8,11 @@ import PreferencesContentRoute from 'components/Preferences/PreferencesContentRo
 import DashboardErrorBoundary from 'components/Dashboard/DashboardErrorBoundary';
 import PreferencesSidebar from 'components/Preferences/PreferencesSidebar';
 
+import 'style/pages/Preferences/Page.scss';
+
+/**
+ * Preferences page.
+ */
 export default function PreferencesPage() {
   return (
     <ErrorBoundary FallbackComponent={DashboardErrorBoundary}>

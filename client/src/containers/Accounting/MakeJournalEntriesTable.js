@@ -1,17 +1,12 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
-import { Button, Tooltip, Position, Intent } from '@blueprintjs/core';
+import { Button } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { omit } from 'lodash';
 import classNames from 'classnames';
 
 import { CLASSES } from 'common/classes';
 import DataTable from 'components/DataTable';
-import {
-  compose,
-  formattedAmount,
-  transformUpdatedRows,
-  saveInvoke,
-} from 'utils';
+import { compose, transformUpdatedRows, saveInvoke } from 'utils';
 import {
   AccountsListFieldCell,
   MoneyFieldCell,
@@ -25,6 +20,7 @@ import {
   TotalCreditDebitCellRenderer,
   NoteCellRenderer,
 } from './components';
+import { DataTableEditable } from 'components';
 import withAccounts from 'containers/Accounts/withAccounts';
 import withCustomers from 'containers/Customers/withCustomers';
 
@@ -130,45 +126,34 @@ function MakeJournalEntriesTable({
   };
 
   // Handles update datatable data.
-  const handleUpdateData = useCallback(
-    (rowIndex, columnIdOrObj, value) => {
-      const newRows = transformUpdatedRows(
-        rows,
-        rowIndex,
-        columnIdOrObj,
-        value,
-      );
-      saveInvoke(
-        onChange,
-        newRows
-          .filter((row) => row.rowType === 'editor')
-          .map((row) => ({
-            ...omit(row, ['rowType']),
-          })),
-      );
-    },
-    [rows, onChange],
-  );
+  const handleUpdateData = (rowIndex, columnIdOrObj, value) => {
+    const newRows = transformUpdatedRows(rows, rowIndex, columnIdOrObj, value);
+    saveInvoke(
+      onChange,
+      newRows
+        .filter((row) => row.rowType === 'editor')
+        .map((row) => ({
+          ...omit(row, ['rowType']),
+        })),
+    );
+  };
+  // Handle remove datatable row.
+  const handleRemoveRow = (rowIndex) => {
+    // Can't continue if there is just one row line or less.
+    if (rows.length <= 2) {
+      return;
+    }
+    const removeIndex = parseInt(rowIndex, 10);
+    const newRows = rows.filter((row, index) => index !== removeIndex);
 
-  const handleRemoveRow = useCallback(
-    (rowIndex) => {
-      // Can't continue if there is just one row line or less.
-      if (rows.length <= 2) {
-        return;
-      }
-      const removeIndex = parseInt(rowIndex, 10);
-      const newRows = rows.filter((row, index) => index !== removeIndex);
-
-      saveInvoke(
-        onChange,
-        newRows
-          .filter((row) => row.rowType === 'editor')
-          .map((row) => ({ ...omit(row, ['rowType']) })),
-      );
-      saveInvoke(onClickRemoveRow, removeIndex);
-    },
-    [rows, onChange, onClickRemoveRow],
-  );
+    saveInvoke(
+      onChange,
+      newRows
+        .filter((row) => row.rowType === 'editor')
+        .map((row) => ({ ...omit(row, ['rowType']) })),
+    );
+    saveInvoke(onClickRemoveRow, removeIndex);
+  };
 
   // Rows class names callback.
   const rowClassNames = useCallback(
@@ -183,48 +168,44 @@ function MakeJournalEntriesTable({
   };
 
   return (
-    <div
-      className={classNames(
-        CLASSES.DATATABLE_EDITOR,
-        CLASSES.DATATABLE_EDITOR_HAS_TOTAL_ROW,
-      )}
-    >
-      <DataTable
-        columns={columns}
-        data={tableRows}
-        rowClassNames={rowClassNames}
-        sticky={true}
-        payload={{
-          accounts: accountsList,
-          errors: error,
-          updateData: handleUpdateData,
-          removeRow: handleRemoveRow,
-          contacts: [
-            ...customers.map((customer) => ({
-              ...customer,
-              contact_type: 'customer',
-            })),
-          ],
-        }}
-      />
-      <div className={classNames(CLASSES.DATATABLE_EDITOR_ACTIONS)}>
-        <Button
-          small={true}
-          className={'button--secondary button--new-line'}
-          onClick={onClickNewRow}
-        >
-          <T id={'new_lines'} />
-        </Button>
+    <DataTableEditable
+      columns={columns}
+      data={tableRows}
+      rowClassNames={rowClassNames}
+      sticky={true}
+      totalRow={true}
+      payload={{
+        accounts: accountsList,
+        errors: error,
+        updateData: handleUpdateData,
+        removeRow: handleRemoveRow,
+        contacts: [
+          ...customers.map((customer) => ({
+            ...customer,
+            contact_type: 'customer',
+          })),
+        ],
+      }}
+      actions={
+        <>
+          <Button
+            small={true}
+            className={'button--secondary button--new-line'}
+            onClick={onClickNewRow}
+          >
+            <T id={'new_lines'} />
+          </Button>
 
-        <Button
-          small={true}
-          className={'button--secondary button--clear-lines ml1'}
-          onClick={handleClickClearAllLines}
-        >
-          <T id={'clear_all_lines'} />
-        </Button>
-      </div>
-    </div>
+          <Button
+            small={true}
+            className={'button--secondary button--clear-lines ml1'}
+            onClick={handleClickClearAllLines}
+          >
+            <T id={'clear_all_lines'} />
+          </Button>
+        </>
+      }
+    />
   );
 }
 

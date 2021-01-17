@@ -24,6 +24,11 @@ import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 
 import { compose } from 'utils';
 
+import 'style/pages/Customers/List.scss';
+
+/**
+ * Customers list.
+ */
 function CustomersList({
   // #withDashboardActions
   changePageTitle,

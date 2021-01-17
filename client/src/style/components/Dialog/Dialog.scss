@@ -1,0 +1,15 @@
+@import '../../Base.scss';
+
+// Dialog
+.#{$ns}-dialog{
+  background: #fff;
+
+  &-header{
+    background: #ebf1f5;
+  }
+
+  .bp3-spinner{
+    padding-top: 10px;
+    margin-bottom: -10px;
+  }
+}

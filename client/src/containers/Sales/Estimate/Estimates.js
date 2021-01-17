@@ -13,6 +13,8 @@ import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 
 import { compose } from 'utils';
 
+import 'style/pages/SaleEstimate/PageForm.scss';
+
 function Estimates({
   // #withCustomersActions
   requestFetchCustomers,
@@ -85,8 +87,8 @@ function Estimates({
       name={'estimate-form'}
     >
       <EstimateForm
-        onFormSubmit={handleFormSubmit}
         estimateId={id}
+        onFormSubmit={handleFormSubmit}
         onCancelForm={handleCancel}
       />
     </DashboardInsider>

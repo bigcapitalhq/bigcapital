@@ -18,6 +18,8 @@ import withTrialBalanceActions from './withTrialBalanceActions';
 import withSettings from 'containers/Settings/withSettings';
 import withTrialBalance from './withTrialBalance';
 
+import 'style/pages/FinancialStatements/TrialBalanceSheet.scss';
+
 /**
  * Trial balance sheet.
  */

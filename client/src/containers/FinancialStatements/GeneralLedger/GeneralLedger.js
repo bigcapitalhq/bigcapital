@@ -21,6 +21,8 @@ import { compose } from 'utils';
 import { transformFilterFormToQuery } from 'containers/FinancialStatements/common';
 import withGeneralLedger from './withGeneralLedger';
 
+import 'style/pages/FinancialStatements/GeneralLedger.scss';
+
 /**
  * General Ledger (GL) sheet.
  */

@@ -14,6 +14,8 @@ import withAccountsActions from 'containers/Accounts/withAccountsActions';
 
 import { compose } from 'utils';
 
+import 'style/pages/Preferences/Accounting.scss';
+
 // Accountant preferences.
 function AccountantPreferences({
   changePreferencesPageTitle,

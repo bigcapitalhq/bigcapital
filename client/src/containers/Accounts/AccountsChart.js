@@ -25,6 +25,11 @@ import withAccounts from 'containers/Accounts/withAccounts';
 
 import { compose } from 'utils';
 
+import 'style/pages/Accounts/List.scss';
+
+/**
+ * Accounts chart list.
+ */
 function AccountsChart({
   // #withDashboardActions
   changePageTitle,

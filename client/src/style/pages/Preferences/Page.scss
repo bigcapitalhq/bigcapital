@@ -1,0 +1,71 @@
+@import '../../Base.scss';
+
+.dashboard-content--preferences {
+  flex-direction: row;
+  flex: 1 0 0;
+  min-width: auto;
+  background-color: #fbfbfb;
+}
+.dashboard {
+  &__preferences-content {
+    flex: 1 0 0;
+    display: flex;
+    flex-direction: column;
+  }
+}
+.preferences-page {
+  &__inside-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    &--tabable {
+      margin-left: -25px;
+      margin-right: -25px;
+    }
+    .card{
+      margin: 15px;
+    }
+    .bigcapital-datatable{
+
+      .table .tbody .tbody-inner > .loading{
+        padding: 30px 0;
+      }
+    }
+  }
+  &__inside-content {
+    .#{$ns}-tab-list {
+      border-bottom: 1px solid #e5e5e5;
+      padding-left: 15px;
+      padding-right: 15px;
+      align-items: baseline;
+
+      .#{$ns}-tab {
+        font-weight: 400;
+        line-height: 44px;
+        font-size: 15px;
+      }
+    }
+  }
+
+  &__tabs-extra-actions {
+    margin-left: auto;
+  }
+}
+
+.preferences-page {
+  display: flex;
+  flex: 1 0 0;
+
+  &__content {
+    flex: 1 0 0;
+    display: flex;
+    flex-direction: column;
+    margin-left: 220px;
+
+    .dashboard__card {
+      margin: 15px;
+      flex: 1 0 0;
+    }
+  }
+}

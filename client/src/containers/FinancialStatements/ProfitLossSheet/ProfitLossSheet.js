@@ -19,6 +19,11 @@ import withSettings from 'containers/Settings/withSettings';
 
 import { transformFilterFormToQuery } from 'containers/FinancialStatements/common';
 
+import 'style/pages/FinancialStatements/ProfitLossSheet.scss';
+
+/**
+ * Profit/Loss financial statement sheet.
+ */
 function ProfitLossSheet({
   // #withDashboardActions
   changePageTitle,

@@ -4,11 +4,16 @@ import { useFormik } from 'formik';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { Button, Intent } from '@blueprintjs/core';
 import { withWizard } from 'react-albus';
-import withSubscriptionsActions from 'containers/Subscriptions/withSubscriptionsActions';
+
+import 'style/pages/Setup/Billing.scss';
+
 import BillingPlans from 'containers/Subscriptions/billingPlans';
 import BillingPeriods from 'containers/Subscriptions/billingPeriods';
 import { BillingPaymentmethod } from 'containers/Subscriptions/billingPaymentmethod';
+
+import withSubscriptionsActions from 'containers/Subscriptions/withSubscriptionsActions';
 import withBillingActions from 'containers/Subscriptions/withBillingActions';
+
 import { compose } from 'utils';
 
 /**

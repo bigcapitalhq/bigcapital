@@ -40,7 +40,9 @@ export default class AccountTransaction extends TenantModel {
       'BillPayment': 'Payment made',
       'VendorOpeningBalance': 'Vendor opening balance',
       'CustomerOpeningBalance': 'Customer opening balance',
-      'InventoryAdjustment': 'Inventory adjustment'
+      'InventoryAdjustment': 'Inventory adjustment',
+      'ManualJournal': 'Manual journal',
+      'Journal': 'Manual journal',
     };
     return mapped[referenceType] || '';
   }

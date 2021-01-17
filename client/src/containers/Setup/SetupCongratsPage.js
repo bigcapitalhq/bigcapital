@@ -1,12 +1,16 @@
 import React, { useCallback } from 'react';
 import { Button, Intent } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'react-intl';
 import { useHistory } from "react-router-dom";
 import WorkflowIcon from './WorkflowIcon';
 import withOrganizationActions from 'containers/Organization/withOrganizationActions';
 
+import 'style/pages/Setup/Congrats.scss';
+
 import { compose } from 'utils';
 
+/**
+ * Setup congrats page.
+ */
 function SetupCongratsPage({
   setOrganizationSetupCompleted,
 }) {

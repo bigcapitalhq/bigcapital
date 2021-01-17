@@ -1,0 +1,70 @@
+@import '../../Base.scss';
+
+// Preferences sidebar.
+// -----------------------------
+.preferences-sidebar {
+  background: #e5eaee;
+  border-right: 1px solid #c6d0d9;
+  min-width: 220px;
+  max-width: 220px;
+  height: 100%;
+  position: fixed;
+
+  &__wrapper {
+    height: 100%;
+  }
+  .ScrollbarsCustom-Track {
+    &.ScrollbarsCustom-TrackY,
+    &.ScrollbarsCustom-TrackX {
+      background: rgba(0, 0, 0, 0);
+    }
+  }
+  .ScrollbarsCustom-Thumb {
+    &.ScrollbarsCustom-ThumbX,
+    &.ScrollbarsCustom-ThumbY {
+      background: rgba(0, 0, 0, 0);
+    }
+  }
+
+  &:hover {
+    .ScrollbarsCustom-Thumb {
+      &.ScrollbarsCustom-ThumbX,
+      &.ScrollbarsCustom-ThumbY {
+        background: rgba(0, 0, 0, 0.15);
+      }
+    }
+  }
+
+  &__head {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 60px;
+    padding: 0 22px;
+
+    h2 {
+      font-size: 22px;
+      color: #48485b;
+      font-weight: 400;
+      margin: 0;
+    }
+  }
+
+  &__menu {
+    padding: 0;
+    background: transparent;
+
+    .#{$ns}-menu-item {
+      padding: 10px 18px;
+      font-size: 15px;
+      font-weight: 400;
+      color: #333;
+
+      &:hover,
+      &.#{$ns}-active {
+        background-color: rgba(255, 255, 255, 0.5);
+        color: #333;
+      }
+    }
+  }
+}

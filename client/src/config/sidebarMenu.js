@@ -3,9 +3,6 @@ import { FormattedMessage as T } from 'react-intl';
 
 export default [
   {
-    spacer: 1,
-  },
-  {
     text: <T id={'homepage'} />,
     disabled: false,
     href: '/homepage',
@@ -97,7 +94,7 @@ export default [
     divider: true,
   },
   {
-    text: <T id={'financial_accounting'} />,
+    text: <T id={'financial'} />,
     label: true,
   },
   {

@@ -45,7 +45,7 @@ function JournalSheetTable({
         Header: formatMessage({ id: 'transaction_type' }),
         accessor: (r) =>
           rowTypeFilter(r.rowType, r.transaction_type, ['first_entry']),
-        className: 'transaction_type',
+        className: 'reference_type_formatted',
         width: 145,
       },
       {

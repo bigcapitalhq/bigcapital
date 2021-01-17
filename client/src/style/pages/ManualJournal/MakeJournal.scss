@@ -1,0 +1,37 @@
+
+.page-form--make-journal-entries{
+  $self: '.page-form';  
+
+  #{$self}__header{
+    .bp3-label{
+      min-width: 140px;
+    }
+    .bp3-form-content{
+      width: 100%;
+    }
+
+    .bp3-form-group{
+      margin-bottom: 18px;
+
+      &.bp3-inline{
+        max-width: 440px; 
+      }
+    }
+  }
+
+  .form-group--description{
+    max-width: 500px;
+
+    textarea{
+      min-height: 60px;
+      width: 100%;
+    }
+  }
+}
+
+.dashboard__insider{
+
+  &--make-journal-page{
+    background: #fff;
+  }
+}

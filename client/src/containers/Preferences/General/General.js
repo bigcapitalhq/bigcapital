@@ -17,6 +17,11 @@ import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withSettings from 'containers/Settings/withSettings';
 import withSettingsActions from 'containers/Settings/withSettingsActions';
 
+import 'style/pages/Preferences/GeneralForm.scss';
+
+/**
+ * Preferences - General form.
+ */
 function GeneralPreferences({
   // #withSettings
   organizationSettings,

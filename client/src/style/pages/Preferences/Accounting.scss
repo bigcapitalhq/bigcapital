@@ -1,0 +1,39 @@
+
+// Accountant.
+// ---------------------------------
+.preferences-page__inside-content--accountant {
+  .card {
+    padding: 25px;
+
+    .card__footer {
+      padding-top: 16px;
+      border-top: 1px solid #e0e7ea;
+      margin-top: 30px;
+
+      .bp3-button {
+        min-width: 60px;
+
+        + .bp3-button{
+          margin-left: 10px;
+        }
+      }
+    }
+  }
+
+  .form-group--select-list{
+
+    button{
+      min-width: 250px;
+    }
+  }
+  .bp3-form-group {
+    
+    .bp3-form-helper-text{
+      margin-top: 7px;
+    }
+
+    label.bp3-label {
+      margin-bottom: 7px;
+    }
+  }
+}

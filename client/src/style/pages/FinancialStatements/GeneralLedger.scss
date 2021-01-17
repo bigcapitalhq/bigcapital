@@ -1,0 +1,29 @@
+
+.financial-sheet{
+  &--general-ledger{
+    .financial-sheet__table{
+      .tbody{
+        .tr.row-type{
+
+          &--opening_balance,
+          &--closing_balance{
+            .td{
+              border-top: 1px solid #333;
+            }
+            .name,
+            .amount,
+            .balance{
+              font-weight: 500;
+            }
+          }
+          &--closing_balance .td{
+            border-bottom-color: #666;
+          }
+          &--account_name .td.name{
+            font-weight: 500;
+          }
+        }
+      }
+    }
+  }
+}

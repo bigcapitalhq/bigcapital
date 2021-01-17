@@ -1,10 +1,6 @@
-$form-check-input-checked-color: #fff;
-$form-check-input-checked-bg-color: $blue1;
-$form-check-input-checked-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 16 16' enable-background='new 0 0 16 16' xml:space='preserve'><g id='small_tick_1_'><g><path fill='#{$form-check-input-checked-color}' fill-rule='evenodd' clip-rule='evenodd' d='M12,5c-0.28,0-0.53,0.11-0.71,0.29L7,9.59L4.71,7.29C4.53,7.11,4.28,7,4,7C3.45,7,3,7.45,3,8c0,0.28,0.11,0.53,0.29,0.71l3,3C6.47,11.89,6.72,12,7,12s0.53-0.11,0.71-0.29l5-5C12.89,6.53,13,6.28,13,6C13,5.45,12.55,5,12,5z'/></g></g></svg>") !default;
-$form-check-input-indeterminate-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 16 16' enable-background='new 0 0 16 16' xml:space='preserve'><g id='small_tick_1_'><g><path fill='#{$form-check-input-checked-color}' fill-rule='evenodd' clip-rule='evenodd' d='M11,7H5C4.45,7,4,7.45,4,8c0,0.55,0.45,1,1,1h6c0.55,0,1-0.45,1-1C12,7.45,11.55,7,11,7z'/></g></g></svg>") !default;
 
-.form{
-  &__floating-footer{
+.form {
+  &__floating-footer {
     position: fixed;
     bottom: 0;
     width: 100%;
@@ -12,30 +8,30 @@ $form-check-input-indeterminate-bg-image: url("data:image/svg+xml,<svg xmlns='ht
     padding: 14px 18px;
     border-top: 1px solid #ececec;
 
-    .has-mini-sidebar &{
+    .has-mini-sidebar & {
       left: 50px;
     }
   }
 }
 
 // Form
-label.bp3-label{
+label.bp3-label {
   color: #353535;
   font-weight: 400;
 
-  .required{
+  .required {
     color: red;
   }
 
-  .bp3-form-group.bp3-inline &{
+  .bp3-form-group.bp3-inline & {
     margin: 0 10px 0 0;
     line-height: 1.6;
-    padding-top: calc(.3rem + 1px);
-    padding-bottom: calc(.3rem + 1px);
+    padding-top: calc(0.3rem + 1px);
+    padding-bottom: calc(0.3rem + 1px);
   }
 }
 
-.#{$ns}-input{
+.#{$ns}-input {
   box-shadow: 0 0 0 transparent;
   border: 1px solid #ced4da;
   border-radius: 2px;
@@ -44,72 +40,69 @@ label.bp3-label{
   color: #333;
 
   &:focus,
-  &.bp3-active{
-    box-shadow: 0 0 0 1px #116cd0; 
+  &.bp3-active {
+    box-shadow: 0 0 0 1px #116cd0;
     border-color: #116cd0;
   }
   &.bp3-disabled,
-  &:disabled{
+  &:disabled {
     background: #e9ecef;
   }
 
-  .bp3-form-group.bp3-intent-danger &{
+  .bp3-form-group.bp3-intent-danger & {
     box-shadow: 0 0 0 transparent;
     border-color: #db3737;
 
     &:focus,
-    &.bp3-active{
-      box-shadow: 0 0 0 1px #db3737; 
+    &.bp3-active {
+      box-shadow: 0 0 0 1px #db3737;
       border-color: #db3737;
     }
   }
 }
 
-.#{$ns}-form-group{
+.#{$ns}-form-group {
   margin-bottom: 20px;
 
-  &.#{$ns}-intent-danger{
-    select{
-      box-shadow: 0 0 0 0 rgba(228, 226, 226, 0),
-        0 0 0 0 rgba(2, 2, 2, 0),
-        inset 0 0 0 1px #db3737,
-        inset 0 0 0 1px rgba(16, 22, 26, 0.15),
+  &.#{$ns}-intent-danger {
+    select {
+      box-shadow: 0 0 0 0 rgba(228, 226, 226, 0), 0 0 0 0 rgba(2, 2, 2, 0),
+        inset 0 0 0 1px #db3737, inset 0 0 0 1px rgba(16, 22, 26, 0.15),
         inset 0 1px 1px rgba(16, 22, 26, 0.2);
     }
   }
 
-  .#{$ns}-label{
+  .#{$ns}-label {
     margin-bottom: 6px;
   }
 }
 
-.#{$ns}-button:not([class*=".#{$ns}-intent-"]) {
+.#{$ns}-button:not([class*='.#{$ns}-intent-']) {
   background-image: none;
 }
 
 .#{$ns}-html-select select,
-.#{$ns}-select select{
+.#{$ns}-select select {
   background-image: none;
   border-radius: 2px;
-  
+
   &,
-  &:hover{
+  &:hover {
     background: #fff;
     box-shadow: none;
     border: 1px solid #ced4da;
   }
-  &:focus{
-    box-shadow: 0 0 0 .2rem rgba(0,123,255,.25); 
+  &:focus {
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
     border-color: #80bdff;
   }
 }
 
-.input-group-prepend{
-
-  .input-group-text{
+.input-group-prepend {
+  .input-group-text {
     display: flex;
     align-items: center;
-    padding: .375rem .75rem;
+    padding: 0.375rem 0.75rem;
     margin-bottom: 0;
     font-size: 1rem;
     font-weight: 400;
@@ -119,46 +112,45 @@ label.bp3-label{
     white-space: nowrap;
     background-color: #e9ecef;
     border: 1px solid #ced4da;
-    border-radius: .25rem;
+    border-radius: 0.25rem;
     height: 100%;
 
-    .bp3-form-group &{
-      padding: .25rem .5rem;
-      font-size: .875rem;
+    .bp3-form-group & {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.875rem;
       line-height: 1.5;
-      border-radius: .2rem;
+      border-radius: 0.2rem;
     }
   }
 }
 
-.bp3-form-group{
-
-  .bp3-input-group{
+.bp3-form-group {
+  .bp3-input-group {
     flex: 1 1 auto;
   }
-  .bp3-control-group{
-    > .input-group-prepend:first-child .input-group-text{
+  .bp3-control-group {
+    > .input-group-prepend:first-child .input-group-text {
       border-top-right-radius: 0;
       border-bottom-right-radius: 0;
     }
-  } 
+  }
 }
 
-.#{$ns}-html-select{
-  .bp3-icon-double-caret-vertical{
+.#{$ns}-html-select {
+  .bp3-icon-double-caret-vertical {
     display: none;
   }
 }
-.bp3-datepicker-caption select{  
+.bp3-datepicker-caption select {
   &,
-  &:hover{
+  &:hover {
     border-color: transparent;
   }
 }
 
 // Dropdown arrow to html select and select list.
 .#{$ns}-html-select::after,
-.form-group--select-list .#{$ns}-button::after{
+.form-group--select-list .#{$ns}-button::after {
   content: '';
   display: inline-block;
   width: 0;
@@ -174,20 +166,19 @@ label.bp3-label{
   border-radius: 1px;
 }
 
-.form-group--select-list{
-
-  .#{$ns}-button{
-    color: #8D8D8D;
+.form-group--select-list {
+  .#{$ns}-button {
+    color: #8d8d8d;
     position: relative;
     padding-right: 25px;
   }
 
-  &.bp3-fill{
+  &.bp3-fill {
     width: 100%;
   }
 
-  &.bp3-intent-danger{
-    .bp3-button:not(.bp3-minimal){
+  &.bp3-intent-danger {
+    .bp3-button:not(.bp3-minimal) {
       border-color: #db3737;
     }
   }
@@ -197,8 +188,7 @@ label.bp3-label{
   display: block;
 }
 
-
-@mixin control-checked-colors($selector: ":checked") {
+@mixin control-checked-colors($selector: ':checked') {
   input#{$selector} ~ .#{$ns}-control-indicator {
     box-shadow: none;
     background-color: $control-checked-background-color;
@@ -225,7 +215,6 @@ label.bp3-label{
 
 ///@extend
 .#{$ns}-control {
-
   input:checked ~ .#{$ns}-control-indicator {
     box-shadow: none;
     background-color: transparent;
@@ -253,7 +242,7 @@ label.bp3-label{
     display: inline-block;
     margin-right: $pt-grid-size * 2;
   }
- 
+
   .#{$ns}-control-indicator {
     box-shadow: 0 0 0 transparent;
     background-clip: padding-box;
@@ -261,7 +250,7 @@ label.bp3-label{
     background-image: none;
     width: 18px;
     height: 18px;
-    
+
     &::before {
       width: 18px;
       height: 18px;
@@ -271,14 +260,12 @@ label.bp3-label{
   &.bp3-large .#{$ns}-control-indicator {
     width: 20px;
     height: 20px;
-    
+
     &::before {
       width: 20px;
       height: 20px;
     }
   }
-
-  
 
   &:hover .#{$ns}-control-indicator {
     background-color: transparent;
@@ -289,30 +276,29 @@ label.bp3-label{
     background: transparent;
   }
 
-   /*
-  Checkbox
-
-  Markup:
-  <label class="#{$ns}-control #{$ns}-checkbox {{.modifier}}">
-    <input type="checkbox" {{:modifier}} />
-    <span class="#{$ns}-control-indicator"></span>
+  /*
     Checkbox
-  </label>
 
-  :checked  - Checked
-  :disabled - Disabled. Also add <code>.#{$ns}-disabled</code> to <code>.#{$ns}-control</code> to change text color (not shown below).
-  :indeterminate - Indeterminate. Note that this style can only be achieved via JavaScript
-                   <code>input.indeterminate = true</code>.
-  .#{$ns}-align-right - Right-aligned indicator
-  .#{$ns}-large - Large
+    Markup:
+    <label class="#{$ns}-control #{$ns}-checkbox {{.modifier}}">
+      <input type="checkbox" {{:modifier}} />
+      <span class="#{$ns}-control-indicator"></span>
+      Checkbox
+    </label>
 
-  Styleguide checkbox
+    :checked  - Checked
+    :disabled - Disabled. Also add <code>.#{$ns}-disabled</code> to <code>.#{$ns}-control</code> to change text color (not shown below).
+    :indeterminate - Indeterminate. Note that this style can only be achieved via JavaScript
+                     <code>input.indeterminate = true</code>.
+    .#{$ns}-align-right - Right-aligned indicator
+    .#{$ns}-large - Large
+
+    Styleguide checkbox
   */
-
   &.#{$ns}-checkbox {
     &:hover input:indeterminate ~ .#{$ns}-control-indicator {
       // box-shadow: 0 0 0 transparent;
-    } 
+    }
 
     @mixin indicator-inline-icon($icon) {
       &::before {
@@ -322,10 +308,10 @@ label.bp3-label{
         width: 100%;
       }
     }
-    @include control-checked-colors(":checked");
+    @include control-checked-colors(':checked');
 
     // make :indeterminate look like :checked _for Checkbox only_
-    @include control-checked-colors(":indeterminate");
+    @include control-checked-colors(':indeterminate');
 
     .#{$ns}-control-indicator {
       border: 1px solid #c6c6c6;
@@ -363,21 +349,24 @@ label.bp3-label{
     Styleguide radio
   */
   &.#{$ns}-radio {
-    .#{$ns}-control-indicator{
+    .#{$ns}-control-indicator {
       border: 2px solid #cecece;
       background-color: #fff;
 
-      &::before{
+      &::before {
         height: 14px;
         width: 14px;
       }
     }
 
-    input:checked ~ .#{$ns}-control-indicator{
+    input:checked ~ .#{$ns}-control-indicator {
       border-color: $form-check-input-checked-bg-color;
 
       &::before {
-        background-image: radial-gradient($form-check-input-checked-bg-color 40%, transparent 40%);
+        background-image: radial-gradient(
+          $form-check-input-checked-bg-color 40%,
+          transparent 40%
+        );
       }
     }
 
@@ -391,24 +380,22 @@ label.bp3-label{
   }
 }
 
-
-.bp3-menu-item::before, .bp3-menu-item > .bp3-icon{
+.bp3-menu-item::before,
+.bp3-menu-item > .bp3-icon {
   color: #4b5d6b;
 }
 
-.bp3-control-group{
-
-  .input-prepend{
-
-    &:not(.bp3-fixed){
+.bp3-control-group {
+  .input-prepend {
+    &:not(.bp3-fixed) {
       flex: 0;
     }
 
     &__text,
-    &__button{
+    &__button {
       display: flex;
       align-items: center;
-      padding: .375rem .75rem;
+      padding: 0.375rem 0.75rem;
       margin: 0;
       height: 32px;
       font-size: 1rem;
@@ -421,7 +408,7 @@ label.bp3-label{
       border: 1px solid #ced4da;
       border-radius: 0 3px 3px 0;
 
-      .bp3-icon{
+      .bp3-icon {
         color: #848da0;
       }
     }

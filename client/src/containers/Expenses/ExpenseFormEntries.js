@@ -2,12 +2,8 @@ import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { Button, Intent, Position, Tooltip } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { omit } from 'lodash';
-import classNames from 'classnames';
 
-import { CLASSES } from 'common/classes';
-
-import DataTable from 'components/DataTable';
-import Icon from 'components/Icon';
+import { DataTableEditable, Icon } from 'components';
 import { Hint } from 'components';
 import {
   compose,
@@ -228,42 +224,38 @@ function ExpenseTable({
   );
 
   return (
-    <div
-      className={classNames(
-        CLASSES.DATATABLE_EDITOR,
-        CLASSES.DATATABLE_EDITOR_HAS_TOTAL_ROW,
-      )}
-    >
-      <DataTable
-        columns={columns}
-        data={tableRows}
-        rowClassNames={rowClassNames}
-        sticky={true}
-        payload={{
-          accounts: accountsList,
-          errors: error,
-          updateData: handleUpdateData,
-          removeRow: handleRemoveRow,
-        }}
-      />
-      <div className={classNames(CLASSES.DATATABLE_EDITOR_ACTIONS)}>
-        <Button
-          small={true}
-          className={'button--secondary button--new-line'}
-          onClick={onClickNewRow}
-        >
-          <T id={'new_lines'} />
-        </Button>
+    <DataTableEditable
+      columns={columns}
+      data={tableRows}
+      rowClassNames={rowClassNames}
+      sticky={true}
+      payload={{
+        accounts: accountsList,
+        errors: error,
+        updateData: handleUpdateData,
+        removeRow: handleRemoveRow,
+      }}
+      actions={
+        <>
+          <Button
+            small={true}
+            className={'button--secondary button--new-line'}
+            onClick={onClickNewRow}
+          >
+            <T id={'new_lines'} />
+          </Button>
 
-        <Button
-          small={true}
-          className={'button--secondary button--clear-lines ml1'}
-          onClick={handleClickClearAllLines}
-        >
-          <T id={'clear_all_lines'} />
-        </Button>
-      </div>
-    </div>
+          <Button
+            small={true}
+            className={'button--secondary button--clear-lines ml1'}
+            onClick={handleClickClearAllLines}
+          >
+            <T id={'clear_all_lines'} />
+          </Button>
+        </>
+      }
+      totalRow={true}
+    />
   );
 }
 

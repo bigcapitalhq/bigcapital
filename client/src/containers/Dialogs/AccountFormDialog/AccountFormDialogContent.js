@@ -19,6 +19,8 @@ import {
 import { compose, transformToForm } from 'utils';
 import { transformApiErrors, transformAccountToForm } from './utils';
 
+import 'style/pages/Accounts/AccountFormDialog.scss';
+
 const defaultInitialValues = {
   account_type_id: '',
   parent_account_id: '',

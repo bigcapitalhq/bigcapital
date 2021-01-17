@@ -1,0 +1,34 @@
+
+.financial-sheet{
+  &--receivable-aging-summary{
+
+    .financial-sheet__table{
+
+      .bigcapital-datatable{
+        .tbody,
+        .thead{
+          .tr .td.customer_name ~ .td,
+          .tr .th.customer_name ~ .th{
+            justify-content: flex-end;
+          }
+        }
+        .tbody{
+          .tr .td{
+            border-bottom: 0;
+          }
+          .tr:not(:first-child) .td{
+            border-top: 1px solid #E8E8E8;
+          }
+          .tr.row-type--total{
+            font-weight: 500;
+  
+            .td{
+              border-top: 1px solid #333;
+              border-bottom: 3px double #333;
+            }
+          }
+        }
+      }
+    }    
+  }
+}

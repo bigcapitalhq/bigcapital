@@ -1,0 +1,33 @@
+.dialog--invite-form {
+  width: 450px;
+
+  .bp3-dialog-body {
+    .bp3-form-group.bp3-inline {
+      .bp3-label {
+        min-width: 70px;
+      }
+      .bp3-form-content {
+        width: 250px;
+
+        .bp3-dialog-footer-actions {
+          margin-right: 20px;
+          display: flex;
+          justify-content: flex-end;
+        }
+      }
+    }
+  }
+}
+
+.dialog--invite-user {
+  .bp3-dialog-body {
+    .bp3-form-group.bp3-inline {
+      .bp3-label {
+        min-width: 140px;
+      }
+      .bp3-form-content {
+        width: 250px;
+      }
+    }
+  }
+}

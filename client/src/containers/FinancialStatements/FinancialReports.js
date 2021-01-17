@@ -9,6 +9,8 @@ import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 
 import { compose } from 'utils';
 
+import 'style/pages/FinancialStatements/FinancialSheets.scss';
+
 function FinancialReportsItem({ title, desc, link }) {
   return (
     <div class="financial-reports__item">

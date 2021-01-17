@@ -1,0 +1,24 @@
+
+.financial-sheet{
+
+  &--trial-balance{
+    min-width: 720px;
+
+    .financial-sheet__table{
+      
+      .tbody{
+        .tr .td{
+          border-bottom: 0;
+        }
+        .balance.td{
+          border-top-color: #000;
+        }
+        .tr.row_type--total .td{
+          border-top: 1px solid #000;
+          font-weight: 500;
+          border-bottom: 3px double #000;
+        }
+      }
+    }
+  }
+}

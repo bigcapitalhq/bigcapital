@@ -3,8 +3,7 @@ import { Button, Intent, Position, Tooltip } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
-import { Hint, Icon } from 'components';
-import DataTable from 'components/DataTable';
+import { Hint, Icon, DataTableEditable } from 'components';
 import {
   InputGroupCell,
   MoneyFieldCell,
@@ -17,7 +16,6 @@ import withItems from 'containers/Items/withItems';
 import {
   compose,
   formattedAmount,
-  orderingLinesIndexes,
   saveInvoke,
 } from 'utils';
 
@@ -202,7 +200,7 @@ function ItemsEntriesTable({
       if (rows.length <= 1) {
         return;
       }
-      const removeIndex = parseInt(rowIndex, 10); 
+      const removeIndex = parseInt(rowIndex, 10);
       saveInvoke(onClickRemoveRow, removeIndex);
     },
     [rows, onClickRemoveRow],
@@ -224,43 +222,38 @@ function ItemsEntriesTable({
   );
 
   return (
-    <div
-      className={classNames(
-        CLASSES.DATATABLE_EDITOR,
-        CLASSES.DATATABLE_EDITOR_ITEMS_ENTRIES,
-        CLASSES.DATATABLE_EDITOR_HAS_TOTAL_ROW,
-      )}
-    >
-      <DataTable
-        columns={columns}
-        data={rows}
-        rowClassNames={rowClassNames}
-        sticky={true}
-        payload={{
-          items: itemsCurrentPage,
-          errors: errors || [],
-          updateData: handleUpdateData,
-          removeRow: handleRemoveRow,
-        }}
-      />
-      <div className={classNames(CLASSES.DATATABLE_EDITOR_ACTIONS)}>
-        <Button
-          small={true}
-          className={'button--secondary button--new-line'}
-          onClick={onClickNewRow}
-        >
-          <T id={'new_lines'} />
-        </Button>
+    <DataTableEditable
+      className={classNames(CLASSES.DATATABLE_EDITOR_ITEMS_ENTRIES)}
+      columns={columns}
+      data={rows}
+      rowClassNames={rowClassNames}
+      sticky={true}
+      payload={{
+        items: itemsCurrentPage,
+        errors: errors || [],
+        updateData: handleUpdateData,
+        removeRow: handleRemoveRow,
+      }}
+      actions={
+        <>
+          <Button
+            small={true}
+            className={'button--secondary button--new-line'}
+            onClick={onClickNewRow}
+          >
+            <T id={'new_lines'} />
+          </Button>
 
-        <Button
-          small={true}
-          className={'button--secondary button--clear-lines ml1'}
-          onClick={handleClickClearAllLines}
-        >
-          <T id={'clear_all_lines'} />
-        </Button>
-      </div>
-    </div>
+          <Button
+            small={true}
+            className={'button--secondary button--clear-lines ml1'}
+            onClick={handleClickClearAllLines}
+          >
+            <T id={'clear_all_lines'} />
+          </Button>
+        </>
+      }
+    />
   );
 }
 

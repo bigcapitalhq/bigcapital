@@ -6,6 +6,8 @@ import PropTypes from 'prop-types';
 import { range } from 'lodash';
 import { Icon } from 'components';
 
+import 'style/components/DataTable/Pagination.scss';
+
 const getState = ({ currentPage, size, total }) => {
   const totalPages = Math.ceil(total / size);
   const visibleItems = 5;

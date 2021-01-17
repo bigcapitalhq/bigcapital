@@ -1,0 +1,29 @@
+
+// Users/Roles List.
+// ---------------------------------
+.preferences-page__inside-content--users{
+
+  .bigcapital-datatable {
+
+    .td{
+      .avatar{
+        height: 28px;
+        width: 28px;
+        text-align: center;
+        background: #b7bfc6;
+        border-radius: 50%;
+        line-height: 28px;
+        color: #fff;
+        text-transform: uppercase;
+        margin-left: 10px;
+      }
+    }
+    .td.status {
+      text-transform: uppercase;
+    }
+
+    .tr:last-child .td{
+      border-bottom: 0;
+    }
+  }
+}

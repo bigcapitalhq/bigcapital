@@ -5,13 +5,13 @@ import { createBrowserHistory } from 'history';
 import { ReactQueryConfigProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query-devtools';
 
+import 'style/App.scss';
+
 import PrivateRoute from 'components/Guards/PrivateRoute';
 import Authentication from 'components/Authentication';
 import DashboardPrivatePages from 'components/Dashboard/PrivatePages';
 import GlobalErrors from 'containers/GlobalErrors/GlobalErrors';
 import intl from 'services/intl';
-
-import 'style/App.scss';
 
 function App({ locale }) {
   const history = createBrowserHistory();

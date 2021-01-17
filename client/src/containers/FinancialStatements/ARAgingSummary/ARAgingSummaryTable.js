@@ -5,7 +5,7 @@ import FinancialSheet from 'components/FinancialSheet';
 
 import withARAgingSummary from './withARAgingSummary';
 
-import { compose } from 'utils';
+import { compose, getColumnWidth } from 'utils';
 
 /**
  * AR aging summary table sheet.
@@ -37,28 +37,34 @@ function ReceivableAgingSummaryTable({
         accessor: 'name',
         className: 'customer_name',
         sticky: 'left',
-        width: 200,
+        width: 240,
       },
       {
         Header: <T id={'current'} />,
         accessor: 'current',
         className: 'current',
-        width: 120,
+        width: getColumnWidth(receivableAgingRows, `current`, {
+          minWidth: 120,
+        }),
       },
       ...agingColumns.map((agingColumn, index) => ({
         Header: agingColumn,
         accessor: `aging-${index }`,
-        width: 120,
+        width: getColumnWidth(receivableAgingRows, `aging-${index }`, {
+          minWidth: 120,
+        }),
       })),
       {
         Header: (<T id={'total'} />),
         id: 'total',
         accessor: 'total',
         className: 'total',
-        width: 140,
+        width: getColumnWidth(receivableAgingRows, 'total', {
+          minWidth: 120,
+        }),
       },
     ],
-    [agingColumns],
+    [receivableAgingRows, agingColumns],
   );
 
   const rowClassNames = (row) => [`row-type--${row.original.rowType}`];

@@ -1,0 +1,31 @@
+
+.financial-sheet{
+
+  &--journal{
+    .financial-sheet__table{
+
+      .tbody{
+        .tr:not(.no-results) .td{
+          padding: 0.4rem;
+          color: #000;
+          border-bottom-color: transparent;
+          min-height: 32px;
+          border-left: 1px solid #ececec;
+
+          &:first-of-type{
+            border-left: 0;
+          }
+        }
+      }
+    }
+  }
+}
+
+.financial-statement--journal{
+
+  .financial-header-drawer{
+    .bp3-drawer{
+      max-height: 350px;
+    }
+  }
+}

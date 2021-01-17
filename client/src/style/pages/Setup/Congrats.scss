@@ -1,0 +1,30 @@
+.setup-congrats {
+  width: 600px;
+  margin: 0 auto;
+  text-align: center;
+  padding-top: 80px;
+
+  &__page {
+  }
+
+  &__text {
+    margin-top: 30px;
+
+    h1 {
+      color: #2d2b43;
+      margin-bottom: 12px;
+    }
+    .paragraph {
+      font-size: 15px;
+      opacity: 0.85;
+      margin-bottom: 14px;
+    }
+    .bp3-button {
+      height: 38px;
+      padding-left: 25px;
+      padding-right: 25px;
+      font-size: 15px;
+      margin-top: 12px;
+    }
+  }
+}

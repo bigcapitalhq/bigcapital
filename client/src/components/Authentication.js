@@ -8,10 +8,10 @@ import withAuthentication from 'containers/Authentication/withAuthentication';
 import { compose } from 'utils';
 import Icon from 'components/Icon';
 
+import 'style/pages/Authentication/Auth.scss'
+
 function PageFade(props) {
-  return (
-    <CSSTransition {...props} classNames="authTransition" timeout={500} />
-  );
+  return <CSSTransition {...props} classNames="authTransition" timeout={500} />;
 }
 
 function AuthenticationWrapper({ isAuthorized = false, ...rest }) {
@@ -52,7 +52,7 @@ function AuthenticationWrapper({ isAuthorized = false, ...rest }) {
                       ))}
                     </Switch>
                   </PageFade>
-                </TransitionGroup>                
+                </TransitionGroup>
               </div>
             </div>
           </div>

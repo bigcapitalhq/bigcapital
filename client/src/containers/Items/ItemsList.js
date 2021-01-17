@@ -24,6 +24,11 @@ import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withItemsActions from 'containers/Items/withItemsActions';
 import withViewsActions from 'containers/Views/withViewsActions';
 
+import 'style/pages/Items/List.scss';
+
+/**
+ * Items list.
+ */
 function ItemsList({
   // #withDashboardActions
   changePageTitle,

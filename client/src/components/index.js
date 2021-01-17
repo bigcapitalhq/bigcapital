@@ -18,6 +18,7 @@ import CurrenciesSelectList from './CurrenciesSelectList';
 import FieldRequiredHint from './FieldRequiredHint';
 import AppToaster from './AppToaster';
 import DataTable from './DataTable';
+import DataTableEditable from './Datatable/DatatableEditable';
 import AccountsSelectList from './AccountsSelectList';
 import AccountsTypesSelect from './AccountsTypesSelect';
 import LoadingIndicator from './LoadingIndicator';
@@ -90,4 +91,5 @@ export {
   InputPrependText,
   PageFormBigNumber,
   AccountsMultiSelect,
+  DataTableEditable
 };

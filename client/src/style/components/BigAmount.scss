@@ -1,0 +1,20 @@
+
+.big-amount{
+
+  &__label{
+    color: #5d6f90;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 14px;
+  }
+  &__number{
+    margin: 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 400;
+    margin-top: 6px;
+    color: #343463;
+    line-height: 1;
+    font-size: 34px;
+  }
+}

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
 import { Position, Drawer } from '@blueprintjs/core';
+import 'style/containers/FinancialStatements/DrawerHeader.scss';
 
 export default function FinancialStatementHeader({
   children,

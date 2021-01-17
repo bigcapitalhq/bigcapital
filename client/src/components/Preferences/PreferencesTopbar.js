@@ -10,6 +10,11 @@ import withDashboard from 'containers/Dashboard/withDashboard';
 
 import { compose } from 'utils';
 
+import 'style/pages/Preferences/Topbar.scss';
+
+/**
+ * Preferences topbar.
+ */
 function PreferencesTopbar({ preferencesPageTitle }) {
   return (
     <div

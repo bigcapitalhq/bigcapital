@@ -30,6 +30,8 @@ import {
   transformItemFormData,
 } from './ItemForm.schema';
 
+import 'style/pages/Items/PageForm.scss';
+
 const defaultInitialValues = {
   active: 1,
   name: '',

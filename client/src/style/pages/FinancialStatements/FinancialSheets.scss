@@ -1,0 +1,39 @@
+.financial-reports {
+  padding: 20px 25px;
+
+  .section-title {
+    font-weight: 500;
+    margin-bottom: 1.6rem;
+    font-size: 20px;
+    color: rgb(31, 50, 85);
+    margin-top: 10px;
+  }
+
+  &__list {
+    display: flex;
+    flex-flow: wrap;
+    margin-left: -20px;
+  }
+
+  &__item {
+    width: 270px;
+    margin-bottom: 20px;
+    margin-left: 20px;
+    border: 1px solid #d1dee2;
+    border-top: 3px solid #d1dee2;
+    padding-top: 16px;
+    background: #fff;
+    padding: 20px;
+
+    .title {
+      font-size: 16px;
+    }
+
+    .desc {
+      color: rgb(31, 50, 85);
+      line-height: 1.55;
+      margin-top: 12px;
+      margin-bottom: 0;
+    }
+  }
+}

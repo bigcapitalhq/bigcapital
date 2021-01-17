@@ -1,0 +1,19 @@
+[data-icon='bigcapital'] {
+  path {
+    fill: #004dd0;
+  }
+  .path-1,
+  .path-13 {
+    fill: #4f5861;
+  }
+}
+
+.bigcapital--alt {
+  svg {
+    path,
+    .path-13,
+    .path-1 {
+      fill: #fff;
+    }
+  }
+}

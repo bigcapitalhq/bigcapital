@@ -81,7 +81,6 @@ export default createReducer(initialState, {
   ...financialStatementFilterToggle('BALANCE_SHEET', 'balanceSheet'),
 
   [t.TRAIL_BALANCE_STATEMENT_SET]: (state, action) => {
-    debugger;
     const trailBalanceSheet = {
       sheet: action.data.data,
       tableRows: mapTrialBalanceSheetToRows(action.data.data),
@@ -155,10 +154,7 @@ export default createReducer(initialState, {
     const { refresh } = action.payload;
     state.profitLoss.refresh = !!refresh;
   },
-
   ...financialStatementFilterToggle('PROFIT_LOSS', 'profitLoss'),
-
- 
 
   [t.RECEIVABLE_AGING_SUMMARY_SET]: (state, action) => {
     const { customers, total, columns, query } = action.payload;

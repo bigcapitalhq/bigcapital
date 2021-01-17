@@ -14,6 +14,8 @@ import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 
 import { compose } from 'utils';
 
+import 'style/pages/ManualJournal/MakeJournal.scss'
+
 function MakeJournalEntriesPage({
   // #withCustomersActions
   requestFetchCustomers,

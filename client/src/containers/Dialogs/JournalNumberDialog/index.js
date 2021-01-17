@@ -29,7 +29,6 @@ function JournalNumberDialog({
   );
 }
 
-
 export default compose(
   withDialogRedux(),
 )(JournalNumberDialog);

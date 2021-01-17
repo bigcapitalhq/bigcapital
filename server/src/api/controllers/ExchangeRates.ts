@@ -1,18 +1,13 @@
 import { Service, Inject } from 'typedi';
 import { Router, Request, Response, NextFunction } from 'express';
-import {
-  check,
-  param,
-  query,
-} from 'express-validator';
+import { check, param, query } from 'express-validator';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
 import BaseController from './BaseController';
 import { ServiceError } from 'exceptions';
 import ExchangeRatesService from 'services/ExchangeRates/ExchangeRatesService';
 
-@Service() 
+@Service()
 export default class ExchangeRatesController extends BaseController {
-
   @Inject()
   exchangeRatesService: ExchangeRatesService;
 
@@ -22,41 +17,40 @@ export default class ExchangeRatesController extends BaseController {
   router() {
     const router = Router();
 
-    router.get('/', [
-      ...this.exchangeRatesListSchema,
-    ],
+    router.get(
+      '/',
+      [...this.exchangeRatesListSchema],
       this.validationResult,
       asyncMiddleware(this.exchangeRates.bind(this)),
-      this.handleServiceError,
+      this.handleServiceError
     );
-    router.post('/', [
-      ...this.exchangeRateDTOSchema
-    ],
+    router.post(
+      '/',
+      [...this.exchangeRateDTOSchema],
       this.validationResult,
       asyncMiddleware(this.addExchangeRate.bind(this)),
-      this.handleServiceError,
+      this.handleServiceError
     );
-    router.post('/:id', [
-      ...this.exchangeRateEditDTOSchema,
-      ...this.exchangeRateIdSchema,
-    ],
+    router.post(
+      '/:id',
+      [...this.exchangeRateEditDTOSchema, ...this.exchangeRateIdSchema],
       this.validationResult,
       asyncMiddleware(this.editExchangeRate.bind(this)),
-      this.handleServiceError,
+      this.handleServiceError
     );
-    router.delete('/bulk', [
-      ...this.exchangeRatesIdsSchema,
-    ],
+    router.delete(
+      '/bulk',
+      [...this.exchangeRatesIdsSchema],
       this.validationResult,
       asyncMiddleware(this.bulkDeleteExchangeRates.bind(this)),
-      this.handleServiceError,
+      this.handleServiceError
     );
-    router.delete('/:id', [
-      ...this.exchangeRateIdSchema,
-    ],
+    router.delete(
+      '/:id',
+      [...this.exchangeRateIdSchema],
       this.validationResult,
       asyncMiddleware(this.deleteExchangeRate.bind(this)),
-      this.handleServiceError,
+      this.handleServiceError
     );
     return router;
   }
@@ -77,15 +71,11 @@ export default class ExchangeRatesController extends BaseController {
   }
 
   get exchangeRateEditDTOSchema() {
-    return [
-      check('exchange_rate').exists().isNumeric().toFloat(),
-    ];
+    return [check('exchange_rate').exists().isNumeric().toFloat()];
   }
 
   get exchangeRateIdSchema() {
-    return [
-      param('id').isNumeric().toInt(),
-    ];
+    return [param('id').isNumeric().toInt()];
   }
 
   get exchangeRatesIdsSchema() {
@@ -97,9 +87,9 @@ export default class ExchangeRatesController extends BaseController {
 
   /**
    * Retrieve exchange rates.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
   async exchangeRates(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
@@ -109,7 +99,10 @@ export default class ExchangeRatesController extends BaseController {
       ...req.query,
     };
     try {
-      const exchangeRates = await this.exchangeRatesService.listExchangeRates(tenantId, filter);
+      const exchangeRates = await this.exchangeRatesService.listExchangeRates(
+        tenantId,
+        filter
+      );
       return res.status(200).send({ exchange_rates: exchangeRates });
     } catch (error) {
       next(error);
@@ -118,16 +111,19 @@ export default class ExchangeRatesController extends BaseController {
 
   /**
    * Adds a new exchange rate on the given date.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
   async addExchangeRate(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const exchangeRateDTO = this.matchedBodyData(req);
 
     try {
-      const exchangeRate = await this.exchangeRatesService.newExchangeRate(tenantId, exchangeRateDTO)
+      const exchangeRate = await this.exchangeRatesService.newExchangeRate(
+        tenantId,
+        exchangeRateDTO
+      );
       return res.status(200).send({ id: exchangeRate.id });
     } catch (error) {
       next(error);
@@ -136,9 +132,9 @@ export default class ExchangeRatesController extends BaseController {
 
   /**
    * Edit the given exchange rate.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
   async editExchangeRate(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
@@ -146,7 +142,11 @@ export default class ExchangeRatesController extends BaseController {
     const exchangeRateDTO = this.matchedBodyData(req);
 
     try {
-      const exchangeRate = await this.exchangeRatesService.editExchangeRate(tenantId, exchangeRateId, exchangeRateDTO)
+      const exchangeRate = await this.exchangeRatesService.editExchangeRate(
+        tenantId,
+        exchangeRateId,
+        exchangeRateDTO
+      );
 
       return res.status(200).send({
         id: exchangeRateId,
@@ -159,16 +159,19 @@ export default class ExchangeRatesController extends BaseController {
 
   /**
    * Delete the given exchange rate from the storage.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
   async deleteExchangeRate(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const { id: exchangeRateId } = req.params;
 
     try {
-      await this.exchangeRatesService.deleteExchangeRate(tenantId, exchangeRateId);
+      await this.exchangeRatesService.deleteExchangeRate(
+        tenantId,
+        exchangeRateId
+      );
       return res.status(200).send({ id: exchangeRateId });
     } catch (error) {
       next(error);
@@ -177,16 +180,23 @@ export default class ExchangeRatesController extends BaseController {
 
   /**
    * Deletes the given exchange rates in bulk.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next  
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
-  async bulkDeleteExchangeRates(req: Request, res: Response, next: NextFunction) {
+  async bulkDeleteExchangeRates(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { tenantId } = req;
     const { ids: exchangeRateIds } = req.query;
 
     try {
-      await this.exchangeRatesService.deleteBulkExchangeRates(tenantId, exchangeRateIds);
+      await this.exchangeRatesService.deleteBulkExchangeRates(
+        tenantId,
+        exchangeRateIds
+      );
       return res.status(200).send();
     } catch (error) {
       next(error);
@@ -195,12 +205,17 @@ export default class ExchangeRatesController extends BaseController {
 
   /**
    * Handle service errors.
-   * @param {Error} error 
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next  
+   * @param {Error} error
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
-  handleServiceError(error: Error, req: Request, res: Response, next: NextFunction) {
+  handleServiceError(
+    error: Error,
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     if (error instanceof ServiceError) {
       if (error.errorType === 'EXCHANGE_RATE_NOT_FOUND') {
         return res.status(404).send({

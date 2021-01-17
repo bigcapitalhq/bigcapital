@@ -3,8 +3,9 @@ import { useQuery } from 'react-query';
 import { withWizard } from 'react-albus'
 import { ProgressBar, Intent } from '@blueprintjs/core';
 
+import 'style/pages/Setup/Initializing.scss';
+
 import withOrganizationActions from 'containers/Organization/withOrganizationActions';
-import withOrganization from 'containers/Organization/withOrganization'
 
 import { compose } from 'utils';
 

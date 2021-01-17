@@ -6,7 +6,7 @@ import { sumBy } from 'lodash';
 import classNames from 'classnames';
 
 import { CLASSES } from 'common/classes';
-import { DataTable, Money } from 'components';
+import { DataTableEditable, Money } from 'components';
 import { transformUpdatedRows } from 'utils';
 import {
   MoneyFieldCell,
@@ -146,24 +146,18 @@ export default function PaymentReceiveItemsTableEditor({
   );
 
   return (
-    <div
-      className={classNames(
-        CLASSES.DATATABLE_EDITOR,
-        CLASSES.DATATABLE_EDITOR_ITEMS_ENTRIES,
-      )}
-    >
-      <DataTable
-        columns={columns}
-        data={localData}
-        rowClassNames={rowClassNames}
-        spinnerProps={false}
-        payload={{
-          errors,
-          updateData: handleUpdateData,
-        }}
-        noResults={noResultsMessage}
-      />
-      <div className={classNames(CLASSES.DATATABLE_EDITOR_ACTIONS, 'mt1')}>
+    <DataTableEditable
+      className={classNames(CLASSES.DATATABLE_EDITOR_ITEMS_ENTRIES)}
+      columns={columns}
+      data={localData}
+      rowClassNames={rowClassNames}
+      spinnerProps={false}
+      payload={{
+        errors,
+        updateData: handleUpdateData,
+      }}
+      noResults={noResultsMessage}
+      actions={
         <Button
           small={true}
           className={'button--secondary button--clear-lines'}
@@ -171,7 +165,8 @@ export default function PaymentReceiveItemsTableEditor({
         >
           <T id={'clear_all_lines'} />
         </Button>
-      </div>
-    </div>
+      }
+      totalRow={true}
+    />
   );
 }

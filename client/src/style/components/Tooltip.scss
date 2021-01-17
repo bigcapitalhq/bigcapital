@@ -1,0 +1,11 @@
+
+
+.pt-tooltip {
+  .pt-popover-content {
+    max-width: 100px;
+  }
+}
+
+.#{$ns}-tooltip {
+  box-shadow: none;
+}

@@ -13,6 +13,8 @@ import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 
 import { compose } from 'utils';
 
+import 'style/pages/SaleInvoice/PageForm.scss';
+
 function Invoices({
   // #withCustomersActions
   requestFetchCustomers,

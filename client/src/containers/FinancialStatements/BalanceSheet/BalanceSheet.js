@@ -21,6 +21,8 @@ import withBalanceSheetDetail from './withBalanceSheetDetail';
 
 import { transformFilterFormToQuery } from 'containers/FinancialStatements/common';
 
+import 'style/pages/FinancialStatements/BalanceSheet.scss';
+
 function BalanceSheet({
   // #withDashboardActions
   changePageTitle,

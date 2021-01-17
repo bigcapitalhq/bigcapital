@@ -15,6 +15,11 @@ import withSettingsActions from 'containers/Settings/withSettingsActions';
 
 import { compose } from 'utils';
 
+import 'style/pages/Dashboard/Dashboard.scss'
+
+/**
+ * Dashboard page.
+ */
 function Dashboard({
   // #withSettings
   requestFetchOptions,

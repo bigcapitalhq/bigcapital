@@ -5,6 +5,8 @@ import {
   Money,
 } from 'components';
 
+import 'style/components/BigAmount.scss';
+
 export default function PageFormBigNumber({ label, amount, currencyCode }) {
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_BIG_NUMBERS)}>

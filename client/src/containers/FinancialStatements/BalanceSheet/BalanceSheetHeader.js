@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import moment from 'moment';

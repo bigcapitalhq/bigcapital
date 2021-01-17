@@ -2,6 +2,11 @@ import React from 'react';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 
+import 'style/components/DataTable/DataTableEmptyStatus.scss';
+
+/**
+ * Datatable empty status.
+ */
 export default function EmptyStatuts({ title, description, action, children }) {
   return (
     <div className={classNames(CLASSES.DATATABLE_EMPTY_STATUS)}>

@@ -5,6 +5,8 @@ import { FormattedMessage as T } from 'react-intl';
 import ItemsEntriesTable from './ItemsEntriesTable';
 import { orderingLinesIndexes, repeatValue } from 'utils';
 
+import 'style/components/DataTable/DataTableEditable.scss';
+
 export default function EditableItemsEntriesTable({
   defaultEntry,
   minLinesNumber = 2,

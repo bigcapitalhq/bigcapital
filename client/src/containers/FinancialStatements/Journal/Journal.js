@@ -19,6 +19,8 @@ import withJournal from './withJournal';
 
 import { transformFilterFormToQuery } from 'containers/FinancialStatements/common';
 
+import 'style/pages/FinancialStatements/Journal.scss';
+
 function Journal({
   // #withJournalActions
   requestFetchJournalSheet,

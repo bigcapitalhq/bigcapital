@@ -4,6 +4,11 @@ import { useHistory, useLocation } from 'react-router-dom';
 import preferencesMenu from 'config/preferencesMenu';
 import PreferencesSidebarContainer from './PreferencesSidebarContainer';
 
+import 'style/pages/Preferences/Sidebar.scss';
+
+/**
+ * Preferences sidebar.
+ */
 export default function PreferencesSidebar() {
   const history = useHistory();
   const location = useLocation();

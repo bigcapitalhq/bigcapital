@@ -1,91 +1,81 @@
-
-.form-group--select-list{
-
-  .bp3-popover-target{
-
-    .bp3-icon{
+.form-group--select-list {
+  .bp3-popover-target {
+    .bp3-icon {
       position: absolute;
       top: 0;
       left: 0;
       margin: 7px;
 
-      + .bp3-button-text{
+      + .bp3-button-text {
         padding-left: 20px;
       }
     }
 
-    .bp3-button{
+    .bp3-button {
       padding-left: 10px;
       color: #333;
     }
   }
 }
 
-.form-group--select-list{
-
-  .bp3-popover-open{
-    .bp3-button{
-      
+.form-group--select-list {
+  .bp3-popover-open {
+    .bp3-button {
       border-color: #80bdff;
     }
   }
 }
 
-.bp3-button{
+.bp3-button {
   min-width: 32px;
   min-height: 32px;
   padding-left: 12px;
   padding-right: 12px;
 }
 
-
-.bp3-button:not([class*="bp3-intent-"]):not(.bp3-minimal){
+.bp3-button:not([class*='bp3-intent-']):not(.bp3-minimal) {
   color: #555555;
   box-shadow: 0 0 0 transparent;
 
-  &.bp3-small{
+  &.bp3-small {
     font-size: 13px;
     min-height: 29px;
   }
-  .form-group--select-list &{
+  .form-group--select-list & {
     border-radius: 2px;
 
     &,
-    &:hover{
-      box-shadow: 0 0 0 transparent;  
+    &:hover {
+      box-shadow: 0 0 0 transparent;
       border: 1px solid #ced4da;
-      
+
       &:not(:disabled) {
-        background: #fff;      
+        background: #fff;
       }
-    }  
+    }
   }
-  .form-group--select-list.bp3-intent-danger &{
-    
-    &{
+  .form-group--select-list.bp3-intent-danger & {
+    & {
       border-color: #db3737;
     }
   }
 }
 
-.bp3-button-group.bp3-minimal .bp3-button{
+.bp3-button-group.bp3-minimal .bp3-button {
   background-color: transparent;
 }
 
-.bp3-button{
-
+.bp3-button {
   &.bp3-intent-primary,
   &.bp3-intent-success,
   &.bp3-intent-danger,
-  &.bp3-intent-warning{
-
+  &.bp3-intent-warning {
     &,
-    &:hover{
+    &:hover {
       box-shadow: 0 0 0 transparent;
-    }    
+    }
   }
 }
 
-.button--secondary{
-  
+.button--secondary {
 }

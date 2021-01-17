@@ -11,13 +11,15 @@ import withSubscriptionsActions from 'containers/Subscriptions/withSubscriptions
 
 import EnsureOrganizationIsReady from 'components/Guards/EnsureOrganizationIsReady';
 import EnsureOrganizationIsNotReady from 'components/Guards/EnsureOrganizationIsNotReady';
+
 import { compose } from 'utils';
+
+import 'style/pages/Dashboard/Dashboard.scss';
 
 /**
  * Dashboard inner private pages.
  */
 function DashboardPrivatePages({
-
   // #withOrganizationActions
   requestAllOrganizations,
 
