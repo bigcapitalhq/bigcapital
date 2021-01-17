@@ -1,11 +1,10 @@
-import React from 'react';
-import { sumBy, subtract, add } from 'lodash';
+import React, { useRef } from 'react';
 import { FastField, ErrorMessage, useFormikContext } from 'formik';
 import { FormGroup, InputGroup, Intent } from '@blueprintjs/core';
 import { inputIntent } from 'utils';
 import { Row, Col, If, FieldRequiredHint } from 'components';
 import { FormattedMessage as T } from 'react-intl';
-import { calculate } from './utils';
+import { decrementCalc, dec } from './utils';
 
 function DecrementAdjustmentFields() {
   return (
@@ -41,7 +40,7 @@ function DecrementAdjustmentFields() {
               <InputGroup
                 {...field}
                 onBlur={(event) => {
-                  setFieldValue('new_quantity', calculate(values, field.value));
+                  setFieldValue('new_quantity', decrementCalc(values, event));
                 }}
               />
             </FormGroup>
@@ -62,13 +61,9 @@ function DecrementAdjustmentFields() {
               helperText={<ErrorMessage name="new_quantity" />}
             >
               <InputGroup
-                medium={'true'}
                 {...field}
                 onBlur={(event) => {
-                  setFieldValue(
-                    'quantity',
-                    subtract(field.value, values.quantity_on_hand),
-                  );
+                  setFieldValue('quantity', decrementCalc(values, event));
                 }}
               />
             </FormGroup>

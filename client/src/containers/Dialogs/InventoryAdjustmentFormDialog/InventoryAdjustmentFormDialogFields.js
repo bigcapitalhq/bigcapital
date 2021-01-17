@@ -10,7 +10,7 @@ import {
 import classNames from 'classnames';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { DateInput } from '@blueprintjs/datetime';
-import { ListSelect, Choose, FieldRequiredHint } from 'components';
+import { ListSelect, Choose, If, FieldRequiredHint } from 'components';
 import {
   inputIntent,
   momentFormatter,
@@ -24,6 +24,7 @@ import DecrementAdjustmentFields from './DecrementAdjustmentFields';
 import AccountsSuggestField from 'components/AccountsSuggestField';
 import withAccounts from 'containers/Accounts/withAccounts';
 import { compose } from 'redux';
+import { decrementCalc, incrementCalc, dec } from './utils';
 
 /**
  * Inventory adjustment form dialogs fields.
@@ -34,7 +35,7 @@ function InventoryAdjustmentFormDialogFields({
 }) {
   const { values } = useFormikContext();
   const { formatMessage } = useIntl();
-  // console.log(values, 'EE');
+
   return (
     <div className={Classes.DIALOG_BODY}>
       {/*------------ Date -----------*/}
@@ -77,6 +78,12 @@ function InventoryAdjustmentFormDialogFields({
               items={adjustmentType}
               onItemSelect={(type) => {
                 form.setFieldValue('type', type.value);
+                type?.value == 'increment'
+                  ? form.setFieldValue('new_quantity', incrementCalc(values))
+                  : form.setFieldValue(
+                      'new_quantity',
+                      values.quantity_on_hand - values.quantity,
+                    );
               }}
               filterable={false}
               selectedItem={value}

@@ -1,20 +1,11 @@
-import { add, sumBy, subtract } from 'lodash';
-
-export const calculate = ({ type, quantity_on_hand }, operator) => {
-  const qty = parseInt(quantity_on_hand);
-  const quantity = parseInt(operator);
-
+export const decrementCalc = ({ quantity_on_hand, type }, e) => {
   if (type == 'decrement') {
-    return subtract(qty, quantity);
+    return parseInt(quantity_on_hand, 10) - parseInt(e.currentTarget.value, 10);
   } else {
-    return add(qty, quantity);
+    return e.currentTarget.value - quantity_on_hand;
   }
 };
 
-// function calculate(qty, operator) {
-//   return operator > 0
-//     ? calculate(qty + 1, operator - 1)
-//     : operator < 0
-//     ? calculate(qty - 1, operator + 1)
-//     : qty;
-// }
+export const incrementCalc = ({ quantity_on_hand, quantity }, e) => {
+  return parseInt(quantity_on_hand, 10) + parseInt(quantity, 10);
+};
