@@ -16,7 +16,8 @@
     &-left {
       display: flex;
     }
-    &-actions {}
+    &-actions {
+    }
     &-sidebar-toggle {
       display: flex;
       align-items: center;
@@ -58,6 +59,15 @@
 
       .bp3-navbar-divider {
         margin: 0 8px;
+      }
+
+      .form-group-quick-new-downDrop {
+        .bp3-popover-target .bp3-button {
+          color: #1552c8;
+        }
+        .bp3-button::after {
+          content: none;
+        }
       }
     }
 
@@ -403,7 +413,6 @@
 }
 
 .tabs--dashboard-views {
-
   .#{$ns}-tab {
     color: #5b606d;
     font-size: 14px;
