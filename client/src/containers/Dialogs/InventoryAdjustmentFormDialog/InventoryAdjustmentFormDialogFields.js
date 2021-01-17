@@ -113,7 +113,7 @@ function InventoryAdjustmentFormDialogFields({
             labelInfo={<FieldRequiredHint />}
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name="reason" />}
-            className={'from-group--adjustment-account'}
+            className={'form-group--adjustment-account'}
           >
             <AccountsSuggestField
               accounts={accountsList}
@@ -137,7 +137,7 @@ function InventoryAdjustmentFormDialogFields({
             label={<T id={'reference_no'} />}
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name="reference_no" />}
-            className={'from-group--reference-no'}
+            className={'form-group--reference-no'}
           >
             <InputGroup {...field} />
           </FormGroup>
@@ -152,12 +152,10 @@ function InventoryAdjustmentFormDialogFields({
             className={'form-group--adjustment-reasons'}
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name={'adjustment_reasons'} />}
-            placeholder={'Max 500 characters'}
           >
             <TextArea
               growVertically={true}
               large={true}
-              placeholder={'Max 500 characters.'}
               {...field}
             />
           </FormGroup>

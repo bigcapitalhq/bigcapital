@@ -19,7 +19,7 @@
     }
     &--reference-no,
     &--adjustment-account {
-      max-width: 250px;
+      max-width: 270px;
     }
   }
   .adjustment-fields {
@@ -28,6 +28,14 @@
     margin-bottom: 18px;
     padding-bottom: 12px;
     border-bottom: 2px solid #e9e9e9;
+    
+    .bp3-input-group{
+
+      .bp3-input{
+        padding-left: 8px;
+        padding-right: 8px;
+      }
+    } 
 
     .row {
       display: flex;
@@ -42,27 +50,25 @@
         .bp3-form-group {
           margin-bottom: 0;
         }
-      }
-      .col--quantity-on-hand {
-        width: 120px;
-      }
-      .col--sign {
-        display: flex;
-
-        span {
-          margin-top: auto;
-          margin-bottom: 12px;
+        &--quantity-on-hand,
+        &--quantity  {
+          width: 120px;
         }
-      }
-      .col--decrement,
-      .col--increment {
-        width: 100px;
-      }
-      .col--cost {
-        width: 95px;
-      }
-      .col--quantity {
-        width: 120px;
+        &--sign {
+          display: flex;
+  
+          span {
+            margin-top: auto;
+            margin-bottom: 12px;
+          }
+        }
+        &--decrement,
+        &--increment {
+          width: 100px;
+        }
+        &--cost {
+          width: 95px;
+        }
       }
     }
   }

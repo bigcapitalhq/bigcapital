@@ -957,7 +957,7 @@ export default {
   the_adjustment_has_been_successfully_deleted:
     'The adjustment has been successfully deleted.',
   once_delete_this_inventory_a_adjustment_you_will_able_to_restore_it: `Once you delete this inventory a adjustment, you won\'t be able to restore it later. Are you sure you want to delete this invoice?`,
-  select_adjustment_account: 'Select Adjustment account',
+  select_adjustment_account: 'Select adjustment account',
   qty: 'Quantity on hand',
   money_format: 'Money format',
   show_zero: 'Show zero',
