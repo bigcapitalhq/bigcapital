@@ -1,10 +1,10 @@
 import React from 'react';
-import { FastField, ErrorMessage } from 'formik';
+import { Field, FastField, ErrorMessage } from 'formik';
 import { FormGroup, InputGroup } from '@blueprintjs/core';
-import { Row, Col } from 'components';
-import { inputIntent } from 'utils';
+import { Row, Col, MoneyInputGroup } from 'components';
+import { inputIntent, toSafeNumber } from 'utils';
 import { FormattedMessage as T } from 'react-intl';
-import { decrementCalc, incrementCalc } from './utils';
+import { decrementQuantity, incrementQuantity } from './utils';
 
 function IncrementAdjustmentFields() {
   return (
@@ -31,7 +31,7 @@ function IncrementAdjustmentFields() {
 
       {/*------------ Increment -----------*/}
       <Col className={'col--quantity'}>
-        <FastField name={'quantity'}>
+        <Field name={'quantity'}>
           {({
             form: { values, setFieldValue },
             field,
@@ -43,27 +43,47 @@ function IncrementAdjustmentFields() {
               helperText={<ErrorMessage name="quantity" />}
               fill={true}
             >
-              <InputGroup
-                {...field}
-                onBlur={(event) => {
-                  setFieldValue('new_quantity', incrementCalc(values, event));
+              <MoneyInputGroup
+                value={field.value}
+                allowDecimals={false}
+                allowNegativeValue={true}
+                onChange={(value) => {
+                  setFieldValue('quantity', value);
+                }}
+                onBlurValue={(value) => {
+                  setFieldValue(
+                    'new_quantity',
+                    incrementQuantity(
+                      toSafeNumber(value),
+                      toSafeNumber(values.quantity_on_hand),
+                    ),
+                  );
                 }}
               />
             </FormGroup>
           )}
-        </FastField>
+        </Field>
       </Col>
 
       {/*------------ Cost -----------*/}
       <Col className={'col--cost'}>
         <FastField name={'cost'}>
-          {({ field, meta: { error, touched } }) => (
+          {({
+            form: { setFieldValue },
+            field: { value },
+            meta: { error, touched },
+          }) => (
             <FormGroup
               label={<T id={'cost'} />}
               intent={inputIntent({ error, touched })}
               helperText={<ErrorMessage name="cost" />}
             >
-              <InputGroup medium={'true'} {...field} />
+              <MoneyInputGroup
+                value={value}
+                onChange={(value) => {
+                  setFieldValue('cost', value);
+                }}
+              />
             </FormGroup>
           )}
         </FastField>
@@ -76,7 +96,7 @@ function IncrementAdjustmentFields() {
 
       {/*------------ New quantity -----------*/}
       <Col className={'col--quantity-on-hand'}>
-        <FastField name={'new_quantity'}>
+        <Field name={'new_quantity'}>
           {({
             form: { values, setFieldValue },
             field,
@@ -87,15 +107,26 @@ function IncrementAdjustmentFields() {
               intent={inputIntent({ error, touched })}
               helperText={<ErrorMessage name="new_quantity" />}
             >
-              <InputGroup
-                {...field}
-                onBlur={(event) => {
-                  setFieldValue('quantity', decrementCalc(values, event));
+              <MoneyInputGroup
+                value={field.value}
+                allowDecimals={false}
+                allowNegativeValue={true}
+                onChange={(value) => {
+                  setFieldValue('new_quantity', value);
+                }}
+                onBlurValue={(value) => {
+                  setFieldValue(
+                    'quantity',
+                    decrementQuantity(
+                      toSafeNumber(value),
+                      toSafeNumber(values.quantity_on_hand),
+                    ),
+                  );
                 }}
               />
             </FormGroup>
           )}
-        </FastField>
+        </Field>
       </Col>
     </Row>
   );

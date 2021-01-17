@@ -1,10 +1,11 @@
 import React from 'react';
-import { FastField, ErrorMessage } from 'formik';
+import { Field, ErrorMessage, FastField } from 'formik';
 import { FormGroup, InputGroup } from '@blueprintjs/core';
 import { inputIntent } from 'utils';
-import { Row, Col  } from 'components';
+import { Row, Col, MoneyInputGroup } from 'components';
 import { FormattedMessage as T } from 'react-intl';
-import { decrementCalc, dec } from './utils';
+import { decrementQuantity } from './utils';
+import { toSafeNumber } from 'utils';
 
 function DecrementAdjustmentFields() {
   return (
@@ -27,10 +28,10 @@ function DecrementAdjustmentFields() {
       <Col className={'col--sign'}>
         <span>–</span>
       </Col>
-      
+
       {/*------------ Decrement -----------*/}
       <Col className={'col--decrement'}>
-        <FastField name={'quantity'}>
+        <Field name={'quantity'}>
           {({
             form: { values, setFieldValue },
             field,
@@ -42,15 +43,26 @@ function DecrementAdjustmentFields() {
               helperText={<ErrorMessage name="quantity" />}
               fill={true}
             >
-              <InputGroup
-                {...field}
-                onBlur={(event) => {
-                  setFieldValue('new_quantity', decrementCalc(values, event));
+              <MoneyInputGroup
+                value={field.value}
+                allowDecimals={false}
+                allowNegativeValue={true}
+                onChange={(value) => {
+                  setFieldValue('quantity', value);
+                }}
+                onBlurValue={(value) => {
+                  setFieldValue(
+                    'new_quantity',
+                    decrementQuantity(
+                      toSafeNumber(value),
+                      toSafeNumber(values.quantity_on_hand),
+                    ),
+                  );
                 }}
               />
             </FormGroup>
           )}
-        </FastField>
+        </Field>
       </Col>
 
       <Col className={'col--sign'}>
@@ -58,7 +70,7 @@ function DecrementAdjustmentFields() {
       </Col>
       {/*------------ New quantity -----------*/}
       <Col className={'col--quantity'}>
-        <FastField name={'new_quantity'}>
+        <Field name={'new_quantity'}>
           {({
             form: { values, setFieldValue },
             field,
@@ -69,15 +81,26 @@ function DecrementAdjustmentFields() {
               intent={inputIntent({ error, touched })}
               helperText={<ErrorMessage name="new_quantity" />}
             >
-              <InputGroup
-                {...field}
-                onBlur={(event) => {
-                  setFieldValue('quantity', decrementCalc(values, event));
+              <MoneyInputGroup
+                value={field.value}
+                allowDecimals={false}
+                allowNegativeValue={true}
+                onChange={(value) => {
+                  setFieldValue('new_quantity', value);
+                }}
+                onBlurValue={(value) => {
+                  setFieldValue(
+                    'quantity',
+                    decrementQuantity(
+                      toSafeNumber(value),
+                      toSafeNumber(values.quantity_on_hand),
+                    ),
+                  );
                 }}
               />
             </FormGroup>
           )}
-        </FastField>
+        </Field>
       </Col>
     </Row>
   );

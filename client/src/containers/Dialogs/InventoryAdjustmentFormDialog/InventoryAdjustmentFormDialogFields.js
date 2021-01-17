@@ -1,5 +1,5 @@
 import React from 'react';
-import { FastField, ErrorMessage, useFormikContext } from 'formik';
+import { FastField, ErrorMessage, Field, useFormikContext } from 'formik';
 import {
   Classes,
   FormGroup,
@@ -10,20 +10,21 @@ import {
 import classNames from 'classnames';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { DateInput } from '@blueprintjs/datetime';
+import { compose } from 'redux';
 import { ListSelect, FieldRequiredHint, Col, Row } from 'components';
 import {
   inputIntent,
   momentFormatter,
   tansformDateValue,
   handleDateChange,
+  toSafeNumber
 } from 'utils';
 import { CLASSES } from 'common/classes';
 import adjustmentType from 'common/adjustmentType';
 
 import AccountsSuggestField from 'components/AccountsSuggestField';
 import withAccounts from 'containers/Accounts/withAccounts';
-import { compose } from 'redux';
-import { decrementCalc, incrementCalc, dec } from './utils';
+import { diffQuantity } from './utils';
 import InventoryAdjustmentQuantityFields from './InventoryAdjustmentQuantityFields';
 
 /**
@@ -66,10 +67,11 @@ function InventoryAdjustmentFormDialogFields({
             )}
           </FastField>
         </Col>
+
         <Col xs={5}>
           {/*------------ Adjustment type -----------*/}
-          <FastField name={'type'}>
-            {({ form, field: { value }, meta: { error, touched } }) => (
+          <Field name={'type'}>
+            {({ form: { values, setFieldValue }, field: { value }, meta: { error, touched } }) => (
               <FormGroup
                 label={<T id={'adjustment_type'} />}
                 labelInfo={<FieldRequiredHint />}
@@ -80,16 +82,13 @@ function InventoryAdjustmentFormDialogFields({
                 <ListSelect
                   items={adjustmentType}
                   onItemSelect={(type) => {
-                    form.setFieldValue('type', type.value);
-                    type?.value == 'increment'
-                      ? form.setFieldValue(
-                          'new_quantity',
-                          incrementCalc(values),
-                        )
-                      : form.setFieldValue(
-                          'new_quantity',
-                          values.quantity_on_hand - values.quantity,
-                        );
+                    const result = diffQuantity(
+                      toSafeNumber(values.quantity),
+                      toSafeNumber(values.quantity_on_hand),
+                      type.value
+                    );
+                    setFieldValue('type', type.value);
+                    setFieldValue('new_quantity', result);
                   }}
                   filterable={false}
                   selectedItem={value}
@@ -99,7 +98,7 @@ function InventoryAdjustmentFormDialogFields({
                 />
               </FormGroup>
             )}
-          </FastField>
+          </Field>
         </Col>
       </Row>
 
@@ -145,7 +144,7 @@ function InventoryAdjustmentFormDialogFields({
       </FastField>
 
       {/*------------ description -----------*/}
-      <FastField name={'adjustment_reasons'}>
+      <FastField name={'reason'}>
         {({ field, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'adjustment_reasons'} />}
@@ -153,11 +152,7 @@ function InventoryAdjustmentFormDialogFields({
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name={'adjustment_reasons'} />}
           >
-            <TextArea
-              growVertically={true}
-              large={true}
-              {...field}
-            />
+            <TextArea growVertically={true} large={true} {...field} />
           </FormGroup>
         )}
       </FastField>

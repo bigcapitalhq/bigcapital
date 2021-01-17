@@ -33,7 +33,6 @@ const defaultInitialValues = {
   quantity: '',
   reference_no: '',
   quantity_on_hand: '',
-  description: '',
   publish: '',
 };
 
@@ -73,6 +72,7 @@ function InventoryAdjustmentFormDialogContent({
   // Initial form values.
   const initialValues = {
     ...defaultInitialValues,
+    item_id: itemId,
     quantity_on_hand: get(item, 'quantity_on_hand', 0),
   };
 
@@ -104,7 +104,7 @@ function InventoryAdjustmentFormDialogContent({
   const handleCloseClick = useCallback(() => {
     closeDialog(dialogName);
   }, [closeDialog, dialogName]);
-
+  
   const handleSubmitClick = useCallback(
     (event, payload) => {
       setSubmitPayload({ ...payload });

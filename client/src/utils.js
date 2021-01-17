@@ -388,3 +388,8 @@ export const getColumnWidth = (
 
   return result;
 };
+
+
+export const toSafeNumber = (number) => {
+  return _.toNumber(_.defaultTo(number, 0));
+}

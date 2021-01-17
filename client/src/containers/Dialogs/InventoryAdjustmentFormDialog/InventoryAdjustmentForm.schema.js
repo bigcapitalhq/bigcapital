@@ -11,19 +11,19 @@ const Schema = Yup.object().shape({
   item_id: Yup.number().required(),
   reason: Yup.string()
     .required()
+    .min(3)
+    .max(DATATYPES_LENGTH.TEXT)
     .label(formatMessage({ id: 'reason' })),
   quantity_on_hand: Yup.number()
-    .min(0)
     .required()
     .label(formatMessage({ id: 'qty' })),
-  quantity: Yup.number().integer().max(Yup.ref('quantity_on_hand')).required(),
+  quantity: Yup.number().integer().min(1).required(),
   cost: Yup.number().when(['type'], {
-    is: (type) => type,
-    then: Yup.number(),
+    is: (type) => type === 'increment',
+    then: Yup.number().required(),
   }),
   reference_no: Yup.string(),
-  new_quantity: Yup.number().min(Yup.ref('quantity')).required(),
-  description: Yup.string().min(3).max(DATATYPES_LENGTH.TEXT).nullable().trim(),
+  new_quantity: Yup.number().required(),
   publish: Yup.boolean(),
 });
 
