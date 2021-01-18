@@ -2,32 +2,28 @@ import React, { useCallback, useEffect } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { useQuery } from 'react-query';
 
-import BillForm from './BillForm';
+import EstimateForm from './EstimateForm';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 
-import withVendorActions from 'containers/Vendors/withVendorActions';
-import withAccountsActions from 'containers/Accounts/withAccountsActions';
+import withCustomersActions from 'containers/Customers/withCustomersActions';
 import withItemsActions from 'containers/Items/withItemsActions';
-import withBillActions from './withBillActions';
+import withEstimateActions from './withEstimateActions';
 import withSettingsActions from 'containers/Settings/withSettingsActions';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 
 import { compose } from 'utils';
 
-import 'style/pages/Bills/PageForm.scss';
+import 'style/pages/SaleEstimate/PageForm.scss';
 
-function Bills({
-  // #withwithAccountsActions
-  requestFetchAccounts,
-
-  // #withVendorActions
-  requestFetchVendorsTable,
+function EstimateFormPage({
+  // #withCustomersActions
+  requestFetchCustomers,
 
   // #withItemsActions
   requestFetchItems,
 
-  // #withBilleActions
-  requestFetchBill,
+  // #withEstimateActions
+  requsetFetchEstimate,
 
   // #withSettingsActions
   requestFetchOptions,
@@ -35,7 +31,7 @@ function Bills({
   // #withDashboardActions
   setSidebarShrink,
   resetSidebarPreviousExpand,
-  setDashboardBackLink
+  setDashboardBackLink,
 }) {
   const history = useHistory();
   const { id } = useParams();
@@ -54,51 +50,45 @@ function Bills({
     };
   }, [resetSidebarPreviousExpand, setSidebarShrink, setDashboardBackLink]);
 
-  // Handle fetch accounts
-  const fetchAccounts = useQuery('accounts-list', (key) =>
-    requestFetchAccounts(),
-  );
-
-  // Handle fetch customers data table
-  const fetchVendors = useQuery('vendors-list', () =>
-    requestFetchVendorsTable({}),
+  const fetchEstimate = useQuery(
+    ['estimate', id],
+    (key, _id) => requsetFetchEstimate(_id),
+    { enabled: !!id },
   );
 
   // Handle fetch Items data table or list
   const fetchItems = useQuery('items-list', () => requestFetchItems({}));
 
-  const fetchSettings = useQuery(['settings'], () => requestFetchOptions({}));
+  // Handle fetch customers data table or list
+  const fetchCustomers = useQuery('customers-table', () =>
+    requestFetchCustomers({}),
+  );
 
+  //
   const handleFormSubmit = useCallback(
     (payload) => {
-      payload.redirect && history.push('/bills');
+      payload.redirect && history.push('/estimates');
     },
     [history],
   );
-
   const handleCancel = useCallback(() => {
     history.goBack();
   }, [history]);
 
-  const fetchBill = useQuery(
-    ['bill', id],
-    (key, _id) => requestFetchBill(_id),
-    { enabled: !!id },
-  );
+  const fetchSettings = useQuery(['settings'], () => requestFetchOptions({}));
 
   return (
     <DashboardInsider
       loading={
-        fetchVendors.isFetching ||
+        fetchCustomers.isFetching ||
         fetchItems.isFetching ||
-        fetchAccounts.isFetching ||
-        fetchBill.isFetching
+        fetchEstimate.isFetching
       }
-      name={'bill-form'}
+      name={'estimate-form'}
     >
-      <BillForm
+      <EstimateForm
+        estimateId={id}
         onFormSubmit={handleFormSubmit}
-        billId={id}
         onCancelForm={handleCancel}
       />
     </DashboardInsider>
@@ -106,10 +96,9 @@ function Bills({
 }
 
 export default compose(
-  withBillActions,
-  withVendorActions,
+  withEstimateActions,
+  withCustomersActions,
   withItemsActions,
-  withAccountsActions,
   withSettingsActions,
-  withDashboardActions
-)(Bills);
+  withDashboardActions,
+)(EstimateFormPage);

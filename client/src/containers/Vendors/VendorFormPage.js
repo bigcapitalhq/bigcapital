@@ -11,7 +11,7 @@ import withCurrenciesActions from 'containers/Currencies/withCurrenciesActions';
 
 import { compose } from 'utils';
 
-function Vendor({
+function VendorFormPage({
   // #withVendorActions
   requestFetchVendorsTable,
   requsetFetchVendor,
@@ -65,4 +65,4 @@ function Vendor({
   );
 }
 
-export default compose(withCurrenciesActions, withVendorActions)(Vendor);
+export default compose(withCurrenciesActions, withVendorActions)(VendorFormPage);

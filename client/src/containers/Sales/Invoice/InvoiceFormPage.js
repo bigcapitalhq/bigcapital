@@ -2,30 +2,28 @@ import React, { useCallback, useEffect } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { useQuery } from 'react-query';
 
-import ReceiptFrom from './ReceiptForm';
+import InvoiceForm from './InvoiceForm';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 
 import withCustomersActions from 'containers/Customers/withCustomersActions';
-import withAccountsActions from 'containers/Accounts/withAccountsActions';
 import withItemsActions from 'containers/Items/withItemsActions';
-import withReceiptActions from './withReceiptActions';
+import withInvoiceActions from './withInvoiceActions';
 import withSettingsActions from 'containers/Settings/withSettingsActions';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 
 import { compose } from 'utils';
 
-function Receipts({
-  //#withwithAccountsActions
-  requestFetchAccounts,
+import 'style/pages/SaleInvoice/PageForm.scss';
 
-  //#withCustomersActions
+function InvoiceFormPage({
+  // #withCustomersActions
   requestFetchCustomers,
 
-  //#withItemsActions
+  // #withItemsActions
   requestFetchItems,
 
-  //#withReceiptsActions
-  requestFetchReceipt,
+  // #withInvoiceActions
+  requsetFetchInvoice,
 
   // #withSettingsActions
   requestFetchOptions,
@@ -52,29 +50,26 @@ function Receipts({
     };
   }, [resetSidebarPreviousExpand, setSidebarShrink, setDashboardBackLink]);
 
-  const fetchReceipt = useQuery(
-    ['receipt', id],
-    (key, _id) => requestFetchReceipt(_id),
+  const fetchInvoice = useQuery(
+    ['invoice', id],
+    (key, _id) => requsetFetchInvoice(_id),
     { enabled: !!id },
   );
-  const fetchAccounts = useQuery('accounts-list', (key) =>
-    requestFetchAccounts(),
-  );
 
-  const fetchCustomers = useQuery('customers-table', () =>
-    requestFetchCustomers({}),
-  );
+  const fetchSettings = useQuery(['settings'], () => requestFetchOptions({}));
 
   // Handle fetch Items data table or list
   const fetchItems = useQuery('items-table', () => requestFetchItems({}));
 
-  const fetchSettings = useQuery(['settings'], () => requestFetchOptions({}));
-
   const handleFormSubmit = useCallback(
     (payload) => {
-      payload.redirect && history.push('/receipts');
+      payload.redirect && history.push('/invoices');
     },
     [history],
+  );
+  // Handle fetch customers data table or list
+  const fetchCustomers = useQuery('customers-table', () =>
+    requestFetchCustomers({}),
   );
 
   const handleCancel = useCallback(() => {
@@ -86,14 +81,13 @@ function Receipts({
       loading={
         fetchCustomers.isFetching ||
         fetchItems.isFetching ||
-        fetchAccounts.isFetching ||
-        fetchReceipt.isFetching
+        fetchInvoice.isFetching
       }
-      name={'receipt-form'}
+      name={'invoice-form'}
     >
-      <ReceiptFrom
+      <InvoiceForm
+        invoiceId={id}
         onFormSubmit={handleFormSubmit}
-        receiptId={id}
         onCancelForm={handleCancel}
       />
     </DashboardInsider>
@@ -101,10 +95,9 @@ function Receipts({
 }
 
 export default compose(
-  withReceiptActions,
+  withInvoiceActions,
   withCustomersActions,
   withItemsActions,
-  withAccountsActions,
   withSettingsActions,
   withDashboardActions,
-)(Receipts);
+)(InvoiceFormPage);

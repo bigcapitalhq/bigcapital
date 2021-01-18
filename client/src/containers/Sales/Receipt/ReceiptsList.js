@@ -20,7 +20,7 @@ import withViewsActions from 'containers/Views/withViewsActions';
 
 import { compose } from 'utils';
 
-function ReceiptList({
+function ReceiptsList({
   // #withDashboardActions
   changePageTitle,
 
@@ -54,7 +54,7 @@ function ReceiptList({
   );
 
   useEffect(() => {
-    changePageTitle(formatMessage({ id: 'receipt_list' }));
+    changePageTitle(formatMessage({ id: 'receipts_list' }));
   }, [changePageTitle, formatMessage]);
 
   // handle delete receipt click
@@ -206,4 +206,4 @@ export default compose(
   withReceipts(({ receiptTableQuery }) => ({
     receiptTableQuery,
   })),
-)(ReceiptList);
+)(ReceiptsList);

@@ -19,7 +19,7 @@ import { Icon, Hint, If } from 'components';
 import withSearch from 'containers/GeneralSearch/withSearch';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withDashboard from 'containers/Dashboard/withDashboard';
-
+import QuickNewDropdown from 'containers/QuickNewDropdown/QuickNewDropdown';
 import { compose } from 'utils';
 
 function DashboardTopbar({
@@ -48,6 +48,7 @@ function DashboardTopbar({
     toggleSidebarExpend();
     recordSidebarPreviousExpand();
   };
+
   return (
     <div class="dashboard__topbar">
       <div class="dashboard__topbar-left">
@@ -128,11 +129,7 @@ function DashboardTopbar({
               icon={<Icon icon={'search-24'} iconSize={20} />}
               text={<T id={'quick_find'} />}
             />
-            <Button
-              className={Classes.MINIMAL}
-              icon={<Icon icon={'plus-24'} iconSize={20} />}
-              text={<T id={'quick_new'} />}
-            />
+            <QuickNewDropdown/>
             <Tooltip
               content={<T id={'notifications'} />}
               position={Position.BOTTOM}
@@ -165,7 +162,7 @@ export default compose(
     pageTitle,
     pageSubtitle,
     editViewId,
-    sidebarExpended
+    sidebarExpended,
   })),
   withDashboardActions,
 )(DashboardTopbar);
