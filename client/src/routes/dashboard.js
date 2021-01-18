@@ -18,6 +18,7 @@ export default [
       loader: () => import('containers/Accounts/AccountsChart'),
     }),
     breadcrumb: 'Accounts Chart',
+    hotkey: 'shift+a',
   },
   // Custom views.
   {
@@ -41,6 +42,7 @@ export default [
       loader: () => import('containers/Accounting/MakeJournalEntriesPage'),
     }),
     breadcrumb: 'Make Journal Entry',
+    hotkey: 'ctrl+shift+m',
   },
   {
     path: `/manual-journals/:id/edit`,
@@ -55,6 +57,7 @@ export default [
       loader: () => import('containers/Accounting/ManualJournalsList'),
     }),
     breadcrumb: 'Manual Journals',
+    hotkey: 'shift+m',
   },
   {
     path: `/items/categories`,
@@ -77,6 +80,7 @@ export default [
       loader: () => import('containers/Items/ItemFormPage'),
     }),
     breadcrumb: 'New Item',
+    hotkey: 'ctrl+shift+w',
   },
   {
     path: `/items`,
@@ -84,6 +88,7 @@ export default [
       loader: () => import('containers/Items/ItemsList'),
     }),
     breadcrumb: 'Items',
+    hotkey: 'shift+w',
   },
 
   // Inventory adjustments.
@@ -103,6 +108,7 @@ export default [
         import('containers/FinancialStatements/GeneralLedger/GeneralLedger'),
     }),
     breadcrumb: 'General Ledger',
+    hotkey: 'shift+4',
   },
   {
     path: `/financial-reports/balance-sheet`,
@@ -111,6 +117,7 @@ export default [
         import('containers/FinancialStatements/BalanceSheet/BalanceSheet'),
     }),
     breadcrumb: 'Balance Sheet',
+    hotkey: 'shift+1',
   },
   {
     path: `/financial-reports/trial-balance-sheet`,
@@ -121,6 +128,7 @@ export default [
         ),
     }),
     breadcrumb: 'Trial Balance Sheet',
+    hotkey: 'shift+5',
   },
   {
     path: `/financial-reports/profit-loss-sheet`,
@@ -131,6 +139,7 @@ export default [
         ),
     }),
     breadcrumb: 'Profit Loss Sheet',
+    hotkey: 'shift+2',
   },
   {
     path: '/financial-reports/receivable-aging-summary',
@@ -146,6 +155,7 @@ export default [
       loader: () => import('containers/FinancialStatements/Journal/Journal'),
     }),
     breadcrumb: 'Journal Sheet',
+    hotkey: 'shift+3',
   },
   {
     path: '/financial-reports',
@@ -169,6 +179,7 @@ export default [
       loader: () => import('containers/Expenses/ExpenseFormPage'),
     }),
     breadcrumb: 'Expenses',
+    hotkey: 'ctrl+shift+x',
   },
   {
     path: `/expenses/:id/edit`,
@@ -183,6 +194,7 @@ export default [
       loader: () => import('containers/Expenses/ExpensesList'),
     }),
     breadcrumb: 'Expenses List',
+    hotkey: 'shift+x',
   },
 
   // Customers
@@ -199,6 +211,7 @@ export default [
       loader: () => import('containers/Customers/CustomerFormPage'),
     }),
     breadcrumb: 'New Customer',
+    hotkey: 'ctrl+shift+c',
   },
   {
     path: `/customers`,
@@ -206,6 +219,7 @@ export default [
       loader: () => import('containers/Customers/CustomersList'),
     }),
     breadcrumb: 'Customers',
+    hotkey: 'shift+c',
   },
 
   // Vendors
@@ -222,6 +236,7 @@ export default [
       loader: () => import('containers/Vendors/VendorFormPage'),
     }),
     breadcrumb: 'New Vendor',
+    hotkey: 'ctrl+shift+v',
   },
   {
     path: `/vendors`,
@@ -229,6 +244,7 @@ export default [
       loader: () => import('containers/Vendors/VendorsList'),
     }),
     breadcrumb: 'Vendors',
+    hotkey: 'shift+v',
   },
 
   // Estimates
@@ -245,6 +261,7 @@ export default [
       loader: () => import('containers/Sales/Estimate/EstimateFormPage'),
     }),
     breadcrumb: 'New Estimate',
+    hotkey: 'ctrl+shift+e',
   },
   {
     path: `/estimates`,
@@ -252,6 +269,7 @@ export default [
       loader: () => import('containers/Sales/Estimate/EstimatesList'),
     }),
     breadcrumb: 'Estimates List',
+    hotkey: 'shift+e',
   },
 
   // Invoices.
@@ -268,6 +286,7 @@ export default [
       loader: () => import('containers/Sales/Invoice/InvoiceFormPage'),
     }),
     breadcrumb: 'New Invoice',
+    hotkey: 'ctrl+shift+i',
   },
   {
     path: `/invoices`,
@@ -275,6 +294,7 @@ export default [
       loader: () => import('containers/Sales/Invoice/InvoicesList'),
     }),
     breadcrumb: 'Invoices List',
+    hotkey: 'shift+i',
   },
 
   // Sales Receipts.
@@ -291,6 +311,7 @@ export default [
       loader: () => import('containers/Sales/Receipt/ReceiptFormPage'),
     }),
     breadcrumb: 'New Receipt',
+    hotkey: 'ctrl+shift+r',
   },
   {
     path: `/receipts`,
@@ -298,6 +319,7 @@ export default [
       loader: () => import('containers/Sales/Receipt/ReceiptsList'),
     }),
     breadcrumb: 'Receipts List',
+    hotkey: 'shift+r',
   },
 
   // Payment receives
@@ -340,6 +362,7 @@ export default [
       loader: () => import('containers/Purchases/Bill/BillFormPage'),
     }),
     breadcrumb: 'New Bill',
+    hotkey: 'ctrl+shift+b',
   },
   {
     path: `/bills`,
@@ -347,6 +370,7 @@ export default [
       loader: () => import('containers/Purchases/Bill/BillsList'),
     }),
     breadcrumb: 'Bills List',
+    hotkey: 'shift+b',
   },
 
   // Subscription billing.
@@ -361,14 +385,16 @@ export default [
   {
     path: `/payment-mades/:id/edit`,
     component: LazyLoader({
-      loader: () => import('containers/Purchases/PaymentMades/PaymentMadeFormPage'),
+      loader: () =>
+        import('containers/Purchases/PaymentMades/PaymentMadeFormPage'),
     }),
     breadcrumb: 'Edit',
   },
   {
     path: `/payment-mades/new`,
     component: LazyLoader({
-      loader: () => import('containers/Purchases/PaymentMades/PaymentMadeFormPage'),
+      loader: () =>
+        import('containers/Purchases/PaymentMades/PaymentMadeFormPage'),
     }),
     breadcrumb: 'New Payment Made',
   },

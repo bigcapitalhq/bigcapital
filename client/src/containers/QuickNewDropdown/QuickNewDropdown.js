@@ -21,6 +21,7 @@ function QuickNewDropdown() {
       items={quickNewOptions}
       onItemSelect={(type) => handleClickQuickNew(type)}
       textProp={'name'}
+      labelProp={'label'}
       filterable={false}
       popoverProps={{ minimal: false, position: Position.BOTTOM }}
       defaultText={'Select'}
