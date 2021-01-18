@@ -1,9 +1,11 @@
 import React, { useMemo, useCallback } from 'react';
 import moment from 'moment';
 import classnames from 'classnames';
-import { LoadingIndicator, MODIFIER } from 'components';
 import { FormattedMessage as T, useIntl } from 'react-intl';
-import { If } from 'components';
+
+import { If, LoadingIndicator, MODIFIER } from 'components';
+
+import 'style/pages/FinancialStatements/FinancialSheet.scss';
 
 export default function FinancialSheet({
   companyName,

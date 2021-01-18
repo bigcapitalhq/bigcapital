@@ -31,11 +31,7 @@ function TrialBalanceSheetTable({
       },
       {
         Header: formatMessage({ id: 'credit' }),
-        accessor: 'credit',
-        Cell: ({ cell }) => {
-          const { currency_code, credit } = cell.row.original;
-          return <Money amount={credit} currency={currency_code} />;
-        },
+        accessor: 'formatted_credit',
         className: 'credit',
         width: getColumnWidth(trialBalanceTableRows, `credit`, {
           minWidth: 95,
@@ -43,20 +39,12 @@ function TrialBalanceSheetTable({
       },
       {
         Header: formatMessage({ id: 'debit' }),
-        accessor: 'debit',
-        Cell: ({ cell }) => {
-          const { currency_code, debit } = cell.row.original;
-          return <Money amount={debit} currency={currency_code} />;
-        },
+        accessor: 'formatted_debit',
         width: getColumnWidth(trialBalanceTableRows, `debit`, { minWidth: 95 }),
       },
       {
         Header: formatMessage({ id: 'balance' }),
-        accessor: 'balance',
-        Cell: ({ cell }) => {
-          const { currency_code, balance } = cell.row.original;
-          return <Money amount={balance} currency={currency_code} />;
-        },
+        accessor: 'formatted_balance',
         className: 'balance',
         width: getColumnWidth(trialBalanceTableRows, `balance`, {
           minWidth: 95,

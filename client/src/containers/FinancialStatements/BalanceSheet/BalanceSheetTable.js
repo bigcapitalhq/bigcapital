@@ -2,8 +2,6 @@ import React, { useMemo, useCallback } from 'react';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames';
 
-
-import Money from 'components/Money';
 import FinancialSheet from 'components/FinancialSheet';
 import DataTable from 'components/DataTable';
 
@@ -16,12 +14,7 @@ function TotalCell({ cell }) {
   const row = cell.row.original;
 
   if (row.total) {
-    return (
-      <Money
-        amount={row.total.formatted_amount}
-        currency={row.total.currency_code}
-      />
-    );
+    return row.total.formatted_amount;
   }
   return '';
 }
@@ -32,9 +25,8 @@ const TotalPeriodCell = (index) => ({ cell }) => {
 
   if (original.total_periods && original.total_periods[index]) {
     const amount = original.total_periods[index].formatted_amount;
-    const currencyCode = original.total_periods[index].currency_code;
 
-    return <Money amount={amount} currency={currencyCode} />;
+    return amount;
   }
   return '';
 };

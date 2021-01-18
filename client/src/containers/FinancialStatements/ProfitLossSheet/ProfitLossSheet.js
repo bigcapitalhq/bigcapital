@@ -77,18 +77,28 @@ function ProfitLossSheet({
     { manual: true });
 
   // Handle submit filter.
-  const handleSubmitFilter = useCallback((filter) => {
+  const handleSubmitFilter = (filter) => {
     const _filter = {
       ...filter,
       fromDate: moment(filter.fromDate).format('YYYY-MM-DD'),
       toDate: moment(filter.toDate).format('YYYY-MM-DD'),
     };
     setFilter(_filter);
-  }, [setFilter]);
+  };
+  // Handle number format submit.
+  const handleNumberFormatSubmit = (numberFormat) => {
+    setFilter({
+      ...filter,
+      numberFormat,
+    });
+  };
 
   return (
     <DashboardInsider>
-      <ProfitLossActionsBar />
+      <ProfitLossActionsBar
+        numberFormat={filter.numberFormat}
+        onNumberFormatSubmit={handleNumberFormatSubmit}
+      />
  
       <DashboardPageContent>
         <div class="financial-statement">

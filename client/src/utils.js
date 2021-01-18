@@ -4,6 +4,8 @@ import { Intent } from '@blueprintjs/core';
 import Currency from 'js-money/lib/currency';
 import PProgress from 'p-progress';
 import accounting from 'accounting';
+import deepMapKeys from 'deep-map-keys';
+ 
 
 export function removeEmptyFromObject(obj) {
   obj = Object.assign({}, obj);
@@ -371,8 +373,6 @@ export function isBlank(value) {
   return _.isEmpty(value) && !_.isNumber(value) || _.isNaN(value);
 }
 
-
-
 export const getColumnWidth = (
   rows,
   accessor,
@@ -389,7 +389,32 @@ export const getColumnWidth = (
   return result;
 };
 
-
 export const toSafeNumber = (number) => {
   return _.toNumber(_.defaultTo(number, 0));
+};
+
+export const transformToCamelCase = (object) => {
+  return deepMapKeys(object, (key) => _.snakeCase(key));
+};
+
+
+export function flatObject(obj) {
+  const flatObject = {};
+  const path = []; // current path
+
+  function dig(obj) {
+      if (obj !== Object(obj))
+          /*is primitive, end of path*/
+          return flatObject[path.join('.')] = obj; /*<- value*/ 
+  
+      //no? so this is an object with keys. go deeper on each key down
+      for (let key in obj) {
+          path.push(key);
+          dig(obj[key]);
+          path.pop();
+      }
+  }
+
+  dig(obj);
+  return flatObject;
 }

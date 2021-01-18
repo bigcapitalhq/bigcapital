@@ -5,10 +5,18 @@
     min-width: 720px;
 
     .financial-sheet__table{
-      
+      .thead,
+      .tbody{
+        .tr .td:not(:first-child),
+        .tr .th:not(:first-child) {
+          justify-content: flex-end;
+        }
+      }
       .tbody{
         .tr .td{
           border-bottom: 0;
+          padding-top: 0.4rem;
+          padding-bottom: 0.4rem;
         }
         .balance.td{
           border-top-color: #000;

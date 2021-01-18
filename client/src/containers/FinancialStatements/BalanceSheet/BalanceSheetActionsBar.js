@@ -13,19 +13,25 @@ import classNames from 'classnames';
 
 import Icon from 'components/Icon';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
-import NumberFormats from 'components/NumberFormats';
+import NumberFormatDropdown from 'components/NumberFormatDropdown';
 
-import { compose } from 'utils';
+import { compose, saveInvoke } from 'utils';
 import withBalanceSheetDetail from './withBalanceSheetDetail';
 import withBalanceSheetActions from './withBalanceSheetActions';
+import { safeInvoke } from '@blueprintjs/core/lib/esm/common/utils';
 
 function BalanceSheetActionsBar({
   // #withBalanceSheetDetail
   balanceSheetFilter,
+  balanceSheetLoading,
 
   // #withBalanceSheetActions
   toggleBalanceSheetFilter,
   refreshBalanceSheet,
+
+  // #ownProps
+  numberFormat,
+  onNumberFormatSubmit,
 }) {
   const handleFilterToggleClick = () => {
     toggleBalanceSheetFilter();
@@ -34,6 +40,10 @@ function BalanceSheetActionsBar({
   // Handle recalculate the report button.
   const handleRecalcReport = () => {
     refreshBalanceSheet(true);
+  };
+
+  const handleNumberFormatSubmit = (values) => {
+    safeInvoke(onNumberFormatSubmit, values);
   };
 
   return (
@@ -63,18 +73,13 @@ function BalanceSheetActionsBar({
         <NavbarDivider />
 
         <Popover
-          // content={}
-          interactionKind={PopoverInteractionKind.CLICK}
-          position={Position.BOTTOM_LEFT}
-        >
-          <Button
-            className={classNames(Classes.MINIMAL, 'button--filter')}
-            text={<T id={'filter'} />}
-            icon={<Icon icon="filter-16" iconSize={16} />}
-          />
-        </Popover>
-        <Popover
-          content={<NumberFormats />}
+          content={
+            <NumberFormatDropdown
+              numberFormat={numberFormat}
+              onSubmit={handleNumberFormatSubmit}
+              submitDisabled={balanceSheetLoading}
+            />
+          }
           minimal={true}
           interactionKind={PopoverInteractionKind.CLICK}
           position={Position.BOTTOM_LEFT}
@@ -82,6 +87,18 @@ function BalanceSheetActionsBar({
           <Button
             className={classNames(Classes.MINIMAL, 'button--filter')}
             text={<T id={'format'} />}
+            icon={<Icon icon="numbers" width={23} height={16} />}
+          />
+        </Popover>
+
+        <Popover
+          // content={}
+          interactionKind={PopoverInteractionKind.CLICK}
+          position={Position.BOTTOM_LEFT}
+        >
+          <Button
+            className={classNames(Classes.MINIMAL, 'button--filter')}
+            text={<T id={'filter'} />}
             icon={<Icon icon="filter-16" iconSize={16} />}
           />
         </Popover>
@@ -104,6 +121,9 @@ function BalanceSheetActionsBar({
 }
 
 export default compose(
-  withBalanceSheetDetail(({ balanceSheetFilter }) => ({ balanceSheetFilter })),
+  withBalanceSheetDetail(({ balanceSheetFilter, balanceSheetLoading }) => ({
+    balanceSheetFilter,
+    balanceSheetLoading,
+  })),
   withBalanceSheetActions,
 )(BalanceSheetActionsBar);

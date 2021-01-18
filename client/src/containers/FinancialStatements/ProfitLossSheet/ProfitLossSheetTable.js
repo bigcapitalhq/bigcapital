@@ -32,18 +32,7 @@ function ProfitLossSheetTable({
         ? [
             {
               Header: formatMessage({ id: 'total' }),
-              Cell: ({ cell }) => {
-                const row = cell.row.original;
-                if (row.total) {
-                  return (
-                    <Money
-                      amount={row.total.formatted_amount}
-                      currency={row.total.currency_code}
-                    />
-                  );
-                }
-                return '';
-              },
+              accessor: 'total.formatted_amount',
               className: 'total',
               width: 140,
             },
@@ -53,13 +42,7 @@ function ProfitLossSheetTable({
         ? profitLossColumns.map((column, index) => ({
             id: `date_period_${index}`,
             Header: column,
-            accessor: (row) => {
-              if (row.total_periods && row.total_periods[index]) {
-                const amount = row.total_periods[index].formatted_amount;
-                return <Money amount={amount} currency={'USD'} />;
-              }
-              return '';
-            },
+            accessor: `total_periods[${index}].formatted_amount`,
             width: getColumnWidth(
               profitLossTableRows,
               `total_periods.${index}.formatted_amount`,
@@ -69,7 +52,12 @@ function ProfitLossSheetTable({
           }))
         : []),
     ],
-    [profitLossQuery.display_columns_type, profitLossTableRows, profitLossColumns, formatMessage],
+    [
+      profitLossQuery.display_columns_type,
+      profitLossTableRows,
+      profitLossColumns,
+      formatMessage,
+    ],
   );
 
   // Retrieve default expanded rows of balance sheet.
@@ -81,9 +69,7 @@ function ProfitLossSheetTable({
   // Retrieve conditional datatable row classnames.
   const rowClassNames = useCallback((row) => {
     const { original } = row;
-    const rowTypes = Array.isArray(original.rowTypes)
-      ? original.rowTypes
-      : [];
+    const rowTypes = Array.isArray(original.rowTypes) ? original.rowTypes : [];
 
     return {
       ...rowTypes.reduce((acc, rowType) => {
