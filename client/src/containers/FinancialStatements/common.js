@@ -1,4 +1,5 @@
 import { mapKeys, omit, snakeCase } from 'lodash';
+import { transformToCamelCase, flatObject } from 'utils';
 import { formatMessage } from 'services/intl';
 
 export const displayColumnsByOptions = [
@@ -52,10 +53,11 @@ export const transformDisplayColumnsType = (form) => {
 };
 
 export const transformFilterFormToQuery = (form) => {
-  return mapKeys({
+  const transformed = transformToCamelCase({
     ...omit(form, ['accountsFilter']),
     ...transformDisplayColumnsType(form),
     noneZero: form.accountsFilter === 'without-zero-balance',
     noneTransactions: form.accountsFilter === 'with-transactions',
-  }, (v, k) => snakeCase(k));
+  });
+  return flatObject(transformed);
 };

@@ -13,11 +13,13 @@ import classNames from 'classnames';
 
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import Icon from 'components/Icon';
+import NumberFormatDropdown from 'components/NumberFormatDropdown';
 
 import withARAgingSummary from './withARAgingSummary';
 import withARAgingSummaryActions from './withARAgingSummaryActions';
 
 import { compose } from 'utils';
+import { safeInvoke } from '@blueprintjs/core/lib/esm/common/utils';
 
 /**
  * AR Aging summary sheet - Actions bar.
@@ -25,10 +27,15 @@ import { compose } from 'utils';
 function ARAgingSummaryActionsBar({
   // #withReceivableAging
   receivableAgingFilter,
+  ARAgingSummaryLoading,
 
   // #withReceivableAgingActions
   toggleFilterARAgingSummary,
   refreshARAgingSummary,
+
+  // #ownProps
+  numberFormat,
+  onNumberFormatSubmit,
 }) {
   const handleFilterToggleClick = () => {
     toggleFilterARAgingSummary();
@@ -36,6 +43,10 @@ function ARAgingSummaryActionsBar({
   // Handles re-calculate report button.
   const handleRecalcReport = () => {
     refreshARAgingSummary(true);
+  };
+  // Handle number format submit.
+  const handleNumberFormatSubmit = (numberFormat) => {
+    safeInvoke(onNumberFormatSubmit, numberFormat);
   };
 
   return (
@@ -64,6 +75,25 @@ function ARAgingSummaryActionsBar({
         />
         <NavbarDivider />
 
+        <Popover
+          content={
+            <NumberFormatDropdown
+              numberFormat={numberFormat}
+              onSubmit={handleNumberFormatSubmit}
+              submitDisabled={ARAgingSummaryLoading}
+            />
+          }
+          minimal={true}
+          interactionKind={PopoverInteractionKind.CLICK}
+          position={Position.BOTTOM_LEFT}
+        >
+          <Button
+            className={classNames(Classes.MINIMAL, 'button--filter')}
+            text={<T id={'format'} />}
+            icon={<Icon icon="numbers" width={23} height={16} />}
+          />
+        </Popover>
+
         <Button
           className={Classes.MINIMAL}
           text={<T id={'filter'} />}
@@ -88,7 +118,7 @@ function ARAgingSummaryActionsBar({
 
 export default compose(
   withARAgingSummaryActions,
-  withARAgingSummary(({ receivableAgingSummaryFilter }) => ({
-    receivableAgingFilter: receivableAgingSummaryFilter,
+  withARAgingSummary(({ receivableAgingSummaryLoading }) => ({
+    ARAgingSummaryLoading: receivableAgingSummaryLoading,
   })),
 )(ARAgingSummaryActionsBar);

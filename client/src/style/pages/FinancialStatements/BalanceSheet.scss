@@ -14,6 +14,8 @@
       .tbody{
         .tr .td{
           border-bottom: 0;
+          padding-top: 0.4rem;
+          padding-bottom: 0.4rem;
         }
         .tr.row_type--total-row .td{
           border-top: 1px solid #BBB;

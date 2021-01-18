@@ -104,7 +104,7 @@ export const ARAgingSummaryTableRowsMapper = (sheet, total) => {
   return [
     ...rows,
     {
-      name: 'Total Aged Receivable',
+      name: '',
       rowType: 'total',
       current: sheet.total.current.formatted_amount,
       ...mapAging(sheet.total.aging),

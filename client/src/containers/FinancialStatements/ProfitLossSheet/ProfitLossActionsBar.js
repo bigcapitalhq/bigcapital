@@ -13,19 +13,25 @@ import classNames from 'classnames';
 
 import Icon from 'components/Icon';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
+import NumberFormatDropdown from 'components/NumberFormatDropdown';
 
 import withProfitLossActions from './withProfitLossActions';
 import withProfitLoss from './withProfitLoss';
 
-import { compose } from 'utils';
+import { compose, saveInvoke } from 'utils';
 
 function ProfitLossActionsBar({
   // #withProfitLoss
   profitLossSheetFilter,
+  profitLossSheetLoading,
 
   // #withProfitLossActions
   toggleProfitLossSheetFilter,
   refreshProfitLossSheet,
+
+  // #ownProps
+  numberFormat,
+  onNumberFormatSubmit,
 }) {
   const handleFilterClick = () => {
     toggleProfitLossSheetFilter();
@@ -33,6 +39,10 @@ function ProfitLossActionsBar({
 
   const handleRecalcReport = () => {
     refreshProfitLossSheet(true);
+  };
+  // Handle number format submit.
+  const handleNumberFormatSubmit = (values) => {
+    saveInvoke(onNumberFormatSubmit, values);
   };
 
   return (
@@ -60,6 +70,25 @@ function ProfitLossActionsBar({
           active={profitLossSheetFilter}
         />
         <NavbarDivider />
+
+        <Popover
+          content={
+            <NumberFormatDropdown
+              numberFormat={numberFormat}
+              onSubmit={handleNumberFormatSubmit}
+              submitDisabled={profitLossSheetLoading}
+            />
+          }
+          minimal={true}
+          interactionKind={PopoverInteractionKind.CLICK}
+          position={Position.BOTTOM_LEFT}
+        >
+          <Button
+            className={classNames(Classes.MINIMAL, 'button--filter')}
+            text={<T id={'format'} />}
+            icon={<Icon icon="numbers" width={23} height={16} />}
+          />
+        </Popover>
 
         <Popover
           // content={}

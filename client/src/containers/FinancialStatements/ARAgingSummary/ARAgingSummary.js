@@ -94,9 +94,19 @@ function ReceivableAgingSummarySheet({
     [refreshARAgingSummary, toggleFilterARAgingSummary],
   );
 
+  const handleNumberFormatSubmit = (numberFormat) => {
+    setQuery({
+      ...query,
+      numberFormat
+    });
+    refreshARAgingSummary(true);
+  };
+
   return (
     <DashboardInsider>
-      <ARAgingSummaryActionsBar />
+      <ARAgingSummaryActionsBar
+        numberFormat={query.numberFormat}
+        onNumberFormatSubmit={handleNumberFormatSubmit}/>
 
       <DashboardPageContent>
         <FinancialStatement>

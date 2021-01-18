@@ -1,5 +1,5 @@
-import { mapKeys, snakeCase } from 'lodash';
+import { transformToCamelCase, flatObject } from 'utils';
 
 export const transfromFilterFormToQuery = (form) => {
-  return mapKeys(form, (v, k) => snakeCase(k));
+  return flatObject(transformToCamelCase(form));
 };

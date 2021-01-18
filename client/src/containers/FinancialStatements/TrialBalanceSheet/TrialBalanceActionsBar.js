@@ -13,18 +13,24 @@ import { FormattedMessage as T } from 'react-intl';
 
 import Icon from 'components/Icon';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
+import NumberFormatDropdown from 'components/NumberFormatDropdown';
 
 import withTrialBalance from './withTrialBalance';
 import withTrialBalanceActions from './withTrialBalanceActions';
-import { compose } from 'utils';
+import { compose, saveInvoke } from 'utils';
 
 function TrialBalanceActionsBar({
   // #withTrialBalance
   trialBalanceSheetFilter,
+  trialBalanceSheetLoading,
 
   // #withTrialBalanceActions
   toggleTrialBalanceFilter,
   refreshTrialBalance,
+
+  // #ownProps
+  numberFormat,
+  onNumberFormatSubmit
 }) {
   const handleFilterToggleClick = () => {
     toggleTrialBalanceFilter();
@@ -34,6 +40,10 @@ function TrialBalanceActionsBar({
     refreshTrialBalance(true);
   };
 
+  // Handle number format submit.
+  const handleNumberFormatSubmit = (values) => {
+    saveInvoke(onNumberFormatSubmit, values);
+  };
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -59,6 +69,25 @@ function TrialBalanceActionsBar({
           onClick={handleFilterToggleClick}
         />
         <NavbarDivider />
+
+        <Popover
+          content={
+            <NumberFormatDropdown
+              numberFormat={numberFormat}
+              onSubmit={handleNumberFormatSubmit}
+              submitDisabled={trialBalanceSheetLoading}
+            />
+          }
+          minimal={true}
+          interactionKind={PopoverInteractionKind.CLICK}
+          position={Position.BOTTOM_LEFT}
+        >
+          <Button
+            className={classNames(Classes.MINIMAL, 'button--filter')}
+            text={<T id={'format'} />}
+            icon={<Icon icon="numbers" width={23} height={16} />}
+          />
+        </Popover>
 
         <Popover
           // content={}
@@ -88,8 +117,9 @@ function TrialBalanceActionsBar({
 }
 
 export default compose(
-  withTrialBalance(({ trialBalanceSheetFilter }) => ({
+  withTrialBalance(({ trialBalanceSheetFilter, trialBalanceSheetLoading }) => ({
     trialBalanceSheetFilter,
+    trialBalanceSheetLoading
   })),
   withTrialBalanceActions,
 )(TrialBalanceActionsBar);

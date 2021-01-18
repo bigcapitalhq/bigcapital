@@ -92,9 +92,20 @@ function TrialBalanceSheet({
     }
   }, [trialBalanceSheetRefresh, refreshTrialBalance]);
 
+  const handleNumberFormatSubmit = (numberFormat) => {
+    setFilter({
+      ...filter,
+      numberFormat,
+    });
+    refreshTrialBalance(false);
+  };
+
   return (
     <DashboardInsider>
-      <TrialBalanceActionsBar />
+      <TrialBalanceActionsBar
+        numberFormat={filter.numberFormat}
+        onNumberFormatSubmit={handleNumberFormatSubmit}
+      />
 
       <DashboardPageContent>
         <div class="financial-statement">
@@ -102,7 +113,6 @@ function TrialBalanceSheet({
             pageFilter={filter}
             onSubmitFilter={handleFilterSubmit}
           />
-
           <div class="financial-statement__body">
             <TrialBalanceSheetTable companyName={organizationName} />
           </div>

@@ -6,6 +6,8 @@ import moment from 'moment';
 import { useIntl } from 'react-intl';
 import { queryCache } from 'react-query';
 
+import 'style/pages/FinancialStatements/BalanceSheet.scss';
+
 import BalanceSheetHeader from './BalanceSheetHeader';
 import BalanceSheetTable from './BalanceSheetTable';
 
@@ -21,8 +23,9 @@ import withBalanceSheetDetail from './withBalanceSheetDetail';
 
 import { transformFilterFormToQuery } from 'containers/FinancialStatements/common';
 
-import 'style/pages/FinancialStatements/BalanceSheet.scss';
-
+/**
+ * Balance sheet.
+ */
 function BalanceSheet({
   // #withDashboardActions
   changePageTitle,
@@ -47,10 +50,11 @@ function BalanceSheet({
     displayColumnsType: 'total',
     accountsFilter: 'all-accounts',
   });
-
   // Fetches the balance sheet.
   const fetchHook = useQuery(['balance-sheet', filter], (key, query) =>
-    fetchBalanceSheet({ ...transformFilterFormToQuery(query) }),
+    fetchBalanceSheet({
+      ...transformFilterFormToQuery(query),
+    }),
   );
 
   useEffect(() => {
@@ -76,23 +80,30 @@ function BalanceSheet({
   }, [setDashboardBackLink]);
 
   // Handle re-fetch balance sheet after filter change.
-  const handleFilterSubmit = useCallback(
-    (filter) => {
-      const _filter = {
-        ...filter,
-        fromDate: moment(filter.fromDate).format('YYYY-MM-DD'),
-        toDate: moment(filter.toDate).format('YYYY-MM-DD'),
-      };
-      setFilter({ ..._filter });
-      refreshBalanceSheet(true);
-    },
-    [setFilter, refreshBalanceSheet],
-  );
+  const handleFilterSubmit = (filter) => {
+    const _filter = {
+      ...filter,
+      fromDate: moment(filter.fromDate).format('YYYY-MM-DD'),
+      toDate: moment(filter.toDate).format('YYYY-MM-DD'),
+    };
+    setFilter({ ..._filter });
+    refreshBalanceSheet(true);
+  };
+
+  const handleNumberFormatSubmit = (values) => {
+    setFilter({
+      ...filter,
+      numberFormat: values,
+    });
+    refreshBalanceSheet(true);
+  };
 
   return (
     <DashboardInsider>
-      <BalanceSheetActionsBar />
-
+      <BalanceSheetActionsBar
+        numberFormat={filter.numberFormat}
+        onNumberFormatSubmit={handleNumberFormatSubmit}
+      />
       <DashboardPageContent>
         <FinancialStatement>
           <BalanceSheetHeader
