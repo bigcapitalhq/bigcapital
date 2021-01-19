@@ -10,12 +10,12 @@ import DialogsContainer from 'components/DialogsContainer';
 import PreferencesPage from 'components/Preferences/PreferencesPage';
 import Search from 'containers/GeneralSearch/Search';
 import DashboardSplitPane from 'components/Dashboard/DashboardSplitePane';
-
+import GlobalHotkeys from './GlobalHotkeys';
 import withSettingsActions from 'containers/Settings/withSettingsActions';
 
 import { compose } from 'utils';
 
-import 'style/pages/Dashboard/Dashboard.scss'
+import 'style/pages/Dashboard/Dashboard.scss';
 
 /**
  * Dashboard page.
@@ -46,6 +46,7 @@ function Dashboard({
 
       <Search />
       <DialogsContainer />
+      <GlobalHotkeys />
     </DashboardLoadingIndicator>
   );
 }

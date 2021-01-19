@@ -12,8 +12,8 @@ import quickNewOptions from 'common/quickNewOptions';
 function QuickNewDropdown() {
   const history = useHistory();
 
-  const handleClickQuickNew = ({ id }) => {
-    history.push(`/${id}`);
+  const handleClickQuickNew = ({path }) => {
+    history.push(`/${path}`);
   };
 
   return (
@@ -21,6 +21,7 @@ function QuickNewDropdown() {
       items={quickNewOptions}
       onItemSelect={(type) => handleClickQuickNew(type)}
       textProp={'name'}
+      labelProp={'label'}
       filterable={false}
       popoverProps={{ minimal: false, position: Position.BOTTOM }}
       defaultText={'Select'}
