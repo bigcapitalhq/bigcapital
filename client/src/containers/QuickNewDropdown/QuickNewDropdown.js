@@ -12,8 +12,8 @@ import quickNewOptions from 'common/quickNewOptions';
 function QuickNewDropdown() {
   const history = useHistory();
 
-  const handleClickQuickNew = ({ id }) => {
-    history.push(`/${id}`);
+  const handleClickQuickNew = ({path }) => {
+    history.push(`/${path}`);
   };
 
   return (

@@ -5,25 +5,19 @@ import routes from 'routes/dashboard';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import { compose } from 'utils';
 
-
 function GlobalHotkeys({
   // #withDashboardActions
   toggleSidebarExpend,
-  recordSidebarPreviousExpand,
 }) {
   const history = useHistory();
 
-  const globalHotkeys = (function (array) {
-    const result = [];
-    array.forEach(({ hotkey }) =>
-      typeof hotkey !== 'undefined' ? result.push(hotkey) : null,
-    );
-    return result.toString();
-  })(routes);
-
-  const handleSidebarToggleBtn = () => {
+  const globalHotkeys = routes
+    .filter(({ hotkey }) => hotkey)
+    .map(({ hotkey }) => hotkey)
+    .toString();
+  
+    const handleSidebarToggleBtn = () => {
     toggleSidebarExpend();
-    recordSidebarPreviousExpand();
   };
   useHotkeys(
     globalHotkeys,
