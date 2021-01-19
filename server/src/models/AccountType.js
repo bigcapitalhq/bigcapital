@@ -57,20 +57,24 @@ export default class AccountType extends TenantModel {
    */
   static get labels() {
     return {
+      inventory: 'Inventory',
+      other_current_asset: 'Other current asset',
+      bank: 'Bank account',
+      cash: 'Cash',
       fixed_asset: 'Fixed asset',
-      current_asset: "Current asset",
-      long_term_liability: "Long term liability",
-      current_liability: "Current liability",
+      non_current_asset: 'Non-current asset',
+      accounts_payable: 'Accounts payable (A/P)',
+      accounts_receivable: 'Accounts receivable (A/R)',
+      credit_card: 'Credit card',
+      long_term_liability: 'Long term liability',
+      other_current_liability: 'Other current liability',
+      other_liability: 'Other liability',
       equity: "Equity",
       expense: "Expense",
       income: "Income",
-      accounts_receivable: "Accounts receivable",
-      accounts_payable: "Accounts payable",
-      other_expense: "Other expense",
       other_income: "Other income",
+      other_expense: "Other expense",
       cost_of_goods_sold: "Cost of goods sold (COGS)",
-      other_liability: "Other liability",
-      other_asset: 'Other asset',
     };
   }
 }

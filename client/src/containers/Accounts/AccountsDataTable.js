@@ -145,7 +145,7 @@ function AccountsDataTable({
         Header: formatMessage({ id: 'code' }),
         accessor: 'code',
         className: 'code',
-        width: 125,
+        width: 70,
       },
       {
         id: 'type',
@@ -160,13 +160,13 @@ function AccountsDataTable({
         Cell: NormalCell,
         accessor: 'type.normal',
         className: 'normal',
-        width: 115,
+        width: 65,
       },
       {
         id: 'currency',
         Header: formatMessage({ id: 'currency' }),
         accessor: (row) => 'USD',
-        width: 100,
+        width: 75,
       },
       {
         id: 'balance',
