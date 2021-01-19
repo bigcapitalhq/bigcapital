@@ -1,5 +1,3 @@
-import logger from "src/loaders/logger";
-
 import { Request, Response, NextFunction } from 'express';
 import { Container } from 'typedi';
 

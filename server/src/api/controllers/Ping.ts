@@ -2,7 +2,7 @@ import { Router, Request, Response } from 'express';
 
 export default class Ping {
   /**
-   * Router constur
+   * Router constructor.
    */
   router() {
     const router = Router();

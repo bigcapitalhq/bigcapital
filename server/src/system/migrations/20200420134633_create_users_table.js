@@ -4,8 +4,8 @@ exports.up = function (knex) {
     table.increments();
     table.string('first_name');
     table.string('last_name');
-    table.string('email').unique().index();
-    table.string('phone_number').unique().index();
+    table.string('email').index();
+    table.string('phone_number').index();
     table.string('password');
     table.boolean('active').index();
     table.string('language');

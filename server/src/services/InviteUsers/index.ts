@@ -12,13 +12,14 @@ import { hashPassword } from 'utils';
 import TenancyService from 'services/Tenancy/TenancyService';
 import InviteUsersMailMessages from 'services/InviteUsers/InviteUsersMailMessages';
 import events from 'subscribers/events';
-import { ISystemUser, IInviteUserInput } from 'interfaces';
+import { ISystemUser, IInviteUserInput, IUserInvite } from 'interfaces';
 import TenantsManagerService from 'services/Tenancy/TenantsManager';
 
 const ERRORS = {
   EMAIL_ALREADY_INVITED: 'EMAIL_ALREADY_INVITED',
   INVITE_TOKEN_INVALID: 'INVITE_TOKEN_INVALID',
-  PHONE_NUMBER_EXISTS: 'PHONE_NUMBER_EXISTS'
+  PHONE_NUMBER_EXISTS: 'PHONE_NUMBER_EXISTS',
+  EMAIL_EXISTS: 'EMAIL_EXISTS'
 };
 @Service()
 export default class InviteUserService {
@@ -66,12 +67,16 @@ export default class InviteUserService {
     const user = await systemUserRepository.findOneByEmail(inviteToken.email);
 
     // Sets the invited user details after invite accepting.
-    const updateUserOper = systemUserRepository.update({
-      ...inviteUserInput,
-      active: 1,
-      inviteAcceptedAt: moment().format('YYYY-MM-DD'),
-      password: hashedPassword,
-    }, { id: user.id });
+    const systemUserOper = systemUserRepository.create(
+      {
+        ...inviteUserInput,
+        email: inviteToken.email,
+        tenantId: inviteToken.tenantId,
+        active: 1,
+        inviteAcceptedAt: moment().format('YYYY-MM-DD'),
+        password: hashedPassword,
+      },
+    );
 
     this.logger.info('[accept_invite] trying to delete the given token.');
     const deleteInviteTokenOper = Invite.query()
@@ -79,14 +84,14 @@ export default class InviteUserService {
       .delete();
 
     // Await all async operations.
-    const [updatedUser] = await Promise.all([
-      updateUserOper,
+    const [systemUser] = await Promise.all([
+      systemUserOper,
       deleteInviteTokenOper,
     ]);
     // Triggers `onUserAcceptInvite` event.
     this.eventDispatcher.dispatch(events.inviteUser.acceptInvite, {
       inviteToken,
-      user: updatedUser,
+      user: systemUser,
     });
   }
 
@@ -96,20 +101,20 @@ export default class InviteUserService {
    * @param {string} email -
    * @param {IUser} authorizedUser -
    *
-   * @return {Promise<IInvite>}
+   * @return {Promise<IUserInvite>}
    */
   public async sendInvite(
     tenantId: number,
     email: string,
     authorizedUser: ISystemUser
   ): Promise<{
-    invite: IInvite,
-    user: ISystemUser
+    invite: IUserInvite;
   }> {
-    const { systemUserRepository } = this.sysRepositories;
-
     // Throw error in case user email exists.
     await this.throwErrorIfUserEmailExists(email);
+
+    // Throws service error in case the user already invited.
+    await this.throwErrorIfUserInvited(email);
 
     this.logger.info('[send_invite] trying to store invite token.');
     const invite = await Invite.query().insert({
@@ -121,16 +126,13 @@ export default class InviteUserService {
     this.logger.info(
       '[send_invite] trying to store user with email and tenant.'
     );
-    const user = await systemUserRepository.create({
-      email,
-      tenant_id: authorizedUser.tenantId,
-      active: 1,
-    });
     // Triggers `onUserSendInvite` event.
     this.eventDispatcher.dispatch(events.inviteUser.sendInvite, {
-      invite, authorizedUser, tenantId
+      invite,
+      authorizedUser,
+      tenantId,
     });
-    return { invite, user };
+    return { invite };
   }
 
   /**
@@ -140,7 +142,7 @@ export default class InviteUserService {
    */
   public async checkInvite(
     token: string
-  ): Promise<{ inviteToken: string; orgName: object }> {
+  ): Promise<{ inviteToken: IUserInvite; orgName: object }> {
     const inviteToken = await this.getInviteOrThrowError(token);
 
     // Find the tenant that associated to the given token.
@@ -170,14 +172,27 @@ export default class InviteUserService {
    */
   private async throwErrorIfUserEmailExists(
     email: string
-  ): Promise<ISystemUser> {
+  ): Promise<void> {
     const { systemUserRepository } = this.sysRepositories;
     const foundUser = await systemUserRepository.findOneByEmail(email);
 
     if (foundUser) {
+      throw new ServiceError(ERRORS.EMAIL_EXISTS);
+    }
+  }
+
+  /**
+   * Throws service error if the user already invited.
+   * @param {string} email -  
+   */
+  private async throwErrorIfUserInvited(
+    email: string,
+  ): Promise<void> {
+    const inviteToken = await Invite.query().findOne('email', email);
+
+    if (inviteToken) {
       throw new ServiceError(ERRORS.EMAIL_ALREADY_INVITED);
     }
-    return foundUser;
   }
 
   /**
@@ -186,7 +201,7 @@ export default class InviteUserService {
    * @throws {ServiceError}
    * @returns {Invite}
    */
-  private async getInviteOrThrowError(token: string) {
+  private async getInviteOrThrowError(token: string): Promise<IUserInvite> {
     const inviteToken = await Invite.query().findOne('token', token);
 
     if (!inviteToken) {

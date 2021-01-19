@@ -1,6 +1,6 @@
+import { Model } from 'objection';
 
-
-export interface ISystemUser {
+export interface ISystemUser extends Model {
   id: number,
   firstName: string,
   lastName: string,
@@ -34,4 +34,12 @@ export interface IInviteUserInput {
   lastName: string,
   phoneNumber: string,
   password: string,
+};
+
+export interface IUserInvite {
+  id: number,
+  email: string,
+  token: string,
+  tenantId: number,
+  createdAt?: Date,
 }

@@ -22,7 +22,6 @@ export default class SystemUserRepository extends SystemRepository {
 
     return this.cache.get(cacheKey, () => {
       return this.model.query()
-        .whereNotDeleted()
         .findOne('email', crediential)
         .orWhere('phone_number', crediential);
     });
@@ -39,7 +38,6 @@ export default class SystemUserRepository extends SystemRepository {
 
     return this.cache.get(cacheKey, () => {
       return this.model.query()
-        .whereNotDeleted()
         .findOne({ id: userId, tenant_id: tenantId });
     });
   }
@@ -53,7 +51,7 @@ export default class SystemUserRepository extends SystemRepository {
     const cacheKey = this.getCacheKey('findOneByEmail', email);
 
     return this.cache.get(cacheKey, () => {
-      return this.model.query().whereNotDeleted().findOne('email', email);
+      return this.model.query().findOne('email', email);
     });
   }
 
@@ -67,7 +65,6 @@ export default class SystemUserRepository extends SystemRepository {
 
     return this.cache.get(cacheKey, () => {
       return this.model.query()
-        .whereNotDeleted()
         .findOne('phoneNumber', phoneNumber);
     });
   }
