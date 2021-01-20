@@ -43,6 +43,7 @@ import DashboardCard from './Dashboard/DashboardCard';
 import InputPrependText from './Forms/InputPrependText';
 import PageFormBigNumber from './PageFormBigNumber';
 import AccountsMultiSelect from './AccountsMultiSelect';
+import CustomersMultiSelect from './CustomersMultiSelect';
 
 const Hint = FieldHint;
 
@@ -91,5 +92,6 @@ export {
   InputPrependText,
   PageFormBigNumber,
   AccountsMultiSelect,
-  DataTableEditable
+  DataTableEditable,
+  CustomersMultiSelect
 };

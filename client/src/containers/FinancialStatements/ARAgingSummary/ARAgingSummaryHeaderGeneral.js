@@ -1,15 +1,28 @@
 import React from 'react';
 import { FastField } from 'formik';
 import { DateInput } from '@blueprintjs/datetime';
-import { Intent, FormGroup, InputGroup, Position } from '@blueprintjs/core';
+import {
+  Intent,
+  FormGroup,
+  InputGroup,
+  Position,
+  Classes,
+} from '@blueprintjs/core';
 import { FormattedMessage as T } from 'react-intl';
-import { Row, Col, FieldHint } from 'components';
+import classNames from 'classnames';
+import { CustomersMultiSelect, Row, Col, FieldHint } from 'components';
 import { momentFormatter } from 'utils';
+import withCustomers from 'containers/Customers/withCustomers';
+
+import { compose } from 'redux';
 
 /**
  * AR Aging Summary - Drawer Header - General Fields.
  */
-export default function ARAgingSummaryHeaderGeneral({}) {
+function ARAgingSummaryHeaderGeneral({
+  // #withCustomers
+  customers,
+}) {
   return (
     <div>
       <Row>
@@ -48,7 +61,11 @@ export default function ARAgingSummaryHeaderGeneral({}) {
                 className={'form-group--aging-before-days'}
                 intent={error && Intent.DANGER}
               >
-                <InputGroup medium={true} intent={error && Intent.DANGER} {...field } />
+                <InputGroup
+                  medium={true}
+                  intent={error && Intent.DANGER}
+                  {...field}
+                />
               </FormGroup>
             )}
           </FastField>
@@ -65,12 +82,31 @@ export default function ARAgingSummaryHeaderGeneral({}) {
                 className={'form-group--aging-periods'}
                 intent={error && Intent.DANGER}
               >
-                <InputGroup medium={true} intent={error && Intent.DANGER} {...field} />
+                <InputGroup
+                  medium={true}
+                  intent={error && Intent.DANGER}
+                  {...field}
+                />
               </FormGroup>
             )}
           </FastField>
         </Col>
       </Row>
+      <Row>
+        <Col xs={5}>
+          <FormGroup
+            label={<T id={'specific_customers'} />}
+            className={classNames('form-group--select-list', Classes.FILL)}
+          >
+            <CustomersMultiSelect customers={customers} />
+          </FormGroup>
+        </Col>
+      </Row>
     </div>
   );
 }
+export default compose(
+  withCustomers(({ customers }) => ({
+    customers,
+  })),
+)(ARAgingSummaryHeaderGeneral);
