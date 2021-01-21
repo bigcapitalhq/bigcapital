@@ -191,7 +191,7 @@ export default function DataTable({
 
   // Renders table cell.
   const RenderCell = useCallback(
-    ({ row, cell, index }) => (
+    ({ row, cell, column, index }) => (
       <ConditionalWrapper
         condition={expandToggleColumn === index && expandable}
         wrapper={(children) => (
@@ -199,6 +199,7 @@ export default function DataTable({
             style={{
               'padding-left': `${row.depth * expandColumnSpace}rem`,
             }}
+            className={'expend-padding'}
           >
             {children}
           </div>
@@ -224,7 +225,14 @@ export default function DataTable({
             />
           </span>
         </If>
-        {cell.render('Cell')}
+
+        <ConditionalWrapper
+          condition={cell.column.textOverview}
+          wrapper={(children) => (
+            <span class="text-overview">{ children }</span>
+          )}>
+          {cell.render('Cell')}
+        </ConditionalWrapper>
       </ConditionalWrapper>
     ),
     [expandable, expandToggleColumn, expandColumnSpace],
@@ -276,7 +284,13 @@ export default function DataTable({
             return (
               <div
                 {...cell.getCellProps({
-                  className: classnames(cell.column.className || '', 'td'),
+                  className: classnames(
+                    cell.column.className,
+                    'td',
+                    {
+                      'is-text-overview': cell.column.textOverview,
+                    }
+                  ),
                 })}
                 onContextMenu={handleRowContextMenu(cell, row)}
               >

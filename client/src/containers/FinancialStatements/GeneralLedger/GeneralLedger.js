@@ -49,6 +49,7 @@ function GeneralLedger({
     fromDate: moment().startOf('year').format('YYYY-MM-DD'),
     toDate: moment().endOf('year').format('YYYY-MM-DD'),
     basis: 'accural',
+    accountsFilter: 'with-transactions',
   });
 
   // Change page title of the dashboard.

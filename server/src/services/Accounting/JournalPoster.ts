@@ -72,6 +72,13 @@ export default class JournalPoster implements IJournalPoster {
   }
 
   /**
+   * 
+   */
+  public isEmpty() {
+    return this.entries.length === 0;
+  }
+
+  /**
    * Writes the credit entry for the given account.
    * @param {IJournalEntry} entry -
    */

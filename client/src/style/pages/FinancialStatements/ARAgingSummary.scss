@@ -13,20 +13,22 @@
           }
         }
         .tbody{
-          .tr .td{
-            border-bottom: 0;
-            padding-top: 0.4rem;
-            padding-bottom: 0.4rem;
-          }
-          .tr:not(:first-child) .td{
-            border-top: 1px solid transparent;
-          }
-          .tr.row-type--total{
-            font-weight: 500;
-  
+          .tr:not(.no-results) {
             .td{
-              border-top: 1px solid #333;
-              border-bottom: 3px double #333;
+              border-bottom: 0;
+              padding-top: 0.4rem;
+              padding-bottom: 0.4rem;
+            }
+            &.row-type--total{
+              font-weight: 500;
+              
+              .td{
+                border-top: 1px solid #333;
+                border-bottom: 3px double #333;
+              }
+            }
+            &:not(:first-child) .td{
+              border-top: 1px solid transparent;
             }
           }
         }

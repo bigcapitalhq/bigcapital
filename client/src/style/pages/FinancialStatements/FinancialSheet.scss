@@ -3,9 +3,17 @@
  
   &--financial-report{
     .table {
+      .tbody{
+
+        .tr.no-results {
+          .td{
+            border-bottom: 1px solid #DDD;
+          }
+        }
+      }
       .thead{
         .tr .th{
-          background: transparent;
+          background-color: #fff;
           border-top: 1px solid #666;
           border-bottom: 1px solid #666;
   

@@ -50,6 +50,10 @@ export default class ProfitLossSheet extends FinancialSheet {
     this.initDateRangeCollection();
   }
 
+  get otherIncomeAccounts() {
+    return this.accounts.filter((a) => a.type.key === 'other_income');
+  }
+
   /**
    * Filtering income accounts.
    * @return {IAccount & { type: IAccountType }[]}
@@ -235,6 +239,14 @@ export default class ProfitLossSheet extends FinancialSheet {
     };
   }
 
+  private get otherIncomeSection(): any {
+    return {
+      name: 'Other Income',
+      entryNormal: 'credit',
+      ...this.sectionMapper(this.otherIncomeAccounts)
+    }
+  }
+
   /**
    * Retreive expenses section.
    * @return {IProfitLossSheetLossSection}
@@ -343,10 +355,14 @@ export default class ProfitLossSheet extends FinancialSheet {
    * @return {IProfitLossSheetStatement}
    */
   public reportData(): IProfitLossSheetStatement {
+    if (this.journal.isEmpty()) {
+      return null;
+    }
     const income = this.incomeSection;
     const costOfSales = this.costOfSalesSection;
     const expenses = this.expensesSection;
     const otherExpenses = this.otherExpensesSection;
+    const otherIncome = this.otherIncomeSection;
 
     // - Gross profit = Total income - COGS.
     const grossProfit = this.getSummarySection(income, costOfSales);
@@ -356,7 +372,6 @@ export default class ProfitLossSheet extends FinancialSheet {
       expenses,
       costOfSales,
     ]);
-
     // - Net income = Operating profit - Other expenses.
     const netIncome = this.getSummarySection(operatingProfit, otherExpenses);
 
@@ -365,6 +380,7 @@ export default class ProfitLossSheet extends FinancialSheet {
       costOfSales,
       grossProfit,
       expenses,
+      otherIncome,
       otherExpenses,
       netIncome,
       operatingProfit,

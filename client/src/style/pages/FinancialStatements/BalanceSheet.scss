@@ -36,7 +36,7 @@
         .tr.is-expanded{
           .td.total,
           .td.total-period{
-            > span{
+            > span.cell-text{
               display: none;
             }
           }

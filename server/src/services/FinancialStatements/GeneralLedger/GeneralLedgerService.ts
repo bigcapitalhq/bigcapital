@@ -7,6 +7,8 @@ import TenancyService from 'services/Tenancy/TenancyService';
 import Journal from 'services/Accounting/JournalPoster';
 import GeneralLedgerSheet from 'services/FinancialStatements/GeneralLedger/GeneralLedger';
 
+import { transformToMap } from 'utils';
+
 const ERRORS = {
   ACCOUNTS_NOT_FOUND: 'ACCOUNTS_NOT_FOUND',
 };
@@ -70,6 +72,7 @@ export default class GeneralLedgerService {
     const {
       accountRepository,
       transactionsRepository,
+      contactRepository
     } = this.tenancy.repositories(tenantId);
     const settings = this.tenancy.settings(tenantId);
 
@@ -88,6 +91,10 @@ export default class GeneralLedgerService {
     // Retrieve all accounts with associated type from the storage.
     const accounts = await accountRepository.all('type');
     const accountsGraph = await accountRepository.getDependencyGraph();
+
+    // Retrieve all contacts on the storage.
+    const contacts = await contactRepository.all();
+    const contactsByIdMap = transformToMap(contacts, 'id');
 
     // Retreive journal transactions from/to the given date.
     const transactions = await transactionsRepository.journal({
@@ -127,6 +134,7 @@ export default class GeneralLedgerService {
       tenantId,
       filter,
       accounts,
+      contactsByIdMap,
       transactionsJournal,
       openingTransJournal,
       closingTransJournal,

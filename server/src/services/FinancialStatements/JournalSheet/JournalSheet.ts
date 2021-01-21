@@ -1,19 +1,20 @@
-import { sumBy, chain, omit } from 'lodash';
+import { sumBy, chain, get, head } from 'lodash';
 import {
   IJournalEntry,
   IJournalPoster,
   IJournalReportEntriesGroup,
   IJournalReportQuery,
   IJournalReport,
+  IContact,
 } from 'interfaces';
 import FinancialSheet from '../FinancialSheet';
-import { AccountTransaction } from 'models';
 
 export default class JournalSheet extends FinancialSheet {
   tenantId: number;
   journal: IJournalPoster;
   query: IJournalReportQuery;
   baseCurrency: string;
+  readonly contactsById: Map<number | string, IContact>;
 
   /**
    * Constructor method.
@@ -24,6 +25,8 @@ export default class JournalSheet extends FinancialSheet {
     tenantId: number,
     query: IJournalReportQuery,
     journal: IJournalPoster,
+    accountsGraph: any,
+    contactsById: Map<number | string, IContact>,
     baseCurrency: string
   ) {
     super();
@@ -32,22 +35,48 @@ export default class JournalSheet extends FinancialSheet {
     this.journal = journal;
     this.query = query;
     this.numberFormat = this.query.numberFormat;
+    this.accountsGraph = accountsGraph;
+    this.contactsById = contactsById;
     this.baseCurrency = baseCurrency;
   }
 
   /**
-   * Mappes the journal entries.
-   * @param {IJournalEntry[]} entries - 
+   * Entry mapper.
+   * @param {IJournalEntry} entry 
    */
-  entriesMapper(
-    entries: IJournalEntry[],
-  ) {
-    return entries.map((entry: IJournalEntry) => {
-      return {
-        ...omit(entry, 'account'),
-        currencyCode: this.baseCurrency,
-      };
-    })
+  entryMapper(entry: IJournalEntry) {
+    const account = this.accountsGraph.getNodeData(entry.accountId);
+    const contact = this.contactsById.get(entry.contactId);
+
+    return {
+      entryId: entry.id,
+      index: entry.index,
+      note: entry.note,
+
+      contactName: get(contact, 'displayName'),
+      contactType: get(contact, 'contactService'),
+
+      accountName: account.name,
+      accountCode: account.code,
+      transactionNumber: entry.transactionNumber,
+
+      currencyCode: this.baseCurrency,
+      formattedCredit: this.formatNumber(entry.credit),
+      formattedDebit: this.formatNumber(entry.debit),
+
+      credit: entry.credit,
+      debit: entry.debit,
+
+      createdAt: entry.createdAt,
+    };
+  }
+
+  /**
+   * Mappes the journal entries.
+   * @param {IJournalEntry[]} entries -
+   */
+  entriesMapper(entries: IJournalEntry[]) {
+    return entries.map(this.entryMapper.bind(this));
   }
 
   /**
@@ -58,13 +87,17 @@ export default class JournalSheet extends FinancialSheet {
    */
   entriesGroupsMapper(
     entriesGroup: IJournalEntry[],
-    key: string
+    groupEntry: IJournalEntry
   ): IJournalReportEntriesGroup {
     const totalCredit = sumBy(entriesGroup, 'credit');
     const totalDebit = sumBy(entriesGroup, 'debit');
 
     return {
-      id: key,
+      date: groupEntry.date,
+      referenceType: groupEntry.referenceType,
+      referenceId: groupEntry.referenceId,
+      referenceTypeFormatted: groupEntry.referenceTypeFormatted,
+
       entries: this.entriesMapper(entriesGroup),
 
       currencyCode: this.baseCurrency,
@@ -72,8 +105,8 @@ export default class JournalSheet extends FinancialSheet {
       credit: totalCredit,
       debit: totalDebit,
 
-      formattedCredit: this.formatNumber(totalCredit),
-      formattedDebit: this.formatNumber(totalDebit),
+      formattedCredit: this.formatTotalNumber(totalCredit),
+      formattedDebit: this.formatTotalNumber(totalDebit),
     };
   }
 
@@ -85,9 +118,10 @@ export default class JournalSheet extends FinancialSheet {
   entriesWalker(entries: IJournalEntry[]): IJournalReportEntriesGroup[] {
     return chain(entries)
       .groupBy((entry) => `${entry.referenceId}-${entry.referenceType}`)
-      .map((entriesGroup: IJournalEntry[], key: string) =>
-        this.entriesGroupsMapper(entriesGroup, key)
-      )
+      .map((entriesGroup: IJournalEntry[], key: string) => {
+        const headEntry = head(entriesGroup);
+        return this.entriesGroupsMapper(entriesGroup, headEntry);
+      })
       .value();
   }
 

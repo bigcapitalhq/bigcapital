@@ -389,6 +389,16 @@ export const getColumnWidth = (
   return result;
 };
 
+export const getForceWidth = (
+  text,
+  magicSpacing = 14,
+) => {
+  const textLength = text.length;
+  const result = textLength * magicSpacing
+
+  return result;
+}
+
 export const toSafeNumber = (number) => {
   return _.toNumber(_.defaultTo(number, 0));
 };

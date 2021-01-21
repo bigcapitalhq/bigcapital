@@ -91,5 +91,5 @@ export {
   InputPrependText,
   PageFormBigNumber,
   AccountsMultiSelect,
-  DataTableEditable
+  DataTableEditable,
 };

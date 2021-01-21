@@ -8,6 +8,7 @@ import DataTable from 'components/DataTable';
 import Money from 'components/Money';
 
 import withGeneralLedger from './withGeneralLedger';
+import { getForceWidth, getColumnWidth } from 'utils';
 
 const ROW_TYPE = {
   CLOSING_BALANCE: 'closing_balance',
@@ -25,91 +26,89 @@ function GeneralLedgerTable({
 }) {
   const { formatMessage } = useIntl();
 
-  // Account name column accessor.
-  const accountNameAccessor = (row) => {
-    switch (row.rowType) {
-      case ROW_TYPE.OPENING_BALANCE:
-        return 'Opening Balance';
-      case ROW_TYPE.CLOSING_BALANCE:
-        return 'Closing Balance';
-      default:
-        return row.name;
-    }
-  };
-
-  // Date accessor.
-  const dateAccessor = (row) => {
-    const TYPES = [
-      ROW_TYPE.OPENING_BALANCE,
-      ROW_TYPE.CLOSING_BALANCE,
-      ROW_TYPE.TRANSACTION,
-    ];
-
-    return TYPES.indexOf(row.rowType) !== -1
-      ? moment(row.date).format('DD MMM YYYY')
-      : '';
-  };
-
-  // Amount cell
-  const amountCell = useCallback(({ cell }) => {
-    const transaction = cell.row.original;
-
-    if (transaction.rowType === ROW_TYPE.ACCOUNT) {
-      return !cell.row.isExpanded ? (
-        <Money amount={transaction.closing.amount} currency={'USD'} />
-      ) : (
-        ''
-      );
-    }
-    return <Money amount={transaction.amount} currency={'USD'} />;
-  }, []);
-
   const columns = useMemo(
     () => [
       {
-        Header: formatMessage({ id: 'account_name' }),
-        accessor: accountNameAccessor,
-        className: 'name',
-        width: 225,
+        Header: formatMessage({ id: 'date' }),
+        accessor: (row) => {
+          if (row.rowType === 'ACCOUNT_ROW') {
+            return (
+              <span
+                className={'force-width'}
+                style={{ minWidth: getForceWidth(row.date) }}
+              >
+                {row.date}
+              </span>
+            );
+          }
+          return row.date;
+        },
+        className: 'date',
+        width: 120,
       },
       {
-        Header: formatMessage({ id: 'date' }),
-        accessor: dateAccessor,
-        className: 'date',
-        width: 115,
+        Header: formatMessage({ id: 'account_name' }),
+        accessor: 'name',
+        className: 'name',
+        textOverview: true,
+        // width: 200,
       },
       {
         Header: formatMessage({ id: 'transaction_type' }),
-        accessor: 'referenceType',
+        accessor: 'reference_type_formatted',
         className: 'transaction_type',
-        width: 145,
+        width: 125 ,
       },
       {
-        Header: formatMessage({ id: 'trans_num' }),
+        Header: formatMessage({ id: 'transaction_number' }),
         accessor: 'reference_id',
         className: 'transaction_number',
-        width: 110,
+        width: 100,
       },
       {
         Header: formatMessage({ id: 'description' }),
         accessor: 'note',
         className: 'description',
-        width: 145,
+        // width: 145,
+      },
+      {
+        Header: formatMessage({ id: 'credit' }),
+        accessor: 'formatted_credit',
+        className: 'credit',
+        width: getColumnWidth(generalLedgerTableRows, 'formatted_credit', {
+          minWidth: 100,
+          magicSpacing: 10,
+        }),
+      },
+      {
+        Header: formatMessage({ id: 'debit' }),
+        accessor: 'formatted_debit',
+        className: 'debit',
+        width: getColumnWidth(generalLedgerTableRows, 'formatted_debit', {
+          minWidth: 100,
+          magicSpacing: 10,
+        }),
       },
       {
         Header: formatMessage({ id: 'amount' }),
-        Cell: amountCell,
+        accessor: 'formatted_amount',
         className: 'amount',
-        width: 150,
+        width: getColumnWidth(generalLedgerTableRows, 'formatted_amount', {
+          minWidth: 100,
+          magicSpacing: 10,
+        }),
       },
       {
-        Header: formatMessage({ id: 'balance' }),
-        Cell: amountCell,
-        className: 'balance',
-        width: 150,
+        Header: formatMessage({ id: 'running_balance' }),
+        accessor: 'formatted_running_balance',
+        className: 'running_balance',
+        width: getColumnWidth(generalLedgerTableRows, 'formatted_running_balance', {
+          minWidth: 100,
+          magicSpacing: 10,
+        }),
       },
     ],
-    [],
+    [formatMessage, generalLedgerTableRows],
   );
 
   // Default expanded rows of general ledger table.
@@ -140,7 +139,7 @@ function GeneralLedgerTable({
         rowClassNames={rowClassNames}
         expanded={expandedRows}
         virtualizedRows={true}
-        fixedItemSize={37}
+        fixedItemSize={30}
         fixedSizeHeight={1000}
         expandable={true}
         expandToggleColumn={1}

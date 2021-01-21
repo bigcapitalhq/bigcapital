@@ -1,9 +1,12 @@
 import { Service, Inject } from 'typedi';
 import { IJournalReportQuery } from 'interfaces';
 import moment from 'moment';
+
 import JournalSheet from './JournalSheet';
 import TenancyService from 'services/Tenancy/TenancyService';
 import Journal from 'services/Accounting/JournalPoster';
+
+import { transformToMap } from 'utils';
 
 @Service()
 export default class JournalSheetService {
@@ -40,6 +43,7 @@ export default class JournalSheetService {
     const {
       accountRepository,
       transactionsRepository,
+      contactRepository,
     } = this.tenancy.repositories(tenantId);
 
     const filter = {
@@ -50,7 +54,6 @@ export default class JournalSheetService {
       tenantId,
       filter,
     });
-
     // Settings service.
     const settings = this.tenancy.settings(tenantId);
     const baseCurrency = settings.get({
@@ -59,6 +62,10 @@ export default class JournalSheetService {
     });
     // Retrieve all accounts on the storage.
     const accountsGraph = await accountRepository.getDependencyGraph();
+
+    // Retrieve all contacts on the storage.
+    const contacts = await contactRepository.all();
+    const contactsByIdMap = transformToMap(contacts, 'id');
 
     // Retrieve all journal transactions based on the given query.
     const transactions = await transactionsRepository.journal({
@@ -79,6 +86,8 @@ export default class JournalSheetService {
       tenantId,
       filter,
       transactionsJournal,
+      accountsGraph,
+      contactsByIdMap,
       baseCurrency
     );
     // Retrieve journal report columns.

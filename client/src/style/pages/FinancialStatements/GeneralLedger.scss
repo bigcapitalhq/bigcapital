@@ -2,25 +2,64 @@
 .financial-sheet{
   &--general-ledger{
     .financial-sheet__table{
+      .tbody,
+      .thead{
+        .tr .td,
+        .tr .th{
+          &.credit,
+          &.debit,
+          &.running_balance,
+          &.amount{
+            justify-content: flex-end;
+          }
+        }
+      }
       .tbody{
+       
+        .tr .td{
+          padding-top: 0.2rem;
+          padding-bottom: 0.2rem;
+          border-top-color: transparent;
+          border-bottom-color: transparent;
+  
+          &.date{
+            > div{
+              display: flex;
+            }
+            span.force-width{
+              position: relative;
+            }
+          }
+        }
+        .tr:not(.no-results) .td{
+          border-left: 1px solid #ececec;
+        }
         .tr.row-type{
 
-          &--opening_balance,
-          &--closing_balance{
+
+          &--ACCOUNT_ROW{
             .td{
-              border-top: 1px solid #333;
+              &.date{
+                font-weight: 500;
+              }
+              &.name{
+                border-left-color: transparent;
+              }
             }
-            .name,
-            .amount,
-            .balance{
+            &:not(:first-child).is-expanded .td{
+              border-top: 1px solid #DDD;
+            }
+          }
+          &--OPENING_BALANCE,
+          &--CLOSING_BALANCE{
+            .amount{
               font-weight: 500;
             }
           }
-          &--closing_balance .td{
-            border-bottom-color: #666;
-          }
-          &--account_name .td.name{
-            font-weight: 500;
+          &--CLOSING_BALANCE{
+            .name{
+              font-weight: 500;
+            }
           }
         }
       }
