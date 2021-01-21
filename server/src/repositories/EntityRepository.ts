@@ -1,4 +1,4 @@
-import { cloneDeep, cloneDeepWith, forOwn, isString } from 'lodash';
+import { cloneDeep, forOwn, isString } from 'lodash';
 import ModelEntityNotFound from 'exceptions/ModelEntityNotFound';
 
 export default class EntityRepository {
@@ -38,8 +38,7 @@ export default class EntityRepository {
    * @returns {Promise<Object[]>} - query builder. You can chain additional methods to it or call "await" or then() on it to execute
    */
   find(attributeValues = {}, withRelations?) {
-    return this.model
-      .query()
+    return this.model.query()
       .where(attributeValues)
       .withGraphFetched(withRelations);
   }

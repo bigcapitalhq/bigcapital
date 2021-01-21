@@ -23,7 +23,6 @@ import AuthenticationMailMessages from 'services/Authentication/AuthenticationMa
 import AuthenticationSMSMessages from 'services/Authentication/AuthenticationSMSMessages';
 import TenantsManager from 'services/Tenancy/TenantsManager';
 
-
 const ERRORS = {
   INVALID_DETAILS: 'INVALID_DETAILS',
   USER_INACTIVE: 'USER_INACTIVE',
@@ -32,7 +31,7 @@ const ERRORS = {
   USER_NOT_FOUND: 'USER_NOT_FOUND',
   TOKEN_EXPIRED: 'TOKEN_EXPIRED',
   PHONE_NUMBER_EXISTS: 'PHONE_NUMBER_EXISTS',
-  EMAIL_EXISTS: 'EMAIL_EXISTS'
+  EMAIL_EXISTS: 'EMAIL_EXISTS',
 };
 @Service()
 export default class AuthenticationService implements IAuthenticationService {
@@ -136,6 +135,7 @@ export default class AuthenticationService implements IAuthenticationService {
    */
   private async validateEmailAndPhoneUniqiness(registerDTO: IRegisterDTO) {
     const { systemUserRepository } = this.sysRepositories;
+
     const isEmailExists = await systemUserRepository.findOneByEmail(
       registerDTO.email
     );
@@ -279,7 +279,10 @@ export default class AuthenticationService implements IAuthenticationService {
     const hashedPassword = await hashPassword(password);
 
     this.logger.info('[reset_password] saving a new hashed password.');
-    await systemUserRepository.update({ password: hashedPassword }, { id: user.id });
+    await systemUserRepository.update(
+      { password: hashedPassword },
+      { id: user.id }
+    );
 
     // Deletes the used token.
     await this.deletePasswordResetToken(tokenModel.email);

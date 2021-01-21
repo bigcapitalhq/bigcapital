@@ -59,7 +59,6 @@ export default class SaleInvoiceSubscriber {
     );
   }
  
-
   /**
    * Handles customer balance decrement once sale invoice deleted.
    */

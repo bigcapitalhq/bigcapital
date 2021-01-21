@@ -16,7 +16,8 @@ export default class JournalSheetController extends BaseFinancialReportControlle
   router() {
     const router = Router();
 
-    router.get('/', 
+    router.get(
+      '/',
       this.journalValidationSchema,
       this.validationResult,
       this.asyncMiddleware(this.journal.bind(this))
@@ -31,18 +32,20 @@ export default class JournalSheetController extends BaseFinancialReportControlle
     return [
       query('from_date').optional().isISO8601(),
       query('to_date').optional().isISO8601(),
-      oneOf([
-        query('transaction_types').optional().isArray({ min: 1 }),
-        query('transaction_types.*').optional().isNumeric().toInt(),
-      ], [
-        query('transaction_types').optional().trim().escape(),
-      ]),
-      oneOf([
-        query('account_ids').optional().isArray({ min: 1 }),
-        query('account_ids.*').optional().isNumeric().toInt(),
-      ], [
-        query('account_ids').optional().isNumeric().toInt(),
-      ]),
+      oneOf(
+        [
+          query('transaction_types').optional().isArray({ min: 1 }),
+          query('transaction_types.*').optional().isNumeric().toInt(),
+        ],
+        [query('transaction_types').optional().trim().escape()]
+      ),
+      oneOf(
+        [
+          query('account_ids').optional().isArray({ min: 1 }),
+          query('account_ids.*').optional().isNumeric().toInt(),
+        ],
+        [query('account_ids').optional().isNumeric().toInt()]
+      ),
       query('from_range').optional().isNumeric().toInt(),
       query('to_range').optional().isNumeric().toInt(),
       query('number_format.no_cents').optional().isBoolean().toBoolean(),
@@ -52,7 +55,7 @@ export default class JournalSheetController extends BaseFinancialReportControlle
 
   /**
    * Retrieve the ledger report of the given account.
-   * @param {Request} req - 
+   * @param {Request} req -
    * @param {Response} res -
    */
   async journal(req: Request, res: Response, next: NextFunction) {
@@ -63,11 +66,20 @@ export default class JournalSheetController extends BaseFinancialReportControlle
       ...filter,
       accountsIds: castArray(filter.accountsIds),
     };
-    const organizationName = settings.get({ group: 'organization', key: 'name' });
-    const baseCurrency = settings.get({ group: 'organization', key: 'base_currency' });
+    const organizationName = settings.get({
+      group: 'organization',
+      key: 'name',
+    });
+    const baseCurrency = settings.get({
+      group: 'organization',
+      key: 'base_currency',
+    });
 
     try {
-      const { data, query } = await this.journalService.journalSheet(tenantId, filter);
+      const { data, query } = await this.journalService.journalSheet(
+        tenantId,
+        filter
+      );
 
       return res.status(200).send({
         organization_name: organizationName,

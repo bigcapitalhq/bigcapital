@@ -1,4 +1,4 @@
-import { pick } from 'lodash';
+import { pick, get, last } from 'lodash';
 import {
   IGeneralLedgerSheetQuery,
   IGeneralLedgerSheetAccount,
@@ -8,9 +8,13 @@ import {
   IJournalPoster,
   IAccountType,
   IJournalEntry,
+  IContact,
 } from 'interfaces';
 import FinancialSheet from '../FinancialSheet';
 
+/**
+ * General ledger sheet.
+ */
 export default class GeneralLedgerSheet extends FinancialSheet {
   tenantId: number;
   accounts: IAccount[];
@@ -18,6 +22,7 @@ export default class GeneralLedgerSheet extends FinancialSheet {
   openingBalancesJournal: IJournalPoster;
   closingBalancesJournal: IJournalPoster;
   transactions: IJournalPoster;
+  contactsMap: Map<number, IContact>;
   baseCurrency: string;
 
   /**
@@ -32,6 +37,7 @@ export default class GeneralLedgerSheet extends FinancialSheet {
     tenantId: number,
     query: IGeneralLedgerSheetQuery,
     accounts: IAccount[],
+    contactsByIdMap: Map<number, IContact>,
     transactions: IJournalPoster,
     openingBalancesJournal: IJournalPoster,
     closingBalancesJournal: IJournalPoster,
@@ -43,10 +49,79 @@ export default class GeneralLedgerSheet extends FinancialSheet {
     this.query = query;
     this.numberFormat = this.query.numberFormat;
     this.accounts = accounts;
+    this.contactsMap = contactsByIdMap;
     this.transactions = transactions;
     this.openingBalancesJournal = openingBalancesJournal;
     this.closingBalancesJournal = closingBalancesJournal;
     this.baseCurrency = baseCurrency;
+  }
+
+  /**
+   * Retrieve the transaction amount.
+   * @param {number} credit - Credit amount.
+   * @param {number} debit - Debit amount.
+   * @param {string} normal - Credit or debit.
+   */
+  getAmount(credit: number, debit: number, normal: string) {
+    return normal === 'credit' ? credit - debit : debit - credit;
+  }
+
+  /**
+   * Entry mapper.
+   * @param {IJournalEntry} entry -
+   * @return {IGeneralLedgerSheetAccountTransaction}
+   */
+  entryReducer(
+    entries: IGeneralLedgerSheetAccountTransaction[],
+    entry: IJournalEntry,
+    index: number
+  ): IGeneralLedgerSheetAccountTransaction[] {
+    const lastEntry = last(entries);
+    const openingBalance = 0;
+
+    const contact = this.contactsMap.get(entry.contactId);
+    const amount = this.getAmount(
+      entry.credit,
+      entry.debit,
+      entry.accountNormal
+    );
+    const runningBalance =
+      (entries.length === 0
+        ? openingBalance
+        : lastEntry
+        ? lastEntry.runningBalance
+          : 0) + amount;
+
+    const newEntry = {
+      date: entry.date,
+      entryId: entry.id,
+
+      referenceType: entry.referenceType,
+      referenceId: entry.referenceId,
+      referenceTypeFormatted: entry.referenceTypeFormatted,
+
+      contactName: get(contact, 'displayName'),
+      contactType: get(contact, 'contactService'),
+
+      transactionType: entry.transactionType,
+      index: entry.index,
+      note: entry.note,
+
+      credit: entry.credit,
+      debit: entry.debit,
+      amount,
+      runningBalance,
+
+      formattedAmount: this.formatNumber(amount),
+      formattedCredit: this.formatNumber(entry.credit),
+      formattedDebit: this.formatNumber(entry.debit),
+      formattedRunningBalance: this.formatNumber(runningBalance),
+
+      currencyCode: this.baseCurrency,
+    };
+    entries.push(newEntry);
+
+    return entries;
   }
 
   /**
@@ -55,36 +130,19 @@ export default class GeneralLedgerSheet extends FinancialSheet {
    * @return {IGeneralLedgerSheetAccountTransaction[]}
    */
   private accountTransactionsMapper(
-    account: IAccount & { type: IAccountType }
+    account: IAccount & { type: IAccountType },
+    openingBalance: number
   ): IGeneralLedgerSheetAccountTransaction[] {
     const entries = this.transactions.getAccountEntries(account.id);
 
-    return entries.map(
-      (transaction: IJournalEntry): IGeneralLedgerSheetAccountTransaction => {
-        let amount = 0;
-
-        if (account.type.normal === 'credit') {
-          amount += transaction.credit - transaction.debit;
-        } else if (account.type.normal === 'debit') {
-          amount += transaction.debit - transaction.credit;
-        }
-        const formattedAmount = this.formatNumber(amount);
-
-        return {
-          ...pick(transaction, [
-            'id',
-            'note',
-            'transactionType',
-            'referenceType',
-            'referenceId',
-            'referenceTypeFormatted',
-            'date',
-          ]),
-          amount,
-          formattedAmount,
-          currencyCode: this.baseCurrency,
-        };
-      }
+    return entries.reduce(
+      (
+        entries: IGeneralLedgerSheetAccountTransaction[],
+        entry: IJournalEntry
+      ) => {
+        return this.entryReducer(entries, entry, openingBalance);
+      },
+      []
     );
   }
 
@@ -128,11 +186,21 @@ export default class GeneralLedgerSheet extends FinancialSheet {
   private accountMapper(
     account: IAccount & { type: IAccountType }
   ): IGeneralLedgerSheetAccount {
+    const openingBalance = this.accountOpeningBalance(account);
+    const closingBalance = this.accountClosingBalance(account);
+
     return {
-      ...pick(account, ['id', 'name', 'code', 'index', 'parentAccountId']),
-      opening: this.accountOpeningBalance(account),
-      transactions: this.accountTransactionsMapper(account),
-      closing: this.accountClosingBalance(account),
+      id: account.id,
+      name: account.name,
+      code: account.code,
+      index: account.index,
+      parentAccountId: account.parentAccountId,
+      openingBalance,
+      transactions: this.accountTransactionsMapper(
+        account,
+        openingBalance.amount
+      ),
+      closingBalance,
     };
   }
 
@@ -149,7 +217,8 @@ export default class GeneralLedgerSheet extends FinancialSheet {
         .map((account: IAccount & { type: IAccountType }) =>
           this.accountMapper(account)
         )
-        // Filter general ledger accounts that have no transactions when `noneTransactions` is on.
+        // Filter general ledger accounts that have no transactions
+        // when`noneTransactions` is on.
         .filter(
           (generalLedgerAccount: IGeneralLedgerSheetAccount) =>
             !(

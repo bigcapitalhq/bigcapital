@@ -60,12 +60,17 @@
       display: none;
     }
   }
-  &__basis {
+  &__footer {
     color: #888;
     text-align: center;
     margin-top: auto;
     padding-top: 18px;
     font-size: 13px;
+
+
+    > span + span{
+      padding-left: 10px;
+    }
   }
   .dashboard__loading-indicator {
     margin: auto;

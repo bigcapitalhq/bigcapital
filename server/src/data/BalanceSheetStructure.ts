@@ -8,19 +8,42 @@ const balanceSheetStructure: IBalanceSheetStructureSection[] = [
     children: [
       {
         name: 'Current Asset',
-        type: 'accounts_section',
-        accountsTypesRelated: ['current_asset'],
+        sectionType: 'assets',
+        type: 'section',
+        children: [
+          {
+            name: 'Cash and cash equivalents',
+            type: 'accounts_section',
+            accountsTypes: ['cash', 'bank'],
+          },
+          {
+            name: 'Accounts Receivable',
+            type: 'accounts_section',
+            accountsTypes: ['accounts_receivable'],
+          },
+          {
+            name: 'Inventories',
+            type: 'accounts_section',
+            accountsTypes: ['inventory'],
+          },
+          {
+            name: 'Other current assets',
+            type: 'accounts_section',
+            accountsTypes: ['other_current_asset'],
+          },
+        ],
+        alwaysShow: true,
       },
       {
         name: 'Fixed Asset',
         type: 'accounts_section',
-        accountsTypesRelated: ['fixed_asset'],
+        accountsTypes: ['fixed_asset'],
       },
       {
-        name: 'Other Asset',
+        name: 'Non-Current Assets',
         type: 'accounts_section',
-        accountsTypesRelated: ['other_asset'],
-      },
+        accountsTypes: ['non_current_asset'],
+      }
     ],
     alwaysShow: true,
   },
@@ -35,27 +58,32 @@ const balanceSheetStructure: IBalanceSheetStructureSection[] = [
         type: 'section',
         children: [
           {
-            name: 'Current Liability',
+            name: 'Current Liabilties',
             type: 'accounts_section',
-            accountsTypesRelated: ['current_liability'],
+            accountsTypes: [
+              'accounts_payable',
+              'tax_payable',
+              'credit_card',
+              'other_current_liability'
+            ],
           },
           {
-            name: 'Long Term Liability',
+            name: 'Long-Term Liabilities',
             type: 'accounts_section',
-            accountsTypesRelated: ['long_term_liability'],
+            accountsTypes: ['long_term_liability'],
           },
           {
-            name: 'Other Liability',
+            name: 'Non-Current Liabilities',
             type: 'accounts_section',
-            accountsTypesRelated: ['other_liability'],
-          },
+            accountsTypes: ['non_current_liability'],
+          }
         ],
       },
       {
         name: 'Equity',
         sectionType: 'equity',
         type: 'accounts_section',
-        accountsTypesRelated: ['equity'],
+        accountsTypes: ['equity'],
       },
     ],
     alwaysShow: true,

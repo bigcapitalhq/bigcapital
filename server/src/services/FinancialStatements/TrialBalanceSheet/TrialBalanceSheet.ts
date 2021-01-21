@@ -4,6 +4,7 @@ import {
   ITrialBalanceAccount,
   IAccount,
   ITrialBalanceTotal,
+  ITrialBalanceSheetData,
   IAccountType,
 } from 'interfaces';
 import FinancialSheet from '../FinancialSheet';
@@ -49,6 +50,7 @@ export default class TrialBalanceSheet extends FinancialSheet {
   /**
    * Account mapper.
    * @param {IAccount} account
+   * @return {ITrialBalanceAccount}
    */
   private accountMapper(
     account: IAccount & { type: IAccountType }
@@ -80,6 +82,7 @@ export default class TrialBalanceSheet extends FinancialSheet {
   /**
    * Accounts walker.
    * @param {IAccount[]} accounts
+   * @return {ITrialBalanceAccount[]}
    */
   private accountsWalker(
     accounts: IAccount & { type: IAccountType }[]
@@ -136,8 +139,15 @@ export default class TrialBalanceSheet extends FinancialSheet {
 
   /**
    * Retrieve trial balance sheet statement data.
+   * Note: Retruns null in case there is no transactions between the given date periods.
+   * 
+   * @return {ITrialBalanceSheetData}
    */
-  public reportData() {
+  public reportData(): ITrialBalanceSheetData {
+    // Don't return noting if the journal has no transactions.
+    if (this.journalFinancial.isEmpty()) {
+      return null;
+    }
     const accounts = this.accountsWalker(this.accounts);
     const total = this.tatalSection(accounts);
 

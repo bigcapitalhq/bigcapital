@@ -2,6 +2,8 @@ import React from 'react';
 import { Switch, Route } from 'react-router';
 import { useQuery } from 'react-query';
 
+import 'style/pages/Dashboard/Dashboard.scss';
+
 import DashboardLoadingIndicator from './DashboardLoadingIndicator';
 
 import Sidebar from 'components/Sidebar/Sidebar';
@@ -14,8 +16,6 @@ import GlobalHotkeys from './GlobalHotkeys';
 import withSettingsActions from 'containers/Settings/withSettingsActions';
 
 import { compose } from 'utils';
-
-import 'style/pages/Dashboard/Dashboard.scss';
 
 /**
  * Dashboard page.

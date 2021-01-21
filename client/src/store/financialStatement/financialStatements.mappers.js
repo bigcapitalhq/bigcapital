@@ -1,14 +1,8 @@
-import { omit } from 'lodash';
+import { omit, chain } from 'lodash';
+import moment from 'moment';
 
 export const mapBalanceSheetToTableRows = (accounts) => {
   return accounts.map((account) => {
-    const PRIMARY_SECTIONS = ['assets', 'liability', 'equity'];
-    const rowTypes = [
-      'total_row',
-      ...(PRIMARY_SECTIONS.indexOf(account.section_type) !== -1
-        ? ['total_assets']
-        : []),
-    ];
     return {
       ...account,
       children: mapBalanceSheetToTableRows([
@@ -31,51 +25,79 @@ export const mapBalanceSheetToTableRows = (accounts) => {
 };
 
 export const journalToTableRowsMapper = (journal) => {
-  return journal.reduce((rows, journal) => {
-    journal.entries.forEach((entry, index) => {
-      rows.push({
-        ...entry,
-        rowType: index === 0 ? 'first_entry' : 'entry',
-      });
-    });
-    rows.push({
-      credit: journal.credit,
-      debit: journal.debit,
-      rowType: 'entries_total',
-    });
-    rows.push({
-      rowType: 'space_entry',
-    });
-    return rows;
-  }, []);
+  const TYPES = {
+    ENTRY: 'ENTRY',
+    TOTAL_ENTRIES: 'TOTAL_ENTRIES',
+    EMPTY_ROW: 'EMPTY_ROW',
+  };
+
+  const entriesMapper = (transaction) => {
+    return transaction.entries.map((entry, index) => ({
+      ...(index === 0
+        ? {
+            date: transaction.date,
+            reference_type: transaction.reference_type,
+            reference_id: transaction.reference_id,
+            reference_type_formatted: transaction.reference_type_formatted,
+          }
+        : {}),
+      rowType: TYPES.ENTRY,
+      ...entry,
+    }));
+  };
+
+  return chain(journal)
+    .map((transaction) => {
+      const entries = entriesMapper(transaction);
+
+      return [
+        ...entries,
+        {
+          rowType: TYPES.TOTAL_ENTRIES,
+          currency_code: transaction.currency_code,
+          credit: transaction.credit,
+          debit: transaction.debit,
+          formatted_credit: transaction.formatted_credit,
+          formatted_debit: transaction.formatted_debit,
+        },
+        {
+          rowType: TYPES.EMPTY_ROW,
+        },
+      ];
+    })
+    .flatten()
+    .value();
 };
 
-
 export const generalLedgerToTableRows = (accounts) => {
-  return accounts.reduce((tableRows, account) => {
-    const children = [];
-    children.push({
-      ...account.opening,
-      rowType: 'opening_balance',
-    });
-    account.transactions.map((transaction) => {
-      children.push({
-        ...transaction,
-        ...omit(account, ['transactions']),
-        rowType: 'transaction',
-      });
-    });
-    children.push({
-      ...account.closing,
-      rowType: 'closing_balance',
-    });
-    tableRows.push({
-      ...omit(account, ['transactions']),
-      children,
-      rowType: 'account_name',
-    });
-    return tableRows;
-  }, []);
+  return chain(accounts)
+    .map((account) => {
+      return {
+        name: '',
+        code: account.code,
+        rowType: 'ACCOUNT_ROW',
+        date: account.name,
+        children: [
+          {
+            ...account.opening_balance,
+            name: 'Opening balance',
+            rowType: 'OPENING_BALANCE',
+          },
+          ...account.transactions.map((transaction) => ({
+            ...transaction,
+            name: account.name,
+            code: account.code,
+            date: moment(transaction.date).format('DD MMM YYYY'),
+          })),
+          {
+            ...account.closing_balance,
+            name: 'Closing balance',
+            rowType: 'CLOSING_BALANCE',
+          },
+        ],
+      };
+    })
+    .value();
 };
 
 export const ARAgingSummaryTableRowsMapper = (sheet, total) => {
@@ -109,25 +131,32 @@ export const ARAgingSummaryTableRowsMapper = (sheet, total) => {
       current: sheet.total.current.formatted_amount,
       ...mapAging(sheet.total.aging),
       total: sheet.total.total.formatted_amount,
-    } 
-  ];
-};
-
-export const mapTrialBalanceSheetToRows = (sheet) => {
-  return [
-    ...sheet.accounts,
-    {
-      name: 'Total',
-      rowTypes: ['total'],
-      ...sheet.total,
     },
   ];
 };
 
-export const profitLossToTableRowsMapper = (profitLoss) => {
+export const mapTrialBalanceSheetToRows = (sheet) => {
+  const results = [];
 
-  return [
-    {
+  if (sheet.accounts) {
+    sheet.accounts.forEach((account) => {
+      results.push(account);
+    });
+  }
+  if (sheet.total) {
+    results.push({
+      rowType: 'total',
+      ...sheet.total,
+    });
+  }
+  return results;
+};
+
+export const profitLossToTableRowsMapper = (profitLoss) => {
+  const results = [];
+
+  if (profitLoss.income) {
+    results.push({
       name: 'Income',
       total: profitLoss.income.total,
       children: [
@@ -140,8 +169,10 @@ export const profitLossToTableRowsMapper = (profitLoss) => {
         },
       ],
       total_periods: profitLoss.income.total_periods,
-    },
-    {
+    });
+  }
+  if (profitLoss.cost_of_sales) {
+    results.push({
       name: 'Cost of sales',
       total: profitLoss.cost_of_sales.total,
       children: [
@@ -153,15 +184,19 @@ export const profitLossToTableRowsMapper = (profitLoss) => {
           rowTypes: ['cogs_total', 'section_total', 'total'],
         },
       ],
-      total_periods: profitLoss.cost_of_sales.total_periods
-    },
-    {
+      total_periods: profitLoss.cost_of_sales.total_periods,
+    });
+  }
+  if (profitLoss.gross_profit) {
+    results.push({
       name: 'Gross profit',
       total: profitLoss.gross_profit.total,
       total_periods: profitLoss.gross_profit.total_periods,
       rowTypes: ['gross_total', 'section_total', 'total'],
-    },
-    {
+    })
+  }
+  if (profitLoss.expenses) {
+    results.push({
       name: 'Expenses',
       total: profitLoss.expenses.total,
       children: [
@@ -174,14 +209,34 @@ export const profitLossToTableRowsMapper = (profitLoss) => {
         },
       ],
       total_periods: profitLoss.expenses.total_periods,
-    },
-    {
+    })
+  }
+  if (profitLoss.operating_profit) {
+    results.push({
       name: 'Net Operating income',
       total: profitLoss.operating_profit.total,
       total_periods: profitLoss.income.total_periods,
       rowTypes: ['net_operating_total', 'section_total', 'total'],
-    },
-    {
+    })
+  }
+  if (profitLoss.other_income) {
+    results.push({
+      name: 'Other Income',
+      total: profitLoss.other_income.total,
+      total_periods: profitLoss.other_income.total_periods,
+      children: [
+        ...profitLoss.other_income.accounts,
+        {
+          name: 'Total other income',
+          total: profitLoss.other_income.total,
+          total_periods: profitLoss.other_income.total_periods,
+          rowTypes: ['expenses_total', 'section_total', 'total'],
+        },
+      ],
+    });
+  }
+  if (profitLoss.other_expenses) {
+    results.push({
       name: 'Other expenses',
       total: profitLoss.other_expenses.total,
       total_periods: profitLoss.other_expenses.total_periods,
@@ -194,12 +249,15 @@ export const profitLossToTableRowsMapper = (profitLoss) => {
           rowTypes: ['expenses_total', 'section_total', 'total'],
         },
       ],
-    },
-    {
+    });
+  }
+  if (profitLoss.net_income) {
+    results.push({
       name: 'Net Income',
       total: profitLoss.net_income.total,
       total_periods: profitLoss.net_income.total_periods,
       rowTypes: ['net_income_total', 'section_total', 'total'],
-    },
-  ];
+    })
+  };
+  return results;
 };

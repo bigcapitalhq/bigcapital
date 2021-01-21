@@ -3,7 +3,7 @@ import { FormattedMessage as T, useIntl } from 'react-intl';
 
 import FinancialSheet from 'components/FinancialSheet';
 import DataTable from 'components/DataTable';
-import Money from 'components/Money';
+import { CellTextSpan } from 'components/Datatable/Cells';
 
 import { compose, defaultExpanderReducer, getColumnWidth } from 'utils';
 import withProfitLossDetail from './withProfitLoss';
@@ -26,12 +26,14 @@ function ProfitLossSheetTable({
         Header: formatMessage({ id: 'account' }),
         accessor: (row) => (row.code ? `${row.name} - ${row.code}` : row.name),
         className: 'name',
+        textOverview: true,
         width: 240,
       },
       ...(profitLossQuery.display_columns_type === 'total'
         ? [
             {
               Header: formatMessage({ id: 'total' }),
+              Cell: CellTextSpan,
               accessor: 'total.formatted_amount',
               className: 'total',
               width: 140,
@@ -42,6 +44,7 @@ function ProfitLossSheetTable({
         ? profitLossColumns.map((column, index) => ({
             id: `date_period_${index}`,
             Header: column,
+            Cell: CellTextSpan,
             accessor: `total_periods[${index}].formatted_amount`,
             width: getColumnWidth(
               profitLossTableRows,

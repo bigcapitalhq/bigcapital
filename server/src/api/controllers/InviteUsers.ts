@@ -1,6 +1,7 @@
 import { Service, Inject } from 'typedi';
 import { Router, Request, Response } from 'express';
 import { check, body, param } from 'express-validator';
+import { IInviteUserInput } from 'interfaces';
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
 import InviteUserService from 'services/InviteUsers';
 import { ServiceErrors, ServiceError } from 'exceptions';
@@ -22,7 +23,7 @@ export default class InviteUsersController extends BaseController {
       [body('email').exists().trim().escape()],
       this.validationResult,
       asyncMiddleware(this.sendInvite.bind(this)),
-      this.handleServicesError,
+      this.handleServicesError
     );
     return router;
   }
@@ -38,14 +39,14 @@ export default class InviteUsersController extends BaseController {
       [...this.inviteUserDTO],
       this.validationResult,
       asyncMiddleware(this.accept.bind(this)),
-      this.handleServicesError,
+      this.handleServicesError
     );
     router.get(
       '/invited/:token',
       [param('token').exists().trim().escape()],
       this.validationResult,
       asyncMiddleware(this.invited.bind(this)),
-      this.handleServicesError,
+      this.handleServicesError
     );
 
     return router;
@@ -76,8 +77,11 @@ export default class InviteUsersController extends BaseController {
     const { user } = req;
 
     try {
-      await this.inviteUsersService.sendInvite(tenantId, email, user);
-
+      const { invite } = await this.inviteUsersService.sendInvite(
+        tenantId,
+        email,
+        user
+      );
       return res.status(200).send({
         type: 'success',
         code: 'INVITE.SENT.SUCCESSFULLY',
@@ -104,6 +108,7 @@ export default class InviteUsersController extends BaseController {
 
     try {
       await this.inviteUsersService.acceptInvite(token, inviteUserInput);
+
       return res.status(200).send({
         type: 'success',
         code: 'USER.INVITE.ACCEPTED',
@@ -144,19 +149,40 @@ export default class InviteUsersController extends BaseController {
    */
   handleServicesError(error, req: Request, res: Response, next: Function) {
     if (error instanceof ServiceError) {
+      if (error.errorType === 'EMAIL_EXISTS') {
+        return res.status(400).send({
+          errors: [{
+            type: 'EMAIL.ALREADY.EXISTS',
+            code: 100,
+            message: 'Email already exists in the users.'
+          }],
+        });
+      }
       if (error.errorType === 'EMAIL_ALREADY_INVITED') {
         return res.status(400).send({
-          errors: [{ type: 'EMAIL.ALREADY.INVITED' }],
+          errors: [{
+            type: 'EMAIL.ALREADY.INVITED',
+            code: 200,
+            message: 'Email already invited.',
+          }],
         });
       }
       if (error.errorType === 'INVITE_TOKEN_INVALID') {
         return res.status(400).send({
-          errors: [{ type: 'INVITE.TOKEN.INVALID' }],
+          errors: [{
+            type: 'INVITE.TOKEN.INVALID',
+            code: 300,
+            message: 'Invite token is invalid, please try another one.',
+          }],
         });
       }
       if (error.errorType === 'PHONE_NUMBER_EXISTS') {
         return res.status(400).send({
-          errors: [{ type: 'PHONE_NUMBER.EXISTS' }],
+          errors: [{
+            type: 'PHONE_NUMBER.EXISTS',
+            code: 400,
+            message: 'Phone number is already invited, please try another unique one.'
+          }],
         });
       }
     }

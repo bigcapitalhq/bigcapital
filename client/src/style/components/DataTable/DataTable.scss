@@ -27,6 +27,12 @@
         color: #58667b;
         font-weight: 500;
         border-bottom: 1px solid rgb(224, 224, 224);
+
+        > div{
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
       }
       .sort-icon {
         width: 0;
@@ -141,9 +147,22 @@
         .placeholder {
           color: #a0a0a0;
         }
+        .text-overview{
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+
+        }
 
         .bp3-form-group {
           width: 100%;
+        }
+
+        &.is-text-overview {
+          .expend-padding{
+            display: flex;
+            width: 100%;
+          }
         }
       }
       .tr:hover .td {

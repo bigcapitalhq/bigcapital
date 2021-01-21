@@ -3,7 +3,7 @@ import { useIntl } from 'react-intl';
 
 import FinancialSheet from 'components/FinancialSheet';
 import DataTable from 'components/DataTable';
-import Money from 'components/Money';
+import { CellTextSpan } from 'components/Datatable/Cells';
 
 import withTrialBalance from './withTrialBalance';
 
@@ -28,9 +28,11 @@ function TrialBalanceSheetTable({
         accessor: (row) => (row.code ? `${row.name} - ${row.code}` : row.name),
         className: 'name',
         width: 160,
+        textOverview: true,
       },
       {
         Header: formatMessage({ id: 'credit' }),
+        Cell: CellTextSpan,
         accessor: 'formatted_credit',
         className: 'credit',
         width: getColumnWidth(trialBalanceTableRows, `credit`, {
@@ -39,11 +41,13 @@ function TrialBalanceSheetTable({
       },
       {
         Header: formatMessage({ id: 'debit' }),
+        Cell: CellTextSpan,
         accessor: 'formatted_debit',
         width: getColumnWidth(trialBalanceTableRows, `debit`, { minWidth: 95 }),
       },
       {
         Header: formatMessage({ id: 'balance' }),
+        Cell: CellTextSpan,
         accessor: 'formatted_balance',
         className: 'balance',
         width: getColumnWidth(trialBalanceTableRows, `balance`, {
@@ -56,7 +60,7 @@ function TrialBalanceSheetTable({
 
   const rowClassNames = (row) => {
     const { original } = row;
-    const rowTypes = Array.isArray(original.rowTypes) ? original.rowTypes : [];
+    const rowTypes = Array.isArray(original.rowType) ? original.rowType : [original.rowType];
 
     return {
       ...rowTypes.reduce((acc, rowType) => {

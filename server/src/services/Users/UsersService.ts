@@ -1,9 +1,17 @@
-import { Inject, Service } from 'typedi';
 import TenancyService from 'services/Tenancy/TenancyService';
-import { SystemUser } from 'system/models';
+import { Inject, Service } from 'typedi';
 import { ServiceError, ServiceErrors } from 'exceptions';
 import { ISystemUser, ISystemUserDTO } from 'interfaces';
-import systemRepositories from 'loaders/systemRepositories';
+
+const ERRORS = {
+  CANNOT_DELETE_LAST_USER: 'CANNOT_DELETE_LAST_USER',
+  USER_ALREADY_ACTIVE: 'USER_ALREADY_ACTIVE',
+  USER_ALREADY_INACTIVE: 'USER_ALREADY_INACTIVE',
+  EMAIL_ALREADY_EXISTS: 'EMAIL_ALREADY_EXISTS',
+  PHONE_NUMBER_ALREADY_EXIST: 'PHONE_NUMBER_ALREADY_EXIST',
+  USER_NOT_FOUND: 'USER_NOT_FOUND',
+  USER_SAME_THE_AUTHORIZED_USER: 'USER_SAME_THE_AUTHORIZED_USER',
+};
 
 @Service()
 export default class UsersService {
@@ -23,7 +31,7 @@ export default class UsersService {
    * @param  {IUserDTO} userDTO
    * @return {Promise<ISystemUser>}
    */
-  async editUser(
+  public async editUser(
     tenantId: number,
     userId: number,
     userDTO: ISystemUserDTO
@@ -36,49 +44,24 @@ export default class UsersService {
     });
     const userByPhoneNumber = await systemUserRepository.findOne({
       phoneNumber: userDTO.phoneNumber,
-      id: userId
+      id: userId,
     });
     const serviceErrors: ServiceError[] = [];
 
     if (userByEmail) {
-      serviceErrors.push(new ServiceError('email_already_exists'));
+      serviceErrors.push(new ServiceError(ERRORS.EMAIL_ALREADY_EXISTS));
     }
     if (userByPhoneNumber) {
-      serviceErrors.push(new ServiceError('phone_number_already_exist'));
+      serviceErrors.push(new ServiceError(ERRORS.PHONE_NUMBER_ALREADY_EXIST));
     }
     if (serviceErrors.length > 0) {
       throw new ServiceErrors(serviceErrors);
     }
-    const updateSystemUser = await systemUserRepository
-      .update({ ...userDTO, }, { id: userId });
-
-    return updateSystemUser;
-  }
-
-  /**
-   * Validate user existance throw error in case user was not found.,
-   * @param {number} tenantId -
-   * @param {number} userId -
-   * @returns {ISystemUser}
-   */
-  async getUserOrThrowError(
-    tenantId: number,
-    userId: number
-  ): Promise<ISystemUser> {
-    const { systemUserRepository } = this.repositories;
-    const user = await systemUserRepository.findOneByIdAndTenant(
-      userId,
-      tenantId
+    const updateSystemUser = await systemUserRepository.update(
+      { ...userDTO },
+      { id: userId }
     );
-
-    if (!user) {
-      this.logger.info('[users] the given user not found.', {
-        tenantId,
-        userId,
-      });
-      throw new ServiceError('user_not_found');
-    }
-    return user;
+    return updateSystemUser;
   }
 
   /**
@@ -86,14 +69,20 @@ export default class UsersService {
    * @param {number} tenantId
    * @param {number} userId
    */
-  async deleteUser(tenantId: number, userId: number): Promise<void> {
+  public async deleteUser(tenantId: number, userId: number): Promise<void> {
     const { systemUserRepository } = this.repositories;
-    await this.getUserOrThrowError(tenantId, userId);
+
+    // Retrieve user details or throw not found service error.
+    const oldUser = await this.getUserOrThrowError(tenantId, userId);
 
     this.logger.info('[users] trying to delete the given user.', {
       tenantId,
       userId,
     });
+    // Validate the delete user should not be the last user.
+    await this.validateNotLastUserDelete(tenantId);
+
+    // Delete user from the storage.
     await systemUserRepository.deleteById(userId);
 
     this.logger.info('[users] the given user deleted successfully.', {
@@ -104,18 +93,24 @@ export default class UsersService {
 
   /**
    * Activate the given user id.
-   * @param {number} tenantId
-   * @param {number} userId
+   * @param {number} tenantId - Tenant id.
+   * @param {number} userId - User id.
+   * @return {Promise<void>}
    */
-  async activateUser(
+  public async activateUser(
     tenantId: number,
     userId: number,
     authorizedUser: ISystemUser
   ): Promise<void> {
-    this.throwErrorIfUserIdSameAuthorizedUser(userId, authorizedUser);
     const { systemUserRepository } = this.repositories;
 
+    // Throw service error if the given user is equals the authorized user.
+    this.throwErrorIfUserSameAuthorizedUser(userId, authorizedUser);
+
+    // Retrieve the user or throw not found service error.
     const user = await this.getUserOrThrowError(tenantId, userId);
+
+    // Throw serivce error if the user is already activated.
     this.throwErrorIfUserActive(user);
 
     await systemUserRepository.activateUser(userId);
@@ -127,15 +122,20 @@ export default class UsersService {
    * @param {number} userId
    * @return {Promise<void>}
    */
-  async inactivateUser(
+  public async inactivateUser(
     tenantId: number,
     userId: number,
     authorizedUser: ISystemUser
   ): Promise<void> {
-    this.throwErrorIfUserIdSameAuthorizedUser(userId, authorizedUser);
     const { systemUserRepository } = this.repositories;
 
+    // Throw service error if the given user is equals the authorized user.
+    this.throwErrorIfUserSameAuthorizedUser(userId, authorizedUser);
+
+    // Retrieve the user or throw not found service error.
     const user = await this.getUserOrThrowError(tenantId, userId);
+
+    // Throw serivce error if the user is already inactivated.
     this.throwErrorIfUserInactive(user);
 
     await systemUserRepository.inactivateById(userId);
@@ -146,10 +146,10 @@ export default class UsersService {
    * @param {number} tenantId
    * @param {object} filter
    */
-  async getList(tenantId: number) {
-    const users = await SystemUser.query()
-      .whereNotDeleted()
-      .where('tenant_id', tenantId);
+  public async getList(tenantId: number) {
+    const { systemUserRepository } = this.repositories;
+
+    const users = await systemUserRepository.find({ tenantId });
 
     return users;
   }
@@ -159,8 +159,48 @@ export default class UsersService {
    * @param {number} tenantId - Tenant id.
    * @param {number} userId - User id.
    */
-  async getUser(tenantId: number, userId: number) {
+  public async getUser(tenantId: number, userId: number) {
     return this.getUserOrThrowError(tenantId, userId);
+  }
+
+    /**
+   * Validate user existance throw error in case user was not found.,
+   * @param {number} tenantId -
+   * @param {number} userId -
+   * @returns {ISystemUser}
+   */
+  async getUserOrThrowError(
+    tenantId: number,
+    userId: number
+  ): Promise<ISystemUser> {
+    const { systemUserRepository } = this.repositories;
+
+    const user = await systemUserRepository.findOneByIdAndTenant(
+      userId,
+      tenantId
+    );
+    if (!user) {
+      this.logger.info('[users] the given user not found.', {
+        tenantId,
+        userId,
+      });
+      throw new ServiceError(ERRORS.USER_NOT_FOUND);
+    }
+    return user;
+  }
+
+  /**
+   * Validate the delete user should not be the last user.
+   * @param {number} tenantId
+   */
+  private async validateNotLastUserDelete(tenantId: number) {
+    const { systemUserRepository } = this.repositories;
+
+    const usersFound = await systemUserRepository.find({ tenantId });
+
+    if (usersFound.length === 1) {
+      throw new ServiceError(ERRORS.CANNOT_DELETE_LAST_USER);
+    }
   }
 
   /**
@@ -168,9 +208,9 @@ export default class UsersService {
    * @param {ISystemUser} user
    * @throws {ServiceError}
    */
-  throwErrorIfUserActive(user: ISystemUser) {
+  private throwErrorIfUserActive(user: ISystemUser) {
     if (user.active) {
-      throw new ServiceError('user_already_active');
+      throw new ServiceError(ERRORS.USER_ALREADY_ACTIVE);
     }
   }
 
@@ -179,9 +219,9 @@ export default class UsersService {
    * @param {ISystemUser} user
    * @throws {ServiceError}
    */
-  throwErrorIfUserInactive(user: ISystemUser) {
+  private throwErrorIfUserInactive(user: ISystemUser) {
     if (!user.active) {
-      throw new ServiceError('user_already_inactive');
+      throw new ServiceError(ERRORS.USER_ALREADY_INACTIVE);
     }
   }
 
@@ -190,12 +230,12 @@ export default class UsersService {
    * @param {number} userId
    * @param {ISystemUser} authorizedUser
    */
-  throwErrorIfUserIdSameAuthorizedUser(
+  private throwErrorIfUserSameAuthorizedUser(
     userId: number,
     authorizedUser: ISystemUser
   ) {
     if (userId === authorizedUser.id) {
-      throw new ServiceError('user_same_the_authorized_user');
+      throw new ServiceError(ERRORS.USER_SAME_THE_AUTHORIZED_USER);
     }
   }
 }

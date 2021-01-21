@@ -1,4 +1,4 @@
-import { mapKeys, omit, snakeCase } from 'lodash';
+import { omit } from 'lodash';
 import { transformToCamelCase, flatObject } from 'utils';
 import { formatMessage } from 'services/intl';
 

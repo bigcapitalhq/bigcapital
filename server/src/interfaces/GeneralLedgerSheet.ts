@@ -14,13 +14,26 @@ export interface IGeneralLedgerSheetQuery {
 
 export interface IGeneralLedgerSheetAccountTransaction {
   id: number,
+
   amount: number,
+  runningBalance: number,
+  credit: number,
+  debit: number,
+
   formattedAmount: string,
+  formattedCredit: string,
+  formattedDebit: string,
+  formattedRunningBalance: string,
+
   currencyCode: string,
   note?: string,
+
   transactionType?: string,
+  transactionNumber: string,
+
   referenceId?: number,
   referenceType?: string,
+
   date: Date|string,
 };
 
@@ -38,8 +51,8 @@ export interface IGeneralLedgerSheetAccount {
   index: number,
   parentAccountId: number,
   transactions: IGeneralLedgerSheetAccountTransaction[],
-  opening: IGeneralLedgerSheetAccountBalance,
-  closing: IGeneralLedgerSheetAccountBalance,
+  openingBalance: IGeneralLedgerSheetAccountBalance,
+  closingBalance: IGeneralLedgerSheetAccountBalance,
 }
 
 export interface IAccountTransaction {

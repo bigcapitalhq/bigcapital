@@ -8,7 +8,7 @@ import Money from 'components/Money';
 
 import withJournal from './withJournal';
 
-import { compose, defaultExpanderReducer } from 'utils';
+import { compose, defaultExpanderReducer, getForceWidth } from 'utils';
 
 function JournalSheetTable({
   // #withJournal
@@ -22,70 +22,52 @@ function JournalSheetTable({
 }) {
   const { formatMessage } = useIntl();
 
-  const rowTypeFilter = (rowType, value, types) => {
-    return types.indexOf(rowType) === -1 ? '' : value;
-  };
-
-  const exceptRowTypes = (rowType, value, types) => {
-    return types.indexOf(rowType) !== -1 ? '' : value;
-  };
-
   const columns = useMemo(
     () => [
       {
         Header: formatMessage({ id: 'date' }),
-        accessor: (r) =>
-          rowTypeFilter(r.rowType, moment(r.date).format('YYYY MMM DD'), [
-            'first_entry',
-          ]),
+        accessor: row => row.date ? moment(row.date).format('YYYY MMM DD') : '',
         className: 'date',
-        width: 85,
+        width: 100,
       },
       {
         Header: formatMessage({ id: 'transaction_type' }),
-        accessor: (r) =>
-          rowTypeFilter(r.rowType, r.transaction_type, ['first_entry']),
+        accessor: 'reference_type_formatted',
         className: 'reference_type_formatted',
-        width: 145,
+        width: 120,
       },
       {
         Header: formatMessage({ id: 'num' }),
-        accessor: (r) =>
-          rowTypeFilter(r.rowType, r.reference_id, ['first_entry']),
+        accessor: 'reference_id',
         className: 'reference_id',
         width: 70,
       },
       {
         Header: formatMessage({ id: 'description' }),
         accessor: 'note',
+        className: 'note'
       },
       {
         Header: formatMessage({ id: 'acc_code' }),
-        accessor: 'account.code',
+        accessor: 'account_code',
         width: 95,
         className: 'account_code',
       },
       {
         Header: formatMessage({ id: 'account' }),
-        accessor: 'account.name',
+        accessor: 'account_name',
+        className: 'account_name',
+        textOverview: true,
       },
       {
         Header: formatMessage({ id: 'credit' }),
-        accessor: (r) =>
-          exceptRowTypes(
-            r.rowType,
-            <Money amount={r.credit} currency={'USD'} />,
-            ['space_entry'],
-          ),
+        accessor: 'formatted_credit',
+        className: 'credit'
       },
       {
         Header: formatMessage({ id: 'debit' }),
-        accessor: (r) =>
-          exceptRowTypes(
-            r.rowType,
-            <Money amount={r.debit} currency={'USD'} />,
-            ['space_entry'],
-          ),
+        accessor: 'formatted_debit',
+        className: 'debit'
       },
     ],
     [formatMessage],
@@ -101,6 +83,20 @@ function JournalSheetTable({
   // Default expanded rows of general journal table.
   const expandedRows = useMemo(() => defaultExpanderReducer([], 1), []);
 
+  const rowClassNames = useCallback((row) => {
+    const { original } = row;
+    const rowTypes = Array.isArray(original.rowType)
+      ? original.rowType
+      : [original.rowType];
+
+    return {
+      ...rowTypes.reduce((acc, rowType) => {
+        acc[`row_type--${rowType}`] = rowType;
+        return acc;
+      }, {}),
+    };
+  }, []);
+
   return (
     <FinancialSheet
       companyName={companyName}
@@ -111,11 +107,12 @@ function JournalSheetTable({
       loading={journalSheetLoading}
       // minimal={true}
       fullWidth={true}
-    >
+      >
       <DataTable
         className="bigcapital-datatable--financial-report"
         columns={columns}
         data={journalSheetTableRows}
+        rowClassNames={rowClassNames}
         onFetchData={handleFetchData}
         noResults={formatMessage({
           id: 'this_report_does_not_contain_any_data_between_date_period',

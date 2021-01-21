@@ -50,7 +50,7 @@ export interface IProfitLossSheetStatement {
   costOfSales: IProfitLossSheetAccountsSection,
   expenses: IProfitLossSheetAccountsSection,
   otherExpenses: IProfitLossSheetAccountsSection,
-
+  otherIncome: IProfitLossSheetAccountsSection,
   netIncome: IProfitLossSheetTotalSection;
   operatingProfit: IProfitLossSheetTotalSection;
   grossProfit: IProfitLossSheetTotalSection;

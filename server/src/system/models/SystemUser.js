@@ -1,19 +1,21 @@
-import { Model, mixin } from 'objection';
+import { Model } from 'objection';
 import bcrypt from 'bcryptjs';
-import SoftDelete from 'objection-soft-delete';
 import SystemModel from 'system/models/SystemModel';
-import moment from 'moment';
+import SoftDeleteQueryBuilder from 'collection/SoftDeleteQueryBuilder';
 
-export default class SystemUser extends mixin(SystemModel, [SoftDelete({
-  columnName: 'deleted_at',
-  deletedValue: moment().format('YYYY-MM-DD HH:mm:ss'),
-  notDeletedValue: null,
-})]) {
+export default class SystemUser extends SystemModel {
   /**
    * Table name.
    */
   static get tableName() {
     return 'users';
+  }
+
+  /**
+   * Soft delete query builder.
+   */
+  static get QueryBuilder() {
+    return SoftDeleteQueryBuilder;
   }
 
   /**
@@ -23,10 +25,16 @@ export default class SystemUser extends mixin(SystemModel, [SoftDelete({
     return ['createdAt', 'updatedAt'];
   }
 
+  /**
+   * Virtual attributes.
+   */
   static get virtualAttributes() {
     return ['fullName'];
   }
 
+  /**
+   * Full name attribute.
+   */
   get fullName() {
     return (this.firstName + ' ' + this.lastName).trim();
   }

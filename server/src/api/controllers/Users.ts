@@ -126,6 +126,7 @@ export default class UsersController extends BaseController{
 
     try {
       await this.usersService.deleteUser(tenantId, id);
+
       return res.status(200).send({
         id,
         message: 'The user has been deleted successfully.'
@@ -225,10 +226,10 @@ export default class UsersController extends BaseController{
     if (error instanceof ServiceErrors) {
       const errorReasons = [];
       
-      if (error.errorType === 'email_already_exists') {
+      if (error.errorType === 'EMAIL_ALREADY_EXISTS') {
         errorReasons.push({ type: 'EMAIL_ALREADY_EXIST', code: 100 });
       }
-      if (error.errorType === 'phone_number_already_exist') {
+      if (error.errorType === 'PHONE_NUMBER_ALREADY_EXIST') {
         errorReasons.push({ type: 'PHONE_NUMBER_ALREADY_EXIST', code: 200 });
       }
       if (errorReasons.length > 0) {
@@ -236,29 +237,35 @@ export default class UsersController extends BaseController{
       }
     }
     if (error instanceof ServiceError) {
-      if (error.errorType === 'user_not_found') {
+      if (error.errorType === 'USER_NOT_FOUND') {
         return res.boom.badRequest(
           'User not found.',
           { errors: [{ type: 'USER.NOT.FOUND', code: 100 }] }
         );
       }
-      if (error.errorType === 'user_already_active') {
+      if (error.errorType === 'USER_ALREADY_ACTIVE') {
         return res.boom.badRequest(
           'User is already active.',
           { errors: [{ type: 'USER.ALREADY.ACTIVE', code: 200 }] },
         );
       }
-      if (error.errorType === 'user_already_inactive') {
+      if (error.errorType === 'USER_ALREADY_INACTIVE') {
         return res.boom.badRequest(
           'User is already inactive.',
           { errors: [{ type: 'USER.ALREADY.INACTIVE', code: 200 }] },
         );
       }
-      if (error.errorType === 'user_same_the_authorized_user') {
+      if (error.errorType === 'USER_SAME_THE_AUTHORIZED_USER') {
         return res.boom.badRequest(
           'You could not activate/inactivate the same authorized user.',
           { errors: [{ type: 'CANNOT.TOGGLE.ACTIVATE.AUTHORIZED.USER', code: 300 }] },
         )
+      }
+      if (error.errorType === 'CANNOT_DELETE_LAST_USER') {
+        return res.boom.badRequest(
+          'Cannot delete last user in the organization.',
+          { errors: [{ type: 'CANNOT_DELETE_LAST_USER', code: 400 }] },
+        );
       }
     }
     next(error);

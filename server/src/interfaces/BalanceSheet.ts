@@ -42,7 +42,7 @@ export interface IBalanceSheetStructureSection {
   sectionType?: string;
   type: 'section' | 'accounts_section';
   children?: IBalanceSheetStructureSection[];
-  accountsTypesRelated?: string[];
+  accountsTypes?: string[];
   alwaysShow?: boolean;
 }
 
@@ -74,6 +74,6 @@ export interface IBalanceSheetSection {
   total: IBalanceSheetAccountTotal;
   totalPeriods?: IBalanceSheetAccountTotal[];
 
-  accountsTypesRelated?: string[];
+  accountsTypes?: string[];
   _forceShow?: boolean;
 }

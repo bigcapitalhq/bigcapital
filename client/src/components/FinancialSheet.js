@@ -3,9 +3,10 @@ import moment from 'moment';
 import classnames from 'classnames';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 
+import 'style/pages/FinancialStatements/FinancialSheet.scss';
+
 import { If, LoadingIndicator, MODIFIER } from 'components';
 
-import 'style/pages/FinancialStatements/FinancialSheet.scss';
 
 export default function FinancialSheet({
   companyName,
@@ -20,7 +21,8 @@ export default function FinancialSheet({
   className,
   basis,
   minimal = false,
-  fullWidth = false
+  fullWidth = false,
+  currentDate = true,
 }) {
   const { formatMessage } = useIntl();
   const format = 'DD MMMM YYYY';
@@ -84,11 +86,19 @@ export default function FinancialSheet({
         <div class="financial-sheet__table">{children}</div>
         <div class="financial-sheet__accounting-basis">{accountingBasis}</div>
 
-        {basisLabel && (
-          <div class="financial-sheet__basis">
-            <T id={'accounting_basis'} /> {basisLabel}
-          </div>
-        )}
+        <div class="financial-sheet__footer">
+          <If condition={basisLabel}>
+            <span class="financial-sheet__basis">
+              <T id={'accounting_basis'} /> {basisLabel}
+            </span>
+          </If>
+
+          <If condition={currentDate}>
+            <span class="financial-sheet__current-date">
+              {moment().format('YYYY MMM DD  HH:MM')}
+            </span>
+          </If>
+        </div>
       </div>
     </div>
   );

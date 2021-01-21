@@ -38,6 +38,7 @@ function ReceivableAgingSummaryTable({
         className: 'customer_name',
         sticky: 'left',
         width: 240,
+        textOverview: true,
       },
       {
         Header: <T id={'current'} />,

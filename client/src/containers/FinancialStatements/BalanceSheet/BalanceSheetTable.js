@@ -4,32 +4,11 @@ import classNames from 'classnames';
 
 import FinancialSheet from 'components/FinancialSheet';
 import DataTable from 'components/DataTable';
+import { CellTextSpan } from 'components/Datatable/Cells';
 
 import withBalanceSheetDetail from './withBalanceSheetDetail';
 
 import { compose, defaultExpanderReducer, getColumnWidth } from 'utils';
-
-// Total cell.
-function TotalCell({ cell }) {
-  const row = cell.row.original;
-
-  if (row.total) {
-    return row.total.formatted_amount;
-  }
-  return '';
-}
-
-// Total period cell.
-const TotalPeriodCell = (index) => ({ cell }) => {
-  const { original } = cell.row;
-
-  if (original.total_periods && original.total_periods[index]) {
-    const amount = original.total_periods[index].formatted_amount;
-
-    return amount;
-  }
-  return '';
-};
 
 /**
  * Balance sheet table.
@@ -52,14 +31,15 @@ function BalanceSheetTable({
         Header: formatMessage({ id: 'account_name' }),
         accessor: (row) => (row.code ? `${row.name} - ${row.code}` : row.name),
         className: 'account_name',
+        textOverview: true,
         width: 240,
       },
       ...(balanceSheetQuery.display_columns_type === 'total'
         ? [
             {
               Header: formatMessage({ id: 'total' }),
-              accessor: 'balance.formatted_amount',
-              Cell: TotalCell,
+              accessor: 'total.formatted_amount',
+              Cell: CellTextSpan,
               className: 'total',
               width: 140,
             },
@@ -69,8 +49,8 @@ function BalanceSheetTable({
         ? balanceSheetColumns.map((column, index) => ({
             id: `date_period_${index}`,
             Header: column,
-            accessor: `total_periods[${index}]`,
-            Cell: TotalPeriodCell(index),
+            Cell: CellTextSpan,
+            accessor: `total_periods[${index}].formatted_amount`,
             className: classNames('total-period', `total-periods-${index}`),
             width: getColumnWidth(
               balanceSheetTableRows,
@@ -93,7 +73,7 @@ function BalanceSheetTable({
     const { original } = row;
     const rowTypes = Array.isArray(original.row_types)
       ? original.row_types
-      : [];
+      : [original.row_types];
 
     return {
       ...rowTypes.reduce((acc, rowType) => {
