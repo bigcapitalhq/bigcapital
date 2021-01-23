@@ -25,13 +25,15 @@ import TenancyService from 'services/Tenancy/TenancyService';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import { entriesAmountDiff, formatDateFields } from 'utils';
 import { ServiceError } from 'exceptions';
+import { ACCOUNT_PARENT_TYPE } from 'data/AccountTypes';
 
 const ERRORS = {
   BILL_VENDOR_NOT_FOUND: 'VENDOR_NOT_FOUND',
   PAYMENT_MADE_NOT_FOUND: 'PAYMENT_MADE_NOT_FOUND',
   BILL_PAYMENT_NUMBER_NOT_UNQIUE: 'BILL_PAYMENT_NUMBER_NOT_UNQIUE',
   PAYMENT_ACCOUNT_NOT_FOUND: 'PAYMENT_ACCOUNT_NOT_FOUND',
-  PAYMENT_ACCOUNT_NOT_CURRENT_ASSET_TYPE: 'PAYMENT_ACCOUNT_NOT_CURRENT_ASSET_TYPE',
+  PAYMENT_ACCOUNT_NOT_CURRENT_ASSET_TYPE:
+    'PAYMENT_ACCOUNT_NOT_CURRENT_ASSET_TYPE',
   BILL_ENTRIES_IDS_NOT_FOUND: 'BILL_ENTRIES_IDS_NOT_FOUND',
   BILL_PAYMENT_ENTRIES_NOT_FOUND: 'BILL_PAYMENT_ENTRIES_NOT_FOUND',
   INVALID_BILL_PAYMENT_AMOUNT: 'INVALID_BILL_PAYMENT_AMOUNT',
@@ -63,9 +65,9 @@ export default class BillPaymentsService {
 
   /**
    * Validate whether the bill payment vendor exists on the storage.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {Function} next 
+   * @param {Request} req
+   * @param {Response} res
+   * @param {Function} next
    */
   private async getVendorOrThrowError(tenantId: number, vendorId: number) {
     const { vendorRepository } = this.tenancy.repositories(tenantId);
@@ -74,18 +76,21 @@ export default class BillPaymentsService {
     const vendor = await vendorRepository.findOneById(vendorId);
 
     if (!vendor) {
-      throw new ServiceError(ERRORS.BILL_VENDOR_NOT_FOUND)
+      throw new ServiceError(ERRORS.BILL_VENDOR_NOT_FOUND);
     }
     return vendor;
   }
 
   /**
-   * Validates the bill payment existance. 
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {Function} next 
+   * Validates the bill payment existance.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {Function} next
    */
-  private async getPaymentMadeOrThrowError(tenantid: number, paymentMadeId: number) {
+  private async getPaymentMadeOrThrowError(
+    tenantid: number,
+    paymentMadeId: number
+  ) {
     const { BillPayment } = this.tenancy.models(tenantid);
     const billPayment = await BillPayment.query()
       .withGraphFetched('entries')
@@ -98,23 +103,25 @@ export default class BillPaymentsService {
   }
 
   /**
-   * Validates the payment account. 
-   * @param {number} tenantId - 
+   * Validates the payment account.
+   * @param {number} tenantId -
    * @param {number} paymentAccountId
    * @return {Promise<IAccountType>}
    */
-  private async getPaymentAccountOrThrowError(tenantId: number, paymentAccountId: number) {
-    const { accountTypeRepository, accountRepository } = this.tenancy.repositories(tenantId);
+  private async getPaymentAccountOrThrowError(
+    tenantId: number,
+    paymentAccountId: number
+  ) {
+    const { accountRepository } = this.tenancy.repositories(tenantId);
 
-    const currentAssetTypes = await accountTypeRepository.getByChildType('current_asset');
-    const paymentAccount = await accountRepository.findOneById(paymentAccountId);
-
-    const currentAssetTypesIds = currentAssetTypes.map(type => type.id);
+    const paymentAccount = await accountRepository.findOneById(
+      paymentAccountId
+    );
 
     if (!paymentAccount) {
       throw new ServiceError(ERRORS.PAYMENT_ACCOUNT_NOT_FOUND);
     }
-    if (currentAssetTypesIds.indexOf(paymentAccount.accountTypeId) === -1) {
+    if (!paymentAccount.isParentType(ACCOUNT_PARENT_TYPE.CURRENT_ASSET)) {
       throw new ServiceError(ERRORS.PAYMENT_ACCOUNT_NOT_CURRENT_ASSET_TYPE);
     }
     return paymentAccount;
@@ -122,35 +129,44 @@ export default class BillPaymentsService {
 
   /**
    * Validates the payment number uniqness.
-   * @param {number} tenantId - 
-   * @param {string} paymentMadeNumber - 
+   * @param {number} tenantId -
+   * @param {string} paymentMadeNumber -
    * @return {Promise<IBillPayment>}
    */
-  private async validatePaymentNumber(tenantId: number, paymentMadeNumber: string, notPaymentMadeId?: number) {
+  private async validatePaymentNumber(
+    tenantId: number,
+    paymentMadeNumber: string,
+    notPaymentMadeId?: number
+  ) {
     const { BillPayment } = this.tenancy.models(tenantId);
-  
-    const foundBillPayment = await BillPayment.query()
-      .onBuild((builder: any) => {
+
+    const foundBillPayment = await BillPayment.query().onBuild(
+      (builder: any) => {
         builder.findOne('payment_number', paymentMadeNumber);
 
         if (notPaymentMadeId) {
           builder.whereNot('id', notPaymentMadeId);
         }
-      });
- 
+      }
+    );
+
     if (foundBillPayment) {
-      throw new ServiceError(ERRORS.BILL_PAYMENT_NUMBER_NOT_UNQIUE)
+      throw new ServiceError(ERRORS.BILL_PAYMENT_NUMBER_NOT_UNQIUE);
     }
     return foundBillPayment;
   }
 
   /**
    * Validate whether the entries bills ids exist on the storage.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
-  private async validateBillsExistance(tenantId: number, billPaymentEntries: IBillPaymentEntry[], vendorId: number) {
+  private async validateBillsExistance(
+    tenantId: number,
+    billPaymentEntries: IBillPaymentEntry[],
+    vendorId: number
+  ) {
     const { Bill } = this.tenancy.models(tenantId);
     const entriesBillsIds = billPaymentEntries.map((e: any) => e.billId);
 
@@ -162,15 +178,15 @@ export default class BillPaymentsService {
     const notFoundBillsIds = difference(entriesBillsIds, storedBillsIds);
 
     if (notFoundBillsIds.length > 0) {
-      throw new ServiceError(ERRORS.BILL_ENTRIES_IDS_NOT_FOUND)
+      throw new ServiceError(ERRORS.BILL_ENTRIES_IDS_NOT_FOUND);
     }
   }
 
   /**
    * Validate wether the payment amount bigger than the payable amount.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    * @return {void}
    */
   private async validateBillsDueAmount(
@@ -179,22 +195,28 @@ export default class BillPaymentsService {
     oldPaymentEntries: IBillPaymentEntry[] = []
   ) {
     const { Bill } = this.tenancy.models(tenantId);
-    const billsIds = billPaymentEntries.map((entry: IBillPaymentEntryDTO) => entry.billId);
+    const billsIds = billPaymentEntries.map(
+      (entry: IBillPaymentEntryDTO) => entry.billId
+    );
 
     const storedBills = await Bill.query().whereIn('id', billsIds);
     const storedBillsMap = new Map(
-      storedBills
-        .map((bill) => {
-          const oldEntries = oldPaymentEntries.filter(entry => entry.billId === bill.id);
-          const oldPaymentAmount = sumBy(oldEntries, 'paymentAmount') || 0;
+      storedBills.map((bill) => {
+        const oldEntries = oldPaymentEntries.filter(
+          (entry) => entry.billId === bill.id
+        );
+        const oldPaymentAmount = sumBy(oldEntries, 'paymentAmount') || 0;
 
-          return [bill.id, { ...bill, dueAmount: bill.dueAmount + oldPaymentAmount }];
-        }),
+        return [
+          bill.id,
+          { ...bill, dueAmount: bill.dueAmount + oldPaymentAmount },
+        ];
+      })
     );
-    interface invalidPaymentAmountError{
-      index: number,
-      due_amount: number
-    };
+    interface invalidPaymentAmountError {
+      index: number;
+      due_amount: number;
+    }
     const hasWrongPaymentAmount: invalidPaymentAmountError[] = [];
 
     billPaymentEntries.forEach((entry: IBillPaymentEntryDTO, index: number) => {
@@ -203,7 +225,7 @@ export default class BillPaymentsService {
 
       if (dueAmount < entry.paymentAmount) {
         hasWrongPaymentAmount.push({ index, due_amount: dueAmount });
-      }      
+      }
     });
     if (hasWrongPaymentAmount.length > 0) {
       throw new ServiceError(ERRORS.INVALID_BILL_PAYMENT_AMOUNT);
@@ -211,9 +233,9 @@ export default class BillPaymentsService {
   }
 
   /**
-   * Validate the payment receive entries IDs existance. 
-   * @param {Request} req 
-   * @param {Response} res 
+   * Validate the payment receive entries IDs existance.
+   * @param {Request} req
+   * @param {Response} res
    * @return {Response}
    */
   private async validateEntriesIdsExistance(
@@ -227,9 +249,12 @@ export default class BillPaymentsService {
       .filter((entry: any) => entry.id)
       .map((entry: any) => entry.id);
 
-    const storedEntries = await BillPaymentEntry.query().where('bill_payment_id', billPaymentId);
+    const storedEntries = await BillPaymentEntry.query().where(
+      'bill_payment_id',
+      billPaymentId
+    );
 
-    const storedEntriesIds = storedEntries.map((entry: any) => entry.id);    
+    const storedEntriesIds = storedEntries.map((entry: any) => entry.id);
     const notFoundEntriesIds = difference(entriesIds, storedEntriesIds);
 
     if (notFoundEntriesIds.length > 0) {
@@ -256,7 +281,10 @@ export default class BillPaymentsService {
     tenantId: number,
     billPaymentDTO: IBillPaymentDTO
   ): Promise<IBillPayment> {
-    this.logger.info('[paymentDate] trying to save payment made.', { tenantId, billPaymentDTO });
+    this.logger.info('[paymentDate] trying to save payment made.', {
+      tenantId,
+      billPaymentDTO,
+    });
     const { BillPayment } = this.tenancy.models(tenantId);
 
     const billPaymentObj = {
@@ -268,28 +296,39 @@ export default class BillPaymentsService {
     await this.getVendorOrThrowError(tenantId, billPaymentObj.vendorId);
 
     // Validate the payment account existance and type.
-    await this.getPaymentAccountOrThrowError(tenantId, billPaymentObj.paymentAccountId);
+    await this.getPaymentAccountOrThrowError(
+      tenantId,
+      billPaymentObj.paymentAccountId
+    );
 
     // Validate the payment number uniquiness.
     if (billPaymentObj.paymentNumber) {
       await this.validatePaymentNumber(tenantId, billPaymentObj.paymentNumber);
     }
     // Validates the bills existance and associated to the given vendor.
-    await this.validateBillsExistance(tenantId, billPaymentObj.entries, billPaymentDTO.vendorId);
+    await this.validateBillsExistance(
+      tenantId,
+      billPaymentObj.entries,
+      billPaymentDTO.vendorId
+    );
 
     // Validates the bills due payment amount.
     await this.validateBillsDueAmount(tenantId, billPaymentObj.entries);
 
-    const billPayment = await BillPayment.query()
-      .insertGraphAndFetch({
-        ...omit(billPaymentObj, ['entries']),
-        entries: billPaymentDTO.entries,
-      });
+    const billPayment = await BillPayment.query().insertGraphAndFetch({
+      ...omit(billPaymentObj, ['entries']),
+      entries: billPaymentDTO.entries,
+    });
 
     await this.eventDispatcher.dispatch(events.billPayment.onCreated, {
-      tenantId, billPayment, billPaymentId: billPayment.id,
+      tenantId,
+      billPayment,
+      billPaymentId: billPayment.id,
     });
-    this.logger.info('[payment_made] inserted successfully.', { tenantId, billPaymentId: billPayment.id, });
+    this.logger.info('[payment_made] inserted successfully.', {
+      tenantId,
+      billPaymentId: billPayment.id,
+    });
 
     return billPayment;
   }
@@ -315,11 +354,14 @@ export default class BillPaymentsService {
   public async editBillPayment(
     tenantId: number,
     billPaymentId: number,
-    billPaymentDTO,
+    billPaymentDTO
   ): Promise<IBillPayment> {
     const { BillPayment } = this.tenancy.models(tenantId);
 
-    const oldBillPayment = await this.getPaymentMadeOrThrowError(tenantId, billPaymentId);
+    const oldBillPayment = await this.getPaymentMadeOrThrowError(
+      tenantId,
+      billPaymentId
+    );
 
     const billPaymentObj = {
       amount: sumBy(billPaymentDTO.entries, 'paymentAmount'),
@@ -330,31 +372,57 @@ export default class BillPaymentsService {
     await this.getVendorOrThrowError(tenantId, billPaymentObj.vendorId);
 
     // Validate the payment account existance and type.
-    await this.getPaymentAccountOrThrowError(tenantId, billPaymentObj.paymentAccountId);
+    await this.getPaymentAccountOrThrowError(
+      tenantId,
+      billPaymentObj.paymentAccountId
+    );
 
     // Validate the items entries IDs existance on the storage.
-    await this.validateEntriesIdsExistance(tenantId, billPaymentId, billPaymentObj.entries);
-    
+    await this.validateEntriesIdsExistance(
+      tenantId,
+      billPaymentId,
+      billPaymentObj.entries
+    );
+
     // Validate the bills existance and associated to the given vendor.
-    await this.validateBillsExistance(tenantId, billPaymentObj.entries, billPaymentDTO.vendorId);
+    await this.validateBillsExistance(
+      tenantId,
+      billPaymentObj.entries,
+      billPaymentDTO.vendorId
+    );
 
     // Validates the bills due payment amount.
-    await this.validateBillsDueAmount(tenantId, billPaymentObj.entries, oldBillPayment.entries);
+    await this.validateBillsDueAmount(
+      tenantId,
+      billPaymentObj.entries,
+      oldBillPayment.entries
+    );
 
     // Validate the payment number uniquiness.
     if (billPaymentObj.paymentNumber) {
-      await this.validatePaymentNumber(tenantId, billPaymentObj.paymentNumber, billPaymentId);
+      await this.validatePaymentNumber(
+        tenantId,
+        billPaymentObj.paymentNumber,
+        billPaymentId
+      );
     }
-    const billPayment = await BillPayment.query()
-      .upsertGraphAndFetch({
-        id: billPaymentId,
-        ...omit(billPaymentObj, ['entries']),
-        entries: billPaymentDTO.entries,
-      });
-    await this.eventDispatcher.dispatch(events.billPayment.onEdited, {
-      tenantId, billPaymentId, billPayment, oldBillPayment,
+    const billPayment = await BillPayment.query().upsertGraphAndFetch({
+      id: billPaymentId,
+      ...omit(billPaymentObj, ['entries']),
+      entries: billPaymentDTO.entries,
     });
-    this.logger.info('[bill_payment] edited successfully.', { tenantId, billPaymentId, billPayment, oldBillPayment });
+    await this.eventDispatcher.dispatch(events.billPayment.onEdited, {
+      tenantId,
+      billPaymentId,
+      billPayment,
+      oldBillPayment,
+    });
+    this.logger.info('[bill_payment] edited successfully.', {
+      tenantId,
+      billPaymentId,
+      billPayment,
+      oldBillPayment,
+    });
 
     return billPayment;
   }
@@ -367,15 +435,30 @@ export default class BillPaymentsService {
    */
   public async deleteBillPayment(tenantId: number, billPaymentId: number) {
     const { BillPayment, BillPaymentEntry } = this.tenancy.models(tenantId);
-    
-    this.logger.info('[bill_payment] trying to delete.', { tenantId, billPaymentId });
-    const oldBillPayment = await this.getPaymentMadeOrThrowError(tenantId, billPaymentId);
 
-    await BillPaymentEntry.query().where('bill_payment_id', billPaymentId).delete();
+    this.logger.info('[bill_payment] trying to delete.', {
+      tenantId,
+      billPaymentId,
+    });
+    const oldBillPayment = await this.getPaymentMadeOrThrowError(
+      tenantId,
+      billPaymentId
+    );
+
+    await BillPaymentEntry.query()
+      .where('bill_payment_id', billPaymentId)
+      .delete();
     await BillPayment.query().where('id', billPaymentId).delete();
 
-    await this.eventDispatcher.dispatch(events.billPayment.onDeleted, { tenantId, billPaymentId, oldBillPayment });
-    this.logger.info('[bill_payment] deleted successfully.', { tenantId, billPaymentId });
+    await this.eventDispatcher.dispatch(events.billPayment.onDeleted, {
+      tenantId,
+      billPaymentId,
+      oldBillPayment,
+    });
+    this.logger.info('[bill_payment] deleted successfully.', {
+      tenantId,
+      billPaymentId,
+    });
   }
 
   /**
@@ -386,7 +469,10 @@ export default class BillPaymentsService {
   public async getPaymentBills(tenantId: number, billPaymentId: number) {
     const { Bill } = this.tenancy.models(tenantId);
 
-    const billPayment = await this.getPaymentMadeOrThrowError(tenantId, billPaymentId);
+    const billPayment = await this.getPaymentMadeOrThrowError(
+      tenantId,
+      billPaymentId
+    );
     const paymentBillsIds = billPayment.entries.map((entry) => entry.id);
 
     const bills = await Bill.query().whereIn('id', paymentBillsIds);
@@ -396,11 +482,14 @@ export default class BillPaymentsService {
 
   /**
    * Records bill payment receive journal transactions.
-   * @param {number} tenantId - 
+   * @param {number} tenantId -
    * @param {BillPayment} billPayment
    * @param {Integer} billPaymentId
    */
-  public async recordJournalEntries(tenantId: number, billPayment: IBillPayment) {
+  public async recordJournalEntries(
+    tenantId: number,
+    billPayment: IBillPayment
+  ) {
     const { AccountTransaction } = this.tenancy.models(tenantId);
     const { accountRepository } = this.tenancy.repositories(tenantId);
 
@@ -408,7 +497,9 @@ export default class BillPaymentsService {
     const formattedDate = moment(billPayment.paymentDate).format('YYYY-MM-DD');
 
     // Retrieve AP account from the storage.
-    const payableAccount = await accountRepository.findOne({ slug: 'accounts-payable' });
+    const payableAccount = await accountRepository.findOne({
+      slug: 'accounts-payable',
+    });
 
     const journal = new JournalPoster(tenantId);
     const commonJournal = {
@@ -451,43 +542,49 @@ export default class BillPaymentsService {
 
   /**
    * Reverts bill payment journal entries.
-   * @param {number} tenantId 
-   * @param {number} billPaymentId 
+   * @param {number} tenantId
+   * @param {number} billPaymentId
    * @return {Promise<void>}
    */
   public async revertJournalEntries(tenantId: number, billPaymentId: number) {
     const journal = new JournalPoster(tenantId);
     const journalCommands = new JournalCommands(journal);
-  
+
     await journalCommands.revertJournalEntries(billPaymentId, 'BillPayment');
-  
-    return Promise.all([
-      journal.saveBalance(),
-      journal.deleteEntries(),
-    ]);
+
+    return Promise.all([journal.saveBalance(), journal.deleteEntries()]);
   }
 
   /**
    * Retrieve bill payment paginted and filterable list.
-   * @param {number} tenantId 
-   * @param {IBillPaymentsFilter} billPaymentsFilter 
+   * @param {number} tenantId
+   * @param {IBillPaymentsFilter} billPaymentsFilter
    */
   public async listBillPayments(
     tenantId: number,
-    billPaymentsFilter: IBillPaymentsFilter,
-  ): Promise<{ billPayments: IBillPayment, pagination: IPaginationMeta, filterMeta: IFilterMeta }> {
+    billPaymentsFilter: IBillPaymentsFilter
+  ): Promise<{
+    billPayments: IBillPayment;
+    pagination: IPaginationMeta;
+    filterMeta: IFilterMeta;
+  }> {
     const { BillPayment } = this.tenancy.models(tenantId);
-    const dynamicFilter = await this.dynamicListService.dynamicList(tenantId, BillPayment, billPaymentsFilter);
-
-    this.logger.info('[bill_payment] try to get bill payments list.', { tenantId });
-    const { results, pagination } = await BillPayment.query().onBuild((builder) => {
-      builder.withGraphFetched('vendor');
-      builder.withGraphFetched('paymentAccount');
-      dynamicFilter.buildQuery()(builder);
-    }).pagination(
-      billPaymentsFilter.page - 1,
-      billPaymentsFilter.pageSize,
+    const dynamicFilter = await this.dynamicListService.dynamicList(
+      tenantId,
+      BillPayment,
+      billPaymentsFilter
     );
+
+    this.logger.info('[bill_payment] try to get bill payments list.', {
+      tenantId,
+    });
+    const { results, pagination } = await BillPayment.query()
+      .onBuild((builder) => {
+        builder.withGraphFetched('vendor');
+        builder.withGraphFetched('paymentAccount');
+        dynamicFilter.buildQuery()(builder);
+      })
+      .pagination(billPaymentsFilter.page - 1, billPaymentsFilter.pageSize);
 
     return {
       billPayments: results,
@@ -501,10 +598,13 @@ export default class BillPaymentsService {
    * @param {number} billPaymentId - The bill payment id.
    * @return {object}
    */
-  public async getBillPayment(tenantId: number, billPaymentId: number): Promise<{
-    billPayment: IBillPayment,
-    payableBills: IBill[],
-    paymentMadeBills: IBill[],
+  public async getBillPayment(
+    tenantId: number,
+    billPaymentId: number
+  ): Promise<{
+    billPayment: IBillPayment;
+    payableBills: IBill[];
+    paymentMadeBills: IBill[];
   }> {
     const { BillPayment, Bill } = this.tenancy.models(tenantId);
     const billPayment = await BillPayment.query()
@@ -527,8 +627,8 @@ export default class BillPaymentsService {
 
     // Retrieve all payment made assocaited bills.
     const paymentMadeBills = billPayment.entries.map((entry) => ({
-      ...(entry.bill),
-      dueAmount: (entry.bill.dueAmount + entry.paymentAmount),
+      ...entry.bill,
+      dueAmount: entry.bill.dueAmount + entry.paymentAmount,
     }));
 
     return {
@@ -552,7 +652,7 @@ export default class BillPaymentsService {
   public async saveChangeBillsPaymentAmount(
     tenantId: number,
     paymentMadeEntries: IBillPaymentEntryDTO[],
-    oldPaymentMadeEntries?: IBillPaymentEntryDTO[],
+    oldPaymentMadeEntries?: IBillPaymentEntryDTO[]
   ): Promise<void> {
     const { Bill } = this.tenancy.models(tenantId);
     const opers: Promise<void>[] = [];
@@ -561,17 +661,21 @@ export default class BillPaymentsService {
       paymentMadeEntries,
       oldPaymentMadeEntries,
       'paymentAmount',
-      'billId',
+      'billId'
     );
-    diffEntries.forEach((diffEntry: { paymentAmount: number, billId: number }) => {
-      if (diffEntry.paymentAmount === 0) { return; }
+    diffEntries.forEach(
+      (diffEntry: { paymentAmount: number; billId: number }) => {
+        if (diffEntry.paymentAmount === 0) {
+          return;
+        }
 
-      const oper = Bill.changePaymentAmount(
-        diffEntry.billId,
-        diffEntry.paymentAmount,
-      );
-      opers.push(oper);
-    });
+        const oper = Bill.changePaymentAmount(
+          diffEntry.billId,
+          diffEntry.paymentAmount
+        );
+        opers.push(oper);
+      }
+    );
     await Promise.all(opers);
   }
 }

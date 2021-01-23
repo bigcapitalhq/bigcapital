@@ -3,7 +3,7 @@ exports.up = function (knex) {
     table.increments('id').comment('Auto-generated id');
     table.string('name').index();
     table.string('slug');
-    table.integer('account_type_id').unsigned().references('id').inTable('account_types');
+    table.string('account_type').index();
     table.integer('parent_account_id').unsigned().references('id').inTable('accounts');
     table.string('code', 10).index();
     table.text('description');

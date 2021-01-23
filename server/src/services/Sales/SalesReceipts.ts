@@ -18,6 +18,7 @@ import { ServiceError } from 'exceptions';
 import ItemsEntriesService from 'services/Items/ItemsEntriesService';
 import { ItemEntry } from 'models';
 import InventoryService from 'services/Inventory/Inventory';
+import { ACCOUNT_PARENT_TYPE } from 'data/AccountTypes';
 
 const ERRORS = {
   SALE_RECEIPT_NOT_FOUND: 'SALE_RECEIPT_NOT_FOUND',
@@ -78,30 +79,20 @@ export default class SalesReceiptService {
 
   /**
    * Validate whether sale receipt deposit account exists on the storage.
-   * @param {number} tenantId -
-   * @param {number} accountId -
+   * @param {number} tenantId - Tenant id.
+   * @param {number} accountId - Account id.
    */
   async validateReceiptDepositAccountExistance(
     tenantId: number,
     accountId: number
   ) {
-    const {
-      accountRepository,
-      accountTypeRepository,
-    } = this.tenancy.repositories(tenantId);
+    const { accountRepository } = this.tenancy.repositories(tenantId);
     const depositAccount = await accountRepository.findOneById(accountId);
 
     if (!depositAccount) {
       throw new ServiceError(ERRORS.DEPOSIT_ACCOUNT_NOT_FOUND);
     }
-    const depositAccountType = await accountTypeRepository.findOneById(
-      depositAccount.accountTypeId
-    );
-
-    if (
-      !depositAccountType ||
-      depositAccountType.childRoot === 'current_asset'
-    ) {
+    if (!depositAccount.isParentType(ACCOUNT_PARENT_TYPE.CURRENT_ASSET)) {
       throw new ServiceError(ERRORS.DEPOSIT_ACCOUNT_NOT_CURRENT_ASSET);
     }
   }

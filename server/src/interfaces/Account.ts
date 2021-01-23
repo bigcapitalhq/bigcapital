@@ -4,7 +4,7 @@ export interface IAccountDTO {
   name: string,
   code: string,
   description: string,
-  accountTypeId: number,
+  accountType: string,
   parentAccountId: number,
   active: boolean,
 };
@@ -16,7 +16,7 @@ export interface IAccount {
   code: string,
   index: number,
   description: string,
-  accountTypeId: number,
+  accountType: string,
   parentAccountId: number,
   active: boolean,
   predefined: boolean,
@@ -31,7 +31,7 @@ export interface IAccountsFilter extends IDynamicListFilterDTO {
 };
 
 export interface IAccountType {
-  id: number,
+  label: string,
   key: string,
   label: string,
   normal: string,

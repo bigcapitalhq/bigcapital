@@ -2,7 +2,6 @@ import { mapValues } from 'lodash';
 
 import Account from 'models/Account';
 import AccountTransaction from 'models/AccountTransaction';
-import AccountType from 'models/AccountType';
 import Item from 'models/Item';
 import ItemEntry from 'models/ItemEntry';
 import ItemCategory from 'models/ItemCategory';
@@ -43,7 +42,6 @@ export default (knex) => {
     Option,
     Account,
     AccountTransaction,
-    AccountType,
     Item,
     ItemCategory,
     ItemEntry,

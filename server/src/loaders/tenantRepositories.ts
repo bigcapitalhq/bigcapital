@@ -1,5 +1,4 @@
 import AccountRepository from 'repositories/AccountRepository';
-import AccountTypeRepository from 'repositories/AccountTypeRepository';
 import VendorRepository from 'repositories/VendorRepository';
 import CustomerRepository from 'repositories/CustomerRepository';
 import ExpenseRepository from 'repositories/ExpenseRepository';
@@ -18,7 +17,6 @@ export default (knex, cache) => {
   return {
     accountRepository: new AccountRepository(knex, cache),
     transactionsRepository: new AccountTransactionsRepository(knex, cache),
-    accountTypeRepository: new AccountTypeRepository(knex, cache),
     customerRepository: new CustomerRepository(knex, cache), 
     vendorRepository: new VendorRepository(knex, cache),
     contactRepository: new ContactRepository(knex, cache),

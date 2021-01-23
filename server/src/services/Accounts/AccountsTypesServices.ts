@@ -1,20 +1,14 @@
-import { Inject, Service } from 'typedi';
-import { omit } from 'lodash';
-import TenancyService from 'services/Tenancy/TenancyService';
+import { Service } from 'typedi';
 import { IAccountsTypesService, IAccountType } from 'interfaces';
+import AccountTypesUtils from 'lib/AccountTypes';
 
 @Service()
 export default class AccountsTypesService implements IAccountsTypesService {
-  @Inject()
-  tenancy: TenancyService;
-
   /**
    * Retrieve all accounts types.
-   * @param {number} tenantId -
-   * @return {Promise<IAccountType>}
+   * @return {IAccountType}
    */
-  async getAccountsTypes(tenantId: number): Promise<IAccountType> {
-    const { accountTypeRepository } = this.tenancy.repositories(tenantId);
-    return accountTypeRepository.all();
+  getAccountsTypes(): IAccountType[] {
+    return AccountTypesUtils.getList();
   }
 }

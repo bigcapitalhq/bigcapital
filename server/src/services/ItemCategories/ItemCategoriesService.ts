@@ -16,6 +16,7 @@ import {
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import TenancyService from 'services/Tenancy/TenancyService';
 import events from 'subscribers/events';
+import { ACCOUNT_ROOT_TYPE, ACCOUNT_TYPE } from 'data/AccountTypes';
 
 const ERRORS = {
   ITEM_CATEGORIES_NOT_FOUND: 'ITEM_CATEGORIES_NOT_FOUND',
@@ -172,16 +173,12 @@ export default class ItemCategoriesService implements IItemCategoriesService {
    * @return {Promise<void>}
    */
   private async validateSellAccount(tenantId: number, sellAccountId: number) {
-    const {
-      accountRepository,
-      accountTypeRepository,
-    } = this.tenancy.repositories(tenantId);
+    const { accountRepository } = this.tenancy.repositories(tenantId);
 
     this.logger.info('[items] validate sell account existance.', {
       tenantId,
       sellAccountId,
     });
-    const incomeType = await accountTypeRepository.getByKey('income');
     const foundAccount = await accountRepository.findOneById(sellAccountId);
 
     if (!foundAccount) {
@@ -190,7 +187,7 @@ export default class ItemCategoriesService implements IItemCategoriesService {
         sellAccountId,
       });
       throw new ServiceError(ERRORS.SELL_ACCOUNT_NOT_FOUND);
-    } else if (foundAccount.accountTypeId !== incomeType.id) {
+    } else if (!foundAccount.isRootType(ACCOUNT_ROOT_TYPE.INCOME)) {
       this.logger.info('[items] sell account not income type.', {
         tenantId,
         sellAccountId,
@@ -206,16 +203,12 @@ export default class ItemCategoriesService implements IItemCategoriesService {
    * @return {Promise<void>}
    */
   private async validateCostAccount(tenantId: number, costAccountId: number) {
-    const {
-      accountRepository,
-      accountTypeRepository,
-    } = this.tenancy.repositories(tenantId);
+    const { accountRepository } = this.tenancy.repositories(tenantId);
 
     this.logger.info('[items] validate cost account existance.', {
       tenantId,
       costAccountId,
     });
-    const COGSType = await accountTypeRepository.getByKey('cost_of_goods_sold');
     const foundAccount = await accountRepository.findOneById(costAccountId);
 
     if (!foundAccount) {
@@ -224,7 +217,7 @@ export default class ItemCategoriesService implements IItemCategoriesService {
         costAccountId,
       });
       throw new ServiceError(ERRORS.COST_ACCOUNT_NOT_FOUMD);
-    } else if (foundAccount.accountTypeId !== COGSType.id) {
+    } else if (!foundAccount.isRootType(ACCOUNT_ROOT_TYPE.EXPENSE)) {
       this.logger.info('[items] validate cost account not COGS type.', {
         tenantId,
         costAccountId,
@@ -243,16 +236,12 @@ export default class ItemCategoriesService implements IItemCategoriesService {
     tenantId: number,
     inventoryAccountId: number
   ) {
-    const {
-      accountTypeRepository,
-      accountRepository,
-    } = this.tenancy.repositories(tenantId);
+    const { accountRepository } = this.tenancy.repositories(tenantId);
 
     this.logger.info('[items] validate inventory account existance.', {
       tenantId,
       inventoryAccountId,
     });
-    const otherAsset = await accountTypeRepository.getByKey('other_asset');
     const foundAccount = await accountRepository.findOneById(
       inventoryAccountId
     );
@@ -263,7 +252,7 @@ export default class ItemCategoriesService implements IItemCategoriesService {
         inventoryAccountId,
       });
       throw new ServiceError(ERRORS.INVENTORY_ACCOUNT_NOT_FOUND);
-    } else if (otherAsset.id !== foundAccount.accountTypeId) {
+    } else if (!foundAccount.isAccountType(ACCOUNT_TYPE.INVENTORY)) {
       this.logger.info('[items] inventory account not inventory type.', {
         tenantId,
         inventoryAccountId,

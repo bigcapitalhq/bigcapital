@@ -136,7 +136,7 @@ function AccountsDataTable({
         Header: formatMessage({ id: 'account_name' }),
         accessor: 'name',
         className: 'account_name',
-        width: 220,
+        width: 200,
       },
       {
         id: 'code',

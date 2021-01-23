@@ -17,7 +17,6 @@ import BillPaymentEntry from './BillPaymentEntry';
 import View from './View';
 import ItemEntry from './ItemEntry';
 import InventoryTransaction from './InventoryTransaction';
-import AccountType from './AccountType';
 import InventoryLotCostTracker from './InventoryCostLotTracker';
 import Customer from './Customer';
 import Contact from './Contact';
@@ -45,7 +44,6 @@ export {
   ItemEntry,
   InventoryTransaction,
   InventoryLotCostTracker,
-  AccountType,
   Option,
   Contact,
   ExpenseCategory,

@@ -334,10 +334,10 @@ export default class PaymentReceivesController extends BaseController {
           errors: [{ type: 'PAYMENT_RECEIVE_NOT_EXISTS', code: 300 }],
         });
       }
-      if (error.errorType === 'DEPOSIT_ACCOUNT_NOT_CURRENT_ASSET_TYPE') {
+      if (error.errorType === 'DEPOSIT_ACCOUNT_INVALID_TYPE') {
         return res.boom.badRequest(null, {
           errors: [
-            { type: 'DEPOSIT_ACCOUNT_NOT_CURRENT_ASSET_TYPE', code: 300 },
+            { type: 'DEPOSIT_ACCOUNT_INVALID_TYPE', code: 300 },
           ],
         });
       }

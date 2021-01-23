@@ -1,6 +1,6 @@
 import { Response, Request, NextFunction } from 'express';
 import { matchedData, validationResult } from "express-validator";
-import { camelCase, snakeCase, omit } from "lodash";
+import { camelCase, snakeCase, omit, set, get } from "lodash";
 import { mapKeysDeep } from 'utils'
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
 
@@ -61,8 +61,18 @@ export default class BaseController {
    * Transform the given data to response.
    * @param {any} data 
    */
-  transfromToResponse(data: any) {
-    return mapKeysDeep(data, (v, k) => snakeCase(k));
+  transfromToResponse(data: any, translatable?: string | string[], req?: Request) {
+    const response = mapKeysDeep(data, (v, k) => snakeCase(k));
+
+    if (translatable) {
+      const translatables = Array.isArray(translatable) ? translatable : [translatable];
+
+      translatables.forEach((path) => {
+        const value = get(response, path);
+        set(response, path, req.__(value));
+      });
+    }
+    return response;
   }
 
   asyncMiddleware(callback) {

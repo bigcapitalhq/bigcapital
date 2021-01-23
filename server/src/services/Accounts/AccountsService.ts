@@ -15,6 +15,7 @@ import {
 } from 'decorators/eventDispatcher';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import events from 'subscribers/events';
+import AccountTypesUtils from 'lib/AccountTypes';
 
 const ERRORS = {
   ACCOUNT_NOT_FOUND: 'account_not_found',
@@ -52,17 +53,13 @@ export default class AccountsService {
    * @param {number} accountTypeId -
    * @return {IAccountType}
    */
-  private async getAccountTypeOrThrowError(
-    tenantId: number,
-    accountTypeId: number
+  private getAccountTypeOrThrowError(
+    accountTypeKey: string
   ) {
-    const { accountTypeRepository } = this.tenancy.repositories(tenantId);
-
     this.logger.info('[accounts] validating account type existance.', {
-      tenantId,
-      accountTypeId,
+      accountTypeKey
     });
-    const accountType = await accountTypeRepository.findOneById(accountTypeId);
+    const accountType = AccountTypesUtils.getType(accountTypeKey);
 
     if (!accountType) {
       this.logger.info('[accounts] account type not found.');
@@ -153,7 +150,7 @@ export default class AccountsService {
     accountDTO: IAccountDTO,
     parentAccount: IAccount
   ) {
-    if (accountDTO.accountTypeId !== parentAccount.accountTypeId) {
+    if (accountDTO.accountType !== parentAccount.accountType) {
       throw new ServiceError(ERRORS.PARENT_ACCOUNT_HAS_DIFFERENT_TYPE);
     }
   }
@@ -193,7 +190,7 @@ export default class AccountsService {
     oldAccount: IAccount | IAccountDTO,
     newAccount: IAccount | IAccountDTO
   ) {
-    if (oldAccount.accountTypeId !== newAccount.accountTypeId) {
+    if (oldAccount.accountType !== newAccount.accountType) {
       throw new ServiceError(ERRORS.ACCOUNT_TYPE_NOT_ALLOWED_TO_CHANGE);
     }
   }
@@ -244,7 +241,7 @@ export default class AccountsService {
     if (accountDTO.code) {
       await this.isAccountCodeUniqueOrThrowError(tenantId, accountDTO.code);
     }
-    await this.getAccountTypeOrThrowError(tenantId, accountDTO.accountTypeId);
+    this.getAccountTypeOrThrowError(accountDTO.accountType);
 
     if (accountDTO.parentAccountId) {
       const parentAccount = await this.getParentAccountOrThrowError(
@@ -638,7 +635,6 @@ export default class AccountsService {
       filter,
     });
     const accounts = await Account.query().onBuild((builder) => {
-      builder.withGraphFetched('type');
       dynamicList.buildQuery()(builder);
     });
 
@@ -673,10 +669,8 @@ export default class AccountsService {
       toAccountId,
       deleteAfterClosing,
     });
-
     const { AccountTransaction } = this.tenancy.models(tenantId);
     const {
-      accountTypeRepository,
       accountRepository,
     } = this.tenancy.repositories(tenantId);
 
@@ -685,14 +679,7 @@ export default class AccountsService {
 
     this.throwErrorIfAccountPredefined(account);
 
-    const accountType = await accountTypeRepository.findOneById(
-      account.accountTypeId
-    );
-    const toAccountType = await accountTypeRepository.findOneById(
-      toAccount.accountTypeId
-    );
-
-    if (accountType.rootType !== toAccountType.rootType) {
+    if (account.accountType !== toAccount.accountType) {
       throw new ServiceError(ERRORS.CLOSE_ACCOUNT_AND_TO_ACCOUNT_NOT_SAME_TYPE);
     }
     const updateAccountBalanceOper = await accountRepository.balanceChange(

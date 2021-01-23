@@ -1,6 +1,6 @@
 /* eslint-disable global-require */
 import { Model } from 'objection';
-import { flatten } from 'lodash';
+import { flatten, castArray } from 'lodash';
 import TenantModel from 'models/TenantModel';
 import {
   buildFilterQuery,
@@ -8,6 +8,7 @@ import {
 } from 'lib/ViewRolesBuilder';
 import { flatToNestedArray } from 'utils';
 import DependencyGraph from 'lib/DependencyGraph';
+import AccountTypesUtils from 'lib/AccountTypes'
 
 export default class Account extends TenantModel {
   /**
@@ -22,6 +23,54 @@ export default class Account extends TenantModel {
    */
   get timestamps() {
     return ['createdAt', 'updatedAt'];
+  }
+
+  /**
+   * Virtual attributes.
+   */
+  static get virtualAttributes() {
+    return [
+      'accountTypeLabel',
+      'accountParentTypeLabel',
+      'accountNormal',
+      'isBalanceSheetAccount',
+      'isPLSheet'
+    ];
+  }
+
+  /**
+   * Account normal.
+   */
+  get accountNormal() {
+    return AccountTypesUtils.getType(this.accountType, 'normal');
+  }
+
+  /**
+   * Retrieve account type label.
+   */
+  get accountTypeLabel() {
+    return AccountTypesUtils.getType(this.accountType, 'label');
+  }
+
+  /**
+   * Retrieve account parent type.
+   */
+  get accountParentType() {
+    return AccountTypesUtils.getType(this.accountType, 'parentType');
+  }
+
+  /**
+   * Retrieve whether the account is balance sheet account.
+   */
+  get isBalanceSheetAccount() {
+    return this.isBalanceSheet();
+  }
+
+  /**
+   * Retrieve whether the account is profit/loss sheet account.
+   */
+  get isPLSheet() {
+    return this.isProfitLossSheet();
   }
 
   /**
@@ -61,22 +110,9 @@ export default class Account extends TenantModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const AccountType = require('models/AccountType');
     const AccountTransaction = require('models/AccountTransaction');
 
     return {
-      /**
-       * Account model may belongs to account type.
-       */
-      type: {
-        relation: Model.BelongsToOneRelation,
-        modelClass: AccountType.default,
-        join: {
-          from: 'accounts.accountTypeId',
-          to: 'account_types.id',
-        },
-      },
-
       /**
        * Account model may has many transactions.
        */
@@ -89,6 +125,58 @@ export default class Account extends TenantModel {
         },
       },
     };
+  }
+  
+  /**
+   * Detarmines whether the given type equals the account type.
+   * @param {string} accountType 
+   * @return {boolean}
+   */
+  isAccountType(accountType) {
+    const types = castArray(accountType);
+    return types.indexOf(this.accountType) !== -1;
+  }
+
+  /**
+   * Detarmines whether the given root type equals the account type.
+   * @param {string} rootType 
+   * @return {boolean}
+   */
+  isRootType(rootType) {
+    return AccountTypesUtils.isRootTypeEqualsKey(this.accountType, rootType);
+  }
+
+  /**
+   * Detarmine whether the given parent type equals the account type.
+   * @param {string} parentType 
+   * @return {boolean}
+   */
+  isParentType(parentType) {
+    return AccountTypesUtils.isParentTypeEqualsKey(this.accountType, parentType);
+  }
+
+  /**
+   * Detarmines whether the account is balance sheet account.
+   * @return {boolean}
+   */
+  isBalanceSheet() {
+    return AccountTypesUtils.isTypeBalanceSheet(this.accountType);
+  }
+
+  /**
+   * Detarmines whether the account is profit/loss account.
+   * @return {boolean}
+   */
+  isProfitLossSheet() {
+    return AccountTypesUtils.isTypePLSheet(this.accountType);
+  }
+
+  /**
+   * Detarmines whether the account is income statement account
+   * @return {boolean}
+   */
+  isIncomeSheet() {
+    return this.isProfitLossSheet();
   }
 
   static collectJournalEntries(accounts) {

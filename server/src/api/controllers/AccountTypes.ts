@@ -5,7 +5,7 @@ import BaseController from 'api/controllers/BaseController';
 import AccountsTypesService from 'services/Accounts/AccountsTypesServices';
 
 @Service()
-export default class AccountsTypesController extends BaseController{
+export default class AccountsTypesController extends BaseController {
   @Inject()
   accountsTypesService: AccountsTypesService;
 
@@ -15,23 +15,26 @@ export default class AccountsTypesController extends BaseController{
   router() {
     const router = Router();
 
-    router.get('/',
-      asyncMiddleware(this.getAccountTypesList.bind(this))
-    );
+    router.get('/', asyncMiddleware(this.getAccountTypesList.bind(this)));
+
     return router;
   }
 
   /**
    * Retrieve accounts types list.
+   * @param {Request} req - Request.
+   * @param {Response} res - Response.
+   * @return {Response}
    */
-  async getAccountTypesList(req: Request, res: Response, next: NextFunction) {
-    const { tenantId, user } = req;
-
+  getAccountTypesList(req: Request, res: Response, next: NextFunction) {
     try {
-      const accountTypes = await this.accountsTypesService.getAccountsTypes(tenantId);
-      return res.status(200).send({ account_types: accountTypes });
+      const accountTypes = this.accountsTypesService.getAccountsTypes();
+
+      return res.status(200).send({
+        account_types: this.transfromToResponse(accountTypes, ['label'], req),
+      });
     } catch (error) {
       next(error);
     }
   }
-};
+}

@@ -31,13 +31,13 @@ import { ServiceError } from 'exceptions';
 import CustomersService from 'services/Contacts/CustomersService';
 import ItemsEntriesService from 'services/Items/ItemsEntriesService';
 import JournalCommands from 'services/Accounting/JournalCommands';
+import { ACCOUNT_PARENT_TYPE } from 'data/AccountTypes';
 
 const ERRORS = {
   PAYMENT_RECEIVE_NO_EXISTS: 'PAYMENT_RECEIVE_NO_EXISTS',
   PAYMENT_RECEIVE_NOT_EXISTS: 'PAYMENT_RECEIVE_NOT_EXISTS',
   DEPOSIT_ACCOUNT_NOT_FOUND: 'DEPOSIT_ACCOUNT_NOT_FOUND',
-  DEPOSIT_ACCOUNT_NOT_CURRENT_ASSET_TYPE:
-    'DEPOSIT_ACCOUNT_NOT_CURRENT_ASSET_TYPE',
+  DEPOSIT_ACCOUNT_INVALID_TYPE: 'DEPOSIT_ACCOUNT_INVALID_TYPE',
   INVALID_PAYMENT_AMOUNT: 'INVALID_PAYMENT_AMOUNT',
   INVOICES_IDS_NOT_FOUND: 'INVOICES_IDS_NOT_FOUND',
   ENTRIES_IDS_NOT_EXISTS: 'ENTRIES_IDS_NOT_EXISTS',
@@ -99,8 +99,8 @@ export default class PaymentReceiveService {
 
   /**
    * Validates the payment receive existance.
-   * @param {number} tenantId -
-   * @param {number} paymentReceiveId -
+   * @param {number} tenantId - Tenant id.
+   * @param {number} paymentReceiveId - Payment receive id.
    */
   async getPaymentReceiveOrThrowError(
     tenantId: number,
@@ -119,32 +119,25 @@ export default class PaymentReceiveService {
 
   /**
    * Validate the deposit account id existance.
-   * @param {number} tenantId -
-   * @param {number} depositAccountId -
+   * @param {number} tenantId - Tenant id.
+   * @param {number} depositAccountId - Deposit account id.
+   * @return {Promise<IAccount>}
    */
   async getDepositAccountOrThrowError(
     tenantId: number,
     depositAccountId: number
   ): Promise<IAccount> {
-    const {
-      accountTypeRepository,
-      accountRepository,
-    } = this.tenancy.repositories(tenantId);
+    const { accountRepository } = this.tenancy.repositories(tenantId);
 
-    const currentAssetTypes = await accountTypeRepository.getByChildType(
-      'current_asset'
-    );
     const depositAccount = await accountRepository.findOneById(
       depositAccountId
     );
-
-    const currentAssetTypesIds = currentAssetTypes.map((type) => type.id);
-
     if (!depositAccount) {
       throw new ServiceError(ERRORS.DEPOSIT_ACCOUNT_NOT_FOUND);
     }
-    if (currentAssetTypesIds.indexOf(depositAccount.accountTypeId) === -1) {
-      throw new ServiceError(ERRORS.DEPOSIT_ACCOUNT_NOT_CURRENT_ASSET_TYPE);
+    // Detarmines whether the account is cash equivalents.
+    if (!depositAccount.isParentType(ACCOUNT_PARENT_TYPE.CURRENT_ASSET)) {
+      throw new ServiceError(ERRORS.DEPOSIT_ACCOUNT_INVALID_TYPE);
     }
     return depositAccount;
   }
@@ -316,7 +309,6 @@ export default class PaymentReceiveService {
       ...formatDateFields(omit(paymentReceiveDTO, ['entries']), [
         'paymentDate',
       ]),
-
       entries: paymentReceiveDTO.entries.map((entry) => ({
         ...omit(entry, ['id']),
       })),

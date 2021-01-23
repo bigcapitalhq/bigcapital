@@ -109,10 +109,11 @@ export default class AccountsController extends BaseController {
         .isLength({ min: 3, max: 6 })
         .trim()
         .escape(),
-      check('account_type_id')
+      check('account_type')
         .exists()
-        .isInt({ min: 0, max: DATATYPES_LENGTH.INT_10 })
-        .toInt(),
+        .isLength({ min: 3, max: DATATYPES_LENGTH.STRING })
+        .trim()
+        .escape(),
       check('description')
         .optional({ nullable: true })
         .isLength({ max: DATATYPES_LENGTH.TEXT })
@@ -341,6 +342,7 @@ export default class AccountsController extends BaseController {
    * Retrieve accounts datatable list.
    * @param {Request} req
    * @param {Response} res
+   * @param {Response}
    */
   async getAccountsList(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
@@ -360,7 +362,7 @@ export default class AccountsController extends BaseController {
       } = await this.accountsService.getAccountsList(tenantId, filter);
 
       return res.status(200).send({
-        accounts,
+        accounts: this.transfromToResponse(accounts, 'accountTypeLabel', req),
         filter_meta: this.transfromToResponse(filterMeta),
       });
     } catch (error) {

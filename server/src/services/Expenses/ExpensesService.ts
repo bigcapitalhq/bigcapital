@@ -21,6 +21,7 @@ import {
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import events from 'subscribers/events';
 import ContactsService from 'services/Contacts/ContactsService';
+import { ACCOUNT_PARENT_TYPE, ACCOUNT_ROOT_TYPE } from 'data/AccountTypes'
 
 const ERRORS = {
   EXPENSE_NOT_FOUND: 'expense_not_found',
@@ -153,17 +154,10 @@ export default class ExpensesService implements IExpensesService {
       tenantId,
       expensesAccounts,
     });
-
-    const { accountTypeRepository } = this.tenancy.repositories(tenantId);
-
-    // Retrieve accounts types of the given root type.
-    const expensesTypes = await accountTypeRepository.getByRootType('expense');
-
-    const expensesTypesIds = expensesTypes.map((t) => t.id);
     const invalidExpenseAccounts: number[] = [];
 
     expensesAccounts.forEach((expenseAccount) => {
-      if (expensesTypesIds.indexOf(expenseAccount.accountTypeId) === -1) {
+      if (expenseAccount.isRootType(ACCOUNT_ROOT_TYPE.EXPENSE)) {
         invalidExpenseAccounts.push(expenseAccount.id);
       }
     });
@@ -187,16 +181,7 @@ export default class ExpensesService implements IExpensesService {
       paymentAccount,
     });
 
-    const { accountTypeRepository } = this.tenancy.repositories(tenantId);
-
-    // Retrieve account tpy eof the given key.
-    const validAccountsType = await accountTypeRepository.getByKeys([
-      'current_asset',
-      'fixed_asset',
-    ]);
-    const validAccountsTypeIds = validAccountsType.map((t) => t.id);
-
-    if (validAccountsTypeIds.indexOf(paymentAccount.accountTypeId) === -1) {
+    if (paymentAccount.isParentType(ACCOUNT_PARENT_TYPE.CURRENT_ASSET)) {
       this.logger.info(
         '[expenses] the given payment account has invalid type',
         { tenantId, paymentAccount }
@@ -270,7 +255,6 @@ export default class ExpensesService implements IExpensesService {
       tenantId,
       expenseId,
     });
-
     // Retrieve the given expense by id.
     const expense = await expenseRepository.findOneById(expenseId);
 

@@ -44,7 +44,7 @@ export default [
     name:'Computer Equipment',
     slug: 'computer-equipment',
     code: '10005',
-    account_type: 'fixed_asset',
+    account_type: 'fixed-asset',
     predefined: 0,
     parent_account_id: null,
     index: 1,
@@ -55,7 +55,7 @@ export default [
     name:'Office Equipment',
     slug: 'office-equipment',
     code: '10006',
-    account_type: 'fixed_asset',
+    account_type: 'fixed-asset',
     predefined: 0,
     parent_account_id: null,
     index: 1,
@@ -65,7 +65,7 @@ export default [
   {
     name:'Accounts Receivable (A/R)',
     slug: 'accounts-receivable',
-    account_type: 'accounts_receivable',
+    account_type: 'accounts-receivable',
     code: '10007',
     description: '',
     active: 1,
@@ -88,7 +88,7 @@ export default [
   {
     name:'Accounts Payable (A/P)',
     slug: 'accounts-payable',
-    account_type: 'accounts_payable',
+    account_type: 'accounts-payable',
     parent_account_id: null,
     code: '20001',
     description: '',
@@ -99,7 +99,7 @@ export default [
   {
     name:'Owner A Drawings',
     slug: 'owner-drawings',
-    account_type: 'other_current_liability',
+    account_type: 'other-current-liability',
     parent_account_id: null,
     code: '20002',
     description:'Withdrawals by the owners.',
@@ -110,7 +110,7 @@ export default [
   {
     name:'Loan',
     slug: 'owner-drawings',
-    account_type: 'other_current_liability',
+    account_type: 'other-current-liability',
     code: '20003',
     description:'Money that has been borrowed from a creditor.',
     active: 1,
@@ -120,7 +120,7 @@ export default [
   {
     name:'Opening Balance Adjustments',
     slug: 'opening-balance-adjustments',
-    account_type: 'other_current_liability',
+    account_type: 'other-current-liability',
     code: '20004',
     description:'This account will hold the difference in the debits and credits entered during the opening balance..',
     active: 1,
@@ -129,8 +129,8 @@ export default [
   },
   {
     name:'Revenue Received in Advance',
-    slug: 'Revenue-received-in-advance',
-    account_type: 'other_current_liability',
+    slug: 'revenue-received-in-advance',
+    account_type: 'other-current-liability',
     parent_account_id: null,
     code: '20005',
     description: 'When customers pay in advance for products/services.',
@@ -141,7 +141,7 @@ export default [
   {
     name:'Sales Tax Payable',
     slug: 'owner-drawings',
-    account_type: 'tax_payable',
+    account_type: 'other-current-liability',
     code: '20006',
     description: '',
     active: 1,
@@ -206,7 +206,7 @@ export default [
   {
     name:'Cost of Goods Sold',
     slug: 'cost-of-goods-sold',
-    account_type: 'cost_of_goods_sold',
+    account_type: 'cost-of-goods-sold',
     parent_account_id: null,
     code: '40002',
     description:'Tracks the direct cost of the goods sold.',
@@ -239,7 +239,7 @@ export default [
   {
     name:'Exchange Gain or Loss',
     slug: 'exchange-grain-loss',
-    account_type: 'other_expense',
+    account_type: 'other-expense',
     parent_account_id: null,
     code: '40005',
     description:'Tracks the gain and losses of the exchange differences.',
@@ -307,7 +307,7 @@ export default [
   {
     name:'Other Income',
     slug: 'other-income',
-    account_type: 'other_income',
+    account_type: 'other-income',
     parent_account_id: null,
     code: '50004',
     description:'The income activities are not associated to the core business.',

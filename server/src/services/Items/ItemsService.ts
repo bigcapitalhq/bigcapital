@@ -1,4 +1,4 @@
-import { defaultTo, difference, omit, pick } from 'lodash';
+import { defaultTo, difference } from 'lodash';
 import { Service, Inject } from 'typedi';
 import {
   EventDispatcher,
@@ -10,7 +10,7 @@ import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import TenancyService from 'services/Tenancy/TenancyService';
 import { ServiceError } from 'exceptions';
 import InventoryService from 'services/Inventory/Inventory';
-import InventoryAdjustmentEntry from 'models/InventoryAdjustmentEntry';
+import { ACCOUNT_ROOT_TYPE, ACCOUNT_TYPE } from 'data/AccountTypes'
 
 const ERRORS = {
   NOT_FOUND: 'NOT_FOUND',
@@ -29,7 +29,8 @@ const ERRORS = {
   ITEMS_HAVE_ASSOCIATED_TRANSACTIONS: 'ITEMS_HAVE_ASSOCIATED_TRANSACTIONS',
   ITEM_HAS_ASSOCIATED_TRANSACTINS: 'ITEM_HAS_ASSOCIATED_TRANSACTINS',
 
-  ITEM_HAS_ASSOCIATED_INVENTORY_ADJUSTMENT: 'ITEM_HAS_ASSOCIATED_INVENTORY_ADJUSTMENT',
+  ITEM_HAS_ASSOCIATED_INVENTORY_ADJUSTMENT:
+    'ITEM_HAS_ASSOCIATED_INVENTORY_ADJUSTMENT',
 };
 
 @Service()
@@ -114,16 +115,12 @@ export default class ItemsService implements IItemsService {
     tenantId: number,
     costAccountId: number
   ): Promise<void> {
-    const {
-      accountRepository,
-      accountTypeRepository,
-    } = this.tenancy.repositories(tenantId);
+    const { accountRepository } = this.tenancy.repositories(tenantId);
 
     this.logger.info('[items] validate cost account existance.', {
       tenantId,
       costAccountId,
     });
-    const COGSType = await accountTypeRepository.getByKey('cost_of_goods_sold');
     const foundAccount = await accountRepository.findOneById(costAccountId);
 
     if (!foundAccount) {
@@ -132,7 +129,9 @@ export default class ItemsService implements IItemsService {
         costAccountId,
       });
       throw new ServiceError(ERRORS.COST_ACCOUNT_NOT_FOUMD);
-    } else if (foundAccount.accountTypeId !== COGSType.id) {
+
+    // Detarmines the cost of goods sold account.
+    } else if (foundAccount.isRootType(ACCOUNT_ROOT_TYPE.EXPENSE)) {
       this.logger.info('[items] validate cost account not COGS type.', {
         tenantId,
         costAccountId,
@@ -152,14 +151,13 @@ export default class ItemsService implements IItemsService {
   ) {
     const {
       accountRepository,
-      accountTypeRepository,
     } = this.tenancy.repositories(tenantId);
 
     this.logger.info('[items] validate sell account existance.', {
       tenantId,
       sellAccountId,
     });
-    const incomeType = await accountTypeRepository.getByKey('income');
+
     const foundAccount = await accountRepository.findOneById(sellAccountId);
 
     if (!foundAccount) {
@@ -168,7 +166,8 @@ export default class ItemsService implements IItemsService {
         sellAccountId,
       });
       throw new ServiceError(ERRORS.SELL_ACCOUNT_NOT_FOUND);
-    } else if (foundAccount.accountTypeId !== incomeType.id) {
+      
+    } else if (!foundAccount.isRootType(ACCOUNT_ROOT_TYPE.INCOME)) {
       this.logger.info('[items] sell account not income type.', {
         tenantId,
         sellAccountId,
@@ -187,7 +186,6 @@ export default class ItemsService implements IItemsService {
     inventoryAccountId: number
   ) {
     const {
-      accountTypeRepository,
       accountRepository,
     } = this.tenancy.repositories(tenantId);
 
@@ -195,7 +193,6 @@ export default class ItemsService implements IItemsService {
       tenantId,
       inventoryAccountId,
     });
-    const otherAsset = await accountTypeRepository.getByKey('other_asset');
     const foundAccount = await accountRepository.findOneById(
       inventoryAccountId
     );
@@ -206,7 +203,8 @@ export default class ItemsService implements IItemsService {
         inventoryAccountId,
       });
       throw new ServiceError(ERRORS.INVENTORY_ACCOUNT_NOT_FOUND);
-    } else if (otherAsset.id !== foundAccount.accountTypeId) {
+
+    } else if (foundAccount.isAccountType(ACCOUNT_TYPE.INVENTORY)) {
       this.logger.info('[items] inventory account not inventory type.', {
         tenantId,
         inventoryAccountId,
@@ -361,11 +359,11 @@ export default class ItemsService implements IItemsService {
     await this.getItemOrThrowError(tenantId, itemId);
 
     // Validate the item has no associated inventory transactions.
-    await this.validateHasNoInventoryAdjustments(tenantId, itemId); 
+    await this.validateHasNoInventoryAdjustments(tenantId, itemId);
 
     // Validate the item has no associated invoices or bills.
     await this.validateHasNoInvoicesOrBills(tenantId, itemId);
-    
+
     await Item.query().findById(itemId).delete();
 
     this.logger.info('[items] deleted successfully.', { tenantId, itemId });
@@ -479,7 +477,7 @@ export default class ItemsService implements IItemsService {
     await this.validateItemsIdsExists(tenantId, itemsIds);
 
     // Validate the item has no associated inventory transactions.
-    await this.validateHasNoInventoryAdjustments(tenantId, itemsIds); 
+    await this.validateHasNoInventoryAdjustments(tenantId, itemsIds);
 
     // Validate the items have no associated invoices or bills.
     await this.validateHasNoInvoicesOrBills(tenantId, itemsIds);
@@ -554,14 +552,15 @@ export default class ItemsService implements IItemsService {
    */
   private async validateHasNoInventoryAdjustments(
     tenantId: number,
-    itemId: number[] | number,
+    itemId: number[] | number
   ): Promise<void> {
     const { InventoryAdjustmentEntry } = this.tenancy.models(tenantId);
     const itemsIds = Array.isArray(itemId) ? itemId : [itemId];
 
-    const inventoryAdjEntries = await InventoryAdjustmentEntry.query()
-      .whereIn('item_id', itemsIds);
-    
+    const inventoryAdjEntries = await InventoryAdjustmentEntry.query().whereIn(
+      'item_id',
+      itemsIds
+    );
     if (inventoryAdjEntries.length > 0) {
       throw new ServiceError(ERRORS.ITEM_HAS_ASSOCIATED_INVENTORY_ADJUSTMENT);
     }
