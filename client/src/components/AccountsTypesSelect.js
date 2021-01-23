@@ -29,15 +29,10 @@ export default function AccountsTypesSelect({
     onTypeSelected && onTypeSelected(accountType);
   };
 
-  const items = accountsTypes.map((type) => ({
-    id: type.id,
-    label: type.label,
-  }));
-
   return (
     <ListSelect
-      items={items}
-      selectedItemProp={'id'}
+      items={accountsTypes}
+      selectedItemProp={'key'}
       selectedItem={selectedTypeId}
       textProp={'label'}
       defaultText={defaultSelectText}

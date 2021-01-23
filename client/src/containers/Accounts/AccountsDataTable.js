@@ -148,15 +148,15 @@ function AccountsDataTable({
       {
         id: 'type',
         Header: formatMessage({ id: 'type' }),
-        accessor: 'type.label',
+        accessor: 'account_type_label',
         className: 'type',
         width: 140,
       },
       {
         id: 'normal',
         Header: formatMessage({ id: 'normal' }),
-        Cell: NormalCell,
-        accessor: 'type.normal',
+        // Cell: NormalCell,
+        accessor: 'account_normal',
         className: 'normal',
         width: 65,
       },
@@ -176,14 +176,14 @@ function AccountsDataTable({
       {
         id: 'actions',
         Header: '',
-        Cell: ({ cell }) => (
-          <Popover
-            content={actionMenuList(cell.row.original)}
-            position={Position.RIGHT_TOP}
-          >
-            <Button icon={<Icon icon="more-h-16" iconSize={16} />} />
-          </Popover>
-        ),
+        // Cell: ({ cell }) => (
+        //   <Popover
+        //     content={actionMenuList(cell.row.original)}
+        //     position={Position.RIGHT_TOP}
+        //   >
+        //     <Button icon={<Icon icon="more-h-16" iconSize={16} />} />
+        //   </Popover>
+        // ),
         className: 'actions',
         width: 50,
       },
@@ -229,6 +229,8 @@ function AccountsDataTable({
         autoResetExpanded={false}
         autoResetSortBy={false}
         selectionColumnWidth={50}
+        virtualizedRows={true}
+        fixedSizeHeight={1000}
       />
     </div>
   );

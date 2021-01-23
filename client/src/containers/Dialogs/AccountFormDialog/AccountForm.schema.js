@@ -9,10 +9,9 @@ const Schema = Yup.object().shape({
     .max(DATATYPES_LENGTH.STRING)
     .label(formatMessage({ id: 'account_name_' })),
   code: Yup.string().nullable().min(3).max(6),
-  account_type_id: Yup.number()
-    .nullable()
+  account_type: Yup.string()
     .required()
-    .label(formatMessage({ id: 'account_type_id' })),
+    .label(formatMessage({ id: 'account_type' })),
   description: Yup.string().min(3).max(DATATYPES_LENGTH.TEXT).nullable().trim(),
   parent_account_id: Yup.number().nullable(),
 });
