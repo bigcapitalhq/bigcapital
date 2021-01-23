@@ -971,6 +971,9 @@ export default {
   format: 'Format',
   current: 'Current',
   adjustment_reasons: 'Adjustment reasons',
+  specific_customers: 'Specific Customers',
+  all_customers: 'All Customers',
+  selected_customers: '{count} Selected Customers',
   transaction_number: 'Transaction #',
   running_balance: 'Running balance'
 };
