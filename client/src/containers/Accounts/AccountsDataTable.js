@@ -148,7 +148,7 @@ function AccountsDataTable({
       {
         id: 'type',
         Header: formatMessage({ id: 'type' }),
-        accessor: 'type.label',
+        accessor: 'account_type_label',
         className: 'type',
         width: 140,
       },
@@ -156,7 +156,7 @@ function AccountsDataTable({
         id: 'normal',
         Header: formatMessage({ id: 'normal' }),
         Cell: NormalCell,
-        accessor: 'type.normal',
+        accessor: 'account_normal',
         className: 'normal',
         width: 65,
       },

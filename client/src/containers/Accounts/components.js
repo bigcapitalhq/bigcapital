@@ -8,17 +8,14 @@ import { FormattedMessage as T, useIntl } from 'react-intl';
 import classNames from 'classnames';
 import { Icon, Money, If, Choose } from 'components';
 
-export function NormalCell({ cell }) {
+export function NormalCell({ cell: { value } }) {
   const { formatMessage } = useIntl();
-
-  const account = cell.row.original;
-  const normal = account?.type?.normal || '';
-  const arrowDirection = normal === 'credit' ? 'down' : 'up';
+  const arrowDirection = value === 'credit' ? 'down' : 'up';
 
   return (
     <Tooltip
       className={Classes.TOOLTIP_INDICATOR}
-      content={formatMessage({ id: normal })}
+      content={formatMessage({ id: value })}
       position={Position.RIGHT}
       hoverOpenDelay={100}
     >

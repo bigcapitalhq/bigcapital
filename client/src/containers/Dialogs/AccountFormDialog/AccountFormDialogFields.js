@@ -42,22 +42,22 @@ function AccountFormDialogFields({
   return (
     <Form>
       <div className={Classes.DIALOG_BODY}>
-        <FastField name={'account_type_id'}>
+        <FastField name={'account_type'}>
           {({ form, field: { value }, meta: { error, touched } }) => (
             <FormGroup
               label={<T id={'account_type'} />}
               labelInfo={<FieldRequiredHint />}
               className={classNames('form-group--account-type', Classes.FILL)}
               inline={true}
-              helperText={<ErrorMessage name="account_type_id" />}
+              helperText={<ErrorMessage name="account_type" />}
               intent={inputIntent({ error, touched })}
             >
               <AccountsTypesSelect
                 accountsTypes={accountsTypes}
                 selectedTypeId={value}
                 defaultSelectText={<T id={'select_account_type'} />}
-                onTypeSelected={(account) => {
-                  form.setFieldValue('account_type_id', account.id);
+                onTypeSelected={(accountType) => {
+                  form.setFieldValue('account_type', accountType.key);
                 }}
                 disabled={!isNewMode}
                 popoverProps={{ minimal: true }}
