@@ -176,14 +176,14 @@ function AccountsDataTable({
       {
         id: 'actions',
         Header: '',
-        Cell: ({ cell }) => (
-          <Popover
-            content={actionMenuList(cell.row.original)}
-            position={Position.RIGHT_TOP}
-          >
-            <Button icon={<Icon icon="more-h-16" iconSize={16} />} />
-          </Popover>
-        ),
+        // Cell: ({ cell }) => (
+        //   <Popover
+        //     content={actionMenuList(cell.row.original)}
+        //     position={Position.RIGHT_TOP}
+        //   >
+        //     <Button icon={<Icon icon="more-h-16" iconSize={16} />} />
+        //   </Popover>
+        // ),
         className: 'actions',
         width: 50,
       },
@@ -229,6 +229,8 @@ function AccountsDataTable({
         autoResetExpanded={false}
         autoResetSortBy={false}
         selectionColumnWidth={50}
+        virtualizedRows={true}
+        fixedSizeHeight={1000}
       />
     </div>
   );
