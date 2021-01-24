@@ -1,4 +1,4 @@
-  import React from 'react';
+import React from 'react';
 import { FormattedMessage as T } from 'react-intl';
 
 export default [
@@ -167,11 +167,11 @@ export default [
         href: '/financial-reports/profit-loss-sheet',
       },
       {
-        text: 'Receivable Aging Summary',
+        text: <T id={'receivable_aging_summary'} />,
         href: '/financial-reports/receivable-aging-summary',
       },
       {
-        text: 'Payable Aging Summary',
+        text: <T id={'payable_aging_summary'} />,
         href: '/financial-reports/payable-aging-summary',
       },
     ],

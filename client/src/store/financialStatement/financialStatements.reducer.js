@@ -6,6 +6,7 @@ import {
   generalLedgerToTableRows,
   profitLossToTableRowsMapper,
   ARAgingSummaryTableRowsMapper,
+  APAgingSummaryTableRowsMapper,
   mapTrialBalanceSheetToRows,
 } from './financialStatements.mappers';
 
@@ -42,6 +43,13 @@ const initialState = {
     filter: true,
   },
   receivableAgingSummary: {
+    sheet: {},
+    loading: false,
+    tableRows: [],
+    filter: true,
+    refresh: false,
+  },
+  payableAgingSummary: {
     sheet: {},
     loading: false,
     tableRows: [],
@@ -172,12 +180,37 @@ export default createReducer(initialState, {
     const { refresh } = action.payload;
     state.receivableAgingSummary.refresh = !!refresh;
   },
-   [t.RECEIVABLE_AGING_SUMMARY_LOADING]: (state, action) => {
+  [t.RECEIVABLE_AGING_SUMMARY_LOADING]: (state, action) => {
     const { loading } = action.payload;
     state.receivableAgingSummary.loading = loading;
   },
   ...financialStatementFilterToggle(
     'RECEIVABLE_AGING_SUMMARY',
     'receivableAgingSummary',
+  ),
+
+  [t.PAYABLE_AGING_SUMMARY_SET]: (state, action) => {
+    const { vendors, total, columns, query } = action.payload;
+
+    const receivableSheet = {
+      query,
+      columns,
+      vendors,
+      total,
+      tableRows: APAgingSummaryTableRowsMapper({ vendors, columns, total }),
+    };
+    state.payableAgingSummary.sheet = receivableSheet;
+  },
+  [t.PAYABLE_AGING_SUMMARY_REFRESH]: (state, action) => {
+    const { refresh } = action.payload;
+    state.payableAgingSummary.refresh = !!refresh;
+  },
+  [t.PAYABLE_AGING_SUMMARY_LOADING]: (state, action) => {
+    const { loading } = action.payload;
+    state.payableAgingSummary.loading = loading;
+  },
+  ...financialStatementFilterToggle(
+    'PAYABLE_AGING_SUMMARY',
+    'payableAgingSummary',
   ),
 });

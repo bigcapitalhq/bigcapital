@@ -972,5 +972,6 @@ export default {
   current: 'Current',
   adjustment_reasons: 'Adjustment reasons',
   transaction_number: 'Transaction #',
-  running_balance: 'Running balance'
+  running_balance: 'Running balance',
+  payable_aging_summary: 'Payable Aging Summary',
 };
