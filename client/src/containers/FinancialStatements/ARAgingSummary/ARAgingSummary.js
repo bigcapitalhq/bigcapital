@@ -31,7 +31,8 @@ function ReceivableAgingSummarySheet({
   // #withDashboardActions
   changePageTitle,
   setDashboardBackLink,
-
+  setSidebarShrink,
+  
   // #withARAgingSummaryActions
   requestReceivableAgingSummary,
   refreshARAgingSummary,
@@ -59,6 +60,7 @@ function ReceivableAgingSummarySheet({
   }, [ARAgingSummaryRefresh, refreshARAgingSummary]);
 
   useEffect(() => {
+    setSidebarShrink()
     // Show the back link on dashboard topbar.
     setDashboardBackLink(true);
 
@@ -66,7 +68,7 @@ function ReceivableAgingSummarySheet({
       // Hide the back link on dashboard topbar.
       setDashboardBackLink(false);
     };
-  }, [setDashboardBackLink]);
+  }, [setDashboardBackLink,setSidebarShrink]);
 
   // Handle fetching receivable aging summary report.
   const fetchARAgingSummarySheet = useQuery(
