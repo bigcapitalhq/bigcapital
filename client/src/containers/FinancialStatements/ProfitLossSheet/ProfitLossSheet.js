@@ -28,7 +28,8 @@ function ProfitLossSheet({
   // #withDashboardActions
   changePageTitle,
   setDashboardBackLink,
-
+  setSidebarShrink,
+  
   // #withProfitLoss
   profitLossSheetRefresh,
 
@@ -62,6 +63,7 @@ function ProfitLossSheet({
   }, [profitLossSheetRefresh, refreshProfitLossSheet]);
 
   useEffect(() => {
+    setSidebarShrink()
     // Show the back link on dashboard topbar.
     setDashboardBackLink(true);
 
@@ -69,7 +71,7 @@ function ProfitLossSheet({
       // Hide the back link on dashboard topbar.
       setDashboardBackLink(false);
     };
-  });
+  },[setDashboardBackLink,setSidebarShrink]);
 
   // Fetches profit/loss sheet.
   const fetchSheetHook = useQuery(['profit-loss-sheet', filter],

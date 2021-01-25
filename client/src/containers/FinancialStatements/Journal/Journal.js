@@ -32,6 +32,7 @@ function Journal({
   // #withDashboardActions
   changePageTitle,
   setDashboardBackLink,
+  setSidebarShrink,
 
   // #withPreferences
   organizationName,
@@ -54,6 +55,7 @@ function Journal({
   }, [changePageTitle, formatMessage]);
 
   useEffect(() => {
+    setSidebarShrink();
     // Show the back link on dashboard topbar.
     setDashboardBackLink(true);
 
@@ -61,7 +63,7 @@ function Journal({
       // Hide the back link on dashboard topbar.
       setDashboardBackLink(false);
     };
-  });
+  }, [setDashboardBackLink, setSidebarShrink]);
 
   useEffect(() => {
     if (journalSheetRefresh) {
