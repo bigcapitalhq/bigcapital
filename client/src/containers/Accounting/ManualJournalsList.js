@@ -95,7 +95,7 @@ function ManualJournalsTable({
     requestDeleteManualJournal(deleteManualJournal.id).then(() => {
       AppToaster.show({
         message: formatMessage(
-          { id: 'the_journal_has_been_successfully_deleted' },
+          { id: 'the_journal_has_been_deleted_successfully' },
           { number: deleteManualJournal.journal_number },
         ),
         intent: Intent.SUCCESS,
@@ -123,7 +123,7 @@ function ManualJournalsTable({
         setBulkDelete(false);
         AppToaster.show({
           message: formatMessage(
-            { id: 'the_journals_has_been_successfully_deleted' },
+            { id: 'the_journals_has_been_deleted_successfully' },
             { count: selectedRowsCount },
           ),
           intent: Intent.SUCCESS,

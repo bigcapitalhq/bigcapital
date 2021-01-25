@@ -57,7 +57,7 @@ function CurrenciesList({
           setDeleteCurrencyState(false);
           AppToaster.show({
             message: formatMessage({
-              id: 'the_currency_has_been_successfully_deleted',
+              id: 'the_currency_has_been_deleted_successfully',
             }),
             intent: Intent.SUCCESS,
           });

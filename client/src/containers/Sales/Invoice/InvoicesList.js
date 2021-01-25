@@ -100,7 +100,7 @@ function InvoicesList({
         setDeleteInvoice(false);
         AppToaster.show({
           message: formatMessage({
-            id: 'the_invoice_has_been_successfully_deleted',
+            id: 'the_invoice_has_been_deleted_successfully',
           }),
           intent: Intent.SUCCESS,
         });
@@ -128,7 +128,7 @@ function InvoicesList({
         setDeliverInvoice(false);
         AppToaster.show({
           message: formatMessage({
-            id: 'the_invoice_has_been_successfully_delivered',
+            id: 'the_invoice_has_been_delivered_successfully',
           }),
           intent: Intent.SUCCESS,
         });

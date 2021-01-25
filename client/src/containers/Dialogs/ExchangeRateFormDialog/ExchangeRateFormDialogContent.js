@@ -112,7 +112,7 @@ function ExchangeRateFormDialogContent({
             closeDialog(dialogName);
             AppToaster.show({
               message: formatMessage({
-                id: 'the_exchange_rate_has_been_successfully_edited',
+                id: 'the_exchange_rate_has_been_edited_successfully',
               }),
               intent: Intent.SUCCESS,
             });
@@ -128,7 +128,7 @@ function ExchangeRateFormDialogContent({
             closeDialog(dialogName);
             AppToaster.show({
               message: formatMessage({
-                id: 'the_exchange_rate_has_been_successfully_created',
+                id: 'the_exchange_rate_has_been_created_successfully',
               }),
               intent: Intent.SUCCESS,
             });

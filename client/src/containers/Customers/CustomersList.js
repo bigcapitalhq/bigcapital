@@ -108,7 +108,7 @@ function CustomersList({
         setDeleteCustomer(false);
         AppToaster.show({
           message: formatMessage({
-            id: 'the_customer_has_been_successfully_deleted',
+            id: 'the_customer_has_been_deleted_successfully',
           }),
           intent: Intent.SUCCESS,
         });
@@ -172,7 +172,7 @@ function CustomersList({
         setBulkDelete(false);
         AppToaster.show({
           message: formatMessage({
-            id: 'the_customers_has_been_successfully_deleted',
+            id: 'the_customers_has_been_deleted_successfully',
           }),
           intent: Intent.SUCCESS,
         });

@@ -75,7 +75,7 @@ function ExchangeRatesList({
         setDeleteExchangeRate(false);
         AppToaster.show({
           message: formatMessage({
-            id: 'the_exchange_rates_has_been_successfully_deleted',
+            id: 'the_exchange_rates_has_been_deleted_successfully',
           }),
           intent: Intent.SUCCESS,
         });

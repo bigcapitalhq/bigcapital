@@ -189,8 +189,8 @@ function MakeJournalEntriesForm({
         message: formatMessage(
           {
             id: isNewMode
-              ? 'the_journal_has_been_successfully_created'
-              : 'the_journal_has_been_successfully_edited',
+              ? 'the_journal_has_been_created_successfully'
+              : 'the_journal_has_been_edited_successfully',
           },
           { number: values.journal_number },
         ),

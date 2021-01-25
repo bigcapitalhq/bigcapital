@@ -78,7 +78,7 @@ function PaymentReceiveList({
     requestDeletePaymentReceive(deletePaymentReceive.id).then(() => {
       AppToaster.show({
         message: formatMessage({
-          id: 'the_payment_receive_has_been_successfully_deleted',
+          id: 'the_payment_receive_has_been_deleted_successfully',
         }),
         intent: Intent.SUCCESS,
       });

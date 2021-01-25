@@ -172,10 +172,10 @@ export default {
   new_custom_view: 'New Custom View',
   view_name: 'View Name',
   item: 'Item',
-  service_has_been_successful_created:
-    '{service} {name} has been successfully created.',
-  service_has_been_successful_edited:
-    '{service} {name} has been successfully edited.',
+  service_has_been_created_successfully:
+    '{service} {name} has been created successfully.',
+  service_has_been_edited_successfully:
+    '{service} {name} has been edited successfully.',
   you_are_about_permanently_delete_this_journal: `You're about to permanently delete this journal and all its transactions on accounts and attachments, and all of its data. <br /><br />If you're not sure, you can archive this journal instead.`,
   once_delete_these_accounts_you_will_not_able_restore_them:
     "Once you delete these accounts, you won't be able to retrieve them later. Are you sure you want to delete them?",
@@ -202,38 +202,38 @@ export default {
   are_sure_to_activate_this_accounts:
     'Are you sure you want to activate this accounts? You will be able to inactivate it later',
   once_delete_this_account_you_will_able_to_restore_it: `Once you delete this account, you won\'t be able to restore it later. Are you sure you want to delete this account?<br /><br />If you're not sure, you can inactivate this account instead.`,
-  the_journal_has_been_successfully_created:
-    'The journal #{number} has been successfully created.',
-  the_journal_has_been_successfully_edited:
-    'The journal #{number} has been successfully edited.',
-  the_journal_has_been_successfully_deleted:
-    'The journal has been successfully deleted',
+  the_journal_has_been_created_successfully:
+    'The journal #{number} has been created successfully.',
+  the_journal_has_been_edited_successfully:
+    'The journal #{number} has been edited successfully.',
+  the_journal_has_been_deleted_successfully:
+    'The journal has been deleted successfully',
   the_manual_journal_has_been_published:
     'The manual journal has been published',
-  the_journals_has_been_successfully_deleted:
-    'The journals has been successfully deleted ',
+  the_journals_has_been_deleted_successfully:
+    'The journals has been deleted successfully ',
   credit: 'Credit',
   debit: 'Debit',
   once_delete_this_item_you_will_able_to_restore_it: `Once you delete this item, you won\'t be able to restore the item later. Are you sure you want to delete ?<br /><br />If you're not sure, you can inactivate it instead.`,
-  the_item_has_been_successfully_deleted:
-    'The item has been successfully deleted.',
+  the_item_has_been_deleted_successfully:
+    'The item has been deleted successfully.',
   the_item_has_been_created_successfully:
     'The item has been created successfully.',
-  the_item_has_been_successfully_edited:
-    'The item #{number} has been successfully edited.',
+  the_item_has_been_edited_successfully:
+    'The item #{number} has been edited successfully',
 
-  the_item_category_has_been_successfully_created:
-    'The item category has been successfully created.',
-  the_item_category_has_been_successfully_edited:
-    'The item category has been successfully edited.',
+  the_item_category_has_been_created_successfully:
+    'The item category has been created successfully.',
+  the_item_category_has_been_edited_successfully:
+    'The item category has been edited successfully.',
   the_item_category_has_been_deleted_successfully:
     'The item category has been deleted successfully.',
   once_delete_these_item_categories_you_will_not_able_restore_them:
     "Once you delete these categories, you won't be able to retrieve them later. Are you sure you want to delete them?",
   once_delete_these_views_you_will_not_able_restore_them:
     "Once you delete the custom view, you won't be able to restore it later. Are you sure you want to delete this view?",
-  the_custom_view_has_been_successfully_deleted:
-    'The custom view has been successfully deleted.',
+  the_custom_view_has_been_deleted_successfully:
+    'The custom view has been deleted successfully.',
   teammate_invited_to_organization_account:
     'Your teammate has been invited to the organization account.',
   select_account_type: 'Select account type',
@@ -295,16 +295,12 @@ export default {
   we_couldn_t_find_your_account_with_that_email:
     "We couldn't find your account with that email.",
   select_parent_account: 'Select Parent Account',
-  the_exchange_rate_has_been_successfully_edited:
-    'The exchange rate has been successfully edited',
-  the_exchange_rate_has_been_successfully_created:
-    'The exchange rate has been successfully created',
+  the_exchange_rate_has_been_edited_successfully:
+    'The exchange rate has been edited successfully',
+  the_exchange_rate_has_been_created_successfully:
+    'The exchange rate has been created successfully',
   the_user_details_has_been_updated: 'The user details has been updated',
-  the_category_has_been_successfully_created:
-    'The category has been successfully created.',
   filters_applied: 'filters applied',
-  the_expense_has_been_successfully_deleted:
-    'The expense has been successfully deleted.',
   select_item_type: 'Select Item Type',
   service: 'Service',
   inventory: 'Inventory',
@@ -312,8 +308,6 @@ export default {
   select_category: 'Select category',
   select_account: 'Select Account',
   custom_fields: 'Custom Fields',
-  the_currency_has_been_successfully_deleted:
-    'The currency has been successfully deleted',
   organization_industry: 'Organization Industry',
   business_location: 'Business Location',
   base_currency: 'Base Currency',
@@ -326,10 +320,10 @@ export default {
   inactivate_user: 'Inactivate User',
   delete_user: 'Delete User',
   full_name: 'Full Name',
-  the_user_has_been_successfully_inactivated:
-    'The user has been successfully inactivated.',
-  the_user_has_been_successfully_deleted:
-    'The user has been successfully deleted.',
+  the_user_has_been_inactivated_successfully:
+    'The user has been inactivated successfully.',
+    the_user_has_been_deleted_successfully:
+    'The user has been deleted successfully.',
   customize_report: 'Customize Report',
   print: 'Print',
   export: 'Export',
@@ -348,12 +342,12 @@ export default {
   display_report_columns: 'Display report columns',
   select_display_columns_by: 'Select display columns by...',
   credit_and_debit_not_equal: 'credit and debit not equal',
-  the_currency_has_been_successfully_edited:
-    'The currency has been successfully edited',
-  the_currency_has_been_successfully_created:
-    'The currency has been successfully created',
-  the_currency_has_been_successfully_deleted:
-    'The currency has been successfully deleted',
+  the_currency_has_been_edited_successfully:
+    'The currency has been edited successfully',
+  the_currency_has_been_created_successfully:
+    'The currency has been created successfully',
+  the_currency_has_been_deleted_successfully:
+    'The currency has been deleted successfully',
   once_delete_this_currency_you_will_able_to_restore_it: `Once you delete this currency, you won\'t be able to restore it later. Are you sure you want to delete this currency?`,
   once_delete_this_exchange_rate_you_will_able_to_restore_it: `Once you delete this exchange rate, you won\'t be able to restore it later. Are you sure you want to delete this exchange rate?`,
   once_delete_these_exchange_rates_you_will_not_able_restore_them: `Once you delete these exchange rates, you won't be able to retrieve them later. Are you sure you want to delete them?`,
@@ -366,12 +360,12 @@ export default {
   select_time_zone: 'Select Time Zone',
   select_currency: 'Select Currency',
   select_parent_category: 'Select Parent Category',
-  the_options_has_been_successfully_created:
-    'The options has been successfully created',
+  the_options_has_been_created_successfully:
+    'The options has been created successfully',
   there_is_exchange_rate_in_this_date_with_the_same_currency:
     'There is exchange rate in this date with the same currency.',
-  the_exchange_rates_has_been_successfully_deleted:
-    'The exchange rates has been successfully deleted',
+  the_exchange_rates_has_been_deleted_successfully:
+    'The exchange rates has been deleted successfully',
   once_delete_this_expense_you_will_able_to_restore_it: `Once you delete this expense, you won\'t be able to restore it later. Are you sure you want to delete this expense?`,
   january: 'January',
   february: 'February',
@@ -415,8 +409,8 @@ export default {
   view_name_: 'View name',
   time_zone_: 'Time zone',
   location: 'Location',
-  the_items_has_been_successfully_deleted:
-    'The items have been successfully deleted.',
+  the_items_has_been_deleted_successfully:
+    'The items have been deleted successfully.',
   once_delete_these_items_you_will_not_able_restore_them:
     "Once you delete these items, you won't be able to retrieve them later. Are you sure you want to delete them?",
   ops_something_went_wrong: 'Something went wrong! Please try again.',
@@ -449,14 +443,14 @@ export default {
   new_expense: 'New Expense',
   full_amount: 'Full Amount',
   payment_date_: 'Payment date',
-  the_expense_has_been_successfully_created:
-    'The expense #{number} has been successfully created.',
-  the_expense_has_been_successfully_edited:
-    'The expense #{number} has been successfully edited.',
-  the_expense_has_been_successfully_deleted:
-    'The expense has been successfully deleted',
-  the_expenses_have_been_successfully_deleted:
-    'The expenses have been successfully deleted',
+  the_expense_has_been_created_successfully:
+    'The expense #{number} has been created successfully.',
+  the_expense_has_been_edited_successfully:
+    'The expense #{number} has been edited successfully.',
+  the_expense_has_been_deleted_successfully:
+    'The expense has been deleted successfully',
+  the_expenses_have_been_deleted_successfully:
+    'The expenses have been deleted successfully',
   once_delete_these_expenses_you_will_not_able_restore_them:
     "Once you delete these expenses, you won't be able to retrieve them later. Are you sure you want to delete them?",
   the_expense_has_been_published: 'The expense has been published',
@@ -481,8 +475,8 @@ export default {
   business: 'Business',
   individual: 'Individual',
   display_name: 'Display Name',
-  the_customer_has_been_successfully_created:
-    'The customer has been successfully created.',
+  the_customer_has_been_created_successfully:
+    'The customer has been created successfully.',
   select_contact: 'Select contact',
   contact: 'Contact',
   contacts: 'Contacts',
@@ -514,14 +508,12 @@ export default {
   shipping_address: 'Shipping Address',
   customers_list: 'Customers List',
   receivable_balance: 'Receivable balance',
-  the_customer_has_been_successfully_created:
-    'The customer has been successfully created.',
-  the_customer_has_been_successfully_deleted:
-    'The customer has been successfully deleted.',
-  the_customers_has_been_successfully_deleted:
-    'The customers have been successfully deleted.',
-  the_item_customer_has_been_successfully_edited:
-    'The item customer has been successfully edited.',
+  the_customer_has_been_deleted_successfully:
+    'The customer has been deleted successfully.',
+  the_customers_has_been_deleted_successfully:
+    'The customers have been deleted successfully.',
+  the_item_customer_has_been_edited_successfully:
+    'The item customer has been edited successfully.',
   once_delete_this_customer_you_will_able_to_restore_it: `Once you delete this customer, you won\'t be able to restore it later. Are you sure you want to delete this cusomter?`,
   once_delete_these_customers_you_will_not_able_restore_them:
     "Once you delete these customers, you won't be able to retrieve them later. Are you sure you want to delete them?",
@@ -604,12 +596,12 @@ export default {
   estimates_list: 'Estimates List',
   estimate_number: 'Estimate Number',
   product_and_service: 'Product/Service',
-  the_estimate_has_been_successfully_edited:
-    'The estimate #{number} has been successfully edited.',
-  the_estimate_has_been_successfully_created:
-    'The estimate #{number} has been successfully created.',
-  the_estimate_has_been_successfully_deleted:
-    'The estimate has been successfully deleted.',
+  the_estimate_has_been_edited_successfully:
+    'The estimate #{number} has been edited successfully.',
+  the_estimate_has_been_created_successfully:
+    'The estimate #{number} has been created successfully.',
+  the_estimate_has_been_deleted_successfully:
+    'The estimate has been deleted successfully.',
   once_delete_this_estimate_you_will_able_to_restore_it: `Once you delete this estimate, you won\'t be able to restore it later. Are you sure you want to delete this estimate?`,
   cannot_be_zero_or_empty: 'cannot be zero or empty.',
   invoices: 'Invoices',
@@ -631,12 +623,12 @@ export default {
   delete_invoice: 'Delete Invoice',
   new_invoice: 'New Invoice',
   invoice_list: 'Invoice List',
-  the_invoice_has_been_successfully_edited:
-    'The invoice #{number} has been successfully edited.',
-  the_invocie_has_been_successfully_created:
-    'The invoice #{number} has been successfully created.',
-  the_invoice_has_been_successfully_deleted:
-    'The invoice has been successfully deleted.',
+  the_invoice_has_been_edited_successfully:
+    'The invoice #{number} has been edited successfully.',
+  the_invoice_has_been_created_successfully:
+    'The invoice #{number} has been created successfully.',
+  the_invoice_has_been_deleted_successfully:
+    'The invoice has been deleted successfully.',
   once_delete_this_invoice_you_will_able_to_restore_it: `Once you delete this invoice, you won\'t be able to restore it later. Are you sure you want to delete this invoice?`,
   receipts_list: 'Receipts List',
   receipts: 'Receipts',
@@ -655,12 +647,12 @@ export default {
   send_to_email: 'Send to email',
   select_deposit_account: 'Select Deposit Account',
   once_delete_this_receipt_you_will_able_to_restore_it: `Once you delete this receipt, you won\'t be able to restore it later. Are you sure you want to delete this receipt?`,
-  the_receipt_has_been_successfully_created:
-    'The recepit #{number} has been successfully created.',
-  the_receipt_has_been_successfully_edited:
-    'The receipt #{number}  has been successfully edited.',
-  the_receipt_has_been_successfully_deleted:
-    'The receipt has been successfully deleted.',
+  the_receipt_has_been_created_successfully:
+    'The receipt #{number} has been created successfully.',
+  the_receipt_has_been_edited_successfully:
+    'The receipt #{number}  has been edited successfully.',
+  the_receipt_has_been_deleted_successfully:
+    'The receipt has been deleted successfully.',
   bills_list: 'Bills List',
   bills: 'Bills',
   accept: 'Accept',
@@ -676,12 +668,12 @@ export default {
   bill_number_: 'Bill number',
   vendor_name_: 'Vendor name',
   delete_bill: 'Delete Bill',
-  the_bill_has_been_successfully_edited:
-    'The bill #{number} has been successfully edited.',
-  the_bill_has_been_successfully_created:
-    'The bill #{number} has been successfully created.',
-  the_bill_has_been_successfully_deleted:
-    'The bill has been successfully deleted.',
+  the_bill_has_been_edited_successfully:
+    'The bill #{number} has been edited successfully.',
+  the_bill_has_been_created_successfully:
+    'The bill #{number} has been created successfully.',
+  the_bill_has_been_deleted_successfully:
+    'The bill has been deleted successfully.',
   once_delete_this_bill_you_will_able_to_restore_it: `Once you delete this bill, you won\'t be able to restore it later. Are you sure you want to delete this bill?`,
   deposit_to: 'Deposit to',
   edit_payment_receive: 'Edit Payment Receive',
@@ -696,8 +688,8 @@ export default {
   receive_amount_: 'Receive amount',
   the_payment_receive_transaction_has_been_created:
     'The payment receive transaction has been created successfully.',
-  the_payment_receive_has_been_successfully_deleted:
-    'The payment receive has been successfully deleted.',
+  the_payment_receive_has_been_deleted_successfully:
+    'The payment receive has been deleted successfully.',
   the_payment_receive_transaction_has_been_edited:
     'The payment receive transaction has been edited successfully.',
   once_delete_this_payment_receive_you_will_able_to_restore_it: `Once you delete this payment receive, you won\'t be able to restore it later. Are you sure you want to delete this payment receive?`,
@@ -706,8 +698,8 @@ export default {
   subscription: 'Subscription',
   plan_slug: 'Plan slug',
   billing: 'Billing',
-  the_billing_has_been_successfully_created:
-    'The billing has been successfully created.',
+  the_billing_has_been_created_successfully:
+    'The billing has been created successfully.',
   a_select_a_plan: 'A. Select a plan',
   b_choose_your_billing: 'B. Choose your billing',
   c_payment_methods: 'C. Payment methods',
@@ -743,12 +735,12 @@ export default {
   payment_account: 'Payment Account',
   select_vender_account: 'Select Vender Account',
   select_payment_account: 'Select Payment Account',
-  the_payment_made_has_been_successfully_edited:
-    'The payment made has been successfully edited.',
-  the_payment_made_has_been_successfully_created:
-    'The payment made has been successfully created.',
-  the_payment_made_has_been_successfully_deleted:
-    'The payment made has been successfully deleted.',
+  the_payment_made_has_been_edited_successfully:
+    'The payment made has been edited successfully.',
+  the_payment_made_has_been_created_successfully:
+    'The payment made has been created successfully.',
+  the_payment_made_has_been_deleted_successfully:
+    'The payment made has been deleted successfully.',
   once_delete_this_payment_made_you_will_able_to_restore_it: `Once you delete this payment made, you won\'t be able to restore it later. Are you sure you want to delete this payment made?`,
   sellable: 'Sellable',
   purchasable: 'Purchasable',
@@ -834,20 +826,16 @@ export default {
   edit_vendor: 'Edit Vendor',
   delete_vendor: 'Delete Vendor',
   vendors_list: 'Vendors List',
-  the_vendor_has_been_successfully_created:
+  the_vendor_has_been_created_successfully:
     'The vendor has been successfully created.',
-  the_vendor_has_been_successfully_deleted:
-    'The vendor has been successfully deleted.',
-  the_vendors_has_been_successfully_deleted:
-    'The vendors has been successfully deleted.',
-  the_item_vendor_has_been_successfully_edited:
-    'The item vendor has been successfully edited.',
+  the_vendor_has_been_deleted_successfully:
+    'The vendor has been deleted successfully.',
+  the_item_vendor_has_been_edited_successfully:
+    'The item vendor has been edited successfully.',
   once_delete_this_vendor_you_will_able_to_restore_it: `Once you delete this vendor, you won\'t be able to restore it later. Are you sure you want to delete this vendor?`,
   once_delete_these_vendors_you_will_not_able_restore_them:
     "Once you delete these vendors, you won't be able to retrieve them later. Are you sure you want to delete them?",
   vendor_has_bills: 'Vendor has bills',
-  the_item_has_been_edited_successfully:
-    'The item has been edited successfully.',
   you_cannot_make_payment_with_zero_total_amount:
     'You cannot record payment transaction with zero total amount',
   are_sure_to_publish_this_manual_journal:
@@ -876,8 +864,8 @@ export default {
   paid: 'Paid',
   your_account_has_been_locked:
     'Your account has been locked due to repeated failed login attempts. Please wait a few minutes before trying again.',
-  the_invoice_has_been_successfully_delivered:
-    'The invoice has been successfully delivered.',
+  the_invoice_has_been_delivered_successfully:
+    'The invoice has been delivered successfully.',
   are_sure_to_deliver_this_invoice:
     'Are you sure you want to deliver this invoice?',
   mark_as_delivered: 'Mark as delivered',
@@ -888,24 +876,24 @@ export default {
   save_open: 'Save & Open',
   close_and_new: 'Close and new',
   close_continue_editing: 'Close (continue editing)',
-  the_receipt_has_been_successfully_closed:
-    'The receipt has been successfully closed.',
+  the_receipt_has_been_closed_successfully:
+    'The receipt has been closed successfully.',
   are_sure_to_close_this_receipt:
     'Are you sure you want to close this receipt?',
   closed: 'Closed',
   open_and_new: 'Open and new',
   open_continue_editing: 'Open (continue editing)',
-  the_bill_has_been_successfully_opened:
-    'The bill has been successfully opened.',
+  the_bill_has_been_opened_successfully:
+    'The bill has been opened successfully.',
   open: 'Open',
   are_sure_to_open_this_bill: 'Are you sure you want to open this bill?',
   opened: 'Opened',
-  the_estimate_has_been_successfully_delivered:
-    'The estimate has been successfully delivered.',
-  the_estimate_has_been_successfully_approved:
-    'The estimate has been successfully approved.',
-  the_estimate_has_been_successfully_rejected:
-    'The estimate has been successfully rejected.',
+  the_estimate_has_been_delivered_successfully:
+    'The estimate has been delivered successfully.',
+  the_estimate_has_been_approved_successfully:
+    'The estimate has been approved successfully.',
+  the_estimate_has_been_rejected_successfully:
+    'The estimate has been rejected successfully.',
   are_sure_to_deliver_this_estimate:
     'Are you sure you want to deliver this estimate?',
   approve: 'Approve',
@@ -919,10 +907,10 @@ export default {
   delivered: 'Delivered',
   rejected: 'Rejected',
   approved: 'Approved',
-  the_item_has_been_successfully_inactivated:
-    'The item has been successfully inactivated.',
-  the_item_has_been_successfully_activated:
-    'The item has been successfully activated.',
+  the_item_has_been_inactivated_successfully:
+    'The item has been inactivated successfully.',
+  the_item_has_been_activated_successfully:
+    'The item has been activated successfully.',
   are_sure_to_inactive_this_item:
     'Are you sure you want to inactive this item? You will be able to activate it later',
   are_sure_to_activate_this_item:
@@ -952,10 +940,10 @@ export default {
   adjustment_account: 'Adjustment account',
   inventory_adjustment_list: 'Inventory Adjustment List',
   delete_adjustment: 'Delete Adjustment',
-  the_make_adjustment_has_been_successfully_created:
-    'The make adjustment has been successfully created.',
-  the_adjustment_has_been_successfully_deleted:
-    'The adjustment has been successfully deleted.',
+  the_make_adjustment_has_been_created_successfully:
+    'The make adjustment has been created successfully.',
+    the_adjustment_has_been_deleted_successfully:
+    'The adjustment has been deleted successfully.',
   once_delete_this_inventory_a_adjustment_you_will_able_to_restore_it: `Once you delete this inventory a adjustment, you won\'t be able to restore it later. Are you sure you want to delete this invoice?`,
   select_adjustment_account: 'Select adjustment account',
   qty: 'Quantity on hand',
@@ -975,5 +963,5 @@ export default {
   all_customers: 'All Customers',
   selected_customers: '{count} Selected Customers',
   transaction_number: 'Transaction #',
-  running_balance: 'Running balance'
+  running_balance: 'Running balance',
 };

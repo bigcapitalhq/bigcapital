@@ -195,8 +195,8 @@ const EstimateForm = ({
         message: formatMessage(
           {
             id: isNewMode
-              ? 'the_estimate_has_been_successfully_edited'
-              : 'the_estimate_has_been_successfully_created',
+              ? 'the_estimate_has_been_edited_successfully'
+              : 'the_estimate_has_been_created_successfully',
           },
           { number: values.estimate_number },
         ),

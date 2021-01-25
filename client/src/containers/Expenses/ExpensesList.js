@@ -83,7 +83,7 @@ function ExpensesList({
     requestDeleteExpense(deleteExpense.id).then(() => {
       AppToaster.show({
         message: formatMessage(
-          { id: 'the_expense_has_been_successfully_deleted' },
+          { id: 'the_expense_has_been_deleted_successfully' },
           { number: deleteExpense.payment_account_id },
         ),
         intent: Intent.SUCCESS,
@@ -110,7 +110,7 @@ function ExpensesList({
       .then(() => {
         AppToaster.show({
           message: formatMessage(
-            { id: 'the_expenses_have_been_successfully_deleted' },
+            { id: 'the_expenses_have_been_deleted_successfully' },
             { count: selectedRowsCount },
           ),
           intent: Intent.SUCCESS,

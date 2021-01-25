@@ -114,8 +114,8 @@ function VendorForm({
       AppToaster.show({
         message: formatMessage({
           id: isNewMode
-            ? 'the_vendor_has_been_successfully_created'
-            : 'the_item_vendor_has_been_successfully_edited',
+            ? 'the_vendor_has_been_created_successfully'
+            : 'the_item_vendor_has_been_edited_successfully',
         }),
         intent: Intent.SUCCESS,
       });

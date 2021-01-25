@@ -178,8 +178,8 @@ function CustomerForm({
       AppToaster.show({
         message: formatMessage({
           id: customer
-            ? 'the_item_customer_has_been_successfully_edited'
-            : 'the_customer_has_been_successfully_created',
+            ? 'the_item_customer_has_been_edited_successfully'
+            : 'the_customer_has_been_created_successfully',
         }),
         intent: Intent.SUCCESS,
       });
