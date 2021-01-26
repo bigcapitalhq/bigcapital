@@ -30,6 +30,7 @@ function BalanceSheet({
   // #withDashboardActions
   changePageTitle,
   setDashboardBackLink,
+  setSidebarShrink,
 
   // #withBalanceSheetActions
   fetchBalanceSheet,
@@ -58,8 +59,9 @@ function BalanceSheet({
   );
 
   useEffect(() => {
+    setSidebarShrink();
     changePageTitle(formatMessage({ id: 'balance_sheet' }));
-  }, [changePageTitle, formatMessage]);
+  }, [changePageTitle, formatMessage, setSidebarShrink]);
 
   // Observes the balance sheet refresh to invalid the query to refresh it.
   useEffect(() => {

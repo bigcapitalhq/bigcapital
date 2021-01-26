@@ -81,8 +81,8 @@ function AccountFormDialogContent({
         message: formatMessage(
           {
             id: isNewMode
-              ? 'service_has_been_successful_created'
-              : 'service_has_been_successful_edited',
+              ? 'service_has_been_created_successfully'
+              : 'service_has_been_edited_successfully',
           },
           {
             name: toastAccountName,

@@ -179,8 +179,8 @@ function InvoiceForm({
         message: formatMessage(
           {
             id: isNewMode
-              ? 'the_invocie_has_been_successfully_created'
-              : 'the_invoice_has_been_successfully_edited',
+              ? 'the_invoice_has_been_created_successfully'
+              : 'the_invoice_has_been_edited_successfully',
           },
           { number: values.invoice_no },
         ),

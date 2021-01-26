@@ -57,7 +57,7 @@ function GeneralPreferences({
       .then((response) => {
         AppToaster.show({
           message: formatMessage({
-            id: 'the_options_has_been_successfully_created',
+            id: 'the_options_has_been_created_successfully',
           }),
           intent: Intent.SUCCESS,
         });

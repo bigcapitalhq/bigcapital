@@ -131,7 +131,7 @@ function ItemsList({
       .then(() => {
         AppToaster.show({
           message: formatMessage({
-            id: 'the_item_has_been_successfully_deleted',
+            id: 'the_item_has_been_deleted_successfully',
           }),
           intent: Intent.SUCCESS,
         });
@@ -187,7 +187,7 @@ function ItemsList({
         setBulkDelete(false);
         AppToaster.show({
           message: formatMessage({
-            id: 'the_items_has_been_successfully_deleted',
+            id: 'the_items_has_been_deleted_successfully',
           }),
           intent: Intent.SUCCESS,
         });
@@ -219,7 +219,7 @@ function ItemsList({
         setInactiveItem(false);
         AppToaster.show({
           message: formatMessage({
-            id: 'the_item_has_been_successfully_inactivated',
+            id: 'the_item_has_been_inactivated_successfully',
           }),
           intent: Intent.SUCCESS,
         });
@@ -247,7 +247,7 @@ function ItemsList({
         setActivateItem(false);
         AppToaster.show({
           message: formatMessage({
-            id: 'the_item_has_been_successfully_activated',
+            id: 'the_item_has_been_activated_successfully',
           }),
           intent: Intent.SUCCESS,
         });

@@ -89,7 +89,7 @@ function InventoryAdjustmentFormDialogContent({
 
       AppToaster.show({
         message: formatMessage({
-          id: 'the_make_adjustment_has_been_successfully_created',
+          id: 'the_make_adjustment_has_been_created_successfully',
         }),
         intent: Intent.SUCCESS,
       });

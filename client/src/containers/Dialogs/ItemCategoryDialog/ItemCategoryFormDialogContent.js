@@ -103,8 +103,8 @@ function ItemCategoryFormDialogContent({
       AppToaster.show({
         message: formatMessage({
           id: isNewMode
-            ? 'the_item_category_has_been_successfully_created'
-            : 'the_item_category_has_been_successfully_edited',
+            ? 'the_item_category_has_been_created_successfully'
+            : 'the_item_category_has_been_edited_successfully',
         }),
         intent: Intent.SUCCESS,
       });

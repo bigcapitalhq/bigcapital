@@ -152,8 +152,8 @@ function ExpenseForm({
         message: formatMessage(
           {
             id: isNewMode
-              ? 'the_expense_has_been_successfully_created'
-              : 'the_expense_has_been_successfully_edited',
+              ? 'the_expense_has_been_created_successfully'
+              : 'the_expense_has_been_edited_successfully',
           },
           { number: values.payment_account_id },
         ),

@@ -83,7 +83,7 @@ function BillsList({
     requestDeleteBill(deleteBill.id).then(() => {
       AppToaster.show({
         message: formatMessage({
-          id: 'the_bill_has_been_successfully_deleted',
+          id: 'the_bill_has_been_deleted_successfully',
         }),
         intent: Intent.SUCCESS,
       });
@@ -108,7 +108,7 @@ function BillsList({
         setOpenBill(false);
         AppToaster.show({
           message: formatMessage({
-            id: 'the_bill_has_been_successfully_opened',
+            id: 'the_bill_has_been_opened_successfully',
           }),
           intent: Intent.SUCCESS,
         });

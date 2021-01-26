@@ -75,7 +75,7 @@ function ReceiptsList({
     requestDeleteReceipt(deleteReceipt.id).then(() => {
       AppToaster.show({
         message: formatMessage({
-          id: 'the_receipt_has_been_successfully_deleted',
+          id: 'the_receipt_has_been_deleted_successfully',
         }),
         intent: Intent.SUCCESS,
       });
@@ -100,7 +100,7 @@ function ReceiptsList({
         setCloseReceipt(false);
         AppToaster.show({
           message: formatMessage({
-            id: 'the_receipt_has_been_successfully_closed',
+            id: 'the_receipt_has_been_closed_successfully',
           }),
           intent: Intent.SUCCESS,
         });

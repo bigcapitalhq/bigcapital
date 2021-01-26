@@ -194,8 +194,8 @@ function ReceiptForm({
         message: formatMessage(
           {
             id: isNewMode
-              ? 'the_receipt_has_been_successfully_created'
-              : 'the_receipt_has_been_successfully_edited',
+              ? 'the_receipt_has_been_created_successfully'
+              : 'the_receipt_has_been_edited_successfully',
           },
           { number: values.receipt_number },
         ),

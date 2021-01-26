@@ -86,7 +86,7 @@ function EstimatesList({
     requestDeleteEstimate(deleteEstimate.id).then(() => {
       AppToaster.show({
         message: formatMessage({
-          id: 'the_estimate_has_been_successfully_deleted',
+          id: 'the_estimate_has_been_deleted_successfully',
         }),
         intent: Intent.SUCCESS,
       });
@@ -111,7 +111,7 @@ function EstimatesList({
         setDeliverEstimate(false);
         AppToaster.show({
           message: formatMessage({
-            id: 'the_estimate_has_been_successfully_delivered',
+            id: 'the_estimate_has_been_delivered_successfully',
           }),
           intent: Intent.SUCCESS,
         });
@@ -139,7 +139,7 @@ function EstimatesList({
         setApproveEstimate(false);
         AppToaster.show({
           message: formatMessage({
-            id: 'the_estimate_has_been_successfully_approved',
+            id: 'the_estimate_has_been_approved_successfully',
           }),
           intent: Intent.SUCCESS,
         });
@@ -167,7 +167,7 @@ function EstimatesList({
         setRejectEstimate(false);
         AppToaster.show({
           message: formatMessage({
-            id: 'the_estimate_has_been_successfully_rejected',
+            id: 'the_estimate_has_been_rejected_successfully',
           }),
           intent: Intent.SUCCESS,
         });

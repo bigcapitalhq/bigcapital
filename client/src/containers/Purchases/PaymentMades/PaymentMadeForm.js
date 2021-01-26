@@ -150,8 +150,8 @@ function PaymentMadeForm({
       AppToaster.show({
         message: formatMessage({
           id: paymentMadeId
-            ? 'the_payment_made_has_been_successfully_edited'
-            : 'the_payment_made_has_been_successfully_created',
+            ? 'the_payment_made_has_been_edited_successfully'
+            : 'the_payment_made_has_been_created_successfully',
         }),
         intent: Intent.SUCCESS,
       });

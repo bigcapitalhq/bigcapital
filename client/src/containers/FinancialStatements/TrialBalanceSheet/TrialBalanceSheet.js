@@ -27,6 +27,7 @@ function TrialBalanceSheet({
   // #withDashboardActions
   changePageTitle,
   setDashboardBackLink,
+  setSidebarShrink,
 
   // #withTrialBalance
   trialBalanceSheetRefresh,
@@ -62,6 +63,7 @@ function TrialBalanceSheet({
   }, [changePageTitle, formatMessage]);
 
   useEffect(() => {
+    setSidebarShrink();
     // Show the back link on dashboard topbar.
     setDashboardBackLink(true);
 
@@ -69,7 +71,7 @@ function TrialBalanceSheet({
       // Hide the back link on dashboard topbar.
       setDashboardBackLink(false);
     };
-  });
+  }, [setDashboardBackLink, setSidebarShrink]);
 
   const handleFilterSubmit = useCallback(
     (filter) => {

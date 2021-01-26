@@ -151,8 +151,8 @@ function BillForm({
         message: formatMessage(
           {
             id: isNewMode
-              ? 'the_bill_has_been_successfully_created' :
-              'the_bill_has_been_successfully_edited',
+              ? 'the_bill_has_been_created_successfully' :
+              'the_bill_has_been_edited_successfully',
           },
           { number: values.bill_number },
         ),

@@ -77,7 +77,7 @@ function ViewFormPage({
       setStateDeleteView(null);
       AppToaster.show({
         message: formatMessage({
-          id: 'the_custom_view_has_been_successfully_deleted',
+          id: 'the_custom_view_has_been_deleted_successfully',
         }),
         intent: Intent.SUCCESS,
       });

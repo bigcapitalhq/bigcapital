@@ -78,7 +78,7 @@ function PaymentMadeList({
     requestDeletePaymentMade(deletePaymentMade.id).then(() => {
       AppToaster.show({
         message: formatMessage({
-          id: 'the_payment_made_has_been_successfully_deleted',
+          id: 'the_payment_made_has_been_deleted_successfully',
         }),
         intent: Intent.SUCCESS,
       });
