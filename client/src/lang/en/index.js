@@ -859,7 +859,7 @@ export default {
   deliver_and_new: 'Deliver and new',
   deliver_continue_editing: 'Deliver (continue editing)',
   due_in: 'Due in {due} day.',
-  day_partially_paid: 'Partially paid {due} due.',
+  day_partially_paid: 'Partially paid, {currencySign}{due} due.',
   overdue_by: 'Overdue by {overdue} day.',
   paid: 'Paid',
   your_account_has_been_locked:

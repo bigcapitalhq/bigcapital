@@ -11,10 +11,10 @@ export const statusAccessor = (row) => {
     <div className={'status-accessor'}>
       <Choose>
         <Choose.When condition={row.is_fully_paid && row.is_delivered}>
-          <span className={'fully-paid-status'}>
-            <Icon icon="checkmark-16" iconSize={17} />
+          <span className={'fully-paid-icon'}>
+            <Icon icon="small-tick" iconSize={18} />
           </span>
-          <span>
+          <span class="fully-paid-text">
             <T id={'paid'} />
           </span>
         </Choose.When>
@@ -27,15 +27,21 @@ export const statusAccessor = (row) => {
               </span>
             </Choose.When>
             <Choose.Otherwise>
-              <span className={'remaining-status'}>
+              <span className={'due-status'}>
                 <T id={'due_in'} values={{ due: row.remaining_days }} />
               </span>
             </Choose.Otherwise>
           </Choose>
 
           <If condition={row.is_partially_paid}>
-            <span>
-              <T id={'day_partially_paid'} values={{ due: row.due_amount }} />
+            <span class="partial-paid">
+              <T
+                id={'day_partially_paid'}
+                values={{
+                  due: row.due_amount,
+                  currencySign: '$',
+                }}
+              />
             </span>
             <ProgressBar
               animate={false}

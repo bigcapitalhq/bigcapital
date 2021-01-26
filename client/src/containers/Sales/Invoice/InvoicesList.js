@@ -3,8 +3,11 @@ import { Route, Switch, useHistory } from 'react-router-dom';
 import { useQuery, queryCache } from 'react-query';
 import { Alert, Intent } from '@blueprintjs/core';
 
+import 'style/pages/SaleInvoice/List.scss';
+
 import AppToaster from 'components/AppToaster';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { FormattedMessage as T, useIntl } from 'react-intl'
+;
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 
@@ -161,7 +164,7 @@ function InvoicesList({
   return (
     <DashboardInsider
       loading={fetchResourceViews.isFetching || fetchResourceFields.isFetching}
-      name={'sales_invoices'}
+      name={'sales-invoices-list'}
     >
       <InvoiceActionsBar
         // onBulkDelete={}

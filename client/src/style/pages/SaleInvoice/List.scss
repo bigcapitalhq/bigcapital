@@ -1,0 +1,56 @@
+
+
+.dashboard__insider--sales-invoices-list{
+
+
+  .bigcapital-datatable{
+
+
+    .tbody{
+      .status.td{
+
+        .status-accessor{
+          padding: 4px 0;
+        }
+        .overdue-status,
+        .due-status{
+          display: block;
+          font-size: 13.5px;
+          line-height: 1.4;
+
+          + .partial-paid{
+            margin-top: 5px;
+          }
+        }
+        .overdue-status{
+          color: #ec5b0a;
+        }
+        .due-status{
+          color: #1652c8;
+        }
+        .partial-paid{
+          font-size: 12px;
+          line-height: 1;
+          display: block;
+          margin-bottom: 8px;
+          opacity: 0.65;
+        }
+        .fully-paid-icon{
+          width: 18px;
+          height: 18px;
+          margin-right: 8px;
+
+          svg {
+            fill: #2ba01d;
+          }
+        }
+        .fully-paid-text{
+          font-size: 13.5px;
+        }
+        .bp3-progress-bar{
+          height: 6px;
+        }
+      }
+    }
+  }
+}
