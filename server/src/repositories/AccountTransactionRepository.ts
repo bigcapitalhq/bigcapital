@@ -31,7 +31,7 @@ export default class AccountTransactionsRepository extends TenantRepository {
       return this.model.query()
         .modify('filterAccounts', filter.accountsIds)
         .modify('filterDateRange', filter.fromDate, filter.toDate)
-        .withGraphFetched('account.type')
+        .withGraphFetched('account')
         .onBuild((query) => {
           if (filter.sumationCreditDebit) {
             query.modify('sumationCreditDebit');

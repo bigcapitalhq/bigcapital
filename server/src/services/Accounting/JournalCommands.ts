@@ -269,7 +269,7 @@ export default class JournalCommands {
         'reference_id',
         Array.isArray(referenceId) ? referenceId : [referenceId]
       )
-      .withGraphFetched('account.type');
+      .withGraphFetched('account');
 
     this.journal.fromTransactions(transactions);
     this.journal.removeEntries();

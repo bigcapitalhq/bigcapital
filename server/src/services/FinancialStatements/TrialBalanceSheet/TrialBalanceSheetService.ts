@@ -69,7 +69,7 @@ export default class TrialBalanceSheetService extends FinancialSheet {
       filter,
     });
     // Retrieve all accounts on the storage.
-    const accounts = await accountRepository.all('type');
+    const accounts = await accountRepository.all();
     const accountsGraph = await accountRepository.getDependencyGraph();
 
     // Retrieve all journal transactions based on the given query.

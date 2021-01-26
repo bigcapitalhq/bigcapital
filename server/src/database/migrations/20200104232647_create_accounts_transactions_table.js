@@ -10,6 +10,9 @@ exports.up = function(knex) {
     table.integer('account_id').unsigned().index().references('id').inTable('accounts');
     table.string('contact_type').nullable().index();
     table.integer('contact_id').unsigned().nullable().index();
+    table.string('transaction_number').nullable().index();
+    table.string('reference_number').nullable().index();
+    table.integer('item_id').unsigned().nullable().index();
     table.string('note');
     table.integer('user_id').unsigned().index();
     table.integer('index').unsigned();

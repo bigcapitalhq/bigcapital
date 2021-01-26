@@ -184,7 +184,7 @@ export default class BalanceSheetStatement extends FinancialSheet {
     const filteredAccounts = accounts
       // Filter accounts that associated to the section accounts types.
       .filter(
-        (account) => sectionAccountsTypes.indexOf(account.type.key) !== -1
+        (account) => sectionAccountsTypes.indexOf(account.accountType) !== -1
       )
       .map((account) => this.balanceSheetAccountMapper(account))
       // Filter accounts that have no transaction when `noneTransactions` is on.

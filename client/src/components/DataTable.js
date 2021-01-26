@@ -50,7 +50,6 @@ export default function DataTable(props) {
     rowClassNames,
     payload,
     expandable = false,
-    expandToggleColumn = 2,
     noInitialFetch = false,
     
     pagesCount: controlledPageCount,
@@ -58,8 +57,6 @@ export default function DataTable(props) {
     // Pagination props.
     initialPageIndex = 0,
     initialPageSize = 10,
-    rowContextMenu,
-    expandColumnSpace = 1.5,
 
     updateDebounceTime = 200,
     selectionColumnWidth = 42,
@@ -179,6 +176,9 @@ export default function DataTable(props) {
 DataTable.defaultProps = {
   pagination: false,
   spinnerProps: { size: 30 },
+
+  expandToggleColumn: 1,
+  expandColumnSpace: 0.8,
 
   autoResetPage: true,
   autoResetExpanded: true,

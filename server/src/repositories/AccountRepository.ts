@@ -23,6 +23,15 @@ export default class AccountRepository extends TenantRepository {
       return this.model.toDependencyGraph(accounts);
     });
   }
+  
+  /**
+   * Retrieve.
+   * @param {string} slug 
+   * @return {Promise<IAccount>}
+   */
+  findBySlug(slug: string) {
+    return this.findOne({ slug });
+  }
 
   /**
    * Changes account balance.

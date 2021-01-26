@@ -12,7 +12,7 @@ export default function TablePage() {
       loading,
       TableRowsRenderer,
       TableLoadingRenderer,
-      TableNoResultsRow,
+      TableNoResultsRowRenderer,
     },
   } = useContext(TableContext);
 
@@ -20,7 +20,7 @@ export default function TablePage() {
     return <TableLoadingRenderer spinnerProps={spinnerProps} />;
   }
   if (page.length === 0) {
-    return <TableNoResultsRow />;
+    return <TableNoResultsRowRenderer />;
   }
   return (<TableRowsRenderer />);
 }

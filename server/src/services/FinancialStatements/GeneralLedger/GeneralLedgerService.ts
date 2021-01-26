@@ -89,7 +89,7 @@ export default class GeneralLedgerService {
       key: 'base_currency',
     });
     // Retrieve all accounts with associated type from the storage.
-    const accounts = await accountRepository.all('type');
+    const accounts = await accountRepository.all();
     const accountsGraph = await accountRepository.getDependencyGraph();
 
     // Retrieve all contacts on the storage.

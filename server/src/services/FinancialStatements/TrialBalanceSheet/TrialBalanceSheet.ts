@@ -65,7 +65,7 @@ export default class TrialBalanceSheet extends FinancialSheet {
       parentAccountId: account.parentAccountId,
       name: account.name,
       code: account.code,
-      accountNormal: account.type.normal,
+      accountNormal: account.accountNormal,
       hasTransactions: entries.length > 0,
 
       credit: trial.credit,

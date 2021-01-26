@@ -179,14 +179,6 @@ export default class Account extends TenantModel {
     return this.isProfitLossSheet();
   }
 
-  static collectJournalEntries(accounts) {
-    return flatten(accounts.map((account) => account.transactions.map((transaction) => ({
-      accountId: account.id,
-      ...transaction,
-      accountNormal: account.type.normal,
-    }))));
-  }
-
   /**
    * Converts flatten accounts list to nested array. 
    * @param {Array} accounts 
@@ -196,6 +188,10 @@ export default class Account extends TenantModel {
     return flatToNestedArray(accounts, { id: 'id', parentId: 'parentAccountId' })
   }
 
+  /**
+   * Transformes the accounts list to depenedency graph structure.
+   * @param {IAccount[]} accounts 
+   */  
   static toDependencyGraph(accounts) {
     return DependencyGraph.fromArray(
       accounts, { itemId: 'id', parentItemId: 'parentAccountId' }

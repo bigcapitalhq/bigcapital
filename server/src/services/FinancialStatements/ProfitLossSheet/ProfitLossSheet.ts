@@ -12,6 +12,7 @@ import {
   IProfitLossSheetTotalSection,
 } from 'interfaces';
 import { flatToNestedArray, dateRangeCollection } from 'utils';
+import { ACCOUNT_TYPE } from 'data/AccountTypes';
 
 export default class ProfitLossSheet extends FinancialSheet {
   tenantId: number;
@@ -51,7 +52,7 @@ export default class ProfitLossSheet extends FinancialSheet {
   }
 
   get otherIncomeAccounts() {
-    return this.accounts.filter((a) => a.type.key === 'other_income');
+    return this.accounts.filter((a) => a.accountType === ACCOUNT_TYPE.OTHER_INCOME);
   }
 
   /**
@@ -59,7 +60,7 @@ export default class ProfitLossSheet extends FinancialSheet {
    * @return {IAccount & { type: IAccountType }[]}
    */
   get incomeAccounts() {
-    return this.accounts.filter((a) => a.type.key === 'income');
+    return this.accounts.filter((a) => a.accountType === ACCOUNT_TYPE.INCOME);
   }
 
   /**
@@ -67,7 +68,7 @@ export default class ProfitLossSheet extends FinancialSheet {
    * @return {IAccount & { type: IAccountType }[]}
    */
   get expensesAccounts() {
-    return this.accounts.filter((a) => a.type.key === 'expense');
+    return this.accounts.filter((a) => a.accountType === ACCOUNT_TYPE.EXPENSE);
   }
 
   /**
@@ -75,7 +76,7 @@ export default class ProfitLossSheet extends FinancialSheet {
    * @return {IAccount & { type: IAccountType }[]}}
    */
   get otherExpensesAccounts() {
-    return this.accounts.filter((a) => a.type.key === 'other_expense');
+    return this.accounts.filter((a) => a.accountType === ACCOUNT_TYPE.OTHER_EXPENSE);
   }
 
   /**
@@ -83,7 +84,7 @@ export default class ProfitLossSheet extends FinancialSheet {
    * @return {IAccount & { type: IAccountType }[]}
    */
   get costOfSalesAccounts() {
-    return this.accounts.filter((a) => a.type.key === 'cost_of_goods_sold');
+    return this.accounts.filter((a) => a.accountType === ACCOUNT_TYPE.COST_OF_GOODS_SOLD);
   }
 
   /**

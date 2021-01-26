@@ -165,7 +165,6 @@ export default class JournalPoster implements IJournalPoster {
   private async convertBalanceChangesToArr(
     accountsChange: IAccountsChange
   ) : Promise<{ account: number, change: number }[]>{
-    const { accountTypeRepository } = this.repositories;
     const mappedList: { account: number, change: number }[] = [];
     const accountsIds: number[] = Object.keys(accountsChange).map(id => parseInt(id, 10));
 
@@ -173,8 +172,8 @@ export default class JournalPoster implements IJournalPoster {
       accountsIds.map(async (account: number) => {
         const accountChange = accountsChange[account];
         const accountNode = this.accountsDepGraph.getNodeData(account);
-        const accountTypeMeta = await accountTypeRepository.findOneById(accountNode.accountTypeId);
-        const { normal }: { normal: TEntryType } = accountTypeMeta;
+        
+        const { normal }: { normal: TEntryType } = accountNode.accountNormal;
         let change = 0;
 
         if (accountChange.credit) {
@@ -333,7 +332,7 @@ export default class JournalPoster implements IJournalPoster {
         ...transaction,
         referenceTypeFormatted: transaction.referenceTypeFormatted,
         account: transaction.accountId,
-        accountNormal: get(transaction, 'account.type.normal'),
+        accountNormal: get(transaction, 'account.accountNormal'),
       });
     });
   }

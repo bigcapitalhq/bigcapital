@@ -103,7 +103,7 @@ function BalanceSheetTable({
         expanded={expandedRows}
         expandToggleColumn={1}
         expandColumnSpace={0.8}
-        sticky={true}
+        // sticky={true}
       />
     </FinancialSheet>
   );

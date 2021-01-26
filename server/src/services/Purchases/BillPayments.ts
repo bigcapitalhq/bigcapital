@@ -513,7 +513,7 @@ export default class BillPaymentsService {
       const transactions = await AccountTransaction.query()
         .whereIn('reference_type', ['BillPayment'])
         .where('reference_id', billPayment.id)
-        .withGraphFetched('account.type');
+        .withGraphFetched('account');
 
       journal.loadEntries(transactions);
       journal.removeEntries();

@@ -6,7 +6,6 @@ import {
   IGeneralLedgerSheetAccountTransaction,
   IAccount,
   IJournalPoster,
-  IAccountType,
   IJournalEntry,
   IContact,
 } from 'interfaces';
@@ -130,7 +129,7 @@ export default class GeneralLedgerSheet extends FinancialSheet {
    * @return {IGeneralLedgerSheetAccountTransaction[]}
    */
   private accountTransactionsMapper(
-    account: IAccount & { type: IAccountType },
+    account: IAccount,
     openingBalance: number
   ): IGeneralLedgerSheetAccountTransaction[] {
     const entries = this.transactions.getAccountEntries(account.id);
@@ -184,7 +183,7 @@ export default class GeneralLedgerSheet extends FinancialSheet {
    * @return {IGeneralLedgerSheetAccount}
    */
   private accountMapper(
-    account: IAccount & { type: IAccountType }
+    account: IAccount
   ): IGeneralLedgerSheetAccount {
     const openingBalance = this.accountOpeningBalance(account);
     const closingBalance = this.accountClosingBalance(account);
@@ -210,11 +209,11 @@ export default class GeneralLedgerSheet extends FinancialSheet {
    * @return {IGeneralLedgerSheetAccount[]}
    */
   private accountsWalker(
-    accounts: IAccount & { type: IAccountType }[]
+    accounts: IAccount[]
   ): IGeneralLedgerSheetAccount[] {
     return (
       accounts
-        .map((account: IAccount & { type: IAccountType }) =>
+        .map((account: IAccount) =>
           this.accountMapper(account)
         )
         // Filter general ledger accounts that have no transactions

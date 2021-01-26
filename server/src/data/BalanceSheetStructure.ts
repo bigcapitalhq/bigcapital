@@ -1,4 +1,7 @@
 import { IBalanceSheetStructureSection } from 'interfaces';
+import {
+  ACCOUNT_TYPE
+} from 'data/AccountTypes';
 
 const balanceSheetStructure: IBalanceSheetStructureSection[] = [
   {
@@ -14,22 +17,22 @@ const balanceSheetStructure: IBalanceSheetStructureSection[] = [
           {
             name: 'Cash and cash equivalents',
             type: 'accounts_section',
-            accountsTypes: ['cash', 'bank'],
+            accountsTypes: [ACCOUNT_TYPE.CASH, ACCOUNT_TYPE.BANK],
           },
           {
             name: 'Accounts Receivable',
             type: 'accounts_section',
-            accountsTypes: ['accounts_receivable'],
+            accountsTypes: [ACCOUNT_TYPE.ACCOUNTS_RECEIVABLE],
           },
           {
             name: 'Inventories',
             type: 'accounts_section',
-            accountsTypes: ['inventory'],
+            accountsTypes: [ACCOUNT_TYPE.INVENTORY],
           },
           {
             name: 'Other current assets',
             type: 'accounts_section',
-            accountsTypes: ['other_current_asset'],
+            accountsTypes: [ACCOUNT_TYPE.OTHER_CURRENT_ASSET],
           },
         ],
         alwaysShow: true,
@@ -37,12 +40,12 @@ const balanceSheetStructure: IBalanceSheetStructureSection[] = [
       {
         name: 'Fixed Asset',
         type: 'accounts_section',
-        accountsTypes: ['fixed_asset'],
+        accountsTypes: [ACCOUNT_TYPE.FIXED_ASSET],
       },
       {
         name: 'Non-Current Assets',
         type: 'accounts_section',
-        accountsTypes: ['non_current_asset'],
+        accountsTypes: [ACCOUNT_TYPE.NON_CURRENT_ASSET],
       }
     ],
     alwaysShow: true,
@@ -61,21 +64,21 @@ const balanceSheetStructure: IBalanceSheetStructureSection[] = [
             name: 'Current Liabilties',
             type: 'accounts_section',
             accountsTypes: [
-              'accounts_payable',
-              'tax_payable',
-              'credit_card',
-              'other_current_liability'
+              ACCOUNT_TYPE.ACCOUNTS_PAYABLE,
+              ACCOUNT_TYPE.TAX_PAYABLE,
+              ACCOUNT_TYPE.CREDIT_CARD,
+              ACCOUNT_TYPE.OTHER_CURRENT_LIABILITY,
             ],
           },
           {
             name: 'Long-Term Liabilities',
             type: 'accounts_section',
-            accountsTypes: ['long_term_liability'],
+            accountsTypes: [ACCOUNT_TYPE.LOGN_TERM_LIABILITY],
           },
           {
             name: 'Non-Current Liabilities',
             type: 'accounts_section',
-            accountsTypes: ['non_current_liability'],
+            accountsTypes: [ACCOUNT_TYPE.NON_CURRENT_LIABILITY],
           }
         ],
       },
@@ -83,7 +86,7 @@ const balanceSheetStructure: IBalanceSheetStructureSection[] = [
         name: 'Equity',
         sectionType: 'equity',
         type: 'accounts_section',
-        accountsTypes: ['equity'],
+        accountsTypes: [ACCOUNT_TYPE.EQUITY],
       },
     ],
     alwaysShow: true,

@@ -24,6 +24,8 @@ export interface IAccount {
   currencyCode: string,
   transactions?: any[],
   type?: any[],
+  accountNormal: string,
+  accountParentType: string,
 };
 
 export interface IAccountsFilter extends IDynamicListFilterDTO {

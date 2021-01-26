@@ -101,6 +101,7 @@ function ProfitLossSheetTable({
         rowClassNames={rowClassNames}
         expandable={true}
         expandToggleColumn={1}
+        
         sticky={true}
       />
     </FinancialSheet>

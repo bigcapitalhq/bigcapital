@@ -118,8 +118,8 @@ export default [
     predefined: 0,
   },
   {
-    name:'Opening Balance Adjustments',
-    slug: 'opening-balance-adjustments',
+    name:'Opening Balance Liabilities',
+    slug: 'opening-balance-liabilities',
     account_type: 'other-current-liability',
     code: '20004',
     description:'This account will hold the difference in the debits and credits entered during the opening balance..',
@@ -193,9 +193,9 @@ export default [
 
   // Expenses
   {
-    name:'Uncategorized Expenses',
-    slug: 'uncategorized-expense',
-    account_type: 'expense',
+    name:'Other Expenses',
+    slug: 'other-expenses',
+    account_type: 'other-expense',
     parent_account_id: null,
     code: '40001',
     description: '',
