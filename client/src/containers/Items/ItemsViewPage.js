@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React from 'react';
 import { Switch, Route, useHistory } from 'react-router-dom';
 
 import ItemsViewsTabs from 'containers/Items/ItemsViewsTabs';
@@ -62,6 +62,4 @@ function ItemsViewPage({
   );
 }
 
-const ItemsViewPageMemo = memo(ItemsViewPage);
-
-export default compose(withAlertsActions, withItemsActions)(ItemsViewPageMemo);
+export default compose(withAlertsActions, withItemsActions)(ItemsViewPage);
