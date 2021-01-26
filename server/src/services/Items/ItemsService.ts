@@ -10,7 +10,7 @@ import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import TenancyService from 'services/Tenancy/TenancyService';
 import { ServiceError } from 'exceptions';
 import InventoryService from 'services/Inventory/Inventory';
-import { ACCOUNT_ROOT_TYPE, ACCOUNT_TYPE } from 'data/AccountTypes'
+import { ACCOUNT_PARENT_TYPE, ACCOUNT_ROOT_TYPE, ACCOUNT_TYPE } from 'data/AccountTypes'
 
 const ERRORS = {
   NOT_FOUND: 'NOT_FOUND',
@@ -131,7 +131,7 @@ export default class ItemsService implements IItemsService {
       throw new ServiceError(ERRORS.COST_ACCOUNT_NOT_FOUMD);
 
     // Detarmines the cost of goods sold account.
-    } else if (foundAccount.isRootType(ACCOUNT_ROOT_TYPE.EXPENSE)) {
+    } else if (!foundAccount.isParentType(ACCOUNT_PARENT_TYPE.EXPENSE)) {
       this.logger.info('[items] validate cost account not COGS type.', {
         tenantId,
         costAccountId,
@@ -167,7 +167,7 @@ export default class ItemsService implements IItemsService {
       });
       throw new ServiceError(ERRORS.SELL_ACCOUNT_NOT_FOUND);
       
-    } else if (!foundAccount.isRootType(ACCOUNT_ROOT_TYPE.INCOME)) {
+    } else if (!foundAccount.isParentType(ACCOUNT_ROOT_TYPE.INCOME)) {
       this.logger.info('[items] sell account not income type.', {
         tenantId,
         sellAccountId,
@@ -204,7 +204,7 @@ export default class ItemsService implements IItemsService {
       });
       throw new ServiceError(ERRORS.INVENTORY_ACCOUNT_NOT_FOUND);
 
-    } else if (foundAccount.isAccountType(ACCOUNT_TYPE.INVENTORY)) {
+    } else if (!foundAccount.isAccountType(ACCOUNT_TYPE.INVENTORY)) {
       this.logger.info('[items] inventory account not inventory type.', {
         tenantId,
         inventoryAccountId,

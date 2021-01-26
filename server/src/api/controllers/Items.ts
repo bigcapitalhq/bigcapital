@@ -466,7 +466,7 @@ export default class ItemsController extends BaseController {
       }
       if (error.errorType === 'INVENTORY_ACCOUNT_NOT_INVENTORY') {
         return res.status(400).send({
-          errors: [{ type: 'INVENTORY.ACCOUNT.NOT.CURRENT.ASSET', code: 300 }],
+          errors: [{ type: 'INVENTORY.ACCOUNT.NOT.INVENTORY.TYPE', code: 300 }],
         });
       }
       if (error.errorType === 'ITEMS_HAVE_ASSOCIATED_TRANSACTIONS') {

@@ -15,37 +15,6 @@ import {
   IItemEntry,
 } from 'interfaces';
 
-interface IInventoryCostEntity {
-  date: Date;
-
-  referenceType: string;
-  referenceId: number;
-
-  costAccount: number;
-  incomeAccount: number;
-  inventoryAccount: number;
-
-  inventory: number;
-  cost: number;
-  income: number;
-}
-
-interface NonInventoryJEntries {
-  date: Date;
-
-  referenceType: string;
-  referenceId: number;
-
-  receivable: number;
-  payable: number;
-
-  incomeAccountId: number;
-  income: number;
-
-  costAccountId: number;
-  cost: number;
-}
-
 export default class JournalCommands {
   journal: JournalPoster;
 
@@ -90,6 +59,9 @@ export default class JournalCommands {
       referenceType: 'Bill',
       date: formattedDate,
       userId: bill.userId,
+
+      referenceNumber: bill.referenceNo,
+      transactionNumber: bill.billNumber,
     };
     // Overrides the old bill entries.
     if (override) {
@@ -122,6 +94,7 @@ export default class JournalCommands {
             ? item.inventoryAccountId
             : item.costAccountId,
         index: index + 2,
+        itemId: entry.itemId
       });
       this.journal.debit(debitEntry);
     });
@@ -362,6 +335,7 @@ export default class JournalCommands {
       debit: inventoryCostLot.cost,
       account: inventoryCostLot.item.costAccountId,
       index: 3,
+      itemId: inventoryCostLot.itemId
     });
     // XXX Credit - Inventory account.
     const inventoryEntry = new JournalEntry({
@@ -369,6 +343,7 @@ export default class JournalCommands {
       credit: inventoryCostLot.cost,
       account: inventoryCostLot.item.inventoryAccountId,
       index: 4,
+      itemId: inventoryCostLot.itemId
     });
     this.journal.credit(inventoryEntry);
     this.journal.debit(costEntry);
@@ -395,6 +370,9 @@ export default class JournalCommands {
       referenceId: saleInvoice.id,
       date: saleInvoice.invoiceDate,
       userId: saleInvoice.userId,
+
+      transactionNumber: saleInvoice.invoiceNo,
+      referenceNumber: saleInvoice.referenceNo,
     };
     // XXX Debit - Receivable account.
     const receivableEntry = new JournalEntry({
@@ -416,6 +394,7 @@ export default class JournalCommands {
           account: entry.item.sellAccountId,
           note: entry.description,
           index: index + 2,
+          itemId: entry.itemId,
         });
         this.journal.credit(incomeEntry);
       }
