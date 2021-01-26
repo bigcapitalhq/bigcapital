@@ -22,6 +22,7 @@ import { If, DashboardActionViewsList } from 'components';
 import withResourceDetail from 'containers/Resources/withResourceDetails';
 import withItems from 'containers/Items/withItems';
 import withItemsActions from './withItemsActions';
+import withAlertActions from 'containers/Alert/withAlertActions';
 
 import { compose } from 'utils';
 import { connect } from 'react-redux';
@@ -32,26 +33,22 @@ const ItemsActionsBar = ({
 
   // #withItems
   itemsViews,
+  itemsSelectedRows,
 
   //#withItemActions
   addItemsTableQueries,
   changeItemsCurrentView,
 
+  // #withAlertActions
+  openAlert,
   onFilterChanged,
-  selectedRows = [],
-  onBulkDelete,
 }) => {
   const { formatMessage } = useIntl();
   const history = useHistory();
-  const [filterCount, setFilterCount] = useState(0);
 
   const onClickNewItem = useCallback(() => {
     history.push('/items/new');
   }, [history]);
-
-  const hasSelectedRows = useMemo(() => selectedRows.length > 0, [
-    selectedRows,
-  ]);
 
   const filterDropdown = FilterDropdown({
     fields: resourceFields,
@@ -68,15 +65,16 @@ const ItemsActionsBar = ({
     },
   });
 
-  const handleBulkDelete = useCallback(() => {
-    onBulkDelete && onBulkDelete(selectedRows.map((r) => r.id));
-  }, [onBulkDelete, selectedRows]);
-
   const handleTabChange = (viewId) => {
     changeItemsCurrentView(viewId.id || -1);
     addItemsTableQueries({
       custom_view_id: viewId.id || null,
     });
+  };
+
+  // Handle cancel/confirm items bulk.
+  const handleBulkDelete = () => {
+    openAlert('items-bulk-delete', { itemsIds: itemsSelectedRows });
   };
 
   return (
@@ -105,18 +103,12 @@ const ItemsActionsBar = ({
         >
           <Button
             className={classNames(Classes.MINIMAL, 'button--filter')}
-            text={
-              filterCount <= 0 ? (
-                <T id={'filter'} />
-              ) : (
-                `${filterCount} ${formatMessage({ id: 'filters_applied' })}`
-              )
-            }
+            text={`${formatMessage({ id: 'filters_applied' })}`}
             icon={<Icon icon="filter-16" iconSize={16} />}
           />
         </Popover>
 
-        <If condition={hasSelectedRows}>
+        <If condition={itemsSelectedRows.length}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon="trash-16" iconSize={16} />}
@@ -149,11 +141,13 @@ const withItemsActionsBar = connect(mapStateToProps);
 
 export default compose(
   withItemsActionsBar,
-  withItems(({ itemsViews }) => ({
+  withItems(({ itemsViews, itemsSelectedRows }) => ({
     itemsViews,
+    itemsSelectedRows,
   })),
   withResourceDetail(({ resourceFields }) => ({
     resourceFields,
   })),
   withItemsActions,
+  withAlertActions,
 )(ItemsActionsBar);
