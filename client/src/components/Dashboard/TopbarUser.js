@@ -6,6 +6,7 @@ import {
   MenuDivider,
   Button,
   Popover,
+  Position,
 } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'react-intl';
 
@@ -50,7 +51,7 @@ function DashboardTopbarUser({ requestLogout, user }) {
   );
 
   return (
-    <Popover content={userAvatarDropMenu}>
+    <Popover content={userAvatarDropMenu} position={Position.BOTTOM}>
       <Button>
         <div className="user-text">
           {firstLettersArgs(user.first_name, user.last_name)}

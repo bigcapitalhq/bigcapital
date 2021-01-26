@@ -45,6 +45,9 @@ import PageFormBigNumber from './PageFormBigNumber';
 import AccountsMultiSelect from './AccountsMultiSelect';
 import CustomersMultiSelect from './CustomersMultiSelect';
 
+
+import TableFastCell from './Datatable/TableFastCell';
+
 const Hint = FieldHint;
 
 export {
@@ -93,5 +96,7 @@ export {
   PageFormBigNumber,
   AccountsMultiSelect,
   DataTableEditable,
-  CustomersMultiSelect
+  CustomersMultiSelect,
+
+  TableFastCell,
 };

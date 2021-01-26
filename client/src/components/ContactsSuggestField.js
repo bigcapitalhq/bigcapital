@@ -94,8 +94,7 @@ export default function ContactsSuggestField({
       selectedItem={selecetedContact}
       inputProps={{ placeholder: defaultTextSelect }}
       resetOnClose={true}
-      // fill={true}
-      popoverProps={{ minimal: true }}
+      popoverProps={{ minimal: true, boundary: 'window' }}
       inputValueRenderer={handleInputValueRenderer}
       className={classNames(CLASSES.FORM_GROUP_LIST_SELECT, {
         [CLASSES.SELECT_LIST_FILL_POPOVER]: popoverFill,

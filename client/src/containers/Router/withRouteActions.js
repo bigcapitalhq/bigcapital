@@ -28,4 +28,4 @@ const mapDispatchToProps = (dispatch, props) => {
   }
 }
 
-export default connect(null, mapDispatchToProps)
+export default connect(null, mapDispatchToProps)  

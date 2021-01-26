@@ -30,7 +30,7 @@ import { useAutofocus } from 'hooks';
 function AccountFormDialogFields({
   // #ownPropscl
   onClose,
-  isNewMode,
+  action,
 
   // #withAccounts
   accounts,
@@ -42,7 +42,7 @@ function AccountFormDialogFields({
   return (
     <Form>
       <div className={Classes.DIALOG_BODY}>
-        <FastField name={'account_type'}>
+        <Field name={'account_type'}>
           {({ form, field: { value }, meta: { error, touched } }) => (
             <FormGroup
               label={<T id={'account_type'} />}
@@ -59,13 +59,13 @@ function AccountFormDialogFields({
                 onTypeSelected={(accountType) => {
                   form.setFieldValue('account_type', accountType.key);
                 }}
-                disabled={!isNewMode}
+                disabled={action === 'edit' || action === 'new_child'}
                 popoverProps={{ minimal: true }}
                 popoverFill={true}
               />
             </FormGroup>
           )}
-        </FastField>
+        </Field>
 
         <FastField name={'name'}>
           {({ field, meta: { error, touched } }) => (
@@ -126,7 +126,11 @@ function AccountFormDialogFields({
 
         <If condition={values.subaccount}>
           <FastField name={'parent_account_id'}>
-            {({ form, field: { value }, meta: { error, touched } }) => (
+            {({
+              form: { values, setFieldValue },
+              field: { value },
+              meta: { error, touched },
+            }) => (
               <FormGroup
                 label={<T id={'parent_account'} />}
                 className={classNames(
@@ -139,11 +143,12 @@ function AccountFormDialogFields({
                 <AccountsSelectList
                   accounts={accounts}
                   onAccountSelected={(account) => {
-                    form.setFieldValue('parent_account_id', account.id);
+                    setFieldValue('parent_account_id', account.id);
                   }}
                   defaultSelectText={<T id={'select_parent_account'} />}
                   selectedAccountId={value}
                   popoverFill={true}
+                  filterByTypes={values.account_type}
                 />
               </FormGroup>
             )}
@@ -177,7 +182,7 @@ function AccountFormDialogFields({
             style={{ minWidth: '75px' }}
             type="submit"
           >
-            {!isNewMode ? <T id={'edit'} /> : <T id={'submit'} />}
+            {action === 'edit' ? <T id={'edit'} /> : <T id={'submit'} />}
           </Button>
         </div>
       </div>

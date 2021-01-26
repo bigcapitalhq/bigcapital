@@ -13,5 +13,21 @@ export function closeDialog(name, payload) {
     type: t.CLOSE_DIALOG,
     name: name,
     payload: payload,
-  }
+  };
+}
+
+export function openAlert(name, payload) {
+  return  {
+    type: t.OPEN_ALERT,
+    name,
+    payload,
+  };
+}
+
+export function closeAlert(name, payload) {
+  return  {
+    type: t.CLOSE_ALERT,
+    name,
+    payload,
+  };
 }

@@ -2,47 +2,45 @@ import React, { useCallback, useState, useMemo, useEffect } from 'react';
 import {
   Button,
   Popover,
-  Menu,
-  MenuItem,
-  MenuDivider,
   Position,
-  Intent,
 } from '@blueprintjs/core';
 import { withRouter } from 'react-router';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import classNames from 'classnames';
 import { Icon, DataTable, If } from 'components';
-import { compose } from 'utils';
+import { saveInvoke, compose } from 'utils';
 import { useUpdateEffect } from 'hooks';
 
 import { CLASSES } from 'common/classes';
-import { 
-  NormalCell,
-  BalanceCell,
-} from './components';
+
+import { NormalCell, BalanceCell, AccountActionsMenuList } from './components';
+import { TableFastCell } from 'components';
+import TableVirtualizedListRows from 'components/Datatable/TableVirtualizedRows';
 
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withAccountsActions from 'containers/Accounts/withAccountsActions';
 import withAccounts from 'containers/Accounts/withAccounts';
-import withDialogActions from 'containers/Dialog/withDialogActions';
 import withCurrentView from 'containers/Views/withCurrentView';
 
+/**
+ * Accounts data-table.
+ */
 function AccountsDataTable({
   // #withDashboardActions
   accountsTable,
   accountsLoading,
 
-  // #withDialog.
-  openDialog,
-
+  // #
   currentViewId,
 
-  // own properties
+  // #ownProps
   onFetchData,
   onSelectedRowsChange,
   onDeleteAccount,
-  onInactiveAccount,
+  onInactivateAccount,
   onActivateAccount,
+  onEditAccount,
+  onNewChildAccount
 }) {
   const [isMounted, setIsMounted] = useState(false);
   const { formatMessage } = useIntl();
@@ -57,77 +55,44 @@ function AccountsDataTable({
     }
   }, [accountsLoading, setIsMounted]);
 
-  const handleEditAccount = useCallback(
-    (account) => () => {
-      openDialog('account-form', { action: 'edit', id: account.id });
-    },
-    [openDialog],
-  );
 
-  const handleNewParentAccount = useCallback(
-    (account) => {
-      openDialog('account-form', {
-        action: 'new_child',
-        parentAccountId: account.id,
-        accountTypeId: account.account_type_id,
-      });
-    },
-    [openDialog],
-  );
+  const ActionsCell = useMemo(() => 
+    ({ row }) => (
+      <Popover
+        content={<AccountActionsMenuList
+          account={row.original}
+          onDeleteAccount={onDeleteAccount}
+          onInactivateAccount={onInactivateAccount}
+          onActivateAccount={onActivateAccount}
+          onEditAccount={onEditAccount}
+        />}
+        position={Position.RIGHT_TOP}
+      >
+        <Button icon={<Icon icon="more-h-16" iconSize={16} />} />
+      </Popover>
+  ), [
+    onDeleteAccount,
+    onInactivateAccount,
+    onActivateAccount,
+    onEditAccount
+  ]);
 
-  const actionMenuList = useCallback(
-    (account) => (
-      <Menu>
-        <MenuItem
-          icon={<Icon icon="reader-18" />}
-          text={formatMessage({ id: 'view_details' })}
-        />
-        <MenuDivider />
-        <MenuItem
-          icon={<Icon icon="pen-18" />}
-          text={formatMessage({ id: 'edit_account' })}
-          onClick={handleEditAccount(account)}
-        />
-        <MenuItem
-          icon={<Icon icon="plus" />}
-          text={formatMessage({ id: 'new_child_account' })}
-          onClick={() => handleNewParentAccount(account)}
-        />
-        <MenuDivider />
-        <If condition={account.active}>
-          <MenuItem
-            text={formatMessage({ id: 'inactivate_account' })}
-            icon={<Icon icon="pause-16" iconSize={16} />}
-            onClick={() => onInactiveAccount(account)}
-          />
-        </If>
-        <If condition={!account.active}>
-          <MenuItem
-            text={formatMessage({ id: 'activate_account' })}
-            icon={<Icon icon="play-16" iconSize={16} />}
-            onClick={() => onActivateAccount(account)}
-          />
-        </If>
-        <MenuItem
-          text={formatMessage({ id: 'delete_account' })}
-          icon={<Icon icon="trash-16" iconSize={16} />}
-          intent={Intent.DANGER}
-          onClick={() => onDeleteAccount(account)}
-        />
-      </Menu>
-    ),
-    [
-      handleEditAccount,
-      onDeleteAccount,
-      onInactiveAccount,
-      handleNewParentAccount,
-      formatMessage,
-    ],
-  );
-
-  const rowContextMenu = (cell) => {
-    return actionMenuList(cell.row.original);
-  };
+  const RowContextMenu = useMemo(() => ({ row }) => (
+    <AccountActionsMenuList
+      account={row.original}
+      onDeleteAccount={onDeleteAccount}
+      onInactivateAccount={onInactivateAccount}
+      onActivateAccount={onActivateAccount}
+      onEditAccount={onEditAccount}
+      onNewChildAccount={onNewChildAccount}
+    />
+  ), [
+    onDeleteAccount,
+    onInactivateAccount,
+    onActivateAccount,
+    onEditAccount,
+    onNewChildAccount
+  ]);
 
   const columns = useMemo(
     () => [
@@ -143,7 +108,7 @@ function AccountsDataTable({
         Header: formatMessage({ id: 'code' }),
         accessor: 'code',
         className: 'code',
-        width: 70,
+        width: 80,
       },
       {
         id: 'type',
@@ -158,7 +123,7 @@ function AccountsDataTable({
         Cell: NormalCell,
         accessor: 'account_normal',
         className: 'normal',
-        width: 65,
+        width: 80,
       },
       {
         id: 'currency',
@@ -176,40 +141,31 @@ function AccountsDataTable({
       {
         id: 'actions',
         Header: '',
-        // Cell: ({ cell }) => (
-        //   <Popover
-        //     content={actionMenuList(cell.row.original)}
-        //     position={Position.RIGHT_TOP}
-        //   >
-        //     <Button icon={<Icon icon="more-h-16" iconSize={16} />} />
-        //   </Popover>
-        // ),
+        Cell: ActionsCell,
         className: 'actions',
         width: 50,
       },
     ],
-    [actionMenuList, formatMessage],
+    [ActionsCell, formatMessage],
   );
 
- 
-
-  const handleDatatableFetchData = useCallback((...params) => {
-    onFetchData && onFetchData(...params);
-  }, []);
+  const handleDatatableFetchData = useCallback(
+    (...params) => {
+      saveInvoke(onFetchData, params);
+    },
+    [onFetchData],
+  );
 
   const handleSelectedRowsChange = useCallback(
     (selectedRows) => {
-      onSelectedRowsChange &&
-        onSelectedRowsChange(selectedRows.map((s) => s.original));
+      saveInvoke(onSelectedRowsChange, selectedRows);
     },
     [onSelectedRowsChange],
   );
 
-  const rowClassNames = (row) => {
-    return {
-      'inactive': !row.original.active,
-    };
-  };
+  const rowClassNames = (row) => ({
+    inactive: !row.original.active,
+  });
 
   return (
     <div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>
@@ -223,14 +179,19 @@ function AccountsDataTable({
         sticky={true}
         onSelectedRowsChange={handleSelectedRowsChange}
         loading={accountsLoading && !isMounted}
-        rowContextMenu={rowContextMenu}
+        rowContextMenu={RowContextMenu}
         rowClassNames={rowClassNames}
-        expandColumnSpace={1}
         autoResetExpanded={false}
         autoResetSortBy={false}
+        autoResetSelectedRows={false}
+        expandColumnSpace={1}
+        expandToggleColumn={2}
         selectionColumnWidth={50}
-        virtualizedRows={true}
-        fixedSizeHeight={1000}
+        TableCellRenderer={TableFastCell}
+        TableRowsRenderer={TableVirtualizedListRows}
+        // #TableVirtualizedListRows props.
+        vListrowHeight={42}
+        vListOverscanRowCount={10}
       />
     </div>
   );
@@ -239,7 +200,6 @@ function AccountsDataTable({
 export default compose(
   withRouter,
   withCurrentView,
-  withDialogActions,
   withDashboardActions,
   withAccountsActions,
   withAccounts(({ accountsLoading, accountsTable }) => ({

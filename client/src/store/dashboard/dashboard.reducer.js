@@ -11,6 +11,7 @@ const initialState = {
   sidebarExpended: true,
   previousSidebarExpended: null,
   dialogs: {},
+  alerts: {},
   topbarEditViewId: null,
   requestsLoading: 0,
   backLink: false,
@@ -43,6 +44,20 @@ const reducerInstance = createReducer(initialState, {
   [t.CLOSE_DIALOG]: (state, action) => {
     state.dialogs[action.name] = {
       ...state.dialogs[action.name],
+      isOpen: false,
+    };
+  },
+
+  [t.OPEN_ALERT]: (state, action) => {
+    state.alerts[action.name] = {
+      isOpen: true,
+      payload: action.payload || {},
+    };
+  },
+
+  [t.CLOSE_ALERT]: (state, action) => {
+    state.alerts[action.name] = {
+      ...state.alerts[action.name],
       isOpen: false,
     };
   },

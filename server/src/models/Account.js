@@ -31,7 +31,7 @@ export default class Account extends TenantModel {
   static get virtualAttributes() {
     return [
       'accountTypeLabel',
-      'accountParentTypeLabel',
+      'accountParentType',
       'accountNormal',
       'isBalanceSheetAccount',
       'isPLSheet'

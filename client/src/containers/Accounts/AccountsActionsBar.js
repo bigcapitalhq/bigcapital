@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useCallback } from 'react';
+import React, { memo, useState } from 'react';
 import Icon from 'components/Icon';
 import {
   Button,
@@ -22,9 +22,13 @@ import withDialogActions from 'containers/Dialog/withDialogActions';
 import withResourceDetail from 'containers/Resources/withResourceDetails';
 import withAccountsTableActions from 'containers/Accounts/withAccountsTableActions';
 import withAccounts from 'containers/Accounts/withAccounts';
+import withAlertActions from 'containers/Alert/withAlertActions';
 
 import { compose } from 'utils';
 
+/**
+ * Accounts actions bar.
+ */
 function AccountsActionsBar({
   openDialog,
   accountsViews,
@@ -32,18 +36,18 @@ function AccountsActionsBar({
   // #withResourceDetail
   resourceFields,
 
-  // #withAccountsActions
+  // #withAccountsTableActions
   addAccountsTableQueries,
+  setAccountsBulkAction,
 
   // #withAccounts
   accountsTableQuery,
+  accountsSelectedRows,
 
-  selectedRows = [],
+  // #withAlertActions
+  openAlert,
+
   onFilterChanged,
-  onBulkDelete,
-  onBulkArchive,
-  onBulkActivate,
-  onBulkInactive,
 }) {
   const [filterCount, setFilterCount] = useState(
     accountsTableQuery?.filter_roles?.length || 0,
@@ -53,10 +57,7 @@ function AccountsActionsBar({
     openDialog('account-form', {});
   };
 
-  const hasSelectedRows = useMemo(() => selectedRows.length > 0, [
-    selectedRows,
-  ]);
-
+  // Filter dropdown.
   const filterDropdown = FilterDropdown({
     fields: resourceFields,
     initialConditions: accountsTableQuery.filter_roles,
@@ -74,17 +75,17 @@ function AccountsActionsBar({
     },
   });
 
-  const handleBulkDelete = useCallback(() => {
-    onBulkDelete && onBulkDelete(selectedRows.map((r) => r.id));
-  }, [onBulkDelete, selectedRows]);
+  const handleBulkDelete = () => {
+    openAlert('accounts-bulk-delete', { accountsIds: accountsSelectedRows });
+  };
 
-  const handelBulkActivate = useCallback(() => {
-    onBulkActivate && onBulkActivate(selectedRows.map((r) => r.id));
-  }, [onBulkActivate, selectedRows]);
+  const handelBulkActivate = () => {
+    openAlert('accounts-bulk-activate', { accountsIds: accountsSelectedRows });
+  };
 
-  const handelBulkInactive = useCallback(() => {
-    onBulkInactive && onBulkInactive(selectedRows.map((r) => r.id));
-  }, [onBulkInactive, selectedRows]);
+  const handelBulkInactive = () => {
+    openAlert('accounts-bulk-inactivate', { accountsIds: accountsSelectedRows });
+  };
 
   return (
     <DashboardActionsBar>
@@ -113,7 +114,7 @@ function AccountsActionsBar({
               'has-active-filters': filterCount > 0,
             })}
             text={
-              filterCount <= 0 ? (
+              (filterCount <= 0) ? (
                 <T id={'filter'} />
               ) : (
                 <T
@@ -126,7 +127,7 @@ function AccountsActionsBar({
           />
         </Popover>
 
-        <If condition={hasSelectedRows}>
+        <If condition={accountsSelectedRows.length}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon="play-16" iconSize={16} />}
@@ -168,21 +169,30 @@ function AccountsActionsBar({
   );
 }
 
+// Momerize the component.
+const AccountsActionsBarMemo = memo(AccountsActionsBar);
+
 const mapStateToProps = (state, props) => ({
   resourceName: 'accounts',
 });
 
 const withAccountsActionsBar = connect(mapStateToProps);
 
-export default compose(
+const comp = compose(
   withAccountsActionsBar,
   withDialogActions,
-  withAccounts(({ accountsViews, accountsTableQuery }) => ({
-    accountsViews,
-    accountsTableQuery,
-  })),
+  withAccounts(
+    ({ accountsSelectedRows, accountsViews, accountsTableQuery }) => ({
+      accountsViews,
+      accountsTableQuery,
+      accountsSelectedRows,
+    }),
+  ),
   withResourceDetail(({ resourceFields }) => ({
     resourceFields,
   })),
   withAccountsTableActions,
-)(AccountsActionsBar);
+  withAlertActions
+)(AccountsActionsBarMemo);
+
+export default comp;

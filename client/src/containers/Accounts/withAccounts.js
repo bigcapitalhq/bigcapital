@@ -18,6 +18,7 @@ export default (mapState) => {
       accountsTableQuery: state.accounts.tableQuery,
       accountsLoading: state.accounts.loading,
       accountErrors: state.accounts.errors,
+      accountsSelectedRows: state.accounts.selectedRows,
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };

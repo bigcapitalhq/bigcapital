@@ -22,7 +22,7 @@ import { transformApiErrors, transformAccountToForm } from './utils';
 import 'style/pages/Accounts/AccountFormDialog.scss';
 
 const defaultInitialValues = {
-  account_type_id: '',
+  account_type: '',
   parent_account_id: '',
   name: '',
   code: '',
@@ -51,7 +51,7 @@ function AccountFormDialogContent({
   accountId,
   action,
   parentAccountId,
-  accountTypeId,
+  accountType,
 }) {
   const { formatMessage } = useIntl();
   const isNewMode = !accountId;
@@ -72,7 +72,10 @@ function AccountFormDialogContent({
     const handleSuccess = () => {
       closeDialog(dialogName);
       queryCache.invalidateQueries('accounts-table');
-      queryCache.invalidateQueries('accounts-list');
+
+      setTimeout(() => {        
+        queryCache.invalidateQueries('accounts-list');
+      }, 1000);
 
       AppToaster.show({
         message: formatMessage(
@@ -116,7 +119,7 @@ function AccountFormDialogContent({
       transformAccountToForm(account, {
         action,
         parentAccountId,
-        accountTypeId,
+        accountType,
       }),
       defaultInitialValues,
     ),
@@ -158,7 +161,7 @@ function AccountFormDialogContent({
       >
         <AccountFormDialogFields
           dialogName={dialogName}
-          isNewMode={isNewMode}
+          action={action}
           onClose={handleClose}
         />
       </Formik>

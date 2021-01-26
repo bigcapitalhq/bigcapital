@@ -14,11 +14,11 @@ export const transformApiErrors = (errors) => {
 export const transformAccountToForm = (account, {
   action,
   parentAccountId,
-  accountTypeId
+  accountType
 }) => {
   return {
     parent_account_id: action === 'new_child' ? parentAccountId : '',
-    account_type_id: action === 'new_child'? accountTypeId : '',
+    account_type: action === 'new_child'? accountType : '',
     subaccount: action === 'new_child' ? true : false,
     ...account,
   }

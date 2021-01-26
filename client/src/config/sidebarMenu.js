@@ -8,9 +8,6 @@ export default [
     href: '/homepage',
   },
   {
-    spacer: 1,
-  },
-  {
     text: 'Sales & inventory',
     label: true,
   },
@@ -91,10 +88,7 @@ export default [
     ],
   },
   {
-    divider: true,
-  },
-  {
-    text: <T id={'financial'} />,
+    text: <T id={'accounting'} />,
     label: true,
   },
   {

@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import t from 'store/types';
-import { fetchAccountsTable } from 'store/accounts/accounts.actions';
+import { fetchAccountsTable, setBulkAction } from 'store/accounts/accounts.actions';
 
 const mapActionsToProps = (dispatch) => ({
   requestFetchAccountsTable: (query = {}) =>
@@ -21,11 +21,12 @@ const mapActionsToProps = (dispatch) => ({
       type: t.ACCOUNTS_TABLE_QUERIES_ADD,
       queries,
     }),
-  setSelectedRowsAccounts: (ids) =>
+  setSelectedRowsAccounts: (selectedRows) =>
     dispatch({
       type: t.ACCOUNTS_SELECTED_ROWS_SET,
-      payload: { ids },
+      payload: { selectedRows },
     }),
+  setAccountsBulkAction: (actionName) => setBulkAction(actionName),
 });
 
 export default connect(null, mapActionsToProps);

@@ -75,11 +75,6 @@ const accountsReducer = createReducer(initialState, {
     }
   },
 
-  [t.ACCOUNTS_SELECTED_ROWS_SET]: (state, action) => {
-    const { ids } = action.payload;
-    state.selectedRows = [];
-  },
-
   [t.ACCOUNTS_SET_CURRENT_VIEW]: (state, action) => {  
     state.currentViewId = action.currentViewId;
   },
@@ -108,6 +103,11 @@ const accountsReducer = createReducer(initialState, {
     });
     state.items = items;
   },
+
+  [t.ACCOUNTS_SELECTED_ROWS_SET]: (state, action) => {
+    const { selectedRows } = action.payload;
+    state.selectedRows = selectedRows;
+  }
 });
 
 export default createTableQueryReducers('accounts', accountsReducer);

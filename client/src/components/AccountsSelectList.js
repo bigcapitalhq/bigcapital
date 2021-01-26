@@ -14,7 +14,7 @@ export default function AccountsSelectList({
   onAccountSelected,
   disabled = false,
   popoverFill = false,
-  filterByRootTypes = [],
+  filterByParentTypes = [],
   filterByTypes = [],
   filterByNormal,
   buttonProps = {}
@@ -23,23 +23,23 @@ export default function AccountsSelectList({
   const filteredAccounts = useMemo(() => {
     let filteredAccounts = [...accounts];
 
-    if (!isEmpty(filterByRootTypes)) {
+    if (!isEmpty(filterByParentTypes)) {
       filteredAccounts = filteredAccounts.filter(
-        (account) => filterByRootTypes.indexOf(account.type.root_type) !== -1,
+        (account) => filterByParentTypes.indexOf(account.account_parent_type) !== -1,
       );
     }
     if (!isEmpty(filterByTypes)) {
       filteredAccounts = filteredAccounts.filter(
-        (account) => filterByTypes.indexOf(account.type.key) !== -1,
+        (account) => filterByTypes.indexOf(account.account_type) !== -1,
       );
     }
     if (!isEmpty(filterByNormal)) {
       filteredAccounts = filteredAccounts.filter(
-        (account) => filterByTypes.indexOf(account.type.normal) === filterByNormal,
+        (account) => filterByTypes.indexOf(account.account_normal) === filterByNormal,
       );
     }
     return filteredAccounts;
-  }, [accounts, filterByRootTypes, filterByTypes, filterByNormal]);
+  }, [accounts, filterByParentTypes, filterByTypes, filterByNormal]);
 
   // Find initial account object to set it as default account in initial render.
   const initialAccount = useMemo(

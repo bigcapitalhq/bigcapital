@@ -60,7 +60,6 @@
       .bp3-navbar-divider {
         margin: 0 8px;
       }
-
       .form-group-quick-new-downDrop {
         .bp3-popover-target .bp3-button {
           color: #1552c8;
@@ -146,7 +145,7 @@
       }
       .#{$ns}-button {
         color: #32304a;
-        padding: 8px 10px;
+        padding: 8px 12px;
 
         &:hover {
           background: rgba(167, 182, 194, 0.12);
@@ -323,7 +322,7 @@
     flex: 1 0 0;
     flex-direction: column;
     background: #fff;
-    margin: 20px;
+    margin: 22px 32px;
     border: 1px solid #d2dce2;
 
     .bigcapital-datatable {
@@ -425,15 +424,15 @@
 
     &[aria-selected='true'] {
       color: #0052cc;
+      font-weight: 500;
     }
   }
 
   .#{$ns}-tab-indicator-wrapper {
     .#{$ns}-tab-indicator {
-      height: 3px;
+      height: 4px;
     }
   }
-
   .button--new-view {
     margin: 0;
     height: 50px;

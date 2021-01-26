@@ -137,7 +137,8 @@ function ManualJournalsDataTable({
         accessor: (r) => (
           <Tooltip
             content={<AmountPopoverContent journalEntries={r.entries} />}
-            position={Position.RIGHT_BOTTOM}
+            position={Position.RIGHT_TOP}
+            boundary={'viewport'}
           >
             <Money amount={r.amount} currency={'USD'} />
           </Tooltip>

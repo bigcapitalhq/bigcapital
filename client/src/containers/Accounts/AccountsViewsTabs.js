@@ -1,11 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo, memo, useCallback } from 'react';
 import { useHistory } from 'react-router';
 import { connect } from 'react-redux';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
 import { useParams, withRouter } from 'react-router-dom';
 import { pick } from 'lodash';
 
-import { useUpdateEffect } from 'hooks';
 import { DashboardViewsTabs } from 'components';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withAccounts from 'containers/Accounts/withAccounts';
@@ -14,6 +13,9 @@ import withViewDetail from 'containers/Views/withViewDetails';
 
 import { compose } from 'utils';
 
+/**
+ * Accounts views tabs.
+ */
 function AccountsViewsTabs({
   // #withViewDetail
   viewId,
@@ -23,16 +25,11 @@ function AccountsViewsTabs({
   accountsViews,
 
   // #withAccountsTableActions
-  addAccountsTableQueries,
   changeAccountsCurrentView,
 
   // #withDashboardActions
   setTopbarEditView,
   changePageSubtitle,
-
-  // props
-  customViewChanged,
-  onViewChanged,
 }) {
   const history = useHistory();
   const { custom_view_id: customViewId = null } = useParams();
@@ -40,28 +37,27 @@ function AccountsViewsTabs({
   useEffect(() => {
     setTopbarEditView(customViewId);
     changePageSubtitle(customViewId && viewItem ? viewItem.name : '');
-  }, [customViewId]);
+  }, [customViewId, viewItem, changePageSubtitle, setTopbarEditView]);
 
   // Handle click a new view tab.
-  const handleClickNewView = () => {
+  const handleClickNewView = useCallback(() => {
     setTopbarEditView(null);
     history.push('/custom_views/accounts/new');
-  };
+  }, [setTopbarEditView]);
 
-  const handleTabChange = (viewId) => {
+  const handleTabChange = useCallback((viewId) => {
     changeAccountsCurrentView(viewId || -1);
-    // addAccountsTableQueries({
-    //   custom_view_id: viewId || null,
-    // });
-  };
+  }, [changeAccountsCurrentView]);
 
-  const tabs = accountsViews.map((view) => ({
+  const tabs = useMemo(() => accountsViews.map((view) => ({
     ...pick(view, ['name', 'id']),
-  }));
+  })), [accountsViews]);;
+
   return (
     <Navbar className="navbar--dashboard-views">
       <NavbarGroup align={Alignment.LEFT}>
         <DashboardViewsTabs
+          defaultTabText={'All Accounts'}
           initialViewId={customViewId}
           resourceName={'accounts'}
           onChange={handleTabChange}
@@ -72,8 +68,10 @@ function AccountsViewsTabs({
   );
 }
 
+const AccountsViewsTabsMemo = memo(AccountsViewsTabs);
+
 const mapStateToProps = (state, ownProps) => ({
-  viewId: ownProps.match.params.custom_view_id,
+  viewId: -1,
 });
 
 const withAccountsViewsTabs = connect(mapStateToProps);
@@ -87,4 +85,4 @@ export default compose(
   })),
   withAccountsTableActions,
   withViewDetail(),
-)(AccountsViewsTabs);
+)(AccountsViewsTabsMemo);

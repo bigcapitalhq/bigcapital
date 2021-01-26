@@ -1,3 +1,4 @@
+import { batch } from 'react-redux'
 import { omit } from 'lodash';
 import ApiService from 'services/ApiService';
 import t from 'store/types';
@@ -26,15 +27,17 @@ export const fetchAccountsList = () => {
 
       ApiService.get('accounts', { params: query })
         .then((response) => {
-          dispatch({
-            type: t.ACCOUNTS_ITEMS_SET,
-            accounts: response.data.accounts,
-          });
-          dispatch({
-            type: t.ACCOUNTS_LIST_SET,
-            payload: {
+          batch(() => {
+            dispatch({
+              type: t.ACCOUNTS_ITEMS_SET,
               accounts: response.data.accounts,
-            }
+            });
+            dispatch({
+              type: t.ACCOUNTS_LIST_SET,
+              payload: {
+                accounts: response.data.accounts,
+              }
+            });
           });
           resolve(response);
         })
@@ -62,18 +65,20 @@ export const fetchAccountsTable = ({ query } = {}) => {
       });
       ApiService.get('accounts', { params: { ...pageQuery, ...query } })
         .then((response) => {
-          dispatch({
-            type: t.ACCOUNTS_PAGE_SET,
-            accounts: response.data.accounts,
-            customViewId: response.data?.filter_meta?.view?.custom_view_id,
-          });
-          dispatch({
-            type: t.ACCOUNTS_ITEMS_SET,
-            accounts: response.data.accounts,
-          });
-          dispatch({
-            type: t.ACCOUNTS_TABLE_LOADING,
-            loading: false,
+          batch(() => {
+            dispatch({
+              type: t.ACCOUNTS_PAGE_SET,
+              accounts: response.data.accounts,
+              customViewId: response.data?.filter_meta?.view?.custom_view_id,
+            });
+            dispatch({
+              type: t.ACCOUNTS_ITEMS_SET,
+              accounts: response.data.accounts,
+            });
+            dispatch({
+              type: t.ACCOUNTS_TABLE_LOADING,
+              loading: false,
+            });
           });
           resolve(response);
         })
@@ -243,3 +248,11 @@ export const fetchAccount = ({ id }) => {
         });
     });
 };
+
+
+export const setBulkAction = ({ action }) => {
+  return (dispatch) => dispatch({
+    type: t.ACCOUNTS_BULK_ACTION,
+    payload: { action }
+  });
+}

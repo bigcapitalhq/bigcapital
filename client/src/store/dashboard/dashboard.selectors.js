@@ -15,3 +15,19 @@ export const getDialogPayloadFactory = () => createSelector(
     return { ...dialog?.payload };
   },
 );
+
+const alertByNameSelector = (state, props) => state.dashboard.alerts?.[props.name];
+
+export const isAlertOpenFactory = () => createSelector(
+  alertByNameSelector,
+  (alert) => {
+    return alert && alert.isOpen;
+  },
+);
+
+export const getAlertPayloadFactory = () => createSelector(
+  alertByNameSelector,
+  (alert) => {
+    return { ...alert?.payload };
+  },
+);

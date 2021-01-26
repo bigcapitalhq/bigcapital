@@ -160,8 +160,7 @@ export default class ManualJournalsService implements IManualJournalsService {
     const manualAccountsIds = manualJournalDTO.entries.map((e) => e.accountId);
 
     const accounts = await Account.query()
-      .whereIn('id', manualAccountsIds)
-      .withGraphFetched('type');
+      .whereIn('id', manualAccountsIds);
 
     const storedAccountsIds = accounts.map((account) => account.id);
 

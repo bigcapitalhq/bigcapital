@@ -12,7 +12,8 @@ const CLASSES = {
 
   DASHBOARD_CONTENT: 'dashboard-content',
   DASHBOARD_CONTENT_PREFERENCES: 'dashboard-content--preferences',
-
+  DASHBOARD_CONTENT_PANE: 'Pane2',
+  
   PAGE_FORM: 'page-form',
   PAGE_FORM_HEADER: 'page-form__header',
   PAGE_FORM_HEADER_PRIMARY: 'page-form__primary-section',

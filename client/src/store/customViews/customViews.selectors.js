@@ -3,10 +3,10 @@ import { pickItemsFromIds } from 'store/selectors';
 import { getResourceColumn } from 'store/resources/resources.reducer';
 
 const resourceViewsIdsSelector = (state, props, resourceName) =>
-  state.views.resourceViews[resourceName] || [];
+  state.views.resourceViews[resourceName];
 
 const viewsSelector = (state) => state.views.views;
-const viewByIdSelector = (state, props) => state.views.views[props.viewId] || {}; 
+const viewByIdSelector = (state, props) => state.views.views[props.viewId]; 
 
 const viewColumnsSelector = (state, props) => {
 };

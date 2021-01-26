@@ -1,12 +1,15 @@
-import { createSelector } from 'reselect';
-import { repeat } from 'lodash';
+import { createSelector, createSelectorCreator, defaultMemoize } from 'reselect';
+import { repeat, isEqual } from 'lodash';
 import {
   pickItemsFromIds,
   getItemById,
-  paginationLocationQuery,
 } from 'store/selectors';
 import { flatToNestedArray, treeToList } from 'utils';
 
+const createDeepEqualSelector = createSelectorCreator(
+  defaultMemoize,
+  isEqual
+);
 const accountsViewsSelector = (state) => state.accounts.views;
 const accountsDataSelector = (state) => state.accounts.items;
 const accountsCurrentViewSelector = (state) => state.accounts.currentViewId;
@@ -23,7 +26,7 @@ export const getAccountsTableQuery = createSelector(
   },
 );
 
-export const getAccountsItems = createSelector(
+export const getAccountsItems = createDeepEqualSelector(
   accountsViewsSelector,
   accountsDataSelector,
   accountsCurrentViewSelector,
@@ -42,7 +45,7 @@ export const getAccountsItems = createSelector(
 );
 
 export const getAccountsListFactory = () =>
-  createSelector(
+  createDeepEqualSelector(
     accountsListSelector,
     accountsDataSelector,
     (accountsTree, accountsItems) => {

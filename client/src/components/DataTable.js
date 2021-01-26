@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback, useMemo } from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
   useTable,
   useExpanded,
@@ -9,104 +9,101 @@ import {
   useFlexLayout,
   useAsyncDebounce,
 } from 'react-table';
-import { Checkbox, Spinner, ContextMenu } from '@blueprintjs/core';
-import classnames from 'classnames';
-import { FixedSizeList } from 'react-window';
 import { useSticky } from 'react-table-sticky';
-import { ScrollSync, ScrollSyncPane } from 'react-scroll-sync';
 
 import { useUpdateEffect } from 'hooks';
-import { If, Pagination, Choose } from 'components';
-
-import { ConditionalWrapper, saveInvoke } from 'utils';
+import { saveInvoke } from 'utils';
 
 import 'style/components/DataTable/DataTable.scss';
 
-const IndeterminateCheckbox = React.forwardRef(
-  ({ indeterminate, ...rest }, ref) => {
-    return <Checkbox indeterminate={indeterminate} {...rest} />;
-  },
-);
+import TableNoResultsRow from './Datatable/TableNoResultsRow';
+import TableLoadingRow from './Datatable/TableLoading';
+import TableHeader from './Datatable/TableHeader';
+import TablePage from './Datatable/TablePage';
+import TableRow from './Datatable/TableRow';
+import TableRows from './Datatable/TableRows';
+import TableCell from './Datatable/TableCell';
+import TableTBody from './Datatable/TableTBody';
+import TableContext from './Datatable/TableContext';
+import TablePagination from './Datatable/TablePagination';
+import TableWrapper from './Datatable/TableWrapper';
 
-export default function DataTable({
-  columns,
-  data,
+import TableIndeterminateCheckboxRow from './Datatable/TableIndeterminateCheckboxRow';
+import TableIndeterminateCheckboxHeader from './Datatable/TableIndeterminateCheckboxHeader';
 
-  loading,
-  onFetchData,
-
-  onSelectedRowsChange,
-  manualSortBy = false,
-  manualPagination = true,
-  selectionColumn = false,
-  expandSubRows = true,
-  className,
-  noResults = 'This report does not contain any data.',
-  expanded = {},
-  rowClassNames,
-  sticky = false,
-  virtualizedRows = false,
-  fixedSizeHeight = 100,
-  fixedItemSize = 30,
-  payload,
-  expandable = false,
-  expandToggleColumn = 2,
-  noInitialFetch = false,
-  spinnerProps = { size: 30 },
-
-  pagination = false,
-  pagesCount: controlledPageCount,
-
-  // Pagination props.
-  initialPageIndex = 0,
-  initialPageSize = 10,
-  rowContextMenu,
-
-  expandColumnSpace = 1.5,
-
-  updateDebounceTime = 200,
-  selectionColumnWidth = 42,
-
-  // Read this document to know why! https://bit.ly/2Uw9SEc
-  autoResetPage = true,
-  autoResetExpanded = true,
-  autoResetGroupBy = true,
-  autoResetSelectedRows = true,
-  autoResetSortBy = true,
-  autoResetFilters = true,
-  autoResetRowState = true,
-}) {
+/**
+ * Datatable component.
+ */
+export default function DataTable(props) {
   const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    prepareRow,
-    page,
-    rows,
-    selectedFlatRows,
-    getToggleAllRowsExpandedProps,
-    isAllRowsExpanded,
-    totalColumnsWidth,
+    columns,
+    data,
 
-    // page,
-    pageCount,
-    canPreviousPage,
-    canNextPage,
-    gotoPage,
-    previousPage,
-    nextPage,
-    setPageSize,
+    onFetchData,
 
-    // Get the state from the instance
-    state: { pageIndex, pageSize, sortBy, selectedRowIds },
-  } = useTable(
+    onSelectedRowsChange,
+    manualSortBy = false,
+    manualPagination = true,
+    selectionColumn = false,
+    expandSubRows = true,
+    expanded = {},
+    rowClassNames,
+    payload,
+    expandable = false,
+    expandToggleColumn = 2,
+    noInitialFetch = false,
+    
+    pagesCount: controlledPageCount,
+
+    // Pagination props.
+    initialPageIndex = 0,
+    initialPageSize = 10,
+    rowContextMenu,
+    expandColumnSpace = 1.5,
+
+    updateDebounceTime = 200,
+    selectionColumnWidth = 42,
+
+    autoResetPage,
+    autoResetExpanded,
+    autoResetGroupBy,
+    autoResetSelectedRows,
+    autoResetSortBy,
+    autoResetFilters,
+    autoResetRowState,
+
+    // Components
+    TableHeaderRenderer,
+    TablePageRenderer,
+    TableWrapperRenderer,
+    TableTBodyRenderer,
+    TablePaginationRenderer,
+  } = props;
+
+  const selectionColumnObj = {
+    id: 'selection',
+    disableResizing: true,
+    minWidth: selectionColumnWidth,
+    width: selectionColumnWidth,
+    maxWidth: selectionColumnWidth,
+    // The header can use the table's getToggleAllRowsSelectedProps method
+    // to render a checkbox
+    Header: TableIndeterminateCheckboxHeader,
+    // The cell can use the individual row's getToggleRowSelectedProps method
+    // to the render a checkbox
+    Cell: TableIndeterminateCheckboxRow,
+    className: 'selection',
+    ...(typeof selectionColumn === 'object' ? selectionColumn : {}),
+  };
+
+  const table = useTable(
     {
       columns,
       data,
       initialState: {
         pageIndex: initialPageIndex,
         pageSize: initialPageSize,
-        expanded
+        expanded,
       },
       manualPagination,
       pageCount: controlledPageCount,
@@ -133,49 +130,23 @@ export default function DataTable({
     (hooks) => {
       hooks.visibleColumns.push((columns) => [
         // Let's make a column for selection
-        ...(selectionColumn
-          ? [
-              {
-                id: 'selection',
-                disableResizing: true,
-                minWidth: selectionColumnWidth,
-                width: selectionColumnWidth,
-                maxWidth: selectionColumnWidth,
-                // The header can use the table's getToggleAllRowsSelectedProps method
-                // to render a checkbox
-                Header: ({ getToggleAllRowsSelectedProps }) => (
-                  <div>
-                    <IndeterminateCheckbox
-                      {...getToggleAllRowsSelectedProps()}
-                    />
-                  </div>
-                ),
-                // The cell can use the individual row's getToggleRowSelectedProps method
-                // to the render a checkbox
-                Cell: ({ row }) => (
-                  <div>
-                    <IndeterminateCheckbox
-                      {...row.getToggleRowSelectedProps()}
-                    />
-                  </div>
-                ),
-                className: 'selection',
-                ...(typeof selectionColumn === 'object' ? selectionColumn : {}),
-              },
-            ]
-          : []),
+        ...(selectionColumn ? [selectionColumnObj] : []),
         ...columns,
       ]);
     },
   );
 
+  const {
+    selectedFlatRows,
+    state: { pageIndex, pageSize, sortBy, selectedRowIds },
+  } = table;
+
   const isInitialMount = useRef(noInitialFetch);
-  const onFetchDataDebounced = useAsyncDebounce(
-    (...args) => {
-      saveInvoke(onFetchData, ...args);
-    },
-    updateDebounceTime,
-  );
+
+  const onFetchDataDebounced = useAsyncDebounce((...args) => {
+    saveInvoke(onFetchData, ...args);
+  }, updateDebounceTime);
+
   // When these table states change, fetch new data!
   useEffect(() => {
     if (isInitialMount.current) {
@@ -189,285 +160,42 @@ export default function DataTable({
     saveInvoke(onSelectedRowsChange, selectedFlatRows);
   }, [selectedRowIds, onSelectedRowsChange]);
 
-  // Renders table cell.
-  const RenderCell = useCallback(
-    ({ row, cell, column, index }) => (
-      <ConditionalWrapper
-        condition={expandToggleColumn === index && expandable}
-        wrapper={(children) => (
-          <div
-            style={{
-              'padding-left': `${row.depth * expandColumnSpace}rem`,
-            }}
-            className={'expend-padding'}
-          >
-            {children}
-          </div>
-        )}
-      >
-        {
-          // Use the row.canExpand and row.getToggleRowExpandedProps prop getter
-          // to build the toggle for expanding a row
-        }
-        <If
-          condition={
-            row.canExpand && expandable && index === expandToggleColumn
-          }
-        >
-          <span
-            {...row.getToggleRowExpandedProps({ className: 'expand-toggle' })}
-          >
-            <span
-              className={classnames({
-                'arrow-down': row.isExpanded,
-                'arrow-right': !row.isExpanded,
-              })}
-            />
-          </span>
-        </If>
-
-        <ConditionalWrapper
-          condition={cell.column.textOverview}
-          wrapper={(children) => (
-            <span class="text-overview">{ children }</span>
-          )}>
-          {cell.render('Cell')}
-        </ConditionalWrapper>
-      </ConditionalWrapper>
-    ),
-    [expandable, expandToggleColumn, expandColumnSpace],
-  );
-
-  // Handle rendering row context menu.
-  const handleRowContextMenu = useMemo(
-    () => (cell, row) => (e) => {
-      if (typeof rowContextMenu === 'function') {
-        e.preventDefault();
-        const tr = e.currentTarget.closest('.tr');
-        tr.classList.add('is-context-menu-active');
-
-        const DropdownEl = rowContextMenu(cell, row);
-
-        ContextMenu.show(
-          DropdownEl,
-          { left: e.clientX, top: e.clientY },
-          () => {
-            tr.classList.remove('is-context-menu-active');
-          },
-        );
-      }
-    },
-    [rowContextMenu],
-  );
-
-  // Renders table row.
-  const RenderRow = useCallback(
-    ({ style = {}, row }) => {
-      prepareRow(row);
-      const rowClasses = rowClassNames && rowClassNames(row);
-
-      return (
-        <div
-          {...row.getRowProps({
-            className: classnames(
-              'tr',
-              {
-                'is-expanded': row.isExpanded && row.canExpand,
-              },
-              rowClasses,
-            ),
-            style,
-          })}
-        >
-          {row.cells.map((cell, i) => {
-            const index = i + 1;
-            return (
-              <div
-                {...cell.getCellProps({
-                  className: classnames(
-                    cell.column.className,
-                    'td',
-                    {
-                      'is-text-overview': cell.column.textOverview,
-                    }
-                  ),
-                })}
-                onContextMenu={handleRowContextMenu(cell, row)}
-              >
-                {RenderCell({ cell, row, index })}
-              </div>
-            );
-          })}
-        </div>
-      );
-    },
-    [prepareRow, rowClassNames, RenderCell, handleRowContextMenu],
-  );
-
-  // Renders virtualize circle table rows.
-  const RenderVirtualizedRows = useCallback(
-    ({ index, style }) => {
-      const row = rows[index];
-      return RenderRow({ row, style });
-    },
-    [RenderRow, rows],
-  );
-  // Renders page with multi-rows.
-  const RenderPage = useCallback(
-    ({ style, index } = {}) => {
-      return page.map((row, index) => RenderRow({ row }));
-    },
-    [RenderRow, page],
-  );
-
-  // Renders fixed size tbody.
-  const RenderTBody = useCallback(() => {
-    return virtualizedRows ? (
-      <FixedSizeList
-        height={fixedSizeHeight}
-        itemCount={rows.length}
-        itemSize={fixedItemSize}
-      >
-        {RenderVirtualizedRows}
-      </FixedSizeList>
-    ) : (
-      RenderPage()
-    );
-  }, [
-    fixedSizeHeight,
-    rows,
-    fixedItemSize,
-    virtualizedRows,
-    RenderVirtualizedRows,
-    RenderPage,
-  ]);
-
-  const handlePageChange = useCallback(
-    (currentPage) => {
-      gotoPage(currentPage - 1);
-    },
-    [gotoPage],
-  );
-
-  const handlePageSizeChange = useCallback(
-    (pageSize, currentPage) => {
-      gotoPage(0);
-      setPageSize(pageSize);
-    },
-    [gotoPage, setPageSize],
-  );
-
   return (
-    <div
-      className={classnames('bigcapital-datatable', className, {
-        'has-sticky': sticky,
-        'has-pagination': pagination,
-        'is-expandable': expandable,
-        'is-loading': loading,
-        'has-virtualized-rows': virtualizedRows,
-      })}
-    >
-      <ScrollSync>
-        <div
-          {...getTableProps({ style: { minWidth: 'none' } })}
-          className="table"
-        >
-          <ScrollSyncPane>
-            <div className="thead">
-              {headerGroups.map((headerGroup) => (
-                <div {...headerGroup.getHeaderGroupProps()} className="tr">
-                  {headerGroup.headers.map((column, index) => (
-                    <div
-                      {...column.getHeaderProps({
-                        className: classnames(column.className || '', 'th'),
-                      })}
-                    >
-                      <If
-                        condition={
-                          expandable && index + 1 === expandToggleColumn
-                        }
-                      >
-                        <span
-                          {...getToggleAllRowsExpandedProps()}
-                          className="expand-toggle"
-                        >
-                          <span
-                            className={classnames({
-                              'arrow-down': isAllRowsExpanded,
-                              'arrow-right': !isAllRowsExpanded,
-                            })}
-                          />
-                        </span>
-                      </If>
+    <TableContext.Provider value={{ table, props }}>
+      <TableWrapperRenderer>
+        <TableHeaderRenderer />
 
-                      <div {...column.getSortByToggleProps()}>
-                        {column.render('Header')}
+        <TableTBodyRenderer>
+          <TablePageRenderer />
+        </TableTBodyRenderer>
+      </TableWrapperRenderer>
 
-                        <If condition={column.isSorted}>
-                          <span
-                            className={classnames(
-                              {
-                                'sort-icon--desc': column.isSortedDesc,
-                                'sort-icon--asc': !column.isSortedDesc,
-                              },
-                              'sort-icon',
-                            )}
-                          ></span>
-                        </If>
-                      </div>
-
-                      {column.canResize && (
-                        <div
-                          {...column.getResizerProps()}
-                          className={`resizer ${
-                            column.isResizing ? 'isResizing' : ''
-                          }`}
-                        >
-                          <div class="inner-resizer" />
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              ))}
-            </div>
-          </ScrollSyncPane>
-
-          <ScrollSyncPane>
-            <div {...getTableBodyProps()} className="tbody">
-              <div class="tbody-inner" style={{ minWidth: totalColumnsWidth }}>
-                <Choose>
-                  <Choose.When condition={loading}>
-                    <div class="loading">
-                      <Spinner {...spinnerProps} />
-                    </div>
-                  </Choose.When>
-
-                  <Choose.Otherwise>
-                    {RenderTBody()}
-
-                    <If condition={page.length === 0}>
-                      <div className={'tr no-results'}>
-                        <div class="td">{noResults}</div>
-                      </div>
-                    </If>
-                  </Choose.Otherwise>
-                </Choose>
-              </div>
-            </div>
-          </ScrollSyncPane>
-        </div>
-      </ScrollSync>
-
-      <If condition={pagination && !loading}>
-        <Pagination
-          initialPage={pageIndex + 1}
-          total={pageSize * pageCount}
-          size={pageSize}
-          onPageChange={handlePageChange}
-          onPageSizeChange={handlePageSizeChange}
-        />
-      </If>
-    </div>
+      <TablePaginationRenderer />
+    </TableContext.Provider>
   );
 }
+
+
+DataTable.defaultProps = {
+  pagination: false,
+  spinnerProps: { size: 30 },
+
+  autoResetPage: true,
+  autoResetExpanded: true,
+  autoResetGroupBy: true,
+  autoResetSelectedRows: true,
+  autoResetSortBy: true,
+  autoResetFilters: true,
+  autoResetRowState: true,
+
+  TableHeaderRenderer: TableHeader,
+  TableLoadingRenderer: TableLoadingRow,
+  TablePageRenderer: TablePage,
+  TableRowsRenderer: TableRows,
+  TableRowRenderer: TableRow,
+  TableCellRenderer: TableCell,
+  TableWrapperRenderer: TableWrapper,
+  TableTBodyRenderer: TableTBody,
+  TablePaginationRenderer: TablePagination,
+  TableNoResultsRowRenderer: TableNoResultsRow,
+};

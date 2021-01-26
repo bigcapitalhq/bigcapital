@@ -33,7 +33,7 @@ function AccountFormDialog({
           accountId={payload.id}
           action={payload.action}
           parentAccountId={payload.parentAccountId}
-          accountTypeId={payload.accountTypeId}
+          accountType={payload.accountType}
         />
       </DialogSuspense>
     </Dialog>
