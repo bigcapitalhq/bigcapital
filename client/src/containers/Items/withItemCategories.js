@@ -10,6 +10,7 @@ export default (mapState) => {
       categoriesList: getItemsCategoriesList(state, props),
       itemCategoriesViews: getResourceViews(state, props, 'items_categories'),
       categoriesTableLoading: state.itemCategories.loading,
+      itemCategoriesSelectedRows: state.itemCategories.selectedRows,
     };
     return mapState ? mapState(mapped, state, props) : mapState;
   };

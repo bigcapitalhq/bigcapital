@@ -11,38 +11,29 @@ import {
 } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'react-intl';
 import classNames from 'classnames';
-import { connect } from 'react-redux';
 import { If, Icon } from 'components';
 
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
-import FilterDropdown from 'components/FilterDropdown';
 
-import withResourceDetail from 'containers/Resources/withResourceDetails';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 
 import withItemCategories from './withItemCategories';
 import withItemCategoriesActions from './withItemCategoriesActions';
+import withAlertActions from 'containers/Alert/withAlertActions';
 
 import { compose } from 'utils';
 
 const ItemsCategoryActionsBar = ({
-  // #withResourceDetail
-  resourceFields,
-
   // #withDialog
   openDialog,
 
   // #withItemCategories
-  categoriesViews,
+  itemCategoriesSelectedRows,
 
-  // #withItemCategoriesActions
-  addItemCategoriesTableQueries,
+  // #withAlertActions
+  openAlert,
 
-  // #ownProps
-  selectedRows = [],
-  onFilterChanged,
-  onBulkDelete,
 }) => {
   const [filterCount, setFilterCount] = useState(0);
 
@@ -50,30 +41,12 @@ const ItemsCategoryActionsBar = ({
     openDialog('item-category-form', {});
   }, [openDialog]);
 
-  const hasSelectedRows = useMemo(() => selectedRows.length > 0, [
-    selectedRows,
-  ]);
-
-  // const filterDropdown = FilterDropdown({
-  //   fields: resourceFields,
-  //   initialCondition: {
-  //     fieldKey: 'name',
-  //     compatator: 'contains',
-  //     value: '',
-  //   },
-  //   onFilterChange: (filterConditions) => {
-  //     setFilterCount(filterConditions.length || 0);
-  //     addItemCategoriesTableQueries({
-  //       filter_roles: filterConditions || '',
-  //     });
-  //     onFilterChanged && onFilterChanged(filterConditions);
-  //   },
-  // });
-
-  const handelBulkDelete = useCallback(() => {
-    onBulkDelete && onBulkDelete(selectedRows.map((r) => r.id));
-  }, [onBulkDelete, selectedRows]);
-
+  const handelBulkDelete = () => {
+    openAlert('item-categories-bulk-delete', {
+      itemCategoriesIds: itemCategoriesSelectedRows,
+    });
+  };
+  console.log(itemCategoriesSelectedRows, 'EE');
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -105,7 +78,7 @@ const ItemsCategoryActionsBar = ({
           />
         </Popover>
 
-        <If condition={hasSelectedRows}>
+        <If condition={itemCategoriesSelectedRows.length}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon="trash-16" iconSize={16} />}
@@ -130,20 +103,12 @@ const ItemsCategoryActionsBar = ({
   );
 };
 
-const mapStateToProps = (state, props) => ({
-  resourceName: 'items_categories',
-});
-const withItemsCategoriesActionsBar = connect(mapStateToProps);
-
 export default compose(
-  withItemsCategoriesActionsBar,
   withDialogActions,
   withDashboardActions,
-  withResourceDetail(({ resourceFields }) => ({
-    resourceFields,
+  withItemCategories(({ itemCategoriesSelectedRows }) => ({
+    itemCategoriesSelectedRows,
   })),
-  // withItemCategories(({ categoriesViews }) => ({
-  //   categoriesViews,
-  // })),
   withItemCategoriesActions,
+  withAlertActions,
 )(ItemsCategoryActionsBar);
