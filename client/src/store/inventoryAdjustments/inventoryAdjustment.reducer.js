@@ -14,6 +14,7 @@ const initialState = {
     page_size: 12,
     page: 1,
   },
+  selectedRows: [],
 };
 
 export default createReducer(initialState, {
@@ -61,6 +62,10 @@ export default createReducer(initialState, {
   },
   [t.INVENTORY_ADJUSTMENTS_SET_CURRENT_VIEW]: (state, action) => {
     state.currentViewId = action.currentViewId;
+  },
+  [t.INVENTORY_ADJUSTMENTS_SELECTED_ROW_SET]: (state, action) => {
+    const { selectedRows } = action.payload;
+    state.selectedRows = selectedRows;
   },
 
   ...viewPaginationSetReducer(t.INVENTORY_ADJUSTMENTS_PAGINATION_SET),

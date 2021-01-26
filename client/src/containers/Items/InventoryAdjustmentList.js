@@ -1,19 +1,20 @@
-import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useQuery } from 'react-query';
-import { Alert, Intent } from '@blueprintjs/core';
+import { Route, Switch } from 'react-router-dom';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 
-import AppToaster from 'components/AppToaster';
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 
+import ItemsAlerts from './ItemsAlerts';
 import InventoryAdjustmentDataTable from './InventoryAdjustmentDataTable';
+
 import withInventoryAdjustmentActions from './withInventoryAdjustmentActions';
 import withInventoryAdjustments from './withInventoryAdjustments';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
+import withAlertsActions from 'containers/Alert/withAlertActions';
 
 import { compose } from 'utils';
-import { Route, Switch } from 'react-router-dom';
 
 /**
  * Inventory Adjustment List.
@@ -25,69 +26,33 @@ function InventoryAdjustmentList({
   // #withInventoryAdjustments
   inventoryAdjustmentTableQuery,
 
+  // #withAlertsActions.
+  openAlert,
+
   // #withInventoryAdjustmentsActions
   requestFetchInventoryAdjustmentTable,
-  requestDeleteInventoryAdjustment,
+  setSelectedRowsInventoryAdjustments,
 }) {
   const { formatMessage } = useIntl();
-  const [selectedRows, setSelectedRows] = useState([]);
-  const [deleteInventoryAdjustment, setDeleteInventoryAdjustment] = useState(
-    false,
-  );
 
   useEffect(() => {
     changePageTitle(formatMessage({ id: 'inventory_adjustment_list' }));
   }, [changePageTitle, formatMessage]);
 
   const fetchInventoryAdjustments = useQuery(
-    ['inventory-adjustment-list' ,inventoryAdjustmentTableQuery],
+    ['inventory-adjustment-list', inventoryAdjustmentTableQuery],
     (key, query) => requestFetchInventoryAdjustmentTable({ ...query }),
   );
 
   // Handle selected rows change.
-  const handleSelectedRowsChange = useCallback(
-    (inventory) => {
-      setSelectedRows(inventory);
-    },
-    [setSelectedRows],
-  );
+  const handleSelectedRowsChange = (selectedRows) => {
+    const selectedRowsIds = selectedRows.map((r) => r.id);
+    setSelectedRowsInventoryAdjustments(selectedRowsIds);
+  };
 
-  const handleDeleteInventoryAdjustment = useCallback(
-    (adjustment) => {
-      setDeleteInventoryAdjustment(adjustment);
-    },
-    [setDeleteInventoryAdjustment],
-  );
-
-  const handleCancelInventoryAdjustmentDelete = useCallback(() => {
-    setDeleteInventoryAdjustment(false);
-  }, [setDeleteInventoryAdjustment]);
-
-  const handleConfirmInventoryAdjustmentDelete = useCallback(() => {
-    requestDeleteInventoryAdjustment(deleteInventoryAdjustment.id)
-      .then(() => {
-        setDeleteInventoryAdjustment(false);
-        AppToaster.show({
-          message: formatMessage({
-            id: 'the_adjustment_has_been_deleted_successfully',
-          }),
-          intent: Intent.SUCCESS,
-        });
-      })
-      .catch((errors) => {
-        setDeleteInventoryAdjustment(false);
-      });
-  }, [
-    deleteInventoryAdjustment,
-    requestDeleteInventoryAdjustment,
-    formatMessage,
-  ]);
-
-  // Calculates the data table selected rows count.
-  const selectedRowsCount = useMemo(() => Object.values(selectedRows).length, [
-    selectedRows,
-  ]);
-
+  const handleDeleteInventoryAdjustment = ({ id }) => {
+    openAlert('inventory-adjustment-delete', { inventoryId: id });
+  };
   return (
     <DashboardInsider name={'inventory_adjustments'}>
       <DashboardPageContent>
@@ -95,27 +60,10 @@ function InventoryAdjustmentList({
           <Route exact={true}>
             <InventoryAdjustmentDataTable
               onDeleteInventoryAdjustment={handleDeleteInventoryAdjustment}
-              onSelectedRowsChange={handleSelectedRowsChange}
             />
           </Route>
         </Switch>
-        <Alert
-          cancelButtonText={<T id={'cancel'} />}
-          confirmButtonText={<T id={'delete'} />}
-          icon={'trash'}
-          intent={Intent.DANGER}
-          isOpen={deleteInventoryAdjustment}
-          onCancel={handleCancelInventoryAdjustmentDelete}
-          onConfirm={handleConfirmInventoryAdjustmentDelete}
-        >
-          <p>
-            <T
-              id={
-                'once_delete_this_inventory_a_adjustment_you_will_able_to_restore_it'
-              }
-            />
-          </p>
-        </Alert>
+        <ItemsAlerts />
       </DashboardPageContent>
     </DashboardInsider>
   );
@@ -127,4 +75,5 @@ export default compose(
   withInventoryAdjustments(({ inventoryAdjustmentTableQuery }) => ({
     inventoryAdjustmentTableQuery,
   })),
+  withAlertsActions,
 )(InventoryAdjustmentList);

@@ -5,6 +5,7 @@ import ItemActivateAlert from 'containers/Alerts/Item/ItemActivateAlert';
 import ItemBulkDeleteAlert from 'containers/Alerts/Item/ItemBulkDeleteAlert';
 import ItemCategoryDeleteAlert from 'containers/Alerts/Item/ItemCategoryDeleteAlert';
 import ItemCategoryBulkDeleteAlert from 'containers/Alerts/Item/ItemCategoryBulkDeleteAlert';
+import InventoryAdjustmentDeleteAlert from 'containers/Alerts/Item/InventoryAdjustmentDeleteAlert';
 
 /**
  * Items alert.
@@ -18,6 +19,7 @@ export default function ItemsAlerts() {
       <ItemBulkDeleteAlert name={'items-bulk-delete'} />
       <ItemCategoryDeleteAlert name={'item-category-delete'} />
       <ItemCategoryBulkDeleteAlert name={'item-categories-bulk-delete'} />
+      <InventoryAdjustmentDeleteAlert name={'inventory-adjustment-delete'} />
     </div>
   );
 }
