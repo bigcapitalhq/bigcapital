@@ -1,8 +1,9 @@
 import React from 'react';
 import { Intent } from '@blueprintjs/core';
+import { get, sumBy, setWith, toSafeInteger } from 'lodash';
 import { AppToaster } from 'components';
 import { formatMessage } from 'services/intl';
-import { setWith } from 'lodash';
+import { transformUpdatedRows } from 'utils';
 
 const ERROR = {
   JOURNAL_NUMBER_ALREADY_EXISTS: 'JOURNAL.NUMBER.ALREADY.EXISTS',
@@ -13,6 +14,46 @@ const ERROR = {
   CREDIT_DEBIT_SUMATION_SHOULD_NOT_EQUAL_ZERO:
     'CREDIT.DEBIT.SUMATION.SHOULD.NOT.EQUAL.ZERO',
   ENTRIES_SHOULD_ASSIGN_WITH_CONTACT: 'ENTRIES_SHOULD_ASSIGN_WITH_CONTACT',
+};
+
+
+function adjustmentEntries(entries) {
+  const credit = sumBy(entries, e => toSafeInteger(e.credit));
+  const debit = sumBy(entries, e => toSafeInteger(e.debit));
+
+  return {
+    debit: Math.max(credit - debit, 0),
+    credit: Math.max(debit - credit, 0),
+  }
+}
+
+export const updateDataReducer = (rows, rowIndex, columnId, value) => {
+  let newRows = transformUpdatedRows(rows, rowIndex, columnId, value);
+
+  const oldCredit = get(rows, `[${rowIndex}].credit`);
+  const oldDebit = get(rows, `[${rowIndex}].debit`);
+
+  if (columnId === 'account_id' && !oldCredit && !oldDebit) {
+    const adjustment = adjustmentEntries(rows);
+
+    if (adjustment.credit) {
+      newRows = transformUpdatedRows(
+        newRows,
+        rowIndex,
+        'credit',
+        adjustment.credit,
+      );
+    }
+    if (adjustment.debit) {
+      newRows = transformUpdatedRows(
+        newRows,
+        rowIndex,
+        'debit',
+        adjustment.debit,
+      );
+    }
+  }
+  return newRows;
 };
 
 // Transform API errors in toasts messages.

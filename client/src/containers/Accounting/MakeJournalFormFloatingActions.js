@@ -91,7 +91,6 @@ export default function MakeJournalFloatingAction({
           <Button
             disabled={isSubmitting}
             intent={Intent.PRIMARY}
-            type="submit"
             onClick={handleSubmitPublishBtnClick}
             text={<T id={'save_publish'} />}
           />
@@ -123,7 +122,6 @@ export default function MakeJournalFloatingAction({
           <Button
             disabled={isSubmitting}
             className={'ml1'}
-            type="submit"
             onClick={handleSubmitDraftBtnClick}
             text={<T id={'save_as_draft'} />}
           />
@@ -156,7 +154,6 @@ export default function MakeJournalFloatingAction({
           <Button
             disabled={isSubmitting}
             intent={Intent.PRIMARY}
-            type="submit"
             onClick={handleSubmitPublishBtnClick}
             text={<T id={'save'} />}
           />

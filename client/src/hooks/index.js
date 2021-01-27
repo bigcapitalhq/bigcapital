@@ -1,4 +1,4 @@
-import {useRef, useEffect} from 'react';
+import {useRef, useEffect, useMemo } from 'react';
 import useAsync from './async';
 import useAutofocus from './useAutofocus';
 
@@ -35,7 +35,37 @@ export function useIsValuePassed(value, compatatorValue) {
   return cache.current.indexOf(compatatorValue) !== -1;
 }
 
+const isCurrentFocus = (autoFocus, columnId, rowIndex) => {
+  let _columnId;
+  let _rowIndex;
+
+  if (Array.isArray(autoFocus)) {
+    _columnId = autoFocus[0];
+    _rowIndex = autoFocus[1] || 0;
+  }
+  _rowIndex = parseInt(_rowIndex, 10);
+
+  return columnId === _columnId && _rowIndex === rowIndex;
+};
+
+export function useCellAutoFocus(ref, autoFocus, columnId, rowIndex) {
+  const focus = useMemo(() => isCurrentFocus(autoFocus, columnId, rowIndex), [
+    autoFocus,
+    columnId,
+    rowIndex,
+  ]);
+  useEffect(() => {
+    if (ref.current && focus) {
+      ref.current.focus();
+    }
+  }, [ref, focus]);
+
+  return ref;
+}
+
+
 export {
   useAsync,
   useAutofocus,
 }
+

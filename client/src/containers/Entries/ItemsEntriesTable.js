@@ -233,6 +233,7 @@ function ItemsEntriesTable({
         errors: errors || [],
         updateData: handleUpdateData,
         removeRow: handleRemoveRow,
+        autoFocus: ['item_id', 0],
       }}
       actions={
         <>
