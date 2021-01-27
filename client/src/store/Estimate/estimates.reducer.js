@@ -15,6 +15,7 @@ const initialState = {
     page: 1,
   },
   currentViewId: -1,
+  selectedRows: [],
 };
 
 const defaultEstimate = {
@@ -100,6 +101,10 @@ export default createReducer(initialState, {
         paginationMeta,
       },
     };
+  },
+  [t.ESTIMATES_SELECTED_ROWS_SET]: (state, action) => {
+    const { selectedRows } = action.payload;
+    state.selectedRows = selectedRows;
   },
 
   ...journalNumberChangedReducer(t.ESTIMATE_NUMBER_CHANGED),

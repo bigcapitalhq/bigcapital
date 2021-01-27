@@ -23,7 +23,7 @@ function EstimateFormPage({
   requestFetchItems,
 
   // #withEstimateActions
-  requsetFetchEstimate,
+  requestFetchEstimate,
 
   // #withSettingsActions
   requestFetchOptions,
@@ -52,7 +52,7 @@ function EstimateFormPage({
 
   const fetchEstimate = useQuery(
     ['estimate', id],
-    (key, _id) => requsetFetchEstimate(_id),
+    (key, _id) => requestFetchEstimate(_id),
     { enabled: !!id },
   );
 
