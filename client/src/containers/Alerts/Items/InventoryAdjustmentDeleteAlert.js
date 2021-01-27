@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   FormattedMessage as T,
   FormattedHTMLMessage,
@@ -30,6 +30,7 @@ function InventoryAdjustmentDeleteAlert({
   closeAlert,
 }) {
   const { formatMessage } = useIntl();
+  const [isLoading, setLoading] = useState(false);
 
   // handle cancel delete  alert.
   const handleCancelInventoryAdjustmentDelete = () => {
@@ -37,9 +38,9 @@ function InventoryAdjustmentDeleteAlert({
   };
 
   const handleConfirmInventoryAdjustmentDelete = () => {
+    setLoading(true);
     requestDeleteInventoryAdjustment(inventoryId)
       .then(() => {
-        closeAlert(name);
         AppToaster.show({
           message: formatMessage({
             id: 'the_adjustment_has_been_deleted_successfully',
@@ -48,7 +49,9 @@ function InventoryAdjustmentDeleteAlert({
         });
         queryCache.invalidateQueries('inventory-adjustment-list');
       })
-      .catch((errors) => {
+      .catch((errors) => {})
+      .finally(() => {
+        setLoading(false);
         closeAlert(name);
       });
   };
@@ -62,6 +65,7 @@ function InventoryAdjustmentDeleteAlert({
       isOpen={isOpen}
       onCancel={handleCancelInventoryAdjustmentDelete}
       onConfirm={handleConfirmInventoryAdjustmentDelete}
+      loading={isLoading}
     >
       <p>
         <FormattedHTMLMessage

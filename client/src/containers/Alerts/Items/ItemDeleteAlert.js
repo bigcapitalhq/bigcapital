@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   FormattedMessage as T,
   FormattedHTMLMessage,
@@ -33,6 +33,7 @@ function ItemDeleteAlert({
   closeAlert,
 }) {
   const { formatMessage } = useIntl();
+  const [isLoading, setLoading] = useState(false);
 
   // handle cancel delete item alert.
   const handleCancelItemDelete = () => {
@@ -40,9 +41,9 @@ function ItemDeleteAlert({
   };
 
   const handleConfirmDeleteItem = () => {
+    setLoading(true);
     requestDeleteItem(itemId)
       .then(() => {
-        closeAlert(name);
         AppToaster.show({
           message: formatMessage({
             id: 'the_item_has_been_deleted_successfully',
@@ -53,7 +54,10 @@ function ItemDeleteAlert({
       })
       .catch(({ errors }) => {
         handleDeleteErrors(errors);
+      })
+      .finally(() => {
         closeAlert(name);
+        setLoading(false);
       });
   };
 
@@ -66,6 +70,7 @@ function ItemDeleteAlert({
       isOpen={isOpen}
       onCancel={handleCancelItemDelete}
       onConfirm={handleConfirmDeleteItem}
+      loading={isLoading}
     >
       <p>
         <FormattedHTMLMessage

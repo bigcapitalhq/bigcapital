@@ -1,8 +1,5 @@
-import React from 'react';
-import {
-  FormattedMessage as T,
-  useIntl,
-} from 'react-intl';
+import React, { useState } from 'react';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 import { Intent, Alert } from '@blueprintjs/core';
 import { queryCache } from 'react-query';
 import { AppToaster } from 'components';
@@ -30,7 +27,8 @@ function ItemActivateAlert({
   closeAlert,
 }) {
   const { formatMessage } = useIntl();
-
+  const [isLoading, setLoading] = useState(false);
+  
   // Handle activate item alert cancel.
   const handleCancelActivateItem = () => {
     closeAlert(name);
@@ -38,9 +36,9 @@ function ItemActivateAlert({
 
   // Handle confirm item activated.
   const handleConfirmItemActivate = () => {
+    setLoading(true);
     requestActivateItem(itemId)
       .then(() => {
-        closeAlert(name);
         AppToaster.show({
           message: formatMessage({
             id: 'the_item_has_been_activated_successfully',
@@ -49,8 +47,10 @@ function ItemActivateAlert({
         });
         queryCache.invalidateQueries('items-table');
       })
-      .catch((error) => {
+      .catch((error) => {})
+      .finally(() => {
         closeAlert(name);
+        setLoading(false);
       });
   };
 
@@ -62,6 +62,7 @@ function ItemActivateAlert({
       isOpen={isOpen}
       onCancel={handleCancelActivateItem}
       onConfirm={handleConfirmItemActivate}
+      loading={isLoading}
     >
       <p>
         <T id={'are_sure_to_activate_this_item'} />

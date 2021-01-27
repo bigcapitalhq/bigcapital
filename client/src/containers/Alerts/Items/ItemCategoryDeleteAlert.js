@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   FormattedMessage as T,
   FormattedHTMLMessage,
@@ -31,6 +31,7 @@ function ItemCategoryDeleteAlert({
   closeAlert,
 }) {
   const { formatMessage } = useIntl();
+  const [isLoading, setLoading] = useState(false);
 
   // handle cancel delete item category alert.
   const handleCancelItemCategoryDelete = () => {
@@ -39,9 +40,9 @@ function ItemCategoryDeleteAlert({
 
   // Handle alert confirm delete item category.
   const handleConfirmItemDelete = () => {
+    setLoading(true);
     requestDeleteItemCategory(itemCategoryId)
       .then(() => {
-        closeAlert(name);
         AppToaster.show({
           message: formatMessage({
             id: 'the_item_category_has_been_deleted_successfully',
@@ -50,7 +51,9 @@ function ItemCategoryDeleteAlert({
         });
         queryCache.invalidateQueries('items-categories-list');
       })
-      .catch(() => {
+      .catch(() => {})
+      .finally(() => {
+        setLoading(false);
         closeAlert(name);
       });
   };
@@ -64,6 +67,7 @@ function ItemCategoryDeleteAlert({
       isOpen={isOpen}
       onCancel={handleCancelItemCategoryDelete}
       onConfirm={handleConfirmItemDelete}
+      loading={isLoading}
     >
       <p>
         <FormattedHTMLMessage

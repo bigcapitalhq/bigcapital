@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   FormattedMessage as T,
   FormattedHTMLMessage,
@@ -30,6 +30,7 @@ function ItemCategoryBulkDeleteAlert({
   closeAlert,
 }) {
   const { formatMessage } = useIntl();
+  const [isLoading, setLoading] = useState(false);
 
   // handle cancel bulk delete alert.
   const handleCancelBulkDelete = () => {
@@ -38,9 +39,9 @@ function ItemCategoryBulkDeleteAlert({
 
   // handle confirm itemCategories bulk delete.
   const handleConfirmBulkDelete = () => {
+    setLoading(true);
     requestDeleteBulkItemCategories(itemCategoriesIds)
       .then(() => {
-        closeAlert(name);
         AppToaster.show({
           message: formatMessage({
             id: 'the_item_categories_has_been_deleted_successfully',
@@ -48,8 +49,10 @@ function ItemCategoryBulkDeleteAlert({
           intent: Intent.SUCCESS,
         });
       })
-      .catch((errors) => {
+      .catch((errors) => {})
+      .finally(() => {
         closeAlert(name);
+        setLoading(false);
       });
   };
   return (
@@ -63,6 +66,7 @@ function ItemCategoryBulkDeleteAlert({
       isOpen={isOpen}
       onCancel={handleCancelBulkDelete}
       onConfirm={handleConfirmBulkDelete}
+      loading={isLoading}
     >
       <p>
         <FormattedHTMLMessage
