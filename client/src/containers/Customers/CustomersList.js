@@ -31,12 +31,8 @@ function CustomersList({
   // #withCustomers
   customersTableQuery,
 
-  // #withAlertsActions.
-  openAlert,
-
   // #withCustomersActions
   requestFetchCustomers,
-
   addCustomersTableQueries,
 }) {
   const [tableLoading, setTableLoading] = useState(false);

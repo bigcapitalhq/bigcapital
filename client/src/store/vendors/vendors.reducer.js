@@ -11,7 +11,7 @@ const initialState = {
   views: {},
   loading: false,
   currentViewId: -1,
-
+  selectedRows: [],
   tableQuery: {
     page_size: 12,
     page: 1,
@@ -71,6 +71,11 @@ export default createReducer(initialState, {
     if (typeof state.items[id] !== 'undefined') {
       delete state.items[id];
     }
+  },
+
+  [t.VENDOR_SELECTED_ROWS_SET]: (state, action) => {
+    const { selectedRows } = action.payload;
+    state.selectedRows = selectedRows;
   },
   ...viewPaginationSetReducer(t.VENDORS_PAGINATION_SET),
   ...createTableQueryReducers('VENDORS'),

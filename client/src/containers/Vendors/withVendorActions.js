@@ -8,10 +8,10 @@ import {
 } from 'store/vendors/vendors.actions';
 import t from 'store/types';
 
-const mapDipatchToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch) => ({
   requestSubmitVendor: (form) => dispatch(submitVendor({ form })),
   requestEditVendor: (id, form) => dispatch(editVendor({ id, form })),
-  requsetFetchVendor: (id) => dispatch(fetchVendor({ id })),
+  requestFetchVendor: (id) => dispatch(fetchVendor({ id })),
   requestFetchVendorsTable: (query = {}) =>
     dispatch(fetchVendorsTable({ query: { ...query } })),
   requestDeleteVender: (id) => dispatch(deleteVendor({ id })),
@@ -25,6 +25,11 @@ const mapDipatchToProps = (dispatch) => ({
       type: t.VENDORS_TABLE_QUERIES_ADD,
       payload: { queries },
     }),
+  setSelectedRowsVendors: (selectedRows) =>
+    dispatch({
+      type: t.VENDOR_SELECTED_ROWS_SET,
+      payload: { selectedRows },
+    }),
 });
 
-export default connect(null, mapDipatchToProps);
+export default connect(null, mapDispatchToProps);
