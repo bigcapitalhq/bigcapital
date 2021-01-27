@@ -2,11 +2,7 @@ import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { Button } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { omit } from 'lodash';
-import classNames from 'classnames';
-
-import { CLASSES } from 'common/classes';
-import DataTable from 'components/DataTable';
-import { compose, transformUpdatedRows, saveInvoke } from 'utils';
+import { compose, saveInvoke } from 'utils';
 import {
   AccountsListFieldCell,
   MoneyFieldCell,
@@ -21,8 +17,11 @@ import {
   NoteCellRenderer,
 } from './components';
 import { DataTableEditable } from 'components';
+
 import withAccounts from 'containers/Accounts/withAccounts';
 import withCustomers from 'containers/Customers/withCustomers';
+
+import { updateDataReducer } from './utils';
 
 /**
  * Make journal entries table component.
@@ -126,8 +125,9 @@ function MakeJournalEntriesTable({
   };
 
   // Handles update datatable data.
-  const handleUpdateData = (rowIndex, columnIdOrObj, value) => {
-    const newRows = transformUpdatedRows(rows, rowIndex, columnIdOrObj, value);
+  const handleUpdateData = (rowIndex, columnId, value) => {
+    const newRows = updateDataReducer(rows, rowIndex, columnId, value);
+
     saveInvoke(
       onChange,
       newRows
@@ -185,6 +185,7 @@ function MakeJournalEntriesTable({
             contact_type: 'customer',
           })),
         ],
+        autoFocus: ['account_id', 0],
       }}
       actions={
         <>

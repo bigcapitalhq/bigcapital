@@ -7,7 +7,7 @@
       .tr .th.credit,
       .tr .td.debit,
       .tr .th.debit{
-        justify-content: flex-end;
+        text-align: right;
       }
       .tbody{
         .tr:not(.no-results) .td{

@@ -48,7 +48,12 @@
           font-size: 13.5px;
         }
         .bp3-progress-bar{
-          height: 6px;
+          height: 4px;
+          
+          &,
+          .bp3-progress-meter{
+            border-radius: 4px;
+          }
         }
       }
     }

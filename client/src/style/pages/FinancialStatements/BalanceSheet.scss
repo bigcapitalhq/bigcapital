@@ -8,7 +8,7 @@
       .tbody{
         .tr .td.account_name ~ .td,
         .tr .th.account_name ~ .th{
-          justify-content: flex-end;
+          text-align: right;
         }
       }
       .tbody{

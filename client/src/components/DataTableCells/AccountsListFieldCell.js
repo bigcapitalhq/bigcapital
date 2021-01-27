@@ -1,11 +1,14 @@
-import React, { useCallback, useMemo } from 'react';
-import AccountsSuggestField from 'components/AccountsSuggestField';
-// import AccountsSelectList from 'components/AccountsSelectList';
+import React, { useRef, useCallback, useMemo } from 'react';
 import classNames from 'classnames';
+import { useCellAutoFocus } from 'hooks';
+
+import AccountsSuggestField from 'components/AccountsSuggestField';
+
+// import AccountsSelectList from 'components/AccountsSelectList';
 import { FormGroup, Classes, Intent } from '@blueprintjs/core';
 
 // Account cell renderer.
-const AccountCellRenderer = ({
+export default function AccountCellRenderer({
   column: {
     id,
     accountsDataProp,
@@ -18,9 +21,14 @@ const AccountCellRenderer = ({
     accounts: defaultAccounts,
     updateData,
     errors,
+    autoFocus,
     ...restPayloadProps
   },
-}) => {
+}) {
+  const accountRef = useRef();
+
+  useCellAutoFocus(accountRef, autoFocus, id, index);
+
   const handleAccountSelected = useCallback(
     (account) => {
       updateData(index, id, account.id);
@@ -49,9 +57,12 @@ const AccountCellRenderer = ({
         selectedAccountId={initialValue}
         filterByRootTypes={filterAccountsByRootType}
         filterByTypes={filterAccountsByTypes}
+        inputProps={{
+          inputRef: (ref) => (accountRef.current = ref),
+        }}
+        openOnKeyDown={true}
+        blurOnSelectClose={false}
       />
     </FormGroup>
   );
-};
-
-export default AccountCellRenderer;
+}

@@ -29,7 +29,7 @@ export default function TableCell({
       <div
         className={classNames({
           'text-overview': cell.column.textOverview,
-        })}
+        }, 'cell-inner')}
         style={{
           'padding-left':
             isExpandColumn && expandable

@@ -9,7 +9,7 @@
         .thead{
           .tr .td.customer_name ~ .td,
           .tr .th.customer_name ~ .th{
-            justify-content: flex-end;
+            text-align: right;
           }
         }
         .tbody{
