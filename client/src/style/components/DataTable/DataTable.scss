@@ -147,6 +147,9 @@
         .placeholder {
           color: #a0a0a0;
         }
+        .cell-inner{
+          flex: 1 0 0;
+        }
         .text-overview{
           overflow: hidden;
           white-space: nowrap;
