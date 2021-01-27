@@ -22,9 +22,9 @@
 
       .th {
         padding: 0.6rem 0.5rem;
-        background: #fafafa;
+        background: #f5f5f5;
         font-size: 14px;
-        color: #58667b;
+        color: #505e71;
         font-weight: 500;
         border-bottom: 1px solid rgb(224, 224, 224);
 
@@ -76,6 +76,10 @@
       margin: 0;
       padding: 0.5rem;
 
+      .cell-inner{
+        flex: 1 0 0;
+      }
+
       &:last-child {
         border-right: 0;
       }
@@ -102,7 +106,7 @@
         .inner-resizer {
           height: 100%;
           width: 1px;
-          border-left: 1px solid #ececec;
+          border-left: 1px solid #E6E6E6;
           margin: 0 auto;
         }
 
@@ -140,21 +144,17 @@
       }
 
       .tr .td {
-        border-bottom: 1px solid #e8e8e8;
+        border-bottom: 1px solid #e0e0e0;
         align-items: center;
         color: #101219;
 
         .placeholder {
           color: #a0a0a0;
         }
-        .cell-inner{
-          flex: 1 0 0;
-        }
         .text-overview{
           overflow: hidden;
           white-space: nowrap;
           text-overflow: ellipsis;
-
         }
 
         .bp3-form-group {
@@ -171,7 +171,6 @@
       .tr:hover .td {
         background: #f3f7fc;
       }
-
       .tr.is-context-menu-active .td {
         background: #f3fafc;
       }
@@ -186,11 +185,9 @@
         &:focus {
           background-color: #cfdcee;
         }
-
         svg {
           color: #425361;
         }
-
         .bp3-icon-more-h-16 {
           margin-top: 2px;
         }
@@ -267,12 +264,10 @@
 
     .thead {
       top: 0;
-      // box-shadow: 0px 3px 3px #ccc;
     }
 
     .tfoot {
       bottom: 0;
-      // box-shadow: 0px -3px 3px #ccc;
     }
     .tbody {
       position: relative;

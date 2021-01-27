@@ -1,4 +1,5 @@
 @import '../../Base.scss';
+$dashboard-views-bar-height: 45px;
 
 .dashboard {
   display: flex;
@@ -412,10 +413,11 @@
 }
 
 .tabs--dashboard-views {
+
   .#{$ns}-tab {
-    color: #5b606d;
+    color: #474d5e;
     font-size: 14px;
-    line-height: 50px;
+    line-height: $dashboard-views-bar-height;
     font-weight: 400;
     padding: 0;
     margin-right: 0;
@@ -430,12 +432,12 @@
 
   .#{$ns}-tab-indicator-wrapper {
     .#{$ns}-tab-indicator {
-      height: 4px;
+      height: 3px;
     }
   }
   .button--new-view {
     margin: 0;
-    height: 50px;
+    height: $dashboard-views-bar-height;
 
     &,
     &:hover,
@@ -455,6 +457,11 @@
 .navbar--dashboard-views {
   box-shadow: 0 0 0;
   border-bottom: 1px solid #d2dce2;
+  height: $dashboard-views-bar-height;
+
+  .bp3-navbar-group{
+    height: $dashboard-views-bar-height;
+  }
 }
 
 .navbar-omnibar {
