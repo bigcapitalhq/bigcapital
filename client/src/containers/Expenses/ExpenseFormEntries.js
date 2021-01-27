@@ -234,6 +234,7 @@ function ExpenseTable({
         errors: error,
         updateData: handleUpdateData,
         removeRow: handleRemoveRow,
+        autoFocus: ['expense_account_id', 0],
       }}
       actions={
         <>
