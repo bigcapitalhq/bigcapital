@@ -14,6 +14,7 @@ import classNames from 'classnames';
 import Icon from 'components/Icon';
 import LoadingIndicator from 'components/LoadingIndicator';
 import { compose } from 'utils';
+import { useIsValuePassed } from 'hooks';
 import DataTable from 'components/DataTable';
 
 import { CLASSES } from 'common/classes';
@@ -32,10 +33,10 @@ const ItemsCategoryList = ({
   // #ownProps
   onFetchData,
   onDeleteCategory,
-  onEditCategory,
   onSelectedRowsChange,
 }) => {
   const { formatMessage } = useIntl();
+  const isLoadedBefore = useIsValuePassed(categoriesTableLoading, false);
 
   const handelEditCategory = useCallback(
     (category) => () => {
@@ -143,7 +144,10 @@ const ItemsCategoryList = ({
 
   return (
     <div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>
-      <LoadingIndicator mount={false}>
+      <LoadingIndicator
+        loading={categoriesTableLoading && !isLoadedBefore}
+        mount={false}
+      >
         <DataTable
           noInitialFetch={true}
           columns={columns}
@@ -154,7 +158,6 @@ const ItemsCategoryList = ({
           expandable={true}
           sticky={true}
           onSelectedRowsChange={handleSelectedRowsChange}
-          loading={categoriesTableLoading}
           rowContextMenu={handleRowContextMenu}
         />
       </LoadingIndicator>

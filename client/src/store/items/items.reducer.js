@@ -18,6 +18,7 @@ const initialState = {
     page_size: 12,
     page: 1,
   },
+  selectedRows: [],
 };
 
 export default createReducer(initialState, {
@@ -57,6 +58,11 @@ export default createReducer(initialState, {
 
   [t.ITEM_BULK_ACTION_ADD]: (state, action) => {
     state.bulkActions[action.itemId] = true;
+  },
+  
+  [t.ITEM_SELECTED_ROWS_SET]: (state, action) => {
+    const { selectedRows } = action.payload;
+    state.selectedRows = selectedRows;
   },
 
   [t.ITEM_BULK_ACTION_REMOVE]: (state, action) => {

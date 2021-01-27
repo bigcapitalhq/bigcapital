@@ -27,6 +27,7 @@ export default (mapState) => {
         query,
       ),
       inventoryAdjustmentLoading: state.inventoryAdjustments.loading,
+      inventoryAdjustmentsSelectedRows: state.inventoryAdjustments.selectedRows,
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };

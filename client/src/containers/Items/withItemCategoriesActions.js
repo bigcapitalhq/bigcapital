@@ -28,6 +28,11 @@ export const mapDispatchToProps = (dispatch) => ({
       type: t.ITEM_CATEGORIES_TABLE_QUERIES_ADD,
       queries,
     }),
+  setSelectedRowsCategories: (selectedRows) =>
+    dispatch({
+      type: t.ITEM_CATEGORY_SELECTED_ROW_SET,
+      payload: { selectedRows },
+    }),
 });
 
 export default connect(null, mapDispatchToProps);

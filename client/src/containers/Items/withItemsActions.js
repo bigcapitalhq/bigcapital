@@ -17,7 +17,7 @@ export const mapDispatchToProps = (dispatch) => ({
   requestDeleteItem: (id) => dispatch(deleteItem({ id })),
   requestDeleteBulkItems: (ids) => dispatch(deleteBulkItems({ ids })),
   requestSubmitItem: (form) => dispatch(submitItem({ form })),
-  requestEditItem: (id, form) => dispatch(editItem( id, form )),
+  requestEditItem: (id, form) => dispatch(editItem(id, form)),
   requestInactiveItem: (id) => dispatch(inactiveItem({ id })),
   requestActivateItem: (id) => dispatch(activateItem({ id })),
   addBulkActionItem: (id) =>
@@ -46,6 +46,11 @@ export const mapDispatchToProps = (dispatch) => ({
     dispatch({
       type: t.ITEMS_SET_CURRENT_VIEW,
       currentViewId: parseInt(id, 10),
+    }),
+  setSelectedRowsItems: (selectedRows) =>
+    dispatch({
+      type: t.ITEM_SELECTED_ROWS_SET,
+      payload: { selectedRows },
     }),
 });
 

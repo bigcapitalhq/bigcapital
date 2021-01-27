@@ -21,6 +21,7 @@ export default (mapState) => {
       itemsCurrentPage: getItemsCurrentPage(state, props),
       itemsBulkSelected: state.items.bulkActions,
       itemsTableLoading: state.items.loading,
+      itemsSelectedRows: state.items.selectedRows,
       itemsTableQuery: getItemsTableQuery(state, props),
       itemsPagination: getItemsPaginationMeta(state, props),
       itemsCurrentViewId: getItemsCurrentViewId(state, props),

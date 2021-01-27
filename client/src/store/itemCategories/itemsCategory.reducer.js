@@ -4,6 +4,7 @@ import { createReducer } from '@reduxjs/toolkit';
 const initialState = {
   categories: {},
   loading: false,
+  selectedRows: [],
 };
 
 export default createReducer(initialState, {
@@ -44,6 +45,11 @@ export default createReducer(initialState, {
       }
     });
     state.categories = categories;
+  },
+  
+  [t.ITEM_CATEGORY_SELECTED_ROW_SET]: (state, action) => {
+    const { selectedRows } = action.payload;
+    state.selectedRows = selectedRows;
   },
 });
 

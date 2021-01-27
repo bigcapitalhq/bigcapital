@@ -175,21 +175,14 @@ function InventoryAdjustmentDataTable({
     },
     [addInventoryAdjustmentTableQueries],
   );
-  
-
+ 
   const handleSelectedRowsChange = useCallback(
     (selectedRows) => {
-      saveInvoke(
-        onSelectedRowsChange,
-        selectedRows.map((s) => s.original),
-      );
+      onSelectedRowsChange &&
+        onSelectedRowsChange(selectedRows.map((s) => s.original));
     },
     [onSelectedRowsChange],
   );
-
-  // const showEmptyStatus = [
-
-  // ].every((condition) => condition === true);
 
   return (
     <div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>
