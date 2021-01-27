@@ -1,8 +1,5 @@
-import React from 'react';
-import {
-  FormattedMessage as T,
-  useIntl
-} from 'react-intl';
+import React, { useState } from 'react';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 import { Intent, Alert } from '@blueprintjs/core';
 import { queryCache } from 'react-query';
 import { AppToaster } from 'components';
@@ -27,9 +24,11 @@ function AccountBulkDeleteAlert({
   closeAlert,
 
   // #withAccountsActions
-  requestDeleteBulkAccounts
+  requestDeleteBulkAccounts,
 }) {
   const { formatMessage } = useIntl();
+  const [isLoading, setLoading] = useState(false);
+
   const selectedRowsCount = 0;
 
   const handleCancel = () => {
@@ -37,9 +36,9 @@ function AccountBulkDeleteAlert({
   };
   // Handle confirm accounts bulk delete.
   const handleConfirmBulkDelete = () => {
+    setLoading(true);
     requestDeleteBulkAccounts(accountsIds)
       .then(() => {
-        closeAlert(name);
         AppToaster.show({
           message: formatMessage({
             id: 'the_accounts_has_been_successfully_deleted',
@@ -49,8 +48,11 @@ function AccountBulkDeleteAlert({
         queryCache.invalidateQueries('accounts-table');
       })
       .catch((errors) => {
-        closeAlert(name);
         handleDeleteErrors(errors);
+      })
+      .finally(() => {
+        setLoading(false);
+        closeAlert(name);
       });
   };
 
@@ -65,6 +67,7 @@ function AccountBulkDeleteAlert({
       isOpen={isOpen}
       onCancel={handleCancel}
       onConfirm={handleConfirmBulkDelete}
+      loading={isLoading}
     >
       <p>
         <T id={'once_delete_these_accounts_you_will_not_able_restore_them'} />
@@ -76,5 +79,5 @@ function AccountBulkDeleteAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
-  withAccountsActions
+  withAccountsActions,
 )(AccountBulkDeleteAlert);

@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   FormattedMessage as T,
   FormattedHTMLMessage,
-  useIntl
+  useIntl,
 } from 'react-intl';
 import { Intent, Alert } from '@blueprintjs/core';
 import { queryCache } from 'react-query';
@@ -22,22 +22,22 @@ function AccountBulkActivateAlert({
   // #withAlertActions
   closeAlert,
 
-  requestBulkActivateAccounts
+  requestBulkActivateAccounts,
 }) {
   const { formatMessage } = useIntl();
+  const [isLoading, setLoading] = useState(false);
   const selectedRowsCount = 0;
 
   // Handle alert cancel.
   const handleClose = () => {
     closeAlert(name);
-  }
+  };
 
   // Handle Bulk activate account confirm.
   const handleConfirmBulkActivate = () => {
+    setLoading(true);
     requestBulkActivateAccounts(accountsIds)
       .then(() => {
-        closeAlert(name);
-
         AppToaster.show({
           message: formatMessage({
             id: 'the_accounts_has_been_successfully_activated',
@@ -46,7 +46,9 @@ function AccountBulkActivateAlert({
         });
         queryCache.invalidateQueries('accounts-table');
       })
-      .catch((errors) => {
+      .catch((errors) => {})
+      .finally(() => {
+        setLoading(false);
         closeAlert(name);
       });
   };
@@ -61,6 +63,7 @@ function AccountBulkActivateAlert({
       isOpen={isOpen}
       onCancel={handleClose}
       onConfirm={handleConfirmBulkActivate}
+      loading={isLoading}
     >
       <p>
         <T id={'are_sure_to_activate_this_accounts'} />
@@ -72,5 +75,5 @@ function AccountBulkActivateAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
-  withAccountsActions
+  withAccountsActions,
 )(AccountBulkActivateAlert);

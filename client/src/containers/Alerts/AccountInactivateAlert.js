@@ -1,8 +1,5 @@
-import React from 'react';
-import {
-  FormattedMessage as T,
-  useIntl,
-} from 'react-intl';
+import React, { useState } from 'react';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 import { Intent, Alert } from '@blueprintjs/core';
 import { queryCache } from 'react-query';
 import { AppToaster } from 'components';
@@ -23,18 +20,18 @@ function AccountInactivateAlert({
 
   // #withAccountsActions
   requestInactiveAccount,
-
 }) {
   const { formatMessage } = useIntl();
+  const [isLoading, setLoading] = useState(false);
 
   const handleCancelInactiveAccount = () => {
     closeAlert('account-inactivate');
   };
 
   const handleConfirmAccountActive = () => {
+    setLoading(true);
     requestInactiveAccount(accountId)
       .then(() => {
-        closeAlert('account-inactivate');
         AppToaster.show({
           message: formatMessage({
             id: 'the_account_has_been_successfully_inactivated',
@@ -43,7 +40,9 @@ function AccountInactivateAlert({
         });
         queryCache.invalidateQueries('accounts-table');
       })
-      .catch((error) => {
+      .catch((error) => {})
+      .finally(() => {
+        setLoading(false);
         closeAlert('account-inactivate');
       });
   };
@@ -56,6 +55,7 @@ function AccountInactivateAlert({
       isOpen={isOpen}
       onCancel={handleCancelInactiveAccount}
       onConfirm={handleConfirmAccountActive}
+      loading={isLoading}
     >
       <p>
         <T id={'are_sure_to_inactive_this_account'} />
@@ -67,5 +67,5 @@ function AccountInactivateAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
-  withAccountsActions
+  withAccountsActions,
 )(AccountInactivateAlert);

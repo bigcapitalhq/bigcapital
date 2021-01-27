@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   FormattedMessage as T,
   FormattedHTMLMessage,
-  useIntl
+  useIntl,
 } from 'react-intl';
 import { Intent, Alert } from '@blueprintjs/core';
 import { queryCache } from 'react-query';
@@ -30,9 +30,10 @@ function AccountDeleteAlert({
   requestDeleteAccount,
 
   // #withAlertActions
-  closeAlert
+  closeAlert,
 }) {
   const { formatMessage } = useIntl();
+  const [isLoading, setLoading] = useState(false);
 
   // handle cancel delete account alert.
   const handleCancelAccountDelete = () => {
@@ -41,9 +42,9 @@ function AccountDeleteAlert({
 
   // Handle confirm account delete.
   const handleConfirmAccountDelete = () => {
+    setLoading(true);
     requestDeleteAccount(accountId)
       .then(() => {
-        closeAlert(name);
         AppToaster.show({
           message: formatMessage({
             id: 'the_account_has_been_successfully_deleted',
@@ -54,6 +55,9 @@ function AccountDeleteAlert({
       })
       .catch((errors) => {
         handleDeleteErrors(errors);
+      })
+      .finally(() => {
+        setLoading(false);
         closeAlert(name);
       });
   };
@@ -67,6 +71,7 @@ function AccountDeleteAlert({
       isOpen={isOpen}
       onCancel={handleCancelAccountDelete}
       onConfirm={handleConfirmAccountDelete}
+      loading={isLoading}
     >
       <p>
         <FormattedHTMLMessage
@@ -74,11 +79,11 @@ function AccountDeleteAlert({
         />
       </p>
     </Alert>
-  )
+  );
 }
 
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
-  withAccountsActions
+  withAccountsActions,
 )(AccountDeleteAlert);

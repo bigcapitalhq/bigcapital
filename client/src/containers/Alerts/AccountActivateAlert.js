@@ -1,8 +1,5 @@
-import React from 'react';
-import {
-  FormattedMessage as T,
-  useIntl,
-} from 'react-intl';
+import React, { useState } from 'react';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 import { Intent, Alert } from '@blueprintjs/core';
 import { queryCache } from 'react-query';
 import { AppToaster } from 'components';
@@ -24,9 +21,10 @@ function AccountActivateAlert({
   // #withAlertActions
   closeAlert,
 
-  requestActivateAccount
+  requestActivateAccount,
 }) {
   const { formatMessage } = useIntl();
+  const [isLoading, setLoading] = useState(false);
 
   // Handle alert cancel.
   const handleCancel = () => {
@@ -35,9 +33,9 @@ function AccountActivateAlert({
 
   // Handle activate account confirm.
   const handleConfirmAccountActivate = () => {
+    setLoading(true);
     requestActivateAccount(accountId)
       .then(() => {
-        closeAlert('account-activate');
         AppToaster.show({
           message: formatMessage({
             id: 'the_account_has_been_successfully_activated',
@@ -46,8 +44,10 @@ function AccountActivateAlert({
         });
         queryCache.invalidateQueries('accounts-table');
       })
-      .catch((error) => {
+      .catch((error) => {})
+      .finally(() => {
         closeAlert('account-activate');
+        setLoading(false);
       });
   };
 
@@ -59,6 +59,7 @@ function AccountActivateAlert({
       isOpen={isOpen}
       onCancel={handleCancel}
       onConfirm={handleConfirmAccountActivate}
+      loading={isLoading}
     >
       <p>
         <T id={'are_sure_to_activate_this_account'} />
@@ -70,5 +71,5 @@ function AccountActivateAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
-  withAccountsActions
+  withAccountsActions,
 )(AccountActivateAlert);
