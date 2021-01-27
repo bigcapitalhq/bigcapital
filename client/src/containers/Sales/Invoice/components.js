@@ -2,6 +2,8 @@ import React from 'react';
 import { Intent, Tag, ProgressBar } from '@blueprintjs/core';
 import { Choose, If, Icon } from 'components';
 import { FormattedMessage as T, useIntl } from 'react-intl';
+import { AppToaster } from 'components';
+import { formatMessage } from 'services/intl';
 
 const calculateStatus = (paymentAmount, balanceAmount) =>
   paymentAmount / balanceAmount;
@@ -59,4 +61,19 @@ export const statusAccessor = (row) => {
       </Choose>
     </div>
   );
+};
+
+export const handleDeleteErrors = (errors) => {
+  if (
+    errors.find(
+      (error) => error.type === 'INVOICE_HAS_ASSOCIATED_PAYMENT_ENTRIES',
+    )
+  ) {
+    AppToaster.show({
+      message: formatMessage({
+        id: 'the_invoice_cannot_be_deleted',
+      }),
+      intent: Intent.DANGER,
+    });
+  }
 };
