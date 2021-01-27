@@ -10,7 +10,7 @@ const initialState = {
   views: {},
   loading: false,
   currentViewId: -1,
-
+  selectedRows: [],
   // Responsible for data fetch query based on this query.
   tableQuery: {
     page_size: 12,
@@ -49,7 +49,6 @@ export default createReducer(initialState, {
     state.views[viewId] = {
       ...view,
       pages: {
-        
         ...(state.views?.[viewId]?.pages || {}),
         [paginationMeta.page]: {
           ids: customers.map((i) => i.id),
@@ -85,7 +84,10 @@ export default createReducer(initialState, {
     });
     state.items = items;
   },
-
+  [t.CUSTOMER_SELECTED_ROWS_SET]: (state, action) => {
+    const { selectedRows } = action.payload;
+    state.selectedRows = selectedRows;
+  },
   ...viewPaginationSetReducer(t.CUSTOMERS_PAGINATION_SET),
   ...createTableQueryReducers('CUSTOMERS'),
 });

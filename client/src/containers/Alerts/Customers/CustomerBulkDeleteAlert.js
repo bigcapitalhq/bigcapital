@@ -1,26 +1,26 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { Intent, Alert } from '@blueprintjs/core';
 import { AppToaster } from 'components';
+import { transformErrors } from 'containers/Customers/utils';
 
-import withItemsActions from 'containers/Items/withItemsActions';
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
+import withCustomersActions from 'containers/Customers/withCustomersActions';
 
 import { compose } from 'utils';
 
 /**
- * Item bulk delete alert.
+ * Customer bulk delete alert.
  */
-function ItemBulkDeleteAlert({
+function CustomerBulkDeleteAlert({
   name,
 
   // #withAlertStoreConnect
   isOpen,
-  payload: { itemsIds },
-
-  // #withItemsActions
-  requestDeleteBulkItems,
+  payload: { customersIds },
+  // #withCustomersActions
+  requestDeleteBulkCustomers,
 
   // #withAlertActions
   closeAlert,
@@ -28,43 +28,47 @@ function ItemBulkDeleteAlert({
   const { formatMessage } = useIntl();
   const [isLoading, setLoading] = useState(false);
 
-  // handle cancel item bulk delete alert.
-  const handleCancelBulkDelete = () => {
+  // handle cancel delete  alert.
+  const handleCancelDeleteAlert = () => {
     closeAlert(name);
   };
-  // Handle confirm items bulk delete.
-  const handleConfirmBulkDelete = () => {
+
+  console.log(customersIds, 'EE');
+
+  // Handle confirm customers bulk delete.
+  const handleConfirmBulkDelete = useCallback(() => {
     setLoading(true);
-    requestDeleteBulkItems(itemsIds)
+    requestDeleteBulkCustomers(customersIds)
       .then(() => {
         AppToaster.show({
           message: formatMessage({
-            id: 'the_items_has_been_deleted_successfully',
+            id: 'the_customers_has_been_deleted_successfully',
           }),
           intent: Intent.SUCCESS,
         });
       })
-      .catch((errors) => {})
+      .catch((errors) => {
+        transformErrors(errors);
+      })
       .finally(() => {
         setLoading(false);
         closeAlert(name);
       });
-  };
+  }, [requestDeleteBulkCustomers, customersIds, formatMessage]);
+
   return (
     <Alert
       cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={
-        <T id={'delete_count'} values={{ count: itemsIds.length }} />
-      }
+      confirmButtonText={<T id={'delete'} />}
       icon="trash"
       intent={Intent.DANGER}
       isOpen={isOpen}
-      onCancel={handleCancelBulkDelete}
+      onCancel={handleCancelDeleteAlert}
       onConfirm={handleConfirmBulkDelete}
       loading={isLoading}
     >
       <p>
-        <T id={'once_delete_these_items_you_will_not_able_restore_them'} />
+        <T id={'once_delete_these_customers_you_will_not_able_restore_them'} />
       </p>
     </Alert>
   );
@@ -73,5 +77,5 @@ function ItemBulkDeleteAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
-  withItemsActions,
-)(ItemBulkDeleteAlert);
+  withCustomersActions,
+)(CustomerBulkDeleteAlert);
