@@ -201,4 +201,11 @@ export default class MetableStore implements IMetableStore{
 
     return collection;
   }
+
+  /**
+   * Reset the momerized metadata.
+   */
+  resetMetadata() {
+    this.metadata = [];
+  }
 }

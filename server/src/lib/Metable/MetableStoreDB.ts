@@ -77,7 +77,7 @@ export default class MetableDBStore extends MetableStore implements IMetableStor
       this.saveInserted(this.metadata),
     ]);
   }
-  
+
   /**
    * Saves the updated metadata.
    * @param {IMetadata[]} metadata -
@@ -154,6 +154,8 @@ export default class MetableDBStore extends MetableStore implements IMetableStor
   async load() {
     const metadata = await this.repository.all();
     const mappedMetadata = this.mapMetadataCollection(metadata);
+
+    this.resetMetadata();
 
     mappedMetadata.forEach((meta: IMetadata) => {
       this.metadata.push(meta);
