@@ -1,57 +1,63 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   FormattedMessage as T,
   FormattedHTMLMessage,
   useIntl,
 } from 'react-intl';
 import { Intent, Alert } from '@blueprintjs/core';
-import { AppToaster } from 'components';
 import { queryCache } from 'react-query';
+import { AppToaster } from 'components';
 
-import withItemCategoriesActions from 'containers/Items/withItemCategoriesActions';
+import { handleDeleteErrors } from 'containers/Items/utils';
+
+import withItemsActions from 'containers/Items/withItemsActions';
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
 
 import { compose } from 'utils';
 
 /**
- * Item Category delete alerts.
+ * Item delete alerts.
  */
-function ItemCategoryDeleteAlert({
+function ItemDeleteAlert({
   name,
 
   // #withAlertStoreConnect
   isOpen,
-  payload: { itemCategoryId },
+  payload: { itemId },
 
-  // #withItemCategoriesActions
-  requestDeleteItemCategory,
+  // #withItemsActions
+  requestDeleteItem,
 
   // #withAlertActions
   closeAlert,
 }) {
   const { formatMessage } = useIntl();
+  const [isLoading, setLoading] = useState(false);
 
-  // handle cancel delete item category alert.
-  const handleCancelItemCategoryDelete = () => {
+  // handle cancel delete item alert.
+  const handleCancelItemDelete = () => {
     closeAlert(name);
   };
 
-  // Handle alert confirm delete item category.
-  const handleConfirmItemDelete = () => {
-    requestDeleteItemCategory(itemCategoryId)
+  const handleConfirmDeleteItem = () => {
+    setLoading(true);
+    requestDeleteItem(itemId)
       .then(() => {
-        closeAlert(name);
         AppToaster.show({
           message: formatMessage({
-            id: 'the_item_category_has_been_deleted_successfully',
+            id: 'the_item_has_been_deleted_successfully',
           }),
           intent: Intent.SUCCESS,
         });
-        queryCache.invalidateQueries('items-categories-list');
+        queryCache.invalidateQueries('items-table');
       })
-      .catch(() => {
+      .catch(({ errors }) => {
+        handleDeleteErrors(errors);
+      })
+      .finally(() => {
         closeAlert(name);
+        setLoading(false);
       });
   };
 
@@ -62,12 +68,13 @@ function ItemCategoryDeleteAlert({
       icon="trash"
       intent={Intent.DANGER}
       isOpen={isOpen}
-      onCancel={handleCancelItemCategoryDelete}
-      onConfirm={handleConfirmItemDelete}
+      onCancel={handleCancelItemDelete}
+      onConfirm={handleConfirmDeleteItem}
+      loading={isLoading}
     >
       <p>
         <FormattedHTMLMessage
-          id={'once_delete_this_item_category_you_will_able_to_restore_it'}
+          id={'once_delete_this_item_you_will_able_to_restore_it'}
         />
       </p>
     </Alert>
@@ -77,5 +84,5 @@ function ItemCategoryDeleteAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
-  withItemCategoriesActions,
-)(ItemCategoryDeleteAlert);
+  withItemsActions,
+)(ItemDeleteAlert);

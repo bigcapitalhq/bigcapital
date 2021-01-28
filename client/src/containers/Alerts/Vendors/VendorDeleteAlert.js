@@ -1,33 +1,31 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   FormattedMessage as T,
   FormattedHTMLMessage,
   useIntl,
 } from 'react-intl';
 import { Intent, Alert } from '@blueprintjs/core';
-import { queryCache } from 'react-query';
 import { AppToaster } from 'components';
+import { transformErrors } from 'containers/Customers/utils';
 
-import { handleDeleteErrors } from 'containers/Accounts/utils';
-
-import withAccountsActions from 'containers/Accounts/withAccountsActions';
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
+import withVendorActions from 'containers/Vendors/withVendorActions';
 
 import { compose } from 'utils';
 
 /**
- * Account delete alerts.
+ * Vendor delete alert.
  */
-function AccountDeleteAlert({
+function VendorDeleteAlert({
   name,
 
   // #withAlertStoreConnect
   isOpen,
-  payload: { accountId },
+  payload: { vendorId },
 
-  // #withAccountsActions
-  requestDeleteAccount,
+  // #withVendorActions
+  requestDeleteVender,
 
   // #withAlertActions
   closeAlert,
@@ -35,32 +33,31 @@ function AccountDeleteAlert({
   const { formatMessage } = useIntl();
   const [isLoading, setLoading] = useState(false);
 
-  // handle cancel delete account alert.
-  const handleCancelAccountDelete = () => {
+  // Handle cancel delete the vendor.
+  const handleCancelDeleteAlert = () => {
     closeAlert(name);
   };
 
-  // Handle confirm account delete.
-  const handleConfirmAccountDelete = () => {
+  // handle confirm delete vendor.
+  const handleConfirmDeleteVendor = useCallback(() => {
     setLoading(true);
-    requestDeleteAccount(accountId)
+    requestDeleteVender(vendorId)
       .then(() => {
         AppToaster.show({
           message: formatMessage({
-            id: 'the_account_has_been_successfully_deleted',
+            id: 'the_vendor_has_been_deleted_successfully',
           }),
           intent: Intent.SUCCESS,
         });
-        queryCache.invalidateQueries('accounts-table');
       })
       .catch((errors) => {
-        handleDeleteErrors(errors);
+        transformErrors(errors);
       })
       .finally(() => {
-        setLoading(false);
         closeAlert(name);
+        setLoading(false);
       });
-  };
+  }, [requestDeleteVender, vendorId, formatMessage]);
 
   return (
     <Alert
@@ -69,13 +66,13 @@ function AccountDeleteAlert({
       icon="trash"
       intent={Intent.DANGER}
       isOpen={isOpen}
-      onCancel={handleCancelAccountDelete}
-      onConfirm={handleConfirmAccountDelete}
+      onCancel={handleCancelDeleteAlert}
+      onConfirm={handleConfirmDeleteVendor}
       loading={isLoading}
     >
       <p>
         <FormattedHTMLMessage
-          id={'once_delete_this_account_you_will_able_to_restore_it'}
+          id={'once_delete_this_vendor_you_will_able_to_restore_it'}
         />
       </p>
     </Alert>
@@ -85,5 +82,5 @@ function AccountDeleteAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
-  withAccountsActions,
-)(AccountDeleteAlert);
+  withVendorActions,
+)(VendorDeleteAlert);

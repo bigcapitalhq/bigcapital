@@ -1,50 +1,48 @@
 import React, { useState } from 'react';
-import {
-  FormattedMessage as T,
-  FormattedHTMLMessage,
-  useIntl,
-} from 'react-intl';
+import { FormattedMessage as T, useIntl } from 'react-intl';
 import { Intent, Alert } from '@blueprintjs/core';
-import { queryCache } from 'react-query';
 import { AppToaster } from 'components';
 
-import withAccountsActions from 'containers/Accounts/withAccountsActions';
+import withItemsActions from 'containers/Items/withItemsActions';
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
 
 import { compose } from 'utils';
 
-function AccountBulkActivateAlert({
+/**
+ * Item bulk delete alert.
+ */
+function ItemBulkDeleteAlert({
   name,
+
+  // #withAlertStoreConnect
   isOpen,
-  payload: { accountsIds },
+  payload: { itemsIds },
+
+  // #withItemsActions
+  requestDeleteBulkItems,
 
   // #withAlertActions
   closeAlert,
-
-  requestBulkActivateAccounts,
 }) {
   const { formatMessage } = useIntl();
   const [isLoading, setLoading] = useState(false);
-  const selectedRowsCount = 0;
 
-  // Handle alert cancel.
-  const handleClose = () => {
+  // handle cancel item bulk delete alert.
+  const handleCancelBulkDelete = () => {
     closeAlert(name);
   };
-
-  // Handle Bulk activate account confirm.
-  const handleConfirmBulkActivate = () => {
+  // Handle confirm items bulk delete.
+  const handleConfirmBulkDelete = () => {
     setLoading(true);
-    requestBulkActivateAccounts(accountsIds)
+    requestDeleteBulkItems(itemsIds)
       .then(() => {
         AppToaster.show({
           message: formatMessage({
-            id: 'the_accounts_has_been_successfully_activated',
+            id: 'the_items_has_been_deleted_successfully',
           }),
           intent: Intent.SUCCESS,
         });
-        queryCache.invalidateQueries('accounts-table');
       })
       .catch((errors) => {})
       .finally(() => {
@@ -52,21 +50,21 @@ function AccountBulkActivateAlert({
         closeAlert(name);
       });
   };
-
   return (
     <Alert
       cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={`${formatMessage({
-        id: 'activate',
-      })} (${selectedRowsCount})`}
-      intent={Intent.WARNING}
+      confirmButtonText={
+        <T id={'delete_count'} values={{ count: itemsIds.length }} />
+      }
+      icon="trash"
+      intent={Intent.DANGER}
       isOpen={isOpen}
-      onCancel={handleClose}
-      onConfirm={handleConfirmBulkActivate}
+      onCancel={handleCancelBulkDelete}
+      onConfirm={handleConfirmBulkDelete}
       loading={isLoading}
     >
       <p>
-        <T id={'are_sure_to_activate_this_accounts'} />
+        <T id={'once_delete_these_items_you_will_not_able_restore_them'} />
       </p>
     </Alert>
   );
@@ -75,5 +73,5 @@ function AccountBulkActivateAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
-  withAccountsActions,
-)(AccountBulkActivateAlert);
+  withItemsActions,
+)(ItemBulkDeleteAlert);

@@ -204,7 +204,6 @@ const CustomerTable = ({
               noInitialFetch={true}
               columns={columns}
               data={customers}
-              // loading={customersLoading}
               onFetchData={handleFetchData}
               selectionColumn={true}
               expandable={false}

@@ -7,18 +7,18 @@ import {
   fetchEstimatesTable,
   deliverEstimate,
   approveEstimate,
-  rejectEstimate
+  rejectEstimate,
 } from 'store/Estimate/estimates.actions';
 import t from 'store/types';
 
-const mapDipatchToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch) => ({
   requestSubmitEstimate: (form) => dispatch(submitEstimate({ form })),
-  requsetFetchEstimate: (id) => dispatch(fetchEstimate({ id })),
+  requestFetchEstimate: (id) => dispatch(fetchEstimate({ id })),
   requestEditEstimate: (id, form) => dispatch(editEstimate(id, form)),
   requestFetchEstimatesTable: (query = {}) =>
     dispatch(fetchEstimatesTable({ query: { ...query } })),
   requestDeleteEstimate: (id) => dispatch(deleteEstimate({ id })),
-  requestDeliverdEstimate: (id) => dispatch(deliverEstimate({ id })),
+  requestDeliveredEstimate: (id) => dispatch(deliverEstimate({ id })),
   requestApproveEstimate: (id) => dispatch(approveEstimate({ id })),
   requestRejectEstimate: (id) => dispatch(rejectEstimate({ id })),
 
@@ -38,6 +38,11 @@ const mapDipatchToProps = (dispatch) => ({
       type: t.ESTIMATE_NUMBER_CHANGED,
       payload: { isChanged },
     }),
+  setSelectedRowsEstimates: (selectedRows) =>
+    dispatch({
+      type: t.ESTIMATES_SELECTED_ROWS_SET,
+      payload: { selectedRows },
+    }),
 });
 
-export default connect(null, mapDipatchToProps);
+export default connect(null, mapDispatchToProps);

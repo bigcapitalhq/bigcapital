@@ -14,9 +14,9 @@ import { compose } from 'utils';
 function VendorFormPage({
   // #withVendorActions
   requestFetchVendorsTable,
-  requsetFetchVendor,
+  requestFetchVendor,
 
-  // #wihtCurrenciesActions
+  // #withCurrenciesActions
   requestFetchCurrencies,
 }) {
   const { id } = useParams();
@@ -35,7 +35,7 @@ function VendorFormPage({
   // Handle fetch vendor details.
   const fetchVendor = useQuery(
     ['vendor', id],
-    (_id, vendorId) => requsetFetchVendor(vendorId),
+    (_id, vendorId) => requestFetchVendor(vendorId),
     { enabled: id && id },
   );
 

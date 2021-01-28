@@ -8,6 +8,7 @@ import { FormattedMessage as T, useIntl } from 'react-intl';
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 
+import EstimatesAlerts from './EstimatesAlerts';
 import EstimatesDataTable from './EstimatesDataTable';
 import EstimateActionsBar from './EstimateActionsBar';
 import EstimateViewTabs from './EstimateViewTabs';
@@ -15,8 +16,9 @@ import EstimateViewTabs from './EstimateViewTabs';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withResourceActions from 'containers/Resources/withResourcesActions';
 import withEstimates from './withEstimates';
-import withEstimateActions from './withEstimateActions';
+import withEstimateActions from 'containers/Sales/Estimate/withEstimateActions';
 import withViewsActions from 'containers/Views/withViewsActions';
+import withAlertsActions from 'containers/Alert/withAlertActions';
 
 import { compose } from 'utils';
 
@@ -32,9 +34,11 @@ function EstimatesList({
   estimatesTableQuery,
   estimateViews,
 
+  // #withAlertsActions.
+  openAlert,
+
   //#withEistimateActions
   requestFetchEstimatesTable,
-  requestDeleteEstimate,
   requestDeliverdEstimate,
   requestApproveEstimate,
   requestRejectEstimate,
@@ -42,7 +46,6 @@ function EstimatesList({
 }) {
   const history = useHistory();
   const { formatMessage } = useIntl();
-  const [deleteEstimate, setDeleteEstimate] = useState(false);
   const [deliverEstimate, setDeliverEstimate] = useState(false);
   const [approveEstimate, setApproveEstimate] = useState(false);
   const [rejectEstimate, setRejectEstimate] = useState(false);
@@ -70,111 +73,35 @@ function EstimatesList({
 
   // handle delete estimate click
   const handleDeleteEstimate = useCallback(
-    (estimate) => {
-      setDeleteEstimate(estimate);
+    ({ id }) => {
+      openAlert('estimate-delete', { estimateId: id });
     },
-    [setDeleteEstimate],
+    [openAlert],
   );
 
-  // handle cancel estimate
-  const handleCancelEstimateDelete = useCallback(() => {
-    setDeleteEstimate(false);
-  }, [setDeleteEstimate]);
-
-  // handle confirm delete estimate
-  const handleConfirmEstimateDelete = useCallback(() => {
-    requestDeleteEstimate(deleteEstimate.id).then(() => {
-      AppToaster.show({
-        message: formatMessage({
-          id: 'the_estimate_has_been_deleted_successfully',
-        }),
-        intent: Intent.SUCCESS,
-      });
-      setDeleteEstimate(false);
-    });
-  }, [deleteEstimate, requestDeleteEstimate, formatMessage]);
-
   // Handle cancel/confirm estimate deliver.
-  const handleDeliverEstimate = useCallback((estimate) => {
-    setDeliverEstimate(estimate);
-  }, []);
-
-  // Handle cancel deliver estimate alert.
-  const handleCancelDeliverEstimate = useCallback(() => {
-    setDeliverEstimate(false);
-  }, []);
-
-  // Handle confirm estimate deliver.
-  const handleConfirmEstimateDeliver = useCallback(() => {
-    requestDeliverdEstimate(deliverEstimate.id)
-      .then(() => {
-        setDeliverEstimate(false);
-        AppToaster.show({
-          message: formatMessage({
-            id: 'the_estimate_has_been_delivered_successfully',
-          }),
-          intent: Intent.SUCCESS,
-        });
-        queryCache.invalidateQueries('estimates-table');
-      })
-      .catch((error) => {
-        setDeliverEstimate(false);
-      });
-  }, [deliverEstimate, requestDeliverdEstimate, formatMessage]);
+  const handleDeliverEstimate = useCallback(
+    ({ id }) => {
+      openAlert('estimate-deliver', { estimateId: id });
+    },
+    [openAlert],
+  );
 
   // Handle cancel/confirm estimate approve.
-  const handleApproveEstimate = useCallback((estimate) => {
-    setApproveEstimate(estimate);
-  }, []);
-
-  // Handle cancel approve estimate alert.
-  const handleCancelApproveEstimate = useCallback(() => {
-    setApproveEstimate(false);
-  }, []);
-
-  // Handle confirm estimate approve.
-  const handleConfirmEstimateApprove = useCallback(() => {
-    requestApproveEstimate(approveEstimate.id)
-      .then(() => {
-        setApproveEstimate(false);
-        AppToaster.show({
-          message: formatMessage({
-            id: 'the_estimate_has_been_approved_successfully',
-          }),
-          intent: Intent.SUCCESS,
-        });
-        queryCache.invalidateQueries('estimates-table');
-      })
-      .catch((error) => {
-        setApproveEstimate(false);
-      });
-  }, [approveEstimate, requestApproveEstimate, formatMessage]);
+  const handleApproveEstimate = useCallback(
+    ({ id }) => {
+      openAlert('estimate-Approve', { estimateId: id });
+    },
+    [openAlert],
+  );
 
   // Handle cancel/confirm estimate reject.
-  const handleRejectEstimate = useCallback((estimate) => {
-    setRejectEstimate(estimate);
-  }, []);
-
-  // Handle cancel reject estimate alert.
-  const handleCancelRejectEstimate = useCallback(() => {
-    setRejectEstimate(false);
-  }, []);
-
-  // Handle confirm estimate reject.
-  const handleConfirmEstimateReject = useCallback(() => {
-    requestRejectEstimate(rejectEstimate.id)
-      .then(() => {
-        setRejectEstimate(false);
-        AppToaster.show({
-          message: formatMessage({
-            id: 'the_estimate_has_been_rejected_successfully',
-          }),
-          intent: Intent.SUCCESS,
-        });
-        queryCache.invalidateQueries('estimates-table');
-      })
-      .catch((error) => {});
-  }, [rejectEstimate, requestRejectEstimate, formatMessage]);
+  const handleRejectEstimate = useCallback(
+    ({ id }) => {
+      openAlert('estimate-reject', { estimateId: id });
+    },
+    [openAlert],
+  );
 
   // Handle filter change to re-fetch data-table.
   const handleFilterChanged = useCallback(() => {}, []);
@@ -224,56 +151,7 @@ function EstimatesList({
             />
           </Route>
         </Switch>
-
-        <Alert
-          cancelButtonText={<T id={'cancel'} />}
-          confirmButtonText={<T id={'delete'} />}
-          icon={'trash'}
-          intent={Intent.DANGER}
-          isOpen={deleteEstimate}
-          onCancel={handleCancelEstimateDelete}
-          onConfirm={handleConfirmEstimateDelete}
-        >
-          <p>
-            <T id={'once_delete_this_estimate_you_will_able_to_restore_it'} />
-          </p>
-        </Alert>
-        <Alert
-          cancelButtonText={<T id={'cancel'} />}
-          confirmButtonText={<T id={'deliver'} />}
-          intent={Intent.WARNING}
-          isOpen={deliverEstimate}
-          onCancel={handleCancelDeliverEstimate}
-          onConfirm={handleConfirmEstimateDeliver}
-        >
-          <p>
-            <T id={'are_sure_to_deliver_this_estimate'} />
-          </p>
-        </Alert>
-        <Alert
-          cancelButtonText={<T id={'cancel'} />}
-          confirmButtonText={<T id={'approve'} />}
-          intent={Intent.WARNING}
-          isOpen={approveEstimate}
-          onCancel={handleCancelApproveEstimate}
-          onConfirm={handleConfirmEstimateApprove}
-        >
-          <p>
-            <T id={'are_sure_to_approve_this_estimate'} />
-          </p>
-        </Alert>
-        <Alert
-          cancelButtonText={<T id={'cancel'} />}
-          confirmButtonText={<T id={'reject'} />}
-          intent={Intent.WARNING}
-          isOpen={rejectEstimate}
-          onCancel={handleCancelRejectEstimate}
-          onConfirm={handleConfirmEstimateReject}
-        >
-          <p>
-            <T id={'are_sure_to_approve_this_estimate'} />
-          </p>
-        </Alert>
+        <EstimatesAlerts />
       </DashboardPageContent>
     </DashboardInsider>
   );
@@ -288,4 +166,5 @@ export default compose(
     estimatesTableQuery,
     estimateViews,
   })),
+  withAlertsActions,
 )(EstimatesList);

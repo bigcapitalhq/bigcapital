@@ -1,76 +1,74 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { Intent, Alert } from '@blueprintjs/core';
-import { queryCache } from 'react-query';
 import { AppToaster } from 'components';
+import { transformErrors } from 'containers/Customers/utils';
 
-import { handleDeleteErrors } from 'containers/Accounts/utils';
-
-import withAccountsActions from 'containers/Accounts/withAccountsActions';
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
+import withCustomersActions from 'containers/Customers/withCustomersActions';
 
 import { compose } from 'utils';
 
-function AccountBulkDeleteAlert({
-  // #ownProps
+/**
+ * Customer bulk delete alert.
+ */
+function CustomerBulkDeleteAlert({
   name,
 
   // #withAlertStoreConnect
   isOpen,
-  payload: { accountsIds },
+  payload: { customersIds },
+  // #withCustomersActions
+  requestDeleteBulkCustomers,
 
   // #withAlertActions
   closeAlert,
-
-  // #withAccountsActions
-  requestDeleteBulkAccounts,
 }) {
   const { formatMessage } = useIntl();
   const [isLoading, setLoading] = useState(false);
 
-  const selectedRowsCount = 0;
-
-  const handleCancel = () => {
+  // handle cancel delete  alert.
+  const handleCancelDeleteAlert = () => {
     closeAlert(name);
   };
-  // Handle confirm accounts bulk delete.
-  const handleConfirmBulkDelete = () => {
+
+  console.log(customersIds, 'EE');
+
+  // Handle confirm customers bulk delete.
+  const handleConfirmBulkDelete = useCallback(() => {
     setLoading(true);
-    requestDeleteBulkAccounts(accountsIds)
+    requestDeleteBulkCustomers(customersIds)
       .then(() => {
         AppToaster.show({
           message: formatMessage({
-            id: 'the_accounts_has_been_successfully_deleted',
+            id: 'the_customers_has_been_deleted_successfully',
           }),
           intent: Intent.SUCCESS,
         });
-        queryCache.invalidateQueries('accounts-table');
       })
       .catch((errors) => {
-        handleDeleteErrors(errors);
+        transformErrors(errors);
       })
       .finally(() => {
         setLoading(false);
         closeAlert(name);
       });
-  };
+  }, [requestDeleteBulkCustomers, customersIds, formatMessage]);
 
   return (
     <Alert
       cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={`${formatMessage({
-        id: 'delete',
-      })} (${selectedRowsCount})`}
+      confirmButtonText={<T id={'delete'} />}
       icon="trash"
       intent={Intent.DANGER}
       isOpen={isOpen}
-      onCancel={handleCancel}
+      onCancel={handleCancelDeleteAlert}
       onConfirm={handleConfirmBulkDelete}
       loading={isLoading}
     >
       <p>
-        <T id={'once_delete_these_accounts_you_will_not_able_restore_them'} />
+        <T id={'once_delete_these_customers_you_will_not_able_restore_them'} />
       </p>
     </Alert>
   );
@@ -79,5 +77,5 @@ function AccountBulkDeleteAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
-  withAccountsActions,
-)(AccountBulkDeleteAlert);
+  withCustomersActions,
+)(CustomerBulkDeleteAlert);

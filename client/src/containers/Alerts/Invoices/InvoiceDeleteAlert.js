@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   FormattedMessage as T,
   FormattedHTMLMessage,
@@ -8,26 +8,26 @@ import { Intent, Alert } from '@blueprintjs/core';
 import { queryCache } from 'react-query';
 import { AppToaster } from 'components';
 
-import { handleDeleteErrors } from 'containers/Accounts/utils';
+import { handleDeleteErrors } from 'containers/Sales/Invoice/components';
 
-import withAccountsActions from 'containers/Accounts/withAccountsActions';
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
+import withInvoiceActions from 'containers/Sales/Invoice/withInvoiceActions';
 
 import { compose } from 'utils';
 
 /**
- * Account delete alerts.
+ * Invoice delete alert.
  */
-function AccountDeleteAlert({
+function InvoiceDeleteAlert({
   name,
 
   // #withAlertStoreConnect
   isOpen,
-  payload: { accountId },
+  payload: { invoiceId },
 
-  // #withAccountsActions
-  requestDeleteAccount,
+  // #withInvoiceActions
+  requestDeleteInvoice,
 
   // #withAlertActions
   closeAlert,
@@ -35,32 +35,32 @@ function AccountDeleteAlert({
   const { formatMessage } = useIntl();
   const [isLoading, setLoading] = useState(false);
 
-  // handle cancel delete account alert.
-  const handleCancelAccountDelete = () => {
+  // handle cancel delete invoice  alert.
+  const handleCancelDeleteAlert = () => {
     closeAlert(name);
   };
 
-  // Handle confirm account delete.
-  const handleConfirmAccountDelete = () => {
+  // handleConfirm delete invoice
+  const handleConfirmInvoiceDelete = useCallback(() => {
     setLoading(true);
-    requestDeleteAccount(accountId)
+    requestDeleteInvoice(invoiceId)
       .then(() => {
         AppToaster.show({
           message: formatMessage({
-            id: 'the_account_has_been_successfully_deleted',
+            id: 'the_invoice_has_been_deleted_successfully',
           }),
           intent: Intent.SUCCESS,
         });
-        queryCache.invalidateQueries('accounts-table');
+        queryCache.invalidateQueries('invoices-table');
       })
       .catch((errors) => {
         handleDeleteErrors(errors);
       })
       .finally(() => {
-        setLoading(false);
         closeAlert(name);
+        setLoading(false);
       });
-  };
+  }, [invoiceId, requestDeleteInvoice, formatMessage]);
 
   return (
     <Alert
@@ -69,13 +69,13 @@ function AccountDeleteAlert({
       icon="trash"
       intent={Intent.DANGER}
       isOpen={isOpen}
-      onCancel={handleCancelAccountDelete}
-      onConfirm={handleConfirmAccountDelete}
+      onCancel={handleCancelDeleteAlert}
+      onConfirm={handleConfirmInvoiceDelete}
       loading={isLoading}
     >
       <p>
         <FormattedHTMLMessage
-          id={'once_delete_this_account_you_will_able_to_restore_it'}
+          id={'once_delete_this_invoice_you_will_able_to_restore_it'}
         />
       </p>
     </Alert>
@@ -85,5 +85,5 @@ function AccountDeleteAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
-  withAccountsActions,
-)(AccountDeleteAlert);
+  withInvoiceActions,
+)(InvoiceDeleteAlert);

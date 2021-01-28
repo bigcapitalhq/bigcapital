@@ -1,67 +1,79 @@
-import React from 'react';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import React, { useState } from 'react';
+import {
+  FormattedMessage as T,
+  FormattedHTMLMessage,
+  useIntl,
+} from 'react-intl';
 import { Intent, Alert } from '@blueprintjs/core';
 import { AppToaster } from 'components';
 
-import withItemsActions from 'containers/Items/withItemsActions';
+import withItemCategoriesActions from 'containers/Items/withItemCategoriesActions';
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
 
 import { compose } from 'utils';
 
 /**
- * Item bulk delete alert.
+ * Item category bulk delete alerts.
  */
-function ItemBulkDeleteAlert({
+function ItemCategoryBulkDeleteAlert({
   name,
 
   // #withAlertStoreConnect
   isOpen,
-  payload: { itemsIds },
+  payload: { itemCategoriesIds },
 
-  // #withItemsActions
-  requestDeleteBulkItems,
+  // #withItemCategoriesActions
+  requestDeleteBulkItemCategories,
 
   // #withAlertActions
   closeAlert,
 }) {
   const { formatMessage } = useIntl();
+  const [isLoading, setLoading] = useState(false);
 
-  // handle cancel item bulk delete alert.
+  // handle cancel bulk delete alert.
   const handleCancelBulkDelete = () => {
     closeAlert(name);
   };
-  // Handle confirm items bulk delete.
+
+  // handle confirm itemCategories bulk delete.
   const handleConfirmBulkDelete = () => {
-    requestDeleteBulkItems(itemsIds)
+    setLoading(true);
+    requestDeleteBulkItemCategories(itemCategoriesIds)
       .then(() => {
-        closeAlert(name);
         AppToaster.show({
           message: formatMessage({
-            id: 'the_items_has_been_deleted_successfully',
+            id: 'the_item_categories_has_been_deleted_successfully',
           }),
           intent: Intent.SUCCESS,
         });
       })
-      .catch((errors) => {
+      .catch((errors) => {})
+      .finally(() => {
         closeAlert(name);
+        setLoading(false);
       });
   };
-
   return (
     <Alert
       cancelButtonText={<T id={'cancel'} />}
       confirmButtonText={
-        <T id={'delete_count'} values={{ count: itemsIds.length }} />
+        <T id={'delete_count'} values={{ count: itemCategoriesIds.length }} />
       }
       icon="trash"
       intent={Intent.DANGER}
       isOpen={isOpen}
       onCancel={handleCancelBulkDelete}
       onConfirm={handleConfirmBulkDelete}
+      loading={isLoading}
     >
       <p>
-        <T id={'once_delete_these_items_you_will_not_able_restore_them'} />
+        <FormattedHTMLMessage
+          id={
+            'once_delete_these_item_categories_you_will_not_able_restore_them'
+          }
+        />
       </p>
     </Alert>
   );
@@ -70,5 +82,5 @@ function ItemBulkDeleteAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
-  withItemsActions,
-)(ItemBulkDeleteAlert);
+  withItemCategoriesActions,
+)(ItemCategoryBulkDeleteAlert);

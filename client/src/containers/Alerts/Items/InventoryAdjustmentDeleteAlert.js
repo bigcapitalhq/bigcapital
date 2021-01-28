@@ -8,43 +8,46 @@ import { Intent, Alert } from '@blueprintjs/core';
 import { queryCache } from 'react-query';
 import { AppToaster } from 'components';
 
-import withAccountsActions from 'containers/Accounts/withAccountsActions';
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
+import withInventoryAdjustmentActions from 'containers/Items/withInventoryAdjustmentActions';
 
 import { compose } from 'utils';
 
-function AccountBulkActivateAlert({
+/**
+ * Inventory Adjustment delete alerts.
+ */
+function InventoryAdjustmentDeleteAlert({
   name,
+
+  // #withAlertStoreConnect
   isOpen,
-  payload: { accountsIds },
+  payload: { inventoryId },
+  // #withInventoryAdjustmentActions
+  requestDeleteInventoryAdjustment,
 
   // #withAlertActions
   closeAlert,
-
-  requestBulkActivateAccounts,
 }) {
   const { formatMessage } = useIntl();
   const [isLoading, setLoading] = useState(false);
-  const selectedRowsCount = 0;
 
-  // Handle alert cancel.
-  const handleClose = () => {
+  // handle cancel delete  alert.
+  const handleCancelInventoryAdjustmentDelete = () => {
     closeAlert(name);
   };
 
-  // Handle Bulk activate account confirm.
-  const handleConfirmBulkActivate = () => {
+  const handleConfirmInventoryAdjustmentDelete = () => {
     setLoading(true);
-    requestBulkActivateAccounts(accountsIds)
+    requestDeleteInventoryAdjustment(inventoryId)
       .then(() => {
         AppToaster.show({
           message: formatMessage({
-            id: 'the_accounts_has_been_successfully_activated',
+            id: 'the_adjustment_has_been_deleted_successfully',
           }),
           intent: Intent.SUCCESS,
         });
-        queryCache.invalidateQueries('accounts-table');
+        queryCache.invalidateQueries('inventory-adjustment-list');
       })
       .catch((errors) => {})
       .finally(() => {
@@ -56,17 +59,20 @@ function AccountBulkActivateAlert({
   return (
     <Alert
       cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={`${formatMessage({
-        id: 'activate',
-      })} (${selectedRowsCount})`}
-      intent={Intent.WARNING}
+      confirmButtonText={<T id={'delete'} />}
+      icon="trash"
+      intent={Intent.DANGER}
       isOpen={isOpen}
-      onCancel={handleClose}
-      onConfirm={handleConfirmBulkActivate}
+      onCancel={handleCancelInventoryAdjustmentDelete}
+      onConfirm={handleConfirmInventoryAdjustmentDelete}
       loading={isLoading}
     >
       <p>
-        <T id={'are_sure_to_activate_this_accounts'} />
+        <FormattedHTMLMessage
+          id={
+            'once_delete_this_inventory_a_adjustment_you_will_able_to_restore_it'
+          }
+        />
       </p>
     </Alert>
   );
@@ -75,5 +81,5 @@ function AccountBulkActivateAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
-  withAccountsActions,
-)(AccountBulkActivateAlert);
+  withInventoryAdjustmentActions,
+)(InventoryAdjustmentDeleteAlert);

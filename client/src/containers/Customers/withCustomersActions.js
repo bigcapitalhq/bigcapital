@@ -27,6 +27,11 @@ export const mapDispatchToProps = (dispatch) => ({
       currentViewId: parseInt(id, 10),
     });
   },
+  setSelectedRowsCustomers: (selectedRows) =>
+    dispatch({
+      type: t.CUSTOMER_SELECTED_ROWS_SET,
+      payload: { selectedRows },
+    }),
 });
 
 export default connect(null, mapDispatchToProps);

@@ -1,76 +1,71 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { Intent, Alert } from '@blueprintjs/core';
 import { queryCache } from 'react-query';
 import { AppToaster } from 'components';
 
-import { handleDeleteErrors } from 'containers/Accounts/utils';
-
-import withAccountsActions from 'containers/Accounts/withAccountsActions';
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
+import withEstimateActions from 'containers/Sales/Estimate/withEstimateActions';
 
 import { compose } from 'utils';
 
-function AccountBulkDeleteAlert({
-  // #ownProps
+/**
+ * Estimate Approve alert.
+ */
+function EstimateApproveAlert({
   name,
 
   // #withAlertStoreConnect
   isOpen,
-  payload: { accountsIds },
+  payload: { estimateId },
+
+  // #withEstimateActions
+  requestApproveEstimate,
 
   // #withAlertActions
   closeAlert,
-
-  // #withAccountsActions
-  requestDeleteBulkAccounts,
 }) {
   const { formatMessage } = useIntl();
   const [isLoading, setLoading] = useState(false);
 
-  const selectedRowsCount = 0;
-
-  const handleCancel = () => {
+  // handle cancel approve alert.
+  const handleCancelApproveEstimate = () => {
     closeAlert(name);
   };
-  // Handle confirm accounts bulk delete.
-  const handleConfirmBulkDelete = () => {
+  // Handle confirm estimate approve.
+  const handleConfirmEstimateApprove = useCallback(() => {
     setLoading(true);
-    requestDeleteBulkAccounts(accountsIds)
+    requestApproveEstimate(estimateId)
       .then(() => {
         AppToaster.show({
           message: formatMessage({
-            id: 'the_accounts_has_been_successfully_deleted',
+            id: 'the_estimate_has_been_approved_successfully',
           }),
           intent: Intent.SUCCESS,
         });
-        queryCache.invalidateQueries('accounts-table');
+        queryCache.invalidateQueries('estimates-table');
       })
-      .catch((errors) => {
-        handleDeleteErrors(errors);
-      })
+      .catch((error) => {})
       .finally(() => {
         setLoading(false);
         closeAlert(name);
       });
-  };
+  }, [estimateId, requestApproveEstimate, formatMessage]);
 
   return (
     <Alert
       cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={`${formatMessage({
-        id: 'delete',
-      })} (${selectedRowsCount})`}
+      confirmButtonText={<T id={'approve'} />}
       icon="trash"
-      intent={Intent.DANGER}
+      intent={Intent.WARNING}
       isOpen={isOpen}
-      onCancel={handleCancel}
-      onConfirm={handleConfirmBulkDelete}
       loading={isLoading}
+      onCancel={handleCancelApproveEstimate}
+      onConfirm={handleConfirmEstimateApprove}
     >
       <p>
-        <T id={'once_delete_these_accounts_you_will_not_able_restore_them'} />
+        <T id={'are_sure_to_approve_this_estimate'} />
       </p>
     </Alert>
   );
@@ -79,5 +74,5 @@ function AccountBulkDeleteAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
-  withAccountsActions,
-)(AccountBulkDeleteAlert);
+  withEstimateActions,
+)(EstimateApproveAlert);

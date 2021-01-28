@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { Intent, Alert } from '@blueprintjs/core';
 import { queryCache } from 'react-query';
@@ -6,59 +6,66 @@ import { AppToaster } from 'components';
 
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
-import withAccountsActions from 'containers/Accounts/withAccountsActions';
+import withReceiptActions from 'containers/Sales/Receipt/withReceiptActions';
 
 import { compose } from 'utils';
 
-function AccountInactivateAlert({
+/**
+ * Receipt close alert.
+ */
+function ReceiptCloseAlert({
   name,
+
+  // #withAlertStoreConnect
   isOpen,
-  payload: { accountId },
+  payload: { receiptId },
+
+  // #withReceiptActions
+  requestCloseReceipt,
 
   // #withAlertActions
   closeAlert,
-
-  // #withAccountsActions
-  requestInactiveAccount,
 }) {
   const { formatMessage } = useIntl();
   const [isLoading, setLoading] = useState(false);
 
-  const handleCancelInactiveAccount = () => {
-    closeAlert('account-inactivate');
+  // handle cancel delete  alert.
+  const handleCancelDeleteAlert = () => {
+    closeAlert(name);
   };
 
-  const handleConfirmAccountActive = () => {
+  // Handle confirm receipt close.
+  const handleConfirmReceiptClose = useCallback(() => {
     setLoading(true);
-    requestInactiveAccount(accountId)
+    requestCloseReceipt(receiptId)
       .then(() => {
         AppToaster.show({
           message: formatMessage({
-            id: 'the_account_has_been_successfully_inactivated',
+            id: 'the_receipt_has_been_closed_successfully',
           }),
           intent: Intent.SUCCESS,
         });
-        queryCache.invalidateQueries('accounts-table');
+        queryCache.invalidateQueries('receipts-table');
       })
       .catch((error) => {})
       .finally(() => {
+        closeAlert(name);
         setLoading(false);
-        closeAlert('account-inactivate');
       });
-  };
+  }, [receiptId, requestCloseReceipt, formatMessage]);
 
   return (
     <Alert
       cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'inactivate'} />}
+      confirmButtonText={<T id={'close'} />}
       intent={Intent.WARNING}
       isOpen={isOpen}
-      onCancel={handleCancelInactiveAccount}
-      onConfirm={handleConfirmAccountActive}
+      onCancel={handleCancelDeleteAlert}
+      onConfirm={handleConfirmReceiptClose}
       loading={isLoading}
     >
       <p>
-        <T id={'are_sure_to_inactive_this_account'} />
+        <T id={'are_sure_to_close_this_receipt'} />
       </p>
     </Alert>
   );
@@ -67,5 +74,5 @@ function AccountInactivateAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
-  withAccountsActions,
-)(AccountInactivateAlert);
+  withReceiptActions,
+)(ReceiptCloseAlert);

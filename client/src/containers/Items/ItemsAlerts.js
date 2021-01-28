@@ -1,11 +1,11 @@
 import React from 'react';
-import ItemDeleteAlert from 'containers/Alerts/Item/ItemDeleteAlert';
-import ItemInactivateAlert from 'containers/Alerts/Item/ItemInactivateAlert';
-import ItemActivateAlert from 'containers/Alerts/Item/ItemActivateAlert';
-import ItemBulkDeleteAlert from 'containers/Alerts/Item/ItemBulkDeleteAlert';
-import ItemCategoryDeleteAlert from 'containers/Alerts/Item/ItemCategoryDeleteAlert';
-import ItemCategoryBulkDeleteAlert from 'containers/Alerts/Item/ItemCategoryBulkDeleteAlert';
-import InventoryAdjustmentDeleteAlert from 'containers/Alerts/Item/InventoryAdjustmentDeleteAlert';
+import ItemDeleteAlert from 'containers/Alerts/Items/ItemDeleteAlert';
+import ItemInactivateAlert from 'containers/Alerts/Items/ItemInactivateAlert';
+import ItemActivateAlert from 'containers/Alerts/Items/ItemActivateAlert';
+import ItemBulkDeleteAlert from 'containers/Alerts/Items/ItemBulkDeleteAlert';
+import ItemCategoryDeleteAlert from 'containers/Alerts/Items/ItemCategoryDeleteAlert';
+import ItemCategoryBulkDeleteAlert from 'containers/Alerts/Items/ItemCategoryBulkDeleteAlert';
+import InventoryAdjustmentDeleteAlert from 'containers/Alerts/Items/InventoryAdjustmentDeleteAlert';
 
 /**
  * Items alert.

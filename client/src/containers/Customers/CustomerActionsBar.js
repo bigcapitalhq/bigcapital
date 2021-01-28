@@ -14,33 +14,31 @@ import classNames from 'classnames';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
-import Icon from 'components/Icon';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
-import FilterDropdown from 'components/FilterDropdown';
-import { If, DashboardActionViewsList } from 'components';
+import { If, Icon, DashboardActionViewsList } from 'components';
 
 import withResourceDetail from 'containers/Resources/withResourceDetails';
 import withCustomers from 'containers/Customers/withCustomers';
 import withCustomersActions from 'containers/Customers/withCustomersActions';
+import withAlertActions from 'containers/Alert/withAlertActions';
+
 import { compose } from 'utils';
 
 const CustomerActionsBar = ({
-  // #withResourceDetail
-  resourceFields,
-
   // #withCustomers
   customersViews,
+  customersSelectedRows,
 
   //#withCustomersActions
   addCustomersTableQueries,
   changeCustomerView,
 
+  // #withAlertActions
+  openAlert,
+
   // #ownProps
-  selectedRows = [],
   onFilterChanged,
-  onBulkDelete,
 }) => {
-  const [filterCount, setFilterCount] = useState(0);
   const history = useHistory();
   const { formatMessage } = useIntl();
 
@@ -48,14 +46,10 @@ const CustomerActionsBar = ({
     history.push('/customers/new');
   }, [history]);
 
-
-  const hasSelectedRows = useMemo(() => selectedRows.length > 0, [
-    selectedRows,
-  ]);
-
-  const handleBulkDelete = useCallback(() => {
-    onBulkDelete && onBulkDelete(selectedRows.map((r) => r.id));
-  }, [onBulkDelete, selectedRows]);
+  // Handle Customers bulk delete button click.,
+  const handleBulkDelete = () => {
+    openAlert('customers-bulk-delete', { customersIds: customersSelectedRows });
+  };
 
   const handleTabChange = (viewId) => {
     changeCustomerView(viewId.id || -1);
@@ -88,18 +82,12 @@ const CustomerActionsBar = ({
         >
           <Button
             className={classNames(Classes.MINIMAL, 'button--filter')}
-            text={
-              filterCount <= 0 ? (
-                <T id={'filter'} />
-              ) : (
-                `${filterCount} ${formatMessage({ id: 'filters_applied' })}`
-              )
-            }
+            text={`${formatMessage({ id: 'filters_applied' })}`}
             icon={<Icon icon="filter-16" iconSize={16} />}
           />
         </Popover>
 
-        <If condition={hasSelectedRows}>
+        <If condition={customersSelectedRows.length}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon="trash-16" iconSize={16} />}
@@ -134,7 +122,9 @@ export default compose(
   withResourceDetail(({ resourceFields }) => ({
     resourceFields,
   })),
-  withCustomers(({ customersViews }) => ({
+  withCustomers(({ customersViews, customersSelectedRows }) => ({
     customersViews,
+    customersSelectedRows,
   })),
+  withAlertActions,
 )(CustomerActionsBar);

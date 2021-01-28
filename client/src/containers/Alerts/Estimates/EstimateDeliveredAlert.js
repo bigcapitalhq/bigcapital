@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { Intent, Alert } from '@blueprintjs/core';
 import { queryCache } from 'react-query';
@@ -6,59 +6,66 @@ import { AppToaster } from 'components';
 
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
-import withAccountsActions from 'containers/Accounts/withAccountsActions';
+import withEstimateActions from 'containers/Sales/Estimate/withEstimateActions';
 
 import { compose } from 'utils';
 
-function AccountInactivateAlert({
+/**
+ * Estimate delivered alert.
+ */
+function EstimateDeliveredAlert({
   name,
+
+  // #withAlertStoreConnect
   isOpen,
-  payload: { accountId },
+  payload: { estimateId },
+
+  // #withEstimateActions
+  requestDeliveredEstimate,
 
   // #withAlertActions
   closeAlert,
-
-  // #withAccountsActions
-  requestInactiveAccount,
 }) {
   const { formatMessage } = useIntl();
   const [isLoading, setLoading] = useState(false);
 
-  const handleCancelInactiveAccount = () => {
-    closeAlert('account-inactivate');
+  // Handle cancel delivered estimate alert.
+  const handleCancelDeliveredEstimate = () => {
+    closeAlert(name);
   };
 
-  const handleConfirmAccountActive = () => {
+  // Handle confirm estimate delivered.
+  const handleConfirmEstimateDelivered = useCallback(() => {
     setLoading(true);
-    requestInactiveAccount(accountId)
+    requestDeliveredEstimate(estimateId)
       .then(() => {
         AppToaster.show({
           message: formatMessage({
-            id: 'the_account_has_been_successfully_inactivated',
+            id: 'the_estimate_has_been_delivered_successfully',
           }),
           intent: Intent.SUCCESS,
         });
-        queryCache.invalidateQueries('accounts-table');
+        queryCache.invalidateQueries('estimates-table');
       })
       .catch((error) => {})
       .finally(() => {
+        closeAlert(name);
         setLoading(false);
-        closeAlert('account-inactivate');
       });
-  };
+  }, [estimateId, requestDeliveredEstimate, formatMessage]);
 
   return (
     <Alert
       cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'inactivate'} />}
+      confirmButtonText={<T id={'deliver'} />}
       intent={Intent.WARNING}
       isOpen={isOpen}
-      onCancel={handleCancelInactiveAccount}
-      onConfirm={handleConfirmAccountActive}
+      onCancel={handleCancelDeliveredEstimate}
+      onConfirm={handleConfirmEstimateDelivered}
       loading={isLoading}
     >
       <p>
-        <T id={'are_sure_to_inactive_this_account'} />
+        <T id={'are_sure_to_deliver_this_estimate'} />
       </p>
     </Alert>
   );
@@ -67,5 +74,5 @@ function AccountInactivateAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
-  withAccountsActions,
-)(AccountInactivateAlert);
+  withEstimateActions,
+)(EstimateDeliveredAlert);

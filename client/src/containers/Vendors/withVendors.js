@@ -13,7 +13,7 @@ export default (mapState) => {
   const getVendorsPaginationMeta = getVendorsPaginationMetaFactory();
   const getVendorsCurrentViewId = getVendorsCurrentViewIdFactory();
   const getVendorTableQuery = getVendorTableQueryFactory();
-  
+
   const mapStateToProps = (state, props) => {
     const query = getVendorTableQuery(state, props);
 
@@ -25,6 +25,7 @@ export default (mapState) => {
       vendorsPageination: getVendorsPaginationMeta(state, props, query),
       vendorsLoading: state.vendors.loading,
       vendorsCurrentViewId: getVendorsCurrentViewId(state, props),
+      vendorsSelectedRows: state.vendors.selectedRows,
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };

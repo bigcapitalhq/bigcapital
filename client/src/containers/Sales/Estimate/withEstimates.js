@@ -22,7 +22,8 @@ export default (mapState) => {
 
       estimateViews: getResourceViews(state, props, 'sale_estimate'),
       estimateItems: state.salesEstimates.items,
-      
+      estimateSelectedRows: state.salesEstimates.selectedRows,
+
       estimatesTableQuery: query,
       estimatesPageination: getEstimatesPaginationMeta(state, props, query),
       estimatesLoading: state.salesEstimates.loading,

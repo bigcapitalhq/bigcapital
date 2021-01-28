@@ -15,7 +15,6 @@ export default (mapState) => {
 
   const mapStateToProps = (state, props) => {
     const query = getCustomerTableQuery(state, props);
-
     const mapped = {
       customers: getCustomersList(state, props, query),
       customersViews: getResourceViews(state, props, 'customers'),
@@ -24,7 +23,7 @@ export default (mapState) => {
       customersLoading: state.customers.loading,
       customersItems: state.customers.items,
       customersCurrentViewId: getCustomersCurrentViewId(state, props),
-      // customerErrors: state.customers.errors,
+      customersSelectedRows: state.customers.selectedRows,
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };

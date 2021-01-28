@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   FormattedMessage as T,
   FormattedHTMLMessage,
@@ -10,48 +10,53 @@ import { AppToaster } from 'components';
 
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
-import withInventoryAdjustmentActions from 'containers/Items/withInventoryAdjustmentActions';
+import withReceiptActions from 'containers/Sales/Receipt/withReceiptActions';
 
 import { compose } from 'utils';
 
 /**
- * Inventory Adjustment delete alerts.
+ * Invoice  alert.
  */
-function InventoryAdjustmentDeleteAlert({
+function NameDeleteAlert({
   name,
 
   // #withAlertStoreConnect
   isOpen,
-  payload: { inventoryId },
-  // #withInventoryAdjustmentActions
-  requestDeleteInventoryAdjustment,
+  payload: { receiptId },
+
+  // #withReceiptActions
+  requestDeleteReceipt,
 
   // #withAlertActions
   closeAlert,
 }) {
   const { formatMessage } = useIntl();
+  const [isLoading, setLoading] = useState(false);
 
   // handle cancel delete  alert.
-  const handleCancelInventoryAdjustmentDelete = () => {
+  const handleCancelDeleteAlert = () => {
     closeAlert(name);
   };
 
-  const handleConfirmInventoryAdjustmentDelete = () => {
-    requestDeleteInventoryAdjustment(inventoryId)
+  // handle confirm delete receipt
+  const handleConfirmReceiptDelete = useCallback(() => {
+    setLoading(true);
+    requestDeleteReceipt(receiptId)
       .then(() => {
-        closeAlert(name);
         AppToaster.show({
           message: formatMessage({
-            id: 'the_adjustment_has_been_deleted_successfully',
+            id: 'the_receipt_has_been_deleted_successfully',
           }),
           intent: Intent.SUCCESS,
         });
-        queryCache.invalidateQueries('inventory-adjustment-list');
+        queryCache.invalidateQueries('receipts-table');
       })
-      .catch((errors) => {
+      .catch(() => {})
+      .finally(() => {
+        setLoading(false);
         closeAlert(name);
       });
-  };
+  }, [receiptId, requestDeleteReceipt, formatMessage]);
 
   return (
     <Alert
@@ -60,14 +65,13 @@ function InventoryAdjustmentDeleteAlert({
       icon="trash"
       intent={Intent.DANGER}
       isOpen={isOpen}
-      onCancel={handleCancelInventoryAdjustmentDelete}
-      onConfirm={handleConfirmInventoryAdjustmentDelete}
+      onCancel={handleCancelDeleteAlert}
+      onConfirm={handleConfirmReceiptDelete}
+      loading={isLoading}
     >
       <p>
         <FormattedHTMLMessage
-          id={
-            'once_delete_this_inventory_a_adjustment_you_will_able_to_restore_it'
-          }
+          id={'once_delete_this_receipt_you_will_able_to_restore_it'}
         />
       </p>
     </Alert>
@@ -77,5 +81,5 @@ function InventoryAdjustmentDeleteAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
-  withInventoryAdjustmentActions,
-)(InventoryAdjustmentDeleteAlert);
+  withReceiptActions,
+)(NameDeleteAlert);

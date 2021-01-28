@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   FormattedMessage as T,
   FormattedHTMLMessage,
@@ -8,54 +8,55 @@ import { Intent, Alert } from '@blueprintjs/core';
 import { queryCache } from 'react-query';
 import { AppToaster } from 'components';
 
-import { handleDeleteErrors } from 'containers/Items/utils';
-
-import withItemsActions from 'containers/Items/withItemsActions';
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
+import withEstimateActions from 'containers/Sales/Estimate/withEstimateActions';
 
 import { compose } from 'utils';
 
 /**
- * Item delete alerts.
+ * Estimate delete alert.
  */
-function ItemDeleteAlert({
+function EstimateDeleteAlert({
   name,
 
   // #withAlertStoreConnect
   isOpen,
-  payload: { itemId },
+  payload: { estimateId },
 
-  // #withItemsActions
-  requestDeleteItem,
+  // #withEstimateActions
+  requestDeleteEstimate,
 
   // #withAlertActions
   closeAlert,
 }) {
   const { formatMessage } = useIntl();
+  const [isLoading, setLoading] = useState(false);
 
-  // handle cancel delete item alert.
-  const handleCancelItemDelete = () => {
+  // handle cancel delete  alert.
+  const handleCancelEstimateDelete = () => {
     closeAlert(name);
   };
 
-  const handleConfirmDeleteItem = () => {
-    requestDeleteItem(itemId)
+  // handle confirm delete estimate
+  const handleConfirmEstimateDelete = useCallback(() => {
+    setLoading(true);
+    requestDeleteEstimate(estimateId)
       .then(() => {
-        closeAlert(name);
         AppToaster.show({
           message: formatMessage({
-            id: 'the_item_has_been_deleted_successfully',
+            id: 'the_estimate_has_been_deleted_successfully',
           }),
           intent: Intent.SUCCESS,
         });
-        queryCache.invalidateQueries('items-table');
+        queryCache.invalidateQueries('estimates-table');
       })
-      .catch(({ errors }) => {
-        handleDeleteErrors(errors);
+      .catch(({ errors }) => {})
+      .finally(() => {
+        setLoading(false);
         closeAlert(name);
       });
-  };
+  }, [requestDeleteEstimate, formatMessage, estimateId]);
 
   return (
     <Alert
@@ -64,12 +65,13 @@ function ItemDeleteAlert({
       icon="trash"
       intent={Intent.DANGER}
       isOpen={isOpen}
-      onCancel={handleCancelItemDelete}
-      onConfirm={handleConfirmDeleteItem}
+      loading={isLoading}
+      onCancel={handleCancelEstimateDelete}
+      onConfirm={handleConfirmEstimateDelete}
     >
       <p>
         <FormattedHTMLMessage
-          id={'once_delete_this_item_you_will_able_to_restore_it'}
+          id={'once_delete_this_estimate_you_will_able_to_restore_it'}
         />
       </p>
     </Alert>
@@ -79,5 +81,5 @@ function ItemDeleteAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
-  withItemsActions,
-)(ItemDeleteAlert);
+  withEstimateActions,
+)(EstimateDeleteAlert);
