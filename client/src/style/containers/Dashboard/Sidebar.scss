@@ -99,7 +99,7 @@
     .#{$ns}-submenu {
       .#{$ns}-collapse {
         &-body {
-          background-color: rgb(11, 34, 85);
+          background-color: rgba(255, 255, 255, 0.02);
           padding-bottom: 6px;
           padding-top: 6px;
         }
@@ -193,7 +193,6 @@
 
   .bp3-button.menu-item__add-btn {
     width: auto;
-
     padding: 2px;
     margin-right: 0px;
     position: relative;
