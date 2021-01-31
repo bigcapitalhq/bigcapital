@@ -96,3 +96,13 @@ body.hide-scrollbar .Pane2{
     justify-content: start;
   }
 }
+
+.bp3-timezone-picker{
+
+  .bp3-button{
+
+    [icon="caret-down"] {
+      display: none;
+    }
+  }
+}

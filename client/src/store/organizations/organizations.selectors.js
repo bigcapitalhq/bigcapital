@@ -54,4 +54,4 @@ export const isOrganizationCongratsFactory = () => createSelector(
   (organization) => {
     return !!organization?.is_congrats;
   }
-)
+);

@@ -1,16 +1,12 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import React from 'react';
 import { PaymentMethodTabs } from './SubscriptionTabs';
 
-export const BillingPaymentmethod = ({ formik, title }) => {
+export default ({ formik, title, description }) => {
   return (
-    <section class="billing-section">
-      <h1 className={'bg-title'}>
-        <T id={title} />
-      </h1>
-      <p className='paragraph'>
-        <T id={'please_enter_your_preferred_payment_method'} />
-      </p>
+    <section class="billing-plans__section">
+      <h1 className="title">{ title }</h1>
+      <p className="paragraph">{ description }</p>
+
       <PaymentMethodTabs formik={formik} />
     </section>
   );

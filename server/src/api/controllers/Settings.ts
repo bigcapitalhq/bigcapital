@@ -79,7 +79,7 @@ export default  class SettingsController extends BaseController{
    * @param {Request} req - 
    * @param {Response} res - 
    */
-  saveSettings(req: Request, res: Response) {
+  async saveSettings(req: Request, res: Response) {
     const { Option } = req.models;
     const optionsDTO: IOptionsDTO = this.matchedBodyData(req);
     const { settings } = req;
@@ -101,6 +101,8 @@ export default  class SettingsController extends BaseController{
       settings.set({ ...option });
     });
     this.observeAppConfigsComplete(settings);
+
+    await settings.save();
 
     return res.status(200).send({ 
       type: 'success',

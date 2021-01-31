@@ -1,0 +1,23 @@
+
+
+.dialog--payment-via-voucher{
+  
+  .bp3-dialog-body{
+    p{
+      margin-bottom: 20px;
+    }
+    .form-group-license_code{
+      margin-bottom: 30px;
+    }
+  }
+
+  .bp3-dialog-footer-actions{ 
+    button{
+      min-width: 80px;
+
+      &.bp3-intent-primary{
+        min-width: 90px;
+      }
+    }
+  }
+}

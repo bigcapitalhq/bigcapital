@@ -404,5 +404,5 @@ export default [
       loader: () => import('containers/Purchases/PaymentMades/PaymentMadeList'),
     }),
     breadcrumb: 'Payment Made List',
-  },
+  }
 ];

@@ -1,13 +1,21 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect } from 'react';
 import * as Yup from 'yup';
-import { useFormik } from 'formik';
-import { Button, Intent } from '@blueprintjs/core';
+import { Formik, Form } from 'formik';
 import { FormattedMessage as T, useIntl } from 'react-intl';
-import withDashboardActions from 'containers/Dashboard/withDashboardActions';
-import { MeteredBillingTabs, PaymentMethodTabs } from './SubscriptionTabs';
+import DashboardInsider from 'components/Dashboard/DashboardInsider';
+
+import 'style/pages/Billing/BillingPage.scss';
+
+import { MasterBillingTabs } from './SubscriptionTabs';
+
 import withBillingActions from './withBillingActions';
+import withDashboardActions from 'containers/Dashboard/withDashboardActions';
+
 import { compose } from 'utils';
 
+/**
+ * Billing form.
+ */
 function BillingForm({
   // #withDashboardActions
   changePageTitle,
@@ -23,51 +31,43 @@ function BillingForm({
 
   const validationSchema = Yup.object().shape({
     plan_slug: Yup.string()
-      .required()
-      .label(formatMessage({ id: 'plan_slug' })),
+      .required(),
+    period: Yup.string().required(),
     license_code: Yup.string().trim(),
   });
 
-  const initialValues = useMemo(
-    () => ({
-      plan_slug: 'free',
-      license_code: '',
-    }),
-    [],
-  );
+  const initialValues = {
+    plan_slug: 'free',
+    period: 'month',
+    license_code: '',
+  };
 
-  const formik = useFormik({
-    enableReinitialize: true,
-    validationSchema: validationSchema,
-    initialValues: {
-      ...initialValues,
-    },
-    onSubmit: (values, { setSubmitting, resetForm, setErrors }) => {
-      requestSubmitBilling(values)
-        .then((response) => {
-          setSubmitting(false);
-        })
-        .catch((errors) => {
-          setSubmitting(false);
-        });
-    },
-  });
+  const handleSubmit = (values, { setSubmitting }) => {
+    requestSubmitBilling(values)
+      .then((response) => {
+        setSubmitting(false);
+      })
+      .catch((errors) => {
+        setSubmitting(false);
+      });
+  };
 
   return (
-    <div className={'billing-form'}>
-      <form onSubmit={formik.handleSubmit}>
-        <MeteredBillingTabs formik={formik} planId={formik.values.plan_slug} />
-        <div className={'subscribe-button'}>
-          <Button
-            intent={Intent.PRIMARY}
-            type="submit"
-            loading={formik.isSubmitting}
-          >
-            <T id={'subscribe'} />
-          </Button>
-        </div>
-      </form>
-    </div>
+    <DashboardInsider name={'billing-page'}>
+      <div className={'billing-page'}>
+        <Formik
+          validationSchema={validationSchema}
+          onSubmit={handleSubmit}
+          initialValues={initialValues}
+        >
+          {({ isSubmitting, handleSubmit }) => (
+            <Form>
+              <MasterBillingTabs />
+            </Form>
+          )}
+        </Formik>
+      </div>
+    </DashboardInsider>
   );
 }
 

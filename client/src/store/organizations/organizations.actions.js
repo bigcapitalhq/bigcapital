@@ -40,11 +40,11 @@ export const seedTenant = () => (dispatch, getState) => new Promise((resolve, re
     payload: { organizationId }
   });
   ApiService.post(`organization/seed/`).then((response) => {
-    resolve(response);
     dispatch({
       type: t.SET_ORGANIZATION_SEEDED,
       payload: { organizationId }
     });
+    resolve(response);
   })
   .catch((error) => {
     reject(error.response.data.errors || []);

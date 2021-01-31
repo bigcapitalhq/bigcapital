@@ -32,6 +32,7 @@ function SetupInitializingForm({
   return (
     <div class="setup-initializing-form">
       <ProgressBar intent={Intent.PRIMARY} value={null} />
+
       <div className={'setup-initializing-form__title'}>
         <h1>
           {/* You organization is initializin... */}

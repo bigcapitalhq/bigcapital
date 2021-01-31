@@ -1,0 +1,69 @@
+
+.billing-plans{
+
+  &__section{
+    margin-bottom: 35px;
+
+    .title{
+      font-size: 22px;
+      font-weight: 500;
+      color: #6b7382;
+      margin-top: 0;
+      margin-bottom: 12px;
+    }
+    .bp3-tab-list {
+      border-bottom: 2px solid #e6e6e6;
+      width: 95%;
+  
+      .bp3-tab-indicator-wrapper .bp3-tab-indicator{
+        bottom: -2px;
+      }
+    }
+    .bp3-tab-panel{
+      margin-top: 26px;
+    }
+    .subscribe-button {
+      .bp3-button {
+        background-color: #0063ff;
+        min-height: 41px;
+        width: 240px;
+      }
+    }
+    .plan-radios,
+    .plan-periods{
+      margin-top: 20px;
+    }
+  }
+
+  .license-container {
+
+    .bp3-button{
+      margin-top: 14px;
+      padding: 0 30px;
+    }
+    .form-group-license_code{
+      margin-top: 20px;
+    }
+    .bp3-form-content {
+      .bp3-input-group {
+        display: block;
+        position: relative;
+      }
+      .bp3-input {
+        position: relative;
+        width: 59%;
+        height: 41px;
+      }
+    }
+    h4 {
+      font-size: 18px;
+      font-weight: 400;
+      color: #444444;
+    }
+    p {
+      margin-top: 15px;
+      font-size: 14px;
+    }
+  }
+
+}

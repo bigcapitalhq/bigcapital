@@ -407,6 +407,9 @@ export const transformToCamelCase = (object) => {
   return deepMapKeys(object, (key) => _.snakeCase(key));
 };
 
+export const transfromToSnakeCase = (object) => {
+  return deepMapKeys(object, (key) => _.snakeCase(key));
+};
 
 export function flatObject(obj) {
   const flatObject = {};
@@ -428,3 +431,4 @@ export function flatObject(obj) {
   dig(obj);
   return flatObject;
 }
+
