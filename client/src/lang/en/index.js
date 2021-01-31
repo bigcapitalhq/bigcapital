@@ -322,7 +322,7 @@ export default {
   full_name: 'Full Name',
   the_user_has_been_inactivated_successfully:
     'The user has been inactivated successfully.',
-    the_user_has_been_deleted_successfully:
+  the_user_has_been_deleted_successfully:
     'The user has been deleted successfully.',
   customize_report: 'Customize Report',
   print: 'Print',
@@ -942,7 +942,7 @@ export default {
   delete_adjustment: 'Delete Adjustment',
   the_make_adjustment_has_been_created_successfully:
     'The make adjustment has been created successfully.',
-    the_adjustment_has_been_deleted_successfully:
+  the_adjustment_has_been_deleted_successfully:
     'The adjustment has been deleted successfully.',
   once_delete_this_inventory_a_adjustment_you_will_able_to_restore_it: `Once you delete this inventory a adjustment, you won\'t be able to restore it later. Are you sure you want to delete this invoice?`,
   select_adjustment_account: 'Select adjustment account',
@@ -964,4 +964,5 @@ export default {
   selected_customers: '{count} Selected Customers',
   transaction_number: 'Transaction #',
   running_balance: 'Running balance',
+  view_all: 'View all',
 };
