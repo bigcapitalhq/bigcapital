@@ -28,6 +28,7 @@ import paymentMades from './PaymentMades/paymentMade.reducer';
 import organizations from './organizations/organizations.reducers';
 import subscriptions from './subscription/subscription.reducer';
 import inventoryAdjustments from './inventoryAdjustments/inventoryAdjustment.reducer';
+import plans from './plans/plans.reducer';
 
 export default combineReducers({
   authentication,
@@ -58,4 +59,5 @@ export default combineReducers({
   paymentReceives,
   paymentMades,
   inventoryAdjustments,
+  plans
 });

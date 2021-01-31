@@ -1,35 +1,38 @@
 import React from 'react';
-import { FormattedMessage as T, useIntl } from 'react-intl';
-import { InputGroup, FormGroup, Intent } from '@blueprintjs/core';
-import ErrorMessage from 'components/ErrorMessage';
+import { FormattedMessage as T } from 'react-intl';
 
-function LicenseTab({
-  formik: { errors, touched, setFieldValue, getFieldProps },
-}) {
+import { Intent, Button } from '@blueprintjs/core';
+
+import withDialogActions from 'containers/Dialog/withDialogActions';
+import { compose } from 'redux';
+import { useFormikContext } from 'formik';
+
+/**
+ * Payment via license code tab.
+ */
+function LicenseTab({ openDialog }) {
+  const { submitForm, values } = useFormikContext();
+
+  const handleSubmitBtnClick = () => {
+    submitForm().then(() => {
+      openDialog('payment-via-voucher', { ...values });
+    });
+  };
+
   return (
     <div className={'license-container'}>
-      <h4>
-        <T id={'license_code'} />
-      </h4>
+      <h3>
+        <T id={'voucher'} />
+      </h3>
       <p className="paragraph">
         <T id={'cards_will_be_charged'} />
       </p>
 
-      <FormGroup
-        label={<T id={'license_number'} />}
-        intent={errors.license_code && touched.license_code && Intent.DANGER}
-        helperText={
-          <ErrorMessage name="license_code" {...{ errors, touched }} />
-        }
-        className={'form-group-license_code'}
-      >
-        <InputGroup
-          intent={errors.license_code && touched.license_code && Intent.DANGER}
-          {...getFieldProps('license_code')}
-        />
-      </FormGroup>
+      <Button onClick={handleSubmitBtnClick} intent={Intent.PRIMARY} large={true}>
+        Submit Voucher
+      </Button>
     </div>
   );
 }
 
-export default LicenseTab;
+export default compose(withDialogActions)(LicenseTab);

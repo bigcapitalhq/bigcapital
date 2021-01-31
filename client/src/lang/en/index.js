@@ -353,8 +353,8 @@ export default {
   once_delete_these_exchange_rates_you_will_not_able_restore_them: `Once you delete these exchange rates, you won't be able to retrieve them later. Are you sure you want to delete them?`,
   once_delete_this_item_category_you_will_able_to_restore_it: `Once you delete this category, you won\'t be able to restore it later. Are you sure you want to delete this item?`,
   select_business_location: 'Select Business Location',
-  select_base_currency: 'Select Base Currency',
-  select_fiscal_year: 'Select Fiscal Year',
+  select_base_currency: 'Select base currency',
+  select_fiscal_year: 'Select fiscal year',
   select_language: 'Select Language',
   select_date_format: 'Select Date Format',
   select_time_zone: 'Select Time Zone',
@@ -700,9 +700,9 @@ export default {
   billing: 'Billing',
   the_billing_has_been_created_successfully:
     'The billing has been created successfully.',
-  a_select_a_plan: 'A. Select a plan',
-  b_choose_your_billing: 'B. Choose your billing',
-  c_payment_methods: 'C. Payment methods',
+  select_a_plan: '{order}. Select a plan',
+  choose_your_billing: '{order}. Choose your billing',
+  payment_methods: '{order}. Payment methods',
   usage: 'Usage',
   basic: 'Basic',
   license: 'License',
@@ -964,4 +964,7 @@ export default {
   selected_customers: '{count} Selected Customers',
   transaction_number: 'Transaction #',
   running_balance: 'Running balance',
+  payment_via_voucher: 'Payment via voucher',
+  voucher_number: 'Voucher number',
+  voucher: 'Voucher'
 };

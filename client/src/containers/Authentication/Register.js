@@ -101,7 +101,7 @@ function RegisterUserForm({ requestRegister, requestLogin }) {
               }),
             });
           }
-          if (errors.some((e) => e.type === 'EMAIL_EXISTS')) {
+          if (errors.some((e) => e.type === 'EMAIL.EXISTS')) {
             setErrors({
               email: formatMessage({
                 id: 'the_email_already_used_in_another_account',

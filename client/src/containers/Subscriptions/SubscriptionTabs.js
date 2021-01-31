@@ -1,16 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Tabs, Tab } from '@blueprintjs/core';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
 import BillingTab from './BillingTab';
 import LicenseTab from './LicenseTab';
 
-export const MeteredBillingTabs = ({ formik }) => {
-  const [animate, setAnimate] = useState(true);
+/**
+ * Master billing tabs.
+ */
+export const MasterBillingTabs = ({ formik }) => {
   const { formatMessage } = useIntl();
 
   return (
     <div>
-      <Tabs animate={animate} large={true}>
+      <Tabs animate={true} large={true}>
         <Tab
           title={formatMessage({ id: 'billing' })}
           id={'billing'}
@@ -20,23 +22,24 @@ export const MeteredBillingTabs = ({ formik }) => {
           title={formatMessage({ id: 'usage' })}
           id={'usage'}
           disabled={true}
-          // panel={'Usage'}
         />
       </Tabs>
     </div>
   );
 };
 
+/**
+ * Payment methods tabs.
+ */
 export const PaymentMethodTabs = ({ formik }) => {
-  const [animate, setAnimate] = useState(true);
   const { formatMessage } = useIntl();
 
   return (
     <div>
-      <Tabs animate={animate} large={true}>
+      <Tabs animate={true} large={true}>
         <Tab
-          title={formatMessage({ id: 'license' })}
-          id={'license'}
+          title={formatMessage({ id: 'voucher' })}
+          id={'voucher'}
           panel={<LicenseTab formik={formik} />}
         />
         <Tab

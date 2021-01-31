@@ -18,7 +18,7 @@ function SetupCongratsPage({
 
   const handleBtnClick = useCallback(() => {
     setOrganizationSetupCompleted(false);
-    history.push('/');
+    history.push('/homepage');
   }, [
     setOrganizationSetupCompleted,
     history,

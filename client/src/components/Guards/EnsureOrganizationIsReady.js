@@ -13,9 +13,9 @@ function EnsureOrganizationIsReady({
   redirectTo = '/setup',
 
   // #withOrganizationByOrgId
-  isOrganizationInitialized,
+  isOrganizationReady,
 }) {
-  return (isOrganizationInitialized) ? children : (
+  return (isOrganizationReady) ? children : (
     <Redirect
       to={{ pathname: redirectTo }}
     />
@@ -27,5 +27,5 @@ export default compose(
   connect((state, props) => ({
     organizationId: props.currentOrganizationId,
   })),
-  withOrganization(({ isOrganizationInitialized }) => ({ isOrganizationInitialized })),
+  withOrganization(({ isOrganizationReady }) => ({ isOrganizationReady })),
 )(EnsureOrganizationIsReady);

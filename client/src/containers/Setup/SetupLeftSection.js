@@ -1,9 +1,12 @@
 import React, { useCallback } from 'react';
 import { Icon, For } from 'components';
 import { FormattedMessage as T } from 'react-intl';
+
 import withAuthenticationActions from 'containers/Authentication/withAuthenticationActions';
 import withAuthentication from 'containers/Authentication/withAuthentication';
+
 import footerLinks from 'config/footerLinks';
+
 import { compose } from 'utils';
 
 

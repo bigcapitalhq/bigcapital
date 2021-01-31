@@ -161,11 +161,11 @@ export default [
         href: '/financial-reports/profit-loss-sheet',
       },
       {
-        text: 'Receivable Aging Summary',
+        text: 'A/R Aging Summary',
         href: '/financial-reports/receivable-aging-summary',
       },
       {
-        text: 'Payable Aging Summary',
+        text: 'A/P Aging Summary',
         href: '/financial-reports/payable-aging-summary',
       },
     ],

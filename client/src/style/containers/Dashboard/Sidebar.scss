@@ -57,7 +57,7 @@
     .#{$ns}-menu-item {
       color: $sidebar-menu-item-color;
       border-radius: 0;
-      padding: 8px 18px;
+      padding: 8px 20px;
       font-size: 15px;
       font-weight: 400;
 
@@ -84,7 +84,7 @@
         display: block;
         color: $sidebar-menu-label-color;
         font-size: 11px;
-        padding: 10px 18px;
+        padding: 10px 20px;
         margin-top: 4px;
         text-transform: uppercase;
         font-weight: 500;
@@ -104,7 +104,7 @@
           padding-top: 6px;
         }
         .#{$ns}-menu-item {
-          padding: 8px 16px;
+          padding: 8px 20px;
           font-size: 15px;
           color: $sidebar-submenu-item-color;
 
