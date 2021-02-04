@@ -55,6 +55,7 @@ function ReceiptsDataTable({
   onEditReceipt,
   onDeleteReceipt,
   onCloseReceipt,
+  onDrawerReceipt,
   onSelectedRowsChange,
 }) {
   const { formatMessage } = useIntl();
@@ -93,6 +94,11 @@ function ReceiptsDataTable({
             onClick={() => onCloseReceipt(receipt)}
           />
         </If>
+
+        <MenuItem
+          text={formatMessage({ id: 'receipt_paper' })}
+          onClick={() => onDrawerReceipt()}
+        />
         <MenuItem
           text={formatMessage({ id: 'delete_receipt' })}
           intent={Intent.DANGER}

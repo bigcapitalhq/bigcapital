@@ -6,14 +6,14 @@ import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 import { compose } from 'utils';
 
-function InvoiceDrawer({
+const ReceiptDrawer = ({
   name,
   //#withDrawer
   isOpen,
   payload,
 
   closeDrawer,
-}) {
+}) => {
   // handle close Drawer
   const handleDrawerClose = () => {
     closeDrawer(name);
@@ -21,21 +21,23 @@ function InvoiceDrawer({
 
   const propLabels = {
     labels: {
-      name: 'Invoice',
+      name: 'Receipt',
       billedTo: 'Billed to',
-      date: 'Invoice date',
-      refNo: 'Invoice No.',
+      date: 'Receipt date',
+      refNo: 'Receipt No.',
       billedFrom: 'Billed from',
-      amount: 'Invoice amount',
+      amount: 'Receipt amount',
       dueDate: 'Due date',
     },
   };
 
   return (
-    <DrawerTemplate isOpen={isOpen} isClose={handleDrawerClose}>
-      <PaperTemplate labels={propLabels.labels} />
-    </DrawerTemplate>
+    <div>
+      <DrawerTemplate isOpen={isOpen} isClose={handleDrawerClose}>
+        <PaperTemplate labels={propLabels.labels} />
+      </DrawerTemplate>
+    </div>
   );
-}
+};
 
-export default compose(withDrawers(), withDrawerActions)(InvoiceDrawer);
+export default compose(withDrawers(), withDrawerActions)(ReceiptDrawer);

@@ -969,6 +969,7 @@ export default {
   voucher_number: 'Voucher number',
   voucher: 'Voucher',
   view_paper: 'View Paper',
-  estimate_paper:'Estimate Paper',
-  invoice_paper:'Invoice Paper',
+  estimate_paper: 'Estimate Paper',
+  invoice_paper: 'Invoice Paper',
+  receipt_paper: 'Receipt Paper',
 };

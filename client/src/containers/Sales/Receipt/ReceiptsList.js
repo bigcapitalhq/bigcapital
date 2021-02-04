@@ -17,6 +17,7 @@ import withReceipts from './withReceipts';
 import withReceiptActions from './withReceiptActions';
 import withViewsActions from 'containers/Views/withViewsActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
+import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 import { compose } from 'utils';
 
@@ -32,6 +33,9 @@ function ReceiptsList({
 
   // #withAlertsActions,
   openAlert,
+
+  // #withDrawerActions
+  openDrawer,
 
   //#withReceiptActions
   requestFetchReceiptsTable,
@@ -78,6 +82,10 @@ function ReceiptsList({
     [history],
   );
 
+  const handleReceiptDrawer = useCallback(() => {
+    openDrawer('receipt-drawer', {});
+  }, [openDrawer]);
+
   const handleSelectedRowsChange = useCallback(
     (estimate) => {
       setSelectedRows(estimate);
@@ -105,6 +113,7 @@ function ReceiptsList({
               onDeleteReceipt={handleDeleteReceipt}
               onEditReceipt={handleEditReceipt}
               onCloseReceipt={handleCloseReceipt}
+              onDrawerReceipt={handleReceiptDrawer}
               onSelectedRowsChange={handleSelectedRowsChange}
             />
           </Route>
@@ -124,4 +133,5 @@ export default compose(
     receiptTableQuery,
   })),
   withAlertsActions,
+  withDrawerActions,
 )(ReceiptsList);
