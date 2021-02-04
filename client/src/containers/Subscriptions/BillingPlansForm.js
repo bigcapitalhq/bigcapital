@@ -1,11 +1,11 @@
 import React from 'react';
 import { FormattedMessage as T } from 'react-intl';
 
-import 'style/pages/Subscription/BillingPlans.scss'
+import 'style/pages/Subscription/BillingPlans.scss';
 
 import BillingPlansInput from 'containers/Subscriptions/BillingPlansInput';
 import BillingPeriodsInput from 'containers/Subscriptions/BillingPeriodsInput';
-import BillingPaymentMethod from 'containers/Subscriptions/BillingPaymentMethod';
+import BillingPaymentMethod from 'containers/Subscriptions/BillingPaymentmethod';
 
 /**
  * Billing plans form.
@@ -26,5 +26,5 @@ export default function BillingPlansForm() {
         description={<T id={'please_enter_your_preferred_payment_method'} />}
       />
     </div>
-  )
+  );
 }

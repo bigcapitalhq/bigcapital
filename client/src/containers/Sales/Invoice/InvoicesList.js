@@ -1,6 +1,6 @@
 import React, { useEffect, useCallback, useMemo, useState } from 'react';
 import { Route, Switch, useHistory } from 'react-router-dom';
-import { useQuery} from 'react-query';
+import { useQuery } from 'react-query';
 
 import 'style/pages/SaleInvoice/List.scss';
 
@@ -19,6 +19,7 @@ import withInvoices from './withInvoices';
 import withInvoiceActions from 'containers/Sales/Invoice/withInvoiceActions';
 import withViewsActions from 'containers/Views/withViewsActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
+import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 import { compose } from 'utils';
 
@@ -40,14 +41,17 @@ function InvoicesList({
   // #withAlertsActions.
   openAlert,
 
+  // #withDrawerActions
+  openDrawer,
+
   //#withInvoiceActions
   requestFetchInvoiceTable,
-  
+
   addInvoiceTableQueries,
 }) {
   const history = useHistory();
   const { formatMessage } = useIntl();
-   const [selectedRows, setSelectedRows] = useState([]);
+  const [selectedRows, setSelectedRows] = useState([]);
 
   useEffect(() => {
     changePageTitle(formatMessage({ id: 'invoices_list' }));
@@ -77,16 +81,19 @@ function InvoicesList({
 
   // Handle cancel/confirm invoice deliver.
   const handleDeliverInvoice = useCallback(
-    ({id}) => {
+    ({ id }) => {
       openAlert('invoice-deliver', { invoiceId: id });
     },
     [openAlert],
   );
 
-
   const handleEditInvoice = useCallback((invoice) => {
     history.push(`/invoices/${invoice.id}/edit`);
   });
+
+  const handleInvoiceDrawer = useCallback(() => {
+    openDrawer('invoice-drawer', {});
+  }, [openDrawer]);
 
   // Handle filter change to re-fetch data-table.
   const handleFilterChanged = useCallback(() => {}, []);
@@ -118,6 +125,7 @@ function InvoicesList({
               onDeleteInvoice={handleDeleteInvoice}
               onEditInvoice={handleEditInvoice}
               onDeliverInvoice={handleDeliverInvoice}
+              onDrawerInvoice={handleInvoiceDrawer}
               onSelectedRowsChange={handleSelectedRowsChange}
             />
           </Route>
@@ -138,4 +146,5 @@ export default compose(
     invoicesTableQuery,
   })),
   withAlertsActions,
+  withDrawerActions,
 )(InvoicesList);

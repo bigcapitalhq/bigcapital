@@ -19,6 +19,7 @@ import withEstimates from './withEstimates';
 import withEstimateActions from 'containers/Sales/Estimate/withEstimateActions';
 import withViewsActions from 'containers/Views/withViewsActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
+import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 import { compose } from 'utils';
 
@@ -37,6 +38,9 @@ function EstimatesList({
   // #withAlertsActions.
   openAlert,
 
+  // #withDrawerActions
+  openDrawer,
+
   //#withEistimateActions
   requestFetchEstimatesTable,
   requestDeliverdEstimate,
@@ -46,10 +50,6 @@ function EstimatesList({
 }) {
   const history = useHistory();
   const { formatMessage } = useIntl();
-  const [deliverEstimate, setDeliverEstimate] = useState(false);
-  const [approveEstimate, setApproveEstimate] = useState(false);
-  const [rejectEstimate, setRejectEstimate] = useState(false);
-
   const [selectedRows, setSelectedRows] = useState([]);
 
   const fetchResourceViews = useQuery(
@@ -103,6 +103,10 @@ function EstimatesList({
     [openAlert],
   );
 
+  const handleEstimateDrawer = useCallback(() => {
+    openDrawer('estimate-drawer', {});
+  }, [openDrawer]);
+
   // Handle filter change to re-fetch data-table.
   const handleFilterChanged = useCallback(() => {}, []);
 
@@ -147,6 +151,7 @@ function EstimatesList({
               onDeliverEstimate={handleDeliverEstimate}
               onApproveEstimate={handleApproveEstimate}
               onRejectEstimate={handleRejectEstimate}
+              onDrawerEstimate={handleEstimateDrawer}
               onSelectedRowsChange={handleSelectedRowsChange}
             />
           </Route>
@@ -167,4 +172,5 @@ export default compose(
     estimateViews,
   })),
   withAlertsActions,
+  withDrawerActions,
 )(EstimatesList);

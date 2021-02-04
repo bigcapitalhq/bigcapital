@@ -967,5 +967,8 @@ export default {
   view_all: 'View all',
   payment_via_voucher: 'Payment via voucher',
   voucher_number: 'Voucher number',
-  voucher: 'Voucher'
+  voucher: 'Voucher',
+  view_paper: 'View Paper',
+  estimate_paper:'Estimate Paper',
+  invoice_paper:'Invoice Paper',
 };

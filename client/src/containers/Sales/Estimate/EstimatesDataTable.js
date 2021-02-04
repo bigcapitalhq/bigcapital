@@ -46,6 +46,7 @@ function EstimatesDataTable({
   onDeliverEstimate,
   onApproveEstimate,
   onRejectEstimate,
+  onDrawerEstimate,
   onSelectedRowsChange,
 }) {
   const { formatMessage } = useIntl();
@@ -112,6 +113,11 @@ function EstimatesDataTable({
             />
           </Choose.When>
         </Choose>
+        <MenuItem
+          text={formatMessage({ id: 'estimate_paper' })}
+          onClick={() => onDrawerEstimate()}
+        />
+
         <MenuItem
           text={formatMessage({ id: 'delete_estimate' })}
           intent={Intent.DANGER}
