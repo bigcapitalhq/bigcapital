@@ -15,6 +15,7 @@ import withResourceActions from 'containers/Resources/withResourcesActions';
 import withPaymentReceives from './withPaymentReceives';
 import withPaymentReceivesActions from './withPaymentReceivesActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
+import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 import { compose } from 'utils';
 
@@ -27,6 +28,9 @@ function PaymentReceiveList({
 
   // #withAlertsActions.
   openAlert,
+
+  // #withDrawerActions
+  openDrawer,
 
   //#withPaymentReceivesActions
   requestFetchPaymentReceiveTable,
@@ -55,6 +59,10 @@ function PaymentReceiveList({
   const handleEditPaymentReceive = useCallback((payment) => {
     history.push(`/payment-receives/${payment.id}/edit`);
   });
+
+  const handlePaymentReceiveDrawer = useCallback(() => {
+    openDrawer('payment-receive-drawer', {});
+  }, [openDrawer]);
 
   // Handle filter change to re-fetch data-table.
   const handleFilterChanged = useCallback(() => {}, [fetchPaymentReceives]);
@@ -86,6 +94,7 @@ function PaymentReceiveList({
             <PaymentReceivesDataTable
               onDeletePaymentReceive={handleDeletePaymentReceive}
               onEditPaymentReceive={handleEditPaymentReceive}
+              onDrawerPaymentReceive={handlePaymentReceiveDrawer}
               onSelectedRowsChange={handleSelectedRowsChange}
             />
           </Route>
@@ -104,4 +113,5 @@ export default compose(
     paymentReceivesTableQuery,
   })),
   withAlertsActions,
+  withDrawerActions,
 )(PaymentReceiveList);

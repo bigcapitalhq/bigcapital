@@ -18,6 +18,7 @@
     justify-content: space-between;
     margin: 0px 40px 16px 0px;
     &--title h1 {
+      font-weight: 600;
       color: #1c4587;
       margin: 0;
     }
@@ -54,52 +55,6 @@
         color: #000;
       }
     }
-
-    // &__content {
-    //   display: flex;
-    //   flex-wrap: wrap;
-    //   border-bottom: 2px solid #1155cc;
-    //   padding-bottom: 45px;
-
-    //   &--info {
-    //     flex: 0 1 25%;
-    //     padding-left: 5px;
-    //     margin-bottom: 10px;
-    //   }
-    //   &--info > span {
-    //     color: #999999;
-    //     font-size: 16px;
-    //   }
-    //   &--info > p:not(.-info--amount) {
-    //     color: #000;
-    //     font-size: 14px;
-    //   }
-    //   // span {
-    //   //   color: #999999;
-    //   //   font-size: 16px;
-    //   // }
-    //   // p {
-    //   //   color: #000;
-    //   // }
-
-    //   .info--amount {
-    //     color: #123163;
-    //   }
-
-    // p {
-    //   // font-size: 16px;
-    //   // font-weight: 500;
-    //   // margin: 5px 0px;
-    //   color: #000;
-    // }
-
-    // &--amount {
-    //   color: #123163;
-    //   color: red;
-    //   //         margin-top: 8px;
-    //   //         font-size: 25px;
-    //   //         font-weight: 700;
-    // }
   }
 
   &__table {
@@ -116,6 +71,9 @@
 
       &--cell {
         flex: 0 20%;
+      }
+      &--cell-payment-receive {
+        flex: 1;
       }
 
       &--cell:first-child {

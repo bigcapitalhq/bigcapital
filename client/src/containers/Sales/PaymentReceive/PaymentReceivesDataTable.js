@@ -43,10 +43,11 @@ function PaymentReceivesDataTable({
 
   // #withSettings
   baseCurrency,
-  
+
   // #OwnProps
   onEditPaymentReceive,
   onDeletePaymentReceive,
+  onDrawerPaymentReceive,
   onSelectedRowsChange,
 }) {
   const isLoaded = useIsValuePassed(paymentReceivesLoading, false);
@@ -104,6 +105,10 @@ function PaymentReceivesDataTable({
           icon={<Icon icon="pen-18" />}
           text={formatMessage({ id: 'edit_payment_receive' })}
           onClick={handleEditPaymentReceive(paymentReceive)}
+        />
+        <MenuItem
+          text={formatMessage({ id: 'payment_receive_paper' })}
+          onClick={() => onDrawerPaymentReceive()}
         />
         <MenuItem
           text={formatMessage({ id: 'delete_payment_receive' })}
