@@ -150,6 +150,14 @@ export default [
     breadcrumb: 'Receivable Aging Summary',
   },
   {
+    path: '/financial-reports/payable-aging-summary',
+    component: LazyLoader({
+      loader: () =>
+        import('containers/FinancialStatements/APAgingSummary/APAgingSummary'),
+    }),
+    breadcrumb: 'Payable Aging Summary',
+  },
+  {
     path: `/financial-reports/journal-sheet`,
     component: LazyLoader({
       loader: () => import('containers/FinancialStatements/Journal/Journal'),

@@ -972,4 +972,5 @@ export default {
   estimate_paper: 'Estimate Paper',
   invoice_paper: 'Invoice Paper',
   receipt_paper: 'Receipt Paper',
+  payable_aging_summary: 'Payable Aging Summary',
 };

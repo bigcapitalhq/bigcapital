@@ -193,7 +193,7 @@ export const profitLossToTableRowsMapper = (profitLoss) => {
       total: profitLoss.gross_profit.total,
       total_periods: profitLoss.gross_profit.total_periods,
       rowTypes: ['gross_total', 'section_total', 'total'],
-    })
+    });
   }
   if (profitLoss.expenses) {
     results.push({
@@ -209,7 +209,7 @@ export const profitLossToTableRowsMapper = (profitLoss) => {
         },
       ],
       total_periods: profitLoss.expenses.total_periods,
-    })
+    });
   }
   if (profitLoss.operating_profit) {
     results.push({
@@ -217,7 +217,7 @@ export const profitLossToTableRowsMapper = (profitLoss) => {
       total: profitLoss.operating_profit.total,
       total_periods: profitLoss.income.total_periods,
       rowTypes: ['net_operating_total', 'section_total', 'total'],
-    })
+    });
   }
   if (profitLoss.other_income) {
     results.push({
@@ -257,7 +257,42 @@ export const profitLossToTableRowsMapper = (profitLoss) => {
       total: profitLoss.net_income.total,
       total_periods: profitLoss.net_income.total_periods,
       rowTypes: ['net_income_total', 'section_total', 'total'],
-    })
-  };
+    });
+  }
   return results;
+};
+
+export const APAgingSummaryTableRowsMapper = (sheet, total) => {
+  const rows = [];
+
+  const mapAging = (agingPeriods) => {
+    return agingPeriods.reduce((acc, aging, index) => {
+      acc[`aging-${index}`] = aging.total.formatted_amount;
+      return acc;
+    }, {});
+  };
+  sheet.vendors.forEach((vendor) => {
+    const agingRow = mapAging(vendor.aging);
+
+    rows.push({
+      rowType: 'vendor',
+      name: vendor.vendor_name,
+      ...agingRow,
+      current: vendor.current.formatted_amount,
+      total: vendor.total.formatted_amount,
+    });
+  });
+  if (rows.length <= 0) {
+    return [];
+  }
+  return [
+    ...rows,
+    {
+      name: '',
+      rowType: 'total',
+      current: sheet.total.current.formatted_amount,
+      ...mapAging(sheet.total.aging),
+      total: sheet.total.total.formatted_amount,
+    },
+  ];
 };

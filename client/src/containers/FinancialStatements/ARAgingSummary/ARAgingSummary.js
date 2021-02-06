@@ -33,6 +33,7 @@ function ReceivableAgingSummarySheet({
   setDashboardBackLink,
   setSidebarShrink,
 
+  
   // #withARAgingSummaryActions
   requestReceivableAgingSummary,
   refreshARAgingSummary,
@@ -99,16 +100,17 @@ function ReceivableAgingSummarySheet({
   const handleNumberFormatSubmit = (numberFormat) => {
     setQuery({
       ...query,
-      numberFormat
+      numberFormat,
     });
     refreshARAgingSummary(true);
   };
-
+  console.log(query, 'EE');
   return (
     <DashboardInsider>
       <ARAgingSummaryActionsBar
         numberFormat={query.numberFormat}
-        onNumberFormatSubmit={handleNumberFormatSubmit}/>
+        onNumberFormatSubmit={handleNumberFormatSubmit}
+      />
 
       <DashboardPageContent>
         <FinancialStatement>
