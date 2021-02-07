@@ -88,7 +88,7 @@ export default function PreferencesGeneralForm({}) {
       </FastField>
 
       <FastField name={'location'}>
-        {({ field: { value }, meta: { error, touched } }) => (
+        {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'business_location'} />}
             className={classNames(
@@ -101,7 +101,9 @@ export default function PreferencesGeneralForm({}) {
           >
             <ListSelect
               items={countriesOptions}
-              onItemSelect={(item) => {}}
+              onItemSelect={({ value }) => {
+                form.setFieldValue('location', value);
+              }}
               selectedItem={value}
               selectedItemProp={'value'}
               defaultText={<T id={'select_business_location'} />}
@@ -130,7 +132,8 @@ export default function PreferencesGeneralForm({}) {
               selectedItem={value}
               selectedItemProp={'code'}
               defaultText={<T id={'select_base_currency'} />}
-              textProp={'label'}
+              textProp={'name'}
+              labelProp={'code'}
               popoverProps={{ minimal: true }}
             />
           </FormGroup>
@@ -149,11 +152,13 @@ export default function PreferencesGeneralForm({}) {
           >
             <ListSelect
               items={fiscalYearOptions}
-              selectedItemProp={'value'}
-              textProp={'name'}
-              defaultText={<T id={'select_fiscal_year'} />}
+              onItemSelect={({ value }) =>
+                form.setFieldValue('fiscal_year', value)
+              }
               selectedItem={value}
-              onItemSelect={(item) => {}}
+              selectedItemProp={'value'}
+              defaultText={<T id={'select_fiscal_year'} />}
+              textProp={'name'}
               popoverProps={{ minimal: true }}
             />
           </FormGroup>
@@ -176,7 +181,9 @@ export default function PreferencesGeneralForm({}) {
               textProp={'name'}
               defaultText={<T id={'select_language'} />}
               selectedItem={value}
-              onItemSelect={(item) => {}}
+              onItemSelect={(item) =>
+                form.setFieldValue('language', item.value)
+              }
               popoverProps={{ minimal: true }}
             />
           </FormGroup>
@@ -222,12 +229,13 @@ export default function PreferencesGeneralForm({}) {
             <ListSelect
               items={dateFormatsOptions}
               onItemSelect={(dateFormat) => {
-                form.setFieldValue('date_format', dateFormat);
+                form.setFieldValue('date_format', dateFormat.value);
               }}
               selectedItem={value}
               selectedItemProp={'value'}
               defaultText={<T id={'select_date_format'} />}
               textProp={'name'}
+              labelProp={'label'}
               popoverProps={{ minimal: true }}
             />
           </FormGroup>
@@ -235,10 +243,7 @@ export default function PreferencesGeneralForm({}) {
       </FastField>
 
       <div className={'card__footer'}>
-        <Button
-          intent={Intent.PRIMARY}
-          type="submit"
-        >
+        <Button intent={Intent.PRIMARY} type="submit">
           <T id={'save'} />
         </Button>
         <Button onClick={handleCloseClick}>
