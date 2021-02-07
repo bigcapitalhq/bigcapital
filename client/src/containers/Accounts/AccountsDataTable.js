@@ -1,98 +1,53 @@
-import React, { useCallback, useState, useMemo, useEffect } from 'react';
-import {
-  Button,
-  Popover,
-  Position,
-} from '@blueprintjs/core';
-import { withRouter } from 'react-router';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import React, { useCallback, useMemo } from 'react';
+import { Button, Popover, Position } from '@blueprintjs/core';
+import { useIntl } from 'react-intl';
 import classNames from 'classnames';
-import { Icon, DataTable, If } from 'components';
-import { saveInvoke, compose } from 'utils';
-import { useUpdateEffect } from 'hooks';
+
+import { Icon, DataTable } from 'components';
+import { saveInvoke } from 'utils';
 
 import { CLASSES } from 'common/classes';
 
-import { NormalCell, BalanceCell, AccountActionsMenuList } from './components';
+import { NormalCell, BalanceCell, AccountActionsMenu } from './components';
 import { TableFastCell } from 'components';
-import TableVirtualizedListRows from 'components/Datatable/TableVirtualizedRows';
 
-import withDashboardActions from 'containers/Dashboard/withDashboardActions';
-import withAccountsActions from 'containers/Accounts/withAccountsActions';
-import withAccounts from 'containers/Accounts/withAccounts';
-import withCurrentView from 'containers/Views/withCurrentView';
+import TableVirtualizedListRows from 'components/Datatable/TableVirtualizedRows';
+import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
+import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
 
 /**
  * Accounts data-table.
  */
-function AccountsDataTable({
-  // #withDashboardActions
-  accountsTable,
-  accountsLoading,
-
-  // #
-  currentViewId,
-
+export default function AccountsDataTable({
   // #ownProps
+  accounts,
+  loading,
   onFetchData,
   onSelectedRowsChange,
-  onDeleteAccount,
-  onInactivateAccount,
-  onActivateAccount,
-  onEditAccount,
-  onNewChildAccount
+  // onDeleteAccount,
+  // onInactivateAccount,
+  // onActivateAccount,
+  // onEditAccount,
+  // onNewChildAccount,
 }) {
-  const [isMounted, setIsMounted] = useState(false);
   const { formatMessage } = useIntl();
 
-  useEffect(() => {
-    setIsMounted(false);
-  }, [currentViewId]);
-
-  useUpdateEffect(() => {
-    if (!accountsLoading) {
-      setIsMounted(true);
-    }
-  }, [accountsLoading, setIsMounted]);
-
-
-  const ActionsCell = useMemo(() => 
-    ({ row }) => (
+  const ActionsCell = useMemo(
+    () => ({ row }) => (
       <Popover
-        content={<AccountActionsMenuList
-          account={row.original}
-          onDeleteAccount={onDeleteAccount}
-          onInactivateAccount={onInactivateAccount}
-          onActivateAccount={onActivateAccount}
-          onEditAccount={onEditAccount}
-        />}
+        content={<AccountActionsMenu row={row} />}
         position={Position.RIGHT_TOP}
       >
         <Button icon={<Icon icon="more-h-16" iconSize={16} />} />
       </Popover>
-  ), [
-    onDeleteAccount,
-    onInactivateAccount,
-    onActivateAccount,
-    onEditAccount
-  ]);
+    ),
+    [],
+  );
 
-  const RowContextMenu = useMemo(() => ({ row }) => (
-    <AccountActionsMenuList
-      account={row.original}
-      onDeleteAccount={onDeleteAccount}
-      onInactivateAccount={onInactivateAccount}
-      onActivateAccount={onActivateAccount}
-      onEditAccount={onEditAccount}
-      onNewChildAccount={onNewChildAccount}
-    />
-  ), [
-    onDeleteAccount,
-    onInactivateAccount,
-    onActivateAccount,
-    onEditAccount,
-    onNewChildAccount
-  ]);
+  const RowContextMenu = useMemo(
+    () => ({ row }) => <AccountActionsMenu row={row} />,
+    [],
+  );
 
   const columns = useMemo(
     () => [
@@ -144,6 +99,7 @@ function AccountsDataTable({
         Cell: ActionsCell,
         className: 'actions',
         width: 50,
+        skeletonWidthMin: 100,
       },
     ],
     [ActionsCell, formatMessage],
@@ -172,13 +128,14 @@ function AccountsDataTable({
       <DataTable
         noInitialFetch={true}
         columns={columns}
-        data={accountsTable}
+        data={accounts}
         onFetchData={handleDatatableFetchData}
         selectionColumn={true}
         expandable={true}
         sticky={true}
         onSelectedRowsChange={handleSelectedRowsChange}
-        loading={accountsLoading && !isMounted}
+        loading={loading}
+        headerLoading={loading}
         rowContextMenu={RowContextMenu}
         rowClassNames={rowClassNames}
         autoResetExpanded={false}
@@ -189,6 +146,8 @@ function AccountsDataTable({
         selectionColumnWidth={50}
         TableCellRenderer={TableFastCell}
         TableRowsRenderer={TableVirtualizedListRows}
+        TableLoadingRenderer={TableSkeletonRows}
+        TableHeaderSkeletonRenderer={TableSkeletonHeader}
         // #TableVirtualizedListRows props.
         vListrowHeight={42}
         vListOverscanRowCount={10}
@@ -196,14 +155,3 @@ function AccountsDataTable({
     </div>
   );
 }
-
-export default compose(
-  withRouter,
-  withCurrentView,
-  withDashboardActions,
-  withAccountsActions,
-  withAccounts(({ accountsLoading, accountsTable }) => ({
-    accountsLoading,
-    accountsTable,
-  })),
-)(AccountsDataTable);

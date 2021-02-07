@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 import {
   FormattedMessage as T,
   FormattedHTMLMessage,
@@ -6,11 +6,12 @@ import {
 } from 'react-intl';
 import { Intent, Alert } from '@blueprintjs/core';
 import { queryCache } from 'react-query';
+
+import { useDeleteReceipt } from 'hooks/query';
 import { AppToaster } from 'components';
 
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
-import withReceiptActions from 'containers/Sales/Receipt/withReceiptActions';
 
 import { compose } from 'utils';
 
@@ -24,24 +25,23 @@ function NameDeleteAlert({
   isOpen,
   payload: { receiptId },
 
-  // #withReceiptActions
-  requestDeleteReceipt,
-
   // #withAlertActions
   closeAlert,
 }) {
   const { formatMessage } = useIntl();
-  const [isLoading, setLoading] = useState(false);
+  const {
+    mutateAsync: deleteReceiptMutate,
+    isLoading
+  } = useDeleteReceipt();
 
-  // handle cancel delete  alert.
+  // Handle cancel delete  alert.
   const handleCancelDeleteAlert = () => {
     closeAlert(name);
   };
 
-  // handle confirm delete receipt
-  const handleConfirmReceiptDelete = useCallback(() => {
-    setLoading(true);
-    requestDeleteReceipt(receiptId)
+  // Handle confirm delete receipt
+  const handleConfirmReceiptDelete = () => {
+    deleteReceiptMutate(receiptId)
       .then(() => {
         AppToaster.show({
           message: formatMessage({
@@ -49,14 +49,12 @@ function NameDeleteAlert({
           }),
           intent: Intent.SUCCESS,
         });
-        queryCache.invalidateQueries('receipts-table');
       })
       .catch(() => {})
       .finally(() => {
-        setLoading(false);
         closeAlert(name);
       });
-  }, [receiptId, requestDeleteReceipt, formatMessage]);
+  };
 
   return (
     <Alert
@@ -81,5 +79,4 @@ function NameDeleteAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
-  withReceiptActions,
 )(NameDeleteAlert);

@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback } from 'react';
 import {
   NavbarGroup,
   NavbarDivider,
@@ -11,36 +11,35 @@ import {
 } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import classNames from 'classnames';
-import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import { If, Icon, DashboardActionViewsList } from 'components';
 
-import withResourceDetail from 'containers/Resources/withResourceDetails';
+import { useCustomersListContext } from './CustomersListProvider';
+
 import withCustomers from 'containers/Customers/withCustomers';
 import withCustomersActions from 'containers/Customers/withCustomersActions';
 import withAlertActions from 'containers/Alert/withAlertActions';
 
 import { compose } from 'utils';
 
-const CustomerActionsBar = ({
+/**
+ * Customers actions bar.
+ */
+function CustomerActionsBar({
   // #withCustomers
-  customersViews,
   customersSelectedRows,
 
   //#withCustomersActions
   addCustomersTableQueries,
-  changeCustomerView,
 
   // #withAlertActions
   openAlert,
-
-  // #ownProps
-  onFilterChanged,
-}) => {
+}) {
   const history = useHistory();
   const { formatMessage } = useIntl();
+  const { customersViews } = useCustomersListContext();
 
   const onClickNewCustomer = useCallback(() => {
     history.push('/customers/new');
@@ -52,7 +51,6 @@ const CustomerActionsBar = ({
   };
 
   const handleTabChange = (viewId) => {
-    changeCustomerView(viewId.id || -1);
     addCustomersTableQueries({
       custom_view_id: viewId.id || null,
     });
@@ -111,19 +109,9 @@ const CustomerActionsBar = ({
   );
 };
 
-const mapStateToProps = (state, props) => ({
-  resourceName: 'customers',
-});
-const withCustomersActionsBar = connect(mapStateToProps);
-
 export default compose(
-  withCustomersActionsBar,
   withCustomersActions,
-  withResourceDetail(({ resourceFields }) => ({
-    resourceFields,
-  })),
-  withCustomers(({ customersViews, customersSelectedRows }) => ({
-    customersViews,
+  withCustomers(({ customersSelectedRows }) => ({
     customersSelectedRows,
   })),
   withAlertActions,

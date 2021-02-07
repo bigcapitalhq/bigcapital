@@ -6,7 +6,7 @@
       .tbody{
         .tr .td:not(:first-child),
         .tr .th:not(:first-child) {
-          justify-content: flex-end;
+          text-align: right;
         }
       }
       .tbody{

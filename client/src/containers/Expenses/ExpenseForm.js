@@ -1,7 +1,7 @@
-import React, { useMemo, useEffect,useState,useCallback } from 'react';
+import React, { useMemo, useEffect, useState, useCallback } from 'react';
 import { Intent } from '@blueprintjs/core';
 import { useIntl } from 'react-intl';
-import { defaultTo, pick } from 'lodash';
+import { defaultTo, pick, sumBy } from 'lodash';
 import { Formik, Form } from 'formik';
 import moment from 'moment';
 import classNames from 'classnames';
@@ -13,9 +13,8 @@ import ExpenseFormBody from './ExpenseFormBody';
 import ExpenseFloatingFooter from './ExpenseFloatingActions';
 import ExpenseFormFooter from './ExpenseFormFooter';
 
-import withExpensesActions from 'containers/Expenses/withExpensesActions';
-import withExpenseDetail from 'containers/Expenses/withExpenseDetail';
-import withAccountsActions from 'containers/Accounts/withAccountsActions';
+import { useExpenseFormContext } from './ExpenseFormPageProvider';
+
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withMediaActions from 'containers/Media/withMediaActions';
 import withSettings from 'containers/Settings/withSettings';
@@ -45,7 +44,7 @@ const defaultInitialValues = {
   description: '',
   reference_no: '',
   currency_code: '',
-  publish:'',
+  publish: '',
   categories: [...repeatValue(defaultCategory, MIN_LINES_NUMBER)],
 };
 
@@ -57,35 +56,25 @@ function ExpenseForm({
   requestSubmitMedia,
   requestDeleteMedia,
 
-  // #withExpensesActions
-  requestSubmitExpense,
-  requestEditExpense,
-  requestFetchExpensesTable,
-
   // #withDashboard
   changePageTitle,
-  changePageSubtitle,
-
-  // #withExpenseDetail
-  expense,
 
   // #withSettings
   baseCurrency,
   preferredPaymentAccount,
-
-  // #ownProps
-  expenseId,
-  onFormSubmit,
-  onCancelForm,
 }) {
+  const {
+    editExpenseMutate,
+    createExpenseMutate,
+    expense,
+    expenseId,
+  } = useExpenseFormContext();
+
   const isNewMode = !expenseId;
   const [submitPayload, setSubmitPayload] = useState({});
+
   const { formatMessage } = useIntl();
   const history = useHistory();
-
-  const validationSchema = isNewMode
-    ? CreateExpenseFormSchema
-    : EditExpenseFormSchema;
 
   useEffect(() => {
     if (isNewMode) {
@@ -104,10 +93,6 @@ function ExpenseForm({
               ...expense.categories.map((category) => ({
                 ...pick(category, Object.keys(defaultCategory)),
               })),
-              // ...repeatValue(
-              //   defaultCategory,
-              //   Math.max(MIN_LINES_NUMBER - expense.categories.length, 0),
-              // ),
             ],
           }
         : {
@@ -120,11 +105,10 @@ function ExpenseForm({
     [expense, baseCurrency, preferredPaymentAccount],
   );
 
+  //  Handle form submit.
   const handleSubmit = (values, { setSubmitting, setErrors, resetForm }) => {
     setSubmitting(true);
-    const totalAmount = values.categories.reduce((total, item) => {
-      return total + item.amount;
-    }, 0);
+    const totalAmount = sumBy(values.categories, 'amount');
 
     if (totalAmount <= 0) {
       AppToaster.show({
@@ -135,7 +119,6 @@ function ExpenseForm({
       });
       return;
     }
-
     const categories = values.categories.filter(
       (category) =>
         category.amount && category.index && category.expense_account_id,
@@ -175,9 +158,9 @@ function ExpenseForm({
       setSubmitting(false);
     };
     if (isNewMode) {
-      requestSubmitExpense(form).then(handleSuccess).catch(handleError);
+      createExpenseMutate(form).then(handleSuccess).catch(handleError);
     } else {
-      requestEditExpense(expense.id, form)
+      editExpenseMutate(expense.id, form)
         .then(handleSuccess)
         .catch(handleError);
     }
@@ -202,7 +185,9 @@ function ExpenseForm({
       )}
     >
       <Formik
-        validationSchema={validationSchema}
+        validationSchema={isNewMode
+          ? CreateExpenseFormSchema
+          : EditExpenseFormSchema}
         initialValues={initialValues}
         onSubmit={handleSubmit}
       >
@@ -226,11 +211,8 @@ function ExpenseForm({
 }
 
 export default compose(
-  withExpensesActions,
-  withAccountsActions,
   withDashboardActions,
   withMediaActions,
-  withExpenseDetail(),
   withSettings(({ organizationSettings, expenseSettings }) => ({
     baseCurrency: organizationSettings?.baseCurrency,
     preferredPaymentAccount: parseInt(

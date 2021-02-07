@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 import classNames from 'classnames';
 import { FormGroup, Position, Classes, ControlGroup } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
@@ -13,21 +13,23 @@ import {
 } from 'components';
 import { FormattedMessage as T } from 'react-intl';
 
-import withCurrencies from 'containers/Currencies/withCurrencies';
+import { useCustomerFormContext } from './CustomerFormProvider';
 
 import {
-  compose,
   momentFormatter,
   tansformDateValue,
   inputIntent,
 } from 'utils';
 
-function CustomerFinancialPanel({
-  // #withCurrencies
-  currenciesList,
+/**
+ * Customer financial panel.
+ */
+export default function CustomerFinancialPanel() {
+  const {
+    currencies,
+    customerId
+  } = useCustomerFormContext();
 
-  customerId,
-}) {
   return (
     <div className={'tab-panel--financial'}>
       <Row>
@@ -103,7 +105,7 @@ function CustomerFinancialPanel({
                 inline={true}
               >
                 <CurrencySelectList
-                  currenciesList={currenciesList}
+                  currenciesList={currencies}
                   selectedCurrencyCode={value}
                   onCurrencySelected={(currency) => {
                     form.setFieldValue('currency_code', currency.currency_code);
@@ -118,7 +120,3 @@ function CustomerFinancialPanel({
     </div>
   );
 }
-
-export default compose(
-  withCurrencies(({ currenciesList }) => ({ currenciesList })),
-)(CustomerFinancialPanel);

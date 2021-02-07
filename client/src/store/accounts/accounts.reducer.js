@@ -1,7 +1,9 @@
 import t from 'store/types';
 import { createReducer} from '@reduxjs/toolkit';
-import { createTableQueryReducers } from 'store/queryReducers';
 import { listToTree } from 'utils';
+import {
+  createTableQueryReducers,
+} from 'store/journalNumber.reducer';
 
 const initialState = {
   items: {},
@@ -20,7 +22,7 @@ const initialState = {
   errors: [],
 };
 
-const accountsReducer = createReducer(initialState, {
+export default createReducer(initialState, {
   [t.ACCOUNTS_ITEMS_SET]: (state, action) => {
     const _items = {};
 
@@ -107,10 +109,10 @@ const accountsReducer = createReducer(initialState, {
   [t.ACCOUNTS_SELECTED_ROWS_SET]: (state, action) => {
     const { selectedRows } = action.payload;
     state.selectedRows = selectedRows;
-  }
-});
+  },
 
-export default createTableQueryReducers('accounts', accountsReducer);
+  ...createTableQueryReducers('ACCOUNTS'),
+});
 
 export const getAccountById = (state, id) => {
   return state.accounts.accountsById[id];

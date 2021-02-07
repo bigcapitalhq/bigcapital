@@ -5,12 +5,12 @@ import {
   useIntl,
 } from 'react-intl';
 import { Intent, Alert } from '@blueprintjs/core';
-import { queryCache } from 'react-query';
+import { useDeleteEstimate } from 'hooks/query';
+
 import { AppToaster } from 'components';
 
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
-import withEstimateActions from 'containers/Sales/Estimate/withEstimateActions';
 
 import { compose } from 'utils';
 
@@ -24,14 +24,11 @@ function EstimateDeleteAlert({
   isOpen,
   payload: { estimateId },
 
-  // #withEstimateActions
-  requestDeleteEstimate,
-
   // #withAlertActions
   closeAlert,
 }) {
   const { formatMessage } = useIntl();
-  const [isLoading, setLoading] = useState(false);
+  const { mutateAsync: deleteEstimateMutate, isLoading } = useDeleteEstimate();
 
   // handle cancel delete  alert.
   const handleCancelEstimateDelete = () => {
@@ -40,8 +37,7 @@ function EstimateDeleteAlert({
 
   // handle confirm delete estimate
   const handleConfirmEstimateDelete = useCallback(() => {
-    setLoading(true);
-    requestDeleteEstimate(estimateId)
+    deleteEstimateMutate(estimateId)
       .then(() => {
         AppToaster.show({
           message: formatMessage({
@@ -49,14 +45,12 @@ function EstimateDeleteAlert({
           }),
           intent: Intent.SUCCESS,
         });
-        queryCache.invalidateQueries('estimates-table');
       })
       .catch(({ errors }) => {})
       .finally(() => {
-        setLoading(false);
         closeAlert(name);
       });
-  }, [requestDeleteEstimate, formatMessage, estimateId]);
+  }, [deleteEstimateMutate, name, closeAlert, formatMessage, estimateId]);
 
   return (
     <Alert
@@ -81,5 +75,4 @@ function EstimateDeleteAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
-  withEstimateActions,
 )(EstimateDeleteAlert);

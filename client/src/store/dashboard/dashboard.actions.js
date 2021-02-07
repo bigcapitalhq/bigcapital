@@ -1,5 +1,12 @@
 import t from 'store/types';
 
+export function dashboardPageTitle(pageTitle) {
+  return {
+    type: t.CHANGE_DASHBOARD_PAGE_TITLE,
+    pageTitle,
+  };
+}
+
 export function openDialog(name, payload) {
   return {
     type: t.OPEN_DIALOG,

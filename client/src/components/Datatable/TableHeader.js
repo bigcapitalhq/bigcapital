@@ -27,11 +27,13 @@ function TableHeaderCell({ column, index }) {
         </span>
       </If>
 
-      <div {...column.getSortByToggleProps({
-        className: classNames('cell-inner', {
-          'text-overview': column.textOverview,
-        })
-      })}>
+      <div
+        {...column.getSortByToggleProps({
+          className: classNames('cell-inner', {
+            'text-overview': column.textOverview,
+          }),
+        })}
+      >
         {column.render('Header')}
 
         <If condition={column.isSorted}>
@@ -74,9 +76,13 @@ function TableHeaderGroup({ headerGroup }) {
  */
 export default function TableHeader() {
   const {
-    table: { headerGroups },
+    table: { headerGroups, page },
+    props: { TableHeaderSkeletonRenderer, headerLoading },
   } = useContext(TableContext);
 
+  if (headerLoading && TableHeaderSkeletonRenderer) {
+    return <TableHeaderSkeletonRenderer />;
+  }
   return (
     <ScrollSyncPane>
       <div className="thead">

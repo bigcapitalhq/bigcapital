@@ -1,21 +1,18 @@
-import React, { useMemo, useCallback, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import Icon from 'components/Icon';
 import {
   Button,
   NavbarGroup,
   Classes,
   NavbarDivider,
-  MenuItem,
-  Menu,
   Popover,
   PopoverInteractionKind,
   Position,
   Intent,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { useRouteMatch, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { FormattedMessage as T } from 'react-intl';
-import { connect } from 'react-redux';
 
 import FilterDropdown from 'components/FilterDropdown';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
@@ -23,8 +20,7 @@ import withDialogActions from 'containers/Dialog/withDialogActions';
 
 import { If, DashboardActionViewsList } from 'components';
 
-import withResourceDetail from 'containers/Resources/withResourceDetails';
-import withExpenses from 'containers/Expenses/withExpenses';
+import { useExpensesListContext } from './ExpensesListProvider';
 import withExpensesActions from 'containers/Expenses/withExpensesActions';
 
 import { compose } from 'utils';
@@ -33,53 +29,24 @@ import { compose } from 'utils';
  * Expenses actions bar.
  */
 function ExpensesActionsBar({
-  // #withResourceDetail
-  resourceFields,
-
-  //#withExpenses
-  expensesViews,
-
   //#withExpensesActions
   addExpensesTableQueries,
-  changeExpensesView,
-
-  onFilterChanged,
-  selectedRows,
-  onBulkDelete,
 }) {
   const [filterCount, setFilterCount] = useState(0);
   const history = useHistory();
+
+  const { expensesViews } = useExpensesListContext();
 
   const onClickNewExpense = useCallback(() => {
     history.push('/expenses/new');
   }, [history]);
 
-  const filterDropdown = FilterDropdown({
-    initialCondition: {
-      fieldKey: 'reference_no',
-      compatator: 'contains',
-      value: '',
-    },
-    fields: resourceFields,
-    onFilterChange: (filterConditions) => {
-      addExpensesTableQueries({
-        filter_roles: filterConditions || '',
-      });
-      onFilterChanged && onFilterChanged(filterConditions);
-    },
-  });
-
-  const hasSelectedRows = useMemo(() => selectedRows.length > 0, [
-    selectedRows,
-  ]);
-
   // Handle delete button click.
-  const handleBulkDelete = useCallback(() => {
-    onBulkDelete && onBulkDelete(selectedRows.map((r) => r.id));
-  }, [onBulkDelete, selectedRows]);
+  const handleBulkDelete = () => {
+    
+  };
 
   const handleTabChange = (viewId) => {
-    changeExpensesView(viewId.id || -1);
     addExpensesTableQueries({
       custom_view_id: viewId.id || null,
     });
@@ -93,6 +60,7 @@ function ExpensesActionsBar({
           onChange={handleTabChange}
         />
         <NavbarDivider />
+
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon="plus" />}
@@ -101,7 +69,7 @@ function ExpensesActionsBar({
         />
         <Popover
           minimal={true}
-          content={filterDropdown}
+          content={''}
           interactionKind={PopoverInteractionKind.CLICK}
           position={Position.BOTTOM_LEFT}
         >
@@ -114,7 +82,7 @@ function ExpensesActionsBar({
           />
         </Popover>
 
-        <If condition={hasSelectedRows}>
+        <If condition={false}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon="trash-16" iconSize={16} />}
@@ -144,20 +112,7 @@ function ExpensesActionsBar({
   );
 }
 
-const mapStateToProps = (state, props) => ({
-  resourceName: 'expenses',
-});
-
-const withExpensesActionsBar = connect(mapStateToProps);
-
 export default compose(
-  withExpensesActionsBar,
   withDialogActions,
-  withResourceDetail(({ resourceFields }) => ({
-    resourceFields,
-  })),
-  withExpenses(({ expensesViews }) => ({
-    expensesViews,
-  })),
   withExpensesActions,
 )(ExpensesActionsBar);

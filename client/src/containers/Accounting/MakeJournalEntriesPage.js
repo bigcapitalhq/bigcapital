@@ -1,44 +1,26 @@
 import React, { useCallback, useEffect } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
-import { useQuery } from 'react-query';
 
 import MakeJournalEntriesForm from './MakeJournalEntriesForm';
-import DashboardInsider from 'components/Dashboard/DashboardInsider';
+import { MakeJournalProvider } from './MakeJournalProvider';
 
-import withCustomersActions from 'containers/Customers/withCustomersActions';
-import withAccountsActions from 'containers/Accounts/withAccountsActions';
-import withManualJournalsActions from 'containers/Accounting/withManualJournalsActions';
-import withCurrenciesActions from 'containers/Currencies/withCurrenciesActions';
-import withSettingsActions from 'containers/Settings/withSettingsActions';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 
 import { compose } from 'utils';
 
-import 'style/pages/ManualJournal/MakeJournal.scss'
+import 'style/pages/ManualJournal/MakeJournal.scss';
 
+/**
+ * Make journal entries page.
+ */
 function MakeJournalEntriesPage({
-  // #withCustomersActions
-  requestFetchCustomers,
-
-  // #withAccountsActions
-  requestFetchAccounts,
-
-  // #withManualJournalActions
-  requestFetchManualJournal,
-
-  // #wihtCurrenciesActions
-  requestFetchCurrencies,
-
-  // #withSettingsActions
-  requestFetchOptions,
-
   // #withDashboardActions
   setSidebarShrink,
   resetSidebarPreviousExpand,
-  setDashboardBackLink
+  setDashboardBackLink,
 }) {
   const history = useHistory();
-  const { id } = useParams();
+  const { id: journalId } = useParams();
 
   useEffect(() => {
     // Shrink the sidebar by foce.
@@ -52,27 +34,7 @@ function MakeJournalEntriesPage({
       // Hide the back link on dashboard topbar.
       setDashboardBackLink(false);
     };
-  }, [resetSidebarPreviousExpand, setSidebarShrink]);
-
-  const fetchAccounts = useQuery('accounts-list', (key) =>
-    requestFetchAccounts(),
-  );
-
-  const fetchCustomers = useQuery('customers-list', (key) =>
-    requestFetchCustomers(),
-  );
-
-  const fetchCurrencies = useQuery('currencies', () =>
-    requestFetchCurrencies(),
-  );
-
-  const fetchSettings = useQuery(['settings'], () => requestFetchOptions({}));
-
-  const fetchJournal = useQuery(
-    ['manual-journal', id],
-    (key, journalId) => requestFetchManualJournal(journalId),
-    { enabled: id && id },
-  );
+  }, [resetSidebarPreviousExpand, setDashboardBackLink, setSidebarShrink]);
 
   const handleFormSubmit = useCallback(
     (payload) => {
@@ -86,29 +48,15 @@ function MakeJournalEntriesPage({
   }, [history]);
 
   return (
-    <DashboardInsider
-      loading={
-        fetchJournal.isFetching ||
-        fetchAccounts.isFetching ||
-        fetchCurrencies.isFetching ||
-        fetchCustomers.isFetching
-      }
-      name={'make-journal-page'}
-    >
+    <MakeJournalProvider journalId={journalId}>
       <MakeJournalEntriesForm
         onFormSubmit={handleFormSubmit}
-        manualJournalId={id}
         onCancelForm={handleCancel}
       />
-    </DashboardInsider>
+    </MakeJournalProvider>
   );
 }
 
 export default compose(
-  withAccountsActions,
-  withCustomersActions,
-  withManualJournalsActions,
-  withCurrenciesActions,
-  withSettingsActions,
   withDashboardActions,
 )(MakeJournalEntriesPage);

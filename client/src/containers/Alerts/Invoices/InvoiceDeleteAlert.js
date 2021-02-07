@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import {
   FormattedMessage as T,
   FormattedHTMLMessage,
@@ -6,7 +6,9 @@ import {
 } from 'react-intl';
 import { Intent, Alert } from '@blueprintjs/core';
 import { queryCache } from 'react-query';
+
 import { AppToaster } from 'components';
+import { useDeleteInvoice } from 'hooks/query';
 
 import { handleDeleteErrors } from 'containers/Sales/Invoice/components';
 
@@ -26,14 +28,14 @@ function InvoiceDeleteAlert({
   isOpen,
   payload: { invoiceId },
 
-  // #withInvoiceActions
-  requestDeleteInvoice,
-
   // #withAlertActions
   closeAlert,
 }) {
   const { formatMessage } = useIntl();
-  const [isLoading, setLoading] = useState(false);
+  const {
+    mutateAsync: deleteInvoiceMutate,
+    isLoading
+  } = useDeleteInvoice();
 
   // handle cancel delete invoice  alert.
   const handleCancelDeleteAlert = () => {
@@ -41,9 +43,8 @@ function InvoiceDeleteAlert({
   };
 
   // handleConfirm delete invoice
-  const handleConfirmInvoiceDelete = useCallback(() => {
-    setLoading(true);
-    requestDeleteInvoice(invoiceId)
+  const handleConfirmInvoiceDelete = () => {
+    deleteInvoiceMutate(invoiceId)
       .then(() => {
         AppToaster.show({
           message: formatMessage({
@@ -51,16 +52,14 @@ function InvoiceDeleteAlert({
           }),
           intent: Intent.SUCCESS,
         });
-        queryCache.invalidateQueries('invoices-table');
       })
       .catch((errors) => {
         handleDeleteErrors(errors);
       })
       .finally(() => {
         closeAlert(name);
-        setLoading(false);
       });
-  }, [invoiceId, requestDeleteInvoice, formatMessage]);
+  };
 
   return (
     <Alert

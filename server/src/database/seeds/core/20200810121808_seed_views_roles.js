@@ -6,11 +6,11 @@ exports.up = (knex) => {
       // Inserts seed entries
       return knex('view_roles').insert([
         // Accounts
-        { field_key: 'type', index: 1, comparator: 'equals', value: 'asset', view_id: 1 },
-        { field_key: 'type', index: 1, comparator: 'equals', value: 'liability', view_id: 2 }, 
-        { field_key: 'type', index: 1, comparator: 'equals', value: 'equity', view_id: 3 }, 
-        { field_key: 'type', index: 1, comparator: 'equals', value: 'income', view_id: 4 }, 
-        { field_key: 'type', index: 1, comparator: 'equals', value: 'expense', view_id: 5 }, 
+        { field_key: 'root_type', index: 1, comparator: 'equals', value: 'asset', view_id: 1 },
+        { field_key: 'root_type', index: 1, comparator: 'equals', value: 'liability', view_id: 2 }, 
+        { field_key: 'root_type', index: 1, comparator: 'equals', value: 'equity', view_id: 3 }, 
+        { field_key: 'root_type', index: 1, comparator: 'equals', value: 'income', view_id: 4 }, 
+        { field_key: 'root_type', index: 1, comparator: 'equals', value: 'expense', view_id: 5 }, 
         { field_key: 'active', index: 1, comparator: 'is', value: 1, view_id: 15 },
 
         // Items.

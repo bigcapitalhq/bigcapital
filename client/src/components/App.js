@@ -2,9 +2,7 @@ import React from 'react';
 import { RawIntlProvider } from 'react-intl';
 import { Router, Switch, Route } from 'react-router';
 import { createBrowserHistory } from 'history';
-import { ReactQueryConfigProvider } from 'react-query';
-import { ReactQueryDevtools } from 'react-query-devtools';
-
+import { QueryClientProvider, QueryClient } from 'react-query';
 import 'style/App.scss';
 
 import PrivateRoute from 'components/Guards/PrivateRoute';
@@ -17,14 +15,18 @@ function App({ locale }) {
   const history = createBrowserHistory();
 
   const queryConfig = {
-    queries: {
-      refetchOnWindowFocus: false,
+    defaultOptions: {
+      queries: {
+        refetchOnWindowFocus: false,
+      },
     },
   };
+  const queryClient = new QueryClient(queryConfig);
+
   return (
     <RawIntlProvider value={intl}>
-      <div className="App">
-        <ReactQueryConfigProvider config={queryConfig}>
+      <QueryClientProvider client={queryClient}>
+        <div className="App">
           <Router history={history}>
             <Switch>
               <Route path={'/auth'}>
@@ -38,9 +40,8 @@ function App({ locale }) {
           </Router>
 
           <GlobalErrors />
-          <ReactQueryDevtools />
-        </ReactQueryConfigProvider>
-      </div>
+        </div>
+      </QueryClientProvider>
     </RawIntlProvider>
   );
 }

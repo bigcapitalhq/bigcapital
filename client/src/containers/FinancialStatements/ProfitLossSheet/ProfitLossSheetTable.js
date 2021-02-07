@@ -5,22 +5,22 @@ import FinancialSheet from 'components/FinancialSheet';
 import DataTable from 'components/DataTable';
 import { CellTextSpan } from 'components/Datatable/Cells';
 
-import { compose, defaultExpanderReducer, getColumnWidth } from 'utils';
-import withProfitLossDetail from './withProfitLoss';
+import { defaultExpanderReducer, getColumnWidth } from 'utils';
+import { useProfitLossSheetContext } from './ProfitLossProvider';
 
-function ProfitLossSheetTable({
-  // #withProfitLoss
-  profitLossTableRows,
-  profitLossQuery,
-  profitLossColumns,
-  profitLossSheetLoading,
-
+export default function ProfitLossSheetTable({
   // #ownProps
   companyName,
 }) {
   const { formatMessage } = useIntl();
 
-  const columns = useMemo(
+  // Profit/Loss sheet context.
+  const {
+    profitLossSheet: { tableRows, query, columns },
+    isLoading
+  } = useProfitLossSheetContext();
+
+  const tableColumns = useMemo(
     () => [
       {
         Header: formatMessage({ id: 'account' }),
@@ -29,7 +29,7 @@ function ProfitLossSheetTable({
         textOverview: true,
         width: 240,
       },
-      ...(profitLossQuery.display_columns_type === 'total'
+      ...(query.display_columns_type === 'total'
         ? [
             {
               Header: formatMessage({ id: 'total' }),
@@ -40,14 +40,14 @@ function ProfitLossSheetTable({
             },
           ]
         : []),
-      ...(profitLossQuery.display_columns_type === 'date_periods'
-        ? profitLossColumns.map((column, index) => ({
+      ...(query.display_columns_type === 'date_periods'
+        ? columns.map((column, index) => ({
             id: `date_period_${index}`,
             Header: column,
             Cell: CellTextSpan,
             accessor: `total_periods[${index}].formatted_amount`,
             width: getColumnWidth(
-              profitLossTableRows,
+              tableRows,
               `total_periods.${index}.formatted_amount`,
               { minWidth: 100 },
             ),
@@ -56,17 +56,17 @@ function ProfitLossSheetTable({
         : []),
     ],
     [
-      profitLossQuery.display_columns_type,
-      profitLossTableRows,
-      profitLossColumns,
+      query.display_columns_type,
+      tableRows,
+      columns,
       formatMessage,
     ],
   );
 
   // Retrieve default expanded rows of balance sheet.
   const expandedRows = useMemo(
-    () => defaultExpanderReducer(profitLossTableRows, 3),
-    [profitLossTableRows],
+    () => defaultExpanderReducer(tableRows, 3),
+    [tableRows],
   );
 
   // Retrieve conditional datatable row classnames.
@@ -86,16 +86,16 @@ function ProfitLossSheetTable({
     <FinancialSheet
       companyName={companyName}
       sheetType={<T id={'profit_loss_sheet'} />}
-      fromDate={profitLossQuery.from_date}
-      toDate={profitLossQuery.to_date}
+      fromDate={query.from_date}
+      toDate={query.to_date}
       name="profit-loss-sheet"
-      loading={profitLossSheetLoading}
-      basis={profitLossQuery.basis}
+      loading={isLoading}
+      basis={query.basis}
     >
       <DataTable
         className="bigcapital-datatable--financial-report"
-        columns={columns}
-        data={profitLossTableRows}
+        columns={tableColumns}
+        data={tableRows}
         noInitialFetch={true}
         expanded={expandedRows}
         rowClassNames={rowClassNames}
@@ -107,19 +107,3 @@ function ProfitLossSheetTable({
     </FinancialSheet>
   );
 }
-
-export default compose(
-  withProfitLossDetail(
-    ({
-      profitLossQuery,
-      profitLossColumns,
-      profitLossTableRows,
-      profitLossSheetLoading,
-    }) => ({
-      profitLossColumns,
-      profitLossQuery,
-      profitLossTableRows,
-      profitLossSheetLoading,
-    }),
-  ),
-)(ProfitLossSheetTable);

@@ -1,7 +1,8 @@
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { Intent, Alert } from '@blueprintjs/core';
-import { queryCache } from 'react-query';
+
+import { useDeliverInvoice } from 'hooks/query';
 import { AppToaster } from 'components';
 
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
@@ -11,7 +12,7 @@ import withInvoiceActions from 'containers/Sales/Invoice/withInvoiceActions';
 import { compose } from 'utils';
 
 /**
- * Invoice  alert.
+ * Sale invoice alert.
  */
 function InvoiceDeliverAlert({
   name,
@@ -20,14 +21,14 @@ function InvoiceDeliverAlert({
   isOpen,
   payload: { invoiceId },
 
-  // #withInvoiceActions
-  requestDeliverInvoice,
-
   // #withAlertActions
   closeAlert,
 }) {
   const { formatMessage } = useIntl();
-  const [isLoading, setLoading] = useState(false);
+  const {
+    mutateAsync: deliverInvoiceMutate,
+    isLoading
+  } = useDeliverInvoice();
 
   // handle cancel delete deliver alert.
   const handleCancelDeleteAlert = () => {
@@ -35,9 +36,8 @@ function InvoiceDeliverAlert({
   };
 
   // Handle confirm invoice deliver.
-  const handleConfirmInvoiceDeliver = useCallback(() => {
-    setLoading(true);
-    requestDeliverInvoice(invoiceId)
+  const handleConfirmInvoiceDeliver = () => {
+    deliverInvoiceMutate(invoiceId)
       .then(() => {
         AppToaster.show({
           message: formatMessage({
@@ -45,14 +45,12 @@ function InvoiceDeliverAlert({
           }),
           intent: Intent.SUCCESS,
         });
-        queryCache.invalidateQueries('invoices-table');
       })
       .catch((error) => {})
       .finally(() => {
         closeAlert(name);
-        setLoading(false);
       });
-  }, [invoiceId, requestDeliverInvoice, formatMessage]);
+  };
 
   return (
     <Alert

@@ -18,32 +18,36 @@ import NumberFormatDropdown from 'components/NumberFormatDropdown';
 import withTrialBalance from './withTrialBalance';
 import withTrialBalanceActions from './withTrialBalanceActions';
 import { compose, saveInvoke } from 'utils';
+import { useTrialBalanceSheetContext } from './TrialBalanceProvider';
 
 function TrialBalanceActionsBar({
   // #withTrialBalance
   trialBalanceSheetFilter,
-  trialBalanceSheetLoading,
 
   // #withTrialBalanceActions
   toggleTrialBalanceFilter,
-  refreshTrialBalance,
 
   // #ownProps
   numberFormat,
-  onNumberFormatSubmit
+  onNumberFormatSubmit,
 }) {
+  const { refetchSheet, isLoading } = useTrialBalanceSheetContext();
+
+  // Handle filter toggle click.
   const handleFilterToggleClick = () => {
     toggleTrialBalanceFilter();
   };
 
+  // Handle re-calc button click.
   const handleRecalcReport = () => {
-    refreshTrialBalance(true);
+    refetchSheet();
   };
 
   // Handle number format submit.
   const handleNumberFormatSubmit = (values) => {
     saveInvoke(onNumberFormatSubmit, values);
   };
+
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -75,7 +79,7 @@ function TrialBalanceActionsBar({
             <NumberFormatDropdown
               numberFormat={numberFormat}
               onSubmit={handleNumberFormatSubmit}
-              submitDisabled={trialBalanceSheetLoading}
+              submitDisabled={isLoading}
             />
           }
           minimal={true}
@@ -119,7 +123,7 @@ function TrialBalanceActionsBar({
 export default compose(
   withTrialBalance(({ trialBalanceSheetFilter, trialBalanceSheetLoading }) => ({
     trialBalanceSheetFilter,
-    trialBalanceSheetLoading
+    trialBalanceSheetLoading,
   })),
   withTrialBalanceActions,
 )(TrialBalanceActionsBar);

@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import {
   Intent,
   Button,
@@ -10,7 +10,6 @@ import {
   Tag,
 } from '@blueprintjs/core';
 
-import { useParams } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import moment from 'moment';
@@ -65,7 +64,6 @@ function BillsDataTable({
   onSelectedRowsChange,
 }) {
   const { formatMessage } = useIntl();
-  const isLoadedBefore = useIsValuePassed(billsLoading, false);
 
   const handleFetchData = useCallback(
     ({ pageIndex, pageSize, sortBy }) => {
@@ -243,31 +241,29 @@ function BillsDataTable({
 
   return (
     <div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>
-      <LoadingIndicator loading={billsLoading && !isLoadedBefore} mount={false}>
-        <Choose>
-          <Choose.When condition={showEmptyStatus}>
-            <BillsEmptyStatus />
-          </Choose.When>
+      <Choose>
+        <Choose.When condition={showEmptyStatus}>
+          <BillsEmptyStatus />
+        </Choose.When>
 
-          <Choose.Otherwise>
-            <DataTable
-              columns={columns}
-              data={billsCurrentPage}
-              onFetchData={handleFetchData}
-              manualSortBy={true}
-              selectionColumn={true}
-              noInitialFetch={true}
-              sticky={true}
-              onSelectedRowsChange={handleSelectedRowsChange}
-              rowContextMenu={onRowContextMenu}
-              pagination={true}
-              pagesCount={billsPageination.pagesCount}
-              initialPageSize={billsPageination.pageSize}
-              initialPageIndex={billsPageination.page - 1}
-            />
-          </Choose.Otherwise>
-        </Choose>
-      </LoadingIndicator>
+        <Choose.Otherwise>
+          <DataTable
+            columns={columns}
+            data={billsCurrentPage}
+            onFetchData={handleFetchData}
+            manualSortBy={true}
+            selectionColumn={true}
+            noInitialFetch={true}
+            sticky={true}
+            onSelectedRowsChange={handleSelectedRowsChange}
+            rowContextMenu={onRowContextMenu}
+            pagination={true}
+            pagesCount={billsPageination.pagesCount}
+            initialPageSize={billsPageination.pageSize}
+            initialPageIndex={billsPageination.page - 1}
+          />
+        </Choose.Otherwise>
+      </Choose>
     </div>
   );
 }

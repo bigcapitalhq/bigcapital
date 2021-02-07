@@ -1,8 +1,10 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { Intent, Alert } from '@blueprintjs/core';
 import { queryCache } from 'react-query';
+
 import { AppToaster } from 'components';
+import { useRejectEstimate } from 'hooks/query';
 
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
@@ -27,7 +29,11 @@ function EstimateRejectAlert({
   closeAlert,
 }) {
   const { formatMessage } = useIntl();
-  const [isLoading, setLoading] = useState(false);
+  const {
+    mutateAsync: rejectEstimateMutate,
+    isLoading
+  } = useRejectEstimate();
+
   // Handle cancel reject estimate alert.
   const handleCancelRejectEstimate = () => {
     closeAlert(name);
@@ -35,7 +41,6 @@ function EstimateRejectAlert({
 
   // Handle confirm estimate reject.
   const handleConfirmEstimateReject = useCallback(() => {
-    setLoading(true);
     requestRejectEstimate(estimateId)
       .then(() => {
         AppToaster.show({
@@ -48,10 +53,9 @@ function EstimateRejectAlert({
       })
       .catch((error) => {})
       .finally(() => {
-        setLoading(false);
         closeAlert(name);
       });
-  }, [estimateId, requestRejectEstimate, formatMessage]);
+  }, [estimateId, rejectEstimateMutate, formatMessage]);
 
   return (
     <Alert

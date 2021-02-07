@@ -1,12 +1,12 @@
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { Intent, Alert } from '@blueprintjs/core';
-import { queryCache } from 'react-query';
+
+import { useCloseReceipt } from 'hooks/query';
 import { AppToaster } from 'components';
 
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
-import withReceiptActions from 'containers/Sales/Receipt/withReceiptActions';
 
 import { compose } from 'utils';
 
@@ -20,24 +20,20 @@ function ReceiptCloseAlert({
   isOpen,
   payload: { receiptId },
 
-  // #withReceiptActions
-  requestCloseReceipt,
-
   // #withAlertActions
   closeAlert,
 }) {
   const { formatMessage } = useIntl();
-  const [isLoading, setLoading] = useState(false);
+  const { mutateAsync: closeReceiptMutate, isLoading } = useCloseReceipt();
 
-  // handle cancel delete  alert.
+  // handle cancel delete alert.
   const handleCancelDeleteAlert = () => {
     closeAlert(name);
   };
 
   // Handle confirm receipt close.
-  const handleConfirmReceiptClose = useCallback(() => {
-    setLoading(true);
-    requestCloseReceipt(receiptId)
+  const handleConfirmReceiptClose = () => {
+    closeReceiptMutate(receiptId)
       .then(() => {
         AppToaster.show({
           message: formatMessage({
@@ -45,14 +41,12 @@ function ReceiptCloseAlert({
           }),
           intent: Intent.SUCCESS,
         });
-        queryCache.invalidateQueries('receipts-table');
       })
       .catch((error) => {})
       .finally(() => {
         closeAlert(name);
-        setLoading(false);
       });
-  }, [receiptId, requestCloseReceipt, formatMessage]);
+  };
 
   return (
     <Alert
@@ -74,5 +68,4 @@ function ReceiptCloseAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
-  withReceiptActions,
 )(ReceiptCloseAlert);

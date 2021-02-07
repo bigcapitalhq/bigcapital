@@ -26,15 +26,14 @@ function DashboardPrivatePages({
   // #withSubscriptionsActions
   requestFetchSubscriptions,
 }) {
-  // Fetch all user's organizatins.
+  // Fetches all user's organizatins.
   const fetchOrganizations = useQuery(
     ['organizations'], () => requestAllOrganizations(),
   );
 
-  // Fetchs organization subscriptions.
+  // Fetches organization subscriptions.
   const fetchSuscriptions = useQuery(
     ['susbcriptions'], () => requestFetchSubscriptions(),
-    { enabled: fetchOrganizations.data },
   )
 
   return (

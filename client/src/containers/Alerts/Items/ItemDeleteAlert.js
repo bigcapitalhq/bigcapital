@@ -10,7 +10,9 @@ import { AppToaster } from 'components';
 
 import { handleDeleteErrors } from 'containers/Items/utils';
 
-import withItemsActions from 'containers/Items/withItemsActions';
+import {
+  useDeleteItem
+} from 'hooks/query';
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
 
@@ -26,14 +28,11 @@ function ItemDeleteAlert({
   isOpen,
   payload: { itemId },
 
-  // #withItemsActions
-  requestDeleteItem,
-
   // #withAlertActions
   closeAlert,
 }) {
+  const { mutateAsync: deleteItem, isLoading } = useDeleteItem();
   const { formatMessage } = useIntl();
-  const [isLoading, setLoading] = useState(false);
 
   // handle cancel delete item alert.
   const handleCancelItemDelete = () => {
@@ -41,8 +40,7 @@ function ItemDeleteAlert({
   };
 
   const handleConfirmDeleteItem = () => {
-    setLoading(true);
-    requestDeleteItem(itemId)
+    deleteItem(itemId)
       .then(() => {
         AppToaster.show({
           message: formatMessage({
@@ -50,14 +48,12 @@ function ItemDeleteAlert({
           }),
           intent: Intent.SUCCESS,
         });
-        queryCache.invalidateQueries('items-table');
       })
       .catch(({ errors }) => {
         handleDeleteErrors(errors);
       })
       .finally(() => {
         closeAlert(name);
-        setLoading(false);
       });
   };
 
@@ -84,5 +80,4 @@ function ItemDeleteAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
-  withItemsActions,
 )(ItemDeleteAlert);

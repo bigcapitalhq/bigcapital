@@ -1,165 +1,111 @@
-import React, { useCallback } from 'react';
-import {
-  Button,
-  Classes,
-  FormGroup,
-  InputGroup,
-  Intent,
-  TextArea,
-  MenuItem,
-} from '@blueprintjs/core';
-import { FormattedMessage as T } from 'react-intl';
-import classNames from 'classnames';
-import { ErrorMessage, Form, FastField } from 'formik';
-import {
-  ListSelect,
-  AccountsSelectList,
-  FieldRequiredHint,
-  Hint,
-} from 'components';
-import { inputIntent } from 'utils';
+import React, { useMemo } from 'react';
+import { useIntl } from 'react-intl';
+import { Intent } from '@blueprintjs/core';
+import { Formik } from 'formik';
 
-import { useAutofocus } from 'hooks';
+import { AppToaster } from 'components';
+import { useItemCategoryContext } from './ItemCategoryProvider';
+import { transformToForm } from 'utils';
+import {
+  CreateItemCategoryFormSchema,
+  EditItemCategoryFormSchema,
+} from './ItemCategoryForm.schema';
 
-export default function ItemCategoryForm({
-  itemCategoryId,
-  accountsList,
-  categoriesList,
-  isSubmitting,
-  onClose,
+import withDialogActions from 'containers/Dialog/withDialogActions';
+import ItemCategoryFormContent from './ItemCategoryFormContent'
+import { compose } from 'utils';
+
+const defaultInitialValues = {
+  name: '',
+  description: '',
+  cost_account_id: '',
+  sell_account_id: '',
+  inventory_account_id: '',
+};
+
+/**
+ * Item category form.
+ */
+function ItemCategoryForm({
+  // #withDialogActions
+  closeDialog,
 }) {
-  const categoryNameFieldRef = useAutofocus();
+  const { formatMessage } = useIntl();
+  const {
+    isNewMode,
+    itemCategory,
+    itemCategoryId,
+    dialogName,
+    createItemCategoryMutate,
+    editItemCategoryMutate,
+  } = useItemCategoryContext();
+
+  // Initial values.
+  const initialValues = useMemo(
+    () => ({
+      ...defaultInitialValues,
+      ...transformToForm(itemCategory, defaultInitialValues),
+    }),
+    [itemCategory],
+  );
+
+  // Transformes response errors.
+  const transformErrors = (errors, { setErrors }) => {
+    if (errors.find((error) => error.type === 'CATEGORY_NAME_EXISTS')) {
+      setErrors({
+        name: formatMessage({ id: 'category_name_exists' }),
+      });
+    }
+  };
+
+  // Handles the form submit.
+  const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
+    setSubmitting(true);
+    const form = { ...values };
+
+    // Handle close the dialog after success response.
+    const afterSubmit = () => {
+      closeDialog(dialogName);
+    };
+    // Handle the response success/
+    const onSuccess = ({ response }) => {
+      AppToaster.show({
+        message: formatMessage({
+          id: isNewMode
+            ? 'the_item_category_has_been_created_successfully'
+            : 'the_item_category_has_been_edited_successfully',
+        }),
+        intent: Intent.SUCCESS,
+      });
+      afterSubmit(response);
+    };
+    // Handle the response error.
+    const onError = (errors) => {
+      transformErrors(errors, { setErrors });
+      setSubmitting(false);
+    };
+    if (isNewMode) {
+      createItemCategoryMutate(form).then(onSuccess).catch(onError);
+    } else {
+      editItemCategoryMutate([itemCategoryId, form])
+        .then(onSuccess)
+        .catch(onError);
+    }
+  };
 
   return (
-    <Form>
-      <div className={Classes.DIALOG_BODY}>
-        {/* ----------- Category name ----------- */}
-        <FastField name={'name'}>
-          {({ field, field: { value }, meta: { error, touched } }) => (
-            <FormGroup
-              label={<T id={'category_name'} />}
-              labelInfo={<FieldRequiredHint />}
-              className={'form-group--category-name'}
-              intent={inputIntent({ error, touched })}
-              helperText={<ErrorMessage name="name" />}
-              inline={true}
-            >
-              <InputGroup
-                medium={true}
-                inputRef={(ref) => (categoryNameFieldRef.current = ref)}
-                {...field}
-              />
-            </FormGroup>
-          )}
-        </FastField>
-
-
-        {/* ----------- Description ----------- */}
-        <FastField name={'description'}>
-          {({ field, field: { value }, meta: { error, touched } }) => (
-            <FormGroup
-              label={<T id={'description'} />}
-              className={'form-group--description'}
-              intent={inputIntent({ error, touched })}
-              helperText={<ErrorMessage name="description" />}
-              inline={true}
-            >
-              <TextArea growVertically={true} large={true} {...field} />
-            </FormGroup>
-          )}
-        </FastField>
-
-        {/* ----------- Cost account ----------- */}
-        <FastField name={'cost_account_id'}>
-          {({ form, field: { value }, meta: { error, touched } }) => (
-            <FormGroup
-              label={<T id={'cost_account'} />}
-              inline={true}
-              intent={inputIntent({ error, touched })}
-              helperText={<ErrorMessage name="cost_account_id" />}
-              className={classNames(
-                'form-group--cost-account',
-                'form-group--select-list',
-                Classes.FILL,
-              )}
-            >
-              <AccountsSelectList
-                accounts={accountsList}
-                onAccountSelected={(account) => {
-                  form.setFieldValue('cost_account_id', account.id);
-                }}
-                defaultSelectText={<T id={'select_account'} />}
-                selectedAccountId={value}
-                filterByTypes={['cost_of_goods_sold']}
-              />
-            </FormGroup>
-          )}
-        </FastField>
-
-        {/* ----------- Sell account ----------- */}
-        <FastField name={'sell_account_id'}>
-          {({ form, field: { value }, meta: { error, touched } }) => (
-            <FormGroup
-              label={<T id={'sell_account'} />}
-              inline={true}
-              intent={inputIntent({ error, touched })}
-              helperText={<ErrorMessage name="sell_account_id" />}
-              className={classNames(
-                'form-group--sell-account',
-                'form-group--select-list',
-                Classes.FILL,
-              )}
-            >
-              <AccountsSelectList
-                accounts={accountsList}
-                onAccountSelected={(account) => {
-                  form.setFieldValue('sell_account_id', account.id);
-                }}
-                defaultSelectText={<T id={'select_account'} />}
-                selectedAccountId={value}
-                filterByTypes={['income']}
-              />
-            </FormGroup>
-          )}
-        </FastField>
-
-        {/* ----------- inventory account ----------- */}
-        <FastField name={'inventory_account_id'}>
-          {({ form, field: { value }, meta: { error, touched } }) => (
-            <FormGroup
-              label={<T id={'inventory_account'} />}
-              inline={true}
-              intent={inputIntent({ error, touched })}
-              helperText={<ErrorMessage name="inventory_account_id" />}
-              className={classNames(
-                'form-group--sell-account',
-                'form-group--select-list',
-                Classes.FILL,
-              )}
-            >
-              <AccountsSelectList
-                accounts={accountsList}
-                onAccountSelected={(account) => {
-                  form.setFieldValue('inventory_account_id', account.id);
-                }}
-                defaultSelectText={<T id={'select_account'} />}
-                selectedAccountId={value}
-              />
-            </FormGroup>
-          )}
-        </FastField>
-      </div>
-
-      <div className={Classes.DIALOG_FOOTER}>
-        <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-          <Button onClick={onClose}>
-            <T id={'close'} />
-          </Button>
-          <Button intent={Intent.PRIMARY} type="submit" disabled={isSubmitting}>
-            {itemCategoryId ? <T id={'edit'} /> : <T id={'submit'} />}
-          </Button>
-        </div>
-      </div>
-    </Form>
+    <Formik
+      validationSchema={
+        isNewMode ? CreateItemCategoryFormSchema : EditItemCategoryFormSchema
+      }
+      initialValues={initialValues}
+      onSubmit={handleFormSubmit}
+    >
+      <ItemCategoryFormContent />
+    </Formik>
   );
 }
+
+export default compose(
+  withDialogActions,
+)(ItemCategoryForm);

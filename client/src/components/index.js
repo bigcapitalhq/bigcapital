@@ -44,7 +44,7 @@ import InputPrependText from './Forms/InputPrependText';
 import PageFormBigNumber from './PageFormBigNumber';
 import AccountsMultiSelect from './AccountsMultiSelect';
 import CustomersMultiSelect from './CustomersMultiSelect';
-
+import Skeleton from './Skeleton'
 
 import TableFastCell from './Datatable/TableFastCell';
 
@@ -97,6 +97,6 @@ export {
   AccountsMultiSelect,
   DataTableEditable,
   CustomersMultiSelect,
-
   TableFastCell,
+  Skeleton,
 };

@@ -1,9 +1,9 @@
-import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
 import moment from 'moment';
 import { Intent } from '@blueprintjs/core';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 
@@ -16,14 +16,10 @@ import CustomersTabs from 'containers/Customers/CustomersTabs';
 import CustomerFloatingActions from './CustomerFloatingActions';
 
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
-import withCustomerDetail from 'containers/Customers/withCustomerDetail';
-import withCustomersActions from 'containers/Customers/withCustomersActions';
-import withMediaActions from 'containers/Media/withMediaActions';
-import withCustomers from 'containers/Customers//withCustomers';
 import withSettings from 'containers/Settings/withSettings';
-import useMedia from 'hooks/useMedia';
 
 import { compose, transformToForm } from 'utils';
+import { useCustomerFormContext } from './CustomerFormProvider';
 
 const defaultInitialValues = {
   customer_type: 'business',
@@ -68,43 +64,20 @@ function CustomerForm({
   // #withDashboardActions
   changePageTitle,
 
-  // #withCustomers
-  customers,
-
-  // #withCustomerDetail
-  customer,
-
   // #withSettings
   baseCurrency,
-
-  // #withCustomersActions
-  requestSubmitCustomer,
-  requestEditCustomer,
-
-  // #withMediaActions
-  requestSubmitMedia,
-  requestDeleteMedia,
-
-  // #Props
-  customerId,
-  onFormSubmit,
-  onCancelForm,
 }) {
-  const isNewMode = !customerId;
-  const [submitPayload, setSubmitPayload] = useState({});
+  const {
+    customer,
+    customerId,
+    submitPayload,
+    editCustomerMutate,
+    createCustomerMutate,
+  } = useCustomerFormContext();
 
+  const isNewMode = !customerId;
   const history = useHistory();
   const { formatMessage } = useIntl();
-  const {
-    setFiles,
-    saveMedia,
-    deletedFiles,
-    setDeletedFiles,
-    deleteMedia,
-  } = useMedia({
-    saveCallback: requestSubmitMedia,
-    deleteCallback: requestDeleteMedia,
-  });
 
   const validationSchema = Yup.object().shape({
     customer_type: Yup.string()
@@ -158,7 +131,7 @@ function CustomerForm({
       currency_code: baseCurrency,
       ...transformToForm(customer, defaultInitialValues),
     }),
-    [customer, defaultInitialValues],
+    [customer, baseCurrency],
   );
 
   useEffect(() => {
@@ -196,52 +169,13 @@ function CustomerForm({
     };
 
     if (customer && customer.id) {
-      requestEditCustomer(customer.id, formValues)
+      editCustomerMutate(customer.id, formValues)
         .then(onSuccess)
         .catch(onError);
     } else {
-      requestSubmitCustomer(formValues).then(onSuccess).catch(onError);
+      createCustomerMutate(formValues).then(onSuccess).catch(onError);
     }
   };
-
-  const initialAttachmentFiles = useMemo(() => {
-    return customer && customer.media
-      ? customer.media.map((attach) => ({
-          preview: attach.attachment_file,
-          upload: true,
-          metadata: { ...attach },
-        }))
-      : [];
-  }, []);
-
-  const handleDropFiles = useCallback((_files) => {
-    setFiles(_files.filter((file) => file.uploaded === false));
-  }, []);
-
-  const handleDeleteFile = useCallback(
-    (_deletedFiles) => {
-      _deletedFiles.forEach((deletedFile) => {
-        if (deletedFile.uploaded && deletedFile.metadata.id) {
-          setDeletedFiles([...deletedFiles, deletedFile.metadata.id]);
-        }
-      });
-    },
-    [setDeletedFiles, deletedFiles],
-  );
-
-  const handleCancelClick = useCallback(
-    (event) => {
-      history.goBack();
-    },
-    [history],
-  );
-
-  const handleSubmitClick = useCallback(
-    (event, payload) => {
-      setSubmitPayload({ ...payload });
-    },
-    [setSubmitPayload],
-  );
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM, CLASSES.PAGE_FORM_CUSTOMER)}>
@@ -250,42 +184,29 @@ function CustomerForm({
         initialValues={initialValues}
         onSubmit={handleFormSubmit}
       >
-        {({ isSubmitting }) => (
-          <Form>
-            <div className={classNames(CLASSES.PAGE_FORM_HEADER_PRIMARY)}>
-              <CustomerFormPrimarySection />
-            </div>
+        <Form>
+          <div className={classNames(CLASSES.PAGE_FORM_HEADER_PRIMARY)}>
+            <CustomerFormPrimarySection />
+          </div>
 
-            <div className={'page-form__after-priamry-section'}>
-              <CustomerFormAfterPrimarySection />
-            </div>
+          <div className={'page-form__after-priamry-section'}>
+            <CustomerFormAfterPrimarySection />
+          </div>
 
-            <div className={classNames(CLASSES.PAGE_FORM_TABS)}>
-              <CustomersTabs customer={customerId} />
-            </div>
+          <div className={classNames(CLASSES.PAGE_FORM_TABS)}>
+            <CustomersTabs />
+          </div>
 
-            <CustomerFloatingActions
-              isSubmitting={isSubmitting}
-              customerId={customer}
-              onSubmitClick={handleSubmitClick}
-              onCancelClick={handleCancelClick}
-            />
-          </Form>
-        )}
+          <CustomerFloatingActions />
+        </Form>
       </Formik>
     </div>
   );
 }
 
 export default compose(
-  withCustomerDetail,
-  withCustomers(({ customers }) => ({
-    customers,
-  })),
   withSettings(({ organizationSettings }) => ({
     baseCurrency: organizationSettings?.baseCurrency,
   })),
   withDashboardActions,
-  withCustomersActions,
-  withMediaActions,
 )(CustomerForm);

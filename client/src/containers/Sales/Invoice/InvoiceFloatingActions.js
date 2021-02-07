@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import {
   Intent,
   Button,
@@ -11,72 +11,67 @@ import {
 } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 import { FormattedMessage as T } from 'react-intl';
+import { useHistory } from 'react-router-dom';
 import { CLASSES } from 'common/classes';
 import classNames from 'classnames';
-import { saveInvoke } from 'utils';
+
+import { useInvoiceFormContext } from './InvoiceFormProvider';
 import { If, Icon } from 'components';
 
 /**
  * Invoice floating actions bar.
  */
-export default function InvoiceFloatingActions({
-  isSubmitting,
-  onSubmitClick,
-  onCancelClick,
-  invoice,
-}) {
+export default function InvoiceFloatingActions() {
+  const history = useHistory();
+
+  // Formik context.
+  const { isSubmitting } = useFormikContext();
+
+  // Formik context.
   const { resetForm, submitForm } = useFormikContext();
 
+  // Invoice form context.
+  const { setSubmitPayload, invoice } = useInvoiceFormContext();
+
+  // Handle submit & deliver button click.
   const handleSubmitDeliverBtnClick = (event) => {
-    saveInvoke(onSubmitClick, event, {
-      redirect: true,
-      deliver: true,
-    });
+    setSubmitPayload({ redirect: true, deliver: true });
+    submitForm();
   };
 
+  // Handle submit, deliver & new button click.
   const handleSubmitDeliverAndNewBtnClick = (event) => {
+    setSubmitPayload({ redirect: false, deliver: true, resetForm: true });
     submitForm();
-    saveInvoke(onSubmitClick, event, {
-      redirect: false,
-      deliver: true,
-      resetForm: true,
-    });
   };
 
+  // Handle submit, deliver & continue editing button click.
   const handleSubmitDeliverContinueEditingBtnClick = (event) => {
+    setSubmitPayload({ redirect: false, deliver: true });
     submitForm();
-    saveInvoke(onSubmitClick, event, {
-      redirect: false,
-      deliver: true,
-    });
   };
 
+  // Handle submit as draft button click.
   const handleSubmitDraftBtnClick = (event) => {
-    saveInvoke(onSubmitClick, event, {
-      redirect: true,
-      deliver: false,
-    });
+    setSubmitPayload({ redirect: true, deliver: false });
+    submitForm();
   };
 
+  // Handle submit as draft & new button click.
   const handleSubmitDraftAndNewBtnClick = (event) => {
+    setSubmitPayload({ redirect: false, deliver: false, resetForm: true });
     submitForm();
-    saveInvoke(onSubmitClick, event, {
-      redirect: false,
-      deliver: false,
-      resetForm: true,
-    });
   };
 
+  // Handle submit as draft & continue editing button click.
   const handleSubmitDraftContinueEditingBtnClick = (event) => {
+    setSubmitPayload({ redirect: false, deliver: false });
     submitForm();
-    saveInvoke(onSubmitClick, event, {
-      redirect: false,
-      deliver: false,
-    });
   };
 
+  // Handle cancel button click.
   const handleCancelBtnClick = (event) => {
-    saveInvoke(onCancelClick, event);
+    history.goBack();
   };
 
   const handleClearBtnClick = (event) => {
@@ -90,8 +85,8 @@ export default function InvoiceFloatingActions({
         <ButtonGroup>
           <Button
             disabled={isSubmitting}
+            loading={isSubmitting}
             intent={Intent.PRIMARY}
-            type="submit"
             onClick={handleSubmitDeliverBtnClick}
             text={<T id={'save_and_deliver'} />}
           />
@@ -124,7 +119,6 @@ export default function InvoiceFloatingActions({
           <Button
             disabled={isSubmitting}
             className={'ml1'}
-            type="submit"
             onClick={handleSubmitDraftBtnClick}
             text={<T id={'save_as_draft'} />}
           />
@@ -158,7 +152,6 @@ export default function InvoiceFloatingActions({
           <Button
             disabled={isSubmitting}
             intent={Intent.PRIMARY}
-            type="submit"
             onClick={handleSubmitDeliverBtnClick}
             text={<T id={'save'} />}
           />

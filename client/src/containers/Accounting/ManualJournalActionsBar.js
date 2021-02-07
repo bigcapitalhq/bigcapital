@@ -1,23 +1,21 @@
-import React, { useMemo, useState, useCallback } from 'react';
+import React from 'react';
 import Icon from 'components/Icon';
 import {
   Button,
   NavbarGroup,
   Classes,
   NavbarDivider,
-  MenuItem,
-  Menu,
   Popover,
   PopoverInteractionKind,
   Position,
   Intent,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { useRouteMatch, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { FormattedMessage as T } from 'react-intl';
 import { connect } from 'react-redux';
 
-import FilterDropdown from 'components/FilterDropdown';
+import { useManualJournalsContext } from 'containers/Accounting/ManualJournalsListProvider';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 
@@ -33,53 +31,24 @@ import { compose } from 'utils';
  * Manual journal actions bar.
  */
 function ManualJournalActionsBar({
-  // #withResourceDetail
-  resourceFields,
-
-  // #withManualJournals
-  manualJournalsViews,
-
   // #withManualJournalsActions
   addManualJournalsTableQueries,
-  changeManualJournalCurrentView,
-
-  onFilterChanged,
-  selectedRows = [],
-  onBulkDelete,
 }) {
-  const [filterCount, setFilterCount] = useState(0);
   const history = useHistory();
+  const { journalsViews } = useManualJournalsContext();
 
-  const onClickNewManualJournal = useCallback(() => {
+  // Handle click a new manual journal.
+  const onClickNewManualJournal = () => {
     history.push('/make-journal-entry');
-  }, [history]);
-
-  // const filterDropdown = FilterDropdown({
-  //   fields: resourceFields,
-  //   initialCondition: {
-  //     fieldKey: 'journal_number',
-  //     compatator: 'contains',
-  //     value: '',
-  //   },
-  //   onFilterChange: (filterConditions) => {
-  //     setFilterCount(filterConditions.length || 0);
-  //     addManualJournalsTableQueries({
-  //       filter_roles: filterConditions || '',
-  //     });
-  //     onFilterChanged && onFilterChanged(filterConditions);
-  //   },
-  // });
-  const hasSelectedRows = useMemo(() => selectedRows.length > 0, [
-    selectedRows,
-  ]);
+  };
 
   // Handle delete button click.
-  const handleBulkDelete = useCallback(() => {
-    onBulkDelete && onBulkDelete(selectedRows.map((r) => r.id));
-  }, [onBulkDelete, selectedRows]);
+  const handleBulkDelete = () => {
+    
+  };
 
+  // Handle tab change.
   const handleTabChange = (viewId) => {
-    changeManualJournalCurrentView(viewId.id || -1);
     addManualJournalsTableQueries({
       custom_view_id: viewId.id || null,
     });
@@ -90,7 +59,7 @@ function ManualJournalActionsBar({
       <NavbarGroup>
         <DashboardActionViewsList
           resourceName={'manual-journals'}
-          views={manualJournalsViews}
+          views={journalsViews}
           onChange={handleTabChange}
         />
         <NavbarDivider />
@@ -109,14 +78,14 @@ function ManualJournalActionsBar({
         >
           <Button
             className={classNames(Classes.MINIMAL, 'button--filter', {
-              'has-active-filters': filterCount > 0,
+              'has-active-filters': false,
             })}
             text="Filter"
             icon={<Icon icon="filter-16" iconSize={16} />}
           />
         </Popover>
 
-        <If condition={hasSelectedRows}>
+        <If condition={false}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon="trash-16" iconSize={16} />}

@@ -1,50 +1,50 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { Intent, Alert } from '@blueprintjs/core';
-import { queryCache } from 'react-query';
 import { AppToaster } from 'components';
 
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
-import withAccountsActions from 'containers/Accounts/withAccountsActions';
 
 import { compose } from 'utils';
+import { useInactivateAccount } from 'hooks/query';
 
+/**
+ * Account inactivate alert.
+ */
 function AccountInactivateAlert({
   name,
+
+  // #withAlertStoreConnect
   isOpen,
   payload: { accountId },
 
   // #withAlertActions
   closeAlert,
-
-  // #withAccountsActions
-  requestInactiveAccount,
 }) {
   const { formatMessage } = useIntl();
-  const [isLoading, setLoading] = useState(false);
+  const {
+    mutateAsync: inactivateAccount,
+    isLoading
+  } = useInactivateAccount();
 
   const handleCancelInactiveAccount = () => {
     closeAlert('account-inactivate');
   };
 
   const handleConfirmAccountActive = () => {
-    setLoading(true);
-    requestInactiveAccount(accountId)
-      .then(() => {
-        AppToaster.show({
-          message: formatMessage({
-            id: 'the_account_has_been_successfully_inactivated',
-          }),
-          intent: Intent.SUCCESS,
-        });
-        queryCache.invalidateQueries('accounts-table');
-      })
-      .catch((error) => {})
-      .finally(() => {
-        setLoading(false);
-        closeAlert('account-inactivate');
+    inactivateAccount(accountId).then(() => {
+      AppToaster.show({
+        message: formatMessage({
+          id: 'the_account_has_been_successfully_inactivated',
+        }),
+        intent: Intent.SUCCESS,
       });
+    }).catch(() => {
+
+    }).finally(() => {
+      closeAlert('account-inactivate');
+    });
   };
 
   return (
@@ -67,5 +67,4 @@ function AccountInactivateAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
-  withAccountsActions,
 )(AccountInactivateAlert);

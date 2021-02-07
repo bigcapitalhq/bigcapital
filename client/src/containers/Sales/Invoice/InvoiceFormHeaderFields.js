@@ -18,21 +18,25 @@ import {
   InputPrependButton,
 } from 'components';
 
-import withCustomers from 'containers/Customers/withCustomers';
+import { useInvoiceFormContext } from './InvoiceFormProvider';
+
 import withDialogActions from 'containers/Dialog/withDialogActions';
 
 import { inputIntent, handleDateChange } from 'utils';
 
+/**
+ * Invoice form header fields.
+ */
 function InvoiceFormHeaderFields({
-  // #withCustomers
-  customers,
-
   // #withDialogActions
   openDialog,
 
   // #ownProps
   onInvoiceNumberChanged,
 }) {
+  // Invoice form context.
+  const { customers } = useInvoiceFormContext();
+
   const handleInvoiceNumberChange = useCallback(() => {
     openDialog('invoice-number-form', {});
   }, [openDialog]);
@@ -169,8 +173,5 @@ function InvoiceFormHeaderFields({
 }
 
 export default compose(
-  withCustomers(({ customers }) => ({
-    customers,
-  })),
   withDialogActions,
 )(InvoiceFormHeaderFields);

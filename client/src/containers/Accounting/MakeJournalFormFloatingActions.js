@@ -12,73 +12,64 @@ import {
 import { useFormikContext } from 'formik';
 import classNames from 'classnames';
 import { FormattedMessage as T } from 'react-intl';
-import { saveInvoke } from 'utils';
 import { CLASSES } from 'common/classes';
 import { Icon, If } from 'components';
+import { useHistory } from 'react-router-dom';
+import { useMakeJournalFormContext } from './MakeJournalProvider';
 
 /**
  * Make Journal floating actions bar.
  */
-export default function MakeJournalFloatingAction({
-  isSubmitting,
-  onSubmitClick,
-  onCancelClick,
-  manualJournal,
-}) {
-  const { submitForm, resetForm } = useFormikContext();
+export default function MakeJournalFloatingAction() {
+  const history = useHistory();
 
+  // Formik context.
+  const { submitForm, resetForm, isSubmitting } = useFormikContext();
+
+  // Make journal form context.
+  const { setSubmitPayload, manualJournal } = useMakeJournalFormContext();
+
+  // Handle submit & publish button click.
   const handleSubmitPublishBtnClick = (event) => {
-    saveInvoke(onSubmitClick, event, {
-      redirect: true,
-      publish: true,
-    });
+    submitForm();
+    setSubmitPayload({ redirect: true, publish: true });
   };
 
+  // Handle submit, publish & new button click.
   const handleSubmitPublishAndNewBtnClick = (event) => {
     submitForm();
-    saveInvoke(onSubmitClick, event, {
-      redirect: false,
-      publish: true,
-      resetForm: true,
-    });
+    setSubmitPayload({ redirect: false, publish: true, resetForm: true });
   };
 
+  // Handle submit, publish & edit button click.
   const handleSubmitPublishContinueEditingBtnClick = (event) => {
     submitForm();
-    saveInvoke(onSubmitClick, event, {
-      redirect: false,
-      publish: true,
-    });
+    setSubmitPayload({ redirect: false, publish: true });
   };
 
+  // Handle submit as draft button click.
   const handleSubmitDraftBtnClick = (event) => {
-    saveInvoke(onSubmitClick, event, {
-      redirect: true,
-      publish: false,
-    });
+    setSubmitPayload({ redirect: true, publish: false });
   };
 
+  // Handle submit as draft & new button click.
   const handleSubmitDraftAndNewBtnClick = (event) => {
     submitForm();
-    saveInvoke(onSubmitClick, event, {
-      redirect: false,
-      publish: false,
-      resetForm: true,
-    });
+    setSubmitPayload({ redirect: false, publish: false, resetForm: true });
   };
 
+  // Handle submit as draft & continue editing button click.
   const handleSubmitDraftContinueEditingBtnClick = (event) => {
     submitForm();
-    saveInvoke(onSubmitClick, event, {
-      redirect: false,
-      publish: false,
-    });
+    setSubmitPayload({ redirect: false, publish: false });
   };
 
+  // Handle cancel button click.
   const handleCancelBtnClick = (event) => {
-    saveInvoke(onCancelClick, event);
+    history.goBack();
   };
 
+  // Handle clear button click.
   const handleClearBtnClick = (event) => {
     resetForm();
   };
@@ -90,6 +81,7 @@ export default function MakeJournalFloatingAction({
         <ButtonGroup>
           <Button
             disabled={isSubmitting}
+            loading={isSubmitting}
             intent={Intent.PRIMARY}
             onClick={handleSubmitPublishBtnClick}
             text={<T id={'save_publish'} />}
@@ -114,6 +106,7 @@ export default function MakeJournalFloatingAction({
             <Button
               intent={Intent.PRIMARY}
               rightIcon={<Icon icon="arrow-drop-up-16" iconSize={20} />}
+              disabled={isSubmitting}
             />
           </Popover>
         </ButtonGroup>
@@ -144,6 +137,7 @@ export default function MakeJournalFloatingAction({
           >
             <Button
               rightIcon={<Icon icon="arrow-drop-up-16" iconSize={20} />}
+              disabled={isSubmitting}
             />
           </Popover>
         </ButtonGroup>
@@ -173,6 +167,7 @@ export default function MakeJournalFloatingAction({
             <Button
               intent={Intent.PRIMARY}
               rightIcon={<Icon icon="arrow-drop-up-16" iconSize={20} />}
+              disabled={isSubmitting}
             />
           </Popover>
         </ButtonGroup>

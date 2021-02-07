@@ -1,10 +1,8 @@
-import React, { useCallback, useState, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import Icon from 'components/Icon';
 import {
   Button,
   Classes,
-  Menu,
-  MenuItem,
   Popover,
   NavbarDivider,
   NavbarGroup,
@@ -14,75 +12,50 @@ import {
 } from '@blueprintjs/core';
 
 import classNames from 'classnames';
-import { useRouteMatch, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 
-import { connect } from 'react-redux';
 import { If, DashboardActionViewsList } from 'components';
 import FilterDropdown from 'components/FilterDropdown';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 
-import withResourceDetail from 'containers/Resources/withResourceDetails';
-import withDialogActions from 'containers/Dialog/withDialogActions';
+
 import withReceiptActions from './withReceiptActions';
-import withReceipts from './withReceipts';
+import { useReceiptsListContext } from './ReceiptsListProvider';
 
 import { compose } from 'utils';
 
+/**
+ * Receipts actions bar.
+ */
 function ReceiptActionsBar({
-  // #withResourceDetail
-  resourceFields,
-
-  //#withReceipts
-  receiptview,
   //#withReceiptActions
   addReceiptsTableQueries,
-  changeReceiptView,
-
-  //#OWn Props
-  onFilterChanged,
-  selectedRows = [],
 }) {
   const history = useHistory();
-  const [filterCount, setFilterCount] = useState(0);
   const { formatMessage } = useIntl();
+  
+  const [filterCount, setFilterCount] = useState(0);
 
-  const onClickNewReceipt = useCallback(() => {
+  // Sale receipts list context.
+  const { receiptsViews } = useReceiptsListContext();
+
+  const onClickNewReceipt = () => {
     history.push('/receipts/new');
-  }, [history]);
-
-  const hasSelectedRows = useMemo(() => selectedRows.length > 0, [
-    selectedRows,
-  ]);
-
+  };
+ 
   const handleTabChange = (viewId) => {
-    changeReceiptView(viewId.id || -1);
     addReceiptsTableQueries({
       custom_view_id: viewId.id || null,
     });
   };
-
-  // const filterDropdown = FilterDropdown({
-  //   initialCondition: {
-  //     fieldKey: '',
-  //     compatator: '',
-  //     value: '',
-  //   },
-  //   fields: resourceFields,
-  //   onFilterChange: (filterConditions) => {
-  //     addReceiptsTableQueries({
-  //       filter_roles: filterConditions || '',
-  //     });
-  //     onFilterChanged && onFilterChange(filterConditions);
-  //   },
-  // });
-
+ 
   return (
     <DashboardActionsBar>
       <NavbarGroup>
         <DashboardActionViewsList
           resourceName={'receipts'}
-          views={receiptview}
+          views={receiptsViews}
           onChange={handleTabChange}
         />
 
@@ -111,7 +84,7 @@ function ReceiptActionsBar({
             icon={<Icon icon={'filter-16'} iconSize={16} />}
           />
         </Popover>
-        <If condition={hasSelectedRows}>
+        <If condition={false}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon={'trash-16'} iconSize={16} />}
@@ -139,19 +112,7 @@ function ReceiptActionsBar({
     </DashboardActionsBar>
   );
 }
-const mapStateToProps = (state, props) => ({
-  resourceName: 'sales_receipts',
-});
-
-const withReceiptActionsBar = connect(mapStateToProps);
 
 export default compose(
-  withReceiptActionsBar,
-  withResourceDetail(({ resourceFields }) => ({
-    resourceFields,
-  })),
-  withReceipts(({ receiptview }) => ({
-    receiptview,
-  })),
   withReceiptActions,
 )(ReceiptActionsBar);

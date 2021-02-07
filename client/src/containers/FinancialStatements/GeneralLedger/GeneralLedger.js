@@ -1,15 +1,15 @@
 import React, { useEffect, useCallback, useState } from 'react';
 import moment from 'moment';
-import { useQuery } from 'react-query';
 import { useIntl } from 'react-intl';
-import { queryCache } from 'react-query';
 
-import GeneralLedgerTable from 'containers/FinancialStatements/GeneralLedger/GeneralLedgerTable';
+import 'style/pages/FinancialStatements/GeneralLedger.scss';
+
+import GeneralLedgerTable from './GeneralLedgerTable';
 import GeneralLedgerHeader from './GeneralLedgerHeader';
 
-import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import GeneralLedgerActionsBar from './GeneralLedgerActionsBar';
+import { GeneralLedgerProvider } from './GeneralLedgerProvider';
 
 import withGeneralLedgerActions from './withGeneralLedgerActions';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
@@ -19,9 +19,6 @@ import withSettings from 'containers/Settings/withSettings';
 import { compose } from 'utils';
 
 import { transformFilterFormToQuery } from 'containers/FinancialStatements/common';
-import withGeneralLedger from './withGeneralLedger';
-
-import 'style/pages/FinancialStatements/GeneralLedger.scss';
 
 /**
  * General Ledger (GL) sheet.
@@ -32,14 +29,7 @@ function GeneralLedger({
   setDashboardBackLink,
 
   // #withGeneralLedgerActions
-  fetchGeneralLedger,
   refreshGeneralLedgerSheet,
-
-  // #withAccountsActions
-  requestFetchAccounts,
-
-  // #withGeneralLedger
-  generalLedgerSheetRefresh,
 
   // #withSettings
   organizationName,
@@ -66,24 +56,7 @@ function GeneralLedger({
       setDashboardBackLink(false);
     };
   });
-
-  // Observes the GL sheet refresh to invalid the query to refresh it.
-  useEffect(() => {
-    if (generalLedgerSheetRefresh) {
-      queryCache.invalidateQueries('general-ledger');
-      refreshGeneralLedgerSheet(false);
-    }
-  }, [generalLedgerSheetRefresh, refreshGeneralLedgerSheet]);
-
-  // Fetches accounts list.
-  const fetchAccounts = useQuery(['accounts-list'], () =>
-    requestFetchAccounts(),
-  );
-  // Fetches the general ledger sheet.
-  const fetchSheet = useQuery(['general-ledger', filter], (key, q) =>
-    fetchGeneralLedger({ ...transformFilterFormToQuery(q) }),
-  );
-
+  
   // Handle financial statement filter change.
   const handleFilterSubmit = useCallback(
     (filter) => {
@@ -99,7 +72,7 @@ function GeneralLedger({
   );
 
   return (
-    <DashboardInsider>
+    <GeneralLedgerProvider query={filter}>
       <GeneralLedgerActionsBar />
 
       <DashboardPageContent>
@@ -117,7 +90,7 @@ function GeneralLedger({
           </div>
         </div>
       </DashboardPageContent>
-    </DashboardInsider>
+    </GeneralLedgerProvider>
   );
 }
 
@@ -125,9 +98,6 @@ export default compose(
   withGeneralLedgerActions,
   withDashboardActions,
   withAccountsActions,
-  withGeneralLedger(({ generalLedgerSheetRefresh }) => ({
-    generalLedgerSheetRefresh,
-  })),
   withSettings(({ organizationSettings }) => ({
     organizationName: organizationSettings.name,
   })),

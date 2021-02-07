@@ -9,7 +9,7 @@ export default function TableRows() {
     table: { prepareRow, page },
     props: { TableRowRenderer, TableCellRenderer },
   } = useContext(TableContext);
-  
+
   return page.map((row) => {
     prepareRow(row);
     return <TableRowRenderer row={row} TableCellRenderer={TableCellRenderer} />;

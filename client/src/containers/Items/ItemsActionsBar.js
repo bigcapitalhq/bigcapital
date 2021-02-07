@@ -1,11 +1,9 @@
-import React, { useMemo, useCallback, useState, useEffect } from 'react';
-import { useRouteMatch, useHistory, useParams } from 'react-router-dom';
+import React from 'react';
+import { useHistory } from 'react-router-dom';
 import classNames from 'classnames';
 import {
-  MenuItem,
   Popover,
   NavbarGroup,
-  Menu,
   NavbarDivider,
   PopoverInteractionKind,
   Position,
@@ -16,57 +14,44 @@ import {
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import Icon from 'components/Icon';
-import FilterDropdown from 'components/FilterDropdown';
 import { If, DashboardActionViewsList } from 'components';
 
-import withResourceDetail from 'containers/Resources/withResourceDetails';
+import { useItemsListContext } from './ItemsListProvider';
+
 import withItems from 'containers/Items/withItems';
 import withItemsActions from './withItemsActions';
 import withAlertActions from 'containers/Alert/withAlertActions';
 
 import { compose } from 'utils';
-import { connect } from 'react-redux';
 
-const ItemsActionsBar = ({
-  // #withResourceDetail
-  resourceFields,
-
+/**
+ * Items actions bar.
+ */
+function ItemsActionsBar({
   // #withItems
-  itemsViews,
   itemsSelectedRows,
 
-  //#withItemActions
+  // #withItemActions
   addItemsTableQueries,
-  changeItemsCurrentView,
 
   // #withAlertActions
   openAlert,
-  onFilterChanged,
-}) => {
+}) {
+  // Items list context.
+  const { itemsViews } = useItemsListContext();
+
   const { formatMessage } = useIntl();
+
+  // History context.
   const history = useHistory();
 
-  const onClickNewItem = useCallback(() => {
+  // Handle `new item` button click.
+  const onClickNewItem = () => {
     history.push('/items/new');
-  }, [history]);
+  };
 
-  const filterDropdown = FilterDropdown({
-    fields: resourceFields,
-    initialCondition: {
-      fieldKey: 'name',
-      compatator: 'contains',
-      value: '',
-    },
-    onFilterChange: (filterConditions) => {
-      addItemsTableQueries({
-        filter_roles: filterConditions || '',
-      });
-      onFilterChanged && onFilterChanged(filterConditions);
-    },
-  });
-
+  // Handle tab changing.
   const handleTabChange = (viewId) => {
-    changeItemsCurrentView(viewId.id || -1);
     addItemsTableQueries({
       custom_view_id: viewId.id || null,
     });
@@ -85,7 +70,6 @@ const ItemsActionsBar = ({
           views={itemsViews}
           onChange={handleTabChange}
         />
-
         <NavbarDivider />
 
         <Button
@@ -97,7 +81,7 @@ const ItemsActionsBar = ({
         <NavbarDivider />
 
         <Popover
-          content={filterDropdown}
+          content={''}
           interactionKind={PopoverInteractionKind.CLICK}
           position={Position.BOTTOM_LEFT}
         >
@@ -133,21 +117,9 @@ const ItemsActionsBar = ({
   );
 };
 
-const mapStateToProps = (state, props) => ({
-  resourceName: 'items',
-});
-
-const withItemsActionsBar = connect(mapStateToProps);
 
 export default compose(
-  withItemsActionsBar,
-  withItems(({ itemsViews, itemsSelectedRows }) => ({
-    itemsViews,
-    itemsSelectedRows,
-  })),
-  withResourceDetail(({ resourceFields }) => ({
-    resourceFields,
-  })),
+  withItems(({ itemsSelectedRows }) => ({ itemsSelectedRows })),
   withItemsActions,
   withAlertActions,
 )(ItemsActionsBar);

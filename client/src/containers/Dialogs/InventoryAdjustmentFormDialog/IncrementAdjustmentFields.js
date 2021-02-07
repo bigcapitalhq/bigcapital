@@ -1,12 +1,15 @@
 import React from 'react';
 import { Field, FastField, ErrorMessage } from 'formik';
 import { FormGroup, InputGroup } from '@blueprintjs/core';
+import { useAutofocus } from 'hooks';
 import { Row, Col, MoneyInputGroup } from 'components';
 import { inputIntent, toSafeNumber } from 'utils';
 import { FormattedMessage as T } from 'react-intl';
 import { decrementQuantity, incrementQuantity } from './utils';
 
-function IncrementAdjustmentFields() {
+export default function IncrementAdjustmentFields() {
+  const incrementFieldRef = useAutofocus();
+
   return (
     <Row>
       {/*------------ Quantity on hand  -----------*/}
@@ -47,6 +50,7 @@ function IncrementAdjustmentFields() {
                 value={field.value}
                 allowDecimals={false}
                 allowNegativeValue={true}
+                inputRef={(ref) => (incrementFieldRef.current = ref)}
                 onChange={(value) => {
                   setFieldValue('quantity', value);
                 }}
@@ -131,5 +135,3 @@ function IncrementAdjustmentFields() {
     </Row>
   );
 }
-
-export default IncrementAdjustmentFields;

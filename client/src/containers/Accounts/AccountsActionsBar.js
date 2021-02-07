@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react';
+import React from 'react';
 import Icon from 'components/Icon';
 import {
   Button,
@@ -11,16 +11,14 @@ import {
   Intent,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { connect } from 'react-redux';
 import { FormattedMessage as T } from 'react-intl';
 import { If, DashboardActionViewsList } from 'components';
 
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import FilterDropdown from 'components/FilterDropdown';
 
+import { useAccountsChartContext } from 'containers/Accounts/AccountsChartProvider';
 import withDialogActions from 'containers/Dialog/withDialogActions';
-import withResourceDetail from 'containers/Resources/withResourceDetails';
-import withAccountsTableActions from 'containers/Accounts/withAccountsTableActions';
 import withAccounts from 'containers/Accounts/withAccounts';
 import withAlertActions from 'containers/Alert/withAlertActions';
 
@@ -30,61 +28,39 @@ import { compose } from 'utils';
  * Accounts actions bar.
  */
 function AccountsActionsBar({
+  // #withDialogActions
   openDialog,
-  accountsViews,
-
-  // #withResourceDetail
-  resourceFields,
-
-  // #withAccountsTableActions
-  addAccountsTableQueries,
-  setAccountsBulkAction,
 
   // #withAccounts
-  accountsTableQuery,
   accountsSelectedRows,
 
   // #withAlertActions
   openAlert,
 
+  // #ownProps
   onFilterChanged,
 }) {
-  const [filterCount, setFilterCount] = useState(
-    accountsTableQuery?.filter_roles?.length || 0,
-  );
+  const { resourceViews } = useAccountsChartContext();
 
   const onClickNewAccount = () => {
     openDialog('account-form', {});
   };
 
-  // Filter dropdown.
-  const filterDropdown = FilterDropdown({
-    fields: resourceFields,
-    initialConditions: accountsTableQuery.filter_roles,
-    initialCondition: {
-      fieldKey: 'name',
-      comparator: 'contains',
-      value: '',
-    },
-    onFilterChange: (filterConditions) => {
-      setFilterCount(filterConditions.length || 0);
-      addAccountsTableQueries({
-        filter_roles: filterConditions || '',
-      });
-      onFilterChanged && onFilterChanged(filterConditions);
-    },
-  });
-
+  // handle bulk accounts delete.
   const handleBulkDelete = () => {
     openAlert('accounts-bulk-delete', { accountsIds: accountsSelectedRows });
   };
 
+  // Handle bulk accounts activate.
   const handelBulkActivate = () => {
     openAlert('accounts-bulk-activate', { accountsIds: accountsSelectedRows });
   };
 
+  // Handle bulk accounts inactivate.
   const handelBulkInactive = () => {
-    openAlert('accounts-bulk-inactivate', { accountsIds: accountsSelectedRows });
+    openAlert('accounts-bulk-inactivate', {
+      accountsIds: accountsSelectedRows,
+    });
   };
 
   return (
@@ -92,7 +68,7 @@ function AccountsActionsBar({
       <NavbarGroup>
         <DashboardActionViewsList
           resourceName={'accounts'}
-          views={accountsViews}
+          views={resourceViews}
         />
         <NavbarDivider />
 
@@ -104,23 +80,20 @@ function AccountsActionsBar({
         />
         <Popover
           minimal={true}
-          content={filterDropdown}
+          content={''}
           interactionKind={PopoverInteractionKind.CLICK}
           position={Position.BOTTOM_LEFT}
           canOutsideClickClose={true}
         >
           <Button
             className={classNames(Classes.MINIMAL, 'button--filter', {
-              'has-active-filters': filterCount > 0,
+              'has-active-filters': false,
             })}
             text={
-              (filterCount <= 0) ? (
+              true ? (
                 <T id={'filter'} />
               ) : (
-                <T
-                  id={'count_filters_applied'}
-                  values={{ count: filterCount }}
-                />
+                <T id={'count_filters_applied'} values={{ count: 0 }} />
               )
             }
             icon={<Icon icon="filter-16" iconSize={16} />}
@@ -169,30 +142,10 @@ function AccountsActionsBar({
   );
 }
 
-// Momerize the component.
-const AccountsActionsBarMemo = memo(AccountsActionsBar);
-
-const mapStateToProps = (state, props) => ({
-  resourceName: 'accounts',
-});
-
-const withAccountsActionsBar = connect(mapStateToProps);
-
-const comp = compose(
-  withAccountsActionsBar,
+export default compose(
   withDialogActions,
-  withAccounts(
-    ({ accountsSelectedRows, accountsViews, accountsTableQuery }) => ({
-      accountsViews,
-      accountsTableQuery,
-      accountsSelectedRows,
-    }),
-  ),
-  withResourceDetail(({ resourceFields }) => ({
-    resourceFields,
+  withAccounts(({ accountsSelectedRows }) => ({
+    accountsSelectedRows,
   })),
-  withAccountsTableActions,
-  withAlertActions
-)(AccountsActionsBarMemo);
-
-export default comp;
+  withAlertActions,
+)(AccountsActionsBar);

@@ -7,7 +7,11 @@ import { orderingLinesIndexes, repeatValue } from 'utils';
 
 import 'style/components/DataTable/DataTableEditable.scss';
 
+/**
+ * Editable items entries table.
+ */
 export default function EditableItemsEntriesTable({
+  items,
   defaultEntry,
   minLinesNumber = 2,
   linesNumber = 5,
@@ -61,6 +65,7 @@ export default function EditableItemsEntriesTable({
             onUpdateData={(entries) => {
               form.setFieldValue('entries', entries);
             }}
+            items={items}
             entries={value}
             errors={error}
             filterPurchasableItems={filterPurchasableItems}

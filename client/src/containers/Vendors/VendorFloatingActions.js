@@ -13,41 +13,43 @@ import { FormattedMessage as T } from 'react-intl';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 import { useFormikContext } from 'formik';
-import { saveInvoke } from 'utils';
+import { useHistory } from 'react-router-dom';
 import { Icon } from 'components';
+import { useVendorFormContext } from './VendorFormProvider';
 
 /**
  * Vendor floating actions bar.
  */
-export default function VendorFloatingActions({
-  onSubmitClick,
-  onSubmitAndNewClick,
-  onCancelClick,
-  isSubmitting,
-  vendor,
-}) {
-  const { resetForm, submitForm } = useFormikContext();
+export default function VendorFloatingActions() {
+  // Formik context.
+  const { resetForm, isSubmitting, submitForm } = useFormikContext();
 
+  // Vendor form context.
+  const { vendor, setSubmitPayload } = useVendorFormContext();
+
+  // History.
+  const history = useHistory();
+
+  // Handle the submit button.
   const handleSubmitBtnClick = (event) => {
-    saveInvoke(onSubmitClick, event, {
-      noRedirect: false,
-    });
+    setSubmitPayload({ noRedirect: false, });
+    submitForm();
   };
 
-  const handleCancelBtnClick = (event) => {
-    saveInvoke(onCancelClick, event);
-  };
-
-  const handleClearBtnClick = (event) => {
-    // saveInvoke(onClearClick, event);
-    resetForm();
-  };
-
+  // Handle the submit & new button click.
   const handleSubmitAndNewClick = (event) => {
     submitForm();
-    saveInvoke(onSubmitClick, event, {
-      noRedirect: true,
-    });
+    setSubmitPayload({ noRedirect: true, });
+  };
+
+  // Handle cancel button click.
+  const handleCancelBtnClick = (event) => {
+    history.goBack();
+  };
+
+  // Handle clear button click.
+  const handleClearBtnClick = (event) => {
+    resetForm();
   };
 
   return (

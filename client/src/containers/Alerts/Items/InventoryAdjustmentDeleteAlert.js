@@ -1,16 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   FormattedMessage as T,
   FormattedHTMLMessage,
   useIntl,
 } from 'react-intl';
 import { Intent, Alert } from '@blueprintjs/core';
-import { queryCache } from 'react-query';
 import { AppToaster } from 'components';
 
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
-import withInventoryAdjustmentActions from 'containers/Items/withInventoryAdjustmentActions';
+import {
+  useDeleteInventoryAdjustment
+} from 'hooks/query';
 
 import { compose } from 'utils';
 
@@ -23,23 +24,24 @@ function InventoryAdjustmentDeleteAlert({
   // #withAlertStoreConnect
   isOpen,
   payload: { inventoryId },
-  // #withInventoryAdjustmentActions
-  requestDeleteInventoryAdjustment,
 
   // #withAlertActions
   closeAlert,
 }) {
   const { formatMessage } = useIntl();
-  const [isLoading, setLoading] = useState(false);
+  const {
+    mutateAsync: deleteInventoryAdjMutate,
+    isLoading
+  } = useDeleteInventoryAdjustment();
 
-  // handle cancel delete  alert.
+  // handle cancel delete alert.
   const handleCancelInventoryAdjustmentDelete = () => {
     closeAlert(name);
   };
 
+  // Handle the confirm delete of the inventory adjustment transaction.
   const handleConfirmInventoryAdjustmentDelete = () => {
-    setLoading(true);
-    requestDeleteInventoryAdjustment(inventoryId)
+    deleteInventoryAdjMutate(inventoryId)
       .then(() => {
         AppToaster.show({
           message: formatMessage({
@@ -47,11 +49,9 @@ function InventoryAdjustmentDeleteAlert({
           }),
           intent: Intent.SUCCESS,
         });
-        queryCache.invalidateQueries('inventory-adjustment-list');
       })
       .catch((errors) => {})
       .finally(() => {
-        setLoading(false);
         closeAlert(name);
       });
   };
@@ -81,5 +81,4 @@ function InventoryAdjustmentDeleteAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
-  withInventoryAdjustmentActions,
 )(InventoryAdjustmentDeleteAlert);

@@ -171,7 +171,8 @@ export default [
     ],
   },
   {
-    divider: true,
+    text: <T id={'system'} />,
+    label: true,
   },
   {
     text: <T id={'preferences'} />,

@@ -1,17 +1,18 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { Intent, Alert } from '@blueprintjs/core';
 import { queryCache } from 'react-query';
+
+import { useApproveEstimate } from 'hooks/query';
 import { AppToaster } from 'components';
 
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
-import withEstimateActions from 'containers/Sales/Estimate/withEstimateActions';
 
 import { compose } from 'utils';
 
 /**
- * Estimate Approve alert.
+ * Estimate approve alert.
  */
 function EstimateApproveAlert({
   name,
@@ -27,7 +28,10 @@ function EstimateApproveAlert({
   closeAlert,
 }) {
   const { formatMessage } = useIntl();
-  const [isLoading, setLoading] = useState(false);
+  const {
+    mutateAsync: deliverEstimateMutate,
+    isLoading,
+  } = useApproveEstimate();
 
   // handle cancel approve alert.
   const handleCancelApproveEstimate = () => {
@@ -35,8 +39,7 @@ function EstimateApproveAlert({
   };
   // Handle confirm estimate approve.
   const handleConfirmEstimateApprove = useCallback(() => {
-    setLoading(true);
-    requestApproveEstimate(estimateId)
+    deliverEstimateMutate(estimateId)
       .then(() => {
         AppToaster.show({
           message: formatMessage({
@@ -48,10 +51,9 @@ function EstimateApproveAlert({
       })
       .catch((error) => {})
       .finally(() => {
-        setLoading(false);
         closeAlert(name);
       });
-  }, [estimateId, requestApproveEstimate, formatMessage]);
+  }, [estimateId, deliverEstimateMutate, closeAlert, name, formatMessage]);
 
   return (
     <Alert
@@ -74,5 +76,4 @@ function EstimateApproveAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
-  withEstimateActions,
 )(EstimateApproveAlert);

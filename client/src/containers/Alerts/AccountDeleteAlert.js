@@ -1,18 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   FormattedMessage as T,
   FormattedHTMLMessage,
   useIntl,
 } from 'react-intl';
 import { Intent, Alert } from '@blueprintjs/core';
-import { queryCache } from 'react-query';
 import { AppToaster } from 'components';
 
 import { handleDeleteErrors } from 'containers/Accounts/utils';
 
-import withAccountsActions from 'containers/Accounts/withAccountsActions';
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
+
+import { useDeleteAccount } from 'hooks/query';
 
 import { compose } from 'utils';
 
@@ -26,40 +26,32 @@ function AccountDeleteAlert({
   isOpen,
   payload: { accountId },
 
-  // #withAccountsActions
-  requestDeleteAccount,
-
   // #withAlertActions
   closeAlert,
 }) {
   const { formatMessage } = useIntl();
-  const [isLoading, setLoading] = useState(false);
+  const {
+    isLoading,
+    mutateAsync: deleteAccount,
+  } = useDeleteAccount();
 
   // handle cancel delete account alert.
   const handleCancelAccountDelete = () => {
     closeAlert(name);
   };
-
   // Handle confirm account delete.
   const handleConfirmAccountDelete = () => {
-    setLoading(true);
-    requestDeleteAccount(accountId)
-      .then(() => {
-        AppToaster.show({
-          message: formatMessage({
-            id: 'the_account_has_been_successfully_deleted',
-          }),
-          intent: Intent.SUCCESS,
-        });
-        queryCache.invalidateQueries('accounts-table');
-      })
-      .catch((errors) => {
-        handleDeleteErrors(errors);
-      })
-      .finally(() => {
-        setLoading(false);
-        closeAlert(name);
+    deleteAccount(accountId).then(() => {
+      AppToaster.show({
+        message: formatMessage({
+          id: 'the_account_has_been_successfully_deleted',
+        }),
+        intent: Intent.SUCCESS,
       });
+      closeAlert(name);
+    }).catch(errors => {
+      handleDeleteErrors(errors);
+    });
   };
 
   return (
@@ -85,5 +77,4 @@ function AccountDeleteAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
-  withAccountsActions,
 )(AccountDeleteAlert);

@@ -13,7 +13,9 @@ import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
 import withCustomersActions from 'containers/Customers/withCustomersActions';
 
+import { useDeleteCustomer } from 'hooks/query';
 import { compose } from 'utils';
+
 
 /**
  * Customer delete alert.
@@ -31,7 +33,10 @@ function CustomerDeleteAlert({
   closeAlert,
 }) {
   const { formatMessage } = useIntl();
-  const [isLoading, setLoading] = useState(false);
+  const {
+    mutateAsync: deleteCustomerMutate,
+    isLoading
+  } = useDeleteCustomer();
 
   // handle cancel delete  alert.
   const handleCancelDeleteAlert = () => {
@@ -40,8 +45,7 @@ function CustomerDeleteAlert({
 
   // handle confirm delete customer.
   const handleConfirmDeleteCustomer = useCallback(() => {
-    setLoading(true);
-    requestDeleteCustomer(customerId)
+    deleteCustomerMutate(customerId)
       .then(() => {
         AppToaster.show({
           message: formatMessage({
@@ -55,10 +59,9 @@ function CustomerDeleteAlert({
         transformErrors(errors);
       })
       .finally(() => {
-        setLoading(false);
         closeAlert(name);
       });
-  }, [requestDeleteCustomer, customerId, formatMessage]);
+  }, [deleteCustomerMutate, customerId, closeAlert, name, formatMessage]);
 
   return (
     <Alert

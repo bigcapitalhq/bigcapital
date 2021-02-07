@@ -1,0 +1,26 @@
+
+
+@keyframes skeleton-glow {
+  0% {
+    background: rgba(206,217,224,.3);
+    border-color: rgba(206,217,224,.3);
+  }
+  to {
+    background: rgba(92,112,128,.3);
+    border-color: rgba(92,112,128,.3);
+  }
+}
+
+.skeleton{
+  animation: skeleton-glow 1s linear infinite alternate;
+  background: rgba(206,217,224,.3);
+  background-clip: padding-box;
+  border-color: rgba(206,217,224,.3);
+  border-radius: 2px;
+
+  box-shadow: none;
+  color: transparent;
+  cursor: default;
+  pointer-events: none;
+  user-select: none;
+}

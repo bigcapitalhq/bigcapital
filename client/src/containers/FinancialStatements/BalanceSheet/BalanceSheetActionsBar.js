@@ -18,32 +18,34 @@ import NumberFormatDropdown from 'components/NumberFormatDropdown';
 import { compose, saveInvoke } from 'utils';
 import withBalanceSheetDetail from './withBalanceSheetDetail';
 import withBalanceSheetActions from './withBalanceSheetActions';
-import { safeInvoke } from '@blueprintjs/core/lib/esm/common/utils';
+import { useBalanceSheetContext } from './BalanceSheetProvider';
 
 function BalanceSheetActionsBar({
   // #withBalanceSheetDetail
   balanceSheetFilter,
-  balanceSheetLoading,
 
   // #withBalanceSheetActions
   toggleBalanceSheetFilter,
-  refreshBalanceSheet,
 
   // #ownProps
   numberFormat,
   onNumberFormatSubmit,
 }) {
+  const { isLoading, refetchBalanceSheet } = useBalanceSheetContext();
+
+  // Handle filter toggle click.
   const handleFilterToggleClick = () => {
     toggleBalanceSheetFilter();
   };
 
   // Handle recalculate the report button.
   const handleRecalcReport = () => {
-    refreshBalanceSheet(true);
+    refetchBalanceSheet();
   };
 
+  // Handle number format form submit.
   const handleNumberFormatSubmit = (values) => {
-    safeInvoke(onNumberFormatSubmit, values);
+    saveInvoke(onNumberFormatSubmit, values);
   };
 
   return (
@@ -77,7 +79,7 @@ function BalanceSheetActionsBar({
             <NumberFormatDropdown
               numberFormat={numberFormat}
               onSubmit={handleNumberFormatSubmit}
-              submitDisabled={balanceSheetLoading}
+              submitDisabled={isLoading}
             />
           }
           minimal={true}

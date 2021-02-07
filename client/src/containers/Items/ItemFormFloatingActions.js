@@ -1,32 +1,39 @@
-import React, { memo } from 'react';
+import React from 'react';
 import { Button, Intent, FormGroup, Checkbox } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'react-intl';
-import { saveInvoke } from 'utils';
+import { useHistory } from 'react-router-dom';
 import classNames from 'classnames';
-import { FastField } from 'formik';
+import { FastField, useFormikContext } from 'formik';
+
 import { CLASSES } from 'common/classes';
+import { useItemFormContext } from './ItemFormProvider';
 
 /**
  * Item form floating actions.
  */
-export default function ItemFormFloatingActions({
-  isSubmitting,
-  itemId,
-  handleSubmit,
-  onCancelClick,
-  onSubmitClick,
-  onSubmitAndNewClick,
-}) {
+export default function ItemFormFloatingActions() {
+  // History context.
+  const history = useHistory();
+
+  // Item form context.
+  const { setSubmitPayload, isNewMode } = useItemFormContext();
+
+  // Formik context.
+  const { isSubmitting } = useFormikContext();
+
+  // Handle cancel button click.
   const handleCancelBtnClick = (event) => {
-    saveInvoke(onCancelClick, event.currentTarget.value);
+    history.goBack();
   };
 
+  // Handle submit button click.
   const handleSubmitBtnClick = (event) => {
-    saveInvoke(onSubmitClick, event);
+    setSubmitPayload({ redirect: true });
   };
 
+  // Handle submit & new button click.
   const handleSubmitAndNewBtnClick = (event) => {
-    saveInvoke(onSubmitAndNewClick, event);
+    setSubmitPayload({ redirect: false });
   };
 
   return (
@@ -34,14 +41,16 @@ export default function ItemFormFloatingActions({
       <Button
         intent={Intent.PRIMARY}
         disabled={isSubmitting}
+        loading={isSubmitting}
         onClick={handleSubmitBtnClick}
         type="submit"
+        className={'btn--submit'}
       >
-        {itemId ? <T id={'edit'} /> : <T id={'save'} />}
+        {isNewMode ? <T id={'save'} /> : <T id={'edit'} />}
       </Button>
 
       <Button
-        className={'ml1'}
+        className={classNames('ml1', 'btn--submit-new')}
         disabled={isSubmitting}
         onClick={handleSubmitAndNewBtnClick}
         type="submit"
@@ -49,7 +58,11 @@ export default function ItemFormFloatingActions({
         <T id={'save_new'} />
       </Button>
 
-      <Button className={'ml1'} onClick={handleCancelBtnClick}>
+      <Button
+        disabled={isSubmitting}
+        className={'ml1'}
+        onClick={handleCancelBtnClick}
+      >
         <T id={'close'} />
       </Button>
 

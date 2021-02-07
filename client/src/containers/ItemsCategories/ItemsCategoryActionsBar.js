@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React from 'react';
 import {
   NavbarGroup,
   NavbarDivider,
@@ -16,37 +16,35 @@ import { If, Icon } from 'components';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
-import withDashboardActions from 'containers/Dashboard/withDashboardActions';
-
 import withItemCategories from './withItemCategories';
-import withItemCategoriesActions from './withItemCategoriesActions';
 import withAlertActions from 'containers/Alert/withAlertActions';
 
 import { compose } from 'utils';
 
-const ItemsCategoryActionsBar = ({
-  // #withDialog
-  openDialog,
-
+/**
+ * Items categories actions bar.
+ */
+function ItemsCategoryActionsBar({
   // #withItemCategories
   itemCategoriesSelectedRows,
 
+  // #withDialog
+  openDialog,
+
   // #withAlertActions
   openAlert,
-
-}) => {
-  const [filterCount, setFilterCount] = useState(0);
-
-  const onClickNewCategory = useCallback(() => {
+}) {
+  const onClickNewCategory = () => {
     openDialog('item-category-form', {});
-  }, [openDialog]);
+  };
 
+  // Handle the items categories bulk delete.
   const handelBulkDelete = () => {
     openAlert('item-categories-bulk-delete', {
       itemCategoriesIds: itemCategoriesSelectedRows,
     });
   };
-  console.log(itemCategoriesSelectedRows, 'EE');
+  
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -68,10 +66,10 @@ const ItemsCategoryActionsBar = ({
           <Button
             className={classNames(Classes.MINIMAL, 'button--filter')}
             text={
-              filterCount <= 0 ? (
+              true ? (
                 <T id={'filter'} />
               ) : (
-                `${filterCount} filters applied`
+                `${0} filters applied`
               )
             }
             icon={<Icon icon="filter-16" iconSize={16} />}
@@ -101,14 +99,12 @@ const ItemsCategoryActionsBar = ({
       </NavbarGroup>
     </DashboardActionsBar>
   );
-};
+}
 
 export default compose(
   withDialogActions,
-  withDashboardActions,
   withItemCategories(({ itemCategoriesSelectedRows }) => ({
     itemCategoriesSelectedRows,
   })),
-  withItemCategoriesActions,
   withAlertActions,
 )(ItemsCategoryActionsBar);

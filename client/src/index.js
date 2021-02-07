@@ -7,7 +7,6 @@ import 'services/yup';
 import App from 'components/App';
 import * as serviceWorker from 'serviceWorker';
 import { store, persistor } from 'store/createStore';
-import AppProgress from 'components/NProgress/AppProgress';
 
 if (process.env.NODE_ENV === 'development') {
   const whyDidYouRender = require('@welldone-software/why-did-you-render');
@@ -26,13 +25,6 @@ ReactDOM.render(
     </PersistGate>
   </Provider>,
   document.getElementById('root'),
-);
-
-ReactDOM.render(
-  <Provider store={store}>
-    <AppProgress />
-  </Provider>,
-  document.getElementById('nprogress'),
 );
 
 // If you want your app to work offline and load faster, you can change

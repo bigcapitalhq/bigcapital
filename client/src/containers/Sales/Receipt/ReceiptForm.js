@@ -1,19 +1,22 @@
-import React, { useMemo, useCallback, useEffect, useState } from 'react';
+import React, { useMemo, useCallback, useEffect } from 'react';
 import { Formik, Form } from 'formik';
 import moment from 'moment';
 import { Intent } from '@blueprintjs/core';
-import { FormattedMessage as T, useIntl } from 'react-intl';
-import { pick, sumBy } from 'lodash';
+import { useIntl } from 'react-intl';
+import { pick, sumBy, isEmpty } from 'lodash';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 
 import { CLASSES } from 'common/classes';
 import { ERROR } from 'common/errors';
-
 import {
   EditReceiptFormSchema,
   CreateReceiptFormSchema,
 } from './ReceiptForm.schema';
+
+import 'style/pages/SaleReceipt/PageForm.scss';
+
+import { useReceiptFormContext } from './ReceiptFormProvider';
 
 import ReceiptFromHeader from './ReceiptFormHeader';
 import ReceiptFormBody from './ReceiptFormBody';
@@ -21,11 +24,7 @@ import ReceiptFormFloatingActions from './ReceiptFormFloatingActions';
 import ReceiptFormFooter from './ReceiptFormFooter';
 import ReceiptNumberWatcher from './ReceiptNumberWatcher';
 
-import withReceiptActions from './withReceiptActions';
-import withReceiptDetail from './withReceiptDetail';
-
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
-import withMediaActions from 'containers/Media/withMediaActions';
 import withSettings from 'containers/Settings/withSettings';
 
 import { AppToaster } from 'components';
@@ -34,9 +33,8 @@ import {
   repeatValue,
   orderingLinesIndexes,
   defaultToTransform,
+  transactionNumber,
 } from 'utils';
-
-import 'style/pages/SaleReceipt/PageForm.scss'
 
 const MIN_LINES_NUMBER = 4;
 
@@ -65,17 +63,6 @@ const defaultInitialValues = {
  * Receipt form.
  */
 function ReceiptForm({
-  // #withMedia
-  requestSubmitMedia,
-  requestDeleteMedia,
-
-  // #withReceiptActions
-  requestSubmitReceipt,
-  requestEditReceipt,
-
-  // #withReceiptDetail
-  receipt,
-
   // #withDashboard
   changePageTitle,
   changePageSubtitle,
@@ -84,22 +71,26 @@ function ReceiptForm({
   receiptNextNumber,
   receiptNumberPrefix,
   preferredDepositAccount,
-
-  //#own Props
-  receiptId,
-  onFormSubmit,
-  onCancelForm,
 }) {
   const { formatMessage } = useIntl();
   const history = useHistory();
 
-  const [submitPayload, setSubmitPayload] = useState({});
+  // Receipt form context.
+  const {
+    receiptId,
+    receipt,
+    editReceiptMutate,
+    createReceiptMutate,
+    submitPayload
+  } = useReceiptFormContext();
+
   const isNewMode = !receiptId;
 
-  const receiptNumber = receiptNumberPrefix
-    ? `${receiptNumberPrefix}-${receiptNextNumber}`
-    : receiptNextNumber;
-
+  // The next receipt number.
+  const receiptNumber = transactionNumber(
+    receiptNumberPrefix,
+    receiptNextNumber,
+  );
   useEffect(() => {
     const transactionNumber = !isNewMode
       ? receipt.receipt_number
@@ -125,7 +116,7 @@ function ReceiptForm({
   // Initial values in create and edit mode.
   const initialValues = useMemo(
     () => ({
-      ...(receipt
+      ...(!isEmpty(receipt)
         ? {
             ...pick(receipt, Object.keys(defaultInitialValues)),
             entries: [
@@ -145,7 +136,7 @@ function ReceiptForm({
             entries: orderingLinesIndexes(defaultInitialValues.entries),
           }),
     }),
-    [receipt],
+    [receipt, preferredDepositAccount, receiptNumber],
   );
 
   // Transform response error to fields.
@@ -167,7 +158,6 @@ function ReceiptForm({
     const entries = values.entries.filter(
       (item) => item.item_id && item.quantity,
     );
-
     const totalQuantity = sumBy(entries, (entry) => parseInt(entry.quantity));
 
     if (totalQuantity === 0) {
@@ -218,9 +208,9 @@ function ReceiptForm({
     };
 
     if (receipt && receipt.id) {
-      requestEditReceipt(receipt.id, form).then(onSuccess).catch(onError);
+      editReceiptMutate(receipt.id, form).then(onSuccess).catch(onError);
     } else {
-      requestSubmitReceipt(form).then(onSuccess).catch(onError);
+      createReceiptMutate(form).then(onSuccess).catch(onError);
     }
   };
 
@@ -231,20 +221,6 @@ function ReceiptForm({
       );
     },
     [changePageSubtitle],
-  );
-
-  const handleSubmitClick = useCallback(
-    (event, payload) => {
-      setSubmitPayload({ ...payload });
-    },
-    [setSubmitPayload],
-  );
-
-  const handleCancelClick = useCallback(
-    (event) => {
-      history.goBack();
-    },
-    [history],
   );
 
   return (
@@ -262,32 +238,22 @@ function ReceiptForm({
         initialValues={initialValues}
         onSubmit={handleFormSubmit}
       >
-        {({ isSubmitting}) => (
-          <Form>
-            <ReceiptFromHeader
-              onReceiptNumberChanged={handleReceiptNumberChanged}
-            />
-            <ReceiptNumberWatcher receiptNumber={receiptNumber} />
-            <ReceiptFormBody defaultReceipt={defaultReceipt} />
-            <ReceiptFormFooter />
-            <ReceiptFormFloatingActions
-              isSubmitting={isSubmitting}
-              receipt={receipt}
-              onSubmitClick={handleSubmitClick}
-              onCancelClick={handleCancelClick}
-            />
-          </Form>
-        )}
+        <Form>
+          <ReceiptFromHeader
+            onReceiptNumberChanged={handleReceiptNumberChanged}
+          />
+          <ReceiptNumberWatcher receiptNumber={receiptNumber} />
+          <ReceiptFormBody defaultReceipt={defaultReceipt} />
+          <ReceiptFormFooter />
+          <ReceiptFormFloatingActions />
+        </Form>
       </Formik>
     </div>
   );
 }
 
 export default compose(
-  withReceiptActions,
-  withReceiptDetail(),
   withDashboardActions,
-  withMediaActions,
   withSettings(({ receiptSettings }) => ({
     receiptNextNumber: receiptSettings?.nextNumber,
     receiptNumberPrefix: receiptSettings?.numberPrefix,

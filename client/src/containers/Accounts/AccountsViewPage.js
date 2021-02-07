@@ -1,7 +1,8 @@
-import React, { memo } from 'react';
+import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import AccountsViewsTabs from 'containers/Accounts/AccountsViewsTabs';
 import AccountsDataTable from 'containers/Accounts/AccountsDataTable';
+import { useAccountsChartContext } from 'containers/Accounts/AccountsChartProvider';
 
 import withAccountsTableActions from 'containers/Accounts/withAccountsTableActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
@@ -13,45 +14,50 @@ import { compose } from 'utils';
  * Accounts view page.
  */
 function AccountsViewPage({
+  // #withAlertActions
   openAlert,
 
   // #withDialog.
   openDialog,
 
   // #withAccountsTableActions
-  setSelectedRowsAccounts
+  setSelectedRowsAccounts,
 }) {
+  const { isAccountsLoading, accounts } = useAccountsChartContext();
+
   // Handle delete action account.
   const handleDeleteAccount = (account) => {
-    openAlert('account-delete', { accountId: account.id })
+    // openAlert('account-delete', { accountId: account.id });
   };
 
   // Handle activate action account.
   const handleActivateAccount = (account) => {
-    openAlert('account-activate', { accountId: account.id });
+    // openAlert('account-activate', { accountId: account.id });
   };
 
   // Handle inactivate action account.
   const handleInactivateAccount = (account) => {
-    openAlert('account-inactivate', { accountId: account.id });
+    // openAlert('account-inactivate', { accountId: account.id });
   };
 
   // Handle select accounts datatable rows.
-  const handleSelectedRowsChange = (selectedRows) => {
-    const selectedRowsIds = selectedRows.map(r => r.id);
-    setSelectedRowsAccounts(selectedRowsIds);
+  //   const handleSelectedRowsChange = (selectedRows) => {
+  //     const selectedRowsIds = selectedRows.map((r) => r.id);
+  //     setSelectedRowsAccounts(selectedRowsIds);
+  //   };
+
+  // Handle edit account action.
+  const handleEditAccount = (account) => {
+    // openDialog('account-form', { action: 'edit', id: account.id });
   };
 
-  const handleEditAccount = (account) => {
-    openDialog('account-form', { action: 'edit', id: account.id });
-  }
-
+  // Handle new child button click.
   const handleNewChildAccount = (account) => {
-    openDialog('account-form', {
-      action: 'new_child',
-      parentAccountId: account.id,
-      accountType: account.account_type,
-    });
+    // openDialog('account-form', {
+    //   action: 'new_child',
+    //   parentAccountId: account.id,
+    //   accountType: account.account_type,
+    // });
   };
 
   return (
@@ -63,22 +69,22 @@ function AccountsViewPage({
         <AccountsViewsTabs />
 
         <AccountsDataTable
-          onDeleteAccount={handleDeleteAccount}
-          onInactivateAccount={handleInactivateAccount}
-          onActivateAccount={handleActivateAccount}
-          onSelectedRowsChange={handleSelectedRowsChange}
-          onEditAccount={handleEditAccount}
-          onNewChildAccount={handleNewChildAccount}
+          loading={isAccountsLoading}
+          accounts={accounts}
+          // onDeleteAccount={handleDeleteAccount}
+          // onInactivateAccount={handleInactivateAccount}
+          // onActivateAccount={handleActivateAccount}
+          // onSelectedRowsChange={handleSelectedRowsChange}
+          // onEditAccount={handleEditAccount}
+          // onNewChildAccount={handleNewChildAccount}
         />
       </Route>
     </Switch>
   );
 }
 
-const AccountsViewPageMemo = memo(AccountsViewPage);
-
 export default compose(
   withAlertsActions,
   withAccountsTableActions,
-  withDialogActions
-)(AccountsViewPageMemo);
+  withDialogActions,
+)(AccountsViewPage);

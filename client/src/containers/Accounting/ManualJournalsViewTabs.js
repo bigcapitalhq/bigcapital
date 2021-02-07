@@ -1,61 +1,38 @@
-import React, { useEffect } from 'react';
-import { useHistory } from 'react-router';
+import React from 'react';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
-import { useParams, withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { pick } from 'lodash';
 
-import { DashboardViewsTabs, Icon } from 'components';
+import { DashboardViewsTabs } from 'components';
 
-import withManualJournals from './withManualJournals';
+import { useManualJournalsContext } from './ManualJournalsListProvider';
 import withManualJournalsActions from './withManualJournalsActions';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
-import withViewDetail from 'containers/Views/withViewDetails';
 
-import { compose } from 'utils';
+import { compose, saveInvoke } from 'utils';
 
 /**
  * Manual journal views tabs.
  */
 function ManualJournalsViewTabs({
-  // #withViewDetail
-  viewId,
-  viewItem,
-
-  // #withManualJournals
-  manualJournalsViews,
-
   // #withManualJournalsActions
   addManualJournalsTableQueries,
-  changeManualJournalCurrentView,
-
-  // #withDashboardActions
-  setTopbarEditView,
-  changePageSubtitle,
-
-  // #ownProps
-  onViewChanged,
 }) {
   const { custom_view_id: customViewId } = useParams();
+  const { journalsViews } = useManualJournalsContext();
 
-  useEffect(() => {
-    setTopbarEditView(customViewId);
-    changePageSubtitle(customViewId && viewItem ? viewItem.name : '');
-  }, [customViewId]);
-
-  const tabs = manualJournalsViews.map((view) => ({
+  const tabs = journalsViews.map((view) => ({
     ...pick(view, ['name', 'id']),
   }));
 
   const handleClickNewView = () => {};
 
   const handleTabChange = (viewId) => {
-    changeManualJournalCurrentView(viewId || -1);
     addManualJournalsTableQueries({
       custom_view_id: viewId || null,
     });
   };
-
+  
   return (
     <Navbar className="navbar--dashboard-views">
       <NavbarGroup align={Alignment.LEFT}>
@@ -71,19 +48,7 @@ function ManualJournalsViewTabs({
   );
 }
 
-const mapStateToProps = (state, ownProps) => ({
-  viewId: parseInt(ownProps.match.params.custom_view_id, 10),
-});
-
-const withManualJournalsViewTabs = connect(mapStateToProps);
-
 export default compose(
-  withRouter,
-  withManualJournalsViewTabs,
-  withManualJournals(({ manualJournalsViews }) => ({
-    manualJournalsViews,
-  })),
   withManualJournalsActions,
   withDashboardActions,
-  withViewDetail(),
 )(ManualJournalsViewTabs);

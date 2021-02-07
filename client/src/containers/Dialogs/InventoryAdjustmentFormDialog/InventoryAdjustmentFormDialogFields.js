@@ -1,5 +1,5 @@
 import React from 'react';
-import { FastField, ErrorMessage, Field, useFormikContext } from 'formik';
+import { FastField, ErrorMessage, Field } from 'formik';
 import {
   Classes,
   FormGroup,
@@ -10,7 +10,7 @@ import {
 import classNames from 'classnames';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { DateInput } from '@blueprintjs/datetime';
-import { compose } from 'redux';
+import { useAutofocus } from 'hooks';
 import { ListSelect, FieldRequiredHint, Col, Row } from 'components';
 import {
   inputIntent,
@@ -23,18 +23,20 @@ import { CLASSES } from 'common/classes';
 import adjustmentType from 'common/adjustmentType';
 
 import AccountsSuggestField from 'components/AccountsSuggestField';
-import withAccounts from 'containers/Accounts/withAccounts';
+import { useInventoryAdjContext } from './InventoryAdjustmentFormProvider'
 import { diffQuantity } from './utils';
 import InventoryAdjustmentQuantityFields from './InventoryAdjustmentQuantityFields';
 
 /**
  * Inventory adjustment form dialogs fields.
  */
-function InventoryAdjustmentFormDialogFields({
-  //# withAccount
-  accountsList,
-}) {
-  const { values } = useFormikContext();
+export default function InventoryAdjustmentFormDialogFields() {
+  const dateFieldRef = useAutofocus();
+
+  // Inventory adjustment dialog context.
+  const { accounts } = useInventoryAdjContext();
+
+  // Intl context.
   const { formatMessage } = useIntl();
 
   return (
@@ -62,6 +64,7 @@ function InventoryAdjustmentFormDialogFields({
                     position: Position.BOTTOM,
                     minimal: true,
                   }}
+                  inputRef={(ref) => (dateFieldRef.current = ref)}
                 />
               </FormGroup>
             )}
@@ -115,7 +118,7 @@ function InventoryAdjustmentFormDialogFields({
             className={'form-group--adjustment-account'}
           >
             <AccountsSuggestField
-              accounts={accountsList}
+              accounts={accounts}
               onAccountSelected={(item) =>
                 form.setFieldValue('adjustment_account_id', item.id)
               }
@@ -159,9 +162,3 @@ function InventoryAdjustmentFormDialogFields({
     </div>
   );
 }
-
-export default compose(
-  withAccounts(({ accountsList }) => ({
-    accountsList,
-  })),
-)(InventoryAdjustmentFormDialogFields);

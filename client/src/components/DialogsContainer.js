@@ -11,9 +11,11 @@ import EstimateNumberDialog from 'containers/Dialogs/EstimateNumberDialog';
 import ReceiptNumberDialog from 'containers/Dialogs/ReceiptNumberDialog';
 import InvoiceNumberDialog from 'containers/Dialogs/InvoiceNumberDialog';
 import InventoryAdjustmentDialog from 'containers/Dialogs/InventoryAdjustmentFormDialog';
-
 import PaymentViaVoucherDialog from 'containers/Dialogs/PaymentViaVoucherDialog';
 
+/**
+ * Dialogs container.
+ */
 export default function DialogsContainer() {
   return (
     <div>
@@ -27,7 +29,7 @@ export default function DialogsContainer() {
       <InviteUserDialog dialogName={'invite-user'} />
       <ExchangeRateFormDialog dialogName={'exchangeRate-form'} />
       <ItemCategoryDialog dialogName={'item-category-form'} />
-      <InventoryAdjustmentDialog dialogName={'inventory-adjustment-form'} />
+      <InventoryAdjustmentDialog dialogName={'inventory-adjustment'} />
       <PaymentViaVoucherDialog dialogName={'payment-via-voucher'} />
     </div>
   );

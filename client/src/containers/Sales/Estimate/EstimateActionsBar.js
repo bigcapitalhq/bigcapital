@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import Icon from 'components/Icon';
 import {
   Button,
@@ -11,65 +11,51 @@ import {
   Intent,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { useRouteMatch, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 
 import { If, DashboardActionViewsList } from 'components';
-import FilterDropdown from 'components/FilterDropdown';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 
-import withResourceDetail from 'containers/Resources/withResourceDetails';
-import withDialogActions from 'containers/Dialog/withDialogActions';
 import withEstimateActions from './withEstimateActions';
-
-import withEstimates from './withEstimates';
+import { useEstimatesListContext } from './EstimatesListProvider';
 
 import { compose } from 'utils';
-import { connect } from 'react-redux';
 
+/**
+ * Estimates list actions bar.
+ */
 function EstimateActionsBar({
-  // #withResourceDetail
-  resourceFields,
-
-  //#withEstimates
-  estimateViews,
-
   // #withEstimateActions
   addEstimatesTableQueries,
-  changeEstimateView,
-  // #own Porps
-  onFilterChanged,
-  selectedRows = [],
 }) {
-  const { path } = useRouteMatch();
   const history = useHistory();
-  const [filterCount, setFilterCount] = useState(0);
   const { formatMessage } = useIntl();
 
-  const onClickNewEstimate = useCallback(() => {
-    history.push('/estimates/new');
-  }, [history]);
+  const [filterCount, setFilterCount] = useState(0);
 
-  const hasSelectedRows = useMemo(() => selectedRows.length > 0, [
-    selectedRows,
-  ]);
+  // Estimates list context.
+  const { estimatesViews } = useEstimatesListContext();
+
+  // Handle click a new sale estimate.
+  const onClickNewEstimate = () => {
+    history.push('/estimates/new');
+  };
 
   const handleTabChange = (viewId) => {
-    changeEstimateView(viewId.id || -1);
     addEstimatesTableQueries({
       custom_view_id: viewId.id || null,
     });
   };
-  
+
   return (
-    <DashboardActionsBar>
+    <DashboardActionsBar> 
       <NavbarGroup>
         <DashboardActionViewsList
           resourceName={'estimates'}
-          views={estimateViews}
+          views={estimatesViews}
           onChange={handleTabChange}
         />
-
         <NavbarDivider />
         <Button
           className={Classes.MINIMAL}
@@ -79,7 +65,6 @@ function EstimateActionsBar({
         />
         <Popover
           minimal={true}
-          // content={filterDropdown}
           interactionKind={PopoverInteractionKind.CLICK}
           position={Position.BOTTOM_LEFT}
         >
@@ -95,7 +80,7 @@ function EstimateActionsBar({
             icon={<Icon icon={'filter-16'} iconSize={16} />}
           />
         </Popover>
-        <If condition={hasSelectedRows}>
+        <If condition={false}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon={'trash-16'} iconSize={16} />}
@@ -125,19 +110,6 @@ function EstimateActionsBar({
   );
 }
 
-const mapStateToProps = (state, props) => ({
-  resourceName: 'sale_estimate',
-});
-const withEstimateActionsBar = connect(mapStateToProps);
-
 export default compose(
-  withEstimateActionsBar,
-  withDialogActions,
-  withEstimates(({ estimateViews }) => ({
-    estimateViews,
-  })),
-  withResourceDetail(({ resourceFields }) => ({
-    resourceFields,
-  })),
   withEstimateActions,
 )(EstimateActionsBar);

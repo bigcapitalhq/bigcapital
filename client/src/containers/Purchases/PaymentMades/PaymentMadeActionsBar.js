@@ -1,10 +1,8 @@
-import React, { useCallback, useState, useMemo } from 'react';
+import React from 'react';
 import Icon from 'components/Icon';
 import {
   Button,
   Classes,
-  Menu,
-  MenuItem,
   Popover,
   NavbarDivider,
   NavbarGroup,
@@ -14,69 +12,41 @@ import {
 } from '@blueprintjs/core';
 
 import classNames from 'classnames';
-import { useRouteMatch, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 
-import { connect } from 'react-redux';
-import FilterDropdown from 'components/FilterDropdown';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
-
 import { If, DashboardActionViewsList } from 'components';
 
-import withResourceDetail from 'containers/Resources/withResourceDetails';
-import withPaymentMade from './withPaymentMade';
 import withPaymentMadeActions from './withPaymentMadeActions';
+import { usePaymentMadesListContext } from './PaymentMadesListProvider';
 
 import { compose } from 'utils';
 
+/**
+ * Payment made actions bar.
+ */
 function PaymentMadeActionsBar({
-  //#withResourceDetail
-  resourceFields,
-
-  //#withPaymentMades
-  paymentMadeViews,
-
   //#withPaymentMadesActions
   addPaymentMadesTableQueries,
-
-  // #own Porps
-  onFilterChanged,
-  selectedRows = [],
 }) {
   const history = useHistory();
-  const { path } = useRouteMatch();
-  const [filterCount, setFilterCount] = useState(0);
   const { formatMessage } = useIntl();
 
-  const handleClickNewPaymentMade = useCallback(() => {
+  // Payment receives list context.
+  const { paymentMadesViews } = usePaymentMadesListContext();
+
+  // Handle new payment made button click.
+  const handleClickNewPaymentMade = () => {
     history.push('/payment-mades/new');
-  }, [history]);
-
-  // const filterDropdown = FilterDropdown({
-  //   initialCondition: {
-  //     fieldKey: '',
-  //     compatator: 'contains',
-  //     value: '',
-  //   },
-  //   fields: resourceFields,
-  //   onFilterChange: (filterConditions) => {
-  //     addPaymentMadesTableQueries({
-  //       filter_roles: filterConditions || '',
-  //     });
-  //     onFilterChanged && onFilterChanged(filterConditions);
-  //   },
-  // });
-
-  const hasSelectedRows = useMemo(() => selectedRows.length > 0, [
-    selectedRows,
-  ]);
+  };
 
   return (
     <DashboardActionsBar>
       <NavbarGroup>
         <DashboardActionViewsList
           resourceName={'bill_payments'}
-          views={paymentMadeViews}
+          views={paymentMadesViews}
         />
         <NavbarDivider />
         <Button
@@ -94,16 +64,16 @@ function PaymentMadeActionsBar({
           <Button
             className={classNames(Classes.MINIMAL)}
             text={
-              filterCount <= 0 ? (
+              true ? (
                 <T id={'filter'} />
               ) : (
-                `${filterCount} ${formatMessage({ id: 'filters_applied' })}`
+                `${0} ${formatMessage({ id: 'filters_applied' })}`
               )
             }
             icon={<Icon icon={'filter-16'} iconSize={16} />}
           />
         </Popover>
-        <If condition={hasSelectedRows}>
+        <If condition={false}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon={'trash-16'} iconSize={16} />}
@@ -132,19 +102,4 @@ function PaymentMadeActionsBar({
   );
 }
 
-const mapStateToProps = (state, props) => ({
-  resourceName: 'bill_payments',
-});
-
-const withPaymentMadeActionsBar = connect(mapStateToProps);
-
-export default compose(
-  withPaymentMadeActionsBar,
-  withResourceDetail(({ resourceFields }) => ({
-    resourceFields,
-  })),
-  withPaymentMade(({ paymentMadeViews }) => ({
-    paymentMadeViews,
-  })),
-  withPaymentMadeActions,
-)(PaymentMadeActionsBar);
+export default compose(withPaymentMadeActions)(PaymentMadeActionsBar);

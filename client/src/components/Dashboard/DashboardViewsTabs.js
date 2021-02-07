@@ -5,9 +5,11 @@ import { Button, Tabs, Tab, Tooltip, Position } from '@blueprintjs/core';
 import { debounce } from 'lodash';
 import { useHistory } from 'react-router';
 import { If, Icon } from 'components';
+import { saveInvoke }  from 'utils';
 
 export default function DashboardViewsTabs({
   initialViewId = 0,
+  viewId,
   tabs,
   defaultTabText = <T id={'all'} />,
   allTab = true,
@@ -26,16 +28,16 @@ export default function DashboardViewsTabs({
   };
 
   const handleTabClick = (viewId) => {
-    onTabClick && onTabClick(viewId);
+    saveInvoke(onTabClick, viewId);
   };
 
   const mappedTabs = useMemo(
     () => tabs.map((tab) => ({ ...tab, onTabClick: handleTabClick })),
-    [tabs],
+    [tabs, handleTabClick],
   );
 
   const handleViewLinkClick = () => {
-    onNewViewTabClick && onNewViewTabClick();
+    saveInvoke(onNewViewTabClick);
   };
 
   const debounceChangeHistory = useRef(
@@ -49,7 +51,7 @@ export default function DashboardViewsTabs({
     debounceChangeHistory.current(`/${resourceName}/${toPath}`);
 
     setCurrentView(viewId);
-    onChange && onChange(viewId);
+    saveInvoke(onChange, viewId);
   };
 
   return (

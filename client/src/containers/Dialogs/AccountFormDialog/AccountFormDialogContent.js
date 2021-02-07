@@ -3,24 +3,29 @@ import { Intent } from '@blueprintjs/core';
 import { Formik } from 'formik';
 import { useIntl } from 'react-intl';
 import { omit } from 'lodash';
-import { useQuery, queryCache } from 'react-query';
 import { AppToaster, DialogContent } from 'components';
 
 import AccountFormDialogFields from './AccountFormDialogFields';
 
-import withAccountsActions from 'containers/Accounts/withAccountsActions';
-import withAccountDetail from 'containers/Accounts/withAccountDetail';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import {
   EditAccountFormSchema,
   CreateAccountFormSchema,
 } from './AccountForm.schema';
-
+import {
+  useAccounts,
+  useAccountsTypes,
+  useCreateAccount,
+  useAccount,
+  useEditAccount
+} from 'hooks/query';
 import { compose, transformToForm } from 'utils';
 import { transformApiErrors, transformAccountToForm } from './utils';
 
 import 'style/pages/Accounts/AccountFormDialog.scss';
 
+
+// Default initial form values.
 const defaultInitialValues = {
   account_type: '',
   parent_account_id: '',
@@ -34,16 +39,7 @@ const defaultInitialValues = {
  * Account form dialog content.
  */
 function AccountFormDialogContent({
-  // #withAccountDetail
-  account,
-
-  // #withAccountsActions
-  requestFetchAccounts,
-  requestFetchAccountTypes,
-  requestFetchAccount,
-  requestSubmitAccount,
-  requestEditAccount,
-
+  // #withDialogActions
   closeDialog,
 
   // #ownProp
@@ -61,6 +57,27 @@ function AccountFormDialogContent({
     ? CreateAccountFormSchema
     : EditAccountFormSchema;
 
+  const { mutateAsync: createAccountMutate } = useCreateAccount();
+  const { mutateAsync: editAccountMutate } = useEditAccount();
+  
+  // Fetches accounts list.
+  const {
+    data: accounts,
+    isLoading: isAccountsLoading,
+  } = useAccounts();
+
+  // Fetches accounts types.
+  const {
+    data: accountsTypes,
+    isLoading: isAccountsTypesLoading
+  } = useAccountsTypes();
+
+  // Fetches the specific account details.
+  const {
+    data: account,
+    isLoading: isAccountLoading,
+  } = useAccount(accountId, { enabled: !!accountId });
+
   // Callbacks handles form submit.
   const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
     const form = omit(values, ['subaccount']);
@@ -71,11 +88,6 @@ function AccountFormDialogContent({
     // Handle request success.
     const handleSuccess = () => {
       closeDialog(dialogName);
-      queryCache.invalidateQueries('accounts-table');
-
-      setTimeout(() => {        
-        queryCache.invalidateQueries('accounts-list');
-      }, 1000);
 
       AppToaster.show({
         message: formatMessage(
@@ -94,16 +106,16 @@ function AccountFormDialogContent({
     };
     // Handle request error.
     const handleError = (errors) => {
-      const errorsTransformed = transformApiErrors(errors);
-      setErrors({ ...errorsTransformed });
-      setSubmitting(false);
+      // const errorsTransformed = transformApiErrors(errors);
+      // setErrors({ ...errorsTransformed });
+      // setSubmitting(false);
     };
     if (accountId) {
-      requestEditAccount(accountId, form)
+      editAccountMutate(accountId, form)
         .then(handleSuccess)
         .catch(handleError);
     } else {
-      requestSubmitAccount({ form }).then(handleSuccess).catch(handleError);
+      createAccountMutate({ ...form }).then(handleSuccess).catch(handleError);
     }
   };
 
@@ -130,27 +142,10 @@ function AccountFormDialogContent({
     closeDialog(dialogName);
   }, [closeDialog, dialogName]);
 
-  // Fetches accounts list.
-  const fetchAccountsList = useQuery('accounts-list', () =>
-    requestFetchAccounts(),
-  );
-
-  // Fetches accounts types.
-  const fetchAccountsTypes = useQuery('accounts-types-list', () =>
-    requestFetchAccountTypes(),
-  );
-
-  // Fetch the given account id on edit mode.
-  const fetchAccount = useQuery(
-    ['account', accountId],
-    (key, _id) => requestFetchAccount(_id),
-    { enabled: accountId },
-  );
-
   const isFetching =
-    fetchAccountsList.isFetching ||
-    fetchAccountsTypes.isFetching ||
-    fetchAccount.isFetching;
+    isAccountsLoading ||
+    isAccountsTypesLoading ||
+    isAccountLoading;
 
   return (
     <DialogContent isLoading={isFetching}>
@@ -160,6 +155,8 @@ function AccountFormDialogContent({
         onSubmit={handleFormSubmit}
       >
         <AccountFormDialogFields
+          accounts={accounts}
+          accountsTypes={accountsTypes}
           dialogName={dialogName}
           action={action}
           onClose={handleClose}
@@ -170,7 +167,5 @@ function AccountFormDialogContent({
 }
 
 export default compose(
-  withAccountsActions,
-  withAccountDetail,
   withDialogActions,
 )(AccountFormDialogContent);

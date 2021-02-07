@@ -4,22 +4,23 @@ import { useIntl } from 'react-intl';
 import FinancialSheet from 'components/FinancialSheet';
 import DataTable from 'components/DataTable';
 import { CellTextSpan } from 'components/Datatable/Cells';
+import { useTrialBalanceSheetContext } from './TrialBalanceProvider';
 
-import withTrialBalance from './withTrialBalance';
+import { getColumnWidth } from 'utils';
 
-import { compose, getColumnWidth } from 'utils';
-
-function TrialBalanceSheetTable({
-  // #withTrialBalanceDetail
-  trialBalanceTableRows,
-  trialBalanceSheetLoading,
-
-  // #withTrialBalanceTable
-  trialBalanceQuery,
-
+/**
+ * Trial Balance sheet data table.
+ */
+export default function TrialBalanceSheetTable({
   companyName,
 }) {
   const { formatMessage } = useIntl();
+
+  // Trial balance sheet context.
+  const {
+    trialBalanceSheet: { tableRows, query },
+    isLoading
+  } = useTrialBalanceSheetContext();
 
   const columns = useMemo(
     () => [
@@ -35,7 +36,7 @@ function TrialBalanceSheetTable({
         Cell: CellTextSpan,
         accessor: 'formatted_credit',
         className: 'credit',
-        width: getColumnWidth(trialBalanceTableRows, `credit`, {
+        width: getColumnWidth(tableRows, `credit`, {
           minWidth: 95,
         }),
       },
@@ -43,24 +44,26 @@ function TrialBalanceSheetTable({
         Header: formatMessage({ id: 'debit' }),
         Cell: CellTextSpan,
         accessor: 'formatted_debit',
-        width: getColumnWidth(trialBalanceTableRows, `debit`, { minWidth: 95 }),
+        width: getColumnWidth(tableRows, `debit`, { minWidth: 95 }),
       },
       {
         Header: formatMessage({ id: 'balance' }),
         Cell: CellTextSpan,
         accessor: 'formatted_balance',
         className: 'balance',
-        width: getColumnWidth(trialBalanceTableRows, `balance`, {
+        width: getColumnWidth(tableRows, `balance`, {
           minWidth: 95,
         }),
       },
     ],
-    [trialBalanceTableRows, formatMessage],
+    [tableRows, formatMessage],
   );
 
   const rowClassNames = (row) => {
     const { original } = row;
-    const rowTypes = Array.isArray(original.rowType) ? original.rowType : [original.rowType];
+    const rowTypes = Array.isArray(original.rowType)
+      ? original.rowType
+      : [original.rowType];
 
     return {
       ...rowTypes.reduce((acc, rowType) => {
@@ -74,16 +77,16 @@ function TrialBalanceSheetTable({
     <FinancialSheet
       companyName={companyName}
       sheetType={formatMessage({ id: 'trial_balance_sheet' })}
-      fromDate={trialBalanceQuery.from_date}
-      toDate={trialBalanceQuery.to_date}
+      fromDate={query.from_date}
+      toDate={query.to_date}
       name="trial-balance"
-      loading={trialBalanceSheetLoading}
+      loading={isLoading}
       basis={'cash'}
     >
       <DataTable
         className="bigcapital-datatable--financial-report"
         columns={columns}
-        data={trialBalanceTableRows}
+        data={tableRows}
         expandable={true}
         expandToggleColumn={1}
         expandColumnSpace={1}
@@ -93,17 +96,3 @@ function TrialBalanceSheetTable({
     </FinancialSheet>
   );
 }
-
-export default compose(
-  withTrialBalance(
-    ({
-      trialBalanceTableRows,
-      trialBalanceSheetLoading,
-      trialBalanceQuery,
-    }) => ({
-      trialBalanceTableRows,
-      trialBalanceSheetLoading,
-      trialBalanceQuery,
-    }),
-  ),
-)(TrialBalanceSheetTable);

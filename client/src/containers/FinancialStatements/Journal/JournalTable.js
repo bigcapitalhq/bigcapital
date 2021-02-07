@@ -4,23 +4,22 @@ import { useIntl } from 'react-intl';
 
 import FinancialSheet from 'components/FinancialSheet';
 import DataTable from 'components/DataTable';
-import Money from 'components/Money';
+import { useJournalSheetContext } from './JournalProvider';
 
-import withJournal from './withJournal';
+import { defaultExpanderReducer, getForceWidth } from 'utils';
 
-import { compose, defaultExpanderReducer, getForceWidth } from 'utils';
-
-function JournalSheetTable({
-  // #withJournal
-  journalSheetTableRows,
-  journalSheetLoading,
-  journalSheetQuery,
-
+export default function JournalSheetTable({
   // #ownProps
   onFetchData,
   companyName,
 }) {
   const { formatMessage } = useIntl();
+
+  // Journal sheet context.
+  const {
+    journalSheet: { tableRows, query },
+    isLoading
+  } = useJournalSheetContext();
 
   const columns = useMemo(
     () => [
@@ -101,17 +100,17 @@ function JournalSheetTable({
     <FinancialSheet
       companyName={companyName}
       sheetType={formatMessage({ id: 'journal_sheet' })}
-      fromDate={journalSheetQuery.from_date}
-      toDate={journalSheetQuery.to_date}
+      fromDate={query.from_date}
+      toDate={query.to_date}
       name="journal"
-      loading={journalSheetLoading}
+      loading={isLoading}
       // minimal={true}
       fullWidth={true}
       >
       <DataTable
         className="bigcapital-datatable--financial-report"
         columns={columns}
-        data={journalSheetTableRows}
+        data={tableRows}
         rowClassNames={rowClassNames}
         onFetchData={handleFetchData}
         noResults={formatMessage({
@@ -123,13 +122,3 @@ function JournalSheetTable({
     </FinancialSheet>
   );
 }
-
-export default compose(
-  withJournal(
-    ({ journalSheetTableRows, journalSheetLoading, journalSheetQuery }) => ({
-      journalSheetTableRows,
-      journalSheetLoading,
-      journalSheetQuery,
-    }),
-  ),
-)(JournalSheetTable);

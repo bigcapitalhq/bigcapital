@@ -17,6 +17,7 @@ import withJournalActions from './withJournalActions';
 import withJournal from './withJournal';
 
 import { compose } from 'utils';
+import { useJournalSheetContext } from './JournalProvider';
 
 /**
  * Journal sheeet - Actions bar.
@@ -27,14 +28,17 @@ function JournalActionsBar({
 
   // #withJournalActions
   toggleJournalSheetFilter,
-  refreshJournalSheet,
 }) {
+  const { refetchSheet } = useJournalSheetContext();
+
+  // Handle filter toggle click.
   const handleFilterToggleClick = () => {
     toggleJournalSheetFilter();
   };
 
+  // Handle re-calc the report.
   const handleRecalcReport = () => {
-    refreshJournalSheet(true);
+    refetchSheet();
   };
 
   return (

@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { Intent, Alert } from '@blueprintjs/core';
-import { queryCache } from 'react-query';
 import { AppToaster } from 'components';
 
-import withItemsActions from 'containers/Items/withItemsActions';
+import {
+  useActivateItem,
+} from 'hooks/query';
+
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
 
@@ -20,14 +22,11 @@ function ItemActivateAlert({
   isOpen,
   payload: { itemId },
 
-  // #withItemsActions
-  requestActivateItem,
-
   // #withAlertActions
   closeAlert,
 }) {
   const { formatMessage } = useIntl();
-  const [isLoading, setLoading] = useState(false);
+  const { mutateAsync: activateItem, isLoading }  = useActivateItem();
   
   // Handle activate item alert cancel.
   const handleCancelActivateItem = () => {
@@ -36,8 +35,7 @@ function ItemActivateAlert({
 
   // Handle confirm item activated.
   const handleConfirmItemActivate = () => {
-    setLoading(true);
-    requestActivateItem(itemId)
+    activateItem(itemId)
       .then(() => {
         AppToaster.show({
           message: formatMessage({
@@ -45,12 +43,10 @@ function ItemActivateAlert({
           }),
           intent: Intent.SUCCESS,
         });
-        queryCache.invalidateQueries('items-table');
       })
       .catch((error) => {})
       .finally(() => {
         closeAlert(name);
-        setLoading(false);
       });
   };
 
@@ -61,8 +57,8 @@ function ItemActivateAlert({
       intent={Intent.WARNING}
       isOpen={isOpen}
       onCancel={handleCancelActivateItem}
-      onConfirm={handleConfirmItemActivate}
       loading={isLoading}
+      onConfirm={handleConfirmItemActivate}
     >
       <p>
         <T id={'are_sure_to_activate_this_item'} />
@@ -74,5 +70,4 @@ function ItemActivateAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
-  withItemsActions,
 )(ItemActivateAlert);

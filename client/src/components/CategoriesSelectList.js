@@ -7,7 +7,7 @@ import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 
 export default function CategoriesSelectList({
-  categoriesList,
+  categories,
   selecetedCategoryId,
   defaultSelectText = <T id={'select_category'} />,
   onCategorySelected,
@@ -41,7 +41,7 @@ export default function CategoriesSelectList({
 
   return (
     <ListSelect
-      items={categoriesList}
+      items={categories}
       selectedItemProp={'id'}
       selectedItem={selecetedCategoryId}
       textProp={'name'}

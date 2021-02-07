@@ -27,8 +27,6 @@ import withMediaActions from 'containers/Media/withMediaActions';
 import withSettings from 'containers/Settings/withSettings';
 
 import { AppToaster } from 'components';
-import Dragzone from 'components/Dragzone';
-import useMedia from 'hooks/useMedia';
 import { ERROR } from 'common/errors';
 
 import {

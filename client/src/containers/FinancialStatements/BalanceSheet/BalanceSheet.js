@@ -1,27 +1,23 @@
-import React, { useEffect, useCallback, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { compose } from 'utils';
-import { useQuery } from 'react-query';
+
 import moment from 'moment';
 import { useIntl } from 'react-intl';
-import { queryCache } from 'react-query';
 
 import 'style/pages/FinancialStatements/BalanceSheet.scss';
 
 import BalanceSheetHeader from './BalanceSheetHeader';
 import BalanceSheetTable from './BalanceSheetTable';
-
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
-import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import BalanceSheetActionsBar from './BalanceSheetActionsBar';
+
 import { FinancialStatement } from 'components';
 
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withSettings from 'containers/Settings/withSettings';
-import withBalanceSheetActions from './withBalanceSheetActions';
-import withBalanceSheetDetail from './withBalanceSheetDetail';
 
-import { transformFilterFormToQuery } from 'containers/FinancialStatements/common';
+import { BalanceSheetProvider } from './BalanceSheetProvider';
 
 /**
  * Balance sheet.
@@ -31,13 +27,6 @@ function BalanceSheet({
   changePageTitle,
   setDashboardBackLink,
   setSidebarShrink,
-
-  // #withBalanceSheetActions
-  fetchBalanceSheet,
-  refreshBalanceSheet,
-
-  // #withBalanceSheetDetail
-  balanceSheetRefresh,
 
   // #withPreferences
   organizationName,
@@ -51,25 +40,11 @@ function BalanceSheet({
     displayColumnsType: 'total',
     accountsFilter: 'all-accounts',
   });
-  // Fetches the balance sheet.
-  const fetchHook = useQuery(['balance-sheet', filter], (key, query) =>
-    fetchBalanceSheet({
-      ...transformFilterFormToQuery(query),
-    }),
-  );
 
   useEffect(() => {
     setSidebarShrink();
     changePageTitle(formatMessage({ id: 'balance_sheet' }));
   }, [changePageTitle, formatMessage, setSidebarShrink]);
-
-  // Observes the balance sheet refresh to invalid the query to refresh it.
-  useEffect(() => {
-    if (balanceSheetRefresh) {
-      queryCache.invalidateQueries('balance-sheet');
-      refreshBalanceSheet(false);
-    }
-  }, [balanceSheetRefresh, refreshBalanceSheet]);
 
   useEffect(() => {
     // Show the back link on dashboard topbar.
@@ -89,7 +64,6 @@ function BalanceSheet({
       toDate: moment(filter.toDate).format('YYYY-MM-DD'),
     };
     setFilter({ ..._filter });
-    refreshBalanceSheet(true);
   };
 
   const handleNumberFormatSubmit = (values) => {
@@ -97,11 +71,10 @@ function BalanceSheet({
       ...filter,
       numberFormat: values,
     });
-    refreshBalanceSheet(true);
   };
 
   return (
-    <DashboardInsider>
+    <BalanceSheetProvider query={filter}>
       <BalanceSheetActionsBar
         numberFormat={filter.numberFormat}
         onNumberFormatSubmit={handleNumberFormatSubmit}
@@ -117,16 +90,12 @@ function BalanceSheet({
           </div>
         </FinancialStatement>
       </DashboardPageContent>
-    </DashboardInsider>
+    </BalanceSheetProvider>
   );
 }
 
 export default compose(
   withDashboardActions,
-  withBalanceSheetActions,
-  withBalanceSheetDetail(({ balanceSheetRefresh }) => ({
-    balanceSheetRefresh,
-  })),
   withSettings(({ organizationSettings }) => ({
     organizationName: organizationSettings.name,
   })),

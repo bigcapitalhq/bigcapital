@@ -8,12 +8,11 @@ import {
   Position,
   Intent,
 } from '@blueprintjs/core';
-import { FormattedMessage as T, useIntl } from 'react-intl';
-import { useIsValuePassed } from 'hooks';
+import { useIntl } from 'react-intl';
 import classNames from 'classnames';
 
 import CustomersEmptyStatus from './CustomersEmptyStatus';
-import { DataTable, Icon, Money, Choose, LoadingIndicator } from 'components';
+import { DataTable, Icon, Money, Choose } from 'components';
 import { CLASSES } from 'common/classes';
 
 import withCustomers from './withCustomers';
@@ -25,7 +24,19 @@ const AvatarCell = (row) => {
   return <span className="avatar">{firstLettersArgs(row.display_name)}</span>;
 };
 
-const CustomerTable = ({
+const PhoneNumberAccessor = (row) => (
+  <div>
+    <div className={'work_phone'}>{row.work_phone}</div>
+    <div className={'personal_phone'}>{row.personal_phone}</div>
+  </div>
+);
+
+const BalanceAccessor = (row) => {
+  return (<Money amount={row.closing_balance} currency={row.currency_code} />);
+};
+
+
+function CustomerTable({
   //#withCustomers
   customers,
   customersLoading,
@@ -42,9 +53,8 @@ const CustomerTable = ({
   onDeleteCustomer,
   onFetchData,
   onSelectedRowsChange,
-}) => {
+}) {
   const { formatMessage } = useIntl();
-  const isLoadedBefore = useIsValuePassed(loading, false);
 
   // Customers actions list.
   const renderContextMenu = useMemo(
@@ -125,21 +135,14 @@ const CustomerTable = ({
       {
         id: 'phone_number',
         Header: formatMessage({ id: 'phone_number' }),
-        accessor: (row) => (
-          <div>
-            <div className={'work_phone'}>{row.work_phone}</div>
-            <div className={'personal_phone'}>{row.personal_phone}</div>
-          </div>
-        ),
+        accessor: PhoneNumberAccessor,
         className: 'phone_number',
         width: 100,
       },
       {
         id: 'receivable_balance',
         Header: formatMessage({ id: 'receivable_balance' }),
-        accessor: (r) => (
-          <Money amount={r.closing_balance} currency={r.currency_code} />
-        ),
+        accessor: BalanceAccessor,
         className: 'receivable_balance',
         width: 100,
       },
@@ -193,35 +196,33 @@ const CustomerTable = ({
   ].every((condition) => condition === true);
   return (
     <div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>
-      <LoadingIndicator loading={customersLoading && !isLoadedBefore}>
-        <Choose>
-          <Choose.When condition={showEmptyStatus}>
-            <CustomersEmptyStatus />
-          </Choose.When>
+      <Choose>
+        <Choose.When condition={showEmptyStatus}>
+          <CustomersEmptyStatus />
+        </Choose.When>
 
-          <Choose.Otherwise>
-            <DataTable
-              noInitialFetch={true}
-              columns={columns}
-              data={customers}
-              onFetchData={handleFetchData}
-              selectionColumn={true}
-              expandable={false}
-              sticky={true}
-              onSelectedRowsChange={handleSelectedRowsChange}
-              spinnerProps={{ size: 30 }}
-              rowContextMenu={rowContextMenu}
-              pagination={true}
-              manualSortBy={true}
-              pagesCount={customerPagination.pagesCount}
-              autoResetSortBy={false}
-              autoResetPage={false}
-              initialPageSize={customersTableQuery.page_size}
-              initialPageIndex={customersTableQuery.page - 1}
-            />
-          </Choose.Otherwise>
-        </Choose>
-      </LoadingIndicator>
+        <Choose.Otherwise>
+          <DataTable
+            noInitialFetch={true}
+            columns={columns}
+            data={customers}
+            onFetchData={handleFetchData}
+            selectionColumn={true}
+            expandable={false}
+            sticky={true}
+            onSelectedRowsChange={handleSelectedRowsChange}
+            spinnerProps={{ size: 30 }}
+            rowContextMenu={rowContextMenu}
+            pagination={true}
+            manualSortBy={true}
+            pagesCount={customerPagination.pagesCount}
+            autoResetSortBy={false}
+            autoResetPage={false}
+            initialPageSize={customersTableQuery.page_size}
+            initialPageIndex={customersTableQuery.page - 1}
+          />
+        </Choose.Otherwise>
+      </Choose>
     </div>
   );
 };

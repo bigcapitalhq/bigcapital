@@ -32,6 +32,7 @@ export default class Account extends TenantModel {
     return [
       'accountTypeLabel',
       'accountParentType',
+      'accountRootType',
       'accountNormal',
       'isBalanceSheetAccount',
       'isPLSheet'
@@ -57,6 +58,13 @@ export default class Account extends TenantModel {
    */
   get accountParentType() {
     return AccountTypesUtils.getType(this.accountType, 'parentType');
+  }
+
+  /**
+   * Retrieve account root type.
+   */
+  get accountRootType() {
+    return AccountTypesUtils.getType(this.accountType, 'rootType');
   }
 
   /**
@@ -236,9 +244,6 @@ export default class Account extends TenantModel {
       },
       root_type: {
         label: 'Root type',
-        column: 'account_type_id',
-        relation: 'account_types.id',
-        relationColumn: 'account_types.root_type',
         options: [
           { key: 'asset', label: 'Asset', },
           { key: 'liability', label: 'Liability' },
@@ -246,7 +251,12 @@ export default class Account extends TenantModel {
           { key: 'Income', label: 'Income' },
           { key: 'expense', label: 'Expense' },
         ],
-        fieldType: 'options',
+        query: (query, role) => {
+          const accountsTypes = AccountTypesUtils.getTypesByRootType(role.value);
+          const accountsTypesKeys = accountsTypes.map(type => type.key);
+
+          query.whereIn('account_type', accountsTypesKeys);
+        },
       },
       created_at: {
         label: 'Created at',

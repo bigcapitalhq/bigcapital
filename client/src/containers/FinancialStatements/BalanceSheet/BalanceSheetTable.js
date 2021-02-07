@@ -5,27 +5,26 @@ import classNames from 'classnames';
 import FinancialSheet from 'components/FinancialSheet';
 import DataTable from 'components/DataTable';
 import { CellTextSpan } from 'components/Datatable/Cells';
+import { useBalanceSheetContext } from './BalanceSheetProvider';
 
-import withBalanceSheetDetail from './withBalanceSheetDetail';
-
-import { compose, defaultExpanderReducer, getColumnWidth } from 'utils';
+import { defaultExpanderReducer, getColumnWidth } from 'utils';
 
 /**
  * Balance sheet table.
  */
-function BalanceSheetTable({
-  // #withBalanceSheetDetail
-  balanceSheetTableRows,
-  balanceSheetColumns,
-  balanceSheetQuery,
-  balanceSheetLoading,
-
+export default function BalanceSheetTable({
   // #ownProps
   companyName,
 }) {
   const { formatMessage } = useIntl();
 
-  const columns = useMemo(
+  // Balance sheet context.
+  const {
+    balanceSheet: { tableRows, columns, query },
+    isLoading,
+  } = useBalanceSheetContext();
+
+  const tableColumns = useMemo(
     () => [
       {
         Header: formatMessage({ id: 'account_name' }),
@@ -34,7 +33,7 @@ function BalanceSheetTable({
         textOverview: true,
         width: 240,
       },
-      ...(balanceSheetQuery.display_columns_type === 'total'
+      ...(query.display_columns_type === 'total'
         ? [
             {
               Header: formatMessage({ id: 'total' }),
@@ -45,29 +44,26 @@ function BalanceSheetTable({
             },
           ]
         : []),
-      ...(balanceSheetQuery.display_columns_type === 'date_periods'
-        ? balanceSheetColumns.map((column, index) => ({
+      ...(query.display_columns_type === 'date_periods'
+        ? columns.map((column, index) => ({
             id: `date_period_${index}`,
             Header: column,
             Cell: CellTextSpan,
             accessor: `total_periods[${index}].formatted_amount`,
             className: classNames('total-period', `total-periods-${index}`),
             width: getColumnWidth(
-              balanceSheetTableRows,
+              tableRows,
               `total_periods.${index}.formatted_amount`,
               { minWidth: 100 },
             ),
           }))
         : []),
     ],
-    [balanceSheetQuery, balanceSheetColumns, balanceSheetTableRows, formatMessage],
+    [query, columns, tableRows, formatMessage],
   );
 
   // Calculates the default expanded rows of balance sheet table.
-  const expandedRows = useMemo(
-    () => defaultExpanderReducer(balanceSheetTableRows, 4),
-    [balanceSheetTableRows],
-  );
+  const expandedRows = useMemo(() => defaultExpanderReducer(tableRows, 4), [tableRows]);
 
   const rowClassNames = useCallback((row) => {
     const { original } = row;
@@ -88,15 +84,15 @@ function BalanceSheetTable({
       name="balance-sheet"
       companyName={companyName}
       sheetType={formatMessage({ id: 'balance_sheet' })}
-      fromDate={balanceSheetQuery.from_date}
-      toDate={balanceSheetQuery.to_date}
-      basis={balanceSheetQuery.basis}
-      loading={balanceSheetLoading}
+      fromDate={query.from_date}
+      toDate={query.to_date}
+      basis={query.basis}
+      loading={isLoading}
     >
       <DataTable
         className="bigcapital-datatable--financial-report"
-        columns={columns}
-        data={balanceSheetTableRows}
+        columns={tableColumns}
+        data={tableRows}
         rowClassNames={rowClassNames}
         noInitialFetch={true}
         expandable={true}
@@ -108,19 +104,3 @@ function BalanceSheetTable({
     </FinancialSheet>
   );
 }
-
-export default compose(
-  withBalanceSheetDetail(
-    ({
-      balanceSheetTableRows,
-      balanceSheetColumns,
-      balanceSheetQuery,
-      balanceSheetLoading,
-    }) => ({
-      balanceSheetTableRows,
-      balanceSheetColumns,
-      balanceSheetQuery,
-      balanceSheetLoading,
-    }),
-  ),
-)(BalanceSheetTable);

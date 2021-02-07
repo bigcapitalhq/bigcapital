@@ -18,23 +18,20 @@ import MakeJournalEntriesField from './MakeJournalEntriesField';
 import MakeJournalNumberWatcher from './MakeJournalNumberWatcher';
 import MakeJournalFormFooter from './MakeJournalFormFooter';
 
-import withJournalsActions from 'containers/Accounting/withJournalsActions';
-import withManualJournalDetail from 'containers/Accounting/withManualJournalDetail';
-import withAccountsActions from 'containers/Accounts/withAccountsActions';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withSettings from 'containers/Settings/withSettings';
 
 import AppToaster from 'components/AppToaster';
-import Dragzone from 'components/Dragzone';
 import withMediaActions from 'containers/Media/withMediaActions';
 import {
   compose,
   repeatValue,
   orderingLinesIndexes,
   defaultToTransform,
+  transactionNumber,
 } from 'utils';
 import { transformErrors } from './utils';
-import withManualJournalsActions from './withManualJournalsActions';
+import { useMakeJournalFormContext } from './MakeJournalProvider';
 
 const defaultEntry = {
   index: 0,
@@ -59,18 +56,6 @@ const defaultInitialValues = {
  * Journal entries form.
  */
 function MakeJournalEntriesForm({
-  // #withMedia
-  requestSubmitMedia,
-  requestDeleteMedia,
-
-  // #withJournalsActions
-  requestMakeJournalEntries,
-  requestEditManualJournal,
-  setJournalNumberChanged,
-
-  // #withManualJournals
-  journalNumberChanged,
-
   // #withDashboard
   changePageTitle,
   changePageSubtitle,
@@ -79,30 +64,33 @@ function MakeJournalEntriesForm({
   journalNextNumber,
   journalNumberPrefix,
   baseCurrency,
-  // #ownProps
-  manualJournalId,
-  manualJournal,
-  onFormSubmit,
-  onCancelForm,
 }) {
-  const isNewMode = !manualJournalId;
-  const [submitPayload, setSubmitPayload] = useState({});
+  const {
+    createJournalMutate,
+    editJournalMutate,
+    isNewMode,
+    manualJournal,
+    submitPayload,
+  } = useMakeJournalFormContext();
+
   const { formatMessage } = useIntl();
   const history = useHistory();
 
-  const journalNumber = isNewMode
-    ? `${journalNumberPrefix}-${journalNextNumber}`
-    : journalNextNumber;
-
+  // New journal number.
+  const journalNumber = transactionNumber(
+    journalNumberPrefix,
+    journalNextNumber,
+  );
+  // Changes the page title based on the form in new and edit mode.
   useEffect(() => {
     const transactionNumber = manualJournal
       ? manualJournal.journal_number
       : journalNumber;
 
-    if (manualJournal && manualJournal.id) {
-      changePageTitle(formatMessage({ id: 'edit_journal' }));
-    } else {
+    if (isNewMode) {
       changePageTitle(formatMessage({ id: 'new_journal' }));
+    } else {
+      changePageTitle(formatMessage({ id: 'edit_journal' }));
     }
     changePageSubtitle(
       defaultToTransform(transactionNumber, `No. ${transactionNumber}`, ''),
@@ -113,6 +101,7 @@ function MakeJournalEntriesForm({
     journalNumber,
     manualJournal,
     formatMessage,
+    isNewMode,
   ]);
 
   const initialValues = useMemo(
@@ -131,7 +120,7 @@ function MakeJournalEntriesForm({
             entries: orderingLinesIndexes(defaultInitialValues.entries),
           }),
     }),
-    [manualJournal, journalNumber],
+    [manualJournal, baseCurrency, journalNumber],
   );
 
   // Handle journal number field change.
@@ -144,6 +133,7 @@ function MakeJournalEntriesForm({
     [changePageSubtitle],
   );
 
+  // Handle the form submiting.
   const handleSubmit = (values, { setErrors, setSubmitting, resetForm }) => {
     setSubmitting(true);
     const entries = values.entries.filter(
@@ -179,11 +169,13 @@ function MakeJournalEntriesForm({
     }
     const form = { ...values, publish: submitPayload.publish, entries };
 
+    // Handle the request error.
     const handleError = (error) => {
       transformErrors(error, { setErrors });
       setSubmitting(false);
     };
 
+    // Handle the request success.
     const handleSuccess = (errors) => {
       AppToaster.show({
         message: formatMessage(
@@ -196,7 +188,6 @@ function MakeJournalEntriesForm({
         ),
         intent: Intent.SUCCESS,
       });
-
       setSubmitting(false);
 
       if (submitPayload.redirect) {
@@ -208,24 +199,13 @@ function MakeJournalEntriesForm({
     };
 
     if (isNewMode) {
-      requestMakeJournalEntries(form).then(handleSuccess).catch(handleError);
+      createJournalMutate(form).then(handleSuccess).catch(handleError);
     } else {
-      requestEditManualJournal(manualJournal.id, form)
+      editJournalMutate(manualJournal.id, form)
         .then(handleSuccess)
         .catch(handleError);
     }
   };
-
-  const handleCancelClick = useCallback(() => {
-    history.goBack();
-  }, [history]);
-
-  const handleSubmitClick = useCallback(
-    (event, payload) => {
-      setSubmitPayload({ ...payload });
-    },
-    [setSubmitPayload],
-  );
 
   return (
     <div
@@ -240,39 +220,21 @@ function MakeJournalEntriesForm({
         validationSchema={isNewMode ? CreateJournalSchema : EditJournalSchema}
         onSubmit={handleSubmit}
       >
-        {({ isSubmitting }) => (
-          <Form>
-            <MakeJournalEntriesHeader
-              manualJournal={manualJournalId}
-              onJournalNumberChanged={handleJournalNumberChanged}
-            />
-            <MakeJournalNumberWatcher journalNumber={journalNumber} />
-            <MakeJournalEntriesField defaultRow={defaultEntry} />
-            <MakeJournalFormFooter />
-            <MakeJournalFormFloatingActions
-              isSubmitting={isSubmitting}
-              manualJournal={manualJournal}
-              // manualJournalPublished={values.status}
-              onCancelClick={handleCancelClick}
-              onSubmitClick={handleSubmitClick}
-            />
-          </Form>
-        )}
+        <Form>
+          <MakeJournalEntriesHeader
+            onJournalNumberChanged={handleJournalNumberChanged}
+          />
+          <MakeJournalNumberWatcher journalNumber={journalNumber} />
+          <MakeJournalEntriesField defaultRow={defaultEntry} />
+          <MakeJournalFormFooter />
+          <MakeJournalFormFloatingActions />
+        </Form>
       </Formik>
-      {/* <Dragzone
-        initialFiles={initialAttachmentFiles}
-        onDrop={handleDropFiles}
-        onDeleteFile={handleDeleteFile}
-        hint={'Attachments: Maxiumum size: 20MB'}
-      /> */}
     </div>
   );
 }
 
 export default compose(
-  withJournalsActions,
-  withManualJournalDetail(),
-  withAccountsActions,
   withDashboardActions,
   withMediaActions,
   withSettings(({ manualJournalsSettings, organizationSettings }) => ({
@@ -280,5 +242,4 @@ export default compose(
     journalNumberPrefix: manualJournalsSettings?.numberPrefix,
     baseCurrency: organizationSettings?.baseCurrency,
   })),
-  withManualJournalsActions,
 )(MakeJournalEntriesForm);

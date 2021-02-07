@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import {
   Intent,
   Button,
@@ -11,17 +11,17 @@ import {
   Position,
   Tag,
 } from '@blueprintjs/core';
-import { useParams } from 'react-router-dom';
-import { withRouter } from 'react-router';
+
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import moment from 'moment';
 import classNames from 'classnames';
 
 import Icon from 'components/Icon';
 import { compose, saveInvoke } from 'utils';
-import { useIsValuePassed } from 'hooks';
 
-import { If, Money, Choose, LoadingIndicator } from 'components';
+import { useExpensesListContext } from './ExpensesListProvider';
+
+import { If, Money, Choose } from 'components';
 import { CLASSES } from 'common/classes';
 
 import DataTable from 'components/DataTable';
@@ -29,54 +29,26 @@ import ExpensesEmptyStatus from './ExpensesEmptyStatus';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
-import withViewDetails from 'containers/Views/withViewDetails';
-import withExpenses from 'containers/Expenses/withExpenses';
 import withExpensesActions from 'containers/Expenses/withExpensesActions';
-import withCurrentView from 'containers/Views/withCurrentView';
 
+import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
+
+/**
+ * Expenses datatable.
+ */
 function ExpensesDataTable({
-  // #withExpenes
-  expensesCurrentPage,
-  expensesLoading,
-  expensesPagination,
-  expensesTableQuery,
-  expensesCurrentViewId,
 
   // #withExpensesActions
   addExpensesTableQueries,
-
-  // #withDashboardActions
-  changeCurrentView,
-  changePageSubtitle,
-  setTopbarEditView,
-
-  // #withView
-  viewMeta,
-
+ 
   // #ownProps
   onEditExpense,
   onDeleteExpense,
   onPublishExpense,
   onSelectedRowsChange,
 }) {
-  const { custom_view_id: customViewId } = useParams();
-  const isLoadedBefore = useIsValuePassed(expensesLoading, false);
-
   const { formatMessage } = useIntl();
-
-  useEffect(() => {
-    if (customViewId) {
-      changeCurrentView(customViewId);
-      setTopbarEditView(customViewId);
-    }
-    changePageSubtitle(customViewId && viewMeta ? viewMeta.name : '');
-  }, [
-    customViewId,
-    changeCurrentView,
-    changePageSubtitle,
-    setTopbarEditView,
-    viewMeta,
-  ]);
+  const { expenses, isExpensesLoading } = useExpensesListContext();
 
   // Handle fetch data of manual jouranls datatable.
   const handleFetchData = useCallback(
@@ -187,7 +159,9 @@ function ExpensesDataTable({
       {
         id: 'total_amount',
         Header: formatMessage({ id: 'full_amount' }),
-        accessor: (r) => <Money amount={r.total_amount} currency={r.currency_code} />,
+        accessor: (r) => (
+          <Money amount={r.total_amount} currency={r.currency_code} />
+        ),
         className: 'total_amount',
         width: 150,
       },
@@ -270,64 +244,42 @@ function ExpensesDataTable({
     [onSelectedRowsChange],
   );
 
-  const showEmptyStatus = [
-    expensesCurrentViewId === -1,
-    expensesCurrentPage.length === 0,
-  ].every((condition) => condition === true);
 
   return (
     <div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>
-      <LoadingIndicator loading={expensesLoading && !isLoadedBefore}>
-        <Choose>
-          <Choose.When condition={showEmptyStatus}>
-            <ExpensesEmptyStatus />
-          </Choose.When>
+      <Choose>
+        <Choose.When condition={false}>
+          <ExpensesEmptyStatus />
+        </Choose.When>
 
-          <Choose.Otherwise>
-            <DataTable
-              columns={columns}
-              data={expensesCurrentPage}
-              manualSortBy={true}
-              selectionColumn={true}
-              noInitialFetch={true}
-              sticky={true}
-              onSelectedRowsChange={handleSelectedRowsChange}
-              onFetchData={handleFetchData}
-              rowContextMenu={onRowContextMenu}
-              pagination={true}
-              pagesCount={expensesPagination.pagesCount}
-              autoResetSortBy={false}
-              autoResetPage={false}
-              initialPageSize={expensesTableQuery.page_size}
-              initialPageIndex={expensesTableQuery.page - 1}
-            />
-          </Choose.Otherwise>
-        </Choose>
-      </LoadingIndicator>
+        <Choose.Otherwise>
+          <DataTable
+            columns={columns}
+            data={expenses}
+            loading={isExpensesLoading}
+            manualSortBy={true}
+            selectionColumn={true}
+            noInitialFetch={true}
+            sticky={true}
+            onSelectedRowsChange={handleSelectedRowsChange}
+            onFetchData={handleFetchData}
+            rowContextMenu={onRowContextMenu}
+            TableLoadingRenderer={TableSkeletonRows}
+            pagination={true}
+            // pagesCount={expensesPagination.pagesCount}
+            autoResetSortBy={false}
+            autoResetPage={false}
+            // initialPageSize={expensesTableQuery.page_size}
+            // initialPageIndex={expensesTableQuery.page - 1}
+          />
+        </Choose.Otherwise>
+      </Choose>
     </div>
   );
 }
 
 export default compose(
-  withRouter,
-  withCurrentView,
   withDialogActions,
   withDashboardActions,
   withExpensesActions,
-  withExpenses(
-    ({
-      expensesCurrentPage,
-      expensesLoading,
-      expensesPagination,
-      expensesTableQuery,
-      expensesCurrentViewId,
-    }) => ({
-      expensesCurrentPage,
-      expensesLoading,
-      expensesPagination,
-      expensesTableQuery,
-      expensesCurrentViewId,
-    }),
-  ),
-  withViewDetails(),
 )(ExpensesDataTable);

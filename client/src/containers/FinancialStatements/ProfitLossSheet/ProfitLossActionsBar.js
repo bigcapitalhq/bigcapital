@@ -19,26 +19,30 @@ import withProfitLossActions from './withProfitLossActions';
 import withProfitLoss from './withProfitLoss';
 
 import { compose, saveInvoke } from 'utils';
+import { useProfitLossSheetContext } from './ProfitLossProvider';
 
+/**
+ * Profit/Loss sheet actions bar.
+ */
 function ProfitLossActionsBar({
   // #withProfitLoss
   profitLossSheetFilter,
-  profitLossSheetLoading,
 
   // #withProfitLossActions
   toggleProfitLossSheetFilter,
-  refreshProfitLossSheet,
 
   // #ownProps
   numberFormat,
   onNumberFormatSubmit,
 }) {
+  const { sheetRefetch, isLoading } = useProfitLossSheetContext();
+
   const handleFilterClick = () => {
     toggleProfitLossSheetFilter();
   };
 
   const handleRecalcReport = () => {
-    refreshProfitLossSheet(true);
+    sheetRefetch();
   };
   // Handle number format submit.
   const handleNumberFormatSubmit = (values) => {
@@ -76,7 +80,7 @@ function ProfitLossActionsBar({
             <NumberFormatDropdown
               numberFormat={numberFormat}
               onSubmit={handleNumberFormatSubmit}
-              submitDisabled={profitLossSheetLoading}
+              submitDisabled={isLoading}
             />
           }
           minimal={true}

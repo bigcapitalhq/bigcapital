@@ -62,7 +62,7 @@ export default [
   {
     path: `/items/categories`,
     component: LazyLoader({
-      loader: () => import('containers/Items/ItemCategoriesList'),
+      loader: () => import('containers/ItemsCategories/ItemCategoriesList'),
     }),
     breadcrumb: 'Categories',
   },
@@ -95,7 +95,7 @@ export default [
   {
     path: `/inventory-adjustments`,
     component: LazyLoader({
-      loader: () => import('containers/Items/InventoryAdjustmentList'),
+      loader: () => import('containers/InventoryAdjustments/InventoryAdjustmentList'),
     }),
     breadcrumb: 'Inventory a adjustments',
   },

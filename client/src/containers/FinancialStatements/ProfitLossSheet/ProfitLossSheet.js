@@ -1,25 +1,20 @@
-import React, {useState, useCallback, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import moment from 'moment';
-import {compose} from 'utils';
-import { useQuery } from 'react-query';
+import { compose } from 'utils';
 import { useIntl } from 'react-intl';
-import { queryCache } from 'react-query';
 
 import ProfitLossSheetHeader from './ProfitLossSheetHeader';
 import ProfitLossSheetTable from './ProfitLossSheetTable';
 import ProfitLossActionsBar from './ProfitLossActionsBar';
 
-import DashboardInsider from 'components/Dashboard/DashboardInsider'
-import DashboardPageContent from 'components/Dashboard/DashboardPageContent'
+import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withProfitLossActions from './withProfitLossActions';
-import withProfitLoss from './withProfitLoss';
 import withSettings from 'containers/Settings/withSettings';
 
-import { transformFilterFormToQuery } from 'containers/FinancialStatements/common';
-
 import 'style/pages/FinancialStatements/ProfitLossSheet.scss';
+import { ProfitLossSheetProvider } from './ProfitLossProvider';
 
 /**
  * Profit/Loss financial statement sheet.
@@ -29,13 +24,6 @@ function ProfitLossSheet({
   changePageTitle,
   setDashboardBackLink,
   setSidebarShrink,
-  
-  // #withProfitLoss
-  profitLossSheetRefresh,
-
-  // #withProfitLossActions
-  fetchProfitLossSheet,
-  refreshProfitLossSheet,
 
   // #withPreferences
   organizationName,
@@ -54,16 +42,8 @@ function ProfitLossSheet({
     changePageTitle(formatMessage({ id: 'profit_loss_sheet' }));
   }, [changePageTitle, formatMessage]);
 
-  // Observes the P&L sheet refresh to invalid the query to refresh it.
   useEffect(() => {
-    if (profitLossSheetRefresh) {
-      refreshProfitLossSheet(false);
-      queryCache.invalidateQueries('profit-loss-sheet');
-    }
-  }, [profitLossSheetRefresh, refreshProfitLossSheet]);
-
-  useEffect(() => {
-    setSidebarShrink()
+    setSidebarShrink();
     // Show the back link on dashboard topbar.
     setDashboardBackLink(true);
 
@@ -71,12 +51,7 @@ function ProfitLossSheet({
       // Hide the back link on dashboard topbar.
       setDashboardBackLink(false);
     };
-  },[setDashboardBackLink,setSidebarShrink]);
-
-  // Fetches profit/loss sheet.
-  const fetchSheetHook = useQuery(['profit-loss-sheet', filter],
-    (key, query) => fetchProfitLossSheet({ ...transformFilterFormToQuery(query) }),
-    { manual: true });
+  }, [setDashboardBackLink, setSidebarShrink]);
 
   // Handle submit filter.
   const handleSubmitFilter = (filter) => {
@@ -87,6 +62,7 @@ function ProfitLossSheet({
     };
     setFilter(_filter);
   };
+
   // Handle number format submit.
   const handleNumberFormatSubmit = (numberFormat) => {
     setFilter({
@@ -96,33 +72,33 @@ function ProfitLossSheet({
   };
 
   return (
-    <DashboardInsider>
+    <ProfitLossSheetProvider query={filter}>
       <ProfitLossActionsBar
         numberFormat={filter.numberFormat}
         onNumberFormatSubmit={handleNumberFormatSubmit}
       />
- 
+
       <DashboardPageContent>
         <div class="financial-statement">
           <ProfitLossSheetHeader
             pageFilter={filter}
-            onSubmitFilter={handleSubmitFilter} />
+            onSubmitFilter={handleSubmitFilter}
+          />
 
           <div class="financial-statement__body">
             <ProfitLossSheetTable
               companyName={organizationName}
-              profitLossQuery={filter} />
+            />
           </div>
         </div>
       </DashboardPageContent>
-    </DashboardInsider>
+    </ProfitLossSheetProvider>
   );
 }
 
 export default compose(
   withDashboardActions,
   withProfitLossActions,
-  withProfitLoss(({ profitLossSheetRefresh }) => ({ profitLossSheetRefresh })),
   withSettings(({ organizationSettings }) => ({
     organizationName: organizationSettings.name,
   })),

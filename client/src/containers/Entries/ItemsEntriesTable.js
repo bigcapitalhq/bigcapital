@@ -11,13 +11,7 @@ import {
   PercentFieldCell,
   DivFieldCell,
 } from 'components/DataTableCells';
-
-import withItems from 'containers/Items/withItems';
-import {
-  compose,
-  formattedAmount,
-  saveInvoke,
-} from 'utils';
+import { formattedAmount, saveInvoke } from 'utils';
 
 // Actions cell renderer component.
 const ActionsCellRenderer = ({
@@ -77,11 +71,9 @@ const ItemHeaderCell = () => (
   </>
 );
 
-function ItemsEntriesTable({
-  //#withitems
-  itemsCurrentPage,
-
+export default function ItemsEntriesTable({
   //#ownProps
+  items,
   entries,
   errors,
   onUpdateData,
@@ -229,7 +221,7 @@ function ItemsEntriesTable({
       rowClassNames={rowClassNames}
       sticky={true}
       payload={{
-        items: itemsCurrentPage,
+        items,
         errors: errors || [],
         updateData: handleUpdateData,
         removeRow: handleRemoveRow,
@@ -257,9 +249,3 @@ function ItemsEntriesTable({
     />
   );
 }
-
-export default compose(
-  withItems(({ itemsCurrentPage }) => ({
-    itemsCurrentPage,
-  })),
-)(ItemsEntriesTable);

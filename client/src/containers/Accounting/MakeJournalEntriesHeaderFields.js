@@ -21,25 +21,24 @@ import {
   CurrencySelectList,
 } from 'components';
 
+import { useMakeJournalFormContext } from './MakeJournalProvider';
 import withDialogActions from 'containers/Dialog/withDialogActions';
-import withCurrencies from 'containers/Currencies/withCurrencies';
 
 import { compose, inputIntent, handleDateChange } from 'utils';
 
 function MakeJournalEntriesHeader({
   // #ownProps
-  manualJournal,
   onJournalNumberChanged,
-
-  // #withCurrencies
-  currenciesList,
 
   // #withDialog
   openDialog,
 }) {
-  const handleJournalNumberChange = useCallback(() => {
+  const { currencies } = useMakeJournalFormContext();
+
+  // Handle journal number change.
+  const handleJournalNumberChange = () => {
     openDialog('journal-number-form', {});
-  }, [openDialog]);
+  };
 
   // Handle journal number field blur event.
   const handleJournalNumberChanged = (event) => {
@@ -165,7 +164,7 @@ function MakeJournalEntriesHeader({
             inline={true}
           >
             <CurrencySelectList
-              currenciesList={currenciesList}
+              currenciesList={currencies}
               selectedCurrencyCode={value}
               onCurrencySelected={(currencyItem) => {
                 form.setFieldValue('currency_code', currencyItem.currency_code);
@@ -181,7 +180,4 @@ function MakeJournalEntriesHeader({
 
 export default compose(
   withDialogActions,
-  withCurrencies(({ currenciesList }) => ({
-    currenciesList,
-  })),
 )(MakeJournalEntriesHeader);

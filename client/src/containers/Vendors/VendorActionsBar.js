@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React from 'react';
 import {
   NavbarGroup,
   NavbarDivider,
@@ -11,42 +11,34 @@ import {
 } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import classNames from 'classnames';
-import { connect } from 'react-redux';
-import { useHistory } from 'react-router-dom';
 
-import Icon from 'components/Icon';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
+import Icon from 'components/Icon';
 import { If, DashboardActionViewsList } from 'components';
 
-import withVendors from './withVendors';
+import { useVendorsListContext } from './VendorsListProvider';
+import { useHistory } from 'react-router-dom';
+
 import withVendorActions from './withVendorActions';
+
 import { compose } from 'utils';
 
+/**
+ * Vendors actions bar.
+ */
 function VendorActionsBar({
-  // #withVendors
-  vendorViews,
-
   // #withVendorActions
   addVendorsTableQueries,
-  changeVendorView,
-
-  // #ownProps
-  selectedRows = [],
 }) {
-  const [filterCount, setFilterCount] = useState(0);
   const history = useHistory();
   const { formatMessage } = useIntl();
+  const { vendorsViews } = useVendorsListContext();
 
-  const onClickNewVendor = useCallback(() => {
+  const onClickNewVendor = () => {
     history.push('/vendors/new');
-  }, [history]);
-
-  const hasSelectedRows = useMemo(() => selectedRows.length > 0, [
-    selectedRows,
-  ]);
+  };
 
   const handleTabChange = (viewId) => {
-    changeVendorView(viewId.id || -1);
     addVendorsTableQueries({
       custom_view_id: viewId.id || null,
     });
@@ -57,7 +49,7 @@ function VendorActionsBar({
       <NavbarGroup>
         <DashboardActionViewsList
           resourceName={'vendors'}
-          views={vendorViews}
+          views={vendorsViews}
           onChange={handleTabChange}
         />
         <NavbarDivider />
@@ -76,16 +68,16 @@ function VendorActionsBar({
           <Button
             className={classNames(Classes.MINIMAL, 'button--filter')}
             text={
-              filterCount <= 0 ? (
+              true ? (
                 <T id={'filter'} />
               ) : (
-                `${filterCount} ${formatMessage({ id: 'filters_applied' })}`
+                `${9} ${formatMessage({ id: 'filters_applied' })}`
               )
             }
             icon={<Icon icon="filter-16" iconSize={16} />}
           />
         </Popover>
-        <If condition={hasSelectedRows}>
+        <If condition={false}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon="trash-16" iconSize={16} />}
@@ -107,13 +99,7 @@ function VendorActionsBar({
     </DashboardActionsBar>
   );
 }
-const mapStateToProps = (state, props) => ({
-  resourceName: 'vendors',
-});
-const withVendorsActionsBar = connect(mapStateToProps);
 
 export default compose(
-  withVendorsActionsBar,
   withVendorActions,
-  withVendors(({ vendorViews }) => ({ vendorViews })),
 )(VendorActionsBar);

@@ -7,7 +7,6 @@ import { orderingLinesIndexes, repeatValue } from 'utils';
 
 export default function MakeJournalEntriesField({
   defaultRow,
-
   linesNumber = 4,
 }) {
   return (

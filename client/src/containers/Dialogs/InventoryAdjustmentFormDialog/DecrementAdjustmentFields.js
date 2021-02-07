@@ -4,10 +4,16 @@ import { FormGroup, InputGroup } from '@blueprintjs/core';
 import { inputIntent } from 'utils';
 import { Row, Col, MoneyInputGroup } from 'components';
 import { FormattedMessage as T } from 'react-intl';
+import { useAutofocus } from 'hooks';
 import { decrementQuantity } from './utils';
 import { toSafeNumber } from 'utils';
 
+/**
+ * Decrement adjustment fields.
+ */
 function DecrementAdjustmentFields() {
+  const decrementFieldRef = useAutofocus();
+
   return (
     <Row className={'row--decrement-fields'}>
       {/*------------ Quantity on hand  -----------*/}
@@ -47,6 +53,7 @@ function DecrementAdjustmentFields() {
                 value={field.value}
                 allowDecimals={false}
                 allowNegativeValue={true}
+                inputRef={(ref) => (decrementFieldRef.current = ref)}
                 onChange={(value) => {
                   setFieldValue('quantity', value);
                 }}

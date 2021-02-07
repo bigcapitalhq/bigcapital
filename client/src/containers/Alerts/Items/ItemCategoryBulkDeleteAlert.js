@@ -5,6 +5,7 @@ import {
   useIntl,
 } from 'react-intl';
 import { Intent, Alert } from '@blueprintjs/core';
+import { size } from 'lodash';
 import { AppToaster } from 'components';
 
 import withItemCategoriesActions from 'containers/Items/withItemCategoriesActions';
@@ -59,7 +60,7 @@ function ItemCategoryBulkDeleteAlert({
     <Alert
       cancelButtonText={<T id={'cancel'} />}
       confirmButtonText={
-        <T id={'delete_count'} values={{ count: itemCategoriesIds.length }} />
+        <T id={'delete_count'} values={{ count: size(itemCategoriesIds) }} />
       }
       icon="trash"
       intent={Intent.DANGER}

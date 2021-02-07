@@ -8,7 +8,7 @@ import VendorAttahmentTab from './VendorAttahmentTab';
 import CustomerAddressTabs from 'containers/Customers/CustomerAddressTabs';
 import CustomerNotePanel from 'containers/Customers/CustomerNotePanel';
 
-export default function VendorTabs({ vendor }) {
+export default function VendorTabs() {
   const { formatMessage } = useIntl();
   return (
     <div className={classNames(CLASSES.PAGE_FORM_TABS)}>
@@ -21,7 +21,7 @@ export default function VendorTabs({ vendor }) {
         <Tab
           id={'financial'}
           title={formatMessage({ id: 'financial_details' })}
-          panel={<VendorFinanicalPanelTab vendorId={vendor} />}
+          panel={<VendorFinanicalPanelTab  />}
         />
         <Tab
           id={'address'}

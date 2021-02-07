@@ -18,6 +18,7 @@ import withGeneralLedger from './withGeneralLedger';
 import withGeneralLedgerActions from './withGeneralLedgerActions';
 
 import { compose } from 'utils';
+import { useGeneralLedgerContext } from './GeneralLedgerProvider';
 
 /**
  * General ledger - Actions bar.
@@ -28,15 +29,17 @@ function GeneralLedgerActionsBar({
 
   // #withGeneralLedgerActions
   toggleGeneralLedgerSheetFilter,
-  refreshGeneralLedgerSheet,
 }) {
+  const { sheetRefresh } = useGeneralLedgerContext();
+
   // Handle customize button click.
   const handleCustomizeClick = () => {
     toggleGeneralLedgerSheetFilter();
   };
+
   // Handle re-calculate button click.
   const handleRecalcReport = () => {
-    refreshGeneralLedgerSheet(true);
+    sheetRefresh();
   };
 
   return (

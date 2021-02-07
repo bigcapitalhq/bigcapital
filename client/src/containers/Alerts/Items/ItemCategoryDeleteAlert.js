@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   FormattedMessage as T,
   FormattedHTMLMessage,
   useIntl,
 } from 'react-intl';
 import { Intent, Alert } from '@blueprintjs/core';
-import { AppToaster } from 'components';
-import { queryCache } from 'react-query';
 
-import withItemCategoriesActions from 'containers/Items/withItemCategoriesActions';
+import { useDeleteItemCategory } from 'hooks/query';
+import { AppToaster } from 'components';
+
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
 
@@ -24,14 +24,14 @@ function ItemCategoryDeleteAlert({
   isOpen,
   payload: { itemCategoryId },
 
-  // #withItemCategoriesActions
-  requestDeleteItemCategory,
-
   // #withAlertActions
   closeAlert,
 }) {
   const { formatMessage } = useIntl();
-  const [isLoading, setLoading] = useState(false);
+  const {
+    mutateAsync: deleteItemCategory,
+    isLoading,
+  } = useDeleteItemCategory();
 
   // handle cancel delete item category alert.
   const handleCancelItemCategoryDelete = () => {
@@ -40,8 +40,7 @@ function ItemCategoryDeleteAlert({
 
   // Handle alert confirm delete item category.
   const handleConfirmItemDelete = () => {
-    setLoading(true);
-    requestDeleteItemCategory(itemCategoryId)
+    deleteItemCategory(itemCategoryId)
       .then(() => {
         AppToaster.show({
           message: formatMessage({
@@ -49,11 +48,9 @@ function ItemCategoryDeleteAlert({
           }),
           intent: Intent.SUCCESS,
         });
-        queryCache.invalidateQueries('items-categories-list');
       })
       .catch(() => {})
       .finally(() => {
-        setLoading(false);
         closeAlert(name);
       });
   };
@@ -81,5 +78,4 @@ function ItemCategoryDeleteAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
-  withItemCategoriesActions,
 )(ItemCategoryDeleteAlert);

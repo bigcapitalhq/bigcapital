@@ -1,11 +1,11 @@
-import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import React, { useMemo, useCallback, useEffect } from 'react';
 import { Formik, Form } from 'formik';
 import moment from 'moment';
 import { Intent } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { useIntl } from 'react-intl';
 import { useHistory } from 'react-router-dom';
-import { pick, sumBy, omit } from 'lodash';
+import { pick, sumBy, isEmpty, omit } from 'lodash';
 import { CLASSES } from 'common/classes';
 
 import { EditBillFormSchema, CreateBillFormSchema } from './BillForm.schema';
@@ -13,17 +13,14 @@ import BillFormHeader from './BillFormHeader';
 import BillFloatingActions from './BillFloatingActions';
 import BillFormFooter from './BillFormFooter';
 
-
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
-import withMediaActions from 'containers/Media/withMediaActions';
-import withBillActions from './withBillActions';
-import withBillDetail from './withBillDetail';
 
 import { AppToaster } from 'components';
 
 import { ERROR } from 'common/errors';
-import { compose, repeatValue, defaultToTransform, orderingLinesIndexes } from 'utils';
+import { compose, repeatValue, orderingLinesIndexes } from 'utils';
 import BillFormBody from './BillFormBody';
+import { useBillFormContext } from './BillFormProvider';
 
 const MIN_LINES_NUMBER = 5;
 
@@ -43,7 +40,7 @@ const defaultInitialValues = {
   due_date: moment(new Date()).format('YYYY-MM-DD'),
   reference_no: '',
   note: '',
-  open:'',
+  open: '',
   entries: [...repeatValue(defaultBill, MIN_LINES_NUMBER)],
 };
 
@@ -51,31 +48,21 @@ const defaultInitialValues = {
  * Bill form.
  */
 function BillForm({
-  //#WithMedia
-  requestSubmitMedia,
-  requestDeleteMedia,
-
-  //#withBillActions
-  requestSubmitBill,
-  requestEditBill,
-  setBillNumberChanged,
-
   //#withDashboard
   changePageTitle,
   changePageSubtitle,
-
-  //#withBillDetail
-  bill,
-
-  //#Own Props
-  billId,
-  onFormSubmit,
-  onCancelForm,
 }) {
   const { formatMessage } = useIntl();
   const history = useHistory();
 
-  const [submitPayload, setSubmitPayload] = useState({});
+  const {
+    bill,
+    billId,
+    submitPayload,
+    createBillMutate,
+    editBillMutate,
+  } = useBillFormContext();
+
   const isNewMode = !billId;
 
   useEffect(() => {
@@ -89,7 +76,7 @@ function BillForm({
   // Initial values in create and edit mode.
   const initialValues = useMemo(
     () => ({
-      ...(bill
+      ...(!isEmpty(bill)
         ? {
             ...pick(bill, Object.keys(defaultInitialValues)),
             entries: [
@@ -139,10 +126,9 @@ function BillForm({
       setSubmitting(false);
       return;
     }
-
     const form = {
       ...values,
-      open:submitPayload.status,
+      open: submitPayload.status,
       entries: entries.map((entry) => ({ ...omit(entry, ['total']) })),
     };
     // Handle the request success.
@@ -151,8 +137,8 @@ function BillForm({
         message: formatMessage(
           {
             id: isNewMode
-              ? 'the_bill_has_been_created_successfully' :
-              'the_bill_has_been_edited_successfully',
+              ? 'the_bill_has_been_created_successfully'
+              : 'the_bill_has_been_edited_successfully',
           },
           { number: values.bill_number },
         ),
@@ -175,9 +161,9 @@ function BillForm({
       setSubmitting(false);
     };
     if (bill && bill.id) {
-      requestEditBill(bill.id, form).then(onSuccess).catch(onError);
+      editBillMutate(bill.id, form).then(onSuccess).catch(onError);
     } else {
-      requestSubmitBill(form).then(onSuccess).catch(onError);
+      createBillMutate(form).then(onSuccess).catch(onError);
     }
   };
 
@@ -189,60 +175,28 @@ function BillForm({
     [changePageSubtitle],
   );
 
-  // Clear page subtitle once unmount bill form page.
-  useEffect(
-    () => () => {
-      changePageSubtitle('');
-    },
-    [changePageSubtitle],
-  );
-
-  const handleSubmitClick = useCallback(
-    (event, payload) => {
-      setSubmitPayload({ ...payload });
-    },
-    [setSubmitPayload],
-  );
-
-  const handleCancelClick = useCallback(() => {
-    history.goBack();
-  }, [history]);
-
   return (
-    <div className={classNames(
-      CLASSES.PAGE_FORM,
-      CLASSES.PAGE_FORM_STRIP_STYLE,
-      CLASSES.PAGE_FORM_BILL,
-    )}>
+    <div
+      className={classNames(
+        CLASSES.PAGE_FORM,
+        CLASSES.PAGE_FORM_STRIP_STYLE,
+        CLASSES.PAGE_FORM_BILL,
+      )}
+    >
       <Formik
         validationSchema={isNewMode ? CreateBillFormSchema : EditBillFormSchema}
         initialValues={initialValues}
         onSubmit={handleFormSubmit}
       >
-        {({ isSubmitting}) => (
-          <Form>
-            <BillFormHeader onBillNumberChanged={handleBillNumberChanged} />
-            <BillFormBody defaultBill={defaultBill} />
-            <BillFormFooter
-              oninitialFiles={[]}
-              // onDropFiles={handleDeleteFile}
-            />
-            <BillFloatingActions
-              isSubmitting={isSubmitting}
-              bill={bill}
-              onSubmitClick={handleSubmitClick}
-              onCancelClick={handleCancelClick}
-            />
-          </Form>
-        )}
+        <Form>
+          <BillFormHeader onBillNumberChanged={handleBillNumberChanged} />
+          <BillFormBody defaultBill={defaultBill} />
+          <BillFormFooter />
+          <BillFloatingActions />
+        </Form>
       </Formik>
     </div>
   );
 }
 
-export default compose(
-  withBillActions,
-  withBillDetail(),
-  withDashboardActions,
-  withMediaActions,
-)(BillForm);
+export default compose(withDashboardActions)(BillForm);

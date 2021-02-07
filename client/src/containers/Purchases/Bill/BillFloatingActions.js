@@ -10,72 +10,64 @@ import {
   MenuItem,
 } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'react-intl';
+import { useHistory } from 'react-router-dom';
 import { CLASSES } from 'common/classes';
 import classNames from 'classnames';
 import { useFormikContext } from 'formik';
-import { saveInvoke } from 'utils';
 import { If, Icon } from 'components';
+import { useBillFormContext } from './BillFormProvider';
 
 /**
  * Bill floating actions bar.
  */
-export default function BillFloatingActions({
-  isSubmitting,
-  onSubmitClick,
-  onCancelClick,
-  bill,
-}) {
-  const { resetForm, submitForm } = useFormikContext();
+export default function BillFloatingActions() {
+  const history = useHistory();
+
+  // Formik context.
+  const { resetForm, submitForm, isSubmitting } = useFormikContext();
+
+  // Bill form context.
+  const { bill, setSubmitPayload } = useBillFormContext();
+
+  // Handle submit as open button click.
   const handleSubmitOpenBtnClick = (event) => {
-    saveInvoke(onSubmitClick, event, {
-      redirect: true,
-      status: true,
-    });
+    setSubmitPayload({ redirect: true, status: true });
+    submitForm();
   };
 
+  // Handle submit, open and anothe new button click.
   const handleSubmitOpenAndNewBtnClick = (event) => {
+    setSubmitPayload({ redirect: false, status: true, resetForm: true });
     submitForm();
-    saveInvoke(onSubmitClick, event, {
-      redirect: false,
-      status: true,
-      resetForm: true,
-    });
   };
 
+  // Handle submit as open & continue editing button click.
   const handleSubmitOpenContinueEditingBtnClick = (event) => {
+    setSubmitPayload({ redirect: false, status: true });
     submitForm();
-    saveInvoke(onSubmitClick, event, {
-      redirect: false,
-      status: true,
-    });
   };
 
+  // Handle submit as draft button click.
   const handleSubmitDraftBtnClick = (event) => {
-    saveInvoke(onSubmitClick, event, {
-      redirect: true,
-      status: false,
-    });
+    setSubmitPayload({ redirect: true, status: false });
+    submitForm();
   };
 
+  // handle submit as draft & new button click.
   const handleSubmitDraftAndNewBtnClick = (event) => {
+    setSubmitPayload({ redirect: false, status: false, resetForm: true });
     submitForm();
-    saveInvoke(onSubmitClick, event, {
-      redirect: false,
-      status: false,
-      resetForm: true,
-    });
   };
 
+  // Handle submit as draft & continue editing button click.
   const handleSubmitDraftContinueEditingBtnClick = (event) => {
+    setSubmitPayload({ redirect: false, status: false, });
     submitForm();
-    saveInvoke(onSubmitClick, event, {
-      redirect: false,
-      status: false,
-    });
   };
 
+  // Handle cancel button click.
   const handleCancelBtnClick = (event) => {
-    saveInvoke(onCancelClick, event);
+    history.goBack();
   };
 
   const handleClearBtnClick = (event) => {
@@ -89,6 +81,7 @@ export default function BillFloatingActions({
         <ButtonGroup>
           <Button
             disabled={isSubmitting}
+            loading={isSubmitting}
             intent={Intent.PRIMARY}
             type="submit"
             onClick={handleSubmitOpenBtnClick}

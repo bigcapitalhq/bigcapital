@@ -29,10 +29,7 @@ export default function ExpenseFloatingFooter({
   const { submitForm, resetForm } = useFormikContext();
 
   const handleSubmitPublishBtnClick = (event) => {
-    saveInvoke(onSubmitClick, event, {
-      redirect: true,
-      publish: true,
-    });
+    saveInvoke(onSubmitClick, event, { redirect: true, publish: true});
   };
 
   const handleSubmitPublishAndNewBtnClick = (event) => {
@@ -46,17 +43,11 @@ export default function ExpenseFloatingFooter({
 
   const handleSubmitPublishContinueEditingBtnClick = (event) => {
     submitForm();
-    saveInvoke(onSubmitClick, event, {
-      redirect: false,
-      publish: true,
-    });
+    saveInvoke(onSubmitClick, event, { redirect: false, publish: true });
   };
 
   const handleSubmitDraftBtnClick = (event) => {
-    saveInvoke(onSubmitClick, event, {
-      redirect: true,
-      publish: false,
-    });
+    saveInvoke(onSubmitClick, event, { redirect: true, publish: false });
   };
 
   const handleSubmitDraftAndNewBtnClick = (event) => {
@@ -70,10 +61,7 @@ export default function ExpenseFloatingFooter({
 
   const handleSubmitDraftContinueEditingBtnClick = (event) => {
     submitForm();
-    saveInvoke(onSubmitClick, event, {
-      redirect: false,
-      publish: false,
-    });
+    saveInvoke(onSubmitClick, event, { redirect: false, publish: false });
   };
 
   const handleCancelBtnClick = (event) => {
@@ -81,9 +69,9 @@ export default function ExpenseFloatingFooter({
   };
 
   const handleClearBtnClick = (event) => {
-    // saveInvoke(onClearClick, event);
     resetForm();
   };
+
   return (
     <div className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>
       {/* ----------- Save And Publish ----------- */}
@@ -92,7 +80,6 @@ export default function ExpenseFloatingFooter({
           <Button
             disabled={isSubmitting}
             intent={Intent.PRIMARY}
-            type="submit"
             onClick={handleSubmitPublishBtnClick}
             text={<T id={'save_publish'} />}
           />
@@ -125,7 +112,6 @@ export default function ExpenseFloatingFooter({
           <Button
             disabled={isSubmitting}
             className={'ml1'}
-            type="submit"
             onClick={handleSubmitDraftBtnClick}
             text={<T id={'save_as_draft'} />}
           />
@@ -159,7 +145,6 @@ export default function ExpenseFloatingFooter({
           <Button
             disabled={isSubmitting}
             intent={Intent.PRIMARY}
-            type="submit"
             onClick={handleSubmitPublishBtnClick}
             text={<T id={'save'} />}
           />

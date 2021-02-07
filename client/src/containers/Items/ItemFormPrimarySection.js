@@ -8,8 +8,7 @@ import {
   Position,
 } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'react-intl';
-import { ErrorMessage, FastField } from 'formik';
-import { useIntl } from 'react-intl';
+import { ErrorMessage, FastField, useFormikContext } from 'formik';
 import {
   CategoriesSelectList,
   Hint,
@@ -20,27 +19,19 @@ import {
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 
-import withItemCategories from 'containers/Items/withItemCategories';
-import withAccounts from 'containers/Accounts/withAccounts';
-import withDashboardActions from 'containers/Dashboard/withDashboardActions';
-
-import { compose, handleStringChange, inputIntent } from 'utils';
-import { transitionItemTypeKeyToLabel } from './utils';
+import { useItemFormContext } from './ItemFormProvider';
+import { handleStringChange, inputIntent } from 'utils';
 
 /**
  * Item form primary section.
  */
-function ItemFormPrimarySection({
-  // #withItemCategories
-  categoriesList,
+export default function ItemFormPrimarySection() {
+  const { itemsCategories } = useItemFormContext();
 
-  // #withDashboardActions
-  changePageSubtitle,
-
-  // #ownProps
-  itemType,
-}) {
   const nameFieldRef = useRef(null);
+
+  // Formik context.
+  const { values: { itemType } } = useFormikContext();
 
   useEffect(() => {
     // Auto focus item name field once component mount.
@@ -94,7 +85,6 @@ function ItemFormPrimarySection({
               inline={true}
               onChange={handleStringChange((_value) => {
                 form.setFieldValue('type', _value);
-                changePageSubtitle(transitionItemTypeKeyToLabel(_value));
               })}
               selectedValue={value}
               disabled={itemType === 'inventory'}
@@ -155,7 +145,7 @@ function ItemFormPrimarySection({
                 className={classNames('form-group--category', Classes.FILL)}
               >
                 <CategoriesSelectList
-                  categoriesList={categoriesList}
+                  categories={itemsCategories}
                   selecetedCategoryId={value}
                   onCategorySelected={(category) => {
                     form.setFieldValue('category_id', category.id);
@@ -179,13 +169,3 @@ function ItemFormPrimarySection({
     </div>
   );
 }
-
-export default compose(
-  withAccounts(({ accountsList }) => ({
-    accountsList,
-  })),
-  withItemCategories(({ categoriesList }) => ({
-    categoriesList,
-  })),
-  withDashboardActions,
-)(ItemFormPrimarySection);

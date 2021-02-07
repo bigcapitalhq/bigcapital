@@ -1,16 +1,13 @@
-import React, { useEffect, useRef } from 'react';
-import { useHistory } from 'react-router';
+import React from 'react';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
-import { useParams, withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { pick } from 'lodash';
 
 import { DashboardViewsTabs } from 'components';
 
-import withExpenses from './withExpenses';
+import { useExpensesListContext } from './ExpensesListProvider';
+
 import withExpensesActions from './withExpensesActions';
-import withDashboardActions from 'containers/Dashboard/withDashboardActions';
-import withViewDetails from 'containers/Views/withViewDetails';
 
 import { compose } from 'utils';
 
@@ -18,38 +15,19 @@ import { compose } from 'utils';
  * Expesne views tabs.
  */
 function ExpenseViewTabs({
-  // #withExpenses
-  expensesViews,
-
-  // #withViewDetails
-  viewItem,
-
   // #withExpensesActions
-  addExpensesTableQueries,
-  changeExpensesView,
-
-  // #withDashboardActions
-  setTopbarEditView,
-  changePageSubtitle,
-
-  // props
-  customViewChanged,
-  onViewChanged,
+  addExpensesTableQueries,  
 }) {
-  const history = useHistory();
+  const { expensesViews } = useExpensesListContext();
+
   const { custom_view_id: customViewId = null } = useParams();
 
-  useEffect(() => {
-    setTopbarEditView(customViewId);
-    changePageSubtitle(customViewId && viewItem ? viewItem.name : '');
-  }, [customViewId]);
-
   const handleTabChange = (viewId) => {
-    changeExpensesView(viewId || -1);
     addExpensesTableQueries({
       custom_view_id: viewId || null,
     });
   };
+
   const tabs = expensesViews.map((view) => ({
     ...pick(view, ['name', 'id']),
   }));
@@ -72,19 +50,7 @@ function ExpenseViewTabs({
   );
 }
 
-const mapStateToProps = (state, ownProps) => ({
-  viewId: ownProps.match.params.custom_view_id,
-});
-
-const withExpensesViewTabs = connect(mapStateToProps);
-
+ 
 export default compose(
-  withRouter,
-  withExpensesViewTabs,
   withExpensesActions,
-  withDashboardActions,
-  withViewDetails(),
-  withExpenses(({ expensesViews }) => ({
-    expensesViews,
-  })),
 )(ExpenseViewTabs);

@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+  import React, { useCallback, useMemo } from 'react';
 import {
   Button,
   Popover,
@@ -7,38 +7,36 @@ import {
   MenuItem,
   MenuDivider,
   Position,
-  Tag,
 } from '@blueprintjs/core';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
 import moment from 'moment';
 import classNames from 'classnames';
-import { DataTable, Icon, LoadingIndicator } from 'components';
+import { withRouter } from 'react-router-dom';
+
+import { DataTable, Icon } from 'components';
 import { CLASSES } from 'common/classes';
-import { useIsValuePassed } from 'hooks';
+import {
+  PublishAccessor,
+  TypeAccessor,
+} from './components';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
-import withInventoryAdjustments from './withInventoryAdjustments';
 import withInventoryAdjustmentActions from './withInventoryAdjustmentActions';
 
 import { compose, saveInvoke } from 'utils';
-import { withRouter } from 'react-router-dom';
 
 function InventoryAdjustmentDataTable({
-  // withInventoryAdjustments
-  inventoryAdjustmentItems,
-  inventoryAdjustmentCurrentPage,
-  inventoryAdjustmentLoading,
-  inventoryAdjustmentsPagination,
-
   // withInventoryAdjustmentsActions
   addInventoryAdjustmentTableQueries,
 
   // #ownProps
+  isLoading,
+  inventoryAdjustments,
+  pagination,
   onDeleteInventoryAdjustment,
   onSelectedRowsChange,
 }) {
   const { formatMessage } = useIntl();
-  const isLoadedBefore = useIsValuePassed(inventoryAdjustmentLoading, false);
 
   const handleDeleteInventoryAdjustment = useCallback(
     (_adjustment) => () => {
@@ -83,14 +81,7 @@ function InventoryAdjustmentDataTable({
       {
         id: 'type',
         Header: formatMessage({ id: 'type' }),
-        accessor: (row) =>
-          row.type ? (
-            <Tag minimal={true} round={true} intent={Intent.NONE}>
-              {formatMessage({ id: row.type })}
-            </Tag>
-          ) : (
-            ''
-          ),
+        accessor: TypeAccessor,
         className: 'type',
         width: 100,
       },
@@ -111,21 +102,10 @@ function InventoryAdjustmentDataTable({
       {
         id: 'publish',
         Header: formatMessage({ id: 'status' }),
-        accessor: (r) => {
-          return r.is_published ? (
-            <Tag minimal={true}>
-              <T id={'published'} />
-            </Tag>
-          ) : (
-            <Tag minimal={true} intent={Intent.WARNING}>
-              <T id={'draft'} />
-            </Tag>
-          );
-        },
+        accessor: PublishAccessor,
         width: 95,
         className: 'publish',
       },
-
       {
         id: 'description',
         Header: formatMessage({ id: 'description' }),
@@ -175,7 +155,7 @@ function InventoryAdjustmentDataTable({
     },
     [addInventoryAdjustmentTableQueries],
   );
- 
+
   const handleSelectedRowsChange = useCallback(
     (selectedRows) => {
       onSelectedRowsChange &&
@@ -186,24 +166,23 @@ function InventoryAdjustmentDataTable({
 
   return (
     <div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>
-      <LoadingIndicator loading={inventoryAdjustmentLoading && !isLoadedBefore}>
-        <DataTable
-          columns={columns}
-          data={inventoryAdjustmentItems}
-          onFetchData={handleDataTableFetchData}
-          manualSortBy={true}
-          selectionColumn={true}
-          noInitialFetch={true}
-          onSelectedRowsChange={handleSelectedRowsChange}
-          rowContextMenu={onRowContextMenu}
-          pagination={true}
-          autoResetSortBy={false}
-          autoResetPage={false}
-          pagesCount={inventoryAdjustmentsPagination.pagesCount}
-          initialPageSize={inventoryAdjustmentsPagination.pageSize}
-          initialPageIndex={inventoryAdjustmentsPagination.page - 1}
-        />
-      </LoadingIndicator>
+      <DataTable
+        columns={columns}
+        data={inventoryAdjustments}
+        onFetchData={handleDataTableFetchData}
+        manualSortBy={true}
+        selectionColumn={true}
+        noInitialFetch={true}
+        onSelectedRowsChange={handleSelectedRowsChange}
+        rowContextMenu={onRowContextMenu}
+        pagination={true}
+        autoResetSortBy={false}
+        autoResetPage={false}
+        isLoading={isLoading}
+        // pagesCount={inventoryAdjustmentsPagination.pagesCount}
+        // initialPageSize={inventoryAdjustmentsPagination.pageSize}
+        // initialPageIndex={inventoryAdjustmentsPagination.page - 1}
+      />
     </div>
   );
 }
@@ -212,17 +191,4 @@ export default compose(
   withRouter,
   withDialogActions,
   withInventoryAdjustmentActions,
-  withInventoryAdjustments(
-    ({
-      inventoryAdjustmentLoading,
-      inventoryAdjustmentItems,
-      inventoryAdjustmentCurrentPage,
-      inventoryAdjustmentsPagination,
-    }) => ({
-      inventoryAdjustmentLoading,
-      inventoryAdjustmentItems,
-      inventoryAdjustmentCurrentPage,
-      inventoryAdjustmentsPagination,
-    }),
-  ),
 )(InventoryAdjustmentDataTable);

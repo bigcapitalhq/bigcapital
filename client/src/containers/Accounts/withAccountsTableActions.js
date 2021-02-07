@@ -16,10 +16,10 @@ const mapActionsToProps = (dispatch) => ({
       key,
       value,
     }),
-  addAccountsTableQueries: (queries) =>
+  addAccountsTableQuery: (queries) =>
     dispatch({
       type: t.ACCOUNTS_TABLE_QUERIES_ADD,
-      queries,
+      payload: { queries },
     }),
   setSelectedRowsAccounts: (selectedRows) =>
     dispatch({

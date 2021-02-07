@@ -9,10 +9,7 @@ import Dragzone from 'components/Dragzone';
 import { inputIntent } from 'utils';
 
 // Bill form floating actions.
-export default function BillFormFooter({
-  oninitialFiles,
-  onDropFiles,
-}) {
+export default function BillFormFooter() {
   return (
     <div class={classNames(CLASSES.PAGE_FORM_FOOTER)}>
       <Row>
@@ -32,9 +29,9 @@ export default function BillFormFooter({
 
         <Col md={4}>
           <Dragzone
-            initialFiles={oninitialFiles}
-            onDrop={onDropFiles}
-            onDeleteFile={onDropFiles}
+            initialFiles={[]}
+            // onDrop={onDropFiles}
+            // onDeleteFile={onDropFiles}
             hint={'Attachments: Maxiumum size: 20MB'}
           />
         </Col>

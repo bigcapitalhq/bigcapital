@@ -76,11 +76,15 @@ export const fetchAccountsTable = ({ query } = {}) => {
               accounts: response.data.accounts,
             });
             dispatch({
+              type: t.ACCOUNTS_SET_CURRENT_VIEW,
+              currentViewId: parseInt(response.data?.filter_meta?.view?.custom_view_id, 10),
+            });
+            dispatch({
               type: t.ACCOUNTS_TABLE_LOADING,
               loading: false,
             });
+            resolve(response);
           });
-          resolve(response);
         })
         .catch((error) => {
           reject(error);

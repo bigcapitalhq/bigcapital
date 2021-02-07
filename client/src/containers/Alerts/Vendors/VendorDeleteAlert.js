@@ -8,11 +8,11 @@ import { Intent, Alert } from '@blueprintjs/core';
 import { AppToaster } from 'components';
 import { transformErrors } from 'containers/Customers/utils';
 
-import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
-import withVendorActions from 'containers/Vendors/withVendorActions';
-
 import { compose } from 'utils';
+import {
+  useDeleteVendor
+} from 'hooks/query';
 
 /**
  * Vendor delete alert.
@@ -24,24 +24,23 @@ function VendorDeleteAlert({
   isOpen,
   payload: { vendorId },
 
-  // #withVendorActions
-  requestDeleteVender,
-
   // #withAlertActions
   closeAlert,
 }) {
   const { formatMessage } = useIntl();
-  const [isLoading, setLoading] = useState(false);
+  const {
+    mutateAsync: deleteVendorMutate,
+    isLoading
+  } = useDeleteVendor();
 
   // Handle cancel delete the vendor.
   const handleCancelDeleteAlert = () => {
     closeAlert(name);
   };
 
-  // handle confirm delete vendor.
+  // Handle confirm delete vendor.
   const handleConfirmDeleteVendor = useCallback(() => {
-    setLoading(true);
-    requestDeleteVender(vendorId)
+    deleteVendorMutate(vendorId)
       .then(() => {
         AppToaster.show({
           message: formatMessage({
@@ -55,9 +54,8 @@ function VendorDeleteAlert({
       })
       .finally(() => {
         closeAlert(name);
-        setLoading(false);
       });
-  }, [requestDeleteVender, vendorId, formatMessage]);
+  }, [deleteVendorMutate, name, closeAlert, vendorId, formatMessage]);
 
   return (
     <Alert
@@ -80,7 +78,5 @@ function VendorDeleteAlert({
 }
 
 export default compose(
-  withAlertStoreConnect(),
   withAlertActions,
-  withVendorActions,
 )(VendorDeleteAlert);

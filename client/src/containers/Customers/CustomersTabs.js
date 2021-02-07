@@ -6,7 +6,7 @@ import CustomerAttachmentTabs from './CustomerAttachmentTabs';
 import CustomerFinancialPanel from './CustomerFinancialPanel';
 import CustomerNotePanel from './CustomerNotePanel';
 
-export default function CustomersTabs({ customer }) {
+export default function CustomersTabs() {
   const { formatMessage } = useIntl();
 
   return (
@@ -20,7 +20,7 @@ export default function CustomersTabs({ customer }) {
         <Tab
           id={'financial'}
           title={formatMessage({ id: 'financial_details' })}
-          panel={<CustomerFinancialPanel customerId={customer} />}
+          panel={<CustomerFinancialPanel />}
         />
         <Tab
           id={'address'}

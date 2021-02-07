@@ -20,21 +20,16 @@ import {
   FieldRequiredHint,
   Hint,
 } from 'components';
-import withCurrencies from 'containers/Currencies/withCurrencies';
-import withAccounts from 'containers/Accounts/withAccounts';
-import withCustomers from 'containers/Customers/withCustomers';
 
-function ExpenseFormHeader({
-  //withCurrencies
-  currenciesList,
+import { ACCOUNT_PARENT_TYPE } from 'common/accountTypes';
+import { useExpenseFormContext } from './ExpenseFormPageProvider';
 
-  // #withAccounts
-  accountsList,
-  accountsTypes,
+/**
+ * Expense form header.
+ */
+export default function ExpenseFormHeader({}) {
+  const { currencies, accounts, customers } = useExpenseFormContext();
 
-  // #withCustomers
-  customers,
-}) {
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
       <FastField name={'payment_date'}>
@@ -74,13 +69,13 @@ function ExpenseFormHeader({
             inline={true}
           >
             <AccountsSelectList
-              accounts={accountsList}
+              accounts={accounts}
               onAccountSelected={(account) => {
                 form.setFieldValue('payment_account_id', account.id);
               }}
               defaultSelectText={<T id={'select_payment_account'} />}
               selectedAccountId={value}
-              filterByTypes={['current_asset']}
+              filterByParentTypes={[ACCOUNT_PARENT_TYPE.CURRENT_ASSET]}
             />
           </FormGroup>
         )}
@@ -100,7 +95,7 @@ function ExpenseFormHeader({
             inline={true}
           >
             <CurrencySelectList
-              currenciesList={currenciesList}
+              currenciesList={currencies}
               selectedCurrencyCode={value}
               onCurrencySelected={(currencyItem) => {
                 form.setFieldValue('currency_code', currencyItem.currency_code);
@@ -149,16 +144,3 @@ function ExpenseFormHeader({
     </div>
   );
 }
-
-export default compose(
-  withAccounts(({ accountsList, accountsTypes }) => ({
-    accountsList,
-    accountsTypes,
-  })),
-  withCurrencies(({ currenciesList }) => ({
-    currenciesList,
-  })),
-  withCustomers(({ customers }) => ({
-    customers,
-  })),
-)(ExpenseFormHeader);

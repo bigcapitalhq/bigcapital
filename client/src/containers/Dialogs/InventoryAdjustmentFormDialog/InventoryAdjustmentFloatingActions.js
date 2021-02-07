@@ -2,29 +2,45 @@ import React from 'react';
 import { Intent, Button, Classes } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 import { FormattedMessage as T } from 'react-intl';
-import { saveInvoke } from 'utils';
 
-export default function InventoryAdjustmentFloatingActions({
-  onCloseClick,
-  onSubmitClick,
+import { useInventoryAdjContext } from './InventoryAdjustmentFormProvider';
+import withDialogActions from 'containers/Dialog/withDialogActions';
+import { compose } from 'utils';
+
+/**
+ * Inventory adjustment floating actions.
+ */
+function InventoryAdjustmentFloatingActions({
+  // #withDialogActions
+  closeDialog,
 }) {
-  const { isSubmitting } = useFormikContext();
+  // Formik context.
+  const { isSubmitting, submitForm } = useFormikContext();
 
+  // Inventory adjustment dialog context.
+  const { dialogName, setSubmitPayload } = useInventoryAdjContext();
+
+  // handle submit as draft button click.
   const handleSubmitDraftBtnClick = (event) => {
-    saveInvoke(onSubmitClick, event, {
-      publish: false,
-    });
+    setSubmitPayload({ publish: false });
+    submitForm();
   };
+
+  // Handle submit make adjustment button click.
   const handleSubmitMakeAdjustmentBtnClick = (event) => {
-    saveInvoke(onSubmitClick, event, {
-      publish: true,
-    });
+    setSubmitPayload({ publish: true });
+    submitForm();
+  };
+
+  // Handle close button click.
+  const handleCloseBtnClick = (event) => {
+    closeDialog(dialogName)
   };
 
   return (
     <div className={Classes.DIALOG_FOOTER}>
       <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-        <Button onClick={onCloseClick} style={{ minWidth: '75px' }}>
+        <Button onClick={handleCloseBtnClick} style={{ minWidth: '75px' }}>
           <T id={'close'} />
         </Button>
 
@@ -49,3 +65,7 @@ export default function InventoryAdjustmentFloatingActions({
     </div>
   );
 }
+
+export default compose(
+  withDialogActions
+)(InventoryAdjustmentFloatingActions);

@@ -1,30 +1,27 @@
-import React, { useCallback, useMemo } from 'react';
-import moment from 'moment';
-import { defaultExpanderReducer, compose } from 'utils';
+import React, { useMemo } from 'react';
+
+import { defaultExpanderReducer } from 'utils';
 import { useIntl } from 'react-intl';
 
 import FinancialSheet from 'components/FinancialSheet';
 import DataTable from 'components/DataTable';
-import Money from 'components/Money';
 
-import withGeneralLedger from './withGeneralLedger';
 import { getForceWidth, getColumnWidth } from 'utils';
+import { useGeneralLedgerContext } from './GeneralLedgerProvider';
 
-const ROW_TYPE = {
-  CLOSING_BALANCE: 'closing_balance',
-  OPENING_BALANCE: 'opening_balance',
-  ACCOUNT: 'account_name',
-  TRANSACTION: 'transaction',
-};
-
-function GeneralLedgerTable({
+/**
+ * General ledger table.
+ */
+export default function GeneralLedgerTable({
   companyName,
-
-  generalLedgerSheetLoading,
-  generalLedgerTableRows,
-  generalLedgerQuery,
 }) {
   const { formatMessage } = useIntl();
+
+  // General ledger context.
+  const {
+    generalLedger: { tableRows, query },
+    isSheetLoading
+  } = useGeneralLedgerContext();
 
   const columns = useMemo(
     () => [
@@ -75,7 +72,7 @@ function GeneralLedgerTable({
         Header: formatMessage({ id: 'credit' }),
         accessor: 'formatted_credit',
         className: 'credit',
-        width: getColumnWidth(generalLedgerTableRows, 'formatted_credit', {
+        width: getColumnWidth(tableRows, 'formatted_credit', {
           minWidth: 100,
           magicSpacing: 10,
         }),
@@ -84,7 +81,7 @@ function GeneralLedgerTable({
         Header: formatMessage({ id: 'debit' }),
         accessor: 'formatted_debit',
         className: 'debit',
-        width: getColumnWidth(generalLedgerTableRows, 'formatted_debit', {
+        width: getColumnWidth(tableRows, 'formatted_debit', {
           minWidth: 100,
           magicSpacing: 10,
         }),
@@ -93,7 +90,7 @@ function GeneralLedgerTable({
         Header: formatMessage({ id: 'amount' }),
         accessor: 'formatted_amount',
         className: 'amount',
-        width: getColumnWidth(generalLedgerTableRows, 'formatted_amount', {
+        width: getColumnWidth(tableRows, 'formatted_amount', {
           minWidth: 100,
           magicSpacing: 10,
         }),
@@ -102,19 +99,19 @@ function GeneralLedgerTable({
         Header: formatMessage({ id: 'running_balance' }),
         accessor: 'formatted_running_balance',
         className: 'running_balance',
-        width: getColumnWidth(generalLedgerTableRows, 'formatted_running_balance', {
+        width: getColumnWidth(tableRows, 'formatted_running_balance', {
           minWidth: 100,
           magicSpacing: 10,
         }),
       },
     ],
-    [formatMessage, generalLedgerTableRows],
+    [formatMessage, tableRows],
   );
 
   // Default expanded rows of general ledger table.
   const expandedRows = useMemo(
-    () => defaultExpanderReducer(generalLedgerTableRows, 1),
-    [generalLedgerTableRows],
+    () => defaultExpanderReducer(tableRows, 1),
+    [tableRows],
   );
 
   const rowClassNames = (row) => [`row-type--${row.original.rowType}`];
@@ -123,10 +120,10 @@ function GeneralLedgerTable({
     <FinancialSheet
       companyName={companyName}
       sheetType={formatMessage({ id: 'general_ledger_sheet' })}
-      fromDate={generalLedgerQuery.from_date}
-      toDate={generalLedgerQuery.to_date}
+      fromDate={query.from_date}
+      toDate={query.to_date}
       name="general-ledger"
-      loading={generalLedgerSheetLoading}
+      loading={isSheetLoading}
       fullWidth={true}
     >
       <DataTable
@@ -135,7 +132,7 @@ function GeneralLedgerTable({
           id: 'this_report_does_not_contain_any_data_between_date_period',
         })}
         columns={columns}
-        data={generalLedgerTableRows}
+        data={tableRows}
         rowClassNames={rowClassNames}
         expanded={expandedRows}
         virtualizedRows={true}
@@ -148,17 +145,3 @@ function GeneralLedgerTable({
     </FinancialSheet>
   );
 }
-
-export default compose(
-  withGeneralLedger(
-    ({
-      generalLedgerTableRows,
-      generalLedgerSheetLoading,
-      generalLedgerQuery,
-    }) => ({
-      generalLedgerTableRows,
-      generalLedgerSheetLoading,
-      generalLedgerQuery,
-    }),
-  ),
-)(GeneralLedgerTable);

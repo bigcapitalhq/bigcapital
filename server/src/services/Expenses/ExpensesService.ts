@@ -157,7 +157,7 @@ export default class ExpensesService implements IExpensesService {
     const invalidExpenseAccounts: number[] = [];
 
     expensesAccounts.forEach((expenseAccount) => {
-      if (expenseAccount.isRootType(ACCOUNT_ROOT_TYPE.EXPENSE)) {
+      if (!expenseAccount.isRootType(ACCOUNT_ROOT_TYPE.EXPENSE)) {
         invalidExpenseAccounts.push(expenseAccount.id);
       }
     });
@@ -181,7 +181,7 @@ export default class ExpensesService implements IExpensesService {
       paymentAccount,
     });
 
-    if (paymentAccount.isParentType(ACCOUNT_PARENT_TYPE.CURRENT_ASSET)) {
+    if (!paymentAccount.isParentType(ACCOUNT_PARENT_TYPE.CURRENT_ASSET)) {
       this.logger.info(
         '[expenses] the given payment account has invalid type',
         { tenantId, paymentAccount }

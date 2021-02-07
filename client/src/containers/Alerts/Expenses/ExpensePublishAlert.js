@@ -1,0 +1,64 @@
+import React from 'react';
+import { FormattedMessage as T, useIntl } from 'react-intl';
+import { Intent, Alert } from '@blueprintjs/core';
+import { AppToaster } from 'components';
+
+import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
+import withAlertActions from 'containers/Alert/withAlertActions';
+
+import { usePublishExpense } from 'hooks/query';
+import { compose } from 'utils';
+
+/**
+ * Expense publish alert.
+ */
+function ExpensePublishAlert({
+  closeAlert,
+
+  // #withAlertStoreConnect
+  name,
+  payload: { expenseId },
+  isOpen,
+}) {
+  const { formatMessage } = useIntl();
+  const { mutateAsync: publishExpenseMutate, isLoading } = usePublishExpense();
+
+  const handleCancelPublishExpense = () => {
+    closeAlert('expense-publish');
+  };
+
+  // Handle publish expense confirm.
+  const handleConfirmPublishExpense = () => {
+    publishExpenseMutate(expenseId)
+      .then(() => {
+        AppToaster.show({
+          message: formatMessage({
+            id: 'the_expense_has_been_published',
+          }),
+          intent: Intent.SUCCESS,
+        });
+      })
+      .catch((error) => {});
+  };
+
+  return (
+    <Alert
+      cancelButtonText={<T id={'cancel'} />}
+      confirmButtonText={<T id={'publish'} />}
+      intent={Intent.WARNING}
+      isOpen={isOpen}
+      onCancel={handleCancelPublishExpense}
+      onConfirm={handleConfirmPublishExpense}
+      loading={isLoading}
+    >
+      <p>
+        <T id={'are_sure_to_publish_this_expense'} />
+      </p>
+    </Alert>
+  );
+}
+
+export default compose(
+  withAlertStoreConnect(),
+  withAlertActions,
+)(ExpensePublishAlert);

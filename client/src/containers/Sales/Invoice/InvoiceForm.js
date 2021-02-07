@@ -1,12 +1,11 @@
-import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import React, { useMemo, useCallback, useEffect } from 'react';
 import { Formik, Form } from 'formik';
 import moment from 'moment';
 import { Intent } from '@blueprintjs/core';
 import { useIntl } from 'react-intl';
-import { pick, sumBy, omit } from 'lodash';
+import { pick, sumBy, omit, isEmpty } from 'lodash';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
-
 import {
   CreateInvoiceFormSchema,
   EditInvoiceFormSchema,
@@ -19,24 +18,21 @@ import InvoiceFormFooter from './InvoiceFormFooter';
 import InvoiceNumberChangeWatcher from './InvoiceNumberChangeWatcher';
 
 import withInvoiceActions from './withInvoiceActions';
-import withInvoiceDetail from './withInvoiceDetail';
-
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withMediaActions from 'containers/Media/withMediaActions';
 import withSettings from 'containers/Settings/withSettings';
 
 import { AppToaster } from 'components';
-
-import useMedia from 'hooks/useMedia';
 import { ERROR } from 'common/errors';
-
 import {
   compose,
   repeatValue,
   defaultToTransform,
   orderingLinesIndexes,
+  transactionNumber,
 } from 'utils';
 import { useHistory } from 'react-router-dom';
+import { useInvoiceFormContext } from './InvoiceFormProvider';
 
 const MIN_LINES_NUMBER = 4;
 
@@ -65,14 +61,6 @@ const defaultInitialValues = {
  * Invoice form.
  */
 function InvoiceForm({
-  // #WithMedia
-  requestSubmitMedia,
-  requestDeleteMedia,
-
-  // #WithInvoiceActions
-  requestSubmitInvoice,
-  requestEditInvoice,
-
   // #withDashboard
   changePageTitle,
   changePageSubtitle,
@@ -80,24 +68,25 @@ function InvoiceForm({
   // #withSettings
   invoiceNextNumber,
   invoiceNumberPrefix,
-
-  // #withInvoiceDetail
-  invoice,
-
-  // #own Props
-  invoiceId,
-  onCancelForm,
 }) {
   const { formatMessage } = useIntl();
   const history = useHistory();
+  const {
+    items,
+    invoiceId,
+    invoice,
+    createInvoiceMutate,
+    editInvoiceMutate,
+    submitPayload,
+  } = useInvoiceFormContext();
 
-  const [submitPayload, setSubmitPayload] = useState({});
   const isNewMode = !invoiceId;
 
-  const invoiceNumber = invoiceNumberPrefix
-    ? `${invoiceNumberPrefix}-${invoiceNextNumber}`
-    : invoiceNextNumber;
-
+  // Invoice number.
+  const invoiceNumber = transactionNumber(
+    invoiceNumberPrefix,
+    invoiceNextNumber,
+  );
   useEffect(() => {
     const transactionNumber = invoice ? invoice.invoice_no : invoiceNumber;
 
@@ -119,7 +108,7 @@ function InvoiceForm({
 
   const initialValues = useMemo(
     () => ({
-      ...(invoice
+      ...(!isEmpty(invoice)
         ? {
             ...pick(invoice, Object.keys(defaultInitialValues)),
             entries: [
@@ -205,22 +194,11 @@ function InvoiceForm({
     };
 
     if (invoice && invoice.id) {
-      requestEditInvoice(invoice.id, form).then(onSuccess).catch(onError);
+      editInvoiceMutate(invoice.id, form).then(onSuccess).catch(onError);
     } else {
-      requestSubmitInvoice(form).then(onSuccess).catch(onError);
+      createInvoiceMutate(form).then(onSuccess).catch(onError);
     }
   };
-
-  const handleCancelClick = useCallback(() => {
-    history.goBack();
-  }, [history]);
-
-  const handleSubmitClick = useCallback(
-    (event, payload) => {
-      setSubmitPayload({ ...payload });
-    },
-    [setSubmitPayload],
-  );
 
   const handleInvoiceNumberChanged = useCallback(
     (invoiceNumber) => {
@@ -246,28 +224,22 @@ function InvoiceForm({
         initialValues={initialValues}
         onSubmit={handleSubmit}
       >
-        {({ isSubmitting}) => (
-          <Form>
-            <InvoiceFormHeader
-              onInvoiceNumberChanged={handleInvoiceNumberChanged}
-            />
-            <InvoiceNumberChangeWatcher invoiceNumber={invoiceNumber} />
+        <Form>
+          <InvoiceFormHeader
+            onInvoiceNumberChanged={handleInvoiceNumberChanged}
+          />
+          <InvoiceNumberChangeWatcher invoiceNumber={invoiceNumber} />
 
-            <div className={classNames(CLASSES.PAGE_FORM_BODY)}>
-              <EditableItemsEntriesTable
-                defaultEntry={defaultInvoice}
-                filterSellableItems={true}
-              />
-            </div>
-            <InvoiceFormFooter />
-            <InvoiceFloatingActions
-              isSubmitting={isSubmitting}
-              invoice={invoice}
-              onCancelClick={handleCancelClick}
-              onSubmitClick={handleSubmitClick}
+          <div className={classNames(CLASSES.PAGE_FORM_BODY)}>
+            <EditableItemsEntriesTable
+              items={items}
+              defaultEntry={defaultInvoice}
+              filterSellableItems={true}
             />
-          </Form>
-        )}
+          </div>
+          <InvoiceFormFooter />
+          <InvoiceFloatingActions />
+        </Form>
       </Formik>
     </div>
   );
@@ -277,7 +249,6 @@ export default compose(
   withInvoiceActions,
   withDashboardActions,
   withMediaActions,
-  withInvoiceDetail(),
   withSettings(({ invoiceSettings }) => ({
     invoiceNextNumber: invoiceSettings?.nextNumber,
     invoiceNumberPrefix: invoiceSettings?.numberPrefix,

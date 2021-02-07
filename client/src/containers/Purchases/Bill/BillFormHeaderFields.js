@@ -8,10 +8,8 @@ import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 import { ContactSelecetList, FieldRequiredHint, Icon } from 'components';
 
-import withVendors from 'containers/Vendors/withVendors';
-import withAccounts from 'containers/Accounts/withAccounts';
+import { useBillFormContext } from './BillFormProvider';
 import withDialogActions from 'containers/Dialog/withDialogActions';
-
 import {
   momentFormatter,
   compose,
@@ -26,10 +24,10 @@ import {
  */
 function BillFormHeader({
   onBillNumberChanged,
-
-  //#withVendors
-  vendorItems,
 }) {
+  // Bill form context.
+  const { vendors } = useBillFormContext();
+
   const handleBillNumberBlur = (event) => {
     saveInvoke(onBillNumberChanged, event.currentTarget.value);
   };
@@ -48,7 +46,7 @@ function BillFormHeader({
             helperText={<ErrorMessage name={'vendor_id'} />}
           >
             <ContactSelecetList
-              contactsList={vendorItems}
+              contactsList={vendors}
               selectedContactId={value}
               defaultSelectText={<T id={'select_vender_account'} />}
               onContactSelected={(contact) => {
@@ -151,11 +149,5 @@ function BillFormHeader({
 }
 
 export default compose(
-  withVendors(({ vendorItems }) => ({
-    vendorItems,
-  })),
-  withAccounts(({ accountsList }) => ({
-    accountsList,
-  })),
   withDialogActions,
 )(BillFormHeader);

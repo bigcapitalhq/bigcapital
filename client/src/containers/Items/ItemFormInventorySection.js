@@ -1,37 +1,23 @@
 import React from 'react';
 import { FastField, ErrorMessage } from 'formik';
-import {
-  FormGroup,
-  InputGroup,
-  ControlGroup,
-  Position,
-} from '@blueprintjs/core';
-import { DateInput } from '@blueprintjs/datetime';
-import {
-  AccountsSelectList,
-  MoneyInputGroup,
-  InputPrependText,
-  Col,
-  Row,
-  Hint,
-} from 'components';
+import { FormGroup } from '@blueprintjs/core';
+import { AccountsSelectList, Col, Row } from 'components';
 import { CLASSES } from 'common/classes';
 import { FormattedMessage as T } from 'react-intl';
 import classNames from 'classnames';
-import withAccounts from 'containers/Accounts/withAccounts';
+
 import withSettings from 'containers/Settings/withSettings';
-import {
-  compose,
-  tansformDateValue,
-  momentFormatter,
-  inputIntent,
-  handleDateChange,
-} from 'utils';
+
+import { compose, inputIntent } from 'utils';
+import { ACCOUNT_TYPE } from 'common/accountTypes';
+import { useItemFormContext } from './ItemFormProvider';
 
 /**
  * Item form inventory sections.
  */
-function ItemFormInventorySection({ accountsList, baseCurrency }) {
+function ItemFormInventorySection({ baseCurrency }) {
+  const { accounts } = useItemFormContext();
+
   return (
     <div class="page-form__section page-form__section--inventory">
       <h3>
@@ -55,12 +41,13 @@ function ItemFormInventorySection({ accountsList, baseCurrency }) {
                 )}
               >
                 <AccountsSelectList
-                  accounts={accountsList}
+                  accounts={accounts}
                   onAccountSelected={(account) => {
                     form.setFieldValue('inventory_account_id', account.id);
                   }}
                   defaultSelectText={<T id={'select_account'} />}
                   selectedAccountId={value}
+                  filterByTypes={[ACCOUNT_TYPE.INVENTORY]}
                 />
               </FormGroup>
             )}
@@ -72,9 +59,6 @@ function ItemFormInventorySection({ accountsList, baseCurrency }) {
 }
 
 export default compose(
-  withAccounts(({ accountsList }) => ({
-    accountsList,
-  })),
   withSettings(({ organizationSettings }) => ({
     baseCurrency: organizationSettings?.baseCurrency,
   })),

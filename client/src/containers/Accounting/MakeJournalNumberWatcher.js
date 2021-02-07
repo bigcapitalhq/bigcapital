@@ -9,14 +9,20 @@ import withManualJournals from './withManualJournals';
 import { defaultToTransform } from 'utils';
 
 /**
- * 
+ * Journal number chaلing watcher.
  */
 function MakeJournalNumberChangingWatcher({
-  journalNumber,
+  // #withDashboardActions
+  changePageSubtitle,
 
+  // #withManualJournals
   journalNumberChanged,
+
+  // #withManualJournalsActions
   setJournalNumberChanged,
-  changePageSubtitle
+
+  // #ownProps
+  journalNumber,
 }) {
   const { setFieldValue } = useFormikContext();
 

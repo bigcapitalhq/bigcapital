@@ -12,26 +12,15 @@ import {
   Col,
 } from 'components';
 import { FormattedMessage as T } from 'react-intl';
-
-import withCurrencies from 'containers/Currencies/withCurrencies';
-
-import {
-  compose,
-  momentFormatter,
-  tansformDateValue,
-  inputIntent,
-} from 'utils';
+import { momentFormatter, tansformDateValue, inputIntent } from 'utils';
+import { useVendorFormContext } from './VendorFormProvider';
 
 /**
  * Vendor Finaniceal Panel Tab.
  */
-function VendorFinanicalPanelTab({
-  // #withCurrencies
-  currenciesList,
+export default function VendorFinanicalPanelTab() {
+  const { vendorId, currencies } = useVendorFormContext();
 
-  // #OwnProps
-  vendorId,
-}) {
   return (
     <div className={'tab-panel--financial'}>
       <Row>
@@ -104,7 +93,7 @@ function VendorFinanicalPanelTab({
                 inline={true}
               >
                 <CurrencySelectList
-                  currenciesList={currenciesList}
+                  currenciesList={currencies}
                   selectedCurrencyCode={value}
                   onCurrencySelected={(currency) => {
                     form.setFieldValue('currency_code', currency.currency_code);
@@ -119,7 +108,3 @@ function VendorFinanicalPanelTab({
     </div>
   );
 }
-
-export default compose(
-  withCurrencies(({ currenciesList }) => ({ currenciesList })),
-)(VendorFinanicalPanelTab);

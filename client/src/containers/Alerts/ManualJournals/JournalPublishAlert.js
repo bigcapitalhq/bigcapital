@@ -1,0 +1,73 @@
+import React from 'react';
+import { Intent, Alert } from '@blueprintjs/core';
+import { FormattedMessage as T, useIntl } from 'react-intl';
+import { usePublishJournal } from 'hooks/query';
+
+import { AppToaster } from 'components';
+
+import withAlertActions from 'containers/Alert/withAlertActions';
+import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
+
+import { compose } from 'utils';
+
+/**
+ * Journal publish alert.
+ */
+function JournalPublishAlert({
+  name,
+
+  // #withAlertStoreConnect
+  isOpen,
+  payload: { manualJournalId, journalNumber },
+
+  // #withAlertActions
+  closeAlert,
+}) {
+  const { formatMessage } = useIntl();
+  const { mutate: publishJournalMutate, isLoading } = usePublishJournal();
+
+  // Handle cancel manual journal alert.
+  const handleCancel = () => {
+    closeAlert(name);
+  };
+
+  // Handle publish manual journal confirm.
+  const handleConfirm = () => {
+    publishJournalMutate(manualJournalId)
+      .then(() => {
+        AppToaster.show({
+          message: formatMessage({
+            id: 'the_manual_journal_has_been_published',
+          }),
+          intent: Intent.SUCCESS,
+        });
+      })
+      .catch((error) => {
+        
+      })
+      .finally(() => {
+        closeAlert(name);
+      });
+  };
+  
+  return (
+    <Alert
+      cancelButtonText={<T id={'cancel'} />}
+      confirmButtonText={<T id={'publish'} />}
+      intent={Intent.WARNING}
+      isOpen={isOpen}
+      onCancel={handleCancel}
+      onConfirm={handleConfirm}
+      loading={isLoading}
+    >
+      <p>
+        <T id={'are_sure_to_publish_this_manual_journal'} />
+      </p>
+    </Alert>
+  );
+}
+
+export default compose(
+  withAlertStoreConnect(),
+  withAlertActions,
+)(JournalPublishAlert)

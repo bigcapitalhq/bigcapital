@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import Icon from 'components/Icon';
 import {
   Button,
@@ -12,70 +12,44 @@ import {
 } from '@blueprintjs/core';
 
 import classNames from 'classnames';
-import { useRouteMatch, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 
-import { connect } from 'react-redux';
-import FilterDropdown from 'components/FilterDropdown';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 
 import { If, DashboardActionViewsList } from 'components';
 
-import withResourceDetail from 'containers/Resources/withResourceDetails';
-import withDialogActions from 'containers/Dialog/withDialogActions';
-
+import { useInvoicesListContext } from './InvoicesListProvider';
 import withInvoiceActions from './withInvoiceActions';
-import withInvoices from './withInvoices';
 
 import { compose } from 'utils';
 
+/**
+ * Invoices table actions bar.
+ */
 function InvoiceActionsBar({
-  // #withResourceDetail
-  resourceFields,
-
-  //#withInvoice
-  invoicesViews,
-
   // #withInvoiceActions
   addInvoiceTableQueries,
-  changeInvoiceView,
-  // #own Porps
-  onFilterChanged,
-  selectedRows = [],
 }) {
   const history = useHistory();
-  const [filterCount, setFilterCount] = useState(0);
   const { formatMessage } = useIntl();
 
-  const handleClickNewInvoice = useCallback(() => {
+  const [filterCount, setFilterCount] = useState(0);
+
+  // Sale invoices list context.
+  const { invoicesViews } = useInvoicesListContext();
+
+  // Handle new invoice button click.
+  const handleClickNewInvoice = () => {
     history.push('/invoices/new');
-  }, [history]);
+  };
 
-  const hasSelectedRows = useMemo(() => selectedRows.length > 0, [
-    selectedRows,
-  ]);
-
+  // Handle views tab change.
   const handleTabChange = (viewId) => {
-    changeInvoiceView(viewId.id || -1);
     addInvoiceTableQueries({
       custom_view_id: viewId.id || null,
     });
   };
-
-  // const filterDropdown = FilterDropdown({
-  //   initialCondition: {
-  //     fieldKey: '',
-  //     compatator: '',
-  //     value: '',
-  //   },
-  //   fields: resourceFields,
-  //   onFilterChange: (filterConditions) => {
-  //     addInvoiceTableQueries({
-  //       filter_roles: filterConditions || '',
-  //     });
-  //     onFilterChanged && onFilterChanged(filterConditions);
-  //   },
-  // });
 
   return (
     <DashboardActionsBar>
@@ -110,7 +84,7 @@ function InvoiceActionsBar({
             icon={<Icon icon={'filter-16'} iconSize={16} />}
           />
         </Popover>
-        <If condition={hasSelectedRows}>
+        <If condition={false}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon={'trash-16'} iconSize={16} />}
@@ -139,18 +113,4 @@ function InvoiceActionsBar({
   );
 }
 
-const mapStateToProps = (state, props) => ({
-  resourceName: 'sales_invoices',
-});
-const withInvoiceActionsBar = connect(mapStateToProps);
-
-export default compose(
-  withInvoiceActionsBar,
-  withResourceDetail(({ resourceFields }) => ({
-    resourceFields,
-  })),
-  withInvoices(({ invoicesViews }) => ({
-    invoicesViews,
-  })),
-  withInvoiceActions,
-)(InvoiceActionsBar);
+export default compose(withInvoiceActions)(InvoiceActionsBar);

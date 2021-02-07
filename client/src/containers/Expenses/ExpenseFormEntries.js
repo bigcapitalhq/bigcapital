@@ -6,7 +6,6 @@ import { omit } from 'lodash';
 import { DataTableEditable, Icon } from 'components';
 import { Hint } from 'components';
 import {
-  compose,
   formattedAmount,
   transformUpdatedRows,
   saveInvoke,
@@ -16,7 +15,7 @@ import {
   MoneyFieldCell,
   InputGroupCell,
 } from 'components/DataTableCells';
-import withAccounts from 'containers/Accounts/withAccounts';
+import { useExpenseFormContext } from './ExpenseFormPageProvider';
 
 const ExpenseCategoryHeaderCell = () => {
   return (
@@ -88,10 +87,7 @@ const TotalAmountCellRenderer = (chainedComponent, type) => (props) => {
   return chainedComponent(props);
 };
 
-function ExpenseTable({
-  // #withAccounts
-  accountsList,
-
+export default function ExpenseTable({
   // #ownPorps
   onClickRemoveRow,
   onClickAddNewRow,
@@ -103,6 +99,8 @@ function ExpenseTable({
 }) {
   const [rows, setRows] = useState([]);
   const { formatMessage } = useIntl();
+
+  const { accounts } = useExpenseFormContext();
 
   useEffect(() => {
     setRows([...entries.map((e) => ({ ...e, rowType: 'editor' }))]);
@@ -230,7 +228,7 @@ function ExpenseTable({
       rowClassNames={rowClassNames}
       sticky={true}
       payload={{
-        accounts: accountsList,
+        accounts: accounts,
         errors: error,
         updateData: handleUpdateData,
         removeRow: handleRemoveRow,
@@ -258,10 +256,4 @@ function ExpenseTable({
       totalRow={true}
     />
   );
-}
-
-export default compose(
-  withAccounts(({ accountsList }) => ({
-    accountsList,
-  })),
-)(ExpenseTable);
+} 

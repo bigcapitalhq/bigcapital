@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { Intent, Alert } from '@blueprintjs/core';
-import { queryCache } from 'react-query';
 import { AppToaster } from 'components';
 
-import withItemsActions from 'containers/Items/withItemsActions';
+import { useInactivateItem } from 'hooks/query';
+
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
 
@@ -20,24 +20,20 @@ function ItemInactivateAlert({
   isOpen,
   payload: { itemId },
 
-  // #withItemsActions
-  requestInactiveItem,
-
   // #withAlertActions
   closeAlert,
 }) {
   const { formatMessage } = useIntl();
-  const [isLoading, setLoading] = useState(false);
+  const { mutateAsync: inactivateItem, isLoading } = useInactivateItem();
 
-  // handle cancel inactivate alert.
+  // Handle cancel inactivate alert.
   const handleCancelInactivateItem = () => {
     closeAlert(name);
   };
 
   // Handle confirm item Inactive.
   const handleConfirmItemInactive = () => {
-    setLoading(true);
-    requestInactiveItem(itemId)
+    inactivateItem(itemId)
       .then(() => {
         AppToaster.show({
           message: formatMessage({
@@ -45,11 +41,9 @@ function ItemInactivateAlert({
           }),
           intent: Intent.SUCCESS,
         });
-        queryCache.invalidateQueries('items-table');
       })
       .catch((error) => {})
       .finally(() => {
-        setLoading(false);
         closeAlert(name);
       });
   };
@@ -74,5 +68,4 @@ function ItemInactivateAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
-  withItemsActions,
 )(ItemInactivateAlert);

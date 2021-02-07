@@ -1,9 +1,30 @@
 import React from 'react';
-import { Intent, Classes, Tooltip, Position, Tag, Button } from '@blueprintjs/core';
+import {
+  Intent,
+  Classes,
+  Tooltip,
+  Position,
+  Tag,
+  Button,
+} from '@blueprintjs/core';
 import { FormattedMessage as T } from 'react-intl';
+import moment from 'moment';
 import { Choose, Money, If, Icon, Hint } from 'components';
+
 import withAccountDetails from 'containers/Accounts/withAccountDetail';
+
 import { compose } from 'utils';
+
+// Amount accessor.
+export const AmountAccessor = (r) => (
+  <Tooltip
+    content={<AmountPopoverContent journalEntries={r.entries} />}
+    position={Position.RIGHT_TOP}
+    boundary={'viewport'}
+  >
+    <Money amount={r.amount} currency={'USD'} />
+  </Tooltip>
+);
 
 const AmountPopoverContentLineRender = ({
   journalEntry,
@@ -75,6 +96,13 @@ export const StatusAccessor = (row) => {
       </Choose.Otherwise>
     </Choose>
   );
+};
+
+/**
+ * Date accessor.
+ */
+export const DateAccessor = (row) => {
+  return moment(row.date).format('YYYY MMM DD');
 };
 
 /**
@@ -156,7 +184,11 @@ export const TotalCreditDebitCellRenderer = (chainedComponent, type) => (
       return computed;
     }, 0);
 
-    return <span><Money amount={total} currency={'USD'} /></span>;
+    return (
+      <span>
+        <Money amount={total} currency={'USD'} />
+      </span>
+    );
   }
   return chainedComponent(props);
 };

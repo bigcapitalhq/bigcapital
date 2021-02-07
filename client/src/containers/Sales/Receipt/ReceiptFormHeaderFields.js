@@ -20,10 +20,7 @@ import {
   InputPrependButton,
 } from 'components';
 
-import withCustomers from 'containers/Customers/withCustomers';
-import withAccounts from 'containers/Accounts/withAccounts';
 import withDialogActions from 'containers/Dialog/withDialogActions';
-
 import {
   momentFormatter,
   compose,
@@ -32,20 +29,20 @@ import {
   handleDateChange,
   inputIntent,
 } from 'utils';
+import { useReceiptFormContext } from './ReceiptFormProvider';
 
+/**
+ * Receipt form header fields.
+ */
 function ReceiptFormHeader({
-  //#withCustomers
-  customers,
-
-  //#withAccouts
-  accountsList,
-
   //#withDialogActions
   openDialog,
 
   // #ownProps
   onReceiptNumberChanged,
 }) {
+  const { accounts, customers } = useReceiptFormContext();
+
   const handleReceiptNumberChange = useCallback(() => {
     openDialog('receipt-number-form', {});
   }, [openDialog]);
@@ -92,13 +89,13 @@ function ReceiptFormHeader({
             helperText={<ErrorMessage name={'deposit_account_id'} />}
           >
             <AccountsSelectList
-              accounts={accountsList}
+              accounts={accounts}
               onAccountSelected={(account) => {
                 form.setFieldValue('deposit_account_id', account.id);
               }}
               defaultSelectText={<T id={'select_deposit_account'} />}
               selectedAccountId={value}
-              filterByTypes={['current_asset']}
+              // filterByTypes={['current_asset']}
               popoverFill={true}
             />
           </FormGroup>
@@ -185,11 +182,5 @@ function ReceiptFormHeader({
 }
 
 export default compose(
-  withCustomers(({ customers }) => ({
-    customers,
-  })),
-  withAccounts(({ accountsList }) => ({
-    accountsList,
-  })),
   withDialogActions,
 )(ReceiptFormHeader);

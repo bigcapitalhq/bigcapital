@@ -1,16 +1,13 @@
 import React, { useEffect, useCallback, useState } from 'react';
-import { useQuery } from 'react-query';
 import moment from 'moment';
 import { useIntl } from 'react-intl';
-import { queryCache } from 'react-query';
 
+import 'style/pages/FinancialStatements/TrialBalanceSheet.scss';
+
+import { TrialBalanceSheetProvider } from './TrialBalanceProvider';
 import TrialBalanceActionsBar from './TrialBalanceActionsBar';
 import TrialBalanceSheetHeader from './TrialBalanceSheetHeader';
 import TrialBalanceSheetTable from './TrialBalanceSheetTable';
-import DashboardInsider from 'components/Dashboard/DashboardInsider';
-
-import { compose } from 'utils';
-import { transformFilterFormToQuery } from 'containers/FinancialStatements/common';
 
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
@@ -18,7 +15,7 @@ import withTrialBalanceActions from './withTrialBalanceActions';
 import withSettings from 'containers/Settings/withSettings';
 import withTrialBalance from './withTrialBalance';
 
-import 'style/pages/FinancialStatements/TrialBalanceSheet.scss';
+import { compose } from 'utils';
 
 /**
  * Trial balance sheet.
@@ -28,13 +25,6 @@ function TrialBalanceSheet({
   changePageTitle,
   setDashboardBackLink,
   setSidebarShrink,
-
-  // #withTrialBalance
-  trialBalanceSheetRefresh,
-
-  // #withTrialBalanceActions
-  fetchTrialBalanceSheet,
-  refreshTrialBalance,
 
   // #withPreferences
   organizationName,
@@ -48,15 +38,6 @@ function TrialBalanceSheet({
     accountsFilter: 'all-accounts',
   });
 
-  // Fetches trial balance sheet.
-  const fetchSheet = useQuery(
-    ['trial-balance-sheet', filter],
-    (key, query) =>
-      fetchTrialBalanceSheet({
-        ...transformFilterFormToQuery(query),
-      }),
-    { manual: true },
-  );
   // Change page title of the dashboard.
   useEffect(() => {
     changePageTitle(formatMessage({ id: 'trial_balance_sheet' }));
@@ -73,6 +54,7 @@ function TrialBalanceSheet({
     };
   }, [setDashboardBackLink, setSidebarShrink]);
 
+  // Handle filter form submit.
   const handleFilterSubmit = useCallback(
     (filter) => {
       const parsedFilter = {
@@ -81,34 +63,24 @@ function TrialBalanceSheet({
         toDate: moment(filter.toDate).format('YYYY-MM-DD'),
       };
       setFilter(parsedFilter);
-      refreshTrialBalance(true);
     },
-    [setFilter, refreshTrialBalance],
+    [setFilter],
   );
 
-  // Observes the trial balance sheet refresh to invaoid the query.
-  useEffect(() => {
-    if (trialBalanceSheetRefresh) {
-      queryCache.invalidateQueries('trial-balance-sheet');
-      refreshTrialBalance(false);
-    }
-  }, [trialBalanceSheetRefresh, refreshTrialBalance]);
-
+  // Handle numebr format form submit.
   const handleNumberFormatSubmit = (numberFormat) => {
     setFilter({
       ...filter,
       numberFormat,
     });
-    refreshTrialBalance(false);
   };
 
   return (
-    <DashboardInsider>
+    <TrialBalanceSheetProvider query={filter}>
       <TrialBalanceActionsBar
         numberFormat={filter.numberFormat}
         onNumberFormatSubmit={handleNumberFormatSubmit}
       />
-
       <DashboardPageContent>
         <div class="financial-statement">
           <TrialBalanceSheetHeader
@@ -120,15 +92,15 @@ function TrialBalanceSheet({
           </div>
         </div>
       </DashboardPageContent>
-    </DashboardInsider>
+    </TrialBalanceSheetProvider>
   );
 }
 
 export default compose(
   withDashboardActions,
   withTrialBalanceActions,
-  withTrialBalance(({ trialBalanceSheetRefresh }) => ({
-    trialBalanceSheetRefresh,
+  withTrialBalance(({ trialBalanceQuery }) => ({
+    trialBalanceQuery,
   })),
   withSettings(({ organizationSettings }) => ({
     organizationName: organizationSettings.name,

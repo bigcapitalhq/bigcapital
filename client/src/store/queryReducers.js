@@ -16,7 +16,11 @@ export const createTableQueryReducers =
         };
       case `${RESOURCE_NAME}/TABLE_QUERIES_ADD`:
         return {
-          
+          ...state,
+          tableQuery: {
+            ...state.tableQuery,
+            ...action.payload.query,
+          }
         };
       default:
         return reducer(state, action);

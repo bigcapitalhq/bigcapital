@@ -1,18 +1,25 @@
 import React from 'react';
 import { Switch, Route, useHistory } from 'react-router-dom';
 
-import ItemsViewsTabs from 'containers/Items/ItemsViewsTabs';
-import ItemsDataTable from 'containers/Items/ItemsDataTable';
+import ItemsViewsTabs from './ItemsViewsTabs';
+import ItemsDataTable from './ItemsDataTable';
+
 import withItemsActions from 'containers/Items/withItemsActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
+import withDialogActions from 'containers/Dialog/withDialogActions';
+
 import { compose } from 'utils';
 
 function ItemsViewPage({
   // #withAlertsActions.
   openAlert,
 
+  // #withDialogActions
+  openDialog,
+
   // #withItemsActions.
   setSelectedRowsItems,
+  addItemsTableQueries
 }) {
   const history = useHistory();
 
@@ -42,6 +49,25 @@ function ItemsViewPage({
     history.push(`/items/${id}/edit`);
   };
 
+  // Handle item make adjustment.
+  const handleMakeAdjustment = ({ id }) => {
+    openDialog('inventory-adjustment', { itemId: id });
+  }
+
+  // Handle fetch data once the page index, size or sort by of the table change.
+  const handleFetchData = ({ pageIndex, pageSize, sortBy }) => {
+    addItemsTableQueries({
+      page_size: pageSize,
+      page: pageIndex,
+      ...(sortBy.length > 0
+        ? {
+            column_sort_by: sortBy[0].id,
+            sort_order: sortBy[0].desc ? 'desc' : 'asc',
+          }
+        : {}),
+    });
+  };
+
   return (
     <Switch>
       <Route
@@ -49,12 +75,17 @@ function ItemsViewPage({
         path={['/items/:custom_view_id/custom_view', '/items']}
       >
         <ItemsViewsTabs />
-
         <ItemsDataTable
-          onDeleteItem={handleDeleteItem}
-          onEditItem={handleEditItem}
-          onInactiveItem={handleInactiveItem}
-          onActivateItem={handleActivateItem}
+          tableProps={{
+            payload: {
+              onDeleteItem: handleDeleteItem,
+              onEditItem: handleEditItem,
+              onInactivateItem: handleInactiveItem,
+              onActivateItem: handleActivateItem,
+              onMakeAdjustment: handleMakeAdjustment
+            },
+            onFetchData: handleFetchData
+          }}
           onSelectedRowsChange={handleSelectedRowsChange}
         />
       </Route>
@@ -62,4 +93,8 @@ function ItemsViewPage({
   );
 }
 
-export default compose(withAlertsActions, withItemsActions)(ItemsViewPage);
+export default compose(
+  withAlertsActions,
+  withItemsActions,
+  withDialogActions
+)(ItemsViewPage);

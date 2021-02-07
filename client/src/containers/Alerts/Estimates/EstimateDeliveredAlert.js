@@ -2,11 +2,12 @@ import React, { useCallback, useState } from 'react';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { Intent, Alert } from '@blueprintjs/core';
 import { queryCache } from 'react-query';
+
+import { useDeliverEstimate } from 'hooks/query';
 import { AppToaster } from 'components';
 
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
-import withEstimateActions from 'containers/Sales/Estimate/withEstimateActions';
 
 import { compose } from 'utils';
 
@@ -20,14 +21,11 @@ function EstimateDeliveredAlert({
   isOpen,
   payload: { estimateId },
 
-  // #withEstimateActions
-  requestDeliveredEstimate,
-
   // #withAlertActions
   closeAlert,
 }) {
   const { formatMessage } = useIntl();
-  const [isLoading, setLoading] = useState(false);
+  const { mutateAsync: deliverEstimateMutate, isLoading } = useDeliverEstimate();
 
   // Handle cancel delivered estimate alert.
   const handleCancelDeliveredEstimate = () => {
@@ -36,8 +34,7 @@ function EstimateDeliveredAlert({
 
   // Handle confirm estimate delivered.
   const handleConfirmEstimateDelivered = useCallback(() => {
-    setLoading(true);
-    requestDeliveredEstimate(estimateId)
+    deliverEstimateMutate(estimateId)
       .then(() => {
         AppToaster.show({
           message: formatMessage({
@@ -50,9 +47,8 @@ function EstimateDeliveredAlert({
       .catch((error) => {})
       .finally(() => {
         closeAlert(name);
-        setLoading(false);
       });
-  }, [estimateId, requestDeliveredEstimate, formatMessage]);
+  }, [estimateId, deliverEstimateMutate, formatMessage]);
 
   return (
     <Alert
@@ -74,5 +70,4 @@ function EstimateDeliveredAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
-  withEstimateActions,
 )(EstimateDeliveredAlert);

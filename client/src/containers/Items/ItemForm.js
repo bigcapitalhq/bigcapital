@@ -1,11 +1,12 @@
-import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
-import { queryCache } from 'react-query';
 import { useHistory } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames';
 import { defaultTo } from 'lodash';
+
+import 'style/pages/Items/PageForm.scss';
 
 import { CLASSES } from 'common/classes';
 import AppToaster from 'components/AppToaster';
@@ -14,22 +15,16 @@ import ItemFormBody from './ItemFormBody';
 import ItemFormFloatingActions from './ItemFormFloatingActions';
 import ItemFormInventorySection from './ItemFormInventorySection';
 
-import withItemsActions from 'containers/Items/withItemsActions';
-import withMediaActions from 'containers/Media/withMediaActions';
-import useMedia from 'hooks/useMedia';
-import withItem from 'containers/Items/withItem';
-import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withSettings from 'containers/Settings/withSettings';
 
 import { compose, transformToForm } from 'utils';
-import { transitionItemTypeKeyToLabel } from './utils';
 import {
   EditItemFormSchema,
   CreateItemFormSchema,
   transformItemFormData,
 } from './ItemForm.schema';
 
-import 'style/pages/Items/PageForm.scss';
+import { useItemFormContext } from './ItemFormProvider';
 
 const defaultInitialValues = {
   active: 1,
@@ -50,46 +45,27 @@ const defaultInitialValues = {
  * Item form.
  */
 function ItemForm({
-  // #withItemActions
-  requestSubmitItem,
-  requestEditItem,
-
-  itemId,
-  item,
-  onFormSubmit,
-
-  // #withDashboardActions
-  changePageTitle,
-  changePageSubtitle,
-
   // #withSettings
   preferredCostAccount,
   preferredSellAccount,
   preferredInventoryAccount,
-
-  // #withMediaActions
-  requestSubmitMedia,
-  requestDeleteMedia,
 }) {
-  const isNewMode = !itemId;
-
-  // Holds data of submit button once clicked to form submit function.
-  const [submitPayload, setSubmitPayload] = useState({});
-
-  const history = useHistory();
-  const { formatMessage } = useIntl();
-
+  // Item form context.
   const {
-    setFiles,
-    saveMedia,
-    deletedFiles,
-    setDeletedFiles,
-    deleteMedia,
-  } = useMedia({
-    saveCallback: requestSubmitMedia,
-    deleteCallback: requestDeleteMedia,
-  });
+    itemId,
+    item,
+    accounts,
+    createItemMutate,
+    editItemMutate,
+    submitPayload,
+    isNewMode
+  } = useItemFormContext();
 
+  // History context.
+  const history = useHistory();
+
+  const { formatMessage } = useIntl();
+ 
   /**
    * Initial values in create and edit mode.
    */
@@ -117,12 +93,7 @@ function ItemForm({
     ],
   );
 
-  useEffect(() => {
-    !isNewMode
-      ? changePageTitle(formatMessage({ id: 'edit_item_details' }))
-      : changePageTitle(formatMessage({ id: 'new_item' }));
-  }, [changePageTitle, isNewMode, formatMessage]);
-
+  // Transform API errors.
   const transformApiErrors = (errors) => {
     const fields = {};
     if (errors.find((e) => e.type === 'ITEM.NAME.ALREADY.EXISTS')) {
@@ -155,12 +126,14 @@ function ItemForm({
       });
       resetForm();
       setSubmitting(false);
-      queryCache.removeQueries(['items-table']);
 
+      // Submit payload.
       if (submitPayload.redirect) {
         history.push('/items');
       }
     };
+
+    // Handle response error.
     const onError = (errors) => {
       setSubmitting(false);
       if (errors) {
@@ -169,58 +142,12 @@ function ItemForm({
       }
     };
     if (isNewMode) {
-      requestSubmitItem(form).then(onSuccess).catch(onError);
+      createItemMutate(form).then(onSuccess).catch(onError);
     } else {
-      requestEditItem(itemId, form).then(onSuccess).catch(onError);
+      editItemMutate([itemId, form]).then(onSuccess).catch(onError);
     }
   };
-
-  useEffect(() => {
-    if (item && item.type) {
-      changePageSubtitle(transitionItemTypeKeyToLabel(item.type));
-    }
-  }, [item, changePageSubtitle, formatMessage]);
-
-  const initialAttachmentFiles = useMemo(() => {
-    return item && item.media
-      ? item.media.map((attach) => ({
-          preview: attach.attachment_file,
-          upload: true,
-          metadata: { ...attach },
-        }))
-      : [];
-  }, [item]);
-
-  const handleDropFiles = useCallback(
-    (_files) => {
-      setFiles(_files.filter((file) => file.uploaded === false));
-    },
-    [setFiles],
-  );
-
-  const handleDeleteFile = useCallback(
-    (_deletedFiles) => {
-      _deletedFiles.forEach((deletedFile) => {
-        if (deletedFile.uploaded && deletedFile.metadata.id) {
-          setDeletedFiles([...deletedFiles, deletedFile.metadata.id]);
-        }
-      });
-    },
-    [setDeletedFiles, deletedFiles],
-  );
-
-  const handleCancelBtnClick = () => {
-    history.goBack();
-  };
-
-  const handleSubmitAndNewClick = () => {
-    setSubmitPayload({ redirect: false });
-  };
-
-  const handleSubmitClick = () => {
-    setSubmitPayload({ redirect: true });
-  };
-
+ 
   return (
     <div class={classNames(CLASSES.PAGE_FORM_ITEM)}>
       <Formik
@@ -229,33 +156,21 @@ function ItemForm({
         initialValues={initialValues}
         onSubmit={handleFormSubmit}
       >
-        {({ isSubmitting, handleSubmit }) => (
-          <Form>
-            <div class={classNames(CLASSES.PAGE_FORM_BODY)}>
-              <ItemFormPrimarySection itemType={item?.type} />
-              <ItemFormBody />
-              <ItemFormInventorySection />
-            </div>
-            <ItemFormFloatingActions
-              isSubmitting={isSubmitting}
-              itemId={itemId}
-              handleSubmit={handleSubmit}
-              onCancelClick={handleCancelBtnClick}
-              onSubmitAndNewClick={handleSubmitAndNewClick}
-              onSubmitClick={handleSubmitClick}
-            />
-          </Form>
-        )}
+        <Form>
+          <div class={classNames(CLASSES.PAGE_FORM_BODY)}>
+            <ItemFormPrimarySection />
+            <ItemFormBody accounts={accounts} />
+            <ItemFormInventorySection accounts={accounts} />
+          </div>
+
+          <ItemFormFloatingActions />
+        </Form>
       </Formik>
     </div>
   );
 }
 
 export default compose(
-  withItemsActions,
-  withItem(({ item }) => ({ item })),
-  withDashboardActions,
-  withMediaActions,
   withSettings(({ itemsSettings }) => ({
     preferredCostAccount: parseInt(itemsSettings?.preferredCostAccount),
     preferredSellAccount: parseInt(itemsSettings?.preferredSellAccount),

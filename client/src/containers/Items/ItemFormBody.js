@@ -12,15 +12,18 @@ import {
 import { FormattedMessage as T } from 'react-intl';
 import classNames from 'classnames';
 
-import withAccounts from 'containers/Accounts/withAccounts';
+import { useItemFormContext } from './ItemFormProvider';
 import withSettings from 'containers/Settings/withSettings';
+import { ACCOUNT_PARENT_TYPE } from 'common/accountTypes';
 
 import { compose, inputIntent } from 'utils';
 
 /**
  * Item form body.
  */
-function ItemFormBody({ accountsList, baseCurrency }) {
+function ItemFormBody({ baseCurrency }) {
+  const { accounts } = useItemFormContext();
+
   return (
     <div class="page-form__section page-form__section--selling-cost">
       <Row>
@@ -84,14 +87,14 @@ function ItemFormBody({ accountsList, baseCurrency }) {
                 )}
               >
                 <AccountsSelectList
-                  accounts={accountsList}
+                  accounts={accounts}
                   onAccountSelected={(account) => {
                     form.setFieldValue('sell_account_id', account.id);
                   }}
                   defaultSelectText={<T id={'select_account'} />}
                   selectedAccountId={value}
                   disabled={!form.values.sellable}
-                  filterByTypes={['income']}
+                  filterByParentTypes={[ACCOUNT_PARENT_TYPE.INCOME]}
                   popoverFill={true}
                 />
               </FormGroup>
@@ -158,14 +161,14 @@ function ItemFormBody({ accountsList, baseCurrency }) {
                 )}
               >
                 <AccountsSelectList
-                  accounts={accountsList}
+                  accounts={accounts}
                   onAccountSelected={(account) => {
                     form.setFieldValue('cost_account_id', account.id);
                   }}
                   defaultSelectText={<T id={'select_account'} />}
                   selectedAccountId={value}
                   disabled={!form.values.purchasable}
-                  filterByTypes={['cost_of_goods_sold']}
+                  filterByParentTypes={[ACCOUNT_PARENT_TYPE.EXPENSE]}
                   popoverFill={true}
                 />
               </FormGroup>
@@ -178,9 +181,6 @@ function ItemFormBody({ accountsList, baseCurrency }) {
 }
 
 export default compose(
-  withAccounts(({ accountsList }) => ({
-    accountsList,
-  })),
   withSettings(({ organizationSettings }) => ({
     baseCurrency: organizationSettings?.baseCurrency,
   })),

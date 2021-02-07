@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import {
   Intent,
   Button,
@@ -13,70 +13,57 @@ import { FormattedMessage as T } from 'react-intl';
 import { useFormikContext } from 'formik';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
-import { saveInvoke } from 'utils';
 import { If, Icon } from 'components';
+import { useReceiptFormContext } from './ReceiptFormProvider';
 
 /**
  * Receipt floating actions bar.
  */
-export default function ReceiptFormFloatingActions({
-  isSubmitting,
-  receipt,
-  onSubmitClick,
-  onCancelClick,
-}) {
-  const { resetForm, submitForm } = useFormikContext();
+export default function ReceiptFormFloatingActions() {
+  // Formik context.
+  const { resetForm, submitForm, isSubmitting } = useFormikContext();
 
+  // Receipt form context.
+  const { receipt, setSubmitPayload } = useReceiptFormContext();
+
+  // Handle submit & close button click.
   const handleSubmitCloseBtnClick = (event) => {
-    saveInvoke(onSubmitClick, event, {
-      redirect: true,
-      status: true,
-    });
+    setSubmitPayload({ redirect: true, status: true });
+    submitForm();
   };
 
+  // Handle submit, close & new button click.
   const handleSubmitCloseAndNewBtnClick = (event) => {
+    setSubmitPayload({ redirect: false, status: true, resetForm: true });
     submitForm();
-    saveInvoke(onSubmitClick, event, {
-      redirect: false,
-      status: true,
-      resetForm: true,
-    });
   };
 
+  // Handle submit, close & continue editing button click.
   const handleSubmitCloseContinueEditingBtnClick = (event) => {
+    setSubmitPayload({ redirect: false, status: true });
     submitForm();
-    saveInvoke(onSubmitClick, event, {
-      redirect: false,
-      status: true,
-    });
   };
 
+  // Handle submit & draft button click.
   const handleSubmitDraftBtnClick = (event) => {
-    saveInvoke(onSubmitClick, event, {
-      redirect: true,
-      status: false,
-    });
+    setSubmitPayload({ redirect: true, status: false });
+    submitForm();
   };
 
+  // Handle submit, draft & new button click.
   const handleSubmitDraftAndNewBtnClick = (event) => {
+    setSubmitPayload({ redirect: false, status: false, resetForm: true });
     submitForm();
-    saveInvoke(onSubmitClick, event, {
-      redirect: false,
-      status: false,
-      resetForm: true,
-    });
   };
 
   const handleSubmitDraftContinueEditingBtnClick = (event) => {
+    setSubmitPayload({ redirect: false, status: false });
     submitForm();
-    saveInvoke(onSubmitClick, event, {
-      redirect: false,
-      status: false,
-    });
   };
 
+  // Handle cancel button click.
   const handleCancelBtnClick = (event) => {
-    saveInvoke(onCancelClick, event);
+    
   };
 
   const handleClearBtnClick = (event) => {
@@ -91,7 +78,6 @@ export default function ReceiptFormFloatingActions({
           <Button
             disabled={isSubmitting}
             intent={Intent.PRIMARY}
-            type="submit"
             onClick={handleSubmitCloseBtnClick}
             text={<T id={'save_close'} />}
           />
@@ -124,7 +110,6 @@ export default function ReceiptFormFloatingActions({
           <Button
             disabled={isSubmitting}
             className={'ml1'}
-            type="submit"
             onClick={handleSubmitDraftBtnClick}
             text={<T id={'save_as_draft'} />}
           />
@@ -158,7 +143,6 @@ export default function ReceiptFormFloatingActions({
           <Button
             disabled={isSubmitting}
             intent={Intent.PRIMARY}
-            type="submit"
             onClick={handleSubmitCloseBtnClick}
             text={<T id={'save'} />}
           />

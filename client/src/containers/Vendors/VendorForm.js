@@ -1,5 +1,4 @@
-import React, { useState, useMemo, useCallback, useEffect } from 'react';
-import * as Yup from 'yup';
+import React, { useMemo, useEffect } from 'react';
 import { Formik, Form } from 'formik';
 import moment from 'moment';
 import { Intent } from '@blueprintjs/core';
@@ -20,11 +19,10 @@ import VendorTabs from './VendorsTabs';
 import VendorFloatingActions from './VendorFloatingActions';
 
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
-import withVendorDetail from './withVendorDetail';
-import withVendorActions from './withVendorActions';
 import withSettings from 'containers/Settings/withSettings';
 
 import { compose, transformToForm } from 'utils';
+import { useVendorFormContext } from './VendorFormProvider';
 
 const defaultInitialValues = {
   salutation: '',
@@ -68,20 +66,19 @@ function VendorForm({
   // #withDashboardActions
   changePageTitle,
 
-  // #withVendorDetailsActions
-  vendor,
-  // #withVendorActions
-  requestSubmitVendor,
-  requestEditVendor,
-
   // #withSettings
   baseCurrency,
-
-  // #OwnProps
-  vendorId,
 }) {
+  const {
+    vendorId,
+    vendor,
+    createVendorMutate,
+    editVendorMutate,
+    setSubmitPayload,
+    submitPayload,
+  } = useVendorFormContext();
+
   const isNewMode = !vendorId;
-  const [submitPayload, setSubmitPayload] = useState({});
 
   const history = useHistory();
   const { formatMessage } = useIntl();
@@ -95,15 +92,16 @@ function VendorForm({
       currency_code: baseCurrency,
       ...transformToForm(vendor, defaultInitialValues),
     }),
-    [defaultInitialValues],
+    [vendor, baseCurrency],
   );
+
   useEffect(() => {
     !isNewMode
       ? changePageTitle(formatMessage({ id: 'edit_vendor' }))
       : changePageTitle(formatMessage({ id: 'new_vendor' }));
   }, [changePageTitle, isNewMode, formatMessage]);
 
-  //Handles the form submit.
+  // Handles the form submit.
   const handleFormSubmit = (
     values,
     { setSubmitting: resetForm, setErrors },
@@ -132,22 +130,11 @@ function VendorForm({
     };
 
     if (vendor && vendor.id) {
-      requestEditVendor(vendor.id, requestForm).then(onSuccess).catch(onError);
+      editVendorMutate(vendor.id, requestForm).then(onSuccess).catch(onError);
     } else {
-      requestSubmitVendor(requestForm).then(onSuccess).catch(onError);
+      createVendorMutate(requestForm).then(onSuccess).catch(onError);
     }
   };
-
-  const handleCancelClick = useCallback(() => {
-    history.goBack();
-  }, [history]);
-
-  const handleSubmitClick = useCallback(
-    (event, payload) => {
-      setSubmitPayload({ ...payload });
-    },
-    [setSubmitPayload],
-  );
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM, CLASSES.PAGE_FORM_CUSTOMER)}>
@@ -158,38 +145,29 @@ function VendorForm({
         initialValues={initialValues}
         onSubmit={handleFormSubmit}
       >
-        {({ isSubmitting }) => (
-          <Form>
-            <div className={classNames(CLASSES.PAGE_FORM_HEADER_PRIMARY)}>
-              <VendorFormPrimarySection />
-            </div>
+        <Form>
+          <div className={classNames(CLASSES.PAGE_FORM_HEADER_PRIMARY)}>
+            <VendorFormPrimarySection />
+          </div>
 
-            <div className={'page-form__after-priamry-section'}>
-              <VendorFormAfterPrimarySection />
-            </div>
+          <div className={'page-form__after-priamry-section'}>
+            <VendorFormAfterPrimarySection />
+          </div>
 
-            <div className={classNames(CLASSES.PAGE_FORM_TABS)}>
-              <VendorTabs vendor={vendorId} />
-            </div>
+          <div className={classNames(CLASSES.PAGE_FORM_TABS)}>
+            <VendorTabs vendor={vendorId} />
+          </div>
 
-            <VendorFloatingActions
-              isSubmitting={isSubmitting}
-              vendor={vendorId}
-              onSubmitClick={handleSubmitClick}
-              onCancelClick={handleCancelClick}
-            />
-          </Form>
-        )}
+          <VendorFloatingActions />
+        </Form>
       </Formik>
     </div>
   );
 }
 
 export default compose(
-  withVendorDetail(),
   withDashboardActions,
   withSettings(({ organizationSettings }) => ({
     baseCurrency: organizationSettings?.baseCurrency,
   })),
-  withVendorActions,
 )(VendorForm);

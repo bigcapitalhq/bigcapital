@@ -484,7 +484,7 @@ export default {
   open_sidebar: 'Open sidebar.',
   recalc_report: 'Re-calc Report',
   remove_the_line: 'Remove the line',
-  no_results: 'No results',
+  no_results: 'No results.',
   all_reports: 'All Reports',
   next: 'Next',
   previous: 'Previous',
@@ -923,7 +923,6 @@ export default {
   opening_average_cost: 'Opening average cost',
   opening_cost_: 'Opening cost ',
   opening_date_: 'Opening date ',
-  no_results: 'No results.',
   the_invoice_cannot_be_deleted:
     'The invoice cannot be deleted cause has associated payment transactions',
   category_name_exists: 'Category name exists',

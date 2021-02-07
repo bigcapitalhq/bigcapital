@@ -83,6 +83,7 @@ export default function DataTable(props) {
     minWidth: selectionColumnWidth,
     width: selectionColumnWidth,
     maxWidth: selectionColumnWidth,
+    skeletonWidthMin: 100,
     // The header can use the table's getToggleAllRowsSelectedProps method
     // to render a checkbox
     Header: TableIndeterminateCheckboxHeader,
@@ -198,4 +199,7 @@ DataTable.defaultProps = {
   TableTBodyRenderer: TableTBody,
   TablePaginationRenderer: TablePagination,
   TableNoResultsRowRenderer: TableNoResultsRow,
+
+  noResults: 'There is no results in the table.',
+  payload: {},
 };

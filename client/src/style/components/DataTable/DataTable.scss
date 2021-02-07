@@ -131,6 +131,23 @@
           border-color: #0052ff;
         }
       }
+
+      .skeleton{
+        animation: skeleton-fade-in .3s linear forwards,
+          skeleton-glow 1s linear infinite alternate;
+
+        animation-delay: 0s,.3s;
+        height: 8px;
+        opacity: 1;
+        width: 65%;
+        margin: 10px 0;
+      }
+    }
+
+    .th{
+      .skeleton{
+        margin: 5px 0;
+      }
     }
 
     .tbody {

@@ -1,5 +1,3 @@
-
-
 export const ACCOUNT_TYPE = {
   CASH: 'cash',
   BANK: 'bank',
@@ -42,10 +40,9 @@ export const ACCOUNT_ROOT_TYPE = {
   ASSET: 'asset',
   LIABILITY: 'liability',
   EQUITY: 'equity',
-  EXPENSE: 'expene',
+  EXPENSE: 'expense',
   INCOME: 'income',
 };
-
 
 export const ACCOUNT_NORMAL = {
   CREDIT: 'credit',

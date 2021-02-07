@@ -3,13 +3,11 @@ import {
   Intent,
   Button,
   Popover,
-  Tooltip,
   Menu,
   MenuItem,
   MenuDivider,
   Position,
 } from '@blueprintjs/core';
-import { withRouter, useParams } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 import moment from 'moment';
 import classNames from 'classnames';
@@ -17,68 +15,59 @@ import classNames from 'classnames';
 import {
   DataTable,
   If,
-  Money,
   Choose,
   Icon,
-  LoadingIndicator,
 } from 'components';
 import { CLASSES } from 'common/classes';
-import { useIsValuePassed } from 'hooks';
-
 import ManualJournalsEmptyStatus from './ManualJournalsEmptyStatus';
+import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
+import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
 import {
-  AmountPopoverContent,
   NoteAccessor,
   StatusAccessor,
+  DateAccessor,
+  AmountAccessor
 } from './components';
 
-import withDialogActions from 'containers/Dialog/withDialogActions';
-import withManualJournals from 'containers/Accounting/withManualJournals';
 import withManualJournalsActions from 'containers/Accounting/withManualJournalsActions';
 
 import { compose, saveInvoke } from 'utils';
+import { useManualJournalsContext } from './ManualJournalsListProvider';
 
+
+/**
+ * Manual journals data-table.
+ */
 function ManualJournalsDataTable({
-  // #withManualJournals
-  manualJournalsCurrentPage,
-  manualJournalsLoading,
-  manualJournalsPagination,
-  manualJournalsTableQuery,
-  manualJournalsCurrentViewId,
-
   // #withManualJournalsActions
   addManualJournalsTableQueries,
 
   // #ownProps
-  onEditJournal,
-  onDeleteJournal,
-  onPublishJournal,
   onSelectedRowsChange,
-  manualJournalViewLoading,
 }) {
-  const { custom_view_id: customViewId } = useParams();
   const { formatMessage } = useIntl();
-  const isLoadedBefore = useIsValuePassed(manualJournalsLoading, false);
+
+  const { manualJournals, isManualJournalsLoading } = useManualJournalsContext();
 
   const handlePublishJournal = useCallback(
     (journal) => () => {
-      saveInvoke(onPublishJournal, journal);
+      
     },
-    [onPublishJournal],
+    [],
   );
 
   const handleEditJournal = useCallback(
     (journal) => () => {
-      saveInvoke(onEditJournal, journal);
+      
     },
-    [onEditJournal],
+    [],
   );
 
   const handleDeleteJournal = useCallback(
     (journal) => () => {
-      saveInvoke(onDeleteJournal, journal);
+      
     },
-    [onDeleteJournal],
+    [],
   );
 
   const actionMenuList = useCallback(
@@ -127,22 +116,14 @@ function ManualJournalsDataTable({
       {
         id: 'date',
         Header: formatMessage({ id: 'date' }),
-        accessor: (r) => moment(r.date).format('YYYY MMM DD'),
+        accessor: DateAccessor,
         width: 115,
         className: 'date',
       },
       {
         id: 'amount',
         Header: formatMessage({ id: 'amount' }),
-        accessor: (r) => (
-          <Tooltip
-            content={<AmountPopoverContent journalEntries={r.entries} />}
-            position={Position.RIGHT_TOP}
-            boundary={'viewport'}
-          >
-            <Money amount={r.amount} currency={'USD'} />
-          </Tooltip>
-        ),
+        accessor: AmountAccessor,
         className: 'amount',
         width: 115,
       },
@@ -227,66 +208,42 @@ function ManualJournalsDataTable({
     [onSelectedRowsChange],
   );
 
-  const showEmptyStatus = [
-    manualJournalsCurrentViewId === -1,
-    manualJournalsCurrentPage.length === 0,
-  ].every((condition) => condition === true);
-
   return (
     <div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>
-      <LoadingIndicator
-        loading={
-          (manualJournalsLoading && !isLoadedBefore) || manualJournalViewLoading
-        }
-      >
-        <Choose>
-          <Choose.When condition={showEmptyStatus}>
-            <ManualJournalsEmptyStatus />
-          </Choose.When>
+      <Choose>
+        <Choose.When condition={false}>
+          <ManualJournalsEmptyStatus />
+        </Choose.When>
 
-          <Choose.Otherwise>
-            <DataTable
-              noInitialFetch={true}
-              columns={columns}
-              data={manualJournalsCurrentPage}
-              onFetchData={handleDataTableFetchData}
-              manualSortBy={true}
-              selectionColumn={true}
-              expandable={true}
-              sticky={true}
-              onSelectedRowsChange={handleSelectedRowsChange}
-              rowContextMenu={onRowContextMenu}
-              pagesCount={manualJournalsPagination.pagesCount}
-              pagination={true}
-              initialPageSize={manualJournalsTableQuery.page_size}
-              initialPageIndex={manualJournalsTableQuery.page - 1}
-              autoResetSortBy={false}
-              autoResetPage={false}
-            />
-          </Choose.Otherwise>
-        </Choose>
-      </LoadingIndicator>
+        <Choose.Otherwise>
+          <DataTable
+            noInitialFetch={true}
+            columns={columns}
+            data={manualJournals}
+            onFetchData={handleDataTableFetchData}
+            manualSortBy={true}
+            selectionColumn={true}
+            expandable={true}
+            sticky={true}
+            loading={isManualJournalsLoading}
+            onSelectedRowsChange={handleSelectedRowsChange}
+            rowContextMenu={onRowContextMenu}
+            // pagesCount={manualJournalsPagination.pagesCount}
+            pagination={true}
+            // initialPageSize={manualJournalsTableQuery.page_size}
+            // initialPageIndex={manualJournalsTableQuery.page - 1}
+            autoResetSortBy={false}
+            autoResetPage={false}
+
+            TableLoadingRenderer={TableSkeletonRows}
+            TableHeaderSkeletonRenderer={TableSkeletonHeader}
+          />
+        </Choose.Otherwise>
+      </Choose>
     </div>
   );
 }
 
 export default compose(
-  withRouter,
-  withDialogActions,
   withManualJournalsActions,
-  withManualJournals(
-    ({
-      manualJournalsCurrentPage,
-      manualJournalsLoading,
-      manualJournalsPagination,
-      manualJournalsTableQuery,
-      manualJournalsCurrentViewId,
-    }) => ({
-      manualJournalsCurrentPage,
-      manualJournalsLoading,
-      manualJournalsPagination,
-      manualJournalsTableQuery,
-      manualJournalsCurrentViewId,
-    }),
-  ),
 )(ManualJournalsDataTable);

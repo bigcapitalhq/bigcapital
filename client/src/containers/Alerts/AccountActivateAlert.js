@@ -1,15 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { Intent, Alert } from '@blueprintjs/core';
-import { queryCache } from 'react-query';
 import { AppToaster } from 'components';
 
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
-import withAccountsActions from 'containers/Accounts/withAccountsActions';
 
+import { useActivateAccount } from 'hooks/query';
 import { compose } from 'utils';
-
 /**
  * Account activate alert.
  */
@@ -20,11 +18,12 @@ function AccountActivateAlert({
 
   // #withAlertActions
   closeAlert,
-
-  requestActivateAccount,
 }) {
   const { formatMessage } = useIntl();
-  const [isLoading, setLoading] = useState(false);
+  const {
+    mutateAsync: activateAccount,
+    isLoading 
+  } = useActivateAccount();
 
   // Handle alert cancel.
   const handleCancel = () => {
@@ -33,22 +32,17 @@ function AccountActivateAlert({
 
   // Handle activate account confirm.
   const handleConfirmAccountActivate = () => {
-    setLoading(true);
-    requestActivateAccount(accountId)
-      .then(() => {
-        AppToaster.show({
-          message: formatMessage({
-            id: 'the_account_has_been_successfully_activated',
-          }),
-          intent: Intent.SUCCESS,
-        });
-        queryCache.invalidateQueries('accounts-table');
-      })
-      .catch((error) => {})
-      .finally(() => {
-        closeAlert('account-activate');
-        setLoading(false);
+    activateAccount(accountId).then(() => {
+      AppToaster.show({
+        message: formatMessage({
+          id: 'the_account_has_been_successfully_activated',
+        }),
+        intent: Intent.SUCCESS,
       });
+      closeAlert('account-activate');
+    }).finally(() => {
+      closeAlert('account-activate');
+    });
   };
 
   return (
@@ -71,5 +65,4 @@ function AccountActivateAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
-  withAccountsActions,
 )(AccountActivateAlert);

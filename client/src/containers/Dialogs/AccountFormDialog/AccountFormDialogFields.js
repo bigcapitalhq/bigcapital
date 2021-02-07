@@ -28,11 +28,9 @@ import { useAutofocus } from 'hooks';
  * Account form dialogs fields.
  */
 function AccountFormDialogFields({
-  // #ownPropscl
+  // #ownProps
   onClose,
   action,
-
-  // #withAccounts
   accounts,
   accountsTypes,
 }) {

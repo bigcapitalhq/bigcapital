@@ -20,10 +20,8 @@ function TrialBalanceSheetHeader({
 
   // #withTrialBalance
   trialBalanceSheetFilter,
-  trialBalanceSheetRefresh,
 
   // #withTrialBalanceActions
-  refreshTrialBalance,
   toggleTrialBalanceFilter
 }) {
   const { formatMessage } = useIntl();

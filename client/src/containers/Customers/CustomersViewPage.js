@@ -46,9 +46,9 @@ function CustomersViewPage({
       >
         <CustomersViewsTabs />
         <CustomersTable
-          onDeleteCustomer={handleDeleteCustomer}
-          onEditCustomer={handleEditCustomer}
-          onSelectedRowsChange={handleSelectedRowsChange}
+          // onDeleteCustomer={handleDeleteCustomer}
+          // onEditCustomer={handleEditCustomer}
+          // onSelectedRowsChange={handleSelectedRowsChange}
         />
       </Route>
     </Switch>

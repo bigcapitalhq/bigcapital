@@ -1,33 +1,19 @@
 import React, { useCallback, useEffect } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
-import { useQuery } from 'react-query';
 
 import InvoiceForm from './InvoiceForm';
-import DashboardInsider from 'components/Dashboard/DashboardInsider';
 
-import withCustomersActions from 'containers/Customers/withCustomersActions';
-import withItemsActions from 'containers/Items/withItemsActions';
-import withInvoiceActions from './withInvoiceActions';
-import withSettingsActions from 'containers/Settings/withSettingsActions';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 
 import { compose } from 'utils';
 
 import 'style/pages/SaleInvoice/PageForm.scss';
+import { InvoiceFormProvider } from './InvoiceFormProvider';
 
+/**
+ * Invoice form page.
+ */
 function InvoiceFormPage({
-  // #withCustomersActions
-  requestFetchCustomers,
-
-  // #withItemsActions
-  requestFetchItems,
-
-  // #withInvoiceActions
-  requsetFetchInvoice,
-
-  // #withSettingsActions
-  requestFetchOptions,
-
   // #withDashboardActions
   setSidebarShrink,
   resetSidebarPreviousExpand,
@@ -50,26 +36,11 @@ function InvoiceFormPage({
     };
   }, [resetSidebarPreviousExpand, setSidebarShrink, setDashboardBackLink]);
 
-  const fetchInvoice = useQuery(
-    ['invoice', id],
-    (key, _id) => requsetFetchInvoice(_id),
-    { enabled: !!id },
-  );
-
-  const fetchSettings = useQuery(['settings'], () => requestFetchOptions({}));
-
-  // Handle fetch Items data table or list
-  const fetchItems = useQuery('items-table', () => requestFetchItems({}));
-
   const handleFormSubmit = useCallback(
     (payload) => {
       payload.redirect && history.push('/invoices');
     },
     [history],
-  );
-  // Handle fetch customers data table or list
-  const fetchCustomers = useQuery('customers-table', () =>
-    requestFetchCustomers({}),
   );
 
   const handleCancel = useCallback(() => {
@@ -77,27 +48,15 @@ function InvoiceFormPage({
   }, [history]);
 
   return (
-    <DashboardInsider
-      loading={
-        fetchCustomers.isFetching ||
-        fetchItems.isFetching ||
-        fetchInvoice.isFetching
-      }
-      name={'invoice-form'}
-    >
+    <InvoiceFormProvider invoiceId={id}>
       <InvoiceForm
-        invoiceId={id}
         onFormSubmit={handleFormSubmit}
         onCancelForm={handleCancel}
       />
-    </DashboardInsider>
+    </InvoiceFormProvider>
   );
 }
 
 export default compose(
-  withInvoiceActions,
-  withCustomersActions,
-  withItemsActions,
-  withSettingsActions,
   withDashboardActions,
 )(InvoiceFormPage);

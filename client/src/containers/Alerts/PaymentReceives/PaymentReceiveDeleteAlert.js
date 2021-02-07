@@ -1,16 +1,16 @@
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 import {
   FormattedMessage as T,
   FormattedHTMLMessage,
   useIntl,
 } from 'react-intl';
 import { Intent, Alert } from '@blueprintjs/core';
-import { queryCache } from 'react-query';
+
+import { useDeletePaymentReceive } from 'hooks/query';
 import { AppToaster } from 'components';
 
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
-import withPaymentReceivesActions from 'containers/Sales/PaymentReceive/withPaymentReceivesActions';
 
 import { compose } from 'utils';
 
@@ -24,14 +24,14 @@ function PaymentReceiveDeleteAlert({
   isOpen,
   payload: { paymentReceiveId },
 
-  // #withPaymentReceivesActions
-  requestDeletePaymentReceive,
-
   // #withAlertActions
   closeAlert,
 }) {
   const { formatMessage } = useIntl();
-  const [isLoading, setLoading] = useState(false);
+  const {
+    mutateAsync: deletePaymentReceiveMutate,
+    isLoading,
+  } = useDeletePaymentReceive();
 
   // Handle cancel payment Receive.
   const handleCancelDeleteAlert = () => {
@@ -39,9 +39,8 @@ function PaymentReceiveDeleteAlert({
   };
 
   // Handle confirm delete payment receive.
-  const handleConfirmPaymentReceiveDelete = useCallback(() => {
-    setLoading(true);
-    requestDeletePaymentReceive(paymentReceiveId)
+  const handleConfirmPaymentReceiveDelete = () => {
+    deletePaymentReceiveMutate(paymentReceiveId)
       .then(() => {
         AppToaster.show({
           message: formatMessage({
@@ -49,14 +48,12 @@ function PaymentReceiveDeleteAlert({
           }),
           intent: Intent.SUCCESS,
         });
-        queryCache.invalidateQueries('paymentReceives-table');
       })
       .catch(() => {})
       .finally(() => {
         closeAlert(name);
-        setLoading(false);
       });
-  }, [paymentReceiveId, requestDeletePaymentReceive, formatMessage]);
+  };
 
   return (
     <Alert
@@ -81,5 +78,4 @@ function PaymentReceiveDeleteAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
-  withPaymentReceivesActions,
 )(PaymentReceiveDeleteAlert);

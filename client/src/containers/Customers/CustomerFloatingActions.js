@@ -13,40 +13,38 @@ import { FormattedMessage as T } from 'react-intl';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 import { useFormikContext } from 'formik';
-import { saveInvoke } from 'utils';
 import { Icon } from 'components';
+import { useCustomerFormContext } from './CustomerFormProvider';
 
 /**
  * Customer floating actions bar.
  */
-export default function CustomerFloatingActions({
-  onSubmitClick,
-  onCancelClick,
-  isSubmitting,
-  customerId,
-}) {
-  const { resetForm, submitForm } = useFormikContext();
+export default function CustomerFloatingActions() {
+  // Customer form context.
+  const { customerId, setSubmitPayload } = useCustomerFormContext();
 
+  // Formik context.
+  const { resetForm, submitForm, isSubmitting } = useFormikContext();
+
+  // Handle submit button click.
   const handleSubmitBtnClick = (event) => {
-    saveInvoke(onSubmitClick, event, {
-      noRedirect: false,
-    });
+    setSubmitPayload({ noRedirect: false });
   };
 
+  // Handle cancel button click.
   const handleCancelBtnClick = (event) => {
-    saveInvoke(onCancelClick, event);
+    
   };
 
+  // handle clear button clicl.
   const handleClearBtnClick = (event) => {
-    // saveInvoke(onClearClick, event);
     resetForm();
   };
 
+  // Handle submit & new button click.
   const handleSubmitAndNewClick = (event) => {
     submitForm();
-    saveInvoke(onSubmitClick, event, {
-      noRedirect: true,
-    });
+    setSubmitPayload({ noRedirect: true });
   };
 
   return (
@@ -55,6 +53,7 @@ export default function CustomerFloatingActions({
         {/* ----------- Save and New ----------- */}
         <Button
           disabled={isSubmitting}
+          loading={isSubmitting}
           intent={Intent.PRIMARY}
           type="submit"
           onClick={handleSubmitBtnClick}

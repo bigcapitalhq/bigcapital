@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { Button } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { omit } from 'lodash';
-import { compose, saveInvoke } from 'utils';
+import { saveInvoke } from 'utils';
 import {
   AccountsListFieldCell,
   MoneyFieldCell,
@@ -18,21 +18,13 @@ import {
 } from './components';
 import { DataTableEditable } from 'components';
 
-import withAccounts from 'containers/Accounts/withAccounts';
-import withCustomers from 'containers/Customers/withCustomers';
-
 import { updateDataReducer } from './utils';
+import { useMakeJournalFormContext } from './MakeJournalProvider';
 
 /**
  * Make journal entries table component.
  */
-function MakeJournalEntriesTable({
-  // #withCustomers
-  customers,
-
-  // #withAccounts
-  accountsList,
-
+export default function MakeJournalEntriesTable({
   // #ownPorps
   onClickRemoveRow,
   onClickAddNewRow,
@@ -43,6 +35,8 @@ function MakeJournalEntriesTable({
 }) {
   const [rows, setRows] = useState([]);
   const { formatMessage } = useIntl();
+
+  const { accounts, customers } = useMakeJournalFormContext();
 
   useEffect(() => {
     setRows([...entries.map((e) => ({ ...e, rowType: 'editor' }))]);
@@ -175,7 +169,7 @@ function MakeJournalEntriesTable({
       sticky={true}
       totalRow={true}
       payload={{
-        accounts: accountsList,
+        accounts,
         errors: error,
         updateData: handleUpdateData,
         removeRow: handleRemoveRow,
@@ -209,12 +203,3 @@ function MakeJournalEntriesTable({
     />
   );
 }
-
-export default compose(
-  withAccounts(({ accountsList }) => ({
-    accountsList,
-  })),
-  withCustomers(({ customers }) => ({
-    customers,
-  })),
-)(MakeJournalEntriesTable);

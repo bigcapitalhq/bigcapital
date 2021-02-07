@@ -24,6 +24,8 @@ export const mapBalanceSheetToTableRows = (accounts) => {
   });
 };
 
+export const profitLossToTableRowsMapper = () => {};
+
 export const journalToTableRowsMapper = (journal) => {
   const TYPES = {
     ENTRY: 'ENTRY',
@@ -149,115 +151,5 @@ export const mapTrialBalanceSheetToRows = (sheet) => {
       ...sheet.total,
     });
   }
-  return results;
-};
-
-export const profitLossToTableRowsMapper = (profitLoss) => {
-  const results = [];
-
-  if (profitLoss.income) {
-    results.push({
-      name: 'Income',
-      total: profitLoss.income.total,
-      children: [
-        ...profitLoss.income.accounts,
-        {
-          name: 'Total Income',
-          total: profitLoss.income.total,
-          total_periods: profitLoss.income.total_periods,
-          rowTypes: ['income_total', 'section_total', 'total'],
-        },
-      ],
-      total_periods: profitLoss.income.total_periods,
-    });
-  }
-  if (profitLoss.cost_of_sales) {
-    results.push({
-      name: 'Cost of sales',
-      total: profitLoss.cost_of_sales.total,
-      children: [
-        ...profitLoss.cost_of_sales.accounts,
-        {
-          name: 'Total cost of sales',
-          total: profitLoss.cost_of_sales.total,
-          total_periods: profitLoss.cost_of_sales.total_periods,
-          rowTypes: ['cogs_total', 'section_total', 'total'],
-        },
-      ],
-      total_periods: profitLoss.cost_of_sales.total_periods,
-    });
-  }
-  if (profitLoss.gross_profit) {
-    results.push({
-      name: 'Gross profit',
-      total: profitLoss.gross_profit.total,
-      total_periods: profitLoss.gross_profit.total_periods,
-      rowTypes: ['gross_total', 'section_total', 'total'],
-    })
-  }
-  if (profitLoss.expenses) {
-    results.push({
-      name: 'Expenses',
-      total: profitLoss.expenses.total,
-      children: [
-        ...profitLoss.expenses.accounts,
-        {
-          name: 'Total Expenses',
-          total: profitLoss.expenses.total,
-          total_periods: profitLoss.expenses.total_periods,
-          rowTypes: ['expenses_total', 'section_total', 'total'],
-        },
-      ],
-      total_periods: profitLoss.expenses.total_periods,
-    })
-  }
-  if (profitLoss.operating_profit) {
-    results.push({
-      name: 'Net Operating income',
-      total: profitLoss.operating_profit.total,
-      total_periods: profitLoss.income.total_periods,
-      rowTypes: ['net_operating_total', 'section_total', 'total'],
-    })
-  }
-  if (profitLoss.other_income) {
-    results.push({
-      name: 'Other Income',
-      total: profitLoss.other_income.total,
-      total_periods: profitLoss.other_income.total_periods,
-      children: [
-        ...profitLoss.other_income.accounts,
-        {
-          name: 'Total other income',
-          total: profitLoss.other_income.total,
-          total_periods: profitLoss.other_income.total_periods,
-          rowTypes: ['expenses_total', 'section_total', 'total'],
-        },
-      ],
-    });
-  }
-  if (profitLoss.other_expenses) {
-    results.push({
-      name: 'Other expenses',
-      total: profitLoss.other_expenses.total,
-      total_periods: profitLoss.other_expenses.total_periods,
-      children: [
-        ...profitLoss.other_expenses.accounts,
-        {
-          name: 'Total other expenses',
-          total: profitLoss.other_expenses.total,
-          total_periods: profitLoss.other_expenses.total_periods,
-          rowTypes: ['expenses_total', 'section_total', 'total'],
-        },
-      ],
-    });
-  }
-  if (profitLoss.net_income) {
-    results.push({
-      name: 'Net Income',
-      total: profitLoss.net_income.total,
-      total_periods: profitLoss.net_income.total_periods,
-      rowTypes: ['net_income_total', 'section_total', 'total'],
-    })
-  };
   return results;
 };

@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import {
   Button,
   Popover,
@@ -8,15 +8,15 @@ import {
   Position,
   Intent,
 } from '@blueprintjs/core';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
 import classNames from 'classnames';
-import { useIsValuePassed } from 'hooks';
 
-import VendorsEmptyStatus from './VendorsEmptyStatus';
-import { DataTable, LoadingIndicator, Icon, Money, Choose } from 'components';
 import { CLASSES } from 'common/classes';
 
-import withVendors from './withVendors';
+import VendorsEmptyStatus from './VendorsEmptyStatus';
+import { DataTable, Icon, Money, Choose } from 'components';
+
+import { useVendorsListContext } from './VendorsListProvider';
 import withVendorsActions from './withVendorActions';
 
 import { compose, firstLettersArgs, saveInvoke } from 'utils';
@@ -26,25 +26,16 @@ const AvatarCell = (row) => {
 };
 
 function VendorsTable({
-  // #withVendors
-  vendorsCurrentPage,
-  vendorsLoading,
-  vendorsPageination,
-  vendorTableQuery,
-  vendorItems,
-  vendorsCurrentViewId,
-
   // #withVendorsActions
   addVendorsTableQueries,
 
   // #ownProps
-  loading,
   onEditVendor,
   onDeleteVendor,
   onSelectedRowsChange,
 }) {
   const { formatMessage } = useIntl();
-  const isLoadedBefore = useIsValuePassed(loading, false);
+  const { vendors } = useVendorsListContext();
 
   // Vendor actions list.
   const renderContextMenu = useMemo(
@@ -186,64 +177,38 @@ function VendorsTable({
       onEditVendor,
       onDeleteVendor,
     });
-  const showEmptyStatus = [
-    vendorsCurrentViewId === -1,
-    vendorItems.length === 0,
-  ].every((condition) => condition === true);
 
   return (
     <div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>
-      <LoadingIndicator
-        loading={vendorsLoading && !isLoadedBefore}
-        mount={false}
-      >
-        <Choose>
-          <Choose.When condition={showEmptyStatus}>
-            <VendorsEmptyStatus />
-          </Choose.When>
+      <Choose>
+        <Choose.When condition={false}>
+          <VendorsEmptyStatus />
+        </Choose.When>
 
-          <Choose.Otherwise>
-            <DataTable
-              noInitialFetch={true}
-              columns={columns}
-              data={vendorItems}
-              onFetchData={handleFetchData}
-              selectionColumn={true}
-              expandable={false}
-              sticky={true}
-              onSelectedRowsChange={handleSelectedRowsChange}
-              spinnerProps={{ size: 30 }}
-              rowContextMenu={rowContextMenu}
-              pagination={true}
-              manualSortBy={true}
-              pagesCount={vendorsPageination.pagesCount}
-              autoResetSortBy={false}
-              autoResetPage={false}
-              initialPageSize={vendorTableQuery.page_size}
-              initialPageIndex={vendorTableQuery.page - 1}
-            />
-          </Choose.Otherwise>
-        </Choose>
-      </LoadingIndicator>
+        <Choose.Otherwise>
+          <DataTable
+            noInitialFetch={true}
+            columns={columns}
+            data={vendors}
+            onFetchData={handleFetchData}
+            selectionColumn={true}
+            expandable={false}
+            sticky={true}
+            onSelectedRowsChange={handleSelectedRowsChange}
+            spinnerProps={{ size: 30 }}
+            rowContextMenu={rowContextMenu}
+            pagination={true}
+            manualSortBy={true}
+            // pagesCount={vendorsPageination.pagesCount}
+            autoResetSortBy={false}
+            autoResetPage={false}
+            // initialPageSize={vendorTableQuery.page_size}
+            // initialPageIndex={vendorTableQuery.page - 1}
+          />
+        </Choose.Otherwise>
+      </Choose>
     </div>
   );
 }
 
-export default compose(
-  withVendors(
-    ({
-      vendorItems,
-      vendorsLoading,
-      vendorTableQuery,
-      vendorsPageination,
-      vendorsCurrentViewId,
-    }) => ({
-      vendorItems,
-      vendorsLoading,
-      vendorsPageination,
-      vendorTableQuery,
-      vendorsCurrentViewId,
-    }),
-  ),
-  withVendorsActions,
-)(VendorsTable);
+export default compose(withVendorsActions)(VendorsTable);

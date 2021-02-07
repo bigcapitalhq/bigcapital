@@ -1,8 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { useQuery } from 'react-query';
 import moment from 'moment';
 import { useIntl } from 'react-intl';
-import { queryCache } from 'react-query';
 
 import { compose } from 'utils';
 import JournalTable from './JournalTable';
@@ -10,9 +8,9 @@ import JournalTable from './JournalTable';
 import JournalHeader from './JournalHeader';
 import JournalActionsBar from './JournalActionsBar';
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
-import DashboardInsider from 'components/Dashboard/DashboardInsider';
-import withSettings from 'containers/Settings/withSettings';
+import { JournalSheetProvider } from './JournalProvider';
 
+import withSettings from 'containers/Settings/withSettings';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withJournalActions from './withJournalActions';
 import withJournal from './withJournal';
@@ -21,14 +19,10 @@ import { transformFilterFormToQuery } from 'containers/FinancialStatements/commo
 
 import 'style/pages/FinancialStatements/Journal.scss';
 
+/**
+ * Journal sheet.
+ */
 function Journal({
-  // #withJournalActions
-  requestFetchJournalSheet,
-  refreshJournalSheet,
-
-  // #withJournal
-  journalSheetRefresh,
-
   // #withDashboardActions
   changePageTitle,
   setDashboardBackLink,
@@ -43,12 +37,6 @@ function Journal({
     basis: 'accural',
   });
   const { formatMessage } = useIntl();
-
-  const fetchJournalSheet = useQuery(['journal-sheet', filter], (key, query) =>
-    requestFetchJournalSheet({
-      ...transformFilterFormToQuery(filter),
-    }),
-  );
 
   useEffect(() => {
     changePageTitle(formatMessage({ id: 'journal_sheet' }));
@@ -65,13 +53,6 @@ function Journal({
     };
   }, [setDashboardBackLink, setSidebarShrink]);
 
-  useEffect(() => {
-    if (journalSheetRefresh) {
-      queryCache.invalidateQueries('journal-sheet');
-      refreshJournalSheet(false);
-    }
-  }, [journalSheetRefresh, refreshJournalSheet]);
-
   // Handle financial statement filter change.
   const handleFilterSubmit = useCallback(
     (filter) => {
@@ -81,12 +62,12 @@ function Journal({
         toDate: moment(filter.toDate).format('YYYY-MM-DD'),
       };
       setFilter(_filter);
-      queryCache.invalidateQueries('journal-sheet');
     },
     [setFilter],
   );
+
   return (
-    <DashboardInsider>
+    <JournalSheetProvider query={filter}>
       <JournalActionsBar />
 
       <DashboardPageContent>
@@ -95,7 +76,6 @@ function Journal({
             onSubmitFilter={handleFilterSubmit}
             pageFilter={filter}
           />
-
           <div class="financial-statement__body">
             <JournalTable
               companyName={organizationName}
@@ -104,7 +84,7 @@ function Journal({
           </div>
         </div>
       </DashboardPageContent>
-    </DashboardInsider>
+    </JournalSheetProvider>
   );
 }
 

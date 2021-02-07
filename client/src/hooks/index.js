@@ -1,8 +1,9 @@
-import {useRef, useEffect, useMemo } from 'react';
+import { useRef, useEffect, useMemo } from 'react';
 import useAsync from './async';
 import useAutofocus from './useAutofocus';
 
 // import use from 'async';
+
 
 /**
  * A custom useEffect hook that only triggers on updates, not on initial mount
@@ -21,7 +22,6 @@ export function useUpdateEffect(effect, dependencies = []) {
     }
   }, dependencies);
 }
-
 
 export function useIsValuePassed(value, compatatorValue) {
   const cache = useRef([value]);
@@ -63,9 +63,4 @@ export function useCellAutoFocus(ref, autoFocus, columnId, rowIndex) {
   return ref;
 }
 
-
-export {
-  useAsync,
-  useAutofocus,
-}
-
+export { useAsync, useAutofocus };
