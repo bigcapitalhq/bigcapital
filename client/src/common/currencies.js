@@ -1,5 +1,5 @@
 export default [
-  { label: 'US Dollar', code: 'USD' },
-  { label: 'Euro', code: 'EUR' },
-  { label: 'Libyan Dinar	', code: 'LYD' },
+  { name: 'US Dollar', code: 'USD' },
+  { name: 'Euro', code: 'EUR' },
+  { name: 'Libyan Dinar	', code: 'LYD' },
 ]

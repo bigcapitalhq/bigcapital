@@ -5,7 +5,7 @@ import 'style/pages/Subscription/BillingPlans.scss'
 
 import BillingPlansInput from 'containers/Subscriptions/BillingPlansInput';
 import BillingPeriodsInput from 'containers/Subscriptions/BillingPeriodsInput';
-import BillingPaymentMethod from 'containers/Subscriptions/BillingPaymentMethod';
+import BillingPaymentMethod from 'containers/Subscriptions/BillingPaymentmethod';
 
 /**
  * Billing plans form.
