@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import { ScrollSyncPane } from 'react-scroll-sync';
 import { If } from 'components';
 import TableContext from './TableContext';
+import MaterialProgressBar from 'components/MaterialProgressBar';
 
 function TableHeaderCell({ column, index }) {
   const {
@@ -77,7 +78,7 @@ function TableHeaderGroup({ headerGroup }) {
 export default function TableHeader() {
   const {
     table: { headerGroups, page },
-    props: { TableHeaderSkeletonRenderer, headerLoading },
+    props: { TableHeaderSkeletonRenderer, headerLoading, progressBarLoading },
   } = useContext(TableContext);
 
   if (headerLoading && TableHeaderSkeletonRenderer) {
@@ -89,6 +90,9 @@ export default function TableHeader() {
         {headerGroups.map((headerGroup) => (
           <TableHeaderGroup headerGroup={headerGroup} />
         ))}
+        <If condition={progressBarLoading}>
+          <MaterialProgressBar />
+        </If>
       </div>
     </ScrollSyncPane>
   );

@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { defaultTo } from 'lodash';
 import ApiService from 'services/ApiService';
 import { transformResponse } from 'utils';
 
@@ -12,7 +13,14 @@ const defaultPagination = {
  * Creates a new item.
  */
 export function useCreateItem(props) {
-  return useMutation((values) => ApiService.post('items', values), props);
+  const queryClient = useQueryClient();
+
+  return useMutation((values) => ApiService.post('items', values), {
+    onSuccess: () => {
+      queryClient.invalidateQueries('ITEMS');
+    },
+    ...props,
+  });
 }
 
 /**
@@ -35,7 +43,7 @@ export function useEditItem(props) {
  */
 export function useDeleteItem(props) {
   const queryClient = useQueryClient();
-  
+
   return useMutation((id) => ApiService.delete(`items/${id}`), {
     onSuccess: () => {
       queryClient.invalidateQueries('ITEMS');
@@ -58,19 +66,21 @@ const transformItemsResponse = (response) => {
  * Retrieves items list.
  */
 export function useItems(query, props) {
-  return useQuery(
+  const result = useQuery(
     ['ITEMS', query],
     () =>
       ApiService.get(`items`, { params: query }).then(transformItemsResponse),
-    {
-      initialData: {
-        items: [],
-        pagination: defaultPagination,
-        filterMeta: {},
-      },
-      ...props,
-    },
+    props,
   );
+
+  return {
+    ...result,
+    data: defaultTo(result.data, {
+      items: [],
+      pagination: defaultPagination,
+      filterMeta: {},
+    }),
+  };
 }
 
 /**

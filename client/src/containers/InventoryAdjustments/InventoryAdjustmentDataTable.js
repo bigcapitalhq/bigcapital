@@ -179,6 +179,7 @@ function InventoryAdjustmentDataTable({
         autoResetSortBy={false}
         autoResetPage={false}
         isLoading={isLoading}
+        noResults={'There is no inventory adjustments transactions yet.'}
         // pagesCount={inventoryAdjustmentsPagination.pagesCount}
         // initialPageSize={inventoryAdjustmentsPagination.pageSize}
         // initialPageIndex={inventoryAdjustmentsPagination.page - 1}

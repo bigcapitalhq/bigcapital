@@ -1,28 +1,55 @@
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQueryClient, useQuery } from 'react-query';
+import { defaultTo } from 'lodash';
 import ApiService from 'services/ApiService';
 
 /**
  * Create a new currency.
  */
-export function useCreateCurrency() {
-  return useMutation((values) => ApiService.post('currencies', values));
+export function useCreateCurrency(props) {
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    (values) => ApiService.post('currencies', values),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('CURRENCIES');
+      },
+      ...props,
+    }
+  );
 }
 
 /**
  * Edits the given currency code.
  */
-export function useEditCurrency() {
+export function useEditCurrency(props) {
+  const queryClient = useQueryClient();
+
   return useMutation((currencyCode, values) =>
     ApiService.post(`currencies/${currencyCode}`, values),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('CURRENCIES');
+      },
+      ...props,
+    }
   );
 }
 
 /**
  * Deletes the given currency.
  */
-export function useDeleteCurrency() {
+export function useDeleteCurrency(props) {
+  const queryClient = useQueryClient();
+
   return useMutation((currencyCode) =>
     ApiService.delete(`currencies/${currencyCode}`),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('CURRENCIES');
+      },
+      ...props
+    }
   );
 }
 
@@ -30,12 +57,14 @@ export function useDeleteCurrency() {
  * Retrieve the currencies list.
  */
 export function useCurrencies(props) {
-  return useQuery(
+  const states = useQuery(
     ['CURRENCIES'],
     () => ApiService.get('currencies').then(res => res.data.currencies),
-    {
-      initialData: [],
-      ...props,
-    },
+    props,
   );
+
+  return {
+    ...states,
+    data: defaultTo(states.data, []),
+  }
 }

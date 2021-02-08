@@ -18,6 +18,7 @@ import {
   CostPriceCell,
   ItemTypeAccessor,
   ItemsActionsTableCell,
+  ItemsActionMenuList
 } from './components';
 
 // Items datatable.
@@ -118,11 +119,14 @@ function ItemsDataTable({
             manualSortBy={true}
             pagesCount={1}
             autoResetSortBy={false}
-            autoResetPage={false}
+            autoResetPage={true}
+            manualPagination={true}
             TableLoadingRenderer={TableSkeletonRows}
             TableHeaderSkeletonRenderer={TableSkeletonHeader}
-            initialPageSize={pagination.pageSize}
-            initialPageIndex={pagination.page}
+            
+            pageSize={pagination.pageSize}
+            pageIndex={pagination.page - 1}
+            ContextMenu={ItemsActionMenuList}
             {...tableProps}
           />
         </Choose.Otherwise>

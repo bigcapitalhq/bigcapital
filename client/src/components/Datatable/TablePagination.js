@@ -1,11 +1,12 @@
 import React, { useCallback, useContext } from 'react';
 import { If, Pagination } from 'components';
 import TableContext from './TableContext';
+import { saveInvoke } from 'utils';
 
 /**
  * Table pagination.
  */
-export default function TablePagination({}) {
+export default function TablePagination() {
   const {
     table: {
       gotoPage,
@@ -13,28 +14,39 @@ export default function TablePagination({}) {
       pageCount,
       state: { pageIndex, pageSize },
     },
-    props: { pagination, loading },
+    props: { pagination, loading, onPaginationChange },
   } = useContext(TableContext);
 
+  const triggerOnPaginationChange = useCallback((payload) => {
+    saveInvoke(onPaginationChange, payload)
+  }, [onPaginationChange]);
+
+  // Handles the page changing.
   const handlePageChange = useCallback(
-    (currentPage) => {
-      gotoPage(currentPage - 1);
+    ({ page, pageSize }) => {
+      const pageIndex = page - 1;
+
+      gotoPage(pageIndex);
+      triggerOnPaginationChange({ page, pageSize });
     },
-    [gotoPage],
+    [gotoPage, triggerOnPaginationChange],
   );
 
+  // Handles the page size changing.
   const handlePageSizeChange = useCallback(
-    (pageSize, currentPage) => {
+    ({ pageSize, page }) => {
       gotoPage(0);
       setPageSize(pageSize);
+
+      triggerOnPaginationChange({ page, pageSize });
     },
-    [gotoPage, setPageSize],
+    [gotoPage, setPageSize, triggerOnPaginationChange],
   );
 
   return (
     <If condition={pagination && !loading}>
       <Pagination
-        initialPage={pageIndex + 1}
+        currentPage={pageIndex + 1}
         total={pageSize * pageCount}
         size={pageSize}
         onPageChange={handlePageChange}

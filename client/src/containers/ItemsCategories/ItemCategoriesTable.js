@@ -68,7 +68,7 @@ export default function ItemsCategoryTable({
         sticky={true}
         selectionColumn={true}
         TableLoadingRenderer={TableSkeletonRows}
-        {...tableProps}
+        noResults={'There is no items categories in table yet.'}
       />
     </div>
   );

@@ -53,7 +53,7 @@ function ItemsActionsBar({
   // Handle tab changing.
   const handleTabChange = (viewId) => {
     addItemsTableQueries({
-      custom_view_id: viewId.id || null,
+      customViewId: viewId.id || null,
     });
   };
 
@@ -87,7 +87,7 @@ function ItemsActionsBar({
         >
           <Button
             className={classNames(Classes.MINIMAL, 'button--filter')}
-            text={`${formatMessage({ id: 'filters_applied' })}`}
+            text={`${formatMessage({ id: 'filter' })}`}
             icon={<Icon icon="filter-16" iconSize={16} />}
           />
         </Popover>

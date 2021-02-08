@@ -44,14 +44,7 @@ body.hide-scrollbar .Pane2{
 }
 
 
-.select-list--fill-popover {
-  position: relative;
 
-  .bp3-transition-container,
-  .bp3-popover {
-    min-width: 100%;
-  }
-}
 
 .bp3-fill{
   .bp3-popover-wrapper,
@@ -91,12 +84,6 @@ body.hide-scrollbar .Pane2{
   max-width: 300px;
 }
 
-.form-group--select-list{
-  button{
-    justify-content: start;
-  }
-}
-
 .bp3-timezone-picker{
 
   .bp3-button{
@@ -106,3 +93,5 @@ body.hide-scrollbar .Pane2{
     }
   }
 }
+
+

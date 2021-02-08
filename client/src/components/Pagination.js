@@ -1,12 +1,18 @@
 import React, { useReducer, useEffect } from 'react';
 import classNames from 'classnames';
-import { Button, ButtonGroup, Intent, HTMLSelect,  } from '@blueprintjs/core';
+import { Button, ButtonGroup, Intent, HTMLSelect } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'react-intl';
 import PropTypes from 'prop-types';
 import { range } from 'lodash';
 import { Icon } from 'components';
 
 import 'style/components/DataTable/Pagination.scss';
+
+const TYPE = {
+  PAGE_CHANGE: 'PAGE_CHANGE',
+  PAGE_SIZE_CHANGE: 'PAGE_SIZE_CHANGE',
+  INITIALIZE: 'INITIALIZE',
+};
 
 const getState = ({ currentPage, size, total }) => {
   const totalPages = Math.ceil(total / size);
@@ -16,7 +22,7 @@ const getState = ({ currentPage, size, total }) => {
   // create an array of pages to ng-repeat in the pager control
   let startPage, endPage;
   if (totalPages <= visibleItems) {
-    // less than {visibleItems} total pages so show 
+    // less than {visibleItems} total pages so show
     startPage = 1;
     endPage = totalPages;
   } else {
@@ -50,11 +56,6 @@ const getState = ({ currentPage, size, total }) => {
   };
 };
 
-const TYPE = {
-  PAGE_CHANGE: 'PAGE_CHANGE',
-  PAGE_SIZE_CHANGE: 'PAGE_SIZE_CHANGE',
-  INITIALIZE: 'INITIALIZE',
-};
 const reducer = (state, action) => {
   switch (action.type) {
     case TYPE.PAGE_CHANGE:
@@ -63,15 +64,15 @@ const reducer = (state, action) => {
         size: state.size,
         total: state.total,
       });
-    case TYPE.PAGE_SIZE_CHANGE: 
+    case TYPE.PAGE_SIZE_CHANGE:
       return getState({
         currentPage: state.currentPage,
         size: action.size,
         total: state.total,
       });
-    case TYPE.INITIALIZE: 
+    case TYPE.INITIALIZE:
       return getState({
-        currentPage: state.currentPage,
+        currentPage: action.page,
         size: action.size,
         total: action.total,
       });
@@ -80,82 +81,92 @@ const reducer = (state, action) => {
   }
 };
 
-const Pagination = ({
-  initialPage,
+function Pagination({
+  currentPage,
   total,
   size,
   pageSizesOptions = [5, 12, 20, 30, 50, 75, 100, 150],
   onPageChange,
   onPageSizeChange,
-}) => {
+}) {
   const [state, dispatch] = useReducer(
     reducer,
-    { currentPage: initialPage, total, size },
+    { currentPage, total, size },
     getState,
   );
 
   useEffect(() => {
     dispatch({
-      type: 'INITIALIZE',
+      type: TYPE.INITIALIZE,
       total,
       size,
+      page: currentPage,
     });
-  }, [total, size]);
+  }, [total, size, currentPage]);
 
   return (
     <div class="pagination">
       <div class="pagination__buttons-group">
-      <ButtonGroup>
-        <Button
-          disabled={state.currentPage === 1}
-          onClick={() => {
-            dispatch({ type: 'PAGE_CHANGE', page: state.currentPage - 1 });
-            onPageChange(state.currentPage - 1);
-          }}
-          minimal={true}
-          className={'pagination__item pagination__item--previous'}
-          icon={<Icon icon={'arrow-back-24'} iconSize={12} />}
-        >
-          <T id='previous' />
-        </Button>
-        
-        {state.pages.map((page) => (
+        <ButtonGroup>
           <Button
-            key={page}
-            intent={state.currentPage === page ? Intent.PRIMARY : Intent.NONE}
-            disabled={state.currentPage === page}
+            disabled={state.currentPage <= 1}
             onClick={() => {
-              dispatch({ type: 'PAGE_CHANGE', page });
-              onPageChange(page);
+              dispatch({ type: 'PAGE_CHANGE', page: state.currentPage - 1 });
+
+              const page = state.currentPage - 1;
+              const { size: pageSize } = state;
+ 
+              onPageChange({ page, pageSize });
             }}
             minimal={true}
-            className={classNames(
-              'pagination__item',
-              'pagination__item--page',
-              {
-                'is-active': state.currentPage === page,
-              }
-            )}
+            className={'pagination__item pagination__item--previous'}
+            icon={<Icon icon={'arrow-back-24'} iconSize={12} />}
           >
-            { page }
+            <T id="previous" />
           </Button>
-        ))}
-        <Button
-          disabled={state.currentPage === state.totalPages}
-          onClick={() => {
-            dispatch({
-              type: 'PAGE_CHANGE',
-              page: state.currentPage + 1
-            });
-            onPageChange(state.currentPage + 1);
-          }}
-          minimal={true}
-          className={'pagination__item pagination__item--next'}
-          icon={<Icon icon={'arrow-forward-24'} iconSize={12} />}
-        >
-          <T id='next' />
-        </Button>
-      </ButtonGroup>
+
+          {state.pages.map((page) => (
+            <Button
+              key={page}
+              intent={state.currentPage === page ? Intent.PRIMARY : Intent.NONE}
+              disabled={state.currentPage === page}
+              onClick={() => {
+                dispatch({ type: 'PAGE_CHANGE', page });
+                const { size: pageSize } = state;
+
+                onPageChange({ page, pageSize });
+              }}
+              minimal={true}
+              className={classNames(
+                'pagination__item',
+                'pagination__item--page',
+                {
+                  'is-active': state.currentPage === page,
+                },
+              )}
+            >
+              {page}
+            </Button>
+          ))}
+          <Button
+            disabled={state.currentPage === state.totalPages}
+            onClick={() => {
+              dispatch({
+                type: 'PAGE_CHANGE',
+                page: state.currentPage + 1,
+              });
+              const page = state.currentPage + 1;
+              const { size: pageSize } = state;
+
+              onPageChange({ page, pageSize });
+            }}
+            minimal={true}
+            className={'pagination__item pagination__item--next'}
+            icon={<Icon icon={'arrow-forward-24'} iconSize={12} />}
+          >
+            <T id="next" />
+          </Button>
+        </ButtonGroup>
       </div>
 
       <div class="pagination__controls">
@@ -167,11 +178,11 @@ const Pagination = ({
             value={state.currentPage}
             onChange={(event) => {
               const page = parseInt(event.currentTarget.value, 10);
+              const { size: pageSize } = state;
 
               dispatch({ type: 'PAGE_CHANGE', page });
-              onPageChange(page);
+              onPageChange({ page, pageSize });
             }}
-            minimal={true}
           />
         </div>
 
@@ -186,26 +197,28 @@ const Pagination = ({
               dispatch({ type: 'PAGE_SIZE_CHANGE', size: pageSize });
               dispatch({ type: 'PAGE_CHANGE', page: 1 });
 
-              onPageSizeChange(pageSize, 1);
+              onPageSizeChange({ pageSize, page: 1 });
             }}
-            minimal={true}
           />
         </div>
       </div>
 
       <div class="pagination__info">
-        <T id={'showing_current_page_to_total'} values={{
-          currentPage: state.currentPage,
-          totalPages: state.totalPages,
-          total: total,
-        }} />
+        <T
+          id={'showing_current_page_to_total'}
+          values={{
+            currentPage: state.currentPage,
+            totalPages: state.totalPages,
+            total: total,
+          }}
+        />
       </div>
     </div>
   );
-};
+}
 
 Pagination.propTypes = {
-  initialPage: PropTypes.number.isRequired,
+  currentPage: PropTypes.number.isRequired,
   size: PropTypes.number.isRequired,
   total: PropTypes.number.isRequired,
   onPageChange: PropTypes.func,
@@ -213,7 +226,7 @@ Pagination.propTypes = {
 };
 
 Pagination.defaultProps = {
-  initialPage: 1,
+  currentPage: 1,
   size: 25,
 };
 

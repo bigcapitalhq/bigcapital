@@ -1,32 +1,36 @@
 import React, { useContext } from 'react';
 import classNames from 'classnames';
-import { ContextMenu } from '@blueprintjs/core';
+import useContextMenu from 'react-use-context-menu';
 
 import TableContext from './TableContext';
 import { saveInvoke } from 'utils';
+import { ContextMenu } from 'components';
+
 
 /**
  * Table row.
  */
 export default function TableRow({ row, className, style }) {
   const {
-    props: { TableCellRenderer, rowContextMenu, rowClassNames },
+    props: {
+      TableCellRenderer,
+      rowContextMenu,
+      rowClassNames,
+      ContextMenu: ContextMenuContent,
+    },
+    table,
   } = useContext(TableContext);
 
-  // Handle rendering row context menu.
-  const handleRowContextMenu = (row) => (e) => {
-    if (typeof rowContextMenu === 'function') {
-      e.preventDefault();
-      const tr = e.currentTarget.closest('.tr');
-      tr.classList.add('is-context-menu-active');
+  const [
+    bindMenu,
+    bindMenuItem,
+    useContextTrigger,
+    { coords, setVisible, isVisible },
+  ] = useContextMenu();
 
-      const DropdownEl = rowContextMenu({ row });
-
-      ContextMenu.show(DropdownEl, { left: e.clientX, top: e.clientY }, () => {
-        tr.classList.remove('is-context-menu-active');
-      });
-    }
-  };
+  const [bindTrigger] = useContextTrigger({
+    collect: () => 'Title',
+  });
 
   return (
     <div
@@ -40,12 +44,21 @@ export default function TableRow({ row, className, style }) {
           className,
         ),
         style,
-        onContextMenu: handleRowContextMenu(row)
       })}
+      {...bindTrigger}
     >
       {row.cells.map((cell, index) => (
         <TableCellRenderer cell={cell} row={row} index={index + 1} />
       ))}
+
+      <ContextMenu
+        bindMenu={bindMenu}
+        isOpen={isVisible}
+        coords={coords}
+        onClosed={() => setVisible(false)}
+      >
+        <ContextMenuContent {...table} row={row} />
+      </ContextMenu>
     </div>
   );
 }

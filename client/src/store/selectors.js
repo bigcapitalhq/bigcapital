@@ -40,7 +40,7 @@ export const paginationLocationQuery = (state, props) => {
     ? new URLSearchParams(props.location.search)
     : null;
 
-  const queryParamsKeys = ['page_size', 'page'];
+  const queryParamsKeys = ['page_size', 'page', 'custom_view_id'];
 
   return queryParams
     ? mapValues(pick(Object.fromEntries(queryParams), queryParamsKeys), (v) =>

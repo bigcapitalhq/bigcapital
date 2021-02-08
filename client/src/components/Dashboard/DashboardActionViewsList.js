@@ -10,22 +10,20 @@ import {
   Position,
 } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'react-intl';
-import { useHistory } from 'react-router-dom';
 import { Icon } from 'components';
 
+/**
+ * Dashboard action views list.
+ */
 export default function DashboardActionViewsList({
   resourceName,
   views,
   onChange,
 }) {
-  const history = useHistory();
-
   const handleClickViewItem = (view) => {
-    history.push(
-      view ? `/${resourceName}/${view.id}/custom_view` : '/accounts',
-    );
     onChange && onChange(view);
   };
+
   const viewsMenuItems = views.map((view) => {
     return (
       <MenuItem onClick={() => handleClickViewItem(view)} text={view.name} />

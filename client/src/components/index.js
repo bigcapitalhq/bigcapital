@@ -45,7 +45,7 @@ import PageFormBigNumber from './PageFormBigNumber';
 import AccountsMultiSelect from './AccountsMultiSelect';
 import CustomersMultiSelect from './CustomersMultiSelect';
 import Skeleton from './Skeleton'
-
+import ContextMenu from './ContextMenu'
 import TableFastCell from './Datatable/TableFastCell';
 
 const Hint = FieldHint;
@@ -99,4 +99,5 @@ export {
   CustomersMultiSelect,
   TableFastCell,
   Skeleton,
+  ContextMenu
 };

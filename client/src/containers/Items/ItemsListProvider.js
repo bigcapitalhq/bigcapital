@@ -1,13 +1,21 @@
 import React, { useEffect, createContext } from 'react';
 import { useIntl } from 'react-intl';
-import { isEmpty } from 'lodash';
+
+import { transformTableQueryToParams, isTableEmptyStatus } from 'utils';
+
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import { useResourceViews, useResourceFields, useItems } from 'hooks/query';
 import { useDashboardPageTitle } from 'hooks/state';
 
 const ItemsContext = createContext();
 
-function ItemsListProvider({ query, ...props }) {
+/**
+ * Items list provider.
+ */
+function ItemsListProvider({
+  query,
+  ...props
+}) {
   // Fetch accounts resource views and fields.
   const { data: itemsViews, isFetching: isViewsLoading } = useResourceViews(
     'items',
@@ -21,11 +29,16 @@ function ItemsListProvider({ query, ...props }) {
   // Handle fetching the items table based on the given query.
   const {
     data: { items, pagination, filterMeta },
-    isFetching: isItemsLoading,
-  } = useItems(query);
+    isFetching: isItemsFetching,
+    isLoading: isItemsLoading,
+  } = useItems({
+    ...transformTableQueryToParams(query)
+  }, { keepPreviousData: true });
 
   // Detarmines the datatable empty status.
-  const isEmptyStatus = isEmpty(items) && !isItemsLoading && !filterMeta.view;
+  const isEmptyStatus = isTableEmptyStatus({
+    data: items, pagination, filterMeta,
+  }) && !isItemsFetching;
 
   // Format message intl.
   const { formatMessage } = useIntl();
@@ -42,15 +55,15 @@ function ItemsListProvider({ query, ...props }) {
     itemsFields,
     items,
     pagination,
-
     isViewsLoading,
     isItemsLoading,
-    isEmptyStatus: false,
+    isItemsFetching: isItemsFetching,
+    isEmptyStatus,
   };
 
   return (
     <DashboardInsider
-      loading={isFieldsLoading || isViewsLoading}
+      loading={isFieldsLoading}
       name={'items-list'}
     >
       <ItemsContext.Provider value={state} {...props} />

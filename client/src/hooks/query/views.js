@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query';
+import { defaultTo } from 'lodash';
 import ApiService from "services/ApiService";
-
 // export function useSaveView(values) {
 //   return ApiService.post('views', form);
 // }
@@ -18,14 +18,16 @@ import ApiService from "services/ApiService";
 // }
 
 export function useResourceViews(resourceSlug) {
-  return useQuery(
+  const states = useQuery(
     ['RESOURCE_VIEW', resourceSlug],
     () => ApiService.get(`views/resource/${resourceSlug}`)
       .then((response) => response.data.views),
-    {
-      initialData: [],
-    }
   );
+
+  return {
+    ...states,
+    data: defaultTo(states.data, []),
+  }
 }
  
 
@@ -39,13 +41,16 @@ export function useResourceColumns(resourceSlug) {
   );
 }
  
-export function useResourceFields(resourceSlug) {
-  return useQuery(
+export function useResourceFields(resourceSlug, props) {
+  const states = useQuery(
     ['RESOURCE_FIELDS', resourceSlug], 
     () => ApiService.get(`resources/${resourceSlug}/fields`)
       .then((res) => res.data.resource_fields),
-    {
-      initialData: [],
-    },
+    props
   );
+
+  return {
+    ...states,
+    data: defaultTo(states.data, []),
+  }
 }

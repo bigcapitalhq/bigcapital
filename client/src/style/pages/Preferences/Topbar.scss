@@ -32,17 +32,17 @@
       background-size: contain;
       background-color: #eed1f2;
       border-radius: 50%;
-      height: 35px;
-      width: 35px;
+      height: 32px;
+      width: 32px;
 
       .user-text {
         font-size: 12px;
-        color: #804f87;
+        color: #fff;
       }
       &,
       &:hover,
       &:focus {
-        background-color: #eed1f2;
+        background-color: #cb20e5;
         border: 0;
         box-shadow: none;
       }

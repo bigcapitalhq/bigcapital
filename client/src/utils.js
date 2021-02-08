@@ -5,7 +5,8 @@ import Currency from 'js-money/lib/currency';
 import PProgress from 'p-progress';
 import accounting from 'accounting';
 import deepMapKeys from 'deep-map-keys';
- 
+import { createSelectorCreator, defaultMemoize } from 'reselect';
+import { isEqual } from 'lodash'; 
 
 export function removeEmptyFromObject(obj) {
   obj = Object.assign({}, obj);
@@ -411,6 +412,10 @@ export const transfromToSnakeCase = (object) => {
   return deepMapKeys(object, (key) => _.snakeCase(key));
 };
 
+export const transformTableQueryToParams = (object) => {
+  return transfromToSnakeCase(object);
+};
+
 export function flatObject(obj) {
   const flatObject = {};
   const path = []; // current path
@@ -466,4 +471,20 @@ export function transactionNumber(prefix, number) {
 
 export function safeCallback(callback, ...args) {
   return () => callback && callback(...args);
+}
+
+export const createDeepEqualSelector = createSelectorCreator(
+  defaultMemoize,
+  isEqual
+);
+
+/**
+ * Detarmines whether the table has empty status.
+ */
+export const isTableEmptyStatus = ({ data, pagination, filterMeta }) => {
+  return [
+    _.isEmpty(data),
+    _.isEmpty(filterMeta.view),
+    pagination.page === 1,
+  ].every(cond => cond === true)
 }

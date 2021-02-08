@@ -1,30 +1,4 @@
-.form-group--select-list {
-  .bp3-popover-target {
-    .bp3-icon {
-      position: absolute;
-      top: 0;
-      left: 0;
-      margin: 7px;
 
-      + .bp3-button-text {
-        padding-left: 20px;
-      }
-    }
-
-    .bp3-button {
-      padding-left: 10px;
-      color: #333;
-    }
-  }
-}
-
-.form-group--select-list {
-  .bp3-popover-open {
-    .bp3-button {
-      border-color: #80bdff;
-    }
-  }
-}
 
 .bp3-button {
   min-width: 32px;
@@ -40,24 +14,6 @@
   &.bp3-small {
     font-size: 13px;
     min-height: 29px;
-  }
-  .form-group--select-list & {
-    border-radius: 2px;
-
-    &,
-    &:hover {
-      box-shadow: 0 0 0 transparent;
-      border: 1px solid #ced4da;
-
-      &:not(:disabled) {
-        background: #fff;
-      }
-    }
-  }
-  .form-group--select-list.bp3-intent-danger & {
-    & {
-      border-color: #db3737;
-    }
   }
 }
 

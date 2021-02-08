@@ -75,6 +75,8 @@ export default function DataTable(props) {
     TableWrapperRenderer,
     TableTBodyRenderer,
     TablePaginationRenderer,
+
+    ...restProps
   } = props;
 
   const selectionColumnObj = {
@@ -117,6 +119,8 @@ export default function DataTable(props) {
       autoResetSortBy,
       autoResetFilters,
       autoResetRowState,
+
+      ...restProps
     },
     useSortBy,
     useExpanded,

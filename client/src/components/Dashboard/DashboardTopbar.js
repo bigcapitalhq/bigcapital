@@ -19,13 +19,14 @@ import { Icon, Hint, If } from 'components';
 import withSearch from 'containers/GeneralSearch/withSearch';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withDashboard from 'containers/Dashboard/withDashboard';
+import withSettings from 'containers/Settings/withSettings';
+
 import QuickNewDropdown from 'containers/QuickNewDropdown/QuickNewDropdown';
 import { compose } from 'utils';
 
 function DashboardTopbar({
   // #withDashboard
   pageTitle,
-  pageSubtitle,
   editViewId,
 
   // #withDashboardActions
@@ -34,6 +35,9 @@ function DashboardTopbar({
 
   // #withDashboard
   sidebarExpended,
+
+  // #withSettings
+  organizationName,
 
   // #withGlobalSearch
   openGlobalSearch,
@@ -100,11 +104,7 @@ function DashboardTopbar({
             </div>
           </If>
 
-          <If condition={pageSubtitle}>
-            <h3>{pageSubtitle}</h3>
-          </If>
-
-          <If condition={pageSubtitle && editViewId}>
+          <If condition={editViewId}>
             <Button
               className={Classes.MINIMAL + ' button--view-edit'}
               icon={<Icon icon="pen" iconSize={13} />}
@@ -116,6 +116,10 @@ function DashboardTopbar({
         <div class="dashboard__breadcrumbs">
           <DashboardBreadcrumbs />
         </div>
+
+        {/* <div class="dashboard__organization-name">
+          { organizationName }
+        </div> */}
 
         <DashboardBackLink />
       </div>
@@ -158,11 +162,13 @@ function DashboardTopbar({
 
 export default compose(
   withSearch,
-  withDashboard(({ pageTitle, pageSubtitle, editViewId, sidebarExpended }) => ({
+  withDashboard(({ pageTitle, editViewId, sidebarExpended }) => ({
     pageTitle,
-    pageSubtitle,
     editViewId,
     sidebarExpended,
+  })),
+  withSettings(({ organizationSettings }) => ({
+    organizationName: organizationSettings.name,
   })),
   withDashboardActions,
 )(DashboardTopbar);

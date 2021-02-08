@@ -1,20 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   FormattedMessage as T,
   FormattedHTMLMessage,
   useIntl,
 } from 'react-intl';
 import { Intent, Alert } from '@blueprintjs/core';
-import { queryCache } from 'react-query';
 import { AppToaster } from 'components';
 
 import { handleDeleteErrors } from 'containers/Items/utils';
+import { useDeleteItem } from 'hooks/query';
 
-import {
-  useDeleteItem
-} from 'hooks/query';
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
+import withItemsActions from 'containers/Items/withItemsActions';
 
 import { compose } from 'utils';
 
@@ -30,15 +28,19 @@ function ItemDeleteAlert({
 
   // #withAlertActions
   closeAlert,
+
+  // #withItemsActions
+  addItemsTableQueries
 }) {
   const { mutateAsync: deleteItem, isLoading } = useDeleteItem();
   const { formatMessage } = useIntl();
 
-  // handle cancel delete item alert.
+  // Handle cancel delete item alert.
   const handleCancelItemDelete = () => {
     closeAlert(name);
   };
 
+  // Handle confirm delete item.
   const handleConfirmDeleteItem = () => {
     deleteItem(itemId)
       .then(() => {
@@ -48,6 +50,8 @@ function ItemDeleteAlert({
           }),
           intent: Intent.SUCCESS,
         });
+        // Reset to page number one.
+        addItemsTableQueries({ page: 1 });
       })
       .catch(({ errors }) => {
         handleDeleteErrors(errors);
@@ -80,4 +84,5 @@ function ItemDeleteAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
+  withItemsActions
 )(ItemDeleteAlert);

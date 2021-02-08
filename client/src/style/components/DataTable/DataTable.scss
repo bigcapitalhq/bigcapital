@@ -64,6 +64,10 @@
           border-bottom: 0;
         }
       }
+
+      .bp3-context-menu-popover-target{
+        z-index: 100;
+      }
     }
 
     .th,

@@ -1,12 +1,12 @@
 
 .pagination{
   display: flex;
-  padding: 25px 14px;
+  padding: 28px 14px;
   font-size: 13px;
 
   .bp3-button{
     background: transparent;
-    padding: 4px 4px;
+    padding: 5px;
   }
 
   &__item{
@@ -15,7 +15,7 @@
 
     &:not([class*="bp3-intent-"]){
       color: #666666; 
-      border-radius: 3px;
+      border-radius: 5px;
 
       &:hover{
         background-color: #E6EFFB;
@@ -28,14 +28,14 @@
     }
 
     .pagination .pagination__buttons-group .bp3-button-group &{
-      border-radius: 3px;
+      border-radius: 5px;
     }
     &--next,
     &--previous{
 
       &.bp3-button{
-        padding-left: 6px;
-        padding-right: 6px;
+        padding-left: 10px;
+        padding-right: 10px;
       }
     }
 
@@ -63,20 +63,22 @@
   }
 
   &__info{
-    padding-top: 6px;
-    color: #999;
+    color: #888;
     margin-left: 12px;
+    display: flex;
+    align-items: center;
   }
 
   &__controls{
     display: flex;
+    align-items: center;
     margin-left: auto;
 
     .bp3-html-select{
       margin-left: 6px;
 
       select{
-        height: 20px;
+        height: 24px;
         width: auto;
         padding: 0;
         padding-right: 0px;
@@ -103,7 +105,6 @@
 
   &__pagesize-control{
     margin-left: 12px;
-    padding-top: 4px;
-    color: #777;
+    color: #888;
   }
 }

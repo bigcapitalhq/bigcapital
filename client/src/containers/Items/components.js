@@ -71,7 +71,7 @@ export const ItemTypeAccessor = (row) => {
   ) : null;
 };
 
-export const ItemsActionMenuList = ({
+export function ItemsActionMenuList({
   row: { original },
   payload: {
     onEditItem,
@@ -80,9 +80,9 @@ export const ItemsActionMenuList = ({
     onMakeAdjustment,
     onDeleteItem,
   },
-}) => {
+}) {
   const { formatMessage } = useIntl();
-
+ 
   return (
     <Menu>
       <MenuItem
@@ -112,6 +112,7 @@ export const ItemsActionMenuList = ({
       <If condition={original.type === 'inventory'}>
         <MenuItem
           text={formatMessage({ id: 'make_adjustment' })}
+          icon={<Icon icon={'swap-vert'} iconSize={16} />}
           onClick={safeCallback(onMakeAdjustment, original)}
         />
       </If>
