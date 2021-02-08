@@ -1,10 +1,6 @@
 import axios from 'axios';
-import React from 'react';
-import { Intent } from '@blueprintjs/core';
 import { store } from 'store/createStore';
 import { logout } from 'store/authentication/authentication.actions';
-import AppToaster from 'components/AppToaster';
-import { FormattedMessage as T, useIntl } from 'react-intl';
 import { setGlobalErrors } from 'store/globalErrors/globalErrors.actions';
 const http = axios.create();
 

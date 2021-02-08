@@ -46,6 +46,14 @@
     .form-group--purchasable {
       margin-bottom: 1rem;
     }
+
+    .form-group--purchase-description,
+    .form-group--sell-description{
+      
+      textarea{
+        width: 100%;
+      }
+    }
   }
 
   #{$self}__section {

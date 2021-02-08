@@ -94,8 +94,10 @@ function ItemForm({
   );
 
   // Transform API errors.
-  const transformApiErrors = (errors) => {
+  const transformApiErrors = (error) => {
+    const { response: { data: { errors } } } = error;
     const fields = {};
+
     if (errors.find((e) => e.type === 'ITEM.NAME.ALREADY.EXISTS')) {
       fields.name = formatMessage({ id: 'the_name_used_before' });
     }
