@@ -18,6 +18,7 @@ function App({ locale }) {
     defaultOptions: {
       queries: {
         refetchOnWindowFocus: false,
+        staleTime: 30000,
       },
     },
   };

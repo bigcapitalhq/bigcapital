@@ -89,6 +89,7 @@
     "react-table-sticky": "^1.1.2",
     "react-transition-group": "^4.4.1",
     "react-use": "^13.26.1",
+    "react-use-context-menu": "^0.1.4",
     "react-virtualized": "^9.22.3",
     "redux": "^4.0.5",
     "redux-persist": "^6.0.0",
