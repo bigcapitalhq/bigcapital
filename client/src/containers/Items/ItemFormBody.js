@@ -1,6 +1,12 @@
 import React from 'react';
 import { FastField, Field, ErrorMessage } from 'formik';
-import { FormGroup, Classes, Checkbox, ControlGroup } from '@blueprintjs/core';
+import {
+  FormGroup,
+  Classes,
+  TextArea,
+  Checkbox,
+  ControlGroup,
+} from '@blueprintjs/core';
 import {
   AccountsSelectList,
   MoneyInputGroup,
@@ -100,6 +106,25 @@ function ItemFormBody({ baseCurrency }) {
               </FormGroup>
             )}
           </FastField>
+
+          <FastField name={'sell_description'}>
+            {({ form: { values }, field, meta: { error, touched } }) => (
+              <FormGroup
+                label={<T id={'description'} />}
+                className={'form-group--sell-description'}
+                intent={inputIntent({ error, touched })}
+                helperText={<ErrorMessage name={'description'} />}
+                inline={true}
+              >
+                <TextArea
+                  growVertically={true}
+                  height={280}
+                  {...field}
+                  disabled={!values.sellable}
+                />
+              </FormGroup>
+            )}
+          </FastField>
         </Col>
 
         <Col xs={6}>
@@ -170,6 +195,25 @@ function ItemFormBody({ baseCurrency }) {
                   disabled={!form.values.purchasable}
                   filterByParentTypes={[ACCOUNT_PARENT_TYPE.EXPENSE]}
                   popoverFill={true}
+                />
+              </FormGroup>
+            )}
+          </FastField>
+
+          <FastField name={'purchase_description'}>
+            {({ form: { values }, field, meta: { error, touched } }) => (
+              <FormGroup
+                label={<T id={'description'} />}
+                className={'form-group--purchase-description'}
+                intent={inputIntent({ error, touched })}
+                helperText={<ErrorMessage name={'description'} />}
+                inline={true}
+              >
+                <TextArea
+                  growVertically={true}
+                  height={280}
+                  {...field}
+                  disabled={!values.purchasable}
                 />
               </FormGroup>
             )}
