@@ -3,34 +3,38 @@ import { compose } from 'utils';
 
 import 'style/pages/Items/List.scss';
 
-import ItemsViewPage from './ItemsViewPage';
-import ItemsActionsBar from './ItemsActionsBar';
-import ItemsAlerts from './ItemsAlerts';
-
-import { ItemsListProvider } from './ItemsListProvider';
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 
-import withItems from 'containers/Items/withItems';
+import ItemsActionsBar from './ItemsActionsBar';
+import ItemsAlerts from './ItemsAlerts';
+import ItemsViewsTabs from './ItemsViewsTabs';
+import ItemsDataTable from './ItemsDataTable';
+
+import { ItemsListProvider } from './ItemsListProvider';
+import withItems from './withItems';
+import { transformTableStateToQuery } from 'utils';
 
 /**
  * Items list.
  */
 function ItemsList({
   // #withItems
-  itemsTableQuery
+  itemsTableState,
 }) {
   return (
-    <ItemsListProvider query={itemsTableQuery}>
+    <ItemsListProvider query={transformTableStateToQuery(itemsTableState)}>
       <ItemsActionsBar />
 
       <DashboardPageContent>
-        <ItemsViewPage />
+        <ItemsViewsTabs />
+        <ItemsDataTable />
       </DashboardPageContent>
+
       <ItemsAlerts />
     </ItemsListProvider>
   );
 }
 
 export default compose(
-  withItems(({ itemsTableQuery }) => ({ itemsTableQuery })),
+  withItems(({ itemsTableState }) => ({ itemsTableState })),
 )(ItemsList);

@@ -32,7 +32,7 @@ function ItemsActionsBar({
   itemsSelectedRows,
 
   // #withItemActions
-  addItemsTableQueries,
+  setItemsTableState,
 
   // #withAlertActions
   openAlert,
@@ -40,6 +40,7 @@ function ItemsActionsBar({
   // Items list context.
   const { itemsViews } = useItemsListContext();
 
+  // React intl.
   const { formatMessage } = useIntl();
 
   // History context.
@@ -52,9 +53,7 @@ function ItemsActionsBar({
 
   // Handle tab changing.
   const handleTabChange = (viewId) => {
-    addItemsTableQueries({
-      customViewId: viewId.id || null,
-    });
+    setItemsTableState({ customViewId: viewId.id || null });
   };
 
   // Handle cancel/confirm items bulk.
@@ -115,8 +114,7 @@ function ItemsActionsBar({
       </NavbarGroup>
     </DashboardActionsBar>
   );
-};
-
+}
 
 export default compose(
   withItems(({ itemsSelectedRows }) => ({ itemsSelectedRows })),

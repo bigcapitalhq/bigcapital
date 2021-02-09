@@ -46,6 +46,7 @@ function ItemsListProvider({
   // Change page title dispatcher.
   const changePageTitle = useDashboardPageTitle();
 
+  // Changeas the page title once the page mount.
   useEffect(() => {
     changePageTitle(formatMessage({ id: 'items_list' }));
   }, [changePageTitle, formatMessage]);

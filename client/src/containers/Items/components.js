@@ -136,3 +136,67 @@ export const ItemsActionsTableCell = (props) => {
     </Popover>
   );
 };
+
+
+/**
+ * Retrieve all items table columns.
+ */
+export const useItemsTableColumns = () => {
+  const { formatMessage } = useIntl();
+
+  return React.useMemo(
+    () => [
+      {
+        Header: formatMessage({ id: 'item_name' }),
+        accessor: 'name',
+        className: 'name',
+        width: 180,
+      },
+      {
+        Header: formatMessage({ id: 'item_code' }),
+        accessor: 'code',
+        className: 'code',
+        width: 120,
+      },
+      {
+        Header: formatMessage({ id: 'item_type' }),
+        accessor: ItemTypeAccessor,
+        className: 'item_type',
+        width: 120,
+      },
+      {
+        Header: formatMessage({ id: 'category' }),
+        accessor: 'category.name',
+        className: 'category',
+        width: 150,
+      },
+      {
+        Header: formatMessage({ id: 'sell_price' }),
+        Cell: SellPriceCell,
+        accessor: 'sell_price',
+        className: 'sell-price',
+        width: 150,
+      },
+      {
+        Header: formatMessage({ id: 'cost_price' }),
+        Cell: CostPriceCell,
+        accessor: 'cost_price',
+        className: 'cost-price',
+        width: 150,
+      },
+      {
+        Header: formatMessage({ id: 'quantity_on_hand' }),
+        accessor: 'quantity_on_hand',
+        Cell: QuantityOnHandCell,
+        width: 140,
+      },
+      {
+        id: 'actions',
+        Cell: ItemsActionsTableCell,
+        width: 60,
+        skeletonWidthMin: 100,
+      },
+    ],
+    [formatMessage],
+  );
+}

@@ -15,10 +15,10 @@ import { useItemsListContext } from './ItemsListProvider';
  */
 function ItemsViewsTabs({
   // #withItemsActions
-  addItemsTableQueries,
+  setItemsTableState,
 
   // #withItems
-  itemsTableQuery
+  itemsCustomViewId
 }) {
   const { itemsViews } = useItemsListContext();
 
@@ -29,8 +29,8 @@ function ItemsViewsTabs({
 
   // Handles the active tab change.
   const handleTabChange = (viewId) => {
-    addItemsTableQueries({
-      page: 1,
+    setItemsTableState({
+      pageIndex: 0,
       customViewId: viewId || null,
     });
   };
@@ -39,7 +39,7 @@ function ItemsViewsTabs({
     <Navbar className="navbar--dashboard-views">
       <NavbarGroup align={Alignment.LEFT}>
         <DashboardViewsTabs
-          currentViewId={itemsTableQuery.customViewId}
+          currentViewId={itemsCustomViewId}
           resourceName={'items'}
           tabs={tabs}
           onChange={handleTabChange}
@@ -51,6 +51,8 @@ function ItemsViewsTabs({
 
 export default compose(
   withRouter,
-  withItems(({ itemsTableQuery }) => ({ itemsTableQuery })),
+  withItems(({ itemsTableState }) => ({
+    itemsCustomViewId: itemsTableState?.customViewId
+  })),
   withItemsActions,
 )(ItemsViewsTabs);

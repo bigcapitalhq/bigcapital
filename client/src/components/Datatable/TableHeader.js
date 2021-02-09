@@ -32,7 +32,7 @@ function TableHeaderCell({ column, index }) {
         {...column.getSortByToggleProps({
           className: classNames('cell-inner', {
             'text-overview': column.textOverview,
-          }),
+          })
         })}
       >
         {column.render('Header')}

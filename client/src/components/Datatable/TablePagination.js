@@ -27,7 +27,7 @@ export default function TablePagination() {
       const pageIndex = page - 1;
 
       gotoPage(pageIndex);
-      triggerOnPaginationChange({ page, pageSize });
+      triggerOnPaginationChange({ pageIndex, pageSize });
     },
     [gotoPage, triggerOnPaginationChange],
   );
@@ -35,10 +35,12 @@ export default function TablePagination() {
   // Handles the page size changing.
   const handlePageSizeChange = useCallback(
     ({ pageSize, page }) => {
-      gotoPage(0);
+      const pageIndex = 0;
+
+      gotoPage(pageIndex);
       setPageSize(pageSize);
 
-      triggerOnPaginationChange({ page, pageSize });
+      triggerOnPaginationChange({ pageIndex, pageSize });
     },
     [gotoPage, setPageSize, triggerOnPaginationChange],
   );

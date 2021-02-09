@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { defaultTo } from 'lodash';
 import ApiService from 'services/ApiService';
-import { transformResponse } from 'utils';
+import { transformPagination, transformResponse } from 'utils';
 
 const defaultPagination = {
   pageSize: 12,
@@ -57,7 +57,9 @@ export function useDeleteItem(props) {
 const transformItemsResponse = (response) => {
   return {
     items: response.data.items,
-    pagination: transformResponse(response.data.pagination),
+    pagination: transformPagination(
+      transformResponse(response.data.pagination)
+    ),
     filterMeta: transformResponse(response.data.filter_meta),
   };
 };

@@ -488,3 +488,51 @@ export const isTableEmptyStatus = ({ data, pagination, filterMeta }) => {
     pagination.page === 1,
   ].every(cond => cond === true)
 }
+
+/**
+ * Transformes the pagination meta to table props.
+ */
+export function getPagesCountFromPaginationMeta(pagination) {
+  const { pageSize, total } = pagination;
+
+  return Math.ceil(total / pageSize);
+}
+
+/**
+ * Transformes the table state to url query.
+ */
+export function transformTableStateToQuery(tableState) {
+  const { pageSize, pageIndex, customViewId, sortBy } = tableState;
+
+  const query = {
+    pageSize,
+    page: pageIndex + 1,
+    ...(customViewId ? { customViewId } : {}),
+    ...(Array.isArray(sortBy) && sortBy.length > 0
+      ? {
+          column_sort_by: sortBy[0].id,
+          sort_order: sortBy[0].desc ? 'desc' : 'asc',
+        }
+      : {}),
+  };
+  return transfromToSnakeCase(query);
+}
+
+/**
+ * Transformes the global table state to table state.
+ */
+export function globalTableStateToTable(globalState) {
+  return {
+    ..._.omit(globalState, ['customViewId']),
+  };
+}
+
+/**
+ * Transformes the pagination meta repsonse.
+ */
+export function transformPagination(pagination) {
+  return {
+    ...pagination,
+    pagesCount: getPagesCountFromPaginationMeta(pagination),
+  }
+}

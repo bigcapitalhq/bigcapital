@@ -1,17 +1,17 @@
 import { paginationLocationQuery } from 'store/selectors';
 import { createDeepEqualSelector } from 'utils';
 
-const itemsTableQuerySelector = (state) => state.items.tableQuery;
+const itemsTableStateSelector = (state) => state.items.tableState;
 
-// Get items table query marged with location query.
-export const getItemsTableQueryFactory = () =>
+// Get items table state marged with location query.
+export const getItemsTableStateFactory = () =>
   createDeepEqualSelector(
     paginationLocationQuery,
-    itemsTableQuerySelector,
-    (locationQuery, tableQuery) => {
+    itemsTableStateSelector,
+    (locationQuery, tableState) => {
       return {
         ...locationQuery,
-        ...tableQuery,
+        ...tableState,
       };
     },
   );

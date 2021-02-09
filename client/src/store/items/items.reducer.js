@@ -1,16 +1,17 @@
 import { createReducer } from '@reduxjs/toolkit';
 import {
-  createTableQueryReducers,
-} from 'store/journalNumber.reducer';
+  createTableStateReducers,
+} from 'store/tableState.reducer';
 
 const initialState = {
-  tableQuery: {
+  tableState: {
     pageSize: 12,
-    page: 1,
+    pageIndex: 0,
+    filters: [],
   },
   selectedRows: [],
 };
 
 export default createReducer(initialState, {
-  ...createTableQueryReducers('ITEMS'),
+  ...createTableStateReducers('ITEMS'),
 });

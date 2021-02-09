@@ -1,7 +1,8 @@
-import React, { useMemo } from 'react';
-import { useIntl } from 'react-intl';
+import React from 'react';
 import classNames from 'classnames';
-import { DataTable, Choose } from 'components';
+import { useHistory } from 'react-router-dom';
+
+import { DataTable } from 'components';
 
 import ItemsEmptyStatus from './ItemsEmptyStatus';
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
@@ -9,134 +10,138 @@ import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
 
 import { CLASSES } from 'common/classes';
 
-import withSettings from 'containers/Settings/withSettings';
-import { useItemsListContext } from './ItemsListProvider';
-import { compose } from 'utils';
-import {
-  QuantityOnHandCell,
-  SellPriceCell,
-  CostPriceCell,
-  ItemTypeAccessor,
-  ItemsActionsTableCell,
-  ItemsActionMenuList
-} from './components';
+import withItems from 'containers/Items/withItems';
+import withItemsActions from 'containers/Items/withItemsActions';
+import withAlertsActions from 'containers/Alert/withAlertActions';
+import withDialogActions from 'containers/Dialog/withDialogActions';
 
-// Items datatable.
+import { useItemsListContext } from './ItemsListProvider';
+import { useItemsTableColumns, ItemsActionMenuList } from './components';
+import { compose } from 'utils';
+
+/**
+ * Items datatable.
+ */
 function ItemsDataTable({
+  // #withItemsActions
+  setItemsTableState,
+
+  // #withDialogAction
+  openDialog,
+
+  // #withAlertsActions
+  openAlert,
+
+  // #withItems
+  itemsTableState,
+
   // #ownProps
-  tableProps
+  tableProps,
 }) {
-  const { formatMessage } = useIntl();
+  // Items list context.
   const {
     items,
     pagination,
     isItemsLoading,
     isEmptyStatus,
+    isItemsFetching,
   } = useItemsListContext();
 
   // Datatable columns.
-  const columns = useMemo(
-    () => [
-      {
-        Header: formatMessage({ id: 'item_name' }),
-        accessor: 'name',
-        className: 'name',
-        width: 180,
-      },
-      {
-        Header: formatMessage({ id: 'item_code' }),
-        accessor: 'code',
-        className: 'code',
-        width: 120,
-      },
-      {
-        Header: formatMessage({ id: 'item_type' }),
-        accessor: ItemTypeAccessor,
-        className: 'item_type',
-        width: 120,
-      },
-      {
-        Header: formatMessage({ id: 'category' }),
-        accessor: 'category.name',
-        className: 'category',
-        width: 150,
-      },
-      {
-        Header: formatMessage({ id: 'sell_price' }),
-        Cell: SellPriceCell,
-        accessor: 'sell_price',
-        className: 'sell-price',
-        width: 150,
-      },
-      {
-        Header: formatMessage({ id: 'cost_price' }),
-        Cell: CostPriceCell,
-        accessor: 'cost_price',
-        className: 'cost-price',
-        width: 150,
-      },
-      {
-        Header: formatMessage({ id: 'quantity_on_hand' }),
-        accessor: 'quantity_on_hand',
-        Cell: QuantityOnHandCell,
-        width: 140,
-      },
-      {
-        id: 'actions',
-        Cell: ItemsActionsTableCell,
-        width: 60,
-        skeletonWidthMin: 100,
-      },
-    ],
-    [formatMessage],
-  );
+  const columns = useItemsTableColumns();
+
+  // History context.
+  const history = useHistory();
 
   // Table row class names.
   const rowClassNames = (row) => ({
     inactive: !row.original.active,
   });
 
+  // Handle fetch data once the page index, size or sort by of the table change.
+  const handleFetchData = React.useCallback(
+    ({ pageSize, pageIndex, sortBy }) => {
+      setItemsTableState({
+        pageIndex,
+        pageSize,
+        sortBy,
+      });
+    },
+    [setItemsTableState],
+  );
+
+  // Handle delete action Item.
+  const handleDeleteItem = ({ id }) => {
+    openAlert('item-delete', { itemId: id });
+  };
+
+  // Handle cancel/confirm item inactive.
+  const handleInactiveItem = ({ id }) => {
+    openAlert('item-inactivate', { itemId: id });
+  };
+
+  // Handle cancel/confirm item activate.
+  const handleActivateItem = ({ id }) => {
+    openAlert('item-activate', { itemId: id });
+  };
+
+  // Handle Edit item.
+  const handleEditItem = ({ id }) => {
+    history.push(`/items/${id}/edit`);
+  };
+
+  // Handle item make adjustment.
+  const handleMakeAdjustment = ({ id }) => {
+    openDialog('inventory-adjustment', { itemId: id });
+  };
+
+  // Cannot continue in case the items has empty status.
+  if (isEmptyStatus) {
+    return <ItemsEmptyStatus />;
+  }
+
   return (
     <div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>
-      <Choose>
-        <Choose.When condition={isEmptyStatus}>
-          <ItemsEmptyStatus />
-        </Choose.When>
-
-        <Choose.Otherwise>
-          <DataTable
-            columns={columns}
-            data={items}
-            loading={isItemsLoading}
-            headerLoading={isItemsLoading}
-            noInitialFetch={true}
-            selectionColumn={true}
-            spinnerProps={{ size: 30 }}
-            expandable={false}
-            sticky={true}
-            rowClassNames={rowClassNames}
-            pagination={true}
-            manualSortBy={true}
-            pagesCount={1}
-            autoResetSortBy={false}
-            autoResetPage={true}
-            manualPagination={true}
-            TableLoadingRenderer={TableSkeletonRows}
-            TableHeaderSkeletonRenderer={TableSkeletonHeader}
-            
-            pageSize={pagination.pageSize}
-            pageIndex={pagination.page - 1}
-            ContextMenu={ItemsActionMenuList}
-            {...tableProps}
-          />
-        </Choose.Otherwise>
-      </Choose>
+      <DataTable
+        columns={columns}
+        data={items}
+        initialState={itemsTableState}
+        loading={isItemsLoading}
+        headerLoading={isItemsLoading}
+        progressBarLoading={isItemsFetching}
+        noInitialFetch={true}
+        selectionColumn={true}
+        spinnerProps={{ size: 30 }}
+        expandable={false}
+        sticky={true}
+        rowClassNames={rowClassNames}
+        pagination={true}
+        manualSortBy={true}
+        manualPagination={true}
+        pagesCount={pagination.pagesCount}
+        autoResetSortBy={false}
+        autoResetPage={true}
+        TableLoadingRenderer={TableSkeletonRows}
+        TableHeaderSkeletonRenderer={TableSkeletonHeader}
+        ContextMenu={ItemsActionMenuList}
+        onFetchData={handleFetchData}
+        payload={{
+          onDeleteItem: handleDeleteItem,
+          onEditItem: handleEditItem,
+          onInactivateItem: handleInactiveItem,
+          onActivateItem: handleActivateItem,
+          onMakeAdjustment: handleMakeAdjustment,
+        }}
+        noResults={'There is no items in the table yet.'}
+        {...tableProps}
+      />
     </div>
   );
 }
 
 export default compose(
-  withSettings(({ organizationSettings }) => ({
-    baseCurrency: organizationSettings?.baseCurrency,
-  })),
+  withItemsActions,
+  withAlertsActions,
+  withDialogActions,
+  withItems(({ itemsTableState }) => ({ itemsTableState })),
 )(ItemsDataTable);

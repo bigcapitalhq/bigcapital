@@ -1,15 +1,15 @@
 import {connect} from 'react-redux';
 import {
-  getItemsTableQueryFactory,
+  getItemsTableStateFactory,
 } from 'store/items/items.selectors';
 
 export default (mapState) => {
-  const getItemsTableQuery = getItemsTableQueryFactory();
-  
+  const getItemsTableState = getItemsTableStateFactory();
+
   const mapStateToProps = (state, props) => {
     const mapped = {
       itemsSelectedRows: state.items.selectedRows,
-      itemsTableQuery: getItemsTableQuery(state, props),
+      itemsTableState: getItemsTableState(state, props),
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };
