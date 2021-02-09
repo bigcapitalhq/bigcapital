@@ -1,60 +1,52 @@
-import React, { useMemo } from 'react';
-import { useIntl } from 'react-intl';
+import React from 'react';
 import classNames from 'classnames';
 
-import { TableActionsCell } from './components';
+import { useItemsCategoriesTableColumns, ActionMenuList } from './components';
 import DataTable from 'components/DataTable';
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
 
 import { useItemsCategoriesContext } from './ItemsCategoriesProvider';
 import { CLASSES } from 'common/classes';
 
+import withAlertActions from 'containers/Alert/withAlertActions';
+import withDialogActions from 'containers/Dialog/withDialogActions';
+
+import { compose } from 'utils';
+
 /**
  * Items categories table.
  */
-export default function ItemsCategoryTable({
+function ItemsCategoryTable({
   // #ownProps
   tableProps,
+
+  // #withDialogActions
+  openDialog,
+
+  // #withAlertActions
+  openAlert
 }) {
-  const { formatMessage } = useIntl();
+  // Items categories context.
   const {
-    isItemsCategoriesFetching,
+    isCategoriesLoading,
+    isCategoriesFetching,
     itemsCategories,
   } = useItemsCategoriesContext();
 
   // Table columns.
-  const columns = useMemo(
-    () => [
-      {
-        id: 'name',
-        Header: formatMessage({ id: 'category_name' }),
-        accessor: 'name',
-        width: 220,
-      },
-      {
-        id: 'description',
-        Header: formatMessage({ id: 'description' }),
-        accessor: 'description',
-        className: 'description',
-        width: 220,
-      },
-      {
-        id: 'count',
-        Header: formatMessage({ id: 'count' }),
-        accessor: 'count',
-        className: 'count',
-        width: 180,
-      },
-      {
-        id: 'actions',
-        Header: '',
-        Cell: TableActionsCell,
-        className: 'actions',
-        width: 50,
-      },
-    ],
-    [formatMessage],
-  );
+  const columns = useItemsCategoriesTableColumns();
+
+  const handleSelectedRowsChange = (selectedRows) => {};
+
+  // Handle delete Item.
+  const handleDeleteCategory = ({ id }) => {
+    openAlert('item-category-delete', { itemCategoryId: id });
+  };
+
+  // Handle Edit item category.
+  const handleEditCategory = (category) => {
+    openDialog('item-category-form', { action: 'edit', id: category.id });
+  };
 
   return (
     <div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>
@@ -62,14 +54,29 @@ export default function ItemsCategoryTable({
         noInitialFetch={true}
         columns={columns}
         data={itemsCategories}
-        loading={isItemsCategoriesFetching}
+
+        loading={isCategoriesLoading}
+        headerLoading={isCategoriesLoading}
+        progressBarLoading={isCategoriesFetching}
+
         manualSortBy={true}
         expandable={true}
         sticky={true}
         selectionColumn={true}
         TableLoadingRenderer={TableSkeletonRows}
         noResults={'There is no items categories in table yet.'}
+        payload={{
+          onDeleteCategory: handleDeleteCategory,
+          onEditCategory: handleEditCategory
+        }}
+        ContextMenu={ActionMenuList}
+        {...tableProps}
       />
     </div>
   );
 }
+
+export default compose(
+  withDialogActions,
+  withAlertActions,
+)(ItemsCategoryTable);

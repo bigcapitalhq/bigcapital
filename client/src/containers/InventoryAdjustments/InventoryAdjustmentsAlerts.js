@@ -3,7 +3,7 @@ import InventoryAdjustmentDeleteAlert from 'containers/Alerts/Items/InventoryAdj
 
 export default function InventoryAdjustmentsAlerts() {
   return (
-    <div>
+    <div className={'inventory-adjustments-alert'}>
       <InventoryAdjustmentDeleteAlert name={'inventory-adjustment-delete'} />
     </div>
   );

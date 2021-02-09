@@ -1,4 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from 'react-query';
+import { defaultTo } from 'lodash';
 import ApiService from 'services/ApiService';
 
 /**
@@ -7,15 +8,12 @@ import ApiService from 'services/ApiService';
 export function useCreateItemCategory(props) {
   const queryClient = useQueryClient();
 
-  return useMutation(
-    (values) => ApiService.post('item_categories', values),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries('ITEMS_CATEGORIES');
-      },
-      ...props
-    }
-  );
+  return useMutation((values) => ApiService.post('item_categories', values), {
+    onSuccess: () => {
+      queryClient.invalidateQueries('ITEMS_CATEGORIES');
+    },
+    ...props,
+  });
 }
 
 /**
@@ -29,9 +27,10 @@ export function useEditItemCategory(props) {
     {
       onSuccess: () => {
         queryClient.invalidateQueries('ITEMS_CATEGORIES');
+        queryClient.invalidateQueries('ITEMS');
       },
-      ...props
-    }
+      ...props,
+    },
   );
 }
 
@@ -41,14 +40,13 @@ export function useEditItemCategory(props) {
 export function useDeleteItemCategory(props) {
   const queryClient = useQueryClient();
 
-  return useMutation(
-    (id) => ApiService.delete(`item_categories/${id}`),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries('ITEMS_CATEGORIES');
-      },
-      ...props
-    });
+  return useMutation((id) => ApiService.delete(`item_categories/${id}`), {
+    onSuccess: () => {
+      queryClient.invalidateQueries('ITEMS_CATEGORIES');
+      queryClient.invalidateQueries('ITEMS');
+    },
+    ...props,
+  });
 }
 
 // Transforms items categories.
@@ -63,18 +61,22 @@ const transformItemsCategories = (response) => {
  * Retrieve the items categories.
  */
 export function useItemsCategories(query, props) {
-  return useQuery(
+  const states = useQuery(
     ['ITEMS_CATEGORIES', query],
-    () => ApiService.get(`item_categories`, { params: query })
-      .then(transformItemsCategories),
-    {
-      initialData: {
-        itemsCategories: [],
-        pagination: {}
-      },
-      ...props,
-    },
+    () =>
+      ApiService.get(`item_categories`, { params: query }).then(
+        transformItemsCategories,
+      ),
+    props,
   );
+
+  return {
+    ...states,
+    data: defaultTo(states.data, {
+      itemsCategories: [],
+      pagination: {},
+    }),
+  };
 }
 
 /**
@@ -82,13 +84,15 @@ export function useItemsCategories(query, props) {
  * @param {number} id - Item category.
  */
 export function useItemCategory(id, props) {
-  return useQuery(
+  const states = useQuery(
     ['ITEMS_CATEGORY', id],
-    () => ApiService.get(`item_categories/${id}`)
-      .then(res => res.data.category),
-    {
-      initialData: {},
-      ...props,
-    },
+    () =>
+      ApiService.get(`item_categories/${id}`).then((res) => res.data.category),
+    props,
   );
+
+  return {
+    ...states,
+    data: defaultTo(states.data, {}),
+  };
 }

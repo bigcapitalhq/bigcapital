@@ -6,12 +6,12 @@ import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import InventoryAdjustmentsAlerts from './InventoryAdjustmentsAlerts';
 
 import { InventoryAdjustmentsProvider } from './InventoryAdjustmentsProvider';
-import InventoryAdjustmentView from './InventoryAdjustmentView';
+import InventoryAdjustmentTable from './InventoryAdjustmentTable';
 
 import withInventoryAdjustments from './withInventoryAdjustments';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 
-import { compose } from 'utils';
+import { compose, transformTableStateToQuery } from 'utils';
 
 /**
  * Inventory Adjustment List.
@@ -21,18 +21,21 @@ function InventoryAdjustmentList({
   changePageTitle,
 
   // #withInventoryAdjustments
-  inventoryAdjustmentTableQuery,
+  inventoryAdjustmentTableState,
 }) {
   const { formatMessage } = useIntl();
 
+  // Changes the dashboard title once the page mount.
   useEffect(() => {
     changePageTitle(formatMessage({ id: 'inventory_adjustment_list' }));
   }, [changePageTitle, formatMessage]);
 
   return (
-    <InventoryAdjustmentsProvider query={inventoryAdjustmentTableQuery}>
+    <InventoryAdjustmentsProvider
+      query={transformTableStateToQuery(inventoryAdjustmentTableState)}
+    >
       <DashboardPageContent>
-        <InventoryAdjustmentView />
+        <InventoryAdjustmentTable />
         <InventoryAdjustmentsAlerts />
       </DashboardPageContent>
     </InventoryAdjustmentsProvider>
@@ -41,7 +44,7 @@ function InventoryAdjustmentList({
 
 export default compose(
   withDashboardActions,
-  withInventoryAdjustments(({ inventoryAdjustmentTableQuery }) => ({
-    inventoryAdjustmentTableQuery,
+  withInventoryAdjustments(({ inventoryAdjustmentTableState }) => ({
+    inventoryAdjustmentTableState,
   })),
 )(InventoryAdjustmentList);

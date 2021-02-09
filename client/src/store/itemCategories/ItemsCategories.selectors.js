@@ -1,18 +1,19 @@
-import { createSelector } from 'reselect';
-import { getItemById } from 'store/selectors';
+import { paginationLocationQuery } from 'store/selectors';
+import { createDeepEqualSelector } from 'utils';
 
-const itemsCateogoriesDataSelector = (state) => state.itemCategories.categories;
-const itemCategoryIdFromProps = (state, props) => props.itemCategoryId;
+// Items categories table state.
+const itemsCategoriesTableStateSelector = (state) =>
+  state.itemsCategories.tableState;
 
-export const getItemsCategoriesListFactory = () =>
-  createSelector(itemsCateogoriesDataSelector, (itemsCategories) => {
-    return Object.values(itemsCategories);
-  });
-
-export const getItemCategoryByIdFactory = () => createSelector(
-  itemsCateogoriesDataSelector,
-  itemCategoryIdFromProps,
-  (itemsCategories, itemCategoryid) => {
-    return getItemById(itemsCategories, itemCategoryid);
-  },
-);
+// Get items categories table state marged with location query.
+export const getItemsCategoriesTableStateFactory = () =>
+  createDeepEqualSelector(
+    paginationLocationQuery,
+    itemsCategoriesTableStateSelector,
+    (locationQuery, tableState) => {
+      return {
+        ...locationQuery,
+        ...tableState,
+      };
+    },
+  );

@@ -7,7 +7,7 @@ import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import ItemsCategoriesAlerts from './ItemsCategoriesAlerts';
 import ItemsCategoryActionsBar from './ItemsCategoryActionsBar';
 import { ItemsCategoriesProvider } from './ItemsCategoriesProvider';
-import ItemCategoriesViewPage from './ItemCategoriesViewPage';
+import ItemCategoriesTable from './ItemCategoriesTable';
 
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import { compose } from 'utils';
@@ -22,6 +22,7 @@ const ItemCategoryList = ({
   const { id } = useParams();
   const { formatMessage } = useIntl();
 
+  // Changes the dashboard page title once the page mount.
   useEffect(() => {
     id
       ? changePageTitle(formatMessage({ id: 'edit_category_details' }))
@@ -33,7 +34,7 @@ const ItemCategoryList = ({
       <ItemsCategoryActionsBar />
 
       <DashboardPageContent>
-        <ItemCategoriesViewPage />
+        <ItemCategoriesTable />
       </DashboardPageContent>
       <ItemsCategoriesAlerts />
     </ItemsCategoriesProvider>
