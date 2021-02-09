@@ -11,7 +11,7 @@ import expenses from './expenses/expenses.reducer';
 import currencies from './currencies/currencies.reducer';
 import resources from './resources/resources.reducer';
 import financialStatements from './financialStatement/financialStatements.reducer';
-import itemCategories from './itemCategories/itemsCategory.reducer';
+import itemsCategories from './itemCategories/itemsCategory.reducer';
 import settings from './settings/settings.reducer';
 import manualJournals from './manualJournals/manualJournals.reducers';
 import globalSearch from './search/search.reducer';
@@ -45,7 +45,7 @@ export default combineReducers({
   resources,
   financialStatements,
   items,
-  itemCategories,
+  itemsCategories,
   settings,
   globalSearch,
   exchangeRates,

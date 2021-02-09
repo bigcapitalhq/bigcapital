@@ -67,7 +67,7 @@ function ItemCategoryForm({
     const afterSubmit = () => {
       closeDialog(dialogName);
     };
-    // Handle the response success/
+    // Handle the response success.
     const onSuccess = ({ response }) => {
       AppToaster.show({
         message: formatMessage({
@@ -80,7 +80,9 @@ function ItemCategoryForm({
       afterSubmit(response);
     };
     // Handle the response error.
-    const onError = (errors) => {
+    const onError = (error) => {
+      const { response: { data: { errors } } } = error;
+
       transformErrors(errors, { setErrors });
       setSubmitting(false);
     };

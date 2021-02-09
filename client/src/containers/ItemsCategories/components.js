@@ -52,3 +52,44 @@ export function TableActionsCell(props) {
     </Popover>
   );
 }
+
+/**
+ * Retrieve the items categories table columns.
+ */
+export function useItemsCategoriesTableColumns() {
+  const { formatMessage } = useIntl();
+
+  return React.useMemo(
+    () => [
+      {
+        id: 'name',
+        Header: formatMessage({ id: 'category_name' }),
+        accessor: 'name',
+        width: 220,
+      },
+      
+      {
+        id: 'count',
+        Header: formatMessage({ id: 'count' }),
+        accessor: 'count',
+        className: 'count',
+        width: 180,
+      },
+      {
+        id: 'description',
+        Header: formatMessage({ id: 'description' }),
+        accessor: 'description',
+        className: 'description',
+        width: 220,
+      },
+      {
+        id: 'actions',
+        Header: '',
+        Cell: TableActionsCell,
+        className: 'actions',
+        width: 50,
+      },
+    ],
+    [formatMessage],
+  );
+}

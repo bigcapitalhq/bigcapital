@@ -531,8 +531,10 @@ export function globalTableStateToTable(globalState) {
  * Transformes the pagination meta repsonse.
  */
 export function transformPagination(pagination) {
+  const transformed = transformResponse(pagination);
+  
   return {
-    ...pagination,
-    pagesCount: getPagesCountFromPaginationMeta(pagination),
-  }
+    ...transformed,
+    pagesCount: getPagesCountFromPaginationMeta(transformed),
+  };
 }

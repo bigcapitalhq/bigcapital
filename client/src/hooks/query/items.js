@@ -18,6 +18,7 @@ export function useCreateItem(props) {
   return useMutation((values) => ApiService.post('items', values), {
     onSuccess: () => {
       queryClient.invalidateQueries('ITEMS');
+      queryClient.invalidateQueries('ITEMS_CATEGORIES');
     },
     ...props,
   });
@@ -33,6 +34,7 @@ export function useEditItem(props) {
     onSuccess: () => {
       queryClient.invalidateQueries('ITEMS');
       queryClient.invalidateQueries('ITEM');
+      queryClient.invalidateQueries('ITEMS_CATEGORIES');
     },
     ...props,
   });
@@ -48,6 +50,7 @@ export function useDeleteItem(props) {
     onSuccess: () => {
       queryClient.invalidateQueries('ITEMS');
       queryClient.invalidateQueries('ITEM');
+      queryClient.invalidateQueries('ITEMS_CATEGORIES');
     },
     ...props,
   });

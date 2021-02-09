@@ -1,19 +1,16 @@
 import { connect } from 'react-redux';
-import { getItemsCategoriesListFactory } from 'store/itemCategories/ItemsCategories.selectors';
-import { getResourceViews } from 'store/customViews/customViews.selectors';
+import {
+  getItemsCategoriesTableStateFactory,
+} from 'store/itemCategories/itemsCategories.selectors';
 
 export default (mapState) => {
-  const getItemsCategoriesList = getItemsCategoriesListFactory();
+  const getItemsCategoriesTableState = getItemsCategoriesTableStateFactory();
 
   const mapStateToProps = (state, props) => {
-    const mapped = {
-      categoriesList: getItemsCategoriesList(state, props),
-      itemCategoriesViews: getResourceViews(state, props, 'items_categories'),
-      categoriesTableLoading: state.itemCategories.loading,
-      itemCategoriesSelectedRows: state.itemCategories.selectedRows,
+    const mapped = {  
+      itemsCategoriesTableState: getItemsCategoriesTableState(state, props),
     };
     return mapState ? mapState(mapped, state, props) : mapState;
   };
-
   return connect(mapStateToProps);
 };

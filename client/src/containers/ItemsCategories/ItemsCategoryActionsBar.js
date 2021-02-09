@@ -16,7 +16,7 @@ import { If, Icon } from 'components';
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
-import withItemCategories from './withItemCategories';
+// import withItemCategories from './withItemCategories';
 import withAlertActions from 'containers/Alert/withAlertActions';
 
 import { compose } from 'utils';
@@ -26,7 +26,7 @@ import { compose } from 'utils';
  */
 function ItemsCategoryActionsBar({
   // #withItemCategories
-  itemCategoriesSelectedRows,
+  itemCategoriesSelectedRows = [],
 
   // #withDialog
   openDialog,
@@ -103,8 +103,8 @@ function ItemsCategoryActionsBar({
 
 export default compose(
   withDialogActions,
-  withItemCategories(({ itemCategoriesSelectedRows }) => ({
-    itemCategoriesSelectedRows,
-  })),
+  // withItemCategories(({ itemCategoriesSelectedRows }) => ({
+  //   itemCategoriesSelectedRows,
+  // })),
   withAlertActions,
 )(ItemsCategoryActionsBar);

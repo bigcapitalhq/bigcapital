@@ -1,6 +1,6 @@
 import { Inject, Service } from 'typedi';
 import { Router, Request, Response, NextFunction } from 'express';
-import { check, param } from 'express-validator';
+import { check, query, param } from 'express-validator';
 import { ServiceError } from 'exceptions';
 import BaseController from '../BaseController';
 import InventoryAdjustmentService from 'services/Inventory/InventoryAdjustmentService';
@@ -39,10 +39,26 @@ export default class InventoryAdjustmentsController extends BaseController {
     );
     router.get(
       '/',
+      [...this.validateListQuerySchema],
+      this.validationResult,
       this.asyncMiddleware(this.getInventoryAdjustments.bind(this)),
       this.handleServiceErrors
     );
     return router;
+  }
+
+
+  /**
+   * Validate list query schema
+   */
+  get validateListQuerySchema() {
+    return [
+      query('column_sort_by').optional().trim().escape(),
+      query('sort_order').optional().isIn(['desc', 'asc']),
+
+      query('page').optional().isNumeric().toInt(),
+      query('page_size').optional().isNumeric().toInt(),
+    ];
   }
 
   /**

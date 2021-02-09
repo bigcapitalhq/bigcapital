@@ -1,5 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { defaultTo } from 'lodash';
 import ApiService from 'services/ApiService';
+import { transformPagination } from 'utils';
+
+const invalidateQueries = (queryClient) => {
+  queryClient.invalidateQueries('INVENTORY_ADJUSTMENTS');
+
+  queryClient.invalidateQueries('ITEMS');
+  queryClient.invalidateQueries('ITEM');
+};
 
 /**
  * Creates the inventory adjustment to the given item.
@@ -11,7 +20,7 @@ export function useCreateInventoryAdjustment(props) {
     (values) => ApiService.post('inventory_adjustments/quick', values),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries('INVENTORY_ADJUSTMENTS');
+        invalidateQueries(queryClient)
       },
       ...props,
     },
@@ -28,7 +37,7 @@ export function useDeleteInventoryAdjustment(props) {
     (id) => ApiService.delete(`inventory_adjustments/${id}`),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries('INVENTORY_ADJUSTMENTS');
+        invalidateQueries(queryClient)
       },
       ...props
     },
@@ -38,7 +47,7 @@ export function useDeleteInventoryAdjustment(props) {
 const inventoryAdjustmentsTransformer = (response) => {
   return {
     transactions: response.data.inventoy_adjustments,
-    pagination: response.data.pagination,
+    pagination: transformPagination(response.data.pagination),
   };
 }
 
@@ -46,20 +55,22 @@ const inventoryAdjustmentsTransformer = (response) => {
  * Retrieve inventory adjustment list with pagination meta.
  */
 export function useInventoryAdjustments(query, props) {
-  return useQuery(
+  const states = useQuery(
     ['INVENTORY_ADJUSTMENTS', query],
     () => ApiService.get('inventory_adjustments', { params: query })  
       .then(inventoryAdjustmentsTransformer),
-    {
-      initialData: {
-        transactions: [],
-        pagination: {
-          page: 1,
-          page_size: 12,
-          total: 0
-        },
-      },
-      ...props,
-    },
+    props,
   );
+  return {
+    ...states,
+    data: defaultTo(states.data, {
+      transactions: [],
+      pagination: {
+        page: 1,
+        pageSize: 12,
+        total: 0,
+        pagesCount: 0,
+      }
+    })
+  }
 }

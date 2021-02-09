@@ -1,24 +1,9 @@
 import { connect } from 'react-redux';
-import {
-  submitInventoryAdjustment,
-  deleteInventoryAdjustment,
-  fetchInventoryAdjustmentsTable,
-} from 'store/inventoryAdjustments/inventoryAdjustment.actions';
-import t from 'store/types';
+import { setInventoryAdjustmentsTableState } from 'store/inventoryAdjustments/inventoryAdjustment.actions';
 
 const mapDispatchToProps = (dispatch) => ({
-  requestSubmitInventoryAdjustment: ({ form }) =>
-    dispatch(submitInventoryAdjustment({ form })),
-  requestFetchInventoryAdjustmentTable: (query = {}) =>
-    dispatch(fetchInventoryAdjustmentsTable({ query: { ...query } })),
-  requestDeleteInventoryAdjustment: (id) =>
-    dispatch(deleteInventoryAdjustment({ id })),
-
-  addInventoryAdjustmentTableQueries: (queries) =>
-    dispatch({
-      type: t.INVENTORY_ADJUSTMENTS_TABLE_QUERIES_ADD,
-      payload: { queries },
-    }),
+  setInventoryAdjustmentTableState: (queries) =>
+    dispatch(setInventoryAdjustmentsTableState(queries)),
 });
 
 export default connect(null, mapDispatchToProps);

@@ -10,13 +10,18 @@ const ItemsCategoriesContext = createContext();
 function ItemsCategoriesProvider({ query, ...props }) {
   const {
     data: { itemsCategories, pagination },
-    isFetching: isItemsCategoriesFetching,
+    isFetching: isCategoriesFetching,
+    isLoading: isCategoriesLoading,
   } = useItemsCategories();
 
   const state = {
-    isItemsCategoriesFetching,
+    isCategoriesFetching,
+    isCategoriesLoading,
+
     itemsCategories,
     pagination,
+
+    query,
   };
 
   return (
