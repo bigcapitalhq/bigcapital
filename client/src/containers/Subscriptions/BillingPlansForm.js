@@ -5,7 +5,7 @@ import 'style/pages/Subscription/BillingPlans.scss'
 
 import BillingPlansInput from 'containers/Subscriptions/BillingPlansInput';
 import BillingPeriodsInput from 'containers/Subscriptions/BillingPeriodsInput';
-import BillingPaymentMethod from 'containers/Subscriptions/BillingPaymentmethod';
+import BillingPaymentMethod from 'containers/Subscriptions/BillingPaymentMethod';
 
 /**
  * Billing plans form.
@@ -14,7 +14,7 @@ export default function BillingPlansForm() {
   return (
     <div class="billing-plans">
       <BillingPlansInput
-        title={<T id={'select_a_plan'} values={{ order: 1 }} />}
+        title={<T id={'sele ct_a_plan'} values={{ order: 1 }} />}
         description={<T id={'please_enter_your_preferred_payment_method'} />}
       />
       <BillingPeriodsInput
