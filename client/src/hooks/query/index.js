@@ -17,3 +17,4 @@ export * from './receipts';
 export * from './paymentReceives';
 export * from './paymentMades';
 export * from './settings';
+export * from './users';

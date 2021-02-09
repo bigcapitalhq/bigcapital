@@ -1,21 +1,24 @@
 import React from 'react';
-import {
-  FormGroup,
-  InputGroup,
-  Intent,
-  Button,
-} from '@blueprintjs/core';
+import { FormGroup, InputGroup, Intent, Button } from '@blueprintjs/core';
 import { FastField, Form, useFormikContext, ErrorMessage } from 'formik';
 import { FormattedMessage as T } from 'react-intl';
 import { CLASSES } from 'common/classes';
 import classNames from 'classnames';
-import { inputIntent, saveInvoke } from 'utils';
+import { inputIntent } from 'utils';
+import { useInviteUserFormContext } from './InviteUserFormProvider';
 
-export default function InviteUserDialogForm({ onCancelClick, action }) {
+import withDialogActions from 'containers/Dialog/withDialogActions';
+import { compose } from 'utils';
+
+function InviteUserFormContent({
+  // #withDialogActions
+  closeDialog,
+}) {
   const { isSubmitting } = useFormikContext();
+  const { isEditMode, dialogName } = useInviteUserFormContext();
 
-  const handleCancelBtnClick = (event) => {
-    saveInvoke(onCancelClick, event);
+  const handleClose = () => {
+    closeDialog(dialogName);
   };
 
   return (
@@ -38,19 +41,21 @@ export default function InviteUserDialogForm({ onCancelClick, action }) {
             </FormGroup>
           )}
         </FastField>
-    </div>
+      </div>
 
       <div className={CLASSES.DIALOG_FOOTER}>
         <div className={CLASSES.DIALOG_FOOTER_ACTIONS}>
-          <Button onClick={handleCancelBtnClick}>
+          <Button onClick={handleClose}>
             <T id={'cancel'} />
           </Button>
 
           <Button intent={Intent.PRIMARY} type="submit" disabled={isSubmitting}>
-            {action === 'edit' ? <T id={'edit'} /> : <T id={'invite'} />}
+            {isEditMode ? <T id={'edit'} /> : <T id={'invite'} />}
           </Button>
         </div>
       </div>
     </Form>
   );
 }
+
+export default compose(withDialogActions)(InviteUserFormContent);
