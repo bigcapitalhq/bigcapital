@@ -7,7 +7,7 @@ import ReferenceNumberForm from 'containers/JournalNumber/ReferenceNumberForm';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withSettingsActions from 'containers/Settings/withSettingsActions';
 import withSettings from 'containers/Settings/withSettings';
-import withManualJournalsActions from 'containers/Accounting/withManualJournalsActions';
+// import withManualJournalsActions from 'containers/Accounting/withManualJournalsActions';
 
 import { compose, optionsMapToArray } from 'utils';
 
@@ -28,8 +28,6 @@ function JournalNumberDialogContent({
   // #withDialogActions
   closeDialog,
 
-  // #withManualJournalsActions
-  setJournalNumberChanged,
 }) {  
   const fetchSettings = useQuery(
     ['settings'],
@@ -47,7 +45,7 @@ function JournalNumberDialogContent({
 
       setTimeout(() => {
         queryCache.invalidateQueries('settings');
-        setJournalNumberChanged(true);
+        // setJournalNumberChanged(true);
       }, 250);
     }).catch(() => {
       setSubmitting(false);
@@ -77,5 +75,5 @@ export default compose(
     nextNumber: manualJournalsSettings?.nextNumber,
     numberPrefix: manualJournalsSettings?.numberPrefix,
   })),
-  withManualJournalsActions,
+  // withManualJournalsActions,
 )(JournalNumberDialogContent);

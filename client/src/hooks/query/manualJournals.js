@@ -1,21 +1,22 @@
-import { useMutation, useQuery } from 'react-query';
+import { defaultTo } from 'lodash';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import ApiService from 'services/ApiService';
-
-// Transform joiurn
-const transformJournals = (response) => {
-  return {
-    manualJournals: response.data.manual_journals,
-    pagination: response.data.pagination,
-  };
-};
+import { transformPagination } from 'utils';
 
 /**
  * Creates a new manual journal.
  */
 export function useCreateJournal(props) {
+  const queryClient = useQueryClient();
+
   return useMutation(
     (values) => ApiService.post('manual-journals', values),
-    props,
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('JOURNALS');
+      },
+      ...props
+    },
   );
 }
 
@@ -23,9 +24,16 @@ export function useCreateJournal(props) {
  * Edits the given manual journal.
  */
 export function useEditJournal(props) {
+  const queryClient = useQueryClient();
+
   return useMutation(
     (values, id) => ApiService.post(`manual-journals/${id}`, values),
-    props,
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('JOURNALS');
+      },
+      ...props
+    },
   );
 }
 
@@ -33,9 +41,16 @@ export function useEditJournal(props) {
  * Deletes the given manual jouranl.
  */
 export function useDeleteJournal(props) {
+  const queryClient = useQueryClient();
+
   return useMutation(
-    (values, id) => ApiService.delete(`manual-journals/${id}`),
-    props,
+    (id) => ApiService.delete(`manual-journals/${id}`),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('JOURNALS');
+      },
+      ...props
+    },
   );
 }
 
@@ -43,9 +58,16 @@ export function useDeleteJournal(props) {
  * Publishes the given manual journal.
  */
 export function usePublishJournal(props) {
+  const queryClient = useQueryClient();
+
   return useMutation(
     (id) => ApiService.post(`manual-journals/${id}/publish`),
-    props,
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('JOURNALS');
+      },
+      ...props
+    },
   );
 }
 
@@ -53,20 +75,27 @@ export function usePublishJournal(props) {
  * Retrieve the manual journals with pagination meta.
  */
 export function useJournals(query, props) {
-  return useQuery(
+  const states = useQuery(
     ['JOURNALS', query],
-    () =>
-      ApiService.get('manual-journals', { params: query }).then(
-        transformJournals,
-      ),
+    () => ApiService.get('manual-journals', { params: query }),
     {
-      initialData: {
-        manualJournals: [],
-        pagination: {},
-      },
+      select: (response) => ({
+        manualJournals: response.data.manual_journals,
+        pagination: transformPagination(response.data.pagination),
+        filterMeta: response.data.filter_meta
+      }),
       ...props,
     },
   );
+
+  return {
+    ...states,
+    data: defaultTo(states.data, {
+      manualJournals: [],
+      pagination: {},
+      filterMeta: {},
+    }),
+  };
 }
 
 /**

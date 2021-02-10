@@ -6,7 +6,6 @@ import { transformErrors } from 'containers/Customers/utils';
 
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
-import withCustomersActions from 'containers/Customers/withCustomersActions';
 
 import { compose } from 'utils';
 
@@ -19,8 +18,6 @@ function CustomerBulkDeleteAlert({
   // #withAlertStoreConnect
   isOpen,
   payload: { customersIds },
-  // #withCustomersActions
-  requestDeleteBulkCustomers,
 
   // #withAlertActions
   closeAlert,
@@ -77,5 +74,4 @@ function CustomerBulkDeleteAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
-  withCustomersActions,
 )(CustomerBulkDeleteAlert);

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import {
   FormattedMessage as T,
   FormattedHTMLMessage,
@@ -7,12 +7,12 @@ import {
 import { Intent, Alert } from '@blueprintjs/core';
 import { AppToaster } from 'components';
 import { transformErrors } from 'containers/Customers/utils';
+import { useDeleteVendor } from 'hooks/query';
 
+import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
+
 import { compose } from 'utils';
-import {
-  useDeleteVendor
-} from 'hooks/query';
 
 /**
  * Vendor delete alert.
@@ -78,5 +78,6 @@ function VendorDeleteAlert({
 }
 
 export default compose(
+  withAlertStoreConnect(),
   withAlertActions,
 )(VendorDeleteAlert);

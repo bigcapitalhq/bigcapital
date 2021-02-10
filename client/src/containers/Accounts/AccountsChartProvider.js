@@ -9,18 +9,22 @@ const AccountsChartContext = createContext();
  */
 function AccountsChartProvider({ query, ...props }) {
   // Fetch accounts resource views and fields.
-  const { data: resourceViews, isFetching: isViewsLoading } = useResourceViews(
+  const { data: resourceViews, isLoading: isViewsLoading } = useResourceViews(
     'accounts',
   );
 
   // Fetch the accounts resource fields.
   const {
     data: resourceFields,
-    isFetching: isFieldsLoading,
+    isLoading: isFieldsLoading,
   } = useResourceFields('accounts');
 
   // Fetch accounts list according to the given custom view id.
-  const { data: accounts, isFetching: isAccountsLoading } = useAccounts(
+  const {
+    data: accounts,
+    isFetching: isAccountsFetching,
+    isLoading: isAccountsLoading
+  } = useAccounts(
     query,
     { keepPreviousData: true }
   );
@@ -32,6 +36,7 @@ function AccountsChartProvider({ query, ...props }) {
     resourceViews,
 
     isAccountsLoading,
+    isAccountsFetching,
     isFieldsLoading,
     isViewsLoading,
   };

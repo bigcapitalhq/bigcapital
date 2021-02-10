@@ -24,7 +24,7 @@ function JournalDeleteAlert({
   closeAlert,
 }) {
   const { formatMessage } = useIntl();
-  const { mutate: deleteJournalMutate } = useDeleteJournal();
+  const { mutateAsync: deleteJournalMutate, isLoading } = useDeleteJournal();
 
   // Handle cancel delete manual journal.
   const handleCancelAlert = () => {
@@ -33,16 +33,20 @@ function JournalDeleteAlert({
 
   // Handle confirm delete manual journal.
   const handleConfirmManualJournalDelete = () => {
-    deleteJournalMutate(manualJournalId).then(() => {
-      AppToaster.show({
-        message: formatMessage(
-          { id: 'the_journal_has_been_deleted_successfully' },
-          { number: journalNumber },
-        ),
-        intent: Intent.SUCCESS,
+    deleteJournalMutate(manualJournalId)
+      .then(() => {
+        AppToaster.show({
+          message: formatMessage(
+            { id: 'the_journal_has_been_deleted_successfully' },
+            { number: journalNumber },
+          ),
+          intent: Intent.SUCCESS,
+        });
+        closeAlert(name);
+      })
+      .catch(() => {
+        closeAlert(name);
       });
-      
-    });
   };
 
   return (
@@ -54,6 +58,7 @@ function JournalDeleteAlert({
       isOpen={isOpen}
       onCancel={handleCancelAlert}
       onConfirm={handleConfirmManualJournalDelete}
+      loading={isLoading}
     >
       <p>
         <T id={'once_delete_this_journal_you_will_able_to_restore_it'} />

@@ -24,7 +24,7 @@ function JournalPublishAlert({
   closeAlert,
 }) {
   const { formatMessage } = useIntl();
-  const { mutate: publishJournalMutate, isLoading } = usePublishJournal();
+  const { mutateAsync: publishJournalMutate, isLoading } = usePublishJournal();
 
   // Handle cancel manual journal alert.
   const handleCancel = () => {

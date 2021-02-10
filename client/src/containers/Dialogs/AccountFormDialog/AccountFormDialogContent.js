@@ -105,10 +105,12 @@ function AccountFormDialogContent({
       });
     };
     // Handle request error.
-    const handleError = (errors) => {
-      // const errorsTransformed = transformApiErrors(errors);
-      // setErrors({ ...errorsTransformed });
-      // setSubmitting(false);
+    const handleError = (error) => {
+      const { response: { data: { errors } } } = error;
+
+      const errorsTransformed = transformApiErrors(errors);
+      setErrors({ ...errorsTransformed });
+      setSubmitting(false);
     };
     if (accountId) {
       editAccountMutate(accountId, form)

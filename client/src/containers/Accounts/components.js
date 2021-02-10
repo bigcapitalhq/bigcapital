@@ -6,65 +6,97 @@ import {
   MenuItem,
   Menu,
   MenuDivider,
-  Intent
+  Intent,
+  Popover,
+  Button,
 } from '@blueprintjs/core';
-import { FormattedMessage as T, useIntl } from 'react-intl';
-import classNames from 'classnames';
+import { useIntl } from 'react-intl';
 import { Icon, Money, If } from 'components';
-import { saveInvoke } from 'utils';
 import { formatMessage } from 'services/intl';
+import { safeCallback } from 'utils';
 
-export function AccountActionsMenu({ row: { original } }) {
+/**
+ * Accounts table actions menu.
+ */
+export function ActionsMenu({
+  row: { original },
+  payload: {
+    onEdit,
+    onViewDetails,
+    onDelete,
+    onNewChild,
+    onActivate,
+    onInactivate,
+  },
+}) {
   return (
     <Menu>
       <MenuItem
         icon={<Icon icon="reader-18" />}
         text={formatMessage({ id: 'view_details' })}
+        onClick={safeCallback(onViewDetails, original)}
       />
       <MenuDivider />
       <MenuItem
         icon={<Icon icon="pen-18" />}
         text={formatMessage({ id: 'edit_account' })}
-        // onClick={handleEditAccount}
+        onClick={safeCallback(onEdit, original)}
       />
       <MenuItem
         icon={<Icon icon="plus" />}
         text={formatMessage({ id: 'new_child_account' })}
-        // onClick={handleNewChildAccount}
+        onClick={safeCallback(onNewChild, original)}
       />
       <MenuDivider />
       <If condition={original.active}>
         <MenuItem
           text={formatMessage({ id: 'inactivate_account' })}
           icon={<Icon icon="pause-16" iconSize={16} />}
-          // onClick={handleInactivateAccount}
+          onClick={safeCallback(onInactivate, original)}
         />
       </If>
       <If condition={!original.active}>
         <MenuItem
           text={formatMessage({ id: 'activate_account' })}
           icon={<Icon icon="play-16" iconSize={16} />}
-          // onClick={handleActivateAccount}
+          onClick={safeCallback(onActivate, original)}
         />
       </If>
       <MenuItem
         text={formatMessage({ id: 'delete_account' })}
         icon={<Icon icon="trash-16" iconSize={16} />}
         intent={Intent.DANGER}
-        // onClick={handleDeleteA ccount}
+        onClick={safeCallback(onDelete, original)}
       />
     </Menu>
   );
 }
 
+/**
+ * Actions cell.
+ */
+export const ActionsCell = (props) => {
+  return (
+    <Popover
+      position={Position.RIGHT_BOTTOM}
+      content={<ActionsMenu {...props} />}
+    >
+      <Button icon={<Icon icon="more-h-16" iconSize={16} />} />
+    </Popover>
+  );
+};
 
+/**
+ * Normal cell.
+ */
 export function NormalCell({ cell: { value } }) {
   const { formatMessage } = useIntl();
   const arrowDirection = value === 'credit' ? 'down' : 'up';
 
-  // if (value !== 'credit' || value !== 'debit') {
-  //   return '';
-  // }
+  // Can't continue if the value is not `credit` or `debit`.
+  if (['credit', 'debit'].indexOf(value) === -1) {
+    return '';
+  }
   return (
     <Tooltip
       className={Classes.TOOLTIP_INDICATOR}
@@ -77,6 +109,9 @@ export function NormalCell({ cell: { value } }) {
   );
 }
 
+/**
+ * Balance cell.
+ */
 export function BalanceCell({ cell }) {
   const account = cell.row.original;
 
@@ -86,21 +121,5 @@ export function BalanceCell({ cell }) {
     </span>
   ) : (
     <span class="placeholder">—</span>
-  );
-}
-
-export function InactiveSemafro() {
-  return (
-    <Tooltip
-      content={<T id="inactive" />}
-      className={classNames(
-        Classes.TOOLTIP_INDICATOR,
-        'bp3-popover-wrapper--inactive-semafro',
-      )}
-      position={Position.TOP}
-      hoverOpenDelay={250}
-    >
-      <div className="inactive-semafro"></div>
-    </Tooltip>
   );
 }
