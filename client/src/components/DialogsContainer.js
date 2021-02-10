@@ -19,7 +19,7 @@ import PaymentViaVoucherDialog from 'containers/Dialogs/PaymentViaVoucherDialog'
 export default function DialogsContainer() {
   return (
     <div>
-      <AccountFormDialog dialogName={'account-form'} />
+      {/* <AccountFormDialog dialogName={'account-form'} /> */}
       <JournalNumberDialog dialogName={'journal-number-form'} />
       <PaymentReceiveNumberDialog dialogName={'payment-receive-number-form'} />
       <EstimateNumberDialog dialogName={'estimate-number-form'} />

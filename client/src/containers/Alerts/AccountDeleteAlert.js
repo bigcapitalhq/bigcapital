@@ -30,10 +30,7 @@ function AccountDeleteAlert({
   closeAlert,
 }) {
   const { formatMessage } = useIntl();
-  const {
-    isLoading,
-    mutateAsync: deleteAccount,
-  } = useDeleteAccount();
+  const { isLoading, mutateAsync: deleteAccount } = useDeleteAccount();
 
   // handle cancel delete account alert.
   const handleCancelAccountDelete = () => {
@@ -41,17 +38,25 @@ function AccountDeleteAlert({
   };
   // Handle confirm account delete.
   const handleConfirmAccountDelete = () => {
-    deleteAccount(accountId).then(() => {
-      AppToaster.show({
-        message: formatMessage({
-          id: 'the_account_has_been_successfully_deleted',
-        }),
-        intent: Intent.SUCCESS,
+    deleteAccount(accountId)
+      .then(() => {
+        AppToaster.show({
+          message: formatMessage({
+            id: 'the_account_has_been_successfully_deleted',
+          }),
+          intent: Intent.SUCCESS,
+        });
+        closeAlert(name);
+      })
+      .catch((error) => {
+        const {
+          response: {
+            data: { errors },
+          },
+        } = error;
+        handleDeleteErrors(errors);
+        closeAlert(name);
       });
-      closeAlert(name);
-    }).catch(errors => {
-      handleDeleteErrors(errors);
-    });
   };
 
   return (

@@ -1,17 +1,15 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import {
   FormattedMessage as T,
   FormattedHTMLMessage,
   useIntl,
 } from 'react-intl';
 import { Intent, Alert } from '@blueprintjs/core';
-import { queryCache } from 'react-query';
 import { AppToaster } from 'components';
 import { transformErrors } from 'containers/Customers/utils';
 
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
-import withCustomersActions from 'containers/Customers/withCustomersActions';
 
 import { useDeleteCustomer } from 'hooks/query';
 import { compose } from 'utils';
@@ -26,8 +24,6 @@ function CustomerDeleteAlert({
   // #withAlertStoreConnect
   isOpen,
   payload: { customerId },
-  // #withCustomersActions
-  requestDeleteCustomer,
 
   // #withAlertActions
   closeAlert,
@@ -53,9 +49,8 @@ function CustomerDeleteAlert({
           }),
           intent: Intent.SUCCESS,
         });
-        queryCache.invalidateQueries('customers-table');
       })
-      .catch((errors) => {
+      .catch(({ response: { data: { errors } } }) => {
         transformErrors(errors);
       })
       .finally(() => {
@@ -86,5 +81,4 @@ function CustomerDeleteAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
-  withCustomersActions,
 )(CustomerDeleteAlert);

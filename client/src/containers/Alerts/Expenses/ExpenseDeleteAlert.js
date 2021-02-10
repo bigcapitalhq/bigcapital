@@ -24,7 +24,6 @@ function ExpenseDeleteAlert({
   const {
     mutateAsync: deleteExpenseMutate,
     isLoading,
-    deleteExpense
   } = useDeleteExpense();
 
   // Handle cancel expense journal.

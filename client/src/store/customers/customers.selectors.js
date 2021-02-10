@@ -1,70 +1,16 @@
-import { createSelector } from 'reselect';
-import {
-  pickItemsFromIds,
-  paginationLocationQuery,
-  defaultPaginationMeta,
-} from 'store/selectors';
+import { paginationLocationQuery } from 'store/selectors';
+import { createDeepEqualSelector } from 'utils';
 
-const customerTableQuery = (state) => state.customers.tableQuery;
+const customerTableStateSelector = (state) => state.customers.tableState;
 
-const customersByIdSelector = (state, props) => {
-  return state.customers.items[props.customerId];
-};
-
-const customersPaginationSelector = (state, props) => {
-  const viewId = state.customers.currentViewId;
-  return state.customers.views?.[viewId];
-};
-
-const customerPageSelector = (state, props) => {
-  const viewId = state.customers.currentViewId;
-  const currentView = state.customers.views?.[viewId];
-  const currentPageId = currentView?.paginationMeta?.page;
-
-  return currentView?.pages?.[currentPageId];
-};
-
-const customersItemsSelector = (state) => state.customers.items;
-
-const customersCurrentViewIdSelector = (state) => state.customers.currentViewId;
-
-export const getCustomerTableQueryFactory = () =>
-  createSelector(
+export const getCustomersTableStateFactory = () =>
+  createDeepEqualSelector(
     paginationLocationQuery,
-    customerTableQuery,
-    (locationQuery, tableQuery) => {
+    customerTableStateSelector,
+    (locationQuery, tableState) => {
       return {
         ...locationQuery,
-        ...tableQuery,
+        ...tableState,
       };
     },
   );
-
-export const getCustomerCurrentPageFactory = () =>
-  createSelector(
-    customerPageSelector,
-    customersItemsSelector,
-    (customerPage, customersItems) => {
-      return typeof customerPage === 'object'
-        ? pickItemsFromIds(customersItems, customerPage.ids) || []
-        : [];
-    },
-  );
-
-export const getCustomersByIdFactory = () =>
-  createSelector(customersByIdSelector, (customer) => {
-    return customer;
-  });
-
-export const getCustomerPaginationMetaFactory = () =>
-  createSelector(customersPaginationSelector, (customerPage) => {
-    return {
-      ...defaultPaginationMeta(),
-      ...(customerPage?.paginationMeta || {}),
-    };
-  });
-
-export const getCustomersCurrentViewIdFactory = () =>
-  createSelector(customersCurrentViewIdSelector, (currentViewId) => {
-    return currentViewId;
-  });

@@ -1,72 +1,105 @@
-
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { defaultTo } from 'lodash';
 import ApiService from 'services/ApiService';
+import { transformPagination } from 'utils';
 
-
-const transformCustomers = (response) => {
-  return response.data;
-}
-
-const transformCustomer = (response) => {
-  return response.data;
-}
+const defaultPagination = {
+  pageSize: 12,
+  page: 0,
+  pagesCount: 0,
+};
 
 /**
- * 
- * @param {*} query 
- * @param {*} props 
+ * Retrieve customers list with pagination meta.
  */
 export function useCustomers(query, props) {
-  return useQuery(
+  const states = useQuery(
     ['CUSTOMERS', query],
-    () => ApiService
-      .get(`customers`, { params: query })
-      .then(transformCustomers),
+    () => ApiService.get(`customers`, { params: query }),
     {
-      initialData: {
-        customers: [],
-        pagination: {},
-      },
-      ...props
-    }
-  )
+      select: (response) => ({
+        customers: response.data.customers,
+        pagination: transformPagination(response.data.pagination),
+        filterMeta: response.data.filter_meta
+      }),
+      ...props,
+    },
+  );
+
+  return {
+    ...states,
+    data: defaultTo(states.data, {
+      customers: [],
+      pagination: defaultPagination,
+      filterMeta: {},
+    })
+  }
 }
 
 /**
- * 
- * @param {*} props 
+ * Edits the given customer details.
+ * @param {*} props
  */
 export function useEditCustomer(props) {
+  const queryClient = useQueryClient();
+
   return useMutation(
-    (values, id) => ApiService.post(`customers/${id}`, values),
-    props
+    ([id, values]) => ApiService.post(`customers/${id}`, values),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('CUSTOMERS');
+        queryClient.invalidateQueries('CUSTOMER');
+      },
+      ...props
+    },
   );
 }
 
 /**
- * 
- * @param {*} props 
+ * Deletes the given customer.
  */
 export function useDeleteCustomer(props) {
+  const queryClient = useQueryClient();
+
   return useMutation(
     (id) => ApiService.delete(`customers/${id}`),
-    props
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('CUSTOMERS');
+        queryClient.invalidateQueries('CUSTOMER');
+      },
+      ...props,
+    }
   );
 }
 
+/**
+ * Creates a new customer.
+ */
 export function useCreateCustomer(props) {
+  const queryClient = useQueryClient();
+
   return useMutation(
     (values) => ApiService.post('customers', values),
-    props
-  );
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('CUSTOMERS');
+        queryClient.invalidateQueries('CUSTOMER');
+      },
+      ...props
+    });
 }
 
+/**
+ * Retrieve the customer details.
+ */
 export function useCustomer(id, props) {
   return useQuery(
     ['CUSTOMER', id],
-    () => ApiService
-      .get(`customers/${id}`)
-      .then(transformCustomer),
-    props
-  )
-};
+    () => ApiService.get(`customers/${id}`),
+    {
+      select: (res) => res.data.customer,
+      ...props
+    },
+  );
+}

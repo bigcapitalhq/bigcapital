@@ -4,15 +4,17 @@ import { useIntl } from 'react-intl';
 import 'style/pages/Accounts/List.scss';
 
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
-import { AccountsChartProvider } from 'containers/Accounts/AccountsChartProvider';
-import AccountsViewPage from 'containers/Accounts/AccountsViewPage';
+import { AccountsChartProvider } from './AccountsChartProvider';
+
+import AccountsViewsTabs from 'containers/Accounts/AccountsViewsTabs';
 import AccountsActionsBar from 'containers/Accounts/AccountsActionsBar';
 import AccountsAlerts from './AccountsAlerts';
+import AccountsDataTable from './AccountsDataTable';
 
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withAccounts from 'containers/Accounts/withAccounts';
 
-import { compose } from 'utils';
+import { transformTableStateToQuery, compose } from 'utils';
 
 /**
  * Accounts chart list.
@@ -22,7 +24,7 @@ function AccountsChart({
   changePageTitle,
 
   // #withAccounts
-  accountsTableQuery
+  accountsTableState,
 }) {
   const { formatMessage } = useIntl();
 
@@ -31,11 +33,14 @@ function AccountsChart({
   }, [changePageTitle, formatMessage]);
 
   return (
-    <AccountsChartProvider query={accountsTableQuery}>
+    <AccountsChartProvider
+      query={transformTableStateToQuery(accountsTableState)}
+    >
       <AccountsActionsBar />
 
       <DashboardPageContent>
-        <AccountsViewPage />
+        <AccountsViewsTabs />
+        <AccountsDataTable />
       </DashboardPageContent>
 
       <AccountsAlerts />
@@ -45,7 +50,5 @@ function AccountsChart({
 
 export default compose(
   withDashboardActions,
-  withAccounts(({ accountsTableQuery }) => ({
-    accountsTableQuery,
-  })),
+  withAccounts(({ accountsTableState }) => ({ accountsTableState })),
 )(AccountsChart);

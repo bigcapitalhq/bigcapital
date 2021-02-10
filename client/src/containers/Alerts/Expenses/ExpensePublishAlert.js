@@ -37,8 +37,11 @@ function ExpensePublishAlert({
           }),
           intent: Intent.SUCCESS,
         });
+        closeAlert(name)
       })
-      .catch((error) => {});
+      .catch((error) => {
+        closeAlert(name)
+      });
   };
 
   return (

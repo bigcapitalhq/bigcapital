@@ -12,7 +12,7 @@ import { FormattedMessage as T } from 'react-intl';
 import classNames from 'classnames';
 import { CustomersMultiSelect, Row, Col, FieldHint } from 'components';
 import { momentFormatter } from 'utils';
-import withCustomers from 'containers/Customers/withCustomers';
+// import withCustomers from 'containers/Customers/withCustomers';
 
 import { compose } from 'redux';
 
@@ -106,7 +106,7 @@ function ARAgingSummaryHeaderGeneral({
   );
 }
 export default compose(
-  withCustomers(({ customers }) => ({
-    customers,
-  })),
+  // withCustomers(({ customers }) => ({
+  //   customers,
+  // })),
 )(ARAgingSummaryHeaderGeneral);

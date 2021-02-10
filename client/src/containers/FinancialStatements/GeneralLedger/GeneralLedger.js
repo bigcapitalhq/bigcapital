@@ -13,7 +13,6 @@ import { GeneralLedgerProvider } from './GeneralLedgerProvider';
 
 import withGeneralLedgerActions from './withGeneralLedgerActions';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
-import withAccountsActions from 'containers/Accounts/withAccountsActions';
 import withSettings from 'containers/Settings/withSettings';
 
 import { compose } from 'utils';
@@ -97,7 +96,6 @@ function GeneralLedger({
 export default compose(
   withGeneralLedgerActions,
   withDashboardActions,
-  withAccountsActions,
   withSettings(({ organizationSettings }) => ({
     organizationName: organizationSettings.name,
   })),

@@ -1,5 +1,6 @@
 import React from 'react';
 import Icon from 'components/Icon';
+import { isEmpty } from 'lodash';
 import {
   Button,
   NavbarGroup,
@@ -21,6 +22,7 @@ import { useAccountsChartContext } from 'containers/Accounts/AccountsChartProvid
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withAccounts from 'containers/Accounts/withAccounts';
 import withAlertActions from 'containers/Alert/withAlertActions';
+import withAccountsTableActions from './withAccountsTableActions';
 
 import { compose } from 'utils';
 
@@ -37,6 +39,9 @@ function AccountsActionsBar({
   // #withAlertActions
   openAlert,
 
+  // #withAccountsTableActions
+  setAccountsTableState,
+
   // #ownProps
   onFilterChanged,
 }) {
@@ -46,7 +51,7 @@ function AccountsActionsBar({
     openDialog('account-form', {});
   };
 
-  // handle bulk accounts delete.
+  // Handle bulk accounts delete.
   const handleBulkDelete = () => {
     openAlert('accounts-bulk-delete', { accountsIds: accountsSelectedRows });
   };
@@ -63,12 +68,18 @@ function AccountsActionsBar({
     });
   };
 
+  // Handle tab changing.
+  const handleTabChange = (viewId) => {
+    setAccountsTableState({ customViewId: viewId.id || null });
+  };
+
   return (
     <DashboardActionsBar>
       <NavbarGroup>
         <DashboardActionViewsList
           resourceName={'accounts'}
           views={resourceViews}
+          onChange={handleTabChange}
         />
         <NavbarDivider />
 
@@ -100,7 +111,7 @@ function AccountsActionsBar({
           />
         </Popover>
 
-        <If condition={accountsSelectedRows.length}>
+        <If condition={!isEmpty(accountsSelectedRows)}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon="play-16" iconSize={16} />}
@@ -144,8 +155,9 @@ function AccountsActionsBar({
 
 export default compose(
   withDialogActions,
+  withAlertActions,
   withAccounts(({ accountsSelectedRows }) => ({
     accountsSelectedRows,
   })),
-  withAlertActions,
+  withAccountsTableActions
 )(AccountsActionsBar);

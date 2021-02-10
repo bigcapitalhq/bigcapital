@@ -33,7 +33,7 @@ const CLASSES = {
   PAGE_FORM_PAYMENT_MADE: 'page-form--payment-made',
   PAGE_FORM_PAYMENT_RECEIVE: 'page-form--payment-receive',
   PAGE_FORM_CUSTOMER: 'page-form--customer',
-  PAGE_FORM_VENDOR: 'page-form--customer',
+  PAGE_FORM_VENDOR: 'page-form--vendor',
   PAGE_FORM_ITEM: 'page-form--item',
   PAGE_FORM_MAKE_JOURNAL: 'page-form--make-journal-entries',
   PAGE_FORM_EXPENSE: 'page-form--expense',

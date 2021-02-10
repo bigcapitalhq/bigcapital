@@ -1,81 +1,97 @@
-
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { defaultTo } from 'lodash';
 import ApiService from 'services/ApiService';
-
-
-const transformVendors = (response) => {
-  return {
-    vendors: response.data.vendors,
-    pagination: response.data.pagination,
-  };
-};
-
-const transformVendor = (response) => {
-  return response.data.vendor;
-};
+import { transformPagination } from 'utils';
 
 /**
  * Retrieve vendors list.
  */
 export function useVendors(query, props) {
-  return useQuery(
+  const states = useQuery(
     ['VENDORS', query],
-    () => ApiService
-      .get(`vendors`, { params: query })
-      .then(transformVendors),
+    () => ApiService.get(`vendors`, { params: query }),
     {
-      initialData: {
-        vendors: [],
-        pagination: {},
-      },
-      ...props
-    }
-  )
+      select: (res) => ({
+        vendors: res.data.vendors,
+        pagination: transformPagination(res.data.pagination),
+        filterMeta: res.data.filter_meta,
+      }),
+      ...props,
+    },
+  );
+
+  return {
+    ...states,
+    data: defaultTo(states.data, {
+      vendors: [],
+      pagination: {},
+      filterMeta: {}
+    }),
+  };
 }
 
 /**
- * 
- * @param {*} props 
+ * Edits details of the given vendor.
  */
 export function useEditVendor(props) {
+  const queryClient = useQueryClient();
+
   return useMutation(
-    (values, id) => ApiService.post(`vendors/${id}`, values),
-    props
+    ([id, values]) => ApiService.post(`vendors/${id}`, values),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('VENDORS');
+        queryClient.invalidateQueries('VENDOR');
+      },
+      ...props
+    },
   );
 }
 
 /**
- * 
- * @param {*} props 
+ * Deletes the given vendor.
  */
 export function useDeleteVendor(props) {
+  const queryClient = useQueryClient();
+
   return useMutation(
     (id) => ApiService.delete(`vendors/${id}`),
-    props
-  );
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('VENDORS');
+        queryClient.invalidateQueries('VENDOR');
+      },
+      ...props
+    });
 }
 
 /**
  * Creates a new vendor.
  */
 export function useCreateVendor(props) {
+  const queryClient = useQueryClient();
+
   return useMutation(
     (values) => ApiService.post('vendors', values),
-    props
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('VENDORS');
+      },
+      ...props
+    }
   );
 }
 
 /**
- * 
- * @param {*} id 
- * @param {*} props 
+ * Retrieve vendor details.
  */
 export function useVendor(id, props) {
   return useQuery(
     ['VENDOR', id],
-    () => ApiService
-      .get(`vendors/${id}`)
-      .then(transformVendor),
-    props
-  )
-};
+    () => ApiService.get(`vendors/${id}`),
+    {
+      select: (res) => res.data.vendor,
+      ...props
+    },
+  );
+}

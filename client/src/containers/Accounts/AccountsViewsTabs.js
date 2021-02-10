@@ -1,12 +1,12 @@
 import React, { useMemo, useCallback } from 'react';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
-import { useParams  } from 'react-router-dom';
 import { pick } from 'lodash';
 
 import { DashboardViewsTabs } from 'components';
 import { useAccountsChartContext } from 'containers/Accounts/AccountsChartProvider';
 
-import withAccountsTableActions from 'containers/Accounts/withAccountsTableActions';
+import withAccountsTableActions from './withAccountsTableActions';
+import withAccounts from './withAccounts';
 
 import { compose } from 'utils';
 
@@ -15,18 +15,22 @@ import { compose } from 'utils';
  */
 function AccountsViewsTabs({
   // #withAccountsTableActions
-  addAccountsTableQuery,
-}) {
-  const { resourceViews } = useAccountsChartContext();
-  const { custom_view_id: customViewId = null } = useParams();
+  setAccountsTableState,
 
+  // #withAccounts
+  accountsCustomViewId
+}) {
+  // Accounts chart context.
+  const { resourceViews } = useAccountsChartContext();
+
+  // Handles the tab change.
   const handleTabChange = useCallback(
     (viewId) => {
-      addAccountsTableQuery({
-        custom_view_id: viewId || null,
+      setAccountsTableState({
+        customViewId: viewId || null,
       });
     },
-    [addAccountsTableQuery],
+    [setAccountsTableState],
   );
 
   const tabs = useMemo(
@@ -42,7 +46,7 @@ function AccountsViewsTabs({
       <NavbarGroup align={Alignment.LEFT}>
         <DashboardViewsTabs
           defaultTabText={'All Accounts'}
-          initialViewId={customViewId}
+          currentViewId={accountsCustomViewId}
           resourceName={'accounts'}
           onChange={handleTabChange}
           tabs={tabs}
@@ -54,4 +58,7 @@ function AccountsViewsTabs({
 
 export default compose(
   withAccountsTableActions,
+  withAccounts(({ accountsTableState }) => ({
+    accountsCustomViewId: accountsTableState.customViewId
+  }))
 )(AccountsViewsTabs);
