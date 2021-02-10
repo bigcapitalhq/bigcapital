@@ -79,10 +79,10 @@ export function ItemsActionMenuList({
     onActivateItem,
     onMakeAdjustment,
     onDeleteItem,
+    onDuplicate,
   },
 }) {
   const { formatMessage } = useIntl();
- 
   return (
     <Menu>
       <MenuItem
@@ -122,9 +122,13 @@ export function ItemsActionMenuList({
         onClick={safeCallback(onDeleteItem, original)}
         intent={Intent.DANGER}
       />
+      <MenuItem
+        text={formatMessage({ id: 'duplicate' })}
+        onClick={safeCallback(onDuplicate, original)}
+      />
     </Menu>
   );
-};
+}
 
 export const ItemsActionsTableCell = (props) => {
   return (
@@ -136,7 +140,6 @@ export const ItemsActionsTableCell = (props) => {
     </Popover>
   );
 };
-
 
 /**
  * Retrieve all items table columns.
@@ -199,4 +202,4 @@ export const useItemsTableColumns = () => {
     ],
     [formatMessage],
   );
-}
+};

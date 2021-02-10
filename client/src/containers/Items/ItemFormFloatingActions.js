@@ -16,7 +16,7 @@ export default function ItemFormFloatingActions() {
   const history = useHistory();
 
   // Item form context.
-  const { setSubmitPayload, isNewMode } = useItemFormContext();
+  const { setSubmitPayload, isNewMode, isDuplicateMode } = useItemFormContext();
 
   // Formik context.
   const { isSubmitting } = useFormikContext();
@@ -46,7 +46,7 @@ export default function ItemFormFloatingActions() {
         type="submit"
         className={'btn--submit'}
       >
-        {isNewMode ? <T id={'save'} /> : <T id={'edit'} />}
+        {isNewMode || isDuplicateMode ? <T id={'save'} /> : <T id={'edit'} />}
       </Button>
 
       <Button

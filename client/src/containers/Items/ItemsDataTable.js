@@ -95,6 +95,10 @@ function ItemsDataTable({
     openDialog('inventory-adjustment', { itemId: id });
   };
 
+  const handleDuplicate = ({ id }) => {
+    history.push(`/items/${id}/duplicate`, { action: 'duplicate' });
+  };
+
   // Cannot continue in case the items has empty status.
   if (isEmptyStatus) {
     return <ItemsEmptyStatus />;
@@ -131,6 +135,7 @@ function ItemsDataTable({
           onInactivateItem: handleInactiveItem,
           onActivateItem: handleActivateItem,
           onMakeAdjustment: handleMakeAdjustment,
+          onDuplicate: handleDuplicate,
         }}
         noResults={'There is no items in the table yet.'}
         {...tableProps}

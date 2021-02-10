@@ -965,5 +965,6 @@ export default {
   running_balance: 'Running balance',
   payment_via_voucher: 'Payment via voucher',
   voucher_number: 'Voucher number',
-  voucher: 'Voucher'
+  voucher: 'Voucher',
+  duplicate:'Duplicate'
 };

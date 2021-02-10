@@ -75,6 +75,13 @@ export default [
     breadcrumb: 'Edit Item',
   },
   {
+    path: `/items/:id/duplicate`,
+    component: LazyLoader({
+      loader: () => import('containers/Items/ItemFormPage'),
+    }),
+    breadcrumb: 'Duplicate Item',
+  },
+  {
     path: `/items/new`,
     component: LazyLoader({
       loader: () => import('containers/Items/ItemFormPage'),

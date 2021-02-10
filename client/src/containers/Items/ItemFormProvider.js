@@ -1,5 +1,6 @@
 import React, { useEffect, createContext, useState } from 'react';
 import { useIntl } from 'react-intl';
+import { useLocation, useParams } from 'react-router-dom';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import {
   useItem,
@@ -16,6 +17,7 @@ const ItemFormContext = createContext();
  * Accounts chart data provider.
  */
 function ItemFormProvider({ itemId, ...props }) {
+  const { state } = useLocation();
   // Fetches the accounts list.
   const { isFetching: isAccountsLoading, data: accounts } = useAccounts();
 
@@ -38,6 +40,7 @@ function ItemFormProvider({ itemId, ...props }) {
 
   // Detarmines whether the form new mode.
   const isNewMode = !itemId;
+  const isDuplicateMode = state?.action == 'duplicate';
 
   // Provider state.
   const provider = {
@@ -47,6 +50,7 @@ function ItemFormProvider({ itemId, ...props }) {
     itemsCategories,
     submitPayload,
     isNewMode,
+    isDuplicateMode,
 
     isAccountsLoading,
     isItemsCategoriesLoading,
@@ -54,20 +58,20 @@ function ItemFormProvider({ itemId, ...props }) {
 
     createItemMutate,
     editItemMutate,
-    setSubmitPayload
+    setSubmitPayload,
   };
 
   // Format message intl.
   const { formatMessage } = useIntl();
-  
+
   // Change page title dispatcher.
   const changePageTitle = useDashboardPageTitle();
 
   // Changes the page title in new and edit mode.
   useEffect(() => {
-    !isNewMode
-      ? changePageTitle(formatMessage({ id: 'edit_item_details' }))
-      : changePageTitle(formatMessage({ id: 'new_item' }));
+    isNewMode || isDuplicateMode
+      ? changePageTitle(formatMessage({ id: 'new_item' }))
+      : changePageTitle(formatMessage({ id: 'edit_item_details' }));
   }, [changePageTitle, isNewMode, formatMessage]);
 
   return (
