@@ -25,7 +25,7 @@ export function useCreateCurrency(props) {
 export function useEditCurrency(props) {
   const queryClient = useQueryClient();
 
-  return useMutation((currencyCode, values) =>
+  return useMutation(([currencyCode, values]) =>
     ApiService.post(`currencies/${currencyCode}`, values),
     {
       onSuccess: () => {

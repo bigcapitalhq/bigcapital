@@ -5,7 +5,7 @@ import withDialogRedux from 'components/DialogReduxConnect';
 import { compose } from 'utils';
 
 const CurrencyFormDialogContent = lazy(() =>
-  import('./CurencyFormDialogContent'),
+  import('./CurrencyFormDialogContent'),
 );
 
 /**
