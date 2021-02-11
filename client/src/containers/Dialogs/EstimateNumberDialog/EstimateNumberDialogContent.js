@@ -6,7 +6,6 @@ import ReferenceNumberForm from 'containers/JournalNumber/ReferenceNumberForm';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withSettings from 'containers/Settings/withSettings';
 import withSettingsActions from 'containers/Settings/withSettingsActions';
-import withEstimateActions from 'containers/Sales/Estimate/withEstimateActions';
 
 import { compose, optionsMapToArray } from 'utils';
 
@@ -18,15 +17,13 @@ function EstimateNumberDialogContent({
   // #withSettings
   nextNumber,
   numberPrefix,
+
   // #withSettingsActions
   requestFetchOptions,
   requestSubmitOptions,
 
   // #withDialogActions
   closeDialog,
-
-  // #withEstimateActions
-  setEstimateNumberChanged,
 }) {
   const fetchSettings = useQuery(['settings'], () => requestFetchOptions({}));
 
@@ -41,7 +38,7 @@ function EstimateNumberDialogContent({
 
         setTimeout(() => {
           queryCache.invalidateQueries('settings');
-          setEstimateNumberChanged(true);
+          // setEstimateNumberChanged(true);
         }, 250);
       })
       .catch(() => {
@@ -72,5 +69,4 @@ export default compose(
     nextNumber: estimatesSettings?.nextNumber,
     numberPrefix: estimatesSettings?.numberPrefix,
   })),
-  withEstimateActions,
 )(EstimateNumberDialogContent);

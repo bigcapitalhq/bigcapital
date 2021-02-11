@@ -1,0 +1,206 @@
+import React from 'react';
+import {
+  Intent,
+  Tag,
+  Menu,
+  MenuItem,
+  MenuDivider,
+  ProgressBar,
+  Popover,
+  Position,
+  Button
+} from '@blueprintjs/core';
+import { Choose, If, Icon } from 'components';
+import { FormattedMessage as T, useIntl } from 'react-intl';
+import moment from 'moment';
+import { Money, AppToaster } from 'components';
+import { formatMessage } from 'services/intl';
+import { safeCallback } from 'utils';
+
+const calculateStatus = (paymentAmount, balanceAmount) =>
+  paymentAmount / balanceAmount;
+
+export const statusAccessor = (row) => {
+  return (
+    <div className={'status-accessor'}>
+      <Choose>
+        <Choose.When condition={row.is_fully_paid && row.is_delivered}>
+          <span className={'fully-paid-icon'}>
+            <Icon icon="small-tick" iconSize={18} />
+          </span>
+          <span class="fully-paid-text">
+            <T id={'paid'} />
+          </span>
+        </Choose.When>
+
+        <Choose.When condition={row.is_delivered}>
+          <Choose>
+            <Choose.When condition={row.is_overdue}>
+              <span className={'overdue-status'}>
+                <T id={'overdue_by'} values={{ overdue: row.overdue_days }} />
+              </span>
+            </Choose.When>
+            <Choose.Otherwise>
+              <span className={'due-status'}>
+                <T id={'due_in'} values={{ due: row.remaining_days }} />
+              </span>
+            </Choose.Otherwise>
+          </Choose>
+
+          <If condition={row.is_partially_paid}>
+            <span class="partial-paid">
+              <T
+                id={'day_partially_paid'}
+                values={{
+                  due: row.due_amount,
+                  currencySign: '$',
+                }}
+              />
+            </span>
+            <ProgressBar
+              animate={false}
+              stripes={false}
+              intent={Intent.PRIMARY}
+              value={calculateStatus(row.payment_amount, row.balance)}
+            />
+          </If>
+        </Choose.When>
+        <Choose.Otherwise>
+          <Tag minimal={true}>
+            <T id={'draft'} />
+          </Tag>
+        </Choose.Otherwise>
+      </Choose>
+    </div>
+  );
+};
+
+export const handleDeleteErrors = (errors) => {
+  if (
+    errors.find(
+      (error) => error.type === 'INVOICE_HAS_ASSOCIATED_PAYMENT_ENTRIES',
+    )
+  ) {
+    AppToaster.show({
+      message: formatMessage({
+        id: 'the_invoice_cannot_be_deleted',
+      }),
+      intent: Intent.DANGER,
+    });
+  }
+};
+
+export function ActionsMenu({
+  payload: { onEdit, onDeliver, onDelete },
+  row: { original },
+}) {
+  const { formatMessage } = useIntl();
+
+  return (
+    <Menu>
+      <MenuItem
+        icon={<Icon icon="reader-18" />}
+        text={formatMessage({ id: 'view_details' })}
+      />
+      <MenuDivider />
+      <MenuItem
+        icon={<Icon icon="pen-18" />}
+        text={formatMessage({ id: 'edit_invoice' })}
+        onClick={safeCallback(onEdit, original)}
+      />
+      <If condition={!original.is_delivered}>
+        <MenuItem
+          text={formatMessage({ id: 'mark_as_delivered' })}
+          onClick={safeCallback(onDeliver, original)}
+        />
+      </If>
+      <MenuItem
+        text={formatMessage({ id: 'delete_invoice' })}
+        intent={Intent.DANGER}
+        onClick={safeCallback(onDelete, original)}
+        icon={<Icon icon="trash-16" iconSize={16} />}
+      />
+    </Menu>
+  );
+}
+
+function ActionsCell(props) {
+  return (
+    <Popover
+      content={<ActionsMenu {...props} />}
+      position={Position.RIGHT_BOTTOM}
+    >
+      <Button icon={<Icon icon="more-h-16" iconSize={16} />} />
+    </Popover>
+  );
+}
+
+/**
+ * Retrieve invoices table columns.
+ */
+export function useInvoicesTableColumns() {
+  const { formatMessage } = useIntl();
+
+  return React.useMemo(
+    () => [
+      {
+        id: 'invoice_date',
+        Header: formatMessage({ id: 'invoice_date' }),
+        accessor: (r) => moment(r.invoice_date).format('YYYY MMM DD'),
+        width: 110,
+        className: 'invoice_date',
+      },
+      {
+        id: 'customer_id',
+        Header: formatMessage({ id: 'customer_name' }),
+        accessor: 'customer.display_name',
+        width: 180,
+        className: 'customer_id',
+      },
+      {
+        id: 'invoice_no',
+        Header: formatMessage({ id: 'invoice_no__' }),
+        accessor: (row) => (row.invoice_no ? `#${row.invoice_no}` : null),
+        width: 100,
+        className: 'invoice_no',
+      },
+      {
+        id: 'balance',
+        Header: formatMessage({ id: 'balance' }),
+        accessor: (r) => <Money amount={r.balance} currency={'USD'} />,
+        width: 110,
+        className: 'balance',
+      },
+      {
+        id: 'status',
+        Header: formatMessage({ id: 'status' }),
+        accessor: (row) => statusAccessor(row),
+        width: 160,
+        className: 'status',
+      },
+      {
+        id: 'due_date',
+        Header: formatMessage({ id: 'due_date' }),
+        accessor: (r) => moment(r.due_date).format('YYYY MMM DD'),
+        width: 110,
+        className: 'due_date',
+      },
+      {
+        id: 'reference_no',
+        Header: formatMessage({ id: 'reference_no' }),
+        accessor: 'reference_no',
+        width: 90,
+        className: 'reference_no',
+      },
+      {
+        id: 'actions',
+        Header: '',
+        Cell: ActionsCell,
+        className: 'actions',
+        width: 50,
+        disableResizing: true,
+      },
+    ],
+    [formatMessage],
+  );
+}

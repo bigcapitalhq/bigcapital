@@ -4,7 +4,7 @@ import PaymentMadeDeleteAlert from 'containers/Alerts/PaymentMades/PaymentMadeDe
 export default function PaymentMadesAlerts() {
   return (
     <div>
-      <PaymentMadeDeleteAlert dialogName={'payment-made-delete'} />
+      <PaymentMadeDeleteAlert name={'payment-made-delete'} />
     </div>
   );
 }

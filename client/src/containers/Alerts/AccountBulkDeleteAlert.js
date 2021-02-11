@@ -12,6 +12,9 @@ import withAlertActions from 'containers/Alert/withAlertActions';
 
 import { compose } from 'utils';
 
+/**
+ * Account bulk delete alert.
+ */
 function AccountBulkDeleteAlert({
   // #ownProps
   name,

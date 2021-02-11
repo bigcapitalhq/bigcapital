@@ -10,7 +10,6 @@ import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
 
 import { useDeleteBill } from 'hooks/query';
-
 import { compose } from 'utils';
 
 /**
@@ -29,12 +28,12 @@ function BillDeleteAlert({
   const { formatMessage } = useIntl();
   const { isLoading, mutateAsync: deleteBillMutate } = useDeleteBill();
 
-  // handle cancel Bill
+  // Handle cancel Bill
   const handleCancel = () => {
     closeAlert(name);
   };
 
-  // handleConfirm delete invoice
+  // Handle confirm delete invoice
   const handleConfirmBillDelete = () => {
     deleteBillMutate(billId).then(() => {
       AppToaster.show({

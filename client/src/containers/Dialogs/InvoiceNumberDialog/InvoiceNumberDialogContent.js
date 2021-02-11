@@ -7,7 +7,7 @@ import ReferenceNumberForm from 'containers/JournalNumber/ReferenceNumberForm';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withSettings from 'containers/Settings/withSettings';
 import withSettingsActions from 'containers/Settings/withSettingsActions';
-import withInvoicesActions from 'containers/Sales/Invoice/withInvoiceActions';
+// import withInvoicesActions from 'containers/Sales/Invoice/withInvoiceActions';
 
 import { compose, optionsMapToArray } from 'utils';
 
@@ -28,7 +28,7 @@ function InvoiceNumberDialogContent({
   closeDialog,
 
   // #withInvoicesActions
-  setInvoiceNumberChanged,
+  // setInvoiceNumberChanged,
 }) {
   const fetchSettings = useQuery(['settings'], () => requestFetchOptions({}));
 
@@ -44,7 +44,7 @@ function InvoiceNumberDialogContent({
 
         setTimeout(() => {
           queryCache.invalidateQueries('settings');
-          setInvoiceNumberChanged(true);
+          // setInvoiceNumberChanged(true);
         }, 250);
       })
       .catch(() => {
@@ -75,5 +75,5 @@ export default compose(
     nextNumber: invoiceSettings?.nextNumber,
     numberPrefix: invoiceSettings?.numberPrefix,
   })),
-  withInvoicesActions,
+  // withInvoicesActions,
 )(InvoiceNumberDialogContent);

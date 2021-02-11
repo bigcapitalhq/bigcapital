@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
-
 import { useIntl } from 'react-intl';
+
+import 'style/pages/Expense/List.scss';
+
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 
 import ExpenseActionsBar from './ExpenseActionsBar';

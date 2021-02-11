@@ -263,60 +263,60 @@ export default [
   //   breadcrumb: 'New Estimate',
   //   hotkey: 'ctrl+shift+e',
   // },
-  // {
-  //   path: `/estimates`,
-  //   component: LazyLoader({
-  //     loader: () => import('containers/Sales/Estimate/EstimatesList'),
-  //   }),
-  //   breadcrumb: 'Estimates List',
-  //   hotkey: 'shift+e',
-  // },
+  {
+    path: `/estimates`,
+    component: LazyLoader({
+      loader: () => import('containers/Sales/Estimates/EstimatesLanding/EstimatesList'),
+    }),
+    breadcrumb: 'Estimates List',
+    hotkey: 'shift+e',
+  },
 
   // Invoices.
-  {
-    path: `/invoices/:id/edit`,
-    component: LazyLoader({
-      loader: () => import('containers/Sales/Invoice/InvoiceFormPage'),
-    }),
-    breadcrumb: 'Edit',
-  },
-  {
-    path: `/invoices/new`,
-    component: LazyLoader({
-      loader: () => import('containers/Sales/Invoice/InvoiceFormPage'),
-    }),
-    breadcrumb: 'New Invoice',
-    hotkey: 'ctrl+shift+i',
-  },
+  // {
+  //   path: `/invoices/:id/edit`,
+  //   component: LazyLoader({
+  //     loader: () => import('containers/Sales/Invoice/InvoiceFormPage'),
+  //   }),
+  //   breadcrumb: 'Edit',
+  // },
+  // {
+  //   path: `/invoices/new`,
+  //   component: LazyLoader({
+  //     loader: () => import('containers/Sales/Invoice/InvoiceFormPage'),
+  //   }),
+  //   breadcrumb: 'New Invoice',
+  //   hotkey: 'ctrl+shift+i',
+  // },
   {
     path: `/invoices`,
     component: LazyLoader({
-      loader: () => import('containers/Sales/Invoice/InvoicesList'),
+      loader: () => import('containers/Sales/Invoices/InvoicesLanding/InvoicesList'),
     }),
     breadcrumb: 'Invoices List',
     hotkey: 'shift+i',
   },
 
   // Sales Receipts.
-  {
-    path: `/receipts/:id/edit`,
-    component: LazyLoader({
-      loader: () => import('containers/Sales/Receipt/ReceiptFormPage'),
-    }),
-    breadcrumb: 'Edit',
-  },
-  {
-    path: `/receipts/new`,
-    component: LazyLoader({
-      loader: () => import('containers/Sales/Receipt/ReceiptFormPage'),
-    }),
-    breadcrumb: 'New Receipt',
-    hotkey: 'ctrl+shift+r',
-  },
+  // {
+  //   path: `/receipts/:id/edit`,
+  //   component: LazyLoader({
+  //     loader: () => import('containers/Sales/Receipt/ReceiptFormPage'),
+  //   }),
+  //   breadcrumb: 'Edit',
+  // },
+  // {
+  //   path: `/receipts/new`,
+  //   component: LazyLoader({
+  //     loader: () => import('containers/Sales/Receipt/ReceiptFormPage'),
+  //   }),
+  //   breadcrumb: 'New Receipt',
+  //   hotkey: 'ctrl+shift+r',
+  // },
   {
     path: `/receipts`,
     component: LazyLoader({
-      loader: () => import('containers/Sales/Receipt/ReceiptsList'),
+      loader: () => import('containers/Sales/Receipts/ReceiptsLanding/ReceiptsList'),
     }),
     breadcrumb: 'Receipts List',
     hotkey: 'shift+r',
@@ -339,35 +339,35 @@ export default [
   //   }),
   //   breadcrumb: 'New Payment Receive',
   // },
-  // {
-  //   path: `/payment-receives`,
-  //   component: LazyLoader({
-  //     loader: () =>
-  //       import('containers/Sales/PaymentReceive/PaymentReceivesList'),
-  //   }),
-  //   breadcrumb: 'Payment Receives List',
-  // },
+  {
+    path: `/payment-receives`,
+    component: LazyLoader({
+      loader: () =>
+        import('containers/Sales/PaymentReceive/PaymentsLanding/PaymentReceivesList'),
+    }),
+    breadcrumb: 'Payment Receives List',
+  },
 
   // Bills
-  {
-    path: `/bills/:id/edit`,
-    component: LazyLoader({
-      loader: () => import('containers/Purchases/Bill/BillFormPage'),
-    }),
-    breadcrumb: 'Edit',
-  },
-  {
-    path: `/bills/new`,
-    component: LazyLoader({
-      loader: () => import('containers/Purchases/Bill/BillFormPage'),
-    }),
-    breadcrumb: 'New Bill',
-    hotkey: 'ctrl+shift+b',
-  },
+  // {
+  //   path: `/bills/:id/edit`,
+  //   component: LazyLoader({
+  //     loader: () => import('containers/Purchases/Bill/BillFormPage'),
+  //   }),
+  //   breadcrumb: 'Edit',
+  // },
+  // {
+  //   path: `/bills/new`,
+  //   component: LazyLoader({
+  //     loader: () => import('containers/Purchases/Bill/BillFormPage'),
+  //   }),
+  //   breadcrumb: 'New Bill',
+  //   hotkey: 'ctrl+shift+b',
+  // },
   {
     path: `/bills`,
     component: LazyLoader({
-      loader: () => import('containers/Purchases/Bill/BillsList'),
+      loader: () => import('containers/Purchases/Bills/BillsLanding/BillsList'),
     }),
     breadcrumb: 'Bills List',
     hotkey: 'shift+b',
@@ -398,11 +398,11 @@ export default [
   //   }),
   //   breadcrumb: 'New Payment Made',
   // },
-  // {
-  //   path: `/payment-mades`,
-  //   component: LazyLoader({
-  //     loader: () => import('containers/Purchases/PaymentMades/PaymentMadeList'),
-  //   }),
-  //   breadcrumb: 'Payment Made List',
-  // }
+  {
+    path: `/payment-mades`,
+    component: LazyLoader({
+      loader: () => import('containers/Purchases/PaymentMades/PaymentsLanding/PaymentMadeList'),
+    }),
+    breadcrumb: 'Payment Made List',
+  }
 ];

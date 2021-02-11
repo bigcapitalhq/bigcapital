@@ -40,8 +40,9 @@ function BillOpenAlert({
           }),
           intent: Intent.SUCCESS,
         });
+        closeAlert(name);
       })
-      .finally((error) => {
+      .catch((error) => {
         closeAlert(name);
       });
   };

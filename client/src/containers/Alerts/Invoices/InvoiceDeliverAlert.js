@@ -7,7 +7,6 @@ import { AppToaster } from 'components';
 
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
-import withInvoiceActions from 'containers/Sales/Invoice/withInvoiceActions';
 
 import { compose } from 'utils';
 
@@ -72,5 +71,4 @@ function InvoiceDeliverAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
-  withInvoiceActions,
 )(InvoiceDeliverAlert);

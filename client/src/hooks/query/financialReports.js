@@ -1,4 +1,5 @@
 import { useQuery } from 'react-query';
+import { defaultTo } from 'lodash';
 import ApiService from 'services/ApiService';
 import {
   trialBalanceSheetReducer,
@@ -7,134 +8,154 @@ import {
   generalLedgerTableRowsReducer,
   journalTableRowsReducer,
 } from 'containers/FinancialStatements/reducers';
-
-const transformBalanceSheet = (response) => {
-  return {
-    tableRows: balanceSheetRowsReducer(response.data.data),
-    ...response.data,
-  };
-};
-
-const transformTrialBalance = (response) => {
-  return {
-    tableRows: trialBalanceSheetReducer(response.data.data),
-    ...response.data,
-  };
-};
-
-const transformProfitLoss = (response) => {
-  return {
-    tableRows: profitLossSheetReducer(response.data.data),
-    ...response.data,
-  };
-};
-
-const transformGeneralLedger = (response) => {
-  return {
-    tableRows: generalLedgerTableRowsReducer(response.data.data),
-    ...response.data,
-  };
-};
-
-const transformJournal = (response) => {
-  return {
-    tableRows: journalTableRowsReducer(response.data.data),
-    ...response.data,
-  };
-};
-
+ 
+/**
+ * Retrieve balance sheet.
+ */
 export function useBalanceSheet(query, props) {
-  return useQuery(
+  const states = useQuery(
     ['FINANCIAL-REPORT', 'BALANCE-SHEET', query],
     () =>
       ApiService.get('/financial_statements/balance_sheet', {
         params: query,
-      }).then(transformBalanceSheet),
+      }),
     {
-      initialData: {
-        data: [],
-        columns: [],
-        query: {},
-        tableRows: [],
-      },
-      ...props,
+      select: (res) => ({
+        tableRows: balanceSheetRowsReducer(res.data.data),
+        ...res.data,
+      }),
+      ...props
     },
   );
+
+  return {
+    ...states,
+    data: defaultTo(states.data, {
+      data: [],
+      columns: [],
+      query: {},
+      tableRows: [],
+    }),
+  };
 }
 
+/**
+ * Retrieve trial balance sheet.
+ */
 export function useTrialBalanceSheet(query, props) {
-  return useQuery(
+  const states = useQuery(
     ['FINANCIAL-REPORT', 'TRIAL-BALANCE-SHEET', query],
     () =>
       ApiService.get('/financial_statements/trial_balance_sheet', {
         params: query,
-      }).then(transformTrialBalance),
+      }),
     {
-      initialData: {
-        tableRows: [],
-        data: [],
-        query: {},
-      },
+      select: (res) => ({
+        tableRows: trialBalanceSheetReducer(res.data.data),
+        ...res.data,
+      }),
       ...props,
     },
   );
+
+  return {
+    ...states,
+    data: defaultTo(states.data, {
+      tableRows: [],
+      data: [],
+      query: {},
+    })
+  }
 }
 
+/**
+ * Retrieve profit/loss (P&L) sheet.
+ */
 export function useProfitLossSheet(query, props) {
-  return useQuery(
+  const states = useQuery(
     ['FINANCIAL-REPORT', 'PROFIT-LOSS-SHEET', query],
     () =>
       ApiService.get('/financial_statements/profit_loss_sheet', {
         params: query,
-      }).then(transformProfitLoss),
+      }),
     {
-      initialData: {
-        data: {},
-        tableRows: [],
-        columns: [],
-        query: {},
-      },
+      select: (res) => ({
+        tableRows: profitLossSheetReducer(res.data.data),
+        ...res.data,
+      }),
       ...props,
     },
   );
+  return {
+    ...states,
+    data: defaultTo(states.data, {
+      data: {},
+      tableRows: [],
+      columns: [],
+      query: {},
+    }),
+  }
 }
 
+/**
+ * Retrieve general ledger (GL) sheet.
+ */
 export function useGeneralLedgerSheet(query, props) {
-  return useQuery(
+  const states = useQuery(
     ['FINANCIAL-REPORT', 'GENERAL-LEDGER', query],
     () =>
       ApiService.get('/financial_statements/general_ledger', {
         params: query,
-      }).then(transformGeneralLedger),
+      }),
     {
-      initialData: {
-        tableRows: [],
-        data: {},
-        query: {}
-      },
-      ...props
+      select: (res) => ({
+        tableRows: generalLedgerTableRowsReducer(res.data.data),
+        ...res.data,
+      }),
+      ...props,
     },
   );
+
+  return {
+    ...states,
+    data: defaultTo(states.data, {
+      tableRows: [],
+      data: {},
+      query: {},
+    }),
+  }
 }
 
+/**
+ * Retrieve journal sheet.
+ */
 export function useJournalSheet(query, props) {
-  return useQuery(
+  const states = useQuery(
     ['FINANCIAL-REPORT', 'JOURNAL', query],
     () =>
-      ApiService.get('/financial_statements/journal', { params: query }).then(
-        transformJournal,
-      ),
+      ApiService.get('/financial_statements/journal', { params: query }),
     {
-      initialData: {
-        data: {},
-        tableRows: [],
-        query: {},
-      },
-      ...props
+      select: (res) => ({
+        tableRows: journalTableRowsReducer(res.data.data),
+       ...res.data,
+      }),
+      ...props,
     },
   );
+
+  return {
+    ...states,
+    data: defaultTo(states.data, {
+      data: {},
+      tableRows: [],
+      query: {},
+    })
+  }
 }
 
+/**
+ * Retrieve AR aging summary report.
+ */
 export function useARAgingSummaryReport(query, props) {
   return useQuery(
     ['FINANCIAL-REPORT', 'AR-AGING-SUMMARY', query],

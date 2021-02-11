@@ -1,18 +1,8 @@
 import { useQueryClient, useQuery, useMutation } from 'react-query';
+import { defaultTo } from 'lodash';
 import ApiService from 'services/ApiService';
+import { transformPagination } from 'utils';
 
-// Receipts transformer.
-const invoicesTransformer = (response) => {
-  return {
-    invoices: response.data.sales_invoices,
-    pagination: response.data.pagination,
-    filterMeta: response.data.filter_meta,
-  };
-};
-
-const receiptTransformer = (response) => {
-  return response.data;
-}
 /**
  * Creates a new sale invoice.
  */
@@ -76,39 +66,48 @@ export function useCloseReceipt(props) {
  * Retrieve sale invoices list with pagination meta.
  */
 export function useReceipts(query, props) {
-  return useQuery(
+  const states = useQuery(
     ['SALE_RECEIPTS', query],
-    () =>
-      ApiService
-        .get('sales/receipts', { params: query })
-        .then(invoicesTransformer),
+    () => ApiService.get('sales/receipts', { params: query }),
     {
-      initialData: {
-        saleReceipts: [],
-        pagination: {
-          page: 1,
-          page_size: 12,
-          total: 0,
-        },
-      },
+      select: (response) => ({
+        receipts: response.data.sale_receipts,
+        pagination: transformPagination(response.data.pagination),
+        filterMeta: response.data.filter_meta,
+      }),
       ...props,
     },
   );
+
+  return {
+    ...states,
+    data: defaultTo(states.data, {
+      receipts: [],
+      pagination: {
+        page: 1,
+        page_size: 12,
+        total: 0,
+      },
+      filterMeta: {},
+    }),
+  };
 }
 
 /**
  * Retrieve sale invoices list with pagination meta.
  */
 export function useReceipt(id, props) {
-  return useQuery(
+  const states = useQuery(
     ['SALE_RECEIPT', id],
-    () =>
-      ApiService
-        .get(`sales/receipts/${id}`)
-        .then(receiptTransformer),
+    () => ApiService.get(`sales/receipts/${id}`),
     {
-      initialData: {},
+      select: (res) => res.data.sale_receipt,
       ...props,
     },
   );
+
+  return {
+    ...states,
+    data: defaultTo(states.data, {}),
+  }
 }

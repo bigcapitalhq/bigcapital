@@ -1,25 +1,33 @@
+import { defaultTo } from 'lodash';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import ApiService from 'services/ApiService';
-
-const transformPaymentMades = (response) => {
-  return {};
-};
+import { transformPagination } from 'utils';
 
 /**
  * Retrieve payment mades list.
  */
 export function usePaymentMades(query, props) {
-  return useQuery(
+  const states = useQuery(
     ['PAYMENT_MADES', query],
-    () =>
-      ApiService.get('sales/payment_mades', { params: query }).then(
-        transformPaymentMades,
-      ),
+    () => ApiService.get('purchases/bill_payments', { params: query }),
     {
-      initialData: [],
+      select: (res) => ({
+        paymentMades: res.data.bill_payments,
+        pagination: transformPagination(res.data.pagination),
+        filterMeta: res.data.filter_meta,
+      }),
       ...props,
     },
   );
+
+  return {
+    ...states,
+    data: defaultTo(states.data, {
+      paymentMades: [],
+      pagination: {},
+      filterMeta: {}
+    }),
+  };
 }
 
 /**
@@ -29,7 +37,7 @@ export function useCreatePaymentMade(props) {
   const client = useQueryClient();
 
   return useMutation(
-    (values) => ApiService.post('sales/payment_mades', values),
+    (values) => ApiService.post('purchases/bill_payments', values),
     {
       onSuccess: () => {
         client.invalidateQueries('PAYMENT_MADES');
@@ -46,7 +54,7 @@ export function useEditPaymentMade(props) {
   const client = useQueryClient();
 
   return useMutation(
-    (id, values) => ApiService.post(`sales/payment_mades/${id}`, values),
+    (id, values) => ApiService.post(`purchases/bill_payments/${id}`, values),
     {
       onSuccess: () => {
         client.invalidateQueries('PAYMENT_MADES');
@@ -63,7 +71,7 @@ export function useDeletePaymentMade(props) {
   const client = useQueryClient();
 
   return useMutation(
-    (id, values) => ApiService.delete(`sales/payment_mades/${id}`, values),
+    (id, values) => ApiService.delete(`purchases/bill_payments/${id}`, values),
     {
       onSuccess: () => {
         client.invalidateQueries('PAYMENT_MADES');
@@ -77,15 +85,14 @@ export function useDeletePaymentMade(props) {
  * Retrieve specific payment made.
  */
 export function usePaymentMade(id, props) {
-  return useQuery(
+  const states = useQuery(
     ['PAYMENT_MADE', id],
-    () =>
-      ApiService.get(`sales/payment_mades/${id}`).then(
-        transformPaymentMades,
-      ),
-    {
-      initialData: [],
-      ...props,
-    },
+    () => ApiService.get(`purchases/bill_payments/${id}`),
+    props,
   );
+
+  return {
+    ...states,
+    data: defaultTo(states.data, {}),
+  };
 }

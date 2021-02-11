@@ -1,13 +1,12 @@
 import React, { useCallback } from 'react';
 import { DialogContent } from 'components';
-import { useQuery, queryCache } from 'react-query';
+import { useQuery } from 'react-query';
 
 import ReferenceNumberForm from 'containers/JournalNumber/ReferenceNumberForm';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withSettings from 'containers/Settings/withSettings';
 import withSettingsActions from 'containers/Settings/withSettingsActions';
-import withReceiptActions from 'containers/Sales/Receipt/withReceiptActions';
 
 import { compose, optionsMapToArray } from 'utils';
 
@@ -43,7 +42,6 @@ function ReceiptNumberDialogContent({
         closeDialog('receipt-number-form');
 
         setTimeout(() => {
-          queryCache.invalidateQueries('settings');
           setReceiptNumberChanged(true);
         }, 250);
       })
@@ -75,5 +73,4 @@ export default compose(
     nextNumber: receiptSettings?.nextNumber,
     numberPrefix: receiptSettings?.numberPrefix,
   })),
-  withReceiptActions,
 )(ReceiptNumberDialogContent);

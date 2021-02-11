@@ -8,6 +8,7 @@ import withAlertActions from 'containers/Alert/withAlertActions';
 
 import { useActivateAccount } from 'hooks/query';
 import { compose } from 'utils';
+
 /**
  * Account activate alert.
  */

@@ -1,14 +1,7 @@
 import { useQueryClient, useQuery, useMutation } from 'react-query';
+import { defaultTo } from 'lodash';
 import ApiService from 'services/ApiService';
-
-// Bills transformer.
-const billsTransformer = (response) => {
-  return {
-    bills: response.data.bills,
-    pagination: response.data.pagination,
-    filterMeta: response.data.filter_meta,
-  };
-};
+import { transformPagination } from 'utils';
 
 /**
  * Creates a new sale invoice.
@@ -19,6 +12,7 @@ export function useCreateBill(props) {
   return useMutation((values) => ApiService.post('purchases/bills', values), {
     onSuccess: () => {
       queryClient.invalidateQueries('BILLS');
+      queryClient.invalidateQueries('BILL');
     },
     ...props,
   });
@@ -35,6 +29,7 @@ export function useEditBill(props) {
     {
       onSuccess: () => {
         queryClient.invalidateQueries('BILLS');
+        queryClient.invalidateQueries('BILL');
       },
       ...props,
     },
@@ -50,6 +45,7 @@ export function useDeleteBill(props) {
   return useMutation((id) => ApiService.delete(`purchases/bills/${id}`), {
     onSuccess: () => {
       queryClient.invalidateQueries('BILLS');
+      queryClient.invalidateQueries('BILL');
     },
     ...props,
   });
@@ -59,24 +55,32 @@ export function useDeleteBill(props) {
  * Retrieve sale invoices list with pagination meta.
  */
 export function useBills(query, props) {
-  return useQuery(
+  const states = useQuery(
     ['BILLS', query],
     () =>
-      ApiService.get('purchases/bills', { params: query }).then(
-        billsTransformer,
-      ),
+      ApiService.get('purchases/bills', { params: query }),
     {
-      initialData: {
-        bills: [],
-        pagination: {
-          page: 1,
-          page_size: 12,
-          total: 0,
-        },
-      },
+      select: (response) => ({
+        bills: response.data.bills,
+        pagination: transformPagination(response.data.pagination),
+        filterMeta: response.data.filter_meta,
+      }),
       ...props,
     },
   );
+
+  return {
+    ...states,
+    data: defaultTo(states.data, {
+      bills: [],
+      pagination: {
+        page: 1,
+        page_size: 12,
+        total: 0,
+      },
+      filterMeta: {},
+    })
+  }
 }
 
 /**
@@ -84,17 +88,16 @@ export function useBills(query, props) {
  * @param {number} id - Bill id.
  */
 export function useBill(id, props) {
-  return useQuery(
+  const states = useQuery(
     ['BILL', id],
-    async () => {
-      const { data } = await ApiService.get(`/purchases/bills/${id}`);
-      return data.bill;
-    },
+    () => ApiService.get(`/purchases/bills/${id}`),
     {
-      initialData: {},
+      select: (res) => res.data.bill,
       ...props,
-    },
+    }
   );
+
+  return defaultTo(states.data, {});
 }
 
 /**

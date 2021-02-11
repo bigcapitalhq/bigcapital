@@ -1,14 +1,12 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { Intent, Alert } from '@blueprintjs/core';
-import { queryCache } from 'react-query';
 
 import { AppToaster } from 'components';
 import { useRejectEstimate } from 'hooks/query';
 
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
-import withEstimateActions from 'containers/Sales/Estimate/withEstimateActions';
 
 import { compose } from 'utils';
 
@@ -21,9 +19,6 @@ function EstimateRejectAlert({
   // #withAlertStoreConnect
   isOpen,
   payload: { estimateId },
-
-  // #withEstimateActions
-  requestRejectEstimate,
 
   // #withAlertActions
   closeAlert,
@@ -40,8 +35,8 @@ function EstimateRejectAlert({
   };
 
   // Handle confirm estimate reject.
-  const handleConfirmEstimateReject = useCallback(() => {
-    requestRejectEstimate(estimateId)
+  const handleConfirmEstimateReject = () => {
+    rejectEstimateMutate(estimateId)
       .then(() => {
         AppToaster.show({
           message: formatMessage({
@@ -49,13 +44,12 @@ function EstimateRejectAlert({
           }),
           intent: Intent.SUCCESS,
         });
-        queryCache.invalidateQueries('estimates-table');
       })
       .catch((error) => {})
       .finally(() => {
         closeAlert(name);
       });
-  }, [estimateId, rejectEstimateMutate, formatMessage]);
+  };
 
   return (
     <Alert
@@ -77,5 +71,4 @@ function EstimateRejectAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
-  withEstimateActions,
 )(EstimateRejectAlert);

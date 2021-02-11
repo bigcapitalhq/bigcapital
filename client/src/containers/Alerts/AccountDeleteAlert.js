@@ -13,7 +13,6 @@ import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
 
 import { useDeleteAccount } from 'hooks/query';
-
 import { compose } from 'utils';
 
 /**
@@ -48,12 +47,7 @@ function AccountDeleteAlert({
         });
         closeAlert(name);
       })
-      .catch((error) => {
-        const {
-          response: {
-            data: { errors },
-          },
-        } = error;
+      .catch(({ response: { data: { errors } } }) => {
         handleDeleteErrors(errors);
         closeAlert(name);
       });

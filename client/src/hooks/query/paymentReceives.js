@@ -1,25 +1,37 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { defaultTo } from 'lodash';
 import ApiService from 'services/ApiService';
-
-const transformPaymentReceives = (response) => {
-  return {};
-};
+import { transformPagination } from 'utils';
 
 /**
  * Retrieve accounts list.
  */
 export function usePaymentReceives(query, props) {
-  return useQuery(
+  const states = useQuery(
     ['PAYMENT_RECEIVES', query],
-    () =>
-      ApiService.get('sales/payment_receives', { params: query }).then(
-        transformPaymentReceives,
-      ),
+    () => ApiService.get('sales/payment_receives', { params: query }),
     {
-      initialData: [],
+      select: (res) => ({
+        paymentReceives: res.data.payment_receives,
+        pagination: transformPagination(res.data.pagination),
+        filterMeta: res.data.filter_meta,
+      }),
       ...props,
     },
   );
+
+  return {
+    ...states,
+    data: defaultTo(states.data, {
+      paymentReceives: [],
+      pagination: {
+        page: 1,
+        pageSize: 12,
+        total: 0,
+      },
+      filterMeta: {},
+    }),
+  }
 }
 
 /**
@@ -77,15 +89,14 @@ export function useDeletePaymentReceive(props) {
  * Retrieve specific payment receive.
  */
 export function usePaymentReceive(id, props) {
-  return useQuery(
+  const states = useQuery(
     ['PAYMENT_RECEIVE', id],
-    () =>
-      ApiService.get(`sales/payment_receives/${id}`).then(
-        transformPaymentReceives,
-      ),
-    {
-      initialData: [],
-      ...props,
-    },
+    () => ApiService.get(`sales/payment_receives/${id}`),
+    props,
   );
+
+  return {
+    ...states,
+    data: defaultTo(states.data, {}),
+  }
 }

@@ -1,20 +1,17 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import {
   FormattedMessage as T,
   FormattedHTMLMessage,
   useIntl,
 } from 'react-intl';
 import { Intent, Alert } from '@blueprintjs/core';
-import { queryCache } from 'react-query';
-
 import { AppToaster } from 'components';
 import { useDeleteInvoice } from 'hooks/query';
 
-import { handleDeleteErrors } from 'containers/Sales/Invoice/components';
+import { handleDeleteErrors } from 'containers/Sales/Invoices/InvoicesLanding/components';
 
 import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 import withAlertActions from 'containers/Alert/withAlertActions';
-import withInvoiceActions from 'containers/Sales/Invoice/withInvoiceActions';
 
 import { compose } from 'utils';
 
@@ -32,12 +29,9 @@ function InvoiceDeleteAlert({
   closeAlert,
 }) {
   const { formatMessage } = useIntl();
-  const {
-    mutateAsync: deleteInvoiceMutate,
-    isLoading
-  } = useDeleteInvoice();
+  const { mutateAsync: deleteInvoiceMutate, isLoading } = useDeleteInvoice();
 
-  // handle cancel delete invoice  alert.
+  // handle cancel delete invoice alert.
   const handleCancelDeleteAlert = () => {
     closeAlert(name);
   };
@@ -84,5 +78,4 @@ function InvoiceDeleteAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
-  withInvoiceActions,
 )(InvoiceDeleteAlert);

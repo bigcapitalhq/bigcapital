@@ -1,20 +1,8 @@
+import { defaultTo } from 'lodash';
 import { useQueryClient, useQuery, useMutation } from 'react-query';
 import ApiService from 'services/ApiService';
+import { transformPagination } from 'utils';
 
-// Invoices transformer.
-const invoicesTransformer = (response) => {
-  return {
-    invoices: response.data.sales_invoices,
-    pagination: response.data.pagination,
-    filterMeta: response.data.filter_meta,
-  };
-};
-
-const invoiceTransformer = (response) => {
-  return {
-    invoice: response.data.invoice,
-  }
-}
 /**
  * Creates a new sale invoice.
  */
@@ -64,24 +52,31 @@ export function useDeleteInvoice(props) {
  * Retrieve sale invoices list with pagination meta.
  */
 export function useInvoices(query, props) {
-  return useQuery(
+  const states = useQuery(
     ['SALE_INVOICES', query],
-    () =>
-      ApiService.get('sales/invoices', { params: query }).then(
-        invoicesTransformer,
-      ),
+    () => ApiService.get('sales/invoices', { params: query }),
     {
-      initialData: {
-        saleInvoices: [],
-        pagination: {
-          page: 1,
-          page_size: 12,
-          total: 0,
-        },
-      },
+      select: (res) => ({
+        invoices: res.data.sales_invoices,
+        pagination: transformPagination(res.data.pagination),
+        filterMeta: res.data.filter_meta,
+      }),
       ...props,
     },
   );
+
+  return {
+    ...states,
+    data: defaultTo(states.data, {
+      invoices: [],
+      pagination: {
+        page: 1,
+        pageSize: 12,
+        total: 0,
+      },
+      filterMeta: {},
+    })
+  }
 }
 
 /**
@@ -105,11 +100,16 @@ export function useDeliverInvoice(props) {
  * Retrieve the sale invoice details.
  */
 export function useInvoice(id, props) {
-  return useQuery(['SALE_INVOICE', id], () =>
-    ApiService.get(`sales/invoices/${id}`).then(invoiceTransformer),
+  const states = useQuery(['SALE_INVOICE', id], () =>
+    ApiService.get(`sales/invoices/${id}`),
     {
-      initialData: {},
+      select: (res) => res.data.invoice,
       ...props
-    }
+    },
   );
+
+  return {
+    ...states,
+    data: defaultTo(states.data, {}),
+  };
 }

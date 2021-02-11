@@ -1,13 +1,13 @@
 import React, { useCallback } from 'react';
 import { DialogContent } from 'components';
-import { useQuery, queryCache } from 'react-query';
+import { useQuery } from 'react-query';
 
 import ReferenceNumberForm from 'containers/JournalNumber/ReferenceNumberForm';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withSettingsActions from 'containers/Settings/withSettingsActions';
 import withSettings from 'containers/Settings/withSettings';
-import withPaymentReceivesActions from 'containers/Sales/PaymentReceive/withPaymentReceivesActions';
+// import withPaymentReceivesActions from 'containers/Sales/PaymentReceive/withPaymentReceivesActions';
 
 import { compose, optionsMapToArray } from 'utils';
 
@@ -28,7 +28,7 @@ function PaymentNumberDialogContent({
   closeDialog,
 
   // #withPaymentReceivesActions
-  setPaymentReceiveNumberChanged,
+  // setPaymentReceiveNumberChanged,
 }) {
   const fetchSettings = useQuery(['settings'], () => requestFetchOptions({}));
 
@@ -43,8 +43,7 @@ function PaymentNumberDialogContent({
         closeDialog('payment-receive-number-form');
 
         setTimeout(() => {
-          queryCache.invalidateQueries('settings');
-          setPaymentReceiveNumberChanged(true);
+          // setPaymentReceiveNumberChanged(true);
         }, 250);
       })
       .catch(() => {
@@ -76,5 +75,5 @@ export default compose(
     nextNumber: paymentReceiveSettings?.nextNumber,
     numberPrefix: paymentReceiveSettings?.numberPrefix,
   })),
-  withPaymentReceivesActions,
+  // withPaymentReceivesActions,
 )(PaymentNumberDialogContent);
