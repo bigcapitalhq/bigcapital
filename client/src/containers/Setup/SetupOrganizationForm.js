@@ -99,7 +99,7 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
                     setFieldValue('baseCurrency', item.code);
                   }}
                   selectedItemProp={'code'}
-                  textProp={'label'}
+                  textProp={'name'}
                   defaultText={<T id={'select_base_currency'} />}
                   selectedItem={value}
                 />
