@@ -63,36 +63,35 @@ function PaymentReceivesDataTable({
     [setPaymentReceivesTableState],
   );
 
+  // Display empty status instead of the table.
   if (isEmptyStatus) {
     return <PaymentReceivesEmptyStatus />;
   }
 
   return (
-    <div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>
-      <DataTable
-        columns={columns}
-        data={paymentReceives}
-        loading={isPaymentReceivesLoading}
-        headerLoading={isPaymentReceivesLoading}
-        progressBarLoading={isPaymentReceivesFetching}
-        onFetchData={handleDataTableFetchData}
-        manualSortBy={true}
-        selectionColumn={true}
-        noInitialFetch={true}
-        sticky={true}
-        autoResetSortBy={false}
-        autoResetPage={false}
-        pagination={true}
-        pagesCount={pagination.pagesCount}
-        TableLoadingRenderer={TableSkeletonRows}
-        TableHeaderSkeletonRenderer={TableSkeletonHeader}
-        ContextMenu={ActionsMenu}
-        payload={{
-          onDelete: handleDeletePaymentReceive,
-          onEdit: handleEditPaymentReceive,
-        }}
-      />
-    </div>
+    <DataTable
+      columns={columns}
+      data={paymentReceives}
+      loading={isPaymentReceivesLoading}
+      headerLoading={isPaymentReceivesLoading}
+      progressBarLoading={isPaymentReceivesFetching}
+      onFetchData={handleDataTableFetchData}
+      manualSortBy={true}
+      selectionColumn={true}
+      noInitialFetch={true}
+      sticky={true}
+      autoResetSortBy={false}
+      autoResetPage={false}
+      pagination={true}
+      pagesCount={pagination.pagesCount}
+      TableLoadingRenderer={TableSkeletonRows}
+      TableHeaderSkeletonRenderer={TableSkeletonHeader}
+      ContextMenu={ActionsMenu}
+      payload={{
+        onDelete: handleDeletePaymentReceive,
+        onEdit: handleEditPaymentReceive,
+      }}
+    />
   );
 }
 

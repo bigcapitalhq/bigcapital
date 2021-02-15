@@ -24,7 +24,7 @@ function ItemsCategoryTable({
   openDialog,
 
   // #withAlertActions
-  openAlert
+  openAlert,
 }) {
   // Items categories context.
   const {
@@ -49,34 +49,27 @@ function ItemsCategoryTable({
   };
 
   return (
-    <div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>
-      <DataTable
-        noInitialFetch={true}
-        columns={columns}
-        data={itemsCategories}
-
-        loading={isCategoriesLoading}
-        headerLoading={isCategoriesLoading}
-        progressBarLoading={isCategoriesFetching}
-
-        manualSortBy={true}
-        expandable={true}
-        sticky={true}
-        selectionColumn={true}
-        TableLoadingRenderer={TableSkeletonRows}
-        noResults={'There is no items categories in table yet.'}
-        payload={{
-          onDeleteCategory: handleDeleteCategory,
-          onEditCategory: handleEditCategory
-        }}
-        ContextMenu={ActionMenuList}
-        {...tableProps}
-      />
-    </div>
+    <DataTable
+      noInitialFetch={true}
+      columns={columns}
+      data={itemsCategories}
+      loading={isCategoriesLoading}
+      headerLoading={isCategoriesLoading}
+      progressBarLoading={isCategoriesFetching}
+      manualSortBy={true}
+      expandable={true}
+      sticky={true}
+      selectionColumn={true}
+      TableLoadingRenderer={TableSkeletonRows}
+      noResults={'There is no items categories in table yet.'}
+      payload={{
+        onDeleteCategory: handleDeleteCategory,
+        onEditCategory: handleEditCategory,
+      }}
+      ContextMenu={ActionMenuList}
+      {...tableProps}
+    />
   );
 }
 
-export default compose(
-  withDialogActions,
-  withAlertActions,
-)(ItemsCategoryTable);
+export default compose(withDialogActions, withAlertActions)(ItemsCategoryTable);

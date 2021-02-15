@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 
-import EditableItemsEntriesTable from 'containers/Entries/EditableItemsEntriesTable';
+// import EditableItemsEntriesTable from 'containers/Entries/EditableItemsEntriesTable';
 import { useReceiptFormContext } from './ReceiptFormProvider';
 
 export default function ExpenseFormBody({ defaultReceipt }) {
@@ -10,11 +10,11 @@ export default function ExpenseFormBody({ defaultReceipt }) {
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_BODY)}>
-      <EditableItemsEntriesTable
+      {/* <EditableItemsEntriesTable
         items={items}
         defaultEntry={defaultReceipt}
         filterSellableItems={true}
-      />
+      /> */}
     </div>
   );
 }

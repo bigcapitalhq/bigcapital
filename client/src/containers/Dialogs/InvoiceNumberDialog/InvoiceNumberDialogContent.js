@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
-import { DialogContent } from 'components';
-import { useQuery, queryCache } from 'react-query';
+import { useSaveSettings } from 'hooks/query';
 
+import { InvoiceNumberDialogProvider } from './InvoiceNumberDialogProvider';
 import ReferenceNumberForm from 'containers/JournalNumber/ReferenceNumberForm';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
@@ -19,52 +19,41 @@ function InvoiceNumberDialogContent({
   // #withSettings
   nextNumber,
   numberPrefix,
-
-  // #withSettingsActions
-  requestFetchOptions,
-  requestSubmitOptions,
-
+ 
   // #withDialogActions
   closeDialog,
-
-  // #withInvoicesActions
-  // setInvoiceNumberChanged,
 }) {
-  const fetchSettings = useQuery(['settings'], () => requestFetchOptions({}));
+  const { mutateAsync: saveSettings } = useSaveSettings();
 
   const handleSubmitForm = (values, { setSubmitting }) => {
     const options = optionsMapToArray(values).map((option) => {
       return { key: option.key, ...option, group: 'sales_invoices' };
     });
 
-    requestSubmitOptions({ options })
+    saveSettings({ options })
       .then(() => {
         setSubmitting(false);
         closeDialog('invoice-number-form');
-
-        setTimeout(() => {
-          queryCache.invalidateQueries('settings');
-          // setInvoiceNumberChanged(true);
-        }, 250);
       })
       .catch(() => {
         setSubmitting(false);
       });
   };
 
+  // Handle the dialog close.
   const handleClose = useCallback(() => {
     closeDialog('invoice-number-form');
   }, [closeDialog]);
 
   return (
-    <DialogContent isLoading={fetchSettings.isFetching}>
+    <InvoiceNumberDialogProvider>
       <ReferenceNumberForm
         initialNumber={nextNumber}
         initialPrefix={numberPrefix}
         onSubmit={handleSubmitForm}
         onClose={handleClose}
       />
-    </DialogContent>
+    </InvoiceNumberDialogProvider>
   );
 }
 

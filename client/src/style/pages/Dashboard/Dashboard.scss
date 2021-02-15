@@ -297,6 +297,12 @@ $dashboard-views-bar-height: 45px;
     }
   }
 
+  &__page{
+    display: flex;
+    flex-direction: column;
+    flex: 1 0 0;
+  }
+
   &__page-content {
     display: flex;
     flex-direction: column;
@@ -354,7 +360,7 @@ $dashboard-views-bar-height: 45px;
   &__footer {
     margin-top: auto;
     padding: 8px 0;
-    border-top: 1px solid #ececec;
+    border-top: 1px solid #d2dce2;
 
     .footer-links {
       text-align: center;

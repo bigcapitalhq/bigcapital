@@ -1,6 +1,17 @@
+import React from 'react';
+import { Button, Tooltip, Intent, Position } from '@blueprintjs/core';
+import { FormattedMessage as T, useIntl } from 'react-intl';
+import { Icon, Hint } from 'components';
+import {
+  InputGroupCell,
+  MoneyFieldCell,
+  AccountsListFieldCell,
+} from 'components/DataTableCells';
+import { formattedAmount, safeSumBy } from 'utils';
 
-
-
+/**
+ * Expense category header cell.
+ */
 const ExpenseCategoryHeaderCell = () => {
   return (
     <>
@@ -10,7 +21,9 @@ const ExpenseCategoryHeaderCell = () => {
   );
 };
 
-// Actions cell renderer.
+/**
+ * Actions cell renderer.
+ */
 const ActionsCellRenderer = ({
   row: { index },
   column: { id },
@@ -18,9 +31,6 @@ const ActionsCellRenderer = ({
   data,
   payload,
 }) => {
-  if (data.length <= index + 1) {
-    return '';
-  }
   const onClickRemoveRole = () => {
     payload.removeRow(index);
   };
@@ -38,95 +48,76 @@ const ActionsCellRenderer = ({
   );
 };
 
-// Total text cell renderer.
-const TotalExpenseCellRenderer = (chainedComponent) => (props) => {
-  if (props.data.length <= props.row.index + 1) {
-    return (
-      <span>
-        <T id={'total_currency'} values={{ currency: 'USD' }} />
-      </span>
-    );
-  }
-  return chainedComponent(props);
-};
+/**
+ * Amount footer cell.
+ */
+function AmountFooterCell({ rows }) {
+  const total = safeSumBy(rows, 'original.amount');
+  return <span>{formattedAmount(total, 'USD')}</span>;
+}
 
 /**
- * Note cell renderer.
+ * Expense account footer cell.
  */
-const NoteCellRenderer = (chainedComponent) => (props) => {
-  if (props.data.length === props.row.index + 1) {
-    return '';
-  }
-  return chainedComponent(props);
-};
+function ExpenseAccountFooterCell() {
+  return 'Total';
+}
 
 /**
- * Total amount cell renderer.
+ * Retrieve expense form table entries columns.
  */
-const TotalAmountCellRenderer = (chainedComponent, type) => (props) => {
-    if (props.data.length === props.row.index + 1) {
-      const total = props.data.reduce((total, entry) => {
-        const amount = parseInt(entry[type], 10);
-        const computed = amount ? total + amount : total;
-  
-        return computed;
-      }, 0);
-  
-      return <span>{formattedAmount(total, 'USD')}</span>;
-    }
-    return chainedComponent(props);
-  };
-  
+export function useExpenseFormTableColumns() {
+  const { formatMessage } = useIntl();
 
-
-  export function useExpenseFormTableColumns() {
-    return React.useMemo(
-        () => [
-          {
-            Header: '#',
-            accessor: 'index',
-            Cell: ({ row: { index } }) => <span>{index + 1}</span>,
-            className: 'index',
-            width: 40,
-            disableResizing: true,
-            disableSortBy: true,
-          },
-          {
-            Header: ExpenseCategoryHeaderCell,
-            id: 'expense_account_id',
-            accessor: 'expense_account_id',
-            Cell: TotalExpenseCellRenderer(AccountsListFieldCell),
-            className: 'expense_account_id',
-            disableSortBy: true,
-            width: 40,
-            filterAccountsByRootType: ['expense'],
-          },
-          {
-            Header: formatMessage({ id: 'amount_currency' }, { currency: 'USD' }),
-            accessor: 'amount',
-            Cell: TotalAmountCellRenderer(MoneyFieldCell, 'amount'),
-            disableSortBy: true,
-            width: 40,
-            className: 'amount',
-          },
-          {
-            Header: formatMessage({ id: 'description' }),
-            accessor: 'description',
-            Cell: NoteCellRenderer(InputGroupCell),
-            disableSortBy: true,
-            className: 'description',
-            width: 100,
-          },
-          {
-            Header: '',
-            accessor: 'action',
-            Cell: ActionsCellRenderer,
-            className: 'actions',
-            disableSortBy: true,
-            disableResizing: true,
-            width: 45,
-          },
-        ],
-        [formatMessage],
-      )
-  }
+  return React.useMemo(
+    () => [
+      {
+        Header: '#',
+        accessor: 'index',
+        Cell: ({ row: { index } }) => <span>{index + 1}</span>,
+        className: 'index',
+        width: 40,
+        disableResizing: true,
+        disableSortBy: true,
+      },
+      {
+        Header: ExpenseCategoryHeaderCell,
+        id: 'expense_account_id',
+        accessor: 'expense_account_id',
+        Cell: AccountsListFieldCell,
+        Footer: ExpenseAccountFooterCell,
+        className: 'expense_account_id',
+        disableSortBy: true,
+        width: 40,
+        filterAccountsByRootType: ['expense'],
+      },
+      {
+        Header: formatMessage({ id: 'amount_currency' }, { currency: 'USD' }),
+        accessor: 'amount',
+        Cell: MoneyFieldCell,
+        Footer: AmountFooterCell,
+        disableSortBy: true,
+        width: 40,
+        className: 'amount',
+      },
+      {
+        Header: formatMessage({ id: 'description' }),
+        accessor: 'description',
+        Cell: InputGroupCell,
+        disableSortBy: true,
+        className: 'description',
+        width: 100,
+      },
+      {
+        Header: '',
+        accessor: 'action',
+        Cell: ActionsCellRenderer,
+        className: 'actions',
+        disableSortBy: true,
+        disableResizing: true,
+        width: 45,
+      },
+    ],
+    [formatMessage],
+  );
+}

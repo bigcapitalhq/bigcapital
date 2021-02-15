@@ -1,8 +1,8 @@
 import React, { useCallback } from 'react';
 import classNames from 'classnames';
+import { useHistory } from 'react-router-dom';
 
 import { compose } from 'utils';
-
 import { useExpensesListContext } from './ExpensesListProvider';
 
 import { Choose } from 'components';
@@ -39,6 +39,8 @@ function ExpensesDataTable({
     isEmptyStatus
   } = useExpensesListContext();
 
+  const history = useHistory();
+
   // Expenses table columns.
   const columns = useExpensesTableColumns();
 
@@ -59,7 +61,9 @@ function ExpensesDataTable({
     openAlert('expense-publish', { expenseId: expense.id });
   };
 
-  const handleEditExpense = (expense) => {
+  // Handle the expense edit action.
+  const handleEditExpense = ({ id }) => {
+    history.push(`/expenses/${id}/edit`);
   };
 
   // Handle the expense delete action.
@@ -67,49 +71,45 @@ function ExpensesDataTable({
     openAlert('expense-delete', { expenseId: expense.id });
   };
 
+  // Display empty status instead of the table.
+  if (isEmptyStatus) {
+    return <ExpensesEmptyStatus />;
+  }
+
   return (
-    <div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>
-      <Choose>
-        <Choose.When condition={isEmptyStatus}>
-          <ExpensesEmptyStatus />
-        </Choose.When>
+    <DataTable
+      columns={columns}
+      data={expenses}
+      
+      loading={isExpensesLoading}
+      headerLoading={isExpensesLoading}
+      progressBarLoading={isExpensesFetching}
 
-        <Choose.Otherwise>
-          <DataTable
-            columns={columns}
-            data={expenses}
+      selectionColumn={true}
+      noInitialFetch={true}
+      sticky={true}
 
-            loading={isExpensesLoading}
-            headerLoading={isExpensesLoading}
-            progressBarLoading={isExpensesFetching}
+      onFetchData={handleFetchData}
+      
+      pagination={true}
+      manualSortBy={true}
+      manualPagination={true}
+      pagesCount={pagination.pagesCount}
 
-            selectionColumn={true}
-            noInitialFetch={true}
-            sticky={true}
+      autoResetSortBy={false}
+      autoResetPage={false}
 
-            onFetchData={handleFetchData}
-            
-            pagination={true}
-            manualSortBy={true}
-            manualPagination={true}
-            pagesCount={pagination.pagesCount}
+      TableLoadingRenderer={TableSkeletonRows}
+      TableHeaderSkeletonRenderer={TableSkeletonHeader}
 
-            autoResetSortBy={false}
-            autoResetPage={false}
+      ContextMenu={ActionsMenu}
 
-            TableLoadingRenderer={TableSkeletonRows}
-            TableHeaderSkeletonRenderer={TableSkeletonHeader}
-
-            ContextMenu={ActionsMenu}
-
-            payload={{
-              onPublish: handlePublishExpense,
-              onDelete: handleDeleteExpense
-            }}
-          />
-        </Choose.Otherwise>
-      </Choose>
-    </div>
+      payload={{
+        onPublish: handlePublishExpense,
+        onDelete: handleDeleteExpense,
+        onEdit: handleEditExpense
+      }}
+    />
   );
 }
 

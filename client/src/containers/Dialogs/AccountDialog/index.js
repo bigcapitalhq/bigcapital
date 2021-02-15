@@ -4,7 +4,7 @@ import { Dialog, DialogSuspense } from 'components';
 import withDialogRedux from 'components/DialogReduxConnect';
 import { compose } from 'utils';
 
-const AccountFormDialogContent = lazy(() => import('./AccountFormDialogContent'));
+const AccountDialogContent = lazy(() => import('./AccountDialogContent'));
 
 /**
  * Account form dialog.
@@ -28,7 +28,7 @@ function AccountFormDialog({
       isOpen={isOpen}
     >
       <DialogSuspense>
-        <AccountFormDialogContent
+        <AccountDialogContent
           dialogName={dialogName}
           accountId={payload.id}
           action={payload.action}

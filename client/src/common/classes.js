@@ -1,6 +1,7 @@
 import { Classes } from '@blueprintjs/core';
 
 const CLASSES = {
+  DASHBOARD_PAGE: 'dashboard__page',
   DASHBOARD_DATATABLE: 'dashboard__datatable',
   DASHBOARD_CARD: 'dashboard__card',
   DASHBOARD_CARD_PAGE: 'dashboard__card--page',

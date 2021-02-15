@@ -47,6 +47,8 @@ import CustomersMultiSelect from './CustomersMultiSelect';
 import Skeleton from './Skeleton'
 import ContextMenu from './ContextMenu'
 import TableFastCell from './Datatable/TableFastCell';
+import DashboardContentTable from './Dashboard/DashboardContentTable';
+import DashboardPageContent from './Dashboard/DashboardPageContent';
 
 const Hint = FieldHint;
 
@@ -99,5 +101,7 @@ export {
   CustomersMultiSelect,
   TableFastCell,
   Skeleton,
-  ContextMenu
+  ContextMenu,
+  DashboardContentTable,
+  DashboardPageContent
 };

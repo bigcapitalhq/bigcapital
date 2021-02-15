@@ -1,10 +1,10 @@
-import React, { useMemo, useCallback, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import { Formik, Form } from 'formik';
-import moment from 'moment';
 import { Intent } from '@blueprintjs/core';
 import { useIntl } from 'react-intl';
-import { pick, sumBy, omit, isEmpty } from 'lodash';
+import { sumBy, omit, isEmpty } from 'lodash';
 import classNames from 'classnames';
+import { useHistory } from 'react-router-dom';
 import { CLASSES } from 'common/classes';
 import {
   CreateInvoiceFormSchema,
@@ -12,12 +12,10 @@ import {
 } from './InvoiceForm.schema';
 
 import InvoiceFormHeader from './InvoiceFormHeader';
-import EditableItemsEntriesTable from 'containers/Entries/EditableItemsEntriesTable';
+import InvoiceItemsEntriesEditorField from './InvoiceItemsEntriesEditorField';
 import InvoiceFloatingActions from './InvoiceFloatingActions';
 import InvoiceFormFooter from './InvoiceFormFooter';
-import InvoiceNumberChangeWatcher from './InvoiceNumberChangeWatcher';
 
-import withInvoiceActions from './withInvoiceActions';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withMediaActions from 'containers/Media/withMediaActions';
 import withSettings from 'containers/Settings/withSettings';
@@ -26,101 +24,47 @@ import { AppToaster } from 'components';
 import { ERROR } from 'common/errors';
 import {
   compose,
-  repeatValue,
-  defaultToTransform,
   orderingLinesIndexes,
   transactionNumber,
 } from 'utils';
-import { useHistory } from 'react-router-dom';
 import { useInvoiceFormContext } from './InvoiceFormProvider';
-
-const MIN_LINES_NUMBER = 4;
-
-const defaultInvoice = {
-  index: 0,
-  item_id: '',
-  rate: '',
-  discount: 0,
-  quantity: 1,
-  description: '',
-};
-
-const defaultInitialValues = {
-  customer_id: '',
-  invoice_date: moment(new Date()).format('YYYY-MM-DD'),
-  due_date: moment(new Date()).format('YYYY-MM-DD'),
-  delivered: '',
-  invoice_no: '',
-  reference_no: '',
-  invoice_message: '',
-  terms_conditions: '',
-  entries: [...repeatValue(defaultInvoice, MIN_LINES_NUMBER)],
-};
+import { transformToEditForm } from './utils';
+import {
+  MIN_LINES_NUMBER,
+  defaultInitialValues
+} from './constants';
 
 /**
  * Invoice form.
  */
 function InvoiceForm({
-  // #withDashboard
-  changePageTitle,
-  changePageSubtitle,
-
   // #withSettings
   invoiceNextNumber,
   invoiceNumberPrefix,
 }) {
   const { formatMessage } = useIntl();
   const history = useHistory();
+
+  // Invoice form context.
   const {
-    items,
-    invoiceId,
+    isNewMode,
     invoice,
     createInvoiceMutate,
     editInvoiceMutate,
     submitPayload,
   } = useInvoiceFormContext();
 
-  const isNewMode = !invoiceId;
-
   // Invoice number.
   const invoiceNumber = transactionNumber(
     invoiceNumberPrefix,
     invoiceNextNumber,
   );
-  useEffect(() => {
-    const transactionNumber = invoice ? invoice.invoice_no : invoiceNumber;
 
-    if (invoice && invoice.id) {
-      changePageTitle(formatMessage({ id: 'edit_invoice' }));
-    } else {
-      changePageTitle(formatMessage({ id: 'new_invoice' }));
-    }
-    changePageSubtitle(
-      defaultToTransform(transactionNumber, `No. ${transactionNumber}`, ''),
-    );
-  }, [
-    changePageTitle,
-    changePageSubtitle,
-    invoice,
-    invoiceNumber,
-    formatMessage,
-  ]);
-
+  // Form initial values.
   const initialValues = useMemo(
     () => ({
       ...(!isEmpty(invoice)
-        ? {
-            ...pick(invoice, Object.keys(defaultInitialValues)),
-            entries: [
-              ...invoice.entries.map((invoice) => ({
-                ...pick(invoice, Object.keys(defaultInvoice)),
-              })),
-              ...repeatValue(
-                defaultInvoice,
-                Math.max(MIN_LINES_NUMBER - invoice.entries.length, 0),
-              ),
-            ],
-          }
+      ? transformToEditForm(invoice, defaultInitialValues, MIN_LINES_NUMBER)
         : {
             ...defaultInitialValues,
             invoice_no: invoiceNumber,
@@ -193,21 +137,12 @@ function InvoiceForm({
       setSubmitting(false);
     };
 
-    if (invoice && invoice.id) {
-      editInvoiceMutate(invoice.id, form).then(onSuccess).catch(onError);
+    if (!isEmpty(invoice)) {
+      editInvoiceMutate([invoice.id, form]).then(onSuccess).catch(onError);
     } else {
       createInvoiceMutate(form).then(onSuccess).catch(onError);
     }
   };
-
-  const handleInvoiceNumberChanged = useCallback(
-    (invoiceNumber) => {
-      changePageSubtitle(
-        defaultToTransform(invoiceNumber, `No. ${invoiceNumber}`, ''),
-      );
-    },
-    [changePageSubtitle],
-  );
 
   return (
     <div
@@ -225,17 +160,10 @@ function InvoiceForm({
         onSubmit={handleSubmit}
       >
         <Form>
-          <InvoiceFormHeader
-            onInvoiceNumberChanged={handleInvoiceNumberChanged}
-          />
-          <InvoiceNumberChangeWatcher invoiceNumber={invoiceNumber} />
+          <InvoiceFormHeader />
 
           <div className={classNames(CLASSES.PAGE_FORM_BODY)}>
-            <EditableItemsEntriesTable
-              items={items}
-              defaultEntry={defaultInvoice}
-              filterSellableItems={true}
-            />
+            <InvoiceItemsEntriesEditorField />
           </div>
           <InvoiceFormFooter />
           <InvoiceFloatingActions />
@@ -246,7 +174,6 @@ function InvoiceForm({
 }
 
 export default compose(
-  withInvoiceActions,
   withDashboardActions,
   withMediaActions,
   withSettings(({ invoiceSettings }) => ({

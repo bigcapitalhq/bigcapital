@@ -1,7 +1,5 @@
-import React, { useEffect } from 'react';
-
-import { useIntl } from 'react-intl';
-import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
+import React from 'react';
+import { DashboardContentTable, DashboardPageContent } from 'components';
 
 import { BillsListProvider } from './BillsListProvider';
 
@@ -10,7 +8,6 @@ import BillsAlerts from './BillsAlerts';
 import BillsViewsTabs from './BillsViewsTabs';
 import BillsTable from './BillsTable';
 
-import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withBills from './withBills';
 
 import { transformTableStateToQuery, compose } from 'utils';
@@ -19,25 +16,19 @@ import { transformTableStateToQuery, compose } from 'utils';
  * Bills list.
  */
 function BillsList({
-  // #withDashboardActions
-  changePageTitle,
-
   // #withBills
   billsTableState,
 }) {
-  const { formatMessage } = useIntl();
-  
-  useEffect(() => {
-    changePageTitle(formatMessage({ id: 'bills_list' }));
-  }, [changePageTitle, formatMessage]);
-  
   return (
     <BillsListProvider query={transformTableStateToQuery(billsTableState)}>
       <BillsActionsBar />
 
       <DashboardPageContent>
         <BillsViewsTabs />
-        <BillsTable />
+
+        <DashboardContentTable>
+          <BillsTable />
+        </DashboardContentTable>
       </DashboardPageContent>
 
       <BillsAlerts />
@@ -46,6 +37,5 @@ function BillsList({
 }
 
 export default compose(
-  withDashboardActions,
   withBills(({ billsTableState }) => ({ billsTableState })),
 )(BillsList);

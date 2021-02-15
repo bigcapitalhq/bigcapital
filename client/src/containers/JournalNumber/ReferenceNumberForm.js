@@ -11,11 +11,10 @@ import {
   InputGroup,
   Intent,
 } from '@blueprintjs/core';
-import withSettingsActions from 'containers/Settings/withSettingsActions';
 
-import { compose } from 'utils';
-
-
+/**
+ * Reference number form.
+ */
 export default function ReferenceNumberForm({
   onSubmit,
   onClose,
@@ -62,6 +61,7 @@ export default function ReferenceNumberForm({
           <Row>
             {/* prefix */}
             <Col>
+            
               <FormGroup
                 label={<T id={'prefix'} />}
                 className={'form-group--'}

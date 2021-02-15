@@ -1,13 +1,25 @@
 import { cloneDeep, forOwn, isString } from 'lodash';
 import ModelEntityNotFound from 'exceptions/ModelEntityNotFound';
 
+function applyGraphFetched(withRelations, builder) {
+  const relations = Array.isArray(withRelations)
+    ? withRelations
+    : typeof withRelations === 'string'
+    ? withRelations.split(',').map((relation) => relation.trim())
+    : [];
+
+  relations.forEach((relation) => {
+    builder.withGraphFetched(relation);
+  });
+}
+
 export default class EntityRepository {
   idColumn: string;
   knex: any;
 
   /**
    * Constructor method.
-   * @param {Knex} knex 
+   * @param {Knex} knex
    */
   constructor(knex) {
     this.knex = knex;
@@ -23,11 +35,14 @@ export default class EntityRepository {
 
   /**
    * Retrieve all entries with specified relations.
-   * 
-   * @param withRelations 
+   *
+   * @param withRelations
    */
   all(withRelations?) {
-    return this.model.query().withGraphFetched(withRelations);
+    const builder = this.model.query();
+    applyGraphFetched(withRelations, builder);
+
+    return builder;
   }
 
   /**
@@ -38,9 +53,12 @@ export default class EntityRepository {
    * @returns {Promise<Object[]>} - query builder. You can chain additional methods to it or call "await" or then() on it to execute
    */
   find(attributeValues = {}, withRelations?) {
-    return this.model.query()
-      .where(attributeValues)
-      .withGraphFetched(withRelations);
+    const builder = this.model
+      .query()
+      .where(attributeValues);
+
+    applyGraphFetched(withRelations, builder);
+    return builder;
   }
 
   /**
@@ -51,10 +69,12 @@ export default class EntityRepository {
    * @returns {PromiseLike<Object[]>} - query builder. You can chain additional methods to it or call "await" or then() on it to execute
    */
   findWhereNot(attributeValues = {}, withRelations?) {
-    return this.model
+    const builder = this.model
       .query()
-      .whereNot(attributeValues)
-      .withGraphFetched(withRelations);
+      .whereNot(attributeValues);
+
+    applyGraphFetched(withRelations, builder);
+    return builder;
   }
 
   /**
@@ -67,13 +87,17 @@ export default class EntityRepository {
    * @returns {PromiseLike<Object[]>} - query builder. You can chain additional methods to it or call "await" or then() on it to execute
    */
   findWhereIn(searchParam, attributeValues, withRelations?) {
+    const commonBuilder = (builder) => {
+      applyGraphFetched(withRelations, builder);
+    };
     if (isString(searchParam)) {
       return this.model
         .query()
         .whereIn(searchParam, attributeValues)
-        .withGraphFetched(withRelations);
+        .onBuild(commonBuilder);
     } else {
-      const builder = this.model.query(this.knex).withGraphFetched(withRelations);
+      const builder = this.model.query(this.knex).onBuild(commonBuilder);
+
       forOwn(searchParam, (value, key) => {
         if (Array.isArray(value)) {
           builder.whereIn(key, value);
@@ -134,11 +158,13 @@ export default class EntityRepository {
     const identityClause = {};
 
     if (Array.isArray(this.idColumn)) {
-      this.idColumn.forEach((idColumn) => (identityClause[idColumn] = entityDto[idColumn]));
+      this.idColumn.forEach(
+        (idColumn) => (identityClause[idColumn] = entityDto[idColumn])
+      );
     } else {
       identityClause[this.idColumn] = entityDto[this.idColumn];
     }
-    const whereConditions = (whereAttributes || identityClause);
+    const whereConditions = whereAttributes || identityClause;
     const modifiedEntitiesCount = await this.model
       .query()
       .where(whereConditions)
@@ -151,25 +177,22 @@ export default class EntityRepository {
   }
 
   /**
-   * 
+   *
    * @param {Object} attributeValues - values to filter deleted entities by
    * @param {Object} [trx]
    * @returns {Promise<integer>} Query builder. After promise is resolved, returns count of deleted rows
    */
   deleteBy(attributeValues) {
-    return this.model
-      .query()
-      .delete()
-      .where(attributeValues);
+    return this.model.query().delete().where(attributeValues);
   }
 
   /**
    * @param {string || number} id - value of id column of the entity
    * @returns {Promise<integer>} Query builder. After promise is resolved, returns count of deleted rows
    */
-  deleteById(id: number|string) {
+  deleteById(id: number | string) {
     return this.deleteBy({
-      [this.idColumn]: id
+      [this.idColumn]: id,
     });
   }
 
@@ -178,43 +201,41 @@ export default class EntityRepository {
    * @param {string} field -
    * @param {number|string} values -
    */
-  deleteWhereIn(field: string, values: string|number[]) {
-    return this.model
-      .query()
-      .whereIn(field, values)
-      .delete();
+  deleteWhereIn(field: string, values: string | number[]) {
+    return this.model.query().whereIn(field, values).delete();
   }
 
   /**
-   * 
-   * @param {string|number[]} values 
+   *
+   * @param {string|number[]} values
    */
-  deleteWhereIdIn(values: string|number[]) {
+  deleteWhereIdIn(values: string | number[]) {
     return this.deleteWhereIn(this.idColumn, values);
   }
 
   /**
    * Arbitrary relation graphs can be upserted (insert + update + delete)
    * using the upsertGraph method.
-   * @param graph 
-   * @param options 
+   * @param graph
+   * @param options
    */
   upsertGraph(graph, options) {
     // Keep the input grpah immutable
     const graphCloned = cloneDeep(graph);
-    return this.model.query().upsertGraph(graphCloned, options)
+    return this.model.query().upsertGraph(graphCloned, options);
   }
 
   /**
-   * 
-   * @param {object} whereAttributes 
-   * @param {string} field 
-   * @param amount 
+   *
+   * @param {object} whereAttributes
+   * @param {string} field
+   * @param amount
    */
   changeNumber(whereAttributes, field: string, amount: number) {
-    const changeMethod = (amount > 0) ? 'increment' : 'decrement';
+    const changeMethod = amount > 0 ? 'increment' : 'decrement';
 
-    return this.model.query()
+    return this.model
+      .query()
       .where(whereAttributes)
       [changeMethod](field, Math.abs(amount));
   }

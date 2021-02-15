@@ -23,7 +23,7 @@ function PaymentMadesTable({
   addPaymentMadesTableQueries,
 
   // #withAlerts
-  openAlert
+  openAlert,
 }) {
   // Payment mades table columns.
   const columns = usePaymentMadesTableColumns();
@@ -42,7 +42,7 @@ function PaymentMadesTable({
 
   // Handles the delete payment made action.
   const handleDeletePaymentMade = (paymentMade) => {
-    openAlert('payment-made-delete', { paymentMadeId: paymentMade.id })
+    openAlert('payment-made-delete', { paymentMadeId: paymentMade.id });
   };
 
   // Handle datatable fetch data once the table state change.
@@ -52,37 +52,36 @@ function PaymentMadesTable({
     },
     [addPaymentMadesTableQueries],
   );
-    
+
+  // Display empty status instead of the table.
   if (isEmptyStatus) {
     return <PaymentMadesEmptyStatus />;
   }
 
   return (
-    <div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>
-      <DataTable
-        columns={columns}
-        data={paymentMades}
-        onFetchData={handleDataTableFetchData}
-        loading={isPaymentsLoading}
-        headerLoading={isPaymentsLoading}
-        progressBarLoading={isPaymentsFetching}
-        manualSortBy={true}
-        selectionColumn={true}
-        noInitialFetch={true}
-        sticky={true}
-        pagination={true}
-        pagesCount={pagination.pagesCount}
-        autoResetSortBy={false}
-        autoResetPage={false}
-        TableLoadingRenderer={TableSkeletonRows}
-        TableHeaderSkeletonRenderer={TableSkeletonHeader}
-        ContextMenu={ActionsMenu}
-        payload={{
-          onEdit: handleEditPaymentMade,
-          onDelete: handleDeletePaymentMade,
-        }}
-      />
-    </div>
+    <DataTable
+      columns={columns}
+      data={paymentMades}
+      onFetchData={handleDataTableFetchData}
+      loading={isPaymentsLoading}
+      headerLoading={isPaymentsLoading}
+      progressBarLoading={isPaymentsFetching}
+      manualSortBy={true}
+      selectionColumn={true}
+      noInitialFetch={true}
+      sticky={true}
+      pagination={true}
+      pagesCount={pagination.pagesCount}
+      autoResetSortBy={false}
+      autoResetPage={false}
+      TableLoadingRenderer={TableSkeletonRows}
+      TableHeaderSkeletonRenderer={TableSkeletonHeader}
+      ContextMenu={ActionsMenu}
+      payload={{
+        onEdit: handleEditPaymentMade,
+        onDelete: handleDeletePaymentMade,
+      }}
+    />
   );
 }
 

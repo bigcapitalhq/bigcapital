@@ -85,7 +85,7 @@
     "react-scrollbars-custom": "^4.0.21",
     "react-sortablejs": "^2.0.11",
     "react-split-pane": "^0.1.91",
-    "react-table": "^7.0.0",
+    "react-table": "^7.6.3",
     "react-table-sticky": "^1.1.2",
     "react-transition-group": "^4.4.1",
     "react-use": "^13.26.1",

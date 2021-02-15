@@ -751,8 +751,7 @@ export default class ExpensesService implements IExpensesService {
 
     const expense = await expenseRepository.findOneById(expenseId, [
       'paymentAccount',
-      'media',
-      'categories.expenseAccount',
+      'categories',
     ]);
     if (!expense) {
       throw new ServiceError(ERRORS.EXPENSE_NOT_FOUND);

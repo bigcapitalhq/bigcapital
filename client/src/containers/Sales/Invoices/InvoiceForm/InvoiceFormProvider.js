@@ -40,6 +40,9 @@ function InvoiceFormProvider({ invoiceId, ...props }) {
   // Form submit payload.
   const [submitPayload, setSubmitPayload] = useState({});
 
+  // Detarmines whether the form in new mode.
+  const isNewMode = !invoiceId;
+
   // Provider payload.
   const provider = {
     invoice,
@@ -54,6 +57,7 @@ function InvoiceFormProvider({ invoiceId, ...props }) {
     createInvoiceMutate,
     editInvoiceMutate,
     setSubmitPayload,
+    isNewMode
   };
 
   return (

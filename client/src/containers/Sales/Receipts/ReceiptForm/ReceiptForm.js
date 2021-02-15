@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import { Formik, Form } from 'formik';
 import moment from 'moment';
 import { Intent } from '@blueprintjs/core';
@@ -22,7 +22,6 @@ import ReceiptFromHeader from './ReceiptFormHeader';
 import ReceiptFormBody from './ReceiptFormBody';
 import ReceiptFormFloatingActions from './ReceiptFormFloatingActions';
 import ReceiptFormFooter from './ReceiptFormFooter';
-import ReceiptNumberWatcher from './ReceiptNumberWatcher';
 
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withSettings from 'containers/Settings/withSettings';
@@ -32,7 +31,6 @@ import {
   compose,
   repeatValue,
   orderingLinesIndexes,
-  defaultToTransform,
   transactionNumber,
 } from 'utils';
 
@@ -63,10 +61,6 @@ const defaultInitialValues = {
  * Receipt form.
  */
 function ReceiptForm({
-  // #withDashboard
-  changePageTitle,
-  changePageSubtitle,
-
   // #withSettings
   receiptNextNumber,
   receiptNumberPrefix,
@@ -91,28 +85,6 @@ function ReceiptForm({
     receiptNumberPrefix,
     receiptNextNumber,
   );
-  useEffect(() => {
-    const transactionNumber = !isNewMode
-      ? receipt.receipt_number
-      : receiptNumber;
-
-    if (receipt && receipt.id) {
-      changePageTitle(formatMessage({ id: 'edit_receipt' }));
-    } else {
-      changePageTitle(formatMessage({ id: 'new_receipt' }));
-    }
-    changePageSubtitle(
-      defaultToTransform(transactionNumber, `No. ${transactionNumber}`, ''),
-    );
-  }, [
-    isNewMode,
-    changePageTitle,
-    changePageSubtitle,
-    receipt,
-    receiptNumber,
-    formatMessage,
-  ]);
-
   // Initial values in create and edit mode.
   const initialValues = useMemo(
     () => ({
@@ -214,15 +186,6 @@ function ReceiptForm({
     }
   };
 
-  const handleReceiptNumberChanged = useCallback(
-    (receiptNumber) => {
-      changePageSubtitle(
-        defaultToTransform(receiptNumber, `No. ${receiptNumber}`, ''),
-      );
-    },
-    [changePageSubtitle],
-  );
-
   return (
     <div
       className={classNames(
@@ -239,10 +202,7 @@ function ReceiptForm({
         onSubmit={handleFormSubmit}
       >
         <Form>
-          <ReceiptFromHeader
-            onReceiptNumberChanged={handleReceiptNumberChanged}
-          />
-          <ReceiptNumberWatcher receiptNumber={receiptNumber} />
+          <ReceiptFromHeader />
           <ReceiptFormBody defaultReceipt={defaultReceipt} />
           <ReceiptFormFooter />
           <ReceiptFormFloatingActions />

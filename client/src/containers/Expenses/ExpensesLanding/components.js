@@ -108,6 +108,24 @@ export function PublishAccessor(row) {
 }
 
 /**
+ * Expense account accessor.
+ */
+export function ExpenseAccountAccessor(expense) {
+  if (expense.categories.length === 1) {
+    return expense.categories[0].expense_account.name;
+  } else if (expense.categories.length > 1) {
+    const mutliCategories = expense.categories.map((category) => (
+      <div>
+        - {category.expense_account.name} ${category.amount}
+      </div>
+    ));
+    return (
+      <Tooltip content={mutliCategories}>{'- Multi Categories -'}</Tooltip>
+    );
+  }
+}
+
+/**
  * Retrieve the expenses table columns.
  */
 export function useExpensesTableColumns() {
@@ -167,19 +185,4 @@ export function useExpensesTableColumns() {
     ],
     [],
   );
-}
-
-export function ExpenseAccountAccessor(expense) {
-  if (expense.categories.length === 1) {
-    return expense.categories[0].expense_account.name;
-  } else if (expense.categories.length > 1) {
-    const mutliCategories = expense.categories.map((category) => (
-      <div>
-        - {category.expense_account.name} ${category.amount}
-      </div>
-    ));
-    return (
-      <Tooltip content={mutliCategories}>{'- Multi Categories -'}</Tooltip>
-    );
-  }
 }

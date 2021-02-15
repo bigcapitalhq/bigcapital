@@ -24,7 +24,12 @@ function ExpenseFormPageProvider({ expenseId, ...props }) {
   } = useCustomers();
 
   // Fetch the expense details.
-  const { data: expense, isFetching: isExpenseLoading } = useExpense(expenseId);
+  const { data: expense, isFetching: isExpenseLoading } = useExpense(
+    expenseId,
+    {
+      enabled: !!expenseId,
+    },
+  );
 
   // Fetch accounts list.
   const { data: accounts, isFetching: isAccountsLoading } = useAccounts();
@@ -33,9 +38,17 @@ function ExpenseFormPageProvider({ expenseId, ...props }) {
   const { mutateAsync: createExpenseMutate } = useCreateExpense();
   const { mutateAsync: editExpenseMutate } = useEditExpense();
 
+  // Submit form payload.
+  const [submitPayload, setSubmitPayload] = React.useState({});
+
+  // 
+  const isNewMode = !expenseId;
+
   // Provider payload.
   const provider = {
+    isNewMode,
     expenseId,
+    submitPayload,
 
     currencies,
     customers,
@@ -49,6 +62,7 @@ function ExpenseFormPageProvider({ expenseId, ...props }) {
 
     createExpenseMutate,
     editExpenseMutate,
+    setSubmitPayload,
   };
 
   return (

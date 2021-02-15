@@ -12,9 +12,6 @@ import { compose } from 'utils';
 
 // Estimate form top header.
 function EstimateFormHeader({
-  // #ownProps
-  onEstimateNumberChanged,
-
   // #withSettings
   baseCurrency,
 }) {
@@ -27,9 +24,7 @@ function EstimateFormHeader({
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
-      <EstimateFormHeaderFields
-        onEstimateNumberChanged={onEstimateNumberChanged}
-      />
+      <EstimateFormHeaderFields />
       <PageFormBigNumber
         label={'Amount'}
         amount={totalDueAmount}

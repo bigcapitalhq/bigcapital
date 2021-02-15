@@ -1,9 +1,8 @@
-import React, { useMemo, useEffect, useState, useCallback } from 'react';
+import React, { useMemo } from 'react';
 import { Intent } from '@blueprintjs/core';
 import { useIntl } from 'react-intl';
-import { defaultTo, pick, sumBy } from 'lodash';
+import { defaultTo, sumBy, isEmpty } from 'lodash';
 import { Formik, Form } from 'formik';
-import moment from 'moment';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 import { CLASSES } from 'common/classes';
@@ -24,80 +23,51 @@ import {
   CreateExpenseFormSchema,
   EditExpenseFormSchema,
 } from './ExpenseForm.schema';
-import { transformErrors } from './utils';
-import { compose, repeatValue, orderingLinesIndexes } from 'utils';
-
-const MIN_LINES_NUMBER = 4;
-
-const defaultCategory = {
-  index: 0,
-  amount: '',
-  expense_account_id: '',
-  description: '',
-};
-
-const defaultInitialValues = {
-  payment_account_id: '',
-  beneficiary: '',
-  payment_date: moment(new Date()).format('YYYY-MM-DD'),
-  description: '',
-  reference_no: '',
-  currency_code: '',
-  publish: '',
-  categories: [...repeatValue(defaultCategory, MIN_LINES_NUMBER)],
-};
+import { transformErrors, defaultExpense, transformToEditForm } from './utils';
+import { compose, orderingLinesIndexes } from 'utils';
 
 /**
  * Expense form.
  */
 function ExpenseForm({
-  // #withDashboard
-  changePageTitle,
-
   // #withSettings
   baseCurrency,
   preferredPaymentAccount,
 }) {
+  // Expense form context.
   const {
     editExpenseMutate,
     createExpenseMutate,
     expense,
     expenseId,
+    submitPayload,
   } = useExpenseFormContext();
 
   const isNewMode = !expenseId;
-  const [submitPayload, setSubmitPayload] = useState({});
-
   const { formatMessage } = useIntl();
+
+  // History context.
   const history = useHistory();
 
-  useEffect(() => {
-    if (isNewMode) {
-      changePageTitle(formatMessage({ id: 'new_expense' }));
-    } else {
-      changePageTitle(formatMessage({ id: 'edit_expense' }));
-    }
-  }, [changePageTitle, isNewMode, formatMessage]);
-
+  // Form initial values.
   const initialValues = useMemo(
     () => ({
-      ...(expense
+      ...(!isEmpty(expense)
         ? {
-            ...pick(expense, Object.keys(defaultInitialValues)),
-            categories: [
-              ...expense.categories.map((category) => ({
-                ...pick(category, Object.keys(defaultCategory)),
-              })),
-            ],
+            ...transformToEditForm(expense, defaultExpense),
           }
         : {
-            ...defaultInitialValues,
+            ...defaultExpense,
             currency_code: baseCurrency,
             payment_account_id: defaultTo(preferredPaymentAccount, ''),
-            categories: orderingLinesIndexes(defaultInitialValues.categories),
+            categories: orderingLinesIndexes(defaultExpense.categories),
           }),
     }),
-    [expense, baseCurrency, preferredPaymentAccount],
+    [
+      expense,
+      baseCurrency,
+      preferredPaymentAccount,
+    ],
   );
 
   //  Handle form submit.
@@ -155,21 +125,11 @@ function ExpenseForm({
     if (isNewMode) {
       createExpenseMutate(form).then(handleSuccess).catch(handleError);
     } else {
-      editExpenseMutate(expense.id, form)
+      editExpenseMutate([expense.id, form])
         .then(handleSuccess)
         .catch(handleError);
     }
   };
-  const handleCancelClick = useCallback(() => {
-    history.goBack();
-  }, [history]);
-
-  const handleSubmitClick = useCallback(
-    (event, payload) => {
-      setSubmitPayload({ ...payload });
-    },
-    [setSubmitPayload],
-  );
 
   return (
     <div
@@ -180,32 +140,24 @@ function ExpenseForm({
       )}
     >
       <Formik
-        validationSchema={isNewMode
-          ? CreateExpenseFormSchema
-          : EditExpenseFormSchema}
+        validationSchema={
+          isNewMode ? CreateExpenseFormSchema : EditExpenseFormSchema
+        }
         initialValues={initialValues}
         onSubmit={handleSubmit}
       >
-        {({ isSubmitting, values }) => (
-          <Form>
-            <ExpenseFormHeader />
-            <ExpenseFormBody />
-            <ExpenseFormFooter />
-            <ExpenseFloatingFooter
-              isSubmitting={isSubmitting}
-              expense={expenseId}
-              expensePublished={values.publish}
-              onCancelClick={handleCancelClick}
-              onSubmitClick={handleSubmitClick}
-            />
-          </Form>
-        )}
+        <Form>
+          <ExpenseFormHeader />
+          <ExpenseFormBody />
+          <ExpenseFormFooter />
+          <ExpenseFloatingFooter />
+        </Form>
       </Formik>
     </div>
   );
 }
 
-  export default compose(
+export default compose(
   withDashboardActions,
   withMediaActions,
   withSettings(({ organizationSettings, expenseSettings }) => ({

@@ -7,7 +7,7 @@ import { inputIntent } from 'utils';
 import { Row, Dragzone, Col } from 'components';
 import { CLASSES } from 'common/classes';
 
-export default function ExpenseFormFooter({}) {
+export default function ExpenseFormFooter() {
   return (
     <div className={classNames(CLASSES.PAGE_FORM_FOOTER)}>
       <Row>

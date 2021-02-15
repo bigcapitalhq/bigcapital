@@ -1,5 +1,7 @@
 import { AppToaster } from 'components';
+import moment from 'moment';
 import { formatMessage } from 'services/intl';
+import { transformToForm, repeatValue } from 'utils';
 
 const ERROR = {
   EXPENSE_ALREADY_PUBLISHED: 'EXPENSE.ALREADY.PUBLISHED',
@@ -18,4 +20,46 @@ export const transformErrors = (errors, { setErrors }) => {
       }),
     );
   }
+};
+
+export const MIN_LINES_NUMBER = 4;
+
+export const defaultExpenseEntry = {
+  index: 0,
+  amount: '',
+  expense_account_id: '',
+  description: '',
+};
+
+export const defaultExpense = {
+  payment_account_id: '',
+  beneficiary: '',
+  payment_date: moment(new Date()).format('YYYY-MM-DD'),
+  description: '',
+  reference_no: '',
+  currency_code: '',
+  publish: '',
+  categories: [...repeatValue(defaultExpenseEntry, MIN_LINES_NUMBER)],
+};
+
+/**
+ * Transformes the expense to form initial values in edit mode.
+ */
+export const transformToEditForm = (
+  expense,
+  defaultExpense,
+  linesNumber = 4,
+) => {
+  return {
+    ...transformToForm(expense, defaultExpense),
+    categories: [
+      ...expense.categories.map((category) => ({
+        ...transformToForm(category, defaultExpense.categories[0]),
+      })),
+      ...repeatValue(
+        expense,
+        Math.max(linesNumber - expense.categories.length, 0),
+      ),
+    ],
+  };
 };

@@ -1,37 +1,23 @@
-import React, { useEffect } from 'react';
-import { useIntl } from 'react-intl';
-
-import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
+import React from 'react';
+import { DashboardContentTable, DashboardPageContent } from 'components';
 
 import ReceiptActionsBar from './ReceiptActionsBar';
 import ReceiptViewTabs from './ReceiptViewTabs';
 import ReceiptsAlerts from '../ReceiptsAlerts';
 import ReceiptsTable from './ReceiptsTable';
 
-import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withReceipts from './withReceipts';
 
 import { ReceiptsListProvider } from './ReceiptsListProvider';
-
 import { transformTableStateToQuery, compose } from 'utils';
 
 /**
  * Receipts list page.
  */
 function ReceiptsList({
-  // #withDashboardActions
-  changePageTitle,
-
   // #withReceipts
   receiptTableState,
 }) {
-  const { formatMessage } = useIntl();
-
-  // Changes the dashboard page title once the page mount.
-  useEffect(() => {
-    changePageTitle(formatMessage({ id: 'receipts_list' }));
-  }, [changePageTitle, formatMessage]);
-
   return (
     <ReceiptsListProvider query={transformTableStateToQuery(receiptTableState)}>
       <DashboardPageContent>
@@ -39,7 +25,10 @@ function ReceiptsList({
 
         <DashboardPageContent>
           <ReceiptViewTabs />
-          <ReceiptsTable />
+
+          <DashboardContentTable>
+            <ReceiptsTable />
+          </DashboardContentTable>
         </DashboardPageContent>
 
         <ReceiptsAlerts />
@@ -49,7 +38,6 @@ function ReceiptsList({
 }
 
 export default compose(
-  withDashboardActions,
   withReceipts(({ receiptTableState }) => ({
     receiptTableState,
   })),

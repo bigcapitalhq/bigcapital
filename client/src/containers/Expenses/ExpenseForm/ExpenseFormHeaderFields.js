@@ -6,7 +6,6 @@ import { FormattedMessage as T } from 'react-intl';
 import { CLASSES } from 'common/classes';
 import {
   momentFormatter,
-  compose,
   tansformDateValue,
   inputIntent,
   handleDateChange,
@@ -27,7 +26,7 @@ import { useExpenseFormContext } from './ExpenseFormPageProvider';
 /**
  * Expense form header.
  */
-export default function ExpenseFormHeader({}) {
+export default function ExpenseFormHeader() {
   const { currencies, accounts, customers } = useExpenseFormContext();
 
   return (

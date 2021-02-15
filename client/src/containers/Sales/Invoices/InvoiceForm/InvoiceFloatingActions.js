@@ -151,6 +151,7 @@ export default function InvoiceFloatingActions() {
         <ButtonGroup>
           <Button
             disabled={isSubmitting}
+            loading={isSubmitting}
             intent={Intent.PRIMARY}
             onClick={handleSubmitDeliverBtnClick}
             text={<T id={'save'} />}

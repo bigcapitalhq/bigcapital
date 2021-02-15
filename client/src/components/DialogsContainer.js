@@ -1,6 +1,6 @@
 import React from 'react';
 
-import AccountFormDialog from 'containers/Dialogs/AccountFormDialog';
+import AccountDialog from 'containers/Dialogs/AccountDialog';
 import InviteUserDialog from 'containers/Dialogs/InviteUserDialog';
 import ItemCategoryDialog from 'containers/Dialogs/ItemCategoryDialog';
 import CurrencyFormDialog from 'containers/Dialogs/CurrencyFormDialog';
@@ -19,7 +19,7 @@ import PaymentViaVoucherDialog from 'containers/Dialogs/PaymentViaVoucherDialog'
 export default function DialogsContainer() {
   return (
     <div>
-      {/* <AccountFormDialog dialogName={'account-form'} /> */}
+      <AccountDialog dialogName={'account-form'} />
       <JournalNumberDialog dialogName={'journal-number-form'} />
       <PaymentReceiveNumberDialog dialogName={'payment-receive-number-form'} />
       <EstimateNumberDialog dialogName={'estimate-number-form'} />

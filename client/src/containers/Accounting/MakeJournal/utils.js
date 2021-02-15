@@ -1,8 +1,9 @@
 import React from 'react';
 import { Intent } from '@blueprintjs/core';
 import { sumBy, setWith, toSafeInteger, get } from 'lodash';
+import moment from 'moment';
 
-import { transformUpdatedRows } from 'utils';
+import { transformUpdatedRows, repeatValue, transformToForm } from 'utils';
 import { AppToaster } from 'components';
 import { formatMessage } from 'services/intl';
 
@@ -17,6 +18,44 @@ const ERROR = {
   ENTRIES_SHOULD_ASSIGN_WITH_CONTACT: 'ENTRIES_SHOULD_ASSIGN_WITH_CONTACT',
 };
 
+export const MIN_LINES_NUMBER = 4;
+
+export const defaultEntry = {
+  index: 0,
+  account_id: '',
+  credit: '',
+  debit: '',
+  contact_id: '',
+  note: '',
+};
+
+export const defaultManualJournal = {
+  journal_number: '',
+  journal_type: 'Journal',
+  date: moment(new Date()).format('YYYY-MM-DD'),
+  description: '',
+  reference: '',
+  currency_code: '',
+  publish: '',
+  entries: [...repeatValue(defaultEntry, 4)],
+};
+
+// Transform to edit form.
+export function transformToEditForm(manualJournal) {
+  return {
+    ...transformToForm(manualJournal, defaultManualJournal),
+    entries: [
+      ...manualJournal.entries.map((entry) => ({
+        ...transformToForm(entry, defaultManualJournal.entries[0]),
+      })),
+      ...repeatValue(
+        defaultEntry,
+        Math.max(MIN_LINES_NUMBER - manualJournal.entries.length, 0),
+      ),
+    ],
+  };
+}
+
 /**
  * Entries adjustment.
  */
@@ -30,6 +69,9 @@ function adjustmentEntries(entries) {
   };
 }
 
+/**
+ *
+ */
 export const updateDataReducer = (rows, rowIndex, columnId, value) => {
   let newRows = transformUpdatedRows(rows, rowIndex, columnId, value);
 
@@ -59,7 +101,9 @@ export const updateDataReducer = (rows, rowIndex, columnId, value) => {
   return newRows;
 };
 
-// Transform API errors in toasts messages.
+/**
+ * Transform API errors in toasts messages.
+ */
 export const transformErrors = (resErrors, { setErrors, errors }) => {
   const getError = (errorType) => resErrors.find((e) => e.type === errorType);
   const toastMessages = [];

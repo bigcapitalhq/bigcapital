@@ -80,8 +80,8 @@ export default function MakeJournalFloatingAction() {
       <If condition={!manualJournal || !manualJournal?.is_published}>
         <ButtonGroup>
           <Button
-            disabled={isSubmitting}
             loading={isSubmitting}
+            disabled={isSubmitting}
             intent={Intent.PRIMARY}
             onClick={handleSubmitPublishBtnClick}
             text={<T id={'save_publish'} />}
@@ -146,6 +146,7 @@ export default function MakeJournalFloatingAction() {
       <If condition={manualJournal && manualJournal?.is_published}>
         <ButtonGroup>
           <Button
+            loading={isSubmitting}
             disabled={isSubmitting}
             intent={Intent.PRIMARY}
             onClick={handleSubmitPublishBtnClick}

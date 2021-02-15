@@ -15,8 +15,6 @@ import { compose } from 'redux';
  * Invoice form header section.
  */
 function InvoiceFormHeader({
-  // #ownProps
-  onInvoiceNumberChanged,
   // #withSettings
   baseCurrency,
 }) {
@@ -29,9 +27,7 @@ function InvoiceFormHeader({
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
-      <InvoiceFormHeaderFields
-        onInvoiceNumberChanged={onInvoiceNumberChanged}
-      />
+      <InvoiceFormHeaderFields />
       <PageFormBigNumber
         label={'Due Amount'}
         amount={totalDueAmount}

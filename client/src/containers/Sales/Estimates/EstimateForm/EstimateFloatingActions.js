@@ -13,70 +13,55 @@ import { FormattedMessage as T } from 'react-intl';
 import { CLASSES } from 'common/classes';
 import classNames from 'classnames';
 import { useFormikContext } from 'formik';
-import { saveInvoke } from 'utils';
 import { If, Icon } from 'components';
+import { useEstimateFormContext } from './EstimateFormProvider';
 
 /**
  * Estimate floating actions bar.
  */
-export default function EstimateFloatingActions({
-  isSubmitting,
-  onSubmitClick,
-  onCancelClick,
-  estimate,
-}) {
-  const { resetForm, submitForm } = useFormikContext();
+export default function EstimateFloatingActions() {
+  const { resetForm, submitForm, isSubmitting } = useFormikContext();
 
+  // Estimate form context.
+  const { estimate, setSubmitPayload } = useEstimateFormContext();
+
+  // Handle submit & deliver button click.
   const handleSubmitDeliverBtnClick = (event) => {
-    saveInvoke(onSubmitClick, event, {
-      redirect: true,
-      deliver: true,
-    });
+    setSubmitPayload({ redirect: true, deliver: true, });
   };
 
+  // Handle submit, deliver & new button click.
   const handleSubmitDeliverAndNewBtnClick = (event) => {
+    setSubmitPayload({ redirect: false, deliver: true, resetForm: true });
     submitForm();
-    saveInvoke(onSubmitClick, event, {
-      redirect: false,
-      deliver: true,
-      resetForm: true,
-    });
   };
 
+  // Handle submit, deliver & continue editing button click.
   const handleSubmitDeliverContinueEditingBtnClick = (event) => {
+    setSubmitPayload({ redirect: false, deliver: true });
     submitForm();
-    saveInvoke(onSubmitClick, event, {
-      redirect: false,
-      deliver: true,
-    });
   };
 
+  // Handle submit as draft button click.
   const handleSubmitDraftBtnClick = (event) => {
-    saveInvoke(onSubmitClick, event, {
-      redirect: true,
-      deliver: false,
-    });
+    setSubmitPayload({ redirect: true, deliver: false });
+    submitForm();
   };
 
+  // Handle submit as draft & new button click.
   const handleSubmitDraftAndNewBtnClick = (event) => {
+    setSubmitPayload({ redirect: false, deliver: false, resetForm: true });
     submitForm();
-    saveInvoke(onSubmitClick, event, {
-      redirect: false,
-      deliver: false,
-      resetForm: true,
-    });
   };
 
+  // Handle submit as draft & continue editing button click.
   const handleSubmitDraftContinueEditingBtnClick = (event) => {
+    setSubmitPayload({ redirect: false, deliver: false });
     submitForm();
-    saveInvoke(onSubmitClick, event, {
-      redirect: false,
-      deliver: false,
-    });
   };
 
   const handleCancelBtnClick = (event) => {
-    saveInvoke(onCancelClick, event);
+    
   };
 
   const handleClearBtnClick = (event) => {
@@ -90,6 +75,7 @@ export default function EstimateFloatingActions({
         <ButtonGroup>
           <Button
             disabled={isSubmitting}
+            loading={isSubmitting}
             intent={Intent.PRIMARY}
             type="submit"
             onClick={handleSubmitDeliverBtnClick}

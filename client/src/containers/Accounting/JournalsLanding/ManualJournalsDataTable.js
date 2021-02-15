@@ -1,7 +1,7 @@
 import React from 'react';
-import classNames from 'classnames';
-import { DataTable, Choose } from 'components';
-import { CLASSES } from 'common/classes';
+import { useHistory } from 'react-router-dom';
+
+import { DataTable } from 'components';
 
 import ManualJournalsEmptyStatus from './ManualJournalsEmptyStatus';
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
@@ -35,20 +35,22 @@ function ManualJournalsDataTable({
     pagination,
     isManualJournalsLoading,
     isManualJournalsFetching,
-    isEmptyStatus
+    isEmptyStatus,
   } = useManualJournalsContext();
+
+  const history = useHistory();
 
   // Manual journals columns.
   const columns = useManualJournalsColumns();
 
   // Handles the journal publish action.
   const handlePublishJournal = ({ id }) => {
-    openAlert('journal-publish', { manualJournalId: id })
+    openAlert('journal-publish', { manualJournalId: id });
   };
 
   // Handle the journal edit action.
   const handleEditJournal = ({ id }) => {
-
+    history.push(`/manual-journals/${id}/edit`);
   };
 
   // Handle the journal delete action.
@@ -68,51 +70,41 @@ function ManualJournalsDataTable({
     [setManualJournalsTableState],
   );
 
+  // Display manual journal empty status instead of the table.
+  if (isEmptyStatus) {
+    return <ManualJournalsEmptyStatus />;
+  }
+
   return (
-    <div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>
-      <Choose>
-        <Choose.When condition={isEmptyStatus}>
-          <ManualJournalsEmptyStatus />
-        </Choose.When>
-
-        <Choose.Otherwise>
-          <DataTable
-            noInitialFetch={true}
-            columns={columns}
-            data={manualJournals}
-
-            manualSortBy={true}
-            selectionColumn={true}
-            expandable={true}
-            sticky={true}
-
-            loading={isManualJournalsLoading}
-            headerLoading={isManualJournalsLoading}
-            progressBarLoading={isManualJournalsFetching}
-
-            pagesCount={pagination.pagesCount}
-            pagination={true}
-
-            autoResetSortBy={false}
-            autoResetPage={false}
-          
-            TableLoadingRenderer={TableSkeletonRows}
-            TableHeaderSkeletonRenderer={TableSkeletonHeader}
-            ContextMenu={ActionsMenu}
-
-            onFetchData={handleFetchData}
-            payload={{
-              onDelete: handleDeleteJournal,
-              onPublish: handlePublishJournal
-            }}
-          />
-        </Choose.Otherwise>
-      </Choose>
-    </div>
+    <DataTable
+      noInitialFetch={true}
+      columns={columns}
+      data={manualJournals}
+      manualSortBy={true}
+      selectionColumn={true}
+      expandable={true}
+      sticky={true}
+      loading={isManualJournalsLoading}
+      headerLoading={isManualJournalsLoading}
+      progressBarLoading={isManualJournalsFetching}
+      pagesCount={pagination.pagesCount}
+      pagination={true}
+      autoResetSortBy={false}
+      autoResetPage={false}
+      TableLoadingRenderer={TableSkeletonRows}
+      TableHeaderSkeletonRenderer={TableSkeletonHeader}
+      ContextMenu={ActionsMenu}
+      onFetchData={handleFetchData}
+      payload={{
+        onDelete: handleDeleteJournal,
+        onPublish: handlePublishJournal,
+        onEdit: handleEditJournal,
+      }}
+    />
   );
 }
 
 export default compose(
   withManualJournalsActions,
-  withAlertsActions
+  withAlertsActions,
 )(ManualJournalsDataTable);

@@ -24,7 +24,7 @@ export function useEditInvoice(props) {
   const queryClient = useQueryClient();
 
   return useMutation(
-    (id, values) => ApiService.post(`sales/invoices/${id}`, values),
+    ([id, values]) => ApiService.post(`sales/invoices/${id}`, values),
     {
       onSuccess: () => {
         queryClient.invalidateQueries('SALE_INVOICES');
@@ -102,8 +102,8 @@ export function useDeliverInvoice(props) {
 export function useInvoice(id, props) {
   const states = useQuery(['SALE_INVOICE', id], () =>
     ApiService.get(`sales/invoices/${id}`),
-    {
-      select: (res) => res.data.invoice,
+    { 
+      select: (res) => res.data.sale_invoice,
       ...props
     },
   );

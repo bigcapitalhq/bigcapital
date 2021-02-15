@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback, useEffect, useState } from 'react';
+import React, { useMemo } from 'react';
 import { Formik, Form } from 'formik';
 import moment from 'moment';
 import { Intent } from '@blueprintjs/core';
@@ -17,10 +17,6 @@ import EstimateFormHeader from './EstimateFormHeader';
 import EstimateFormBody from './EstimateFormBody';
 import EstimateFloatingActions from './EstimateFloatingActions';
 import EstimateFormFooter from './EstimateFormFooter';
-import EstimateNumberWatcher from './EstimateNumberWatcher';
-
-import withEstimateActions from './withEstimateActions';
-import withEstimateDetail from './withEstimateDetail';
 
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withMediaActions from 'containers/Media/withMediaActions';
@@ -28,13 +24,12 @@ import withSettings from 'containers/Settings/withSettings';
 
 import { AppToaster } from 'components';
 import { ERROR } from 'common/errors';
-
 import {
   compose,
   repeatValue,
-  defaultToTransform,
   orderingLinesIndexes,
 } from 'utils';
+import { useEstimateFormContext } from './EstimateFormProvider';
 
 const MIN_LINES_NUMBER = 4;
 
@@ -63,63 +58,24 @@ const defaultInitialValues = {
  * Estimate form.
  */
 const EstimateForm = ({
-  // #WithMedia
-  requestSubmitMedia,
-  requestDeleteMedia,
-
-  // #WithEstimateActions
-  requestSubmitEstimate,
-  requestEditEstimate,
-  setEstimateNumberChanged,
-
-  //#withDashboard
-  changePageTitle,
-  changePageSubtitle,
-
   // #withSettings
   estimateNextNumber,
   estimateNumberPrefix,
-
-  //#withEstimateDetail
-  estimate,
-
-  // #withEstimates
-  estimateNumberChanged,
-
-  //#own Props
-  estimateId,
-  onFormSubmit,
-  onCancelForm,
 }) => {
   const { formatMessage } = useIntl();
   const history = useHistory();
-  const [submitPayload, setSubmitPayload] = useState({});
 
-  const isNewMode = !estimateId;
+  const {
+    estimate,
+    isNewMode,
+    submitPayload,
+    createEstimateMutate,
+    editEstimateMutate,
+  } = useEstimateFormContext();
 
   const estimateNumber = estimateNumberPrefix
     ? `${estimateNumberPrefix}-${estimateNextNumber}`
     : estimateNextNumber;
-
-  useEffect(() => {
-    const transNumber = !isNewMode ? estimate.estimate_number : estimateNumber;
-
-    if (!isNewMode) {
-      changePageTitle(formatMessage({ id: 'edit_estimate' }));
-    } else {
-      changePageTitle(formatMessage({ id: 'new_estimate' }));
-    }
-    changePageSubtitle(
-      defaultToTransform(estimateNumber, `No. ${transNumber}`, ''),
-    );
-  }, [
-    estimate,
-    estimateNumber,
-    isNewMode,
-    formatMessage,
-    changePageTitle,
-    changePageSubtitle,
-  ]);
 
   // Initial values in create and edit mode.
   const initialValues = useMemo(
@@ -167,7 +123,6 @@ const EstimateForm = ({
     const entries = values.entries.filter(
       (item) => item.item_id && item.quantity,
     );
-
     const totalQuantity = sumBy(entries, (entry) => parseInt(entry.quantity));
 
     if (totalQuantity === 0) {
@@ -218,34 +173,11 @@ const EstimateForm = ({
     };
 
     if (estimate && estimate.id) {
-      requestEditEstimate(estimate.id, form).then(onSuccess).catch(onError);
+      editEstimateMutate([estimate.id, form]).then(onSuccess).catch(onError);
     } else {
-      requestSubmitEstimate(form).then(onSuccess).catch(onError);
+      createEstimateMutate(form).then(onSuccess).catch(onError);
     }
   };
-
-  const handleEstimateNumberChange = useCallback(
-    (estimateNumber) => {
-      changePageSubtitle(
-        defaultToTransform(estimateNumber, `No. ${estimateNumber}`, ''),
-      );
-    },
-    [changePageSubtitle],
-  );
-
-  const handleSubmitClick = useCallback(
-    (event, payload) => {
-      setSubmitPayload({ ...payload });
-    },
-    [setSubmitPayload],
-  );
-
-  const handleCancelClick = useCallback(
-    (event) => {
-      history.goBack();
-    },
-    [history],
-  );
 
   return (
     <div
@@ -262,30 +194,18 @@ const EstimateForm = ({
         initialValues={initialValues}
         onSubmit={handleFormSubmit}
       >
-        {({ isSubmitting}) => (
-          <Form>
-            <EstimateFormHeader
-              onEstimateNumberChanged={handleEstimateNumberChange}
-            />
-            <EstimateNumberWatcher estimateNumber={estimateNumber} />
-            <EstimateFormBody defaultEstimate={defaultEstimate} />
-            <EstimateFormFooter />
-            <EstimateFloatingActions
-              isSubmitting={isSubmitting}
-              estimate={estimate}
-              onSubmitClick={handleSubmitClick}
-              onCancelClick={handleCancelClick}
-            />
-          </Form>
-        )}
+        <Form>
+          <EstimateFormHeader />
+          <EstimateFormBody defaultEstimate={defaultEstimate} />
+          <EstimateFormFooter />
+          <EstimateFloatingActions />
+        </Form>
       </Formik>
     </div>
   );
 };
 
 export default compose(
-  withEstimateActions,
-  withEstimateDetail(),
   withDashboardActions,
   withMediaActions,
   withSettings(({ estimatesSettings }) => ({

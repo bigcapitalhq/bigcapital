@@ -41,7 +41,7 @@ export function useExpenses(query, props) {
  * @param {number} id - Expense id.
  */
 export function useExpense(id, props) {
-  const states = useQuery(['EXPENSES', id], () => ApiService.get(`expenses`), {
+  const states = useQuery(['EXPENSE', id], () => ApiService.get(`expenses/${id}`), {
     select: (res) => res.data.expense,
     ...props,
   });

@@ -20,6 +20,7 @@ import TableNoResultsRow from './Datatable/TableNoResultsRow';
 import TableLoadingRow from './Datatable/TableLoading';
 import TableHeader from './Datatable/TableHeader';
 import TablePage from './Datatable/TablePage';
+import TableFooter from './Datatable/TableFooter';
 import TableRow from './Datatable/TableRow';
 import TableRows from './Datatable/TableRows';
 import TableCell from './Datatable/TableCell';
@@ -75,6 +76,7 @@ export default function DataTable(props) {
     TableWrapperRenderer,
     TableTBodyRenderer,
     TablePaginationRenderer,
+    TableFooterRenderer,
 
     ...restProps
   } = props;
@@ -124,11 +126,11 @@ export default function DataTable(props) {
     },
     useSortBy,
     useExpanded,
-    useRowSelect,
     useResizeColumns,
     useFlexLayout,
     useSticky,
     usePagination,
+    useRowSelect,
     (hooks) => {
       hooks.visibleColumns.push((columns) => [
         // Let's make a column for selection
@@ -170,6 +172,8 @@ export default function DataTable(props) {
         <TableTBodyRenderer>
           <TablePageRenderer />
         </TableTBodyRenderer>
+
+        <TableFooterRenderer />
       </TableWrapperRenderer>
 
       <TablePaginationRenderer />
@@ -194,6 +198,7 @@ DataTable.defaultProps = {
   autoResetRowState: true,
 
   TableHeaderRenderer: TableHeader,
+  TableFooterRenderer: TableFooter,
   TableLoadingRenderer: TableLoadingRow,
   TablePageRenderer: TablePage,
   TableRowsRenderer: TableRows,

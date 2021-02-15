@@ -1,30 +1,27 @@
 import { FastField } from 'formik';
 import React from 'react';
-import ExpenseFormEntries from './ExpenseFormEntries';
-import { orderingLinesIndexes, repeatValue } from 'utils';
+import ExpenseFormEntriesTable from './ExpenseFormEntriesTable';
+import { useExpenseFormContext } from './ExpenseFormPageProvider';
 
+/**
+ * Expense form entries field.
+ */
 export default function ExpenseFormEntriesField({
-  defaultRow,
   linesNumber = 4,
 }) {
+  const { defaultCategoryEntry } = useExpenseFormContext();
+
   return (
     <FastField name={'categories'}>
       {({ form, field: { value }, meta: { error, touched } }) => (
-        <ExpenseFormEntries
+        <ExpenseFormEntriesTable
           entries={value}
           error={error}
           onChange={(entries) => {
             form.setFieldValue('categories', entries);
           }}
-          onClickAddNewRow={() => {
-            form.setFieldValue('categories', [...value, defaultRow]);
-          }}
-          onClickClearAllLines={() => {
-            form.setFieldValue(
-              'categories', 
-              orderingLinesIndexes([...repeatValue(defaultRow, linesNumber)])
-            );
-          }}
+          defaultEntry={defaultCategoryEntry}
+          linesNumber={linesNumber}
         />
       )}
     </FastField>

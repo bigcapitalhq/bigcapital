@@ -1,7 +1,14 @@
 import React from 'react';
-import { Position } from '@blueprintjs/core';
-import { FormattedMessage as T } from 'react-intl';
-import { Money, Hint } from 'components';
+import { Intent, Position, Button, Tooltip } from '@blueprintjs/core';
+import { FormattedMessage as T, useIntl } from 'react-intl';
+import { Icon, Money, Hint } from 'components';
+import {
+  AccountsListFieldCell,
+  MoneyFieldCell,
+  InputGroupCell,
+  ContactsListFieldCell,
+} from 'components/DataTableCells';
+import { safeSumBy } from 'utils';
 
 /**
  * Contact header cell.
@@ -18,74 +25,138 @@ export function ContactHeaderCell() {
   );
 }
 
-/** 
- * Total text cell renderer.
+/**
+ * Account footer cell.
  */
-export const TotalAccountCellRenderer = (chainedComponent) => (props) => {
-  if (props.data.length === props.row.index + 1) {
-    return <span>{'Total USD'}</span>;
-  }
-  return chainedComponent(props);
-};
+function AccountFooterCell() {
+  return <span>{'Total USD'}</span>;
+}
 
 /**
- * Total credit/debit cell renderer.
+ * Total credit table footer cell.
  */
-export const TotalCreditDebitCellRenderer = (chainedComponent, type) => (
-  props,
-) => {
-  if (props.data.length === props.row.index + 1) {
-    const total = props.data.reduce((total, entry) => {
-      const amount = parseInt(entry[type], 10);
-      const computed = amount ? total + amount : total;
+function TotalCreditFooterCell({ rows }) {
+  const credit = safeSumBy(rows, 'original.credit');
 
-      return computed;
-    }, 0);
+  return (
+    <span>
+      <Money amount={credit} currency={'USD'} />
+    </span>
+  );
+}
 
-    return (
-      <span>
-        <Money amount={total} currency={'USD'} />
-      </span>
-    );
-  }
-  return chainedComponent(props);
-};
+/**
+ * Total debit table footer cell.
+ */
+function TotalDebitFooterCell({ rows }) {
+  const debit = safeSumBy(rows, 'original.debit');
 
-export const NoteCellRenderer = (chainedComponent) => (props) => {
-  if (props.data.length === props.row.index + 1) {
-    return '';
-  }
-  return chainedComponent(props);
-};
-
-
+  return (
+    <span>
+      <Money amount={debit} currency={'USD'} />
+    </span>
+  );
+}
 /**
  * Actions cell renderer.
  */
 export const ActionsCellRenderer = ({
-    row: { index },
-    column: { id },
-    cell: { value: initialValue },
-    data,
-    payload,
-  }) => {
-    if (data.length <= index + 1) {
-      return '';
-    }
-    const onClickRemoveRole = () => {
-      payload.removeRow(index);
-    };
-    return (
-      <Tooltip content={<T id={'remove_the_line'} />} position={Position.LEFT}>
-        <Button
-          icon={<Icon icon="times-circle" iconSize={14} />}
-          iconSize={14}
-          className="ml2"
-          minimal={true}
-          intent={Intent.DANGER}
-          onClick={onClickRemoveRole}
-        />
-      </Tooltip>
-    );
+  row: { index },
+  column: { id },
+  cell: { value: initialValue },
+  data,
+  payload,
+}) => {
+  const onClickRemoveRole = () => {
+    payload.removeRow(index);
   };
-  
+  return (
+    <Tooltip content={<T id={'remove_the_line'} />} position={Position.LEFT}>
+      <Button
+        icon={<Icon icon="times-circle" iconSize={14} />}
+        iconSize={14}
+        className="ml2"
+        minimal={true}
+        intent={Intent.DANGER}
+        onClick={onClickRemoveRole}
+      />
+    </Tooltip>
+  );
+};
+
+/**
+ * Retrieve columns of make journal entries table.
+ */
+export const useJournalTableEntriesColumns = () => {
+  const { formatMessage } = useIntl();
+
+  return React.useMemo(
+    () => [
+      {
+        Header: '#',
+        accessor: 'index',
+        Cell: ({ row: { index } }) => <span>{index + 1}</span>,
+        className: 'index',
+        width: 40,
+        disableResizing: true,
+        disableSortBy: true,
+        sticky: 'left',
+      },
+      {
+        Header: formatMessage({ id: 'account' }),
+        id: 'account_id',
+        accessor: 'account_id',
+        Cell: AccountsListFieldCell,
+        Footer: AccountFooterCell,
+        className: 'account',
+        disableSortBy: true,
+        width: 160,
+      },
+      {
+        Header: formatMessage({ id: 'credit_currency' }, { currency: 'USD' }),
+        accessor: 'credit',
+        Cell: MoneyFieldCell,
+        Footer: TotalCreditFooterCell,
+        className: 'credit',
+        disableSortBy: true,
+        width: 100,
+      },
+      {
+        Header: formatMessage({ id: 'debit_currency' }, { currency: 'USD' }),
+        accessor: 'debit',
+        Cell: MoneyFieldCell,
+        Footer: TotalDebitFooterCell,
+        className: 'debit',
+        disableSortBy: true,
+        width: 100,
+      },
+      {
+        Header: ContactHeaderCell,
+        id: 'contact_id',
+        accessor: 'contact_id',
+        Cell: ContactsListFieldCell,
+        className: 'contact',
+        disableSortBy: true,
+        width: 120,
+      },
+      {
+        Header: formatMessage({ id: 'note' }),
+        accessor: 'note',
+        Cell: InputGroupCell,
+        disableSortBy: true,
+        className: 'note',
+        width: 200,
+      },
+      {
+        Header: '',
+        accessor: 'action',
+        Cell: ActionsCellRenderer,
+        className: 'actions',
+        disableSortBy: true,
+        disableResizing: true,
+        width: 45,
+      },
+    ],
+    [formatMessage],
+  );
+};

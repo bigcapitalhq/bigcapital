@@ -3,12 +3,12 @@ import { FastField } from 'formik';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 import MakeJournalEntriesTable from './MakeJournalEntriesTable';
-import { orderingLinesIndexes, repeatValue } from 'utils';
+import { defaultManualJournal, MIN_LINES_NUMBER } from './utils';
 
-export default function MakeJournalEntriesField({
-  defaultRow,
-  linesNumber = 4,
-}) {
+/**
+ * Make journal entries field.
+ */
+export default function MakeJournalEntriesField() {
   return (
     <div className={classNames(CLASSES.PAGE_FORM_BODY)}>
       <FastField name={'entries'}>
@@ -18,16 +18,9 @@ export default function MakeJournalEntriesField({
               form.setFieldValue('entries', entries);
             }}
             entries={value}
+            defaultEntry={defaultManualJournal}
+            initialLinesNumber={MIN_LINES_NUMBER}
             error={error}
-            onClickAddNewRow={() => {
-              form.setFieldValue('entries', [...value, defaultRow]);
-            }}
-            onClickClearAllLines={() => {
-              form.setFieldValue(
-                'entries', 
-                orderingLinesIndexes([...repeatValue(defaultRow, linesNumber)])
-              );
-            }}
           />
         )}
       </FastField>

@@ -49,6 +49,9 @@ export default class ManualJournal extends TenantModel {
           from: 'manual_journals.id',
           to: 'manual_journals_entries.manualJournalId',
         },
+        filter(query) {
+          query.orderBy('index', 'ASC');
+        }
       },
       transactions: {
         relation: Model.HasManyRelation,

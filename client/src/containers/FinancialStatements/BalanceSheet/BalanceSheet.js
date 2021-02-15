@@ -1,9 +1,5 @@
-import React, { useEffect, useState } from 'react';
-
-import { compose } from 'utils';
-
+import React, { useState } from 'react';
 import moment from 'moment';
-import { useIntl } from 'react-intl';
 
 import 'style/pages/FinancialStatements/BalanceSheet.scss';
 
@@ -14,25 +10,18 @@ import BalanceSheetActionsBar from './BalanceSheetActionsBar';
 
 import { FinancialStatement } from 'components';
 
-import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withSettings from 'containers/Settings/withSettings';
-
 import { BalanceSheetProvider } from './BalanceSheetProvider';
+
+import { compose } from 'utils';
 
 /**
  * Balance sheet.
  */
 function BalanceSheet({
-  // #withDashboardActions
-  changePageTitle,
-  setDashboardBackLink,
-  setSidebarShrink,
-
   // #withPreferences
   organizationName,
 }) {
-  const { formatMessage } = useIntl();
-
   const [filter, setFilter] = useState({
     fromDate: moment().startOf('year').format('YYYY-MM-DD'),
     toDate: moment().endOf('year').format('YYYY-MM-DD'),
@@ -40,21 +29,6 @@ function BalanceSheet({
     displayColumnsType: 'total',
     accountsFilter: 'all-accounts',
   });
-
-  useEffect(() => {
-    setSidebarShrink();
-    changePageTitle(formatMessage({ id: 'balance_sheet' }));
-  }, [changePageTitle, formatMessage, setSidebarShrink]);
-
-  useEffect(() => {
-    // Show the back link on dashboard topbar.
-    setDashboardBackLink(true);
-
-    return () => {
-      // Hide the back link on dashboard topbar.
-      setDashboardBackLink(false);
-    };
-  }, [setDashboardBackLink]);
 
   // Handle re-fetch balance sheet after filter change.
   const handleFilterSubmit = (filter) => {
@@ -95,7 +69,6 @@ function BalanceSheet({
 }
 
 export default compose(
-  withDashboardActions,
   withSettings(({ organizationSettings }) => ({
     organizationName: organizationSettings.name,
   })),

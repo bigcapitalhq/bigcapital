@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import {
   FormGroup,
   InputGroup,
@@ -8,7 +8,7 @@ import {
 import { DateInput } from '@blueprintjs/datetime';
 import { FormattedMessage as T } from 'react-intl';
 import { FastField, ErrorMessage } from 'formik';
-import { momentFormatter, compose, tansformDateValue, saveInvoke } from 'utils';
+import { momentFormatter, compose, tansformDateValue } from 'utils';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 import {
@@ -16,30 +16,25 @@ import {
   FieldRequiredHint,
   Icon,
   InputPrependButton,
-  Row,
-  Col,
 } from 'components';
 
 import withCustomers from 'containers/Customers/withCustomers';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 
 import { inputIntent, handleDateChange } from 'utils';
-import { formatMessage } from 'services/intl';
+import { useEstimateFormContext } from './EstimateFormProvider';
 
+/**
+ * Estimate form header.
+ */
 function EstimateFormHeader({
-  //#withCustomers
-  customers,
   // #withDialogActions
   openDialog,
-  // #ownProps
-  onEstimateNumberChanged,
 }) {
-  const handleEstimateNumberChange = useCallback(() => {
-    openDialog('estimate-number-form', {});
-  }, [openDialog]);
+  const { customers } = useEstimateFormContext();
 
-  const handleEstimateNumberChanged = (event) => {
-    saveInvoke(onEstimateNumberChanged, event.currentTarget.value);
+  const handleEstimateNumberChange = () => {
+    openDialog('estimate-number-form', {});
   };
 
   return (
@@ -138,7 +133,6 @@ function EstimateFormHeader({
               <InputGroup
                 minimal={true}
                 {...field}
-                onBlur={handleEstimateNumberChanged}
               />
               <InputPrependButton
                 buttonProps={{

@@ -10,79 +10,70 @@ import {
   MenuItem,
 } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'react-intl';
+import { useFormikContext } from 'formik';
 import { CLASSES } from 'common/classes';
 import classNames from 'classnames';
-import { saveInvoke } from 'utils';
 import { If, Icon } from 'components';
+import { useMakeJournalFormContext } from './MakeJournalProvider';
+import { useHistory } from 'react-router-dom';
 
 /**
  * Make Journal floating actions bar.
  */
-export default function MakeJournalEntriesFooter({
-  isSubmitting,
-  onSubmitClick,
-  onCancelClick,
-  manualJournalId,
-  onSubmitForm,
-  onResetForm,
-  manualJournalPublished,
-}) {
+export default function MakeJournalEntriesFooter() {
+  const history = useHistory();
+
+  // Formik context.
+  const { isSubmitting, submitForm } = useFormikContext();
+
+  // Make journal form context.
+  const {
+    manualJournalId,
+    setSubmitPayload,
+    manualJournalPublished = false,
+  } = useMakeJournalFormContext();
+
+  // Handle `submit & publish` button click.
   const handleSubmitPublishBtnClick = (event) => {
-    saveInvoke(onSubmitClick, event, {
-      redirect: true,
-      publish: true,
-    });
+    setSubmitPayload({ redirect: true, publish: true });
+    submitForm();
   };
 
+  // Handle `submit, publish & new` button click.
   const handleSubmitPublishAndNewBtnClick = (event) => {
-    onSubmitForm();
-    saveInvoke(onSubmitClick, event, {
-      redirect: false,
-      publish: true,
-      resetForm: true,
-    });
+    setSubmitPayload({ redirect: false, publish: true, resetForm: true });
+    submitForm();
   };
 
+  // Handle `submit, publish & continue editing` button click.
   const handleSubmitPublishContinueEditingBtnClick = (event) => {
-    onSubmitForm();
-    saveInvoke(onSubmitClick, event, {
-      redirect: false,
-      publish: true,
-    });
+    setSubmitPayload({ redirect: false, publish: true });
+    submitForm();
   };
 
+  // Handle `submit as draft` button click.
   const handleSubmitDraftBtnClick = (event) => {
-    saveInvoke(onSubmitClick, event, {
-      redirect: true,
-      publish: false,
-    });
+    setSubmitPayload({ redirect: true, publish: false });
   };
 
+  // Handle `submit as draft & new` button click.
   const handleSubmitDraftAndNewBtnClick = (event) => {
-    onSubmitForm();
-    saveInvoke(onSubmitClick, event, {
-      redirect: false,
-      publish: false,
-      resetForm: true,
-    });
+    setSubmitPayload({ redirect: false, publish: false, resetForm: true });
+    submitForm();
   };
 
+  // Handles submit as draft & continue editing button click.
   const handleSubmitDraftContinueEditingBtnClick = (event) => {
-    onSubmitForm();
-    saveInvoke(onSubmitClick, event, {
-      redirect: false,
-      publish: false,
-    });
+    setSubmitPayload({ redirect: false, publish: false });
+    submitForm();
   };
 
+  // Handle cancel button action click.
   const handleCancelBtnClick = (event) => {
-    saveInvoke(onCancelClick, event);
+    history.goBack();
   };
 
-  const handleClearBtnClick = (event) => {
-    // saveInvoke(onClearClick, event);
-    onResetForm();
-  };
+  const handleClearBtnClick = (event) => {};
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>

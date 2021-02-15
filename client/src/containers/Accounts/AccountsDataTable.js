@@ -1,10 +1,7 @@
 import React from 'react';
-import classNames from 'classnames';
 
 import { TableFastCell, DataTable } from 'components';
 import { compose } from 'utils';
-
-import { CLASSES } from 'common/classes';
 
 import { useAccountsTableColumns, rowClassNames } from './utils';
 import { ActionsMenu } from './components';
@@ -72,48 +69,46 @@ function AccountsDataTable({
   };
 
   return (
-    <div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>
-      <DataTable
-        noInitialFetch={true}
-        columns={columns}
-        data={accounts}
-        selectionColumn={true}
-        expandable={true}
-        sticky={true}
+    <DataTable
+      noInitialFetch={true}
+      columns={columns}
+      data={accounts}
+      selectionColumn={true}
+      expandable={true}
+      sticky={true}
 
-        loading={isAccountsLoading}
-        headerLoading={isAccountsLoading}
-        progressBarLoading={isAccountsFetching}
-        
-        rowClassNames={rowClassNames}
+      loading={isAccountsLoading}
+      headerLoading={isAccountsLoading}
+      progressBarLoading={isAccountsFetching}
+      
+      rowClassNames={rowClassNames}
 
-        autoResetExpanded={false}
-        autoResetSortBy={false}
-        autoResetSelectedRows={false}
+      autoResetExpanded={false}
+      autoResetSortBy={false}
+      autoResetSelectedRows={false}
 
-        expandColumnSpace={1}
-        expandToggleColumn={2}
-        selectionColumnWidth={50}
+      expandColumnSpace={1}
+      expandToggleColumn={2}
+      selectionColumnWidth={50}
 
-        TableCellRenderer={TableFastCell}
-        TableRowsRenderer={TableVirtualizedListRows}
-        TableLoadingRenderer={TableSkeletonRows}
-        TableHeaderSkeletonRenderer={TableSkeletonHeader}
-        ContextMenu={ActionsMenu}
+      TableCellRenderer={TableFastCell}
+      TableRowsRenderer={TableVirtualizedListRows}
+      TableLoadingRenderer={TableSkeletonRows}
+      TableHeaderSkeletonRenderer={TableSkeletonHeader}
+      ContextMenu={ActionsMenu}
 
-        // #TableVirtualizedListRows props.
-        vListrowHeight={42}
-        vListOverscanRowCount={10}
+      // #TableVirtualizedListRows props.
+      vListrowHeight={42}
+      vListOverscanRowCount={10}
 
-        payload={{
-          onEdit: handleEditAccount,
-          onDelete: handleDeleteAccount,
-          onActivate: handleActivateAccount,
-          onInactivate: handleInactivateAccount,
-          newChild: handleNewChildAccount
-        }}
-      />
-    </div>
+      payload={{
+        onEdit: handleEditAccount,
+        onDelete: handleDeleteAccount,
+        onActivate: handleActivateAccount,
+        onInactivate: handleInactivateAccount,
+        newChild: handleNewChildAccount
+      }}
+    />
   );
 }
 

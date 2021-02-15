@@ -42,6 +42,7 @@ function MakeJournalProvider({ journalId, ...props }) {
   // Loading the journal settings.
   const { isFetching: isSettingsLoading } = useSettings();
 
+  // Submit form payload.
   const [submitPayload, setSubmitPayload] = useState({});
 
   const provider = {

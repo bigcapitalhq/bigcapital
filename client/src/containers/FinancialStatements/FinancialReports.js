@@ -34,16 +34,7 @@ function FinancialReportsSection({ sectionTitle, reports }) {
   );
 }
 
-function FinancialReports({
-  // #withDashboardActions
-  changePageTitle,
-}) {
-  const { formatMessage } = useIntl();
-
-  useEffect(() => {
-    changePageTitle(formatMessage({ id: 'all_financial_reports' }));
-  }, [changePageTitle, formatMessage]);
-
+export default function FinancialReports() {
   return (
     <DashboardInsider name={'financial-reports'}>
       <div class="financial-reports">
@@ -53,4 +44,3 @@ function FinancialReports({
   );
 }
 
-export default compose(withDashboardActions)(FinancialReports);

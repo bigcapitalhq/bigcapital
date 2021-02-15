@@ -3,7 +3,7 @@ import { compose } from 'utils';
 
 import 'style/pages/Items/List.scss';
 
-import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
+import { DashboardContentTable, DashboardPageContent } from 'components';
 
 import ItemsActionsBar from './ItemsActionsBar';
 import ItemsAlerts from './ItemsAlerts';
@@ -27,7 +27,10 @@ function ItemsList({
 
       <DashboardPageContent>
         <ItemsViewsTabs />
-        <ItemsDataTable />
+
+        <DashboardContentTable>
+          <ItemsDataTable />
+        </DashboardContentTable>
       </DashboardPageContent>
 
       <ItemsAlerts />

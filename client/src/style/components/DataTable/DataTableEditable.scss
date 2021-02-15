@@ -93,14 +93,6 @@
           }
         }
 
-        &:last-of-type {
-          .td {
-            .bp3-button,
-            .bp3-input-group {
-              display: none;
-            }
-          }
-        }
         .td.actions {
           .bp3-button {
             background-color: transparent;
@@ -123,13 +115,7 @@
               padding-top: 2px;
             }
           }
-          .debit.td,
-          .credit.td {
-            > span {
-              font-weight: 600;
-              color: #444;
-            }
-          }
+
         }
         .td {
           &.note {
@@ -182,25 +168,42 @@
     .button--clear-lines {
       &.bp3-button:not([class*='bp3-intent-']):not(.bp3-minimal) {
         background-color: #fcefef;
+
+        &:hover{
+          background-color: #f8e4e4;
+        }
       }
     }
   }
 
-  &.has-total-row {
-    .table .tbody-inner .tr:last-of-type {
-      .td {
-        border-top-width: 2px;
-        border-top-color: #e9e9ef;
-        border-top-style: solid;
-        min-height: 40px;
+  .tfooter{
+    .debit.td,
+    .credit.td {
+      > span {
+        font-weight: 600;
+        color: #444;
+      }
+    }
+    .td {
+      border-top-width: 2px;
+      border-top-color: #e9e9ef;
+      border-top-style: solid;
+      min-height: 40px;
 
-        &:not(.index) {
-          background-color: #fcfcfd;
-        }
+      font-weight: 500;
 
-        &.index span {
-          display: none;
-        }
+
+      &:not(.index) {
+        background-color: #fcfcfd;
+      }
+
+      &:first-of-type{
+        background-color: #f0f2f8;
+      }
+
+
+      &.index span {
+        display: none;
       }
     }
   }

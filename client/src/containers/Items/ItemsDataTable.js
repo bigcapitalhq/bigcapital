@@ -1,5 +1,4 @@
 import React from 'react';
-import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 
 import { DataTable } from 'components';
@@ -8,7 +7,6 @@ import ItemsEmptyStatus from './ItemsEmptyStatus';
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
 import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
 
-import { CLASSES } from 'common/classes';
 
 import withItems from 'containers/Items/withItems';
 import withItemsActions from 'containers/Items/withItemsActions';
@@ -95,53 +93,51 @@ function ItemsDataTable({
     openDialog('inventory-adjustment', { itemId: id });
   };
 
-  // Cannot continue in case the items has empty status.
+  // Display empty status instead of the table.
   if (isEmptyStatus) {
     return <ItemsEmptyStatus />;
   }
 
   return (
-    <div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>
-      <DataTable
-        columns={columns}
-        data={items}
-        initialState={itemsTableState}
-        
-        loading={isItemsLoading}
-        headerLoading={isItemsLoading}
-        progressBarLoading={isItemsFetching}
+    <DataTable
+      columns={columns}
+      data={items}
+      initialState={itemsTableState}
+      
+      loading={isItemsLoading}
+      headerLoading={isItemsLoading}
+      progressBarLoading={isItemsFetching}
 
-        noInitialFetch={true}
-        selectionColumn={true}
-        spinnerProps={{ size: 30 }}
-        expandable={false}
-        sticky={true}
-        rowClassNames={rowClassNames}
+      noInitialFetch={true}
+      selectionColumn={true}
+      spinnerProps={{ size: 30 }}
+      expandable={false}
+      sticky={true}
+      rowClassNames={rowClassNames}
 
-        pagination={true}
-        manualSortBy={true}
-        manualPagination={true}
-        pagesCount={pagination.pagesCount}
+      pagination={true}
+      manualSortBy={true}
+      manualPagination={true}
+      pagesCount={pagination.pagesCount}
 
-        autoResetSortBy={false}
-        autoResetPage={true}
+      autoResetSortBy={false}
+      autoResetPage={true}
 
-        TableLoadingRenderer={TableSkeletonRows}
-        TableHeaderSkeletonRenderer={TableSkeletonHeader}
+      TableLoadingRenderer={TableSkeletonRows}
+      TableHeaderSkeletonRenderer={TableSkeletonHeader}
 
-        ContextMenu={ItemsActionMenuList}
-        onFetchData={handleFetchData}
-        payload={{
-          onDeleteItem: handleDeleteItem,
-          onEditItem: handleEditItem,
-          onInactivateItem: handleInactiveItem,
-          onActivateItem: handleActivateItem,
-          onMakeAdjustment: handleMakeAdjustment,
-        }}
-        noResults={'There is no items in the table yet.'}
-        {...tableProps}
-      />
-    </div>
+      ContextMenu={ItemsActionMenuList}
+      onFetchData={handleFetchData}
+      payload={{
+        onDeleteItem: handleDeleteItem,
+        onEditItem: handleEditItem,
+        onInactivateItem: handleInactiveItem,
+        onActivateItem: handleActivateItem,
+        onMakeAdjustment: handleMakeAdjustment,
+      }}
+      noResults={'There is no items in the table yet.'}
+      {...tableProps}
+    />
   );
 }
 

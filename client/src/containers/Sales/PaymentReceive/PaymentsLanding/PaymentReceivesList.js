@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useIntl } from 'react-intl';
 
-import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
+import { DashboardContentTable, DashboardPageContent } from 'components';
 import PaymentReceiveActionsBar from './PaymentReceiveActionsBar';
 import PaymentReceiveAlerts from '../PaymentReceiveAlerts';
 import { PaymentReceivesListProvider } from './PaymentReceiptsListProvider';
@@ -38,7 +38,10 @@ function PaymentReceiveList({
 
       <DashboardPageContent>
         <PaymentReceiveViewTabs />
-        <PaymentReceivesTable />
+
+        <DashboardContentTable>
+          <PaymentReceivesTable />
+        </DashboardContentTable>
       </DashboardPageContent>
 
       <PaymentReceiveAlerts />

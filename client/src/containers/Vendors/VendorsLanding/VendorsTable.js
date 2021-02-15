@@ -32,6 +32,7 @@ function VendorsTable({
     pagination,
     isVendorsFetching,
     isVendorsLoading,
+    isEmptyStatus
   } = useVendorsListContext();
 
   // Vendors table columns.
@@ -62,53 +63,37 @@ function VendorsTable({
     [setVendorsTableState],
   );
 
+  // Display empty status instead of the table.
+  if (isEmptyStatus) {
+    return <VendorsEmptyStatus />
+  }
+
   return (
-    <div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>
-      <Choose>
-        <Choose.When condition={false}>
-          <VendorsEmptyStatus />
-        </Choose.When>
-
-        <Choose.Otherwise>
-          <DataTable
-            noInitialFetch={true}
-            columns={columns}
-            data={vendors}
-
-            loading={isVendorsLoading}
-            headerLoading={isVendorsLoading}
-            progressBarLoading={isVendorsFetching}
-
-            onFetchData={handleFetchData}
-
-            selectionColumn={true}
-            expandable={false}
-            sticky={true}
-            
-            pagination={true}
-            manualSortBy={true}
-            pagesCount={pagination.pagesCount}
-
-            autoResetSortBy={false}
-            autoResetPage={false}
-
-            TableLoadingRenderer={TableSkeletonRows}
-            TableHeaderSkeletonRenderer={TableSkeletonHeader}
-
-            ContextMenu={ActionsMenu}
-
-            payload={{
-              onEdit: handleEditVendor,
-              onDelete: handleDeleteVendor,
-            }}
-          />
-        </Choose.Otherwise>
-      </Choose>
-    </div>
+    <DataTable
+      noInitialFetch={true}
+      columns={columns}
+      data={vendors}
+      loading={isVendorsLoading}
+      headerLoading={isVendorsLoading}
+      progressBarLoading={isVendorsFetching}
+      onFetchData={handleFetchData}
+      selectionColumn={true}
+      expandable={false}
+      sticky={true}
+      pagination={true}
+      manualSortBy={true}
+      pagesCount={pagination.pagesCount}
+      autoResetSortBy={false}
+      autoResetPage={false}
+      TableLoadingRenderer={TableSkeletonRows}
+      TableHeaderSkeletonRenderer={TableSkeletonHeader}
+      ContextMenu={ActionsMenu}
+      payload={{
+        onEdit: handleEditVendor,
+        onDelete: handleDeleteVendor,
+      }}
+    />
   );
 }
 
-export default compose(
-  withVendorsActions,
-  withAlertsActions
-)(VendorsTable);
+export default compose(withVendorsActions, withAlertsActions)(VendorsTable);

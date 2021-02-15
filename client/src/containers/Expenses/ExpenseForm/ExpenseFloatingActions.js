@@ -11,63 +11,67 @@ import {
 } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 import { FormattedMessage as T } from 'react-intl';
+import { useHistory } from 'react-router-dom';
+
 import { CLASSES } from 'common/classes';
 import classNames from 'classnames';
-import { saveInvoke } from 'utils';
 import { Icon, If } from 'components';
+import { useExpenseFormContext } from './ExpenseFormPageProvider';
 
 /**
  * Expense form floating actions.
  */
-export default function ExpenseFloatingFooter({
-  isSubmitting,
-  onSubmitClick,
-  onCancelClick,
-  expense,
-  expensePublished,
-}) {
-  const { submitForm, resetForm } = useFormikContext();
+export default function ExpenseFloatingFooter() {
+  const history = useHistory();
 
+  // Formik context.
+  const { isSubmitting, submitForm, resetForm } = useFormikContext();
+
+  // Expense form context.
+  const { setSubmitPayload, isNewMode } = useExpenseFormContext();
+
+  // Handle submit & publish button click.
   const handleSubmitPublishBtnClick = (event) => {
-    saveInvoke(onSubmitClick, event, { redirect: true, publish: true});
+    setSubmitPayload({ redirect: true, publish: true});
+    submitForm();
   };
 
+  // Handle submit, publish & new button click.
   const handleSubmitPublishAndNewBtnClick = (event) => {
+    setSubmitPayload({ redirect: false, publish: true, resetForm: true });
     submitForm();
-    saveInvoke(onSubmitClick, event, {
-      redirect: false,
-      publish: true,
-      resetForm: true,
-    });
   };
 
+  // Handle submit, publish & continue editing button click.
   const handleSubmitPublishContinueEditingBtnClick = (event) => {
+    setSubmitPayload({ redirect: false, publish: true });
     submitForm();
-    saveInvoke(onSubmitClick, event, { redirect: false, publish: true });
   };
 
+  // Handle submit as draft button click.
   const handleSubmitDraftBtnClick = (event) => {
-    saveInvoke(onSubmitClick, event, { redirect: true, publish: false });
+    setSubmitPayload({ redirect: true, publish: false });
+    submitForm();
   };
 
+  // Handle submit as draft & new button click.
   const handleSubmitDraftAndNewBtnClick = (event) => {
+    setSubmitPayload({ redirect: false, publish: false, resetForm: true });
     submitForm();
-    saveInvoke(onSubmitClick, event, {
-      redirect: false,
-      publish: false,
-      resetForm: true,
-    });
   };
 
+  // Handles submit as draft & continue editing button click.
   const handleSubmitDraftContinueEditingBtnClick = (event) => {
+    setSubmitPayload({ redirect: false, publish: false });
     submitForm();
-    saveInvoke(onSubmitClick, event, { redirect: false, publish: false });
   };
 
+  // Handle cancel button click.
   const handleCancelBtnClick = (event) => {
-    saveInvoke(onCancelClick, event);
+    history.goBack();
   };
 
+  // Handles clear form button click.
   const handleClearBtnClick = (event) => {
     resetForm();
   };
@@ -75,10 +79,11 @@ export default function ExpenseFloatingFooter({
   return (
     <div className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>
       {/* ----------- Save And Publish ----------- */}
-      <If condition={!expense || !expensePublished}>
+      <If condition={isNewMode}>
         <ButtonGroup>
           <Button
             disabled={isSubmitting}
+            loading={isSubmitting}
             intent={Intent.PRIMARY}
             onClick={handleSubmitPublishBtnClick}
             text={<T id={'save_publish'} />}
@@ -140,10 +145,11 @@ export default function ExpenseFloatingFooter({
         </ButtonGroup>
       </If>
       {/* ----------- Save and New ----------- */}
-      <If condition={expense && expensePublished}>
+      <If condition={!isNewMode}>
         <ButtonGroup>
           <Button
             disabled={isSubmitting}
+            loading={isSubmitting}
             intent={Intent.PRIMARY}
             onClick={handleSubmitPublishBtnClick}
             text={<T id={'save'} />}
@@ -174,7 +180,7 @@ export default function ExpenseFloatingFooter({
         className={'ml1'}
         disabled={isSubmitting}
         onClick={handleClearBtnClick}
-        text={expense ? <T id={'reset'} /> : <T id={'clear'} />}
+        text={!isNewMode ? <T id={'reset'} /> : <T id={'clear'} />}
       />
       {/* ----------- Cancel ----------- */}
       <Button

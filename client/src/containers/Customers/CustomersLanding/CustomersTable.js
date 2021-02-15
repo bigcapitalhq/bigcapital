@@ -1,13 +1,11 @@
 import React from 'react';
-import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 
 import CustomersEmptyStatus from './CustomersEmptyStatus';
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
 import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
 
-import { DataTable, Choose } from 'components';
-import { CLASSES } from 'common/classes';
+import { DataTable } from 'components';
 
 import withCustomersActions from './withCustomersActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
@@ -23,10 +21,10 @@ import { compose } from 'utils';
  */
 function CustomersTable({
   // #withCustomersActions
-  setCustomersTableState, 
+  setCustomersTableState,
 
   // #withAlerts
-  openAlert
+  openAlert,
 }) {
   const history = useHistory();
 
@@ -56,60 +54,47 @@ function CustomersTable({
 
   // Handles the customer delete action.
   const handleCustomerDelete = (customer) => {
-    openAlert('customer-delete', { customerId: customer.id })
+    openAlert('customer-delete', { customerId: customer.id });
   };
 
   // Handle the customer edit action.
   const handleCustomerEdit = (customer) => {
     history.push(`/customers/${customer.id}/edit`);
   };
- 
+
+  if (isEmptyStatus) {
+    return <CustomersEmptyStatus />;
+  }
+
   return (
-    <div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>
-      <Choose>
-        <Choose.When condition={isEmptyStatus}>
-          <CustomersEmptyStatus />
-        </Choose.When>
-
-        <Choose.Otherwise>
-          <DataTable
-            noInitialFetch={true}
-            columns={columns}
-            data={customers}
-
-            loading={isCustomersLoading}
-            headerLoading={isCustomersLoading}
-            progressBarLoading={isCustomersFetching}
-
-            onFetchData={handleFetchData}
-            selectionColumn={true}
-            expandable={false}
-            sticky={true}
-
-            spinnerProps={{ size: 30 }}
-
-            pagination={true}
-            manualSortBy={true}
-            manualPagination={true}
-            pagesCount={pagination.pagesCount}
-
-            autoResetSortBy={false}
-            autoResetPage={false}
-
-            TableLoadingRenderer={TableSkeletonRows}
-            TableHeaderSkeletonRenderer={TableSkeletonHeader}
-
-            payload={{
-              onDelete: handleCustomerDelete,
-              onEdit: handleCustomerEdit,
-            }}
-            ContextMenu={ActionsMenu}
-          />
-        </Choose.Otherwise>
-      </Choose>
-    </div>
+    <DataTable
+      noInitialFetch={true}
+      columns={columns}
+      data={customers}
+      loading={isCustomersLoading}
+      headerLoading={isCustomersLoading}
+      progressBarLoading={isCustomersFetching}
+      onFetchData={handleFetchData}
+      selectionColumn={true}
+      expandable={false}
+      sticky={true}
+      spinnerProps={{ size: 30 }}
+      pagination={true}
+      manualSortBy={true}
+      manualPagination={true}
+      pagesCount={pagination.pagesCount}
+      autoResetSortBy={false}
+      autoResetPage={false}
+      TableLoadingRenderer={TableSkeletonRows}
+      TableHeaderSkeletonRenderer={TableSkeletonHeader}
+      payload={{
+        onDelete: handleCustomerDelete,
+        onEdit: handleCustomerEdit,
+      }}
+      ContextMenu={ActionsMenu}
+    />
   );
-};
+}
 
 export default compose(
   withAlertsActions,

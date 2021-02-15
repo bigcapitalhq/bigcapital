@@ -43,10 +43,6 @@ function JournalNumberDialogContent({
       setSubmitting(false);
       closeDialog('journal-number-form');
 
-      setTimeout(() => {
-        queryCache.invalidateQueries('settings');
-        // setJournalNumberChanged(true);
-      }, 250);
     }).catch(() => {
       setSubmitting(false);
     });

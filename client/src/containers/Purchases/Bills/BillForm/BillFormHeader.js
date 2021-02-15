@@ -14,8 +14,6 @@ import { compose } from 'redux';
  * Fill form header.
  */
 function BillFormHeader({
-  onBillNumberChanged,
-
   // #withSettings
   baseCurrency,
 }) {
@@ -28,7 +26,7 @@ function BillFormHeader({
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
-      <BillFormHeaderFields onBillNumberChanged={onBillNumberChanged} />
+      <BillFormHeaderFields />
       <PageFormBigNumber
         label={'Due Amount'}
         amount={totalDueAmount}

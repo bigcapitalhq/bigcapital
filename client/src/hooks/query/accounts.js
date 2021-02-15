@@ -50,7 +50,10 @@ export function useAccountsTypes(props) {
   const states = useQuery(
     ['ACCOUNTS_TYPES'],
     () => ApiService.get('account_types'),
-    props,
+    {
+      select: (res) => res.data.account_types,
+      ...props,
+    },
   );
   return {
     ...states,
@@ -79,7 +82,7 @@ export function useEditAccount(props) {
   const query = useQueryClient();
 
   return useMutation(
-    (values, id) => ApiService.post(`accounts/${id}`, values),
+    ([values, id]) => ApiService.post(`accounts/${id}`, values),
     {
       onSuccess: () => {
         query.invalidateQueries('ACCOUNTS');

@@ -93,6 +93,18 @@ export const compose = (...funcs) =>
     (arg) => arg,
   );
 
+
+export const updateTableRow = (rowIndex, columnId, value) => (old) => {
+  return old.map((row, index) => {
+    if (index === rowIndex) {
+      return {
+        ...old[rowIndex],
+        [columnId]: value,
+      }
+    }
+    return row
+  })
+}
 export const getObjectDiff = (a, b) => {
   return _.reduce(
     a,
@@ -147,9 +159,24 @@ export const defaultExpanderReducer = (tableRows, level) => {
   return expended;
 };
 
-export function formattedAmount(cents, currency) {
+export function formattedAmount(cents, currency, props) {
   const { symbol, decimal_digits: precision } = Currency[currency];
-  return accounting.formatMoney(cents, { symbol, precision });
+
+  const parsedProps = {
+    noZero: false,
+    ...props,
+  };
+  const formatOptions = {
+    symbol,
+    precision: 0,
+    format: {
+      pos : "%s%v",
+      neg : "%s%v",
+      zero: parsedProps.noZero ? "" : '%s%v'
+    },
+  };
+
+  return accounting.formatMoney(cents, formatOptions);
 }
 
 export function formattedExchangeRate(amount, currency) {
@@ -215,9 +242,7 @@ export const uniqueMultiProps = (items, props) => {
 
 export const transformUpdatedRows = (rows, rowIndex, columnIdOrObj, value) => {
   const columnId = typeof columnIdOrObj !== 'object' ? columnIdOrObj : null;
-
   const updateTable = typeof columnIdOrObj === 'object' ? columnIdOrObj : null;
-
   const newData = updateTable ? updateTable : { [columnId]: value };
 
   return rows.map((row, index) => {
@@ -537,4 +562,19 @@ export function transformPagination(pagination) {
     ...transformed,
     pagesCount: getPagesCountFromPaginationMeta(transformed),
   };
+}
+
+export function removeRowsByIndex(rows, rowIndex) {
+  const removeIndex = parseInt(rowIndex, 10);
+  const newRows = rows.filter((row, index) => index !== removeIndex);
+
+  return newRows;
+}
+
+
+export function safeSumBy(entries, getter) {
+  return _.chain(entries)
+    .map(row => toSafeNumber(_.get(row, getter)))
+    .sum()
+    .value();
 }

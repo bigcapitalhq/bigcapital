@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import { Formik, Form } from 'formik';
 import moment from 'moment';
 import { Intent } from '@blueprintjs/core';
@@ -14,7 +14,6 @@ import CustomerFormAfterPrimarySection from './CustomerFormAfterPrimarySection';
 import CustomersTabs from './CustomersTabs';
 import CustomerFloatingActions from './CustomerFloatingActions';
 
-import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withSettings from 'containers/Settings/withSettings';
 
 import { compose, transformToForm } from 'utils';
@@ -61,9 +60,6 @@ const defaultInitialValues = {
  * Customer form.
  */
 function CustomerForm({
-  // #withDashboardActions
-  changePageTitle,
-
   // #withSettings
   baseCurrency,
 }) {
@@ -90,13 +86,7 @@ function CustomerForm({
     }),
     [customer, baseCurrency],
   );
-
-  useEffect(() => {
-    !isNewMode
-      ? changePageTitle(formatMessage({ id: 'edit_customer' }))
-      : changePageTitle(formatMessage({ id: 'new_customer' }));
-  }, [changePageTitle, isNewMode, formatMessage]);
-
+ 
   //Handles the form submit.
   const handleFormSubmit = (
     values,
@@ -165,5 +155,4 @@ export default compose(
   withSettings(({ organizationSettings }) => ({
     baseCurrency: organizationSettings?.baseCurrency,
   })),
-  withDashboardActions,
 )(CustomerForm);

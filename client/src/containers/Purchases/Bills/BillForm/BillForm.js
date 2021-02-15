@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import { Formik, Form } from 'formik';
 import moment from 'moment';
 import { Intent } from '@blueprintjs/core';
@@ -13,12 +13,10 @@ import BillFormHeader from './BillFormHeader';
 import BillFloatingActions from './BillFloatingActions';
 import BillFormFooter from './BillFormFooter';
 
-import withDashboardActions from 'containers/Dashboard/withDashboardActions';
-
 import { AppToaster } from 'components';
 
 import { ERROR } from 'common/errors';
-import { compose, repeatValue, orderingLinesIndexes } from 'utils';
+import { repeatValue, orderingLinesIndexes } from 'utils';
 import BillFormBody from './BillFormBody';
 import { useBillFormContext } from './BillFormProvider';
 
@@ -47,10 +45,8 @@ const defaultInitialValues = {
 /**
  * Bill form.
  */
-function BillForm({
-  //#withDashboard
-  changePageTitle,
-  changePageSubtitle,
+export default function BillForm({
+ 
 }) {
   const { formatMessage } = useIntl();
   const history = useHistory();
@@ -64,14 +60,6 @@ function BillForm({
   } = useBillFormContext();
 
   const isNewMode = !billId;
-
-  useEffect(() => {
-    if (!isNewMode) {
-      changePageTitle(formatMessage({ id: 'edit_bill' }));
-    } else {
-      changePageTitle(formatMessage({ id: 'new_bill' }));
-    }
-  }, [changePageTitle, isNewMode, formatMessage]);
 
   // Initial values in create and edit mode.
   const initialValues = useMemo(
@@ -146,8 +134,6 @@ function BillForm({
       });
       setSubmitting(false);
 
-      changePageSubtitle('');
-
       if (submitPayload.redirect) {
         history.push('/bills');
       }
@@ -167,14 +153,6 @@ function BillForm({
     }
   };
 
-  // Handle bill number changed once the field blur.
-  const handleBillNumberChanged = useCallback(
-    (billNumber) => {
-      changePageSubtitle(billNumber);
-    },
-    [changePageSubtitle],
-  );
-
   return (
     <div
       className={classNames(
@@ -189,7 +167,7 @@ function BillForm({
         onSubmit={handleFormSubmit}
       >
         <Form>
-          <BillFormHeader onBillNumberChanged={handleBillNumberChanged} />
+          <BillFormHeader />
           <BillFormBody defaultBill={defaultBill} />
           <BillFormFooter />
           <BillFloatingActions />
@@ -198,5 +176,3 @@ function BillForm({
     </div>
   );
 }
-
-export default compose(withDashboardActions)(BillForm);

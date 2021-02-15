@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import {
   FormGroup,
   InputGroup,
@@ -8,7 +8,7 @@ import {
 import { DateInput } from '@blueprintjs/datetime';
 import { FastField, ErrorMessage } from 'formik';
 import { FormattedMessage as T } from 'react-intl';
-import { momentFormatter, compose, tansformDateValue, saveInvoke } from 'utils';
+import { momentFormatter, compose, tansformDateValue } from 'utils';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 import {
@@ -19,9 +19,7 @@ import {
 } from 'components';
 
 import { useInvoiceFormContext } from './InvoiceFormProvider';
-
 import withDialogActions from 'containers/Dialog/withDialogActions';
-
 import { inputIntent, handleDateChange } from 'utils';
 
 /**
@@ -30,19 +28,13 @@ import { inputIntent, handleDateChange } from 'utils';
 function InvoiceFormHeaderFields({
   // #withDialogActions
   openDialog,
-
-  // #ownProps
-  onInvoiceNumberChanged,
 }) {
   // Invoice form context.
   const { customers } = useInvoiceFormContext();
 
-  const handleInvoiceNumberChange = useCallback(() => {
+  // Handle invoice number changing.
+  const handleInvoiceNumberChange = () => {
     openDialog('invoice-number-form', {});
-  }, [openDialog]);
-
-  const handleInvoiceNumberChanged = (event) => {
-    saveInvoke(onInvoiceNumberChanged, event.currentTarget.value);
   };
 
   return (
@@ -136,7 +128,6 @@ function InvoiceFormHeaderFields({
               <InputGroup
                 minimal={true}
                 {...field}
-                onBlur={handleInvoiceNumberChanged}
               />
               <InputPrependButton
                 buttonProps={{

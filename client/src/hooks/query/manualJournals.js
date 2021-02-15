@@ -27,10 +27,11 @@ export function useEditJournal(props) {
   const queryClient = useQueryClient();
 
   return useMutation(
-    (values, id) => ApiService.post(`manual-journals/${id}`, values),
+    ([id, values]) => ApiService.post(`manual-journals/${id}`, values),
     {
-      onSuccess: () => {
+      onSuccess: (res, [id]) => {
         queryClient.invalidateQueries('JOURNALS');
+        queryClient.invalidateQueries('JOURNAL', id);
       },
       ...props
     },
@@ -46,8 +47,9 @@ export function useDeleteJournal(props) {
   return useMutation(
     (id) => ApiService.delete(`manual-journals/${id}`),
     {
-      onSuccess: () => {
+      onSuccess: (res, id) => {
         queryClient.invalidateQueries('JOURNALS');
+        queryClient.invalidateQueries('JOURNAL', id);
       },
       ...props
     },
@@ -63,8 +65,9 @@ export function usePublishJournal(props) {
   return useMutation(
     (id) => ApiService.post(`manual-journals/${id}/publish`),
     {
-      onSuccess: () => {
+      onSuccess: (res, id) => {
         queryClient.invalidateQueries('JOURNALS');
+        queryClient.invalidateQueries('JOURNAL', id);
       },
       ...props
     },
@@ -104,12 +107,9 @@ export function useJournals(query, props) {
 export function useJournal(id, props) {
   return useQuery(
     ['JOURNAL', id],
-    async () => {
-      const { data } = await ApiService.get(`manual-journals/${id}`);
-
-      return data.manual_journal;
-    },
+    () => ApiService.get(`manual-journals/${id}`),
     {
+      select: (res) => res.data.manual_journal,
       ...props,
     },
   );

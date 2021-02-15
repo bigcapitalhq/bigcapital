@@ -1,4 +1,5 @@
-import LazyLoader from 'components/LazyLoader';
+import { lazy } from 'react';
+import { formatMessage } from 'services/intl';
 
 // const BASE_URL = '/dashboard';
 
@@ -6,87 +7,86 @@ export default [
   // Homepage
   {
     path: `/homepage`,
-    component: LazyLoader({
-      loader: () => import('containers/Homepage/Homepage'),
-    }),
+    component: lazy(() => import('containers/Homepage/Homepage')),
     breadcrumb: 'Home',
+    pageTitle: 'Homepage',
   },
   // Accounts.
   {
     path: `/accounts`,
-    component: LazyLoader({
-      loader: () => import('containers/Accounts/AccountsChart'),
-    }),
+    component: lazy(() => import('containers/Accounts/AccountsChart')),
     breadcrumb: 'Accounts Chart',
     hotkey: 'shift+a',
+    pageTitle: 'Accounts Chart',
   },
   // Custom views.
   {
     path: `/custom_views/:resource_slug/new`,
-    component: LazyLoader({
-      loader: () => import('containers/Views/ViewFormPage'),
-    }),
+    component: lazy(() => import('containers/Views/ViewFormPage')),
     breadcrumb: 'New',
   },
   {
     path: `/custom_views/:view_id/edit`,
-    component: LazyLoader({
-      loader: () => import('containers/Views/ViewFormPage'),
-    }),
+    component: lazy(() => import('containers/Views/ViewFormPage')),
     breadcrumb: 'Edit',
   },
   // Accounting.
-  // {
-  //   path: `/make-journal-entry`,
-  //   component: LazyLoader({
-  //     loader: () => import('containers/Accounting/MakeJournalEntriesPage'),
-  //   }),
-  //   breadcrumb: 'Make Journal Entry',
-  //   hotkey: 'ctrl+shift+m',
-  // },
-  // {
-  //   path: `/manual-journals/:id/edit`,
-  //   component: LazyLoader({
-  //     loader: () => import('containers/Accounting/MakeJournalEntriesPage'),
-  //   }),
-  //   breadcrumb: 'Edit',
-  // },
+  {
+    path: `/make-journal-entry`,
+    component: lazy(() =>
+      import('containers/Accounting/MakeJournal/MakeJournalEntriesPage'),
+    ),
+    breadcrumb: 'Make Journal Entry',
+    hotkey: 'ctrl+shift+m',
+    pageTitle: formatMessage({ id: 'new_journal' }),
+    sidebarShrink: true,
+    backLink: true
+  },
+  {
+    path: `/manual-journals/:id/edit`,
+    component: lazy(() =>
+      import('containers/Accounting/MakeJournal/MakeJournalEntriesPage'),
+    ),
+    breadcrumb: 'Edit',
+    pageTitle: formatMessage({ id: 'edit_journal' }),
+    sidebarShrink: true,
+    backLink: true
+  },
   {
     path: `/manual-journals`,
-    component: LazyLoader({
-      loader: () => import('containers/Accounting/JournalsLanding/ManualJournalsList'),
-    }),
+    component: lazy(() =>
+      import('containers/Accounting/JournalsLanding/ManualJournalsList'),
+    ),
     breadcrumb: 'Manual Journals',
     hotkey: 'shift+m',
   },
   {
     path: `/items/categories`,
-    component: LazyLoader({
-      loader: () => import('containers/ItemsCategories/ItemCategoriesList'),
-    }),
+    component: lazy(() =>
+      import('containers/ItemsCategories/ItemCategoriesList'),
+    ),
     breadcrumb: 'Categories',
+    pageTitle: formatMessage({ id: 'category_list' }),
   },
   // Items.
   {
     path: `/items/:id/edit`,
-    component: LazyLoader({
-      loader: () => import('containers/Items/ItemFormPage'),
-    }),
+    component: lazy(() => import('containers/Items/ItemFormPage')),
     breadcrumb: 'Edit Item',
+    pageTitle: formatMessage({ id: 'edit_item' }),
+    backLink: true
   },
   {
     path: `/items/new`,
-    component: LazyLoader({
-      loader: () => import('containers/Items/ItemFormPage'),
-    }),
+    component: lazy(() => import('containers/Items/ItemFormPage')),
     breadcrumb: 'New Item',
     hotkey: 'ctrl+shift+w',
+    pageTitle: formatMessage({ id: 'new_item' }),
+    backLink: true
   },
   {
     path: `/items`,
-    component: LazyLoader({
-      loader: () => import('containers/Items/ItemsList'),
-    }),
+    component: lazy(() => import('containers/Items/ItemsList')),
     breadcrumb: 'Items',
     hotkey: 'shift+w',
   },
@@ -94,157 +94,168 @@ export default [
   // Inventory adjustments.
   {
     path: `/inventory-adjustments`,
-    component: LazyLoader({
-      loader: () => import('containers/InventoryAdjustments/InventoryAdjustmentList'),
-    }),
+    component: lazy(() =>
+      import('containers/InventoryAdjustments/InventoryAdjustmentList'),
+    ),
     breadcrumb: 'Inventory a adjustments',
+    pageTitle: formatMessage({ id: 'inventory_adjustment_list' }),
   },
 
   // Financial Reports.
   {
     path: `/financial-reports/general-ledger`,
-    component: LazyLoader({
-      loader: () =>
-        import('containers/FinancialStatements/GeneralLedger/GeneralLedger'),
-    }),
+    component: lazy(() =>
+      import('containers/FinancialStatements/GeneralLedger/GeneralLedger'),
+    ),
     breadcrumb: 'General Ledger',
     hotkey: 'shift+4',
   },
   {
     path: `/financial-reports/balance-sheet`,
-    component: LazyLoader({
-      loader: () =>
-        import('containers/FinancialStatements/BalanceSheet/BalanceSheet'),
-    }),
+    component: lazy(() =>
+      import('containers/FinancialStatements/BalanceSheet/BalanceSheet'),
+    ),
     breadcrumb: 'Balance Sheet',
     hotkey: 'shift+1',
+    pageTitle: formatMessage({ id: 'balance_sheet' }),
+    backLink: true,
+    sidebarShrink: true,
   },
   {
     path: `/financial-reports/trial-balance-sheet`,
-    component: LazyLoader({
-      loader: () =>
-        import(
-          'containers/FinancialStatements/TrialBalanceSheet/TrialBalanceSheet'
-        ),
-    }),
+    component: lazy(() =>
+      import(
+        'containers/FinancialStatements/TrialBalanceSheet/TrialBalanceSheet'
+      ),
+    ),
     breadcrumb: 'Trial Balance Sheet',
     hotkey: 'shift+5',
   },
   {
     path: `/financial-reports/profit-loss-sheet`,
-    component: LazyLoader({
-      loader: () =>
-        import(
-          'containers/FinancialStatements/ProfitLossSheet/ProfitLossSheet'
-        ),
-    }),
+    component: lazy(() =>
+      import('containers/FinancialStatements/ProfitLossSheet/ProfitLossSheet'),
+    ),
     breadcrumb: 'Profit Loss Sheet',
     hotkey: 'shift+2',
   },
   {
     path: '/financial-reports/receivable-aging-summary',
-    component: LazyLoader({
-      loader: () =>
-        import('containers/FinancialStatements/ARAgingSummary/ARAgingSummary'),
-    }),
+    component: lazy(() =>
+      import('containers/FinancialStatements/ARAgingSummary/ARAgingSummary'),
+    ),
     breadcrumb: 'Receivable Aging Summary',
   },
   {
     path: `/financial-reports/journal-sheet`,
-    component: LazyLoader({
-      loader: () => import('containers/FinancialStatements/Journal/Journal'),
-    }),
+    component: lazy(() =>
+      import('containers/FinancialStatements/Journal/Journal'),
+    ),
     breadcrumb: 'Journal Sheet',
     hotkey: 'shift+3',
   },
   {
     path: '/financial-reports',
-    component: LazyLoader({
-      loader: () => import('containers/FinancialStatements/FinancialReports'),
-    }),
+    component: lazy(() =>
+      import('containers/FinancialStatements/FinancialReports'),
+    ),
     breadcrumb: 'Financial Reports',
+    pageTitle: formatMessage({ id: 'all_financial_reports' }),
   },
   // Exchange Rates
   {
     path: `/exchange-rates`,
-    component: LazyLoader({
-      loader: () => import('containers/ExchangeRates/ExchangeRatesList'),
-    }),
+    component: lazy(() => import('containers/ExchangeRates/ExchangeRatesList')),
     breadcrumb: 'Exchange Rates',
   },
   // Expenses.
-  // {
-  //   path: `/expenses/new`,
-  //   component: LazyLoader({
-  //     loader: () => import('containers/Expenses/ExpenseForm/ExpenseFormPage'),
-  //   }),
-  //   breadcrumb: 'Expenses',
-  //   hotkey: 'ctrl+shift+x',
-  // },
-  // {
-  //   path: `/expenses/:id/edit`,
-  //   component: LazyLoader({
-  //     loader: () => import('containers/Expenses/ExpenseForm/ExpenseFormPage'),
-  //   }),
-  //   breadcrumb: 'Edit',
-  // },
+  {
+    path: `/expenses/new`,
+    component: lazy(() =>
+      import('containers/Expenses/ExpenseForm/ExpenseFormPage'),
+    ),
+    breadcrumb: 'Expenses',
+    hotkey: 'ctrl+shift+x',
+    pageTitle: formatMessage({ id: 'new_expense' }),
+    sidebarShrink: true,
+    backLink: true
+  },
+  {
+    path: `/expenses/:id/edit`,
+    component: lazy(() =>
+      import('containers/Expenses/ExpenseForm/ExpenseFormPage'),
+    ),
+    breadcrumb: 'Edit',
+    pageTitle: formatMessage({ id: 'edit_expense' }),
+    sidebarShrink: true,
+    backLink: true
+  },
   {
     path: `/expenses`,
-    component: LazyLoader({
-      loader: () => import('containers/Expenses/ExpensesLanding/ExpensesList'),
-    }),
+    component: lazy(() =>
+      import('containers/Expenses/ExpensesLanding/ExpensesList'),
+    ),
     breadcrumb: 'Expenses List',
+    pageTitle: formatMessage({ id: 'expenses_list' }),
     hotkey: 'shift+x',
   },
 
   // Customers
   {
     path: `/customers/:id/edit`,
-    component: LazyLoader({
-      loader: () => import('containers/Customers/CustomerForm/CustomerFormPage'),
-    }),
+    component: lazy(() =>
+      import('containers/Customers/CustomerForm/CustomerFormPage'),
+    ),
     breadcrumb: 'Edit Customer',
+    pageTitle: formatMessage({ id: 'edit_customer' }),
+    backLink: true
   },
   {
     path: `/customers/new`,
-    component: LazyLoader({
-      loader: () => import('containers/Customers/CustomerForm/CustomerFormPage'),
-    }),
+    component: lazy(() =>
+      import('containers/Customers/CustomerForm/CustomerFormPage'),
+    ),
     breadcrumb: 'New Customer',
     hotkey: 'ctrl+shift+c',
+    pageTitle: formatMessage({ id: 'new_customer' }),
+    backLink: true
   },
   {
     path: `/customers`,
-    component: LazyLoader({
-      loader: () => import('containers/Customers/CustomersLanding/CustomersList'),
-    }),
+    component: lazy(() =>
+      import('containers/Customers/CustomersLanding/CustomersList'),
+    ),
     breadcrumb: 'Customers',
     hotkey: 'shift+c',
+    pageTitle: formatMessage({ id: 'customers_list' }),
   },
 
   // Vendors
   {
     path: `/vendors/:id/edit`,
-    component: LazyLoader({
-      loader: () => import('containers/Vendors/VendorForm/VendorFormPage'),
-    }),
+    component: lazy(() =>
+      import('containers/Vendors/VendorForm/VendorFormPage'),
+    ),
     breadcrumb: 'Edit Vendor',
+    pageTitle: formatMessage({ id: 'edit_vendor' }),
   },
   {
     path: `/vendors/new`,
-    component: LazyLoader({
-      loader: () => import('containers/Vendors/VendorForm/VendorFormPage'),
-    }),
+    component: lazy(() =>
+      import('containers/Vendors/VendorForm/VendorFormPage'),
+    ),
     breadcrumb: 'New Vendor',
     hotkey: 'ctrl+shift+v',
+    pageTitle: formatMessage({ id: 'new_vendor' }),
   },
   {
     path: `/vendors`,
-    component: LazyLoader({
-      loader: () => import('containers/Vendors/VendorsLanding/VendorsList'),
-    }),
+    component: lazy(() =>
+      import('containers/Vendors/VendorsLanding/VendorsList'),
+    ),
     breadcrumb: 'Vendors',
     hotkey: 'shift+v',
+    pageTitle: formatMessage({ id: 'vendors_list' }),
   },
 
   // Estimates
@@ -265,61 +276,70 @@ export default [
   // },
   {
     path: `/estimates`,
-    component: LazyLoader({
-      loader: () => import('containers/Sales/Estimates/EstimatesLanding/EstimatesList'),
-    }),
+    component: lazy(() =>
+      import('containers/Sales/Estimates/EstimatesLanding/EstimatesList'),
+    ),
     breadcrumb: 'Estimates List',
     hotkey: 'shift+e',
+    pageTitle: formatMessage({ id: 'estimates_list' })
   },
 
   // Invoices.
-  // {
-  //   path: `/invoices/:id/edit`,
-  //   component: LazyLoader({
-  //     loader: () => import('containers/Sales/Invoice/InvoiceFormPage'),
-  //   }),
-  //   breadcrumb: 'Edit',
-  // },
-  // {
-  //   path: `/invoices/new`,
-  //   component: LazyLoader({
-  //     loader: () => import('containers/Sales/Invoice/InvoiceFormPage'),
-  //   }),
-  //   breadcrumb: 'New Invoice',
-  //   hotkey: 'ctrl+shift+i',
-  // },
+  {
+    path: `/invoices/:id/edit`,
+    component: lazy(() =>
+      import('containers/Sales/Invoices/InvoiceForm/InvoiceFormPage'),
+    ),
+    breadcrumb: 'Edit',
+    pageTitle: formatMessage({ id: 'edit_invoice' }),
+    sidebarShrink: true,
+    backLink: true
+  },
+  {
+    path: `/invoices/new`,
+    component: lazy(() =>
+      import('containers/Sales/Invoices/InvoiceForm/InvoiceFormPage'),
+    ),
+    breadcrumb: 'New Invoice',
+    hotkey: 'ctrl+shift+i',
+    pageTitle: formatMessage({ id: 'new_invoice' }),
+    sidebarShrink: true,
+    backLink: true
+  },
   {
     path: `/invoices`,
-    component: LazyLoader({
-      loader: () => import('containers/Sales/Invoices/InvoicesLanding/InvoicesList'),
-    }),
+    component: lazy(() =>
+      import('containers/Sales/Invoices/InvoicesLanding/InvoicesList'),
+    ),
     breadcrumb: 'Invoices List',
     hotkey: 'shift+i',
+    pageTitle: formatMessage({ id: 'invoices_list' }),
   },
 
   // Sales Receipts.
-  // {
-  //   path: `/receipts/:id/edit`,
-  //   component: LazyLoader({
-  //     loader: () => import('containers/Sales/Receipt/ReceiptFormPage'),
-  //   }),
-  //   breadcrumb: 'Edit',
-  // },
-  // {
-  //   path: `/receipts/new`,
-  //   component: LazyLoader({
-  //     loader: () => import('containers/Sales/Receipt/ReceiptFormPage'),
-  //   }),
-  //   breadcrumb: 'New Receipt',
-  //   hotkey: 'ctrl+shift+r',
-  // },
+  {
+    path: `/receipts/:id/edit`,
+    component: lazy(() =>
+      import('containers/Sales/Receipts/ReceiptForm/ReceiptFormPage'),
+    ),
+    breadcrumb: 'Edit',
+  },
+  {
+    path: `/receipts/new`,
+    component: lazy(() =>
+      import('containers/Sales/Receipts/ReceiptForm/ReceiptFormPage'),
+    ),
+    breadcrumb: 'New Receipt',
+    hotkey: 'ctrl+shift+r',
+  },
   {
     path: `/receipts`,
-    component: LazyLoader({
-      loader: () => import('containers/Sales/Receipts/ReceiptsLanding/ReceiptsList'),
-    }),
+    component: lazy(() =>
+      import('containers/Sales/Receipts/ReceiptsLanding/ReceiptsList'),
+    ),
     breadcrumb: 'Receipts List',
     hotkey: 'shift+r',
+    pageTitle: formatMessage({ id: 'receipts_list' })
   },
 
   // Payment receives
@@ -341,44 +361,46 @@ export default [
   // },
   {
     path: `/payment-receives`,
-    component: LazyLoader({
-      loader: () =>
-        import('containers/Sales/PaymentReceive/PaymentsLanding/PaymentReceivesList'),
-    }),
+    component: lazy(() =>
+      import(
+        'containers/Sales/PaymentReceive/PaymentsLanding/PaymentReceivesList'
+      ),
+    ),
     breadcrumb: 'Payment Receives List',
   },
 
   // Bills
-  // {
-  //   path: `/bills/:id/edit`,
-  //   component: LazyLoader({
-  //     loader: () => import('containers/Purchases/Bill/BillFormPage'),
-  //   }),
-  //   breadcrumb: 'Edit',
-  // },
-  // {
-  //   path: `/bills/new`,
-  //   component: LazyLoader({
-  //     loader: () => import('containers/Purchases/Bill/BillFormPage'),
-  //   }),
-  //   breadcrumb: 'New Bill',
-  //   hotkey: 'ctrl+shift+b',
-  // },
+  {
+    path: `/bills/:id/edit`,
+    component: lazy(() =>
+      import('containers/Purchases/Bills/BillForm/BillFormPage'),
+    ),
+    breadcrumb: 'Edit',
+    pageTitle: formatMessage({ id: 'edit_bill' })
+  },
+  {
+    path: `/bills/new`,
+    component: lazy(() =>
+      import('containers/Purchases/Bills/BillForm/BillFormPage'),
+    ),
+    breadcrumb: 'New Bill',
+    hotkey: 'ctrl+shift+b',
+    pageTitle: formatMessage({ id: 'new_bill' })
+  },
   {
     path: `/bills`,
-    component: LazyLoader({
-      loader: () => import('containers/Purchases/Bills/BillsLanding/BillsList'),
-    }),
+    component: lazy(() =>
+      import('containers/Purchases/Bills/BillsLanding/BillsList'),
+    ),
     breadcrumb: 'Bills List',
     hotkey: 'shift+b',
+    pageTitle: formatMessage({ id: 'bills_list' })
   },
 
   // Subscription billing.
   {
     path: `/billing`,
-    component: LazyLoader({
-      loader: () => import('containers/Subscriptions/BillingForm'),
-    }),
+    component: lazy(() => import('containers/Subscriptions/BillingForm')),
     breadcrumb: 'New Billing',
   },
   // Payment modes.
@@ -400,9 +422,12 @@ export default [
   // },
   {
     path: `/payment-mades`,
-    component: LazyLoader({
-      loader: () => import('containers/Purchases/PaymentMades/PaymentsLanding/PaymentMadeList'),
-    }),
+    component: lazy(() =>
+      import(
+        'containers/Purchases/PaymentMades/PaymentsLanding/PaymentMadeList'
+      ),
+    ),
     breadcrumb: 'Payment Made List',
-  }
+    pageTitle: formatMessage({ id: 'payment_made_list' })
+  },
 ];

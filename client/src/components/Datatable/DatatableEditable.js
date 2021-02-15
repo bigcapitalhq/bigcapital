@@ -1,10 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
-import {
-  DataTable,
-  If,
-} from 'components';
+import { DataTable, If } from 'components';
 import 'style/components/DataTable/DataTableEditable.scss';
 
 export default function DatatableEditable({
@@ -14,11 +11,7 @@ export default function DatatableEditable({
   ...tableProps
 }) {
   return (
-    <div
-      className={classNames(CLASSES.DATATABLE_EDITOR, {
-        [`${CLASSES.DATATABLE_EDITOR_HAS_TOTAL_ROW}`]: totalRow,
-      }, className)}
-    >
+    <div className={classNames(CLASSES.DATATABLE_EDITOR, className)}>
       <DataTable {...tableProps} />
 
       <If condition={actions}>

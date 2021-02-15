@@ -1,9 +1,7 @@
 import React, { useCallback } from 'react';
-import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 
 import { compose } from 'utils';
-import { CLASSES } from 'common/classes';
 import { DataTable } from 'components';
 
 import ReceiptsEmptyStatus from './ReceiptsEmptyStatus';
@@ -29,7 +27,7 @@ function ReceiptsDataTable({
   baseCurrency,
 
   // #withAlertsActions
-  openAlert
+  openAlert,
 }) {
   const history = useHistory();
 
@@ -39,7 +37,7 @@ function ReceiptsDataTable({
     pagination,
     isReceiptsFetching,
     isReceiptsLoading,
-    isEmptyStatus
+    isEmptyStatus,
   } = useReceiptsListContext();
 
   // Receipts table columns.
@@ -58,7 +56,7 @@ function ReceiptsDataTable({
   // Handles receipt close action.
   const handleCloseReceipt = (receipt) => {
     openAlert('receipt-close', { receiptId: receipt.id });
-  }
+  };
 
   // Handles the datable fetch data once the state changing.
   const handleDataTableFetchData = useCallback(
@@ -73,44 +71,36 @@ function ReceiptsDataTable({
   );
 
   if (isEmptyStatus) {
-    return <ReceiptsEmptyStatus />
+    return <ReceiptsEmptyStatus />;
   }
 
   return (
-    <div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>
-      <DataTable
-        columns={columns}
-        data={receipts}
-
-        loading={isReceiptsLoading}
-        headerLoading={isReceiptsLoading}
-        progressBarLoading={isReceiptsFetching}
-
-        onFetchData={handleDataTableFetchData}
-        manualSortBy={true}
-        selectionColumn={true}
-        noInitialFetch={true}
-        sticky={true}
-        pagination={true}
-        pagesCount={pagination.pagesCount}
-
-        manualPagination={true}
-
-        autoResetSortBy={false}
-        autoResetPage={false}
-
-        TableLoadingRenderer={TableSkeletonRows}
-        TableHeaderSkeletonRenderer={TableSkeletonHeader}
-        ContextMenu={ActionsMenu}
-
-        payload={{
-          onEdit: handleEditReceipt,
-          onDelete: handleDeleteReceipt,
-          onClose: handleCloseReceipt,
-          baseCurrency
-        }}
-      />
-    </div>
+    <DataTable
+      columns={columns}
+      data={receipts}
+      loading={isReceiptsLoading}
+      headerLoading={isReceiptsLoading}
+      progressBarLoading={isReceiptsFetching}
+      onFetchData={handleDataTableFetchData}
+      manualSortBy={true}
+      selectionColumn={true}
+      noInitialFetch={true}
+      sticky={true}
+      pagination={true}
+      pagesCount={pagination.pagesCount}
+      manualPagination={true}
+      autoResetSortBy={false}
+      autoResetPage={false}
+      TableLoadingRenderer={TableSkeletonRows}
+      TableHeaderSkeletonRenderer={TableSkeletonHeader}
+      ContextMenu={ActionsMenu}
+      payload={{
+        onEdit: handleEditReceipt,
+        onDelete: handleDeleteReceipt,
+        onClose: handleCloseReceipt,
+        baseCurrency,
+      }}
+    />
   );
 }
 

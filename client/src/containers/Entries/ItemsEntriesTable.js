@@ -1,251 +1,147 @@
-import React, { useState, useMemo, useEffect, useCallback } from 'react';
-import { Button, Intent, Position, Tooltip } from '@blueprintjs/core';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import React, { useCallback } from 'react';
+import { Button } from '@blueprintjs/core';
+import { FormattedMessage as T } from 'react-intl';
 import classNames from 'classnames';
+
+import ItemsEntriesDeleteAlert from 'containers/Alerts/ItemsEntries/ItemsEntriesDeleteAlert';
+import withAlertActions from 'containers/Alert/withAlertActions';
+
 import { CLASSES } from 'common/classes';
-import { Hint, Icon, DataTableEditable } from 'components';
+import { DataTableEditable } from 'components';
+
+import { useEditableItemsEntriesColumns } from './components';
 import {
-  InputGroupCell,
-  MoneyFieldCell,
-  ItemsListCell,
-  PercentFieldCell,
-  DivFieldCell,
-} from 'components/DataTableCells';
-import { formattedAmount, saveInvoke } from 'utils';
+  saveInvoke,
+  updateTableRow,
+  repeatValue,
+  removeRowsByIndex,
+  compose,
+} from 'utils';
+import { updateItemsEntriesTotal } from './utils';
 
-// Actions cell renderer component.
-const ActionsCellRenderer = ({
-  row: { index },
-  column: { id },
-  cell: { value },
-  data,
-  payload,
-}) => {
-  if (data.length <= index + 1) {
-    return '';
-  }
-  const onRemoveRole = () => {
-    payload.removeRow(index);
-  };
-  return (
-    <Tooltip content={<T id={'remove_the_line'} />} position={Position.LEFT}>
-      <Button
-        icon={<Icon icon={'times-circle'} iconSize={14} />}
-        iconSize={14}
-        className="m12"
-        intent={Intent.DANGER}
-        onClick={onRemoveRole}
-      />
-    </Tooltip>
-  );
-};
+/**
+ * Items entries table.
+ */
+function ItemsEntriesTable({
+  // #withAlertActions
+  openAlert,
 
-// Total cell renderer.
-const TotalCellRenderer = (content, type) => (props) => {
-  if (props.data.length === props.row.index + 1) {
-    const total = props.data.reduce((total, entry) => {
-      const amount = parseInt(entry[type], 10);
-      const computed = amount ? total + amount : total;
-
-      return computed;
-    }, 0);
-    return <span>{formattedAmount(total, 'USD')}</span>;
-  }
-  return content(props);
-};
-
-const calculateDiscount = (discount, quantity, rate) =>
-  quantity * rate - (quantity * rate * discount) / 100;
-
-const CellRenderer = (content, type) => (props) => {
-  if (props.data.length === props.row.index + 1) {
-    return '';
-  }
-  return content(props);
-};
-
-const ItemHeaderCell = () => (
-  <>
-    <T id={'product_and_service'} />
-    <Hint />
-  </>
-);
-
-export default function ItemsEntriesTable({
-  //#ownProps
+  // #ownProps
   items,
   entries,
+  initialEntries,
+  defaultEntry,
   errors,
   onUpdateData,
-  onClickRemoveRow,
-  onClickAddNewRow,
-  onClickClearAllLines,
-  filterPurchasableItems = false,
-  filterSellableItems = false,
+  linesNumber,
 }) {
-  const [rows, setRows] = useState([]);
-  const { formatMessage } = useIntl();
+  const [rows, setRows] = React.useState(initialEntries);
 
-  useEffect(() => {
-    setRows([...entries.map((e) => ({ ...e }))]);
-  }, [entries]);
+  // Allows to observes `entries` to make table rows outside controlled.
+  React.useEffect(() => {
+    if (entries && entries !== rows) {
+      setRows(entries);
+    }
+  }, [entries, rows]);
 
-  const columns = useMemo(
-    () => [
-      {
-        Header: '#',
-        accessor: 'index',
-        Cell: ({ row: { index } }) => <span>{index + 1}</span>,
-        width: 40,
-        disableResizing: true,
-        disableSortBy: true,
-        className: 'index',
-      },
-      {
-        Header: ItemHeaderCell,
-        id: 'item_id',
-        accessor: 'item_id',
-        Cell: ItemsListCell,
-        disableSortBy: true,
-        width: 180,
-        filterPurchasable: filterPurchasableItems,
-        filterSellable: filterSellableItems,
-      },
-      {
-        Header: formatMessage({ id: 'description' }),
-        accessor: 'description',
-        Cell: InputGroupCell,
-        disableSortBy: true,
-        className: 'description',
-        width: 100,
-      },
+  // Editiable items entries columns.
+  const columns = useEditableItemsEntriesColumns();
 
-      {
-        Header: formatMessage({ id: 'quantity' }),
-        accessor: 'quantity',
-        Cell: CellRenderer(InputGroupCell, 'quantity'),
-        disableSortBy: true,
-        width: 80,
-        className: 'quantity',
-      },
-      {
-        Header: formatMessage({ id: 'rate' }),
-        accessor: 'rate',
-        Cell: TotalCellRenderer(MoneyFieldCell, 'rate'),
-        disableSortBy: true,
-        width: 80,
-        className: 'rate',
-      },
-      {
-        Header: formatMessage({ id: 'discount' }),
-        accessor: 'discount',
-        Cell: CellRenderer(PercentFieldCell, InputGroupCell),
-        disableSortBy: true,
-        width: 80,
-        className: 'discount',
-      },
-      {
-        Header: formatMessage({ id: 'total' }),
-        accessor: (row) =>
-          calculateDiscount(row.discount, row.quantity, row.rate),
-        Cell: TotalCellRenderer(DivFieldCell, 'total'),
-        disableSortBy: true,
-        width: 120,
-        className: 'total',
-      },
-      {
-        Header: '',
-        accessor: 'action',
-        Cell: ActionsCellRenderer,
-        className: 'actions',
-        disableSortBy: true,
-        disableResizing: true,
-        width: 45,
-      },
-    ],
-    [formatMessage],
-  );
-
+  // Handles the editor data update.
   const handleUpdateData = useCallback(
     (rowIndex, columnId, value) => {
-      const newRows = rows.map((row, index) => {
-        if (index === rowIndex) {
-          const newRow = { ...rows[rowIndex], [columnId]: value };
-          return {
-            ...newRow,
-            total: calculateDiscount(
-              newRow.discount,
-              newRow.quantity,
-              newRow.rate,
-            ),
-          };
-        }
-        return row;
-      });
-      saveInvoke(onUpdateData, newRows);
+      const newRows = compose(
+        updateTableRow(rowIndex, columnId, value),
+        updateItemsEntriesTotal,
+      )(entries);
+
+      setRows(newRows);
+      onUpdateData(newRows);
     },
-    [rows, onUpdateData],
+    [entries, onUpdateData],
   );
 
-  const handleRemoveRow = useCallback(
-    (rowIndex) => {
-      if (rows.length <= 1) {
-        return;
-      }
-      const removeIndex = parseInt(rowIndex, 10);
-      saveInvoke(onClickRemoveRow, removeIndex);
-    },
-    [rows, onClickRemoveRow],
-  );
+  // Handle table rows removing by index.
+  const handleRemoveRow = (rowIndex) => {
+    const newRows = removeRowsByIndex(rows, rowIndex);
+    setRows(newRows);
+    saveInvoke(onUpdateData, newRows);
+  };
 
+  // Handle table rows adding a new row.
   const onClickNewRow = (event) => {
-    saveInvoke(onClickAddNewRow, event);
+    const newRows = [...rows, defaultEntry];
+    setRows(newRows);
+    saveInvoke(onUpdateData, newRows);
   };
 
+  // Handle table clearing all rows.
   const handleClickClearAllLines = (event) => {
-    saveInvoke(onClickClearAllLines, event);
+    openAlert('items-entries-clear-lines');
   };
 
-  const rowClassNames = useCallback(
-    (row) => ({
-      'row--total': rows.length === row.index + 1,
-    }),
-    [rows],
-  );
+  /**
+   * Handle alert confirm of clear all lines.
+   */
+  const handleClearLinesAlertConfirm = () => {
+    const newRows = repeatValue(defaultEntry, linesNumber);
+    setRows(newRows);
+    saveInvoke(onUpdateData, newRows);
+  };
 
   return (
-    <DataTableEditable
-      className={classNames(CLASSES.DATATABLE_EDITOR_ITEMS_ENTRIES)}
-      columns={columns}
-      data={rows}
-      rowClassNames={rowClassNames}
-      sticky={true}
-      payload={{
-        items,
-        errors: errors || [],
-        updateData: handleUpdateData,
-        removeRow: handleRemoveRow,
-        autoFocus: ['item_id', 0],
-      }}
-      actions={
-        <>
-          <Button
-            small={true}
-            className={'button--secondary button--new-line'}
-            onClick={onClickNewRow}
-          >
-            <T id={'new_lines'} />
-          </Button>
+    <>
+      <DataTableEditable
+        className={classNames(CLASSES.DATATABLE_EDITOR_ITEMS_ENTRIES)}
+        columns={columns}
+        data={entries}
+        sticky={true}
+        payload={{
+          items,
+          errors: errors || [],
+          updateData: handleUpdateData,
+          removeRow: handleRemoveRow,
+          autoFocus: ['item_id', 0],
+        }}
+        actions={
+          <>
+            <Button
+              small={true}
+              className={'button--secondary button--new-line'}
+              onClick={onClickNewRow}
+            >
+              <T id={'new_lines'} />
+            </Button>
 
-          <Button
-            small={true}
-            className={'button--secondary button--clear-lines ml1'}
-            onClick={handleClickClearAllLines}
-          >
-            <T id={'clear_all_lines'} />
-          </Button>
-        </>
-      }
-    />
+            <Button
+              small={true}
+              className={'button--secondary button--clear-lines ml1'}
+              onClick={handleClickClearAllLines}
+            >
+              <T id={'clear_all_lines'} />
+            </Button>
+          </>
+        }
+      />
+      <ItemsEntriesDeleteAlert
+        name={'items-entries-clear-lines'}
+        onConfirm={handleClearLinesAlertConfirm}
+      />
+    </>
   );
 }
+
+ItemsEntriesTable.defaultProps = {
+  defaultEntry: {
+    index: 0,
+    item_id: '',
+    description: '',
+    quantity: 1,
+    rate: '',
+    discount: '',
+  },
+  initialEntries: [],
+  linesNumber: 4,
+};
+
+export default compose(withAlertActions)(ItemsEntriesTable);

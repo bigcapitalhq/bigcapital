@@ -17,7 +17,6 @@ import withAlertsActions from 'containers/Alert/withAlertActions';
 import { useEstimatesListContext } from './EstimatesListProvider';
 import { ActionsMenu, useEstiamtesTableColumns } from './components';
 
-
 /**
  * Estimates datatable.
  */
@@ -78,43 +77,37 @@ function EstimatesDataTable({
     [setEstimatesTableState],
   );
 
+  // Display empty status instead of the table.
   if (isEmptyStatus) {
     return <EstimatesEmptyStatus />;
   }
 
   return (
-    <div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>
-      <DataTable
-        columns={columns}
-        data={estimates}
-        
-        loading={isEstimatesLoading}
-        headerLoading={isEstimatesLoading}
-        progressBarLoading={isEstimatesFetching}
-
-        onFetchData={handleFetchData}
-        noInitialFetch={true}
-        manualSortBy={true}
-        selectionColumn={true}
-        sticky={true}
-        pagination={true}
-
-        manualPagination={true}
-        pagesCount={pagination.pagesCount}
-
-        TableLoadingRenderer={TableSkeletonRows}
-        TableHeaderSkeletonRenderer={TableSkeletonHeader}
-
-        ContextMenu={ActionsMenu}
-        payload={{
-          onApprove: handleApproveEstimate,
-          onEdit: handleEditEstimate,
-          onReject: handleRejectEstimate,
-          onDeliver: handleDeliverEstimate,
-          onDelete: handleDeleteEstimate,
-        }}
-      />
-    </div>
+    <DataTable
+      columns={columns}
+      data={estimates}
+      loading={isEstimatesLoading}
+      headerLoading={isEstimatesLoading}
+      progressBarLoading={isEstimatesFetching}
+      onFetchData={handleFetchData}
+      noInitialFetch={true}
+      manualSortBy={true}
+      selectionColumn={true}
+      sticky={true}
+      pagination={true}
+      manualPagination={true}
+      pagesCount={pagination.pagesCount}
+      TableLoadingRenderer={TableSkeletonRows}
+      TableHeaderSkeletonRenderer={TableSkeletonHeader}
+      ContextMenu={ActionsMenu}
+      payload={{
+        onApprove: handleApproveEstimate,
+        onEdit: handleEditEstimate,
+        onReject: handleRejectEstimate,
+        onDeliver: handleDeliverEstimate,
+        onDelete: handleDeleteEstimate,
+      }}
+    />
   );
 }
 

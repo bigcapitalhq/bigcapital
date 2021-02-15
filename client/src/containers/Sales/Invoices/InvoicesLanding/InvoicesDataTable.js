@@ -72,40 +72,38 @@ function InvoicesDataTable({
     [setInvoicesTableState],
   );
 
-  // Display invoice empty status.
+  // Display invoice empty status instead of the table.
   if (isEmptyStatus) {
     return <InvoicesEmptyStatus />;
   }
 
   return (
-    <div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>
-      <DataTable
-        columns={columns}
-        data={invoices}
-        loading={isInvoicesLoading}
-        headerLoading={isInvoicesLoading}
-        progressBarLoading={isInvoicesFetching}
-        onFetchData={handleDataTableFetchData}
-        manualSortBy={true}
-        selectionColumn={true}
-        noInitialFetch={true}
-        sticky={true}
-        pagination={true}
-        manualPagination={true}
-        pagesCount={pagination.pagesCount}
-        autoResetSortBy={false}
-        autoResetPage={false}
-        TableLoadingRenderer={TableSkeletonRows}
-        TableHeaderSkeletonRenderer={TableSkeletonHeader}
-        ContextMenu={ActionsMenu}
-        payload={{
-          onDelete: handleDeleteInvoice,
-          onDeliver: handleDeliverInvoice,
-          onEdit: handleEditInvoice,
-          baseCurrency
-        }}
-      />
-    </div>
+    <DataTable
+      columns={columns}
+      data={invoices}
+      loading={isInvoicesLoading}
+      headerLoading={isInvoicesLoading}
+      progressBarLoading={isInvoicesFetching}
+      onFetchData={handleDataTableFetchData}
+      manualSortBy={true}
+      selectionColumn={true}
+      noInitialFetch={true}
+      sticky={true}
+      pagination={true}
+      manualPagination={true}
+      pagesCount={pagination.pagesCount}
+      autoResetSortBy={false}
+      autoResetPage={false}
+      TableLoadingRenderer={TableSkeletonRows}
+      TableHeaderSkeletonRenderer={TableSkeletonHeader}
+      ContextMenu={ActionsMenu}
+      payload={{
+        onDelete: handleDeleteInvoice,
+        onDeliver: handleDeliverInvoice,
+        onEdit: handleEditInvoice,
+        baseCurrency,
+      }}
+    />
   );
 }
 

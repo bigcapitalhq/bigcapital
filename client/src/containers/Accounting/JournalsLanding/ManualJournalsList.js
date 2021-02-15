@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useIntl } from 'react-intl';
 
-import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
+import { DashboardContentTable, DashboardPageContent } from 'components';
 
 import { ManualJournalsListProvider } from './ManualJournalsListProvider';
 import ManualJournalsAlerts from './ManualJournalsAlerts';
@@ -41,7 +41,11 @@ function ManualJournalsTable({
 
       <DashboardPageContent>
         <ManualJournalsViewTabs />
-        <ManualJournalsDataTable />
+
+        <DashboardContentTable>
+          <ManualJournalsDataTable />
+        </DashboardContentTable>
+
         <ManualJournalsAlerts />
       </DashboardPageContent>
     </ManualJournalsListProvider>

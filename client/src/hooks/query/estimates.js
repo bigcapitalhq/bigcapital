@@ -35,6 +35,27 @@ export function useEditEstimate(props) {
 }
 
 /**
+ * Retrieve sale estimate details.
+ */
+export function useEstimate(id, props) {
+  const states = useQuery(
+    ['SALE_ESTIMATE', id],
+    () => ApiService.get(`sales/estimates/${id}`),
+    {
+      select: (res) => ({
+        estimate: res.data.sale_estimate,
+      }),
+      ...props,
+    },
+  );
+
+  return {
+    ...states,
+    data: defaultTo(states.data, {}),
+  };
+}
+
+/**
  * Retrieve sale invoices list with pagination meta.
  */
 export function useEstimates(query, props) {

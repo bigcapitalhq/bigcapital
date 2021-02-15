@@ -1,9 +1,7 @@
 import React, { useCallback } from 'react';
-import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 
 import { compose } from 'utils';
-import { CLASSES } from 'common/classes';
 
 import DataTable from 'components/DataTable';
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
@@ -25,7 +23,7 @@ function BillsDataTable({
   setBillsTableState,
 
   // #withAlerts
-  openAlert
+  openAlert,
 }) {
   // Bills list context.
   const {
@@ -72,30 +70,28 @@ function BillsDataTable({
   }
 
   return (
-    <div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>
-      <DataTable
-        columns={columns}
-        data={bills}
-        loading={isBillsLoading}
-        headerLoading={isBillsLoading}
-        progressBarLoading={isBillsFetching}
-        onFetchData={handleFetchData}
-        manualSortBy={true}
-        selectionColumn={true}
-        noInitialFetch={true}
-        sticky={true}
-        pagination={true}
-        pagesCount={pagination.pagesCount}
-        TableLoadingRenderer={TableSkeletonRows}
-        TableHeaderSkeletonRenderer={TableSkeletonHeader}
-        ContextMenu={ActionsMenu}
-        payload={{
-          onDelete: handleDeleteBill,
-          onEdit: handleEditBill,
-          onOpen: handleOpenBill
-        }}
-      />
-    </div>
+    <DataTable
+      columns={columns}
+      data={bills}
+      loading={isBillsLoading}
+      headerLoading={isBillsLoading}
+      progressBarLoading={isBillsFetching}
+      onFetchData={handleFetchData}
+      manualSortBy={true}
+      selectionColumn={true}
+      noInitialFetch={true}
+      sticky={true}
+      pagination={true}
+      pagesCount={pagination.pagesCount}
+      TableLoadingRenderer={TableSkeletonRows}
+      TableHeaderSkeletonRenderer={TableSkeletonHeader}
+      ContextMenu={ActionsMenu}
+      payload={{
+        onDelete: handleDeleteBill,
+        onEdit: handleEditBill,
+        onOpen: handleOpenBill,
+      }}
+    />
   );
 }
 

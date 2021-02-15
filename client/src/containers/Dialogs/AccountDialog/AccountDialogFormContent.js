@@ -23,6 +23,7 @@ import withAccounts from 'containers/Accounts/withAccounts';
 import { inputIntent } from 'utils';
 import { compose } from 'redux';
 import { useAutofocus } from 'hooks';
+import { useAccountDialogContext } from './AccountDialogProvider';
 
 /**
  * Account form dialogs fields.
@@ -31,11 +32,12 @@ function AccountFormDialogFields({
   // #ownProps
   onClose,
   action,
-  accounts,
-  accountsTypes,
 }) {
   const { values, isSubmitting } = useFormikContext();
   const accountNameFieldRef = useAutofocus();
+
+  // Account form context.
+  const { accounts, accountsTypes } = useAccountDialogContext();
 
   return (
     <Form>

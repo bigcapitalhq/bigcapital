@@ -1,9 +1,5 @@
 import React, { useCallback } from 'react';
-
-import classNames from 'classnames';
-
 import { DataTable } from 'components';
-import { CLASSES } from 'common/classes';
 import { useInventoryAdjustmentsColumns, ActionsMenu } from './components';
 
 import withAlertsActions from 'containers/Alert/withAlertActions';
@@ -57,38 +53,36 @@ function InventoryAdjustmentDataTable({
     [setInventoryAdjustmentTableState],
   );
 
-  return (
-    <div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>
-      <DataTable
-        columns={columns}
-        data={inventoryAdjustments}
+  return (  
+    <DataTable
+      columns={columns}
+      data={inventoryAdjustments}
 
-        loading={isAdjustmentsLoading}
-        headerLoading={isAdjustmentsLoading}
-        progressBarLoading={isAdjustmentsFetching}
-        
-        initialState={inventoryAdjustmentTableState}
-        noInitialFetch={true}
+      loading={isAdjustmentsLoading}
+      headerLoading={isAdjustmentsLoading}
+      progressBarLoading={isAdjustmentsFetching}
+      
+      initialState={inventoryAdjustmentTableState}
+      noInitialFetch={true}
 
-        onFetchData={handleDataTableFetchData}
-        
-        manualSortBy={true}
-        selectionColumn={true}
+      onFetchData={handleDataTableFetchData}
+      
+      manualSortBy={true}
+      selectionColumn={true}
 
-        pagination={true}
-        pagesCount={pagination.pagesCount}
+      pagination={true}
+      pagesCount={pagination.pagesCount}
 
-        autoResetSortBy={false}
-        autoResetPage={false}
+      autoResetSortBy={false}
+      autoResetPage={false}
 
-        payload={{
-          onDelete: handleDeleteAdjustment,
-        }}
-        ContextMenu={ActionsMenu}
-        noResults={'There is no inventory adjustments transactions yet.'}
-        {...tableProps}
-      />
-    </div>
+      payload={{
+        onDelete: handleDeleteAdjustment,
+      }}
+      ContextMenu={ActionsMenu}
+      noResults={'There is no inventory adjustments transactions yet.'}
+      {...tableProps}
+    />
   );
 }
 
