@@ -116,7 +116,7 @@ function CustomerForm({
     };
 
     if (customer && customer.id) {
-      editCustomerMutate(customer.id, formValues)
+      editCustomerMutate([customer.id, formValues])
         .then(onSuccess)
         .catch(onError);
     } else {
