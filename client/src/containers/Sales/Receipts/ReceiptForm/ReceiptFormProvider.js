@@ -46,6 +46,8 @@ function ReceiptFormProvider({ receiptId, ...props }) {
 
   const [submitPayload, setSubmitPayload] = useState({});
 
+  const isNewMode = !receiptId;
+
   const provider = {
     receiptId,
     receipt,
@@ -54,6 +56,7 @@ function ReceiptFormProvider({ receiptId, ...props }) {
     items,
     submitPayload,
 
+    isNewMode,
     isReceiptLoading,
     isAccountsLoading,
     isCustomersLoading,

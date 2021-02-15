@@ -67,6 +67,7 @@ export function ActionsMenu({
       />
       <If condition={!original.is_delivered}>
         <MenuItem
+          icon={<Icon icon={'check'} iconSize={18} />}
           text={formatMessage({ id: 'mark_as_delivered' })}
           onClick={safeCallback(onDeliver, original)}
         />
@@ -80,16 +81,19 @@ export function ActionsMenu({
         </Choose.When>
         <Choose.When condition={original.is_delivered && original.is_rejected}>
           <MenuItem
+            icon={<Icon icon={'check'} iconSize={18} />}
             text={formatMessage({ id: 'mark_as_approved' })}
             onClick={safeCallback(onApprove, original)}
           />
         </Choose.When>
         <Choose.When condition={original.is_delivered}>
           <MenuItem
+            icon={<Icon icon={'check'} iconSize={18} />}
             text={formatMessage({ id: 'mark_as_approved' })}
             onClick={safeCallback(onApprove, original)}
           />
           <MenuItem
+            icon={<Icon icon={'close-black'} />}
             text={formatMessage({ id: 'mark_as_rejected' })}
             onClick={safeCallback(onReject, original)}
           />

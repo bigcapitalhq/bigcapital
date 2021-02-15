@@ -46,12 +46,15 @@ function BillFormProvider({ billId, ...props }) {
   const { mutateAsync: createBillMutate } = useCreateBill();
   const { mutateAsync: editBillMutate } = useEditBill();
 
+  const isNewMode = !billId;
+
   const provider = {
     accounts,
     vendors,
     items,
     bill,
     submitPayload,
+    isNewMode,
 
     isSettingLoading,
     isBillLoading,

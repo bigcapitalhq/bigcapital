@@ -259,21 +259,23 @@ export default [
   },
 
   // Estimates
-  // {
-  //   path: `/estimates/:id/edit`,
-  //   component: LazyLoader({
-  //     loader: () => import('containers/Sales/Estimate/EstimateFormPage'),
-  //   }),
-  //   breadcrumb: 'Edit',
-  // },
-  // {
-  //   path: `/estimates/new`,
-  //   component: LazyLoader({
-  //     loader: () => import('containers/Sales/Estimate/EstimateFormPage'),
-  //   }),
-  //   breadcrumb: 'New Estimate',
-  //   hotkey: 'ctrl+shift+e',
-  // },
+  {
+    path: `/estimates/:id/edit`,
+    component: lazy(() => import('containers/Sales/Estimates/EstimateForm/EstimateFormPage')),
+    breadcrumb: 'Edit',
+    pageTitle: formatMessage({ id: 'edit_estimate' }),
+    backLink: true,
+    sidebarShrink: true,
+  },
+  {
+    path: `/estimates/new`,
+    component: lazy(() => import('containers/Sales/Estimates/EstimateForm/EstimateFormPage')),
+    breadcrumb: 'New Estimate',
+    hotkey: 'ctrl+shift+e',
+    pageTitle: formatMessage({ id: 'new_estimate' }),
+    backLink: true,
+    sidebarShrink: true,
+  },
   {
     path: `/estimates`,
     component: lazy(() =>
@@ -323,6 +325,9 @@ export default [
       import('containers/Sales/Receipts/ReceiptForm/ReceiptFormPage'),
     ),
     breadcrumb: 'Edit',
+    pageTitle: formatMessage({ id: 'edit_receipt' }),
+    backLink: true,
+    sidebarShrink: true,
   },
   {
     path: `/receipts/new`,
@@ -331,6 +336,9 @@ export default [
     ),
     breadcrumb: 'New Receipt',
     hotkey: 'ctrl+shift+r',
+    pageTitle: formatMessage({ id: 'new_receipt' }),
+    backLink: true,
+    sidebarShrink: true,
   },
   {
     path: `/receipts`,
@@ -376,7 +384,9 @@ export default [
       import('containers/Purchases/Bills/BillForm/BillFormPage'),
     ),
     breadcrumb: 'Edit',
-    pageTitle: formatMessage({ id: 'edit_bill' })
+    pageTitle: formatMessage({ id: 'edit_bill' }),
+    sidebarShrink: true,
+    backLink: true
   },
   {
     path: `/bills/new`,
@@ -385,7 +395,9 @@ export default [
     ),
     breadcrumb: 'New Bill',
     hotkey: 'ctrl+shift+b',
-    pageTitle: formatMessage({ id: 'new_bill' })
+    pageTitle: formatMessage({ id: 'new_bill' }),
+    sidebarShrink: true,
+    backLink: true
   },
   {
     path: `/bills`,

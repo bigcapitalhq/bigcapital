@@ -16,21 +16,14 @@ import {
   tansformDateValue,
   handleDateChange,
   inputIntent,
-  saveInvoke,
 } from 'utils';
 
 /**
  * Fill form header.
  */
-function BillFormHeader({
-  onBillNumberChanged,
-}) {
+function BillFormHeader() {
   // Bill form context.
   const { vendors } = useBillFormContext();
-
-  const handleBillNumberBlur = (event) => {
-    saveInvoke(onBillNumberChanged, event.currentTarget.value);
-  };
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
@@ -121,11 +114,7 @@ function BillFormHeader({
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name="bill_number" />}
           >
-            <InputGroup
-              minimal={true}
-              {...field}
-              onBlur={handleBillNumberBlur}
-            />
+            <InputGroup minimal={true} {...field} />
           </FormGroup>
         )}
       </FastField>
@@ -148,6 +137,4 @@ function BillFormHeader({
   );
 }
 
-export default compose(
-  withDialogActions,
-)(BillFormHeader);
+export default compose(withDialogActions)(BillFormHeader);

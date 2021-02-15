@@ -27,7 +27,8 @@ export default function EstimateFloatingActions() {
 
   // Handle submit & deliver button click.
   const handleSubmitDeliverBtnClick = (event) => {
-    setSubmitPayload({ redirect: true, deliver: true, });
+    setSubmitPayload({ redirect: true, deliver: true });
+    submitForm();
   };
 
   // Handle submit, deliver & new button click.
@@ -77,7 +78,6 @@ export default function EstimateFloatingActions() {
             disabled={isSubmitting}
             loading={isSubmitting}
             intent={Intent.PRIMARY}
-            type="submit"
             onClick={handleSubmitDeliverBtnClick}
             text={<T id={'save_and_deliver'} />}
           />
@@ -105,12 +105,12 @@ export default function EstimateFloatingActions() {
             />
           </Popover>
         </ButtonGroup>
+
         {/* ----------- Save As Draft ----------- */}
         <ButtonGroup>
           <Button
             disabled={isSubmitting}
             className={'ml1'}
-            type="submit"
             onClick={handleSubmitDraftBtnClick}
             text={<T id={'save_as_draft'} />}
           />
@@ -138,13 +138,13 @@ export default function EstimateFloatingActions() {
           </Popover>
         </ButtonGroup>
       </If>
+
       {/* ----------- Save and New ----------- */}
       <If condition={estimate && estimate?.is_delivered}>
         <ButtonGroup>
           <Button
             disabled={isSubmitting}
             intent={Intent.PRIMARY}
-            type="submit"
             onClick={handleSubmitDeliverBtnClick}
             text={<T id={'save'} />}
           />
@@ -177,6 +177,7 @@ export default function EstimateFloatingActions() {
         onClick={handleClearBtnClick}
         text={estimate ? <T id={'reset'} /> : <T id={'clear'} />}
       />
+
       {/* ----------- Cancel ----------- */}
       <Button
         className={'ml1'}

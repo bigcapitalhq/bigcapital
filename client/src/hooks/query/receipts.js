@@ -24,7 +24,7 @@ export function useEditReceipt(props) {
   const queryClient = useQueryClient();
 
   return useMutation(
-    (id, values) => ApiService.post(`sales/receipts/${id}`, values),
+    ([id, values]) => ApiService.post(`sales/receipts/${id}`, values),
     {
       onSuccess: () => {
         queryClient.invalidateQueries('SALE_RECEIPTS');

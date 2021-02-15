@@ -42,9 +42,7 @@ export function useEstimate(id, props) {
     ['SALE_ESTIMATE', id],
     () => ApiService.get(`sales/estimates/${id}`),
     {
-      select: (res) => ({
-        estimate: res.data.sale_estimate,
-      }),
+      select: (res) => res.data.estimate,
       ...props,
     },
   );
