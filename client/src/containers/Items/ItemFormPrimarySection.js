@@ -31,7 +31,7 @@ export default function ItemFormPrimarySection() {
   const nameFieldRef = useRef(null);
 
   // Formik context.
-  const { values: { itemType } } = useFormikContext();
+  const { values: { type } } = useFormikContext();
 
   useEffect(() => {
     // Auto focus item name field once component mount.
@@ -87,7 +87,7 @@ export default function ItemFormPrimarySection() {
                 form.setFieldValue('type', _value);
               })}
               selectedValue={value}
-              disabled={itemType === 'inventory'}
+              disabled={type === 'inventory'}
             >
               <Radio label={<T id={'service'} />} value="service" />
               <Radio label={<T id={'non_inventory'} />} value="non-inventory" />

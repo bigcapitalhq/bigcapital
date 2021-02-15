@@ -29,6 +29,7 @@ function VendorFormProvider({ vendorId, ...props }) {
   const [submitPayload, setSubmitPayload] = useState({});
 
   const provider = {
+    vendorId,
     currencies,
     vendor,
     submitPayload,
