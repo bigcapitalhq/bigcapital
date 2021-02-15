@@ -82,7 +82,7 @@ export function useEditAccount(props) {
   const query = useQueryClient();
 
   return useMutation(
-    ([values, id]) => ApiService.post(`accounts/${id}`, values),
+    ([id,values]) => ApiService.post(`accounts/${id}`, values),
     {
       onSuccess: () => {
         query.invalidateQueries('ACCOUNTS');
