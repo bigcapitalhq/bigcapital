@@ -25,7 +25,7 @@ export function useEditBill(props) {
   const queryClient = useQueryClient();
 
   return useMutation(
-    (id, values) => ApiService.post(`purchases/bills/${id}`, values),
+    ([id, values]) => ApiService.post(`purchases/bills/${id}`, values),
     {
       onSuccess: () => {
         queryClient.invalidateQueries('BILLS');
@@ -97,7 +97,10 @@ export function useBill(id, props) {
     }
   );
 
-  return defaultTo(states.data, {});
+  return {
+    ...states,
+    data: defaultTo(states.data, {}),
+  }
 }
 
 /**

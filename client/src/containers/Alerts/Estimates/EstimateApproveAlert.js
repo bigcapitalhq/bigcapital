@@ -21,9 +21,6 @@ function EstimateApproveAlert({
   isOpen,
   payload: { estimateId },
 
-  // #withEstimateActions
-  requestApproveEstimate,
-
   // #withAlertActions
   closeAlert,
 }) {
@@ -59,7 +56,6 @@ function EstimateApproveAlert({
     <Alert
       cancelButtonText={<T id={'cancel'} />}
       confirmButtonText={<T id={'approve'} />}
-      icon="trash"
       intent={Intent.WARNING}
       isOpen={isOpen}
       loading={isLoading}

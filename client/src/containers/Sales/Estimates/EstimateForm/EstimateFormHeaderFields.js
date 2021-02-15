@@ -18,7 +18,6 @@ import {
   InputPrependButton,
 } from 'components';
 
-import withCustomers from 'containers/Customers/withCustomers';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 
 import { inputIntent, handleDateChange } from 'utils';
@@ -169,8 +168,5 @@ function EstimateFormHeader({
 }
 
 export default compose(
-  withCustomers(({ customers }) => ({
-    customers,
-  })),
   withDialogActions,
 )(EstimateFormHeader);

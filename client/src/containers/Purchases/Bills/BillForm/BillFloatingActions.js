@@ -83,7 +83,6 @@ export default function BillFloatingActions() {
             disabled={isSubmitting}
             loading={isSubmitting}
             intent={Intent.PRIMARY}
-            type="submit"
             onClick={handleSubmitOpenBtnClick}
             text={<T id={'save_open'} />}
           />
@@ -116,7 +115,6 @@ export default function BillFloatingActions() {
           <Button
             disabled={isSubmitting}
             className={'ml1'}
-            type="submit"
             onClick={handleSubmitDraftBtnClick}
             text={<T id={'save_as_draft'} />}
           />
@@ -150,7 +148,6 @@ export default function BillFloatingActions() {
           <Button
             disabled={isSubmitting}
             intent={Intent.PRIMARY}
-            type="submit"
             onClick={handleSubmitOpenBtnClick}
             text={<T id={'save'} />}
           />

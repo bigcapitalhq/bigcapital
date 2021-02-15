@@ -22,17 +22,9 @@ import withSettings from 'containers/Settings/withSettings';
 
 import { AppToaster } from 'components';
 import { ERROR } from 'common/errors';
-import {
-  compose,
-  orderingLinesIndexes,
-  transactionNumber,
-} from 'utils';
+import { compose, orderingLinesIndexes, transactionNumber } from 'utils';
 import { useInvoiceFormContext } from './InvoiceFormProvider';
-import { transformToEditForm } from './utils';
-import {
-  MIN_LINES_NUMBER,
-  defaultInitialValues
-} from './constants';
+import { transformToEditForm, defaultInvoice } from './utils';
 
 /**
  * Invoice form.
@@ -64,11 +56,11 @@ function InvoiceForm({
   const initialValues = useMemo(
     () => ({
       ...(!isEmpty(invoice)
-      ? transformToEditForm(invoice, defaultInitialValues, MIN_LINES_NUMBER)
+        ? transformToEditForm(invoice)
         : {
-            ...defaultInitialValues,
+            ...defaultInvoice,
             invoice_no: invoiceNumber,
-            entries: orderingLinesIndexes(defaultInitialValues.entries),
+            entries: orderingLinesIndexes(defaultInvoice.entries),
           }),
     }),
     [invoice, invoiceNumber],

@@ -1,9 +1,8 @@
 import React, { useMemo } from 'react';
 import { Formik, Form } from 'formik';
-import moment from 'moment';
 import { Intent } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
-import { pick, sumBy } from 'lodash';
+import { omit, sumBy, isEmpty } from 'lodash';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 
@@ -14,57 +13,31 @@ import {
 } from './EstimateForm.schema';
 
 import EstimateFormHeader from './EstimateFormHeader';
-import EstimateFormBody from './EstimateFormBody';
+import EstimateItemsEntriesField from './EstimateItemsEntriesField';
 import EstimateFloatingActions from './EstimateFloatingActions';
 import EstimateFormFooter from './EstimateFormFooter';
 
-import withDashboardActions from 'containers/Dashboard/withDashboardActions';
-import withMediaActions from 'containers/Media/withMediaActions';
 import withSettings from 'containers/Settings/withSettings';
 
 import { AppToaster } from 'components';
 import { ERROR } from 'common/errors';
 import {
   compose,
-  repeatValue,
   orderingLinesIndexes,
 } from 'utils';
 import { useEstimateFormContext } from './EstimateFormProvider';
-
-const MIN_LINES_NUMBER = 4;
-
-const defaultEstimate = {
-  index: 0,
-  item_id: '',
-  rate: '',
-  discount: 0,
-  quantity: 1,
-  description: '',
-};
-
-const defaultInitialValues = {
-  customer_id: '',
-  estimate_date: moment(new Date()).format('YYYY-MM-DD'),
-  expiration_date: moment(new Date()).format('YYYY-MM-DD'),
-  estimate_number: '',
-  delivered: '',
-  reference: '',
-  note: '',
-  terms_conditions: '',
-  entries: [...repeatValue(defaultEstimate, MIN_LINES_NUMBER)],
-};
+import { transformToEditForm, defaultEstimate } from './utils';
 
 /**
  * Estimate form.
  */
-const EstimateForm = ({
+function EstimateForm({
   // #withSettings
   estimateNextNumber,
   estimateNumberPrefix,
-}) => {
+}) {
   const { formatMessage } = useIntl();
   const history = useHistory();
-
   const {
     estimate,
     isNewMode,
@@ -80,23 +53,14 @@ const EstimateForm = ({
   // Initial values in create and edit mode.
   const initialValues = useMemo(
     () => ({
-      ...(estimate
+      ...(!isEmpty(estimate)
         ? {
-            ...pick(estimate, Object.keys(defaultInitialValues)),
-            entries: [
-              ...estimate.entries.map((estimate) => ({
-                ...pick(estimate, Object.keys(defaultEstimate)),
-              })),
-              ...repeatValue(
-                defaultEstimate,
-                Math.max(MIN_LINES_NUMBER - estimate.entries.length, 0),
-              ),
-            ],
+            ...transformToEditForm(estimate)
           }
         : {
-            ...defaultInitialValues,
+            ...defaultEstimate,
             estimate_number: estimateNumber,
-            entries: orderingLinesIndexes(defaultInitialValues.entries),
+            entries: orderingLinesIndexes(defaultEstimate.entries),
           }),
     }),
     [estimate, estimateNumber],
@@ -138,10 +102,7 @@ const EstimateForm = ({
     const form = {
       ...values,
       delivered: submitPayload.deliver,
-      // Exclude all entries properties that out of request schema.
-      entries: entries.map((entry) => ({
-        ...pick(entry, Object.keys(defaultEstimate)),
-      })),
+      entries: entries.map((entry) => ({ ...omit(entry, ['total']) })),
     };
     const onSuccess = (response) => {
       AppToaster.show({
@@ -172,7 +133,7 @@ const EstimateForm = ({
       setSubmitting(false);
     };
 
-    if (estimate && estimate.id) {
+    if (!isNewMode) {
       editEstimateMutate([estimate.id, form]).then(onSuccess).catch(onError);
     } else {
       createEstimateMutate(form).then(onSuccess).catch(onError);
@@ -196,18 +157,19 @@ const EstimateForm = ({
       >
         <Form>
           <EstimateFormHeader />
-          <EstimateFormBody defaultEstimate={defaultEstimate} />
+
+          <div className={classNames(CLASSES.PAGE_FORM_BODY)}>
+            <EstimateItemsEntriesField />
+          </div>
           <EstimateFormFooter />
           <EstimateFloatingActions />
         </Form>
       </Formik>
     </div>
   );
-};
+}
 
 export default compose(
-  withDashboardActions,
-  withMediaActions,
   withSettings(({ estimatesSettings }) => ({
     estimateNextNumber: estimatesSettings?.nextNumber,
     estimateNumberPrefix: estimatesSettings?.numberPrefix,

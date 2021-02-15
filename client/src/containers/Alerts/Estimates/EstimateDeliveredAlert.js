@@ -1,7 +1,6 @@
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { Intent, Alert } from '@blueprintjs/core';
-import { queryCache } from 'react-query';
 
 import { useDeliverEstimate } from 'hooks/query';
 import { AppToaster } from 'components';
@@ -28,12 +27,12 @@ function EstimateDeliveredAlert({
   const { mutateAsync: deliverEstimateMutate, isLoading } = useDeliverEstimate();
 
   // Handle cancel delivered estimate alert.
-  const handleCancelDeliveredEstimate = () => {
+  const handleAlertCancel = () => {
     closeAlert(name);
   };
 
   // Handle confirm estimate delivered.
-  const handleConfirmEstimateDelivered = useCallback(() => {
+  const handleAlertConfirm = () => {
     deliverEstimateMutate(estimateId)
       .then(() => {
         AppToaster.show({
@@ -41,14 +40,13 @@ function EstimateDeliveredAlert({
             id: 'the_estimate_has_been_delivered_successfully',
           }),
           intent: Intent.SUCCESS,
-        });
-        queryCache.invalidateQueries('estimates-table');
+        })
       })
       .catch((error) => {})
       .finally(() => {
         closeAlert(name);
       });
-  }, [estimateId, deliverEstimateMutate, formatMessage]);
+  };
 
   return (
     <Alert
@@ -56,8 +54,8 @@ function EstimateDeliveredAlert({
       confirmButtonText={<T id={'deliver'} />}
       intent={Intent.WARNING}
       isOpen={isOpen}
-      onCancel={handleCancelDeliveredEstimate}
-      onConfirm={handleConfirmEstimateDelivered}
+      onCancel={handleAlertCancel}
+      onConfirm={handleAlertConfirm}
       loading={isLoading}
     >
       <p>

@@ -1,9 +1,8 @@
 import React, { useMemo } from 'react';
 import { Formik, Form } from 'formik';
-import moment from 'moment';
 import { Intent } from '@blueprintjs/core';
 import { useIntl } from 'react-intl';
-import { pick, sumBy, isEmpty } from 'lodash';
+import { omit, sumBy, isEmpty } from 'lodash';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 
@@ -19,7 +18,7 @@ import 'style/pages/SaleReceipt/PageForm.scss';
 import { useReceiptFormContext } from './ReceiptFormProvider';
 
 import ReceiptFromHeader from './ReceiptFormHeader';
-import ReceiptFormBody from './ReceiptFormBody';
+import ReceiptItemsEntriesEditor from './ReceiptItemsEntriesEditor';
 import ReceiptFormFloatingActions from './ReceiptFormFloatingActions';
 import ReceiptFormFooter from './ReceiptFormFooter';
 
@@ -29,33 +28,11 @@ import withSettings from 'containers/Settings/withSettings';
 import { AppToaster } from 'components';
 import {
   compose,
-  repeatValue,
   orderingLinesIndexes,
   transactionNumber,
 } from 'utils';
+import { transformToEditForm, defaultReceipt } from './utils'
 
-const MIN_LINES_NUMBER = 4;
-
-const defaultReceipt = {
-  index: 0,
-  item_id: '',
-  rate: '',
-  discount: 0,
-  quantity: '',
-  description: '',
-};
-
-const defaultInitialValues = {
-  customer_id: '',
-  deposit_account_id: '',
-  receipt_number: '',
-  receipt_date: moment(new Date()).format('YYYY-MM-DD'),
-  reference_no: '',
-  receipt_message: '',
-  statement: '',
-  closed: '',
-  entries: [...repeatValue(defaultReceipt, MIN_LINES_NUMBER)],
-};
 
 /**
  * Receipt form.
@@ -75,10 +52,9 @@ function ReceiptForm({
     receipt,
     editReceiptMutate,
     createReceiptMutate,
-    submitPayload
+    submitPayload,
+    isNewMode
   } = useReceiptFormContext();
-
-  const isNewMode = !receiptId;
 
   // The next receipt number.
   const receiptNumber = transactionNumber(
@@ -89,23 +65,12 @@ function ReceiptForm({
   const initialValues = useMemo(
     () => ({
       ...(!isEmpty(receipt)
-        ? {
-            ...pick(receipt, Object.keys(defaultInitialValues)),
-            entries: [
-              ...receipt.entries.map((receipt) => ({
-                ...pick(receipt, Object.keys(defaultReceipt)),
-              })),
-              ...repeatValue(
-                defaultReceipt,
-                Math.max(MIN_LINES_NUMBER - receipt.entries.length, 0),
-              ),
-            ],
-          }
+        ? transformToEditForm(receipt)
         : {
-            ...defaultInitialValues,
+            ...defaultReceipt,
             receipt_number: receiptNumber,
             deposit_account_id: parseInt(preferredDepositAccount),
-            entries: orderingLinesIndexes(defaultInitialValues.entries),
+            entries: orderingLinesIndexes(defaultReceipt.entries),
           }),
     }),
     [receipt, preferredDepositAccount, receiptNumber],
@@ -145,10 +110,7 @@ function ReceiptForm({
     const form = {
       ...values,
       closed: submitPayload.status,
-      entries: entries.map((entry) => ({
-        // Exclude all properties that out of request entries schema.
-        ...pick(entry, Object.keys(defaultReceipt)),
-      })),
+      entries: entries.map((entry) => ({ ...omit(entry, ['total']), })),
     };
     // Handle the request success.
     const onSuccess = (response) => {
@@ -179,8 +141,8 @@ function ReceiptForm({
       setSubmitting(false);
     };
 
-    if (receipt && receipt.id) {
-      editReceiptMutate(receipt.id, form).then(onSuccess).catch(onError);
+    if (!isNewMode) {
+      editReceiptMutate([receipt.id, form]).then(onSuccess).catch(onError);
     } else {
       createReceiptMutate(form).then(onSuccess).catch(onError);
     }
@@ -203,7 +165,7 @@ function ReceiptForm({
       >
         <Form>
           <ReceiptFromHeader />
-          <ReceiptFormBody defaultReceipt={defaultReceipt} />
+          <ReceiptItemsEntriesEditor />
           <ReceiptFormFooter />
           <ReceiptFormFloatingActions />
         </Form>

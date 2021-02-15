@@ -31,12 +31,12 @@ function EstimateDeleteAlert({
   const { mutateAsync: deleteEstimateMutate, isLoading } = useDeleteEstimate();
 
   // handle cancel delete  alert.
-  const handleCancelEstimateDelete = () => {
+  const handleAlertCancel = () => {
     closeAlert(name);
   };
 
   // handle confirm delete estimate
-  const handleConfirmEstimateDelete = useCallback(() => {
+  const handleAlertConfirm = () => {
     deleteEstimateMutate(estimateId)
       .then(() => {
         AppToaster.show({
@@ -50,7 +50,7 @@ function EstimateDeleteAlert({
       .finally(() => {
         closeAlert(name);
       });
-  }, [deleteEstimateMutate, name, closeAlert, formatMessage, estimateId]);
+  };
 
   return (
     <Alert
@@ -60,8 +60,8 @@ function EstimateDeleteAlert({
       intent={Intent.DANGER}
       isOpen={isOpen}
       loading={isLoading}
-      onCancel={handleCancelEstimateDelete}
-      onConfirm={handleConfirmEstimateDelete}
+      onCancel={handleAlertCancel}
+      onConfirm={handleAlertConfirm}
     >
       <p>
         <FormattedHTMLMessage

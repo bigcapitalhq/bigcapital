@@ -1,85 +1,51 @@
 import React, { useMemo } from 'react';
 import { Formik, Form } from 'formik';
-import moment from 'moment';
 import { Intent } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { useIntl } from 'react-intl';
 import { useHistory } from 'react-router-dom';
-import { pick, sumBy, isEmpty, omit } from 'lodash';
+import { sumBy, isEmpty, omit } from 'lodash';
 import { CLASSES } from 'common/classes';
 
 import { EditBillFormSchema, CreateBillFormSchema } from './BillForm.schema';
 import BillFormHeader from './BillFormHeader';
 import BillFloatingActions from './BillFloatingActions';
 import BillFormFooter from './BillFormFooter';
+import BillItemsEntriesEditor from './BillItemsEntriesEditor';
 
 import { AppToaster } from 'components';
 
 import { ERROR } from 'common/errors';
-import { repeatValue, orderingLinesIndexes } from 'utils';
-import BillFormBody from './BillFormBody';
 import { useBillFormContext } from './BillFormProvider';
-
-const MIN_LINES_NUMBER = 5;
-
-const defaultBill = {
-  index: 0,
-  item_id: '',
-  rate: '',
-  discount: 0,
-  quantity: 1,
-  description: '',
-};
-
-const defaultInitialValues = {
-  vendor_id: '',
-  bill_number: '',
-  bill_date: moment(new Date()).format('YYYY-MM-DD'),
-  due_date: moment(new Date()).format('YYYY-MM-DD'),
-  reference_no: '',
-  note: '',
-  open: '',
-  entries: [...repeatValue(defaultBill, MIN_LINES_NUMBER)],
-};
+import { orderingLinesIndexes, safeSumBy } from 'utils';
+import { defaultBill, transformToEditForm } from './utils';
 
 /**
  * Bill form.
  */
-export default function BillForm({
- 
-}) {
+export default function BillForm() {
   const { formatMessage } = useIntl();
   const history = useHistory();
 
+  // Bill form context.
   const {
     bill,
-    billId,
+    isNewMode,
     submitPayload,
     createBillMutate,
     editBillMutate,
   } = useBillFormContext();
-
-  const isNewMode = !billId;
 
   // Initial values in create and edit mode.
   const initialValues = useMemo(
     () => ({
       ...(!isEmpty(bill)
         ? {
-            ...pick(bill, Object.keys(defaultInitialValues)),
-            entries: [
-              ...bill.entries.map((bill) => ({
-                ...pick(bill, Object.keys(defaultBill)),
-              })),
-              ...repeatValue(
-                defaultBill,
-                Math.max(MIN_LINES_NUMBER - bill.entries.length, 0),
-              ),
-            ],
+            ...transformToEditForm(bill),
           }
         : {
-            ...defaultInitialValues,
-            entries: orderingLinesIndexes(defaultInitialValues.entries),
+            ...defaultBill,
+            entries: orderingLinesIndexes(defaultBill.entries),
           }),
     }),
     [bill],
@@ -102,7 +68,7 @@ export default function BillForm({
     const entries = values.entries.filter(
       (item) => item.item_id && item.quantity,
     );
-    const totalQuantity = sumBy(entries, (entry) => parseInt(entry.quantity));
+    const totalQuantity = safeSumBy(entries, (entry) => entry.quantity);
 
     if (totalQuantity === 0) {
       AppToaster.show({
@@ -146,10 +112,10 @@ export default function BillForm({
       handleErrors(errors, { setErrors });
       setSubmitting(false);
     };
-    if (bill && bill.id) {
-      editBillMutate(bill.id, form).then(onSuccess).catch(onError);
-    } else {
+    if (isNewMode) {
       createBillMutate(form).then(onSuccess).catch(onError);
+    } else {
+      editBillMutate([bill.id, form]).then(onSuccess).catch(onError);
     }
   };
 
@@ -168,7 +134,7 @@ export default function BillForm({
       >
         <Form>
           <BillFormHeader />
-          <BillFormBody defaultBill={defaultBill} />
+          <BillItemsEntriesEditor />
           <BillFormFooter />
           <BillFloatingActions />
         </Form>

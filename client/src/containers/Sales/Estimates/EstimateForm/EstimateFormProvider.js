@@ -7,7 +7,7 @@ import {
   useSettings,
   useCreateEstimate,
   useEditEstimate
-} from 'query/hooks';
+} from 'hooks/query';
 
 const EstimateFormContext = createContext();
 
@@ -16,7 +16,7 @@ const EstimateFormContext = createContext();
  */
 function EstimateFormProvider({ estimateId, ...props }) {
   const { data: estimate, isFetching: isEstimateFetching } = useEstimate(
-    estimateId,
+    estimateId, { enabled: !!estimateId }
   );
 
   // Handle fetch Items data table or list
@@ -32,16 +32,16 @@ function EstimateFormProvider({ estimateId, ...props }) {
   } = useCustomers();
 
   // Handle fetch settings.
-  const {
-    data: { settings },
-  } = useSettings();
+  useSettings();
 
+  // Form submit payload.
   const [submitPayload, setSubmitPayload] = React.useState({});
-
-  const isNewMode = !estimateId;
-
+  
+  // Create and edit estimate form.
   const { mutateAsync: createEstimateMutate } = useCreateEstimate();
   const { mutateAsync: editEstimateMutate } = useEditEstimate();
+  
+  const isNewMode = !estimateId;
 
   // Provider payload.
   const provider = {
