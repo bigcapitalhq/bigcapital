@@ -58,7 +58,7 @@ export function useEditPaymentReceive(props) {
   const client = useQueryClient();
 
   return useMutation(
-    (id, values) => ApiService.post(`sales/payment_receives/${id}`, values),
+    ([id, values]) => ApiService.post(`sales/payment_receives/${id}`, values),
     {
       onSuccess: () => {
         client.invalidateQueries('PAYMENT_RECEIVES');
@@ -92,7 +92,10 @@ export function usePaymentReceive(id, props) {
   const states = useQuery(
     ['PAYMENT_RECEIVE', id],
     () => ApiService.get(`sales/payment_receives/${id}`),
-    props,
+    {
+      select: (res) => res.data.payment_receive,
+      ...props
+    },
   );
 
   return {

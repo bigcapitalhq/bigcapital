@@ -1,12 +1,10 @@
 import React from 'react';
-import classNames from 'classnames';
 
 import { useItemsCategoriesTableColumns, ActionMenuList } from './components';
 import DataTable from 'components/DataTable';
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
 
 import { useItemsCategoriesContext } from './ItemsCategoriesProvider';
-import { CLASSES } from 'common/classes';
 
 import withAlertActions from 'containers/Alert/withAlertActions';
 import withDialogActions from 'containers/Dialog/withDialogActions';
@@ -35,8 +33,6 @@ function ItemsCategoryTable({
 
   // Table columns.
   const columns = useItemsCategoriesTableColumns();
-
-  const handleSelectedRowsChange = (selectedRows) => {};
 
   // Handle delete Item.
   const handleDeleteCategory = ({ id }) => {

@@ -1,9 +1,8 @@
 import React, { useCallback } from 'react';
-import classNames from 'classnames';
+import { useHistory } from 'react-router-dom';
 
 import { compose } from 'utils';
 
-import { CLASSES } from 'common/classes';
 import { DataTable } from 'components';
 import PaymentMadesEmptyStatus from './PaymentMadesEmptyStatus';
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
@@ -37,8 +36,13 @@ function PaymentMadesTable({
     isPaymentsFetching,
   } = usePaymentMadesListContext();
 
+  // History context.
+  const history = useHistory();
+
   // Handles the edit payment made action.
-  const handleEditPaymentMade = (paymentMade) => {};
+  const handleEditPaymentMade = (paymentMade) => {
+    history.push(`/payment-mades/${paymentMade.id}/edit`);
+  };
 
   // Handles the delete payment made action.
   const handleDeletePaymentMade = (paymentMade) => {

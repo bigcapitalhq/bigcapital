@@ -11,50 +11,42 @@ import {
 } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'react-intl';
 import classNames from 'classnames';
+import { useFormikContext } from 'formik';
+import { usePaymentMadeFormContext } from './PaymentMadeFormProvider';
+
 import { CLASSES } from 'common/classes';
-import { saveInvoke } from 'utils';
+
 import { Icon } from 'components';
 
 /**
  * Payment made floating actions bar.
  */
-export default function PaymentMadeFloatingActions({
-  isSubmitting,
-  onSubmitClick,
-  onCancelClick,
-  onClearBtnClick,
-  onSubmitForm,
-  paymentMadeId,
-}) {
+export default function PaymentMadeFloatingActions() {
+  // Formik context.
+  const { isSubmitting } = useFormikContext();
+
+  // Payment made form context.
+  const { setSubmitPayload, paymentMadeId } = usePaymentMadeFormContext();
+
+  // Handle submit button click.
   const handleSubmitBtnClick = (event) => {
-    saveInvoke(onSubmitClick, event, {
-      redirect: true,
-    });
+    setSubmitPayload({ redirect: true });
   };
 
-  const handleClearBtnClick = (event) => {
-    onClearBtnClick && onClearBtnClick(event);
-  };
+  // Handle clear button click.
+  const handleClearBtnClick = (event) => {};
 
-  const handleCancelBtnClick = (event) => {
-    onCancelClick && onCancelClick(event);
-    saveInvoke(onCancelClick, event);
-  };
+  // Handle cancel button click.
+  const handleCancelBtnClick = (event) => {};
 
+  // Handle submit & new button click.
   const handleSubmitAndNewClick = (event) => {
-    onSubmitForm();
-    saveInvoke(onSubmitClick, event, {
-      redirect: false,
-      resetForm: true,
-    });
+    setSubmitPayload({ redirect: false, resetForm: true });
   };
 
+  // handle submit & continue editing button click.
   const handleSubmitContinueEditingBtnClick = (event) => {
-    onSubmitForm();
-    saveInvoke(onSubmitClick, event, {
-      redirect: false,
-      publish: true,
-    });
+    setSubmitPayload({ redirect: false, publish: true });
   };
   return (
     <div className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>

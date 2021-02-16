@@ -49,6 +49,7 @@ import ContextMenu from './ContextMenu'
 import TableFastCell from './Datatable/TableFastCell';
 import DashboardContentTable from './Dashboard/DashboardContentTable';
 import DashboardPageContent from './Dashboard/DashboardPageContent';
+import DashboardInsider from './Dashboard/DashboardInsider';
 
 const Hint = FieldHint;
 
@@ -103,5 +104,6 @@ export {
   Skeleton,
   ContextMenu,
   DashboardContentTable,
-  DashboardPageContent
+  DashboardPageContent,
+  DashboardInsider
 };
