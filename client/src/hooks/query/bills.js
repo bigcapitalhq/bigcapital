@@ -119,3 +119,26 @@ export function useOpenBill(props) {
     },
   );
 }
+
+/**
+ * Retrieve the due bills of the given vendor id.
+ * @param {number} vendorId -
+ */
+export function useDueBills(vendorId, props) {
+  const states = useQuery(
+    ['BILLS_DUE', vendorId],
+    () =>
+      ApiService.get(`purchases/bills/due`, {
+        params: { vendor_id: vendorId },
+      }),
+    {
+      select: (res) => res.data.bills,
+      ...props,
+    },
+  );
+
+  return {
+    ...states,
+    data: defaultTo(states.data, []),
+  };
+}

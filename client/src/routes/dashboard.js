@@ -450,7 +450,7 @@ export default [
       ),
     ),
     breadcrumb: 'New Payment Made',
-    pageTitle: formatMessage({ id: 'edit_payment_made' }),
+    pageTitle: formatMessage({ id: 'new_payment_made' }),
     sidebarShrink: true,
     backLink: true,
   },

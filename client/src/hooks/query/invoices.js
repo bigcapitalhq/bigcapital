@@ -77,8 +77,8 @@ export function useInvoices(query, props) {
         total: 0,
       },
       filterMeta: {},
-    })
-  }
+    }),
+  };
 }
 
 /**
@@ -87,32 +87,53 @@ export function useInvoices(query, props) {
 export function useDeliverInvoice(props) {
   const queryClient = useQueryClient();
 
-  return useMutation(
-    (id) => ApiService.post(`sales/invoices/${id}/deliver`),
-    {
-      onSuccess: (res, id) => {
-        queryClient.invalidateQueries('SALE_INVOICES');
-        queryClient.invalidateQueries(['SALE_INVOICE', id]);
-      },
-      ...props,
+  return useMutation((id) => ApiService.post(`sales/invoices/${id}/deliver`), {
+    onSuccess: (res, id) => {
+      queryClient.invalidateQueries('SALE_INVOICES');
+      queryClient.invalidateQueries(['SALE_INVOICE', id]);
     },
-  );
+    ...props,
+  });
 }
 
 /**
  * Retrieve the sale invoice details.
  */
 export function useInvoice(id, props) {
-  const states = useQuery(['SALE_INVOICE', id], () =>
-    ApiService.get(`sales/invoices/${id}`),
-    { 
+  const states = useQuery(
+    ['SALE_INVOICE', id],
+    () => ApiService.get(`sales/invoices/${id}`),
+    {
       select: (res) => res.data.sale_invoice,
-      ...props
+      ...props,
     },
   );
 
   return {
     ...states,
     data: defaultTo(states.data, {}),
+  };
+}
+
+/**
+ * Retrieve due invoices of the given customer id.
+ * @param {number} customerId - Customer id.
+ */
+export function useDueInvoices(customerId, props) {
+  const states = useQuery(
+    ['SALE_INVOICE_DUE', customerId],
+    () =>
+      ApiService.get(`sales/invoices/payable`, {
+        params: { customer_id: customerId },
+      }),
+    {
+      select: (res) => res.data.sales_invoices,
+      ...props,
+    },
+  );
+
+  return {
+    ...states,
+    data: defaultTo(states.data, []),
   };
 }

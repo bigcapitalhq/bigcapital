@@ -11,6 +11,7 @@ import { AppToaster } from 'components';
 import PaymentMadeHeader from './PaymentMadeFormHeader';
 import PaymentMadeFloatingActions from './PaymentMadeFloatingActions';
 import PaymentMadeFooter from './PaymentMadeFooter';
+import PaymentMadeItemsTable from './PaymentMadeItemsTable';
 
 import withSettings from 'containers/Settings/withSettings';
 import {
@@ -135,7 +136,7 @@ function PaymentMadeForm() {
           <PaymentMadeHeader />
 
           <div className={classNames(CLASSES.PAGE_FORM_BODY)}>
-             
+             <PaymentMadeItemsTable />
           </div>
           <PaymentMadeFooter />
           <PaymentMadeFloatingActions />

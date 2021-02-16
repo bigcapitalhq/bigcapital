@@ -37,7 +37,12 @@ import { compose } from 'utils';
  */
 function PaymentReceiveHeaderFields({ baseCurrency }) {
   // Payment receive form context.
-  const { customers, accounts, isNewMode } = usePaymentReceiveFormContext();
+  const {
+    customers,
+    accounts,
+    isNewMode,
+    setPaymentCustomerId,
+  } = usePaymentReceiveFormContext();
 
   // Formik form context.
   const { values } = useFormikContext();
@@ -66,8 +71,9 @@ function PaymentReceiveHeaderFields({ baseCurrency }) {
               contactsList={customers}
               selectedContactId={value}
               defaultSelectText={<T id={'select_customer_account'} />}
-              onContactSelected={(value) => {
-                form.setFieldValue('customer_id', value);
+              onContactSelected={(customer) => {
+                form.setFieldValue('customer_id', customer);
+                setPaymentCustomerId(customer.id);
               }}
               popoverFill={true}
               disabled={!isNewMode}

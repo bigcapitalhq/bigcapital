@@ -34,7 +34,12 @@ import {
  * Payment made form header fields.
  */
 function PaymentMadeFormHeaderFields({ baseCurrency }) {
-  const { vendors, accounts, isNewMode } = usePaymentMadeFormContext();
+  const {
+    vendors,
+    accounts,
+    isNewMode,
+    setPaymentVendorId,
+  } = usePaymentMadeFormContext();
 
   const payableFullAmount = 0;
 
@@ -57,6 +62,7 @@ function PaymentMadeFormHeaderFields({ baseCurrency }) {
               defaultSelectText={<T id={'select_vender_account'} />}
               onContactSelected={(contact) => {
                 form.setFieldValue('vendor_id', contact.id);
+                setPaymentVendorId(contact.id);
               }}
               disabled={!isNewMode}
               popoverFill={true}

@@ -9,7 +9,7 @@ import { useHistory } from 'react-router-dom';
 
 import { CLASSES } from 'common/classes';
 import PaymentReceiveHeader from './PaymentReceiveFormHeader';
-// import PaymentReceiveItemsTable from './PaymentReceiveItemsTable';
+import PaymentReceiveItemsTable from './PaymentReceiveItemsTable';
 import PaymentReceiveFloatingActions from './PaymentReceiveFloatingActions';
 import PaymentReceiveFormFooter from './PaymentReceiveFormFooter';
 
@@ -167,48 +167,16 @@ function PaymentReceiveForm({
       >
         <Form>
           <PaymentReceiveHeader />
+
+          <div className={classNames(CLASSES.PAGE_FORM_BODY)}>
+            <PaymentReceiveItemsTable />
+          </div>
+
           <PaymentReceiveFormFooter />
           <PaymentReceiveFloatingActions />
         </Form>
       </Formik>
 
-      {/* <form onSubmit={handleSubmit}> */}
-      {/* <PaymentReceiveHeader
-          errors={errors}
-          touched={touched}
-          setFieldValue={setFieldValue}
-          getFieldProps={getFieldProps}
-          values={values}
-          paymentReceiveId={paymentReceiveId}
-          customerId={values.customer_id}
-          onFullAmountChanged={handleFullAmountChange}
-          receivableFullAmount={receivableFullAmount}
-          amountReceived={fullAmountReceived}
-          onPaymentReceiveNumberChanged={handlePaymentReceiveNumberChanged}
-        />
-        <div className={classNames(CLASSES.PAGE_FORM_BODY)}>
-          <PaymentReceiveItemsTable
-            paymentReceiveId={paymentReceiveId}
-            customerId={values.customer_id}
-            fullAmount={fullAmount}
-            onUpdateData={handleUpdataData}
-            paymentReceiveEntries={localPaymentEntries}
-            errors={errors?.entries}
-            onClickClearAllLines={handleClearAllLines}
-            onFetchEntriesSuccess={handleFetchEntriesSuccess}
-          />
-        </div>
-
-        
-
-        <PaymentReceiveFloatingActions
-          isSubmitting={isSubmitting}
-          paymentReceiveId={paymentReceiveId}
-          onClearClick={handleClearBtnClick}
-          onSubmitClick={handleSubmitClick}
-          onCancelClick={handleCancelClick}
-          onSubmitForm={submitForm}
-        /> */}
       {/* </form> */}
     </div>
   );

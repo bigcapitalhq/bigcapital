@@ -6,7 +6,8 @@ import {
   usePaymentMade,
   useSettings,
   useCreatePaymentMade,
-  useEditPaymentMade
+  useEditPaymentMade,
+  useDueBills,
 } from 'hooks/query';
 import { DashboardInsider } from 'components';
 
@@ -17,6 +18,9 @@ const PaymentMadeFormContext = createContext();
  * Payment made form provider.
  */
 function PaymentMadeFormProvider({ paymentMadeId, ...props }) {
+  const [submitPayload, setSubmitPayload] = React.useState({});
+  const [paymentVendorId, setPaymentVendorId] = React.useState(null);
+
   // Handle fetch accounts data.
   const { data: accounts, isFetching: isAccountsFetching } = useAccounts();
 
@@ -42,12 +46,21 @@ function PaymentMadeFormProvider({ paymentMadeId, ...props }) {
     enabled: !!paymentMadeId,
   });
 
+  // Retrieve the due bills of the given vendor.
+  const {
+    data: dueBills,
+    isLoading: isDueBillsLoading,
+    isFetching: isDueBillsFetching,
+  } = useDueBills(paymentVendorId, { enabled: !!paymentVendorId });
+
   // Fetch payment made settings.
   useSettings();
 
   // Create and edit payment made mutations.
   const { mutateAsync: createPaymentMadeMutate } = useCreatePaymentMade();
   const { mutateAsync: editPaymentMadeMutate } = useEditPaymentMade();
+
+  const isNewMode = !paymentMadeId;
 
   // Provider payload.
   const provider = {
@@ -58,16 +71,25 @@ function PaymentMadeFormProvider({ paymentMadeId, ...props }) {
     paymentBills,
     vendors,
     items,
+    dueBills,
+    submitPayload,
+    paymentVendorId,
 
+    isNewMode,
     isAccountsFetching,
     isItemsFetching,
     isItemsLoading,
     isVendorsFetching,
     isPaymentFetching,
     isPaymentLoading,
+    isDueBillsLoading,
+    isDueBillsFetching,
 
     createPaymentMadeMutate,
     editPaymentMadeMutate,
+
+    setSubmitPayload,
+    setPaymentVendorId,
   };
 
   return (

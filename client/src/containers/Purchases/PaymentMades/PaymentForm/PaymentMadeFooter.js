@@ -9,7 +9,7 @@ import { CLASSES } from 'common/classes';
 /**
  * Payment made form footer.
  */
-export default function PaymentMadeFooter({ getFieldProps }) {
+export default function PaymentMadeFooter() {
   return (
     <div className={classNames(CLASSES.PAGE_FORM_FOOTER)}>
       <Row>
