@@ -3,7 +3,7 @@ import { FastField } from 'formik';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 import MakeJournalEntriesTable from './MakeJournalEntriesTable';
-import { defaultManualJournal, MIN_LINES_NUMBER } from './utils';
+import { defaultEntry, MIN_LINES_NUMBER } from './utils';
 
 /**
  * Make journal entries field.
@@ -18,7 +18,7 @@ export default function MakeJournalEntriesField() {
               form.setFieldValue('entries', entries);
             }}
             entries={value}
-            defaultEntry={defaultManualJournal}
+            defaultEntry={defaultEntry}
             initialLinesNumber={MIN_LINES_NUMBER}
             error={error}
           />
