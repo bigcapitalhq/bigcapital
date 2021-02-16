@@ -49,6 +49,7 @@ export default function MakeJournalFloatingAction() {
 
   // Handle submit as draft button click.
   const handleSubmitDraftBtnClick = (event) => {
+    submitForm();
     setSubmitPayload({ redirect: true, publish: false });
   };
 

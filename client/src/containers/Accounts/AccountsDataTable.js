@@ -106,7 +106,7 @@ function AccountsDataTable({
         onDelete: handleDeleteAccount,
         onActivate: handleActivateAccount,
         onInactivate: handleInactivateAccount,
-        newChild: handleNewChildAccount
+        onNewChild: handleNewChildAccount
       }}
     />
   );
