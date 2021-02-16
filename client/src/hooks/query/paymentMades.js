@@ -54,10 +54,11 @@ export function useEditPaymentMade(props) {
   const client = useQueryClient();
 
   return useMutation(
-    (id, values) => ApiService.post(`purchases/bill_payments/${id}`, values),
+    ([id, values]) => ApiService.post(`purchases/bill_payments/${id}`, values),
     {
-      onSuccess: () => {
+      onSuccess: (res, [id, values]) => {
         client.invalidateQueries('PAYMENT_MADES');
+        client.invalidateQueries(['PAYMENT_MADE', id]);
       },
       ...props,
     },
@@ -71,10 +72,11 @@ export function useDeletePaymentMade(props) {
   const client = useQueryClient();
 
   return useMutation(
-    (id, values) => ApiService.delete(`purchases/bill_payments/${id}`, values),
+    (id) => ApiService.delete(`purchases/bill_payments/${id}`),
     {
-      onSuccess: () => {
+      onSuccess: (res, id) => {
         client.invalidateQueries('PAYMENT_MADES');
+        client.invalidateQueries(['PAYMENT_MADE', id]);
       },
       ...props,
     },
@@ -88,7 +90,14 @@ export function usePaymentMade(id, props) {
   const states = useQuery(
     ['PAYMENT_MADE', id],
     () => ApiService.get(`purchases/bill_payments/${id}`),
-    props,
+    {
+      select: res => ({
+        paymentMade: res.data.bill_payment,
+        payableBills: res.data.payable_bills,
+        paymentBills: res.data.payment_bills,
+      }),
+      ...props,
+    },
   );
 
   return {

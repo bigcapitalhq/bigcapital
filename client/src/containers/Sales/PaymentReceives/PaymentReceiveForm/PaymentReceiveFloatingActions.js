@@ -10,52 +10,51 @@ import {
   MenuItem,
 } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'react-intl';
+import { useHistory } from 'react-router-dom';
 import classNames from 'classnames';
+import { useFormikContext } from 'formik';
 import { CLASSES } from 'common/classes';
 
-import { saveInvoke } from 'utils';
 import { Icon } from 'components';
+import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
 
 /**
  * Payment receive floating actions bar.
  */
-export default function PaymentReceiveFormFloatingActions({
-  isSubmitting,
-  onSubmitClick,
-  onCancelClick,
-  onClearClick,
-  onSubmitForm,
-  paymentReceiveId,
-}) {
+export default function PaymentReceiveFormFloatingActions() {
+
+  // Payment receive form context.
+  const { setSubmitPayload, isNewMode } = usePaymentReceiveFormContext();
+
+  // Formik form context.
+  const { isSubmitting } = useFormikContext();
+
+  // History context.
+  const history = useHistory();
+
+  // Handle submit button click.
   const handleSubmitBtnClick = (event) => {
-    saveInvoke(onSubmitClick, event, {
-      redirect: true,
-    });
+    setSubmitPayload({ redirect: true, });
   };
 
+  // Handle clear button click.
   const handleClearBtnClick = (event) => {
-    onClearClick && onClearClick(event);
+    
   };
 
+  // Handle cancel button click.
   const handleCancelBtnClick = (event) => {
-    onCancelClick && onCancelClick(event);
-    saveInvoke(onCancelClick, event);
+    history.goBack();
   };
 
+  // Handle submit & new button click.
   const handleSubmitAndNewClick = (event) => {
-    onSubmitForm();
-    saveInvoke(onSubmitClick, event, {
-      redirect: false,
-      resetForm: true,
-    });
+    setSubmitPayload({ redirect: false, resetForm: true, });
   };
 
+  // Handle submit & continue editing button click.
   const handleSubmitContinueEditingBtnClick = (event) => {
-    onSubmitForm();
-    saveInvoke(onSubmitClick, event, {
-      redirect: false,
-      publish: true,
-    });
+    setSubmitPayload({ redirect: false, publish: true });
   };
 
   return (
@@ -67,7 +66,7 @@ export default function PaymentReceiveFormFloatingActions({
           intent={Intent.PRIMARY}
           type="submit"
           onClick={handleSubmitBtnClick}
-          text={paymentReceiveId ? <T id={'edit'} /> : <T id={'save'} />}
+          text={!isNewMode ? <T id={'edit'} /> : <T id={'save'} />}
         />
         <Popover
           content={
@@ -93,13 +92,15 @@ export default function PaymentReceiveFormFloatingActions({
           />
         </Popover>
       </ButtonGroup>
+
       {/* ----------- Clear & Reset----------- */}
       <Button
         className={'ml1'}
         disabled={isSubmitting}
         onClick={handleClearBtnClick}
-        text={paymentReceiveId ? <T id={'reset'} /> : <T id={'clear'} />}
+        text={!isNewMode ? <T id={'reset'} /> : <T id={'clear'} />}
       />
+
       {/* ----------- Cancel  ----------- */}
       <Button
         className={'ml1'}

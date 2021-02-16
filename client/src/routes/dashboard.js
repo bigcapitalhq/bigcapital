@@ -40,7 +40,7 @@ export default [
     hotkey: 'ctrl+shift+m',
     pageTitle: formatMessage({ id: 'new_journal' }),
     sidebarShrink: true,
-    backLink: true
+    backLink: true,
   },
   {
     path: `/manual-journals/:id/edit`,
@@ -50,7 +50,7 @@ export default [
     breadcrumb: 'Edit',
     pageTitle: formatMessage({ id: 'edit_journal' }),
     sidebarShrink: true,
-    backLink: true
+    backLink: true,
   },
   {
     path: `/manual-journals`,
@@ -74,7 +74,7 @@ export default [
     component: lazy(() => import('containers/Items/ItemFormPage')),
     breadcrumb: 'Edit Item',
     pageTitle: formatMessage({ id: 'edit_item' }),
-    backLink: true
+    backLink: true,
   },
   {
     path: `/items/new`,
@@ -82,7 +82,7 @@ export default [
     breadcrumb: 'New Item',
     hotkey: 'ctrl+shift+w',
     pageTitle: formatMessage({ id: 'new_item' }),
-    backLink: true
+    backLink: true,
   },
   {
     path: `/items`,
@@ -178,7 +178,7 @@ export default [
     hotkey: 'ctrl+shift+x',
     pageTitle: formatMessage({ id: 'new_expense' }),
     sidebarShrink: true,
-    backLink: true
+    backLink: true,
   },
   {
     path: `/expenses/:id/edit`,
@@ -188,7 +188,7 @@ export default [
     breadcrumb: 'Edit',
     pageTitle: formatMessage({ id: 'edit_expense' }),
     sidebarShrink: true,
-    backLink: true
+    backLink: true,
   },
   {
     path: `/expenses`,
@@ -208,7 +208,7 @@ export default [
     ),
     breadcrumb: 'Edit Customer',
     pageTitle: formatMessage({ id: 'edit_customer' }),
-    backLink: true
+    backLink: true,
   },
   {
     path: `/customers/new`,
@@ -218,7 +218,7 @@ export default [
     breadcrumb: 'New Customer',
     hotkey: 'ctrl+shift+c',
     pageTitle: formatMessage({ id: 'new_customer' }),
-    backLink: true
+    backLink: true,
   },
   {
     path: `/customers`,
@@ -238,6 +238,7 @@ export default [
     ),
     breadcrumb: 'Edit Vendor',
     pageTitle: formatMessage({ id: 'edit_vendor' }),
+    backLink: true,
   },
   {
     path: `/vendors/new`,
@@ -247,6 +248,7 @@ export default [
     breadcrumb: 'New Vendor',
     hotkey: 'ctrl+shift+v',
     pageTitle: formatMessage({ id: 'new_vendor' }),
+    backLink: true,
   },
   {
     path: `/vendors`,
@@ -261,7 +263,9 @@ export default [
   // Estimates
   {
     path: `/estimates/:id/edit`,
-    component: lazy(() => import('containers/Sales/Estimates/EstimateForm/EstimateFormPage')),
+    component: lazy(() =>
+      import('containers/Sales/Estimates/EstimateForm/EstimateFormPage'),
+    ),
     breadcrumb: 'Edit',
     pageTitle: formatMessage({ id: 'edit_estimate' }),
     backLink: true,
@@ -269,7 +273,9 @@ export default [
   },
   {
     path: `/estimates/new`,
-    component: lazy(() => import('containers/Sales/Estimates/EstimateForm/EstimateFormPage')),
+    component: lazy(() =>
+      import('containers/Sales/Estimates/EstimateForm/EstimateFormPage'),
+    ),
     breadcrumb: 'New Estimate',
     hotkey: 'ctrl+shift+e',
     pageTitle: formatMessage({ id: 'new_estimate' }),
@@ -283,7 +289,7 @@ export default [
     ),
     breadcrumb: 'Estimates List',
     hotkey: 'shift+e',
-    pageTitle: formatMessage({ id: 'estimates_list' })
+    pageTitle: formatMessage({ id: 'estimates_list' }),
   },
 
   // Invoices.
@@ -295,7 +301,7 @@ export default [
     breadcrumb: 'Edit',
     pageTitle: formatMessage({ id: 'edit_invoice' }),
     sidebarShrink: true,
-    backLink: true
+    backLink: true,
   },
   {
     path: `/invoices/new`,
@@ -306,7 +312,7 @@ export default [
     hotkey: 'ctrl+shift+i',
     pageTitle: formatMessage({ id: 'new_invoice' }),
     sidebarShrink: true,
-    backLink: true
+    backLink: true,
   },
   {
     path: `/invoices`,
@@ -347,31 +353,39 @@ export default [
     ),
     breadcrumb: 'Receipts List',
     hotkey: 'shift+r',
-    pageTitle: formatMessage({ id: 'receipts_list' })
+    pageTitle: formatMessage({ id: 'receipts_list' }),
   },
 
   // Payment receives
-  // {
-  //   path: `/payment-receives/:id/edit`,
-  //   component: LazyLoader({
-  //     loader: () =>
-  //       import('containers/Sales/PaymentReceive/PaymentReceiveFormPage'),
-  //   }),
-  //   breadcrumb: 'Edit',
-  // },
-  // {
-  //   path: `/payment-receives/new`,
-  //   component: LazyLoader({
-  //     loader: () =>
-  //       import('containers/Sales/PaymentReceive/PaymentReceiveFormPage'),
-  //   }),
-  //   breadcrumb: 'New Payment Receive',
-  // },
+  {
+    path: `/payment-receives/:id/edit`,
+    component: lazy(() =>
+      import(
+        'containers/Sales/PaymentReceives/PaymentReceiveForm/PaymentReceiveFormPage'
+      ),
+    ),
+    breadcrumb: 'Edit',
+    pageTitle: formatMessage({ id: 'edit_payment_receive' }),
+    backLink: true,
+    sidebarShrink: true,
+  },
+  {
+    path: `/payment-receives/new`,
+    component: lazy(() =>
+      import(
+        'containers/Sales/PaymentReceives/PaymentReceiveForm/PaymentReceiveFormPage'
+      ),
+    ),
+    breadcrumb: 'New Payment Receive',
+    pageTitle: formatMessage({ id: 'new_payment_receive' }),
+    backLink: true,
+    sidebarShrink: true,
+  },
   {
     path: `/payment-receives`,
     component: lazy(() =>
       import(
-        'containers/Sales/PaymentReceive/PaymentsLanding/PaymentReceivesList'
+        'containers/Sales/PaymentReceives/PaymentsLanding/PaymentReceivesList'
       ),
     ),
     breadcrumb: 'Payment Receives List',
@@ -386,7 +400,7 @@ export default [
     breadcrumb: 'Edit',
     pageTitle: formatMessage({ id: 'edit_bill' }),
     sidebarShrink: true,
-    backLink: true
+    backLink: true,
   },
   {
     path: `/bills/new`,
@@ -397,7 +411,7 @@ export default [
     hotkey: 'ctrl+shift+b',
     pageTitle: formatMessage({ id: 'new_bill' }),
     sidebarShrink: true,
-    backLink: true
+    backLink: true,
   },
   {
     path: `/bills`,
@@ -406,7 +420,7 @@ export default [
     ),
     breadcrumb: 'Bills List',
     hotkey: 'shift+b',
-    pageTitle: formatMessage({ id: 'bills_list' })
+    pageTitle: formatMessage({ id: 'bills_list' }),
   },
 
   // Subscription billing.
@@ -416,22 +430,30 @@ export default [
     breadcrumb: 'New Billing',
   },
   // Payment modes.
-  // {
-  //   path: `/payment-mades/:id/edit`,
-  //   component: LazyLoader({
-  //     loader: () =>
-  //       import('containers/Purchases/PaymentMades/PaymentMadeFormPage'),
-  //   }),
-  //   breadcrumb: 'Edit',
-  // },
-  // {
-  //   path: `/payment-mades/new`,
-  //   component: LazyLoader({
-  //     loader: () =>
-  //       import('containers/Purchases/PaymentMades/PaymentMadeFormPage'),
-  //   }),
-  //   breadcrumb: 'New Payment Made',
-  // },
+  {
+    path: `/payment-mades/:id/edit`,
+    component: lazy(() =>
+      import(
+        'containers/Purchases/PaymentMades/PaymentForm/PaymentMadeFormPage'
+      ),
+    ),
+    breadcrumb: 'Edit',
+    pageTitle: formatMessage({ id: 'edit_payment_made' }),
+    sidebarShrink: true,
+    backLink: true,
+  },
+  {
+    path: `/payment-mades/new`,
+    component: lazy(() =>
+      import(
+        'containers/Purchases/PaymentMades/PaymentForm/PaymentMadeFormPage'
+      ),
+    ),
+    breadcrumb: 'New Payment Made',
+    pageTitle: formatMessage({ id: 'edit_payment_made' }),
+    sidebarShrink: true,
+    backLink: true,
+  },
   {
     path: `/payment-mades`,
     component: lazy(() =>
@@ -440,6 +462,6 @@ export default [
       ),
     ),
     breadcrumb: 'Payment Made List',
-    pageTitle: formatMessage({ id: 'payment_made_list' })
+    pageTitle: formatMessage({ id: 'payment_made_list' }),
   },
 ];

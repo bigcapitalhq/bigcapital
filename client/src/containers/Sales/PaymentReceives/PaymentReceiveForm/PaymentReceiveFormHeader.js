@@ -1,38 +1,41 @@
 import React, { useMemo } from 'react';
-import classNames from 'classnames';
-import { useFormikContext } from 'formik';
 import { sumBy } from 'lodash';
+import { useFormikContext } from 'formik';
+import classNames from 'classnames';
+import { Money } from 'components';
+
 import { CLASSES } from 'common/classes';
-import { compose } from 'utils';
-import {
-  Money,
-} from 'components';
-import PaymentMadeFormHeaderFields from './PaymentMadeFormHeaderFields';
+import PaymentReceiveHeaderFields from './PaymentReceiveHeaderFields';
 import withSettings from 'containers/Settings/withSettings';
 
+import { compose } from 'utils';
+
 /**
- * Payment made header form.
+ * Payment receive form header.
  */
-function PaymentMadeFormHeader({
+function PaymentReceiveFormHeader({
   // #withSettings
   baseCurrency,
 }) {
   // Formik form context.
   const { values } = useFormikContext();
 
-  // Calculate the payment amount of the entries.
-  const amountPaid = useMemo(() => sumBy(values, 'payment_amount'), [values]);
+  // Calculates the total receivable amount from due amount.
+  const receivableFullAmount = useMemo(
+    () => sumBy(values.entries, 'due_amount'),
+    [values.entries],
+  );
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
       <div className={classNames(CLASSES.PAGE_FORM_HEADER_PRIMARY)}>
-        <PaymentMadeFormHeaderFields />
+        <PaymentReceiveHeaderFields />
 
         <div className={classNames(CLASSES.PAGE_FORM_HEADER_BIG_NUMBERS)}>
           <div class="big-amount">
             <span class="big-amount__label">Amount Received</span>
             <h1 class="big-amount__number">
-              <Money amount={amountPaid} currency={baseCurrency} />
+              <Money amount={receivableFullAmount} currency={baseCurrency} />
             </h1>
           </div>
         </div>
@@ -45,4 +48,4 @@ export default compose(
   withSettings(({ organizationSettings }) => ({
     baseCurrency: organizationSettings?.baseCurrency,
   })),
-)(PaymentMadeFormHeader);
+)(PaymentReceiveFormHeader);
