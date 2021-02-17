@@ -34,7 +34,7 @@ function CurrenciesDataTable({
     (currency) => {
       openDialog('currency-form', {
         action: 'edit',
-        currencyCode: currency.currency_code,
+        currency: currency,
       });
     },
     [openDialog],

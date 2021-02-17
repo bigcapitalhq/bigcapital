@@ -11,13 +11,13 @@ import 'style/pages/Currency/CurrencyFormDialog.scss';
 function CurrencyFormDialogContent({
   // #ownProp
   action,
-  currency,
+  currencyCode,
   dialogName,
 }) {
   return (
     <CurrencyFormProvider
       isEditMode={action}
-      currency={currency}
+      currency={currencyCode}
       dialogName={dialogName}
     >
       <CurrencyForm />
