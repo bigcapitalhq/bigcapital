@@ -13,7 +13,7 @@ const CurrencyFormDialogContent = lazy(() =>
  */
 function CurrencyFormDialog({
   dialogName,
-  payload = { action: '', id: null },
+  payload = { action: '', id: null, currency: '' },
   isOpen,
 }) {
   return (
@@ -34,7 +34,7 @@ function CurrencyFormDialog({
       <DialogSuspense>
         <CurrencyFormDialogContent
           dialogName={dialogName}
-          currencyId={payload.currencyCode}
+          currencyCode={payload.currency}
           action={payload.action}
         />
       </DialogSuspense>
