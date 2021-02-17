@@ -359,6 +359,7 @@ export default {
   select_date_format: 'Select Date Format',
   select_time_zone: 'Select Time Zone',
   select_currency: 'Select Currency',
+  once_delete_this_currency_you_will_able_to_restore_it: `Once you delete this currency, you won\'t be able to restore it later. Are you sure you want to delete this item?`,
   select_parent_category: 'Select Parent Category',
   the_options_has_been_created_successfully:
     'The options has been created successfully',
