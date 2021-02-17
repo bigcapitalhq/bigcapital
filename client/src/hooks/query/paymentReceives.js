@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { defaultTo } from 'lodash';
 import ApiService from 'services/ApiService';
-import { transformPagination } from 'utils';
+import { transformPagination, saveInvoke } from 'utils';
 
 /**
  * Retrieve accounts list.
@@ -43,8 +43,13 @@ export function useCreatePaymentReceive(props) {
   return useMutation(
     (values) => ApiService.post('sales/payment_receives', values),
     {
-      onSuccess: () => {
+      onSuccess: (data, values) => {
         client.invalidateQueries('PAYMENT_RECEIVES');
+        client.invalidateQueries('SALE_INVOICE_DUE');
+        client.invalidateQueries('SALE_INVOICES');
+        client.invalidateQueries('SALE_INVOICE');
+
+        saveInvoke(props?.onSuccess, data);
       },
       ...props,
     },
@@ -60,8 +65,13 @@ export function useEditPaymentReceive(props) {
   return useMutation(
     ([id, values]) => ApiService.post(`sales/payment_receives/${id}`, values),
     {
-      onSuccess: () => {
+      onSuccess: (data) => {
         client.invalidateQueries('PAYMENT_RECEIVES');
+        client.invalidateQueries('SALE_INVOICE_DUE');
+        client.invalidateQueries('SALE_INVOICES');
+        client.invalidateQueries('SALE_INVOICE');
+
+        saveInvoke(props?.onSuccess, data);
       },
       ...props,
     },
@@ -75,10 +85,15 @@ export function useDeletePaymentReceive(props) {
   const client = useQueryClient();
 
   return useMutation(
-    (id, values) => ApiService.delete(`sales/payment_receives/${id}`, values),
+    (id) => ApiService.delete(`sales/payment_receives/${id}`),
     {
-      onSuccess: () => {
+      onSuccess: (data, [id]) => {
         client.invalidateQueries('PAYMENT_RECEIVES');
+        client.invalidateQueries('SALE_INVOICE_DUE');
+        client.invalidateQueries('SALE_INVOICES');
+        client.invalidateQueries('SALE_INVOICE');
+
+        saveInvoke(props?.onSuccess, data);
       },
       ...props,
     },
@@ -87,19 +102,53 @@ export function useDeletePaymentReceive(props) {
 
 /**
  * Retrieve specific payment receive.
+ * @param {number} id - Payment receive.
  */
 export function usePaymentReceive(id, props) {
   const states = useQuery(
     ['PAYMENT_RECEIVE', id],
     () => ApiService.get(`sales/payment_receives/${id}`),
     {
-      select: (res) => res.data.payment_receive,
+      select: (res) => ({
+        paymentReceive: res.data.payment_receive,
+        receivableEntries: res.data.receivable_entries,
+      }),
       ...props
     },
   );
 
   return {
     ...states,
-    data: defaultTo(states.data, {}),
+    data: defaultTo(states.data, {
+      paymentReceive: {},
+      receivableInvoices: {},
+      paymentInvoices: {}
+    }),
+  }
+}
+
+/**
+ * Retrieve information of payment receive in edit page.
+ * @param {number} id - Payment receive id.
+ */
+export function usePaymentReceiveEditPage(id, props) {
+  const states = useQuery(
+    ['PAYMENT_RECEIVE_EDIT_PAGE', id],
+    () => ApiService.get(`sales/payment_receives/${id}/edit-page`),
+    {
+      select: (res) => ({
+        paymentReceive: res.data.payment_receive,
+        entries: res.data.entries,
+      }),
+      ...props,
+    },
+  );
+
+  return {
+    ...states,
+    data: defaultTo(states.data, {
+      paymentReceive: {},
+      entries: [],
+    })
   }
 }

@@ -1,5 +1,4 @@
 import { omit, sumBy, difference } from 'lodash';
-import moment from 'moment';
 import { Service, Inject } from 'typedi';
 import {
   EventDispatcher,
@@ -19,6 +18,7 @@ import {
   ISaleInvoice,
   ISystemService,
   ISystemUser,
+  IPaymentReceiveEditPageEntry,
 } from 'interfaces';
 import AccountsService from 'services/Accounts/AccountsService';
 import JournalPoster from 'services/Accounting/JournalPoster';
@@ -467,45 +467,79 @@ export default class PaymentReceiveService {
   }
 
   /**
+   * Retrive edit page invoices entries from the given sale invoices models.
+   * @param  {ISaleInvoice[]} invoices - Invoices.
+   * @return {IPaymentReceiveEditPageEntry}
+   */
+  public invoicesToEditPageEntries(
+    invoice: ISaleInvoice
+  ): IPaymentReceiveEditPageEntry {
+    return {
+      entryType: 'invoice',
+      invoiceId: invoice.id,
+      dueAmount: invoice.dueAmount + invoice.paymentAmount,
+      amount: invoice.balance,
+      invoiceNo: invoice.invoiceNo,
+      totalPaymentAmount: invoice.paymentAmount,
+      paymentAmount: invoice.paymentAmount,
+      date: invoice.invoiceDate,
+    };
+  }
+  
+  /**
    * Retrieve the payment receive details of the given id.
    * @param {number} tenantId - Tenant id.
    * @param {Integer} paymentReceiveId - Payment receive id.
    */
-  public async getPaymentReceive(
+  public async getPaymentReceiveEditPage(
     tenantId: number,
     paymentReceiveId: number,
-    authorizedUser: ISystemService
   ): Promise<{
     paymentReceive: IPaymentReceive;
-    receivableInvoices: ISaleInvoice[];
-    paymentReceiveInvoices: ISaleInvoice[];
+    entries: IPaymentReceiveEditPageEntry[];
   }> {
     const { PaymentReceive, SaleInvoice } = this.tenancy.models(tenantId);
+
+    // Retrieve payment receive.
     const paymentReceive = await PaymentReceive.query()
       .findById(paymentReceiveId)
-      .withGraphFetched('entries.invoice')
-      .withGraphFetched('customer')
-      .withGraphFetched('depositAccount');
+      .withGraphFetched('entries.invoice');
 
+    // Throw not found the payment receive.
     if (!paymentReceive) {
       throw new ServiceError(ERRORS.PAYMENT_RECEIVE_NOT_EXISTS);
     }
-    const invoicesIds = paymentReceive.entries.map((entry) => entry.invoiceId);
 
-    // Retrieves all receivable bills that associated to the payment receive transaction.
-    const receivableInvoices = await SaleInvoice.query()
-      .modify('dueInvoices')
-      .where('customer_id', paymentReceive.customerId)
-      .whereNotIn('id', invoicesIds)
-      .orderBy('invoice_date', 'ASC');
+    // Mapping the entries invoices.
+    const entriesInvoicesIds = paymentReceive.entries.map(
+      (entry) => entry.invoiceId
+    );
 
-    // Retrieve all payment receive associated invoices.
-    const paymentReceiveInvoices = paymentReceive.entries.map((entry) => ({
-      ...entry.invoice,
-      dueAmount: entry.invoice.dueAmount + entry.paymentAmount,
+    const paymentEntries = paymentReceive.entries.map((entry) => ({
+      ...this.invoicesToEditPageEntries(entry.invoice),
+      paymentAmount: entry.paymentAmount,
     }));
 
-    return { paymentReceive, receivableInvoices, paymentReceiveInvoices };
+    // Retrieves all receivable bills that associated to the payment receive transaction.
+    const restReceivableInvoices = await SaleInvoice.query()
+      .modify('dueInvoices')
+      .where('customer_id', paymentReceive.customerId)
+      .whereNotIn('id', entriesInvoicesIds)
+      .orderBy('invoice_date', 'ASC');
+
+    const restReceivableEntries = restReceivableInvoices.map(
+      this.invoicesToEditPageEntries
+    );
+
+    const entries = [
+      ...paymentEntries,
+      ...restReceivableEntries,
+    ];
+
+    return {
+      paymentReceive: omit(paymentReceive, ['entries']),
+      entries,
+    };
   }
 
   /**
@@ -664,7 +698,7 @@ export default class PaymentReceiveService {
    */
   async revertPaymentReceiveJournalEntries(
     tenantId: number,
-    paymentReceiveId: number,
+    paymentReceiveId: number
   ) {
     const { accountRepository } = this.tenancy.repositories(tenantId);
 

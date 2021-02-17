@@ -1,23 +1,54 @@
+import React from 'react';
+import { Intent, Alert } from '@blueprintjs/core';
+import { FormattedMessage as T } from 'react-intl';
 
+import withAlertActions from 'containers/Alert/withAlertActions';
+import withAlertStoreConnect from 'containers/Alert/withAlertStoreConnect';
 
+import { compose } from 'utils';
 
+/**
+ * Clearning all lines alert.
+ */
+function ClearAllLinesAlert({
+  name,
 
-function ClearningAllLinesAlert() {
+  // #withAlertStoreConnect
+  isOpen,
+  payload: {},
 
-    return (
+  // #withAlertActions
+  closeAlert,
+}) {
 
-        <Alert
-          cancelButtonText={<T id={'cancel'} />}
-          confirmButtonText={<T id={'ok'} />}
-          intent={Intent.DANGER}
-          isOpen={clearLinesAlert}
-          onCancel={handleCancelClearLines}
-          onConfirm={handleConfirmClearLines}
-        >
-          <p>
-            Clearing the table lines will delete all credits and payments were
-            applied. Is this okay?
-          </p>
-        </Alert>
-    )
+  // Handle the alert cancel.
+  const handleCancel = () => {
+    closeAlert(name);
+  };
+
+  // Handle confirm delete manual journal.
+  const handleConfirm = () => {};
+
+  return (
+    <Alert
+      cancelButtonText={<T id={'cancel'} />}
+      confirmButtonText={<T id={'action'} />}
+      icon="trash"
+      intent={Intent.DANGER}
+      isOpen={isOpen}
+      onCancel={handleCancel}
+      onConfirm={handleConfirm}
+      loading={false}
+    >
+      <p>
+        Clearing the table lines will delete all credits and payments were
+        applied. Is this okay?
+      </p>
+    </Alert>
+  );
 }
+
+export default compose(
+  withAlertStoreConnect(),
+  withAlertActions,
+)(ClearAllLinesAlert);

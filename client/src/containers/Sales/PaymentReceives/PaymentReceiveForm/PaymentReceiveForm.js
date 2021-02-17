@@ -1,17 +1,18 @@
 import React, { useMemo } from 'react';
 import { Formik, Form } from 'formik';
-
 import { useIntl } from 'react-intl';
-import { pick, sumBy, omit, isEmpty } from 'lodash';
+import { sumBy, pick, isEmpty } from 'lodash';
 import { Intent } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 
 import { CLASSES } from 'common/classes';
 import PaymentReceiveHeader from './PaymentReceiveFormHeader';
-import PaymentReceiveItemsTable from './PaymentReceiveItemsTable';
+import PaymentReceiveFormBody from './PaymentReceiveFormBody';
 import PaymentReceiveFloatingActions from './PaymentReceiveFloatingActions';
 import PaymentReceiveFormFooter from './PaymentReceiveFormFooter';
+import PaymentReceiveFormAlerts from './PaymentReceiveFormAlerts';
+import { PaymentReceiveInnerProvider } from './PaymentReceiveInnerProvider';
 
 import withSettings from 'containers/Settings/withSettings';
 import {
@@ -24,7 +25,6 @@ import { compose } from 'utils';
 import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
 import {
   defaultPaymentReceive,
-  defaultPaymentReceiveEntry,
   transformToEditForm,
 } from './utils';
 
@@ -44,7 +44,8 @@ function PaymentReceiveForm({
   // Payment receive form context.
   const {
     isNewMode,
-    paymentReceive,
+    paymentReceiveEditPage,
+    paymentEntriesEditPage,
     paymentReceiveId,
     submitPayload,
     editPaymentReceiveMutate,
@@ -56,24 +57,17 @@ function PaymentReceiveForm({
     ? `${paymentReceiveNumberPrefix}-${paymentReceiveNextNumber}`
     : paymentReceiveNextNumber;
 
-  // Form validation schema.
-  const validationSchema = isNewMode
-    ? CreatePaymentReceiveFormSchema
-    : EditPaymentReceiveFormSchema;
-
   // Form initial values.
   const initialValues = useMemo(
     () => ({
-      ...(!isEmpty(paymentReceive)
-        ? {
-            ...transformToEditForm(paymentReceive, []),
-          }
+      ...(!isEmpty(paymentReceiveEditPage)
+        ? transformToEditForm(paymentReceiveEditPage, paymentEntriesEditPage)
         : {
-            ...paymentReceive,
+            ...defaultPaymentReceive,
             payment_receive_no: paymentReceiveNumber,
           }),
     }),
-    [paymentReceive, paymentReceiveNumber],
+    [paymentReceiveEditPage, paymentReceiveNumber, paymentEntriesEditPage],
   );
 
   // Handle form submit.
@@ -87,7 +81,7 @@ function PaymentReceiveForm({
     const entries = values.entries
       .filter((entry) => entry.invoice_id && entry.payment_amount)
       .map((entry) => ({
-        ...omit(entry, ['due_amount']),
+        ...pick(entry, ['invoice_id', 'payment_amount']),
       }));
 
     // Calculates the total payment amount of entries.
@@ -125,7 +119,7 @@ function PaymentReceiveForm({
       }
     };
     // Handle request response errors.
-    const onError = (errors) => {
+    const onError = ({ response: { data: { errors } } }) => {
       const getError = (errorType) => errors.find((e) => e.type === errorType);
 
       if (getError('PAYMENT_RECEIVE_NO_EXISTS')) {
@@ -146,12 +140,6 @@ function PaymentReceiveForm({
     }
   };
 
-  const transformDataTableToEntries = (dataTable) => {
-    return dataTable.map((data) => ({
-      ...pick(data, Object.keys(defaultPaymentReceiveEntry)),
-    }));
-  };
-
   return (
     <div
       className={classNames(
@@ -163,21 +151,23 @@ function PaymentReceiveForm({
       <Formik
         initialValues={initialValues}
         onSubmit={handleSubmitForm}
-        validationSchema={validationSchema}
+        validationSchema={
+          isNewMode
+            ? CreatePaymentReceiveFormSchema
+            : EditPaymentReceiveFormSchema
+        }
       >
         <Form>
-          <PaymentReceiveHeader />
+          <PaymentReceiveInnerProvider>
+            <PaymentReceiveHeader />
+            <PaymentReceiveFormBody />
+            <PaymentReceiveFormFooter />
+            <PaymentReceiveFloatingActions />
 
-          <div className={classNames(CLASSES.PAGE_FORM_BODY)}>
-            <PaymentReceiveItemsTable />
-          </div>
-
-          <PaymentReceiveFormFooter />
-          <PaymentReceiveFloatingActions />
+            <PaymentReceiveFormAlerts />
+          </PaymentReceiveInnerProvider>
         </Form>
       </Formik>
-
-      {/* </form> */}
     </div>
   );
 }

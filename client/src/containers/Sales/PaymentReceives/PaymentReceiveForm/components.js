@@ -1,6 +1,8 @@
 import React from 'react';
 import moment from 'moment';
 import { useIntl } from 'react-intl';
+import { Money } from 'components';
+import { MoneyFieldCell } from 'components/DataTableCells';
 import { safeSumBy, formattedAmount } from 'utils';
 
 /**
@@ -21,15 +23,14 @@ function IndexCell({ row: { index } }) {
  * Invoice number table cell accessor.
  */
 function InvNumberCellAccessor(row) {
-  const invNumber = row?.invoice_no || row?.id;
-  return `#INV-${invNumber || ''}`;
+  return row?.invoice_no ? `#${row?.invoice_no || ''}` : '-';
 }
 
 /**
  * Balance footer cell.
  */
 function BalanceFooterCell({ rows }) {
-  const total = safeSumBy(rows, 'original.balance');
+  const total = safeSumBy(rows, 'original.amount');
   return <span>{ formattedAmount(total, 'USD') }</span>;
 }
 
@@ -49,6 +50,18 @@ function PaymentAmountFooterCell({ rows }) {
   return <span>{ formattedAmount(totalPaymentAmount, 'USD') }</span>;
 }
 
+
+/**
+ * Mobey table cell.
+ */
+function MoneyTableCell({ value }) {
+  return <Money amount={value} currency={"USD"} />
+}
+
+function DateFooterCell() {
+  return 'Total';
+}
+
 /**
  * Retrieve payment receive form entries columns.
  */
@@ -64,12 +77,14 @@ export const usePaymentReceiveEntriesColumns = () => {
         width: 40,
         disableResizing: true,
         disableSortBy: true,
+        className: 'index'
       },
       {
         Header: formatMessage({ id: 'Date' }),
         id: 'invoice_date',
         accessor: 'invoice_date',
         Cell: InvoiceDateCell,
+        Footer: DateFooterCell,
         disableSortBy: true,
         disableResizing: true,
         width: 250,
@@ -77,14 +92,14 @@ export const usePaymentReceiveEntriesColumns = () => {
       {
         Header: formatMessage({ id: 'invocie_number' }),
         accessor: InvNumberCellAccessor,
-        Cell: 'invoice_no',
         disableSortBy: true,
         className: '',
       },
       {
         Header: formatMessage({ id: 'invoice_amount' }),
-        accessor: 'balance',
+        accessor: 'amount',
         Footer: BalanceFooterCell,
+        Cell: MoneyTableCell,
         disableSortBy: true,
         width: 100,
         className: '',
@@ -93,6 +108,7 @@ export const usePaymentReceiveEntriesColumns = () => {
         Header: formatMessage({ id: 'amount_due' }),
         accessor: 'due_amount',
         Footer: DueAmountFooterCell,
+        Cell: MoneyTableCell,
         disableSortBy: true,
         width: 150,
         className: '',
@@ -100,6 +116,7 @@ export const usePaymentReceiveEntriesColumns = () => {
       {
         Header: formatMessage({ id: 'payment_amount' }),
         accessor: 'payment_amount',
+        Cell: MoneyFieldCell,
         Footer: PaymentAmountFooterCell,
         disableSortBy: true,
         width: 150,

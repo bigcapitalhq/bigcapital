@@ -2,7 +2,6 @@ import * as Yup from 'yup';
 import { defaultTo } from 'lodash';
 import { formatMessage } from 'services/intl';
 import { DATATYPES_LENGTH } from 'common/dataTypes';
-import { isBlank } from 'utils';
 
 const Schema = Yup.object().shape({
   active: Yup.boolean(),
@@ -20,6 +19,7 @@ const Schema = Yup.object().shape({
   code: Yup.string().trim().min(0).max(DATATYPES_LENGTH.STRING),
   cost_price: Yup.number()
     .min(0)
+    .max(DATATYPES_LENGTH.DECIMAL_13_3)
     .when(['purchasable'], {
       is: true,
       then: Yup.number()
@@ -29,6 +29,7 @@ const Schema = Yup.object().shape({
     }),
   sell_price: Yup.number()
     .min(0)
+    .max(DATATYPES_LENGTH.DECIMAL_13_3)
     .when(['sellable'], {
       is: true,
       then: Yup.number()

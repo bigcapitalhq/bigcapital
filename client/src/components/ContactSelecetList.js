@@ -14,6 +14,7 @@ export default function ContactSelecetList({
   onContactSelected,
   popoverFill = false,
   disabled = false,
+  buttonProps
 }) {
   const contacts = useMemo(
     () =>
@@ -94,6 +95,7 @@ export default function ContactSelecetList({
         text={
           selecetedContact ? selecetedContact.display_name : defaultSelectText
         }
+        {...buttonProps}
       />
     </Select>
   );

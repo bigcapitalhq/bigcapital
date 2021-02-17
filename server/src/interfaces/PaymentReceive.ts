@@ -1,5 +1,5 @@
-import { IDynamicListFilterDTO } from "./DynamicFilter";
 
+import { IDynamicListFilterDTO } from "./DynamicFilter";
 
 export interface IPaymentReceive {
   id?: number,
@@ -51,3 +51,19 @@ export interface IPaymentReceiveEntryDTO {
 export interface IPaymentReceivesFilter extends IDynamicListFilterDTO {
   stringifiedFilterRoles?: string,
 }
+
+export interface IPaymentReceiveEditPageEntry {
+  invoiceId: number,
+  entryType: string,
+  invoiceNo: string,
+  dueAmount: number,
+  amount: number,
+  totalPaymentAmount: number,
+  paymentAmount: number,
+  date: Date|string,
+};
+
+export interface IPaymentReceiveEditPage {
+  paymentReceive: IPaymentReceive,
+  entries: IPaymentReceiveEditPageEntry[];
+};

@@ -122,7 +122,7 @@ function InvoiceForm({
     };
 
     // Handle the request error.
-    const onError = (errors) => {
+    const onError = ({ response: { data: { errors } } }) => {
       if (errors) {
         handleErrors(errors, { setErrors });
       }

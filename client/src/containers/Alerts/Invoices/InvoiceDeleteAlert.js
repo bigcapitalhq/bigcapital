@@ -47,7 +47,7 @@ function InvoiceDeleteAlert({
           intent: Intent.SUCCESS,
         });
       })
-      .catch((errors) => {
+      .catch(({ response: { data: { errors } } }) => {
         handleDeleteErrors(errors);
       })
       .finally(() => {

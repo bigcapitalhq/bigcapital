@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { Button } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'react-intl';
 import { CloudLoadingIndicator } from 'components';
@@ -8,31 +8,28 @@ import { CLASSES } from 'common/classes';
 import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
 import { DataTableEditable } from 'components';
 import { usePaymentReceiveEntriesColumns } from './components';
+import { compose, updateTableRow, safeSumBy } from 'utils';
+import withAlertActions from 'containers/Alert/withAlertActions';
+
 
 /**
  * Payment receive items table.
  */
-export default function PaymentReceiveItemsTable() {
+function PaymentReceiveItemsTable({
+  entries,
+  onUpdateData,
+
+  // #withDialogActions
+  openAlert
+}) {
   // Payment receive form context.
   const {
-    isNewMode,
     isDueInvoicesFetching,
     paymentCustomerId,
-    dueInvoices,
   } = usePaymentReceiveFormContext();
 
   // Payment receive entries form context.
   const columns = usePaymentReceiveEntriesColumns();
-
-  // Detarmines takes payment receive invoices entries from customer receivable
-  // invoices or associated payment receive invoices.
-  const computedTableData = useMemo(
-    () => [
-      ...(!isNewMode ? [] || [] : []),
-      ...(isNewMode ? dueInvoices || [] : []),
-    ],
-    [isNewMode, dueInvoices],
-  );
 
   // No results message.
   const noResultsMessage = paymentCustomerId
@@ -40,11 +37,21 @@ export default function PaymentReceiveItemsTable() {
     : 'Please select a customer to display all open invoices for it.';
 
   // Handle update data.
-  const handleUpdateData = useCallback((rows) => {}, []);
+  const handleUpdateData = useCallback((rowIndex, columnId, value) => {
+    const newRows = compose(
+      updateTableRow(rowIndex, columnId, value),
+    )(entries);
+
+    onUpdateData(newRows);
+  }, [entries, onUpdateData]);
 
   // Handle click clear all lines button.
   const handleClickClearAllLines = () => {
-    
+    const fullAmount = safeSumBy(entries, 'payment_amount');
+
+    if (fullAmount > 0) {
+      openAlert('clear-all-lines-payment-receive');
+    }
   };
  
   return (
@@ -53,7 +60,7 @@ export default function PaymentReceiveItemsTable() {
         progressBarLoading={isDueInvoicesFetching}
         className={classNames(CLASSES.DATATABLE_EDITOR_ITEMS_ENTRIES)}
         columns={columns}
-        data={[]}
+        data={entries}
         spinnerProps={false}
         payload={{
           errors: [],
@@ -74,3 +81,5 @@ export default function PaymentReceiveItemsTable() {
     </CloudLoadingIndicator>
   );
 }
+
+export default compose(withAlertActions)(PaymentReceiveItemsTable);

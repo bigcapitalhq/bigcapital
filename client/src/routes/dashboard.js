@@ -389,6 +389,7 @@ export default [
       ),
     ),
     breadcrumb: 'Payment Receives List',
+    pageTitle: formatMessage({ id: 'payment_receives_list' }),
   },
 
   // Bills

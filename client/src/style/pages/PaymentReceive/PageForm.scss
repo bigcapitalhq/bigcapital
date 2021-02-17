@@ -20,10 +20,18 @@
       &.bp3-inline{
         max-width: 470px; 
       }
-      a.receive-full-amount{
+      button.receive-full-amount{
+        width: auto;
+        padding: 0;
+        min-height: auto;
         font-size: 12px;
-        margin-top: 6px;
-        display: inline-block;
+        margin-top: 4px;
+        background-color: transparent;
+        color: #0052cc;
+
+        &:hover{
+          text-decoration: underline;
+        }
       }
     }
   }

@@ -22,25 +22,23 @@ import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
  * Payment receive floating actions bar.
  */
 export default function PaymentReceiveFormFloatingActions() {
-
   // Payment receive form context.
   const { setSubmitPayload, isNewMode } = usePaymentReceiveFormContext();
 
   // Formik form context.
-  const { isSubmitting } = useFormikContext();
+  const { isSubmitting, submitForm } = useFormikContext();
 
   // History context.
   const history = useHistory();
 
   // Handle submit button click.
   const handleSubmitBtnClick = (event) => {
-    setSubmitPayload({ redirect: true, });
+    setSubmitPayload({ redirect: true });
+    submitForm();
   };
 
   // Handle clear button click.
-  const handleClearBtnClick = (event) => {
-    
-  };
+  const handleClearBtnClick = (event) => {};
 
   // Handle cancel button click.
   const handleCancelBtnClick = (event) => {
@@ -49,12 +47,14 @@ export default function PaymentReceiveFormFloatingActions() {
 
   // Handle submit & new button click.
   const handleSubmitAndNewClick = (event) => {
-    setSubmitPayload({ redirect: false, resetForm: true, });
+    setSubmitPayload({ redirect: false, resetForm: true });
+    submitForm();
   };
 
   // Handle submit & continue editing button click.
   const handleSubmitContinueEditingBtnClick = (event) => {
     setSubmitPayload({ redirect: false, publish: true });
+    submitForm();
   };
 
   return (
@@ -63,6 +63,7 @@ export default function PaymentReceiveFormFloatingActions() {
       <ButtonGroup>
         <Button
           disabled={isSubmitting}
+          loading={isSubmitting}
           intent={Intent.PRIMARY}
           type="submit"
           onClick={handleSubmitBtnClick}

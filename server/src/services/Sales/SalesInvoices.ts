@@ -583,6 +583,8 @@ export default class SaleInvoicesService {
         query.where('customer_id', customerId);
       }
     });
+
+    
     return salesInvoices;
   }
 }

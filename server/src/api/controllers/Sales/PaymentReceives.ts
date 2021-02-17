@@ -48,10 +48,10 @@ export default class PaymentReceivesController extends BaseController {
       this.handleServiceErrors
     );
     router.get(
-      '/:id',
+      '/:id/edit-page',
       this.paymentReceiveValidation,
       this.validationResult,
-      asyncMiddleware(this.getPaymentReceive.bind(this)),
+      asyncMiddleware(this.getPaymentReceiveEditPage.bind(this)),
       this.handleServiceErrors
     );
     router.get(
@@ -215,16 +215,15 @@ export default class PaymentReceivesController extends BaseController {
    * @param {Request} req -
    * @param {Response} res -
    */
-  async getPaymentReceive(req: Request, res: Response, next: NextFunction) {
+  async getPaymentReceiveEditPage(req: Request, res: Response, next: NextFunction) {
     const { tenantId, user } = req;
     const { id: paymentReceiveId } = req.params;
 
     try {
       const {
         paymentReceive,
-        receivableInvoices,
-        paymentReceiveInvoices,
-      } = await this.paymentReceiveService.getPaymentReceive(
+        entries
+      } = await this.paymentReceiveService.getPaymentReceiveEditPage(
         tenantId,
         paymentReceiveId,
         user
@@ -232,8 +231,7 @@ export default class PaymentReceivesController extends BaseController {
 
       return res.status(200).send({
         payment_receive: this.transfromToResponse({ ...paymentReceive }),
-        receivable_invoices: this.transfromToResponse([...receivableInvoices]),
-        payment_invoices: this.transfromToResponse([...paymentReceiveInvoices]),
+        entries: this.transfromToResponse([...entries]),
       });
     } catch (error) {
       next(error);

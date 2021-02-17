@@ -10,15 +10,19 @@ import {
   Position,
   Button
 } from '@blueprintjs/core';
-import { Choose, If, Icon } from 'components';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import moment from 'moment';
+import { round } from 'lodash';
+import { Choose, If, Icon } from 'components';
 import { Money, AppToaster } from 'components';
 import { formatMessage } from 'services/intl';
 import { safeCallback } from 'utils';
 
-const calculateStatus = (paymentAmount, balanceAmount) =>
-  paymentAmount / balanceAmount;
+
+const calculateStatus = (paymentAmount, balanceAmount) => {
+  return round(paymentAmount / balanceAmount, 2);
+}
+  
 
 export const statusAccessor = (row) => {
   return (
@@ -52,7 +56,7 @@ export const statusAccessor = (row) => {
               <T
                 id={'day_partially_paid'}
                 values={{
-                  due: row.due_amount,
+                  due: round(row.due_amount, 2),
                   currencySign: '$',
                 }}
               />
@@ -110,6 +114,7 @@ export function ActionsMenu({
       />
       <If condition={!original.is_delivered}>
         <MenuItem
+          icon={<Icon icon="send" iconSize={16} />}
           text={formatMessage({ id: 'mark_as_delivered' })}
           onClick={safeCallback(onDeliver, original)}
         />
@@ -158,18 +163,18 @@ export function useInvoicesTableColumns() {
         className: 'customer_id',
       },
       {
-        id: 'invoice_no',
-        Header: formatMessage({ id: 'invoice_no__' }),
-        accessor: (row) => (row.invoice_no ? `#${row.invoice_no}` : null),
-        width: 100,
-        className: 'invoice_no',
-      },
-      {
         id: 'balance',
         Header: formatMessage({ id: 'balance' }),
         accessor: (r) => <Money amount={r.balance} currency={'USD'} />,
         width: 110,
         className: 'balance',
+      },
+      {
+        id: 'invoice_no',
+        Header: formatMessage({ id: 'invoice_no__' }),
+        accessor: (row) => (row.invoice_no ? `#${row.invoice_no}` : null),
+        width: 100,
+        className: 'invoice_no',
       },
       {
         id: 'status',

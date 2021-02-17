@@ -75,6 +75,7 @@ export function ActionsMenu({
       <Choose>
         <Choose.When condition={original.is_delivered && original.is_approved}>
           <MenuItem
+            icon={<Icon icon={'close-black'} />}
             text={formatMessage({ id: 'mark_as_rejected' })}
             onClick={safeCallback(onReject, original)}
           />

@@ -20,9 +20,9 @@ function PaymentReceiveFormHeader({
   // Formik form context.
   const { values } = useFormikContext();
 
-  // Calculates the total receivable amount from due amount.
-  const receivableFullAmount = useMemo(
-    () => sumBy(values.entries, 'due_amount'),
+  // Calculates the total payment amount from due amount.
+  const paymentFullAmount = useMemo(
+    () => sumBy(values.entries, 'payment_amount'),
     [values.entries],
   );
 
@@ -35,7 +35,7 @@ function PaymentReceiveFormHeader({
           <div class="big-amount">
             <span class="big-amount__label">Amount Received</span>
             <h1 class="big-amount__number">
-              <Money amount={receivableFullAmount} currency={baseCurrency} />
+              <Money amount={paymentFullAmount} currency={baseCurrency} />
             </h1>
           </div>
         </div>

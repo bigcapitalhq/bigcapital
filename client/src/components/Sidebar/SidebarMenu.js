@@ -59,7 +59,7 @@ export default function SidebarMenu() {
           disabled={item.disabled}
           children={children}
           dropdownType={item.dropdownType || 'collapse'}
-          caretIconSize={15}
+          caretIconSize={16}
           onClick={handleItemClick}
           callapseActive={!!isActive}
           itemClassName={classNames({

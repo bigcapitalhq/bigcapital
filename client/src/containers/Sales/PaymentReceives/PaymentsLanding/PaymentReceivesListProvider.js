@@ -29,7 +29,7 @@ function PaymentReceivesListProvider({ query, ...props }) {
     data: { paymentReceives, pagination, filterMeta },
     isLoading: isPaymentReceivesLoading,
     isFetching: isPaymentReceivesFetching,
-  } = usePaymentReceives(query);
+  } = usePaymentReceives(query, { keepPreviousData: true });
 
   // Provider payload.
   const provider = {

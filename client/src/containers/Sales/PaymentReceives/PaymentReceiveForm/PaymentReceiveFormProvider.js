@@ -2,12 +2,11 @@ import React, { createContext, useContext } from 'react';
 import { DashboardInsider } from 'components';
 import {
   useSettings,
-  usePaymentReceive,
+  usePaymentReceiveEditPage,
   useAccounts,
   useCustomers,
   useCreatePaymentReceive,
   useEditPaymentReceive,
-  useDueInvoices,
 } from 'hooks/query';
 
 // Payment receive form context.
@@ -18,15 +17,19 @@ const PaymentReceiveFormContext = createContext();
  */
 function PaymentReceiveFormProvider({ paymentReceiveId, ...props }) {
   // Form state.
-  const [paymentCustomerId, setPaymentCustomerId] = React.useState(null);
   const [submitPayload, setSubmitPayload] = React.useState({});
 
   // Fetches payment recevie details.
   const {
-    data: paymentReceive,
+    data: {
+      paymentReceive: paymentReceiveEditPage,
+      entries: paymentEntriesEditPage,
+    },
     isLoading: isPaymentLoading,
     isFetching: isPaymentFetching,
-  } = usePaymentReceive(paymentReceiveId, { enabled: !!paymentReceiveId });
+  } = usePaymentReceiveEditPage(paymentReceiveId, {
+    enabled: !!paymentReceiveId,
+  });
 
   // Handle fetch accounts data.
   const { data: accounts, isFetching: isAccountsFetching } = useAccounts();
@@ -40,15 +43,6 @@ function PaymentReceiveFormProvider({ paymentReceiveId, ...props }) {
     isFetching: isCustomersFetching,
   } = useCustomers();
 
-  // Fetches customer receivable invoices.
-  const {
-    data: dueInvoices,
-    isLoading: isDueInvoicesLoading,
-    isFetching: isDueInvoicesFetching,
-  } = useDueInvoices(paymentCustomerId, {
-    enabled: !!paymentCustomerId,
-  });
-
   // Detarmines whether the new mode.
   const isNewMode = !paymentReceiveId;
 
@@ -58,24 +52,20 @@ function PaymentReceiveFormProvider({ paymentReceiveId, ...props }) {
 
   // Provider payload.
   const provider = {
-    paymentReceive,
+    paymentReceiveId,
+    paymentReceiveEditPage,
+    paymentEntriesEditPage,
     accounts,
     customers,
-    dueInvoices,
 
     isPaymentLoading,
     isPaymentFetching,
     isAccountsFetching,
     isCustomersFetching,
-    isDueInvoicesLoading,
-    isDueInvoicesFetching,
-
-    paymentCustomerId,
-    submitPayload,
     isNewMode,
-    
+
+    submitPayload,
     setSubmitPayload,
-    setPaymentCustomerId,
 
     editPaymentReceiveMutate,
     createPaymentReceiveMutate,

@@ -91,8 +91,15 @@ export function usePaymentReceivesColumns() {
         id: 'customer_id',
         Header: formatMessage({ id: 'customer_name' }),
         accessor: 'customer.display_name',
-        width: 140,
+        width: 160,
         className: 'customer_id',
+      },
+      {
+        id: 'amount',
+        Header: formatMessage({ id: 'amount' }),
+        accessor: AmountAccessor,
+        width: 120,
+        className: 'amount',
       },
       {
         id: 'payment_receive_no',
@@ -101,13 +108,6 @@ export function usePaymentReceivesColumns() {
           row.payment_receive_no ? `#${row.payment_receive_no}` : null,
         width: 140,
         className: 'payment_receive_no',
-      },
-      {
-        id: 'amount',
-        Header: formatMessage({ id: 'amount' }),
-        accessor: AmountAccessor,
-        width: 140,
-        className: 'amount',
       },
       {
         id: 'reference_no',

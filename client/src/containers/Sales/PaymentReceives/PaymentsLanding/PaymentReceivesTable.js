@@ -1,10 +1,8 @@
 import React, { useCallback } from 'react';
-import classNames from 'classnames';
-
-import { compose } from 'utils';
 import { useHistory } from 'react-router-dom';
 
-import { CLASSES } from 'common/classes';
+import { compose } from 'utils';
+
 import PaymentReceivesEmptyStatus from './PaymentReceivesEmptyStatus';
 import { DataTable } from 'components';
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';

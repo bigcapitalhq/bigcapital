@@ -678,7 +678,7 @@ export default {
   deposit_to: 'Deposit to',
   edit_payment_receive: 'Edit Payment Receive',
   delete_payment_receive: 'Delete Payment Receive',
-  payment_Receives_list: 'Payment Receives List',
+  payment_receives_list: 'Payment Receives List',
   payment_receive: 'Payment Receive',
   new_payment_receive: 'New Payment Receive',
   payment_receives: 'Payment Receives',
@@ -965,5 +965,7 @@ export default {
   running_balance: 'Running balance',
   payment_via_voucher: 'Payment via voucher',
   voucher_number: 'Voucher number',
-  voucher: 'Voucher'
+  voucher: 'Voucher',
+  payment_number_is_not_unique: 'Payment number is not unique.',
+  change_full_amount: 'Change full amount'
 };

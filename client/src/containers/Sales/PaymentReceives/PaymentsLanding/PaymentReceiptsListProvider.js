@@ -57,7 +57,7 @@ function PaymentReceivesListProvider({ query, ...props }) {
   return (
     <DashboardInsider
       loading={isViewsLoading || isFieldsLoading}
-      name={'payment-receives'}
+      name={'payment-receives-list'}
     >
       <PaymentReceivesListContext.Provider value={state} {...props} />
     </DashboardInsider>
