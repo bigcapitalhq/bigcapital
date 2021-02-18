@@ -16,7 +16,7 @@ const ExchangeRateFormDialogContent = lazy(() =>
  */
 function ExchangeRateFormDialog({
   dialogName,
-  payload = { action: '', id: null },
+  payload = { action: '', id: null , exchangeRate:"" },
   isOpen,
 }) {
   return (
@@ -38,7 +38,7 @@ function ExchangeRateFormDialog({
         <ExchangeRateFormDialogContent
           dialogName={dialogName}
           action={payload.action}
-          exchangeRateId={payload.id}
+          exchangeRateId={payload.exchangeRate}
         />
       </DialogSuspense>
     </Dialog>
