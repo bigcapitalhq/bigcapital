@@ -19,3 +19,4 @@ export * from './paymentMades';
 export * from './settings';
 export * from './users';
 export * from './invite';
+export * from './exchangeRates';

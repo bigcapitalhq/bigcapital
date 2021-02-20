@@ -1,183 +1,75 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import {
-  Button,
-  Popover,
-  Menu,
-  MenuItem,
-  Position,
-  Intent,
-} from '@blueprintjs/core';
-import { FormattedMessage as T, useIntl } from 'react-intl';
-import moment from 'moment';
-import classNames from 'classnames';
+import React from 'react';
 
-import { CLASSES } from 'common/classes';
+import { DataTable } from 'components';
+import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
 
-import { DataTable, Icon, Money } from 'components';
-import LoadingIndicator from 'components/LoadingIndicator';
+import { useExchangeRatesContext } from './ExchangeRatesProvider';
+import { useExchangeRatesTableColumns, ActionMenuList } from './components';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
-import withExchangeRatesActions from 'containers/ExchangeRates/withExchangeRatesActions';
-import withExchangeRates from 'containers/ExchangeRates/withExchangeRates';
+import withAlertActions from 'containers/Alert/withAlertActions';
 
 import { compose } from 'utils';
 
+/**
+ * Exchange rates table.
+ */
 function ExchangeRateTable({
-  // #withExchangeRates
-  exchangeRatesList,
-  exchangeRatesLoading,
-  exchangeRatesPageination,
+  // #ownProps
+  tableProps,
+
   // #withDialogActions.
   openDialog,
 
-  // own properties
-  loading,
-  onFetchData,
-  onDeleteExchangeRate,
-  onSelectedRowsChange,
+  // #withAlertActions
+  openAlert,
 }) {
-  const [initialMount, setInitialMount] = useState(false);
-  const { formatMessage } = useIntl();
+  const {
+    isExchangeRatesFetching,
+    isExchangeRatesLoading,
 
-  const handelEditExchangeRate = useCallback(
-    (exchange_rate) => () => {
-      openDialog('exchangeRate-form', { action: 'edit', id: exchange_rate.id });
-    },
-    [openDialog],
-  );
+    exchangesRates,
+    pagination,
+  } = useExchangeRatesContext();
 
-  const handleDeleteExchangeRate = (exchange_rate) => () => {
-    onDeleteExchangeRate(exchange_rate);
+  // Table columns.
+  const columns = useExchangeRatesTableColumns();
+
+  // Handle delete exchange rate.
+  const handleDeleteExchangeRate = ({ id }) => {
+    openAlert('exchange-rate-delete', { exchangeRateId: id });
   };
 
-  const actionMenuList = useCallback(
-    (ExchangeRate) => (
-      <Menu>
-        <MenuItem
-          icon={<Icon icon="pen-18" />}
-          text={formatMessage({ id: 'edit_exchange_rate' })}
-          onClick={handelEditExchangeRate(ExchangeRate)}
-        />
-        <MenuItem
-          text={formatMessage({ id: 'delete_exchange_rate' })}
-          intent={Intent.DANGER}
-          onClick={handleDeleteExchangeRate(ExchangeRate)}
-          icon={<Icon icon="trash-16" iconSize={16} />}
-        />
-      </Menu>
-    ),
-    [handelEditExchangeRate, handleDeleteExchangeRate, formatMessage],
-  );
-
-  const rowContextMenu = (cell) => {
-    return actionMenuList(cell.row.original);
+  // Handle Edit exchange rate.
+  const handelEditExchangeRate = (exchangeRate) => {
+    openDialog('exchangeRate-form', {
+      action: 'edit',
+      exchangeRate: exchangeRate,
+    });
   };
-
-  const columns = useMemo(
-    () => [
-      {
-        id: 'date',
-        Header: formatMessage({ id: 'date' }),
-        accessor: (r) => moment(r.date).format('YYYY MMM DD'),
-        width: 150,
-      },
-      {
-        id: 'currency_code',
-        Header: formatMessage({ id: 'currency_code' }),
-        accessor: 'currency_code',
-        className: 'currency_code',
-        width: 150,
-      },
-      {
-        id: 'exchange_rate',
-        Header: formatMessage({ id: 'exchange_rate' }),
-        accessor: (r) => (
-          <Money
-            amount={r.exchange_rate}
-            currency={r.currency_code}
-          />
-        ),
-        className: 'exchange_rate',
-        width: 150,
-      },
-      {
-        id: 'actions',
-        Header: '',
-        Cell: ({ cell }) => (
-          <Popover
-            content={actionMenuList(cell.row.original)}
-            position={Position.RIGHT_TOP}
-          >
-            <Button icon={<Icon icon="more-h-16" iconSize={16} />} />
-          </Popover>
-        ),
-        className: 'actions',
-        width: 50,
-      },
-    ],
-    [actionMenuList, formatMessage],
-  );
-
-  const selectionColumn = useMemo(
-    () => ({
-      minWidth: 42,
-      width: 42,
-      maxWidth: 42,
-    }),
-    [],
-  );
-
-  const handelFetchData = useCallback(
-    (...params) => {
-      onFetchData && onFetchData(...params);
-    },
-    [onFetchData],
-  );
-
-  const handelSelectedRowsChange = useCallback(
-    (selectRows) => {
-      onSelectedRowsChange &&
-        onSelectedRowsChange(selectRows.map((c) => c.original));
-    },
-    [onSelectedRowsChange],
-  );
 
   return (
-    <div className={classNames(CLASSES.DASHBOARD_DATATABLE)}>
-      <LoadingIndicator loading={loading} mount={false}>
-        <DataTable
-          columns={columns}
-          data={exchangeRatesList}
-          onFetchData={handelFetchData}
-          loading={exchangeRatesLoading && !initialMount}
-          manualSortBy={true}
-          selectionColumn={selectionColumn}
-          expandable={true}
-          treeGraph={true}
-          onSelectedRowsChange={handelSelectedRowsChange}
-          rowContextMenu={rowContextMenu}
-          pagination={true}
-          pagesCount={exchangeRatesPageination.pagesCount}
-          initialPageSize={exchangeRatesPageination.pageSize}
-          initialPageIndex={exchangeRatesPageination.page - 1}
-        />
-      </LoadingIndicator>
-    </div>
+    <DataTable
+      columns={columns}
+      data={exchangesRates}
+      noInitialFetch={true}
+      loading={isExchangeRatesLoading}
+      headerLoading={isExchangeRatesLoading}
+      progressBarLoading={isExchangeRatesFetching}
+      selectionColumn={true}
+      manualSortBy={true}
+      expandable={true}
+      sticky={true}
+      // pagination={true}
+      TableLoadingRenderer={TableSkeletonRows}
+      payload={{
+        onDeleteExchangeRate: handleDeleteExchangeRate,
+        onEditExchangeRate: handelEditExchangeRate,
+      }}
+      ContextMenu={ActionMenuList}
+      {...tableProps}
+    />
   );
 }
 
-export default compose(
-  withDialogActions,
-  withExchangeRatesActions,
-  withExchangeRates(
-    ({
-      exchangeRatesList,
-      exchangeRatesLoading,
-      exchangeRatesPageination,
-    }) => ({
-      exchangeRatesList,
-      exchangeRatesLoading,
-      exchangeRatesPageination,
-    }),
-  ),
-)(ExchangeRateTable);
+export default compose(withDialogActions, withAlertActions)(ExchangeRateTable);

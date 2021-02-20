@@ -167,6 +167,7 @@ export default [
     path: `/exchange-rates`,
     component: lazy(() => import('containers/ExchangeRates/ExchangeRatesList')),
     breadcrumb: 'Exchange Rates',
+    pageTitle: formatMessage({ id: 'exchange_rates_list' }),
   },
   // Expenses.
   {
