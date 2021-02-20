@@ -2,7 +2,6 @@ import moment from 'moment';
 import _ from 'lodash';
 import { Intent } from '@blueprintjs/core';
 import Currency from 'js-money/lib/currency';
-import PProgress from 'p-progress';
 import accounting from 'accounting';
 import deepMapKeys from 'deep-map-keys';
 import { createSelectorCreator, defaultMemoize } from 'reselect';
@@ -207,20 +206,20 @@ export const saveFilesInAsync = (files, actionCb, extraTasks) => {
   files.forEach((file) => {
     const formData = new FormData();
     formData.append('attachment', file.file);
-    const oper = new PProgress((resolve, reject, progress) => {
-      actionCb(formData, file, (requestProgress) => {
-        progress(requestProgress);
-      })
-        .then((data) => {
-          resolve(data);
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    });
-    opers.push(oper);
+    // const oper = new PProgress((resolve, reject, progress) => {
+    //   actionCb(formData, file, (requestProgress) => {
+    //     progress(requestProgress);
+    //   })
+    //     .then((data) => {
+    //       resolve(data);
+    //     })
+    //     .catch((error) => {
+    //       reject(error);
+    //     });
+    // });
+    // opers.push(oper);
   });
-  return PProgress.all(opers);
+  // return PProgress.all(opers);
 };
 
 export const firstLettersArgs = (...args) => {

@@ -1,14 +1,14 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import BodyClassName from 'react-body-classname';
 import { Redirect } from 'react-router-dom';
-import withAuthentication from 'containers/Authentication/withAuthentication';
-import { compose } from 'utils';
+import { useIsAuthenticated } from 'hooks/state';
 
-function PrivateRoute({ component: Component, isAuthorized = false, ...rest }) {
+export default function PrivateRoute({ component: Component, ...rest }) {
+  const isAuthenticated = useIsAuthenticated();
+
   return (
     <BodyClassName className={''}>
-      {isAuthorized ? (
+      {isAuthenticated ? (
         <Component />
       ) : (
         <Redirect
@@ -20,7 +20,3 @@ function PrivateRoute({ component: Component, isAuthorized = false, ...rest }) {
     </BodyClassName>
   );
 }
-
-export default compose(
-  withAuthentication(({ isAuthorized }) => ({ isAuthorized })),
-)(PrivateRoute);

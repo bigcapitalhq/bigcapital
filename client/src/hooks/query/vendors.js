@@ -1,15 +1,17 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { defaultTo } from 'lodash';
-import ApiService from 'services/ApiService';
 import { transformPagination } from 'utils';
+import useApiRequest from '../useRequest';
 
 /**
  * Retrieve vendors list.
  */
 export function useVendors(query, props) {
+  const apiRequest = useApiRequest();
+
   const states = useQuery(
     ['VENDORS', query],
-    () => ApiService.get(`vendors`, { params: query }),
+    () => apiRequest.get(`vendors`, { params: query }),
     {
       select: (res) => ({
         vendors: res.data.vendors,
@@ -35,9 +37,10 @@ export function useVendors(query, props) {
  */
 export function useEditVendor(props) {
   const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
 
   return useMutation(
-    ([id, values]) => ApiService.post(`vendors/${id}`, values),
+    ([id, values]) => apiRequest.post(`vendors/${id}`, values),
     {
       onSuccess: () => {
         queryClient.invalidateQueries('VENDORS');
@@ -53,9 +56,10 @@ export function useEditVendor(props) {
  */
 export function useDeleteVendor(props) {
   const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
 
   return useMutation(
-    (id) => ApiService.delete(`vendors/${id}`),
+    (id) => apiRequest.delete(`vendors/${id}`),
     {
       onSuccess: () => {
         queryClient.invalidateQueries('VENDORS');
@@ -70,9 +74,10 @@ export function useDeleteVendor(props) {
  */
 export function useCreateVendor(props) {
   const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
 
   return useMutation(
-    (values) => ApiService.post('vendors', values),
+    (values) => apiRequest.post('vendors', values),
     {
       onSuccess: () => {
         queryClient.invalidateQueries('VENDORS');
@@ -86,9 +91,11 @@ export function useCreateVendor(props) {
  * Retrieve vendor details.
  */
 export function useVendor(id, props) {
+  const apiRequest = useApiRequest();
+
   return useQuery(
     ['VENDOR', id],
-    () => ApiService.get(`vendors/${id}`),
+    () => apiRequest.get(`vendors/${id}`),
     {
       select: (res) => res.data.vendor,
       ...props

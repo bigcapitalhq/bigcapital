@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { defaultTo } from 'lodash';
-import ApiService from 'services/ApiService';
+import useApiRequest from '../useRequest';
 
 // Transform the account.
 const transformAccount = (response) => {
@@ -11,9 +11,11 @@ const transformAccount = (response) => {
  * Retrieve accounts list.
  */
 export function useAccounts(query, props) {
+  const apiRequest = useApiRequest();
+
   const states = useQuery(
     ['ACCOUNTS', query],
-    () => ApiService.get('accounts', { params: query }),
+    () => apiRequest.get('accounts', { params: query }),
     {
       select: (response) => {
         return response.data.accounts;
@@ -32,9 +34,11 @@ export function useAccounts(query, props) {
  * @param {number} id -
  */
 export function useAccount(id, props) {
+  const apiRequest = useApiRequest();
+
   const states = useQuery(
     ['ACCOUNT', id],
-    () => ApiService.get(`accounts/${id}`).then(transformAccount),
+    () => apiRequest.get(`accounts/${id}`).then(transformAccount),
     props,
   );
   return {
@@ -47,9 +51,11 @@ export function useAccount(id, props) {
  * Retrieve accounts types list.
  */
 export function useAccountsTypes(props) {
+  const apiRequest = useApiRequest();
+
   const states = useQuery(
     ['ACCOUNTS_TYPES'],
-    () => ApiService.get('account_types'),
+    () => apiRequest.get('account_types'),
     {
       select: (res) => res.data.account_types,
       ...props,
@@ -66,8 +72,9 @@ export function useAccountsTypes(props) {
  */
 export function useCreateAccount(props) {
   const client = useQueryClient();
+  const apiRequest = useApiRequest();
 
-  return useMutation((values) => ApiService.post('accounts', values), {
+  return useMutation((values) => apiRequest.post('accounts', values), {
     onSuccess: () => {
       client.invalidateQueries('ACCOUNTS');
     },
@@ -80,9 +87,10 @@ export function useCreateAccount(props) {
  */
 export function useEditAccount(props) {
   const query = useQueryClient();
+  const apiRequest = useApiRequest();
 
   return useMutation(
-    ([id,values]) => ApiService.post(`accounts/${id}`, values),
+    ([id, values]) => apiRequest.post(`accounts/${id}`, values),
     {
       onSuccess: () => {
         query.invalidateQueries('ACCOUNTS');
@@ -97,8 +105,9 @@ export function useEditAccount(props) {
  */
 export function useDeleteAccount(props) {
   const query = useQueryClient();
+  const apiRequest = useApiRequest();
 
-  return useMutation((id) => ApiService.delete(`accounts/${id}`), {
+  return useMutation((id) => apiRequest.delete(`accounts/${id}`), {
     onSuccess: () => {
       query.invalidateQueries('ACCOUNTS');
     },
@@ -111,8 +120,9 @@ export function useDeleteAccount(props) {
  */
 export function useActivateAccount(props) {
   const query = useQueryClient();
+  const apiRequest = useApiRequest();
 
-  return useMutation((id) => ApiService.post(`accounts/${id}/activate`), {
+  return useMutation((id) => apiRequest.post(`accounts/${id}/activate`), {
     onSuccess: () => {
       query.invalidateQueries('ACCOUNTS');
     },
@@ -125,8 +135,9 @@ export function useActivateAccount(props) {
  */
 export function useInactivateAccount(props) {
   const query = useQueryClient();
+  const apiRequest = useApiRequest();
 
-  return useMutation((id) => ApiService.post(`accounts/${id}/inactivate`), {
+  return useMutation((id) => apiRequest.post(`accounts/${id}/inactivate`), {
     onSuccess: () => {
       query.invalidateQueries('ACCOUNTS');
     },

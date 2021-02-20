@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { defaultTo } from 'lodash';
-import ApiService from 'services/ApiService';
 import { transformPagination } from 'utils';
+import useApiRequest from '../useRequest';
 
 const invalidateQueries = (queryClient) => {
   queryClient.invalidateQueries('INVENTORY_ADJUSTMENTS');
@@ -15,9 +15,10 @@ const invalidateQueries = (queryClient) => {
  */
 export function useCreateInventoryAdjustment(props) {
   const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
 
   return useMutation(
-    (values) => ApiService.post('inventory_adjustments/quick', values),
+    (values) => apiRequest.post('inventory_adjustments/quick', values),
     {
       onSuccess: () => {
         invalidateQueries(queryClient)
@@ -32,9 +33,10 @@ export function useCreateInventoryAdjustment(props) {
  */
 export function useDeleteInventoryAdjustment(props) {
   const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
 
   return useMutation(
-    (id) => ApiService.delete(`inventory_adjustments/${id}`),
+    (id) => apiRequest.delete(`inventory_adjustments/${id}`),
     {
       onSuccess: () => {
         invalidateQueries(queryClient)
@@ -55,9 +57,11 @@ const inventoryAdjustmentsTransformer = (response) => {
  * Retrieve inventory adjustment list with pagination meta.
  */
 export function useInventoryAdjustments(query, props) {
+  const apiRequest = useApiRequest();
+
   const states = useQuery(
     ['INVENTORY_ADJUSTMENTS', query],
-    () => ApiService.get('inventory_adjustments', { params: query })  
+    () => apiRequest.get('inventory_adjustments', { params: query })  
       .then(inventoryAdjustmentsTransformer),
     props,
   );

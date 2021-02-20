@@ -4,9 +4,8 @@ import BodyClassName from 'react-body-classname';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import authenticationRoutes from 'routes/authentication';
 import { FormattedMessage as T } from 'react-intl';
-import withAuthentication from 'containers/Authentication/withAuthentication';
-import { compose } from 'utils';
 import Icon from 'components/Icon';
+import { useIsAuthenticated } from 'hooks/state';
 
 import 'style/pages/Authentication/Auth.scss'
 
@@ -14,14 +13,15 @@ function PageFade(props) {
   return <CSSTransition {...props} classNames="authTransition" timeout={500} />;
 }
 
-function AuthenticationWrapper({ isAuthorized = false, ...rest }) {
+export default function AuthenticationWrapper({ ...rest }) {
   const to = { pathname: '/homepage' };
   const location = useLocation();
+  const isAuthenticated = useIsAuthenticated();
   const locationKey = location.pathname;
 
   return (
     <>
-      {isAuthorized ? (
+      {isAuthenticated ? (
         <Redirect to={to} />
       ) : (
         <BodyClassName className={'authentication'}>
@@ -61,7 +61,3 @@ function AuthenticationWrapper({ isAuthorized = false, ...rest }) {
     </>
   );
 }
-
-export default compose(
-  withAuthentication(({ isAuthorized }) => ({ isAuthorized })),
-)(AuthenticationWrapper);

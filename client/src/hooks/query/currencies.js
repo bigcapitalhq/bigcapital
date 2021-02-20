@@ -1,22 +1,20 @@
 import { useMutation, useQueryClient, useQuery } from 'react-query';
 import { defaultTo } from 'lodash';
-import ApiService from 'services/ApiService';
+import useApiRequest from '../useRequest';
 
 /**
  * Create a new currency.
  */
 export function useCreateCurrency(props) {
   const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
 
-  return useMutation(
-    (values) => ApiService.post('currencies', values),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries('CURRENCIES');
-      },
-      ...props,
-    }
-  );
+  return useMutation((values) => apiRequest.post('currencies', values), {
+    onSuccess: () => {
+      queryClient.invalidateQueries('CURRENCIES');
+    },
+    ...props,
+  });
 }
 
 /**
@@ -24,15 +22,17 @@ export function useCreateCurrency(props) {
  */
 export function useEditCurrency(props) {
   const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
 
-  return useMutation(([currencyCode, values]) =>
-    ApiService.post(`currencies/${currencyCode}`, values),
+  return useMutation(
+    ([currencyCode, values]) =>
+      apiRequest.post(`currencies/${currencyCode}`, values),
     {
       onSuccess: () => {
         queryClient.invalidateQueries('CURRENCIES');
       },
       ...props,
-    }
+    },
   );
 }
 
@@ -41,15 +41,16 @@ export function useEditCurrency(props) {
  */
 export function useDeleteCurrency(props) {
   const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
 
-  return useMutation((currencyCode) =>
-    ApiService.delete(`currencies/${currencyCode}`),
+  return useMutation(
+    (currencyCode) => apiRequest.delete(`currencies/${currencyCode}`),
     {
       onSuccess: () => {
         queryClient.invalidateQueries('CURRENCIES');
       },
-      ...props
-    }
+      ...props,
+    },
   );
 }
 
@@ -57,14 +58,16 @@ export function useDeleteCurrency(props) {
  * Retrieve the currencies list.
  */
 export function useCurrencies(props) {
+  const apiRequest = useApiRequest();
+
   const states = useQuery(
     ['CURRENCIES'],
-    () => ApiService.get('currencies').then(res => res.data.currencies),
+    () => apiRequest.get('currencies').then((res) => res.data.currencies),
     props,
   );
 
   return {
     ...states,
     data: defaultTo(states.data, []),
-  }
+  };
 }

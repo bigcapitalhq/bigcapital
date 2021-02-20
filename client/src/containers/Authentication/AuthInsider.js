@@ -1,7 +1,9 @@
 import React from 'react';
-import Icon from 'components/Icon';
 import AuthCopyright from './AuthCopyright';
 
+/**
+ * Authentication insider page.
+ */
 export default function AuthInsider({
   logo = true,
   copyright = true,

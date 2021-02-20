@@ -1,14 +1,9 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { Icon, For } from 'components';
 import { FormattedMessage as T } from 'react-intl';
 
-import withAuthenticationActions from 'containers/Authentication/withAuthenticationActions';
-import withAuthentication from 'containers/Authentication/withAuthentication';
-
 import footerLinks from 'config/footerLinks';
-
-import { compose } from 'utils';
-
+import { useAuthActions, useAuthOrganizationId } from 'hooks/state';
 
 function FooterLinkItem({ title, link }) {
   return (
@@ -21,16 +16,13 @@ function FooterLinkItem({ title, link }) {
 /**
  * Wizard setup left section.
  */
-function SetupLeftSection({
-  // #withAuthenticationActions
-  requestLogout,
+export default function SetupLeftSection() {
+  const { setLogout } = useAuthActions();
+  const organizationId = useAuthOrganizationId();
 
-  // #withAuthentication
-  currentOrganizationId
-}) {
-  const onClickLogout = useCallback(() => {
-    requestLogout();
-  }, [requestLogout]);
+  const onClickLogout = () => {
+    setLogout();
+  };
 
   return (
     <section className={'setup-page__left-section'}>
@@ -50,7 +42,7 @@ function SetupLeftSection({
 
         <div className={'content__organization'}>
           <span class="organization-id">
-            Oragnization ID: <span class="id">{ currentOrganizationId }</span>,
+            Oragnization ID: <span class="id">{ organizationId }</span>,
           </span>
           <br />
           <span class="signout">
@@ -71,8 +63,3 @@ function SetupLeftSection({
     </section>
   )
 }
-
-export default compose(
-  withAuthenticationActions,
-  withAuthentication(({ currentOrganizationId }) => ({ currentOrganizationId })),
-)(SetupLeftSection);

@@ -1,15 +1,16 @@
 import { useQueryClient, useQuery, useMutation } from 'react-query';
 import { defaultTo } from 'lodash';
-import ApiService from 'services/ApiService';
 import { transformPagination } from 'utils';
+import useApiRequest from '../useRequest';
 
 /**
  * Creates a new sale invoice.
  */
 export function useCreateBill(props) {
   const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
 
-  return useMutation((values) => ApiService.post('purchases/bills', values), {
+  return useMutation((values) => apiRequest.post('purchases/bills', values), {
     onSuccess: () => {
       queryClient.invalidateQueries('BILLS');
       queryClient.invalidateQueries('BILL');
@@ -23,9 +24,10 @@ export function useCreateBill(props) {
  */
 export function useEditBill(props) {
   const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
 
   return useMutation(
-    ([id, values]) => ApiService.post(`purchases/bills/${id}`, values),
+    ([id, values]) => apiRequest.post(`purchases/bills/${id}`, values),
     {
       onSuccess: () => {
         queryClient.invalidateQueries('BILLS');
@@ -41,8 +43,9 @@ export function useEditBill(props) {
  */
 export function useDeleteBill(props) {
   const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
 
-  return useMutation((id) => ApiService.delete(`purchases/bills/${id}`), {
+  return useMutation((id) => apiRequest.delete(`purchases/bills/${id}`), {
     onSuccess: () => {
       queryClient.invalidateQueries('BILLS');
       queryClient.invalidateQueries('BILL');
@@ -55,10 +58,12 @@ export function useDeleteBill(props) {
  * Retrieve sale invoices list with pagination meta.
  */
 export function useBills(query, props) {
+  const apiRequest = useApiRequest();
+
   const states = useQuery(
     ['BILLS', query],
     () =>
-      ApiService.get('purchases/bills', { params: query }),
+      apiRequest.get('purchases/bills', { params: query }),
     {
       select: (response) => ({
         bills: response.data.bills,
@@ -88,9 +93,11 @@ export function useBills(query, props) {
  * @param {number} id - Bill id.
  */
 export function useBill(id, props) {
+  const apiRequest = useApiRequest();
+
   const states = useQuery(
     ['BILL', id],
-    () => ApiService.get(`/purchases/bills/${id}`),
+    () => apiRequest.get(`/purchases/bills/${id}`),
     {
       select: (res) => res.data.bill,
       ...props,
@@ -108,9 +115,10 @@ export function useBill(id, props) {
  */
 export function useOpenBill(props) {
   const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
 
   return useMutation(
-    (id) => ApiService.delete(`purchases/bills/${id}/open`),
+    (id) => apiRequest.delete(`purchases/bills/${id}/open`),
     {
       onSuccess: () => {
         queryClient.invalidateQueries('BILLS');
@@ -125,10 +133,12 @@ export function useOpenBill(props) {
  * @param {number} vendorId -
  */
 export function useDueBills(vendorId, props) {
+  const apiRequest = useApiRequest();
+
   const states = useQuery(
     ['BILLS_DUE', vendorId],
     () =>
-      ApiService.get(`purchases/bills/due`, {
+      apiRequest.get(`purchases/bills/due`, {
         params: { vendor_id: vendorId },
       }),
     {

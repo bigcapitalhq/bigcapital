@@ -1,40 +1,31 @@
 import React, { useMemo } from 'react';
-import * as Yup from 'yup';
-import { useFormik } from 'formik';
-
+import { Formik } from 'formik';
 import {
-  Button,
-  InputGroup,
   Intent,
-  FormGroup,
   Position,
 } from '@blueprintjs/core';
 import { Link, useParams, useHistory } from 'react-router-dom';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 
+import { useAuthResetPassword } from 'hooks/query';
+
 import AppToaster from 'components/AppToaster';
-import ErrorMessage from 'components/ErrorMessage';
 import AuthInsider from 'containers/Authentication/AuthInsider';
-import withAuthenticationActions from './withAuthenticationActions';
 
-import { compose } from 'utils';
-
-function ResetPassword({ requestResetPassword }) {
+import ResetPasswordForm from './ResetPasswordForm';
+import { ResetPasswordSchema } from './utils';
+/**
+ * Reset password page.
+ */
+export default function ResetPassword() {
   const { formatMessage } = useIntl();
   const { token } = useParams();
   const history = useHistory();
 
-  const ValidationSchema = Yup.object().shape({
-    password: Yup.string()
-      .min(4)
-      .required()
-      .label(formatMessage({ id: 'password' })),
-    confirm_password: Yup.string()
-      .oneOf([Yup.ref('password'), null])
-      .required()
-      .label(formatMessage({ id: 'confirm_password' })),
-  });
+  // Authentication reset password.
+  const { mutateAsync: authResetPasswordMutate } = useAuthResetPassword();
 
+  // Initial values of the form.
   const initialValues = useMemo(
     () => ({
       password: '',
@@ -43,42 +34,30 @@ function ResetPassword({ requestResetPassword }) {
     [],
   );
 
-  const {
-    touched,
-    errors,
-    handleSubmit,
-    getFieldProps,
-    isSubmitting,
-  } = useFormik({
-    enableReinitialize: true,
-    validationSchema: ValidationSchema,
-    initialValues: {
-      ...initialValues,
-    },
-    onSubmit: (values, { setSubmitting }) => {
-      requestResetPassword(values, token)
-        .then((response) => {
+  // Handle the form submitting.
+  const handleSubmit = (values, { setSubmitting }) => {
+    authResetPasswordMutate([token, values])
+      .then((response) => {
+        AppToaster.show({
+          message: formatMessage('password_successfully_updated'),
+          intent: Intent.DANGER,
+          position: Position.BOTTOM,
+        });
+        history.push('/auth/login');
+        setSubmitting(false);
+      })
+      .catch(({ response: { data: { errors } } }) => {
+        if (errors.find((e) => e.type === 'TOKEN_INVALID')) {
           AppToaster.show({
-            message: formatMessage('password_successfully_updated'),
+            message: formatMessage({ id: 'an_unexpected_error_occurred' }),
             intent: Intent.DANGER,
             position: Position.BOTTOM,
           });
           history.push('/auth/login');
-          setSubmitting(false);
-        })
-        .catch((errors) => {
-          if (errors.find((e) => e.type === 'TOKEN_INVALID')) {
-            AppToaster.show({
-              message: formatMessage('an_unexpected_error_occurred'),
-              intent: Intent.DANGER,
-              position: Position.BOTTOM,
-            });
-            history.push('/auth/login');
-          }
-          setSubmitting(false);
-        });
-    },
-  });
+        }
+        setSubmitting(false);
+      });
+  };
 
   return (
     <AuthInsider>
@@ -93,66 +72,13 @@ function ResetPassword({ requestResetPassword }) {
           </Link>
         </div>
 
-        <form onSubmit={handleSubmit}>
-          <FormGroup
-            label={<T id={'new_password'} />}
-            intent={errors.password && touched.password && Intent.DANGER}
-            helperText={
-              <ErrorMessage name={'password'} {...{ errors, touched }} />
-            }
-            className={'form-group--password'}
-          >
-            <InputGroup
-              lang={true}
-              type={'password'}
-              intent={errors.password && touched.password && Intent.DANGER}
-              {...getFieldProps('password')}
-            />
-          </FormGroup>
-
-          <FormGroup
-            label={<T id={'new_password'} />}
-            labelInfo={'(again):'}
-            intent={
-              errors.confirm_password &&
-              touched.confirm_password &&
-              Intent.DANGER
-            }
-            helperText={
-              <ErrorMessage
-                name={'confirm_password'}
-                {...{ errors, touched }}
-              />
-            }
-            className={'form-group--confirm-password'}
-          >
-            <InputGroup
-              lang={true}
-              type={'password'}
-              intent={
-                errors.confirm_password &&
-                touched.confirm_password &&
-                Intent.DANGER
-              }
-              {...getFieldProps('confirm_password')}
-            />
-          </FormGroup>
-
-          <div className={'authentication-page__submit-button-wrap'}>
-            <Button
-              fill={true}
-              className={'btn-new'}
-              intent={Intent.PRIMARY}
-              type="submit"
-              loading={isSubmitting}
-            >
-              <T id={'submit'} />
-            </Button>
-          </div>
-        </form>
+        <Formik
+          initialValues={initialValues}
+          validationSchema={ResetPasswordSchema}
+          onSubmit={handleSubmit}
+          component={ResetPasswordForm}
+        />
       </div>
     </AuthInsider>
   );
 }
-
-export default compose(withAuthenticationActions)(ResetPassword);

@@ -1,15 +1,16 @@
 import { defaultTo } from 'lodash';
 import { useQueryClient, useQuery, useMutation } from 'react-query';
-import ApiService from 'services/ApiService';
 import { transformPagination } from 'utils';
+import useApiRequest from '../useRequest';
 
 /**
  * Creates a new sale invoice.
  */
 export function useCreateInvoice(props) {
   const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
 
-  return useMutation((values) => ApiService.post('sales/invoices', values), {
+  return useMutation((values) => apiRequest.post('sales/invoices', values), {
     onSuccess: () => {
       queryClient.invalidateQueries('SALE_INVOICES');
     },
@@ -22,9 +23,10 @@ export function useCreateInvoice(props) {
  */
 export function useEditInvoice(props) {
   const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
 
   return useMutation(
-    ([id, values]) => ApiService.post(`sales/invoices/${id}`, values),
+    ([id, values]) => apiRequest.post(`sales/invoices/${id}`, values),
     {
       onSuccess: (res, id) => {
         queryClient.invalidateQueries('SALE_INVOICES');
@@ -40,8 +42,9 @@ export function useEditInvoice(props) {
  */
 export function useDeleteInvoice(props) {
   const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
 
-  return useMutation((id) => ApiService.delete(`sales/invoices/${id}`), {
+  return useMutation((id) => apiRequest.delete(`sales/invoices/${id}`), {
     onSuccess: (res, id) => {
       queryClient.invalidateQueries('SALE_INVOICES');
       queryClient.invalidateQueries(['SALE_INVOICE', id]);
@@ -54,9 +57,11 @@ export function useDeleteInvoice(props) {
  * Retrieve sale invoices list with pagination meta.
  */
 export function useInvoices(query, props) {
+  const apiRequest = useApiRequest();
+
   const states = useQuery(
     ['SALE_INVOICES', query],
-    () => ApiService.get('sales/invoices', { params: query }),
+    () => apiRequest.get('sales/invoices', { params: query }),
     {
       select: (res) => ({
         invoices: res.data.sales_invoices,
@@ -86,8 +91,9 @@ export function useInvoices(query, props) {
  */
 export function useDeliverInvoice(props) {
   const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
 
-  return useMutation((id) => ApiService.post(`sales/invoices/${id}/deliver`), {
+  return useMutation((id) => apiRequest.post(`sales/invoices/${id}/deliver`), {
     onSuccess: (res, id) => {
       queryClient.invalidateQueries('SALE_INVOICES');
       queryClient.invalidateQueries(['SALE_INVOICE', id]);
@@ -100,9 +106,11 @@ export function useDeliverInvoice(props) {
  * Retrieve the sale invoice details.
  */
 export function useInvoice(id, props) {
+  const apiRequest = useApiRequest();
+
   const states = useQuery(
     ['SALE_INVOICE', id],
-    () => ApiService.get(`sales/invoices/${id}`),
+    () => apiRequest.get(`sales/invoices/${id}`),
     {
       select: (res) => res.data.sale_invoice,
       ...props,
@@ -120,10 +128,12 @@ export function useInvoice(id, props) {
  * @param {number} customerId - Customer id.
  */
 export function useDueInvoices(customerId, props) {
+  const apiRequest = useApiRequest();
+
   const states = useQuery(
     ['SALE_INVOICE_DUE', customerId],
     () =>
-      ApiService.get(`sales/invoices/payable`, {
+      apiRequest.get(`sales/invoices/payable`, {
         params: { customer_id: customerId },
       }),
     {
