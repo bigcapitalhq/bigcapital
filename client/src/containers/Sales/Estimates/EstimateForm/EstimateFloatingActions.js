@@ -12,6 +12,7 @@ import {
 import { FormattedMessage as T } from 'react-intl';
 import { CLASSES } from 'common/classes';
 import classNames from 'classnames';
+import { useHistory } from 'react-router-dom';
 import { useFormikContext } from 'formik';
 import { If, Icon } from 'components';
 import { useEstimateFormContext } from './EstimateFormProvider';
@@ -20,6 +21,7 @@ import { useEstimateFormContext } from './EstimateFormProvider';
  * Estimate floating actions bar.
  */
 export default function EstimateFloatingActions() {
+  const history = useHistory();
   const { resetForm, submitForm, isSubmitting } = useFormikContext();
 
   // Estimate form context.
@@ -62,6 +64,7 @@ export default function EstimateFloatingActions() {
   };
 
   const handleCancelBtnClick = (event) => {
+    history.goBack();
     
   };
 
