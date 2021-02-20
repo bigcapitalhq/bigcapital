@@ -1,14 +1,15 @@
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import { defaultTo } from 'lodash';
-import ApiService from 'services/ApiService';
+import useApiRequest from '../useRequest';
 
 /**
  * Creates a new exchange rate.
  */
 export function useCreateExchangeRate(props) {
   const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
 
-  return useMutation((values) => ApiService.post('exchange_rates', values), {
+  return useMutation((values) => apiRequest.post('exchange_rates', values), {
     onSuccess: () => {
       queryClient.invalidateQueries('EXCHANGES_RATES');
     },
@@ -21,9 +22,10 @@ export function useCreateExchangeRate(props) {
  */
 export function useEdiExchangeRate(props) {
   const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
 
   return useMutation(
-    ([id, values]) => ApiService.post(`exchange_rates/${id}`, values),
+    ([id, values]) => apiRequest.post(`exchange_rates/${id}`, values),
     {
       onSuccess: () => {
         queryClient.invalidateQueries('EXCHANGES_RATES');
@@ -38,8 +40,9 @@ export function useEdiExchangeRate(props) {
  */
 export function useDeleteExchangeRate(props) {
   const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
 
-  return useMutation((id) => ApiService.delete(`exchange_rates/${id}`), {
+  return useMutation((id) => apiRequest.delete(`exchange_rates/${id}`), {
     onSuccess: () => {
       queryClient.invalidateQueries('EXCHANGES_RATES');
     },
@@ -59,10 +62,12 @@ const transformExchangesRates = (response) => {
  * Retrieve the exchange rate list.
  */
 export function useExchangeRates(query, props) {
+  const apiRequest = useApiRequest();
+
   const states = useQuery(
     ['EXCHANGES_RATES', query],
     () =>
-      ApiService.get('exchange_rates', { params: { query } }).then(
+      apiRequest.get('exchange_rates', { params: { query } }).then(
         transformExchangesRates,
       ),
     props,

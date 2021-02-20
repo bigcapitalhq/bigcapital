@@ -1,15 +1,17 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { defaultTo } from 'lodash';
-import ApiService from 'services/ApiService';
+import useApiRequest from '../useRequest';
 import { transformPagination, saveInvoke } from 'utils';
 
 /**
  * Retrieve accounts list.
  */
 export function usePaymentReceives(query, props) {
+  const apiRequest = useApiRequest();
+
   const states = useQuery(
     ['PAYMENT_RECEIVES', query],
-    () => ApiService.get('sales/payment_receives', { params: query }),
+    () => apiRequest.get('sales/payment_receives', { params: query }),
     {
       select: (res) => ({
         paymentReceives: res.data.payment_receives,
@@ -39,9 +41,10 @@ export function usePaymentReceives(query, props) {
  */
 export function useCreatePaymentReceive(props) {
   const client = useQueryClient();
+  const apiRequest = useApiRequest();
 
   return useMutation(
-    (values) => ApiService.post('sales/payment_receives', values),
+    (values) => apiRequest.post('sales/payment_receives', values),
     {
       onSuccess: (data, values) => {
         client.invalidateQueries('PAYMENT_RECEIVES');
@@ -61,9 +64,10 @@ export function useCreatePaymentReceive(props) {
  */
 export function useEditPaymentReceive(props) {
   const client = useQueryClient();
+  const apiRequest = useApiRequest();
 
   return useMutation(
-    ([id, values]) => ApiService.post(`sales/payment_receives/${id}`, values),
+    ([id, values]) => apiRequest.post(`sales/payment_receives/${id}`, values),
     {
       onSuccess: (data) => {
         client.invalidateQueries('PAYMENT_RECEIVES');
@@ -83,9 +87,10 @@ export function useEditPaymentReceive(props) {
  */
 export function useDeletePaymentReceive(props) {
   const client = useQueryClient();
+  const apiRequest = useApiRequest();
 
   return useMutation(
-    (id) => ApiService.delete(`sales/payment_receives/${id}`),
+    (id) => apiRequest.delete(`sales/payment_receives/${id}`),
     {
       onSuccess: (data, [id]) => {
         client.invalidateQueries('PAYMENT_RECEIVES');
@@ -105,9 +110,11 @@ export function useDeletePaymentReceive(props) {
  * @param {number} id - Payment receive.
  */
 export function usePaymentReceive(id, props) {
+  const apiRequest = useApiRequest();
+
   const states = useQuery(
     ['PAYMENT_RECEIVE', id],
-    () => ApiService.get(`sales/payment_receives/${id}`),
+    () => apiRequest.get(`sales/payment_receives/${id}`),
     {
       select: (res) => ({
         paymentReceive: res.data.payment_receive,
@@ -132,9 +139,11 @@ export function usePaymentReceive(id, props) {
  * @param {number} id - Payment receive id.
  */
 export function usePaymentReceiveEditPage(id, props) {
+  const apiRequest = useApiRequest();
+
   const states = useQuery(
     ['PAYMENT_RECEIVE_EDIT_PAGE', id],
-    () => ApiService.get(`sales/payment_receives/${id}/edit-page`),
+    () => apiRequest.get(`sales/payment_receives/${id}/edit-page`),
     {
       select: (res) => ({
         paymentReceive: res.data.payment_receive,

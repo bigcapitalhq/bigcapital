@@ -1,14 +1,15 @@
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import { defaultTo } from 'lodash';
-import ApiService from 'services/ApiService';
+import useApiRequest from '../useRequest';
 
 /**
  * Creates a new item category.
  */
 export function useCreateItemCategory(props) {
   const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
 
-  return useMutation((values) => ApiService.post('item_categories', values), {
+  return useMutation((values) => apiRequest.post('item_categories', values), {
     onSuccess: () => {
       queryClient.invalidateQueries('ITEMS_CATEGORIES');
     },
@@ -21,9 +22,10 @@ export function useCreateItemCategory(props) {
  */
 export function useEditItemCategory(props) {
   const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
 
   return useMutation(
-    ([id, values]) => ApiService.post(`item_categories/${id}`, values),
+    ([id, values]) => apiRequest.post(`item_categories/${id}`, values),
     {
       onSuccess: () => {
         queryClient.invalidateQueries('ITEMS_CATEGORIES');
@@ -39,8 +41,9 @@ export function useEditItemCategory(props) {
  */
 export function useDeleteItemCategory(props) {
   const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
 
-  return useMutation((id) => ApiService.delete(`item_categories/${id}`), {
+  return useMutation((id) => apiRequest.delete(`item_categories/${id}`), {
     onSuccess: () => {
       queryClient.invalidateQueries('ITEMS_CATEGORIES');
       queryClient.invalidateQueries('ITEMS');
@@ -61,10 +64,12 @@ const transformItemsCategories = (response) => {
  * Retrieve the items categories.
  */
 export function useItemsCategories(query, props) {
+  const apiRequest = useApiRequest();
+
   const states = useQuery(
     ['ITEMS_CATEGORIES', query],
     () =>
-      ApiService.get(`item_categories`, { params: query }).then(
+      apiRequest.get(`item_categories`, { params: query }).then(
         transformItemsCategories,
       ),
     props,
@@ -84,10 +89,12 @@ export function useItemsCategories(query, props) {
  * @param {number} id - Item category.
  */
 export function useItemCategory(id, props) {
+  const apiRequest = useApiRequest();
+
   const states = useQuery(
     ['ITEMS_CATEGORY', id],
     () =>
-      ApiService.get(`item_categories/${id}`).then((res) => res.data.category),
+      apiRequest.get(`item_categories/${id}`).then((res) => res.data.category),
     props,
   );
 

@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { defaultTo } from 'lodash';
-import ApiService from 'services/ApiService';
 import { transformPagination, transformResponse } from 'utils';
+import useApiRequest from '../useRequest';
 
 const defaultPagination = {
   pageSize: 12,
@@ -14,8 +14,9 @@ const defaultPagination = {
  */
 export function useCreateItem(props) {
   const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
 
-  return useMutation((values) => ApiService.post('items', values), {
+  return useMutation((values) => apiRequest.post('items', values), {
     onSuccess: () => {
       queryClient.invalidateQueries('ITEMS');
       queryClient.invalidateQueries('ITEMS_CATEGORIES');
@@ -29,8 +30,9 @@ export function useCreateItem(props) {
  */
 export function useEditItem(props) {
   const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
 
-  return useMutation(([id, values]) => ApiService.post(`items/${id}`, values), {
+  return useMutation(([id, values]) => apiRequest.post(`items/${id}`, values), {
     onSuccess: () => {
       queryClient.invalidateQueries('ITEMS');
       queryClient.invalidateQueries('ITEM');
@@ -45,8 +47,9 @@ export function useEditItem(props) {
  */
 export function useDeleteItem(props) {
   const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
 
-  return useMutation((id) => ApiService.delete(`items/${id}`), {
+  return useMutation((id) => apiRequest.delete(`items/${id}`), {
     onSuccess: () => {
       queryClient.invalidateQueries('ITEMS');
       queryClient.invalidateQueries('ITEM');
@@ -71,10 +74,12 @@ const transformItemsResponse = (response) => {
  * Retrieves items list.
  */
 export function useItems(query, props) {
+  const apiRequest = useApiRequest();
+
   const result = useQuery(
     ['ITEMS', query],
     () =>
-      ApiService.get(`items`, { params: query }).then(transformItemsResponse),
+      apiRequest.get(`items`, { params: query }).then(transformItemsResponse),
     props,
   );
 
@@ -93,9 +98,11 @@ export function useItems(query, props) {
  * @param {number} id - Item id.
  */
 export function useItem(id, props) {
+  const apiRequest = useApiRequest();
+
   return useQuery(
     ['ITEM', id],
-    () => ApiService.get(`items/${id}`).then((response) => response.data.item),
+    () => apiRequest.get(`items/${id}`).then((response) => response.data.item),
     props,
   );
 }
@@ -105,8 +112,9 @@ export function useItem(id, props) {
  */
 export function useActivateItem(props) {
   const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
 
-  return useMutation((id) => ApiService.post(`items/${id}/activate`), {
+  return useMutation((id) => apiRequest.post(`items/${id}/activate`), {
     onSuccess: () => {
       queryClient.invalidateQueries('ITEMS');
       queryClient.invalidateQueries('ITEM');
@@ -120,8 +128,9 @@ export function useActivateItem(props) {
  */
 export function useInactivateItem(props) {
   const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
 
-  return useMutation((id) => ApiService.post(`items/${id}/inactivate`), {
+  return useMutation((id) => apiRequest.post(`items/${id}/inactivate`), {
     onSuccess: () => {
       queryClient.invalidateQueries('ITEMS');
       queryClient.invalidateQueries('ITEM');

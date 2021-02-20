@@ -1,6 +1,6 @@
 import { useQueryClient, useQuery, useMutation } from 'react-query';
 import { defaultTo } from 'lodash';
-import ApiService from 'services/ApiService';
+import useApiRequest from '../useRequest';
 import { transformPagination } from 'utils';
 
 /**
@@ -8,8 +8,9 @@ import { transformPagination } from 'utils';
  */
 export function useCreateEstimate(props) {
   const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
 
-  return useMutation((values) => ApiService.post('sales/estimates', values), {
+  return useMutation((values) => apiRequest.post('sales/estimates', values), {
     onSuccess: () => {
       queryClient.invalidateQueries('SALE_ESTIMATES');
     },
@@ -22,9 +23,10 @@ export function useCreateEstimate(props) {
  */
 export function useEditEstimate(props) {
   const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
 
   return useMutation(
-    ([id, values]) => ApiService.post(`sales/estimates/${id}`, values),
+    ([id, values]) => apiRequest.post(`sales/estimates/${id}`, values),
     {
       onSuccess: () => {
         queryClient.invalidateQueries('SALE_ESTIMATES');
@@ -38,9 +40,11 @@ export function useEditEstimate(props) {
  * Retrieve sale estimate details.
  */
 export function useEstimate(id, props) {
+  const apiRequest = useApiRequest();
+
   const states = useQuery(
     ['SALE_ESTIMATE', id],
-    () => ApiService.get(`sales/estimates/${id}`),
+    () => apiRequest.get(`sales/estimates/${id}`),
     {
       select: (res) => res.data.estimate,
       ...props,
@@ -57,9 +61,11 @@ export function useEstimate(id, props) {
  * Retrieve sale invoices list with pagination meta.
  */
 export function useEstimates(query, props) {
+  const apiRequest = useApiRequest();
+
   const states = useQuery(
     ['SALE_ESTIMATES', query],
-    () => ApiService.get('sales/estimates', { params: query }),
+    () => apiRequest.get('sales/estimates', { params: query }),
     {
       select: (res) => ({
         estimates: res.data.sales_estimates,
@@ -89,8 +95,9 @@ export function useEstimates(query, props) {
  */
 export function useDeleteEstimate(props) {
   const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
 
-  return useMutation((id) => ApiService.delete(`sales/estimates/${id}`), {
+  return useMutation((id) => apiRequest.delete(`sales/estimates/${id}`), {
     onSuccess: () => {
       queryClient.invalidateQueries('SALE_ESTIMATES');
     },
@@ -103,9 +110,10 @@ export function useDeleteEstimate(props) {
  */
 export function useDeliverEstimate(props) {
   const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
 
   return useMutation(
-    (id) => ApiService.post(`sales/estimates/${id}/deliver`),
+    (id) => apiRequest.post(`sales/estimates/${id}/deliver`),
     {
       onSuccess: () => {
         queryClient.invalidateQueries('SALE_ESTIMATES');
@@ -120,9 +128,10 @@ export function useDeliverEstimate(props) {
  */
 export function useApproveEstimate(props) {
   const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
 
   return useMutation(
-    (id) => ApiService.post(`sales/estimates/${id}/approve`),
+    (id) => apiRequest.post(`sales/estimates/${id}/approve`),
     {
       onSuccess: () => {
         queryClient.invalidateQueries('SALE_ESTIMATES');
@@ -137,9 +146,10 @@ export function useApproveEstimate(props) {
  */
 export function useRejectEstimate(props) {
   const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
 
   return useMutation(
-    (id) => ApiService.post(`sales/estimates/${id}/reject`),
+    (id) => apiRequest.post(`sales/estimates/${id}/reject`),
     {
       onSuccess: () => {
         queryClient.invalidateQueries('SALE_ESTIMATES');

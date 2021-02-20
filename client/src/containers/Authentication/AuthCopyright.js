@@ -1,7 +1,7 @@
 import React from 'react';
 import Icon from 'components/Icon';
 
-function AuthCopyright() {
+export default function AuthCopyright() {
   return (
     <div class="auth-copyright">
       <div class="auth-copyright__text">
@@ -12,5 +12,3 @@ function AuthCopyright() {
     </div>    
   );
 }
-
-export default AuthCopyright;

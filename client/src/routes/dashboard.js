@@ -20,16 +20,16 @@ export default [
     pageTitle: 'Accounts Chart',
   },
   // Custom views.
-  {
-    path: `/custom_views/:resource_slug/new`,
-    component: lazy(() => import('containers/Views/ViewFormPage')),
-    breadcrumb: 'New',
-  },
-  {
-    path: `/custom_views/:view_id/edit`,
-    component: lazy(() => import('containers/Views/ViewFormPage')),
-    breadcrumb: 'Edit',
-  },
+  // {
+  //   path: `/custom_views/:resource_slug/new`,
+  //   component: lazy(() => import('containers/Views/ViewFormPage')),
+  //   breadcrumb: 'New',
+  // },
+  // {
+  //   path: `/custom_views/:view_id/edit`,
+  //   component: lazy(() => import('containers/Views/ViewFormPage')),
+  //   breadcrumb: 'Edit',
+  // },
   // Accounting.
   {
     path: `/make-journal-entry`,

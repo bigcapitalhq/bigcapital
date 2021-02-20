@@ -1,9 +1,8 @@
 import React, { useMemo  } from 'react';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import { Row, Col } from 'react-grid-system';
+import { Row, Col, ErrorMessage } from 'components';
 import { FormattedMessage as T } from 'react-intl';
-import { ErrorMessage } from 'components';
 import {
   Button,
   Classes,

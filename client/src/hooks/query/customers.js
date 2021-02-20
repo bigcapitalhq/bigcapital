@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { defaultTo } from 'lodash';
-import ApiService from 'services/ApiService';
 import { transformPagination } from 'utils';
+import useApiRequest from '../useRequest';
 
 const defaultPagination = {
   pageSize: 12,
@@ -13,9 +13,11 @@ const defaultPagination = {
  * Retrieve customers list with pagination meta.
  */
 export function useCustomers(query, props) {
+  const apiRequest = useApiRequest();
+
   const states = useQuery(
     ['CUSTOMERS', query],
-    () => ApiService.get(`customers`, { params: query }),
+    () => apiRequest.get(`customers`, { params: query }),
     {
       select: (response) => ({
         customers: response.data.customers,
@@ -42,9 +44,10 @@ export function useCustomers(query, props) {
  */
 export function useEditCustomer(props) {
   const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
 
   return useMutation(
-    ([id, values]) => ApiService.post(`customers/${id}`, values),
+    ([id, values]) => apiRequest.post(`customers/${id}`, values),
     {
       onSuccess: () => {
         queryClient.invalidateQueries('CUSTOMERS');
@@ -60,9 +63,10 @@ export function useEditCustomer(props) {
  */
 export function useDeleteCustomer(props) {
   const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
 
   return useMutation(
-    (id) => ApiService.delete(`customers/${id}`),
+    (id) => apiRequest.delete(`customers/${id}`),
     {
       onSuccess: () => {
         queryClient.invalidateQueries('CUSTOMERS');
@@ -78,9 +82,10 @@ export function useDeleteCustomer(props) {
  */
 export function useCreateCustomer(props) {
   const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
 
   return useMutation(
-    (values) => ApiService.post('customers', values),
+    (values) => apiRequest.post('customers', values),
     {
       onSuccess: () => {
         queryClient.invalidateQueries('CUSTOMERS');
@@ -94,9 +99,12 @@ export function useCreateCustomer(props) {
  * Retrieve the customer details.
  */
 export function useCustomer(id, props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
   return useQuery(
     ['CUSTOMER', id],
-    () => ApiService.get(`customers/${id}`),
+    () => apiRequest.get(`customers/${id}`),
     {
       select: (res) => res.data.customer,
       ...props

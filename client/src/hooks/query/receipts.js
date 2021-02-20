@@ -1,6 +1,6 @@
 import { useQueryClient, useQuery, useMutation } from 'react-query';
 import { defaultTo } from 'lodash';
-import ApiService from 'services/ApiService';
+import useApiRequest from '../useRequest';
 import { transformPagination } from 'utils';
 
 /**
@@ -8,8 +8,9 @@ import { transformPagination } from 'utils';
  */
 export function useCreateReceipt(props) {
   const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
 
-  return useMutation((values) => ApiService.post('sales/receipts', values), {
+  return useMutation((values) => apiRequest.post('sales/receipts', values), {
     onSuccess: () => {
       queryClient.invalidateQueries('SALE_RECEIPTS');
     },
@@ -22,9 +23,10 @@ export function useCreateReceipt(props) {
  */
 export function useEditReceipt(props) {
   const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
 
   return useMutation(
-    ([id, values]) => ApiService.post(`sales/receipts/${id}`, values),
+    ([id, values]) => apiRequest.post(`sales/receipts/${id}`, values),
     {
       onSuccess: () => {
         queryClient.invalidateQueries('SALE_RECEIPTS');
@@ -39,8 +41,9 @@ export function useEditReceipt(props) {
  */
 export function useDeleteReceipt(props) {
   const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
 
-  return useMutation((id) => ApiService.delete(`sales/receipts/${id}`), {
+  return useMutation((id) => apiRequest.delete(`sales/receipts/${id}`), {
     onSuccess: () => {
       queryClient.invalidateQueries('SALE_RECEIPTS');
     },
@@ -53,8 +56,9 @@ export function useDeleteReceipt(props) {
  */
 export function useCloseReceipt(props) {
   const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
 
-  return useMutation((id) => ApiService.post(`sales/receipts/${id}/close`), {
+  return useMutation((id) => apiRequest.post(`sales/receipts/${id}/close`), {
     onSuccess: () => {
       queryClient.invalidateQueries('SALE_RECEIPTS');
     },
@@ -66,9 +70,11 @@ export function useCloseReceipt(props) {
  * Retrieve sale invoices list with pagination meta.
  */
 export function useReceipts(query, props) {
+  const apiRequest = useApiRequest();
+
   const states = useQuery(
     ['SALE_RECEIPTS', query],
-    () => ApiService.get('sales/receipts', { params: query }),
+    () => apiRequest.get('sales/receipts', { params: query }),
     {
       select: (response) => ({
         receipts: response.data.sale_receipts,
@@ -97,9 +103,11 @@ export function useReceipts(query, props) {
  * Retrieve sale invoices list with pagination meta.
  */
 export function useReceipt(id, props) {
+  const apiRequest = useApiRequest();
+
   const states = useQuery(
     ['SALE_RECEIPT', id],
-    () => ApiService.get(`sales/receipts/${id}`),
+    () => apiRequest.get(`sales/receipts/${id}`),
     {
       select: (res) => res.data.sale_receipt,
       ...props,

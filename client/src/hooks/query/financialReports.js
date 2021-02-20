@@ -1,6 +1,5 @@
 import { useQuery } from 'react-query';
 import { defaultTo } from 'lodash';
-import ApiService from 'services/ApiService';
 import {
   trialBalanceSheetReducer,
   balanceSheetRowsReducer,
@@ -8,15 +7,18 @@ import {
   generalLedgerTableRowsReducer,
   journalTableRowsReducer,
 } from 'containers/FinancialStatements/reducers';
+import useApiRequest from '../useRequest';
  
 /**
  * Retrieve balance sheet.
  */
 export function useBalanceSheet(query, props) {
+  const apiRequest = useApiRequest();
+
   const states = useQuery(
     ['FINANCIAL-REPORT', 'BALANCE-SHEET', query],
     () =>
-      ApiService.get('/financial_statements/balance_sheet', {
+      apiRequest.get('/financial_statements/balance_sheet', {
         params: query,
       }),
     {
@@ -43,10 +45,12 @@ export function useBalanceSheet(query, props) {
  * Retrieve trial balance sheet.
  */
 export function useTrialBalanceSheet(query, props) {
+  const apiRequest = useApiRequest();
+
   const states = useQuery(
     ['FINANCIAL-REPORT', 'TRIAL-BALANCE-SHEET', query],
     () =>
-      ApiService.get('/financial_statements/trial_balance_sheet', {
+      apiRequest.get('/financial_statements/trial_balance_sheet', {
         params: query,
       }),
     {
@@ -72,10 +76,12 @@ export function useTrialBalanceSheet(query, props) {
  * Retrieve profit/loss (P&L) sheet.
  */
 export function useProfitLossSheet(query, props) {
+  const apiRequest = useApiRequest();
+
   const states = useQuery(
     ['FINANCIAL-REPORT', 'PROFIT-LOSS-SHEET', query],
     () =>
-      ApiService.get('/financial_statements/profit_loss_sheet', {
+      apiRequest.get('/financial_statements/profit_loss_sheet', {
         params: query,
       }),
     {
@@ -101,10 +107,12 @@ export function useProfitLossSheet(query, props) {
  * Retrieve general ledger (GL) sheet.
  */
 export function useGeneralLedgerSheet(query, props) {
+  const apiRequest = useApiRequest();
+
   const states = useQuery(
     ['FINANCIAL-REPORT', 'GENERAL-LEDGER', query],
     () =>
-      ApiService.get('/financial_statements/general_ledger', {
+      apiRequest.get('/financial_statements/general_ledger', {
         params: query,
       }),
     {
@@ -130,10 +138,12 @@ export function useGeneralLedgerSheet(query, props) {
  * Retrieve journal sheet.
  */
 export function useJournalSheet(query, props) {
+  const apiRequest = useApiRequest();
+
   const states = useQuery(
     ['FINANCIAL-REPORT', 'JOURNAL', query],
     () =>
-      ApiService.get('/financial_statements/journal', { params: query }),
+      apiRequest.get('/financial_statements/journal', { params: query }),
     {
       select: (res) => ({
         tableRows: journalTableRowsReducer(res.data.data),
@@ -157,10 +167,12 @@ export function useJournalSheet(query, props) {
  * Retrieve AR aging summary report.
  */
 export function useARAgingSummaryReport(query, props) {
+  const apiRequest = useApiRequest();
+
   return useQuery(
     ['FINANCIAL-REPORT', 'AR-AGING-SUMMARY', query],
     () =>
-      ApiService.get('/financial_statements/receivable_aging_summary', {
+      apiRequest.get('/financial_statements/receivable_aging_summary', {
         params: query,
       }),
     props,

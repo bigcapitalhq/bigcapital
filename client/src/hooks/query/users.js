@@ -1,13 +1,16 @@
 import { useMutation, useQueryClient, useQuery } from 'react-query';
 import { defaultTo } from 'lodash';
-import ApiService from 'services/ApiService';
+import useApiRequest from '../useRequest';
+
 
 /**
  * Create a new invite user.
  */
 export function useCreateInviteUser(props) {
   const queryClient = useQueryClient();
-  return useMutation((values) => ApiService.post('invite/send', values), {
+  const apiRequest = useApiRequest();
+
+  return useMutation((values) => apiRequest.post('invite/send', values), {
     onSuccess: () => {
       queryClient.invalidateQueries('USERS');
     },
@@ -21,8 +24,9 @@ export function useCreateInviteUser(props) {
  */
 export function useEditUser(props) {
   const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
 
-  return useMutation(([id, values]) => ApiService.post(`users/${id}`, values), {
+  return useMutation(([id, values]) => apiRequest.post(`users/${id}`, values), {
     onSuccess: () => {
       queryClient.invalidateQueries('USERS');
     },
@@ -35,8 +39,9 @@ export function useEditUser(props) {
  */
 export function useDeleteUser(props) {
   const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
 
-  return useMutation((id) => ApiService.delete(`users/${id}`), {
+  return useMutation((id) => apiRequest.delete(`users/${id}`), {
     onSuccess: () => {
       queryClient.invalidateQueries('USERS');
       queryClient.invalidateQueries('USER');
@@ -49,9 +54,11 @@ export function useDeleteUser(props) {
  * Retrieves users list.
  */
 export function useUsers(props) {
+  const apiRequest = useApiRequest();
+
   const result = useQuery(
     ['USERS'],
-    () => ApiService.get(`USERS`).then((response) => response.data.users),
+    () => apiRequest.get(`USERS`).then((response) => response.data.users),
     props,
   );
 
@@ -65,9 +72,11 @@ export function useUsers(props) {
  * Retrieve details of the given user.
  */
 export function useUser(id, props) {
+  const apiRequest = useApiRequest();
+
   return useQuery(
     ['USER', id],
-    () => ApiService.get(`users/${id}`).then((response) => response.data.item),
+    () => apiRequest.get(`users/${id}`).then((response) => response.data.item),
     props,
   );
 }
