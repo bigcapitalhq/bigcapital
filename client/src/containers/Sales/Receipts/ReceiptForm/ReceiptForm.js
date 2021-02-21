@@ -136,8 +136,10 @@ function ReceiptForm({
     };
 
     // Handle the request error.
-    const onError = (errors) => {
-      handleErrors(errors, { setErrors });
+    const onError = ({response:{data:{errors}}}) => {
+      if(errors){
+        handleErrors(errors, { setErrors });
+      }
       setSubmitting(false);
     };
 

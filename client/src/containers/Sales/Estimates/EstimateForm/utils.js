@@ -31,7 +31,7 @@ export const transformToEditForm = (estimate) => ({
       ...transformToForm(estimate, defaultEstimateEntry),
     })),
     ...repeatValue(
-      defaultEstimate,
+      defaultEstimateEntry,
       Math.max(MIN_LINES_NUMBER - estimate.entries.length, 0),
     ),
   ],

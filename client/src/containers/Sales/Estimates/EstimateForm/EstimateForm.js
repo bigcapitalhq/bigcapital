@@ -21,10 +21,7 @@ import withSettings from 'containers/Settings/withSettings';
 
 import { AppToaster } from 'components';
 import { ERROR } from 'common/errors';
-import {
-  compose,
-  orderingLinesIndexes,
-} from 'utils';
+import { compose, orderingLinesIndexes } from 'utils';
 import { useEstimateFormContext } from './EstimateFormProvider';
 import { transformToEditForm, defaultEstimate } from './utils';
 
@@ -55,7 +52,7 @@ function EstimateForm({
     () => ({
       ...(!isEmpty(estimate)
         ? {
-            ...transformToEditForm(estimate)
+            ...transformToEditForm(estimate),
           }
         : {
             ...defaultEstimate,
@@ -126,7 +123,11 @@ function EstimateForm({
       }
     };
 
-    const onError = (errors) => {
+    const onError = ({
+      response: {
+        data: { errors },
+      },
+    }) => {
       if (errors) {
         handleErrors(errors, { setErrors });
       }
