@@ -9,6 +9,7 @@ import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
 import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
 
 import withPaymentMadeActions from './withPaymentMadeActions';
+import withPaymentMade from './withPaymentMade';
 import withSettings from 'containers/Settings/withSettings';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import { usePaymentMadesTableColumns, ActionsMenu } from './components';
@@ -19,7 +20,10 @@ import { usePaymentMadesListContext } from './PaymentMadesListProvider';
  */
 function PaymentMadesTable({
   // #withPaymentMadeActions
-  addPaymentMadesTableQueries,
+  setPaymentMadesTableState,
+
+  // #withPaymentMade
+  paymentMadesTableState,
 
   // #withAlerts
   openAlert,
@@ -52,9 +56,9 @@ function PaymentMadesTable({
   // Handle datatable fetch data once the table state change.
   const handleDataTableFetchData = useCallback(
     ({ pageIndex, pageSize, sortBy }) => {
-      addPaymentMadesTableQueries({ pageIndex, pageSize, sortBy });
+      setPaymentMadesTableState({ pageIndex, pageSize, sortBy });
     },
-    [addPaymentMadesTableQueries],
+    [setPaymentMadesTableState],
   );
 
   // Display empty status instead of the table.
@@ -66,6 +70,7 @@ function PaymentMadesTable({
     <DataTable
       columns={columns}
       data={paymentMades}
+      initialState={paymentMadesTableState}
       onFetchData={handleDataTableFetchData}
       loading={isPaymentsLoading}
       headerLoading={isPaymentsLoading}
@@ -91,6 +96,7 @@ function PaymentMadesTable({
 
 export default compose(
   withPaymentMadeActions,
+  withPaymentMade(({ paymentMadesTableState }) => ({ paymentMadesTableState })),
   withAlertsActions,
   withSettings(({ organizationSettings }) => ({
     baseCurrency: organizationSettings?.baseCurrency,

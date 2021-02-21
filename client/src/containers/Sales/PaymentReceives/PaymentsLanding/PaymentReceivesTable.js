@@ -8,8 +8,9 @@ import { DataTable } from 'components';
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
 import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
 
-import withAlertsActions from 'containers/Alert/withAlertActions';
+import withPaymentReceives from './withPaymentReceives';
 import withPaymentReceivesActions from './withPaymentReceivesActions';
+import withAlertsActions from 'containers/Alert/withAlertActions';
 import withSettings from 'containers/Settings/withSettings';
 import { usePaymentReceivesColumns, ActionsMenu } from './components';
 import { usePaymentReceivesListContext } from './PaymentReceiptsListProvider';
@@ -20,6 +21,9 @@ import { usePaymentReceivesListContext } from './PaymentReceiptsListProvider';
 function PaymentReceivesDataTable({
   // #withPaymentReceivesActions
   setPaymentReceivesTableState,
+
+  // #withPaymentReceives
+  paymentReceivesTableState,
 
   // #withAlertsActions
   openAlert,
@@ -70,6 +74,7 @@ function PaymentReceivesDataTable({
     <DataTable
       columns={columns}
       data={paymentReceives}
+      initialState={paymentReceivesTableState}
       loading={isPaymentReceivesLoading}
       headerLoading={isPaymentReceivesLoading}
       progressBarLoading={isPaymentReceivesFetching}
@@ -96,6 +101,9 @@ function PaymentReceivesDataTable({
 export default compose(
   withPaymentReceivesActions,
   withAlertsActions,
+  withPaymentReceives(({ paymentReceivesTableState }) => ({
+    paymentReceivesTableState,
+  })),
   withSettings(({ organizationSettings }) => ({
     baseCurrency: organizationSettings?.baseCurrency,
   })),

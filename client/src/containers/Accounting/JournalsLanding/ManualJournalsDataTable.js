@@ -7,6 +7,7 @@ import ManualJournalsEmptyStatus from './ManualJournalsEmptyStatus';
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
 import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
 
+import withManualJournals from './withManualJournals';
 import withManualJournalsActions from './withManualJournalsActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 
@@ -25,6 +26,9 @@ function ManualJournalsDataTable({
 
   // #withAlertsActions
   openAlert,
+
+  // #withManualJournals
+  manualJournalsTableState,
 
   // #ownProps
   onSelectedRowsChange,
@@ -80,6 +84,7 @@ function ManualJournalsDataTable({
       noInitialFetch={true}
       columns={columns}
       data={manualJournals}
+      initialState={manualJournalsTableState}
       manualSortBy={true}
       selectionColumn={true}
       expandable={true}
@@ -106,5 +111,8 @@ function ManualJournalsDataTable({
 
 export default compose(
   withManualJournalsActions,
+  withManualJournals(({ manualJournalsTableState }) => ({
+    manualJournalsTableState,
+  })),
   withAlertsActions,
 )(ManualJournalsDataTable);

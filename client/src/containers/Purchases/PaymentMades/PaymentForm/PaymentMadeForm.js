@@ -101,7 +101,9 @@ function PaymentMadeForm() {
 
     const onError = ({
       response: {
-        error: { data: errors },
+        error: {
+          data: { errors },
+        },
       },
     }) => {
       const getError = (errorType) => errors.find((e) => e.type === errorType);
@@ -116,9 +118,7 @@ function PaymentMadeForm() {
     };
 
     if (!isNewMode) {
-      editPaymentMadeMutate([paymentMadeId, form])
-        .then(onSaved)
-        .catch(onError);
+      editPaymentMadeMutate([paymentMadeId, form]).then(onSaved).catch(onError);
     } else {
       createPaymentMadeMutate(form).then(onSaved).catch(onError);
     }

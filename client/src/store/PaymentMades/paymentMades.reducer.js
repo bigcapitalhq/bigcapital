@@ -12,5 +12,5 @@ const initialState = {
 };
  
 export default createReducer(initialState, {
-  ...createTableStateReducers('ITEMS'),
+  ...createTableStateReducers('PAYMENT_MADES'),
 });

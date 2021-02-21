@@ -7,6 +7,7 @@ import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
 
 import { DataTable } from 'components';
 
+import withCustomers from './withCustomers';
 import withCustomersActions from './withCustomersActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 import withDialogActions from 'containers/Dialog/withDialogActions';
@@ -22,6 +23,9 @@ import { compose } from 'utils';
 function CustomersTable({
   // #withCustomersActions
   setCustomersTableState,
+
+  // #withCustomers
+  customersTableState,
 
   // #withAlerts
   openAlert,
@@ -71,6 +75,7 @@ function CustomersTable({
       noInitialFetch={true}
       columns={columns}
       data={customers}
+      initialState={customersTableState}
       loading={isCustomersLoading}
       headerLoading={isCustomersLoading}
       progressBarLoading={isCustomersFetching}
@@ -100,4 +105,5 @@ export default compose(
   withAlertsActions,
   withDialogActions,
   withCustomersActions,
+  withCustomers(({ customersTableState }) => ({ customersTableState })),
 )(CustomersTable);

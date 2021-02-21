@@ -1,9 +1,7 @@
 import React from 'react';
-import classNames from 'classnames';
 import { useHistory } from 'react-router';
 
-import { CLASSES } from 'common/classes';
-import { DataTable, Choose } from 'components';
+import { DataTable } from 'components';
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
 import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
 
@@ -11,6 +9,7 @@ import VendorsEmptyStatus from './VendorsEmptyStatus';
 
 import { useVendorsListContext } from './VendorsListProvider';
 import withVendorsActions from './withVendorsActions';
+import withVendors from './withVendors';
 import withAlertsActions from 'containers/Alert/withAlertActions';
 
 import { compose } from 'utils';
@@ -22,6 +21,9 @@ import { ActionsMenu, useVendorsTableColumns } from './components';
 function VendorsTable({
   // #withVendorsActions
   setVendorsTableState,
+
+  // #withVendors
+  vendorsTableState,
 
   // #withAlertsActions
   openAlert,
@@ -73,6 +75,7 @@ function VendorsTable({
       noInitialFetch={true}
       columns={columns}
       data={vendors}
+      initialState={vendorsTableState}
       loading={isVendorsLoading}
       headerLoading={isVendorsLoading}
       progressBarLoading={isVendorsFetching}
@@ -96,4 +99,8 @@ function VendorsTable({
   );
 }
 
-export default compose(withVendorsActions, withAlertsActions)(VendorsTable);
+export default compose(
+  withVendorsActions,
+  withAlertsActions,
+  withVendors(({ vendorsTableState }) => ({ vendorsTableState })),
+)(VendorsTable);

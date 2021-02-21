@@ -9,6 +9,7 @@ import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
 
 import BillsEmptyStatus from './BillsEmptyStatus';
 
+import withBills from './withBills';
 import withBillActions from './withBillsActions';
 import withSettings from 'containers/Settings/withSettings';
 import withAlertsActions from 'containers/Alert/withAlertActions';
@@ -21,6 +22,9 @@ import { useBillsListContext } from './BillsListProvider';
 function BillsDataTable({
   // #withBillsActions
   setBillsTableState,
+
+  // #withBills
+  billsTableState,
 
   // #withAlerts
   openAlert,
@@ -73,6 +77,7 @@ function BillsDataTable({
     <DataTable
       columns={columns}
       data={bills}
+      initialState={billsTableState}
       loading={isBillsLoading}
       headerLoading={isBillsLoading}
       progressBarLoading={isBillsFetching}
@@ -96,6 +101,7 @@ function BillsDataTable({
 }
 
 export default compose(
+  withBills(({ billsTableState }) => ({ billsTableState })),
   withBillActions,
   withAlertsActions,
   withSettings(({ organizationSettings }) => ({

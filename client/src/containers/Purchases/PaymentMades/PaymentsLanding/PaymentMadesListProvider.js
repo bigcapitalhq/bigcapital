@@ -12,7 +12,7 @@ const PaymentMadesListContext = createContext();
 /**
  * Accounts chart data provider.
  */
-function PaymentMadesListProvider({ accountsTableQuery, ...props }) {
+function PaymentMadesListProvider({ query, ...props }) {
   // Fetch accounts resource views and fields.
   const {
     data: paymentMadesViews,
@@ -30,7 +30,7 @@ function PaymentMadesListProvider({ accountsTableQuery, ...props }) {
     data: { paymentMades, pagination, filterMeta },
     isLoading: isPaymentsLoading,
     isFetching: isPaymentsFetching,
-  } = usePaymentMades(accountsTableQuery, { keepPreviousData: true });
+  } = usePaymentMades(query, { keepPreviousData: true });
 
   // Detarmines the datatable empty status.
   const isEmptyStatus =

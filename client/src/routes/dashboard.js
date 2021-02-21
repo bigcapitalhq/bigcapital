@@ -59,6 +59,7 @@ export default [
     ),
     breadcrumb: 'Manual Journals',
     hotkey: 'shift+m',
+    pageTitle: formatMessage({ id: 'manual_journals' })
   },
   {
     path: `/items/categories`,

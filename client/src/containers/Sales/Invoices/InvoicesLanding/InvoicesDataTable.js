@@ -9,6 +9,7 @@ import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
 import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
 
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
+import withInvoices from './withInvoices'; 
 import withInvoiceActions from './withInvoiceActions';
 import withSettings from 'containers/Settings/withSettings';
 import withAlertsActions from 'containers/Alert/withAlertActions';
@@ -22,6 +23,9 @@ import { useInvoicesListContext } from './InvoicesListProvider';
 function InvoicesDataTable({
   // #withInvoicesActions
   setInvoicesTableState,
+
+  // #withInvoices
+  invoicesTableState,
 
   // #withSettings
   baseCurrency,
@@ -79,6 +83,7 @@ function InvoicesDataTable({
     <DataTable
       columns={columns}
       data={invoices}
+      initialState={invoicesTableState}
       loading={isInvoicesLoading}
       headerLoading={isInvoicesLoading}
       progressBarLoading={isInvoicesFetching}
@@ -109,6 +114,7 @@ export default compose(
   withDashboardActions,
   withInvoiceActions,
   withAlertsActions,
+  withInvoices(({ invoicesTableState }) => ({ invoicesTableState })),
   withSettings(({ organizationSettings }) => ({
     baseCurrency: organizationSettings?.baseCurrency,
   })),

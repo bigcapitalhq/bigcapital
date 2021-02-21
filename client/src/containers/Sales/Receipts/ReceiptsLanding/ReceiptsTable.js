@@ -23,6 +23,9 @@ function ReceiptsDataTable({
   // #withReceiptsActions
   setReceiptsTableState,
 
+  // #withReceipts
+  receiptTableState,
+
   // #withSettings
   baseCurrency,
 
@@ -78,6 +81,7 @@ function ReceiptsDataTable({
     <DataTable
       columns={columns}
       data={receipts}
+      initialState={receiptTableState}
       loading={isReceiptsLoading}
       headerLoading={isReceiptsLoading}
       progressBarLoading={isReceiptsFetching}
