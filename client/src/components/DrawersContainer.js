@@ -1,8 +1,8 @@
 import React from 'react';
-import EstimateDrawer from 'containers/Sales/Estimate/EstimateDrawer';
-import InvoiceDrawer from 'containers/Sales/Invoice/InvoiceDrawer';
-import ReceiptDrawer from 'containers/Sales/Receipt/ReceiptDrawer';
-import PaymentReceive from 'containers/Sales/PaymentReceive/PaymentReceiveDrawer';
+import EstimateDrawer from 'containers/Sales/Estimates/EstimateDetails/EstimateDrawer';
+import InvoiceDrawer from 'containers/Sales/Invoices/InvoiceDetails/InvoiceDrawer';
+import ReceiptDrawer from 'containers/Sales/Receipts/ReceiptDetails/ReceiptDrawer';
+import PaymentReceive from 'containers/Sales/PaymentReceives/PaymentDetails/PaymentDrawer';
 
 export default function DrawersContainer() {
   return (

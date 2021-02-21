@@ -59,7 +59,7 @@ export default [
     ),
     breadcrumb: 'Manual Journals',
     hotkey: 'shift+m',
-    pageTitle: formatMessage({ id: 'manual_journals' })
+    pageTitle: formatMessage({ id: 'manual_journals' }),
   },
   {
     path: `/items/categories`,
@@ -112,7 +112,7 @@ export default [
     hotkey: 'shift+4',
     pageTitle: formatMessage({ id: 'general_ledger' }),
     backLink: true,
-    sidebarShrink: true
+    sidebarShrink: true,
   },
   {
     path: `/financial-reports/balance-sheet`,
@@ -155,14 +155,13 @@ export default [
     backLink: true,
     sidebarShrink: true,
   },
-  {
-    path: '/financial-reports/payable-aging-summary',
-    component: LazyLoader({
-      loader: () =>
-        import('containers/FinancialStatements/APAgingSummary/APAgingSummary'),
-    }),
-    breadcrumb: 'Payable Aging Summary',
-  },
+  // {
+  //   path: '/financial-reports/payable-aging-summary',
+  //   component: lazy(() =>
+  //     import('containers/FinancialStatements/APAgingSummary/APAgingSummary'),
+  //   ),
+  //   breadcrumb: 'Payable Aging Summary',
+  // },
   {
     path: `/financial-reports/journal-sheet`,
     component: lazy(() =>

@@ -197,7 +197,7 @@ export default createReducer(initialState, {
       columns,
       vendors,
       total,
-      tableRows: APAgingSummaryTableRowsMapper({ vendors, columns, total }),
+      // tableRows: APAgingSummaryTableRowsMapper({ vendors, columns, total }),
     };
     state.payableAgingSummary.sheet = receivableSheet;
   },
