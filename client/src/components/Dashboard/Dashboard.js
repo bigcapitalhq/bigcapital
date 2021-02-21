@@ -14,6 +14,7 @@ import Search from 'containers/GeneralSearch/Search';
 import DashboardSplitPane from 'components/Dashboard/DashboardSplitePane';
 import GlobalHotkeys from './GlobalHotkeys';
 import withSettingsActions from 'containers/Settings/withSettingsActions';
+import DrawersContainer from 'components/DrawersContainer';
 
 import { compose } from 'utils';
 
@@ -47,6 +48,7 @@ function Dashboard({
       <Search />
       <DialogsContainer />
       <GlobalHotkeys />
+      <DrawersContainer />
     </DashboardLoadingIndicator>
   );
 }

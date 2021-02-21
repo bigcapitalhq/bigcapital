@@ -13,7 +13,7 @@ export function openDialog(name, payload) {
     name: name,
     payload: payload,
   };
-};
+}
 
 export function closeDialog(name, payload) {
   return {
@@ -24,7 +24,7 @@ export function closeDialog(name, payload) {
 }
 
 export function openAlert(name, payload) {
-  return  {
+  return {
     type: t.OPEN_ALERT,
     name,
     payload,
@@ -32,8 +32,23 @@ export function openAlert(name, payload) {
 }
 
 export function closeAlert(name, payload) {
-  return  {
+  return {
     type: t.CLOSE_ALERT,
+    name,
+    payload,
+  };
+}
+
+export function openDrawer(name, payload) {
+  return {
+    type: t.OPEN_DRAWER,
+    name,
+    payload,
+  };
+}
+export function closeDrawer(name, payload) {
+  return {
+    type: t.CLOSE_DRAWER,
     name,
     payload,
   };

@@ -156,6 +156,14 @@ export default [
     sidebarShrink: true,
   },
   {
+    path: '/financial-reports/payable-aging-summary',
+    component: LazyLoader({
+      loader: () =>
+        import('containers/FinancialStatements/APAgingSummary/APAgingSummary'),
+    }),
+    breadcrumb: 'Payable Aging Summary',
+  },
+  {
     path: `/financial-reports/journal-sheet`,
     component: lazy(() =>
       import('containers/FinancialStatements/Journal/Journal'),

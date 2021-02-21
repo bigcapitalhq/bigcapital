@@ -8,78 +8,75 @@ import {
   PopoverInteractionKind,
   Position,
 } from '@blueprintjs/core';
+import { safeInvoke } from '@blueprintjs/core/lib/esm/common/utils';
+
 import { FormattedMessage as T } from 'react-intl';
 import classNames from 'classnames';
 
 import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
-import Icon from 'components/Icon';
+import { Icon } from 'components';
 import NumberFormatDropdown from 'components/NumberFormatDropdown';
 
-import { useARAgingSummaryContext } from './ARAgingSummaryProvider';
-import withARAgingSummaryActions from './withARAgingSummaryActions';
+import withAPAgingSummary from './withAPAgingSummary';
+import withARAgingSummaryActions from './withAPAgingSummaryActions';
 
 import { compose } from 'utils';
-import { safeInvoke } from '@blueprintjs/core/lib/esm/common/utils';
 
 /**
- * A/R Aging summary sheet - Actions bar.
+ * AP Aging summary sheet - Actions bar.
  */
-function ARAgingSummaryActionsBar({
-  // #withReceivableAging
-  receivableAgingFilter,
+function APAgingSummaryActionsBar({
+  //#withPayableAgingSummary
+  payableAgingFilter,
+  payableAgingLoading,
 
-  // #withReceivableAgingActions
-  toggleFilterARAgingSummary,
+  //#withARAgingSummaryActions
+  toggleFilterAPAgingSummary,
+  refreshAPAgingSummary,
 
-  // #ownProps
+  //#ownProps
   numberFormat,
   onNumberFormatSubmit,
 }) {
-  const { isARAgingFetching, refetch } = useARAgingSummaryContext();
+  const handleFilterToggleClick = () => toggleFilterAPAgingSummary();
 
-  const handleFilterToggleClick = () => {
-    toggleFilterARAgingSummary();
-  };
-  // Handles re-calculate report button.
-  const handleRecalcReport = () => {
-    refetch();
-  };
-  // Handle number format submit.
-  const handleNumberFormatSubmit = (numberFormat) => {
+  // handle recalculate report button.
+  const handleRecalculateReport = () => refreshAPAgingSummary(true);
+
+  // handle number format submit.
+  const handleNumberFormatSubmit = (numberFormat) =>
     safeInvoke(onNumberFormatSubmit, numberFormat);
-  };
+    
   return (
     <DashboardActionsBar>
       <NavbarGroup>
         <Button
           className={classNames(Classes.MINIMAL, 'button--gray-highlight')}
           text={<T id={'recalc_report'} />}
-          onClick={handleRecalcReport}
+          onClick={handleRecalculateReport}
           icon={<Icon icon="refresh-16" iconSize={16} />}
         />
         <NavbarDivider />
-
         <Button
           className={classNames(Classes.MINIMAL, 'button--table-views')}
           icon={<Icon icon="cog-16" iconSize={16} />}
           text={
-            receivableAgingFilter ? (
-              <T id="hide_customizer" />
+            payableAgingFilter ? (
+              <T id={'hide_customizer'} />
             ) : (
               <T id={'customize_report'} />
             )
           }
           onClick={handleFilterToggleClick}
-          active={receivableAgingFilter}
+          active={payableAgingFilter}
         />
         <NavbarDivider />
-
         <Popover
           content={
             <NumberFormatDropdown
               numberFormat={numberFormat}
               onSubmit={handleNumberFormatSubmit}
-              submitDisabled={isARAgingFetching}
+              submitDisabled={payableAgingLoading}
             />
           }
           minimal={true}
@@ -117,4 +114,10 @@ function ARAgingSummaryActionsBar({
 
 export default compose(
   withARAgingSummaryActions,
-)(ARAgingSummaryActionsBar);
+  withAPAgingSummary(
+    ({ payableAgingSummaryLoading, payableAgingSummaryFilter }) => ({
+      payableAgingLoading: payableAgingSummaryLoading,
+      payableAgingFilter: payableAgingSummaryFilter,
+    }),
+  ),
+)(APAgingSummaryActionsBar);

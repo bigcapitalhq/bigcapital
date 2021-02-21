@@ -29,16 +29,13 @@ function ReceivableAgingSummarySheet({
   });
 
   // Handle filter submit.
-  const handleFilterSubmit = useCallback(
-    (filter) => {
-      const _filter = {
-        ...filter,
-        asDate: moment(filter.asDate).format('YYYY-MM-DD'),
-      };
-      setFilter(_filter);
-    },
-    [],
-  );
+  const handleFilterSubmit = useCallback((filter) => {
+    const _filter = {
+      ...filter,
+      asDate: moment(filter.asDate).format('YYYY-MM-DD'),
+    };
+    setFilter(_filter);
+  }, []);
 
   // Handle number format submit.
   const handleNumberFormatSubmit = (numberFormat) => {
@@ -49,8 +46,8 @@ function ReceivableAgingSummarySheet({
     <ARAgingSummaryProvider filter={filter}>
       <ARAgingSummaryActionsBar
         numberFormat={filter.numberFormat}
-        onNumberFormatSubmit={handleNumberFormatSubmit}/>
-
+        onNumberFormatSubmit={handleNumberFormatSubmit}
+      />
       <DashboardPageContent>
         <FinancialStatement>
           <ARAgingSummaryHeader
@@ -58,9 +55,7 @@ function ReceivableAgingSummarySheet({
             onSubmitFilter={handleFilterSubmit}
           />
           <div class="financial-statement__body">
-            <ARAgingSummaryTable
-              organizationName={organizationName}
-            />
+            <ARAgingSummaryTable organizationName={organizationName} />
           </div>
         </FinancialStatement>
       </DashboardPageContent>

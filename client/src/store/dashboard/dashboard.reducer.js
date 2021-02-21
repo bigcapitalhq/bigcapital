@@ -1,7 +1,7 @@
 import t from 'store/types';
 import { createReducer } from '@reduxjs/toolkit';
-import { persistReducer } from 'redux-persist'
-import storage from 'redux-persist/lib/storage' // defaults to localStorage for web
+import { persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
 
 const initialState = {
   pageTitle: '',
@@ -12,6 +12,7 @@ const initialState = {
   previousSidebarExpended: null,
   dialogs: {},
   alerts: {},
+  drawers: {},
   topbarEditViewId: null,
   requestsLoading: 0,
   backLink: false,
@@ -61,10 +62,19 @@ const reducerInstance = createReducer(initialState, {
       isOpen: false,
     };
   },
-
-  [t.CLOSE_ALL_DIALOGS]: (state, action) => {
-    
+  [t.OPEN_DRAWER]: (state, action) => {
+    state.drawers[action.name] = {
+      isOpen: true,
+      payload: action.payload || {},
+    };
   },
+  [t.CLOSE_DRAWER]: (state, action) => {
+    state.drawers[action.name] = {
+      ...state.drawers[action.name],
+      isOpen: false,
+    };
+  },
+  [t.CLOSE_ALL_DIALOGS]: (state, action) => {},
 
   [t.SET_TOPBAR_EDIT_VIEW]: (state, action) => {
     state.topbarEditViewId = action.id;
@@ -102,25 +112,29 @@ const reducerInstance = createReducer(initialState, {
   [t.SET_DASHBOARD_BACK_LINK]: (state, action) => {
     const { backLink } = action.payload;
     state.backLink = backLink;
-  }
+  },
 });
 
-export default persistReducer({
-  key: 'bigcapital:dashboard',
-  blacklist: [
-    'pageTitle',
-    'pageSubtitle',
-    'pageHint',
-    'preferencesPageTitle',
-    'topbarEditViewId',
-    'backLink'
-  ],
-  storage,
-}, reducerInstance);
+export default persistReducer(
+  {
+    key: 'bigcapital:dashboard',
+    blacklist: [
+      'pageTitle',
+      'pageSubtitle',
+      'pageHint',
+      'preferencesPageTitle',
+      'topbarEditViewId',
+      'backLink',
+    ],
+    storage,
+  },
+  reducerInstance,
+);
 
 export const getDialogPayload = (state, dialogName) => {
   return typeof state.dashboard.dialogs[dialogName] !== 'undefined'
-    ? state.dashboard.dialogs[dialogName].payload : {};
+    ? state.dashboard.dialogs[dialogName].payload
+    : {};
 };
 
 export const getDialogActiveStatus = (state, dialogName) => {
