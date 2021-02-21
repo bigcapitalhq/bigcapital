@@ -1,6 +1,5 @@
-import React, { useEffect, useCallback, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import moment from 'moment';
-import { useIntl } from 'react-intl';
 
 import 'style/pages/FinancialStatements/GeneralLedger.scss';
 
@@ -12,28 +11,21 @@ import GeneralLedgerActionsBar from './GeneralLedgerActionsBar';
 import { GeneralLedgerProvider } from './GeneralLedgerProvider';
 
 import withGeneralLedgerActions from './withGeneralLedgerActions';
-import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withSettings from 'containers/Settings/withSettings';
 
-import { compose } from 'utils';
-
 import { transformFilterFormToQuery } from 'containers/FinancialStatements/common';
+import { compose } from 'utils';
 
 /**
  * General Ledger (GL) sheet.
  */
 function GeneralLedger({
-  // #withDashboardActions
-  changePageTitle,
-  setDashboardBackLink,
-
   // #withGeneralLedgerActions
   refreshGeneralLedgerSheet,
 
   // #withSettings
   organizationName,
 }) {
-  const { formatMessage } = useIntl();
   const [filter, setFilter] = useState({
     fromDate: moment().startOf('year').format('YYYY-MM-DD'),
     toDate: moment().endOf('year').format('YYYY-MM-DD'),
@@ -41,21 +33,6 @@ function GeneralLedger({
     accountsFilter: 'with-transactions',
   });
 
-  // Change page title of the dashboard.
-  useEffect(() => {
-    changePageTitle(formatMessage({ id: 'general_ledger' }));
-  }, [changePageTitle, formatMessage]);
-
-  useEffect(() => {
-    // Show the back link on dashboard topbar.
-    setDashboardBackLink(true);
-
-    return () => {
-      // Hide the back link on dashboard topbar.
-      setDashboardBackLink(false);
-    };
-  });
-  
   // Handle financial statement filter change.
   const handleFilterSubmit = useCallback(
     (filter) => {
@@ -71,7 +48,7 @@ function GeneralLedger({
   );
 
   return (
-    <GeneralLedgerProvider query={filter}>
+    <GeneralLedgerProvider query={transformFilterFormToQuery(filter)}>
       <GeneralLedgerActionsBar />
 
       <DashboardPageContent>
@@ -95,7 +72,6 @@ function GeneralLedger({
 
 export default compose(
   withGeneralLedgerActions,
-  withDashboardActions,
   withSettings(({ organizationSettings }) => ({
     organizationName: organizationSettings.name,
   })),

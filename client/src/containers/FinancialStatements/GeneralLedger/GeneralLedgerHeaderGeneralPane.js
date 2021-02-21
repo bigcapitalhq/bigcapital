@@ -5,7 +5,6 @@ import {
 } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'react-intl';
 import classNames from 'classnames';
-import { compose } from 'redux';
 
 import { AccountsMultiSelect, Row, Col } from 'components';
 
@@ -13,17 +12,15 @@ import FinancialStatementDateRange from 'containers/FinancialStatements/Financia
 import RadiosAccountingBasis from '../RadiosAccountingBasis';
 import FinancialAccountsFilter from '../FinancialAccountsFilter';
 
-import withAccounts from 'containers/Accounts/withAccounts';
-
 import { filterAccountsOptions } from './common';
+import { useGeneralLedgerContext } from './GeneralLedgerProvider'
 
 /**
  * General ledger (GL) - Header - General panel.
  */
-function GeneralLedgerHeaderGeneralPane({
-  // #withAccounts
-  accountsList,
-}) {
+export default function GeneralLedgerHeaderGeneralPane() {
+  const { accounts } = useGeneralLedgerContext();
+
   return (
     <div>
       <FinancialStatementDateRange />
@@ -37,7 +34,7 @@ function GeneralLedgerHeaderGeneralPane({
             label={<T id={'specific_accounts'} />}
             className={classNames('form-group--select-list', Classes.FILL)}
           >
-            <AccountsMultiSelect accounts={accountsList} />
+            <AccountsMultiSelect accounts={accounts} />
           </FormGroup>
         </Col>
       </Row>
@@ -46,7 +43,3 @@ function GeneralLedgerHeaderGeneralPane({
     </div>
   );
 }
-
-export default compose(withAccounts(({ accountsList }) => ({ accountsList })))(
-  GeneralLedgerHeaderGeneralPane,
-);

@@ -40,6 +40,7 @@ function BalanceSheet({
     setFilter({ ..._filter });
   };
 
+  // Hnadle number format submit.
   const handleNumberFormatSubmit = (values) => {
     setFilter({
       ...filter,
@@ -48,7 +49,7 @@ function BalanceSheet({
   };
 
   return (
-    <BalanceSheetProvider query={filter}>
+    <BalanceSheetProvider filter={filter}>
       <BalanceSheetActionsBar
         numberFormat={filter.numberFormat}
         onNumberFormatSubmit={handleNumberFormatSubmit}

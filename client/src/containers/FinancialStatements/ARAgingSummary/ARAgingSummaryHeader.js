@@ -17,24 +17,21 @@ import { compose } from 'utils';
  * AR Aging Summary Report - Drawer Header.
  */
 function ARAgingSummaryHeader({
+  // #ownProps
   pageFilter,
   onSubmitFilter,
   receivableAgingFilter,
 
-  // #withReceivableAgingSummary
-  receivableAgingRefresh,
-
   // #withReceivableAgingSummaryActions
-  refreshReceivableAgingSummary,
   toggleFilterARAgingSummary,
 }) {
   const validationSchema = Yup.object().shape({
     asDate: Yup.date().required().label('asDate'),
-    agingBeforeDays: Yup.number()
+    agingDaysBefore: Yup.number()
       .required()
       .integer()
       .positive()
-      .label('agingBeforeDays'),
+      .label('agingDaysBefore'),
     agingPeriods: Yup.number()
       .required()
       .integer()
@@ -44,12 +41,13 @@ function ARAgingSummaryHeader({
   // Initial values.
   const initialValues = {
     asDate: moment(pageFilter.asDate).toDate(),
-    agingBeforeDays: 30,
+    agingDaysBefore: 30,
     agingPeriods: 3,
   };
   // Handle form submit.
   const handleSubmit = (values, { setSubmitting }) => {
     onSubmitFilter(values);
+    toggleFilterARAgingSummary();
     setSubmitting(false);
   };
   // Handle cancel button click.
@@ -89,10 +87,7 @@ function ARAgingSummaryHeader({
 
 export default compose(
   withARAgingSummaryActions,
-  withARAgingSummary(
-    ({ receivableAgingSummaryFilter, receivableAgingSummaryRefresh }) => ({
-      receivableAgingFilter: receivableAgingSummaryFilter,
-      receivableAgingRefresh: receivableAgingSummaryRefresh,
-    }),
-  ),
+  withARAgingSummary(({ receivableAgingSummaryFilter }) => ({
+    receivableAgingFilter: receivableAgingSummaryFilter,
+  })),
 )(ARAgingSummaryHeader);

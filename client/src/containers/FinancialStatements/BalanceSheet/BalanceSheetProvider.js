@@ -5,15 +5,20 @@ import { transformFilterFormToQuery } from '../common';
 
 const BalanceSheetContext = createContext();
 
-function BalanceSheetProvider({ query, ...props }) {
-  const { data: balanceSheet, isFetching, refetch } = useBalanceSheet({
-    ...transformFilterFormToQuery(query),
-  });
+function BalanceSheetProvider({ filter, ...props }) {
+  // Transformes the given filter to query.
+  const query = React.useMemo(() => transformFilterFormToQuery(filter), [filter]);
+
+  // Fetches the balance sheet report.
+  const { data: balanceSheet, isFetching, refetch } = useBalanceSheet(query);
 
   const provider = {
     balanceSheet,
     isLoading: isFetching,
-    refetchBalanceSheet: refetch
+    refetchBalanceSheet: refetch,
+    
+    query,
+    filter,
   };
   return (
     <DashboardInsider name={'balance-sheet'}>

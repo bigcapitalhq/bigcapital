@@ -110,6 +110,9 @@ export default [
     ),
     breadcrumb: 'General Ledger',
     hotkey: 'shift+4',
+    pageTitle: formatMessage({ id: 'general_ledger' }),
+    backLink: true,
+    sidebarShrink: true
   },
   {
     path: `/financial-reports/balance-sheet`,
@@ -131,6 +134,8 @@ export default [
     ),
     breadcrumb: 'Trial Balance Sheet',
     hotkey: 'shift+5',
+    pageTitle: formatMessage({ id: 'trial_balance_sheet' }),
+    backLink: true,
   },
   {
     path: `/financial-reports/profit-loss-sheet`,
@@ -146,6 +151,9 @@ export default [
       import('containers/FinancialStatements/ARAgingSummary/ARAgingSummary'),
     ),
     breadcrumb: 'Receivable Aging Summary',
+    pageTitle: formatMessage({ id: 'receivable_aging_summary' }),
+    backLink: true,
+    sidebarShrink: true,
   },
   {
     path: `/financial-reports/journal-sheet`,

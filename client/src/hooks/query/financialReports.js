@@ -6,6 +6,7 @@ import {
   profitLossSheetReducer,
   generalLedgerTableRowsReducer,
   journalTableRowsReducer,
+  ARAgingSummaryTableRowsMapper
 } from 'containers/FinancialStatements/reducers';
 import useApiRequest from '../useRequest';
  
@@ -175,6 +176,29 @@ export function useARAgingSummaryReport(query, props) {
       apiRequest.get('/financial_statements/receivable_aging_summary', {
         params: query,
       }),
-    props,
+    {
+      select: (res) => ({
+        columns: res.data.columns,
+        data: res.data.data,
+        query: res.data.query,
+        tableRows: ARAgingSummaryTableRowsMapper({
+          customers: res.data.data.customers,
+          total: res.data.data.total,
+          columns: res.data.columns,
+        }), 
+      }),
+      initialData: {
+        data: {
+          data: {
+            customers: [],
+            total: {},
+          },
+          columns: [],
+          tableRows: []
+        }
+      },
+      initialDataUpdatedAt: 0,
+      ...props
+    },
   );
 }

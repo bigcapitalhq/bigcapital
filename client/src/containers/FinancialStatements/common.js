@@ -1,5 +1,5 @@
 import { omit } from 'lodash';
-import { transformToCamelCase, flatObject } from 'utils';
+import { transfromToSnakeCase, flatObject } from 'utils';
 import { formatMessage } from 'services/intl';
 
 export const displayColumnsByOptions = [
@@ -53,7 +53,7 @@ export const transformDisplayColumnsType = (form) => {
 };
 
 export const transformFilterFormToQuery = (form) => {
-  const transformed = transformToCamelCase({
+  const transformed = transfromToSnakeCase({
     ...omit(form, ['accountsFilter']),
     ...transformDisplayColumnsType(form),
     noneZero: form.accountsFilter === 'without-zero-balance',

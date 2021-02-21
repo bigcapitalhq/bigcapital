@@ -15,34 +15,34 @@ import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import Icon from 'components/Icon';
 import NumberFormatDropdown from 'components/NumberFormatDropdown';
 
-import withARAgingSummary from './withARAgingSummary';
+import { useARAgingSummaryContext } from './ARAgingSummaryProvider';
 import withARAgingSummaryActions from './withARAgingSummaryActions';
 
 import { compose } from 'utils';
 import { safeInvoke } from '@blueprintjs/core/lib/esm/common/utils';
 
 /**
- * AR Aging summary sheet - Actions bar.
+ * A/R Aging summary sheet - Actions bar.
  */
 function ARAgingSummaryActionsBar({
   // #withReceivableAging
   receivableAgingFilter,
-  ARAgingSummaryLoading,
 
   // #withReceivableAgingActions
   toggleFilterARAgingSummary,
-  refreshARAgingSummary,
 
   // #ownProps
   numberFormat,
   onNumberFormatSubmit,
 }) {
+  const { isARAgingFetching, refetch } = useARAgingSummaryContext();
+
   const handleFilterToggleClick = () => {
     toggleFilterARAgingSummary();
   };
   // Handles re-calculate report button.
   const handleRecalcReport = () => {
-    refreshARAgingSummary(true);
+    refetch();
   };
   // Handle number format submit.
   const handleNumberFormatSubmit = (numberFormat) => {
@@ -80,7 +80,7 @@ function ARAgingSummaryActionsBar({
             <NumberFormatDropdown
               numberFormat={numberFormat}
               onSubmit={handleNumberFormatSubmit}
-              submitDisabled={ARAgingSummaryLoading}
+              submitDisabled={isARAgingFetching}
             />
           }
           minimal={true}
@@ -118,7 +118,4 @@ function ARAgingSummaryActionsBar({
 
 export default compose(
   withARAgingSummaryActions,
-  withARAgingSummary(({ receivableAgingSummaryLoading }) => ({
-    ARAgingSummaryLoading: receivableAgingSummaryLoading,
-  })),
 )(ARAgingSummaryActionsBar);

@@ -1,72 +1,25 @@
-import React, { useMemo, useCallback } from 'react';
-import { FormattedMessage as T, useIntl } from 'react-intl';
+import React, { useCallback } from 'react';
+import { useIntl } from 'react-intl';
 import DataTable from 'components/DataTable';
 import FinancialSheet from 'components/FinancialSheet';
 
-import withARAgingSummary from './withARAgingSummary';
-
-import { compose, getColumnWidth } from 'utils';
+import { useARAgingSummaryContext } from './ARAgingSummaryProvider';
+import { useARAgingSummaryColumns } from './components';
 
 /**
  * AR aging summary table sheet.
  */
-function ReceivableAgingSummaryTable({
-  // #withReceivableAgingSummary
-  receivableAgingRows,
-  receivableAgingLoading,
-  receivableAgingColumns,
-
+export default function ReceivableAgingSummaryTable({
   // #ownProps
-  onFetchData,
   organizationName,
 }) {
   const { formatMessage } = useIntl();
 
-  const agingColumns = useMemo(() => {
-    return receivableAgingColumns.map((agingColumn) => {
-      return `${agingColumn.before_days} - ${
-        agingColumn.to_days || 'And Over'
-      }`;
-    });
-  }, [receivableAgingColumns]);
+  // AR aging summary report context.
+  const { ARAgingSummary, isARAgingFetching } = useARAgingSummaryContext();
 
-  const columns = useMemo(
-    () => [
-      {
-        Header: <T id={'customer_name'} />,
-        accessor: 'name',
-        className: 'customer_name',
-        sticky: 'left',
-        width: 240,
-        textOverview: true,
-      },
-      {
-        Header: <T id={'current'} />,
-        accessor: 'current',
-        className: 'current',
-        width: getColumnWidth(receivableAgingRows, `current`, {
-          minWidth: 120,
-        }),
-      },
-      ...agingColumns.map((agingColumn, index) => ({
-        Header: agingColumn,
-        accessor: `aging-${index }`,
-        width: getColumnWidth(receivableAgingRows, `aging-${index }`, {
-          minWidth: 120,
-        }),
-      })),
-      {
-        Header: (<T id={'total'} />),
-        id: 'total',
-        accessor: 'total',
-        className: 'total',
-        width: getColumnWidth(receivableAgingRows, 'total', {
-          minWidth: 120,
-        }),
-      },
-    ],
-    [receivableAgingRows, agingColumns],
-  );
+  // AR aging summary columns.
+  const columns = useARAgingSummaryColumns();
 
   const rowClassNames = (row) => [`row-type--${row.original.rowType}`];
 
@@ -80,12 +33,12 @@ function ReceivableAgingSummaryTable({
       name={'receivable-aging-summary'}
       sheetType={formatMessage({ id: 'receivable_aging_summary' })}
       asDate={new Date()}
-      loading={receivableAgingLoading}
+      loading={isARAgingFetching}
     >
       <DataTable
         className="bigcapital-datatable--financial-report"
         columns={columns}
-        data={receivableAgingRows}
+        data={ARAgingSummary.tableRows}
         rowClassNames={rowClassNames}
         onFetchData={handleFetchData}
         noInitialFetch={true}
@@ -94,17 +47,3 @@ function ReceivableAgingSummaryTable({
     </FinancialSheet>
   );
 }
-
-export default compose(
-  withARAgingSummary(
-    ({
-      receivableAgingSummaryLoading,
-      receivableAgingSummaryColumns,
-      receivableAgingSummaryRows,
-    }) => ({
-      receivableAgingLoading: receivableAgingSummaryLoading,
-      receivableAgingColumns: receivableAgingSummaryColumns,
-      receivableAgingRows: receivableAgingSummaryRows,
-    }),
-  ),
-)(ReceivableAgingSummaryTable);

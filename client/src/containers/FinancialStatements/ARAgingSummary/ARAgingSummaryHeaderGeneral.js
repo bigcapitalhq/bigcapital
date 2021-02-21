@@ -12,17 +12,16 @@ import { FormattedMessage as T } from 'react-intl';
 import classNames from 'classnames';
 import { CustomersMultiSelect, Row, Col, FieldHint } from 'components';
 import { momentFormatter } from 'utils';
-// import withCustomers from 'containers/Customers/withCustomers';
 
-import { compose } from 'redux';
+import { useARAgingSummaryContext } from './ARAgingSummaryProvider';
 
 /**
  * AR Aging Summary - Drawer Header - General Fields.
  */
-function ARAgingSummaryHeaderGeneral({
-  // #withCustomers
-  customers,
-}) {
+export default function ARAgingSummaryHeaderGeneral() {
+  // AR Aging summary context.
+  const { customers } = useARAgingSummaryContext();
+
   return (
     <div>
       <Row>
@@ -53,7 +52,7 @@ function ARAgingSummaryHeaderGeneral({
 
       <Row>
         <Col xs={5}>
-          <FastField name={'agingBeforeDays'}>
+          <FastField name={'agingDaysBefore'}>
             {({ field, meta: { error, touched } }) => (
               <FormGroup
                 label={<T id={'aging_before_days'} />}
@@ -105,8 +104,3 @@ function ARAgingSummaryHeaderGeneral({
     </div>
   );
 }
-export default compose(
-  // withCustomers(({ customers }) => ({
-  //   customers,
-  // })),
-)(ARAgingSummaryHeaderGeneral);
