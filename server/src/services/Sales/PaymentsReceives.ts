@@ -18,7 +18,7 @@ import {
   ISaleInvoice,
   ISystemService,
   ISystemUser,
-  IPaymentReceiveEditPageEntry,
+  IPaymentReceivePageEntry,
 } from 'interfaces';
 import AccountsService from 'services/Accounts/AccountsService';
 import JournalPoster from 'services/Accounting/JournalPoster';
@@ -471,7 +471,7 @@ export default class PaymentReceiveService {
    * @param  {ISaleInvoice[]} invoices - Invoices.
    * @return {IPaymentReceiveEditPageEntry}
    */
-  public invoicesToEditPageEntries(
+  public invoiceToPageEntry(
     invoice: ISaleInvoice
   ): IPaymentReceiveEditPageEntry {
     return {
@@ -485,7 +485,7 @@ export default class PaymentReceiveService {
       date: invoice.invoiceDate,
     };
   }
-  
+
   /**
    * Retrieve the payment receive details of the given id.
    * @param {number} tenantId - Tenant id.
@@ -494,9 +494,10 @@ export default class PaymentReceiveService {
   public async getPaymentReceiveEditPage(
     tenantId: number,
     paymentReceiveId: number,
+    authorizedUser: ISystemUser
   ): Promise<{
-    paymentReceive: IPaymentReceive;
-    entries: IPaymentReceiveEditPageEntry[];
+    paymentReceive: Omit<IPaymentReceive, "entries">;
+    entries: IPaymentReceivePageEntry[];
   }> {
     const { PaymentReceive, SaleInvoice } = this.tenancy.models(tenantId);
 
@@ -509,14 +510,8 @@ export default class PaymentReceiveService {
     if (!paymentReceive) {
       throw new ServiceError(ERRORS.PAYMENT_RECEIVE_NOT_EXISTS);
     }
-
-    // Mapping the entries invoices.
-    const entriesInvoicesIds = paymentReceive.entries.map(
-      (entry) => entry.invoiceId
-    );
-
     const paymentEntries = paymentReceive.entries.map((entry) => ({
-      ...this.invoicesToEditPageEntries(entry.invoice),
+      ...this.invoiceToPageEntry(entry.invoice),
       paymentAmount: entry.paymentAmount,
     }));
 
@@ -524,17 +519,16 @@ export default class PaymentReceiveService {
     const restReceivableInvoices = await SaleInvoice.query()
       .modify('dueInvoices')
       .where('customer_id', paymentReceive.customerId)
-      .whereNotIn('id', entriesInvoicesIds)
+      .whereNotIn(
+        'id',
+        paymentReceive.entries.map((entry) => entry.invoiceId)
+      )
       .orderBy('invoice_date', 'ASC');
 
     const restReceivableEntries = restReceivableInvoices.map(
-      this.invoicesToEditPageEntries
+      this.invoiceToPageEntry
     );
-
-    const entries = [
-      ...paymentEntries,
-      ...restReceivableEntries,
-    ];
+    const entries = [...paymentEntries, ...restReceivableEntries];
 
     return {
       paymentReceive: omit(paymentReceive, ['entries']),
@@ -616,6 +610,7 @@ export default class PaymentReceiveService {
     paymentReceiveId: number
   ) {
     const { PaymentReceive } = this.tenancy.models(tenantId);
+
     return PaymentReceive.query()
       .where('id', paymentReceiveId)
       .withGraphFetched('invoices')
@@ -739,7 +734,6 @@ export default class PaymentReceiveService {
       if (diffEntry.paymentAmount === 0) {
         return;
       }
-
       const oper = SaleInvoice.changePaymentAmount(
         diffEntry.invoiceId,
         diffEntry.paymentAmount
@@ -747,5 +741,23 @@ export default class PaymentReceiveService {
       opers.push(oper);
     });
     await Promise.all([...opers]);
+  }
+
+  /**
+   * Retrieve payment receive new page receivable entries.
+   * @param {number} tenantId - Tenant id.
+   * @param {number} vendorId - Vendor id.
+   * @return {IPaymentReceivePageEntry[]}
+   */
+  async getNewPageEntries(tenantId: number, customerId: number) {
+    const { SaleInvoice } = this.tenancy.models(tenantId);
+
+    // Retrieve due invoices.
+    const entries = await SaleInvoice.query()
+      .modify('dueInvoices')
+      .where('customer_id', customerId)
+      .orderBy('invoice_date', 'ASC');
+
+    return entries.map(this.invoiceToPageEntry);
   }
 }

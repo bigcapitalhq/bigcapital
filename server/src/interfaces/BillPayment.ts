@@ -33,3 +33,14 @@ export interface IBillPaymentDTO {
   reference: string,
   entries: IBillPaymentEntryDTO[],
 };
+
+export interface IBillReceivePageEntry {
+  billId: number,
+  entryType: string,
+  billNo: string,
+  dueAmount: number,
+  amount: number,
+  totalPaymentAmount: number,
+  paymentAmount: number,
+  date: Date|string,
+};

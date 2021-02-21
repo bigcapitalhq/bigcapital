@@ -3,11 +3,10 @@ import {
   useAccounts,
   useVendors,
   useItems,
-  usePaymentMade,
+  usePaymentMadeEditPage,
   useSettings,
   useCreatePaymentMade,
   useEditPaymentMade,
-  useDueBills,
 } from 'hooks/query';
 import { DashboardInsider } from 'components';
 
@@ -39,19 +38,12 @@ function PaymentMadeFormProvider({ paymentMadeId, ...props }) {
 
   // Handle fetch specific payment made details.
   const {
-    data: { paymentMade, payableBills, paymentBills },
+    data: { paymentMade: paymentMadeEditPage, entries: paymentEntriesEditPage },
     isFetching: isPaymentFetching,
     isLoading: isPaymentLoading,
-  } = usePaymentMade(paymentMadeId, {
+  } = usePaymentMadeEditPage(paymentMadeId, {
     enabled: !!paymentMadeId,
   });
-
-  // Retrieve the due bills of the given vendor.
-  const {
-    data: dueBills,
-    isLoading: isDueBillsLoading,
-    isFetching: isDueBillsFetching,
-  } = useDueBills(paymentVendorId, { enabled: !!paymentVendorId });
 
   // Fetch payment made settings.
   useSettings();
@@ -66,12 +58,10 @@ function PaymentMadeFormProvider({ paymentMadeId, ...props }) {
   const provider = {
     paymentMadeId,
     accounts,
-    paymentMade,
-    payableBills,
-    paymentBills,
+    paymentEntriesEditPage,
+    paymentMadeEditPage,
     vendors,
     items,
-    dueBills,
     submitPayload,
     paymentVendorId,
 
@@ -82,8 +72,6 @@ function PaymentMadeFormProvider({ paymentMadeId, ...props }) {
     isVendorsFetching,
     isPaymentFetching,
     isPaymentLoading,
-    isDueBillsLoading,
-    isDueBillsFetching,
 
     createPaymentMadeMutate,
     editPaymentMadeMutate,

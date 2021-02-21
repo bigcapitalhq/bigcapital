@@ -4,7 +4,7 @@ import { Intent } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { useIntl } from 'react-intl';
 import { useHistory } from 'react-router-dom';
-import { sumBy, isEmpty, omit } from 'lodash';
+import { isEmpty, omit } from 'lodash';
 import { CLASSES } from 'common/classes';
 
 import { EditBillFormSchema, CreateBillFormSchema } from './BillForm.schema';
@@ -68,7 +68,7 @@ export default function BillForm() {
     const entries = values.entries.filter(
       (item) => item.item_id && item.quantity,
     );
-    const totalQuantity = safeSumBy(entries, (entry) => entry.quantity);
+    const totalQuantity = safeSumBy(entries, 'quantity');
 
     if (totalQuantity === 0) {
       AppToaster.show({

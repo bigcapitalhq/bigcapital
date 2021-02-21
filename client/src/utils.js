@@ -577,3 +577,27 @@ export function safeSumBy(entries, getter) {
     .sum()
     .value();
 }
+
+
+
+export const fullAmountPaymentEntries = (entries) => {
+  return entries.map((item) => ({
+    ...item,
+    payment_amount: item.due_amount,
+  }));
+}
+
+
+export const amountPaymentEntries = (amount, entries) => {
+  let total = amount;
+
+  return entries.map((item) => {
+    const diff = Math.min(item.due_amount, total);
+    total -= Math.max(diff, 0);
+
+    return {
+      ...item,
+      payment_amount: diff,
+    };
+  });
+};

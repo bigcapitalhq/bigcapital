@@ -27,7 +27,7 @@ export function usePaymentMades(query, props) {
     data: defaultTo(states.data, {
       paymentMades: [],
       pagination: {},
-      filterMeta: {}
+      filterMeta: {},
     }),
   };
 }
@@ -42,8 +42,9 @@ export function useCreatePaymentMade(props) {
   return useMutation(
     (values) => apiRequest.post('purchases/bill_payments', values),
     {
-      onSuccess: () => {
+      onSuccess: (res, values) => {
         client.invalidateQueries('PAYMENT_MADES');
+        client.invalidateQueries(['PAYMENT_MADE_NEW_PAGE_ENTRIES', values.vendor_id]);
       },
       ...props,
     },
@@ -63,6 +64,8 @@ export function useEditPaymentMade(props) {
       onSuccess: (res, [id, values]) => {
         client.invalidateQueries('PAYMENT_MADES');
         client.invalidateQueries(['PAYMENT_MADE', id]);
+
+        client.invalidateQueries(['PAYMENT_MADE_NEW_PAGE_ENTRIES', values.vendor_id]);
       },
       ...props,
     },
@@ -82,6 +85,7 @@ export function useDeletePaymentMade(props) {
       onSuccess: (res, id) => {
         client.invalidateQueries('PAYMENT_MADES');
         client.invalidateQueries(['PAYMENT_MADE', id]);
+        
       },
       ...props,
     },
@@ -91,17 +95,16 @@ export function useDeletePaymentMade(props) {
 /**
  * Retrieve specific payment made.
  */
-export function usePaymentMade(id, props) {
+export function usePaymentMadeEditPage(id, props) {
   const apiRequest = useApiRequest();
 
   const states = useQuery(
     ['PAYMENT_MADE', id],
-    () => apiRequest.get(`purchases/bill_payments/${id}`),
+    () => apiRequest.get(`purchases/bill_payments/${id}/edit-page`),
     {
-      select: res => ({
+      select: (res) => ({
         paymentMade: res.data.bill_payment,
-        payableBills: res.data.payable_bills,
-        paymentBills: res.data.payment_bills,
+        entries: res.data.entries,
       }),
       ...props,
     },
@@ -111,4 +114,24 @@ export function usePaymentMade(id, props) {
     ...states,
     data: defaultTo(states.data, {}),
   };
+}
+
+/**
+ * Retreive payment made new page entries.
+ * @param {number} vendorId -
+ */
+export function usePaymentMadeNewPageEntries(vendorId, props) {
+  const apiRequest = useApiRequest();
+
+  return useQuery(
+    ['PAYMENT_MADE_NEW_PAGE_ENTRIES', vendorId],
+    () =>
+      apiRequest.get(`purchases/bill_payments/new-page/entries`, {
+        params: { vendor_id: vendorId },
+      }),
+    {
+      select: (res) => res.data.entries,
+      ...props,
+    },
+  );
 }

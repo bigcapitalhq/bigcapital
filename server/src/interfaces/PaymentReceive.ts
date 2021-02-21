@@ -52,7 +52,7 @@ export interface IPaymentReceivesFilter extends IDynamicListFilterDTO {
   stringifiedFilterRoles?: string,
 }
 
-export interface IPaymentReceiveEditPageEntry {
+export interface IPaymentReceivePageEntry {
   invoiceId: number,
   entryType: string,
   invoiceNo: string,
@@ -65,5 +65,5 @@ export interface IPaymentReceiveEditPageEntry {
 
 export interface IPaymentReceiveEditPage {
   paymentReceive: IPaymentReceive,
-  entries: IPaymentReceiveEditPageEntry[];
+  entries: IPaymentReceivePageEntry[];
 };

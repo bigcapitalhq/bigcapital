@@ -1,25 +1,27 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   FormGroup,
   InputGroup,
   Position,
   Classes,
   ControlGroup,
+  Button
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
-import { FastField } from 'formik';
+import { FastField, Field, useFormikContext, ErrorMessage } from 'formik';
 import { FormattedMessage as T } from 'react-intl';
+import { toSafeInteger } from 'lodash';
 import classNames from 'classnames';
 import { CLASSES } from 'common/classes';
 import {
   AccountsSelectList,
   ContactSelecetList,
-  ErrorMessage,
   FieldRequiredHint,
   InputPrependText,
   Money,
   Hint,
   Icon,
+  MoneyInputGroup
 } from 'components';
 import withSettings from 'containers/Settings/withSettings';
 import { usePaymentMadeFormContext } from './PaymentMadeFormProvider';
@@ -28,20 +30,43 @@ import {
   tansformDateValue,
   inputIntent,
   compose,
+  safeSumBy,
+  fullAmountPaymentEntries,
+  amountPaymentEntries,
 } from 'utils';
 
 /**
  * Payment made form header fields.
  */
 function PaymentMadeFormHeaderFields({ baseCurrency }) {
+  // Formik form context.
+  const { values: { entries }, setFieldValue } = useFormikContext();
+
+  // Payment made form context.
   const {
     vendors,
     accounts,
     isNewMode,
     setPaymentVendorId,
   } = usePaymentMadeFormContext();
+  
+  // Sumation of payable full-amount.
+  const payableFullAmount = useMemo(() => safeSumBy(entries, 'due_amount'), [entries]);
+  
+  // Handle receive full-amount click.
+  const handleReceiveFullAmountClick = () => {
+    const newEntries = fullAmountPaymentEntries(entries);
+    const fullAmount = safeSumBy(newEntries, 'payment_amount');
 
-  const payableFullAmount = 0;
+    setFieldValue('entries', newEntries);
+    setFieldValue('full_amount', fullAmount);
+  };
+
+  // Handles the full-amount field blur.
+  const onFullAmountBlur = (value) => {
+    const newEntries = amountPaymentEntries(toSafeInteger(value), entries);
+    setFieldValue('entries', newEntries);
+  };
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
@@ -96,8 +121,8 @@ function PaymentMadeFormHeaderFields({ baseCurrency }) {
       </FastField>
 
       {/* ------------ Full amount ------------ */}
-      <FastField name={'full_amount'}>
-        {({ form, field, meta: { error, touched } }) => (
+      <Field name={'full_amount'}>
+        {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'full_amount'} />}
             inline={true}
@@ -108,24 +133,27 @@ function PaymentMadeFormHeaderFields({ baseCurrency }) {
           >
             <ControlGroup>
               <InputPrependText text={baseCurrency} />
-              <InputGroup
-                intent={inputIntent({ error, touched })}
-                minimal={true}
-                {...field}
+              <MoneyInputGroup
+                value={value}
+                onChange={(value) => {
+                  setFieldValue('full_amount', value);
+                }}
+                onBlurValue={onFullAmountBlur}
               />
             </ControlGroup>
 
-            <a
-              //   onClick={handleReceiveFullAmountClick}
-              href="#"
+            <Button
+              onClick={handleReceiveFullAmountClick}
               className={'receive-full-amount'}
+              small={true}
+              minimal={true}
             >
               Receive full amount (
               <Money amount={payableFullAmount} currency={baseCurrency} />)
-            </a>
+            </Button>
           </FormGroup>
         )}
-      </FastField>
+      </Field>
 
       {/* ------------ Payment number ------------ */}
       <FastField name={'payment_number'}>

@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import { useIntl } from 'react-intl';
-import { sumBy, omit } from 'lodash';
+import { sumBy, pick } from 'lodash';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 
@@ -11,7 +11,8 @@ import { AppToaster } from 'components';
 import PaymentMadeHeader from './PaymentMadeFormHeader';
 import PaymentMadeFloatingActions from './PaymentMadeFloatingActions';
 import PaymentMadeFooter from './PaymentMadeFooter';
-import PaymentMadeItemsTable from './PaymentMadeItemsTable';
+import PaymentMadeFormBody from './PaymentMadeFormBody';
+import { PaymentMadeInnerProvider } from './PaymentMadeInnerProvider';
 
 import withSettings from 'containers/Settings/withSettings';
 import {
@@ -32,7 +33,9 @@ function PaymentMadeForm() {
   // Payment made form context.
   const {
     isNewMode,
-    paymentMade,
+    paymentMadeId,
+    paymentMadeEditPage,
+    paymentEntriesEditPage,
     submitPayload,
     createPaymentMadeMutate,
     editPaymentMadeMutate,
@@ -43,14 +46,14 @@ function PaymentMadeForm() {
     () => ({
       ...(!isNewMode
         ? {
-            ...transformToEditForm(paymentMade, []),
+            ...transformToEditForm(paymentMadeEditPage, paymentEntriesEditPage),
           }
         : {
             ...defaultPaymentMade,
             entries: orderingLinesIndexes(defaultPaymentMade.entries),
           }),
     }),
-    [isNewMode, paymentMade],
+    [isNewMode, paymentMadeEditPage, paymentEntriesEditPage],
   );
 
   // Handle the form submit.
@@ -62,9 +65,9 @@ function PaymentMadeForm() {
 
     // Filters entries that have no `bill_id` or `payment_amount`.
     const entries = values.entries
-      .filter((item) => !item.bill_id || item.payment_amount)
+      .filter((item) => item.bill_id && item.payment_amount)
       .map((entry) => ({
-        ...omit(entry, ['due_amount']),
+        ...pick(entry, ['payment_amount', 'bill_id']),
       }));
     // Total payment amount of entries.
     const totalPaymentAmount = sumBy(entries, 'payment_amount');
@@ -96,7 +99,11 @@ function PaymentMadeForm() {
       submitPayload.resetForm && resetForm();
     };
 
-    const onError = ({ response: { error: { data: errors } } }) => {
+    const onError = ({
+      response: {
+        error: { data: errors },
+      },
+    }) => {
       const getError = (errorType) => errors.find((e) => e.type === errorType);
 
       if (getError(ERRORS.PAYMENT_NUMBER_NOT_UNIQUE)) {
@@ -109,7 +116,7 @@ function PaymentMadeForm() {
     };
 
     if (!isNewMode) {
-      editPaymentMadeMutate([paymentMade.id, form])
+      editPaymentMadeMutate([paymentMadeId, form])
         .then(onSaved)
         .catch(onError);
     } else {
@@ -133,13 +140,12 @@ function PaymentMadeForm() {
         onSubmit={handleSubmitForm}
       >
         <Form>
-          <PaymentMadeHeader />
-
-          <div className={classNames(CLASSES.PAGE_FORM_BODY)}>
-             <PaymentMadeItemsTable />
-          </div>
-          <PaymentMadeFooter />
-          <PaymentMadeFloatingActions />
+          <PaymentMadeInnerProvider>
+            <PaymentMadeHeader />
+            <PaymentMadeFormBody />
+            <PaymentMadeFooter />
+            <PaymentMadeFloatingActions />
+          </PaymentMadeInnerProvider>
         </Form>
       </Formik>
     </div>

@@ -9,31 +9,34 @@ import { DataTableEditable } from 'components';
 import { usePaymentMadeEntriesTableColumns } from './components';
 
 import { usePaymentMadeFormContext } from './PaymentMadeFormProvider';
+import { compose, updateTableRow, safeSumBy } from 'utils';
+import withAlertActions from 'containers/Alert/withAlertActions';
 
 /**
  * Payment made items table.
  */
-export default function PaymentMadeItemsTable() {
+function PaymentMadeEntriesTable({
+  onUpdateData,
+  entries,
+
+  // #withAlertsActions
+  openAlert
+}) {
   const {
     paymentVendorId,
-    dueBills,
     isDueBillsFetching,
-    isNewMode,
   } = usePaymentMadeFormContext();
 
   const columns = usePaymentMadeEntriesTableColumns();
-
-  // Detarmines takes vendor payable bills entries in create mode
-  // or payment made entries in edit mode.
-  const computedTableEntries = useMemo(() => [], []);
-
-  // Triggers `onUpdateData` event that passes changed entries.
-  const triggerUpdateData = useCallback((entries) => {}, []);
-
-  const triggerOnFetchBillsSuccess = useCallback((bills) => {}, []);
-
+ 
   // Handle update data.
-  const handleUpdateData = useCallback((rows) => {}, []);
+  const handleUpdateData = useCallback((rowIndex, columnId, value) => {
+    const newRows = compose(
+      updateTableRow(rowIndex, columnId, value),
+    )(entries);
+
+    onUpdateData(newRows);
+  }, [onUpdateData, entries]);
 
   // Detarmines the right no results message before selecting vendor and aftering
   // selecting vendor id.
@@ -41,13 +44,22 @@ export default function PaymentMadeItemsTable() {
     ? 'There is no payable bills for this vendor that can be applied for this payment'
     : 'Please select a vendor to display all open bills for it.';
 
+  // Handle clear all lines action.
+  const handleClearAllLines = () => {
+    const fullAmount = safeSumBy(entries, 'payment_amount');
+
+    if (fullAmount > 0) {
+      openAlert('clear-all-lines-payment-made');
+    }
+  }
+
   return (
     <CloudLoadingIndicator isLoading={isDueBillsFetching}>
       <DataTableEditable
         progressBarLoading={isDueBillsFetching}
         className={classNames(CLASSES.DATATABLE_EDITOR_ITEMS_ENTRIES)}
         columns={columns}
-        data={[]}
+        data={entries}
         spinnerProps={false}
         payload={{
           errors: [],
@@ -58,7 +70,7 @@ export default function PaymentMadeItemsTable() {
           <Button
             small={true}
             className={'button--secondary button--clear-lines'}
-            // onClick={handleClickClearAllLines}
+            onClick={handleClearAllLines}
           >
             <T id={'clear_all_lines'} />
           </Button>
@@ -68,3 +80,7 @@ export default function PaymentMadeItemsTable() {
     </CloudLoadingIndicator>
   );
 }
+
+export default compose(
+  withAlertActions
+)(PaymentMadeEntriesTable);

@@ -18,10 +18,10 @@ function PaymentMadeFormHeader({
   baseCurrency,
 }) {
   // Formik form context.
-  const { values } = useFormikContext();
+  const { values: { entries } } = useFormikContext();
 
   // Calculate the payment amount of the entries.
-  const amountPaid = useMemo(() => sumBy(values, 'payment_amount'), [values]);
+  const amountPaid = useMemo(() => sumBy(entries, 'payment_amount'), [entries]);
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>

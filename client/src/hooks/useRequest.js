@@ -26,7 +26,7 @@ export default function useApiRequest() {
         const locale = 'en';
 
         if (token) {
-          request.headers.common['x-access-token'] = token;
+          request.headers.common['X-Access-Token'] = token;
         }
         if (organizationId) {
           request.headers.common['organization-id'] = organizationId;

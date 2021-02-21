@@ -8,6 +8,7 @@ import BillPaymentsService from 'services/Purchases/BillPayments';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import AccountsService from 'services/Accounts/AccountsService';
 import ResourceController from '../Resources';
+import { Request } from 'express-validator/src/base';
 
 /**
  * Bills payments controller.
@@ -30,6 +31,20 @@ export default class BillsPayments extends BaseController {
   router() {
     const router = Router();
 
+    router.get(
+      '/new-page/entries',
+      [query('vendor_id').exists()],
+      this.validationResult,
+      asyncMiddleware(this.getBillPaymentNewPageEntries.bind(this)),
+      this.handleServiceError
+    );
+    router.get(
+      '/:id/edit-page',
+      this.specificBillPaymentValidateSchema,
+      this.validationResult,
+      asyncMiddleware(this.getBillPaymentEditPage.bind(this)),
+      this.handleServiceError
+    );
     router.post(
       '/',
       [...this.billPaymentSchemaValidation],
@@ -76,6 +91,7 @@ export default class BillsPayments extends BaseController {
       this.handleServiceError,
       this.dynamicListService.handlerErrorsToResponse
     );
+
     return router;
   }
 
@@ -116,6 +132,53 @@ export default class BillsPayments extends BaseController {
       query('page').optional().isNumeric().toInt(),
       query('page_size').optional().isNumeric().toInt(),
     ];
+  }
+
+  /**
+   * Retrieve bill payment new page entries.
+   * @param {Request} req -
+   * @param {Response} res -
+   */
+  async getBillPaymentNewPageEntries(req: Request, res: Response) {
+    const { tenantId } = req;
+    const { vendorId } = this.matchedQueryData(req);
+
+    try {
+      const entries = await this.billPaymentService.getNewPageEntries(
+        tenantId,
+        vendorId
+      );
+      return res.status(200).send({
+        entries: this.transfromToResponse(entries),
+      });
+    } catch (error) {}
+  }
+
+  /**
+   * Retrieve the bill payment edit page details.
+   * @param {Request} req 
+   * @param {Response} res 
+   */
+  async getBillPaymentEditPage(req: Request, res: Response, next: NextFunction) {
+    const { tenantId } = req;
+    const { id: paymentReceiveId } = req.params;
+
+    try {
+      const {
+        billPayment,
+        entries,
+      } = await this.billPaymentService.getBillPaymentEditPage(
+        tenantId,
+        paymentReceiveId,
+      );
+
+      return res.status(200).send({
+        bill_payment: this.transfromToResponse(billPayment),
+        entries: this.transfromToResponse(entries),
+      });
+    } catch (error) {
+      next(error);
+    }
   }
 
   /**

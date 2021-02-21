@@ -55,6 +55,15 @@ export default class PaymentReceivesController extends BaseController {
       this.handleServiceErrors
     );
     router.get(
+      '/new-page/entries',
+      [
+        query('customer_id').exists().isNumeric().toInt(),
+      ],
+      this.validationResult,
+      asyncMiddleware(this.getPaymentReceiveNewPageEntries.bind(this)),
+      this.getPaymentReceiveNewPageEntries.bind(this)
+    );
+    router.get(
       '/',
       this.validatePaymentReceiveList,
       this.validationResult,
@@ -301,6 +310,26 @@ export default class PaymentReceivesController extends BaseController {
     } catch (error) {
       next(error);
     }
+  }
+
+  /**
+   * Retrieve payment receive new page receivable entries.
+   * @param {Request} req - Request.
+   * @param {Response} res - Response.
+   */
+  async getPaymentReceiveNewPageEntries(req, res) {
+    const { tenantId } = req;
+    const { customerId } = this.matchedQueryData(req);
+ 
+    try {
+      const entries = await this.paymentReceiveService.getNewPageEntries(
+        tenantId,
+        customerId
+      );
+      return res.status(200).send({
+        entries: this.transfromToResponse(entries),
+      });
+    } catch (error) {}
   }
 
   /**

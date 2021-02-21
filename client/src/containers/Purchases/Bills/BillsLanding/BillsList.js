@@ -1,6 +1,8 @@
 import React from 'react';
 import { DashboardContentTable, DashboardPageContent } from 'components';
 
+import 'style/pages/Bills/List.scss';
+
 import { BillsListProvider } from './BillsListProvider';
 
 import BillsActionsBar from './BillsActionsBar';

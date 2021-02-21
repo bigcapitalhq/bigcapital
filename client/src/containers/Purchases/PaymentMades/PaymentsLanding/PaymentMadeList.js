@@ -1,4 +1,7 @@
 import React from 'react';
+
+import 'style/pages/PaymentMade/List.scss';
+
 import { DashboardContentTable, DashboardPageContent } from 'components';
 import PaymentMadeActionsBar from './PaymentMadeActionsBar';
 import PaymentMadesAlerts from '../PaymentMadesAlerts';

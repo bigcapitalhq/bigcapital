@@ -1,12 +1,10 @@
 import moment from 'moment';
-import { sumBy } from 'lodash';
-import { transformToForm } from 'utils';
+import { safeSumBy, transformToForm } from 'utils';
 
 export const ERRORS = {
-PAYMENT_NUMBER_NOT_UNIQUE: 'PAYMENT.NUMBER.NOT.UNIQUE',
+  PAYMENT_NUMBER_NOT_UNIQUE: 'PAYMENT.NUMBER.NOT.UNIQUE',
 };
 
-  
 // Default payment made entry values.
 export const defaultPaymentMadeEntry = {
   bill_id: '',
@@ -30,7 +28,7 @@ export const defaultPaymentMade = {
 export const transformToEditForm = (paymentMade, paymentMadeEntries) => {
   return {
     ...transformToForm(paymentMade, defaultPaymentMade),
-    full_amount: sumBy(paymentMade.entries, 'payment_amount'),
+    full_amount: safeSumBy(paymentMadeEntries, 'payment_amount'),
     entries: [
       ...paymentMadeEntries.map((paymentMadeEntry) => ({
         ...transformToForm(paymentMadeEntry, defaultPaymentMadeEntry),
