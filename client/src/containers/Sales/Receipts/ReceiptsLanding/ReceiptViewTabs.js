@@ -17,7 +17,7 @@ function ReceiptViewTabs({
   setReceiptsTableState,
 
   // #withReceipts
-  receiptTableState
+  receiptTableState,
 }) {
   // Receipts list context.
   const { receiptsViews } = useReceiptsListContext();

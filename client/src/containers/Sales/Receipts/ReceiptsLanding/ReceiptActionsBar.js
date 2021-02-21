@@ -43,7 +43,6 @@ function ReceiptActionsBar({
     history.push('/receipts/new');
   };
 
-  // Handle the active tab change.
   const handleTabChange = (customView) => {
     setReceiptsTableState({
       customViewId: customView.id || null,
