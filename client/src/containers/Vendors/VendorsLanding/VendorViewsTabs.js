@@ -40,7 +40,7 @@ function VendorViewsTabs({
     <Navbar className="navbar--dashboard-views">
       <NavbarGroup align={Alignment.LEFT}>
         <DashboardViewsTabs
-          customViewId={vendorsTableState.customViewId}
+          currentViewId={vendorsTableState.customViewId}
           resourceName={'vendors'}
           tabs={tabs}
           onChange={handleTabsChange}

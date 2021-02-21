@@ -8,7 +8,7 @@ const InvoicesListContext = createContext();
 /**
  * Accounts chart data provider.
  */
-function InvoicesListProvider({ accountsTableQuery, ...props }) {
+function InvoicesListProvider({ query, ...props }) {
   // Fetch accounts resource views and fields.
   const { data: invoicesViews, isFetching: isViewsLoading } = useResourceViews(
     'sale_invoices',
@@ -25,7 +25,7 @@ function InvoicesListProvider({ accountsTableQuery, ...props }) {
     data: { invoices, pagination, filterMeta },
     isFetching: isInvoicesFetching,
     isLoading: isInvoicesLoading,
-  } = useInvoices(accountsTableQuery, { keepPreviousData: true });
+  } = useInvoices(query, { keepPreviousData: true });
 
   // Detarmines the datatable empty status.
   const isEmptyStatus =

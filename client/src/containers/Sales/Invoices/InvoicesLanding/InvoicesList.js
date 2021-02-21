@@ -3,7 +3,7 @@ import React from 'react';
 import 'style/pages/SaleInvoice/List.scss';
 
 import { DashboardContentTable, DashboardPageContent } from 'components';
-import InvoiceActionsBar from './InvoiceActionsBar';
+import InvoicesActionsBar from './InvoicesActionsBar';
 import { InvoicesListProvider } from './InvoicesListProvider';
 
 import InvoiceViewTabs from './InvoiceViewTabs';
@@ -26,7 +26,7 @@ function InvoicesList({
     <InvoicesListProvider
       query={transformTableStateToQuery(invoicesTableState)}
     >
-      <InvoiceActionsBar />
+      <InvoicesActionsBar />
 
       <DashboardPageContent>
         <InvoiceViewTabs />

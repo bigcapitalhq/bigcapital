@@ -42,6 +42,7 @@ function EstimateActionsBar({
     history.push('/estimates/new');
   };
 
+  // Handle tab change.
   const handleTabChange = (customView) => {
     setEstimatesTableState({
       customViewId: customView.id || null,

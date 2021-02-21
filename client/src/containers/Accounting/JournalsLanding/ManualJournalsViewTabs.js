@@ -43,7 +43,7 @@ function ManualJournalsViewTabs({
       <NavbarGroup align={Alignment.LEFT}>
         <DashboardViewsTabs
           resourceName={'manual-journals'}
-          customViewId={journalsTableState.customViewId}
+          currentViewId={journalsTableState.customViewId}
           tabs={tabs}
           onChange={handleTabChange}
           onNewViewTabClick={handleClickNewView}

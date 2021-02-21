@@ -4,7 +4,7 @@ import {
 } from 'store/Invoice/invoices.actions';
 
 const mapDipatchToProps = (dispatch) => ({
-  setInvoicesTableState: (query) => setInvoicesTableState(query),
+  setInvoicesTableState: (queries) => dispatch(setInvoicesTableState(queries)),
 });
 
 export default connect(null, mapDipatchToProps);

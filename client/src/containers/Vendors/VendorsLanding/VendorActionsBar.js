@@ -42,10 +42,8 @@ function VendorActionsBar({
   };
 
   // Handle the active tab change.
-  const handleTabChange = (viewId) => {
-    setVendorsTableState({
-      customViewId: viewId.id || null,
-    });
+  const handleTabChange = (customView) => {
+    setVendorsTableState({ customViewId: customView.id || null });
   };
   
   return (

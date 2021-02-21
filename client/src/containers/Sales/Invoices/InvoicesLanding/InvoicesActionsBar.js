@@ -46,9 +46,7 @@ function InvoiceActionsBar({
 
   // Handle views tab change.
   const handleTabChange = (customView) => {
-    setInvoicesTableState({
-      customViewId: customView.id || null,
-    });
+    setInvoicesTableState({ customViewId: customView.id || null });
   };
 
   return (

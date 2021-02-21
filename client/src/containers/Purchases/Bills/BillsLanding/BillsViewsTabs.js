@@ -1,13 +1,13 @@
 import React from 'react';
 
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
-import { useParams } from 'react-router-dom';
 import { pick } from 'lodash';
 
 import { DashboardViewsTabs } from 'components';
 
 import { useBillsListContext } from './BillsListProvider';
 import withBillActions from './withBillsActions';
+import withBills from './withBills';
 
 import { compose } from 'utils';
 
@@ -15,11 +15,12 @@ import { compose } from 'utils';
  * Bills view tabs.
  */
 function BillViewTabs({
-  //#withBillActions
+  // #withBillActions
   setBillsTableState,
-}) {
-  const { custom_view_id: customViewId = null } = useParams();
 
+  // #withBills
+  billsTableState
+}) {
   // Bills list context.
   const { billsViews } = useBillsListContext();
 
@@ -38,7 +39,7 @@ function BillViewTabs({
     <Navbar className={'navbar--dashboard-views'}>
       <NavbarGroup align={Alignment.LEFT}>
         <DashboardViewsTabs
-          initialViewId={customViewId}
+          currentViewId={billsTableState.customViewId}
           resourceName={'bills'}
           tabs={tabs}
           onChange={handleTabsChange}
@@ -48,4 +49,7 @@ function BillViewTabs({
   );
 }
 
-export default compose(withBillActions)(BillViewTabs);
+export default compose(
+  withBillActions,
+  withBills(({ billsTableState }) => ({ billsTableState }))
+)(BillViewTabs);

@@ -23,21 +23,21 @@ function EstimateViewTabs({
   // Estimates list context.
   const { estimatesViews } = useEstimatesListContext();
  
+  // Estimates views.
   const tabs = estimatesViews.map((view) => ({
     ...pick(view, ['name', 'id']),
   }));
 
-  const handleTabsChange = (viewId) => {
-    setEstimatesTableState({
-      customViewId: viewId || null,
-    });
+  // Handle tab change.
+  const handleTabsChange = (customViewId) => {
+    setEstimatesTableState({ customViewId: customViewId || null });
   };
 
   return (
     <Navbar className={'navbar--dashboard-views'}>
       <NavbarGroup align={Alignment.LEFT}>
         <DashboardViewsTabs
-          customViewId={estimatesTableState.customViewId}
+          currentViewId={estimatesTableState.customViewId}
           resourceName={'estimates'}
           tabs={tabs}
           onChange={handleTabsChange}

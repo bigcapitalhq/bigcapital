@@ -31,9 +31,9 @@ function InvoiceViewTabs({
   }));
 
   // Handle tab change.
-  const handleTabsChange = (customView) => {    
+  const handleTabsChange = (customViewId) => {    
     setInvoicesTableState({
-      customViewId: customView.id || null,
+      customViewId: customViewId || null,
     });
   };
 
@@ -46,7 +46,7 @@ function InvoiceViewTabs({
     <Navbar className={'navbar--dashboard-views'}>
       <NavbarGroup align={Alignment.LEFT}>
         <DashboardViewsTabs
-          customViewId={invoicesTableState.customViewId}
+          currentViewId={invoicesTableState.customViewId}
           resourceName={'invoices'}
           tabs={tabs}
           onNewViewTabClick={handleClickNewView}

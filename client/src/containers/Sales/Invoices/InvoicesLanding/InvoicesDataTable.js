@@ -1,9 +1,7 @@
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
-import classNames from 'classnames';
 
 import InvoicesEmptyStatus from './InvoicesEmptyStatus';
-import { CLASSES } from 'common/classes';
 
 import { compose } from 'utils';
 import { DataTable } from 'components';

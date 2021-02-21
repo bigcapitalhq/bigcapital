@@ -47,10 +47,8 @@ function ManualJournalActionsBar({
   };
 
   // Handle tab change.
-  const handleTabChange = (viewId) => {
-    setManualJournalsTableState({
-      customViewid: viewId.id || null,
-    });
+  const handleTabChange = (customView) => {
+    setManualJournalsTableState({ customViewId: customView.id || null });
   };
 
   return (

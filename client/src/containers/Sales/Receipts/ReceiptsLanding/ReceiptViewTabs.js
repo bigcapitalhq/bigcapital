@@ -27,9 +27,9 @@ function ReceiptViewTabs({
   }));
 
   // Handles the active tab chaning.
-  const handleTabsChange = (customView) => {
+  const handleTabsChange = (customViewId) => {
     setReceiptsTableState({
-      customViewId: customView.id || null,
+      customViewId: customViewId || null,
     });
   };
 
@@ -37,7 +37,7 @@ function ReceiptViewTabs({
     <Navbar className={'navbar--dashboard-views'}>
       <NavbarGroup align={Alignment.LEFT}>
         <DashboardViewsTabs
-          initialViewId={receiptTableState.customViewId}
+          currentViewId={receiptTableState.customViewId}
           tabs={tabs}
           resourceName={'receipts'}
           onChange={handleTabsChange}

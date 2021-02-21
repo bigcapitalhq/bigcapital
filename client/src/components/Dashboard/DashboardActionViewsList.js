@@ -24,17 +24,15 @@ export default function DashboardActionViewsList({
     onChange && onChange(view);
   };
 
-  const viewsMenuItems = views.map((view) => {
-    return (
-      <MenuItem onClick={() => handleClickViewItem(view)} text={view.name} />
-    );
-  });
+  const viewsMenuItems = views.map((view) => (
+    <MenuItem onClick={() => handleClickViewItem(view)} text={view.name} />
+  ));
 
   return (
     <Popover
       content={<Menu>{viewsMenuItems}</Menu>}
       minimal={true}
-      interactionKind={PopoverInteractionKind.HOVER}
+      interactionKind={PopoverInteractionKind.CLICK}
       position={Position.BOTTOM_LEFT}
     >
       <Button

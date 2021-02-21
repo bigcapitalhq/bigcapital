@@ -1,8 +1,6 @@
 import React, { useCallback } from 'react';
-import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 
-import { CLASSES } from 'common/classes';
 import { compose } from 'utils';
 
 import { DataTable } from 'components';

@@ -69,8 +69,8 @@ function AccountsActionsBar({
   };
 
   // Handle tab changing.
-  const handleTabChange = (viewId) => {
-    setAccountsTableState({ customViewId: viewId.id || null });
+  const handleTabChange = (customView) => {
+    setAccountsTableState({ customViewId: customView.id || null });
   };
 
   return (

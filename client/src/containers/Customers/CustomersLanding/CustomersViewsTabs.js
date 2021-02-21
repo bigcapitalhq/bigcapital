@@ -34,16 +34,14 @@ function CustomersViewsTabs({
 
   // Handle tabs change.
   const handleTabsChange = (viewId) => {
-    setCustomersTableState({
-      customViewId: viewId || null,
-    });
+    setCustomersTableState({ customViewId: viewId || null });
   };
 
   return (
     <Navbar className="navbar--dashboard-views">
       <NavbarGroup align={Alignment.LEFT}>
         <DashboardViewsTabs
-          customViewId={customersTableState.customViewId}
+          currentViewId={customersTableState.customViewId}
           resourceName={'customers'}
           tabs={tabs}
           onChange={handleTabsChange}
