@@ -45,9 +45,7 @@ function ReceiptActionsBar({
 
   // Handle the active tab change.
   const handleTabChange = (viewId) => {
-    setReceiptsTableState({
-      csutomViewId: viewId.id || null,
-    });
+    setReceiptsTableState({ customViewId: viewId.id || null });
   };
 
   return (

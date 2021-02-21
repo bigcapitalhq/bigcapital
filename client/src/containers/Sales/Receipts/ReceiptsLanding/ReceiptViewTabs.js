@@ -17,7 +17,7 @@ function ReceiptViewTabs({
   setReceiptsTableState,
 
   // #withReceipts
-  receiptTableState
+  receiptTableState,
 }) {
   // Receipts list context.
   const { receiptsViews } = useReceiptsListContext();
@@ -27,9 +27,9 @@ function ReceiptViewTabs({
   }));
 
   // Handles the active tab chaning.
-  const handleTabsChange = (customView) => {
+  const handleTabsChange = (viewId) => {
     setReceiptsTableState({
-      customViewId: customView.id || null,
+      customViewId: viewId || null,
     });
   };
 
