@@ -26,10 +26,10 @@ import { useProfitLossSheetContext } from './ProfitLossProvider';
  */
 function ProfitLossActionsBar({
   // #withProfitLoss
-  profitLossSheetFilter,
+  profitLossDrawerFilter,
 
   // #withProfitLossActions
-  toggleProfitLossSheetFilter,
+  toggleProfitLossFilterDrawer: toggleFilterDrawer,
 
   // #ownProps
   numberFormat,
@@ -38,7 +38,7 @@ function ProfitLossActionsBar({
   const { sheetRefetch, isLoading } = useProfitLossSheetContext();
 
   const handleFilterClick = () => {
-    toggleProfitLossSheetFilter();
+    toggleFilterDrawer();
   };
 
   const handleRecalcReport = () => {
@@ -64,14 +64,14 @@ function ProfitLossActionsBar({
           className={classNames(Classes.MINIMAL, 'button--table-views')}
           icon={<Icon icon="cog-16" iconSize={16} />}
           text={
-            profitLossSheetFilter ? (
+            profitLossDrawerFilter ? (
               <T id={'hide_customizer'} />
             ) : (
               <T id={'customize_report'} />
             )
           }
           onClick={handleFilterClick}
-          active={profitLossSheetFilter}
+          active={profitLossDrawerFilter}
         />
         <NavbarDivider />
 
@@ -122,6 +122,6 @@ function ProfitLossActionsBar({
 }
 
 export default compose(
-  withProfitLoss(({ profitLossSheetFilter }) => ({ profitLossSheetFilter })),
+  withProfitLoss(({ profitLossDrawerFilter }) => ({ profitLossDrawerFilter })),
   withProfitLossActions,
 )(ProfitLossActionsBar);

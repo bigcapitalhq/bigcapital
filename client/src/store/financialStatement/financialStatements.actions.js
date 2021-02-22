@@ -1,266 +1,79 @@
-import ApiService from 'services/ApiService';
 import t from 'store/types';
 
-export const balanceSheetRefresh = (refresh) => {
-  return (dispatch) =>
-    dispatch({
-      type: 'BALANCE_SHEET_REFRESH',
-      payload: { refresh },
-    });
-};
+/**
+ * Toggles display of the balance sheet filter drawer.
+ * @param {boolean} toggle 
+ */
+export function toggleBalanceSheetFilterDrawer(toggle) {
+  return {
+    type: `${t.BALANCE_SHEET}/${t.DISPLAY_FILTER_DRAWER_TOGGLE}`,
+    payload: {
+      toggle
+    },
+  };
+}
 
-export const fetchGeneralLedger = ({ query }) => {
-  return (dispatch) =>
-    new Promise((resolve, reject) => {
-      dispatch({
-        type: t.GENERAL_LEDGER_SHEET_LOADING,
-        loading: true,
-      });
-      ApiService.get('/financial_statements/general_ledger', { params: query })
-        .then((response) => {
-          dispatch({
-            type: t.GENERAL_LEDGER_STATEMENT_SET,
-            data: response.data,
-          });
-          dispatch({
-            type: t.GENERAL_LEDGER_SHEET_LOADING,
-            loading: false,
-          });
-          resolve(response);
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    });
-};
+/**
+ * Toggles display of the trial balance sheet filter drawer.
+ * @param {boolean} toggle 
+ */
+export function toggleTrialBalanceSheetFilterDrawer(toggle) {
+  return {
+    type: `${t.TRIAL_BALANCE_SHEET}/${t.DISPLAY_FILTER_DRAWER_TOGGLE}`,
+    payload: {
+      toggle,
+    },
+  };
+}
 
-export const refreshGeneralLedgerSheet = (refresh) => {
-  return (dispatch) =>
-    dispatch({
-      type: t.GENERAL_LEDGER_REFRESH,
-      payload: { refresh },
-    });
-};
+/**
+ * Toggles display of the journal sheet filter drawer.
+ * @param {boolean} toggle 
+ */
+export function toggleJournalSheeetFilterDrawer(toggle) {
+  return {
+    type: `${t.JOURNAL}/${t.DISPLAY_FILTER_DRAWER_TOGGLE}`,
+    payload: {
+      toggle
+    },
+  };
+}
 
-export const fetchBalanceSheet = ({ query }) => {
-  return (dispatch) =>
-    new Promise((resolve, reject) => {
-      dispatch({
-        type: t.BALANCE_SHEET_LOADING,
-        loading: true,
-      });
-      ApiService.get('/financial_statements/balance_sheet', { params: query })
-        .then((response) => {
-          dispatch({
-            type: t.BALANCE_SHEET_STATEMENT_SET,
-            data: response.data,
-            query: query,
-          });
-          dispatch({
-            type: t.BALANCE_SHEET_LOADING,
-            loading: false,
-          });
-          dispatch({
-            type: t.SET_DASHBOARD_REQUEST_COMPLETED,
-          });
-          resolve(response);
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    });
-};
+/**
+ * Toggles display of the profit/loss filter drawer.
+ * @param {boolean} toggle 
+ */
+export function toggleProfitLossFilterDrawer(toggle) {
+  return {
+    type: `${t.PROFIT_LOSS}/${t.DISPLAY_FILTER_DRAWER_TOGGLE}`,
+    payload: {
+      toggle
+    },
+  };
+}
 
-export const fetchTrialBalanceSheet = ({ query }) => {
-  return (dispatch) =>
-    new Promise((resolve, reject) => {
-      dispatch({
-        type: t.TRIAL_BALANCE_SHEET_LOADING,
-        loading: true,
-      });
-      ApiService.get('/financial_statements/trial_balance_sheet', {
-        params: query,
-      })
-        .then((response) => {
-          dispatch({
-            type: t.TRAIL_BALANCE_STATEMENT_SET,
-            data: response.data,
-          });
-          dispatch({
-            type: t.TRIAL_BALANCE_SHEET_LOADING,
-            loading: false,
-          });
-          resolve(response.data);
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    });
-};
+/**
+ * Toggles display of the general ledger filter drawer.
+ * @param {boolean} toggle 
+ */
+export function toggleGeneralLedgerFilterDrawer(toggle) {
+  return {
+    type: `${t.GENERAL_LEDGER}/${t.DISPLAY_FILTER_DRAWER_TOGGLE}`,
+    payload: {
+      toggle
+    },
+  };
+}
 
-export const trialBalanceRefresh = (refresh) => {
-  return (dispatch) =>
-    dispatch({
-      type: t.TRIAL_BALANCE_REFRESH,
-      payload: { refresh },
-    });
-};
-
-export const fetchProfitLossSheet = ({ query }) => {
-  return (dispatch) =>
-    new Promise((resolve, reject) => {
-      dispatch({
-        type: t.PROFIT_LOSS_SHEET_LOADING,
-        loading: true,
-      });
-      ApiService.get('/financial_statements/profit_loss_sheet', {
-        params: query,
-      })
-        .then((response) => {
-          dispatch({
-            type: t.PROFIT_LOSS_SHEET_SET,
-            profitLoss: response.data.data,
-            columns: response.data.columns,
-            query: response.data.query,
-          });
-          dispatch({
-            type: t.PROFIT_LOSS_SHEET_LOADING,
-            loading: false,
-          });
-          resolve(response.data);
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    });
-};
-
-export const profitLossRefresh = (refresh) => {
-  return (dispatch) =>
-    dispatch({
-      type: t.PROFIT_LOSS_REFRESH,
-      payload: { refresh },
-    });
-};
-
-export const fetchJournalSheet = ({ query }) => {
-  return (dispatch) =>
-    new Promise((resolve, reject) => {
-      dispatch({
-        type: t.JOURNAL_SHEET_LOADING,
-        loading: true,
-      });
-      ApiService.get('/financial_statements/journal', { params: query })
-        .then((response) => {
-          dispatch({
-            type: t.JOURNAL_SHEET_SET,
-            data: response.data,
-            query: response.data.query,
-          });
-          dispatch({
-            type: t.JOURNAL_SHEET_LOADING,
-            loading: false,
-          });
-          resolve(response.data);
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    });
-};
-
-export const refreshJournalSheet = (refresh) => {
-  return (dispatch) =>
-    dispatch({
-      type: t.JOURNAL_SHEET_REFRESH,
-      payload: { refresh },
-    });
-};
-
-export const fetchReceivableAgingSummary = ({ query }) => {
-  return (dispatch) =>
-    new Promise((resolve, reject) => {
-      dispatch({
-        type: t.RECEIVABLE_AGING_SUMMARY_LOADING,
-        payload: {
-          loading: true,
-        },
-      });
-      ApiService.get('/financial_statements/receivable_aging_summary', {
-        params: query,
-      })
-        .then((response) => {
-          dispatch({
-            type: t.RECEIVABLE_AGING_SUMMARY_SET,
-            payload: {
-              customers: response.data.data.customers,
-              total: response.data.data.total,
-              columns: response.data.columns,
-              query,
-            },
-          });
-          dispatch({
-            type: t.RECEIVABLE_AGING_SUMMARY_LOADING,
-            payload: {
-              loading: false,
-            },
-          });
-          resolve(response);
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    });
-};
-
-export const receivableAgingSummaryRefresh = (refresh) => {
-  return (dispatch) =>
-    dispatch({
-      type: t.RECEIVABLE_AGING_SUMMARY_REFRESH,
-      payload: { refresh },
-    });
-};
-
-export const fetchPayableAginSummary = ({ query }) => {
-  return (dispatch) =>
-    new Promise((resolve, reject) => {
-      dispatch({
-        type: t.PAYABLE_AGING_SUMMARY_LOADING,
-        payload: {
-          loading: true,
-        },
-      });
-      ApiService.get('/financial_statements/payable_aging_summary', {
-        params: query,
-      })
-        .then((response) => {
-          dispatch({
-            type: t.PAYABLE_AGING_SUMMARY_SET,
-            payload: {
-              vendors: response.data.data.vendors,
-              total: response.data.data.total,
-              columns: response.data.columns,
-              query,
-            },
-          });
-          dispatch({
-            type: t.PAYABLE_AGING_SUMMARY_LOADING,
-            payload: {
-              loading: false,
-            },
-          });
-          resolve(response);
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    });
-};
-
-export const payableAgingSummaryRefresh = (refresh) => {
-  return (dispatch) =>
-    dispatch({
-      type: t.PAYABLE_AGING_SUMMARY_REFRESH,
-      payload: { refresh },
-    });
-};
+/**
+ * Toggles display of the AR aging summary filter drawer.
+ * @param {boolean} toggle -
+ */
+export function toggleARAgingSummaryFilterDrawer(toggle) {
+  return {
+    type: `${t.AR_AGING_SUMMARY}/${t.DISPLAY_FILTER_DRAWER_TOGGLE}`,
+    payload: {
+      toggle,
+    }
+  };
+}

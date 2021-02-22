@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import moment from 'moment';
 
 import 'style/pages/FinancialStatements/ARAgingSummary.scss';
@@ -11,6 +11,7 @@ import ARAgingSummaryTable from './ARAgingSummaryTable';
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import { ARAgingSummaryProvider } from './ARAgingSummaryProvider';
 
+import withARAgingSummaryActions from './withARAgingSummaryActions'
 import withSettings from 'containers/Settings/withSettings';
 
 import { compose } from 'utils';
@@ -21,6 +22,9 @@ import { compose } from 'utils';
 function ReceivableAgingSummarySheet({
   // #withSettings
   organizationName,
+
+  // #withARAgingSummaryActions
+  toggleARAgingSummaryFilterDrawer: toggleDisplayFilterDrawer
 }) {
   const [filter, setFilter] = useState({
     asDate: moment().endOf('day').format('YYYY-MM-DD'),
@@ -41,6 +45,11 @@ function ReceivableAgingSummarySheet({
   const handleNumberFormatSubmit = (numberFormat) => {
     setFilter({ ...filter, numberFormat });
   };
+
+  // Hide the filter drawer once the page unmount.
+  useEffect(() => () => {
+    toggleDisplayFilterDrawer(false);
+  }, [toggleDisplayFilterDrawer]);
 
   return (
     <ARAgingSummaryProvider filter={filter}>
@@ -67,4 +76,5 @@ export default compose(
   withSettings(({ organizationSettings }) => ({
     organizationName: organizationSettings.name,
   })),
+  withARAgingSummaryActions
 )(ReceivableAgingSummarySheet);

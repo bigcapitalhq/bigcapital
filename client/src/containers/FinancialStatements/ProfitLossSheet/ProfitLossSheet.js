@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import moment from 'moment';
 import { compose } from 'utils';
-import { useIntl } from 'react-intl';
 
 import ProfitLossSheetHeader from './ProfitLossSheetHeader';
 import ProfitLossSheetTable from './ProfitLossSheetTable';
@@ -20,13 +19,11 @@ import { ProfitLossSheetProvider } from './ProfitLossProvider';
  * Profit/Loss financial statement sheet.
  */
 function ProfitLossSheet({
-  // #withDashboardActions
-  changePageTitle,
-  setDashboardBackLink,
-  setSidebarShrink,
-
   // #withPreferences
   organizationName,
+
+  // #withProfitLossActions
+  toggleProfitLossFilterDrawer: toggleDisplayFilterDrawer
 }) {
   const [filter, setFilter] = useState({
     basis: 'cash',
@@ -35,24 +32,7 @@ function ProfitLossSheet({
     displayColumnsType: 'total',
     accountsFilter: 'all-accounts',
   });
-  const { formatMessage } = useIntl();
-
-  // Change page title of the dashboard.
-  useEffect(() => {
-    changePageTitle(formatMessage({ id: 'profit_loss_sheet' }));
-  }, [changePageTitle, formatMessage]);
-
-  useEffect(() => {
-    setSidebarShrink();
-    // Show the back link on dashboard topbar.
-    setDashboardBackLink(true);
-
-    return () => {
-      // Hide the back link on dashboard topbar.
-      setDashboardBackLink(false);
-    };
-  }, [setDashboardBackLink, setSidebarShrink]);
-
+ 
   // Handle submit filter.
   const handleSubmitFilter = (filter) => {
     const _filter = {
@@ -70,6 +50,11 @@ function ProfitLossSheet({
       numberFormat,
     });
   };
+
+  // Hide the filter drawer once the page unmount.
+  React.useEffect(() => () => {
+    toggleDisplayFilterDrawer(false);
+  }, [toggleDisplayFilterDrawer])
 
   return (
     <ProfitLossSheetProvider query={filter}>

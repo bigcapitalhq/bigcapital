@@ -1,12 +1,12 @@
 import React, { useCallback, useMemo } from 'react';
-import moment from 'moment';
 import { useIntl } from 'react-intl';
 
 import FinancialSheet from 'components/FinancialSheet';
 import DataTable from 'components/DataTable';
 import { useJournalSheetContext } from './JournalProvider';
 
-import { defaultExpanderReducer, getForceWidth } from 'utils';
+import { defaultExpanderReducer } from 'utils';
+import { useJournalTableColumns } from './components';
 
 export default function JournalSheetTable({
   // #ownProps
@@ -21,63 +21,8 @@ export default function JournalSheetTable({
     isLoading
   } = useJournalSheetContext();
 
-  const columns = useMemo(
-    () => [
-      {
-        Header: formatMessage({ id: 'date' }),
-        accessor: row => row.date ? moment(row.date).format('YYYY MMM DD') : '',
-        className: 'date',
-        width: 100,
-      },
-      {
-        Header: formatMessage({ id: 'transaction_type' }),
-        accessor: 'reference_type_formatted',
-        className: 'reference_type_formatted',
-        width: 120,
-      },
-      {
-        Header: formatMessage({ id: 'num' }),
-        accessor: 'reference_id',
-        className: 'reference_id',
-        width: 70,
-      },
-      {
-        Header: formatMessage({ id: 'description' }),
-        accessor: 'note',
-        className: 'note'
-      },
-      {
-        Header: formatMessage({ id: 'acc_code' }),
-        accessor: 'account_code',
-        width: 95,
-        className: 'account_code',
-      },
-      {
-        Header: formatMessage({ id: 'account' }),
-        accessor: 'account_name',
-        className: 'account_name',
-        textOverview: true,
-      },
-      {
-        Header: formatMessage({ id: 'credit' }),
-        accessor: 'formatted_credit',
-        className: 'credit'
-      },
-      {
-        Header: formatMessage({ id: 'debit' }),
-        accessor: 'formatted_debit',
-        className: 'debit'
-      },
-    ],
-    [formatMessage],
-  );
-
-  const handleFetchData = useCallback(
-    (...args) => {
-      onFetchData && onFetchData(...args);
-    },
-    [onFetchData],
-  );
+  // Retreive the journal table columns.
+  const columns = useJournalTableColumns();
 
   // Default expanded rows of general journal table.
   const expandedRows = useMemo(() => defaultExpanderReducer([], 1), []);
@@ -112,7 +57,6 @@ export default function JournalSheetTable({
         columns={columns}
         data={tableRows}
         rowClassNames={rowClassNames}
-        onFetchData={handleFetchData}
         noResults={formatMessage({
           id: 'this_report_does_not_contain_any_data_between_date_period',
         })}

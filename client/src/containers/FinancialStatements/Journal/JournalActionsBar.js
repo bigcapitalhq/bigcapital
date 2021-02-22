@@ -24,7 +24,7 @@ import { useJournalSheetContext } from './JournalProvider';
  */
 function JournalActionsBar({
   // #withJournal
-  journalSheetFilter,
+  isFilterDrawerOpen,
 
   // #withJournalActions
   toggleJournalSheetFilter,
@@ -56,13 +56,13 @@ function JournalActionsBar({
           className={classNames(Classes.MINIMAL, 'button--table-views')}
           icon={<Icon icon="cog-16" iconSize={16} />}
           text={
-            (journalSheetFilter) ? (
+            (isFilterDrawerOpen) ? (
               <T id={'hide_customizer'} />
             ) : (
               <T id={'customize_report'} />
             )
           }
-          active={journalSheetFilter}
+          active={isFilterDrawerOpen}
           onClick={handleFilterToggleClick}
         />
         <NavbarDivider />
@@ -96,6 +96,8 @@ function JournalActionsBar({
 }
 
 export default compose(
-  withJournal(({ journalSheetFilter }) => ({ journalSheetFilter })),
+  withJournal(({ journalSheetDrawerFilter }) => ({
+    isFilterDrawerOpen: journalSheetDrawerFilter
+  })),
   withJournalActions,
 )(JournalActionsBar);

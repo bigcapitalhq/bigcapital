@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   NavbarGroup,
   Button,
@@ -16,16 +16,16 @@ import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import NumberFormatDropdown from 'components/NumberFormatDropdown';
 
 import { compose, saveInvoke } from 'utils';
-import withBalanceSheetDetail from './withBalanceSheetDetail';
+import withBalanceSheet from './withBalanceSheet';
 import withBalanceSheetActions from './withBalanceSheetActions';
 import { useBalanceSheetContext } from './BalanceSheetProvider';
 
 function BalanceSheetActionsBar({
-  // #withBalanceSheetDetail
-  balanceSheetFilter,
+  // #withBalanceSheet
+  balanceSheetDrawerFilter,
 
   // #withBalanceSheetActions
-  toggleBalanceSheetFilter,
+  toggleBalanceSheetFilterDrawer: toggleFilterDrawer,
 
   // #ownProps
   numberFormat,
@@ -35,7 +35,7 @@ function BalanceSheetActionsBar({
 
   // Handle filter toggle click.
   const handleFilterToggleClick = () => {
-    toggleBalanceSheetFilter();
+    toggleFilterDrawer();
   };
 
   // Handle recalculate the report button.
@@ -63,14 +63,14 @@ function BalanceSheetActionsBar({
           className={classNames(Classes.MINIMAL, 'button--table-views')}
           icon={<Icon icon="cog-16" iconSize={16} />}
           text={
-            !balanceSheetFilter ? (
+            !balanceSheetDrawerFilter ? (
               <T id={'customize_report'} />
             ) : (
               <T id={'hide_customizer'} />
             )
           }
           onClick={handleFilterToggleClick}
-          active={balanceSheetFilter}
+          active={balanceSheetDrawerFilter}
         />
         <NavbarDivider />
 
@@ -123,9 +123,6 @@ function BalanceSheetActionsBar({
 }
 
 export default compose(
-  withBalanceSheetDetail(({ balanceSheetFilter, balanceSheetLoading }) => ({
-    balanceSheetFilter,
-    balanceSheetLoading,
-  })),
+  withBalanceSheet(({ balanceSheetDrawerFilter }) => ({ balanceSheetDrawerFilter })),
   withBalanceSheetActions,
 )(BalanceSheetActionsBar);

@@ -20,10 +20,12 @@ function ARAgingSummaryHeader({
   // #ownProps
   pageFilter,
   onSubmitFilter,
-  receivableAgingFilter,
 
   // #withReceivableAgingSummaryActions
-  toggleFilterARAgingSummary,
+  toggleARAgingSummaryFilterDrawer: toggleFilterDrawerDisplay,
+
+  // #withARAgingSummary
+  isFilterDrawerOpen
 }) {
   const validationSchema = Yup.object().shape({
     asDate: Yup.date().required().label('asDate'),
@@ -44,19 +46,20 @@ function ARAgingSummaryHeader({
     agingDaysBefore: 30,
     agingPeriods: 3,
   };
+
   // Handle form submit.
   const handleSubmit = (values, { setSubmitting }) => {
     onSubmitFilter(values);
-    toggleFilterARAgingSummary();
+    toggleFilterDrawerDisplay(false);
     setSubmitting(false);
   };
   // Handle cancel button click.
   const handleCancelClick = () => {
-    toggleFilterARAgingSummary();
+    toggleFilterDrawerDisplay(false);
   };
 
   return (
-    <FinancialStatementHeader isOpen={receivableAgingFilter}>
+    <FinancialStatementHeader isOpen={isFilterDrawerOpen}>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
@@ -87,7 +90,7 @@ function ARAgingSummaryHeader({
 
 export default compose(
   withARAgingSummaryActions,
-  withARAgingSummary(({ receivableAgingSummaryFilter }) => ({
-    receivableAgingFilter: receivableAgingSummaryFilter,
+  withARAgingSummary(({ ARAgingSummaryFilterDrawer }) => ({
+    isFilterDrawerOpen: ARAgingSummaryFilterDrawer,
   })),
 )(ARAgingSummaryHeader);

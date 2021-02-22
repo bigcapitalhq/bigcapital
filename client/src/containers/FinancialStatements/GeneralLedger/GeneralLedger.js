@@ -21,7 +21,7 @@ import { compose } from 'utils';
  */
 function GeneralLedger({
   // #withGeneralLedgerActions
-  refreshGeneralLedgerSheet,
+  toggleGeneralLedgerFilterDrawer,
 
   // #withSettings
   organizationName,
@@ -42,9 +42,16 @@ function GeneralLedger({
         toDate: moment(filter.toDate).format('YYYY-MM-DD'),
       };
       setFilter(parsedFilter);
-      refreshGeneralLedgerSheet(true);
     },
-    [setFilter, refreshGeneralLedgerSheet],
+    [setFilter],
+  );
+
+  // Hide the filter drawer once the page unmount.
+  React.useEffect(
+    () => () => {
+      toggleGeneralLedgerFilterDrawer(false);
+    },
+    [toggleGeneralLedgerFilterDrawer],
   );
 
   return (

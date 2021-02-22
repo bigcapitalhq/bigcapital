@@ -9,6 +9,7 @@ import {
   MoneyFieldCell,
   ItemsListCell,
   PercentFieldCell,
+  NumericInputCell
 } from 'components/DataTableCells';
 
 /**
@@ -62,7 +63,7 @@ export function ActionsCellRenderer({
  */
 export function QuantityTotalFooterCell({ rows }) {
   const quantity = sumBy(rows, r => parseInt(r.original.quantity, 10));
-  return <span>{ formattedAmount(quantity, 'USD') }</span>;
+  return <span>{ quantity }</span>;
 }
 
 /**
@@ -80,6 +81,11 @@ export function TotalCell({ value }) {
   return <span>{ formattedAmount(value, 'USD', { noZero: true }) }</span>;
 }
 
+// Index table cell.
+export function IndexTableCell({ row: { index } }){
+  return (<span>{index + 1}</span>); 
+}
+
 /**
  * Retrieve editable items entries columns.
  */
@@ -91,7 +97,7 @@ export function useEditableItemsEntriesColumns() {
       {
         Header: '#',
         accessor: 'index',
-        Cell: ({ row: { index } }) => <span>{index + 1}</span>,
+        Cell: IndexTableCell,
         width: 40,
         disableResizing: true,
         disableSortBy: true,
@@ -119,7 +125,7 @@ export function useEditableItemsEntriesColumns() {
       {
         Header: formatMessage({ id: 'quantity' }),
         accessor: 'quantity',
-        Cell: InputGroupCell,
+        Cell: NumericInputCell,
         Footer: QuantityTotalFooterCell,
         disableSortBy: true,
         width: 80,

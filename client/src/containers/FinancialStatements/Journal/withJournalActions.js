@@ -1,13 +1,9 @@
-import {connect} from 'react-redux';
-import {
-  fetchJournalSheet,
-  refreshJournalSheet,
-} from 'store/financialStatement/financialStatements.actions';
+import { connect } from 'react-redux';
+import { toggleJournalSheeetFilterDrawer } from 'store/financialStatement/financialStatements.actions';
 
 export const mapDispatchToProps = (dispatch) => ({
-  requestFetchJournalSheet: (query) => dispatch(fetchJournalSheet({ query })),
-  toggleJournalSheetFilter: () => dispatch({ type: 'JOURNAL_FILTER_TOGGLE' }),
-  refreshJournalSheet: (refresh) => dispatch(refreshJournalSheet(refresh)),
+  toggleJournalSheetFilter: (toggle) =>
+    dispatch(toggleJournalSheeetFilterDrawer(toggle)),
 });
 
 export default connect(null, mapDispatchToProps);

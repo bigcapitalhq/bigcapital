@@ -19,10 +19,10 @@ function ProfitLossHeader({
   onSubmitFilter,
 
   // #withProfitLoss
-  profitLossSheetFilter,
+  profitLossDrawerFilter,
 
   // #withProfitLossActions
-  toggleProfitLossSheetFilter,
+  toggleProfitLossFilterDrawer: toggleFilterDrawer,
 }) {
   const { formatMessage } = useIntl();
 
@@ -49,21 +49,21 @@ function ProfitLossHeader({
   // Handle form submit.
   const handleSubmit = (values, actions) => {
     onSubmitFilter(values);
-    toggleProfitLossSheetFilter();
+    toggleFilterDrawer(false);
   };
 
   // Handles the cancel button click.
   const handleCancelClick = () => {
-    toggleProfitLossSheetFilter();
+    toggleFilterDrawer(false);
   };
   // Handles the drawer close action.
   const handleDrawerClose = () => {
-    toggleProfitLossSheetFilter();
+    toggleFilterDrawer(false);
   };
 
   return (
     <FinancialStatementHeader
-      isOpen={profitLossSheetFilter}
+      isOpen={profitLossDrawerFilter}
       drawerProps={{ onClose: handleDrawerClose }}
     >
       <Formik
@@ -95,8 +95,8 @@ function ProfitLossHeader({
 }
 
 export default compose(
-  withProfitLoss(({ profitLossSheetFilter }) => ({
-    profitLossSheetFilter,
+  withProfitLoss(({ profitLossDrawerFilter }) => ({
+    profitLossDrawerFilter,
   })),
   withProfitLossActions,
 )(ProfitLossHeader);

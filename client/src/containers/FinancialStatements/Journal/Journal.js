@@ -13,9 +13,6 @@ import { JournalSheetProvider } from './JournalProvider';
 import withSettings from 'containers/Settings/withSettings';
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withJournalActions from './withJournalActions';
-import withJournal from './withJournal';
-
-import { transformFilterFormToQuery } from 'containers/FinancialStatements/common';
 
 import 'style/pages/FinancialStatements/Journal.scss';
 
@@ -23,35 +20,17 @@ import 'style/pages/FinancialStatements/Journal.scss';
  * Journal sheet.
  */
 function Journal({
-  // #withDashboardActions
-  changePageTitle,
-  setDashboardBackLink,
-  setSidebarShrink,
-
   // #withPreferences
   organizationName,
+
+  // #withJournalActions
+  toggleJournalSheetFilter
 }) {
   const [filter, setFilter] = useState({
     fromDate: moment().startOf('year').format('YYYY-MM-DD'),
     toDate: moment().endOf('year').format('YYYY-MM-DD'),
     basis: 'accural',
   });
-  const { formatMessage } = useIntl();
-
-  useEffect(() => {
-    changePageTitle(formatMessage({ id: 'journal_sheet' }));
-  }, [changePageTitle, formatMessage]);
-
-  useEffect(() => {
-    setSidebarShrink();
-    // Show the back link on dashboard topbar.
-    setDashboardBackLink(true);
-
-    return () => {
-      // Hide the back link on dashboard topbar.
-      setDashboardBackLink(false);
-    };
-  }, [setDashboardBackLink, setSidebarShrink]);
 
   // Handle financial statement filter change.
   const handleFilterSubmit = useCallback(
@@ -65,6 +44,11 @@ function Journal({
     },
     [setFilter],
   );
+
+  // Hide the journal sheet filter drawer once the page unmount.
+  useEffect(() => () => {
+    toggleJournalSheetFilter(false);
+  }, [toggleJournalSheetFilter]);
 
   return (
     <JournalSheetProvider query={filter}>
@@ -93,8 +77,5 @@ export default compose(
   withJournalActions,
   withSettings(({ organizationSettings }) => ({
     organizationName: organizationSettings.name,
-  })),
-  withJournal(({ journalSheetRefresh }) => ({
-    journalSheetRefresh,
   })),
 )(Journal);

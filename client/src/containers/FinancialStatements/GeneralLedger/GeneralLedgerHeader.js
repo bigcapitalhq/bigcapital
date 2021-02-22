@@ -11,7 +11,7 @@ import GeneralLedgerHeaderGeneralPane from './GeneralLedgerHeaderGeneralPane';
 import withGeneralLedger from './withGeneralLedger';
 import withGeneralLedgerActions from './withGeneralLedgerActions';
 
-import { compose } from 'utils';
+import { compose, saveInvoke } from 'utils';
 
 /**
  * Geenral Ledger (GL) - Header.
@@ -22,10 +22,10 @@ function GeneralLedgerHeader({
   pageFilter,
 
   // #withGeneralLedgerActions
-  toggleGeneralLedgerSheetFilter,
+  toggleGeneralLedgerFilterDrawer: toggleDisplayFilterDrawer,
 
   // #withGeneralLedger
-  generalLedgerSheetFilter,
+  isFilterDrawerOpen,
 }) {
   // Initial values.
   const initialValues = {
@@ -43,24 +43,24 @@ function GeneralLedgerHeader({
 
   // Handle form submit.
   const handleSubmit = (values, { setSubmitting }) => {
-    onSubmitFilter(values);
-    toggleGeneralLedgerSheetFilter();
+    saveInvoke(onSubmitFilter, values);
+    toggleDisplayFilterDrawer();
     setSubmitting(false);
   };
 
   // Handle cancel button click.
   const handleCancelClick = () => {
-    toggleGeneralLedgerSheetFilter(false);
+    toggleDisplayFilterDrawer(false);
   };
 
   // Handle drawer close action.
   const handleDrawerClose = () => {
-    toggleGeneralLedgerSheetFilter(false);
+    toggleDisplayFilterDrawer(false);
   };
 
   return (
     <FinancialStatementHeader
-      isOpen={generalLedgerSheetFilter}
+      isOpen={isFilterDrawerOpen}
       drawerProps={{ onClose: handleDrawerClose }}
     >
       <Formik
@@ -93,8 +93,8 @@ function GeneralLedgerHeader({
 }
 
 export default compose(
-  withGeneralLedger(({ generalLedgerSheetFilter }) => ({
-    generalLedgerSheetFilter,
+  withGeneralLedger(({ generalLedgerFilterDrawer }) => ({
+    isFilterDrawerOpen: generalLedgerFilterDrawer,
   })),
   withGeneralLedgerActions,
 )(GeneralLedgerHeader);
