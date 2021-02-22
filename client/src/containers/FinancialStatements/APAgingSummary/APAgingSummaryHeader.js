@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormattedMessage as T } from 'react-intl';
-import { Formik, Form, validateYupSchema } from 'formik';
+import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import moment from 'moment';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
@@ -48,11 +48,13 @@ function APAgingSummaryHeader({
   // handle form submit.
   const handleSubmit = (values, { setSubmitting }) => {
     onSubmitFilter(values);
+    toggleFilterAPAgingSummary();
     setSubmitting(false);
   };
 
   // handle cancel button click.
   const handleCancelClick = () => toggleFilterAPAgingSummary();
+
   return (
     <FinancialStatementHeader isOpen={payableAgingFilter}>
       <Formik

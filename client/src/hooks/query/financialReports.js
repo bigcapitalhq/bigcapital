@@ -6,10 +6,11 @@ import {
   profitLossSheetReducer,
   generalLedgerTableRowsReducer,
   journalTableRowsReducer,
-  ARAgingSummaryTableRowsMapper
+  ARAgingSummaryTableRowsMapper,
+  APAgingSummaryTableRowsMapper
 } from 'containers/FinancialStatements/reducers';
 import useApiRequest from '../useRequest';
- 
+
 /**
  * Retrieve balance sheet.
  */
@@ -27,7 +28,7 @@ export function useBalanceSheet(query, props) {
         tableRows: balanceSheetRowsReducer(res.data.data),
         ...res.data,
       }),
-      ...props
+      ...props,
     },
   );
 
@@ -69,8 +70,8 @@ export function useTrialBalanceSheet(query, props) {
       tableRows: [],
       data: [],
       query: {},
-    })
-  }
+    }),
+  };
 }
 
 /**
@@ -101,7 +102,7 @@ export function useProfitLossSheet(query, props) {
       columns: [],
       query: {},
     }),
-  }
+  };
 }
 
 /**
@@ -132,7 +133,7 @@ export function useGeneralLedgerSheet(query, props) {
       data: {},
       query: {},
     }),
-  }
+  };
 }
 
 /**
@@ -143,12 +144,11 @@ export function useJournalSheet(query, props) {
 
   const states = useQuery(
     ['FINANCIAL-REPORT', 'JOURNAL', query],
-    () =>
-      apiRequest.get('/financial_statements/journal', { params: query }),
+    () => apiRequest.get('/financial_statements/journal', { params: query }),
     {
       select: (res) => ({
         tableRows: journalTableRowsReducer(res.data.data),
-       ...res.data,
+        ...res.data,
       }),
       ...props,
     },
@@ -160,8 +160,8 @@ export function useJournalSheet(query, props) {
       data: {},
       tableRows: [],
       query: {},
-    })
-  }
+    }),
+  };
 }
 
 /**
@@ -185,7 +185,7 @@ export function useARAgingSummaryReport(query, props) {
           customers: res.data.data.customers,
           total: res.data.data.total,
           columns: res.data.columns,
-        }), 
+        }),
       }),
       initialData: {
         data: {
@@ -194,11 +194,50 @@ export function useARAgingSummaryReport(query, props) {
             total: {},
           },
           columns: [],
-          tableRows: []
-        }
+          tableRows: [],
+        },
       },
       initialDataUpdatedAt: 0,
-      ...props
+      ...props,
+    },
+  );
+}
+
+/**
+ * Retrieve AP aging summary report.
+ */
+export function useAPAgingSummaryReport(query, props) {
+  const apiRequest = useApiRequest();
+
+  return useQuery(
+    ['FINANCIAL-REPORT', 'AP-AGING-SUMMARY', query],
+    () =>
+      apiRequest.get('/financial_statements/payable_aging_summary', {
+        params: query,
+      }),
+    {
+      select: (res) => ({
+        columns: res.data.columns,
+        data: res.data.data,
+        query: res.data.query,
+        tableRows: APAgingSummaryTableRowsMapper({
+          vendors: res.data.data.vendors,
+          total: res.data.data.total,
+          columns: res.data.columns,
+        }),
+      }),
+      initialData: {
+        data: {
+          data: {
+            vendors: [],
+            total: {},
+          },
+          columns: [],
+          tableRows: [],
+        },
+      },
+      initialDataUpdatedAt: 0,
+      ...props,
     },
   );
 }

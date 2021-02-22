@@ -1,26 +1,19 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { useIntl } from 'react-intl';
-import { queryCache, useQuery } from 'react-query';
+import React, { useState, useCallback } from 'react';
 import moment from 'moment';
+
+import 'style/pages/FinancialStatements/ARAgingSummary.scss';
 
 import { FinancialStatement } from 'components';
 
-import DashboardInsider from 'components/Dashboard/DashboardInsider';
-import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
-
-import APAgingSummaryActionsBar from './APAgingSummaryActionsBar';
 import APAgingSummaryHeader from './APAgingSummaryHeader';
+import APAgingSummaryActionsBar from './APAgingSummaryActionsBar';
 import APAgingSummaryTable from './APAgingSummaryTable';
+import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
+import { APAgingSummaryProvider } from './APAgingSummaryProvider';
 
 import withSettings from 'containers/Settings/withSettings';
-import withDashboardActions from 'containers/Dashboard/withDashboardActions';
-import withAPAgingSummaryActions from './withAPAgingSummaryActions';
-import withAPAgingSummary from './withAPAgingSummary';
-import { transformFilterFormToQuery } from './common';
 
 import { compose } from 'utils';
-
-import 'style/pages/FinancialStatements/ARAgingSummary.scss';
 
 /**
  * AP aging summary report.
@@ -28,83 +21,40 @@ import 'style/pages/FinancialStatements/ARAgingSummary.scss';
 function APAgingSummary({
   // #withSettings
   organizationName,
-
-  // #withDashboardActions
-  changePageTitle,
-  setDashboardBackLink,
-
-  // #withAPAgingSummary
-  APAgingSummaryRefresh,
-
-  // #withAPAgingSummaryActions
-  requestPayableAgingSummary,
-  refreshAPAgingSummary,
-  toggleFilterAPAgingSummary,
 }) {
-  const { formatMessage } = useIntl();
-
-  const [query, setQuery] = useState({
+  const [filter, setFilter] = useState({
     asDate: moment().endOf('day').format('YYYY-MM-DD'),
     agingBeforeDays: 30,
     agingPeriods: 3,
   });
 
-  // handle fetching payable aging summary report.
-  const fetchAPAgingSummarySheet = useQuery(
-    ['payable-aging-summary', query],
-    (key, _query) =>
-      requestPayableAgingSummary({
-        ...transformFilterFormToQuery(_query),
-      }),
-    { enable: true },
-  );
-
-  useEffect(() => {
-    changePageTitle(formatMessage({ id: 'payable_aging_summary' }));
-  }, [changePageTitle, formatMessage]);
-
-  useEffect(() => {
-    if (APAgingSummaryRefresh) {
-      queryCache.invalidateQueries('payable-aging-summary');
-      refreshAPAgingSummary(false);
-    }
-  }, [APAgingSummaryRefresh, refreshAPAgingSummary]);
-
-  useEffect(() => {
-    setDashboardBackLink(true);
-    return () => {
-      setDashboardBackLink(false);
-    };
-  }, [setDashboardBackLink]);
-
-  const handleFilterSubmit = (filter) => {
+  // Handle filter submit.
+  const handleFilterSubmit = useCallback((filter) => {
     const _filter = {
       ...filter,
       asDate: moment(filter.asDate).format('YYYY-MM-DD'),
     };
-    setQuery(_filter);
-    refreshAPAgingSummary(true);
-    toggleFilterAPAgingSummary(false);
-  };
+    setFilter(_filter);
+  }, []);
 
+  // Handle number format submit.
   const handleNumberFormatSubmit = (numberFormat) => {
-    setQuery({
-      ...query,
+    setFilter({
+      ...filter,
       numberFormat,
     });
-    refreshAPAgingSummary(true);
   };
 
   return (
-    <DashboardInsider>
+    <APAgingSummaryProvider filter={filter}>
       <APAgingSummaryActionsBar
-        numberFormat={query.numberFormat}
+        numberFormat={filter.numberFormat}
         onNumberFormatSubmit={handleNumberFormatSubmit}
       />
       <DashboardPageContent>
         <FinancialStatement>
           <APAgingSummaryHeader
-            pageFilter={query}
+            pageFilter={filter}
             onSubmitFilter={handleFilterSubmit}
           />
           <div className={'financial-statement__body'}>
@@ -112,17 +62,12 @@ function APAgingSummary({
           </div>
         </FinancialStatement>
       </DashboardPageContent>
-    </DashboardInsider>
+    </APAgingSummaryProvider>
   );
 }
 
 export default compose(
-  withDashboardActions,
-  withAPAgingSummaryActions,
   withSettings(({ organizationSettings }) => ({
-    organizationName: organizationSettings.name,
-  })),
-  withAPAgingSummary(({ APAgingSummaryRefresh }) => ({
-    APAgingSummaryRefresh,
+    organizationName: organizationSettings?.name,
   })),
 )(APAgingSummary);

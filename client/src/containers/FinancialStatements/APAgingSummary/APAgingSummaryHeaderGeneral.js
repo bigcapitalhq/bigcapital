@@ -1,9 +1,17 @@
 import React from 'react';
 import { FastField } from 'formik';
 import { DateInput } from '@blueprintjs/datetime';
-import { Intent, FormGroup, InputGroup, Position } from '@blueprintjs/core';
+import {
+  Intent,
+  FormGroup,
+  InputGroup,
+  Position,
+  Classes,
+} from '@blueprintjs/core';
 import { FormattedMessage as T } from 'react-intl';
-import { Row, Col, FieldHint } from 'components';
+import classNames from 'classnames';
+import { ContactsMultiSelect, Row, Col, FieldHint } from 'components';
+import { useAPAgingSummaryContext } from './APAgingSummaryProvider';
 import {
   momentFormatter,
   tansformDateValue,
@@ -15,6 +23,7 @@ import {
  * AP Aging Summary - Drawer Header - General Fields.
  */
 export default function APAgingSummaryHeaderGeneral() {
+  const { vendors } = useAPAgingSummaryContext();
   return (
     <div>
       <Row>
@@ -70,6 +79,19 @@ export default function APAgingSummaryHeaderGeneral() {
               </FormGroup>
             )}
           </FastField>
+        </Col>
+      </Row>
+      <Row>
+        <Col xs={5}>
+          <FormGroup
+            label={<T id={'specific_vendors'} />}
+            className={classNames('form-group--select-list', Classes.FILL)}
+          >
+            <ContactsMultiSelect
+              defaultText={<T id={'all_vendors'} />}
+              contacts={vendors}
+            />
+          </FormGroup>
         </Col>
       </Row>
     </div>

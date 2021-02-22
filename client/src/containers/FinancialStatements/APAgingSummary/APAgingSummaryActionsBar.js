@@ -8,7 +8,6 @@ import {
   PopoverInteractionKind,
   Position,
 } from '@blueprintjs/core';
-import { safeInvoke } from '@blueprintjs/core/lib/esm/common/utils';
 
 import { FormattedMessage as T } from 'react-intl';
 import classNames from 'classnames';
@@ -17,10 +16,11 @@ import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import { Icon } from 'components';
 import NumberFormatDropdown from 'components/NumberFormatDropdown';
 
-import withAPAgingSummary from './withAPAgingSummary';
+import { useAPAgingSummaryContext } from './APAgingSummaryProvider';
 import withARAgingSummaryActions from './withAPAgingSummaryActions';
 
 import { compose } from 'utils';
+import { safeInvoke } from '@blueprintjs/core/lib/esm/common/utils';
 
 /**
  * AP Aging summary sheet - Actions bar.
@@ -28,25 +28,25 @@ import { compose } from 'utils';
 function APAgingSummaryActionsBar({
   //#withPayableAgingSummary
   payableAgingFilter,
-  payableAgingLoading,
 
   //#withARAgingSummaryActions
   toggleFilterAPAgingSummary,
-  refreshAPAgingSummary,
 
   //#ownProps
   numberFormat,
   onNumberFormatSubmit,
 }) {
+  const { isAPAgingFetching, refetch } = useAPAgingSummaryContext();
+
   const handleFilterToggleClick = () => toggleFilterAPAgingSummary();
 
   // handle recalculate report button.
-  const handleRecalculateReport = () => refreshAPAgingSummary(true);
+  const handleRecalculateReport = () => refetch();
 
   // handle number format submit.
   const handleNumberFormatSubmit = (numberFormat) =>
     safeInvoke(onNumberFormatSubmit, numberFormat);
-    
+
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -76,7 +76,7 @@ function APAgingSummaryActionsBar({
             <NumberFormatDropdown
               numberFormat={numberFormat}
               onSubmit={handleNumberFormatSubmit}
-              submitDisabled={payableAgingLoading}
+              submitDisabled={isAPAgingFetching}
             />
           }
           minimal={true}
@@ -112,12 +112,4 @@ function APAgingSummaryActionsBar({
   );
 }
 
-export default compose(
-  withARAgingSummaryActions,
-  withAPAgingSummary(
-    ({ payableAgingSummaryLoading, payableAgingSummaryFilter }) => ({
-      payableAgingLoading: payableAgingSummaryLoading,
-      payableAgingFilter: payableAgingSummaryFilter,
-    }),
-  ),
-)(APAgingSummaryActionsBar);
+export default compose(withARAgingSummaryActions)(APAgingSummaryActionsBar);
