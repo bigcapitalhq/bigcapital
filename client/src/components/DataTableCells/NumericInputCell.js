@@ -1,17 +1,21 @@
 import React, { useState, useEffect } from 'react';
+import { FormGroup, NumericInput, Intent } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { Classes, InputGroup, FormGroup, Intent } from '@blueprintjs/core';
+import { CLASSES } from 'common/classes';
 
-const InputEditableCell = ({
+/**
+ * Numeric input table cell.
+ */
+export default function NumericInputCell({
   row: { index },
   column: { id },
   cell: { value: initialValue },
   payload,
-}) => {
+}) {
   const [value, setValue] = useState(initialValue);
 
-  const onChange = (e) => {
-    setValue(e.target.value);
+  const handleValueChange = (newValue) => {
+    setValue(newValue);
   };
   const onBlur = () => {
     payload.updateData(index, id, value);
@@ -25,16 +29,15 @@ const InputEditableCell = ({
   return (
     <FormGroup
       intent={error ? Intent.DANGER : null}
-      className={classNames(Classes.FILL)}
+      className={classNames(CLASSES.FILL)}
     >
-      <InputGroup
+      <NumericInput
         value={value}
-        onChange={onChange}
+        onValueChange={handleValueChange}
         onBlur={onBlur}
         fill={true}
+        buttonPosition={"none"}
       />
     </FormGroup>
   );
-};
-
-export default InputEditableCell;
+}

@@ -17,6 +17,7 @@ import NumberFormatDropdown from 'components/NumberFormatDropdown';
 
 import { useARAgingSummaryContext } from './ARAgingSummaryProvider';
 import withARAgingSummaryActions from './withARAgingSummaryActions';
+import withARAgingSummary from './withARAgingSummary';
 
 import { compose } from 'utils';
 import { safeInvoke } from '@blueprintjs/core/lib/esm/common/utils';
@@ -26,10 +27,10 @@ import { safeInvoke } from '@blueprintjs/core/lib/esm/common/utils';
  */
 function ARAgingSummaryActionsBar({
   // #withReceivableAging
-  receivableAgingFilter,
+  isFilterDrawerOpen,
 
   // #withReceivableAgingActions
-  toggleFilterARAgingSummary,
+  toggleARAgingSummaryFilterDrawer: toggleDisplayFilterDrawer,
 
   // #ownProps
   numberFormat,
@@ -38,16 +39,19 @@ function ARAgingSummaryActionsBar({
   const { isARAgingFetching, refetch } = useARAgingSummaryContext();
 
   const handleFilterToggleClick = () => {
-    toggleFilterARAgingSummary();
+    toggleDisplayFilterDrawer();
   };
+
   // Handles re-calculate report button.
   const handleRecalcReport = () => {
     refetch();
   };
+
   // Handle number format submit.
   const handleNumberFormatSubmit = (numberFormat) => {
     safeInvoke(onNumberFormatSubmit, numberFormat);
   };
+
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -63,14 +67,14 @@ function ARAgingSummaryActionsBar({
           className={classNames(Classes.MINIMAL, 'button--table-views')}
           icon={<Icon icon="cog-16" iconSize={16} />}
           text={
-            receivableAgingFilter ? (
+            isFilterDrawerOpen ? (
               <T id="hide_customizer" />
             ) : (
               <T id={'customize_report'} />
             )
           }
           onClick={handleFilterToggleClick}
-          active={receivableAgingFilter}
+          active={isFilterDrawerOpen}
         />
         <NavbarDivider />
 
@@ -117,4 +121,7 @@ function ARAgingSummaryActionsBar({
 
 export default compose(
   withARAgingSummaryActions,
+  withARAgingSummary(({ ARAgingSummaryFilterDrawer }) => ({
+    isFilterDrawerOpen: ARAgingSummaryFilterDrawer,
+  }))
 )(ARAgingSummaryActionsBar);

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import moment from 'moment';
 
 import 'style/pages/FinancialStatements/TrialBalanceSheet.scss';
@@ -11,7 +11,6 @@ import TrialBalanceSheetTable from './TrialBalanceSheetTable';
 import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import withTrialBalanceActions from './withTrialBalanceActions';
 import withSettings from 'containers/Settings/withSettings';
-import withTrialBalance from './withTrialBalance';
 
 import { compose } from 'utils';
 
@@ -21,6 +20,9 @@ import { compose } from 'utils';
 function TrialBalanceSheet({
   // #withPreferences
   organizationName,
+
+  // #withTrialBalanceSheetActions
+  toggleTrialBalanceFilterDrawer: toggleFilterDrawer
 }) {
   const [filter, setFilter] = useState({
     fromDate: moment().startOf('year').format('YYYY-MM-DD'),
@@ -50,6 +52,11 @@ function TrialBalanceSheet({
     });
   };
 
+  // Hide the filter drawer once the page unmount.
+  useEffect(() => () => {
+    toggleFilterDrawer(false)
+  }, [toggleFilterDrawer]);
+
   return (
     <TrialBalanceSheetProvider query={filter}>
       <TrialBalanceActionsBar
@@ -73,9 +80,6 @@ function TrialBalanceSheet({
 
 export default compose(
   withTrialBalanceActions,
-  withTrialBalance(({ trialBalanceQuery }) => ({
-    trialBalanceQuery,
-  })),
   withSettings(({ organizationSettings }) => ({
     organizationName: organizationSettings.name,
   })),

@@ -136,6 +136,7 @@ export default [
     hotkey: 'shift+5',
     pageTitle: formatMessage({ id: 'trial_balance_sheet' }),
     backLink: true,
+    sidebarShrink: true
   },
   {
     path: `/financial-reports/profit-loss-sheet`,
@@ -144,6 +145,9 @@ export default [
     ),
     breadcrumb: 'Profit Loss Sheet',
     hotkey: 'shift+2',
+    pageTitle: formatMessage({ id: 'profit_loss_sheet' }),
+    backLink: true,
+    sidebarShrink: true,
   },
   {
     path: '/financial-reports/receivable-aging-summary',
@@ -172,6 +176,9 @@ export default [
     ),
     breadcrumb: 'Journal Sheet',
     hotkey: 'shift+3',
+    pageTitle: formatMessage({ id: 'journal_sheet' }),
+    sidebarShrink: true,
+    backLink: true,
   },
   {
     path: '/financial-reports',

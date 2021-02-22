@@ -51,8 +51,8 @@ function ItemsEntriesTable({
   const handleUpdateData = useCallback(
     (rowIndex, columnId, value) => {
       const newRows = compose(
-        updateTableRow(rowIndex, columnId, value),
         updateItemsEntriesTotal,
+        updateTableRow(rowIndex, columnId, value),
       )(entries);
 
       setRows(newRows);

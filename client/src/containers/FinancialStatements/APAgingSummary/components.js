@@ -36,7 +36,6 @@ export const useAPAgingSummaryColumns = () => {
           minWidth: 120,
         }),
       },
-
       ...agingColumns.map((agingColumn, index) => ({
         Header: agingColumn,
         accessor: `aging-${index}`,

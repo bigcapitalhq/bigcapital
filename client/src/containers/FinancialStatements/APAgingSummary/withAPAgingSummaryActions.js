@@ -1,18 +1,9 @@
 import { connect } from 'react-redux';
-import {
-  fetchPayableAginSummary,
-  payableAgingSummaryRefresh,
-} from 'store/financialStatement/financialStatements.actions';
+import { toggleAPAgingSummaryFilterDrawer } from 'store/financialStatement/financialStatements.actions';
 
 const mapActionsToProps = (dispatch) => ({
-  requestPayableAgingSummary: (query) =>
-    dispatch(fetchPayableAginSummary({ query })),
-  refreshAPAgingSummary: (refresh) =>
-    dispatch(payableAgingSummaryRefresh(refresh)),
-  toggleFilterAPAgingSummary: () =>
-    dispatch({
-      type: 'PAYABLE_AGING_SUMMARY_FILTER_TOGGLE',
-    }),
+  toggleAPAgingSummaryFilterDrawer: (toggle) =>
+    dispatch(toggleAPAgingSummaryFilterDrawer(toggle)),
 });
 
 export default connect(null, mapActionsToProps);

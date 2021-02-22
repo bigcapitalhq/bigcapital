@@ -7,7 +7,7 @@ import { Formik, Form } from 'formik';
 
 import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
 
-import withBalanceSheet from './withBalanceSheetDetail';
+import withBalanceSheet from './withBalanceSheet';
 import withBalanceSheetActions from './withBalanceSheetActions';
 
 import { compose } from 'utils';
@@ -19,10 +19,10 @@ function BalanceSheetHeader({
   pageFilter,
 
   // #withBalanceSheet
-  balanceSheetFilter,
+  balanceSheetDrawerFilter,
 
   // #withBalanceSheetActions
-  toggleBalanceSheetFilter,
+  toggleBalanceSheetFilterDrawer: toggleFilterDrawer,
 }) {
   const { formatMessage } = useIntl();
 
@@ -51,22 +51,23 @@ function BalanceSheetHeader({
   // Handle form submit.
   const handleSubmit = (values, actions) => {
     onSubmitFilter(values);
-    toggleBalanceSheetFilter();
+    toggleFilterDrawer(false);
     actions.setSubmitting(false);
   };
 
   // Handle cancel button click.
   const handleCancelClick = () => {
-    toggleBalanceSheetFilter();
+    toggleFilterDrawer(false);
   };
+
   // Handle drawer close action.
   const handleDrawerClose = () => {
-    toggleBalanceSheetFilter();
+    toggleFilterDrawer(false);
   };
 
   return (
     <FinancialStatementHeader
-      isOpen={balanceSheetFilter}
+      isOpen={balanceSheetDrawerFilter}
       drawerProps={{ onClose: handleDrawerClose }}
     >
       <Formik
@@ -98,8 +99,8 @@ function BalanceSheetHeader({
 }
 
 export default compose(
-  withBalanceSheet(({ balanceSheetFilter }) => ({
-    balanceSheetFilter,
+  withBalanceSheet(({ balanceSheetDrawerFilter }) => ({
+    balanceSheetDrawerFilter,
   })),
   withBalanceSheetActions,
 )(BalanceSheetHeader);

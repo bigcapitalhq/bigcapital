@@ -22,10 +22,10 @@ import { useTrialBalanceSheetContext } from './TrialBalanceProvider';
 
 function TrialBalanceActionsBar({
   // #withTrialBalance
-  trialBalanceSheetFilter,
+  trialBalanceDrawerFilter,
 
   // #withTrialBalanceActions
-  toggleTrialBalanceFilter,
+  toggleTrialBalanceFilterDrawer: toggleFilterDrawer,
 
   // #ownProps
   numberFormat,
@@ -35,7 +35,7 @@ function TrialBalanceActionsBar({
 
   // Handle filter toggle click.
   const handleFilterToggleClick = () => {
-    toggleTrialBalanceFilter();
+    toggleFilterDrawer();
   };
 
   // Handle re-calc button click.
@@ -63,13 +63,13 @@ function TrialBalanceActionsBar({
           className={classNames(Classes.MINIMAL, 'button--table-views')}
           icon={<Icon icon="cog-16" iconSize={16} />}
           text={
-            trialBalanceSheetFilter ? (
+            trialBalanceDrawerFilter ? (
               <T id={'hide_customizer'} />
             ) : (
               <T id={'customize_report'} />
             )
           }
-          active={trialBalanceSheetFilter}
+          active={trialBalanceDrawerFilter}
           onClick={handleFilterToggleClick}
         />
         <NavbarDivider />
@@ -121,9 +121,8 @@ function TrialBalanceActionsBar({
 }
 
 export default compose(
-  withTrialBalance(({ trialBalanceSheetFilter, trialBalanceSheetLoading }) => ({
-    trialBalanceSheetFilter,
-    trialBalanceSheetLoading,
+  withTrialBalance(({ trialBalanceDrawerFilter }) => ({
+    trialBalanceDrawerFilter,
   })),
   withTrialBalanceActions,
 )(TrialBalanceActionsBar);

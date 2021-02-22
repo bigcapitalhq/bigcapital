@@ -25,16 +25,16 @@ import { useGeneralLedgerContext } from './GeneralLedgerProvider';
  */
 function GeneralLedgerActionsBar({
   // #withGeneralLedger
-  generalLedgerSheetFilter,
+  isFilterDrawerOpen,
 
   // #withGeneralLedgerActions
-  toggleGeneralLedgerSheetFilter,
+  toggleGeneralLedgerFilterDrawer: toggleDisplayFilterDrawer,
 }) {
   const { sheetRefresh } = useGeneralLedgerContext();
 
   // Handle customize button click.
   const handleCustomizeClick = () => {
-    toggleGeneralLedgerSheetFilter();
+    toggleDisplayFilterDrawer();
   };
 
   // Handle re-calculate button click.
@@ -57,14 +57,14 @@ function GeneralLedgerActionsBar({
           className={classNames(Classes.MINIMAL, 'button--table-views')}
           icon={<Icon icon="cog-16" iconSize={16} />}
           text={
-            generalLedgerSheetFilter ? (
+            isFilterDrawerOpen ? (
               <T id={'hide_customizer'} />
             ) : (
               <T id={'customize_report'} />
             )
           }
           onClick={handleCustomizeClick}
-          active={generalLedgerSheetFilter}
+          active={isFilterDrawerOpen}
         />
         <NavbarDivider />
 
@@ -97,8 +97,8 @@ function GeneralLedgerActionsBar({
 }
 
 export default compose(
-  withGeneralLedger(({ generalLedgerSheetFilter }) => ({
-    generalLedgerSheetFilter,
+  withGeneralLedger(({ generalLedgerFilterDrawer }) => ({
+    isFilterDrawerOpen: generalLedgerFilterDrawer,
   })),
   withGeneralLedgerActions,
 )(GeneralLedgerActionsBar);

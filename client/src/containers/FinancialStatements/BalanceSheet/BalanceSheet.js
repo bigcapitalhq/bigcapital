@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 
 import 'style/pages/FinancialStatements/BalanceSheet.scss';
@@ -10,6 +10,7 @@ import BalanceSheetActionsBar from './BalanceSheetActionsBar';
 
 import { FinancialStatement } from 'components';
 
+import withBalanceSheetActions from './withBalanceSheetActions';
 import withSettings from 'containers/Settings/withSettings';
 import { BalanceSheetProvider } from './BalanceSheetProvider';
 
@@ -21,6 +22,9 @@ import { compose } from 'utils';
 function BalanceSheet({
   // #withPreferences
   organizationName,
+
+  // #withBalanceSheetActions
+  toggleBalanceSheetFilterDrawer
 }) {
   const [filter, setFilter] = useState({
     fromDate: moment().startOf('year').format('YYYY-MM-DD'),
@@ -40,13 +44,18 @@ function BalanceSheet({
     setFilter({ ..._filter });
   };
 
-  // Hnadle number format submit.
+  // Handle number format submit.
   const handleNumberFormatSubmit = (values) => {
     setFilter({
       ...filter,
       numberFormat: values,
     });
   };
+
+  // Hides the balance sheet filter drawer once the page unmount.
+  useEffect(() => () => {
+    toggleBalanceSheetFilterDrawer(false);
+  }, [toggleBalanceSheetFilterDrawer])
 
   return (
     <BalanceSheetProvider filter={filter}>
@@ -73,4 +82,5 @@ export default compose(
   withSettings(({ organizationSettings }) => ({
     organizationName: organizationSettings.name,
   })),
+  withBalanceSheetActions,
 )(BalanceSheet);

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import moment from 'moment';
 
 import 'style/pages/FinancialStatements/ARAgingSummary.scss';
@@ -12,7 +12,7 @@ import DashboardPageContent from 'components/Dashboard/DashboardPageContent';
 import { APAgingSummaryProvider } from './APAgingSummaryProvider';
 
 import withSettings from 'containers/Settings/withSettings';
-
+import withAPAgingSummaryActions from './withAPAgingSummaryActions'
 import { compose } from 'utils';
 
 /**
@@ -21,6 +21,9 @@ import { compose } from 'utils';
 function APAgingSummary({
   // #withSettings
   organizationName,
+
+  // #withAPAgingSummaryActions
+  toggleAPAgingSummaryFilterDrawer: toggleDisplayFilterDrawer,
 }) {
   const [filter, setFilter] = useState({
     asDate: moment().endOf('day').format('YYYY-MM-DD'),
@@ -44,6 +47,11 @@ function APAgingSummary({
       numberFormat,
     });
   };
+
+  // Hide the report filter drawer once the page unmount.
+  useEffect(() => () => {
+    toggleDisplayFilterDrawer(false);
+  }, [toggleDisplayFilterDrawer])
 
   return (
     <APAgingSummaryProvider filter={filter}>
@@ -70,4 +78,5 @@ export default compose(
   withSettings(({ organizationSettings }) => ({
     organizationName: organizationSettings?.name,
   })),
+  withAPAgingSummaryActions  
 )(APAgingSummary);

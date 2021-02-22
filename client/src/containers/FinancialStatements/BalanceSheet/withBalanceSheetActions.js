@@ -1,14 +1,11 @@
 import { connect } from 'react-redux';
 import {
-  fetchBalanceSheet,
-  balanceSheetRefresh,
+  toggleBalanceSheetFilterDrawer,
 } from 'store/financialStatement/financialStatements.actions';
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchBalanceSheet: (query = {}) => dispatch(fetchBalanceSheet({ query })),
-  toggleBalanceSheetFilter: () =>
-    dispatch({ type: 'BALANCE_SHEET_FILTER_TOGGLE' }),
-  refreshBalanceSheet: (refresh) => dispatch(balanceSheetRefresh(refresh)),
+  toggleBalanceSheetFilterDrawer: (toggle) =>
+    dispatch(toggleBalanceSheetFilterDrawer(toggle)),
 });
 
 export default connect(null, mapDispatchToProps);

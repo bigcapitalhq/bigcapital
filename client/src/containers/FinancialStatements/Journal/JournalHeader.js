@@ -5,8 +5,7 @@ import { Tab, Tabs, Button, Intent } from '@blueprintjs/core';
 import * as Yup from 'yup';
 import { FormattedMessage as T } from 'react-intl';
 
-import JournalSheetHeaderGeneralPanel from './JournalSheetHeaderGeneralPanel';
-
+import JournalSheetHeaderGeneral from './JournalSheetHeaderGeneral';
 import FinancialStatementHeader from 'containers/FinancialStatements/FinancialStatementHeader';
 
 import withJournal from './withJournal';
@@ -22,12 +21,10 @@ function JournalHeader({
   onSubmitFilter,
 
   // #withJournalActions
-  refreshJournalSheet,
   toggleJournalSheetFilter,
 
   // #withJournal
-  journalSheetFilter,
-  journalSheetRefresh,
+  journalSheetDrawerFilter,
 }) {
   const initialValues = {
     ...pageFilter,
@@ -59,7 +56,7 @@ function JournalHeader({
 
   return (
     <FinancialStatementHeader
-      isOpen={journalSheetFilter}
+      isOpen={journalSheetDrawerFilter}
       drawerProps={{ onClose: handleDrawerClose }}
     >
       <Formik
@@ -72,7 +69,7 @@ function JournalHeader({
             <Tab
               id="general"
               title={'General'}
-              panel={<JournalSheetHeaderGeneralPanel />}
+              panel={<JournalSheetHeaderGeneral />}
             />
           </Tabs>
 
@@ -91,9 +88,8 @@ function JournalHeader({
 }
 
 export default compose(
-  withJournal(({ journalSheetFilter, journalSheetRefresh }) => ({
-    journalSheetFilter,
-    journalSheetRefresh,
+  withJournal(({ journalSheetDrawerFilter }) => ({
+    journalSheetDrawerFilter,
   })),
   withJournalActions,
 )(JournalHeader);

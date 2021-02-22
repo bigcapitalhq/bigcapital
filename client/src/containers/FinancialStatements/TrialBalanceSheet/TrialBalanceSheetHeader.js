@@ -13,16 +13,19 @@ import withTrialBalanceActions from './withTrialBalanceActions';
 
 import { compose } from 'utils';
 
+/**
+ * Trial balance sheet header.
+ */
 function TrialBalanceSheetHeader({
   // #ownProps
   pageFilter,
   onSubmitFilter,
 
   // #withTrialBalance
-  trialBalanceSheetFilter,
+  trialBalanceDrawerFilter,
 
   // #withTrialBalanceActions
-  toggleTrialBalanceFilter
+  toggleTrialBalanceFilterDrawer: toggleFilterDrawer,
 }) {
   const { formatMessage } = useIntl();
 
@@ -48,22 +51,22 @@ function TrialBalanceSheetHeader({
   const handleSubmit = (values, { setSubmitting }) => {
     onSubmitFilter(values);
     setSubmitting(false);
-    toggleTrialBalanceFilter(false);
+    toggleFilterDrawer(false);
   };
 
   // Handle drawer close action.
   const handleDrawerClose = () => {
-    toggleTrialBalanceFilter(false);
+    toggleFilterDrawer(false);
   };
 
   // Handle cancel button click.
   const handleCancelClick = () => {
-    toggleTrialBalanceFilter(false);
+    toggleFilterDrawer(false);
   };
 
   return (
     <FinancialStatementHeader
-      isOpen={trialBalanceSheetFilter}
+      isOpen={trialBalanceDrawerFilter}
       drawerProps={{ onClose: handleDrawerClose }}
     >
       <Formik
@@ -81,11 +84,7 @@ function TrialBalanceSheetHeader({
           </Tabs>
 
           <div class="financial-header-drawer__footer">
-            <Button
-              className={'mr1'}
-              intent={Intent.PRIMARY}
-              type={'submit'}
-            >
+            <Button className={'mr1'} intent={Intent.PRIMARY} type={'submit'}>
               <T id={'calculate_report'} />
             </Button>
             <Button onClick={handleCancelClick} minimal={true}>
@@ -99,9 +98,8 @@ function TrialBalanceSheetHeader({
 }
 
 export default compose(
-  withTrialBalance(({ trialBalanceSheetFilter, trialBalanceSheetRefresh }) => ({
-    trialBalanceSheetFilter,
-    trialBalanceSheetRefresh,
+  withTrialBalance(({ trialBalanceDrawerFilter }) => ({
+    trialBalanceDrawerFilter,
   })),
   withTrialBalanceActions,
 )(TrialBalanceSheetHeader);
