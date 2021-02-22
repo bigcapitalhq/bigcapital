@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormattedMessage as T } from 'react-intl';
-import { Formik, Form, validateYupSchema } from 'formik';
+import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import moment from 'moment';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
@@ -17,12 +17,15 @@ import { compose } from 'utils';
  * AP Aging Summary Report - Drawer Header.
  */
 function APAgingSummaryHeader({
+  // #ownProps
   pageFilter,
   onSubmitFilter,
-  payableAgingFilter,
 
-  // #withPayableAgingSummaryActions
-  toggleFilterAPAgingSummary,
+  // #withAPAgingSummaryActions
+  toggleAPAgingSummaryFilterDrawer: toggleFilterDrawerDisplay,
+
+  // #withAPAgingSummary
+  isFilterDrawerOpen
 }) {
   const validationSchema = Yup.object({
     as_date: Yup.date().required().label('asDate'),
@@ -38,23 +41,32 @@ function APAgingSummaryHeader({
       .label('agingPeriods'),
   });
 
-  // initial values.
+  // Initial values.
   const initialValues = {
     as_date: moment(pageFilter.asDate).toDate(),
     aging_days_before: 30,
     aging_periods: 3,
   };
 
-  // handle form submit.
+  // Handle form submit.
   const handleSubmit = (values, { setSubmitting }) => {
     onSubmitFilter(values);
+    toggleFilterDrawerDisplay(false);
     setSubmitting(false);
   };
 
   // handle cancel button click.
-  const handleCancelClick = () => toggleFilterAPAgingSummary();
+  const handleCancelClick = () => {
+    toggleFilterDrawerDisplay(false);
+  };
+
+  // Handle the drawer closing.
+  const handleDrawerClose = () => {
+    toggleFilterDrawerDisplay(false);
+  };
+
   return (
-    <FinancialStatementHeader isOpen={payableAgingFilter}>
+    <FinancialStatementHeader isOpen={isFilterDrawerOpen} drawerProps={{ onClose: handleDrawerClose }}>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
@@ -84,7 +96,7 @@ function APAgingSummaryHeader({
 
 export default compose(
   withAPAgingSummaryActions,
-  withAPAgingSummary(({ payableAgingSummaryFilter }) => ({
-    payableAgingFilter: payableAgingSummaryFilter,
+  withAPAgingSummary(({ APAgingSummaryFilterDrawer }) => ({
+    isFilterDrawerOpen: APAgingSummaryFilterDrawer,
   })),
 )(APAgingSummaryHeader);

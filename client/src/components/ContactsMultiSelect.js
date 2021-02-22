@@ -4,65 +4,65 @@ import { omit } from 'lodash';
 import MultiSelect from 'components/MultiSelect';
 import { FormattedMessage as T } from 'react-intl';
 
-export default function CustomersMultiSelect({
-  customers,
+export default function ContactsMultiSelect({
+  contacts,
   defaultText = <T id={'all_customers'} />,
   buttonProps,
 
-  onCustomerSelected,
+  onCustomerSelected: onContactSelected,
   ...selectProps
 }) {
-  const [selectedCustomers, setSelectedCustomers] = useState({});
+  const [selectedContacts, setSelectedContacts] = useState({});
 
-  const isCustomerSelect = useCallback(
-    (id) => typeof selectedCustomers[id] !== 'undefined',
-    [selectedCustomers],
+  const isContactSelect = useCallback(
+    (id) => typeof selectedContacts[id] !== 'undefined',
+    [selectedContacts],
   );
 
-  const customerRenderer = useCallback(
-    (customer, { handleClick }) => (
+  const contactRenderer = useCallback(
+    (contact, { handleClick }) => (
       <MenuItem
-        icon={isCustomerSelect(customer.id) ? 'tick' : 'blank'}
-        text={customer.display_name}
-        key={customer.id}
+        icon={isContactSelect(contact.id) ? 'tick' : 'blank'}
+        text={contact.display_name}
+        key={contact.id}
         onClick={handleClick}
       />
     ),
-    [isCustomerSelect],
+    [isContactSelect],
   );
 
-  const countSelected = useMemo(() => Object.values(selectedCustomers).length, [
-    selectedCustomers,
+  const countSelected = useMemo(() => Object.values(selectedContacts).length, [
+    selectedContacts,
   ]);
 
   const onContactSelect = useCallback(
     ({ id }) => {
       const selected = {
-        ...(isCustomerSelect(id)
+        ...(isContactSelect(id)
           ? {
-              ...omit(selectedCustomers, [id]),
+              ...omit(selectedContacts, [id]),
             }
           : {
-              ...selectedCustomers,
+              ...selectedContacts,
               [id]: true,
             }),
       };
-      setSelectedCustomers({ ...selected });
-      onCustomerSelected && onCustomerSelected(selected);
+      setSelectedContacts({ ...selected });
+      onContactSelected && onContactSelected(selected);
     },
     [
-      setSelectedCustomers,
-      selectedCustomers,
-      isCustomerSelect,
-      onCustomerSelected,
+      setSelectedContacts,
+      selectedContacts,
+      isContactSelect,
+      onContactSelected,
     ],
   );
 
   return (
     <MultiSelect
-      items={customers}
+      items={contacts}
       noResults={<MenuItem disabled={true} text="No results." />}
-      itemRenderer={customerRenderer}
+      itemRenderer={contactRenderer}
       popoverProps={{ minimal: true }}
       filterable={true}
       onItemSelect={onContactSelect}

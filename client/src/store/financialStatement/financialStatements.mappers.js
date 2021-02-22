@@ -137,6 +137,41 @@ export const ARAgingSummaryTableRowsMapper = (sheet, total) => {
   ];
 };
 
+export const APAgingSummaryTableRowsMapper = (sheet, total) => {
+  const rows = [];
+
+  const mapAging = (agingPeriods) => {
+    return agingPeriods.reduce((acc, aging, index) => {
+      acc[`aging-${index}`] = aging.total.formatted_amount;
+      return acc;
+    }, {});
+  };
+  sheet.vendors.forEach((vendor) => {
+    const agingRow = mapAging(vendor.aging);
+
+    rows.push({
+      rowType: 'vendor',
+      name: vendor.vendor_name,
+      ...agingRow,
+      current: vendor.current.formatted_amount,
+      total: vendor.total.formatted_amount,
+    });
+  });
+  if (rows.length <= 0) {
+    return [];
+  }
+  return [
+    ...rows,
+    {
+      name: '',
+      rowType: 'total',
+      current: sheet.total.current.formatted_amount,
+      ...mapAging(sheet.total.aging),
+      total: sheet.total.total.formatted_amount,
+    },
+  ];
+};
+
 export const mapTrialBalanceSheetToRows = (sheet) => {
   const results = [];
 

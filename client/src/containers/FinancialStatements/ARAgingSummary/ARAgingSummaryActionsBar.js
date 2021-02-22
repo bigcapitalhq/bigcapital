@@ -39,7 +39,7 @@ function ARAgingSummaryActionsBar({
   const { isARAgingFetching, refetch } = useARAgingSummaryContext();
 
   const handleFilterToggleClick = () => {
-    toggleDisplayFilterDrawer(false);
+    toggleDisplayFilterDrawer();
   };
 
   // Handles re-calculate report button.

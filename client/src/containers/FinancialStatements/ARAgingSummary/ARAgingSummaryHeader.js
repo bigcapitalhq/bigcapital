@@ -25,7 +25,7 @@ function ARAgingSummaryHeader({
   toggleARAgingSummaryFilterDrawer: toggleFilterDrawerDisplay,
 
   // #withARAgingSummary
-  isFilterDrawerOpen
+  isFilterDrawerOpen,
 }) {
   const validationSchema = Yup.object().shape({
     asDate: Yup.date().required().label('asDate'),
@@ -53,13 +53,22 @@ function ARAgingSummaryHeader({
     toggleFilterDrawerDisplay(false);
     setSubmitting(false);
   };
+
   // Handle cancel button click.
   const handleCancelClick = () => {
     toggleFilterDrawerDisplay(false);
   };
+ 
+  // Handle the drawer close.
+  const handleDrawerClose = () => {
+    toggleFilterDrawerDisplay(false);
+  };
 
   return (
-    <FinancialStatementHeader isOpen={isFilterDrawerOpen}>
+    <FinancialStatementHeader
+      isOpen={isFilterDrawerOpen}
+      drawerProps={{ onClose: handleDrawerClose }}
+    >
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}

@@ -43,7 +43,7 @@ import DashboardCard from './Dashboard/DashboardCard';
 import InputPrependText from './Forms/InputPrependText';
 import PageFormBigNumber from './PageFormBigNumber';
 import AccountsMultiSelect from './AccountsMultiSelect';
-import CustomersMultiSelect from './CustomersMultiSelect';
+import ContactsMultiSelect from './ContactsMultiSelect';
 import Skeleton from './Skeleton'
 import ContextMenu from './ContextMenu'
 import TableFastCell from './Datatable/TableFastCell';
@@ -99,7 +99,7 @@ export {
   PageFormBigNumber,
   AccountsMultiSelect,
   DataTableEditable,
-  CustomersMultiSelect,
+  ContactsMultiSelect,
   TableFastCell,
   Skeleton,
   ContextMenu,

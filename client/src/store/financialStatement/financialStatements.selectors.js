@@ -34,6 +34,11 @@ export const ARAgingSummaryFilterDrawerSelector = (state) => {
   return filterDrawerByTypeSelector('ARAgingSummary')(state);
 };
 
+export const APAgingSummaryFilterDrawerSelector = (state) => {
+  return filterDrawerByTypeSelector('APAgingSummary')(state);
+}
+
+
 /**
  * Retrieve balance sheet filter drawer.
  */
@@ -89,6 +94,17 @@ export const getJournalFilterDrawer = createSelector(
  */
 export const getARAgingSummaryFilterDrawer = createSelector(
   ARAgingSummaryFilterDrawerSelector,
+  (isOpen) => {
+    return isOpen;
+  },
+);
+
+
+/**
+ * Retrieve whether display AR aging summary drawer filter.
+ */
+export const getAPAgingSummaryFilterDrawer = createSelector(
+  APAgingSummaryFilterDrawerSelector,
   (isOpen) => {
     return isOpen;
   },

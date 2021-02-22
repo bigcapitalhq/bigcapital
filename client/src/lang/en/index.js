@@ -961,6 +961,7 @@ export default {
   adjustment_reasons: 'Adjustment reasons',
   specific_customers: 'Specific Customers',
   all_customers: 'All Customers',
+  all_vendors: 'All Vendors',
   selected_customers: '{count} Selected Customers',
   transaction_number: 'Transaction #',
   running_balance: 'Running balance',
@@ -976,4 +977,6 @@ export default {
   receipt_paper: 'Receipt Paper',
   payable_aging_summary: 'Payable Aging Summary',
   payment_receive_paper: 'Payment Receive Paper',
+  specific_vendors: 'Specific Vendors',
+
 };

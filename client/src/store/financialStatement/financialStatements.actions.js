@@ -77,3 +77,16 @@ export function toggleARAgingSummaryFilterDrawer(toggle) {
     }
   };
 }
+
+/**
+ * Toggles display of the AP aging summary filter drawer.
+ * @param {boolean} toggle -
+ */
+export function toggleAPAgingSummaryFilterDrawer(toggle) {
+  return {
+    type: `${t.AP_AGING_SUMMARY}/${t.DISPLAY_FILTER_DRAWER_TOGGLE}`,
+    payload: {
+      toggle,
+    }
+  };
+}

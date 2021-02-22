@@ -159,13 +159,16 @@ export default [
     backLink: true,
     sidebarShrink: true,
   },
-  // {
-  //   path: '/financial-reports/payable-aging-summary',
-  //   component: lazy(() =>
-  //     import('containers/FinancialStatements/APAgingSummary/APAgingSummary'),
-  //   ),
-  //   breadcrumb: 'Payable Aging Summary',
-  // },
+  {
+    path: '/financial-reports/payable-aging-summary',
+    component: lazy(() =>
+      import('containers/FinancialStatements/APAgingSummary/APAgingSummary'),
+    ),
+    breadcrumb: 'Payable Aging Summary',
+    pageTitle: formatMessage({ id: 'payable_aging_summary' }),
+    backLink: true,
+    sidebarShrink: true,
+  },
   {
     path: `/financial-reports/journal-sheet`,
     component: lazy(() =>

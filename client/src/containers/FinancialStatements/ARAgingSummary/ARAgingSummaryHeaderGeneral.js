@@ -10,7 +10,7 @@ import {
 } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'react-intl';
 import classNames from 'classnames';
-import { CustomersMultiSelect, Row, Col, FieldHint } from 'components';
+import { ContactsMultiSelect, Row, Col, FieldHint } from 'components';
 import { momentFormatter } from 'utils';
 
 import { useARAgingSummaryContext } from './ARAgingSummaryProvider';
@@ -97,7 +97,7 @@ export default function ARAgingSummaryHeaderGeneral() {
             label={<T id={'specific_customers'} />}
             className={classNames('form-group--select-list', Classes.FILL)}
           >
-            <CustomersMultiSelect customers={customers} />
+            <ContactsMultiSelect contacts={customers} />
           </FormGroup>
         </Col>
       </Row>

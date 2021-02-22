@@ -8,7 +8,6 @@ import {
   PopoverInteractionKind,
   Position,
 } from '@blueprintjs/core';
-import { safeInvoke } from '@blueprintjs/core/lib/esm/common/utils';
 
 import { FormattedMessage as T } from 'react-intl';
 import classNames from 'classnames';
@@ -17,36 +16,42 @@ import DashboardActionsBar from 'components/Dashboard/DashboardActionsBar';
 import { Icon } from 'components';
 import NumberFormatDropdown from 'components/NumberFormatDropdown';
 
+import { useAPAgingSummaryContext } from './APAgingSummaryProvider';
 import withAPAgingSummary from './withAPAgingSummary';
-import withARAgingSummaryActions from './withAPAgingSummaryActions';
+import withAPAgingSummaryActions from './withAPAgingSummaryActions';
 
-import { compose } from 'utils';
+import { saveInvoke, compose } from 'utils';
 
 /**
  * AP Aging summary sheet - Actions bar.
  */
 function APAgingSummaryActionsBar({
-  //#withPayableAgingSummary
+  // #withPayableAgingSummary
   payableAgingFilter,
-  payableAgingLoading,
 
-  //#withARAgingSummaryActions
-  toggleFilterAPAgingSummary,
-  refreshAPAgingSummary,
+  // #withARAgingSummaryActions
+  toggleAPAgingSummaryFilterDrawer: toggleFilterDrawerDisplay,
 
   //#ownProps
   numberFormat,
   onNumberFormatSubmit,
 }) {
-  const handleFilterToggleClick = () => toggleFilterAPAgingSummary();
+  const { isAPAgingFetching, refetch } = useAPAgingSummaryContext();
+
+  const handleFilterToggleClick = () => {
+    toggleFilterDrawerDisplay();
+  }
 
   // handle recalculate report button.
-  const handleRecalculateReport = () => refreshAPAgingSummary(true);
+  const handleRecalculateReport = () => { 
+    refetch();
+  }
 
   // handle number format submit.
-  const handleNumberFormatSubmit = (numberFormat) =>
-    safeInvoke(onNumberFormatSubmit, numberFormat);
-    
+  const handleNumberFormatSubmit = (numberFormat) => {
+    saveInvoke(onNumberFormatSubmit, numberFormat);
+  }
+
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -76,7 +81,7 @@ function APAgingSummaryActionsBar({
             <NumberFormatDropdown
               numberFormat={numberFormat}
               onSubmit={handleNumberFormatSubmit}
-              submitDisabled={payableAgingLoading}
+              submitDisabled={isAPAgingFetching}
             />
           }
           minimal={true}
@@ -113,11 +118,8 @@ function APAgingSummaryActionsBar({
 }
 
 export default compose(
-  withARAgingSummaryActions,
-  withAPAgingSummary(
-    ({ payableAgingSummaryLoading, payableAgingSummaryFilter }) => ({
-      payableAgingLoading: payableAgingSummaryLoading,
-      payableAgingFilter: payableAgingSummaryFilter,
-    }),
-  ),
+  withAPAgingSummaryActions,
+  withAPAgingSummary(({ APAgingSummaryFilterDrawer }) => ({
+    isFilterDrawerOpen: APAgingSummaryFilterDrawer
+  }))
 )(APAgingSummaryActionsBar);
