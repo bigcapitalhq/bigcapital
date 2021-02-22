@@ -11,6 +11,7 @@ import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
 import withPaymentReceives from './withPaymentReceives';
 import withPaymentReceivesActions from './withPaymentReceivesActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
+import withDrawerActions from 'containers/Drawer/withDrawerActions';
 import withSettings from 'containers/Settings/withSettings';
 import { usePaymentReceivesColumns, ActionsMenu } from './components';
 import { usePaymentReceivesListContext } from './PaymentReceiptsListProvider';
@@ -27,6 +28,9 @@ function PaymentReceivesDataTable({
 
   // #withAlertsActions
   openAlert,
+
+  // #withDrawerActions
+  openDrawer,
 }) {
   const history = useHistory();
 
@@ -51,6 +55,11 @@ function PaymentReceivesDataTable({
   // Handles delete payment receive.
   const handleDeletePaymentReceive = ({ id }) => {
     openAlert('payment-receive-delete', { paymentReceiveId: id });
+  };
+
+  // Handle drawer payment receive.
+  const handleDrawerPaymentReceive = () => {
+    openDrawer('payment-receive-drawer', {});
   };
 
   // Handle datatable fetch once the table's state changing.
@@ -93,6 +102,7 @@ function PaymentReceivesDataTable({
       payload={{
         onDelete: handleDeletePaymentReceive,
         onEdit: handleEditPaymentReceive,
+        onDrawer: handleDrawerPaymentReceive,
       }}
     />
   );
@@ -101,6 +111,7 @@ function PaymentReceivesDataTable({
 export default compose(
   withPaymentReceivesActions,
   withAlertsActions,
+  withDrawerActions,
   withPaymentReceives(({ paymentReceivesTableState }) => ({
     paymentReceivesTableState,
   })),

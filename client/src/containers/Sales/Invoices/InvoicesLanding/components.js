@@ -8,7 +8,7 @@ import {
   ProgressBar,
   Popover,
   Position,
-  Button
+  Button,
 } from '@blueprintjs/core';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import moment from 'moment';
@@ -18,11 +18,9 @@ import { Money, AppToaster } from 'components';
 import { formatMessage } from 'services/intl';
 import { safeCallback } from 'utils';
 
-
 const calculateStatus = (paymentAmount, balanceAmount) => {
   return round(paymentAmount / balanceAmount, 2);
-}
-  
+};
 
 export const statusAccessor = (row) => {
   return (
@@ -95,7 +93,7 @@ export const handleDeleteErrors = (errors) => {
 };
 
 export function ActionsMenu({
-  payload: { onEdit, onDeliver, onDelete },
+  payload: { onEdit, onDeliver, onDelete, onDrawer },
   row: { original },
 }) {
   const { formatMessage } = useIntl();
@@ -119,6 +117,10 @@ export function ActionsMenu({
           onClick={safeCallback(onDeliver, original)}
         />
       </If>
+      <MenuItem
+        text={formatMessage({ id: 'invoice_paper' })}
+        onClick={() => onDrawer()}
+      />
       <MenuItem
         text={formatMessage({ id: 'delete_invoice' })}
         intent={Intent.DANGER}
