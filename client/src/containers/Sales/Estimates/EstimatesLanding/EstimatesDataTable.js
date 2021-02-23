@@ -11,6 +11,7 @@ import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
 import withEstimatesActions from './withEstimatesActions';
 import withSettings from 'containers/Settings/withSettings';
 import withAlertsActions from 'containers/Alert/withAlertActions';
+import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 import { useEstimatesListContext } from './EstimatesListProvider';
 import { ActionsMenu, useEstiamtesTableColumns } from './components';
@@ -24,6 +25,9 @@ function EstimatesDataTable({
 
   // #withAlertsActions
   openAlert,
+
+  // #withDrawerActions
+  openDrawer,
 }) {
   const history = useHistory();
 
@@ -61,6 +65,11 @@ function EstimatesDataTable({
   // Handle cancel/confirm estimate reject.
   const handleRejectEstimate = ({ id }) => {
     openAlert('estimate-reject', { estimateId: id });
+  };
+  
+  // Handle drawer estimate.
+  const handleDrawerEstimate = () => {
+    openDrawer('estimate-drawer', {});
   };
 
   // Handles fetch data.
@@ -104,6 +113,7 @@ function EstimatesDataTable({
         onReject: handleRejectEstimate,
         onDeliver: handleDeliverEstimate,
         onDelete: handleDeleteEstimate,
+        onDrawer: handleDrawerEstimate,
       }}
     />
   );
@@ -112,6 +122,7 @@ function EstimatesDataTable({
 export default compose(
   withEstimatesActions,
   withAlertsActions,
+  withDrawerActions,
   withSettings(({ organizationSettings }) => ({
     baseCurrency: organizationSettings?.baseCurrency,
   })),

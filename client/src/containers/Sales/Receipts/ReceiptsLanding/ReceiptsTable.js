@@ -9,6 +9,7 @@ import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
 import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
 
 import withAlertsActions from 'containers/Alert/withAlertActions';
+import withDrawerActions from 'containers/Drawer/withDrawerActions';
 import withReceipts from './withReceipts';
 import withReceiptsActions from './withReceiptsActions';
 import withSettings from 'containers/Settings/withSettings';
@@ -31,6 +32,9 @@ function ReceiptsDataTable({
 
   // #withAlertsActions
   openAlert,
+
+  // #withDrawerActions
+  openDrawer,
 }) {
   const history = useHistory();
 
@@ -60,6 +64,11 @@ function ReceiptsDataTable({
   const handleCloseReceipt = (receipt) => {
     openAlert('receipt-close', { receiptId: receipt.id });
   };
+
+    // Handle drawer receipts.
+    const handleDrawerReceipt = () => {
+      openDrawer('receipt-drawer', {});
+    };
 
   // Handles the datable fetch data once the state changing.
   const handleDataTableFetchData = useCallback(
@@ -102,6 +111,7 @@ function ReceiptsDataTable({
         onEdit: handleEditReceipt,
         onDelete: handleDeleteReceipt,
         onClose: handleCloseReceipt,
+        onDrawer:handleDrawerReceipt,
         baseCurrency,
       }}
     />
@@ -111,6 +121,7 @@ function ReceiptsDataTable({
 export default compose(
   withAlertsActions,
   withReceiptsActions,
+  withDrawerActions,
   withReceipts(({ receiptTableState }) => ({
     receiptTableState,
   })),

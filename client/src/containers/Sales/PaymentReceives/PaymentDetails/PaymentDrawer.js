@@ -1,6 +1,6 @@
 import React from 'react';
 import DrawerTemplate from 'containers/Drawers/DrawerTemplate';
-import PaymentPaperTemplate from 'containers/Drawers/PaymentPaperTemplate';
+import PaymentPaperTemplate from 'containers/Drawers/PaymentPaperTemplate/PaymentPaperTemplate';
 import withDrawers from 'containers/Drawer/withDrawers';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 

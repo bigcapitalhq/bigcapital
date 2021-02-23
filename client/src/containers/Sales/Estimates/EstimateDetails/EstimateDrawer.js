@@ -1,6 +1,6 @@
 import React from 'react';
 import DrawerTemplate from 'containers/Drawers/DrawerTemplate';
-import PaperTemplate from 'containers/Drawers/PaperTemplate';
+import PaperTemplate from 'containers/Drawers/PaperTemplate/PaperTemplate';
 import withDrawers from 'containers/Drawer/withDrawers';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
@@ -18,10 +18,11 @@ function EstimateDrawer({
   const handleDrawerClose = () => {
     closeDrawer(name);
   };
+  
 
   return (
     <DrawerTemplate isOpen={isOpen} isClose={handleDrawerClose}>
-      <PaperTemplate />
+      <PaperTemplate  />
     </DrawerTemplate>
   );
 }

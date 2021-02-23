@@ -9,10 +9,11 @@ import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
 import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
 
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
-import withInvoices from './withInvoices'; 
+import withInvoices from './withInvoices';
 import withInvoiceActions from './withInvoiceActions';
 import withSettings from 'containers/Settings/withSettings';
 import withAlertsActions from 'containers/Alert/withAlertActions';
+import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
 import { useInvoicesTableColumns, ActionsMenu } from './components';
 import { useInvoicesListContext } from './InvoicesListProvider';
@@ -32,6 +33,9 @@ function InvoicesDataTable({
 
   // #withAlertsActions
   openAlert,
+  
+  // #withDrawerActions
+  openDrawer,
 }) {
   const history = useHistory();
 
@@ -60,6 +64,11 @@ function InvoicesDataTable({
   // Handle edit sale invoice.
   const handleEditInvoice = (invoice) => {
     history.push(`/invoices/${invoice.id}/edit`);
+  };
+
+  // Handle drawer invoice.
+  const handleDrawerInvoice = () => {
+    openDrawer('invoice-drawer', {});
   };
 
   // Handles fetch data once the table state change.
@@ -104,6 +113,7 @@ function InvoicesDataTable({
         onDelete: handleDeleteInvoice,
         onDeliver: handleDeliverInvoice,
         onEdit: handleEditInvoice,
+        onDrawer: handleDrawerInvoice,
         baseCurrency,
       }}
     />
@@ -114,6 +124,7 @@ export default compose(
   withDashboardActions,
   withInvoiceActions,
   withAlertsActions,
+  withDrawerActions,
   withInvoices(({ invoicesTableState }) => ({ invoicesTableState })),
   withSettings(({ organizationSettings }) => ({
     baseCurrency: organizationSettings?.baseCurrency,

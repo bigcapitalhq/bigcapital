@@ -18,7 +18,7 @@ import { safeCallback } from 'utils';
  */
 export function ActionsMenu({
   row: { original: paymentReceive },
-  payload: { onEdit, onDelete },
+  payload: { onEdit, onDelete, onDrawer },
 }) {
   const { formatMessage } = useIntl();
 
@@ -33,6 +33,10 @@ export function ActionsMenu({
         icon={<Icon icon="pen-18" />}
         text={formatMessage({ id: 'edit_payment_receive' })}
         onClick={safeCallback(onEdit, paymentReceive)}
+      />
+      <MenuItem
+        text={formatMessage({ id: 'payment_receive_paper' })}
+        onClick={() => onDrawer()}
       />
       <MenuItem
         text={formatMessage({ id: 'delete_payment_receive' })}
