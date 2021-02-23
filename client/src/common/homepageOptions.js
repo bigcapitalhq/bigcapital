@@ -36,7 +36,7 @@ export const accountsReceivable = [
         title: 'Customers payment',
         description:
           'Labore aute elit proident sit culpa. Commodo nulla veniam ullamco ullamco ut nulla pariatur eu. Esse tempor irure incididunt veniam sint excepteur quis.',
-        link: '/',
+        link: '/payment-receives',
       },
     ],
   },
@@ -97,7 +97,7 @@ export const financialAccounting = [
         title: 'Financial statements',
         description:
           'Labore aute elit proident sit culpa. Commodo nulla veniam ullamco ullamco ut nulla pariatur eu. Esse tempor irure incididunt veniam sint excepteur quis.',
-        link: '/',
+        link: '/financial-reports',
       },
     ],
   },
@@ -117,7 +117,7 @@ export const productsServices = [
         title: 'Products & Services Categories',
         description:
           'Labore aute elit proident sit culpa. Commodo nulla veniam ullamco ullamco ut nulla pariatur eu. Esse tempor irure incididunt veniam sint excepteur quis.',
-        link: '/categories',
+        link: 'items/categories',
       },
       {
         title: 'Inventory Adjustments',
