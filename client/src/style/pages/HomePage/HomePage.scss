@@ -1,9 +1,10 @@
 .homepage {
   &__container {
     display: flex;
-    height: 100%;
+    
     margin: 22px 32px;
     background-color: transparent;
+    align-items: flex-start;
 
     .shortcut-boxes {
       flex: 2;
@@ -12,15 +13,19 @@
       background-color: #fff;
       border-bottom: 1px solid #d2dce2;
       border-right: 1px solid #d2dce2;
+      max-width: 800px;
 
       .shortcut-box {
         width: 50%;
-        // height: 174px;
         padding: 16px;
         border-left: 1px solid #d2dce2;
         border-top: 1px solid #d2dce2;
         background-color: transparent;
         transition: 0.2s;
+
+        a{
+          text-decoration: none;
+        }
 
         &__header {
           display: flex;
@@ -28,7 +33,7 @@
           justify-content: space-between;
           margin-bottom: 14px;
 
-          span > a {
+          span {
             color: #d6d6e0;
           }
           .header--icon {
@@ -62,7 +67,7 @@
       display: flex;
       flex-direction: column;
       padding-bottom: 32px;
-      width: 100%;
+      max-width: 400px;
 
       &__title {
         font-size: 16px;

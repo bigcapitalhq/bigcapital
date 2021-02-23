@@ -58,9 +58,8 @@ export default function ReferenceNumberForm({
             tincidunt porta quam,
           </p>
           <Row>
-            {/* prefix */}
-            <Col>
-            
+            {/* ------------- Prefix ------------- */}
+            <Col xs={6}>
               <FormGroup
                 label={<T id={'prefix'} />}
                 className={'form-group--'}
@@ -75,8 +74,9 @@ export default function ReferenceNumberForm({
                 />
               </FormGroup>
             </Col>
-            {/* next_number */}
-            <Col>
+
+            {/* ------------- Next number ------------- */}
+            <Col xs={6}>
               <FormGroup
                 label={<T id={'next_number'} />}
                 className={'form-group--'}

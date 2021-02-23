@@ -16,24 +16,30 @@ import { compose, optionsMapToArray } from 'utils';
  */
 
 function InvoiceNumberDialogContent({
+  // #ownProps
+  onConfirm,
+
   // #withSettings
   nextNumber,
   numberPrefix,
- 
+
   // #withDialogActions
   closeDialog,
 }) {
   const { mutateAsync: saveSettings } = useSaveSettings();
 
   const handleSubmitForm = (values, { setSubmitting }) => {
-    const options = optionsMapToArray(values).map((option) => {
-      return { key: option.key, ...option, group: 'sales_invoices' };
-    });
+    const options = optionsMapToArray(values).map((option) => ({
+      key: option.key,
+      ...option,
+      group: 'sales_invoices',
+    }));
 
     saveSettings({ options })
       .then(() => {
         setSubmitting(false);
         closeDialog('invoice-number-form');
+        onConfirm(values);
       })
       .catch(() => {
         setSubmitting(false);
@@ -64,5 +70,4 @@ export default compose(
     nextNumber: invoiceSettings?.nextNumber,
     numberPrefix: invoiceSettings?.numberPrefix,
   })),
-  // withInvoicesActions,
 )(InvoiceNumberDialogContent);

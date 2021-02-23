@@ -1,49 +1,45 @@
 import React, { useCallback } from 'react';
 import { DialogContent } from 'components';
-import { useQuery } from 'react-query';
 
+import { useSettingsReceipts, useSaveSettings } from 'hooks/query';
 import ReferenceNumberForm from 'containers/JournalNumber/ReferenceNumberForm';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withSettings from 'containers/Settings/withSettings';
-import withSettingsActions from 'containers/Settings/withSettingsActions';
 
-import { compose, optionsMapToArray } from 'utils';
+import { compose, optionsMapToArray, saveInvoke } from 'utils';
 
 /**
  * Receipt number dialog's content.
  */
 
 function ReceiptNumberDialogContent({
+  // #ownProps
+  receiptId, 
+  onConfirm,
+
   // #withSettings
   nextNumber,
   numberPrefix,
 
-  // #withSettingsActions
-  requestFetchOptions,
-  requestSubmitOptions,
-
   // #withDialogActions
   closeDialog,
-
-  // #withReceiptActions
-  setReceiptNumberChanged,
 }) {
-  const fetchSettings = useQuery(['settings'], () => requestFetchOptions({}));
+  const { isLoading: isSettingsLoading } = useSettingsReceipts();
+  const { mutateAsync: saveSettingsMutate } = useSaveSettings();
 
   const handleSubmitForm = (values, { setSubmitting }) => {
-    const options = optionsMapToArray(values).map((option) => {
-      return { key: option.key, ...option, group: 'sales_receipts' };
-    });
+    const options = optionsMapToArray(values).map((option) => ({
+      key: option.key,
+      ...option,
+      group: 'sales_receipts',
+    }));
 
-    requestSubmitOptions({ options })
+    saveSettingsMutate({ options })
       .then(() => {
         setSubmitting(false);
         closeDialog('receipt-number-form');
-
-        setTimeout(() => {
-          setReceiptNumberChanged(true);
-        }, 250);
+        saveInvoke(onConfirm, values)
       })
       .catch(() => {
         setSubmitting(false);
@@ -55,7 +51,7 @@ function ReceiptNumberDialogContent({
   }, [closeDialog]);
 
   return (
-    <DialogContent isLoading={fetchSettings.isFetching}>
+    <DialogContent isLoading={isSettingsLoading}>
       <ReferenceNumberForm
         initialNumber={nextNumber}
         initialPrefix={numberPrefix}
@@ -68,7 +64,6 @@ function ReceiptNumberDialogContent({
 
 export default compose(
   withDialogActions,
-  withSettingsActions,
   withSettings(({ receiptSettings }) => ({
     nextNumber: receiptSettings?.nextNumber,
     numberPrefix: receiptSettings?.numberPrefix,

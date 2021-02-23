@@ -11,9 +11,11 @@ export function useCreateBill(props) {
   const apiRequest = useApiRequest();
 
   return useMutation((values) => apiRequest.post('purchases/bills', values), {
-    onSuccess: () => {
+    onSuccess: (res, values) => {
       queryClient.invalidateQueries('BILLS');
       queryClient.invalidateQueries('BILL');
+      queryClient.invalidateQueries(['VENDORS']);
+      queryClient.invalidateQueries(['VENDOR', values.vendor_id]);
     },
     ...props,
   });
@@ -29,9 +31,11 @@ export function useEditBill(props) {
   return useMutation(
     ([id, values]) => apiRequest.post(`purchases/bills/${id}`, values),
     {
-      onSuccess: () => {
+      onSuccess: (res, [id, values]) => {
         queryClient.invalidateQueries('BILLS');
         queryClient.invalidateQueries('BILL');
+        queryClient.invalidateQueries(['VENDORS']);
+        queryClient.invalidateQueries(['VENDOR', values.vendor_id]);
       },
       ...props,
     },
@@ -46,9 +50,10 @@ export function useDeleteBill(props) {
   const apiRequest = useApiRequest();
 
   return useMutation((id) => apiRequest.delete(`purchases/bills/${id}`), {
-    onSuccess: () => {
+    onSuccess: (res, id) => {
       queryClient.invalidateQueries('BILLS');
       queryClient.invalidateQueries('BILL');
+      queryClient.invalidateQueries(['VENDORS']);
     },
     ...props,
   });
@@ -122,6 +127,7 @@ export function useOpenBill(props) {
     {
       onSuccess: () => {
         queryClient.invalidateQueries('BILLS');
+        queryClient.invalidateQueries(['VENDORS']);
       },
       ...props,
     },

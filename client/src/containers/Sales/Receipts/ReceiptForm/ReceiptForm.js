@@ -21,6 +21,7 @@ import ReceiptFromHeader from './ReceiptFormHeader';
 import ReceiptItemsEntriesEditor from './ReceiptItemsEntriesEditor';
 import ReceiptFormFloatingActions from './ReceiptFormFloatingActions';
 import ReceiptFormFooter from './ReceiptFormFooter';
+import ReceiptFormDialogs from './ReceiptFormDialogs';
 
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withSettings from 'containers/Settings/withSettings';
@@ -170,6 +171,8 @@ function ReceiptForm({
           <ReceiptItemsEntriesEditor />
           <ReceiptFormFooter />
           <ReceiptFormFloatingActions />
+
+          <ReceiptFormDialogs />
         </Form>
       </Formik>
     </div>

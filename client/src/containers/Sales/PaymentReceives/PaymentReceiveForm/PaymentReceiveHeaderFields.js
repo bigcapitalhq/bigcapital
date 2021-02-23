@@ -32,7 +32,7 @@ import {
   Money,
 } from 'components';
 import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
-
+import withDialogActions from 'containers/Dialog/withDialogActions';
 import withSettings from 'containers/Settings/withSettings';
 
 import { amountPaymentEntries, fullAmountPaymentEntries } from './utils';
@@ -41,7 +41,12 @@ import { toSafeInteger } from 'lodash';
 /**
  * Payment receive header fields.
  */
-function PaymentReceiveHeaderFields({ baseCurrency }) {
+function PaymentReceiveHeaderFields({
+  baseCurrency,
+
+  // #withDialogActions
+  openDialog,
+}) {
   // Payment receive form context.
   const { customers, accounts, isNewMode } = usePaymentReceiveFormContext();
 
@@ -71,6 +76,12 @@ function PaymentReceiveHeaderFields({ baseCurrency }) {
   const onFullAmountBlur = (value) => {
     const newEntries = amountPaymentEntries(toSafeInteger(value), entries);
     setFieldValue('entries', newEntries);
+  };
+
+
+  // Handle click open payment receive number dialog.
+  const handleClickOpenDialog = () => {
+    openDialog('payment-receive-number-form')
   };
 
   return (
@@ -185,7 +196,7 @@ function PaymentReceiveHeaderFields({ baseCurrency }) {
               />
               <InputPrependButton
                 buttonProps={{
-                  //   onClick: handlePaymentReceiveNumberChange,
+                  onClick: handleClickOpenDialog,
                   icon: <Icon icon={'settings-18'} />,
                 }}
                 tooltip={true}
@@ -253,4 +264,5 @@ export default compose(
   withSettings(({ organizationSettings }) => ({
     baseCurrency: organizationSettings?.baseCurrency,
   })),
+  withDialogActions
 )(PaymentReceiveHeaderFields);

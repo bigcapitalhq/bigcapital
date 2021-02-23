@@ -15,6 +15,7 @@ import InvoiceFormHeader from './InvoiceFormHeader';
 import InvoiceItemsEntriesEditorField from './InvoiceItemsEntriesEditorField';
 import InvoiceFloatingActions from './InvoiceFloatingActions';
 import InvoiceFormFooter from './InvoiceFormFooter';
+import InvoiceFormDialogs from './InvoiceFormDialogs';
 
 import withDashboardActions from 'containers/Dashboard/withDashboardActions';
 import withMediaActions from 'containers/Media/withMediaActions';
@@ -159,6 +160,7 @@ function InvoiceForm({
           </div>
           <InvoiceFormFooter />
           <InvoiceFloatingActions />
+          <InvoiceFormDialogs />
         </Form>
       </Formik>
     </div>

@@ -39,7 +39,7 @@ function ReceiptFormProvider({ receiptId, ...props }) {
   } = useItems();
 
   // Fetch receipt settings.
-  const { isFetching: isSettingLoading } = useSettings();
+  const { isLoading: isSettingLoading } = useSettings();
 
   const { mutateAsync: createReceiptMutate } = useCreateReceipt();
   const { mutateAsync: editReceiptMutate } = useEditReceipt();

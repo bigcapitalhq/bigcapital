@@ -1,13 +1,12 @@
 import React, { useCallback } from 'react';
 import { DialogContent } from 'components';
-import { useQuery, queryCache } from 'react-query';
+import { useSaveSettings, useSettingsEstimates } from 'hooks/query';
 
 import ReferenceNumberForm from 'containers/JournalNumber/ReferenceNumberForm';
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withSettings from 'containers/Settings/withSettings';
-import withSettingsActions from 'containers/Settings/withSettingsActions';
 
-import { compose, optionsMapToArray } from 'utils';
+import { compose, optionsMapToArray, saveInvoke } from 'utils';
 
 /**
  * Estimate number dialog's content.
@@ -18,28 +17,26 @@ function EstimateNumberDialogContent({
   nextNumber,
   numberPrefix,
 
-  // #withSettingsActions
-  requestFetchOptions,
-  requestSubmitOptions,
-
   // #withDialogActions
   closeDialog,
+
+  // #ownProps
+  onConfirm,
 }) {
-  const fetchSettings = useQuery(['settings'], () => requestFetchOptions({}));
+  const { isLoading: isSettingsLoading } = useSettingsEstimates();
+  const { mutateAsync: saveSettingsMutate } = useSaveSettings();
 
   const handleSubmitForm = (values, { setSubmitting }) => {
-    const options = optionsMapToArray(values).map((option) => {
-      return { key: option.key, ...option, group: 'sales_estimates' };
-    });
-    requestSubmitOptions({ options })
+    const options = optionsMapToArray(values).map((option) => ({
+      key: option.key,
+      ...option,
+      group: 'sales_estimates',
+    }));
+    saveSettingsMutate({ options })
       .then(() => {
         setSubmitting(false);
         closeDialog('estimate-number-form');
-
-        setTimeout(() => {
-          queryCache.invalidateQueries('settings');
-          // setEstimateNumberChanged(true);
-        }, 250);
+        saveInvoke(onConfirm, values);
       })
       .catch(() => {
         setSubmitting(false);
@@ -51,7 +48,7 @@ function EstimateNumberDialogContent({
   }, [closeDialog]);
 
   return (
-    <DialogContent isLoading={fetchSettings.isFetching}>
+    <DialogContent isLoading={isSettingsLoading}>
       <ReferenceNumberForm
         initialNumber={nextNumber}
         initialPrefix={numberPrefix}
@@ -64,7 +61,6 @@ function EstimateNumberDialogContent({
 
 export default compose(
   withDialogActions,
-  withSettingsActions,
   withSettings(({ estimatesSettings }) => ({
     nextNumber: estimatesSettings?.nextNumber,
     numberPrefix: estimatesSettings?.numberPrefix,

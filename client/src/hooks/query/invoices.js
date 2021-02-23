@@ -11,8 +11,11 @@ export function useCreateInvoice(props) {
   const apiRequest = useApiRequest();
 
   return useMutation((values) => apiRequest.post('sales/invoices', values), {
-    onSuccess: () => {
+    onSuccess: (values) => {
       queryClient.invalidateQueries('SALE_INVOICES');
+      queryClient.invalidateQueries(['SETTINGS', 'INVOICES']);
+      queryClient.invalidateQueries('CUSTOMERS');
+      queryClient.invalidateQueries(['CUSTOMER', values.customer_id]);
     },
     ...props,
   });
@@ -28,9 +31,11 @@ export function useEditInvoice(props) {
   return useMutation(
     ([id, values]) => apiRequest.post(`sales/invoices/${id}`, values),
     {
-      onSuccess: (res, id) => {
+      onSuccess: (res, [id, values]) => {
         queryClient.invalidateQueries('SALE_INVOICES');
         queryClient.invalidateQueries(['SALE_INVOICE', id]);
+        queryClient.invalidateQueries('CUSTOMERS');
+        queryClient.invalidateQueries(['CUSTOMER', values.customer_id]);
       },
       ...props,
     },
@@ -48,6 +53,7 @@ export function useDeleteInvoice(props) {
     onSuccess: (res, id) => {
       queryClient.invalidateQueries('SALE_INVOICES');
       queryClient.invalidateQueries(['SALE_INVOICE', id]);
+      queryClient.invalidateQueries('CUSTOMERS');
     },
     ...props,
   });
@@ -97,6 +103,7 @@ export function useDeliverInvoice(props) {
     onSuccess: (res, id) => {
       queryClient.invalidateQueries('SALE_INVOICES');
       queryClient.invalidateQueries(['SALE_INVOICE', id]);
+      queryClient.invalidateQueries('CUSTOMERS');
     },
     ...props,
   });
