@@ -6,6 +6,7 @@ import {
   useCustomers,
   useCreateInvoice,
   useEditInvoice,
+  useSettingsInvoices,
 } from 'hooks/query';
 
 const InvoiceFormContext = createContext();
@@ -14,7 +15,7 @@ const InvoiceFormContext = createContext();
  * Accounts chart data provider.
  */
 function InvoiceFormProvider({ invoiceId, ...props }) {
-  const { data: invoice, isFetching: isInvoiceLoading } = useInvoice(
+  const { data: invoice, isLoading: isInvoiceLoading } = useInvoice(
     invoiceId,
     {
       enabled: !!invoiceId,
@@ -24,21 +25,24 @@ function InvoiceFormProvider({ invoiceId, ...props }) {
   // Handle fetching the items table based on the given query.
   const {
     data: { items },
-    isFetching: isItemsLoading,
+    isLoading: isItemsLoading,
   } = useItems();
 
   // Handle fetch customers data table or list
   const {
     data: { customers },
-    isFetching: isCustomersLoading,
+    isLoading: isCustomersLoading,
   } = useCustomers();
+
+  // Handle fetching settings.
+  const { isLoading: isSettingsLoading } = useSettingsInvoices();
 
   // Create and edit invoice mutations.
   const { mutateAsync: createInvoiceMutate } = useCreateInvoice();
   const { mutateAsync: editInvoiceMutate } = useEditInvoice();
 
   // Form submit payload.
-  const [submitPayload, setSubmitPayload] = useState({});
+  const [submitPayload, setSubmitPayload] = useState();
 
   // Detarmines whether the form in new mode.
   const isNewMode = !invoiceId;
@@ -53,16 +57,22 @@ function InvoiceFormProvider({ invoiceId, ...props }) {
     isInvoiceLoading,
     isItemsLoading,
     isCustomersLoading,
+    isSettingsLoading,
 
     createInvoiceMutate,
     editInvoiceMutate,
     setSubmitPayload,
-    isNewMode
+    isNewMode,
   };
 
   return (
     <DashboardInsider
-      loading={isInvoiceLoading || isItemsLoading || isCustomersLoading}
+      loading={
+        isInvoiceLoading ||
+        isItemsLoading ||
+        isCustomersLoading ||
+        isSettingsLoading
+      }
       name={'invoice-form'}
     >
       <InvoiceFormContext.Provider value={provider} {...props} />

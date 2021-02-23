@@ -15,6 +15,7 @@ import MakeJournalEntriesHeader from './MakeJournalEntriesHeader';
 import MakeJournalFormFloatingActions from './MakeJournalFormFloatingActions';
 import MakeJournalEntriesField from './MakeJournalEntriesField';
 import MakeJournalFormFooter from './MakeJournalFormFooter';
+import MakeJournalFormDialogs from './MakeJournalFormDialogs';
 
 import withSettings from 'containers/Settings/withSettings';
 
@@ -167,6 +168,8 @@ function MakeJournalEntriesForm({
           <MakeJournalEntriesField />
           <MakeJournalFormFooter />
           <MakeJournalFormFloatingActions />
+
+          <MakeJournalFormDialogs />
         </Form>
       </Formik>
     </div>

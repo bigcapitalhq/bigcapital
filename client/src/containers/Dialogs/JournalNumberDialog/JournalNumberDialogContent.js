@@ -1,15 +1,12 @@
 import React, { useCallback } from 'react';
 import { DialogContent } from 'components';
-import { useQuery, queryCache } from 'react-query';
+import { useSaveSettings, useSettingsManualJournals } from 'hooks/query';
 
 import ReferenceNumberForm from 'containers/JournalNumber/ReferenceNumberForm';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
-import withSettingsActions from 'containers/Settings/withSettingsActions';
 import withSettings from 'containers/Settings/withSettings';
-// import withManualJournalsActions from 'containers/Accounting/withManualJournalsActions';
-
-import { compose, optionsMapToArray } from 'utils';
+import { saveInvoke, compose, optionsMapToArray } from 'utils';
 
 import 'style/pages/ManualJournal/JournalNumberDialog.scss'
 
@@ -21,28 +18,25 @@ function JournalNumberDialogContent({
   nextNumber,
   numberPrefix,
 
-  // #withSettingsActions
-  requestFetchOptions,
-  requestSubmitOptions,
-
   // #withDialogActions
   closeDialog,
 
-}) {  
-  const fetchSettings = useQuery(
-    ['settings'],
-    () => requestFetchOptions({}),
-  );
+  // #ownProps
+  onConfirm
+}) {
+  const { isLoading: isSettingsLoading } = useSettingsManualJournals();
+  const { mutateAsync: saveSettingsMutate } = useSaveSettings();
 
+  // Handle the form submit. 
   const handleSubmitForm = (values, { setSubmitting }) => {
     const options = optionsMapToArray(values).map((option) => ({
       key: option.key, ...option, group: 'manual_journals',
     }));
 
-    requestSubmitOptions({ options }).then(() => {
+    saveSettingsMutate({ options }).then(() => {
       setSubmitting(false);
       closeDialog('journal-number-form');
-
+      saveInvoke(onConfirm, values);
     }).catch(() => {
       setSubmitting(false);
     });
@@ -53,7 +47,7 @@ function JournalNumberDialogContent({
   }, [closeDialog]);
 
   return (
-    <DialogContent isLoading={fetchSettings.isFetching}>
+    <DialogContent isLoading={isSettingsLoading}>
       <ReferenceNumberForm
         initialNumber={nextNumber}
         initialPrefix={numberPrefix}
@@ -66,10 +60,8 @@ function JournalNumberDialogContent({
 
 export default compose(
   withDialogActions,
-  withSettingsActions,
   withSettings(({ manualJournalsSettings }) => ({
     nextNumber: manualJournalsSettings?.nextNumber,
     numberPrefix: manualJournalsSettings?.numberPrefix,
   })),
-  // withManualJournalsActions,
 )(JournalNumberDialogContent);

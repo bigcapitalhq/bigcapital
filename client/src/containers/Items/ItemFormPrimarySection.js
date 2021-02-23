@@ -8,7 +8,7 @@ import {
   Position,
 } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'react-intl';
-import { ErrorMessage, FastField, useFormikContext } from 'formik';
+import { ErrorMessage, FastField } from 'formik';
 import {
   CategoriesSelectList,
   Hint,
@@ -26,12 +26,10 @@ import { handleStringChange, inputIntent } from 'utils';
  * Item form primary section.
  */
 export default function ItemFormPrimarySection() {
-  const { itemsCategories } = useItemFormContext();
+  // Item form context.
+  const { isNewMode, item, itemsCategories } = useItemFormContext();
 
   const nameFieldRef = useRef(null);
-
-  // Formik context.
-  const { values: { type } } = useFormikContext();
 
   useEffect(() => {
     // Auto focus item name field once component mount.
@@ -87,7 +85,7 @@ export default function ItemFormPrimarySection() {
                 form.setFieldValue('type', _value);
               })}
               selectedValue={value}
-              disabled={type === 'inventory'}
+              disabled={!isNewMode && item.type === 'inventory'}
             >
               <Radio label={<T id={'service'} />} value="service" />
               <Radio label={<T id={'non_inventory'} />} value="non-inventory" />

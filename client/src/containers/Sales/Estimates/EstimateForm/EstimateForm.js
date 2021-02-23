@@ -16,6 +16,7 @@ import EstimateFormHeader from './EstimateFormHeader';
 import EstimateItemsEntriesField from './EstimateItemsEntriesField';
 import EstimateFloatingActions from './EstimateFloatingActions';
 import EstimateFormFooter from './EstimateFormFooter';
+import EstimateFormDialogs from './EstimateFormDialogs';
 
 import withSettings from 'containers/Settings/withSettings';
 
@@ -158,12 +159,11 @@ function EstimateForm({
       >
         <Form>
           <EstimateFormHeader />
-
-          <div className={classNames(CLASSES.PAGE_FORM_BODY)}>
-            <EstimateItemsEntriesField />
-          </div>
+          <EstimateItemsEntriesField />
           <EstimateFormFooter />
           <EstimateFloatingActions />
+
+          <EstimateFormDialogs />
         </Form>
       </Formik>
     </div>

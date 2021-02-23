@@ -5,11 +5,7 @@ import InviteUserDialog from 'containers/Dialogs/InviteUserDialog';
 import ItemCategoryDialog from 'containers/Dialogs/ItemCategoryDialog';
 import CurrencyFormDialog from 'containers/Dialogs/CurrencyFormDialog';
 import ExchangeRateFormDialog from 'containers/Dialogs/ExchangeRateFormDialog';
-import JournalNumberDialog from 'containers/Dialogs/JournalNumberDialog';
-import PaymentReceiveNumberDialog from 'containers/Dialogs/PaymentReceiveNumberDialog';
-import EstimateNumberDialog from 'containers/Dialogs/EstimateNumberDialog';
-import ReceiptNumberDialog from 'containers/Dialogs/ReceiptNumberDialog';
-import InvoiceNumberDialog from 'containers/Dialogs/InvoiceNumberDialog';
+
 import InventoryAdjustmentDialog from 'containers/Dialogs/InventoryAdjustmentFormDialog';
 import PaymentViaVoucherDialog from 'containers/Dialogs/PaymentViaVoucherDialog';
 
@@ -20,11 +16,6 @@ export default function DialogsContainer() {
   return (
     <div>
       <AccountDialog dialogName={'account-form'} />
-      <JournalNumberDialog dialogName={'journal-number-form'} />
-      <PaymentReceiveNumberDialog dialogName={'payment-receive-number-form'} />
-      <EstimateNumberDialog dialogName={'estimate-number-form'} />
-      <ReceiptNumberDialog dialogName={'receipt-number-form'} />
-      <InvoiceNumberDialog dialogName={'invoice-number-form'} />
       <CurrencyFormDialog dialogName={'currency-form'} />
       <InviteUserDialog dialogName={'invite-user'} />
       <ExchangeRateFormDialog dialogName={'exchangeRate-form'} />

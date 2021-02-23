@@ -32,7 +32,7 @@ function EstimateFormHeader({
 }) {
   const { customers } = useEstimateFormContext();
 
-  const handleEstimateNumberChange = () => {
+  const handleEstimateNumberBtnClick = () => {
     openDialog('estimate-number-form', {});
   };
 
@@ -135,7 +135,7 @@ function EstimateFormHeader({
               />
               <InputPrependButton
                 buttonProps={{
-                  onClick: handleEstimateNumberChange,
+                  onClick: handleEstimateNumberBtnClick,
                   icon: <Icon icon={'settings-18'} />,
                 }}
                 tooltip={true}

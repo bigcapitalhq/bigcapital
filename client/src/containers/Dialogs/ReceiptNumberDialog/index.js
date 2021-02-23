@@ -2,13 +2,25 @@ import React, { lazy } from 'react';
 import { FormattedMessage as T } from 'react-intl';
 import { Dialog, DialogSuspense } from 'components';
 import withDialogRedux from 'components/DialogReduxConnect';
-import { compose } from 'utils';
+import { compose, saveInvoke } from 'utils';
 
 const ReceiptNumberDialogContent = lazy(() =>
   import('./ReceiptNumberDialogContent'),
 );
 
-function ReceiptNumberDialog({ dialogName, paylaod = { id: null }, isOpen }) {
+/**
+ * Sale receipt number dialog.
+ */
+function ReceiptNumberDialog({
+  dialogName,
+  paylaod = { id: null },
+  isOpen,
+  onConfirm,
+}) {
+  const handleConfirm = (values) => {
+    saveInvoke(onConfirm, values);
+  };
+
   return (
     <Dialog
       name={dialogName}
@@ -18,7 +30,10 @@ function ReceiptNumberDialog({ dialogName, paylaod = { id: null }, isOpen }) {
       isOpen={isOpen}
     >
       <DialogSuspense>
-        <ReceiptNumberDialogContent ReceiptNumberId={paylaod.id} />
+        <ReceiptNumberDialogContent
+          receiptId={paylaod.id}
+          onConfirm={handleConfirm}
+        />
       </DialogSuspense>
     </Dialog>
   );

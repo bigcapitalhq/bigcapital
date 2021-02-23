@@ -1,15 +1,14 @@
 import React, { useCallback } from 'react';
 import { DialogContent } from 'components';
-import { useQuery } from 'react-query';
+import { useSaveSettings, useSettingsPaymentReceives } from 'hooks/query';
 
 import ReferenceNumberForm from 'containers/JournalNumber/ReferenceNumberForm';
 
 import withDialogActions from 'containers/Dialog/withDialogActions';
 import withSettingsActions from 'containers/Settings/withSettingsActions';
 import withSettings from 'containers/Settings/withSettings';
-// import withPaymentReceivesActions from 'containers/Sales/PaymentReceive/withPaymentReceivesActions';
 
-import { compose, optionsMapToArray } from 'utils';
+import { saveInvoke, compose, optionsMapToArray } from 'utils';
 
 /**
  * payment receive number dialog's content.
@@ -20,31 +19,28 @@ function PaymentNumberDialogContent({
   nextNumber,
   numberPrefix,
 
-  // #withSettingsActions
-  requestFetchOptions,
-  requestSubmitOptions,
-
   // #withDialogActions
   closeDialog,
 
-  // #withPaymentReceivesActions
-  // setPaymentReceiveNumberChanged,
+  // #ownProps
+  onConfirm,
 }) {
-  const fetchSettings = useQuery(['settings'], () => requestFetchOptions({}));
+  const { isLoading: isSettingsLoading } = useSettingsPaymentReceives();
+  const { mutateAsync: saveSettingsMutate } = useSaveSettings();
 
   const handleSubmitForm = (values, { setSubmitting }) => {
-    const options = optionsMapToArray(values).map((option) => {
-      return { key: option.key, ...option, group: 'payment_receives' };
-    });
+    const options = optionsMapToArray(values).map((option) => ({
+      key: option.key,
+      ...option,
+      group: 'payment_receives',
+    }));
 
-    requestSubmitOptions({ options })
+    saveSettingsMutate({ options })
       .then(() => {
         setSubmitting(false);
         closeDialog('payment-receive-number-form');
 
-        setTimeout(() => {
-          // setPaymentReceiveNumberChanged(true);
-        }, 250);
+        saveInvoke(onConfirm, values);
       })
       .catch(() => {
         setSubmitting(false);
@@ -55,9 +51,8 @@ function PaymentNumberDialogContent({
     closeDialog('payment-receive-number-form');
   }, [closeDialog]);
 
-
   return (
-    <DialogContent isLoading={fetchSettings.isFetching}>
+    <DialogContent isLoading={isSettingsLoading}>
       <ReferenceNumberForm
         initialNumber={nextNumber}
         initialPrefix={numberPrefix}
@@ -75,5 +70,4 @@ export default compose(
     nextNumber: paymentReceiveSettings?.nextNumber,
     numberPrefix: paymentReceiveSettings?.numberPrefix,
   })),
-  // withPaymentReceivesActions,
 )(PaymentNumberDialogContent);

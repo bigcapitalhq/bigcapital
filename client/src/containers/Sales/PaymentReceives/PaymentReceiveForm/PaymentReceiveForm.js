@@ -12,6 +12,7 @@ import PaymentReceiveFormBody from './PaymentReceiveFormBody';
 import PaymentReceiveFloatingActions from './PaymentReceiveFloatingActions';
 import PaymentReceiveFormFooter from './PaymentReceiveFormFooter';
 import PaymentReceiveFormAlerts from './PaymentReceiveFormAlerts';
+import PaymentReceiveFormDialogs from './PaymentReceiveFormDialogs';
 import { PaymentReceiveInnerProvider } from './PaymentReceiveInnerProvider';
 
 import withSettings from 'containers/Settings/withSettings';
@@ -164,7 +165,9 @@ function PaymentReceiveForm({
             <PaymentReceiveFormFooter />
             <PaymentReceiveFloatingActions />
 
+            {/* Alerts & Dialogs */}
             <PaymentReceiveFormAlerts />
+            <PaymentReceiveFormDialogs />
           </PaymentReceiveInnerProvider>
         </Form>
       </Formik>

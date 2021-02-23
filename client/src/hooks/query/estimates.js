@@ -13,6 +13,7 @@ export function useCreateEstimate(props) {
   return useMutation((values) => apiRequest.post('sales/estimates', values), {
     onSuccess: () => {
       queryClient.invalidateQueries('SALE_ESTIMATES');
+      queryClient.invalidateQueries(['SETTINGS', 'ESTIMATES']);
     },
     ...props,
   });

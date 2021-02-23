@@ -10,7 +10,7 @@ export const useAuthInviteAccept = (props) => {
   return useMutation(
     ([values, token]) => apiRequest.post(`invite/accept/${token}`, values),
     props,
-  )
+  );
 }
 
 /**

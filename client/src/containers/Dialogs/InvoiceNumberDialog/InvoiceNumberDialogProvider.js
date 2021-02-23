@@ -1,6 +1,6 @@
 import React, { createContext, useContext } from 'react';
 import { DialogContent } from 'components';
-import { useSettings } from 'hooks/query';
+import { useSettingsInvoices } from 'hooks/query';
 
 const InvoiceNumberDialogContext = createContext();
 
@@ -8,15 +8,15 @@ const InvoiceNumberDialogContext = createContext();
  * Invoice number dialog provider.
  */
 function InvoiceNumberDialogProvider({ query, ...props }) {
-  const { isLoading } = useSettings();
+  const { isLoading: isSettingsLoading } = useSettingsInvoices();
 
   // Provider payload.
   const provider = {
-      
+    isSettingsLoading,
   };
 
   return (
-    <DialogContent isLoading={isLoading}>
+    <DialogContent isLoading={isSettingsLoading}>
       <InvoiceNumberDialogContext.Provider value={provider} {...props} />
     </DialogContent>
   );
