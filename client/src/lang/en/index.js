@@ -978,5 +978,8 @@ export default {
   payable_aging_summary: 'Payable Aging Summary',
   payment_receive_paper: 'Payment Receive Paper',
   specific_vendors: 'Specific Vendors',
-
+  accounts_receivable_a_r: 'Accounts Receivable A/R',
+  accounts_payable_a_p: 'Accounts Payable A/P',
+  financial_accounting: ' Financial Accounting',
+  products_services_inventory: 'Products,Services & Inventory',
 };

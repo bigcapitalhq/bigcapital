@@ -1,56 +1,130 @@
-export const shortcutBox = [
+import React from 'react';
+import { FormattedMessage as T } from 'react-intl';
+
+export const accountsReceivable = [
   {
-    title: 'Request time Off',
-    iconColor: '#F3FEFA',
-    description:
-      'Cupidatat nulla minim sit duis duis laboris. Sint exercitation.',
-  },
-  {
-    title: 'Benefits',
-    iconColor: '#F5F3FE',
-    description:
-      'Cupidatat nulla minim sit duis duis laboris. Sint exercitation.',
-  },
-  {
-    title: 'Schedule a one-on-one',
-    iconColor: '#F2F9FF',
-    description:
-      'Cupidatat nulla minim sit duis duis laboris. Sint exercitation.',
-  },
-  {
-    title: 'Payroll',
-    iconColor: '#FFFCED',
-    description:
-      'Cupidatat nulla minim sit duis duis laboris. Sint exercitation.',
-  },
-  {
-    title: 'Submit an expense',
-    iconColor: '#FDF1F1',
-    description:
-      'Cupidatat nulla minim sit duis duis laboris. Sint exercitation.',
-  },
-  {
-    title: 'Training',
-    iconColor: '#EFF1FE',
-    description:
-      'Cupidatat nulla minim sit duis duis laboris. Sint exercitation.',
+    sectionTitle: <T id={'accounts_receivable_a_r'} />,
+    shortcuts: [
+      {
+        title: 'Sales invoices',
+        description:
+          'Labore aute elit proident sit culpa. Commodo nulla veniam ullamco ullamco ut nulla pariatur eu. Esse tempor irure incididunt veniam sint excepteur quis.',
+        link: '/invoices',
+      },
+      {
+        title: 'Sales estimates',
+        description:
+          'Labore aute elit proident sit culpa. Commodo nulla veniam ullamco ullamco ut nulla pariatur eu. Esse tempor irure incididunt veniam sint excepteur quis.',
+
+        link: '/estimates',
+      },
+      {
+        title: 'Sales receipts',
+        description:
+          'Labore aute elit proident sit culpa. Commodo nulla veniam ullamco ullamco ut nulla pariatur eu. Esse tempor irure incididunt veniam sint excepteur quis.',
+
+        link: '/receipts',
+      },
+      {
+        title: 'Customers',
+        description:
+          'Labore aute elit proident sit culpa. Commodo nulla veniam ullamco ullamco ut nulla pariatur eu. Esse tempor irure incididunt veniam sint excepteur quis.',
+
+        link: '/customers',
+      },
+      {
+        title: 'Customers payment',
+        description:
+          'Labore aute elit proident sit culpa. Commodo nulla veniam ullamco ullamco ut nulla pariatur eu. Esse tempor irure incididunt veniam sint excepteur quis.',
+        link: '/',
+      },
+    ],
   },
 ];
 
-export const announcementLists = [
+export const accountsPayable = [
   {
-    title: 'Office closed on July 2nd',
-    description:
-      'Incididunt Lorem ad sunt proident nulla exercitation consectetur reprehenderit labore qui.',
+    sectionTitle: <T id={'accounts_payable_a_p'} />,
+    shortcuts: [
+      {
+        title: 'Purchase invoices',
+        description:
+          'Labore aute elit proident sit culpa. Commodo nulla veniam ullamco ullamco ut nulla pariatur eu. Esse tempor irure incididunt veniam sint excepteur quis.',
+
+        link: '/bills',
+      },
+      {
+        title: 'Vendors',
+        description:
+          'Labore aute elit proident sit culpa. Commodo nulla veniam ullamco ullamco ut nulla pariatur eu. Esse tempor irure incididunt veniam sint excepteur quis.',
+        link: '/vendors',
+      },
+      {
+        title: 'Vendors payments',
+        description:
+          'Labore aute elit proident sit culpa. Commodo nulla veniam ullamco ullamco ut nulla pariatur eu. Esse tempor irure incididunt veniam sint excepteur quis.',
+
+        link: '/payment-mades',
+      },
+    ],
   },
+];
+
+export const financialAccounting = [
   {
-    title: 'New Password policy ',
-    description:
-      'Incididunt Lorem ad sunt proident nulla exercitation consectetur reprehenderit labore qui.',
+    sectionTitle: <T id={'financial_accounting'} />,
+    shortcuts: [
+      {
+        title: 'Chart of accounts',
+        description:
+          'Labore aute elit proident sit culpa. Commodo nulla veniam ullamco ullamco ut nulla pariatur eu. Esse tempor irure incididunt veniam sint excepteur quis.',
+
+        link: '/accounts',
+      },
+      {
+        title: 'Manual journal',
+        description:
+          'Labore aute elit proident sit culpa. Commodo nulla veniam ullamco ullamco ut nulla pariatur eu. Esse tempor irure incididunt veniam sint excepteur quis.',
+        link: '/manual-journals',
+      },
+      {
+        title: 'Expenses',
+        description:
+          'Labore aute elit proident sit culpa. Commodo nulla veniam ullamco ullamco ut nulla pariatur eu. Esse tempor irure incididunt veniam sint excepteur quis.',
+        link: '/expenses',
+      },
+      {
+        title: 'Financial statements',
+        description:
+          'Labore aute elit proident sit culpa. Commodo nulla veniam ullamco ullamco ut nulla pariatur eu. Esse tempor irure incididunt veniam sint excepteur quis.',
+        link: '/',
+      },
+    ],
   },
+];
+
+export const productsServices = [
   {
-    title: 'Office closed on July 2nd',
-    description:
-      'Incididunt Lorem ad sunt proident nulla exercitation consectetur reprehenderit labore qui.',
+    sectionTitle: <T id={'products_services_inventory'} />,
+    shortcuts: [
+      {
+        title: 'Products & Services',
+        description:
+          'Labore aute elit proident sit culpa. Commodo nulla veniam ullamco ullamco ut nulla pariatur eu. Esse tempor irure incididunt veniam sint excepteur quis.',
+        link: '/items',
+      },
+      {
+        title: 'Products & Services Categories',
+        description:
+          'Labore aute elit proident sit culpa. Commodo nulla veniam ullamco ullamco ut nulla pariatur eu. Esse tempor irure incididunt veniam sint excepteur quis.',
+        link: '/categories',
+      },
+      {
+        title: 'Inventory Adjustments',
+        description:
+          'Labore aute elit proident sit culpa. Commodo nulla veniam ullamco ullamco ut nulla pariatur eu. Esse tempor irure incididunt veniam sint excepteur quis.',
+        link: '/inventory-adjustments',
+      },
+    ],
   },
 ];
