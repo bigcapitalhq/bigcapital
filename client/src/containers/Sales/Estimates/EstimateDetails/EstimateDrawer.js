@@ -1,10 +1,13 @@
-import React from 'react';
-import DrawerTemplate from 'containers/Drawers/DrawerTemplate';
-import PaperTemplate from 'containers/Drawers/PaperTemplate/PaperTemplate';
+import React, { lazy } from 'react';
 import withDrawers from 'containers/Drawer/withDrawers';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
 
+import { Drawer, DrawerSuspense } from 'components';
 import { compose } from 'utils';
+
+const EstimateDrawerContent = lazy(() =>
+  import('containers/Drawers/PaperTemplate/PaperTemplate'),
+);
 
 function EstimateDrawer({
   name,
@@ -18,12 +21,12 @@ function EstimateDrawer({
   const handleDrawerClose = () => {
     closeDrawer(name);
   };
-  
-
   return (
-    <DrawerTemplate isOpen={isOpen} isClose={handleDrawerClose}>
-      <PaperTemplate  />
-    </DrawerTemplate>
+    <Drawer isOpen={isOpen} isClose={handleDrawerClose}>
+      <DrawerSuspense>
+        <EstimateDrawerContent />
+      </DrawerSuspense>
+    </Drawer>
   );
 }
 

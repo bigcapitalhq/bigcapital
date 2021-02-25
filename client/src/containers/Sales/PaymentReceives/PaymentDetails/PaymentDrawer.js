@@ -1,11 +1,17 @@
-import React from 'react';
-import DrawerTemplate from 'containers/Drawers/DrawerTemplate';
-import PaymentPaperTemplate from 'containers/Drawers/PaymentPaperTemplate/PaymentPaperTemplate';
+import React, { lazy } from 'react';
 import withDrawers from 'containers/Drawer/withDrawers';
 import withDrawerActions from 'containers/Drawer/withDrawerActions';
+import { Drawer, DrawerSuspense } from 'components';
 
 import { compose } from 'utils';
 
+const PaymentReceiveDrawerContent = lazy(() =>
+  import('containers/Drawers/PaymentPaperTemplate/PaymentPaperTemplate'),
+);
+
+/**
+ *  payment receive drawer.
+ */
 function PaymentReceiveDrawer({
   name,
   //#withDrawer
@@ -20,9 +26,11 @@ function PaymentReceiveDrawer({
   };
 
   return (
-    <DrawerTemplate isOpen={isOpen} isClose={handleDrawerClose}>
-      <PaymentPaperTemplate />
-    </DrawerTemplate>
+    <Drawer isOpen={isOpen} isClose={handleDrawerClose}>
+      <DrawerSuspense>
+        <PaymentReceiveDrawerContent />
+      </DrawerSuspense>
+    </Drawer>
   );
 }
 
