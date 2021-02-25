@@ -466,6 +466,7 @@ export default {
   name_: 'name',
   as: 'As',
   receivable_aging_summary: 'Receivable Aging Summary',
+  receivable_a_r: 'Receivable A/R',
   customers: 'Customers',
   new_customers: 'New Customers',
   customer_type_: 'Customer type',
@@ -982,4 +983,9 @@ export default {
   accounts_payable_a_p: 'Accounts Payable A/P',
   financial_accounting: ' Financial Accounting',
   products_services_inventory: 'Products,Services & Inventory',
+  payable_a_p: 'Payable A/P',
+  keyboard_shortcuts:'Keyboard Shortcuts',
+  shortcut_keys:'Shortcut Keys',
+  oK_:'Ok'
+
 };
