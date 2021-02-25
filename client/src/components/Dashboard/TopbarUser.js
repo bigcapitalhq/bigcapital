@@ -13,13 +13,20 @@ import { FormattedMessage as T } from 'react-intl';
 import { firstLettersArgs } from 'utils';
 import { useAuthActions, useAuthUser } from 'hooks/state';
 
-export default function DashboardTopbarUser() {
+import withDialogActions from 'containers/Dialog/withDialogActions';
+import { compose } from 'utils';
+
+function DashboardTopbarUser({ openDialog }) {
   const history = useHistory();
   const { setLogout } = useAuthActions();
   const user = useAuthUser();
 
   const onClickLogout = () => {
     setLogout();
+  };
+
+  const onKeyboardShortcut = () => {
+    openDialog('keyboard-shortcuts');
   };
 
   return (
@@ -42,6 +49,10 @@ export default function DashboardTopbarUser() {
           />
           <MenuDivider />
           <MenuItem
+            text={<T id={'keyboard_shortcuts'} />}
+            onClick={onKeyboardShortcut}
+          />
+          <MenuItem
             text={<T id={'preferences'} />}
             onClick={() => history.push('/preferences')}
           />
@@ -58,3 +69,4 @@ export default function DashboardTopbarUser() {
     </Popover>
   );
 }
+export default compose(withDialogActions)(DashboardTopbarUser);
