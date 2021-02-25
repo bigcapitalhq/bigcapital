@@ -1,5 +1,7 @@
 import React from 'react';
 
+import 'style/pages/ManualJournal/List.scss';
+
 import { DashboardContentTable, DashboardPageContent } from 'components';
 
 import { ManualJournalsListProvider } from './ManualJournalsListProvider';
@@ -9,10 +11,7 @@ import ManualJournalsDataTable from './ManualJournalsDataTable';
 import ManualJournalsActionsBar from './ManualJournalActionsBar';
 
 import withManualJournals from './withManualJournals';
-
 import { transformTableStateToQuery, compose } from 'utils';
-
-import 'style/pages/ManualJournal/List.scss';
 
 /**
  * Manual journals table.

@@ -169,6 +169,7 @@ function MakeJournalEntriesForm({
           <MakeJournalFormFooter />
           <MakeJournalFormFloatingActions />
 
+          {/* --------- Dialogs --------- */}
           <MakeJournalFormDialogs />
         </Form>
       </Formik>

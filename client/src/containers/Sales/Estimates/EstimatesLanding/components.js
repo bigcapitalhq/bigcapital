@@ -49,7 +49,7 @@ export const statusAccessor = (row) => (
  */
 export function ActionsMenu({
   row: { original },
-  payload: { onEdit, onDeliver, onReject, onApprove, onDelete ,onDrawer },
+  payload: { onEdit, onDeliver, onReject, onApprove, onDelete, onDrawer },
 }) {
   const { formatMessage } = useIntl();
 
@@ -101,9 +101,10 @@ export function ActionsMenu({
         </Choose.When>
       </Choose>
       <MenuItem
-          text={formatMessage({ id: 'estimate_paper' })}
-          onClick={() => onDrawer()}
-        />
+        icon={<Icon icon={'receipt-24'} iconSize={16} />}
+        text={formatMessage({ id: 'estimate_paper' })}
+        onClick={() => onDrawer()}
+      />
       <MenuItem
         text={formatMessage({ id: 'delete_estimate' })}
         intent={Intent.DANGER}

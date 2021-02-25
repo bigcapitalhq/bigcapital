@@ -1,9 +1,8 @@
 import React from 'react';
 import { FormattedMessage as T, useIntl } from 'react-intl';
 import { Tooltip, Button, Intent, Position } from '@blueprintjs/core';
-import { sumBy } from 'lodash';
 import { Hint, Icon } from 'components';
-import { formattedAmount } from 'utils';
+import { formattedAmount, safeSumBy } from 'utils';
 import {
   InputGroupCell,
   MoneyFieldCell,
@@ -62,7 +61,7 @@ export function ActionsCellRenderer({
  * Quantity total footer cell.
  */
 export function QuantityTotalFooterCell({ rows }) {
-  const quantity = sumBy(rows, r => parseInt(r.original.quantity, 10));
+  const quantity = safeSumBy(rows, 'original.quantity');
   return <span>{ quantity }</span>;
 }
 
@@ -70,7 +69,7 @@ export function QuantityTotalFooterCell({ rows }) {
  * Total footer cell.
  */
 export function TotalFooterCell({ rows }) {
-  const total = sumBy(rows, 'original.total');
+  const total = safeSumBy(rows, 'original.total');
   return <span>{ formattedAmount(total, 'USD') }</span>;
 }
 
@@ -110,9 +109,8 @@ export function useEditableItemsEntriesColumns() {
         Cell: ItemsListCell,
         Footer: ItemFooterCell,
         disableSortBy: true,
-        width: 180,
-        // filterPurchasable: filterPurchasableItems,
-        // filterSellable: filterSellableItems,
+        width: 130,
+        className: 'item',
       },
       {
         Header: formatMessage({ id: 'description' }),
@@ -120,7 +118,7 @@ export function useEditableItemsEntriesColumns() {
         Cell: InputGroupCell,
         disableSortBy: true,
         className: 'description',
-        width: 100,
+        width: 120,
       },
       {
         Header: formatMessage({ id: 'quantity' }),
@@ -128,7 +126,7 @@ export function useEditableItemsEntriesColumns() {
         Cell: NumericInputCell,
         Footer: QuantityTotalFooterCell,
         disableSortBy: true,
-        width: 80,
+        width: 70,
         className: 'quantity',
       },
       {
@@ -136,7 +134,7 @@ export function useEditableItemsEntriesColumns() {
         accessor: 'rate',
         Cell: MoneyFieldCell,
         disableSortBy: true,
-        width: 80,
+        width: 70,
         className: 'rate',
       },
       {
@@ -144,7 +142,7 @@ export function useEditableItemsEntriesColumns() {
         accessor: 'discount',
         Cell: PercentFieldCell,
         disableSortBy: true,
-        width: 80,
+        width: 60,
         className: 'discount',
       },
       {
@@ -153,7 +151,7 @@ export function useEditableItemsEntriesColumns() {
         accessor: 'total',
         Cell: TotalCell,
         disableSortBy: true,
-        width: 120,
+        width: 100,
         className: 'total',
       },
       {

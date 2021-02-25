@@ -40,6 +40,7 @@ export default function ItemsListCell({
         purchasable={filterPurchasable}
         inputProps={{
           inputRef: (ref) => (fieldRef.current = ref),
+          placeholder: 'Enter an item...'
         }}
         openOnKeyDown={true}
         blurOnSelectClose={false}

@@ -50,6 +50,7 @@ import TableFastCell from './Datatable/TableFastCell';
 import DashboardContentTable from './Dashboard/DashboardContentTable';
 import DashboardPageContent from './Dashboard/DashboardPageContent';
 import DashboardInsider from './Dashboard/DashboardInsider';
+import Postbox from './Postbox';
 
 const Hint = FieldHint;
 
@@ -105,5 +106,6 @@ export {
   ContextMenu,
   DashboardContentTable,
   DashboardPageContent,
-  DashboardInsider
+  DashboardInsider,
+  Postbox
 };

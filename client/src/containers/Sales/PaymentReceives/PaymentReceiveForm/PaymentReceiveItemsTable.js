@@ -45,15 +45,6 @@ function PaymentReceiveItemsTable({
     onUpdateData(newRows);
   }, [entries, onUpdateData]);
 
-  // Handle click clear all lines button.
-  const handleClickClearAllLines = () => {
-    const fullAmount = safeSumBy(entries, 'payment_amount');
-
-    if (fullAmount > 0) {
-      openAlert('clear-all-lines-payment-receive');
-    }
-  };
- 
   return (
     <CloudLoadingIndicator isLoading={isDueInvoicesFetching}>
       <DataTableEditable
@@ -67,16 +58,7 @@ function PaymentReceiveItemsTable({
           updateData: handleUpdateData,
         }}
         noResults={noResultsMessage}
-        actions={
-          <Button
-            small={true}
-            className={'button--secondary button--clear-lines'}
-            onClick={handleClickClearAllLines}
-          >
-            <T id={'clear_all_lines'} />
-          </Button>
-        }
-        totalRow={true}
+        footer={true}
       />
     </CloudLoadingIndicator>
   );

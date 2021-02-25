@@ -39,6 +39,8 @@ const defaultInitialValues = {
   category_id: '',
   sellable: 1,
   purchasable: true,
+  sell_description: '',
+  purchase_description: '',
 };
 
 /**

@@ -14,7 +14,6 @@ function InvoiceNumberDialog({
   isOpen,
   onConfirm,
 }) {
-
   return (
     <Dialog
     title={<T id={'invoice_number_settings'} />}

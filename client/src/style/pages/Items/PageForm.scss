@@ -1,3 +1,16 @@
+
+body.page-item-new,
+body.page-item-edit{
+
+  .dashboard__footer{
+    display: none;
+  }
+}
+
+.dashboard__insider--item-form{
+  padding-bottom: 64px;
+}
+
 .page-form--item {
   $self: '.page-form';
   padding: 20px;

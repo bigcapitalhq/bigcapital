@@ -1,5 +1,14 @@
+
+body.page-estimate-new,
+body.page-estimate-edit{
+
+  .dashboard__footer{
+    display: none;
+  }
+}
+
 .dashboard__insider--estimate-form{
-  background-color: #FFF;
+  padding-bottom: 64px;
 }
 
 .page-form--estimate {

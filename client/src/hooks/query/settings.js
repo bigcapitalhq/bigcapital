@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import { useDispatch } from 'react-redux';
 import useApiRequest from '../useRequest';
@@ -22,7 +23,7 @@ function useSettingsQuery(key, query, props) {
   const dispatch = useDispatch();
   const apiRequest = useApiRequest();
 
-  return useQuery(
+  const state = useQuery(
     key,
     () => apiRequest.get('settings', { params: query }),
     {
@@ -33,12 +34,17 @@ function useSettingsQuery(key, query, props) {
           settings: [],
         },
       },
-      onSuccess: (settings) => {
-        dispatch({ type: t.SETTING_SET, options: settings });
-      },
       ...props,
     },
   );
+
+  useEffect(() => {
+    if (typeof state.data !== 'undefined') {
+      dispatch({ type: t.SETTING_SET, options: state.data });
+    }
+  }, [state.data, dispatch]);
+
+  return state.data;
 }
 
 /**

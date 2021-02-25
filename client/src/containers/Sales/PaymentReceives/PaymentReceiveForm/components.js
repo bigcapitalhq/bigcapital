@@ -88,12 +88,13 @@ export const usePaymentReceiveEntriesColumns = () => {
         disableSortBy: true,
         disableResizing: true,
         width: 250,
+        className: 'date'
       },
       {
         Header: formatMessage({ id: 'invocie_number' }),
         accessor: InvNumberCellAccessor,
         disableSortBy: true,
-        className: '',
+        className: 'invoice_number',
       },
       {
         Header: formatMessage({ id: 'invoice_amount' }),
@@ -102,7 +103,7 @@ export const usePaymentReceiveEntriesColumns = () => {
         Cell: MoneyTableCell,
         disableSortBy: true,
         width: 100,
-        className: '',
+        className: 'invoice_amount',
       },
       {
         Header: formatMessage({ id: 'amount_due' }),
@@ -111,7 +112,7 @@ export const usePaymentReceiveEntriesColumns = () => {
         Cell: MoneyTableCell,
         disableSortBy: true,
         width: 150,
-        className: '',
+        className: 'amount_due',
       },
       {
         Header: formatMessage({ id: 'payment_amount' }),
@@ -120,7 +121,7 @@ export const usePaymentReceiveEntriesColumns = () => {
         Footer: PaymentAmountFooterCell,
         disableSortBy: true,
         width: 150,
-        className: '',
+        className: 'payment_amount',
       },
     ],
     [formatMessage],

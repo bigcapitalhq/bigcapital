@@ -108,10 +108,10 @@ export default class SalesEstimatesController extends BaseController {
       check('entries').exists().isArray({ min: 1 }),
       check('entries.*.index').exists().isNumeric().toInt(),
       check('entries.*.item_id').exists().isNumeric().toInt(),
-      check('entries.*.description').optional().trim().escape(),
       check('entries.*.quantity').exists().isNumeric().toInt(),
       check('entries.*.rate').exists().isNumeric().toFloat(),
-      check('entries.*.discount').optional().isNumeric().toFloat(),
+      check('entries.*.description').optional({ nullable: true }).trim().escape(),
+      check('entries.*.discount').optional({ nullable: true }).isNumeric().toFloat(),
 
       check('note').optional().trim().escape(),
       check('terms_conditions').optional().trim().escape(),

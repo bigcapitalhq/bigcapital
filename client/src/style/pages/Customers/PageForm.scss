@@ -1,5 +1,18 @@
 @import '../../Base.scss';
 
+
+body.page-customer-new,
+body.page-customer-edit{
+
+  .dashboard__footer{
+    display: none;
+  }
+}
+
+.dashboard__insider--customer-form{
+  padding-bottom: 64px;
+}
+
 .page-form--customer {
   $self: '.page-form';
   padding: 20px;

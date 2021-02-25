@@ -118,6 +118,7 @@ export function ActionsMenu({
         />
       </If>
       <MenuItem
+        icon={<Icon icon={'receipt-24'} iconSize={16} />}
         text={formatMessage({ id: 'invoice_paper' })}
         onClick={() => onDrawer()}
       />

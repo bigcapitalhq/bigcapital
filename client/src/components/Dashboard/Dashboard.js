@@ -51,6 +51,6 @@ function Dashboard({
       <DrawersContainer />
     </DashboardLoadingIndicator>
   );
-}
+} 
 
 export default compose(withSettingsActions)(Dashboard);

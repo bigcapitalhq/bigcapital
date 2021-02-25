@@ -1,6 +1,16 @@
-.dashboard__insider--bill-form{
-  background-color: #FFF;
+
+body.page-bill-new,
+body.page-bill-edit{
+
+  .dashboard__footer{
+    display: none;
+  }
 }
+
+.dashboard__insider--bill-form{
+  padding-bottom: 64px;
+}
+
 
 .page-form--bill{
   $self: '.page-form';

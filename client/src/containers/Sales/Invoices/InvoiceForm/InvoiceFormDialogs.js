@@ -11,6 +11,9 @@ export default function InvoiceFormDialogs() {
 
   // Update the form once the invoice number form submit confirm.
   const handleInvoiceNumberFormConfirm = (values) => {
+    debugger;
+    console.log(values, 'XX');
+
     setFieldValue(
       'invoice_no',
       transactionNumber(values.number_prefix, values.next_number),

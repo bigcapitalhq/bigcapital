@@ -1,14 +1,16 @@
 .datatable-editor {
+  
   .bp3-form-group {
     margin-bottom: 0;
   }
   .table {
     border: 1px solid #d2dce2;
     border-left: transparent;
+    background-color: #FFF;
 
     .th,
     .td {
-      border-left: 1px solid #e2e2e2;
+      border-left: 1px dashed #e2e2e2;
 
       &.index {
         text-align: center;
@@ -29,7 +31,8 @@
         background-color: #f0f2f8;
         font-size: 14px;
         font-weight: 500;
-        color: #1c1940;
+        color: #415060;
+        border-bottom: 1px solid #d2dce2;
 
         &.index > div {
           width: 100%;
@@ -39,13 +42,14 @@
 
     .tbody {
       .tr .td {
-        padding: 5px;
+        padding: 4px;
         border-bottom: 0;
-        border-top: 1px dashed #aaa;
-        min-height: 42px;
+        border-top: 1px solid #d8d8d8;
+        min-height: 40px;
 
         &.index {
           background-color: #f0f2f8;
+          color: #718294;
 
           > span {
             margin-top: auto;
@@ -126,6 +130,12 @@
         }
       }
     }
+
+    .tfooter{
+      .td{
+        min-height: 38px;
+      }
+    }
     .th {
       color: #444;
       font-weight: 600;
@@ -140,6 +150,23 @@
       .bp3-button {
         background: transparent;
         margin: 0;
+      }
+    }
+
+
+    .tbody,
+    .thead,
+    .tfooter{
+
+      // .total,
+      .quantity,
+      .rate,
+      .discount{
+
+        &,
+        input{
+          text-align: right;
+        }
       }
     }
   }

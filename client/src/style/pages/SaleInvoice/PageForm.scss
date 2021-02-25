@@ -1,5 +1,14 @@
-.dashboard__insider--invoice-form {
-  background-color: #fff;
+
+body.page-invoice-new,
+body.page-invoice-edit{
+
+  .dashboard__footer{
+    display: none;
+  }
+}
+
+.dashboard__insider--invoice-form{
+  padding-bottom: 64px;
 }
 
 .page-form--invoice {
@@ -20,7 +29,7 @@
     }
 
     .bp3-form-group {
-      margin-bottom: 18px;
+      
 
       &.bp3-inline {
         max-width: 440px;

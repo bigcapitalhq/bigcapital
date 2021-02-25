@@ -11,6 +11,7 @@ function DashboardPage({
   backLink,
   sidebarShrink,
   Component,
+  name,
 
   // #withDashboardActions
   changePageTitle,
@@ -43,6 +44,15 @@ function DashboardPage({
       sidebarShrink && resetSidebarPreviousExpand();
     };
   }, [resetSidebarPreviousExpand, sidebarShrink, setSidebarShrink]);
+
+  useEffect(() => {
+    const className = `page-${name}`;
+    name && document.body.classList.add(className);
+    
+    return () => {
+      name && document.body.classList.remove(className);
+    };
+  }, [name]);
 
   return (
     <div className={CLASSES.DASHBOARD_PAGE}>

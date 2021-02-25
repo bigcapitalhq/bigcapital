@@ -1,0 +1,48 @@
+.postbox {
+    border: 1px solid #d2dce2;
+    background: #FFF;
+
+    &__header {
+        border-bottom: 1px solid #d2dde2;
+        height: 38px;
+        padding-left: 18px;
+        align-items: center;
+        display: flex;
+    }
+
+    &__title {
+        vertical-align: middle;
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    &.is-toggable .postbox__header {
+        cursor: pointer;
+    }
+
+    &__toggle-indicator {
+        margin-left: auto;
+        width: 40px;
+        text-align: center;
+        display: flex;
+
+        &:before {
+            content: "";
+            width: 0;
+            height: 0;
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            border-bottom: 6px solid #8ca0b3;
+            margin: auto;
+        }
+    }
+
+    &__title {}
+
+    &__content {
+
+        &-inner {
+            padding: 20px;
+        }
+    }
+}

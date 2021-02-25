@@ -1,7 +1,6 @@
-import React, { useEffect, Suspense } from 'react';
+import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import routes from 'routes/dashboard';
-
 import DashboardPage from './DashboardPage';
 
 /**
@@ -18,6 +17,7 @@ export default function DashboardContentRoute() {
             path={`${route.path}`}
           >
             <DashboardPage
+              name={route.name}
               Component={route.component}
               pageTitle={route.pageTitle}
               backLink={route.backLink}

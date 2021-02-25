@@ -6,14 +6,14 @@ import { For } from 'components';
 function FooterLinkItem({ title, link }) {
   return (
     <div class="">
-      <a href={link} target="_blank">
+      <a href={link} target="_blank" rel="noopener noreferrer">
         {title}
       </a>
     </div>
   );
 }
 
-export default function DashboardFooter({}) {
+export default function DashboardFooter() {
   return (
     <div class="dashboard__footer">
       <div class="footer-links">

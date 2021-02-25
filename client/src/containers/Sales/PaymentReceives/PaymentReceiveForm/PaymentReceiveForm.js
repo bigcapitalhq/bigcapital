@@ -165,7 +165,7 @@ function PaymentReceiveForm({
             <PaymentReceiveFormFooter />
             <PaymentReceiveFloatingActions />
 
-            {/* Alerts & Dialogs */}
+            {/* ------- Alerts & Dialogs ------- */}
             <PaymentReceiveFormAlerts />
             <PaymentReceiveFormDialogs />
           </PaymentReceiveInnerProvider>

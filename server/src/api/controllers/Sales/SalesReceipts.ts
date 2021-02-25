@@ -88,14 +88,14 @@ export default class SalesReceiptsController extends BaseController{
       check('closed').default(false).isBoolean().toBoolean(),
 
       check('entries').exists().isArray({ min: 1 }),
-      
+
       check('entries.*.id').optional({ nullable: true }).isNumeric().toInt(),
       check('entries.*.index').exists().isNumeric().toInt(),
       check('entries.*.item_id').exists().isNumeric().toInt(),
-      check('entries.*.description').optional().trim().escape(),
       check('entries.*.quantity').exists().isNumeric().toInt(),
       check('entries.*.rate').exists().isNumeric().toInt(),
-      check('entries.*.discount').optional().isNumeric().toInt(),
+      check('entries.*.discount').optional({ nullable: true }).isNumeric().toInt(),
+      check('entries.*.description').optional({ nullable: true }).trim().escape(),
 
       check('receipt_message').optional().trim().escape(),
       check('statement').optional().trim().escape(),
