@@ -11,7 +11,7 @@ $dashboard-views-bar-height: 45px;
     display: flex;
     justify-content: space-between;
     background-color: #fff;
-    border-bottom: 1px solid #dddee3;
+    border-bottom: 1px solid #c7d5db;
 
     &-right,
     &-left {
@@ -137,7 +137,11 @@ $dashboard-views-bar-height: 45px;
   }
 
   &__actions-bar {
-    border-bottom: 2px solid #eaeaea;
+    border-bottom: 2px solid #e1e2e8;
+
+    .bp3-navbar-divider{
+      border-left-color: rgb(199, 214, 219);
+    }
 
     .#{$ns}-navbar {
       box-shadow: none;
@@ -493,3 +497,5 @@ $dashboard-views-bar-height: 45px;
     }
   }
 }
+
+

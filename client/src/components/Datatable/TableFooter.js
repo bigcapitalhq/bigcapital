@@ -6,9 +6,13 @@ import TableContext from './TableContext';
  */
 export default function TableFooter() {
   const {
+    props: { footer },
     table: { footerGroups },
   } = useContext(TableContext);
 
+  // Can't contiunue if the footer is disabled.
+  if (!footer) { return null; }
+  
   return (
     <div class="tfooter">
       {footerGroups.map((group) => (

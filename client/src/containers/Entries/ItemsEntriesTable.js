@@ -1,7 +1,8 @@
-import React, { useCallback } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { Button } from '@blueprintjs/core';
 import { FormattedMessage as T } from 'react-intl';
 import classNames from 'classnames';
+import { useItem } from 'hooks/query';
 
 import ItemsEntriesDeleteAlert from 'containers/Alerts/ItemsEntries/ItemsEntriesDeleteAlert';
 import withAlertActions from 'containers/Alert/withAlertActions';
@@ -17,7 +18,15 @@ import {
   removeRowsByIndex,
   compose,
 } from 'utils';
-import { updateItemsEntriesTotal } from './utils';
+import { updateItemsEntriesTotal, ITEM_TYPE } from './utils';
+import { last } from 'lodash';
+
+const updateAutoAddNewLine = (defaultEntry) => (entries) => {
+  const newEntries = [...entries];
+  const lastEntry = last(newEntries);
+
+  return (lastEntry.item_id) ? [...entries, defaultEntry] : [...entries];
+};
 
 /**
  * Items entries table.
@@ -34,11 +43,64 @@ function ItemsEntriesTable({
   errors,
   onUpdateData,
   linesNumber,
+  itemType, // sellable or purchasable
 }) {
   const [rows, setRows] = React.useState(initialEntries);
+  const [rowItem, setRowItem] = React.useState(null);
+  const [cellsLoading, setCellsLoading] = React.useState(null);
+
+  // Fetches the item details.
+  const { data: item, isFetching: isItemFetching } = useItem(
+    rowItem && rowItem.itemId,
+    {
+      enabled: !!rowItem,
+    },
+  );
+
+  // Once the item start loading give the table cells loading state.
+  useEffect(() => {
+    if (rowItem && isItemFetching) {
+      setCellsLoading([
+        [rowItem.rowIndex, 'rate'],
+        [rowItem.rowIndex, 'description'],
+        [rowItem.rowIndex, 'quantity'],
+        [rowItem.rowIndex, 'discount'],
+      ]);
+    } else {
+      setCellsLoading(null);
+    }
+  }, [isItemFetching, setCellsLoading, rowItem]);
+
+  // Once the item selected and fetched set the initial details to the table.
+  useEffect(() => {
+    if (item && rowItem) {
+      const { rowIndex } = rowItem;
+      const price =
+        itemType === ITEM_TYPE.PURCHASABLE
+          ? item.purchase_price
+          : item.sell_price;
+
+      const description =
+        itemType === ITEM_TYPE.PURCHASABLE
+          ? item.purchase_description
+          : item.sell_description;
+
+      // Update the rate, description and quantity data of the row.
+      const newRows = compose(
+        updateItemsEntriesTotal,
+        updateTableRow(rowIndex, 'rate', price),
+        updateTableRow(rowIndex, 'description', description),
+        updateTableRow(rowIndex, 'quantity', 1),
+      )(rows);
+
+      setRows(newRows);
+      setRowItem(null);
+      saveInvoke(onUpdateData, newRows);
+    }
+  }, [item, rowItem, rows, itemType, onUpdateData]);
 
   // Allows to observes `entries` to make table rows outside controlled.
-  React.useEffect(() => {
+  useEffect(() => {
     if (entries && entries !== rows) {
       setRows(entries);
     }
@@ -50,15 +112,19 @@ function ItemsEntriesTable({
   // Handles the editor data update.
   const handleUpdateData = useCallback(
     (rowIndex, columnId, value) => {
+      if (columnId === 'item_id') {
+        setRowItem({ rowIndex, columnId, itemId: value });
+      }
       const newRows = compose(
+        updateAutoAddNewLine(defaultEntry),
         updateItemsEntriesTotal,
         updateTableRow(rowIndex, columnId, value),
-      )(entries);
+      )(rows);
 
       setRows(newRows);
       onUpdateData(newRows);
     },
-    [entries, onUpdateData],
+    [rows, defaultEntry, onUpdateData],
   );
 
   // Handle table rows removing by index.
@@ -80,9 +146,7 @@ function ItemsEntriesTable({
     openAlert('items-entries-clear-lines');
   };
 
-  /**
-   * Handle alert confirm of clear all lines.
-   */
+  // Handle alert confirm of clear all lines.
   const handleClearLinesAlertConfirm = () => {
     const newRows = repeatValue(defaultEntry, linesNumber);
     setRows(newRows);
@@ -94,8 +158,12 @@ function ItemsEntriesTable({
       <DataTableEditable
         className={classNames(CLASSES.DATATABLE_EDITOR_ITEMS_ENTRIES)}
         columns={columns}
-        data={entries}
+        data={rows}
         sticky={true}
+        progressBarLoading={isItemFetching}
+        cellsLoading={isItemFetching}
+        cellsLoadingCoords={cellsLoading}
+        footer={true}
         payload={{
           items,
           errors: errors || [],
@@ -103,25 +171,7 @@ function ItemsEntriesTable({
           removeRow: handleRemoveRow,
           autoFocus: ['item_id', 0],
         }}
-        actions={
-          <>
-            <Button
-              small={true}
-              className={'button--secondary button--new-line'}
-              onClick={onClickNewRow}
-            >
-              <T id={'new_lines'} />
-            </Button>
-
-            <Button
-              small={true}
-              className={'button--secondary button--clear-lines ml1'}
-              onClick={handleClickClearAllLines}
-            >
-              <T id={'clear_all_lines'} />
-            </Button>
-          </>
-        }
+         
       />
       <ItemsEntriesDeleteAlert
         name={'items-entries-clear-lines'}

@@ -106,8 +106,8 @@ export default class SaleInvoicesController extends BaseController {
       check('entries.*.item_id').exists().isNumeric().toInt(),
       check('entries.*.rate').exists().isNumeric().toFloat(),
       check('entries.*.quantity').exists().isNumeric().toFloat(),
-      check('entries.*.discount').optional().isNumeric().toFloat(),
-      check('entries.*.description').optional().trim().escape(),
+      check('entries.*.discount').optional({ nullable: true }).isNumeric().toFloat(),
+      check('entries.*.description').optional({ nullable: true }).trim().escape(),
     ];
   }
 

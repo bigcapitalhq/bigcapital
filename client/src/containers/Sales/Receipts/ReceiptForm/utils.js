@@ -7,7 +7,7 @@ export const defaultReceiptEntry = {
   index: 0,
   item_id: '',
   rate: '',
-  discount: 0,
+  discount: '',
   quantity: '',
   description: '',
 };

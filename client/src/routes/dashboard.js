@@ -4,13 +4,7 @@ import { formatMessage } from 'services/intl';
 // const BASE_URL = '/dashboard';
 
 export default [
-  // Homepage
-  {
-    path: `/homepage`,
-    component: lazy(() => import('containers/Homepage/Homepage')),
-    breadcrumb: 'Home',
-    pageTitle: 'Homepage',
-  },
+  
   // Accounts.
   {
     path: `/accounts`,
@@ -73,6 +67,7 @@ export default [
   {
     path: `/items/:id/edit`,
     component: lazy(() => import('containers/Items/ItemFormPage')),
+    name: 'item-edit',
     breadcrumb: 'Edit Item',
     pageTitle: formatMessage({ id: 'edit_item' }),
     backLink: true,
@@ -80,6 +75,7 @@ export default [
   {
     path: `/items/new`,
     component: lazy(() => import('containers/Items/ItemFormPage')),
+    name: 'item-new',
     breadcrumb: 'New Item',
     hotkey: 'ctrl+shift+w',
     pageTitle: formatMessage({ id: 'new_item' }),
@@ -233,6 +229,7 @@ export default [
     component: lazy(() =>
       import('containers/Customers/CustomerForm/CustomerFormPage'),
     ),
+    name: 'customer-edit',
     breadcrumb: 'Edit Customer',
     pageTitle: formatMessage({ id: 'edit_customer' }),
     backLink: true,
@@ -242,6 +239,7 @@ export default [
     component: lazy(() =>
       import('containers/Customers/CustomerForm/CustomerFormPage'),
     ),
+    name: 'customer-new',
     breadcrumb: 'New Customer',
     hotkey: 'ctrl+shift+c',
     pageTitle: formatMessage({ id: 'new_customer' }),
@@ -263,6 +261,7 @@ export default [
     component: lazy(() =>
       import('containers/Vendors/VendorForm/VendorFormPage'),
     ),
+    name: 'vendor-edit',
     breadcrumb: 'Edit Vendor',
     pageTitle: formatMessage({ id: 'edit_vendor' }),
     backLink: true,
@@ -272,6 +271,7 @@ export default [
     component: lazy(() =>
       import('containers/Vendors/VendorForm/VendorFormPage'),
     ),
+    name: 'vendor-new',
     breadcrumb: 'New Vendor',
     hotkey: 'ctrl+shift+v',
     pageTitle: formatMessage({ id: 'new_vendor' }),
@@ -293,6 +293,7 @@ export default [
     component: lazy(() =>
       import('containers/Sales/Estimates/EstimateForm/EstimateFormPage'),
     ),
+    name: 'estimate-edit',
     breadcrumb: 'Edit',
     pageTitle: formatMessage({ id: 'edit_estimate' }),
     backLink: true,
@@ -303,6 +304,7 @@ export default [
     component: lazy(() =>
       import('containers/Sales/Estimates/EstimateForm/EstimateFormPage'),
     ),
+    name: 'estimate-new',
     breadcrumb: 'New Estimate',
     hotkey: 'ctrl+shift+e',
     pageTitle: formatMessage({ id: 'new_estimate' }),
@@ -314,6 +316,7 @@ export default [
     component: lazy(() =>
       import('containers/Sales/Estimates/EstimatesLanding/EstimatesList'),
     ),
+    name: 'estimates-list',
     breadcrumb: 'Estimates List',
     hotkey: 'shift+e',
     pageTitle: formatMessage({ id: 'estimates_list' }),
@@ -325,6 +328,7 @@ export default [
     component: lazy(() =>
       import('containers/Sales/Invoices/InvoiceForm/InvoiceFormPage'),
     ),
+    name: 'invoice-edit',
     breadcrumb: 'Edit',
     pageTitle: formatMessage({ id: 'edit_invoice' }),
     sidebarShrink: true,
@@ -335,6 +339,7 @@ export default [
     component: lazy(() =>
       import('containers/Sales/Invoices/InvoiceForm/InvoiceFormPage'),
     ),
+    name: 'invoice-new',
     breadcrumb: 'New Invoice',
     hotkey: 'ctrl+shift+i',
     pageTitle: formatMessage({ id: 'new_invoice' }),
@@ -357,6 +362,7 @@ export default [
     component: lazy(() =>
       import('containers/Sales/Receipts/ReceiptForm/ReceiptFormPage'),
     ),
+    name: 'receipt-edit',
     breadcrumb: 'Edit',
     pageTitle: formatMessage({ id: 'edit_receipt' }),
     backLink: true,
@@ -367,6 +373,7 @@ export default [
     component: lazy(() =>
       import('containers/Sales/Receipts/ReceiptForm/ReceiptFormPage'),
     ),
+    name: 'receipt-new',
     breadcrumb: 'New Receipt',
     hotkey: 'ctrl+shift+r',
     pageTitle: formatMessage({ id: 'new_receipt' }),
@@ -391,6 +398,7 @@ export default [
         'containers/Sales/PaymentReceives/PaymentReceiveForm/PaymentReceiveFormPage'
       ),
     ),
+    name: 'payment-receive-edit',
     breadcrumb: 'Edit',
     pageTitle: formatMessage({ id: 'edit_payment_receive' }),
     backLink: true,
@@ -403,6 +411,7 @@ export default [
         'containers/Sales/PaymentReceives/PaymentReceiveForm/PaymentReceiveFormPage'
       ),
     ),
+    name: 'payment-receive-new',
     breadcrumb: 'New Payment Receive',
     pageTitle: formatMessage({ id: 'new_payment_receive' }),
     backLink: true,
@@ -425,6 +434,7 @@ export default [
     component: lazy(() =>
       import('containers/Purchases/Bills/BillForm/BillFormPage'),
     ),
+    name: 'bill-edit',
     breadcrumb: 'Edit',
     pageTitle: formatMessage({ id: 'edit_bill' }),
     sidebarShrink: true,
@@ -435,6 +445,7 @@ export default [
     component: lazy(() =>
       import('containers/Purchases/Bills/BillForm/BillFormPage'),
     ),
+    name: 'bill-new',
     breadcrumb: 'New Bill',
     hotkey: 'ctrl+shift+b',
     pageTitle: formatMessage({ id: 'new_bill' }),
@@ -465,6 +476,7 @@ export default [
         'containers/Purchases/PaymentMades/PaymentForm/PaymentMadeFormPage'
       ),
     ),
+    name: 'payment-made-edit',
     breadcrumb: 'Edit',
     pageTitle: formatMessage({ id: 'edit_payment_made' }),
     sidebarShrink: true,
@@ -477,6 +489,7 @@ export default [
         'containers/Purchases/PaymentMades/PaymentForm/PaymentMadeFormPage'
       ),
     ),
+    name: 'payment-made-new',
     breadcrumb: 'New Payment Made',
     pageTitle: formatMessage({ id: 'new_payment_made' }),
     sidebarShrink: true,
@@ -491,5 +504,12 @@ export default [
     ),
     breadcrumb: 'Payment Made List',
     pageTitle: formatMessage({ id: 'payment_made_list' }),
+  },
+  // Homepage
+  {
+    path: `/`,
+    component: lazy(() => import('containers/Homepage/Homepage')),
+    breadcrumb: 'Home',
+    pageTitle: 'Homepage',
   },
 ];

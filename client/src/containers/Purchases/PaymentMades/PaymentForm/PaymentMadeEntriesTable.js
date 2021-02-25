@@ -20,38 +20,29 @@ function PaymentMadeEntriesTable({
   entries,
 
   // #withAlertsActions
-  openAlert
+  openAlert,
 }) {
-  const {
-    paymentVendorId,
-    isDueBillsFetching,
-  } = usePaymentMadeFormContext();
+  const { paymentVendorId, isDueBillsFetching } = usePaymentMadeFormContext();
 
   const columns = usePaymentMadeEntriesTableColumns();
- 
-  // Handle update data.
-  const handleUpdateData = useCallback((rowIndex, columnId, value) => {
-    const newRows = compose(
-      updateTableRow(rowIndex, columnId, value),
-    )(entries);
 
-    onUpdateData(newRows);
-  }, [onUpdateData, entries]);
+  // Handle update data.
+  const handleUpdateData = useCallback(
+    (rowIndex, columnId, value) => {
+      const newRows = compose(updateTableRow(rowIndex, columnId, value))(
+        entries,
+      );
+
+      onUpdateData(newRows);
+    },
+    [onUpdateData, entries],
+  );
 
   // Detarmines the right no results message before selecting vendor and aftering
   // selecting vendor id.
   const noResultsMessage = paymentVendorId
     ? 'There is no payable bills for this vendor that can be applied for this payment'
     : 'Please select a vendor to display all open bills for it.';
-
-  // Handle clear all lines action.
-  const handleClearAllLines = () => {
-    const fullAmount = safeSumBy(entries, 'payment_amount');
-
-    if (fullAmount > 0) {
-      openAlert('clear-all-lines-payment-made');
-    }
-  }
 
   return (
     <CloudLoadingIndicator isLoading={isDueBillsFetching}>
@@ -66,21 +57,10 @@ function PaymentMadeEntriesTable({
           updateData: handleUpdateData,
         }}
         noResults={noResultsMessage}
-        actions={
-          <Button
-            small={true}
-            className={'button--secondary button--clear-lines'}
-            onClick={handleClearAllLines}
-          >
-            <T id={'clear_all_lines'} />
-          </Button>
-        }
-        totalRow={true}
+        footer={true}
       />
     </CloudLoadingIndicator>
   );
 }
 
-export default compose(
-  withAlertActions
-)(PaymentMadeEntriesTable);
+export default compose(withAlertActions)(PaymentMadeEntriesTable);

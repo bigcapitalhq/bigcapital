@@ -15,7 +15,7 @@ import { Choose, Money, Icon, If } from 'components';
 import moment from 'moment';
 
 export function ActionsMenu({
-  payload: { onEdit, onDelete, onClose ,onDrawer },
+  payload: { onEdit, onDelete, onClose, onDrawer },
   row: { original: receipt },
 }) {
   const { formatMessage } = useIntl();
@@ -39,9 +39,10 @@ export function ActionsMenu({
         />
       </If>
       <MenuItem
-          text={formatMessage({ id: 'receipt_paper' })}
-          onClick={() => onDrawer()}
-        />
+        icon={<Icon icon={'receipt-24'} iconSize={16} />}
+        text={formatMessage({ id: 'receipt_paper' })}
+        onClick={() => onDrawer()}
+      />
       <MenuItem
         text={formatMessage({ id: 'delete_receipt' })}
         intent={Intent.DANGER}

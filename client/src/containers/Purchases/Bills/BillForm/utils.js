@@ -7,8 +7,8 @@ export const defaultBillEntry = {
   index: 0,
   item_id: '',
   rate: '',
-  discount: 0,
-  quantity: 1,
+  discount: '',
+  quantity: '',
   description: '',
 };
 

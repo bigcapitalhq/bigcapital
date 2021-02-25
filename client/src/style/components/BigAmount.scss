@@ -1,5 +1,6 @@
 
 .big-amount{
+  text-align: right;
 
   &__label{
     color: #5d6f90;
@@ -11,7 +12,7 @@
     margin: 0;
     text-overflow: ellipsis;
     white-space: nowrap;
-    font-weight: 400;
+    font-weight: 500;
     margin-top: 6px;
     color: #343463;
     line-height: 1;

@@ -9,8 +9,8 @@ export const defaultInvoiceEntry = {
   index: 0,
   item_id: '',
   rate: '',
-  discount: 0,
-  quantity: 1,
+  discount: '',
+  quantity: '',
   description: '',
   total: 0,
 };

@@ -45,7 +45,7 @@ function InvoiceFormHeaderFields({
           <FormGroup
             label={<T id={'customer_name'} />}
             inline={true}
-            className={classNames('form-group--customer-name', CLASSES.FILL)}
+            className={classNames('form-group--customer-name', 'form-group--select-list', CLASSES.FILL)}
             labelInfo={<FieldRequiredHint />}
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name={'customer_id'} />}

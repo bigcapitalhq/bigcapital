@@ -5,7 +5,8 @@ export default [
   {
     text: <T id={'homepage'} />,
     disabled: false,
-    href: '/homepage',
+    href: '/',
+    matchExact: true,
   },
   {
     text: 'Sales & inventory',

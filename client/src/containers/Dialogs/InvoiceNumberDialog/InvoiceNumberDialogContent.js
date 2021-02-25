@@ -29,7 +29,9 @@ function InvoiceNumberDialogContent({
   const { mutateAsync: saveSettings } = useSaveSettings();
 
   const handleSubmitForm = (values, { setSubmitting }) => {
-    const options = optionsMapToArray(values).map((option) => ({
+    const { mode, ...autoModeValues } = values;
+
+    const options = optionsMapToArray(autoModeValues).map((option) => ({
       key: option.key,
       ...option,
       group: 'sales_invoices',

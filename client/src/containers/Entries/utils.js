@@ -24,3 +24,8 @@ export function updateItemsEntriesTotal(rows) {
     total: calcItemEntryTotal(row.discount, row.quantity, row.rate)
   }));
 };
+
+export const ITEM_TYPE = {
+  SELLABLE: 'SELLABLE',
+  PURCHASABLE: 'PURCHASABLE',
+};

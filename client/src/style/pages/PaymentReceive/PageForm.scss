@@ -1,26 +1,37 @@
 
-.dashboard__insider--payment-receive-form{
-  background-color: #FFF;
+body.page-payment-receive-new,
+body.page-payment-receive-edit{
+
+  .dashboard__footer{
+    display: none;
+  }
 }
+
+.dashboard__insider--payment-receive-form{
+  padding-bottom: 64px;
+}
+
 
 .page-form--payment-receive {
   $self: '.page-form';
 
-  #{$self}__header{
-    .bp3-label{
+  #{$self}__header {
+    .bp3-label {
       min-width: 160px;
     }
-    .bp3-form-content{
+
+    .bp3-form-content {
       width: 100%;
     }
 
-    .bp3-form-group{
+    .bp3-form-group {
       margin-bottom: 18px;
 
-      &.bp3-inline{
-        max-width: 470px; 
+      &.bp3-inline {
+        max-width: 470px;
       }
-      button.receive-full-amount{
+
+      button.receive-full-amount {
         width: auto;
         padding: 0;
         min-height: auto;
@@ -29,28 +40,28 @@
         background-color: transparent;
         color: #0052cc;
 
-        &:hover{
+        &:hover {
           text-decoration: underline;
         }
       }
     }
   }
 
-  #{$self}__primary-section{
+  #{$self}__primary-section {
     display: flex;
     padding-bottom: 2px;
   }
 
-  #{$self}__big-numbers{
+  #{$self}__big-numbers {
     margin-left: auto;
     padding-right: 10px;
   }
 
-  .datatable-editor{
-    
-    .table .tbody{
-      .tr.no-results{
-        .td{
+  .datatable-editor {
+
+    .table .tbody {
+      .tr.no-results {
+        .td {
           font-size: 15px;
           padding: 26px 0;
           color: #5a5a77;
@@ -58,11 +69,30 @@
       }
     }
 
-    .table{
-      .tr{
+    .table {
+
+
+      .th,
+      .td {
+
+        &.invoice_amount,
+        &.amount_due,
+        &.payment_amount {
+
+          &,
+          input {
+            text-align: right;
+          }
+        }
+      }
+
+      .tr {
+
         .td:first-of-type,
-        .th:first-of-type{
-          span, div{
+        .th:first-of-type {
+
+          span,
+          div {
             margin-left: auto;
             margin-right: auto;
           }
@@ -71,12 +101,12 @@
     }
   }
 
-  #{$self}__footer{
-    .form-group--statement{
+  #{$self}__footer {
+    .form-group--statement {
       max-width: 500px;
       width: 100%;
 
-      textarea{
+      textarea {
         width: 100%;
         min-height: 70px;
       }

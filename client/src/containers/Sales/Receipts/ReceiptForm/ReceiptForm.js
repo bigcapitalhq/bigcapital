@@ -10,10 +10,8 @@ import { CLASSES } from 'common/classes';
 import { ERROR } from 'common/errors';
 import {
   EditReceiptFormSchema,
-  CreateReceiptFormSchema,
+  CreateReceiptFormSchema,   
 } from './ReceiptForm.schema';
-
-import 'style/pages/SaleReceipt/PageForm.scss';
 
 import { useReceiptFormContext } from './ReceiptFormProvider';
 

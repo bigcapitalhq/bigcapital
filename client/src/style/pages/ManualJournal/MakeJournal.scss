@@ -3,6 +3,12 @@
   $self: '.page-form';  
 
   #{$self}__header{
+    display: flex;
+
+    &-fields {
+      flex: 1 0 0;
+    }
+    
     .bp3-label{
       min-width: 140px;
     }
@@ -26,12 +32,5 @@
       min-height: 60px;
       width: 100%;
     }
-  }
-}
-
-.dashboard__insider{
-
-  &--make-journal-page{
-    background: #fff;
   }
 }

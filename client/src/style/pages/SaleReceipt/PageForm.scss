@@ -1,5 +1,15 @@
+
+
+body.page-receipt-new,
+body.page-receipt-edit{
+
+  .dashboard__footer{
+    display: none;
+  }
+}
+
 .dashboard__insider--receipt-form{
-  background-color: #fff;
+  padding-bottom: 64px;
 }
 
 .page-form--receipt{

@@ -123,7 +123,11 @@ function InvoiceForm({
     };
 
     // Handle the request error.
-    const onError = ({ response: { data: { errors } } }) => {
+    const onError = ({
+      response: {
+        data: { errors },
+      },
+    }) => {
       if (errors) {
         handleErrors(errors, { setErrors });
       }
@@ -146,6 +150,7 @@ function InvoiceForm({
       )}
     >
       <Formik
+        enableReinitialize={true}
         validationSchema={
           isNewMode ? CreateInvoiceFormSchema : EditInvoiceFormSchema
         }
@@ -154,10 +159,7 @@ function InvoiceForm({
       >
         <Form>
           <InvoiceFormHeader />
-
-          <div className={classNames(CLASSES.PAGE_FORM_BODY)}>
-            <InvoiceItemsEntriesEditorField />
-          </div>
+          <InvoiceItemsEntriesEditorField />
           <InvoiceFormFooter />
           <InvoiceFloatingActions />
           <InvoiceFormDialogs />

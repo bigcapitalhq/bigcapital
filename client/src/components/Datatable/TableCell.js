@@ -1,22 +1,50 @@
 import React, { useContext } from 'react';
 import classNames from 'classnames';
 import { If } from 'components';
-import { ConditionalWrapper } from 'utils';
+import { Skeleton } from 'components';
 import TableContext from './TableContext';
+import { isCellLoading } from './utils';
 
 /**
- * Tabl cell.
+ * Table cell.
  */
 export default function TableCell({
   cell,
-  row: { depth, getToggleRowExpandedProps, isExpanded },
+  row: { index: rowIndex, depth, getToggleRowExpandedProps, isExpanded },
   index,
 }) {
   const {
-    props: { expandToggleColumn, expandColumnSpace, expandable },
+    props: {
+      expandToggleColumn,
+      expandColumnSpace,
+      expandable,
+      cellsLoading,
+      cellsLoadingCoords,
+    },
   } = useContext(TableContext);
 
   const isExpandColumn = expandToggleColumn === index;
+  const { skeletonWidthMax = 100, skeletonWidthMin = 40 } = {};
+
+  // Detarmines whether the current cell is loading.
+  const cellLoading = isCellLoading(
+    cellsLoading,
+    cellsLoadingCoords,
+    rowIndex,
+    cell.column.id,
+  );
+
+  if (cellLoading) {
+    return (
+      <div
+        {...cell.getCellProps({
+          className: classNames(cell.column.className, 'td'),
+        })}
+      >
+        <Skeleton minWidth={skeletonWidthMin} maxWidth={skeletonWidthMax} />
+      </div>
+    );
+  }
 
   return (
     <div
@@ -27,9 +55,12 @@ export default function TableCell({
       })}
     >
       <div
-        className={classNames({
-          'text-overview': cell.column.textOverview,
-        }, 'cell-inner')}
+        className={classNames(
+          {
+            'text-overview': cell.column.textOverview,
+          },
+          'cell-inner',
+        )}
         style={{
           'padding-left':
             isExpandColumn && expandable

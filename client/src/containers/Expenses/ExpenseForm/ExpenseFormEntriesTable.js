@@ -15,7 +15,7 @@ import { transformUpdatedRows, compose, saveInvoke, repeatValue } from 'utils';
  * Expenses form entries.
  */
 function ExpenseFormEntriesTable({
-  // #withAlertActions 
+  // #withAlertActions
   openAlert,
 
   // #ownPorps
@@ -57,65 +57,21 @@ function ExpenseFormEntriesTable({
     [entries, onChange],
   );
 
-  // Invoke when click on add new line button.
-  const onClickNewRow = () => {
-    const newRows = [...entries, defaultEntry];
-    saveInvoke(onChange, newRows);
-  };
-
-  // Invoke when click on clear all lines button.
-  const handleClickClearAllLines = () => {
-    openAlert('expense-delete-entries');
-  };
-
-  // handle confirm clear all entries alert.
-  const handleConfirmClearEntriesAlert = () => {
-    const newRows = repeatValue(defaultEntry, 3);
-    saveInvoke(onChange, newRows);
-  };
-
   return (
-    <>
-      <DataTableEditable
-        columns={columns}
-        data={entries}
-        sticky={true}
-        payload={{
-          accounts: accounts,
-          errors: error,
-          updateData: handleUpdateData,
-          removeRow: handleRemoveRow,
-          autoFocus: ['expense_account_id', 0],
-        }}
-        actions={
-          <>
-            <Button
-              small={true}
-              className={'button--secondary button--new-line'}
-              onClick={onClickNewRow}
-            >
-              <T id={'new_lines'} />
-            </Button>
-
-            <Button
-              small={true}
-              className={'button--secondary button--clear-lines ml1'}
-              onClick={handleClickClearAllLines}
-            >
-              <T id={'clear_all_lines'} />
-            </Button>
-          </>
-        }
-        totalRow={true}
-      />
-      <ExpenseDeleteEntriesAlert
-        name={'expense-delete-entries'}
-        onConfirm={handleConfirmClearEntriesAlert}
-      />
-    </>
+    <DataTableEditable
+      columns={columns}
+      data={entries}
+      sticky={true}
+      payload={{
+        accounts: accounts,
+        errors: error,
+        updateData: handleUpdateData,
+        removeRow: handleRemoveRow,
+        autoFocus: ['expense_account_id', 0],
+      }}
+      footer={true}
+    />
   );
 }
 
-export default compose(
-  withAlertActions
-)(ExpenseFormEntriesTable);
+export default compose(withAlertActions)(ExpenseFormEntriesTable);

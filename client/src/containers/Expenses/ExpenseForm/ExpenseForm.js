@@ -118,8 +118,8 @@ function ExpenseForm({
     };
 
     // Handle request error
-    const handleError = (error) => {
-      transformErrors(error, { setErrors });
+    const handleError = ({ response: { data: { errors } } }) => {
+      transformErrors(errors, { setErrors });
       setSubmitting(false);
     };
     if (isNewMode) {

@@ -13,9 +13,11 @@ export function useCreateInvoice(props) {
   return useMutation((values) => apiRequest.post('sales/invoices', values), {
     onSuccess: (values) => {
       queryClient.invalidateQueries('SALE_INVOICES');
-      queryClient.invalidateQueries(['SETTINGS', 'INVOICES']);
+
       queryClient.invalidateQueries('CUSTOMERS');
       queryClient.invalidateQueries(['CUSTOMER', values.customer_id]);
+
+      queryClient.invalidateQueries(['SETTINGS', 'INVOICES']);
     },
     ...props,
   });

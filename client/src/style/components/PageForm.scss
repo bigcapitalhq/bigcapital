@@ -12,7 +12,7 @@
     width: 100%;
     background: #fff;
     padding: 14px 18px;
-    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    border-top: 1px solid rgb(210, 221, 226);
     box-shadow: 0px -1px 4px 0px rgba(0, 0, 0, 0.05);
 
     .bp3-button-group{
@@ -33,6 +33,14 @@
   &--strip {
     #{$self}__header-fields {
       width: 85%;
+
+      .bp3-form-group{
+        margin-bottom: 16px;
+      }
+
+      > .bp3-form-group:last-of-type{
+        margin-bottom: 0;
+      }
     }
     #{$self}__body,
     #{$self}__footer {
@@ -40,8 +48,8 @@
     }
 
     #{$self}__header {
-      background-color: #fbfbfb;
-      padding: 30px 20px 0;
+      background-color: #FFF;
+      padding: 25px 32px;
       border-bottom: 1px solid #d2dce2;
 
       .bp3-form-group.bp3-inline label.bp3-label {
@@ -50,15 +58,13 @@
     }
 
     #{$self}__body {
-      padding-top: 15px;
-      padding-left: 20px;
-      padding-right: 20px;
+      padding: 18px 32px 0;
     }
 
     #{$self}__footer {
-      margin: 25px 0 0 0;
-      padding-left: 20px;
-      padding-right: 20px;
+      margin: 20px 0 0 0;
+      padding-left: 32px;
+      padding-right: 32px;
 
       label.bp3-label{
         font-weight: 500;

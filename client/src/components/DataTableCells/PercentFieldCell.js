@@ -29,6 +29,7 @@ const PercentFieldCell = ({
   return (
     <FormGroup intent={error ? Intent.DANGER : null}>
       <MoneyInputGroup
+        prefix={'%'}
         value={value}
         onChange={handleChange}
         onBlurValue={handleBlurChange}
