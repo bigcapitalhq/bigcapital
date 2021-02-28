@@ -23,16 +23,13 @@ export default class JournalPoster implements IJournalPoster {
   balancesChange: IAccountsChange = {};
   accountsDepGraph: IAccountsChange;
 
-  accountsBalanceTable: { [key: number]: number; } = {};
+  accountsBalanceTable: { [key: number]: number } = {};
 
   /**
    * Journal poster constructor.
-   * @param {number} tenantId - 
+   * @param {number} tenantId -
    */
-  constructor(
-    tenantId: number,
-    accountsGraph?: any,
-  ) {
+  constructor(tenantId: number, accountsGraph?: any) {
     this.initTenancy();
 
     this.tenantId = tenantId;
@@ -59,7 +56,7 @@ export default class JournalPoster implements IJournalPoster {
 
   /**
    * Async initialize acccounts dependency graph.
-   * @private 
+   * @private
    * @returns {Promise<void>}
    */
   public async initAccountsDepGraph(): Promise<void> {
@@ -72,7 +69,7 @@ export default class JournalPoster implements IJournalPoster {
   }
 
   /**
-   * 
+   *
    */
   public isEmpty() {
     return this.entries.length === 0;
@@ -118,7 +115,7 @@ export default class JournalPoster implements IJournalPoster {
   /**
    * Sets account balance change.
    * @private
-   * @param {number} accountId - 
+   * @param {number} accountId -
    * @param {IAccountChange} accountChange
    */
   private _setAccountBalanceChange(
@@ -126,21 +123,23 @@ export default class JournalPoster implements IJournalPoster {
     accountChange: IAccountChange
   ) {
     this.balancesChange = this.accountBalanceChangeReducer(
-      this.balancesChange, accountId, accountChange,
+      this.balancesChange,
+      accountId,
+      accountChange
     );
   }
 
   /**
    * Accounts balance change reducer.
-   * @param {IAccountsChange} balancesChange 
-   * @param {number} accountId 
+   * @param {IAccountsChange} balancesChange
+   * @param {number} accountId
    * @param {IAccountChange} accountChange
-   * @return {IAccountChange} 
+   * @return {IAccountChange}
    */
   private accountBalanceChangeReducer(
     balancesChange: IAccountsChange,
     accountId: number,
-    accountChange: IAccountChange,
+    accountChange: IAccountChange
   ) {
     const change = { ...balancesChange };
 
@@ -159,31 +158,37 @@ export default class JournalPoster implements IJournalPoster {
   /**
    * Converts balance changes to array.
    * @private
-   * @param {IAccountsChange} accountsChange - 
+   * @param {IAccountsChange} accountsChange -
    * @return {Promise<{ account: number, change: number }>}
    */
   private async convertBalanceChangesToArr(
     accountsChange: IAccountsChange
-  ) : Promise<{ account: number, change: number }[]>{
-    const mappedList: { account: number, change: number }[] = [];
-    const accountsIds: number[] = Object.keys(accountsChange).map(id => parseInt(id, 10));
+  ): Promise<{ account: number; change: number }[]> {
+    const mappedList: { account: number; change: number }[] = [];
+    const accountsIds: number[] = Object.keys(accountsChange).map((id) =>
+      parseInt(id, 10)
+    );
 
     await Promise.all(
       accountsIds.map(async (account: number) => {
         const accountChange = accountsChange[account];
         const accountNode = this.accountsDepGraph.getNodeData(account);
-        
-        const { normal }: { normal: TEntryType } = accountNode.accountNormal;
+        const normal = accountNode.accountNormal;
+
         let change = 0;
 
         if (accountChange.credit) {
-          change = (normal === 'credit') ? accountChange.credit : -1 * accountChange.credit;
+          change =
+            normal === 'credit'
+              ? accountChange.credit
+              : -1 * accountChange.credit;
         }
         if (accountChange.debit) {
-          change = (normal === 'debit') ? accountChange.debit : -1 * accountChange.debit;
+          change =
+            normal === 'debit' ? accountChange.debit : -1 * accountChange.debit;
         }
         mappedList.push({ account, change });
-      }),
+      })
     );
     return mappedList;
   }
@@ -198,20 +203,26 @@ export default class JournalPoster implements IJournalPoster {
     const { Account } = this.models;
     const accountsChange = this.balanceChangeWithDepends(this.balancesChange);
     const balancesList = await this.convertBalanceChangesToArr(accountsChange);
-    const balancesAccounts = balancesList.map(b => b.account);
+    const balancesAccounts = balancesList.map((b) => b.account);
 
     // Ensure the accounts has atleast zero in amount.
-    await Account.query().where('amount', null).whereIn('id', balancesAccounts)
+    await Account.query()
+      .where('amount', null)
+      .whereIn('id', balancesAccounts)
       .patch({ amount: 0 });
 
     const balanceUpdateOpers: Promise<void>[] = [];
 
-    balancesList.forEach((balance: { account: number, change: number }) => {
-      const method: string = (balance.change < 0) ? 'decrement' : 'increment';
+    balancesList.forEach((balance: { account: number; change: number }) => {
+      const method: string = balance.change < 0 ? 'decrement' : 'increment';
 
-      this.logger.info('[journal_poster] increment/decrement account balance.', {
-        balance, tenantId: this.tenantId,
-      })
+      this.logger.info(
+        '[journal_poster] increment/decrement account balance.',
+        {
+          balance,
+          tenantId: this.tenantId,
+        }
+      );
       const query = Account.query()
         [method]('amount', Math.abs(balance.change))
         .where('id', balance.account);
@@ -225,19 +236,25 @@ export default class JournalPoster implements IJournalPoster {
 
   /**
    * Changes all accounts that dependencies of changed accounts.
-   * @param {IAccountsChange} accountsChange 
+   * @param {IAccountsChange} accountsChange
    * @returns {IAccountsChange}
    */
-  private balanceChangeWithDepends(accountsChange: IAccountsChange): IAccountsChange {
+  private balanceChangeWithDepends(
+    accountsChange: IAccountsChange
+  ): IAccountsChange {
     const accountsIds = Object.keys(accountsChange);
     let changes: IAccountsChange = {};
 
     accountsIds.forEach((accountId) => {
       const accountChange = accountsChange[accountId];
-      const depAccountsIds = this.accountsDepGraph.dependenciesOf(accountId);
-      
+      const depAccountsIds = this.accountsDepGraph.dependantsOf(accountId);
+
       [accountId, ...depAccountsIds].forEach((account) => {
-        changes = this.accountBalanceChangeReducer(changes, account, accountChange);
+        changes = this.accountBalanceChangeReducer(
+          changes,
+          account,
+          accountChange
+        );
       });
     });
     return changes;
@@ -260,11 +277,10 @@ export default class JournalPoster implements IJournalPoster {
     const saveOperations: Promise<void>[] = [];
 
     this.entries.forEach((entry) => {
-      const oper = transactionsRepository
-        .create({
-          accountId: entry.account,
-          ...omit(entry, ['account']),
-        });
+      const oper = transactionsRepository.create({
+        accountId: entry.account,
+        ...omit(entry, ['account']),
+      });
       saveOperations.push(oper);
     });
     await Promise.all(saveOperations);
@@ -361,14 +377,14 @@ export default class JournalPoster implements IJournalPoster {
 
   /**
    * Retrieve the closing balance for the given account and closing date.
-   * @param  {Number} accountId - 
-   * @param  {Date} closingDate - 
-   * @param  {string} dataType? - 
+   * @param  {Number} accountId -
+   * @param  {Date} closingDate -
+   * @param  {string} dataType? -
    * @return {number}
    */
   getClosingBalance(
     accountId: number,
-    closingDate: Date|string,
+    closingDate: Date | string,
     dateType: string = 'day'
   ): number {
     let closingBalance = 0;
@@ -399,11 +415,16 @@ export default class JournalPoster implements IJournalPoster {
    * @param {String} dateType -
    * @return {Number}
    */
-  getAccountBalance(accountId: number, closingDate: Date|string, dateType: string) {
+  getAccountBalance(
+    accountId: number,
+    closingDate: Date | string,
+    dateType: string
+  ) {
     const accountNode = this.accountsDepGraph.getNodeData(accountId);
     const depAccountsIds = this.accountsDepGraph.dependenciesOf(accountId);
-    const depAccounts = depAccountsIds
-      .map((id) => this.accountsDepGraph.getNodeData(id));
+    const depAccounts = depAccountsIds.map((id) =>
+      this.accountsDepGraph.getNodeData(id)
+    );
 
     let balance: number = 0;
 
@@ -459,7 +480,11 @@ export default class JournalPoster implements IJournalPoster {
    * @return {Number}
    */
 
-  getTrialBalanceWithDepands(accountId: number, closingDate: Date, dateType: string) {
+  getTrialBalanceWithDepands(
+    accountId: number,
+    closingDate: Date,
+    dateType: string
+  ) {
     const accountNode = this.accountsDepGraph.getNodeData(accountId);
     const depAccountsIds = this.accountsDepGraph.dependenciesOf(accountId);
     const depAccounts = depAccountsIds.map((id) =>
@@ -485,8 +510,8 @@ export default class JournalPoster implements IJournalPoster {
     accountId: number,
     contactId: number,
     contactType: string,
-    closingDate?: Date|string,
-    openingDate?: Date|string,
+    closingDate?: Date | string,
+    openingDate?: Date | string
   ) {
     const momentClosingDate = moment(closingDate);
     const momentOpeningDate = moment(openingDate);
@@ -534,7 +559,7 @@ export default class JournalPoster implements IJournalPoster {
     contactId: number,
     contactType: string,
     closingDate: Date,
-    openingDate: Date,
+    openingDate: Date
   ) {
     const momentClosingDate = moment(closingDate);
     let balance = 0;
