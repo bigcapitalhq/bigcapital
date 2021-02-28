@@ -14,6 +14,7 @@ export interface ISaleEstimate {
   sendToEmail: string,
   createdAt?: Date,
   deliveredAt: string|Date,
+  isConvertedToInvoice: boolean
 };
 export interface ISaleEstimateDTO {
   customerId: number,

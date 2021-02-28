@@ -7,7 +7,6 @@ import asyncMiddleware from 'api/middleware/asyncMiddleware';
 import SaleEstimateService from 'services/Sales/SalesEstimate';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import { ServiceError } from "exceptions";
-import { Request } from 'express-validator/src/base';
 
 @Service()
 export default class SalesEstimatesController extends BaseController {

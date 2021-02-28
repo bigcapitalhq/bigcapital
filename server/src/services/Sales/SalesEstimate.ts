@@ -99,6 +99,16 @@ export default class SaleEstimateService {
   }
 
   /**
+   * Validates the given sale estimate not already converted to invoice.
+   * @param {ISaleEstimate} saleEstimate - 
+   */
+  validateEstimateNotConverted(saleEstimate: ISaleEstimate) {
+    if (saleEstimate.isConvertedToInvoice) {
+      throw new ServiceError(ERRORS.SALE_ESTIMATE_CONVERTED_TO_INVOICE);
+    }
+  }
+
+  /**
    * Transform DTO object ot model object.
    * @param  {number} tenantId
    * @param  {ISaleEstimateDTO} saleEstimateDTO
@@ -181,6 +191,7 @@ export default class SaleEstimateService {
       tenantId,
       saleEstimate,
       saleEstimateId: saleEstimate.id,
+      saleEstimateDTO: estimateDTO,
     });
 
     return saleEstimate;

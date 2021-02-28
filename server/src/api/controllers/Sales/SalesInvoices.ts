@@ -400,6 +400,20 @@ export default class SaleInvoicesController extends BaseController {
           ],
         });
       }
+      if (error.errorType === 'SALE_ESTIMATE_NOT_FOUND') {
+        return res.boom.badRequest(null, {
+          errors: [
+            { type: 'FROM_SALE_ESTIMATE_NOT_FOUND', code: 1200 },
+          ],
+        });
+      }
+      if (error.errorType === 'SALE_ESTIMATE_CONVERTED_TO_INVOICE') {
+        return res.boom.badRequest(null, {
+          errors: [
+            { type: 'SALE_ESTIMATE_IS_ALREADY_CONVERTED_TO_INVOICE', code: 1300 },
+          ],
+        });
+      }
     }
     next(error);
   }

@@ -165,10 +165,10 @@ export default class SaleInvoicesService {
     );
 
     return {
-      ...formatDateFields(omit(saleInvoiceDTO, ['delivered', 'entries']), [
-        'invoiceDate',
-        'dueDate',
-      ]),
+      ...formatDateFields(
+        omit(saleInvoiceDTO, ['delivered', 'entries', 'fromEstimateId']),
+        ['invoiceDate', 'dueDate']
+      ),
       // Avoid rewrite the deliver date in edit mode when already published.
       ...(saleInvoiceDTO.delivered &&
         !oldSaleInvoice?.deliveredAt && {
@@ -213,6 +213,15 @@ export default class SaleInvoicesService {
         saleInvoiceDTO.invoiceNo
       );
     }
+    // Validate the from estimate id exists on the storage.
+    if (saleInvoiceDTO.fromEstimateId) {
+      const fromEstimate = await this.saleEstimatesService.getSaleEstimateOrThrowError(
+        tenantId,
+        saleInvoiceDTO.fromEstimateId
+      );
+      // Validate the sale estimate is not already converted to invoice.
+      this.saleEstimatesService.validateEstimateNotConverted(fromEstimate);
+    }
     // Validate items ids existance.
     await this.itemsEntriesService.validateItemsIdsExistance(
       tenantId,
@@ -232,6 +241,7 @@ export default class SaleInvoicesService {
     await this.eventDispatcher.dispatch(events.saleInvoice.onCreated, {
       tenantId,
       saleInvoice,
+      saleInvoiceDTO,
       saleInvoiceId: saleInvoice.id,
       authorizedUser,
     });
@@ -503,8 +513,8 @@ export default class SaleInvoicesService {
 
   /**
    * Retrieve sale invoice with associated entries.
-   * @param {Number} saleInvoiceId - 
-   * @param {ISystemUser} authorizedUser - 
+   * @param {Number} saleInvoiceId -
+   * @param {ISystemUser} authorizedUser -
    * @return {Promise<ISaleInvoice>}
    */
   public async getSaleInvoice(
@@ -584,7 +594,6 @@ export default class SaleInvoicesService {
       }
     });
 
-    
     return salesInvoices;
   }
 }

@@ -26,15 +26,16 @@ export default class SaleInvoiceSubscriber {
    * Marks the sale estimate as converted from the sale invoice once created.
    */
   @On(events.saleInvoice.onCreated)
-  public async handleMarkEstimateConvert({
+  public async handleMarkEstimateConvertOnceInvoiceCreated({
     tenantId,
     saleInvoice,
+    saleInvoiceDTO,
     saleInvoiceId,
   }) {
-    if (saleInvoice.fromEstimateId) {
-      this.saleEstimatesService.convertEstimateToInvoice(
+    if (saleInvoiceDTO.fromEstimateId) {
+      await this.saleEstimatesService.convertEstimateToInvoice(
         tenantId,
-        saleInvoice.fromEstiamteId,
+        saleInvoiceDTO.fromEstimateId,
         saleInvoiceId
       );
     }
