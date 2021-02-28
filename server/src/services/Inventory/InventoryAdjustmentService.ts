@@ -183,7 +183,7 @@ export default class InventoryAdjustmentService {
     inventoryAdjustmentId: number
   ): Promise<void> {
     // Retrieve the inventory adjustment or throw not found service error.
-    const adjustment = await this.getInventoryAdjustmentOrThrowError(
+    const oldInventoryAdjustment = await this.getInventoryAdjustmentOrThrowError(
       tenantId,
       inventoryAdjustmentId
     );
@@ -208,6 +208,7 @@ export default class InventoryAdjustmentService {
     await this.eventDispatcher.dispatch(events.inventoryAdjustment.onDeleted, {
       tenantId,
       inventoryAdjustmentId,
+      oldInventoryAdjustment
     });
     this.logger.info(
       '[inventory_adjustment] the adjustment deleted successfully.',
@@ -317,7 +318,7 @@ export default class InventoryAdjustmentService {
       });
     });
     // Saves the given inventory transactions to the storage.
-    this.inventoryService.recordInventoryTransactions(
+    await this.inventoryService.recordInventoryTransactions(
       tenantId,
       inventoryTransactions,
       override

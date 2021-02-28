@@ -33,7 +33,7 @@ export default class InventoryAdjustmentsSubscriber {
     await this.inventoryAdjustment.writeInventoryTransactions(
       tenantId,
       inventoryAdjustment
-    )
+    );
   }
 
   /**
@@ -43,10 +43,10 @@ export default class InventoryAdjustmentsSubscriber {
   async handleRevertInventoryTransactionsOnceDeleted({
     tenantId,
     inventoryAdjustmentId,
-    oldInventoryTransaction,
+    oldInventoryAdjustment,
   }) {
     // Can't continue if the inventory adjustment is not published.
-    if (!oldInventoryTransaction.isPublished) { return; }
+    if (!oldInventoryAdjustment.isPublished) { return; }
 
     await this.inventoryAdjustment.revertInventoryTransactions(
       tenantId,

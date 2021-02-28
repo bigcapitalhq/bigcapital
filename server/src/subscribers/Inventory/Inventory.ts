@@ -3,16 +3,21 @@ import { EventSubscriber, On } from 'event-dispatch';
 import { map, head } from 'lodash';
 import events from 'subscribers/events';
 import SaleInvoicesCost from 'services/Sales/SalesInvoicesCost';
+import InventoryItemsQuantitySync from 'services/Inventory/InventoryItemsQuantitySync';
+import { InventoryTransaction } from 'models';
 
 @EventSubscriber()
 export class InventorySubscriber {
   depends: number = 0;
   startingDate: Date;
   saleInvoicesCost: SaleInvoicesCost;
+
+  itemsQuantitySync: InventoryItemsQuantitySync;
   agenda: any;
 
   constructor() {
     this.saleInvoicesCost = Container.get(SaleInvoicesCost);
+    this.itemsQuantitySync = Container.get(InventoryItemsQuantitySync);
     this.agenda = Container.get('agenda');
   }
 
@@ -30,7 +35,7 @@ export class InventorySubscriber {
     if (dependsComputeJobs.length === 0) {
       this.startingDate = null;
 
-    await this.saleInvoicesCost.scheduleWriteJournalEntries(
+      await this.saleInvoicesCost.scheduleWriteJournalEntries(
         tenantId,
         startingDate
       );
@@ -38,12 +43,46 @@ export class InventorySubscriber {
   }
 
   /**
-   * 
+   * Sync inventory items quantity once inventory transactions created.
+   */
+  @On(events.inventory.onInventoryTransactionsCreated)
+  async syncItemsQuantityOnceInventoryTransactionsCreated({
+    tenantId,
+    inventoryTransactions,
+  }) {
+    const itemsQuantityChanges = this.itemsQuantitySync.getItemsQuantityChanges(
+      inventoryTransactions
+    );
+    await this.itemsQuantitySync.changeItemsQuantity(
+      tenantId,
+      itemsQuantityChanges
+    );
+  }
+
+  /**
+   * Sync inventory items quantity once inventory transactions deleted.
+   */
+  @On(events.inventory.onInventoryTransactionsDeleted)
+  async syncItemsQuantityOnceInventoryTransactionsDeleted({
+    tenantId,
+    oldInventoryTransactions,
+  }) {
+    const itemsQuantityChanges = this.itemsQuantitySync.getReverseItemsQuantityChanges(
+      oldInventoryTransactions
+    );
+    await this.itemsQuantitySync.changeItemsQuantity(
+      tenantId,
+      itemsQuantityChanges
+    );
+  }
+
+  /**
+   *
    */
   @On(events.inventory.onInventoryTransactionsCreated)
   async handleScheduleItemsCostOnInventoryTransactionsCreated({
     tenantId,
-    inventoryTransactions
+    inventoryTransactions,
   }) {
     const inventoryItemsIds = map(inventoryTransactions, 'itemId');
 
@@ -61,7 +100,7 @@ export class InventorySubscriber {
     tenantId,
     transactionType,
     transactionId,
-    oldInventoryTransactions
+    oldInventoryTransactions,
   }) {
     // Ignore compute item cost with theses transaction types.
     const ignoreWithTransactionTypes = ['OpeningItem'];

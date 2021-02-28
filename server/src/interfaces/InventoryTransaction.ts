@@ -29,4 +29,9 @@ export interface IInventoryLotCost {
   transactionType: string,
   transactionId: number,
   entryId: number
-}
+};
+
+export interface IItemsQuantityChanges {
+  itemId: number,
+  balanceChange: number,
+};
