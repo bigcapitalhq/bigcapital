@@ -1,5 +1,8 @@
 import React, { createContext, useState } from 'react';
+import { isEmpty, pick } from 'lodash';
+import { useLocation } from 'react-router-dom';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
+import { transformToEditForm } from './utils';
 import {
   useInvoice,
   useItems,
@@ -7,6 +10,7 @@ import {
   useCreateInvoice,
   useEditInvoice,
   useSettingsInvoices,
+  useEstimate,
 } from 'hooks/query';
 
 const InvoiceFormContext = createContext();
@@ -15,12 +19,24 @@ const InvoiceFormContext = createContext();
  * Accounts chart data provider.
  */
 function InvoiceFormProvider({ invoiceId, ...props }) {
-  const { data: invoice, isLoading: isInvoiceLoading } = useInvoice(
-    invoiceId,
-    {
-      enabled: !!invoiceId,
-    },
-  );
+  const { state } = useLocation();
+
+  const estimateId = state?.action;
+
+  const { data: invoice, isLoading: isInvoiceLoading } = useInvoice(invoiceId, {
+    enabled: !!invoiceId,
+  });
+
+  const {
+    data: estimate,
+    isFetching: isEstimateFetching,
+  } = useEstimate(estimateId, { enabled: !!estimateId });
+
+  const newInvoice = !isEmpty(estimate)
+    ? transformToEditForm({
+        ...pick(estimate, ['customer_id', 'customer', 'entries']),
+      })
+    : [];
 
   // Handle fetching the items table based on the given query.
   const {
@@ -52,6 +68,8 @@ function InvoiceFormProvider({ invoiceId, ...props }) {
     invoice,
     items,
     customers,
+    newInvoice,
+    estimateId,
     submitPayload,
 
     isInvoiceLoading,
@@ -71,6 +89,7 @@ function InvoiceFormProvider({ invoiceId, ...props }) {
         isInvoiceLoading ||
         isItemsLoading ||
         isCustomersLoading ||
+        isEstimateFetching ||
         isSettingsLoading
       }
       name={'invoice-form'}

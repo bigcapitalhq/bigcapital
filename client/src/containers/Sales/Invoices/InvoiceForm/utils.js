@@ -1,6 +1,11 @@
 import moment from 'moment';
 import { compose, transformToForm, repeatValue } from 'utils';
 import { updateItemsEntriesTotal } from 'containers/Entries/utils';
+import { ERROR } from 'common/errors';
+
+import { Intent } from '@blueprintjs/core';
+import { formatMessage } from 'services/intl';
+import { AppToaster } from 'components';
 
 export const MIN_LINES_NUMBER = 4;
 
@@ -47,3 +52,24 @@ export function transformToEditForm(invoice) {
     entries,
   };
 }
+
+export const transformErrors = (errors, { setErrors }) => {
+  if (errors.some((e) => e.type === ERROR.SALE_INVOICE_NUMBER_IS_EXISTS)) {
+    setErrors({
+      invoice_no: formatMessage({ id: 'sale_invoice_number_is_exists' }),
+    });
+  }
+  if (
+    errors.some(
+      ({ type }) =>
+        type === ERROR.SALE_ESTIMATE_IS_ALREADY_CONVERTED_TO_INVOICE,
+    )
+  ) {
+    AppToaster.show({
+      message: formatMessage({
+        id: 'sale_estimate_is_already_converted_to_invoice',
+      }),
+      intent: Intent.DANGER,
+    });
+  }
+};

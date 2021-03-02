@@ -984,8 +984,10 @@ export default {
   financial_accounting: ' Financial Accounting',
   products_services_inventory: 'Products,Services & Inventory',
   payable_a_p: 'Payable A/P',
-  keyboard_shortcuts:'Keyboard Shortcuts',
-  shortcut_keys:'Shortcut Keys',
-  oK_:'Ok'
-
+  keyboard_shortcuts: 'Keyboard Shortcuts',
+  shortcut_keys: 'Shortcut Keys',
+  oK_: 'Ok',
+  convert_to_invoice: 'Convert to Invoice',
+  sale_estimate_is_already_converted_to_invoice:
+    'Sale estimate is already converted to invoice.',
 };

@@ -11,7 +11,7 @@ import 'style/pages/ExchangeRate/ExchangeRateDialog.scss';
 /**
  * Exchange rate form content.
  */
-function ExchangeRateFormDialogContent({
+export default function ExchangeRateFormDialogContent({
   // #ownProp
   action,
   exchangeRateId,
@@ -27,5 +27,3 @@ function ExchangeRateFormDialogContent({
     </ExchangeRateFormProvider>
   );
 }
-
-export default compose(withExchangeRateDetail)(ExchangeRateFormDialogContent);
