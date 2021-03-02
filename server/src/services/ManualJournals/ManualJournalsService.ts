@@ -197,7 +197,7 @@ export default class ManualJournalsService implements IManualJournalsService {
   }
 
   /**
-   *
+   * Validate accounts with contact type.
    * @param {number} tenantId
    * @param {IManualJournalDTO} manualJournalDTO
    * @param {string} accountBySlug
