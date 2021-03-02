@@ -28,7 +28,6 @@ export default class LicensesController extends BaseController {
         challenge: true,
       })
     );
-
     router.post(
       '/generate',
       this.generateLicenseSchema,

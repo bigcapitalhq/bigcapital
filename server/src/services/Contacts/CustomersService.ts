@@ -268,7 +268,11 @@ export default class CustomersService {
       openingBalanceAt,
       authorizedUserId
     );
-    await Promise.all([journal.saveBalance(), journal.saveEntries()]);
+    await Promise.all([
+      journal.saveBalance(),
+      journal.saveEntries(),
+      journal.saveContactsBalance(),
+    ]);
   }
 
   /**

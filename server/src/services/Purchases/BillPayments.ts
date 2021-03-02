@@ -27,7 +27,6 @@ import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import { entriesAmountDiff, formatDateFields } from 'utils';
 import { ServiceError } from 'exceptions';
 import { ACCOUNT_PARENT_TYPE } from 'data/AccountTypes';
-import PayableAgingSummaryService from 'services/FinancialStatements/AgingSummary/APAgingSummaryService';
 
 const ERRORS = {
   BILL_VENDOR_NOT_FOUND: 'VENDOR_NOT_FOUND',
@@ -452,6 +451,7 @@ export default class BillPaymentsService {
       .delete();
     await BillPayment.query().where('id', billPaymentId).delete();
 
+    // Triggers `onBillPaymentDeleted` event.
     await this.eventDispatcher.dispatch(events.billPayment.onDeleted, {
       tenantId,
       billPaymentId,
@@ -490,7 +490,8 @@ export default class BillPaymentsService {
    */
   public async recordJournalEntries(
     tenantId: number,
-    billPayment: IBillPayment
+    billPayment: IBillPayment,
+    override: boolean = false,
   ) {
     const { AccountTransaction } = this.tenancy.models(tenantId);
     const { accountRepository } = this.tenancy.repositories(tenantId);
@@ -498,7 +499,7 @@ export default class BillPaymentsService {
     const paymentAmount = sumBy(billPayment.entries, 'paymentAmount');
     const formattedDate = moment(billPayment.paymentDate).format('YYYY-MM-DD');
 
-    // Retrieve AP account from the storage.
+    // Retrieve A/P account from the storage.
     const payableAccount = await accountRepository.findOne({
       slug: 'accounts-payable',
     });
@@ -511,26 +512,27 @@ export default class BillPaymentsService {
       referenceType: 'BillPayment',
       date: formattedDate,
     };
-    if (billPayment.id) {
+    if (override) {
       const transactions = await AccountTransaction.query()
         .whereIn('reference_type', ['BillPayment'])
         .where('reference_id', billPayment.id)
         .withGraphFetched('account');
 
-      journal.loadEntries(transactions);
+      journal.fromTransactions(transactions);
       journal.removeEntries();
     }
     const debitReceivable = new JournalEntry({
       ...commonJournal,
       debit: paymentAmount,
-      contactType: 'Vendor',
       contactId: billPayment.vendorId,
       account: payableAccount.id,
+      index: 1,
     });
     const creditPaymentAccount = new JournalEntry({
       ...commonJournal,
       credit: paymentAmount,
       account: billPayment.paymentAccountId,
+      index: 2,
     });
     journal.debit(debitReceivable);
     journal.credit(creditPaymentAccount);
@@ -539,6 +541,7 @@ export default class BillPaymentsService {
       journal.deleteEntries(),
       journal.saveEntries(),
       journal.saveBalance(),
+      journal.saveContactsBalance(),
     ]);
   }
 
@@ -554,7 +557,11 @@ export default class BillPaymentsService {
 
     await journalCommands.revertJournalEntries(billPaymentId, 'BillPayment');
 
-    return Promise.all([journal.saveBalance(), journal.deleteEntries()]);
+    return Promise.all([
+      journal.saveBalance(),
+      journal.deleteEntries(),
+      journal.saveContactsBalance(),
+    ]);
   }
 
   /**

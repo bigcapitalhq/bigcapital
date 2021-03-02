@@ -5,7 +5,6 @@ import { mapKeysDeep } from 'utils'
 import asyncMiddleware from 'api/middleware/asyncMiddleware';
 
 export default class BaseController {
-
   /**
    * Converts plain object keys to cameCase style.
    * @param {Object} data 
@@ -75,6 +74,10 @@ export default class BaseController {
     return response;
   }
 
+  /**
+   * Async middleware.
+   * @param {function} callback 
+   */
   asyncMiddleware(callback) {
     return asyncMiddleware(callback);
   }

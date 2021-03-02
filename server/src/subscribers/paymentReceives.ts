@@ -40,61 +40,6 @@ export default class PaymentReceivesSubscriber {
   }
 
   /**
-   * Handle customer balance decrement once payment receive created.
-   */
-  @On(events.paymentReceive.onCreated)
-  async handleCustomerBalanceDecrement({
-    tenantId,
-    paymentReceiveId,
-    paymentReceive,
-  }) {
-    const { customerRepository } = this.tenancy.repositories(tenantId);
-
-    this.logger.info('[payment_receive] trying to decrement customer balance.');
-    await customerRepository.changeBalance(
-      paymentReceive.customerId,
-      paymentReceive.amount * -1
-    );
-  }
-
-  /**
-   * Handle customer balance increment once payment receive deleted.
-   */
-  @On(events.paymentReceive.onDeleted)
-  async handleCustomerBalanceIncrement({
-    tenantId,
-    paymentReceiveId,
-    oldPaymentReceive,
-  }) {
-    const { customerRepository } = this.tenancy.repositories(tenantId);
-
-    this.logger.info('[payment_receive] trying to increment customer balance.');
-    await customerRepository.changeBalance(
-      oldPaymentReceive.customerId,
-      oldPaymentReceive.amount
-    );
-  }
-
-  /**
-   * Handles customer balance diff balance change once payment receive edited.
-   */
-  @On(events.paymentReceive.onEdited)
-  async handleCustomerBalanceDiffChange({
-    tenantId,
-    paymentReceiveId,
-    paymentReceive,
-    oldPaymentReceive,
-  }) {
-    const { customerRepository } = this.tenancy.repositories(tenantId);
-
-    await customerRepository.changeDiffBalance(
-      paymentReceive.customerId,
-      paymentReceive.amount * -1,
-      oldPaymentReceive.amount * -1,
-    );
-  }
-
-  /**
    * Handle journal entries writing once the payment receive edited.
    */
   @On(events.paymentReceive.onEdited)

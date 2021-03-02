@@ -17,7 +17,6 @@ import {
 
 export default class JournalCommands {
   journal: JournalPoster;
-
   models: any;
   repositories: any;
 
@@ -77,7 +76,6 @@ export default class JournalCommands {
       credit: bill.amount,
       account: payableAccount.id,
       contactId: bill.vendorId,
-      contactType: 'Vendor',
       index: 1,
     });
     this.journal.credit(payableEntry);
@@ -113,8 +111,8 @@ export default class JournalCommands {
   ) {
     const { accountRepository } = this.repositories;
 
-    const openingBalanceAccount = await accountRepository.findOne({
-      slug: 'opening-balance',
+    const incomeAccount = await accountRepository.findOne({
+      slug: 'other-income',
     });
     const receivableAccount = await accountRepository.findOne({
       slug: 'accounts-receivable',
@@ -123,8 +121,6 @@ export default class JournalCommands {
     const commonEntry = {
       referenceType: 'CustomerOpeningBalance',
       referenceId: customerId,
-      contactType: 'Customer',
-      contactId: customerId,
       date: openingBalanceAt,
       userId,
     };
@@ -133,13 +129,14 @@ export default class JournalCommands {
       credit: 0,
       debit: openingBalance,
       account: receivableAccount.id,
+      contactId: customerId,
       index: 1,
     });
     const creditEntry = new JournalEntry({
       ...commonEntry,
       credit: openingBalance,
       debit: 0,
-      account: openingBalanceAccount.id,
+      account: incomeAccount.id,
       index: 2,
     });
     this.journal.debit(debitEntry);
@@ -171,8 +168,6 @@ export default class JournalCommands {
     const commonEntry = {
       referenceType: 'VendorOpeningBalance',
       referenceId: vendorId,
-      contactType: 'Vendor',
-      contactId: vendorId,
       date: openingBalanceAt,
       userId: authorizedUserId,
     };
@@ -182,6 +177,7 @@ export default class JournalCommands {
       credit: openingBalance,
       debit: 0,
       index: 1,
+      contactId: vendorId,
     });
     const debitEntry = new JournalEntry({
       ...commonEntry,
@@ -297,7 +293,6 @@ export default class JournalCommands {
         account: entry.accountId,
         referenceType: 'Journal',
         referenceId: manualJournalObj.id,
-        contactType: entry.contactType,
         contactId: entry.contactId,
         note: entry.note,
         date: manualJournalObj.date,
@@ -379,6 +374,7 @@ export default class JournalCommands {
       ...commonEntry,
       debit: saleInvoice.balance,
       account: receivableAccountId,
+      contactId: saleInvoice.customerId,
       index: 1,
     });
     this.journal.debit(receivableEntry);

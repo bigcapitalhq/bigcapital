@@ -245,7 +245,7 @@ export default class ManualJournalsController extends BaseController {
         manualJournalId
       );
       return res.status(200).send({
-        manual_journal: manualJournal
+        manual_journal: manualJournal,
       });
     } catch (error) {
       next(error);
@@ -449,14 +449,25 @@ export default class ManualJournalsController extends BaseController {
           ],
         });
       }
+      if (error.errorType === 'CONTACTS_SHOULD_ASSIGN_WITH_VALID_ACCOUNT') {
+        return res.boom.badRequest('', {
+          errors: [
+            {
+              type: 'CONTACTS_SHOULD_ASSIGN_WITH_VALID_ACCOUNT',
+              code: 700,
+              meta: this.transfromToResponse(error.payload),
+            },
+          ],
+        });
+      }
       if (error.errorType === 'contacts_not_found') {
         return res.boom.badRequest('', {
-          errors: [{ type: 'CONTACTS_NOT_FOUND', code: 700 }],
+          errors: [{ type: 'CONTACTS_NOT_FOUND', code: 800 }],
         });
       }
       if (error.errorType === 'MANUAL_JOURNAL_ALREADY_PUBLISHED') {
         return res.boom.badRequest('', {
-          errors: [{ type: 'MANUAL_JOURNAL_ALREADY_PUBLISHED', code: 800 }],
+          errors: [{ type: 'MANUAL_JOURNAL_ALREADY_PUBLISHED', code: 900 }],
         });
       }
     }

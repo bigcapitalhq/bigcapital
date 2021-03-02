@@ -14,6 +14,4 @@ export default class JournalFinancial {
     this.journal = journal;
     this.accountsDepGraph = this.journal.accountsDepGraph;
   }
-
-
 }

@@ -106,8 +106,14 @@ export default class SaleInvoicesController extends BaseController {
       check('entries.*.item_id').exists().isNumeric().toInt(),
       check('entries.*.rate').exists().isNumeric().toFloat(),
       check('entries.*.quantity').exists().isNumeric().toFloat(),
-      check('entries.*.discount').optional({ nullable: true }).isNumeric().toFloat(),
-      check('entries.*.description').optional({ nullable: true }).trim().escape(),
+      check('entries.*.discount')
+        .optional({ nullable: true })
+        .isNumeric()
+        .toFloat(),
+      check('entries.*.description')
+        .optional({ nullable: true })
+        .trim()
+        .escape(),
     ];
   }
 
@@ -230,7 +236,11 @@ export default class SaleInvoicesController extends BaseController {
 
     try {
       // Deletes the sale invoice with associated entries and journal transaction.
-      await this.saleInvoiceService.deleteSaleInvoice(tenantId, saleInvoiceId, user);
+      await this.saleInvoiceService.deleteSaleInvoice(
+        tenantId,
+        saleInvoiceId,
+        user
+      );
 
       return res.status(200).send({
         id: saleInvoiceId,
@@ -402,15 +412,23 @@ export default class SaleInvoicesController extends BaseController {
       }
       if (error.errorType === 'SALE_ESTIMATE_NOT_FOUND') {
         return res.boom.badRequest(null, {
-          errors: [
-            { type: 'FROM_SALE_ESTIMATE_NOT_FOUND', code: 1200 },
-          ],
+          errors: [{ type: 'FROM_SALE_ESTIMATE_NOT_FOUND', code: 1200 }],
         });
       }
       if (error.errorType === 'SALE_ESTIMATE_CONVERTED_TO_INVOICE') {
         return res.boom.badRequest(null, {
           errors: [
-            { type: 'SALE_ESTIMATE_IS_ALREADY_CONVERTED_TO_INVOICE', code: 1300 },
+            {
+              type: 'SALE_ESTIMATE_IS_ALREADY_CONVERTED_TO_INVOICE',
+              code: 1300,
+            },
+          ],
+        });
+      }
+      if (error.errorType === 'INVOICE_AMOUNT_SMALLER_THAN_PAYMENT_AMOUNT') {
+        return res.boom.badRequest(null, {
+          errors: [
+            { type: 'INVOICE_AMOUNT_SMALLER_THAN_PAYMENT_AMOUNT', code: 1400 },
           ],
         });
       }

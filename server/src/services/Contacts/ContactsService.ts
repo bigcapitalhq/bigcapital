@@ -240,7 +240,10 @@ export default class ContactsService {
     journal.fromTransactions(contactsTransactions);
     journal.removeEntries();
 
-    await Promise.all([journal.saveBalance(), journal.deleteEntries()]);
+    await Promise.all([
+      journal.saveBalance(),
+      journal.deleteEntries(),
+    ]);
   }
 
   /**

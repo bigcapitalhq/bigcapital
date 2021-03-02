@@ -20,7 +20,25 @@ export default class Contact extends TenantModel {
    * Defined virtual attributes.
    */
   static get virtualAttributes() {
-    return ['closingBalance'];
+    return ['contactNormal', 'closingBalance'];
+  }
+
+  /**
+   * Retrieve the contact normal by the given contact type.
+   */
+  static getContactNormalByType(contactType) {
+    const types = {
+      'vendor': 'credit',
+      'customer': 'debit',
+    };
+    return types[contactType];
+  }
+
+  /**
+   * Retrieve the contact noraml;
+   */
+  get contactNormal() {
+    return Contact.getContactNormalByType(this.contactService);
   }
 
   /**

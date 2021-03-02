@@ -527,6 +527,7 @@ export default class BillsService extends SalesInvoicesCost {
       journal.deleteEntries(),
       journal.saveEntries(),
       journal.saveBalance(),
+      journal.saveContactsBalance(),
     ]);
   }
 

@@ -7,12 +7,10 @@ import 'subscribers/manualJournals';
 import 'subscribers/expenses';
 
 import 'subscribers/Bills';
-import 'subscribers/Bills/SyncVendorsBalances';
 import 'subscribers/Bills/WriteJournalEntries';
 import 'subscribers/Bills/WriteInventoryTransactions';
 
 import 'subscribers/SaleInvoices';
-import 'subscribers/SaleInvoices/SyncCustomersBalance';
 import 'subscribers/SaleInvoices/WriteInventoryTransactions';
 import 'subscribers/SaleInvoices/WriteJournalEntries';
 

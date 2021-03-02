@@ -27,7 +27,8 @@ export default class JournalPosterService {
 
     await Promise.all([
       journal.deleteEntries(),
-      journal.saveBalance()
+      journal.saveBalance(),
+      journal.saveContactsBalance(),
     ]);
   }
 }

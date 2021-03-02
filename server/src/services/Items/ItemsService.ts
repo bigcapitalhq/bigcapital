@@ -10,29 +10,12 @@ import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import TenancyService from 'services/Tenancy/TenancyService';
 import { ServiceError } from 'exceptions';
 import InventoryService from 'services/Inventory/Inventory';
-import { ACCOUNT_PARENT_TYPE, ACCOUNT_ROOT_TYPE, ACCOUNT_TYPE } from 'data/AccountTypes'
-
-const ERRORS = {
-  NOT_FOUND: 'NOT_FOUND',
-  ITEMS_NOT_FOUND: 'ITEMS_NOT_FOUND',
-
-  ITEM_NAME_EXISTS: 'ITEM_NAME_EXISTS',
-  ITEM_CATEOGRY_NOT_FOUND: 'ITEM_CATEOGRY_NOT_FOUND',
-  COST_ACCOUNT_NOT_COGS: 'COST_ACCOUNT_NOT_COGS',
-  COST_ACCOUNT_NOT_FOUMD: 'COST_ACCOUNT_NOT_FOUMD',
-  SELL_ACCOUNT_NOT_FOUND: 'SELL_ACCOUNT_NOT_FOUND',
-  SELL_ACCOUNT_NOT_INCOME: 'SELL_ACCOUNT_NOT_INCOME',
-
-  INVENTORY_ACCOUNT_NOT_FOUND: 'INVENTORY_ACCOUNT_NOT_FOUND',
-  INVENTORY_ACCOUNT_NOT_INVENTORY: 'INVENTORY_ACCOUNT_NOT_INVENTORY',
-
-  ITEMS_HAVE_ASSOCIATED_TRANSACTIONS: 'ITEMS_HAVE_ASSOCIATED_TRANSACTIONS',
-  ITEM_HAS_ASSOCIATED_TRANSACTINS: 'ITEM_HAS_ASSOCIATED_TRANSACTINS',
-
-  ITEM_HAS_ASSOCIATED_INVENTORY_ADJUSTMENT:
-    'ITEM_HAS_ASSOCIATED_INVENTORY_ADJUSTMENT',
-};
-
+import {
+  ACCOUNT_PARENT_TYPE,
+  ACCOUNT_ROOT_TYPE,
+  ACCOUNT_TYPE,
+} from 'data/AccountTypes';
+import { ERRORS } from './constants';
 @Service()
 export default class ItemsService implements IItemsService {
   @Inject()
@@ -130,7 +113,7 @@ export default class ItemsService implements IItemsService {
       });
       throw new ServiceError(ERRORS.COST_ACCOUNT_NOT_FOUMD);
 
-    // Detarmines the cost of goods sold account.
+      // Detarmines the cost of goods sold account.
     } else if (!foundAccount.isParentType(ACCOUNT_PARENT_TYPE.EXPENSE)) {
       this.logger.info('[items] validate cost account not COGS type.', {
         tenantId,
@@ -149,9 +132,7 @@ export default class ItemsService implements IItemsService {
     tenantId: number,
     sellAccountId: number
   ) {
-    const {
-      accountRepository,
-    } = this.tenancy.repositories(tenantId);
+    const { accountRepository } = this.tenancy.repositories(tenantId);
 
     this.logger.info('[items] validate sell account existance.', {
       tenantId,
@@ -166,7 +147,6 @@ export default class ItemsService implements IItemsService {
         sellAccountId,
       });
       throw new ServiceError(ERRORS.SELL_ACCOUNT_NOT_FOUND);
-      
     } else if (!foundAccount.isParentType(ACCOUNT_ROOT_TYPE.INCOME)) {
       this.logger.info('[items] sell account not income type.', {
         tenantId,
@@ -185,9 +165,7 @@ export default class ItemsService implements IItemsService {
     tenantId: number,
     inventoryAccountId: number
   ) {
-    const {
-      accountRepository,
-    } = this.tenancy.repositories(tenantId);
+    const { accountRepository } = this.tenancy.repositories(tenantId);
 
     this.logger.info('[items] validate inventory account existance.', {
       tenantId,
@@ -203,7 +181,6 @@ export default class ItemsService implements IItemsService {
         inventoryAccountId,
       });
       throw new ServiceError(ERRORS.INVENTORY_ACCOUNT_NOT_FOUND);
-
     } else if (!foundAccount.isAccountType(ACCOUNT_TYPE.INVENTORY)) {
       this.logger.info('[items] inventory account not inventory type.', {
         tenantId,

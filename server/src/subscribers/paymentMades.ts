@@ -21,12 +21,20 @@ export default class PaymentMadesSubscriber {
    */
   @On(events.billPayment.onCreated)
   @On(events.billPayment.onEdited)
-  async handleBillsIncrementPaymentAmount({ tenantId, billPayment, oldBillPayment, billPaymentId }) {
-    this.logger.info('[payment_made] trying to change bills payment amount.', { tenantId, billPaymentId });
+  async handleBillsIncrementPaymentAmount({
+    tenantId,
+    billPayment,
+    oldBillPayment,
+    billPaymentId,
+  }) {
+    this.logger.info('[payment_made] trying to change bills payment amount.', {
+      tenantId,
+      billPaymentId,
+    });
     this.billPaymentsService.saveChangeBillsPaymentAmount(
       tenantId,
       billPayment.entries,
-      oldBillPayment?.entries || null,
+      oldBillPayment?.entries || null
     );
   }
 
@@ -34,51 +42,53 @@ export default class PaymentMadesSubscriber {
    * Handle revert bill payment amount once bill payment deleted.
    */
   @On(events.billPayment.onDeleted)
-  handleBillDecrementPaymentAmount({ tenantId, billPaymentId, oldBillPayment }) {
-    this.logger.info('[payment_made] tring to revert bill payment amount.', { tenantId, billPaymentId });
+  handleBillDecrementPaymentAmount({
+    tenantId,
+    billPaymentId,
+    oldBillPayment,
+  }) {
+    this.logger.info('[payment_made] tring to revert bill payment amount.', {
+      tenantId,
+      billPaymentId,
+    });
     this.billPaymentsService.saveChangeBillsPaymentAmount(
       tenantId,
       oldBillPayment.entries.map((entry) => ({ ...entry, paymentAmount: 0 })),
-      oldBillPayment.entries,
+      oldBillPayment.entries
     );
   }
 
   /**
-   * Handle vendor balance increment once payment made created.
-   */
-  @On(events.billPayment.onCreated)
-  async handleVendorIncrement({ tenantId, billPayment, billPaymentId }) {
-    const { vendorRepository } = this.tenancy.repositories(tenantId);
-
-    // Increment the vendor balance after bills payments.
-    this.logger.info('[bill_payment] trying to increment vendor balance.', { tenantId });
-    await vendorRepository.changeBalance(
-      billPayment.vendorId,
-      billPayment.amount * -1,
-    );
-  }
-
-  /**
-   * Handle bill payment writing journal entries once created. 
+   * Handle bill payment writing journal entries once created.
    */
   @On(events.billPayment.onCreated)
   async handleWriteJournalEntries({ tenantId, billPayment }) {
     // Records the journal transactions after bills payment
     // and change diff acoount balance.
-    this.logger.info('[bill_payment] trying to write journal entries.', { tenantId, billPaymentId: billPayment.id });
+    this.logger.info('[bill_payment] trying to write journal entries.', {
+      tenantId,
+      billPaymentId: billPayment.id,
+    });
     await this.billPaymentsService.recordJournalEntries(tenantId, billPayment);
   }
 
   /**
-   * Decrements the vendor balance once bill payment deleted. 
+   * Handle bill payment re-writing journal entries once the payment transaction be edited.
    */
-  @On(events.billPayment.onDeleted)
-  async handleVendorDecrement({ tenantId, paymentMadeId, oldPaymentMade }) {
-    const { vendorRepository } = this.tenancy.repositories(tenantId);
-
-    await vendorRepository.changeBalance(
-      oldPaymentMade.vendorId,
-      oldPaymentMade.amount,
+  @On(events.billPayment.onEdited)
+  async handleRewriteJournalEntriesOncePaymentEdited({
+    tenantId,
+    billPayment,
+  }) {
+    // Records the journal transactions after bills payment be edited.
+    this.logger.info('[bill_payment] trying to rewrite journal entries.', {
+      tenantId,
+      billPaymentId: billPayment.id,
+    });
+    await this.billPaymentsService.recordJournalEntries(
+      tenantId,
+      billPayment,
+      true
     );
   }
 
@@ -88,24 +98,8 @@ export default class PaymentMadesSubscriber {
   @On(events.billPayment.onDeleted)
   async handleRevertJournalEntries({ tenantId, billPaymentId }) {
     await this.billPaymentsService.revertJournalEntries(
-      tenantId, billPaymentId,
-    );
-  }
-
-  /**
-   * Change the vendor balance different between old and new once
-   * bill payment edited.
-   */
-  @On(events.billPayment.onEdited)
-  async handleVendorChangeDiffBalance({ tenantId, paymentMadeId, billPayment, oldBillPayment }) {
-    const { vendorRepository } = this.tenancy.repositories(tenantId);
-
-    // Change the different vendor balance between the new and old one.
-    await vendorRepository.changeDiffBalance(
-      billPayment.vendorId,
-      oldBillPayment.vendorId,
-      billPayment.amount * -1,
-      oldBillPayment.amount * -1,
+      tenantId,
+      billPaymentId
     );
   }
 }

@@ -9,6 +9,7 @@ import {
   ISystemUser,
   IManualJournal,
   IPaginationMeta,
+  IManualJournalEntry,
 } from 'interfaces';
 import TenancyService from 'services/Tenancy/TenancyService';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
@@ -20,30 +21,7 @@ import {
 import JournalPoster from 'services/Accounting/JournalPoster';
 import JournalCommands from 'services/Accounting/JournalCommands';
 import JournalPosterService from 'services/Sales/JournalPosterService';
-
-const ERRORS = {
-  NOT_FOUND: 'manual_journal_not_found',
-  CREDIT_DEBIT_NOT_EQUAL_ZERO: 'credit_debit_not_equal_zero',
-  CREDIT_DEBIT_NOT_EQUAL: 'credit_debit_not_equal',
-  ACCCOUNTS_IDS_NOT_FOUND: 'acccounts_ids_not_found',
-  JOURNAL_NUMBER_EXISTS: 'journal_number_exists',
-  ENTRIES_SHOULD_ASSIGN_WITH_CONTACT: 'ENTRIES_SHOULD_ASSIGN_WITH_CONTACT',
-  CONTACTS_NOT_FOUND: 'contacts_not_found',
-  MANUAL_JOURNAL_ALREADY_PUBLISHED: 'MANUAL_JOURNAL_ALREADY_PUBLISHED',
-};
-
-const CONTACTS_CONFIG = [
-  {
-    accountBySlug: 'accounts-receivable',
-    contactService: 'customer',
-    assignRequired: false,
-  },
-  {
-    accountBySlug: 'accounts-payable',
-    contactService: 'vendor',
-    assignRequired: true,
-  },
-];
+import { ERRORS } from './constants';
 
 @Service()
 export default class ManualJournalsService implements IManualJournalsService {
@@ -159,8 +137,7 @@ export default class ManualJournalsService implements IManualJournalsService {
     const { Account } = this.tenancy.models(tenantId);
     const manualAccountsIds = manualJournalDTO.entries.map((e) => e.accountId);
 
-    const accounts = await Account.query()
-      .whereIn('id', manualAccountsIds);
+    const accounts = await Account.query().whereIn('id', manualAccountsIds);
 
     const storedAccountsIds = accounts.map((account) => account.id);
 
@@ -203,29 +180,37 @@ export default class ManualJournalsService implements IManualJournalsService {
    * @param {string} accountBySlug
    * @param {string} contactType
    */
-  private async validateAccountsWithContactType(
+  private async validateAccountWithContactType(
     tenantId: number,
-    manualJournalDTO: IManualJournalDTO,
-    accountBySlug: string,
-    contactType: string,
-    contactRequired: boolean = true
-  ): Promise<void> {
-    const { accountRepository } = this.tenancy.repositories(tenantId);
-    const payableAccount = await accountRepository.findOne({
-      slug: accountBySlug,
-    });
+    entriesDTO: IManualJournalEntry[],
 
-    const entriesHasNoVendorContact = manualJournalDTO.entries.filter(
-      (e) =>
-        e.accountId === payableAccount.id &&
-        ((!e.contactId && contactRequired) || e.contactType !== contactType)
+    accountBySlug: string,
+    contactType: string
+  ): Promise<void> {
+    const { Account, Contact } = this.tenancy.models(tenantId);
+
+    // Retrieve account meta by the given account slug.
+    const account = await Account.query().findOne('slug', accountBySlug);
+
+    // Filter all entries of the given account.
+    const accountEntries = entriesDTO.filter(
+      (entry) => entry.accountId === account.id
     );
-    if (entriesHasNoVendorContact.length > 0) {
-      const indexes = entriesHasNoVendorContact.map((e) => e.index);
+    // Can't continue if there is no entry that associate to the given account.
+    if (accountEntries.length === 0) {
+      return;
+    }
+    // Filter entries that have no contact type or not equal the valid type.
+    const entriesNoContact = accountEntries.filter(
+      (entry) => !entry.contactType || entry.contactType !== contactType
+    );
+    // Throw error in case one of entries that has invalid contact type.
+    if (entriesNoContact.length > 0) {
+      const indexes = entriesNoContact.map(e => e.index);
 
       throw new ServiceError(ERRORS.ENTRIES_SHOULD_ASSIGN_WITH_CONTACT, '', {
+        accountSlug: accountBySlug,
         contactType,
-        accountBySlug,
         indexes,
       });
     }
@@ -238,19 +223,22 @@ export default class ManualJournalsService implements IManualJournalsService {
    */
   private async dynamicValidateAccountsWithContactType(
     tenantId: number,
-    manualJournalDTO: IManualJournalDTO
+    entriesDTO: IManualJournalEntry[]
   ): Promise<any> {
-    return Promise.all(
-      CONTACTS_CONFIG.map(({ accountBySlug, contactService, assignRequired }) =>
-        this.validateAccountsWithContactType(
-          tenantId,
-          manualJournalDTO,
-          accountBySlug,
-          contactService,
-          assignRequired
-        )
-      )
-    );
+    return Promise.all([
+      this.validateAccountWithContactType(
+        tenantId,
+        entriesDTO,
+        'accounts-receivable',
+        'customer'
+      ),
+      this.validateAccountWithContactType(
+        tenantId,
+        entriesDTO,
+        'accounts-payable',
+        'vendor'
+      ),
+    ]);
   }
 
   /**
@@ -273,9 +261,9 @@ export default class ManualJournalsService implements IManualJournalsService {
       const entriesContactsIds = entriesContactPairs.map(
         (entry) => entry.contactId
       );
-
       // Retrieve all stored contacts on the storage from contacts entries.
-      const storedContacts = await contactRepository.findByIds(
+      const storedContacts = await contactRepository.findWhereIn(
+        'id',
         entriesContactsIds
       );
       // Converts the stored contacts to map with id as key and entry as value.
@@ -287,8 +275,7 @@ export default class ManualJournalsService implements IManualJournalsService {
       entriesContactPairs.forEach((contactEntry) => {
         const storedContact = storedContactsMap.get(contactEntry.contactId);
 
-        // in case the contact id not found or contact type no equals pushed to
-        // not found contacts.
+        // in case the contact id not found.
         if (
           !storedContact ||
           storedContact.contactService !== contactEntry.contactType
@@ -378,7 +365,7 @@ export default class ManualJournalsService implements IManualJournalsService {
     // Validate accounts with contact type from the given config.
     await this.dynamicValidateAccountsWithContactType(
       tenantId,
-      manualJournalDTO
+      manualJournalDTO.entries
     );
     this.logger.info(
       '[manual_journal] trying to save manual journal to the storage.',
@@ -446,7 +433,7 @@ export default class ManualJournalsService implements IManualJournalsService {
     // Validate accounts with contact type from the given config.
     await this.dynamicValidateAccountsWithContactType(
       tenantId,
-      manualJournalDTO
+      manualJournalDTO.entries
     );
     // Transform manual journal DTO to model.
     const manualJournalObj = this.transformEditDTOToModel(
@@ -525,7 +512,7 @@ export default class ManualJournalsService implements IManualJournalsService {
     tenantId: number,
     manualJournalsIds: number[]
   ): Promise<{
-    oldManualJournals: IManualJournal[]
+    oldManualJournals: IManualJournal[];
   }> {
     const { ManualJournal, ManualJournalEntry } = this.tenancy.models(tenantId);
 
@@ -817,6 +804,7 @@ export default class ManualJournalsService implements IManualJournalsService {
       journal.saveBalance(),
       journal.deleteEntries(),
       journal.saveEntries(),
+      journal.saveContactsBalance(),
     ]);
     this.logger.info(
       '[manual_journal] the journal entries saved successfully.',

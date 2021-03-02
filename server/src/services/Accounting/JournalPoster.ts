@@ -1,6 +1,7 @@
-import { omit, get } from 'lodash';
+import { omit, get, chain } from 'lodash';
 import moment from 'moment';
 import { Container } from 'typedi';
+import async from 'async';
 import JournalEntry from 'services/Accounting/JournalEntry';
 import TenancyService from 'services/Tenancy/TenancyService';
 import {
@@ -10,6 +11,19 @@ import {
   IAccountsChange,
   TEntryType,
 } from 'interfaces';
+
+const CONTACTS_CONFIG = [
+  {
+    accountBySlug: 'accounts-receivable',
+    contactService: 'customer',
+    assignRequired: true,
+  },
+  {
+    accountBySlug: 'accounts-payable',
+    contactService: 'vendor',
+    assignRequired: true,
+  },
+];
 
 export default class JournalPoster implements IJournalPoster {
   tenantId: number;
@@ -24,6 +38,10 @@ export default class JournalPoster implements IJournalPoster {
   accountsDepGraph: IAccountsChange;
 
   accountsBalanceTable: { [key: number]: number } = {};
+  contactsBalanceTable: {
+    [key: number]: { credit: number; debit: number }[];
+  } = {};
+  saveContactBalanceQueue: any;
 
   /**
    * Journal poster constructor.
@@ -39,6 +57,10 @@ export default class JournalPoster implements IJournalPoster {
     if (accountsGraph) {
       this.accountsDepGraph = accountsGraph;
     }
+    this.saveContactBalanceQueue = async.queue(
+      this.saveContactBalanceChangeTask.bind(this),
+      10
+    );
   }
 
   /**
@@ -69,7 +91,7 @@ export default class JournalPoster implements IJournalPoster {
   }
 
   /**
-   *
+   * Detarmines the ledger is empty.
    */
   public isEmpty() {
     return this.entries.length === 0;
@@ -85,6 +107,7 @@ export default class JournalPoster implements IJournalPoster {
     }
     this.entries.push(entryModel.entry);
     this.setAccountBalanceChange(entryModel.entry);
+    this.setContactBalanceChange(entryModel.entry);
   }
 
   /**
@@ -97,6 +120,83 @@ export default class JournalPoster implements IJournalPoster {
     }
     this.entries.push(entryModel.entry);
     this.setAccountBalanceChange(entryModel.entry);
+    this.setContactBalanceChange(entryModel.entry);
+  }
+
+  /**
+   * Sets the contact balance change.
+   */
+  private setContactBalanceChange(entry) {
+    if (!entry.contactId) {
+      return;
+    }
+    const change = {
+      debit: entry.debit || 0,
+      credit: entry.credit || 0,
+      account: entry.account,
+    };
+    if (!this.contactsBalanceTable[entry.contactId]) {
+      this.contactsBalanceTable[entry.contactId] = [];
+    }
+    this.contactsBalanceTable[entry.contactId].push(change);
+  }
+
+  /**
+   * Save contacts balance change.
+   */
+  async saveContactsBalance() {
+    await this.initAccountsDepGraph();
+
+    const balanceChanges = Object.entries(this.contactsBalanceTable).map(
+      ([contactId, entries]) => ({
+        contactId,
+        entries: entries.filter((entry) => {
+          const account = this.accountsDepGraph.getNodeData(entry.account);
+
+          return (
+            account &&
+            CONTACTS_CONFIG.some((config) => {
+              return config.accountBySlug === account.slug;
+            })
+          );
+        }),
+      })
+    );
+
+    const balanceEntries = chain(balanceChanges)
+      .map((change) => change.entries.map(entry => ({
+        ...entry,
+        contactId: change.contactId
+      })))
+      .flatten()
+      .value();
+
+    return this.saveContactBalanceQueue.pushAsync(balanceEntries);
+  }
+
+  /**
+   * Saves contact balance change task.
+   * @param {number} contactId - Contact id.
+   * @param {number} credit - Credit amount.
+   * @param {number} debit - Debit amount.
+   */
+  async saveContactBalanceChangeTask({ contactId, credit, debit }) {
+    const { contactRepository } = this.repositories;
+
+    const contact = await contactRepository.findOneById(contactId);
+    let balanceChange = 0;
+
+    if (contact.contactNormal === 'credit') {
+      balanceChange += credit - debit;
+    } else {
+      balanceChange += debit - credit;
+    }
+    // Contact change balance.
+    await contactRepository.changeNumber(
+      { id: contactId },
+      'balance',
+      balanceChange
+    );
   }
 
   /**
@@ -321,7 +421,8 @@ export default class JournalPoster implements IJournalPoster {
       entry.credit = -1 * entry.credit;
       entry.debit = -1 * entry.debit;
 
-      this.setAccountBalanceChange(entry, entry.accountNormal);
+      this.setAccountBalanceChange(entry);
+      this.setContactBalanceChange(entry);
     });
     this.deletedEntriesIds.push(...removeEntries.map((entry) => entry.id));
   }

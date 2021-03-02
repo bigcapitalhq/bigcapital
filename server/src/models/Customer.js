@@ -41,7 +41,7 @@ export default class Customer extends TenantModel {
    * Defined virtual attributes.
    */
   static get virtualAttributes() {
-    return ['closingBalance'];
+    return ['closingBalance', 'contactNormal'];
   }
 
   /**
@@ -49,6 +49,13 @@ export default class Customer extends TenantModel {
    */
   get closingBalance() {
     return this.openingBalance + this.balance;
+  }
+
+  /**
+   * Retrieve the contact noraml;
+   */
+  get contactNormal() {
+    return 'debit';
   }
 
   /**

@@ -29,6 +29,7 @@ import ItemsEntriesService from 'services/Items/ItemsEntriesService';
 import CustomersService from 'services/Contacts/CustomersService';
 import SaleEstimateService from 'services/Sales/SalesEstimate';
 import JournalPosterService from './JournalPosterService';
+import SaleInvoiceRepository from 'repositories/SaleInvoiceRepository';
 
 const ERRORS = {
   INVOICE_NUMBER_NOT_UNIQUE: 'INVOICE_NUMBER_NOT_UNIQUE',
@@ -37,6 +38,8 @@ const ERRORS = {
   ENTRIES_ITEMS_IDS_NOT_EXISTS: 'ENTRIES_ITEMS_IDS_NOT_EXISTS',
   NOT_SELLABLE_ITEMS: 'NOT_SELLABLE_ITEMS',
   SALE_INVOICE_NO_NOT_UNIQUE: 'SALE_INVOICE_NO_NOT_UNIQUE',
+  INVOICE_AMOUNT_SMALLER_THAN_PAYMENT_AMOUNT:
+    'INVOICE_AMOUNT_SMALLER_THAN_PAYMENT_AMOUNT',
   INVOICE_HAS_ASSOCIATED_PAYMENT_ENTRIES:
     'INVOICE_HAS_ASSOCIATED_PAYMENT_ENTRIES',
 };
@@ -128,6 +131,20 @@ export default class SaleInvoicesService {
       throw new ServiceError(ERRORS.INVOICE_HAS_ASSOCIATED_PAYMENT_ENTRIES);
     }
     return entries;
+  }
+
+  /**
+   * Validate the invoice amount is bigger than payment amount before edit the invoice.
+   * @param {number} saleInvoiceAmount
+   * @param {number} paymentAmount
+   */
+  validateInvoiceAmountBiggerPaymentAmount(
+    saleInvoiceAmount: number,
+    paymentAmount: number
+  ) {
+    if (saleInvoiceAmount < paymentAmount) {
+      throw new ServiceError(ERRORS.INVOICE_AMOUNT_SMALLER_THAN_PAYMENT_AMOUNT);
+    }
   }
 
   /**
@@ -267,7 +284,7 @@ export default class SaleInvoicesService {
     saleInvoiceDTO: any,
     authorizedUser: ISystemUser
   ): Promise<ISaleInvoice> {
-    const { SaleInvoice } = this.tenancy.models(tenantId);
+    const { saleInvoiceRepository } = this.tenancy.repositories(tenantId);
 
     const oldSaleInvoice = await this.getInvoiceOrThrowError(
       tenantId,
@@ -309,12 +326,16 @@ export default class SaleInvoicesService {
       'SaleInvoice',
       saleInvoiceDTO.entries
     );
+    // Validate the invoice amount is not smaller than the invoice payment amount.
+    this.validateInvoiceAmountBiggerPaymentAmount(
+      saleInvoiceObj.balance,
+      oldSaleInvoice.paymentAmount
+    );
+
     this.logger.info('[sale_invoice] trying to update sale invoice.');
-    const saleInvoice: ISaleInvoice = await SaleInvoice.query().upsertGraphAndFetch(
-      {
-        id: saleInvoiceId,
-        ...saleInvoiceObj,
-      }
+    const saleInvoice: ISaleInvoice = await saleInvoiceRepository.update(
+      { ...omit(saleInvoiceObj, ['paymentAmount']) },
+      { id: saleInvoiceId }
     );
     // Triggers `onSaleInvoiceEdited` event.
     await this.eventDispatcher.dispatch(events.saleInvoice.onEdited, {
@@ -470,6 +491,7 @@ export default class SaleInvoicesService {
     await Promise.all([
       journal.deleteEntries(),
       journal.saveBalance(),
+      journal.saveContactsBalance(),
       journal.saveEntries(),
     ]);
   }

@@ -16,7 +16,6 @@ import {
   IPaymentReceiveEntryDTO,
   IPaymentReceivesFilter,
   ISaleInvoice,
-  ISystemService,
   ISystemUser,
   IPaymentReceivePageEntry,
 } from 'interfaces';
@@ -496,7 +495,7 @@ export default class PaymentReceiveService {
     paymentReceiveId: number,
     authorizedUser: ISystemUser
   ): Promise<{
-    paymentReceive: Omit<IPaymentReceive, "entries">;
+    paymentReceive: Omit<IPaymentReceive, 'entries'>;
     entries: IPaymentReceivePageEntry[];
   }> {
     const { PaymentReceive, SaleInvoice } = this.tenancy.models(tenantId);
@@ -665,7 +664,6 @@ export default class PaymentReceiveService {
     const creditReceivable = new JournalEntry({
       ...commonJournal,
       credit: paymentAmount,
-      contactType: 'Customer',
       contactId: paymentReceive.customerId,
       account: receivableAccount.id,
       index: 1,
@@ -683,6 +681,7 @@ export default class PaymentReceiveService {
       journal.deleteEntries(),
       journal.saveEntries(),
       journal.saveBalance(),
+      journal.saveContactsBalance(),
     ]);
   }
 
@@ -705,7 +704,11 @@ export default class PaymentReceiveService {
 
     await commands.revertJournalEntries(paymentReceiveId, 'PaymentReceive');
 
-    await Promise.all([journal.saveBalance(), journal.deleteEntries()]);
+    await Promise.all([
+      journal.saveBalance(),
+      journal.deleteEntries(),
+      journal.saveContactsBalance(),
+    ]);
   }
 
   /**
