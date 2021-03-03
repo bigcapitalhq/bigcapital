@@ -9,7 +9,7 @@ import { ServiceError } from 'exceptions';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 
 @Service()
-export default class SalesReceiptsController extends BaseController{
+export default class SalesReceiptsController extends BaseController {
   @Inject()
   saleReceiptService: SaleReceiptService;
 
@@ -24,36 +24,35 @@ export default class SalesReceiptsController extends BaseController{
 
     router.post(
       '/:id/close',
-      [
-        ...this.specificReceiptValidationSchema,
-      ],
+      [...this.specificReceiptValidationSchema],
       this.validationResult,
       asyncMiddleware(this.closeSaleReceipt.bind(this)),
-      this.handleServiceErrors,
-    )
+      this.handleServiceErrors
+    );
 
     router.post(
-      '/:id', [
+      '/:id',
+      [
         ...this.specificReceiptValidationSchema,
         ...this.salesReceiptsValidationSchema,
       ],
       this.validationResult,
       asyncMiddleware(this.editSaleReceipt.bind(this)),
-      this.handleServiceErrors,
+      this.handleServiceErrors
     );
     router.post(
       '/',
       this.salesReceiptsValidationSchema,
       this.validationResult,
       asyncMiddleware(this.newSaleReceipt.bind(this)),
-      this.handleServiceErrors,
+      this.handleServiceErrors
     );
     router.delete(
       '/:id',
       this.specificReceiptValidationSchema,
       this.validationResult,
       asyncMiddleware(this.deleteSaleReceipt.bind(this)),
-      this.handleServiceErrors,
+      this.handleServiceErrors
     );
     router.get(
       '/',
@@ -61,15 +60,14 @@ export default class SalesReceiptsController extends BaseController{
       this.validationResult,
       asyncMiddleware(this.getSalesReceipts.bind(this)),
       this.handleServiceErrors,
-      this.dynamicListService.handlerErrorsToResponse,
+      this.dynamicListService.handlerErrorsToResponse
     );
     router.get(
-      '/:id', [
-        ...this.specificReceiptValidationSchema,
-      ],
+      '/:id',
+      [...this.specificReceiptValidationSchema],
       this.validationResult,
       asyncMiddleware(this.getSaleReceipt.bind(this)),
-      this.handleServiceErrors,
+      this.handleServiceErrors
     );
     return router;
   }
@@ -94,8 +92,14 @@ export default class SalesReceiptsController extends BaseController{
       check('entries.*.item_id').exists().isNumeric().toInt(),
       check('entries.*.quantity').exists().isNumeric().toInt(),
       check('entries.*.rate').exists().isNumeric().toInt(),
-      check('entries.*.discount').optional({ nullable: true }).isNumeric().toInt(),
-      check('entries.*.description').optional({ nullable: true }).trim().escape(),
+      check('entries.*.discount')
+        .optional({ nullable: true })
+        .isNumeric()
+        .toInt(),
+      check('entries.*.description')
+        .optional({ nullable: true })
+        .trim()
+        .escape(),
 
       check('receipt_message').optional().trim().escape(),
       check('statement').optional().trim().escape(),
@@ -106,9 +110,7 @@ export default class SalesReceiptsController extends BaseController{
    * Specific sale receipt validation schema.
    */
   get specificReceiptValidationSchema() {
-    return [
-      param('id').exists().isNumeric().toInt()
-    ];
+    return [param('id').exists().isNumeric().toInt()];
   }
 
   /**
@@ -121,14 +123,14 @@ export default class SalesReceiptsController extends BaseController{
       query('column_sort_by').optional(),
       query('sort_order').optional().isIn(['desc', 'asc']),
       query('page').optional().isNumeric().toInt(),
-      query('page_size').optional().isNumeric().toInt(), 
+      query('page_size').optional().isNumeric().toInt(),
     ];
   }
 
   /**
    * Creates a new receipt.
-   * @param {Request} req 
-   * @param {Response} res 
+   * @param {Request} req
+   * @param {Response} res
    */
   async newSaleReceipt(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
@@ -136,11 +138,10 @@ export default class SalesReceiptsController extends BaseController{
 
     try {
       // Store the given sale receipt details with associated entries.
-      const storedSaleReceipt = await this.saleReceiptService
-        .createSaleReceipt(
-          tenantId,
-          saleReceiptDTO,
-        );
+      const storedSaleReceipt = await this.saleReceiptService.createSaleReceipt(
+        tenantId,
+        saleReceiptDTO
+      );
       return res.status(200).send({
         id: storedSaleReceipt.id,
         message: 'Sale receipt has been created successfully.',
@@ -152,8 +153,8 @@ export default class SalesReceiptsController extends BaseController{
 
   /**
    * Deletes the sale receipt with associated entries and journal transactions.
-   * @param {Request} req 
-   * @param {Response} res 
+   * @param {Request} req
+   * @param {Response} res
    */
   async deleteSaleReceipt(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
@@ -162,7 +163,7 @@ export default class SalesReceiptsController extends BaseController{
     try {
       // Deletes the sale receipt.
       await this.saleReceiptService.deleteSaleReceipt(tenantId, saleReceiptId);
-  
+
       return res.status(200).send({
         id: saleReceiptId,
         message: 'Sale receipt has been deleted successfully.',
@@ -175,8 +176,8 @@ export default class SalesReceiptsController extends BaseController{
   /**
    * Edit the sale receipt details with associated entries and re-write
    * journal transaction on the same date.
-   * @param {Request} req - 
-   * @param {Response} res - 
+   * @param {Request} req -
+   * @param {Response} res -
    */
   async editSaleReceipt(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
@@ -188,7 +189,7 @@ export default class SalesReceiptsController extends BaseController{
       await this.saleReceiptService.editSaleReceipt(
         tenantId,
         saleReceiptId,
-        saleReceipt,
+        saleReceipt
       );
       return res.status(200).send({
         id: saleReceiptId,
@@ -201,9 +202,9 @@ export default class SalesReceiptsController extends BaseController{
 
   /**
    * Marks the given the sale receipt as closed.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
   async closeSaleReceipt(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
@@ -211,10 +212,7 @@ export default class SalesReceiptsController extends BaseController{
 
     try {
       // Update the given sale receipt details.
-      await this.saleReceiptService.closeSaleReceipt(
-        tenantId,
-        saleReceiptId,
-      );
+      await this.saleReceiptService.closeSaleReceipt(tenantId, saleReceiptId);
       return res.status(200).send({
         id: saleReceiptId,
         message: 'Sale receipt has been closed successfully.',
@@ -226,7 +224,7 @@ export default class SalesReceiptsController extends BaseController{
 
   /**
    * Listing sales receipts.
-   * @param {Request} req 
+   * @param {Request} req
    * @param {Response} res
    */
   async getSalesReceipts(req: Request, res: Response, next: NextFunction) {
@@ -244,8 +242,11 @@ export default class SalesReceiptsController extends BaseController{
     }
 
     try {
-      const { salesReceipts, pagination, filterMeta } = await this.saleReceiptService
-        .salesReceiptsList(tenantId, filter);
+      const {
+        salesReceipts,
+        pagination,
+        filterMeta,
+      } = await this.saleReceiptService.salesReceiptsList(tenantId, filter);
 
       return res.status(200).send({
         sale_receipts: salesReceipts,
@@ -259,20 +260,23 @@ export default class SalesReceiptsController extends BaseController{
 
   /**
    * Retrieve the sale receipt with associated entries.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
-  async getSaleReceipt(req: Request, res: Response, next: NextFunction) { 
+  async getSaleReceipt(req: Request, res: Response, next: NextFunction) {
     const { id: saleReceiptId } = req.params;
     const { tenantId } = req;
 
     try {
-      const saleReceipt = await this.saleReceiptService.getSaleReceipt(tenantId, saleReceiptId);
+      const saleReceipt = await this.saleReceiptService.getSaleReceipt(
+        tenantId,
+        saleReceiptId
+      );
 
       return res.status(200).send({
         sale_receipt: saleReceipt,
-      })
+      });
     } catch (error) {
       next(error);
     }
@@ -280,41 +284,46 @@ export default class SalesReceiptsController extends BaseController{
 
   /**
    * Handles service errors.
-   * @param {Error} error 
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
+   * @param {Error} error
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
-  handleServiceErrors(error: Error, req: Request, res: Response, next: NextFunction) {
+  handleServiceErrors(
+    error: Error,
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     if (error instanceof ServiceError) {
       if (error.errorType === 'SALE_RECEIPT_NOT_FOUND') {
         return res.boom.badRequest(null, {
           errors: [{ type: 'SALE_RECEIPT_NOT_FOUND', code: 100 }],
-        })
+        });
       }
       if (error.errorType === 'DEPOSIT_ACCOUNT_NOT_FOUND') {
         return res.boom.badRequest(null, {
           errors: [{ type: 'DEPOSIT_ACCOUNT_NOT_FOUND', code: 200 }],
-        })
+        });
       }
       if (error.errorType === 'DEPOSIT_ACCOUNT_NOT_CURRENT_ASSET') {
         return res.boom.badRequest(null, {
           errors: [{ type: 'DEPOSIT_ACCOUNT_NOT_CURRENT_ASSET', code: 300 }],
-        })
+        });
       }
       if (error.errorType === 'ITEMS_NOT_FOUND') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'ITEMS_NOT_FOUND', code: 400, }],
+          errors: [{ type: 'ITEMS_NOT_FOUND', code: 400 }],
         });
       }
       if (error.errorType === 'ENTRIES_IDS_NOT_FOUND') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'ENTRIES_IDS_NOT_FOUND', code: 500, }],
+          errors: [{ type: 'ENTRIES_IDS_NOT_FOUND', code: 500 }],
         });
       }
       if (error.errorType === 'NOT_SELL_ABLE_ITEMS') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'NOT_SELL_ABLE_ITEMS', code: 600, }],
+          errors: [{ type: 'NOT_SELL_ABLE_ITEMS', code: 600 }],
         });
       }
       if (error.errorType === 'SALE.RECEIPT.NOT.FOUND') {
@@ -340,4 +349,4 @@ export default class SalesReceiptsController extends BaseController{
     }
     next(error);
   }
-};
+}
