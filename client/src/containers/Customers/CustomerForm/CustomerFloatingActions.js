@@ -25,7 +25,7 @@ export default function CustomerFloatingActions() {
   const history = useHistory();
 
   // Customer form context.
-  const { customerId, setSubmitPayload } = useCustomerFormContext();
+  const { isNewMode,setSubmitPayload } = useCustomerFormContext();
 
   // Formik context.
   const { resetForm, submitForm, isSubmitting } = useFormikContext();
@@ -61,7 +61,7 @@ export default function CustomerFloatingActions() {
           intent={Intent.PRIMARY}
           type="submit"
           onClick={handleSubmitBtnClick}
-          text={customerId ? <T id={'edit'} /> : <T id={'save'} />}
+          text={!isNewMode ? <T id={'edit'} /> : <T id={'save'} />}
         />
         <Popover
           content={
@@ -88,7 +88,7 @@ export default function CustomerFloatingActions() {
         className={'ml1'}
         disabled={isSubmitting}
         onClick={handleClearBtnClick}
-        text={customerId ? <T id={'reset'} /> : <T id={'clear'} />}
+        text={!isNewMode ? <T id={'reset'} /> : <T id={'clear'} />}
       />
       {/* ----------- Cancel  ----------- */}
       <Button

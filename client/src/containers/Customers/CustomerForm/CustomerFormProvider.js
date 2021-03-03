@@ -1,4 +1,5 @@
 import React, { useState, createContext } from 'react';
+import { useLocation } from 'react-router-dom';
 import DashboardInsider from 'components/Dashboard/DashboardInsider';
 import {
   useCustomers,
@@ -6,17 +7,30 @@ import {
   useCurrencies,
   useCreateCustomer,
   useEditCustomer,
+  useContact,
 } from 'hooks/query';
 
 const CustomerFormContext = createContext();
 
 function CustomerFormProvider({ customerId, ...props }) {
+  const { state } = useLocation();
+
+  const contactId = state?.action;
+
   // Handle fetch customer details.
   const { data: customer, isFetching: isCustomerLoading } = useCustomer(
     customerId,
     {
-        enabled: !!customerId,
-    }
+      enabled: !!customerId,
+    },
+  );
+
+  // Handle fetch contact duplicate details.
+  const { data: contactDuplicate, isFetching: isContactLoading } = useContact(
+    contactId,
+    {
+      enabled: !!contactId,
+    },
   );
 
   // Handle fetch customers data table
@@ -34,12 +48,17 @@ function CustomerFormProvider({ customerId, ...props }) {
   const { mutateAsync: editCustomerMutate } = useEditCustomer();
   const { mutateAsync: createCustomerMutate } = useCreateCustomer();
 
+  // determines whether the form new or duplicate mode.
+  const isNewMode = contactId || !customerId;
+
   const provider = {
     customerId,
     customer,
     customers,
     currencies,
+    contactDuplicate,
     submitPayload,
+    isNewMode,
 
     isCustomerLoading,
     isCustomersLoading,
@@ -47,12 +66,17 @@ function CustomerFormProvider({ customerId, ...props }) {
 
     setSubmitPayload,
     editCustomerMutate,
-    createCustomerMutate
+    createCustomerMutate,
   };
 
   return (
     <DashboardInsider
-      loading={isCustomerLoading || isCustomerLoading || isCurrenciesLoading}
+      loading={
+        isCustomerLoading ||
+        isCustomerLoading ||
+        isCurrenciesLoading ||
+        isContactLoading
+      }
       name={'customer-form'}
     >
       <CustomerFormContext.Provider value={provider} {...props} />
