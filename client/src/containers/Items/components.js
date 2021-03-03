@@ -79,10 +79,10 @@ export function ItemsActionMenuList({
     onActivateItem,
     onMakeAdjustment,
     onDeleteItem,
+    onDuplicate,
   },
 }) {
   const { formatMessage } = useIntl();
-
   return (
     <Menu>
       <MenuItem
@@ -94,6 +94,11 @@ export function ItemsActionMenuList({
         icon={<Icon icon="pen-18" />}
         text={formatMessage({ id: 'edit_item' })}
         onClick={safeCallback(onEditItem, original)}
+      />
+      <MenuItem
+        icon={<Icon icon="duplicate-18" />}
+        text={formatMessage({ id: 'duplicate' })}
+        onClick={safeCallback(onDuplicate, original)}
       />
       <If condition={original.active}>
         <MenuItem
@@ -153,7 +158,7 @@ export const useItemsTableColumns = () => {
         width: 180,
       },
       {
-        id:'code',
+        id: 'code',
         Header: formatMessage({ id: 'item_code' }),
         accessor: 'code',
         className: 'code',
@@ -174,7 +179,7 @@ export const useItemsTableColumns = () => {
         width: 150,
       },
       {
-        id:'sell_price',
+        id: 'sell_price',
         Header: formatMessage({ id: 'sell_price' }),
         Cell: SellPriceCell,
         accessor: 'sell_price',
@@ -182,7 +187,7 @@ export const useItemsTableColumns = () => {
         width: 150,
       },
       {
-        id:'cost_price',
+        id: 'cost_price',
         Header: formatMessage({ id: 'cost_price' }),
         Cell: CostPriceCell,
         accessor: 'cost_price',
@@ -190,7 +195,7 @@ export const useItemsTableColumns = () => {
         width: 150,
       },
       {
-        id:'quantity_on_hand',
+        id: 'quantity_on_hand',
         Header: formatMessage({ id: 'quantity_on_hand' }),
         accessor: 'quantity_on_hand',
         Cell: QuantityOnHandCell,

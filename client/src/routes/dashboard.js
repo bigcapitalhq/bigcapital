@@ -72,6 +72,13 @@ export default [
     backLink: true,
   },
   {
+    path: `/items/new?duplicate=/:id`,
+    component: lazy({
+      loader: () => import('containers/Items/ItemFormPage'),
+    }),
+    breadcrumb: 'Duplicate Item',
+  },
+  {
     path: `/items/new`,
     component: lazy(() => import('containers/Items/ItemFormPage')),
     name: 'item-new',
