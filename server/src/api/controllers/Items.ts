@@ -216,36 +216,9 @@ export default class ItemsController extends BaseController {
 
       query('stringified_filter_roles').optional().isJSON(),
       query('limit').optional().isNumeric().toInt(),
+
+      query('keyword').optional().isString().trim().escape(),
     ];
-  }
-
-  /**
-   * Auto-complete list.
-   * @param {Request} req
-   * @param {Response} res
-   * @param {NextFunction} next
-   */
-  async autocompleteList(req: Request, res: Response, next: NextFunction) {
-    const { tenantId } = req;
-    const filter = {
-      filterRoles: [],
-      sortOrder: 'asc',
-      columnSortBy: 'created_at',
-      limit: 10,
-      ...this.matchedQueryData(req),
-    };
-
-    try {
-      const items = await this.itemsService.autocompleteItems(
-        tenantId,
-        filter
-      );
-      return res.status(200).send({
-        items,
-      });
-    } catch (error) {
-      next(error);
-    }
   }
 
   /**
@@ -404,6 +377,38 @@ export default class ItemsController extends BaseController {
         items,
         pagination: this.transfromToResponse(pagination),
         filter_meta: this.transfromToResponse(filterMeta),
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Auto-complete list.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   */
+  async autocompleteList(req: Request, res: Response, next: NextFunction) {
+    const { tenantId } = req;
+    const filter = {
+      filterRoles: [],
+      sortOrder: 'asc',
+      columnSortBy: 'name',
+      limit: 10,
+      keyword: '',
+      ...this.matchedQueryData(req),
+    };
+    if (filter.stringifiedFilterRoles) {
+      filter.filterRoles = JSON.parse(filter.stringifiedFilterRoles);
+    }
+    try {
+      const items = await this.itemsService.autocompleteItems(
+        tenantId,
+        filter
+      );
+      return res.status(200).send({
+        items,
       });
     } catch (error) {
       next(error);

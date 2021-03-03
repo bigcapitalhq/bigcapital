@@ -97,6 +97,12 @@ export default class Contact extends TenantModel {
 
   static get fields() {
     return {
+      contact_service: {
+        column: 'contact_service',
+      },
+      display_name: {
+        column: 'display_name',
+      },
       created_at: {
         column: 'created_at',
       }

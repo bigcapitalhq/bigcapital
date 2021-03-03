@@ -1,7 +1,5 @@
 
-// Contact Interfaces.
-
-import { IDynamicListFilter } from "./DynamicFilter";
+import { IFilterRole } from "./DynamicFilter";
 
 // ----------------------------------
 export interface IContactAddress {
@@ -208,6 +206,9 @@ export interface ICustomersFilter extends IDynamicListFilter {
 export interface IContactsAutoCompleteFilter {
   limit: number,
   keyword: string,
+  filterRoles?: IFilterRole[];
+  columnSortBy: string;
+  sortOrder: string;
 }
 
 export interface IContactAutoCompleteItem {

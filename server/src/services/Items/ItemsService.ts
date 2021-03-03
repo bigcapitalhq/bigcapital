@@ -523,13 +523,13 @@ export default class ItemsService implements IItemsService {
 
       dynamicFilter.buildQuery()(builder);
       builder.limit(itemsFilter.limit);
-    });
 
-    // const autocompleteItems = this.transformAutoCompleteItems(items);
+      if (itemsFilter.keyword) {
+        builder.where('name', 'LIKE', `%${itemsFilter.keyword}%`);
+      }
+    });
     return items;
   }
-
-  // transformAutoCompleteItems(item)
 
   /**
    * Validates the given item or items have no associated invoices or bills.
