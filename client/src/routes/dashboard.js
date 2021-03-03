@@ -300,6 +300,17 @@ export default [
     sidebarShrink: true,
   },
   {
+    path: `/invoices/new?from_estimate_id=/:id`,
+    component: lazy(() =>
+      import('containers/Sales/Estimates/EstimateForm/EstimateFormPage'),
+    ),
+    name: 'convert-to-invoice',
+    breadcrumb: 'New Estimate',
+    pageTitle: formatMessage({ id: 'new_estimate' }),
+    backLink: true,
+    sidebarShrink: true,
+  },
+  {
     path: `/estimates/new`,
     component: lazy(() =>
       import('containers/Sales/Estimates/EstimateForm/EstimateFormPage'),

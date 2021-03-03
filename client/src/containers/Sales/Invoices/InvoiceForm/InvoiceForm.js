@@ -22,10 +22,9 @@ import withMediaActions from 'containers/Media/withMediaActions';
 import withSettings from 'containers/Settings/withSettings';
 
 import { AppToaster } from 'components';
-import { ERROR } from 'common/errors';
 import { compose, orderingLinesIndexes, transactionNumber } from 'utils';
 import { useInvoiceFormContext } from './InvoiceFormProvider';
-import { transformToEditForm, defaultInvoice } from './utils';
+import { transformToEditForm, defaultInvoice, transformErrors } from './utils';
 
 /**
  * Invoice form.
@@ -42,6 +41,8 @@ function InvoiceForm({
   const {
     isNewMode,
     invoice,
+    estimateId,
+    newInvoice,
     createInvoiceMutate,
     editInvoiceMutate,
     submitPayload,
@@ -62,19 +63,11 @@ function InvoiceForm({
             ...defaultInvoice,
             invoice_no: invoiceNumber,
             entries: orderingLinesIndexes(defaultInvoice.entries),
+            ...newInvoice,
           }),
     }),
-    [invoice, invoiceNumber],
+    [invoice, newInvoice,invoiceNumber],
   );
-
-  // Handle form errors.
-  const handleErrors = (errors, { setErrors }) => {
-    if (errors.some((e) => e.type === ERROR.SALE_INVOICE_NUMBER_IS_EXISTS)) {
-      setErrors({
-        invoice_no: formatMessage({ id: 'sale_invoice_number_is_exists' }),
-      });
-    }
-  };
 
   // Handles form submit.
   const handleSubmit = (values, { setSubmitting, setErrors, resetForm }) => {
@@ -97,6 +90,7 @@ function InvoiceForm({
     const form = {
       ...values,
       delivered: submitPayload.deliver,
+      from_estimate_id: estimateId,
       entries: entries.map((entry) => ({ ...omit(entry, ['total']) })),
     };
     // Handle the request success.
@@ -129,7 +123,7 @@ function InvoiceForm({
       },
     }) => {
       if (errors) {
-        handleErrors(errors, { setErrors });
+        transformErrors(errors, { setErrors });
       }
       setSubmitting(false);
     };
