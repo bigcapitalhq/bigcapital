@@ -133,7 +133,7 @@ export default class SaleReceipt extends TenantModel {
       },
       deposit_account: {
         column: 'deposit_account_id',
-        lable: 'Deposit account',
+        label: 'Deposit account',
         relation: "accounts.id",
         optionsResource: "account",
       },

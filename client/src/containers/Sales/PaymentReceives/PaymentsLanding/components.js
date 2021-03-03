@@ -93,7 +93,7 @@ export function usePaymentReceivesColumns() {
         className: 'payment_date',
       },
       {
-        id: 'customer_id',
+        id: 'customer',
         Header: formatMessage({ id: 'customer_name' }),
         accessor: 'customer.display_name',
         width: 160,
@@ -122,7 +122,7 @@ export function usePaymentReceivesColumns() {
         className: 'reference_no',
       },
       {
-        id: 'deposit_account_id',
+        id: 'deposit_account',
         Header: formatMessage({ id: 'deposit_account' }),
         accessor: 'deposit_account.name',
         width: 140,

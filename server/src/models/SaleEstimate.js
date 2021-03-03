@@ -172,6 +172,12 @@ export default class SaleEstimate extends TenantModel {
         columnType: 'number',
         fieldType: 'number',
       },
+      estimate_number: {
+        label: 'Estimate number',
+        column: 'estimate_number',
+        columnType: 'text',
+        fieldType: 'text',
+      },
       customer: {
         label: 'Customer',
         column: 'customer_id',
@@ -194,6 +200,12 @@ export default class SaleEstimate extends TenantModel {
         column: 'expiration_date',
         columnType: 'date',
         fieldType: 'date',
+      },
+      reference_no: {
+        label: "Reference No.",
+        column: "reference_no",
+        columnType: "number",
+        fieldType: "number",
       },
       note: {
         label: 'Note',

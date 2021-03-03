@@ -158,7 +158,7 @@ export const useInventoryAdjustmentsColumns = () => {
         width: 100,
       },
       {
-        id: 'publish',
+        id: 'published_at',
         Header: formatMessage({ id: 'status' }),
         accessor: PublishAccessor,
         width: 95,

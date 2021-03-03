@@ -153,7 +153,7 @@ export function useEstiamtesTableColumns() {
         className: 'estimate_date',
       },
       {
-        id: 'customer_id',
+        id: 'customer',
         Header: formatMessage({ id: 'customer_name' }),
         accessor: 'customer.display_name',
         width: 140,
@@ -190,11 +190,11 @@ export function useEstiamtesTableColumns() {
         className: 'status',
       },
       {
-        id: 'reference',
+        id: 'reference_no',
         Header: formatMessage({ id: 'reference_no' }),
-        accessor: 'reference',
-        width: 140,
-        className: 'reference',
+        accessor: 'reference_no',
+        width: 90,
+        className: 'reference_no',
       },
       {
         id: 'actions',

@@ -1,19 +1,19 @@
-import { Model } from 'objection';
-import TenantModel from 'models/TenantModel';
+import { Model } from "objection";
+import TenantModel from "models/TenantModel";
 
 export default class BillPayment extends TenantModel {
   /**
    * Table name
    */
   static get tableName() {
-    return 'bills_payments';
+    return "bills_payments";
   }
 
   /**
    * Timestamps columns.
    */
   get timestamps() {
-    return ['createdAt', 'updatedAt'];
+    return ["createdAt", "updatedAt"];
   }
 
   static get resourceable() {
@@ -24,18 +24,18 @@ export default class BillPayment extends TenantModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const BillPaymentEntry = require('models/BillPaymentEntry');
-    const AccountTransaction = require('models/AccountTransaction');
-    const Contact = require('models/Contact');
-    const Account = require('models/Account');
+    const BillPaymentEntry = require("models/BillPaymentEntry");
+    const AccountTransaction = require("models/AccountTransaction");
+    const Contact = require("models/Contact");
+    const Account = require("models/Account");
 
     return {
       entries: {
         relation: Model.HasManyRelation,
         modelClass: BillPaymentEntry.default,
         join: {
-          from: 'bills_payments.id',
-          to: 'bills_payments_entries.billPaymentId',
+          from: "bills_payments.id",
+          to: "bills_payments_entries.billPaymentId",
         },
       },
 
@@ -43,20 +43,20 @@ export default class BillPayment extends TenantModel {
         relation: Model.BelongsToOneRelation,
         modelClass: Contact.default,
         join: {
-          from: 'bills_payments.vendorId',
-          to: 'contacts.id',
+          from: "bills_payments.vendorId",
+          to: "contacts.id",
         },
         filter(query) {
-          query.where('contact_service', 'vendor');
-        }
+          query.where("contact_service", "vendor");
+        },
       },
 
       paymentAccount: {
         relation: Model.BelongsToOneRelation,
         modelClass: Account.default,
         join: {
-          from: 'bills_payments.paymentAccountId',
-          to: 'accounts.id',
+          from: "bills_payments.paymentAccountId",
+          to: "accounts.id",
         },
       },
 
@@ -64,11 +64,11 @@ export default class BillPayment extends TenantModel {
         relation: Model.HasManyRelation,
         modelClass: AccountTransaction.default,
         join: {
-          from: 'bills_payments.id',
-          to: 'accounts_transactions.referenceId'
+          from: "bills_payments.id",
+          to: "accounts_transactions.referenceId",
         },
         filter(builder) {
-          builder.where('reference_type', 'BillPayment');
+          builder.where("reference_type", "BillPayment");
         },
       },
     };
@@ -80,16 +80,22 @@ export default class BillPayment extends TenantModel {
   static get fields() {
     return {
       vendor: {
-        lable: "Vendor name",
-        column: 'vendor_id',
-        relation: 'contacts.id',
-        relationColumn: 'contacts.display_name',
+        label: "Vendor name",
+        column: "vendor_id",
+        relation: "contacts.id",
+        relationColumn: "contacts.display_name",
       },
       amount: {
         label: "Amount",
         column: "amount",
-        columnType: 'number',
-        fieldType: 'number',
+        columnType: "number",
+        fieldType: "number",
+      },
+      due_amount: {
+        label: "Due amount",
+        column: "due_amount",
+        columnType: "number",
+        fieldType: "number",
       },
       payment_account: {
         label: "Payment account",
@@ -97,40 +103,40 @@ export default class BillPayment extends TenantModel {
         relation: "accounts.id",
         relationColumn: "accounts.name",
 
-        fieldType: 'options',
-        optionsResource: 'Account',
-        optionsKey: 'id',
-        optionsLabel: 'name',
+        fieldType: "options",
+        optionsResource: "Account",
+        optionsKey: "id",
+        optionsLabel: "name",
       },
       payment_number: {
         label: "Payment number",
         column: "payment_number",
-        columnType: 'string',
-        fieldType: 'text',
+        columnType: "string",
+        fieldType: "text",
       },
       payment_date: {
         label: "Payment date",
         column: "payment_date",
-        columnType: 'date',
-        fieldType: 'date',
+        columnType: "date",
+        fieldType: "date",
       },
       reference_no: {
         label: "Reference No.",
         column: "reference",
-        columnType: 'string',
-        fieldType: 'text',
+        columnType: "string",
+        fieldType: "text",
       },
       description: {
         label: "Description",
         column: "description",
-        columnType: 'string',
-        fieldType: 'text',
+        columnType: "string",
+        fieldType: "text",
       },
       created_at: {
-        label: 'Created at',
-        column: 'created_at',
-        columnType: 'date',
+        label: "Created at",
+        column: "created_at",
+        columnType: "date",
       },
-    }
+    };
   }
 }
