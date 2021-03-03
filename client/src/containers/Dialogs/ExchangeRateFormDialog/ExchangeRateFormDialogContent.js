@@ -3,9 +3,6 @@ import React from 'react';
 import ExchangeRateForm from './ExchangeRateForm';
 import { ExchangeRateFormProvider } from './ExchangeRateFormProvider';
 
-import withExchangeRateDetail from 'containers/ExchangeRates/withExchangeRateDetail';
-import { compose } from 'utils';
-
 import 'style/pages/ExchangeRate/ExchangeRateDialog.scss';
 
 /**
