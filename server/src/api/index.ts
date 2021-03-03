@@ -27,6 +27,7 @@ import FinancialStatements from 'api/controllers/FinancialStatements';
 import Expenses from 'api/controllers/Expenses';
 import Settings from 'api/controllers/Settings';
 import Currencies from 'api/controllers/Currencies';
+import Contacts from 'api/controllers/Contacts/Contacts';
 import Customers from 'api/controllers/Contacts/Customers';
 import Vendors from 'api/controllers/Contacts/Vendors';
 import Sales from 'api/controllers/Sales'
@@ -93,6 +94,7 @@ export default () => {
   dashboard.use('/item_categories', Container.get(ItemCategories).router());
   dashboard.use('/expenses', Container.get(Expenses).router());
   dashboard.use('/financial_statements', Container.get(FinancialStatements).router());
+  dashboard.use('/contacts', Container.get(Contacts).router());
   dashboard.use('/customers', Container.get(Customers).router());
   dashboard.use('/vendors', Container.get(Vendors).router());
   dashboard.use('/sales', Container.get(Sales).router());

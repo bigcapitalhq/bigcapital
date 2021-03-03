@@ -1,8 +1,100 @@
 import { check, param, query, body, ValidationChain } from 'express-validator';
+import { Router, Request, Response, NextFunction } from 'express';
+import { Inject } from 'typedi';
 import BaseController from 'api/controllers/BaseController';
+import ContactsService from 'services/Contacts/ContactsService';
 import { DATATYPES_LENGTH } from 'data/DataTypes';
+import { Service } from 'typedi';
 
+@Service()
 export default class ContactsController extends BaseController {
+  @Inject()
+  contactsService: ContactsService;
+
+  /**
+   * Express router.
+   */
+  router() {
+    const router = Router();
+
+    router.get(
+      '/:id',
+      [param('id').exists().isNumeric().toInt()],
+      this.validationResult,
+      this.asyncMiddleware(this.getContact.bind(this))
+    );
+    router.get(
+      '/auto-complete',
+      [...this.autocompleteQuerySchema],
+      this.validationResult,
+      this.asyncMiddleware(this.autocompleteContacts.bind(this))
+    );
+    return router;
+  }
+
+  /**
+   * Auto-complete list query validation schema.
+   */
+  get autocompleteQuerySchema() {
+    return [
+      query('column_sort_by').optional().trim().escape(),
+      query('sort_order').optional().isIn(['desc', 'asc']),
+
+      query('stringified_filter_roles').optional().isJSON(),
+      query('limit').optional().isNumeric().toInt(),
+    ];
+  }
+
+  /**
+   * Retrieve details of the given contact.
+   * @param {Request} req - 
+   * @param {Response} res -
+   * @param {NextFunction} next -
+   */
+  async getContact(req: Request, res: Response, next: NextFunction) {
+    const { tenantId } = req;
+    const { id: contactId } = req.params;
+
+    try {
+      const contact = await this.contactsService.getContact(
+        tenantId,
+        contactId,
+      );
+      return res.status(200).send({
+        customer: this.transfromToResponse(contact),
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Retrieve auto-complete contacts list.
+   * @param {Request} req - Request object.
+   * @param {Response} res - Response object.
+   * @param {NextFunction} next
+   */
+  async autocompleteContacts(req: Request, res: Response, next: NextFunction) {
+    const { tenantId } = req;
+    const filter = {
+      filterRoles: [],
+      sortOrder: 'asc',
+      columnSortBy: 'created_at',
+      limit: 10,
+      ...this.matchedQueryData(req),
+    };
+
+    try {
+      const contacts = await this.contactsService.autocompleteContacts(
+        tenantId,
+        filter
+      );
+      return res.status(200).send({ contacts });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   /**
    * @returns {ValidationChain[]}
    */

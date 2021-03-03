@@ -66,6 +66,11 @@ export default class ItemsController extends BaseController {
       this.handlerServiceErrors
     );
     router.get(
+      '/auto-complete',
+      this.autocompleteQuerySchema,
+      this.asyncMiddleware(this.autocompleteList.bind(this)),
+    );
+    router.get(
       '/:id',
       [...this.validateSpecificItemSchema],
       this.validationResult,
@@ -202,6 +207,48 @@ export default class ItemsController extends BaseController {
   }
 
   /**
+   * Validate autocomplete list query schema.
+   */
+  get autocompleteQuerySchema() {
+    return [
+      query('column_sort_by').optional().trim().escape(),
+      query('sort_order').optional().isIn(['desc', 'asc']),
+
+      query('stringified_filter_roles').optional().isJSON(),
+      query('limit').optional().isNumeric().toInt(),
+    ];
+  }
+
+  /**
+   * Auto-complete list.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   */
+  async autocompleteList(req: Request, res: Response, next: NextFunction) {
+    const { tenantId } = req;
+    const filter = {
+      filterRoles: [],
+      sortOrder: 'asc',
+      columnSortBy: 'created_at',
+      limit: 10,
+      ...this.matchedQueryData(req),
+    };
+
+    try {
+      const items = await this.itemsService.autocompleteItems(
+        tenantId,
+        filter
+      );
+      return res.status(200).send({
+        items,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
    * Stores the given item details to the storage.
    * @param {Request} req
    * @param {Response} res
@@ -237,7 +284,7 @@ export default class ItemsController extends BaseController {
 
       return res.status(200).send({
         id: itemId,
-        message: 'The item has been edited successfully.'
+        message: 'The item has been edited successfully.',
       });
     } catch (error) {
       next(error);
@@ -302,7 +349,7 @@ export default class ItemsController extends BaseController {
 
       return res.status(200).send({
         id: itemId,
-        message: 'The item has been deleted successfully.'
+        message: 'The item has been deleted successfully.',
       });
     } catch (error) {
       next(error);
@@ -481,7 +528,9 @@ export default class ItemsController extends BaseController {
       }
       if (error.errorType === 'ITEM_HAS_ASSOCIATED_INVENTORY_ADJUSTMENT') {
         return res.status(400).send({
-          errors: [{ type: 'ITEM_HAS_ASSOCIATED_INVENTORY_ADJUSTMENT', code: 330 }],
+          errors: [
+            { type: 'ITEM_HAS_ASSOCIATED_INVENTORY_ADJUSTMENT', code: 330 },
+          ],
         });
       }
     }

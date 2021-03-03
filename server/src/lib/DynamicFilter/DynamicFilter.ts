@@ -1,7 +1,5 @@
 import { forEach, uniqBy } from 'lodash';
-import {
-  buildFilterRolesJoins,
-} from 'lib/ViewRolesBuilder';
+import { buildFilterRolesJoins } from 'lib/ViewRolesBuilder';
 import { IModel } from 'interfaces';
 
 export default class DynamicFilter {
@@ -20,7 +18,7 @@ export default class DynamicFilter {
 
   /**
    * Set filter.
-   * @param {*} filterRole -
+   * @param {*} filterRole - Filter role.
    */
   setFilter(filterRole) {
     filterRole.setModel(this.model);
@@ -36,14 +34,22 @@ export default class DynamicFilter {
 
     this.filters.forEach((filter) => {
       const { filterRoles } = filter;
+
       buildersCallbacks.push(filter.buildQuery());
-      tableColumns.push(...(Array.isArray(filterRoles)) ? filterRoles : [filterRoles]);
+      tableColumns.push(
+        ...(Array.isArray(filterRoles) ? filterRoles : [filterRoles])
+      );
     });
+
     return (builder) => {
       buildersCallbacks.forEach((builderCallback) => {
         builderCallback(builder);
       });
-      buildFilterRolesJoins(this.model, uniqBy(tableColumns, 'columnKey'))(builder);
+
+      buildFilterRolesJoins(
+        this.model,
+        uniqBy(tableColumns, 'columnKey')
+      )(builder);
     };
   }
 

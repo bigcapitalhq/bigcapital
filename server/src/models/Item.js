@@ -140,16 +140,19 @@ export default class Item extends TenantModel {
         label: 'Cost account',
         column: 'cost_account_id',
         relation: 'accounts.id',
+        relationColumn: 'accounts.name',
       },
       sell_account: {
         label: 'Sell account',
         column: 'sell_account_id',
         relation: 'accounts.id',
+        relationColumn: 'accounts.name',
       },
       inventory_account: {
         label: "Inventory account",
         column: 'inventory_account_id',
         relation: 'accounts.id',
+        relationColumn: 'accounts.name',
       },
       sell_description: {
         label: "Sell description",
@@ -170,18 +173,21 @@ export default class Item extends TenantModel {
       category: {
         label: "Category",
         column: 'category_id',
-        relation: 'categories.id',
+        relation: 'items_categories.id',
+        relationColumn: 'items_categories.name',
       },
-      user: {
-        label: 'User',
-        column: 'user_id',
-        relation: 'users.id',
-        relationColumn: 'users.id',
-      },
+      // user: {
+      //   label: 'User',
+      //   column: 'user_id',
+      //   relation: 'users.id',
+      //   relationColumn: 'users.',
+      // },
       created_at: {
         label: 'Created at',
         column: 'created_at',
-      }
+        columnType: 'date',
+        fieldType: 'date',
+      },
     };
   }
 }

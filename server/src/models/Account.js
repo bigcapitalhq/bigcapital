@@ -215,19 +215,11 @@ export default class Account extends TenantModel {
         label: 'Account name',
         column: 'name',
         columnType: 'string',
-        
         fieldType: 'text',
       },
       type: {
         label: 'Account type',
-        column: 'account_type_id',
-        relation: 'account_types.id',
-        relationColumn: 'account_types.key',
-
-        fieldType: 'options',
-        optionsResource: 'AccountType',
-        optionsKey: 'key',
-        optionsLabel: 'label',
+        column: 'account_type',
       },
       description: {
         label: 'Description',

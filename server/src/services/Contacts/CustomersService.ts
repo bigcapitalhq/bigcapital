@@ -173,7 +173,6 @@ export default class CustomersService {
       tenantId,
       customerId,
     });
-
     // Retrieve the customer of throw not found service error.
     await this.getCustomerByIdOrThrowError(tenantId, customerId);
 
@@ -375,7 +374,6 @@ export default class CustomersService {
     const salesInvoice = await saleInvoiceRepository.find({
       customer_id: customerId,
     });
-
     if (salesInvoice.length > 0) {
       throw new ServiceError('customer_has_invoices');
     }

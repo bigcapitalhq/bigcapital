@@ -3,6 +3,7 @@ import moment from 'moment';
 import TenantModel from 'models/TenantModel';
 import { defaultToTransform } from 'utils';
 import { QueryBuilder } from 'knex';
+import { query } from 'winston';
 
 export default class SaleInvoice extends TenantModel {
   /**
@@ -198,6 +199,18 @@ export default class SaleInvoice extends TenantModel {
        */
       fromDate(query, fromDate) {
         query.where('invoice_date', '<=', fromDate)
+      },
+      /**
+       * Sort the sale invoices by full-payment invoices.
+       */
+      sortByStatus(query, order) {
+        query.orderByRaw(`PAYMENT_AMOUNT = BALANCE ${order}`);
+      },
+      /**
+       * Sort the sale invoices by the due amount.
+       */
+      sortByDueAmount(query, order) {
+        query.orderByRaw(`BALANCE - PAYMENT_AMOUNT ${order}`)
       }
     };
   }
@@ -293,6 +306,9 @@ export default class SaleInvoice extends TenantModel {
       customer: {
         label: 'Customer',
         column: 'customer_id',
+        relation: 'contacts.id',
+        relationColumn: 'contacts.displayName',
+
         fieldType: 'options',
         optionsResource: 'customers',
         optionsKey: 'id',
@@ -351,6 +367,9 @@ export default class SaleInvoice extends TenantModel {
         column: 'due_amount',
         columnType: 'number',
         fieldType: 'number',
+        sortQuery(query, role) {
+          query.modify('sortByDueAmount', role.order);
+        }
       },
       created_at: {
         label: 'Created at',
@@ -389,6 +408,9 @@ export default class SaleInvoice extends TenantModel {
               break;
           }
         },
+        sortQuery(query, role) {
+          query.modify('sortByStatus', role.order);
+        }
       }
     };
   }

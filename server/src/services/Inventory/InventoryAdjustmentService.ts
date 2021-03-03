@@ -17,6 +17,7 @@ import {
 import events from 'subscribers/events';
 import AccountsService from 'services/Accounts/AccountsService';
 import ItemsService from 'services/Items/ItemsService';
+import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import HasTenancyService from 'services/Tenancy/TenancyService';
 import InventoryService from './Inventory';
 
@@ -44,6 +45,9 @@ export default class InventoryAdjustmentService {
 
   @Inject()
   inventoryService: InventoryService;
+
+  @Inject()
+  dynamicListService: DynamicListingService;
 
   /**
    * Transformes the quick inventory adjustment DTO to model object.
@@ -208,7 +212,7 @@ export default class InventoryAdjustmentService {
     await this.eventDispatcher.dispatch(events.inventoryAdjustment.onDeleted, {
       tenantId,
       inventoryAdjustmentId,
-      oldInventoryAdjustment
+      oldInventoryAdjustment,
     });
     this.logger.info(
       '[inventory_adjustment] the adjustment deleted successfully.',
@@ -275,9 +279,18 @@ export default class InventoryAdjustmentService {
   }> {
     const { InventoryAdjustment } = this.tenancy.models(tenantId);
 
+    const dynamicFilter = await this.dynamicListService.dynamicList(
+      tenantId,
+      InventoryAdjustment,
+      adjustmentsFilter
+    );
     const { results, pagination } = await InventoryAdjustment.query()
-      .withGraphFetched('entries.item')
-      .withGraphFetched('adjustmentAccount')
+      .onBuild((query) => {
+        query.withGraphFetched('entries.item');
+        query.withGraphFetched('adjustmentAccount');
+
+        dynamicFilter.buildQuery()(query);
+      })
       .pagination(adjustmentsFilter.page - 1, adjustmentsFilter.pageSize);
 
     return {

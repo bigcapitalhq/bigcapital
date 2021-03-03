@@ -79,4 +79,54 @@ export default class InventoryAdjustment extends TenantModel {
       },
     };
   }
+
+  /**
+   * Model defined fields.
+   */
+  static get fields() {
+    return {
+      date: {
+        label: 'Date',
+        column: 'date',
+        columnType: 'date',
+      },
+      type: {
+        label: 'Adjustment type',
+        column: 'type',
+        options: [
+          { key: 'increment', label: 'Increment', },
+          { key: 'decrement', label: 'Decrement' },
+        ],
+      },
+      adjustment_account: {
+        column: 'adjustment_account_id',
+      },
+      reason: {
+        label: 'Reason',
+        column: 'reason',
+      },
+      reference_no: {
+        label: 'Reference No.',
+        column: 'reference_no',
+      },
+      description: {
+        label: 'Description',
+        column: 'description',
+      },
+      user: {
+        label: 'User',
+        column: 'user_id',
+      },
+      published_at: {
+        label: 'Published at',
+        column: 'published_at'
+      },
+      created_at: {
+        label: 'Created at',
+        column: 'created_at',
+        columnType: 'date',
+        fieldType: 'date',
+      },
+    };
+  }
 }

@@ -165,12 +165,6 @@ export default class Expense extends TenantModel {
         label: "Published",
         column: "published",
       },
-      user: {
-        label: "User",
-        column: "user_id",
-        relation: "users.id",
-        relationColumn: "users.id",
-      },
       created_at: {
         label: "Created at",
         column: "created_at",

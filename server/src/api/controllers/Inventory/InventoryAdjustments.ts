@@ -4,11 +4,15 @@ import { check, query, param } from 'express-validator';
 import { ServiceError } from 'exceptions';
 import BaseController from '../BaseController';
 import InventoryAdjustmentService from 'services/Inventory/InventoryAdjustmentService';
+import DynamicListingService from 'services/DynamicListing/DynamicListService';
 
 @Service()
 export default class InventoryAdjustmentsController extends BaseController {
   @Inject()
   inventoryAdjustmentService: InventoryAdjustmentService;
+
+  @Inject()
+  dynamicListService: DynamicListingService;
 
   /**
    * Router constructor.
@@ -42,6 +46,7 @@ export default class InventoryAdjustmentsController extends BaseController {
       [...this.validateListQuerySchema],
       this.validationResult,
       this.asyncMiddleware(this.getInventoryAdjustments.bind(this)),
+      this.dynamicListService.handlerErrorsToResponse,
       this.handleServiceErrors
     );
     return router;
@@ -191,6 +196,9 @@ export default class InventoryAdjustmentsController extends BaseController {
     const filter = {
       page: 1,
       pageSize: 12,
+      columnSortBy: 'created_at',
+      sortOrder: 'desc',
+      filterRoles: [],
       ...this.matchedQueryData(req),
     };
 

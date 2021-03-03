@@ -170,7 +170,10 @@ export default class AccountsController extends BaseController {
         accountDTO
       );
 
-      return res.status(200).send({ id: account.id });
+      return res.status(200).send({
+        id: account.id,
+        message: 'The account has been created successfully.',
+      });
     } catch (error) {
       next(error);
     }
@@ -258,7 +261,11 @@ export default class AccountsController extends BaseController {
 
     try {
       await this.accountsService.activateAccount(tenantId, accountId, true);
-      return res.status(200).send({ id: accountId });
+
+      return res.status(200).send({
+        id: accountId,
+        message: 'The account has been activated successfully.'
+      });
     } catch (error) {
       next(error);
     }
@@ -276,7 +283,11 @@ export default class AccountsController extends BaseController {
 
     try {
       await this.accountsService.activateAccount(tenantId, accountId, false);
-      return res.status(200).send({ id: accountId });
+
+      return res.status(200).send({
+        id: accountId,
+        message: 'The account has been inactivated successfully.',
+      });
     } catch (error) {
       next(error);
     }

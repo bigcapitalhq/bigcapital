@@ -77,3 +77,9 @@ export interface IItemsFilter extends IDynamicListFilter {
   page: number,
   pageSize: number,
 };
+
+export interface IItemsAutoCompleteFilter {
+  limit: number,
+  keyword: string,
+  
+}

@@ -205,3 +205,12 @@ export interface ICustomersFilter extends IDynamicListFilter {
   pageSize?: number,
 };
 
+export interface IContactsAutoCompleteFilter {
+  limit: number,
+  keyword: string,
+}
+
+export interface IContactAutoCompleteItem {
+  displayName: string,
+  contactService: string,
+}

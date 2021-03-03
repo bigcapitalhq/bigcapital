@@ -3,7 +3,13 @@ import { difference, upperFirst, omit } from 'lodash';
 import moment from 'moment';
 import { ServiceError } from 'exceptions';
 import TenancyService from 'services/Tenancy/TenancyService';
-import { IContact, IContactNewDTO, IContactEditDTO } from 'interfaces';
+import DynamicListingService from 'services/DynamicListing/DynamicListService';
+import {
+  IContact,
+  IContactNewDTO,
+  IContactEditDTO,
+  IContactsAutoCompleteFilter,
+} from 'interfaces';
 import JournalPoster from '../Accounting/JournalPoster';
 
 type TContactService = 'customer' | 'vendor';
@@ -16,6 +22,9 @@ const ERRORS = {
 export default class ContactsService {
   @Inject()
   tenancy: TenancyService;
+
+  @Inject()
+  dynamicListService: DynamicListingService;
 
   @Inject('logger')
   logger: any;
@@ -166,9 +175,38 @@ export default class ContactsService {
   async getContact(
     tenantId: number,
     contactId: number,
-    contactService: TContactService
+    contactService?: TContactService
   ) {
     return this.getContactByIdOrThrowError(tenantId, contactId, contactService);
+  }
+
+  /**
+   * Retrieve auto-complete contacts list.
+   * @param {number} tenantId -
+   * @param {IContactsAutoCompleteFilter} contactsFilter -
+   * @return {IContactAutoCompleteItem}
+   */
+  async autocompleteContacts(
+    tenantId: number,
+    contactsFilter: IContactsAutoCompleteFilter
+  ) {
+    const { Contact } = this.tenancy.models(tenantId);
+
+    // Dynamic list.
+    const dynamicList = await this.dynamicListService.dynamicList(
+      tenantId,
+      Contact,
+      contactsFilter,
+    );
+    // Retrieve contacts list by the given query.
+    const contacts = await Contact.query().onBuild((builder) => {
+      if (contactsFilter.keyword) {
+        builder.where('display_name', 'LIKE', contactsFilter.keyword);
+      }
+      dynamicList.buildQuery()(builder);
+      builder.limit(contactsFilter.limit);
+    });
+    return contacts;
   }
 
   /**
@@ -182,7 +220,7 @@ export default class ContactsService {
   async getContactsOrThrowErrorNotFound(
     tenantId: number,
     contactsIds: number[],
-    contactService: TContactService,
+    contactService: TContactService
   ) {
     const { Contact } = this.tenancy.models(tenantId);
     const contacts = await Contact.query()
@@ -240,10 +278,7 @@ export default class ContactsService {
     journal.fromTransactions(contactsTransactions);
     journal.removeEntries();
 
-    await Promise.all([
-      journal.saveBalance(),
-      journal.deleteEntries(),
-    ]);
+    await Promise.all([journal.saveBalance(), journal.deleteEntries()]);
   }
 
   /**
@@ -268,7 +303,6 @@ export default class ContactsService {
       contactId,
       contactService
     );
-
     // Should the opening balance date be required.
     if (!contact.openingBalanceAt && !openingBalanceAt) {
       throw new ServiceError(ERRORS.OPENING_BALANCE_DATE_REQUIRED);

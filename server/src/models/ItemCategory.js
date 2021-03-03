@@ -91,6 +91,11 @@ export default class ItemCategory extends TenantModel {
         }],
         columnType: 'string',
       },
+      count: {
+        label: 'Count',
+        column: 'count',
+        sortQuery: this.sortCountQuery
+      },
       created_at: {
         label: 'Created at',
         column: 'created_at',
@@ -98,4 +103,8 @@ export default class ItemCategory extends TenantModel {
       },
     };
   }
+
+  static sortCountQuery(query, role) {
+    query.orderBy('count', role.order);
+  } 
 }

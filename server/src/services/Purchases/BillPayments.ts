@@ -591,6 +591,7 @@ export default class BillPaymentsService {
       .onBuild((builder) => {
         builder.withGraphFetched('vendor');
         builder.withGraphFetched('paymentAccount');
+
         dynamicFilter.buildQuery()(builder);
       })
       .pagination(billPaymentsFilter.page - 1, billPaymentsFilter.pageSize);

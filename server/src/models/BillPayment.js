@@ -74,13 +74,11 @@ export default class BillPayment extends TenantModel {
     };
   }
 
+  /**
+   * Resource fields.
+   */
   static get fields() {
     return {
-      created_at: {
-        label: 'Created at',
-        column: 'created_at',
-        columnType: 'date',
-      },
       vendor: {
         lable: "Vendor name",
         column: 'vendor_id',
@@ -96,7 +94,7 @@ export default class BillPayment extends TenantModel {
       payment_account: {
         label: "Payment account",
         column: "payment_account_id",
-        relation: "accounts",
+        relation: "accounts.id",
         relationColumn: "accounts.name",
 
         fieldType: 'options',
@@ -116,7 +114,7 @@ export default class BillPayment extends TenantModel {
         columnType: 'date',
         fieldType: 'date',
       },
-      reference: {
+      reference_no: {
         label: "Reference No.",
         column: "reference",
         columnType: 'string',
@@ -127,7 +125,12 @@ export default class BillPayment extends TenantModel {
         column: "description",
         columnType: 'string',
         fieldType: 'text',
-      }
+      },
+      created_at: {
+        label: 'Created at',
+        column: 'created_at',
+        columnType: 'date',
+      },
     }
   }
 }

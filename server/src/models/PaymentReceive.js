@@ -3,7 +3,7 @@ import TenantModel from 'models/TenantModel';
 
 export default class PaymentReceive extends TenantModel {
   /**
-   * Table name
+   * Table name.
    */
   static get tableName() {
     return 'payment_receives';
@@ -16,11 +16,14 @@ export default class PaymentReceive extends TenantModel {
     return ['created_at', 'updated_at'];
   }
 
+  /**
+   * Resourcable model.
+   */
   static get resourceable() {
     return true;
   }
 
-  /**
+  /*
    * Relationship mapping.
    */
   static get relationMappings() {
@@ -79,6 +82,9 @@ export default class PaymentReceive extends TenantModel {
       customer: {
         label: 'Customer',
         column: 'customer_id',
+        relation: 'contacts.id',
+        relationColumn: 'contacts.displayName',
+
         fieldType: 'options',
         optionsResource: 'customers',
         optionsKey: 'id',
@@ -102,10 +108,11 @@ export default class PaymentReceive extends TenantModel {
         columnType: 'string',
         fieldType: 'text',
       },
-      deposit_acount: {
+      deposit_account: {
         column: 'deposit_account_id',
         lable: 'Deposit account',
         relation: "accounts.id",
+        relationColumn: 'accounts.name',
         optionsResource: "account",
       },
       payment_receive_no: {
@@ -124,9 +131,6 @@ export default class PaymentReceive extends TenantModel {
         label: 'Created at',
         column: 'created_at',
         columnType: 'date',
-      },
-      user: {
-
       },
     };
   }

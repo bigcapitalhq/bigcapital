@@ -5,7 +5,13 @@ import {
   EventDispatcherInterface,
 } from 'decorators/eventDispatcher';
 import events from 'subscribers/events';
-import { IItemsFilter, IItemsService, IItemDTO, IItem } from 'interfaces';
+import {
+  IItemsFilter,
+  IItemsService,
+  IItemDTO,
+  IItem,
+  IItemsAutoCompleteFilter,
+} from 'interfaces';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import TenancyService from 'services/Tenancy/TenancyService';
 import { ServiceError } from 'exceptions';
@@ -16,6 +22,7 @@ import {
   ACCOUNT_TYPE,
 } from 'data/AccountTypes';
 import { ERRORS } from './constants';
+
 @Service()
 export default class ItemsService implements IItemsService {
   @Inject()
@@ -495,6 +502,34 @@ export default class ItemsService implements IItemsService {
       filterMeta: dynamicFilter.getResponseMeta(),
     };
   }
+
+  /**
+   * Retrieve auto-complete items list.
+   * @param {number} tenantId -
+   * @param {IItemsAutoCompleteFilter} itemsFilter -
+   */
+  public async autocompleteItems(
+    tenantId: number,
+    itemsFilter: IItemsAutoCompleteFilter
+  ) {
+    const { Item } = this.tenancy.models(tenantId);
+    const dynamicFilter = await this.dynamicListService.dynamicList(
+      tenantId,
+      Item,
+      itemsFilter
+    );
+    const items = await Item.query().onBuild((builder) => {
+      builder.withGraphFetched('category');
+
+      dynamicFilter.buildQuery()(builder);
+      builder.limit(itemsFilter.limit);
+    });
+
+    // const autocompleteItems = this.transformAutoCompleteItems(items);
+    return items;
+  }
+
+  // transformAutoCompleteItems(item)
 
   /**
    * Validates the given item or items have no associated invoices or bills.

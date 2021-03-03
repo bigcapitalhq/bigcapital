@@ -106,6 +106,10 @@ export default {
       key: "number_prefix",
       type: "string",
     },
+    {
+      key: 'increment_mode',
+      type: 'string'
+    }
   ],
   payment_receives: [
     {

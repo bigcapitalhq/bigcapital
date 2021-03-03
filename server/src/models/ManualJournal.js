@@ -1,5 +1,6 @@
 import { Model } from 'objection';
 import TenantModel from 'models/TenantModel';
+import { query } from 'winston';
 
 export default class ManualJournal extends TenantModel {
   /**
@@ -20,9 +21,7 @@ export default class ManualJournal extends TenantModel {
    * Virtual attributes.
    */
   static get virtualAttributes() {
-    return [
-      'isPublished',
-    ];
+    return ['isPublished'];
   }
 
   /**
@@ -31,6 +30,17 @@ export default class ManualJournal extends TenantModel {
    */
   get isPublished() {
     return !!this.publishedAt;
+  }
+
+  /**
+   * Model modifiers.
+   */
+  static get modifiers() {
+    return {
+      sortByStatus(query, order) {
+        query.orderByRaw(`PUBLISHED_AT IS NULL ${order}`);
+      },
+    };
   }
 
   /**
@@ -51,7 +61,7 @@ export default class ManualJournal extends TenantModel {
         },
         filter(query) {
           query.orderBy('index', 'ASC');
-        }
+        },
       },
       transactions: {
         relation: Model.HasManyRelation,
@@ -77,8 +87,8 @@ export default class ManualJournal extends TenantModel {
         },
         filter(query) {
           query.where('model_name', 'ManualJournal');
-        }
-      }
+        },
+      },
     };
   }
 
@@ -102,9 +112,10 @@ export default class ManualJournal extends TenantModel {
         column: 'reference',
         columnType: 'string',
       },
-      status: {
-        label: 'Status',
-        column: 'status',
+      journal_type: {
+        label: 'Journal type',
+        column: 'journal_type',
+        columnType: 'string',
       },
       amount: {
         label: 'Amount',
@@ -116,15 +127,12 @@ export default class ManualJournal extends TenantModel {
         column: 'description',
         columnType: 'string',
       },
-      user: {
-        label: 'User',
-        column: 'user_id',
-        relation: 'users.id',
-        relationColumn: 'users.id',
-      },
-      journal_type: {
-        label: 'Journal type',
-        column: 'journal_type',
+      status: {
+        label: 'Status',
+        column: 'status',
+        sortQuery(query, role) {
+          query.modify('sortByStatus', role.order);
+        },
       },
       created_at: {
         label: 'Created at',

@@ -175,6 +175,9 @@ export default class SaleEstimate extends TenantModel {
       customer: {
         label: 'Customer',
         column: 'customer_id',
+        relation: 'contacts.id',
+        relationColumn: 'contacts.displayName',
+
         fieldType: 'options',
         optionsResource: 'customers',
         optionsKey: 'id',

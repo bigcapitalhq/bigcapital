@@ -1,3 +1,4 @@
+import { IDynamicListFilter } from 'interfaces/DynamicFilter';
 import { IItemEntry, IItemEntryDTO } from "./ItemEntry";
 
 export interface ISaleInvoice {
@@ -36,7 +37,7 @@ export interface ISaleInvoiceEditDTO extends ISaleInvoiceDTO {
 
 };
 
-export interface ISalesInvoicesFilter{
+export interface ISalesInvoicesFilter extends IDynamicListFilter{
   page: number,
   pageSize: number,
 };

@@ -27,17 +27,7 @@ import ItemsService from 'services/Items/ItemsService';
 import ItemsEntriesService from 'services/Items/ItemsEntriesService';
 import JournalCommands from 'services/Accounting/JournalCommands';
 import JournalPosterService from 'services/Sales/JournalPosterService';
-
-const ERRORS = {
-  BILL_NOT_FOUND: 'BILL_NOT_FOUND',
-  BILL_VENDOR_NOT_FOUND: 'BILL_VENDOR_NOT_FOUND',
-  BILL_ITEMS_NOT_PURCHASABLE: 'BILL_ITEMS_NOT_PURCHASABLE',
-  BILL_NUMBER_EXISTS: 'BILL_NUMBER_EXISTS',
-  BILL_ITEMS_NOT_FOUND: 'BILL_ITEMS_NOT_FOUND',
-  BILL_ENTRIES_IDS_NOT_FOUND: 'BILL_ENTRIES_IDS_NOT_FOUND',
-  NOT_PURCHASE_ABLE_ITEMS: 'NOT_PURCHASE_ABLE_ITEMS',
-  BILL_ALREADY_OPEN: 'BILL_ALREADY_OPEN',
-};
+import { ERRORS } from './constants';
 
 /**
  * Vendor bills services.
