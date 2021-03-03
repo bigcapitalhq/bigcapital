@@ -1,4 +1,4 @@
-import { IDynamicListFilter } from 'interfaces/DynamicFilter';
+import { IFilterRole } from 'interfaces/DynamicFilter';
 
 export interface IItem{
   id: number,
@@ -72,7 +72,7 @@ export interface IItemsService {
   itemsList(tenantId: number, itemsFilter: IItemsFilter): Promise<{items: IItem[]}>;
 }
 
-export interface IItemsFilter extends IDynamicListFilter {
+export interface IItemsFilter extends IDynamicListFilterDTO {
   stringifiedFilterRoles?: string,
   page: number,
   pageSize: number,
@@ -81,5 +81,7 @@ export interface IItemsFilter extends IDynamicListFilter {
 export interface IItemsAutoCompleteFilter {
   limit: number,
   keyword: string,
-  
+  filterRoles?: IFilterRole[];
+  columnSortBy: string;
+  sortOrder: string;
 }

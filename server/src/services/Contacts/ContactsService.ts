@@ -201,7 +201,7 @@ export default class ContactsService {
     // Retrieve contacts list by the given query.
     const contacts = await Contact.query().onBuild((builder) => {
       if (contactsFilter.keyword) {
-        builder.where('display_name', 'LIKE', contactsFilter.keyword);
+        builder.where('display_name', 'LIKE', `%${contactsFilter.keyword}%`);
       }
       dynamicList.buildQuery()(builder);
       builder.limit(contactsFilter.limit);

@@ -216,36 +216,9 @@ export default class ItemsController extends BaseController {
 
       query('stringified_filter_roles').optional().isJSON(),
       query('limit').optional().isNumeric().toInt(),
+
+      query('keyword').optional().isString().trim().escape(),
     ];
-  }
-
-  /**
-   * Auto-complete list.
-   * @param {Request} req
-   * @param {Response} res
-   * @param {NextFunction} next
-   */
-  async autocompleteList(req: Request, res: Response, next: NextFunction) {
-    const { tenantId } = req;
-    const filter = {
-      filterRoles: [],
-      sortOrder: 'asc',
-      columnSortBy: 'created_at',
-      limit: 10,
-      ...this.matchedQueryData(req),
-    };
-
-    try {
-      const items = await this.itemsService.autocompleteItems(
-        tenantId,
-        filter
-      );
-      return res.status(200).send({
-        items,
-      });
-    } catch (error) {
-      next(error);
-    }
   }
 
   /**
@@ -411,6 +384,38 @@ export default class ItemsController extends BaseController {
   }
 
   /**
+   * Auto-complete list.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   */
+  async autocompleteList(req: Request, res: Response, next: NextFunction) {
+    const { tenantId } = req;
+    const filter = {
+      filterRoles: [],
+      sortOrder: 'asc',
+      columnSortBy: 'name',
+      limit: 10,
+      keyword: '',
+      ...this.matchedQueryData(req),
+    };
+    if (filter.stringifiedFilterRoles) {
+      filter.filterRoles = JSON.parse(filter.stringifiedFilterRoles);
+    }
+    try {
+      const items = await this.itemsService.autocompleteItems(
+        tenantId,
+        filter
+      );
+      return res.status(200).send({
+        items,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
    * Deletes items in bulk.
    * @param {Request} req
    * @param {Response} res
@@ -531,6 +536,15 @@ export default class ItemsController extends BaseController {
           errors: [
             { type: 'ITEM_HAS_ASSOCIATED_INVENTORY_ADJUSTMENT', code: 330 },
           ],
+        });
+      }
+      if (error.errorType === 'ITEM_CANNOT_CHANGE_INVENTORY_TYPE') {
+        return res.status(400).send({
+          errors: [{
+            type: 'ITEM_CANNOT_CHANGE_INVENTORY_TYPE',
+            message: 'Cannot change inventory item type',
+            code: 340,
+          }],
         });
       }
     }

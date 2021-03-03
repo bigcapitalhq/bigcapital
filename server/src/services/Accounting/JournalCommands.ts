@@ -417,6 +417,8 @@ export default class JournalCommands {
       referenceId: saleReceipt.id,
       date: saleReceipt.receiptDate,
       userId: saleReceipt.userId,
+      transactionNumber: saleReceipt.receiptNumber,
+      referenceNumber: saleReceipt.referenceNo,
     };
     // XXX Debit - Deposit account.
     const depositEntry = new JournalEntry({

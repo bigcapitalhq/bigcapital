@@ -181,19 +181,16 @@ export default class SalesReceiptService {
       tenantId,
       saleReceiptDTO.depositAccountId
     );
-
     // Validate items IDs existance on the storage.
     await this.itemsEntriesService.validateItemsIdsExistance(
       tenantId,
       saleReceiptDTO.entries
     );
-
     // Validate the sellable items.
     await this.itemsEntriesService.validateNonSellableEntriesItems(
       tenantId,
       saleReceiptDTO.entries
     );
-
     // Validate sale receipt number uniuqiness.
     if (saleReceiptDTO.receiptNumber) {
       await this.validateReceiptNumberUnique(
@@ -460,22 +457,13 @@ export default class SalesReceiptService {
     saleReceipt: ISaleReceipt,
     override?: boolean
   ): Promise<void> {
-    await this.inventoryService.recordInventoryTransactionsFromItemsEntries(
+    return this.inventoryService.recordInventoryTransactionsFromItemsEntries(
       tenantId,
       saleReceipt.id,
       'SaleReceipt',
       saleReceipt.receiptDate,
       'OUT',
       override,
-    );
-    // Triggers `onInventoryTransactionsCreated` event.
-    this.eventDispatcher.dispatch(
-      events.saleReceipt.onInventoryTransactionsCreated,
-      {
-        tenantId,
-        saleReceipt,
-        saleReceiptId: saleReceipt.id,
-      }
     );
   }
 

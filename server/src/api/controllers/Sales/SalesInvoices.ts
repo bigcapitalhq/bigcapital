@@ -7,7 +7,7 @@ import SaleInvoiceService from 'services/Sales/SalesInvoices';
 import ItemsService from 'services/Items/ItemsService';
 import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import { ServiceError } from 'exceptions';
-import { ISaleInvoiceDTO, ISalesInvoicesFilter } from 'interfaces';
+import { ISaleInvoiceDTO, ISaleInvoiceCreateDTO } from 'interfaces';
 
 @Service()
 export default class SaleInvoicesController extends BaseController {
@@ -153,7 +153,7 @@ export default class SaleInvoicesController extends BaseController {
    */
   async newSaleInvoice(req: Request, res: Response, next: NextFunction) {
     const { tenantId, user } = req;
-    const saleInvoiceDTO: ISaleInvoiceDTO = this.matchedBodyData(req);
+    const saleInvoiceDTO: ISaleInvoiceCreateDTO = this.matchedBodyData(req);
 
     try {
       // Creates a new sale invoice with associated entries.

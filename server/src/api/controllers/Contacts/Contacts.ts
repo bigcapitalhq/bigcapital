@@ -1,15 +1,18 @@
 import { check, param, query, body, ValidationChain } from 'express-validator';
 import { Router, Request, Response, NextFunction } from 'express';
-import { Inject } from 'typedi';
+import { Inject, Service } from 'typedi';
 import BaseController from 'api/controllers/BaseController';
 import ContactsService from 'services/Contacts/ContactsService';
+import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import { DATATYPES_LENGTH } from 'data/DataTypes';
-import { Service } from 'typedi';
 
 @Service()
 export default class ContactsController extends BaseController {
   @Inject()
   contactsService: ContactsService;
+
+  @Inject()
+  dynamicListService: DynamicListingService;
 
   /**
    * Express router.
@@ -18,16 +21,17 @@ export default class ContactsController extends BaseController {
     const router = Router();
 
     router.get(
+      '/auto-complete',
+      [...this.autocompleteQuerySchema],
+      this.validationResult,
+      this.asyncMiddleware(this.autocompleteContacts.bind(this)),
+      this.dynamicListService.handlerErrorsToResponse
+    );
+    router.get(
       '/:id',
       [param('id').exists().isNumeric().toInt()],
       this.validationResult,
       this.asyncMiddleware(this.getContact.bind(this))
-    );
-    router.get(
-      '/auto-complete',
-      [...this.autocompleteQuerySchema],
-      this.validationResult,
-      this.asyncMiddleware(this.autocompleteContacts.bind(this))
     );
     return router;
   }
@@ -79,11 +83,13 @@ export default class ContactsController extends BaseController {
     const filter = {
       filterRoles: [],
       sortOrder: 'asc',
-      columnSortBy: 'created_at',
+      columnSortBy: 'display_name',
       limit: 10,
       ...this.matchedQueryData(req),
     };
-
+    if (filter.stringifiedFilterRoles) {
+      filter.filterRoles = JSON.parse(filter.stringifiedFilterRoles);
+    }
     try {
       const contacts = await this.contactsService.autocompleteContacts(
         tenantId,
