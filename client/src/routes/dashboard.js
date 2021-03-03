@@ -4,7 +4,6 @@ import { formatMessage } from 'services/intl';
 // const BASE_URL = '/dashboard';
 
 export default [
-  
   // Accounts.
   {
     path: `/accounts`,
@@ -132,7 +131,7 @@ export default [
     hotkey: 'shift+5',
     pageTitle: formatMessage({ id: 'trial_balance_sheet' }),
     backLink: true,
-    sidebarShrink: true
+    sidebarShrink: true,
   },
   {
     path: `/financial-reports/profit-loss-sheet`,
@@ -254,6 +253,16 @@ export default [
     hotkey: 'shift+c',
     pageTitle: formatMessage({ id: 'customers_list' }),
   },
+  {
+    path: `/customers/contact_duplicate=/:id`,
+    component: lazy(() =>
+      import('containers/Customers/CustomerForm/CustomerFormPage'),
+    ),
+    name: 'duplicate-customer',
+    breadcrumb: 'Duplicate  Customer',
+    pageTitle: formatMessage({ id: 'new_customer' }),
+    backLink: true,
+  },
 
   // Vendors
   {
@@ -285,6 +294,16 @@ export default [
     breadcrumb: 'Vendors',
     hotkey: 'shift+v',
     pageTitle: formatMessage({ id: 'vendors_list' }),
+  },
+  {
+    path: `/vendors/contact_duplicate=/:id`,
+    component: lazy(() =>
+      import('containers/Vendors/VendorForm/VendorFormPage'),
+    ),
+    name: 'duplicate-vendor',
+    breadcrumb: 'Duplicate  Vendor',
+    pageTitle: formatMessage({ id: 'new_vendor' }),
+    backLink: true,
   },
 
   // Estimates

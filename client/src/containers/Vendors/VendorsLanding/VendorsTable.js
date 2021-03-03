@@ -11,6 +11,7 @@ import { useVendorsListContext } from './VendorsListProvider';
 import withVendorsActions from './withVendorsActions';
 import withVendors from './withVendors';
 import withAlertsActions from 'containers/Alert/withAlertActions';
+import withDialogActions from 'containers/Dialog/withDialogActions';
 
 import { compose } from 'utils';
 import { ActionsMenu, useVendorsTableColumns } from './components';
@@ -27,6 +28,8 @@ function VendorsTable({
 
   // #withAlertsActions
   openAlert,
+  // #withDialogActions
+  openDialog,
 }) {
   // Vendors list context.
   const {
@@ -34,7 +37,7 @@ function VendorsTable({
     pagination,
     isVendorsFetching,
     isVendorsLoading,
-    isEmptyStatus
+    isEmptyStatus,
   } = useVendorsListContext();
 
   // Vendors table columns.
@@ -53,6 +56,12 @@ function VendorsTable({
     openAlert('vendor-delete', { vendorId: id });
   };
 
+  // Handle contact duplicate .
+  const handleContactDuplicate = ({ id }) => {
+    openDialog('contact-duplicate', {
+      contactId: id,
+    });
+  };
   // Handle fetch data once the page index, size or sort by of the table change.
   const handleFetchData = React.useCallback(
     ({ pageSize, pageIndex, sortBy }) => {
@@ -67,7 +76,7 @@ function VendorsTable({
 
   // Display empty status instead of the table.
   if (isEmptyStatus) {
-    return <VendorsEmptyStatus />
+    return <VendorsEmptyStatus />;
   }
 
   return (
@@ -94,6 +103,7 @@ function VendorsTable({
       payload={{
         onEdit: handleEditVendor,
         onDelete: handleDeleteVendor,
+        onDuplicate: handleContactDuplicate,
       }}
     />
   );
@@ -102,5 +112,6 @@ function VendorsTable({
 export default compose(
   withVendorsActions,
   withAlertsActions,
+  withDialogActions,
   withVendors(({ vendorsTableState }) => ({ vendorsTableState })),
 )(VendorsTable);

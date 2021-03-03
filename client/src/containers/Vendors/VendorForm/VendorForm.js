@@ -69,11 +69,11 @@ function VendorForm({
   // #withSettings
   baseCurrency,
 }) {
-
   // Vendor form context.
   const {
     vendorId,
     vendor,
+    contactDuplicate,
     createVendorMutate,
     editVendorMutate,
     setSubmitPayload,
@@ -94,9 +94,9 @@ function VendorForm({
     () => ({
       ...defaultInitialValues,
       currency_code: baseCurrency,
-      ...transformToForm(vendor, defaultInitialValues),
+      ...transformToForm(vendor || contactDuplicate, defaultInitialValues),
     }),
-    [vendor, baseCurrency],
+    [vendor, contactDuplicate, baseCurrency],
   );
 
   useEffect(() => {
