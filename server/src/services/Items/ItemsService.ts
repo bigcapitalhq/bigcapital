@@ -228,6 +228,37 @@ export default class ItemsService implements IItemsService {
   }
 
   /**
+   *
+   * @param {IItemDTO} itemDTO - Item DTO.
+   * @param {IItem} oldItem -
+   */
+  private transformEditItemDTOToModel(itemDTO: IItemDTO, oldItem: IItem) {
+    return {
+      ...itemDTO,
+      ...(itemDTO.type === 'inventory' && oldItem.type !== 'inventory'
+        ? {
+            quantityOnHand: 0,
+          }
+        : {}),
+    };
+  }
+
+  /**
+   * Validate item type in edit item mode, cannot change item inventory type.
+   * @param {IItemDTO} itemDTO
+   * @param {IItem} oldItem
+   */
+  private validateEditItemInventoryType(itemDTO: IItemDTO, oldItem: IItem) {
+    if (
+      itemDTO.type &&
+      oldItem.type === 'inventory' &&
+      itemDTO.type !== oldItem.type
+    ) {
+      throw new ServiceError(ERRORS.ITEM_CANNOT_CHANGE_INVENTORY_TYPE);
+    }
+  }
+
+  /**
    * Creates a new item.
    * @param {number} tenantId DTO
    * @param {IItemDTO} item
@@ -288,6 +319,11 @@ export default class ItemsService implements IItemsService {
     // Validates the given item existance on the storage.
     const oldItem = await this.getItemOrThrowError(tenantId, itemId);
 
+    this.validateEditItemInventoryType(itemDTO, oldItem);
+
+    // Transform the edit item DTO to model.
+    const itemModel = this.transformEditItemDTOToModel(itemDTO, oldItem);
+
     // Validate whether the given item name already exists on the storage.
     await this.validateItemNameUniquiness(tenantId, itemDTO.name, itemId);
 
@@ -318,7 +354,7 @@ export default class ItemsService implements IItemsService {
     }
 
     const newItem = await Item.query().patchAndFetchById(itemId, {
-      ...itemDTO,
+      ...itemModel,
     });
     this.logger.info('[items] item edited successfully.', {
       tenantId,

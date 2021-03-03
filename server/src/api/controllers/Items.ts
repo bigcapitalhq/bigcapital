@@ -538,6 +538,15 @@ export default class ItemsController extends BaseController {
           ],
         });
       }
+      if (error.errorType === 'ITEM_CANNOT_CHANGE_INVENTORY_TYPE') {
+        return res.status(400).send({
+          errors: [{
+            type: 'ITEM_CANNOT_CHANGE_INVENTORY_TYPE',
+            message: 'Cannot change inventory item type',
+            code: 340,
+          }],
+        });
+      }
     }
     next(error);
   }
