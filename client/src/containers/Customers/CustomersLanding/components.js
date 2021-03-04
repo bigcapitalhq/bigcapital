@@ -18,7 +18,7 @@ import { useIntl } from 'react-intl';
  */
 export function ActionsMenu({
   row: { original },
-  payload: { onEdit, onDelete },
+  payload: { onEdit, onDelete ,onDuplicate },
 }) {
   const { formatMessage } = useIntl();
 
@@ -33,6 +33,11 @@ export function ActionsMenu({
         icon={<Icon icon="pen-18" />}
         text={formatMessage({ id: 'edit_customer' })}
         onClick={safeCallback(onEdit, original)}
+      />
+      <MenuItem
+        icon={<Icon icon="duplicate-18" />}
+        text={formatMessage({ id: 'duplicate' })}
+        onClick={safeCallback(onDuplicate, original)}
       />
       <MenuItem
         icon={<Icon icon="trash-16" iconSize={16} />}

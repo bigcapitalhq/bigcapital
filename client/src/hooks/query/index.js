@@ -20,3 +20,4 @@ export * from './settings';
 export * from './users';
 export * from './invite';
 export * from './exchangeRates';
+export * from './contacts';

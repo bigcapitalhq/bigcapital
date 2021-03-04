@@ -1,0 +1,20 @@
+.dialog--contact-duplicate {
+  .bp3-dialog-body {
+    .bp3-form-group.bp3-inline {
+      margin: 18px 0px;
+      .bp3-label {
+        min-width: 100px;
+      }
+    }
+    .bp3-button:not([class*='bp3-intent-']):not(.bp3-minimal) {
+      width: 260px;
+    }
+  }
+
+  .bp3-dialog-footer {
+    .bp3-dialog-footer-actions .bp3-button {
+      margin-left: 8px;
+      min-width: 65px;
+    }
+  }
+}

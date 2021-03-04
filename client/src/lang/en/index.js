@@ -990,4 +990,10 @@ export default {
   convert_to_invoice: 'Convert to Invoice',
   sale_estimate_is_already_converted_to_invoice:
     'Sale estimate is already converted to invoice.',
+  duplicate: 'Duplicate',
+  are_you_sure_want_to_duplicate:
+    'Are you sure want to duplicate this contact, which contact type?',
+  contact_type: 'Contact Type',
+  duplicate_contact: 'Duplicate Contact',
+  contact_type_: 'Contact type',
 };

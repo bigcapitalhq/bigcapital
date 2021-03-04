@@ -1,22 +1,20 @@
-import { Model } from 'objection';
-import TenantModel from 'models/TenantModel';
-import {
-  buildFilterQuery,
-} from 'lib/ViewRolesBuilder';
+import { Model } from "objection";
+import TenantModel from "models/TenantModel";
+import { buildFilterQuery } from "lib/ViewRolesBuilder";
 
 export default class Item extends TenantModel {
   /**
    * Table name
    */
   static get tableName() {
-    return 'items';
+    return "items";
   }
 
   /**
    * Model timestamps.
    */
   get timestamps() {
-    return ['createdAt', 'updatedAt'];
+    return ["createdAt", "updatedAt"];
   }
 
   /**
@@ -44,9 +42,9 @@ export default class Item extends TenantModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const Media = require('models/Media');
-    const Account = require('models/Account');
-    const ItemCategory = require('models/ItemCategory');
+    const Media = require("models/Media");
+    const Account = require("models/Account");
+    const ItemCategory = require("models/ItemCategory");
 
     return {
       /**
@@ -56,8 +54,8 @@ export default class Item extends TenantModel {
         relation: Model.BelongsToOneRelation,
         modelClass: ItemCategory.default,
         join: {
-          from: 'items.categoryId',
-          to: 'items_categories.id',
+          from: "items.categoryId",
+          to: "items_categories.id",
         },
       },
 
@@ -65,8 +63,8 @@ export default class Item extends TenantModel {
         relation: Model.BelongsToOneRelation,
         modelClass: Account.default,
         join: {
-          from: 'items.costAccountId',
-          to: 'accounts.id',
+          from: "items.costAccountId",
+          to: "accounts.id",
         },
       },
 
@@ -74,8 +72,8 @@ export default class Item extends TenantModel {
         relation: Model.BelongsToOneRelation,
         modelClass: Account.default,
         join: {
-          from: 'items.sellAccountId',
-          to: 'accounts.id',
+          from: "items.sellAccountId",
+          to: "accounts.id",
         },
       },
 
@@ -83,8 +81,8 @@ export default class Item extends TenantModel {
         relation: Model.BelongsToOneRelation,
         modelClass: Account.default,
         join: {
-          from: 'items.inventoryAccountId',
-          to: 'accounts.id',
+          from: "items.inventoryAccountId",
+          to: "accounts.id",
         },
       },
 
@@ -92,13 +90,13 @@ export default class Item extends TenantModel {
         relation: Model.ManyToManyRelation,
         modelClass: Media.default,
         join: {
-          from: 'items.id',
+          from: "items.id",
           through: {
-            from: 'media_links.model_id',
-            to: 'media_links.media_id',
+            from: "media_links.model_id",
+            to: "media_links.media_id",
           },
-          to: 'media.id',
-        }
+          to: "media.id",
+        },
       },
     };
   }
@@ -109,72 +107,76 @@ export default class Item extends TenantModel {
   static get fields() {
     return {
       type: {
-        label: 'Type',
-        column: 'type',
+        label: "Type",
+        column: "type",
       },
       name: {
-        label: 'Name',
-        column: 'name',
+        label: "Name",
+        column: "name",
+      },
+      code: {
+        label: "Code",
+        column: "code",
       },
       sellable: {
-        label: 'Sellable',
-        column: 'sellable',
+        label: "Sellable",
+        column: "sellable",
       },
       purchasable: {
-        label: 'Purchasable',
-        column: 'purchasable',
+        label: "Purchasable",
+        column: "purchasable",
       },
       sell_price: {
-        label: 'Sell price',
-        column: 'sell_price'
+        label: "Sell price",
+        column: "sell_price",
       },
       cost_price: {
-        label: 'Cost price',
-        column: 'cost_price',
+        label: "Cost price",
+        column: "cost_price",
       },
       currency_code: {
-        label: 'Currency',
-        column: 'currency_code',
+        label: "Currency",
+        column: "currency_code",
       },
       cost_account: {
-        label: 'Cost account',
-        column: 'cost_account_id',
-        relation: 'accounts.id',
-        relationColumn: 'accounts.name',
+        label: "Cost account",
+        column: "cost_account_id",
+        relation: "accounts.id",
+        relationColumn: "accounts.name",
       },
       sell_account: {
-        label: 'Sell account',
-        column: 'sell_account_id',
-        relation: 'accounts.id',
-        relationColumn: 'accounts.name',
+        label: "Sell account",
+        column: "sell_account_id",
+        relation: "accounts.id",
+        relationColumn: "accounts.name",
       },
       inventory_account: {
         label: "Inventory account",
-        column: 'inventory_account_id',
-        relation: 'accounts.id',
-        relationColumn: 'accounts.name',
+        column: "inventory_account_id",
+        relation: "accounts.id",
+        relationColumn: "accounts.name",
       },
       sell_description: {
         label: "Sell description",
-        column: 'sell_description',
+        column: "sell_description",
       },
       purchase_description: {
         label: "Purchase description",
-        column: 'purchase_description',
+        column: "purchase_description",
       },
       quantity_on_hand: {
         label: "Quantity on hand",
-        column: 'quantity_on_hand',
+        column: "quantity_on_hand",
       },
       note: {
-        label: 'Note',
-        column: 'note',
+        label: "Note",
+        column: "note",
       },
       category: {
         label: "Category",
-        column: 'category_id',
-        relation: 'items_categories.id',
-        relationColumn: 'items_categories.name',
+        column: "category_id",
+        relation: "items_categories.id",
+        relationColumn: "items_categories.name",
       },
       // user: {
       //   label: 'User',
@@ -183,10 +185,10 @@ export default class Item extends TenantModel {
       //   relationColumn: 'users.',
       // },
       created_at: {
-        label: 'Created at',
-        column: 'created_at',
-        columnType: 'date',
-        fieldType: 'date',
+        label: "Created at",
+        column: "created_at",
+        columnType: "date",
+        fieldType: "date",
       },
     };
   }

@@ -7,7 +7,6 @@ import ItemsEmptyStatus from './ItemsEmptyStatus';
 import TableSkeletonRows from 'components/Datatable/TableSkeletonRows';
 import TableSkeletonHeader from 'components/Datatable/TableHeaderSkeleton';
 
-
 import withItems from 'containers/Items/withItems';
 import withItemsActions from 'containers/Items/withItemsActions';
 import withAlertsActions from 'containers/Alert/withAlertActions';
@@ -94,6 +93,11 @@ function ItemsDataTable({
   };
 
   // Display empty status instead of the table.
+  const handleDuplicate = ({ id }) => {
+    history.push(`/items/new?duplicate=${id}`, { action: id });
+  };
+
+  // Cannot continue in case the items has empty status.
   if (isEmptyStatus) {
     return <ItemsEmptyStatus />;
   }
@@ -103,29 +107,23 @@ function ItemsDataTable({
       columns={columns}
       data={items}
       initialState={itemsTableState}
-      
       loading={isItemsLoading}
       headerLoading={isItemsLoading}
       progressBarLoading={isItemsFetching}
-
       noInitialFetch={true}
       selectionColumn={true}
       spinnerProps={{ size: 30 }}
       expandable={false}
       sticky={true}
       rowClassNames={rowClassNames}
-
       pagination={true}
       manualSortBy={true}
       manualPagination={true}
       pagesCount={pagination.pagesCount}
-
       autoResetSortBy={false}
       autoResetPage={true}
-
       TableLoadingRenderer={TableSkeletonRows}
       TableHeaderSkeletonRenderer={TableSkeletonHeader}
-
       ContextMenu={ItemsActionMenuList}
       onFetchData={handleFetchData}
       payload={{
@@ -134,6 +132,7 @@ function ItemsDataTable({
         onInactivateItem: handleInactiveItem,
         onActivateItem: handleActivateItem,
         onMakeAdjustment: handleMakeAdjustment,
+        onDuplicate: handleDuplicate,
       }}
       noResults={'There is no items in the table yet.'}
       {...tableProps}

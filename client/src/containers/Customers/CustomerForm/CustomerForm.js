@@ -67,11 +67,13 @@ function CustomerForm({
     customer,
     customerId,
     submitPayload,
+    contactDuplicate,
     editCustomerMutate,
     createCustomerMutate,
+    isNewMode,
   } = useCustomerFormContext();
 
-  const isNewMode = !customerId;
+  // const isNewMode = !customerId;
   const history = useHistory();
   const { formatMessage } = useIntl();
 
@@ -82,11 +84,11 @@ function CustomerForm({
     () => ({
       ...defaultInitialValues,
       currency_code: baseCurrency,
-      ...transformToForm(customer, defaultInitialValues),
+      ...transformToForm(customer || contactDuplicate, defaultInitialValues),
     }),
-    [customer, baseCurrency],
+    [customer, contactDuplicate, baseCurrency],
   );
- 
+
   //Handles the form submit.
   const handleFormSubmit = (
     values,
@@ -97,9 +99,9 @@ function CustomerForm({
     const onSuccess = () => {
       AppToaster.show({
         message: formatMessage({
-          id: customer
-            ? 'the_item_customer_has_been_edited_successfully'
-            : 'the_customer_has_been_created_successfully',
+          id: isNewMode
+            ? 'the_customer_has_been_created_successfully'
+            : 'the_item_customer_has_been_edited_successfully',
         }),
         intent: Intent.SUCCESS,
       });
@@ -115,12 +117,12 @@ function CustomerForm({
       setSubmitting(false);
     };
 
-    if (customer && customer.id) {
+    if (isNewMode) {
+      createCustomerMutate(formValues).then(onSuccess).catch(onError);
+    } else {
       editCustomerMutate([customer.id, formValues])
         .then(onSuccess)
         .catch(onError);
-    } else {
-      createCustomerMutate(formValues).then(onSuccess).catch(onError);
     }
   };
 

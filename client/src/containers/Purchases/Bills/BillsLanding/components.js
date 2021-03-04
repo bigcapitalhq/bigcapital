@@ -112,11 +112,11 @@ export function useBillsTableColumns() {
         className: 'bill_date',
       },
       {
-        id: 'vendor_id',
+        id: 'vendor',
         Header: formatMessage({ id: 'vendor_name' }),
         accessor: 'vendor.display_name',
         width: 140,
-        className: 'vendor_id',
+        className: 'vendor',
       },
       {
         id: 'bill_number',

@@ -29,6 +29,8 @@ function CustomersTable({
 
   // #withAlerts
   openAlert,
+  // #withDialogActions
+  openDialog,
 }) {
   const history = useHistory();
 
@@ -66,6 +68,10 @@ function CustomersTable({
     history.push(`/customers/${customer.id}/edit`);
   };
 
+  const handleContactDuplicate = ({ id }) => {
+    openDialog('contact-duplicate', { contactId: id });
+  };
+
   if (isEmptyStatus) {
     return <CustomersEmptyStatus />;
   }
@@ -95,6 +101,7 @@ function CustomersTable({
       payload={{
         onDelete: handleCustomerDelete,
         onEdit: handleCustomerEdit,
+        onDuplicate: handleContactDuplicate,
       }}
       ContextMenu={ActionsMenu}
     />

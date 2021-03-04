@@ -104,7 +104,7 @@ export function useReceiptsTableColumns() {
         className: 'receipt_date',
       },
       {
-        id: 'customer_id',
+        id: 'customer',
         Header: formatMessage({ id: 'customer_name' }),
         accessor: 'customer.display_name',
         width: 140,
@@ -119,7 +119,7 @@ export function useReceiptsTableColumns() {
         className: 'receipt_number',
       },
       {
-        id: 'deposit_account_id',
+        id: 'deposit_account',
         Header: formatMessage({ id: 'deposit_account' }),
         accessor: 'deposit_account.name',
         width: 140,

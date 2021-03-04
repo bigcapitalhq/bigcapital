@@ -83,7 +83,7 @@ export function usePaymentMadesTableColumns() {
         className: 'payment_date',
       },
       {
-        id: 'vendor_id',
+        id: 'vendor',
         Header: formatMessage({ id: 'vendor_name' }),
         accessor: 'vendor.display_name',
         width: 140,
@@ -98,7 +98,7 @@ export function usePaymentMadesTableColumns() {
         className: 'payment_number',
       },
       {
-        id: 'payment_account_id',
+        id: 'payment_account',
         Header: formatMessage({ id: 'payment_account' }),
         accessor: 'payment_account.name',
         width: 140,
@@ -112,7 +112,7 @@ export function usePaymentMadesTableColumns() {
         className: 'amount',
       },
       {
-        id: 'reference',
+        id: 'reference_no',
         Header: formatMessage({ id: 'reference' }),
         accessor: 'reference',
         width: 140,

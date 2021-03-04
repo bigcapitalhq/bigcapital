@@ -159,7 +159,7 @@ export function useInvoicesTableColumns() {
         className: 'invoice_date',
       },
       {
-        id: 'customer_id',
+        id: 'customer',
         Header: formatMessage({ id: 'customer_name' }),
         accessor: 'customer.display_name',
         width: 180,

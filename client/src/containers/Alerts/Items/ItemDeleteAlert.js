@@ -30,7 +30,7 @@ function ItemDeleteAlert({
   closeAlert,
 
   // #withItemsActions
-  addItemsTableQueries
+  addItemsTableQueries,
 }) {
   const { mutateAsync: deleteItem, isLoading } = useDeleteItem();
   const { formatMessage } = useIntl();
@@ -53,9 +53,15 @@ function ItemDeleteAlert({
         // Reset to page number one.
         addItemsTableQueries({ page: 1 });
       })
-      .catch(({ errors }) => {
-        handleDeleteErrors(errors);
-      })
+      .catch(
+        ({
+          response: {
+            data: { errors },
+          },
+        }) => {
+          handleDeleteErrors(errors);
+        },
+      )
       .finally(() => {
         closeAlert(name);
       });
@@ -84,5 +90,5 @@ function ItemDeleteAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
-  withItemsActions
+  withItemsActions,
 )(ItemDeleteAlert);

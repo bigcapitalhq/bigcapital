@@ -60,14 +60,14 @@ function ItemForm({
     createItemMutate,
     editItemMutate,
     submitPayload,
-    isNewMode
+    isNewMode,
   } = useItemFormContext();
 
   // History context.
   const history = useHistory();
 
   const { formatMessage } = useIntl();
- 
+  
   /**
    * Initial values in create and edit mode.
    */
@@ -97,7 +97,11 @@ function ItemForm({
 
   // Transform API errors.
   const transformApiErrors = (error) => {
-    const { response: { data: { errors } } } = error;
+    const {
+      response: {
+        data: { errors },
+      },
+    } = error;
     const fields = {};
 
     if (errors.find((e) => e.type === 'ITEM.NAME.ALREADY.EXISTS')) {
@@ -118,9 +122,10 @@ function ItemForm({
       AppToaster.show({
         message: formatMessage(
           {
-            id: isNewMode
-              ? 'the_item_has_been_created_successfully'
-              : 'the_item_has_been_edited_successfully',
+            id:
+              isNewMode 
+                ? 'the_item_has_been_created_successfully'
+                : 'the_item_has_been_edited_successfully',
           },
           {
             number: itemId,
@@ -151,7 +156,7 @@ function ItemForm({
       editItemMutate([itemId, form]).then(onSuccess).catch(onError);
     }
   };
- 
+
   return (
     <div class={classNames(CLASSES.PAGE_FORM_ITEM)}>
       <Formik

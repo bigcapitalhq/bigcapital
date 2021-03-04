@@ -79,10 +79,10 @@ export function ItemsActionMenuList({
     onActivateItem,
     onMakeAdjustment,
     onDeleteItem,
+    onDuplicate,
   },
 }) {
   const { formatMessage } = useIntl();
- 
   return (
     <Menu>
       <MenuItem
@@ -94,6 +94,11 @@ export function ItemsActionMenuList({
         icon={<Icon icon="pen-18" />}
         text={formatMessage({ id: 'edit_item' })}
         onClick={safeCallback(onEditItem, original)}
+      />
+      <MenuItem
+        icon={<Icon icon="duplicate-18" />}
+        text={formatMessage({ id: 'duplicate' })}
+        onClick={safeCallback(onDuplicate, original)}
       />
       <If condition={original.active}>
         <MenuItem
@@ -124,7 +129,7 @@ export function ItemsActionMenuList({
       />
     </Menu>
   );
-};
+}
 
 export const ItemsActionsTableCell = (props) => {
   return (
@@ -137,7 +142,6 @@ export const ItemsActionsTableCell = (props) => {
   );
 };
 
-
 /**
  * Retrieve all items table columns.
  */
@@ -147,30 +151,35 @@ export const useItemsTableColumns = () => {
   return React.useMemo(
     () => [
       {
+        id: 'name',
         Header: formatMessage({ id: 'item_name' }),
         accessor: 'name',
         className: 'name',
         width: 180,
       },
       {
+        id: 'code',
         Header: formatMessage({ id: 'item_code' }),
         accessor: 'code',
         className: 'code',
         width: 120,
       },
       {
+        id: 'type',
         Header: formatMessage({ id: 'item_type' }),
         accessor: ItemTypeAccessor,
         className: 'item_type',
         width: 120,
       },
       {
+        id: 'category',
         Header: formatMessage({ id: 'category' }),
         accessor: 'category.name',
         className: 'category',
         width: 150,
       },
       {
+        id: 'sell_price',
         Header: formatMessage({ id: 'sell_price' }),
         Cell: SellPriceCell,
         accessor: 'sell_price',
@@ -178,6 +187,7 @@ export const useItemsTableColumns = () => {
         width: 150,
       },
       {
+        id: 'cost_price',
         Header: formatMessage({ id: 'cost_price' }),
         Cell: CostPriceCell,
         accessor: 'cost_price',
@@ -185,6 +195,7 @@ export const useItemsTableColumns = () => {
         width: 150,
       },
       {
+        id: 'quantity_on_hand',
         Header: formatMessage({ id: 'quantity_on_hand' }),
         accessor: 'quantity_on_hand',
         Cell: QuantityOnHandCell,
@@ -199,4 +210,4 @@ export const useItemsTableColumns = () => {
     ],
     [formatMessage],
   );
-}
+};
