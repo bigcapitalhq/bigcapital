@@ -4,6 +4,7 @@ import events from 'subscribers/events';
 import TenancyService from 'services/Tenancy/TenancyService';
 import SettingsService from 'services/Settings/SettingsService';
 import SaleEstimateService from 'services/Sales/SalesEstimate';
+import SaleInvoicesService from 'services/Sales/SalesInvoices';
 
 @EventSubscriber()
 export default class SaleInvoiceSubscriber {
@@ -11,6 +12,7 @@ export default class SaleInvoiceSubscriber {
   tenancy: TenancyService;
   settingsService: SettingsService;
   saleEstimatesService: SaleEstimateService;
+  saleInvoicesService: SaleInvoicesService;
 
   /**
    * Constructor method.
@@ -20,6 +22,7 @@ export default class SaleInvoiceSubscriber {
     this.tenancy = Container.get(TenancyService);
     this.settingsService = Container.get(SettingsService);
     this.saleEstimatesService = Container.get(SaleEstimateService);
+    this.saleInvoicesService = Container.get(SaleInvoicesService);
   }
 
   /**
@@ -49,10 +52,15 @@ export default class SaleInvoiceSubscriber {
     tenantId,
     saleInvoiceId,
     saleInvoice,
+    saleInvoiceDTO,
+    autoNextNumber,
   }) {
-    await this.settingsService.incrementNextNumber(tenantId, {
-      key: 'next_number',
-      group: 'sales_invoices',
-    });
+    if (saleInvoiceDTO.invoiceNo || !autoNextNumber) return;
+
+    await this.saleInvoicesService.autoIncrementOrdersService.incrementSettingsNextNumber(
+      tenantId,
+      'sales_invoices',
+      autoNextNumber[1]
+    );
   }
 }

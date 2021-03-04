@@ -1,5 +1,5 @@
 import { Service, Inject } from 'typedi';
-import { omit, sumBy } from 'lodash';
+import { omit, sumBy, join } from 'lodash';
 import moment from 'moment';
 import {
   EventDispatcher,
@@ -21,14 +21,15 @@ import JournalCommands from 'services/Accounting/JournalCommands';
 import events from 'subscribers/events';
 import InventoryService from 'services/Inventory/Inventory';
 import TenancyService from 'services/Tenancy/TenancyService';
-import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import { formatDateFields } from 'utils';
+import DynamicListingService from 'services/DynamicListing/DynamicListService';
 import { ServiceError } from 'exceptions';
 import ItemsService from 'services/Items/ItemsService';
 import ItemsEntriesService from 'services/Items/ItemsEntriesService';
 import CustomersService from 'services/Contacts/CustomersService';
 import SaleEstimateService from 'services/Sales/SalesEstimate';
 import JournalPosterService from './JournalPosterService';
+import AutoIncrementOrdersService from './AutoIncrementOrdersService';
 import { ERRORS } from './constants';
 
 /**
@@ -66,6 +67,9 @@ export default class SaleInvoicesService {
 
   @Inject()
   journalService: JournalPosterService;
+
+  @Inject()
+  autoIncrementOrdersService: AutoIncrementOrdersService;
 
   /**
    * Validate whether sale invoice number unqiue on the storage.
@@ -154,6 +158,33 @@ export default class SaleInvoicesService {
   }
 
   /**
+   * Retrieve the next unique invoice number.
+   * @param  {number} tenantId - Tenant id.
+   * @return {string}
+   */
+  async getNextInvoiceNumber(tenantId: number): Promise<[string, string]> {
+    const { SaleInvoice } = this.tenancy.models(tenantId);
+
+    // Retrieve the max invoice number in the given prefix.
+    const getMaxInvoicesNo = (prefix, number) => {
+      return SaleInvoice.query()
+        .modify('maxInvoiceNo', prefix, number)
+        .then((res) => res?.invNumber);
+    };
+    // Retrieve the order transaction number by number.
+    const getTransactionNumber = (prefix, number) => {
+      return SaleInvoice.query().modify('byPrefixAndNumber', prefix, number);
+    };
+
+    return this.autoIncrementOrdersService.getNextTransactionNumber(
+      tenantId,
+      'sales_invoices',
+      getTransactionNumber,
+      getMaxInvoicesNo
+    );
+  }
+
+  /**
    * Transform DTO object to model object.
    * @param {number} tenantId - Tenant id.
    * @param {ISaleInvoiceDTO} saleInvoiceDTO - Sale invoice DTO.
@@ -161,7 +192,8 @@ export default class SaleInvoicesService {
   transformDTOToModel(
     tenantId: number,
     saleInvoiceDTO: ISaleInvoiceCreateDTO | ISaleInvoiceEditDTO,
-    oldSaleInvoice?: ISaleInvoice
+    oldSaleInvoice?: ISaleInvoice,
+    autoNextNumber?: [string, string] // prefix, number
   ): ISaleInvoice {
     const { ItemEntry } = this.tenancy.models(tenantId);
     const balance = sumBy(saleInvoiceDTO.entries, (e) =>
@@ -180,6 +212,13 @@ export default class SaleInvoicesService {
         }),
       balance,
       paymentAmount: 0,
+      ...(saleInvoiceDTO.invoiceNo || autoNextNumber
+        ? {
+            invoiceNo: saleInvoiceDTO.invoiceNo
+              ? saleInvoiceDTO.invoiceNo
+              : join(autoNextNumber, ''),
+          }
+        : {}),
       entries: saleInvoiceDTO.entries.map((entry) => ({
         referenceType: 'SaleInvoice',
         ...omit(entry, ['amount', 'id']),
@@ -202,9 +241,18 @@ export default class SaleInvoicesService {
   ): Promise<ISaleInvoice> {
     const { saleInvoiceRepository } = this.tenancy.repositories(tenantId);
 
-    // Transform DTO object to model object.
-    const saleInvoiceObj = this.transformDTOToModel(tenantId, saleInvoiceDTO);
+    // The next invoice number automattically or manually.
+    const autoNextNumber = !saleInvoiceDTO.invoiceNo
+      ? await this.getNextInvoiceNumber(tenantId)
+      : null;
 
+    // Transform DTO object to model object.
+    const saleInvoiceObj = this.transformDTOToModel(
+      tenantId,
+      saleInvoiceDTO,
+      null,
+      autoNextNumber
+    );
     // Validate customer existance.
     await this.customersService.getCustomerByIdOrThrowError(
       tenantId,
@@ -248,6 +296,7 @@ export default class SaleInvoicesService {
       saleInvoiceDTO,
       saleInvoiceId: saleInvoice.id,
       authorizedUser,
+      autoNextNumber,
     });
     this.logger.info('[sale_invoice] successfully inserted.', {
       tenantId,

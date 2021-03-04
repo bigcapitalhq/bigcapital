@@ -281,11 +281,13 @@ function defaultToTransform(value, defaultOrTransformedValue, defaultValue) {
 const transformToMap = (objects, key) => {
   const map = new Map();
 
-  objects.forEach(object => {
+  objects.forEach((object) => {
     map.set(object[key], object);
   });
   return map;
-}
+};
+
+const transactionIncrement = (s) => s.replace(/([0-8]|\d?9+)?$/, (e) => ++e);
 
 export {
   hashPassword,
@@ -308,5 +310,6 @@ export {
   formatNumber,
   isBlank,
   defaultToTransform,
-  transformToMap
+  transformToMap,
+  transactionIncrement,
 };

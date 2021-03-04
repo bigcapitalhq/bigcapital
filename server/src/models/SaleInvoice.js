@@ -1,9 +1,7 @@
 import { Model, raw } from 'objection';
 import moment from 'moment';
+import knex from 'knex';
 import TenantModel from 'models/TenantModel';
-import { defaultToTransform } from 'utils';
-import { QueryBuilder } from 'knex';
-import { query } from 'winston';
 
 export default class SaleInvoice extends TenantModel {
   /**
@@ -91,7 +89,9 @@ export default class SaleInvoice extends TenantModel {
    */
   get remainingDays() {
     // Can't continue in case due date not defined.
-    if (!this.dueDate) { return null; }
+    if (!this.dueDate) {
+      return null;
+    }
 
     const date = moment();
     const dueDate = moment(this.dueDate);
@@ -112,12 +112,14 @@ export default class SaleInvoice extends TenantModel {
   }
 
   /**
-   * 
-   * @param {*} asDate 
+   *
+   * @param {*} asDate
    */
   getOverdueDays(asDate = moment().format('YYYY-MM-DD')) {
     // Can't continue in case due date not defined.
-    if (!this.dueDate) { return null; }
+    if (!this.dueDate) {
+      return null;
+    }
 
     const date = moment(asDate);
     const dueDate = moment(this.dueDate);
@@ -198,7 +200,7 @@ export default class SaleInvoice extends TenantModel {
        * Filters the sale invoices from the given date.
        */
       fromDate(query, fromDate) {
-        query.where('invoice_date', '<=', fromDate)
+        query.where('invoice_date', '<=', fromDate);
       },
       /**
        * Sort the sale invoices by full-payment invoices.
@@ -210,7 +212,25 @@ export default class SaleInvoice extends TenantModel {
        * Sort the sale invoices by the due amount.
        */
       sortByDueAmount(query, order) {
-        query.orderByRaw(`BALANCE - PAYMENT_AMOUNT ${order}`)
+        query.orderByRaw(`BALANCE - PAYMENT_AMOUNT ${order}`);
+      },
+
+      /**
+       * Retrieve the max invoice
+       */
+      maxInvoiceNo(query, prefix, number) {
+        query
+          .select(
+            raw(`REPLACE(INVOICE_NO, "${prefix}", "") AS INV_NUMBER`)
+          )
+          .havingRaw('CHAR_LENGTH(INV_NUMBER) = ??', [number.length])
+          .orderBy('invNumber', 'DESC')
+          .limit(1)
+          .first();
+      },
+
+      byPrefixAndNumber(query, prefix, number) {
+        query.where('invoice_no', `${prefix}${number}`)
       }
     };
   }
@@ -247,7 +267,7 @@ export default class SaleInvoice extends TenantModel {
         },
         filter(query) {
           query.where('contact_service', 'Customer');
-        }
+        },
       },
 
       transactions: {
@@ -255,7 +275,7 @@ export default class SaleInvoice extends TenantModel {
         modelClass: AccountTransaction.default,
         join: {
           from: 'sales_invoices.id',
-          to: 'accounts_transactions.referenceId'
+          to: 'accounts_transactions.referenceId',
         },
         filter(builder) {
           builder.where('reference_type', 'SaleInvoice');
@@ -267,7 +287,7 @@ export default class SaleInvoice extends TenantModel {
         modelClass: InventoryCostLotTracker.default,
         join: {
           from: 'sales_invoices.id',
-          to: 'inventory_cost_lot_tracker.transactionId'
+          to: 'inventory_cost_lot_tracker.transactionId',
         },
         filter(builder) {
           builder.where('transaction_type', 'SaleInvoice');
@@ -287,15 +307,15 @@ export default class SaleInvoice extends TenantModel {
 
   /**
    * Change payment amount.
-   * @param {Integer} invoiceId 
-   * @param {Numeric} amount 
+   * @param {Integer} invoiceId
+   * @param {Numeric} amount
    */
   static async changePaymentAmount(invoiceId, amount) {
     const changeMethod = amount > 0 ? 'increment' : 'decrement';
 
     await this.query()
       .where('id', invoiceId)
-      [changeMethod]('payment_amount', Math.abs(amount));      
+      [changeMethod]('payment_amount', Math.abs(amount));
   }
 
   /**
@@ -369,7 +389,7 @@ export default class SaleInvoice extends TenantModel {
         fieldType: 'number',
         sortQuery(query, role) {
           query.modify('sortByDueAmount', role.order);
-        }
+        },
       },
       created_at: {
         label: 'Created at',
@@ -379,7 +399,7 @@ export default class SaleInvoice extends TenantModel {
       status: {
         label: 'Status',
         options: [
-          { key: 'draft', label: 'Draft', },
+          { key: 'draft', label: 'Draft' },
           { key: 'delivered', label: 'Delivered' },
           { key: 'unpaid', label: 'Unpaid' },
           { key: 'overdue', label: 'Overdue' },
@@ -387,7 +407,7 @@ export default class SaleInvoice extends TenantModel {
           { key: 'paid', label: 'Paid' },
         ],
         query: (query, role) => {
-          switch(role.value) {
+          switch (role.value) {
             case 'draft':
               query.modify('draft');
               break;
@@ -410,8 +430,8 @@ export default class SaleInvoice extends TenantModel {
         },
         sortQuery(query, role) {
           query.modify('sortByStatus', role.order);
-        }
-      }
+        },
+      },
     };
   }
 }
