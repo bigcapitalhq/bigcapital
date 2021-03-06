@@ -68,8 +68,8 @@ function EstimatesDataTable({
   };
 
   // Handle drawer estimate.
-  const handleDrawerEstimate = () => {
-    openDrawer('estimate-drawer', {});
+  const handleDrawerEstimate = ({ id }) => {
+    openDrawer('estimate-drawer', { estimateId: id });
   };
 
   // Handle convent to invoice.
