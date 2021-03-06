@@ -286,8 +286,13 @@ export default class JournalCommands {
    * @param {number} manualJournalId
    */
   async manualJournal(manualJournalObj: IManualJournal) {
+    const commonEntry = {
+      transaction_number: manualJournalObj.journalNumber,
+      reference_number: manualJournalObj.reference,
+    };
     manualJournalObj.entries.forEach((entry: IManualJournalEntry) => {
       const jouranlEntry = new JournalEntry({
+        ...commonEntry,
         debit: entry.debit,
         credit: entry.credit,
         account: entry.accountId,

@@ -7,6 +7,7 @@ export interface IManualJournal {
   date: Date | string;
   journalNumber: number;
   journalType: string;
+  reference: string;
   amount: number;
   publishedAt: Date | null;
   description: string;

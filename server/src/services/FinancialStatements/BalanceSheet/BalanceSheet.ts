@@ -107,7 +107,7 @@ export default class BalanceSheetStatement extends FinancialSheet {
   ): IBalanceSheetAccountTotal[] {
     return this.dateRangeSet.map((date, index) => {
       const amount = sumBy(accounts, `totalPeriods[${index}].amount`);
-      const formattedAmount = this.formatNumber(amount)
+      const formattedAmount = this.formatNumber(amount);
       const currencyCode = this.baseCurrency;
 
       return { date, amount, formattedAmount, currencyCode };
@@ -198,14 +198,15 @@ export default class BalanceSheetStatement extends FinancialSheet {
           !(section.total.amount === 0 && this.query.noneZero)
       );
 
+    const children = flatToNestedArray(filteredAccounts, {
+      id: 'id',
+      parentId: 'parentAccountId',
+    });
     // Gets total amount of the given accounts.
-    const totalAmount = sumBy(filteredAccounts, 'total.amount');
+    const totalAmount = sumBy(children, 'total.amount');
 
     return {
-      children: flatToNestedArray(filteredAccounts, {
-        id: 'id',
-        parentId: 'parentAccountId',
-      }),
+      children,
       total: {
         amount: totalAmount,
         formattedAmount: this.formatTotalNumber(totalAmount),
@@ -250,17 +251,14 @@ export default class BalanceSheetStatement extends FinancialSheet {
    */
   private balanceSheetStructureMapper(
     structure: IBalanceSheetStructureSection,
-    accounts: IAccount & { type: IAccountType }[],
+    accounts: IAccount & { type: IAccountType }[]
   ): IBalanceSheetSection {
     const result = {
       name: structure.name,
       sectionType: structure.sectionType,
       type: structure.type,
       ...(structure.type === 'accounts_section'
-        ? this.structureRelatedAccountsMapper(
-            structure.accountsTypes,
-            accounts
-          )
+        ? this.structureRelatedAccountsMapper(structure.accountsTypes, accounts)
         : this.structureSectionMapper(structure, accounts)),
     };
     return result;
