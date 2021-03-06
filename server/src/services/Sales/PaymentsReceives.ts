@@ -479,7 +479,7 @@ export default class PaymentReceiveService {
     const paymentReceive = await PaymentReceive.query()
       .withGraphFetched('customer')
       .withGraphFetched('depositAccount')
-      .withGraphFetched('entries')
+      .withGraphFetched('entries.invoice')
       .withGraphFetched('transactions')
       .findById(paymentReceiveId);
 
