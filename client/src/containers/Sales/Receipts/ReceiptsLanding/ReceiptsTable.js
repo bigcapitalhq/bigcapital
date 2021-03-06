@@ -65,10 +65,10 @@ function ReceiptsDataTable({
     openAlert('receipt-close', { receiptId: receipt.id });
   };
 
-    // Handle drawer receipts.
-    const handleDrawerReceipt = () => {
-      openDrawer('receipt-drawer', {});
-    };
+  // Handle drawer receipts.
+  const handleDrawerReceipt = ({ id }) => {
+    openDrawer('receipt-drawer', { receiptId: id });
+  };
 
   // Handles the datable fetch data once the state changing.
   const handleDataTableFetchData = useCallback(
@@ -111,7 +111,7 @@ function ReceiptsDataTable({
         onEdit: handleEditReceipt,
         onDelete: handleDeleteReceipt,
         onClose: handleCloseReceipt,
-        onDrawer:handleDrawerReceipt,
+        onDrawer: handleDrawerReceipt,
         baseCurrency,
       }}
     />

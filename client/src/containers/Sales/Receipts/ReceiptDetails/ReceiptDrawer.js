@@ -5,9 +5,7 @@ import withDrawerActions from 'containers/Drawer/withDrawerActions';
 import { Drawer, DrawerSuspense } from 'components';
 import { compose } from 'utils';
 
-const ReceiptDrawerContent = lazy(() =>
-  import('containers/Drawers/PaperTemplate/PaperTemplate'),
-);
+const ReceiptDrawerContent = lazy(() => import('./ReceiptDrawerContent'));
 
 /**
  *  receipt drawer.
@@ -16,7 +14,7 @@ const ReceiptDrawer = ({
   name,
   //#withDrawer
   isOpen,
-  payload,
+  payload: { receiptId },
 
   closeDrawer,
 }) => {
@@ -25,23 +23,11 @@ const ReceiptDrawer = ({
     closeDrawer(name);
   };
 
-  const propLabels = {
-    labels: {
-      name: 'Receipt',
-      billedTo: 'Billed to',
-      date: 'Receipt date',
-      refNo: 'Receipt No.',
-      billedFrom: 'Billed from',
-      amount: 'Receipt amount',
-      dueDate: 'Due date',
-    },
-  };
-
   return (
     <div>
       <Drawer isOpen={isOpen} isClose={handleDrawerClose}>
         <DrawerSuspense>
-          <ReceiptDrawerContent labels={propLabels.labels} />
+          <ReceiptDrawerContent receiptId={receiptId} />
         </DrawerSuspense>
       </Drawer>
     </div>
