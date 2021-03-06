@@ -1,55 +1,41 @@
-import React from 'react';
+import React, { useMemo } from 'react';
+import { formatMessage } from 'services/intl';
+import { DataTable, Money } from 'components';
 
-export default function DrawerTemplateTable() {
+export default function DrawerTemplateTable({ tableData }) {
+  const columns = useMemo(
+    () => [
+      {
+        Header: formatMessage({ id: 'description' }),
+        accessor: 'description',
+        disableSortBy: true,
+        width: 150,
+      },
+      {
+        Header: formatMessage({ id: 'rate' }),
+        accessor: 'rate',
+        accessor: ({ rate }) => <Money amount={rate} currency={'USD'} />,
+        disableSortBy: true,
+        width: 50,
+      },
+      {
+        Header: formatMessage({ id: 'Qty' }),
+        accessor: 'quantity',
+        disableSortBy: true,
+        width: 50,
+      },
+      {
+        Header: formatMessage({ id: 'Total' }),
+        accessor: ({ total }) => <Money amount={total} currency={'USD'} />,
+        disableSortBy: true,
+        width: 50,
+      },
+    ],
+    [],
+  );
   return (
     <div className="template__table">
-      <div className="template__table__rows">
-        <span className="template__table__rows--cell ">Description</span>
-        <span className="template__table__rows--cell">Rate</span>
-        <span className="template__table__rows--cell">Qty</span>
-        <span className="template__table__rows--cell">Total</span>
-      </div>
-      <div className="template__table__rows">
-        <span className="template__table__rows--cell">
-          Nulla commodo magnanon dolor excepteur nisi aute laborum.
-        </span>
-        <span className="template__table__rows--cell">1</span>
-        <span className="template__table__rows--cell">1</span>
-        <span className="template__table__rows--cell">100 LYD</span>
-      </div>
-
-      <div className="template__table__rows">
-        <span className="template__table__rows--cell">
-          Nulla comm non dolor excepteur elit dolore eiusmod nisi aute laborum.
-        </span>
-        <span className="template__table__rows--cell">1</span>
-        <span className="template__table__rows--cell">1</span>
-        <span className="template__table__rows--cell">100 LYD</span>
-      </div>
-      <div className="template__table__rows">
-        <span className="template__table__rows--cell">
-          Nulla comm non dolor excepteur elit dolore eiusmod nisi aute laborum.
-        </span>
-        <span className="template__table__rows--cell">1</span>
-        <span className="template__table__rows--cell">1</span>
-        <span className="template__table__rows--cell">100 LYD</span>
-      </div>
-      <div className="template__table__rows">
-        <span className="template__table__rows--cell">
-          Nulla comm non dolor excepteur elit dolore eiusmod nisi aute laborum.
-        </span>
-        <span className="template__table__rows--cell">1</span>
-        <span className="template__table__rows--cell">1</span>
-        <span className="template__table__rows--cell">100 LYD</span>
-      </div>
-      <div className="template__table__rows">
-        <span className="template__table__rows--cell">
-          Nulla comm non dolor excepteur elit dolore eiusmod nisi aute laborum.
-        </span>
-        <span className="template__table__rows--cell">1</span>
-        <span className="template__table__rows--cell">1</span>
-        <span className="template__table__rows--cell">100 LYD</span>
-      </div>
+      <DataTable columns={columns} data={tableData} />
     </div>
   );
 }
