@@ -581,8 +581,7 @@ export default class ItemsService implements IItemsService {
 
     const ids = Array.isArray(itemId) ? itemId : [itemId];
     const foundItemEntries = await ItemEntry.query()
-      .whereIn('item_id', ids)
-      .whereIn('reference_type', ['SaleInvoice', 'Bill']);
+      .whereIn('item_id', ids);
 
     if (foundItemEntries.length > 0) {
       throw new ServiceError(

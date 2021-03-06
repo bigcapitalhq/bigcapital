@@ -1,4 +1,4 @@
-import { Service, Inject } from "typedi";
+import { Service, Inject } from 'typedi';
 import TenancyService from 'services/Tenancy/TenancyService';
 
 @Service()
@@ -11,13 +11,16 @@ export default class SettingsService {
 
   /**
    * Increment next number based on the given find query.
-   * @param {number} tenantId 
-   * @param {any} findQuery 
+   * @param {number} tenantId
+   * @param {any} findQuery
    */
   async incrementNextNumber(tenantId: number, findQuery: any): Promise<void> {
     const settings = this.tenancy.settings(tenantId);
 
-    this.logger.info('[settings] increment the next number.', { tenantId, findQuery });
+    this.logger.info('[settings] increment the next number.', {
+      tenantId,
+      findQuery,
+    });
     const currentNumber = settings.find(findQuery);
 
     if (currentNumber) {

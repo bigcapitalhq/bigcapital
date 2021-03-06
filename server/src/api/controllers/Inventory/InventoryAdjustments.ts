@@ -52,7 +52,6 @@ export default class InventoryAdjustmentsController extends BaseController {
     return router;
   }
 
-
   /**
    * Validate list query schema
    */
@@ -236,11 +235,13 @@ export default class InventoryAdjustmentsController extends BaseController {
     if (error instanceof ServiceError) {
       if (error.errorType === 'INVENTORY_ADJUSTMENT_NOT_FOUND') {
         return res.status(400).send({
-          errors: [{
-            type: 'INVENTORY_ADJUSTMENT.NOT.FOUND',
-            code: 100,
-            message: 'The inventory adjustment not found.'
-          }],
+          errors: [
+            {
+              type: 'INVENTORY_ADJUSTMENT.NOT.FOUND',
+              code: 100,
+              message: 'The inventory adjustment not found.',
+            },
+          ],
         });
       }
       if (error.errorType === 'NOT_FOUND') {
