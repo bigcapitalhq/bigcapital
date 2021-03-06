@@ -483,6 +483,31 @@ export default class BillPaymentsService {
   }
 
   /**
+   * Retrieve bill payment.
+   * @param {number} tenantId
+   * @param {number} billPyamentId
+   * @return {Promise<IBillPayment>}
+   */
+  public async getBillPayment(
+    tenantId: number,
+    billPyamentId: number
+  ): Promise<IBillPayment> {
+    const { BillPayment } = this.tenancy.models(tenantId);
+
+    const billPayment = await BillPayment.query()
+      .withGraphFetched('entries')
+      .withGraphFetched('vendor')
+      .withGraphFetched('paymentAccount')
+      .withGraphFetched('transactions')
+      .findById(billPyamentId);
+
+    if (!billPayment) {
+      throw new ServiceError(ERRORS.PAYMENT_MADE_NOT_FOUND);
+    }
+    return billPayment;
+  }
+
+  /**
    * Records bill payment receive journal transactions.
    * @param {number} tenantId -
    * @param {BillPayment} billPayment
@@ -491,7 +516,7 @@ export default class BillPaymentsService {
   public async recordJournalEntries(
     tenantId: number,
     billPayment: IBillPayment,
-    override: boolean = false,
+    override: boolean = false
   ) {
     const { AccountTransaction } = this.tenancy.models(tenantId);
     const { accountRepository } = this.tenancy.repositories(tenantId);
@@ -612,7 +637,7 @@ export default class BillPaymentsService {
     tenantId: number,
     billPaymentId: number
   ): Promise<{
-    billPayment: Omit<IBillPayment, "entries">;
+    billPayment: Omit<IBillPayment, 'entries'>;
     entries: IBillReceivePageEntry[];
   }> {
     const { BillPayment, Bill } = this.tenancy.models(tenantId);
@@ -634,17 +659,17 @@ export default class BillPaymentsService {
       .where('vendor_id', billPayment.vendorId)
       .whereNotIn(
         'id',
-        billPayment.entries.map((e) => e.billId),
+        billPayment.entries.map((e) => e.billId)
       )
       .orderBy('bill_date', 'ASC');
 
     // Mapping the payable bills to entries.
     const restPayableEntries = resPayableBills.map(this.mapBillToPageEntry);
     const entries = [...paymentEntries, ...restPayableEntries];
-    
+
     return {
       billPayment: omit(billPayment, ['entries']),
-      entries
+      entries,
     };
   }
 
@@ -712,7 +737,7 @@ export default class BillPaymentsService {
       date: bill.billDate,
       totalPaymentAmount: bill.paymentAmount,
       paymentAmount: 0,
-    }
+    };
   }
 
   /**
@@ -722,7 +747,7 @@ export default class BillPaymentsService {
    */
   async getNewPageEntries(
     tenantId: number,
-    vendorId: number,
+    vendorId: number
   ): Promise<IBillReceivePageEntry[]> {
     const { Bill } = this.tenancy.models(tenantId);
 

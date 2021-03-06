@@ -31,20 +31,6 @@ export default class BillsPayments extends BaseController {
   router() {
     const router = Router();
 
-    router.get(
-      '/new-page/entries',
-      [query('vendor_id').exists()],
-      this.validationResult,
-      asyncMiddleware(this.getBillPaymentNewPageEntries.bind(this)),
-      this.handleServiceError
-    );
-    router.get(
-      '/:id/edit-page',
-      this.specificBillPaymentValidateSchema,
-      this.validationResult,
-      asyncMiddleware(this.getBillPaymentEditPage.bind(this)),
-      this.handleServiceError
-    );
     router.post(
       '/',
       [...this.billPaymentSchemaValidation],
@@ -67,6 +53,20 @@ export default class BillsPayments extends BaseController {
       [...this.specificBillPaymentValidateSchema],
       this.validationResult,
       asyncMiddleware(this.deleteBillPayment.bind(this)),
+      this.handleServiceError
+    );
+    router.get(
+      '/new-page/entries',
+      [query('vendor_id').exists()],
+      this.validationResult,
+      asyncMiddleware(this.getBillPaymentNewPageEntries.bind(this)),
+      this.handleServiceError
+    );
+    router.get(
+      '/:id/edit-page',
+      this.specificBillPaymentValidateSchema,
+      this.validationResult,
+      asyncMiddleware(this.getBillPaymentEditPage.bind(this)),
       this.handleServiceError
     );
     router.get(
@@ -156,10 +156,14 @@ export default class BillsPayments extends BaseController {
 
   /**
    * Retrieve the bill payment edit page details.
-   * @param {Request} req 
-   * @param {Response} res 
+   * @param {Request} req
+   * @param {Response} res
    */
-  async getBillPaymentEditPage(req: Request, res: Response, next: NextFunction) {
+  async getBillPaymentEditPage(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { tenantId } = req;
     const { id: paymentReceiveId } = req.params;
 
@@ -169,7 +173,7 @@ export default class BillsPayments extends BaseController {
         entries,
       } = await this.billPaymentService.getBillPaymentEditPage(
         tenantId,
-        paymentReceiveId,
+        paymentReceiveId
       );
 
       return res.status(200).send({
@@ -265,16 +269,13 @@ export default class BillsPayments extends BaseController {
     const { id: billPaymentId } = req.params;
 
     try {
-      const {
-        billPayment,
-        payableBills,
-        paymentMadeBills,
-      } = await this.billPaymentService.getBillPayment(tenantId, billPaymentId);
+      const billPayment = await this.billPaymentService.getBillPayment(
+        tenantId,
+        billPaymentId
+      );
 
       return res.status(200).send({
-        bill_payment: this.transfromToResponse({ ...billPayment }),
-        payable_bills: this.transfromToResponse([...payableBills]),
-        payment_bills: this.transfromToResponse([...paymentMadeBills]),
+        bill_payment: this.transfromToResponse(billPayment),
       });
     } catch (error) {
       next(error);

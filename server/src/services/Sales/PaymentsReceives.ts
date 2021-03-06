@@ -466,6 +466,31 @@ export default class PaymentReceiveService {
   }
 
   /**
+   * Retrieve payment receive details.
+   * @param {number} tenantId - Tenant id.
+   * @param {number} paymentReceiveId - Payment receive id.
+   * @return {Promise<IPaymentReceive>}
+   */
+  async getPaymentReceive(
+    tenantId: number,
+    paymentReceiveId: number
+  ): Promise<IPaymentReceive> {
+    const { PaymentReceive } = this.tenancy.models(tenantId);
+    const paymentReceive = await PaymentReceive.query()
+      .withGraphFetched('customer')
+      .withGraphFetched('depositAccount')
+      .withGraphFetched('entries')
+      .withGraphFetched('transactions')
+      .findById(paymentReceiveId);
+
+    if (!paymentReceive) {
+      throw new ServiceError(ERRORS.PAYMENT_RECEIVE_NOT_EXISTS);
+    }
+
+    return paymentReceive;
+  }
+
+  /**
    * Retrive edit page invoices entries from the given sale invoices models.
    * @param  {ISaleInvoice[]} invoices - Invoices.
    * @return {IPaymentReceiveEditPageEntry}

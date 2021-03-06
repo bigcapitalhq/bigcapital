@@ -41,13 +41,6 @@ export default class PaymentReceivesController extends BaseController {
       this.handleServiceErrors
     );
     router.get(
-      '/:id/invoices',
-      this.paymentReceiveValidation,
-      this.validationResult,
-      asyncMiddleware(this.getPaymentReceiveInvoices.bind(this)),
-      this.handleServiceErrors
-    );
-    router.get(
       '/:id/edit-page',
       this.paymentReceiveValidation,
       this.validationResult,
@@ -56,12 +49,23 @@ export default class PaymentReceivesController extends BaseController {
     );
     router.get(
       '/new-page/entries',
-      [
-        query('customer_id').exists().isNumeric().toInt(),
-      ],
+      [query('customer_id').exists().isNumeric().toInt()],
       this.validationResult,
       asyncMiddleware(this.getPaymentReceiveNewPageEntries.bind(this)),
       this.getPaymentReceiveNewPageEntries.bind(this)
+    );
+    router.get(
+      '/:id/invoices',
+      this.paymentReceiveValidation,
+      this.validationResult,
+      asyncMiddleware(this.getPaymentReceiveInvoices.bind(this)),
+      this.handleServiceErrors
+    );
+    router.get(
+      '/:id',
+      this.paymentReceiveValidation,
+      this.asyncMiddleware(this.getPaymentReceive.bind(this)),
+      this.handleServiceErrors
     );
     router.get(
       '/',
@@ -224,14 +228,18 @@ export default class PaymentReceivesController extends BaseController {
    * @param {Request} req -
    * @param {Response} res -
    */
-  async getPaymentReceiveEditPage(req: Request, res: Response, next: NextFunction) {
+  async getPaymentReceiveEditPage(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { tenantId, user } = req;
     const { id: paymentReceiveId } = req.params;
 
     try {
       const {
         paymentReceive,
-        entries
+        entries,
       } = await this.paymentReceiveService.getPaymentReceiveEditPage(
         tenantId,
         paymentReceiveId,
@@ -317,10 +325,14 @@ export default class PaymentReceivesController extends BaseController {
    * @param {Request} req - Request.
    * @param {Response} res - Response.
    */
-  async getPaymentReceiveNewPageEntries(req, res) {
+  async getPaymentReceiveNewPageEntries(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { tenantId } = req;
     const { customerId } = this.matchedQueryData(req);
- 
+
     try {
       const entries = await this.paymentReceiveService.getNewPageEntries(
         tenantId,
@@ -329,7 +341,33 @@ export default class PaymentReceivesController extends BaseController {
       return res.status(200).send({
         entries: this.transfromToResponse(entries),
       });
-    } catch (error) {}
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Retrieve the payment receive details.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   */
+  async getPaymentReceive(req: Request, res: Response, next: NextFunction) {
+    const { tenantId } = req;
+    const { id: paymentReceiveId } = req.params;
+
+    try {
+      const paymentReceive = await this.paymentReceiveService.getPaymentReceive(
+        tenantId,
+        paymentReceiveId
+      );
+
+      return res
+        .status(200)
+        .send({ payment_receive: this.transfromToResponse(paymentReceive) });
+    } catch (error) {
+      next(error);
+    }
   }
 
   /**
@@ -363,9 +401,7 @@ export default class PaymentReceivesController extends BaseController {
       }
       if (error.errorType === 'DEPOSIT_ACCOUNT_INVALID_TYPE') {
         return res.boom.badRequest(null, {
-          errors: [
-            { type: 'DEPOSIT_ACCOUNT_INVALID_TYPE', code: 300 },
-          ],
+          errors: [{ type: 'DEPOSIT_ACCOUNT_INVALID_TYPE', code: 300 }],
         });
       }
       if (error.errorType === 'INVALID_PAYMENT_AMOUNT_INVALID') {
