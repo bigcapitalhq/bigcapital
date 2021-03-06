@@ -33,7 +33,7 @@ export function usePaymentReceives(query, props) {
       },
       filterMeta: {},
     }),
-  }
+  };
 }
 
 /**
@@ -118,20 +118,15 @@ export function usePaymentReceive(id, props) {
     {
       select: (res) => ({
         paymentReceive: res.data.payment_receive,
-        receivableEntries: res.data.receivable_entries,
       }),
-      ...props
+      ...props,
     },
   );
 
   return {
     ...states,
-    data: defaultTo(states.data, {
-      paymentReceive: {},
-      receivableInvoices: {},
-      paymentInvoices: {}
-    }),
-  }
+    data: defaultTo(states.data, {}),
+  };
 }
 
 /**
@@ -158,6 +153,6 @@ export function usePaymentReceiveEditPage(id, props) {
     data: defaultTo(states.data, {
       paymentReceive: {},
       entries: [],
-    })
-  }
+    }),
+  };
 }

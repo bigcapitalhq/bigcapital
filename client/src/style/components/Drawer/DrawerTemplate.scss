@@ -1,15 +1,13 @@
 #page-size {
   margin: 0 auto;
-  // background-color: #ffffff;
   background-color: transparent;
   width: 21cm;
-  height: 29.7cm;
+  // height: 29.7cm;
   padding-bottom: 20px;
 }
 
 .template {
   background-color: transparent;
-  // margin: 30px;
   margin: 20px;
 
   &__header {
@@ -31,7 +29,6 @@
     display: flex;
     flex-wrap: wrap;
     border-bottom: 2px solid #1155cc;
-    // padding-bottom: 40px;
     padding-bottom: 35px;
 
     &__info {
@@ -62,30 +59,28 @@
     flex-direction: column;
     padding: 0px 5px;
     margin: 5px 0px 20px 0px;
-    font-size: 16px;
 
-    &__rows {
-      display: flex;
-      margin-bottom: 15px;
-      color: #1155cc;
+    .bigcapital-datatable {
+      .table {
+        .thead .tr .th .resizer {
+          display: none;
+        }
 
-      &--cell {
-        flex: 0 20%;
+        .thead .th {
+          font-size: 16px;
+          font-weight: 400;
+          border-bottom: none;
+          background-color: transparent;
+          margin-bottom: 15px;
+          color: #1155cc;
+        }
+        .tbody .tr .td {
+          font-size: 15px;
+          padding: 10px;
+          margin-bottom: 15px;
+          border-bottom: 1px solid #cecbcb;
+        }
       }
-      &--cell-payment-receive {
-        flex: 1;
-      }
-
-      &--cell:first-child {
-        flex: 1 0 20%;
-        padding-left: 5px;
-      }
-    }
-
-    &__rows:not(:first-child) {
-      color: #000;
-      border-bottom: 1px solid #cecbcb;
-      padding-bottom: 15px;
     }
   }
 
@@ -96,9 +91,6 @@
       font-weight: 400;
       color: #666666;
       margin-bottom: 5px;
-
-      // font-size: 18px;
-      // font-weight: 500;
     }
 
     ul {

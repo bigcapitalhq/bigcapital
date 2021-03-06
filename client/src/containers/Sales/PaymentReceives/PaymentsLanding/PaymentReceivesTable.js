@@ -58,8 +58,8 @@ function PaymentReceivesDataTable({
   };
 
   // Handle drawer payment receive.
-  const handleDrawerPaymentReceive = () => {
-    openDrawer('payment-receive-drawer', {});
+  const handleDrawerPaymentReceive = ({ id }) => {
+    openDrawer('payment-receive-drawer', { paymentReceiveId: id });
   };
 
   // Handle datatable fetch once the table's state changing.

@@ -6,7 +6,7 @@ import { Drawer, DrawerSuspense } from 'components';
 import { compose } from 'utils';
 
 const PaymentReceiveDrawerContent = lazy(() =>
-  import('containers/Drawers/PaymentPaperTemplate/PaymentPaperTemplate'),
+  import('./PaymentReceiveDrawerContent'),
 );
 
 /**
@@ -16,7 +16,7 @@ function PaymentReceiveDrawer({
   name,
   //#withDrawer
   isOpen,
-  payload,
+  payload: { paymentReceiveId },
 
   closeDrawer,
 }) {
@@ -28,7 +28,7 @@ function PaymentReceiveDrawer({
   return (
     <Drawer isOpen={isOpen} isClose={handleDrawerClose}>
       <DrawerSuspense>
-        <PaymentReceiveDrawerContent />
+        <PaymentReceiveDrawerContent paymentReceiveId={paymentReceiveId} />
       </DrawerSuspense>
     </Drawer>
   );
