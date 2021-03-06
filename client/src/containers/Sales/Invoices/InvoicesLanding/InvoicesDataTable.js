@@ -33,7 +33,7 @@ function InvoicesDataTable({
 
   // #withAlertsActions
   openAlert,
-  
+
   // #withDrawerActions
   openDrawer,
 }) {
@@ -67,8 +67,8 @@ function InvoicesDataTable({
   };
 
   // Handle drawer invoice.
-  const handleDrawerInvoice = () => {
-    openDrawer('invoice-drawer', {});
+  const handleDrawerInvoice = ({ id }) => {
+    openDrawer('invoice-drawer', { invoiceId: id });
   };
 
   // Handles fetch data once the table state change.
